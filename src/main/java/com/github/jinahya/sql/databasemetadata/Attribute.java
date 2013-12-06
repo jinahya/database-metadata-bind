@@ -54,32 +54,6 @@ public class Attribute {
 
     /**
      *
-     * @param suppression
-     * @param resultSet
-     *
-     * @return
-     *
-     * @throws SQLException
-     */
-    public static Attribute retrieve(final Suppression suppression,
-                                     final ResultSet resultSet)
-        throws SQLException {
-
-        Objects.requireNonNull(suppression, "null suppression");
-
-        Objects.requireNonNull(resultSet, "null resultSet");
-
-        final Attribute instance = new Attribute();
-
-        ColumnRetriever.retrieve(
-            Attribute.class, instance, suppression, resultSet);
-
-        return instance;
-    }
-
-
-    /**
-     *
      * @param database
      * @param suppression
      * @param catalog
@@ -90,7 +64,7 @@ public class Attribute {
      *
      * @throws SQLException if a database access error occurs.
      *
-     * @see DatabaseMetaData#getColumns(java.lang.String, java.lang.String,
+     * @see DatabaseMetaData#getAttributes(java.lang.String, java.lang.String,
      * java.lang.String, java.lang.String)
      */
     public static void retrieve(final DatabaseMetaData database,
@@ -117,7 +91,8 @@ public class Attribute {
             catalog, schemaPattern, typeNamePattern, attributeNamePattern);
         try {
             while (resultSet.next()) {
-                attributes.add(retrieve(suppression, resultSet));
+                attributes.add(ColumnRetriever.retrieve(
+                    Attribute.class, suppression, resultSet));
             }
         } finally {
             resultSet.close();
@@ -369,6 +344,7 @@ public class Attribute {
      * type name.
      */
     @ColumnLabel("TYPE_NAME")
+    //@SuppressionPath("attribute/typeName")
     @XmlAttribute
     protected String typeName;
 
@@ -381,6 +357,7 @@ public class Attribute {
      * attribute name.
      */
     @ColumnLabel("ATTR_NAME")
+    //@SuppressionPath("attribute/attrName")
     @XmlElement(required = true)
     protected String attrName;
 
@@ -389,6 +366,7 @@ public class Attribute {
      * attribute type SQL type from {@link java.sql.Types}.
      */
     @ColumnLabel("DATA_TYPE")
+    //@SuppressionPath("attribute/dataType")
     @XmlElement(required = true)
     protected int dataType;
 
@@ -399,6 +377,7 @@ public class Attribute {
      * target type of the reference type.
      */
     @ColumnLabel("ATTR_TYPE_NAME")
+    //@SuppressionPath("attribute/attrTypeName")
     @XmlElement(required = true)
     protected String attrTypeName;
 
@@ -408,6 +387,7 @@ public class Attribute {
      * characters; for numeric or decimal types this is precision.
      */
     @ColumnLabel("ATTR_SIZE")
+    //@SuppressionPath("attribute/attrSize")
     @XmlElement(required = true)
     protected int attrSize;
 
@@ -417,6 +397,7 @@ public class Attribute {
      * DECIMAL_DIGITS is not applicable.
      */
     @ColumnLabel("DECIMAL_DIGITS")
+    //@SuppressionPath("attribute/decimalDigits")
     @XmlElement(required = true)
     protected Integer decimalDigits;
 
@@ -425,6 +406,7 @@ public class Attribute {
      * Radix (typically either 10 or 2).
      */
     @ColumnLabel("NUM_PREC_RADIX")
+    //@SuppressionPath("attribute/numPrecRadix")
     @XmlElement(required = true)
     protected int numPrecRadix;
 
@@ -433,6 +415,7 @@ public class Attribute {
      * whether NULL is allowed.
      */
     @ColumnLabel("NULLABLE")
+    //@SuppressionPath("attribute/nullable")
     @XmlElement(required = true)
     protected int nullable;
 
@@ -441,6 +424,7 @@ public class Attribute {
      * comment describing column.
      */
     @ColumnLabel("REMARKS")
+    //@SuppressionPath("attribute/remarks")
     @XmlElement(nillable = true, required = true)
     @XmlNillableBySpecification
     protected String remarks;
@@ -450,17 +434,26 @@ public class Attribute {
      * default value.
      */
     @ColumnLabel("ATTR_DEF")
+    //@SuppressionPath("attribute/attrDef")
     @XmlElement(nillable = true, required = true)
     @XmlNillableBySpecification
     protected String attrDef;
 
 
+    /**
+     * not used.
+     */
     @ColumnLabel("SQL_DATA_TYPE")
+    //@SuppressionPath("attribute/sqlDataType")
     @NotUsed
     protected int sqlDataType;
 
 
+    /**
+     * not used.
+     */
     @ColumnLabel("SQL_DATETIME_SUB")
+    //@SuppressionPath("attribute/sqlDatetimeSub")
     @NotUsed
     protected int sqlDatetimeSub;
 
@@ -469,6 +462,7 @@ public class Attribute {
      * for char types the maximum number of bytes in the column.
      */
     @ColumnLabel("CHAR_OCTET_LENGTH")
+    //@SuppressionPath("attribute/charOctetLength")
     @XmlElement(required = true)
     protected int charOctetLength;
 
@@ -477,6 +471,7 @@ public class Attribute {
      * index of the attribute in the UDT (starting at 1).
      */
     @ColumnLabel("ORDINAL_POSITION")
+    //@SuppressionPath("attribute/ordinalPosition")
     @XmlElement(required = true)
     protected int ordinalPosition;
 
@@ -485,6 +480,7 @@ public class Attribute {
      * ISO rules are used to determine the nullability for a attribute.
      */
     @ColumnLabel("IS_NULLABLE")
+    //@SuppressionPath("attribute/isNullable")
     @XmlElement(required = true)
     protected String isNullable;
 
@@ -496,6 +492,7 @@ public class Attribute {
      * {@link java.sql.Types#REF REF})
      */
     @ColumnLabel("SOURCE_DATA_TYPE")
+    @SuppressionPath("attribute/sourceDataType")
     @XmlElement(nillable = true, required = true)
     @XmlNillableBySpecification()
     protected Short sourceDataType;

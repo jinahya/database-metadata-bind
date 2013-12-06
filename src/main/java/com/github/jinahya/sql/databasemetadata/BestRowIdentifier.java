@@ -18,11 +18,6 @@
 package com.github.jinahya.sql.databasemetadata;
 
 
-import com.github.jinahya.sql.databasemetadata.ColumnLabel;
-import com.github.jinahya.sql.databasemetadata.ColumnRetriever;
-import com.github.jinahya.sql.databasemetadata.Suppression;
-import com.github.jinahya.sql.databasemetadata.NotUsed;
-import com.github.jinahya.sql.databasemetadata.XmlNillableBySpecification;
 import java.sql.DatabaseMetaData;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -44,32 +39,6 @@ import javax.xml.bind.annotation.XmlType;
     }
 )
 public class BestRowIdentifier {
-
-
-    /**
-     *
-     * @param suppression
-     * @param resultSet
-     *
-     * @return
-     *
-     * @throws SQLException if a database access error occurs.
-     */
-    public static BestRowIdentifier retrieve(final Suppression suppression,
-                                             final ResultSet resultSet)
-        throws SQLException {
-
-        Objects.requireNonNull(suppression, "null suppression");
-
-        Objects.requireNonNull(resultSet, "null resultSet");
-
-        final BestRowIdentifier instance = new BestRowIdentifier();
-
-        ColumnRetriever.retrieve(
-            BestRowIdentifier.class, instance, suppression, resultSet);
-
-        return instance;
-    }
 
 
     /**
@@ -110,7 +79,8 @@ public class BestRowIdentifier {
             catalog, schema, table, scope, nullable);
         try {
             while (resultSet.next()) {
-                bestRowIdentifiers.add(retrieve(suppression, resultSet));
+                bestRowIdentifiers.add(ColumnRetriever.retrieve(
+                    BestRowIdentifier.class, suppression, resultSet));
             }
         } finally {
             resultSet.close();
@@ -155,8 +125,9 @@ public class BestRowIdentifier {
                  DatabaseMetaData.bestRowSession, true,
                  table.getBestRowIdentifiers());
 
-        for (final BestRowIdentifier instance : table.getBestRowIdentifiers()) {
-            instance.setTable(table);
+        for (final BestRowIdentifier bestRowIdentifier
+             : table.getBestRowIdentifiers()) {
+            bestRowIdentifier.setTable(table);
         }
     }
 
@@ -235,6 +206,7 @@ public class BestRowIdentifier {
     }
 
 
+    // -------------------------------------------------------------- columnSize
     public int getColumnSize() {
 
         return columnSize;
@@ -289,6 +261,7 @@ public class BestRowIdentifier {
      * </ul>
      */
     @ColumnLabel("SCOPE")
+    //@SuppressionPath("bestRowIdentifier/scope")
     @XmlElement(required = true)
     protected short scope;
 
@@ -297,6 +270,7 @@ public class BestRowIdentifier {
      * column name.
      */
     @ColumnLabel("COLUMN_NAME")
+    //@SuppressionPath("bestRowIdentifier/columnName")
     @XmlElement(required = true)
     protected String columnName;
 
