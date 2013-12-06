@@ -1,8 +1,8 @@
 sql-databasemetadata
 ====================
-A library binding various information from [DatabaseMetaData](http://docs.oracle.com/javase/7/docs/api/java/sql/DatabaseMetaData.html) and [ResultSetMetaData](http://docs.oracle.com/javase/7/docs/api/java/sql/ResultSetMetaData.html).
+A library binding various information from [DatabaseMetaData](http://docs.oracle.com/javase/7/docs/api/java/sql/DatabaseMetaData.html). 
 
-[wanna donate some?](https://www.paypal.com/cgi-bin/webscr?cmd=_donations&business=GWDFLJNSZSEGG&lc=KR&item_name=github&currency_code=USD&bn=PP%2dDonationsBF%3abtn_donateCC_LG%2egif%3aNonHosted)
+[Wanna donate some?](https://www.paypal.com/cgi-bin/webscr?cmd=_donations&business=GWDFLJNSZSEGG&lc=KR&item_name=github&currency_code=USD&bn=PP%2dDonationsBF%3abtn_donateCC_LG%2egif%3aNonHosted)
 
 <!--
 ### maven
@@ -14,5 +14,11 @@ A library binding various information from [DatabaseMetaData](http://docs.oracle
 [jinahya.com/jenkins](https://jinahya.com/jenkins/job/com.github.jinahya%20bit-io/)
 -->
 
-## Apidocs
-* 1.0-SNAPSHOT ([apidocs](http://jinahya.github.io/sql-databasemetadata/site/1.0-SNAPSHOT/apidocs/index.html)) ([site](http://jinahya.github.io/sql-databasemetadata/site/1.0-SNAPSHOT/index.html))  
+## Versions
+
+| Version | Apidocs | Site | Notes |
+| :------ | :------ | :--- | :---- |
+| `1.0-SNAPSHOT` | [apidocs](http://jinahya.github.io/sql-databasemetadata/site/1.0-SNAPSHOT/apidocs/index.html) | [site](http://jinahya.github.io/sql-databasemetadata/site/1.0-SNAPSHOT/index.html)||
+
+
+<!-- 1.0-SNAPSHOT ([apidocs](http://jinahya.github.io/sql-databasemetadata/site/1.0-SNAPSHOT/apidocs/index.html)) ([site](http://jinahya.github.io/sql-databasemetadata/site/1.0-SNAPSHOT/index.html))  -->
