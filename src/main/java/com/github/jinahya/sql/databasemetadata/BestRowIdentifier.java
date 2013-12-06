@@ -1,0 +1,363 @@
+/*
+ * Copyright 2011 Jin Kwon <jinahya at gmail.com>.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
+
+package com.github.jinahya.sql.databasemetadata;
+
+
+import com.github.jinahya.sql.databasemetadata.ColumnLabel;
+import com.github.jinahya.sql.databasemetadata.ColumnRetriever;
+import com.github.jinahya.sql.databasemetadata.Suppression;
+import com.github.jinahya.sql.databasemetadata.NotUsed;
+import com.github.jinahya.sql.databasemetadata.XmlNillableBySpecification;
+import java.sql.DatabaseMetaData;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.util.Collection;
+import java.util.Objects;
+import javax.xml.bind.annotation.XmlElement;
+import javax.xml.bind.annotation.XmlTransient;
+import javax.xml.bind.annotation.XmlType;
+
+
+/**
+ *
+ * @author Jin Kwon <jinahya at gmail.com>
+ */
+@XmlType(
+    propOrder = {
+        "scope", "columnName", "dataType", "typeName", "columnSize",
+        "decimalDigits", "pseudoColumn"
+    }
+)
+public class BestRowIdentifier {
+
+
+    /**
+     *
+     * @param suppression
+     * @param resultSet
+     *
+     * @return
+     *
+     * @throws SQLException if a database access error occurs.
+     */
+    public static BestRowIdentifier retrieve(final Suppression suppression,
+                                             final ResultSet resultSet)
+        throws SQLException {
+
+        Objects.requireNonNull(suppression, "null suppression");
+
+        Objects.requireNonNull(resultSet, "null resultSet");
+
+        final BestRowIdentifier instance = new BestRowIdentifier();
+
+        ColumnRetriever.retrieve(
+            BestRowIdentifier.class, instance, suppression, resultSet);
+
+        return instance;
+    }
+
+
+    /**
+     *
+     * @param database
+     * @param suppression
+     * @param catalog
+     * @param schema
+     * @param table
+     * @param scope
+     * @param nullable
+     * @param bestRowIdentifiers
+     *
+     * @throws SQLException if a database access error occurs.
+     *
+     * @see DatabaseMetaData#getBestRowIdentifier(java.lang.String,
+     * java.lang.String, java.lang.String, int, boolean)
+     */
+    public static void retrieve(
+        final DatabaseMetaData database, final Suppression suppression,
+        final String catalog, final String schema, final String table,
+        final int scope, final boolean nullable,
+        final Collection<? super BestRowIdentifier> bestRowIdentifiers)
+        throws SQLException {
+
+        Objects.requireNonNull(database, "null database");
+
+        Objects.requireNonNull(suppression, "null suppression");
+
+        Objects.requireNonNull(bestRowIdentifiers, "null bestRowIdentifiers");
+
+        if (suppression.isSuppressed(
+            Table.SUPPRESSION_PATH_BEST_ROW_IDENTIFIERS)) {
+            return;
+        }
+
+        final ResultSet resultSet = database.getBestRowIdentifier(
+            catalog, schema, table, scope, nullable);
+        try {
+            while (resultSet.next()) {
+                bestRowIdentifiers.add(retrieve(suppression, resultSet));
+            }
+        } finally {
+            resultSet.close();
+        }
+    }
+
+
+    /**
+     *
+     * @param database
+     * @param suppression
+     * @param table
+     *
+     * @throws SQLException if a database access error occurs.
+     */
+    public static void retrieve(final DatabaseMetaData database,
+                                final Suppression suppression,
+                                final Table table)
+        throws SQLException {
+
+        Objects.requireNonNull(database, "null database");
+
+        Objects.requireNonNull(suppression, "null suppression");
+
+        Objects.requireNonNull(table, "null table");
+
+        retrieve(database, suppression,
+                 table.getSchema().getCatalog().getTableCat(),
+                 table.getSchema().getTableSchem(), table.getTableName(),
+                 DatabaseMetaData.bestRowTemporary, true,
+                 table.getBestRowIdentifiers());
+
+        retrieve(database, suppression,
+                 table.getSchema().getCatalog().getTableCat(),
+                 table.getSchema().getTableSchem(), table.getTableName(),
+                 DatabaseMetaData.bestRowTransaction, true,
+                 table.getBestRowIdentifiers());
+
+        retrieve(database, suppression,
+                 table.getSchema().getCatalog().getTableCat(),
+                 table.getSchema().getTableSchem(), table.getTableName(),
+                 DatabaseMetaData.bestRowSession, true,
+                 table.getBestRowIdentifiers());
+
+        for (final BestRowIdentifier instance : table.getBestRowIdentifiers()) {
+            instance.setTable(table);
+        }
+    }
+
+
+    /**
+     * Creates a new instance.
+     */
+    public BestRowIdentifier() {
+
+        super();
+    }
+
+
+    // ------------------------------------------------------------------- table
+    public Table getTable() {
+
+        return table;
+    }
+
+
+    public void setTable(final Table table) {
+
+        this.table = table;
+    }
+
+
+    // ------------------------------------------------------------------- scope
+    public short getScope() {
+
+        return scope;
+    }
+
+
+    public void setScope(final short scope) {
+
+        this.scope = scope;
+    }
+
+
+    // -------------------------------------------------------------- columnName
+    public String getColumnName() {
+
+        return columnName;
+    }
+
+
+    public void setColumnName(final String columnName) {
+
+        this.columnName = columnName;
+    }
+
+
+    // ---------------------------------------------------------------- dataType
+    public int getDataType() {
+
+        return dataType;
+    }
+
+
+    public void setDataType(final int dataType) {
+
+        this.dataType = dataType;
+    }
+
+
+    // ---------------------------------------------------------------- typeName
+    public String getTypeName() {
+
+        return typeName;
+    }
+
+
+    public void setTypeName(final String typeName) {
+
+        this.typeName = typeName;
+    }
+
+
+    public int getColumnSize() {
+
+        return columnSize;
+    }
+
+
+    public void setColumnSize(final int columnSize) {
+
+        this.columnSize = columnSize;
+    }
+
+
+    // ----------------------------------------------------------- decimalDigits
+    public Short getDecimalDigits() {
+
+        return decimalDigits;
+    }
+
+
+    public void setDecimalDigits(final Short decimalDigits) {
+
+        this.decimalDigits = decimalDigits;
+    }
+
+
+    // ------------------------------------------------------------ pseudoColumn
+    public short getPseudoColumn() {
+
+        return pseudoColumn;
+    }
+
+
+    public void setPseudoColumn(final short pseudoColumn) {
+
+        this.pseudoColumn = pseudoColumn;
+    }
+
+
+    @XmlTransient
+    private Table table;
+
+
+    /**
+     * actual scope of result.
+     * <ul>
+     * <li>{@link DatabaseMetaData#bestRowTemporary} - very temporary, while
+     * using row</li>
+     * <li>{@link DatabaseMetaData#bestRowTransaction} - valid for remainder of
+     * current transaction</li>
+     * <li>{@link DatabaseMetaData#bestRowSession} - valid for remainder of
+     * current session</li>
+     * </ul>
+     */
+    @ColumnLabel("SCOPE")
+    @XmlElement(required = true)
+    protected short scope;
+
+
+    /**
+     * column name.
+     */
+    @ColumnLabel("COLUMN_NAME")
+    @XmlElement(required = true)
+    protected String columnName;
+
+
+    /**
+     * SQL data type from {@link java.sql.Types}.
+     */
+    @ColumnLabel("DATA_TYPE")
+    @XmlElement(required = true)
+    protected int dataType;
+
+
+    /**
+     * Data source dependent type name, for a UDT the type name is fully
+     * qualified.
+     */
+    @ColumnLabel("TYPE_NAME")
+    @XmlElement(required = true)
+    protected String typeName;
+
+
+    /**
+     * precision.
+     */
+    @ColumnLabel("COLUMN_SIZE")
+    @XmlElement(required = true)
+    protected int columnSize;
+
+
+    /**
+     * unused.
+     */
+    @ColumnLabel("BUFFER_LENGTH")
+    @NotUsed
+    protected int bufferLength;
+
+
+    /**
+     * scale - Null is returned for data types where DECIMAL_DIGITS is not
+     * applicable.
+     */
+    @ColumnLabel("DECIMAL_DIGITS")
+    @XmlElement(nillable = true, required = true)
+    @XmlNillableBySpecification
+    protected Short decimalDigits;
+
+
+    /**
+     * is this a pseudo column like an Oracle ROWID.
+     * <ul>
+     * <li>{@link DatabaseMetaData#bestRowUnknown} - may or may not be pseudo
+     * column</li>
+     * <li>{@link DatabaseMetaData#bestRowNotPseudo} - is NOT a pseudo
+     * column</li>
+     * <li>{@link DatabaseMetaData#bestRowPseudo} - is a pseudo column</li>
+     * </ul>
+     */
+    @ColumnLabel("PSEUDO_COLUMN")
+    @XmlElement(required = true)
+    protected short pseudoColumn;
+
+
+}
+

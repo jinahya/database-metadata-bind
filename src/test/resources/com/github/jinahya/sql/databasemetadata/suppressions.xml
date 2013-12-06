@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<suppressions xmlns="http://github.com/jinahya/sql/databasemetadata">
+  <suppression enabled="true">
+    <key>
+      <databaseMajorVersion>0</databaseMajorVersion>
+      <databaseMinorVersion>0</databaseMinorVersion>
+      <databaseProductName>test</databaseProductName>
+      <databaseProductVersion>test</databaseProductVersion>
+      <driverMajorVersion>0</driverMajorVersion>
+      <driverMinorVersion>0</driverMinorVersion>
+      <driverName>test</driverName>
+      <driverVersion>test</driverVersion>
+    </key>
+    <paths>
+      <path></path>
+    </paths>
+  </suppression>
+  <suppression enabled="true">
+    <key>
+      <databaseMajorVersion>10</databaseMajorVersion>
+      <databaseMinorVersion>10</databaseMinorVersion>
+      <databaseProductName>Apache Derby</databaseProductName>
+      <databaseProductVersion>Apache Derby</databaseProductVersion>
+      <driverMajorVersion>10</driverMajorVersion>
+      <driverMinorVersion>10</driverMinorVersion>
+      <driverName>Apache Derby Embedded JDBC Driver</driverName>
+      <driverVersion>10.10.1.1 - (1458268)</driverVersion>
+    </key>
+    <paths>
+      <!--
+      <path>database://tablePrivilege/grantor</path>
+      <path>database://tablePrivilege/grantee</path>
+      -->
+    </paths>
+  </suppression>
+  <suppression enabled="true">
+    <key>
+      <databaseMajorVersion>1</databaseMajorVersion>
+      <databaseMinorVersion>3</databaseMinorVersion>
+      <databaseProductName>H2</databaseProductName>
+      <databaseProductVersion>H2</databaseProductVersion>
+      <driverMajorVersion>1</driverMajorVersion>
+      <driverMinorVersion>3</driverMinorVersion>
+      <driverName>H2 JDBC Driver</driverName>
+      <driverVersion>1.3.174 (2013-10-19)</driverVersion>
+    </key>
+    <paths>
+      <path>schema/functions</path>
+      <path>column/isGeneratedcolumn</path>
+    </paths>
+  </suppression>
+</suppressions>
