@@ -14,5 +14,5 @@ A library binding various information from [DatabaseMetaData](http://docs.oracle
 [jinahya.com/jenkins](https://jinahya.com/jenkins/job/com.github.jinahya%20bit-io/)
 -->
 
-### site/apidocs
-* 1.0-SNAPSHOT ([site](http://jinahya.github.io/sql-databasemetadata/site/1.0-SNAPSHOT/index.html)) ([apidocs](http://jinahya.github.io/sql-databasemetadata/site/1.0-SNAPSHOT/apidocs/index.html)) 
+## Apidocs
+* 1.0-SNAPSHOT ([apidocs](http://jinahya.github.io/sql-databasemetadata/site/1.0-SNAPSHOT/apidocs/index.html)) ([site](http://jinahya.github.io/sql-databasemetadata/site/1.0-SNAPSHOT/index.html))  
