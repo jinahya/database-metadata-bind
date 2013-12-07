@@ -18,9 +18,6 @@
 package com.github.jinahya.sql.databasemetadata;
 
 
-import com.github.jinahya.sql.databasemetadata.SuppressionKey;
-import com.github.jinahya.sql.databasemetadata.Suppression;
-import com.github.jinahya.sql.databasemetadata.Suppressions;
 import java.io.IOException;
 import java.sql.Connection;
 import java.sql.DatabaseMetaData;
@@ -39,14 +36,14 @@ import org.testng.annotations.Test;
  *
  * @author <a href="mailto:onacit@gmail.com">Jin Kwon</a>
  */
-public class DerbyTest {
+public class DerbyMemoryTest {
 
 
     /**
      * logger.
      */
     private static final Logger LOGGER
-        = LoggerFactory.getLogger(DerbyTest.class);
+        = LoggerFactory.getLogger(DerbyMemoryTest.class);
 
 
     private static final String DRIVER_NAME
@@ -114,7 +111,7 @@ public class DerbyTest {
             final Metadata metadata
                 = Metadata.newInstance(databaseMetaData, suppression);
 
-            MetadataTest.print(metadata);
+            metadata.print(System.out);
         }
 
         //final DatabaseMetadata databaseMetadata = new DatabaseMetadata();

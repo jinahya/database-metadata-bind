@@ -105,12 +105,18 @@ public class Suppressions {
 
 
     public void print(final PrintStream out) throws JAXBException {
+        
+        if (out == null) {
+            throw new NullPointerException("null out");
+        }
+        
+        assert Suppressions.class.getAnnotation(XmlRootElement.class) != null;
 
         final JAXBContext context = JAXBContext.newInstance(Suppressions.class);
 
         final Marshaller marshaller = context.createMarshaller();
         marshaller.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, Boolean.TRUE);
-
+        
         marshaller.marshal(this, out);
     }
 

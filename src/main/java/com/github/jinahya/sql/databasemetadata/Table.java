@@ -18,10 +18,6 @@
 package com.github.jinahya.sql.databasemetadata;
 
 
-import com.github.jinahya.sql.databasemetadata.ColumnLabel;
-import com.github.jinahya.sql.databasemetadata.ColumnRetriever;
-import com.github.jinahya.sql.databasemetadata.Suppression;
-import com.github.jinahya.sql.databasemetadata.SuppressionPath;
 import java.sql.DatabaseMetaData;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -41,10 +37,10 @@ import javax.xml.bind.annotation.XmlType;
  */
 @XmlType(
     propOrder = {
-        "tableName", "tableType", "remarks", "selfReferencingColName",
-        "refGeneration",
-        "bestRowIdentifiers", "columns", "columnPrivileges", "indices",
-        "primaryKeys", "tablePrivileges", "versionColumns"
+        "tableName", "tableType", "remarks", "typeCat", "typeSchem", "typeName",
+        "selfReferencingColName", "refGeneration",
+        "bestRowIdentifiers", "columns", "columnPrivileges", "exportedKeys",
+        "indexInfo", "primaryKeys", "tablePrivileges", "versionColumns"
     }
 )
 public class Table implements Comparable<Table> {
@@ -62,8 +58,12 @@ public class Table implements Comparable<Table> {
         = "table/columnPrivileges";
 
 
-    public static final String SUPPRESSION_PATH_INDICES
-        = "table/indices";
+    public static final String SUPPRESSION_PATH_EXPORTED_KEYS
+        = "table/exportedKeys";
+
+
+    public static final String SUPPRESSION_PATH_INDEX_INFO
+        = "table/indexInfo";
 
 
     public static final String SUPPRESSION_PATH_PRIMARY_KEYS
@@ -76,31 +76,6 @@ public class Table implements Comparable<Table> {
 
     public static final String SUPPRESSION_PATH_VERSION_COLUMNS
         = "table/versionColumns";
-
-
-    /**
-     *
-     * @param suppression
-     * @param resultSet
-     *
-     * @return
-     *
-     * @throws SQLException
-     */
-    public static Table retrieve(final Suppression suppression,
-                                 final ResultSet resultSet)
-        throws SQLException {
-
-        Objects.requireNonNull(suppression, "null suppression");
-
-        Objects.requireNonNull(resultSet, "null resultSet");
-
-        final Table instance = new Table();
-
-        ColumnRetriever.retrieve(Table.class, instance, suppression, resultSet);
-
-        return instance;
-    }
 
 
     /**
@@ -141,7 +116,8 @@ public class Table implements Comparable<Table> {
             catalog, schemaPattern, tableNamePattern, types);
         try {
             while (resultSet.next()) {
-                tables.add(retrieve(suppression, resultSet));
+                tables.add(ColumnRetriever.retrieve(
+                    Table.class, suppression, resultSet));
             }
         } finally {
             resultSet.close();
@@ -172,7 +148,9 @@ public class Table implements Comparable<Table> {
         for (final Table table : schema.getTables()) {
             BestRowIdentifier.retrieve(database, suppression, table);
             Column.retrieve(database, suppression, table);
-            Index.retrieve(database, suppression, table);
+            ColumnPrivilege.retrieve(database, suppression, table);
+            ExportedKey.retrieve(database, suppression, table);
+            IndexInfo.retrieve(database, suppression, table);
             PrimaryKey.retrieve(database, suppression, table);
             TablePrivilege.retrieve(database, suppression, table);
             VersionColumn.retrieve(database, suppression, table);
@@ -351,27 +329,80 @@ public class Table implements Comparable<Table> {
     }
 
 
-    // ----------------------------------------------------------------- indices
-    public List<Index> getIndices() {
+    // ------------------------------------------------------------ exportedKeys
+    public List<ExportedKey> getExportedKeys() {
 
-        if (indices == null) {
-            indices = new ArrayList<Index>();
+        if (exportedKeys == null) {
+            exportedKeys = new ArrayList<ExportedKey>();
         }
 
-        return indices;
+        return exportedKeys;
+    }
+
+
+    // ----------------------------------------------------------------- indices
+    public List<IndexInfo> getIndexInfo() {
+
+        if (indexInfo == null) {
+            indexInfo = new ArrayList<IndexInfo>();
+        }
+
+        return indexInfo;
+    }
+
+
+    public List<String> getIndexColumnNames(final String indexName) {
+
+        if (indexName == null) {
+            throw new NullPointerException("null indexName");
+        }
+
+        final List<String> indexColumnName = new ArrayList<String>();
+
+        for (final IndexInfo indexInfo_ : getIndexInfo()) {
+            if (!indexName.equals(indexInfo_.indexName)) {
+                continue;
+            }
+            indexColumnName.add(indexInfo_.columnName);
+        }
+
+        return indexColumnName;
     }
 
 
     public List<String> getIndexNames() {
 
-        final List<String> indexNames
-            = new ArrayList<String>(getIndices().size());
+        final List<String> indexNames = new ArrayList<String>();
 
-        for (final Index indexInfo : getIndices()) {
-            final String indexName = indexInfo.getIndexName();
-            if (!indexNames.contains(indexName)) {
-                indexNames.add(indexName);
+        for (final IndexInfo indexInfo_ : getIndexInfo()) {
+            final String indexName = indexInfo_.getIndexName();
+            if (indexNames.contains(indexName)) {
+                continue;
             }
+            indexNames.add(indexName);
+        }
+
+        return indexNames;
+    }
+
+
+    public List<String> getIndexNames(final boolean nonUnique,
+                                      final short type) {
+
+        final List<String> indexNames = new ArrayList<String>();
+
+        for (final IndexInfo indexInfo_ : getIndexInfo()) {
+            if (indexInfo_.nonUnique != nonUnique) {
+                continue;
+            }
+            if (indexInfo_.type != type) {
+                continue;
+            }
+            final String indexName = indexInfo_.getIndexName();
+            if (indexNames.contains(indexName)) {
+                continue;
+            }
+            indexNames.add(indexName);
         }
 
         return indexNames;
@@ -411,73 +442,168 @@ public class Table implements Comparable<Table> {
     }
 
 
+    /**
+     * table catalog (may be {@code null}).
+     */
     @ColumnLabel("TABLE_CAT")
     @SuppressionPath("table/tableCat")
     @XmlAttribute
     private String tableCat;
 
 
+    /**
+     * table schema (may be {@code null}).
+     */
     @ColumnLabel("TABLE_SCHEM")
     @SuppressionPath("table/tableSchem")
     @XmlAttribute
     private String tableSchem;
 
 
+    /**
+     * parent schema.
+     */
     @XmlTransient
     private Schema schema;
 
 
+    /**
+     * table name.
+     */
     @ColumnLabel("TABLE_NAME")
     @XmlElement(required = true)
-    private String tableName;
+    protected String tableName;
 
 
+    /**
+     * table type. Typical types are "TABLE", "VIEW", "SYSTEM TABLE", "GLOBAL
+     * TEMPORARY", "LOCAL TEMPORARY", "ALIAS", "SYNONYM".
+     */
     @ColumnLabel("TABLE_TYPE")
     @XmlElement(required = true)
-    private String tableType;
+    protected String tableType;
 
 
+    /**
+     * explanatory comment on the table.
+     */
     @ColumnLabel("REMARKS")
     @XmlElement(nillable = true, required = true)
-    private String remarks;
+    protected String remarks;
 
 
+    /**
+     * the types catalog (may be {@code null}).
+     */
+    @ColumnLabel("TYPE_CAT")
+    @SuppressionPath("table/typeCat")
+    @XmlElement(nillable = true, required = true)
+    @XmlElementNillableBySpecification
+    protected String typeCat;
+
+
+    /**
+     * the types schema (may be {@code null}).
+     */
+    @ColumnLabel("TYPE_SCHEM")
+    @SuppressionPath("table/typeSchem")
+    @XmlElement(nillable = true, required = true)
+    @XmlElementNillableBySpecification
+    protected String typeSchem;
+
+
+    /**
+     * type name (may be {@code null}).
+     */
+    @ColumnLabel("TYPE_NAME")
+    @SuppressionPath("table/typeName")
+    @XmlElement(nillable = true, required = true)
+    @XmlElementNillableBySpecification
+    protected String typeName;
+
+
+    /**
+     * name of the designated "identifier" column of a typed table (may be
+     * {@code null}).
+     */
     @ColumnLabel("SELF_REFERENCING_COL_NAME")
     @XmlElement(nillable = true, required = true)
-    private String selfReferencingColName;
+    @XmlElementNillableBySpecification
+    protected String selfReferencingColName;
 
 
+    /**
+     * specifies how values in SELF_REFERENCING_COL_NAME are created. Values are
+     * "SYSTEM", "USER", "DERIVED". (may be {@code null}).
+     */
     @ColumnLabel("REF_GENERATION")
     @XmlElement(nillable = true, required = true)
-    private String refGeneration;
+    @XmlElementNillableBySpecification
+    protected String refGeneration;
 
 
+    /**
+     * bestRowIdentifiers.
+     */
+    @SuppressWarnings(SUPPRESSION_PATH_BEST_ROW_IDENTIFIERS)
     @XmlElement(name = "bestRowIdentifier")
-    private List<BestRowIdentifier> bestRowIdentifiers;
+    protected List<BestRowIdentifier> bestRowIdentifiers;
 
 
+    /**
+     * columns.
+     */
+    @SuppressWarnings(SUPPRESSION_PATH_COLUMNS)
     @XmlElement(name = "column")
-    private List<Column> columns;
+    protected List<Column> columns;
 
 
+    /**
+     * columnPrivileges.
+     */
+    @SuppressionPath(SUPPRESSION_PATH_COLUMN_PRIVILEGES)
     @XmlElement(name = "columnPrivilege")
-    private List<ColumnPrivilege> columnPrivileges;
+    protected List<ColumnPrivilege> columnPrivileges;
 
 
-    @XmlElement(name = "index")
-    private List<Index> indices;
+    /**
+     * exportedKeys.
+     */
+    @SuppressionPath(SUPPRESSION_PATH_EXPORTED_KEYS)
+    @XmlElement(name = "exportedKey")
+    protected List<ExportedKey> exportedKeys;
 
 
+    /**
+     * indexInfo.
+     */
+    @SuppressionPath(SUPPRESSION_PATH_INDEX_INFO)
+    @XmlElement(name = "indexInfo")
+    protected List<IndexInfo> indexInfo;
+
+
+    /**
+     * primaryKeys.
+     */
+    @SuppressWarnings(SUPPRESSION_PATH_PRIMARY_KEYS)
     @XmlElement(name = "primaryKey")
-    private List<PrimaryKey> primaryKeys;
+    protected List<PrimaryKey> primaryKeys;
 
 
+    /**
+     * tablePrivileges.
+     */
+    @SuppressionPath(SUPPRESSION_PATH_TABLE_PRIVILEGES)
     @XmlElement(name = "tablePrivilege")
-    private List<TablePrivilege> tablePrivileges;
+    protected List<TablePrivilege> tablePrivileges;
 
 
+    /**
+     * versionColumns.
+     */
+    @SuppressionPath(SUPPRESSION_PATH_VERSION_COLUMNS)
     @XmlElement(name = "versionColumn")
-    private List<VersionColumn> versionColumns;
+    protected List<VersionColumn> versionColumns;
 
 
 }

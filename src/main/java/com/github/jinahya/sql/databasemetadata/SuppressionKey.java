@@ -18,11 +18,15 @@
 package com.github.jinahya.sql.databasemetadata;
 
 
+import java.io.PrintStream;
 import java.sql.DatabaseMetaData;
 import java.sql.SQLException;
 import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.Objects;
+import javax.xml.bind.JAXBContext;
+import javax.xml.bind.JAXBException;
+import javax.xml.bind.Marshaller;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlType;
@@ -145,6 +149,24 @@ public class SuppressionKey {
         values.put("driverVersion", driverVersion);
 
         return super.toString() + "?" + values.toString();
+    }
+
+
+    public void print(final PrintStream out) throws JAXBException {
+
+        if (out == null) {
+            throw new NullPointerException("null out");
+        }
+
+        assert SuppressionKey.class.getAnnotation(XmlRootElement.class) != null;
+
+        final JAXBContext context
+            = JAXBContext.newInstance(SuppressionKey.class);
+
+        final Marshaller marshaller = context.createMarshaller();
+        marshaller.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, Boolean.TRUE);
+
+        marshaller.marshal(this, out);
     }
 
 

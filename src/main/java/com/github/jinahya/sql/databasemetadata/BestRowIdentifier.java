@@ -314,7 +314,7 @@ public class BestRowIdentifier {
      */
     @ColumnLabel("DECIMAL_DIGITS")
     @XmlElement(nillable = true, required = true)
-    @XmlNillableBySpecification
+    @XmlElementNillableBySpecification
     protected Short decimalDigits;
 
 

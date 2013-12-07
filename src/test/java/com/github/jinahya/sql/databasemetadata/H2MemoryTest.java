@@ -38,16 +38,25 @@ import org.testng.annotations.Test;
  *
  * @author <a href="mailto:onacit@gmail.com">Jin Kwon</a>
  */
-public class H2Test {
+public class H2MemoryTest {
 
 
+    /**
+     * logger.
+     */
     private static final Logger LOGGER
-        = LoggerFactory.getLogger(H2Test.class);
+        = LoggerFactory.getLogger(H2MemoryTest.class);
 
 
+    /**
+     * driver name.
+     */
     private static final String DRIVER_NAME = "org.h2.Driver";
 
 
+    /**
+     * connection url.
+     */
     private static final String CONNECTION_URL
         = "jdbc:h2:mem:test"; //;DB_CLOSE_DELAY=-1";
 
@@ -84,9 +93,9 @@ public class H2Test {
             final Metadata metadata
                 = Metadata.newInstance(databaseMetaData, suppression);
             
-            MetadataTest.print(metadata);
+            metadata.print(System.out);
 
-            MetadataTest.test(metadata);
+            MetadataVerifier.verify(metadata);
         }
     }
 

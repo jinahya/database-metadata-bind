@@ -49,4 +49,21 @@
       <path>column/isGeneratedcolumn</path>
     </paths>
   </suppression>
+
+  <suppression>
+    <key>
+      <databaseMajorVersion>5</databaseMajorVersion>
+      <databaseMinorVersion>5</databaseMinorVersion>
+      <databaseProductName>MySQL</databaseProductName>
+      <databaseProductVersion>MySQL</databaseProductVersion>
+      <driverMajorVersion>5</driverMajorVersion>
+      <driverMinorVersion>1</driverMinorVersion>
+      <driverName>MySQL Connector Java</driverName>
+      <driverVersion>mysql-connector-java-5.1.26 ( Revision: ${bzr.revision-id} )</driverVersion>
+    </key>
+    <paths>
+      <path>table/tablePrivileges</path>
+    </paths>
+  </suppression>
+
 </suppressions>

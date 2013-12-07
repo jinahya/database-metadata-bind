@@ -125,8 +125,8 @@ public class Attribute {
                  userDefinedType.getTypeName(), null,
                  userDefinedType.getAttributes());
 
-        for (final Attribute child : userDefinedType.getAttributes()) {
-            child.setUserDefinedType(userDefinedType);
+        for (final Attribute attribute : userDefinedType.getAttributes()) {
+            attribute.setUserDefinedType(userDefinedType);
         }
     }
 
@@ -426,7 +426,7 @@ public class Attribute {
     @ColumnLabel("REMARKS")
     //@SuppressionPath("attribute/remarks")
     @XmlElement(nillable = true, required = true)
-    @XmlNillableBySpecification
+    @XmlElementNillableBySpecification
     protected String remarks;
 
 
@@ -436,7 +436,7 @@ public class Attribute {
     @ColumnLabel("ATTR_DEF")
     //@SuppressionPath("attribute/attrDef")
     @XmlElement(nillable = true, required = true)
-    @XmlNillableBySpecification
+    @XmlElementNillableBySpecification
     protected String attrDef;
 
 
@@ -494,7 +494,7 @@ public class Attribute {
     @ColumnLabel("SOURCE_DATA_TYPE")
     @SuppressionPath("attribute/sourceDataType")
     @XmlElement(nillable = true, required = true)
-    @XmlNillableBySpecification()
+    @XmlElementNillableBySpecification()
     protected Short sourceDataType;
 
 

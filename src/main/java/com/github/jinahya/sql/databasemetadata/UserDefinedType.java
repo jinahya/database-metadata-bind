@@ -247,51 +247,86 @@ public class UserDefinedType {
     }
 
 
+    /**
+     * the type's catalog (may be {@code null}).
+     */
     @ColumnLabel("TYPE_CAT")
     @SuppressionPath("userDefinedType/typeCat")
     @XmlAttribute
     private String typeCat;
 
 
+    /**
+     * type's schema (may be {@code null}).
+     */
     @ColumnLabel("TYPE_CAT")
     @SuppressionPath("userDefinedType/typeSchem")
     @XmlAttribute
     private String typeSchem;
 
 
+    /**
+     * schema.
+     */
     @XmlTransient
     private Schema schema;
 
 
+    /**
+     * type name.
+     */
     @ColumnLabel("TYPE_NAME")
     @XmlElement(required = true)
-    private String typeName;
+    protected String typeName;
 
 
+    /**
+     * Java class name.
+     */
     @ColumnLabel("CLASS_NAME")
     @XmlElement(required = true)
-    private String className;
+    protected String className;
 
 
+    /**
+     * type value defined in {@link java.sql.Types}. One of
+     * {@link java.sql.Types#JAVA_OBJECT}, {@link java.sql.Types#STRUCT}, or
+     * {@link java.sql.Types#DISTINCT}.
+     */
     @ColumnLabel("DATA_TYPE")
     @XmlElement(required = true)
-    private int dataType;
+    protected int dataType;
 
 
+    /**
+     * explanatory comment on the type.
+     */
     @ColumnLabel("REMARKS")
     @XmlElement(required = true)
-    private String remarks;
+    protected String remarks;
 
 
+    /**
+     * type code of the source type of a {@link java.sql.Types#DISTINCT} type or
+     * the type that implements the user-generated reference type of the
+     * SELF_REFERENCING_COLUMN of a structured type as defined in
+     * {@link java.sql.Types} ({@code null} if {@link #dataType DATA_TYPE} is
+     * not {@link java.sql.Types#DISTINCT} or not {@link java.sql.Types#STRUCT}
+     * with REFERENCE_GENERATION = USER_DEFINED)
+     */
     @ColumnLabel("BASE_TYPE")
-    @SuppressionPath("userDefinedtype/baseType")
+    //@SuppressionPath("userDefinedType/baseType")
     @XmlElement(nillable = true, required = true)
-    private Short baseType;
+    @XmlElementNillableBySpecification
+    protected Short baseType;
 
 
+    /**
+     * attributes.
+     */
     @SuppressionPath(SUPPRESSION_PATH_ATTRIBUTES)
     @XmlElement(name = "attribute")
-    private List<Attribute> attributes;
+    protected List<Attribute> attributes;
 
 
 }

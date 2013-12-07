@@ -32,7 +32,7 @@ import java.lang.annotation.Target;
 @Documented
 @Retention(RetentionPolicy.CLASS)
 @Target({ElementType.FIELD})
-public @interface XmlNillableBySuppression {
+public @interface XmlElementNillableBySuppression {
 
 
     String value() default "";

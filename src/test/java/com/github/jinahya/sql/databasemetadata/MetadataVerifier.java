@@ -20,31 +20,17 @@ package com.github.jinahya.sql.databasemetadata;
 
 import java.util.List;
 import java.util.Objects;
-import javax.xml.bind.JAXBContext;
-import javax.xml.bind.JAXBException;
-import javax.xml.bind.Marshaller;
-import org.junit.Assert;
+import org.testng.Assert;
 
 
 /**
  *
  * @author <a href="mailto:onacit@gmail.com">Jin Kwon</a>
  */
-public class MetadataTest {
+public class MetadataVerifier {
 
 
-    public static void print(final Metadata metadata) throws JAXBException {
-
-        final JAXBContext context = JAXBContext.newInstance(Metadata.class);
-
-        final Marshaller marshaller = context.createMarshaller();
-        marshaller.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, Boolean.TRUE);
-
-        marshaller.marshal(metadata, System.out);
-    }
-
-
-    public static void test(final Metadata metadata) {
+    public static void verify(final Metadata metadata) {
 
         Objects.requireNonNull(metadata, "null metadata");
 
@@ -70,12 +56,12 @@ public class MetadataTest {
         }
 
         for (final Catalog catalog : metadata.getCatalogs()) {
-            test(catalog);
+            verify(catalog);
         }
     }
 
 
-    public static void test(final Catalog catalog) {
+    public static void verify(final Catalog catalog) {
 
         Objects.requireNonNull(catalog, "null catalog");
 
@@ -102,7 +88,7 @@ public class MetadataTest {
     }
 
 
-    public static void test(final Schema schema) {
+    public static void verify(final Schema schema) {
 
         Objects.requireNonNull(schema, "null schema");
 

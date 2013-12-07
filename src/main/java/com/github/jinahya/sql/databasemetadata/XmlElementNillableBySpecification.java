@@ -32,7 +32,7 @@ import java.lang.annotation.Target;
 @Documented
 @Retention(RetentionPolicy.CLASS)
 @Target({ElementType.FIELD})
-public @interface XmlNillableBySpecification {
+public @interface XmlElementNillableBySpecification {
 
 
     String value() default "";

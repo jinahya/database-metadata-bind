@@ -23,7 +23,7 @@ import com.github.jinahya.sql.databasemetadata.ColumnRetriever;
 import com.github.jinahya.sql.databasemetadata.Suppression;
 import com.github.jinahya.sql.databasemetadata.SuppressionPath;
 import com.github.jinahya.sql.databasemetadata.NotUsed;
-import com.github.jinahya.sql.databasemetadata.XmlNillableBySpecification;
+import com.github.jinahya.sql.databasemetadata.XmlElementNillableBySpecification;
 import java.sql.DatabaseMetaData;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -514,7 +514,7 @@ public class Column {
      */
     @ColumnLabel("REMARKS")
     @XmlElement(nillable = true, required = true)
-    @XmlNillableBySpecification
+    @XmlElementNillableBySpecification
     private String remarks;
 
 
@@ -524,7 +524,7 @@ public class Column {
      */
     @ColumnLabel("COLUMN_DEF")
     @XmlElement(nillable = true, required = true)
-    @XmlNillableBySpecification
+    @XmlElementNillableBySpecification
     private String columnDef;
 
 
@@ -579,7 +579,7 @@ public class Column {
      */
     @ColumnLabel("SCOPE_CATALOG")
     @XmlElement(nillable = true, required = true)
-    @XmlNillableBySpecification
+    @XmlElementNillableBySpecification
     private String scopeCatalog;
 
 
@@ -589,7 +589,7 @@ public class Column {
      */
     @ColumnLabel("SCOPE_SCHEMA")
     @XmlElement(nillable = true, required = true)
-    @XmlNillableBySpecification
+    @XmlElementNillableBySpecification
     private String scopeSchema;
 
 
@@ -599,7 +599,7 @@ public class Column {
      */
     @ColumnLabel("SCOPE_TABLE")
     @XmlElement(nillable = true, required = true)
-    @XmlNillableBySpecification
+    @XmlElementNillableBySpecification
     private String scopeTable;
 
 
@@ -611,7 +611,7 @@ public class Column {
      */
     @ColumnLabel("SOURCE_DATA_TYPE")
     @XmlElement(nillable = true, required = true)
-    @XmlNillableBySpecification
+    @XmlElementNillableBySpecification
     private String sourceDataType;
 
 

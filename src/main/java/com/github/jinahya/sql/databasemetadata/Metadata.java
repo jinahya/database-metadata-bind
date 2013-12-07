@@ -18,13 +18,15 @@
 package com.github.jinahya.sql.databasemetadata;
 
 
-import com.github.jinahya.sql.databasemetadata.Suppression;
-import com.github.jinahya.sql.databasemetadata.SuppressionPath;
+import java.io.PrintStream;
 import java.sql.DatabaseMetaData;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
+import javax.xml.bind.JAXBContext;
+import javax.xml.bind.JAXBException;
+import javax.xml.bind.Marshaller;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlList;
 import javax.xml.bind.annotation.XmlRootElement;
@@ -133,6 +135,32 @@ public class Metadata {
         TableType.retrieve(database, suppression, instance);
 
         return instance;
+    }
+
+
+    /**
+     * Creates a new instance.
+     */
+    public Metadata() {
+
+        super();
+    }
+
+
+    public void print(final PrintStream out) throws JAXBException {
+
+        if (out == null) {
+            throw new NullPointerException("null out");
+        }
+
+        assert Metadata.class.getAnnotation(XmlRootElement.class) != null;
+
+        final JAXBContext context = JAXBContext.newInstance(Metadata.class);
+
+        final Marshaller marshaller = context.createMarshaller();
+        marshaller.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, Boolean.TRUE);
+
+        marshaller.marshal(this, out);
     }
 
 

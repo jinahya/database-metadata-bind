@@ -18,11 +18,6 @@
 package com.github.jinahya.sql.databasemetadata;
 
 
-import com.github.jinahya.sql.databasemetadata.ColumnLabel;
-import com.github.jinahya.sql.databasemetadata.ColumnRetriever;
-import com.github.jinahya.sql.databasemetadata.SuppressionPath;
-import com.github.jinahya.sql.databasemetadata.Suppression;
-import com.github.jinahya.sql.databasemetadata.XmlNillableBySpecification;
 import java.sql.DatabaseMetaData;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -46,25 +41,14 @@ import org.slf4j.LoggerFactory;
         "columnName", "ascOrDesc", "cardinality", "pages", "filterCondition"
     }
 )
-public class Index {
+public class IndexInfo {
 
 
     /**
      * logger.
      */
-    private static final Logger LOGGER = LoggerFactory.getLogger(Index.class);
-
-
-    public static Index retrieve(final Suppression suppression,
-                                 final ResultSet resultSet)
-        throws SQLException {
-
-        final Index instance = new Index();
-
-        ColumnRetriever.retrieve(Index.class, instance, suppression, resultSet);
-
-        return instance;
-    }
+    private static final Logger LOGGER =
+        LoggerFactory.getLogger(IndexInfo.class);
 
 
     /**
@@ -76,7 +60,7 @@ public class Index {
      * @param table
      * @param unique
      * @param approximate
-     * @param indices
+     * @param indexInfo
      *
      * @throws SQLException
      *
@@ -88,16 +72,16 @@ public class Index {
                                 final String catalog, final String schema,
                                 final String table, final boolean unique,
                                 final boolean approximate,
-                                final Collection<? super Index> indices)
+                                final Collection<? super IndexInfo> indexInfo)
         throws SQLException {
 
         Objects.requireNonNull(database, "null database");
 
         Objects.requireNonNull(suppression, "null suppression");
 
-        Objects.requireNonNull(indices, "null indices");
+        Objects.requireNonNull(indexInfo, "null indices");
 
-        if (suppression.isSuppressed(Table.SUPPRESSION_PATH_INDICES)) {
+        if (suppression.isSuppressed(Table.SUPPRESSION_PATH_INDEX_INFO)) {
             return;
         }
 
@@ -105,7 +89,8 @@ public class Index {
             catalog, schema, table, unique, approximate);
         try {
             while (resultSet.next()) {
-                indices.add(retrieve(suppression, resultSet));
+                indexInfo.add(ColumnRetriever.retrieve(
+                    IndexInfo.class, suppression, resultSet));
             }
         } finally {
             resultSet.close();
@@ -128,18 +113,18 @@ public class Index {
                  table.getSchema().getCatalog().getTableCat(),
                  table.getSchema().getTableSchem(), table.getTableName(),
                  false, false,
-                 table.getIndices());
+                 table.getIndexInfo());
 
-        for (final Index index : table.getIndices()) {
-            index.setTable(table);
+        for (final IndexInfo indexInfo : table.getIndexInfo()) {
+            indexInfo.setTable(table);
         }
     }
 
 
     /**
-     * Creates a new instance.
+     * Creates a nIndexInfostance.
      */
-    public Index() {
+    public IndexInfo() {
 
         super();
     }
@@ -326,13 +311,13 @@ public class Index {
 
 
     @ColumnLabel("TABLE_CAT")
-    @SuppressionPath("index/tableCat")
+    @SuppressionPath("indexInfo/tableCat")
     @XmlAttribute
     private String tableCat;
 
 
     @ColumnLabel("TABLE_SCHEM")
-    @SuppressionPath("index/tableSchem")
+    @SuppressionPath("indexInfo/tableSchem")
     @XmlAttribute
     private String tableSchem;
 
@@ -364,7 +349,7 @@ public class Index {
      */
     @ColumnLabel("INDEX_QUALIFIER")
     @XmlElement(nillable = true, required = true)
-    @XmlNillableBySpecification
+    @XmlElementNillableBySpecification
     protected String indexQualifier;
 
 
@@ -374,7 +359,7 @@ public class Index {
      */
     @ColumnLabel("INDEX_NAME")
     @XmlElement(nillable = true, required = true)
-    @XmlNillableBySpecification
+    @XmlElementNillableBySpecification
     protected String indexName;
 
 
@@ -412,7 +397,7 @@ public class Index {
      */
     @ColumnLabel("COLUMN_NAME")
     @XmlElement(nillable = true, required = true)
-    @XmlNillableBySpecification
+    @XmlElementNillableBySpecification
     protected String columnName;
 
 
@@ -423,7 +408,7 @@ public class Index {
      */
     @ColumnLabel("ASC_OR_DESC")
     @XmlElement(nillable = true, required = true)
-    @XmlNillableBySpecification
+    @XmlElementNillableBySpecification
     protected String ascOrDesc;
 
 
@@ -434,6 +419,7 @@ public class Index {
      */
     @ColumnLabel("CARDINALITY")
     @XmlElement(required = true)
+    //protected long cardinality;
     protected int cardinality;
 
 
@@ -444,6 +430,7 @@ public class Index {
      */
     @ColumnLabel("PAGES")
     @XmlElement(required = true)
+    //protected long pages;
     protected int pages;
 
 
@@ -452,7 +439,7 @@ public class Index {
      */
     @ColumnLabel("FILTER_CONDITION")
     @XmlElement(nillable = true, required = true)
-    @XmlNillableBySpecification
+    @XmlElementNillableBySpecification
     protected String filterCondition;
 
 
