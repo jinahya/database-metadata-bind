@@ -40,7 +40,8 @@ import javax.xml.bind.annotation.XmlType;
         "tableName", "tableType", "remarks", "typeCat", "typeSchem", "typeName",
         "selfReferencingColName", "refGeneration",
         "bestRowIdentifiers", "columns", "columnPrivileges", "exportedKeys",
-        "indexInfo", "primaryKeys", "tablePrivileges", "versionColumns"
+        "importedKeys", "indexInfo", "primaryKeys", "tablePrivileges",
+        "versionColumns"
     }
 )
 public class Table implements Comparable<Table> {
@@ -72,6 +73,13 @@ public class Table implements Comparable<Table> {
      */
     public static final String SUPPRESSION_PATH_EXPORTED_KEYS
         = "table/exportedKeys";
+
+
+    /**
+     * Suppression path value for {@link #exportedKeys}.
+     */
+    public static final String SUPPRESSION_PATH_IMPORTED_KEYS
+        = "table/importedKeys";
 
 
     /**
@@ -174,6 +182,7 @@ public class Table implements Comparable<Table> {
             Column.retrieve(database, suppression, table);
             ColumnPrivilege.retrieve(database, suppression, table);
             ExportedKey.retrieve(database, suppression, table);
+            ImportedKey.retrieve(database, suppression, table);
             IndexInfo.retrieve(database, suppression, table);
             PrimaryKey.retrieve(database, suppression, table);
             TablePrivilege.retrieve(database, suppression, table);
@@ -361,6 +370,17 @@ public class Table implements Comparable<Table> {
         }
 
         return exportedKeys;
+    }
+
+
+    // ------------------------------------------------------------ importedKeys
+    public List<ImportedKey> getImportedKeys() {
+
+        if (importedKeys == null) {
+            importedKeys = new ArrayList<ImportedKey>();
+        }
+
+        return importedKeys;
     }
 
 
@@ -597,6 +617,14 @@ public class Table implements Comparable<Table> {
     @SuppressionPath(SUPPRESSION_PATH_EXPORTED_KEYS)
     @XmlElement(name = "exportedKey")
     protected List<ExportedKey> exportedKeys;
+
+
+    /**
+     * importedKeys.
+     */
+    @SuppressionPath(SUPPRESSION_PATH_IMPORTED_KEYS)
+    @XmlElement(name = "importedKey")
+    protected List<ImportedKey> importedKeys;
 
 
     /**

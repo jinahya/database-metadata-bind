@@ -18,12 +18,6 @@
 package com.github.jinahya.sql.databasemetadata;
 
 
-import com.github.jinahya.sql.databasemetadata.ColumnLabel;
-import com.github.jinahya.sql.databasemetadata.ColumnRetriever;
-import com.github.jinahya.sql.databasemetadata.Suppression;
-import com.github.jinahya.sql.databasemetadata.SuppressionPath;
-import com.github.jinahya.sql.databasemetadata.NotUsed;
-import com.github.jinahya.sql.databasemetadata.XmlElementNillableBySpecification;
 import java.sql.DatabaseMetaData;
 import java.sql.ResultSet;
 import java.sql.SQLException;

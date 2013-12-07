@@ -18,7 +18,12 @@
 package com.github.jinahya.sql.databasemetadata;
 
 
-import com.github.jinahya.sql.databasemetadata.ColumnLabel;
+import java.sql.DatabaseMetaData;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.util.Collection;
+import java.util.Objects;
+import javax.xml.bind.annotation.XmlAttribute;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlTransient;
 
@@ -30,42 +35,111 @@ import javax.xml.bind.annotation.XmlTransient;
 public class ImportedKey {
 
 
-    public String getPktableCat() {
+    /**
+     *
+     * @param database
+     * @param suppression
+     * @param catalog
+     * @param schema
+     * @param table
+     * @param importedKeys
+     *
+     * @throws SQLException if a database access error occurs.
+     *
+     * @see DatabaseMetaData#getImportedKeys(java.lang.String, java.lang.String,
+     * java.lang.String)
+     */
+    public static void retrieve(
+        final DatabaseMetaData database, final Suppression suppression,
+        final String catalog, final String schema, final String table,
+        final Collection<? super ImportedKey> importedKeys)
+        throws SQLException {
 
+        Objects.requireNonNull(database, "null database");
+
+        Objects.requireNonNull(suppression, "null suppression");
+
+        Objects.requireNonNull(importedKeys, "null importedKeys");
+
+        if (suppression.isSuppressed(Table.SUPPRESSION_PATH_IMPORTED_KEYS)) {
+            return;
+        }
+
+        final ResultSet resultSet = database.getImportedKeys(
+            catalog, schema, table);
+        try {
+            while (resultSet.next()) {
+                importedKeys.add(ColumnRetriever.retrieve(
+                    ImportedKey.class, suppression, resultSet));
+            }
+        } finally {
+            resultSet.close();
+        }
+    }
+
+
+    public static void retrieve(final DatabaseMetaData database,
+                                final Suppression suppression,
+                                final Table table)
+        throws SQLException {
+
+        Objects.requireNonNull(database, "null database");
+
+        Objects.requireNonNull(suppression, "null suppression");
+
+        Objects.requireNonNull(table, "null table");
+
+        retrieve(database, suppression,
+                 table.getSchema().getCatalog().getTableCat(),
+                 table.getSchema().getTableSchem(), table.getTableName(),
+                 table.getImportedKeys());
+
+        for (final ImportedKey importedKey : table.getImportedKeys()) {
+            importedKey.setTable(table);
+        }
+    }
+
+
+    /**
+     * Creates a new instance.
+     */
+    public ImportedKey() {
+
+        super();
+    }
+
+
+    public String getPktableCat() {
         return pktableCat;
     }
 
 
-    public void setPktableCat(final String pktableCat) {
-
+    public void setPktableCat(String pktableCat) {
         this.pktableCat = pktableCat;
     }
 
 
     public String getPktableSchem() {
-
         return pktableSchem;
     }
 
 
-    public void setPktableSchem(final String pktableSchem) {
-
+    public void setPktableSchem(String pktableSchem) {
         this.pktableSchem = pktableSchem;
     }
 
 
     public String getPktableName() {
-
         return pktableName;
     }
 
 
-    public void setPktableName(final String pktableName) {
-
+    public void setPktableName(String pktableName) {
         this.pktableName = pktableName;
     }
 
 
+    // ------------------------------------------------------------ pkColumnName
     public String getPkcolumnName() {
 
         return pkcolumnName;
@@ -78,54 +152,33 @@ public class ImportedKey {
     }
 
 
-    public String getFktableCat() {
+    // ------------------------------------------------------------------- table
+    public Table getTable() {
 
-        return fktableCat;
+        return table;
     }
 
 
-    public void setFktableCat(final String fktableCat) {
+    public void setTable(final Table table) {
 
-        this.fktableCat = fktableCat;
+        this.table = table;
     }
 
 
-    public String getFktableSchem() {
-
-        return fktableSchem;
-    }
-
-
-    public void setFktableSchem(final String fktableSchem) {
-
-        this.fktableSchem = fktableSchem;
-    }
-
-
-    public String getFktableName() {
-
-        return fktableName;
-    }
-
-
-    public void setFktableName(final String fktableName) {
-
-        this.fktableName = fktableName;
-    }
-
-
-    public String getFkcolumnName() {
+    // ------------------------------------------------------------ fkcolumnName
+    public Column getFkcolumnName() {
 
         return fkcolumnName;
     }
 
 
-    public void setFkcolumnName(final String fkcolumnName) {
+    public void setFkcolumnName(final Column fkcolumnName) {
 
         this.fkcolumnName = fkcolumnName;
     }
 
 
+    // ------------------------------------------------------------------ keySeq
     public short getKeySeq() {
 
         return keySeq;
@@ -138,18 +191,20 @@ public class ImportedKey {
     }
 
 
+    // -------------------------------------------------------------- updateRule
     public short getUpdateRule() {
 
         return updateRule;
     }
 
 
-    public void setUpdateRule(final short updateRule) {
+    public void setUpdateRule(short updateRule) {
 
         this.updateRule = updateRule;
     }
 
 
+    // -------------------------------------------------------------- deleteRule
     public short getDeleteRule() {
 
         return deleteRule;
@@ -162,6 +217,7 @@ public class ImportedKey {
     }
 
 
+    // ------------------------------------------------------------------ fnname
     public String getFkName() {
 
         return fkName;
@@ -174,6 +230,7 @@ public class ImportedKey {
     }
 
 
+    // ------------------------------------------------------------------ pkName
     public String getPkName() {
 
         return pkName;
@@ -186,86 +243,183 @@ public class ImportedKey {
     }
 
 
+    // --------------------------------------------------------- deferrerability
+    /**
+     * Returns current value of {@link #deferrability}.
+     *
+     * @return current value of {@link #deferrability}.
+     */
     public short getDeferrability() {
 
         return deferrability;
     }
 
 
+    /**
+     * Replaces value of {@link #deferrability} with given.
+     *
+     * @param deferrability new value for {@link #deferrability}
+     */
     public void setDeferrability(final short deferrability) {
 
         this.deferrability = deferrability;
     }
 
 
+    /**
+     * primary key table catalog being imported (may be {@code null}).
+     */
     @ColumnLabel("PKTABLE_CAT")
-    @XmlTransient
+    @XmlElement(nillable = true, required = true)
+    @XmlElementNillableBySpecification
     private String pktableCat;
 
 
+    /**
+     * primary key table schema being imported (may be {@code null}).
+     */
     @ColumnLabel("PKTABLE_SCHEM")
-    @XmlTransient
+    @XmlElement(nillable = true, required = true)
+    @XmlElementNillableBySpecification
     private String pktableSchem;
 
 
+    /**
+     * primary key table name being imported.
+     */
     @ColumnLabel("PKTABLE_NAME")
-    @XmlTransient
+    @XmlElement(required = true)
     private String pktableName;
 
 
+    /**
+     * primary key column name being imported.
+     */
     @ColumnLabel("PKCOLUMN_NAME")
-    @XmlTransient
-    private String pkcolumnName;
-
-
-    @ColumnLabel("FKTABLE_CAT")
-    @XmlTransient
-    private String fktableCat;
-
-
-    @ColumnLabel("FKTABLE_SCHEM")
-    @XmlTransient
-    private String fktableSchem;
-
-
-    @ColumnLabel("FKTABLE_NAME")
-    @XmlTransient
-    private String fktableName;
-
-
-    @ColumnLabel("FKCOLUMN_NAME")
-    @XmlTransient
-    private String fkcolumnName;
-
-
-    @ColumnLabel("KEY_SEQ")
     @XmlElement(required = true)
-    private short keySeq;
+    protected String pkcolumnName;
 
 
+    /**
+     * foreign key table catalog (may be {@code null}).
+     */
+    @ColumnLabel("FKTABLE_CAT")
+    @SuppressionPath("importedKey/fktableCat")
+    @XmlAttribute
+    protected String fktableCat;
+
+
+    /**
+     * foreign key table schema (may be {@code null}).
+     */
+    @ColumnLabel("FKTABLE_NAME")
+    @SuppressionPath("importedKey/fktableSchem")
+    @XmlAttribute
+    protected String fktableSchem;
+
+
+    /**
+     * foreign key table name.
+     */
+    @ColumnLabel("FKTABLE_NAME")
+    @XmlAttribute
+    protected String fktableName;
+
+
+    /**
+     * parent table.
+     */
+    @XmlTransient
+    private Table table;
+
+
+    /**
+     * foreign key column name.
+     */
+    @ColumnLabel("FKCOLUMN_NAME")
+    @XmlElement(required = true)
+    protected Column fkcolumnName;
+
+
+    /**
+     * sequence number within a foreign key( a value of 1 represents the first
+     * column of the foreign key, a value of 2 would represent the second column
+     * within the foreign key).
+     */
+    @ColumnLabel("FKCOLUMN_NAME")
+    @XmlElement(required = true)
+    protected short keySeq;
+
+
+    /**
+     * What happens to a foreign key when primary is updated:.
+     * <ul>
+     * <li>{@link java.sql.DatabaseMetaData#importedKeyNoAction} - do not allow
+     * update of primary key if it has been imported</li>
+     * <li>{@link java.sql.DatabaseMetaData#importedKeyCascade} - change
+     * imported key to agree with primary key update</li>
+     * <li>{@link java.sql.DatabaseMetaData#importedKeySetNull} - change
+     * imported key to NULL if its primary key has been updated</li>
+     * <li>{@link java.sql.DatabaseMetaData#importedKeySetDefault} - change
+     * imported key to default values if its primary key has been updated</li>
+     * <li>{@link java.sql.DatabaseMetaData#importedKeyRestrict} - same as
+     * importedKeyNoAction (for ODBC 2.x compatibility)</li>
+     * </ul>
+     */
     @ColumnLabel("UPDATE_RULE")
     @XmlElement(required = true)
-    private short updateRule;
+    protected short updateRule;
 
 
+    /**
+     * What happens to the foreign key when primary is deleted.
+     * <ul>
+     * <li>{@link java.sql.DatabaseMetaData#importedKeyNoAction} - do not allow
+     * delete of primary key if it has been imported</li>
+     * <li>{@link java.sql.DatabaseMetaData#importedKeyCascade} - delete rows
+     * that import a deleted key</li>
+     * <li>{@link java.sql.DatabaseMetaData#importedKeySetNull} - change
+     * imported key to NULL if its primary key has been deleted</li>
+     * <li>{@link java.sql.DatabaseMetaData#importedKeyRestrict} - same as
+     * importedKeyNoAction (for ODBC 2.x compatibility)</li>
+     * <li>{@link java.sql.DatabaseMetaData#importedKeySetDefault} - change
+     * imported key to default if its primary key has been deleted</li>
+     * </ul>
+     */
     @ColumnLabel("DELETE_RULE")
     @XmlElement(required = true)
-    private short deleteRule;
+    protected short deleteRule;
 
 
+    /**
+     * foreign key name (may be {@code null}).
+     */
     @ColumnLabel("FK_NAME")
-    @XmlElement(nillable = true, required = true)
-    private String fkName;
-
-
-    @ColumnLabel("PK_NAME")
-    @XmlElement(nillable = true, required = true)
-    private String pkName;
-
-
-    @ColumnLabel("DEFERRABILITY")
     @XmlElement(required = true)
-    private short deferrability;
+    protected String fkName;
+
+
+    /**
+     * primary key name (may be {@code null}).
+     */
+    @ColumnLabel("PK_NAME")
+    @XmlElement(required = true)
+    protected String pkName;
+
+
+    /**
+     * can the evaluation of foreign key constraints be deferred until commit.
+     * <ul>
+     * <li>{@link DatabaseMetaData#importedKeyInitiallyDeferred} - see SQL92 for
+     * definition</li>
+     * <li>{@link DatabaseMetaData#importedKeyInitiallyImmediate} - see SQL92
+     * for definition</li>
+     * <li>{@link DatabaseMetaData#importedKeyNotDeferrable} - see SQL92 for
+     * definition</li>
+     * </ul>
+     */
+    @ColumnLabel("DEFERRABILITY")
+    protected short deferrability;
 
 
 }

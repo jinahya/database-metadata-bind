@@ -28,7 +28,7 @@
       <dependency>
         <groupId>mysql</groupId>
         <artifactId>mysql-connector-java</artifactId>
-        <version>5.1.26</version>
+        <version>5.1.27</version>
       </dependency>
       <dependency>
         <groupId>org.apache.commons</groupId>
@@ -306,7 +306,8 @@
               <groupId>org.apache.maven.plugins</groupId>
               <artifactId>maven-pmd-plugin</artifactId>
               <configuration>
-                <targetJdk>1.7</targetJdk>
+                <!--targetJdk>1.7</targetJdk-->
+                <targetJdk>1.6</targetJdk>
               </configuration>
             </plugin>
             <plugin>
