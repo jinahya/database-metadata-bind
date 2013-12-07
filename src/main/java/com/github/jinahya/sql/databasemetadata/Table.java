@@ -46,34 +46,58 @@ import javax.xml.bind.annotation.XmlType;
 public class Table implements Comparable<Table> {
 
 
+    /**
+     * Suppression path value for {@link #bestRowIdentifiers}.
+     */
     public static final String SUPPRESSION_PATH_BEST_ROW_IDENTIFIERS
         = "table/bestRowIdentifiers";
 
 
+    /**
+     * Suppression path value for {@link #columns}.
+     */
     public static final String SUPPRESSION_PATH_COLUMNS
         = "table/columns";
 
 
+    /**
+     * Suppression path value for {@link #columnPrivileges}.
+     */
     public static final String SUPPRESSION_PATH_COLUMN_PRIVILEGES
         = "table/columnPrivileges";
 
 
+    /**
+     * Suppression path value for {@link #exportedKeys}.
+     */
     public static final String SUPPRESSION_PATH_EXPORTED_KEYS
         = "table/exportedKeys";
 
 
+    /**
+     * Suppression path value for {@link #indexInfo}.
+     */
     public static final String SUPPRESSION_PATH_INDEX_INFO
         = "table/indexInfo";
 
 
+    /**
+     * Suppression path value for {@link #primaryKeys}.
+     */
     public static final String SUPPRESSION_PATH_PRIMARY_KEYS
         = "table/primaryKeys";
 
 
+    /**
+     * Suppression path value for {@link #tablePrivileges}.
+     */
     public static final String SUPPRESSION_PATH_TABLE_PRIVILEGES
         = "table/tablePrivileges";
 
 
+    /**
+     * Suppression path value for {@link #versionColumns}.
+     */
     public static final String SUPPRESSION_PATH_VERSION_COLUMNS
         = "table/versionColumns";
 
@@ -533,8 +557,9 @@ public class Table implements Comparable<Table> {
 
 
     /**
-     * specifies how values in SELF_REFERENCING_COL_NAME are created. Values are
-     * "SYSTEM", "USER", "DERIVED". (may be {@code null}).
+     * specifies how values in
+     * {@link #selfReferencingColName SELF_REFERENCING_COL_NAME} are created.
+     * Values are "SYSTEM", "USER", "DERIVED". (may be {@code null}).
      */
     @ColumnLabel("REF_GENERATION")
     @XmlElement(nillable = true, required = true)
