@@ -22,7 +22,6 @@ import java.sql.DatabaseMetaData;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.Collection;
-import java.util.Objects;
 import javax.xml.bind.annotation.XmlAttribute;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlTransient;
@@ -47,8 +46,8 @@ public class IndexInfo {
     /**
      * logger.
      */
-    private static final Logger LOGGER =
-        LoggerFactory.getLogger(IndexInfo.class);
+    private static final Logger LOGGER
+        = LoggerFactory.getLogger(IndexInfo.class);
 
 
     /**
@@ -75,11 +74,17 @@ public class IndexInfo {
                                 final Collection<? super IndexInfo> indexInfo)
         throws SQLException {
 
-        Objects.requireNonNull(database, "null database");
+        if (database == null) {
+            throw new NullPointerException("null database");
+        }
 
-        Objects.requireNonNull(suppression, "null suppression");
+        if (suppression == null) {
+            throw new NullPointerException("null suppression");
+        }
 
-        Objects.requireNonNull(indexInfo, "null indices");
+        if (indexInfo == null) {
+            throw new NullPointerException("null indexInfo");
+        }
 
         if (suppression.isSuppressed(Table.SUPPRESSION_PATH_INDEX_INFO)) {
             return;
@@ -103,11 +108,17 @@ public class IndexInfo {
                                 final Table table)
         throws SQLException {
 
-        Objects.requireNonNull(database, "null database");
+        if (database == null) {
+            throw new NullPointerException("null database");
+        }
 
-        Objects.requireNonNull(suppression, "null suppression");
+        if (suppression == null) {
+            throw new NullPointerException("null suppression");
+        }
 
-        Objects.requireNonNull(table, "null table");
+        if (table == null) {
+            throw new NullPointerException("table");
+        }
 
         retrieve(database, suppression,
                  table.getSchema().getCatalog().getTableCat(),

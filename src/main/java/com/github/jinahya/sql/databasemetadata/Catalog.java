@@ -24,7 +24,6 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
-import java.util.Objects;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlTransient;
@@ -61,11 +60,17 @@ public class Catalog implements Comparable<Catalog> {
                                 final Collection<? super Catalog> catalogs)
         throws SQLException {
 
-        Objects.requireNonNull(database, "null database");
+        if (database == null) {
+            throw new NullPointerException("null database");
+        }
 
-        Objects.requireNonNull(suppression, "null suppression");
+        if (suppression == null) {
+            throw new NullPointerException("null suppression");
+        }
 
-        Objects.requireNonNull(catalogs, "null catalogs");
+        if (catalogs == null) {
+            throw new NullPointerException("null catalogs");
+        }
 
         if (suppression.isSuppressed(Metadata.SUPPRESSION_PATH_CATALOGS)) {
             return;
@@ -96,11 +101,17 @@ public class Catalog implements Comparable<Catalog> {
                                 final Metadata metadata)
         throws SQLException {
 
-        Objects.requireNonNull(database, "null database");
+        if (database == null) {
+            throw new NullPointerException("null database");
+        }
 
-        Objects.requireNonNull(suppression, "null suppression");
+        if (suppression == null) {
+            throw new NullPointerException("null suppression");
+        }
 
-        Objects.requireNonNull(metadata, "null metadata");
+        if (metadata == null) {
+            throw new NullPointerException("metadata");
+        }
 
         retrieve(database, suppression, metadata.getCatalogs());
 
@@ -130,11 +141,13 @@ public class Catalog implements Comparable<Catalog> {
 
 
     @Override
-    public int compareTo(final Catalog o) {
+    public int compareTo(final Catalog object) {
 
-        Objects.requireNonNull(o, "null object");
+        if (object == null) {
+            throw new NullPointerException("object");
+        }
 
-        return tableCat.compareTo(o.tableCat);
+        return tableCat.compareTo(object.tableCat);
     }
 
 
@@ -201,7 +214,9 @@ public class Catalog implements Comparable<Catalog> {
 
     public Schema getSchemaByName(final String schemaName) {
 
-        Objects.requireNonNull(schemaName, "null schemaName");
+        if (schemaName == null) {
+            throw new NullPointerException("schemaName");
+        }
 
         for (final Schema schema : getSchemas()) {
             if (schemaName.equals(schema.getTableSchem())) {

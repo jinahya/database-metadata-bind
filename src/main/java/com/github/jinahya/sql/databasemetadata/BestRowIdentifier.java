@@ -22,7 +22,6 @@ import java.sql.DatabaseMetaData;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.Collection;
-import java.util.Objects;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlTransient;
 import javax.xml.bind.annotation.XmlType;
@@ -64,11 +63,17 @@ public class BestRowIdentifier {
         final Collection<? super BestRowIdentifier> bestRowIdentifiers)
         throws SQLException {
 
-        Objects.requireNonNull(database, "null database");
+        if (database == null) {
+            throw new NullPointerException("null database");
+        }
 
-        Objects.requireNonNull(suppression, "null suppression");
+        if (suppression == null) {
+            throw new NullPointerException("null suppression");
+        }
 
-        Objects.requireNonNull(bestRowIdentifiers, "null bestRowIdentifiers");
+        if (bestRowIdentifiers == null) {
+            throw new NullPointerException("best RowIdentifiers");
+        }
 
         if (suppression.isSuppressed(
             Table.SUPPRESSION_PATH_BEST_ROW_IDENTIFIERS)) {
@@ -101,11 +106,17 @@ public class BestRowIdentifier {
                                 final Table table)
         throws SQLException {
 
-        Objects.requireNonNull(database, "null database");
+        if (database == null) {
+            throw new NullPointerException("null database");
+        }
 
-        Objects.requireNonNull(suppression, "null suppression");
+        if (suppression == null) {
+            throw new NullPointerException("null suppression");
+        }
 
-        Objects.requireNonNull(table, "null table");
+        if (table == null) {
+            throw new NullPointerException("table");
+        }
 
         retrieve(database, suppression,
                  table.getSchema().getCatalog().getTableCat(),

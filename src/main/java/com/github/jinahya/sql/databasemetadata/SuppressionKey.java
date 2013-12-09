@@ -23,7 +23,6 @@ import java.sql.DatabaseMetaData;
 import java.sql.SQLException;
 import java.util.LinkedHashMap;
 import java.util.Map;
-import java.util.Objects;
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBException;
 import javax.xml.bind.Marshaller;
@@ -48,7 +47,9 @@ public class SuppressionKey {
     public static SuppressionKey newInstance(final DatabaseMetaData database)
         throws SQLException {
 
-        Objects.requireNonNull(database, "null database");
+        if (database == null) {
+            throw new NullPointerException("null database");
+        }
 
         final SuppressionKey instance = new SuppressionKey();
 
@@ -71,14 +72,14 @@ public class SuppressionKey {
 
         int hash = 7;
 
-        hash = 29 * hash + this.databaseMajorVersion;
-        hash = 29 * hash + this.databaseMinorVersion;
-        hash = 29 * hash + Objects.hashCode(this.databaseProductName);
-        hash = 29 * hash + Objects.hashCode(this.databaseProductVersion);
-        hash = 29 * hash + this.driverMajorVersion;
-        hash = 29 * hash + this.driverMinorVersion;
-        hash = 29 * hash + Objects.hashCode(this.driverName);
-        hash = 29 * hash + Objects.hashCode(this.driverVersion);
+        hash = 29 * hash + databaseMajorVersion;
+        hash = 29 * hash + databaseMinorVersion;
+        hash = 29 * hash + databaseProductName.hashCode();
+        hash = 29 * hash + databaseProductVersion.hashCode();
+        hash = 29 * hash + driverMajorVersion;
+        hash = 29 * hash + driverMinorVersion;
+        hash = 29 * hash + driverName.hashCode();
+        hash = 29 * hash + driverVersion.hashCode();
 
         return hash;
     }
@@ -97,37 +98,35 @@ public class SuppressionKey {
 
         final SuppressionKey that = (SuppressionKey) obj;
 
-        if (this.databaseMajorVersion != that.databaseMajorVersion) {
+        if (databaseMajorVersion != that.databaseMajorVersion) {
             return false;
         }
 
-        if (this.databaseMinorVersion != that.databaseMinorVersion) {
+        if (databaseMinorVersion != that.databaseMinorVersion) {
             return false;
         }
 
-        if (!Objects.equals(this.databaseProductName,
-                            that.databaseProductName)) {
+        if (!databaseProductName.equals(that.databaseProductName)) {
             return false;
         }
 
-        if (!Objects.equals(this.databaseProductVersion,
-                            that.databaseProductVersion)) {
+        if (!databaseProductVersion.equals(that.databaseProductVersion)) {
             return false;
         }
 
-        if (this.driverMajorVersion != that.driverMajorVersion) {
+        if (driverMajorVersion != that.driverMajorVersion) {
             return false;
         }
 
-        if (this.driverMinorVersion != that.driverMinorVersion) {
+        if (driverMinorVersion != that.driverMinorVersion) {
             return false;
         }
 
-        if (!Objects.equals(this.driverName, that.driverName)) {
+        if (!driverName.equals(that.driverName)) {
             return false;
         }
 
-        if (!Objects.equals(this.driverVersion, that.driverVersion)) {
+        if (!driverVersion.equals(that.driverVersion)) {
             return false;
         }
 

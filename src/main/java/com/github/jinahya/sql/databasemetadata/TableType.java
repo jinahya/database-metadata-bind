@@ -22,7 +22,6 @@ import java.sql.DatabaseMetaData;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.Collection;
-import java.util.Objects;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlTransient;
@@ -40,9 +39,9 @@ public class TableType {
                                      final ResultSet resultSet)
         throws SQLException {
 
-        Objects.requireNonNull(suppression, "null suppression");
+        if (suppression == null) { throw new NullPointerException("null suppression");}
 
-        Objects.requireNonNull(resultSet, "null resultSet");
+        if (resultSet == null) { throw new NullPointerException("resultSet"); }
 
         final TableType instance = new TableType();
 
@@ -68,11 +67,11 @@ public class TableType {
                                 final Collection<? super TableType> tableTypes)
         throws SQLException {
 
-        Objects.requireNonNull(database, "null database");
+        if (database == null) { throw new NullPointerException("null database");}
 
-        Objects.requireNonNull(suppression, "null suppression");
+        if (suppression == null) { throw new NullPointerException("null suppression");}
 
-        Objects.requireNonNull(tableTypes, "null tableTypes");
+        if (tableTypes == null) { throw new NullPointerException("tableTypes"); }
 
         if (suppression.isSuppressed(Metadata.SUPPRESSION_PATH_TABLE_TYPES)) {
             return;
@@ -94,11 +93,11 @@ public class TableType {
                                 final Metadata metadata)
         throws SQLException {
 
-        Objects.requireNonNull(database, "null database");
+        if (database == null) { throw new NullPointerException("null database");}
 
-        Objects.requireNonNull(suppression, "null suppression");
+        if (suppression == null) { throw new NullPointerException("null suppression");}
 
-        Objects.requireNonNull(metadata, "null metadata");
+        if (metadata == null) { throw new NullPointerException("metadata"); }
 
         retrieve(database, suppression, metadata.getTableTypes());
 

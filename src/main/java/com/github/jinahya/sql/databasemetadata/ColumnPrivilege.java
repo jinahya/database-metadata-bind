@@ -22,7 +22,6 @@ import java.sql.DatabaseMetaData;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.Collection;
-import java.util.Objects;
 import javax.xml.bind.annotation.XmlAttribute;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlTransient;
@@ -45,9 +44,13 @@ public class ColumnPrivilege {
                                            final ResultSet resultSet)
         throws SQLException {
 
-        Objects.requireNonNull(suppression, "null suppression");
+        if (suppression == null) {
+            throw new NullPointerException("null suppression");
+        }
 
-        Objects.requireNonNull(resultSet, "null resultSet");
+        if (resultSet == null) {
+            throw new NullPointerException("resultSet");
+        }
 
         final ColumnPrivilege instance = new ColumnPrivilege();
 
@@ -79,11 +82,17 @@ public class ColumnPrivilege {
         final Collection<? super ColumnPrivilege> columnPrivileges)
         throws SQLException {
 
-        Objects.requireNonNull(database, "null metaData");
+        if (database == null) {
+            throw new NullPointerException("null database");
+        }
 
-        Objects.requireNonNull(suppression, "null suppression");
+        if (suppression == null) {
+            throw new NullPointerException("null suppression");
+        }
 
-        Objects.requireNonNull(columnPrivileges, "null columnPrivileges");
+        if (columnPrivileges == null) {
+            throw new NullPointerException("columnPrivileges");
+        }
 
         if (suppression.isSuppressed(
             Table.SUPPRESSION_PATH_COLUMN_PRIVILEGES)) {
@@ -107,11 +116,17 @@ public class ColumnPrivilege {
                                 final Table table)
         throws SQLException {
 
-        Objects.requireNonNull(database, "null database");
+        if (database == null) {
+            throw new NullPointerException("null database");
+        }
 
-        Objects.requireNonNull(suppression, "null suppression");
+        if (suppression == null) {
+            throw new NullPointerException("null suppression");
+        }
 
-        Objects.requireNonNull(table, "null table");
+        if (table == null) {
+            throw new NullPointerException("table");
+        }
 
         retrieve(database, suppression,
                  table.getSchema().getCatalog().getTableCat(),

@@ -22,7 +22,6 @@ import java.sql.DatabaseMetaData;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.Collection;
-import java.util.Objects;
 import javax.xml.bind.annotation.XmlAttribute;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlTransient;
@@ -45,9 +44,9 @@ public class Procedure {
                                      final ResultSet resultSet)
         throws SQLException {
 
-        Objects.requireNonNull(suppression, "null suppression");
+        if (suppression == null) { throw new NullPointerException("null suppression");}
 
-        Objects.requireNonNull(resultSet, "null resultSet");
+        if (resultSet == null) { throw new NullPointerException("resultSet"); }
 
         final Procedure instance = new Procedure();
 
@@ -80,11 +79,11 @@ public class Procedure {
                                 final Collection<? super Procedure> procedures)
         throws SQLException {
 
-        Objects.requireNonNull(database, "null database");
+        if (database == null) { throw new NullPointerException("null database");}
 
-        Objects.requireNonNull(suppression, "null suppression");
+        if (suppression == null) { throw new NullPointerException("null suppression");}
 
-        Objects.requireNonNull(procedures, "null procedures");
+        if (procedures == null) { throw new NullPointerException("procedures"); }
 
         if (suppression.isSuppressed(Schema.SUPPRESSION_PATH_PROCEDURES)) {
             return;
@@ -107,11 +106,11 @@ public class Procedure {
                                 final Schema schema)
         throws SQLException {
 
-        Objects.requireNonNull(database, "null database");
+        if (database == null) { throw new NullPointerException("null database");}
 
-        Objects.requireNonNull(suppression, "null suppression");
+        if (suppression == null) { throw new NullPointerException("null suppression");}
 
-        Objects.requireNonNull(schema, "null schema");
+        if (schema == null) { throw new NullPointerException("schema"); }
 
         retrieve(database, suppression,
                  schema.getCatalog().getTableCat(), schema.getTableSchem(),

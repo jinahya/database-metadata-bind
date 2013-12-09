@@ -24,7 +24,6 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
-import java.util.Objects;
 import javax.xml.bind.annotation.XmlAttribute;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlTransient;
@@ -134,11 +133,11 @@ public class Table implements Comparable<Table> {
                                 final Collection<? super Table> tables)
         throws SQLException {
 
-        Objects.requireNonNull(database, "null database");
+        if (database == null) { throw new NullPointerException("null database");}
 
-        Objects.requireNonNull(suppression, "null suppression");
+        if (suppression == null) { throw new NullPointerException("null suppression");}
 
-        Objects.requireNonNull(tables, "null tables");
+        if (tables == null) { throw new NullPointerException("tables"); }
 
         if (suppression.isSuppressed(Schema.SUPPRESSION_PATH_TABLES)) {
             return;
@@ -162,11 +161,11 @@ public class Table implements Comparable<Table> {
                                 final Schema schema)
         throws SQLException {
 
-        Objects.requireNonNull(database, "null database");
+        if (database == null) { throw new NullPointerException("null database");}
 
-        Objects.requireNonNull(suppression, "null suppression");
+        if (suppression == null) { throw new NullPointerException("null suppression");}
 
-        Objects.requireNonNull(schema, "null schema");
+        if (schema == null) { throw new NullPointerException("schema"); }
 
         retrieve(database, suppression,
                  schema.getCatalog().getTableCat(), schema.getTableSchem(),
@@ -203,7 +202,7 @@ public class Table implements Comparable<Table> {
     @Override
     public int compareTo(final Table o) {
 
-        Objects.requireNonNull(o, "null object");
+        if (o == null) { throw new NullPointerException("object"); }
 
         final int tableTypeCompared = tableType.compareTo(o.tableType);
         if (tableTypeCompared != 0) {
@@ -339,7 +338,7 @@ public class Table implements Comparable<Table> {
 
     public Column getColumnByName(final String columnName) {
 
-        Objects.requireNonNull(columnName, "null columnName");
+        if (columnName == null) { throw new NullPointerException("columnName"); }
 
         for (final Column column : getColumns()) {
             if (columnName.equals(column.getColumnName())) {
@@ -401,19 +400,25 @@ public class Table implements Comparable<Table> {
             throw new NullPointerException("null indexName");
         }
 
-        final List<String> indexColumnName = new ArrayList<String>();
+        final List<String> indexColumnNames = new ArrayList<String>();
 
         for (final IndexInfo indexInfo_ : getIndexInfo()) {
             if (!indexName.equals(indexInfo_.indexName)) {
                 continue;
             }
-            indexColumnName.add(indexInfo_.columnName);
+            indexColumnNames.add(indexInfo_.columnName);
         }
 
-        return indexColumnName;
+        return indexColumnNames;
     }
 
 
+    /**
+     *
+     * @return @deprecated Use
+     * {@link #getIndexNames(java.lang.Boolean, java.lang.Short)}
+     */
+    @Deprecated
     public List<String> getIndexNames() {
 
         final List<String> indexNames = new ArrayList<String>();
@@ -430,6 +435,17 @@ public class Table implements Comparable<Table> {
     }
 
 
+    /**
+     *
+     * @param nonUnique
+     * @param type
+     *
+     * @return
+     *
+     * @deprecated Use
+     * {@link #getIndexNames(java.lang.Boolean, java.lang.Short)}
+     */
+    @Deprecated
     public List<String> getIndexNames(final boolean nonUnique,
                                       final short type) {
 
@@ -441,6 +457,42 @@ public class Table implements Comparable<Table> {
             }
             if (indexInfo_.type != type) {
                 continue;
+            }
+            final String indexName = indexInfo_.getIndexName();
+            if (indexNames.contains(indexName)) {
+                continue;
+            }
+            indexNames.add(indexName);
+        }
+
+        return indexNames;
+    }
+
+
+    public List<String> getIndexNames(final Boolean nonUnique,
+                                      final Short... types) {
+
+        final List<String> indexNames = new ArrayList<String>();
+
+        for (final IndexInfo indexInfo_ : getIndexInfo()) {
+            if (nonUnique != null
+                && indexInfo_.nonUnique != nonUnique.booleanValue()) {
+                continue;
+            }
+            if (types != null) {
+                boolean typeMatches = false;
+                for (final Short type : types) {
+                    if (type == null) {
+                        throw new NullPointerException("null type");
+                    }
+                    if (type.shortValue() == indexInfo_.getType()) {
+                        typeMatches = true;
+                        break;
+                    }
+                }
+                if (!typeMatches) {
+                    continue;
+                }
             }
             final String indexName = indexInfo_.getIndexName();
             if (indexNames.contains(indexName)) {
@@ -516,7 +568,7 @@ public class Table implements Comparable<Table> {
      */
     @ColumnLabel("TABLE_NAME")
     @XmlElement(required = true)
-    protected String tableName;
+    private String tableName;
 
 
     /**
@@ -525,7 +577,7 @@ public class Table implements Comparable<Table> {
      */
     @ColumnLabel("TABLE_TYPE")
     @XmlElement(required = true)
-    protected String tableType;
+    private String tableType;
 
 
     /**
@@ -533,7 +585,7 @@ public class Table implements Comparable<Table> {
      */
     @ColumnLabel("REMARKS")
     @XmlElement(nillable = true, required = true)
-    protected String remarks;
+    private String remarks;
 
 
     /**
@@ -543,7 +595,7 @@ public class Table implements Comparable<Table> {
     @SuppressionPath("table/typeCat")
     @XmlElement(nillable = true, required = true)
     @XmlElementNillableBySpecification
-    protected String typeCat;
+    private String typeCat;
 
 
     /**
@@ -553,7 +605,7 @@ public class Table implements Comparable<Table> {
     @SuppressionPath("table/typeSchem")
     @XmlElement(nillable = true, required = true)
     @XmlElementNillableBySpecification
-    protected String typeSchem;
+    private String typeSchem;
 
 
     /**
@@ -563,7 +615,7 @@ public class Table implements Comparable<Table> {
     @SuppressionPath("table/typeName")
     @XmlElement(nillable = true, required = true)
     @XmlElementNillableBySpecification
-    protected String typeName;
+    private String typeName;
 
 
     /**
@@ -573,7 +625,7 @@ public class Table implements Comparable<Table> {
     @ColumnLabel("SELF_REFERENCING_COL_NAME")
     @XmlElement(nillable = true, required = true)
     @XmlElementNillableBySpecification
-    protected String selfReferencingColName;
+    private String selfReferencingColName;
 
 
     /**
@@ -584,7 +636,7 @@ public class Table implements Comparable<Table> {
     @ColumnLabel("REF_GENERATION")
     @XmlElement(nillable = true, required = true)
     @XmlElementNillableBySpecification
-    protected String refGeneration;
+    private String refGeneration;
 
 
     /**
@@ -592,7 +644,7 @@ public class Table implements Comparable<Table> {
      */
     @SuppressWarnings(SUPPRESSION_PATH_BEST_ROW_IDENTIFIERS)
     @XmlElement(name = "bestRowIdentifier")
-    protected List<BestRowIdentifier> bestRowIdentifiers;
+    private List<BestRowIdentifier> bestRowIdentifiers;
 
 
     /**
@@ -600,7 +652,7 @@ public class Table implements Comparable<Table> {
      */
     @SuppressWarnings(SUPPRESSION_PATH_COLUMNS)
     @XmlElement(name = "column")
-    protected List<Column> columns;
+    private List<Column> columns;
 
 
     /**
@@ -608,7 +660,7 @@ public class Table implements Comparable<Table> {
      */
     @SuppressionPath(SUPPRESSION_PATH_COLUMN_PRIVILEGES)
     @XmlElement(name = "columnPrivilege")
-    protected List<ColumnPrivilege> columnPrivileges;
+    private List<ColumnPrivilege> columnPrivileges;
 
 
     /**
@@ -616,7 +668,7 @@ public class Table implements Comparable<Table> {
      */
     @SuppressionPath(SUPPRESSION_PATH_EXPORTED_KEYS)
     @XmlElement(name = "exportedKey")
-    protected List<ExportedKey> exportedKeys;
+    private List<ExportedKey> exportedKeys;
 
 
     /**
@@ -624,7 +676,7 @@ public class Table implements Comparable<Table> {
      */
     @SuppressionPath(SUPPRESSION_PATH_IMPORTED_KEYS)
     @XmlElement(name = "importedKey")
-    protected List<ImportedKey> importedKeys;
+    private List<ImportedKey> importedKeys;
 
 
     /**
@@ -632,7 +684,7 @@ public class Table implements Comparable<Table> {
      */
     @SuppressionPath(SUPPRESSION_PATH_INDEX_INFO)
     @XmlElement(name = "indexInfo")
-    protected List<IndexInfo> indexInfo;
+    private List<IndexInfo> indexInfo;
 
 
     /**
@@ -640,7 +692,7 @@ public class Table implements Comparable<Table> {
      */
     @SuppressWarnings(SUPPRESSION_PATH_PRIMARY_KEYS)
     @XmlElement(name = "primaryKey")
-    protected List<PrimaryKey> primaryKeys;
+    private List<PrimaryKey> primaryKeys;
 
 
     /**
@@ -648,7 +700,7 @@ public class Table implements Comparable<Table> {
      */
     @SuppressionPath(SUPPRESSION_PATH_TABLE_PRIVILEGES)
     @XmlElement(name = "tablePrivilege")
-    protected List<TablePrivilege> tablePrivileges;
+    private List<TablePrivilege> tablePrivileges;
 
 
     /**
@@ -656,7 +708,7 @@ public class Table implements Comparable<Table> {
      */
     @SuppressionPath(SUPPRESSION_PATH_VERSION_COLUMNS)
     @XmlElement(name = "versionColumn")
-    protected List<VersionColumn> versionColumns;
+    private List<VersionColumn> versionColumns;
 
 
 }

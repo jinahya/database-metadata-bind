@@ -22,7 +22,6 @@ import java.sql.DatabaseMetaData;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.Collection;
-import java.util.Objects;
 import javax.xml.bind.annotation.XmlAttribute;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlTransient;
@@ -76,11 +75,17 @@ public class Attribute {
                                 final Collection<? super Attribute> attributes)
         throws SQLException {
 
-        Objects.requireNonNull(database, "null database");
+        if (database == null) {
+            throw new NullPointerException("null database");
+        }
 
-        Objects.requireNonNull(suppression, "null suppression");
+        if (suppression == null) {
+            throw new NullPointerException("null suppression");
+        }
 
-        Objects.requireNonNull(attributes, "null attributes");
+        if (attributes == null) {
+            throw new NullPointerException("null attributes");
+        }
 
         if (suppression.isSuppressed(
             UserDefinedType.SUPPRESSION_PATH_ATTRIBUTES)) {
@@ -113,11 +118,15 @@ public class Attribute {
                                 final UserDefinedType userDefinedType)
         throws SQLException {
 
-        Objects.requireNonNull(database, "null database");
+        if (database == null) {
+            throw new NullPointerException("null database");
+        }
 
-        Objects.requireNonNull(suppression, "null suppression");
+        if (suppression == null) {
+            throw new NullPointerException("null suppression");
+        }
 
-        Objects.requireNonNull(userDefinedType, "null userDefinedType");
+        if (userDefinedType == null) { throw new NullPointerException("userDefinedType"); }
 
         retrieve(database, suppression,
                  userDefinedType.getSchema().getCatalog().getTableCat(),

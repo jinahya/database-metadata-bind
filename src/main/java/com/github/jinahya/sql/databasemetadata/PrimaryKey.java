@@ -22,7 +22,6 @@ import java.sql.DatabaseMetaData;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.Collection;
-import java.util.Objects;
 import javax.xml.bind.annotation.XmlAttribute;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlTransient;
@@ -45,9 +44,9 @@ public class PrimaryKey implements Comparable<PrimaryKey> {
                                       final ResultSet resultSet)
         throws SQLException {
 
-        Objects.requireNonNull(suppression, "null suppression");
+        if (suppression == null) { throw new NullPointerException("null suppression");}
 
-        Objects.requireNonNull(resultSet, "null resultSet");
+        if (resultSet == null) { throw new NullPointerException("resultSet"); }
 
         final PrimaryKey instance = new PrimaryKey();
 
@@ -78,11 +77,11 @@ public class PrimaryKey implements Comparable<PrimaryKey> {
         final Collection<? super PrimaryKey> primaryKeys)
         throws SQLException {
 
-        Objects.requireNonNull(database, "null database");
+        if (database == null) { throw new NullPointerException("null database");}
 
-        Objects.requireNonNull(suppression, "null suppression");
+        if (suppression == null) { throw new NullPointerException("null suppression");}
 
-        Objects.requireNonNull(primaryKeys, "null primaryKeys");
+        if (primaryKeys == null) { throw new NullPointerException("primaryKeys"); }
 
         if (suppression.isSuppressed(Table.SUPPRESSION_PATH_PRIMARY_KEYS)) {
             return;
@@ -105,11 +104,11 @@ public class PrimaryKey implements Comparable<PrimaryKey> {
                                 final Table table)
         throws SQLException {
 
-        Objects.requireNonNull(database, "null database");
+        if (database == null) { throw new NullPointerException("null database");}
 
-        Objects.requireNonNull(suppression, "null suppression");
+        if (suppression == null) { throw new NullPointerException("null suppression");}
 
-        Objects.requireNonNull(table, "null table");
+        if (table == null) { throw new NullPointerException("table"); }
 
         retrieve(database, suppression,
                  table.getSchema().getCatalog().getTableCat(),

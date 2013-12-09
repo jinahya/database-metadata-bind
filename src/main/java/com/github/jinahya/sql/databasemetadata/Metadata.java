@@ -23,7 +23,6 @@ import java.sql.DatabaseMetaData;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Objects;
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBException;
 import javax.xml.bind.Marshaller;
@@ -83,9 +82,9 @@ public class Metadata {
                                        final Suppression suppression)
         throws SQLException {
 
-        Objects.requireNonNull(database, "null database");
+        if (database == null) { throw new NullPointerException("null database");}
 
-        Objects.requireNonNull(suppression, "null suppression");
+        if (suppression == null) { throw new NullPointerException("null suppression");}
 
         final Metadata instance = new Metadata();
 
@@ -378,7 +377,7 @@ public class Metadata {
 
     public Catalog getCatalogByName(final String catalogName) {
 
-        Objects.requireNonNull(catalogName, "null catalogName");
+        if (catalogName == null) { throw new NullPointerException("catalogName"); }
 
         for (final Catalog catalog : getCatalogs()) {
             if (catalogName.endsWith(catalog.getTableCat())) {

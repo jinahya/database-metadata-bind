@@ -24,7 +24,6 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
-import java.util.Objects;
 import javax.xml.bind.annotation.XmlAttribute;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlTransient;
@@ -45,23 +44,6 @@ public class UserDefinedType {
 
     public static final String SUPPRESSION_PATH_ATTRIBUTES
         = "userDefinedType/attributes";
-
-
-    public static UserDefinedType retrieve(
-        final Suppression suppression, final ResultSet resultSet)
-        throws SQLException {
-
-        Objects.requireNonNull(suppression, "null suppression");
-
-        Objects.requireNonNull(resultSet, "null resultSte");
-
-        final UserDefinedType instance = new UserDefinedType();
-
-        ColumnRetriever.retrieve(
-            UserDefinedType.class, instance, suppression, resultSet);
-
-        return instance;
-    }
 
 
     /**
@@ -86,11 +68,17 @@ public class UserDefinedType {
         final Collection<? super UserDefinedType> userDefinedTypes)
         throws SQLException {
 
-        Objects.requireNonNull(database, "null database");
+        if (database == null) {
+            throw new NullPointerException("null database");
+        }
 
-        Objects.requireNonNull(suppression, "null suppression");
+        if (suppression == null) {
+            throw new NullPointerException("null suppression");
+        }
 
-        Objects.requireNonNull(userDefinedTypes, "null userDefinedTypes");
+        if (userDefinedTypes == null) {
+            throw new NullPointerException("userDefinedTypes");
+        }
 
         if (suppression.isSuppressed(
             Schema.SUPPRESSION_PATH_USER_DEFINED_TYPES)) {
@@ -101,7 +89,10 @@ public class UserDefinedType {
             catalog, schemaPattern, typeNamePattern, types);
         try {
             while (resultSet.next()) {
-                userDefinedTypes.add(retrieve(suppression, resultSet));
+                final UserDefinedType userDefinedType
+                    = ColumnRetriever.retrieve(
+                        UserDefinedType.class, suppression, resultSet);
+                userDefinedTypes.add(userDefinedType);
             }
         } finally {
             resultSet.close();
@@ -122,11 +113,17 @@ public class UserDefinedType {
                                 final Schema schema)
         throws SQLException {
 
-        Objects.requireNonNull(database, "null database");
+        if (database == null) {
+            throw new NullPointerException("null database");
+        }
 
-        Objects.requireNonNull(suppression, "null suppression");
+        if (suppression == null) {
+            throw new NullPointerException("null suppression");
+        }
 
-        Objects.requireNonNull(schema, "null schema");
+        if (schema == null) {
+            throw new NullPointerException("schema");
+        }
 
         retrieve(database, suppression,
                  schema.getCatalog().getTableCat(), schema.getTableSchem(),

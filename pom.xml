@@ -246,6 +246,13 @@
       -->
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-javadoc-plugin</artifactId>
+        <configuration>
+          <show>private</show>
+        </configuration>
+      </plugin>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-failsafe-plugin</artifactId>
         <executions>
           <execution>
@@ -293,6 +300,7 @@
               <groupId>org.apache.maven.plugins</groupId>
               <artifactId>maven-javadoc-plugin</artifactId>
               <configuration>
+                <show>private</show>
                 <links>
                   <link>http://docs.oracle.com/javase/7/docs/api/</link>
                 </links>
@@ -329,7 +337,7 @@
             <id>check-against-java16</id>
             <phase>test</phase>
             <goals>
-              <!--<goal>check</goal>-->
+              <goal>check</goal>
             </goals>
             <configuration>
               <signature>

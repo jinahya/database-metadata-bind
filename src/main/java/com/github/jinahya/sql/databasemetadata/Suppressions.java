@@ -23,7 +23,6 @@ import java.io.InputStream;
 import java.io.PrintStream;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Objects;
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBException;
 import javax.xml.bind.Marshaller;
@@ -77,7 +76,9 @@ public class Suppressions {
     public static Suppressions loadInstance(final InputStream in)
         throws JAXBException, IOException {
 
-        Objects.requireNonNull(in, "null in");
+        if (in == null) {
+            throw new NullPointerException("in");
+        }
 
         final JAXBContext context
             = JAXBContext.newInstance(Suppressions.class);
@@ -105,18 +106,18 @@ public class Suppressions {
 
 
     public void print(final PrintStream out) throws JAXBException {
-        
+
         if (out == null) {
             throw new NullPointerException("null out");
         }
-        
+
         assert Suppressions.class.getAnnotation(XmlRootElement.class) != null;
 
         final JAXBContext context = JAXBContext.newInstance(Suppressions.class);
 
         final Marshaller marshaller = context.createMarshaller();
         marshaller.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, Boolean.TRUE);
-        
+
         marshaller.marshal(this, out);
     }
 
@@ -133,7 +134,9 @@ public class Suppressions {
 
     public Suppression getSuppression(final SuppressionKey suppressionKey) {
 
-        Objects.requireNonNull(suppressionKey, "nulls suppressionKey");
+        if (suppressionKey == null) {
+            throw new NullPointerException("null suppressionKey");
+        }
 
         for (final Suppression suppression : getSuppressions()) {
             if (suppression.getKey().equals(suppressionKey)) {

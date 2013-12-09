@@ -22,7 +22,6 @@ import java.sql.DatabaseMetaData;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.Collection;
-import java.util.Objects;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlTransient;
 import javax.xml.bind.annotation.XmlType;
@@ -53,9 +52,13 @@ public class ClientInfoProperty {
                                               final ResultSet resultSet)
         throws SQLException {
 
-        Objects.requireNonNull(suppression, "null suppression");
+        if (suppression == null) {
+            throw new NullPointerException("null suppression");
+        }
 
-        Objects.requireNonNull(resultSet, "null resultSet");
+        if (resultSet == null) {
+            throw new NullPointerException("resultSet");
+        }
 
         final ClientInfoProperty instance = new ClientInfoProperty();
 
@@ -81,12 +84,17 @@ public class ClientInfoProperty {
         final Collection<? super ClientInfoProperty> clientInfoProperties)
         throws SQLException {
 
-        Objects.requireNonNull(database, "null database");
+        if (database == null) {
+            throw new NullPointerException("null database");
+        }
 
-        Objects.requireNonNull(suppression, "null suppression");
+        if (suppression == null) {
+            throw new NullPointerException("null suppression");
+        }
 
-        Objects.requireNonNull(clientInfoProperties,
-                               "null clientInfoProperties");
+        if (clientInfoProperties == null) {
+            throw new NullPointerException("null clientInfoProperties");
+        }
 
         if (suppression.isSuppressed(
             Metadata.SUPPRESSION_PATH_CLIENT_INFO_PROPERTIES)) {
@@ -117,11 +125,17 @@ public class ClientInfoProperty {
                                 final Metadata metadata)
         throws SQLException {
 
-        Objects.requireNonNull(database, "null database");
+        if (database == null) {
+            throw new NullPointerException("null database");
+        }
 
-        Objects.requireNonNull(suppression, "null suppression");
+        if (suppression == null) {
+            throw new NullPointerException("null suppression");
+        }
 
-        Objects.requireNonNull(metadata, "null metadata");
+        if (metadata == null) {
+            throw new NullPointerException("metadata");
+        }
 
         retrieve(database, suppression, metadata.getClientInfoProperties());
 

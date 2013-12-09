@@ -25,7 +25,6 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
-import java.util.Objects;
 import javax.xml.bind.annotation.XmlTransient;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -50,8 +49,7 @@ public final class ColumnRetriever {
                                  final ResultSet resultSet)
         throws SQLException {
 
-        final List<Field> collectionFields = new ArrayList<Field>();
-
+//        final List<Field> collectionFields = new ArrayList<Field>();
         for (final Field field : type.getDeclaredFields()) {
 
             if (field.isSynthetic()) {
@@ -96,7 +94,7 @@ public final class ColumnRetriever {
             }
 
             if (Collection.class.isAssignableFrom(field.getType())) {
-                collectionFields.add(field);
+//                collectionFields.add(field);
                 continue;
             }
 
@@ -129,7 +127,7 @@ public final class ColumnRetriever {
             if (Boolean.class.equals(field.getType())) {
                 try {
                     field.set(instance,
-                              resultSet.getObject(columnLabel, Boolean.class));
+                              (Boolean) resultSet.getObject(columnLabel));
                 } catch (final IllegalAccessException iae) {
                     throw new RuntimeException(iae);
                 }
@@ -146,9 +144,12 @@ public final class ColumnRetriever {
             }
 
             if (Short.class.equals(field.getType())) {
+                Object value = (Number) resultSet.getObject(columnLabel);
+                if (value != null && !(value instanceof Short)) {
+                    value = new Short(((Number) value).shortValue());
+                }
                 try {
-                    field.set(instance,
-                              resultSet.getObject(columnLabel, Short.class));
+                    field.set(instance, value);
                 } catch (final IllegalAccessException iae) {
                     throw new RuntimeException(iae);
                 }
@@ -165,10 +166,34 @@ public final class ColumnRetriever {
             }
 
             if (Integer.class.equals(field.getType())) {
-//                field.set(instance,
-//                          resultSet.getObject(columnLabel, Integer.class));
+                Object value = (Number) resultSet.getObject(columnLabel);
+                if (value != null && !(value instanceof Integer)) {
+                    value = new Integer(((Number) value).intValue());
+                }
                 try {
-                    field.set(instance, resultSet.getObject(columnLabel));
+                    field.set(instance, value);
+                } catch (final IllegalAccessException iae) {
+                    throw new RuntimeException(iae);
+                }
+                continue;
+            }
+            
+            if (Long.TYPE.equals(field.getType())) {
+                try {
+                    field.setLong(instance, resultSet.getLong(columnLabel));
+                } catch (final IllegalAccessException iae) {
+                    throw new RuntimeException(iae);
+                }
+                continue;
+            }
+
+            if (Long.class.equals(field.getType())) {
+                Object value = (Number) resultSet.getObject(columnLabel);
+                if (value != null && !(value instanceof Long)) {
+                    value = new Long(((Number) value).longValue());
+                }
+                try {
+                    field.set(instance, value);
                 } catch (final IllegalAccessException iae) {
                     throw new RuntimeException(iae);
                 }
@@ -197,7 +222,9 @@ public final class ColumnRetriever {
                                  final ResultSet resultSet)
         throws SQLException {
 
-        Objects.requireNonNull(type, "null type");
+        if (type == null) {
+            throw new NullPointerException("type");
+        }
 
         final T instance;
         try {

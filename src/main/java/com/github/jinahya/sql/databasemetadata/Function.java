@@ -22,7 +22,6 @@ import java.sql.DatabaseMetaData;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.Collection;
-import java.util.Objects;
 import javax.xml.bind.annotation.XmlAttribute;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlTransient;
@@ -45,9 +44,9 @@ public class Function {
                                     final ResultSet resultSet)
         throws SQLException {
 
-        Objects.requireNonNull(suppression, "null suppression");
+        if (suppression == null) { throw new NullPointerException("null suppression");}
 
-        Objects.requireNonNull(resultSet, "null resultSet");
+        if (resultSet == null) { throw new NullPointerException("resultSet"); }
 
         final Function instance = new Function();
 
@@ -80,11 +79,11 @@ public class Function {
                                 final Collection<? super Function> functions)
         throws SQLException {
 
-        Objects.requireNonNull(database, "null database");
+        if (database == null) { throw new NullPointerException("null database");}
 
-        Objects.requireNonNull(suppression, "null suppression");
+        if (suppression == null) { throw new NullPointerException("null suppression");}
 
-        Objects.requireNonNull(functions, "null functions");
+        if (functions == null) { throw new NullPointerException("functions"); }
 
         if (suppression.isSuppressed(Schema.SUPPRESSION_PATH_FUNCTIONS)) {
             return;
@@ -107,11 +106,11 @@ public class Function {
                                 final Schema schema)
         throws SQLException {
 
-        Objects.requireNonNull(database, "null database");
+        if (database == null) { throw new NullPointerException("null database");}
 
-        Objects.requireNonNull(suppression, "null suppression");
+        if (suppression == null) { throw new NullPointerException("null suppression");}
 
-        Objects.requireNonNull(schema, "null schema");
+        if (schema == null) { throw new NullPointerException("schema"); }
 
         retrieve(database, suppression,
                  schema.getCatalog().getTableCat(), schema.getTableSchem(),

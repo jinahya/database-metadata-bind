@@ -22,7 +22,6 @@ import java.sql.DatabaseMetaData;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.Collection;
-import java.util.Objects;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlTransient;
 import javax.xml.bind.annotation.XmlType;
@@ -38,23 +37,6 @@ import javax.xml.bind.annotation.XmlType;
         "decimalDigits", "pseudoColumn"
     })
 public class VersionColumn {
-
-
-    public static VersionColumn retrieve(final Suppression suppression,
-                                         final ResultSet resultSet)
-        throws SQLException {
-
-        Objects.requireNonNull(suppression, "null suppression");
-
-        Objects.requireNonNull(resultSet, "null resultSet");
-
-        final VersionColumn instance = new VersionColumn();
-
-        ColumnRetriever.retrieve(VersionColumn.class, instance, suppression,
-                                 resultSet);
-
-        return instance;
-    }
 
 
     /**
@@ -77,11 +59,17 @@ public class VersionColumn {
         final Collection<? super VersionColumn> versionColumns)
         throws SQLException {
 
-        Objects.requireNonNull(database, "null database");
+        if (database == null) {
+            throw new NullPointerException("null database");
+        }
 
-        Objects.requireNonNull(suppression, "null suppression");
+        if (suppression == null) {
+            throw new NullPointerException("null suppression");
+        }
 
-        Objects.requireNonNull(versionColumns, "null versionColumns");
+        if (versionColumns == null) {
+            throw new NullPointerException("versionColumns");
+        }
 
         if (suppression.isSuppressed(Table.SUPPRESSION_PATH_VERSION_COLUMNS)) {
             return;
@@ -91,7 +79,8 @@ public class VersionColumn {
             catalog, schema, table);
         try {
             while (resultSet.next()) {
-                versionColumns.add(retrieve(suppression, resultSet));
+                versionColumns.add(ColumnRetriever.retrieve(
+                    VersionColumn.class, suppression, resultSet));
             }
         } finally {
             resultSet.close();
@@ -104,11 +93,17 @@ public class VersionColumn {
                                 final Table table)
         throws SQLException {
 
-        Objects.requireNonNull(database, "null database");
+        if (database == null) {
+            throw new NullPointerException("null database");
+        }
 
-        Objects.requireNonNull(suppression, "null suppression");
+        if (suppression == null) {
+            throw new NullPointerException("null suppression");
+        }
 
-        Objects.requireNonNull(table, "null table");
+        if (table == null) {
+            throw new NullPointerException("table");
+        }
 
         retrieve(database, suppression,
                  table.getSchema().getCatalog().getTableCat(),

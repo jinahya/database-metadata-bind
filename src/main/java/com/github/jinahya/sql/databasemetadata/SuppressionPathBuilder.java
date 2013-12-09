@@ -20,7 +20,6 @@ package com.github.jinahya.sql.databasemetadata;
 
 import java.beans.Introspector;
 import java.lang.reflect.Field;
-import java.util.Objects;
 
 
 /**
@@ -32,7 +31,9 @@ class SuppressionPathBuilder {
 
     public static SuppressionPathBuilder newInstance(final Field field) {
 
-        Objects.requireNonNull(field, "null field");
+        if (field == null) {
+            throw new NullPointerException("field");
+        }
 
         final String className = Introspector.decapitalize(
             field.getDeclaringClass().getSimpleName());
@@ -54,8 +55,16 @@ class SuppressionPathBuilder {
 
         super();
 
-        this.className = Objects.requireNonNull(className);
-        this.fieldName = Objects.requireNonNull(fieldName);
+        if (className == null) {
+            throw new NullPointerException("null className");
+        }
+
+        if (fieldName == null) {
+            throw new NullPointerException("null fieldName");
+        }
+
+        this.className = className;
+        this.fieldName = fieldName;
     }
 
 
