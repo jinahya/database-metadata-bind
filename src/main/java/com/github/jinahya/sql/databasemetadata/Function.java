@@ -40,23 +40,6 @@ import javax.xml.bind.annotation.XmlType;
 public class Function {
 
 
-    public static Function retrieve(final Suppression suppression,
-                                    final ResultSet resultSet)
-        throws SQLException {
-
-        if (suppression == null) { throw new NullPointerException("null suppression");}
-
-        if (resultSet == null) { throw new NullPointerException("resultSet"); }
-
-        final Function instance = new Function();
-
-        ColumnRetriever.retrieve(Function.class, instance, suppression,
-                                 resultSet);
-
-        return instance;
-    }
-
-
     /**
      *
      * @param database
@@ -79,11 +62,17 @@ public class Function {
                                 final Collection<? super Function> functions)
         throws SQLException {
 
-        if (database == null) { throw new NullPointerException("null database");}
+        if (database == null) {
+            throw new NullPointerException("null database");
+        }
 
-        if (suppression == null) { throw new NullPointerException("null suppression");}
+        if (suppression == null) {
+            throw new NullPointerException("null suppression");
+        }
 
-        if (functions == null) { throw new NullPointerException("functions"); }
+        if (functions == null) {
+            throw new NullPointerException("null functions");
+        }
 
         if (suppression.isSuppressed(Schema.SUPPRESSION_PATH_FUNCTIONS)) {
             return;
@@ -93,7 +82,8 @@ public class Function {
             catalog, schemaPattern, functionNamePattern);
         try {
             while (resultSet.next()) {
-                functions.add(retrieve(suppression, resultSet));
+                functions.add(ColumnRetriever.retrieve(
+                    Function.class, suppression, resultSet));
             }
         } finally {
             resultSet.close();
@@ -106,11 +96,17 @@ public class Function {
                                 final Schema schema)
         throws SQLException {
 
-        if (database == null) { throw new NullPointerException("null database");}
+        if (database == null) {
+            throw new NullPointerException("null database");
+        }
 
-        if (suppression == null) { throw new NullPointerException("null suppression");}
+        if (suppression == null) {
+            throw new NullPointerException("null suppression");
+        }
 
-        if (schema == null) { throw new NullPointerException("schema"); }
+        if (schema == null) {
+            throw new NullPointerException("schema");
+        }
 
         retrieve(database, suppression,
                  schema.getCatalog().getTableCat(), schema.getTableSchem(),

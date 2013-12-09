@@ -274,7 +274,7 @@ public class BestRowIdentifier {
     @ColumnLabel("SCOPE")
     //@SuppressionPath("bestRowIdentifier/scope")
     @XmlElement(required = true)
-    protected short scope;
+    private short scope;
 
 
     /**
@@ -283,7 +283,7 @@ public class BestRowIdentifier {
     @ColumnLabel("COLUMN_NAME")
     //@SuppressionPath("bestRowIdentifier/columnName")
     @XmlElement(required = true)
-    protected String columnName;
+    private String columnName;
 
 
     /**
@@ -291,7 +291,7 @@ public class BestRowIdentifier {
      */
     @ColumnLabel("DATA_TYPE")
     @XmlElement(required = true)
-    protected int dataType;
+    private int dataType;
 
 
     /**
@@ -300,7 +300,7 @@ public class BestRowIdentifier {
      */
     @ColumnLabel("TYPE_NAME")
     @XmlElement(required = true)
-    protected String typeName;
+    private String typeName;
 
 
     /**
@@ -308,7 +308,7 @@ public class BestRowIdentifier {
      */
     @ColumnLabel("COLUMN_SIZE")
     @XmlElement(required = true)
-    protected int columnSize;
+    private int columnSize;
 
 
     /**
@@ -316,7 +316,7 @@ public class BestRowIdentifier {
      */
     @ColumnLabel("BUFFER_LENGTH")
     @NotUsed
-    protected int bufferLength;
+    private int bufferLength;
 
 
     /**
@@ -325,8 +325,8 @@ public class BestRowIdentifier {
      */
     @ColumnLabel("DECIMAL_DIGITS")
     @XmlElement(nillable = true, required = true)
-    @XmlElementNillableBySpecification
-    protected Short decimalDigits;
+    @NillableBySpecification
+    private Short decimalDigits;
 
 
     /**
@@ -341,7 +341,7 @@ public class BestRowIdentifier {
      */
     @ColumnLabel("PSEUDO_COLUMN")
     @XmlElement(required = true)
-    protected short pseudoColumn;
+    private short pseudoColumn;
 
 
 }

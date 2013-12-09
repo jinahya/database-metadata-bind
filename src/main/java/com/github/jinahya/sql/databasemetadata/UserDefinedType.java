@@ -77,7 +77,7 @@ public class UserDefinedType {
         }
 
         if (userDefinedTypes == null) {
-            throw new NullPointerException("userDefinedTypes");
+            throw new NullPointerException("null userDefinedTypes");
         }
 
         if (suppression.isSuppressed(
@@ -270,7 +270,7 @@ public class UserDefinedType {
      */
     @ColumnLabel("TYPE_NAME")
     @XmlElement(required = true)
-    protected String typeName;
+    private String typeName;
 
 
     /**
@@ -278,7 +278,7 @@ public class UserDefinedType {
      */
     @ColumnLabel("CLASS_NAME")
     @XmlElement(required = true)
-    protected String className;
+    private String className;
 
 
     /**
@@ -288,7 +288,7 @@ public class UserDefinedType {
      */
     @ColumnLabel("DATA_TYPE")
     @XmlElement(required = true)
-    protected int dataType;
+    private int dataType;
 
 
     /**
@@ -296,7 +296,7 @@ public class UserDefinedType {
      */
     @ColumnLabel("REMARKS")
     @XmlElement(required = true)
-    protected String remarks;
+    private String remarks;
 
 
     /**
@@ -310,8 +310,8 @@ public class UserDefinedType {
     @ColumnLabel("BASE_TYPE")
     //@SuppressionPath("userDefinedType/baseType")
     @XmlElement(nillable = true, required = true)
-    @XmlElementNillableBySpecification
-    protected Short baseType;
+    @NillableBySpecification
+    private Short baseType;
 
 
     /**
@@ -319,7 +319,7 @@ public class UserDefinedType {
      */
     @SuppressionPath(SUPPRESSION_PATH_ATTRIBUTES)
     @XmlElement(name = "attribute")
-    protected List<Attribute> attributes;
+    private List<Attribute> attributes;
 
 
 }

@@ -35,23 +35,6 @@ import javax.xml.bind.annotation.XmlTransient;
 public class TableType {
 
 
-    public static TableType retrieve(final Suppression suppression,
-                                     final ResultSet resultSet)
-        throws SQLException {
-
-        if (suppression == null) { throw new NullPointerException("null suppression");}
-
-        if (resultSet == null) { throw new NullPointerException("resultSet"); }
-
-        final TableType instance = new TableType();
-
-        ColumnRetriever.retrieve(TableType.class, instance, suppression,
-                                 resultSet);
-
-        return instance;
-    }
-
-
     /**
      *
      * @param database
@@ -67,11 +50,17 @@ public class TableType {
                                 final Collection<? super TableType> tableTypes)
         throws SQLException {
 
-        if (database == null) { throw new NullPointerException("null database");}
+        if (database == null) {
+            throw new NullPointerException("null database");
+        }
 
-        if (suppression == null) { throw new NullPointerException("null suppression");}
+        if (suppression == null) {
+            throw new NullPointerException("null suppression");
+        }
 
-        if (tableTypes == null) { throw new NullPointerException("tableTypes"); }
+        if (tableTypes == null) {
+            throw new NullPointerException("tableTypes");
+        }
 
         if (suppression.isSuppressed(Metadata.SUPPRESSION_PATH_TABLE_TYPES)) {
             return;
@@ -80,7 +69,8 @@ public class TableType {
         final ResultSet resultSet = database.getTableTypes();
         try {
             while (resultSet.next()) {
-                tableTypes.add(retrieve(suppression, resultSet));
+                tableTypes.add(ColumnRetriever.retrieve(
+                    TableType.class, suppression, resultSet));
             }
         } finally {
             resultSet.close();
@@ -93,11 +83,17 @@ public class TableType {
                                 final Metadata metadata)
         throws SQLException {
 
-        if (database == null) { throw new NullPointerException("null database");}
+        if (database == null) {
+            throw new NullPointerException("null database");
+        }
 
-        if (suppression == null) { throw new NullPointerException("null suppression");}
+        if (suppression == null) {
+            throw new NullPointerException("null suppression");
+        }
 
-        if (metadata == null) { throw new NullPointerException("metadata"); }
+        if (metadata == null) {
+            throw new NullPointerException("metadata");
+        }
 
         retrieve(database, suppression, metadata.getTableTypes());
 

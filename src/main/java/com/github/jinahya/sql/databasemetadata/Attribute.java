@@ -435,7 +435,7 @@ public class Attribute {
     @ColumnLabel("REMARKS")
     //@SuppressionPath("attribute/remarks")
     @XmlElement(nillable = true, required = true)
-    @XmlElementNillableBySpecification
+    @NillableBySpecification
     protected String remarks;
 
 
@@ -445,7 +445,7 @@ public class Attribute {
     @ColumnLabel("ATTR_DEF")
     //@SuppressionPath("attribute/attrDef")
     @XmlElement(nillable = true, required = true)
-    @XmlElementNillableBySpecification
+    @NillableBySpecification
     protected String attrDef;
 
 
@@ -503,7 +503,7 @@ public class Attribute {
     @ColumnLabel("SOURCE_DATA_TYPE")
     @SuppressionPath("attribute/sourceDataType")
     @XmlElement(nillable = true, required = true)
-    @XmlElementNillableBySpecification()
+    @NillableBySpecification()
     protected Short sourceDataType;
 
 

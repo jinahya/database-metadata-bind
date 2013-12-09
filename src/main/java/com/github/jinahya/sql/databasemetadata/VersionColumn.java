@@ -68,7 +68,7 @@ public class VersionColumn {
         }
 
         if (versionColumns == null) {
-            throw new NullPointerException("versionColumns");
+            throw new NullPointerException("null versionColumns");
         }
 
         if (suppression.isSuppressed(Table.SUPPRESSION_PATH_VERSION_COLUMNS)) {
@@ -102,7 +102,7 @@ public class VersionColumn {
         }
 
         if (table == null) {
-            throw new NullPointerException("table");
+            throw new NullPointerException("null table");
         }
 
         retrieve(database, suppression,

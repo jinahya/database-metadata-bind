@@ -26,6 +26,7 @@ import java.util.Collection;
 import java.util.List;
 import javax.xml.bind.annotation.XmlAttribute;
 import javax.xml.bind.annotation.XmlElement;
+import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlTransient;
 import javax.xml.bind.annotation.XmlType;
 
@@ -34,6 +35,7 @@ import javax.xml.bind.annotation.XmlType;
  *
  * @author Jin Kwon <jinahya at gmail.com>
  */
+@XmlRootElement
 @XmlType(
     propOrder = {
         "tableSchem", "functions", "procedures", "tables", "userDefinedTypes"
@@ -60,32 +62,6 @@ public class Schema implements Comparable<Schema> {
 
     /**
      *
-     * @param suppression
-     * @param resultSet
-     *
-     * @return
-     *
-     * @throws SQLException
-     */
-    public static Schema retrieve(final Suppression suppression,
-                                  final ResultSet resultSet)
-        throws SQLException {
-
-        if (suppression == null) { throw new NullPointerException("null suppression");}
-
-        if (resultSet == null) { throw new NullPointerException("resultSet"); }
-
-        final Schema instance = new Schema();
-
-        ColumnRetriever.retrieve(
-            Schema.class, instance, suppression, resultSet);
-
-        return instance;
-    }
-
-
-    /**
-     *
      * @param database
      * @param suppression
      * @param catalog
@@ -103,11 +79,17 @@ public class Schema implements Comparable<Schema> {
                                 final Collection<? super Schema> schemas)
         throws SQLException {
 
-        if (database == null) { throw new NullPointerException("null database");}
+        if (database == null) {
+            throw new NullPointerException("null database");
+        }
 
-        if (suppression == null) { throw new NullPointerException("null suppression");}
+        if (suppression == null) {
+            throw new NullPointerException("null suppression");
+        }
 
-        if (schemas == null) { throw new NullPointerException("schemas"); }
+        if (schemas == null) {
+            throw new NullPointerException("null schemas");
+        }
 
         if (suppression.isSuppressed(Catalog.SUPPRESSION_PATH_SCHEMAS)) {
             return;
@@ -117,8 +99,8 @@ public class Schema implements Comparable<Schema> {
             = database.getSchemas(catalog, schemaPattern);
         try {
             while (resultSet.next()) {
-                final Schema instance = retrieve(suppression, resultSet);
-                schemas.add(instance);
+                schemas.add(ColumnRetriever.retrieve(
+                    Schema.class, suppression, resultSet));
             }
         } finally {
             resultSet.close();
@@ -139,11 +121,17 @@ public class Schema implements Comparable<Schema> {
                                 final Catalog catalog)
         throws SQLException {
 
-        if (database == null) { throw new NullPointerException("null database");}
+        if (database == null) {
+            throw new NullPointerException("null database");
+        }
 
-        if (suppression == null) { throw new NullPointerException("null suppression");}
+        if (suppression == null) {
+            throw new NullPointerException("null suppression");
+        }
 
-        if (catalog == null) { throw new NullPointerException("catalog"); }
+        if (catalog == null) {
+            throw new NullPointerException("catalog");
+        }
 
         retrieve(database, suppression,
                  catalog.getTableCat(), null,
@@ -180,7 +168,9 @@ public class Schema implements Comparable<Schema> {
     @Override
     public int compareTo(final Schema o) {
 
-        if (o == null) { throw new NullPointerException("object"); }
+        if (o == null) {
+            throw new NullPointerException("object");
+        }
 
         final int catalogCompared = catalog.compareTo(o.catalog);
         if (catalogCompared != 0) {
@@ -292,7 +282,9 @@ public class Schema implements Comparable<Schema> {
 
     public Table getTableByName(final String tableName) {
 
-        if (tableName == null) { throw new NullPointerException("tableName"); }
+        if (tableName == null) {
+            throw new NullPointerException("tableName");
+        }
 
         for (final Table table : getTables()) {
             if (tableName.equals(table.getTableName())) {

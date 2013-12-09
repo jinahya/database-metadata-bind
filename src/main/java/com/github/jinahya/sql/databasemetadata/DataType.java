@@ -42,23 +42,6 @@ import javax.xml.bind.annotation.XmlType;
 public class DataType {
 
 
-    public static DataType retrieve(final Suppression suppression,
-                                    final ResultSet resultSet)
-        throws SQLException {
-
-        if (suppression == null) { throw new NullPointerException("null suppression");}
-
-        if (resultSet == null) { throw new NullPointerException("resultSet"); }
-
-        final DataType instance = new DataType();
-
-        ColumnRetriever.retrieve(DataType.class, instance, suppression,
-                                 resultSet);
-
-        return instance;
-    }
-
-
     /**
      *
      * @param database
@@ -74,11 +57,17 @@ public class DataType {
                                 final Collection<? super DataType> dataTypes)
         throws SQLException {
 
-        if (database == null) { throw new NullPointerException("null database");}
+        if (database == null) {
+            throw new NullPointerException("null database");
+        }
 
-        if (suppression == null) { throw new NullPointerException("null suppression");}
+        if (suppression == null) {
+            throw new NullPointerException("null suppression");
+        }
 
-        if (dataTypes == null) { throw new NullPointerException("dataTypes"); }
+        if (dataTypes == null) {
+            throw new NullPointerException("null dataTypes");
+        }
 
         if (suppression.isSuppressed(Metadata.SUPPRESSION_PATH_DATA_TYPES)) {
             return;
@@ -87,7 +76,8 @@ public class DataType {
         final ResultSet resultSet = database.getTypeInfo();
         try {
             while (resultSet.next()) {
-                dataTypes.add(retrieve(suppression, resultSet));
+                dataTypes.add(ColumnRetriever.retrieve(
+                    DataType.class, suppression, resultSet));
             }
         } finally {
             resultSet.close();
@@ -100,11 +90,17 @@ public class DataType {
                                 final Metadata metadata)
         throws SQLException {
 
-        if (database == null) { throw new NullPointerException("null database");}
+        if (database == null) {
+            throw new NullPointerException("null database");
+        }
 
-        if (suppression == null) { throw new NullPointerException("null suppression");}
+        if (suppression == null) {
+            throw new NullPointerException("null suppression");
+        }
 
-        if (metadata == null) { throw new NullPointerException("metadata"); }
+        if (metadata == null) {
+            throw new NullPointerException("null metadata");
+        }
 
         retrieve(database, suppression, metadata.getDataTypes());
 

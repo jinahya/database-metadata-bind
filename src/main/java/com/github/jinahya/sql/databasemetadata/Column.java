@@ -64,9 +64,13 @@ public class Column {
                                   final ResultSet resultSet)
         throws SQLException {
 
-        if (suppression == null) { throw new NullPointerException("null suppression");}
+        if (suppression == null) {
+            throw new NullPointerException("null suppression");
+        }
 
-        if (resultSet == null) { throw new NullPointerException("resultSet"); }
+        if (resultSet == null) {
+            throw new NullPointerException("resultSet");
+        }
 
         final Column instance = new Column();
 
@@ -103,11 +107,17 @@ public class Column {
                                 final Collection<? super Column> columns)
         throws SQLException {
 
-        if (database == null) { throw new NullPointerException("null database");}
+        if (database == null) {
+            throw new NullPointerException("null database");
+        }
 
-        if (suppression == null) { throw new NullPointerException("null suppression");}
+        if (suppression == null) {
+            throw new NullPointerException("null suppression");
+        }
 
-        if (columns == null) { throw new NullPointerException("columns"); }
+        if (columns == null) {
+            throw new NullPointerException("columns");
+        }
 
         if (suppression.isSuppressed(Table.SUPPRESSION_PATH_COLUMNS)) {
             return;
@@ -141,11 +151,17 @@ public class Column {
                                 final Table table)
         throws SQLException {
 
-        if (database == null) { throw new NullPointerException("null database");}
+        if (database == null) {
+            throw new NullPointerException("null database");
+        }
 
-        if (suppression == null) { throw new NullPointerException("null suppression");}
+        if (suppression == null) {
+            throw new NullPointerException("null suppression");
+        }
 
-        if (table == null) { throw new NullPointerException("table"); }
+        if (table == null) {
+            throw new NullPointerException("table");
+        }
 
         retrieve(database, suppression,
                  table.getSchema().getCatalog().getTableCat(),
@@ -433,7 +449,7 @@ public class Column {
      */
     @ColumnLabel("COLUMN_NAME")
     @XmlElement(required = true)
-    protected String columnName;
+    private String columnName;
 
 
     /**
@@ -507,7 +523,7 @@ public class Column {
      */
     @ColumnLabel("REMARKS")
     @XmlElement(nillable = true, required = true)
-    @XmlElementNillableBySpecification
+    @NillableBySpecification
     private String remarks;
 
 
@@ -517,7 +533,7 @@ public class Column {
      */
     @ColumnLabel("COLUMN_DEF")
     @XmlElement(nillable = true, required = true)
-    @XmlElementNillableBySpecification
+    @NillableBySpecification
     private String columnDef;
 
 
@@ -572,7 +588,7 @@ public class Column {
      */
     @ColumnLabel("SCOPE_CATALOG")
     @XmlElement(nillable = true, required = true)
-    @XmlElementNillableBySpecification
+    @NillableBySpecification
     private String scopeCatalog;
 
 
@@ -582,7 +598,7 @@ public class Column {
      */
     @ColumnLabel("SCOPE_SCHEMA")
     @XmlElement(nillable = true, required = true)
-    @XmlElementNillableBySpecification
+    @NillableBySpecification
     private String scopeSchema;
 
 
@@ -592,7 +608,7 @@ public class Column {
      */
     @ColumnLabel("SCOPE_TABLE")
     @XmlElement(nillable = true, required = true)
-    @XmlElementNillableBySpecification
+    @NillableBySpecification
     private String scopeTable;
 
 
@@ -604,7 +620,7 @@ public class Column {
      */
     @ColumnLabel("SOURCE_DATA_TYPE")
     @XmlElement(nillable = true, required = true)
-    @XmlElementNillableBySpecification
+    @NillableBySpecification
     private String sourceDataType;
 
 

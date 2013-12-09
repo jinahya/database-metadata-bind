@@ -40,23 +40,6 @@ import javax.xml.bind.annotation.XmlType;
 public class TablePrivilege {
 
 
-    public static TablePrivilege retrieve(final Suppression suppression,
-                                          final ResultSet resultSet)
-        throws SQLException {
-
-        if (suppression == null) { throw new NullPointerException("null suppression");}
-
-        if (resultSet == null) { throw new NullPointerException("resultSet"); }
-
-        final TablePrivilege instance = new TablePrivilege();
-
-        ColumnRetriever.retrieve(TablePrivilege.class, instance, suppression,
-                                 resultSet);
-
-        return instance;
-    }
-
-
     /**
      *
      * @param database
@@ -78,11 +61,17 @@ public class TablePrivilege {
         final Collection<? super TablePrivilege> tablePrivileges)
         throws SQLException {
 
-        if (database == null) { throw new NullPointerException("null database");}
+        if (database == null) {
+            throw new NullPointerException("null database");
+        }
 
-        if (suppression == null) { throw new NullPointerException("null suppression");}
+        if (suppression == null) {
+            throw new NullPointerException("null suppression");
+        }
 
-        if (tablePrivileges == null) { throw new NullPointerException("tablePrivileges"); }
+        if (tablePrivileges == null) {
+            throw new NullPointerException("null tablePrivileges");
+        }
 
         if (suppression.isSuppressed(Table.SUPPRESSION_PATH_TABLE_PRIVILEGES)) {
             return;
@@ -92,9 +81,8 @@ public class TablePrivilege {
             catalog, schemaPattern, tableNamePattern);
         try {
             while (resultSet.next()) {
-                final TablePrivilege instance = retrieve(
-                    suppression, resultSet);
-                tablePrivileges.add(instance);
+                tablePrivileges.add(ColumnRetriever.retrieve(
+                    TablePrivilege.class, suppression, resultSet));
             }
         } finally {
             resultSet.close();
@@ -107,11 +95,17 @@ public class TablePrivilege {
                                 final Table table)
         throws SQLException {
 
-        if (database == null) { throw new NullPointerException("null database");}
+        if (database == null) {
+            throw new NullPointerException("null database");
+        }
 
-        if (suppression == null) { throw new NullPointerException("null suppression");}
+        if (suppression == null) {
+            throw new NullPointerException("null suppression");
+        }
 
-        if (table == null) { throw new NullPointerException("table"); }
+        if (table == null) {
+            throw new NullPointerException("null table");
+        }
 
         retrieve(database, suppression,
                  table.getSchema().getCatalog().getTableCat(),

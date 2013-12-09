@@ -40,27 +40,6 @@ import javax.xml.bind.annotation.XmlType;
 public class ColumnPrivilege {
 
 
-    public static ColumnPrivilege retrieve(final Suppression suppression,
-                                           final ResultSet resultSet)
-        throws SQLException {
-
-        if (suppression == null) {
-            throw new NullPointerException("null suppression");
-        }
-
-        if (resultSet == null) {
-            throw new NullPointerException("resultSet");
-        }
-
-        final ColumnPrivilege instance = new ColumnPrivilege();
-
-        ColumnRetriever.retrieve(ColumnPrivilege.class, instance, suppression,
-                                 resultSet);
-
-        return instance;
-    }
-
-
     /**
      *
      * @param database
@@ -103,7 +82,8 @@ public class ColumnPrivilege {
             catalog, schema, table, columnNamePattern);
         try {
             while (resultSet.next()) {
-                columnPrivileges.add(retrieve(suppression, resultSet));
+                columnPrivileges.add(ColumnRetriever.retrieve(
+                    ColumnPrivilege.class, suppression, resultSet));
             }
         } finally {
             resultSet.close();

@@ -351,7 +351,7 @@ public class IndexInfo {
      */
     @ColumnLabel("NON_UNIQUE")
     @XmlElement(required = true)
-    protected boolean nonUnique;
+    private boolean nonUnique;
 
 
     /**
@@ -360,8 +360,8 @@ public class IndexInfo {
      */
     @ColumnLabel("INDEX_QUALIFIER")
     @XmlElement(nillable = true, required = true)
-    @XmlElementNillableBySpecification
-    protected String indexQualifier;
+    @NillableBySpecification
+    private String indexQualifier;
 
 
     /**
@@ -370,8 +370,8 @@ public class IndexInfo {
      */
     @ColumnLabel("INDEX_NAME")
     @XmlElement(nillable = true, required = true)
-    @XmlElementNillableBySpecification
-    protected String indexName;
+    @NillableBySpecification
+    private String indexName;
 
 
     /**
@@ -390,7 +390,7 @@ public class IndexInfo {
      */
     @ColumnLabel("TYPE")
     @XmlElement(required = true)
-    protected short type;
+    private short type;
 
 
     /**
@@ -399,7 +399,7 @@ public class IndexInfo {
      */
     @ColumnLabel("ORDINAL_POSITION")
     @XmlElement(required = true)
-    protected short ordinalPosition;
+    private short ordinalPosition;
 
 
     /**
@@ -408,8 +408,8 @@ public class IndexInfo {
      */
     @ColumnLabel("COLUMN_NAME")
     @XmlElement(nillable = true, required = true)
-    @XmlElementNillableBySpecification
-    protected String columnName;
+    @NillableBySpecification
+    private String columnName;
 
 
     /**
@@ -419,8 +419,8 @@ public class IndexInfo {
      */
     @ColumnLabel("ASC_OR_DESC")
     @XmlElement(nillable = true, required = true)
-    @XmlElementNillableBySpecification
-    protected String ascOrDesc;
+    @NillableBySpecification
+    private String ascOrDesc;
 
 
     /**
@@ -430,8 +430,8 @@ public class IndexInfo {
      */
     @ColumnLabel("CARDINALITY")
     @XmlElement(required = true)
-    //protected long cardinality;
-    protected int cardinality;
+    //private long cardinality;
+    private int cardinality;
 
 
     /**
@@ -441,8 +441,8 @@ public class IndexInfo {
      */
     @ColumnLabel("PAGES")
     @XmlElement(required = true)
-    //protected long pages;
-    protected int pages;
+    //private long pages;
+    private int pages;
 
 
     /**
@@ -450,8 +450,8 @@ public class IndexInfo {
      */
     @ColumnLabel("FILTER_CONDITION")
     @XmlElement(nillable = true, required = true)
-    @XmlElementNillableBySpecification
-    protected String filterCondition;
+    @NillableBySpecification
+    private String filterCondition;
 
 
 }

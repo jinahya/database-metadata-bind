@@ -54,11 +54,17 @@ public class ImportedKey {
         final Collection<? super ImportedKey> importedKeys)
         throws SQLException {
 
-        if (database == null) { throw new NullPointerException("null database");}
+        if (database == null) {
+            throw new NullPointerException("null database");
+        }
 
-        if (suppression == null) { throw new NullPointerException("null suppression");}
+        if (suppression == null) {
+            throw new NullPointerException("null suppression");
+        }
 
-        if (importedKeys == null) { throw new NullPointerException("importedKeys"); }
+        if (importedKeys == null) {
+            throw new NullPointerException("importedKeys");
+        }
 
         if (suppression.isSuppressed(Table.SUPPRESSION_PATH_IMPORTED_KEYS)) {
             return;
@@ -82,11 +88,17 @@ public class ImportedKey {
                                 final Table table)
         throws SQLException {
 
-        if (database == null) { throw new NullPointerException("null database");}
+        if (database == null) {
+            throw new NullPointerException("null database");
+        }
 
-        if (suppression == null) { throw new NullPointerException("null suppression");}
+        if (suppression == null) {
+            throw new NullPointerException("null suppression");
+        }
 
-        if (table == null) { throw new NullPointerException("table"); }
+        if (table == null) {
+            throw new NullPointerException("table");
+        }
 
         retrieve(database, suppression,
                  table.getSchema().getCatalog().getTableCat(),
@@ -270,7 +282,7 @@ public class ImportedKey {
      */
     @ColumnLabel("PKTABLE_CAT")
     @XmlElement(nillable = true, required = true)
-    @XmlElementNillableBySpecification
+    @NillableBySpecification
     private String pktableCat;
 
 
@@ -279,7 +291,7 @@ public class ImportedKey {
      */
     @ColumnLabel("PKTABLE_SCHEM")
     @XmlElement(nillable = true, required = true)
-    @XmlElementNillableBySpecification
+    @NillableBySpecification
     private String pktableSchem;
 
 
@@ -296,7 +308,7 @@ public class ImportedKey {
      */
     @ColumnLabel("PKCOLUMN_NAME")
     @XmlElement(required = true)
-    protected String pkcolumnName;
+    private String pkcolumnName;
 
 
     /**
@@ -305,7 +317,7 @@ public class ImportedKey {
     @ColumnLabel("FKTABLE_CAT")
     @SuppressionPath("importedKey/fktableCat")
     @XmlAttribute
-    protected String fktableCat;
+    private String fktableCat;
 
 
     /**
@@ -314,7 +326,7 @@ public class ImportedKey {
     @ColumnLabel("FKTABLE_NAME")
     @SuppressionPath("importedKey/fktableSchem")
     @XmlAttribute
-    protected String fktableSchem;
+    private String fktableSchem;
 
 
     /**
@@ -322,7 +334,7 @@ public class ImportedKey {
      */
     @ColumnLabel("FKTABLE_NAME")
     @XmlAttribute
-    protected String fktableName;
+    private String fktableName;
 
 
     /**
@@ -337,7 +349,7 @@ public class ImportedKey {
      */
     @ColumnLabel("FKCOLUMN_NAME")
     @XmlElement(required = true)
-    protected Column fkcolumnName;
+    private Column fkcolumnName;
 
 
     /**
@@ -347,7 +359,7 @@ public class ImportedKey {
      */
     @ColumnLabel("FKCOLUMN_NAME")
     @XmlElement(required = true)
-    protected short keySeq;
+    private short keySeq;
 
 
     /**
@@ -367,7 +379,7 @@ public class ImportedKey {
      */
     @ColumnLabel("UPDATE_RULE")
     @XmlElement(required = true)
-    protected short updateRule;
+    private short updateRule;
 
 
     /**
@@ -387,7 +399,7 @@ public class ImportedKey {
      */
     @ColumnLabel("DELETE_RULE")
     @XmlElement(required = true)
-    protected short deleteRule;
+    private short deleteRule;
 
 
     /**
@@ -395,7 +407,7 @@ public class ImportedKey {
      */
     @ColumnLabel("FK_NAME")
     @XmlElement(required = true)
-    protected String fkName;
+    private String fkName;
 
 
     /**
@@ -403,7 +415,7 @@ public class ImportedKey {
      */
     @ColumnLabel("PK_NAME")
     @XmlElement(required = true)
-    protected String pkName;
+    private String pkName;
 
 
     /**
@@ -418,7 +430,7 @@ public class ImportedKey {
      * </ul>
      */
     @ColumnLabel("DEFERRABILITY")
-    protected short deferrability;
+    private short deferrability;
 
 
 }

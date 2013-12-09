@@ -229,7 +229,7 @@ public class ClientInfoProperty {
      */
     @ColumnLabel("NAME")
     @XmlElement(required = true)
-    protected String name;
+    private String name;
 
 
     /**
@@ -237,7 +237,7 @@ public class ClientInfoProperty {
      */
     @ColumnLabel("MAX_LEN")
     @XmlElement(required = true)
-    protected int maxLen;
+    private int maxLen;
 
 
     /**
@@ -245,7 +245,7 @@ public class ClientInfoProperty {
      */
     @ColumnLabel("DEFAULT_VALUE")
     @XmlElement(required = true)
-    protected String defaultValue;
+    private String defaultValue;
 
 
     /**
@@ -254,7 +254,7 @@ public class ClientInfoProperty {
      */
     @ColumnLabel("DESCRIPTION")
     @XmlElement(required = true)
-    protected String description;
+    private String description;
 
 
 }

@@ -26,6 +26,7 @@ import java.util.Collection;
 import java.util.List;
 import javax.xml.bind.annotation.XmlAttribute;
 import javax.xml.bind.annotation.XmlElement;
+import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlTransient;
 import javax.xml.bind.annotation.XmlType;
 
@@ -34,6 +35,7 @@ import javax.xml.bind.annotation.XmlType;
  *
  * @author Jin Kwon <onacit at gmail.com>
  */
+@XmlRootElement
 @XmlType(
     propOrder = {
         "tableName", "tableType", "remarks", "typeCat", "typeSchem", "typeName",
@@ -133,11 +135,17 @@ public class Table implements Comparable<Table> {
                                 final Collection<? super Table> tables)
         throws SQLException {
 
-        if (database == null) { throw new NullPointerException("null database");}
+        if (database == null) {
+            throw new NullPointerException("null database");
+        }
 
-        if (suppression == null) { throw new NullPointerException("null suppression");}
+        if (suppression == null) {
+            throw new NullPointerException("null suppression");
+        }
 
-        if (tables == null) { throw new NullPointerException("tables"); }
+        if (tables == null) {
+            throw new NullPointerException("tables");
+        }
 
         if (suppression.isSuppressed(Schema.SUPPRESSION_PATH_TABLES)) {
             return;
@@ -161,11 +169,17 @@ public class Table implements Comparable<Table> {
                                 final Schema schema)
         throws SQLException {
 
-        if (database == null) { throw new NullPointerException("null database");}
+        if (database == null) {
+            throw new NullPointerException("null database");
+        }
 
-        if (suppression == null) { throw new NullPointerException("null suppression");}
+        if (suppression == null) {
+            throw new NullPointerException("null suppression");
+        }
 
-        if (schema == null) { throw new NullPointerException("schema"); }
+        if (schema == null) {
+            throw new NullPointerException("schema");
+        }
 
         retrieve(database, suppression,
                  schema.getCatalog().getTableCat(), schema.getTableSchem(),
@@ -202,7 +216,9 @@ public class Table implements Comparable<Table> {
     @Override
     public int compareTo(final Table o) {
 
-        if (o == null) { throw new NullPointerException("object"); }
+        if (o == null) {
+            throw new NullPointerException("object");
+        }
 
         final int tableTypeCompared = tableType.compareTo(o.tableType);
         if (tableTypeCompared != 0) {
@@ -338,7 +354,9 @@ public class Table implements Comparable<Table> {
 
     public Column getColumnByName(final String columnName) {
 
-        if (columnName == null) { throw new NullPointerException("columnName"); }
+        if (columnName == null) {
+            throw new NullPointerException("columnName");
+        }
 
         for (final Column column : getColumns()) {
             if (columnName.equals(column.getColumnName())) {
@@ -403,69 +421,13 @@ public class Table implements Comparable<Table> {
         final List<String> indexColumnNames = new ArrayList<String>();
 
         for (final IndexInfo indexInfo_ : getIndexInfo()) {
-            if (!indexName.equals(indexInfo_.indexName)) {
+            if (!indexName.equals(indexInfo_.getIndexName())) {
                 continue;
             }
-            indexColumnNames.add(indexInfo_.columnName);
+            indexColumnNames.add(indexInfo_.getColumnName());
         }
 
         return indexColumnNames;
-    }
-
-
-    /**
-     *
-     * @return @deprecated Use
-     * {@link #getIndexNames(java.lang.Boolean, java.lang.Short)}
-     */
-    @Deprecated
-    public List<String> getIndexNames() {
-
-        final List<String> indexNames = new ArrayList<String>();
-
-        for (final IndexInfo indexInfo_ : getIndexInfo()) {
-            final String indexName = indexInfo_.getIndexName();
-            if (indexNames.contains(indexName)) {
-                continue;
-            }
-            indexNames.add(indexName);
-        }
-
-        return indexNames;
-    }
-
-
-    /**
-     *
-     * @param nonUnique
-     * @param type
-     *
-     * @return
-     *
-     * @deprecated Use
-     * {@link #getIndexNames(java.lang.Boolean, java.lang.Short)}
-     */
-    @Deprecated
-    public List<String> getIndexNames(final boolean nonUnique,
-                                      final short type) {
-
-        final List<String> indexNames = new ArrayList<String>();
-
-        for (final IndexInfo indexInfo_ : getIndexInfo()) {
-            if (indexInfo_.nonUnique != nonUnique) {
-                continue;
-            }
-            if (indexInfo_.type != type) {
-                continue;
-            }
-            final String indexName = indexInfo_.getIndexName();
-            if (indexNames.contains(indexName)) {
-                continue;
-            }
-            indexNames.add(indexName);
-        }
-
-        return indexNames;
     }
 
 
@@ -476,7 +438,7 @@ public class Table implements Comparable<Table> {
 
         for (final IndexInfo indexInfo_ : getIndexInfo()) {
             if (nonUnique != null
-                && indexInfo_.nonUnique != nonUnique.booleanValue()) {
+                && indexInfo_.getNonUnique() != nonUnique.booleanValue()) {
                 continue;
             }
             if (types != null) {
@@ -594,7 +556,7 @@ public class Table implements Comparable<Table> {
     @ColumnLabel("TYPE_CAT")
     @SuppressionPath("table/typeCat")
     @XmlElement(nillable = true, required = true)
-    @XmlElementNillableBySpecification
+    @NillableBySpecification
     private String typeCat;
 
 
@@ -604,7 +566,7 @@ public class Table implements Comparable<Table> {
     @ColumnLabel("TYPE_SCHEM")
     @SuppressionPath("table/typeSchem")
     @XmlElement(nillable = true, required = true)
-    @XmlElementNillableBySpecification
+    @NillableBySpecification
     private String typeSchem;
 
 
@@ -614,7 +576,7 @@ public class Table implements Comparable<Table> {
     @ColumnLabel("TYPE_NAME")
     @SuppressionPath("table/typeName")
     @XmlElement(nillable = true, required = true)
-    @XmlElementNillableBySpecification
+    @NillableBySpecification
     private String typeName;
 
 
@@ -624,7 +586,7 @@ public class Table implements Comparable<Table> {
      */
     @ColumnLabel("SELF_REFERENCING_COL_NAME")
     @XmlElement(nillable = true, required = true)
-    @XmlElementNillableBySpecification
+    @NillableBySpecification
     private String selfReferencingColName;
 
 
@@ -635,7 +597,7 @@ public class Table implements Comparable<Table> {
      */
     @ColumnLabel("REF_GENERATION")
     @XmlElement(nillable = true, required = true)
-    @XmlElementNillableBySpecification
+    @NillableBySpecification
     private String refGeneration;
 
 

@@ -82,9 +82,13 @@ public class Metadata {
                                        final Suppression suppression)
         throws SQLException {
 
-        if (database == null) { throw new NullPointerException("null database");}
+        if (database == null) {
+            throw new NullPointerException("null database");
+        }
 
-        if (suppression == null) { throw new NullPointerException("null suppression");}
+        if (suppression == null) {
+            throw new NullPointerException("null suppression");
+        }
 
         final Metadata instance = new Metadata();
 
@@ -377,7 +381,9 @@ public class Metadata {
 
     public Catalog getCatalogByName(final String catalogName) {
 
-        if (catalogName == null) { throw new NullPointerException("catalogName"); }
+        if (catalogName == null) {
+            throw new NullPointerException("catalogName");
+        }
 
         for (final Catalog catalog : getCatalogs()) {
             if (catalogName.endsWith(catalog.getTableCat())) {

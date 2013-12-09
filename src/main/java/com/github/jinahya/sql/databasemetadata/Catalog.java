@@ -240,7 +240,7 @@ public class Catalog implements Comparable<Catalog> {
      */
     @ColumnLabel("TABLE_CAT")
     @XmlElement(required = true)
-    protected String tableCat;
+    private String tableCat;
 
 
     /**

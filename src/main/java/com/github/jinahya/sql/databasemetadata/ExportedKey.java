@@ -313,7 +313,7 @@ public class ExportedKey {
      */
     @ColumnLabel("PKCOLUMN_NAME")
     @XmlElement(required = true)
-    protected String pkcolumnName;
+    private String pkcolumnName;
 
 
     /**
@@ -322,8 +322,8 @@ public class ExportedKey {
      */
     @ColumnLabel("FKTABLE_CAT")
     @XmlElement(nillable = true, required = true)
-    @XmlElementNillableBySpecification
-    protected String fktableCat;
+    @NillableBySpecification
+    private String fktableCat;
 
 
     /**
@@ -333,8 +333,8 @@ public class ExportedKey {
      */
     @ColumnLabel("FKTABLE_NAME")
     @XmlElement(nillable = true, required = true)
-    @XmlElementNillableBySpecification
-    protected String fktableSchem;
+    @NillableBySpecification
+    private String fktableSchem;
 
 
     /**
@@ -342,7 +342,7 @@ public class ExportedKey {
      */
     @ColumnLabel("FKTABLE_NAME")
     @XmlElement(required = true)
-    protected String fktableName;
+    private String fktableName;
 
 
     /**
@@ -350,7 +350,7 @@ public class ExportedKey {
      */
     @ColumnLabel("FKCOLUMN_NAME")
     @XmlElement(required = true)
-    protected Column fkcolumnName;
+    private Column fkcolumnName;
 
 
     /**
@@ -360,7 +360,7 @@ public class ExportedKey {
      */
     @ColumnLabel("FKCOLUMN_NAME")
     @XmlElement(required = true)
-    protected short keySeq;
+    private short keySeq;
 
 
     /**
@@ -380,7 +380,7 @@ public class ExportedKey {
      */
     @ColumnLabel("UPDATE_RULE")
     @XmlElement(required = true)
-    protected short updateRule;
+    private short updateRule;
 
 
     /**
@@ -400,7 +400,7 @@ public class ExportedKey {
      */
     @ColumnLabel("DELETE_RULE")
     @XmlElement(required = true)
-    protected short deleteRule;
+    private short deleteRule;
 
 
     /**
@@ -408,7 +408,7 @@ public class ExportedKey {
      */
     @ColumnLabel("FK_NAME")
     @XmlElement(required = true)
-    protected String fkName;
+    private String fkName;
 
 
     /**
@@ -416,7 +416,7 @@ public class ExportedKey {
      */
     @ColumnLabel("PK_NAME")
     @XmlElement(required = true)
-    protected String pkName;
+    private String pkName;
 
 
     /**
@@ -431,7 +431,7 @@ public class ExportedKey {
      * </ul>
      */
     @ColumnLabel("DEFERRABILITY")
-    protected short deferrability;
+    private short deferrability;
 
 
 }
