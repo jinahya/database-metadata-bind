@@ -239,7 +239,7 @@
         <artifactId>maven-release-plugin</artifactId>
         <configuration>
           <goals>deploy</goals>
-          <targetNameFormat>{project.version}</targetNameFormat>
+          <targetNameFormat>@{project.version}</targetNameFormat>
           <pushChanges>false</pushChanges>
           <localCheckout>true</localCheckout>
         </configuration>
