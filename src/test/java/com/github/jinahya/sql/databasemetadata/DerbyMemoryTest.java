@@ -118,7 +118,7 @@ public class DerbyMemoryTest {
             metadata = Metadata.newInstance(databaseMetaData, suppression);
         }
 
-        metadata.print(System.out);
+        //metadata.print(System.out);
 
         final JAXBContext context = JAXBContext.newInstance(Metadata.class);
         final Marshaller marshaller = context.createMarshaller();

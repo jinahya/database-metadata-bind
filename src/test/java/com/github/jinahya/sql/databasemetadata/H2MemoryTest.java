@@ -99,7 +99,7 @@ public class H2MemoryTest {
 
             metadata = Metadata.newInstance(databaseMetaData, suppression);
 
-            metadata.print(System.out);
+            //metadata.print(System.out);
 
             MetadataVerifier.verify(metadata);
         }
