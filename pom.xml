@@ -240,8 +240,10 @@
         <configuration>
           <goals>deploy</goals>
           <targetNameFormat>@{project.version}</targetNameFormat>
+          <!--
           <pushChanges>false</pushChanges>
           <localCheckout>true</localCheckout>
+          -->
         </configuration>
       </plugin>
       <plugin>
