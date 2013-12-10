@@ -43,8 +43,10 @@ import javax.xml.bind.annotation.XmlType;
 public class Catalog implements Comparable<Catalog> {
 
 
-    public static final String SUPPRESSION_PATH_SCHEMAS
-        = "catalog/schemas";
+    /**
+     * Suppression path value for {@link #schemas}.
+     */
+    public static final String SUPPRESSION_PATH_SCHEMAS = "catalog/schemas";
 
 
     /**
@@ -141,13 +143,13 @@ public class Catalog implements Comparable<Catalog> {
 
 
     @Override
-    public int compareTo(final Catalog object) {
+    public int compareTo(final Catalog o) {
 
-        if (object == null) {
-            throw new NullPointerException("object");
+        if (o == null) {
+            throw new NullPointerException("null o");
         }
 
-        return tableCat.compareTo(object.tableCat);
+        return tableCat.compareTo(o.tableCat);
     }
 
 
@@ -200,7 +202,8 @@ public class Catalog implements Comparable<Catalog> {
 
     public List<String> getSchemaNames() {
 
-        final List<String> schemaNames = new ArrayList<String>();
+        final List<String> schemaNames
+            = new ArrayList<String>(getSchemas().size());
 
         for (final Schema schema : getSchemas()) {
             final String schemaName = schema.getTableSchem();
@@ -212,14 +215,14 @@ public class Catalog implements Comparable<Catalog> {
     }
 
 
-    public Schema getSchemaByName(final String schemaName) {
+    public Schema getSchemaByName(final String tableSchem) {
 
-        if (schemaName == null) {
-            throw new NullPointerException("schemaName");
+        if (tableSchem == null) {
+            throw new NullPointerException("tableSchem");
         }
 
         for (final Schema schema : getSchemas()) {
-            if (schemaName.equals(schema.getTableSchem())) {
+            if (tableSchem.equals(schema.getTableSchem())) {
                 return schema;
             }
         }
