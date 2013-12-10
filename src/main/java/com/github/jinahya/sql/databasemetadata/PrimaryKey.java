@@ -44,14 +44,16 @@ public class PrimaryKey implements Comparable<PrimaryKey> {
                                       final ResultSet resultSet)
         throws SQLException {
 
-        if (suppression == null) { throw new NullPointerException("null suppression");}
+        if (suppression == null) {
+            throw new NullPointerException("null suppression");
+        }
 
-        if (resultSet == null) { throw new NullPointerException("resultSet"); }
+        if (resultSet == null) {
+            throw new NullPointerException("resultSet");
+        }
 
         final PrimaryKey instance = new PrimaryKey();
-
-        ColumnRetriever.retrieve(PrimaryKey.class, instance, suppression,
-                                 resultSet);
+        ;
 
         return instance;
     }
@@ -77,11 +79,17 @@ public class PrimaryKey implements Comparable<PrimaryKey> {
         final Collection<? super PrimaryKey> primaryKeys)
         throws SQLException {
 
-        if (database == null) { throw new NullPointerException("null database");}
+        if (database == null) {
+            throw new NullPointerException("null database");
+        }
 
-        if (suppression == null) { throw new NullPointerException("null suppression");}
+        if (suppression == null) {
+            throw new NullPointerException("null suppression");
+        }
 
-        if (primaryKeys == null) { throw new NullPointerException("primaryKeys"); }
+        if (primaryKeys == null) {
+            throw new NullPointerException("null primaryKeys");
+        }
 
         if (suppression.isSuppressed(Table.SUPPRESSION_PATH_PRIMARY_KEYS)) {
             return;
@@ -91,7 +99,8 @@ public class PrimaryKey implements Comparable<PrimaryKey> {
             catalog, schema, table);
         try {
             while (resultSet.next()) {
-                primaryKeys.add(retrieve(suppression, resultSet));
+                primaryKeys.add(ColumnRetriever.retrieve(
+                    PrimaryKey.class, suppression, resultSet));
             }
         } finally {
             resultSet.close();
@@ -104,11 +113,17 @@ public class PrimaryKey implements Comparable<PrimaryKey> {
                                 final Table table)
         throws SQLException {
 
-        if (database == null) { throw new NullPointerException("null database");}
+        if (database == null) {
+            throw new NullPointerException("null database");
+        }
 
-        if (suppression == null) { throw new NullPointerException("null suppression");}
+        if (suppression == null) {
+            throw new NullPointerException("null suppression");
+        }
 
-        if (table == null) { throw new NullPointerException("table"); }
+        if (table == null) {
+            throw new NullPointerException("table");
+        }
 
         retrieve(database, suppression,
                  table.getSchema().getCatalog().getTableCat(),
@@ -213,19 +228,19 @@ public class PrimaryKey implements Comparable<PrimaryKey> {
     @ColumnLabel("COLUMN_NAME")
     //@SuppressionPath("primaryKey/columnName")
     @XmlElement(required = true)
-    private String columnName;
+    String columnName;
 
 
     @ColumnLabel("KEY_SEQ")
     //@SuppressionPath("primaryKey/keySeq")
     @XmlElement(required = true)
-    private short keySeq;
+    short keySeq;
 
 
     @ColumnLabel("PK_NAME")
     @SuppressionPath("primaryKey/pkName")
     @XmlElement(nillable = true, required = true)
-    private String pkName;
+    String pkName;
 
 
 }

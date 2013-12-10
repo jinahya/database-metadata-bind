@@ -59,7 +59,7 @@ public class TableType {
         }
 
         if (tableTypes == null) {
-            throw new NullPointerException("tableTypes");
+            throw new NullPointerException("null tableTypes");
         }
 
         if (suppression.isSuppressed(Metadata.SUPPRESSION_PATH_TABLE_TYPES)) {
@@ -92,7 +92,7 @@ public class TableType {
         }
 
         if (metadata == null) {
-            throw new NullPointerException("metadata");
+            throw new NullPointerException("null metadata");
         }
 
         retrieve(database, suppression, metadata.getTableTypes());
@@ -136,7 +136,7 @@ public class TableType {
     @ColumnLabel("TABLE_TYPE")
     //@SuppressionPath("tableType/tableType")
     @XmlElement(required = true)
-    private String tableType;
+    String tableType;
 
 
 }

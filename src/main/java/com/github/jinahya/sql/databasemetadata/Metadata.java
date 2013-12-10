@@ -49,7 +49,7 @@ import org.slf4j.LoggerFactory;
         "driverVersion",
         "numericFunctions", "stringFunctions", "systemFunctions",
         "timeDateFunctions",
-        "catalogs", "clientInfoProperties", "dataTypes", "tableTypes"
+        "catalogs", "clientInfoProperties", "tableTypes", "typeInfo"
     }
 )
 public class Metadata {
@@ -62,16 +62,14 @@ public class Metadata {
         = LoggerFactory.getLogger(Metadata.class);
 
 
-    public static final String SUPPRESSION_PATH_CATALOGS
-        = "metadata/catalogs";
+    public static final String SUPPRESSION_PATH_CATALOGS = "metadata/catalogs";
 
 
     public static final String SUPPRESSION_PATH_CLIENT_INFO_PROPERTIES
         = "metadata/clientProperties";
 
 
-    public static final String SUPPRESSION_PATH_DATA_TYPES
-        = "metadata/datatypes";
+    public static final String SUPPRESSION_PATH_TYPE_INFO = "metadata/typeInfo";
 
 
     public static final String SUPPRESSION_PATH_TABLE_TYPES
@@ -133,7 +131,7 @@ public class Metadata {
 
         ClientInfoProperty.retrieve(database, suppression, instance);
 
-        DataType.retrieve(database, suppression, instance);
+        TypeInfo.retrieve(database, suppression, instance);
 
         TableType.retrieve(database, suppression, instance);
 
@@ -406,17 +404,6 @@ public class Metadata {
     }
 
 
-    // --------------------------------------------------------------- dataTypes
-    public List<DataType> getDataTypes() {
-
-        if (dataTypes == null) {
-            dataTypes = new ArrayList<DataType>();
-        }
-
-        return dataTypes;
-    }
-
-
     // -------------------------------------------------------------- tableTypes
     public List<TableType> getTableTypes() {
 
@@ -425,6 +412,17 @@ public class Metadata {
         }
 
         return tableTypes;
+    }
+
+
+    // ---------------------------------------------------------------- typeInfo
+    public List<TypeInfo> getTypeInfo() {
+
+        if (typeInfo == null) {
+            typeInfo = new ArrayList<TypeInfo>();
+        }
+
+        return typeInfo;
     }
 
 
@@ -498,22 +496,22 @@ public class Metadata {
 
     @SuppressionPath(SUPPRESSION_PATH_CATALOGS)
     @XmlElement(name = "catalog")
-    private List<Catalog> catalogs;
+    List<Catalog> catalogs;
 
 
     @SuppressionPath(SUPPRESSION_PATH_CLIENT_INFO_PROPERTIES)
     @XmlElement(name = "clientInfoProperty")
-    private List<ClientInfoProperty> clientInfoProperties;
-
-
-    @SuppressionPath(SUPPRESSION_PATH_DATA_TYPES)
-    @XmlElement(name = "dataType")
-    private List<DataType> dataTypes;
+    List<ClientInfoProperty> clientInfoProperties;
 
 
     @SuppressionPath(SUPPRESSION_PATH_TABLE_TYPES)
     @XmlElement(name = "tableType")
-    private List<TableType> tableTypes;
+    List<TableType> tableTypes;
+
+
+    @SuppressionPath(SUPPRESSION_PATH_TYPE_INFO)
+    @XmlElement(name = "typeInfo")
+    List<TypeInfo> typeInfo;
 
 
 }

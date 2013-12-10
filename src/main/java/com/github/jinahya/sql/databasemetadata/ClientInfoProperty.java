@@ -41,36 +41,6 @@ public class ClientInfoProperty {
 
     /**
      *
-     * @param suppression
-     * @param resultSet
-     *
-     * @return
-     *
-     * @throws SQLException if a database access error occurs.
-     */
-    public static ClientInfoProperty retrieve(final Suppression suppression,
-                                              final ResultSet resultSet)
-        throws SQLException {
-
-        if (suppression == null) {
-            throw new NullPointerException("null suppression");
-        }
-
-        if (resultSet == null) {
-            throw new NullPointerException("resultSet");
-        }
-
-        final ClientInfoProperty instance = new ClientInfoProperty();
-
-        ColumnRetriever.retrieve(
-            ClientInfoProperty.class, instance, suppression, resultSet);
-
-        return instance;
-    }
-
-
-    /**
-     *
      * @param database
      * @param suppression
      * @param clientInfoProperties
@@ -104,7 +74,8 @@ public class ClientInfoProperty {
         final ResultSet resultSet = database.getClientInfoProperties();
         try {
             while (resultSet.next()) {
-                clientInfoProperties.add(retrieve(suppression, resultSet));
+                clientInfoProperties.add(ColumnRetriever.retrieve(
+                    ClientInfoProperty.class, suppression, resultSet));
             }
         } finally {
             resultSet.close();
@@ -134,7 +105,7 @@ public class ClientInfoProperty {
         }
 
         if (metadata == null) {
-            throw new NullPointerException("metadata");
+            throw new NullPointerException("null metadata");
         }
 
         retrieve(database, suppression, metadata.getClientInfoProperties());
@@ -220,6 +191,9 @@ public class ClientInfoProperty {
     }
 
 
+    /**
+     * parent metadata.
+     */
     @XmlTransient
     private Metadata metadata;
 
@@ -229,7 +203,7 @@ public class ClientInfoProperty {
      */
     @ColumnLabel("NAME")
     @XmlElement(required = true)
-    private String name;
+    String name;
 
 
     /**
@@ -237,7 +211,7 @@ public class ClientInfoProperty {
      */
     @ColumnLabel("MAX_LEN")
     @XmlElement(required = true)
-    private int maxLen;
+    int maxLen;
 
 
     /**
@@ -245,7 +219,7 @@ public class ClientInfoProperty {
      */
     @ColumnLabel("DEFAULT_VALUE")
     @XmlElement(required = true)
-    private String defaultValue;
+    String defaultValue;
 
 
     /**
@@ -254,7 +228,7 @@ public class ClientInfoProperty {
      */
     @ColumnLabel("DESCRIPTION")
     @XmlElement(required = true)
-    private String description;
+    String description;
 
 
 }

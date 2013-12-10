@@ -130,7 +130,7 @@ public class Schema implements Comparable<Schema> {
         }
 
         if (catalog == null) {
-            throw new NullPointerException("catalog");
+            throw new NullPointerException("null catalog");
         }
 
         retrieve(database, suppression,
@@ -138,20 +138,20 @@ public class Schema implements Comparable<Schema> {
                  catalog.getSchemas());
 
         if (catalog.getSchemas().isEmpty()) {
-            final Schema instance = new Schema();
-            instance.setTableSchem("");
-            catalog.getSchemas().add(instance);
+            final Schema schema = new Schema();
+            schema.setTableSchem("");
+            catalog.getSchemas().add(schema);
         }
 
-        for (final Schema child : catalog.getSchemas()) {
-            child.setCatalog(catalog);
+        for (final Schema schema : catalog.getSchemas()) {
+            schema.setCatalog(catalog);
         }
 
-        for (final Schema instance : catalog.getSchemas()) {
-            Function.retrieve(database, suppression, instance);
-            Procedure.retrieve(database, suppression, instance);
-            Table.retrieve(database, suppression, instance);
-            UserDefinedType.retrieve(database, suppression, instance);
+        for (final Schema schema : catalog.getSchemas()) {
+            Function.retrieve(database, suppression, schema);
+            Procedure.retrieve(database, suppression, schema);
+            Table.retrieve(database, suppression, schema);
+            UserDefinedType.retrieve(database, suppression, schema);
         }
     }
 
@@ -318,29 +318,40 @@ public class Schema implements Comparable<Schema> {
 
 
     @ColumnLabel("TABLE_SCHEM")
-    //@SuppressionPath("schema/tableSchem")
     @XmlElement(required = true)
-    private String tableSchem;
+    String tableSchem;
 
 
+    /**
+     * functions.
+     */
     @SuppressionPath(SUPPRESSION_PATH_FUNCTIONS)
     @XmlElement(name = "function")
-    private List<Function> functions;
+    List<Function> functions;
 
 
+    /**
+     * procedures.
+     */
     @SuppressionPath(SUPPRESSION_PATH_PROCEDURES)
     @XmlElement(name = "procedure")
-    private List<Procedure> procedures;
+    List<Procedure> procedures;
 
 
+    /**
+     * tables.
+     */
     @SuppressionPath(SUPPRESSION_PATH_TABLES)
     @XmlElement(name = "table")
-    private List<Table> tables;
+    List<Table> tables;
 
 
+    /**
+     * UDTs.
+     */
     @SuppressionPath(SUPPRESSION_PATH_USER_DEFINED_TYPES)
     @XmlElement(name = "userDefinedType")
-    private List<UserDefinedType> userDefinedTypes;
+    List<UserDefinedType> userDefinedTypes;
 
 
 }

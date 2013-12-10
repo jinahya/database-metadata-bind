@@ -71,7 +71,7 @@ public class Procedure {
         }
 
         if (procedures == null) {
-            throw new NullPointerException("procedures");
+            throw new NullPointerException("null procedures");
         }
 
         if (suppression.isSuppressed(Schema.SUPPRESSION_PATH_PROCEDURES)) {
@@ -105,15 +105,15 @@ public class Procedure {
         }
 
         if (schema == null) {
-            throw new NullPointerException("schema");
+            throw new NullPointerException("null schema");
         }
 
         retrieve(database, suppression,
                  schema.getCatalog().getTableCat(), schema.getTableSchem(),
                  null, schema.getProcedures());
 
-        for (final Procedure instance : schema.getProcedures()) {
-            instance.setSchema(schema);
+        for (final Procedure procedure : schema.getProcedures()) {
+            procedure.setSchema(schema);
         }
     }
 
@@ -207,22 +207,22 @@ public class Procedure {
 
     @ColumnLabel("PROCEDURE_NAME")
     @XmlElement(required = true)
-    private String procedureName;
+    String procedureName;
 
 
     @ColumnLabel("REMARKS")
     @XmlElement(required = true)
-    private String remarks;
+    String remarks;
 
 
     @ColumnLabel("PROCEDURE_TYPE")
     @XmlElement(required = true)
-    private short procedureType;
+    short procedureType;
 
 
     @ColumnLabel("SPECIFIC_NAME")
     @XmlElement(required = true)
-    private String specificName;
+    String specificName;
 
 
 }

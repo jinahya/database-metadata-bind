@@ -39,14 +39,14 @@ import javax.xml.bind.annotation.XmlType;
         "minimumScale", "maximumScale", "numPrecRadix"
     }
 )
-public class DataType {
+public class TypeInfo {
 
 
     /**
      *
      * @param database
      * @param suppression
-     * @param dataTypes
+     * @param typeInfo
      *
      * @throws SQLException
      *
@@ -54,7 +54,7 @@ public class DataType {
      */
     public static void retrieve(final DatabaseMetaData database,
                                 final Suppression suppression,
-                                final Collection<? super DataType> dataTypes)
+                                final Collection<? super TypeInfo> typeInfo)
         throws SQLException {
 
         if (database == null) {
@@ -65,19 +65,19 @@ public class DataType {
             throw new NullPointerException("null suppression");
         }
 
-        if (dataTypes == null) {
-            throw new NullPointerException("null dataTypes");
+        if (typeInfo == null) {
+            throw new NullPointerException("null typeInfo");
         }
 
-        if (suppression.isSuppressed(Metadata.SUPPRESSION_PATH_DATA_TYPES)) {
+        if (suppression.isSuppressed(Metadata.SUPPRESSION_PATH_TYPE_INFO)) {
             return;
         }
 
         final ResultSet resultSet = database.getTypeInfo();
         try {
             while (resultSet.next()) {
-                dataTypes.add(ColumnRetriever.retrieve(
-                    DataType.class, suppression, resultSet));
+                typeInfo.add(ColumnRetriever.retrieve(
+                    TypeInfo.class, suppression, resultSet));
             }
         } finally {
             resultSet.close();
@@ -102,10 +102,10 @@ public class DataType {
             throw new NullPointerException("null metadata");
         }
 
-        retrieve(database, suppression, metadata.getDataTypes());
+        retrieve(database, suppression, metadata.getTypeInfo());
 
-        for (final DataType instance : metadata.getDataTypes()) {
-            instance.setMetadata(metadata);
+        for (final TypeInfo typeInfo : metadata.getTypeInfo()) {
+            typeInfo.setMetadata(metadata);
         }
     }
 
@@ -113,7 +113,7 @@ public class DataType {
     /**
      * Creates a new instance.
      */
-    public DataType() {
+    public TypeInfo() {
 
         super();
     }
@@ -338,104 +338,107 @@ public class DataType {
     }
 
 
+    /**
+     * parent metadata.
+     */
     @XmlTransient
     private Metadata metadata;
 
 
     @ColumnLabel("TYPE_NAME")
-    @SuppressionPath("dataType/typeName")
+    @SuppressionPath("typeInfo/typeName")
     @XmlElement(required = true)
-    private String typeName;
+    String typeName;
 
 
     @ColumnLabel("DATA_TYPE")
-    @SuppressionPath("dataType/dataType")
+    @SuppressionPath("typeInfo/dataType")
     @XmlElement(required = true)
-    private int dataType;
+    int dataType;
 
 
     @ColumnLabel("PRECISION")
-    @SuppressionPath("dataType/precision")
+    @SuppressionPath("typeInfo/precision")
     @XmlElement(required = true)
-    private int precision;
+    int precision;
 
 
     @ColumnLabel("LITERAL_PREFIX")
-    @SuppressionPath("dataType/literalPrefix")
+    @SuppressionPath("typeInfo/literalPrefix")
     @XmlElement(nillable = true, required = true)
-    private String literalPrefix;
+    String literalPrefix;
 
 
     @ColumnLabel("LITERAL_SUFFIX")
-    @SuppressionPath("dataType/literalSuffix")
+    @SuppressionPath("typeInfo/literalSuffix")
     @XmlElement(nillable = true, required = true)
-    private String literalSuffix;
+    String literalSuffix;
 
 
     @ColumnLabel("CREATE_PARAMS")
-    @SuppressionPath("dataType/createParams")
+    @SuppressionPath("typeInfo/createParams")
     @XmlElement(nillable = true, required = true)
-    private String createParams;
+    String createParams;
 
 
     @ColumnLabel("NULLABLE")
-    @SuppressionPath("dataType/nullable")
+    @SuppressionPath("typeInfo/nullable")
     @XmlElement(required = true)
-    private short nullable;
+    short nullable;
 
 
     @ColumnLabel("CASE_SENSITIVE")
-    @SuppressionPath("dataType/caseSensitive")
+    @SuppressionPath("typeInfo/caseSensitive")
     @XmlElement(required = true)
-    private boolean caseSensitive;
+    boolean caseSensitive;
 
 
     @ColumnLabel("SEARCHABLE")
-    @SuppressionPath("dataType/searchable")
+    @SuppressionPath("typeInfo/searchable")
     @XmlElement(required = true)
-    private short searchable;
+    short searchable;
 
 
     @ColumnLabel("UNSIGNED_ATTRIBUTE")
-    @SuppressionPath("dataType/unsignedAttribute")
+    @SuppressionPath("typeInfo/unsignedAttribute")
     @XmlElement(required = true)
-    private boolean unsignedAttribute;
+    boolean unsignedAttribute;
 
 
     @ColumnLabel("FIXED_PREC_SCALE")
-    @SuppressionPath("dataType/fixedPrecScale")
+    @SuppressionPath("typeInfo/fixedPrecScale")
     @XmlElement(required = true)
-    private boolean fixedPrecScale;
+    boolean fixedPrecScale;
 
 
     @ColumnLabel("AUTO_INCREMENT")
-    @SuppressionPath("dataType/autoIncrement")
+    @SuppressionPath("typeInfo/autoIncrement")
     @XmlElement(required = true)
-    private boolean autoIncrement;
+    boolean autoIncrement;
 
 
     @ColumnLabel("LOCAL_TYPE_NAME")
-    @SuppressionPath("dataType/localTypeName")
+    @SuppressionPath("typeInfo/localTypeName")
     @XmlElement(nillable = true, required = true)
-    private String localTypeName;
+    String localTypeName;
 
 
     @ColumnLabel("MINIMUM_SCALE")
-    @SuppressionPath("dataType/minimumScale")
+    @SuppressionPath("typeInfo/minimumScale")
     @XmlElement(required = true)
-    private short minimumScale;
+    short minimumScale;
 
 
     @ColumnLabel("MAXIMUM_SCALE")
-    @SuppressionPath("dataType/maximumScale")
+    @SuppressionPath("typeInfo/maximumScale")
     @XmlElement(required = true)
-    private short maximumScale;
+    short maximumScale;
 
 
     @ColumnLabel("NUM_PREC_RADIX")
-    @SuppressionPath("dataType/numPrecRadix")
+    @SuppressionPath("typeInfo/numPrecRadix")
     @XmlElement(required = true)
-    private int numPrecRadix;
+    int numPrecRadix;
 
 
 }

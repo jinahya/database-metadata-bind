@@ -53,38 +53,6 @@ public class Column {
 
     /**
      *
-     * @param suppression
-     * @param resultSet
-     *
-     * @return
-     *
-     * @throws SQLException if a database access error occurs.
-     */
-    public static Column retrieve(final Suppression suppression,
-                                  final ResultSet resultSet)
-        throws SQLException {
-
-        if (suppression == null) {
-            throw new NullPointerException("null suppression");
-        }
-
-        if (resultSet == null) {
-            throw new NullPointerException("resultSet");
-        }
-
-        final Column instance = new Column();
-
-        ColumnRetriever.retrieve(
-            Column.class, instance, suppression, resultSet);
-
-        return instance;
-
-        //return ColumnRetriever.retrieve(Column.class, suppression, resultSet);
-    }
-
-
-    /**
-     *
      * @param database
      * @param suppression
      * @param catalog
@@ -116,7 +84,7 @@ public class Column {
         }
 
         if (columns == null) {
-            throw new NullPointerException("columns");
+            throw new NullPointerException("null columns");
         }
 
         if (suppression.isSuppressed(Table.SUPPRESSION_PATH_COLUMNS)) {
@@ -127,10 +95,8 @@ public class Column {
             catalog, schemaPattern, tableNamePattern, columnNamePattern);
         try {
             while (resultSet.next()) {
-                //columns.add(retrieve(suppression, resultSet));
-                final Column column = ColumnRetriever.retrieve(
-                    Column.class, suppression, resultSet);
-                columns.add(column);
+                columns.add(ColumnRetriever.retrieve(
+                    Column.class, suppression, resultSet));
             }
         } finally {
             resultSet.close();
@@ -160,7 +126,7 @@ public class Column {
         }
 
         if (table == null) {
-            throw new NullPointerException("table");
+            throw new NullPointerException("null table");
         }
 
         retrieve(database, suppression,
@@ -172,6 +138,15 @@ public class Column {
         for (final Column column : table.getColumns()) {
             column.setTable(table);
         }
+    }
+
+
+    /**
+     * Creates a new instance.
+     */
+    public Column() {
+
+        super();
     }
 
 
@@ -449,7 +424,7 @@ public class Column {
      */
     @ColumnLabel("COLUMN_NAME")
     @XmlElement(required = true)
-    private String columnName;
+    String columnName;
 
 
     /**
@@ -457,7 +432,7 @@ public class Column {
      */
     @ColumnLabel("DATA_TYPE")
     @XmlElement(required = true)
-    private int dataType;
+    int dataType;
 
 
     /**
@@ -466,7 +441,7 @@ public class Column {
      */
     @ColumnLabel("TYPE_NAME")
     @XmlElement(required = true)
-    private String typeName;
+    String typeName;
 
 
     /**
@@ -474,7 +449,7 @@ public class Column {
      */
     @ColumnLabel("COLUMN_SIZE")
     @XmlElement(required = true)
-    private int columnSize;
+    int columnSize;
 
 
     /**
@@ -482,7 +457,7 @@ public class Column {
      */
     @ColumnLabel("BUFFER_LENGTH")
     @NotUsed
-    private int bufferLength;
+    int bufferLength;
 
 
     /**
@@ -491,7 +466,7 @@ public class Column {
      */
     @ColumnLabel("DECIMAL_DIGITS")
     @XmlElement(required = true)
-    private Integer decimalDigits;
+    Integer decimalDigits;
 
 
     /**
@@ -499,7 +474,7 @@ public class Column {
      */
     @ColumnLabel("NUM_PREC_RADIX")
     @XmlElement(required = true)
-    private int numPrecRadix;
+    int numPrecRadix;
 
 
     /**
@@ -515,7 +490,7 @@ public class Column {
      */
     @ColumnLabel("NULLABLE")
     @XmlElement(required = true)
-    private int nullable;
+    int nullable;
 
 
     /**
@@ -524,7 +499,7 @@ public class Column {
     @ColumnLabel("REMARKS")
     @XmlElement(nillable = true, required = true)
     @NillableBySpecification
-    private String remarks;
+    String remarks;
 
 
     /**
@@ -534,7 +509,7 @@ public class Column {
     @ColumnLabel("COLUMN_DEF")
     @XmlElement(nillable = true, required = true)
     @NillableBySpecification
-    private String columnDef;
+    String columnDef;
 
 
     /**
@@ -542,7 +517,7 @@ public class Column {
      */
     @ColumnLabel("SQL_DATA_TYPE")
     @NotUsed
-    private int sqlDataType;
+    int sqlDataType;
 
 
     /**
@@ -550,7 +525,7 @@ public class Column {
      */
     @ColumnLabel("SQL_DATETIME_SUB")
     @NotUsed
-    private int sqlDatetimeSub;
+    int sqlDatetimeSub;
 
 
     /**
@@ -558,7 +533,7 @@ public class Column {
      */
     @ColumnLabel("CHAR_OCTET_LENGTH")
     @XmlElement(required = true)
-    private int charOctetLength;
+    int charOctetLength;
 
 
     /**
@@ -566,7 +541,7 @@ public class Column {
      */
     @ColumnLabel("ORDINAL_POSITION")
     @XmlElement(required = true)
-    private int ordinalPosition;
+    int ordinalPosition;
 
 
     /**
@@ -579,7 +554,7 @@ public class Column {
      */
     @ColumnLabel("IS_NULLABLE")
     @XmlElement(required = true)
-    private String isNullable;
+    String isNullable;
 
 
     /**
@@ -589,7 +564,7 @@ public class Column {
     @ColumnLabel("SCOPE_CATALOG")
     @XmlElement(nillable = true, required = true)
     @NillableBySpecification
-    private String scopeCatalog;
+    String scopeCatalog;
 
 
     /**
@@ -599,7 +574,7 @@ public class Column {
     @ColumnLabel("SCOPE_SCHEMA")
     @XmlElement(nillable = true, required = true)
     @NillableBySpecification
-    private String scopeSchema;
+    String scopeSchema;
 
 
     /**
@@ -609,7 +584,7 @@ public class Column {
     @ColumnLabel("SCOPE_TABLE")
     @XmlElement(nillable = true, required = true)
     @NillableBySpecification
-    private String scopeTable;
+    String scopeTable;
 
 
     /**
@@ -621,7 +596,7 @@ public class Column {
     @ColumnLabel("SOURCE_DATA_TYPE")
     @XmlElement(nillable = true, required = true)
     @NillableBySpecification
-    private String sourceDataType;
+    String sourceDataType;
 
 
     /**
@@ -635,7 +610,7 @@ public class Column {
      */
     @ColumnLabel("IS_AUTOINCREMENT")
     @XmlElement(required = true)
-    private String isAutoincrement;
+    String isAutoincrement;
 
 
     /**
@@ -650,7 +625,7 @@ public class Column {
     @ColumnLabel("IS_GENERATEDCOLUMN")
     @SuppressionPath("column/isGeneratedcolumn")
     @XmlElement(required = true)
-    private String isGeneratedcolumn;
+    String isGeneratedcolumn;
 
 
 }

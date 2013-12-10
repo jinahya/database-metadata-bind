@@ -234,39 +234,75 @@ public class VersionColumn {
     private Table table;
 
 
+    @ColumnLabel("SCOPE")
+    @XmlTransient
+    @NotUsed
+    short scope;
+
+
+    /**
+     * column name.
+     */
     @ColumnLabel("COLUMN_NAME")
     @XmlElement(required = true)
-    private String columnName;
+    String columnName;
 
 
+    /**
+     * SQL data type from {@link java.sql.Types}.
+     */
     @ColumnLabel("DATA_TYPE")
     @XmlElement(required = true)
-    private int dataType;
+    int dataType;
 
 
+    /**
+     * Data source-dependent type name.
+     */
     @ColumnLabel("TYPE_NAME")
     @XmlElement(required = true)
-    private String typeName;
+    String typeName;
 
 
+    /**
+     * precision.
+     */
     @ColumnLabel("COLUMN_SIZE")
     @XmlElement(required = true)
-    private int columnSize;
+    int columnSize;
 
 
+    /**
+     * length of column value in bytes.
+     */
     @ColumnLabel("BUFFER_LENGTH")
     @XmlElement(required = true)
-    private int bufferLength;
+    int bufferLength;
 
 
+    /**
+     * scale - Null is returned for data types where
+     * {@link Column#decimalDigits DECIMAL_DIGITS} is not applicable.
+     */
     @ColumnLabel("DECIMAL_DIGITS")
     @XmlElement(nillable = true, required = true)
-    private Short decimalDigits;
+    Short decimalDigits;
 
 
+    /**
+     * whether this is pseudo column like an Oracle ROWID
+     * <ul>
+     * <li>{@link DatabaseMetaData#versionColumnUnknown} - may or may not be
+     * pseudo column</li>
+     * <li>{@link DatabaseMetaData#versionColumnNotPseudo} - is NOT a pseudo
+     * column</li>
+     * <li>{@link DatabaseMetaData#versionColumnPseudo} - is a pseudo
+     * column</li>
+     * </ul>
+     */
     @ColumnLabel("PSEUDO_COLUMN")
     @XmlElement(required = true)
-    private short pseudoColumn;
+    short pseudoColumn;
 
 
 }

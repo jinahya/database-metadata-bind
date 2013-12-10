@@ -72,7 +72,7 @@ public class BestRowIdentifier {
         }
 
         if (bestRowIdentifiers == null) {
-            throw new NullPointerException("best RowIdentifiers");
+            throw new NullPointerException("null bestRowIdentifiers");
         }
 
         if (suppression.isSuppressed(
@@ -256,6 +256,9 @@ public class BestRowIdentifier {
     }
 
 
+    /**
+     * parent table.
+     */
     @XmlTransient
     private Table table;
 
@@ -274,7 +277,7 @@ public class BestRowIdentifier {
     @ColumnLabel("SCOPE")
     //@SuppressionPath("bestRowIdentifier/scope")
     @XmlElement(required = true)
-    private short scope;
+    short scope;
 
 
     /**
@@ -283,7 +286,7 @@ public class BestRowIdentifier {
     @ColumnLabel("COLUMN_NAME")
     //@SuppressionPath("bestRowIdentifier/columnName")
     @XmlElement(required = true)
-    private String columnName;
+    String columnName;
 
 
     /**
@@ -291,7 +294,7 @@ public class BestRowIdentifier {
      */
     @ColumnLabel("DATA_TYPE")
     @XmlElement(required = true)
-    private int dataType;
+    int dataType;
 
 
     /**
@@ -300,7 +303,7 @@ public class BestRowIdentifier {
      */
     @ColumnLabel("TYPE_NAME")
     @XmlElement(required = true)
-    private String typeName;
+    String typeName;
 
 
     /**
@@ -308,7 +311,7 @@ public class BestRowIdentifier {
      */
     @ColumnLabel("COLUMN_SIZE")
     @XmlElement(required = true)
-    private int columnSize;
+    int columnSize;
 
 
     /**
@@ -316,7 +319,7 @@ public class BestRowIdentifier {
      */
     @ColumnLabel("BUFFER_LENGTH")
     @NotUsed
-    private int bufferLength;
+    int bufferLength;
 
 
     /**
@@ -326,7 +329,7 @@ public class BestRowIdentifier {
     @ColumnLabel("DECIMAL_DIGITS")
     @XmlElement(nillable = true, required = true)
     @NillableBySpecification
-    private Short decimalDigits;
+    Short decimalDigits;
 
 
     /**
@@ -341,7 +344,7 @@ public class BestRowIdentifier {
      */
     @ColumnLabel("PSEUDO_COLUMN")
     @XmlElement(required = true)
-    private short pseudoColumn;
+    short pseudoColumn;
 
 
 }

@@ -70,7 +70,7 @@ public class ColumnPrivilege {
         }
 
         if (columnPrivileges == null) {
-            throw new NullPointerException("columnPrivileges");
+            throw new NullPointerException("null columnPrivileges");
         }
 
         if (suppression.isSuppressed(
@@ -105,7 +105,7 @@ public class ColumnPrivilege {
         }
 
         if (table == null) {
-            throw new NullPointerException("table");
+            throw new NullPointerException("null table");
         }
 
         retrieve(database, suppression,
@@ -114,12 +114,16 @@ public class ColumnPrivilege {
                  null,
                  table.getColumnPrivileges());
 
-        for (final ColumnPrivilege instance : table.getColumnPrivileges()) {
-            instance.setTable(table);
+        for (final ColumnPrivilege columnPrivilege
+             : table.getColumnPrivileges()) {
+            columnPrivilege.setTable(table);
         }
     }
 
 
+    /**
+     * Creates a new instance.
+     */
     public ColumnPrivilege() {
 
         super();
@@ -215,22 +219,22 @@ public class ColumnPrivilege {
 
     @ColumnLabel("GRANTOR")
     @XmlElement(nillable = true, required = true)
-    private String grantor;
+    String grantor;
 
 
     @ColumnLabel("GRANTEE")
     @XmlElement(required = true)
-    private String grantee;
+    String grantee;
 
 
     @ColumnLabel("PRIVILEGE")
     @XmlElement(required = true)
-    private String privilege;
+    String privilege;
 
 
     @ColumnLabel("IS_GRANTABLE")
     @XmlElement(nillable = true, required = true)
-    private String isGrantable;
+    String isGrantable;
 
 
 }

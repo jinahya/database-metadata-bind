@@ -313,7 +313,7 @@ public class ExportedKey {
      */
     @ColumnLabel("PKCOLUMN_NAME")
     @XmlElement(required = true)
-    private String pkcolumnName;
+    String pkcolumnName;
 
 
     /**
@@ -323,7 +323,7 @@ public class ExportedKey {
     @ColumnLabel("FKTABLE_CAT")
     @XmlElement(nillable = true, required = true)
     @NillableBySpecification
-    private String fktableCat;
+    String fktableCat;
 
 
     /**
@@ -334,7 +334,7 @@ public class ExportedKey {
     @ColumnLabel("FKTABLE_NAME")
     @XmlElement(nillable = true, required = true)
     @NillableBySpecification
-    private String fktableSchem;
+    String fktableSchem;
 
 
     /**
@@ -342,7 +342,7 @@ public class ExportedKey {
      */
     @ColumnLabel("FKTABLE_NAME")
     @XmlElement(required = true)
-    private String fktableName;
+    String fktableName;
 
 
     /**
@@ -350,7 +350,7 @@ public class ExportedKey {
      */
     @ColumnLabel("FKCOLUMN_NAME")
     @XmlElement(required = true)
-    private Column fkcolumnName;
+    Column fkcolumnName;
 
 
     /**
@@ -360,7 +360,7 @@ public class ExportedKey {
      */
     @ColumnLabel("FKCOLUMN_NAME")
     @XmlElement(required = true)
-    private short keySeq;
+    short keySeq;
 
 
     /**
@@ -380,7 +380,7 @@ public class ExportedKey {
      */
     @ColumnLabel("UPDATE_RULE")
     @XmlElement(required = true)
-    private short updateRule;
+    short updateRule;
 
 
     /**
@@ -400,7 +400,7 @@ public class ExportedKey {
      */
     @ColumnLabel("DELETE_RULE")
     @XmlElement(required = true)
-    private short deleteRule;
+    short deleteRule;
 
 
     /**
@@ -408,7 +408,7 @@ public class ExportedKey {
      */
     @ColumnLabel("FK_NAME")
     @XmlElement(required = true)
-    private String fkName;
+    String fkName;
 
 
     /**
@@ -416,7 +416,7 @@ public class ExportedKey {
      */
     @ColumnLabel("PK_NAME")
     @XmlElement(required = true)
-    private String pkName;
+    String pkName;
 
 
     /**
@@ -431,7 +431,7 @@ public class ExportedKey {
      * </ul>
      */
     @ColumnLabel("DEFERRABILITY")
-    private short deferrability;
+    short deferrability;
 
 
 }

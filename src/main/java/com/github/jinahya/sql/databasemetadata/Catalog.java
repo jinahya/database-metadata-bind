@@ -94,7 +94,7 @@ public class Catalog implements Comparable<Catalog> {
      * @param suppression
      * @param metadata
      *
-     * @throws SQLException if a database error occurs.
+     * @throws SQLException if a database access error occurs.
      */
     public static void retrieve(final DatabaseMetaData database,
                                 final Suppression suppression,
@@ -110,15 +110,15 @@ public class Catalog implements Comparable<Catalog> {
         }
 
         if (metadata == null) {
-            throw new NullPointerException("metadata");
+            throw new NullPointerException("null metadata");
         }
 
         retrieve(database, suppression, metadata.getCatalogs());
 
         if (metadata.getCatalogs().isEmpty()) {
-            final Catalog instance = new Catalog();
-            instance.setTableCat("");
-            metadata.getCatalogs().add(instance);
+            final Catalog catalog = new Catalog();
+            catalog.setTableCat("");
+            metadata.getCatalogs().add(catalog);
         }
 
         for (final Catalog catalog : metadata.getCatalogs()) {
@@ -240,7 +240,7 @@ public class Catalog implements Comparable<Catalog> {
      */
     @ColumnLabel("TABLE_CAT")
     @XmlElement(required = true)
-    private String tableCat;
+    String tableCat;
 
 
     /**
@@ -248,7 +248,7 @@ public class Catalog implements Comparable<Catalog> {
      */
     @SuppressionPath(SUPPRESSION_PATH_SCHEMAS)
     @XmlElement(name = "schema")
-    private List<Schema> schemas;
+    List<Schema> schemas;
 
 
 }

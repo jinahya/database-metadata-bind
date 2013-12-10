@@ -105,7 +105,7 @@ public class Function {
         }
 
         if (schema == null) {
-            throw new NullPointerException("schema");
+            throw new NullPointerException("null schema");
         }
 
         retrieve(database, suppression,
@@ -113,8 +113,8 @@ public class Function {
                  null,
                  schema.getFunctions());
 
-        for (final Function instance : schema.getFunctions()) {
-            instance.setSchema(schema);
+        for (final Function function : schema.getFunctions()) {
+            function.setSchema(schema);
         }
     }
 
@@ -209,22 +209,22 @@ public class Function {
 
     @ColumnLabel("FUNCTION_NAME")
     @XmlElement(required = true)
-    private String functionName;
+    String functionName;
 
 
     @ColumnLabel("REMARKS")
     @XmlElement(required = true)
-    private String remarks;
+    String remarks;
 
 
     @ColumnLabel("FUNCTION_TYPE")
     @XmlElement(required = true)
-    private short functionType;
+    short functionType;
 
 
     @ColumnLabel("SPECIFIC_NAME")
     @XmlElement(required = true)
-    private String specificName;
+    String specificName;
 
 
 }

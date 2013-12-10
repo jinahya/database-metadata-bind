@@ -117,7 +117,7 @@ public class IndexInfo {
         }
 
         if (table == null) {
-            throw new NullPointerException("table");
+            throw new NullPointerException("null table");
         }
 
         retrieve(database, suppression,
@@ -351,7 +351,7 @@ public class IndexInfo {
      */
     @ColumnLabel("NON_UNIQUE")
     @XmlElement(required = true)
-    private boolean nonUnique;
+    boolean nonUnique;
 
 
     /**
@@ -361,7 +361,7 @@ public class IndexInfo {
     @ColumnLabel("INDEX_QUALIFIER")
     @XmlElement(nillable = true, required = true)
     @NillableBySpecification
-    private String indexQualifier;
+    String indexQualifier;
 
 
     /**
@@ -371,7 +371,7 @@ public class IndexInfo {
     @ColumnLabel("INDEX_NAME")
     @XmlElement(nillable = true, required = true)
     @NillableBySpecification
-    private String indexName;
+    String indexName;
 
 
     /**
@@ -390,7 +390,7 @@ public class IndexInfo {
      */
     @ColumnLabel("TYPE")
     @XmlElement(required = true)
-    private short type;
+    short type;
 
 
     /**
@@ -399,7 +399,7 @@ public class IndexInfo {
      */
     @ColumnLabel("ORDINAL_POSITION")
     @XmlElement(required = true)
-    private short ordinalPosition;
+    short ordinalPosition;
 
 
     /**
@@ -409,7 +409,7 @@ public class IndexInfo {
     @ColumnLabel("COLUMN_NAME")
     @XmlElement(nillable = true, required = true)
     @NillableBySpecification
-    private String columnName;
+    String columnName;
 
 
     /**
@@ -420,7 +420,7 @@ public class IndexInfo {
     @ColumnLabel("ASC_OR_DESC")
     @XmlElement(nillable = true, required = true)
     @NillableBySpecification
-    private String ascOrDesc;
+    String ascOrDesc;
 
 
     /**
@@ -430,8 +430,8 @@ public class IndexInfo {
      */
     @ColumnLabel("CARDINALITY")
     @XmlElement(required = true)
-    //private long cardinality;
-    private int cardinality;
+    //long cardinality;
+    int cardinality;
 
 
     /**
@@ -441,8 +441,8 @@ public class IndexInfo {
      */
     @ColumnLabel("PAGES")
     @XmlElement(required = true)
-    //private long pages;
-    private int pages;
+    //long pages;
+    int pages;
 
 
     /**
@@ -451,7 +451,7 @@ public class IndexInfo {
     @ColumnLabel("FILTER_CONDITION")
     @XmlElement(nillable = true, required = true)
     @NillableBySpecification
-    private String filterCondition;
+    String filterCondition;
 
 
 }

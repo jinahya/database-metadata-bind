@@ -126,7 +126,9 @@ public class Attribute {
             throw new NullPointerException("null suppression");
         }
 
-        if (userDefinedType == null) { throw new NullPointerException("userDefinedType"); }
+        if (userDefinedType == null) {
+            throw new NullPointerException("userDefinedType");
+        }
 
         retrieve(database, suppression,
                  userDefinedType.getSchema().getCatalog().getTableCat(),
@@ -337,7 +339,7 @@ public class Attribute {
     @ColumnLabel("TYPE_CAT")
     @SuppressionPath("attribute/typeCat")
     @XmlAttribute
-    protected String typeCat;
+    private String typeCat;
 
 
     /**
@@ -346,7 +348,7 @@ public class Attribute {
     @ColumnLabel("TYPE_SCHEM")
     @SuppressionPath("attribute/typeSchem")
     @XmlAttribute
-    protected String typeSchem;
+    private String typeSchem;
 
 
     /**
@@ -355,9 +357,12 @@ public class Attribute {
     @ColumnLabel("TYPE_NAME")
     //@SuppressionPath("attribute/typeName")
     @XmlAttribute
-    protected String typeName;
+    private String typeName;
 
 
+    /**
+     * parent UDT.
+     */
     @XmlTransient
     private UserDefinedType userDefinedType;
 
@@ -368,7 +373,7 @@ public class Attribute {
     @ColumnLabel("ATTR_NAME")
     //@SuppressionPath("attribute/attrName")
     @XmlElement(required = true)
-    protected String attrName;
+    String attrName;
 
 
     /**
@@ -377,7 +382,7 @@ public class Attribute {
     @ColumnLabel("DATA_TYPE")
     //@SuppressionPath("attribute/dataType")
     @XmlElement(required = true)
-    protected int dataType;
+    int dataType;
 
 
     /**
@@ -388,7 +393,7 @@ public class Attribute {
     @ColumnLabel("ATTR_TYPE_NAME")
     //@SuppressionPath("attribute/attrTypeName")
     @XmlElement(required = true)
-    protected String attrTypeName;
+    String attrTypeName;
 
 
     /**
@@ -398,7 +403,7 @@ public class Attribute {
     @ColumnLabel("ATTR_SIZE")
     //@SuppressionPath("attribute/attrSize")
     @XmlElement(required = true)
-    protected int attrSize;
+    int attrSize;
 
 
     /**
@@ -408,7 +413,7 @@ public class Attribute {
     @ColumnLabel("DECIMAL_DIGITS")
     //@SuppressionPath("attribute/decimalDigits")
     @XmlElement(required = true)
-    protected Integer decimalDigits;
+    Integer decimalDigits;
 
 
     /**
@@ -417,7 +422,7 @@ public class Attribute {
     @ColumnLabel("NUM_PREC_RADIX")
     //@SuppressionPath("attribute/numPrecRadix")
     @XmlElement(required = true)
-    protected int numPrecRadix;
+    int numPrecRadix;
 
 
     /**
@@ -426,7 +431,7 @@ public class Attribute {
     @ColumnLabel("NULLABLE")
     //@SuppressionPath("attribute/nullable")
     @XmlElement(required = true)
-    protected int nullable;
+    int nullable;
 
 
     /**
@@ -436,7 +441,7 @@ public class Attribute {
     //@SuppressionPath("attribute/remarks")
     @XmlElement(nillable = true, required = true)
     @NillableBySpecification
-    protected String remarks;
+    String remarks;
 
 
     /**
@@ -446,7 +451,7 @@ public class Attribute {
     //@SuppressionPath("attribute/attrDef")
     @XmlElement(nillable = true, required = true)
     @NillableBySpecification
-    protected String attrDef;
+    String attrDef;
 
 
     /**
@@ -455,7 +460,7 @@ public class Attribute {
     @ColumnLabel("SQL_DATA_TYPE")
     //@SuppressionPath("attribute/sqlDataType")
     @NotUsed
-    protected int sqlDataType;
+    int sqlDataType;
 
 
     /**
@@ -464,7 +469,7 @@ public class Attribute {
     @ColumnLabel("SQL_DATETIME_SUB")
     //@SuppressionPath("attribute/sqlDatetimeSub")
     @NotUsed
-    protected int sqlDatetimeSub;
+    int sqlDatetimeSub;
 
 
     /**
@@ -473,7 +478,7 @@ public class Attribute {
     @ColumnLabel("CHAR_OCTET_LENGTH")
     //@SuppressionPath("attribute/charOctetLength")
     @XmlElement(required = true)
-    protected int charOctetLength;
+    int charOctetLength;
 
 
     /**
@@ -482,7 +487,7 @@ public class Attribute {
     @ColumnLabel("ORDINAL_POSITION")
     //@SuppressionPath("attribute/ordinalPosition")
     @XmlElement(required = true)
-    protected int ordinalPosition;
+    int ordinalPosition;
 
 
     /**
@@ -491,7 +496,7 @@ public class Attribute {
     @ColumnLabel("IS_NULLABLE")
     //@SuppressionPath("attribute/isNullable")
     @XmlElement(required = true)
-    protected String isNullable;
+    String isNullable;
 
 
     /**
@@ -504,7 +509,7 @@ public class Attribute {
     @SuppressionPath("attribute/sourceDataType")
     @XmlElement(nillable = true, required = true)
     @NillableBySpecification()
-    protected Short sourceDataType;
+    Short sourceDataType;
 
 
 }

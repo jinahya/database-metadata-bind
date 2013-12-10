@@ -217,25 +217,25 @@ public class TablePrivilege {
     @ColumnLabel("GRANTOR")
     //@SuppressionPath("tablePrivilege/grantor")
     @XmlElement(nillable = true, required = true)
-    private String grantor;
+    String grantor;
 
 
     @ColumnLabel("GRANTEE")
     //@SuppressionPath("tablePrivilege/grantee")
     @XmlElement(required = true)
-    private String grantee;
+    String grantee;
 
 
     @ColumnLabel("PRIVILEGE")
     //@SuppressionPath("tablePrivilege/privilege")
     @XmlElement(required = true)
-    private String privilege;
+    String privilege;
 
 
     @ColumnLabel("IS_GRANTABLE")
     @SuppressionPath("tablePrivilege/isGrantable")
     @XmlElement(nillable = true, required = true)
-    private String isGrantable;
+    String isGrantable;
 
 
 }

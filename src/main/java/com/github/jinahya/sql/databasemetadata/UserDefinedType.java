@@ -89,10 +89,8 @@ public class UserDefinedType {
             catalog, schemaPattern, typeNamePattern, types);
         try {
             while (resultSet.next()) {
-                final UserDefinedType userDefinedType
-                    = ColumnRetriever.retrieve(
-                        UserDefinedType.class, suppression, resultSet);
-                userDefinedTypes.add(userDefinedType);
+                userDefinedTypes.add(ColumnRetriever.retrieve(
+                    UserDefinedType.class, suppression, resultSet));
             }
         } finally {
             resultSet.close();
@@ -122,7 +120,7 @@ public class UserDefinedType {
         }
 
         if (schema == null) {
-            throw new NullPointerException("schema");
+            throw new NullPointerException("null schema");
         }
 
         retrieve(database, suppression,
@@ -270,7 +268,7 @@ public class UserDefinedType {
      */
     @ColumnLabel("TYPE_NAME")
     @XmlElement(required = true)
-    private String typeName;
+    String typeName;
 
 
     /**
@@ -278,7 +276,7 @@ public class UserDefinedType {
      */
     @ColumnLabel("CLASS_NAME")
     @XmlElement(required = true)
-    private String className;
+    String className;
 
 
     /**
@@ -288,7 +286,7 @@ public class UserDefinedType {
      */
     @ColumnLabel("DATA_TYPE")
     @XmlElement(required = true)
-    private int dataType;
+    int dataType;
 
 
     /**
@@ -296,7 +294,7 @@ public class UserDefinedType {
      */
     @ColumnLabel("REMARKS")
     @XmlElement(required = true)
-    private String remarks;
+    String remarks;
 
 
     /**
@@ -311,7 +309,7 @@ public class UserDefinedType {
     //@SuppressionPath("userDefinedType/baseType")
     @XmlElement(nillable = true, required = true)
     @NillableBySpecification
-    private Short baseType;
+    Short baseType;
 
 
     /**
@@ -319,7 +317,7 @@ public class UserDefinedType {
      */
     @SuppressionPath(SUPPRESSION_PATH_ATTRIBUTES)
     @XmlElement(name = "attribute")
-    private List<Attribute> attributes;
+    List<Attribute> attributes;
 
 
 }

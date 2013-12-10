@@ -308,7 +308,7 @@ public class ImportedKey {
      */
     @ColumnLabel("PKCOLUMN_NAME")
     @XmlElement(required = true)
-    private String pkcolumnName;
+    String pkcolumnName;
 
 
     /**
@@ -349,7 +349,7 @@ public class ImportedKey {
      */
     @ColumnLabel("FKCOLUMN_NAME")
     @XmlElement(required = true)
-    private Column fkcolumnName;
+    Column fkcolumnName;
 
 
     /**
@@ -359,7 +359,7 @@ public class ImportedKey {
      */
     @ColumnLabel("FKCOLUMN_NAME")
     @XmlElement(required = true)
-    private short keySeq;
+    short keySeq;
 
 
     /**
@@ -379,7 +379,7 @@ public class ImportedKey {
      */
     @ColumnLabel("UPDATE_RULE")
     @XmlElement(required = true)
-    private short updateRule;
+    short updateRule;
 
 
     /**
@@ -399,7 +399,7 @@ public class ImportedKey {
      */
     @ColumnLabel("DELETE_RULE")
     @XmlElement(required = true)
-    private short deleteRule;
+    short deleteRule;
 
 
     /**
@@ -407,7 +407,7 @@ public class ImportedKey {
      */
     @ColumnLabel("FK_NAME")
     @XmlElement(required = true)
-    private String fkName;
+    String fkName;
 
 
     /**
@@ -415,7 +415,7 @@ public class ImportedKey {
      */
     @ColumnLabel("PK_NAME")
     @XmlElement(required = true)
-    private String pkName;
+    String pkName;
 
 
     /**
@@ -430,7 +430,7 @@ public class ImportedKey {
      * </ul>
      */
     @ColumnLabel("DEFERRABILITY")
-    private short deferrability;
+    short deferrability;
 
 
 }
