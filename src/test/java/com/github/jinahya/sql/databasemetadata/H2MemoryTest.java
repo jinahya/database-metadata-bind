@@ -21,12 +21,17 @@ package com.github.jinahya.sql.databasemetadata;
 import com.github.jinahya.sql.databasemetadata.SuppressionKey;
 import com.github.jinahya.sql.databasemetadata.Suppression;
 import com.github.jinahya.sql.databasemetadata.Suppressions;
+import java.io.File;
+import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.OutputStream;
 import java.sql.Connection;
 import java.sql.DatabaseMetaData;
 import java.sql.DriverManager;
 import java.sql.SQLException;
+import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBException;
+import javax.xml.bind.Marshaller;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.testng.annotations.AfterClass;
@@ -78,6 +83,8 @@ public class H2MemoryTest {
     @Test
     public void retrieve() throws SQLException, JAXBException, IOException {
 
+        final Metadata metadata;
+
         try (Connection connection
             = DriverManager.getConnection(CONNECTION_URL)) {
 
@@ -90,13 +97,23 @@ public class H2MemoryTest {
             final Suppression suppression
                 = suppressions.getSuppression(suppressionKey);
 
-            final Metadata metadata
-                = Metadata.newInstance(databaseMetaData, suppression);
-            
+            metadata = Metadata.newInstance(databaseMetaData, suppression);
+
             metadata.print(System.out);
 
             MetadataVerifier.verify(metadata);
         }
+
+        final JAXBContext context = JAXBContext.newInstance(Metadata.class);
+        final Marshaller marshaller = context.createMarshaller();
+        marshaller.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, Boolean.TRUE);
+
+        final File file = new File("target", "h2.memory.metadata.xml");
+        try (OutputStream outputStream = new FileOutputStream(file)) {
+            marshaller.marshal(metadata, outputStream);
+            outputStream.flush();
+        }
+
     }
 
 
