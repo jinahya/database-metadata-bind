@@ -18,9 +18,6 @@
 package com.github.jinahya.sql.databasemetadata;
 
 
-import com.github.jinahya.sql.databasemetadata.SuppressionKey;
-import com.github.jinahya.sql.databasemetadata.Suppression;
-import com.github.jinahya.sql.databasemetadata.Suppressions;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;

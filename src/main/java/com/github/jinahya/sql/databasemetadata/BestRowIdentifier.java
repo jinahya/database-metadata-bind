@@ -115,7 +115,7 @@ public class BestRowIdentifier {
         }
 
         if (table == null) {
-            throw new NullPointerException("table");
+            throw new NullPointerException("null table");
         }
 
         retrieve(database, suppression,

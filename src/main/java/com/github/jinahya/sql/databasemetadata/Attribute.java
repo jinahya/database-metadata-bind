@@ -53,18 +53,22 @@ public class Attribute {
 
     /**
      *
-     * @param database
-     * @param suppression
+     * Retrieves attributes. This method invokes
+     * {@link DatabaseMetaData#getAttributes(String, String, String, String)}
+     * with specified {@code catalog}, {@code schemaPattern},
+     * {@code typeNamePattern}, and {@code attributeNamePattern}.
+     *
+     * @param database the database meta data.
+     * @param suppression the suppression
      * @param catalog
      * @param schemaPattern
      * @param typeNamePattern
      * @param attributeNamePattern
-     * @param attributes
+     * @param attributes the collection to which retrieved attributes are added.
      *
      * @throws SQLException if a database access error occurs.
      *
-     * @see DatabaseMetaData#getAttributes(java.lang.String, java.lang.String,
-     * java.lang.String, java.lang.String)
+     * @see DatabaseMetaData#getAttributes(String, String, String, String)
      */
     public static void retrieve(final DatabaseMetaData database,
                                 final Suppression suppression,
@@ -127,13 +131,14 @@ public class Attribute {
         }
 
         if (userDefinedType == null) {
-            throw new NullPointerException("userDefinedType");
+            throw new NullPointerException("null userDefinedType");
         }
 
         retrieve(database, suppression,
                  userDefinedType.getSchema().getCatalog().getTableCat(),
                  userDefinedType.getSchema().getTableSchem(),
-                 userDefinedType.getTypeName(), null,
+                 userDefinedType.getTypeName(),
+                 null,
                  userDefinedType.getAttributes());
 
         for (final Attribute attribute : userDefinedType.getAttributes()) {
