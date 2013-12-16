@@ -49,6 +49,20 @@
       <path>column/isGeneratedcolumn</path>
     </paths>
   </suppression>
+  
+  <suppression>
+    <key>
+      <databaseMajorVersion>2</databaseMajorVersion>
+      <databaseMinorVersion>3</databaseMinorVersion>
+      <databaseProductName>HSQL Database Engine</databaseProductName>
+      <databaseProductVersion>HSQL Database Engine</databaseProductVersion>
+      <driverMajorVersion>2</driverMajorVersion>
+      <driverMinorVersion>3</driverMinorVersion>
+      <driverName>HSQL Database Engine Driver</driverName>
+      <driverVersion>2.3.0</driverVersion>
+    </key>
+  </suppression>
+    
 
   <suppression>
     <key>
@@ -62,6 +76,23 @@
       <driverVersion>mysql-connector-java-5.1.26 ( Revision: ${bzr.revision-id} )</driverVersion>
     </key>
     <paths>
+      <path>table/tablePrivileges</path>
+    </paths>
+  </suppression>
+
+  <suppression>
+    <key>
+      <databaseMajorVersion>5</databaseMajorVersion>
+      <databaseMinorVersion>6</databaseMinorVersion>
+      <databaseProductName>MySQL</databaseProductName>
+      <databaseProductVersion>MySQL</databaseProductVersion>
+      <driverMajorVersion>5</driverMajorVersion>
+      <driverMinorVersion>1</driverMinorVersion>
+      <driverName>MySQL Connector Java</driverName>
+      <driverVersion>mysql-connector-java-5.1.27 ( Revision: alexander.soklakov@oracle.com-20131021093118-gtm1bh1vb450xipt )</driverVersion>
+    </key>
+    <paths>
+      <path>table/columnPrivileges</path>
       <path>table/tablePrivileges</path>
     </paths>
   </suppression>

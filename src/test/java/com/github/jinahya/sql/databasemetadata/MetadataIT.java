@@ -18,12 +18,17 @@
 package com.github.jinahya.sql.databasemetadata;
 
 
+import java.io.File;
+import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.OutputStream;
 import java.sql.Connection;
 import java.sql.DatabaseMetaData;
 import java.sql.DriverManager;
 import java.sql.SQLException;
+import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBException;
+import javax.xml.bind.Marshaller;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.testng.SkipException;
@@ -90,6 +95,17 @@ public class MetadataIT {
 
             final Metadata metadata
                 = Metadata.newInstance(database, suppression);
+
+            final JAXBContext context = JAXBContext.newInstance(Metadata.class);
+            final Marshaller marshaller = context.createMarshaller();
+            marshaller.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT,
+                                   Boolean.TRUE);
+            final File file = new File("target", "metadata.xml");
+            try (OutputStream outputStream = new FileOutputStream(file)) {
+                marshaller.marshal(metadata, outputStream);
+                outputStream.flush();
+            }
+
 
             metadata.print(System.out);
         }
