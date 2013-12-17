@@ -48,10 +48,9 @@ public class VersionColumn {
      * @param table
      * @param versionColumns
      *
-     * @throws SQLException
+     * @throws SQLException if a database access error occurs.
      *
-     * @see DatabaseMetaData#getVersionColumns(java.lang.String,
-     * java.lang.String, java.lang.String)
+     * @see DatabaseMetaData#getVersionColumns(String, String, String)
      */
     public static void retrieve(
         final DatabaseMetaData database, final Suppression suppression,
@@ -88,6 +87,14 @@ public class VersionColumn {
     }
 
 
+    /**
+     *
+     * @param database
+     * @param suppression
+     * @param table
+     *
+     * @throws SQLException if a database access error occurs.
+     */
     public static void retrieve(final DatabaseMetaData database,
                                 final Suppression suppression,
                                 final Table table)
@@ -112,7 +119,7 @@ public class VersionColumn {
                  table.getVersionColumns());
 
         for (final VersionColumn versionColumn : table.getVersionColumns()) {
-            versionColumn.setTable(table);
+            versionColumn.table = table;
         }
     }
 
@@ -130,12 +137,6 @@ public class VersionColumn {
     public Table getTable() {
 
         return table;
-    }
-
-
-    public void setTable(final Table table) {
-
-        this.table = table;
     }
 
 
@@ -230,6 +231,9 @@ public class VersionColumn {
     }
 
 
+    /**
+     * parent table.
+     */
     @XmlTransient
     private Table table;
 

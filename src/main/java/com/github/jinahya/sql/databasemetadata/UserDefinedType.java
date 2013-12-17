@@ -56,10 +56,9 @@ public class UserDefinedType {
      * @param types
      * @param userDefinedTypes
      *
-     * @throws SQLException
+     * @throws SQLException if a database access error occurs.
      *
-     * @see DatabaseMetaData#getUDTs(java.lang.String, java.lang.String,
-     * java.lang.String, int[])
+     * @see DatabaseMetaData#getUDTs(String, String, String, int[])
      */
     public static void retrieve(
         final DatabaseMetaData database, final Suppression suppression,
@@ -124,13 +123,15 @@ public class UserDefinedType {
         }
 
         retrieve(database, suppression,
-                 schema.getCatalog().getTableCat(), schema.getTableSchem(),
-                 null, null,
+                 schema.getCatalog().getTableCat(),
+                 schema.getTableSchem(),
+                 null,
+                 null,
                  schema.getUserDefinedTypes());
 
         for (final UserDefinedType userDefinedType
              : schema.getUserDefinedTypes()) {
-            userDefinedType.setSchema(schema);
+            userDefinedType.schema = schema;
         }
 
         for (final UserDefinedType uesrDefinedType
@@ -153,12 +154,6 @@ public class UserDefinedType {
     public Schema getSchema() {
 
         return schema;
-    }
-
-
-    public void setSchema(final Schema schema) {
-
-        this.schema = schema;
     }
 
 
@@ -257,7 +252,7 @@ public class UserDefinedType {
 
 
     /**
-     * schema.
+     * parent schema.
      */
     @XmlTransient
     private Schema schema;

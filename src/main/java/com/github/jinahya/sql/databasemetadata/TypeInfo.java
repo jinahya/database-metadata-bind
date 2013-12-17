@@ -86,6 +86,14 @@ public class TypeInfo {
     }
 
 
+    /**
+     *
+     * @param database
+     * @param suppression
+     * @param metadata
+     *
+     * @throws SQLException if a database access error occurs.
+     */
     public static void retrieve(final DatabaseMetaData database,
                                 final Suppression suppression,
                                 final Metadata metadata)
