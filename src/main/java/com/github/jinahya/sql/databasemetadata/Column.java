@@ -21,7 +21,9 @@ package com.github.jinahya.sql.databasemetadata;
 import java.sql.DatabaseMetaData;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.Collection;
+import java.util.List;
 import javax.xml.bind.annotation.XmlAttribute;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlTransient;
@@ -39,7 +41,8 @@ import org.slf4j.LoggerFactory;
         "columnName", "dataType", "typeName", "columnSize", "decimalDigits",
         "numPrecRadix", "nullable", "remarks", "columnDef", "charOctetLength",
         "ordinalPosition", "isNullable", "scopeCatalog", "scopeSchema",
-        "scopeTable", "sourceDataType", "isAutoincrement", "isGeneratedcolumn"
+        "scopeTable", "sourceDataType", "isAutoincrement", "isGeneratedcolumn",
+        "columnPrivileges"
     }
 )
 public class Column {
@@ -49,6 +52,13 @@ public class Column {
      * logger.
      */
     private static final Logger LOGGER = LoggerFactory.getLogger(Column.class);
+
+
+    /**
+     * Suppression path value for {@link #columnPrivileges}.
+     */
+    public static final String SUPPRESSION_PATH_COLUMN_PRIVILEGES
+        = "column/columnPrivileges";
 
 
     /**
@@ -63,8 +73,7 @@ public class Column {
      *
      * @throws SQLException if a database access error occurs.
      *
-     * @see DatabaseMetaData#getColumns(java.lang.String, java.lang.String,
-     * java.lang.String, java.lang.String)
+     * @see DatabaseMetaData#getColumns(String, String, String, String)
      */
     public static void retrieve(final DatabaseMetaData database,
                                 final Suppression suppression,
@@ -137,6 +146,10 @@ public class Column {
 
         for (final Column column : table.getColumns()) {
             column.setTable(table);
+        }
+
+        for (final Column column : table.getColumns()) {
+            ColumnPrivilege.retrieve(database, suppression, column);
         }
     }
 
@@ -385,6 +398,17 @@ public class Column {
     }
 
 
+    // -------------------------------------------------------- columnPrivileges
+    public List<ColumnPrivilege> getColumnPrivileges() {
+
+        if (columnPrivileges == null) {
+            columnPrivileges = new ArrayList<ColumnPrivilege>();
+        }
+
+        return columnPrivileges;
+    }
+
+
     /**
      * table catalog (may be {@code null}).
      */
@@ -626,6 +650,14 @@ public class Column {
     @SuppressionPath("column/isGeneratedcolumn")
     @XmlElement(required = true)
     String isGeneratedcolumn;
+
+
+    /**
+     * columnPrivileges.
+     */
+    @SuppressionPath(SUPPRESSION_PATH_COLUMN_PRIVILEGES)
+    @XmlElement(name = "columnPrivilege")
+    List<ColumnPrivilege> columnPrivileges;
 
 
 }

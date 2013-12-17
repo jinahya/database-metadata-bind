@@ -40,9 +40,8 @@ import javax.xml.bind.annotation.XmlType;
     propOrder = {
         "tableName", "tableType", "remarks", "typeCat", "typeSchem", "typeName",
         "selfReferencingColName", "refGeneration",
-        "bestRowIdentifiers", "columns", "columnPrivileges", "exportedKeys",
-        "importedKeys", "indexInfo", "primaryKeys", "tablePrivileges",
-        "versionColumns"
+        "bestRowIdentifiers", "columns", "exportedKeys", "importedKeys",
+        "indexInfo", "primaryKeys", "tablePrivileges", "versionColumns"
     }
 )
 public class Table implements Comparable<Table> {
@@ -60,13 +59,6 @@ public class Table implements Comparable<Table> {
      */
     public static final String SUPPRESSION_PATH_COLUMNS
         = "table/columns";
-
-
-    /**
-     * Suppression path value for {@link #columnPrivileges}.
-     */
-    public static final String SUPPRESSION_PATH_COLUMN_PRIVILEGES
-        = "table/columnPrivileges";
 
 
     /**
@@ -193,7 +185,6 @@ public class Table implements Comparable<Table> {
         for (final Table table : schema.getTables()) {
             BestRowIdentifier.retrieve(database, suppression, table);
             Column.retrieve(database, suppression, table);
-            ColumnPrivilege.retrieve(database, suppression, table);
             ExportedKey.retrieve(database, suppression, table);
             ImportedKey.retrieve(database, suppression, table);
             IndexInfo.retrieve(database, suppression, table);
@@ -365,17 +356,6 @@ public class Table implements Comparable<Table> {
         }
 
         return null;
-    }
-
-
-    // -------------------------------------------------------- columnPrivileges
-    public List<ColumnPrivilege> getColumnPrivileges() {
-
-        if (columnPrivileges == null) {
-            columnPrivileges = new ArrayList<ColumnPrivilege>();
-        }
-
-        return columnPrivileges;
     }
 
 
@@ -615,14 +595,6 @@ public class Table implements Comparable<Table> {
     @SuppressWarnings(SUPPRESSION_PATH_COLUMNS)
     @XmlElement(name = "column")
     List<Column> columns;
-
-
-    /**
-     * columnPrivileges.
-     */
-    @SuppressionPath(SUPPRESSION_PATH_COLUMN_PRIVILEGES)
-    @XmlElement(name = "columnPrivilege")
-    List<ColumnPrivilege> columnPrivileges;
 
 
     /**

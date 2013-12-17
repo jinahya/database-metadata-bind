@@ -51,8 +51,7 @@ public class TablePrivilege {
      *
      * @throws SQLException
      *
-     * @see DatabaseMetaData#getTablePrivileges(java.lang.String,
-     * java.lang.String, java.lang.String)
+     * @see DatabaseMetaData#getTablePrivileges(String, String, String)
      */
     public static void retrieve(
         final DatabaseMetaData database, final Suppression suppression,
@@ -129,12 +128,22 @@ public class TablePrivilege {
 
 
     // ------------------------------------------------------------------- table
+    /**
+     * Returns the parent table of this table privilege.
+     *
+     * @return the parent table.
+     */
     public Table getTable() {
 
         return table;
     }
 
 
+    /**
+     * Replaces the parent table of this table privilege with given.
+     *
+     * @param table the parent table.
+     */
     public void setTable(final Table table) {
 
         this.table = table;
@@ -142,12 +151,22 @@ public class TablePrivilege {
 
 
     // ----------------------------------------------------------------- grantor
+    /**
+     * Returns {@link #grantor}.
+     *
+     * @return {@link #grantor}.
+     */
     public String getGrantor() {
 
         return grantor;
     }
 
 
+    /**
+     * Replaces {@link #grantor}.
+     *
+     * @param grantor {@link #grantor}.
+     */
     public void setGrantor(final String grantor) {
 
         this.grantor = grantor;
@@ -155,12 +174,22 @@ public class TablePrivilege {
 
 
     // ----------------------------------------------------------------- grantee
+    /**
+     * Returns {@link #grantee}.
+     *
+     * @return {@link #grantee}.
+     */
     public String getGrantee() {
 
         return grantee;
     }
 
 
+    /**
+     * Replaces {@link #grantee}.
+     *
+     * @param grantee {@link #grantee}.
+     */
     public void setGrantee(final String grantee) {
 
         this.grantee = grantee;
@@ -193,48 +222,75 @@ public class TablePrivilege {
     }
 
 
+    /**
+     * table catalog (may be {@code null}).
+     */
     @ColumnLabel("TABLE_CAT")
     @SuppressionPath("tablePrivilege/tableCat")
     @XmlAttribute
     private String tableCat;
 
 
+    /**
+     * table schema (may be {@code null}).
+     */
     @ColumnLabel("TABLE_SCHEM")
     @SuppressionPath("tablePrivilege/tableSchem")
     @XmlAttribute
     private String tableSchem;
 
 
+    /**
+     * table name.
+     */
     @ColumnLabel("TABLE_NAME")
     @XmlAttribute
     private String tableName;
 
 
+    /**
+     * parent table.
+     */
     @XmlTransient
     private Table table;
 
 
+    /**
+     * grantor of access (may be {@code null}).
+     */
     @ColumnLabel("GRANTOR")
-    //@SuppressionPath("tablePrivilege/grantor")
+    @SuppressionPath("tablePrivilege/grantor")
     @XmlElement(nillable = true, required = true)
+    @NillableBySpecification
     String grantor;
 
 
+    /**
+     * grantee of access.
+     */
     @ColumnLabel("GRANTEE")
-    //@SuppressionPath("tablePrivilege/grantee")
+    @SuppressionPath("tablePrivilege/grantee")
     @XmlElement(required = true)
     String grantee;
 
 
+    /**
+     * name of access (SELECT, INSERT, UPDATE, REFRENCES, ...).
+     */
     @ColumnLabel("PRIVILEGE")
-    //@SuppressionPath("tablePrivilege/privilege")
+    @SuppressionPath("tablePrivilege/privilege")
     @XmlElement(required = true)
     String privilege;
 
 
+    /**
+     * {@code YES} if grantee is permitted to grant to others; {@code NO} if
+     * not; {@code null} if unknown.
+     */
     @ColumnLabel("IS_GRANTABLE")
     @SuppressionPath("tablePrivilege/isGrantable")
     @XmlElement(nillable = true, required = true)
+    @NillableBySpecification
     String isGrantable;
 
 

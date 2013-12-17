@@ -36,7 +36,8 @@ import javax.xml.bind.annotation.XmlType;
         "typeName", "dataType", "precision", "literalPrefix", "literalSuffix",
         "createParams", "nullable", "caseSensitive", "searchable",
         "unsignedAttribute", "fixedPrecScale", "autoIncrement", "localTypeName",
-        "minimumScale", "maximumScale", "numPrecRadix"
+        "minimumScale", "maximumScale", "sqlDataType", "sqlDatetimeSub",
+        "numPrecRadix"
     }
 )
 public class TypeInfo {
@@ -48,7 +49,7 @@ public class TypeInfo {
      * @param suppression
      * @param typeInfo
      *
-     * @throws SQLException
+     * @throws SQLException if a database access error occurs.
      *
      * @see DatabaseMetaData#getTypeInfo()
      */
@@ -247,7 +248,7 @@ public class TypeInfo {
     }
 
 
-    // -------------------------------------------------------- unsignedAttribute
+    // ------------------------------------------------------- unsignedAttribute
     public boolean getUnsignedAttribute() {
 
         return unsignedAttribute;
@@ -345,96 +346,179 @@ public class TypeInfo {
     private Metadata metadata;
 
 
+    /**
+     * Type name.
+     */
     @ColumnLabel("TYPE_NAME")
     @SuppressionPath("typeInfo/typeName")
     @XmlElement(required = true)
     String typeName;
 
 
+    /**
+     * SQL data type from {@link java.sql.Types}.
+     */
     @ColumnLabel("DATA_TYPE")
     @SuppressionPath("typeInfo/dataType")
     @XmlElement(required = true)
     int dataType;
 
 
+    /**
+     * maximum precision.
+     */
     @ColumnLabel("PRECISION")
     @SuppressionPath("typeInfo/precision")
     @XmlElement(required = true)
     int precision;
 
 
+    /**
+     * prefix used to quote a literal (may be {@code null}).
+     */
     @ColumnLabel("LITERAL_PREFIX")
     @SuppressionPath("typeInfo/literalPrefix")
     @XmlElement(nillable = true, required = true)
+    @NillableBySpecification
     String literalPrefix;
 
 
+    /**
+     * suffix used to quote a literal (may be {@code null}).
+     */
     @ColumnLabel("LITERAL_SUFFIX")
     @SuppressionPath("typeInfo/literalSuffix")
     @XmlElement(nillable = true, required = true)
     String literalSuffix;
 
 
+    /**
+     * parameters used in creating the type (may be {@code null}).
+     */
     @ColumnLabel("CREATE_PARAMS")
     @SuppressionPath("typeInfo/createParams")
     @XmlElement(nillable = true, required = true)
     String createParams;
 
 
+    /**
+     * can you use NULL for this type.
+     * <ul>
+     * <li>{@link DatabaseMetaData#typeNoNulls} - does not allow NULL
+     * values</li>
+     * <li>{@link DatabaseMetaData#typeNullable} - allows NULL values</li>
+     * <li>{@link DatabaseMetaData#typeNullableUnknown} - nullability
+     * unknown</li>
+     * </ul>
+     */
     @ColumnLabel("NULLABLE")
     @SuppressionPath("typeInfo/nullable")
     @XmlElement(required = true)
     short nullable;
 
 
+    /**
+     * is it case sensitive..
+     */
     @ColumnLabel("CASE_SENSITIVE")
     @SuppressionPath("typeInfo/caseSensitive")
     @XmlElement(required = true)
     boolean caseSensitive;
 
 
+    /**
+     * can you use "WHERE" based on this type:
+     * <ul>
+     * <li>typePredNone - No support</li>
+     * <li>typePredChar - Only supported with WHERE .. LIKE</li>
+     * <li>typePredBasic - Supported except for WHERE .. LIKE</li>
+     * <li>typeSearchable - Supported for all WHERE ..</li>
+     * </ul>
+     */
     @ColumnLabel("SEARCHABLE")
     @SuppressionPath("typeInfo/searchable")
     @XmlElement(required = true)
     short searchable;
 
 
+    /**
+     * is it unsigned.
+     */
     @ColumnLabel("UNSIGNED_ATTRIBUTE")
     @SuppressionPath("typeInfo/unsignedAttribute")
     @XmlElement(required = true)
     boolean unsignedAttribute;
 
 
+    /**
+     * can it be a money value.
+     */
     @ColumnLabel("FIXED_PREC_SCALE")
     @SuppressionPath("typeInfo/fixedPrecScale")
     @XmlElement(required = true)
     boolean fixedPrecScale;
 
 
+    /**
+     * can it be used for an auto-increment value.
+     */
     @ColumnLabel("AUTO_INCREMENT")
     @SuppressionPath("typeInfo/autoIncrement")
     @XmlElement(required = true)
     boolean autoIncrement;
 
 
+    /**
+     * localized version of type name (may be {@code null}).
+     */
     @ColumnLabel("LOCAL_TYPE_NAME")
     @SuppressionPath("typeInfo/localTypeName")
     @XmlElement(nillable = true, required = true)
+    @NillableBySpecification
     String localTypeName;
 
 
+    /**
+     * minimum scale supported.
+     */
     @ColumnLabel("MINIMUM_SCALE")
     @SuppressionPath("typeInfo/minimumScale")
     @XmlElement(required = true)
     short minimumScale;
 
 
+    /**
+     * maximum scale supported.
+     */
     @ColumnLabel("MAXIMUM_SCALE")
     @SuppressionPath("typeInfo/maximumScale")
     @XmlElement(required = true)
     short maximumScale;
 
 
+    /**
+     * unused.
+     */
+    @ColumnLabel("SQL_DATA_TYPE")
+    @SuppressionPath("typeInfo/sqlDataType")
+    @NotUsed
+    @XmlElement(required = true)
+    int sqlDataType;
+
+
+    /**
+     * unused.
+     */
+    @ColumnLabel("SQL_DATA_TYPE")
+    @SuppressionPath("typeInfo/sqlDatetimeSub")
+    @NotUsed
+    @XmlElement(required = true)
+    int sqlDatetimeSub;
+
+
+    /**
+     * usually 2 or 10.
+     */
     @ColumnLabel("NUM_PREC_RADIX")
     @SuppressionPath("typeInfo/numPrecRadix")
     @XmlElement(required = true)

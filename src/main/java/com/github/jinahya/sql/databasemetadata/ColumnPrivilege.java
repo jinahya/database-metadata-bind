@@ -51,8 +51,7 @@ public class ColumnPrivilege {
      * @param columnPrivileges
      *
      * @throws SQLException
-     * @see DatabaseMetaData#getColumnPrivileges(java.lang.String,
-     * java.lang.String, java.lang.String, java.lang.String)
+     * @see DatabaseMetaData#getColumnPrivileges(String, String, String, String)
      */
     public static void retrieve(
         final DatabaseMetaData database, final Suppression suppression,
@@ -74,7 +73,7 @@ public class ColumnPrivilege {
         }
 
         if (suppression.isSuppressed(
-            Table.SUPPRESSION_PATH_COLUMN_PRIVILEGES)) {
+            Column.SUPPRESSION_PATH_COLUMN_PRIVILEGES)) {
             return;
         }
 
@@ -93,7 +92,7 @@ public class ColumnPrivilege {
 
     public static void retrieve(final DatabaseMetaData database,
                                 final Suppression suppression,
-                                final Table table)
+                                final Column column)
         throws SQLException {
 
         if (database == null) {
@@ -104,19 +103,19 @@ public class ColumnPrivilege {
             throw new NullPointerException("null suppression");
         }
 
-        if (table == null) {
-            throw new NullPointerException("null table");
+        if (column == null) {
+            throw new NullPointerException("null column");
         }
 
         retrieve(database, suppression,
-                 table.getSchema().getCatalog().getTableCat(),
-                 table.getSchema().getTableSchem(), table.getTableName(),
-                 null,
-                 table.getColumnPrivileges());
+                 column.getTable().getSchema().getCatalog().getTableCat(),
+                 column.getTable().getSchema().getTableSchem(),
+                 column.getTable().getTableName(), null,
+                 column.getColumnPrivileges());
 
         for (final ColumnPrivilege columnPrivilege
-             : table.getColumnPrivileges()) {
-            columnPrivilege.setTable(table);
+             : column.getColumnPrivileges()) {
+            columnPrivilege.setColumn(column);
         }
     }
 
@@ -130,16 +129,16 @@ public class ColumnPrivilege {
     }
 
 
-    // ------------------------------------------------------------------- table
-    public Table getTable() {
+    // ------------------------------------------------------------------ column
+    public Column getColumn() {
 
-        return table;
+        return column;
     }
 
 
-    public void setTable(final Table table) {
+    public void setColumn(final Column column) {
 
-        this.table = table;
+        this.column = column;
     }
 
 
@@ -195,45 +194,80 @@ public class ColumnPrivilege {
     }
 
 
+    /**
+     * table catalog (may be {@code null}).
+     */
     @ColumnLabel("TABLE_CAT")
     @SuppressionPath("columnPrivilege/tableCat")
     @XmlAttribute
     private String tableCat;
 
 
+    /**
+     * table schema (may be {@code null}).
+     */
     @ColumnLabel("TABLE_SCHEM")
     @SuppressionPath("columnPrivilege/tableSchem")
     @XmlAttribute
     private String tableSchem;
 
 
+    /**
+     * table name.
+     */
     @ColumnLabel("TABLE_NAME")
-    //@SuppressionPath("columnPrivileg/tableName")
     @XmlAttribute
     private String tableName;
 
 
+    /**
+     * column name.
+     */
+    @ColumnLabel("COLUMN_NAME")
+    @XmlAttribute
+    private String columnName;
+
+
+    /**
+     * parent column.
+     */
     @XmlTransient
-    private Table table;
+    private Column column;
 
 
+    /**
+     * grantor of access (may be {@code null}).
+     */
     @ColumnLabel("GRANTOR")
     @XmlElement(nillable = true, required = true)
+    @NillableBySpecification
     String grantor;
 
 
+    /**
+     * grantee of access.
+     */
     @ColumnLabel("GRANTEE")
     @XmlElement(required = true)
     String grantee;
 
 
+    /**
+     * name of access (SELECT, INSERT, UPDATE, REFRENCES, ...)
+     */
     @ColumnLabel("PRIVILEGE")
     @XmlElement(required = true)
     String privilege;
 
 
+    /**
+     * {@code YES} if grantee is permitted to grant to others; {@code NO} if
+     * not; {@code null} if unknown.
+     */
     @ColumnLabel("IS_GRANTABLE")
+    @SuppressionPath("columnPrivilege/isGrantable")
     @XmlElement(nillable = true, required = true)
+    @NillableBySpecification
     String isGrantable;
 
 
