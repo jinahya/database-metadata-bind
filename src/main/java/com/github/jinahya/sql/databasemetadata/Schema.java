@@ -44,18 +44,28 @@ import javax.xml.bind.annotation.XmlType;
 public class Schema implements Comparable<Schema> {
 
 
-    public static final String SUPPRESSION_PATH_FUNCTIONS
-        = "schema/functions";
+    /**
+     * Suppression path value for {@link #functions}.
+     */
+    public static final String SUPPRESSION_PATH_FUNCTIONS = "schema/functions";
 
 
+    /**
+     * Suppression path value for {@link #procedures}.
+     */
     public static final String SUPPRESSION_PATH_PROCEDURES
         = "schema/procedures";
 
 
-    public static final String SUPPRESSION_PATH_TABLES
-        = "schema/tables";
+    /**
+     * Suppression path value for {@link #tables}.
+     */
+    public static final String SUPPRESSION_PATH_TABLES = "schema/tables";
 
 
+    /**
+     * Suppression path value for {@link #userDefinedTypes}.
+     */
     public static final String SUPPRESSION_PATH_USER_DEFINED_TYPES
         = "schema/userDefinedTypes";
 
@@ -68,9 +78,9 @@ public class Schema implements Comparable<Schema> {
      * @param schemaPattern
      * @param schemas
      *
-     * @throws SQLException
+     * @throws SQLException if a database access error occurs.
      *
-     * @see DatabaseMetaData#getSchemas(java.lang.String, java.lang.String)
+     * @see DatabaseMetaData#getSchemas(String, String)
      */
     public static void retrieve(final DatabaseMetaData database,
                                 final Suppression suppression,
@@ -114,7 +124,7 @@ public class Schema implements Comparable<Schema> {
      * @param suppression
      * @param catalog
      *
-     * @throws SQLException
+     * @throws SQLException if a database access error occurs.
      */
     public static void retrieve(final DatabaseMetaData database,
                                 final Suppression suppression,
@@ -134,7 +144,8 @@ public class Schema implements Comparable<Schema> {
         }
 
         retrieve(database, suppression,
-                 catalog.getTableCat(), null,
+                 catalog.getTableCat(),
+                 null,
                  catalog.getSchemas());
 
         if (catalog.getSchemas().isEmpty()) {
@@ -144,7 +155,7 @@ public class Schema implements Comparable<Schema> {
         }
 
         for (final Schema schema : catalog.getSchemas()) {
-            schema.setCatalog(catalog);
+            schema.catalog = catalog;
         }
 
         for (final Schema schema : catalog.getSchemas()) {
@@ -188,13 +199,7 @@ public class Schema implements Comparable<Schema> {
     }
 
 
-    public void setCatalog(final Catalog catalog) {
-
-        this.catalog = catalog;
-    }
-
-
-    // -------------------------------------------------------------------- name
+    // -------------------------------------------------------------- tableSchem
     /**
      * Return the name of this schema.
      *
@@ -206,12 +211,6 @@ public class Schema implements Comparable<Schema> {
     }
 
 
-    public String getName() {
-
-        return getTableSchem();
-    }
-
-
     /**
      * Replaces the name of this schema.
      *
@@ -220,12 +219,6 @@ public class Schema implements Comparable<Schema> {
     public void setTableSchem(final String tableSchem) {
 
         this.tableSchem = tableSchem;
-    }
-
-
-    public void setName(final String name) {
-
-        setTableSchem(name);
     }
 
 
@@ -283,7 +276,7 @@ public class Schema implements Comparable<Schema> {
     public Table getTableByName(final String tableName) {
 
         if (tableName == null) {
-            throw new NullPointerException("tableName");
+            throw new NullPointerException("null tableName");
         }
 
         for (final Table table : getTables()) {
@@ -307,16 +300,25 @@ public class Schema implements Comparable<Schema> {
     }
 
 
+    /**
+     * catalog name (may be {@code null}).
+     */
     @ColumnLabel("TABLE_CATALOG")
     @SuppressionPath("schema/tableCatalog")
     @XmlAttribute
     private String tableCatalog;
 
 
+    /**
+     * parent catalog.
+     */
     @XmlTransient
     private Catalog catalog;
 
 
+    /**
+     * schema name.
+     */
     @ColumnLabel("TABLE_SCHEM")
     @XmlElement(required = true)
     String tableSchem;

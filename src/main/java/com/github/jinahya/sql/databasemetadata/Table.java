@@ -120,10 +120,9 @@ public class Table implements Comparable<Table> {
      * @param types
      * @param tables
      *
-     * @throws SQLException
+     * @throws SQLException if a database access error occurs.
      *
-     * @see DatabaseMetaData#getTables(java.lang.String, java.lang.String,
-     * java.lang.String, java.lang.String[])
+     * @see DatabaseMetaData#getTables(String, String, String, String[])
      */
     public static void retrieve(final DatabaseMetaData database,
                                 final Suppression suppression,
@@ -163,6 +162,14 @@ public class Table implements Comparable<Table> {
     }
 
 
+    /**
+     *
+     * @param database
+     * @param suppression
+     * @param schema
+     *
+     * @throws SQLException if a database access error occurs.
+     */
     public static void retrieve(final DatabaseMetaData database,
                                 final Suppression suppression,
                                 final Schema schema)
@@ -181,8 +188,10 @@ public class Table implements Comparable<Table> {
         }
 
         retrieve(database, suppression,
-                 schema.getCatalog().getTableCat(), schema.getTableSchem(),
-                 null, null,
+                 schema.getCatalog().getTableCat(),
+                 schema.getTableSchem(),
+                 null,
+                 null,
                  schema.getTables());
 
         for (final Table table : schema.getTables()) {

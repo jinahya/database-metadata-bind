@@ -26,6 +26,8 @@ import javax.xml.bind.annotation.XmlAttribute;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlTransient;
 import javax.xml.bind.annotation.XmlType;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 
 /**
@@ -40,23 +42,11 @@ import javax.xml.bind.annotation.XmlType;
 public class PrimaryKey implements Comparable<PrimaryKey> {
 
 
-    public static PrimaryKey retrieve(final Suppression suppression,
-                                      final ResultSet resultSet)
-        throws SQLException {
-
-        if (suppression == null) {
-            throw new NullPointerException("null suppression");
-        }
-
-        if (resultSet == null) {
-            throw new NullPointerException("resultSet");
-        }
-
-        final PrimaryKey instance = new PrimaryKey();
-        ;
-
-        return instance;
-    }
+    /**
+     * logger.
+     */
+    private static final Logger LOGGER
+        = LoggerFactory.getLogger(PrimaryKey.class);
 
 
     /**
@@ -68,10 +58,9 @@ public class PrimaryKey implements Comparable<PrimaryKey> {
      * @param table
      * @param primaryKeys
      *
-     * @throws SQLException
+     * @throws SQLException if a database access error occurs.
      *
-     * @see DatabaseMetaData#getPrimaryKeys(java.lang.String, java.lang.String,
-     * java.lang.String)
+     * @see DatabaseMetaData#getPrimaryKeys(String, String, String)
      */
     public static void retrieve(
         final DatabaseMetaData database, final Suppression suppression,
@@ -99,6 +88,7 @@ public class PrimaryKey implements Comparable<PrimaryKey> {
             catalog, schema, table);
         try {
             while (resultSet.next()) {
+//                LOGGER.trace("primaryKey.next()");
                 primaryKeys.add(ColumnRetriever.retrieve(
                     PrimaryKey.class, suppression, resultSet));
             }
@@ -108,6 +98,14 @@ public class PrimaryKey implements Comparable<PrimaryKey> {
     }
 
 
+    /**
+     *
+     * @param database
+     * @param suppression
+     * @param table
+     *
+     * @throws SQLException if a database access error occurs.
+     */
     public static void retrieve(final DatabaseMetaData database,
                                 final Suppression suppression,
                                 final Table table)
@@ -122,16 +120,17 @@ public class PrimaryKey implements Comparable<PrimaryKey> {
         }
 
         if (table == null) {
-            throw new NullPointerException("table");
+            throw new NullPointerException("null table");
         }
 
         retrieve(database, suppression,
                  table.getSchema().getCatalog().getTableCat(),
-                 table.getSchema().getTableSchem(), table.getTableName(),
+                 table.getSchema().getTableSchem(),
+                 table.getTableName(),
                  table.getPrimaryKeys());
 
         for (final PrimaryKey primaryKey : table.getPrimaryKeys()) {
-            primaryKey.setTable(table);
+            primaryKey.table = table;
         }
     }
 
@@ -156,12 +155,6 @@ public class PrimaryKey implements Comparable<PrimaryKey> {
     public Table getTable() {
 
         return table;
-    }
-
-
-    public void setTable(final Table table) {
-
-        this.table = table;
     }
 
 
@@ -204,42 +197,65 @@ public class PrimaryKey implements Comparable<PrimaryKey> {
     }
 
 
+    /**
+     * table catalog (may be {@code null}).
+     */
     @ColumnLabel("TABLE_CAT")
     @SuppressionPath("primaryKey/tableCat")
     @XmlAttribute
     private String tableCat;
 
 
+    /**
+     * table schema (may be {@code null}).
+     */
     @ColumnLabel("TABLE_SCHEM")
     @SuppressionPath("primaryKey/tableSchem")
     @XmlAttribute
     private String tableSchem;
 
 
+    /**
+     * table name.
+     */
     @ColumnLabel("TABLE_Name")
     @XmlAttribute
     private String tableName;
 
 
+    /**
+     * parent table.
+     */
     @XmlTransient
     private Table table;
 
 
+    /**
+     * column name.
+     */
     @ColumnLabel("COLUMN_NAME")
-    //@SuppressionPath("primaryKey/columnName")
     @XmlElement(required = true)
     String columnName;
 
 
+    /**
+     * sequence number within primary key. (a value of 1 represents the first
+     * column of the primary key, a value of 2 would represent the second column
+     * within the primary key).
+     */
     @ColumnLabel("KEY_SEQ")
     //@SuppressionPath("primaryKey/keySeq")
     @XmlElement(required = true)
     short keySeq;
 
 
+    /**
+     * primary key name (may be {@code null})
+     */
     @ColumnLabel("PK_NAME")
     @SuppressionPath("primaryKey/pkName")
     @XmlElement(nillable = true, required = true)
+    @NillableBySpecification
     String pkName;
 
 

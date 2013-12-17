@@ -113,7 +113,7 @@ public class TablePrivilege {
                  table.getTablePrivileges());
 
         for (final TablePrivilege tablePrivilege : table.getTablePrivileges()) {
-            tablePrivilege.setTable(table);
+            tablePrivilege.table = table;
         }
     }
 
@@ -136,17 +136,6 @@ public class TablePrivilege {
     public Table getTable() {
 
         return table;
-    }
-
-
-    /**
-     * Replaces the parent table of this table privilege with given.
-     *
-     * @param table the parent table.
-     */
-    public void setTable(final Table table) {
-
-        this.table = table;
     }
 
 

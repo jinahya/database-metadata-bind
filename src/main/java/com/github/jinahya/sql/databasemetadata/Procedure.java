@@ -49,10 +49,9 @@ public class Procedure {
      * @param procedureNamePattern
      * @param procedures
      *
-     * @throws SQLException
+     * @throws SQLException if a database access error occurs.
      *
-     * @see DatabaseMetaData#getProcedures(java.lang.String, java.lang.String,
-     * java.lang.String)
+     * @see DatabaseMetaData#getProcedures(String, String, String)
      */
     public static void retrieve(final DatabaseMetaData database,
                                 final Suppression suppression,
@@ -109,11 +108,13 @@ public class Procedure {
         }
 
         retrieve(database, suppression,
-                 schema.getCatalog().getTableCat(), schema.getTableSchem(),
-                 null, schema.getProcedures());
+                 schema.getCatalog().getTableCat(),
+                 schema.getTableSchem(),
+                 null,
+                 schema.getProcedures());
 
         for (final Procedure procedure : schema.getProcedures()) {
-            procedure.setSchema(schema);
+            procedure.schema = schema;
         }
     }
 
@@ -131,12 +132,6 @@ public class Procedure {
     public Schema getSchema() {
 
         return schema;
-    }
-
-
-    public void setSchema(final Schema schema) {
-
-        this.schema = schema;
     }
 
 
@@ -189,37 +184,66 @@ public class Procedure {
     }
 
 
+    /**
+     * procedure catalog (may be {@code null}).
+     */
     @ColumnLabel("PROCEDURE_TYPE")
     @SuppressionPath("procedure/procedureCat")
     @XmlAttribute
-    private String procedureCat;
+    String procedureCat;
 
 
+    /**
+     * procedure schema (may be {@code null}).
+     */
     @ColumnLabel("PROCEDURE_TYPE")
     @SuppressionPath("procedure/procedureSchem")
     @XmlAttribute
     private String procedureSchem;
 
 
+    /**
+     * parent schema.
+     */
     @XmlTransient
     private Schema schema;
 
 
+    /**
+     * procedure name.
+     */
     @ColumnLabel("PROCEDURE_NAME")
     @XmlElement(required = true)
     String procedureName;
 
 
+    /**
+     * explanatory comment on the procedure.
+     */
     @ColumnLabel("REMARKS")
     @XmlElement(required = true)
     String remarks;
 
 
+    /**
+     * kind of procedure:
+     * <ul>
+     * <li>{@link DatabaseMetaData#procedureResultUnknown} - Cannot determine if
+     * a return value will be returned</li>
+     * <li>{@link DatabaseMetaData#procedureNoResult} - Does not return a return
+     * value</li>
+     * <li>{@link DatabaseMetaData#procedureReturnsResult} - Returns a return
+     * value</li>
+     * </ul>
+     */
     @ColumnLabel("PROCEDURE_TYPE")
     @XmlElement(required = true)
     short procedureType;
 
 
+    /**
+     * The name which uniquely identifies this procedure within its schema.
+     */
     @ColumnLabel("SPECIFIC_NAME")
     @XmlElement(required = true)
     String specificName;

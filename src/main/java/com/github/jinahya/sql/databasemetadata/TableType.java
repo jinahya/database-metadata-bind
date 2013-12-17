@@ -41,7 +41,7 @@ public class TableType {
      * @param suppression
      * @param tableTypes
      *
-     * @throws SQLException
+     * @throws SQLException if a database access error occurs.
      *
      * @see DatabaseMetaData#getTableTypes()
      */
@@ -78,6 +78,14 @@ public class TableType {
     }
 
 
+    /**
+     *
+     * @param database
+     * @param suppression
+     * @param metadata
+     *
+     * @throws SQLException if a database access error occurs.
+     */
     public static void retrieve(final DatabaseMetaData database,
                                 final Suppression suppression,
                                 final Metadata metadata)
@@ -98,7 +106,7 @@ public class TableType {
         retrieve(database, suppression, metadata.getTableTypes());
 
         for (final TableType tableType : metadata.getTableTypes()) {
-            tableType.setMetadata(metadata);
+            tableType.metadata = metadata;
         }
     }
 
@@ -107,12 +115,6 @@ public class TableType {
     public Metadata getMetadata() {
 
         return metadata;
-    }
-
-
-    public void setMetadata(final Metadata metadata) {
-
-        this.metadata = metadata;
     }
 
 
@@ -133,8 +135,11 @@ public class TableType {
     private Metadata metadata;
 
 
+    /**
+     * table type. Typical types are "TABLE", "VIEW", "SYSTEM TABLE", "GLOBAL
+     * TEMPORARY", "LOCAL TEMPORARY", "ALIAS", "SYNONYM".
+     */
     @ColumnLabel("TABLE_TYPE")
-    //@SuppressionPath("tableType/tableType")
     @XmlElement(required = true)
     String tableType;
 

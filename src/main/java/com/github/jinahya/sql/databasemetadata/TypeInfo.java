@@ -105,8 +105,8 @@ public class TypeInfo {
 
         retrieve(database, suppression, metadata.getTypeInfo());
 
-        for (final TypeInfo typeInfo : metadata.getTypeInfo()) {
-            typeInfo.setMetadata(metadata);
+        for (final TypeInfo typeInfo_ : metadata.getTypeInfo()) {
+            typeInfo_.metadata = metadata;
         }
     }
 
@@ -124,12 +124,6 @@ public class TypeInfo {
     public Metadata getMetadata() {
 
         return metadata;
-    }
-
-
-    public void setMetadata(final Metadata metadata) {
-
-        this.metadata = metadata;
     }
 
 
@@ -429,10 +423,13 @@ public class TypeInfo {
     /**
      * can you use "WHERE" based on this type:
      * <ul>
-     * <li>typePredNone - No support</li>
-     * <li>typePredChar - Only supported with WHERE .. LIKE</li>
-     * <li>typePredBasic - Supported except for WHERE .. LIKE</li>
-     * <li>typeSearchable - Supported for all WHERE ..</li>
+     * <li>{@link DatabaseMetaData#typePredNone} - No support</li>
+     * <li>{@link DatabaseMetaData#typePredChar} - Only supported with WHERE ..
+     * LIKE</li>
+     * <li>{@link DatabaseMetaData#typePredBasic} - Supported except for WHERE
+     * .. LIKE</li>
+     * <li>{@link DatabaseMetaData#typeSearchable} - Supported for all WHERE
+     * ..</li>
      * </ul>
      */
     @ColumnLabel("SEARCHABLE")
