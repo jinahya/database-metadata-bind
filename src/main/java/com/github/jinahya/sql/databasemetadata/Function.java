@@ -49,10 +49,9 @@ public class Function {
      * @param functionNamePattern
      * @param functions
      *
-     * @throws SQLException
+     * @throws SQLException if a database access error occurs.
      *
-     * @see DatabaseMetaData#getFunctions(java.lang.String, java.lang.String,
-     * java.lang.String)
+     * @see DatabaseMetaData#getFunctions(String, String, String)
      */
     public static void retrieve(final DatabaseMetaData database,
                                 final Suppression suppression,

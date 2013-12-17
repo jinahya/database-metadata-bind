@@ -41,8 +41,7 @@ import org.slf4j.LoggerFactory;
         "columnName", "dataType", "typeName", "columnSize", "decimalDigits",
         "numPrecRadix", "nullable", "remarks", "columnDef", "charOctetLength",
         "ordinalPosition", "isNullable", "scopeCatalog", "scopeSchema",
-        "scopeTable", "sourceDataType", "isAutoincrement", "isGeneratedcolumn",
-        "columnPrivileges"
+        "scopeTable", "sourceDataType", "isAutoincrement", "isGeneratedcolumn"
     }
 )
 public class Column {
@@ -52,13 +51,6 @@ public class Column {
      * logger.
      */
     private static final Logger LOGGER = LoggerFactory.getLogger(Column.class);
-
-
-    /**
-     * Suppression path value for {@link #columnPrivileges}.
-     */
-    public static final String SUPPRESSION_PATH_COLUMN_PRIVILEGES
-        = "column/columnPrivileges";
 
 
     /**
@@ -145,11 +137,7 @@ public class Column {
                  table.getColumns());
 
         for (final Column column : table.getColumns()) {
-            column.setTable(table);
-        }
-
-        for (final Column column : table.getColumns()) {
-            ColumnPrivilege.retrieve(database, suppression, column);
+            column.table = table;
         }
     }
 
@@ -167,12 +155,6 @@ public class Column {
     public Table getTable() {
 
         return table;
-    }
-
-
-    public void setTable(final Table table) {
-
-        this.table = table;
     }
 
 
@@ -395,17 +377,6 @@ public class Column {
     public void setIsGeneratedColumn(final String isGeneratedcolumn) {
 
         this.isGeneratedcolumn = isGeneratedcolumn;
-    }
-
-
-    // -------------------------------------------------------- columnPrivileges
-    public List<ColumnPrivilege> getColumnPrivileges() {
-
-        if (columnPrivileges == null) {
-            columnPrivileges = new ArrayList<ColumnPrivilege>();
-        }
-
-        return columnPrivileges;
     }
 
 
@@ -650,14 +621,6 @@ public class Column {
     @SuppressionPath("column/isGeneratedcolumn")
     @XmlElement(required = true)
     String isGeneratedcolumn;
-
-
-    /**
-     * columnPrivileges.
-     */
-    @SuppressionPath(SUPPRESSION_PATH_COLUMN_PRIVILEGES)
-    @XmlElement(name = "columnPrivilege")
-    List<ColumnPrivilege> columnPrivileges;
 
 
 }

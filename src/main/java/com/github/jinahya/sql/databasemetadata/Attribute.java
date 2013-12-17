@@ -142,7 +142,7 @@ public class Attribute {
                  userDefinedType.getAttributes());
 
         for (final Attribute attribute : userDefinedType.getAttributes()) {
-            attribute.setUserDefinedType(userDefinedType);
+            attribute.userDefinedType = userDefinedType;
         }
     }
 
@@ -160,12 +160,6 @@ public class Attribute {
     public UserDefinedType getUserDefinedType() {
 
         return userDefinedType;
-    }
-
-
-    public void setUserDefinedType(final UserDefinedType userDefinedType) {
-
-        this.userDefinedType = userDefinedType;
     }
 
 

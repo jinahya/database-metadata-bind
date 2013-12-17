@@ -34,7 +34,7 @@ import javax.xml.bind.annotation.XmlType;
  */
 @XmlType(
     propOrder = {
-        "grantor", "grantee", "privilege", "isGrantable"
+        "columnName", "grantor", "grantee", "privilege", "isGrantable"
     }
 )
 public class ColumnPrivilege {
@@ -55,7 +55,9 @@ public class ColumnPrivilege {
      */
     public static void retrieve(
         final DatabaseMetaData database, final Suppression suppression,
-        final String catalog, final String schema, final String table,
+        final String catalog,
+        final String schema,
+        final String table,
         final String columnNamePattern,
         final Collection<? super ColumnPrivilege> columnPrivileges)
         throws SQLException {
@@ -73,7 +75,7 @@ public class ColumnPrivilege {
         }
 
         if (suppression.isSuppressed(
-            Column.SUPPRESSION_PATH_COLUMN_PRIVILEGES)) {
+            Table.SUPPRESSION_PATH_COLUMN_PRIVILEGES)) {
             return;
         }
 
@@ -92,7 +94,7 @@ public class ColumnPrivilege {
 
     public static void retrieve(final DatabaseMetaData database,
                                 final Suppression suppression,
-                                final Column column)
+                                final Table table)
         throws SQLException {
 
         if (database == null) {
@@ -103,19 +105,22 @@ public class ColumnPrivilege {
             throw new NullPointerException("null suppression");
         }
 
-        if (column == null) {
-            throw new NullPointerException("null column");
+        if (table == null) {
+            throw new NullPointerException("null table");
         }
 
-        retrieve(database, suppression,
-                 column.getTable().getSchema().getCatalog().getTableCat(),
-                 column.getTable().getSchema().getTableSchem(),
-                 column.getTable().getTableName(), null,
-                 column.getColumnPrivileges());
+        for (final Column column : table.getColumns()) {
+            retrieve(database, suppression,
+                     column.getTable().getSchema().getCatalog().getTableCat(),
+                     column.getTable().getSchema().getTableSchem(),
+                     column.getTable().getTableName(),
+                     column.getColumnName(),
+                     table.getColumnPrivileges());
+        }
 
         for (final ColumnPrivilege columnPrivilege
-             : column.getColumnPrivileges()) {
-            columnPrivilege.setColumn(column);
+             : table.getColumnPrivileges()) {
+            columnPrivilege.table = table;
         }
     }
 
@@ -130,15 +135,9 @@ public class ColumnPrivilege {
 
 
     // ------------------------------------------------------------------ column
-    public Column getColumn() {
+    public Table getTable() {
 
-        return column;
-    }
-
-
-    public void setColumn(final Column column) {
-
-        this.column = column;
+        return table;
     }
 
 
@@ -221,18 +220,18 @@ public class ColumnPrivilege {
 
 
     /**
-     * column name.
+     * parent table
      */
-    @ColumnLabel("COLUMN_NAME")
-    @XmlAttribute
-    private String columnName;
+    @XmlTransient
+    private Table table;
 
 
     /**
-     * parent column.
+     * column name.
      */
-    @XmlTransient
-    private Column column;
+    @ColumnLabel("COLUMN_NAME")
+    @XmlElement(required = true)
+    private String columnName;
 
 
     /**

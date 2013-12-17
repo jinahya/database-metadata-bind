@@ -45,8 +45,7 @@ public class ExportedKey {
      *
      * @throws SQLException if a database access error occurs.
      *
-     * @see DatabaseMetaData#getExportedKeys(java.lang.String, java.lang.String,
-     * java.lang.String)
+     * @see DatabaseMetaData#getExportedKeys(String, String, String)
      */
     public static void retrieve(
         final DatabaseMetaData database, final Suppression suppression,
@@ -54,11 +53,17 @@ public class ExportedKey {
         final Collection<? super ExportedKey> exportedKeys)
         throws SQLException {
 
-        if (database == null) { throw new NullPointerException("null database");}
+        if (database == null) {
+            throw new NullPointerException("null database");
+        }
 
-        if (suppression == null) { throw new NullPointerException("null suppression");}
+        if (suppression == null) {
+            throw new NullPointerException("null suppression");
+        }
 
-        if (exportedKeys == null) { throw new NullPointerException("exportedKeys"); }
+        if (exportedKeys == null) {
+            throw new NullPointerException("null exportedKeys");
+        }
 
         if (suppression.isSuppressed(Table.SUPPRESSION_PATH_EXPORTED_KEYS)) {
             return;
@@ -77,16 +82,30 @@ public class ExportedKey {
     }
 
 
+    /**
+     *
+     * @param database
+     * @param suppression
+     * @param table
+     *
+     * @throws SQLException if a database access error occurs.
+     */
     public static void retrieve(final DatabaseMetaData database,
                                 final Suppression suppression,
                                 final Table table)
         throws SQLException {
 
-        if (database == null) { throw new NullPointerException("null database");}
+        if (database == null) {
+            throw new NullPointerException("null database");
+        }
 
-        if (suppression == null) { throw new NullPointerException("null suppression");}
+        if (suppression == null) {
+            throw new NullPointerException("null suppression");
+        }
 
-        if (table == null) { throw new NullPointerException("table"); }
+        if (table == null) {
+            throw new NullPointerException("null table");
+        }
 
         retrieve(database, suppression,
                  table.getSchema().getCatalog().getTableCat(),
@@ -94,7 +113,7 @@ public class ExportedKey {
                  table.getExportedKeys());
 
         for (final ExportedKey exportedKey : table.getExportedKeys()) {
-            exportedKey.setTable(table);
+            exportedKey.table = table;
         }
     }
 
@@ -108,16 +127,46 @@ public class ExportedKey {
     }
 
 
+//    // -------------------------------------------------------------- pktableCat
+//    /**
+//     * Returns {@link #pktableCat}.
+//     *
+//     * @return {@link #pktableCat}.
+//     */
+//    public String getPktableCat() {
+//
+//        return pktableCat;
+//    }
+//
+//
+//    // ------------------------------------------------------------ pktableSchem
+//    /**
+//     * Returns {@link #pktableSchem}.
+//     *
+//     * @return {@link #pktableSchem}.
+//     */
+//    public String getPktableSchem() {
+//
+//        return pktableSchem;
+//    }
+//
+//
+//    // ------------------------------------------------------------- pktableName
+//    /**
+//     * Returns {@link #pktableName}.
+//     *
+//     * @return {@link #pktableName}.
+//     */
+//    public String getPktableName() {
+//
+//        return pktableName;
+//    }
+
+
     // ------------------------------------------------------------------- table
     public Table getTable() {
 
         return table;
-    }
-
-
-    public void setTable(final Table table) {
-
-        this.table = table;
     }
 
 
