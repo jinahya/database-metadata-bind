@@ -238,6 +238,9 @@ public class VersionColumn {
     private Table table;
 
 
+    /**
+     * not used.
+     */
     @ColumnLabel("SCOPE")
     @XmlTransient
     @NotUsed
