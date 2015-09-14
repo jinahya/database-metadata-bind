@@ -5,7 +5,7 @@
 
   <!-- The Basics -->
   <groupId>com.github.jinahya</groupId>
-  <artifactId>sql-databasemetadata</artifactId>
+  <artifactId>sql-database-meta-data-bind</artifactId>
   <version>0.4-SNAPSHOT</version>
   <packaging>jar</packaging>
   <parent>
@@ -394,9 +394,9 @@
   <ciManagement />
   <mailingLists />
   <scm>
-    <connection>scm:git:git@github.com:jinahya/sql-databasemetadata.git</connection>
-    <developerConnection>scm:git:git@github.com:jinahya/sql-databasemetadata.git</developerConnection>
-    <url>https://github.com/jinahya/sql-databasemetadata</url>
+    <connection>scm:git:git@github.com:jinahya/sql-database-meta-data-bind.git</connection>
+    <developerConnection>scm:git:git@github.com:jinahya/sql-database-meta-data-bind.git</developerConnection>
+    <url>https://github.com/jinahya/sql-database-meta-data-bind</url>
     <tag>HEAD</tag>
   </scm>
   <prerequisites>
