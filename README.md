@@ -1,4 +1,4 @@
-sql-databasemetadata
+database-metadata-bind
 ====================
 A library binding various information from [DatabaseMetaData](http://docs.oracle.com/javase/7/docs/api/java/sql/DatabaseMetaData.html). 
 
