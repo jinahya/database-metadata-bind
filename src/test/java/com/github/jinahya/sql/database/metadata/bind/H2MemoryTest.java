@@ -18,23 +18,19 @@
 package com.github.jinahya.sql.database.metadata.bind;
 
 
-import com.github.jinahya.sql.database.metadata.bind.Suppressions;
-import com.github.jinahya.sql.database.metadata.bind.SuppressionKey;
-import com.github.jinahya.sql.database.metadata.bind.Suppression;
-import com.github.jinahya.sql.database.metadata.bind.Metadata;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.sql.Connection;
 import java.sql.DatabaseMetaData;
-import java.sql.DriverManager;
+import static java.sql.DriverManager.getConnection;
 import java.sql.SQLException;
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBException;
 import javax.xml.bind.Marshaller;
 import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import static org.slf4j.LoggerFactory.getLogger;
 import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
@@ -42,67 +38,43 @@ import org.testng.annotations.Test;
 
 /**
  *
- * @author <a href="mailto:onacit@gmail.com">Jin Kwon</a>
+ * @author Jin Kwon &lt;jinahya_at_gmail.com&gt;
  */
 public class H2MemoryTest {
 
 
-    /**
-     * logger.
-     */
-    private static final Logger LOGGER
-        = LoggerFactory.getLogger(H2MemoryTest.class);
+    private static final Logger logger = getLogger(H2MemoryTest.class);
 
 
-    /**
-     * driver name.
-     */
     private static final String DRIVER_NAME = "org.h2.Driver";
 
 
-    /**
-     * connection url.
-     */
     private static final String CONNECTION_URL
         = "jdbc:h2:mem:test"; //;DB_CLOSE_DELAY=-1";
 
 
     @BeforeClass
     private static void beforeClass() throws SQLException {
-
-        LOGGER.trace("beforeClass()");
     }
 
 
     @AfterClass
     private static void afterClass() throws SQLException {
-
-        LOGGER.trace("afterClass()");
     }
 
 
-    @Test
+    @Test(enabled = true)
     public void retrieve() throws SQLException, JAXBException, IOException {
 
         final Metadata metadata;
 
-        try (Connection connection
-            = DriverManager.getConnection(CONNECTION_URL)) {
-
-            final DatabaseMetaData databaseMetaData = connection.getMetaData();
-            final SuppressionKey suppressionKey
-                = SuppressionKey.newInstance(databaseMetaData);
-            LOGGER.trace("suppressionKey: {}", suppressionKey);
-
-            final Suppressions suppressions = Suppressions.loadInstance();
-            final Suppression suppression
-                = suppressions.getSuppression(suppressionKey);
-
-            metadata = Metadata.newInstance(databaseMetaData, suppression);
-
-            //metadata.print(System.out);
-
-            MetadataVerifier.verify(metadata);
+        try (Connection connection = getConnection(CONNECTION_URL)) {
+            final DatabaseMetaData database = connection.getMetaData();
+            final MetadataContext context = new MetadataContext(database);
+            context.suppressionPath(
+                "schema/functions",
+                "column/isGeneratedcolumn");
+            metadata = context.getMetadata();
         }
 
         final JAXBContext context = JAXBContext.newInstance(Metadata.class);
@@ -114,7 +86,6 @@ public class H2MemoryTest {
             marshaller.marshal(metadata, outputStream);
             outputStream.flush();
         }
-
     }
 
 

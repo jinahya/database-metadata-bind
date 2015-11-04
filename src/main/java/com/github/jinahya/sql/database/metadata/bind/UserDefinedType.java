@@ -18,22 +18,21 @@
 package com.github.jinahya.sql.database.metadata.bind;
 
 
-import java.sql.DatabaseMetaData;
-import java.sql.ResultSet;
-import java.sql.SQLException;
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.List;
 import javax.xml.bind.annotation.XmlAttribute;
 import javax.xml.bind.annotation.XmlElement;
+import javax.xml.bind.annotation.XmlElementRef;
+import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlTransient;
 import javax.xml.bind.annotation.XmlType;
 
 
 /**
  *
- * @author Jin Kwon <onacit at gmail.com>
+ * @author Jin Kwon &lt;jinahya_at_gmail.com&gt;
  */
+@XmlRootElement
 @XmlType(
     propOrder = {
         "typeName", "className", "dataType", "remarks", "baseType", "attributes"
@@ -42,118 +41,17 @@ import javax.xml.bind.annotation.XmlType;
 public class UserDefinedType {
 
 
-    public static final String SUPPRESSION_PATH_ATTRIBUTES
-        = "userDefinedType/attributes";
+    // ----------------------------------------------------------------- typeCat
+    public String getTypeCat() {
 
-
-    /**
-     *
-     * @param database
-     * @param suppression
-     * @param catalog
-     * @param schemaPattern
-     * @param typeNamePattern
-     * @param types
-     * @param userDefinedTypes
-     *
-     * @throws SQLException if a database access error occurs.
-     *
-     * @see DatabaseMetaData#getUDTs(String, String, String, int[])
-     */
-    public static void retrieve(
-        final DatabaseMetaData database, final Suppression suppression,
-        final String catalog, final String schemaPattern,
-        final String typeNamePattern, final int[] types,
-        final Collection<? super UserDefinedType> userDefinedTypes)
-        throws SQLException {
-
-        if (database == null) {
-            throw new NullPointerException("null database");
-        }
-
-        if (suppression == null) {
-            throw new NullPointerException("null suppression");
-        }
-
-        if (userDefinedTypes == null) {
-            throw new NullPointerException("null userDefinedTypes");
-        }
-
-        if (suppression.isSuppressed(
-            Schema.SUPPRESSION_PATH_USER_DEFINED_TYPES)) {
-            return;
-        }
-
-        final ResultSet resultSet = database.getUDTs(
-            catalog, schemaPattern, typeNamePattern, types);
-        try {
-            while (resultSet.next()) {
-                userDefinedTypes.add(ColumnRetriever.retrieve(
-                    UserDefinedType.class, suppression, resultSet));
-            }
-        } finally {
-            resultSet.close();
-        }
+        return typeCat;
     }
 
 
-    /**
-     *
-     * @param database
-     * @param suppression
-     * @param schema
-     *
-     * @throws SQLException
-     */
-    public static void retrieve(final DatabaseMetaData database,
-                                final Suppression suppression,
-                                final Schema schema)
-        throws SQLException {
+    // --------------------------------------------------------------- typeSchem
+    public String getTypeSchem() {
 
-        if (database == null) {
-            throw new NullPointerException("null database");
-        }
-
-        if (suppression == null) {
-            throw new NullPointerException("null suppression");
-        }
-
-        if (schema == null) {
-            throw new NullPointerException("null schema");
-        }
-
-        retrieve(database, suppression,
-                 schema.getCatalog().getTableCat(),
-                 schema.getTableSchem(),
-                 null,
-                 null,
-                 schema.getUserDefinedTypes());
-
-        for (final UserDefinedType userDefinedType
-             : schema.getUserDefinedTypes()) {
-            userDefinedType.schema = schema;
-        }
-
-        for (final UserDefinedType uesrDefinedType
-             : schema.getUserDefinedTypes()) {
-            Attribute.retrieve(database, suppression, uesrDefinedType);
-        }
-    }
-
-
-    /**
-     * Creates a new instance.
-     */
-    public UserDefinedType() {
-
-        super();
-    }
-
-
-    // ------------------------------------------------------------------ schema
-    public Schema getSchema() {
-
-        return schema;
+        return typeSchem;
     }
 
 
@@ -222,6 +120,19 @@ public class UserDefinedType {
     }
 
 
+    // ------------------------------------------------------------------ schema
+    public Schema getSchema() {
+
+        return schema;
+    }
+
+
+    public void setSchema(final Schema schema) {
+
+        this.schema = schema;
+    }
+
+
     // -------------------------------------------------------------- attributes
     public List<Attribute> getAttributes() {
 
@@ -237,7 +148,6 @@ public class UserDefinedType {
      * the type's catalog (may be {@code null}).
      */
     @ColumnLabel("TYPE_CAT")
-    @SuppressionPath("userDefinedType/typeCat")
     @XmlAttribute
     private String typeCat;
 
@@ -246,7 +156,6 @@ public class UserDefinedType {
      * type's schema (may be {@code null}).
      */
     @ColumnLabel("TYPE_CAT")
-    @SuppressionPath("userDefinedType/typeSchem")
     @XmlAttribute
     private String typeSchem;
 
@@ -281,7 +190,7 @@ public class UserDefinedType {
      */
     @ColumnLabel("DATA_TYPE")
     @XmlElement(required = true)
-    int dataType;
+    private int dataType;
 
 
     /**
@@ -289,30 +198,20 @@ public class UserDefinedType {
      */
     @ColumnLabel("REMARKS")
     @XmlElement(required = true)
-    String remarks;
+    private String remarks;
 
 
-    /**
-     * type code of the source type of a {@link java.sql.Types#DISTINCT} type or
-     * the type that implements the user-generated reference type of the
-     * SELF_REFERENCING_COLUMN of a structured type as defined in
-     * {@link java.sql.Types} ({@code null} if {@link #dataType DATA_TYPE} is
-     * not {@link java.sql.Types#DISTINCT} or not {@link java.sql.Types#STRUCT}
-     * with REFERENCE_GENERATION = USER_DEFINED)
-     */
     @ColumnLabel("BASE_TYPE")
-    //@SuppressionPath("userDefinedType/baseType")
     @XmlElement(nillable = true, required = true)
     @NillableBySpecification
-    Short baseType;
+    private Short baseType;
 
 
     /**
      * attributes.
      */
-    @SuppressionPath(SUPPRESSION_PATH_ATTRIBUTES)
-    @XmlElement(name = "attribute")
-    List<Attribute> attributes;
+    @XmlElementRef
+    private List<Attribute> attributes;
 
 
 }

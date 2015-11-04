@@ -18,10 +18,6 @@
 package com.github.jinahya.sql.database.metadata.bind;
 
 
-import java.sql.DatabaseMetaData;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.util.Collection;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlTransient;
@@ -33,82 +29,6 @@ import javax.xml.bind.annotation.XmlTransient;
  */
 @XmlRootElement
 public class TableType {
-
-
-    /**
-     *
-     * @param database
-     * @param suppression
-     * @param tableTypes
-     *
-     * @throws SQLException if a database access error occurs.
-     *
-     * @see DatabaseMetaData#getTableTypes()
-     */
-    public static void retrieve(final DatabaseMetaData database,
-                                final Suppression suppression,
-                                final Collection<? super TableType> tableTypes)
-        throws SQLException {
-
-        if (database == null) {
-            throw new NullPointerException("null database");
-        }
-
-        if (suppression == null) {
-            throw new NullPointerException("null suppression");
-        }
-
-        if (tableTypes == null) {
-            throw new NullPointerException("null tableTypes");
-        }
-
-        if (suppression.isSuppressed(Metadata.SUPPRESSION_PATH_TABLE_TYPES)) {
-            return;
-        }
-
-        final ResultSet resultSet = database.getTableTypes();
-        try {
-            while (resultSet.next()) {
-                tableTypes.add(ColumnRetriever.retrieve(
-                    TableType.class, suppression, resultSet));
-            }
-        } finally {
-            resultSet.close();
-        }
-    }
-
-
-    /**
-     *
-     * @param database
-     * @param suppression
-     * @param metadata
-     *
-     * @throws SQLException if a database access error occurs.
-     */
-    public static void retrieve(final DatabaseMetaData database,
-                                final Suppression suppression,
-                                final Metadata metadata)
-        throws SQLException {
-
-        if (database == null) {
-            throw new NullPointerException("null database");
-        }
-
-        if (suppression == null) {
-            throw new NullPointerException("null suppression");
-        }
-
-        if (metadata == null) {
-            throw new NullPointerException("null metadata");
-        }
-
-        retrieve(database, suppression, metadata.getTableTypes());
-
-        for (final TableType tableType : metadata.getTableTypes()) {
-            tableType.metadata = metadata;
-        }
-    }
 
 
     // ---------------------------------------------------------------- metadata

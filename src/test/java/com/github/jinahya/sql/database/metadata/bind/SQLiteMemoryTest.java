@@ -38,18 +38,18 @@ import org.testng.annotations.Test;
 
 /**
  *
- * @author <a href="mailto:onacit@gmail.com">Jin Kwon</a>
+ * @author Jin Kwon &lt;jinahya_at_gmail.com&gt;
  */
-public class HyperSQLMemoryTest {
+public class SQLiteMemoryTest {
 
 
-    private static final Logger logger = getLogger(HyperSQLMemoryTest.class);
+    private static final Logger logger = getLogger(SQLiteMemoryTest.class);
 
 
     private static final String DRIVER_NAME = "org.hsqldb.jdbc.JDBCDriver";
 
 
-    private static final String CONNECTION_URL = "jdbc:hsqldb:mem:test";
+    private static final String CONNECTION_URL = "jdbc:sqlite::memory:";
 
 
     @BeforeClass
@@ -62,7 +62,7 @@ public class HyperSQLMemoryTest {
     }
 
 
-    @Test(enabled = true)
+    @Test(enabled = false)
     public void retrieve() throws SQLException, JAXBException, IOException {
 
         final Metadata metadata;
@@ -77,7 +77,8 @@ public class HyperSQLMemoryTest {
         final Marshaller marshaller = context.createMarshaller();
         marshaller.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, Boolean.TRUE);
 
-        final File file = new File("target", "hsql.memory.metadata.xml");
+        final File file
+            = new File("target", "sqlite.memory.metadata.xml");
         try (OutputStream outputStream = new FileOutputStream(file)) {
             marshaller.marshal(metadata, outputStream);
             outputStream.flush();

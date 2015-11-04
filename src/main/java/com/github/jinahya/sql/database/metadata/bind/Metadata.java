@@ -19,19 +19,18 @@ package com.github.jinahya.sql.database.metadata.bind;
 
 
 import java.io.PrintStream;
-import java.sql.DatabaseMetaData;
-import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
+import java.util.TreeSet;
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBException;
 import javax.xml.bind.Marshaller;
+import javax.xml.bind.annotation.XmlAttribute;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlList;
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlType;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 
 /**
@@ -55,13 +54,6 @@ import org.slf4j.LoggerFactory;
 public class Metadata {
 
 
-    /**
-     * logger.
-     */
-    private static final Logger LOGGER
-        = LoggerFactory.getLogger(Metadata.class);
-
-
     public static final String SUPPRESSION_PATH_CATALOGS = "metadata/catalogs";
 
 
@@ -74,78 +66,6 @@ public class Metadata {
 
     public static final String SUPPRESSION_PATH_TABLE_TYPES
         = "metadata/tabletypes";
-
-
-    public static Metadata newInstance(final DatabaseMetaData database,
-                                       final Suppression suppression)
-        throws SQLException {
-
-        if (database == null) {
-            throw new NullPointerException("null database");
-        }
-
-        if (suppression == null) {
-            throw new NullPointerException("null suppression");
-        }
-
-        final Metadata instance = new Metadata();
-
-        instance.setAllProceduresAreCallable(
-            database.allProceduresAreCallable());
-        instance.setAllTablesAreSelectable(database.allTablesAreSelectable());
-
-        instance.setCatalogSeparator(database.getCatalogSeparator());
-        instance.setCatalogTerm(database.getCatalogTerm());
-
-        instance.setDatabaseMajorVersion(database.getDatabaseMajorVersion());
-        instance.setDatabaseMinorVersion(database.getDatabaseMinorVersion());
-        instance.setDatabaseProductName(database.getDatabaseProductName());
-        instance.setDatabaseProductVersion(database.getDatabaseProductName());
-
-        instance.setDriverMajorVersion(database.getDriverMajorVersion());
-        instance.setDriverMinorVersion(database.getDriverMinorVersion());
-        instance.setDriverName(database.getDriverName());
-        instance.setDriverVersion(database.getDriverVersion());
-
-        for (final String numericFunction
-             : database.getNumericFunctions().split(",")) {
-            instance.getNumericFunctions().add(numericFunction);
-        }
-
-        for (final String stringFunction
-             : database.getStringFunctions().split(",")) {
-            instance.getStringFunctions().add(stringFunction);
-        }
-
-        for (final String systemFunction
-             : database.getSystemFunctions().split(",")) {
-            instance.getSystemFunctions().add(systemFunction);
-        }
-
-        for (final String timeDateFunction
-             : database.getTimeDateFunctions().split(",")) {
-            instance.getTimeDateFunctions().add(timeDateFunction);
-        }
-
-        Catalog.retrieve(database, suppression, instance);
-
-        ClientInfoProperty.retrieve(database, suppression, instance);
-
-        TypeInfo.retrieve(database, suppression, instance);
-
-        TableType.retrieve(database, suppression, instance);
-
-        return instance;
-    }
-
-
-    /**
-     * Creates a new instance.
-     */
-    public Metadata() {
-
-        super();
-    }
 
 
     public void print(final PrintStream out) throws JAXBException {
@@ -165,6 +85,18 @@ public class Metadata {
     }
 
 
+    // -------------------------------------------------------- suppressionPaths
+    public Set<String> getSuppressionPaths() {
+
+        if (suppressionPaths == null) {
+            suppressionPaths = new TreeSet<String>();
+        }
+
+        return suppressionPaths;
+    }
+
+
+    // ------------------------------------------------ allProceduresAreCallable
     public boolean getAllProceduresAreCallable() {
 
         return allProceduresAreCallable;
@@ -311,43 +243,55 @@ public class Metadata {
     }
 
 
-    public List<String> getNumericFunctions() {
-
-        if (numericFunctions == null) {
-            numericFunctions = new ArrayList<String>();
-        }
+    // -------------------------------------------------------- numericFunctions
+    public String getNumericFunctions() {
 
         return numericFunctions;
     }
 
 
-    public List<String> getStringFunctions() {
+    public void setNumericFunctions(final String numericFunctions) {
 
-        if (stringFunctions == null) {
-            stringFunctions = new ArrayList<String>();
-        }
+        this.numericFunctions = numericFunctions;
+    }
+
+
+    // --------------------------------------------------------- stringFunctions
+    public String getStringFunctions() {
 
         return stringFunctions;
     }
 
 
-    public List<String> getSystemFunctions() {
+    public void setStringFunctions(final String stringFunctions) {
 
-        if (systemFunctions == null) {
-            systemFunctions = new ArrayList<String>();
-        }
+        this.stringFunctions = stringFunctions;
+    }
+
+
+    // --------------------------------------------------------- systemFunctions
+    public String getSystemFunctions() {
 
         return systemFunctions;
     }
 
 
-    public List<String> getTimeDateFunctions() {
+    public void setSystemFunctions(final String systemFunctions) {
 
-        if (timeDateFunctions == null) {
-            timeDateFunctions = new ArrayList<String>();
-        }
+        this.systemFunctions = systemFunctions;
+    }
+
+
+    // ------------------------------------------------------- timeDateFunctions
+    public String getTimeDateFunctions() {
 
         return timeDateFunctions;
+    }
+
+
+    public void setTimeDateFunctions(final String timeDateFunctions) {
+
+        this.timeDateFunctions = timeDateFunctions;
     }
 
 
@@ -426,12 +370,17 @@ public class Metadata {
     }
 
 
-    @XmlElement(required = true)
-    private boolean allProceduresAreCallable;
+    @XmlAttribute
+    @XmlList
+    private Set<String> suppressionPaths;
 
 
     @XmlElement(required = true)
-    private boolean allTablesAreSelectable;
+    boolean allProceduresAreCallable;
+
+
+    @XmlElement(required = true)
+    boolean allTablesAreSelectable;
 
 
     @XmlElement(nillable = true, required = true)
@@ -474,44 +423,36 @@ public class Metadata {
     private String driverVersion;
 
 
-    @XmlElement(required = true)
-    @XmlList
-    private List<String> numericFunctions;
+    @XmlElement(nillable = true, required = true)
+    private String numericFunctions;
 
 
-    @XmlElement(required = true)
-    @XmlList
-    private List<String> stringFunctions;
+    @XmlElement(nillable = true, required = true)
+    private String stringFunctions;
 
 
-    @XmlElement(required = true)
-    @XmlList
-    private List<String> systemFunctions;
+    @XmlElement(nillable = true, required = true)
+    private String systemFunctions;
 
 
-    @XmlElement(required = true)
-    @XmlList
-    private List<String> timeDateFunctions;
+    @XmlElement(nillable = true, required = true)
+    private String timeDateFunctions;
 
 
-    @SuppressionPath(SUPPRESSION_PATH_CATALOGS)
     @XmlElement(name = "catalog")
-    List<Catalog> catalogs;
+    private List<Catalog> catalogs;
 
 
-    @SuppressionPath(SUPPRESSION_PATH_CLIENT_INFO_PROPERTIES)
     @XmlElement(name = "clientInfoProperty")
-    List<ClientInfoProperty> clientInfoProperties;
+    private List<ClientInfoProperty> clientInfoProperties;
 
 
-    @SuppressionPath(SUPPRESSION_PATH_TABLE_TYPES)
     @XmlElement(name = "tableType")
-    List<TableType> tableTypes;
+    private List<TableType> tableTypes;
 
 
-    @SuppressionPath(SUPPRESSION_PATH_TYPE_INFO)
     @XmlElement(name = "typeInfo")
-    List<TypeInfo> typeInfo;
+    private List<TypeInfo> typeInfo;
 
 
 }

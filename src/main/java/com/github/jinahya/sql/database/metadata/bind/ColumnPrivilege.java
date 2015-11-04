@@ -18,116 +18,20 @@
 package com.github.jinahya.sql.database.metadata.bind;
 
 
-import java.sql.DatabaseMetaData;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.util.Collection;
 import javax.xml.bind.annotation.XmlAttribute;
 import javax.xml.bind.annotation.XmlElement;
+import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlTransient;
 import javax.xml.bind.annotation.XmlType;
 
 
 /**
  *
- * @author Jin Kwon <onacit at gmail.com>
+ * @author Jin Kwon &lt;jinahya_at_gmail.com&gt;
  */
+@XmlRootElement
 @XmlType(propOrder = {"grantor", "grantee", "privilege", "isGrantable"})
 public class ColumnPrivilege {
-
-
-    /**
-     *
-     * @param database
-     * @param suppression
-     * @param catalog
-     * @param schema
-     * @param table
-     * @param columnNamePattern
-     * @param columnPrivileges
-     *
-     * @throws SQLException
-     * @see DatabaseMetaData#getColumnPrivileges(String, String, String, String)
-     */
-    public static void retrieve(
-        final DatabaseMetaData database, final Suppression suppression,
-        final String catalog,
-        final String schema,
-        final String table,
-        final String columnNamePattern,
-        final Collection<? super ColumnPrivilege> columnPrivileges)
-        throws SQLException {
-
-        if (database == null) {
-            throw new NullPointerException("null database");
-        }
-
-        if (suppression == null) {
-            throw new NullPointerException("null suppression");
-        }
-
-        if (columnPrivileges == null) {
-            throw new NullPointerException("null columnPrivileges");
-        }
-
-        if (suppression.isSuppressed(
-            Table.SUPPRESSION_PATH_COLUMN_PRIVILEGES)) {
-            return;
-        }
-
-        final ResultSet resultSet = database.getColumnPrivileges(
-            catalog, schema, table, columnNamePattern);
-        try {
-            while (resultSet.next()) {
-                columnPrivileges.add(ColumnRetriever.retrieve(
-                    ColumnPrivilege.class, suppression, resultSet));
-            }
-        } finally {
-            resultSet.close();
-        }
-    }
-
-
-    public static void retrieve(final DatabaseMetaData database,
-                                final Suppression suppression,
-                                final Table table)
-        throws SQLException {
-
-        if (database == null) {
-            throw new NullPointerException("null database");
-        }
-
-        if (suppression == null) {
-            throw new NullPointerException("null suppression");
-        }
-
-        if (table == null) {
-            throw new NullPointerException("null table");
-        }
-
-        for (final Column column : table.getColumns()) {
-            retrieve(database, suppression,
-                     column.getTable().getSchema().getCatalog().getTableCat(),
-                     column.getTable().getSchema().getTableSchem(),
-                     column.getTable().getTableName(),
-                     column.getColumnName(),
-                     table.getColumnPrivileges());
-        }
-
-        for (final ColumnPrivilege columnPrivilege
-             : table.getColumnPrivileges()) {
-            columnPrivilege.table = table;
-        }
-    }
-
-
-    /**
-     * Creates a new instance.
-     */
-    public ColumnPrivilege() {
-
-        super();
-    }
 
 
     // ------------------------------------------------------------------ column
@@ -193,7 +97,6 @@ public class ColumnPrivilege {
      * table catalog (may be {@code null}).
      */
     @ColumnLabel("TABLE_CAT")
-    @SuppressionPath("columnPrivilege/tableCat")
     @XmlAttribute
     private String tableCat;
 
@@ -202,7 +105,6 @@ public class ColumnPrivilege {
      * table schema (may be {@code null}).
      */
     @ColumnLabel("TABLE_SCHEM")
-    @SuppressionPath("columnPrivilege/tableSchem")
     @XmlAttribute
     private String tableSchem;
 
@@ -211,7 +113,6 @@ public class ColumnPrivilege {
      * table name.
      */
     @ColumnLabel("TABLE_NAME")
-    @SuppressionPath("columnPrivilege/tableName")
     @XmlAttribute
     private String tableName;
 
@@ -220,7 +121,6 @@ public class ColumnPrivilege {
      * column name.
      */
     @ColumnLabel("COLUMN_NAME")
-    @SuppressionPath("columnPrivilege/columnName")
     @XmlAttribute(required = true)
     //@XmlElement(nillable = true, required = true)
     private String columnName;
@@ -230,7 +130,6 @@ public class ColumnPrivilege {
      * grantor of access (may be {@code null}).
      */
     @ColumnLabel("GRANTOR")
-    @SuppressionPath("columnPrivilege/grantor")
     @NillableBySpecification
     @XmlElement(nillable = true, required = true)
     String grantor;
@@ -240,7 +139,6 @@ public class ColumnPrivilege {
      * grantee of access.
      */
     @ColumnLabel("GRANTEE")
-    @SuppressionPath("columnPrivilege/grantee")
     @XmlElement(nillable = false, required = true)
     String grantee;
 
@@ -249,7 +147,6 @@ public class ColumnPrivilege {
      * name of access (SELECT, INSERT, UPDATE, REFRENCES, ...)
      */
     @ColumnLabel("PRIVILEGE")
-    @SuppressionPath("columnPrivilege/privilege")
     @XmlElement(nillable = false, required = true)
     String privilege;
 
@@ -259,7 +156,6 @@ public class ColumnPrivilege {
      * not; {@code null} if unknown.
      */
     @ColumnLabel("IS_GRANTABLE")
-    @SuppressionPath("columnPrivilege/isGrantable")
     @NillableBySpecification
     @XmlElement(nillable = true, required = true)
     String isGrantable;

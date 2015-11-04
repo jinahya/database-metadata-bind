@@ -18,14 +18,11 @@
 package com.github.jinahya.sql.database.metadata.bind;
 
 
-import java.sql.DatabaseMetaData;
-import java.sql.ResultSet;
-import java.sql.SQLException;
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.List;
 import javax.xml.bind.annotation.XmlAttribute;
 import javax.xml.bind.annotation.XmlElement;
+import javax.xml.bind.annotation.XmlElementRef;
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlTransient;
 import javax.xml.bind.annotation.XmlType;
@@ -45,7 +42,7 @@ import javax.xml.bind.annotation.XmlType;
         "versionColumns"
     }
 )
-public class Table implements Comparable<Table> {
+public class Table {
 
 
     /**
@@ -110,142 +107,17 @@ public class Table implements Comparable<Table> {
         = "table/versionColumns";
 
 
-    /**
-     *
-     * @param database
-     * @param suppression
-     * @param catalog
-     * @param schemaPattern
-     * @param tableNamePattern
-     * @param types
-     * @param tables
-     *
-     * @throws SQLException if a database access error occurs.
-     *
-     * @see DatabaseMetaData#getTables(String, String, String, String[])
-     */
-    public static void retrieve(final DatabaseMetaData database,
-                                final Suppression suppression,
-                                final String catalog,
-                                final String schemaPattern,
-                                final String tableNamePattern,
-                                final String[] types,
-                                final Collection<? super Table> tables)
-        throws SQLException {
+    // ---------------------------------------------------------------- tableCat
+    public String getTableCat() {
 
-        if (database == null) {
-            throw new NullPointerException("null database");
-        }
-
-        if (suppression == null) {
-            throw new NullPointerException("null suppression");
-        }
-
-        if (tables == null) {
-            throw new NullPointerException("null tables");
-        }
-
-        if (suppression.isSuppressed(Schema.SUPPRESSION_PATH_TABLES)) {
-            return;
-        }
-
-        final ResultSet resultSet = database.getTables(
-            catalog, schemaPattern, tableNamePattern, types);
-        try {
-            while (resultSet.next()) {
-                tables.add(ColumnRetriever.retrieve(
-                    Table.class, suppression, resultSet));
-            }
-        } finally {
-            resultSet.close();
-        }
+        return tableCat;
     }
 
 
-    /**
-     *
-     * @param database
-     * @param suppression
-     * @param schema
-     *
-     * @throws SQLException if a database access error occurs.
-     */
-    public static void retrieve(final DatabaseMetaData database,
-                                final Suppression suppression,
-                                final Schema schema)
-        throws SQLException {
+    // -------------------------------------------------------------- tableSchem
+    public String getTableSchem() {
 
-        if (database == null) {
-            throw new NullPointerException("null database");
-        }
-
-        if (suppression == null) {
-            throw new NullPointerException("null suppression");
-        }
-
-        if (schema == null) {
-            throw new NullPointerException("null schema");
-        }
-
-        retrieve(database, suppression,
-                 schema.getCatalog().getTableCat(),
-                 schema.getTableSchem(),
-                 null,
-                 null,
-                 schema.getTables());
-
-        for (final Table table : schema.getTables()) {
-            table.schema = schema;
-        }
-
-        for (final Table table : schema.getTables()) {
-            BestRowIdentifier.retrieve(database, suppression, table);
-            Column.retrieve(database, suppression, table);
-            ColumnPrivilege.retrieve(database, suppression, table);
-            ExportedKey.retrieve(database, suppression, table);
-            ImportedKey.retrieve(database, suppression, table);
-            IndexInfo.retrieve(database, suppression, table);
-            PrimaryKey.retrieve(database, suppression, table);
-            TablePrivilege.retrieve(database, suppression, table);
-            VersionColumn.retrieve(database, suppression, table);
-        }
-    }
-
-
-    /**
-     * Creates a new instance.
-     */
-    public Table() {
-
-        super();
-    }
-
-
-    @Override
-    public int compareTo(final Table o) {
-
-        if (o == null) {
-            throw new NullPointerException("object");
-        }
-
-        final int tableTypeCompared = tableType.compareTo(o.tableType);
-        if (tableTypeCompared != 0) {
-            return tableTypeCompared;
-        }
-
-        final int schemaCompared = schema.compareTo(o.schema);
-        if (schemaCompared != 0) {
-            return schemaCompared;
-        }
-
-        return tableName.compareTo(o.tableName);
-    }
-
-
-    // ------------------------------------------------------------------ schema
-    public Schema getSchema() {
-
-        return schema;
+        return tableSchem;
     }
 
 
@@ -381,6 +253,19 @@ public class Table implements Comparable<Table> {
     }
 
 
+    // ------------------------------------------------------------------ schema
+    public Schema getSchema() {
+
+        return schema;
+    }
+
+
+    public void setSchema(final Schema schema) {
+
+        this.schema = schema;
+    }
+
+
     // ------------------------------------------------------------ exportedKeys
     public List<ExportedKey> getExportedKeys() {
 
@@ -502,181 +387,99 @@ public class Table implements Comparable<Table> {
     }
 
 
-    /**
-     * table catalog (may be {@code null}).
-     */
     @ColumnLabel("TABLE_CAT")
-    @SuppressionPath("table/tableCat")
     @XmlAttribute
     private String tableCat;
 
 
-    /**
-     * table schema (may be {@code null}).
-     */
     @ColumnLabel("TABLE_SCHEM")
-    @SuppressionPath("table/tableSchem")
     @XmlAttribute
     private String tableSchem;
 
 
-    /**
-     * table name.
-     */
     @ColumnLabel("TABLE_NAME")
-    @XmlElement(nillable = true, required = true)
-    String tableName;
+    @XmlElement(required = true)
+    private String tableName;
 
 
-    /**
-     * table type. Typical types are "TABLE", "VIEW", "SYSTEM TABLE", "GLOBAL
-     * TEMPORARY", "LOCAL TEMPORARY", "ALIAS", "SYNONYM".
-     */
     @ColumnLabel("TABLE_TYPE")
-    @SuppressionPath("table/tableType")
-    @XmlElement(nillable = true, required = true)
-    String tableType;
+    @XmlElement(required = true)
+    private String tableType;
 
 
-    /**
-     * explanatory comment on the table.
-     */
     @ColumnLabel("REMARKS")
-    @SuppressionPath("table/remarks")
-    @XmlElement(nillable = true, required = true)
-    String remarks;
+    @XmlElement(required = true)
+    private String remarks;
 
 
-    /**
-     * the types catalog (may be {@code null}).
-     */
     @ColumnLabel("TYPE_CAT")
-    @SuppressionPath("table/typeCat")
     @XmlElement(nillable = true, required = true)
     @NillableBySpecification
-    String typeCat;
+    private String typeCat;
 
 
-    /**
-     * the types schema (may be {@code null}).
-     */
     @ColumnLabel("TYPE_SCHEM")
-    @SuppressionPath("table/typeSchem")
     @XmlElement(nillable = true, required = true)
     @NillableBySpecification
-    String typeSchem;
+    private String typeSchem;
 
 
-    /**
-     * type name (may be {@code null}).
-     */
     @ColumnLabel("TYPE_NAME")
-    @SuppressionPath("table/typeName")
     @XmlElement(nillable = true, required = true)
     @NillableBySpecification
-    String typeName;
+    private String typeName;
 
 
-    /**
-     * name of the designated "identifier" column of a typed table (may be
-     * {@code null}).
-     */
     @ColumnLabel("SELF_REFERENCING_COL_NAME")
-    @SuppressionPath("table/selfReferencingColName")
     @XmlElement(nillable = true, required = true)
     @NillableBySpecification
-    String selfReferencingColName;
+    private String selfReferencingColName;
 
 
-    /**
-     * specifies how values in
-     * {@link #selfReferencingColName SELF_REFERENCING_COL_NAME} are created.
-     * Values are "SYSTEM", "USER", "DERIVED". (may be {@code null}).
-     */
     @ColumnLabel("REF_GENERATION")
-    @SuppressionPath("table/refGeneration")
     @XmlElement(nillable = true, required = true)
     @NillableBySpecification
-    String refGeneration;
+    private String refGeneration;
 
 
-    /**
-     * parent schema.
-     */
     @XmlTransient
     private Schema schema;
 
 
-    /**
-     * bestRowIdentifiers.
-     */
-    @SuppressWarnings(SUPPRESSION_PATH_BEST_ROW_IDENTIFIERS)
-    @XmlElement(name = "bestRowIdentifier")
-    List<BestRowIdentifier> bestRowIdentifiers;
+    @XmlElementRef
+    private List<BestRowIdentifier> bestRowIdentifiers;
 
 
-    /**
-     * columns.
-     */
-    @SuppressWarnings(SUPPRESSION_PATH_COLUMNS)
-    @XmlElement(name = "column")
-    List<Column> columns;
+    @XmlElementRef
+    private List<Column> columns;
 
 
-    /**
-     * columnPrivileges.
-     */
-    @SuppressionPath(SUPPRESSION_PATH_COLUMN_PRIVILEGES)
-    @XmlElement(name = "columnPrivilege")
-    List<ColumnPrivilege> columnPrivileges;
+    @XmlElementRef
+    private List<ColumnPrivilege> columnPrivileges;
 
 
-    /**
-     * exportedKeys.
-     */
-    @SuppressionPath(SUPPRESSION_PATH_EXPORTED_KEYS)
-    @XmlElement(name = "exportedKey")
-    List<ExportedKey> exportedKeys;
+    @XmlElementRef
+    private List<ExportedKey> exportedKeys;
 
 
-    /**
-     * importedKeys.
-     */
-    @SuppressionPath(SUPPRESSION_PATH_IMPORTED_KEYS)
-    @XmlElement(name = "importedKey")
-    List<ImportedKey> importedKeys;
+    @XmlElementRef
+    private List<ImportedKey> importedKeys;
 
 
-    /**
-     * indexInfo.
-     */
-    @SuppressionPath(SUPPRESSION_PATH_INDEX_INFO)
-    @XmlElement(name = "indexInfo")
-    List<IndexInfo> indexInfo;
+    @XmlElementRef
+    private List<IndexInfo> indexInfo;
 
 
-    /**
-     * primaryKeys.
-     */
-    @SuppressWarnings(SUPPRESSION_PATH_PRIMARY_KEYS)
-    @XmlElement(name = "primaryKey")
-    List<PrimaryKey> primaryKeys;
+    @XmlElementRef
+    private List<PrimaryKey> primaryKeys;
 
 
-    /**
-     * tablePrivileges.
-     */
-    @SuppressionPath(SUPPRESSION_PATH_TABLE_PRIVILEGES)
-    @XmlElement(name = "tablePrivilege")
-    List<TablePrivilege> tablePrivileges;
+    @XmlElementRef
+    private List<TablePrivilege> tablePrivileges;
 
 
-    /**
-     * versionColumns.
-     */
-    @SuppressionPath(SUPPRESSION_PATH_VERSION_COLUMNS)
-    @XmlElement(name = "versionColumn")
-    List<VersionColumn> versionColumns;
+    @XmlElementRef
+    private List<VersionColumn> versionColumns;
 
 
 }

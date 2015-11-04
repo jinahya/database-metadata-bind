@@ -19,9 +19,6 @@ package com.github.jinahya.sql.database.metadata.bind;
 
 
 import java.sql.DatabaseMetaData;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.util.Collection;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlTransient;
 import javax.xml.bind.annotation.XmlType;
@@ -41,91 +38,6 @@ import javax.xml.bind.annotation.XmlType;
     }
 )
 public class TypeInfo {
-
-
-    /**
-     *
-     * @param database
-     * @param suppression
-     * @param typeInfo
-     *
-     * @throws SQLException if a database access error occurs.
-     *
-     * @see DatabaseMetaData#getTypeInfo()
-     */
-    public static void retrieve(final DatabaseMetaData database,
-                                final Suppression suppression,
-                                final Collection<? super TypeInfo> typeInfo)
-        throws SQLException {
-
-        if (database == null) {
-            throw new NullPointerException("null database");
-        }
-
-        if (suppression == null) {
-            throw new NullPointerException("null suppression");
-        }
-
-        if (typeInfo == null) {
-            throw new NullPointerException("null typeInfo");
-        }
-
-        if (suppression.isSuppressed(Metadata.SUPPRESSION_PATH_TYPE_INFO)) {
-            return;
-        }
-
-        final ResultSet resultSet = database.getTypeInfo();
-        try {
-            while (resultSet.next()) {
-                typeInfo.add(ColumnRetriever.retrieve(
-                    TypeInfo.class, suppression, resultSet));
-            }
-        } finally {
-            resultSet.close();
-        }
-    }
-
-
-    /**
-     *
-     * @param database
-     * @param suppression
-     * @param metadata
-     *
-     * @throws SQLException if a database access error occurs.
-     */
-    public static void retrieve(final DatabaseMetaData database,
-                                final Suppression suppression,
-                                final Metadata metadata)
-        throws SQLException {
-
-        if (database == null) {
-            throw new NullPointerException("null database");
-        }
-
-        if (suppression == null) {
-            throw new NullPointerException("null suppression");
-        }
-
-        if (metadata == null) {
-            throw new NullPointerException("null metadata");
-        }
-
-        retrieve(database, suppression, metadata.getTypeInfo());
-
-        for (final TypeInfo typeInfo_ : metadata.getTypeInfo()) {
-            typeInfo_.metadata = metadata;
-        }
-    }
-
-
-    /**
-     * Creates a new instance.
-     */
-    public TypeInfo() {
-
-        super();
-    }
 
 
     // ---------------------------------------------------------------- metadata
@@ -352,7 +264,6 @@ public class TypeInfo {
      * Type name.
      */
     @ColumnLabel("TYPE_NAME")
-    @SuppressionPath("typeInfo/typeName")
     @XmlElement(required = true)
     String typeName;
 
@@ -361,7 +272,6 @@ public class TypeInfo {
      * SQL data type from {@link java.sql.Types}.
      */
     @ColumnLabel("DATA_TYPE")
-    @SuppressionPath("typeInfo/dataType")
     @XmlElement(required = true)
     int dataType;
 
@@ -370,7 +280,6 @@ public class TypeInfo {
      * maximum precision.
      */
     @ColumnLabel("PRECISION")
-    @SuppressionPath("typeInfo/precision")
     @XmlElement(required = true)
     int precision;
 
@@ -379,7 +288,6 @@ public class TypeInfo {
      * prefix used to quote a literal (may be {@code null}).
      */
     @ColumnLabel("LITERAL_PREFIX")
-    @SuppressionPath("typeInfo/literalPrefix")
     @XmlElement(nillable = true, required = true)
     @NillableBySpecification
     String literalPrefix;
@@ -389,7 +297,6 @@ public class TypeInfo {
      * suffix used to quote a literal (may be {@code null}).
      */
     @ColumnLabel("LITERAL_SUFFIX")
-    @SuppressionPath("typeInfo/literalSuffix")
     @XmlElement(nillable = true, required = true)
     String literalSuffix;
 
@@ -398,7 +305,6 @@ public class TypeInfo {
      * parameters used in creating the type (may be {@code null}).
      */
     @ColumnLabel("CREATE_PARAMS")
-    @SuppressionPath("typeInfo/createParams")
     @XmlElement(nillable = true, required = true)
     String createParams;
 
@@ -414,7 +320,6 @@ public class TypeInfo {
      * </ul>
      */
     @ColumnLabel("NULLABLE")
-    @SuppressionPath("typeInfo/nullable")
     @XmlElement(required = true)
     short nullable;
 
@@ -423,7 +328,6 @@ public class TypeInfo {
      * is it case sensitive..
      */
     @ColumnLabel("CASE_SENSITIVE")
-    @SuppressionPath("typeInfo/caseSensitive")
     @XmlElement(required = true)
     boolean caseSensitive;
 
@@ -441,7 +345,6 @@ public class TypeInfo {
      * </ul>
      */
     @ColumnLabel("SEARCHABLE")
-    @SuppressionPath("typeInfo/searchable")
     @XmlElement(required = true)
     short searchable;
 
@@ -450,7 +353,6 @@ public class TypeInfo {
      * is it unsigned.
      */
     @ColumnLabel("UNSIGNED_ATTRIBUTE")
-    @SuppressionPath("typeInfo/unsignedAttribute")
     @XmlElement(required = true)
     boolean unsignedAttribute;
 
@@ -459,7 +361,6 @@ public class TypeInfo {
      * can it be a money value.
      */
     @ColumnLabel("FIXED_PREC_SCALE")
-    @SuppressionPath("typeInfo/fixedPrecScale")
     @XmlElement(required = true)
     boolean fixedPrecScale;
 
@@ -468,7 +369,6 @@ public class TypeInfo {
      * can it be used for an auto-increment value.
      */
     @ColumnLabel("AUTO_INCREMENT")
-    @SuppressionPath("typeInfo/autoIncrement")
     @XmlElement(required = true)
     boolean autoIncrement;
 
@@ -477,7 +377,6 @@ public class TypeInfo {
      * localized version of type name (may be {@code null}).
      */
     @ColumnLabel("LOCAL_TYPE_NAME")
-    @SuppressionPath("typeInfo/localTypeName")
     @XmlElement(nillable = true, required = true)
     @NillableBySpecification
     String localTypeName;
@@ -487,7 +386,6 @@ public class TypeInfo {
      * minimum scale supported.
      */
     @ColumnLabel("MINIMUM_SCALE")
-    @SuppressionPath("typeInfo/minimumScale")
     @XmlElement(required = true)
     short minimumScale;
 
@@ -496,7 +394,6 @@ public class TypeInfo {
      * maximum scale supported.
      */
     @ColumnLabel("MAXIMUM_SCALE")
-    @SuppressionPath("typeInfo/maximumScale")
     @XmlElement(required = true)
     short maximumScale;
 
@@ -505,7 +402,6 @@ public class TypeInfo {
      * unused.
      */
     @ColumnLabel("SQL_DATA_TYPE")
-    @SuppressionPath("typeInfo/sqlDataType")
     @NotUsed
     @XmlElement(required = true)
     int sqlDataType;
@@ -515,7 +411,6 @@ public class TypeInfo {
      * unused.
      */
     @ColumnLabel("SQL_DATA_TYPE")
-    @SuppressionPath("typeInfo/sqlDatetimeSub")
     @NotUsed
     @XmlElement(required = true)
     int sqlDatetimeSub;
@@ -525,7 +420,6 @@ public class TypeInfo {
      * usually 2 or 10.
      */
     @ColumnLabel("NUM_PREC_RADIX")
-    @SuppressionPath("typeInfo/numPrecRadix")
     @XmlElement(required = true)
     int numPrecRadix;
 

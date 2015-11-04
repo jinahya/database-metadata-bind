@@ -18,20 +18,18 @@
 package com.github.jinahya.sql.database.metadata.bind;
 
 
-import java.sql.DatabaseMetaData;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.util.Collection;
 import javax.xml.bind.annotation.XmlAttribute;
 import javax.xml.bind.annotation.XmlElement;
+import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlTransient;
 import javax.xml.bind.annotation.XmlType;
 
 
 /**
  *
- * @author Jin Kwon <onacit at gmail.com>
+ * @author Jin Kwon &lt;jinahya_at_gmail.com&gt;
  */
+@XmlRootElement
 @XmlType(
     propOrder = {
         "attrName", "dataType", "attrTypeName", "attrSize", "decimalDigits",
@@ -40,118 +38,6 @@ import javax.xml.bind.annotation.XmlType;
     }
 )
 public class Attribute {
-
-
-    /**
-     *
-     * Retrieves attributes. This method invokes
-     * {@link DatabaseMetaData#getAttributes(String, String, String, String)}
-     * with specified {@code catalog}, {@code schemaPattern},
-     * {@code typeNamePattern}, and {@code attributeNamePattern}.
-     *
-     * @param database the database meta data.
-     * @param suppression the suppression
-     * @param catalog
-     * @param schemaPattern
-     * @param typeNamePattern
-     * @param attributeNamePattern
-     * @param attributes the collection to which retrieved attributes are added.
-     *
-     * @throws SQLException if a database access error occurs.
-     *
-     * @see DatabaseMetaData#getAttributes(String, String, String, String)
-     */
-    public static void retrieve(final DatabaseMetaData database,
-                                final Suppression suppression,
-                                final String catalog,
-                                final String schemaPattern,
-                                final String typeNamePattern,
-                                final String attributeNamePattern,
-                                final Collection<? super Attribute> attributes)
-        throws SQLException {
-
-        if (database == null) {
-            throw new NullPointerException("null database");
-        }
-
-        if (suppression == null) {
-            throw new NullPointerException("null suppression");
-        }
-
-        if (attributes == null) {
-            throw new NullPointerException("null attributes");
-        }
-
-        if (suppression.isSuppressed(
-            UserDefinedType.SUPPRESSION_PATH_ATTRIBUTES)) {
-            return;
-        }
-
-        final ResultSet resultSet = database.getColumns(
-            catalog, schemaPattern, typeNamePattern, attributeNamePattern);
-        try {
-            while (resultSet.next()) {
-                attributes.add(ColumnRetriever.retrieve(
-                    Attribute.class, suppression, resultSet));
-            }
-        } finally {
-            resultSet.close();
-        }
-    }
-
-
-    /**
-     *
-     * @param database
-     * @param suppression
-     * @param userDefinedType
-     *
-     * @throws SQLException if a database access error occurs
-     */
-    public static void retrieve(final DatabaseMetaData database,
-                                final Suppression suppression,
-                                final UserDefinedType userDefinedType)
-        throws SQLException {
-
-        if (database == null) {
-            throw new NullPointerException("null database");
-        }
-
-        if (suppression == null) {
-            throw new NullPointerException("null suppression");
-        }
-
-        if (userDefinedType == null) {
-            throw new NullPointerException("null userDefinedType");
-        }
-
-        retrieve(database, suppression,
-                 userDefinedType.getSchema().getCatalog().getTableCat(),
-                 userDefinedType.getSchema().getTableSchem(),
-                 userDefinedType.getTypeName(),
-                 null,
-                 userDefinedType.getAttributes());
-
-        for (final Attribute attribute : userDefinedType.getAttributes()) {
-            attribute.userDefinedType = userDefinedType;
-        }
-    }
-
-
-    /**
-     * Creates a new instance.
-     */
-    public Attribute() {
-
-        super();
-    }
-
-
-    // --------------------------------------------------------- userDefinedType
-    public UserDefinedType getUserDefinedType() {
-
-        return userDefinedType;
-    }
 
 
     // ---------------------------------------------------------------- attrName
@@ -323,183 +209,110 @@ public class Attribute {
     }
 
 
-    /**
-     * type catalog (may be {@code null})
-     */
+    // --------------------------------------------------------- userDefinedType
+    public UserDefinedType getUserDefinedType() {
+
+        return userDefinedType;
+    }
+
+
     @ColumnLabel("TYPE_CAT")
-    @SuppressionPath("attribute/typeCat")
     @XmlAttribute
     private String typeCat;
 
 
-    /**
-     * type schema (may be {@code null})
-     */
     @ColumnLabel("TYPE_SCHEM")
-    @SuppressionPath("attribute/typeSchem")
     @XmlAttribute
     private String typeSchem;
 
 
-    /**
-     * type name.
-     */
     @ColumnLabel("TYPE_NAME")
-    //@SuppressionPath("attribute/typeName")
     @XmlAttribute
     private String typeName;
 
 
-    /**
-     * parent UDT.
-     */
-    @XmlTransient
-    private UserDefinedType userDefinedType;
-
-
-    /**
-     * attribute name.
-     */
     @ColumnLabel("ATTR_NAME")
-    //@SuppressionPath("attribute/attrName")
     @XmlElement(required = true)
-    String attrName;
+    private String attrName;
 
 
-    /**
-     * attribute type SQL type from {@link java.sql.Types}.
-     */
     @ColumnLabel("DATA_TYPE")
-    //@SuppressionPath("attribute/dataType")
     @XmlElement(required = true)
-    int dataType;
+    private int dataType;
 
 
-    /**
-     * Data source dependent type name. For a UDT, the type name is fully
-     * qualified. For a REF, the type name is fully qualified and represents the
-     * target type of the reference type.
-     */
     @ColumnLabel("ATTR_TYPE_NAME")
-    //@SuppressionPath("attribute/attrTypeName")
     @XmlElement(required = true)
-    String attrTypeName;
+    private String attrTypeName;
 
 
-    /**
-     * column size. For char or date types this is the maximum number of
-     * characters; for numeric or decimal types this is precision.
-     */
     @ColumnLabel("ATTR_SIZE")
-    //@SuppressionPath("attribute/attrSize")
     @XmlElement(required = true)
-    int attrSize;
+    private int attrSize;
 
 
-    /**
-     * the number of fractional digits. Null is returned for data types where
-     * DECIMAL_DIGITS is not applicable.
-     */
     @ColumnLabel("DECIMAL_DIGITS")
-    //@SuppressionPath("attribute/decimalDigits")
     @XmlElement(required = true)
-    Integer decimalDigits;
+    private Integer decimalDigits;
 
 
-    /**
-     * Radix (typically either 10 or 2).
-     */
     @ColumnLabel("NUM_PREC_RADIX")
-    //@SuppressionPath("attribute/numPrecRadix")
     @XmlElement(required = true)
-    int numPrecRadix;
+    private int numPrecRadix;
 
 
-    /**
-     * whether NULL is allowed.
-     */
     @ColumnLabel("NULLABLE")
-    //@SuppressionPath("attribute/nullable")
     @XmlElement(required = true)
-    int nullable;
+    private int nullable;
 
 
-    /**
-     * comment describing column.
-     */
     @ColumnLabel("REMARKS")
-    //@SuppressionPath("attribute/remarks")
     @XmlElement(nillable = true, required = true)
     @NillableBySpecification
-    String remarks;
+    private String remarks;
 
 
-    /**
-     * default value.
-     */
     @ColumnLabel("ATTR_DEF")
-    //@SuppressionPath("attribute/attrDef")
     @XmlElement(nillable = true, required = true)
     @NillableBySpecification
-    String attrDef;
+    private String attrDef;
 
 
-    /**
-     * not used.
-     */
     @ColumnLabel("SQL_DATA_TYPE")
-    //@SuppressionPath("attribute/sqlDataType")
+    @XmlTransient
     @NotUsed
-    int sqlDataType;
+    private int sqlDataType;
 
 
-    /**
-     * not used.
-     */
     @ColumnLabel("SQL_DATETIME_SUB")
-    //@SuppressionPath("attribute/sqlDatetimeSub")
+    @XmlTransient
     @NotUsed
-    int sqlDatetimeSub;
+    private int sqlDatetimeSub;
 
 
-    /**
-     * for char types the maximum number of bytes in the column.
-     */
     @ColumnLabel("CHAR_OCTET_LENGTH")
-    //@SuppressionPath("attribute/charOctetLength")
     @XmlElement(required = true)
-    int charOctetLength;
+    private int charOctetLength;
 
 
-    /**
-     * index of the attribute in the UDT (starting at 1).
-     */
     @ColumnLabel("ORDINAL_POSITION")
-    //@SuppressionPath("attribute/ordinalPosition")
     @XmlElement(required = true)
-    int ordinalPosition;
+    private int ordinalPosition;
 
 
-    /**
-     * ISO rules are used to determine the nullability for a attribute.
-     */
     @ColumnLabel("IS_NULLABLE")
-    //@SuppressionPath("attribute/isNullable")
     @XmlElement(required = true)
     String isNullable;
 
 
-    /**
-     * source type of a distinct type or user-generated Ref type,SQL type from
-     * {@link java.sql.Types} ({@code null} if {@link #data DATA_TYPE} isn't
-     * {@link java.sql.Types#DISTINCT DISTINCT} or user-generated
-     * {@link java.sql.Types#REF REF})
-     */
     @ColumnLabel("SOURCE_DATA_TYPE")
-    @SuppressionPath("attribute/sourceDataType")
     @XmlElement(nillable = true, required = true)
     @NillableBySpecification()
-    Short sourceDataType;
+    private Short sourceDataType;
+
+
+    @XmlTransient
+    private UserDefinedType userDefinedType;
 
 
 }

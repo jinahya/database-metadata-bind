@@ -19,21 +19,18 @@ package com.github.jinahya.sql.database.metadata.bind;
 
 
 import java.sql.DatabaseMetaData;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.util.Collection;
 import javax.xml.bind.annotation.XmlAttribute;
 import javax.xml.bind.annotation.XmlElement;
+import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlTransient;
 import javax.xml.bind.annotation.XmlType;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 
 /**
  *
  * @author Jin Kwon &lt;jinahya_at_gmail.com&gt;
  */
+@XmlRootElement
 @XmlType(
     propOrder = {
         "nonUnique", "indexQualifier", "indexName", "type", "ordinalPosition",
@@ -41,104 +38,6 @@ import org.slf4j.LoggerFactory;
     }
 )
 public class IndexInfo {
-
-
-    /**
-     * logger.
-     */
-    private static final Logger LOGGER
-        = LoggerFactory.getLogger(IndexInfo.class);
-
-
-    /**
-     *
-     * @param database
-     * @param suppression
-     * @param catalog
-     * @param schema
-     * @param table
-     * @param unique
-     * @param approximate
-     * @param indexInfo
-     *
-     * @throws SQLException
-     *
-     * @see DatabaseMetaData#getIndexInfo(java.lang.String, java.lang.String,
-     * java.lang.String, boolean, boolean)
-     */
-    public static void retrieve(final DatabaseMetaData database,
-                                final Suppression suppression,
-                                final String catalog, final String schema,
-                                final String table, final boolean unique,
-                                final boolean approximate,
-                                final Collection<? super IndexInfo> indexInfo)
-        throws SQLException {
-
-        if (database == null) {
-            throw new NullPointerException("null database");
-        }
-
-        if (suppression == null) {
-            throw new NullPointerException("null suppression");
-        }
-
-        if (indexInfo == null) {
-            throw new NullPointerException("null indexInfo");
-        }
-
-        if (suppression.isSuppressed(Table.SUPPRESSION_PATH_INDEX_INFO)) {
-            return;
-        }
-
-        final ResultSet resultSet = database.getIndexInfo(
-            catalog, schema, table, unique, approximate);
-        try {
-            while (resultSet.next()) {
-                indexInfo.add(ColumnRetriever.retrieve(
-                    IndexInfo.class, suppression, resultSet));
-            }
-        } finally {
-            resultSet.close();
-        }
-    }
-
-
-    public static void retrieve(final DatabaseMetaData database,
-                                final Suppression suppression,
-                                final Table table)
-        throws SQLException {
-
-        if (database == null) {
-            throw new NullPointerException("null database");
-        }
-
-        if (suppression == null) {
-            throw new NullPointerException("null suppression");
-        }
-
-        if (table == null) {
-            throw new NullPointerException("null table");
-        }
-
-        retrieve(database, suppression,
-                 table.getSchema().getCatalog().getTableCat(),
-                 table.getSchema().getTableSchem(), table.getTableName(),
-                 false, false,
-                 table.getIndexInfo());
-
-        for (final IndexInfo indexInfo : table.getIndexInfo()) {
-            indexInfo.setTable(table);
-        }
-    }
-
-
-    /**
-     * Creates a nIndexInfostance.
-     */
-    public IndexInfo() {
-
-        super();
-    }
 
 
     // ------------------------------------------------------------------- table
@@ -322,13 +221,11 @@ public class IndexInfo {
 
 
     @ColumnLabel("TABLE_CAT")
-    @SuppressionPath("indexInfo/tableCat")
     @XmlAttribute
     private String tableCat;
 
 
     @ColumnLabel("TABLE_SCHEM")
-    @SuppressionPath("indexInfo/tableSchem")
     @XmlAttribute
     private String tableSchem;
 

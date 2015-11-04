@@ -18,153 +18,43 @@
 package com.github.jinahya.sql.database.metadata.bind;
 
 
-import java.sql.DatabaseMetaData;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.util.Collection;
 import javax.xml.bind.annotation.XmlAttribute;
 import javax.xml.bind.annotation.XmlElement;
+import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlTransient;
+import javax.xml.bind.annotation.XmlType;
 
 
 /**
  *
- * @author Jin Kwon <onacit at gmail.com>
+ * @author Jin Kwon &lt;jinahya_at_gmail.com&gt;
  */
+@XmlRootElement
+@XmlType(propOrder = {"pkcolumnName", "fktableCat", "fktableSchem",
+                      "fktableName", "fkcolumnName", "keySeq", "updateRule",
+                      "deleteRule", "fkName", "pkName", "deferrability"
+})
 public class ExportedKey {
 
 
-    /**
-     *
-     * @param database
-     * @param suppression
-     * @param catalog
-     * @param schema
-     * @param table
-     * @param exportedKeys
-     *
-     * @throws SQLException if a database access error occurs.
-     *
-     * @see DatabaseMetaData#getExportedKeys(String, String, String)
-     */
-    public static void retrieve(
-        final DatabaseMetaData database, final Suppression suppression,
-        final String catalog, final String schema, final String table,
-        final Collection<? super ExportedKey> exportedKeys)
-        throws SQLException {
+    // -------------------------------------------------------------- pktableCat
+    public String getPktableCat() {
 
-        if (database == null) {
-            throw new NullPointerException("null database");
-        }
-
-        if (suppression == null) {
-            throw new NullPointerException("null suppression");
-        }
-
-        if (exportedKeys == null) {
-            throw new NullPointerException("null exportedKeys");
-        }
-
-        if (suppression.isSuppressed(Table.SUPPRESSION_PATH_EXPORTED_KEYS)) {
-            return;
-        }
-
-        final ResultSet resultSet = database.getExportedKeys(
-            catalog, schema, table);
-        try {
-            while (resultSet.next()) {
-                exportedKeys.add(ColumnRetriever.retrieve(
-                    ExportedKey.class, suppression, resultSet));
-            }
-        } finally {
-            resultSet.close();
-        }
+        return pktableCat;
     }
 
 
-    /**
-     *
-     * @param database
-     * @param suppression
-     * @param table
-     *
-     * @throws SQLException if a database access error occurs.
-     */
-    public static void retrieve(final DatabaseMetaData database,
-                                final Suppression suppression,
-                                final Table table)
-        throws SQLException {
+    // ------------------------------------------------------------ pktableSchem
+    public String getPktableSchem() {
 
-        if (database == null) {
-            throw new NullPointerException("null database");
-        }
-
-        if (suppression == null) {
-            throw new NullPointerException("null suppression");
-        }
-
-        if (table == null) {
-            throw new NullPointerException("null table");
-        }
-
-        retrieve(database, suppression,
-                 table.getSchema().getCatalog().getTableCat(),
-                 table.getSchema().getTableSchem(), table.getTableName(),
-                 table.getExportedKeys());
-
-        for (final ExportedKey exportedKey : table.getExportedKeys()) {
-            exportedKey.table = table;
-        }
+        return pktableSchem;
     }
 
 
-    /**
-     * Creates a new instance.
-     */
-    public ExportedKey() {
+    // ------------------------------------------------------------- pktableName
+    public String getPktableName() {
 
-        super();
-    }
-
-
-//    // -------------------------------------------------------------- pktableCat
-//    /**
-//     * Returns {@link #pktableCat}.
-//     *
-//     * @return {@link #pktableCat}.
-//     */
-//    public String getPktableCat() {
-//
-//        return pktableCat;
-//    }
-//
-//
-//    // ------------------------------------------------------------ pktableSchem
-//    /**
-//     * Returns {@link #pktableSchem}.
-//     *
-//     * @return {@link #pktableSchem}.
-//     */
-//    public String getPktableSchem() {
-//
-//        return pktableSchem;
-//    }
-//
-//
-//    // ------------------------------------------------------------- pktableName
-//    /**
-//     * Returns {@link #pktableName}.
-//     *
-//     * @return {@link #pktableName}.
-//     */
-//    public String getPktableName() {
-//
-//        return pktableName;
-//    }
-    // ------------------------------------------------------------------- table
-    public Table getTable() {
-
-        return table;
+        return pktableName;
     }
 
 
@@ -321,163 +211,85 @@ public class ExportedKey {
     }
 
 
-    /**
-     * primary key table catalog (may be {@code null}).
-     */
+    // ------------------------------------------------------------------- table
+    public Table getTable() {
+
+        return table;
+    }
+
+
     @ColumnLabel("PKTABLE_CAT")
-    @SuppressionPath("exportedKey/pktableCat")
     @XmlAttribute
     private String pktableCat;
 
 
-    /**
-     * primary key table schema (may be {@code null}).
-     */
     @ColumnLabel("PKTABLE_SCHEM")
-    @SuppressionPath("exportedKey/pktableSchem")
     @XmlAttribute
     private String pktableSchem;
 
 
-    /**
-     * primary key table name.
-     */
     @ColumnLabel("PKTABLE_NAME")
-    @SuppressionPath("exportedKey/pktableName")
     @XmlAttribute
     private String pktableName;
 
 
-    /**
-     * primary key column name.
-     */
     @ColumnLabel("PKCOLUMN_NAME")
-    @SuppressionPath("exportedKey/pktableName")
-    @XmlElement(nillable = true, required = true)
-    String pkcolumnName;
+    @XmlElement(required = true)
+    private String pkcolumnName;
 
 
-    /**
-     * foreign key table catalog (may be {@code null}) being exported (may be
-     * {@code null}).
-     */
     @ColumnLabel("FKTABLE_CAT")
     @XmlElement(nillable = true, required = true)
     @NillableBySpecification
-    String fktableCat;
+    private String fktableCat;
 
 
-    /**
-     * foreign key table schema (may be {@code null}) being exported (may be
-     * {@code null}).
-     *
-     */
     @ColumnLabel("FKTABLE_NAME")
     @XmlElement(nillable = true, required = true)
     @NillableBySpecification
-    String fktableSchem;
+    private String fktableSchem;
 
 
-    /**
-     * foreign key table name being exported.
-     */
     @ColumnLabel("FKTABLE_NAME")
     @XmlElement(required = true)
-    String fktableName;
+    private String fktableName;
 
 
-    /**
-     * foreign key column name being exported.
-     */
     @ColumnLabel("FKCOLUMN_NAME")
     @XmlElement(required = true)
-    Column fkcolumnName;
+    private Column fkcolumnName;
 
 
-    /**
-     * sequence number within foreign key( a value of 1 represents the first
-     * column of the foreign key, a value of 2 would represent the second column
-     * within the foreign key).
-     */
     @ColumnLabel("FKCOLUMN_NAME")
     @XmlElement(required = true)
-    short keySeq;
+    private short keySeq;
 
 
-    /**
-     * What happens to foreign key when primary is updated:.
-     * <ul>
-     * <li>{@link java.sql.DatabaseMetaData#importedKeyNoAction} - do not allow
-     * update of primary key if it has been imported</li>
-     * <li>{@link java.sql.DatabaseMetaData#importedKeyCascade} - change
-     * imported key to agree with primary key update</li>
-     * <li>{@link java.sql.DatabaseMetaData#importedKeySetNull} - change
-     * imported key to NULL if its primary key has been updated</li>
-     * <li>{@link java.sql.DatabaseMetaData#importedKeySetDefault} - change
-     * imported key to default values if its primary key has been updated</li>
-     * <li>{@link java.sql.DatabaseMetaData#importedKeyRestrict} - same as
-     * importedKeyNoAction (for ODBC 2.x compatibility)</li>
-     * </ul>
-     */
     @ColumnLabel("UPDATE_RULE")
     @XmlElement(required = true)
-    short updateRule;
+    private short updateRule;
 
 
-    /**
-     * What happens to the foreign key when primary is deleted.
-     * <ul>
-     * <li>{@link java.sql.DatabaseMetaData#importedKeyNoAction} - do not allow
-     * delete of primary key if it has been imported</li>
-     * <li>{@link java.sql.DatabaseMetaData#importedKeyCascade} - delete rows
-     * that import a deleted key</li>
-     * <li>{@link java.sql.DatabaseMetaData#importedKeySetNull} - change
-     * imported key to NULL if its primary key has been deleted</li>
-     * <li>{@link java.sql.DatabaseMetaData#importedKeyRestrict} - same as
-     * importedKeyNoAction (for ODBC 2.x compatibility)</li>
-     * <li>{@link java.sql.DatabaseMetaData#importedKeySetDefault} - change
-     * imported key to default if its primary key has been deleted</li>
-     * </ul>
-     */
     @ColumnLabel("DELETE_RULE")
     @XmlElement(required = true)
-    short deleteRule;
+    private short deleteRule;
 
 
-    /**
-     * foreign key name (may be {@code null}).
-     */
     @ColumnLabel("FK_NAME")
     @XmlElement(required = true)
-    String fkName;
+    private String fkName;
 
 
-    /**
-     * primary key name (may be {@code null}).
-     */
     @ColumnLabel("PK_NAME")
     @XmlElement(required = true)
-    String pkName;
+    private String pkName;
 
 
-    /**
-     * can the evaluation of foreign key constraints be deferred until commit.
-     * <ul>
-     * <li>{@link DatabaseMetaData#importedKeyInitiallyDeferred} - see SQL92 for
-     * definition</li>
-     * <li>{@link DatabaseMetaData#importedKeyInitiallyImmediate} - see SQL92
-     * for definition</li>
-     * <li>{@link DatabaseMetaData#importedKeyNotDeferrable} - see SQL92 for
-     * definition</li>
-     * </ul>
-     */
     @ColumnLabel("DEFERRABILITY")
-    short deferrability;
+    @XmlElement(required = true)
+    private short deferrability;
 
 
-    /**
-     * parent table.
-     */
     @XmlTransient
     private Table table;
 

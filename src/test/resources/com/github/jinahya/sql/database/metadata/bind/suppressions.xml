@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-<suppressions xmlns="http://github.com/jinahya/sql/databasemetadata">
+<suppressions xmlns="http://github.com/jinahya/sql/database/metadata/bind">
   <suppression enabled="true">
     <key>
       <databaseMajorVersion>0</databaseMajorVersion>
@@ -49,7 +49,7 @@
       <path>column/isGeneratedcolumn</path>
     </paths>
   </suppression>
-  
+
   <suppression>
     <key>
       <databaseMajorVersion>2</databaseMajorVersion>
@@ -62,7 +62,7 @@
       <driverVersion>2.3.0</driverVersion>
     </key>
   </suppression>
-    
+
 
   <suppression>
     <key>

@@ -18,11 +18,7 @@
 package com.github.jinahya.sql.database.metadata.bind;
 
 
-import java.sql.DatabaseMetaData;
-import java.sql.ResultSet;
-import java.sql.SQLException;
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.List;
 import javax.xml.bind.annotation.XmlAttribute;
 import javax.xml.bind.annotation.XmlElement;
@@ -42,7 +38,7 @@ import javax.xml.bind.annotation.XmlType;
         "tableSchem", "functions", "procedures", "tables", "userDefinedTypes"
     }
 )
-public class Schema implements Comparable<Schema> {
+public class Schema {
 
 
     public static final String SUPPRESSION_PATH_TABLE_CATALOG
@@ -71,128 +67,6 @@ public class Schema implements Comparable<Schema> {
      */
     public static final String SUPPRESSION_PATH_USER_DEFINED_TYPES
         = "schema/userDefinedTypes";
-
-
-    /**
-     *
-     * @param database
-     * @param suppression
-     * @param catalog
-     * @param schemaPattern
-     * @param schemas
-     *
-     * @throws SQLException if a database access error occurs.
-     *
-     * @see DatabaseMetaData#getSchemas(String, String)
-     */
-    public static void retrieve(final DatabaseMetaData database,
-                                final Suppression suppression,
-                                final String catalog,
-                                final String schemaPattern,
-                                final Collection<? super Schema> schemas)
-        throws SQLException {
-
-        if (database == null) {
-            throw new NullPointerException("null database");
-        }
-
-        if (suppression == null) {
-            throw new NullPointerException("null suppression");
-        }
-
-        if (schemas == null) {
-            throw new NullPointerException("null schemas");
-        }
-
-        if (suppression.isSuppressed(Catalog.SUPPRESSION_PATH_SCHEMAS)) {
-            return;
-        }
-
-        final ResultSet resultSet
-            = database.getSchemas(catalog, schemaPattern);
-        try {
-            while (resultSet.next()) {
-                schemas.add(ColumnRetriever.retrieve(
-                    Schema.class, suppression, resultSet));
-            }
-        } finally {
-            resultSet.close();
-        }
-    }
-
-
-    /**
-     *
-     * @param database
-     * @param suppression
-     * @param catalog
-     *
-     * @throws SQLException if a database access error occurs.
-     */
-    public static void retrieve(final DatabaseMetaData database,
-                                final Suppression suppression,
-                                final Catalog catalog)
-        throws SQLException {
-
-        if (database == null) {
-            throw new NullPointerException("null database");
-        }
-
-        if (suppression == null) {
-            throw new NullPointerException("null suppression");
-        }
-
-        if (catalog == null) {
-            throw new NullPointerException("null catalog");
-        }
-
-        retrieve(database, suppression,
-                 catalog.getTableCat(),
-                 null,
-                 catalog.getSchemas());
-
-        if (catalog.getSchemas().isEmpty()) {
-            final Schema schema = new Schema();
-            schema.setTableSchem("");
-            catalog.getSchemas().add(schema);
-        }
-
-        for (final Schema schema : catalog.getSchemas()) {
-            schema.catalog = catalog;
-        }
-
-        for (final Schema schema : catalog.getSchemas()) {
-            Function.retrieve(database, suppression, schema);
-            Procedure.retrieve(database, suppression, schema);
-            Table.retrieve(database, suppression, schema);
-            UserDefinedType.retrieve(database, suppression, schema);
-        }
-    }
-
-
-    /**
-     * Creates a new instance.
-     */
-    public Schema() {
-
-        super();
-    }
-
-
-    @Override
-    public int compareTo(final Schema o) {
-
-        if (o == null) {
-            throw new NullPointerException("object");
-        }
-
-        final int catalogCompared = catalog.compareTo(o.catalog);
-        if (catalogCompared != 0) {
-            return catalogCompared;
-        }
-
-        return tableSchem.compareTo(o.tableSchem);
-    }
 
 
     // ------------------------------------------------------------ tableCatalog
@@ -326,7 +200,6 @@ public class Schema implements Comparable<Schema> {
      * catalog name (may be {@code null}).
      */
     @ColumnLabel("TABLE_CATALOG")
-    @SuppressionPath(SUPPRESSION_PATH_TABLE_CATALOG)
     @XmlAttribute(required = false)
     private String tableCatalog;
 
@@ -340,7 +213,6 @@ public class Schema implements Comparable<Schema> {
     private Catalog catalog;
 
 
-    @SuppressionPath(SUPPRESSION_PATH_FUNCTIONS)
     @XmlElementRef
     private List<Function> functions;
 
@@ -348,25 +220,19 @@ public class Schema implements Comparable<Schema> {
     /**
      * procedures.
      */
-    @SuppressionPath(SUPPRESSION_PATH_PROCEDURES)
     @XmlElementRef
-    List<Procedure> procedures;
+    private List<Procedure> procedures;
 
 
     /**
      * tables.
      */
-    @SuppressionPath(SUPPRESSION_PATH_TABLES)
-    @XmlElement(name = "table")
-    List<Table> tables;
+    @XmlElementRef
+    private List<Table> tables;
 
 
-    /**
-     * UDTs.
-     */
-    @SuppressionPath(SUPPRESSION_PATH_USER_DEFINED_TYPES)
-    @XmlElement(name = "userDefinedType")
-    List<UserDefinedType> userDefinedTypes;
+    @XmlElementRef
+    private List<UserDefinedType> userDefinedTypes;
 
 
 }

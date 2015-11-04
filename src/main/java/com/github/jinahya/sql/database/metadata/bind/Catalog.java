@@ -18,11 +18,8 @@
 package com.github.jinahya.sql.database.metadata.bind;
 
 
-import java.sql.DatabaseMetaData;
-import java.sql.ResultSet;
-import java.sql.SQLException;
+import java.io.Serializable;
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.List;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlElementRef;
@@ -33,137 +30,23 @@ import javax.xml.bind.annotation.XmlType;
 
 /**
  *
- * @author Jin Kwon <jinahya at gmail.com>
+ * @author Jin Kwon &lt;jinahya_at_gmail.com&gt;
  */
 @XmlRootElement
 @XmlType(propOrder = {"tableCat", "schemas"})
-public class Catalog implements Comparable<Catalog> {
+public class Catalog implements Serializable {
 
 
     public static final String SUPPRESSION_PATH_SCHEMAS = "catalog/schemas";
 
 
-    /**
-     *
-     * @param database
-     * @param suppression
-     * @param catalogs
-     *
-     * @throws SQLException if a database access error occurs.
-     */
-    public static void retrieve(final DatabaseMetaData database,
-                                final Suppression suppression,
-                                final Collection<? super Catalog> catalogs)
-        throws SQLException {
-
-        if (database == null) {
-            throw new NullPointerException("null database");
-        }
-
-        if (suppression == null) {
-            throw new NullPointerException("null suppression");
-        }
-
-        if (catalogs == null) {
-            throw new NullPointerException("null catalogs");
-        }
-
-        if (suppression.isSuppressed(Metadata.SUPPRESSION_PATH_CATALOGS)) {
-            return;
-        }
-
-        final ResultSet resultSet = database.getCatalogs();
-        try {
-            while (resultSet.next()) {
-                catalogs.add(ColumnRetriever.retrieve(
-                    Catalog.class, suppression, resultSet));
-            }
-        } finally {
-            resultSet.close();
-        }
-    }
-
-
-    /**
-     *
-     * @param database
-     * @param suppression
-     * @param metadata
-     *
-     * @throws SQLException if a database access error occurs.
-     */
-    public static void retrieve(final DatabaseMetaData database,
-                                final Suppression suppression,
-                                final Metadata metadata)
-        throws SQLException {
-
-        if (database == null) {
-            throw new NullPointerException("null database");
-        }
-
-        if (suppression == null) {
-            throw new NullPointerException("null suppression");
-        }
-
-        if (metadata == null) {
-            throw new NullPointerException("null metadata");
-        }
-
-        retrieve(database, suppression, metadata.getCatalogs());
-
-        if (metadata.getCatalogs().isEmpty()) {
-            final Catalog catalog = new Catalog();
-            catalog.setTableCat("");
-            metadata.getCatalogs().add(catalog);
-        }
-
-        for (final Catalog catalog : metadata.getCatalogs()) {
-            catalog.setMetadata(metadata);
-        }
-
-        for (final Catalog catalog : metadata.getCatalogs()) {
-            Schema.retrieve(database, suppression, catalog);
-        }
-    }
-
-
-    /**
-     * Creates a new instance.
-     */
-    public Catalog() {
-
-        super();
-    }
-
-
-    @Override
-    public int compareTo(final Catalog o) {
-
-        if (o == null) {
-            throw new NullPointerException("null o");
-        }
-
-        return tableCat.compareTo(o.tableCat);
-    }
-
-
     // ---------------------------------------------------------------- tableCat
-    /**
-     *
-     * @return
-     *
-     */
     public String getTableCat() {
 
         return tableCat;
     }
 
 
-    /**
-     *
-     * @param tableCat
-     *
-     */
     public void setTableCat(final String tableCat) {
 
         this.tableCat = tableCat;
@@ -225,25 +108,15 @@ public class Catalog implements Comparable<Catalog> {
     }
 
 
-    /**
-     * catalog name.
-     */
     @ColumnLabel("TABLE_CAT")
     @XmlElement(nillable = true, required = true)
     private String tableCat;
 
 
-    /**
-     * schemas.
-     */
-    @SuppressionPath("catalog/schemas")
     @XmlElementRef
     private List<Schema> schemas;
 
 
-    /**
-     * metadata.
-     */
     @XmlTransient
     private Metadata metadata;
 

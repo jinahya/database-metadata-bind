@@ -19,19 +19,18 @@ package com.github.jinahya.sql.database.metadata.bind;
 
 
 import java.sql.DatabaseMetaData;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.util.Collection;
 import javax.xml.bind.annotation.XmlAttribute;
 import javax.xml.bind.annotation.XmlElement;
+import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlTransient;
 import javax.xml.bind.annotation.XmlType;
 
 
 /**
  *
- * @author Jin Kwon <jinahya at gmail.com>
+ * @author Jin Kwon &lt;jinahya_at_gmail.com&gt;
  */
+@XmlRootElement
 @XmlType(
     propOrder = {
         "columnName", "dataType", "typeName", "columnSize", "decimalDigits",
@@ -39,118 +38,6 @@ import javax.xml.bind.annotation.XmlType;
     }
 )
 public class BestRowIdentifier {
-
-
-    /**
-     *
-     * @param database
-     * @param suppression
-     * @param catalog
-     * @param schema
-     * @param table
-     * @param scope
-     * @param nullable
-     * @param bestRowIdentifiers
-     *
-     * @throws SQLException if a database access error occurs.
-     *
-     * @see DatabaseMetaData#getBestRowIdentifier(java.lang.String,
-     * java.lang.String, java.lang.String, int, boolean)
-     */
-    public static void retrieve(
-        final DatabaseMetaData database, final Suppression suppression,
-        final String catalog, final String schema, final String table,
-        final int scope, final boolean nullable,
-        final Collection<? super BestRowIdentifier> bestRowIdentifiers)
-        throws SQLException {
-
-        if (database == null) {
-            throw new NullPointerException("null database");
-        }
-
-        if (suppression == null) {
-            throw new NullPointerException("null suppression");
-        }
-
-        if (bestRowIdentifiers == null) {
-            throw new NullPointerException("null bestRowIdentifiers");
-        }
-
-        if (suppression.isSuppressed(
-            Table.SUPPRESSION_PATH_BEST_ROW_IDENTIFIERS)) {
-            return;
-        }
-
-        final ResultSet resultSet = database.getBestRowIdentifier(
-            catalog, schema, table, scope, nullable);
-        try {
-            while (resultSet.next()) {
-                bestRowIdentifiers.add(ColumnRetriever.retrieve(
-                    BestRowIdentifier.class, suppression, resultSet));
-            }
-        } finally {
-            resultSet.close();
-        }
-    }
-
-
-    /**
-     *
-     * @param database
-     * @param suppression
-     * @param table
-     *
-     * @throws SQLException if a database access error occurs.
-     */
-    public static void retrieve(final DatabaseMetaData database,
-                                final Suppression suppression,
-                                final Table table)
-        throws SQLException {
-
-        if (database == null) {
-            throw new NullPointerException("null database");
-        }
-
-        if (suppression == null) {
-            throw new NullPointerException("null suppression");
-        }
-
-        if (table == null) {
-            throw new NullPointerException("null table");
-        }
-
-        retrieve(database, suppression,
-                 table.getSchema().getCatalog().getTableCat(),
-                 table.getSchema().getTableSchem(), table.getTableName(),
-                 DatabaseMetaData.bestRowTemporary, true,
-                 table.getBestRowIdentifiers());
-
-        retrieve(database, suppression,
-                 table.getSchema().getCatalog().getTableCat(),
-                 table.getSchema().getTableSchem(), table.getTableName(),
-                 DatabaseMetaData.bestRowTransaction, true,
-                 table.getBestRowIdentifiers());
-
-        retrieve(database, suppression,
-                 table.getSchema().getCatalog().getTableCat(),
-                 table.getSchema().getTableSchem(), table.getTableName(),
-                 DatabaseMetaData.bestRowSession, true,
-                 table.getBestRowIdentifiers());
-
-        for (final BestRowIdentifier bestRowIdentifier
-             : table.getBestRowIdentifiers()) {
-            bestRowIdentifier.setTable(table);
-        }
-    }
-
-
-    /**
-     * Creates a new instance.
-     */
-    public BestRowIdentifier() {
-
-        super();
-    }
 
 
     // ------------------------------------------------------------------- scope
@@ -269,7 +156,6 @@ public class BestRowIdentifier {
      * </ul>
      */
     @ColumnLabel("SCOPE")
-    @SuppressionPath("bestRowIdentifier/scope")
     @XmlAttribute
     short scope;
 
@@ -278,7 +164,6 @@ public class BestRowIdentifier {
      * column name.
      */
     @ColumnLabel("COLUMN_NAME")
-    @SuppressionPath("bestRowIdentifier/columnName")
     @XmlElement(nillable = false, required = true)
     String columnName;
 
@@ -287,7 +172,6 @@ public class BestRowIdentifier {
      * SQL data type from {@link java.sql.Types}.
      */
     @ColumnLabel("DATA_TYPE")
-    @SuppressionPath("bestRowIdentifier/dataType")
     @XmlElement(nillable = false, required = true)
     int dataType;
 
@@ -297,7 +181,6 @@ public class BestRowIdentifier {
      * qualified.
      */
     @ColumnLabel("TYPE_NAME")
-    @SuppressionPath("bestRowIdentifier/typeName")
     @XmlElement(nillable = false, required = true)
     String typeName;
 
@@ -306,51 +189,28 @@ public class BestRowIdentifier {
      * precision.
      */
     @ColumnLabel("COLUMN_SIZE")
-    @SuppressionPath("bestRowIdentifier/columnSize")
     @XmlElement(nillable = false, required = true)
     int columnSize;
 
 
-    /**
-     * unused.
-     */
     @ColumnLabel("BUFFER_LENGTH")
-    @SuppressionPath("bestRowIdentifier/bufferLength")
     //@XmlElement(nillable = false, required = true)
+    @XmlTransient
     @NotUsed
-    int bufferLength;
+    private int bufferLength;
 
 
-    /**
-     * scale - Null is returned for data types where DECIMAL_DIGITS is not
-     * applicable.
-     */
     @ColumnLabel("DECIMAL_DIGITS")
-    @SuppressionPath("bestRowIdentifier/decimalDigits")
     @XmlElement(nillable = true, required = true)
     @NillableBySpecification
-    Short decimalDigits;
+    private Short decimalDigits;
 
 
-    /**
-     * is this a pseudo column like an Oracle ROWID.
-     * <ul>
-     * <li>{@link DatabaseMetaData#bestRowUnknown} - may or may not be pseudo
-     * column</li>
-     * <li>{@link DatabaseMetaData#bestRowNotPseudo} - is NOT a pseudo
-     * column</li>
-     * <li>{@link DatabaseMetaData#bestRowPseudo} - is a pseudo column</li>
-     * </ul>
-     */
     @ColumnLabel("PSEUDO_COLUMN")
-    @SuppressionPath("bestRowIdentifier/pseudoColumn")
     @XmlElement(nillable = false, required = true)
     short pseudoColumn;
 
 
-    /**
-     * parent table.
-     */
     @XmlTransient
     private Table table;
 

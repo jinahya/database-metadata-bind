@@ -19,92 +19,37 @@ package com.github.jinahya.sql.database.metadata.bind;
 
 
 import java.lang.reflect.Field;
-import java.lang.reflect.Modifier;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.Collection;
-import javax.xml.bind.annotation.XmlTransient;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 
 /**
  *
- * @author <a href="mailto:onacit@gmail.com">Jin Kwon</a>
+ * @author Jin Kwon &lt;jinahya_at_gmail.com&gt;
  */
-public final class ColumnRetriever {
+final class ColumnRetriever {
 
 
-    /**
-     * logger.
-     */
-    private static final Logger LOGGER
-        = LoggerFactory.getLogger(ColumnRetriever.class);
-
-
-    public static <T> T retrieve(final Class<T> type, final T instance,
-                                 final Suppression suppression,
-                                 final ResultSet resultSet)
+    static <T> T retrieve(final MetadataContext context,
+                          final Class<T> type, final T instance,
+                          final ResultSet resultSet)
         throws SQLException {
 
-//        final List<Field> collectionFields = new ArrayList<Field>();
         for (final Field field : type.getDeclaredFields()) {
-
-            if (field.isSynthetic()) {
-                continue;
-            }
-
-            final int modifiers = field.getModifiers();
-
-            if (Modifier.isStatic(modifiers)) {
-                continue;
-            }
-
-            if (field.getAnnotation(XmlTransient.class) != null) {
-                continue;
-            }
 
             if (field.getAnnotation(NotUsed.class) != null) {
                 continue;
             }
 
-            final String columnLabel;
-            {
-                final ColumnLabel a = field.getAnnotation(ColumnLabel.class);
-                if (a == null) {
-                    LOGGER.debug("field without @ColumnLabel: {}#{}({})",
-                                 type.getName(), field.getName(),
-                                 field.getType());
-                    continue;
-                }
-                columnLabel = a.value();
-            }
-
-            final String suppressionPath;
-            {
-                final SuppressionPath a
-                    = field.getAnnotation(SuppressionPath.class);
-                suppressionPath = a != null ? a.value() : null;
-            }
-            if (suppressionPath != null) {
-                final SuppressionPathBuilder suppressionPathBuilder
-                    = SuppressionPathBuilder.newInstance(field);
-                final String expected
-                    = suppressionPathBuilder.getSuppressionPath();
-                assert expected.equals(suppressionPath) :
-                    "suppressionPath missmatched; expected="
-                    + expected + "; actual=" + suppressionPath
-                    + "; in " + type.getName() + "#" + field.getName();
-            }
-            if (suppressionPath != null
-                && suppression.isSuppressed(suppressionPath)) {
-                LOGGER.debug("field suppressed: {}#{} by {}",
-                             type.getName(), field.getName(), suppressionPath);
+            final String columnLabel = ColumnLabels.get(field);
+            if (columnLabel == null) {
                 continue;
             }
+            //System.out.println("columnLabel: " + columnLabel);
 
-            if (Collection.class.isAssignableFrom(field.getType())) {
-//                collectionFields.add(field);
+            final String suppressionPath = SuppressionPaths.get(field, type);
+            if (suppressionPath != null
+                && context.suppressed(suppressionPath)) {
                 continue;
             }
 
@@ -124,8 +69,9 @@ public final class ColumnRetriever {
 
             if (Boolean.class.equals(field.getType())) {
                 try {
-                    field.set(instance,
-                              (Boolean) resultSet.getObject(columnLabel));
+                    field.set(
+                        instance, resultSet.getObject(
+                            columnLabel, Boolean.class));
                 } catch (final IllegalAccessException iae) {
                     throw new RuntimeException(iae);
                 }
@@ -142,12 +88,9 @@ public final class ColumnRetriever {
             }
 
             if (Short.class.equals(field.getType())) {
-                Object value = (Number) resultSet.getObject(columnLabel);
-                if (value != null && !(value instanceof Short)) {
-                    value = new Short(((Number) value).shortValue());
-                }
                 try {
-                    field.set(instance, value);
+                    field.set(instance,
+                              resultSet.getObject(columnLabel, Short.class));
                 } catch (final IllegalAccessException iae) {
                     throw new RuntimeException(iae);
                 }
@@ -164,12 +107,8 @@ public final class ColumnRetriever {
             }
 
             if (Integer.class.equals(field.getType())) {
-                Object value = (Number) resultSet.getObject(columnLabel);
-                if (value != null && !(value instanceof Integer)) {
-                    value = new Integer(((Number) value).intValue());
-                }
                 try {
-                    field.set(instance, value);
+                    field.set(instance, resultSet.getObject(columnLabel));
                 } catch (final IllegalAccessException iae) {
                     throw new RuntimeException(iae);
                 }
@@ -186,12 +125,8 @@ public final class ColumnRetriever {
             }
 
             if (Long.class.equals(field.getType())) {
-                Object value = (Number) resultSet.getObject(columnLabel);
-                if (value != null && !(value instanceof Long)) {
-                    value = new Long(((Number) value).longValue());
-                }
                 try {
-                    field.set(instance, value);
+                    field.set(instance, resultSet.getObject(columnLabel));
                 } catch (final IllegalAccessException iae) {
                     throw new RuntimeException(iae);
                 }
@@ -206,22 +141,18 @@ public final class ColumnRetriever {
                 }
                 continue;
             }
-
-            LOGGER.debug("field skipped: {}#{}({})", type.getName(),
-                         field.getName(), field.getType());
         }
 
         return instance;
     }
 
 
-    public static <T> T retrieve(final Class<T> type,
-                                 final Suppression suppression,
-                                 final ResultSet resultSet)
+    public static <T> T retrieve(final MetadataContext context,
+                                 final Class<T> type, final ResultSet resultSet)
         throws SQLException {
 
         if (type == null) {
-            throw new NullPointerException("type");
+            throw new NullPointerException("null type");
         }
 
         final T instance;
@@ -233,7 +164,7 @@ public final class ColumnRetriever {
             throw new RuntimeException(iae);
         }
 
-        return retrieve(type, instance, suppression, resultSet);
+        return retrieve(context, type, instance, resultSet);
     }
 
 

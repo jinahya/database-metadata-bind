@@ -18,6 +18,7 @@
 package com.github.jinahya.sql.database.metadata.bind;
 
 
+import static java.beans.Introspector.decapitalize;
 import java.lang.reflect.Field;
 
 
@@ -25,25 +26,37 @@ import java.lang.reflect.Field;
  *
  * @author Jin Kwon &lt;jinahya_at_gmail.com&gt;
  */
-final class ColumnLabels {
+final class SuppressionPaths {
 
 
-    public static String get(final Field field) {
+    public static String get(final Field field, final Class<?> klass) {
 
         if (field == null) {
             throw new NullPointerException("null field");
         }
 
-        final ColumnLabel annotation = field.getAnnotation(ColumnLabel.class);
-        if (annotation == null) {
-            return null;
+        if (klass == null) {
+            throw new NullPointerException("null klass");
         }
 
-        return annotation.value();
+        if (!field.getDeclaringClass().isAssignableFrom(klass)) {
+            throw new IllegalArgumentException(
+                "klass(" + klass
+                + ") is not assignable to the specified field(" + field
+                + ")'s declaring class(" + field.getDeclaringClass() + ")");
+        }
+
+        return decapitalize(klass.getSimpleName()) + "/" + field.getName();
     }
 
 
-    private ColumnLabels() {
+    public static String get(final Field field) {
+
+        return get(field, field.getDeclaringClass());
+    }
+
+
+    private SuppressionPaths() {
 
         super();
     }

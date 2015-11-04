@@ -18,12 +18,9 @@
 package com.github.jinahya.sql.database.metadata.bind;
 
 
-import java.sql.DatabaseMetaData;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.util.Collection;
 import javax.xml.bind.annotation.XmlAttribute;
 import javax.xml.bind.annotation.XmlElement;
+import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlTransient;
 import javax.xml.bind.annotation.XmlType;
 
@@ -32,110 +29,9 @@ import javax.xml.bind.annotation.XmlType;
  *
  * @author Jin Kwon &lt;jinahya_at_gmail.com&gt;
  */
+@XmlRootElement
 @XmlType(propOrder = {"columnName", "keySeq", "pkName"})
-public class PrimaryKey implements Comparable<PrimaryKey> {
-
-
-    /**
-     *
-     * @param database
-     * @param suppression
-     * @param catalog
-     * @param schema
-     * @param table
-     * @param primaryKeys
-     *
-     * @throws SQLException if a database access error occurs.
-     *
-     * @see DatabaseMetaData#getPrimaryKeys(String, String, String)
-     */
-    public static void retrieve(
-        final DatabaseMetaData database, final Suppression suppression,
-        final String catalog, final String schema, final String table,
-        final Collection<? super PrimaryKey> primaryKeys)
-        throws SQLException {
-
-        if (database == null) {
-            throw new NullPointerException("null database");
-        }
-
-        if (suppression == null) {
-            throw new NullPointerException("null suppression");
-        }
-
-        if (primaryKeys == null) {
-            throw new NullPointerException("null primaryKeys");
-        }
-
-        if (suppression.isSuppressed(Table.SUPPRESSION_PATH_PRIMARY_KEYS)) {
-            return;
-        }
-
-        final ResultSet resultSet = database.getPrimaryKeys(
-            catalog, schema, table);
-        try {
-            while (resultSet.next()) {
-//                LOGGER.trace("primaryKey.next()");
-                primaryKeys.add(ColumnRetriever.retrieve(
-                    PrimaryKey.class, suppression, resultSet));
-            }
-        } finally {
-            resultSet.close();
-        }
-    }
-
-
-    /**
-     *
-     * @param database
-     * @param suppression
-     * @param table
-     *
-     * @throws SQLException if a database access error occurs.
-     */
-    public static void retrieve(final DatabaseMetaData database,
-                                final Suppression suppression,
-                                final Table table)
-        throws SQLException {
-
-        if (database == null) {
-            throw new NullPointerException("null database");
-        }
-
-        if (suppression == null) {
-            throw new NullPointerException("null suppression");
-        }
-
-        if (table == null) {
-            throw new NullPointerException("null table");
-        }
-
-        retrieve(database, suppression,
-                 table.getSchema().getCatalog().getTableCat(),
-                 table.getSchema().getTableSchem(),
-                 table.getTableName(),
-                 table.getPrimaryKeys());
-
-        for (final PrimaryKey primaryKey : table.getPrimaryKeys()) {
-            primaryKey.table = table;
-        }
-    }
-
-
-    /**
-     * Creates a new instance.
-     */
-    public PrimaryKey() {
-
-        super();
-    }
-
-
-    @Override
-    public int compareTo(final PrimaryKey o) {
-
-        return columnName.compareTo(o.columnName);
-    }
+public class PrimaryKey {
 
 
     // -------------------------------------------------------------- columnName
@@ -194,7 +90,6 @@ public class PrimaryKey implements Comparable<PrimaryKey> {
      * table catalog (may be {@code null}).
      */
     @ColumnLabel("TABLE_CAT")
-    @SuppressionPath("primaryKey/tableCat")
     @XmlAttribute
     private String tableCat;
 
@@ -203,7 +98,6 @@ public class PrimaryKey implements Comparable<PrimaryKey> {
      * table schema (may be {@code null}).
      */
     @ColumnLabel("TABLE_SCHEM")
-    @SuppressionPath("primaryKey/tableSchem")
     @XmlAttribute
     private String tableSchem;
 
@@ -238,7 +132,6 @@ public class PrimaryKey implements Comparable<PrimaryKey> {
      * primary key name (may be {@code null})
      */
     @ColumnLabel("PK_NAME")
-    @SuppressionPath("primaryKey/pkName")
     @XmlElement(nillable = true, required = true)
     @NillableBySpecification
     private String pkName;

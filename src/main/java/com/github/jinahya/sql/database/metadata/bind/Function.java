@@ -18,10 +18,6 @@
 package com.github.jinahya.sql.database.metadata.bind;
 
 
-import java.sql.DatabaseMetaData;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.util.Collection;
 import javax.xml.bind.annotation.XmlAttribute;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
@@ -40,106 +36,6 @@ import javax.xml.bind.annotation.XmlType;
     }
 )
 public class Function {
-
-
-    /**
-     *
-     * @param database
-     * @param suppression
-     * @param catalog
-     * @param schemaPattern
-     * @param functionNamePattern
-     * @param functions
-     *
-     * @throws SQLException if a database access error occurs.
-     *
-     * @see DatabaseMetaData#getFunctions(String, String, String)
-     */
-    public static void retrieve(final DatabaseMetaData database,
-                                final Suppression suppression,
-                                final String catalog,
-                                final String schemaPattern,
-                                final String functionNamePattern,
-                                final Collection<? super Function> functions)
-        throws SQLException {
-
-        if (database == null) {
-            throw new NullPointerException("null database");
-        }
-
-        if (suppression == null) {
-            throw new NullPointerException("null suppression");
-        }
-
-        if (functions == null) {
-            throw new NullPointerException("null functions");
-        }
-
-        if (suppression.isSuppressed(Schema.SUPPRESSION_PATH_FUNCTIONS)) {
-            return;
-        }
-
-        final ResultSet resultSet = database.getFunctions(
-            catalog, schemaPattern, functionNamePattern);
-        try {
-            while (resultSet.next()) {
-                functions.add(ColumnRetriever.retrieve(
-                    Function.class, suppression, resultSet));
-            }
-        } finally {
-            resultSet.close();
-        }
-    }
-
-
-    public static void retrieve(final DatabaseMetaData database,
-                                final Suppression suppression,
-                                final Schema schema)
-        throws SQLException {
-
-        if (database == null) {
-            throw new NullPointerException("null database");
-        }
-
-        if (suppression == null) {
-            throw new NullPointerException("null suppression");
-        }
-
-        if (schema == null) {
-            throw new NullPointerException("null schema");
-        }
-
-        retrieve(database, suppression,
-                 schema.getCatalog().getTableCat(), schema.getTableSchem(),
-                 null,
-                 schema.getFunctions());
-
-        for (final Function function : schema.getFunctions()) {
-            function.setSchema(schema);
-        }
-    }
-
-
-    /**
-     * Creates a new instance.
-     */
-    public Function() {
-
-        super();
-    }
-
-
-    // ------------------------------------------------------------------ schema
-    public Schema getSchema() {
-
-        return schema;
-    }
-
-
-    public void setSchema(final Schema schema) {
-
-        this.schema = schema;
-    }
 
 
     // ------------------------------------------------------------ functionName
@@ -168,6 +64,7 @@ public class Function {
     }
 
 
+    // ------------------------------------------------------------ functionType
     public short getFunctionType() {
 
         return functionType;
@@ -180,6 +77,7 @@ public class Function {
     }
 
 
+    // ------------------------------------------------------------ specificName
     public String getSpecificName() {
 
         return specificName;
@@ -192,14 +90,25 @@ public class Function {
     }
 
 
+    // ------------------------------------------------------------------ schema
+    public Schema getSchema() {
+
+        return schema;
+    }
+
+
+    public void setSchema(final Schema schema) {
+
+        this.schema = schema;
+    }
+
+
     @ColumnLabel("FUNCTION_CAT")
-    @SuppressionPath("function/functionCat")
     @XmlAttribute(required = false)
     private String functionCat;
 
 
     @ColumnLabel("FUNCTION_SCHEM")
-    @SuppressionPath("function/functionSchem")
     @XmlAttribute(required = false)
     private String functionSchem;
 
@@ -210,19 +119,16 @@ public class Function {
 
 
     @ColumnLabel("REMARKS")
-    @SuppressionPath("function/remarks")
     @XmlElement(nillable = false, required = true)
     private String remarks;
 
 
     @ColumnLabel("FUNCTION_TYPE")
-    @SuppressionPath("function/functionType")
     @XmlElement(nillable = true, required = true)
     Short functionType;
 
 
     @ColumnLabel("SPECIFIC_NAME")
-    @SuppressionPath("function/specificName")
     @XmlElement(nillable = true, required = true)
     String specificName;
 

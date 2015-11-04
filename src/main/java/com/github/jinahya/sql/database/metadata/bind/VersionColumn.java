@@ -18,126 +18,23 @@
 package com.github.jinahya.sql.database.metadata.bind;
 
 
-import java.sql.DatabaseMetaData;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.util.Collection;
 import javax.xml.bind.annotation.XmlElement;
+import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlTransient;
 import javax.xml.bind.annotation.XmlType;
 
 
 /**
  *
- * @author Jin Kwon <onacit at gmail.com>
+ * @author Jin Kwon &lt;jinahya_at_gmail.com&gt;
  */
+@XmlRootElement
 @XmlType(
     propOrder = {
         "columnName", "dataType", "typeName", "columnSize", "bufferLength",
         "decimalDigits", "pseudoColumn"
     })
 public class VersionColumn {
-
-
-    /**
-     *
-     * @param database
-     * @param suppression
-     * @param catalog
-     * @param schema
-     * @param table
-     * @param versionColumns
-     *
-     * @throws SQLException if a database access error occurs.
-     *
-     * @see DatabaseMetaData#getVersionColumns(String, String, String)
-     */
-    public static void retrieve(
-        final DatabaseMetaData database, final Suppression suppression,
-        final String catalog, final String schema, final String table,
-        final Collection<? super VersionColumn> versionColumns)
-        throws SQLException {
-
-        if (database == null) {
-            throw new NullPointerException("null database");
-        }
-
-        if (suppression == null) {
-            throw new NullPointerException("null suppression");
-        }
-
-        if (versionColumns == null) {
-            throw new NullPointerException("null versionColumns");
-        }
-
-        if (suppression.isSuppressed(Table.SUPPRESSION_PATH_VERSION_COLUMNS)) {
-            return;
-        }
-
-        final ResultSet resultSet = database.getVersionColumns(
-            catalog, schema, table);
-        try {
-            while (resultSet.next()) {
-                versionColumns.add(ColumnRetriever.retrieve(
-                    VersionColumn.class, suppression, resultSet));
-            }
-        } finally {
-            resultSet.close();
-        }
-    }
-
-
-    /**
-     *
-     * @param database
-     * @param suppression
-     * @param table
-     *
-     * @throws SQLException if a database access error occurs.
-     */
-    public static void retrieve(final DatabaseMetaData database,
-                                final Suppression suppression,
-                                final Table table)
-        throws SQLException {
-
-        if (database == null) {
-            throw new NullPointerException("null database");
-        }
-
-        if (suppression == null) {
-            throw new NullPointerException("null suppression");
-        }
-
-        if (table == null) {
-            throw new NullPointerException("null table");
-        }
-
-        retrieve(database, suppression,
-                 table.getSchema().getCatalog().getTableCat(),
-                 table.getSchema().getTableSchem(),
-                 table.getTableName(),
-                 table.getVersionColumns());
-
-        for (final VersionColumn versionColumn : table.getVersionColumns()) {
-            versionColumn.table = table;
-        }
-    }
-
-
-    /**
-     * Creates a new instance.
-     */
-    public VersionColumn() {
-
-        super();
-    }
-
-
-    // ------------------------------------------------------------------- table
-    public Table getTable() {
-
-        return table;
-    }
 
 
     // -------------------------------------------------------------- columnName
@@ -231,85 +128,56 @@ public class VersionColumn {
     }
 
 
-    /**
-     * parent table.
-     */
-    @XmlTransient
-    private Table table;
+    // ------------------------------------------------------------------- table
+    public Table getTable() {
+
+        return table;
+    }
 
 
-    /**
-     * not used.
-     */
     @ColumnLabel("SCOPE")
     @XmlTransient
     @NotUsed
     private short scope;
 
 
-    /**
-     * column name.
-     */
     @ColumnLabel("COLUMN_NAME")
-    @XmlElement(nillable = false, required = true)
+    @XmlElement(required = true)
     private String columnName;
 
 
-    /**
-     * SQL data type from {@link java.sql.Types}.
-     */
     @ColumnLabel("DATA_TYPE")
-    @XmlElement(nillable = false, required = true)
+    @XmlElement(required = true)
     private int dataType;
 
 
-    /**
-     * Data source-dependent type name.
-     */
     @ColumnLabel("TYPE_NAME")
-    @XmlElement(nillable = false, required = true)
+    @XmlElement(required = true)
     private String typeName;
 
 
-    /**
-     * precision.
-     */
     @ColumnLabel("COLUMN_SIZE")
     @XmlElement(required = true)
     private int columnSize;
 
 
-    /**
-     * length of column value in bytes.
-     */
     @ColumnLabel("BUFFER_LENGTH")
     @XmlElement(required = true)
     private int bufferLength;
 
 
-    /**
-     * scale - Null is returned for data types where
-     * {@link Column#decimalDigits DECIMAL_DIGITS} is not applicable.
-     */
     @ColumnLabel("DECIMAL_DIGITS")
     @XmlElement(nillable = true, required = true)
     private Short decimalDigits;
 
 
-    /**
-     * whether this is pseudo column like an Oracle ROWID
-     * <ul>
-     * <li>{@link DatabaseMetaData#versionColumnUnknown} - may or may not be
-     * pseudo column</li>
-     * <li>{@link DatabaseMetaData#versionColumnNotPseudo} - is NOT a pseudo
-     * column</li>
-     * <li>{@link DatabaseMetaData#versionColumnPseudo} - is a pseudo
-     * column</li>
-     * </ul>
-     */
     @ColumnLabel("PSEUDO_COLUMN")
     @XmlElement(required = true)
     private short pseudoColumn;
+
+
+    @XmlTransient
+    private Table table;
 
 
 }

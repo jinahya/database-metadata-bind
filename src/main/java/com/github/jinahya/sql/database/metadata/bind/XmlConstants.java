@@ -20,13 +20,13 @@ package com.github.jinahya.sql.database.metadata.bind;
 
 /**
  *
- * @author <a href="mailto:onacit@gmail.com">Jin Kwon</a>
+ * @author Jin Kwon &lt;jinahya_at_gmail.com&gt;
  */
 public final class XmlConstants {
 
 
     public static final String DATABASE_METADATA_NS_URI
-        = "http://github.com/jinahya/sql/databasemetadata";
+        = "http://github.com/jinahya/sql/database/metadata/bind";
 
 
     public static final String DATABASE_MEATDATA_NS_PREFIX = "m";

@@ -1,0 +1,15 @@
+Attribute
+BestRowIdentifier
+Catalog
+Column
+ColumnPrivilege
+ExportedKey
+ImportedKey
+IndexInfo
+Metadata
+PrimaryKey
+Schema
+Table
+TablePrivilege
+UserDefinedType
+VersionColumn
