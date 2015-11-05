@@ -19,8 +19,6 @@ package com.github.jinahya.sql.database.metadata.bind;
 
 
 import java.io.PrintStream;
-import java.sql.ResultSet;
-import java.sql.RowIdLifetime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;

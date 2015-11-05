@@ -185,8 +185,8 @@ public class UserDefinedType {
 
 
     @MethodInvocation(name = "getAttributes",
-                    types = {String.class, String.class, String.class, String.class},
-                    args = {@MethodInvocationArgs({":tableCat", ":tableSchem", ":typeName", "null"})})
+                      types = {String.class, String.class, String.class, String.class},
+                      args = {@MethodInvocationArgs({":tableCat", ":tableSchem", ":typeName", "null"})})
     @XmlElementRef
     private List<Attribute> attributes;
 

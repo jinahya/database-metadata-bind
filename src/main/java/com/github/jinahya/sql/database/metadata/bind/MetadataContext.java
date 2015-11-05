@@ -44,32 +44,6 @@ public class MetadataContext {
     private static final Logger logger = getLogger(Metadata.class.getName());
 
 
-//    private static <T> T fieldValue(final Field field, final Object instance, Class<T> type) {
-//
-//        if (field.isAccessible()) {
-//            field.setAccessible(true);
-//        }
-//
-//        try {
-//            return type.cast(field.get(instance));
-//        } catch (final IllegalAccessException iae) {
-//            throw new RuntimeException(iae);
-//        }
-//    }
-//
-//
-//    private static <T> void fieldValue(final Field field, final Object instance, T value) {
-//
-//        if (field.isAccessible()) {
-//            field.setAccessible(true);
-//        }
-//
-//        try {
-//            field.set(instance, value);
-//        } catch (final IllegalAccessException iae) {
-//            throw new RuntimeException(iae);
-//        }
-//    }
     public MetadataContext(final DatabaseMetaData databaseMetaData) {
 
         super();
@@ -78,13 +52,7 @@ public class MetadataContext {
             throw new NullPointerException("databaseMetaData");
         }
 
-        this.databaseMetaData = databaseMetaData;
-    }
-
-
-    public DatabaseMetaData getDatabaseMetaData() {
-
-        return databaseMetaData;
+        this.metaData = databaseMetaData;
     }
 
 
@@ -102,7 +70,7 @@ public class MetadataContext {
     }
 
 
-    public MetadataContext suppressionPath(
+    public MetadataContext addSuppressionPaths(
         final String suppressionPath, final String... otherSuppressionPaths) {
 
         addSuppressionPath(suppressionPath);
@@ -131,22 +99,211 @@ public class MetadataContext {
     }
 
 
+    <T> T bindSingle(final ResultSet results, final Class<T> type, final T instance) throws SQLException {
+        for (final Field field : type.getDeclaredFields()) {
+            if (field.getAnnotation(NotUsed.class) != null) {
+                logger.log(Level.FINE, "@NotUsed: {0}", field);
+                continue;
+            }
+            final String columnLabel = ColumnLabels.get(field);
+            if (columnLabel == null) {
+                logger.log(Level.FINE, "no @ColumnLabel: {0}", field);
+                continue;
+            }
+            final String suppressionPath = SuppressionPaths.get(field, type);
+            if (suppressionPath != null && suppressed(suppressionPath)) {
+                logger.log(Level.FINE, "suppressed by {0}: {1}", new Object[]{suppressionPath, field});
+                continue;
+            }
+            if (!field.isAccessible()) {
+                field.setAccessible(true);
+            }
+            final int columnIndex = results.findColumn(columnLabel);
+            final Class<?> fieldType = field.getType();
+            final boolean fieldPrimitive = fieldType.isPrimitive();
+            final Object object = results.getObject(columnLabel);
+            if (object == null && fieldPrimitive) {
+                logger.log(Level.WARNING, "null returned: {0}", field);
+            }
+            if (Boolean.TYPE.equals(field.getType())) {
+                final boolean value = results.getBoolean(columnLabel);
+                try {
+                    field.setBoolean(instance, value);
+                } catch (final IllegalAccessException iae) {
+                    throw new RuntimeException(iae);
+                }
+                continue;
+            }
+            if (Boolean.class.equals(field.getType())) {
+                final Boolean value = results.getObject(columnLabel, Boolean.class);
+                try {
+                    field.set(instance, value);
+                } catch (final IllegalAccessException iae) {
+                    throw new RuntimeException(iae);
+                }
+                continue;
+            }
+            if (Short.TYPE.equals(field.getType())) {
+                final short value = results.getShort(columnLabel);
+                try {
+                    field.setShort(instance, value);
+                } catch (final IllegalAccessException iae) {
+                    throw new RuntimeException(iae);
+                }
+                continue;
+            }
+            if (Short.class.equals(field.getType())) {
+                Object value = results.getObject(columnLabel);
+                if (value != null && !(value instanceof Short)) {
+                    logger.log(Level.INFO, "casting {0}({1}) for {2}", new Object[]{value.getClass(), value, field});
+                    if (value instanceof Number) {
+                        value = ((Number) value).shortValue();
+                        logger.log(Level.INFO, "casted: {0}", value);
+                    }
+                }
+                try {
+                    field.set(instance, value);
+                } catch (final IllegalAccessException iae) {
+                    throw new RuntimeException(iae);
+                }
+                continue;
+            }
+            if (Integer.TYPE.equals(field.getType())) {
+                final int value = results.getInt(columnLabel);
+                try {
+                    field.setInt(instance, value);
+                } catch (final IllegalAccessException iae) {
+                    throw new RuntimeException(iae);
+                }
+                continue;
+            }
+            if (Integer.class.equals(field.getType())) {
+                Object value = results.getObject(columnLabel);
+                if (value != null && !(value instanceof Integer)) {
+                    logger.log(Level.INFO, "casting {0}({1}) for {2}", new Object[]{value.getClass(), value, field});
+                    if (value instanceof Number) {
+                        value = ((Number) value).intValue();
+                        logger.log(Level.INFO, "casted: ({0})", value);
+                    }
+                }
+                try {
+                    field.set(instance, value);
+                } catch (final IllegalAccessException iae) {
+                    throw new RuntimeException(iae);
+                }
+                continue;
+            }
+            if (Long.TYPE.equals(field.getType())) {
+                final long value = results.getLong(columnLabel);
+                try {
+                    field.setLong(instance, value);
+                } catch (final IllegalAccessException iae) {
+                    throw new RuntimeException(iae);
+                }
+                continue;
+            }
+            if (Long.class.equals(field.getType())) {
+                Object value = results.getObject(columnLabel);
+                if (value != null && !(value instanceof Integer)) {
+                    logger.log(Level.INFO, "casting {0}({1}) for {2}", new Object[]{value.getClass(), value, field});
+                    if (value instanceof Number) {
+                        value = ((Number) value).longValue();
+                        logger.log(Level.INFO, "casted: {0}", value);
+                    }
+                }
+                try {
+                    field.set(instance, value);
+                } catch (final IllegalAccessException iae) {
+                    throw new RuntimeException(iae);
+                }
+                continue;
+            }
+            if (String.class.equals(field.getType())) {
+                final String value = results.getString(columnLabel);
+                try {
+                    field.set(instance, value);
+                } catch (final IllegalAccessException iae) {
+                    throw new RuntimeException(iae);
+                }
+                continue;
+            }
+        }
+        return instance;
+    }
+
+
+    <T> T bindSingle(final ResultSet results, final Class<T> type) throws SQLException {
+        final T instance;
+        try {
+            instance = type.newInstance();
+        } catch (final InstantiationException ie) {
+            throw new RuntimeException(ie);
+        } catch (final IllegalAccessException iae) {
+            throw new RuntimeException(iae);
+        }
+        return bindSingle(results, type, instance);
+    }
+
+
+    <T> List<T> list(final ResultSet results, final Class<T> type, final List<T> list) throws SQLException {
+        while (results.next()) {
+            final T instance;
+            try {
+                instance = type.newInstance();
+            } catch (final InstantiationException ie) {
+                throw new RuntimeException(ie);
+            } catch (final IllegalAccessException iae) {
+                throw new RuntimeException(iae);
+            }
+            list.add(bindSingle(results, type, instance));
+        }
+        return list;
+    }
+
+
+    <T> List<T> list(final ResultSet results, final Class<T> type) throws SQLException {
+        return list(results, type, new ArrayList<T>());
+    }
+
+
     private boolean column(final Field field) {
 
         return false;
     }
 
 
-    private <T> boolean method(final Class<?> type, final T instance, final Field field) {
+    private <T> boolean method(final Class<T> parentType, final T parentInstance, final Field field)
+        throws ReflectiveOperationException {
 
         final MethodInvocation methodInvocation = field.getAnnotation(MethodInvocation.class);
         if (methodInvocation == null) {
             return false;
         }
         final String methodName = methodInvocation.name();
-        final Class<?>[] parameterTypes = methodInvocation.types();
+        final Class<?>[] methodParameterTypes = methodInvocation.types();
         for (final MethodInvocationArgs invocationArgs : methodInvocation.args()) {
-            final String[] args = invocationArgs.value();
+            final String[] argNames = invocationArgs.value();
+            final Object[] args = new Object[argNames.length];
+            for (int i = 0; i < argNames.length; i++) {
+                final String argName = argNames[i];
+                if ("null".equals(argName)) {
+                    args[i] = null;
+                    continue;
+                }
+                if (argName.startsWith(":")) {
+                    final Field f
+                        = parentType.getDeclaredField(argName.substring(1));
+                    if (f.isAccessible()) {
+                        f.setAccessible(true);
+                    }
+                    args[i] = field.get(parentInstance);
+                    continue;
+                }
+                args[i] = methodParameterTypes[i]
+                    .getMethod("valueOf", String.class)
+                    .invoke(null, argName);
+            }
+            final Object fieldValue = DatabaseMetaData.class.getMethod(methodName, methodParameterTypes).invoke(metaData, args);
         }
 
         return false;
@@ -157,23 +314,23 @@ public class MetadataContext {
 
         final Metadata instance = new Metadata();
         if (!suppressed("metadata/URL")) {
-            instance.setUrl(databaseMetaData.getURL());
+            instance.setUrl(metaData.getURL());
         }
         if (!suppressed("metadata/allProceduresAreCallable")) {
-            instance.setAllProceduresAreCallable(databaseMetaData.allProceduresAreCallable());
+            instance.setAllProceduresAreCallable(metaData.allProceduresAreCallable());
         }
         if (!suppressed("metadata/allTablesAreSelectable")) {
-            instance.setAllTablesAreSelectable(databaseMetaData.allTablesAreSelectable());
+            instance.setAllTablesAreSelectable(metaData.allTablesAreSelectable());
         }
         if (!suppressed("metadata/autoCommitFailureClosesAllResultSets")) {
             instance.setAutoCommitFailureClosesAllResultSets(
-                databaseMetaData.autoCommitFailureClosesAllResultSets());
+                metaData.autoCommitFailureClosesAllResultSets());
         }
         if (!suppressed("metadata/catalogSeparator")) {
-            instance.setCatalogSeparator(databaseMetaData.getCatalogSeparator());
+            instance.setCatalogSeparator(metaData.getCatalogSeparator());
         }
         if (!suppressed("metadata/catalogTerm")) {
-            instance.setCatalogTerm(databaseMetaData.getCatalogTerm());
+            instance.setCatalogTerm(metaData.getCatalogTerm());
         }
         if (!suppressed("metadata/catalogs")) {
             instance.getCatalogs().addAll(getCatalogs());
@@ -184,53 +341,53 @@ public class MetadataContext {
         }
         if (!suppressed("metadata/connectionString")) {
             instance.setConnectionString(
-                databaseMetaData.getConnection().toString());
+                metaData.getConnection().toString());
         }
         if (!suppressed("metadata/dataDefinitionCausesTransactionCommit")) {
             instance.setDataDefinitionCausesTransactionCommit(
-                databaseMetaData.dataDefinitionCausesTransactionCommit());
+                metaData.dataDefinitionCausesTransactionCommit());
         }
         if (!suppressed("metadata/dataDefinitionIgnoredInTransactions")) {
             instance.setDataDefinitionIgnoredInTransactions(
-                databaseMetaData.dataDefinitionIgnoredInTransactions());
+                metaData.dataDefinitionIgnoredInTransactions());
         }
-        instance.setDatabaseMajorVersion(databaseMetaData.getDatabaseMajorVersion());
-        instance.setDatabaseMinorVersion(databaseMetaData.getDatabaseMinorVersion());
-        instance.setDatabaseProductName(databaseMetaData.getDatabaseProductName());
-        instance.setDatabaseProductVersion(databaseMetaData.getDatabaseProductVersion());
+        instance.setDatabaseMajorVersion(metaData.getDatabaseMajorVersion());
+        instance.setDatabaseMinorVersion(metaData.getDatabaseMinorVersion());
+        instance.setDatabaseProductName(metaData.getDatabaseProductName());
+        instance.setDatabaseProductVersion(metaData.getDatabaseProductVersion());
 
-        instance.setDriverMajorVersion(databaseMetaData.getDriverMajorVersion());
-        instance.setDriverMinorVersion(databaseMetaData.getDriverMinorVersion());
-        instance.setDriverName(databaseMetaData.getDriverName());
-        instance.setDriverVersion(databaseMetaData.getDriverVersion());
+        instance.setDriverMajorVersion(metaData.getDriverMajorVersion());
+        instance.setDriverMinorVersion(metaData.getDriverMinorVersion());
+        instance.setDriverName(metaData.getDriverName());
+        instance.setDriverVersion(metaData.getDriverVersion());
 
-        instance.setNumericFunctions(databaseMetaData.getNumericFunctions());
-        instance.setStringFunctions(databaseMetaData.getStringFunctions());
-        instance.setSystemFunctions(databaseMetaData.getSystemFunctions());
-        instance.setTimeDateFunctions(databaseMetaData.getTimeDateFunctions());
+        instance.setNumericFunctions(metaData.getNumericFunctions());
+        instance.setStringFunctions(metaData.getStringFunctions());
+        instance.setSystemFunctions(metaData.getSystemFunctions());
+        instance.setTimeDateFunctions(metaData.getTimeDateFunctions());
 
         if (!suppressed("metadata/deletesAreDetected")) {
             for (final int type : DeletesAreDetected.TYPES) {
                 instance.getDeletesAreDetected().add(
                     new DeletesAreDetected()
                     .type(type).
-                    value(databaseMetaData.deletesAreDetected(type)));
+                    value(metaData.deletesAreDetected(type)));
             }
         }
         if (!suppressed("metadata/doesMaxRowSizeIncludeBlobs")) {
             instance.setDoesMaxRowSizeIncludeBlobs(
-                databaseMetaData.doesMaxRowSizeIncludeBlobs());
+                metaData.doesMaxRowSizeIncludeBlobs());
         }
         if (!suppressed("metadata/generatedKeyAlwaysReturned")) {
             instance.setGeneratedKeyAlwaysReturned(
-                databaseMetaData.generatedKeyAlwaysReturned());
+                metaData.generatedKeyAlwaysReturned());
         }
         if (!suppressed("metadata/insertsAreDetected")) {
             for (final int type : InsertsAreDetected.TYPES) {
                 instance.getInsertsAreDetected().add(
                     new InsertsAreDetected()
                     .type(type).
-                    value(databaseMetaData.insertsAreDetected(type)));
+                    value(metaData.insertsAreDetected(type)));
             }
         }
 
@@ -268,7 +425,7 @@ public class MetadataContext {
                 field.setAccessible(true);
             }
             try {
-                field.set(instance, method.invoke(databaseMetaData));
+                field.set(instance, method.invoke(metaData));
             } catch (final ReflectiveOperationException roe) {
                 logger.log(Level.WARNING, "failed to set: {0}", field);
                 continue;
@@ -319,10 +476,10 @@ public class MetadataContext {
         }
 
         if (!suppressed("metadata/procedureTerm")) {
-            instance.setProcedureTerm(databaseMetaData.getProcedureTerm());
+            instance.setProcedureTerm(metaData.getProcedureTerm());
         }
         if (!suppressed("metadata/resultSetHoldabiltiy")) {
-            instance.setResultSetHoldability(databaseMetaData.getResultSetHoldability());
+            instance.setResultSetHoldability(metaData.getResultSetHoldability());
         }
 //        if (!suppressed("metadata/rowIdLifetime")) {
 //            instance.setRowIdLifetime(databaseMetaData.getRowIdLifetime());
@@ -337,7 +494,7 @@ public class MetadataContext {
             instance.getTableTypes().addAll(getTableTypes());
         }
         if (!suppressed("metadata/userName")) {
-            instance.setUserName(databaseMetaData.getUserName());
+            instance.setUserName(metaData.getUserName());
         }
 
         return instance;
@@ -352,14 +509,12 @@ public class MetadataContext {
 
         final List<Attribute> list = new ArrayList<Attribute>();
 
-        final ResultSet resultSet = databaseMetaData.getAttributes(
+        final ResultSet results = metaData.getAttributes(
             catalog, schemaPattern, typeNamePattern, attributeNamePattern);
         try {
-            while (resultSet.next()) {
-                list.add(ColumnRetriever.single(this, resultSet, Attribute.class));
-            }
+            list(results, Attribute.class, list);
         } finally {
-            resultSet.close();
+            results.close();
         }
 
         return list;
@@ -373,14 +528,12 @@ public class MetadataContext {
 
         final List<BestRowIdentifier> list = new ArrayList<BestRowIdentifier>();
 
-        final ResultSet resultSet = databaseMetaData.getBestRowIdentifier(
+        final ResultSet results = metaData.getBestRowIdentifier(
             catalog, schema, table, scope, nullable);
         try {
-            while (resultSet.next()) {
-                list.add(ColumnRetriever.single(this, resultSet, BestRowIdentifier.class));
-            }
+            list(results, BestRowIdentifier.class, list);
         } finally {
-            resultSet.close();
+            results.close();
         }
 
         return list;
@@ -391,13 +544,11 @@ public class MetadataContext {
 
         final List<Catalog> list = new ArrayList<Catalog>();
 
-        final ResultSet resultSet = databaseMetaData.getCatalogs();
+        final ResultSet results = metaData.getCatalogs();
         try {
-            while (resultSet.next()) {
-                list.add(ColumnRetriever.single(this, resultSet, Catalog.class));
-            }
+            list(results, Catalog.class, list);
         } finally {
-            resultSet.close();
+            results.close();
         }
 
         if (list.isEmpty()) {
@@ -423,17 +574,15 @@ public class MetadataContext {
         final List<ClientInfoProperty> list
             = new ArrayList<ClientInfoProperty>();
 
-        final ResultSet resultSet = databaseMetaData.getClientInfoProperties();
-        if (resultSet == null) {
+        final ResultSet results = metaData.getClientInfoProperties();
+        if (results == null) {
             logger.log(Level.WARNING, "null from getClientInfoProperties");
             return list;
         }
         try {
-            while (resultSet.next()) {
-                list.add(ColumnRetriever.single(this, resultSet, ClientInfoProperty.class));
-            }
+            list(results, ClientInfoProperty.class, list);
         } finally {
-            resultSet.close();
+            results.close();
         }
 
         return list;
@@ -448,12 +597,10 @@ public class MetadataContext {
 
         final List<Column> list = new ArrayList<Column>();
 
-        final ResultSet resultSet = databaseMetaData.getColumns(
+        final ResultSet resultSet = metaData.getColumns(
             catalog, schemaPattern, tableNamePattern, columnNamePattern);
         try {
-            while (resultSet.next()) {
-                list.add(ColumnRetriever.single(this, resultSet, Column.class));
-            }
+            list(resultSet, Column.class, list);
         } finally {
             resultSet.close();
         }
@@ -469,14 +616,12 @@ public class MetadataContext {
 
         final List<ColumnPrivilege> list = new ArrayList<ColumnPrivilege>();
 
-        final ResultSet resultSet = databaseMetaData.getColumnPrivileges(
+        final ResultSet results = metaData.getColumnPrivileges(
             catalog, schema, table, columnNamePattern);
         try {
-            while (resultSet.next()) {
-                list.add(ColumnRetriever.single(this, resultSet, ColumnPrivilege.class));
-            }
+            list(results, ColumnPrivilege.class, list);
         } finally {
-            resultSet.close();
+            results.close();
         }
 
         return list;
@@ -490,16 +635,14 @@ public class MetadataContext {
 
         final List<FunctionColumn> list = new ArrayList<FunctionColumn>();
 
-        final ResultSet results = databaseMetaData.getFunctionColumns(
+        final ResultSet results = metaData.getFunctionColumns(
             catalog, schemaPattern, functionNamePattern, columnNamePattern);
         if (results == null) {
-            logger.warning("null from getFunctionColumns");
+            logger.warning("getFunctionColumns -> null");
         }
         if (results != null) {
             try {
-                while (results.next()) {
-                    list.add(ColumnRetriever.single(this, results, FunctionColumn.class));
-                }
+                list(results, FunctionColumn.class, list);
             } finally {
                 results.close();
             }
@@ -514,24 +657,22 @@ public class MetadataContext {
                                        final String functionNamePattern)
         throws SQLException {
 
-        final List<Function> functions = new ArrayList<Function>();
+        final List<Function> list = new ArrayList<Function>();
 
-        final ResultSet resultSet = databaseMetaData.getFunctions(
+        final ResultSet results = metaData.getFunctions(
             catalog, schemaPattern, functionNamePattern);
-        if (resultSet == null) {
+        if (results == null) {
             logger.warning("null from getFunctions");
         }
-        if (resultSet != null) {
+        if (results != null) {
             try {
-                while (resultSet.next()) {
-                    functions.add(ColumnRetriever.single(this, resultSet, Function.class));
-                }
+                list(results, Function.class, list);
             } finally {
-                resultSet.close();
+                results.close();
             }
         }
 
-        return functions;
+        return list;
     }
 
 
@@ -541,14 +682,12 @@ public class MetadataContext {
 
         final List<ExportedKey> list = new ArrayList<ExportedKey>();
 
-        final ResultSet resultSet = databaseMetaData.getExportedKeys(
+        final ResultSet results = metaData.getExportedKeys(
             catalog, schema, table);
         try {
-            while (resultSet.next()) {
-                list.add(ColumnRetriever.single(this, resultSet, ExportedKey.class));
-            }
+            list(results, ExportedKey.class, list);
         } finally {
-            resultSet.close();
+            results.close();
         }
 
         return list;
@@ -561,14 +700,12 @@ public class MetadataContext {
 
         final List<ImportedKey> list = new ArrayList<ImportedKey>();
 
-        final ResultSet resultSet = databaseMetaData.getImportedKeys(
+        final ResultSet results = metaData.getImportedKeys(
             catalog, schema, table);
         try {
-            while (resultSet.next()) {
-                list.add(ColumnRetriever.single(this, resultSet, ImportedKey.class));
-            }
+            list(results, ImportedKey.class, list);
         } finally {
-            resultSet.close();
+            results.close();
         }
 
         return list;
@@ -582,14 +719,12 @@ public class MetadataContext {
 
         final List<IndexInfo> list = new ArrayList<IndexInfo>();
 
-        final ResultSet resultSet = databaseMetaData.getIndexInfo(
+        final ResultSet results = metaData.getIndexInfo(
             catalog, schema, table, unique, approximate);
         try {
-            while (resultSet.next()) {
-                list.add(ColumnRetriever.single(this, resultSet, IndexInfo.class));
-            }
+            list(results, IndexInfo.class, list);
         } finally {
-            resultSet.close();
+            results.close();
         }
 
         return list;
@@ -602,14 +737,12 @@ public class MetadataContext {
 
         final List<PrimaryKey> list = new ArrayList<PrimaryKey>();
 
-        final ResultSet resultSet = databaseMetaData.getPrimaryKeys(
+        final ResultSet results = metaData.getPrimaryKeys(
             catalog, schema, table);
         try {
-            while (resultSet.next()) {
-                list.add(ColumnRetriever.single(this, resultSet, PrimaryKey.class));
-            }
+            list(results, PrimaryKey.class, list);
         } finally {
-            resultSet.close();
+            results.close();
         }
 
         return list;
@@ -623,12 +756,12 @@ public class MetadataContext {
 
         final List<ProcedureColumn> list = new ArrayList<ProcedureColumn>();
 
-        final ResultSet resultSet = databaseMetaData.getProcedureColumns(
+        final ResultSet results = metaData.getProcedureColumns(
             catalog, schemaPattern, procedureNamePattern, columnNamePattern);
         try {
-            ColumnRetriever.list(this, resultSet, ProcedureColumn.class, list);
+            list(results, ProcedureColumn.class, list);
         } finally {
-            resultSet.close();
+            results.close();
         }
 
         return list;
@@ -642,14 +775,12 @@ public class MetadataContext {
 
         final List<Procedure> list = new ArrayList<Procedure>();
 
-        final ResultSet resultSet = databaseMetaData.getProcedures(
+        final ResultSet results = metaData.getProcedures(
             catalog, schemaPattern, procedureNamePattern);
         try {
-            while (resultSet.next()) {
-                list.add(ColumnRetriever.single(this, resultSet, Procedure.class));
-            }
+            list(results, Procedure.class, list);
         } finally {
-            resultSet.close();
+            results.close();
         }
 
         return list;
@@ -664,16 +795,16 @@ public class MetadataContext {
 
         final List<PseudoColumn> list = new ArrayList<PseudoColumn>();
 
-        final ResultSet resultSet = databaseMetaData.getPseudoColumns(
+        final ResultSet results = metaData.getPseudoColumns(
             catalog, schemaPattern, tableNamePattern, columnNamePattern);
-        if (resultSet == null) {
-            logger.log(Level.WARNING, "null from getPseudoColumns");
-            return list;
-        }
-        try {
-            ColumnRetriever.list(this, resultSet, PseudoColumn.class, list);
-        } finally {
-            resultSet.close();
+        if (results == null) {
+            logger.log(Level.WARNING, "null returned from getPseudoColumns");
+        } else {
+            try {
+                list(results, PseudoColumn.class, list);
+            } finally {
+                results.close();
+            }
         }
 
         return list;
@@ -684,15 +815,13 @@ public class MetadataContext {
 
         final List<SchemaName> list = new ArrayList<SchemaName>();
 
-        final ResultSet results = databaseMetaData.getSchemas();
+        final ResultSet results = metaData.getSchemas();
         if (results == null) {
             logger.warning("null from getSchemas");
         }
         if (results != null) {
             try {
-                while (results.next()) {
-                    list.add(ColumnRetriever.single(this, results, SchemaName.class));
-                }
+                list(results, SchemaName.class, list);
             } finally {
                 results.close();
             }
@@ -708,16 +837,14 @@ public class MetadataContext {
 
         final List<Schema> list = new ArrayList<Schema>();
 
-        final ResultSet results = databaseMetaData.getSchemas(
+        final ResultSet results = metaData.getSchemas(
             catalog, schemaPattern);
         if (results == null) {
-            logger.warning("null from getSchemas");
+            logger.warning("null returned from getSchemas");
         }
         if (results != null) {
             try {
-                while (results.next()) {
-                    list.add(ColumnRetriever.single(this, results, Schema.class));
-                }
+                list(results, Schema.class, list);
             } finally {
                 results.close();
             }
@@ -776,14 +903,17 @@ public class MetadataContext {
 
         final List<Table> list = new ArrayList<Table>();
 
-        final ResultSet resultSet = databaseMetaData.getTables(
+        final ResultSet results = metaData.getTables(
             catalog, schemaPattern, tableNamePattern, types);
-        try {
-            while (resultSet.next()) {
-                list.add(ColumnRetriever.single(this, resultSet, Table.class));
+        if (results == null) {
+            logger.warning("null returned from getTables");
+        }
+        if (results != null) {
+            try {
+                list(results, Table.class, list);
+            } finally {
+                results.close();
             }
-        } finally {
-            resultSet.close();
         }
 
         for (final Table table : list) {
@@ -858,14 +988,12 @@ public class MetadataContext {
 
         final List<TablePrivilege> list = new ArrayList<TablePrivilege>();
 
-        final ResultSet resultSet = databaseMetaData.getTablePrivileges(
+        final ResultSet results = metaData.getTablePrivileges(
             catalog, schemaPattern, tableNamePattern);
         try {
-            while (resultSet.next()) {
-                list.add(ColumnRetriever.single(this, resultSet, TablePrivilege.class));
-            }
+            list(results, TablePrivilege.class, list);
         } finally {
-            resultSet.close();
+            results.close();
         }
 
         return list;
@@ -876,9 +1004,9 @@ public class MetadataContext {
 
         final List<TableType> list = new ArrayList<TableType>();
 
-        final ResultSet results = databaseMetaData.getTableTypes();
+        final ResultSet results = metaData.getTableTypes();
         try {
-            ColumnRetriever.list(this, results, TableType.class, list);
+            list(results, TableType.class, list);
         } finally {
             results.close();
         }
@@ -891,9 +1019,9 @@ public class MetadataContext {
 
         final List<TypeInfo> list = new ArrayList<TypeInfo>();
 
-        final ResultSet results = databaseMetaData.getTypeInfo();
+        final ResultSet results = metaData.getTypeInfo();
         try {
-            ColumnRetriever.list(this, results, TypeInfo.class, list);
+            list(results, TypeInfo.class, list);
         } finally {
             results.close();
         }
@@ -909,10 +1037,10 @@ public class MetadataContext {
 
         final List<UserDefinedType> list = new ArrayList<UserDefinedType>();
 
-        final ResultSet results = databaseMetaData.getUDTs(
+        final ResultSet results = metaData.getUDTs(
             catalog, schemaPattern, typeNamePattern, types);
         try {
-            ColumnRetriever.list(this, results, UserDefinedType.class, list);
+            list(results, UserDefinedType.class, list);
         } finally {
             results.close();
         }
@@ -937,21 +1065,19 @@ public class MetadataContext {
 
         final List<VersionColumn> list = new ArrayList<VersionColumn>();
 
-        final ResultSet resultSet = databaseMetaData.getVersionColumns(
+        final ResultSet results = metaData.getVersionColumns(
             catalog, schema, table);
         try {
-            while (resultSet.next()) {
-                list.add(ColumnRetriever.single(this, resultSet, VersionColumn.class));
-            }
+            list(results, VersionColumn.class, list);
         } finally {
-            resultSet.close();
+            results.close();
         }
 
         return list;
     }
 
 
-    private final DatabaseMetaData databaseMetaData;
+    private final DatabaseMetaData metaData;
 
 
     private Set<String> suppressionPaths;

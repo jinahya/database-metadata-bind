@@ -41,7 +41,7 @@ import java.lang.annotation.Target;
     Class<?>[] types() default {};
 
 
-    MethodInvocationArgs[] args() default {};
+    MethodInvocationArgs[] args() default {@MethodInvocationArgs({})};
 
 
 }
