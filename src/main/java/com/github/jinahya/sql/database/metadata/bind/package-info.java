@@ -25,8 +25,7 @@
         @XmlNs(prefix = "xsi",
                namespaceURI = XMLConstants.W3C_XML_SCHEMA_INSTANCE_NS_URI)
     }
-)
-@XmlAccessorType(XmlAccessType.NONE)
+) @XmlAccessorType(XmlAccessType.NONE)
 package com.github.jinahya.sql.database.metadata.bind;
 
 

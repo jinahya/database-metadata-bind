@@ -144,58 +144,31 @@ public class UserDefinedType {
     }
 
 
-    /**
-     * the type's catalog (may be {@code null}).
-     */
     @ColumnLabel("TYPE_CAT")
     @XmlAttribute
     private String typeCat;
 
 
-    /**
-     * type's schema (may be {@code null}).
-     */
-    @ColumnLabel("TYPE_CAT")
+    @ColumnLabel("TYPE_SCHEM")
     @XmlAttribute
     private String typeSchem;
 
 
-    /**
-     * parent schema.
-     */
-    @XmlTransient
-    private Schema schema;
-
-
-    /**
-     * type name.
-     */
     @ColumnLabel("TYPE_NAME")
     @XmlElement(required = true)
-    String typeName;
+    private String typeName;
 
 
-    /**
-     * Java class name.
-     */
     @ColumnLabel("CLASS_NAME")
     @XmlElement(required = true)
-    String className;
+    private String className;
 
 
-    /**
-     * type value defined in {@link java.sql.Types}. One of
-     * {@link java.sql.Types#JAVA_OBJECT}, {@link java.sql.Types#STRUCT}, or
-     * {@link java.sql.Types#DISTINCT}.
-     */
     @ColumnLabel("DATA_TYPE")
     @XmlElement(required = true)
     private int dataType;
 
 
-    /**
-     * explanatory comment on the type.
-     */
     @ColumnLabel("REMARKS")
     @XmlElement(required = true)
     private String remarks;
@@ -207,9 +180,13 @@ public class UserDefinedType {
     private Short baseType;
 
 
-    /**
-     * attributes.
-     */
+    @XmlTransient
+    private Schema schema;
+
+
+    @MethodInvocation(name = "getAttributes",
+                    types = {String.class, String.class, String.class, String.class},
+                    args = {@MethodInvocationArgs({":tableCat", ":tableSchem", ":typeName", "null"})})
     @XmlElementRef
     private List<Attribute> attributes;
 

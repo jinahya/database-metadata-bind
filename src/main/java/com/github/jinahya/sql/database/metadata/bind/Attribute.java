@@ -216,6 +216,12 @@ public class Attribute {
     }
 
 
+    public void setUserDefindedType(final UserDefinedType userDefinedType) {
+
+        this.userDefinedType = userDefinedType;
+    }
+
+
     @ColumnLabel("TYPE_CAT")
     @XmlAttribute
     private String typeCat;

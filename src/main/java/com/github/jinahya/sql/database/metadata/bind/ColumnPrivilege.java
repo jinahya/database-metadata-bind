@@ -139,7 +139,7 @@ public class ColumnPrivilege {
      * grantee of access.
      */
     @ColumnLabel("GRANTEE")
-    @XmlElement(nillable = false, required = true)
+    @XmlElement(required = true)
     String grantee;
 
 
@@ -147,7 +147,7 @@ public class ColumnPrivilege {
      * name of access (SELECT, INSERT, UPDATE, REFRENCES, ...)
      */
     @ColumnLabel("PRIVILEGE")
-    @XmlElement(nillable = false, required = true)
+    @XmlElement(required = true)
     String privilege;
 
 

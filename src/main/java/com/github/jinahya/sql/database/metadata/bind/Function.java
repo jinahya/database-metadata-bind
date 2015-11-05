@@ -114,12 +114,12 @@ public class Function {
 
 
     @ColumnLabel("FUNCTION_NAME")
-    @XmlElement(nillable = false, required = true)
+    @XmlElement(required = true)
     private String functionName;
 
 
     @ColumnLabel("REMARKS")
-    @XmlElement(nillable = false, required = true)
+    @XmlElement(required = true)
     private String remarks;
 
 

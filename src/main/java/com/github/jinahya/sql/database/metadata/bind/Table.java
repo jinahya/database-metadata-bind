@@ -30,7 +30,7 @@ import javax.xml.bind.annotation.XmlType;
 
 /**
  *
- * @author Jin Kwon <onacit at gmail.com>
+ * @author Jin Kwon &lt;jinahya_at_gmail.com&gt;
  */
 @XmlRootElement
 @XmlType(
@@ -38,8 +38,8 @@ import javax.xml.bind.annotation.XmlType;
         "tableName", "tableType", "remarks", "typeCat", "typeSchem", "typeName",
         "selfReferencingColName", "refGeneration",
         "bestRowIdentifiers", "columns", "columnPrivileges", "exportedKeys",
-        "importedKeys", "indexInfo", "primaryKeys", "tablePrivileges",
-        "versionColumns"
+        "importedKeys", "indexInfo", "primaryKeys", "pseudoColumns",
+        "tablePrivileges", "versionColumns"
     }
 )
 public class Table {
@@ -354,7 +354,7 @@ public class Table {
     }
 
 
-    // ------------------------------------------------------------- primaryKey
+    // ------------------------------------------------------------- primaryKeys
     public List<PrimaryKey> getPrimaryKeys() {
 
         if (primaryKeys == null) {
@@ -362,6 +362,17 @@ public class Table {
         }
 
         return primaryKeys;
+    }
+
+
+    // ----------------------------------------------------------- pseudoColumns
+    public List<PseudoColumn> getPseudoColumns() {
+
+        if (pseudoColumns == null) {
+            pseudoColumns = new ArrayList<PseudoColumn>();
+        }
+
+        return pseudoColumns;
     }
 
 
@@ -472,6 +483,10 @@ public class Table {
 
     @XmlElementRef
     private List<PrimaryKey> primaryKeys;
+
+
+    @XmlElementRef
+    private List<PseudoColumn> pseudoColumns;
 
 
     @XmlElementRef

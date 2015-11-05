@@ -26,6 +26,7 @@ import java.sql.Connection;
 import java.sql.DatabaseMetaData;
 import static java.sql.DriverManager.getConnection;
 import java.sql.SQLException;
+import java.util.List;
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBException;
 import javax.xml.bind.Marshaller;
@@ -70,6 +71,10 @@ public class HyperSQLMemoryTest {
         try (Connection connection = getConnection(CONNECTION_URL)) {
             final DatabaseMetaData database = connection.getMetaData();
             final MetadataContext context = new MetadataContext(database);
+            final List<SchemaName> schemaNames = context.getSchemas();
+            context.addSuppressionPath(
+                "table/pseudoColumns"
+            );
             metadata = context.getMetadata();
         }
 

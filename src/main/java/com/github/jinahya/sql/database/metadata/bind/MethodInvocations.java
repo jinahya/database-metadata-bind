@@ -1,5 +1,5 @@
 /*
- * Copyright 2013 <a href="mailto:onacit@gmail.com">Jin Kwon</a>.
+ * Copyright 2015 Jin Kwon &lt;jinahya_at_gmail.com&gt;.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -22,21 +22,7 @@ package com.github.jinahya.sql.database.metadata.bind;
  *
  * @author Jin Kwon &lt;jinahya_at_gmail.com&gt;
  */
-public final class XmlConstants {
-
-
-    public static final String DATABASE_METADATA_NS_URI
-        = "http://github.com/jinahya/sql/database/metadata/bind";
-
-
-    static final String DATABASE_MEATDATA_NS_PREFIX = "m";
-
-
-    private XmlConstants() {
-
-        super();
-    }
-
+public class MethodInvocations {
 
 }
 

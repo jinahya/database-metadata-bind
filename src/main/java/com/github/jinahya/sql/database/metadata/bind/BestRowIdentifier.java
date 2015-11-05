@@ -18,7 +18,6 @@
 package com.github.jinahya.sql.database.metadata.bind;
 
 
-import java.sql.DatabaseMetaData;
 import javax.xml.bind.annotation.XmlAttribute;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
@@ -144,57 +143,32 @@ public class BestRowIdentifier {
     }
 
 
-    /**
-     * actual scope of result.
-     * <ul>
-     * <li>{@link DatabaseMetaData#bestRowTemporary} - very temporary, while
-     * using row</li>
-     * <li>{@link DatabaseMetaData#bestRowTransaction} - valid for remainder of
-     * current transaction</li>
-     * <li>{@link DatabaseMetaData#bestRowSession} - valid for remainder of
-     * current session</li>
-     * </ul>
-     */
     @ColumnLabel("SCOPE")
     @XmlAttribute
-    short scope;
+    private short scope;
 
 
-    /**
-     * column name.
-     */
     @ColumnLabel("COLUMN_NAME")
-    @XmlElement(nillable = false, required = true)
-    String columnName;
+    @XmlElement(required = true)
+    private String columnName;
 
 
-    /**
-     * SQL data type from {@link java.sql.Types}.
-     */
     @ColumnLabel("DATA_TYPE")
-    @XmlElement(nillable = false, required = true)
-    int dataType;
+    @XmlElement(required = true)
+    private int dataType;
 
 
-    /**
-     * Data source dependent type name, for a UDT the type name is fully
-     * qualified.
-     */
     @ColumnLabel("TYPE_NAME")
-    @XmlElement(nillable = false, required = true)
-    String typeName;
+    @XmlElement(required = true)
+    private String typeName;
 
 
-    /**
-     * precision.
-     */
     @ColumnLabel("COLUMN_SIZE")
-    @XmlElement(nillable = false, required = true)
-    int columnSize;
+    @XmlElement(required = true)
+    private int columnSize;
 
 
     @ColumnLabel("BUFFER_LENGTH")
-    //@XmlElement(nillable = false, required = true)
     @XmlTransient
     @NotUsed
     private int bufferLength;
@@ -207,8 +181,8 @@ public class BestRowIdentifier {
 
 
     @ColumnLabel("PSEUDO_COLUMN")
-    @XmlElement(nillable = false, required = true)
-    short pseudoColumn;
+    @XmlElement(required = true)
+    private short pseudoColumn;
 
 
     @XmlTransient

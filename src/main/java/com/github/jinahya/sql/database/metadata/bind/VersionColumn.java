@@ -37,6 +37,19 @@ import javax.xml.bind.annotation.XmlType;
 public class VersionColumn {
 
 
+    // ------------------------------------------------------------------- scope
+    public short getScope() {
+
+        return scope;
+    }
+
+
+    public void setScope(final short scope) {
+
+        this.scope = scope;
+    }
+
+
     // -------------------------------------------------------------- columnName
     public String getColumnName() {
 
@@ -135,6 +148,12 @@ public class VersionColumn {
     }
 
 
+    public void setTable(final Table table) {
+
+        this.table = table;
+    }
+
+
     @ColumnLabel("SCOPE")
     @XmlTransient
     @NotUsed
@@ -168,6 +187,7 @@ public class VersionColumn {
 
     @ColumnLabel("DECIMAL_DIGITS")
     @XmlElement(nillable = true, required = true)
+    @NillableBySpecification
     private Short decimalDigits;
 
 

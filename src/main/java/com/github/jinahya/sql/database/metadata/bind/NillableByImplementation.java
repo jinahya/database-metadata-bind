@@ -28,12 +28,15 @@ import java.lang.annotation.Target;
 /**
  *
  * @author Jin Kwon &lt;jinahya_at_gmail.com&gt;
- * @deprecated Use {@link NoMapping}
  */
 @Documented
-@Retention(RetentionPolicy.RUNTIME)
+@Retention(RetentionPolicy.CLASS)
 @Target({ElementType.FIELD})
-@Deprecated
-@interface NotUsed {
+@interface NillableByImplementation {
+
+
+    String[] value() default {};
+
+
 }
 

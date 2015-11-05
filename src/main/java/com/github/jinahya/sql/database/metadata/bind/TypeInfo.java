@@ -20,14 +20,16 @@ package com.github.jinahya.sql.database.metadata.bind;
 
 import java.sql.DatabaseMetaData;
 import javax.xml.bind.annotation.XmlElement;
+import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlTransient;
 import javax.xml.bind.annotation.XmlType;
 
 
 /**
  *
- * @author Jin Kwon <onacit at gmail.com>
+ * @author Jin Kwon &lt;jinahya_at_gmail.com&gt;
  */
+@XmlRootElement
 @XmlType(
     propOrder = {
         "typeName", "dataType", "precision", "literalPrefix", "literalSuffix",

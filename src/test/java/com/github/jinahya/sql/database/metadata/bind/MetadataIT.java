@@ -18,6 +18,8 @@
 package com.github.jinahya.sql.database.metadata.bind;
 
 
+import com.github.jinahya.sql.database.metadata.bind.Metadata;
+import com.github.jinahya.sql.database.metadata.bind.MetadataContext;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -37,7 +39,7 @@ import org.testng.annotations.Test;
 
 /**
  *
- * @author <a href="mailto:onacit@gmail.com">Jin Kwon</a>
+ * @author Jin Kwon &lt;jinahya_at_gmail.com&gt;
  */
 public class MetadataIT {
 

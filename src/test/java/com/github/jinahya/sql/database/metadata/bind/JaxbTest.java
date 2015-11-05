@@ -18,7 +18,12 @@
 package com.github.jinahya.sql.database.metadata.bind;
 
 
+import java.io.File;
 import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.util.function.BiFunction;
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBException;
 import javax.xml.bind.SchemaOutputResolver;
@@ -34,7 +39,29 @@ import org.testng.annotations.Test;
 public class JaxbTest {
 
 
-    private static void printSchema(final JAXBContext context) throws IOException {
+    private static void storeSchema(
+        final JAXBContext context,
+        final BiFunction<String, String, File> locator)
+        throws IOException {
+
+        context.generateSchema(new SchemaOutputResolver() {
+
+            @Override
+            public Result createOutput(final String namespaceUri,
+                                       final String suggestedFileName)
+                throws IOException {
+                final File file = locator.apply(namespaceUri, suggestedFileName);
+                final Result output = new StreamResult(file);
+                //output.setSystemId(suggestedFileName);
+                return output;
+            }
+
+        });
+    }
+
+
+    private static void printSchema(final JAXBContext context)
+        throws IOException {
 
         context.generateSchema(new SchemaOutputResolver() {
 
@@ -51,11 +78,29 @@ public class JaxbTest {
     }
 
 
-    @Test
-    public void printWhole() throws JAXBException, IOException {
+    @Test(enabled = false)
+    public void printSchema() throws JAXBException, IOException {
 
         final JAXBContext context = JAXBContext.newInstance(
             JaxbTest.class.getPackage().getName());
+        printSchema(context);
+    }
+
+
+    @Test
+    public void storeSchema() throws JAXBException, IOException {
+
+        final Path schemas = Paths.get("target", "schemas");
+        if (!Files.isDirectory(schemas)) {
+            Files.createDirectories(schemas);
+        }
+
+        final JAXBContext context = JAXBContext.newInstance(
+            JaxbTest.class.getPackage().getName());
+        storeSchema(context, (namespaceUri, suggestedFileName) -> {
+            final Path path = schemas.resolve(suggestedFileName);
+            return path.toFile();
+        });
         printSchema(context);
     }
 

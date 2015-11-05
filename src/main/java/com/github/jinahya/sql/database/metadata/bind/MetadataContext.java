@@ -18,6 +18,10 @@
 package com.github.jinahya.sql.database.metadata.bind;
 
 
+import java.lang.reflect.Field;
+import java.lang.reflect.Method;
+import java.lang.reflect.Modifier;
+import java.lang.reflect.Type;
 import java.sql.DatabaseMetaData;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -25,6 +29,9 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 import java.util.TreeSet;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import static java.util.logging.Logger.getLogger;
 
 
 /**
@@ -34,6 +41,35 @@ import java.util.TreeSet;
 public class MetadataContext {
 
 
+    private static final Logger logger = getLogger(Metadata.class.getName());
+
+
+//    private static <T> T fieldValue(final Field field, final Object instance, Class<T> type) {
+//
+//        if (field.isAccessible()) {
+//            field.setAccessible(true);
+//        }
+//
+//        try {
+//            return type.cast(field.get(instance));
+//        } catch (final IllegalAccessException iae) {
+//            throw new RuntimeException(iae);
+//        }
+//    }
+//
+//
+//    private static <T> void fieldValue(final Field field, final Object instance, T value) {
+//
+//        if (field.isAccessible()) {
+//            field.setAccessible(true);
+//        }
+//
+//        try {
+//            field.set(instance, value);
+//        } catch (final IllegalAccessException iae) {
+//            throw new RuntimeException(iae);
+//        }
+//    }
     public MetadataContext(final DatabaseMetaData databaseMetaData) {
 
         super();
@@ -95,16 +131,69 @@ public class MetadataContext {
     }
 
 
+    private boolean column(final Field field) {
+
+        return false;
+    }
+
+
+    private <T> boolean method(final Class<?> type, final T instance, final Field field) {
+
+        final MethodInvocation methodInvocation = field.getAnnotation(MethodInvocation.class);
+        if (methodInvocation == null) {
+            return false;
+        }
+        final String methodName = methodInvocation.name();
+        final Class<?>[] parameterTypes = methodInvocation.types();
+        for (final MethodInvocationArgs invocationArgs : methodInvocation.args()) {
+            final String[] args = invocationArgs.value();
+        }
+
+        return false;
+    }
+
+
     public Metadata getMetadata() throws SQLException {
 
         final Metadata instance = new Metadata();
-
-        instance.setAllProceduresAreCallable(databaseMetaData.allProceduresAreCallable());
-        instance.setAllTablesAreSelectable(databaseMetaData.allTablesAreSelectable());
-
-        instance.setCatalogSeparator(databaseMetaData.getCatalogSeparator());
-        instance.setCatalogTerm(databaseMetaData.getCatalogTerm());
-
+        if (!suppressed("metadata/URL")) {
+            instance.setUrl(databaseMetaData.getURL());
+        }
+        if (!suppressed("metadata/allProceduresAreCallable")) {
+            instance.setAllProceduresAreCallable(databaseMetaData.allProceduresAreCallable());
+        }
+        if (!suppressed("metadata/allTablesAreSelectable")) {
+            instance.setAllTablesAreSelectable(databaseMetaData.allTablesAreSelectable());
+        }
+        if (!suppressed("metadata/autoCommitFailureClosesAllResultSets")) {
+            instance.setAutoCommitFailureClosesAllResultSets(
+                databaseMetaData.autoCommitFailureClosesAllResultSets());
+        }
+        if (!suppressed("metadata/catalogSeparator")) {
+            instance.setCatalogSeparator(databaseMetaData.getCatalogSeparator());
+        }
+        if (!suppressed("metadata/catalogTerm")) {
+            instance.setCatalogTerm(databaseMetaData.getCatalogTerm());
+        }
+        if (!suppressed("metadata/catalogs")) {
+            instance.getCatalogs().addAll(getCatalogs());
+        }
+        if (!suppressed("metadata/clientProperties")) {
+            instance.getClientInfoProperties().addAll(
+                getClientInfoProperties());
+        }
+        if (!suppressed("metadata/connectionString")) {
+            instance.setConnectionString(
+                databaseMetaData.getConnection().toString());
+        }
+        if (!suppressed("metadata/dataDefinitionCausesTransactionCommit")) {
+            instance.setDataDefinitionCausesTransactionCommit(
+                databaseMetaData.dataDefinitionCausesTransactionCommit());
+        }
+        if (!suppressed("metadata/dataDefinitionIgnoredInTransactions")) {
+            instance.setDataDefinitionIgnoredInTransactions(
+                databaseMetaData.dataDefinitionIgnoredInTransactions());
+        }
         instance.setDatabaseMajorVersion(databaseMetaData.getDatabaseMajorVersion());
         instance.setDatabaseMinorVersion(databaseMetaData.getDatabaseMinorVersion());
         instance.setDatabaseProductName(databaseMetaData.getDatabaseProductName());
@@ -120,21 +209,135 @@ public class MetadataContext {
         instance.setSystemFunctions(databaseMetaData.getSystemFunctions());
         instance.setTimeDateFunctions(databaseMetaData.getTimeDateFunctions());
 
-        if (!suppressed("metadata/catalogs")) {
-            instance.getCatalogs().addAll(getCatalogs());
+        if (!suppressed("metadata/deletesAreDetected")) {
+            for (final int type : DeletesAreDetected.TYPES) {
+                instance.getDeletesAreDetected().add(
+                    new DeletesAreDetected()
+                    .type(type).
+                    value(databaseMetaData.deletesAreDetected(type)));
+            }
+        }
+        if (!suppressed("metadata/doesMaxRowSizeIncludeBlobs")) {
+            instance.setDoesMaxRowSizeIncludeBlobs(
+                databaseMetaData.doesMaxRowSizeIncludeBlobs());
+        }
+        if (!suppressed("metadata/generatedKeyAlwaysReturned")) {
+            instance.setGeneratedKeyAlwaysReturned(
+                databaseMetaData.generatedKeyAlwaysReturned());
+        }
+        if (!suppressed("metadata/insertsAreDetected")) {
+            for (final int type : InsertsAreDetected.TYPES) {
+                instance.getInsertsAreDetected().add(
+                    new InsertsAreDetected()
+                    .type(type).
+                    value(databaseMetaData.insertsAreDetected(type)));
+            }
         }
 
-        if (!suppressed("metadata/clientProperties")) {
-            instance.getClientInfoProperties().addAll(
-                getClientInfoProperties());
+        // maxXXX
+        for (final Field field : Metadata.class.getDeclaredFields()) {
+            final Type genericType = field.getGenericType();
+            final int modifier = field.getModifiers();
+            if (Modifier.isStatic(modifier)) {
+                System.err.println("static");
+                continue;
+            }
+            final String fieldName = field.getName();
+            if (!fieldName.startsWith("max")) {
+                System.out.println("not max");
+                continue;
+            }
+            final String suppresionPath = SuppressionPaths.get(field);
+            if (suppressed(suppresionPath)) {
+                System.err.println("suppressed?");
+                continue;
+            }
+            System.err.println("--------------> " + field);
+            final String methodName
+                = "get" + fieldName.substring(0, 1).toUpperCase()
+                  + fieldName.substring(1);
+            final Method method;
+            try {
+                method = DatabaseMetaData.class.getMethod(methodName);
+            } catch (final NoSuchMethodException nsme) {
+                logger.log(Level.WARNING, "method not found: {0}", methodName);
+                continue;
+            }
+            System.err.println("--------------> " + method);
+            if (field.isAccessible()) {
+                field.setAccessible(true);
+            }
+            try {
+                field.set(instance, method.invoke(databaseMetaData));
+            } catch (final ReflectiveOperationException roe) {
+                logger.log(Level.WARNING, "failed to set: {0}", field);
+                continue;
+            }
         }
 
+        if (!suppressed("metadata/maxBinaryLiteralLength")) {
+        }
+        if (!suppressed("metadata/maxCatalogNameLength")) {
+        }
+        if (!suppressed("metadata/maxCharLiteralLength")) {
+        }
+        if (!suppressed("metadata/maxColumnNameLength")) {
+        }
+        if (!suppressed("metadata/maxColumnsInGroupBy")) {
+        }
+        if (!suppressed("metadata/maxColumnsInIndex")) {
+        }
+        if (!suppressed("metadata/maxColumnsInOrderBy")) {
+        }
+        if (!suppressed("metadata/maxColumnsInSelect")) {
+        }
+        if (!suppressed("metadata/maxColumnsInTable")) {
+        }
+        if (!suppressed("metadata/maxConnections")) {
+        }
+        if (!suppressed("metadata/maxCursorNameLength")) {
+        }
+        if (!suppressed("metadata/maxIndexLength")) {
+        }
+        if (!suppressed("metadata/maxLogicalLobSize")) {
+        }
+        if (!suppressed("metadata/maxProcedureNameLength")) {
+        }
+        if (!suppressed("metadata/maxRowSize")) {
+        }
+        if (!suppressed("metadata/maxSchemaNameLength")) {
+        }
+        if (!suppressed("metadata/maxStatementLength")) {
+        }
+        if (!suppressed("metadata/maxStatements")) {
+        }
+        if (!suppressed("metadata/maxTableNameLength")) {
+        }
+        if (!suppressed("metadata/maxTablesInSelect")) {
+        }
+        if (!suppressed("metadata/maxUserNameLength")) {
+        }
+
+        if (!suppressed("metadata/procedureTerm")) {
+            instance.setProcedureTerm(databaseMetaData.getProcedureTerm());
+        }
+        if (!suppressed("metadata/resultSetHoldabiltiy")) {
+            instance.setResultSetHoldability(databaseMetaData.getResultSetHoldability());
+        }
+//        if (!suppressed("metadata/rowIdLifetime")) {
+//            instance.setRowIdLifetime(databaseMetaData.getRowIdLifetime());
+//        }
+        if (!suppressed("metadata/schemaNames")) {
+            instance.getSchemaNames().addAll(getSchemas());
+        }
         if (!suppressed("metadata/typeInfo")) {
             instance.getTypeInfo().addAll(getTypeInfo());
         }
-
         if (!suppressed("metadata/tableTypes")) {
-            instance.getTypeInfo().addAll(getTypeInfo());
+            instance.getTableTypes().addAll(getTableTypes());
+        }
+        if (!suppressed("metadata/userName")) {
+            instance.setUserName(databaseMetaData.getUserName());
         }
 
         return instance;
@@ -153,8 +356,7 @@ public class MetadataContext {
             catalog, schemaPattern, typeNamePattern, attributeNamePattern);
         try {
             while (resultSet.next()) {
-                list.add(ColumnRetriever.retrieve(
-                    this, Attribute.class, resultSet));
+                list.add(ColumnRetriever.single(this, resultSet, Attribute.class));
             }
         } finally {
             resultSet.close();
@@ -175,8 +377,7 @@ public class MetadataContext {
             catalog, schema, table, scope, nullable);
         try {
             while (resultSet.next()) {
-                list.add(ColumnRetriever.retrieve(
-                    this, BestRowIdentifier.class, resultSet));
+                list.add(ColumnRetriever.single(this, resultSet, BestRowIdentifier.class));
             }
         } finally {
             resultSet.close();
@@ -193,8 +394,7 @@ public class MetadataContext {
         final ResultSet resultSet = databaseMetaData.getCatalogs();
         try {
             while (resultSet.next()) {
-                list.add(ColumnRetriever.retrieve(
-                    this, Catalog.class, resultSet));
+                list.add(ColumnRetriever.single(this, resultSet, Catalog.class));
             }
         } finally {
             resultSet.close();
@@ -209,7 +409,7 @@ public class MetadataContext {
         if (!suppressed("catalog/schemas")) {
             for (final Catalog catalog : list) {
                 catalog.getSchemas().addAll(
-                    getSchema(catalog.getTableCat(), null));
+                    getSchemas(catalog.getTableCat(), null));
             }
         }
 
@@ -224,10 +424,13 @@ public class MetadataContext {
             = new ArrayList<ClientInfoProperty>();
 
         final ResultSet resultSet = databaseMetaData.getClientInfoProperties();
+        if (resultSet == null) {
+            logger.log(Level.WARNING, "null from getClientInfoProperties");
+            return list;
+        }
         try {
             while (resultSet.next()) {
-                list.add(ColumnRetriever.retrieve(
-                    this, ClientInfoProperty.class, resultSet));
+                list.add(ColumnRetriever.single(this, resultSet, ClientInfoProperty.class));
             }
         } finally {
             resultSet.close();
@@ -249,8 +452,7 @@ public class MetadataContext {
             catalog, schemaPattern, tableNamePattern, columnNamePattern);
         try {
             while (resultSet.next()) {
-                list.add(ColumnRetriever.retrieve(
-                    this, Column.class, resultSet));
+                list.add(ColumnRetriever.single(this, resultSet, Column.class));
             }
         } finally {
             resultSet.close();
@@ -271,11 +473,36 @@ public class MetadataContext {
             catalog, schema, table, columnNamePattern);
         try {
             while (resultSet.next()) {
-                list.add(ColumnRetriever.retrieve(
-                    this, ColumnPrivilege.class, resultSet));
+                list.add(ColumnRetriever.single(this, resultSet, ColumnPrivilege.class));
             }
         } finally {
             resultSet.close();
+        }
+
+        return list;
+    }
+
+
+    public List<FunctionColumn> getFunctionColumns(
+        final String catalog, final String schemaPattern,
+        final String functionNamePattern, final String columnNamePattern)
+        throws SQLException {
+
+        final List<FunctionColumn> list = new ArrayList<FunctionColumn>();
+
+        final ResultSet results = databaseMetaData.getFunctionColumns(
+            catalog, schemaPattern, functionNamePattern, columnNamePattern);
+        if (results == null) {
+            logger.warning("null from getFunctionColumns");
+        }
+        if (results != null) {
+            try {
+                while (results.next()) {
+                    list.add(ColumnRetriever.single(this, results, FunctionColumn.class));
+                }
+            } finally {
+                results.close();
+            }
         }
 
         return list;
@@ -291,13 +518,17 @@ public class MetadataContext {
 
         final ResultSet resultSet = databaseMetaData.getFunctions(
             catalog, schemaPattern, functionNamePattern);
-        try {
-            while (resultSet.next()) {
-                functions.add(ColumnRetriever.retrieve(
-                    this, Function.class, resultSet));
+        if (resultSet == null) {
+            logger.warning("null from getFunctions");
+        }
+        if (resultSet != null) {
+            try {
+                while (resultSet.next()) {
+                    functions.add(ColumnRetriever.single(this, resultSet, Function.class));
+                }
+            } finally {
+                resultSet.close();
             }
-        } finally {
-            resultSet.close();
         }
 
         return functions;
@@ -314,8 +545,7 @@ public class MetadataContext {
             catalog, schema, table);
         try {
             while (resultSet.next()) {
-                list.add(ColumnRetriever.retrieve(
-                    this, ExportedKey.class, resultSet));
+                list.add(ColumnRetriever.single(this, resultSet, ExportedKey.class));
             }
         } finally {
             resultSet.close();
@@ -335,8 +565,7 @@ public class MetadataContext {
             catalog, schema, table);
         try {
             while (resultSet.next()) {
-                list.add(ColumnRetriever.retrieve(
-                    this, ImportedKey.class, resultSet));
+                list.add(ColumnRetriever.single(this, resultSet, ImportedKey.class));
             }
         } finally {
             resultSet.close();
@@ -357,8 +586,7 @@ public class MetadataContext {
             catalog, schema, table, unique, approximate);
         try {
             while (resultSet.next()) {
-                list.add(ColumnRetriever.retrieve(
-                    this, IndexInfo.class, resultSet));
+                list.add(ColumnRetriever.single(this, resultSet, IndexInfo.class));
             }
         } finally {
             resultSet.close();
@@ -378,9 +606,27 @@ public class MetadataContext {
             catalog, schema, table);
         try {
             while (resultSet.next()) {
-                list.add(ColumnRetriever.retrieve(
-                    this, PrimaryKey.class, resultSet));
+                list.add(ColumnRetriever.single(this, resultSet, PrimaryKey.class));
             }
+        } finally {
+            resultSet.close();
+        }
+
+        return list;
+    }
+
+
+    public List<ProcedureColumn> getProcedureColumns(
+        final String catalog, final String schemaPattern,
+        final String procedureNamePattern, final String columnNamePattern)
+        throws SQLException {
+
+        final List<ProcedureColumn> list = new ArrayList<ProcedureColumn>();
+
+        final ResultSet resultSet = databaseMetaData.getProcedureColumns(
+            catalog, schemaPattern, procedureNamePattern, columnNamePattern);
+        try {
+            ColumnRetriever.list(this, resultSet, ProcedureColumn.class, list);
         } finally {
             resultSet.close();
         }
@@ -400,8 +646,7 @@ public class MetadataContext {
             catalog, schemaPattern, procedureNamePattern);
         try {
             while (resultSet.next()) {
-                list.add(ColumnRetriever.retrieve(
-                    this, Procedure.class, resultSet));
+                list.add(ColumnRetriever.single(this, resultSet, Procedure.class));
             }
         } finally {
             resultSet.close();
@@ -411,21 +656,71 @@ public class MetadataContext {
     }
 
 
-    public List<Schema> getSchema(final String catalog,
-                                  final String schemaPattern)
+    public List<PseudoColumn> getPseudoColumns(final String catalog,
+                                               final String schemaPattern,
+                                               final String tableNamePattern,
+                                               final String columnNamePattern)
+        throws SQLException {
+
+        final List<PseudoColumn> list = new ArrayList<PseudoColumn>();
+
+        final ResultSet resultSet = databaseMetaData.getPseudoColumns(
+            catalog, schemaPattern, tableNamePattern, columnNamePattern);
+        if (resultSet == null) {
+            logger.log(Level.WARNING, "null from getPseudoColumns");
+            return list;
+        }
+        try {
+            ColumnRetriever.list(this, resultSet, PseudoColumn.class, list);
+        } finally {
+            resultSet.close();
+        }
+
+        return list;
+    }
+
+
+    public List<SchemaName> getSchemas() throws SQLException {
+
+        final List<SchemaName> list = new ArrayList<SchemaName>();
+
+        final ResultSet results = databaseMetaData.getSchemas();
+        if (results == null) {
+            logger.warning("null from getSchemas");
+        }
+        if (results != null) {
+            try {
+                while (results.next()) {
+                    list.add(ColumnRetriever.single(this, results, SchemaName.class));
+                }
+            } finally {
+                results.close();
+            }
+        }
+
+        return list;
+    }
+
+
+    public List<Schema> getSchemas(final String catalog,
+                                   final String schemaPattern)
         throws SQLException {
 
         final List<Schema> list = new ArrayList<Schema>();
 
-        final ResultSet resultSet = databaseMetaData.getSchemas(
+        final ResultSet results = databaseMetaData.getSchemas(
             catalog, schemaPattern);
-        try {
-            while (resultSet.next()) {
-                list.add(ColumnRetriever.retrieve(
-                    this, Schema.class, resultSet));
+        if (results == null) {
+            logger.warning("null from getSchemas");
+        }
+        if (results != null) {
+            try {
+                while (results.next()) {
+                    list.add(ColumnRetriever.single(this, results, Schema.class));
+                }
+            } finally {
+                results.close();
             }
-        } finally {
-            resultSet.close();
         }
 
         if (list.isEmpty()) {
@@ -435,21 +730,37 @@ public class MetadataContext {
         }
 
         for (final Schema schema : list) {
+            if (!suppressed("schema/functionColumns")) {
+                schema.getFunctionColumns().addAll(
+                    getFunctionColumns(
+                        schema.getTableCatalog(), schema.getTableSchem(), null,
+                        null));
+            }
             if (!suppressed("schema/functions")) {
-                schema.getFunctions().addAll(getFunctions(
-                    schema.getTableCatalog(), schema.getTableSchem(), null));
+                schema.getFunctions().addAll(
+                    getFunctions(
+                        schema.getTableCatalog(), schema.getTableSchem(),
+                        null));
+            }
+            if (!suppressed("schema/procedureColumns")) {
+                schema.getProcedureColumns().addAll(
+                    getProcedureColumns(
+                        schema.getTableCatalog(), schema.getTableSchem(), null,
+                        null));
             }
             if (!suppressed("schema/procedures")) {
-                schema.getProcedures().addAll(getProcedures(
-                    schema.getTableCatalog(), schema.getTableSchem(), null));
+                schema.getProcedures().addAll(
+                    getProcedures(
+                        schema.getTableCatalog(), schema.getTableSchem(),
+                        null));
             }
             if (!suppressed("schema/tables")) {
-                schema.getTables().addAll(getTables(
-                    catalog, schemaPattern, null, null));
+                schema.getTables().addAll(
+                    getTables(catalog, schemaPattern, null, null));
             }
             if (!suppressed("schema/userDefinedTypes")) {
-                schema.getUserDefinedTypes().addAll(getUDTs(
-                    catalog, schemaPattern, null, null));
+                schema.getUserDefinedTypes().addAll(
+                    getUDTs(catalog, schemaPattern, null, null));
             }
         }
 
@@ -469,8 +780,7 @@ public class MetadataContext {
             catalog, schemaPattern, tableNamePattern, types);
         try {
             while (resultSet.next()) {
-                list.add(ColumnRetriever.retrieve(
-                    this, Table.class, resultSet));
+                list.add(ColumnRetriever.single(this, resultSet, Table.class));
             }
         } finally {
             resultSet.close();
@@ -518,15 +828,22 @@ public class MetadataContext {
                     table.getTableCat(), table.getTableSchem(),
                     table.getTableName()));
             }
+            if (!suppressed("table/pseudoColumns")) {
+                table.getPseudoColumns().addAll(
+                    getPseudoColumns(
+                        table.getTableCat(), table.getTableSchem(),
+                        table.getTableName(), null));
+            }
             if (!suppressed("table/tablePrivileges")) {
                 table.getTablePrivileges().addAll(getTablePrivileges(
                     table.getTableCat(), table.getTableSchem(),
                     table.getTableName()));
             }
             if (!suppressed("table/versionColumns")) {
-                table.getVersionColumns().addAll(getVersionColumns(
-                    table.getTableCat(), table.getTableSchem(),
-                    table.getTableName()));
+                table.getVersionColumns().addAll(
+                    getVersionColumns(
+                        table.getTableCat(), table.getTableSchem(),
+                        table.getTableName()));
             }
         }
 
@@ -545,8 +862,7 @@ public class MetadataContext {
             catalog, schemaPattern, tableNamePattern);
         try {
             while (resultSet.next()) {
-                list.add(ColumnRetriever.retrieve(
-                    this, TablePrivilege.class, resultSet));
+                list.add(ColumnRetriever.single(this, resultSet, TablePrivilege.class));
             }
         } finally {
             resultSet.close();
@@ -556,18 +872,15 @@ public class MetadataContext {
     }
 
 
-    public List<TableType> getTableType() throws SQLException {
+    public List<TableType> getTableTypes() throws SQLException {
 
         final List<TableType> list = new ArrayList<TableType>();
 
-        final ResultSet resultSet = databaseMetaData.getTableTypes();
+        final ResultSet results = databaseMetaData.getTableTypes();
         try {
-            while (resultSet.next()) {
-                list.add(ColumnRetriever.retrieve(
-                    this, TableType.class, resultSet));
-            }
+            ColumnRetriever.list(this, results, TableType.class, list);
         } finally {
-            resultSet.close();
+            results.close();
         }
 
         return list;
@@ -578,14 +891,11 @@ public class MetadataContext {
 
         final List<TypeInfo> list = new ArrayList<TypeInfo>();
 
-        final ResultSet resultSet = databaseMetaData.getTypeInfo();
+        final ResultSet results = databaseMetaData.getTypeInfo();
         try {
-            while (resultSet.next()) {
-                list.add(ColumnRetriever.retrieve(
-                    this, TypeInfo.class, resultSet));
-            }
+            ColumnRetriever.list(this, results, TypeInfo.class, list);
         } finally {
-            resultSet.close();
+            results.close();
         }
 
         return list;
@@ -599,15 +909,12 @@ public class MetadataContext {
 
         final List<UserDefinedType> list = new ArrayList<UserDefinedType>();
 
-        final ResultSet resultSet = databaseMetaData.getUDTs(
+        final ResultSet results = databaseMetaData.getUDTs(
             catalog, schemaPattern, typeNamePattern, types);
         try {
-            while (resultSet.next()) {
-                list.add(ColumnRetriever.retrieve(
-                    this, UserDefinedType.class, resultSet));
-            }
+            ColumnRetriever.list(this, results, UserDefinedType.class, list);
         } finally {
-            resultSet.close();
+            results.close();
         }
 
         if (!suppressed("userDefinedType/attributes")) {
@@ -634,8 +941,7 @@ public class MetadataContext {
             catalog, schema, table);
         try {
             while (resultSet.next()) {
-                list.add(ColumnRetriever.retrieve(
-                    this, VersionColumn.class, resultSet));
+                list.add(ColumnRetriever.single(this, resultSet, VersionColumn.class));
             }
         } finally {
             resultSet.close();

@@ -30,12 +30,13 @@ import javax.xml.bind.annotation.XmlType;
 
 /**
  *
- * @author Jin Kwon <jinahya at gmail.com>
+ * @author Jin Kwon &lt;jinahya_at_gmail.com&gt;
  */
 @XmlRootElement
 @XmlType(
     propOrder = {
-        "tableSchem", "functions", "procedures", "tables", "userDefinedTypes"
+        "tableSchem", "functionColumns", "functions", "procedureColumns",
+        "procedures", "tables", "userDefinedTypes"
     }
 )
 public class Schema {
@@ -118,6 +119,16 @@ public class Schema {
     }
 
 
+    public List<FunctionColumn> getFunctionColumns() {
+
+        if (functionColumns == null) {
+            functionColumns = new ArrayList<FunctionColumn>();
+        }
+
+        return functionColumns;
+    }
+
+
     // --------------------------------------------------------------- functions
     public List<Function> getFunctions() {
 
@@ -126,6 +137,17 @@ public class Schema {
         }
 
         return functions;
+    }
+
+
+    // -------------------------------------------------------- procedureColumns
+    public List<ProcedureColumn> getProcedureColumns() {
+
+        if (procedureColumns == null) {
+            procedureColumns = new ArrayList<ProcedureColumn>();
+        }
+
+        return procedureColumns;
     }
 
 
@@ -214,12 +236,17 @@ public class Schema {
 
 
     @XmlElementRef
+    private List<FunctionColumn> functionColumns;
+
+
+    @XmlElementRef
     private List<Function> functions;
 
 
-    /**
-     * procedures.
-     */
+    @XmlElementRef
+    private List<ProcedureColumn> procedureColumns;
+
+
     @XmlElementRef
     private List<Procedure> procedures;
 

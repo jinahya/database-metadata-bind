@@ -146,12 +146,12 @@ public class TablePrivilege {
 
 
     @ColumnLabel("GRANTEE")
-    @XmlElement(nillable = false, required = true)
+    @XmlElement(required = true)
     private String grantee;
 
 
     @ColumnLabel("PRIVILEGE")
-    @XmlElement(nillable = false, required = true)
+    @XmlElement(required = true)
     private String privilege;
 
 

@@ -27,6 +27,7 @@ import java.sql.DatabaseMetaData;
 import java.sql.DriverManager;
 import static java.sql.DriverManager.getConnection;
 import java.sql.SQLException;
+import java.util.List;
 import java.util.Properties;
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBException;
@@ -98,10 +99,10 @@ public class DerbyMemoryTest {
         try (Connection connection = getConnection(CONNECTION_URL)) {
             final DatabaseMetaData database = connection.getMetaData();
             final MetadataContext context = new MetadataContext(database);
+            final List<SchemaName> schemaNames = context.getSchemas();
             metadata = context.getMetadata();
         }
 
-        //metadata.print(System.out);
         final JAXBContext context = JAXBContext.newInstance(Metadata.class);
         final Marshaller marshaller = context.createMarshaller();
         marshaller.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, Boolean.TRUE);
@@ -111,7 +112,6 @@ public class DerbyMemoryTest {
             marshaller.marshal(metadata, outputStream);
             outputStream.flush();
         }
-        //final DatabaseMetadata databaseMetadata = new DatabaseMetadata();
     }
 
 

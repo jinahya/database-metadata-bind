@@ -18,12 +18,12 @@
 package com.github.jinahya.sql.database.metadata.bind;
 
 
-import com.github.jinahya.sql.database.metadata.bind.Catalog;
-import com.github.jinahya.sql.database.metadata.bind.Function;
 import com.github.jinahya.sql.database.metadata.bind.Table;
+import com.github.jinahya.sql.database.metadata.bind.Function;
 import com.github.jinahya.sql.database.metadata.bind.Schema;
-import com.github.jinahya.sql.database.metadata.bind.Procedure;
 import com.github.jinahya.sql.database.metadata.bind.Metadata;
+import com.github.jinahya.sql.database.metadata.bind.Procedure;
+import com.github.jinahya.sql.database.metadata.bind.Catalog;
 import java.util.List;
 import java.util.Objects;
 import org.testng.Assert;
@@ -31,7 +31,7 @@ import org.testng.Assert;
 
 /**
  *
- * @author <a href="mailto:onacit@gmail.com">Jin Kwon</a>
+ * @author Jin Kwon &lt;jinahya_at_gmail.com&gt;
  */
 public class MetadataVerifier {
 
@@ -51,16 +51,15 @@ public class MetadataVerifier {
             }
         }
 
-        // catalog names must be order by themselves
-        {
-            final List<String> catalogNames = metadata.getCatalogNames();
-            for (int i = 1; i < catalogNames.size(); i++) {
-                Assert.assertTrue(
-                    catalogNames.get(i - 1).compareTo(catalogNames.get(i))
-                    < 0);
-            }
-        }
-
+//        // catalog names must be order by themselves
+//        {
+//            final List<String> catalogNames = metadata.getCatalogNames();
+//            for (int i = 1; i < catalogNames.size(); i++) {
+//                Assert.assertTrue(
+//                    catalogNames.get(i - 1).compareTo(catalogNames.get(i))
+//                    < 0);
+//            }
+//        }
         for (final Catalog catalog : metadata.getCatalogs()) {
             verify(catalog);
         }
@@ -145,7 +144,7 @@ public class MetadataVerifier {
 
     public void printSchema() {
 
-//        final JAXBContext context = 
+//        final JAXBContext context =
     }
 
 

@@ -26,6 +26,7 @@ import java.sql.Connection;
 import java.sql.DatabaseMetaData;
 import static java.sql.DriverManager.getConnection;
 import java.sql.SQLException;
+import java.util.List;
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBException;
 import javax.xml.bind.Marshaller;
@@ -62,7 +63,7 @@ public class SQLiteMemoryTest {
     }
 
 
-    @Test(enabled = false)
+    @Test(enabled = true)
     public void retrieve() throws SQLException, JAXBException, IOException {
 
         final Metadata metadata;
@@ -70,6 +71,10 @@ public class SQLiteMemoryTest {
         try (Connection connection = getConnection(CONNECTION_URL)) {
             final DatabaseMetaData database = connection.getMetaData();
             final MetadataContext context = new MetadataContext(database);
+            final List<SchemaName> schemaNames = context.getSchemas();
+            context.suppressionPath(
+                "schema/functionColumns"
+            );
             metadata = context.getMetadata();
         }
 
@@ -77,8 +82,7 @@ public class SQLiteMemoryTest {
         final Marshaller marshaller = context.createMarshaller();
         marshaller.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, Boolean.TRUE);
 
-        final File file
-            = new File("target", "sqlite.memory.metadata.xml");
+        final File file = new File("target", "sqlite.memory.metadata.xml");
         try (OutputStream outputStream = new FileOutputStream(file)) {
             marshaller.marshal(metadata, outputStream);
             outputStream.flush();

@@ -29,20 +29,37 @@ import javax.xml.bind.annotation.XmlType;
  * @author Jin Kwon &lt;jinahya_at_gmail.com&gt;
  */
 @XmlRootElement
-@XmlType(propOrder = {"tableType"})
-public class TableType {
+@XmlType(
+    propOrder = {
+        "tableSchem", "tableCatalog"
+    }
+)
+public class SchemaName {
 
 
-    // --------------------------------------------------------------- tableType
-    public String getTableType() {
+    // -------------------------------------------------------------- tableSchem
+    public String getTableSchem() {
 
-        return tableType;
+        return tableSchem;
     }
 
 
-    public void setTableType(final String tableType) {
+    public void setTableSchem(final String tableSchem) {
 
-        this.tableType = tableType;
+        this.tableSchem = tableSchem;
+    }
+
+
+    // ------------------------------------------------------------ tableCatalog
+    public String getTableCatalog() {
+
+        return tableCatalog;
+    }
+
+
+    public void setTableCatalog(final String tableCatalog) {
+
+        this.tableCatalog = tableCatalog;
     }
 
 
@@ -59,9 +76,15 @@ public class TableType {
     }
 
 
-    @ColumnLabel("TABLE_TYPE")
+    @ColumnLabel("TABLE_SCHEM")
     @XmlElement(required = true)
-    private String tableType;
+    private String tableSchem;
+
+
+    @ColumnLabel("TABLE_CATALOG")
+    @NillableBySpecification
+    @XmlElement(nillable = true, required = false)
+    private String tableCatalog;
 
 
     @XmlTransient
