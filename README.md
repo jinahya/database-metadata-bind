@@ -40,6 +40,6 @@ A library binding various information from [DatabaseMetaData](http://docs.oracle
           * IndexInfo
           * PrimaryKey
           * PseudoColumn
-          * TablePrivilege
           * VersionColumn
+        * TablePrivilege
         * Udt
