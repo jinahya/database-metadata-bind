@@ -193,7 +193,7 @@ public class ImportedKey {
     }
 
 
-    @ColumnLabel("PKTABLE_CAT")
+    @Label("PKTABLE_CAT")
     @XmlElement(nillable = true, required = true)
     @NillableBySpecification
     private String pktableCat;
@@ -202,7 +202,7 @@ public class ImportedKey {
     /**
      * primary key table schema being imported (may be {@code null}).
      */
-    @ColumnLabel("PKTABLE_SCHEM")
+    @Label("PKTABLE_SCHEM")
     @XmlElement(nillable = true, required = true)
     @NillableBySpecification
     private String pktableSchem;
@@ -211,62 +211,62 @@ public class ImportedKey {
     /**
      * primary key table name being imported.
      */
-    @ColumnLabel("PKTABLE_NAME")
+    @Label("PKTABLE_NAME")
     @XmlElement(required = true)
     private String pktableName;
 
 
-    @ColumnLabel("PKCOLUMN_NAME")
+    @Label("PKCOLUMN_NAME")
     @XmlElement(required = true)
     private String pkcolumnName;
 
 
-    @ColumnLabel("FKTABLE_CAT")
+    @Label("FKTABLE_CAT")
     @XmlAttribute
     private String fktableCat;
 
 
-    @ColumnLabel("FKTABLE_NAME")
+    @Label("FKTABLE_NAME")
     @XmlAttribute
     private String fktableSchem;
 
 
-    @ColumnLabel("FKTABLE_NAME")
+    @Label("FKTABLE_NAME")
     @XmlAttribute
     private String fktableName;
 
 
-    @ColumnLabel("FKCOLUMN_NAME")
+    @Label("FKCOLUMN_NAME")
     @XmlElement(required = true)
     private Column fkcolumnName;
 
 
-    @ColumnLabel("FKCOLUMN_NAME")
+    @Label("FKCOLUMN_NAME")
     @XmlElement(required = true)
     private short keySeq;
 
 
-    @ColumnLabel("UPDATE_RULE")
+    @Label("UPDATE_RULE")
     @XmlElement(required = true)
     private short updateRule;
 
 
-    @ColumnLabel("DELETE_RULE")
+    @Label("DELETE_RULE")
     @XmlElement(required = true)
     private short deleteRule;
 
 
-    @ColumnLabel("FK_NAME")
+    @Label("FK_NAME")
     @XmlElement(required = true)
     private String fkName;
 
 
-    @ColumnLabel("PK_NAME")
+    @Label("PK_NAME")
     @XmlElement(required = true)
     private String pkName;
 
 
-    @ColumnLabel("DEFERRABILITY")
+    @Label("DEFERRABILITY")
     @XmlElement(required = true)
     private short deferrability;
 

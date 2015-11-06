@@ -96,7 +96,7 @@ public class ColumnPrivilege {
     /**
      * table catalog (may be {@code null}).
      */
-    @ColumnLabel("TABLE_CAT")
+    @Label("TABLE_CAT")
     @XmlAttribute
     private String tableCat;
 
@@ -104,7 +104,7 @@ public class ColumnPrivilege {
     /**
      * table schema (may be {@code null}).
      */
-    @ColumnLabel("TABLE_SCHEM")
+    @Label("TABLE_SCHEM")
     @XmlAttribute
     private String tableSchem;
 
@@ -112,7 +112,7 @@ public class ColumnPrivilege {
     /**
      * table name.
      */
-    @ColumnLabel("TABLE_NAME")
+    @Label("TABLE_NAME")
     @XmlAttribute
     private String tableName;
 
@@ -120,7 +120,7 @@ public class ColumnPrivilege {
     /**
      * column name.
      */
-    @ColumnLabel("COLUMN_NAME")
+    @Label("COLUMN_NAME")
     @XmlAttribute(required = true)
     //@XmlElement(nillable = true, required = true)
     private String columnName;
@@ -129,7 +129,7 @@ public class ColumnPrivilege {
     /**
      * grantor of access (may be {@code null}).
      */
-    @ColumnLabel("GRANTOR")
+    @Label("GRANTOR")
     @NillableBySpecification
     @XmlElement(nillable = true, required = true)
     String grantor;
@@ -138,7 +138,7 @@ public class ColumnPrivilege {
     /**
      * grantee of access.
      */
-    @ColumnLabel("GRANTEE")
+    @Label("GRANTEE")
     @XmlElement(required = true)
     String grantee;
 
@@ -146,7 +146,7 @@ public class ColumnPrivilege {
     /**
      * name of access (SELECT, INSERT, UPDATE, REFRENCES, ...)
      */
-    @ColumnLabel("PRIVILEGE")
+    @Label("PRIVILEGE")
     @XmlElement(required = true)
     String privilege;
 
@@ -155,7 +155,7 @@ public class ColumnPrivilege {
      * {@code YES} if grantee is permitted to grant to others; {@code NO} if
      * not; {@code null} if unknown.
      */
-    @ColumnLabel("IS_GRANTABLE")
+    @Label("IS_GRANTABLE")
     @NillableBySpecification
     @XmlElement(nillable = true, required = true)
     String isGrantable;

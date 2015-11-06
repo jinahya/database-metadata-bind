@@ -154,44 +154,44 @@ public class VersionColumn {
     }
 
 
-    @ColumnLabel("SCOPE")
+    @Label("SCOPE")
     @XmlTransient
     @NotUsed
     private short scope;
 
 
-    @ColumnLabel("COLUMN_NAME")
+    @Label("COLUMN_NAME")
     @XmlElement(required = true)
     private String columnName;
 
 
-    @ColumnLabel("DATA_TYPE")
+    @Label("DATA_TYPE")
     @XmlElement(required = true)
     private int dataType;
 
 
-    @ColumnLabel("TYPE_NAME")
+    @Label("TYPE_NAME")
     @XmlElement(required = true)
     private String typeName;
 
 
-    @ColumnLabel("COLUMN_SIZE")
+    @Label("COLUMN_SIZE")
     @XmlElement(required = true)
     private int columnSize;
 
 
-    @ColumnLabel("BUFFER_LENGTH")
+    @Label("BUFFER_LENGTH")
     @XmlElement(required = true)
     private int bufferLength;
 
 
-    @ColumnLabel("DECIMAL_DIGITS")
+    @Label("DECIMAL_DIGITS")
     @XmlElement(nillable = true, required = true)
     @NillableBySpecification
     private Short decimalDigits;
 
 
-    @ColumnLabel("PSEUDO_COLUMN")
+    @Label("PSEUDO_COLUMN")
     @XmlElement(required = true)
     private short pseudoColumn;
 

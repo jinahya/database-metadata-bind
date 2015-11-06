@@ -27,15 +27,15 @@ import java.lang.annotation.Target;
 
 /**
  *
- * @author Jin Kwon &lt;jinahya_at_gmail.com&gt;
+ * @author Jin Kwon <onacit at gmail.com>
  */
 @Documented
 @Retention(RetentionPolicy.RUNTIME)
 @Target({ElementType.FIELD})
-@interface NoMapping {
+@interface Label {
 
 
-    NoMappingType value() default NoMappingType.OTHER;
+    String value();
 
 
 }

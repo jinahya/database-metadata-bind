@@ -18,8 +18,11 @@
 package com.github.jinahya.sql.database.metadata.bind;
 
 
+import java.util.ArrayList;
+import java.util.List;
 import javax.xml.bind.annotation.XmlAttribute;
 import javax.xml.bind.annotation.XmlElement;
+import javax.xml.bind.annotation.XmlElementRef;
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlTransient;
 import javax.xml.bind.annotation.XmlType;
@@ -27,7 +30,7 @@ import javax.xml.bind.annotation.XmlType;
 
 /**
  *
- * @author Jin Kwon <onacit at gmail.com>
+ * @author Jin Kwon &lt;jinahya_at_gmail.com&gt;
  */
 @XmlRootElement
 @XmlType(
@@ -35,17 +38,12 @@ import javax.xml.bind.annotation.XmlType;
         "columnName", "dataType", "typeName", "columnSize", "decimalDigits",
         "numPrecRadix", "nullable", "remarks", "columnDef", "charOctetLength",
         "ordinalPosition", "isNullable", "scopeCatalog", "scopeSchema",
-        "scopeTable", "sourceDataType", "isAutoincrement", "isGeneratedcolumn"
+        "scopeTable", "sourceDataType", "isAutoincrement", "isGeneratedcolumn",
+        // ---------------------------------------------------------------------
+        "columnPrivileges"
     }
 )
 public class Column {
-
-
-    // ------------------------------------------------------------------- table
-    public Table getTable() {
-
-        return table;
-    }
 
 
     // -------------------------------------------------------------- columnName
@@ -270,137 +268,174 @@ public class Column {
     }
 
 
-    @ColumnLabel("TABLE_CAT")
+    // ------------------------------------------------------------------- table
+    public Table getTable() {
+
+        return table;
+    }
+
+
+    public void setTable(final Table table) {
+
+        this.table = table;
+    }
+
+
+    // -------------------------------------------------------- columnPrivileges
+    public List<ColumnPrivilege> getColumnPrivileges() {
+
+        if (columnPrivileges == null) {
+            columnPrivileges = new ArrayList<ColumnPrivilege>();
+        }
+
+        return columnPrivileges;
+    }
+
+
+    @Label("TABLE_CAT")
     @XmlAttribute
     private String tableCat;
 
 
-    @ColumnLabel("TABLE_SCHEM")
+    @Label("TABLE_SCHEM")
     @XmlAttribute
     private String tableSchem;
 
 
-    @ColumnLabel("TABLE_NAME")
+    @Label("TABLE_NAME")
     @XmlAttribute
     private String tableName;
 
 
-    @ColumnLabel("COLUMN_NAME")
+    @Label("COLUMN_NAME")
     @XmlElement(required = true)
     private String columnName;
 
 
-    @ColumnLabel("DATA_TYPE")
+    @Label("DATA_TYPE")
     @XmlElement(required = true)
     private int dataType;
 
 
-    @ColumnLabel("TYPE_NAME")
+    @Label("TYPE_NAME")
     @XmlElement(required = true)
     private String typeName;
 
 
-    @ColumnLabel("COLUMN_SIZE")
+    @Label("COLUMN_SIZE")
     @XmlElement(required = true)
     private int columnSize;
 
 
-    @ColumnLabel("BUFFER_LENGTH")
+    @Label("BUFFER_LENGTH")
     @XmlTransient
     @NotUsed
     private Object bufferLength;
 
 
-    @ColumnLabel("DECIMAL_DIGITS")
+    @Label("DECIMAL_DIGITS")
     @XmlElement(required = true)
     private int decimalDigits;
 
 
-    @ColumnLabel("NUM_PREC_RADIX")
+    @Label("NUM_PREC_RADIX")
     @XmlElement(required = true)
     private int numPrecRadix;
 
 
-    @ColumnLabel("NULLABLE")
+    @Label("NULLABLE")
     @XmlElement(required = true)
     private int nullable;
 
 
-    @ColumnLabel("REMARKS")
+    @Label("REMARKS")
     @XmlElement(nillable = true, required = true)
     @NillableBySpecification
     private String remarks;
 
 
-    @ColumnLabel("COLUMN_DEF")
+    @Label("COLUMN_DEF")
     @XmlElement(nillable = true, required = true)
     @NillableBySpecification
     private String columnDef;
 
 
-    @ColumnLabel("SQL_DATA_TYPE")
+    @Label("SQL_DATA_TYPE")
     @XmlTransient
     @NotUsed
     private int sqlDataType;
 
 
-    @ColumnLabel("SQL_DATETIME_SUB")
+    @Label("SQL_DATETIME_SUB")
     @XmlTransient
     @NotUsed
     private int sqlDatetimeSub;
 
 
-    @ColumnLabel("CHAR_OCTET_LENGTH")
+    @Label("CHAR_OCTET_LENGTH")
     @XmlElement(required = true)
     private int charOctetLength;
 
 
-    @ColumnLabel("ORDINAL_POSITION")
+    @Label("ORDINAL_POSITION")
     @XmlElement(required = true)
     private int ordinalPosition;
 
 
-    @ColumnLabel("IS_NULLABLE")
+    @Label("IS_NULLABLE")
     @XmlElement(required = true)
     private String isNullable;
 
 
-    @ColumnLabel("SCOPE_CATALOG")
+    @Label("SCOPE_CATALOG")
     @XmlElement(nillable = true, required = true)
     @NillableBySpecification
     private String scopeCatalog;
 
 
-    @ColumnLabel("SCOPE_SCHEMA")
+    @Label("SCOPE_SCHEMA")
     @XmlElement(nillable = true, required = true)
     @NillableBySpecification
     private String scopeSchema;
 
 
-    @ColumnLabel("SCOPE_TABLE")
+    @Label("SCOPE_TABLE")
     @XmlElement(nillable = true, required = true)
     @NillableBySpecification
     private String scopeTable;
 
 
-    @ColumnLabel("SOURCE_DATA_TYPE")
+    @Label("SOURCE_DATA_TYPE")
     @XmlElement(nillable = true, required = true)
     @NillableBySpecification
     private String sourceDataType;
 
 
-    @ColumnLabel("IS_AUTOINCREMENT")
+    @Label("IS_AUTOINCREMENT")
     @XmlElement(required = true)
     private String isAutoincrement;
 
 
-    @ColumnLabel("IS_GENERATEDCOLUMN")
+    @Label("IS_GENERATEDCOLUMN")
     @XmlElement(required = true)
     private String isGeneratedcolumn;
 
 
     @XmlTransient
     private Table table;
+
+
+    @Invocation(
+        name = "getColumnPrivileges",
+        types = {String.class, String.class, String.class, String.class},
+        argsarr = {
+            @InvocationArgs({
+                ":tableCat", ":tableSchem", ":tableName", ":columnName"
+            })
+        }
+    )
+    @XmlElementRef
+    private List<ColumnPrivilege> columnPrivileges;
 
 
 }

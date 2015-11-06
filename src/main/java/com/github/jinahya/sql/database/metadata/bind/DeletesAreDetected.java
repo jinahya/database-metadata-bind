@@ -39,6 +39,15 @@ public class DeletesAreDetected {
         ResultSet.TYPE_SCROLL_SENSITIVE);
 
 
+    public static DeletesAreDetected valueOf(
+        final Object[] args, final Object value) {
+
+        return new DeletesAreDetected()
+            .type((Integer) args[0])
+            .value((Boolean) value);
+    }
+
+
     // -------------------------------------------------------------------- type
     public int getType() {
 

@@ -35,39 +35,16 @@ import javax.xml.bind.annotation.XmlType;
 @XmlRootElement
 @XmlType(
     propOrder = {
-        "tableSchem", "functionColumns", "functions", "procedureColumns",
-        "procedures", "tables", "userDefinedTypes"
+        "tableSchem",
+        //"functionColumns",
+        "functions",
+        //"procedureColumns",
+        "procedures",
+        //"tablePrivileges",
+        "tables", "userDefinedTypes"
     }
 )
 public class Schema {
-
-
-    public static final String SUPPRESSION_PATH_TABLE_CATALOG
-        = "schema/tableCatalog";
-
-
-    public static final String SUPPRESSION_PATH_FUNCTIONS
-        = "schema/functions";
-
-
-    /**
-     * Suppression path value for {@link #procedures}.
-     */
-    public static final String SUPPRESSION_PATH_PROCEDURES
-        = "schema/procedures";
-
-
-    /**
-     * Suppression path value for {@link #tables}.
-     */
-    public static final String SUPPRESSION_PATH_TABLES = "schema/tables";
-
-
-    /**
-     * Suppression path value for {@link #userDefinedTypes}.
-     */
-    public static final String SUPPRESSION_PATH_USER_DEFINED_TYPES
-        = "schema/userDefinedTypes";
 
 
     // ------------------------------------------------------------ tableCatalog
@@ -119,16 +96,6 @@ public class Schema {
     }
 
 
-    public List<FunctionColumn> getFunctionColumns() {
-
-        if (functionColumns == null) {
-            functionColumns = new ArrayList<FunctionColumn>();
-        }
-
-        return functionColumns;
-    }
-
-
     // --------------------------------------------------------------- functions
     public List<Function> getFunctions() {
 
@@ -140,17 +107,15 @@ public class Schema {
     }
 
 
-    // -------------------------------------------------------- procedureColumns
-    public List<ProcedureColumn> getProcedureColumns() {
-
-        if (procedureColumns == null) {
-            procedureColumns = new ArrayList<ProcedureColumn>();
-        }
-
-        return procedureColumns;
-    }
-
-
+//    // -------------------------------------------------------- procedureColumns
+//    public List<ProcedureColumn> getProcedureColumns() {
+//
+//        if (procedureColumns == null) {
+//            procedureColumns = new ArrayList<ProcedureColumn>();
+//        }
+//
+//        return procedureColumns;
+//    }
     // -------------------------------------------------------------- procedures
     public List<Procedure> getProcedures() {
 
@@ -207,6 +172,15 @@ public class Schema {
     }
 
 
+//    // --------------------------------------------------------- tablePrivileges
+//    public List<TablePrivilege> getTablePrivileges() {
+//
+//        if (tablePrivileges == null) {
+//            tablePrivileges = new ArrayList<TablePrivilege>();
+//        }
+//
+//        return tablePrivileges;
+//    }
     // -------------------------------------------------------- userDefinedTypes
     public List<UserDefinedType> getUserDefinedTypes() {
 
@@ -221,12 +195,12 @@ public class Schema {
     /**
      * catalog name (may be {@code null}).
      */
-    @ColumnLabel("TABLE_CATALOG")
+    @Label("TABLE_CATALOG")
     @XmlAttribute(required = false)
     private String tableCatalog;
 
 
-    @ColumnLabel("TABLE_SCHEM")
+    @Label("TABLE_SCHEM")
     @XmlElement(nillable = true, required = true)
     private String tableSchem;
 
@@ -235,29 +209,73 @@ public class Schema {
     private Catalog catalog;
 
 
-    @XmlElementRef
-    private List<FunctionColumn> functionColumns;
-
-
+//    @Invocation(
+//        name = "getFunctionColumns",
+//        types = {String.class, String.class, String.class, String.class},
+//        argsarr = {
+//            @InvocationArgs({":tableCatalog", ":tableSchem", "null", "null"})
+//        }
+//    )
+//    @XmlElementRef
+//    private List<FunctionColumn> functionColumns;
+    @Invocation(
+        name = "getFunctions",
+        types = {String.class, String.class, String.class},
+        argsarr = {
+            @InvocationArgs({":tableCatalog", ":tableSchem", "null"})
+        }
+    )
     @XmlElementRef
     private List<Function> functions;
 
 
-    @XmlElementRef
-    private List<ProcedureColumn> procedureColumns;
-
-
+//    @Invocation(
+//        name = "getProcedureColumns",
+//        types = {String.class, String.class, String.class, String.class},
+//        argsarr = {
+//            @InvocationArgs({":tableCatalog", ":tableSchem", "null", "null"})
+//        }
+//    )
+//    @XmlElementRef
+//    private List<ProcedureColumn> procedureColumns;
+    @Invocation(
+        name = "getProcedures",
+        types = {String.class, String.class, String.class},
+        argsarr = {
+            @InvocationArgs({":tableCatalog", ":tableSchem", "null"})
+        }
+    )
     @XmlElementRef
     private List<Procedure> procedures;
 
 
-    /**
-     * tables.
-     */
+    @Invocation(
+        name = "getTables",
+        types = {String.class, String.class, String.class, String[].class},
+        argsarr = {
+            @InvocationArgs({":tableCatalog", ":tableSchem", "null", "null"})
+        }
+    )
     @XmlElementRef
     private List<Table> tables;
 
 
+//    @Invocation(
+//        name = "getTablePrivileges",
+//        types = {String.class, String.class, String.class},
+//        argsarr = {
+//            @InvocationArgs({":tableCatalog", ":tableSchem", "null"})
+//        }
+//    )
+//    @XmlElementRef
+//    private List<TablePrivilege> tablePrivileges;
+    @Invocation(
+        name = "getUDTs",
+        types = {String.class, String.class, String.class, int[].class},
+        argsarr = {
+            @InvocationArgs({":tableCatalog", ":tableSchem", "null", "null"})
+        }
+    )
     @XmlElementRef
     private List<UserDefinedType> userDefinedTypes;
 

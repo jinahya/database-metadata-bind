@@ -18,8 +18,6 @@
 package com.github.jinahya.sql.database.metadata.bind;
 
 
-import com.github.jinahya.sql.database.metadata.bind.Metadata;
-import com.github.jinahya.sql.database.metadata.bind.MetadataContext;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -48,9 +46,9 @@ public class MetadataIT {
 
 
     @Test
-    public void test()
-        throws ClassNotFoundException, SQLException, JAXBException,
-               IOException {
+    public void test() throws ClassNotFoundException,
+                              ReflectiveOperationException, SQLException,
+                              JAXBException, IOException {
 
         final String driverName = System.getProperty("driverName");
         if (driverName != null) {

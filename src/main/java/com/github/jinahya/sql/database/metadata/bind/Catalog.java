@@ -37,9 +37,6 @@ import javax.xml.bind.annotation.XmlType;
 public class Catalog implements Serializable {
 
 
-    public static final String SUPPRESSION_PATH_SCHEMAS = "catalog/schemas";
-
-
     // ---------------------------------------------------------------- tableCat
     public String getTableCat() {
 
@@ -50,6 +47,14 @@ public class Catalog implements Serializable {
     public void setTableCat(final String tableCat) {
 
         this.tableCat = tableCat;
+    }
+
+
+    Catalog tableCat(final String tableCat) {
+
+        setTableCat(tableCat);
+
+        return this;
     }
 
 
@@ -77,42 +82,18 @@ public class Catalog implements Serializable {
     }
 
 
-    public List<String> getSchemaNames() {
-
-        final List<String> schemaNames
-            = new ArrayList<String>(getSchemas().size());
-
-        for (final Schema schema : getSchemas()) {
-            final String schemaName = schema.getTableSchem();
-            assert !schemaNames.contains(schemaName);
-            schemaNames.add(schemaName);
-        }
-
-        return schemaNames;
-    }
-
-
-    public Schema getSchemaByName(final String tableSchem) {
-
-        if (tableSchem == null) {
-            throw new NullPointerException("tableSchem");
-        }
-
-        for (final Schema schema : getSchemas()) {
-            if (tableSchem.equals(schema.getTableSchem())) {
-                return schema;
-            }
-        }
-
-        return null;
-    }
-
-
-    @ColumnLabel("TABLE_CAT")
+    @Label("TABLE_CAT")
     @XmlElement(nillable = true, required = true)
     private String tableCat;
 
 
+    @Invocation(
+        name = "getSchemas",
+        types = {String.class, String.class},
+        argsarr = {
+            @InvocationArgs({":tableCat", "null"})
+        }
+    )
     @XmlElementRef
     private List<Schema> schemas;
 

@@ -18,7 +18,6 @@
 package com.github.jinahya.sql.database.metadata.bind;
 
 
-import javax.xml.bind.annotation.XmlAttribute;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlTransient;
@@ -32,8 +31,8 @@ import javax.xml.bind.annotation.XmlType;
 @XmlRootElement
 @XmlType(
     propOrder = {
-        "columnName", "dataType", "typeName", "columnSize", "decimalDigits",
-        "pseudoColumn"
+        "scope", "columnName", "dataType", "typeName", "columnSize",
+        "bufferLength", "decimalDigits", "pseudoColumn"
     }
 )
 public class BestRowIdentifier {
@@ -143,44 +142,44 @@ public class BestRowIdentifier {
     }
 
 
-    @ColumnLabel("SCOPE")
-    @XmlAttribute
+    @Label("SCOPE")
+    @XmlElement(required = true)
     private short scope;
 
 
-    @ColumnLabel("COLUMN_NAME")
+    @Label("COLUMN_NAME")
     @XmlElement(required = true)
     private String columnName;
 
 
-    @ColumnLabel("DATA_TYPE")
+    @Label("DATA_TYPE")
     @XmlElement(required = true)
     private int dataType;
 
 
-    @ColumnLabel("TYPE_NAME")
+    @Label("TYPE_NAME")
     @XmlElement(required = true)
     private String typeName;
 
 
-    @ColumnLabel("COLUMN_SIZE")
+    @Label("COLUMN_SIZE")
     @XmlElement(required = true)
     private int columnSize;
 
 
-    @ColumnLabel("BUFFER_LENGTH")
-    @XmlTransient
+    @Label("BUFFER_LENGTH")
     @NotUsed
+    @XmlElement(required = true)
     private int bufferLength;
 
 
-    @ColumnLabel("DECIMAL_DIGITS")
-    @XmlElement(nillable = true, required = true)
+    @Label("DECIMAL_DIGITS")
     @NillableBySpecification
+    @XmlElement(nillable = true, required = true)
     private Short decimalDigits;
 
 
-    @ColumnLabel("PSEUDO_COLUMN")
+    @Label("PSEUDO_COLUMN")
     @XmlElement(required = true)
     private short pseudoColumn;
 

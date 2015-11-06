@@ -30,12 +30,12 @@ import java.lang.annotation.Target;
  * @author Jin Kwon &lt;jinahya_at_gmail.com&gt;
  */
 @Documented
-@Retention(RetentionPolicy.CLASS)
+@Retention(RetentionPolicy.RUNTIME)
 @Target({ElementType.FIELD})
-@interface NillableByImplementation {
+@interface InvocationArgs {
 
 
-    String[] value() default {};
+    String[] value();
 
 
 }

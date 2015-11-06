@@ -37,74 +37,16 @@ import javax.xml.bind.annotation.XmlType;
     propOrder = {
         "tableName", "tableType", "remarks", "typeCat", "typeSchem", "typeName",
         "selfReferencingColName", "refGeneration",
-        "bestRowIdentifiers", "columns", "columnPrivileges", "exportedKeys",
+        // ---------------------------------------------------------------------
+        "bestRowIdentifiers",
+        //"columnPrivileges",
+        "columns", "exportedKeys",
         "importedKeys", "indexInfo", "primaryKeys", "pseudoColumns",
-        "tablePrivileges", "versionColumns"
+        "tablePrivileges",
+        "versionColumns"
     }
 )
 public class Table {
-
-
-    /**
-     * Suppression path value for {@link #bestRowIdentifiers}.
-     */
-    public static final String SUPPRESSION_PATH_BEST_ROW_IDENTIFIERS
-        = "table/bestRowIdentifiers";
-
-
-    /**
-     * Suppression path value for {@link #columns}.
-     */
-    public static final String SUPPRESSION_PATH_COLUMNS = "table/columns";
-
-
-    /**
-     * Suppression path value for {@link #columnPrivileges}.
-     */
-    public static final String SUPPRESSION_PATH_COLUMN_PRIVILEGES
-        = "table/columnPrivileges";
-
-
-    /**
-     * Suppression path value for {@link #exportedKeys}.
-     */
-    public static final String SUPPRESSION_PATH_EXPORTED_KEYS
-        = "table/exportedKeys";
-
-
-    /**
-     * Suppression path value for {@link #exportedKeys}.
-     */
-    public static final String SUPPRESSION_PATH_IMPORTED_KEYS
-        = "table/importedKeys";
-
-
-    /**
-     * Suppression path value for {@link #indexInfo}.
-     */
-    public static final String SUPPRESSION_PATH_INDEX_INFO
-        = "table/indexInfo";
-
-
-    /**
-     * Suppression path value for {@link #primaryKeys}.
-     */
-    public static final String SUPPRESSION_PATH_PRIMARY_KEYS
-        = "table/primaryKeys";
-
-
-    /**
-     * Suppression path value for {@link #tablePrivileges}.
-     */
-    public static final String SUPPRESSION_PATH_TABLE_PRIVILEGES
-        = "table/tablePrivileges";
-
-
-    /**
-     * Suppression path value for {@link #versionColumns}.
-     */
-    public static final String SUPPRESSION_PATH_VERSION_COLUMNS
-        = "table/versionColumns";
 
 
     // ---------------------------------------------------------------- tableCat
@@ -147,7 +89,7 @@ public class Table {
     }
 
 
-    // ----------------------------------------------------------------- REMARKS
+    // ----------------------------------------------------------------- remarks
     public String getRemarks() {
 
         return remarks;
@@ -197,7 +139,16 @@ public class Table {
     }
 
 
-    // ----------------------------------------------------------------- columns
+//    // -------------------------------------------------------- columnPrivileges
+//    public List<ColumnPrivilege> getColumnPrivileges() {
+//
+//        if (columnPrivileges == null) {
+//            columnPrivileges = new ArrayList<ColumnPrivilege>();
+//        }
+//
+//        return columnPrivileges;
+//    }
+// ----------------------------------------------------------------- columns
     public List<Column> getColumns() {
 
         if (columns == null) {
@@ -205,17 +156,6 @@ public class Table {
         }
 
         return columns;
-    }
-
-
-    // -------------------------------------------------------- columnPrivileges
-    public List<ColumnPrivilege> getColumnPrivileges() {
-
-        if (columnPrivileges == null) {
-            columnPrivileges = new ArrayList<ColumnPrivilege>();
-        }
-
-        return columnPrivileges;
     }
 
 
@@ -398,56 +338,58 @@ public class Table {
     }
 
 
-    @ColumnLabel("TABLE_CAT")
+    @Label("TABLE_CAT")
+    @NillableBySpecification
     @XmlAttribute
     private String tableCat;
 
 
-    @ColumnLabel("TABLE_SCHEM")
+    @Label("TABLE_SCHEM")
+    @NillableBySpecification
     @XmlAttribute
     private String tableSchem;
 
 
-    @ColumnLabel("TABLE_NAME")
+    @Label("TABLE_NAME")
     @XmlElement(required = true)
     private String tableName;
 
 
-    @ColumnLabel("TABLE_TYPE")
+    @Label("TABLE_TYPE")
     @XmlElement(required = true)
     private String tableType;
 
 
-    @ColumnLabel("REMARKS")
+    @Label("REMARKS")
     @XmlElement(required = true)
     private String remarks;
 
 
-    @ColumnLabel("TYPE_CAT")
+    @Label("TYPE_CAT")
     @XmlElement(nillable = true, required = true)
     @NillableBySpecification
     private String typeCat;
 
 
-    @ColumnLabel("TYPE_SCHEM")
+    @Label("TYPE_SCHEM")
     @XmlElement(nillable = true, required = true)
     @NillableBySpecification
     private String typeSchem;
 
 
-    @ColumnLabel("TYPE_NAME")
+    @Label("TYPE_NAME")
     @XmlElement(nillable = true, required = true)
     @NillableBySpecification
     private String typeName;
 
 
-    @ColumnLabel("SELF_REFERENCING_COL_NAME")
+    @Label("SELF_REFERENCING_COL_NAME")
     @XmlElement(nillable = true, required = true)
     @NillableBySpecification
     private String selfReferencingColName;
 
 
-    @ColumnLabel("REF_GENERATION")
+    @Label("REF_GENERATION")
     @XmlElement(nillable = true, required = true)
     @NillableBySpecification
     private String refGeneration;
@@ -457,42 +399,131 @@ public class Table {
     private Schema schema;
 
 
+    @Invocation(
+        name = "getBestRowIdentifier",
+        types = {
+            String.class, String.class, String.class, int.class, boolean.class
+        },
+        argsarr = {
+            @InvocationArgs({
+                ":tableCat", ":tableSchem", ":tableName",
+                "0", // bestRowTemporaty
+                "true"
+            }),
+            @InvocationArgs({
+                ":tableCat", ":tableSchem", ":tableName",
+                "1", // bestRowTransaction
+                "true"
+            }),
+            @InvocationArgs({
+                ":tableCat", ":tableSchem", ":tableName",
+                "2", // bestRowSession
+                "true"
+            })
+        }
+    )
     @XmlElementRef
     private List<BestRowIdentifier> bestRowIdentifiers;
 
 
+//    @Invocation(
+//        name = "getColumnPrivileges",
+//        types = {String.class, String.class, String.class, String.class},
+//        argsarr = {
+//            @InvocationArgs({":tableCat", ":tableSchem", ":tableName", "null"})
+//        }
+//    )
+//    @XmlElementRef
+//    private List<ColumnPrivilege> columnPrivileges;
+    @Invocation(
+        name = "getColumns",
+        types = {String.class, String.class, String.class, String.class},
+        argsarr = {
+            @InvocationArgs({":tableCat", ":tableSchem", ":tableName", "null"})
+        }
+    )
     @XmlElementRef
     private List<Column> columns;
 
 
-    @XmlElementRef
-    private List<ColumnPrivilege> columnPrivileges;
-
-
+    @Invocation(
+        name = "getExportedKeys",
+        types = {String.class, String.class, String.class},
+        argsarr = {
+            @InvocationArgs({":tableCat", ":tableSchem", ":tableName"})
+        }
+    )
     @XmlElementRef
     private List<ExportedKey> exportedKeys;
 
 
+    @Invocation(
+        name = "getImportedKeys",
+        types = {String.class, String.class, String.class},
+        argsarr = {
+            @InvocationArgs({":tableCat", ":tableSchem", ":tableName"})
+        }
+    )
     @XmlElementRef
     private List<ImportedKey> importedKeys;
 
 
+    @Invocation(
+        name = "getIndexInfo",
+        types = {
+            String.class, String.class, String.class, boolean.class,
+            boolean.class
+        },
+        argsarr = {
+            @InvocationArgs({
+                ":tableCat", ":tableSchem", ":tableName", "false", "false"
+            })
+        }
+    )
     @XmlElementRef
     private List<IndexInfo> indexInfo;
 
 
+    @Invocation(
+        name = "getPrimaryKeys",
+        types = {String.class, String.class, String.class},
+        argsarr = {
+            @InvocationArgs({":tableCat", ":tableSchem", ":tableName"})
+        }
+    )
     @XmlElementRef
     private List<PrimaryKey> primaryKeys;
 
 
+    @Invocation(
+        name = "getPseudoColumns",
+        types = {String.class, String.class, String.class, String.class},
+        argsarr = {
+            @InvocationArgs({":tableCat", ":tableSchem", ":tableName", "null"})
+        }
+    )
     @XmlElementRef
     private List<PseudoColumn> pseudoColumns;
 
 
+    @Invocation(
+        name = "getTablePrivileges",
+        types = {String.class, String.class, String.class},
+        argsarr = {
+            @InvocationArgs({":tableCat", ":tableSchem", ":tableName"})
+        }
+    )
     @XmlElementRef
     private List<TablePrivilege> tablePrivileges;
 
 
+    @Invocation(
+        name = "getVersionColumns",
+        types = {String.class, String.class, String.class},
+        argsarr = {
+            @InvocationArgs({":tableCat", ":tableSchem", ":tableName"})
+        }
+    )
     @XmlElementRef
     private List<VersionColumn> versionColumns;
 

@@ -274,90 +274,91 @@ public class FunctionColumn {
     }
 
 
-    @ColumnLabel("FUNCTION_CAT")
+    @Label("FUNCTION_CAT")
     @XmlAttribute
     @NillableBySpecification
     private String functionCat;
 
 
-    @ColumnLabel("FUNCTION_SCHEM")
+    @Label("FUNCTION_SCHEM")
     @XmlAttribute
     @NillableBySpecification
     private String functionSchem;
 
 
-    @ColumnLabel("FUNCTION_NAME")
-    @XmlElement(required = true)
+    @Label("FUNCTION_NAME")
+    @XmlAttribute
+    //@XmlElement(required = true)
     private String functionName;
 
 
-    @ColumnLabel("COLUMN_NAME")
+    @Label("COLUMN_NAME")
     @XmlElement(required = true)
     private String columnName;
 
 
-    @ColumnLabel("COLUMN_TYPE")
+    @Label("COLUMN_TYPE")
     @XmlElement(required = true)
     private short columnType;
 
 
-    @ColumnLabel("DATA_TYPE")
+    @Label("DATA_TYPE")
     @XmlElement(required = true)
     private int dataType;
 
 
-    @ColumnLabel("TYPE_NAME")
+    @Label("TYPE_NAME")
     @XmlElement(required = true)
     private String typeName;
 
 
-    @ColumnLabel("PRECISION")
+    @Label("PRECISION")
     @XmlElement(required = true)
     private int precision;
 
 
-    @ColumnLabel("LENGTH")
+    @Label("LENGTH")
     @XmlElement(required = true)
     private int length;
 
 
-    @ColumnLabel("SCALE")
+    @Label("SCALE")
     @XmlElement(required = true)
     private Short scale;
 
 
-    @ColumnLabel("RADIX")
+    @Label("RADIX")
     @XmlElement(required = true)
     private short radix;
 
 
-    @ColumnLabel("NULLABLE")
+    @Label("NULLABLE")
     @XmlElement(required = true)
     private short nullable;
 
 
-    @ColumnLabel("REMARKS")
+    @Label("REMARKS")
     @XmlElement(required = true)
     private String remarks;
 
 
-    @ColumnLabel("CHAR_OCTET_LENGTH")
+    @Label("CHAR_OCTET_LENGTH")
     @XmlElement(required = true)
     @NillableBySpecification
     private Integer charOctetLength;
 
 
-    @ColumnLabel("ORDINAL_POSITION")
+    @Label("ORDINAL_POSITION")
     @XmlElement(required = true)
     private int ordinalPosition;
 
 
-    @ColumnLabel("IS_NULLABLE")
+    @Label("IS_NULLABLE")
     @XmlElement(required = true)
     private String isNullable;
 
 
-    @ColumnLabel("SPECIFIC_NAME")
+    @Label("SPECIFIC_NAME")
     @XmlElement(required = true)
     private String specificName;
 

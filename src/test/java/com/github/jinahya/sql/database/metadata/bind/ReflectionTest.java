@@ -27,6 +27,7 @@ import java.util.List;
 import org.slf4j.Logger;
 import static org.slf4j.LoggerFactory.getLogger;
 import static org.testng.Assert.assertEquals;
+import static org.testng.Assert.assertTrue;
 import org.testng.annotations.Test;
 
 
@@ -48,8 +49,27 @@ public class ReflectionTest {
     }
 
 
-    @Test
+    @Test(enabled = false)
     public void test() throws NoSuchMethodException {
+
+        final boolean b1 = true;
+        final Boolean b2 = true;
+        assertTrue(Boolean.class.isInstance(b1));
+        assertTrue(Boolean.class.isInstance(b2));
+
+        final int i1 = 1;
+        final Integer i2 = 1;
+        assertTrue(Integer.class.isInstance(i1));
+        assertTrue(Integer.class.isInstance(i2));
+        assertTrue(Number.class.isInstance(i1));
+        assertTrue(Number.class.isInstance(i2));
+
+        final long l1 = 1L;
+        final Long l2 = 1L;
+        assertTrue(Long.class.isInstance(l1));
+        assertTrue(Long.class.isInstance(l2));
+        assertTrue(Number.class.isInstance(l1));
+        assertTrue(Number.class.isInstance(l2));
 
         assertEquals(Integer.TYPE, int.class);
 

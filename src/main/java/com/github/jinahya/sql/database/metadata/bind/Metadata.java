@@ -19,6 +19,7 @@ package com.github.jinahya.sql.database.metadata.bind;
 
 
 import java.io.PrintStream;
+import java.sql.RowIdLifetime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
@@ -31,6 +32,7 @@ import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlElementRef;
 import javax.xml.bind.annotation.XmlList;
 import javax.xml.bind.annotation.XmlRootElement;
+import javax.xml.bind.annotation.XmlTransient;
 import javax.xml.bind.annotation.XmlType;
 
 
@@ -44,7 +46,6 @@ import javax.xml.bind.annotation.XmlType;
         "allProceduresAreCallable", "allTablesAreSelectable",
         "autoCommitFailureClosesAllResultSets",
         "catalogSeparator", "catalogTerm", "catalogs", "clientInfoProperties",
-        "connectionString",
         "dataDefinitionCausesTransactionCommit",
         "dataDefinitionIgnoredInTransactions", "databaseMajorVersion",
         "databaseMinorVersion", "databaseProductName", "databaseProductVersion",
@@ -65,8 +66,7 @@ import javax.xml.bind.annotation.XmlType;
         "maxUserNameLength",
         "numericFunctions",
         "procedureTerm",
-        "resultSetHoldability",
-        //"rowIdLifetime",
+        "resultSetHoldability", "rowIdLifetimeName",
         "schemaNames", "stringFunctions", "systemFunctions",
         "tableTypes", "timeDateFunctions", "typeInfo",
         "url", "userName"}
@@ -188,19 +188,6 @@ public class Metadata {
         }
 
         return clientInfoProperties;
-    }
-
-
-    // -------------------------------------------------------- connectionString
-    public String getConnectionString() {
-
-        return connectionString;
-    }
-
-
-    public void setConnectionString(final String connectionString) {
-
-        this.connectionString = connectionString;
     }
 
 
@@ -706,17 +693,33 @@ public class Metadata {
     }
 
 
-//    // ----------------------------------------------------------- rowIdLifetime
-//    public RowIdLifetime getRowIdLifetime() {
-//
-//        return rowIdLifetime;
-//    }
-//
-//
-//    public void setRowIdLifetime(final RowIdLifetime rowIdLifetime) {
-//
-//        this.rowIdLifetime = rowIdLifetime;
-//    }
+    // ----------------------------------------------------------- rowIdLifetime
+    public RowIdLifetime getRowIdLifetime() {
+
+        return rowIdLifetime;
+    }
+
+
+    public void setRowIdLifetime(final RowIdLifetime rowIdLifetime) {
+
+        this.rowIdLifetime = rowIdLifetime;
+    }
+
+
+    @XmlElement(required = true)
+    public String getRowIdLifetimeName() {
+
+        return rowIdLifetime == null ? null : rowIdLifetime.name();
+    }
+
+
+    public void setRowIdLifetimeName(final String rowIdLifetimeName) {
+
+        rowIdLifetime = rowIdLifetimeName == null
+                        ? null : RowIdLifetime.valueOf(rowIdLifetimeName);
+    }
+
+
     // --------------------------------------------------------- stringFunctions
     public String getStringFunctions() {
         return stringFunctions;
@@ -819,267 +822,315 @@ public class Metadata {
     private Set<String> suppressionPaths;
 
 
+    @Invocation(name = "allProceduresAreCallable")
     @XmlElement(required = true)
     boolean allProceduresAreCallable;
 
 
+    @Invocation(name = "allTablesAreSelectable")
     @XmlElement(required = true)
     boolean allTablesAreSelectable;
 
 
+    @Invocation(name = "autoCommitFailureClosesAllResultSets")
     @XmlElement(required = true)
     private boolean autoCommitFailureClosesAllResultSets;
 
 
+    @Invocation(name = "getCatalogSeparator")
     @XmlElement(nillable = true, required = true)
     private String catalogSeparator;
 
 
+    @Invocation(name = "getCatalogTerm")
     @XmlElement(nillable = true, required = true)
     private String catalogTerm;
 
 
+    @Invocation(name = "getCatalogs")
     @XmlElementRef
     private List<Catalog> catalogs;
 
 
+    @Invocation(name = "getClientInfoProperties")
     @XmlElementRef
     private List<ClientInfoProperty> clientInfoProperties;
 
 
-    @XmlElement(required = true)
-    private String connectionString;
-
-
+    @Invocation(name = "dataDefinitionCausesTransactionCommit")
     @XmlElement(required = true)
     private boolean dataDefinitionCausesTransactionCommit;
 
 
+    @Invocation(name = "dataDefinitionIgnoredInTransactions")
     @XmlElement(required = true)
     private boolean dataDefinitionIgnoredInTransactions;
 
 
+    @Invocation(name = "getDatabaseMajorVersion")
     @XmlElement(required = true)
     private int databaseMajorVersion;
 
 
+    @Invocation(name = "getDatabaseMinorVersion")
     @XmlElement(required = true)
     private int databaseMinorVersion;
 
 
+    @Invocation(name = "getDatabaseProductName")
     @XmlElement(nillable = true, required = true)
     private String databaseProductName;
 
 
+    @Invocation(name = "getDatabaseProductVersion")
     @XmlElement(nillable = true, required = true)
     private String databaseProductVersion;
 
 
-    @MethodInvocation(
+    @Invocation(
         name = "getDefaultTransactionIsolation"
     )
     @XmlElement(required = true)
     private int defaultTransactionIsolation;
 
 
-    @MethodInvocation(
+    @Invocation(
         name = "deletesAreDetected",
-        types = {Integer.class},
-        args = {
-            @MethodInvocationArgs({"1003"}), // ResultSet.TYPE_FORWARD_ONLY
-            @MethodInvocationArgs({"1004"}), // ResultSet.TYPE_SCROLL_INSENSITIVE
-            @MethodInvocationArgs({"1005"}) // ResultSet.TYPE_SCROLL_SENSITIVE
+        types = {int.class},
+        argsarr = {
+            @InvocationArgs({"1003"}), // ResultSet.TYPE_FORWARD_ONLY
+            @InvocationArgs({"1004"}), // ResultSet.TYPE_SCROLL_INSENSITIVE
+            @InvocationArgs({"1005"}) // ResultSet.TYPE_SCROLL_SENSITIVE
         }
     )
     @XmlElementRef
     private List<DeletesAreDetected> deletesAreDetected;
 
 
+    @Invocation(name = "doesMaxRowSizeIncludeBlobs")
     @XmlElement(required = true)
     private boolean doesMaxRowSizeIncludeBlobs;
 
 
+    @Invocation(name = "getDriverMajorVersion")
     @XmlElement(required = true)
     private int driverMajorVersion;
 
 
+    @Invocation(name = "getDriverMinorVersion")
     @XmlElement(required = true)
     private int driverMinorVersion;
 
 
+    @Invocation(name = "getDriverName")
     @XmlElement(nillable = true, required = true)
     private String driverName;
 
 
+    @Invocation(name = "getDriverVersion")
     @XmlElement(required = true)
     private String driverVersion;
 
 
+    @Invocation(name = "getExtraNameCharacters")
     @XmlElement(required = true)
     private String extraNameCharacters;
 
 
+    @Invocation(name = "generatedKeyAlwaysReturned")
     @XmlElement(required = true)
     private boolean generatedKeyAlwaysReturned;
 
 
+    @Invocation(name = "getIdentifierQuoteString")
     @XmlElement(required = true)
     private String identifierQuoteString;
 
 
-    @MethodInvocation(
+    @Invocation(
         name = "insertsAreDetected",
-        types = {Integer.class},
-        args = {
-            @MethodInvocationArgs({"1003"}), // ResultSet.TYPE_FORWARD_ONLY
-            @MethodInvocationArgs({"1004"}), // ResultSet.TYPE_SCROLL_INSENSITIVE
-            @MethodInvocationArgs({"1005"}) // ResultSet.TYPE_SCROLL_SENSITIVE
+        types = {int.class},
+        argsarr = {
+            @InvocationArgs({"1003"}), // ResultSet.TYPE_FORWARD_ONLY
+            @InvocationArgs({"1004"}), // ResultSet.TYPE_SCROLL_INSENSITIVE
+            @InvocationArgs({"1005"}) // ResultSet.TYPE_SCROLL_SENSITIVE
         }
     )
     @XmlElementRef
     private List<InsertsAreDetected> insertsAreDetected;
 
 
-    @MethodInvocation(name = "getJDBCMajorVersion")
+    @Invocation(name = "getJDBCMajorVersion")
     @XmlElement(required = true)
     private int jdbcMajorVersion;
 
 
-    @MethodInvocation(name = "getJDBCMinorVersion")
+    @Invocation(name = "getJDBCMinorVersion")
     @XmlElement(required = true)
     private int jdbcMinorVersion;
 
 
-    @MethodInvocation(name = "getMaxBinaryLiteralLength")
+    @Invocation(name = "getMaxBinaryLiteralLength")
     @XmlElement(required = true)
     private int maxBinaryLiteralLength;
 
 
-    @MethodInvocation(name = "getMaxCatalogNameLength")
+    @Invocation(name = "getMaxCatalogNameLength")
     @XmlElement(required = true)
     private int maxCatalogNameLength;
 
 
-    @MethodInvocation(name = "getMaxCharLiteralLength")
+    @Invocation(name = "getMaxCharLiteralLength")
     @XmlElement(required = true)
     private int maxCharLiteralLength;
 
 
-    @MethodInvocation(name = "getMaxColumnNameLength")
+    @Invocation(name = "getMaxColumnNameLength")
     @XmlElement(required = true)
     private int maxColumnNameLength;
 
 
+    @Invocation(name = "getMaxColumnsInGroupBy")
     @XmlElement(required = true)
     private int maxColumnsInGroupBy;
 
 
+    @Invocation(name = "getMaxColumnsInIndex")
     @XmlElement(required = true)
     private int maxColumnsInIndex;
 
 
+    @Invocation(name = "getMaxColumnsInOrderBy")
     @XmlElement(required = true)
     private int maxColumnsInOrderBy;
 
 
+    @Invocation(name = "getMaxColumnsInSelect")
     @XmlElement(required = true)
     private int maxColumnsInSelect;
 
 
+    @Invocation(name = "getMaxColumnsInTable")
     @XmlElement(required = true)
     private int maxColumnsInTable;
 
 
+    @Invocation(name = "getMaxConnections")
     @XmlElement(required = true)
     private int maxConnections;
 
 
+    @Invocation(name = "getMaxCursorNameLength")
     @XmlElement(required = true)
     private int maxCursorNameLength;
 
 
+    @Invocation(name = "getMaxIndexLength")
     @XmlElement(required = true)
     private int maxIndexLength;
 
 
+    @Invocation(name = "getMaxLogicalLobSize")
     @XmlElement(required = true)
     private long maxLogicalLobSize;
 
 
+    @Invocation(name = "getMaxProcedureNameLength")
     @XmlElement(required = true)
     private int maxProcedureNameLength;
 
 
+    @Invocation(name = "getMaxRowSize")
     @XmlElement(required = true)
     private int maxRowSize;
 
 
+    @Invocation(name = "getMaxSchemaNameLength")
     @XmlElement(required = true)
     private int maxSchemaNameLength;
 
 
+    @Invocation(name = "getMaxStatementLength")
     @XmlElement(required = true)
     private int maxStatementLength;
 
 
+    @Invocation(name = "getMaxStatements")
     @XmlElement(required = true)
     private int maxStatements;
 
 
+    @Invocation(name = "getMaxTableNameLength")
     @XmlElement(required = true)
     private int maxTableNameLength;
 
 
+    @Invocation(name = "getMaxTablesInSelect")
     @XmlElement(required = true)
     private int maxTablesInSelect;
 
 
+    @Invocation(name = "getMaxUserNameLength")
     @XmlElement(required = true)
     private int maxUserNameLength;
 
 
-    @XmlElement(nillable = true, required = true)
+    @Invocation(name = "getNumericFunctions")
+    @XmlElement(required = true)
     private String numericFunctions;
 
 
+    @Invocation(name = "getProcedureTerm")
     @XmlElement(required = true)
     private String procedureTerm;
 
 
+    @Invocation(name = "getResultSetHoldability")
     @XmlElement(required = true)
     private int resultSetHoldability;
 
 
-//    @XmlElement(required = true)
-//    private RowIdLifetime rowIdLifetime;
+    @Invocation(name = "getRowIdLifetime")
+    @XmlTransient
+    private RowIdLifetime rowIdLifetime;
+
+
+    @Invocation(name = "getStringFunctions")
     @XmlElement(nillable = true, required = true)
     private String stringFunctions;
 
 
+    @Invocation(name = "getSystemFunctions")
     @XmlElement(nillable = true, required = true)
     private String systemFunctions;
 
 
+    @Invocation(name = "getTimeDateFunctions")
     @XmlElement(nillable = true, required = true)
     private String timeDateFunctions;
 
 
+    @Invocation(name = "getSchemas")
     @XmlElementRef
     private List<SchemaName> schemaNames;
 
 
-    @XmlElementRef//(name = "tableType")
+    @Invocation(name = "getTableTypes")
+    @XmlElementRef
     private List<TableType> tableTypes;
 
 
-    @XmlElementRef//(name = "typeInfo")
+    @Invocation(name = "getTypeInfo")
+    @XmlElementRef
     private List<TypeInfo> typeInfo;
 
 
+    @Invocation(name = "getUserName")
     @XmlElement(required = true)
     private String userName;
 
 
+    @Invocation(name = "getURL")
     @XmlElement(required = true)
     private String url;
 

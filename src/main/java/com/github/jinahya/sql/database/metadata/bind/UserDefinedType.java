@@ -144,37 +144,37 @@ public class UserDefinedType {
     }
 
 
-    @ColumnLabel("TYPE_CAT")
+    @Label("TYPE_CAT")
     @XmlAttribute
     private String typeCat;
 
 
-    @ColumnLabel("TYPE_SCHEM")
+    @Label("TYPE_SCHEM")
     @XmlAttribute
     private String typeSchem;
 
 
-    @ColumnLabel("TYPE_NAME")
+    @Label("TYPE_NAME")
     @XmlElement(required = true)
     private String typeName;
 
 
-    @ColumnLabel("CLASS_NAME")
+    @Label("CLASS_NAME")
     @XmlElement(required = true)
     private String className;
 
 
-    @ColumnLabel("DATA_TYPE")
+    @Label("DATA_TYPE")
     @XmlElement(required = true)
     private int dataType;
 
 
-    @ColumnLabel("REMARKS")
+    @Label("REMARKS")
     @XmlElement(required = true)
     private String remarks;
 
 
-    @ColumnLabel("BASE_TYPE")
+    @Label("BASE_TYPE")
     @XmlElement(nillable = true, required = true)
     @NillableBySpecification
     private Short baseType;
@@ -184,9 +184,13 @@ public class UserDefinedType {
     private Schema schema;
 
 
-    @MethodInvocation(name = "getAttributes",
-                      types = {String.class, String.class, String.class, String.class},
-                      args = {@MethodInvocationArgs({":tableCat", ":tableSchem", ":typeName", "null"})})
+    @Invocation(
+        name = "getAttributes",
+        types = {String.class, String.class, String.class, String.class},
+        argsarr = {
+            @InvocationArgs({":tableCat", ":tableSchem", ":typeName", "null"})
+        }
+    )
     @XmlElementRef
     private List<Attribute> attributes;
 

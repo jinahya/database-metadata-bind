@@ -105,7 +105,7 @@ public class ClientInfoProperty {
     /**
      * The name of the client info property.
      */
-    @ColumnLabel("NAME")
+    @Label("NAME")
     @XmlElement(required = true)
     String name;
 
@@ -113,7 +113,7 @@ public class ClientInfoProperty {
     /**
      * The maximum length of the value for the property.
      */
-    @ColumnLabel("MAX_LEN")
+    @Label("MAX_LEN")
     @XmlElement(required = true)
     int maxLen;
 
@@ -121,7 +121,7 @@ public class ClientInfoProperty {
     /**
      * The default value of the property.
      */
-    @ColumnLabel("DEFAULT_VALUE")
+    @Label("DEFAULT_VALUE")
     @XmlElement(required = true)
     String defaultValue;
 
@@ -130,7 +130,7 @@ public class ClientInfoProperty {
      * A description of the property. This will typically contain information as
      * to where this property is stored in the database.
      */
-    @ColumnLabel("DESCRIPTION")
+    @Label("DESCRIPTION")
     @XmlElement(required = true)
     String description;
 

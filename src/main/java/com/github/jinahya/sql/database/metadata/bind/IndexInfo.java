@@ -220,17 +220,17 @@ public class IndexInfo {
     }
 
 
-    @ColumnLabel("TABLE_CAT")
+    @Label("TABLE_CAT")
     @XmlAttribute
     private String tableCat;
 
 
-    @ColumnLabel("TABLE_SCHEM")
+    @Label("TABLE_SCHEM")
     @XmlAttribute
     private String tableSchem;
 
 
-    @ColumnLabel("TABLE_SCHEM")
+    @Label("TABLE_SCHEM")
     @XmlAttribute
     private String tableName;
 
@@ -246,7 +246,7 @@ public class IndexInfo {
      * Can index values be non-unique. {@code false} when {@link #type} is
      * {@link DatabaseMetaData#tableIndexStatistic}.
      */
-    @ColumnLabel("NON_UNIQUE")
+    @Label("NON_UNIQUE")
     @XmlElement(required = true)
     boolean nonUnique;
 
@@ -255,7 +255,7 @@ public class IndexInfo {
      * index catalog (may be {@code null}); {@code null} when {@link #type} is
      * {@link DatabaseMetaData#tableIndexStatistic}.
      */
-    @ColumnLabel("INDEX_QUALIFIER")
+    @Label("INDEX_QUALIFIER")
     @XmlElement(nillable = true, required = true)
     @NillableBySpecification
     String indexQualifier;
@@ -265,7 +265,7 @@ public class IndexInfo {
      * index name; {@code null} when {@link #type} is
      * {@link DatabaseMetaData#tableIndexStatistic}.
      */
-    @ColumnLabel("INDEX_NAME")
+    @Label("INDEX_NAME")
     @XmlElement(nillable = true, required = true)
     @NillableBySpecification
     String indexName;
@@ -285,7 +285,7 @@ public class IndexInfo {
      * of index</li>
      * </ul>
      */
-    @ColumnLabel("TYPE")
+    @Label("TYPE")
     @XmlElement(required = true)
     short type;
 
@@ -294,7 +294,7 @@ public class IndexInfo {
      * column sequence number within index; zero when {@link #type} is
      * {@link DatabaseMetaData#tableIndexStatistic}.
      */
-    @ColumnLabel("ORDINAL_POSITION")
+    @Label("ORDINAL_POSITION")
     @XmlElement(required = true)
     short ordinalPosition;
 
@@ -303,7 +303,7 @@ public class IndexInfo {
      * column name; {@code null} when {@link #type} is
      * {@link DatabaseMetaData#tableIndexStatistic}.
      */
-    @ColumnLabel("COLUMN_NAME")
+    @Label("COLUMN_NAME")
     @XmlElement(nillable = true, required = true)
     @NillableBySpecification
     String columnName;
@@ -314,7 +314,7 @@ public class IndexInfo {
      * {@code null} if sort sequence is not supported; {@code null} when
      * {@link #type} is {@link DatabaseMetaData#tableIndexStatistic}.
      */
-    @ColumnLabel("ASC_OR_DESC")
+    @Label("ASC_OR_DESC")
     @XmlElement(nillable = true, required = true)
     @NillableBySpecification
     String ascOrDesc;
@@ -325,7 +325,7 @@ public class IndexInfo {
      * this is the number of rows in the table; otherwise, it is the number of
      * unique values in the index.
      */
-    @ColumnLabel("CARDINALITY")
+    @Label("CARDINALITY")
     @XmlElement(required = true)
     //long cardinality;
     int cardinality;
@@ -336,7 +336,7 @@ public class IndexInfo {
      * this is the number of pages used for the table, otherwise it is the
      * number of pages used for the current index.
      */
-    @ColumnLabel("PAGES")
+    @Label("PAGES")
     @XmlElement(required = true)
     //long pages;
     int pages;
@@ -345,7 +345,7 @@ public class IndexInfo {
     /**
      * Filter condition, if any. (may be {@code null})
      */
-    @ColumnLabel("FILTER_CONDITION")
+    @Label("FILTER_CONDITION")
     @XmlElement(nillable = true, required = true)
     @NillableBySpecification
     String filterCondition;

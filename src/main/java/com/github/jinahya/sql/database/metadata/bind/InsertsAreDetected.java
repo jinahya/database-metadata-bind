@@ -39,6 +39,15 @@ public class InsertsAreDetected {
         ResultSet.TYPE_SCROLL_SENSITIVE);
 
 
+    public static InsertsAreDetected valueOf(
+        final Object[] args, final Object value) {
+
+        return new InsertsAreDetected()
+            .type((Integer) args[0])
+            .value((Boolean) value);
+    }
+
+
     // -------------------------------------------------------------------- type
     public int getType() {
 

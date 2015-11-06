@@ -265,7 +265,7 @@ public class TypeInfo {
     /**
      * Type name.
      */
-    @ColumnLabel("TYPE_NAME")
+    @Label("TYPE_NAME")
     @XmlElement(required = true)
     String typeName;
 
@@ -273,7 +273,7 @@ public class TypeInfo {
     /**
      * SQL data type from {@link java.sql.Types}.
      */
-    @ColumnLabel("DATA_TYPE")
+    @Label("DATA_TYPE")
     @XmlElement(required = true)
     int dataType;
 
@@ -281,7 +281,7 @@ public class TypeInfo {
     /**
      * maximum precision.
      */
-    @ColumnLabel("PRECISION")
+    @Label("PRECISION")
     @XmlElement(required = true)
     int precision;
 
@@ -289,7 +289,7 @@ public class TypeInfo {
     /**
      * prefix used to quote a literal (may be {@code null}).
      */
-    @ColumnLabel("LITERAL_PREFIX")
+    @Label("LITERAL_PREFIX")
     @XmlElement(nillable = true, required = true)
     @NillableBySpecification
     String literalPrefix;
@@ -298,7 +298,7 @@ public class TypeInfo {
     /**
      * suffix used to quote a literal (may be {@code null}).
      */
-    @ColumnLabel("LITERAL_SUFFIX")
+    @Label("LITERAL_SUFFIX")
     @XmlElement(nillable = true, required = true)
     String literalSuffix;
 
@@ -306,7 +306,7 @@ public class TypeInfo {
     /**
      * parameters used in creating the type (may be {@code null}).
      */
-    @ColumnLabel("CREATE_PARAMS")
+    @Label("CREATE_PARAMS")
     @XmlElement(nillable = true, required = true)
     String createParams;
 
@@ -321,7 +321,7 @@ public class TypeInfo {
      * unknown</li>
      * </ul>
      */
-    @ColumnLabel("NULLABLE")
+    @Label("NULLABLE")
     @XmlElement(required = true)
     short nullable;
 
@@ -329,7 +329,7 @@ public class TypeInfo {
     /**
      * is it case sensitive..
      */
-    @ColumnLabel("CASE_SENSITIVE")
+    @Label("CASE_SENSITIVE")
     @XmlElement(required = true)
     boolean caseSensitive;
 
@@ -346,7 +346,7 @@ public class TypeInfo {
      * ..</li>
      * </ul>
      */
-    @ColumnLabel("SEARCHABLE")
+    @Label("SEARCHABLE")
     @XmlElement(required = true)
     short searchable;
 
@@ -354,7 +354,7 @@ public class TypeInfo {
     /**
      * is it unsigned.
      */
-    @ColumnLabel("UNSIGNED_ATTRIBUTE")
+    @Label("UNSIGNED_ATTRIBUTE")
     @XmlElement(required = true)
     boolean unsignedAttribute;
 
@@ -362,7 +362,7 @@ public class TypeInfo {
     /**
      * can it be a money value.
      */
-    @ColumnLabel("FIXED_PREC_SCALE")
+    @Label("FIXED_PREC_SCALE")
     @XmlElement(required = true)
     boolean fixedPrecScale;
 
@@ -370,7 +370,7 @@ public class TypeInfo {
     /**
      * can it be used for an auto-increment value.
      */
-    @ColumnLabel("AUTO_INCREMENT")
+    @Label("AUTO_INCREMENT")
     @XmlElement(required = true)
     boolean autoIncrement;
 
@@ -378,7 +378,7 @@ public class TypeInfo {
     /**
      * localized version of type name (may be {@code null}).
      */
-    @ColumnLabel("LOCAL_TYPE_NAME")
+    @Label("LOCAL_TYPE_NAME")
     @XmlElement(nillable = true, required = true)
     @NillableBySpecification
     String localTypeName;
@@ -387,7 +387,7 @@ public class TypeInfo {
     /**
      * minimum scale supported.
      */
-    @ColumnLabel("MINIMUM_SCALE")
+    @Label("MINIMUM_SCALE")
     @XmlElement(required = true)
     short minimumScale;
 
@@ -395,7 +395,7 @@ public class TypeInfo {
     /**
      * maximum scale supported.
      */
-    @ColumnLabel("MAXIMUM_SCALE")
+    @Label("MAXIMUM_SCALE")
     @XmlElement(required = true)
     short maximumScale;
 
@@ -403,7 +403,7 @@ public class TypeInfo {
     /**
      * unused.
      */
-    @ColumnLabel("SQL_DATA_TYPE")
+    @Label("SQL_DATA_TYPE")
     @NotUsed
     @XmlElement(required = true)
     int sqlDataType;
@@ -412,7 +412,7 @@ public class TypeInfo {
     /**
      * unused.
      */
-    @ColumnLabel("SQL_DATA_TYPE")
+    @Label("SQL_DATA_TYPE")
     @NotUsed
     @XmlElement(required = true)
     int sqlDatetimeSub;
@@ -421,7 +421,7 @@ public class TypeInfo {
     /**
      * usually 2 or 10.
      */
-    @ColumnLabel("NUM_PREC_RADIX")
+    @Label("NUM_PREC_RADIX")
     @XmlElement(required = true)
     int numPrecRadix;
 

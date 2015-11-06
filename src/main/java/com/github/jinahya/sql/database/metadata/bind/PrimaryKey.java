@@ -89,7 +89,7 @@ public class PrimaryKey {
     /**
      * table catalog (may be {@code null}).
      */
-    @ColumnLabel("TABLE_CAT")
+    @Label("TABLE_CAT")
     @XmlAttribute
     private String tableCat;
 
@@ -97,7 +97,7 @@ public class PrimaryKey {
     /**
      * table schema (may be {@code null}).
      */
-    @ColumnLabel("TABLE_SCHEM")
+    @Label("TABLE_SCHEM")
     @XmlAttribute
     private String tableSchem;
 
@@ -105,7 +105,7 @@ public class PrimaryKey {
     /**
      * table name.
      */
-    @ColumnLabel("TABLE_Name")
+    @Label("TABLE_Name")
     @XmlAttribute
     private String tableName;
 
@@ -113,7 +113,7 @@ public class PrimaryKey {
     /**
      * column name.
      */
-    @ColumnLabel("COLUMN_NAME")
+    @Label("COLUMN_NAME")
     @XmlElement(required = true)
     private String columnName;
 
@@ -123,7 +123,7 @@ public class PrimaryKey {
      * column of the primary key, a value of 2 would represent the second column
      * within the primary key).
      */
-    @ColumnLabel("KEY_SEQ")
+    @Label("KEY_SEQ")
     @XmlElement(required = true)
     short keySeq;
 
@@ -131,7 +131,7 @@ public class PrimaryKey {
     /**
      * primary key name (may be {@code null})
      */
-    @ColumnLabel("PK_NAME")
+    @Label("PK_NAME")
     @XmlElement(nillable = true, required = true)
     @NillableBySpecification
     private String pkName;

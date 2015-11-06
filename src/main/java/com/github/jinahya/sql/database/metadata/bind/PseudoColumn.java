@@ -206,67 +206,67 @@ public class PseudoColumn {
     }
 
 
-    @ColumnLabel("TABLE_CAT")
+    @Label("TABLE_CAT")
     @XmlAttribute
     @NillableBySpecification
     private String tableCat;
 
 
-    @ColumnLabel("TABLE_SCHEM")
+    @Label("TABLE_SCHEM")
     @XmlAttribute
     @NillableBySpecification
     private String tableSchem;
 
 
-    @ColumnLabel("TABLE_NAME")
+    @Label("TABLE_NAME")
     @XmlAttribute
     @NillableBySpecification
     private String tableName;
 
 
-    @ColumnLabel("COLUMN_NAME")
+    @Label("COLUMN_NAME")
     @XmlElement(required = true)
     private String columnName;
 
 
-    @ColumnLabel("DATA_TYPE")
+    @Label("DATA_TYPE")
     @XmlElement(required = true)
     private int dataType;
 
 
-    @ColumnLabel("COLUMN_SIZE")
+    @Label("COLUMN_SIZE")
     @XmlElement(required = true)
     private int columnSize;
 
 
-    @ColumnLabel("DECIMAL_DIGITS")
+    @Label("DECIMAL_DIGITS")
     @XmlElement(nillable = true, required = true)
     @NillableBySpecification
     private Integer decimalDigits;
 
 
-    @ColumnLabel("NUM_PREC_RADIX")
+    @Label("NUM_PREC_RADIX")
     @XmlElement(required = true)
     private int numPrecRadix;
 
 
-    @ColumnLabel("COLUMN_USAGE")
+    @Label("COLUMN_USAGE")
     @XmlElement(required = true)
     private String columnUsage;
 
 
-    @ColumnLabel("REMARKS")
+    @Label("REMARKS")
     @XmlElement(nillable = true, required = true)
     @NillableBySpecification
     private String remarks;
 
 
-    @ColumnLabel("CHAR_OCTET_LENGTH")
+    @Label("CHAR_OCTET_LENGTH")
     @XmlElement(required = true)
     private int charOctetLength;
 
 
-    @ColumnLabel("IS_NULLABLE")
+    @Label("IS_NULLABLE")
     @XmlElement(required = true)
     private String isNullable;
 

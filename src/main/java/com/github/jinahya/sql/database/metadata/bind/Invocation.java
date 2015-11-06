@@ -32,10 +32,16 @@ import java.lang.annotation.Target;
 @Documented
 @Retention(RetentionPolicy.RUNTIME)
 @Target({ElementType.FIELD})
-@interface MethodInvocationArgs {
+@interface Invocation {
 
 
-    String[] value();
+    String name();
+
+
+    Class<?>[] types() default {};
+
+
+    InvocationArgs[] argsarr() default {@InvocationArgs({})};
 
 
 }

@@ -18,8 +18,11 @@
 package com.github.jinahya.sql.database.metadata.bind;
 
 
+import java.util.ArrayList;
+import java.util.List;
 import javax.xml.bind.annotation.XmlAttribute;
 import javax.xml.bind.annotation.XmlElement;
+import javax.xml.bind.annotation.XmlElementRef;
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlTransient;
 import javax.xml.bind.annotation.XmlType;
@@ -27,15 +30,43 @@ import javax.xml.bind.annotation.XmlType;
 
 /**
  *
- * @author Jin Kwon <onacit at gmail.com>
+ * @author Jin Kwon &lt;jinahya_at_gmail.com&gt;
  */
 @XmlRootElement
 @XmlType(
     propOrder = {
-        "procedureName", "remarks", "procedureType", "specificName"
+        "procedureName", "remarks", "procedureType", "specificName",
+        // ---------------------------------------------------------------------
+        "procedureColumns"
     }
 )
 public class Procedure {
+
+
+    // ------------------------------------------------------------ procedureCat
+    public String getProcedureCat() {
+
+        return procedureCat;
+    }
+
+
+    public void setProcedureCat(final String procedureCat) {
+
+        this.procedureCat = procedureCat;
+    }
+
+
+    // ---------------------------------------------------------- procedureSchem
+    public String getProcedureSchem() {
+
+        return procedureSchem;
+    }
+
+
+    public void setProcedureSchem(final String procedureSchem) {
+
+        this.procedureSchem = procedureSchem;
+    }
 
 
     // ----------------------------------------------------------- procedureName
@@ -103,41 +134,64 @@ public class Procedure {
     }
 
 
-    @ColumnLabel("PROCEDURE_CAT")
+    // -------------------------------------------------------- procedureColumns
+    public List<ProcedureColumn> getProcedureColumns() {
+
+        if (procedureColumns == null) {
+            procedureColumns = new ArrayList<ProcedureColumn>();
+        }
+
+        return procedureColumns;
+    }
+
+
+    @Label("PROCEDURE_CAT")
+    @NillableBySpecification
     @XmlAttribute
     private String procedureCat;
 
 
-    @ColumnLabel("PROCEDURE_SCHEM")
+    @Label("PROCEDURE_SCHEM")
+    @NillableBySpecification
     @XmlAttribute
     private String procedureSchem;
 
 
-    @ColumnLabel("PROCEDURE_NAME")
+    @Label("PROCEDURE_NAME")
     @XmlElement(required = true)
     private String procedureName;
 
 
-    @ColumnLabel("REMARKS")
+    @Label("REMARKS")
     @XmlElement(required = true)
     private String remarks;
 
 
-    @ColumnLabel("PROCEDURE_TYPE")
+    @Label("PROCEDURE_TYPE")
     @XmlElement(required = true)
     private short procedureType;
 
 
-    @ColumnLabel("SPECIFIC_NAME")
+    @Label("SPECIFIC_NAME")
     @XmlElement(required = true)
     private String specificName;
 
 
-    /**
-     * parent schema.
-     */
     @XmlTransient
     private Schema schema;
+
+
+    @Invocation(
+        name = "getProcedureColumns",
+        types = {String.class, String.class, String.class, String.class},
+        argsarr = {
+            @InvocationArgs({
+                ":procedureCat", ":procedureSchem", ":procedureName", "null"
+            })
+        }
+    )
+    @XmlElementRef
+    private List<ProcedureColumn> procedureColumns;
 
 
 }

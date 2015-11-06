@@ -18,8 +18,11 @@
 package com.github.jinahya.sql.database.metadata.bind;
 
 
+import java.util.ArrayList;
+import java.util.List;
 import javax.xml.bind.annotation.XmlAttribute;
 import javax.xml.bind.annotation.XmlElement;
+import javax.xml.bind.annotation.XmlElementRef;
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlTransient;
 import javax.xml.bind.annotation.XmlType;
@@ -27,12 +30,15 @@ import javax.xml.bind.annotation.XmlType;
 
 /**
  *
- * @author Jin Kwon <onacit at gmail.com>
+ * @author Jin Kwon &lt;jinahya_at_gmail.com&gt;
  */
 @XmlRootElement
 @XmlType(
     propOrder = {
-        "functionName", "remarks", "functionType", "specificName"
+        "functionName", "remarks", "functionType", "specificName",
+        // ---------------------------------------------------------------------
+        "functionColumns"
+
     }
 )
 public class Function {
@@ -103,38 +109,64 @@ public class Function {
     }
 
 
-    @ColumnLabel("FUNCTION_CAT")
-    @XmlAttribute(required = false)
+    // --------------------------------------------------------- functionColumns
+    public List<FunctionColumn> getFunctionColumns() {
+
+        if (functionColumns == null) {
+            functionColumns = new ArrayList<FunctionColumn>();
+        }
+
+        return functionColumns;
+    }
+
+
+    @Label("FUNCTION_CAT")
+    @NillableBySpecification
+    @XmlAttribute
     private String functionCat;
 
 
-    @ColumnLabel("FUNCTION_SCHEM")
-    @XmlAttribute(required = false)
+    @Label("FUNCTION_SCHEM")
+    @NillableBySpecification
+    @XmlAttribute
     private String functionSchem;
 
 
-    @ColumnLabel("FUNCTION_NAME")
+    @Label("FUNCTION_NAME")
     @XmlElement(required = true)
     private String functionName;
 
 
-    @ColumnLabel("REMARKS")
+    @Label("REMARKS")
     @XmlElement(required = true)
     private String remarks;
 
 
-    @ColumnLabel("FUNCTION_TYPE")
-    @XmlElement(nillable = true, required = true)
-    Short functionType;
+    @Label("FUNCTION_TYPE")
+    @XmlElement(required = true)
+    private short functionType;
 
 
-    @ColumnLabel("SPECIFIC_NAME")
-    @XmlElement(nillable = true, required = true)
-    String specificName;
+    @Label("SPECIFIC_NAME")
+    @XmlElement(required = true)
+    private String specificName;
 
 
     @XmlTransient
     private Schema schema;
+
+
+    @Invocation(
+        name = "getFunctionColumns",
+        types = {String.class, String.class, String.class, String.class},
+        argsarr = {
+            @InvocationArgs({
+                ":functionCat", ":functionSchem", ":functionName", "null"
+            })
+        }
+    )
+    @XmlElementRef
+    private List<FunctionColumn> functionColumns;
 
 
 }

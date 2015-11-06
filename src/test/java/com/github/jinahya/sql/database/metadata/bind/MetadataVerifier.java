@@ -81,15 +81,15 @@ public class MetadataVerifier {
             }
         }
 
-        // schema names must be order by themselves
-        {
-            final List<String> schemaNames = catalog.getSchemaNames();
-            for (int i = 1; i < schemaNames.size(); i++) {
-                Assert.assertTrue(
-                    schemaNames.get(i - 1).compareTo(schemaNames.get(i))
-                    < 0);
-            }
-        }
+//        // schema names must be order by themselves
+//        {
+//            final List<String> schemaNames = catalog.getSchemaNames();
+//            for (int i = 1; i < schemaNames.size(); i++) {
+//                Assert.assertTrue(
+//                    schemaNames.get(i - 1).compareTo(schemaNames.get(i))
+//                    < 0);
+//            }
+//        }
     }
 
 

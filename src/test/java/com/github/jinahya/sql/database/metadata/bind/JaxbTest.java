@@ -101,7 +101,6 @@ public class JaxbTest {
             final Path path = schemas.resolve(suggestedFileName);
             return path.toFile();
         });
-        printSchema(context);
     }
 
 

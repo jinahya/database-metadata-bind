@@ -27,7 +27,7 @@ import javax.xml.bind.annotation.XmlType;
 
 /**
  *
- * @author Jin Kwon <onacit at gmail.com>
+ * @author Jin Kwon &lt;jinahya_at_gmail.com&gt;
  */
 @XmlRootElement
 @XmlType(propOrder = {"grantor", "grantee", "privilege", "isGrantable"})
@@ -124,38 +124,38 @@ public class TablePrivilege {
     }
 
 
-    @ColumnLabel("TABLE_CAT")
+    @Label("TABLE_CAT")
     @XmlAttribute
     private String tableCat;
 
 
-    @ColumnLabel("TABLE_SCHEM")
+    @Label("TABLE_SCHEM")
     @XmlAttribute
     private String tableSchem;
 
 
-    @ColumnLabel("TABLE_NAME")
+    @Label("TABLE_NAME")
     @XmlAttribute
     private String tableName;
 
 
-    @ColumnLabel("GRANTOR")
+    @Label("GRANTOR")
     @XmlElement(nillable = true, required = true)
     @NillableBySpecification
     private String grantor;
 
 
-    @ColumnLabel("GRANTEE")
+    @Label("GRANTEE")
     @XmlElement(required = true)
     private String grantee;
 
 
-    @ColumnLabel("PRIVILEGE")
+    @Label("PRIVILEGE")
     @XmlElement(required = true)
     private String privilege;
 
 
-    @ColumnLabel("IS_GRANTABLE")
+    @Label("IS_GRANTABLE")
     @XmlElement(nillable = true, required = true)
     @NillableBySpecification
     private String isGrantable;

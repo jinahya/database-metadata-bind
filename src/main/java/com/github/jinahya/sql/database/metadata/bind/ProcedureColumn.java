@@ -32,7 +32,8 @@ import javax.xml.bind.annotation.XmlType;
 @XmlRootElement
 @XmlType(
     propOrder = {
-        "procedureName", "columnName", "columnType", "dataType", "typeName",
+        //"procedureName",
+        "columnName", "columnType", "dataType", "typeName",
         "precision", "length", "scale", "radix", "nullable", "remarks",
         "columnDef", "sqlDataType", "sqlDatetimeSub", "charOctetLength",
         "ordinalPosition", "isNullable", "specificName"
@@ -313,108 +314,109 @@ public class ProcedureColumn {
     }
 
 
-    @ColumnLabel("PROCEDURE_CAT")
-    @XmlAttribute
+    @Label("PROCEDURE_CAT")
     @NillableBySpecification
+    @XmlAttribute
     private String procedureCat;
 
 
-    @ColumnLabel("PROCEDURE_SCHEM")
-    @XmlAttribute
+    @Label("PROCEDURE_SCHEM")
     @NillableBySpecification
+    @XmlAttribute
     private String procedureSchem;
 
 
-    @ColumnLabel("PROCEDURE_NAME")
-    @XmlElement(required = true)
+    @Label("PROCEDURE_NAME")
+    @XmlAttribute
     private String procedureName;
 
 
-    @ColumnLabel("COLUMN_NAME")
+    @Label("COLUMN_NAME")
     @XmlElement(required = true)
     private String columnName;
 
 
-    @ColumnLabel("COLUMN_TYPE")
+    @Label("COLUMN_TYPE")
     @XmlElement(required = true)
     private short columnType;
 
 
-    @ColumnLabel("DATA_TYPE")
+    @Label("DATA_TYPE")
     @XmlElement(required = true)
     private int dataType;
 
 
-    @ColumnLabel("TYPE_NAME")
+    @Label("TYPE_NAME")
     @XmlElement(required = true)
     private String typeName;
 
 
-    @ColumnLabel("PRECISION")
+    @Label("PRECISION")
     @XmlElement(required = true)
     private int precision;
 
 
-    @ColumnLabel("LENGTH")
+    @Label("LENGTH")
     @XmlElement(required = true)
     private int length;
 
 
-    @ColumnLabel("SCALE")
+    @Label("SCALE")
+    @NillableBySpecification
     @XmlElement(required = true)
     private Short scale;
 
 
-    @ColumnLabel("RADIX")
+    @Label("RADIX")
     @XmlElement(required = true)
     private short radix;
 
 
-    @ColumnLabel("NULLABLE")
+    @Label("NULLABLE")
     @XmlElement(required = true)
     private short nullable;
 
 
-    @ColumnLabel("REMARKS")
+    @Label("REMARKS")
     @XmlElement(required = true)
     private String remarks;
 
 
-    @ColumnLabel("COLUMN_DEF")
+    @Label("COLUMN_DEF")
     @NillableBySpecification
     @XmlElement(nillable = true, required = true)
     private String columnDef;
 
 
-    @NoMapping(NoMappingType.RESERVED_FOR_FUTURE_USE)
-    @ColumnLabel("SQL_DATA_TYPE")
+    @Label("SQL_DATA_TYPE")
+    @ReservedForFutureUse
     @XmlElement(required = true)
     private int sqlDataType;
 
 
-    @NoMapping(NoMappingType.RESERVED_FOR_FUTURE_USE)
-    @ColumnLabel("SQL_DATETIME_SUB")
+    @Label("SQL_DATETIME_SUB")
+    @ReservedForFutureUse
     @XmlElement(required = true)
     private int sqlDatetimeSub;
 
 
-    @ColumnLabel("CHAR_OCTET_LENGTH")
+    @Label("CHAR_OCTET_LENGTH")
     @NillableBySpecification
-    @XmlElement(required = true)
+    @XmlElement(nillable = true, required = true)
     private Integer charOctetLength;
 
 
-    @ColumnLabel("ORDINAL_POSITION")
+    @Label("ORDINAL_POSITION")
     @XmlElement(required = true)
     private int ordinalPosition;
 
 
-    @ColumnLabel("IS_NULLABLE")
+    @Label("IS_NULLABLE")
     @XmlElement(required = true)
     private String isNullable;
 
 
-    @ColumnLabel("SPECIFIC_NAME")
+    @Label("SPECIFIC_NAME")
     @XmlElement(required = true)
     private String specificName;
 

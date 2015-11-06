@@ -76,12 +76,12 @@ public class SchemaName {
     }
 
 
-    @ColumnLabel("TABLE_SCHEM")
+    @Label("TABLE_SCHEM")
     @XmlElement(required = true)
     private String tableSchem;
 
 
-    @ColumnLabel("TABLE_CATALOG")
+    @Label("TABLE_CATALOG")
     @NillableBySpecification
     @XmlElement(nillable = true, required = false)
     private String tableCatalog;
