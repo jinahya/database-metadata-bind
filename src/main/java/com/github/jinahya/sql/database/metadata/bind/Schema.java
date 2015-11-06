@@ -35,13 +35,7 @@ import javax.xml.bind.annotation.XmlType;
 @XmlRootElement
 @XmlType(
     propOrder = {
-        "tableSchem",
-        //"functionColumns",
-        "functions",
-        //"procedureColumns",
-        "procedures",
-        //"tablePrivileges",
-        "tables", "userDefinedTypes"
+        "tableSchem", "functions", "procedures", "tables", "userDefinedTypes"
     }
 )
 public class Schema {
@@ -209,15 +203,6 @@ public class Schema {
     private Catalog catalog;
 
 
-//    @Invocation(
-//        name = "getFunctionColumns",
-//        types = {String.class, String.class, String.class, String.class},
-//        argsarr = {
-//            @InvocationArgs({":tableCatalog", ":tableSchem", "null", "null"})
-//        }
-//    )
-//    @XmlElementRef
-//    private List<FunctionColumn> functionColumns;
     @Invocation(
         name = "getFunctions",
         types = {String.class, String.class, String.class},
@@ -229,15 +214,6 @@ public class Schema {
     private List<Function> functions;
 
 
-//    @Invocation(
-//        name = "getProcedureColumns",
-//        types = {String.class, String.class, String.class, String.class},
-//        argsarr = {
-//            @InvocationArgs({":tableCatalog", ":tableSchem", "null", "null"})
-//        }
-//    )
-//    @XmlElementRef
-//    private List<ProcedureColumn> procedureColumns;
     @Invocation(
         name = "getProcedures",
         types = {String.class, String.class, String.class},
@@ -260,15 +236,6 @@ public class Schema {
     private List<Table> tables;
 
 
-//    @Invocation(
-//        name = "getTablePrivileges",
-//        types = {String.class, String.class, String.class},
-//        argsarr = {
-//            @InvocationArgs({":tableCatalog", ":tableSchem", "null"})
-//        }
-//    )
-//    @XmlElementRef
-//    private List<TablePrivilege> tablePrivileges;
     @Invocation(
         name = "getUDTs",
         types = {String.class, String.class, String.class, int[].class},
