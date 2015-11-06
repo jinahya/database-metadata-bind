@@ -27,14 +27,14 @@ A library binding various information from [DatabaseMetaData](http://docs.oracle
   * Metadata
     * Category
       * Schema
-        * FunctionColumn
         * Function
-        * ProcedureColumn
+          * FunctionColumn
         * Procedure
+          * ProcedureColumn
         * Table
           * BestRowIdentifier 
           * Column
-          * ColumnPrivilege
+            * ColumnPrivilege
           * ExportedKey
           * ImportedKey
           * IndexInfo
@@ -42,4 +42,7 @@ A library binding various information from [DatabaseMetaData](http://docs.oracle
           * PseudoColumn
           * TablePrivilege
           * VersionColumn
-        * Udt
+        * UserDefinedType
+    * ClientInfoProperty
+    * SchemaName
+    * TableType
