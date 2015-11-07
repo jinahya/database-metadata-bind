@@ -49,3 +49,32 @@ A library binding various information from [DatabaseMetaData](http://docs.oracle
     * TableType (`metadata/tableTypes`)
 
 ## Usage
+### API Binding
+````
+// prepare jdbc information
+final Connection connection; // get your own
+final DatabaseMetaData database = connection.getDataBaseMetaData();
+
+// create context, and add suppression paths if required
+final MetadataContext context = new MetaDataContext(database);
+context.addSuppressionPaths("metadata/schemaNames", "table/pseudoColumns");
+
+// bind various informations
+final Metadata metadata = context.getMetadata(); // bind all
+final List<Categories> categories = metadata.getCategories();
+for (final Category category : categories) {
+    final List<Schema> schemas = category.getSchemas();
+}
+final List<Schema> schemas = context.getSchemas("", null);
+final List<Tables> tables = context.getTables(null, null, null); // list all tables
+final List<PrimaryKeys> primaryKeys
+    = context.getPrimaryKeys("PUBLIC", "SYSTEM_LOBS", "BLOCKS");
+````
+### XML Binding
+All classes are annotated with `@XmlRootElement`.
+````
+final UseDefinedType userDefinedType;
+final JAXBContext context = JAXBContext.newInstance(UserDefinedType.class);
+final Marshaller marshaller = context.createMarshaller();
+marshaller.mashal(userDefinedType, ...);
+````
