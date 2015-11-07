@@ -426,7 +426,7 @@ public class MetadataContext {
                         continue;
                     }
                     if (types[i].isPrimitive()) {
-                        types[i] = WRAPPERS.get(types[i]);
+                        types[i] = wrapper(types[i]);
                     }
                     args[i] = types[i].getMethod("valueOf", String.class)
                         .invoke(null, name);
