@@ -18,7 +18,6 @@
 package com.github.jinahya.sql.database.metadata.bind;
 
 
-import java.sql.DatabaseMetaData;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlTransient;
@@ -242,6 +241,32 @@ public class TypeInfo {
     }
 
 
+    // ------------------------------------------------------------- sqlDataType
+    public Integer getSqlDataType() {
+
+        return sqlDataType;
+    }
+
+
+    public void setSqlDataType(final Integer sqlDataType) {
+
+        this.sqlDataType = sqlDataType;
+    }
+
+
+    // ---------------------------------------------------------- sqlDatetimeSub
+    public Integer getSqlDatetimeSub() {
+
+        return sqlDatetimeSub;
+    }
+
+
+    public void setSqlDatetimeSub(final Integer sqlDatetimeSub) {
+
+        this.sqlDatetimeSub = sqlDatetimeSub;
+    }
+
+
     // ------------------------------------------------------------ numPrecRadix
     public int getNumPrecRadix() {
 
@@ -255,175 +280,104 @@ public class TypeInfo {
     }
 
 
-    /**
-     * parent metadata.
-     */
-    @XmlTransient
-    private Metadata metadata;
-
-
-    /**
-     * Type name.
-     */
     @Label("TYPE_NAME")
     @XmlElement(required = true)
-    String typeName;
+    private String typeName;
 
 
-    /**
-     * SQL data type from {@link java.sql.Types}.
-     */
     @Label("DATA_TYPE")
     @XmlElement(required = true)
-    int dataType;
+    private int dataType;
 
 
-    /**
-     * maximum precision.
-     */
     @Label("PRECISION")
     @XmlElement(required = true)
-    int precision;
+    private int precision;
 
 
-    /**
-     * prefix used to quote a literal (may be {@code null}).
-     */
     @Label("LITERAL_PREFIX")
-    @XmlElement(nillable = true, required = true)
     @NillableBySpecification
-    String literalPrefix;
+    @XmlElement(nillable = true, required = true)
+    private String literalPrefix;
 
 
-    /**
-     * suffix used to quote a literal (may be {@code null}).
-     */
     @Label("LITERAL_SUFFIX")
+    @NillableBySpecification
     @XmlElement(nillable = true, required = true)
-    String literalSuffix;
+    private String literalSuffix;
 
 
-    /**
-     * parameters used in creating the type (may be {@code null}).
-     */
     @Label("CREATE_PARAMS")
+    @NillableBySpecification
     @XmlElement(nillable = true, required = true)
-    String createParams;
+    private String createParams;
 
 
-    /**
-     * can you use NULL for this type.
-     * <ul>
-     * <li>{@link DatabaseMetaData#typeNoNulls} - does not allow NULL
-     * values</li>
-     * <li>{@link DatabaseMetaData#typeNullable} - allows NULL values</li>
-     * <li>{@link DatabaseMetaData#typeNullableUnknown} - nullability
-     * unknown</li>
-     * </ul>
-     */
     @Label("NULLABLE")
     @XmlElement(required = true)
-    short nullable;
+    private short nullable;
 
 
-    /**
-     * is it case sensitive..
-     */
     @Label("CASE_SENSITIVE")
     @XmlElement(required = true)
-    boolean caseSensitive;
+    private boolean caseSensitive;
 
 
-    /**
-     * can you use "WHERE" based on this type:
-     * <ul>
-     * <li>{@link DatabaseMetaData#typePredNone} - No support</li>
-     * <li>{@link DatabaseMetaData#typePredChar} - Only supported with WHERE ..
-     * LIKE</li>
-     * <li>{@link DatabaseMetaData#typePredBasic} - Supported except for WHERE
-     * .. LIKE</li>
-     * <li>{@link DatabaseMetaData#typeSearchable} - Supported for all WHERE
-     * ..</li>
-     * </ul>
-     */
     @Label("SEARCHABLE")
     @XmlElement(required = true)
-    short searchable;
+    private short searchable;
 
 
-    /**
-     * is it unsigned.
-     */
     @Label("UNSIGNED_ATTRIBUTE")
     @XmlElement(required = true)
-    boolean unsignedAttribute;
+    private boolean unsignedAttribute;
 
 
-    /**
-     * can it be a money value.
-     */
     @Label("FIXED_PREC_SCALE")
     @XmlElement(required = true)
-    boolean fixedPrecScale;
+    private boolean fixedPrecScale;
 
 
-    /**
-     * can it be used for an auto-increment value.
-     */
     @Label("AUTO_INCREMENT")
     @XmlElement(required = true)
-    boolean autoIncrement;
+    private boolean autoIncrement;
 
 
-    /**
-     * localized version of type name (may be {@code null}).
-     */
     @Label("LOCAL_TYPE_NAME")
-    @XmlElement(nillable = true, required = true)
     @NillableBySpecification
-    String localTypeName;
+    @XmlElement(nillable = true, required = true)
+    private String localTypeName;
 
 
-    /**
-     * minimum scale supported.
-     */
     @Label("MINIMUM_SCALE")
     @XmlElement(required = true)
-    short minimumScale;
+    private short minimumScale;
 
 
-    /**
-     * maximum scale supported.
-     */
     @Label("MAXIMUM_SCALE")
     @XmlElement(required = true)
-    short maximumScale;
+    private short maximumScale;
 
 
-    /**
-     * unused.
-     */
     @Label("SQL_DATA_TYPE")
-    @NotUsed
-    @XmlElement(required = true)
-    int sqlDataType;
+    @Unused
+    @XmlElement(nillable = true, required = true)
+    private Integer sqlDataType;
 
 
-    /**
-     * unused.
-     */
     @Label("SQL_DATA_TYPE")
-    @NotUsed
-    @XmlElement(required = true)
-    int sqlDatetimeSub;
+    @Unused
+    @XmlElement(nillable = true, required = true)
+    private Integer sqlDatetimeSub;
 
 
-    /**
-     * usually 2 or 10.
-     */
     @Label("NUM_PREC_RADIX")
     @XmlElement(required = true)
-    int numPrecRadix;
+    private int numPrecRadix;
+
+
+    @XmlTransient
+    private Metadata metadata;
 
 
 }

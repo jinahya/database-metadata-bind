@@ -31,8 +31,8 @@ import javax.xml.bind.annotation.XmlType;
 @XmlRootElement
 @XmlType(
     propOrder = {
-        "columnName", "dataType", "typeName", "columnSize", "bufferLength",
-        "decimalDigits", "pseudoColumn"
+        "scope", "columnName", "dataType", "typeName", "columnSize",
+        "bufferLength", "decimalDigits", "pseudoColumn"
     })
 public class VersionColumn {
 
@@ -155,9 +155,9 @@ public class VersionColumn {
 
 
     @Label("SCOPE")
-    @XmlTransient
-    @NotUsed
-    private short scope;
+    @Unused
+    @XmlElement(nillable = true, required = true)
+    private Short scope;
 
 
     @Label("COLUMN_NAME")

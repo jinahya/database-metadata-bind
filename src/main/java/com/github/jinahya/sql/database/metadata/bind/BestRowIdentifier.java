@@ -103,6 +103,19 @@ public class BestRowIdentifier {
     }
 
 
+    // ------------------------------------------------------------ bufferLength
+    public Integer getBufferLength() {
+
+        return bufferLength;
+    }
+
+
+    public void setBufferLength(final Integer bufferLength) {
+
+        this.bufferLength = bufferLength;
+    }
+
+
     // ----------------------------------------------------------- decimalDigits
     public Short getDecimalDigits() {
 
@@ -168,9 +181,9 @@ public class BestRowIdentifier {
 
 
     @Label("BUFFER_LENGTH")
-    @NotUsed
-    @XmlElement(required = true)
-    private int bufferLength;
+    @Unused
+    @XmlElement(nillable = true, required = true)
+    private Integer bufferLength;
 
 
     @Label("DECIMAL_DIGITS")

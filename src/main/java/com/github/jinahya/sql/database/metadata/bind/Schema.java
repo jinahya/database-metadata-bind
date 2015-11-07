@@ -41,6 +41,14 @@ import javax.xml.bind.annotation.XmlType;
 public class Schema {
 
 
+    @Override
+    public String toString() {
+
+        return super.toString() + "{" + "tableCatalog=" + tableCatalog
+               + ", tableSchem=" + tableSchem + '}';
+    }
+
+
     // ------------------------------------------------------------ tableCatalog
     public String getTableCatalog() {
 
@@ -54,26 +62,32 @@ public class Schema {
     }
 
 
+    Schema tableCatalog(final String tableCatalog) {
+
+        setTableCatalog(tableCatalog);
+
+        return this;
+    }
+
+
     // -------------------------------------------------------------- tableSchem
-    /**
-     * Return the name of this schema.
-     *
-     * @return the name
-     */
     public String getTableSchem() {
 
         return tableSchem;
     }
 
 
-    /**
-     * Replaces the name of this schema.
-     *
-     * @param tableSchem the name
-     */
     public void setTableSchem(final String tableSchem) {
 
         this.tableSchem = tableSchem;
+    }
+
+
+    Schema tableSchem(final String tableSchem) {
+
+        setTableSchem(tableSchem);
+
+        return this;
     }
 
 
@@ -101,15 +115,6 @@ public class Schema {
     }
 
 
-//    // -------------------------------------------------------- procedureColumns
-//    public List<ProcedureColumn> getProcedureColumns() {
-//
-//        if (procedureColumns == null) {
-//            procedureColumns = new ArrayList<ProcedureColumn>();
-//        }
-//
-//        return procedureColumns;
-//    }
     // -------------------------------------------------------------- procedures
     public List<Procedure> getProcedures() {
 
@@ -122,11 +127,6 @@ public class Schema {
 
 
     // ------------------------------------------------------------------ tables
-    /**
-     * Returns a list of tables.
-     *
-     * @return tables
-     */
     public List<Table> getTables() {
 
         if (tables == null) {
@@ -166,15 +166,6 @@ public class Schema {
     }
 
 
-//    // --------------------------------------------------------- tablePrivileges
-//    public List<TablePrivilege> getTablePrivileges() {
-//
-//        if (tablePrivileges == null) {
-//            tablePrivileges = new ArrayList<TablePrivilege>();
-//        }
-//
-//        return tablePrivileges;
-//    }
     // -------------------------------------------------------- userDefinedTypes
     public List<UserDefinedType> getUserDefinedTypes() {
 
@@ -186,11 +177,9 @@ public class Schema {
     }
 
 
-    /**
-     * catalog name (may be {@code null}).
-     */
     @Label("TABLE_CATALOG")
-    @XmlAttribute(required = false)
+    @NillableBySpecification
+    @XmlAttribute
     private String tableCatalog;
 
 

@@ -18,12 +18,6 @@
 package com.github.jinahya.sql.database.metadata.bind;
 
 
-import com.github.jinahya.sql.database.metadata.bind.Table;
-import com.github.jinahya.sql.database.metadata.bind.Function;
-import com.github.jinahya.sql.database.metadata.bind.Schema;
-import com.github.jinahya.sql.database.metadata.bind.Metadata;
-import com.github.jinahya.sql.database.metadata.bind.Procedure;
-import com.github.jinahya.sql.database.metadata.bind.Catalog;
 import java.util.List;
 import java.util.Objects;
 import org.testng.Assert;

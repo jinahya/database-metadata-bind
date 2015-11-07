@@ -33,11 +33,51 @@ import javax.xml.bind.annotation.XmlType;
 @XmlType(
     propOrder = {
         "attrName", "dataType", "attrTypeName", "attrSize", "decimalDigits",
-        "numPrecRadix", "nullable", "remarks", "attrDef", "charOctetLength",
-        "ordinalPosition", "isNullable", "sourceDataType"
+        "numPrecRadix", "nullable", "remarks", "attrDef", "sqlDataType",
+        "sqlDatetimeSub", "charOctetLength", "ordinalPosition", "isNullable",
+        "sourceDataType"
     }
 )
 public class Attribute {
+
+
+    // ----------------------------------------------------------------- typeCat
+    public String getTypeCat() {
+
+        return typeCat;
+    }
+
+
+    public void setTypeCat(final String typeCat) {
+
+        this.typeCat = typeCat;
+    }
+
+
+    // --------------------------------------------------------------- typeSchem
+    public String getTypeSchem() {
+
+        return typeSchem;
+    }
+
+
+    public void setTypeSchem(final String typeSchem) {
+
+        this.typeSchem = typeSchem;
+    }
+
+
+    // ---------------------------------------------------------------- typeName
+    public String getTypeName() {
+
+        return typeName;
+    }
+
+
+    public void setTypeName(final String typeName) {
+
+        this.typeName = typeName;
+    }
 
 
     // ---------------------------------------------------------------- attrName
@@ -118,7 +158,7 @@ public class Attribute {
     }
 
 
-    // ---------------------------------------------------------------- NULLABLE
+    // ---------------------------------------------------------------- nullable
     public int getNullable() {
 
         return nullable;
@@ -131,7 +171,7 @@ public class Attribute {
     }
 
 
-    // ----------------------------------------------------------------- REMARKS
+    // ----------------------------------------------------------------- remarks
     public String getRemarks() {
 
         return remarks;
@@ -144,16 +184,42 @@ public class Attribute {
     }
 
 
-    // --------------------------------------------------------------- columnDef
-    public String getColumnDef() {
+    // ----------------------------------------------------------------- attrDef
+    public String getAttrDef() {
 
         return attrDef;
     }
 
 
-    public void setColumnDef(final String columnDef) {
+    public void setAttrDef(final String attrDef) {
 
-        this.attrDef = columnDef;
+        this.attrDef = attrDef;
+    }
+
+
+    // ------------------------------------------------------------- sqlDataType
+    public Integer getSqlDataType() {
+
+        return sqlDataType;
+    }
+
+
+    public void setSqlDataType(final Integer sqlDataType) {
+
+        this.sqlDataType = sqlDataType;
+    }
+
+
+    // ---------------------------------------------------------- sqlDatetimeSub
+    public Integer getSqlDatetimeSub() {
+
+        return sqlDatetimeSub;
+    }
+
+
+    public void setSqlDatetimeSub(final Integer sqlDatetimeSub) {
+
+        this.sqlDatetimeSub = sqlDatetimeSub;
     }
 
 
@@ -273,27 +339,27 @@ public class Attribute {
 
 
     @Label("REMARKS")
-    @XmlElement(nillable = true, required = true)
     @NillableBySpecification
+    @XmlElement(nillable = true, required = true)
     private String remarks;
 
 
     @Label("ATTR_DEF")
-    @XmlElement(nillable = true, required = true)
     @NillableBySpecification
+    @XmlElement(nillable = true, required = true)
     private String attrDef;
 
 
     @Label("SQL_DATA_TYPE")
-    @XmlTransient
-    @NotUsed
-    private int sqlDataType;
+    @Unused
+    @XmlElement(nillable = true, required = true)
+    private Integer sqlDataType;
 
 
     @Label("SQL_DATETIME_SUB")
-    @XmlTransient
-    @NotUsed
-    private int sqlDatetimeSub;
+    @Unused
+    @XmlElement(nillable = true, required = true)
+    private Integer sqlDatetimeSub;
 
 
     @Label("CHAR_OCTET_LENGTH")
@@ -308,7 +374,7 @@ public class Attribute {
 
     @Label("IS_NULLABLE")
     @XmlElement(required = true)
-    String isNullable;
+    private String isNullable;
 
 
     @Label("SOURCE_DATA_TYPE")

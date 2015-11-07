@@ -37,6 +37,13 @@ import javax.xml.bind.annotation.XmlType;
 public class Catalog implements Serializable {
 
 
+    @Override
+    public String toString() {
+
+        return super.toString() + "{" + "tableCat=" + tableCat + '}';
+    }
+
+
     // ---------------------------------------------------------------- tableCat
     public String getTableCat() {
 

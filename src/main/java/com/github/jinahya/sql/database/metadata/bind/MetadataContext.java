@@ -213,12 +213,27 @@ public class MetadataContext {
         final Class<?> valueType = value == null ? null : value.getClass();
         //logger.log(Level.INFO, "valueType: {0}", new Object[]{valueType});
         if (fieldType == Boolean.TYPE) {
+            if (Number.class.isInstance(value)) {
+                value = ((Number) value).intValue() != 0;
+            }
             if (!Boolean.class.isInstance(value)) {
                 logger.log(Level.WARNING, "cannot set {0}({1}) to {2}",
                            new Object[]{value, valueType, field});
                 return;
             }
             field.setBoolean(obj, (Boolean) value);
+            return;
+        }
+        if (fieldType == Boolean.class) {
+            if (Number.class.isInstance(value)) {
+                value = ((Number) value).intValue() != 0;
+            }
+            if (value != null && !Boolean.class.isInstance(value)) {
+                logger.log(Level.WARNING, "cannot set {0} to {1}",
+                           new Object[]{value, field});
+                return;
+            }
+            field.set(obj, value);
             return;
         }
         if (fieldType == Short.TYPE) {
@@ -248,7 +263,7 @@ public class MetadataContext {
                            new Object[]{value, field});
                 return;
             }
-            if (!Integer.class.isInstance(value)) {
+            if (Number.class.isInstance(value)) {
                 value = ((Number) value).intValue();
             }
             field.setInt(obj, (Integer) value);
@@ -272,7 +287,7 @@ public class MetadataContext {
                            new Object[]{value, field});
                 return;
             }
-            if (Long.class.isInstance(value)) {
+            if (Number.class.isInstance(value)) {
                 value = ((Number) value).longValue();
             }
             field.setLong(obj, (Long) value);
@@ -294,20 +309,27 @@ public class MetadataContext {
             @SuppressWarnings("unchecked")
             final List<Object> list = (List<Object>) field.getDeclaringClass()
                 .getMethod(getterName(field)).invoke(obj);
-            final Type genericType = field.getGenericType();
-            if (!ParameterizedType.class.isInstance(genericType)) {
-                logger.log(Level.WARNING, "not a ParameterizedType({0}): {1}",
-                           new Object[]{genericType, field});
-            }
-            final Type elementType = ((ParameterizedType) genericType)
+//            final Type genericType = field.getGenericType();
+//            if (!ParameterizedType.class.isInstance(genericType)) {
+//                logger.log(Level.WARNING, "not a ParameterizedType({0}): {1}",
+//                           new Object[]{genericType, field});
+//            }
+//            final Type elementType = ((ParameterizedType) genericType)
+//                .getActualTypeArguments()[0];
+            //final String typeName = elementType.getTypeName();
+            //final Class<?> typeClass = Class.forName(typeName);
+            final Class<?> type
+                = (Class<?>) ((ParameterizedType) field.getGenericType())
                 .getActualTypeArguments()[0];
-            final String typeName = elementType.getTypeName();
-            final Class<?> typeClass = Class.forName(typeName);
             if (ResultSet.class.isInstance(value)) {
-                bindAll((ResultSet) value, typeClass, list);
+                //bindAll((ResultSet) value, typeClass, list);
+                bindAll((ResultSet) value, type, list);
                 return;
             }
-            list.add(typeClass
+//            list.add(typeClass
+//                .getMethod("valueOf", Object[].class, Object.class)
+//                .invoke(null, args, value));
+            list.add(type
                 .getMethod("valueOf", Object[].class, Object.class)
                 .invoke(null, args, value));
             return;
@@ -326,7 +348,6 @@ public class MetadataContext {
             for (final Field field : type.getDeclaredFields()) {
                 final String suppressionPath = suppressionPath(field);
                 if (suppressed(suppressionPath)) {
-                    //logger.log(Level.FINE, "suppressed: {0}", field);
                     continue;
                 }
                 final Label label = field.getAnnotation(Label.class);
@@ -341,11 +362,9 @@ public class MetadataContext {
         for (final Field field : type.getDeclaredFields()) {
             final String suppressionPath = suppressionPath(field);
             if (suppressed(suppressionPath)) {
-                //logger.log(Level.FINE, "suppressed: {0}", field);
                 continue;
             }
-            final Invocation invocation
-                = field.getAnnotation(Invocation.class);
+            final Invocation invocation = field.getAnnotation(Invocation.class);
             if (invocation == null) {
                 continue;
             }
@@ -387,16 +406,7 @@ public class MetadataContext {
     private <T> T bindSingle(final ResultSet results, final Class<T> type)
         throws SQLException, ReflectiveOperationException {
 
-        final T instance;
-        try {
-            instance = type.newInstance();
-        } catch (final InstantiationException ie) {
-            throw new RuntimeException(ie);
-        } catch (final IllegalAccessException iae) {
-            throw new RuntimeException(iae);
-        }
-
-        return bindSingle(results, type, instance);
+        return bindSingle(results, type, type.newInstance());
     }
 
 
@@ -406,15 +416,7 @@ public class MetadataContext {
         throws SQLException, ReflectiveOperationException {
 
         while (results.next()) {
-            final T instance;
-            try {
-                instance = type.newInstance();
-            } catch (final InstantiationException ie) {
-                throw new RuntimeException(ie);
-            } catch (final IllegalAccessException iae) {
-                throw new RuntimeException(iae);
-            }
-            list.add(bindSingle(results, type, instance));
+            list.add(bindSingle(results, type, type.newInstance()));
         }
 
         return list;
@@ -434,13 +436,28 @@ public class MetadataContext {
 
         final Metadata metadata = bindSingle(null, Metadata.class);
 
-        final List<Catalog> catalogs = metadata.getCatalogs();
-        if (catalogs.isEmpty()) {
-            final Catalog catalog = new Catalog().tableCat("");
-            bindSingle(null, Catalog.class, catalog);
-            catalogs.add(catalog);
-            final List<Schema> schema = catalog.getSchemas();
-            if (schema.isEmpty()) {
+        if (!suppressed("metadata/catalogs")) {
+            final List<Catalog> catalogs = metadata.getCatalogs();
+            if (catalogs.isEmpty()) {
+                final Catalog catalog = new Catalog().tableCat("");
+                logger.log(Level.INFO, "adding an empty catalog: {0}",
+                           new Object[]{catalog});
+                catalogs.add(catalog);
+                bindSingle(null, Catalog.class, catalog);
+            }
+            if (!suppressed("category/schemas")) {
+                for (final Catalog catalog : catalogs) {
+                    final List<Schema> schemas = catalog.getSchemas();
+                    if (schemas.isEmpty()) {
+                        final Schema schema = new Schema()
+                            .tableCatalog(catalog.getTableCat())
+                            .tableSchem("");
+                        logger.log(Level.INFO, "adding an empty schema: {0}",
+                                   new Object[]{schema});
+                        schemas.add(schema);
+                        bindSingle(null, Schema.class, schema);
+                    }
+                }
             }
         }
 
@@ -499,9 +516,10 @@ public class MetadataContext {
             results.close();
         }
 
-        if (list.isEmpty()) {
+        if (false && list.isEmpty()) {
             final Catalog catalog = new Catalog();
             catalog.setTableCat("");
+            bindSingle(null, Catalog.class, catalog);
             list.add(catalog);
         }
 

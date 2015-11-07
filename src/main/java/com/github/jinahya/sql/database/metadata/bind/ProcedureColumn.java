@@ -389,15 +389,15 @@ public class ProcedureColumn {
 
 
     @Label("SQL_DATA_TYPE")
-    @ReservedForFutureUse
-    @XmlElement(required = true)
-    private int sqlDataType;
+    @Reserved
+    @XmlElement(nillable = true, required = true)
+    private Integer sqlDataType;
 
 
     @Label("SQL_DATETIME_SUB")
-    @ReservedForFutureUse
-    @XmlElement(required = true)
-    private int sqlDatetimeSub;
+    @Reserved
+    @XmlElement(nillable = true, required = true)
+    private Integer sqlDatetimeSub;
 
 
     @Label("CHAR_OCTET_LENGTH")

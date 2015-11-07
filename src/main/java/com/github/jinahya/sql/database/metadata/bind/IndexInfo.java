@@ -40,19 +40,6 @@ import javax.xml.bind.annotation.XmlType;
 public class IndexInfo {
 
 
-    // ------------------------------------------------------------------- table
-    public Table getTable() {
-
-        return table;
-    }
-
-
-    public void setTable(final Table table) {
-
-        this.table = table;
-    }
-
-
     // ---------------------------------------------------------------- tableCat
     public String getTableCat() {
 
@@ -183,25 +170,27 @@ public class IndexInfo {
     }
 
 
-    public int getCardinality() {
+    // ------------------------------------------------------------- cardinality
+    public long getCardinality() {
 
         return cardinality;
     }
 
 
-    public void setCardinality(final int cardinality) {
+    public void setCardinality(final long cardinality) {
 
         this.cardinality = cardinality;
     }
 
 
-    public int getPages() {
+    // ------------------------------------------------------------------- pages
+    public long getPages() {
 
         return pages;
     }
 
 
-    public void setPages(final int pages) {
+    public void setPages(final long pages) {
 
         this.pages = pages;
     }
@@ -220,6 +209,19 @@ public class IndexInfo {
     }
 
 
+    // ------------------------------------------------------------------- table
+    public Table getTable() {
+
+        return table;
+    }
+
+
+    public void setTable(final Table table) {
+
+        this.table = table;
+    }
+
+
     @Label("TABLE_CAT")
     @XmlAttribute
     private String tableCat;
@@ -235,120 +237,63 @@ public class IndexInfo {
     private String tableName;
 
 
-    /**
-     * parent table.
-     */
-    @XmlTransient
-    private Table table;
-
-
-    /**
-     * Can index values be non-unique. {@code false} when {@link #type} is
-     * {@link DatabaseMetaData#tableIndexStatistic}.
-     */
     @Label("NON_UNIQUE")
     @XmlElement(required = true)
-    boolean nonUnique;
+    private boolean nonUnique;
 
 
-    /**
-     * index catalog (may be {@code null}); {@code null} when {@link #type} is
-     * {@link DatabaseMetaData#tableIndexStatistic}.
-     */
     @Label("INDEX_QUALIFIER")
-    @XmlElement(nillable = true, required = true)
     @NillableBySpecification
-    String indexQualifier;
+    @XmlElement(nillable = true, required = true)
+    private String indexQualifier;
 
 
-    /**
-     * index name; {@code null} when {@link #type} is
-     * {@link DatabaseMetaData#tableIndexStatistic}.
-     */
     @Label("INDEX_NAME")
-    @XmlElement(nillable = true, required = true)
     @NillableBySpecification
-    String indexName;
+    @XmlElement(nillable = true, required = true)
+    private String indexName;
 
 
-    /**
-     * index type.
-     * <ul>
-     * <li>{@link DatabaseMetaData#tableIndexStatistic} - this identifies table
-     * statistics that are returned in conjuction with a table's index
-     * descriptions</li>
-     * <li>{@link DatabaseMetaData#tableIndexClustered} - this is a clustered
-     * index</li>
-     * <li>{@link DatabaseMetaData#tableIndexHashed} - this is a hashed
-     * index</li>
-     * <li>{@link DatabaseMetaData#tableIndexOther} - this is some other style
-     * of index</li>
-     * </ul>
-     */
     @Label("TYPE")
     @XmlElement(required = true)
-    short type;
+    private short type;
 
 
-    /**
-     * column sequence number within index; zero when {@link #type} is
-     * {@link DatabaseMetaData#tableIndexStatistic}.
-     */
     @Label("ORDINAL_POSITION")
     @XmlElement(required = true)
-    short ordinalPosition;
+    private short ordinalPosition;
 
 
-    /**
-     * column name; {@code null} when {@link #type} is
-     * {@link DatabaseMetaData#tableIndexStatistic}.
-     */
     @Label("COLUMN_NAME")
-    @XmlElement(nillable = true, required = true)
     @NillableBySpecification
-    String columnName;
+    @XmlElement(nillable = true, required = true)
+    private String columnName;
 
 
-    /**
-     * column sort sequence, "A" => ascending, "D" => descending, may be
-     * {@code null} if sort sequence is not supported; {@code null} when
-     * {@link #type} is {@link DatabaseMetaData#tableIndexStatistic}.
-     */
     @Label("ASC_OR_DESC")
-    @XmlElement(nillable = true, required = true)
     @NillableBySpecification
-    String ascOrDesc;
+    @XmlElement(nillable = true, required = true)
+    private String ascOrDesc;
 
 
-    /**
-     * When {@link #type} is {@link DatabaseMetaData#tableIndexStatistic}, then
-     * this is the number of rows in the table; otherwise, it is the number of
-     * unique values in the index.
-     */
     @Label("CARDINALITY")
     @XmlElement(required = true)
-    //long cardinality;
-    int cardinality;
+    private long cardinality;
 
 
-    /**
-     * When {@link #type} is {@link DatabaseMetaData#tableIndexStatisic} then
-     * this is the number of pages used for the table, otherwise it is the
-     * number of pages used for the current index.
-     */
     @Label("PAGES")
     @XmlElement(required = true)
-    //long pages;
-    int pages;
+    private long pages;
 
 
-    /**
-     * Filter condition, if any. (may be {@code null})
-     */
     @Label("FILTER_CONDITION")
-    @XmlElement(nillable = true, required = true)
     @NillableBySpecification
-    String filterCondition;
+    @XmlElement(nillable = true, required = true)
+    private String filterCondition;
+
+
+    @XmlTransient
+    private Table table;
 
 
 }

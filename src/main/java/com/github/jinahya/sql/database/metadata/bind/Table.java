@@ -38,11 +38,8 @@ import javax.xml.bind.annotation.XmlType;
         "tableName", "tableType", "remarks", "typeCat", "typeSchem", "typeName",
         "selfReferencingColName", "refGeneration",
         // ---------------------------------------------------------------------
-        "bestRowIdentifiers",
-        //"columnPrivileges",
-        "columns", "exportedKeys",
-        "importedKeys", "indexInfo", "primaryKeys", "pseudoColumns",
-        "tablePrivileges",
+        "bestRowIdentifiers", "columns", "exportedKeys", "importedKeys",
+        "indexInfo", "primaryKeys", "pseudoColumns", "tablePrivileges",
         "versionColumns"
     }
 )
@@ -102,6 +99,45 @@ public class Table {
     }
 
 
+    // ----------------------------------------------------------------- typeCat
+    public String getTypeCat() {
+
+        return typeCat;
+    }
+
+
+    public void setTypeCat(final String typeCat) {
+
+        this.typeCat = typeCat;
+    }
+
+
+    // --------------------------------------------------------------- typeSchem
+    public String getTypeSchem() {
+
+        return typeSchem;
+    }
+
+
+    public void setTypeSchem(final String typeSchem) {
+
+        this.typeSchem = typeSchem;
+    }
+
+
+    // ---------------------------------------------------------------- typeName
+    public String getTypeName() {
+
+        return typeName;
+    }
+
+
+    public void setTypeName(final String typeName) {
+
+        this.typeName = typeName;
+    }
+
+
     // -------------------------------------------------- selfReferencingColName
     public String getSelfReferencingColName() {
 
@@ -128,6 +164,19 @@ public class Table {
     }
 
 
+    // ------------------------------------------------------------------ schema
+    public Schema getSchema() {
+
+        return schema;
+    }
+
+
+    public void setSchema(final Schema schema) {
+
+        this.schema = schema;
+    }
+
+
     // ------------------------------------------------------ bestRowIdentifiers
     public List<BestRowIdentifier> getBestRowIdentifiers() {
 
@@ -139,16 +188,7 @@ public class Table {
     }
 
 
-//    // -------------------------------------------------------- columnPrivileges
-//    public List<ColumnPrivilege> getColumnPrivileges() {
-//
-//        if (columnPrivileges == null) {
-//            columnPrivileges = new ArrayList<ColumnPrivilege>();
-//        }
-//
-//        return columnPrivileges;
-//    }
-// ----------------------------------------------------------------- columns
+    // ----------------------------------------------------------------- columns
     public List<Column> getColumns() {
 
         if (columns == null) {
@@ -156,53 +196,6 @@ public class Table {
         }
 
         return columns;
-    }
-
-
-    /**
-     * Returns a list of column names ordered by {@code ordinalPosition}.
-     *
-     * @return a list of column names.
-     */
-    public List<String> getColumnNames() {
-
-        final List<String> columnNames
-            = new ArrayList<String>(getColumns().size());
-
-        for (final Column column : getColumns()) {
-            columnNames.add(column.getColumnName());
-        }
-
-        return columnNames;
-    }
-
-
-    public Column getColumnByName(final String columnName) {
-
-        if (columnName == null) {
-            throw new NullPointerException("columnName");
-        }
-
-        for (final Column column : getColumns()) {
-            if (columnName.equals(column.getColumnName())) {
-                return column;
-            }
-        }
-
-        return null;
-    }
-
-
-    // ------------------------------------------------------------------ schema
-    public Schema getSchema() {
-
-        return schema;
-    }
-
-
-    public void setSchema(final Schema schema) {
-
-        this.schema = schema;
     }
 
 
@@ -255,42 +248,6 @@ public class Table {
         }
 
         return indexColumnNames;
-    }
-
-
-    public List<String> getIndexNames(final Boolean nonUnique,
-                                      final Short... types) {
-
-        final List<String> indexNames = new ArrayList<String>();
-
-        for (final IndexInfo indexInfo_ : getIndexInfo()) {
-            if (nonUnique != null
-                && indexInfo_.getNonUnique() != nonUnique.booleanValue()) {
-                continue;
-            }
-            if (types != null) {
-                boolean typeMatches = false;
-                for (final Short type : types) {
-                    if (type == null) {
-                        throw new NullPointerException("null type");
-                    }
-                    if (type.shortValue() == indexInfo_.getType()) {
-                        typeMatches = true;
-                        break;
-                    }
-                }
-                if (!typeMatches) {
-                    continue;
-                }
-            }
-            final String indexName = indexInfo_.getIndexName();
-            if (indexNames.contains(indexName)) {
-                continue;
-            }
-            indexNames.add(indexName);
-        }
-
-        return indexNames;
     }
 
 
@@ -366,32 +323,32 @@ public class Table {
 
 
     @Label("TYPE_CAT")
-    @XmlElement(nillable = true, required = true)
     @NillableBySpecification
+    @XmlElement(nillable = true, required = true)
     private String typeCat;
 
 
     @Label("TYPE_SCHEM")
-    @XmlElement(nillable = true, required = true)
     @NillableBySpecification
+    @XmlElement(nillable = true, required = true)
     private String typeSchem;
 
 
     @Label("TYPE_NAME")
-    @XmlElement(nillable = true, required = true)
     @NillableBySpecification
+    @XmlElement(nillable = true, required = true)
     private String typeName;
 
 
     @Label("SELF_REFERENCING_COL_NAME")
-    @XmlElement(nillable = true, required = true)
     @NillableBySpecification
+    @XmlElement(nillable = true, required = true)
     private String selfReferencingColName;
 
 
     @Label("REF_GENERATION")
-    @XmlElement(nillable = true, required = true)
     @NillableBySpecification
+    @XmlElement(nillable = true, required = true)
     private String refGeneration;
 
 
@@ -426,15 +383,6 @@ public class Table {
     private List<BestRowIdentifier> bestRowIdentifiers;
 
 
-//    @Invocation(
-//        name = "getColumnPrivileges",
-//        types = {String.class, String.class, String.class, String.class},
-//        argsarr = {
-//            @InvocationArgs({":tableCat", ":tableSchem", ":tableName", "null"})
-//        }
-//    )
-//    @XmlElementRef
-//    private List<ColumnPrivilege> columnPrivileges;
     @Invocation(
         name = "getColumns",
         types = {String.class, String.class, String.class, String.class},

@@ -22,19 +22,16 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
-import static java.lang.invoke.MethodHandles.lookup;
 import java.sql.Connection;
 import java.sql.DatabaseMetaData;
 import static java.sql.DriverManager.getConnection;
 import java.sql.SQLException;
-import java.util.List;
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBException;
 import javax.xml.bind.Marshaller;
 import org.slf4j.Logger;
 import static org.slf4j.LoggerFactory.getLogger;
-import org.testng.annotations.AfterClass;
-import org.testng.annotations.BeforeClass;
+import org.testng.SkipException;
 import org.testng.annotations.Test;
 
 
@@ -42,58 +39,48 @@ import org.testng.annotations.Test;
  *
  * @author Jin Kwon &lt;jinahya_at_gmail.com&gt;
  */
-public class H2MemoryTest {
+public class MetadataTest {
 
 
-    private static final Logger logger = getLogger(lookup().lookupClass());
+    private static final Logger logger = getLogger(MetadataTest.class);
 
 
-    private static final String DRIVER_NAME = "org.h2.Driver";
+    @Test
+    public void test() throws ClassNotFoundException,
+                              ReflectiveOperationException, SQLException,
+                              JAXBException, IOException {
 
+        final String driverName = System.getProperty("driverName");
+        if (driverName != null) {
+            logger.debug("driverName: {}", driverName);
+            Class.forName(driverName);
+        }
 
-    private static final String CONNECTION_URL
-        = "jdbc:h2:mem:test"; //;DB_CLOSE_DELAY=-1";
-
-
-    @BeforeClass
-    private static void beforeClass() throws SQLException {
-    }
-
-
-    @AfterClass
-    private static void afterClass() throws SQLException {
-    }
-
-
-    @Test(enabled = true)
-    public void retrieve() throws SQLException, ReflectiveOperationException,
-                                  JAXBException, IOException {
+        final String connectionUrl = System.getProperty("connectionUrl");
+        if (connectionUrl == null) {
+            logger.info("no connectionUrl. skipping...");
+            throw new SkipException("no connectionUrl");
+        }
+        logger.debug("connectionUrl: {}", connectionUrl);
+        assert connectionUrl != null;
 
         final Metadata metadata;
-
-        try (Connection connection = getConnection(CONNECTION_URL)) {
+        try (Connection connection = getConnection(connectionUrl)) {
             final DatabaseMetaData database = connection.getMetaData();
             final MetadataContext context = new MetadataContext(database);
-            final List<SchemaName> schemaNames = context.getSchemas();
-            context.addSuppressionPaths(
-                "column/isGeneratedcolumn",
-                "metadata/generatedKeyAlwaysReturned",
-                "schema/functionColumns",
-                "schema/functions",
-                "table/pseudoColumns"
-            );
             metadata = context.getMetadata();
         }
 
         final JAXBContext context = JAXBContext.newInstance(Metadata.class);
         final Marshaller marshaller = context.createMarshaller();
         marshaller.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, Boolean.TRUE);
-
-        final File file = new File("target", "h2.memory.metadata.xml");
+        final File file = new File("target", "metadata.xml");
         try (OutputStream outputStream = new FileOutputStream(file)) {
             marshaller.marshal(metadata, outputStream);
             outputStream.flush();
         }
+
+        metadata.print(System.out);
     }
 
 

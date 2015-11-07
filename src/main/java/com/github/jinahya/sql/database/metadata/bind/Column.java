@@ -35,15 +35,55 @@ import javax.xml.bind.annotation.XmlType;
 @XmlRootElement
 @XmlType(
     propOrder = {
-        "columnName", "dataType", "typeName", "columnSize", "decimalDigits",
-        "numPrecRadix", "nullable", "remarks", "columnDef", "charOctetLength",
-        "ordinalPosition", "isNullable", "scopeCatalog", "scopeSchema",
-        "scopeTable", "sourceDataType", "isAutoincrement", "isGeneratedcolumn",
+        "columnName", "dataType", "typeName", "columnSize", "bufferLength",
+        "decimalDigits", "numPrecRadix", "nullable", "remarks", "columnDef",
+        "sqlDataType", "sqlDatetimeSub", "charOctetLength", "ordinalPosition",
+        "isNullable", "scopeCatalog", "scopeSchema", "scopeTable",
+        "sourceDataType", "isAutoincrement", "isGeneratedcolumn",
         // ---------------------------------------------------------------------
         "columnPrivileges"
     }
 )
 public class Column {
+
+
+    // ---------------------------------------------------------------- tableCat
+    public String getTableCat() {
+
+        return tableCat;
+    }
+
+
+    public void setTableCat(final String tableCat) {
+
+        this.tableCat = tableCat;
+    }
+
+
+    // -------------------------------------------------------------- tableSchem
+    public String getTableSchem() {
+
+        return tableSchem;
+    }
+
+
+    public void setTableSchem(final String tableSchem) {
+
+        this.tableSchem = tableSchem;
+    }
+
+
+    // --------------------------------------------------------------- tableName
+    public String getTableName() {
+
+        return tableName;
+    }
+
+
+    public void setTableName(final String tableName) {
+
+        this.tableName = tableName;
+    }
 
 
     // -------------------------------------------------------------- columnName
@@ -95,6 +135,19 @@ public class Column {
     public void setColumnSize(int columnSize) {
 
         this.columnSize = columnSize;
+    }
+
+
+    // ------------------------------------------------------------ bufferLength
+    public Integer getBufferLength() {
+
+        return bufferLength;
+    }
+
+
+    public void setBufferLength(final Integer bufferLength) {
+
+        this.bufferLength = bufferLength;
     }
 
 
@@ -163,6 +216,32 @@ public class Column {
     }
 
 
+    // ------------------------------------------------------------- sqlDataType
+    public Integer getSqlDataType() {
+
+        return sqlDataType;
+    }
+
+
+    public void setSqlDataType(final Integer sqlDataType) {
+
+        this.sqlDataType = sqlDataType;
+    }
+
+
+    // ---------------------------------------------------------- sqlDatetimeSub
+    public Integer getSqlDatetimeSub() {
+
+        return sqlDatetimeSub;
+    }
+
+
+    public void setSqlDatetimeSub(final Integer sqlDatetimeSub) {
+
+        this.sqlDatetimeSub = sqlDatetimeSub;
+    }
+
+
     // --------------------------------------------------------- charOctetLength
     public int getCharOctetLength() {
 
@@ -202,42 +281,54 @@ public class Column {
     }
 
 
+    // ------------------------------------------------------------ scopeCatalog
     public String getScopeCatalog() {
+
         return scopeCatalog;
     }
 
 
-    public void setScopeCatalog(String scopeCatalog) {
+    public void setScopeCatalog(final String scopeCatalog) {
+
         this.scopeCatalog = scopeCatalog;
     }
 
 
+    // ------------------------------------------------------------- scopeSchema
     public String getScopeSchema() {
+
         return scopeSchema;
     }
 
 
-    public void setScopeSchema(String scopeSchema) {
+    public void setScopeSchema(final String scopeSchema) {
+
         this.scopeSchema = scopeSchema;
     }
 
 
+    // -------------------------------------------------------------- scopeTable
     public String getScopeTable() {
+
         return scopeTable;
     }
 
 
-    public void setScopeTable(String scopeTable) {
+    public void setScopeTable(final String scopeTable) {
+
         this.scopeTable = scopeTable;
     }
 
 
-    public String getSourceDataType() {
+    // ---------------------------------------------------------- sourceDataType
+    public Short getSourceDataType() {
+
         return sourceDataType;
     }
 
 
-    public void setSourceDataType(String sourceDataType) {
+    public void setSourceDataType(final Short sourceDataType) {
+
         this.sourceDataType = sourceDataType;
     }
 
@@ -328,14 +419,15 @@ public class Column {
 
 
     @Label("BUFFER_LENGTH")
-    @XmlTransient
-    @NotUsed
-    private Object bufferLength;
+    @Unused
+    @XmlElement(nillable = true, required = true)
+    private Integer bufferLength;
 
 
     @Label("DECIMAL_DIGITS")
+    @NillableBySpecification
     @XmlElement(required = true)
-    private int decimalDigits;
+    private Integer decimalDigits;
 
 
     @Label("NUM_PREC_RADIX")
@@ -361,15 +453,15 @@ public class Column {
 
 
     @Label("SQL_DATA_TYPE")
-    @XmlTransient
-    @NotUsed
-    private int sqlDataType;
+    @Unused
+    @XmlElement(nillable = true, required = true)
+    private Integer sqlDataType;
 
 
     @Label("SQL_DATETIME_SUB")
-    @XmlTransient
-    @NotUsed
-    private int sqlDatetimeSub;
+    @Unused
+    @XmlElement(nillable = true, required = true)
+    private Integer sqlDatetimeSub;
 
 
     @Label("CHAR_OCTET_LENGTH")
@@ -400,15 +492,15 @@ public class Column {
 
 
     @Label("SCOPE_TABLE")
-    @XmlElement(nillable = true, required = true)
     @NillableBySpecification
+    @XmlElement(nillable = true, required = true)
     private String scopeTable;
 
 
     @Label("SOURCE_DATA_TYPE")
-    @XmlElement(nillable = true, required = true)
     @NillableBySpecification
-    private String sourceDataType;
+    @XmlElement(nillable = true, required = true)
+    private Short sourceDataType;
 
 
     @Label("IS_AUTOINCREMENT")
