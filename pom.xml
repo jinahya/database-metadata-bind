@@ -229,6 +229,7 @@
 
   <!-- More Project Information -->
   <name>${project.artifactId}</name>
+  <description>Bindings for java.sql.DatabaseMetaData</description>
   <url>https://www.jinahya.com/mvn/site/${project.groupId}/${project.artifactId}/${project.version}</url>
   <inceptionYear>2011</inceptionYear>
   <licenses>
