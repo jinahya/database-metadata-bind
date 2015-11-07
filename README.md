@@ -29,16 +29,16 @@ A library binding various information from [DatabaseMetaData](http://docs.oracle
 
 ## Hierarchy
   * Metadata
-    * Category
-      * Schema
-        * Function
-          * FunctionColumn
-        * Procedure
-          * ProcedureColumn
-        * Table
-          * BestRowIdentifier 
-          * Column
-            * ColumnPrivilege
+    * Category (`metadata/categories`)
+      * Schema (`category/schemas`)
+        * Function (`schema/functions`)
+          * FunctionColumn (`function/functionColumns`)
+        * Procedure (`schema/procedures`)
+          * ProcedureColumn (`procedure/procedureColuns`)
+        * Table (`schema/tables`)
+          * BestRowIdentifier (`table/bestRowIdentifiers`)
+          * Column (`table/columns`)
+            * ColumnPrivilege (`column/columnPrivileges`)
           * ExportedKey
           * ImportedKey
           * IndexInfo
