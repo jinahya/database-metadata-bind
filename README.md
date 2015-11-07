@@ -19,9 +19,10 @@ A library binding various information from [DatabaseMetaData](http://docs.oracle
 
 ## Versions
 
-| Version | Apidocs | Site | Notes |
-| :------ | :------ | :--- | :---- |
-| `1.0-SNAPSHOT` | [apidocs](http://jinahya.github.io/sql-databasemetadata/site/1.0-SNAPSHOT/apidocs/index.html) | [site](http://jinahya.github.io/sql-databasemetadata/site/1.0-SNAPSHOT/index.html)||
+| Version        | Apidocs | Site | Notes |
+| :------        | :------ | :--- | :---- |
+| `0.6-SNAPSHOT` | [apidocs](http://jinahya.github.io/sql-databasemetadata/site/0.6-SNAPSHOT/apidocs/index.html) | [site](http://jinahya.github.io/sql-databasemetadata/site/0.6-SNAPSHOT/index.html)||
+| `0.5`          | [apidocs](http://jinahya.github.io/sql-databasemetadata/site/0.5/apidocs/index.html) | [site](http://jinahya.github.io/sql-databasemetadata/site/0.5/index.html)||
 
 
 <!-- 1.0-SNAPSHOT ([apidocs](http://jinahya.github.io/sql-databasemetadata/site/1.0-SNAPSHOT/apidocs/index.html)) ([site](http://jinahya.github.io/sql-databasemetadata/site/1.0-SNAPSHOT/index.html))  -->
