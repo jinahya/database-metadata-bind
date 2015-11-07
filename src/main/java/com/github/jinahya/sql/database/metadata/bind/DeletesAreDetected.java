@@ -34,13 +34,12 @@ import javax.xml.bind.annotation.XmlValue;
 public class DeletesAreDetected {
 
 
-    public static final List<Integer> TYPES = Arrays.asList(
+    static final List<Integer> TYPES = Arrays.asList(
         ResultSet.TYPE_FORWARD_ONLY, ResultSet.TYPE_SCROLL_INSENSITIVE,
         ResultSet.TYPE_SCROLL_SENSITIVE);
 
 
-    public static DeletesAreDetected valueOf(
-        final Object[] args, final Object value) {
+    static DeletesAreDetected valueOf(final Object[] args, final Object value) {
 
         return new DeletesAreDetected()
             .type((Integer) args[0])
@@ -82,7 +81,7 @@ public class DeletesAreDetected {
     }
 
 
-    public DeletesAreDetected value(final boolean value) {
+    DeletesAreDetected value(final boolean value) {
 
         setValue(value);
 
@@ -90,6 +89,7 @@ public class DeletesAreDetected {
     }
 
 
+    // -------------------------------------------------------------------------
     @XmlAttribute
     private int type;
 

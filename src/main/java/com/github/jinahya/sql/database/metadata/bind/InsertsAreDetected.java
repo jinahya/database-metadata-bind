@@ -34,13 +34,12 @@ import javax.xml.bind.annotation.XmlValue;
 public class InsertsAreDetected {
 
 
-    public static List<Integer> TYPES = Arrays.asList(
+    static List<Integer> TYPES = Arrays.asList(
         ResultSet.TYPE_FORWARD_ONLY, ResultSet.TYPE_SCROLL_INSENSITIVE,
         ResultSet.TYPE_SCROLL_SENSITIVE);
 
 
-    public static InsertsAreDetected valueOf(
-        final Object[] args, final Object value) {
+    static InsertsAreDetected valueOf(final Object[] args, final Object value) {
 
         return new InsertsAreDetected()
             .type((Integer) args[0])
@@ -82,7 +81,7 @@ public class InsertsAreDetected {
     }
 
 
-    public InsertsAreDetected value(final boolean value) {
+    InsertsAreDetected value(final boolean value) {
 
         setValue(value);
 
@@ -90,6 +89,7 @@ public class InsertsAreDetected {
     }
 
 
+    // -------------------------------------------------------------------------
     @XmlAttribute
     private int type;
 
