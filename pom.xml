@@ -6,7 +6,7 @@
   <!-- The Basics -->
   <groupId>com.github.jinahya</groupId>
   <artifactId>database-metadata-bind</artifactId>
-  <version>0.4</version>
+  <version>0.5</version>
   <packaging>jar</packaging>
   <dependencyManagement />
   <dependencies>
@@ -229,6 +229,7 @@
 
   <!-- More Project Information -->
   <name>${project.artifactId}</name>
+  <description>Bindings for java.sql.DatabaseMetaData</description>
   <url>https://www.jinahya.com/mvn/site/${project.groupId}/${project.artifactId}/${project.version}</url>
   <inceptionYear>2011</inceptionYear>
   <licenses>
@@ -260,7 +261,7 @@
     <connection>scm:git:git@github.com:jinahya/database-metadata-bind.git</connection>
     <developerConnection>scm:git:git@github.com:jinahya/database-metadata-bind.git</developerConnection>
     <url>https://github.com/jinahya/database-metadata-bind</url>
-    <tag>0.4</tag>
+    <tag>0.5</tag>
   </scm>
   <prerequisites />
   <repositories />
