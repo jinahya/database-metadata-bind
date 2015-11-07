@@ -1,4 +1,4 @@
-sql-databasemetadata
+database-metadata-bind
 ====================
 A library binding various information from [DatabaseMetaData](http://docs.oracle.com/javase/7/docs/api/java/sql/DatabaseMetaData.html). 
 
@@ -22,3 +22,27 @@ A library binding various information from [DatabaseMetaData](http://docs.oracle
 
 
 <!-- 1.0-SNAPSHOT ([apidocs](http://jinahya.github.io/sql-databasemetadata/site/1.0-SNAPSHOT/apidocs/index.html)) ([site](http://jinahya.github.io/sql-databasemetadata/site/1.0-SNAPSHOT/index.html))  -->
+
+## Hierarchy
+  * Metadata
+    * Category
+      * Schema
+        * Function
+          * FunctionColumn
+        * Procedure
+          * ProcedureColumn
+        * Table
+          * BestRowIdentifier 
+          * Column
+            * ColumnPrivilege
+          * ExportedKey
+          * ImportedKey
+          * IndexInfo
+          * PrimaryKey
+          * PseudoColumn
+          * TablePrivilege
+          * VersionColumn
+        * UserDefinedType
+    * ClientInfoProperty
+    * SchemaName
+    * TableType
