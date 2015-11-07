@@ -364,7 +364,7 @@ public class MetadataContext {
 //                .getMethod("valueOf", Object[].class, Object.class)
 //                .invoke(null, args, value));
             list.add(type
-                .getMethod("valueOf", Object[].class, Object.class)
+                .getDeclaredMethod("valueOf", Object[].class, Object.class)
                 .invoke(null, args, value));
             parent(type, list, obj);
             return;
