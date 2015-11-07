@@ -1,6 +1,8 @@
 database-metadata-bind
 ====================
 ![](https://travis-ci.org/jinahya/database-metadata-bind.svg?branch=develop)
+[![GitHub version](https://badge.fury.io/gh/jinahya%2Fdatabase-metadata-bind.svg)](https://badge.fury.io/gh/jinahya%2Fdatabase-metadata-bind)
+[![Dependency Status](https://www.versioneye.com/user/projects/563ccf434d415e0018000001/badge.svg?style=flat)](https://www.versioneye.com/user/projects/563ccf434d415e0018000001)
 
 A library binding various information from [DatabaseMetaData](http://docs.oracle.com/javase/7/docs/api/java/sql/DatabaseMetaData.html).
 
