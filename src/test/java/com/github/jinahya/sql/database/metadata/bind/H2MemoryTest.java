@@ -74,11 +74,9 @@ public class H2MemoryTest {
         try (Connection connection = getConnection(CONNECTION_URL)) {
             final DatabaseMetaData database = connection.getMetaData();
             final MetadataContext context = new MetadataContext(database);
-            final List<SchemaName> schemaNames = context.getSchemas();
             context.addSuppressionPaths(
                 "column/isGeneratedcolumn",
                 "metadata/generatedKeyAlwaysReturned",
-                "schema/functionColumns",
                 "schema/functions",
                 "table/pseudoColumns"
             );

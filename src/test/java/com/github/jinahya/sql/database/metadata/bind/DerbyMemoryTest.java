@@ -100,7 +100,6 @@ public class DerbyMemoryTest {
         try (Connection connection = getConnection(CONNECTION_URL)) {
             final DatabaseMetaData database = connection.getMetaData();
             final MetadataContext context = new MetadataContext(database);
-            final List<SchemaName> schemaNames = context.getSchemas();
             metadata = context.getMetadata();
         }
 

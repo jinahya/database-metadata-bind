@@ -44,6 +44,32 @@ import javax.xml.bind.annotation.XmlType;
 public class Function {
 
 
+    // ------------------------------------------------------------- functionCat
+    public String getFunctionCat() {
+
+        return functionCat;
+    }
+
+
+    public void setFunctionCat(final String functionCat) {
+
+        this.functionCat = functionCat;
+    }
+
+
+    // ----------------------------------------------------------- functionSchem
+    public String getFunctionSchem() {
+
+        return functionSchem;
+    }
+
+
+    public void setFunctionSchem(final String functionSchem) {
+
+        this.functionSchem = functionSchem;
+    }
+
+
     // ------------------------------------------------------------ functionName
     public String getFunctionName() {
 

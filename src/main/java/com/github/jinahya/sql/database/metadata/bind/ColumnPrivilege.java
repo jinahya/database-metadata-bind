@@ -34,14 +34,59 @@ import javax.xml.bind.annotation.XmlType;
 public class ColumnPrivilege {
 
 
-    // ------------------------------------------------------------------ column
-    public Table getTable() {
+    // ---------------------------------------------------------------- tableCat
+    public String getTableCat() {
 
-        return table;
+        return tableCat;
     }
 
 
-    // ----------------------------------------------------------------- GRANTOR
+    public void setTableCat(final String tableCat) {
+
+        this.tableCat = tableCat;
+    }
+
+
+    // -------------------------------------------------------------- tableSchem
+    public String getTableSchem() {
+
+        return tableSchem;
+    }
+
+
+    public void setTableSchem(final String tableSchem) {
+
+        this.tableSchem = tableSchem;
+    }
+
+
+    // --------------------------------------------------------------- tableName
+    public String getTableName() {
+
+        return tableName;
+    }
+
+
+    public void setTableName(final String tableName) {
+
+        this.tableName = tableName;
+    }
+
+
+    // -------------------------------------------------------------- columnName
+    public String getColumnName() {
+
+        return columnName;
+    }
+
+
+    public void setColumnName(final String columnName) {
+
+        this.columnName = columnName;
+    }
+
+
+    // ----------------------------------------------------------------- grantor
     public String getGrantor() {
 
         return grantor;
@@ -54,7 +99,7 @@ public class ColumnPrivilege {
     }
 
 
-    // ----------------------------------------------------------------- GRANTEE
+    // ----------------------------------------------------------------- grantee
     public String getGrantee() {
 
         return grantee;
@@ -67,7 +112,7 @@ public class ColumnPrivilege {
     }
 
 
-    // --------------------------------------------------------------- PRIVILEGE
+    // --------------------------------------------------------------- privilege
     public String getPrivilege() {
 
         return privilege;
@@ -80,7 +125,7 @@ public class ColumnPrivilege {
     }
 
 
-    // ------------------------------------------------------------ IS_GRANTABLE
+    // ------------------------------------------------------------- isGrantable
     public String getIsGrantable() {
 
         return isGrantable;
@@ -93,77 +138,63 @@ public class ColumnPrivilege {
     }
 
 
-    /**
-     * table catalog (may be {@code null}).
-     */
+    // ------------------------------------------------------------------- table
+    public Table getTable() {
+
+        return table;
+    }
+
+
+    public void setTable(final Table table) {
+
+        this.table = table;
+    }
+
+
     @Label("TABLE_CAT")
+    @NillableBySpecification
     @XmlAttribute
     private String tableCat;
 
 
-    /**
-     * table schema (may be {@code null}).
-     */
     @Label("TABLE_SCHEM")
+    @NillableBySpecification
     @XmlAttribute
     private String tableSchem;
 
 
-    /**
-     * table name.
-     */
     @Label("TABLE_NAME")
     @XmlAttribute
     private String tableName;
 
 
-    /**
-     * column name.
-     */
     @Label("COLUMN_NAME")
-    @XmlAttribute(required = true)
-    //@XmlElement(nillable = true, required = true)
+    @XmlAttribute
     private String columnName;
 
 
-    /**
-     * grantor of access (may be {@code null}).
-     */
     @Label("GRANTOR")
     @NillableBySpecification
     @XmlElement(nillable = true, required = true)
-    String grantor;
+    private String grantor;
 
 
-    /**
-     * grantee of access.
-     */
     @Label("GRANTEE")
     @XmlElement(required = true)
-    String grantee;
+    private String grantee;
 
 
-    /**
-     * name of access (SELECT, INSERT, UPDATE, REFRENCES, ...)
-     */
     @Label("PRIVILEGE")
     @XmlElement(required = true)
-    String privilege;
+    private String privilege;
 
 
-    /**
-     * {@code YES} if grantee is permitted to grant to others; {@code NO} if
-     * not; {@code null} if unknown.
-     */
     @Label("IS_GRANTABLE")
     @NillableBySpecification
     @XmlElement(nillable = true, required = true)
-    String isGrantable;
+    private String isGrantable;
 
 
-    /**
-     * parent table
-     */
     @XmlTransient
     private Table table;
 

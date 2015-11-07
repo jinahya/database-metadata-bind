@@ -21,6 +21,8 @@ package com.github.jinahya.sql.database.metadata.bind;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.logging.Logger;
+import static java.util.logging.Logger.getLogger;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlElementRef;
 import javax.xml.bind.annotation.XmlRootElement;
@@ -35,6 +37,9 @@ import javax.xml.bind.annotation.XmlType;
 @XmlRootElement
 @XmlType(propOrder = {"tableCat", "schemas"})
 public class Catalog implements Serializable {
+
+
+    private static final Logger logger = getLogger(Catalog.class.getName());
 
 
     @Override
@@ -83,12 +88,29 @@ public class Catalog implements Serializable {
     }
 
 
+    //@XmlAttribute
+    @Deprecated
+    private String getMetadataString() {
+
+        return metadata == null ? null : metadata.toString();
+    }
+
+
     public void setMetadata(final Metadata metadata) {
 
         this.metadata = metadata;
     }
 
 
+    Catalog metadata(final Metadata metadata) {
+
+        setMetadata(metadata);
+
+        return this;
+    }
+
+
+    // -------------------------------------------------------------------------
     @Label("TABLE_CAT")
     @XmlElement(nillable = true, required = true)
     private String tableCat;

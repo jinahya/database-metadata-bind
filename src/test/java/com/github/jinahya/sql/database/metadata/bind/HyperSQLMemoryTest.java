@@ -64,14 +64,14 @@ public class HyperSQLMemoryTest {
 
 
     @Test(enabled = true)
-    public void retrieve() throws SQLException, ReflectiveOperationException, JAXBException, IOException {
+    public void retrieve() throws SQLException, ReflectiveOperationException,
+                                  JAXBException, IOException {
 
         final Metadata metadata;
 
         try (Connection connection = getConnection(CONNECTION_URL)) {
             final DatabaseMetaData database = connection.getMetaData();
             final MetadataContext context = new MetadataContext(database);
-            final List<SchemaName> schemaNames = context.getSchemas();
             context.addSuppressionPath(
                 "table/pseudoColumns"
             );

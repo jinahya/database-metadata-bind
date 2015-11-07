@@ -34,6 +34,45 @@ import javax.xml.bind.annotation.XmlType;
 public class PrimaryKey {
 
 
+    // ---------------------------------------------------------------- tableCat
+    public String getTableCat() {
+
+        return tableCat;
+    }
+
+
+    public void setTableCat(final String tableCat) {
+
+        this.tableCat = tableCat;
+    }
+
+
+    // -------------------------------------------------------------- tableSchem
+    public String getTableSchem() {
+
+        return tableSchem;
+    }
+
+
+    public void setTableSchem(final String tableSchem) {
+
+        this.tableSchem = tableSchem;
+    }
+
+
+    // --------------------------------------------------------------- tableName
+    public String getTableName() {
+
+        return tableName;
+    }
+
+
+    public void setTableName(final String tableName) {
+
+        this.tableName = tableName;
+    }
+
+
     // -------------------------------------------------------------- columnName
     public String getColumnName() {
 
@@ -86,60 +125,39 @@ public class PrimaryKey {
     }
 
 
-    /**
-     * table catalog (may be {@code null}).
-     */
     @Label("TABLE_CAT")
+    @NillableBySpecification
     @XmlAttribute
     private String tableCat;
 
 
-    /**
-     * table schema (may be {@code null}).
-     */
     @Label("TABLE_SCHEM")
+    @NillableBySpecification
     @XmlAttribute
     private String tableSchem;
 
 
-    /**
-     * table name.
-     */
     @Label("TABLE_Name")
     @XmlAttribute
     private String tableName;
 
 
-    /**
-     * column name.
-     */
     @Label("COLUMN_NAME")
     @XmlElement(required = true)
     private String columnName;
 
 
-    /**
-     * sequence number within primary key. (a value of 1 represents the first
-     * column of the primary key, a value of 2 would represent the second column
-     * within the primary key).
-     */
     @Label("KEY_SEQ")
     @XmlElement(required = true)
-    short keySeq;
+    private short keySeq;
 
 
-    /**
-     * primary key name (may be {@code null})
-     */
     @Label("PK_NAME")
-    @XmlElement(nillable = true, required = true)
     @NillableBySpecification
+    @XmlElement(nillable = true, required = true)
     private String pkName;
 
 
-    /**
-     * parent table.
-     */
     @XmlTransient
     private Table table;
 

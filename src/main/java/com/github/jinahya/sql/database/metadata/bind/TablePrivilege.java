@@ -34,6 +34,45 @@ import javax.xml.bind.annotation.XmlType;
 public class TablePrivilege {
 
 
+    // ---------------------------------------------------------------- tableCat
+    public String getTableCat() {
+
+        return tableCat;
+    }
+
+
+    public void setTableCat(final String tableCat) {
+
+        this.tableCat = tableCat;
+    }
+
+
+    // -------------------------------------------------------------- tableSchem
+    public String getTableSchem() {
+
+        return tableSchem;
+    }
+
+
+    public void setTableSchem(final String tableSchem) {
+
+        this.tableSchem = tableSchem;
+    }
+
+
+    // --------------------------------------------------------------- tableName
+    public String getTableName() {
+
+        return tableName;
+    }
+
+
+    public void setTableName(final String tableName) {
+
+        this.tableName = tableName;
+    }
+
+
     // ----------------------------------------------------------------- grantor
     /**
      * Returns {@link #grantor}.
@@ -125,11 +164,13 @@ public class TablePrivilege {
 
 
     @Label("TABLE_CAT")
+    @NillableBySpecification
     @XmlAttribute
     private String tableCat;
 
 
     @Label("TABLE_SCHEM")
+    @NillableBySpecification
     @XmlAttribute
     private String tableSchem;
 
@@ -140,8 +181,8 @@ public class TablePrivilege {
 
 
     @Label("GRANTOR")
-    @XmlElement(nillable = true, required = true)
     @NillableBySpecification
+    @XmlElement(nillable = true, required = true)
     private String grantor;
 
 
@@ -156,8 +197,8 @@ public class TablePrivilege {
 
 
     @Label("IS_GRANTABLE")
-    @XmlElement(nillable = true, required = true)
     @NillableBySpecification
+    @XmlElement(nillable = true, required = true)
     private String isGrantable;
 
 

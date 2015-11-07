@@ -18,9 +18,9 @@
 package com.github.jinahya.sql.database.metadata.bind;
 
 
+import javax.xml.bind.annotation.XmlAttribute;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
-import javax.xml.bind.annotation.XmlTransient;
 import javax.xml.bind.annotation.XmlType;
 
 
@@ -29,10 +29,15 @@ import javax.xml.bind.annotation.XmlType;
  * @author Jin Kwon &lt;jinahya_at_gmail.com&gt;
  */
 @XmlRootElement
-@XmlType(propOrder = {"pktableCat", "pktableSchem", "pktableName",
-                      "pkcolumnName", "fktableCat", "fktableSchem",
-                      "fktableName", "fkcolumnName", "keySeq", "updateRule",
-                      "deleteRule", "fkName", "pkName", "deferrability"})
+@XmlType(
+    propOrder = {
+        //"pktableCat", "pktableSchem", "pktableName",
+        "pkcolumnName",
+        //"fktableCat", "fktableSchem", "fktableName",
+        "fkcolumnName", "keySeq",
+        "updateRule", "deleteRule", "fkName", "pkName", "deferrability"
+    }
+)
 public class CrossReference {
 
 
@@ -218,46 +223,48 @@ public class CrossReference {
     }
 
 
-    // ----------------------------------------------------------------- pktable
-    public Table getPktable() {
-
-        return pktable;
-    }
-
-
-    public void setPktable(final Table pktable) {
-
-        this.pktable = pktable;
-    }
-
-
-    // ----------------------------------------------------------------- fktable
-    public Table getFktable() {
-
-        return fktable;
-    }
-
-
-    public void setFktable(final Table fktable) {
-
-        this.fktable = fktable;
-    }
-
-
+//    // ----------------------------------------------------------------- pktable
+//    public Table getPktable() {
+//
+//        return pktable;
+//    }
+//
+//
+//    public void setPktable(final Table pktable) {
+//
+//        this.pktable = pktable;
+//    }
+//
+//
+//    // ----------------------------------------------------------------- fktable
+//    public Table getFktable() {
+//
+//        return fktable;
+//    }
+//
+//
+//    public void setFktable(final Table fktable) {
+//
+//        this.fktable = fktable;
+//    }
+    // -------------------------------------------------------------------------
     @Label("PKTABLE_CAT")
     @NillableBySpecification
-    @XmlElement(nillable = true, required = true)
+    //@XmlElement(nillable = true, required = true)
+    @XmlAttribute
     private String pktableCat;
 
 
     @Label("PKTABLE_SCHEM")
     @NillableBySpecification
-    @XmlElement(nillable = true, required = true)
+    //@XmlElement(nillable = true, required = true)
+    @XmlAttribute
     private String pktableSchem;
 
 
     @Label("PKTABLE_NAME")
-    @XmlElement(required = true)
+    //@XmlElement(required = true)
+    @XmlAttribute
     private String pktableName;
 
 
@@ -268,18 +275,21 @@ public class CrossReference {
 
     @Label("FKTABLE_CAT")
     @NillableBySpecification
-    @XmlElement(nillable = true, required = true)
+    //@XmlElement(nillable = true, required = true)
+    @XmlAttribute
     private String fktableCat;
 
 
     @Label("FKTABLE_NAME")
     @NillableBySpecification
-    @XmlElement(nillable = true, required = true)
+    //@XmlElement(nillable = true, required = true)
+    @XmlAttribute
     private String fktableSchem;
 
 
     @Label("FKTABLE_NAME")
-    @XmlElement(required = true)
+    //@XmlElement(required = true)
+    @XmlAttribute
     private String fktableName;
 
 
@@ -320,13 +330,9 @@ public class CrossReference {
     private short deferrability;
 
 
-    @XmlTransient
-    private Table pktable;
-
-
-    @XmlTransient
-    private Table fktable;
-
-
+//    @XmlTransient
+//    private Table pktable;
+//    @XmlTransient
+//    private Table fktable;
 }
 

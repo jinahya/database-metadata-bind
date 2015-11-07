@@ -22,7 +22,6 @@ import static java.beans.Introspector.decapitalize;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.lang.reflect.ParameterizedType;
-import java.lang.reflect.Type;
 import java.sql.DatabaseMetaData;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -63,6 +62,16 @@ public class MetadataContext {
         map.put(short.class, Short.class);
         map.put(void.class, Void.class);
         WRAPPERS = Collections.unmodifiableMap(map);
+    }
+
+
+    private static Class<?> wrapper(final Class<?> primitive) {
+
+        if (!primitive.isPrimitive()) {
+            throw new IllegalArgumentException("not primitive: " + primitive);
+        }
+
+        return WRAPPERS.get(primitive);
     }
 
 
@@ -118,9 +127,33 @@ public class MetadataContext {
     }
 
 
-    public static String suppressionPath(final Field field) {
+    private static String suppressionPath(final Field field) {
 
         return suppressionPath(field, field.getDeclaringClass());
+    }
+
+
+    private static <T> void parent(final Class<T> type,
+                                   List<? super T> children,
+                                   final Object parent)
+        throws IllegalAccessException {
+
+        // set parent
+        for (final Field field : type.getDeclaredFields()) {
+            if (field.getType() != parent.getClass()) {
+                continue;
+            }
+            if (!field.isAccessible()) {
+                field.setAccessible(true);
+            }
+//            if (children.isEmpty()) {
+//                logger.warning("children empty!!");
+//            }
+            for (final Object element : children) {
+                field.set(element, parent);
+            }
+            break;
+        }
     }
 
 
@@ -165,7 +198,7 @@ public class MetadataContext {
     }
 
 
-    boolean suppressed(final String path) {
+    private boolean suppressed(final String path) {
 
         if (path == null) {
             throw new NullPointerException("null path");
@@ -190,28 +223,28 @@ public class MetadataContext {
     }
 
 
-    private Object fieldValue(final Class<?> type, final String name, final Object obj)
+    private Object fieldValue(final Class<?> type, final String name,
+                              final Object obj)
         throws ReflectiveOperationException {
 
         return fieldValue(type.getDeclaredField(name), obj);
     }
 
 
-    private void fieldValue(final Field field, final Object obj, Object[] args, Object value)
+    private void fieldValue(final Field field, final Object obj, Object value,
+                            final Object[] args)
         throws ReflectiveOperationException, SQLException {
 
         if (!field.isAccessible()) {
             field.setAccessible(true);
         }
         final Class<?> fieldType = field.getType();
-        //logger.log(Level.INFO, "fieldType: {0}", new Object[]{fieldType});
-        if ((!fieldType.isPrimitive() && value == null)
-            || fieldType.isInstance(value)) {
+        try {
             field.set(obj, value);
             return;
+        } catch (final IllegalArgumentException iae) {
         }
         final Class<?> valueType = value == null ? null : value.getClass();
-        //logger.log(Level.INFO, "valueType: {0}", new Object[]{valueType});
         if (fieldType == Boolean.TYPE) {
             if (Number.class.isInstance(value)) {
                 value = ((Number) value).intValue() != 0;
@@ -324,6 +357,7 @@ public class MetadataContext {
             if (ResultSet.class.isInstance(value)) {
                 //bindAll((ResultSet) value, typeClass, list);
                 bindAll((ResultSet) value, type, list);
+                parent(type, list, obj);
                 return;
             }
 //            list.add(typeClass
@@ -332,6 +366,7 @@ public class MetadataContext {
             list.add(type
                 .getMethod("valueOf", Object[].class, Object.class)
                 .invoke(null, args, value));
+            parent(type, list, obj);
             return;
         }
 
@@ -344,6 +379,7 @@ public class MetadataContext {
                              final T obj)
         throws SQLException, ReflectiveOperationException {
 
+        // set labeled fields
         if (results != null) {
             for (final Field field : type.getDeclaredFields()) {
                 final String suppressionPath = suppressionPath(field);
@@ -355,10 +391,10 @@ public class MetadataContext {
                     continue;
                 }
                 final Object value = results.getObject(label.value());
-                fieldValue(field, obj, null, value);
+                fieldValue(field, obj, value, null);
             }
         }
-
+        // set invocation fields
         for (final Field field : type.getDeclaredFields()) {
             final String suppressionPath = suppressionPath(field);
             if (suppressed(suppressionPath)) {
@@ -395,7 +431,7 @@ public class MetadataContext {
                     args[i] = types[i].getMethod("valueOf", String.class)
                         .invoke(null, name);
                 }
-                fieldValue(field, obj, args, method.invoke(metaData, args));
+                fieldValue(field, obj, method.invoke(metaData, args), args);
             }
         }
 
@@ -439,7 +475,8 @@ public class MetadataContext {
         if (!suppressed("metadata/catalogs")) {
             final List<Catalog> catalogs = metadata.getCatalogs();
             if (catalogs.isEmpty()) {
-                final Catalog catalog = new Catalog().tableCat("");
+                final Catalog catalog
+                    = new Catalog().tableCat("").metadata(metadata);
                 logger.log(Level.INFO, "adding an empty catalog: {0}",
                            new Object[]{catalog});
                 catalogs.add(catalog);
@@ -451,7 +488,7 @@ public class MetadataContext {
                     if (schemas.isEmpty()) {
                         final Schema schema = new Schema()
                             .tableCatalog(catalog.getTableCat())
-                            .tableSchem("");
+                            .tableSchem("").catalog(catalog);
                         logger.log(Level.INFO, "adding an empty schema: {0}",
                                    new Object[]{schema});
                         schemas.add(schema);
@@ -534,10 +571,6 @@ public class MetadataContext {
             = new ArrayList<ClientInfoProperty>();
 
         final ResultSet results = metaData.getClientInfoProperties();
-        if (results == null) {
-            logger.log(Level.WARNING, "null from getClientInfoProperties");
-            return list;
-        }
         try {
             bindAll(results, ClientInfoProperty.class, list);
         } finally {
@@ -596,15 +629,10 @@ public class MetadataContext {
 
         final ResultSet results = metaData.getFunctionColumns(
             catalog, schemaPattern, functionNamePattern, columnNamePattern);
-        if (results == null) {
-            logger.warning("getFunctionColumns -> null");
-        }
-        if (results != null) {
-            try {
-                bindAll(results, FunctionColumn.class, list);
-            } finally {
-                results.close();
-            }
+        try {
+            bindAll(results, FunctionColumn.class, list);
+        } finally {
+            results.close();
         }
 
         return list;
@@ -620,15 +648,10 @@ public class MetadataContext {
 
         final ResultSet results = metaData.getFunctions(
             catalog, schemaPattern, functionNamePattern);
-        if (results == null) {
-            logger.warning("null from getFunctions");
-        }
-        if (results != null) {
-            try {
-                bindAll(results, Function.class, list);
-            } finally {
-                results.close();
-            }
+        try {
+            bindAll(results, Function.class, list);
+        } finally {
+            results.close();
         }
 
         return list;
@@ -756,14 +779,10 @@ public class MetadataContext {
 
         final ResultSet results = metaData.getPseudoColumns(
             catalog, schemaPattern, tableNamePattern, columnNamePattern);
-        if (results == null) {
-            logger.log(Level.WARNING, "null returned from getPseudoColumns");
-        } else {
-            try {
-                bindAll(results, PseudoColumn.class, list);
-            } finally {
-                results.close();
-            }
+        try {
+            bindAll(results, PseudoColumn.class, list);
+        } finally {
+            results.close();
         }
 
         return list;
@@ -776,15 +795,10 @@ public class MetadataContext {
         final List<SchemaName> list = new ArrayList<SchemaName>();
 
         final ResultSet results = metaData.getSchemas();
-        if (results == null) {
-            logger.warning("null from getSchemas");
-        }
-        if (results != null) {
-            try {
-                bindAll(results, SchemaName.class, list);
-            } finally {
-                results.close();
-            }
+        try {
+            bindAll(results, SchemaName.class, list);
+        } finally {
+            results.close();
         }
 
         return list;
@@ -799,15 +813,10 @@ public class MetadataContext {
 
         final ResultSet results = metaData.getSchemas(
             catalog, schemaPattern);
-        if (results == null) {
-            logger.warning("null returned from getSchemas");
-        }
-        if (results != null) {
-            try {
-                bindAll(results, Schema.class, list);
-            } finally {
-                results.close();
-            }
+        try {
+            bindAll(results, Schema.class, list);
+        } finally {
+            results.close();
         }
 
         if (list.isEmpty()) {
@@ -830,15 +839,10 @@ public class MetadataContext {
 
         final ResultSet results = metaData.getTables(
             catalog, schemaPattern, tableNamePattern, types);
-        if (results == null) {
-            logger.warning("null returned from getTables");
-        }
-        if (results != null) {
-            try {
-                bindAll(results, Table.class, list);
-            } finally {
-                results.close();
-            }
+        try {
+            bindAll(results, Table.class, list);
+        } finally {
+            results.close();
         }
 
         return list;

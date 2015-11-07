@@ -27,7 +27,7 @@ import java.lang.annotation.Target;
 
 /**
  *
- * @author Jin Kwon <onacit at gmail.com>
+ * @author Jin Kwon &lt;jinahya_at_gmail.com&gt;
  */
 @Documented
 @Retention(RetentionPolicy.CLASS)

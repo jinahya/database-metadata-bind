@@ -30,9 +30,13 @@ import javax.xml.bind.annotation.XmlType;
  * @author Jin Kwon &lt;jinahya_at_gmail.com&gt;
  */
 @XmlRootElement
-@XmlType(propOrder = {"pktableCat", "pktableSchem", "pktableName",
-                      "pkcolumnName", "fkcolumnName", "keySeq", "updateRule",
-                      "deleteRule", "fkName", "pkName", "deferrability"})
+@XmlType(
+    propOrder = {
+        "pktableCat", "pktableSchem", "pktableName", "pkcolumnName",
+        "fkcolumnName", "keySeq", "updateRule", "deleteRule", "fkName",
+        "pkName", "deferrability"
+    }
+)
 public class ImportedKey {
 
 
@@ -76,6 +80,44 @@ public class ImportedKey {
     public void setPkcolumnName(final String pkcolumnName) {
 
         this.pkcolumnName = pkcolumnName;
+    }
+
+
+    // -------------------------------------------------------------- fktableCat
+    public String getFktableCat() {
+
+        return fktableCat;
+    }
+
+
+    public void setFktableCat(final String fktableCat) {
+
+        this.fktableCat = fktableCat;
+    }
+
+
+    // ------------------------------------------------------------ fktableSchem
+    public String getFktableSchem() {
+
+        return fktableSchem;
+    }
+
+
+    public void setFktableSchem(final String fktableSchem) {
+
+        this.fktableSchem = fktableSchem;
+    }
+
+
+    // ------------------------------------------------------------- fktableName
+    public String getFktableName() {
+        return fktableName;
+    }
+
+
+    public void setFktableName(final String fktableName) {
+
+        this.fktableName = fktableName;
     }
 
 
@@ -194,23 +236,17 @@ public class ImportedKey {
 
 
     @Label("PKTABLE_CAT")
-    @XmlElement(nillable = true, required = true)
     @NillableBySpecification
+    @XmlElement(nillable = true, required = true)
     private String pktableCat;
 
 
-    /**
-     * primary key table schema being imported (may be {@code null}).
-     */
     @Label("PKTABLE_SCHEM")
-    @XmlElement(nillable = true, required = true)
     @NillableBySpecification
+    @XmlElement(nillable = true, required = true)
     private String pktableSchem;
 
 
-    /**
-     * primary key table name being imported.
-     */
     @Label("PKTABLE_NAME")
     @XmlElement(required = true)
     private String pktableName;
@@ -222,11 +258,13 @@ public class ImportedKey {
 
 
     @Label("FKTABLE_CAT")
+    @NillableBySpecification
     @XmlAttribute
     private String fktableCat;
 
 
     @Label("FKTABLE_NAME")
+    @NillableBySpecification
     @XmlAttribute
     private String fktableSchem;
 
@@ -257,12 +295,14 @@ public class ImportedKey {
 
 
     @Label("FK_NAME")
-    @XmlElement(required = true)
+    @NillableBySpecification
+    @XmlElement(nillable = true, required = true)
     private String fkName;
 
 
     @Label("PK_NAME")
-    @XmlElement(required = true)
+    @NillableBySpecification
+    @XmlElement(nillable = true, required = true)
     private String pkName;
 
 

@@ -171,9 +171,25 @@ public class Table {
     }
 
 
+    //@XmlAttribute
+    @Deprecated
+    private String getSchemaString() {
+
+        return schema == null ? null : schema.toString();
+    }
+
+
     public void setSchema(final Schema schema) {
 
         this.schema = schema;
+    }
+
+
+    Table schema(final Schema schema) {
+
+        setSchema(schema);
+
+        return this;
     }
 
 

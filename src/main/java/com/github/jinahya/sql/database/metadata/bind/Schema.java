@@ -35,7 +35,9 @@ import javax.xml.bind.annotation.XmlType;
 @XmlRootElement
 @XmlType(
     propOrder = {
-        "tableSchem", "functions", "procedures", "tables", "userDefinedTypes"
+        "tableSchem",
+        // ---------------------------------------------------------------------
+        "functions", "procedures", "tables", "userDefinedTypes"
     }
 )
 public class Schema {
@@ -98,9 +100,25 @@ public class Schema {
     }
 
 
+    //@XmlAttribute
+    @Deprecated
+    private String getCatalogString() {
+
+        return catalog == null ? null : catalog.toString();
+    }
+
+
     public void setCatalog(final Catalog catalog) {
 
         this.catalog = catalog;
+    }
+
+
+    Schema catalog(final Catalog catalog) {
+
+        setCatalog(catalog);
+
+        return this;
     }
 
 
@@ -177,6 +195,7 @@ public class Schema {
     }
 
 
+    // -------------------------------------------------------------------------
     @Label("TABLE_CATALOG")
     @NillableBySpecification
     @XmlAttribute
@@ -184,7 +203,7 @@ public class Schema {
 
 
     @Label("TABLE_SCHEM")
-    @XmlElement(nillable = true, required = true)
+    @XmlElement(required = true)
     private String tableSchem;
 
 

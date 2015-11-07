@@ -45,7 +45,7 @@ import javax.xml.bind.annotation.XmlType;
     propOrder = {
         "allProceduresAreCallable", "allTablesAreSelectable",
         "autoCommitFailureClosesAllResultSets",
-        "catalogSeparator", "catalogTerm", "catalogs", "clientInfoProperties",
+        "catalogs", "catalogSeparator", "catalogTerm", "clientInfoProperties",
         "dataDefinitionCausesTransactionCommit",
         "dataDefinitionIgnoredInTransactions", "databaseMajorVersion",
         "databaseMinorVersion", "databaseProductName", "databaseProductVersion",
@@ -91,17 +91,15 @@ public class Metadata {
     }
 
 
-    // -------------------------------------------------------- suppressionPaths
-    public Set<String> getSuppressionPaths() {
-
-        if (suppressionPaths == null) {
-            suppressionPaths = new TreeSet<String>();
-        }
-
-        return suppressionPaths;
-    }
-
-
+//    // -------------------------------------------------------- suppressionPaths
+//    public Set<String> getSuppressionPaths() {
+//
+//        if (suppressionPaths == null) {
+//            suppressionPaths = new TreeSet<String>();
+//        }
+//
+//        return suppressionPaths;
+//    }
     // ------------------------------------------------ allProceduresAreCallable
     public boolean getAllProceduresAreCallable() {
 
@@ -116,6 +114,7 @@ public class Metadata {
     }
 
 
+    // -------------------------------------------------- allTablesAreSelectable
     public boolean getAllTablesAreSelectable() {
 
         return allTablesAreSelectable;
@@ -143,6 +142,17 @@ public class Metadata {
     }
 
 
+    // ---------------------------------------------------------------- catalogs
+    public List<Catalog> getCatalogs() {
+
+        if (catalogs == null) {
+            catalogs = new ArrayList<Catalog>();
+        }
+
+        return catalogs;
+    }
+
+
     // -------------------------------------------------------- catalogSeparator
     public String getCatalogSeparator() {
 
@@ -166,17 +176,6 @@ public class Metadata {
     public void setCatalogTerm(final String catalogTerm) {
 
         this.catalogTerm = catalogTerm;
-    }
-
-
-    // ---------------------------------------------------------------- catalogs
-    public List<Catalog> getCatalogs() {
-
-        if (catalogs == null) {
-            catalogs = new ArrayList<Catalog>();
-        }
-
-        return catalogs;
     }
 
 
@@ -817,24 +816,27 @@ public class Metadata {
     }
 
 
-    @XmlAttribute
-    @XmlList
-    private Set<String> suppressionPaths;
-
-
+//    @XmlAttribute
+//    @XmlList
+//    private Set<String> suppressionPaths;
     @Invocation(name = "allProceduresAreCallable")
     @XmlElement(required = true)
-    boolean allProceduresAreCallable;
+    private boolean allProceduresAreCallable;
 
 
     @Invocation(name = "allTablesAreSelectable")
     @XmlElement(required = true)
-    boolean allTablesAreSelectable;
+    private boolean allTablesAreSelectable;
 
 
     @Invocation(name = "autoCommitFailureClosesAllResultSets")
     @XmlElement(required = true)
     private boolean autoCommitFailureClosesAllResultSets;
+
+
+    @Invocation(name = "getCatalogs")
+    @XmlElementRef
+    private List<Catalog> catalogs;
 
 
     @Invocation(name = "getCatalogSeparator")
@@ -845,11 +847,6 @@ public class Metadata {
     @Invocation(name = "getCatalogTerm")
     @XmlElement(nillable = true, required = true)
     private String catalogTerm;
-
-
-    @Invocation(name = "getCatalogs")
-    @XmlElementRef
-    private List<Catalog> catalogs;
 
 
     @Invocation(name = "getClientInfoProperties")
