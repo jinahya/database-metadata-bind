@@ -122,13 +122,13 @@ public class ImportedKey {
 
 
     // ------------------------------------------------------------ fkcolumnName
-    public Column getFkcolumnName() {
+    public String getFkcolumnName() {
 
         return fkcolumnName;
     }
 
 
-    public void setFkcolumnName(final Column fkcolumnName) {
+    public void setFkcolumnName(final String fkcolumnName) {
 
         this.fkcolumnName = fkcolumnName;
     }
@@ -276,7 +276,7 @@ public class ImportedKey {
 
     @Label("FKCOLUMN_NAME")
     @XmlElement(required = true)
-    private Column fkcolumnName;
+    private String fkcolumnName;
 
 
     @Label("FKCOLUMN_NAME")

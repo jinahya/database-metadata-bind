@@ -262,8 +262,8 @@ public class MetadataContext {
                 value = ((Number) value).intValue() != 0;
             }
             if (value != null && !Boolean.class.isInstance(value)) {
-                logger.log(Level.WARNING, "cannot set {0} to {1}",
-                           new Object[]{value, field});
+                logger.log(Level.WARNING, "cannot set {0}({1}) to {2}",
+                           new Object[]{value, valueType, field});
                 return;
             }
             field.set(obj, value);
@@ -271,8 +271,8 @@ public class MetadataContext {
         }
         if (fieldType == Short.TYPE) {
             if (value == null || !Number.class.isInstance(value)) {
-                logger.log(Level.WARNING, "cannot set {0} to {1}",
-                           new Object[]{value, field});
+                logger.log(Level.WARNING, "cannot set {0}({1}) to {2}",
+                           new Object[]{value, valueType, field});
                 return;
             }
             field.setShort(obj, ((Number) value).shortValue());
@@ -280,8 +280,8 @@ public class MetadataContext {
         }
         if (fieldType == Short.class) {
             if (value != null && !Number.class.isInstance(value)) {
-                logger.log(Level.WARNING, "cannot set {0} to {1}",
-                           new Object[]{value, field});
+                logger.log(Level.WARNING, "cannot set {0}({1}) to {2}",
+                           new Object[]{value, valueType, field});
                 return;
             }
             if (value != null && !Short.class.isInstance(value)) {
@@ -292,8 +292,8 @@ public class MetadataContext {
         }
         if (fieldType == Integer.TYPE) {
             if (value == null || !Number.class.isInstance(value)) {
-                logger.log(Level.WARNING, "cannot set {0} to {1}",
-                           new Object[]{value, field});
+                logger.log(Level.WARNING, "cannot set {0}({1}) to {2}",
+                           new Object[]{value, valueType, field});
                 return;
             }
             if (Number.class.isInstance(value)) {
@@ -304,8 +304,8 @@ public class MetadataContext {
         }
         if (fieldType == Integer.class) {
             if (value != null && !Number.class.isInstance(value)) {
-                logger.log(Level.WARNING, "cannot set {0} to {1}",
-                           new Object[]{value, field});
+                logger.log(Level.WARNING, "cannot set {0}({1}) to {2}",
+                           new Object[]{value, valueType, field});
                 return;
             }
             if (value != null && !Integer.class.isInstance(value)) {
@@ -316,8 +316,8 @@ public class MetadataContext {
         }
         if (fieldType == Long.TYPE) {
             if (value == null || !Number.class.isInstance(value)) {
-                logger.log(Level.WARNING, "cannot set {0} to {1}",
-                           new Object[]{value, field});
+                logger.log(Level.WARNING, "cannot set {0}({1}) to {2}",
+                           new Object[]{value, valueType, field});
                 return;
             }
             if (Number.class.isInstance(value)) {
@@ -328,8 +328,8 @@ public class MetadataContext {
         }
         if (fieldType == Long.class) {
             if (value != null && !Number.class.isInstance(value)) {
-                logger.log(Level.WARNING, "cannot set {0} to {1}",
-                           new Object[]{value, field});
+                logger.log(Level.WARNING, "cannot set {0}({1}) to {2}",
+                           new Object[]{value, valueType, field});
                 return;
             }
             if (value != null && !Long.class.isInstance(value)) {
@@ -426,7 +426,7 @@ public class MetadataContext {
                         continue;
                     }
                     if (types[i].isPrimitive()) {
-                        types[i] = WRAPPERS.get(types[i]);
+                        types[i] = wrapper(types[i]);
                     }
                     args[i] = types[i].getMethod("valueOf", String.class)
                         .invoke(null, name);
