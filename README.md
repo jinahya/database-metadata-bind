@@ -50,7 +50,7 @@ A library binding various information from [DatabaseMetaData](http://docs.oracle
 
 ## Usage
 ### API Binding
-````
+````java
 // prepare jdbc information
 final Connection connection; // get your own
 final DatabaseMetaData database = connection.getDataBaseMetaData();
@@ -72,7 +72,7 @@ final List<PrimaryKeys> primaryKeys
 ````
 ### XML Binding
 All classes are annotated with `@XmlRootElement`.
-````
+````java
 final UseDefinedType userDefinedType;
 final JAXBContext context = JAXBContext.newInstance(UserDefinedType.class);
 final Marshaller marshaller = context.createMarshaller();
