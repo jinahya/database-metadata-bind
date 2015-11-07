@@ -24,9 +24,6 @@ A library binding various information from [DatabaseMetaData](http://docs.oracle
 | `0.6-SNAPSHOT` | [apidocs](http://jinahya.github.io/sql-databasemetadata/site/0.6-SNAPSHOT/apidocs/index.html) | [site](http://jinahya.github.io/sql-databasemetadata/site/0.6-SNAPSHOT/index.html)||
 | `0.5`          | [apidocs](http://jinahya.github.io/sql-databasemetadata/site/0.5/apidocs/index.html) | [site](http://jinahya.github.io/sql-databasemetadata/site/0.5/index.html)||
 
-
-<!-- 1.0-SNAPSHOT ([apidocs](http://jinahya.github.io/sql-databasemetadata/site/1.0-SNAPSHOT/apidocs/index.html)) ([site](http://jinahya.github.io/sql-databasemetadata/site/1.0-SNAPSHOT/index.html))  -->
-
 ## Hierarchy
   * Metadata
     * Category (`metadata/categories`)
@@ -39,14 +36,16 @@ A library binding various information from [DatabaseMetaData](http://docs.oracle
           * BestRowIdentifier (`table/bestRowIdentifiers`)
           * Column (`table/columns`)
             * ColumnPrivilege (`column/columnPrivileges`)
-          * ExportedKey
-          * ImportedKey
-          * IndexInfo
-          * PrimaryKey
-          * PseudoColumn
-          * TablePrivilege
-          * VersionColumn
-        * UserDefinedType
-    * ClientInfoProperty
-    * SchemaName
-    * TableType
+          * ExportedKey (`table/exportedKeys`)
+          * ImportedKey (`table/importedKeys`)
+          * IndexInfo (`table/IndexInfo`)
+          * PrimaryKey (`table/primaryKeys`)
+          * PseudoColumn (`table/pseudoColumns`)
+          * TablePrivilege (`table/tablePrivileges`)
+          * VersionColumn (`table/versionColumns`)
+        * UserDefinedType (`schema/userDefinedTypes`)
+    * ClientInfoProperty (`metadata/clientInfoProperties`)
+    * SchemaName (`metadata/schemaNames`)
+    * TableType (`metadata/tableTypes`)
+
+## Usage
