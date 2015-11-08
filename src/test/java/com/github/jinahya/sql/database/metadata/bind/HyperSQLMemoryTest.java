@@ -72,7 +72,7 @@ public class HyperSQLMemoryTest {
         try (Connection connection = getConnection(CONNECTION_URL)) {
             final DatabaseMetaData database = connection.getMetaData();
             final MetadataContext context = new MetadataContext(database);
-            context.addSuppressionPath(
+            context.addSuppressionPaths(
                 "table/pseudoColumns"
             );
             metadata = context.getMetadata();

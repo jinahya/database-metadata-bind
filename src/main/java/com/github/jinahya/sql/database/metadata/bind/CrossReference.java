@@ -133,13 +133,13 @@ public class CrossReference {
 
 
     // ------------------------------------------------------------ fkcolumnName
-    public Column getFkcolumnName() {
+    public String getFkcolumnName() {
 
         return fkcolumnName;
     }
 
 
-    public void setFkcolumnName(final Column fkcolumnName) {
+    public void setFkcolumnName(final String fkcolumnName) {
 
         this.fkcolumnName = fkcolumnName;
     }
@@ -223,30 +223,6 @@ public class CrossReference {
     }
 
 
-//    // ----------------------------------------------------------------- pktable
-//    public Table getPktable() {
-//
-//        return pktable;
-//    }
-//
-//
-//    public void setPktable(final Table pktable) {
-//
-//        this.pktable = pktable;
-//    }
-//
-//
-//    // ----------------------------------------------------------------- fktable
-//    public Table getFktable() {
-//
-//        return fktable;
-//    }
-//
-//
-//    public void setFktable(final Table fktable) {
-//
-//        this.fktable = fktable;
-//    }
     // -------------------------------------------------------------------------
     @Label("PKTABLE_CAT")
     @NillableBySpecification
@@ -295,7 +271,7 @@ public class CrossReference {
 
     @Label("FKCOLUMN_NAME")
     @XmlElement(required = true)
-    private Column fkcolumnName;
+    private String fkcolumnName;
 
 
     @Label("FKCOLUMN_NAME")
@@ -330,9 +306,5 @@ public class CrossReference {
     private short deferrability;
 
 
-//    @XmlTransient
-//    private Table pktable;
-//    @XmlTransient
-//    private Table fktable;
 }
 

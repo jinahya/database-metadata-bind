@@ -301,16 +301,16 @@ public class ProcedureColumn {
     }
 
 
-    // ------------------------------------------------------------------ schema
-    public Schema getSchema() {
+    // --------------------------------------------------------------- procedure
+    public Procedure getProcedure() {
 
-        return schema;
+        return procedure;
     }
 
 
-    public void setSchema(final Schema schema) {
+    public void setProcedure(final Procedure procedure) {
 
-        this.schema = schema;
+        this.procedure = procedure;
     }
 
 
@@ -422,7 +422,7 @@ public class ProcedureColumn {
 
 
     @XmlTransient
-    private Schema schema;
+    private Procedure procedure;
 
 
 }
