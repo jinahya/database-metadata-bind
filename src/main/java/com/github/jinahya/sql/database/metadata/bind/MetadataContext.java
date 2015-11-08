@@ -105,8 +105,8 @@ public class MetadataContext {
     }
 
 
-    public static String suppressionPath(final Field field,
-                                         final Class<?> klass) {
+    private static String suppressionPath(final Field field,
+                                          final Class<?> klass) {
 
         if (field == null) {
             throw new NullPointerException("null field");
@@ -169,7 +169,7 @@ public class MetadataContext {
     }
 
 
-    public boolean addSuppressionPath(final String suppressionPath) {
+    private boolean addSuppressionPath(final String suppressionPath) {
 
         if (suppressionPath == null) {
             throw new NullPointerException("null suppressionPath");
@@ -467,6 +467,14 @@ public class MetadataContext {
     }
 
 
+    /**
+     * Binds all information.
+     *
+     * @return a Metadata
+     *
+     * @throws SQLException if a database occurs.
+     * @throws ReflectiveOperationException if a reflection erorr occurs
+     */
     public Metadata getMetadata()
         throws SQLException, ReflectiveOperationException {
 

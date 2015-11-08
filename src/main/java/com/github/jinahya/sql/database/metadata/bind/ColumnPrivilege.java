@@ -138,16 +138,16 @@ public class ColumnPrivilege {
     }
 
 
-    // ------------------------------------------------------------------- table
-    public Table getTable() {
+    // ------------------------------------------------------------------ column
+    public Column getColumn() {
 
-        return table;
+        return column;
     }
 
 
-    public void setTable(final Table table) {
+    public void setColumn(final Column column) {
 
-        this.table = table;
+        this.column = column;
     }
 
 
@@ -196,7 +196,7 @@ public class ColumnPrivilege {
 
 
     @XmlTransient
-    private Table table;
+    private Column column;
 
 
 }

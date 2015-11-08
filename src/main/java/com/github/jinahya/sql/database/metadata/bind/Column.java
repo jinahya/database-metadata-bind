@@ -29,6 +29,8 @@ import javax.xml.bind.annotation.XmlType;
 
 
 /**
+ * A class binding information from
+ * {@link java.sql.DatabaseMetaData#getColumns(java.lang.String, java.lang.String, java.lang.String, java.lang.String) DatabaseMetaData.getColumns}.
  *
  * @author Jin Kwon &lt;jinahya_at_gmail.com&gt;
  */
@@ -384,11 +386,13 @@ public class Column {
 
 
     @Label("TABLE_CAT")
+    @NillableBySpecification
     @XmlAttribute
     private String tableCat;
 
 
     @Label("TABLE_SCHEM")
+    @NillableBySpecification
     @XmlAttribute
     private String tableSchem;
 
@@ -441,14 +445,14 @@ public class Column {
 
 
     @Label("REMARKS")
-    @XmlElement(nillable = true, required = true)
     @NillableBySpecification
+    @XmlElement(nillable = true, required = true)
     private String remarks;
 
 
     @Label("COLUMN_DEF")
-    @XmlElement(nillable = true, required = true)
     @NillableBySpecification
+    @XmlElement(nillable = true, required = true)
     private String columnDef;
 
 
@@ -480,14 +484,14 @@ public class Column {
 
 
     @Label("SCOPE_CATALOG")
-    @XmlElement(nillable = true, required = true)
     @NillableBySpecification
+    @XmlElement(nillable = true, required = true)
     private String scopeCatalog;
 
 
     @Label("SCOPE_SCHEMA")
-    @XmlElement(nillable = true, required = true)
     @NillableBySpecification
+    @XmlElement(nillable = true, required = true)
     private String scopeSchema;
 
 

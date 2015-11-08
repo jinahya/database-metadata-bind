@@ -29,6 +29,8 @@ import javax.xml.bind.annotation.XmlType;
 
 
 /**
+ * A class binding information from
+ * {@link java.sql.DatabaseMetaData#getTables(java.lang.String, java.lang.String, java.lang.String, java.lang.String[])}.
  *
  * @author Jin Kwon &lt;jinahya_at_gmail.com&gt;
  */

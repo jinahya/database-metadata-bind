@@ -261,16 +261,16 @@ public class FunctionColumn {
     }
 
 
-    // ------------------------------------------------------------------ schema
-    public Schema getSchema() {
+    // ---------------------------------------------------------------- function
+    public Function getFunction() {
 
-        return schema;
+        return function;
     }
 
 
-    public void setSchema(final Schema schema) {
+    public void setFunction(final Function function) {
 
-        this.schema = schema;
+        this.function = function;
     }
 
 
@@ -364,7 +364,7 @@ public class FunctionColumn {
 
 
     @XmlTransient
-    private Schema schema;
+    private Function function;
 
 
 }
