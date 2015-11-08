@@ -282,7 +282,7 @@ public class Attribute {
     }
 
 
-    public void setUserDefindedType(final UserDefinedType userDefinedType) {
+    public void setUserDefinedType(final UserDefinedType userDefinedType) {
 
         this.userDefinedType = userDefinedType;
     }

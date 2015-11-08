@@ -467,6 +467,14 @@ public class MetadataContext {
     }
 
 
+    /**
+     * Binds all information.
+     *
+     * @return a Metadata
+     *
+     * @throws SQLException if a database occurs.
+     * @throws ReflectiveOperationException if a reflection erorr occurs
+     */
     public Metadata getMetadata()
         throws SQLException, ReflectiveOperationException {
 
