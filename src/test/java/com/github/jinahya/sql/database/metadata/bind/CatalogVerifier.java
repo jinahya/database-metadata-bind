@@ -18,12 +18,13 @@
 package com.github.jinahya.sql.database.metadata.bind;
 
 
+import com.github.jinahya.sql.database.metadata.bind.Catalog;
 import java.util.Objects;
 
 
 /**
  *
- * @author Jin Kwon &lt;jinahya_at_gmail.com&gt;
+ * @author <a href="mailto:onacit@gmail.com">Jin Kwon</a>
  */
 public class CatalogVerifier {
 

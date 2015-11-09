@@ -207,14 +207,14 @@ public class PseudoColumn {
 
 
     @Label("TABLE_CAT")
-    @XmlAttribute
     @NillableBySpecification
+    @XmlAttribute
     private String tableCat;
 
 
     @Label("TABLE_SCHEM")
-    @XmlAttribute
     @NillableBySpecification
+    @XmlAttribute
     private String tableSchem;
 
 

@@ -77,7 +77,7 @@ public class Function {
     }
 
 
-    public void setFuntionName(final String functionName) {
+    public void setFunctionName(final String functionName) {
 
         this.functionName = functionName;
     }

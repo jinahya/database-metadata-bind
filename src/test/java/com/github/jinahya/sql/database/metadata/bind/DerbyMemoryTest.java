@@ -89,8 +89,7 @@ public class DerbyMemoryTest {
 
 
     @Test
-    public void retrieve() throws SQLException, ReflectiveOperationException,
-                                  JAXBException, IOException {
+    public void retrieve() throws Exception {
 
         final Metadata metadata;
 

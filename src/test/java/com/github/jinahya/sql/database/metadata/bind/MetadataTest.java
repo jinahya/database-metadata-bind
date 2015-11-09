@@ -46,9 +46,7 @@ public class MetadataTest {
 
 
     @Test
-    public void test() throws ClassNotFoundException,
-                              ReflectiveOperationException, SQLException,
-                              JAXBException, IOException {
+    public void test() throws Exception {
 
         final String driverName = System.getProperty("driverName");
         if (driverName != null) {

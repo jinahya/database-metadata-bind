@@ -29,16 +29,11 @@ import java.lang.reflect.Field;
 class Labels {
 
 
-    static Label get(final Field field) {
+    static Label get(final PropertyDescriptor propertyDescriptor,
+                     final Class<?> beanClass) {
 
-        return Annotations.get(Label.class, field);
-    }
-
-
-    static Label get(final PropertyDescriptor descriptor,
-                     final Class<?> klass) {
-
-        return Annotations.get(Label.class, descriptor, klass);
+        return Annotations.getAnnotation(
+            Label.class, propertyDescriptor, beanClass);
     }
 
 

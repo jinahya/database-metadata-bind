@@ -26,6 +26,7 @@ import java.sql.Connection;
 import java.sql.DatabaseMetaData;
 import static java.sql.DriverManager.getConnection;
 import java.sql.SQLException;
+import java.util.List;
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBException;
 import javax.xml.bind.Marshaller;
@@ -63,8 +64,7 @@ public class SQLiteMemoryTest {
 
 
     @Test(enabled = true)
-    public void retrieve() throws SQLException, ReflectiveOperationException,
-                                  JAXBException, IOException {
+    public void retrieve() throws Exception {
 
         final Metadata metadata;
 

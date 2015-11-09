@@ -19,7 +19,6 @@ package com.github.jinahya.sql.database.metadata.bind;
 
 
 import java.beans.PropertyDescriptor;
-import java.lang.reflect.Field;
 
 
 /**
@@ -29,16 +28,11 @@ import java.lang.reflect.Field;
 class Invocations {
 
 
-    static Invocation get(final Field field) {
+    static Invocation get(final PropertyDescriptor propertyDescriptor,
+                          final Class<?> beanClass) {
 
-        return Annotations.get(Invocation.class, field);
-    }
-
-
-    static Invocation get(final PropertyDescriptor descriptor,
-                          final Class<?> klass) {
-
-        return Annotations.get(Invocation.class, descriptor, klass);
+        return Annotations.getAnnotation(
+            Invocation.class, propertyDescriptor, beanClass);
     }
 
 
