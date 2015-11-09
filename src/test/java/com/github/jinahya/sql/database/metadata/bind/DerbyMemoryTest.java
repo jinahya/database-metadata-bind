@@ -27,7 +27,6 @@ import java.sql.DatabaseMetaData;
 import java.sql.DriverManager;
 import static java.sql.DriverManager.getConnection;
 import java.sql.SQLException;
-import java.util.List;
 import java.util.Properties;
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBException;
@@ -62,8 +61,7 @@ public class DerbyMemoryTest {
         final Properties properties = new Properties();
         properties.put("create", "true");
 
-        final Connection connection
-            = DriverManager.getConnection(CONNECTION_URL, properties);
+        final Connection connection = getConnection(CONNECTION_URL, properties);
         try {
         } finally {
             connection.close();
@@ -79,7 +77,7 @@ public class DerbyMemoryTest {
 
         try {
             final Connection connection
-                = DriverManager.getConnection(CONNECTION_URL, properties);
+                = getConnection(CONNECTION_URL, properties);
             try {
             } finally {
                 connection.close();
