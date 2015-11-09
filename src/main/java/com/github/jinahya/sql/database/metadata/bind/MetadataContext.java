@@ -183,33 +183,6 @@ public class MetadataContext {
 
 
     /**
-     * Adds suppression paths.
-     *
-     * @param suppressionPath
-     * @param otherSuppressionPaths
-     *
-     * @return
-     *
-     * @deprecated Use
-     * {@link #addSuppressions(java.lang.String, java.lang.String...)}.
-     */
-    @Deprecated
-    public MetadataContext addSuppressionPaths(
-        final String suppressionPath, final String... otherSuppressionPaths) {
-
-        addSuppression(suppressionPath);
-
-        if (otherSuppressionPaths != null) {
-            for (final String otherSuppressionPath : otherSuppressionPaths) {
-                addSuppression(otherSuppressionPath);
-            }
-        }
-
-        return this;
-    }
-
-
-    /**
      * Add suppression paths.
      *
      * @param suppression the first suppression
