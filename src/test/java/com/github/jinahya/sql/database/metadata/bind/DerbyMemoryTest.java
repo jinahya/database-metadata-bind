@@ -24,7 +24,6 @@ import java.io.IOException;
 import java.io.OutputStream;
 import java.sql.Connection;
 import java.sql.DatabaseMetaData;
-import java.sql.DriverManager;
 import static java.sql.DriverManager.getConnection;
 import java.sql.SQLException;
 import java.util.Properties;

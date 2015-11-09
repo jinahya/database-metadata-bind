@@ -74,12 +74,12 @@ public class H2MemoryTest {
         try (Connection connection = getConnection(CONNECTION_URL)) {
             final DatabaseMetaData database = connection.getMetaData();
             final MetadataContext context = new MetadataContext(database);
-            context.addSuppressions(
-                "column/isGeneratedcolumn",
-                "metadata/generatedKeyAlwaysReturned",
-                "schema/functions",
-                "table/pseudoColumns"
-            );
+//            context.addSuppressions(
+//                "column/isGeneratedcolumn",
+//                "metadata/generatedKeyAlwaysReturned",
+//                "schema/functions",
+//                "table/pseudoColumns"
+//            );
             metadata = context.getMetadata();
         }
 

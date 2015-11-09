@@ -397,7 +397,13 @@ public class MetadataContext {
                 if (label == null) {
                     continue;
                 }
-                final Object value = results.getObject(label.value());
+                final Object value;
+                try {
+                    value = results.getObject(label.value());
+                } catch (final SQLException sqle) {
+                    sqle.printStackTrace(System.err);
+                    continue;
+                }
                 fieldValue(field, obj, value, null);
             }
         }
@@ -438,7 +444,14 @@ public class MetadataContext {
                     args[i] = types[i].getMethod("valueOf", String.class)
                         .invoke(null, name);
                 }
-                fieldValue(field, obj, method.invoke(database, args), args);
+                final Object value;
+                try {
+                    value = method.invoke(database, args);
+                } catch (final Exception e) {
+                    e.printStackTrace(System.err);
+                    continue;
+                }
+                fieldValue(field, obj, value, args);
             }
         }
 
