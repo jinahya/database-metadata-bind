@@ -24,13 +24,11 @@ import java.beans.Introspector;
 import static java.beans.Introspector.getBeanInfo;
 import java.beans.PropertyDescriptor;
 import java.lang.annotation.Annotation;
-import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.Collection;
 import static java.util.Collections.emptyList;
 import java.util.List;
-import java.util.logging.Level;
 import java.util.logging.Logger;
 import static java.util.logging.Logger.getLogger;
 
@@ -43,7 +41,7 @@ import static java.util.logging.Logger.getLogger;
 class Beans {
 
 
-    private static final Logger logger = getLogger(Metadata.class.getName());
+    private static final Logger logger = getLogger(Beans.class.getName());
 
 
     static List<PropertyDescriptor> getPropertyDescriptors(
@@ -123,14 +121,7 @@ class Beans {
 
         final Method writeMethod = propertyDescriptor.getWriteMethod();
         if (writeMethod != null) {
-            try {
-                writeMethod.invoke(beanInstance, propertyValue);
-            } catch (final IllegalArgumentException iae) {
-                logger.log(Level.WARNING, "property: {0} value: {1}",
-                           new Object[]{propertyDescriptor.getPropertyType(),
-                                        propertyValue.getClass()});
-                throw iae;
-            }
+            writeMethod.invoke(beanInstance, propertyValue);
             return;
         }
 
@@ -138,8 +129,11 @@ class Beans {
             && Collection.class.isAssignableFrom(propertyType)
             && Collection.class.isInstance(propertyValue)) {
             final Method readMethod = propertyDescriptor.getReadMethod();
-            ((Collection<Object>) readMethod.invoke(beanInstance))
-                .addAll((Collection<? extends Object>) propertyValue);
+            if (readMethod != null) {
+                ((Collection<Object>) readMethod.invoke(beanInstance))
+                    .addAll((Collection<? extends Object>) propertyValue);
+                return;
+            }
         }
 
         Reflections.setFieldValueHelper(beanInstance.getClass(),
@@ -188,23 +182,6 @@ class Beans {
             }
             for (final Object childBean : childBeans) {
                 setPropertyValue(propertyDescriptor, childBean, parentBean);
-            }
-            break;
-        }
-
-        if (true) {
-            return;
-        }
-
-        for (final Field field : childClass.getDeclaredFields()) {
-            if (field.getType() != parentBean.getClass()) {
-                continue;
-            }
-            if (!field.isAccessible()) {
-                field.setAccessible(true);
-            }
-            for (final Object element : childBeans) {
-                field.set(element, parentBean);
             }
             break;
         }
