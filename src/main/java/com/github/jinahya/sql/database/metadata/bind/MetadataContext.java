@@ -105,8 +105,7 @@ public class MetadataContext {
     }
 
 
-    private static String suppressionPath(final Field field,
-                                          final Class<?> klass) {
+    private static String suppression(final Field field, final Class<?> klass) {
 
         if (field == null) {
             throw new NullPointerException("null field");
@@ -127,9 +126,9 @@ public class MetadataContext {
     }
 
 
-    private static String suppressionPath(final Field field) {
+    private static String suppression(final Field field) {
 
-        return suppressionPath(field, field.getDeclaringClass());
+        return suppression(field, field.getDeclaringClass());
     }
 
 
@@ -157,40 +156,52 @@ public class MetadataContext {
     }
 
 
-    public MetadataContext(final DatabaseMetaData metaData) {
+    public MetadataContext(final DatabaseMetaData database) {
 
         super();
 
-        if (metaData == null) {
-            throw new NullPointerException("null metadata");
+        if (database == null) {
+            throw new NullPointerException("null database");
         }
 
-        this.metaData = metaData;
+        this.database = database;
     }
 
 
-    private boolean addSuppressionPath(final String suppressionPath) {
+    private boolean addSuppression(final String suppression) {
 
-        if (suppressionPath == null) {
-            throw new NullPointerException("null suppressionPath");
+        if (suppression == null) {
+            throw new NullPointerException("null suppression");
         }
 
-        if (suppressionPaths == null) {
-            suppressionPaths = new TreeSet<String>();
+        if (suppressions == null) {
+            suppressions = new TreeSet<String>();
         }
 
-        return suppressionPaths.add(suppressionPath);
+        return suppressions.add(suppression);
     }
 
 
+    /**
+     * Adds suppression paths.
+     *
+     * @param suppressionPath
+     * @param otherSuppressionPaths
+     *
+     * @return
+     *
+     * @deprecated Use
+     * {@link #addSuppressions(java.lang.String, java.lang.String...)}.
+     */
+    @Deprecated
     public MetadataContext addSuppressionPaths(
         final String suppressionPath, final String... otherSuppressionPaths) {
 
-        addSuppressionPath(suppressionPath);
+        addSuppression(suppressionPath);
 
         if (otherSuppressionPaths != null) {
             for (final String otherSuppressionPath : otherSuppressionPaths) {
-                addSuppressionPath(otherSuppressionPath);
+                addSuppression(otherSuppressionPath);
             }
         }
 
@@ -198,17 +209,40 @@ public class MetadataContext {
     }
 
 
-    private boolean suppressed(final String path) {
+    /**
+     * Add suppression paths.
+     *
+     * @param suppression the first suppression
+     * @param otherSuppressions other suppressions
+     *
+     * @return this
+     */
+    public MetadataContext addSuppressions(
+        final String suppression, final String... otherSuppressions) {
 
-        if (path == null) {
-            throw new NullPointerException("null path");
+        addSuppression(suppression);
+
+        if (otherSuppressions != null) {
+            for (final String otherSuppression : otherSuppressions) {
+                addSuppression(otherSuppression);
+            }
         }
 
-        if (suppressionPaths == null) {
+        return this;
+    }
+
+
+    private boolean suppressed(final String suppression) {
+
+        if (suppression == null) {
+            throw new NullPointerException("null suppression");
+        }
+
+        if (suppressions == null) {
             return false;
         }
 
-        return suppressionPaths.contains(path);
+        return suppressions.contains(suppression);
     }
 
 
@@ -382,7 +416,7 @@ public class MetadataContext {
         // set labeled fields
         if (results != null) {
             for (final Field field : type.getDeclaredFields()) {
-                final String suppressionPath = suppressionPath(field);
+                final String suppressionPath = suppression(field);
                 if (suppressed(suppressionPath)) {
                     continue;
                 }
@@ -396,7 +430,7 @@ public class MetadataContext {
         }
         // set invocation fields
         for (final Field field : type.getDeclaredFields()) {
-            final String suppressionPath = suppressionPath(field);
+            final String suppressionPath = suppression(field);
             if (suppressed(suppressionPath)) {
                 continue;
             }
@@ -431,7 +465,7 @@ public class MetadataContext {
                     args[i] = types[i].getMethod("valueOf", String.class)
                         .invoke(null, name);
                 }
-                fieldValue(field, obj, method.invoke(metaData, args), args);
+                fieldValue(field, obj, method.invoke(database, args), args);
             }
         }
 
@@ -518,7 +552,7 @@ public class MetadataContext {
 
         final List<Attribute> list = new ArrayList<Attribute>();
 
-        final ResultSet results = metaData.getAttributes(
+        final ResultSet results = database.getAttributes(
             catalog, schemaPattern, typeNamePattern, attributeNamePattern);
         try {
             bindAll(results, Attribute.class, list);
@@ -537,7 +571,7 @@ public class MetadataContext {
 
         final List<BestRowIdentifier> list = new ArrayList<BestRowIdentifier>();
 
-        final ResultSet results = metaData.getBestRowIdentifier(
+        final ResultSet results = database.getBestRowIdentifier(
             catalog, schema, table, scope, nullable);
         try {
             bindAll(results, BestRowIdentifier.class, list);
@@ -554,7 +588,7 @@ public class MetadataContext {
 
         final List<Catalog> list = new ArrayList<Catalog>();
 
-        final ResultSet results = metaData.getCatalogs();
+        final ResultSet results = database.getCatalogs();
         try {
             bindAll(results, Catalog.class, list);
         } finally {
@@ -578,7 +612,7 @@ public class MetadataContext {
         final List<ClientInfoProperty> list
             = new ArrayList<ClientInfoProperty>();
 
-        final ResultSet results = metaData.getClientInfoProperties();
+        final ResultSet results = database.getClientInfoProperties();
         try {
             bindAll(results, ClientInfoProperty.class, list);
         } finally {
@@ -597,7 +631,7 @@ public class MetadataContext {
 
         final List<Column> list = new ArrayList<Column>();
 
-        final ResultSet resultSet = metaData.getColumns(
+        final ResultSet resultSet = database.getColumns(
             catalog, schemaPattern, tableNamePattern, columnNamePattern);
         try {
             bindAll(resultSet, Column.class, list);
@@ -616,7 +650,7 @@ public class MetadataContext {
 
         final List<ColumnPrivilege> list = new ArrayList<ColumnPrivilege>();
 
-        final ResultSet results = metaData.getColumnPrivileges(
+        final ResultSet results = database.getColumnPrivileges(
             catalog, schema, table, columnNamePattern);
         try {
             bindAll(results, ColumnPrivilege.class, list);
@@ -635,7 +669,7 @@ public class MetadataContext {
 
         final List<FunctionColumn> list = new ArrayList<FunctionColumn>();
 
-        final ResultSet results = metaData.getFunctionColumns(
+        final ResultSet results = database.getFunctionColumns(
             catalog, schemaPattern, functionNamePattern, columnNamePattern);
         try {
             bindAll(results, FunctionColumn.class, list);
@@ -654,7 +688,7 @@ public class MetadataContext {
 
         final List<Function> list = new ArrayList<Function>();
 
-        final ResultSet results = metaData.getFunctions(
+        final ResultSet results = database.getFunctions(
             catalog, schemaPattern, functionNamePattern);
         try {
             bindAll(results, Function.class, list);
@@ -672,7 +706,7 @@ public class MetadataContext {
 
         final List<ExportedKey> list = new ArrayList<ExportedKey>();
 
-        final ResultSet results = metaData.getExportedKeys(
+        final ResultSet results = database.getExportedKeys(
             catalog, schema, table);
         try {
             bindAll(results, ExportedKey.class, list);
@@ -690,7 +724,7 @@ public class MetadataContext {
 
         final List<ImportedKey> list = new ArrayList<ImportedKey>();
 
-        final ResultSet results = metaData.getImportedKeys(
+        final ResultSet results = database.getImportedKeys(
             catalog, schema, table);
         try {
             bindAll(results, ImportedKey.class, list);
@@ -709,7 +743,7 @@ public class MetadataContext {
 
         final List<IndexInfo> list = new ArrayList<IndexInfo>();
 
-        final ResultSet results = metaData.getIndexInfo(
+        final ResultSet results = database.getIndexInfo(
             catalog, schema, table, unique, approximate);
         try {
             bindAll(results, IndexInfo.class, list);
@@ -727,7 +761,7 @@ public class MetadataContext {
 
         final List<PrimaryKey> list = new ArrayList<PrimaryKey>();
 
-        final ResultSet results = metaData.getPrimaryKeys(
+        final ResultSet results = database.getPrimaryKeys(
             catalog, schema, table);
         try {
             bindAll(results, PrimaryKey.class, list);
@@ -746,7 +780,7 @@ public class MetadataContext {
 
         final List<ProcedureColumn> list = new ArrayList<ProcedureColumn>();
 
-        final ResultSet results = metaData.getProcedureColumns(
+        final ResultSet results = database.getProcedureColumns(
             catalog, schemaPattern, procedureNamePattern, columnNamePattern);
         try {
             bindAll(results, ProcedureColumn.class, list);
@@ -765,7 +799,7 @@ public class MetadataContext {
 
         final List<Procedure> list = new ArrayList<Procedure>();
 
-        final ResultSet results = metaData.getProcedures(
+        final ResultSet results = database.getProcedures(
             catalog, schemaPattern, procedureNamePattern);
         try {
             bindAll(results, Procedure.class, list);
@@ -785,7 +819,7 @@ public class MetadataContext {
 
         final List<PseudoColumn> list = new ArrayList<PseudoColumn>();
 
-        final ResultSet results = metaData.getPseudoColumns(
+        final ResultSet results = database.getPseudoColumns(
             catalog, schemaPattern, tableNamePattern, columnNamePattern);
         try {
             bindAll(results, PseudoColumn.class, list);
@@ -802,7 +836,7 @@ public class MetadataContext {
 
         final List<SchemaName> list = new ArrayList<SchemaName>();
 
-        final ResultSet results = metaData.getSchemas();
+        final ResultSet results = database.getSchemas();
         try {
             bindAll(results, SchemaName.class, list);
         } finally {
@@ -819,7 +853,7 @@ public class MetadataContext {
 
         final List<Schema> list = new ArrayList<Schema>();
 
-        final ResultSet results = metaData.getSchemas(
+        final ResultSet results = database.getSchemas(
             catalog, schemaPattern);
         try {
             bindAll(results, Schema.class, list);
@@ -845,7 +879,7 @@ public class MetadataContext {
 
         final List<Table> list = new ArrayList<Table>();
 
-        final ResultSet results = metaData.getTables(
+        final ResultSet results = database.getTables(
             catalog, schemaPattern, tableNamePattern, types);
         try {
             bindAll(results, Table.class, list);
@@ -864,7 +898,7 @@ public class MetadataContext {
 
         final List<TablePrivilege> list = new ArrayList<TablePrivilege>();
 
-        final ResultSet results = metaData.getTablePrivileges(
+        final ResultSet results = database.getTablePrivileges(
             catalog, schemaPattern, tableNamePattern);
         try {
             bindAll(results, TablePrivilege.class, list);
@@ -881,7 +915,7 @@ public class MetadataContext {
 
         final List<TableType> list = new ArrayList<TableType>();
 
-        final ResultSet results = metaData.getTableTypes();
+        final ResultSet results = database.getTableTypes();
         try {
             bindAll(results, TableType.class, list);
         } finally {
@@ -897,7 +931,7 @@ public class MetadataContext {
 
         final List<TypeInfo> list = new ArrayList<TypeInfo>();
 
-        final ResultSet results = metaData.getTypeInfo();
+        final ResultSet results = database.getTypeInfo();
         try {
             bindAll(results, TypeInfo.class, list);
         } finally {
@@ -915,7 +949,7 @@ public class MetadataContext {
 
         final List<UserDefinedType> list = new ArrayList<UserDefinedType>();
 
-        final ResultSet results = metaData.getUDTs(
+        final ResultSet results = database.getUDTs(
             catalog, schemaPattern, typeNamePattern, types);
         try {
             bindAll(results, UserDefinedType.class, list);
@@ -934,7 +968,7 @@ public class MetadataContext {
 
         final List<VersionColumn> list = new ArrayList<VersionColumn>();
 
-        final ResultSet results = metaData.getVersionColumns(
+        final ResultSet results = database.getVersionColumns(
             catalog, schema, table);
         try {
             bindAll(results, VersionColumn.class, list);
@@ -946,10 +980,10 @@ public class MetadataContext {
     }
 
 
-    private final DatabaseMetaData metaData;
+    private final DatabaseMetaData database;
 
 
-    private Set<String> suppressionPaths;
+    private Set<String> suppressions;
 
 
 }
