@@ -60,9 +60,9 @@ A library binding various information from [DatabaseMetaData](http://docs.oracle
 final Connection connection; // get your own
 final DatabaseMetaData database = connection.getDataBaseMetaData();
 
-// create context, and add suppression paths if required
+// create context, and add suppressions if required
 final MetadataContext context = new MetaDataContext(database);
-context.addSuppressionPaths("metadata/schemaNames", "table/pseudoColumns");
+context.addSuppressions("metadata/schemaNames", "table/pseudoColumns");
 
 // bind various informations
 final Metadata metadata = context.getMetadata(); // bind all
