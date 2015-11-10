@@ -124,15 +124,15 @@ public class MetadataVerifier {
             }
         }
 
-        // table names must be order by themselves
-        {
-            final List<String> tableNames = schema.getTableNames();
-            for (int i = 1; i < tableNames.size(); i++) {
-                Assert.assertTrue(
-                    tableNames.get(i - 1).compareTo(tableNames.get(i))
-                    < 0);
-            }
-        }
+//        // table names must be order by themselves
+//        {
+//            final List<String> tableNames = schema.getTableNames();
+//            for (int i = 1; i < tableNames.size(); i++) {
+//                Assert.assertTrue(
+//                    tableNames.get(i - 1).compareTo(tableNames.get(i))
+//                    < 0);
+//            }
+//        }
     }
 
 

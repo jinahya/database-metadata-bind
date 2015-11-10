@@ -29,6 +29,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import static java.util.Collections.emptyList;
 import java.util.List;
+import java.util.logging.Level;
 import java.util.logging.Logger;
 import static java.util.logging.Logger.getLogger;
 
@@ -38,7 +39,7 @@ import static java.util.logging.Logger.getLogger;
  *
  * @author Jin Kwon &lt;jinahya_at_gmail.com&gt;
  */
-class Beans {
+final class Beans {
 
 
     private static final Logger logger = getLogger(Beans.class.getName());
@@ -86,6 +87,9 @@ class Beans {
             return readMethod.invoke(beanInstance);
         }
 
+        logger.log(Level.WARNING, "accessing field directly: {0}",
+                   new Object[]{propertyDescriptor});
+
         return Reflections.getFieldValueHelper(beanInstance.getClass(),
                                                propertyDescriptor.getName(),
                                                beanInstance);
@@ -130,11 +134,17 @@ class Beans {
             && Collection.class.isInstance(propertyValue)) {
             final Method readMethod = propertyDescriptor.getReadMethod();
             if (readMethod != null) {
-                ((Collection<Object>) readMethod.invoke(beanInstance))
-                    .addAll((Collection<? extends Object>) propertyValue);
+                final Collection<Object> value
+                    = (Collection<Object>) readMethod.invoke(beanInstance);
+                if (value != null) {
+                    value.addAll((Collection<? extends Object>) propertyValue);
+                }
                 return;
             }
         }
+
+        logger.log(Level.WARNING, "accessing field directly: {0}",
+                   new Object[]{propertyDescriptor});
 
         Reflections.setFieldValueHelper(beanInstance.getClass(),
                                         propertyDescriptor.getName(),
@@ -161,8 +171,7 @@ class Beans {
 
 
     static void setParent(final Class<?> childClass,
-                          final Iterable<?> childBeans,
-                          final Object parentBean)
+                          final Iterable<?> childBeans, final Object parentBean)
         throws ReflectiveOperationException {
 
         final Class<?> parentType = parentBean.getClass();

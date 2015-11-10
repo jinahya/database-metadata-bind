@@ -34,7 +34,7 @@ import javax.xml.bind.annotation.XmlValue;
 public class InsertsAreDetected {
 
 
-    static List<Integer> TYPES = Arrays.asList(
+    static final List<Integer> TYPES = Arrays.asList(
         ResultSet.TYPE_FORWARD_ONLY, ResultSet.TYPE_SCROLL_INSENSITIVE,
         ResultSet.TYPE_SCROLL_SENSITIVE);
 

@@ -36,11 +36,11 @@ class Values {
     static Object adapt(final Class<?> type, final Object value,
                         final Object target) {
 
-        if (type.isInstance(value)) {
+        if (type != null && type.isInstance(value)) {
             return value;
         }
 
-        if (!type.isPrimitive() && value == null) {
+        if (type != null && !type.isPrimitive() && value == null) {
             return value;
         }
 

@@ -38,13 +38,13 @@ public class VersionColumn {
 
 
     // ------------------------------------------------------------------- scope
-    public short getScope() {
+    public Short getScope() {
 
         return scope;
     }
 
 
-    public void setScope(final short scope) {
+    public void setScope(final Short scope) {
 
         this.scope = scope;
     }

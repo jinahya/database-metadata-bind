@@ -41,13 +41,6 @@ import javax.xml.bind.annotation.XmlType;
 public class TypeInfo {
 
 
-    // ---------------------------------------------------------------- metadata
-    public Metadata getMetadata() {
-
-        return metadata;
-    }
-
-
     // ---------------------------------------------------------------- typeName
     public String getTypeName() {
 
@@ -277,6 +270,19 @@ public class TypeInfo {
     public void setNumPrecRadix(final int numPrecRadix) {
 
         this.numPrecRadix = numPrecRadix;
+    }
+
+
+    // ---------------------------------------------------------------- metadata
+    public Metadata getMetadata() {
+
+        return metadata;
+    }
+
+
+    public void setMetadata(final Metadata metadata) {
+
+        this.metadata = metadata;
     }
 
 

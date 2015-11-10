@@ -87,15 +87,6 @@ public class Metadata {
     }
 
 
-//    // -------------------------------------------------------- suppressionPaths
-//    public Set<String> getSuppressionPaths() {
-//
-//        if (suppressionPaths == null) {
-//            suppressionPaths = new TreeSet<String>();
-//        }
-//
-//        return suppressionPaths;
-//    }
     // ------------------------------------------------ allProceduresAreCallable
     public boolean getAllProceduresAreCallable() {
 

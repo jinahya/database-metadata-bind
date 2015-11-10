@@ -32,7 +32,6 @@ import javax.xml.bind.annotation.XmlType;
 @XmlRootElement
 @XmlType(
     propOrder = {
-        //"procedureName",
         "columnName", "columnType", "dataType", "typeName",
         "precision", "length", "scale", "radix", "nullable", "remarks",
         "columnDef", "sqlDataType", "sqlDatetimeSub", "charOctetLength",
@@ -225,26 +224,27 @@ public class ProcedureColumn {
 
 
     // ------------------------------------------------------------- sqlDataType
-    public int getSqlDataType() {
+    public Integer getSqlDataType() {
 
         return sqlDataType;
     }
 
 
-    public void setSqlDataType(final int sqlDataType) {
+    public void setSqlDataType(final Integer sqlDataType) {
 
         this.sqlDataType = sqlDataType;
     }
 
 
     // ---------------------------------------------------------- sqlDatetimeSub
-    public int getSqlDatetimeSub() {
+    public Integer getSqlDatetimeSub() {
 
         return sqlDatetimeSub;
     }
 
 
-    public void setSqlDatetimeSub(int sqlDatetimeSub) {
+    public void setSqlDatetimeSub(final Integer sqlDatetimeSub) {
+
         this.sqlDatetimeSub = sqlDatetimeSub;
     }
 

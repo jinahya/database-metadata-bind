@@ -46,8 +46,7 @@ public class MetadataContext {
 
 
     private static String suppression(
-        final Class<?> beanClass,
-        final PropertyDescriptor propertyDescriptor) {
+        final Class<?> beanClass, final PropertyDescriptor propertyDescriptor) {
 
         return decapitalize(beanClass.getSimpleName()) + "/"
                + propertyDescriptor.getName();
@@ -114,17 +113,6 @@ public class MetadataContext {
         }
 
         return suppressions.contains(suppression);
-    }
-
-
-    private Object fieldValue(final Field field, final Object obj)
-        throws ReflectiveOperationException {
-
-        if (!field.isAccessible()) {
-            field.setAccessible(true);
-        }
-
-        return field.get(obj);
     }
 
 
@@ -348,13 +336,6 @@ public class MetadataContext {
             bindAll(results, Catalog.class, list);
         } finally {
             results.close();
-        }
-
-        if (false && list.isEmpty()) {
-            final Catalog catalog = new Catalog();
-            catalog.setTableCat("");
-            bindSingle(null, Catalog.class, catalog);
-            list.add(catalog);
         }
 
         return list;

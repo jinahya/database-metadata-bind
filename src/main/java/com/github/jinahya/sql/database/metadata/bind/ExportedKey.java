@@ -30,17 +30,25 @@ import javax.xml.bind.annotation.XmlType;
  * @author Jin Kwon &lt;jinahya_at_gmail.com&gt;
  */
 @XmlRootElement
-@XmlType(propOrder = {"pkcolumnName", "fktableCat", "fktableSchem",
-                      "fktableName", "fkcolumnName", "keySeq", "updateRule",
-                      "deleteRule", "fkName", "pkName", "deferrability"
-})
-public class ExportedKey {
+@XmlType(
+    propOrder = {
+        "pkcolumnName", "fktableCat", "fktableSchem",
+        "fktableName", "fkcolumnName", "keySeq", "updateRule",
+        "deleteRule", "fkName", "pkName", "deferrability"
+    })
+public class ExportedKey extends Child<Metadata> {
 
 
     // -------------------------------------------------------------- pktableCat
     public String getPktableCat() {
 
         return pktableCat;
+    }
+
+
+    public void setPktableCat(final String pktableCat) {
+
+        this.pktableCat = pktableCat;
     }
 
 
@@ -51,10 +59,22 @@ public class ExportedKey {
     }
 
 
+    public void setPktableSchem(final String pktableSchem) {
+
+        this.pktableSchem = pktableSchem;
+    }
+
+
     // ------------------------------------------------------------- pktableName
     public String getPktableName() {
 
         return pktableName;
+    }
+
+
+    public void setPktableName(final String pktableName) {
+
+        this.pktableName = pktableName;
     }
 
 
@@ -218,12 +238,21 @@ public class ExportedKey {
     }
 
 
+    public void setTable(final Table table) {
+
+        this.table = table;
+    }
+
+
+    // -------------------------------------------------------------------------
     @Label("PKTABLE_CAT")
+    @NillableBySpecification
     @XmlAttribute
     private String pktableCat;
 
 
     @Label("PKTABLE_SCHEM")
+    @NillableBySpecification
     @XmlAttribute
     private String pktableSchem;
 
@@ -239,14 +268,14 @@ public class ExportedKey {
 
 
     @Label("FKTABLE_CAT")
-    @XmlElement(nillable = true, required = true)
     @NillableBySpecification
+    @XmlElement(nillable = true, required = true)
     private String fktableCat;
 
 
     @Label("FKTABLE_NAME")
-    @XmlElement(nillable = true, required = true)
     @NillableBySpecification
+    @XmlElement(nillable = true, required = true)
     private String fktableSchem;
 
 

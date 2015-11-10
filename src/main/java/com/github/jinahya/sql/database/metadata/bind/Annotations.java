@@ -28,23 +28,9 @@ import java.lang.reflect.Method;
  *
  * @author Jin Kwon &lt;jinahya_at_gmail.com&gt;
  */
-class Annotations {
+final class Annotations {
 
 
-//    static <T extends Annotation> T getAnnotation(
-//        final Class<T> annotationClass, final Field propertyField) {
-//
-//        return propertyField.getAnnotation(annotationClass);
-//    }
-//    static <T extends Annotation> T getAnnotation(
-//        final Class<T> annotationClass, final Class<?> beanClass,
-//        final String fieldName)
-//        throws NoSuchFieldException {
-//
-//        return beanClass
-//            .getDeclaredField(fieldName)
-//            .getAnnotation(annotationClass);
-//    }
     static <T extends Annotation> T getAnnotation(
         final Class<T> annotationClass,
         final PropertyDescriptor proeprtyDescriptor, final Class<?> beanClass) {
