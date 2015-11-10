@@ -64,8 +64,7 @@ public class SQLiteMemoryTest {
 
 
     @Test(enabled = true)
-    public void retrieve() throws SQLException, ReflectiveOperationException,
-                                  JAXBException, IOException {
+    public void retrieve() throws Exception {
 
         final Metadata metadata;
 

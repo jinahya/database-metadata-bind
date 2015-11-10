@@ -100,14 +100,6 @@ public class Schema {
     }
 
 
-    //@XmlAttribute
-    @Deprecated
-    private String getCatalogString() {
-
-        return catalog == null ? null : catalog.toString();
-    }
-
-
     public void setCatalog(final Catalog catalog) {
 
         this.catalog = catalog;
@@ -152,35 +144,6 @@ public class Schema {
         }
 
         return tables;
-    }
-
-
-    public List<String> getTableNames() {
-
-        final List<String> tableNames
-            = new ArrayList<String>(getTables().size());
-
-        for (final Table table : getTables()) {
-            tableNames.add(table.getTableName());
-        }
-
-        return tableNames;
-    }
-
-
-    public Table getTableByName(final String tableName) {
-
-        if (tableName == null) {
-            throw new NullPointerException("null tableName");
-        }
-
-        for (final Table table : getTables()) {
-            if (tableName.equals(table.getTableName())) {
-                return table;
-            }
-        }
-
-        return null;
     }
 
 

@@ -18,7 +18,6 @@
 package com.github.jinahya.sql.database.metadata.bind;
 
 
-import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Logger;
@@ -36,7 +35,7 @@ import javax.xml.bind.annotation.XmlType;
  */
 @XmlRootElement
 @XmlType(propOrder = {"tableCat", "schemas"})
-public class Catalog implements Serializable {
+public class Catalog {
 
 
     private static final Logger logger = getLogger(Catalog.class.getName());
@@ -127,8 +126,8 @@ public class Catalog implements Serializable {
     private List<Schema> schemas;
 
 
-    @XmlTransient
-    private Metadata metadata;
+    //@XmlTransient
+    private transient Metadata metadata;
 
 
 }

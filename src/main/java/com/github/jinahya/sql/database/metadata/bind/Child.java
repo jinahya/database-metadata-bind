@@ -18,29 +18,32 @@
 package com.github.jinahya.sql.database.metadata.bind;
 
 
-import java.beans.PropertyDescriptor;
+import javax.xml.bind.annotation.XmlTransient;
 
 
 /**
  *
  * @author Jin Kwon &lt;jinahya_at_gmail.com&gt;
+ * @param <P> parent type parameter
  */
-class Invocations {
+@XmlTransient
+abstract class Child<P> {
 
 
-    static Invocation get(final PropertyDescriptor propertyDescriptor,
-                          final Class<?> beanClass) {
+    public P getParent() {
 
-        return Annotations.getAnnotation(
-            Invocation.class, propertyDescriptor, beanClass);
+        return parent;
     }
 
 
-    private Invocations() {
+    void setParent(final P parent) {
 
-        super();
-
+        this.parent = parent;
     }
+
+
+    //@XmlTransient
+    private transient P parent;
 
 
 }

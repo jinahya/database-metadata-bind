@@ -55,10 +55,22 @@ public class Table {
     }
 
 
+    public void setTableCat(final String tableCat) {
+
+        this.tableCat = tableCat;
+    }
+
+
     // -------------------------------------------------------------- tableSchem
     public String getTableSchem() {
 
         return tableSchem;
+    }
+
+
+    public void setTableSchem(final String tableSchem) {
+
+        this.tableSchem = tableSchem;
     }
 
 

@@ -20,15 +20,12 @@ package com.github.jinahya.sql.database.metadata.bind;
 
 import java.io.File;
 import java.io.FileOutputStream;
-import java.io.IOException;
 import java.io.OutputStream;
 import java.sql.Connection;
 import java.sql.DatabaseMetaData;
 import static java.sql.DriverManager.getConnection;
 import java.sql.SQLException;
-import java.util.List;
 import javax.xml.bind.JAXBContext;
-import javax.xml.bind.JAXBException;
 import javax.xml.bind.Marshaller;
 import org.slf4j.Logger;
 import static org.slf4j.LoggerFactory.getLogger;
@@ -64,8 +61,7 @@ public class HyperSQLMemoryTest {
 
 
     @Test(enabled = true)
-    public void retrieve() throws SQLException, ReflectiveOperationException,
-                                  JAXBException, IOException {
+    public void retrieve() throws Exception {
 
         final Metadata metadata;
 

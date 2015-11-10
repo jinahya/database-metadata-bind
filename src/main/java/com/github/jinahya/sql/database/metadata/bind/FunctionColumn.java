@@ -236,7 +236,7 @@ public class FunctionColumn {
 
 
     // -------------------------------------------------------------- isNullable
-    public String isNullable() {
+    public String getIsNullable() {
 
         return isNullable;
     }
@@ -288,7 +288,6 @@ public class FunctionColumn {
 
     @Label("FUNCTION_NAME")
     @XmlAttribute
-    //@XmlElement(required = true)
     private String functionName;
 
 

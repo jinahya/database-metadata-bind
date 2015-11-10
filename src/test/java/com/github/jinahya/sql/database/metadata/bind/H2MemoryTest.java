@@ -66,8 +66,7 @@ public class H2MemoryTest {
 
 
     @Test(enabled = true)
-    public void retrieve() throws SQLException, ReflectiveOperationException,
-                                  JAXBException, IOException {
+    public void retrieve() throws Exception {
 
         final Metadata metadata;
 

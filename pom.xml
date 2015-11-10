@@ -6,7 +6,7 @@
   <!-- The Basics -->
   <groupId>com.github.jinahya</groupId>
   <artifactId>database-metadata-bind</artifactId>
-  <version>0.8</version>
+  <version>0.9</version>
   <packaging>jar</packaging>
   <dependencyManagement />
   <dependencies>
@@ -95,6 +95,11 @@
           <artifactId>build-helper-maven-plugin</artifactId>
           <version>1.9.1</version>
         </plugin>
+        <plugin>
+          <groupId>org.jacoco</groupId>
+          <artifactId>jacoco-maven-plugin</artifactId>
+          <version>0.7.5.201505241946</version>
+        </plugin>
       </plugins>
     </pluginManagement>
     <plugins>
@@ -179,6 +184,18 @@
           </execution>
         </executions>
       </plugin>
+      <plugin>
+        <groupId>org.jacoco</groupId>
+        <artifactId>jacoco-maven-plugin</artifactId>
+        <executions>
+          <execution>
+            <id>default-prepare-agent</id>
+            <goals>
+              <goal>prepare-agent</goal>
+            </goals>
+          </execution>
+        </executions>
+      </plugin>
     </plugins>
   </build>
   <reporting>
@@ -190,28 +207,19 @@
       </plugin>
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
-        <artifactId>maven-project-info-reports-plugin</artifactId>
-        <version>2.8.1</version>
-      </plugin>
-      <plugin>
-        <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-javadoc-plugin</artifactId>
         <configuration>
-          <!--<additionalparam>-sourceclasspath ${project.build.outputDirectory}</additionalparam>-->
-          <additionalparam>-inferdep -inferrel -hide java.*</additionalparam>
+          <additionalparam>
+            -hide java.*
+            -collapsible -horizontal
+            -inferdep -inferrel
+            -outputencoding UTF-8
+          </additionalparam>
           <breakiterator>true</breakiterator>
           <charset>UTF-8</charset>
-          <!--          <doclet>org.jboss.apiviz.APIviz</doclet>
-          <docletArtifact>
-            <groupId>org.jboss.apiviz</groupId>
-            <artifactId>apiviz</artifactId>
-            <version>1.3.2.GA</version>
-          </docletArtifact>-->
           <doclet>org.umlgraph.doclet.UmlGraphDoc</doclet>
           <docletArtifact>
             <groupId>org.umlgraph</groupId>
-            <!--            <artifactId>doclet</artifactId>
-            <version>5.1</version>-->
             <artifactId>umlgraph</artifactId>
             <version>5.6.6</version>
           </docletArtifact>
@@ -231,11 +239,11 @@
           <targetJdk>${mven.compiler.target}</targetJdk>
         </configuration>
       </plugin>
-      <!--      <plugin>
+      <plugin>
         <groupId>org.codehaus.mojo</groupId>
         <artifactId>cobertura-maven-plugin</artifactId>
         <version>2.7</version>
-      </plugin>-->
+      </plugin>
       <plugin>
         <groupId>org.kuali.maven.plugins</groupId>
         <artifactId>graph-maven-plugin</artifactId>
@@ -245,6 +253,10 @@
         <groupId>org.codehaus.mojo</groupId>
         <artifactId>findbugs-maven-plugin</artifactId>
         <version>3.0.2</version>
+      </plugin>
+      <plugin>
+        <groupId>org.jacoco</groupId>
+        <artifactId>jacoco-maven-plugin</artifactId>
       </plugin>
     </plugins>
   </reporting>
@@ -283,7 +295,7 @@
     <connection>scm:git:git@github.com:jinahya/database-metadata-bind.git</connection>
     <developerConnection>scm:git:git@github.com:jinahya/database-metadata-bind.git</developerConnection>
     <url>https://github.com/jinahya/database-metadata-bind</url>
-    <tag>0.8</tag>
+    <tag>0.9</tag>
   </scm>
   <prerequisites />
   <repositories />

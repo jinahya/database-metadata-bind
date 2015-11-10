@@ -355,7 +355,7 @@ public class Column {
     }
 
 
-    public void setIsGeneratedColumn(final String isGeneratedcolumn) {
+    public void setIsGeneratedcolumn(final String isGeneratedcolumn) {
 
         this.isGeneratedcolumn = isGeneratedcolumn;
     }

@@ -40,32 +40,41 @@ import javax.xml.bind.annotation.XmlType;
 public class ImportedKey {
 
 
+    // -------------------------------------------------------------- pktableCat
     public String getPktableCat() {
+
         return pktableCat;
     }
 
 
-    public void setPktableCat(String pktableCat) {
+    public void setPktableCat(final String pktableCat) {
+
         this.pktableCat = pktableCat;
     }
 
 
+    // ------------------------------------------------------------ pktableSchem
     public String getPktableSchem() {
+
         return pktableSchem;
     }
 
 
-    public void setPktableSchem(String pktableSchem) {
+    public void setPktableSchem(final String pktableSchem) {
+
         this.pktableSchem = pktableSchem;
     }
 
 
+    // ------------------------------------------------------------- pktableName
     public String getPktableName() {
+
         return pktableName;
     }
 
 
-    public void setPktableName(String pktableName) {
+    public void setPktableName(final String pktableName) {
+
         this.pktableName = pktableName;
     }
 

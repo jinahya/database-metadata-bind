@@ -18,28 +18,22 @@
 package com.github.jinahya.sql.database.metadata.bind;
 
 
-import java.beans.PropertyDescriptor;
-
-
 /**
  *
  * @author Jin Kwon &lt;jinahya_at_gmail.com&gt;
  */
-class Invocations {
+class MetadataChild extends Child<Metadata> {
 
 
-    static Invocation get(final PropertyDescriptor propertyDescriptor,
-                          final Class<?> beanClass) {
+    public Metadata getMetadata() {
 
-        return Annotations.getAnnotation(
-            Invocation.class, propertyDescriptor, beanClass);
+        return getParent();
     }
 
 
-    private Invocations() {
+    public void setMetadata(final Metadata metadata) {
 
-        super();
-
+        setParent(metadata);
     }
 
 

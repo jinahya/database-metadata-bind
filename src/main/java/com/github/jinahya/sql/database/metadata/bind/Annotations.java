@@ -28,43 +28,35 @@ import java.lang.reflect.Method;
  *
  * @author Jin Kwon &lt;jinahya_at_gmail.com&gt;
  */
-class Annotations {
+final class Annotations {
 
 
-    static <T extends Annotation> T get(final Class<T> type,
-                                        final Field field) {
+    static <T extends Annotation> T getAnnotation(
+        final Class<T> annotationClass,
+        final PropertyDescriptor proeprtyDescriptor, final Class<?> beanClass) {
 
-        return field.getAnnotation(type);
-    }
-
-
-    static <T extends Annotation> T get(final Class<T> type,
-                                        final PropertyDescriptor descriptor,
-                                        final Class<?> klass) {
-
-        final Method reader = descriptor.getReadMethod();
-        if (reader != null) {
-            final T value = reader.getAnnotation(type);
+        final Method readMethod = proeprtyDescriptor.getReadMethod();
+        if (readMethod != null) {
+            final T value = readMethod.getAnnotation(annotationClass);
             if (value != null) {
                 return value;
             }
         }
 
-        final Method writer = descriptor.getReadMethod();
-        if (writer != null) {
-            final T value = writer.getAnnotation(type);
+        final Method writeMethod = proeprtyDescriptor.getReadMethod();
+        if (writeMethod != null) {
+            final T value = writeMethod.getAnnotation(annotationClass);
             if (value != null) {
                 return value;
             }
         }
 
-        if (klass != null) {
-            final String name = descriptor.getName();
-            try {
-                final Field field = klass.getDeclaredField(name);
-                return get(type, field);
-            } catch (final NoSuchFieldException nsfe) {
-            }
+        final String propertyName = proeprtyDescriptor.getName();
+        try {
+            final Field field = beanClass.getDeclaredField(propertyName);
+            return field.getAnnotation(annotationClass);
+        } catch (final NoSuchFieldException nsfe) {
+            //nsfe.printStackTrace(System.err);
         }
 
         return null;

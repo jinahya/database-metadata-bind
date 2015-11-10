@@ -19,6 +19,7 @@ package com.github.jinahya.sql.database.metadata.bind;
 
 
 import static java.beans.Introspector.decapitalize;
+import java.beans.PropertyDescriptor;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.lang.reflect.ParameterizedType;
@@ -26,10 +27,7 @@ import java.sql.DatabaseMetaData;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
-import java.util.Collections;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.Set;
 import java.util.TreeSet;
 import java.util.logging.Level;
@@ -47,112 +45,11 @@ public class MetadataContext {
     private static final Logger logger = getLogger(Metadata.class.getName());
 
 
-    private static final Map<Class<?>, Class<?>> WRAPPERS;
+    private static String suppression(
+        final Class<?> beanClass, final PropertyDescriptor propertyDescriptor) {
 
-
-    static {
-        final Map<Class<?>, Class<?>> map = new HashMap<Class<?>, Class<?>>(9);
-        map.put(boolean.class, Boolean.class);
-        map.put(byte.class, Byte.class);
-        map.put(char.class, Character.class);
-        map.put(double.class, Double.class);
-        map.put(float.class, Float.class);
-        map.put(int.class, Integer.class);
-        map.put(long.class, Long.class);
-        map.put(short.class, Short.class);
-        map.put(void.class, Void.class);
-        WRAPPERS = Collections.unmodifiableMap(map);
-    }
-
-
-    private static Class<?> wrapper(final Class<?> primitive) {
-
-        if (!primitive.isPrimitive()) {
-            throw new IllegalArgumentException("not primitive: " + primitive);
-        }
-
-        return WRAPPERS.get(primitive);
-    }
-
-
-    private static String capitalize(final String name) {
-
-        return name.substring(0, 1).toUpperCase() + name.substring(1);
-    }
-
-
-    private static String getterName(final String fieldName) {
-
-        return "get" + capitalize(fieldName);
-    }
-
-
-    private static String getterName(final Field field) {
-
-        return getterName(field.getName());
-    }
-
-
-    private static String setterName(final String fieldName) {
-
-        return "set" + capitalize(fieldName);
-    }
-
-
-    private static String setterName(final Field field) {
-
-        return setterName(field.getName());
-    }
-
-
-    private static String suppression(final Field field, final Class<?> klass) {
-
-        if (field == null) {
-            throw new NullPointerException("null field");
-        }
-
-        if (klass == null) {
-            throw new NullPointerException("null klass");
-        }
-
-        if (!field.getDeclaringClass().isAssignableFrom(klass)) {
-            throw new IllegalArgumentException(
-                "klass(" + klass
-                + ") is not assignable to the specified field(" + field
-                + ")'s declaring class(" + field.getDeclaringClass() + ")");
-        }
-
-        return decapitalize(klass.getSimpleName()) + "/" + field.getName();
-    }
-
-
-    private static String suppression(final Field field) {
-
-        return suppression(field, field.getDeclaringClass());
-    }
-
-
-    private static <T> void parent(final Class<T> type,
-                                   List<? super T> children,
-                                   final Object parent)
-        throws IllegalAccessException {
-
-        // set parent
-        for (final Field field : type.getDeclaredFields()) {
-            if (field.getType() != parent.getClass()) {
-                continue;
-            }
-            if (!field.isAccessible()) {
-                field.setAccessible(true);
-            }
-//            if (children.isEmpty()) {
-//                logger.warning("children empty!!");
-//            }
-            for (final Object element : children) {
-                field.set(element, parent);
-            }
-            break;
-        }
+        return decapitalize(beanClass.getSimpleName()) + "/"
+               + propertyDescriptor.getName();
     }
 
 
@@ -219,198 +116,69 @@ public class MetadataContext {
     }
 
 
-    private Object fieldValue(final Field field, final Object obj)
-        throws ReflectiveOperationException {
-
-        if (!field.isAccessible()) {
-            field.setAccessible(true);
-        }
-
-        return field.get(obj);
-    }
-
-
-    private Object fieldValue(final Class<?> type, final String name,
-                              final Object obj)
-        throws ReflectiveOperationException {
-
-        return fieldValue(type.getDeclaredField(name), obj);
-    }
-
-
-    private void fieldValue(final Field field, final Object obj, Object value,
-                            final Object[] args)
+    private void setPropertyValue(final PropertyDescriptor propertyDescriptor,
+                                  final Object beanInstance,
+                                  final Object propertyValue,
+                                  final Object[] invocationArgs)
         throws ReflectiveOperationException, SQLException {
 
-        if (!field.isAccessible()) {
-            field.setAccessible(true);
-        }
-        final Class<?> fieldType = field.getType();
-        try {
-            field.set(obj, value);
-            return;
-        } catch (final IllegalArgumentException iae) {
-        }
-        final Class<?> valueType = value == null ? null : value.getClass();
-        if (fieldType == Boolean.TYPE) {
-            if (Number.class.isInstance(value)) {
-                value = ((Number) value).intValue() != 0;
-            }
-            if (!Boolean.class.isInstance(value)) {
-                logger.log(Level.WARNING, "cannot set {0}({1}) to {2}",
-                           new Object[]{value, valueType, field});
+        final Class<?> propertyType = propertyDescriptor.getPropertyType();
+        if (propertyType == List.class) {
+            if (propertyValue == null) {
                 return;
             }
-            field.setBoolean(obj, (Boolean) value);
-            return;
-        }
-        if (fieldType == Boolean.class) {
-            if (Number.class.isInstance(value)) {
-                value = ((Number) value).intValue() != 0;
-            }
-            if (value != null && !Boolean.class.isInstance(value)) {
-                logger.log(Level.WARNING, "cannot set {0}({1}) to {2}",
-                           new Object[]{value, valueType, field});
-                return;
-            }
-            field.set(obj, value);
-            return;
-        }
-        if (fieldType == Short.TYPE) {
-            if (value == null || !Number.class.isInstance(value)) {
-                logger.log(Level.WARNING, "cannot set {0}({1}) to {2}",
-                           new Object[]{value, valueType, field});
-                return;
-            }
-            field.setShort(obj, ((Number) value).shortValue());
-            return;
-        }
-        if (fieldType == Short.class) {
-            if (value != null && !Number.class.isInstance(value)) {
-                logger.log(Level.WARNING, "cannot set {0}({1}) to {2}",
-                           new Object[]{value, valueType, field});
-                return;
-            }
-            if (value != null && !Short.class.isInstance(value)) {
-                value = ((Number) value).shortValue();
-            }
-            field.set(obj, value);
-            return;
-        }
-        if (fieldType == Integer.TYPE) {
-            if (value == null || !Number.class.isInstance(value)) {
-                logger.log(Level.WARNING, "cannot set {0}({1}) to {2}",
-                           new Object[]{value, valueType, field});
-                return;
-            }
-            if (Number.class.isInstance(value)) {
-                value = ((Number) value).intValue();
-            }
-            field.setInt(obj, (Integer) value);
-            return;
-        }
-        if (fieldType == Integer.class) {
-            if (value != null && !Number.class.isInstance(value)) {
-                logger.log(Level.WARNING, "cannot set {0}({1}) to {2}",
-                           new Object[]{value, valueType, field});
-                return;
-            }
-            if (value != null && !Integer.class.isInstance(value)) {
-                value = ((Number) value).intValue();
-            }
-            field.set(obj, value);
-            return;
-        }
-        if (fieldType == Long.TYPE) {
-            if (value == null || !Number.class.isInstance(value)) {
-                logger.log(Level.WARNING, "cannot set {0}({1}) to {2}",
-                           new Object[]{value, valueType, field});
-                return;
-            }
-            if (Number.class.isInstance(value)) {
-                value = ((Number) value).longValue();
-            }
-            field.setLong(obj, (Long) value);
-            return;
-        }
-        if (fieldType == Long.class) {
-            if (value != null && !Number.class.isInstance(value)) {
-                logger.log(Level.WARNING, "cannot set {0}({1}) to {2}",
-                           new Object[]{value, valueType, field});
-                return;
-            }
-            if (value != null && !Long.class.isInstance(value)) {
-                value = ((Number) value).longValue();
-            }
-            field.set(obj, value);
-            return;
-        }
-        if (fieldType == List.class) {
             @SuppressWarnings("unchecked")
-            final List<Object> list = (List<Object>) field.getDeclaringClass()
-                .getMethod(getterName(field)).invoke(obj);
-//            final Type genericType = field.getGenericType();
-//            if (!ParameterizedType.class.isInstance(genericType)) {
-//                logger.log(Level.WARNING, "not a ParameterizedType({0}): {1}",
-//                           new Object[]{genericType, field});
-//            }
-//            final Type elementType = ((ParameterizedType) genericType)
-//                .getActualTypeArguments()[0];
-            //final String typeName = elementType.getTypeName();
-            //final Class<?> typeClass = Class.forName(typeName);
+            final List<Object> list = (List<Object>) Beans.getPropertyValue(
+                propertyDescriptor, beanInstance);
+            final String propertyName = propertyDescriptor.getName();
+            final Field field
+                = beanInstance.getClass().getDeclaredField(propertyName);
             final Class<?> type
                 = (Class<?>) ((ParameterizedType) field.getGenericType())
                 .getActualTypeArguments()[0];
-            if (ResultSet.class.isInstance(value)) {
-                //bindAll((ResultSet) value, typeClass, list);
-                bindAll((ResultSet) value, type, list);
-                parent(type, list, obj);
+            if (ResultSet.class.isInstance(propertyValue)) {
+                bindAll((ResultSet) propertyValue, type, list);
+                Beans.setParent(type, list, beanInstance);
                 return;
             }
-//            list.add(typeClass
-//                .getMethod("valueOf", Object[].class, Object.class)
-//                .invoke(null, args, value));
             list.add(type
                 .getDeclaredMethod("valueOf", Object[].class, Object.class)
-                .invoke(null, args, value));
-            parent(type, list, obj);
+                .invoke(null, invocationArgs, propertyValue));
+            Beans.setParent(type, list, beanInstance);
             return;
         }
 
-        logger.log(Level.WARNING, "value({0}) not handled: {1}",
-                   new Object[]{value, field});
+        Beans.setPropertyValue(propertyDescriptor, beanInstance, propertyValue);
     }
 
 
-    private <T> T bindSingle(final ResultSet results, final Class<T> type,
-                             final T obj)
+    private <T> T bindSingle(final ResultSet resultSet,
+                             final Class<T> beanClass, final T beanInstance)
         throws SQLException, ReflectiveOperationException {
 
-        // set labeled fields
-        if (results != null) {
-            for (final Field field : type.getDeclaredFields()) {
-                final String suppressionPath = suppression(field);
-                if (suppressed(suppressionPath)) {
+        if (resultSet != null) {
+            for (final PropertyDescriptor propertyDescriptor
+                 : Beans.getPropertyDescriptors(beanClass, Label.class)) {
+                final String suppression
+                    = suppression(beanClass, propertyDescriptor);
+                if (suppressed(suppression)) {
                     continue;
                 }
-                final Label label = field.getAnnotation(Label.class);
-                if (label == null) {
-                    continue;
-                }
-                final Object value = results.getObject(label.value());
-                fieldValue(field, obj, value, null);
+                final Label label = Labels.get(propertyDescriptor, beanClass);
+                final Object value = resultSet.getObject(label.value());
+                Beans.setPropertyValue(propertyDescriptor, beanInstance, value);
             }
         }
-        // set invocation fields
-        for (final Field field : type.getDeclaredFields()) {
-            final String suppressionPath = suppression(field);
-            if (suppressed(suppressionPath)) {
+
+        for (final PropertyDescriptor propertyDescriptor
+             : Beans.getPropertyDescriptors(beanClass, Invocation.class)) {
+            final String suppression
+                = suppression(beanClass, propertyDescriptor);
+            if (suppressed(suppression)) {
                 continue;
             }
-            final Invocation invocation = field.getAnnotation(Invocation.class);
-            if (invocation == null) {
-                continue;
-            }
+            final Invocation invocation
+                = Invocations.get(propertyDescriptor, beanClass);
             final Class<?>[] types = invocation.types();
             final Method method = DatabaseMetaData.class.getMethod(
                 invocation.name(), invocation.types());
@@ -424,8 +192,8 @@ public class MetadataContext {
                         continue;
                     }
                     if (name.startsWith(":")) {
-                        args[i] = fieldValue(
-                            type.getDeclaredField(name.substring(1)), obj);
+                        args[i] = Beans.getPropertyValue(
+                            beanClass, name.substring(1), beanInstance);
                         continue;
                     }
                     if (types[i] == String.class) {
@@ -433,16 +201,18 @@ public class MetadataContext {
                         continue;
                     }
                     if (types[i].isPrimitive()) {
-                        types[i] = wrapper(types[i]);
+                        types[i] = Reflections.wrapper(types[i]);
                     }
                     args[i] = types[i].getMethod("valueOf", String.class)
                         .invoke(null, name);
                 }
-                fieldValue(field, obj, method.invoke(database, args), args);
+                final Object propertyValue = method.invoke(database, args);
+                setPropertyValue(
+                    propertyDescriptor, beanInstance, propertyValue, args);
             }
         }
 
-        return obj;
+        return beanInstance;
     }
 
 
@@ -566,13 +336,6 @@ public class MetadataContext {
             bindAll(results, Catalog.class, list);
         } finally {
             results.close();
-        }
-
-        if (false && list.isEmpty()) {
-            final Catalog catalog = new Catalog();
-            catalog.setTableCat("");
-            bindSingle(null, Catalog.class, catalog);
-            list.add(catalog);
         }
 
         return list;

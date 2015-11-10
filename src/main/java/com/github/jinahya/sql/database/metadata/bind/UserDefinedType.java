@@ -48,10 +48,22 @@ public class UserDefinedType {
     }
 
 
+    public void setTypeCat(final String typeCat) {
+
+        this.typeCat = typeCat;
+    }
+
+
     // --------------------------------------------------------------- typeSchem
     public String getTypeSchem() {
 
         return typeSchem;
+    }
+
+
+    public void setTypeSchem(final String typeSchem) {
+
+        this.typeSchem = typeSchem;
     }
 
 
@@ -180,15 +192,15 @@ public class UserDefinedType {
     private Short baseType;
 
 
-    @XmlTransient
-    private Schema schema;
+    //@XmlTransient
+    private transient Schema schema;
 
 
     @Invocation(
         name = "getAttributes",
         types = {String.class, String.class, String.class, String.class},
         argsarr = {
-            @InvocationArgs({":tableCat", ":tableSchem", ":typeName", "null"})
+            @InvocationArgs({":typeCat", ":typeSchem", ":typeName", "null"})
         }
     )
     @XmlElementRef
