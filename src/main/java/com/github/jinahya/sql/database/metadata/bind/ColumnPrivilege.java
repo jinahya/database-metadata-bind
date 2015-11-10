@@ -21,7 +21,6 @@ package com.github.jinahya.sql.database.metadata.bind;
 import javax.xml.bind.annotation.XmlAttribute;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
-import javax.xml.bind.annotation.XmlTransient;
 import javax.xml.bind.annotation.XmlType;
 
 
@@ -31,7 +30,23 @@ import javax.xml.bind.annotation.XmlType;
  */
 @XmlRootElement
 @XmlType(propOrder = {"grantor", "grantee", "privilege", "isGrantable"})
-public class ColumnPrivilege {
+public class ColumnPrivilege extends AbstractChild<Column> {
+
+
+    @Override
+    public String toString() {
+
+        return super.toString() + "{"
+               + "tableCat=" + tableCat
+               + ", tableSchem=" + tableSchem
+               + ", tableName=" + tableName
+               + ", columnName=" + columnName
+               + ", grantor=" + grantor
+               + ", grantee=" + grantee
+               + ", privilege=" + privilege
+               + ", isGrantable=" + isGrantable
+               + '}';
+    }
 
 
     // ---------------------------------------------------------------- tableCat
@@ -138,19 +153,18 @@ public class ColumnPrivilege {
     }
 
 
-    // ------------------------------------------------------------------ column
-    public Column getColumn() {
-
-        return column;
-    }
-
-
-    public void setColumn(final Column column) {
-
-        this.column = column;
-    }
-
-
+//    // ------------------------------------------------------------------ column
+//    public Column getColumn() {
+//
+//        return column;
+//    }
+//
+//
+//    public void setColumn(final Column column) {
+//
+//        this.column = column;
+//    }
+    // -------------------------------------------------------------------------
     @Label("TABLE_CAT")
     @NillableBySpecification
     @XmlAttribute
@@ -193,10 +207,6 @@ public class ColumnPrivilege {
     @NillableBySpecification
     @XmlElement(nillable = true, required = true)
     private String isGrantable;
-
-
-    @XmlTransient
-    private Column column;
 
 
 }

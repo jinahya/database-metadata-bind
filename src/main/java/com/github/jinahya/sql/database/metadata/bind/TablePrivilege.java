@@ -21,7 +21,6 @@ package com.github.jinahya.sql.database.metadata.bind;
 import javax.xml.bind.annotation.XmlAttribute;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
-import javax.xml.bind.annotation.XmlTransient;
 import javax.xml.bind.annotation.XmlType;
 
 
@@ -30,8 +29,12 @@ import javax.xml.bind.annotation.XmlType;
  * @author Jin Kwon &lt;jinahya_at_gmail.com&gt;
  */
 @XmlRootElement
-@XmlType(propOrder = {"grantor", "grantee", "privilege", "isGrantable"})
-public class TablePrivilege {
+@XmlType(
+    propOrder = {
+        "grantor", "grantee", "privilege", "isGrantable"
+    }
+)
+public class TablePrivilege extends AbstractChild<Table> {
 
 
     // ---------------------------------------------------------------- tableCat
@@ -74,22 +77,12 @@ public class TablePrivilege {
 
 
     // ----------------------------------------------------------------- grantor
-    /**
-     * Returns {@link #grantor}.
-     *
-     * @return {@link #grantor}.
-     */
     public String getGrantor() {
 
         return grantor;
     }
 
 
-    /**
-     * Replaces {@link #grantor}.
-     *
-     * @param grantor {@link #grantor}.
-     */
     public void setGrantor(final String grantor) {
 
         this.grantor = grantor;
@@ -97,22 +90,12 @@ public class TablePrivilege {
 
 
     // ----------------------------------------------------------------- grantee
-    /**
-     * Returns {@link #grantee}.
-     *
-     * @return {@link #grantee}.
-     */
     public String getGrantee() {
 
         return grantee;
     }
 
 
-    /**
-     * Replaces {@link #grantee}.
-     *
-     * @param grantee {@link #grantee}.
-     */
     public void setGrantee(final String grantee) {
 
         this.grantee = grantee;
@@ -145,24 +128,7 @@ public class TablePrivilege {
     }
 
 
-    // ------------------------------------------------------------------- table
-    /**
-     * Returns the parent table of this table privilege.
-     *
-     * @return the parent table.
-     */
-    public Table getTable() {
-
-        return table;
-    }
-
-
-    public void setTable(final Table table) {
-
-        this.table = table;
-    }
-
-
+    // -------------------------------------------------------------------------
     @Label("TABLE_CAT")
     @NillableBySpecification
     @XmlAttribute
@@ -200,10 +166,6 @@ public class TablePrivilege {
     @NillableBySpecification
     @XmlElement(nillable = true, required = true)
     private String isGrantable;
-
-
-    @XmlTransient
-    private Table table;
 
 
 }

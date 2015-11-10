@@ -21,7 +21,6 @@ package com.github.jinahya.sql.database.metadata.bind;
 import javax.xml.bind.annotation.XmlAttribute;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
-import javax.xml.bind.annotation.XmlTransient;
 import javax.xml.bind.annotation.XmlType;
 
 
@@ -38,7 +37,7 @@ import javax.xml.bind.annotation.XmlType;
         "ordinalPosition", "isNullable", "specificName"
     }
 )
-public class ProcedureColumn {
+public class ProcedureColumn extends AbstractChild<Procedure> {
 
 
     // ------------------------------------------------------------ procedureCat
@@ -304,16 +303,17 @@ public class ProcedureColumn {
     // --------------------------------------------------------------- procedure
     public Procedure getProcedure() {
 
-        return procedure;
+        return getParent();
     }
 
 
     public void setProcedure(final Procedure procedure) {
 
-        this.procedure = procedure;
+        setParent(procedure);
     }
 
 
+    // -------------------------------------------------------------------------
     @Label("PROCEDURE_CAT")
     @NillableBySpecification
     @XmlAttribute
@@ -419,10 +419,6 @@ public class ProcedureColumn {
     @Label("SPECIFIC_NAME")
     @XmlElement(required = true)
     private String specificName;
-
-
-    @XmlTransient
-    private Procedure procedure;
 
 
 }

@@ -24,7 +24,6 @@ import javax.xml.bind.annotation.XmlAttribute;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlElementRef;
 import javax.xml.bind.annotation.XmlRootElement;
-import javax.xml.bind.annotation.XmlTransient;
 import javax.xml.bind.annotation.XmlType;
 
 
@@ -41,7 +40,7 @@ import javax.xml.bind.annotation.XmlType;
 
     }
 )
-public class Function {
+public class Function extends AbstractChild<Schema> {
 
 
     // ------------------------------------------------------------- functionCat
@@ -122,19 +121,17 @@ public class Function {
     }
 
 
-    // ------------------------------------------------------------------ schema
-    public Schema getSchema() {
-
-        return schema;
-    }
-
-
-    public void setSchema(final Schema schema) {
-
-        this.schema = schema;
-    }
-
-
+//    // ------------------------------------------------------------------ schema
+//    public Schema getSchema() {
+//
+//        return schema;
+//    }
+//
+//
+//    public void setSchema(final Schema schema) {
+//
+//        this.schema = schema;
+//    }
     // --------------------------------------------------------- functionColumns
     public List<FunctionColumn> getFunctionColumns() {
 
@@ -146,6 +143,7 @@ public class Function {
     }
 
 
+    // -------------------------------------------------------------------------
     @Label("FUNCTION_CAT")
     @NillableBySpecification
     @XmlAttribute
@@ -176,10 +174,6 @@ public class Function {
     @Label("SPECIFIC_NAME")
     @XmlElement(required = true)
     private String specificName;
-
-
-    @XmlTransient
-    private Schema schema;
 
 
     @Invocation(

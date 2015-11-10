@@ -20,7 +20,6 @@ package com.github.jinahya.sql.database.metadata.bind;
 
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
-import javax.xml.bind.annotation.XmlTransient;
 import javax.xml.bind.annotation.XmlType;
 
 
@@ -34,7 +33,7 @@ import javax.xml.bind.annotation.XmlType;
         "name", "maxLen", "defaultValue", "description"
     }
 )
-public class ClientInfoProperty {
+public class ClientInfoProperty extends AbstractChild<Metadata> {
 
 
     // -------------------------------------------------------------------- name
@@ -89,57 +88,36 @@ public class ClientInfoProperty {
     }
 
 
-    // ---------------------------------------------------------------- metadata
-    public Metadata getMetadata() {
-
-        return metadata;
-    }
-
-
-    public void setMetadata(final Metadata metadata) {
-
-        this.metadata = metadata;
-    }
-
-
-    /**
-     * The name of the client info property.
-     */
+//    // ---------------------------------------------------------------- metadata
+//    public Metadata getMetadata() {
+//
+//        return metadata;
+//    }
+//
+//
+//    public void setMetadata(final Metadata metadata) {
+//
+//        this.metadata = metadata;
+//    }
+    // -------------------------------------------------------------------------
     @Label("NAME")
     @XmlElement(required = true)
-    String name;
+    private String name;
 
 
-    /**
-     * The maximum length of the value for the property.
-     */
     @Label("MAX_LEN")
     @XmlElement(required = true)
-    int maxLen;
+    private int maxLen;
 
 
-    /**
-     * The default value of the property.
-     */
     @Label("DEFAULT_VALUE")
     @XmlElement(required = true)
-    String defaultValue;
+    private String defaultValue;
 
 
-    /**
-     * A description of the property. This will typically contain information as
-     * to where this property is stored in the database.
-     */
     @Label("DESCRIPTION")
     @XmlElement(required = true)
-    String description;
-
-
-    /**
-     * parent metadata.
-     */
-    @XmlTransient
-    private Metadata metadata;
+    private String description;
 
 
 }

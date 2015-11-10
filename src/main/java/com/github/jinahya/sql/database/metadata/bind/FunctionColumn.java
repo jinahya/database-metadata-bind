@@ -21,7 +21,6 @@ package com.github.jinahya.sql.database.metadata.bind;
 import javax.xml.bind.annotation.XmlAttribute;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
-import javax.xml.bind.annotation.XmlTransient;
 import javax.xml.bind.annotation.XmlType;
 
 
@@ -37,7 +36,32 @@ import javax.xml.bind.annotation.XmlType;
         "charOctetLength", "ordinalPosition", "isNullable", "specificName"
     }
 )
-public class FunctionColumn {
+public class FunctionColumn extends AbstractChild<Function> {
+
+
+    @Override
+    public String toString() {
+
+        return super.toString() + "{"
+               + "functionCat=" + functionCat
+               + ", functionSchem=" + functionSchem
+               + ", functionName=" + functionName
+               + ", columnName=" + columnName
+               + ", columnType=" + columnType
+               + ", dataType=" + dataType
+               + ", typeName=" + typeName
+               + ", precision=" + precision
+               + ", length=" + length
+               + ", scale=" + scale
+               + ", radix=" + radix
+               + ", nullable=" + nullable
+               + ", remarks=" + remarks
+               + ", charOctetLength=" + charOctetLength
+               + ", ordinalPosition=" + ordinalPosition
+               + ", isNullable=" + isNullable
+               + ", specificName=" + specificName
+               + '}';
+    }
 
 
     // ------------------------------------------------------------- functionCat
@@ -261,28 +285,27 @@ public class FunctionColumn {
     }
 
 
-    // ---------------------------------------------------------------- function
-    public Function getFunction() {
-
-        return function;
-    }
-
-
-    public void setFunction(final Function function) {
-
-        this.function = function;
-    }
-
-
+//    // ---------------------------------------------------------------- function
+//    public Function getFunction() {
+//
+//        return function;
+//    }
+//
+//
+//    public void setFunction(final Function function) {
+//
+//        this.function = function;
+//    }
+    // -------------------------------------------------------------------------
     @Label("FUNCTION_CAT")
-    @XmlAttribute
     @NillableBySpecification
+    @XmlAttribute
     private String functionCat;
 
 
     @Label("FUNCTION_SCHEM")
-    @XmlAttribute
     @NillableBySpecification
+    @XmlAttribute
     private String functionSchem;
 
 
@@ -360,10 +383,6 @@ public class FunctionColumn {
     @Label("SPECIFIC_NAME")
     @XmlElement(required = true)
     private String specificName;
-
-
-    @XmlTransient
-    private Function function;
 
 
 }

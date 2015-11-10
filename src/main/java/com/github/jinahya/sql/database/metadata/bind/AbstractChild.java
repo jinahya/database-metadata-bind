@@ -27,13 +27,25 @@ import javax.xml.bind.annotation.XmlTransient;
  * @param <P> parent type parameter
  */
 @XmlTransient
-interface Child<P> {
+abstract class AbstractChild<P> implements Child<P> {
 
 
-    P getParent();
+    @Override
+    public P getParent() {
+
+        return parent;
+    }
 
 
-    void setParent(final P parent);
+    @Override
+    public void setParent(final P parent) {
+
+        this.parent = parent;
+    }
+
+
+    //@XmlTransient
+    private transient P parent;
 
 
 }

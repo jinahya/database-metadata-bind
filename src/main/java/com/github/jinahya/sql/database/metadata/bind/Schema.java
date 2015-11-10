@@ -40,7 +40,7 @@ import javax.xml.bind.annotation.XmlType;
         "functions", "procedures", "tables", "userDefinedTypes"
     }
 )
-public class Schema {
+public class Schema extends AbstractChild<Catalog> {
 
 
     @Override
@@ -88,27 +88,6 @@ public class Schema {
     Schema tableSchem(final String tableSchem) {
 
         setTableSchem(tableSchem);
-
-        return this;
-    }
-
-
-    // ----------------------------------------------------------------- catalog
-    public Catalog getCatalog() {
-
-        return catalog;
-    }
-
-
-    public void setCatalog(final Catalog catalog) {
-
-        this.catalog = catalog;
-    }
-
-
-    Schema catalog(final Catalog catalog) {
-
-        setCatalog(catalog);
 
         return this;
     }
@@ -168,10 +147,6 @@ public class Schema {
     @Label("TABLE_SCHEM")
     @XmlElement(required = true)
     private String tableSchem;
-
-
-    @XmlTransient
-    private Catalog catalog;
 
 
     @Invocation(

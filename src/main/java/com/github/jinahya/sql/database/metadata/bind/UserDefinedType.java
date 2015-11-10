@@ -24,7 +24,6 @@ import javax.xml.bind.annotation.XmlAttribute;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlElementRef;
 import javax.xml.bind.annotation.XmlRootElement;
-import javax.xml.bind.annotation.XmlTransient;
 import javax.xml.bind.annotation.XmlType;
 
 
@@ -35,10 +34,12 @@ import javax.xml.bind.annotation.XmlType;
 @XmlRootElement
 @XmlType(
     propOrder = {
-        "typeName", "className", "dataType", "remarks", "baseType", "attributes"
+        "typeName", "className", "dataType", "remarks", "baseType",
+        // ---------------------------------------------------------------------
+        "attributes"
     }
 )
-public class UserDefinedType {
+public class UserDefinedType extends AbstractChild<Schema> {
 
 
     // ----------------------------------------------------------------- typeCat
@@ -132,19 +133,6 @@ public class UserDefinedType {
     }
 
 
-    // ------------------------------------------------------------------ schema
-    public Schema getSchema() {
-
-        return schema;
-    }
-
-
-    public void setSchema(final Schema schema) {
-
-        this.schema = schema;
-    }
-
-
     // -------------------------------------------------------------- attributes
     public List<Attribute> getAttributes() {
 
@@ -156,6 +144,7 @@ public class UserDefinedType {
     }
 
 
+    // -------------------------------------------------------------------------
     @Label("TYPE_CAT")
     @XmlAttribute
     private String typeCat;
@@ -187,13 +176,9 @@ public class UserDefinedType {
 
 
     @Label("BASE_TYPE")
-    @XmlElement(nillable = true, required = true)
     @NillableBySpecification
+    @XmlElement(nillable = true, required = true)
     private Short baseType;
-
-
-    //@XmlTransient
-    private transient Schema schema;
 
 
     @Invocation(

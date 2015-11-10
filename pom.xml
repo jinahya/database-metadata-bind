@@ -196,6 +196,19 @@
           </execution>
         </executions>
       </plugin>
+      <plugin>
+        <groupId>org.projectlombok</groupId>
+        <artifactId>lombok-maven-plugin</artifactId>
+        <version>1.16.6.1</version>
+        <executions>
+          <execution>
+            <phase>generate-sources</phase>
+            <goals>
+              <goal>delombok</goal>
+            </goals>
+          </execution>
+        </executions>
+      </plugin>
     </plugins>
   </build>
   <reporting>
@@ -212,7 +225,7 @@
           <additionalparam>
             -hide java.*
             -collapsible -horizontal
-            -inferdep -inferrel
+            -inferdep -inferdepinpackage -inferrel
             -outputencoding UTF-8
           </additionalparam>
           <breakiterator>true</breakiterator>

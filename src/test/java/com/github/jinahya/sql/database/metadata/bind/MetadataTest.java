@@ -78,7 +78,7 @@ public class MetadataTest {
             outputStream.flush();
         }
 
-        metadata.print(System.out);
+        //metadata.print(System.out);
     }
 
 

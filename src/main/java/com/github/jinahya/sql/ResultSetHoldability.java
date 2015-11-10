@@ -15,25 +15,43 @@
  */
 
 
-package com.github.jinahya.sql.database.metadata.bind;
+package com.github.jinahya.sql;
 
 
-import javax.xml.bind.annotation.XmlTransient;
+import java.sql.ResultSet;
 
 
 /**
  *
  * @author Jin Kwon &lt;jinahya_at_gmail.com&gt;
- * @param <P> parent type parameter
  */
-@XmlTransient
-interface Child<P> {
+public enum ResultSetHoldability {
 
 
-    P getParent();
+    HOLD_CURSORS_OVER_COMMIT(ResultSet.HOLD_CURSORS_OVER_COMMIT),
+    CLOSE_CURSORS_AT_COMMIT(ResultSet.CLOSE_CURSORS_AT_COMMIT);
 
 
-    void setParent(final P parent);
+    public static ResultSetHoldability valueOf(final int constant) {
+
+        for (final ResultSetHoldability value : values()) {
+            if (value.constant == constant) {
+                return value;
+            }
+        }
+
+        throw new IllegalArgumentException(
+            "no value for constant: " + constant);
+    }
+
+
+    private ResultSetHoldability(final int constant) {
+
+        this.constant = constant;
+    }
+
+
+    private final int constant;
 
 
 }

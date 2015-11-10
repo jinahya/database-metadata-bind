@@ -18,9 +18,6 @@
 package com.github.jinahya.sql.database.metadata.bind;
 
 
-import java.sql.ResultSet;
-import java.util.Arrays;
-import java.util.List;
 import javax.xml.bind.annotation.XmlAttribute;
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlValue;
@@ -31,19 +28,19 @@ import javax.xml.bind.annotation.XmlValue;
  * @author Jin Kwon &lt;jinahya_at_gmail.com&gt;
  */
 @XmlRootElement
-public class InsertsAreDetected {
+public class TypeConcurrencyBoolean {
 
 
-    static final List<Integer> TYPES = Arrays.asList(
-        ResultSet.TYPE_FORWARD_ONLY, ResultSet.TYPE_SCROLL_INSENSITIVE,
-        ResultSet.TYPE_SCROLL_SENSITIVE);
+    static TypeConcurrencyBoolean valueOf(final Object[] args,
+                                          final Object value) {
 
+        final TypeConcurrencyBoolean instance = new TypeConcurrencyBoolean();
 
-    static InsertsAreDetected valueOf(final Object[] args, final Object value) {
+        instance.setType((Integer) args[0]);
+        instance.setConcurrency((Integer) args[0]);
+        instance.setValue((Boolean) value);
 
-        return new InsertsAreDetected()
-            .type((Integer) args[0])
-            .value((Boolean) value);
+        return instance;
     }
 
 
@@ -60,11 +57,24 @@ public class InsertsAreDetected {
     }
 
 
-    InsertsAreDetected type(final int type) {
+    TypeConcurrencyBoolean type(final int type) {
 
         setType(type);
 
         return this;
+    }
+
+
+    // ------------------------------------------------------------- concurrency
+    public int getConcurrency() {
+
+        return concurrency;
+    }
+
+
+    public void setConcurrency(final int concurrency) {
+
+        this.concurrency = concurrency;
     }
 
 
@@ -81,7 +91,7 @@ public class InsertsAreDetected {
     }
 
 
-    InsertsAreDetected value(final boolean value) {
+    TypeConcurrencyBoolean value(final boolean value) {
 
         setValue(value);
 
@@ -92,6 +102,10 @@ public class InsertsAreDetected {
     // -------------------------------------------------------------------------
     @XmlAttribute
     private int type;
+
+
+    @XmlAttribute
+    private int concurrency;
 
 
     @XmlValue

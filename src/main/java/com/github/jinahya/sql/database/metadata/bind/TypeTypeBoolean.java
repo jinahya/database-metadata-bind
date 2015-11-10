@@ -18,9 +18,6 @@
 package com.github.jinahya.sql.database.metadata.bind;
 
 
-import java.sql.ResultSet;
-import java.util.Arrays;
-import java.util.List;
 import javax.xml.bind.annotation.XmlAttribute;
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlValue;
@@ -31,38 +28,59 @@ import javax.xml.bind.annotation.XmlValue;
  * @author Jin Kwon &lt;jinahya_at_gmail.com&gt;
  */
 @XmlRootElement
-public class DeletesAreDetected {
+public class TypeTypeBoolean {
 
 
-    static final List<Integer> TYPES = Arrays.asList(
-        ResultSet.TYPE_FORWARD_ONLY, ResultSet.TYPE_SCROLL_INSENSITIVE,
-        ResultSet.TYPE_SCROLL_SENSITIVE);
+    static TypeTypeBoolean valueOf(final Object[] args,
+                                   final Object value) {
 
+        final TypeTypeBoolean instance = new TypeTypeBoolean();
 
-    static DeletesAreDetected valueOf(final Object[] args, final Object value) {
+        instance.setFromType((Integer) args[0]);
+        instance.setToType((Integer) args[0]);
+        instance.setValue((Boolean) value);
 
-        return new DeletesAreDetected()
-            .type((Integer) args[0])
-            .value((Boolean) value);
+        return instance;
     }
 
 
-    // -------------------------------------------------------------------- type
-    public int getType() {
+    // ---------------------------------------------------------------- fromType
+    public Integer getFromType() {
 
-        return type;
+        return fromType;
     }
 
 
-    public void setType(final int type) {
+    public void setFromType(final Integer fromType) {
 
-        this.type = type;
+        this.fromType = fromType;
     }
 
 
-    DeletesAreDetected type(final int type) {
+    TypeTypeBoolean fromType(final Integer fromType) {
 
-        setType(type);
+        setFromType(fromType);
+
+        return this;
+    }
+
+
+    // ------------------------------------------------------------------ toType
+    public Integer getToType() {
+
+        return toType;
+    }
+
+
+    public void setToType(final Integer toType) {
+
+        this.toType = toType;
+    }
+
+
+    TypeTypeBoolean toType(final Integer toType) {
+
+        setToType(toType);
 
         return this;
     }
@@ -81,7 +99,7 @@ public class DeletesAreDetected {
     }
 
 
-    DeletesAreDetected value(final boolean value) {
+    TypeTypeBoolean value(final boolean value) {
 
         setValue(value);
 
@@ -91,7 +109,11 @@ public class DeletesAreDetected {
 
     // -------------------------------------------------------------------------
     @XmlAttribute
-    private int type;
+    private Integer fromType;
+
+
+    @XmlAttribute
+    private Integer toType;
 
 
     @XmlValue

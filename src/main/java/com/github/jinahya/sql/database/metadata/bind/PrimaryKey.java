@@ -21,7 +21,6 @@ package com.github.jinahya.sql.database.metadata.bind;
 import javax.xml.bind.annotation.XmlAttribute;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
-import javax.xml.bind.annotation.XmlTransient;
 import javax.xml.bind.annotation.XmlType;
 
 
@@ -31,7 +30,7 @@ import javax.xml.bind.annotation.XmlType;
  */
 @XmlRootElement
 @XmlType(propOrder = {"columnName", "keySeq", "pkName"})
-public class PrimaryKey {
+public class PrimaryKey extends AbstractChild<Table> {
 
 
     // ---------------------------------------------------------------- tableCat
@@ -112,19 +111,18 @@ public class PrimaryKey {
     }
 
 
-    // ------------------------------------------------------------------- table
-    public Table getTable() {
-
-        return table;
-    }
-
-
-    public void setTable(final Table table) {
-
-        this.table = table;
-    }
-
-
+//    // ------------------------------------------------------------------- table
+//    public Table getTable() {
+//
+//        return table;
+//    }
+//
+//
+//    public void setTable(final Table table) {
+//
+//        this.table = table;
+//    }
+    // -------------------------------------------------------------------------
     @Label("TABLE_CAT")
     @NillableBySpecification
     @XmlAttribute
@@ -156,10 +154,6 @@ public class PrimaryKey {
     @NillableBySpecification
     @XmlElement(nillable = true, required = true)
     private String pkName;
-
-
-    @XmlTransient
-    private Table table;
 
 
 }

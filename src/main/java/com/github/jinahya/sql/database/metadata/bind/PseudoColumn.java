@@ -21,7 +21,6 @@ package com.github.jinahya.sql.database.metadata.bind;
 import javax.xml.bind.annotation.XmlAttribute;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
-import javax.xml.bind.annotation.XmlTransient;
 import javax.xml.bind.annotation.XmlType;
 
 
@@ -36,7 +35,7 @@ import javax.xml.bind.annotation.XmlType;
         "columnUsage", "remarks", "charOctetLength", "isNullable"
     }
 )
-public class PseudoColumn {
+public class PseudoColumn extends AbstractChild<Table> {
 
 
     // ---------------------------------------------------------------- tableCat
@@ -196,16 +195,17 @@ public class PseudoColumn {
     // ------------------------------------------------------------------- table
     public Table getTable() {
 
-        return table;
+        return getParent();
     }
 
 
     public void setTable(final Table table) {
 
-        this.table = table;
+        setParent(table);
     }
 
 
+    // -------------------------------------------------------------------------
     @Label("TABLE_CAT")
     @NillableBySpecification
     @XmlAttribute
@@ -220,7 +220,6 @@ public class PseudoColumn {
 
     @Label("TABLE_NAME")
     @XmlAttribute
-    @NillableBySpecification
     private String tableName;
 
 
@@ -240,8 +239,8 @@ public class PseudoColumn {
 
 
     @Label("DECIMAL_DIGITS")
-    @XmlElement(nillable = true, required = true)
     @NillableBySpecification
+    @XmlElement(nillable = true, required = true)
     private Integer decimalDigits;
 
 
@@ -256,8 +255,8 @@ public class PseudoColumn {
 
 
     @Label("REMARKS")
-    @XmlElement(nillable = true, required = true)
     @NillableBySpecification
+    @XmlElement(nillable = true, required = true)
     private String remarks;
 
 
@@ -269,10 +268,6 @@ public class PseudoColumn {
     @Label("IS_NULLABLE")
     @XmlElement(required = true)
     private String isNullable;
-
-
-    @XmlTransient
-    private Table table;
 
 
 }

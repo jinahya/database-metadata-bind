@@ -15,26 +15,44 @@
  */
 
 
-package com.github.jinahya.sql.database.metadata.bind;
+package com.github.jinahya.sql;
+
+
+import java.sql.ResultSet;
 
 
 /**
  *
  * @author Jin Kwon &lt;jinahya_at_gmail.com&gt;
  */
-class MetadataChild extends Child<Metadata> {
+public enum ResultSetType {
 
 
-    public Metadata getMetadata() {
+    TYPE_FORWARD_ONLY(ResultSet.TYPE_FORWARD_ONLY),
+    TYPE_SCROLL_INSENSITIVE(ResultSet.TYPE_SCROLL_INSENSITIVE),
+    TYPE_SCROLL_SENSITIVE(ResultSet.TYPE_SCROLL_SENSITIVE);
 
-        return getParent();
+
+    public static ResultSetType valueOf(final int constant) {
+
+        for (final ResultSetType value : values()) {
+            if (value.constant == constant) {
+                return value;
+            }
+        }
+
+        throw new IllegalArgumentException(
+            "no value for constant: " + constant);
     }
 
 
-    public void setMetadata(final Metadata metadata) {
+    private ResultSetType(final int constant) {
 
-        setParent(metadata);
+        this.constant = constant;
     }
+
+
+    private final int constant;
 
 
 }

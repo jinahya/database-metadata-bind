@@ -20,7 +20,6 @@ package com.github.jinahya.sql.database.metadata.bind;
 
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
-import javax.xml.bind.annotation.XmlTransient;
 import javax.xml.bind.annotation.XmlType;
 
 
@@ -34,7 +33,7 @@ import javax.xml.bind.annotation.XmlType;
         "tableSchem", "tableCatalog"
     }
 )
-public class SchemaName {
+public class SchemaName extends AbstractChild<Metadata> {
 
 
     // -------------------------------------------------------------- tableSchem
@@ -63,19 +62,7 @@ public class SchemaName {
     }
 
 
-    // ---------------------------------------------------------------- metadata
-    public Metadata getMetadata() {
-
-        return metadata;
-    }
-
-
-    public void setMetadata(final Metadata metadata) {
-
-        this.metadata = metadata;
-    }
-
-
+    // -------------------------------------------------------------------------
     @Label("TABLE_SCHEM")
     @XmlElement(required = true)
     private String tableSchem;
@@ -85,10 +72,6 @@ public class SchemaName {
     @NillableBySpecification
     @XmlElement(nillable = true, required = false)
     private String tableCatalog;
-
-
-    @XmlTransient
-    private Metadata metadata;
 
 
 }

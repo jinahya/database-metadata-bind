@@ -20,7 +20,6 @@ package com.github.jinahya.sql.database.metadata.bind;
 
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
-import javax.xml.bind.annotation.XmlTransient;
 import javax.xml.bind.annotation.XmlType;
 
 
@@ -29,8 +28,12 @@ import javax.xml.bind.annotation.XmlType;
  * @author Jin Kwon &lt;jinahya_at_gmail.com&gt;
  */
 @XmlRootElement
-@XmlType(propOrder = {"tableType"})
-public class TableType {
+@XmlType(
+    propOrder = {
+        "tableType"
+    }
+)
+public class TableType extends AbstractChild<Metadata> {
 
 
     // --------------------------------------------------------------- tableType
@@ -46,26 +49,10 @@ public class TableType {
     }
 
 
-    // ---------------------------------------------------------------- metadata
-    public Metadata getMetadata() {
-
-        return metadata;
-    }
-
-
-    public void setMetadata(final Metadata metadata) {
-
-        this.metadata = metadata;
-    }
-
-
+    // -------------------------------------------------------------------------
     @Label("TABLE_TYPE")
     @XmlElement(required = true)
     private String tableType;
-
-
-    @XmlTransient
-    private Metadata metadata;
 
 
 }

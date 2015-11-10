@@ -20,7 +20,6 @@ package com.github.jinahya.sql.database.metadata.bind;
 
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
-import javax.xml.bind.annotation.XmlTransient;
 import javax.xml.bind.annotation.XmlType;
 
 
@@ -38,7 +37,7 @@ import javax.xml.bind.annotation.XmlType;
         "numPrecRadix"
     }
 )
-public class TypeInfo {
+public class TypeInfo extends AbstractChild<Metadata> {
 
 
     // ---------------------------------------------------------------- typeName
@@ -273,19 +272,7 @@ public class TypeInfo {
     }
 
 
-    // ---------------------------------------------------------------- metadata
-    public Metadata getMetadata() {
-
-        return metadata;
-    }
-
-
-    public void setMetadata(final Metadata metadata) {
-
-        this.metadata = metadata;
-    }
-
-
+    // -------------------------------------------------------------------------
     @Label("TYPE_NAME")
     @XmlElement(required = true)
     private String typeName;
@@ -380,10 +367,6 @@ public class TypeInfo {
     @Label("NUM_PREC_RADIX")
     @XmlElement(required = true)
     private int numPrecRadix;
-
-
-    @XmlTransient
-    private Metadata metadata;
 
 
 }

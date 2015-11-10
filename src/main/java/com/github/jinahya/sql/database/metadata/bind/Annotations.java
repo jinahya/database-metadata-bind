@@ -53,7 +53,7 @@ final class Annotations {
 
         final String propertyName = proeprtyDescriptor.getName();
         try {
-            final Field field = beanClass.getDeclaredField(propertyName);
+            final Field field = Reflections.findField(beanClass, propertyName);
             return field.getAnnotation(annotationClass);
         } catch (final NoSuchFieldException nsfe) {
             //nsfe.printStackTrace(System.err);

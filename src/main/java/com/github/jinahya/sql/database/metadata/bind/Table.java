@@ -24,7 +24,6 @@ import javax.xml.bind.annotation.XmlAttribute;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlElementRef;
 import javax.xml.bind.annotation.XmlRootElement;
-import javax.xml.bind.annotation.XmlTransient;
 import javax.xml.bind.annotation.XmlType;
 
 
@@ -45,7 +44,7 @@ import javax.xml.bind.annotation.XmlType;
         "versionColumns"
     }
 )
-public class Table {
+public class Table extends AbstractChild<Schema> {
 
 
     // ---------------------------------------------------------------- tableCat
@@ -178,35 +177,6 @@ public class Table {
     }
 
 
-    // ------------------------------------------------------------------ schema
-    public Schema getSchema() {
-
-        return schema;
-    }
-
-
-    //@XmlAttribute
-    @Deprecated
-    private String getSchemaString() {
-
-        return schema == null ? null : schema.toString();
-    }
-
-
-    public void setSchema(final Schema schema) {
-
-        this.schema = schema;
-    }
-
-
-    Table schema(final Schema schema) {
-
-        setSchema(schema);
-
-        return this;
-    }
-
-
     // ------------------------------------------------------ bestRowIdentifiers
     public List<BestRowIdentifier> getBestRowIdentifiers() {
 
@@ -251,7 +221,7 @@ public class Table {
     }
 
 
-    // ----------------------------------------------------------------- indices
+    // --------------------------------------------------------------- indexInfo
     public List<IndexInfo> getIndexInfo() {
 
         if (indexInfo == null) {
@@ -325,6 +295,7 @@ public class Table {
     }
 
 
+    // -------------------------------------------------------------------------
     @Label("TABLE_CAT")
     @NillableBySpecification
     @XmlAttribute
@@ -380,10 +351,6 @@ public class Table {
     @NillableBySpecification
     @XmlElement(nillable = true, required = true)
     private String refGeneration;
-
-
-    @XmlTransient
-    private Schema schema;
 
 
     @Invocation(

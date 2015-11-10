@@ -128,11 +128,15 @@ public class MetadataContext {
                 return;
             }
             @SuppressWarnings("unchecked")
-            final List<Object> list = (List<Object>) Beans.getPropertyValue(
+            List<Object> list = (List<Object>) Beans.getPropertyValue(
                 propertyDescriptor, beanInstance);
+            if (list == null) {
+                list = new ArrayList<Object>();
+                Beans.setPropertyValue(propertyDescriptor, beanInstance, list);
+            }
             final String propertyName = propertyDescriptor.getName();
             final Field field
-                = beanInstance.getClass().getDeclaredField(propertyName);
+                = Reflections.findField(beanInstance.getClass(), propertyName);
             final Class<?> type
                 = (Class<?>) ((ParameterizedType) field.getGenericType())
                 .getActualTypeArguments()[0];
@@ -260,8 +264,9 @@ public class MetadataContext {
         if (!suppressed("metadata/catalogs")) {
             final List<Catalog> catalogs = metadata.getCatalogs();
             if (catalogs.isEmpty()) {
-                final Catalog catalog
-                    = new Catalog().tableCat("").metadata(metadata);
+                final Catalog catalog = new Catalog();
+                catalog.setTableCat("");
+                catalog.setParent(metadata);
                 logger.log(Level.INFO, "adding an empty catalog: {0}",
                            new Object[]{catalog});
                 catalogs.add(catalog);
@@ -271,15 +276,38 @@ public class MetadataContext {
                 for (final Catalog catalog : catalogs) {
                     final List<Schema> schemas = catalog.getSchemas();
                     if (schemas.isEmpty()) {
-                        final Schema schema = new Schema()
-                            .tableCatalog(catalog.getTableCat())
-                            .tableSchem("").catalog(catalog);
+                        final Schema schema = new Schema();
+                        schema.setTableCatalog(catalog.getTableCat());
+                        schema.setTableSchem("");
+                        schema.setParent(catalog);
                         logger.log(Level.INFO, "adding an empty schema: {0}",
                                    new Object[]{schema});
                         schemas.add(schema);
                         bindSingle(null, Schema.class, schema);
                     }
                 }
+            }
+        }
+
+        final List<TypeTypeBoolean> supportsConvert
+            = new ArrayList<TypeTypeBoolean>();
+        metadata.setSupportsConvert(supportsConvert);
+        supportsConvert.add(
+            new TypeTypeBoolean()
+            .fromType(null)
+            .toType(null)
+            .value(database.supportsConvert()));
+        final Set<Integer> sqlTypes = Reflections.getSqlTypes();
+        for (final int fromType : sqlTypes) {
+            for (final int toType : sqlTypes) {
+                if (fromType == toType) {
+                    continue;
+                }
+                supportsConvert.add(
+                    new TypeTypeBoolean()
+                    .fromType(fromType)
+                    .toType(toType)
+                    .value(database.supportsConvert(fromType, toType)));
             }
         }
 

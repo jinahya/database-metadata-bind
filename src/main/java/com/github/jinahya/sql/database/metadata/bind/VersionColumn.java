@@ -20,7 +20,6 @@ package com.github.jinahya.sql.database.metadata.bind;
 
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
-import javax.xml.bind.annotation.XmlTransient;
 import javax.xml.bind.annotation.XmlType;
 
 
@@ -141,19 +140,7 @@ public class VersionColumn {
     }
 
 
-    // ------------------------------------------------------------------- table
-    public Table getTable() {
-
-        return table;
-    }
-
-
-    public void setTable(final Table table) {
-
-        this.table = table;
-    }
-
-
+    // -------------------------------------------------------------------------
     @Label("SCOPE")
     @Unused
     @XmlElement(nillable = true, required = true)
@@ -186,18 +173,14 @@ public class VersionColumn {
 
 
     @Label("DECIMAL_DIGITS")
-    @XmlElement(nillable = true, required = true)
     @NillableBySpecification
+    @XmlElement(nillable = true, required = true)
     private Short decimalDigits;
 
 
     @Label("PSEUDO_COLUMN")
     @XmlElement(required = true)
     private short pseudoColumn;
-
-
-    @XmlTransient
-    private Table table;
 
 
 }

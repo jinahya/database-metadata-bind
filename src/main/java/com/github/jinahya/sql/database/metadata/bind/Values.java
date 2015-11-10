@@ -27,7 +27,7 @@ import static java.util.logging.Logger.getLogger;
  *
  * @author Jin Kwon &lt;jinahya_at_gmail.com&gt;
  */
-class Values {
+final class Values {
 
 
     private static final Logger logger = getLogger(Metadata.class.getName());

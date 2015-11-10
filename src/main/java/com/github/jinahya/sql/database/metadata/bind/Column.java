@@ -24,7 +24,6 @@ import javax.xml.bind.annotation.XmlAttribute;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlElementRef;
 import javax.xml.bind.annotation.XmlRootElement;
-import javax.xml.bind.annotation.XmlTransient;
 import javax.xml.bind.annotation.XmlType;
 
 
@@ -46,7 +45,7 @@ import javax.xml.bind.annotation.XmlType;
         "columnPrivileges"
     }
 )
-public class Column {
+public class Column extends AbstractChild<Table> {
 
 
     // ---------------------------------------------------------------- tableCat
@@ -361,19 +360,17 @@ public class Column {
     }
 
 
-    // ------------------------------------------------------------------- table
-    public Table getTable() {
-
-        return table;
-    }
-
-
-    public void setTable(final Table table) {
-
-        this.table = table;
-    }
-
-
+//    // ------------------------------------------------------------------- table
+//    public Table getTable() {
+//
+//        return table;
+//    }
+//
+//
+//    public void setTable(final Table table) {
+//
+//        this.table = table;
+//    }
     // -------------------------------------------------------- columnPrivileges
     public List<ColumnPrivilege> getColumnPrivileges() {
 
@@ -385,6 +382,7 @@ public class Column {
     }
 
 
+    // -------------------------------------------------------------------------
     @Label("TABLE_CAT")
     @NillableBySpecification
     @XmlAttribute
@@ -515,10 +513,6 @@ public class Column {
     @Label("IS_GENERATEDCOLUMN")
     @XmlElement(required = true)
     private String isGeneratedcolumn;
-
-
-    @XmlTransient
-    private Table table;
 
 
     @Invocation(

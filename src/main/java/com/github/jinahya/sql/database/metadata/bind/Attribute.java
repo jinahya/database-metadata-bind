@@ -21,7 +21,6 @@ package com.github.jinahya.sql.database.metadata.bind;
 import javax.xml.bind.annotation.XmlAttribute;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
-import javax.xml.bind.annotation.XmlTransient;
 import javax.xml.bind.annotation.XmlType;
 
 
@@ -38,7 +37,7 @@ import javax.xml.bind.annotation.XmlType;
         "sourceDataType"
     }
 )
-public class Attribute {
+public class Attribute extends AbstractChild<UserDefinedType> {
 
 
     // ----------------------------------------------------------------- typeCat
@@ -275,25 +274,15 @@ public class Attribute {
     }
 
 
-    // --------------------------------------------------------- userDefinedType
-    public UserDefinedType getUserDefinedType() {
-
-        return userDefinedType;
-    }
-
-
-    public void setUserDefinedType(final UserDefinedType userDefinedType) {
-
-        this.userDefinedType = userDefinedType;
-    }
-
-
+    // -------------------------------------------------------------------------
     @Label("TYPE_CAT")
+    @NillableBySpecification
     @XmlAttribute
     private String typeCat;
 
 
     @Label("TYPE_SCHEM")
+    @NillableBySpecification
     @XmlAttribute
     private String typeSchem;
 
@@ -378,13 +367,9 @@ public class Attribute {
 
 
     @Label("SOURCE_DATA_TYPE")
+    @NillableBySpecification
     @XmlElement(nillable = true, required = true)
-    @NillableBySpecification()
     private Short sourceDataType;
-
-
-    @XmlTransient
-    private UserDefinedType userDefinedType;
 
 
 }

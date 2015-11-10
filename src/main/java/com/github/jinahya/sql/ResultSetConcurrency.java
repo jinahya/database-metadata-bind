@@ -15,25 +15,43 @@
  */
 
 
-package com.github.jinahya.sql.database.metadata.bind;
+package com.github.jinahya.sql;
 
 
-import javax.xml.bind.annotation.XmlTransient;
+import java.sql.ResultSet;
 
 
 /**
  *
  * @author Jin Kwon &lt;jinahya_at_gmail.com&gt;
- * @param <P> parent type parameter
  */
-@XmlTransient
-interface Child<P> {
+public enum ResultSetConcurrency {
 
 
-    P getParent();
+    CONCUR_READ_ONLY(ResultSet.CONCUR_READ_ONLY),
+    CONCUR_UPDATABLE(ResultSet.CONCUR_UPDATABLE);
 
 
-    void setParent(final P parent);
+    public static ResultSetConcurrency valueOf(final int constant) {
+
+        for (final ResultSetConcurrency value : values()) {
+            if (value.constant == constant) {
+                return value;
+            }
+        }
+
+        throw new IllegalArgumentException(
+            "no value for constant: " + constant);
+    }
+
+
+    private ResultSetConcurrency(final int constant) {
+
+        this.constant = constant;
+    }
+
+
+    private final int constant;
 
 
 }

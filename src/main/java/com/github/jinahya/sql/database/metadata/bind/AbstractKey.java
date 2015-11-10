@@ -20,7 +20,7 @@ package com.github.jinahya.sql.database.metadata.bind;
 
 import javax.xml.bind.annotation.XmlAttribute;
 import javax.xml.bind.annotation.XmlElement;
-import javax.xml.bind.annotation.XmlRootElement;
+import javax.xml.bind.annotation.XmlTransient;
 import javax.xml.bind.annotation.XmlType;
 
 
@@ -28,17 +28,15 @@ import javax.xml.bind.annotation.XmlType;
  *
  * @author Jin Kwon &lt;jinahya_at_gmail.com&gt;
  */
-@XmlRootElement
+@XmlTransient
 @XmlType(
     propOrder = {
-        //"pktableCat", "pktableSchem", "pktableName",
-        "pkcolumnName",
-        //"fktableCat", "fktableSchem", "fktableName",
-        "fkcolumnName", "keySeq",
-        "updateRule", "deleteRule", "fkName", "pkName", "deferrability"
+        "pkcolumnName", "fktableCat", "fktableSchem",
+        "fktableName", "fkcolumnName", "keySeq", "updateRule",
+        "deleteRule", "fkName", "pkName", "deferrability"
     }
 )
-public class CrossReference {
+abstract class AbstractKey extends AbstractChild<Table> {
 
 
     // -------------------------------------------------------------- pktableCat
@@ -165,7 +163,7 @@ public class CrossReference {
     }
 
 
-    public void setUpdateRule(final short updateRule) {
+    public void setUpdateRule(short updateRule) {
 
         this.updateRule = updateRule;
     }
@@ -237,7 +235,6 @@ public class CrossReference {
 
 
     @Label("PKTABLE_NAME")
-    //@XmlElement(required = true)
     @XmlAttribute
     private String pktableName;
 
@@ -249,19 +246,18 @@ public class CrossReference {
 
     @Label("FKTABLE_CAT")
     @NillableBySpecification
-    @XmlAttribute
+    @XmlElement(nillable = true, required = true)
     private String fktableCat;
 
 
     @Label("FKTABLE_NAME")
     @NillableBySpecification
-    @XmlAttribute
+    @XmlElement(nillable = true, required = true)
     private String fktableSchem;
 
 
     @Label("FKTABLE_NAME")
-    //@XmlElement(required = true)
-    @XmlAttribute
+    @XmlElement(required = true)
     private String fktableName;
 
 
@@ -286,14 +282,12 @@ public class CrossReference {
 
 
     @Label("FK_NAME")
-    @NillableBySpecification
-    @XmlElement(nillable = true, required = true)
+    @XmlElement(required = true)
     private String fkName;
 
 
     @Label("PK_NAME")
-    @NillableBySpecification
-    @XmlElement(nillable = true, required = true)
+    @XmlElement(required = true)
     private String pkName;
 
 

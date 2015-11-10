@@ -20,7 +20,6 @@ package com.github.jinahya.sql.database.metadata.bind;
 
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
-import javax.xml.bind.annotation.XmlTransient;
 import javax.xml.bind.annotation.XmlType;
 
 
@@ -35,7 +34,7 @@ import javax.xml.bind.annotation.XmlType;
         "bufferLength", "decimalDigits", "pseudoColumn"
     }
 )
-public class BestRowIdentifier {
+public class BestRowIdentifier extends AbstractChild<Table> {
 
 
     // ------------------------------------------------------------------- scope
@@ -142,19 +141,18 @@ public class BestRowIdentifier {
     }
 
 
-    // ------------------------------------------------------------------- table
-    public Table getTable() {
-
-        return table;
-    }
-
-
-    public void setTable(final Table table) {
-
-        this.table = table;
-    }
-
-
+//    // ------------------------------------------------------------------- table
+//    public Table getTable() {
+//
+//        return table;
+//    }
+//
+//
+//    public void setTable(final Table table) {
+//
+//        this.table = table;
+//    }
+    // -------------------------------------------------------------------------
     @Label("SCOPE")
     @XmlElement(required = true)
     private short scope;
@@ -195,10 +193,6 @@ public class BestRowIdentifier {
     @Label("PSEUDO_COLUMN")
     @XmlElement(required = true)
     private short pseudoColumn;
-
-
-    @XmlTransient
-    private Table table;
 
 
 }

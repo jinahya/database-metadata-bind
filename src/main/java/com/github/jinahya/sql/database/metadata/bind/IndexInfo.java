@@ -21,7 +21,6 @@ package com.github.jinahya.sql.database.metadata.bind;
 import javax.xml.bind.annotation.XmlAttribute;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
-import javax.xml.bind.annotation.XmlTransient;
 import javax.xml.bind.annotation.XmlType;
 
 
@@ -36,7 +35,7 @@ import javax.xml.bind.annotation.XmlType;
         "columnName", "ascOrDesc", "cardinality", "pages", "filterCondition"
     }
 )
-public class IndexInfo {
+public class IndexInfo extends AbstractChild<Table> {
 
 
     // ---------------------------------------------------------------- tableCat
@@ -208,19 +207,18 @@ public class IndexInfo {
     }
 
 
-    // ------------------------------------------------------------------- table
-    public Table getTable() {
-
-        return table;
-    }
-
-
-    public void setTable(final Table table) {
-
-        this.table = table;
-    }
-
-
+//    // ------------------------------------------------------------------- table
+//    public Table getTable() {
+//
+//        return table;
+//    }
+//
+//
+//    public void setTable(final Table table) {
+//
+//        this.table = table;
+//    }
+    // -------------------------------------------------------------------------
     @Label("TABLE_CAT")
     @NillableBySpecification
     @XmlAttribute
@@ -291,10 +289,6 @@ public class IndexInfo {
     @NillableBySpecification
     @XmlElement(nillable = true, required = true)
     private String filterCondition;
-
-
-    @XmlTransient
-    private Table table;
 
 
 }
