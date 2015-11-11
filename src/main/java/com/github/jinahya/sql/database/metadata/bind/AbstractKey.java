@@ -39,6 +39,28 @@ import javax.xml.bind.annotation.XmlType;
 abstract class AbstractKey extends AbstractChild<Table> {
 
 
+    @Override
+    public String toString() {
+
+        return super.toString() + "{"
+               + "pktableCat=" + pktableCat
+               + ", pktableSchem=" + pktableSchem
+               + ", pktableName=" + pktableName
+               + ", pkcolumnName=" + pkcolumnName
+               + ", fktableCat=" + fktableCat
+               + ", fktableSchem=" + fktableSchem
+               + ", fktableName=" + fktableName
+               + ", fkcolumnName=" + fkcolumnName
+               + ", keySeq=" + keySeq
+               + ", updateRule=" + updateRule
+               + ", deleteRule=" + deleteRule
+               + ", fkName=" + fkName
+               + ", pkName=" + pkName
+               + ", deferrability=" + deferrability
+               + "}";
+    }
+
+
     // -------------------------------------------------------------- pktableCat
     public String getPktableCat() {
 

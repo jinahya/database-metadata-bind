@@ -18,8 +18,10 @@
 package com.github.jinahya.sql.database.metadata.bind;
 
 
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import static java.util.logging.Logger.getLogger;
 import javax.xml.bind.annotation.XmlAttribute;
-import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlValue;
 
 
@@ -27,54 +29,55 @@ import javax.xml.bind.annotation.XmlValue;
  *
  * @author Jin Kwon &lt;jinahya_at_gmail.com&gt;
  */
-//@XmlRootElement
-class TypeConcurrencyBoolean {
+class RSHBoolean {
 
 
-    static TypeConcurrencyBoolean valueOf(final Object[] args,
-                                          final Object value) {
+    private static final Logger logger = getLogger(RSHBoolean.class.getName());
 
-        final TypeConcurrencyBoolean instance = new TypeConcurrencyBoolean();
 
-        instance.setType((Integer) args[0]);
-        instance.setConcurrency((Integer) args[0]);
+    static RSHBoolean valueOf(final Object[] args, final Object value) {
+
+        final RSHBoolean instance = new RSHBoolean();
+
+        instance.setHoldability((Integer) args[0]);
         instance.setValue((Boolean) value);
 
         return instance;
     }
 
 
-    // -------------------------------------------------------------------- type
-    public int getType() {
+    // ------------------------------------------------------------- holdability
+    public int getHoldability() {
 
-        return type;
+        return holdability;
     }
 
 
-    public void setType(final int type) {
+    public void setHoldability(final int holdability) {
 
-        this.type = type;
+        this.holdability = holdability;
     }
 
 
-    TypeConcurrencyBoolean type(final int type) {
+    RSHBoolean holdability(final int holdability) {
 
-        setType(type);
+        setHoldability(holdability);
 
         return this;
     }
 
 
-    // ------------------------------------------------------------- concurrency
-    public int getConcurrency() {
+    @XmlAttribute
+    public String getHoldabilityName() {
 
-        return concurrency;
-    }
+        try {
+            return RSH.valueOf(holdability).name();
+        } catch (final IllegalArgumentException iae) {
+            logger.log(Level.WARNING, "unknown result set holdability: {0}",
+                       new Object[]{holdability});
+        }
 
-
-    public void setConcurrency(final int concurrency) {
-
-        this.concurrency = concurrency;
+        return null;
     }
 
 
@@ -91,7 +94,7 @@ class TypeConcurrencyBoolean {
     }
 
 
-    TypeConcurrencyBoolean value(final boolean value) {
+    RSHBoolean value(final boolean value) {
 
         setValue(value);
 
@@ -101,11 +104,7 @@ class TypeConcurrencyBoolean {
 
     // -------------------------------------------------------------------------
     @XmlAttribute
-    private int type;
-
-
-    @XmlAttribute
-    private int concurrency;
+    private int holdability;
 
 
     @XmlValue

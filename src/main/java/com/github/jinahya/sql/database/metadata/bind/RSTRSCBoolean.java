@@ -18,8 +18,10 @@
 package com.github.jinahya.sql.database.metadata.bind;
 
 
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import static java.util.logging.Logger.getLogger;
 import javax.xml.bind.annotation.XmlAttribute;
-import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlValue;
 
 
@@ -27,15 +29,19 @@ import javax.xml.bind.annotation.XmlValue;
  *
  * @author Jin Kwon &lt;jinahya_at_gmail.com&gt;
  */
-//@XmlRootElement
-class TypeBoolean {
+class RSTRSCBoolean {
 
 
-    static TypeBoolean valueOf(final Object[] args, final Object value) {
+    private static final Logger logger
+        = getLogger(RSTRSCBoolean.class.getName());
 
-        final TypeBoolean instance = new TypeBoolean();
+
+    static RSTRSCBoolean valueOf(final Object[] args, final Object value) {
+
+        final RSTRSCBoolean instance = new RSTRSCBoolean();
 
         instance.setType((Integer) args[0]);
+        instance.setConcurrency((Integer) args[1]);
         instance.setValue((Boolean) value);
 
         return instance;
@@ -55,11 +61,52 @@ class TypeBoolean {
     }
 
 
-    TypeBoolean type(final int type) {
+    RSTRSCBoolean type(final int type) {
 
         setType(type);
 
         return this;
+    }
+
+
+    @XmlAttribute
+    public String getTypeName() {
+
+        try {
+            return RST.valueOf(type).name();
+        } catch (final IllegalArgumentException iae) {
+            logger.log(Level.WARNING, "unknown result set type: {0}",
+                       new Object[]{type});
+        }
+
+        return null;
+    }
+
+
+    // ------------------------------------------------------------- concurrency
+    public int getConcurrency() {
+
+        return concurrency;
+    }
+
+
+    public void setConcurrency(final int concurrency) {
+
+        this.concurrency = concurrency;
+    }
+
+
+    @XmlAttribute
+    public String getConccurrencyName() {
+
+        try {
+            return RSC.valueOf(concurrency).name();
+        } catch (final IllegalArgumentException iae) {
+            logger.log(Level.WARNING, "unknown result set concurrency: {0}",
+                       new Object[]{concurrency});
+        }
+
+        return null;
     }
 
 
@@ -76,7 +123,7 @@ class TypeBoolean {
     }
 
 
-    TypeBoolean value(final boolean value) {
+    RSTRSCBoolean value(final boolean value) {
 
         setValue(value);
 
@@ -87,6 +134,10 @@ class TypeBoolean {
     // -------------------------------------------------------------------------
     @XmlAttribute
     private int type;
+
+
+    @XmlAttribute
+    private int concurrency;
 
 
     @XmlValue

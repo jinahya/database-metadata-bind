@@ -18,6 +18,9 @@
 package com.github.jinahya.sql.database.metadata.bind;
 
 
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import static java.util.logging.Logger.getLogger;
 import javax.xml.bind.annotation.XmlAttribute;
 import javax.xml.bind.annotation.XmlValue;
 
@@ -26,38 +29,55 @@ import javax.xml.bind.annotation.XmlValue;
  *
  * @author Jin Kwon &lt;jinahya_at_gmail.com&gt;
  */
-class LevelBoolean {
+class RSTBoolean {
 
 
-    static LevelBoolean valueOf(final Object[] args, final Object value) {
+    private static final Logger logger = getLogger(RSTBoolean.class.getName());
 
-        final LevelBoolean instance = new LevelBoolean();
 
-        instance.setLevel((Integer) args[0]);
+    static RSTBoolean valueOf(final Object[] args, final Object value) {
+
+        final RSTBoolean instance = new RSTBoolean();
+
+        instance.setType((Integer) args[0]);
         instance.setValue((Boolean) value);
 
         return instance;
     }
 
 
-    // ------------------------------------------------------------------- level
-    public int getLevel() {
+    // -------------------------------------------------------------------- type
+    public int getType() {
 
-        return level;
+        return type;
     }
 
 
-    public void setLevel(final int level) {
+    public void setType(final int type) {
 
-        this.level = level;
+        this.type = type;
     }
 
 
-    LevelBoolean level(final int level) {
+    RSTBoolean type(final int type) {
 
-        setLevel(level);
+        setType(type);
 
         return this;
+    }
+
+
+    @XmlAttribute
+    public String getTypeName() {
+
+        try {
+            return RST.valueOf(type).name();
+        } catch (final IllegalArgumentException iae) {
+            logger.log(Level.WARNING, "unknown result set type: {0}",
+                       new Object[]{type});
+        }
+
+        return null;
     }
 
 
@@ -74,7 +94,7 @@ class LevelBoolean {
     }
 
 
-    LevelBoolean value(final boolean value) {
+    RSTBoolean value(final boolean value) {
 
         setValue(value);
 
@@ -84,7 +104,7 @@ class LevelBoolean {
 
     // -------------------------------------------------------------------------
     @XmlAttribute
-    private int level;
+    private int type;
 
 
     @XmlValue

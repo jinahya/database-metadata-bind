@@ -18,8 +18,10 @@
 package com.github.jinahya.sql.database.metadata.bind;
 
 
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import static java.util.logging.Logger.getLogger;
 import javax.xml.bind.annotation.XmlAttribute;
-import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlValue;
 
 
@@ -27,16 +29,19 @@ import javax.xml.bind.annotation.XmlValue;
  *
  * @author Jin Kwon &lt;jinahya_at_gmail.com&gt;
  */
-//@XmlRootElement
-class TypeTypeBoolean {
+class SDTSDTBoolean {
 
 
-    static TypeTypeBoolean valueOf(final Object[] args, final Object value) {
+    private static final Logger logger
+        = getLogger(SDTSDTBoolean.class.getName());
 
-        final TypeTypeBoolean instance = new TypeTypeBoolean();
+
+    static SDTSDTBoolean valueOf(final Object[] args, final Object value) {
+
+        final SDTSDTBoolean instance = new SDTSDTBoolean();
 
         instance.setFromType((Integer) args[0]);
-        instance.setToType((Integer) args[0]);
+        instance.setToType((Integer) args[1]);
         instance.setValue((Boolean) value);
 
         return instance;
@@ -56,11 +61,29 @@ class TypeTypeBoolean {
     }
 
 
-    TypeTypeBoolean fromType(final Integer fromType) {
+    SDTSDTBoolean fromType(final Integer fromType) {
 
         setFromType(fromType);
 
         return this;
+    }
+
+
+    @XmlAttribute
+    public String getFromTypeName() {
+
+        if (fromType == null) {
+            return null;
+        }
+
+        try {
+            return Reflections.getSqlTypeName(fromType);
+        } catch (final IllegalAccessException iae) {
+            logger.log(Level.WARNING, "failed to get sql data type name: {0}",
+                       new Object[]{fromType});
+        }
+
+        return null;
     }
 
 
@@ -77,11 +100,29 @@ class TypeTypeBoolean {
     }
 
 
-    TypeTypeBoolean toType(final Integer toType) {
+    SDTSDTBoolean toType(final Integer toType) {
 
         setToType(toType);
 
         return this;
+    }
+
+
+    @XmlAttribute
+    public String getToTypeName() {
+
+        if (toType == null) {
+            return null;
+        }
+
+        try {
+            return Reflections.getSqlTypeName(toType);
+        } catch (final IllegalAccessException iae) {
+            logger.log(Level.WARNING, "failed to get sql data type name: {0}",
+                       new Object[]{toType});
+        }
+
+        return null;
     }
 
 
@@ -98,7 +139,7 @@ class TypeTypeBoolean {
     }
 
 
-    TypeTypeBoolean value(final boolean value) {
+    SDTSDTBoolean value(final boolean value) {
 
         setValue(value);
 

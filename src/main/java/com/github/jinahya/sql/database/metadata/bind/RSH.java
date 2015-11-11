@@ -15,7 +15,7 @@
  */
 
 
-package com.github.jinahya.sql;
+package com.github.jinahya.sql.database.metadata.bind;
 
 
 import java.sql.ResultSet;
@@ -25,34 +25,33 @@ import java.sql.ResultSet;
  *
  * @author Jin Kwon &lt;jinahya_at_gmail.com&gt;
  */
-public enum ResultSetType {
+enum RSH {
 
 
-    TYPE_FORWARD_ONLY(ResultSet.TYPE_FORWARD_ONLY),
-    TYPE_SCROLL_INSENSITIVE(ResultSet.TYPE_SCROLL_INSENSITIVE),
-    TYPE_SCROLL_SENSITIVE(ResultSet.TYPE_SCROLL_SENSITIVE);
+    HOLD_CURSORS_OVER_COMMIT(ResultSet.HOLD_CURSORS_OVER_COMMIT),
+    CLOSE_CURSORS_AT_COMMIT(ResultSet.CLOSE_CURSORS_AT_COMMIT);
 
 
-    public static ResultSetType valueOf(final int constant) {
+    public static RSH valueOf(final int holdability) {
 
-        for (final ResultSetType value : values()) {
-            if (value.constant == constant) {
+        for (final RSH value : values()) {
+            if (value.holdability == holdability) {
                 return value;
             }
         }
 
         throw new IllegalArgumentException(
-            "no value for constant: " + constant);
+            "no value for holdability: " + holdability);
     }
 
 
-    private ResultSetType(final int constant) {
+    private RSH(final int holdability) {
 
-        this.constant = constant;
+        this.holdability = holdability;
     }
 
 
-    private final int constant;
+    private final int holdability;
 
 
 }

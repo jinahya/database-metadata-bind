@@ -25,6 +25,8 @@ import javax.xml.bind.annotation.XmlType;
 
 
 /**
+ * An entity class for binding the result of
+ * {@link java.sql.DatabaseMetaData#getAttributes(java.lang.String, java.lang.String, java.lang.String, java.lang.String)}.
  *
  * @author Jin Kwon &lt;jinahya_at_gmail.com&gt;
  */
@@ -38,6 +40,33 @@ import javax.xml.bind.annotation.XmlType;
     }
 )
 public class Attribute extends AbstractChild<UserDefinedType> {
+
+
+    @Override
+    public String toString() {
+
+        return super.toString() + "{"
+               + "typeCat=" + typeCat
+               + ", typeSchem=" + typeSchem
+               + ", typeName=" + typeName
+               + ", attrName=" + attrName
+               + ", dataType=" + dataType
+               + ", attrTypeName=" + attrTypeName
+               + ", attrSize=" + attrSize
+               + ", decimalDigits=" + decimalDigits
+               + ", numPrecRadix=" + numPrecRadix
+               + ", nullable=" + nullable
+               + ", remarks=" + remarks
+               + ", attrDef=" + attrDef
+               + ", sqlDataType=" + sqlDataType
+               + ", sqlDatetimeSub=" + sqlDatetimeSub
+               + ", charOctetLength=" + charOctetLength
+               + ", ordinalPosition=" + ordinalPosition
+               + ", isNullable=" + isNullable
+               + ", sourceDataType=" + sourceDataType
+               + "}";
+
+    }
 
 
     // ----------------------------------------------------------------- typeCat

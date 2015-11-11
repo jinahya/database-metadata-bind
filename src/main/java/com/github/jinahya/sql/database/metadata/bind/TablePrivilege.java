@@ -25,6 +25,8 @@ import javax.xml.bind.annotation.XmlType;
 
 
 /**
+ * An entity class for binding the result of
+ * {@link java.sql.DatabaseMetaData#getTablePrivileges(java.lang.String, java.lang.String, java.lang.String)}.
  *
  * @author Jin Kwon &lt;jinahya_at_gmail.com&gt;
  */
@@ -35,6 +37,21 @@ import javax.xml.bind.annotation.XmlType;
     }
 )
 public class TablePrivilege extends AbstractChild<Table> {
+
+
+    @Override
+    public String toString() {
+
+        return super.toString() + "{"
+               + "tableCat=" + tableCat
+               + ", tableSchem=" + tableSchem
+               + ", tableName=" + tableName
+               + ", grantor=" + grantor
+               + ", grantee=" + grantee
+               + ", privilege=" + privilege
+               + ", isGrantable=" + isGrantable
+               + "}";
+    }
 
 
     // ---------------------------------------------------------------- tableCat

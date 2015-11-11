@@ -18,8 +18,10 @@
 package com.github.jinahya.sql.database.metadata.bind;
 
 
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import static java.util.logging.Logger.getLogger;
 import javax.xml.bind.annotation.XmlAttribute;
-import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlValue;
 
 
@@ -27,37 +29,39 @@ import javax.xml.bind.annotation.XmlValue;
  *
  * @author Jin Kwon &lt;jinahya_at_gmail.com&gt;
  */
-//@XmlRootElement
-class HoldabilityBoolean {
+class TILBoolean {
 
 
-    static HoldabilityBoolean valueOf(final Object[] args, final Object value) {
+    private static final Logger logger = getLogger(TILBoolean.class.getName());
 
-        final HoldabilityBoolean instance = new HoldabilityBoolean();
 
-        instance.setHoldability((Integer) args[0]);
+    static TILBoolean valueOf(final Object[] args, final Object value) {
+
+        final TILBoolean instance = new TILBoolean();
+
+        instance.setLevel((Integer) args[0]);
         instance.setValue((Boolean) value);
 
         return instance;
     }
 
 
-    // ------------------------------------------------------------- holdability
-    public int getHoldability() {
+    // ------------------------------------------------------------------- level
+    public int getLevel() {
 
-        return holdability;
+        return level;
     }
 
 
-    public void setHoldability(final int holdability) {
+    public void setLevel(final int level) {
 
-        this.holdability = holdability;
+        this.level = level;
     }
 
 
-    HoldabilityBoolean holdability(final int holdability) {
+    TILBoolean level(final int level) {
 
-        setHoldability(holdability);
+        setLevel(level);
 
         return this;
     }
@@ -76,7 +80,7 @@ class HoldabilityBoolean {
     }
 
 
-    HoldabilityBoolean value(final boolean value) {
+    TILBoolean value(final boolean value) {
 
         setValue(value);
 
@@ -84,9 +88,24 @@ class HoldabilityBoolean {
     }
 
 
+    // -------------------------------------------------------------------- name
+    @XmlAttribute
+    public String getName() {
+
+        try {
+            return TIL.valueOf(level).name();
+        } catch (final IllegalArgumentException iae) {
+            logger.log(Level.WARNING, "unknown transacion isolation level: {0}",
+                       new Object[]{level});
+        }
+
+        return null;
+    }
+
+
     // -------------------------------------------------------------------------
     @XmlAttribute
-    private int holdability;
+    private int level;
 
 
     @XmlValue

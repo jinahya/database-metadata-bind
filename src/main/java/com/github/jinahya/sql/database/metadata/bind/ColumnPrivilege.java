@@ -25,11 +25,17 @@ import javax.xml.bind.annotation.XmlType;
 
 
 /**
+ * An entity class for binding the result of
+ * {@link java.sql.DatabaseMetaData#getColumnPrivileges(java.lang.String, java.lang.String, java.lang.String, java.lang.String)}.
  *
  * @author Jin Kwon &lt;jinahya_at_gmail.com&gt;
  */
 @XmlRootElement
-@XmlType(propOrder = {"grantor", "grantee", "privilege", "isGrantable"})
+@XmlType(
+    propOrder = {
+        "grantor", "grantee", "privilege", "isGrantable"
+    }
+)
 public class ColumnPrivilege extends AbstractChild<Column> {
 
 
@@ -45,7 +51,7 @@ public class ColumnPrivilege extends AbstractChild<Column> {
                + ", grantee=" + grantee
                + ", privilege=" + privilege
                + ", isGrantable=" + isGrantable
-               + '}';
+               + "}";
     }
 
 

@@ -19,7 +19,10 @@ package com.github.jinahya.sql.database.metadata.bind;
 
 
 import java.lang.reflect.Field;
+import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
+import java.lang.reflect.ParameterizedType;
+import java.lang.reflect.Type;
 import java.sql.Types;
 import java.util.Collection;
 import java.util.Collections;
@@ -315,6 +318,68 @@ class Reflections {
         }
 
         return sqlTypes;
+    }
+
+
+    static String getSqlTypeName(final int value)
+        throws IllegalAccessException {
+
+        for (final Field field : Types.class.getFields()) {
+            final int modifiers = field.getModifiers();
+            if (!Modifier.isPublic(modifiers)) {
+                continue;
+            }
+            if (!Modifier.isStatic(modifiers)) {
+                continue;
+            }
+            if (!Integer.TYPE.equals(field.getType())) {
+                continue;
+            }
+            if (field.getInt(null) == value) {
+                return field.getName();
+            }
+        }
+
+        return null;
+    }
+
+
+    static Type getParentType(final Class<?> childClass)
+        throws ReflectiveOperationException {
+
+        if (!Child.class.isAssignableFrom(childClass)) {
+            throw new IllegalArgumentException(
+                "childClass(" + childClass + ") is not assignable to "
+                + Child.class);
+        }
+
+        Type parentType = null;
+
+        for (final Type i : childClass.getGenericInterfaces()) {
+            if (!Child.class.equals(i)) {
+                continue;
+            }
+            final ParameterizedType p = (ParameterizedType) i;
+            final Type[] a = p.getActualTypeArguments();
+            parentType = a[0];
+        }
+
+        return parentType;
+    }
+
+
+    static void setParent(final Class<?> childClass,
+                          final Iterable<?> childBeans, final Object parentBean)
+        throws ReflectiveOperationException {
+
+        if (!Child.class.isAssignableFrom(childClass)) {
+            return;
+        }
+
+        final Method method = childClass.getMethod("setParent", Object.class);
+        for (final Object childBean : childBeans) {
+            method.invoke(childBean, parentBean);
+        }
     }
 
 

@@ -22,23 +22,25 @@ import javax.xml.bind.annotation.XmlRootElement;
 
 
 /**
+ * An entity class for binding the result of
+ * {@link java.sql.DatabaseMetaData#getExportedKeys(java.lang.String, java.lang.String, java.lang.String)}.
  *
  * @author Jin Kwon &lt;jinahya_at_gmail.com&gt;
+ * @see java.sql.DatabaseMetaData#getExportedKeys(java.lang.String,
+ * java.lang.String, java.lang.String)
+ * @see MetadataContext#getExportedKeys(java.lang.String, java.lang.String,
+ * java.lang.String)
  */
 @XmlRootElement
 public class ExportedKey extends AbstractKey {
 
 
     // ------------------------------------------------------------------- table
+    // overridden just for class diagrams
+    @Override
     public Table getTable() {
 
         return getParent();
-    }
-
-
-    public void setTable(final Table table) {
-
-        setParent(table);
     }
 
 

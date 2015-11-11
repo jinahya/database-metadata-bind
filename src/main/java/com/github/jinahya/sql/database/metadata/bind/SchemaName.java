@@ -24,6 +24,8 @@ import javax.xml.bind.annotation.XmlType;
 
 
 /**
+ * An entity class for binding the result of
+ * {@link java.sql.DatabaseMetaData#getSchemas()}.
  *
  * @author Jin Kwon &lt;jinahya_at_gmail.com&gt;
  */
@@ -34,6 +36,16 @@ import javax.xml.bind.annotation.XmlType;
     }
 )
 public class SchemaName extends AbstractChild<Metadata> {
+
+
+    @Override
+    public String toString() {
+
+        return super.toString() + "{"
+               + "tableSchem=" + tableSchem
+               + ", tableCatalog=" + tableCatalog
+               + "}";
+    }
 
 
     // -------------------------------------------------------------- tableSchem

@@ -28,6 +28,8 @@ import javax.xml.bind.annotation.XmlType;
 
 
 /**
+ * An entity class for binding the result of
+ * {@link java.sql.DatabaseMetaData#getUDTs(java.lang.String, java.lang.String, java.lang.String, int[])}.
  *
  * @author Jin Kwon &lt;jinahya_at_gmail.com&gt;
  */
@@ -40,6 +42,21 @@ import javax.xml.bind.annotation.XmlType;
     }
 )
 public class UserDefinedType extends AbstractChild<Schema> {
+
+
+    @Override
+    public String toString() {
+
+        return super.toString() + "{"
+               + "typeCat=" + typeCat
+               + ", typeSchem=" + typeSchem
+               + ", typeName=" + typeName
+               + ", className=" + className
+               + ", dataType=" + dataType
+               + ", remarks=" + remarks
+               + ", baseType=" + baseType
+               + "}";
+    }
 
 
     // ----------------------------------------------------------------- typeCat
@@ -141,6 +158,19 @@ public class UserDefinedType extends AbstractChild<Schema> {
         }
 
         return attributes;
+    }
+
+
+    // ------------------------------------------------------------------ schema
+    public Schema getSchema() {
+
+        return getParent();
+    }
+
+
+    public void setSchema(final Schema schema) {
+
+        setParent(schema);
     }
 
 

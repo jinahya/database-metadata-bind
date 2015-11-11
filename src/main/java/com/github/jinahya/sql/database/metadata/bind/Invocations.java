@@ -22,12 +22,21 @@ import java.beans.PropertyDescriptor;
 
 
 /**
+ * A utility class for {@link Invocation}.
  *
  * @author Jin Kwon &lt;jinahya_at_gmail.com&gt;
  */
-class Invocations {
+final class Invocations {
 
 
+    /**
+     * Find {@link Invocation} value from specified property.
+     *
+     * @param propertyDescriptor property descriptor
+     * @param beanClass bean class
+     *
+     * @return an instance of {@link Invocation} or {@code null} if not found.
+     */
     static Invocation get(final PropertyDescriptor propertyDescriptor,
                           final Class<?> beanClass) {
 

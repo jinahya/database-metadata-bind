@@ -28,7 +28,7 @@ import javax.xml.bind.annotation.XmlType;
 
 
 /**
- * A class binding information from
+ * An entity class for binding information from
  * {@link java.sql.DatabaseMetaData#getColumns(java.lang.String, java.lang.String, java.lang.String, java.lang.String) DatabaseMetaData.getColumns}.
  *
  * @author Jin Kwon &lt;jinahya_at_gmail.com&gt;
@@ -46,6 +46,38 @@ import javax.xml.bind.annotation.XmlType;
     }
 )
 public class Column extends AbstractChild<Table> {
+
+
+    @Override
+    public String toString() {
+
+        return super.toString() + "{"
+               + "tableCat=" + tableCat
+               + ", tableSchem=" + tableSchem
+               + ", tableName=" + tableName
+               + ", columnName=" + columnName
+               + ", dataType=" + dataType
+               + ", typeName=" + typeName
+               + ", columnSize=" + columnSize
+               + ", bufferLength=" + bufferLength
+               + ", decimalDigits=" + decimalDigits
+               + ", numPrecRadix=" + numPrecRadix
+               + ", nullable=" + nullable
+               + ", remarks=" + remarks
+               + ", columnDef=" + columnDef
+               + ", sqlDataType=" + sqlDataType
+               + ", sqlDatetimeSub=" + sqlDatetimeSub
+               + ", charOctetLength=" + charOctetLength
+               + ", ordinalPosition=" + ordinalPosition
+               + ", isNullable=" + isNullable
+               + ", scopeCatalog=" + scopeCatalog
+               + ", scopeSchema=" + scopeSchema
+               + ", scopeTable=" + scopeTable
+               + ", sourceDataType=" + sourceDataType
+               + ", isAutoincrement=" + isAutoincrement
+               + ", isGeneratedcolumn=" + isGeneratedcolumn
+               + "}";
+    }
 
 
     // ---------------------------------------------------------------- tableCat

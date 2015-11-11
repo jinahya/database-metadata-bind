@@ -24,6 +24,8 @@ import javax.xml.bind.annotation.XmlType;
 
 
 /**
+ * An entity class for binding the result of
+ * {@link java.sql.DatabaseMetaData#getTypeInfo()}.
  *
  * @author Jin Kwon &lt;jinahya_at_gmail.com&gt;
  */
@@ -38,6 +40,32 @@ import javax.xml.bind.annotation.XmlType;
     }
 )
 public class TypeInfo extends AbstractChild<Metadata> {
+
+
+    @Override
+    public String toString() {
+
+        return super.toString() + "{"
+               + "typeName=" + typeName
+               + ", dataType=" + dataType
+               + ", precision=" + precision
+               + ", literalPrefix=" + literalPrefix
+               + ", literalSuffix=" + literalSuffix
+               + ", createParams=" + createParams
+               + ", nullable=" + nullable
+               + ", caseSensitive=" + caseSensitive
+               + ", searchable=" + searchable
+               + ", unsignedAttribute=" + unsignedAttribute
+               + ", fixedPrecScale=" + fixedPrecScale
+               + ", autoIncrement=" + autoIncrement
+               + ", localTypeName=" + localTypeName
+               + ", minimumScale=" + minimumScale
+               + ", maximumScale=" + maximumScale
+               + ", sqlDataType=" + sqlDataType
+               + ", sqlDatetimeSub=" + sqlDatetimeSub
+               + ", numPrecRadix=" + numPrecRadix
+               + "}";
+    }
 
 
     // ---------------------------------------------------------------- typeName

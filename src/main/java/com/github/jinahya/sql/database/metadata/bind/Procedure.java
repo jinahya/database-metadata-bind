@@ -28,6 +28,8 @@ import javax.xml.bind.annotation.XmlType;
 
 
 /**
+ * An entity class for binding the result of
+ * {@link java.sql.DatabaseMetaData#getProcedures(java.lang.String, java.lang.String, java.lang.String)}.
  *
  * @author Jin Kwon &lt;jinahya_at_gmail.com&gt;
  */
@@ -40,6 +42,20 @@ import javax.xml.bind.annotation.XmlType;
     }
 )
 public class Procedure extends AbstractChild<Schema> {
+
+
+    @Override
+    public String toString() {
+
+        return super.toString() + "{"
+               + "procedureCat=" + procedureCat
+               + ", procedureSchem=" + procedureSchem
+               + ", procedureName=" + procedureName
+               + ", remarks=" + remarks
+               + ", procedureType=" + procedureType
+               + ", specificName=" + specificName
+               + "}";
+    }
 
 
     // ------------------------------------------------------------ procedureCat

@@ -223,20 +223,20 @@
         <artifactId>maven-javadoc-plugin</artifactId>
         <configuration>
           <additionalparam>
-            -hide java.*
+            -hide java.* -hide AbstractChild -hide AbstractKey -hide Child -hide MetadataContext -hide TableDomain -hide XmlConstants
             -collapsible -horizontal
             -inferdep -inferdepinpackage -inferrel
             -outputencoding UTF-8
           </additionalparam>
-          <breakiterator>true</breakiterator>
-          <charset>UTF-8</charset>
+          <!--<breakiterator>true</breakiterator>-->
+          <!--<charset>${project.build.sourceEncoding}</charset>-->
           <doclet>org.umlgraph.doclet.UmlGraphDoc</doclet>
           <docletArtifact>
             <groupId>org.umlgraph</groupId>
             <artifactId>umlgraph</artifactId>
             <version>5.6.6</version>
           </docletArtifact>
-          <keywords>true</keywords>
+          <!--<keywords>true</keywords>-->
         </configuration>
       </plugin>
       <plugin>
@@ -265,7 +265,7 @@
       <plugin>
         <groupId>org.codehaus.mojo</groupId>
         <artifactId>findbugs-maven-plugin</artifactId>
-        <version>3.0.2</version>
+        <version>3.0.3</version>
       </plugin>
       <plugin>
         <groupId>org.jacoco</groupId>

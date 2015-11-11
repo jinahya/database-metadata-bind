@@ -15,43 +15,26 @@
  */
 
 
-package com.github.jinahya.sql;
+package com.github.jinahya.sql.database.metadata.bind;
 
 
-import java.sql.ResultSet;
+import java.util.List;
 
 
 /**
  *
  * @author Jin Kwon &lt;jinahya_at_gmail.com&gt;
  */
-public enum ResultSetConcurrency {
+interface TableDomain {
 
 
-    CONCUR_READ_ONLY(ResultSet.CONCUR_READ_ONLY),
-    CONCUR_UPDATABLE(ResultSet.CONCUR_UPDATABLE);
+    List<Table> getTables();
 
 
-    public static ResultSetConcurrency valueOf(final int constant) {
-
-        for (final ResultSetConcurrency value : values()) {
-            if (value.constant == constant) {
-                return value;
-            }
-        }
-
-        throw new IllegalArgumentException(
-            "no value for constant: " + constant);
-    }
+    List<CrossReference> getCrossReferences();
 
 
-    private ResultSetConcurrency(final int constant) {
-
-        this.constant = constant;
-    }
-
-
-    private final int constant;
+    void setCrossReferences(List<CrossReference> crossReferences);
 
 
 }

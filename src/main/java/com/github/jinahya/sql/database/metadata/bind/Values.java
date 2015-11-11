@@ -63,7 +63,7 @@ final class Values {
                 return ((Number) value).intValue() != 0;
             }
             if (value != null && !Boolean.class.isInstance(value)) {
-                logger.log(Level.WARNING, "cannot adapt {0}({1}) to {2}",
+                logger.log(Level.WARNING, "cannot adapt {0}({1}) for {2}",
                            new Object[]{value, valueType, target});
                 return Boolean.FALSE;
             }
@@ -72,7 +72,7 @@ final class Values {
 
         if (Short.TYPE.equals(type)) {
             if (value == null || !Number.class.isInstance(value)) {
-                logger.log(Level.WARNING, "cannot adapt {0}({1}) to {2}",
+                logger.log(Level.WARNING, "cannot adapt {0}({1}) for {2}",
                            new Object[]{value, valueType, target});
                 return (short) 0;
             }
@@ -84,7 +84,7 @@ final class Values {
 
         if (Short.class.equals(type)) {
             if (value != null && !Number.class.isInstance(value)) {
-                logger.log(Level.WARNING, "cannot adapt {0}({1}) to {2}",
+                logger.log(Level.WARNING, "cannot adapt {0}({1}) for {2}",
                            new Object[]{value, valueType, target});
                 return null;
             }
@@ -96,7 +96,7 @@ final class Values {
 
         if (Integer.TYPE.equals(type)) {
             if (value == null || !Number.class.isInstance(value)) {
-                logger.log(Level.WARNING, "cannot adapt {0}({1}) to {2}",
+                logger.log(Level.WARNING, "cannot adapt {0}({1}) for {2}",
                            new Object[]{value, valueType, target});
                 return 0;
             }
@@ -108,7 +108,7 @@ final class Values {
 
         if (Integer.class.equals(type)) {
             if (value != null && !Number.class.isInstance(value)) {
-                logger.log(Level.WARNING, "cannot adapt {0}({1}) to {2}",
+                logger.log(Level.WARNING, "cannot adapt {0}({1}) for {2}",
                            new Object[]{value, valueType, target});
                 return null;
             }
@@ -120,7 +120,7 @@ final class Values {
 
         if (Long.TYPE.equals(type)) {
             if (value == null || !Number.class.isInstance(value)) {
-                logger.log(Level.WARNING, "cannot adapt {0}({1}) to {2}",
+                logger.log(Level.WARNING, "cannot adapt {0}({1}) for {2}",
                            new Object[]{value, valueType, target});
                 return 0L;
             }
@@ -132,7 +132,7 @@ final class Values {
 
         if (Long.class.equals(type)) {
             if (value != null && !Number.class.isInstance(value)) {
-                logger.log(Level.WARNING, "cannot adapt {0}({1}) to {2}",
+                logger.log(Level.WARNING, "cannot adapt {0}({1}) for {2}",
                            new Object[]{value, valueType, target});
                 return null;
             }
@@ -142,7 +142,7 @@ final class Values {
             return ((Number) value).longValue();
         }
 
-        logger.log(Level.WARNING, "unhandled {0}({1}) to {2}",
+        logger.log(Level.WARNING, "unadapted value={0}({1}), field={2}",
                    new Object[]{value, valueType, target});
 
         return value;

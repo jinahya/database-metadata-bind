@@ -18,22 +18,41 @@
 package com.github.jinahya.sql.database.metadata.bind;
 
 
-import javax.xml.bind.annotation.XmlTransient;
+import java.sql.ResultSet;
 
 
 /**
  *
  * @author Jin Kwon &lt;jinahya_at_gmail.com&gt;
- * @param <P> parent type parameter
  */
-@XmlTransient
-interface Child<P> {
+enum RST {
 
 
-    P getParent();
+    TYPE_FORWARD_ONLY(ResultSet.TYPE_FORWARD_ONLY),
+    TYPE_SCROLL_INSENSITIVE(ResultSet.TYPE_SCROLL_INSENSITIVE),
+    TYPE_SCROLL_SENSITIVE(ResultSet.TYPE_SCROLL_SENSITIVE);
 
 
-    void setParent(final P parent);
+    public static RST valueOf(final int type) {
+
+        for (final RST value : values()) {
+            if (value.type == type) {
+                return value;
+            }
+        }
+
+        throw new IllegalArgumentException(
+            "no value for constant: " + type);
+    }
+
+
+    private RST(final int type) {
+
+        this.type = type;
+    }
+
+
+    private final int type;
 
 
 }

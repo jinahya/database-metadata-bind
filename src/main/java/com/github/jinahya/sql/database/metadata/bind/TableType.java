@@ -24,6 +24,8 @@ import javax.xml.bind.annotation.XmlType;
 
 
 /**
+ * An entity class for binding the result of
+ * {@link java.sql.DatabaseMetaData#getTableTypes()}.
  *
  * @author Jin Kwon &lt;jinahya_at_gmail.com&gt;
  */
@@ -34,6 +36,15 @@ import javax.xml.bind.annotation.XmlType;
     }
 )
 public class TableType extends AbstractChild<Metadata> {
+
+
+    @Override
+    public String toString() {
+
+        return super.toString() + "{"
+               + "tableType=" + tableType
+               + "}";
+    }
 
 
     // --------------------------------------------------------------- tableType

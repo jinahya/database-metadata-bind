@@ -25,6 +25,8 @@ import javax.xml.bind.annotation.XmlType;
 
 
 /**
+ * An entity class for binding the result of
+ * {@link java.sql.DatabaseMetaData#getPseudoColumns(java.lang.String, java.lang.String, java.lang.String, java.lang.String)}.
  *
  * @author Jin Kwon &lt;jinahya_at_gmail.com&gt;
  */
@@ -36,6 +38,26 @@ import javax.xml.bind.annotation.XmlType;
     }
 )
 public class PseudoColumn extends AbstractChild<Table> {
+
+
+    @Override
+    public String toString() {
+
+        return super.toString() + "{"
+               + "tableCat=" + tableCat
+               + ", tableSchem=" + tableSchem
+               + ", tableName=" + tableName
+               + ", columnName=" + columnName
+               + ", dataType=" + dataType
+               + ", columnSize=" + columnSize
+               + ", decimalDigits=" + decimalDigits
+               + ", numPrecRadix=" + numPrecRadix
+               + ", columnUsage=" + columnUsage
+               + ", remarks=" + remarks
+               + ", charOctetLength=" + charOctetLength
+               + ", isNullable=" + isNullable
+               + "}";
+    }
 
 
     // ---------------------------------------------------------------- tableCat

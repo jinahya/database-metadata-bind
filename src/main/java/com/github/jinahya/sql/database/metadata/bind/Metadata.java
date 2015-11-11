@@ -30,12 +30,27 @@ import javax.xml.bind.annotation.XmlTransient;
 
 
 /**
+ * An entity class for holding information from
+ * {@link java.sql.DatabaseMetaData}.
  *
  * @author Jin Kwon &lt;jinahya_at_gmail.com&gt;
  */
 @XmlAccessorOrder(XmlAccessOrder.ALPHABETICAL)
 @XmlRootElement
-public class Metadata {
+public class Metadata implements TableDomain {
+
+
+    @Override
+    public List<Table> getTables() {
+
+        final List<Table> list = new ArrayList<Table>();
+
+        for (final Catalog catalog : getCatalogs()) {
+            list.addAll(catalog.getTables());
+        }
+
+        return list;
+    }
 
 
     public boolean isAllProceduresAreCallable() {
@@ -118,6 +133,18 @@ public class Metadata {
     }
 
 
+    @Override
+    public List<CrossReference> getCrossReferences() {
+        return crossReferences;
+    }
+
+
+    @Override
+    public void setCrossReferences(List<CrossReference> crossReferences) {
+        this.crossReferences = crossReferences;
+    }
+
+
     public boolean isDataDefinitionCausesTransactionCommit() {
         return dataDefinitionCausesTransactionCommit;
     }
@@ -188,12 +215,12 @@ public class Metadata {
     }
 
 
-    public List<TypeBoolean> getDeletesAreDetected() {
+    public List<RSTBoolean> getDeletesAreDetected() {
         return deletesAreDetected;
     }
 
 
-    public void setDeletesAreDetected(List<TypeBoolean> deletesAreDetected) {
+    public void setDeletesAreDetected(List<RSTBoolean> deletesAreDetected) {
         this.deletesAreDetected = deletesAreDetected;
     }
 
@@ -278,12 +305,12 @@ public class Metadata {
     }
 
 
-    public List<TypeBoolean> getInsertsAreDetected() {
+    public List<RSTBoolean> getInsertsAreDetected() {
         return insertsAreDetected;
     }
 
 
-    public void setInsertsAreDetected(List<TypeBoolean> insertsAreDetected) {
+    public void setInsertsAreDetected(List<RSTBoolean> insertsAreDetected) {
         this.insertsAreDetected = insertsAreDetected;
     }
 
@@ -588,62 +615,62 @@ public class Metadata {
     }
 
 
-    public List<TypeBoolean> getOthersDeletesAreVisible() {
+    public List<RSTBoolean> getOthersDeletesAreVisible() {
         return othersDeletesAreVisible;
     }
 
 
-    public void setOthersDeletesAreVisible(List<TypeBoolean> othersDeletesAreVisible) {
+    public void setOthersDeletesAreVisible(List<RSTBoolean> othersDeletesAreVisible) {
         this.othersDeletesAreVisible = othersDeletesAreVisible;
     }
 
 
-    public List<TypeBoolean> getOthersInsertsAreVisible() {
+    public List<RSTBoolean> getOthersInsertsAreVisible() {
         return othersInsertsAreVisible;
     }
 
 
-    public void setOthersInsertsAreVisible(List<TypeBoolean> othersInsertsAreVisible) {
+    public void setOthersInsertsAreVisible(List<RSTBoolean> othersInsertsAreVisible) {
         this.othersInsertsAreVisible = othersInsertsAreVisible;
     }
 
 
-    public List<TypeBoolean> getOthersUpdatesAreVisible() {
+    public List<RSTBoolean> getOthersUpdatesAreVisible() {
         return othersUpdatesAreVisible;
     }
 
 
-    public void setOthersUpdatesAreVisible(List<TypeBoolean> othersUpdatesAreVisible) {
+    public void setOthersUpdatesAreVisible(List<RSTBoolean> othersUpdatesAreVisible) {
         this.othersUpdatesAreVisible = othersUpdatesAreVisible;
     }
 
 
-    public List<TypeBoolean> getOwnDeletesAreVisible() {
+    public List<RSTBoolean> getOwnDeletesAreVisible() {
         return ownDeletesAreVisible;
     }
 
 
-    public void setOwnDeletesAreVisible(List<TypeBoolean> ownDeletesAreVisible) {
+    public void setOwnDeletesAreVisible(List<RSTBoolean> ownDeletesAreVisible) {
         this.ownDeletesAreVisible = ownDeletesAreVisible;
     }
 
 
-    public List<TypeBoolean> getOwnInsertsAreVisible() {
+    public List<RSTBoolean> getOwnInsertsAreVisible() {
         return ownInsertsAreVisible;
     }
 
 
-    public void setOwnInsertsAreVisible(List<TypeBoolean> ownInsertsAreVisible) {
+    public void setOwnInsertsAreVisible(List<RSTBoolean> ownInsertsAreVisible) {
         this.ownInsertsAreVisible = ownInsertsAreVisible;
     }
 
 
-    public List<TypeBoolean> getOwnUpdatesAreVisible() {
+    public List<RSTBoolean> getOwnUpdatesAreVisible() {
         return ownUpdatesAreVisible;
     }
 
 
-    public void setOwnUpdatesAreVisible(List<TypeBoolean> ownUpdatesAreVisible) {
+    public void setOwnUpdatesAreVisible(List<RSTBoolean> ownUpdatesAreVisible) {
         this.ownUpdatesAreVisible = ownUpdatesAreVisible;
     }
 
@@ -878,12 +905,12 @@ public class Metadata {
     }
 
 
-    public List<TypeTypeBoolean> getSupportsConvert() {
+    public List<SDTSDTBoolean> getSupportsConvert() {
         return supportsConvert;
     }
 
 
-    public void setSupportsConvert(List<TypeTypeBoolean> supportsConvert) {
+    public void setSupportsConvert(List<SDTSDTBoolean> supportsConvert) {
         this.supportsConvert = supportsConvert;
     }
 
@@ -1208,32 +1235,32 @@ public class Metadata {
     }
 
 
-    public List<TypeConcurrencyBoolean> getSupportsResultSetConcurrency() {
+    public List<RSTRSCBoolean> getSupportsResultSetConcurrency() {
         return supportsResultSetConcurrency;
     }
 
 
-    public void setSupportsResultSetConcurrency(List<TypeConcurrencyBoolean> supportsResultSetConcurrency) {
+    public void setSupportsResultSetConcurrency(List<RSTRSCBoolean> supportsResultSetConcurrency) {
         this.supportsResultSetConcurrency = supportsResultSetConcurrency;
     }
 
 
-    public List<HoldabilityBoolean> getSupportsResultSetHoldability() {
+    public List<RSHBoolean> getSupportsResultSetHoldability() {
         return supportsResultSetHoldability;
     }
 
 
-    public void setSupportsResultSetHoldability(List<HoldabilityBoolean> supportsResultSetHoldability) {
+    public void setSupportsResultSetHoldability(List<RSHBoolean> supportsResultSetHoldability) {
         this.supportsResultSetHoldability = supportsResultSetHoldability;
     }
 
 
-    public List<TypeBoolean> getSupportsResultSetType() {
+    public List<RSTBoolean> getSupportsResultSetType() {
         return supportsResultSetType;
     }
 
 
-    public void setSupportsResultSetType(List<TypeBoolean> supportsResultSetType) {
+    public void setSupportsResultSetType(List<RSTBoolean> supportsResultSetType) {
         this.supportsResultSetType = supportsResultSetType;
     }
 
@@ -1388,12 +1415,12 @@ public class Metadata {
     }
 
 
-    public List<LevelBoolean> getSupportsTransactionIsolationLevel() {
+    public List<TILBoolean> getSupportsTransactionIsolationLevel() {
         return supportsTransactionIsolationLevel;
     }
 
 
-    public void setSupportsTransactionIsolationLevel(List<LevelBoolean> supportsTransactionIsolationLevel) {
+    public void setSupportsTransactionIsolationLevel(List<TILBoolean> supportsTransactionIsolationLevel) {
         this.supportsTransactionIsolationLevel = supportsTransactionIsolationLevel;
     }
 
@@ -1478,12 +1505,12 @@ public class Metadata {
     }
 
 
-    public List<TypeBoolean> getUpdatesAreDetected() {
+    public List<RSTBoolean> getUpdatesAreDetected() {
         return updatesAreDetected;
     }
 
 
-    public void setUpdatesAreDetected(List<TypeBoolean> updatesAreDetected) {
+    public void setUpdatesAreDetected(List<RSTBoolean> updatesAreDetected) {
         this.updatesAreDetected = updatesAreDetected;
     }
 
@@ -1569,6 +1596,10 @@ public class Metadata {
     private List<ClientInfoProperty> clientInfoProperties;
 
 
+    @XmlElementRef
+    private List<CrossReference> crossReferences;
+
+
     @Invocation(name = "dataDefinitionCausesTransactionCommit")
     @XmlElement(required = true)
     private boolean dataDefinitionCausesTransactionCommit;
@@ -1613,8 +1644,8 @@ public class Metadata {
             @InvocationArgs({"1005"}) // ResultSet.TYPE_SCROLL_SENSITIVE
         }
     )
-    @XmlElementRef
-    private List<TypeBoolean> deletesAreDetected;
+    @XmlElement
+    private List<RSTBoolean> deletesAreDetected;
 
 
     @Invocation(name = "doesMaxRowSizeIncludeBlobs")
@@ -1666,8 +1697,8 @@ public class Metadata {
             @InvocationArgs({"1005"}) // ResultSet.TYPE_SCROLL_SENSITIVE
         }
     )
-    @XmlElementRef
-    private List<TypeBoolean> insertsAreDetected;
+    @XmlElement
+    private List<RSTBoolean> insertsAreDetected;
 
 
     @Invocation(name = "getJDBCMajorVersion")
@@ -1829,8 +1860,8 @@ public class Metadata {
             @InvocationArgs({"1005"}) // ResultSet.TYPE_SCROLL_SENSITIVE
         }
     )
-    @XmlElementRef
-    private List<TypeBoolean> othersDeletesAreVisible;
+    @XmlElement
+    private List<RSTBoolean> othersDeletesAreVisible;
 
 
     @Invocation(
@@ -1843,7 +1874,7 @@ public class Metadata {
         }
     )
     @XmlElement
-    private List<TypeBoolean> othersInsertsAreVisible;
+    private List<RSTBoolean> othersInsertsAreVisible;
 
 
     @Invocation(
@@ -1855,7 +1886,7 @@ public class Metadata {
         }
     )
     @XmlElement
-    private List<TypeBoolean> othersUpdatesAreVisible;
+    private List<RSTBoolean> othersUpdatesAreVisible;
 
 
     @Invocation(
@@ -1866,8 +1897,8 @@ public class Metadata {
             @InvocationArgs({"1005"}) // ResultSet.TYPE_SCROLL_SENSITIVE
         }
     )
-    @XmlElementRef
-    private List<TypeBoolean> ownDeletesAreVisible;
+    @XmlElement
+    private List<RSTBoolean> ownDeletesAreVisible;
 
 
     @Invocation(
@@ -1880,7 +1911,7 @@ public class Metadata {
         }
     )
     @XmlElement
-    private List<TypeBoolean> ownInsertsAreVisible;
+    private List<RSTBoolean> ownInsertsAreVisible;
 
 
     @Invocation(
@@ -1892,7 +1923,7 @@ public class Metadata {
         }
     )
     @XmlElement
-    private List<TypeBoolean> ownUpdatesAreVisible;
+    private List<RSTBoolean> ownUpdatesAreVisible;
 
 
     @Invocation(name = "getProcedureTerm")
@@ -2011,7 +2042,7 @@ public class Metadata {
 
 
     @XmlElement
-    private List<TypeTypeBoolean> supportsConvert;
+    private List<SDTSDTBoolean> supportsConvert;
 
 
     @Invocation(name = "supportsCoreSQLGrammar")
@@ -2187,7 +2218,7 @@ public class Metadata {
         }
     )
     @XmlElement
-    private List<TypeConcurrencyBoolean> supportsResultSetConcurrency;
+    private List<RSTRSCBoolean> supportsResultSetConcurrency;
 
 
     @Invocation(
@@ -2199,7 +2230,7 @@ public class Metadata {
         }
     )
     @XmlElement
-    private List<HoldabilityBoolean> supportsResultSetHoldability;
+    private List<RSHBoolean> supportsResultSetHoldability;
 
 
     @Invocation(name = "supportsResultSetType", types = {int.class},
@@ -2210,7 +2241,7 @@ public class Metadata {
                 }
     )
     @XmlElement
-    private List<TypeBoolean> supportsResultSetType;
+    private List<RSTBoolean> supportsResultSetType;
 
 
     @Invocation(name = "supportsSavepoints")
@@ -2298,7 +2329,7 @@ public class Metadata {
                 }
     )
     @XmlElement
-    private List<LevelBoolean> supportsTransactionIsolationLevel;
+    private List<TILBoolean> supportsTransactionIsolationLevel;
 
 
     @Invocation(name = "supportsTransactions")
@@ -2351,7 +2382,7 @@ public class Metadata {
         }
     )
     @XmlElement
-    private List<TypeBoolean> updatesAreDetected;
+    private List<RSTBoolean> updatesAreDetected;
 
 
     @Invocation(name = "getUserName")

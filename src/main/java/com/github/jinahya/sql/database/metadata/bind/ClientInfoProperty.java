@@ -24,6 +24,8 @@ import javax.xml.bind.annotation.XmlType;
 
 
 /**
+ * An entity class for binding the result of
+ * {@link java.sql.DatabaseMetaData#getClientInfoProperties()}.
  *
  * @author Jin Kwon &lt;jinahya_at_gmail.com&gt;
  */
@@ -34,6 +36,18 @@ import javax.xml.bind.annotation.XmlType;
     }
 )
 public class ClientInfoProperty extends AbstractChild<Metadata> {
+
+
+    @Override
+    public String toString() {
+
+        return super.toString() + "{"
+               + "name=" + name
+               + ", maxLen=" + maxLen
+               + ", defaultValue=" + defaultValue
+               + ", description=" + description
+               + "}";
+    }
 
 
     // -------------------------------------------------------------------- name

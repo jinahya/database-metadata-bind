@@ -15,7 +15,7 @@
  */
 
 
-package com.github.jinahya.sql;
+package com.github.jinahya.sql.database.metadata.bind;
 
 
 import java.sql.Connection;
@@ -25,7 +25,7 @@ import java.sql.Connection;
  *
  * @author Jin Kwon &lt;jinahya_at_gmail.com&gt;
  */
-public enum ConnectionTransaction {
+enum TIL {
 
 
     TRANSACTION_NONE(Connection.TRANSACTION_NONE), // 0
@@ -35,26 +35,25 @@ public enum ConnectionTransaction {
     TRANSACTION_SERIALIZABLE(Connection.TRANSACTION_SERIALIZABLE);
 
 
-    public static ConnectionTransaction valueOf(final int constant) {
+    public static TIL valueOf(final int level) {
 
-        for (final ConnectionTransaction value : values()) {
-            if (value.constant == constant) {
+        for (final TIL value : values()) {
+            if (value.level == level) {
                 return value;
             }
         }
 
-        throw new IllegalArgumentException(
-            "no value for constant: " + constant);
+        throw new IllegalArgumentException("no value for level: " + level);
     }
 
 
-    private ConnectionTransaction(final int constant) {
+    private TIL(final int level) {
 
-        this.constant = constant;
+        this.level = level;
     }
 
 
-    private final int constant;
+    private final int level;
 
 
 }

@@ -28,7 +28,7 @@ import javax.xml.bind.annotation.XmlType;
 
 
 /**
- * A class binding information from
+ * A entity class for binding the result of
  * {@link java.sql.DatabaseMetaData#getTables(java.lang.String, java.lang.String, java.lang.String, java.lang.String[])}.
  *
  * @author Jin Kwon &lt;jinahya_at_gmail.com&gt;
@@ -45,6 +45,24 @@ import javax.xml.bind.annotation.XmlType;
     }
 )
 public class Table extends AbstractChild<Schema> {
+
+
+    @Override
+    public String toString() {
+
+        return super.toString() + "{"
+               + "tableCat=" + tableCat
+               + ", tableSchem=" + tableSchem
+               + ", tableName=" + tableName
+               + ", tableType=" + tableType
+               + ", remarks=" + remarks
+               + ", typeCat=" + typeCat
+               + ", typeSchem=" + typeSchem
+               + ", typeName=" + typeName
+               + ", selfReferencingColName=" + selfReferencingColName
+               + ", refGeneration=" + refGeneration
+               + "}";
+    }
 
 
     // ---------------------------------------------------------------- tableCat

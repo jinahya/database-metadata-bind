@@ -15,7 +15,7 @@
  */
 
 
-package com.github.jinahya.sql;
+package com.github.jinahya.sql.database.metadata.bind;
 
 
 import java.sql.ResultSet;
@@ -25,33 +25,33 @@ import java.sql.ResultSet;
  *
  * @author Jin Kwon &lt;jinahya_at_gmail.com&gt;
  */
-public enum ResultSetHoldability {
+enum RSC {
 
 
-    HOLD_CURSORS_OVER_COMMIT(ResultSet.HOLD_CURSORS_OVER_COMMIT),
-    CLOSE_CURSORS_AT_COMMIT(ResultSet.CLOSE_CURSORS_AT_COMMIT);
+    CONCUR_READ_ONLY(ResultSet.CONCUR_READ_ONLY),
+    CONCUR_UPDATABLE(ResultSet.CONCUR_UPDATABLE);
 
 
-    public static ResultSetHoldability valueOf(final int constant) {
+    public static RSC valueOf(final int concurrency) {
 
-        for (final ResultSetHoldability value : values()) {
-            if (value.constant == constant) {
+        for (final RSC value : values()) {
+            if (value.concurrency == concurrency) {
                 return value;
             }
         }
 
         throw new IllegalArgumentException(
-            "no value for constant: " + constant);
+            "no value for concurrency: " + concurrency);
     }
 
 
-    private ResultSetHoldability(final int constant) {
+    private RSC(final int concurrency) {
 
-        this.constant = constant;
+        this.concurrency = concurrency;
     }
 
 
-    private final int constant;
+    private final int concurrency;
 
 
 }

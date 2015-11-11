@@ -29,6 +29,8 @@ import javax.xml.bind.annotation.XmlType;
 
 
 /**
+ * An entity class for binding the result of
+ * {@link java.sql.DatabaseMetaData#getCatalogs()}.
  *
  * @author Jin Kwon &lt;jinahya_at_gmail.com&gt;
  */
@@ -37,19 +39,45 @@ import javax.xml.bind.annotation.XmlType;
     propOrder = {
         "tableCat",
         // --------------------------------------------------------------------
+        "crossReferences",
         "schemas"
     }
 )
-public class Catalog extends AbstractChild<Metadata> {
+public class Catalog extends AbstractChild<Metadata> implements TableDomain {
 
 
     private static final Logger logger = getLogger(Catalog.class.getName());
 
 
     @Override
+    public List<Table> getTables() {
+
+        final List<Table> list = new ArrayList<Table>();
+
+        for (final Schema schema : getSchemas()) {
+            list.addAll(schema.getTables());
+        }
+
+        return list;
+    }
+
+
+    @Override
+    public List<CrossReference> getCrossReferences() {
+        return crossReferences;
+    }
+
+
+    @Override
+    public void setCrossReferences(List<CrossReference> crossReferences) {
+        this.crossReferences = crossReferences;
+    }
+
+
+    @Override
     public String toString() {
 
-        return super.toString() + "{" + "tableCat=" + tableCat + '}';
+        return super.toString() + "{" + "tableCat=" + tableCat + "}";
     }
 
 
@@ -110,6 +138,10 @@ public class Catalog extends AbstractChild<Metadata> {
     @Label("TABLE_CAT")
     @XmlElement(required = true)
     private String tableCat;
+
+
+    @XmlElementRef
+    private List<CrossReference> crossReferences;
 
 
     @Invocation(

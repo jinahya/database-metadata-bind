@@ -18,6 +18,7 @@
 package com.github.jinahya.sql.database.metadata.bind;
 
 
+import java.beans.IntrospectionException;
 import static java.beans.Introspector.decapitalize;
 import java.beans.PropertyDescriptor;
 import java.lang.reflect.Field;
@@ -36,6 +37,8 @@ import static java.util.logging.Logger.getLogger;
 
 
 /**
+ * A context class for retrieving information from an instance of
+ * {@link java.sql.DatabaseMetaData}.
  *
  * @author Jin Kwon &lt;jinahya_at_gmail.com&gt;
  */
@@ -120,7 +123,8 @@ public class MetadataContext {
                                   final Object beanInstance,
                                   final Object propertyValue,
                                   final Object[] invocationArgs)
-        throws ReflectiveOperationException, SQLException {
+        throws ReflectiveOperationException, SQLException,
+               IntrospectionException {
 
         final Class<?> propertyType = propertyDescriptor.getPropertyType();
         if (propertyType == List.class) {
@@ -142,13 +146,13 @@ public class MetadataContext {
                 .getActualTypeArguments()[0];
             if (ResultSet.class.isInstance(propertyValue)) {
                 bindAll((ResultSet) propertyValue, type, list);
-                Beans.setParent(type, list, beanInstance);
+                Reflections.setParent(type, list, beanInstance);
                 return;
             }
             list.add(type
                 .getDeclaredMethod("valueOf", Object[].class, Object.class)
                 .invoke(null, invocationArgs, propertyValue));
-            Beans.setParent(type, list, beanInstance);
+            Reflections.setParent(type, list, beanInstance);
             return;
         }
 
@@ -158,7 +162,7 @@ public class MetadataContext {
 
     private <T> T bindSingle(final ResultSet resultSet,
                              final Class<T> beanClass, final T beanInstance)
-        throws SQLException, ReflectiveOperationException {
+        throws SQLException, ReflectiveOperationException, IntrospectionException {
 
         if (resultSet != null) {
             for (final PropertyDescriptor propertyDescriptor
@@ -216,12 +220,19 @@ public class MetadataContext {
             }
         }
 
+        if (TableDomain.class.isAssignableFrom(beanClass)) {
+            final List<Table> tables = ((TableDomain) beanInstance).getTables();
+            final List<CrossReference> crossReferences
+                = getCrossReferences(tables);
+            ((TableDomain) beanInstance).setCrossReferences(crossReferences);
+        }
+
         return beanInstance;
     }
 
 
     private <T> T bindSingle(final ResultSet results, final Class<T> type)
-        throws SQLException, ReflectiveOperationException {
+        throws SQLException, ReflectiveOperationException, IntrospectionException {
 
         return bindSingle(results, type, type.newInstance());
     }
@@ -230,7 +241,7 @@ public class MetadataContext {
     private <T> List<? super T> bindAll(final ResultSet results,
                                         final Class<T> type,
                                         final List<? super T> list)
-        throws SQLException, ReflectiveOperationException {
+        throws SQLException, ReflectiveOperationException, IntrospectionException {
 
         while (results.next()) {
             list.add(bindSingle(results, type, type.newInstance()));
@@ -242,7 +253,7 @@ public class MetadataContext {
 
     private <T> List<? super T> bindAll(final ResultSet results,
                                         final Class<T> type)
-        throws SQLException, ReflectiveOperationException {
+        throws SQLException, ReflectiveOperationException, IntrospectionException {
 
         return bindAll(results, type, new ArrayList<T>());
     }
@@ -257,7 +268,7 @@ public class MetadataContext {
      * @throws ReflectiveOperationException if a reflection erorr occurs
      */
     public Metadata getMetadata()
-        throws SQLException, ReflectiveOperationException {
+        throws SQLException, ReflectiveOperationException, IntrospectionException {
 
         final Metadata metadata = bindSingle(null, Metadata.class);
 
@@ -289,11 +300,11 @@ public class MetadataContext {
             }
         }
 
-        final List<TypeTypeBoolean> supportsConvert
-            = new ArrayList<TypeTypeBoolean>();
+        final List<SDTSDTBoolean> supportsConvert
+            = new ArrayList<SDTSDTBoolean>();
         metadata.setSupportsConvert(supportsConvert);
         supportsConvert.add(
-            new TypeTypeBoolean()
+            new SDTSDTBoolean()
             .fromType(null)
             .toType(null)
             .value(database.supportsConvert()));
@@ -301,16 +312,35 @@ public class MetadataContext {
         for (final int fromType : sqlTypes) {
             for (final int toType : sqlTypes) {
                 if (fromType == toType) {
-                    continue;
+//                    continue;
                 }
                 supportsConvert.add(
-                    new TypeTypeBoolean()
+                    new SDTSDTBoolean()
                     .fromType(fromType)
                     .toType(toType)
                     .value(database.supportsConvert(fromType, toType)));
             }
         }
 
+//        final List<CrossReference> crossReferences
+//            = new ArrayList<CrossReference>();
+//        metadata.setCrossReferences(crossReferences);
+//        final List<Table> tables = new ArrayList<Table>();
+//        for (final Catalog catalog : metadata.getCatalogs()) {
+//            for (final Schema schema : catalog.getSchemas()) {
+//                tables.addAll(schema.getTables());
+//            }
+//        }
+//        for (final Table fktable : tables) {
+//            for (final Table pktable : tables) {
+//                crossReferences.addAll(
+//                    MetadataContext.this.getCrossReferences(
+//                        pktable.getTableCat(), pktable.getTableSchem(),
+//                        pktable.getTableName(),
+//                        fktable.getTableCat(), fktable.getTableSchem(),
+//                        fktable.getTableName()));
+//            }
+//        }
         return metadata;
     }
 
@@ -319,7 +349,7 @@ public class MetadataContext {
                                          final String schemaPattern,
                                          final String typeNamePattern,
                                          final String attributeNamePattern)
-        throws SQLException, ReflectiveOperationException {
+        throws SQLException, ReflectiveOperationException, IntrospectionException {
 
         final List<Attribute> list = new ArrayList<Attribute>();
 
@@ -338,7 +368,7 @@ public class MetadataContext {
     public List<BestRowIdentifier> getBestRowIdentifier(
         final String catalog, final String schema, final String table,
         final int scope, final boolean nullable)
-        throws SQLException, ReflectiveOperationException {
+        throws SQLException, ReflectiveOperationException, IntrospectionException {
 
         final List<BestRowIdentifier> list = new ArrayList<BestRowIdentifier>();
 
@@ -355,7 +385,7 @@ public class MetadataContext {
 
 
     public List<Catalog> getCatalogs()
-        throws SQLException, ReflectiveOperationException {
+        throws SQLException, ReflectiveOperationException, IntrospectionException {
 
         final List<Catalog> list = new ArrayList<Catalog>();
 
@@ -371,7 +401,7 @@ public class MetadataContext {
 
 
     public List<ClientInfoProperty> getClientInfoProperties()
-        throws SQLException, ReflectiveOperationException {
+        throws SQLException, ReflectiveOperationException, IntrospectionException {
 
         final List<ClientInfoProperty> list
             = new ArrayList<ClientInfoProperty>();
@@ -391,7 +421,7 @@ public class MetadataContext {
                                    final String schemaPattern,
                                    final String tableNamePattern,
                                    final String columnNamePattern)
-        throws SQLException, ReflectiveOperationException {
+        throws SQLException, ReflectiveOperationException, IntrospectionException {
 
         final List<Column> list = new ArrayList<Column>();
 
@@ -410,7 +440,7 @@ public class MetadataContext {
     public List<ColumnPrivilege> getColumnPrivileges(
         final String catalog, final String schema, final String table,
         final String columnNamePattern)
-        throws SQLException, ReflectiveOperationException {
+        throws SQLException, ReflectiveOperationException, IntrospectionException {
 
         final List<ColumnPrivilege> list = new ArrayList<ColumnPrivilege>();
 
@@ -426,10 +456,60 @@ public class MetadataContext {
     }
 
 
+    public List<CrossReference> getCrossReferences(
+        final String parentCatalog, final String parentSchema,
+        final String parentTable,
+        final String foreignCatalog, final String foreignSchema,
+        final String foreignTable)
+        throws SQLException, ReflectiveOperationException, IntrospectionException {
+
+        final List<CrossReference> list = new ArrayList<CrossReference>();
+
+        final ResultSet results = database.getCrossReference(
+            parentCatalog, parentSchema, parentTable, foreignCatalog,
+            foreignSchema, foreignTable);
+        try {
+            bindAll(results, CrossReference.class, list);
+        } finally {
+            results.close();
+        }
+
+        return list;
+    }
+
+
+    public List<CrossReference> getCrossReferences(
+        final Table parentTable,
+        final Table foreignTable)
+        throws SQLException, ReflectiveOperationException, IntrospectionException {
+
+        return getCrossReferences(
+            parentTable.getTableCat(), parentTable.getTableSchem(),
+            parentTable.getTableName(),
+            foreignTable.getTableCat(), foreignTable.getTableSchem(),
+            foreignTable.getTableName());
+    }
+
+
+    List<CrossReference> getCrossReferences(final List<Table> tables)
+        throws SQLException, ReflectiveOperationException, IntrospectionException {
+
+        final List<CrossReference> list = new ArrayList<CrossReference>();
+
+        for (final Table parentTable : tables) {
+            for (final Table foreignTable : tables) {
+                list.addAll(getCrossReferences(parentTable, foreignTable));
+            }
+        }
+
+        return list;
+    }
+
+
     public List<FunctionColumn> getFunctionColumns(
         final String catalog, final String schemaPattern,
         final String functionNamePattern, final String columnNamePattern)
-        throws SQLException, ReflectiveOperationException {
+        throws SQLException, ReflectiveOperationException, IntrospectionException {
 
         final List<FunctionColumn> list = new ArrayList<FunctionColumn>();
 
@@ -448,7 +528,7 @@ public class MetadataContext {
     public List<Function> getFunctions(final String catalog,
                                        final String schemaPattern,
                                        final String functionNamePattern)
-        throws SQLException, ReflectiveOperationException {
+        throws SQLException, ReflectiveOperationException, IntrospectionException {
 
         final List<Function> list = new ArrayList<Function>();
 
@@ -466,7 +546,7 @@ public class MetadataContext {
 
     public List<ExportedKey> getExportedKeys(
         final String catalog, final String schema, final String table)
-        throws SQLException, ReflectiveOperationException {
+        throws SQLException, ReflectiveOperationException, IntrospectionException {
 
         final List<ExportedKey> list = new ArrayList<ExportedKey>();
 
@@ -484,7 +564,7 @@ public class MetadataContext {
 
     public List<ImportedKey> getImportedKeys(
         final String catalog, final String schema, final String table)
-        throws SQLException, ReflectiveOperationException {
+        throws SQLException, ReflectiveOperationException, IntrospectionException {
 
         final List<ImportedKey> list = new ArrayList<ImportedKey>();
 
@@ -503,7 +583,7 @@ public class MetadataContext {
     public List<IndexInfo> getIndexInfo(
         final String catalog, final String schema, final String table,
         final boolean unique, final boolean approximate)
-        throws SQLException, ReflectiveOperationException {
+        throws SQLException, ReflectiveOperationException, IntrospectionException {
 
         final List<IndexInfo> list = new ArrayList<IndexInfo>();
 
@@ -521,7 +601,7 @@ public class MetadataContext {
 
     public List<PrimaryKey> getPrimaryKeys(
         final String catalog, final String schema, final String table)
-        throws SQLException, ReflectiveOperationException {
+        throws SQLException, ReflectiveOperationException, IntrospectionException {
 
         final List<PrimaryKey> list = new ArrayList<PrimaryKey>();
 
@@ -540,7 +620,7 @@ public class MetadataContext {
     public List<ProcedureColumn> getProcedureColumns(
         final String catalog, final String schemaPattern,
         final String procedureNamePattern, final String columnNamePattern)
-        throws SQLException, ReflectiveOperationException {
+        throws SQLException, ReflectiveOperationException, IntrospectionException {
 
         final List<ProcedureColumn> list = new ArrayList<ProcedureColumn>();
 
@@ -559,7 +639,7 @@ public class MetadataContext {
     public List<Procedure> getProcedures(final String catalog,
                                          final String schemaPattern,
                                          final String procedureNamePattern)
-        throws SQLException, ReflectiveOperationException {
+        throws SQLException, ReflectiveOperationException, IntrospectionException {
 
         final List<Procedure> list = new ArrayList<Procedure>();
 
@@ -579,7 +659,7 @@ public class MetadataContext {
                                                final String schemaPattern,
                                                final String tableNamePattern,
                                                final String columnNamePattern)
-        throws SQLException, ReflectiveOperationException {
+        throws SQLException, ReflectiveOperationException, IntrospectionException {
 
         final List<PseudoColumn> list = new ArrayList<PseudoColumn>();
 
@@ -596,7 +676,7 @@ public class MetadataContext {
 
 
     public List<SchemaName> getSchemas()
-        throws SQLException, ReflectiveOperationException {
+        throws SQLException, ReflectiveOperationException, IntrospectionException {
 
         final List<SchemaName> list = new ArrayList<SchemaName>();
 
@@ -613,7 +693,7 @@ public class MetadataContext {
 
     public List<Schema> getSchemas(final String catalog,
                                    final String schemaPattern)
-        throws SQLException, ReflectiveOperationException {
+        throws SQLException, ReflectiveOperationException, IntrospectionException {
 
         final List<Schema> list = new ArrayList<Schema>();
 
@@ -639,7 +719,7 @@ public class MetadataContext {
                                  final String schemaPattern,
                                  final String tableNamePattern,
                                  final String[] types)
-        throws SQLException, ReflectiveOperationException {
+        throws SQLException, ReflectiveOperationException, IntrospectionException {
 
         final List<Table> list = new ArrayList<Table>();
 
@@ -658,7 +738,7 @@ public class MetadataContext {
     public List<TablePrivilege> getTablePrivileges(
         final String catalog, final String schemaPattern,
         final String tableNamePattern)
-        throws SQLException, ReflectiveOperationException {
+        throws SQLException, ReflectiveOperationException, IntrospectionException {
 
         final List<TablePrivilege> list = new ArrayList<TablePrivilege>();
 
@@ -675,7 +755,7 @@ public class MetadataContext {
 
 
     public List<TableType> getTableTypes()
-        throws SQLException, ReflectiveOperationException {
+        throws SQLException, ReflectiveOperationException, IntrospectionException {
 
         final List<TableType> list = new ArrayList<TableType>();
 
@@ -691,7 +771,7 @@ public class MetadataContext {
 
 
     public List<TypeInfo> getTypeInfo()
-        throws SQLException, ReflectiveOperationException {
+        throws SQLException, ReflectiveOperationException, IntrospectionException {
 
         final List<TypeInfo> list = new ArrayList<TypeInfo>();
 
@@ -709,7 +789,7 @@ public class MetadataContext {
     public List<UserDefinedType> getUDTs(
         final String catalog, final String schemaPattern,
         final String typeNamePattern, final int[] types)
-        throws SQLException, ReflectiveOperationException {
+        throws SQLException, ReflectiveOperationException, IntrospectionException {
 
         final List<UserDefinedType> list = new ArrayList<UserDefinedType>();
 
@@ -728,7 +808,7 @@ public class MetadataContext {
     public List<VersionColumn> getVersionColumns(final String catalog,
                                                  final String schema,
                                                  final String table)
-        throws SQLException, ReflectiveOperationException {
+        throws SQLException, ReflectiveOperationException, IntrospectionException {
 
         final List<VersionColumn> list = new ArrayList<VersionColumn>();
 

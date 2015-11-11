@@ -25,8 +25,14 @@ import javax.xml.bind.annotation.XmlType;
 
 
 /**
+ * An entity class for binding the result of
+ * {@link java.sql.DatabaseMetaData#getIndexInfo(java.lang.String, java.lang.String, java.lang.String, boolean, boolean)}.
  *
  * @author Jin Kwon &lt;jinahya_at_gmail.com&gt;
+ * @see java.sql.DatabaseMetaData#getIndexInfo(java.lang.String,
+ * java.lang.String, java.lang.String, boolean, boolean)
+ * @see MetadataContext#getIndexInfo(java.lang.String, java.lang.String,
+ * java.lang.String, boolean, boolean)
  */
 @XmlRootElement
 @XmlType(
@@ -36,6 +42,27 @@ import javax.xml.bind.annotation.XmlType;
     }
 )
 public class IndexInfo extends AbstractChild<Table> {
+
+
+    @Override
+    public String toString() {
+
+        return super.toString() + "{"
+               + "tableCat=" + tableCat
+               + ", tableSchem=" + tableSchem
+               + ", tableName=" + tableName
+               + ", nonUnique=" + nonUnique
+               + ", indexQualifier=" + indexQualifier
+               + ", indexName=" + indexName
+               + ", type=" + type
+               + ", ordinalPosition=" + ordinalPosition
+               + ", columnName=" + columnName
+               + ", ascOrDesc=" + ascOrDesc
+               + ", cardinality=" + cardinality
+               + ", pages=" + pages
+               + ", filterCondition=" + filterCondition
+               + "}";
+    }
 
 
     // ---------------------------------------------------------------- tableCat

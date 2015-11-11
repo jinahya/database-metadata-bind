@@ -28,8 +28,14 @@ import javax.xml.bind.annotation.XmlType;
 
 
 /**
+ * An entity class for binding the result of
+ * {@link java.sql.DatabaseMetaData#getFunctions(java.lang.String, java.lang.String, java.lang.String)}.
  *
  * @author Jin Kwon &lt;jinahya_at_gmail.com&gt;
+ * @see java.sql.DatabaseMetaData#getFunctions(java.lang.String,
+ * java.lang.String, java.lang.String)
+ * @see MetadataContext#getFunctions(java.lang.String, java.lang.String,
+ * java.lang.String)
  */
 @XmlRootElement
 @XmlType(
@@ -41,6 +47,20 @@ import javax.xml.bind.annotation.XmlType;
     }
 )
 public class Function extends AbstractChild<Schema> {
+
+
+    @Override
+    public String toString() {
+
+        return super.toString() + "{"
+               + "functionCat=" + functionCat
+               + ", functionSchem=" + functionSchem
+               + ", functionName=" + functionName
+               + ", remarks=" + remarks
+               + ", functionType=" + functionType
+               + ", specificName=" + specificName
+               + "}";
+    }
 
 
     // ------------------------------------------------------------- functionCat
