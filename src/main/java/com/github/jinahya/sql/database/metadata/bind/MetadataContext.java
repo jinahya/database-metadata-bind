@@ -22,6 +22,7 @@ import java.beans.IntrospectionException;
 import static java.beans.Introspector.decapitalize;
 import java.beans.PropertyDescriptor;
 import java.lang.reflect.Field;
+import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.lang.reflect.ParameterizedType;
 import java.sql.DatabaseMetaData;
@@ -162,27 +163,56 @@ public class MetadataContext {
 
     private <T> T bindSingle(final ResultSet resultSet,
                              final Class<T> beanClass, final T beanInstance)
-        throws SQLException, ReflectiveOperationException, IntrospectionException {
+        throws SQLException, ReflectiveOperationException,
+               IntrospectionException {
 
         if (resultSet != null) {
             for (final PropertyDescriptor propertyDescriptor
                  : Beans.getPropertyDescriptors(beanClass, Label.class)) {
+                System.err.println("fetching descriptor: " + propertyDescriptor);
+                System.err.flush();
                 final String suppression
                     = suppression(beanClass, propertyDescriptor);
                 if (suppressed(suppression)) {
                     continue;
                 }
                 final Label label = Labels.get(propertyDescriptor, beanClass);
-                final Object value = resultSet.getObject(label.value());
-                Beans.setPropertyValue(propertyDescriptor, beanInstance, value);
+                System.err.println("fetching: " + label);
+                System.err.flush();
+                try {
+                    final Object value = resultSet.getObject(label.value());
+                    System.err.println("fetched: " + value);
+                    Beans.setPropertyValue(
+                        propertyDescriptor, beanInstance, value);
+                    System.err.println("fetched property set");
+                    System.err.flush();
+                } catch (final SQLException sqle) {
+                    logger.log(Level.SEVERE,
+                               "failed to get value"
+                               + "; label=" + label
+                               + ", suppression=" + suppression,
+                               sqle);
+                    throw sqle;
+                } catch (final Exception e) {
+                    logger.log(Level.SEVERE,
+                               "failed to get value"
+                               + "; label=" + label
+                               + ", suppression=" + suppression,
+                               e);
+                    throw new RuntimeException(e);
+                }
             }
         }
 
         for (final PropertyDescriptor propertyDescriptor
              : Beans.getPropertyDescriptors(beanClass, Invocation.class)) {
+            System.err.println("invoking descriptor: " + propertyDescriptor);
+            System.err.flush();
             final String suppression
                 = suppression(beanClass, propertyDescriptor);
             if (suppressed(suppression)) {
+                System.err.println("suppressed");
+                System.err.flush();
                 continue;
             }
             final Invocation invocation
@@ -214,9 +244,38 @@ public class MetadataContext {
                     args[i] = types[i].getMethod("valueOf", String.class)
                         .invoke(null, name);
                 }
-                final Object propertyValue = method.invoke(database, args);
-                setPropertyValue(
-                    propertyDescriptor, beanInstance, propertyValue, args);
+                System.err.println("invoking: " + invocation);
+                System.err.flush();
+                try {
+                    final Object propertyValue = method.invoke(database, args);
+                    //System.err.println("invoked: " + propertyValue);
+                    System.err.println("invoked");
+                    System.err.flush();
+                    setPropertyValue(
+                        propertyDescriptor, beanInstance, propertyValue, args);
+                    System.err.println("invoked property set");
+                } catch (final InvocationTargetException ite) {
+                    logger.log(Level.SEVERE,
+                               "failed to invoke"
+                               + "; invocation=" + invocation
+                               + ", suppressin=" + suppression,
+                               ite);
+                    throw ite;
+                } catch (final Exception e) {
+                    logger.log(Level.SEVERE,
+                               "failed to invoke"
+                               + "; invocation=" + invocation
+                               + ", suppressin=" + suppression,
+                               e);
+                    throw new RuntimeException(e);
+//                } catch (final AbstractMethodError ame) {
+//                    logger.log(Level.SEVERE,
+//                               "failed to invoke"
+//                               + "; invocation=" + invocation
+//                               + ", suppressin=" + suppression,
+//                               ame);
+//                    throw ame;
+                }
             }
         }
 
@@ -232,7 +291,8 @@ public class MetadataContext {
 
 
     private <T> T bindSingle(final ResultSet results, final Class<T> type)
-        throws SQLException, ReflectiveOperationException, IntrospectionException {
+        throws SQLException, ReflectiveOperationException,
+               IntrospectionException {
 
         return bindSingle(results, type, type.newInstance());
     }
@@ -241,7 +301,8 @@ public class MetadataContext {
     private <T> List<? super T> bindAll(final ResultSet results,
                                         final Class<T> type,
                                         final List<? super T> list)
-        throws SQLException, ReflectiveOperationException, IntrospectionException {
+        throws SQLException, ReflectiveOperationException,
+               IntrospectionException {
 
         while (results.next()) {
             list.add(bindSingle(results, type, type.newInstance()));
