@@ -317,5 +317,19 @@ public class ImportedKey extends AbstractKey {
 //
 //    @XmlTransient
 //    private Table table;
+
+    // ------------------------------------------------------------------- table
+    public Table getTable() {
+
+        return getParent();
+    }
+
+
+    public void setTable(final Table table) {
+
+        setParent(table);
+    }
+
+
 }
 

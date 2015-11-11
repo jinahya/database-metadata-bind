@@ -27,12 +27,11 @@ import javax.xml.bind.annotation.XmlValue;
  *
  * @author Jin Kwon &lt;jinahya_at_gmail.com&gt;
  */
-@XmlRootElement
-public class HoldabilityBoolean {
+//@XmlRootElement
+class HoldabilityBoolean {
 
 
-    static HoldabilityBoolean valueOf(final Object[] args,
-                                      final Object value) {
+    static HoldabilityBoolean valueOf(final Object[] args, final Object value) {
 
         final HoldabilityBoolean instance = new HoldabilityBoolean();
 

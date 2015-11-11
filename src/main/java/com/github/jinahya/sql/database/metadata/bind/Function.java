@@ -121,17 +121,19 @@ public class Function extends AbstractChild<Schema> {
     }
 
 
-//    // ------------------------------------------------------------------ schema
-//    public Schema getSchema() {
-//
-//        return schema;
-//    }
-//
-//
-//    public void setSchema(final Schema schema) {
-//
-//        this.schema = schema;
-//    }
+    // ------------------------------------------------------------------ schema
+    public Schema getSchema() {
+
+        return getParent();
+    }
+
+
+    public void setSchema(final Schema schema) {
+
+        setParent(schema);
+    }
+
+
     // --------------------------------------------------------- functionColumns
     public List<FunctionColumn> getFunctionColumns() {
 

@@ -19,7 +19,6 @@ package com.github.jinahya.sql.database.metadata.bind;
 
 
 import javax.xml.bind.annotation.XmlAttribute;
-import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlValue;
 
 
@@ -27,8 +26,7 @@ import javax.xml.bind.annotation.XmlValue;
  *
  * @author Jin Kwon &lt;jinahya_at_gmail.com&gt;
  */
-@XmlRootElement
-public class LevelBoolean {
+class LevelBoolean {
 
 
     static LevelBoolean valueOf(final Object[] args, final Object value) {

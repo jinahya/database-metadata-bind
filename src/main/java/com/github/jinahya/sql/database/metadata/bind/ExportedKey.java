@@ -27,5 +27,20 @@ import javax.xml.bind.annotation.XmlRootElement;
  */
 @XmlRootElement
 public class ExportedKey extends AbstractKey {
+
+
+    // ------------------------------------------------------------------- table
+    public Table getTable() {
+
+        return getParent();
+    }
+
+
+    public void setTable(final Table table) {
+
+        setParent(table);
+    }
+
+
 }
 

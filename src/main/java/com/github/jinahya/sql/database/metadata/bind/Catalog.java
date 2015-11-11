@@ -83,38 +83,30 @@ public class Catalog extends AbstractChild<Metadata> {
 
         return schemas;
     }
-//
-//
-////    // ---------------------------------------------------------------- metadata
-////    public Metadata getMetadata() {
-////
-////        return metadata;
-////    }
-////
-////
-////    //@XmlAttribute
-////    @Deprecated
-////    private String getMetadataString() {
-////
-////        return metadata == null ? null : metadata.toString();
-////    }
-////
-////
-////    public void setMetadata(final Metadata metadata) {
-////
-////        this.metadata = metadata;
-////    }
-////
-////
-////    Catalog metadata(final Metadata metadata) {
-////
-////        setMetadata(metadata);
-////
-////        return this;
-////    }
+
+
+    // ---------------------------------------------------------------- metadata
+    public Metadata getMetadata() {
+
+        return getParent();
+    }
+
+
+    public void setMetadata(final Metadata metadata) {
+
+        setParent(metadata);
+    }
+
+
+    Catalog metadata(final Metadata metadata) {
+
+        setMetadata(metadata);
+
+        return this;
+    }
+
+
     // -------------------------------------------------------------------------
-
-
     @Label("TABLE_CAT")
     @XmlElement(required = true)
     private String tableCat;

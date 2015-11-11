@@ -221,6 +221,19 @@ abstract class AbstractKey extends AbstractChild<Table> {
     }
 
 
+    // ------------------------------------------------------------------- table
+    public Table getTable() {
+
+        return getParent();
+    }
+
+
+    public void setTable(final Table table) {
+
+        setParent(table);
+    }
+
+
     // -------------------------------------------------------------------------
     @Label("PKTABLE_CAT")
     @NillableBySpecification

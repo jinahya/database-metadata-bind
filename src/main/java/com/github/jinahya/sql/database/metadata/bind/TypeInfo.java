@@ -272,6 +272,19 @@ public class TypeInfo extends AbstractChild<Metadata> {
     }
 
 
+    // ---------------------------------------------------------------- metadata
+    public Metadata getMetadata() {
+
+        return getParent();
+    }
+
+
+    public void setMetadata(final Metadata metadata) {
+
+        setParent(metadata);
+    }
+
+
     // -------------------------------------------------------------------------
     @Label("TYPE_NAME")
     @XmlElement(required = true)

@@ -27,15 +27,13 @@ import javax.xml.bind.annotation.XmlValue;
  *
  * @author Jin Kwon &lt;jinahya_at_gmail.com&gt;
  */
-@XmlRootElement
-public class ConcurrencyBoolean {
+//@XmlRootElement
+class ConcurrencyBoolean {
 
 
-    static ConcurrencyBoolean valueOf(final Object[] args,
-                                               final Object value) {
+    static ConcurrencyBoolean valueOf(final Object[] args, final Object value) {
 
-        final ConcurrencyBoolean instance
-            = new ConcurrencyBoolean();
+        final ConcurrencyBoolean instance = new ConcurrencyBoolean();
 
         instance.setConcurrency((Integer) args[0]);
         instance.setValue((Boolean) value);

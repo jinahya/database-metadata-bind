@@ -62,6 +62,27 @@ public class SchemaName extends AbstractChild<Metadata> {
     }
 
 
+    // ---------------------------------------------------------------- metadata
+    public Metadata getMetadata() {
+
+        return getParent();
+    }
+
+
+    public void setMetadata(final Metadata metadata) {
+
+        setParent(metadata);
+    }
+
+
+    SchemaName metadata(final Metadata metadata) {
+
+        setMetadata(metadata);
+
+        return this;
+    }
+
+
     // -------------------------------------------------------------------------
     @Label("TABLE_SCHEM")
     @XmlElement(required = true)

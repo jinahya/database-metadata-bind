@@ -177,6 +177,19 @@ public class Table extends AbstractChild<Schema> {
     }
 
 
+    // ------------------------------------------------------------------ schema
+    public Schema getSchema() {
+
+        return getParent();
+    }
+
+
+    public void setSchema(final Schema schema) {
+
+        setParent(schema);
+    }
+
+
     // ------------------------------------------------------ bestRowIdentifiers
     public List<BestRowIdentifier> getBestRowIdentifiers() {
 

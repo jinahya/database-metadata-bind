@@ -88,17 +88,19 @@ public class ClientInfoProperty extends AbstractChild<Metadata> {
     }
 
 
-//    // ---------------------------------------------------------------- metadata
-//    public Metadata getMetadata() {
-//
-//        return metadata;
-//    }
-//
-//
-//    public void setMetadata(final Metadata metadata) {
-//
-//        this.metadata = metadata;
-//    }
+    // ---------------------------------------------------------------- metadata
+    public Metadata getMetadata() {
+
+        return getParent();
+    }
+
+
+    public void setMetadata(final Metadata metadata) {
+
+        setParent(metadata);
+    }
+
+
     // -------------------------------------------------------------------------
     @Label("NAME")
     @XmlElement(required = true)

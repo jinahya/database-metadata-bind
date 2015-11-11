@@ -33,7 +33,7 @@ import javax.xml.bind.annotation.XmlType;
         "scope", "columnName", "dataType", "typeName", "columnSize",
         "bufferLength", "decimalDigits", "pseudoColumn"
     })
-public class VersionColumn {
+public class VersionColumn extends AbstractChild<Table> {
 
 
     // ------------------------------------------------------------------- scope
@@ -137,6 +137,19 @@ public class VersionColumn {
     public void setPseudoColumn(final short pseudoColumn) {
 
         this.pseudoColumn = pseudoColumn;
+    }
+
+
+    // ------------------------------------------------------------------- table
+    public Table getTable() {
+
+        return getParent();
+    }
+
+
+    public void setTable(final Table table) {
+
+        setParent(table);
     }
 
 

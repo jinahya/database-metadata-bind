@@ -274,6 +274,19 @@ public class Attribute extends AbstractChild<UserDefinedType> {
     }
 
 
+    // ---------------------------------------------------------- useDefinedType
+    public UserDefinedType getUserDefinedType() {
+
+        return getParent();
+    }
+
+
+    public void setUserDefinedType(final UserDefinedType userDefinedType) {
+
+        setParent(userDefinedType);
+    }
+
+
     // -------------------------------------------------------------------------
     @Label("TYPE_CAT")
     @NillableBySpecification

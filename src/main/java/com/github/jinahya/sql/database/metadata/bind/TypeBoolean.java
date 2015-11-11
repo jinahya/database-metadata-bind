@@ -27,8 +27,8 @@ import javax.xml.bind.annotation.XmlValue;
  *
  * @author Jin Kwon &lt;jinahya_at_gmail.com&gt;
  */
-@XmlRootElement
-public class TypeBoolean {
+//@XmlRootElement
+class TypeBoolean {
 
 
     static TypeBoolean valueOf(final Object[] args, final Object value) {

@@ -93,6 +93,19 @@ public class Schema extends AbstractChild<Catalog> {
     }
 
 
+    // ----------------------------------------------------------------- catalog
+    public Catalog getCatalog() {
+
+        return getParent();
+    }
+
+
+    public void setCatalog(final Catalog catalog) {
+
+        setParent(catalog);
+    }
+
+
     // --------------------------------------------------------------- functions
     public List<Function> getFunctions() {
 

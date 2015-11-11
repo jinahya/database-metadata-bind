@@ -153,17 +153,19 @@ public class ColumnPrivilege extends AbstractChild<Column> {
     }
 
 
-//    // ------------------------------------------------------------------ column
-//    public Column getColumn() {
-//
-//        return column;
-//    }
-//
-//
-//    public void setColumn(final Column column) {
-//
-//        this.column = column;
-//    }
+    // ------------------------------------------------------------------ column
+    public Column getColumn() {
+
+        return getParent();
+    }
+
+
+    public void setColumn(final Column column) {
+
+        setParent(column);
+    }
+
+
     // -------------------------------------------------------------------------
     @Label("TABLE_CAT")
     @NillableBySpecification

@@ -285,17 +285,19 @@ public class FunctionColumn extends AbstractChild<Function> {
     }
 
 
-//    // ---------------------------------------------------------------- function
-//    public Function getFunction() {
-//
-//        return function;
-//    }
-//
-//
-//    public void setFunction(final Function function) {
-//
-//        this.function = function;
-//    }
+    // ---------------------------------------------------------------- function
+    public Function getFunction() {
+
+        return getParent();
+    }
+
+
+    public void setFunction(final Function function) {
+
+        setParent(function);
+    }
+
+
     // -------------------------------------------------------------------------
     @Label("FUNCTION_CAT")
     @NillableBySpecification

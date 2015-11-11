@@ -27,7 +27,7 @@ import javax.xml.bind.annotation.XmlTransient;
  * @param <P> parent type parameter
  */
 @XmlTransient
-abstract class AbstractChild<P> implements Child<P> {
+public abstract class AbstractChild<P> implements Child<P> {
 
 
     @Override
