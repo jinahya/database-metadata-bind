@@ -25,20 +25,41 @@ import javax.xml.bind.annotation.XmlType;
 
 
 /**
+ * An entity class for binding the result of
+ * {@link java.sql.DatabaseMetaData#getCrossReference(java.lang.String, java.lang.String, java.lang.String, java.lang.String, java.lang.String, java.lang.String)}.
  *
  * @author Jin Kwon &lt;jinahya_at_gmail.com&gt;
  */
 @XmlRootElement
 @XmlType(
     propOrder = {
-        //"pktableCat", "pktableSchem", "pktableName",
-        "pkcolumnName",
-        //"fktableCat", "fktableSchem", "fktableName",
-        "fkcolumnName", "keySeq",
-        "updateRule", "deleteRule", "fkName", "pkName", "deferrability"
+        "pkcolumnName", "fkcolumnName", "keySeq", "updateRule", "deleteRule",
+        "fkName", "pkName", "deferrability"
     }
 )
-public class CrossReference {
+public class CrossReference extends AbstractChild<Metadata> {
+
+
+    @Override
+    public String toString() {
+
+        return super.toString() + "{"
+               + "pktableCat=" + pktableCat
+               + ", pktableSchem=" + pktableSchem
+               + ", pktableName=" + pktableName
+               + ", pkcolumnName=" + pkcolumnName
+               + ", fktableCat=" + fktableCat
+               + ", fktableSchem=" + fktableSchem
+               + ", fktableName=" + fktableName
+               + ", fkcolumnName=" + fkcolumnName
+               + ", keySeq=" + keySeq
+               + ", updateRule=" + updateRule
+               + ", deleteRule=" + deleteRule
+               + ", fkName=" + fkName
+               + ", pkName=" + pkName
+               + ", deferrability=" + deferrability
+               + "}";
+    }
 
 
     // -------------------------------------------------------------- pktableCat
@@ -223,23 +244,41 @@ public class CrossReference {
     }
 
 
+    // ---------------------------------------------------------------- metadata
+    public Metadata getMetadata() {
+
+        return getParent();
+    }
+
+
+    public void setMetadata(final Metadata metadata) {
+
+        setParent(metadata);
+    }
+
+
+    CrossReference metadata(final Metadata metadata) {
+
+        setMetadata(metadata);
+
+        return this;
+    }
+
+
     // -------------------------------------------------------------------------
     @Label("PKTABLE_CAT")
     @NillableBySpecification
-    //@XmlElement(nillable = true, required = true)
     @XmlAttribute
     private String pktableCat;
 
 
     @Label("PKTABLE_SCHEM")
     @NillableBySpecification
-    //@XmlElement(nillable = true, required = true)
     @XmlAttribute
     private String pktableSchem;
 
 
     @Label("PKTABLE_NAME")
-    //@XmlElement(required = true)
     @XmlAttribute
     private String pktableName;
 
@@ -251,20 +290,17 @@ public class CrossReference {
 
     @Label("FKTABLE_CAT")
     @NillableBySpecification
-    //@XmlElement(nillable = true, required = true)
     @XmlAttribute
     private String fktableCat;
 
 
     @Label("FKTABLE_NAME")
     @NillableBySpecification
-    //@XmlElement(nillable = true, required = true)
     @XmlAttribute
     private String fktableSchem;
 
 
     @Label("FKTABLE_NAME")
-    //@XmlElement(required = true)
     @XmlAttribute
     private String fktableName;
 

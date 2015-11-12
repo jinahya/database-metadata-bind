@@ -21,17 +21,37 @@ package com.github.jinahya.sql.database.metadata.bind;
 import javax.xml.bind.annotation.XmlAttribute;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
-import javax.xml.bind.annotation.XmlTransient;
 import javax.xml.bind.annotation.XmlType;
 
 
 /**
+ * An entity class for binding the result of
+ * {@link java.sql.DatabaseMetaData#getTablePrivileges(java.lang.String, java.lang.String, java.lang.String)}.
  *
  * @author Jin Kwon &lt;jinahya_at_gmail.com&gt;
  */
 @XmlRootElement
-@XmlType(propOrder = {"grantor", "grantee", "privilege", "isGrantable"})
-public class TablePrivilege {
+@XmlType(
+    propOrder = {
+        "grantor", "grantee", "privilege", "isGrantable"
+    }
+)
+public class TablePrivilege extends AbstractChild<Table> {
+
+
+    @Override
+    public String toString() {
+
+        return super.toString() + "{"
+               + "tableCat=" + tableCat
+               + ", tableSchem=" + tableSchem
+               + ", tableName=" + tableName
+               + ", grantor=" + grantor
+               + ", grantee=" + grantee
+               + ", privilege=" + privilege
+               + ", isGrantable=" + isGrantable
+               + "}";
+    }
 
 
     // ---------------------------------------------------------------- tableCat
@@ -74,22 +94,12 @@ public class TablePrivilege {
 
 
     // ----------------------------------------------------------------- grantor
-    /**
-     * Returns {@link #grantor}.
-     *
-     * @return {@link #grantor}.
-     */
     public String getGrantor() {
 
         return grantor;
     }
 
 
-    /**
-     * Replaces {@link #grantor}.
-     *
-     * @param grantor {@link #grantor}.
-     */
     public void setGrantor(final String grantor) {
 
         this.grantor = grantor;
@@ -97,22 +107,12 @@ public class TablePrivilege {
 
 
     // ----------------------------------------------------------------- grantee
-    /**
-     * Returns {@link #grantee}.
-     *
-     * @return {@link #grantee}.
-     */
     public String getGrantee() {
 
         return grantee;
     }
 
 
-    /**
-     * Replaces {@link #grantee}.
-     *
-     * @param grantee {@link #grantee}.
-     */
     public void setGrantee(final String grantee) {
 
         this.grantee = grantee;
@@ -146,23 +146,19 @@ public class TablePrivilege {
 
 
     // ------------------------------------------------------------------- table
-    /**
-     * Returns the parent table of this table privilege.
-     *
-     * @return the parent table.
-     */
     public Table getTable() {
 
-        return table;
+        return getParent();
     }
 
 
     public void setTable(final Table table) {
 
-        this.table = table;
+        setParent(table);
     }
 
 
+    // -------------------------------------------------------------------------
     @Label("TABLE_CAT")
     @NillableBySpecification
     @XmlAttribute
@@ -200,10 +196,6 @@ public class TablePrivilege {
     @NillableBySpecification
     @XmlElement(nillable = true, required = true)
     private String isGrantable;
-
-
-    @XmlTransient
-    private Table table;
 
 
 }

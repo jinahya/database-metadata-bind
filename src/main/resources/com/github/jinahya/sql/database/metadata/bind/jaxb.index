@@ -5,13 +5,11 @@ ClientInfoProperty
 Column
 ColumnPrivilege
 CrossReference
-DeletesAreDetected
 ExportedKey
 Function
 FunctionColumn
 ImportedKey
 IndexInfo
-InsertsAreDetected
 Metadata
 PrimaryKey
 Procedure

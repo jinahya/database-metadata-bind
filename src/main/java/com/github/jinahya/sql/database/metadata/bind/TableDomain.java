@@ -18,23 +18,23 @@
 package com.github.jinahya.sql.database.metadata.bind;
 
 
+import java.util.List;
+
+
 /**
  *
  * @author Jin Kwon &lt;jinahya_at_gmail.com&gt;
  */
-class MetadataChild extends Child<Metadata> {
+interface TableDomain {
 
 
-    public Metadata getMetadata() {
-
-        return getParent();
-    }
+    List<Table> getTables();
 
 
-    public void setMetadata(final Metadata metadata) {
+    List<CrossReference> getCrossReferences();
 
-        setParent(metadata);
-    }
+
+    void setCrossReferences(List<CrossReference> crossReferences);
 
 
 }

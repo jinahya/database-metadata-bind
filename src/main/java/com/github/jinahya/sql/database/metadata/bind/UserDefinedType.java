@@ -24,21 +24,39 @@ import javax.xml.bind.annotation.XmlAttribute;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlElementRef;
 import javax.xml.bind.annotation.XmlRootElement;
-import javax.xml.bind.annotation.XmlTransient;
 import javax.xml.bind.annotation.XmlType;
 
 
 /**
+ * An entity class for binding the result of
+ * {@link java.sql.DatabaseMetaData#getUDTs(java.lang.String, java.lang.String, java.lang.String, int[])}.
  *
  * @author Jin Kwon &lt;jinahya_at_gmail.com&gt;
  */
 @XmlRootElement
 @XmlType(
     propOrder = {
-        "typeName", "className", "dataType", "remarks", "baseType", "attributes"
+        "typeName", "className", "dataType", "remarks", "baseType",
+        // ---------------------------------------------------------------------
+        "attributes"
     }
 )
-public class UserDefinedType {
+public class UserDefinedType extends AbstractChild<Schema> {
+
+
+    @Override
+    public String toString() {
+
+        return super.toString() + "{"
+               + "typeCat=" + typeCat
+               + ", typeSchem=" + typeSchem
+               + ", typeName=" + typeName
+               + ", className=" + className
+               + ", dataType=" + dataType
+               + ", remarks=" + remarks
+               + ", baseType=" + baseType
+               + "}";
+    }
 
 
     // ----------------------------------------------------------------- typeCat
@@ -132,19 +150,6 @@ public class UserDefinedType {
     }
 
 
-    // ------------------------------------------------------------------ schema
-    public Schema getSchema() {
-
-        return schema;
-    }
-
-
-    public void setSchema(final Schema schema) {
-
-        this.schema = schema;
-    }
-
-
     // -------------------------------------------------------------- attributes
     public List<Attribute> getAttributes() {
 
@@ -156,6 +161,20 @@ public class UserDefinedType {
     }
 
 
+    // ------------------------------------------------------------------ schema
+    public Schema getSchema() {
+
+        return getParent();
+    }
+
+
+    public void setSchema(final Schema schema) {
+
+        setParent(schema);
+    }
+
+
+    // -------------------------------------------------------------------------
     @Label("TYPE_CAT")
     @XmlAttribute
     private String typeCat;
@@ -187,13 +206,9 @@ public class UserDefinedType {
 
 
     @Label("BASE_TYPE")
-    @XmlElement(nillable = true, required = true)
     @NillableBySpecification
+    @XmlElement(nillable = true, required = true)
     private Short baseType;
-
-
-    //@XmlTransient
-    private transient Schema schema;
 
 
     @Invocation(

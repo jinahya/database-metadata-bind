@@ -20,11 +20,12 @@ package com.github.jinahya.sql.database.metadata.bind;
 
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
-import javax.xml.bind.annotation.XmlTransient;
 import javax.xml.bind.annotation.XmlType;
 
 
 /**
+ * An entity class for binding the result of
+ * {@link java.sql.DatabaseMetaData#getBestRowIdentifier(java.lang.String, java.lang.String, java.lang.String, int, boolean)}.
  *
  * @author Jin Kwon &lt;jinahya_at_gmail.com&gt;
  */
@@ -35,7 +36,23 @@ import javax.xml.bind.annotation.XmlType;
         "bufferLength", "decimalDigits", "pseudoColumn"
     }
 )
-public class BestRowIdentifier {
+public class BestRowIdentifier extends AbstractChild<Table> {
+
+
+    @Override
+    public String toString() {
+
+        return super.toString() + "{"
+               + "scope=" + scope
+               + ", columnName=" + columnName
+               + ", dataType=" + dataType
+               + ", typeName=" + typeName
+               + ", columnSize=" + columnSize
+               + ", bufferLength=" + bufferLength
+               + ", decimalDigits=" + decimalDigits
+               + ", pseudoColumn=" + pseudoColumn
+               + "}";
+    }
 
 
     // ------------------------------------------------------------------- scope
@@ -145,16 +162,17 @@ public class BestRowIdentifier {
     // ------------------------------------------------------------------- table
     public Table getTable() {
 
-        return table;
+        return getParent();
     }
 
 
     public void setTable(final Table table) {
 
-        this.table = table;
+        setParent(table);
     }
 
 
+    // -------------------------------------------------------------------------
     @Label("SCOPE")
     @XmlElement(required = true)
     private short scope;
@@ -195,10 +213,6 @@ public class BestRowIdentifier {
     @Label("PSEUDO_COLUMN")
     @XmlElement(required = true)
     private short pseudoColumn;
-
-
-    @XmlTransient
-    private Table table;
 
 
 }

@@ -24,11 +24,12 @@ import javax.xml.bind.annotation.XmlAttribute;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlElementRef;
 import javax.xml.bind.annotation.XmlRootElement;
-import javax.xml.bind.annotation.XmlTransient;
 import javax.xml.bind.annotation.XmlType;
 
 
 /**
+ * An entity class for binding the result of
+ * {@link java.sql.DatabaseMetaData#getSchemas(java.lang.String, java.lang.String)}.
  *
  * @author Jin Kwon &lt;jinahya_at_gmail.com&gt;
  */
@@ -37,17 +38,32 @@ import javax.xml.bind.annotation.XmlType;
     propOrder = {
         "tableSchem",
         // ---------------------------------------------------------------------
+        "crossReferences",
         "functions", "procedures", "tables", "userDefinedTypes"
     }
 )
-public class Schema {
+public class Schema extends AbstractChild<Catalog> implements TableDomain {
+
+
+    @Override
+    public List<CrossReference> getCrossReferences() {
+        return crossReferences;
+    }
+
+
+    @Override
+    public void setCrossReferences(List<CrossReference> crossReferences) {
+        this.crossReferences = crossReferences;
+    }
 
 
     @Override
     public String toString() {
 
-        return super.toString() + "{" + "tableCatalog=" + tableCatalog
-               + ", tableSchem=" + tableSchem + '}';
+        return super.toString() + "{"
+               + "tableCatalog=" + tableCatalog
+               + ", tableSchem=" + tableSchem
+               + "}";
     }
 
 
@@ -96,21 +112,13 @@ public class Schema {
     // ----------------------------------------------------------------- catalog
     public Catalog getCatalog() {
 
-        return catalog;
+        return getParent();
     }
 
 
     public void setCatalog(final Catalog catalog) {
 
-        this.catalog = catalog;
-    }
-
-
-    Schema catalog(final Catalog catalog) {
-
-        setCatalog(catalog);
-
-        return this;
+        setParent(catalog);
     }
 
 
@@ -137,6 +145,7 @@ public class Schema {
 
 
     // ------------------------------------------------------------------ tables
+    @Override
     public List<Table> getTables() {
 
         if (tables == null) {
@@ -170,8 +179,8 @@ public class Schema {
     private String tableSchem;
 
 
-    @XmlTransient
-    private Catalog catalog;
+    @XmlElementRef
+    private List<CrossReference> crossReferences;
 
 
     @Invocation(

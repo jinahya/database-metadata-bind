@@ -20,11 +20,12 @@ package com.github.jinahya.sql.database.metadata.bind;
 
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
-import javax.xml.bind.annotation.XmlTransient;
 import javax.xml.bind.annotation.XmlType;
 
 
 /**
+ * An entity class for binding the result of
+ * {@link java.sql.DatabaseMetaData#getSchemas()}.
  *
  * @author Jin Kwon &lt;jinahya_at_gmail.com&gt;
  */
@@ -34,7 +35,17 @@ import javax.xml.bind.annotation.XmlType;
         "tableSchem", "tableCatalog"
     }
 )
-public class SchemaName {
+public class SchemaName extends AbstractChild<Metadata> {
+
+
+    @Override
+    public String toString() {
+
+        return super.toString() + "{"
+               + "tableSchem=" + tableSchem
+               + ", tableCatalog=" + tableCatalog
+               + "}";
+    }
 
 
     // -------------------------------------------------------------- tableSchem
@@ -66,16 +77,25 @@ public class SchemaName {
     // ---------------------------------------------------------------- metadata
     public Metadata getMetadata() {
 
-        return metadata;
+        return getParent();
     }
 
 
     public void setMetadata(final Metadata metadata) {
 
-        this.metadata = metadata;
+        setParent(metadata);
     }
 
 
+    SchemaName metadata(final Metadata metadata) {
+
+        setMetadata(metadata);
+
+        return this;
+    }
+
+
+    // -------------------------------------------------------------------------
     @Label("TABLE_SCHEM")
     @XmlElement(required = true)
     private String tableSchem;
@@ -85,10 +105,6 @@ public class SchemaName {
     @NillableBySpecification
     @XmlElement(nillable = true, required = false)
     private String tableCatalog;
-
-
-    @XmlTransient
-    private Metadata metadata;
 
 
 }

@@ -31,6 +31,16 @@ import java.lang.reflect.Method;
 final class Annotations {
 
 
+    /**
+     * Finds an annotation value from specified property descriptor.
+     *
+     * @param <T> annotation type parameter
+     * @param annotationClass annotation class
+     * @param proeprtyDescriptor property descriptor
+     * @param beanClass bean class
+     *
+     * @return the annotation value or {@code null} if not found.
+     */
     static <T extends Annotation> T getAnnotation(
         final Class<T> annotationClass,
         final PropertyDescriptor proeprtyDescriptor, final Class<?> beanClass) {
@@ -53,10 +63,10 @@ final class Annotations {
 
         final String propertyName = proeprtyDescriptor.getName();
         try {
-            final Field field = beanClass.getDeclaredField(propertyName);
+            final Field field = Reflections.findField(beanClass, propertyName);
             return field.getAnnotation(annotationClass);
         } catch (final NoSuchFieldException nsfe) {
-            //nsfe.printStackTrace(System.err);
+            // no fields found; absolutely o.k.
         }
 
         return null;

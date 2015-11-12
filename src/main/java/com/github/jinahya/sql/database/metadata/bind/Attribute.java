@@ -21,11 +21,12 @@ package com.github.jinahya.sql.database.metadata.bind;
 import javax.xml.bind.annotation.XmlAttribute;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
-import javax.xml.bind.annotation.XmlTransient;
 import javax.xml.bind.annotation.XmlType;
 
 
 /**
+ * An entity class for binding the result of
+ * {@link java.sql.DatabaseMetaData#getAttributes(java.lang.String, java.lang.String, java.lang.String, java.lang.String)}.
  *
  * @author Jin Kwon &lt;jinahya_at_gmail.com&gt;
  */
@@ -38,7 +39,34 @@ import javax.xml.bind.annotation.XmlType;
         "sourceDataType"
     }
 )
-public class Attribute {
+public class Attribute extends AbstractChild<UserDefinedType> {
+
+
+    @Override
+    public String toString() {
+
+        return super.toString() + "{"
+               + "typeCat=" + typeCat
+               + ", typeSchem=" + typeSchem
+               + ", typeName=" + typeName
+               + ", attrName=" + attrName
+               + ", dataType=" + dataType
+               + ", attrTypeName=" + attrTypeName
+               + ", attrSize=" + attrSize
+               + ", decimalDigits=" + decimalDigits
+               + ", numPrecRadix=" + numPrecRadix
+               + ", nullable=" + nullable
+               + ", remarks=" + remarks
+               + ", attrDef=" + attrDef
+               + ", sqlDataType=" + sqlDataType
+               + ", sqlDatetimeSub=" + sqlDatetimeSub
+               + ", charOctetLength=" + charOctetLength
+               + ", ordinalPosition=" + ordinalPosition
+               + ", isNullable=" + isNullable
+               + ", sourceDataType=" + sourceDataType
+               + "}";
+
+    }
 
 
     // ----------------------------------------------------------------- typeCat
@@ -275,25 +303,28 @@ public class Attribute {
     }
 
 
-    // --------------------------------------------------------- userDefinedType
+    // ---------------------------------------------------------- useDefinedType
     public UserDefinedType getUserDefinedType() {
 
-        return userDefinedType;
+        return getParent();
     }
 
 
     public void setUserDefinedType(final UserDefinedType userDefinedType) {
 
-        this.userDefinedType = userDefinedType;
+        setParent(userDefinedType);
     }
 
 
+    // -------------------------------------------------------------------------
     @Label("TYPE_CAT")
+    @NillableBySpecification
     @XmlAttribute
     private String typeCat;
 
 
     @Label("TYPE_SCHEM")
+    @NillableBySpecification
     @XmlAttribute
     private String typeSchem;
 
@@ -378,13 +409,9 @@ public class Attribute {
 
 
     @Label("SOURCE_DATA_TYPE")
+    @NillableBySpecification
     @XmlElement(nillable = true, required = true)
-    @NillableBySpecification()
     private Short sourceDataType;
-
-
-    @XmlTransient
-    private UserDefinedType userDefinedType;
 
 
 }

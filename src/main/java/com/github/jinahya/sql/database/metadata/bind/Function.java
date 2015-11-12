@@ -24,13 +24,18 @@ import javax.xml.bind.annotation.XmlAttribute;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlElementRef;
 import javax.xml.bind.annotation.XmlRootElement;
-import javax.xml.bind.annotation.XmlTransient;
 import javax.xml.bind.annotation.XmlType;
 
 
 /**
+ * An entity class for binding the result of
+ * {@link java.sql.DatabaseMetaData#getFunctions(java.lang.String, java.lang.String, java.lang.String)}.
  *
  * @author Jin Kwon &lt;jinahya_at_gmail.com&gt;
+ * @see java.sql.DatabaseMetaData#getFunctions(java.lang.String,
+ * java.lang.String, java.lang.String)
+ * @see MetadataContext#getFunctions(java.lang.String, java.lang.String,
+ * java.lang.String)
  */
 @XmlRootElement
 @XmlType(
@@ -41,7 +46,21 @@ import javax.xml.bind.annotation.XmlType;
 
     }
 )
-public class Function {
+public class Function extends AbstractChild<Schema> {
+
+
+    @Override
+    public String toString() {
+
+        return super.toString() + "{"
+               + "functionCat=" + functionCat
+               + ", functionSchem=" + functionSchem
+               + ", functionName=" + functionName
+               + ", remarks=" + remarks
+               + ", functionType=" + functionType
+               + ", specificName=" + specificName
+               + "}";
+    }
 
 
     // ------------------------------------------------------------- functionCat
@@ -125,13 +144,13 @@ public class Function {
     // ------------------------------------------------------------------ schema
     public Schema getSchema() {
 
-        return schema;
+        return getParent();
     }
 
 
     public void setSchema(final Schema schema) {
 
-        this.schema = schema;
+        setParent(schema);
     }
 
 
@@ -146,6 +165,7 @@ public class Function {
     }
 
 
+    // -------------------------------------------------------------------------
     @Label("FUNCTION_CAT")
     @NillableBySpecification
     @XmlAttribute
@@ -176,10 +196,6 @@ public class Function {
     @Label("SPECIFIC_NAME")
     @XmlElement(required = true)
     private String specificName;
-
-
-    @XmlTransient
-    private Schema schema;
 
 
     @Invocation(

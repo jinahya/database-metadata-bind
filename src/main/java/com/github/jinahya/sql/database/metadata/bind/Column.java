@@ -24,12 +24,11 @@ import javax.xml.bind.annotation.XmlAttribute;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlElementRef;
 import javax.xml.bind.annotation.XmlRootElement;
-import javax.xml.bind.annotation.XmlTransient;
 import javax.xml.bind.annotation.XmlType;
 
 
 /**
- * A class binding information from
+ * An entity class for binding information from
  * {@link java.sql.DatabaseMetaData#getColumns(java.lang.String, java.lang.String, java.lang.String, java.lang.String) DatabaseMetaData.getColumns}.
  *
  * @author Jin Kwon &lt;jinahya_at_gmail.com&gt;
@@ -46,7 +45,39 @@ import javax.xml.bind.annotation.XmlType;
         "columnPrivileges"
     }
 )
-public class Column {
+public class Column extends AbstractChild<Table> {
+
+
+    @Override
+    public String toString() {
+
+        return super.toString() + "{"
+               + "tableCat=" + tableCat
+               + ", tableSchem=" + tableSchem
+               + ", tableName=" + tableName
+               + ", columnName=" + columnName
+               + ", dataType=" + dataType
+               + ", typeName=" + typeName
+               + ", columnSize=" + columnSize
+               + ", bufferLength=" + bufferLength
+               + ", decimalDigits=" + decimalDigits
+               + ", numPrecRadix=" + numPrecRadix
+               + ", nullable=" + nullable
+               + ", remarks=" + remarks
+               + ", columnDef=" + columnDef
+               + ", sqlDataType=" + sqlDataType
+               + ", sqlDatetimeSub=" + sqlDatetimeSub
+               + ", charOctetLength=" + charOctetLength
+               + ", ordinalPosition=" + ordinalPosition
+               + ", isNullable=" + isNullable
+               + ", scopeCatalog=" + scopeCatalog
+               + ", scopeSchema=" + scopeSchema
+               + ", scopeTable=" + scopeTable
+               + ", sourceDataType=" + sourceDataType
+               + ", isAutoincrement=" + isAutoincrement
+               + ", isGeneratedcolumn=" + isGeneratedcolumn
+               + "}";
+    }
 
 
     // ---------------------------------------------------------------- tableCat
@@ -364,13 +395,13 @@ public class Column {
     // ------------------------------------------------------------------- table
     public Table getTable() {
 
-        return table;
+        return getParent();
     }
 
 
     public void setTable(final Table table) {
 
-        this.table = table;
+        setParent(table);
     }
 
 
@@ -385,6 +416,7 @@ public class Column {
     }
 
 
+    // -------------------------------------------------------------------------
     @Label("TABLE_CAT")
     @NillableBySpecification
     @XmlAttribute
@@ -515,10 +547,6 @@ public class Column {
     @Label("IS_GENERATEDCOLUMN")
     @XmlElement(required = true)
     private String isGeneratedcolumn;
-
-
-    @XmlTransient
-    private Table table;
 
 
     @Invocation(

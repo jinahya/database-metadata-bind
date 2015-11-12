@@ -21,17 +21,38 @@ package com.github.jinahya.sql.database.metadata.bind;
 import javax.xml.bind.annotation.XmlAttribute;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
-import javax.xml.bind.annotation.XmlTransient;
 import javax.xml.bind.annotation.XmlType;
 
 
 /**
+ * An entity class for binding the result of
+ * {@link java.sql.DatabaseMetaData#getColumnPrivileges(java.lang.String, java.lang.String, java.lang.String, java.lang.String)}.
  *
  * @author Jin Kwon &lt;jinahya_at_gmail.com&gt;
  */
 @XmlRootElement
-@XmlType(propOrder = {"grantor", "grantee", "privilege", "isGrantable"})
-public class ColumnPrivilege {
+@XmlType(
+    propOrder = {
+        "grantor", "grantee", "privilege", "isGrantable"
+    }
+)
+public class ColumnPrivilege extends AbstractChild<Column> {
+
+
+    @Override
+    public String toString() {
+
+        return super.toString() + "{"
+               + "tableCat=" + tableCat
+               + ", tableSchem=" + tableSchem
+               + ", tableName=" + tableName
+               + ", columnName=" + columnName
+               + ", grantor=" + grantor
+               + ", grantee=" + grantee
+               + ", privilege=" + privilege
+               + ", isGrantable=" + isGrantable
+               + "}";
+    }
 
 
     // ---------------------------------------------------------------- tableCat
@@ -141,16 +162,17 @@ public class ColumnPrivilege {
     // ------------------------------------------------------------------ column
     public Column getColumn() {
 
-        return column;
+        return getParent();
     }
 
 
     public void setColumn(final Column column) {
 
-        this.column = column;
+        setParent(column);
     }
 
 
+    // -------------------------------------------------------------------------
     @Label("TABLE_CAT")
     @NillableBySpecification
     @XmlAttribute
@@ -193,10 +215,6 @@ public class ColumnPrivilege {
     @NillableBySpecification
     @XmlElement(nillable = true, required = true)
     private String isGrantable;
-
-
-    @XmlTransient
-    private Column column;
 
 
 }

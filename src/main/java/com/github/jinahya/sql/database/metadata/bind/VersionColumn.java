@@ -20,11 +20,12 @@ package com.github.jinahya.sql.database.metadata.bind;
 
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
-import javax.xml.bind.annotation.XmlTransient;
 import javax.xml.bind.annotation.XmlType;
 
 
 /**
+ * An entity class for binding the result of
+ * {@link java.sql.DatabaseMetaData#getVersionColumns(java.lang.String, java.lang.String, java.lang.String)}.
  *
  * @author Jin Kwon &lt;jinahya_at_gmail.com&gt;
  */
@@ -34,7 +35,23 @@ import javax.xml.bind.annotation.XmlType;
         "scope", "columnName", "dataType", "typeName", "columnSize",
         "bufferLength", "decimalDigits", "pseudoColumn"
     })
-public class VersionColumn {
+public class VersionColumn extends AbstractChild<Table> {
+
+
+    @Override
+    public String toString() {
+
+        return super.toString() + "{"
+               + "scope=" + scope
+               + ", columnName=" + columnName
+               + ", dataType=" + dataType
+               + ", typeName=" + typeName
+               + ", columnSize=" + columnSize
+               + ", bufferLength=" + bufferLength
+               + ", decimalDigits=" + decimalDigits
+               + ", pseudoColumn=" + pseudoColumn
+               + "}";
+    }
 
 
     // ------------------------------------------------------------------- scope
@@ -144,16 +161,17 @@ public class VersionColumn {
     // ------------------------------------------------------------------- table
     public Table getTable() {
 
-        return table;
+        return getParent();
     }
 
 
     public void setTable(final Table table) {
 
-        this.table = table;
+        setParent(table);
     }
 
 
+    // -------------------------------------------------------------------------
     @Label("SCOPE")
     @Unused
     @XmlElement(nillable = true, required = true)
@@ -186,18 +204,14 @@ public class VersionColumn {
 
 
     @Label("DECIMAL_DIGITS")
-    @XmlElement(nillable = true, required = true)
     @NillableBySpecification
+    @XmlElement(nillable = true, required = true)
     private Short decimalDigits;
 
 
     @Label("PSEUDO_COLUMN")
     @XmlElement(required = true)
     private short pseudoColumn;
-
-
-    @XmlTransient
-    private Table table;
 
 
 }

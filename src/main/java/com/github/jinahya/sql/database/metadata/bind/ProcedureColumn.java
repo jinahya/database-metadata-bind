@@ -21,11 +21,12 @@ package com.github.jinahya.sql.database.metadata.bind;
 import javax.xml.bind.annotation.XmlAttribute;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
-import javax.xml.bind.annotation.XmlTransient;
 import javax.xml.bind.annotation.XmlType;
 
 
 /**
+ * An entity class for binding the result of
+ * {@link java.sql.DatabaseMetaData#getProcedureColumns(java.lang.String, java.lang.String, java.lang.String, java.lang.String)}.
  *
  * @author Jin Kwon &lt;jinahya_at_gmail.com&gt;
  */
@@ -38,7 +39,35 @@ import javax.xml.bind.annotation.XmlType;
         "ordinalPosition", "isNullable", "specificName"
     }
 )
-public class ProcedureColumn {
+public class ProcedureColumn extends AbstractChild<Procedure> {
+
+
+    @Override
+    public String toString() {
+
+        return super.toString() + "{"
+               + "procedureCat=" + procedureCat
+               + ", procedureSchem=" + procedureSchem
+               + ", procedureName=" + procedureName
+               + ", columnName=" + columnName
+               + ", columnType=" + columnType
+               + ", dataType=" + dataType
+               + ", typeName=" + typeName
+               + ", precision=" + precision
+               + ", length=" + length
+               + ", scale=" + scale
+               + ", radix=" + radix
+               + ", nullable=" + nullable
+               + ", remarks=" + remarks
+               + ", columnDef=" + columnDef
+               + ", sqlDataType=" + sqlDataType
+               + ", sqlDatetimeSub=" + sqlDatetimeSub
+               + ", charOctetLength=" + charOctetLength
+               + ", ordinalPosition=" + ordinalPosition
+               + ", isNullable=" + isNullable
+               + ", specificName=" + specificName
+               + "}";
+    }
 
 
     // ------------------------------------------------------------ procedureCat
@@ -304,16 +333,17 @@ public class ProcedureColumn {
     // --------------------------------------------------------------- procedure
     public Procedure getProcedure() {
 
-        return procedure;
+        return getParent();
     }
 
 
     public void setProcedure(final Procedure procedure) {
 
-        this.procedure = procedure;
+        setParent(procedure);
     }
 
 
+    // -------------------------------------------------------------------------
     @Label("PROCEDURE_CAT")
     @NillableBySpecification
     @XmlAttribute
@@ -419,10 +449,6 @@ public class ProcedureColumn {
     @Label("SPECIFIC_NAME")
     @XmlElement(required = true)
     private String specificName;
-
-
-    @XmlTransient
-    private Procedure procedure;
 
 
 }

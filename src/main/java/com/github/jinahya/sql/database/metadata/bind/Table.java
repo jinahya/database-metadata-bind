@@ -24,12 +24,11 @@ import javax.xml.bind.annotation.XmlAttribute;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlElementRef;
 import javax.xml.bind.annotation.XmlRootElement;
-import javax.xml.bind.annotation.XmlTransient;
 import javax.xml.bind.annotation.XmlType;
 
 
 /**
- * A class binding information from
+ * A entity class for binding the result of
  * {@link java.sql.DatabaseMetaData#getTables(java.lang.String, java.lang.String, java.lang.String, java.lang.String[])}.
  *
  * @author Jin Kwon &lt;jinahya_at_gmail.com&gt;
@@ -45,7 +44,25 @@ import javax.xml.bind.annotation.XmlType;
         "versionColumns"
     }
 )
-public class Table {
+public class Table extends AbstractChild<Schema> {
+
+
+    @Override
+    public String toString() {
+
+        return super.toString() + "{"
+               + "tableCat=" + tableCat
+               + ", tableSchem=" + tableSchem
+               + ", tableName=" + tableName
+               + ", tableType=" + tableType
+               + ", remarks=" + remarks
+               + ", typeCat=" + typeCat
+               + ", typeSchem=" + typeSchem
+               + ", typeName=" + typeName
+               + ", selfReferencingColName=" + selfReferencingColName
+               + ", refGeneration=" + refGeneration
+               + "}";
+    }
 
 
     // ---------------------------------------------------------------- tableCat
@@ -181,29 +198,13 @@ public class Table {
     // ------------------------------------------------------------------ schema
     public Schema getSchema() {
 
-        return schema;
-    }
-
-
-    //@XmlAttribute
-    @Deprecated
-    private String getSchemaString() {
-
-        return schema == null ? null : schema.toString();
+        return getParent();
     }
 
 
     public void setSchema(final Schema schema) {
 
-        this.schema = schema;
-    }
-
-
-    Table schema(final Schema schema) {
-
-        setSchema(schema);
-
-        return this;
+        setParent(schema);
     }
 
 
@@ -251,7 +252,7 @@ public class Table {
     }
 
 
-    // ----------------------------------------------------------------- indices
+    // --------------------------------------------------------------- indexInfo
     public List<IndexInfo> getIndexInfo() {
 
         if (indexInfo == null) {
@@ -325,6 +326,7 @@ public class Table {
     }
 
 
+    // -------------------------------------------------------------------------
     @Label("TABLE_CAT")
     @NillableBySpecification
     @XmlAttribute
@@ -380,10 +382,6 @@ public class Table {
     @NillableBySpecification
     @XmlElement(nillable = true, required = true)
     private String refGeneration;
-
-
-    @XmlTransient
-    private Schema schema;
 
 
     @Invocation(

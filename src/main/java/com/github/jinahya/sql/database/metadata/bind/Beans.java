@@ -21,7 +21,6 @@ package com.github.jinahya.sql.database.metadata.bind;
 import java.beans.BeanInfo;
 import java.beans.IntrospectionException;
 import java.beans.Introspector;
-import static java.beans.Introspector.getBeanInfo;
 import java.beans.PropertyDescriptor;
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Method;
@@ -45,39 +44,52 @@ final class Beans {
     private static final Logger logger = getLogger(Beans.class.getName());
 
 
+    /**
+     * Returns a list of {@code PropertyDescriptor} which each is annotated with
+     * specified.
+     *
+     * @param beanClass bean class
+     * @param annotationClass annotation class
+     *
+     * @return a list of {@code PropertyDescriptor}
+     *
+     * @throws IntrospectionException if introspection error occurs.
+     */
     static List<PropertyDescriptor> getPropertyDescriptors(
         final Class<?> beanClass,
-        final Class<? extends Annotation> annotationClass) {
+        final Class<? extends Annotation> annotationClass)
+        throws IntrospectionException {
 
-        final BeanInfo beanInfo;
-        try {
-            beanInfo = Introspector.getBeanInfo(beanClass);
-        } catch (final IntrospectionException ie) {
-            ie.printStackTrace(System.err);
-            return emptyList();
-        }
-
-        final PropertyDescriptor[] propertyDescriptors
-            = beanInfo.getPropertyDescriptors();
-        if (propertyDescriptors == null) {
+        final BeanInfo info = Introspector.getBeanInfo(beanClass);
+        final PropertyDescriptor[] array = info.getPropertyDescriptors();
+        if (array == null) {
             return emptyList();
         }
 
         final List<PropertyDescriptor> list
-            = new ArrayList<PropertyDescriptor>(propertyDescriptors.length);
-        for (final PropertyDescriptor propertyDescriptor
-             : propertyDescriptors) {
+            = new ArrayList<PropertyDescriptor>(array.length);
+        for (final PropertyDescriptor descriptor : array) {
             if (Annotations.getAnnotation(
-                annotationClass, propertyDescriptor, beanClass) == null) {
+                annotationClass, descriptor, beanClass) == null) {
                 continue;
             }
-            list.add(propertyDescriptor);
+            list.add(descriptor);
         }
 
         return list;
     }
 
 
+    /**
+     * Returns the value of specified property.
+     *
+     * @param propertyDescriptor property descriptor.
+     * @param beanInstance bean instance.
+     *
+     * @return the value of property.
+     *
+     * @throws ReflectiveOperationException if a reflection error occurs.
+     */
     static Object getPropertyValue(final PropertyDescriptor propertyDescriptor,
                                    final Object beanInstance)
         throws ReflectiveOperationException {
@@ -96,30 +108,53 @@ final class Beans {
     }
 
 
+    /**
+     * Introspect a property with specified property name and returns the value
+     * of the property.
+     *
+     * @param beanClass bean class
+     * @param propertyName property name
+     * @param beanInstance bean instance
+     *
+     * @return the value of the property.
+     *
+     * @throws IntrospectionException if failed to introspect the property with
+     * {@code propertyName}.
+     * @throws ReflectiveOperationException if a reflection error occurs.
+     * @see #getPropertyValue(java.beans.PropertyDescriptor, java.lang.Object)
+     */
     static Object getPropertyValue(final Class<?> beanClass,
                                    final String propertyName,
                                    final Object beanInstance)
-        throws ReflectiveOperationException {
+        throws IntrospectionException, ReflectiveOperationException {
 
-        final PropertyDescriptor propertyDescriptor;
-        try {
-            propertyDescriptor
-                = new PropertyDescriptor(propertyName, beanClass);
-        } catch (final IntrospectionException ie) {
-            throw new RuntimeException(ie);
-        }
+        final PropertyDescriptor propertyDescriptor
+            = new PropertyDescriptor(propertyName, beanClass);
 
         return getPropertyValue(propertyDescriptor, beanInstance);
     }
 
 
+    /**
+     * Sets a property value.
+     *
+     * @param propertyDescriptor property descriptor
+     * @param beanInstance bean instance
+     * @param propertyValue the property value to set
+     *
+     * @throws ReflectiveOperationException
+     */
     @SuppressWarnings("unchecked")
-    static <T> void setPropertyValue(
-        final PropertyDescriptor propertyDescriptor, final T beanInstance,
+    static void setPropertyValue(
+        final PropertyDescriptor propertyDescriptor, final Object beanInstance,
         Object propertyValue)
         throws ReflectiveOperationException {
 
         final Class<?> propertyType = propertyDescriptor.getPropertyType();
+        if (propertyType == null) {
+            throw new RuntimeException(
+                "type cannot be determined: " + propertyDescriptor);
+        }
         propertyValue = Values.adapt(
             propertyType, propertyValue, propertyDescriptor);
 
@@ -129,15 +164,15 @@ final class Beans {
             return;
         }
 
-        if (propertyType != null
-            && Collection.class.isAssignableFrom(propertyType)
+        if (Collection.class.isAssignableFrom(propertyType)
             && Collection.class.isInstance(propertyValue)) {
             final Method readMethod = propertyDescriptor.getReadMethod();
             if (readMethod != null) {
-                final Collection<Object> value
+                final Collection<Object> collectionValue
                     = (Collection<Object>) readMethod.invoke(beanInstance);
-                if (value != null) {
-                    value.addAll((Collection<? extends Object>) propertyValue);
+                if (collectionValue != null) {
+                    collectionValue.addAll(
+                        (Collection<? extends Object>) propertyValue);
                 }
                 return;
             }
@@ -152,48 +187,29 @@ final class Beans {
     }
 
 
+    /**
+     * Finds a property whose name matches to given and sets with given value.
+     *
+     * @param beanClass bean class
+     * @param propertyName property name
+     * @param beanInstance bean instance
+     * @param propertyValue property value
+     *
+     * @throws IntrospectionException if failed to introspect
+     * @throws ReflectiveOperationException if a reflection error occurs.
+     * @see #setPropertyValue(java.beans.PropertyDescriptor, java.lang.Object,
+     * java.lang.Object)
+     */
     static void setPropertyValue(final Class<?> beanClass,
                                  final String propertyName,
                                  final Object beanInstance,
                                  final Object propertyValue)
-        throws ReflectiveOperationException {
+        throws IntrospectionException, ReflectiveOperationException {
 
-        final PropertyDescriptor propertyDescriptor;
-        try {
-            propertyDescriptor
-                = new PropertyDescriptor(propertyName, beanClass);
-        } catch (final IntrospectionException ie) {
-            throw new RuntimeException(ie);
-        }
+        final PropertyDescriptor propertyDescriptor
+            = new PropertyDescriptor(propertyName, beanClass);
 
         setPropertyValue(propertyDescriptor, beanInstance, propertyValue);
-    }
-
-
-    static void setParent(final Class<?> childClass,
-                          final Iterable<?> childBeans, final Object parentBean)
-        throws ReflectiveOperationException {
-
-        final Class<?> parentType = parentBean.getClass();
-
-        final BeanInfo beanInfo;
-        try {
-            beanInfo = getBeanInfo(childClass);
-        } catch (final IntrospectionException ie) {
-            ie.printStackTrace(System.err);
-            return;
-        }
-        for (final PropertyDescriptor propertyDescriptor
-             : beanInfo.getPropertyDescriptors()) {
-            final Class<?> propertyType = propertyDescriptor.getPropertyType();
-            if (!propertyType.equals(parentType)) {
-                continue;
-            }
-            for (final Object childBean : childBeans) {
-                setPropertyValue(propertyDescriptor, childBean, parentBean);
-            }
-            break;
-        }
     }
 
 

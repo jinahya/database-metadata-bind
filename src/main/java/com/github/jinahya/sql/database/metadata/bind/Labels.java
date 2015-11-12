@@ -19,16 +19,24 @@ package com.github.jinahya.sql.database.metadata.bind;
 
 
 import java.beans.PropertyDescriptor;
-import java.lang.reflect.Field;
 
 
 /**
+ * A utility class for {@link Label}.
  *
  * @author Jin Kwon &lt;jinahya_at_gmail.com&gt;
  */
-class Labels {
+final class Labels {
 
 
+    /**
+     * Finds {@link Label} value from specified property.
+     *
+     * @param propertyDescriptor property descriptor
+     * @param beanClass bean instance
+     *
+     * @return an instance of {@link Label} or {@code null} if not found.
+     */
     static Label get(final PropertyDescriptor propertyDescriptor,
                      final Class<?> beanClass) {
 

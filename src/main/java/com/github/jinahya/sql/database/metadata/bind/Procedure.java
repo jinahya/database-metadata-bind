@@ -24,11 +24,12 @@ import javax.xml.bind.annotation.XmlAttribute;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlElementRef;
 import javax.xml.bind.annotation.XmlRootElement;
-import javax.xml.bind.annotation.XmlTransient;
 import javax.xml.bind.annotation.XmlType;
 
 
 /**
+ * An entity class for binding the result of
+ * {@link java.sql.DatabaseMetaData#getProcedures(java.lang.String, java.lang.String, java.lang.String)}.
  *
  * @author Jin Kwon &lt;jinahya_at_gmail.com&gt;
  */
@@ -40,7 +41,21 @@ import javax.xml.bind.annotation.XmlType;
         "procedureColumns"
     }
 )
-public class Procedure {
+public class Procedure extends AbstractChild<Schema> {
+
+
+    @Override
+    public String toString() {
+
+        return super.toString() + "{"
+               + "procedureCat=" + procedureCat
+               + ", procedureSchem=" + procedureSchem
+               + ", procedureName=" + procedureName
+               + ", remarks=" + remarks
+               + ", procedureType=" + procedureType
+               + ", specificName=" + specificName
+               + "}";
+    }
 
 
     // ------------------------------------------------------------ procedureCat
@@ -124,13 +139,13 @@ public class Procedure {
     // ------------------------------------------------------------------ schema
     public Schema getSchema() {
 
-        return schema;
+        return getParent();
     }
 
 
     public void setSchema(final Schema schema) {
 
-        this.schema = schema;
+        setParent(schema);
     }
 
 
@@ -145,6 +160,7 @@ public class Procedure {
     }
 
 
+    // -------------------------------------------------------------------------
     @Label("PROCEDURE_CAT")
     @NillableBySpecification
     @XmlAttribute
@@ -175,10 +191,6 @@ public class Procedure {
     @Label("SPECIFIC_NAME")
     @XmlElement(required = true)
     private String specificName;
-
-
-    @XmlTransient
-    private Schema schema;
 
 
     @Invocation(

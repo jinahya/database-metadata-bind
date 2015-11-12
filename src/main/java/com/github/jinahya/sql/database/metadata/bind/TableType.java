@@ -20,17 +20,31 @@ package com.github.jinahya.sql.database.metadata.bind;
 
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
-import javax.xml.bind.annotation.XmlTransient;
 import javax.xml.bind.annotation.XmlType;
 
 
 /**
+ * An entity class for binding the result of
+ * {@link java.sql.DatabaseMetaData#getTableTypes()}.
  *
  * @author Jin Kwon &lt;jinahya_at_gmail.com&gt;
  */
 @XmlRootElement
-@XmlType(propOrder = {"tableType"})
-public class TableType {
+@XmlType(
+    propOrder = {
+        "tableType"
+    }
+)
+public class TableType extends AbstractChild<Metadata> {
+
+
+    @Override
+    public String toString() {
+
+        return super.toString() + "{"
+               + "tableType=" + tableType
+               + "}";
+    }
 
 
     // --------------------------------------------------------------- tableType
@@ -49,23 +63,20 @@ public class TableType {
     // ---------------------------------------------------------------- metadata
     public Metadata getMetadata() {
 
-        return metadata;
+        return getParent();
     }
 
 
     public void setMetadata(final Metadata metadata) {
 
-        this.metadata = metadata;
+        setParent(metadata);
     }
 
 
+    // -------------------------------------------------------------------------
     @Label("TABLE_TYPE")
     @XmlElement(required = true)
     private String tableType;
-
-
-    @XmlTransient
-    private Metadata metadata;
 
 
 }

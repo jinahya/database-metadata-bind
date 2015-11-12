@@ -18,11 +18,10 @@
 package com.github.jinahya.sql.database.metadata.bind;
 
 
-import java.sql.ResultSet;
-import java.util.Arrays;
-import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import static java.util.logging.Logger.getLogger;
 import javax.xml.bind.annotation.XmlAttribute;
-import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlValue;
 
 
@@ -30,20 +29,20 @@ import javax.xml.bind.annotation.XmlValue;
  *
  * @author Jin Kwon &lt;jinahya_at_gmail.com&gt;
  */
-@XmlRootElement
-public class InsertsAreDetected {
+class RSTBoolean {
 
 
-    static final List<Integer> TYPES = Arrays.asList(
-        ResultSet.TYPE_FORWARD_ONLY, ResultSet.TYPE_SCROLL_INSENSITIVE,
-        ResultSet.TYPE_SCROLL_SENSITIVE);
+    private static final Logger logger = getLogger(RSTBoolean.class.getName());
 
 
-    static InsertsAreDetected valueOf(final Object[] args, final Object value) {
+    static RSTBoolean valueOf(final Object[] args, final Object value) {
 
-        return new InsertsAreDetected()
-            .type((Integer) args[0])
-            .value((Boolean) value);
+        final RSTBoolean instance = new RSTBoolean();
+
+        instance.setType((Integer) args[0]);
+        instance.setValue((Boolean) value);
+
+        return instance;
     }
 
 
@@ -60,11 +59,25 @@ public class InsertsAreDetected {
     }
 
 
-    InsertsAreDetected type(final int type) {
+    RSTBoolean type(final int type) {
 
         setType(type);
 
         return this;
+    }
+
+
+    @XmlAttribute
+    public String getTypeName() {
+
+        try {
+            return RST.valueOf(type).name();
+        } catch (final IllegalArgumentException iae) {
+            logger.log(Level.WARNING, "unknown result set type: {0}",
+                       new Object[]{type});
+        }
+
+        return null;
     }
 
 
@@ -81,7 +94,7 @@ public class InsertsAreDetected {
     }
 
 
-    InsertsAreDetected value(final boolean value) {
+    RSTBoolean value(final boolean value) {
 
         setValue(value);
 

@@ -21,13 +21,18 @@ package com.github.jinahya.sql.database.metadata.bind;
 import javax.xml.bind.annotation.XmlAttribute;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
-import javax.xml.bind.annotation.XmlTransient;
 import javax.xml.bind.annotation.XmlType;
 
 
 /**
+ * An entity class for binding the result of
+ * {@link java.sql.DatabaseMetaData#getIndexInfo(java.lang.String, java.lang.String, java.lang.String, boolean, boolean)}.
  *
  * @author Jin Kwon &lt;jinahya_at_gmail.com&gt;
+ * @see java.sql.DatabaseMetaData#getIndexInfo(java.lang.String,
+ * java.lang.String, java.lang.String, boolean, boolean)
+ * @see MetadataContext#getIndexInfo(java.lang.String, java.lang.String,
+ * java.lang.String, boolean, boolean)
  */
 @XmlRootElement
 @XmlType(
@@ -36,7 +41,28 @@ import javax.xml.bind.annotation.XmlType;
         "columnName", "ascOrDesc", "cardinality", "pages", "filterCondition"
     }
 )
-public class IndexInfo {
+public class IndexInfo extends AbstractChild<Table> {
+
+
+    @Override
+    public String toString() {
+
+        return super.toString() + "{"
+               + "tableCat=" + tableCat
+               + ", tableSchem=" + tableSchem
+               + ", tableName=" + tableName
+               + ", nonUnique=" + nonUnique
+               + ", indexQualifier=" + indexQualifier
+               + ", indexName=" + indexName
+               + ", type=" + type
+               + ", ordinalPosition=" + ordinalPosition
+               + ", columnName=" + columnName
+               + ", ascOrDesc=" + ascOrDesc
+               + ", cardinality=" + cardinality
+               + ", pages=" + pages
+               + ", filterCondition=" + filterCondition
+               + "}";
+    }
 
 
     // ---------------------------------------------------------------- tableCat
@@ -211,16 +237,17 @@ public class IndexInfo {
     // ------------------------------------------------------------------- table
     public Table getTable() {
 
-        return table;
+        return getParent();
     }
 
 
     public void setTable(final Table table) {
 
-        this.table = table;
+        setParent(table);
     }
 
 
+    // -------------------------------------------------------------------------
     @Label("TABLE_CAT")
     @NillableBySpecification
     @XmlAttribute
@@ -291,10 +318,6 @@ public class IndexInfo {
     @NillableBySpecification
     @XmlElement(nillable = true, required = true)
     private String filterCondition;
-
-
-    @XmlTransient
-    private Table table;
 
 
 }

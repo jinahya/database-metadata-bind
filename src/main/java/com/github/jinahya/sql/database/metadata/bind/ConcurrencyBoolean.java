@@ -18,9 +18,6 @@
 package com.github.jinahya.sql.database.metadata.bind;
 
 
-import java.sql.ResultSet;
-import java.util.Arrays;
-import java.util.List;
 import javax.xml.bind.annotation.XmlAttribute;
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlValue;
@@ -30,39 +27,37 @@ import javax.xml.bind.annotation.XmlValue;
  *
  * @author Jin Kwon &lt;jinahya_at_gmail.com&gt;
  */
-@XmlRootElement
-public class DeletesAreDetected {
+//@XmlRootElement
+class ConcurrencyBoolean {
 
 
-    static final List<Integer> TYPES = Arrays.asList(
-        ResultSet.TYPE_FORWARD_ONLY, ResultSet.TYPE_SCROLL_INSENSITIVE,
-        ResultSet.TYPE_SCROLL_SENSITIVE);
+    static ConcurrencyBoolean valueOf(final Object[] args, final Object value) {
 
+        final ConcurrencyBoolean instance = new ConcurrencyBoolean();
 
-    static DeletesAreDetected valueOf(final Object[] args, final Object value) {
+        instance.setConcurrency((Integer) args[0]);
+        instance.setValue((Boolean) value);
 
-        return new DeletesAreDetected()
-            .type((Integer) args[0])
-            .value((Boolean) value);
+        return instance;
     }
 
 
-    // -------------------------------------------------------------------- type
-    public int getType() {
+    // ------------------------------------------------------------- concurrency
+    public int getConcurrency() {
 
-        return type;
+        return concurrency;
     }
 
 
-    public void setType(final int type) {
+    public void setConcurrency(final int concurrency) {
 
-        this.type = type;
+        this.concurrency = concurrency;
     }
 
 
-    DeletesAreDetected type(final int type) {
+    ConcurrencyBoolean concurrency(final int concurrency) {
 
-        setType(type);
+        setConcurrency(concurrency);
 
         return this;
     }
@@ -81,7 +76,7 @@ public class DeletesAreDetected {
     }
 
 
-    DeletesAreDetected value(final boolean value) {
+    ConcurrencyBoolean value(final boolean value) {
 
         setValue(value);
 
@@ -91,7 +86,7 @@ public class DeletesAreDetected {
 
     // -------------------------------------------------------------------------
     @XmlAttribute
-    private int type;
+    private int concurrency;
 
 
     @XmlValue

@@ -18,21 +18,62 @@
 package com.github.jinahya.sql.database.metadata.bind;
 
 
+import java.beans.IntrospectionException;
 import java.beans.PropertyDescriptor;
 
 
 /**
+ * A utility class for {@link Invocation}.
  *
  * @author Jin Kwon &lt;jinahya_at_gmail.com&gt;
  */
-class Invocations {
+final class Invocations {
 
 
+    /**
+     * Find {@link Invocation} value from specified property.
+     *
+     * @param propertyDescriptor property descriptor
+     * @param beanClass bean class
+     *
+     * @return an instance of {@link Invocation} or {@code null} if not found.
+     */
     static Invocation get(final PropertyDescriptor propertyDescriptor,
                           final Class<?> beanClass) {
 
         return Annotations.getAnnotation(
             Invocation.class, propertyDescriptor, beanClass);
+    }
+
+
+    static <T> Object[] values(final Class<T> beanClass, final T beanInstance,
+                               final Class<?>[] types, final String[] names)
+        throws IntrospectionException, ReflectiveOperationException {
+
+        final Object[] values = new Object[names.length];
+        for (int i = 0; i < names.length; i++) {
+            if ("null".equals(names[i])) {
+                values[i] = null;
+                continue;
+            }
+            if (names[i].startsWith(":")) {
+                values[i] = Beans.getPropertyValue(
+                    beanClass, names[i].substring(1), beanInstance);
+                continue;
+            }
+            if (types[i] == String.class) {
+                values[i] = names[i];
+                continue;
+            }
+            if (types[i].isPrimitive()) {
+                types[i] = Reflections.wrapper(types[i]);
+            }
+            values[i] = types[i]
+                .getMethod("valueOf", String.class)
+                .invoke(null, names[i]);
+        }
+
+        return values;
     }
 
 

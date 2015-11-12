@@ -25,26 +25,59 @@ import static java.util.logging.Logger.getLogger;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlElementRef;
 import javax.xml.bind.annotation.XmlRootElement;
-import javax.xml.bind.annotation.XmlTransient;
 import javax.xml.bind.annotation.XmlType;
 
 
 /**
+ * An entity class for binding the result of
+ * {@link java.sql.DatabaseMetaData#getCatalogs()}.
  *
  * @author Jin Kwon &lt;jinahya_at_gmail.com&gt;
  */
 @XmlRootElement
-@XmlType(propOrder = {"tableCat", "schemas"})
-public class Catalog {
+@XmlType(
+    propOrder = {
+        "tableCat",
+        // --------------------------------------------------------------------
+        "crossReferences",
+        "schemas"
+    }
+)
+public class Catalog extends AbstractChild<Metadata> implements TableDomain {
 
 
     private static final Logger logger = getLogger(Catalog.class.getName());
 
 
     @Override
+    public List<Table> getTables() {
+
+        final List<Table> list = new ArrayList<Table>();
+
+        for (final Schema schema : getSchemas()) {
+            list.addAll(schema.getTables());
+        }
+
+        return list;
+    }
+
+
+    @Override
+    public List<CrossReference> getCrossReferences() {
+        return crossReferences;
+    }
+
+
+    @Override
+    public void setCrossReferences(List<CrossReference> crossReferences) {
+        this.crossReferences = crossReferences;
+    }
+
+
+    @Override
     public String toString() {
 
-        return super.toString() + "{" + "tableCat=" + tableCat + '}';
+        return super.toString() + "{" + "tableCat=" + tableCat + "}";
     }
 
 
@@ -83,21 +116,13 @@ public class Catalog {
     // ---------------------------------------------------------------- metadata
     public Metadata getMetadata() {
 
-        return metadata;
-    }
-
-
-    //@XmlAttribute
-    @Deprecated
-    private String getMetadataString() {
-
-        return metadata == null ? null : metadata.toString();
+        return getParent();
     }
 
 
     public void setMetadata(final Metadata metadata) {
 
-        this.metadata = metadata;
+        setParent(metadata);
     }
 
 
@@ -111,8 +136,12 @@ public class Catalog {
 
     // -------------------------------------------------------------------------
     @Label("TABLE_CAT")
-    @XmlElement(nillable = true, required = true)
+    @XmlElement(required = true)
     private String tableCat;
+
+
+    @XmlElementRef
+    private List<CrossReference> crossReferences;
 
 
     @Invocation(
@@ -124,10 +153,6 @@ public class Catalog {
     )
     @XmlElementRef
     private List<Schema> schemas;
-
-
-    //@XmlTransient
-    private transient Metadata metadata;
 
 
 }

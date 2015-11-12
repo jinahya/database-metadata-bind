@@ -20,11 +20,12 @@ package com.github.jinahya.sql.database.metadata.bind;
 
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
-import javax.xml.bind.annotation.XmlTransient;
 import javax.xml.bind.annotation.XmlType;
 
 
 /**
+ * An entity class for binding the result of
+ * {@link java.sql.DatabaseMetaData#getTypeInfo()}.
  *
  * @author Jin Kwon &lt;jinahya_at_gmail.com&gt;
  */
@@ -38,7 +39,33 @@ import javax.xml.bind.annotation.XmlType;
         "numPrecRadix"
     }
 )
-public class TypeInfo {
+public class TypeInfo extends AbstractChild<Metadata> {
+
+
+    @Override
+    public String toString() {
+
+        return super.toString() + "{"
+               + "typeName=" + typeName
+               + ", dataType=" + dataType
+               + ", precision=" + precision
+               + ", literalPrefix=" + literalPrefix
+               + ", literalSuffix=" + literalSuffix
+               + ", createParams=" + createParams
+               + ", nullable=" + nullable
+               + ", caseSensitive=" + caseSensitive
+               + ", searchable=" + searchable
+               + ", unsignedAttribute=" + unsignedAttribute
+               + ", fixedPrecScale=" + fixedPrecScale
+               + ", autoIncrement=" + autoIncrement
+               + ", localTypeName=" + localTypeName
+               + ", minimumScale=" + minimumScale
+               + ", maximumScale=" + maximumScale
+               + ", sqlDataType=" + sqlDataType
+               + ", sqlDatetimeSub=" + sqlDatetimeSub
+               + ", numPrecRadix=" + numPrecRadix
+               + "}";
+    }
 
 
     // ---------------------------------------------------------------- typeName
@@ -276,16 +303,17 @@ public class TypeInfo {
     // ---------------------------------------------------------------- metadata
     public Metadata getMetadata() {
 
-        return metadata;
+        return getParent();
     }
 
 
     public void setMetadata(final Metadata metadata) {
 
-        this.metadata = metadata;
+        setParent(metadata);
     }
 
 
+    // -------------------------------------------------------------------------
     @Label("TYPE_NAME")
     @XmlElement(required = true)
     private String typeName;
@@ -380,10 +408,6 @@ public class TypeInfo {
     @Label("NUM_PREC_RADIX")
     @XmlElement(required = true)
     private int numPrecRadix;
-
-
-    @XmlTransient
-    private Metadata metadata;
 
 
 }

@@ -21,17 +21,22 @@ package com.github.jinahya.sql.database.metadata.bind;
 import javax.xml.bind.annotation.XmlAttribute;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
-import javax.xml.bind.annotation.XmlTransient;
 import javax.xml.bind.annotation.XmlType;
 
 
 /**
+ * An entity class for binding the result of
+ * {@link java.sql.DatabaseMetaData#getPrimaryKeys(java.lang.String, java.lang.String, java.lang.String)}.
  *
  * @author Jin Kwon &lt;jinahya_at_gmail.com&gt;
  */
 @XmlRootElement
-@XmlType(propOrder = {"columnName", "keySeq", "pkName"})
-public class PrimaryKey {
+@XmlType(
+    propOrder = {
+        "columnName", "keySeq", "pkName"
+    }
+)
+public class PrimaryKey extends AbstractChild<Table> {
 
 
     // ---------------------------------------------------------------- tableCat
@@ -115,16 +120,17 @@ public class PrimaryKey {
     // ------------------------------------------------------------------- table
     public Table getTable() {
 
-        return table;
+        return getParent();
     }
 
 
     public void setTable(final Table table) {
 
-        this.table = table;
+        setParent(table);
     }
 
 
+    // -------------------------------------------------------------------------
     @Label("TABLE_CAT")
     @NillableBySpecification
     @XmlAttribute
@@ -156,10 +162,6 @@ public class PrimaryKey {
     @NillableBySpecification
     @XmlElement(nillable = true, required = true)
     private String pkName;
-
-
-    @XmlTransient
-    private Table table;
 
 
 }

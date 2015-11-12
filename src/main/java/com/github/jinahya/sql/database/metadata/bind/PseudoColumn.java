@@ -21,11 +21,12 @@ package com.github.jinahya.sql.database.metadata.bind;
 import javax.xml.bind.annotation.XmlAttribute;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
-import javax.xml.bind.annotation.XmlTransient;
 import javax.xml.bind.annotation.XmlType;
 
 
 /**
+ * An entity class for binding the result of
+ * {@link java.sql.DatabaseMetaData#getPseudoColumns(java.lang.String, java.lang.String, java.lang.String, java.lang.String)}.
  *
  * @author Jin Kwon &lt;jinahya_at_gmail.com&gt;
  */
@@ -36,7 +37,27 @@ import javax.xml.bind.annotation.XmlType;
         "columnUsage", "remarks", "charOctetLength", "isNullable"
     }
 )
-public class PseudoColumn {
+public class PseudoColumn extends AbstractChild<Table> {
+
+
+    @Override
+    public String toString() {
+
+        return super.toString() + "{"
+               + "tableCat=" + tableCat
+               + ", tableSchem=" + tableSchem
+               + ", tableName=" + tableName
+               + ", columnName=" + columnName
+               + ", dataType=" + dataType
+               + ", columnSize=" + columnSize
+               + ", decimalDigits=" + decimalDigits
+               + ", numPrecRadix=" + numPrecRadix
+               + ", columnUsage=" + columnUsage
+               + ", remarks=" + remarks
+               + ", charOctetLength=" + charOctetLength
+               + ", isNullable=" + isNullable
+               + "}";
+    }
 
 
     // ---------------------------------------------------------------- tableCat
@@ -196,16 +217,17 @@ public class PseudoColumn {
     // ------------------------------------------------------------------- table
     public Table getTable() {
 
-        return table;
+        return getParent();
     }
 
 
     public void setTable(final Table table) {
 
-        this.table = table;
+        setParent(table);
     }
 
 
+    // -------------------------------------------------------------------------
     @Label("TABLE_CAT")
     @NillableBySpecification
     @XmlAttribute
@@ -220,7 +242,6 @@ public class PseudoColumn {
 
     @Label("TABLE_NAME")
     @XmlAttribute
-    @NillableBySpecification
     private String tableName;
 
 
@@ -240,8 +261,8 @@ public class PseudoColumn {
 
 
     @Label("DECIMAL_DIGITS")
-    @XmlElement(nillable = true, required = true)
     @NillableBySpecification
+    @XmlElement(nillable = true, required = true)
     private Integer decimalDigits;
 
 
@@ -256,8 +277,8 @@ public class PseudoColumn {
 
 
     @Label("REMARKS")
-    @XmlElement(nillable = true, required = true)
     @NillableBySpecification
+    @XmlElement(nillable = true, required = true)
     private String remarks;
 
 
@@ -269,10 +290,6 @@ public class PseudoColumn {
     @Label("IS_NULLABLE")
     @XmlElement(required = true)
     private String isNullable;
-
-
-    @XmlTransient
-    private Table table;
 
 
 }

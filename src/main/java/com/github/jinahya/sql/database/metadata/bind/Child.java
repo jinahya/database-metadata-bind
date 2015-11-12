@@ -27,23 +27,13 @@ import javax.xml.bind.annotation.XmlTransient;
  * @param <P> parent type parameter
  */
 @XmlTransient
-abstract class Child<P> {
+interface Child<P> {
 
 
-    public P getParent() {
-
-        return parent;
-    }
+    P getParent();
 
 
-    void setParent(final P parent) {
-
-        this.parent = parent;
-    }
-
-
-    //@XmlTransient
-    private transient P parent;
+    void setParent(final P parent);
 
 
 }
