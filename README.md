@@ -30,6 +30,7 @@ A library binding various information from [DatabaseMetaData](http://docs.oracle
 | `0.9` | [apidocs](http://jinahya.github.io/database-metadata-bind/site/0.9/apidocs/index.html) | [site](http://jinahya.github.io/database-metadata-bind/site/0.9/index.html)||
 
 ## Hierarchy
+![Class Diagram](http://jinahya.github.io/database-metadata-bind/site/0.10/apidocs/com/github/jinahya/sql/database/metadata/bind/com.github.jinahya.sql.database.metadata.bind.png)
   * Metadata
     * Category (`metadata/categories`)
       * Schema (`category/schemas`)
