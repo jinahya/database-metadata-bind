@@ -113,5 +113,22 @@ public class DerbyMemoryTest {
     }
 
 
+    @Test
+    public void pattern() throws Exception {
+
+        try (Connection connection = getConnection(CONNECTION_URL)) {
+            final DatabaseMetaData database = connection.getMetaData();
+            final MetadataContext context = new MetadataContext(database);
+            for (final Table table
+                 : context.getTables(null, null, "SYS%", null)) {
+                logger.debug("table.name: {}", table.getTableName());
+            }
+            for (final Table table : context.getTables(null, null, "%", null)) {
+                logger.debug("table.name: {}", table.getTableName());
+            }
+        }
+    }
+
+
 }
 
