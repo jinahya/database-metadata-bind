@@ -57,6 +57,11 @@ public class MetadataContext {
     }
 
 
+    /**
+     * Creates a new instance with given {@code DatabaseMetaData}.
+     *
+     * @param database the {@code DatabaseMetaData} instance to hold.
+     */
     public MetadataContext(final DatabaseMetaData database) {
 
         super();
@@ -211,28 +216,29 @@ public class MetadataContext {
                 invocation.name(), invocation.types());
             for (final InvocationArgs invocationArgs : invocation.argsarr()) {
                 final String[] names = invocationArgs.value();
-                final Object[] args = new Object[names.length];
-                for (int i = 0; i < names.length; i++) {
-                    final String name = names[i];
-                    if ("null".equals(name)) {
-                        args[i] = null;
-                        continue;
-                    }
-                    if (name.startsWith(":")) {
-                        args[i] = Beans.getPropertyValue(
-                            beanClass, name.substring(1), beanInstance);
-                        continue;
-                    }
-                    if (types[i] == String.class) {
-                        args[i] = name;
-                        continue;
-                    }
-                    if (types[i].isPrimitive()) {
-                        types[i] = Reflections.wrapper(types[i]);
-                    }
-                    args[i] = types[i].getMethod("valueOf", String.class)
-                        .invoke(null, name);
-                }
+                final Object[] args = Invocations.values(beanClass, beanInstance, types, names);
+//                final Object[] args = new Object[names.length];
+//                for (int i = 0; i < names.length; i++) {
+//                    final String name = names[i];
+//                    if ("null".equals(name)) {
+//                        args[i] = null;
+//                        continue;
+//                    }
+//                    if (name.startsWith(":")) {
+//                        args[i] = Beans.getPropertyValue(
+//                            beanClass, name.substring(1), beanInstance);
+//                        continue;
+//                    }
+//                    if (types[i] == String.class) {
+//                        args[i] = name;
+//                        continue;
+//                    }
+//                    if (types[i].isPrimitive()) {
+//                        types[i] = Reflections.wrapper(types[i]);
+//                    }
+//                    args[i] = types[i].getMethod("valueOf", String.class)
+//                        .invoke(null, name);
+//                }
                 try {
                     final Object propertyValue = method.invoke(database, args);
                     setPropertyValue(
@@ -251,13 +257,13 @@ public class MetadataContext {
                                + ", suppressin=" + suppression,
                                e);
                     throw new RuntimeException(e);
-//                } catch (final AbstractMethodError ame) {
-//                    logger.log(Level.SEVERE,
-//                               "failed to invoke"
-//                               + "; invocation=" + invocation
-//                               + ", suppressin=" + suppression,
-//                               ame);
-//                    throw ame;
+                } catch (final AbstractMethodError ame) {
+                    logger.log(Level.SEVERE,
+                               "failed to invoke"
+                               + "; invocation=" + invocation
+                               + ", suppressin=" + suppression,
+                               ame);
+                    throw ame;
                 }
             }
         }

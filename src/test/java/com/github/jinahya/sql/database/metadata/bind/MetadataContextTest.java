@@ -36,6 +36,13 @@ public class MetadataContextTest {
     private static final Logger logger = getLogger(lookup().lookupClass());
 
 
+    @Test(expectedExceptions = {NullPointerException.class})
+    public void constructWithNullDatabaseMetaData() {
+
+        final MetadataContext context = new MetadataContext(null);
+    }
+
+
     @Test(enabled = false)
     public void checkMethodBinding() {
 
