@@ -26,9 +26,8 @@ A library binding various information from [DatabaseMetaData](http://docs.oracle
 | Version        | Apidocs | Site | Notes |
 | :------        | :------ | :--- | :---- |
 | `1.0` | [apidocs](http://jinahya.github.io/database-metadata-bind/site/1.0/apidocs/index.html) | [site](http://jinahya.github.io/database-metadata-bind/site/1.0/index.html)|Not Released Yet|
-| `0.9` | [apidocs](http://jinahya.github.io/database-metadata-bind/site/0.9/apidocs/index.html) | [site](http://jinahya.github.io/database-metadata-bind/site/0.9/index.html)|Not Released Yet|
-| `0.9-SNAPSHOT` | [apidocs](http://jinahya.github.io/database-metadata-bind/site/0.9-SNAPSHOT/apidocs/index.html) | [site](http://jinahya.github.io/database-metadata-bind/site/0.9-SNAPSHOT/index.html)||
-| `0.8` | [apidocs](http://jinahya.github.io/database-metadata-bind/site/0.8/apidocs/index.html) | [site](http://jinahya.github.io/database-metadata-bind/site/0.8/index.html)||
+| `0.10` | [apidocs](http://jinahya.github.io/database-metadata-bind/site/0.10/apidocs/index.html) | [site](http://jinahya.github.io/database-metadata-bind/site/0.10/index.html)||
+| `0.9` | [apidocs](http://jinahya.github.io/database-metadata-bind/site/0.9/apidocs/index.html) | [site](http://jinahya.github.io/database-metadata-bind/site/0.9/index.html)||
 
 ## Hierarchy
   * Metadata
