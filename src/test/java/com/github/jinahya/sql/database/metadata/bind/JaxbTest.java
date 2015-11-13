@@ -90,7 +90,7 @@ public class JaxbTest {
     @Test
     public void storeSchema() throws JAXBException, IOException {
 
-        final Path schemas = Paths.get("target", "xsd");
+        final Path schemas = Paths.get("target");
         if (!Files.isDirectory(schemas)) {
             Files.createDirectories(schemas);
         }
