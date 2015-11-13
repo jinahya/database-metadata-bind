@@ -40,8 +40,10 @@ import javax.xml.bind.annotation.XmlType;
         "selfReferencingColName", "refGeneration",
         // ---------------------------------------------------------------------
         "bestRowIdentifiers", "columns", "exportedKeys", "importedKeys",
-        "indexInfo", "primaryKeys", "pseudoColumns", "tablePrivileges",
-        "versionColumns"
+        "indexInfo", "primaryKeys", "pseudoColumns", "superTables",
+        "tablePrivileges", "versionColumns",
+        // ---------------------------------------------------------------------
+        "unknownResults"
     }
 )
 public class Table extends AbstractChild<Schema> {
@@ -304,6 +306,17 @@ public class Table extends AbstractChild<Schema> {
     }
 
 
+    // ------------------------------------------------------------- superTables
+    public List<SuperTable> getSuperTables() {
+
+        if (superTables == null) {
+            superTables = new ArrayList<SuperTable>();
+        }
+
+        return superTables;
+    }
+
+
     // --------------------------------------------------------- tablePrivileges
     public List<TablePrivilege> getTablePrivileges() {
 
@@ -391,20 +404,20 @@ public class Table extends AbstractChild<Schema> {
         },
         argsarr = {
             @InvocationArgs({
-                ":tableCat", ":tableSchem", ":tableName",
-                "0", // bestRowTemporaty
-                "true"
-            }),
+            ":tableCat", ":tableSchem", ":tableName",
+            "0", // bestRowTemporaty
+            "true"
+        }),
             @InvocationArgs({
-                ":tableCat", ":tableSchem", ":tableName",
-                "1", // bestRowTransaction
-                "true"
-            }),
+            ":tableCat", ":tableSchem", ":tableName",
+            "1", // bestRowTransaction
+            "true"
+        }),
             @InvocationArgs({
-                ":tableCat", ":tableSchem", ":tableName",
-                "2", // bestRowSession
-                "true"
-            })
+            ":tableCat", ":tableSchem", ":tableName",
+            "2", // bestRowSession
+            "true"
+        })
         }
     )
     @XmlElementRef
@@ -452,8 +465,8 @@ public class Table extends AbstractChild<Schema> {
         },
         argsarr = {
             @InvocationArgs({
-                ":tableCat", ":tableSchem", ":tableName", "false", "false"
-            })
+            ":tableCat", ":tableSchem", ":tableName", "false", "false"
+        })
         }
     )
     @XmlElementRef
@@ -483,6 +496,17 @@ public class Table extends AbstractChild<Schema> {
 
 
     @Invocation(
+        name = "getSuperTables",
+        types = {String.class, String.class, String.class},
+        argsarr = {
+            @InvocationArgs({":tableCat", ":tableSchem", ":tableName"})
+        }
+    )
+    @XmlElementRef
+    private List<SuperTable> superTables;
+
+
+    @Invocation(
         name = "getTablePrivileges",
         types = {String.class, String.class, String.class},
         argsarr = {
@@ -502,6 +526,10 @@ public class Table extends AbstractChild<Schema> {
     )
     @XmlElementRef
     private List<VersionColumn> versionColumns;
+
+
+    @XmlElement(name = "unknownResult", nillable = true)
+    private List<UnknownResult> unknownResults;
 
 
 }

@@ -78,6 +78,7 @@ public class MckoiEmbeddedTest {
                 "metadata/databaseMinorVersion",
                 "metadata/generatedKeyAlwaysReturned",
                 "metadata/locatorsUpdateCopy",
+                "metadata/sqlStateType",
                 "schema/functions",
                 "schema/userDefinedTypes"
             );

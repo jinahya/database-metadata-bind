@@ -20,7 +20,6 @@ package com.github.jinahya.sql.database.metadata.bind;
 
 import java.io.File;
 import java.io.FileOutputStream;
-import java.io.IOException;
 import java.io.OutputStream;
 import java.sql.Connection;
 import java.sql.DatabaseMetaData;
@@ -28,7 +27,6 @@ import static java.sql.DriverManager.getConnection;
 import java.sql.SQLException;
 import java.util.Properties;
 import javax.xml.bind.JAXBContext;
-import javax.xml.bind.JAXBException;
 import javax.xml.bind.Marshaller;
 import org.slf4j.Logger;
 import static org.slf4j.LoggerFactory.getLogger;
@@ -109,6 +107,23 @@ public class DerbyMemoryTest {
         try (OutputStream outputStream = new FileOutputStream(file)) {
             marshaller.marshal(metadata, outputStream);
             outputStream.flush();
+        }
+    }
+
+
+    @Test
+    public void pattern() throws Exception {
+
+        try (Connection connection = getConnection(CONNECTION_URL)) {
+            final DatabaseMetaData database = connection.getMetaData();
+            final MetadataContext context = new MetadataContext(database);
+            for (final Table table
+                 : context.getTables(null, null, "SYS%", null)) {
+                logger.debug("table.name: {}", table.getTableName());
+            }
+            for (final Table table : context.getTables(null, null, "%", null)) {
+                logger.debug("table.name: {}", table.getTableName());
+            }
         }
     }
 

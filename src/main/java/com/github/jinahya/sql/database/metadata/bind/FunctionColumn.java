@@ -18,6 +18,7 @@
 package com.github.jinahya.sql.database.metadata.bind;
 
 
+import java.util.List;
 import javax.xml.bind.annotation.XmlAttribute;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
@@ -35,7 +36,9 @@ import javax.xml.bind.annotation.XmlType;
     propOrder = {
         "functionName", "columnName", "columnType", "dataType", "typeName",
         "precision", "length", "scale", "radix", "nullable", "remarks",
-        "charOctetLength", "ordinalPosition", "isNullable", "specificName"
+        "charOctetLength", "ordinalPosition", "isNullable", "specificName",
+        // --------------------------------------------------------------------
+        "unknownResults"
     }
 )
 public class FunctionColumn extends AbstractChild<Function> {
@@ -387,6 +390,10 @@ public class FunctionColumn extends AbstractChild<Function> {
     @Label("SPECIFIC_NAME")
     @XmlElement(required = true)
     private String specificName;
+
+
+    @XmlElement(name = "unknownResult", nillable = true)
+    private List<UnknownResult> unknownResults;
 
 
 }

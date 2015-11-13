@@ -38,7 +38,7 @@ import javax.xml.bind.annotation.XmlType;
     propOrder = {
         "typeName", "className", "dataType", "remarks", "baseType",
         // ---------------------------------------------------------------------
-        "attributes"
+        "attributes", "superTypes"
     }
 )
 public class UserDefinedType extends AbstractChild<Schema> {
@@ -161,6 +161,17 @@ public class UserDefinedType extends AbstractChild<Schema> {
     }
 
 
+    // -------------------------------------------------------------- superTypes
+    public List<SuperType> getSuperTypes() {
+
+        if (superTypes == null) {
+            superTypes = new ArrayList<SuperType>();
+        }
+
+        return superTypes;
+    }
+
+
     // ------------------------------------------------------------------ schema
     public Schema getSchema() {
 
@@ -176,11 +187,13 @@ public class UserDefinedType extends AbstractChild<Schema> {
 
     // -------------------------------------------------------------------------
     @Label("TYPE_CAT")
+    @NillableBySpecification
     @XmlAttribute
     private String typeCat;
 
 
     @Label("TYPE_SCHEM")
+    @NillableBySpecification
     @XmlAttribute
     private String typeSchem;
 
@@ -220,6 +233,17 @@ public class UserDefinedType extends AbstractChild<Schema> {
     )
     @XmlElementRef
     private List<Attribute> attributes;
+
+
+    @Invocation(
+        name = "getSuperTypes",
+        types = {String.class, String.class, String.class},
+        argsarr = {
+            @InvocationArgs({":typeCat", ":typeSchem", ":typeName"})
+        }
+    )
+    @XmlElementRef
+    private List<SuperType> superTypes;
 
 
 }

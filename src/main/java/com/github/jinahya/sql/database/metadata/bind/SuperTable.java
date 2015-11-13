@@ -18,7 +18,6 @@
 package com.github.jinahya.sql.database.metadata.bind;
 
 
-import java.util.List;
 import javax.xml.bind.annotation.XmlAttribute;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
@@ -26,20 +25,30 @@ import javax.xml.bind.annotation.XmlType;
 
 
 /**
- * An entity class for binding the result of
- * {@link java.sql.DatabaseMetaData#getPrimaryKeys(java.lang.String, java.lang.String, java.lang.String)}.
+ * A entity class for binding the result of
+ * {@link java.sql.DatabaseMetaData#getSuperTables(java.lang.String, java.lang.String, java.lang.String)}
  *
  * @author Jin Kwon &lt;jinahya_at_gmail.com&gt;
  */
 @XmlRootElement
 @XmlType(
     propOrder = {
-        "columnName", "keySeq", "pkName",
-        // ---------------------------------------------------------------------
-        "unknownResults"
+        "tableName", "supertableName"
     }
 )
-public class PrimaryKey extends AbstractChild<Table> {
+public class SuperTable extends AbstractChild<Table> {
+
+
+    @Override
+    public String toString() {
+
+        return super.toString() + "{"
+               + "tableCat=" + tableCat
+               + ", tableSchem=" + tableSchem
+               + ", tableName=" + tableName
+               + ", supertableName=" + supertableName
+               + "}";
+    }
 
 
     // ---------------------------------------------------------------- tableCat
@@ -81,42 +90,16 @@ public class PrimaryKey extends AbstractChild<Table> {
     }
 
 
-    // -------------------------------------------------------------- columnName
-    public String getColumnName() {
+    // ---------------------------------------------------------- supertableName
+    public String getSupertableName() {
 
-        return columnName;
+        return supertableName;
     }
 
 
-    public void setColumnName(final String columnName) {
+    public void setSupertableName(final String supertableName) {
 
-        this.columnName = columnName;
-    }
-
-
-    // ------------------------------------------------------------------ keySeq
-    public short getKeySeq() {
-
-        return keySeq;
-    }
-
-
-    public void setKeySeq(final short keySeq) {
-
-        this.keySeq = keySeq;
-    }
-
-
-    // ------------------------------------------------------------------ pkName
-    public String getPkName() {
-
-        return pkName;
-    }
-
-
-    public void setPkName(final String pkName) {
-
-        this.pkName = pkName;
+        this.supertableName = supertableName;
     }
 
 
@@ -130,6 +113,14 @@ public class PrimaryKey extends AbstractChild<Table> {
     public void setTable(final Table table) {
 
         setParent(table);
+    }
+
+
+    SuperTable table(final Table table) {
+
+        setTable(table);
+
+        return this;
     }
 
 
@@ -147,28 +138,13 @@ public class PrimaryKey extends AbstractChild<Table> {
 
 
     @Label("TABLE_NAME")
-    @XmlAttribute
+    @XmlElement(required = true)
     private String tableName;
 
 
-    @Label("COLUMN_NAME")
+    @Label("SUPERTABLE_NAME")
     @XmlElement(required = true)
-    private String columnName;
-
-
-    @Label("KEY_SEQ")
-    @XmlElement(required = true)
-    private short keySeq;
-
-
-    @Label("PK_NAME")
-    @NillableBySpecification
-    @XmlElement(nillable = true, required = true)
-    private String pkName;
-
-
-    @XmlElement(name = "unknownResult", nillable = true)
-    private List<UnknownResult> unknownResults;
+    private String supertableName;
 
 
 }

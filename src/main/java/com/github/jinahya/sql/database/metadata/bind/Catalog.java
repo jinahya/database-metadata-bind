@@ -21,11 +21,11 @@ package com.github.jinahya.sql.database.metadata.bind;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Logger;
-import static java.util.logging.Logger.getLogger;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlElementRef;
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlType;
+import static java.util.logging.Logger.getLogger;
 
 
 /**
@@ -38,9 +38,11 @@ import javax.xml.bind.annotation.XmlType;
 @XmlType(
     propOrder = {
         "tableCat",
-        // --------------------------------------------------------------------
+        // ---------------------------------------------------------------------
         "crossReferences",
-        "schemas"
+        "schemas",
+        // ---------------------------------------------------------------------
+        "unknownResults"
     }
 )
 public class Catalog extends AbstractChild<Metadata> implements TableDomain {
@@ -153,6 +155,10 @@ public class Catalog extends AbstractChild<Metadata> implements TableDomain {
     )
     @XmlElementRef
     private List<Schema> schemas;
+
+
+    @XmlElement(name = "unknownResult", nillable = true)
+    private List<UnknownResult> unknownResults;
 
 
 }

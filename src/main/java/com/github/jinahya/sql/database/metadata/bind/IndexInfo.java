@@ -18,6 +18,7 @@
 package com.github.jinahya.sql.database.metadata.bind;
 
 
+import java.util.List;
 import javax.xml.bind.annotation.XmlAttribute;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
@@ -38,7 +39,9 @@ import javax.xml.bind.annotation.XmlType;
 @XmlType(
     propOrder = {
         "nonUnique", "indexQualifier", "indexName", "type", "ordinalPosition",
-        "columnName", "ascOrDesc", "cardinality", "pages", "filterCondition"
+        "columnName", "ascOrDesc", "cardinality", "pages", "filterCondition",
+        // ---------------------------------------------------------------------
+        "unknownResults"
     }
 )
 public class IndexInfo extends AbstractChild<Table> {
@@ -260,7 +263,7 @@ public class IndexInfo extends AbstractChild<Table> {
     private String tableSchem;
 
 
-    @Label("TABLE_SCHEM")
+    @Label("TABLE_NAME")
     @XmlAttribute
     private String tableName;
 
@@ -318,6 +321,10 @@ public class IndexInfo extends AbstractChild<Table> {
     @NillableBySpecification
     @XmlElement(nillable = true, required = true)
     private String filterCondition;
+
+
+    @XmlElement(name = "unknownResult", nillable = true)
+    private List<UnknownResult> unknownResults;
 
 
 }

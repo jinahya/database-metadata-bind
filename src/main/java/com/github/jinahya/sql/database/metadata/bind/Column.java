@@ -42,7 +42,9 @@ import javax.xml.bind.annotation.XmlType;
         "isNullable", "scopeCatalog", "scopeSchema", "scopeTable",
         "sourceDataType", "isAutoincrement", "isGeneratedcolumn",
         // ---------------------------------------------------------------------
-        "columnPrivileges"
+        "columnPrivileges",
+        // ---------------------------------------------------------------------
+        "unknownResults"
     }
 )
 public class Column extends AbstractChild<Table> {
@@ -554,12 +556,16 @@ public class Column extends AbstractChild<Table> {
         types = {String.class, String.class, String.class, String.class},
         argsarr = {
             @InvocationArgs({
-                ":tableCat", ":tableSchem", ":tableName", ":columnName"
-            })
+            ":tableCat", ":tableSchem", ":tableName", ":columnName"
+        })
         }
     )
     @XmlElementRef
     private List<ColumnPrivilege> columnPrivileges;
+
+
+    @XmlElement(name = "unknownResult", nillable = true)
+    private List<UnknownResult> unknownResults;
 
 
 }

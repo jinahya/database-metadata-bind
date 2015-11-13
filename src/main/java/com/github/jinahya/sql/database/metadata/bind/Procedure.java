@@ -38,7 +38,9 @@ import javax.xml.bind.annotation.XmlType;
     propOrder = {
         "procedureName", "remarks", "procedureType", "specificName",
         // ---------------------------------------------------------------------
-        "procedureColumns"
+        "procedureColumns",
+        // ---------------------------------------------------------------------
+        "unknownResults"
     }
 )
 public class Procedure extends AbstractChild<Schema> {
@@ -198,12 +200,16 @@ public class Procedure extends AbstractChild<Schema> {
         types = {String.class, String.class, String.class, String.class},
         argsarr = {
             @InvocationArgs({
-                ":procedureCat", ":procedureSchem", ":procedureName", "null"
-            })
+            ":procedureCat", ":procedureSchem", ":procedureName", "null"
+        })
         }
     )
     @XmlElementRef
     private List<ProcedureColumn> procedureColumns;
+
+
+    @XmlElement(name = "unknownResult", nillable = true)
+    private List<UnknownResult> unknownResults;
 
 
 }

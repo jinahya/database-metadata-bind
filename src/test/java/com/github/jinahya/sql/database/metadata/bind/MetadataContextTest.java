@@ -19,8 +19,10 @@ package com.github.jinahya.sql.database.metadata.bind;
 
 
 import static java.lang.invoke.MethodHandles.lookup;
+import java.lang.reflect.Modifier;
 import java.sql.DatabaseMetaData;
 import java.util.Arrays;
+import javax.xml.bind.JAXBException;
 import org.slf4j.Logger;
 import static org.slf4j.LoggerFactory.getLogger;
 import org.testng.annotations.Test;
@@ -44,10 +46,13 @@ public class MetadataContextTest {
 
 
     @Test(enabled = false)
-    public void checkMethodBinding() {
+    public void checkMethodBinding() throws JAXBException {
 
         Arrays.stream(DatabaseMetaData.class.getMethods()).filter(m -> {
             final int modifiers = m.getModifiers();
+            if (Modifier.isStatic(modifiers)) {
+                return false;
+            }
             return true;
         }).forEach(m -> {
             try {

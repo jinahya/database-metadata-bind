@@ -19,7 +19,6 @@ package com.github.jinahya.sql.database.metadata.bind;
 
 
 import javax.xml.bind.annotation.XmlAttribute;
-import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlValue;
 
 
@@ -27,56 +26,54 @@ import javax.xml.bind.annotation.XmlValue;
  *
  * @author Jin Kwon &lt;jinahya_at_gmail.com&gt;
  */
-//@XmlRootElement
-class ConcurrencyBoolean {
+class UnknownResult {
 
 
-    static ConcurrencyBoolean valueOf(final Object[] args, final Object value) {
+    @Override
+    public String toString() {
 
-        final ConcurrencyBoolean instance = new ConcurrencyBoolean();
-
-        instance.setConcurrency((Integer) args[0]);
-        instance.setValue((Boolean) value);
-
-        return instance;
+        return super.toString() + "{"
+               + "label=" + label
+               + ", value=" + value
+               + "}";
     }
 
 
-    // ------------------------------------------------------------- concurrency
-    public int getConcurrency() {
+    // ------------------------------------------------------------------- label
+    public String getLabel() {
 
-        return concurrency;
+        return label;
     }
 
 
-    public void setConcurrency(final int concurrency) {
+    public void setLabel(String label) {
 
-        this.concurrency = concurrency;
+        this.label = label;
     }
 
 
-    ConcurrencyBoolean concurrency(final int concurrency) {
+    UnknownResult label(final String label) {
 
-        setConcurrency(concurrency);
+        setLabel(label);
 
         return this;
     }
 
 
     // ------------------------------------------------------------------- value
-    public boolean getValue() {
+    public Object getValue() {
 
         return value;
     }
 
 
-    public void setValue(final boolean value) {
+    public void setValue(Object value) {
 
         this.value = value;
     }
 
 
-    ConcurrencyBoolean value(final boolean value) {
+    UnknownResult value(final Object value) {
 
         setValue(value);
 
@@ -84,13 +81,19 @@ class ConcurrencyBoolean {
     }
 
 
+    @XmlValue
+    public String getValueString() {
+
+        return value == null ? null : value.toString();
+    }
+
+
     // -------------------------------------------------------------------------
     @XmlAttribute
-    private int concurrency;
+    protected String label;
 
 
-    @XmlValue
-    private boolean value;
+    protected Object value;
 
 
 }
