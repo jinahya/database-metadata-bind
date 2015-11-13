@@ -7,8 +7,8 @@ database-metadata-bind
 [![Support via Gratipay](https://img.shields.io/gratipay/JSFiddle.svg)](https://gratipay.com/~jinahya/)
 [![Codacy Badge](https://api.codacy.com/project/badge/grade/2e056714e9614bf89b860601cbb2b174)](https://www.codacy.com/app/jinahya/database-metadata-bind)
 
-[![Issue Stats](http://issuestats.com/github/jinahya/database-metadata-bind/badge/pr)](http://issuestats.com/github/jinahya/database-metadata-bind)
-[![Issue Stats](http://issuestats.com/github/jinahya/database-metadata-bind/badge/issue)](http://issuestats.com/github/jinahya/database-metadata-bind)
+[![Issue Stats](http://issuestats.com/github/jinahya/database-metadata-bind/badge/pr?style=flat)](http://issuestats.com/github/jinahya/database-metadata-bind)
+[![Issue Stats](http://issuestats.com/github/jinahya/database-metadata-bind/badge/issue?style=flat)](http://issuestats.com/github/jinahya/database-metadata-bind)
 
 A library binding various information from [DatabaseMetaData](http://docs.oracle.com/javase/7/docs/api/java/sql/DatabaseMetaData.html).
 
