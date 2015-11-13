@@ -5,6 +5,10 @@ database-metadata-bind
 [![GitHub version](https://badge.fury.io/gh/jinahya%2Fdatabase-metadata-bind.svg)](https://badge.fury.io/gh/jinahya%2Fdatabase-metadata-bind)
 [![Dependency Status](https://www.versioneye.com/user/projects/563ccf434d415e0018000001/badge.svg?style=flat)](https://www.versioneye.com/user/projects/563ccf434d415e0018000001)
 [![Support via Gratipay](https://img.shields.io/gratipay/JSFiddle.svg)](https://gratipay.com/~jinahya/)
+[![Codacy Badge](https://api.codacy.com/project/badge/grade/2e056714e9614bf89b860601cbb2b174)](https://www.codacy.com/app/jinahya/database-metadata-bind)
+
+[![Issue Stats](http://issuestats.com/github/jinahya/database-metadata-bind/badge/pr)](http://issuestats.com/github/jinahya/database-metadata-bind)
+[![Issue Stats](http://issuestats.com/github/jinahya/database-metadata-bind/badge/issue)](http://issuestats.com/github/jinahya/database-metadata-bind)
 
 A library binding various information from [DatabaseMetaData](http://docs.oracle.com/javase/7/docs/api/java/sql/DatabaseMetaData.html).
 
@@ -31,6 +35,7 @@ A library binding various information from [DatabaseMetaData](http://docs.oracle
 
 ## Hierarchy
 ![Class Diagram](http://jinahya.github.io/database-metadata-bind/site/0.11-SNAPSHOT/apidocs/com/github/jinahya/sql/database/metadata/bind/com.github.jinahya.sql.database.metadata.bind.png)
+<!--
   * Metadata
     * Category (`metadata/categories`)
       * Schema (`category/schemas`)
@@ -53,6 +58,7 @@ A library binding various information from [DatabaseMetaData](http://docs.oracle
     * ClientInfoProperty (`metadata/clientInfoProperties`)
     * SchemaName (`metadata/schemaNames`)
     * TableType (`metadata/tableTypes`)
+-->
 
 ## Usage
 ### API Binding
