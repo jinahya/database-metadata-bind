@@ -21,7 +21,6 @@ package com.github.jinahya.sql.database.metadata.bind;
 import java.util.List;
 import javax.xml.bind.annotation.XmlAttribute;
 import javax.xml.bind.annotation.XmlElement;
-import javax.xml.bind.annotation.XmlElementRef;
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlType;
 
@@ -42,7 +41,7 @@ import javax.xml.bind.annotation.XmlType;
         "nonUnique", "indexQualifier", "indexName", "type", "ordinalPosition",
         "columnName", "ascOrDesc", "cardinality", "pages", "filterCondition",
         // ---------------------------------------------------------------------
-        "unknownColumns"
+        "unknownResults"
     }
 )
 public class IndexInfo extends AbstractChild<Table> {
@@ -324,8 +323,8 @@ public class IndexInfo extends AbstractChild<Table> {
     private String filterCondition;
 
 
-    @XmlElement(name = "unknownColumn", nillable = true)
-    private List<UnknownColumn> unknownColumns;
+    @XmlElement(name = "unknownResult", nillable = true)
+    private List<UnknownResult> unknownResults;
 
 
 }

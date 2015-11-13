@@ -235,9 +235,9 @@
         <artifactId>maven-javadoc-plugin</artifactId>
         <configuration>
           <additionalparam>
-            -hide java.* -hide AbstractChild -hide AbstractKey -hide Child -hide MetadataContext -hide TableDomain -hide XmlConstants -hide UnknownColumn -hide _
+            -hide java.* -hide AbstractChild -hide AbstractKey -hide Child -hide MetadataContext -hide TableDomain -hide XmlConstants -hide UnknownColumn -hide _ -visibility
             -collapsible -horizontal
-            -inferdep -inferdepinpackage -inferrel
+            -inferdep -inferdepinpackage -inferdepvis protected -inferrel
             -outputencoding UTF-8
           </additionalparam>
           <!--<breakiterator>true</breakiterator>-->

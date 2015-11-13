@@ -21,7 +21,6 @@ package com.github.jinahya.sql.database.metadata.bind;
 import java.util.List;
 import javax.xml.bind.annotation.XmlAttribute;
 import javax.xml.bind.annotation.XmlElement;
-import javax.xml.bind.annotation.XmlElementRef;
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlType;
 
@@ -37,7 +36,7 @@ import javax.xml.bind.annotation.XmlType;
     propOrder = {
         "columnName", "keySeq", "pkName",
         // ---------------------------------------------------------------------
-        "unknownColumns"
+        "unknownResults"
     }
 )
 public class PrimaryKey extends AbstractChild<Table> {
@@ -168,8 +167,8 @@ public class PrimaryKey extends AbstractChild<Table> {
     private String pkName;
 
 
-    @XmlElement(name = "unknownColumn", nillable = true)
-    private List<UnknownColumn> unknownColumns;
+    @XmlElement(name = "unknownResult", nillable = true)
+    private List<UnknownResult> unknownResults;
 
 
 }

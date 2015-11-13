@@ -43,7 +43,7 @@ import javax.xml.bind.annotation.XmlType;
         "indexInfo", "primaryKeys", "pseudoColumns", "superTables",
         "tablePrivileges", "versionColumns",
         // ---------------------------------------------------------------------
-        "unknownColumns"
+        "unknownResults"
     }
 )
 public class Table extends AbstractChild<Schema> {
@@ -404,20 +404,20 @@ public class Table extends AbstractChild<Schema> {
         },
         argsarr = {
             @InvocationArgs({
-                ":tableCat", ":tableSchem", ":tableName",
-                "0", // bestRowTemporaty
-                "true"
-            }),
+            ":tableCat", ":tableSchem", ":tableName",
+            "0", // bestRowTemporaty
+            "true"
+        }),
             @InvocationArgs({
-                ":tableCat", ":tableSchem", ":tableName",
-                "1", // bestRowTransaction
-                "true"
-            }),
+            ":tableCat", ":tableSchem", ":tableName",
+            "1", // bestRowTransaction
+            "true"
+        }),
             @InvocationArgs({
-                ":tableCat", ":tableSchem", ":tableName",
-                "2", // bestRowSession
-                "true"
-            })
+            ":tableCat", ":tableSchem", ":tableName",
+            "2", // bestRowSession
+            "true"
+        })
         }
     )
     @XmlElementRef
@@ -465,8 +465,8 @@ public class Table extends AbstractChild<Schema> {
         },
         argsarr = {
             @InvocationArgs({
-                ":tableCat", ":tableSchem", ":tableName", "false", "false"
-            })
+            ":tableCat", ":tableSchem", ":tableName", "false", "false"
+        })
         }
     )
     @XmlElementRef
@@ -528,8 +528,8 @@ public class Table extends AbstractChild<Schema> {
     private List<VersionColumn> versionColumns;
 
 
-    @XmlElement(name = "unknownColumn", nillable = true)
-    private List<UnknownColumn> unknownColumns;
+    @XmlElement(name = "unknownResult", nillable = true)
+    private List<UnknownResult> unknownResults;
 
 
 }

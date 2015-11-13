@@ -67,7 +67,7 @@ class Reflections {
     }
 
 
-    private static final String FIELD_NAME_UNKNOWN_COLUMNS = "unknownColumns";
+    private static final String FIELD_NAME_UNKNOWN_COLUMNS = "unknownResults";
 
 
     static Class<?> wrapper(final Class<?> primitive) {
@@ -403,7 +403,7 @@ class Reflections {
     }
 
 
-    static <T> void setUnknownColumns(final Class<? super T> beanClass,
+    static <T> void setunknownResults(final Class<? super T> beanClass,
                                       final Set<String> columnLabels,
                                       final ResultSet resultSet,
                                       final T beanInstance)
@@ -423,11 +423,10 @@ class Reflections {
             return;
         }
 
-        final List<UnknownColumn> value
-            = new ArrayList<UnknownColumn>(columnLabels.size());
+        final List<UnknownResult> value
+            = new ArrayList<UnknownResult>(columnLabels.size());
         for (final String columnLabel : columnLabels) {
-            value.add(
-                new UnknownColumn()
+            value.add(new UnknownResult()
                 .label(columnLabel)
                 .value(resultSet.getObject(columnLabel))
             );

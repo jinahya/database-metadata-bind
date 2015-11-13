@@ -19,7 +19,6 @@ package com.github.jinahya.sql.database.metadata.bind;
 
 
 import javax.xml.bind.annotation.XmlAttribute;
-import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlValue;
 
 
@@ -27,8 +26,7 @@ import javax.xml.bind.annotation.XmlValue;
  *
  * @author Jin Kwon &lt;jinahya_at_gmail.com&gt;
  */
-@XmlRootElement
-public class UnknownColumn {
+class UnknownResult {
 
 
     @Override
@@ -41,17 +39,20 @@ public class UnknownColumn {
     }
 
 
+    // ------------------------------------------------------------------- label
     public String getLabel() {
+
         return label;
     }
 
 
     public void setLabel(String label) {
+
         this.label = label;
     }
 
 
-    UnknownColumn label(final String label) {
+    UnknownResult label(final String label) {
 
         setLabel(label);
 
@@ -59,17 +60,20 @@ public class UnknownColumn {
     }
 
 
+    // ------------------------------------------------------------------- value
     public Object getValue() {
+
         return value;
     }
 
 
     public void setValue(Object value) {
+
         this.value = value;
     }
 
 
-    UnknownColumn value(final Object value) {
+    UnknownResult value(final Object value) {
 
         setValue(value);
 
@@ -84,6 +88,7 @@ public class UnknownColumn {
     }
 
 
+    // -------------------------------------------------------------------------
     @XmlAttribute
     protected String label;
 

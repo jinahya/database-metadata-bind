@@ -45,7 +45,7 @@ import javax.xml.bind.annotation.XmlType;
         "tables",
         "userDefinedTypes",
         // ---------------------------------------------------------------------
-        "unknownColumns"
+        "unknownResults"
     }
 )
 public class Schema extends AbstractChild<Catalog> implements TableDomain {
@@ -269,8 +269,8 @@ public class Schema extends AbstractChild<Catalog> implements TableDomain {
     private List<UserDefinedType> userDefinedTypes;
 
 
-    @XmlElement(name = "unknownColumn", nillable = true)
-    private List<UnknownColumn> unknownColumns;
+    @XmlElement(name = "unknownResult", nillable = true)
+    private List<UnknownResult> unknownResults;
 
 
 }

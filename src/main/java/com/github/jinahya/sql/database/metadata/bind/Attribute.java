@@ -18,6 +18,7 @@
 package com.github.jinahya.sql.database.metadata.bind;
 
 
+import java.util.List;
 import javax.xml.bind.annotation.XmlAttribute;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
@@ -36,7 +37,9 @@ import javax.xml.bind.annotation.XmlType;
         "attrName", "dataType", "attrTypeName", "attrSize", "decimalDigits",
         "numPrecRadix", "nullable", "remarks", "attrDef", "sqlDataType",
         "sqlDatetimeSub", "charOctetLength", "ordinalPosition", "isNullable",
-        "sourceDataType"
+        "sourceDataType",
+        // ---------------------------------------------------------------------
+        "unknownResults"
     }
 )
 public class Attribute extends AbstractChild<UserDefinedType> {
@@ -412,6 +415,10 @@ public class Attribute extends AbstractChild<UserDefinedType> {
     @NillableBySpecification
     @XmlElement(nillable = true, required = true)
     private Short sourceDataType;
+
+
+    @XmlElement(name = "unknownResult", nillable = true)
+    private List<UnknownResult> unknownResults;
 
 
 }

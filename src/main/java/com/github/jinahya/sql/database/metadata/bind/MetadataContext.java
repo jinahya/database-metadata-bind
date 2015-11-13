@@ -217,7 +217,7 @@ public class MetadataContext {
                     throw new RuntimeException(e);
                 }
             }
-            Reflections.setUnknownColumns(beanClass, resultLabels, resultSet,
+            Reflections.setunknownResults(beanClass, resultLabels, resultSet,
                                            beanInstance);
         }
 
@@ -400,7 +400,7 @@ public class MetadataContext {
 //            logger.log(Level.WARNING, "unmapped column: {0}",
 //                       new Object[]{unmappedColumn});
 //        }
-//        for (final ColumnDescriptor unknownColumn : getUnknownColumns()) {
+//        for (final ColumnDescriptor unknownColumn : getunknownResults()) {
 //            logger.log(Level.WARNING, "unknown column: {0}",
 //                       new Object[]{unknownColumn});
 //        }
@@ -899,13 +899,13 @@ public class MetadataContext {
 //
 //        return unmappedColumns;
 //    }
-//    public List<ColumnDescriptor> getUnknownColumns() {
+//    public List<ColumnDescriptor> getunknownResults() {
 //
-//        if (unknownColumns == null) {
-//            unknownColumns = new ArrayList<ColumnDescriptor>();
+//        if (unknownResults == null) {
+//            unknownResults = new ArrayList<ColumnDescriptor>();
 //        }
 //
-//        return unknownColumns;
+//        return unknownResults;
 //    }
     Set<String> getMethodNames() {
 
@@ -937,7 +937,7 @@ public class MetadataContext {
 
 
 //    private Set<ColumnDescriptor> unmappedColumns;
-//    private List<ColumnDescriptor> unknownColumns;
+//    private List<ColumnDescriptor> unknownResults;
     private Set<String> methodNames;
 
 

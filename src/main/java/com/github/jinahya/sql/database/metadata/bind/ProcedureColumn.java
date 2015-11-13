@@ -21,7 +21,6 @@ package com.github.jinahya.sql.database.metadata.bind;
 import java.util.List;
 import javax.xml.bind.annotation.XmlAttribute;
 import javax.xml.bind.annotation.XmlElement;
-import javax.xml.bind.annotation.XmlElementRef;
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlType;
 
@@ -40,7 +39,7 @@ import javax.xml.bind.annotation.XmlType;
         "columnDef", "sqlDataType", "sqlDatetimeSub", "charOctetLength",
         "ordinalPosition", "isNullable", "specificName",
         // ---------------------------------------------------------------------
-        "unknownColumns"
+        "unknownResults"
     }
 )
 public class ProcedureColumn extends AbstractChild<Procedure> {
@@ -455,8 +454,8 @@ public class ProcedureColumn extends AbstractChild<Procedure> {
     private String specificName;
 
 
-    @XmlElement(name = "unknownColumn", nillable = true)
-    private List<UnknownColumn> unknownColumns;
+    @XmlElement(name = "unknownResult", nillable = true)
+    private List<UnknownResult> unknownResults;
 
 
 }

@@ -44,7 +44,7 @@ import javax.xml.bind.annotation.XmlType;
         // ---------------------------------------------------------------------
         "columnPrivileges",
         // ---------------------------------------------------------------------
-        "unknownColumns"
+        "unknownResults"
     }
 )
 public class Column extends AbstractChild<Table> {
@@ -556,16 +556,16 @@ public class Column extends AbstractChild<Table> {
         types = {String.class, String.class, String.class, String.class},
         argsarr = {
             @InvocationArgs({
-                ":tableCat", ":tableSchem", ":tableName", ":columnName"
-            })
+            ":tableCat", ":tableSchem", ":tableName", ":columnName"
+        })
         }
     )
     @XmlElementRef
     private List<ColumnPrivilege> columnPrivileges;
 
 
-    @XmlElement(name = "unknownColumn", nillable = true)
-    private List<UnknownColumn> unknownColumns;
+    @XmlElement(name = "unknownResult", nillable = true)
+    private List<UnknownResult> unknownResults;
 
 
 }
