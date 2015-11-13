@@ -18,6 +18,7 @@
 package com.github.jinahya.sql.database.metadata.bind;
 
 
+import java.sql.Connection;
 import java.sql.RowIdLifetime;
 import java.util.ArrayList;
 import java.util.List;
@@ -130,6 +131,18 @@ public class Metadata implements TableDomain {
 
     public void setClientInfoProperties(List<ClientInfoProperty> clientInfoProperties) {
         this.clientInfoProperties = clientInfoProperties;
+    }
+
+
+    @Deprecated
+    public Connection getConnection() {
+        return connection;
+    }
+
+
+    @Deprecated
+    public void setConnection(Connection connection) {
+        this.connection = connection;
     }
 
 
@@ -715,6 +728,36 @@ public class Metadata implements TableDomain {
     }
 
 
+    public String getSearchStringEscape() {
+        return searchStringEscape;
+    }
+
+
+    public void setSearchStringEscape(String searchStringEscape) {
+        this.searchStringEscape = searchStringEscape;
+    }
+
+
+    public String getSqlKewords() {
+        return sqlKewords;
+    }
+
+
+    public void setSqlKewords(String sqlKewords) {
+        this.sqlKewords = sqlKewords;
+    }
+
+
+    public int getSqlStateType() {
+        return sqlStateType;
+    }
+
+
+    public void setSqlStateType(int sqlStateType) {
+        this.sqlStateType = sqlStateType;
+    }
+
+
     public boolean isStoresLowerCaseIdentifiers() {
         return storesLowerCaseIdentifiers;
     }
@@ -902,6 +945,16 @@ public class Metadata implements TableDomain {
 
     public void setSupportsColumnAliasing(boolean supportsColumnAliasing) {
         this.supportsColumnAliasing = supportsColumnAliasing;
+    }
+
+
+    public boolean isSupportsConvert_() {
+        return supportsConvert_;
+    }
+
+
+    public void setSupportsConvert_(boolean supportsConvert_) {
+        this.supportsConvert_ = supportsConvert_;
     }
 
 
@@ -1485,6 +1538,16 @@ public class Metadata implements TableDomain {
     }
 
 
+    public String getSchemaTerm() {
+        return schemaTerm;
+    }
+
+
+    public void setSchemaTerm(String schemaTerm) {
+        this.schemaTerm = schemaTerm;
+    }
+
+
     public List<TableType> getTableTypes() {
         return tableTypes;
     }
@@ -1594,6 +1657,11 @@ public class Metadata implements TableDomain {
     @Invocation(name = "getClientInfoProperties")
     @XmlElementRef
     private List<ClientInfoProperty> clientInfoProperties;
+
+
+    @Invocation(name = "getConnection")
+    @XmlTransient
+    private Connection connection;
 
 
     @XmlElementRef
@@ -1946,6 +2014,21 @@ public class Metadata implements TableDomain {
     private RowIdLifetime rowIdLifetime;
 
 
+    @Invocation(name = "getSearchStringEscape")
+    @XmlElement(required = true)
+    private String searchStringEscape;
+
+
+    @Invocation(name = "getSQLKeywords")
+    @XmlElement(required = true)
+    private String sqlKewords;
+
+
+    @Invocation(name = "getSQLStateType")
+    @XmlElement(required = true)
+    private int sqlStateType;
+
+
     @Invocation(name = "storesLowerCaseIdentifiers")
     @XmlElement(required = true)
     private boolean storesLowerCaseIdentifiers;
@@ -2039,6 +2122,11 @@ public class Metadata implements TableDomain {
     @Invocation(name = "supportsColumnAliasing")
     @XmlElement(required = true)
     private boolean supportsColumnAliasing;
+
+
+    @Invocation(name = "supportsConvert")
+    @XmlTransient
+    private boolean supportsConvert_;
 
 
     @XmlElement
@@ -2360,6 +2448,11 @@ public class Metadata implements TableDomain {
     @Invocation(name = "getSchemas")
     @XmlElementRef
     private List<SchemaName> schemaNames;
+
+
+    @Invocation(name = "getSchemaTerm")
+    @XmlElement(required = true)
+    private String schemaTerm;
 
 
     @Invocation(name = "getTableTypes")

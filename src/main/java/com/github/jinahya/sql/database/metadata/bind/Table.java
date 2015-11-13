@@ -40,8 +40,10 @@ import javax.xml.bind.annotation.XmlType;
         "selfReferencingColName", "refGeneration",
         // ---------------------------------------------------------------------
         "bestRowIdentifiers", "columns", "exportedKeys", "importedKeys",
-        "indexInfo", "primaryKeys", "pseudoColumns", "tablePrivileges",
-        "versionColumns"
+        "indexInfo", "primaryKeys", "pseudoColumns", "superTables",
+        "tablePrivileges", "versionColumns",
+        // ---------------------------------------------------------------------
+        "unknownColumns"
     }
 )
 public class Table extends AbstractChild<Schema> {
@@ -304,6 +306,17 @@ public class Table extends AbstractChild<Schema> {
     }
 
 
+    // ------------------------------------------------------------- superTables
+    public List<SuperTable> getSuperTables() {
+
+        if (superTables == null) {
+            superTables = new ArrayList<SuperTable>();
+        }
+
+        return superTables;
+    }
+
+
     // --------------------------------------------------------- tablePrivileges
     public List<TablePrivilege> getTablePrivileges() {
 
@@ -483,6 +496,17 @@ public class Table extends AbstractChild<Schema> {
 
 
     @Invocation(
+        name = "getSuperTables",
+        types = {String.class, String.class, String.class},
+        argsarr = {
+            @InvocationArgs({":tableCat", ":tableSchem", ":tableName"})
+        }
+    )
+    @XmlElementRef
+    private List<SuperTable> superTables;
+
+
+    @Invocation(
         name = "getTablePrivileges",
         types = {String.class, String.class, String.class},
         argsarr = {
@@ -502,6 +526,10 @@ public class Table extends AbstractChild<Schema> {
     )
     @XmlElementRef
     private List<VersionColumn> versionColumns;
+
+
+    @XmlElement(name = "unknownColumn", nillable = true)
+    private List<UnknownColumn> unknownColumns;
 
 
 }

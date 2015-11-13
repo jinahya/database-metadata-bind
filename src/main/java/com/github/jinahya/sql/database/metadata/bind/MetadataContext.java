@@ -24,11 +24,13 @@ import java.beans.PropertyDescriptor;
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
+import java.lang.reflect.Modifier;
 import java.lang.reflect.ParameterizedType;
 import java.sql.DatabaseMetaData;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 import java.util.TreeSet;
@@ -125,6 +127,13 @@ public class MetadataContext {
     }
 
 
+    private boolean suppressed(final Class<?> beanClass,
+                               final PropertyDescriptor propertyDescriptor) {
+
+        return suppressed(suppression(beanClass, propertyDescriptor));
+    }
+
+
     private void setPropertyValue(final PropertyDescriptor propertyDescriptor,
                                   final Object beanInstance,
                                   final Object propertyValue,
@@ -172,6 +181,8 @@ public class MetadataContext {
                IntrospectionException {
 
         if (resultSet != null) {
+            final Set<String> resultLabels
+                = ResultSets.getColumnLabels(resultSet);
             for (final PropertyDescriptor propertyDescriptor
                  : Beans.getPropertyDescriptors(beanClass, Label.class)) {
                 final String suppression
@@ -180,8 +191,14 @@ public class MetadataContext {
                     continue;
                 }
                 final Label label = Labels.get(propertyDescriptor, beanClass);
+                final String labelValue = label.value();
+                if (!resultLabels.remove(labelValue)) {
+                    logger.log(Level.WARNING,
+                               "unmapped column; bean={0}, label={1}",
+                               new Object[]{beanClass, label});
+                }
                 try {
-                    final Object value = resultSet.getObject(label.value());
+                    final Object value = resultSet.getObject(labelValue);
                     Beans.setPropertyValue(
                         propertyDescriptor, beanInstance, value);
                 } catch (final SQLException sqle) {
@@ -200,6 +217,8 @@ public class MetadataContext {
                     throw new RuntimeException(e);
                 }
             }
+            Reflections.setUnknownColumns(beanClass, resultLabels, resultSet,
+                                           beanInstance);
         }
 
         for (final PropertyDescriptor propertyDescriptor
@@ -211,34 +230,17 @@ public class MetadataContext {
             }
             final Invocation invocation
                 = Invocations.get(propertyDescriptor, beanClass);
+            final String name = invocation.name();
+            if (!getMethodNames().contains(name)) {
+                logger.log(Level.WARNING, "unknown method name: {0}",
+                           new Object[]{name});
+            }
             final Class<?>[] types = invocation.types();
-            final Method method = DatabaseMetaData.class.getMethod(
-                invocation.name(), invocation.types());
+            final Method method = DatabaseMetaData.class.getMethod(name, types);
             for (final InvocationArgs invocationArgs : invocation.argsarr()) {
                 final String[] names = invocationArgs.value();
-                final Object[] args = Invocations.values(beanClass, beanInstance, types, names);
-//                final Object[] args = new Object[names.length];
-//                for (int i = 0; i < names.length; i++) {
-//                    final String name = names[i];
-//                    if ("null".equals(name)) {
-//                        args[i] = null;
-//                        continue;
-//                    }
-//                    if (name.startsWith(":")) {
-//                        args[i] = Beans.getPropertyValue(
-//                            beanClass, name.substring(1), beanInstance);
-//                        continue;
-//                    }
-//                    if (types[i] == String.class) {
-//                        args[i] = name;
-//                        continue;
-//                    }
-//                    if (types[i].isPrimitive()) {
-//                        types[i] = Reflections.wrapper(types[i]);
-//                    }
-//                    args[i] = types[i].getMethod("valueOf", String.class)
-//                        .invoke(null, name);
-//                }
+                final Object[] args = Invocations.values(
+                    beanClass, beanInstance, types, names);
                 try {
                     final Object propertyValue = method.invoke(database, args);
                     setPropertyValue(
@@ -303,7 +305,8 @@ public class MetadataContext {
 
     private <T> List<? super T> bindAll(final ResultSet results,
                                         final Class<T> type)
-        throws SQLException, ReflectiveOperationException, IntrospectionException {
+        throws SQLException, ReflectiveOperationException,
+               IntrospectionException {
 
         return bindAll(results, type, new ArrayList<T>());
     }
@@ -316,9 +319,11 @@ public class MetadataContext {
      *
      * @throws SQLException if a database occurs.
      * @throws ReflectiveOperationException if a reflection erorr occurs
+     * @throws IntrospectionException if introspection failed
      */
     public Metadata getMetadata()
-        throws SQLException, ReflectiveOperationException, IntrospectionException {
+        throws SQLException, ReflectiveOperationException,
+               IntrospectionException {
 
         final Metadata metadata = bindSingle(null, Metadata.class);
 
@@ -390,6 +395,18 @@ public class MetadataContext {
 //                        fktable.getTableCat(), fktable.getTableSchem(),
 //                        fktable.getTableName()));
 //            }
+//        }
+//        for (final ColumnDescriptor unmappedColumn : getUnmappedColumns()) {
+//            logger.log(Level.WARNING, "unmapped column: {0}",
+//                       new Object[]{unmappedColumn});
+//        }
+//        for (final ColumnDescriptor unknownColumn : getUnknownColumns()) {
+//            logger.log(Level.WARNING, "unknown column: {0}",
+//                       new Object[]{unknownColumn});
+//        }
+//        for (final String methodName : getMethodNames()) {
+//            logger.log(Level.WARNING, "uninvoked method: {0}",
+//                       new Object[]{methodName});
 //        }
         return metadata;
     }
@@ -874,10 +891,54 @@ public class MetadataContext {
     }
 
 
+//    private Set<ColumnDescriptor> getUnmappedColumns() {
+//
+//        if (unmappedColumns == null) {
+//            unmappedColumns = new HashSet<ColumnDescriptor>();
+//        }
+//
+//        return unmappedColumns;
+//    }
+//    public List<ColumnDescriptor> getUnknownColumns() {
+//
+//        if (unknownColumns == null) {
+//            unknownColumns = new ArrayList<ColumnDescriptor>();
+//        }
+//
+//        return unknownColumns;
+//    }
+    Set<String> getMethodNames() {
+
+        if (methodNames == null) {
+            methodNames = new HashSet<String>();
+            for (final Method method : DatabaseMetaData.class.getMethods()) {
+                if (!DatabaseMetaData.class.equals(method.getDeclaringClass())) {
+                    continue;
+                }
+                final int modifier = method.getModifiers();
+                if (Modifier.isStatic(modifier)) {
+                    continue;
+                }
+                if (!Modifier.isPublic(modifier)) {
+                    continue;
+                }
+                methodNames.add(method.getName());
+            }
+        }
+
+        return methodNames;
+    }
+
+
     private final DatabaseMetaData database;
 
 
     private Set<String> suppressions;
+
+
+//    private Set<ColumnDescriptor> unmappedColumns;
+//    private List<ColumnDescriptor> unknownColumns;
+    private Set<String> methodNames;
 
 
 }

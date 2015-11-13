@@ -18,7 +18,9 @@
 package com.github.jinahya.sql.database.metadata.bind;
 
 
+import java.util.List;
 import javax.xml.bind.annotation.XmlElement;
+import javax.xml.bind.annotation.XmlElementRef;
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlType;
 
@@ -36,7 +38,9 @@ import javax.xml.bind.annotation.XmlType;
         "createParams", "nullable", "caseSensitive", "searchable",
         "unsignedAttribute", "fixedPrecScale", "autoIncrement", "localTypeName",
         "minimumScale", "maximumScale", "sqlDataType", "sqlDatetimeSub",
-        "numPrecRadix"
+        "numPrecRadix",
+        // ---------------------------------------------------------------------
+        "unknownColumns"
     }
 )
 public class TypeInfo extends AbstractChild<Metadata> {
@@ -399,7 +403,7 @@ public class TypeInfo extends AbstractChild<Metadata> {
     private Integer sqlDataType;
 
 
-    @Label("SQL_DATA_TYPE")
+    @Label("SQL_DATETIME_SUB")
     @Unused
     @XmlElement(nillable = true, required = true)
     private Integer sqlDatetimeSub;
@@ -408,6 +412,10 @@ public class TypeInfo extends AbstractChild<Metadata> {
     @Label("NUM_PREC_RADIX")
     @XmlElement(required = true)
     private int numPrecRadix;
+
+
+    @XmlElement(name = "unknownColumn", nillable = true)
+    private List<UnknownColumn> unknownColumns;
 
 
 }

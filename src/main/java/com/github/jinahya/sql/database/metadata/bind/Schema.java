@@ -39,7 +39,13 @@ import javax.xml.bind.annotation.XmlType;
         "tableSchem",
         // ---------------------------------------------------------------------
         "crossReferences",
-        "functions", "procedures", "tables", "userDefinedTypes"
+        "functions", "procedures",
+        //"superTables",
+        //"superTypes",
+        "tables",
+        "userDefinedTypes",
+        // ---------------------------------------------------------------------
+        "unknownColumns"
     }
 )
 public class Schema extends AbstractChild<Catalog> implements TableDomain {
@@ -144,6 +150,24 @@ public class Schema extends AbstractChild<Catalog> implements TableDomain {
     }
 
 
+//    // ------------------------------------------------------------- superTables
+//    public List<SuperTable> getSuperTables() {
+//
+//        if (superTables == null) {
+//            superTables = new ArrayList<SuperTable>();
+//        }
+//
+//        return superTables;
+//    }
+//    // -------------------------------------------------------------- superTypes
+//    public List<SuperType> getSuperTypes() {
+//
+//        if (superTypes == null) {
+//            superTypes = new ArrayList<SuperType>();
+//        }
+//
+//        return superTypes;
+//    }
     // ------------------------------------------------------------------ tables
     @Override
     public List<Table> getTables() {
@@ -205,6 +229,24 @@ public class Schema extends AbstractChild<Catalog> implements TableDomain {
     private List<Procedure> procedures;
 
 
+//    @Invocation(
+//        name = "getSuperTables",
+//        types = {String.class, String.class, String.class},
+//        argsarr = {
+//            @InvocationArgs({":tableCatalog", ":tableSchem", "null"})
+//        }
+//    )
+//    @XmlElementRef
+//    private List<SuperTable> superTables;
+//    @Invocation(
+//        name = "getSuperTypes",
+//        types = {String.class, String.class, String.class},
+//        argsarr = {
+//            @InvocationArgs({":tableCatalog", ":tableSchem", "null"})
+//        }
+//    )
+//    @XmlElementRef
+//    private List<SuperType> superTypes;
     @Invocation(
         name = "getTables",
         types = {String.class, String.class, String.class, String[].class},
@@ -225,6 +267,10 @@ public class Schema extends AbstractChild<Catalog> implements TableDomain {
     )
     @XmlElementRef
     private List<UserDefinedType> userDefinedTypes;
+
+
+    @XmlElement(name = "unknownColumn", nillable = true)
+    private List<UnknownColumn> unknownColumns;
 
 
 }

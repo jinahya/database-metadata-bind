@@ -19,7 +19,6 @@ package com.github.jinahya.sql.database.metadata.bind;
 
 
 import javax.xml.bind.annotation.XmlAttribute;
-import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlValue;
 
 
@@ -27,13 +26,12 @@ import javax.xml.bind.annotation.XmlValue;
  *
  * @author Jin Kwon &lt;jinahya_at_gmail.com&gt;
  */
-//@XmlRootElement
-class ConcurrencyBoolean {
+class RSCBoolean {
 
 
-    static ConcurrencyBoolean valueOf(final Object[] args, final Object value) {
+    static RSCBoolean valueOf(final Object[] args, final Object value) {
 
-        final ConcurrencyBoolean instance = new ConcurrencyBoolean();
+        final RSCBoolean instance = new RSCBoolean();
 
         instance.setConcurrency((Integer) args[0]);
         instance.setValue((Boolean) value);
@@ -55,7 +53,7 @@ class ConcurrencyBoolean {
     }
 
 
-    ConcurrencyBoolean concurrency(final int concurrency) {
+    RSCBoolean concurrency(final int concurrency) {
 
         setConcurrency(concurrency);
 
@@ -76,7 +74,7 @@ class ConcurrencyBoolean {
     }
 
 
-    ConcurrencyBoolean value(final boolean value) {
+    RSCBoolean value(final boolean value) {
 
         setValue(value);
 

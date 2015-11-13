@@ -17,9 +17,12 @@ ProcedureColumn
 PseudoColumn
 Schema
 SchemaName
+SuperTable
+SuperType
 Table
 TablePrivilege
 TableType
 TypeInfo
+UnknownColumn
 UserDefinedType
 VersionColumn

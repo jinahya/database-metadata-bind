@@ -23,11 +23,15 @@ import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
 import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.sql.Types;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.logging.Level;
@@ -61,6 +65,9 @@ class Reflections {
         map.put(void.class, Void.class);
         WRAPPERS = Collections.unmodifiableMap(map);
     }
+
+
+    private static final String FIELD_NAME_UNKNOWN_COLUMNS = "unknownColumns";
 
 
     static Class<?> wrapper(final Class<?> primitive) {
@@ -160,11 +167,24 @@ class Reflections {
         if (!field.isAccessible()) {
             field.setAccessible(true);
         }
+
         try {
             field.set(bean, value);
             return;
         } catch (final IllegalArgumentException iae) {
         }
+
+        try {
+            field.set(bean, Values.adapt(field.getType(), value, field));
+        } catch (final IllegalArgumentException iae) {
+            logger.log(Level.WARNING, "failed to set value({0}) to field({1})",
+                       new Object[]{value, field});
+        }
+
+        if (true) {
+            return;
+        }
+
         final Class<?> fieldType = field.getType();
         final Class<?> valueType = value == null ? null : value.getClass();
         if (fieldType == Boolean.TYPE) {
@@ -380,6 +400,43 @@ class Reflections {
         for (final Object childBean : childBeans) {
             method.invoke(childBean, parentBean);
         }
+    }
+
+
+    static <T> void setUnknownColumns(final Class<? super T> beanClass,
+                                      final Set<String> columnLabels,
+                                      final ResultSet resultSet,
+                                      final T beanInstance)
+        throws SQLException, ReflectiveOperationException {
+
+        if (columnLabels.isEmpty()) {
+            return;
+        }
+
+        final Field field;
+        try {
+            field = findField(beanClass, FIELD_NAME_UNKNOWN_COLUMNS);
+            //field = beanClass.getDeclaredField(FIELD_NAME_UNKNOWN_COLUMNS);
+        } catch (final NoSuchFieldException nsfe) {
+            logger.log(Level.WARNING, "field not found: {0} in {1}",
+                       new Object[]{FIELD_NAME_UNKNOWN_COLUMNS, beanClass});
+            return;
+        }
+
+        final List<UnknownColumn> value
+            = new ArrayList<UnknownColumn>(columnLabels.size());
+        for (final String columnLabel : columnLabels) {
+            value.add(
+                new UnknownColumn()
+                .label(columnLabel)
+                .value(resultSet.getObject(columnLabel))
+            );
+        }
+
+        if (!field.isAccessible()) {
+            field.setAccessible(true);
+        }
+        field.set(beanInstance, value);
     }
 
 

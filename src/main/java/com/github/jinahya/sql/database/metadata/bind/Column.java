@@ -42,7 +42,9 @@ import javax.xml.bind.annotation.XmlType;
         "isNullable", "scopeCatalog", "scopeSchema", "scopeTable",
         "sourceDataType", "isAutoincrement", "isGeneratedcolumn",
         // ---------------------------------------------------------------------
-        "columnPrivileges"
+        "columnPrivileges",
+        // ---------------------------------------------------------------------
+        "unknownColumns"
     }
 )
 public class Column extends AbstractChild<Table> {
@@ -560,6 +562,10 @@ public class Column extends AbstractChild<Table> {
     )
     @XmlElementRef
     private List<ColumnPrivilege> columnPrivileges;
+
+
+    @XmlElement(name = "unknownColumn", nillable = true)
+    private List<UnknownColumn> unknownColumns;
 
 
 }

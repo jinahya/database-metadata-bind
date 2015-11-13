@@ -18,7 +18,9 @@
 package com.github.jinahya.sql.database.metadata.bind;
 
 
+import java.util.List;
 import javax.xml.bind.annotation.XmlElement;
+import javax.xml.bind.annotation.XmlElementRef;
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlType;
 
@@ -33,7 +35,9 @@ import javax.xml.bind.annotation.XmlType;
 @XmlType(
     propOrder = {
         "scope", "columnName", "dataType", "typeName", "columnSize",
-        "bufferLength", "decimalDigits", "pseudoColumn"
+        "bufferLength", "decimalDigits", "pseudoColumn",
+        // ---------------------------------------------------------------------
+        "unknownColumns"
     }
 )
 public class BestRowIdentifier extends AbstractChild<Table> {
@@ -213,6 +217,10 @@ public class BestRowIdentifier extends AbstractChild<Table> {
     @Label("PSEUDO_COLUMN")
     @XmlElement(required = true)
     private short pseudoColumn;
+
+
+    @XmlElement(name = "unknownColumn", nillable = true)
+    private List<UnknownColumn> unknownColumns;
 
 
 }

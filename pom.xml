@@ -216,7 +216,7 @@
           <execution>
             <phase>generate-sources</phase>
             <goals>
-              <!--<goal>delombok</goal>-->
+              <goal>delombok</goal>
             </goals>
           </execution>
         </executions>
@@ -235,7 +235,7 @@
         <artifactId>maven-javadoc-plugin</artifactId>
         <configuration>
           <additionalparam>
-            -hide java.* -hide AbstractChild -hide AbstractKey -hide Child -hide MetadataContext -hide TableDomain -hide XmlConstants
+            -hide java.* -hide AbstractChild -hide AbstractKey -hide Child -hide MetadataContext -hide TableDomain -hide XmlConstants -hide UnknownColumn -hide _
             -collapsible -horizontal
             -inferdep -inferdepinpackage -inferrel
             -outputencoding UTF-8
