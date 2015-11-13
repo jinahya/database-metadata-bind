@@ -1,6 +1,6 @@
 database-metadata-bind
 ====================
-![](https://travis-ci.org/jinahya/database-metadata-bind.svg?branch=develop)
+[![Build Status](https://travis-ci.org/jinahya/database-metadata-bind.svg?branch=develop)](https://travis-ci.org/jinahya/database-metadata-bind)
 [![Maven Central](https://maven-badges.herokuapp.com/maven-central/com.github.jinahya/database-metadata-bind/badge.svg)](https://maven-badges.herokuapp.com/com.github.jinahya/database-metadata-bind/rsql-parser)
 [![GitHub version](https://badge.fury.io/gh/jinahya%2Fdatabase-metadata-bind.svg)](https://badge.fury.io/gh/jinahya%2Fdatabase-metadata-bind)
 [![Dependency Status](https://www.versioneye.com/user/projects/563ccf434d415e0018000001/badge.svg?style=flat)](https://www.versioneye.com/user/projects/563ccf434d415e0018000001)
