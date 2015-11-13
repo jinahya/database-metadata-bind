@@ -91,16 +91,13 @@ public class JaxbTest {
     public void storeSchema() throws JAXBException, IOException {
 
         final Path schemas = Paths.get("target");
-        if (!Files.isDirectory(schemas)) {
-            Files.createDirectories(schemas);
-        }
 
         final JAXBContext context = JAXBContext.newInstance(
             JaxbTest.class.getPackage().getName());
         storeSchema(context, (namespaceUri, suggestedFileName) -> {
-            final Path path = schemas.resolve(suggestedFileName);
-            return path.toFile();
-        });
+                    final Path path = schemas.resolve(suggestedFileName);
+                    return path.toFile();
+                });
     }
 
 
