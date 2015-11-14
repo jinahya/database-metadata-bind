@@ -6,7 +6,7 @@
   <!-- The Basics -->
   <groupId>com.github.jinahya</groupId>
   <artifactId>database-metadata-bind</artifactId>
-  <version>0.13</version>
+  <version>0.14</version>
   <packaging>jar</packaging>
   <dependencyManagement />
   <dependencies>
@@ -319,11 +319,13 @@
           <targetJdk>${mven.compiler.target}</targetJdk>
         </configuration>
       </plugin>
+      <!--
       <plugin>
         <groupId>org.codehaus.mojo</groupId>
         <artifactId>cobertura-maven-plugin</artifactId>
         <version>2.7</version>
       </plugin>
+      -->
       <plugin>
         <groupId>org.kuali.maven.plugins</groupId>
         <artifactId>graph-maven-plugin</artifactId>
@@ -375,7 +377,7 @@
     <connection>scm:git:git@github.com:jinahya/database-metadata-bind.git</connection>
     <developerConnection>scm:git:git@github.com:jinahya/database-metadata-bind.git</developerConnection>
     <url>https://github.com/jinahya/database-metadata-bind</url>
-    <tag>0.13</tag>
+    <tag>0.14</tag>
   </scm>
   <prerequisites />
   <repositories />
