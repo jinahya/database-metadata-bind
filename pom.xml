@@ -197,7 +197,7 @@
             <option>
               -dontobfuscate
               -dontoptimize
-              -donnote
+              -dontnote
               -keepattributes *Annotation*
               -keepattributes Signature
               -keepattributes InnerClasses
