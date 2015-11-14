@@ -195,6 +195,7 @@
           <includeDependency>flase</includeDependency>
           <options>
             <option>
+              -dontobfuscate
               -dontoptimize
               -keepattributes *Annotation*
               -keepattributes Signature
