@@ -27,7 +27,6 @@ import java.sql.Connection;
  */
 enum TIL {
 
-
     TRANSACTION_NONE(Connection.TRANSACTION_NONE), // 0
     TRANSACTION_READ_UNCOMMITTED(Connection.TRANSACTION_READ_UNCOMMITTED), // 1
     TRANSACTION_READ_COMMITTED(Connection.TRANSACTION_READ_COMMITTED), // 2
@@ -54,7 +53,6 @@ enum TIL {
 
 
     private final int level;
-
 
 }
 

@@ -27,7 +27,6 @@ import java.sql.ResultSet;
  */
 enum RSC {
 
-
     CONCUR_READ_ONLY(ResultSet.CONCUR_READ_ONLY),
     CONCUR_UPDATABLE(ResultSet.CONCUR_UPDATABLE);
 
@@ -52,7 +51,6 @@ enum RSC {
 
 
     private final int concurrency;
-
 
 }
 
