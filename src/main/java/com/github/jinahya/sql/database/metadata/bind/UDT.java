@@ -42,13 +42,12 @@ import org.apache.commons.lang3.builder.CompareToBuilder;
         "attributes", "superTypes"
     }
 )
-public class UserDefinedType extends AbstractChild<Schema>
-    implements Comparable<UserDefinedType> {
+public class UDT extends AbstractChild<Schema> implements Comparable<UDT> {
 
 
     // by DATA_TYPE, TYPE_CAT, TYPE_SCHEM and TYPE_NAME.
     @Override
-    public int compareTo(final UserDefinedType o) {
+    public int compareTo(final UDT o) {
 
         return new CompareToBuilder()
             .append(dataType, o.getDataType())

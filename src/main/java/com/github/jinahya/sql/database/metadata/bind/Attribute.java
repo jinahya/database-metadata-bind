@@ -42,7 +42,7 @@ import javax.xml.bind.annotation.XmlType;
         "unknownResults"
     }
 )
-public class Attribute extends AbstractChild<UserDefinedType>
+public class Attribute extends AbstractChild<UDT>
     implements Comparable<Attribute> {
 
 
@@ -361,8 +361,8 @@ public class Attribute extends AbstractChild<UserDefinedType>
     }
 
 
-    // --------------------------------------------------------- userDefinedType
-    public UserDefinedType getUserDefinedType() {
+    // --------------------------------------------------------------------- UDT
+    public UDT getUDT() {
 
         return getParent();
     }

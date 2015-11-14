@@ -27,6 +27,7 @@ import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlType;
 import static java.util.logging.Logger.getLogger;
 import org.apache.commons.lang3.builder.CompareToBuilder;
+import static java.util.logging.Logger.getLogger;
 
 
 /**
