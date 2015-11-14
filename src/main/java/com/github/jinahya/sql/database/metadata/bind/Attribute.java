@@ -306,16 +306,10 @@ public class Attribute extends AbstractChild<UserDefinedType> {
     }
 
 
-    // ---------------------------------------------------------- useDefinedType
+    // --------------------------------------------------------- userDefinedType
     public UserDefinedType getUserDefinedType() {
 
         return getParent();
-    }
-
-
-    public void setUserDefinedType(final UserDefinedType userDefinedType) {
-
-        setParent(userDefinedType);
     }
 
 

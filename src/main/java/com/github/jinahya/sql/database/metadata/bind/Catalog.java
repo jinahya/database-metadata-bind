@@ -52,34 +52,38 @@ public class Catalog extends AbstractChild<Metadata> implements TableDomain {
 
 
     @Override
+    public String toString() {
+
+        return super.toString() + "{"
+               + "tableCat=" + tableCat
+               + "}";
+    }
+
+
+    @Override
     public List<Table> getTables() {
 
-        final List<Table> list = new ArrayList<Table>();
+        final List<Table> tables = new ArrayList<Table>();
 
         for (final Schema schema : getSchemas()) {
-            list.addAll(schema.getTables());
+            tables.addAll(schema.getTables());
         }
 
-        return list;
+        return tables;
     }
 
 
     @Override
     public List<CrossReference> getCrossReferences() {
+
         return crossReferences;
     }
 
 
     @Override
-    public void setCrossReferences(List<CrossReference> crossReferences) {
+    public void setCrossReferences(final List<CrossReference> crossReferences) {
+
         this.crossReferences = crossReferences;
-    }
-
-
-    @Override
-    public String toString() {
-
-        return super.toString() + "{" + "tableCat=" + tableCat + "}";
     }
 
 

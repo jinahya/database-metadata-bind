@@ -36,7 +36,7 @@ import javax.xml.bind.annotation.XmlType;
         "deleteRule", "fkName", "pkName", "deferrability"
     }
 )
-abstract class AbstractKey extends AbstractChild<Table> {
+abstract class TableKey extends AbstractChild<Table> {
 
 
     @Override

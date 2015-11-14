@@ -18,29 +18,21 @@
 package com.github.jinahya.sql.database.metadata.bind;
 
 
-import javax.xml.bind.annotation.XmlRootElement;
+import java.lang.annotation.Documented;
+import java.lang.annotation.ElementType;
+import java.lang.annotation.Retention;
+import java.lang.annotation.RetentionPolicy;
+import java.lang.annotation.Target;
 
 
 /**
- * An entity class for binding the result of
- * {@link java.sql.DatabaseMetaData#getImportedKeys(java.lang.String, java.lang.String, java.lang.String)}.
  *
  * @author Jin Kwon &lt;jinahya_at_gmail.com&gt;
- * @see MetadataContext#getImportedKeys(java.lang.String, java.lang.String,
- * java.lang.String)
  */
-@XmlRootElement
-public class ImportedKey extends TableKey {
-
-
-    // ------------------------------------------------------------------- table
-    // overriddent just for class diagrams
-    @Override
-    public Table getTable() {
-
-        return getParent();
-    }
-
+@Documented
+@Retention(RetentionPolicy.RUNTIME)
+@Target({ElementType.FIELD})
+@interface Parent {
 
 }
 

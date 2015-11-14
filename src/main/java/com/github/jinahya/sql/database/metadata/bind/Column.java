@@ -407,6 +407,14 @@ public class Column extends AbstractChild<Table> {
     }
 
 
+    Column table(final Table table) {
+
+        setTable(table);
+
+        return this;
+    }
+
+
     // -------------------------------------------------------- columnPrivileges
     public List<ColumnPrivilege> getColumnPrivileges() {
 

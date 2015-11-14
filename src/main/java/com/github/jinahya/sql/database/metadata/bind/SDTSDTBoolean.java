@@ -23,6 +23,7 @@ import java.util.logging.Logger;
 import static java.util.logging.Logger.getLogger;
 import javax.xml.bind.annotation.XmlAttribute;
 import javax.xml.bind.annotation.XmlValue;
+import static java.util.logging.Logger.getLogger;
 
 
 /**

@@ -32,7 +32,7 @@ import javax.xml.bind.annotation.XmlRootElement;
  * java.lang.String)
  */
 @XmlRootElement
-public class ExportedKey extends AbstractKey {
+public class ExportedKey extends TableKey {
 
 
     // ------------------------------------------------------------------- table
