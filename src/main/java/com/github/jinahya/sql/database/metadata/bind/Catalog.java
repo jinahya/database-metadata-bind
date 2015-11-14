@@ -26,6 +26,7 @@ import javax.xml.bind.annotation.XmlElementRef;
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlType;
 import static java.util.logging.Logger.getLogger;
+import org.apache.commons.lang3.builder.CompareToBuilder;
 
 
 /**
@@ -45,10 +46,20 @@ import static java.util.logging.Logger.getLogger;
         "unknownResults"
     }
 )
-public class Catalog extends AbstractChild<Metadata> implements TableDomain {
+public class Catalog extends AbstractChild<Metadata>
+    implements Comparable<Catalog>, TableDomain {
 
 
     private static final Logger logger = getLogger(Catalog.class.getName());
+
+
+    @Override
+    public int compareTo(final Catalog o) {
+
+        return new CompareToBuilder()
+            .append(tableCat, o.tableCat)
+            .build();
+    }
 
 
     @Override

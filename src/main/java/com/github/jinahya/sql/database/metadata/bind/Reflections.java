@@ -39,6 +39,8 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import static java.util.logging.Logger.getLogger;
 import static java.util.logging.Logger.getLogger;
+import static java.util.logging.Logger.getLogger;
+import static java.util.logging.Logger.getLogger;
 
 
 /**
@@ -467,7 +469,7 @@ class Reflections {
     }
 
 
-    static <T> void setunknownResults(final Class<? super T> beanClass,
+    static <T> void setUnknownResults(final Class<? super T> beanClass,
                                       final Set<String> columnLabels,
                                       final ResultSet resultSet,
                                       final T beanInstance)

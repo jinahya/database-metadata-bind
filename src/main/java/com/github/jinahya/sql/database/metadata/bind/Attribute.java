@@ -42,7 +42,62 @@ import javax.xml.bind.annotation.XmlType;
         "unknownResults"
     }
 )
-public class Attribute extends AbstractChild<UserDefinedType> {
+public class Attribute extends AbstractChild<UserDefinedType>
+    implements Comparable<Attribute> {
+
+
+    // They are ordered by TYPE_CAT, TYPE_SCHEM, TYPE_NAME and ORDINAL_POSITION.
+    @Override
+    public int compareTo(Attribute o) {
+
+        if (this == o) {
+            return 0;
+        }
+
+        if (typeCat == null) {
+            if (o.typeCat != null) {
+                return -1;
+            }
+        } else {
+            if (o.typeCat == null) {
+                return 1;
+            }
+            final int compared = typeCat.compareTo(o.typeCat);
+            if (compared != 0) {
+                return compared;
+            }
+        }
+
+        if (typeSchem == null) {
+            if (o.typeSchem != null) {
+                return -1;
+            }
+        } else {
+            if (o.typeSchem == null) {
+                return 1;
+            }
+            final int compared = typeSchem.compareTo(o.typeSchem);
+            if (compared != 0) {
+                return compared;
+            }
+        }
+
+        if (typeName == null) {
+            if (o.typeName != null) {
+                return -1;
+            }
+        } else {
+            if (o.typeName == null) {
+                return 1;
+            }
+            final int compared = typeName.compareTo(o.typeName);
+            if (compared != 0) {
+                return compared;
+            }
+        }
+
+        return ordinalPosition - o.ordinalPosition;
+    }
 
 
     @Override

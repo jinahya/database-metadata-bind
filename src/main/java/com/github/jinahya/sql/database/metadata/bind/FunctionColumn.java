@@ -23,6 +23,7 @@ import javax.xml.bind.annotation.XmlAttribute;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlType;
+import org.apache.commons.lang3.builder.CompareToBuilder;
 
 
 /**
@@ -41,7 +42,21 @@ import javax.xml.bind.annotation.XmlType;
         "unknownResults"
     }
 )
-public class FunctionColumn extends AbstractChild<Function> {
+public class FunctionColumn extends AbstractChild<Function>
+    implements Comparable<FunctionColumn> {
+
+
+    // by FUNCTION_CAT, FUNCTION_SCHEM, FUNCTION_NAME and SPECIFIC_NAME.
+    @Override
+    public int compareTo(final FunctionColumn o) {
+
+        return new CompareToBuilder()
+            .append(functionCat, o.getFunctionCat())
+            .append(functionSchem, o.getFunctionSchem())
+            .append(functionName, o.getFunctionName())
+            .append(specificName, o.getSpecificName())
+            .build();
+    }
 
 
     @Override

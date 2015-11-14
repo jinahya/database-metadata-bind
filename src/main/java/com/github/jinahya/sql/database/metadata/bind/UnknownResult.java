@@ -90,10 +90,10 @@ class UnknownResult {
 
     // -------------------------------------------------------------------------
     @XmlAttribute
-    protected String label;
+    private String label;
 
 
-    protected Object value;
+    private Object value;
 
 
 }

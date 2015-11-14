@@ -23,6 +23,7 @@ import javax.xml.bind.annotation.XmlAttribute;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlType;
+import org.apache.commons.lang3.builder.CompareToBuilder;
 
 
 /**
@@ -42,7 +43,21 @@ import javax.xml.bind.annotation.XmlType;
         "unknownResults"
     }
 )
-public class ProcedureColumn extends AbstractChild<Procedure> {
+public class ProcedureColumn extends AbstractChild<Procedure>
+    implements Comparable<ProcedureColumn> {
+
+
+    // by PROCEDURE_CAT, PROCEDURE_SCHEM, PROCEDURE_NAME and SPECIFIC_NAME.
+    @Override
+    public int compareTo(ProcedureColumn o) {
+
+        return new CompareToBuilder()
+            .append(procedureCat, o.getProcedureCat())
+            .append(procedureSchem, o.getProcedureSchem())
+            .append(procedureName, o.getProcedureName())
+            .append(specificName, o.getSpecificName())
+            .build();
+    }
 
 
     @Override

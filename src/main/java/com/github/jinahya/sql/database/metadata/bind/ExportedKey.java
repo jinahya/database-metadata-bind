@@ -19,6 +19,7 @@ package com.github.jinahya.sql.database.metadata.bind;
 
 
 import javax.xml.bind.annotation.XmlRootElement;
+import org.apache.commons.lang3.builder.CompareToBuilder;
 
 
 /**
@@ -32,7 +33,20 @@ import javax.xml.bind.annotation.XmlRootElement;
  * java.lang.String)
  */
 @XmlRootElement
-public class ExportedKey extends TableKey {
+public class ExportedKey extends TableKey<ExportedKey> {
+
+
+    // by FKTABLE_CAT, FKTABLE_SCHEM, FKTABLE_NAME, and KEY_SEQ.
+    @Override
+    public int compareTo(final ExportedKey o) {
+
+        return new CompareToBuilder()
+            .append(getFktableCat(), o.getFktableCat())
+            .append(getFktableSchem(), o.getFktableSchem())
+            .append(getFktableName(), o.getFktableName())
+            .append(getKeySeq(), o.getKeySeq())
+            .build();
+    }
 
 
     // ------------------------------------------------------------------- table

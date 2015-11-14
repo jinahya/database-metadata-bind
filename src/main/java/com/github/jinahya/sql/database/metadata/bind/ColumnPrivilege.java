@@ -23,6 +23,7 @@ import javax.xml.bind.annotation.XmlAttribute;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlType;
+import org.apache.commons.lang3.builder.CompareToBuilder;
 
 
 /**
@@ -39,7 +40,19 @@ import javax.xml.bind.annotation.XmlType;
         "unknownResults"
     }
 )
-public class ColumnPrivilege extends AbstractChild<Column> {
+public class ColumnPrivilege extends AbstractChild<Column>
+    implements Comparable<ColumnPrivilege> {
+
+
+    // by COLUMN_NAME and PRIVILEGE.
+    @Override
+    public int compareTo(final ColumnPrivilege o) {
+
+        return new CompareToBuilder()
+            .append(columnName, o.columnName)
+            .append(privilege, o.privilege)
+            .build();
+    }
 
 
     @Override

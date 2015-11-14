@@ -25,6 +25,7 @@ import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlElementRef;
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlType;
+import org.apache.commons.lang3.builder.CompareToBuilder;
 
 
 /**
@@ -46,7 +47,21 @@ import javax.xml.bind.annotation.XmlType;
 
     }
 )
-public class Function extends AbstractChild<Schema> {
+public class Function extends AbstractChild<Schema>
+    implements Comparable<Function> {
+
+
+    // by FUNCTION_CAT, FUNCTION_SCHEM, FUNCTION_NAME and SPECIFIC_NAME.
+    @Override
+    public int compareTo(final Function o) {
+
+        return new CompareToBuilder()
+            .append(functionCat, o.functionCat)
+            .append(functionSchem, o.functionSchem)
+            .append(functionName, o.functionName)
+            .append(specificName, o.specificName)
+            .build();
+    }
 
 
     @Override
@@ -203,8 +218,8 @@ public class Function extends AbstractChild<Schema> {
         types = {String.class, String.class, String.class, String.class},
         argsarr = {
             @InvocationArgs({
-                ":functionCat", ":functionSchem", ":functionName", "null"
-            })
+            ":functionCat", ":functionSchem", ":functionName", "null"
+        })
         }
     )
     @XmlElementRef

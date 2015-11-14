@@ -19,6 +19,7 @@ package com.github.jinahya.sql.database.metadata.bind;
 
 
 import javax.xml.bind.annotation.XmlRootElement;
+import org.apache.commons.lang3.builder.CompareToBuilder;
 
 
 /**
@@ -30,7 +31,20 @@ import javax.xml.bind.annotation.XmlRootElement;
  * java.lang.String)
  */
 @XmlRootElement
-public class ImportedKey extends TableKey {
+public class ImportedKey extends TableKey<ImportedKey> {
+
+
+    // by PKTABLE_CAT, PKTABLE_SCHEM, PKTABLE_NAME, and KEY_SEQ.
+    @Override
+    public int compareTo(final ImportedKey o) {
+
+        return new CompareToBuilder()
+            .append(getPktableCat(), o.getPktableCat())
+            .append(getPktableSchem(), o.getPktableSchem())
+            .append(getPktableName(), o.getPktableName())
+            .append(getKeySeq(), o.getKeySeq())
+            .build();
+    }
 
 
     // ------------------------------------------------------------------- table

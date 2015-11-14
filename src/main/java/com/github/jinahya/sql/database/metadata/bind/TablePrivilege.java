@@ -22,6 +22,7 @@ import javax.xml.bind.annotation.XmlAttribute;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlType;
+import org.apache.commons.lang3.builder.CompareToBuilder;
 
 
 /**
@@ -36,7 +37,21 @@ import javax.xml.bind.annotation.XmlType;
         "grantor", "grantee", "privilege", "isGrantable"
     }
 )
-public class TablePrivilege extends AbstractChild<Table> {
+public class TablePrivilege extends AbstractChild<Table>
+    implements Comparable<TablePrivilege> {
+
+
+    // by TABLE_CAT, TABLE_SCHEM, TABLE_NAME, and PRIVILEGE.
+    @Override
+    public int compareTo(final TablePrivilege o) {
+
+        return new CompareToBuilder()
+            .append(tableCat, o.getTableCat())
+            .append(tableSchem, o.getTableSchem())
+            .append(tableName, o.getTableName())
+            .append(privilege, o.getPrivilege())
+            .build();
+    }
 
 
     @Override

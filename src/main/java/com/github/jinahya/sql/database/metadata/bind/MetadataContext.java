@@ -218,8 +218,12 @@ public class MetadataContext {
                     throw new RuntimeException(e);
                 }
             }
-            Reflections.setunknownResults(beanClass, resultLabels, resultSet,
-                                           beanInstance);
+            if (!resultLabels.isEmpty()) {
+                logger.log(Level.INFO, "unknown results: {0}",
+                           new Object[]{resultLabels});
+                Reflections.setUnknownResults(
+                    beanClass, resultLabels, resultSet, beanInstance);
+            }
         }
 
         for (final PropertyDescriptor propertyDescriptor
@@ -378,37 +382,6 @@ public class MetadataContext {
             }
         }
 
-//        final List<CrossReference> crossReferences
-//            = new ArrayList<CrossReference>();
-//        metadata.setCrossReferences(crossReferences);
-//        final List<Table> tables = new ArrayList<Table>();
-//        for (final Catalog catalog : metadata.getCatalogs()) {
-//            for (final Schema schema : catalog.getSchemas()) {
-//                tables.addAll(schema.getTables());
-//            }
-//        }
-//        for (final Table fktable : tables) {
-//            for (final Table pktable : tables) {
-//                crossReferences.addAll(
-//                    MetadataContext.this.getCrossReferences(
-//                        pktable.getTableCat(), pktable.getTableSchem(),
-//                        pktable.getTableName(),
-//                        fktable.getTableCat(), fktable.getTableSchem(),
-//                        fktable.getTableName()));
-//            }
-//        }
-//        for (final ColumnDescriptor unmappedColumn : getUnmappedColumns()) {
-//            logger.log(Level.WARNING, "unmapped column: {0}",
-//                       new Object[]{unmappedColumn});
-//        }
-//        for (final ColumnDescriptor unknownColumn : getunknownResults()) {
-//            logger.log(Level.WARNING, "unknown column: {0}",
-//                       new Object[]{unknownColumn});
-//        }
-//        for (final String methodName : getMethodNames()) {
-//            logger.log(Level.WARNING, "uninvoked method: {0}",
-//                       new Object[]{methodName});
-//        }
         return metadata;
     }
 

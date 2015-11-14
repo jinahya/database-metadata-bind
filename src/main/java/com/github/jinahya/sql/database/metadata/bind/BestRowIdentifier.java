@@ -39,7 +39,16 @@ import javax.xml.bind.annotation.XmlType;
         "unknownResults"
     }
 )
-public class BestRowIdentifier extends AbstractChild<Table> {
+public class BestRowIdentifier extends AbstractChild<Table>
+    implements Comparable<BestRowIdentifier> {
+
+
+    // They are ordered by SCOPE.
+    @Override
+    public int compareTo(final BestRowIdentifier o) {
+
+        return scope - o.scope;
+    }
 
 
     @Override

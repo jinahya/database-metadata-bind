@@ -29,6 +29,13 @@
       <scope>test</scope>
     </dependency>
     <dependency>
+      <groupId>org.apache.commons</groupId>
+      <artifactId>commons-lang3</artifactId>
+      <version>3.4</version>
+      <scope>compile</scope>
+      <optional>true</optional>
+    </dependency>
+    <dependency>
       <groupId>org.apache.derby</groupId>
       <artifactId>derby</artifactId>
       <version>10.12.1.1</version>
@@ -61,6 +68,9 @@
     <maven.compiler.testSource>1.8</maven.compiler.testSource>
     <maven.compiler.testTarget>1.8</maven.compiler.testTarget>
     <maven-javadoc-plugin.version>2.10.3</maven-javadoc-plugin.version>
+    <java.bootstrap.classes>${java.home}/lib/rt.jar</java.bootstrap.classes>
+    <java.cryptographic.extension.classes>${java.home}/lib/jce.jar</java.cryptographic.extension.classes>
+    <java.secure.socket.extension.classes>${java.home}/lib/jsse.jar</java.secure.socket.extension.classes>
   </properties>
 
   <!-- Build Settings -->
@@ -144,6 +154,68 @@
           <localCheckout>true</localCheckout>
           <goals>install</goals>
         </configuration>
+      </plugin>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-shade-plugin</artifactId>
+        <version>2.4.2</version>
+        <executions>
+          <execution>
+            <phase>package</phase>
+            <goals>
+              <goal>shade</goal>
+            </goals>
+            <configuration>
+              <createDependencyReducedPom>false</createDependencyReducedPom>
+              <relocations>
+                <relocation>
+                  <pattern>org.apache.commons.lang3</pattern>
+                  <shadedPattern>com.github.jinahya.sql.metadata.bind.realocated.lang3</shadedPattern>
+                </relocation>
+              </relocations>
+            </configuration>
+          </execution>
+        </executions>
+      </plugin>
+      <plugin>
+        <groupId>com.github.wvengen</groupId>
+        <artifactId>proguard-maven-plugin</artifactId>
+        <version>2.0.11</version>
+        <executions>
+          <execution>
+            <id>proguard</id>
+            <phase>package</phase>
+            <goals>
+              <goal>proguard</goal>
+            </goals>
+          </execution>
+        </executions>
+        <configuration>
+          <addMavenDescriptor>true</addMavenDescriptor>
+          <includeDependency>flase</includeDependency>
+          <options>
+            <option>
+              -dontoptimize
+              -keepattributes *Annotation*
+              -keepattributes Signature
+              -keepattributes InnerClasses
+              -keep class com.github.jinahya.sql.database.metadata.bind.* { *; }
+            </option>
+          </options>
+          <libs>
+            <lib>${java.bootstrap.classes}</lib>
+            <lib>${java.cryptographic.extension.classes}</lib>
+            <lib>${java.secure.socket.extension.classes}</lib>
+          </libs>
+        </configuration>
+        <dependencies>
+          <dependency>
+            <groupId>net.sf.proguard</groupId>
+            <artifactId>proguard-base</artifactId>
+            <version>5.2.1</version>
+            <scope>runtime</scope>
+          </dependency>
+        </dependencies>
       </plugin>
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>

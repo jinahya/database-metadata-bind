@@ -25,6 +25,7 @@ import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlElementRef;
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlType;
+import org.apache.commons.lang3.builder.CompareToBuilder;
 
 
 /**
@@ -41,7 +42,21 @@ import javax.xml.bind.annotation.XmlType;
         "attributes", "superTypes"
     }
 )
-public class UserDefinedType extends AbstractChild<Schema> {
+public class UserDefinedType extends AbstractChild<Schema>
+    implements Comparable<UserDefinedType> {
+
+
+    // by DATA_TYPE, TYPE_CAT, TYPE_SCHEM and TYPE_NAME.
+    @Override
+    public int compareTo(final UserDefinedType o) {
+
+        return new CompareToBuilder()
+            .append(dataType, o.getDataType())
+            .append(typeCat, o.getTypeCat())
+            .append(typeSchem, o.getTypeSchem())
+            .append(typeName, o.getTypeName())
+            .build();
+    }
 
 
     @Override

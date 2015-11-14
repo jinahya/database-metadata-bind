@@ -23,6 +23,7 @@ import javax.xml.bind.annotation.XmlAttribute;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlType;
+import org.apache.commons.lang3.builder.CompareToBuilder;
 
 
 /**
@@ -39,7 +40,18 @@ import javax.xml.bind.annotation.XmlType;
         "unknownResults"
     }
 )
-public class PrimaryKey extends AbstractChild<Table> {
+public class PrimaryKey extends AbstractChild<Table>
+    implements Comparable<PrimaryKey> {
+
+
+    // by COLUMN_NAME.
+    @Override
+    public int compareTo(final PrimaryKey o) {
+
+        return new CompareToBuilder()
+            .append(columnName, o.getColumnName())
+            .build();
+    }
 
 
     // ---------------------------------------------------------------- tableCat
