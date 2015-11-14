@@ -20,7 +20,6 @@ package com.github.jinahya.sql.database.metadata.bind;
 
 import java.io.File;
 import java.io.IOException;
-import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.function.BiFunction;
@@ -50,7 +49,8 @@ public class JaxbTest {
             public Result createOutput(final String namespaceUri,
                                        final String suggestedFileName)
                 throws IOException {
-                final File file = locator.apply(namespaceUri, suggestedFileName);
+                final File file
+                    = locator.apply(namespaceUri, suggestedFileName);
                 final Result output = new StreamResult(file);
                 //output.setSystemId(suggestedFileName);
                 return output;
