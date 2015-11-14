@@ -218,8 +218,8 @@ public class MetadataContext {
                 }
             }
             if (!resultLabels.isEmpty()) {
-                logger.log(Level.INFO, "unknown results: {0}",
-                           new Object[]{resultLabels});
+//                logger.log(Level.INFO, "unknown results: {0}",
+//                           new Object[]{resultLabels});
                 Reflections.setUnknownResults(
                     beanClass, resultLabels, resultSet, beanInstance);
             }
