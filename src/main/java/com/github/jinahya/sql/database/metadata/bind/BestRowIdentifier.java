@@ -47,7 +47,7 @@ public class BestRowIdentifier extends AbstractChild<Table>
     @Override
     public int compareTo(final BestRowIdentifier o) {
 
-        return scope - o.scope;
+        return scope - o.getScope();
     }
 
 

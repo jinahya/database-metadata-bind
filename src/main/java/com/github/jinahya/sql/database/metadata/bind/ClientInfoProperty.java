@@ -46,7 +46,7 @@ public class ClientInfoProperty extends AbstractChild<Metadata>
     @Override
     public int compareTo(final ClientInfoProperty o) {
 
-        return new CompareToBuilder().append(name, o.name).build();
+        return new CompareToBuilder().append(name, o.getName()).build();
     }
 
 

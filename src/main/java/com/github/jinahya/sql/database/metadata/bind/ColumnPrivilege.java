@@ -49,8 +49,8 @@ public class ColumnPrivilege extends AbstractChild<Column>
     public int compareTo(final ColumnPrivilege o) {
 
         return new CompareToBuilder()
-            .append(columnName, o.columnName)
-            .append(privilege, o.privilege)
+            .append(columnName, o.getColumnName())
+            .append(privilege, o.getPrivilege())
             .build();
     }
 

@@ -56,10 +56,10 @@ public class Column extends AbstractChild<Table> implements Comparable<Column> {
     public int compareTo(final Column o) {
 
         return new CompareToBuilder()
-            .append(tableCat, o.tableCat)
-            .append(tableSchem, o.tableSchem)
-            .append(tableName, o.tableName)
-            .append(ordinalPosition, o.ordinalPosition)
+            .append(tableCat, o.getTableCat())
+            .append(tableSchem, o.getTableSchem())
+            .append(tableName, o.getTableName())
+            .append(ordinalPosition, o.getOrdinalPosition())
             .build();
     }
 

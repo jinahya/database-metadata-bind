@@ -57,7 +57,7 @@ public class Catalog extends AbstractChild<Metadata>
     public int compareTo(final Catalog o) {
 
         return new CompareToBuilder()
-            .append(tableCat, o.tableCat)
+            .append(tableCat, o.getTableCat())
             .build();
     }
 

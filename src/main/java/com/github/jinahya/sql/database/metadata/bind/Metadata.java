@@ -728,6 +728,39 @@ public class Metadata implements TableDomain {
     }
 
 
+    public String getRowIdLifetimeName() {
+
+        return rowIdLifetime == null ? null : rowIdLifetime.name();
+    }
+
+
+    public void setRowIdLifetimeName(String rowIdLifetimeName) {
+
+        this.rowIdLifetime = rowIdLifetimeName == null
+                             ? null : RowIdLifetime.valueOf(rowIdLifetimeName);
+    }
+
+
+    public List<SchemaName> getSchemaNames() {
+        return schemaNames;
+    }
+
+
+    public void setSchemaNames(List<SchemaName> schemaNames) {
+        this.schemaNames = schemaNames;
+    }
+
+
+    public String getSchemaTerm() {
+        return schemaTerm;
+    }
+
+
+    public void setSchemaTerm(String schemaTerm) {
+        this.schemaTerm = schemaTerm;
+    }
+
+
     public String getSearchStringEscape() {
         return searchStringEscape;
     }
@@ -1518,36 +1551,6 @@ public class Metadata implements TableDomain {
     }
 
 
-    public String getTimeDateFunctions() {
-        return timeDateFunctions;
-    }
-
-
-    public void setTimeDateFunctions(String timeDateFunctions) {
-        this.timeDateFunctions = timeDateFunctions;
-    }
-
-
-    public List<SchemaName> getSchemaNames() {
-        return schemaNames;
-    }
-
-
-    public void setSchemaNames(List<SchemaName> schemaNames) {
-        this.schemaNames = schemaNames;
-    }
-
-
-    public String getSchemaTerm() {
-        return schemaTerm;
-    }
-
-
-    public void setSchemaTerm(String schemaTerm) {
-        this.schemaTerm = schemaTerm;
-    }
-
-
     public List<TableType> getTableTypes() {
         return tableTypes;
     }
@@ -1555,6 +1558,16 @@ public class Metadata implements TableDomain {
 
     public void setTableTypes(List<TableType> tableTypes) {
         this.tableTypes = tableTypes;
+    }
+
+
+    public String getTimeDateFunctions() {
+        return timeDateFunctions;
+    }
+
+
+    public void setTimeDateFunctions(String timeDateFunctions) {
+        this.timeDateFunctions = timeDateFunctions;
     }
 
 
@@ -2014,6 +2027,16 @@ public class Metadata implements TableDomain {
     private RowIdLifetime rowIdLifetime;
 
 
+    @Invocation(name = "getSchemas")
+    @XmlElementRef
+    private List<SchemaName> schemaNames;
+
+
+    @Invocation(name = "getSchemaTerm")
+    @XmlElement(required = true)
+    private String schemaTerm;
+
+
     @Invocation(name = "getSearchStringEscape")
     @XmlElement(required = true)
     private String searchStringEscape;
@@ -2440,24 +2463,14 @@ public class Metadata implements TableDomain {
     private String systemFunctions;
 
 
-    @Invocation(name = "getTimeDateFunctions")
-    @XmlElement(required = true)
-    private String timeDateFunctions;
-
-
-    @Invocation(name = "getSchemas")
-    @XmlElementRef
-    private List<SchemaName> schemaNames;
-
-
-    @Invocation(name = "getSchemaTerm")
-    @XmlElement(required = true)
-    private String schemaTerm;
-
-
     @Invocation(name = "getTableTypes")
     @XmlElementRef
     private List<TableType> tableTypes;
+
+
+    @Invocation(name = "getTimeDateFunctions")
+    @XmlElement(required = true)
+    private String timeDateFunctions;
 
 
     @Invocation(name = "getTypeInfo")

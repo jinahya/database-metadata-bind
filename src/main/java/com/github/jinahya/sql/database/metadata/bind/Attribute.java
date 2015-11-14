@@ -55,48 +55,48 @@ public class Attribute extends AbstractChild<UserDefinedType>
         }
 
         if (typeCat == null) {
-            if (o.typeCat != null) {
+            if (o.getTypeCat() != null) {
                 return -1;
             }
         } else {
-            if (o.typeCat == null) {
+            if (o.getTypeCat() == null) {
                 return 1;
             }
-            final int compared = typeCat.compareTo(o.typeCat);
+            final int compared = typeCat.compareTo(o.getTypeCat());
             if (compared != 0) {
                 return compared;
             }
         }
 
         if (typeSchem == null) {
-            if (o.typeSchem != null) {
+            if (o.getTypeSchem() != null) {
                 return -1;
             }
         } else {
-            if (o.typeSchem == null) {
+            if (o.getTypeSchem() == null) {
                 return 1;
             }
-            final int compared = typeSchem.compareTo(o.typeSchem);
+            final int compared = typeSchem.compareTo(o.getTypeSchem());
             if (compared != 0) {
                 return compared;
             }
         }
 
         if (typeName == null) {
-            if (o.typeName != null) {
+            if (o.getTypeName() != null) {
                 return -1;
             }
         } else {
-            if (o.typeName == null) {
+            if (o.getTypeName() == null) {
                 return 1;
             }
-            final int compared = typeName.compareTo(o.typeName);
+            final int compared = typeName.compareTo(o.getTypeName());
             if (compared != 0) {
                 return compared;
             }
         }
 
-        return ordinalPosition - o.ordinalPosition;
+        return ordinalPosition - o.getOrdinalPosition();
     }
 
 

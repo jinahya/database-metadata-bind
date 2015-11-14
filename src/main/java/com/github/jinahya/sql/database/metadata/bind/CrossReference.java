@@ -47,10 +47,10 @@ public class CrossReference extends AbstractChild<Metadata>
     public int compareTo(final CrossReference o) {
 
         return new CompareToBuilder()
-            .append(fktableCat, o.fktableCat)
-            .append(fktableSchem, o.fktableSchem)
-            .append(fktableName, o.fktableName)
-            .append(keySeq, o.keySeq)
+            .append(fktableCat, o.getFktableCat())
+            .append(fktableSchem, o.getFktableSchem())
+            .append(fktableName, o.getFktableName())
+            .append(keySeq, o.getKeySeq())
             .build();
     }
 
