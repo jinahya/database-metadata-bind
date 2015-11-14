@@ -36,7 +36,7 @@ import javax.xml.bind.annotation.XmlType;
         "typeName", "supertypeCat", "supertypeSchem", "supertypeName"
     }
 )
-public class SuperType extends AbstractChild<UserDefinedType> {
+public class SuperType extends AbstractChild<UDT> {
 
 
     @Override
@@ -131,22 +131,22 @@ public class SuperType extends AbstractChild<UserDefinedType> {
     }
 
 
-    // --------------------------------------------------------- userDefinedType
-    public UserDefinedType getUserDefinedType() {
+    // --------------------------------------------------------------------- UDT
+    public UDT getUDT() {
 
         return getParent();
     }
 
 
-    public void setUserDefinedType(final UserDefinedType userDefinedType) {
+    public void setUDT(final UDT UDT) {
 
-        setParent(userDefinedType);
+        setParent(UDT);
     }
 
 
-    SuperType userDefinedType(final UserDefinedType userDefinedType) {
+    SuperType UDT(final UDT UDT) {
 
-        setUserDefinedType(userDefinedType);
+        setUDT(UDT);
 
         return this;
     }

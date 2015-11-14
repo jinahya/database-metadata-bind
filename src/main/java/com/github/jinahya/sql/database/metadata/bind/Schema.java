@@ -44,7 +44,7 @@ import org.apache.commons.lang3.builder.CompareToBuilder;
         //"superTables",
         //"superTypes",
         "tables",
-        "userDefinedTypes",
+        "UDTs",
         // ---------------------------------------------------------------------
         "unknownResults"
     }
@@ -193,14 +193,14 @@ public class Schema extends AbstractChild<Catalog>
     }
 
 
-    // -------------------------------------------------------- userDefinedTypes
-    public List<UserDefinedType> getUserDefinedTypes() {
+    // -------------------------------------------------------------------- UDTs
+    public List<UDT> getUDTs() {
 
-        if (userDefinedTypes == null) {
-            userDefinedTypes = new ArrayList<UserDefinedType>();
+        if (UDTs == null) {
+            UDTs = new ArrayList<UDT>();
         }
 
-        return userDefinedTypes;
+        return UDTs;
     }
 
 
@@ -279,7 +279,7 @@ public class Schema extends AbstractChild<Catalog>
         }
     )
     @XmlElementRef
-    private List<UserDefinedType> userDefinedTypes;
+    private List<UDT> UDTs;
 
 
     @XmlElement(name = "unknownResult", nillable = true)

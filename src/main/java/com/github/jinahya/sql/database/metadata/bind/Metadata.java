@@ -328,23 +328,23 @@ public class Metadata implements TableDomain {
     }
 
 
-    public int getJdbcMajorVersion() {
-        return jdbcMajorVersion;
+    public int getJDBCMajorVersion() {
+        return JDBCMajorVersion;
     }
 
 
-    public void setJdbcMajorVersion(int jdbcMajorVersion) {
-        this.jdbcMajorVersion = jdbcMajorVersion;
+    public void setJDBCMajorVersion(int JDBCMajorVersion) {
+        this.JDBCMajorVersion = JDBCMajorVersion;
     }
 
 
-    public int getJdbcMinorVersion() {
-        return jdbcMinorVersion;
+    public int getJDBCMinorVersion() {
+        return JDBCMinorVersion;
     }
 
 
-    public void setJdbcMinorVersion(int jdbcMinorVersion) {
-        this.jdbcMinorVersion = jdbcMinorVersion;
+    public void setJDBCMinorVersion(int JDBCMinorVersion) {
+        this.JDBCMinorVersion = JDBCMinorVersion;
     }
 
 
@@ -771,23 +771,23 @@ public class Metadata implements TableDomain {
     }
 
 
-    public String getSqlKewords() {
-        return sqlKewords;
+    public String getSQLKewords() {
+        return SQLKewords;
     }
 
 
-    public void setSqlKewords(String sqlKewords) {
-        this.sqlKewords = sqlKewords;
+    public void setSQLKewords(String SQLKewords) {
+        this.SQLKewords = SQLKewords;
     }
 
 
-    public int getSqlStateType() {
-        return sqlStateType;
+    public int getSQLStateType() {
+        return SQLStateType;
     }
 
 
-    public void setSqlStateType(int sqlStateType) {
-        this.sqlStateType = sqlStateType;
+    public void setSQLStateType(int SQLStateType) {
+        this.SQLStateType = SQLStateType;
     }
 
 
@@ -1601,13 +1601,13 @@ public class Metadata implements TableDomain {
     }
 
 
-    public String getUrl() {
-        return url;
+    public String getURL() {
+        return URL;
     }
 
 
-    public void setUrl(String url) {
-        this.url = url;
+    public void setURL(String URL) {
+        this.URL = URL;
     }
 
 
@@ -1784,12 +1784,12 @@ public class Metadata implements TableDomain {
 
     @Invocation(name = "getJDBCMajorVersion")
     @XmlElement(required = true)
-    private int jdbcMajorVersion;
+    private int JDBCMajorVersion;
 
 
     @Invocation(name = "getJDBCMinorVersion")
     @XmlElement(required = true)
-    private int jdbcMinorVersion;
+    private int JDBCMinorVersion;
 
 
     @Invocation(name = "locatorsUpdateCopy")
@@ -2044,12 +2044,12 @@ public class Metadata implements TableDomain {
 
     @Invocation(name = "getSQLKeywords")
     @XmlElement(required = true)
-    private String sqlKewords;
+    private String SQLKewords;
 
 
     @Invocation(name = "getSQLStateType")
     @XmlElement(required = true)
-    private int sqlStateType;
+    private int SQLStateType;
 
 
     @Invocation(name = "storesLowerCaseIdentifiers")
@@ -2498,7 +2498,7 @@ public class Metadata implements TableDomain {
 
     @Invocation(name = "getURL")
     @XmlElement(required = true)
-    private String url;
+    private String URL;
 
 
     @Invocation(name = "usesLocalFilePerTable")

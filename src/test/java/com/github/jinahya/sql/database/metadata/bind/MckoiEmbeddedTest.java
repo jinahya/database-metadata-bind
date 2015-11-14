@@ -78,9 +78,9 @@ public class MckoiEmbeddedTest {
                 "metadata/databaseMinorVersion",
                 "metadata/generatedKeyAlwaysReturned",
                 "metadata/locatorsUpdateCopy",
-                "metadata/sqlStateType",
+                "metadata/SQLStateType",
                 "schema/functions",
-                "schema/userDefinedTypes"
+                "schema/UDTs"
             );
             metadata = context.getMetadata();
         }
