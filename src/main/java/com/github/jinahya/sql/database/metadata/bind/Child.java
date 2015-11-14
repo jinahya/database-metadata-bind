@@ -27,7 +27,7 @@ import javax.xml.bind.annotation.XmlTransient;
  * @param <P> parent type parameter
  */
 @XmlTransient
-interface Child<P> {
+public interface Child<P> {
 
 
     P getParent();

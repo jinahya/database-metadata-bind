@@ -23,6 +23,7 @@ import javax.xml.bind.annotation.XmlAttribute;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlType;
+import org.apache.commons.lang3.builder.CompareToBuilder;
 
 
 /**
@@ -44,7 +45,21 @@ import javax.xml.bind.annotation.XmlType;
         "unknownResults"
     }
 )
-public class IndexInfo extends AbstractChild<Table> {
+public class IndexInfo extends AbstractChild<Table>
+    implements Comparable<IndexInfo> {
+
+
+    // by NON_UNIQUE, TYPE, INDEX_NAME, and ORDINAL_POSITION.
+    @Override
+    public int compareTo(IndexInfo o) {
+
+        return new CompareToBuilder()
+            .append(nonUnique, o.isNonUnique())
+            .append(type, o.getType())
+            .append(indexName, o.getIndexName())
+            .append(ordinalPosition, o.getOrdinalPosition())
+            .build();
+    }
 
 
     @Override
@@ -108,7 +123,7 @@ public class IndexInfo extends AbstractChild<Table> {
 
 
     // --------------------------------------------------------------- nonUnique
-    public boolean getNonUnique() {
+    public boolean isNonUnique() {
 
         return nonUnique;
     }

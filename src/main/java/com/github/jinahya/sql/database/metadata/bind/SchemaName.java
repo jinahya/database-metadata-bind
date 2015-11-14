@@ -22,6 +22,7 @@ import java.util.List;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlType;
+import org.apache.commons.lang3.builder.CompareToBuilder;
 
 
 /**
@@ -38,7 +39,18 @@ import javax.xml.bind.annotation.XmlType;
         "unknownResults"
     }
 )
-public class SchemaName extends AbstractChild<Metadata> {
+public class SchemaName extends AbstractChild<Metadata>
+    implements Comparable<SchemaName> {
+
+
+    @Override
+    public int compareTo(final SchemaName o) {
+
+        return new CompareToBuilder()
+            .append(tableCatalog, o.tableCatalog)
+            .append(tableSchem, o.tableSchem)
+            .build();
+    }
 
 
     @Override

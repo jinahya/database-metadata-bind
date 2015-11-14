@@ -21,6 +21,7 @@ package com.github.jinahya.sql.database.metadata.bind;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlType;
+import org.apache.commons.lang3.builder.CompareToBuilder;
 
 
 /**
@@ -35,7 +36,17 @@ import javax.xml.bind.annotation.XmlType;
         "tableType"
     }
 )
-public class TableType extends AbstractChild<Metadata> {
+public class TableType extends AbstractChild<Metadata>
+    implements Comparable<TableType> {
+
+
+    @Override
+    public int compareTo(final TableType o) {
+
+        return new CompareToBuilder()
+            .append(tableType, o.getTableType())
+            .build();
+    }
 
 
     @Override

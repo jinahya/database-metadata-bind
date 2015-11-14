@@ -27,7 +27,6 @@ import java.sql.ResultSet;
  */
 enum RST {
 
-
     TYPE_FORWARD_ONLY(ResultSet.TYPE_FORWARD_ONLY),
     TYPE_SCROLL_INSENSITIVE(ResultSet.TYPE_SCROLL_INSENSITIVE),
     TYPE_SCROLL_SENSITIVE(ResultSet.TYPE_SCROLL_SENSITIVE);
@@ -53,7 +52,6 @@ enum RST {
 
 
     private final int type;
-
 
 }
 

@@ -25,6 +25,7 @@ import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlElementRef;
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlType;
+import org.apache.commons.lang3.builder.CompareToBuilder;
 
 
 /**
@@ -47,7 +48,20 @@ import javax.xml.bind.annotation.XmlType;
         "unknownResults"
     }
 )
-public class Column extends AbstractChild<Table> {
+public class Column extends AbstractChild<Table> implements Comparable<Column> {
+
+
+    // by TABLE_CAT,TABLE_SCHEM, TABLE_NAME, and ORDINAL_POSITION.
+    @Override
+    public int compareTo(final Column o) {
+
+        return new CompareToBuilder()
+            .append(tableCat, o.getTableCat())
+            .append(tableSchem, o.getTableSchem())
+            .append(tableName, o.getTableName())
+            .append(ordinalPosition, o.getOrdinalPosition())
+            .build();
+    }
 
 
     @Override
@@ -404,6 +418,14 @@ public class Column extends AbstractChild<Table> {
     public void setTable(final Table table) {
 
         setParent(table);
+    }
+
+
+    Column table(final Table table) {
+
+        setTable(table);
+
+        return this;
     }
 
 

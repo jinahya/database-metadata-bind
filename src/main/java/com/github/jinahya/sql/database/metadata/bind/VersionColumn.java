@@ -34,7 +34,8 @@ import javax.xml.bind.annotation.XmlType;
     propOrder = {
         "scope", "columnName", "dataType", "typeName", "columnSize",
         "bufferLength", "decimalDigits", "pseudoColumn"
-    })
+    }
+)
 public class VersionColumn extends AbstractChild<Table> {
 
 

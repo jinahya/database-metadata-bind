@@ -42,7 +42,62 @@ import javax.xml.bind.annotation.XmlType;
         "unknownResults"
     }
 )
-public class Attribute extends AbstractChild<UserDefinedType> {
+public class Attribute extends AbstractChild<UserDefinedType>
+    implements Comparable<Attribute> {
+
+
+    // They are ordered by TYPE_CAT, TYPE_SCHEM, TYPE_NAME and ORDINAL_POSITION.
+    @Override
+    public int compareTo(Attribute o) {
+
+        if (this == o) {
+            return 0;
+        }
+
+        if (typeCat == null) {
+            if (o.getTypeCat() != null) {
+                return -1;
+            }
+        } else {
+            if (o.getTypeCat() == null) {
+                return 1;
+            }
+            final int compared = typeCat.compareTo(o.getTypeCat());
+            if (compared != 0) {
+                return compared;
+            }
+        }
+
+        if (typeSchem == null) {
+            if (o.getTypeSchem() != null) {
+                return -1;
+            }
+        } else {
+            if (o.getTypeSchem() == null) {
+                return 1;
+            }
+            final int compared = typeSchem.compareTo(o.getTypeSchem());
+            if (compared != 0) {
+                return compared;
+            }
+        }
+
+        if (typeName == null) {
+            if (o.getTypeName() != null) {
+                return -1;
+            }
+        } else {
+            if (o.getTypeName() == null) {
+                return 1;
+            }
+            final int compared = typeName.compareTo(o.getTypeName());
+            if (compared != 0) {
+                return compared;
+            }
+        }
+
+        return ordinalPosition - o.getOrdinalPosition();
+    }
 
 
     @Override
@@ -306,16 +361,10 @@ public class Attribute extends AbstractChild<UserDefinedType> {
     }
 
 
-    // ---------------------------------------------------------- useDefinedType
+    // --------------------------------------------------------- userDefinedType
     public UserDefinedType getUserDefinedType() {
 
         return getParent();
-    }
-
-
-    public void setUserDefinedType(final UserDefinedType userDefinedType) {
-
-        setParent(userDefinedType);
     }
 
 

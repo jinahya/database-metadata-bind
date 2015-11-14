@@ -6,7 +6,7 @@
   <!-- The Basics -->
   <groupId>com.github.jinahya</groupId>
   <artifactId>database-metadata-bind</artifactId>
-  <version>0.11</version>
+  <version>0.12</version>
   <packaging>jar</packaging>
   <dependencyManagement />
   <dependencies>
@@ -27,6 +27,13 @@
       <artifactId>mckoisqldb</artifactId>
       <version>1.0.5</version>
       <scope>test</scope>
+    </dependency>
+    <dependency>
+      <groupId>org.apache.commons</groupId>
+      <artifactId>commons-lang3</artifactId>
+      <version>3.4</version>
+      <scope>compile</scope>
+      <optional>true</optional>
     </dependency>
     <dependency>
       <groupId>org.apache.derby</groupId>
@@ -60,6 +67,10 @@
     <maven.compiler.target>1.6</maven.compiler.target>
     <maven.compiler.testSource>1.8</maven.compiler.testSource>
     <maven.compiler.testTarget>1.8</maven.compiler.testTarget>
+    <maven-javadoc-plugin.version>2.10.3</maven-javadoc-plugin.version>
+    <java.bootstrap.classes>${java.home}/lib/rt.jar</java.bootstrap.classes>
+    <java.cryptographic.extension.classes>${java.home}/lib/jce.jar</java.cryptographic.extension.classes>
+    <java.secure.socket.extension.classes>${java.home}/lib/jsse.jar</java.secure.socket.extension.classes>
   </properties>
 
   <!-- Build Settings -->
@@ -79,7 +90,7 @@
         <plugin>
           <groupId>org.apache.maven.plugins</groupId>
           <artifactId>maven-javadoc-plugin</artifactId>
-          <version>2.10.3</version>
+          <version>${maven-javadoc-plugin.version}</version>
         </plugin>
         <plugin>
           <groupId>org.apache.maven.plugins</groupId>
@@ -144,10 +155,69 @@
           <goals>install</goals>
         </configuration>
       </plugin>
-      <!--      <plugin>
+      <plugin>
         <groupId>org.apache.maven.plugins</groupId>
-        <artifactId>maven-javadoc-plugin</artifactId>
-      </plugin>-->
+        <artifactId>maven-shade-plugin</artifactId>
+        <version>2.4.2</version>
+        <executions>
+          <execution>
+            <phase>package</phase>
+            <goals>
+              <goal>shade</goal>
+            </goals>
+            <configuration>
+              <createDependencyReducedPom>false</createDependencyReducedPom>
+              <relocations>
+                <relocation>
+                  <pattern>org.apache.commons.lang3</pattern>
+                  <shadedPattern>com.github.jinahya.sql.metadata.bind.realocated.lang3</shadedPattern>
+                </relocation>
+              </relocations>
+            </configuration>
+          </execution>
+        </executions>
+      </plugin>
+      <plugin>
+        <groupId>com.github.wvengen</groupId>
+        <artifactId>proguard-maven-plugin</artifactId>
+        <version>2.0.11</version>
+        <executions>
+          <execution>
+            <id>proguard</id>
+            <phase>package</phase>
+            <goals>
+              <goal>proguard</goal>
+            </goals>
+          </execution>
+        </executions>
+        <configuration>
+          <addMavenDescriptor>true</addMavenDescriptor>
+          <includeDependency>flase</includeDependency>
+          <options>
+            <option>
+              -dontobfuscate
+              -dontoptimize
+              -keepattributes *Annotation*
+              -keepattributes Signature
+              -keepattributes InnerClasses
+              -keep class com.github.jinahya.sql.database.metadata.bind.* { *; }
+            </option>
+          </options>
+          <libs>
+            <lib>${java.bootstrap.classes}</lib>
+            <lib>${java.cryptographic.extension.classes}</lib>
+            <lib>${java.secure.socket.extension.classes}</lib>
+          </libs>
+        </configuration>
+        <dependencies>
+          <dependency>
+            <groupId>net.sf.proguard</groupId>
+            <artifactId>proguard-base</artifactId>
+            <version>5.2.1</version>
+            <scope>runtime</scope>
+          </dependency>
+        </dependencies>
+      </plugin>
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-surefire-plugin</artifactId>
@@ -217,7 +287,7 @@
           <execution>
             <phase>generate-sources</phase>
             <goals>
-              <goal>delombok</goal>
+              <!--<goal>delombok</goal>-->
             </goals>
           </execution>
         </executions>
@@ -234,23 +304,6 @@
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-javadoc-plugin</artifactId>
-        <configuration>
-          <additionalparam>
-            -hide java.* -hide AbstractChild -hide AbstractKey -hide Child -hide MetadataContext -hide TableDomain -hide XmlConstants -hide UnknownColumn -hide _ -visibility
-            -collapsible -horizontal
-            -inferdep -inferdepinpackage -inferdepvis protected -inferrel
-            -outputencoding UTF-8
-          </additionalparam>
-          <!--<breakiterator>true</breakiterator>-->
-          <!--<charset>${project.build.sourceEncoding}</charset>-->
-          <doclet>org.umlgraph.doclet.UmlGraphDoc</doclet>
-          <docletArtifact>
-            <groupId>org.umlgraph</groupId>
-            <artifactId>umlgraph</artifactId>
-            <version>5.6.6</version>
-          </docletArtifact>
-          <!--<keywords>true</keywords>-->
-        </configuration>
       </plugin>
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
@@ -321,7 +374,7 @@
     <connection>scm:git:git@github.com:jinahya/database-metadata-bind.git</connection>
     <developerConnection>scm:git:git@github.com:jinahya/database-metadata-bind.git</developerConnection>
     <url>https://github.com/jinahya/database-metadata-bind</url>
-    <tag>0.11</tag>
+    <tag>0.12</tag>
   </scm>
   <prerequisites />
   <repositories />
@@ -478,6 +531,34 @@
             </configuration>
           </plugin>
         </plugins>
+      </build>
+    </profile>
+    <profile>
+      <id>graphviz</id>
+      <build>
+        <pluginManagement>
+          <plugins>
+            <plugin>
+              <groupId>org.apache.maven.plugins</groupId>
+              <artifactId>maven-javadoc-plugin</artifactId>
+              <version>${maven-javadoc-plugin.version}</version>
+              <configuration>
+                <additionalparam>
+                  -hide java.* -hide AbstractChild -hide AbstractKey -hide Child -hide MetadataContext -hide TableDomain -hide XmlConstants -hide UnknownColumn -hide _ -visibility
+                  -collapsible -horizontal
+                  -inferdep -inferdepinpackage -inferdepvis protected -inferrel
+                  -outputencoding UTF-8
+                </additionalparam>
+                <doclet>org.umlgraph.doclet.UmlGraphDoc</doclet>
+                <docletArtifact>
+                  <groupId>org.umlgraph</groupId>
+                  <artifactId>umlgraph</artifactId>
+                  <version>5.6.6</version>
+                </docletArtifact>
+              </configuration>
+            </plugin>
+          </plugins>
+        </pluginManagement>
       </build>
     </profile>
   </profiles>

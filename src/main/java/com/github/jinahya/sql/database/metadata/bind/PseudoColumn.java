@@ -22,6 +22,7 @@ import javax.xml.bind.annotation.XmlAttribute;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlType;
+import org.apache.commons.lang3.builder.CompareToBuilder;
 
 
 /**
@@ -37,7 +38,21 @@ import javax.xml.bind.annotation.XmlType;
         "columnUsage", "remarks", "charOctetLength", "isNullable"
     }
 )
-public class PseudoColumn extends AbstractChild<Table> {
+public class PseudoColumn extends AbstractChild<Table>
+    implements Comparable<PseudoColumn> {
+
+
+    // by TABLE_CAT,TABLE_SCHEM, TABLE_NAME and COLUMN_NAME.
+    @Override
+    public int compareTo(final PseudoColumn o) {
+
+        return new CompareToBuilder()
+            .append(tableCat, o.getTableCat())
+            .append(tableSchem, o.getTableSchem())
+            .append(tableName, o.getTableName())
+            .append(columnName, o.getColumnName())
+            .build();
+    }
 
 
     @Override

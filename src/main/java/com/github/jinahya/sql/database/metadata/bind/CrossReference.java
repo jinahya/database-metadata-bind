@@ -22,6 +22,7 @@ import javax.xml.bind.annotation.XmlAttribute;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlType;
+import org.apache.commons.lang3.builder.CompareToBuilder;
 
 
 /**
@@ -37,7 +38,21 @@ import javax.xml.bind.annotation.XmlType;
         "fkName", "pkName", "deferrability"
     }
 )
-public class CrossReference extends AbstractChild<Metadata> {
+public class CrossReference extends AbstractChild<Metadata>
+    implements Comparable<CrossReference> {
+
+
+    // by FKTABLE_CAT, FKTABLE_SCHEM, FKTABLE_NAME, and KEY_SEQ.
+    @Override
+    public int compareTo(final CrossReference o) {
+
+        return new CompareToBuilder()
+            .append(fktableCat, o.getFktableCat())
+            .append(fktableSchem, o.getFktableSchem())
+            .append(fktableName, o.getFktableName())
+            .append(keySeq, o.getKeySeq())
+            .build();
+    }
 
 
     @Override

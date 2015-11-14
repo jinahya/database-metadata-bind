@@ -78,9 +78,7 @@ public class HyperSQLMemoryTest {
         final Marshaller marshaller = context.createMarshaller();
         marshaller.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, Boolean.TRUE);
 
-        final File dir = new File("target", "xml");
-        dir.mkdir();
-        final File file = new File(dir, "hsql.memory.metadata.xml");
+        final File file = new File("target", "hsql.memory.metadata.xml");
         try (OutputStream outputStream = new FileOutputStream(file)) {
             marshaller.marshal(metadata, outputStream);
             outputStream.flush();

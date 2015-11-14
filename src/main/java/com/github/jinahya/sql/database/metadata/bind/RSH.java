@@ -27,7 +27,6 @@ import java.sql.ResultSet;
  */
 enum RSH {
 
-
     HOLD_CURSORS_OVER_COMMIT(ResultSet.HOLD_CURSORS_OVER_COMMIT),
     CLOSE_CURSORS_AT_COMMIT(ResultSet.CLOSE_CURSORS_AT_COMMIT);
 
@@ -52,7 +51,6 @@ enum RSH {
 
 
     private final int holdability;
-
 
 }
 

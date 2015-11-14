@@ -18,6 +18,7 @@
 package com.github.jinahya.sql.database.metadata.bind;
 
 
+import java.lang.annotation.Annotation;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
@@ -95,8 +96,41 @@ class Reflections {
             if (superclass == null) {
                 throw nsfe;
             }
-            return findField(superclass, name);
+            return Reflections.findField(superclass, name);
         }
+    }
+
+
+    static List<Field> listFields(
+        final Class<?> declaringClass, final List<Field> fieldList,
+        final Class<? extends Annotation>... annotationClasses) {
+
+        for (final Field declaredField : declaringClass.getDeclaredFields()) {
+            for (final Class<? extends Annotation> annotationClass
+                 : annotationClasses) {
+                if (declaredField.getAnnotation(annotationClass) != null) {
+                    fieldList.add(declaredField);
+                }
+            }
+        }
+
+        final Class<?> superclass = declaringClass.getSuperclass();
+        if (superclass == null) {
+            return fieldList;
+        }
+
+        return listFields(superclass, fieldList, annotationClasses);
+    }
+
+
+    static Field findField(
+        final Class<?> declaringClass,
+        final Class<? extends Annotation>... annotationClasses) {
+
+        final List<Field> parentFields = listFields(
+            declaringClass, new ArrayList<Field>(1), annotationClasses);
+
+        return parentFields.isEmpty() ? null : parentFields.get(0);
     }
 
 
@@ -146,7 +180,7 @@ class Reflections {
                                     final T beanInstance)
         throws NoSuchFieldException, IllegalAccessException {
 
-        return getFieldValue(findField(beanClass, fieldName), beanInstance);
+        return getFieldValue(Reflections.findField(beanClass, fieldName), beanInstance);
     }
 
 
@@ -303,7 +337,7 @@ class Reflections {
                                   final Object fieldValue)
         throws NoSuchFieldException, IllegalAccessException {
 
-        setFieldValue(findField(beanClass, fieldName), beanInstance,
+        setFieldValue(Reflections.findField(beanClass, fieldName), beanInstance,
                       fieldValue);
     }
 
@@ -388,8 +422,9 @@ class Reflections {
     }
 
 
-    static void setParent(final Class<?> childClass,
-                          final Iterable<?> childBeans, final Object parentBean)
+    static <C, P> void setParent(final Class<C> childClass,
+                                 final Iterable<? extends C> childBeans,
+                                 final Class<P> parentClass, final P parentBean)
         throws ReflectiveOperationException {
 
         if (!Child.class.isAssignableFrom(childClass)) {
@@ -403,7 +438,35 @@ class Reflections {
     }
 
 
-    static <T> void setunknownResults(final Class<? super T> beanClass,
+    static void setParent(final Class<?> childClass,
+                          final Iterable<?> childBeans, final Object parentBean)
+        throws ReflectiveOperationException {
+
+        @SuppressWarnings("unchecked")
+        final Field parentField = findField(childClass, Parent.class);
+        if (parentField != null
+            && parentField.getType().isAssignableFrom(parentBean.getClass())) {
+            if (!parentField.isAccessible()) {
+                parentField.setAccessible(true);
+            }
+            for (final Object childBean : childBeans) {
+                parentField.set(childBean, parentBean);
+            }
+            return;
+        }
+
+        if (!Child.class.isAssignableFrom(childClass)) {
+            return;
+        }
+
+        final Method method = childClass.getMethod("setParent", Object.class);
+        for (final Object childBean : childBeans) {
+            method.invoke(childBean, parentBean);
+        }
+    }
+
+
+    static <T> void setUnknownResults(final Class<? super T> beanClass,
                                       final Set<String> columnLabels,
                                       final ResultSet resultSet,
                                       final T beanInstance)
@@ -415,7 +478,7 @@ class Reflections {
 
         final Field field;
         try {
-            field = findField(beanClass, FIELD_NAME_UNKNOWN_COLUMNS);
+            field = Reflections.findField(beanClass, FIELD_NAME_UNKNOWN_COLUMNS);
             //field = beanClass.getDeclaredField(FIELD_NAME_UNKNOWN_COLUMNS);
         } catch (final NoSuchFieldException nsfe) {
             logger.log(Level.WARNING, "field not found: {0} in {1}",

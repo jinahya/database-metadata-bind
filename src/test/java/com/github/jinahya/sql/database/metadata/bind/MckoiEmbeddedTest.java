@@ -89,9 +89,7 @@ public class MckoiEmbeddedTest {
         final Marshaller marshaller = context.createMarshaller();
         marshaller.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, Boolean.TRUE);
 
-        final File dir = new File("target", "xml");
-        dir.mkdir();
-        final File file = new File(dir, "mckoi.embedded.metadata.xml");
+        final File file = new File("target", "mckoi.embedded.metadata.xml");
         try (OutputStream outputStream = new FileOutputStream(file)) {
             marshaller.marshal(metadata, outputStream);
             outputStream.flush();

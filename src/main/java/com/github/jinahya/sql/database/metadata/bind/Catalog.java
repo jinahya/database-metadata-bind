@@ -26,6 +26,7 @@ import javax.xml.bind.annotation.XmlElementRef;
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlType;
 import static java.util.logging.Logger.getLogger;
+import org.apache.commons.lang3.builder.CompareToBuilder;
 
 
 /**
@@ -45,41 +46,55 @@ import static java.util.logging.Logger.getLogger;
         "unknownResults"
     }
 )
-public class Catalog extends AbstractChild<Metadata> implements TableDomain {
+public class Catalog extends AbstractChild<Metadata>
+    implements Comparable<Catalog>, TableDomain {
 
 
     private static final Logger logger = getLogger(Catalog.class.getName());
 
 
     @Override
-    public List<Table> getTables() {
+    public int compareTo(final Catalog o) {
 
-        final List<Table> list = new ArrayList<Table>();
-
-        for (final Schema schema : getSchemas()) {
-            list.addAll(schema.getTables());
-        }
-
-        return list;
-    }
-
-
-    @Override
-    public List<CrossReference> getCrossReferences() {
-        return crossReferences;
-    }
-
-
-    @Override
-    public void setCrossReferences(List<CrossReference> crossReferences) {
-        this.crossReferences = crossReferences;
+        return new CompareToBuilder()
+            .append(tableCat, o.getTableCat())
+            .build();
     }
 
 
     @Override
     public String toString() {
 
-        return super.toString() + "{" + "tableCat=" + tableCat + "}";
+        return super.toString() + "{"
+               + "tableCat=" + tableCat
+               + "}";
+    }
+
+
+    @Override
+    public List<Table> getTables() {
+
+        final List<Table> tables = new ArrayList<Table>();
+
+        for (final Schema schema : getSchemas()) {
+            tables.addAll(schema.getTables());
+        }
+
+        return tables;
+    }
+
+
+    @Override
+    public List<CrossReference> getCrossReferences() {
+
+        return crossReferences;
+    }
+
+
+    @Override
+    public void setCrossReferences(final List<CrossReference> crossReferences) {
+
+        this.crossReferences = crossReferences;
     }
 
 

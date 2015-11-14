@@ -25,6 +25,7 @@ import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlElementRef;
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlType;
+import org.apache.commons.lang3.builder.CompareToBuilder;
 
 
 /**
@@ -48,7 +49,19 @@ import javax.xml.bind.annotation.XmlType;
         "unknownResults"
     }
 )
-public class Schema extends AbstractChild<Catalog> implements TableDomain {
+public class Schema extends AbstractChild<Catalog>
+    implements Comparable<Schema>, TableDomain {
+
+
+    // by TABLE_CATALOG and TABLE_SCHEM.
+    @Override
+    public int compareTo(final Schema o) {
+
+        return new CompareToBuilder()
+            .append(tableCatalog, o.getTableCatalog())
+            .append(tableSchem, o.getTableSchem())
+            .build();
+    }
 
 
     @Override

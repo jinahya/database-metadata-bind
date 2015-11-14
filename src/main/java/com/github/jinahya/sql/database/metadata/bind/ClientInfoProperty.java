@@ -22,6 +22,7 @@ import java.util.List;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlType;
+import org.apache.commons.lang3.builder.CompareToBuilder;
 
 
 /**
@@ -38,7 +39,15 @@ import javax.xml.bind.annotation.XmlType;
         "unknownResults"
     }
 )
-public class ClientInfoProperty extends AbstractChild<Metadata> {
+public class ClientInfoProperty extends AbstractChild<Metadata>
+    implements Comparable<ClientInfoProperty> {
+
+
+    @Override
+    public int compareTo(final ClientInfoProperty o) {
+
+        return new CompareToBuilder().append(name, o.getName()).build();
+    }
 
 
     @Override
