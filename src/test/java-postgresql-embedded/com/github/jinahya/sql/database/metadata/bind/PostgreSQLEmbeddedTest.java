@@ -108,7 +108,7 @@ public class PostgreSQLEmbeddedTest {
                 "column/isGeneratedcolumn",
                 "column/scopeCatalog",
                 "table/pseudoColumns",
-                "userDefinedType/attributes"
+                "UDT/attributes"
             );
             metadata = context.getMetadata();
         }

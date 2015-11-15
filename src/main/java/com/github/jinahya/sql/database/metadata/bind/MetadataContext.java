@@ -262,6 +262,7 @@ public class MetadataContext {
         }
 
         if (TableDomain.class.isAssignableFrom(beanClass)) {
+            getMethodNames().remove("getCrossReference");
             final List<Table> tables = ((TableDomain) beanInstance).getTables();
             final List<CrossReference> crossReferences
                 = getCrossReferences(tables);
