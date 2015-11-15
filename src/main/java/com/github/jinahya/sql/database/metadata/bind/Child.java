@@ -22,6 +22,7 @@ import javax.xml.bind.annotation.XmlTransient;
 
 
 /**
+ * An interface for children.
  *
  * @author Jin Kwon &lt;jinahya_at_gmail.com&gt;
  * @param <P> parent type parameter
@@ -30,9 +31,19 @@ import javax.xml.bind.annotation.XmlTransient;
 public interface Child<P> {
 
 
+    /**
+     * Returns parent.
+     *
+     * @return parent
+     */
     P getParent();
 
 
+    /**
+     * Sets parent.
+     *
+     * @param parent parent
+     */
     void setParent(final P parent);
 
 

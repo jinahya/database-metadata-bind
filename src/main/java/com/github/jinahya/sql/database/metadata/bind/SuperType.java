@@ -132,26 +132,26 @@ public class SuperType extends AbstractChild<UDT> {
 
 
     // --------------------------------------------------------------------- UDT
-    public UDT getUDT() {
+    // just for class diagram
+    @Deprecated
+    private UDT getUDT() {
 
         return getParent();
     }
 
 
-    public void setUDT(final UDT UDT) {
-
-        setParent(UDT);
-    }
-
-
-    SuperType UDT(final UDT UDT) {
-
-        setUDT(UDT);
-
-        return this;
-    }
-
-
+//    public void setUDT(final UDT UDT) {
+//
+//        setParent(UDT);
+//    }
+//
+//
+//    SuperType UDT(final UDT UDT) {
+//
+//        setUDT(UDT);
+//
+//        return this;
+//    }
     // -------------------------------------------------------------------------
     @Label("TYPE_CAT")
     @NillableBySpecification

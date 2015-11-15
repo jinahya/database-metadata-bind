@@ -260,26 +260,25 @@ public class CrossReference extends AbstractChild<Metadata>
 
 
     // ---------------------------------------------------------------- metadata
-    public Metadata getMetadata() {
+    // just for class diagram
+    private Metadata getMetadata() {
 
         return getParent();
     }
 
 
-    public void setMetadata(final Metadata metadata) {
-
-        setParent(metadata);
-    }
-
-
-    CrossReference metadata(final Metadata metadata) {
-
-        setMetadata(metadata);
-
-        return this;
-    }
-
-
+//    public void setMetadata(final Metadata metadata) {
+//
+//        setParent(metadata);
+//    }
+//
+//
+//    CrossReference metadata(final Metadata metadata) {
+//
+//        setMetadata(metadata);
+//
+//        return this;
+//    }
     // -------------------------------------------------------------------------
     @Label("PKTABLE_CAT")
     @NillableBySpecification

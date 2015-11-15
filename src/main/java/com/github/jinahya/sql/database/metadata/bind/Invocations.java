@@ -18,8 +18,7 @@
 package com.github.jinahya.sql.database.metadata.bind;
 
 
-import java.beans.IntrospectionException;
-import java.beans.PropertyDescriptor;
+import java.lang.reflect.Field;
 
 
 /**
@@ -30,25 +29,9 @@ import java.beans.PropertyDescriptor;
 final class Invocations {
 
 
-    /**
-     * Find {@link Invocation} value from specified property.
-     *
-     * @param propertyDescriptor property descriptor
-     * @param beanClass bean class
-     *
-     * @return an instance of {@link Invocation} or {@code null} if not found.
-     */
-    static Invocation get(final PropertyDescriptor propertyDescriptor,
-                          final Class<?> beanClass) {
-
-        return Annotations.getAnnotation(
-            Invocation.class, propertyDescriptor, beanClass);
-    }
-
-
     static <T> Object[] values(final Class<T> beanClass, final T beanInstance,
                                final Class<?>[] types, final String[] names)
-        throws IntrospectionException, ReflectiveOperationException {
+        throws ReflectiveOperationException {
 
         final Object[] values = new Object[names.length];
         for (int i = 0; i < names.length; i++) {
@@ -57,8 +40,15 @@ final class Invocations {
                 continue;
             }
             if (names[i].startsWith(":")) {
-                values[i] = Beans.getPropertyValue(
-                    beanClass, names[i].substring(1), beanInstance);
+                final Field field
+                    = Reflections.findField(beanClass, names[i].substring(1));
+//                if (!field.isAccessible()) {
+//                    field.setAccessible(true);
+//                }
+//                values[i] = field.get(beanInstance);
+//                values[i] = Beans.getPropertyValue(
+//                    beanClass, names[i].substring(1), beanInstance);
+                values[i] = Values.get(field, beanInstance);
                 continue;
             }
             if (types[i] == String.class) {

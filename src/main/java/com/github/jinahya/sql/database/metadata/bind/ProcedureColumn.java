@@ -349,18 +349,17 @@ public class ProcedureColumn extends AbstractChild<Procedure>
 
 
     // --------------------------------------------------------------- procedure
-    public Procedure getProcedure() {
+    // just for class diagrams
+    private Procedure getProcedure() {
 
         return getParent();
     }
 
 
-    public void setProcedure(final Procedure procedure) {
-
-        setParent(procedure);
-    }
-
-
+//    public void setProcedure(final Procedure procedure) {
+//
+//        setParent(procedure);
+//    }
     // -------------------------------------------------------------------------
     @Label("PROCEDURE_CAT")
     @NillableBySpecification
