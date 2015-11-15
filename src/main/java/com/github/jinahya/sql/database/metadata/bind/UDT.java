@@ -187,18 +187,18 @@ public class UDT extends AbstractChild<Schema> implements Comparable<UDT> {
 
 
     // ------------------------------------------------------------------ schema
-    public Schema getSchema() {
+    // just for class diagram
+    @Deprecated
+    private Schema getSchema() {
 
         return getParent();
     }
 
 
-    public void setSchema(final Schema schema) {
-
-        setParent(schema);
-    }
-
-
+//    public void setSchema(final Schema schema) {
+//
+//        setParent(schema);
+//    }
     // -------------------------------------------------------------------------
     @Label("TYPE_CAT")
     @NillableBySpecification

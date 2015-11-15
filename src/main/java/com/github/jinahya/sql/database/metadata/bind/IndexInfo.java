@@ -253,18 +253,17 @@ public class IndexInfo extends AbstractChild<Table>
 
 
     // ------------------------------------------------------------------- table
-    public Table getTable() {
+    // just for class diagram
+    private Table getTable() {
 
         return getParent();
     }
 
 
-    public void setTable(final Table table) {
-
-        setParent(table);
-    }
-
-
+//    public void setTable(final Table table) {
+//
+//        setParent(table);
+//    }
     // -------------------------------------------------------------------------
     @Label("TABLE_CAT")
     @NillableBySpecification

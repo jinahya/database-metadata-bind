@@ -129,18 +129,17 @@ public class Schema extends AbstractChild<Catalog>
 
 
     // ----------------------------------------------------------------- catalog
-    public Catalog getCatalog() {
+    // just for class diagram
+    private Catalog getCatalog() {
 
         return getParent();
     }
 
 
-    public void setCatalog(final Catalog catalog) {
-
-        setParent(catalog);
-    }
-
-
+//    public void setCatalog(final Catalog catalog) {
+//
+//        setParent(catalog);
+//    }
     // --------------------------------------------------------------- functions
     public List<Function> getFunctions() {
 
@@ -152,6 +151,11 @@ public class Schema extends AbstractChild<Catalog>
     }
 
 
+    public void setFunctions(List<Function> functions) {
+        this.functions = functions;
+    }
+
+
     // -------------------------------------------------------------- procedures
     public List<Procedure> getProcedures() {
 
@@ -160,6 +164,11 @@ public class Schema extends AbstractChild<Catalog>
         }
 
         return procedures;
+    }
+
+
+    public void setProcedures(List<Procedure> procedures) {
+        this.procedures = procedures;
     }
 
 
@@ -193,6 +202,11 @@ public class Schema extends AbstractChild<Catalog>
     }
 
 
+    public void setTables(List<Table> tables) {
+        this.tables = tables;
+    }
+
+
     // -------------------------------------------------------------------- UDTs
     public List<UDT> getUDTs() {
 
@@ -201,6 +215,11 @@ public class Schema extends AbstractChild<Catalog>
         }
 
         return UDTs;
+    }
+
+
+    public void setUDTs(List<UDT> UDTs) {
+        this.UDTs = UDTs;
     }
 
 

@@ -48,9 +48,8 @@ public class ImportedKey extends TableKey<ImportedKey> {
 
 
     // ------------------------------------------------------------------- table
-    // overriddent just for class diagrams
-    @Override
-    public Table getTable() {
+    // for class diagrams
+    private Table getTable() {
 
         return getParent();
     }

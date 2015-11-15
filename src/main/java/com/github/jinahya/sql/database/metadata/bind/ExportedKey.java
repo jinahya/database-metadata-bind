@@ -50,9 +50,8 @@ public class ExportedKey extends TableKey<ExportedKey> {
 
 
     // ------------------------------------------------------------------- table
-    // overridden just for class diagrams
-    @Override
-    public Table getTable() {
+    // just for class diagram
+    private Table getTable() {
 
         return getParent();
     }

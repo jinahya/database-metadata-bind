@@ -154,18 +154,17 @@ public class Procedure extends AbstractChild<Schema>
 
 
     // ------------------------------------------------------------------ schema
-    public Schema getSchema() {
+    // just for class diagram
+    private Schema getSchema() {
 
         return getParent();
     }
 
 
-    public void setSchema(final Schema schema) {
-
-        setParent(schema);
-    }
-
-
+//    public void setSchema(final Schema schema) {
+//
+//        setParent(schema);
+//    }
     // -------------------------------------------------------- procedureColumns
     public List<ProcedureColumn> getProcedureColumns() {
 
@@ -174,6 +173,11 @@ public class Procedure extends AbstractChild<Schema>
         }
 
         return procedureColumns;
+    }
+
+
+    public void setProcedureColumns(List<ProcedureColumn> procedureColumns) {
+        this.procedureColumns = procedureColumns;
     }
 
 

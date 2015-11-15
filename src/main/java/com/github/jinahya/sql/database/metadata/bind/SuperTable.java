@@ -104,26 +104,25 @@ public class SuperTable extends AbstractChild<Table> {
 
 
     // ------------------------------------------------------------------- table
-    public Table getTable() {
+    // just for class diagram
+    private Table getTable() {
 
         return getParent();
     }
 
 
-    public void setTable(final Table table) {
-
-        setParent(table);
-    }
-
-
-    SuperTable table(final Table table) {
-
-        setTable(table);
-
-        return this;
-    }
-
-
+//    public void setTable(final Table table) {
+//
+//        setParent(table);
+//    }
+//
+//
+//    SuperTable table(final Table table) {
+//
+//        setTable(table);
+//
+//        return this;
+//    }
     // -------------------------------------------------------------------------
     @Label("TABLE_CAT")
     @NillableBySpecification

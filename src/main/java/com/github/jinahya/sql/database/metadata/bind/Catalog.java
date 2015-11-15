@@ -25,7 +25,6 @@ import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlElementRef;
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlType;
-import static java.util.logging.Logger.getLogger;
 import org.apache.commons.lang3.builder.CompareToBuilder;
 import static java.util.logging.Logger.getLogger;
 
@@ -131,27 +130,31 @@ public class Catalog extends AbstractChild<Metadata>
     }
 
 
+    public void setSchemas(List<Schema> schemas) {
+        this.schemas = schemas;
+    }
+
+
     // ---------------------------------------------------------------- metadata
-    public Metadata getMetadata() {
+    // just for class digram
+    private Metadata getMetadata() {
 
         return getParent();
     }
 
 
-    public void setMetadata(final Metadata metadata) {
-
-        setParent(metadata);
-    }
-
-
-    Catalog metadata(final Metadata metadata) {
-
-        setMetadata(metadata);
-
-        return this;
-    }
-
-
+//    public void setMetadata(final Metadata metadata) {
+//
+//        setParent(metadata);
+//    }
+//
+//
+//    Catalog metadata(final Metadata metadata) {
+//
+//        setMetadata(metadata);
+//
+//        return this;
+//    }
     // -------------------------------------------------------------------------
     @Label("TABLE_CAT")
     @XmlElement(required = true)

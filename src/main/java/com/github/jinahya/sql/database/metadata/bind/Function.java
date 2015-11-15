@@ -180,6 +180,11 @@ public class Function extends AbstractChild<Schema>
     }
 
 
+    public void setFunctionColumns(List<FunctionColumn> functionColumns) {
+        this.functionColumns = functionColumns;
+    }
+
+
     // -------------------------------------------------------------------------
     @Label("FUNCTION_CAT")
     @NillableBySpecification

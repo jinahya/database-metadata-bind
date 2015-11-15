@@ -85,30 +85,36 @@ class Reflections {
     }
 
 
-    static Field findField(final Class<?> klass, final String name)
+    static Field findField(final Class<?> declaringClass,
+                           final String fieldName)
         throws NoSuchFieldException {
 
         try {
-            final Field field = klass.getDeclaredField(name);
+            final Field field = declaringClass.getDeclaredField(fieldName);
             return field;
         } catch (final NoSuchFieldException nsfe) {
-            final Class<?> superclass = klass.getSuperclass();
+            final Class<?> superclass = declaringClass.getSuperclass();
             if (superclass == null) {
                 throw nsfe;
             }
-            return Reflections.findField(superclass, name);
+            return findField(superclass, fieldName);
         }
     }
 
 
     static List<Field> listFields(
         final Class<?> declaringClass, final List<Field> fieldList,
-        final Class<? extends Annotation>... annotationClasses) {
+        final Class<? extends Annotation> annotationClass,
+        final Class<? extends Annotation>... otherAnnotationClasses) {
 
         for (final Field declaredField : declaringClass.getDeclaredFields()) {
-            for (final Class<? extends Annotation> annotationClass
-                 : annotationClasses) {
-                if (declaredField.getAnnotation(annotationClass) != null) {
+            if (declaredField.getAnnotation(annotationClass) != null) {
+                fieldList.add(declaredField);
+                continue;
+            }
+            for (final Class<? extends Annotation> otherAnnotationClass
+                 : otherAnnotationClasses) {
+                if (declaredField.getAnnotation(otherAnnotationClass) != null) {
                     fieldList.add(declaredField);
                 }
             }
@@ -119,16 +125,30 @@ class Reflections {
             return fieldList;
         }
 
-        return listFields(superclass, fieldList, annotationClasses);
+        return listFields(superclass, fieldList, annotationClass,
+                          otherAnnotationClasses);
+    }
+
+
+    static List<Field> listFields(
+        final Class<?> declaringClass,
+        final Class<? extends Annotation> annotationClass,
+        final Class<? extends Annotation>... otherAnnotationClasses) {
+
+        final List<Field> fieldList = new ArrayList<Field>();
+
+        return listFields(declaringClass, fieldList, annotationClass,
+                          otherAnnotationClasses);
     }
 
 
     static Field findField(
         final Class<?> declaringClass,
-        final Class<? extends Annotation>... annotationClasses) {
+        final Class<? extends Annotation> annotationClass,
+        final Class<? extends Annotation>... otherAnnotationClasses) {
 
         final List<Field> parentFields = listFields(
-            declaringClass, new ArrayList<Field>(1), annotationClasses);
+            declaringClass, annotationClass, otherAnnotationClasses);
 
         return parentFields.isEmpty() ? null : parentFields.get(0);
     }
@@ -180,7 +200,7 @@ class Reflections {
                                     final T beanInstance)
         throws NoSuchFieldException, IllegalAccessException {
 
-        return getFieldValue(Reflections.findField(beanClass, fieldName), beanInstance);
+        return getFieldValue(findField(beanClass, fieldName), beanInstance);
     }
 
 
@@ -337,7 +357,7 @@ class Reflections {
                                   final Object fieldValue)
         throws NoSuchFieldException, IllegalAccessException {
 
-        setFieldValue(Reflections.findField(beanClass, fieldName), beanInstance,
+        setFieldValue(findField(beanClass, fieldName), beanInstance,
                       fieldValue);
     }
 
@@ -422,50 +442,6 @@ class Reflections {
     }
 
 
-    static <C, P> void setParent(final Class<C> childClass,
-                                 final Iterable<? extends C> childBeans,
-                                 final Class<P> parentClass, final P parentBean)
-        throws ReflectiveOperationException {
-
-        if (!Child.class.isAssignableFrom(childClass)) {
-            return;
-        }
-
-        final Method method = childClass.getMethod("setParent", Object.class);
-        for (final Object childBean : childBeans) {
-            method.invoke(childBean, parentBean);
-        }
-    }
-
-
-    static void setParent(final Class<?> childClass,
-                          final Iterable<?> childBeans, final Object parentBean)
-        throws ReflectiveOperationException {
-
-        @SuppressWarnings("unchecked")
-        final Field parentField = findField(childClass, Parent.class);
-        if (parentField != null
-            && parentField.getType().isAssignableFrom(parentBean.getClass())) {
-            if (!parentField.isAccessible()) {
-                parentField.setAccessible(true);
-            }
-            for (final Object childBean : childBeans) {
-                parentField.set(childBean, parentBean);
-            }
-            return;
-        }
-
-        if (!Child.class.isAssignableFrom(childClass)) {
-            return;
-        }
-
-        final Method method = childClass.getMethod("setParent", Object.class);
-        for (final Object childBean : childBeans) {
-            method.invoke(childBean, parentBean);
-        }
-    }
-
-
     static <T> void setUnknownResults(final Class<? super T> beanClass,
                                       final Set<String> columnLabels,
                                       final ResultSet resultSet,
@@ -478,8 +454,7 @@ class Reflections {
 
         final Field field;
         try {
-            field = Reflections.findField(beanClass, FIELD_NAME_UNKNOWN_COLUMNS);
-            //field = beanClass.getDeclaredField(FIELD_NAME_UNKNOWN_COLUMNS);
+            field = findField(beanClass, FIELD_NAME_UNKNOWN_COLUMNS);
         } catch (final NoSuchFieldException nsfe) {
             logger.log(Level.WARNING, "field not found: {0} in {1}",
                        new Object[]{FIELD_NAME_UNKNOWN_COLUMNS, beanClass});
@@ -489,7 +464,8 @@ class Reflections {
         final List<UnknownResult> value
             = new ArrayList<UnknownResult>(columnLabels.size());
         for (final String columnLabel : columnLabels) {
-            value.add(new UnknownResult()
+            value.add(
+                new UnknownResult()
                 .label(columnLabel)
                 .value(resultSet.getObject(columnLabel))
             );

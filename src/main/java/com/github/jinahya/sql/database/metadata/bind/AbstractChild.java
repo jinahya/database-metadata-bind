@@ -22,12 +22,22 @@ import javax.xml.bind.annotation.XmlTransient;
 
 
 /**
+ * An abstract class implementing {@code Child}.
  *
  * @author Jin Kwon &lt;jinahya_at_gmail.com&gt;
  * @param <P> parent type parameter
  */
 @XmlTransient
 public abstract class AbstractChild<P> implements Child<P> {
+
+
+    @Deprecated
+    void beforeMarshal(final javax.xml.bind.Marshaller marshaller) {
+
+        if (parent == null) {
+            System.err.println("null parent: " + this);
+        }
+    }
 
 
     @Override
@@ -44,7 +54,6 @@ public abstract class AbstractChild<P> implements Child<P> {
     }
 
 
-    @Parent
     @XmlTransient
     private P parent;
 

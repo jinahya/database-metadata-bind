@@ -409,26 +409,25 @@ public class Column extends AbstractChild<Table> implements Comparable<Column> {
 
 
     // ------------------------------------------------------------------- table
-    public Table getTable() {
+    // just for class diagram
+    private Table getTable() {
 
         return getParent();
     }
 
 
-    public void setTable(final Table table) {
-
-        setParent(table);
-    }
-
-
-    Column table(final Table table) {
-
-        setTable(table);
-
-        return this;
-    }
-
-
+//    public void setTable(final Table table) {
+//
+//        setParent(table);
+//    }
+//
+//
+//    Column table(final Table table) {
+//
+//        setTable(table);
+//
+//        return this;
+//    }
     // -------------------------------------------------------- columnPrivileges
     public List<ColumnPrivilege> getColumnPrivileges() {
 
@@ -437,6 +436,11 @@ public class Column extends AbstractChild<Table> implements Comparable<Column> {
         }
 
         return columnPrivileges;
+    }
+
+
+    public void setColumnPrivileges(List<ColumnPrivilege> columnPrivileges) {
+        this.columnPrivileges = columnPrivileges;
     }
 
 

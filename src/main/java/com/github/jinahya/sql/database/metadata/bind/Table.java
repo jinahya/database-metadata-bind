@@ -198,18 +198,18 @@ public class Table extends AbstractChild<Schema> {
 
 
     // ------------------------------------------------------------------ schema
-    public Schema getSchema() {
+    // just for class diagram
+    @Deprecated
+    private Schema getSchema() {
 
         return getParent();
     }
 
 
-    public void setSchema(final Schema schema) {
-
-        setParent(schema);
-    }
-
-
+//    public void setSchema(final Schema schema) {
+//
+//        setParent(schema);
+//    }
     // ------------------------------------------------------ bestRowIdentifiers
     public List<BestRowIdentifier> getBestRowIdentifiers() {
 
@@ -218,6 +218,11 @@ public class Table extends AbstractChild<Schema> {
         }
 
         return bestRowIdentifiers;
+    }
+
+
+    public void setBestRowIdentifiers(List<BestRowIdentifier> bestRowIdentifiers) {
+        this.bestRowIdentifiers = bestRowIdentifiers;
     }
 
 
@@ -232,6 +237,11 @@ public class Table extends AbstractChild<Schema> {
     }
 
 
+    public void setColumns(List<Column> columns) {
+        this.columns = columns;
+    }
+
+
     // ------------------------------------------------------------ exportedKeys
     public List<ExportedKey> getExportedKeys() {
 
@@ -243,6 +253,11 @@ public class Table extends AbstractChild<Schema> {
     }
 
 
+    public void setExportedKeys(List<ExportedKey> exportedKeys) {
+        this.exportedKeys = exportedKeys;
+    }
+
+
     // ------------------------------------------------------------ importedKeys
     public List<ImportedKey> getImportedKeys() {
 
@@ -251,6 +266,11 @@ public class Table extends AbstractChild<Schema> {
         }
 
         return importedKeys;
+    }
+
+
+    public void setImportedKeys(List<ImportedKey> importedKeys) {
+        this.importedKeys = importedKeys;
     }
 
 
@@ -284,6 +304,11 @@ public class Table extends AbstractChild<Schema> {
     }
 
 
+    public void setIndexInfo(List<IndexInfo> indexInfo) {
+        this.indexInfo = indexInfo;
+    }
+
+
     // ------------------------------------------------------------- primaryKeys
     public List<PrimaryKey> getPrimaryKeys() {
 
@@ -292,6 +317,11 @@ public class Table extends AbstractChild<Schema> {
         }
 
         return primaryKeys;
+    }
+
+
+    public void setPrimaryKeys(List<PrimaryKey> primaryKeys) {
+        this.primaryKeys = primaryKeys;
     }
 
 
@@ -306,6 +336,11 @@ public class Table extends AbstractChild<Schema> {
     }
 
 
+    public void setPseudoColumns(List<PseudoColumn> pseudoColumns) {
+        this.pseudoColumns = pseudoColumns;
+    }
+
+
     // ------------------------------------------------------------- superTables
     public List<SuperTable> getSuperTables() {
 
@@ -314,6 +349,11 @@ public class Table extends AbstractChild<Schema> {
         }
 
         return superTables;
+    }
+
+
+    public void setSuperTables(List<SuperTable> superTables) {
+        this.superTables = superTables;
     }
 
 
@@ -328,6 +368,11 @@ public class Table extends AbstractChild<Schema> {
     }
 
 
+    public void setTablePrivileges(List<TablePrivilege> tablePrivileges) {
+        this.tablePrivileges = tablePrivileges;
+    }
+
+
     // ---------------------------------------------------------- versionColumns
     public List<VersionColumn> getVersionColumns() {
 
@@ -336,6 +381,11 @@ public class Table extends AbstractChild<Schema> {
         }
 
         return versionColumns;
+    }
+
+
+    public void setVersionColumns(List<VersionColumn> versionColumns) {
+        this.versionColumns = versionColumns;
     }
 
 

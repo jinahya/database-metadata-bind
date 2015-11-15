@@ -362,7 +362,8 @@ public class Attribute extends AbstractChild<UDT>
 
 
     // --------------------------------------------------------------------- UDT
-    public UDT getUDT() {
+    // just for class diagram
+    private UDT getUDT() {
 
         return getParent();
     }
