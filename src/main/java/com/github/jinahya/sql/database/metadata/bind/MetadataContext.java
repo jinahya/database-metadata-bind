@@ -20,7 +20,6 @@ package com.github.jinahya.sql.database.metadata.bind;
 
 import static java.beans.Introspector.decapitalize;
 import java.lang.reflect.Field;
-import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
 import java.lang.reflect.ParameterizedType;
@@ -47,6 +46,22 @@ public class MetadataContext {
 
 
     private static final Logger logger = getLogger(Metadata.class.getName());
+
+
+    public static final String DMDB_SUPPRESS_UNKNOWN_COLUMNS
+        = "dmdb.suppressUnknownColumns";
+
+
+    public static final String DMDB_SUPPRESS_UNKNOWN_METHODS
+        = "dmdb.suppressUnknownMethods";
+
+
+    public static final String DMDB_EMPTY_CATALOG_IF_NONE
+        = "dmdb.emptyCatalogIfNone";
+
+
+    public static final String DMDB_EMPTY_SCHEMA_IF_NONE
+        = "dmdb.emptySchemaIfNone";
 
 
     private static String suppression(
@@ -134,35 +149,23 @@ public class MetadataContext {
             if (value == null) {
                 return;
             }
-            if (!field.isAccessible()) {
-                field.setAccessible(true);
-            }
-//            @SuppressWarnings("unchecked")
-//            List<Object> list = (List<Object>) field.get(bean);
-//            if (list == null) {
-//                list = new ArrayList<Object>();
-//                field.set(bean, list);
-//            }
             @SuppressWarnings("unchecked")
             List<Object> list = (List<Object>) Values.get(field, bean);
             if (list == null) {
                 list = new ArrayList<Object>();
                 Values.set(field, bean, list);
-                //field.set(bean, list);
             }
             final Class<?> type
                 = (Class<?>) ((ParameterizedType) field.getGenericType())
                 .getActualTypeArguments()[0];
             if (ResultSet.class.isInstance(value)) {
                 bindAll((ResultSet) value, type, list);
-//                Reflections.setParent(type, list, bean);
                 Values.setParent(type, list, value);
                 return;
             }
             list.add(type
                 .getDeclaredMethod("valueOf", Object[].class, Object.class)
                 .invoke(null, args, value));
-//            Reflections.setParent(type, list, bean);
             Values.setParent(type, list, value);
             return;
         }
@@ -179,85 +182,90 @@ public class MetadataContext {
             final Set<String> resultLabels
                 = ResultSets.getColumnLabels(resultSet);
             @SuppressWarnings("unchecked")
-            final List<Field> fields = Reflections.listFields(beanClass, Label.class);
+            final List<Field> fields
+                = Reflections.listFields(beanClass, Label.class);
             for (final Field field : fields) {
+                final String label = field.getAnnotation(Label.class).value();
                 final String suppression = suppression(beanClass, field);
+                final String info = String.format(
+                    "field=%s, label=%s, suppression=%s", field, label,
+                    suppression);
                 if (suppressed(suppression)) {
+                    logger.log(Level.FINE, "suppressed; {0}", info);
                     continue;
                 }
-                final Label label = field.getAnnotation(Label.class);
-                final String labelValue = label.value();
-                if (!resultLabels.remove(labelValue)) {
-                    logger.log(Level.WARNING,
-                               "unmapped column; bean={0}, label={1}",
-                               new Object[]{beanClass, label});
+                if (!resultLabels.remove(label)) {
+                    final String message = "unknown column; " + info;
+                    if (!suppressUnknownColumns) {
+                        throw new RuntimeException(message);
+                    }
+                    logger.warning(message);
+                    continue;
                 }
+                final Object value;
                 try {
-                    final Object value = resultSet.getObject(labelValue);
-                    Reflections.setFieldValue(field, beanInstance, value);
-                } catch (final SQLException sqle) {
-                    logger.log(Level.SEVERE,
-                               "failed to get value"
-                               + "; label=" + label
-                               + ", suppression=" + suppression,
-                               sqle);
-                    throw sqle;
+                    value = resultSet.getObject(label);
                 } catch (final Exception e) {
-                    logger.log(Level.SEVERE,
-                               "failed to get value"
-                               + "; label=" + label
-                               + ", suppression=" + suppression,
-                               e);
+                    final String message = "failed to get value; " + info;
+                    logger.severe(message);
+                    if (e instanceof SQLException) {
+                        throw (SQLException) e;
+                    }
                     throw new RuntimeException(e);
                 }
+                Reflections.setFieldValue(field, beanInstance, value);
             }
             if (!resultLabels.isEmpty()) {
-                Reflections.setUnknownResults(
-                    beanClass, resultLabels, resultSet, beanInstance);
+                for (final String resultLabel : resultLabels) {
+                    final Object resultValue = resultSet.getObject(resultLabel);
+                    logger.log(Level.WARNING, "unknown result; {0}({1})",
+                               new Object[]{resultLabel, resultValue});
+                }
             }
         }
 
         @SuppressWarnings("unchecked")
-        final List<Field> fields = Reflections.listFields(beanClass, Invocation.class);
+        final List<Field> fields
+            = Reflections.listFields(beanClass, Invocation.class);
         for (final Field field : fields) {
+            final Invocation invocation = field.getAnnotation(Invocation.class);
             final String suppression = suppression(beanClass, field);
+            final String info = String.format(
+                "field=%s, invocation=%s, suppression=%s",
+                field, invocation, suppression);
             if (suppressed(suppression)) {
+                logger.log(Level.FINE, "suppressed; {0}", new Object[]{info});
                 continue;
             }
-            final Invocation invocation = field.getAnnotation(Invocation.class);
             final String name = invocation.name();
             getMethodNames().remove(name);
             final Class<?>[] types = invocation.types();
-            final Method method = DatabaseMetaData.class.getMethod(name, types);
+            final Method method;
+            try {
+                method = DatabaseMetaData.class.getMethod(name, types);
+            } catch (final NoSuchMethodException nsme) {
+                final String message = "unknown methods; " + info;
+                if (!suppressUnknownMethods) {
+                    throw new RuntimeException(message);
+                }
+                logger.warning(message);
+                continue;
+            }
             for (final InvocationArgs invocationArgs : invocation.argsarr()) {
                 final String[] names = invocationArgs.value();
                 final Object[] args = Invocations.values(
                     beanClass, beanInstance, types, names);
+                final Object value;
                 try {
-                    final Object propertyValue = method.invoke(database, args);
-                    setValue(field, beanInstance, propertyValue, args);
-                } catch (final InvocationTargetException ite) {
-                    logger.log(Level.SEVERE,
-                               "failed to invoke"
-                               + "; invocation=" + invocation
-                               + ", suppressin=" + suppression,
-                               ite);
-                    throw ite;
+                    value = method.invoke(database, args);
                 } catch (final Exception e) {
-                    logger.log(Level.SEVERE,
-                               "failed to invoke"
-                               + "; invocation=" + invocation
-                               + ", suppressin=" + suppression,
-                               e);
+                    logger.log(Level.SEVERE, "failed to invoke" + info, e);
                     throw new RuntimeException(e);
                 } catch (final AbstractMethodError ame) {
-                    logger.log(Level.SEVERE,
-                               "failed to invoke"
-                               + "; invocation=" + invocation
-                               + ", suppressin=" + suppression,
-                               ame);
+                    logger.log(Level.SEVERE, "failed by abstract" + info, ame);
                     throw ame;
                 }
+                setValue(field, beanInstance, value, args);
             }
         }
 
@@ -273,31 +281,33 @@ public class MetadataContext {
     }
 
 
-    private <T> T bindSingle(final ResultSet results, final Class<T> type)
+    private <T> T bindSingle(final ResultSet resultSet,
+                             final Class<T> beanClass)
         throws SQLException, ReflectiveOperationException {
 
-        return bindSingle(results, type, type.newInstance());
+        return bindSingle(resultSet, beanClass, beanClass.newInstance());
     }
 
 
-    private <T> List<? super T> bindAll(final ResultSet results,
-                                        final Class<T> type,
-                                        final List<? super T> list)
+    private <T> List<? super T> bindAll(final ResultSet resultSet,
+                                        final Class<T> beanClass,
+                                        final List<? super T> beanList)
         throws SQLException, ReflectiveOperationException {
 
-        while (results.next()) {
-            list.add(bindSingle(results, type, type.newInstance()));
+        while (resultSet.next()) {
+            beanList.add(bindSingle(
+                resultSet, beanClass, beanClass.newInstance()));
         }
 
-        return list;
+        return beanList;
     }
 
 
-    private <T> List<? super T> bindAll(final ResultSet results,
-                                        final Class<T> type)
+    private <T> List<? super T> bindAll(final ResultSet resultSet,
+                                        final Class<T> beanType)
         throws SQLException, ReflectiveOperationException {
 
-        return bindAll(results, type, new ArrayList<T>());
+        return bindAll(resultSet, beanType, new ArrayList<T>());
     }
 
 
@@ -307,60 +317,84 @@ public class MetadataContext {
      * @return a Metadata
      *
      * @throws SQLException if a database occurs.
-     * @throws ReflectiveOperationException if a reflection erorr occurs
+     * @throws ReflectiveOperationException if a reflection error occurs
      */
     public Metadata getMetadata()
         throws SQLException, ReflectiveOperationException {
 
-        final Metadata metadata = bindSingle(null, Metadata.class);
+        final Metadata metadata = bindSingle(null, Metadata.class
+        );
 
-        if (!suppressed("metadata/catalogs")) {
-            final List<Catalog> catalogs = metadata.getCatalogs();
-            if (catalogs.isEmpty()) {
-                final Catalog catalog = new Catalog();
-                catalog.setTableCat("");
-                catalog.setParent(metadata);
-                logger.log(Level.INFO, "adding an empty catalog: {0}",
-                           new Object[]{catalog});
-                catalogs.add(catalog);
-                bindSingle(null, Catalog.class, catalog);
-            }
-            if (!suppressed("category/schemas")) {
-                for (final Catalog catalog : catalogs) {
-                    final List<Schema> schemas = catalog.getSchemas();
-                    if (schemas.isEmpty()) {
-                        final Schema schema = new Schema();
-                        schema.setTableCatalog(catalog.getTableCat());
-                        schema.setTableSchem("");
-                        schema.setParent(catalog);
-                        logger.log(Level.INFO, "adding an empty schema: {0}",
-                                   new Object[]{schema});
-                        schemas.add(schema);
-                        bindSingle(null, Schema.class, schema);
-                    }
-                }
+        final List<Catalog> catalogs = metadata.getCatalogs();
+        if (catalogs.isEmpty() && emptyCatalogIfNone) {
+            final Catalog catalog = new Catalog();
+            catalog.setTableCat("");
+            catalog.setParent(metadata);
+            logger.log(Level.FINE, "adding an empty catalog: {0}",
+                       new Object[]{catalog});
+            catalogs.add(catalog);
+            bindSingle(null, Catalog.class, catalog);
+        }
+        for (final Catalog catalog : catalogs) {
+            final List<Schema> schemas = catalog.getSchemas();
+            if (schemas.isEmpty() && emptySchemaIfNone) {
+                final Schema schema = new Schema();
+                schema.setTableCatalog(catalog.getTableCat());
+                schema.setTableSchem("");
+                schema.setParent(catalog);
+                logger.log(Level.FINE, "adding an empty schema: {0}",
+                           new Object[]{schema});
+                schemas.add(schema);
+                bindSingle(null, Schema.class, schema);
             }
         }
 
-        final List<SDTSDTBoolean> supportsConvert
-            = new ArrayList<SDTSDTBoolean>();
-        metadata.setSupportsConvert(supportsConvert);
-        supportsConvert.add(
-            new SDTSDTBoolean()
-            .fromType(null)
-            .toType(null)
-            .value(database.supportsConvert()));
-        final Set<Integer> sqlTypes = Reflections.getSqlTypes();
-        for (final int fromType : sqlTypes) {
-            for (final int toType : sqlTypes) {
-                if (fromType == toType) {
-//                    continue;
+//        if (!suppressed("metadata/catalogs")) {
+//            final List<Catalog> catalogs = metadata.getCatalogs();
+//            if (catalogs.isEmpty()) {
+//                final Catalog catalog = new Catalog();
+//                catalog.setTableCat("");
+//                catalog.setParent(metadata);
+//                logger.log(Level.INFO, "adding an empty catalog: {0}",
+//                           new Object[]{catalog});
+//                catalogs.add(catalog);
+//                bindSingle(null, Catalog.class, catalog);
+//            }
+//            if (!suppressed("category/schemas")) {
+//                for (final Catalog catalog : catalogs) {
+//                    final List<Schema> schemas = catalog.getSchemas();
+//                    if (schemas.isEmpty()) {
+//                        final Schema schema = new Schema();
+//                        schema.setTableCatalog(catalog.getTableCat());
+//                        schema.setTableSchem("");
+//                        schema.setParent(catalog);
+//                        logger.log(Level.INFO, "adding an empty schema: {0}",
+//                                   new Object[]{schema});
+//                        schemas.add(schema);
+//                        bindSingle(null, Schema.class, schema);
+//                    }
+//                }
+//            }
+//        }
+        if (!suppressed("metadata/supportsConvert")) {
+            getMethodNames().remove("supportsConvert");
+            final List<SDTSDTBoolean> supportsConvert
+                = new ArrayList<SDTSDTBoolean>();
+            metadata.setSupportsConvert(supportsConvert);
+            supportsConvert.add(
+                new SDTSDTBoolean()
+                .fromType(null)
+                .toType(null)
+                .value(database.supportsConvert()));
+            final Set<Integer> sqlTypes = Reflections.getSqlTypes();
+            for (final int fromType : sqlTypes) {
+                for (final int toType : sqlTypes) {
+                    supportsConvert.add(
+                        new SDTSDTBoolean()
+                        .fromType(fromType)
+                        .toType(toType)
+                        .value(database.supportsConvert(fromType, toType)));
                 }
-                supportsConvert.add(
-                    new SDTSDTBoolean()
-                    .fromType(fromType)
-                    .toType(toType)
-                    .value(database.supportsConvert(fromType, toType)));
             }
         }
 
@@ -383,6 +417,7 @@ public class MetadataContext {
 
         final ResultSet results = database.getAttributes(
             catalog, schemaPattern, typeNamePattern, attributeNamePattern);
+
         try {
             bindAll(results, Attribute.class, list);
         } finally {
@@ -402,6 +437,7 @@ public class MetadataContext {
 
         final ResultSet results = database.getBestRowIdentifier(
             catalog, schema, table, scope, nullable);
+
         try {
             bindAll(results, BestRowIdentifier.class, list);
         } finally {
@@ -435,6 +471,7 @@ public class MetadataContext {
             = new ArrayList<ClientInfoProperty>();
 
         final ResultSet results = database.getClientInfoProperties();
+
         try {
             bindAll(results, ClientInfoProperty.class, list);
         } finally {
@@ -455,6 +492,7 @@ public class MetadataContext {
 
         final ResultSet resultSet = database.getColumns(
             catalog, schemaPattern, tableNamePattern, columnNamePattern);
+
         try {
             bindAll(resultSet, Column.class, list);
         } finally {
@@ -474,6 +512,7 @@ public class MetadataContext {
 
         final ResultSet results = database.getColumnPrivileges(
             catalog, schema, table, columnNamePattern);
+
         try {
             bindAll(results, ColumnPrivilege.class, list);
         } finally {
@@ -496,6 +535,7 @@ public class MetadataContext {
         final ResultSet results = database.getCrossReference(
             parentCatalog, parentSchema, parentTable, foreignCatalog,
             foreignSchema, foreignTable);
+
         try {
             bindAll(results, CrossReference.class, list);
         } finally {
@@ -543,6 +583,7 @@ public class MetadataContext {
 
         final ResultSet results = database.getFunctionColumns(
             catalog, schemaPattern, functionNamePattern, columnNamePattern);
+
         try {
             bindAll(results, FunctionColumn.class, list);
         } finally {
@@ -562,6 +603,7 @@ public class MetadataContext {
 
         final ResultSet results = database.getFunctions(
             catalog, schemaPattern, functionNamePattern);
+
         try {
             bindAll(results, Function.class, list);
         } finally {
@@ -580,6 +622,7 @@ public class MetadataContext {
 
         final ResultSet results = database.getExportedKeys(
             catalog, schema, table);
+
         try {
             bindAll(results, ExportedKey.class, list);
         } finally {
@@ -598,6 +641,7 @@ public class MetadataContext {
 
         final ResultSet results = database.getImportedKeys(
             catalog, schema, table);
+
         try {
             bindAll(results, ImportedKey.class, list);
         } finally {
@@ -617,6 +661,7 @@ public class MetadataContext {
 
         final ResultSet results = database.getIndexInfo(
             catalog, schema, table, unique, approximate);
+
         try {
             bindAll(results, IndexInfo.class, list);
         } finally {
@@ -725,18 +770,11 @@ public class MetadataContext {
 
         final List<Schema> list = new ArrayList<Schema>();
 
-        final ResultSet results = database.getSchemas(
-            catalog, schemaPattern);
+        final ResultSet results = database.getSchemas(catalog, schemaPattern);
         try {
             bindAll(results, Schema.class, list);
         } finally {
             results.close();
-        }
-
-        if (list.isEmpty()) {
-            final Schema schema = new Schema();
-            schema.setTableSchem("");
-            list.add(schema);
         }
 
         return list;
@@ -851,12 +889,47 @@ public class MetadataContext {
     }
 
 
+    public MetadataContext suppressUnknownColumns(
+        final boolean suppressUnknownColumns) {
+
+        this.suppressUnknownColumns = suppressUnknownColumns;
+
+        return this;
+    }
+
+
+    public MetadataContext suppressUnknownMethods(
+        final boolean suppressUnknownMethods) {
+
+        this.suppressUnknownMethods = suppressUnknownMethods;
+
+        return this;
+    }
+
+
+    public MetadataContext emptyCatalogIfNone(
+        final boolean emptyCatalogIfNone) {
+
+        this.emptyCatalogIfNone = emptyCatalogIfNone;
+
+        return this;
+    }
+
+
+    public MetadataContext emptySchemaIfNone(final boolean emptySchemaIfNone) {
+
+        this.emptySchemaIfNone = emptySchemaIfNone;
+
+        return this;
+    }
+
+
     private Set<String> getMethodNames() {
 
         if (methodNames == null) {
             methodNames = new HashSet<String>();
             for (final Method method : DatabaseMetaData.class.getMethods()) {
-                if (!DatabaseMetaData.class.equals(method.getDeclaringClass())) {
+                if (method.getDeclaringClass() != DatabaseMetaData.class) {
                     continue;
                 }
                 final int modifier = method.getModifiers();
@@ -877,10 +950,22 @@ public class MetadataContext {
     private final DatabaseMetaData database;
 
 
+    private boolean suppressUnknownColumns;
+
+
+    private boolean suppressUnknownMethods;
+
+
+    private boolean emptyCatalogIfNone = true;
+
+
+    private boolean emptySchemaIfNone = true;
+
+
     private Set<String> suppressions;
 
 
-    private Set<String> methodNames;
+    private transient Set<String> methodNames;
 
 
 }
