@@ -145,6 +145,5 @@ public class SuperTable extends AbstractChild<Table> {
     @XmlElement(required = true)
     private String supertableName;
 
-
 }
 

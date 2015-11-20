@@ -110,6 +110,5 @@ class RSTBoolean {
     @XmlValue
     private boolean value;
 
-
 }
 

@@ -62,6 +62,5 @@ class Suppressions {
         super();
     }
 
-
 }
 

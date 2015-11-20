@@ -100,6 +100,5 @@ public class JaxbTest {
                 });
     }
 
-
 }
 

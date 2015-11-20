@@ -37,6 +37,5 @@ public final class XmlConstants {
         super();
     }
 
-
 }
 

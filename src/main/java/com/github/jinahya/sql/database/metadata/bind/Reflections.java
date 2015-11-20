@@ -23,8 +23,6 @@ import java.lang.reflect.Field;
 import java.lang.reflect.Modifier;
 import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
-import java.sql.ResultSet;
-import java.sql.SQLException;
 import java.sql.Types;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -65,9 +63,6 @@ class Reflections {
         map.put(void.class, Void.class);
         WRAPPERS = Collections.unmodifiableMap(map);
     }
-
-
-    private static final String FIELD_NAME_UNKNOWN_COLUMNS = "unknownResults";
 
 
     static Class<?> wrapper(final Class<?> primitive) {
@@ -441,47 +436,10 @@ class Reflections {
     }
 
 
-    static <T> void setUnknownResults(final Class<? super T> beanClass,
-                                      final Set<String> columnLabels,
-                                      final ResultSet resultSet,
-                                      final T beanInstance)
-        throws SQLException, ReflectiveOperationException {
-
-        if (columnLabels.isEmpty()) {
-            return;
-        }
-
-        final Field field;
-        try {
-            field = findField(beanClass, FIELD_NAME_UNKNOWN_COLUMNS);
-        } catch (final NoSuchFieldException nsfe) {
-            logger.log(Level.WARNING, "field not found: {0} in {1}",
-                       new Object[]{FIELD_NAME_UNKNOWN_COLUMNS, beanClass});
-            return;
-        }
-
-        final List<UnknownResult> value
-            = new ArrayList<UnknownResult>(columnLabels.size());
-        for (final String columnLabel : columnLabels) {
-            value.add(
-                new UnknownResult()
-                .label(columnLabel)
-                .value(resultSet.getObject(columnLabel))
-            );
-        }
-
-        if (!field.isAccessible()) {
-            field.setAccessible(true);
-        }
-        field.set(beanInstance, value);
-    }
-
-
     private Reflections() {
 
         super();
     }
-
 
 }
 

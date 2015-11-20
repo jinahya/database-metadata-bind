@@ -56,6 +56,5 @@ public class ExportedKey extends TableKey<ExportedKey> {
         return getParent();
     }
 
-
 }
 

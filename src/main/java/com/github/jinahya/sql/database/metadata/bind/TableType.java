@@ -89,6 +89,5 @@ public class TableType extends AbstractChild<Metadata>
     @XmlElement(required = true)
     private String tableType;
 
-
 }
 

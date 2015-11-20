@@ -259,6 +259,5 @@ public class UDT extends AbstractChild<Schema> implements Comparable<UDT> {
     @XmlElementRef
     private List<SuperType> superTypes;
 
-
 }
 

@@ -46,6 +46,5 @@ public interface Child<P> {
      */
     void setParent(final P parent);
 
-
 }
 

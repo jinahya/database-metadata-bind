@@ -186,6 +186,5 @@ public class SuperType extends AbstractChild<UDT> {
     @XmlElement(required = true)
     private String supertypeName;
 
-
 }
 

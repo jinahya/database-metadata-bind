@@ -355,6 +355,5 @@ public class CrossReference extends AbstractChild<Metadata>
     @XmlElement(required = true)
     private short deferrability;
 
-
 }
 

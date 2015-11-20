@@ -39,9 +39,7 @@ import org.apache.commons.lang3.builder.CompareToBuilder;
     propOrder = {
         "procedureName", "remarks", "procedureType", "specificName",
         // ---------------------------------------------------------------------
-        "procedureColumns",
-        // ---------------------------------------------------------------------
-        "unknownResults"
+        "procedureColumns"
     }
 )
 public class Procedure extends AbstractChild<Schema>
@@ -225,11 +223,6 @@ public class Procedure extends AbstractChild<Schema>
     )
     @XmlElementRef
     private List<ProcedureColumn> procedureColumns;
-
-
-    @XmlElement(name = "unknownResult", nillable = true)
-    private List<UnknownResult> unknownResults;
-
 
 }
 

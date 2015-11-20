@@ -57,6 +57,5 @@ public abstract class AbstractChild<P> implements Child<P> {
     @XmlTransient
     private P parent;
 
-
 }
 

@@ -18,7 +18,6 @@
 package com.github.jinahya.sql.database.metadata.bind;
 
 
-import java.util.List;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlType;
@@ -34,9 +33,7 @@ import org.apache.commons.lang3.builder.CompareToBuilder;
 @XmlRootElement
 @XmlType(
     propOrder = {
-        "name", "maxLen", "defaultValue", "description",
-        // ---------------------------------------------------------------------
-        "unknownResults"
+        "name", "maxLen", "defaultValue", "description"
     }
 )
 public class ClientInfoProperty extends AbstractChild<Metadata>
@@ -145,11 +142,6 @@ public class ClientInfoProperty extends AbstractChild<Metadata>
     @Label("DESCRIPTION")
     @XmlElement(required = true)
     private String description;
-
-
-    @XmlElement(name = "unknownResult", nillable = true)
-    private List<UnknownResult> unknownResults;
-
 
 }
 

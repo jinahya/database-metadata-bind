@@ -43,9 +43,7 @@ import org.apache.commons.lang3.builder.CompareToBuilder;
         "isNullable", "scopeCatalog", "scopeSchema", "scopeTable",
         "sourceDataType", "isAutoincrement", "isGeneratedcolumn",
         // ---------------------------------------------------------------------
-        "columnPrivileges",
-        // ---------------------------------------------------------------------
-        "unknownResults"
+        "columnPrivileges"
     }
 )
 public class Column extends AbstractChild<Table> implements Comparable<Column> {
@@ -588,11 +586,6 @@ public class Column extends AbstractChild<Table> implements Comparable<Column> {
     )
     @XmlElementRef
     private List<ColumnPrivilege> columnPrivileges;
-
-
-    @XmlElement(name = "unknownResult", nillable = true)
-    private List<UnknownResult> unknownResults;
-
 
 }
 

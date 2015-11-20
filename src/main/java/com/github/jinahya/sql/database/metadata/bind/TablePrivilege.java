@@ -212,6 +212,5 @@ public class TablePrivilege extends AbstractChild<Table>
     @XmlElement(nillable = true, required = true)
     private String isGrantable;
 
-
 }
 
