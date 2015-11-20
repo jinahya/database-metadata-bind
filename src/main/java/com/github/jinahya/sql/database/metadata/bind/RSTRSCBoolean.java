@@ -143,6 +143,5 @@ class RSTRSCBoolean {
     @XmlValue
     private boolean value;
 
-
 }
 

@@ -90,6 +90,5 @@ class RSCBoolean {
     @XmlValue
     private boolean value;
 
-
 }
 

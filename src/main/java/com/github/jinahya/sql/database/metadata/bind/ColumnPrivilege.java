@@ -18,7 +18,6 @@
 package com.github.jinahya.sql.database.metadata.bind;
 
 
-import java.util.List;
 import javax.xml.bind.annotation.XmlAttribute;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
@@ -35,9 +34,7 @@ import org.apache.commons.lang3.builder.CompareToBuilder;
 @XmlRootElement
 @XmlType(
     propOrder = {
-        "grantor", "grantee", "privilege", "isGrantable",
-        // ---------------------------------------------------------------------
-        "unknownResults"
+        "grantor", "grantee", "privilege", "isGrantable"
     }
 )
 public class ColumnPrivilege extends AbstractChild<Column>
@@ -230,11 +227,6 @@ public class ColumnPrivilege extends AbstractChild<Column>
     @NillableBySpecification
     @XmlElement(nillable = true, required = true)
     private String isGrantable;
-
-
-    @XmlElement(name = "unknownResult", nillable = true)
-    private List<UnknownResult> unknownResults;
-
 
 }
 

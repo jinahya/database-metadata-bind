@@ -305,6 +305,5 @@ public class PseudoColumn extends AbstractChild<Table>
     @XmlElement(required = true)
     private String isNullable;
 
-
 }
 

@@ -110,6 +110,5 @@ class RSHBoolean {
     @XmlValue
     private boolean value;
 
-
 }
 

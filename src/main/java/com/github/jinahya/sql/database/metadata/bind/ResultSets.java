@@ -51,6 +51,5 @@ final class ResultSets {
         super();
     }
 
-
 }
 

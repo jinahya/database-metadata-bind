@@ -18,7 +18,6 @@
 package com.github.jinahya.sql.database.metadata.bind;
 
 
-import java.util.List;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlType;
@@ -34,9 +33,7 @@ import org.apache.commons.lang3.builder.CompareToBuilder;
 @XmlRootElement
 @XmlType(
     propOrder = {
-        "tableSchem", "tableCatalog",
-        // ---------------------------------------------------------------------
-        "unknownResults"
+        "tableSchem", "tableCatalog"
     }
 )
 public class SchemaName extends AbstractChild<Metadata>
@@ -119,11 +116,6 @@ public class SchemaName extends AbstractChild<Metadata>
     @NillableBySpecification
     @XmlElement(nillable = true, required = false)
     private String tableCatalog;
-
-
-    @XmlElement(name = "unknownResult", nillable = true)
-    private List<UnknownResult> unknownResults;
-
 
 }
 

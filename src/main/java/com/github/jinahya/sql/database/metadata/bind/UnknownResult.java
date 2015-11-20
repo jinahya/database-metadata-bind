@@ -95,6 +95,5 @@ class UnknownResult {
 
     private Object value;
 
-
 }
 

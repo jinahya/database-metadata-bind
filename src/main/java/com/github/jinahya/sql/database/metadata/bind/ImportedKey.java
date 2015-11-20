@@ -54,6 +54,5 @@ public class ImportedKey extends TableKey<ImportedKey> {
         return getParent();
     }
 
-
 }
 

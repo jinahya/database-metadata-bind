@@ -36,6 +36,5 @@ public interface TableDomain {
 
     void setCrossReferences(List<CrossReference> crossReferences);
 
-
 }
 

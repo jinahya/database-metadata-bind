@@ -41,9 +41,7 @@ import javax.xml.bind.annotation.XmlType;
         // ---------------------------------------------------------------------
         "bestRowIdentifiers", "columns", "exportedKeys", "importedKeys",
         "indexInfo", "primaryKeys", "pseudoColumns", "superTables",
-        "tablePrivileges", "versionColumns",
-        // ---------------------------------------------------------------------
-        "unknownResults"
+        "tablePrivileges", "versionColumns"
     }
 )
 public class Table extends AbstractChild<Schema> {
@@ -576,11 +574,6 @@ public class Table extends AbstractChild<Schema> {
     )
     @XmlElementRef
     private List<VersionColumn> versionColumns;
-
-
-    @XmlElement(name = "unknownResult", nillable = true)
-    private List<UnknownResult> unknownResults;
-
 
 }
 

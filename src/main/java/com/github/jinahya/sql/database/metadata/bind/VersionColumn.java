@@ -214,6 +214,5 @@ public class VersionColumn extends AbstractChild<Table> {
     @XmlElement(required = true)
     private short pseudoColumn;
 
-
 }
 

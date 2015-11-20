@@ -90,6 +90,5 @@ public class H2MemoryTest {
         }
     }
 
-
 }
 

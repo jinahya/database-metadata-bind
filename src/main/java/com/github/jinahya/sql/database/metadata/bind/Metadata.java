@@ -2510,6 +2510,5 @@ public class Metadata implements TableDomain {
     @XmlElement(required = true)
     private boolean usesLocalFiles;
 
-
 }
 

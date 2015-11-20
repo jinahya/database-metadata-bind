@@ -18,7 +18,6 @@
 package com.github.jinahya.sql.database.metadata.bind;
 
 
-import com.github.jinahya.sql.database.metadata.bind.Catalog;
 import java.util.Objects;
 
 
@@ -37,7 +36,6 @@ public class CatalogVerifier {
         {
         }
     }
-
 
 }
 

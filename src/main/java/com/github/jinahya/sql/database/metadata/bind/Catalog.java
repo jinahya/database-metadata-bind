@@ -21,12 +21,12 @@ package com.github.jinahya.sql.database.metadata.bind;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Logger;
+import static java.util.logging.Logger.getLogger;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlElementRef;
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlType;
 import org.apache.commons.lang3.builder.CompareToBuilder;
-import static java.util.logging.Logger.getLogger;
 
 
 /**
@@ -41,9 +41,7 @@ import static java.util.logging.Logger.getLogger;
         "tableCat",
         // ---------------------------------------------------------------------
         "crossReferences",
-        "schemas",
-        // ---------------------------------------------------------------------
-        "unknownResults"
+        "schemas"
     }
 )
 public class Catalog extends AbstractChild<Metadata>
@@ -174,11 +172,6 @@ public class Catalog extends AbstractChild<Metadata>
     )
     @XmlElementRef
     private List<Schema> schemas;
-
-
-    @XmlElement(name = "unknownResult", nillable = true)
-    private List<UnknownResult> unknownResults;
-
 
 }
 

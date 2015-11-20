@@ -101,6 +101,5 @@ public class ReflectionTest {
 
     private List<String> list;
 
-
 }
 

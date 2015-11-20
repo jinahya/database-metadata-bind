@@ -230,6 +230,5 @@ public class Function extends AbstractChild<Schema>
     @XmlElementRef
     private List<FunctionColumn> functionColumns;
 
-
 }
 

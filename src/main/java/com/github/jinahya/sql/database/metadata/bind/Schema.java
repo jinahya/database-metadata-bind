@@ -44,9 +44,7 @@ import org.apache.commons.lang3.builder.CompareToBuilder;
         //"superTables",
         //"superTypes",
         "tables",
-        "UDTs",
-        // ---------------------------------------------------------------------
-        "unknownResults"
+        "UDTs"
     }
 )
 public class Schema extends AbstractChild<Catalog>
@@ -299,11 +297,6 @@ public class Schema extends AbstractChild<Catalog>
     )
     @XmlElementRef
     private List<UDT> UDTs;
-
-
-    @XmlElement(name = "unknownResult", nillable = true)
-    private List<UnknownResult> unknownResults;
-
 
 }
 
