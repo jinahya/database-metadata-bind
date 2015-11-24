@@ -8,6 +8,11 @@
   <artifactId>database-metadata-bind</artifactId>
   <version>0.19-SNAPSHOT</version>
   <packaging>jar</packaging>
+  <parent>
+    <groupId>com.github.jinahya</groupId>
+    <artifactId>jinahya-parent</artifactId>
+    <version>0.2</version>
+  </parent>
   <dependencyManagement />
   <dependencies>
     <dependency>
@@ -61,8 +66,6 @@
     </dependency>
   </dependencies>
   <properties>
-    <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-    <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
     <maven.compiler.source>1.6</maven.compiler.source>
     <maven.compiler.target>1.6</maven.compiler.target>
     <maven.compiler.testSource>1.8</maven.compiler.testSource>
@@ -120,36 +123,6 @@
       </plugins>
     </pluginManagement>
     <plugins>
-      <plugin>
-        <groupId>com.github.github</groupId>
-        <artifactId>site-maven-plugin</artifactId>
-        <version>0.12</version>
-        <configuration>
-          <server>github</server>
-          <message>creating site for ${project.version}</message>
-          <path>site/${project.version}</path>
-          <merge>true</merge>
-        </configuration>
-        <executions>
-          <execution>
-            <goals>
-              <goal>site</goal>
-            </goals>
-            <!--phase>site-deploy</phase-->
-          </execution>
-        </executions>
-      </plugin>
-      <plugin>
-        <groupId>org.apache.maven.plugins</groupId>
-        <artifactId>maven-release-plugin</artifactId>
-        <version>2.5.3</version>
-        <configuration>
-          <tagNameFormat>@{project.version}</tagNameFormat>
-          <pushChanges>false</pushChanges>
-          <localCheckout>true</localCheckout>
-          <goals>install</goals>
-        </configuration>
-      </plugin>
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-shade-plugin</artifactId>
@@ -216,7 +189,6 @@
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-surefire-plugin</artifactId>
-        <!--version>2.18.1</version-->
         <version>2.19</version>
         <configuration>
           <systemProperties>
@@ -367,9 +339,9 @@
   </reporting>
 
   <!-- More Project Information -->
-  <name>${project.artifactId}</name>
+  <!--<name>${project.artifactId}</name>-->
   <description>Bindings for java.sql.DatabaseMetaData</description>
-  <url>https://www.jinahya.com/mvn/site/${project.groupId}/${project.artifactId}/${project.version}</url>
+  <!--<url>https://www.jinahya.com/mvn/site/${project.groupId}/${project.artifactId}/${project.version}</url>-->
   <inceptionYear>2011</inceptionYear>
   <licenses>
     <license>
@@ -390,33 +362,33 @@
   <contributors />
 
   <!-- Environment Settings -->
-  <issueManagement>
+<!--  <issueManagement>
     <system>GitHub Issues</system>
     <url>https://github.com/jinahya/${project.artifactId}/issues</url>
-  </issueManagement>
+  </issueManagement>-->
   <ciManagement />
   <mailingLists />
-  <scm>
+<!--  <scm>
     <connection>scm:git:git@github.com:jinahya/database-metadata-bind.git</connection>
     <developerConnection>scm:git:git@github.com:jinahya/database-metadata-bind.git</developerConnection>
     <url>https://github.com/jinahya/database-metadata-bind</url>
     <tag>HEAD</tag>
-  </scm>
+  </scm>-->
   <prerequisites />
   <repositories />
   <pluginRepositories />
-  <distributionManagement>
+<!--  <distributionManagement>
     <snapshotRepository>
       <id>ossrh</id>
       <url>https://oss.sonatype.org/content/repositories/snapshots</url>
     </snapshotRepository>
-    <!--
+
     <repository>
       <id>ossrh</id>
       <url>https://oss.sonatype.org/service/local/staging/deploy/maven2/</url>
     </repository>
-    -->
-  </distributionManagement>
+
+  </distributionManagement>-->
   <profiles>
     <!--    <profile>
       <id>release-sign-artifacts</id>
@@ -456,19 +428,27 @@
         <dependency>
           <groupId>ru.yandex.qatools.embed</groupId>
           <artifactId>postgresql-embedded</artifactId>
-          <version>1.4</version>
+          <version>1.6</version>
           <scope>test</scope>
         </dependency>
       </dependencies>
       <build>
         <plugins>
           <plugin>
+            <groupId>org.apache.maven.plugins</groupId>
+            <artifactId>maven-surefire-plugin</artifactId>
+            <configuration>
+              <includes>
+                <include>**/PostgreSQL*Test</include>
+              </includes>
+            </configuration>
+          </plugin>
+          <plugin>
             <groupId>org.codehaus.mojo</groupId>
             <artifactId>build-helper-maven-plugin</artifactId>
             <executions>
               <execution>
                 <id>add-test-source</id>
-                <!--phase>generate-test-sources</phase--> <!-- default -->
                 <goals>
                   <goal>add-test-source</goal>
                 </goals>
@@ -483,7 +463,7 @@
         </plugins>
       </build>
     </profile>
-    <profile>
+    <!--    <profile>
       <id>ossrh</id>
       <build>
         <plugins>
@@ -558,7 +538,7 @@
           </plugin>
         </plugins>
       </build>
-    </profile>
+    </profile>-->
     <profile>
       <id>graphviz</id>
       <build>
