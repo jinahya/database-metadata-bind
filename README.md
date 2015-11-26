@@ -3,7 +3,7 @@ database-metadata-bind
 [![GitHub version](https://badge.fury.io/gh/jinahya%2Fdatabase-metadata-bind.svg)](https://badge.fury.io/gh/jinahya%2Fdatabase-metadata-bind)
 [![Build Status](https://travis-ci.org/jinahya/database-metadata-bind.svg?branch=develop)](https://travis-ci.org/jinahya/database-metadata-bind)
 [![Maven Central](https://img.shields.io/maven-central/v/com.github.jinahya/database-metadata-bind.svg)](http://search.maven.org/#search%7Cga%7C1%7Cg%3A%22com.github.jinahya%22%20a%3A%22database-metadata-bind%22)
-[![Dependency Status](https://www.versioneye.com/user/projects/563ccf434d415e0018000001/badge.svg?style=flat)](https://www.versioneye.com/user/projects/563ccf434d415e0018000001)
+[![Dependency Status](https://www.versioneye.com/user/projects/563ccf434d415e0018000001/badge.svg)](https://www.versioneye.com/user/projects/563ccf434d415e0018000001)
 [![Support via Gratipay](https://img.shields.io/gratipay/JSFiddle.svg)](https://gratipay.com/~jinahya/)
 [![Codacy Badge](https://api.codacy.com/project/badge/grade/2e056714e9614bf89b860601cbb2b174)](https://www.codacy.com/app/jinahya/database-metadata-bind)
 [![Issue Stats](http://issuestats.com/github/jinahya/database-metadata-bind/badge/pr?style=flat)](http://issuestats.com/github/jinahya/database-metadata-bind)
