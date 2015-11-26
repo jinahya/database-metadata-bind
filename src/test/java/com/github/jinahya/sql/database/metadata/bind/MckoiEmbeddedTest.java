@@ -37,6 +37,7 @@ import org.testng.annotations.Test;
  *
  * @author Jin Kwon &lt;jinahya_at_gmail.com&gt;
  */
+@Test(enabled = false)
 public class MckoiEmbeddedTest {
 
 
