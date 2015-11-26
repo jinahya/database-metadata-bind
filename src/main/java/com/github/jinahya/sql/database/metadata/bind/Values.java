@@ -162,6 +162,9 @@ final class Values {
         }
 
         if (Integer.TYPE.equals(type)) {
+            if (value instanceof String) {
+                return Integer.parseInt((String) value);
+            }
             if (value == null || !Number.class.isInstance(value)) {
                 logger.log(Level.WARNING, "cannot adapt {0}({1}) for {2}",
                            new Object[]{value, valueType, target});
@@ -174,6 +177,9 @@ final class Values {
         }
 
         if (Integer.class.equals(type)) {
+            if (value instanceof String) {
+                return Integer.valueOf((String) value);
+            }
             if (value != null && !Number.class.isInstance(value)) {
                 logger.log(Level.WARNING, "cannot adapt {0}({1}) for {2}",
                            new Object[]{value, valueType, target});
