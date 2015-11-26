@@ -51,13 +51,6 @@ public class PostgreSQLEmbeddedTest {
         = getLogger(PostgreSQLEmbeddedTest.class);
 
 
-    private static final String DRIVER_NAME = "com.mckoi.JDBCDriver";
-
-
-    private static final String CONNECTION_URL
-        = "jdbc:mckoi:local://./target/test-classes/mckoi/db.conf";
-
-
     private static PostgresConfig config;
 
 
