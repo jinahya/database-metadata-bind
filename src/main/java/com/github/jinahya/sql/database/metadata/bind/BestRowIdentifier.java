@@ -26,6 +26,7 @@ import javax.xml.bind.annotation.XmlType;
 /**
  * An entity class for binding the result of
  * {@link java.sql.DatabaseMetaData#getBestRowIdentifier(java.lang.String, java.lang.String, java.lang.String, int, boolean)}.
+ * Note: this class has a natural ordering that is inconsistent with equals.
  *
  * @author Jin Kwon &lt;jinahya_at_gmail.com&gt;
  */

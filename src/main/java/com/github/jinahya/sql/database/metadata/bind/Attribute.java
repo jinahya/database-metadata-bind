@@ -22,11 +22,13 @@ import javax.xml.bind.annotation.XmlAttribute;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlType;
+import org.apache.commons.lang3.builder.CompareToBuilder;
 
 
 /**
  * An entity class for binding the result of
  * {@link java.sql.DatabaseMetaData#getAttributes(java.lang.String, java.lang.String, java.lang.String, java.lang.String)}.
+ * Note: this class has a natural ordering that is inconsistent with equals.
  *
  * @author Jin Kwon &lt;jinahya_at_gmail.com&gt;
  */
@@ -43,57 +45,15 @@ public class Attribute extends AbstractChild<UDT>
     implements Comparable<Attribute> {
 
 
-    // They are ordered by TYPE_CAT, TYPE_SCHEM, TYPE_NAME and ORDINAL_POSITION.
+    // TYPE_CAT, TYPE_SCHEM, TYPE_NAME and ORDINAL_POSITION.
     @Override
     public int compareTo(Attribute o) {
 
-        if (this == o) {
-            return 0;
-        }
-
-        if (typeCat == null) {
-            if (o.getTypeCat() != null) {
-                return -1;
-            }
-        } else {
-            if (o.getTypeCat() == null) {
-                return 1;
-            }
-            final int compared = typeCat.compareTo(o.getTypeCat());
-            if (compared != 0) {
-                return compared;
-            }
-        }
-
-        if (typeSchem == null) {
-            if (o.getTypeSchem() != null) {
-                return -1;
-            }
-        } else {
-            if (o.getTypeSchem() == null) {
-                return 1;
-            }
-            final int compared = typeSchem.compareTo(o.getTypeSchem());
-            if (compared != 0) {
-                return compared;
-            }
-        }
-
-        if (typeName == null) {
-            if (o.getTypeName() != null) {
-                return -1;
-            }
-        } else {
-            if (o.getTypeName() == null) {
-                return 1;
-            }
-            final int compared = typeName.compareTo(o.getTypeName());
-            if (compared != 0) {
-                return compared;
-            }
-        }
-
-        return ordinalPosition - o.getOrdinalPosition();
+        return new CompareToBuilder()
+            .append(getTypeCat(), o.getTypeCat())
+            .append(getTypeSchem(), o.getTypeSchem())
+            .append(getOrdinalPosition(), o.getOrdinalPosition())
+            .build();
     }
 
 

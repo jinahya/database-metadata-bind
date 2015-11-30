@@ -31,7 +31,8 @@ import org.apache.commons.lang3.builder.CompareToBuilder;
 
 /**
  * An entity class for binding the result of
- * {@link java.sql.DatabaseMetaData#getCatalogs()}.
+ * {@link java.sql.DatabaseMetaData#getCatalogs()}. Note: this class has a
+ * natural ordering that is inconsistent with equals.
  *
  * @author Jin Kwon &lt;jinahya_at_gmail.com&gt;
  */
