@@ -18,6 +18,7 @@
 package com.github.jinahya.sql.database.metadata.bind;
 
 
+import java.util.Comparator;
 import javax.xml.bind.annotation.XmlAttribute;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
@@ -42,20 +43,26 @@ import org.apache.commons.lang3.builder.CompareToBuilder;
         "columnName", "ascOrDesc", "cardinality", "pages", "filterCondition"
     }
 )
-public class IndexInfo extends AbstractChild<Table>
-    implements Comparable<IndexInfo> {
+public class IndexInfo extends AbstractChild<Table> {
 
 
-    // by NON_UNIQUE, TYPE, INDEX_NAME, and ORDINAL_POSITION.
-    @Override
-    public int compareTo(IndexInfo o) {
+    public static Comparator<IndexInfo> natural() {
 
-        return new CompareToBuilder()
-            .append(nonUnique, o.isNonUnique())
-            .append(type, o.getType())
-            .append(indexName, o.getIndexName())
-            .append(ordinalPosition, o.getOrdinalPosition())
-            .build();
+        return new Comparator<IndexInfo>() {
+
+            @Override
+            public int compare(final IndexInfo o1, final IndexInfo o2) {
+
+                // by NON_UNIQUE, TYPE, INDEX_NAME, and ORDINAL_POSITION.
+                return new CompareToBuilder()
+                    .append(o1.isNonUnique(), o2.isNonUnique())
+                    .append(o1.getType(), o2.getType())
+                    .append(o1.getIndexName(), o2.getIndexName())
+                    .append(o1.getOrdinalPosition(), o2.getOrdinalPosition())
+                    .build();
+            }
+
+        };
     }
 
 

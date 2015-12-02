@@ -18,6 +18,7 @@
 package com.github.jinahya.sql.database.metadata.bind;
 
 
+import java.util.Comparator;
 import javax.xml.bind.annotation.XmlRootElement;
 import org.apache.commons.lang3.builder.CompareToBuilder;
 
@@ -31,19 +32,26 @@ import org.apache.commons.lang3.builder.CompareToBuilder;
  * java.lang.String)
  */
 @XmlRootElement
-public class ImportedKey extends TableKey<ImportedKey> {
+public class ImportedKey extends TableKey {
 
 
-    // by PKTABLE_CAT, PKTABLE_SCHEM, PKTABLE_NAME, and KEY_SEQ.
-    @Override
-    public int compareTo(final ImportedKey o) {
+    public static Comparator<ImportedKey> natural() {
 
-        return new CompareToBuilder()
-            .append(getPktableCat(), o.getPktableCat())
-            .append(getPktableSchem(), o.getPktableSchem())
-            .append(getPktableName(), o.getPktableName())
-            .append(getKeySeq(), o.getKeySeq())
-            .build();
+        return new Comparator<ImportedKey>() {
+
+            @Override
+            public int compare(final ImportedKey o1, final ImportedKey o2) {
+
+                // by PKTABLE_CAT, PKTABLE_SCHEM, PKTABLE_NAME, and KEY_SEQ.
+                return new CompareToBuilder()
+                    .append(o1.getPktableCat(), o2.getPktableCat())
+                    .append(o1.getPktableSchem(), o2.getPktableSchem())
+                    .append(o1.getPktableName(), o2.getPktableName())
+                    .append(o1.getKeySeq(), o2.getKeySeq())
+                    .build();
+            }
+
+        };
     }
 
 

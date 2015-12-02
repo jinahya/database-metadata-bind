@@ -18,6 +18,7 @@
 package com.github.jinahya.sql.database.metadata.bind;
 
 
+import java.util.Comparator;
 import javax.xml.bind.annotation.XmlAttribute;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
@@ -40,20 +41,28 @@ import org.apache.commons.lang3.builder.CompareToBuilder;
         "ordinalPosition", "isNullable", "specificName"
     }
 )
-public class ProcedureColumn extends AbstractChild<Procedure>
-    implements Comparable<ProcedureColumn> {
+public class ProcedureColumn extends AbstractChild<Procedure> {
 
 
-    // by PROCEDURE_CAT, PROCEDURE_SCHEM, PROCEDURE_NAME and SPECIFIC_NAME.
-    @Override
-    public int compareTo(ProcedureColumn o) {
+    public static Comparator<ProcedureColumn> natural() {
 
-        return new CompareToBuilder()
-            .append(procedureCat, o.getProcedureCat())
-            .append(procedureSchem, o.getProcedureSchem())
-            .append(procedureName, o.getProcedureName())
-            .append(specificName, o.getSpecificName())
-            .build();
+        return new Comparator<ProcedureColumn>() {
+
+            @Override
+            public int compare(final ProcedureColumn o1,
+                               final ProcedureColumn o2) {
+
+                // by PROCEDURE_CAT, PROCEDURE_SCHEM, PROCEDURE_NAME
+                // and SPECIFIC_NAME.
+                return new CompareToBuilder()
+                    .append(o1.getProcedureCat(), o2.getProcedureCat())
+                    .append(o1.getProcedureSchem(), o2.getProcedureSchem())
+                    .append(o1.getProcedureName(), o2.getProcedureName())
+                    .append(o1.getSpecificName(), o2.getSpecificName())
+                    .build();
+            }
+
+        };
     }
 
 

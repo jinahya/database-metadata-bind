@@ -19,6 +19,7 @@ package com.github.jinahya.sql.database.metadata.bind;
 
 
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
 import javax.xml.bind.annotation.XmlAttribute;
 import javax.xml.bind.annotation.XmlElement;
@@ -47,20 +48,27 @@ import org.apache.commons.lang3.builder.CompareToBuilder;
 
     }
 )
-public class Function extends AbstractChild<Schema>
-    implements Comparable<Function> {
+public class Function extends AbstractChild<Schema> {
 
 
-    // by FUNCTION_CAT, FUNCTION_SCHEM, FUNCTION_NAME and SPECIFIC_NAME.
-    @Override
-    public int compareTo(final Function o) {
+    public static Comparator<Function> natural() {
 
-        return new CompareToBuilder()
-            .append(functionCat, o.functionCat)
-            .append(functionSchem, o.functionSchem)
-            .append(functionName, o.functionName)
-            .append(specificName, o.specificName)
-            .build();
+        return new Comparator<Function>() {
+
+            @Override
+            public int compare(Function o1, Function o2) {
+
+                // by FUNCTION_CAT, FUNCTION_SCHEM, FUNCTION_NAME
+                // and SPECIFIC_NAME.
+                return new CompareToBuilder()
+                    .append(o1.getFunctionCat(), o2.getFunctionCat())
+                    .append(o1.getFunctionSchem(), o2.getFunctionSchem())
+                    .append(o1.getFunctionName(), o2.getFunctionName())
+                    .append(o1.getSpecificName(), o2.getSpecificName())
+                    .build();
+            }
+
+        };
     }
 
 

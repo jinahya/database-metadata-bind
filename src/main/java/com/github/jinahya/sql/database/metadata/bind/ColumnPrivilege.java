@@ -18,6 +18,7 @@
 package com.github.jinahya.sql.database.metadata.bind;
 
 
+import java.util.Comparator;
 import javax.xml.bind.annotation.XmlAttribute;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
@@ -37,18 +38,25 @@ import org.apache.commons.lang3.builder.CompareToBuilder;
         "grantor", "grantee", "privilege", "isGrantable"
     }
 )
-public class ColumnPrivilege extends AbstractChild<Column>
-    implements Comparable<ColumnPrivilege> {
+public class ColumnPrivilege extends AbstractChild<Column> {
 
 
-    // by COLUMN_NAME and PRIVILEGE.
-    @Override
-    public int compareTo(final ColumnPrivilege o) {
+    public static Comparator<ColumnPrivilege> natural() {
 
-        return new CompareToBuilder()
-            .append(columnName, o.getColumnName())
-            .append(privilege, o.getPrivilege())
-            .build();
+        return new Comparator<ColumnPrivilege>() {
+
+            @Override
+            public int compare(final ColumnPrivilege o1,
+                               final ColumnPrivilege o2) {
+
+                // by COLUMN_NAME and PRIVILEGE.
+                return new CompareToBuilder()
+                    .append(o1.getColumnName(), o2.getColumnName())
+                    .append(o1.getPrivilege(), o2.getPrivilege())
+                    .build();
+            }
+
+        };
     }
 
 

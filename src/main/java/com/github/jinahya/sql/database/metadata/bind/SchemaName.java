@@ -18,6 +18,7 @@
 package com.github.jinahya.sql.database.metadata.bind;
 
 
+import java.util.Comparator;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlType;
@@ -36,17 +37,24 @@ import org.apache.commons.lang3.builder.CompareToBuilder;
         "tableSchem", "tableCatalog"
     }
 )
-public class SchemaName extends AbstractChild<Metadata>
-    implements Comparable<SchemaName> {
+public class SchemaName extends AbstractChild<Metadata> {
 
 
-    @Override
-    public int compareTo(final SchemaName o) {
+    public static Comparator<SchemaName> natural() {
 
-        return new CompareToBuilder()
-            .append(tableCatalog, o.tableCatalog)
-            .append(tableSchem, o.tableSchem)
-            .build();
+        return new Comparator<SchemaName>() {
+
+            @Override
+            public int compare(final SchemaName o1, final SchemaName o2) {
+
+                // by TABLE_CATALOG and TABLE_SCHEM
+                return new CompareToBuilder()
+                    .append(o1.getTableCatalog(), o2.getTableCatalog())
+                    .append(o1.getTableSchem(), o2.getTableSchem())
+                    .build();
+            }
+
+        };
     }
 
 

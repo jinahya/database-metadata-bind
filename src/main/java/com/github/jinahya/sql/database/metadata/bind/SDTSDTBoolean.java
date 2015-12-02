@@ -77,7 +77,7 @@ class SDTSDTBoolean {
         }
 
         try {
-            return Reflections.getSqlTypeName(fromType);
+            return Reflections.sqlTypeName(fromType);
         } catch (final IllegalAccessException iae) {
             logger.log(Level.WARNING, "failed to get sql data type name: {0}",
                        new Object[]{fromType});
@@ -116,7 +116,7 @@ class SDTSDTBoolean {
         }
 
         try {
-            return Reflections.getSqlTypeName(toType);
+            return Reflections.sqlTypeName(toType);
         } catch (final IllegalAccessException iae) {
             logger.log(Level.WARNING, "failed to get sql data type name: {0}",
                        new Object[]{toType});

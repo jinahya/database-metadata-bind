@@ -19,9 +19,9 @@ package com.github.jinahya.sql.database.metadata.bind;
 
 
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
 import java.util.logging.Logger;
-import static java.util.logging.Logger.getLogger;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlElementRef;
 import javax.xml.bind.annotation.XmlRootElement;
@@ -31,8 +31,7 @@ import org.apache.commons.lang3.builder.CompareToBuilder;
 
 /**
  * An entity class for binding the result of
- * {@link java.sql.DatabaseMetaData#getCatalogs()}. Note: this class has a
- * natural ordering that is inconsistent with equals.
+ * {@link java.sql.DatabaseMetaData#getCatalogs()}.
  *
  * @author Jin Kwon &lt;jinahya_at_gmail.com&gt;
  */
@@ -45,19 +44,27 @@ import org.apache.commons.lang3.builder.CompareToBuilder;
         "schemas"
     }
 )
-public class Catalog extends AbstractChild<Metadata>
-    implements Comparable<Catalog>, TableDomain {
+public class Catalog extends AbstractChild<Metadata> implements TableDomain {
 
 
-    private static final Logger logger = getLogger(Catalog.class.getName());
+    private static final Logger logger
+        = Logger.getLogger(Catalog.class.getName());
 
 
-    @Override
-    public int compareTo(final Catalog o) {
+    public static Comparator<Catalog> natural() {
 
-        return new CompareToBuilder()
-            .append(tableCat, o.getTableCat())
-            .build();
+        return new Comparator<Catalog>() {
+
+            @Override
+            public int compare(final Catalog o1, final Catalog o2) {
+
+                //  by catalog name
+                return new CompareToBuilder()
+                    .append(o1.getTableCat(), o2.getTableCat())
+                    .build();
+            }
+
+        };
     }
 
 

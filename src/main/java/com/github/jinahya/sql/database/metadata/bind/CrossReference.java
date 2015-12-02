@@ -18,6 +18,7 @@
 package com.github.jinahya.sql.database.metadata.bind;
 
 
+import java.util.Comparator;
 import javax.xml.bind.annotation.XmlAttribute;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
@@ -38,20 +39,27 @@ import org.apache.commons.lang3.builder.CompareToBuilder;
         "fkName", "pkName", "deferrability"
     }
 )
-public class CrossReference extends AbstractChild<Metadata>
-    implements Comparable<CrossReference> {
+public class CrossReference extends AbstractChild<Metadata> {
 
 
-    // by FKTABLE_CAT, FKTABLE_SCHEM, FKTABLE_NAME, and KEY_SEQ.
-    @Override
-    public int compareTo(final CrossReference o) {
+    public static Comparator<CrossReference> natural() {
 
-        return new CompareToBuilder()
-            .append(fktableCat, o.getFktableCat())
-            .append(fktableSchem, o.getFktableSchem())
-            .append(fktableName, o.getFktableName())
-            .append(keySeq, o.getKeySeq())
-            .build();
+        return new Comparator<CrossReference>() {
+
+            @Override
+            public int compare(final CrossReference o1,
+                               final CrossReference o2) {
+
+                // by FKTABLE_CAT, FKTABLE_SCHEM, FKTABLE_NAME, and KEY_SEQ.
+                return new CompareToBuilder()
+                    .append(o1.getFktableCat(), o2.getFktableCat())
+                    .append(o1.getFktableSchem(), o2.getFktableSchem())
+                    .append(o1.getFktableName(), o2.getFktableName())
+                    .append(o1.getKeySeq(), o2.getKeySeq())
+                    .build();
+            }
+
+        };
     }
 
 

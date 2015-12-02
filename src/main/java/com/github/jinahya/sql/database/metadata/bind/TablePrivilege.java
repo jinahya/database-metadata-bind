@@ -18,6 +18,7 @@
 package com.github.jinahya.sql.database.metadata.bind;
 
 
+import java.util.Comparator;
 import javax.xml.bind.annotation.XmlAttribute;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
@@ -37,20 +38,27 @@ import org.apache.commons.lang3.builder.CompareToBuilder;
         "grantor", "grantee", "privilege", "isGrantable"
     }
 )
-public class TablePrivilege extends AbstractChild<Table>
-    implements Comparable<TablePrivilege> {
+public class TablePrivilege extends AbstractChild<Table> {
 
 
-    // by TABLE_CAT, TABLE_SCHEM, TABLE_NAME, and PRIVILEGE.
-    @Override
-    public int compareTo(final TablePrivilege o) {
+    public static Comparator<TablePrivilege> natural() {
 
-        return new CompareToBuilder()
-            .append(tableCat, o.getTableCat())
-            .append(tableSchem, o.getTableSchem())
-            .append(tableName, o.getTableName())
-            .append(privilege, o.getPrivilege())
-            .build();
+        return new Comparator<TablePrivilege>() {
+
+            @Override
+            public int compare(final TablePrivilege o1,
+                               final TablePrivilege o2) {
+
+                // by TABLE_CAT, TABLE_SCHEM, TABLE_NAME, and PRIVILEGE.
+                return new CompareToBuilder()
+                    .append(o1.getTableCat(), o2.getTableCat())
+                    .append(o1.getTableSchem(), o2.getTableSchem())
+                    .append(o1.getTableName(), o2.getTableName())
+                    .append(o1.getPrivilege(), o2.getPrivilege())
+                    .build();
+            }
+
+        };
     }
 
 
