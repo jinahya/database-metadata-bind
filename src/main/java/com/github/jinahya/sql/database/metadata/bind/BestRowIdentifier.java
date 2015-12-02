@@ -18,15 +18,16 @@
 package com.github.jinahya.sql.database.metadata.bind;
 
 
+import java.util.Comparator;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlType;
+import org.apache.commons.lang3.builder.ToStringBuilder;
 
 
 /**
  * An entity class for binding the result of
  * {@link java.sql.DatabaseMetaData#getBestRowIdentifier(java.lang.String, java.lang.String, java.lang.String, int, boolean)}.
- * Note: this class has a natural ordering that is inconsistent with equals.
  *
  * @author Jin Kwon &lt;jinahya_at_gmail.com&gt;
  */
@@ -37,23 +38,43 @@ import javax.xml.bind.annotation.XmlType;
         "bufferLength", "decimalDigits", "pseudoColumn"
     }
 )
-public class BestRowIdentifier extends AbstractChild<Table>
-    implements Comparable<BestRowIdentifier> {
+public class BestRowIdentifier extends AbstractChild<Table> {
 
 
-    // They are ordered by SCOPE.
-    @Override
-    public int compareTo(final BestRowIdentifier o) {
+    public static Comparator<BestRowIdentifier> natural() {
 
-        return scope - o.getScope();
+        return new Comparator<BestRowIdentifier>() {
+
+            @Override
+            public int compare(final BestRowIdentifier o1,
+                               final BestRowIdentifier o2) {
+
+                // They are ordered by SCOPE.
+                return o1.getScope() - o2.getScope();
+            }
+
+        };
     }
 
 
     @Override
     public String toString() {
 
+        if (true) {
+            return new ToStringBuilder(this)
+                .append("scope", getScope())
+                .append("columnName", getColumnName())
+                .append("dataType", getDataType())
+                .append("typeName", getTypeName())
+                .append("columnSize", getColumnSize())
+                .append("bufferLength", getBufferLength())
+                .append("decimalDigits", getDecimalDigits())
+                .append("pseudoColumn", getPseudoColumn())
+                .build();
+        }
+
         return super.toString() + "{"
-               + "scope=" + scope
+               + "scope=" + getScope()
                + ", columnName=" + columnName
                + ", dataType=" + dataType
                + ", typeName=" + typeName

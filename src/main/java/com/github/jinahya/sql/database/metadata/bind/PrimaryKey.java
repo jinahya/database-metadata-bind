@@ -18,6 +18,7 @@
 package com.github.jinahya.sql.database.metadata.bind;
 
 
+import java.util.Comparator;
 import javax.xml.bind.annotation.XmlAttribute;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
@@ -37,17 +38,24 @@ import org.apache.commons.lang3.builder.CompareToBuilder;
         "columnName", "keySeq", "pkName"
     }
 )
-public class PrimaryKey extends AbstractChild<Table>
-    implements Comparable<PrimaryKey> {
+public class PrimaryKey extends AbstractChild<Table> {
 
 
-    // by COLUMN_NAME.
-    @Override
-    public int compareTo(final PrimaryKey o) {
+    public static Comparator<PrimaryKey> natural() {
 
-        return new CompareToBuilder()
-            .append(columnName, o.getColumnName())
-            .build();
+        return new Comparator<PrimaryKey>() {
+
+            @Override
+            public int compare(final PrimaryKey o1, final PrimaryKey o2) {
+
+                // by COLUMN_NAME.
+                return new CompareToBuilder()
+                    .append(o1.getColumnName(), o2.getColumnName())
+                    .build();
+            }
+
+
+        };
     }
 
 
@@ -173,6 +181,7 @@ public class PrimaryKey extends AbstractChild<Table>
     @NillableBySpecification
     @XmlElement(nillable = true, required = true)
     private String pkName;
+
 
 }
 

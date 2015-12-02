@@ -216,12 +216,12 @@
             <version>5.2.1</version>
             <scope>runtime</scope>
           </dependency>
-          <dependency>
+          <!--          <dependency>
             <groupId>net.sourceforge.cobertura</groupId>
             <artifactId>cobertura</artifactId>
             <version>2.1.1</version>
             <scope>runtime</scope>
-          </dependency>
+          </dependency>-->
         </dependencies>
       </plugin>
       <plugin>
@@ -407,7 +407,7 @@
               <artifactId>maven-javadoc-plugin</artifactId>
               <configuration>
                 <additionalparam>
-                  -hide java.* -hide AbstractChild -hide AbstractKey -hide Child -hide MetadataContext -hide TableDomain -hide XmlConstants -hide UnknownColumn -hide _ -visibility
+                  -hide java.* -hide AbstractChild -hide Child -hide MetadataContext -hide TableDomain -hide XmlConstants -visibility
                   -collapsible -horizontal
                   -inferdep -inferdepinpackage -inferrel
                   -outputencoding UTF-8

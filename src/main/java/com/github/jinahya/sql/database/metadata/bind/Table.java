@@ -19,12 +19,14 @@ package com.github.jinahya.sql.database.metadata.bind;
 
 
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
 import javax.xml.bind.annotation.XmlAttribute;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlElementRef;
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlType;
+import org.apache.commons.lang3.builder.CompareToBuilder;
 
 
 /**
@@ -45,6 +47,27 @@ import javax.xml.bind.annotation.XmlType;
     }
 )
 public class Table extends AbstractChild<Schema> {
+
+
+    public static Comparator<Table> natural() {
+
+        return new Comparator<Table>() {
+
+            @Override
+            public int compare(final Table o1, final Table o2) {
+
+                // by TABLE_TYPE, TABLE_CAT, TABLE_SCHEM and TABLE_NAME
+                return new CompareToBuilder()
+                    .append(o1.getTableType(), o2.getTableType())
+                    .append(o1.getTableCat(), o2.getTableCat())
+                    .append(o1.getTableSchem(), o2.getTableSchem())
+                    .append(o1.getTableName(), o2.getTableName())
+                    .build();
+            }
+
+
+        };
+    }
 
 
     @Override
@@ -574,6 +597,7 @@ public class Table extends AbstractChild<Schema> {
     )
     @XmlElementRef
     private List<VersionColumn> versionColumns;
+
 
 }
 

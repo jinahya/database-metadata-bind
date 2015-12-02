@@ -75,7 +75,7 @@ final class Values {
                 if (!writer.isAccessible()) {
                     writer.setAccessible(true);
                 }
-                writer.invoke(obj, value);
+                writer.invoke(obj, adapt(descriptor, value));
             }
         } catch (final IntrospectionException ie) {
         }
@@ -86,56 +86,60 @@ final class Values {
         if (!field.isAccessible()) {
             field.setAccessible(true);
         }
-        field.set(obj, value);
-    }
-
-
-    static Object get(final Field field, final Object obj)
-        throws ReflectiveOperationException {
-
-        try {
-            final PropertyDescriptor descriptor = new PropertyDescriptor(
-                field.getName(), field.getDeclaringClass());
-            final Method reader = descriptor.getReadMethod();
-            if (reader != null) {
-                return reader.invoke(obj);
-            }
-        } catch (final IntrospectionException ie) {
-        }
-
-        logger.log(Level.WARNING, "getting value directly from {0}",
-                   new Object[]{field});
-        if (!field.isAccessible()) {
-            field.setAccessible(true);
-        }
-
-        return field.get(obj);
-    }
-
-
-    static void set(final Field field, final Object obj, final Object value)
-        throws ReflectiveOperationException {
-
-        try {
-            final PropertyDescriptor descriptor = new PropertyDescriptor(
-                field.getName(), field.getDeclaringClass());
-            final Method writer = descriptor.getWriteMethod();
-            if (writer != null) {
-                writer.invoke(obj, adapt(descriptor, value));
-                return;
-            }
-        } catch (final IntrospectionException ie) {
-        }
-
-        logger.log(Level.WARNING, "setting value directly to {0} with {1}",
-                   new Object[]{field, value});
-        if (!field.isAccessible()) {
-            field.setAccessible(true);
-        }
         field.set(obj, adapt(field, value));
     }
 
 
+//    static Object get(final Field field, final Object obj)
+//        throws ReflectiveOperationException {
+//
+//        if (true) {
+//            return get(field.getName(), obj);
+//        }
+//
+//        try {
+//            final PropertyDescriptor descriptor = new PropertyDescriptor(
+//                field.getName(), field.getDeclaringClass());
+//            final Method reader = descriptor.getReadMethod();
+//            if (reader != null) {
+//                return reader.invoke(obj);
+//            }
+//        } catch (final IntrospectionException ie) {
+//        }
+//
+//        logger.log(Level.WARNING, "getting value directly from {0}",
+//                   new Object[]{field});
+//        if (!field.isAccessible()) {
+//            field.setAccessible(true);
+//        }
+//
+//        return field.get(obj);
+//    }
+//    static void set(final Field field, final Object obj, final Object value)
+//        throws ReflectiveOperationException {
+//
+//        if (true) {
+//            set(field.getName(), obj, value);
+//        }
+//
+//        try {
+//            final PropertyDescriptor descriptor = new PropertyDescriptor(
+//                field.getName(), field.getDeclaringClass());
+//            final Method writer = descriptor.getWriteMethod();
+//            if (writer != null) {
+//                writer.invoke(obj, adapt(descriptor, value));
+//                return;
+//            }
+//        } catch (final IntrospectionException ie) {
+//        }
+//
+//        logger.log(Level.WARNING, "setting value directly to {0} with {1}",
+//                   new Object[]{field, value});
+//        if (!field.isAccessible()) {
+//            field.setAccessible(true);
+//        }
+//        field.set(obj, adapt(field, value));
+//    }
     static void setParent(final Class<?> childClass, final Iterable<?> children,
                           final Object parent)
         throws ReflectiveOperationException {

@@ -18,6 +18,7 @@
 package com.github.jinahya.sql.database.metadata.bind;
 
 
+import java.util.Comparator;
 import javax.xml.bind.annotation.XmlAttribute;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
@@ -28,7 +29,6 @@ import org.apache.commons.lang3.builder.CompareToBuilder;
 /**
  * An entity class for binding the result of
  * {@link java.sql.DatabaseMetaData#getAttributes(java.lang.String, java.lang.String, java.lang.String, java.lang.String)}.
- * Note: this class has a natural ordering that is inconsistent with equals.
  *
  * @author Jin Kwon &lt;jinahya_at_gmail.com&gt;
  */
@@ -41,19 +41,25 @@ import org.apache.commons.lang3.builder.CompareToBuilder;
         "sourceDataType"
     }
 )
-public class Attribute extends AbstractChild<UDT>
-    implements Comparable<Attribute> {
+public class Attribute extends AbstractChild<UDT> {
 
 
-    // TYPE_CAT, TYPE_SCHEM, TYPE_NAME and ORDINAL_POSITION.
-    @Override
-    public int compareTo(Attribute o) {
+    public static Comparator<Attribute> natural() {
 
-        return new CompareToBuilder()
-            .append(getTypeCat(), o.getTypeCat())
-            .append(getTypeSchem(), o.getTypeSchem())
-            .append(getOrdinalPosition(), o.getOrdinalPosition())
-            .build();
+        return new Comparator<Attribute>() {
+
+            @Override
+            public int compare(final Attribute o1, final Attribute o2) {
+
+                // TYPE_CAT, TYPE_SCHEM, TYPE_NAME and ORDINAL_POSITION.
+                return new CompareToBuilder()
+                    .append(o1.getTypeCat(), o2.getTypeCat())
+                    .append(o1.getTypeSchem(), o2.getTypeSchem())
+                    .append(o1.getOrdinalPosition(), o2.getOrdinalPosition())
+                    .build();
+            }
+
+        };
     }
 
 

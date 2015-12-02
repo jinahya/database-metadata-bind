@@ -36,8 +36,7 @@ import javax.xml.bind.annotation.XmlType;
         "deleteRule", "fkName", "pkName", "deferrability"
     }
 )
-abstract class TableKey<T extends TableKey<T>> extends AbstractChild<Table>
-    implements Comparable<T> {
+abstract class TableKey extends AbstractChild<Table> {
 
 
     @Override
@@ -328,6 +327,7 @@ abstract class TableKey<T extends TableKey<T>> extends AbstractChild<Table>
     @Label("DEFERRABILITY")
     @XmlElement(required = true)
     private short deferrability;
+
 
 }
 

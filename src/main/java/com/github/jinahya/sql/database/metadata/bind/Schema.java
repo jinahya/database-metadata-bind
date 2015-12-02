@@ -19,6 +19,7 @@ package com.github.jinahya.sql.database.metadata.bind;
 
 
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
 import javax.xml.bind.annotation.XmlAttribute;
 import javax.xml.bind.annotation.XmlElement;
@@ -41,24 +42,29 @@ import org.apache.commons.lang3.builder.CompareToBuilder;
         // ---------------------------------------------------------------------
         "crossReferences",
         "functions", "procedures",
-        //"superTables",
-        //"superTypes",
         "tables",
         "UDTs"
     }
 )
-public class Schema extends AbstractChild<Catalog>
-    implements Comparable<Schema>, TableDomain {
+public class Schema extends AbstractChild<Catalog> implements TableDomain {
 
 
-    // by TABLE_CATALOG and TABLE_SCHEM.
-    @Override
-    public int compareTo(final Schema o) {
+    public static Comparator<Schema> narual() {
 
-        return new CompareToBuilder()
-            .append(tableCatalog, o.getTableCatalog())
-            .append(tableSchem, o.getTableSchem())
-            .build();
+        return new Comparator<Schema>() {
+
+            @Override
+            public int compare(final Schema o1, final Schema o2) {
+
+                // by TABLE_CATALOG and TABLE_SCHEM.
+                return new CompareToBuilder()
+                    .append(o1.getTableCatalog(), o2.getTableCatalog())
+                    .append(o1.getTableSchem(), o2.getTableSchem())
+                    .build();
+            }
+
+
+        };
     }
 
 
@@ -297,6 +303,7 @@ public class Schema extends AbstractChild<Catalog>
     )
     @XmlElementRef
     private List<UDT> UDTs;
+
 
 }
 

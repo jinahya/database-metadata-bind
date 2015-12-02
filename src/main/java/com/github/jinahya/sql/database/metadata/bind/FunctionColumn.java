@@ -18,6 +18,7 @@
 package com.github.jinahya.sql.database.metadata.bind;
 
 
+import java.util.Comparator;
 import javax.xml.bind.annotation.XmlAttribute;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
@@ -39,20 +40,28 @@ import org.apache.commons.lang3.builder.CompareToBuilder;
         "charOctetLength", "ordinalPosition", "isNullable", "specificName"
     }
 )
-public class FunctionColumn extends AbstractChild<Function>
-    implements Comparable<FunctionColumn> {
+public class FunctionColumn extends AbstractChild<Function> {
 
 
-    // by FUNCTION_CAT, FUNCTION_SCHEM, FUNCTION_NAME and SPECIFIC_NAME.
-    @Override
-    public int compareTo(final FunctionColumn o) {
+    public static Comparator<FunctionColumn> natural() {
 
-        return new CompareToBuilder()
-            .append(functionCat, o.getFunctionCat())
-            .append(functionSchem, o.getFunctionSchem())
-            .append(functionName, o.getFunctionName())
-            .append(specificName, o.getSpecificName())
-            .build();
+        return new Comparator<FunctionColumn>() {
+
+            @Override
+            public int compare(final FunctionColumn o1,
+                               final FunctionColumn o2) {
+
+                // by FUNCTION_CAT, FUNCTION_SCHEM, FUNCTION_NAME
+                // and SPECIFIC_NAME.
+                return new CompareToBuilder()
+                    .append(o1.getFunctionCat(), o2.getFunctionCat())
+                    .append(o1.getFunctionSchem(), o2.getFunctionSchem())
+                    .append(o1.getFunctionName(), o2.getFunctionName())
+                    .append(o1.getSpecificName(), o2.getSpecificName())
+                    .build();
+            }
+
+        };
     }
 
 

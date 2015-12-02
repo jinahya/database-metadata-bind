@@ -151,10 +151,12 @@ public class MetadataContext {
                 return;
             }
             @SuppressWarnings("unchecked")
-            List<Object> list = (List<Object>) Values.get(field, bean);
+            List<Object> list
+                = (List<Object>) Values.get(field.getName(), bean);
             if (list == null) {
                 list = new ArrayList<Object>();
-                Values.set(field, bean, list);
+                //Values.set(field, bean, list);
+                Values.set(field.getName(), bean, list);
             }
             final Class<?> elementType
                 = (Class<?>) ((ParameterizedType) field.getGenericType())
@@ -171,7 +173,8 @@ public class MetadataContext {
             return;
         }
 
-        Reflections.fieldValue(field, bean, value);
+        //Reflections.fieldValue(field, bean, value);
+        Values.set(field.getName(), bean, value);
     }
 
 
@@ -216,7 +219,8 @@ public class MetadataContext {
                     }
                     throw new RuntimeException(e);
                 }
-                Reflections.fieldValue(field, beanInstance, value);
+                Values.set(field.getName(), beanInstance, value);
+                //Reflections.fieldValue(field, beanInstance, value);
                 //FieldUtils.writeField(field, beanInstance, value);
                 //FieldUtils.writeField(field, beanInstance, value, true);
             }

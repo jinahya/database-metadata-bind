@@ -167,77 +167,73 @@ class Reflections {
 //
 //        return setterName(field.getName());
 //    }
-    static Object getFieldValue(final Field field, final Object bean)
-        throws IllegalAccessException {
-
-        if (!field.isAccessible()) {
-            field.setAccessible(true);
-        }
-
-        return field.get(bean);
-    }
-
-
-    static <T> Object fieldValue(final Class<? super T> declaring,
-                                 final String name, final T obj)
-        throws NoSuchFieldException, IllegalAccessException {
-
-        return getFieldValue(field(declaring, name), obj);
-    }
-
-
-    static <T> Object fieldValueHelper(final Class<T> declaring,
-                                       final String name, final Object obj)
-        throws NoSuchFieldException, IllegalAccessException {
-
-        return fieldValue(declaring, name, declaring.cast(obj));
-    }
-
-
-    static void fieldValue(final Field field, final Object bean,
-                           final Object value)
-        throws IllegalAccessException {
-
-        if (!field.isAccessible()) {
-            field.setAccessible(true);
-        }
-
-        try {
-            field.set(bean, value);
-            return;
-        } catch (final IllegalArgumentException iae) {
-        }
-
-        try {
-            field.set(bean, Values.adapt(field.getType(), value, field));
-        } catch (final IllegalArgumentException iae) {
-            logger.log(Level.WARNING, "failed to set value({0}) to field({1})",
-                       new Object[]{value, field});
-        }
-    }
-
-
-    static <T> void fieldValue(final Class<? super T> beanClass,
-                               final String fieldName, final T beanInstance,
-                               final Object fieldValue)
-        throws NoSuchFieldException, IllegalAccessException {
-
-        Reflections.fieldValue(field(beanClass, fieldName), beanInstance,
-                               fieldValue);
-    }
-
-
-    static <T> void fieldValueHelper(final Class<T> beanClass,
-                                     final String fieldName,
-                                     final Object beanInstance,
-                                     final Object fieldValue)
-        throws NoSuchFieldException, IllegalAccessException {
-
-        fieldValue(beanClass, fieldName, beanClass.cast(beanInstance),
-                   fieldValue);
-    }
-
-
+//    static Object fieldValue(final Field field, final Object bean)
+//        throws IllegalAccessException {
+//
+//        if (!field.isAccessible()) {
+//            field.setAccessible(true);
+//        }
+//
+//        return field.get(bean);
+//    }
+//
+//
+//    static <T> Object fieldValue(final Class<? super T> declaring,
+//                                 final String name, final T obj)
+//        throws NoSuchFieldException, IllegalAccessException {
+//
+//        return fieldValue(field(declaring, name), obj);
+//    }
+//
+//
+//    static <T> Object fieldValueHelper(final Class<T> declaring,
+//                                       final String name, final Object obj)
+//        throws NoSuchFieldException, IllegalAccessException {
+//
+//        return fieldValue(declaring, name, declaring.cast(obj));
+//    }
+//    static void fieldValue(final Field field, final Object bean,
+//                           final Object value)
+//        throws IllegalAccessException {
+//
+//        if (!field.isAccessible()) {
+//            field.setAccessible(true);
+//        }
+//
+//        try {
+//            field.set(bean, value);
+//            return;
+//        } catch (final IllegalArgumentException iae) {
+//        }
+//
+//        try {
+//            field.set(bean, Values.adapt(field.getType(), value, field));
+//        } catch (final IllegalArgumentException iae) {
+//            logger.log(Level.WARNING, "failed to set value({0}) to field({1})",
+//                       new Object[]{value, field});
+//        }
+//    }
+//
+//
+//    static <T> void fieldValue(final Class<? super T> beanClass,
+//                               final String fieldName, final T beanInstance,
+//                               final Object fieldValue)
+//        throws NoSuchFieldException, IllegalAccessException {
+//
+//        Reflections.fieldValue(field(beanClass, fieldName), beanInstance,
+//                               fieldValue);
+//    }
+//
+//
+//    static <T> void fieldValueHelper(final Class<T> beanClass,
+//                                     final String fieldName,
+//                                     final Object beanInstance,
+//                                     final Object fieldValue)
+//        throws NoSuchFieldException, IllegalAccessException {
+//
+//        fieldValue(beanClass, fieldName, beanClass.cast(beanInstance),
+//                   fieldValue);
+//    }
     static Set<Integer> sqlTypes() throws IllegalAccessException {
 
         final Set<Integer> sqlTypes = new HashSet<Integer>();
@@ -282,30 +278,28 @@ class Reflections {
     }
 
 
-    static Type parentType(final Class<?> childType)
-        throws ReflectiveOperationException {
-
-        if (!Child.class.isAssignableFrom(childType)) {
-            throw new IllegalArgumentException(
-                "childClass(" + childType + ") is not assignable to "
-                + Child.class);
-        }
-
-        Type parentType = null;
-
-        for (final Type i : childType.getGenericInterfaces()) {
-            if (!Child.class.equals(i)) {
-                continue;
-            }
-            final ParameterizedType p = (ParameterizedType) i;
-            final Type[] a = p.getActualTypeArguments();
-            parentType = a[0];
-        }
-
-        return parentType;
-    }
-
-
+//    static Type parentType(final Class<?> childType)
+//        throws ReflectiveOperationException {
+//
+//        if (!Child.class.isAssignableFrom(childType)) {
+//            throw new IllegalArgumentException(
+//                "childClass(" + childType + ") is not assignable to "
+//                + Child.class);
+//        }
+//
+//        Type parentType = null;
+//
+//        for (final Type i : childType.getGenericInterfaces()) {
+//            if (!Child.class.equals(i)) {
+//                continue;
+//            }
+//            final ParameterizedType p = (ParameterizedType) i;
+//            final Type[] a = p.getActualTypeArguments();
+//            parentType = a[0];
+//        }
+//
+//        return parentType;
+//    }
     private Reflections() {
 
         super();
