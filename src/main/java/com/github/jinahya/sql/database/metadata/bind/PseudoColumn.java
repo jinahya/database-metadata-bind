@@ -58,7 +58,6 @@ public class PseudoColumn extends AbstractChild<Table> {
                     .build();
             }
 
-
         };
     }
 
@@ -312,7 +311,6 @@ public class PseudoColumn extends AbstractChild<Table> {
     @Label("IS_NULLABLE")
     @XmlElement(required = true)
     private String isNullable;
-
 
 }
 

@@ -54,7 +54,6 @@ public class PrimaryKey extends AbstractChild<Table> {
                     .build();
             }
 
-
         };
     }
 
@@ -181,7 +180,6 @@ public class PrimaryKey extends AbstractChild<Table> {
     @NillableBySpecification
     @XmlElement(nillable = true, required = true)
     private String pkName;
-
 
 }
 

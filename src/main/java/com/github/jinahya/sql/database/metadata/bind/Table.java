@@ -65,7 +65,6 @@ public class Table extends AbstractChild<Schema> {
                     .build();
             }
 
-
         };
     }
 
@@ -597,7 +596,6 @@ public class Table extends AbstractChild<Schema> {
     )
     @XmlElementRef
     private List<VersionColumn> versionColumns;
-
 
 }
 

@@ -59,7 +59,6 @@ public class CrossReference extends AbstractChild<Metadata> {
                     .build();
             }
 
-
         };
     }
 
@@ -363,7 +362,6 @@ public class CrossReference extends AbstractChild<Metadata> {
     @Label("DEFERRABILITY")
     @XmlElement(required = true)
     private short deferrability;
-
 
 }
 

@@ -62,7 +62,6 @@ public class ProcedureColumn extends AbstractChild<Procedure> {
                     .build();
             }
 
-
         };
     }
 
@@ -473,7 +472,6 @@ public class ProcedureColumn extends AbstractChild<Procedure> {
     @Label("SPECIFIC_NAME")
     @XmlElement(required = true)
     private String specificName;
-
 
 }
 

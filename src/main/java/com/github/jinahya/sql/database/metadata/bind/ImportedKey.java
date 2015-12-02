@@ -51,7 +51,6 @@ public class ImportedKey extends TableKey {
                     .build();
             }
 
-
         };
     }
 
@@ -62,7 +61,6 @@ public class ImportedKey extends TableKey {
 
         return getParent();
     }
-
 
 }
 

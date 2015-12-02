@@ -56,7 +56,6 @@ public class ColumnPrivilege extends AbstractChild<Column> {
                     .build();
             }
 
-
         };
     }
 
@@ -236,7 +235,6 @@ public class ColumnPrivilege extends AbstractChild<Column> {
     @NillableBySpecification
     @XmlElement(nillable = true, required = true)
     private String isGrantable;
-
 
 }
 

@@ -63,7 +63,6 @@ public class Schema extends AbstractChild<Catalog> implements TableDomain {
                     .build();
             }
 
-
         };
     }
 
@@ -303,7 +302,6 @@ public class Schema extends AbstractChild<Catalog> implements TableDomain {
     )
     @XmlElementRef
     private List<UDT> UDTs;
-
 
 }
 

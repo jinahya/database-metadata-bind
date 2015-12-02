@@ -76,6 +76,7 @@ final class Values {
                     writer.setAccessible(true);
                 }
                 writer.invoke(obj, adapt(descriptor, value));
+                return;
             }
         } catch (final IntrospectionException ie) {
         }
@@ -296,7 +297,6 @@ final class Values {
 
         super();
     }
-
 
 }
 

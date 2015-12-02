@@ -18,25 +18,12 @@
 package com.github.jinahya.sql.database.metadata.bind;
 
 
-import java.lang.annotation.Annotation;
 import java.lang.reflect.Field;
 import java.lang.reflect.Modifier;
-import java.lang.reflect.ParameterizedType;
-import java.lang.reflect.Type;
 import java.sql.Types;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.HashMap;
 import java.util.HashSet;
-import java.util.List;
-import java.util.Map;
 import java.util.Set;
-import java.util.logging.Level;
 import java.util.logging.Logger;
-import static java.util.logging.Logger.getLogger;
-import static java.util.logging.Logger.getLogger;
-import static java.util.logging.Logger.getLogger;
 import static java.util.logging.Logger.getLogger;
 
 
@@ -304,7 +291,6 @@ class Reflections {
 
         super();
     }
-
 
 }
 

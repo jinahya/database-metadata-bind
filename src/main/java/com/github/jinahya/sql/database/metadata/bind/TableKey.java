@@ -328,6 +328,5 @@ abstract class TableKey extends AbstractChild<Table> {
     @XmlElement(required = true)
     private short deferrability;
 
-
 }
 

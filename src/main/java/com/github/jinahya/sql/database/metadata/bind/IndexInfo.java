@@ -62,7 +62,6 @@ public class IndexInfo extends AbstractChild<Table> {
                     .build();
             }
 
-
         };
     }
 
@@ -340,7 +339,6 @@ public class IndexInfo extends AbstractChild<Table> {
     @NillableBySpecification
     @XmlElement(nillable = true, required = true)
     private String filterCondition;
-
 
 }
 

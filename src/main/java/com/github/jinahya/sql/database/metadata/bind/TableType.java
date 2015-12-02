@@ -53,7 +53,6 @@ public class TableType extends AbstractChild<Metadata> {
                     .build();
             }
 
-
         };
     }
 
@@ -97,7 +96,6 @@ public class TableType extends AbstractChild<Metadata> {
     @Label("TABLE_TYPE")
     @XmlElement(required = true)
     private String tableType;
-
 
 }
 
