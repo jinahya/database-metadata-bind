@@ -1,12 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
-
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
   <modelVersion>4.0.0</modelVersion>
 
   <parent>
     <groupId>com.github.jinahya</groupId>
     <artifactId>jinahya-parent</artifactId>
-    <version>0.5.1</version>
+    <version>0.6</version>
   </parent>
 
   <groupId>com.github.jinahya</groupId>
@@ -18,19 +19,15 @@
   <description>Bindings for java.sql.DatabaseMetaData</description>
   <url>https://github.com/jinahya/$project.artifactId}</url>
   <inceptionYear>2011</inceptionYear>
-  <licenses>
-    <license>
-      <name>Apache 2</name>
-      <url>http://www.apache.org/licenses/LICENSE-2.0.txt</url>
-      <distribution>repo</distribution>
-      <comments>A business-friendly OSS license</comments>
-    </license>
-  </licenses>
+
+  <prerequisites>
+    <maven>3.3.9</maven>
+  </prerequisites>
 
   <scm>
     <connection>scm:git:git@github.com:jinahya/${project.artifactId}.git</connection>
     <developerConnection>scm:git:git@github.com:jinahya/${project.artifactId}.git</developerConnection>
-    <url>git@github.com:jinahya/${project.artifactId}.git</url>
+    <url>https://github.com:jinahya/${project.artifactId}</url>
     <tag>HEAD</tag>
   </scm>
   <issueManagement>
@@ -52,6 +49,30 @@
     <java.secure.socket.extension.classes>${java.home}/lib/jsse.jar</java.secure.socket.extension.classes>
   </properties>
 
+  <dependencyManagement>
+    <dependencies>
+      <dependency>
+        <groupId>ch.vorburger.mariaDB4j</groupId>
+        <artifactId>mariaDB4j</artifactId>
+        <version>2.1.3</version>
+      </dependency>
+      <dependency>
+        <groupId>org.mariadb.jdbc</groupId>
+        <artifactId>mariadb-java-client</artifactId>
+        <version>1.3.2</version>
+      </dependency>
+      <dependency>
+        <groupId>org.postgresql</groupId>
+        <artifactId>postgresql</artifactId>
+        <version>9.4-1206-jdbc42</version>
+      </dependency>
+      <dependency>
+        <groupId>ru.yandex.qatools.embed</groupId>
+        <artifactId>postgresql-embedded</artifactId>
+        <version>1.7</version>
+      </dependency>
+    </dependencies>
+  </dependencyManagement>
   <dependencies>
     <dependency>
       <groupId>ch.qos.logback</groupId>
@@ -97,10 +118,6 @@
       <scope>test</scope>
     </dependency>
   </dependencies>
-
-  <prerequisites>
-    <maven>3.3.9</maven>
-  </prerequisites>
 
   <build>
     <pluginManagement>
@@ -226,20 +243,6 @@
         <version>1.14</version>
         <executions>
           <execution>
-            <id>check-against-java16</id>
-            <phase>test</phase>
-            <goals>
-              <!--<goal>check</goal>-->
-            </goals>
-            <configuration>
-              <signature>
-                <groupId>org.codehaus.mojo.signature</groupId>
-                <artifactId>java16</artifactId>
-                <version>1.1</version>
-              </signature>
-            </configuration>
-          </execution>
-          <execution>
             <id>check-against-java17</id>
             <phase>test</phase>
             <goals>
@@ -304,13 +307,11 @@
         <dependency>
           <groupId>org.postgresql</groupId>
           <artifactId>postgresql</artifactId>
-          <version>9.4-1206-jdbc42</version>
           <scope>test</scope>
         </dependency>
         <dependency>
           <groupId>ru.yandex.qatools.embed</groupId>
           <artifactId>postgresql-embedded</artifactId>
-          <version>1.7</version>
           <scope>test</scope>
         </dependency>
       </dependencies>
@@ -357,13 +358,11 @@
         <dependency>
           <groupId>org.mariadb.jdbc</groupId>
           <artifactId>mariadb-java-client</artifactId>
-          <version>1.3.2</version>
           <scope>test</scope>
         </dependency>
         <dependency>
           <groupId>ch.vorburger.mariaDB4j</groupId>
           <artifactId>mariaDB4j</artifactId>
-          <version>2.1.3</version>
           <scope>test</scope>
         </dependency>
       </dependencies>

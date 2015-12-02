@@ -18,7 +18,7 @@
 package com.github.jinahya.sql.database.metadata.bind;
 
 
-import java.lang.reflect.Field;
+import org.apache.commons.lang3.ClassUtils;
 
 
 /**
@@ -29,8 +29,8 @@ import java.lang.reflect.Field;
 final class Invocations {
 
 
-    static <T> Object[] values(final Class<T> beanClass, final T beanInstance,
-                               final Class<?>[] types, final String[] names)
+    static <T> Object[] args(final Class<T> beanClass, final T beanInstance,
+                             final Class<?>[] types, final String[] names)
         throws ReflectiveOperationException {
 
         final Object[] values = new Object[names.length];
@@ -40,15 +40,16 @@ final class Invocations {
                 continue;
             }
             if (names[i].startsWith(":")) {
-                final Field field
-                    = Reflections.findField(beanClass, names[i].substring(1));
-//                if (!field.isAccessible()) {
-//                    field.setAccessible(true);
-//                }
-//                values[i] = field.get(beanInstance);
-//                values[i] = Beans.getPropertyValue(
-//                    beanClass, names[i].substring(1), beanInstance);
-                values[i] = Values.get(field, beanInstance);
+//                final Field field
+//                    = Reflections.field(beanClass, names[i].substring(1));
+////                if (!field.isAccessible()) {
+////                    field.setAccessible(true);
+////                }
+////                values[i] = field.get(beanInstance);
+////                values[i] = Beans.getPropertyValue(
+////                    beanClass, names[i].substring(1), beanInstance);
+//                values[i] = Values.get(field, beanInstance);
+                values[i] = Values.get(names[i].substring(1), beanInstance);
                 continue;
             }
             if (types[i] == String.class) {
@@ -56,7 +57,8 @@ final class Invocations {
                 continue;
             }
             if (types[i].isPrimitive()) {
-                types[i] = Reflections.wrapper(types[i]);
+//                types[i] = Reflections.wrapper(types[i]);
+                types[i] = ClassUtils.primitiveToWrapper(types[i]);
             }
             values[i] = types[i]
                 .getMethod("valueOf", String.class)
@@ -72,6 +74,7 @@ final class Invocations {
         super();
 
     }
+
 
 }
 
