@@ -33,6 +33,7 @@ import static org.slf4j.LoggerFactory.getLogger;
 import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
+import static java.sql.DriverManager.getConnection;
 
 
 /**
@@ -70,7 +71,7 @@ public class H2MemoryTest {
         try (Connection connection = getConnection(CONNECTION_URL)) {
             final DatabaseMetaData database = connection.getMetaData();
             final MetadataContext context = new MetadataContext(database);
-            context.addSuppressions(
+            context.suppressions(
                 "column/isGeneratedcolumn",
                 "metadata/generatedKeyAlwaysReturned",
                 "schema/functions",

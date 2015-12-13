@@ -32,6 +32,7 @@ import static org.slf4j.LoggerFactory.getLogger;
 import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
+import static java.sql.DriverManager.getConnection;
 
 
 /**

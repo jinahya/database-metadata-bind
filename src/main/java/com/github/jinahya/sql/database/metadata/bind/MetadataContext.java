@@ -21,14 +21,12 @@ package com.github.jinahya.sql.database.metadata.bind;
 import static java.beans.Introspector.decapitalize;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
-import java.lang.reflect.Modifier;
 import java.lang.reflect.ParameterizedType;
 import java.sql.DatabaseMetaData;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
@@ -87,7 +85,7 @@ public class MetadataContext {
     }
 
 
-    private boolean addSuppression(final String suppression) {
+    private boolean suppression(final String suppression) {
 
         if (suppression == null) {
             throw new NullPointerException("null suppression");
@@ -109,14 +107,14 @@ public class MetadataContext {
      *
      * @return this
      */
-    public MetadataContext addSuppressions(
+    public MetadataContext suppressions(
         final String suppression, final String... otherSuppressions) {
 
-        addSuppression(suppression);
+        suppression(suppression);
 
         if (otherSuppressions != null) {
             for (final String otherSuppression : otherSuppressions) {
-                addSuppression(otherSuppression);
+                suppression(otherSuppression);
             }
         }
 
@@ -138,7 +136,6 @@ public class MetadataContext {
     }
 
 
-    @SuppressWarnings("unchecked")
     private void setValue(final Field field, final Object bean,
                           final Object value, final Object[] args)
         throws ReflectiveOperationException, SQLException {
@@ -215,19 +212,19 @@ public class MetadataContext {
             }
             if (!labels.isEmpty()) {
                 for (final String label : labels) {
-//                    final Object resultValue = results.getObject(label);
-//                    logger.log(Level.WARNING, "unknown result; {0}({1}) {2}",
-//                               new Object[]{label, resultValue, klass});
-                    Set<String> sets = unknownResults.get(klass);
-                    if (sets == null) {
-                        sets = new HashSet<String>();
-                        unknownResults.put(klass, sets);
-                    }
-                    if (!sets.add(label)) {
-                        continue;
-                    }
-                    logger.log(Level.WARNING, "unknown result; {0} {1}",
-                               new Object[]{label, klass});
+                    final Object resultValue = results.getObject(label);
+                    logger.log(Level.WARNING, "unknown result; {0}({1}) {2}",
+                               new Object[]{label, resultValue, klass});
+//                    Set<String> sets = unknownResults.get(klass);
+//                    if (sets == null) {
+//                        sets = new HashSet<String>();
+//                        unknownResults.put(klass, sets);
+//                    }
+//                    if (!sets.add(label)) {
+//                        continue;
+//                    }
+//                    logger.log(Level.WARNING, "unknown result; {0} {1}",
+//                               new Object[]{label, klass});
                 }
             }
         }
@@ -240,12 +237,12 @@ public class MetadataContext {
             final String info = String.format(
                 "field=%s, invocation=%s, suppression=%s",
                 field, invocation, suppression);
-            final String name = invocation.name();
-            getMethodNames().remove(name);
             if (suppressed(suppression)) {
                 logger.log(Level.FINE, "suppressed; {0}", new Object[]{info});
                 continue;
             }
+            final String name = invocation.name();
+//            getMethodNames().remove(name);
             final Class<?>[] types = invocation.types();
             final Method method;
             try {
@@ -277,7 +274,7 @@ public class MetadataContext {
         }
 
         if (TableDomain.class.isAssignableFrom(klass)) {
-            getMethodNames().remove("getCrossReference");
+//            getMethodNames().remove("getCrossReference");
             final List<Table> tables = ((TableDomain) instance).getTables();
             final List<CrossReference> crossReferences
                 = getCrossReferences(tables);
@@ -362,7 +359,7 @@ public class MetadataContext {
         }
 
         if (!suppressed("metadata/supportsConvert")) {
-            getMethodNames().remove("supportsConvert");
+//            getMethodNames().remove("supportsConvert");
             final List<SDTSDTBoolean> supportsConvert
                 = new ArrayList<SDTSDTBoolean>();
             metadata.setSupportsConvert(supportsConvert);
@@ -383,11 +380,10 @@ public class MetadataContext {
             }
         }
 
-        for (final String methodName : getMethodNames()) {
-            logger.log(Level.INFO, "method not invoked: {0}",
-                       new Object[]{methodName});
-        }
-
+//        for (final String methodName : getMethodNames()) {
+//            logger.log(Level.INFO, "method not invoked: {0}",
+//                       new Object[]{methodName});
+//        }
         return metadata;
     }
 
@@ -434,6 +430,7 @@ public class MetadataContext {
 
 
     /**
+     * Returns catalogs.
      *
      * @return a list of catalogs
      *
@@ -980,29 +977,27 @@ public class MetadataContext {
     }
 
 
-    private Set<String> getMethodNames() {
-
-        if (methodNames == null) {
-            methodNames = new HashSet<String>();
-            for (final Method method : DatabaseMetaData.class.getMethods()) {
-                if (method.getDeclaringClass() != DatabaseMetaData.class) {
-                    continue;
-                }
-                final int modifier = method.getModifiers();
-                if (Modifier.isStatic(modifier)) {
-                    continue;
-                }
-                if (!Modifier.isPublic(modifier)) {
-                    continue;
-                }
-                methodNames.add(method.getName());
-            }
-        }
-
-        return methodNames;
-    }
-
-
+//    private Set<String> getMethodNames() {
+//
+//        if (methodNames == null) {
+//            methodNames = new HashSet<String>();
+//            for (final Method method : DatabaseMetaData.class.getMethods()) {
+//                if (method.getDeclaringClass() != DatabaseMetaData.class) {
+//                    continue;
+//                }
+//                final int modifier = method.getModifiers();
+//                if (Modifier.isStatic(modifier)) {
+//                    continue;
+//                }
+//                if (!Modifier.isPublic(modifier)) {
+//                    continue;
+//                }
+//                methodNames.add(method.getName());
+//            }
+//        }
+//
+//        return methodNames;
+//    }
     private final DatabaseMetaData context;
 
 
@@ -1011,12 +1006,8 @@ public class MetadataContext {
 
     private Set<String> suppressions;
 
-
-    private transient Set<String> methodNames;
-
-
-    private final Map<Class<?>, Set<String>> unknownResults
-        = new HashMap<Class<?>, Set<String>>();
-
+//    private transient Set<String> methodNames;
+//    private final Map<Class<?>, Set<String>> unknownResults
+//        = new HashMap<Class<?>, Set<String>>();
 }
 
