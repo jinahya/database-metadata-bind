@@ -140,7 +140,7 @@ public class IndexInfo extends AbstractChild<Table> {
 
 
     // ---------------------------------------------------------- indexQualifier
-    public String setIndexQualifier() {
+    public String getIndexQualifier() {
 
         return indexQualifier;
     }

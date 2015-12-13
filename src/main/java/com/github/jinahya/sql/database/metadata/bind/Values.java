@@ -18,7 +18,9 @@
 package com.github.jinahya.sql.database.metadata.bind;
 
 
+import java.beans.BeanInfo;
 import java.beans.IntrospectionException;
+import java.beans.Introspector;
 import java.beans.PropertyDescriptor;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
@@ -40,23 +42,30 @@ final class Values {
     static Object get(final String name, final Object obj)
         throws ReflectiveOperationException {
 
+        final Class<?> klass = obj.getClass();
+
         try {
-            final PropertyDescriptor descriptor
-                = new PropertyDescriptor(name, obj.getClass());
-            final Method reader = descriptor.getReadMethod();
-            if (reader != null) {
-                if (!reader.isAccessible()) {
-                    reader.setAccessible(true);
+            final BeanInfo info = Introspector.getBeanInfo(klass);
+            for (final PropertyDescriptor descriptor
+                 : info.getPropertyDescriptors()) {
+                if (name.equals(descriptor.getName())) {
+                    final Method reader = descriptor.getReadMethod();
+                    if (reader != null) {
+                        if (!reader.isAccessible()) {
+                            reader.setAccessible(true);
+                        }
+                        return reader.invoke(obj);
+                    }
+                    break;
                 }
-                return reader.invoke(obj);
             }
         } catch (final IntrospectionException ie) {
+            ie.printStackTrace(System.err);
         }
 
-        logger.log(Level.WARNING,
-                   "trying to get value directly from field({0})",
-                   new Object[]{name});
-        final Field field = Reflections.field(obj.getClass(), name);
+        final Field field = Reflections.field(klass, name);
+        logger.log(Level.WARNING, "trying to get value directly from {0}",
+                   new Object[]{field});
         if (!field.isAccessible()) {
             field.setAccessible(true);
         }
@@ -67,23 +76,32 @@ final class Values {
     static void set(final String name, final Object obj, final Object value)
         throws ReflectiveOperationException {
 
+        final Class<?> klass = obj.getClass();
+
         try {
-            final PropertyDescriptor descriptor
-                = new PropertyDescriptor(name, obj.getClass());
-            final Method writer = descriptor.getWriteMethod();
-            if (writer != null) {
-                if (!writer.isAccessible()) {
-                    writer.setAccessible(true);
+            final BeanInfo info = Introspector.getBeanInfo(klass);
+            for (final PropertyDescriptor descriptor
+                 : info.getPropertyDescriptors()) {
+                if (name.equals(descriptor.getName())) {
+                    final Method writer = descriptor.getWriteMethod();
+                    if (writer != null) {
+                        if (!writer.isAccessible()) {
+                            writer.setAccessible(true);
+                        }
+                        writer.invoke(obj, adapt(descriptor, value));
+                        return;
+                    }
+                    break;
                 }
-                writer.invoke(obj, adapt(descriptor, value));
-                return;
             }
         } catch (final IntrospectionException ie) {
+            ie.printStackTrace(System.err);
         }
 
-        logger.log(Level.WARNING, "trying to set value directly to field({0})",
-                   new Object[]{name});
-        final Field field = Reflections.field(obj.getClass(), name);
+        final Field field = Reflections.field(klass, name);
+        logger.log(Level.WARNING,
+                   "trying to set value directly to {0} with {1}",
+                   new Object[]{field, value});
         if (!field.isAccessible()) {
             field.setAccessible(true);
         }
@@ -91,56 +109,6 @@ final class Values {
     }
 
 
-//    static Object get(final Field field, final Object obj)
-//        throws ReflectiveOperationException {
-//
-//        if (true) {
-//            return get(field.getName(), obj);
-//        }
-//
-//        try {
-//            final PropertyDescriptor descriptor = new PropertyDescriptor(
-//                field.getName(), field.getDeclaringClass());
-//            final Method reader = descriptor.getReadMethod();
-//            if (reader != null) {
-//                return reader.invoke(obj);
-//            }
-//        } catch (final IntrospectionException ie) {
-//        }
-//
-//        logger.log(Level.WARNING, "getting value directly from {0}",
-//                   new Object[]{field});
-//        if (!field.isAccessible()) {
-//            field.setAccessible(true);
-//        }
-//
-//        return field.get(obj);
-//    }
-//    static void set(final Field field, final Object obj, final Object value)
-//        throws ReflectiveOperationException {
-//
-//        if (true) {
-//            set(field.getName(), obj, value);
-//        }
-//
-//        try {
-//            final PropertyDescriptor descriptor = new PropertyDescriptor(
-//                field.getName(), field.getDeclaringClass());
-//            final Method writer = descriptor.getWriteMethod();
-//            if (writer != null) {
-//                writer.invoke(obj, adapt(descriptor, value));
-//                return;
-//            }
-//        } catch (final IntrospectionException ie) {
-//        }
-//
-//        logger.log(Level.WARNING, "setting value directly to {0} with {1}",
-//                   new Object[]{field, value});
-//        if (!field.isAccessible()) {
-//            field.setAccessible(true);
-//        }
-//        field.set(obj, adapt(field, value));
-//    }
     static void setParent(final Class<?> childClass, final Iterable<?> children,
                           final Object parent)
         throws ReflectiveOperationException {
@@ -281,7 +249,8 @@ final class Values {
     }
 
 
-    static Object adapt(final PropertyDescriptor descriptor, final Object value) {
+    static Object adapt(final PropertyDescriptor descriptor,
+                        final Object value) {
 
         return adapt(descriptor.getPropertyType(), value, descriptor);
     }
