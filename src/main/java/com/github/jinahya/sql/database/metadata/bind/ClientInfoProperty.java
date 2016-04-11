@@ -112,19 +112,19 @@ public class ClientInfoProperty extends AbstractChild<Metadata> {
 //        setParent(metadata);
 //    }
     // -------------------------------------------------------------------------
-    @_Label("NAME")
+    @Label("NAME")
     @XmlElement(required = true)
     private String name;
 
-    @_Label("MAX_LEN")
+    @Label("MAX_LEN")
     @XmlElement(required = true)
     private int maxLen;
 
-    @_Label("DEFAULT_VALUE")
+    @Label("DEFAULT_VALUE")
     @XmlElement(required = true)
     private String defaultValue;
 
-    @_Label("DESCRIPTION")
+    @Label("DESCRIPTION")
     @XmlElement(required = true)
     private String description;
 }

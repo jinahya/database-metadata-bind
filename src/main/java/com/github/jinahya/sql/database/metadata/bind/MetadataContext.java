@@ -16,17 +16,20 @@
 package com.github.jinahya.sql.database.metadata.bind;
 
 import static java.beans.Introspector.decapitalize;
+import java.lang.annotation.Annotation;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.lang.reflect.ParameterizedType;
 import java.sql.DatabaseMetaData;
 import java.sql.ResultSet;
+import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
-import java.util.Objects;
+import java.util.Map.Entry;
 import java.util.Set;
 import java.util.TreeSet;
 import java.util.logging.Level;
@@ -56,6 +59,60 @@ public class MetadataContext {
     public static final String DMDB_EMPTY_SCHEMA_IF_NONE
             = "dmdb.emptySchemaIfNone";
 
+    private static Set<String> labels(final ResultSet resultSet)
+            throws SQLException {
+        final ResultSetMetaData rsmd = resultSet.getMetaData();
+        final int columnCount = rsmd.getColumnCount();
+        final Set<String> columnLabels = new HashSet<String>(columnCount);
+        for (int i = 1; i <= columnCount; i++) {
+            columnLabels.add(rsmd.getColumnLabel(i));
+        }
+        return columnLabels;
+    }
+
+    private static <T extends Annotation> Map<Field, T> annotatedFields(
+            final Class<?> declaringClass, final Class<T> annotationType,
+            final Map<Field, T> annotatedFields)
+            throws ReflectiveOperationException {
+        for (final Field field : declaringClass.getDeclaredFields()) {
+            final T annotation = field.getAnnotation(annotationType);
+            if (annotation == null) {
+                continue;
+            }
+            annotatedFields.put(field, annotation);
+        }
+        final Class<?> superclass = declaringClass.getSuperclass();
+        return superclass != null
+               ? annotatedFields(superclass, annotationType, annotatedFields)
+               : annotatedFields;
+    }
+
+    private static <T extends Annotation> Map<Field, T> fields(
+            final Class<?> declaringClass, final Class<T> annotationType)
+            throws ReflectiveOperationException {
+        return annotatedFields(declaringClass, annotationType,
+                               new HashMap<Field, T>());
+    }
+
+//    private static Map<Field, Label> fieldLabels(
+//            final Class<?> type, final Map<Field, Label> fieldLabels)
+//            throws ReflectiveOperationException {
+//        for (final Field field : type.getDeclaredFields()) {
+//            final Label label = field.getAnnotation(Label.class);
+//            if (label == null) {
+//                continue;
+//            }
+//            fieldLabels.put(field, label);
+//        }
+//        final Class<?> superclass = type.getSuperclass();
+//        return superclass != null
+//               ? fieldLabels(superclass, fieldLabels) : fieldLabels;
+//    }
+//
+//    private static Map<Field, Label> fieldLabels(final Class<?> type)
+//            throws ReflectiveOperationException {
+//        return fieldLabels(type, new HashMap<Field, Label>());
+//    }
     private static String suppression(final Class<?> klass, final Field field) {
         return decapitalize(klass.getSimpleName()) + "/" + field.getName();
     }
@@ -67,7 +124,10 @@ public class MetadataContext {
      */
     public MetadataContext(final DatabaseMetaData context) {
         super();
-        this.context = Objects.requireNonNull(context, "null context");
+        if (context == null) {
+            throw new NullPointerException("null context");
+        }
+        this.context = context;
     }
 
     private boolean suppression(final String suppression) {
@@ -144,103 +204,148 @@ public class MetadataContext {
     private <T> T bindSingle(final ResultSet results, final Class<T> klass,
                              final T instance)
             throws SQLException, ReflectiveOperationException {
-        if (results != null) {
-            final Set<String> labels = ResultSets.getColumnLabels(results);
-            final Field[] fields
-                    = FieldUtils.getFieldsWithAnnotation(klass, _Label.class);
-            for (final Field field : fields) {
-                final String label = field.getAnnotation(_Label.class).value();
+        if (results != null) { // bind columns to fields
+            final Set<String> labels = labels(results);
+            final Map<Field, Label> fields = fields(klass, Label.class);
+            for (final Entry<Field, Label> entry : fields.entrySet()) {
+                final Field field = entry.getKey();
+                final String label = entry.getValue().value();
                 final String suppression = suppression(klass, field);
-                final String info = String.format(
+                final String formatted = String.format(
                         "field=%s, label=%s, suppression=%s", field, label,
                         suppression);
                 if (suppressed(suppression)) {
-                    logger.log(Level.FINE, "suppressed; {0}", info);
+                    logger.log(Level.FINE, "suppressed; {0}", formatted);
                     continue;
                 }
                 if (!labels.remove(label)) {
-                    final String message = "unknown column; " + info;
-                    if (!suppressUnknownColumns()) {
-                        throw new RuntimeException(message);
-                    }
-                    logger.warning(message);
+                    logger.log(Level.WARNING, "unknown label: {0}", formatted);
                     continue;
                 }
-                final Object value;
-                try {
-                    value = results.getObject(label);
-                } catch (final Exception e) {
-                    final String message = "failed to get value; " + info;
-                    logger.severe(message);
-                    if (e instanceof SQLException) {
-                        throw (SQLException) e;
-                    }
-                    throw new RuntimeException(e);
-                }
+                final Object value = results.getObject(label);
                 Values.set(field.getName(), instance, value);
             }
             if (!labels.isEmpty()) {
                 for (final String label : labels) {
-                    final Object resultValue = results.getObject(label);
-                    logger.log(Level.WARNING, "unknown result; {0}({1}) {2}",
-                               new Object[]{label, resultValue, klass});
-//                    Set<String> sets = unknownResults.get(klass);
-//                    if (sets == null) {
-//                        sets = new HashSet<String>();
-//                        unknownResults.put(klass, sets);
-//                    }
-//                    if (!sets.add(label)) {
-//                        continue;
-//                    }
-//                    logger.log(Level.WARNING, "unknown result; {0} {1}",
-//                               new Object[]{label, klass});
+                    final Object object = results.getObject(label);
+                    logger.log(Level.FINE, "unknown column; {0}({1}) {2}",
+                               new Object[]{label, object, klass});
                 }
             }
-        }
 
-        final List<Field> fields = FieldUtils.getFieldsListWithAnnotation(
-                klass, _Invocation.class);
-        for (final Field field : fields) {
-            final _Invocation invocation = field.getAnnotation(_Invocation.class);
+//            final Set<String> columnLabels = columnLabels(results);
+//            final Field[] fields
+//                    = FieldUtils.getFieldsWithAnnotation(klass, Label.class);
+//            for (final Field field : fields) {
+//                final String fieldLabel
+//                        = field.getAnnotation(Label.class).value();
+//                final String suppression = suppression(klass, field);
+//                final String formatted = String.format(
+//                        "field=%s, label=%s, suppression=%s", field, fieldLabel,
+//                        suppression);
+//                if (suppressed(suppression)) {
+//                    logger.log(Level.FINE, "suppressed; {0}", formatted);
+//                    continue;
+//                }
+//                if (!columnLabels.remove(fieldLabel)) {
+//                    logger.log(Level.WARNING, "unknown label: {0}", formatted);
+//                    continue;
+//                }
+//                final Object value = results.getObject(fieldLabel);
+//                Values.set(field.getName(), instance, value);
+//            }
+//            if (!columnLabels.isEmpty()) {
+//                for (final String columnLabel : columnLabels) {
+//                    final Object resultValue = results.getObject(columnLabel);
+//                    logger.log(Level.WARNING, "unknown column; {0}({1}) {2}",
+//                               new Object[]{columnLabel, resultValue, klass});
+//                }
+//            }
+        }
+        // invoke
+
+        final Map<Field, Invocation> fields = fields(klass, Invocation.class);
+        for (final Entry<Field, Invocation> entry : fields.entrySet()) {
+            final Field field = entry.getKey();
+            final Invocation invocation = entry.getValue();
             final String suppression = suppression(klass, field);
-            final String info = String.format(
+            final String formatted = String.format(
                     "field=%s, invocation=%s, suppression=%s",
                     field, invocation, suppression);
             if (suppressed(suppression)) {
-                logger.log(Level.FINE, "suppressed; {0}", new Object[]{info});
+                logger.log(Level.FINE, "suppressed; {0}", formatted);
                 continue;
             }
             final String name = invocation.name();
-//            getMethodNames().remove(name);
             final Class<?>[] types = invocation.types();
             final Method method;
             try {
                 method = DatabaseMetaData.class.getMethod(name, types);
             } catch (final NoSuchMethodException nsme) {
-                final String message = "unknown methods; " + info;
-                if (!suppressUnknownMethods()) {
-                    throw new RuntimeException(message);
-                }
-                logger.warning(message);
+                logger.log(Level.WARNING, "unknown methods; {0}", formatted);
                 continue;
             }
-            for (final _InvocationArgs invocationArgs : invocation.argsarr()) {
-                final String[] names = invocationArgs.value();
-                final Object[] args = _Invocations.args(
-                        klass, instance, types, names);
+            for (final InvocationArgs invocationArgs : invocation.argsarr()) {
+                final String[] literals = invocationArgs.value();
+                final Object[] values = Invocations.args(
+                        klass, instance, types, literals);
                 final Object value;
                 try {
-                    value = method.invoke(context, args);
+                    value = method.invoke(context, values);
+                    setValue(field, instance, value, values);
                 } catch (final Exception e) {
-                    logger.log(Level.SEVERE, "failed to invoke" + info, e);
-                    throw new RuntimeException(e);
-                } catch (final AbstractMethodError ame) {
-                    logger.log(Level.SEVERE, "failed by abstract" + info, ame);
-                    throw ame;
+                    logger.log(Level.SEVERE, "failed to invoke" + formatted, e);
+//                    throw new RuntimeException(e);
+                } catch (final Error e) {
+                    logger.log(Level.SEVERE, "failed to invoke" + formatted, e);
+                    throw e;
                 }
-                setValue(field, instance, value, args);
             }
         }
+
+//        final List<Field> fields = FieldUtils.getFieldsListWithAnnotation(
+//                klass, _Invocation.class);
+//        for (final Field field : fields) {
+//            final _Invocation invocation = field.getAnnotation(_Invocation.class);
+//            final String suppression = suppression(klass, field);
+//            final String info = String.format(
+//                    "field=%s, invocation=%s, suppression=%s",
+//                    field, invocation, suppression);
+//            if (suppressed(suppression)) {
+//                logger.log(Level.FINE, "suppressed; {0}", new Object[]{info});
+//                continue;
+//            }
+//            final String name = invocation.name();
+////            getMethodNames().remove(name);
+//            final Class<?>[] types = invocation.types();
+//            final Method method;
+//            try {
+//                method = DatabaseMetaData.class.getMethod(name, types);
+//            } catch (final NoSuchMethodException nsme) {
+//                final String message = "unknown methods; " + info;
+//                if (!suppressUnknownMethods()) {
+//                    throw new RuntimeException(message);
+//                }
+//                logger.warning(message);
+//                continue;
+//            }
+//            for (final _InvocationArgs invocationArgs : invocation.argsarr()) {
+//                final String[] names = invocationArgs.value();
+//                final Object[] args = _Invocations.args(
+//                        klass, instance, types, names);
+//                final Object value;
+//                try {
+//                    value = method.invoke(context, args);
+//                } catch (final Exception e) {
+//                    logger.log(Level.SEVERE, "failed to invoke" + info, e);
+//                    throw new RuntimeException(e);
+//                } catch (final AbstractMethodError ame) {
+//                    logger.log(Level.SEVERE, "failed by abstract" + info, ame);
+//                    throw ame;
+//                }
+//                setValue(field, instance, value, args);
+//            }
+//        }
         if (TableDomain.class.isAssignableFrom(klass)) {
 //            getMethodNames().remove("getCrossReference");
             final List<Table> tables = ((TableDomain) instance).getTables();
@@ -276,7 +381,6 @@ public class MetadataContext {
      * Binds all information.
      *
      * @return a Metadata
-     *
      * @throws SQLException if a database occurs.
      * @throws ReflectiveOperationException if a reflection error occurs
      */
@@ -704,6 +808,17 @@ public class MetadataContext {
         return list;
     }
 
+    /**
+     * Binds information from
+     * {@link DatabaseMetaData#getVersionColumns(java.lang.String, java.lang.String, java.lang.String)}.
+     *
+     * @param catalog catalog
+     * @param schema schema
+     * @param table table
+     * @return a list of {@link VersionColumn}
+     * @throws SQLException if a database access error occurs.
+     * @throws ReflectiveOperationException
+     */
     public List<VersionColumn> getVersionColumns(final String catalog,
                                                  final String schema,
                                                  final String table)
@@ -784,34 +899,7 @@ public class MetadataContext {
         return this;
     }
 
-//    private Set<String> getMethodNames() {
-//
-//        if (methodNames == null) {
-//            methodNames = new HashSet<String>();
-//            for (final Method method : DatabaseMetaData.class.getMethods()) {
-//                if (method.getDeclaringClass() != DatabaseMetaData.class) {
-//                    continue;
-//                }
-//                final int modifier = method.getModifiers();
-//                if (Modifier.isStatic(modifier)) {
-//                    continue;
-//                }
-//                if (!Modifier.isPublic(modifier)) {
-//                    continue;
-//                }
-//                methodNames.add(method.getName());
-//            }
-//        }
-//
-//        return methodNames;
-//    }
     private final DatabaseMetaData context;
-
     private Map<String, Object> properties;
-
     private Set<String> suppressions;
-
-//    private transient Set<String> methodNames;
-//    private final Map<Class<?>, Set<String>> unknownResults
-//        = new HashMap<Class<?>, Set<String>>();
 }

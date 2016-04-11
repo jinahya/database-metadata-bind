@@ -82,5 +82,4 @@ class TILBoolean {
 
     @XmlValue
     private boolean value;
-
 }

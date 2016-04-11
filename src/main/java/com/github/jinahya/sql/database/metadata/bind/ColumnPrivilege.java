@@ -147,38 +147,38 @@ public class ColumnPrivilege extends AbstractChild<Column> {
 //        setParent(column);
 //    }
     // -------------------------------------------------------------------------
-    @_Label("TABLE_CAT")
+    @Label("TABLE_CAT")
     @_NillableBySpecification
     @XmlAttribute
     private String tableCat;
 
-    @_Label("TABLE_SCHEM")
+    @Label("TABLE_SCHEM")
     @_NillableBySpecification
     @XmlAttribute
     private String tableSchem;
 
-    @_Label("TABLE_NAME")
+    @Label("TABLE_NAME")
     @XmlAttribute
     private String tableName;
 
-    @_Label("COLUMN_NAME")
+    @Label("COLUMN_NAME")
     @XmlAttribute
     private String columnName;
 
-    @_Label("GRANTOR")
+    @Label("GRANTOR")
     @_NillableBySpecification
     @XmlElement(nillable = true, required = true)
     private String grantor;
 
-    @_Label("GRANTEE")
+    @Label("GRANTEE")
     @XmlElement(required = true)
     private String grantee;
 
-    @_Label("PRIVILEGE")
+    @Label("PRIVILEGE")
     @XmlElement(required = true)
     private String privilege;
 
-    @_Label("IS_GRANTABLE")
+    @Label("IS_GRANTABLE")
     @_NillableBySpecification
     @XmlElement(nillable = true, required = true)
     private String isGrantable;

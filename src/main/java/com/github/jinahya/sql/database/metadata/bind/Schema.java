@@ -179,33 +179,33 @@ public class Schema extends AbstractChild<Catalog> implements TableDomain {
     }
 
     // -------------------------------------------------------------------------
-    @_Label("TABLE_CATALOG")
+    @Label("TABLE_CATALOG")
     @_NillableBySpecification
     @XmlAttribute
     private String tableCatalog;
 
-    @_Label("TABLE_SCHEM")
+    @Label("TABLE_SCHEM")
     @XmlElement(required = true)
     private String tableSchem;
 
     @XmlElementRef
     private List<CrossReference> crossReferences;
 
-    @_Invocation(
+    @Invocation(
             name = "getFunctions",
             types = {String.class, String.class, String.class},
             argsarr = {
-                @_InvocationArgs({":tableCatalog", ":tableSchem", "null"})
+                @InvocationArgs({":tableCatalog", ":tableSchem", "null"})
             }
     )
     @XmlElementRef
     private List<Function> functions;
 
-    @_Invocation(
+    @Invocation(
             name = "getProcedures",
             types = {String.class, String.class, String.class},
             argsarr = {
-                @_InvocationArgs({":tableCatalog", ":tableSchem", "null"})
+                @InvocationArgs({":tableCatalog", ":tableSchem", "null"})
             }
     )
     @XmlElementRef
@@ -229,21 +229,21 @@ public class Schema extends AbstractChild<Catalog> implements TableDomain {
 //    )
 //    @XmlElementRef
 //    private List<SuperType> superTypes;
-    @_Invocation(
+    @Invocation(
             name = "getTables",
             types = {String.class, String.class, String.class, String[].class},
             argsarr = {
-                @_InvocationArgs({":tableCatalog", ":tableSchem", "null", "null"})
+                @InvocationArgs({":tableCatalog", ":tableSchem", "null", "null"})
             }
     )
     @XmlElementRef
     private List<Table> tables;
 
-    @_Invocation(
+    @Invocation(
             name = "getUDTs",
             types = {String.class, String.class, String.class, int[].class},
             argsarr = {
-                @_InvocationArgs({":tableCatalog", ":tableSchem", "null", "null"})
+                @InvocationArgs({":tableCatalog", ":tableSchem", "null", "null"})
             }
     )
     @XmlElementRef

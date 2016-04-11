@@ -113,29 +113,29 @@ public class PrimaryKey extends AbstractChild<Table> {
 //        setParent(table);
 //    }
     // -------------------------------------------------------------------------
-    @_Label("TABLE_CAT")
+    @Label("TABLE_CAT")
     @_NillableBySpecification
     @XmlAttribute
     private String tableCat;
 
-    @_Label("TABLE_SCHEM")
+    @Label("TABLE_SCHEM")
     @_NillableBySpecification
     @XmlAttribute
     private String tableSchem;
 
-    @_Label("TABLE_NAME")
+    @Label("TABLE_NAME")
     @XmlAttribute
     private String tableName;
 
-    @_Label("COLUMN_NAME")
+    @Label("COLUMN_NAME")
     @XmlElement(required = true)
     private String columnName;
 
-    @_Label("KEY_SEQ")
+    @Label("KEY_SEQ")
     @XmlElement(required = true)
     private short keySeq;
 
-    @_Label("PK_NAME")
+    @Label("PK_NAME")
     @_NillableBySpecification
     @XmlElement(nillable = true, required = true)
     private String pkName;

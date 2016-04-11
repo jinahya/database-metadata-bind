@@ -31,86 +31,69 @@ class RSTRSCBoolean {
             = getLogger(RSTRSCBoolean.class.getName());
 
     static RSTRSCBoolean valueOf(final Object[] args, final Object value) {
-
         final RSTRSCBoolean instance = new RSTRSCBoolean();
-
         instance.setType((Integer) args[0]);
         instance.setConcurrency((Integer) args[1]);
         instance.setValue((Boolean) value);
-
         return instance;
     }
 
     // -------------------------------------------------------------------- type
     public int getType() {
-
         return type;
     }
 
     public void setType(final int type) {
-
         this.type = type;
     }
 
     RSTRSCBoolean type(final int type) {
-
         setType(type);
-
         return this;
     }
 
     @XmlAttribute
     public String getTypeName() {
-
         try {
             return RST.valueOf(type).name();
         } catch (final IllegalArgumentException iae) {
             logger.log(Level.WARNING, "unknown result set type: {0}",
                        new Object[]{type});
         }
-
         return null;
     }
 
     // ------------------------------------------------------------- concurrency
     public int getConcurrency() {
-
         return concurrency;
     }
 
     public void setConcurrency(final int concurrency) {
-
         this.concurrency = concurrency;
     }
 
     @XmlAttribute
     public String getConccurrencyName() {
-
         try {
             return RSC.valueOf(concurrency).name();
         } catch (final IllegalArgumentException iae) {
             logger.log(Level.WARNING, "unknown result set concurrency: {0}",
                        new Object[]{concurrency});
         }
-
         return null;
     }
 
     // ------------------------------------------------------------------- value
     public boolean getValue() {
-
         return value;
     }
 
     public void setValue(final boolean value) {
-
         this.value = value;
     }
 
     RSTRSCBoolean value(final boolean value) {
-
         setValue(value);
-
         return this;
     }
 
@@ -123,5 +106,4 @@ class RSTRSCBoolean {
 
     @XmlValue
     private boolean value;
-
 }

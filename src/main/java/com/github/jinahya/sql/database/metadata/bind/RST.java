@@ -35,7 +35,7 @@ enum RST {
             }
         }
         throw new IllegalArgumentException(
-                "no value for constant: " + type);
+                "no value for type: " + type);
     }
 
     private RST(final int type) {

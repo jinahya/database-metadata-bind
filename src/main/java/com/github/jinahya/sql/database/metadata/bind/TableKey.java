@@ -192,63 +192,63 @@ abstract class TableKey extends AbstractChild<Table> {
 //        setParent(table);
 //    }
     // -------------------------------------------------------------------------
-    @_Label("PKTABLE_CAT")
+    @Label("PKTABLE_CAT")
     @_NillableBySpecification
     @XmlAttribute
     private String pktableCat;
 
-    @_Label("PKTABLE_SCHEM")
+    @Label("PKTABLE_SCHEM")
     @_NillableBySpecification
     @XmlAttribute
     private String pktableSchem;
 
-    @_Label("PKTABLE_NAME")
+    @Label("PKTABLE_NAME")
     @XmlAttribute
     private String pktableName;
 
-    @_Label("PKCOLUMN_NAME")
+    @Label("PKCOLUMN_NAME")
     @XmlElement(required = true)
     private String pkcolumnName;
 
-    @_Label("FKTABLE_CAT")
+    @Label("FKTABLE_CAT")
     @_NillableBySpecification
     @XmlElement(nillable = true, required = true)
     private String fktableCat;
 
-    @_Label("FKTABLE_NAME")
+    @Label("FKTABLE_NAME")
     @_NillableBySpecification
     @XmlElement(nillable = true, required = true)
     private String fktableSchem;
 
-    @_Label("FKTABLE_NAME")
+    @Label("FKTABLE_NAME")
     @XmlElement(required = true)
     private String fktableName;
 
-    @_Label("FKCOLUMN_NAME")
+    @Label("FKCOLUMN_NAME")
     @XmlElement(required = true)
     private String fkcolumnName;
 
-    @_Label("FKCOLUMN_NAME")
+    @Label("FKCOLUMN_NAME")
     @XmlElement(required = true)
     private short keySeq;
 
-    @_Label("UPDATE_RULE")
+    @Label("UPDATE_RULE")
     @XmlElement(required = true)
     private short updateRule;
 
-    @_Label("DELETE_RULE")
+    @Label("DELETE_RULE")
     @XmlElement(required = true)
     private short deleteRule;
 
-    @_Label("FK_NAME")
+    @Label("FK_NAME")
     @XmlElement(required = true)
     private String fkName;
 
-    @_Label("PK_NAME")
+    @Label("PK_NAME")
     @XmlElement(required = true)
     private String pkName;
 
-    @_Label("DEFERRABILITY")
+    @Label("DEFERRABILITY")
     @XmlElement(required = true)
     private short deferrability;
 }

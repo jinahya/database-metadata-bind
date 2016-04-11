@@ -91,11 +91,11 @@ public class SchemaName extends AbstractChild<Metadata> {
 //        return this;
 //    }
     // -------------------------------------------------------------------------
-    @_Label("TABLE_SCHEM")
+    @Label("TABLE_SCHEM")
     @XmlElement(required = true)
     private String tableSchem;
 
-    @_Label("TABLE_CATALOG")
+    @Label("TABLE_CATALOG")
     @_NillableBySpecification
     @XmlElement(nillable = true, required = false)
     private String tableCatalog;

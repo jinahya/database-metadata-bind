@@ -28,7 +28,7 @@ import java.lang.annotation.Target;
 @Documented
 @Retention(RetentionPolicy.RUNTIME)
 @Target({ElementType.FIELD})
-@interface _InvocationArgs {
+@interface InvocationArgs {
 
     String[] value();
 

@@ -203,61 +203,61 @@ public class IndexInfo extends AbstractChild<Table> {
 //        setParent(table);
 //    }
     // -------------------------------------------------------------------------
-    @_Label("TABLE_CAT")
+    @Label("TABLE_CAT")
     @_NillableBySpecification
     @XmlAttribute
     private String tableCat;
 
-    @_Label("TABLE_SCHEM")
+    @Label("TABLE_SCHEM")
     @_NillableBySpecification
     @XmlAttribute
     private String tableSchem;
 
-    @_Label("TABLE_NAME")
+    @Label("TABLE_NAME")
     @XmlAttribute
     private String tableName;
 
-    @_Label("NON_UNIQUE")
+    @Label("NON_UNIQUE")
     @XmlElement(required = true)
     private boolean nonUnique;
 
-    @_Label("INDEX_QUALIFIER")
+    @Label("INDEX_QUALIFIER")
     @_NillableBySpecification
     @XmlElement(nillable = true, required = true)
     private String indexQualifier;
 
-    @_Label("INDEX_NAME")
+    @Label("INDEX_NAME")
     @_NillableBySpecification
     @XmlElement(nillable = true, required = true)
     private String indexName;
 
-    @_Label("TYPE")
+    @Label("TYPE")
     @XmlElement(required = true)
     private short type;
 
-    @_Label("ORDINAL_POSITION")
+    @Label("ORDINAL_POSITION")
     @XmlElement(required = true)
     private short ordinalPosition;
 
-    @_Label("COLUMN_NAME")
+    @Label("COLUMN_NAME")
     @_NillableBySpecification
     @XmlElement(nillable = true, required = true)
     private String columnName;
 
-    @_Label("ASC_OR_DESC")
+    @Label("ASC_OR_DESC")
     @_NillableBySpecification
     @XmlElement(nillable = true, required = true)
     private String ascOrDesc;
 
-    @_Label("CARDINALITY")
+    @Label("CARDINALITY")
     @XmlElement(required = true)
     private long cardinality;
 
-    @_Label("PAGES")
+    @Label("PAGES")
     @XmlElement(required = true)
     private long pages;
 
-    @_Label("FILTER_CONDITION")
+    @Label("FILTER_CONDITION")
     @_NillableBySpecification
     @XmlElement(nillable = true, required = true)
     private String filterCondition;

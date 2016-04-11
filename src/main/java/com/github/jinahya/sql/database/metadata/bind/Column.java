@@ -335,119 +335,119 @@ public class Column extends AbstractChild<Table> {
     }
 
     // -------------------------------------------------------------------------
-    @_Label("TABLE_CAT")
+    @Label("TABLE_CAT")
     @_NillableBySpecification
     @XmlAttribute
     private String tableCat;
 
-    @_Label("TABLE_SCHEM")
+    @Label("TABLE_SCHEM")
     @_NillableBySpecification
     @XmlAttribute
     private String tableSchem;
 
-    @_Label("TABLE_NAME")
+    @Label("TABLE_NAME")
     @XmlAttribute
     private String tableName;
 
-    @_Label("COLUMN_NAME")
+    @Label("COLUMN_NAME")
     @XmlElement(required = true)
     private String columnName;
 
-    @_Label("DATA_TYPE")
+    @Label("DATA_TYPE")
     @XmlElement(required = true)
     private int dataType;
 
-    @_Label("TYPE_NAME")
+    @Label("TYPE_NAME")
     @XmlElement(required = true)
     private String typeName;
 
-    @_Label("COLUMN_SIZE")
+    @Label("COLUMN_SIZE")
     @XmlElement(required = true)
     private int columnSize;
 
-    @_Label("BUFFER_LENGTH")
+    @Label("BUFFER_LENGTH")
     @Unused
     @XmlElement(nillable = true, required = true)
     private Integer bufferLength;
 
-    @_Label("DECIMAL_DIGITS")
+    @Label("DECIMAL_DIGITS")
     @_NillableBySpecification
     @XmlElement(required = true)
     private Integer decimalDigits;
 
-    @_Label("NUM_PREC_RADIX")
+    @Label("NUM_PREC_RADIX")
     @XmlElement(required = true)
     private int numPrecRadix;
 
-    @_Label("NULLABLE")
+    @Label("NULLABLE")
     @XmlElement(required = true)
     private int nullable;
 
-    @_Label("REMARKS")
+    @Label("REMARKS")
     @_NillableBySpecification
     @XmlElement(nillable = true, required = true)
     private String remarks;
 
-    @_Label("COLUMN_DEF")
+    @Label("COLUMN_DEF")
     @_NillableBySpecification
     @XmlElement(nillable = true, required = true)
     private String columnDef;
 
-    @_Label("SQL_DATA_TYPE")
+    @Label("SQL_DATA_TYPE")
     @Unused
     @XmlElement(nillable = true, required = true)
     private Integer sqlDataType;
 
-    @_Label("SQL_DATETIME_SUB")
+    @Label("SQL_DATETIME_SUB")
     @Unused
     @XmlElement(nillable = true, required = true)
     private Integer sqlDatetimeSub;
 
-    @_Label("CHAR_OCTET_LENGTH")
+    @Label("CHAR_OCTET_LENGTH")
     @XmlElement(required = true)
     private int charOctetLength;
 
-    @_Label("ORDINAL_POSITION")
+    @Label("ORDINAL_POSITION")
     @XmlElement(required = true)
     private int ordinalPosition;
 
-    @_Label("IS_NULLABLE")
+    @Label("IS_NULLABLE")
     @XmlElement(required = true)
     private String isNullable;
 
-    @_Label("SCOPE_CATALOG")
+    @Label("SCOPE_CATALOG")
     @_NillableBySpecification
     @XmlElement(nillable = true, required = true)
     private String scopeCatalog;
 
-    @_Label("SCOPE_SCHEMA")
+    @Label("SCOPE_SCHEMA")
     @_NillableBySpecification
     @XmlElement(nillable = true, required = true)
     private String scopeSchema;
 
-    @_Label("SCOPE_TABLE")
+    @Label("SCOPE_TABLE")
     @_NillableBySpecification
     @XmlElement(nillable = true, required = true)
     private String scopeTable;
 
-    @_Label("SOURCE_DATA_TYPE")
+    @Label("SOURCE_DATA_TYPE")
     @_NillableBySpecification
     @XmlElement(nillable = true, required = true)
     private Short sourceDataType;
 
-    @_Label("IS_AUTOINCREMENT")
+    @Label("IS_AUTOINCREMENT")
     @XmlElement(required = true)
     private String isAutoincrement;
 
-    @_Label("IS_GENERATEDCOLUMN")
+    @Label("IS_GENERATEDCOLUMN")
     @XmlElement(required = true)
     private String isGeneratedcolumn;
 
-    @_Invocation(
+    @Invocation(
             name = "getColumnPrivileges",
             types = {String.class, String.class, String.class, String.class},
             argsarr = {
-                @_InvocationArgs({
+                @InvocationArgs({
             ":tableCat", ":tableSchem", ":tableName", ":columnName"
         })
             }

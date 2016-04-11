@@ -132,37 +132,37 @@ public class VersionColumn extends AbstractChild<Table> {
 //        setParent(table);
 //    }
     // -------------------------------------------------------------------------
-    @_Label("SCOPE")
+    @Label("SCOPE")
     @Unused
     @XmlElement(nillable = true, required = true)
     private Short scope;
 
-    @_Label("COLUMN_NAME")
+    @Label("COLUMN_NAME")
     @XmlElement(required = true)
     private String columnName;
 
-    @_Label("DATA_TYPE")
+    @Label("DATA_TYPE")
     @XmlElement(required = true)
     private int dataType;
 
-    @_Label("TYPE_NAME")
+    @Label("TYPE_NAME")
     @XmlElement(required = true)
     private String typeName;
 
-    @_Label("COLUMN_SIZE")
+    @Label("COLUMN_SIZE")
     @XmlElement(required = true)
     private int columnSize;
 
-    @_Label("BUFFER_LENGTH")
+    @Label("BUFFER_LENGTH")
     @XmlElement(required = true)
     private int bufferLength;
 
-    @_Label("DECIMAL_DIGITS")
+    @Label("DECIMAL_DIGITS")
     @_NillableBySpecification
     @XmlElement(nillable = true, required = true)
     private Short decimalDigits;
 
-    @_Label("PSEUDO_COLUMN")
+    @Label("PSEUDO_COLUMN")
     @XmlElement(required = true)
     private short pseudoColumn;
 }

@@ -144,37 +144,37 @@ public class Procedure extends AbstractChild<Schema> {
     }
 
     // -------------------------------------------------------------------------
-    @_Label("PROCEDURE_CAT")
+    @Label("PROCEDURE_CAT")
     @_NillableBySpecification
     @XmlAttribute
     private String procedureCat;
 
-    @_Label("PROCEDURE_SCHEM")
+    @Label("PROCEDURE_SCHEM")
     @_NillableBySpecification
     @XmlAttribute
     private String procedureSchem;
 
-    @_Label("PROCEDURE_NAME")
+    @Label("PROCEDURE_NAME")
     @XmlElement(required = true)
     private String procedureName;
 
-    @_Label("REMARKS")
+    @Label("REMARKS")
     @XmlElement(required = true)
     private String remarks;
 
-    @_Label("PROCEDURE_TYPE")
+    @Label("PROCEDURE_TYPE")
     @XmlElement(required = true)
     private short procedureType;
 
-    @_Label("SPECIFIC_NAME")
+    @Label("SPECIFIC_NAME")
     @XmlElement(required = true)
     private String specificName;
 
-    @_Invocation(
+    @Invocation(
             name = "getProcedureColumns",
             types = {String.class, String.class, String.class, String.class},
             argsarr = {
-                @_InvocationArgs({
+                @InvocationArgs({
             ":procedureCat", ":procedureSchem", ":procedureName", "null"
         })
             }

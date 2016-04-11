@@ -241,74 +241,74 @@ public class FunctionColumn extends AbstractChild<Function> {
     }
 
     // -------------------------------------------------------------------------
-    @_Label("FUNCTION_CAT")
+    @Label("FUNCTION_CAT")
     @_NillableBySpecification
     @XmlAttribute
     private String functionCat;
 
-    @_Label("FUNCTION_SCHEM")
+    @Label("FUNCTION_SCHEM")
     @_NillableBySpecification
     @XmlAttribute
     private String functionSchem;
 
-    @_Label("FUNCTION_NAME")
+    @Label("FUNCTION_NAME")
     @XmlAttribute
     private String functionName;
 
-    @_Label("COLUMN_NAME")
+    @Label("COLUMN_NAME")
     @XmlElement(required = true)
     private String columnName;
 
-    @_Label("COLUMN_TYPE")
+    @Label("COLUMN_TYPE")
     @XmlElement(required = true)
     private short columnType;
 
-    @_Label("DATA_TYPE")
+    @Label("DATA_TYPE")
     @XmlElement(required = true)
     private int dataType;
 
-    @_Label("TYPE_NAME")
+    @Label("TYPE_NAME")
     @XmlElement(required = true)
     private String typeName;
 
-    @_Label("PRECISION")
+    @Label("PRECISION")
     @XmlElement(required = true)
     private int precision;
 
-    @_Label("LENGTH")
+    @Label("LENGTH")
     @XmlElement(required = true)
     private int length;
 
-    @_Label("SCALE")
+    @Label("SCALE")
     @XmlElement(required = true)
     private Short scale;
 
-    @_Label("RADIX")
+    @Label("RADIX")
     @XmlElement(required = true)
     private short radix;
 
-    @_Label("NULLABLE")
+    @Label("NULLABLE")
     @XmlElement(required = true)
     private short nullable;
 
-    @_Label("REMARKS")
+    @Label("REMARKS")
     @XmlElement(required = true)
     private String remarks;
 
-    @_Label("CHAR_OCTET_LENGTH")
+    @Label("CHAR_OCTET_LENGTH")
     @XmlElement(required = true)
     @_NillableBySpecification
     private Integer charOctetLength;
 
-    @_Label("ORDINAL_POSITION")
+    @Label("ORDINAL_POSITION")
     @XmlElement(required = true)
     private int ordinalPosition;
 
-    @_Label("IS_NULLABLE")
+    @Label("IS_NULLABLE")
     @XmlElement(required = true)
     private String isNullable;
 
-    @_Label("SPECIFIC_NAME")
+    @Label("SPECIFIC_NAME")
     @XmlElement(required = true)
     private String specificName;
 }

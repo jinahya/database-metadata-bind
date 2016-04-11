@@ -245,81 +245,81 @@ public class Attribute extends AbstractChild<UDT> {
     }
 
     // -------------------------------------------------------------------------
-    @_Label("TYPE_CAT")
+    @Label("TYPE_CAT")
     @_NillableBySpecification
     @XmlAttribute
     private String typeCat;
 
-    @_Label("TYPE_SCHEM")
+    @Label("TYPE_SCHEM")
     @_NillableBySpecification
     @XmlAttribute
     private String typeSchem;
 
-    @_Label("TYPE_NAME")
+    @Label("TYPE_NAME")
     @XmlAttribute
     private String typeName;
 
-    @_Label("ATTR_NAME")
+    @Label("ATTR_NAME")
     @XmlElement(required = true)
     private String attrName;
 
-    @_Label("DATA_TYPE")
+    @Label("DATA_TYPE")
     @XmlElement(required = true)
     private int dataType;
 
-    @_Label("ATTR_TYPE_NAME")
+    @Label("ATTR_TYPE_NAME")
     @XmlElement(required = true)
     private String attrTypeName;
 
-    @_Label("ATTR_SIZE")
+    @Label("ATTR_SIZE")
     @XmlElement(required = true)
     private int attrSize;
 
-    @_Label("DECIMAL_DIGITS")
+    @Label("DECIMAL_DIGITS")
     @XmlElement(required = true)
     private Integer decimalDigits;
 
-    @_Label("NUM_PREC_RADIX")
+    @Label("NUM_PREC_RADIX")
     @XmlElement(required = true)
     private int numPrecRadix;
 
-    @_Label("NULLABLE")
+    @Label("NULLABLE")
     @XmlElement(required = true)
     private int nullable;
 
-    @_Label("REMARKS")
+    @Label("REMARKS")
     @_NillableBySpecification
     @XmlElement(nillable = true, required = true)
     private String remarks;
 
-    @_Label("ATTR_DEF")
+    @Label("ATTR_DEF")
     @_NillableBySpecification
     @XmlElement(nillable = true, required = true)
     private String attrDef;
 
-    @_Label("SQL_DATA_TYPE")
+    @Label("SQL_DATA_TYPE")
     @Unused
     @XmlElement(nillable = true, required = true)
     private Integer sqlDataType;
 
-    @_Label("SQL_DATETIME_SUB")
+    @Label("SQL_DATETIME_SUB")
     @Unused
     @XmlElement(nillable = true, required = true)
     private Integer sqlDatetimeSub;
 
-    @_Label("CHAR_OCTET_LENGTH")
+    @Label("CHAR_OCTET_LENGTH")
     @XmlElement(required = true)
     private int charOctetLength;
 
-    @_Label("ORDINAL_POSITION")
+    @Label("ORDINAL_POSITION")
     @XmlElement(required = true)
     private int ordinalPosition;
 
-    @_Label("IS_NULLABLE")
+    @Label("IS_NULLABLE")
     @XmlElement(required = true)
     private String isNullable;
 
-    @_Label("SOURCE_DATA_TYPE")
+    @Label("SOURCE_DATA_TYPE")
     @_NillableBySpecification
     @XmlElement(nillable = true, required = true)
     private Short sourceDataType;

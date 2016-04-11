@@ -27,9 +27,13 @@ import java.lang.annotation.Target;
  */
 @Documented
 @Retention(RetentionPolicy.RUNTIME)
-@Target({ElementType.FIELD})
-@interface _Label {
+@Target({ElementType.FIELD, ElementType.METHOD})
+@interface Invocation {
 
-    String value();
+    String name();
+
+    Class<?>[] types() default {};
+
+    InvocationArgs[] argsarr() default {@InvocationArgs({})};
 
 }

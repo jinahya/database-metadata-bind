@@ -30,61 +30,48 @@ class RSTBoolean {
     private static final Logger logger = getLogger(RSTBoolean.class.getName());
 
     static RSTBoolean valueOf(final Object[] args, final Object value) {
-
         final RSTBoolean instance = new RSTBoolean();
-
         instance.setType((Integer) args[0]);
         instance.setValue((Boolean) value);
-
         return instance;
     }
 
     // -------------------------------------------------------------------- type
     public int getType() {
-
         return type;
     }
 
     public void setType(final int type) {
-
         this.type = type;
     }
 
     RSTBoolean type(final int type) {
-
         setType(type);
-
         return this;
     }
 
     @XmlAttribute
     public String getTypeName() {
-
         try {
             return RST.valueOf(type).name();
         } catch (final IllegalArgumentException iae) {
             logger.log(Level.WARNING, "unknown result set type: {0}",
                        new Object[]{type});
         }
-
         return null;
     }
 
     // ------------------------------------------------------------------- value
     public boolean getValue() {
-
         return value;
     }
 
     public void setValue(final boolean value) {
-
         this.value = value;
     }
 
     RSTBoolean value(final boolean value) {
-
         setValue(value);
-
         return this;
     }
 
@@ -94,5 +81,4 @@ class RSTBoolean {
 
     @XmlValue
     private boolean value;
-
 }

@@ -187,55 +187,55 @@ public class PseudoColumn extends AbstractChild<Table> {
 //        setParent(table);
 //    }
     // -------------------------------------------------------------------------
-    @_Label("TABLE_CAT")
+    @Label("TABLE_CAT")
     @_NillableBySpecification
     @XmlAttribute
     private String tableCat;
 
-    @_Label("TABLE_SCHEM")
+    @Label("TABLE_SCHEM")
     @_NillableBySpecification
     @XmlAttribute
     private String tableSchem;
 
-    @_Label("TABLE_NAME")
+    @Label("TABLE_NAME")
     @XmlAttribute
     private String tableName;
 
-    @_Label("COLUMN_NAME")
+    @Label("COLUMN_NAME")
     @XmlElement(required = true)
     private String columnName;
 
-    @_Label("DATA_TYPE")
+    @Label("DATA_TYPE")
     @XmlElement(required = true)
     private int dataType;
 
-    @_Label("COLUMN_SIZE")
+    @Label("COLUMN_SIZE")
     @XmlElement(required = true)
     private int columnSize;
 
-    @_Label("DECIMAL_DIGITS")
+    @Label("DECIMAL_DIGITS")
     @_NillableBySpecification
     @XmlElement(nillable = true, required = true)
     private Integer decimalDigits;
 
-    @_Label("NUM_PREC_RADIX")
+    @Label("NUM_PREC_RADIX")
     @XmlElement(required = true)
     private int numPrecRadix;
 
-    @_Label("COLUMN_USAGE")
+    @Label("COLUMN_USAGE")
     @XmlElement(required = true)
     private String columnUsage;
 
-    @_Label("REMARKS")
+    @Label("REMARKS")
     @_NillableBySpecification
     @XmlElement(nillable = true, required = true)
     private String remarks;
 
-    @_Label("CHAR_OCTET_LENGTH")
+    @Label("CHAR_OCTET_LENGTH")
     @XmlElement(required = true)
     private int charOctetLength;
 
-    @_Label("IS_NULLABLE")
+    @Label("IS_NULLABLE")
     @XmlElement(required = true)
     private String isNullable;
 }

@@ -97,21 +97,21 @@ public class SuperTable extends AbstractChild<Table> {
 //        return this;
 //    }
     // -------------------------------------------------------------------------
-    @_Label("TABLE_CAT")
+    @Label("TABLE_CAT")
     @_NillableBySpecification
     @XmlAttribute
     private String tableCat;
 
-    @_Label("TABLE_SCHEM")
+    @Label("TABLE_SCHEM")
     @_NillableBySpecification
     @XmlAttribute
     private String tableSchem;
 
-    @_Label("TABLE_NAME")
+    @Label("TABLE_NAME")
     @XmlElement(required = true)
     private String tableName;
 
-    @_Label("SUPERTABLE_NAME")
+    @Label("SUPERTABLE_NAME")
     @XmlElement(required = true)
     private String supertableName;
 }

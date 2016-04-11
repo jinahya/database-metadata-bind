@@ -148,37 +148,37 @@ public class Function extends AbstractChild<Schema> {
     }
 
     // -------------------------------------------------------------------------
-    @_Label("FUNCTION_CAT")
+    @Label("FUNCTION_CAT")
     @_NillableBySpecification
     @XmlAttribute
     private String functionCat;
 
-    @_Label("FUNCTION_SCHEM")
+    @Label("FUNCTION_SCHEM")
     @_NillableBySpecification
     @XmlAttribute
     private String functionSchem;
 
-    @_Label("FUNCTION_NAME")
+    @Label("FUNCTION_NAME")
     @XmlElement(required = true)
     private String functionName;
 
-    @_Label("REMARKS")
+    @Label("REMARKS")
     @XmlElement(required = true)
     private String remarks;
 
-    @_Label("FUNCTION_TYPE")
+    @Label("FUNCTION_TYPE")
     @XmlElement(required = true)
     private short functionType;
 
-    @_Label("SPECIFIC_NAME")
+    @Label("SPECIFIC_NAME")
     @XmlElement(required = true)
     private String specificName;
 
-    @_Invocation(
+    @Invocation(
             name = "getFunctionColumns",
             types = {String.class, String.class, String.class, String.class},
             argsarr = {
-                @_InvocationArgs({
+                @InvocationArgs({
             ":functionCat", ":functionSchem", ":functionName", "null"
         })})
     @XmlElementRef

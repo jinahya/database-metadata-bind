@@ -155,52 +155,52 @@ public class UDT extends AbstractChild<Schema> implements Comparable<UDT> {
 //        setParent(schema);
 //    }
     // -------------------------------------------------------------------------
-    @_Label("TYPE_CAT")
+    @Label("TYPE_CAT")
     @_NillableBySpecification
     @XmlAttribute
     private String typeCat;
 
-    @_Label("TYPE_SCHEM")
+    @Label("TYPE_SCHEM")
     @_NillableBySpecification
     @XmlAttribute
     private String typeSchem;
 
-    @_Label("TYPE_NAME")
+    @Label("TYPE_NAME")
     @XmlElement(required = true)
     private String typeName;
 
-    @_Label("CLASS_NAME")
+    @Label("CLASS_NAME")
     @XmlElement(required = true)
     private String className;
 
-    @_Label("DATA_TYPE")
+    @Label("DATA_TYPE")
     @XmlElement(required = true)
     private int dataType;
 
-    @_Label("REMARKS")
+    @Label("REMARKS")
     @XmlElement(required = true)
     private String remarks;
 
-    @_Label("BASE_TYPE")
+    @Label("BASE_TYPE")
     @_NillableBySpecification
     @XmlElement(nillable = true, required = true)
     private Short baseType;
 
-    @_Invocation(
+    @Invocation(
             name = "getAttributes",
             types = {String.class, String.class, String.class, String.class},
             argsarr = {
-                @_InvocationArgs({":typeCat", ":typeSchem", ":typeName", "null"})
+                @InvocationArgs({":typeCat", ":typeSchem", ":typeName", "null"})
             }
     )
     @XmlElementRef
     private List<Attribute> attributes;
 
-    @_Invocation(
+    @Invocation(
             name = "getSuperTypes",
             types = {String.class, String.class, String.class},
             argsarr = {
-                @_InvocationArgs({":typeCat", ":typeSchem", ":typeName"})
+                @InvocationArgs({":typeCat", ":typeSchem", ":typeName"})
             }
     )
     @XmlElementRef

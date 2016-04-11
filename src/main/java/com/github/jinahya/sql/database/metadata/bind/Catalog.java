@@ -42,9 +42,6 @@ import org.apache.commons.lang3.builder.CompareToBuilder;
 )
 public class Catalog extends AbstractChild<Metadata> implements TableDomain {
 
-    private static final Logger logger
-            = Logger.getLogger(Catalog.class.getName());
-
     public static Comparator<Catalog> natural() {
         return new Comparator<Catalog>() {
             @Override
@@ -128,18 +125,18 @@ public class Catalog extends AbstractChild<Metadata> implements TableDomain {
 //        return this;
 //    }
     // -------------------------------------------------------------------------
-    @_Label("TABLE_CAT")
+    @Label("TABLE_CAT")
     @XmlElement(required = true)
     private String tableCat;
 
     @XmlElementRef
     private List<CrossReference> crossReferences;
 
-    @_Invocation(
+    @Invocation(
             name = "getSchemas",
             types = {String.class, String.class},
             argsarr = {
-                @_InvocationArgs({":tableCat", "null"})
+                @InvocationArgs({":tableCat", "null"})
             }
     )
     @XmlElementRef

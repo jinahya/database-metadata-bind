@@ -118,31 +118,31 @@ public class SuperType extends AbstractChild<UDT> {
 //        return this;
 //    }
     // -------------------------------------------------------------------------
-    @_Label("TYPE_CAT")
+    @Label("TYPE_CAT")
     @_NillableBySpecification
     @XmlAttribute
     private String typeCat;
 
-    @_Label("TYPE_SCHEM")
+    @Label("TYPE_SCHEM")
     @_NillableBySpecification
     @XmlAttribute
     private String typeSchem;
 
-    @_Label("TYPE_NAME")
+    @Label("TYPE_NAME")
     @XmlElement(required = true)
     private String typeName;
 
-    @_Label("SUPERTYPE_CAT")
+    @Label("SUPERTYPE_CAT")
     @_NillableBySpecification
     @XmlElement(nillable = true, required = true)
     private String supertypeCat;
 
-    @_Label("SUPERTYPE_SCHEM")
+    @Label("SUPERTYPE_SCHEM")
     @_NillableBySpecification
     @XmlElement(nillable = true, required = true)
     private String supertypeSchem;
 
-    @_Label("SUPERTYPE_NAME")
+    @Label("SUPERTYPE_NAME")
     @XmlElement(required = true)
     private String supertypeName;
 

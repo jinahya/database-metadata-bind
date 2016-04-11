@@ -75,7 +75,7 @@ public class TableType extends AbstractChild<Metadata> {
 //        setParent(metadata);
 //    }
     // -------------------------------------------------------------------------
-    @_Label("TABLE_TYPE")
+    @Label("TABLE_TYPE")
     @XmlElement(required = true)
     private String tableType;
 }
