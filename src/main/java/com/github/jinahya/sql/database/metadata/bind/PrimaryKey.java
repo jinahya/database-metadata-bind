@@ -29,11 +29,9 @@ import org.apache.commons.lang3.builder.CompareToBuilder;
  * @author Jin Kwon &lt;jinahya_at_gmail.com&gt;
  */
 @XmlRootElement
-@XmlType(
-        propOrder = {
-            "columnName", "keySeq", "pkName"
-        }
-)
+@XmlType(propOrder = {
+    "columnName", "keySeq", "pkName"
+})
 public class PrimaryKey extends AbstractChild<Table> {
 
     public static Comparator<PrimaryKey> natural() {

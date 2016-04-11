@@ -34,7 +34,6 @@ import java.util.Set;
 import java.util.TreeSet;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import org.apache.commons.lang3.reflect.FieldUtils;
 
 /**
  * A context class for retrieving information from an instance of
