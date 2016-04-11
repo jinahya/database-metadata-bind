@@ -13,13 +13,9 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
-
 package com.github.jinahya.sql.database.metadata.bind;
 
-
 import javax.xml.bind.annotation.XmlTransient;
-
 
 /**
  * An interface for children.
@@ -28,8 +24,7 @@ import javax.xml.bind.annotation.XmlTransient;
  * @param <P> parent type parameter
  */
 @XmlTransient
-public interface Child<P> {
-
+interface Child<P> {
 
     /**
      * Returns parent.
@@ -38,13 +33,10 @@ public interface Child<P> {
      */
     P getParent();
 
-
     /**
      * Sets parent.
      *
      * @param parent parent
      */
     void setParent(final P parent);
-
 }
-

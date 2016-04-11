@@ -13,17 +13,13 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
-
 package com.github.jinahya.sql.database.metadata.bind;
-
 
 import java.util.Comparator;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlType;
 import org.apache.commons.lang3.builder.CompareToBuilder;
-
 
 /**
  * An entity class for binding the result of
@@ -33,69 +29,53 @@ import org.apache.commons.lang3.builder.CompareToBuilder;
  */
 @XmlRootElement
 @XmlType(
-    propOrder = {
-        "tableType"
-    }
+        propOrder = {
+            "tableType"
+        }
 )
 public class TableType extends AbstractChild<Metadata> {
 
-
     public static Comparator<TableType> natural() {
-
         return new Comparator<TableType>() {
-
             @Override
             public int compare(final TableType o1, final TableType o2) {
-
                 // by table type
                 return new CompareToBuilder()
-                    .append(o1.getTableType(), o2.getTableType())
-                    .build();
+                        .append(o1.getTableType(), o2.getTableType())
+                        .build();
             }
-
         };
     }
 
-
     @Override
     public String toString() {
-
         return super.toString() + "{"
                + "tableType=" + tableType
                + "}";
     }
 
-
     // --------------------------------------------------------------- tableType
     public String getTableType() {
-
         return tableType;
     }
 
-
     public void setTableType(final String tableType) {
-
         this.tableType = tableType;
     }
-
 
     // ---------------------------------------------------------------- metadata
     // just for class diagram
     @Deprecated
     private Metadata getMetadata() {
-
         return getParent();
     }
-
 
 //    public void setMetadata(final Metadata metadata) {
 //
 //        setParent(metadata);
 //    }
     // -------------------------------------------------------------------------
-    @Label("TABLE_TYPE")
+    @_Label("TABLE_TYPE")
     @XmlElement(required = true)
     private String tableType;
-
 }
-

@@ -13,10 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
-
 package com.github.jinahya.sql.database.metadata.bind;
-
 
 import java.lang.reflect.Field;
 import java.lang.reflect.Modifier;
@@ -26,16 +23,13 @@ import java.util.Set;
 import java.util.logging.Logger;
 import static java.util.logging.Logger.getLogger;
 
-
 /**
  *
  * @author Jin Kwon &lt;jinahya_at_gmail.com&gt;
  */
 class Reflections {
 
-
     private static final Logger logger = getLogger(Metadata.class.getName());
-
 
 //    private static final Map<Class<?>, Class<?>> WRAPPERS;
 //
@@ -68,8 +62,7 @@ class Reflections {
 //        return WRAPPERS.get(primitive);
 //    }
     static Field field(final Class<?> declaring, final String name)
-        throws NoSuchFieldException {
-
+            throws NoSuchFieldException {
         try {
             return declaring.getDeclaredField(name);
         } catch (final NoSuchFieldException nsfe) {
@@ -80,7 +73,6 @@ class Reflections {
             return field(superclass, name);
         }
     }
-
 
 //    static List<Field> fields(
 //        final Class<?> declaring, final List<Field> fields,
@@ -222,9 +214,7 @@ class Reflections {
 //                   fieldValue);
 //    }
     static Set<Integer> sqlTypes() throws IllegalAccessException {
-
         final Set<Integer> sqlTypes = new HashSet<Integer>();
-
         for (final Field field : Types.class.getFields()) {
             final int modifiers = field.getModifiers();
             if (!Modifier.isPublic(modifiers)) {
@@ -238,13 +228,10 @@ class Reflections {
             }
             sqlTypes.add(field.getInt(null));
         }
-
         return sqlTypes;
     }
 
-
     static String sqlTypeName(final int value) throws IllegalAccessException {
-
         for (final Field field : Types.class.getFields()) {
             final int modifiers = field.getModifiers();
             if (!Modifier.isPublic(modifiers)) {
@@ -260,10 +247,8 @@ class Reflections {
                 return field.getName();
             }
         }
-
         return null;
     }
-
 
 //    static Type parentType(final Class<?> childType)
 //        throws ReflectiveOperationException {
@@ -288,9 +273,6 @@ class Reflections {
 //        return parentType;
 //    }
     private Reflections() {
-
         super();
     }
-
 }
-

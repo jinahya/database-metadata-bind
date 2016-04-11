@@ -13,17 +13,13 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
-
 package com.github.jinahya.sql.database.metadata.bind;
-
 
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.OutputStream;
 import java.sql.Connection;
 import java.sql.DatabaseMetaData;
-import static java.sql.DriverManager.getConnection;
 import java.sql.SQLException;
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.Marshaller;
@@ -34,29 +30,23 @@ import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 import static java.sql.DriverManager.getConnection;
 
-
 /**
  *
  * @author Jin Kwon &lt;jinahya_at_gmail.com&gt;
  */
 public class SQLiteMemoryTest {
 
-
     private static final Logger logger = getLogger(SQLiteMemoryTest.class);
 
-
     private static final String CONNECTION_URL = "jdbc:sqlite::memory:";
-
 
     @BeforeClass
     private static void beforeClass() throws SQLException {
     }
 
-
     @AfterClass
     private static void afterClass() throws SQLException {
     }
-
 
     @Test(enabled = true)
     public void retrieve() throws Exception {
@@ -79,6 +69,4 @@ public class SQLiteMemoryTest {
             outputStream.flush();
         }
     }
-
 }
-

@@ -13,14 +13,10 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
-
 package com.github.jinahya.sql.database.metadata.bind;
-
 
 import org.slf4j.Logger;
 import static org.slf4j.LoggerFactory.getLogger;
-
 
 /**
  *
@@ -28,8 +24,6 @@ import static org.slf4j.LoggerFactory.getLogger;
  */
 public class MetadataTest {
 
-
     private static final Logger logger = getLogger(MetadataTest.class);
 
 }
-

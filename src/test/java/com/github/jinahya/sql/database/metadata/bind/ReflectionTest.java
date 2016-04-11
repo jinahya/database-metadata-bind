@@ -13,10 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
-
 package com.github.jinahya.sql.database.metadata.bind;
-
 
 import static java.lang.invoke.MethodHandles.lookup;
 import java.lang.reflect.Field;
@@ -30,24 +27,19 @@ import static org.testng.Assert.assertEquals;
 import static org.testng.Assert.assertTrue;
 import org.testng.annotations.Test;
 
-
 /**
  *
  * @author Jin Kwon &lt;jinahya_at_gmail.com&gt;
  */
 public class ReflectionTest {
 
-
     private static final Logger logger = getLogger(lookup().lookupClass());
-
 
     private static void method(Integer v) {
     }
 
-
     private static void method(int v) {
     }
-
 
     @Test(enabled = false)
     public void test() throws NoSuchMethodException {
@@ -85,7 +77,6 @@ public class ReflectionTest {
                      getClass().getDeclaredMethod("method", int.class));
     }
 
-
     @Test
     public void listType() throws ReflectiveOperationException {
 
@@ -98,8 +89,6 @@ public class ReflectionTest {
         }
     }
 
-
     private List<String> list;
 
 }
-

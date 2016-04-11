@@ -13,10 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
-
 package com.github.jinahya.sql.database.metadata.bind;
-
 
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -24,16 +21,13 @@ import static java.util.logging.Logger.getLogger;
 import javax.xml.bind.annotation.XmlAttribute;
 import javax.xml.bind.annotation.XmlValue;
 
-
 /**
  *
  * @author Jin Kwon &lt;jinahya_at_gmail.com&gt;
  */
 class RSTBoolean {
 
-
     private static final Logger logger = getLogger(RSTBoolean.class.getName());
-
 
     static RSTBoolean valueOf(final Object[] args, final Object value) {
 
@@ -45,19 +39,16 @@ class RSTBoolean {
         return instance;
     }
 
-
     // -------------------------------------------------------------------- type
     public int getType() {
 
         return type;
     }
 
-
     public void setType(final int type) {
 
         this.type = type;
     }
-
 
     RSTBoolean type(final int type) {
 
@@ -65,7 +56,6 @@ class RSTBoolean {
 
         return this;
     }
-
 
     @XmlAttribute
     public String getTypeName() {
@@ -80,19 +70,16 @@ class RSTBoolean {
         return null;
     }
 
-
     // ------------------------------------------------------------------- value
     public boolean getValue() {
 
         return value;
     }
 
-
     public void setValue(final boolean value) {
 
         this.value = value;
     }
-
 
     RSTBoolean value(final boolean value) {
 
@@ -101,14 +88,11 @@ class RSTBoolean {
         return this;
     }
 
-
     // -------------------------------------------------------------------------
     @XmlAttribute
     private int type;
-
 
     @XmlValue
     private boolean value;
 
 }
-

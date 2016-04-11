@@ -13,13 +13,9 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
-
 package com.github.jinahya.sql.database.metadata.bind;
 
-
 import javax.xml.bind.annotation.XmlTransient;
-
 
 /**
  * An abstract class implementing {@code Child}.
@@ -28,34 +24,25 @@ import javax.xml.bind.annotation.XmlTransient;
  * @param <P> parent type parameter
  */
 @XmlTransient
-public abstract class AbstractChild<P> implements Child<P> {
-
+abstract class AbstractChild<P> implements Child<P> {
 
     @Deprecated
     void beforeMarshal(final javax.xml.bind.Marshaller marshaller) {
-
         if (parent == null) {
             System.err.println("null parent: " + this);
         }
     }
 
-
     @Override
     public P getParent() {
-
         return parent;
     }
 
-
     @Override
     public void setParent(final P parent) {
-
         this.parent = parent;
     }
 
-
     @XmlTransient
     private P parent;
-
 }
-

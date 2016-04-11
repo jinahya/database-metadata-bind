@@ -13,13 +13,9 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
-
 package com.github.jinahya.sql.database.metadata.bind;
 
-
 import java.sql.Connection;
-
 
 /**
  *
@@ -33,26 +29,18 @@ enum TIL {
     TRANSACTION_REPEATABLE_READ(Connection.TRANSACTION_REPEATABLE_READ),
     TRANSACTION_SERIALIZABLE(Connection.TRANSACTION_SERIALIZABLE);
 
-
     public static TIL valueOf(final int level) {
-
         for (final TIL value : values()) {
             if (value.level == level) {
                 return value;
             }
         }
-
         throw new IllegalArgumentException("no value for level: " + level);
     }
 
-
     private TIL(final int level) {
-
         this.level = level;
     }
 
-
     private final int level;
-
 }
-

@@ -13,10 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
-
 package com.github.jinahya.sql.database.metadata.bind;
-
 
 import java.util.ArrayList;
 import java.util.Comparator;
@@ -27,7 +24,6 @@ import javax.xml.bind.annotation.XmlElementRef;
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlType;
 import org.apache.commons.lang3.builder.CompareToBuilder;
-
 
 /**
  * An entity class for binding the result of
@@ -40,41 +36,32 @@ import org.apache.commons.lang3.builder.CompareToBuilder;
  * java.lang.String)
  */
 @XmlRootElement
-@XmlType(
-    propOrder = {
-        "functionName", "remarks", "functionType", "specificName",
-        // ---------------------------------------------------------------------
-        "functionColumns"
+@XmlType(propOrder = {
+    "functionName", "remarks", "functionType", "specificName",
+    // ---------------------------------------------------------------------
+    "functionColumns"
 
-    }
-)
+})
 public class Function extends AbstractChild<Schema> {
 
-
     public static Comparator<Function> natural() {
-
         return new Comparator<Function>() {
-
             @Override
             public int compare(Function o1, Function o2) {
-
                 // by FUNCTION_CAT, FUNCTION_SCHEM, FUNCTION_NAME
                 // and SPECIFIC_NAME.
                 return new CompareToBuilder()
-                    .append(o1.getFunctionCat(), o2.getFunctionCat())
-                    .append(o1.getFunctionSchem(), o2.getFunctionSchem())
-                    .append(o1.getFunctionName(), o2.getFunctionName())
-                    .append(o1.getSpecificName(), o2.getSpecificName())
-                    .build();
+                        .append(o1.getFunctionCat(), o2.getFunctionCat())
+                        .append(o1.getFunctionSchem(), o2.getFunctionSchem())
+                        .append(o1.getFunctionName(), o2.getFunctionName())
+                        .append(o1.getSpecificName(), o2.getSpecificName())
+                        .build();
             }
-
         };
     }
 
-
     @Override
     public String toString() {
-
         return super.toString() + "{"
                + "functionCat=" + functionCat
                + ", functionSchem=" + functionSchem
@@ -85,158 +72,115 @@ public class Function extends AbstractChild<Schema> {
                + "}";
     }
 
-
     // ------------------------------------------------------------- functionCat
     public String getFunctionCat() {
-
         return functionCat;
     }
 
-
     public void setFunctionCat(final String functionCat) {
-
         this.functionCat = functionCat;
     }
 
-
     // ----------------------------------------------------------- functionSchem
     public String getFunctionSchem() {
-
         return functionSchem;
     }
 
-
     public void setFunctionSchem(final String functionSchem) {
-
         this.functionSchem = functionSchem;
     }
 
-
     // ------------------------------------------------------------ functionName
     public String getFunctionName() {
-
         return functionName;
     }
 
-
     public void setFunctionName(final String functionName) {
-
         this.functionName = functionName;
     }
 
-
     // ----------------------------------------------------------------- remarks
     public String getRemarks() {
-
         return remarks;
     }
 
-
     public void setRemarks(final String remarks) {
-
         this.remarks = remarks;
     }
 
-
     // ------------------------------------------------------------ functionType
     public short getFunctionType() {
-
         return functionType;
     }
 
-
     public void setFunctionType(short functionType) {
-
         this.functionType = functionType;
     }
 
-
     // ------------------------------------------------------------ specificName
     public String getSpecificName() {
-
         return specificName;
     }
 
-
     public void setSpecificName(final String specificName) {
-
         this.specificName = specificName;
     }
 
-
     // ------------------------------------------------------------------ schema
     public Schema getSchema() {
-
         return getParent();
     }
 
-
     public void setSchema(final Schema schema) {
-
         setParent(schema);
     }
 
-
     // --------------------------------------------------------- functionColumns
     public List<FunctionColumn> getFunctionColumns() {
-
         if (functionColumns == null) {
             functionColumns = new ArrayList<FunctionColumn>();
         }
-
         return functionColumns;
     }
-
 
     public void setFunctionColumns(List<FunctionColumn> functionColumns) {
         this.functionColumns = functionColumns;
     }
 
-
     // -------------------------------------------------------------------------
-    @Label("FUNCTION_CAT")
-    @NillableBySpecification
+    @_Label("FUNCTION_CAT")
+    @_NillableBySpecification
     @XmlAttribute
     private String functionCat;
 
-
-    @Label("FUNCTION_SCHEM")
-    @NillableBySpecification
+    @_Label("FUNCTION_SCHEM")
+    @_NillableBySpecification
     @XmlAttribute
     private String functionSchem;
 
-
-    @Label("FUNCTION_NAME")
+    @_Label("FUNCTION_NAME")
     @XmlElement(required = true)
     private String functionName;
 
-
-    @Label("REMARKS")
+    @_Label("REMARKS")
     @XmlElement(required = true)
     private String remarks;
 
-
-    @Label("FUNCTION_TYPE")
+    @_Label("FUNCTION_TYPE")
     @XmlElement(required = true)
     private short functionType;
 
-
-    @Label("SPECIFIC_NAME")
+    @_Label("SPECIFIC_NAME")
     @XmlElement(required = true)
     private String specificName;
 
-
-    @Invocation(
-        name = "getFunctionColumns",
-        types = {String.class, String.class, String.class, String.class},
-        argsarr = {
-            @InvocationArgs({
+    @_Invocation(
+            name = "getFunctionColumns",
+            types = {String.class, String.class, String.class, String.class},
+            argsarr = {
+                @_InvocationArgs({
             ":functionCat", ":functionSchem", ":functionName", "null"
-        })
-        }
-    )
+        })})
     @XmlElementRef
     private List<FunctionColumn> functionColumns;
-
 }
-

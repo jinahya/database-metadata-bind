@@ -13,13 +13,9 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
-
 package com.github.jinahya.sql.database.metadata.bind;
 
-
 import java.util.Objects;
-
 
 /**
  *
@@ -27,15 +23,10 @@ import java.util.Objects;
  */
 public class CatalogVerifier {
 
-
     static void verify(final Catalog catalog) {
-
         Objects.requireNonNull(catalog, "null catalog");
-
         // schemas order by name
         {
         }
     }
-
 }
-

@@ -13,15 +13,11 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
-
 package com.github.jinahya.sql.database.metadata.bind;
-
 
 import java.util.Comparator;
 import javax.xml.bind.annotation.XmlRootElement;
 import org.apache.commons.lang3.builder.CompareToBuilder;
-
 
 /**
  * An entity class for binding the result of
@@ -34,33 +30,25 @@ import org.apache.commons.lang3.builder.CompareToBuilder;
 @XmlRootElement
 public class ImportedKey extends TableKey {
 
-
     public static Comparator<ImportedKey> natural() {
-
         return new Comparator<ImportedKey>() {
-
             @Override
             public int compare(final ImportedKey o1, final ImportedKey o2) {
 
                 // by PKTABLE_CAT, PKTABLE_SCHEM, PKTABLE_NAME, and KEY_SEQ.
                 return new CompareToBuilder()
-                    .append(o1.getPktableCat(), o2.getPktableCat())
-                    .append(o1.getPktableSchem(), o2.getPktableSchem())
-                    .append(o1.getPktableName(), o2.getPktableName())
-                    .append(o1.getKeySeq(), o2.getKeySeq())
-                    .build();
+                        .append(o1.getPktableCat(), o2.getPktableCat())
+                        .append(o1.getPktableSchem(), o2.getPktableSchem())
+                        .append(o1.getPktableName(), o2.getPktableName())
+                        .append(o1.getKeySeq(), o2.getKeySeq())
+                        .build();
             }
-
         };
     }
-
 
     // ------------------------------------------------------------------- table
     // for class diagrams
     private Table getTable() {
-
         return getParent();
     }
-
 }
-

@@ -13,16 +13,12 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
-
 package com.github.jinahya.sql.database.metadata.bind;
-
 
 import javax.xml.bind.annotation.XmlAttribute;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlType;
-
 
 /**
  * An entity class for binding the result of
@@ -31,17 +27,13 @@ import javax.xml.bind.annotation.XmlType;
  * @author Jin Kwon &lt;jinahya_at_gmail.com&gt;
  */
 @XmlRootElement
-@XmlType(
-    propOrder = {
-        "typeName", "supertypeCat", "supertypeSchem", "supertypeName"
-    }
-)
+@XmlType(propOrder = {
+    "typeName", "supertypeCat", "supertypeSchem", "supertypeName"
+})
 public class SuperType extends AbstractChild<UDT> {
-
 
     @Override
     public String toString() {
-
         return super.toString() + "{"
                + "typeCat=" + typeCat
                + ", typeSchem=" + typeSchem
@@ -52,93 +44,66 @@ public class SuperType extends AbstractChild<UDT> {
                + "}";
     }
 
-
     // ----------------------------------------------------------------- typeCat
     public String getTypeCat() {
-
         return typeCat;
     }
 
-
     public void setTypeCat(final String typeCat) {
-
         this.typeCat = typeCat;
     }
 
-
     // --------------------------------------------------------------- typeSchem
     public String getTypeSchem() {
-
         return typeSchem;
     }
 
-
     public void setTypeSchem(final String typeSchem) {
-
         this.typeSchem = typeSchem;
     }
 
-
     // ---------------------------------------------------------------- typeName
     public String getTypeName() {
-
         return typeName;
     }
 
-
     public void setTypeName(final String typeName) {
-
         this.typeName = typeName;
     }
 
-
     // ------------------------------------------------------------ supertypeCat
     public String getSupertypeCat() {
-
         return supertypeCat;
     }
 
-
     public void setSupertypeCat(final String supertypeCat) {
-
         this.supertypeCat = supertypeCat;
     }
 
-
     // ---------------------------------------------------------- supertypeSchem
     public String getSupertypeSchem() {
-
         return supertypeSchem;
     }
 
-
     public void setSupertypeSchem(final String supertypeSchem) {
-
         this.supertypeSchem = supertypeSchem;
     }
 
-
     // ----------------------------------------------------------- supertypeName
     public String getSupertypeName() {
-
         return supertypeName;
     }
 
-
     public void setSupertypeName(final String supertypeName) {
-
         this.supertypeName = supertypeName;
     }
-
 
     // --------------------------------------------------------------------- UDT
     // just for class diagram
     @Deprecated
     private UDT getUDT() {
-
         return getParent();
     }
-
 
 //    public void setUDT(final UDT UDT) {
 //
@@ -153,38 +118,32 @@ public class SuperType extends AbstractChild<UDT> {
 //        return this;
 //    }
     // -------------------------------------------------------------------------
-    @Label("TYPE_CAT")
-    @NillableBySpecification
+    @_Label("TYPE_CAT")
+    @_NillableBySpecification
     @XmlAttribute
     private String typeCat;
 
-
-    @Label("TYPE_SCHEM")
-    @NillableBySpecification
+    @_Label("TYPE_SCHEM")
+    @_NillableBySpecification
     @XmlAttribute
     private String typeSchem;
 
-
-    @Label("TYPE_NAME")
+    @_Label("TYPE_NAME")
     @XmlElement(required = true)
     private String typeName;
 
-
-    @Label("SUPERTYPE_CAT")
-    @NillableBySpecification
+    @_Label("SUPERTYPE_CAT")
+    @_NillableBySpecification
     @XmlElement(nillable = true, required = true)
     private String supertypeCat;
 
-
-    @Label("SUPERTYPE_SCHEM")
-    @NillableBySpecification
+    @_Label("SUPERTYPE_SCHEM")
+    @_NillableBySpecification
     @XmlElement(nillable = true, required = true)
     private String supertypeSchem;
 
-
-    @Label("SUPERTYPE_NAME")
+    @_Label("SUPERTYPE_NAME")
     @XmlElement(required = true)
     private String supertypeName;
 
 }
-

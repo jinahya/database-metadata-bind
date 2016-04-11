@@ -13,10 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
-
 package com.github.jinahya.sql.database.metadata.bind;
-
 
 import java.util.Comparator;
 import javax.xml.bind.annotation.XmlElement;
@@ -25,7 +22,6 @@ import javax.xml.bind.annotation.XmlType;
 import org.apache.commons.lang3.builder.CompareToBuilder;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 
-
 /**
  * An entity class for binding the result of
  * {@link java.sql.DatabaseMetaData#getClientInfoProperties()}.
@@ -33,45 +29,34 @@ import org.apache.commons.lang3.builder.ToStringBuilder;
  * @author Jin Kwon &lt;jinahya_at_gmail.com&gt;
  */
 @XmlRootElement
-@XmlType(
-    propOrder = {
-        "name", "maxLen", "defaultValue", "description"
-    }
-)
+@XmlType(propOrder = {
+    "name", "maxLen", "defaultValue", "description"
+})
 public class ClientInfoProperty extends AbstractChild<Metadata> {
 
-
     public static Comparator<ClientInfoProperty> natural() {
-
         return new Comparator<ClientInfoProperty>() {
-
             @Override
             public int compare(final ClientInfoProperty o1,
                                final ClientInfoProperty o2) {
-
                 // by the NAME column
                 return new CompareToBuilder()
-                    .append(o1.getName(), o2.getName())
-                    .build();
-
+                        .append(o1.getName(), o2.getName())
+                        .build();
             }
-
         };
     }
 
-
     @Override
     public String toString() {
-
         if (true) {
             return new ToStringBuilder(this)
-                .append("name", getName())
-                .append("maxLen", getMaxLen())
-                .append("defaultValue", getDefaultValue())
-                .append("description", getDescription())
-                .build();
+                    .append("name", getName())
+                    .append("maxLen", getMaxLen())
+                    .append("defaultValue", getDefaultValue())
+                    .append("description", getDescription())
+                    .build();
         }
-
         return super.toString() + "{"
                + "name=" + name
                + ", maxLen=" + maxLen
@@ -80,90 +65,66 @@ public class ClientInfoProperty extends AbstractChild<Metadata> {
                + "}";
     }
 
-
     // -------------------------------------------------------------------- name
     public String getName() {
-
         return name;
     }
 
-
     public void setName(final String name) {
-
         this.name = name;
     }
 
-
     // ------------------------------------------------------------------ maxLen
     public int getMaxLen() {
-
         return maxLen;
     }
 
-
     public void setMaxLen(final int maxLen) {
-
         this.maxLen = maxLen;
     }
 
-
     // ------------------------------------------------------------ defaultValue
     public String getDefaultValue() {
-
         return defaultValue;
     }
 
-
     public void setDefaultValue(final String defaultValue) {
-
         this.defaultValue = defaultValue;
     }
 
-
     // ------------------------------------------------------------- description
     public String getDescription() {
-
         return description;
     }
 
-
     public void setDescription(final String description) {
-
         this.description = description;
     }
-
 
     // ---------------------------------------------------------------- metadata
     // just for class diagram
     private Metadata getMetadata() {
-
         return getParent();
     }
-
 
 //    public void setMetadata(final Metadata metadata) {
 //
 //        setParent(metadata);
 //    }
     // -------------------------------------------------------------------------
-    @Label("NAME")
+    @_Label("NAME")
     @XmlElement(required = true)
     private String name;
 
-
-    @Label("MAX_LEN")
+    @_Label("MAX_LEN")
     @XmlElement(required = true)
     private int maxLen;
 
-
-    @Label("DEFAULT_VALUE")
+    @_Label("DEFAULT_VALUE")
     @XmlElement(required = true)
     private String defaultValue;
 
-
-    @Label("DESCRIPTION")
+    @_Label("DESCRIPTION")
     @XmlElement(required = true)
     private String description;
-
 }
-

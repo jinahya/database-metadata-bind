@@ -13,15 +13,11 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
-
 package com.github.jinahya.sql.database.metadata.bind;
-
 
 import static java.beans.Introspector.decapitalize;
 import java.beans.PropertyDescriptor;
 import java.lang.reflect.Field;
-
 
 /**
  *
@@ -29,25 +25,22 @@ import java.lang.reflect.Field;
  */
 class Suppressions {
 
-
     private static String suppression(final Class<?> klass, final Field field) {
 
         if (!field.getDeclaringClass().isAssignableFrom(klass)) {
             throw new IllegalArgumentException(
-                "klass(" + klass
-                + ") is not assignable to the specified field(" + field
-                + ")'s declaring class(" + field.getDeclaringClass() + ")");
+                    "klass(" + klass
+                    + ") is not assignable to the specified field(" + field
+                    + ")'s declaring class(" + field.getDeclaringClass() + ")");
         }
 
         return decapitalize(klass.getSimpleName()) + "/" + field.getName();
     }
 
-
     private static String suppression(final Field field) {
 
         return suppression(field.getDeclaringClass(), field);
     }
-
 
     static String suppression(final Class<?> beanClass,
                               final PropertyDescriptor propertyDescriptor) {
@@ -56,11 +49,9 @@ class Suppressions {
                + propertyDescriptor.getName();
     }
 
-
     private Suppressions() {
 
         super();
     }
 
 }
-

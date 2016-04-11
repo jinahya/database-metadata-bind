@@ -13,10 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
-
 package com.github.jinahya.sql.database.metadata.bind;
-
 
 import static java.lang.invoke.MethodHandles.lookup;
 import java.lang.reflect.Modifier;
@@ -27,27 +24,21 @@ import org.slf4j.Logger;
 import static org.slf4j.LoggerFactory.getLogger;
 import org.testng.annotations.Test;
 
-
 /**
  *
  * @author Jin Kwon &lt;jinahya_at_gmail.com&gt;
  */
 public class MetadataContextTest {
 
-
     private static final Logger logger = getLogger(lookup().lookupClass());
-
 
     @Test(expectedExceptions = {NullPointerException.class})
     public void constructWithNullDatabaseMetaData() {
-
         final MetadataContext context = new MetadataContext(null);
     }
 
-
     @Test(enabled = false)
     public void checkMethodBinding() throws JAXBException {
-
         Arrays.stream(DatabaseMetaData.class.getMethods()).filter(m -> {
             final int modifiers = m.getModifiers();
             if (Modifier.isStatic(modifiers)) {
@@ -57,12 +48,10 @@ public class MetadataContextTest {
         }).forEach(m -> {
             try {
                 MetadataContext.class.getMethod(
-                    m.getName(), m.getParameterTypes());
+                        m.getName(), m.getParameterTypes());
             } catch (final NoSuchMethodException nsme) {
                 logger.info("method not covered: {}", m);
             }
         });
     }
-
 }
-

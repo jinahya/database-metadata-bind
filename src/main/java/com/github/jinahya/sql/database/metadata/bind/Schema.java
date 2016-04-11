@@ -13,10 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
-
 package com.github.jinahya.sql.database.metadata.bind;
-
 
 import java.util.ArrayList;
 import java.util.Comparator;
@@ -28,7 +25,6 @@ import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlType;
 import org.apache.commons.lang3.builder.CompareToBuilder;
 
-
 /**
  * An entity class for binding the result of
  * {@link java.sql.DatabaseMetaData#getSchemas(java.lang.String, java.lang.String)}.
@@ -36,108 +32,80 @@ import org.apache.commons.lang3.builder.CompareToBuilder;
  * @author Jin Kwon &lt;jinahya_at_gmail.com&gt;
  */
 @XmlRootElement
-@XmlType(
-    propOrder = {
-        "tableSchem",
-        // ---------------------------------------------------------------------
-        "crossReferences",
-        "functions", "procedures",
-        "tables",
-        "UDTs"
-    }
-)
+@XmlType(propOrder = {
+    "tableSchem",
+    // ---------------------------------------------------------------------
+    "crossReferences",
+    "functions", "procedures",
+    "tables",
+    "UDTs"
+})
 public class Schema extends AbstractChild<Catalog> implements TableDomain {
 
-
     public static Comparator<Schema> narual() {
-
         return new Comparator<Schema>() {
-
             @Override
             public int compare(final Schema o1, final Schema o2) {
-
                 // by TABLE_CATALOG and TABLE_SCHEM.
                 return new CompareToBuilder()
-                    .append(o1.getTableCatalog(), o2.getTableCatalog())
-                    .append(o1.getTableSchem(), o2.getTableSchem())
-                    .build();
+                        .append(o1.getTableCatalog(), o2.getTableCatalog())
+                        .append(o1.getTableSchem(), o2.getTableSchem())
+                        .build();
             }
-
         };
     }
-
 
     @Override
     public List<CrossReference> getCrossReferences() {
         return crossReferences;
     }
 
-
     @Override
     public void setCrossReferences(List<CrossReference> crossReferences) {
         this.crossReferences = crossReferences;
     }
 
-
     @Override
     public String toString() {
-
         return super.toString() + "{"
                + "tableCatalog=" + tableCatalog
                + ", tableSchem=" + tableSchem
                + "}";
     }
 
-
     // ------------------------------------------------------------ tableCatalog
     public String getTableCatalog() {
-
         return tableCatalog;
     }
 
-
     public void setTableCatalog(final String tableCatalog) {
-
         this.tableCatalog = tableCatalog;
     }
 
-
     Schema tableCatalog(final String tableCatalog) {
-
         setTableCatalog(tableCatalog);
-
         return this;
     }
-
 
     // -------------------------------------------------------------- tableSchem
     public String getTableSchem() {
-
         return tableSchem;
     }
 
-
     public void setTableSchem(final String tableSchem) {
-
         this.tableSchem = tableSchem;
     }
 
-
     Schema tableSchem(final String tableSchem) {
-
         setTableSchem(tableSchem);
-
         return this;
     }
-
 
     // ----------------------------------------------------------------- catalog
     // just for class diagram
     private Catalog getCatalog() {
-
         return getParent();
     }
-
 
 //    public void setCatalog(final Catalog catalog) {
 //
@@ -145,35 +113,27 @@ public class Schema extends AbstractChild<Catalog> implements TableDomain {
 //    }
     // --------------------------------------------------------------- functions
     public List<Function> getFunctions() {
-
         if (functions == null) {
             functions = new ArrayList<Function>();
         }
-
         return functions;
     }
-
 
     public void setFunctions(List<Function> functions) {
         this.functions = functions;
     }
 
-
     // -------------------------------------------------------------- procedures
     public List<Procedure> getProcedures() {
-
         if (procedures == null) {
             procedures = new ArrayList<Procedure>();
         }
-
         return procedures;
     }
-
 
     public void setProcedures(List<Procedure> procedures) {
         this.procedures = procedures;
     }
-
 
 //    // ------------------------------------------------------------- superTables
 //    public List<SuperTable> getSuperTables() {
@@ -196,73 +156,60 @@ public class Schema extends AbstractChild<Catalog> implements TableDomain {
     // ------------------------------------------------------------------ tables
     @Override
     public List<Table> getTables() {
-
         if (tables == null) {
             tables = new ArrayList<Table>();
         }
-
         return tables;
     }
-
 
     public void setTables(List<Table> tables) {
         this.tables = tables;
     }
 
-
     // -------------------------------------------------------------------- UDTs
     public List<UDT> getUDTs() {
-
         if (UDTs == null) {
             UDTs = new ArrayList<UDT>();
         }
-
         return UDTs;
     }
-
 
     public void setUDTs(List<UDT> UDTs) {
         this.UDTs = UDTs;
     }
 
-
     // -------------------------------------------------------------------------
-    @Label("TABLE_CATALOG")
-    @NillableBySpecification
+    @_Label("TABLE_CATALOG")
+    @_NillableBySpecification
     @XmlAttribute
     private String tableCatalog;
 
-
-    @Label("TABLE_SCHEM")
+    @_Label("TABLE_SCHEM")
     @XmlElement(required = true)
     private String tableSchem;
-
 
     @XmlElementRef
     private List<CrossReference> crossReferences;
 
-
-    @Invocation(
-        name = "getFunctions",
-        types = {String.class, String.class, String.class},
-        argsarr = {
-            @InvocationArgs({":tableCatalog", ":tableSchem", "null"})
-        }
+    @_Invocation(
+            name = "getFunctions",
+            types = {String.class, String.class, String.class},
+            argsarr = {
+                @_InvocationArgs({":tableCatalog", ":tableSchem", "null"})
+            }
     )
     @XmlElementRef
     private List<Function> functions;
 
-
-    @Invocation(
-        name = "getProcedures",
-        types = {String.class, String.class, String.class},
-        argsarr = {
-            @InvocationArgs({":tableCatalog", ":tableSchem", "null"})
-        }
+    @_Invocation(
+            name = "getProcedures",
+            types = {String.class, String.class, String.class},
+            argsarr = {
+                @_InvocationArgs({":tableCatalog", ":tableSchem", "null"})
+            }
     )
     @XmlElementRef
     private List<Procedure> procedures;
-
 
 //    @Invocation(
 //        name = "getSuperTables",
@@ -282,26 +229,23 @@ public class Schema extends AbstractChild<Catalog> implements TableDomain {
 //    )
 //    @XmlElementRef
 //    private List<SuperType> superTypes;
-    @Invocation(
-        name = "getTables",
-        types = {String.class, String.class, String.class, String[].class},
-        argsarr = {
-            @InvocationArgs({":tableCatalog", ":tableSchem", "null", "null"})
-        }
+    @_Invocation(
+            name = "getTables",
+            types = {String.class, String.class, String.class, String[].class},
+            argsarr = {
+                @_InvocationArgs({":tableCatalog", ":tableSchem", "null", "null"})
+            }
     )
     @XmlElementRef
     private List<Table> tables;
 
-
-    @Invocation(
-        name = "getUDTs",
-        types = {String.class, String.class, String.class, int[].class},
-        argsarr = {
-            @InvocationArgs({":tableCatalog", ":tableSchem", "null", "null"})
-        }
+    @_Invocation(
+            name = "getUDTs",
+            types = {String.class, String.class, String.class, int[].class},
+            argsarr = {
+                @_InvocationArgs({":tableCatalog", ":tableSchem", "null", "null"})
+            }
     )
     @XmlElementRef
     private List<UDT> UDTs;
-
 }
-

@@ -13,10 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
-
 package com.github.jinahya.sql.database.metadata.bind;
-
 
 import java.io.File;
 import java.io.IOException;
@@ -30,75 +27,59 @@ import javax.xml.transform.Result;
 import javax.xml.transform.stream.StreamResult;
 import org.testng.annotations.Test;
 
-
 /**
  *
  * @author Jin Kwon &lt;jinahya_at_gmail.com&gt;
  */
 public class JaxbTest {
 
-
     private static void storeSchema(
-        final JAXBContext context,
-        final BiFunction<String, String, File> locator)
-        throws IOException {
-
+            final JAXBContext context,
+            final BiFunction<String, String, File> locator)
+            throws IOException {
         context.generateSchema(new SchemaOutputResolver() {
-
             @Override
             public Result createOutput(final String namespaceUri,
                                        final String suggestedFileName)
-                throws IOException {
+                    throws IOException {
                 final File file
-                    = locator.apply(namespaceUri, suggestedFileName);
+                        = locator.apply(namespaceUri, suggestedFileName);
                 final Result output = new StreamResult(file);
                 //output.setSystemId(suggestedFileName);
                 return output;
             }
-
         });
     }
 
-
     private static void printSchema(final JAXBContext context)
-        throws IOException {
-
+            throws IOException {
         context.generateSchema(new SchemaOutputResolver() {
-
             @Override
             public Result createOutput(final String namespaceUri,
                                        final String suggestedFileName)
-                throws IOException {
+                    throws IOException {
                 final Result output = new StreamResult(System.out);
                 output.setSystemId(suggestedFileName);
                 return output;
             }
-
         });
     }
 
-
     @Test(enabled = false)
     public void printSchema() throws JAXBException, IOException {
-
         final JAXBContext context = JAXBContext.newInstance(
-            JaxbTest.class.getPackage().getName());
+                JaxbTest.class.getPackage().getName());
         printSchema(context);
     }
 
-
     @Test
     public void storeSchema() throws JAXBException, IOException {
-
         final Path schemas = Paths.get("target");
-
         final JAXBContext context = JAXBContext.newInstance(
-            JaxbTest.class.getPackage().getName());
+                JaxbTest.class.getPackage().getName());
         storeSchema(context, (namespaceUri, suggestedFileName) -> {
-                    final Path path = schemas.resolve(suggestedFileName);
-                    return path.toFile();
-                });
+                final Path path = schemas.resolve(suggestedFileName);
+                return path.toFile();
+            });
     }
-
 }
-

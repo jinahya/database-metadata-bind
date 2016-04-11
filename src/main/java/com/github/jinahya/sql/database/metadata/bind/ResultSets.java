@@ -13,10 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
-
 package com.github.jinahya.sql.database.metadata.bind;
-
 
 import java.sql.ResultSet;
 import java.sql.ResultSetMetaData;
@@ -24,32 +21,24 @@ import java.sql.SQLException;
 import java.util.HashSet;
 import java.util.Set;
 
-
 /**
  *
  * @author Jin Kwon &lt;jinahya_at_gmail.com&gt;
  */
 final class ResultSets {
 
-
     static Set<String> getColumnLabels(final ResultSet resultSet)
-        throws SQLException {
-
+            throws SQLException {
         final ResultSetMetaData rsmd = resultSet.getMetaData();
         final int columnCount = rsmd.getColumnCount();
         final Set<String> columnLabels = new HashSet<String>(columnCount);
         for (int i = 1; i <= columnCount; i++) {
             columnLabels.add(rsmd.getColumnLabel(i));
         }
-
         return columnLabels;
     }
 
-
     private ResultSets() {
-
         super();
     }
-
 }
-

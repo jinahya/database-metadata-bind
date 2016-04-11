@@ -13,25 +13,20 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
-
 package com.github.jinahya.sql.database.metadata.bind;
 
-
 import org.apache.commons.lang3.ClassUtils;
-
 
 /**
  * A utility class for {@link Invocation}.
  *
  * @author Jin Kwon &lt;jinahya_at_gmail.com&gt;
  */
-final class Invocations {
-
+final class _Invocations {
 
     static <T> Object[] args(final Class<T> beanClass, final T beanInstance,
                              final Class<?>[] types, final String[] names)
-        throws ReflectiveOperationException {
+            throws ReflectiveOperationException {
 
         final Object[] values = new Object[names.length];
         for (int i = 0; i < names.length; i++) {
@@ -61,19 +56,14 @@ final class Invocations {
                 types[i] = ClassUtils.primitiveToWrapper(types[i]);
             }
             values[i] = types[i]
-                .getMethod("valueOf", String.class)
-                .invoke(null, names[i]);
+                    .getMethod("valueOf", String.class)
+                    .invoke(null, names[i]);
         }
 
         return values;
     }
 
-
-    private Invocations() {
-
+    private _Invocations() {
         super();
-
     }
-
 }
-
