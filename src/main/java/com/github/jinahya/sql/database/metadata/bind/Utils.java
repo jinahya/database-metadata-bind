@@ -179,7 +179,7 @@ class Utils {
         } catch (final IntrospectionException ie) {
             ie.printStackTrace(System.err);
         }
-        final Field field = Reflections.findField(klass, propertyName);
+        final Field field = Utils.findField(klass, propertyName);
         logger.log(Level.WARNING, "trying to get value directly from {0}",
                    new Object[]{field});
         if (!field.isAccessible()) {
@@ -213,7 +213,7 @@ class Utils {
         } catch (final IntrospectionException ie) {
             ie.printStackTrace(System.err);
         }
-        final Field field = Reflections.findField(klass, propertyName);
+        final Field field = Utils.findField(klass, propertyName);
         logger.log(Level.WARNING,
                    "trying to set value directly to {0} with {1}",
                    new Object[]{field, propertyValue});

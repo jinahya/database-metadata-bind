@@ -17,15 +17,8 @@ package com.github.jinahya.sql.database.metadata.bind;
 
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import static java.util.logging.Logger.getLogger;
 import javax.xml.bind.annotation.XmlAttribute;
 import javax.xml.bind.annotation.XmlValue;
-import static java.util.logging.Logger.getLogger;
-import static java.util.logging.Logger.getLogger;
-import static java.util.logging.Logger.getLogger;
-import static java.util.logging.Logger.getLogger;
-import static java.util.logging.Logger.getLogger;
-import static java.util.logging.Logger.getLogger;
 import static java.util.logging.Logger.getLogger;
 
 /**
@@ -65,7 +58,7 @@ class SDTSDTBoolean {
             return null;
         }
         try {
-            return Reflections.sqlTypeName(fromType);
+            return Utils.sqlTypeName(fromType);
         } catch (final IllegalAccessException iae) {
             logger.log(Level.WARNING, "failed to get sql data type name: {0}",
                        new Object[]{fromType});
@@ -93,7 +86,7 @@ class SDTSDTBoolean {
             return null;
         }
         try {
-            return Reflections.sqlTypeName(toType);
+            return Utils.sqlTypeName(toType);
         } catch (final IllegalAccessException iae) {
             logger.log(Level.WARNING, "failed to get sql data type name: {0}",
                        new Object[]{toType});

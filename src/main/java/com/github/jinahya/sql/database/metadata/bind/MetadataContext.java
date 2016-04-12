@@ -146,7 +146,7 @@ public class MetadataContext {
             throws SQLException, ReflectiveOperationException {
         if (results != null) { // bind columns to fields
             final Set<String> labels = Utils.columnLabels(results);
-            final Map<Field, Label> fields = Reflections.annotatedFields(klass, Label.class);
+            final Map<Field, Label> fields = Utils.annotatedFields(klass, Label.class);
             for (final Entry<Field, Label> entry : fields.entrySet()) {
                 final Field field = entry.getKey();
                 final String label = entry.getValue().value();
@@ -205,7 +205,7 @@ public class MetadataContext {
         // invoke
 
         //final Map<Field, Invocation> fields = fields(klass, Invocation.class);
-        final Map<Field, Invoke> fields = Reflections.annotatedFields(klass, Invoke.class);
+        final Map<Field, Invoke> fields = Utils.annotatedFields(klass, Invoke.class);
         for (final Entry<Field, Invoke> entry : fields.entrySet()) {
             final Field field = entry.getKey();
             final Invoke invocation = entry.getValue();
@@ -365,7 +365,7 @@ public class MetadataContext {
                     .fromType(null)
                     .toType(null)
                     .value(context.supportsConvert()));
-            final Set<Integer> sqlTypes = Reflections.sqlTypes();
+            final Set<Integer> sqlTypes = Utils.sqlTypes();
             for (final int fromType : sqlTypes) {
                 for (final int toType : sqlTypes) {
                     supportsConvert.add(
