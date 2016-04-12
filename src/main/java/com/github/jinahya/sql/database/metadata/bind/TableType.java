@@ -47,8 +47,14 @@ public class TableType {
         this.tableType = tableType;
     }
 
+//    @XmlAttribute // workarounding the bug; @XmlElementRef -> @XmlValue
+//    public String getNothing() {
+//        return null;
+//    }
+
     // -------------------------------------------------------------------------
     @Label("TABLE_TYPE")
     @XmlElement(required = true)
+    //@XmlValue
     private String tableType;
 }

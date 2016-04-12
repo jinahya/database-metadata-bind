@@ -1508,6 +1508,7 @@ public class Metadata implements TableDomain {
         return tableTypes;
     }
 
+    @Deprecated
     public void setTableTypes(final List<TableType> tableTypes) {
         this.tableTypes = tableTypes;
     }
