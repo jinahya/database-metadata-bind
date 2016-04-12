@@ -28,9 +28,4 @@ import javax.xml.bind.annotation.XmlRootElement;
 @XmlRootElement
 public class ImportedKey extends TableKey {
 
-    // ------------------------------------------------------------------- table
-    // for class diagrams
-    private Table getTable() {
-        return getParent();
-    }
 }

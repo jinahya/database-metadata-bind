@@ -32,7 +32,7 @@ import javax.xml.bind.annotation.XmlType;
             "bufferLength", "decimalDigits", "pseudoColumn"
         }
 )
-public class VersionColumn extends AbstractChild<Table> {
+public class VersionColumn {
 
     @Override
     public String toString() {
@@ -120,17 +120,6 @@ public class VersionColumn extends AbstractChild<Table> {
         this.pseudoColumn = pseudoColumn;
     }
 
-    // ------------------------------------------------------------------- table
-    // just for class diagram
-    @Deprecated
-    private Table getTable() {
-        return getParent();
-    }
-
-//    public void setTable(final Table table) {
-//
-//        setParent(table);
-//    }
     // -------------------------------------------------------------------------
     @Label("SCOPE")
     @Unused

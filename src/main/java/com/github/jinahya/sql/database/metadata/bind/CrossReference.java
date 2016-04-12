@@ -31,7 +31,7 @@ import javax.xml.bind.annotation.XmlType;
     "pkcolumnName", "fkcolumnName", "keySeq", "updateRule", "deleteRule",
     "fkName", "pkName", "deferrability"
 })
-public class CrossReference extends AbstractChild<Metadata> {
+public class CrossReference {
 
     @Override
     public String toString() {
@@ -179,24 +179,6 @@ public class CrossReference extends AbstractChild<Metadata> {
         this.deferrability = deferrability;
     }
 
-    // ---------------------------------------------------------------- metadata
-    // just for class diagram
-    private Metadata getMetadata() {
-        return getParent();
-    }
-
-//    public void setMetadata(final Metadata metadata) {
-//
-//        setParent(metadata);
-//    }
-//
-//
-//    CrossReference metadata(final Metadata metadata) {
-//
-//        setMetadata(metadata);
-//
-//        return this;
-//    }
     // -------------------------------------------------------------------------
     @Label("PKTABLE_CAT")
     @NillableBySpecification

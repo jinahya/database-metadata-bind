@@ -30,9 +30,4 @@ import javax.xml.bind.annotation.XmlRootElement;
 @XmlRootElement
 public class ExportedKey extends TableKey {
 
-    // ------------------------------------------------------------------- table
-    // just for class diagram
-    private Table getTable() {
-        return getParent();
-    }
 }

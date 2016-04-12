@@ -38,7 +38,7 @@ import javax.xml.bind.annotation.XmlType;
     "indexInfo", "primaryKeys", "pseudoColumns", "superTables",
     "tablePrivileges", "versionColumns"
 })
-public class Table extends AbstractChild<Schema> {
+public class Table {
 
     @Override
     public String toString() {
@@ -146,17 +146,6 @@ public class Table extends AbstractChild<Schema> {
         this.refGeneration = refGeneration;
     }
 
-    // ------------------------------------------------------------------ schema
-    // just for class diagram
-    @Deprecated
-    private Schema getSchema() {
-        return getParent();
-    }
-
-//    public void setSchema(final Schema schema) {
-//
-//        setParent(schema);
-//    }
     // ------------------------------------------------------ bestRowIdentifiers
     public List<BestRowIdentifier> getBestRowIdentifiers() {
         if (bestRowIdentifiers == null) {
@@ -339,63 +328,63 @@ public class Table extends AbstractChild<Schema> {
     @XmlElement(nillable = true, required = true)
     private String refGeneration;
 
-    @Invocation(
+    @Invoke(
             name = "getBestRowIdentifier",
             types = {
                 String.class, String.class, String.class, int.class, boolean.class
             },
-            argsarr = {
-                @InvocationArgs({":tableCat", ":tableSchem", ":tableName",
-                                 "0", // bestRowTemporaty
-                                 "true"}),
-                @InvocationArgs({":tableCat", ":tableSchem", ":tableName",
-                                 "1", // bestRowTransaction
-                                 "true"}),
-                @InvocationArgs({":tableCat", ":tableSchem", ":tableName",
-                                 "2", // bestRowSession
-                                 "true"})}
+            args = {
+                @Literals({":tableCat", ":tableSchem", ":tableName",
+                           "0", // bestRowTemporaty
+                           "true"}),
+                @Literals({":tableCat", ":tableSchem", ":tableName",
+                           "1", // bestRowTransaction
+                           "true"}),
+                @Literals({":tableCat", ":tableSchem", ":tableName",
+                           "2", // bestRowSession
+                           "true"})}
     )
     @XmlElementRef
     private List<BestRowIdentifier> bestRowIdentifiers;
 
-    @Invocation(
+    @Invoke(
             name = "getColumns",
             types = {String.class, String.class, String.class, String.class},
-            argsarr = {
-                @InvocationArgs({":tableCat", ":tableSchem", ":tableName", "null"})
+            args = {
+                @Literals({":tableCat", ":tableSchem", ":tableName", "null"})
             }
     )
     @XmlElementRef
     private List<Column> columns;
 
-    @Invocation(
+    @Invoke(
             name = "getExportedKeys",
             types = {String.class, String.class, String.class},
-            argsarr = {
-                @InvocationArgs({":tableCat", ":tableSchem", ":tableName"})
+            args = {
+                @Literals({":tableCat", ":tableSchem", ":tableName"})
             }
     )
     @XmlElementRef
     private List<ExportedKey> exportedKeys;
 
-    @Invocation(
+    @Invoke(
             name = "getImportedKeys",
             types = {String.class, String.class, String.class},
-            argsarr = {
-                @InvocationArgs({":tableCat", ":tableSchem", ":tableName"})
+            args = {
+                @Literals({":tableCat", ":tableSchem", ":tableName"})
             }
     )
     @XmlElementRef
     private List<ImportedKey> importedKeys;
 
-    @Invocation(
+    @Invoke(
             name = "getIndexInfo",
             types = {
                 String.class, String.class, String.class, boolean.class,
                 boolean.class
             },
-            argsarr = {
-                @InvocationArgs({
+            args = {
+                @Literals({
             ":tableCat", ":tableSchem", ":tableName", "false", "false"
         })
             }
@@ -403,51 +392,46 @@ public class Table extends AbstractChild<Schema> {
     @XmlElementRef
     private List<IndexInfo> indexInfo;
 
-    @Invocation(
-            name = "getPrimaryKeys",
+    @Invoke(name = "getPrimaryKeys",
             types = {String.class, String.class, String.class},
-            argsarr = {
-                @InvocationArgs({":tableCat", ":tableSchem", ":tableName"})
+            args = {
+                @Literals({":tableCat", ":tableSchem", ":tableName"})
             }
     )
     @XmlElementRef
     private List<PrimaryKey> primaryKeys;
 
-    @Invocation(
-            name = "getPseudoColumns",
+    @Invoke(name = "getPseudoColumns",
             types = {String.class, String.class, String.class, String.class},
-            argsarr = {
-                @InvocationArgs({":tableCat", ":tableSchem", ":tableName", "null"})
+            args = {
+                @Literals({":tableCat", ":tableSchem", ":tableName", "null"})
             }
     )
     @XmlElementRef
     private List<PseudoColumn> pseudoColumns;
 
-    @Invocation(
-            name = "getSuperTables",
+    @Invoke(name = "getSuperTables",
             types = {String.class, String.class, String.class},
-            argsarr = {
-                @InvocationArgs({":tableCat", ":tableSchem", ":tableName"})
+            args = {
+                @Literals({":tableCat", ":tableSchem", ":tableName"})
             }
     )
     @XmlElementRef
     private List<SuperTable> superTables;
 
-    @Invocation(
-            name = "getTablePrivileges",
+    @Invoke(name = "getTablePrivileges",
             types = {String.class, String.class, String.class},
-            argsarr = {
-                @InvocationArgs({":tableCat", ":tableSchem", ":tableName"})
+            args = {
+                @Literals({":tableCat", ":tableSchem", ":tableName"})
             }
     )
     @XmlElementRef
     private List<TablePrivilege> tablePrivileges;
 
-    @Invocation(
-            name = "getVersionColumns",
+    @Invoke(name = "getVersionColumns",
             types = {String.class, String.class, String.class},
-            argsarr = {
-                @InvocationArgs({":tableCat", ":tableSchem", ":tableName"})
+            args = {
+                @Literals({":tableCat", ":tableSchem", ":tableName"})
             }
     )
     @XmlElementRef

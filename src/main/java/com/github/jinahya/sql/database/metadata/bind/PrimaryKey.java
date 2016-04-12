@@ -30,7 +30,7 @@ import javax.xml.bind.annotation.XmlType;
 @XmlType(propOrder = {
     "columnName", "keySeq", "pkName"
 })
-public class PrimaryKey extends AbstractChild<Table> {
+public class PrimaryKey {
 
     // ---------------------------------------------------------------- tableCat
     public String getTableCat() {
@@ -86,16 +86,6 @@ public class PrimaryKey extends AbstractChild<Table> {
         this.pkName = pkName;
     }
 
-    // ------------------------------------------------------------------- table
-    // just for class diagram
-    private Table getTable() {
-        return getParent();
-    }
-
-//    public void setTable(final Table table) {
-//
-//        setParent(table);
-//    }
     // -------------------------------------------------------------------------
     @Label("TABLE_CAT")
     @NillableBySpecification

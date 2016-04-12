@@ -33,7 +33,7 @@ import javax.xml.bind.annotation.XmlType;
     "sqlDatetimeSub", "charOctetLength", "ordinalPosition", "isNullable",
     "sourceDataType"
 })
-public class Attribute extends AbstractChild<UDT> {
+public class Attribute {
 
     @Override
     public String toString() {
@@ -220,12 +220,6 @@ public class Attribute extends AbstractChild<UDT> {
 
     public void setSourceDataType(final Short sourceDataType) {
         this.sourceDataType = sourceDataType;
-    }
-
-    // --------------------------------------------------------------------- UDT
-    // just for class diagram
-    private UDT getUDT() {
-        return getParent();
     }
 
     // -------------------------------------------------------------------------

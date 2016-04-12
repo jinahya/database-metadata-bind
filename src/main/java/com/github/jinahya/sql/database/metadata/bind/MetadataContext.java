@@ -131,13 +131,11 @@ public class MetadataContext {
                     .getActualTypeArguments()[0];
             if (value instanceof ResultSet) {
                 bindAll((ResultSet) value, elementType, list);
-                Utils.setParent(elementType, list, bean);
                 return;
             }
             list.add(elementType
                     .getDeclaredMethod("valueOf", Object[].class, Object.class)
                     .invoke(null, args, value));
-            Utils.setParent(elementType, list, value);
             return;
         }
         Utils.propertyValue(field.getName(), bean, value);
@@ -207,10 +205,10 @@ public class MetadataContext {
         // invoke
 
         //final Map<Field, Invocation> fields = fields(klass, Invocation.class);
-        final Map<Field, Invocation> fields = Reflections.annotatedFields(klass, Invocation.class);
-        for (final Entry<Field, Invocation> entry : fields.entrySet()) {
+        final Map<Field, Invoke> fields = Reflections.annotatedFields(klass, Invoke.class);
+        for (final Entry<Field, Invoke> entry : fields.entrySet()) {
             final Field field = entry.getKey();
-            final Invocation invocation = entry.getValue();
+            final Invoke invocation = entry.getValue();
             final String suppression = suppression(klass, field);
             final String formatted = String.format(
                     "field=%s, invocation=%s, suppression=%s",
@@ -228,7 +226,7 @@ public class MetadataContext {
                 logger.log(Level.WARNING, "unknown methods; {0}", formatted);
                 continue;
             }
-            for (final InvocationArgs invocationArgs : invocation.argsarr()) {
+            for (final Literals invocationArgs : invocation.args()) {
                 final String[] literals = invocationArgs.value();
                 final Object[] values = Invocations.args(
                         klass, instance, types, literals);
@@ -340,7 +338,6 @@ public class MetadataContext {
         if (catalogs.isEmpty() && emptyCatalogIfNone()) {
             final Catalog catalog = new Catalog();
             catalog.setTableCat("");
-            catalog.setParent(metadata);
             logger.log(Level.FINE, "adding an empty catalog: {0}",
                        new Object[]{catalog});
             catalogs.add(catalog);
@@ -352,7 +349,6 @@ public class MetadataContext {
                 final Schema schema = new Schema();
                 schema.setTableCatalog(catalog.getTableCat());
                 schema.setTableSchem("");
-                schema.setParent(catalog);
                 logger.log(Level.FINE, "adding an empty schema: {0}",
                            new Object[]{schema});
                 schemas.add(schema);

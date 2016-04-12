@@ -29,7 +29,7 @@ import javax.xml.bind.annotation.XmlType;
 @XmlType(propOrder = {
     "tableSchem", "tableCatalog"
 })
-public class SchemaName extends AbstractChild<Metadata> {
+public class SchemaName {
 
     @Override
     public String toString() {
@@ -57,24 +57,6 @@ public class SchemaName extends AbstractChild<Metadata> {
         this.tableCatalog = tableCatalog;
     }
 
-    // ---------------------------------------------------------------- metadata
-    // just for class diagram
-    private Metadata getMetadata() {
-        return getParent();
-    }
-
-//    public void setMetadata(final Metadata metadata) {
-//
-//        setParent(metadata);
-//    }
-//
-//
-//    SchemaName metadata(final Metadata metadata) {
-//
-//        setMetadata(metadata);
-//
-//        return this;
-//    }
     // -------------------------------------------------------------------------
     @Label("TABLE_SCHEM")
     @XmlElement(required = true)

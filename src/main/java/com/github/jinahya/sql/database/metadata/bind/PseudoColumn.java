@@ -31,7 +31,7 @@ import javax.xml.bind.annotation.XmlType;
     "columnName", "dataType", "columnSize", "decimalDigits", "numPrecRadix",
     "columnUsage", "remarks", "charOctetLength", "isNullable"
 })
-public class PseudoColumn extends AbstractChild<Table> {
+public class PseudoColumn {
 
     @Override
     public String toString() {
@@ -159,16 +159,6 @@ public class PseudoColumn extends AbstractChild<Table> {
         this.isNullable = isNullable;
     }
 
-    // ------------------------------------------------------------------- table
-    // just for class diagram
-    private Table getTable() {
-        return getParent();
-    }
-
-//    public void setTable(final Table table) {
-//
-//        setParent(table);
-//    }
     // -------------------------------------------------------------------------
     @Label("TABLE_CAT")
     @NillableBySpecification

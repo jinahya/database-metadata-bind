@@ -28,12 +28,12 @@ import java.lang.annotation.Target;
 @Documented
 @Retention(RetentionPolicy.RUNTIME)
 @Target({ElementType.FIELD, ElementType.METHOD})
-@interface Invocation {
+@interface Invoke {
 
     String name();
 
     Class<?>[] types() default {};
 
-    InvocationArgs[] argsarr() default {@InvocationArgs({})};
+    Literals[] args() default {@Literals({})};
 
 }

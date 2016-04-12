@@ -35,7 +35,7 @@ import javax.xml.bind.annotation.XmlType;
     "nonUnique", "indexQualifier", "indexName", "type", "ordinalPosition",
     "columnName", "ascOrDesc", "cardinality", "pages", "filterCondition"
 })
-public class IndexInfo extends AbstractChild<Table> {
+public class IndexInfo {
 
     @Override
     public String toString() {
@@ -173,16 +173,6 @@ public class IndexInfo extends AbstractChild<Table> {
         this.filterCondition = filterCondition;
     }
 
-    // ------------------------------------------------------------------- table
-    // just for class diagram
-    private Table getTable() {
-        return getParent();
-    }
-
-//    public void setTable(final Table table) {
-//
-//        setParent(table);
-//    }
     // -------------------------------------------------------------------------
     @Label("TABLE_CAT")
     @NillableBySpecification

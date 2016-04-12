@@ -30,7 +30,7 @@ import javax.xml.bind.annotation.XmlType;
 @XmlType(propOrder = {
     "tableName", "supertableName"
 })
-public class SuperTable extends AbstractChild<Table> {
+public class SuperTable {
 
     @Override
     public String toString() {
@@ -78,24 +78,6 @@ public class SuperTable extends AbstractChild<Table> {
         this.supertableName = supertableName;
     }
 
-    // ------------------------------------------------------------------- table
-    // just for class diagram
-    private Table getTable() {
-        return getParent();
-    }
-
-//    public void setTable(final Table table) {
-//
-//        setParent(table);
-//    }
-//
-//
-//    SuperTable table(final Table table) {
-//
-//        setTable(table);
-//
-//        return this;
-//    }
     // -------------------------------------------------------------------------
     @Label("TABLE_CAT")
     @NillableBySpecification

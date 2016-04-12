@@ -33,7 +33,7 @@ import javax.xml.bind.annotation.XmlType;
     "columnDef", "sqlDataType", "sqlDatetimeSub", "charOctetLength",
     "ordinalPosition", "isNullable", "specificName"
 })
-public class ProcedureColumn extends AbstractChild<Procedure> {
+public class ProcedureColumn {
 
     @Override
     public String toString() {
@@ -241,16 +241,6 @@ public class ProcedureColumn extends AbstractChild<Procedure> {
         this.specificName = specificName;
     }
 
-    // --------------------------------------------------------------- procedure
-    // just for class diagrams
-    private Procedure getProcedure() {
-        return getParent();
-    }
-
-//    public void setProcedure(final Procedure procedure) {
-//
-//        setParent(procedure);
-//    }
     // -------------------------------------------------------------------------
     @Label("PROCEDURE_CAT")
     @NillableBySpecification

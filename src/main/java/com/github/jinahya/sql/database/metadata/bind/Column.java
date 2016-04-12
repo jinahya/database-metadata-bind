@@ -39,7 +39,7 @@ import javax.xml.bind.annotation.XmlType;
     // ---------------------------------------------------------------------
     "columnPrivileges"
 })
-public class Column extends AbstractChild<Table> {
+public class Column {
 
     @Override
     public String toString() {
@@ -287,24 +287,6 @@ public class Column extends AbstractChild<Table> {
         this.isGeneratedcolumn = isGeneratedcolumn;
     }
 
-    // ------------------------------------------------------------------- table
-    // just for class diagram
-    private Table getTable() {
-        return getParent();
-    }
-
-//    public void setTable(final Table table) {
-//
-//        setParent(table);
-//    }
-//
-//
-//    Column table(final Table table) {
-//
-//        setTable(table);
-//
-//        return this;
-//    }
     // -------------------------------------------------------- columnPrivileges
     public List<ColumnPrivilege> getColumnPrivileges() {
         if (columnPrivileges == null) {
@@ -426,11 +408,11 @@ public class Column extends AbstractChild<Table> {
     @XmlElement(required = true)
     private String isGeneratedcolumn;
 
-    @Invocation(
+    @Invoke(
             name = "getColumnPrivileges",
             types = {String.class, String.class, String.class, String.class},
-            argsarr = {
-                @InvocationArgs({
+            args = {
+                @Literals({
             ":tableCat", ":tableSchem", ":tableName", ":columnName"
         })
             }

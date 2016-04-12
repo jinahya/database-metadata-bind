@@ -40,7 +40,7 @@ import javax.xml.bind.annotation.XmlType;
     "functionColumns"
 
 })
-public class Function extends AbstractChild<Schema> {
+public class Function {
 
     @Override
     public String toString() {
@@ -108,15 +108,6 @@ public class Function extends AbstractChild<Schema> {
         this.specificName = specificName;
     }
 
-    // ------------------------------------------------------------------ schema
-    public Schema getSchema() {
-        return getParent();
-    }
-
-    public void setSchema(final Schema schema) {
-        setParent(schema);
-    }
-
     // --------------------------------------------------------- functionColumns
     public List<FunctionColumn> getFunctionColumns() {
         if (functionColumns == null) {
@@ -156,11 +147,11 @@ public class Function extends AbstractChild<Schema> {
     @XmlElement(required = true)
     private String specificName;
 
-    @Invocation(
+    @Invoke(
             name = "getFunctionColumns",
             types = {String.class, String.class, String.class, String.class},
-            argsarr = {
-                @InvocationArgs({
+            args = {
+                @Literals({
             ":functionCat", ":functionSchem", ":functionName", "null"
         })})
     @XmlElementRef

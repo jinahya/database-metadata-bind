@@ -30,17 +30,17 @@ import javax.xml.bind.annotation.XmlType;
 @XmlType(propOrder = {
     "typeName", "supertypeCat", "supertypeSchem", "supertypeName"
 })
-public class SuperType extends AbstractChild<UDT> {
+public class SuperType {
 
     @Override
     public String toString() {
         return super.toString() + "{"
                + "typeCat=" + typeCat
-               + ", typeSchem=" + typeSchem
-               + ", typeName=" + typeName
-               + ", supertypeCat=" + supertypeCat
-               + ", supertypeSchem=" + supertypeSchem
-               + ", supertypeName=" + supertypeName
+               + ",typeSchem=" + typeSchem
+               + ",typeName=" + typeName
+               + ",supertypeCat=" + supertypeCat
+               + ",supertypeSchem=" + supertypeSchem
+               + ",supertypeName=" + supertypeName
                + "}";
     }
 
@@ -98,25 +98,6 @@ public class SuperType extends AbstractChild<UDT> {
         this.supertypeName = supertypeName;
     }
 
-    // --------------------------------------------------------------------- UDT
-    // just for class diagram
-    @Deprecated
-    private UDT getUDT() {
-        return getParent();
-    }
-
-//    public void setUDT(final UDT UDT) {
-//
-//        setParent(UDT);
-//    }
-//
-//
-//    SuperType UDT(final UDT UDT) {
-//
-//        setUDT(UDT);
-//
-//        return this;
-//    }
     // -------------------------------------------------------------------------
     @Label("TYPE_CAT")
     @NillableBySpecification

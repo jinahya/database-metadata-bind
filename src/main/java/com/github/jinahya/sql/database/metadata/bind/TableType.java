@@ -29,7 +29,7 @@ import javax.xml.bind.annotation.XmlType;
 @XmlType(propOrder = {
     "tableType"
 })
-public class TableType extends AbstractChild<Metadata> {
+public class TableType {
 
     @Override
     public String toString() {
@@ -47,17 +47,6 @@ public class TableType extends AbstractChild<Metadata> {
         this.tableType = tableType;
     }
 
-    // ---------------------------------------------------------------- metadata
-    // just for class diagram
-    @Deprecated
-    private Metadata getMetadata() {
-        return getParent();
-    }
-
-//    public void setMetadata(final Metadata metadata) {
-//
-//        setParent(metadata);
-//    }
     // -------------------------------------------------------------------------
     @Label("TABLE_TYPE")
     @XmlElement(required = true)

@@ -32,7 +32,7 @@ import javax.xml.bind.annotation.XmlType;
     "precision", "length", "scale", "radix", "nullable", "remarks",
     "charOctetLength", "ordinalPosition", "isNullable", "specificName"
 })
-public class FunctionColumn extends AbstractChild<Function> {
+public class FunctionColumn {
 
     @Override
     public String toString() {
@@ -208,15 +208,6 @@ public class FunctionColumn extends AbstractChild<Function> {
 
     public void setSpecificName(final String specificName) {
         this.specificName = specificName;
-    }
-
-    // ---------------------------------------------------------------- function
-    public Function getFunction() {
-        return getParent();
-    }
-
-    public void setFunction(final Function function) {
-        setParent(function);
     }
 
     // -------------------------------------------------------------------------

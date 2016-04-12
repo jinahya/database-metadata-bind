@@ -35,7 +35,7 @@ import javax.xml.bind.annotation.XmlType;
     // ---------------------------------------------------------------------
     "procedureColumns"
 })
-public class Procedure extends AbstractChild<Schema> {
+public class Procedure {
 
     @Override
     public String toString() {
@@ -103,16 +103,6 @@ public class Procedure extends AbstractChild<Schema> {
         this.specificName = specificName;
     }
 
-    // ------------------------------------------------------------------ schema
-    // just for class diagram
-    private Schema getSchema() {
-        return getParent();
-    }
-
-//    public void setSchema(final Schema schema) {
-//
-//        setParent(schema);
-//    }
     // -------------------------------------------------------- procedureColumns
     public List<ProcedureColumn> getProcedureColumns() {
         if (procedureColumns == null) {
@@ -152,11 +142,11 @@ public class Procedure extends AbstractChild<Schema> {
     @XmlElement(required = true)
     private String specificName;
 
-    @Invocation(
+    @Invoke(
             name = "getProcedureColumns",
             types = {String.class, String.class, String.class, String.class},
-            argsarr = {
-                @InvocationArgs({
+            args = {
+                @Literals({
             ":procedureCat", ":procedureSchem", ":procedureName", "null"
         })
             }

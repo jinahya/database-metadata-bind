@@ -30,7 +30,7 @@ import javax.xml.bind.annotation.XmlType;
 @XmlType(propOrder = {
     "grantor", "grantee", "privilege", "isGrantable"
 })
-public class ColumnPrivilege extends AbstractChild<Column> {
+public class ColumnPrivilege {
 
     @Override
     public String toString() {
@@ -118,16 +118,6 @@ public class ColumnPrivilege extends AbstractChild<Column> {
         this.isGrantable = isGrantable;
     }
 
-    // ------------------------------------------------------------------ column
-    // just for class diagram
-    private Column getColumn() {
-        return getParent();
-    }
-
-//    public void setColumn(final Column column) {
-//
-//        setParent(column);
-//    }
     // -------------------------------------------------------------------------
     @Label("TABLE_CAT")
     @NillableBySpecification

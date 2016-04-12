@@ -32,7 +32,7 @@ import javax.xml.bind.annotation.XmlType;
             "grantor", "grantee", "privilege", "isGrantable"
         }
 )
-public class TablePrivilege extends AbstractChild<Table> {
+public class TablePrivilege {
 
     @Override
     public String toString() {
@@ -110,17 +110,6 @@ public class TablePrivilege extends AbstractChild<Table> {
         this.isGrantable = isGrantable;
     }
 
-    // ------------------------------------------------------------------- table
-    // just for class diagram
-    @Deprecated
-    private Table getTable() {
-        return getParent();
-    }
-
-//    public void setTable(final Table table) {
-//
-//        setParent(table);
-//    }
     // -------------------------------------------------------------------------
     @Label("TABLE_CAT")
     @NillableBySpecification

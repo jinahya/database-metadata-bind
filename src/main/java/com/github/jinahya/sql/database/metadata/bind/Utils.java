@@ -223,21 +223,6 @@ class Utils {
         field.set(beanInstance, Utils.adaptValue(field, propertyValue));
     }
 
-    static void setParent(final Class<?> childClass, final Iterable<?> children,
-                          final Object parent)
-            throws ReflectiveOperationException {
-        if (!Child.class.isAssignableFrom(childClass)) {
-            logger.log(Level.WARNING,
-                       "childClass({0}) is not assignable to {1}",
-                       new Object[]{childClass, Child.class});
-            return;
-        }
-        final Method method = childClass.getMethod("setParent", Object.class);
-        for (final Object childBean : children) {
-            method.invoke(childBean, parent);
-        }
-    }
-
     static Object adaptValue(final Class<?> type, final Object value,
                              final Object target) {
         if (type != null && type.isInstance(value)) {

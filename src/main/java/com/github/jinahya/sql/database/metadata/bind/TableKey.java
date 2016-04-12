@@ -32,7 +32,7 @@ import javax.xml.bind.annotation.XmlType;
             "deleteRule", "fkName", "pkName", "deferrability"
         }
 )
-abstract class TableKey extends AbstractChild<Table> {
+abstract class TableKey {
 
     @Override
     public String toString() {
@@ -180,17 +180,6 @@ abstract class TableKey extends AbstractChild<Table> {
         this.deferrability = deferrability;
     }
 
-//    // ------------------------------------------------------------------- table
-//    public Table getTable() {
-//
-//        return getParent();
-//    }
-//
-//
-//    public void setTable(final Table table) {
-//
-//        setParent(table);
-//    }
     // -------------------------------------------------------------------------
     @Label("PKTABLE_CAT")
     @NillableBySpecification

@@ -38,7 +38,7 @@ import javax.xml.bind.annotation.XmlType;
     "tables",
     "UDTs"
 })
-public class Schema extends AbstractChild<Catalog> implements TableDomain {
+public class Schema implements TableDomain {
 
     @Override
     public List<CrossReference> getCrossReferences() {
@@ -54,7 +54,7 @@ public class Schema extends AbstractChild<Catalog> implements TableDomain {
     public String toString() {
         return super.toString() + "{"
                + "tableCatalog=" + tableCatalog
-               + ", tableSchem=" + tableSchem
+               + ",tableSchem=" + tableSchem
                + "}";
     }
 
@@ -86,16 +86,6 @@ public class Schema extends AbstractChild<Catalog> implements TableDomain {
         return this;
     }
 
-    // ----------------------------------------------------------------- catalog
-    // just for class diagram
-    private Catalog getCatalog() {
-        return getParent();
-    }
-
-//    public void setCatalog(final Catalog catalog) {
-//
-//        setParent(catalog);
-//    }
     // --------------------------------------------------------------- functions
     public List<Function> getFunctions() {
         if (functions == null) {
@@ -176,21 +166,21 @@ public class Schema extends AbstractChild<Catalog> implements TableDomain {
     @XmlElementRef
     private List<CrossReference> crossReferences;
 
-    @Invocation(
+    @Invoke(
             name = "getFunctions",
             types = {String.class, String.class, String.class},
-            argsarr = {
-                @InvocationArgs({":tableCatalog", ":tableSchem", "null"})
+            args = {
+                @Literals({":tableCatalog", ":tableSchem", "null"})
             }
     )
     @XmlElementRef
     private List<Function> functions;
 
-    @Invocation(
+    @Invoke(
             name = "getProcedures",
             types = {String.class, String.class, String.class},
-            argsarr = {
-                @InvocationArgs({":tableCatalog", ":tableSchem", "null"})
+            args = {
+                @Literals({":tableCatalog", ":tableSchem", "null"})
             }
     )
     @XmlElementRef
@@ -214,21 +204,21 @@ public class Schema extends AbstractChild<Catalog> implements TableDomain {
 //    )
 //    @XmlElementRef
 //    private List<SuperType> superTypes;
-    @Invocation(
+    @Invoke(
             name = "getTables",
             types = {String.class, String.class, String.class, String[].class},
-            argsarr = {
-                @InvocationArgs({":tableCatalog", ":tableSchem", "null", "null"})
+            args = {
+                @Literals({":tableCatalog", ":tableSchem", "null", "null"})
             }
     )
     @XmlElementRef
     private List<Table> tables;
 
-    @Invocation(
+    @Invoke(
             name = "getUDTs",
             types = {String.class, String.class, String.class, int[].class},
-            argsarr = {
-                @InvocationArgs({":tableCatalog", ":tableSchem", "null", "null"})
+            args = {
+                @Literals({":tableCatalog", ":tableSchem", "null", "null"})
             }
     )
     @XmlElementRef

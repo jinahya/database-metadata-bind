@@ -35,7 +35,7 @@ import javax.xml.bind.annotation.XmlType;
     // ---------------------------------------------------------------------
     "attributes", "superTypes"
 })
-public class UDT extends AbstractChild<Schema> {
+public class UDT {
 
     @Override
     public String toString() {
@@ -129,17 +129,6 @@ public class UDT extends AbstractChild<Schema> {
         return superTypes;
     }
 
-    // ------------------------------------------------------------------ schema
-    // just for class diagram
-    @Deprecated
-    private Schema getSchema() {
-        return getParent();
-    }
-
-//    public void setSchema(final Schema schema) {
-//
-//        setParent(schema);
-//    }
     // -------------------------------------------------------------------------
     @Label("TYPE_CAT")
     @NillableBySpecification
@@ -172,22 +161,20 @@ public class UDT extends AbstractChild<Schema> {
     @XmlElement(nillable = true, required = true)
     private Short baseType;
 
-    @Invocation(
-            name = "getAttributes",
-            types = {String.class, String.class, String.class, String.class},
-            argsarr = {
-                @InvocationArgs({":typeCat", ":typeSchem", ":typeName", "null"})
-            }
+    @Invoke(name = "getAttributes",
+                types = {String.class, String.class, String.class, String.class},
+                args = {
+                    @Literals({":typeCat", ":typeSchem", ":typeName", "null"})
+                }
     )
     @XmlElementRef
     private List<Attribute> attributes;
 
-    @Invocation(
-            name = "getSuperTypes",
-            types = {String.class, String.class, String.class},
-            argsarr = {
-                @InvocationArgs({":typeCat", ":typeSchem", ":typeName"})
-            }
+    @Invoke(name = "getSuperTypes",
+                types = {String.class, String.class, String.class},
+                args = {
+                    @Literals({":typeCat", ":typeSchem", ":typeName"})
+                }
     )
     @XmlElementRef
     private List<SuperType> superTypes;

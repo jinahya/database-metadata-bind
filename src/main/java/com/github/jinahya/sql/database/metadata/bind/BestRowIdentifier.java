@@ -30,7 +30,7 @@ import javax.xml.bind.annotation.XmlType;
     "scope", "columnName", "dataType", "typeName", "columnSize",
     "bufferLength", "decimalDigits", "pseudoColumn"
 })
-public class BestRowIdentifier extends AbstractChild<Table> {
+public class BestRowIdentifier {
 
     @Override
     public String toString() {
@@ -118,16 +118,6 @@ public class BestRowIdentifier extends AbstractChild<Table> {
         this.pseudoColumn = pseudoColumn;
     }
 
-    // ------------------------------------------------------------------- table
-    // just for class diagram
-    private Table getTable() {
-        return getParent();
-    }
-
-//    public void setTable(final Table table) {
-//
-//        setParent(table);
-//    }
     // -------------------------------------------------------------------------
     @Label("SCOPE")
     @XmlElement(required = true)

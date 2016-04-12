@@ -29,15 +29,15 @@ import javax.xml.bind.annotation.XmlType;
 @XmlType(propOrder = {
     "name", "maxLen", "defaultValue", "description"
 })
-public class ClientInfoProperty extends AbstractChild<Metadata> {
+public class ClientInfoProperty {
 
     @Override
     public String toString() {
         return super.toString() + "{"
                + "name=" + name
-               + ", maxLen=" + maxLen
-               + ", defaultValue=" + defaultValue
-               + ", description=" + description
+               + ",maxLen=" + maxLen
+               + ",defaultValue=" + defaultValue
+               + ",description=" + description
                + "}";
     }
 
@@ -77,16 +77,6 @@ public class ClientInfoProperty extends AbstractChild<Metadata> {
         this.description = description;
     }
 
-    // ---------------------------------------------------------------- metadata
-    // just for class diagram
-    private Metadata getMetadata() {
-        return getParent();
-    }
-
-//    public void setMetadata(final Metadata metadata) {
-//
-//        setParent(metadata);
-//    }
     // -------------------------------------------------------------------------
     @Label("NAME")
     @XmlElement(required = true)

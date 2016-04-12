@@ -35,7 +35,7 @@ import javax.xml.bind.annotation.XmlType;
     "crossReferences",
     "schemas"
 })
-public class Catalog extends AbstractChild<Metadata> implements TableDomain {
+public class Catalog implements TableDomain {
 
     @Override
     public String toString() {
@@ -89,24 +89,6 @@ public class Catalog extends AbstractChild<Metadata> implements TableDomain {
         this.schemas = schemas;
     }
 
-    // ---------------------------------------------------------------- metadata
-    // just for class digram
-    private Metadata getMetadata() {
-        return getParent();
-    }
-
-//    public void setMetadata(final Metadata metadata) {
-//
-//        setParent(metadata);
-//    }
-//
-//
-//    Catalog metadata(final Metadata metadata) {
-//
-//        setMetadata(metadata);
-//
-//        return this;
-//    }
     // -------------------------------------------------------------------------
     @Label("TABLE_CAT")
     @XmlElement(required = true)
@@ -115,11 +97,10 @@ public class Catalog extends AbstractChild<Metadata> implements TableDomain {
     @XmlElementRef
     private List<CrossReference> crossReferences;
 
-    @Invocation(
-            name = "getSchemas",
+    @Invoke(name = "getSchemas",
             types = {String.class, String.class},
-            argsarr = {
-                @InvocationArgs({":tableCat", "null"})
+            args = {
+                @Literals({":tableCat", "null"})
             }
     )
     @XmlElementRef

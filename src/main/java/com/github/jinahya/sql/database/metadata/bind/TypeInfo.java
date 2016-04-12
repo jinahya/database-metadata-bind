@@ -26,16 +26,14 @@ import javax.xml.bind.annotation.XmlType;
  * @author Jin Kwon &lt;jinahya_at_gmail.com&gt;
  */
 @XmlRootElement
-@XmlType(
-        propOrder = {
-            "typeName", "dataType", "precision", "literalPrefix", "literalSuffix",
-            "createParams", "nullable", "caseSensitive", "searchable",
-            "unsignedAttribute", "fixedPrecScale", "autoIncrement", "localTypeName",
-            "minimumScale", "maximumScale", "sqlDataType", "sqlDatetimeSub",
-            "numPrecRadix"
-        }
-)
-public class TypeInfo extends AbstractChild<Metadata> {
+@XmlType(propOrder = {
+    "typeName", "dataType", "precision", "literalPrefix", "literalSuffix",
+    "createParams", "nullable", "caseSensitive", "searchable",
+    "unsignedAttribute", "fixedPrecScale", "autoIncrement", "localTypeName",
+    "minimumScale", "maximumScale", "sqlDataType", "sqlDatetimeSub",
+    "numPrecRadix"
+})
+public class TypeInfo {
 
     @Override
     public String toString() {
@@ -223,17 +221,6 @@ public class TypeInfo extends AbstractChild<Metadata> {
         this.numPrecRadix = numPrecRadix;
     }
 
-    // ---------------------------------------------------------------- metadata
-    // just for class diagram
-    @Deprecated
-    private Metadata getMetadata() {
-        return getParent();
-    }
-
-//    public void setMetadata(final Metadata metadata) {
-//
-//        setParent(metadata);
-//    }
     // -------------------------------------------------------------------------
     @Label("TYPE_NAME")
     @XmlElement(required = true)
