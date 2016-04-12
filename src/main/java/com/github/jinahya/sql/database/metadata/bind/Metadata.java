@@ -122,8 +122,12 @@ public class Metadata implements TableDomain {
         this.connection = connection;
     }
 
+    // --------------------------------------------------------- crossReferences
     @Override
     public List<CrossReference> getCrossReferences() {
+        if (crossReferences == null) {
+            crossReferences = new ArrayList<CrossReference>();
+        }
         return crossReferences;
     }
 
@@ -132,22 +136,28 @@ public class Metadata implements TableDomain {
         this.crossReferences = crossReferences;
     }
 
+    // ----------------------------------- dataDefinitionCausesTransactionCommit
     public boolean isDataDefinitionCausesTransactionCommit() {
         return dataDefinitionCausesTransactionCommit;
     }
 
-    public void setDataDefinitionCausesTransactionCommit(boolean dataDefinitionCausesTransactionCommit) {
-        this.dataDefinitionCausesTransactionCommit = dataDefinitionCausesTransactionCommit;
+    public void setDataDefinitionCausesTransactionCommit(
+            final boolean dataDefinitionCausesTransactionCommit) {
+        this.dataDefinitionCausesTransactionCommit
+                = dataDefinitionCausesTransactionCommit;
     }
 
     public boolean isDataDefinitionIgnoredInTransactions() {
         return dataDefinitionIgnoredInTransactions;
     }
 
-    public void setDataDefinitionIgnoredInTransactions(boolean dataDefinitionIgnoredInTransactions) {
-        this.dataDefinitionIgnoredInTransactions = dataDefinitionIgnoredInTransactions;
+    public void setDataDefinitionIgnoredInTransactions(
+            final boolean dataDefinitionIgnoredInTransactions) {
+        this.dataDefinitionIgnoredInTransactions
+                = dataDefinitionIgnoredInTransactions;
     }
 
+    // ---------------------------------------------------- databaseMajorVersion
     public int getDatabaseMajorVersion() {
         return databaseMajorVersion;
     }

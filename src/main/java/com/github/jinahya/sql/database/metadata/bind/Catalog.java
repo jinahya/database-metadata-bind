@@ -35,7 +35,8 @@ import javax.xml.bind.annotation.XmlType;
     "crossReferences",
     "schemas"
 })
-public class Catalog implements TableDomain {
+//public class Catalog implements TableDomain {
+public class Catalog extends AbstractTableDomain {
 
     @Override
     public String toString() {
@@ -44,6 +45,7 @@ public class Catalog implements TableDomain {
                + "}";
     }
 
+    // ------------------------------------------------------------- TableDomain
     @Override
     public List<Table> getTables() {
         final List<Table> tables = new ArrayList<Table>();
@@ -53,15 +55,15 @@ public class Catalog implements TableDomain {
         return tables;
     }
 
-    @Override
-    public List<CrossReference> getCrossReferences() {
-        return crossReferences;
-    }
-
-    @Override
-    public void setCrossReferences(final List<CrossReference> crossReferences) {
-        this.crossReferences = crossReferences;
-    }
+//    @Override
+//    public List<CrossReference> getCrossReferences() {
+//        return crossReferences;
+//    }
+//
+//    @Override
+//    public void setCrossReferences(final List<CrossReference> crossReferences) {
+//        this.crossReferences = crossReferences;
+//    }
 
     // ---------------------------------------------------------------- tableCat
     public String getTableCat() {
@@ -72,10 +74,10 @@ public class Catalog implements TableDomain {
         this.tableCat = tableCat;
     }
 
-    Catalog tableCat(final String tableCat) {
-        setTableCat(tableCat);
-        return this;
-    }
+//    Catalog tableCat(final String tableCat) {
+//        setTableCat(tableCat);
+//        return this;
+//    }
 
     // ----------------------------------------------------------------- schemas
     public List<Schema> getSchemas() {
@@ -85,17 +87,17 @@ public class Catalog implements TableDomain {
         return schemas;
     }
 
-    public void setSchemas(List<Schema> schemas) {
-        this.schemas = schemas;
-    }
+//    public void setSchemas(List<Schema> schemas) {
+//        this.schemas = schemas;
+//    }
 
     // -------------------------------------------------------------------------
     @Label("TABLE_CAT")
     @XmlElement(required = true)
     private String tableCat;
 
-    @XmlElementRef
-    private List<CrossReference> crossReferences;
+//    @XmlElementRef
+//    private List<CrossReference> crossReferences;
 
     @Invoke(name = "getSchemas",
             types = {String.class, String.class},

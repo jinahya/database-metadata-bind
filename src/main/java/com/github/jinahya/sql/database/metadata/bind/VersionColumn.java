@@ -26,25 +26,23 @@ import javax.xml.bind.annotation.XmlType;
  * @author Jin Kwon &lt;jinahya_at_gmail.com&gt;
  */
 @XmlRootElement
-@XmlType(
-        propOrder = {
-            "scope", "columnName", "dataType", "typeName", "columnSize",
-            "bufferLength", "decimalDigits", "pseudoColumn"
-        }
-)
+@XmlType(propOrder = {
+    "scope", "columnName", "dataType", "typeName", "columnSize",
+    "bufferLength", "decimalDigits", "pseudoColumn"
+})
 public class VersionColumn {
 
     @Override
     public String toString() {
         return super.toString() + "{"
                + "scope=" + scope
-               + ", columnName=" + columnName
-               + ", dataType=" + dataType
-               + ", typeName=" + typeName
-               + ", columnSize=" + columnSize
-               + ", bufferLength=" + bufferLength
-               + ", decimalDigits=" + decimalDigits
-               + ", pseudoColumn=" + pseudoColumn
+               + ",columnName=" + columnName
+               + ",dataType=" + dataType
+               + ",typeName=" + typeName
+               + ",columnSize=" + columnSize
+               + ",bufferLength=" + bufferLength
+               + ",decimalDigits=" + decimalDigits
+               + ",pseudoColumn=" + pseudoColumn
                + "}";
     }
 

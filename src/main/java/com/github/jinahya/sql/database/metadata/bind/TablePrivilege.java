@@ -27,11 +27,9 @@ import javax.xml.bind.annotation.XmlType;
  * @author Jin Kwon &lt;jinahya_at_gmail.com&gt;
  */
 @XmlRootElement
-@XmlType(
-        propOrder = {
-            "grantor", "grantee", "privilege", "isGrantable"
-        }
-)
+@XmlType(propOrder = {
+    "grantor", "grantee", "privilege", "isGrantable"
+})
 public class TablePrivilege {
 
     @Override

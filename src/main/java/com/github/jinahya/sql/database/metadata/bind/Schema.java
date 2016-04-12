@@ -38,17 +38,7 @@ import javax.xml.bind.annotation.XmlType;
     "tables",
     "UDTs"
 })
-public class Schema implements TableDomain {
-
-    @Override
-    public List<CrossReference> getCrossReferences() {
-        return crossReferences;
-    }
-
-    @Override
-    public void setCrossReferences(List<CrossReference> crossReferences) {
-        this.crossReferences = crossReferences;
-    }
+public class Schema extends AbstractTableDomain {
 
     @Override
     public String toString() {
@@ -110,24 +100,6 @@ public class Schema implements TableDomain {
         this.procedures = procedures;
     }
 
-//    // ------------------------------------------------------------- superTables
-//    public List<SuperTable> getSuperTables() {
-//
-//        if (superTables == null) {
-//            superTables = new ArrayList<SuperTable>();
-//        }
-//
-//        return superTables;
-//    }
-//    // -------------------------------------------------------------- superTypes
-//    public List<SuperType> getSuperTypes() {
-//
-//        if (superTypes == null) {
-//            superTypes = new ArrayList<SuperType>();
-//        }
-//
-//        return superTypes;
-//    }
     // ------------------------------------------------------------------ tables
     @Override
     public List<Table> getTables() {
@@ -163,11 +135,7 @@ public class Schema implements TableDomain {
     @XmlElement(required = true)
     private String tableSchem;
 
-    @XmlElementRef
-    private List<CrossReference> crossReferences;
-
-    @Invoke(
-            name = "getFunctions",
+    @Invoke(name = "getFunctions",
             types = {String.class, String.class, String.class},
             args = {
                 @Literals({":tableCatalog", ":tableSchem", "null"})
@@ -176,8 +144,7 @@ public class Schema implements TableDomain {
     @XmlElementRef
     private List<Function> functions;
 
-    @Invoke(
-            name = "getProcedures",
+    @Invoke(name = "getProcedures",
             types = {String.class, String.class, String.class},
             args = {
                 @Literals({":tableCatalog", ":tableSchem", "null"})
@@ -186,26 +153,7 @@ public class Schema implements TableDomain {
     @XmlElementRef
     private List<Procedure> procedures;
 
-//    @Invocation(
-//        name = "getSuperTables",
-//        types = {String.class, String.class, String.class},
-//        argsarr = {
-//            @InvocationArgs({":tableCatalog", ":tableSchem", "null"})
-//        }
-//    )
-//    @XmlElementRef
-//    private List<SuperTable> superTables;
-//    @Invocation(
-//        name = "getSuperTypes",
-//        types = {String.class, String.class, String.class},
-//        argsarr = {
-//            @InvocationArgs({":tableCatalog", ":tableSchem", "null"})
-//        }
-//    )
-//    @XmlElementRef
-//    private List<SuperType> superTypes;
-    @Invoke(
-            name = "getTables",
+    @Invoke(name = "getTables",
             types = {String.class, String.class, String.class, String[].class},
             args = {
                 @Literals({":tableCatalog", ":tableSchem", "null", "null"})
@@ -214,8 +162,7 @@ public class Schema implements TableDomain {
     @XmlElementRef
     private List<Table> tables;
 
-    @Invoke(
-            name = "getUDTs",
+    @Invoke(name = "getUDTs",
             types = {String.class, String.class, String.class, int[].class},
             args = {
                 @Literals({":tableCatalog", ":tableSchem", "null", "null"})
