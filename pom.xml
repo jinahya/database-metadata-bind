@@ -38,10 +38,17 @@
     <maven.compiler.target>1.6</maven.compiler.target>
     <maven.compiler.testSource>1.8</maven.compiler.testSource>
     <maven.compiler.testTarget>1.8</maven.compiler.testTarget>
-<!--    <java.bootstrap.classes>${java.home}/lib/rt.jar</java.bootstrap.classes>
+    <!--    <java.bootstrap.classes>${java.home}/lib/rt.jar</java.bootstrap.classes>
     <java.cryptographic.extension.classes>${java.home}/lib/jce.jar</java.cryptographic.extension.classes>
     <java.secure.socket.extension.classes>${java.home}/lib/jsse.jar</java.secure.socket.extension.classes>-->
   </properties>
+
+  <repositories>
+    <repository>
+      <id>bintray-vorburger</id>
+      <url>https://dl.bintray.com/vorburger/maven/</url>
+    </repository>
+  </repositories>
 
   <dependencyManagement>
     <dependencies>
@@ -346,12 +353,6 @@
     </profile>
     <profile>
       <id>mariaDB4j</id>
-      <repositories>
-        <repository>
-          <id>bintray-vorburger</id>
-          <url>https://dl.bintray.com/vorburger/maven/</url>
-        </repository>
-      </repositories>
       <dependencies>
         <dependency>
           <groupId>org.mariadb.jdbc</groupId>
