@@ -16,14 +16,12 @@
 package com.github.jinahya.sql.database.metadata.bind;
 
 import java.util.ArrayList;
-import java.util.Comparator;
 import java.util.List;
 import javax.xml.bind.annotation.XmlAttribute;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlElementRef;
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlType;
-import org.apache.commons.lang3.builder.CompareToBuilder;
 
 /**
  * An entity class for binding the result of
@@ -44,31 +42,15 @@ import org.apache.commons.lang3.builder.CompareToBuilder;
 })
 public class Function extends AbstractChild<Schema> {
 
-    public static Comparator<Function> natural() {
-        return new Comparator<Function>() {
-            @Override
-            public int compare(Function o1, Function o2) {
-                // by FUNCTION_CAT, FUNCTION_SCHEM, FUNCTION_NAME
-                // and SPECIFIC_NAME.
-                return new CompareToBuilder()
-                        .append(o1.getFunctionCat(), o2.getFunctionCat())
-                        .append(o1.getFunctionSchem(), o2.getFunctionSchem())
-                        .append(o1.getFunctionName(), o2.getFunctionName())
-                        .append(o1.getSpecificName(), o2.getSpecificName())
-                        .build();
-            }
-        };
-    }
-
     @Override
     public String toString() {
         return super.toString() + "{"
                + "functionCat=" + functionCat
-               + ", functionSchem=" + functionSchem
-               + ", functionName=" + functionName
-               + ", remarks=" + remarks
-               + ", functionType=" + functionType
-               + ", specificName=" + specificName
+               + ",functionSchem=" + functionSchem
+               + ",functionName=" + functionName
+               + ",remarks=" + remarks
+               + ",functionType=" + functionType
+               + ",specificName=" + specificName
                + "}";
     }
 
@@ -149,12 +131,12 @@ public class Function extends AbstractChild<Schema> {
 
     // -------------------------------------------------------------------------
     @Label("FUNCTION_CAT")
-    @_NillableBySpecification
+    @NillableBySpecification
     @XmlAttribute
     private String functionCat;
 
     @Label("FUNCTION_SCHEM")
-    @_NillableBySpecification
+    @NillableBySpecification
     @XmlAttribute
     private String functionSchem;
 

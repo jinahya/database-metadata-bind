@@ -98,12 +98,12 @@ public class SuperTable extends AbstractChild<Table> {
 //    }
     // -------------------------------------------------------------------------
     @Label("TABLE_CAT")
-    @_NillableBySpecification
+    @NillableBySpecification
     @XmlAttribute
     private String tableCat;
 
     @Label("TABLE_SCHEM")
-    @_NillableBySpecification
+    @NillableBySpecification
     @XmlAttribute
     private String tableSchem;
 

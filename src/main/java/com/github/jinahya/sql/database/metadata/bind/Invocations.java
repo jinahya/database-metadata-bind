@@ -15,8 +15,6 @@
  */
 package com.github.jinahya.sql.database.metadata.bind;
 
-import org.apache.commons.lang3.ClassUtils;
-
 /**
  * A utility class for {@link Invocation}.
  *
@@ -24,7 +22,7 @@ import org.apache.commons.lang3.ClassUtils;
  */
 final class Invocations {
 
-    static <T> Object[] args(final Class<T> beanClass, final T beanInstance,
+    static <T> Object[] args(final Class<T> klass, final T instance,
                              final Class<?>[] types, final String[] literals)
             throws ReflectiveOperationException {
 
@@ -44,7 +42,7 @@ final class Invocations {
 ////                values[i] = Beans.getPropertyValue(
 ////                    beanClass, names[i].substring(1), beanInstance);
 //                values[i] = Values.get(field, beanInstance);
-                values[i] = Values.get(literals[i].substring(1), beanInstance);
+                values[i] = Utils.propertyValue(literals[i].substring(1), instance);
                 continue;
             }
             if (types[i] == String.class) {
@@ -53,7 +51,7 @@ final class Invocations {
             }
             if (types[i].isPrimitive()) {
 //                types[i] = Reflections.wrapper(types[i]);
-                types[i] = ClassUtils.primitiveToWrapper(types[i]);
+                types[i] = Utils.wrapperClass(types[i]);
             }
             values[i] = types[i]
                     .getMethod("valueOf", String.class)

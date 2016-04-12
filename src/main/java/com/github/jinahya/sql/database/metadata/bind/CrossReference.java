@@ -15,12 +15,10 @@
  */
 package com.github.jinahya.sql.database.metadata.bind;
 
-import java.util.Comparator;
 import javax.xml.bind.annotation.XmlAttribute;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlType;
-import org.apache.commons.lang3.builder.CompareToBuilder;
 
 /**
  * An entity class for binding the result of
@@ -35,39 +33,23 @@ import org.apache.commons.lang3.builder.CompareToBuilder;
 })
 public class CrossReference extends AbstractChild<Metadata> {
 
-    public static Comparator<CrossReference> natural() {
-        return new Comparator<CrossReference>() {
-            @Override
-            public int compare(final CrossReference o1,
-                               final CrossReference o2) {
-                // by FKTABLE_CAT, FKTABLE_SCHEM, FKTABLE_NAME, and KEY_SEQ.
-                return new CompareToBuilder()
-                        .append(o1.getFktableCat(), o2.getFktableCat())
-                        .append(o1.getFktableSchem(), o2.getFktableSchem())
-                        .append(o1.getFktableName(), o2.getFktableName())
-                        .append(o1.getKeySeq(), o2.getKeySeq())
-                        .build();
-            }
-        };
-    }
-
     @Override
     public String toString() {
         return super.toString() + "{"
                + "pktableCat=" + pktableCat
-               + ", pktableSchem=" + pktableSchem
-               + ", pktableName=" + pktableName
-               + ", pkcolumnName=" + pkcolumnName
-               + ", fktableCat=" + fktableCat
-               + ", fktableSchem=" + fktableSchem
-               + ", fktableName=" + fktableName
-               + ", fkcolumnName=" + fkcolumnName
-               + ", keySeq=" + keySeq
-               + ", updateRule=" + updateRule
-               + ", deleteRule=" + deleteRule
-               + ", fkName=" + fkName
-               + ", pkName=" + pkName
-               + ", deferrability=" + deferrability
+               + ",pktableSchem=" + pktableSchem
+               + ",pktableName=" + pktableName
+               + ",pkcolumnName=" + pkcolumnName
+               + ",fktableCat=" + fktableCat
+               + ",fktableSchem=" + fktableSchem
+               + ",fktableName=" + fktableName
+               + ",fkcolumnName=" + fkcolumnName
+               + ",keySeq=" + keySeq
+               + ",updateRule=" + updateRule
+               + ",deleteRule=" + deleteRule
+               + ",fkName=" + fkName
+               + ",pkName=" + pkName
+               + ",deferrability=" + deferrability
                + "}";
     }
 
@@ -217,12 +199,12 @@ public class CrossReference extends AbstractChild<Metadata> {
 //    }
     // -------------------------------------------------------------------------
     @Label("PKTABLE_CAT")
-    @_NillableBySpecification
+    @NillableBySpecification
     @XmlAttribute
     private String pktableCat;
 
     @Label("PKTABLE_SCHEM")
-    @_NillableBySpecification
+    @NillableBySpecification
     @XmlAttribute
     private String pktableSchem;
 
@@ -235,12 +217,12 @@ public class CrossReference extends AbstractChild<Metadata> {
     private String pkcolumnName;
 
     @Label("FKTABLE_CAT")
-    @_NillableBySpecification
+    @NillableBySpecification
     @XmlAttribute
     private String fktableCat;
 
     @Label("FKTABLE_NAME")
-    @_NillableBySpecification
+    @NillableBySpecification
     @XmlAttribute
     private String fktableSchem;
 
@@ -265,12 +247,12 @@ public class CrossReference extends AbstractChild<Metadata> {
     private short deleteRule;
 
     @Label("FK_NAME")
-    @_NillableBySpecification
+    @NillableBySpecification
     @XmlElement(nillable = true, required = true)
     private String fkName;
 
     @Label("PK_NAME")
-    @_NillableBySpecification
+    @NillableBySpecification
     @XmlElement(nillable = true, required = true)
     private String pkName;
 

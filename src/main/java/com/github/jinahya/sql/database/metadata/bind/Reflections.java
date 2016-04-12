@@ -15,10 +15,14 @@
  */
 package com.github.jinahya.sql.database.metadata.bind;
 
+import java.lang.annotation.Annotation;
 import java.lang.reflect.Field;
 import java.lang.reflect.Modifier;
 import java.sql.Types;
+import java.util.Collections;
+import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Map;
 import java.util.Set;
 import java.util.logging.Logger;
 import static java.util.logging.Logger.getLogger;
@@ -31,37 +35,33 @@ class Reflections {
 
     private static final Logger logger = getLogger(Metadata.class.getName());
 
-//    private static final Map<Class<?>, Class<?>> WRAPPERS;
-//
-//
-//    static {
-//        final Map<Class<?>, Class<?>> map = new HashMap<Class<?>, Class<?>>(9);
-//        map.put(boolean.class, Boolean.class);
-//        map.put(byte.class, Byte.class);
-//        map.put(char.class, Character.class);
-//        map.put(double.class, Double.class);
-//        map.put(float.class, Float.class);
-//        map.put(int.class, Integer.class);
-//        map.put(long.class, Long.class);
-//        map.put(short.class, Short.class);
-//        map.put(void.class, Void.class);
-//        WRAPPERS = Collections.unmodifiableMap(map);
-//    }
-//
-//
-//    static Class<?> wrapper(final Class<?> primitive) {
-//
-//        if (primitive == null) {
-//            throw new NullPointerException("null primitive");
-//        }
-//
-//        if (!primitive.isPrimitive()) {
-//            throw new IllegalArgumentException("not primitive: " + primitive);
-//        }
-//
-//        return WRAPPERS.get(primitive);
-//    }
-    static Field field(final Class<?> declaring, final String name)
+    private static final Map<Class<?>, Class<?>> WRAPPERS;
+
+    static {
+        final Map<Class<?>, Class<?>> map = new HashMap<Class<?>, Class<?>>();
+        map.put(boolean.class, Boolean.class);
+        map.put(byte.class, Byte.class);
+        map.put(char.class, Character.class);
+        map.put(double.class, Double.class);
+        map.put(float.class, Float.class);
+        map.put(int.class, Integer.class);
+        map.put(long.class, Long.class);
+        map.put(short.class, Short.class);
+        map.put(void.class, Void.class);
+        WRAPPERS = Collections.unmodifiableMap(map);
+    }
+
+    static Class<?> wrapperClass(final Class<?> primitive) {
+        if (primitive == null) {
+            throw new NullPointerException("null primitive");
+        }
+        if (!primitive.isPrimitive()) {
+            throw new IllegalArgumentException("not primitive: " + primitive);
+        }
+        return WRAPPERS.get(primitive);
+    }
+
+    static Field findField(final Class<?> declaring, final String name)
             throws NoSuchFieldException {
         try {
             return declaring.getDeclaredField(name);
@@ -70,36 +70,33 @@ class Reflections {
             if (superclass == null) {
                 throw nsfe;
             }
-            return field(superclass, name);
+            return findField(superclass, name);
         }
     }
 
-//    static List<Field> fields(
-//        final Class<?> declaring, final List<Field> fields,
-//        final Class<? extends Annotation> annotationClass,
-//        final Class<? extends Annotation>... otherAnnotationClasses) {
-//
-//        for (final Field declaredField : declaring.getDeclaredFields()) {
-//            if (declaredField.getAnnotation(annotationClass) != null) {
-//                fields.add(declaredField);
-//                continue;
-//            }
-//            for (final Class<? extends Annotation> otherAnnotationClass
-//                 : otherAnnotationClasses) {
-//                if (declaredField.getAnnotation(otherAnnotationClass) != null) {
-//                    fields.add(declaredField);
-//                }
-//            }
-//        }
-//
-//        final Class<?> superclass = declaring.getSuperclass();
-//        if (superclass == null) {
-//            return fields;
-//        }
-//
-//        return fields(superclass, fields, annotationClass,
-//                      otherAnnotationClasses);
-//    }
+    static <T extends Annotation> Map<Field, T> annotatedFields(
+            final Class<?> declaringClass, final Class<T> annotationType,
+            final Map<Field, T> annotatedFields)
+            throws ReflectiveOperationException {
+        for (final Field declaredField : declaringClass.getDeclaredFields()) {
+            final T annotationValue
+                    = declaredField.getAnnotation(annotationType);
+            if (annotationValue == null) {
+                continue;
+            }
+            annotatedFields.put(declaredField, annotationValue);
+        }
+        final Class<?> superclass = declaringClass.getSuperclass();
+        return superclass == null ? annotatedFields
+               : annotatedFields(superclass, annotationType, annotatedFields);
+    }
+
+    static <T extends Annotation> Map<Field, T> annotatedFields(
+            final Class<?> declaringClass, final Class<T> annotationType)
+            throws ReflectiveOperationException {
+        return annotatedFields(declaringClass, annotationType,
+                               new HashMap<Field, T>());
+    }
 //    static List<Field> fields(
 //        final Class<?> declaring,
 //        final Class<? extends Annotation> annotationClass,
@@ -213,6 +210,7 @@ class Reflections {
 //        fieldValue(beanClass, fieldName, beanClass.cast(beanInstance),
 //                   fieldValue);
 //    }
+
     static Set<Integer> sqlTypes() throws IllegalAccessException {
         final Set<Integer> sqlTypes = new HashSet<Integer>();
         for (final Field field : Types.class.getFields()) {

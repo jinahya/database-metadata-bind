@@ -15,12 +15,10 @@
  */
 package com.github.jinahya.sql.database.metadata.bind;
 
-import java.util.Comparator;
 import javax.xml.bind.annotation.XmlAttribute;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlType;
-import org.apache.commons.lang3.builder.CompareToBuilder;
 
 /**
  * An entity class for binding the result of
@@ -36,23 +34,6 @@ import org.apache.commons.lang3.builder.CompareToBuilder;
     "ordinalPosition", "isNullable", "specificName"
 })
 public class ProcedureColumn extends AbstractChild<Procedure> {
-
-    public static Comparator<ProcedureColumn> natural() {
-        return new Comparator<ProcedureColumn>() {
-            @Override
-            public int compare(final ProcedureColumn o1,
-                               final ProcedureColumn o2) {
-                // by PROCEDURE_CAT, PROCEDURE_SCHEM, PROCEDURE_NAME
-                // and SPECIFIC_NAME.
-                return new CompareToBuilder()
-                        .append(o1.getProcedureCat(), o2.getProcedureCat())
-                        .append(o1.getProcedureSchem(), o2.getProcedureSchem())
-                        .append(o1.getProcedureName(), o2.getProcedureName())
-                        .append(o1.getSpecificName(), o2.getSpecificName())
-                        .build();
-            }
-        };
-    }
 
     @Override
     public String toString() {
@@ -272,12 +253,12 @@ public class ProcedureColumn extends AbstractChild<Procedure> {
 //    }
     // -------------------------------------------------------------------------
     @Label("PROCEDURE_CAT")
-    @_NillableBySpecification
+    @NillableBySpecification
     @XmlAttribute
     private String procedureCat;
 
     @Label("PROCEDURE_SCHEM")
-    @_NillableBySpecification
+    @NillableBySpecification
     @XmlAttribute
     private String procedureSchem;
 
@@ -310,7 +291,7 @@ public class ProcedureColumn extends AbstractChild<Procedure> {
     private int length;
 
     @Label("SCALE")
-    @_NillableBySpecification
+    @NillableBySpecification
     @XmlElement(required = true)
     private Short scale;
 
@@ -327,22 +308,22 @@ public class ProcedureColumn extends AbstractChild<Procedure> {
     private String remarks;
 
     @Label("COLUMN_DEF")
-    @_NillableBySpecification
+    @NillableBySpecification
     @XmlElement(nillable = true, required = true)
     private String columnDef;
 
     @Label("SQL_DATA_TYPE")
-    @_Reserved
+    @Reserved
     @XmlElement(nillable = true, required = true)
     private Integer sqlDataType;
 
     @Label("SQL_DATETIME_SUB")
-    @_Reserved
+    @Reserved
     @XmlElement(nillable = true, required = true)
     private Integer sqlDatetimeSub;
 
     @Label("CHAR_OCTET_LENGTH")
-    @_NillableBySpecification
+    @NillableBySpecification
     @XmlElement(nillable = true, required = true)
     private Integer charOctetLength;
 

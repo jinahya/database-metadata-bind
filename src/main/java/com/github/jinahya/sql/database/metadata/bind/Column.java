@@ -16,14 +16,12 @@
 package com.github.jinahya.sql.database.metadata.bind;
 
 import java.util.ArrayList;
-import java.util.Comparator;
 import java.util.List;
 import javax.xml.bind.annotation.XmlAttribute;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlElementRef;
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlType;
-import org.apache.commons.lang3.builder.CompareToBuilder;
 
 /**
  * An entity class for binding information from
@@ -43,48 +41,33 @@ import org.apache.commons.lang3.builder.CompareToBuilder;
 })
 public class Column extends AbstractChild<Table> {
 
-    public static Comparator<Column> natural() {
-        return new Comparator<Column>() {
-            @Override
-            public int compare(final Column o1, final Column o2) {
-                // by TABLE_CAT,TABLE_SCHEM, TABLE_NAME, and ORDINAL_POSITION.
-                return new CompareToBuilder()
-                        .append(o1.getTableCat(), o2.getTableCat())
-                        .append(o1.getTableSchem(), o2.getTableSchem())
-                        .append(o1.getTableName(), o2.getTableName())
-                        .append(o1.getOrdinalPosition(), o2.getOrdinalPosition())
-                        .build();
-            }
-        };
-    }
-
     @Override
     public String toString() {
         return super.toString() + "{"
                + "tableCat=" + tableCat
-               + ", tableSchem=" + tableSchem
-               + ", tableName=" + tableName
-               + ", columnName=" + columnName
-               + ", dataType=" + dataType
-               + ", typeName=" + typeName
-               + ", columnSize=" + columnSize
-               + ", bufferLength=" + bufferLength
-               + ", decimalDigits=" + decimalDigits
-               + ", numPrecRadix=" + numPrecRadix
-               + ", nullable=" + nullable
-               + ", remarks=" + remarks
-               + ", columnDef=" + columnDef
-               + ", sqlDataType=" + sqlDataType
-               + ", sqlDatetimeSub=" + sqlDatetimeSub
-               + ", charOctetLength=" + charOctetLength
-               + ", ordinalPosition=" + ordinalPosition
-               + ", isNullable=" + isNullable
-               + ", scopeCatalog=" + scopeCatalog
-               + ", scopeSchema=" + scopeSchema
-               + ", scopeTable=" + scopeTable
-               + ", sourceDataType=" + sourceDataType
-               + ", isAutoincrement=" + isAutoincrement
-               + ", isGeneratedcolumn=" + isGeneratedcolumn
+               + ",tableSchem=" + tableSchem
+               + ",tableName=" + tableName
+               + ",columnName=" + columnName
+               + ",dataType=" + dataType
+               + ",typeName=" + typeName
+               + ",columnSize=" + columnSize
+               + ",bufferLength=" + bufferLength
+               + ",decimalDigits=" + decimalDigits
+               + ",numPrecRadix=" + numPrecRadix
+               + ",nullable=" + nullable
+               + ",remarks=" + remarks
+               + ",columnDef=" + columnDef
+               + ",sqlDataType=" + sqlDataType
+               + ",sqlDatetimeSub=" + sqlDatetimeSub
+               + ",charOctetLength=" + charOctetLength
+               + ",ordinalPosition=" + ordinalPosition
+               + ",isNullable=" + isNullable
+               + ",scopeCatalog=" + scopeCatalog
+               + ",scopeSchema=" + scopeSchema
+               + ",scopeTable=" + scopeTable
+               + ",sourceDataType=" + sourceDataType
+               + ",isAutoincrement=" + isAutoincrement
+               + ",isGeneratedcolumn=" + isGeneratedcolumn
                + "}";
     }
 
@@ -336,12 +319,12 @@ public class Column extends AbstractChild<Table> {
 
     // -------------------------------------------------------------------------
     @Label("TABLE_CAT")
-    @_NillableBySpecification
+    @NillableBySpecification
     @XmlAttribute
     private String tableCat;
 
     @Label("TABLE_SCHEM")
-    @_NillableBySpecification
+    @NillableBySpecification
     @XmlAttribute
     private String tableSchem;
 
@@ -371,7 +354,7 @@ public class Column extends AbstractChild<Table> {
     private Integer bufferLength;
 
     @Label("DECIMAL_DIGITS")
-    @_NillableBySpecification
+    @NillableBySpecification
     @XmlElement(required = true)
     private Integer decimalDigits;
 
@@ -384,12 +367,12 @@ public class Column extends AbstractChild<Table> {
     private int nullable;
 
     @Label("REMARKS")
-    @_NillableBySpecification
+    @NillableBySpecification
     @XmlElement(nillable = true, required = true)
     private String remarks;
 
     @Label("COLUMN_DEF")
-    @_NillableBySpecification
+    @NillableBySpecification
     @XmlElement(nillable = true, required = true)
     private String columnDef;
 
@@ -416,22 +399,22 @@ public class Column extends AbstractChild<Table> {
     private String isNullable;
 
     @Label("SCOPE_CATALOG")
-    @_NillableBySpecification
+    @NillableBySpecification
     @XmlElement(nillable = true, required = true)
     private String scopeCatalog;
 
     @Label("SCOPE_SCHEMA")
-    @_NillableBySpecification
+    @NillableBySpecification
     @XmlElement(nillable = true, required = true)
     private String scopeSchema;
 
     @Label("SCOPE_TABLE")
-    @_NillableBySpecification
+    @NillableBySpecification
     @XmlElement(nillable = true, required = true)
     private String scopeTable;
 
     @Label("SOURCE_DATA_TYPE")
-    @_NillableBySpecification
+    @NillableBySpecification
     @XmlElement(nillable = true, required = true)
     private Short sourceDataType;
 

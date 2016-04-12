@@ -28,5 +28,5 @@ import java.lang.annotation.Target;
 @Documented
 @Retention(RetentionPolicy.SOURCE)
 @Target({ElementType.FIELD, ElementType.METHOD})
-@interface _Reserved {
+@interface Reserved {
 }

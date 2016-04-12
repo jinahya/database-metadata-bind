@@ -15,9 +15,7 @@
  */
 package com.github.jinahya.sql.database.metadata.bind;
 
-import java.util.Comparator;
 import javax.xml.bind.annotation.XmlRootElement;
-import org.apache.commons.lang3.builder.CompareToBuilder;
 
 /**
  * An entity class for binding the result of
@@ -31,21 +29,6 @@ import org.apache.commons.lang3.builder.CompareToBuilder;
  */
 @XmlRootElement
 public class ExportedKey extends TableKey {
-
-    public static Comparator<ExportedKey> natural() {
-        return new Comparator<ExportedKey>() {
-            @Override
-            public int compare(final ExportedKey o1, final ExportedKey o2) {
-                // by FKTABLE_CAT, FKTABLE_SCHEM, FKTABLE_NAME, and KEY_SEQ.
-                return new CompareToBuilder()
-                        .append(o1.getFktableCat(), o2.getFktableCat())
-                        .append(o1.getFktableSchem(), o2.getFktableSchem())
-                        .append(o1.getFktableName(), o2.getFktableName())
-                        .append(o1.getKeySeq(), o2.getKeySeq())
-                        .build();
-            }
-        };
-    }
 
     // ------------------------------------------------------------------- table
     // just for class diagram

@@ -248,17 +248,17 @@ public class TypeInfo extends AbstractChild<Metadata> {
     private int precision;
 
     @Label("LITERAL_PREFIX")
-    @_NillableBySpecification
+    @NillableBySpecification
     @XmlElement(nillable = true, required = true)
     private String literalPrefix;
 
     @Label("LITERAL_SUFFIX")
-    @_NillableBySpecification
+    @NillableBySpecification
     @XmlElement(nillable = true, required = true)
     private String literalSuffix;
 
     @Label("CREATE_PARAMS")
-    @_NillableBySpecification
+    @NillableBySpecification
     @XmlElement(nillable = true, required = true)
     private String createParams;
 
@@ -287,7 +287,7 @@ public class TypeInfo extends AbstractChild<Metadata> {
     private boolean autoIncrement;
 
     @Label("LOCAL_TYPE_NAME")
-    @_NillableBySpecification
+    @NillableBySpecification
     @XmlElement(nillable = true, required = true)
     private String localTypeName;
 

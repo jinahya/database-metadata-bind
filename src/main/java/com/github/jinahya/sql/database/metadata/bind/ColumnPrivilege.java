@@ -15,12 +15,10 @@
  */
 package com.github.jinahya.sql.database.metadata.bind;
 
-import java.util.Comparator;
 import javax.xml.bind.annotation.XmlAttribute;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlType;
-import org.apache.commons.lang3.builder.CompareToBuilder;
 
 /**
  * An entity class for binding the result of
@@ -29,38 +27,22 @@ import org.apache.commons.lang3.builder.CompareToBuilder;
  * @author Jin Kwon &lt;jinahya_at_gmail.com&gt;
  */
 @XmlRootElement
-@XmlType(
-        propOrder = {
-            "grantor", "grantee", "privilege", "isGrantable"
-        }
-)
+@XmlType(propOrder = {
+    "grantor", "grantee", "privilege", "isGrantable"
+})
 public class ColumnPrivilege extends AbstractChild<Column> {
-
-    public static Comparator<ColumnPrivilege> natural() {
-        return new Comparator<ColumnPrivilege>() {
-            @Override
-            public int compare(final ColumnPrivilege o1,
-                               final ColumnPrivilege o2) {
-                // by COLUMN_NAME and PRIVILEGE.
-                return new CompareToBuilder()
-                        .append(o1.getColumnName(), o2.getColumnName())
-                        .append(o1.getPrivilege(), o2.getPrivilege())
-                        .build();
-            }
-        };
-    }
 
     @Override
     public String toString() {
         return super.toString() + "{"
                + "tableCat=" + tableCat
-               + ", tableSchem=" + tableSchem
-               + ", tableName=" + tableName
-               + ", columnName=" + columnName
-               + ", grantor=" + grantor
-               + ", grantee=" + grantee
-               + ", privilege=" + privilege
-               + ", isGrantable=" + isGrantable
+               + ",tableSchem=" + tableSchem
+               + ",tableName=" + tableName
+               + ",columnName=" + columnName
+               + ",grantor=" + grantor
+               + ",grantee=" + grantee
+               + ",privilege=" + privilege
+               + ",isGrantable=" + isGrantable
                + "}";
     }
 
@@ -148,12 +130,12 @@ public class ColumnPrivilege extends AbstractChild<Column> {
 //    }
     // -------------------------------------------------------------------------
     @Label("TABLE_CAT")
-    @_NillableBySpecification
+    @NillableBySpecification
     @XmlAttribute
     private String tableCat;
 
     @Label("TABLE_SCHEM")
-    @_NillableBySpecification
+    @NillableBySpecification
     @XmlAttribute
     private String tableSchem;
 
@@ -166,7 +148,7 @@ public class ColumnPrivilege extends AbstractChild<Column> {
     private String columnName;
 
     @Label("GRANTOR")
-    @_NillableBySpecification
+    @NillableBySpecification
     @XmlElement(nillable = true, required = true)
     private String grantor;
 
@@ -179,7 +161,7 @@ public class ColumnPrivilege extends AbstractChild<Column> {
     private String privilege;
 
     @Label("IS_GRANTABLE")
-    @_NillableBySpecification
+    @NillableBySpecification
     @XmlElement(nillable = true, required = true)
     private String isGrantable;
 }

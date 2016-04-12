@@ -158,7 +158,7 @@ public class VersionColumn extends AbstractChild<Table> {
     private int bufferLength;
 
     @Label("DECIMAL_DIGITS")
-    @_NillableBySpecification
+    @NillableBySpecification
     @XmlElement(nillable = true, required = true)
     private Short decimalDigits;
 

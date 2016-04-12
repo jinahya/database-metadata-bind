@@ -193,12 +193,12 @@ abstract class TableKey extends AbstractChild<Table> {
 //    }
     // -------------------------------------------------------------------------
     @Label("PKTABLE_CAT")
-    @_NillableBySpecification
+    @NillableBySpecification
     @XmlAttribute
     private String pktableCat;
 
     @Label("PKTABLE_SCHEM")
-    @_NillableBySpecification
+    @NillableBySpecification
     @XmlAttribute
     private String pktableSchem;
 
@@ -211,12 +211,12 @@ abstract class TableKey extends AbstractChild<Table> {
     private String pkcolumnName;
 
     @Label("FKTABLE_CAT")
-    @_NillableBySpecification
+    @NillableBySpecification
     @XmlElement(nillable = true, required = true)
     private String fktableCat;
 
     @Label("FKTABLE_NAME")
-    @_NillableBySpecification
+    @NillableBySpecification
     @XmlElement(nillable = true, required = true)
     private String fktableSchem;
 

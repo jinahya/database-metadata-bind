@@ -16,17 +16,14 @@
 package com.github.jinahya.sql.database.metadata.bind;
 
 import static java.beans.Introspector.decapitalize;
-import java.lang.annotation.Annotation;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.lang.reflect.ParameterizedType;
 import java.sql.DatabaseMetaData;
 import java.sql.ResultSet;
-import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
@@ -58,60 +55,6 @@ public class MetadataContext {
     public static final String DMDB_EMPTY_SCHEMA_IF_NONE
             = "dmdb.emptySchemaIfNone";
 
-    private static Set<String> labels(final ResultSet resultSet)
-            throws SQLException {
-        final ResultSetMetaData rsmd = resultSet.getMetaData();
-        final int columnCount = rsmd.getColumnCount();
-        final Set<String> columnLabels = new HashSet<String>(columnCount);
-        for (int i = 1; i <= columnCount; i++) {
-            columnLabels.add(rsmd.getColumnLabel(i));
-        }
-        return columnLabels;
-    }
-
-    private static <T extends Annotation> Map<Field, T> annotatedFields(
-            final Class<?> declaringClass, final Class<T> annotationType,
-            final Map<Field, T> annotatedFields)
-            throws ReflectiveOperationException {
-        for (final Field field : declaringClass.getDeclaredFields()) {
-            final T annotation = field.getAnnotation(annotationType);
-            if (annotation == null) {
-                continue;
-            }
-            annotatedFields.put(field, annotation);
-        }
-        final Class<?> superclass = declaringClass.getSuperclass();
-        return superclass != null
-               ? annotatedFields(superclass, annotationType, annotatedFields)
-               : annotatedFields;
-    }
-
-    private static <T extends Annotation> Map<Field, T> fields(
-            final Class<?> declaringClass, final Class<T> annotationType)
-            throws ReflectiveOperationException {
-        return annotatedFields(declaringClass, annotationType,
-                               new HashMap<Field, T>());
-    }
-
-//    private static Map<Field, Label> fieldLabels(
-//            final Class<?> type, final Map<Field, Label> fieldLabels)
-//            throws ReflectiveOperationException {
-//        for (final Field field : type.getDeclaredFields()) {
-//            final Label label = field.getAnnotation(Label.class);
-//            if (label == null) {
-//                continue;
-//            }
-//            fieldLabels.put(field, label);
-//        }
-//        final Class<?> superclass = type.getSuperclass();
-//        return superclass != null
-//               ? fieldLabels(superclass, fieldLabels) : fieldLabels;
-//    }
-//
-//    private static Map<Field, Label> fieldLabels(final Class<?> type)
-//            throws ReflectiveOperationException {
-//        return fieldLabels(type, new HashMap<Field, Label>());
-//    }
     private static String suppression(final Class<?> klass, final Field field) {
         return decapitalize(klass.getSimpleName()) + "/" + field.getName();
     }
@@ -178,34 +121,34 @@ public class MetadataContext {
             }
             @SuppressWarnings("unchecked")
             List<Object> list
-                    = (List<Object>) Values.get(field.getName(), bean);
+                    = (List<Object>) Utils.propertyValue(field.getName(), bean);
             if (list == null) {
                 list = new ArrayList<Object>();
-                Values.set(field.getName(), bean, list);
+                Utils.propertyValue(field.getName(), bean, list);
             }
             final Class<?> elementType
                     = (Class<?>) ((ParameterizedType) field.getGenericType())
                     .getActualTypeArguments()[0];
             if (value instanceof ResultSet) {
                 bindAll((ResultSet) value, elementType, list);
-                Values.setParent(elementType, list, bean);
+                Utils.setParent(elementType, list, bean);
                 return;
             }
             list.add(elementType
                     .getDeclaredMethod("valueOf", Object[].class, Object.class)
                     .invoke(null, args, value));
-            Values.setParent(elementType, list, value);
+            Utils.setParent(elementType, list, value);
             return;
         }
-        Values.set(field.getName(), bean, value);
+        Utils.propertyValue(field.getName(), bean, value);
     }
 
     private <T> T bindSingle(final ResultSet results, final Class<T> klass,
                              final T instance)
             throws SQLException, ReflectiveOperationException {
         if (results != null) { // bind columns to fields
-            final Set<String> labels = labels(results);
-            final Map<Field, Label> fields = fields(klass, Label.class);
+            final Set<String> labels = Utils.columnLabels(results);
+            final Map<Field, Label> fields = Reflections.annotatedFields(klass, Label.class);
             for (final Entry<Field, Label> entry : fields.entrySet()) {
                 final Field field = entry.getKey();
                 final String label = entry.getValue().value();
@@ -222,7 +165,7 @@ public class MetadataContext {
                     continue;
                 }
                 final Object value = results.getObject(label);
-                Values.set(field.getName(), instance, value);
+                Utils.propertyValue(field.getName(), instance, value);
             }
             if (!labels.isEmpty()) {
                 for (final String label : labels) {
@@ -263,7 +206,8 @@ public class MetadataContext {
         }
         // invoke
 
-        final Map<Field, Invocation> fields = fields(klass, Invocation.class);
+        //final Map<Field, Invocation> fields = fields(klass, Invocation.class);
+        final Map<Field, Invocation> fields = Reflections.annotatedFields(klass, Invocation.class);
         for (final Entry<Field, Invocation> entry : fields.entrySet()) {
             final Field field = entry.getKey();
             final Invocation invocation = entry.getValue();

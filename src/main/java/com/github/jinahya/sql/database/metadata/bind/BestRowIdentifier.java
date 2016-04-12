@@ -15,11 +15,9 @@
  */
 package com.github.jinahya.sql.database.metadata.bind;
 
-import java.util.Comparator;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlType;
-import org.apache.commons.lang3.builder.ToStringBuilder;
 
 /**
  * An entity class for binding the result of
@@ -34,40 +32,17 @@ import org.apache.commons.lang3.builder.ToStringBuilder;
 })
 public class BestRowIdentifier extends AbstractChild<Table> {
 
-    public static Comparator<BestRowIdentifier> natural() {
-        return new Comparator<BestRowIdentifier>() {
-            @Override
-            public int compare(final BestRowIdentifier o1,
-                               final BestRowIdentifier o2) {
-                // They are ordered by SCOPE.
-                return o1.getScope() - o2.getScope();
-            }
-        };
-    }
-
     @Override
     public String toString() {
-        if (true) {
-            return new ToStringBuilder(this)
-                    .append("scope", getScope())
-                    .append("columnName", getColumnName())
-                    .append("dataType", getDataType())
-                    .append("typeName", getTypeName())
-                    .append("columnSize", getColumnSize())
-                    .append("bufferLength", getBufferLength())
-                    .append("decimalDigits", getDecimalDigits())
-                    .append("pseudoColumn", getPseudoColumn())
-                    .build();
-        }
         return super.toString() + "{"
                + "scope=" + getScope()
-               + ", columnName=" + columnName
-               + ", dataType=" + dataType
-               + ", typeName=" + typeName
-               + ", columnSize=" + columnSize
-               + ", bufferLength=" + bufferLength
-               + ", decimalDigits=" + decimalDigits
-               + ", pseudoColumn=" + pseudoColumn
+               + ",columnName=" + columnName
+               + ",dataType=" + dataType
+               + ",typeName=" + typeName
+               + ",columnSize=" + columnSize
+               + ",bufferLength=" + bufferLength
+               + ",decimalDigits=" + decimalDigits
+               + ",pseudoColumn=" + pseudoColumn
                + "}";
     }
 
@@ -180,7 +155,7 @@ public class BestRowIdentifier extends AbstractChild<Table> {
     private Integer bufferLength;
 
     @Label("DECIMAL_DIGITS")
-    @_NillableBySpecification
+    @NillableBySpecification
     @XmlElement(nillable = true, required = true)
     private Short decimalDigits;
 

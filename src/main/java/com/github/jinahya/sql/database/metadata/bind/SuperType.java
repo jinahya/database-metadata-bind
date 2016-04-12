@@ -119,12 +119,12 @@ public class SuperType extends AbstractChild<UDT> {
 //    }
     // -------------------------------------------------------------------------
     @Label("TYPE_CAT")
-    @_NillableBySpecification
+    @NillableBySpecification
     @XmlAttribute
     private String typeCat;
 
     @Label("TYPE_SCHEM")
-    @_NillableBySpecification
+    @NillableBySpecification
     @XmlAttribute
     private String typeSchem;
 
@@ -133,12 +133,12 @@ public class SuperType extends AbstractChild<UDT> {
     private String typeName;
 
     @Label("SUPERTYPE_CAT")
-    @_NillableBySpecification
+    @NillableBySpecification
     @XmlElement(nillable = true, required = true)
     private String supertypeCat;
 
     @Label("SUPERTYPE_SCHEM")
-    @_NillableBySpecification
+    @NillableBySpecification
     @XmlElement(nillable = true, required = true)
     private String supertypeSchem;
 

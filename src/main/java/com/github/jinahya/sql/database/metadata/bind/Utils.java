@@ -19,34 +19,159 @@ import java.beans.BeanInfo;
 import java.beans.IntrospectionException;
 import java.beans.Introspector;
 import java.beans.PropertyDescriptor;
+import java.lang.annotation.Annotation;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
+import java.lang.reflect.Modifier;
+import java.sql.ResultSet;
+import java.sql.ResultSetMetaData;
+import java.sql.SQLException;
+import java.sql.Types;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Map;
+import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import static java.util.logging.Logger.getLogger;
 
 /**
  *
  * @author Jin Kwon &lt;jinahya_at_gmail.com&gt;
  */
-final class Values {
+class Utils {
 
-    private static final Logger logger
-            = Logger.getLogger(Values.class.getName());
+    private static final Logger logger = getLogger(Metadata.class.getName());
 
-    static Object get(final String name, final Object obj)
+    private static final Map<Class<?>, Class<?>> WRAPPER_CLASSES;
+
+    static {
+        final Map<Class<?>, Class<?>> m = new HashMap<Class<?>, Class<?>>();
+        m.put(boolean.class, Boolean.class);
+        m.put(byte.class, Byte.class);
+        m.put(char.class, Character.class);
+        m.put(double.class, Double.class);
+        m.put(float.class, Float.class);
+        m.put(int.class, Integer.class);
+        m.put(long.class, Long.class);
+        m.put(short.class, Short.class);
+        m.put(void.class, Void.class);
+        WRAPPER_CLASSES = Collections.unmodifiableMap(m);
+    }
+
+    static Class<?> wrapperClass(final Class<?> primitiveClass) {
+        if (primitiveClass == null) {
+            throw new NullPointerException("null primitive");
+        }
+        if (!primitiveClass.isPrimitive()) {
+            throw new IllegalArgumentException(
+                    "not primitive: " + primitiveClass);
+        }
+        return WRAPPER_CLASSES.get(primitiveClass);
+    }
+
+    static Field findField(final Class<?> declaringClass,
+                           final String fieldName)
+            throws NoSuchFieldException {
+        try {
+            return declaringClass.getDeclaredField(fieldName);
+        } catch (final NoSuchFieldException nsfe) {
+            final Class<?> superclass = declaringClass.getSuperclass();
+            if (superclass == null) {
+                throw nsfe;
+            }
+            return findField(superclass, fieldName);
+        }
+    }
+
+    static <T extends Annotation> Map<Field, T> annotatedFields(
+            final Class<?> declaringClass, final Class<T> annotationType,
+            final Map<Field, T> annotatedFields)
             throws ReflectiveOperationException {
-        final Class<?> klass = obj.getClass();
+        for (final Field declaredField : declaringClass.getDeclaredFields()) {
+            final T annotationValue
+                    = declaredField.getAnnotation(annotationType);
+            if (annotationValue == null) {
+                continue;
+            }
+            annotatedFields.put(declaredField, annotationValue);
+        }
+        final Class<?> superclass = declaringClass.getSuperclass();
+        return superclass == null ? annotatedFields
+               : annotatedFields(superclass, annotationType, annotatedFields);
+    }
+
+    static <T extends Annotation> Map<Field, T> annotatedFields(
+            final Class<?> declaringClass, final Class<T> annotationType)
+            throws ReflectiveOperationException {
+        return annotatedFields(declaringClass, annotationType,
+                               new HashMap<Field, T>());
+    }
+
+    static Set<Integer> sqlTypes() throws IllegalAccessException {
+        final Set<Integer> sqlTypes = new HashSet<Integer>();
+        for (final Field field : Types.class.getFields()) {
+            final int modifiers = field.getModifiers();
+            if (!Modifier.isPublic(modifiers)) {
+                continue;
+            }
+            if (!Modifier.isStatic(modifiers)) {
+                continue;
+            }
+            if (!Integer.TYPE.equals(field.getType())) {
+                continue;
+            }
+            sqlTypes.add(field.getInt(null));
+        }
+        return sqlTypes;
+    }
+
+    static String sqlTypeName(final int value) throws IllegalAccessException {
+        for (final Field field : Types.class.getFields()) {
+            final int modifiers = field.getModifiers();
+            if (!Modifier.isPublic(modifiers)) {
+                continue;
+            }
+            if (!Modifier.isStatic(modifiers)) {
+                continue;
+            }
+            if (!Integer.TYPE.equals(field.getType())) {
+                continue;
+            }
+            if (field.getInt(null) == value) {
+                return field.getName();
+            }
+        }
+        return null;
+    }
+
+    static Set<String> columnLabels(final ResultSet resultSet)
+            throws SQLException {
+        final ResultSetMetaData rsmd = resultSet.getMetaData();
+        final int columnCount = rsmd.getColumnCount();
+        final Set<String> columnLabels = new HashSet<String>(columnCount);
+        for (int i = 1; i <= columnCount; i++) {
+            columnLabels.add(rsmd.getColumnLabel(i));
+        }
+        return columnLabels;
+    }
+
+    static Object propertyValue(final String propertyName,
+                                final Object beanInstance)
+            throws ReflectiveOperationException {
+        final Class<?> klass = beanInstance.getClass();
         try {
             final BeanInfo info = Introspector.getBeanInfo(klass);
             for (final PropertyDescriptor descriptor
                  : info.getPropertyDescriptors()) {
-                if (name.equals(descriptor.getName())) {
+                if (propertyName.equals(descriptor.getName())) {
                     final Method reader = descriptor.getReadMethod();
                     if (reader != null) {
                         if (!reader.isAccessible()) {
                             reader.setAccessible(true);
                         }
-                        return reader.invoke(obj);
+                        return reader.invoke(beanInstance);
                     }
                     break;
                 }
@@ -54,29 +179,32 @@ final class Values {
         } catch (final IntrospectionException ie) {
             ie.printStackTrace(System.err);
         }
-        final Field field = Reflections.field(klass, name);
+        final Field field = Reflections.findField(klass, propertyName);
         logger.log(Level.WARNING, "trying to get value directly from {0}",
                    new Object[]{field});
         if (!field.isAccessible()) {
             field.setAccessible(true);
         }
-        return field.get(obj);
+        return field.get(beanInstance);
     }
 
-    static void set(final String name, final Object obj, final Object value)
+    static void propertyValue(final String propertyName,
+                              final Object beanInstance,
+                              final Object propertyValue)
             throws ReflectiveOperationException {
-        final Class<?> klass = obj.getClass();
+        final Class<?> klass = beanInstance.getClass();
         try {
             final BeanInfo info = Introspector.getBeanInfo(klass);
             for (final PropertyDescriptor descriptor
                  : info.getPropertyDescriptors()) {
-                if (name.equals(descriptor.getName())) {
+                if (propertyName.equals(descriptor.getName())) {
                     final Method writer = descriptor.getWriteMethod();
                     if (writer != null) {
                         if (!writer.isAccessible()) {
                             writer.setAccessible(true);
                         }
-                        writer.invoke(obj, adapt(descriptor, value));
+                        writer.invoke(beanInstance,
+                                      adaptValue(descriptor, propertyValue));
                         return;
                     }
                     break;
@@ -85,14 +213,14 @@ final class Values {
         } catch (final IntrospectionException ie) {
             ie.printStackTrace(System.err);
         }
-        final Field field = Reflections.field(klass, name);
+        final Field field = Reflections.findField(klass, propertyName);
         logger.log(Level.WARNING,
                    "trying to set value directly to {0} with {1}",
-                   new Object[]{field, value});
+                   new Object[]{field, propertyValue});
         if (!field.isAccessible()) {
             field.setAccessible(true);
         }
-        field.set(obj, adapt(field, value));
+        field.set(beanInstance, Utils.adaptValue(field, propertyValue));
     }
 
     static void setParent(final Class<?> childClass, final Iterable<?> children,
@@ -110,8 +238,8 @@ final class Values {
         }
     }
 
-    static Object adapt(final Class<?> type, final Object value,
-                        final Object target) {
+    static Object adaptValue(final Class<?> type, final Object value,
+                             final Object target) {
         if (type != null && type.isInstance(value)) {
             return value;
         }
@@ -218,16 +346,16 @@ final class Values {
         return value;
     }
 
-    static Object adapt(final PropertyDescriptor descriptor,
-                        final Object value) {
-        return adapt(descriptor.getPropertyType(), value, descriptor);
+    static Object adaptValue(final PropertyDescriptor descriptor,
+                             final Object value) {
+        return adaptValue(descriptor.getPropertyType(), value, descriptor);
     }
 
-    static Object adapt(final Field field, final Object value) {
-        return adapt(field.getType(), value, field);
+    static Object adaptValue(final Field field, final Object value) {
+        return adaptValue(field.getType(), value, field);
     }
 
-    private Values() {
+    private Utils() {
         super();
     }
 }

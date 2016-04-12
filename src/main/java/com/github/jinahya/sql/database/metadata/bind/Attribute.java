@@ -15,12 +15,10 @@
  */
 package com.github.jinahya.sql.database.metadata.bind;
 
-import java.util.Comparator;
 import javax.xml.bind.annotation.XmlAttribute;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlType;
-import org.apache.commons.lang3.builder.CompareToBuilder;
 
 /**
  * An entity class for binding the result of
@@ -36,20 +34,6 @@ import org.apache.commons.lang3.builder.CompareToBuilder;
     "sourceDataType"
 })
 public class Attribute extends AbstractChild<UDT> {
-
-    public static Comparator<Attribute> natural() {
-        return new Comparator<Attribute>() {
-            @Override
-            public int compare(final Attribute o1, final Attribute o2) {
-                // TYPE_CAT, TYPE_SCHEM, TYPE_NAME and ORDINAL_POSITION.
-                return new CompareToBuilder()
-                        .append(o1.getTypeCat(), o2.getTypeCat())
-                        .append(o1.getTypeSchem(), o2.getTypeSchem())
-                        .append(o1.getOrdinalPosition(), o2.getOrdinalPosition())
-                        .build();
-            }
-        };
-    }
 
     @Override
     public String toString() {
@@ -246,12 +230,12 @@ public class Attribute extends AbstractChild<UDT> {
 
     // -------------------------------------------------------------------------
     @Label("TYPE_CAT")
-    @_NillableBySpecification
+    @NillableBySpecification
     @XmlAttribute
     private String typeCat;
 
     @Label("TYPE_SCHEM")
-    @_NillableBySpecification
+    @NillableBySpecification
     @XmlAttribute
     private String typeSchem;
 
@@ -288,12 +272,12 @@ public class Attribute extends AbstractChild<UDT> {
     private int nullable;
 
     @Label("REMARKS")
-    @_NillableBySpecification
+    @NillableBySpecification
     @XmlElement(nillable = true, required = true)
     private String remarks;
 
     @Label("ATTR_DEF")
-    @_NillableBySpecification
+    @NillableBySpecification
     @XmlElement(nillable = true, required = true)
     private String attrDef;
 
@@ -320,7 +304,7 @@ public class Attribute extends AbstractChild<UDT> {
     private String isNullable;
 
     @Label("SOURCE_DATA_TYPE")
-    @_NillableBySpecification
+    @NillableBySpecification
     @XmlElement(nillable = true, required = true)
     private Short sourceDataType;
 }

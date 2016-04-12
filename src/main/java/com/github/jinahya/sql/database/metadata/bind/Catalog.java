@@ -16,13 +16,11 @@
 package com.github.jinahya.sql.database.metadata.bind;
 
 import java.util.ArrayList;
-import java.util.Comparator;
 import java.util.List;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlElementRef;
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlType;
-import org.apache.commons.lang3.builder.CompareToBuilder;
 
 /**
  * An entity class for binding the result of
@@ -31,27 +29,13 @@ import org.apache.commons.lang3.builder.CompareToBuilder;
  * @author Jin Kwon &lt;jinahya_at_gmail.com&gt;
  */
 @XmlRootElement
-@XmlType(
-        propOrder = {
-            "tableCat",
-            // ---------------------------------------------------------------------
-            "crossReferences",
-            "schemas"
-        }
-)
+@XmlType(propOrder = {
+    "tableCat",
+    // ---------------------------------------------------------------------
+    "crossReferences",
+    "schemas"
+})
 public class Catalog extends AbstractChild<Metadata> implements TableDomain {
-
-    public static Comparator<Catalog> natural() {
-        return new Comparator<Catalog>() {
-            @Override
-            public int compare(final Catalog o1, final Catalog o2) {
-                //  by catalog name
-                return new CompareToBuilder()
-                        .append(o1.getTableCat(), o2.getTableCat())
-                        .build();
-            }
-        };
-    }
 
     @Override
     public String toString() {

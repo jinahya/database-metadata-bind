@@ -15,12 +15,10 @@
  */
 package com.github.jinahya.sql.database.metadata.bind;
 
-import java.util.Comparator;
 import javax.xml.bind.annotation.XmlAttribute;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlType;
-import org.apache.commons.lang3.builder.CompareToBuilder;
 
 /**
  * An entity class for binding the result of
@@ -36,32 +34,16 @@ import org.apache.commons.lang3.builder.CompareToBuilder;
 )
 public class TablePrivilege extends AbstractChild<Table> {
 
-    public static Comparator<TablePrivilege> natural() {
-        return new Comparator<TablePrivilege>() {
-            @Override
-            public int compare(final TablePrivilege o1,
-                               final TablePrivilege o2) {
-                // by TABLE_CAT, TABLE_SCHEM, TABLE_NAME, and PRIVILEGE.
-                return new CompareToBuilder()
-                        .append(o1.getTableCat(), o2.getTableCat())
-                        .append(o1.getTableSchem(), o2.getTableSchem())
-                        .append(o1.getTableName(), o2.getTableName())
-                        .append(o1.getPrivilege(), o2.getPrivilege())
-                        .build();
-            }
-        };
-    }
-
     @Override
     public String toString() {
         return super.toString() + "{"
                + "tableCat=" + tableCat
-               + ", tableSchem=" + tableSchem
-               + ", tableName=" + tableName
-               + ", grantor=" + grantor
-               + ", grantee=" + grantee
-               + ", privilege=" + privilege
-               + ", isGrantable=" + isGrantable
+               + ",tableSchem=" + tableSchem
+               + ",tableName=" + tableName
+               + ",grantor=" + grantor
+               + ",grantee=" + grantee
+               + ",privilege=" + privilege
+               + ",isGrantable=" + isGrantable
                + "}";
     }
 
@@ -141,12 +123,12 @@ public class TablePrivilege extends AbstractChild<Table> {
 //    }
     // -------------------------------------------------------------------------
     @Label("TABLE_CAT")
-    @_NillableBySpecification
+    @NillableBySpecification
     @XmlAttribute
     private String tableCat;
 
     @Label("TABLE_SCHEM")
-    @_NillableBySpecification
+    @NillableBySpecification
     @XmlAttribute
     private String tableSchem;
 
@@ -155,7 +137,7 @@ public class TablePrivilege extends AbstractChild<Table> {
     private String tableName;
 
     @Label("GRANTOR")
-    @_NillableBySpecification
+    @NillableBySpecification
     @XmlElement(nillable = true, required = true)
     private String grantor;
 
@@ -168,7 +150,7 @@ public class TablePrivilege extends AbstractChild<Table> {
     private String privilege;
 
     @Label("IS_GRANTABLE")
-    @_NillableBySpecification
+    @NillableBySpecification
     @XmlElement(nillable = true, required = true)
     private String isGrantable;
 }

@@ -15,12 +15,10 @@
  */
 package com.github.jinahya.sql.database.metadata.bind;
 
-import java.util.Comparator;
 import javax.xml.bind.annotation.XmlAttribute;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlType;
-import org.apache.commons.lang3.builder.CompareToBuilder;
 
 /**
  * An entity class for binding the result of
@@ -33,45 +31,28 @@ import org.apache.commons.lang3.builder.CompareToBuilder;
  * java.lang.String, boolean, boolean)
  */
 @XmlRootElement
-@XmlType(
-        propOrder = {
-            "nonUnique", "indexQualifier", "indexName", "type", "ordinalPosition",
-            "columnName", "ascOrDesc", "cardinality", "pages", "filterCondition"
-        }
-)
+@XmlType(propOrder = {
+    "nonUnique", "indexQualifier", "indexName", "type", "ordinalPosition",
+    "columnName", "ascOrDesc", "cardinality", "pages", "filterCondition"
+})
 public class IndexInfo extends AbstractChild<Table> {
-
-    public static Comparator<IndexInfo> natural() {
-        return new Comparator<IndexInfo>() {
-            @Override
-            public int compare(final IndexInfo o1, final IndexInfo o2) {
-                // by NON_UNIQUE, TYPE, INDEX_NAME, and ORDINAL_POSITION.
-                return new CompareToBuilder()
-                        .append(o1.isNonUnique(), o2.isNonUnique())
-                        .append(o1.getType(), o2.getType())
-                        .append(o1.getIndexName(), o2.getIndexName())
-                        .append(o1.getOrdinalPosition(), o2.getOrdinalPosition())
-                        .build();
-            }
-        };
-    }
 
     @Override
     public String toString() {
         return super.toString() + "{"
                + "tableCat=" + tableCat
-               + ", tableSchem=" + tableSchem
-               + ", tableName=" + tableName
-               + ", nonUnique=" + nonUnique
-               + ", indexQualifier=" + indexQualifier
-               + ", indexName=" + indexName
-               + ", type=" + type
-               + ", ordinalPosition=" + ordinalPosition
-               + ", columnName=" + columnName
-               + ", ascOrDesc=" + ascOrDesc
-               + ", cardinality=" + cardinality
-               + ", pages=" + pages
-               + ", filterCondition=" + filterCondition
+               + ",tableSchem=" + tableSchem
+               + ",tableName=" + tableName
+               + ",nonUnique=" + nonUnique
+               + ",indexQualifier=" + indexQualifier
+               + ",indexName=" + indexName
+               + ",type=" + type
+               + ",ordinalPosition=" + ordinalPosition
+               + ",columnName=" + columnName
+               + ",ascOrDesc=" + ascOrDesc
+               + ",cardinality=" + cardinality
+               + ",pages=" + pages
+               + ",filterCondition=" + filterCondition
                + "}";
     }
 
@@ -204,12 +185,12 @@ public class IndexInfo extends AbstractChild<Table> {
 //    }
     // -------------------------------------------------------------------------
     @Label("TABLE_CAT")
-    @_NillableBySpecification
+    @NillableBySpecification
     @XmlAttribute
     private String tableCat;
 
     @Label("TABLE_SCHEM")
-    @_NillableBySpecification
+    @NillableBySpecification
     @XmlAttribute
     private String tableSchem;
 
@@ -222,12 +203,12 @@ public class IndexInfo extends AbstractChild<Table> {
     private boolean nonUnique;
 
     @Label("INDEX_QUALIFIER")
-    @_NillableBySpecification
+    @NillableBySpecification
     @XmlElement(nillable = true, required = true)
     private String indexQualifier;
 
     @Label("INDEX_NAME")
-    @_NillableBySpecification
+    @NillableBySpecification
     @XmlElement(nillable = true, required = true)
     private String indexName;
 
@@ -240,12 +221,12 @@ public class IndexInfo extends AbstractChild<Table> {
     private short ordinalPosition;
 
     @Label("COLUMN_NAME")
-    @_NillableBySpecification
+    @NillableBySpecification
     @XmlElement(nillable = true, required = true)
     private String columnName;
 
     @Label("ASC_OR_DESC")
-    @_NillableBySpecification
+    @NillableBySpecification
     @XmlElement(nillable = true, required = true)
     private String ascOrDesc;
 
@@ -258,7 +239,7 @@ public class IndexInfo extends AbstractChild<Table> {
     private long pages;
 
     @Label("FILTER_CONDITION")
-    @_NillableBySpecification
+    @NillableBySpecification
     @XmlElement(nillable = true, required = true)
     private String filterCondition;
 }

@@ -15,12 +15,10 @@
  */
 package com.github.jinahya.sql.database.metadata.bind;
 
-import java.util.Comparator;
 import javax.xml.bind.annotation.XmlAttribute;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlType;
-import org.apache.commons.lang3.builder.CompareToBuilder;
 
 /**
  * An entity class for binding the result of
@@ -29,52 +27,33 @@ import org.apache.commons.lang3.builder.CompareToBuilder;
  * @author Jin Kwon &lt;jinahya_at_gmail.com&gt;
  */
 @XmlRootElement
-@XmlType(
-        propOrder = {
-            "functionName", "columnName", "columnType", "dataType", "typeName",
-            "precision", "length", "scale", "radix", "nullable", "remarks",
-            "charOctetLength", "ordinalPosition", "isNullable", "specificName"
-        }
-)
+@XmlType(propOrder = {
+    "functionName", "columnName", "columnType", "dataType", "typeName",
+    "precision", "length", "scale", "radix", "nullable", "remarks",
+    "charOctetLength", "ordinalPosition", "isNullable", "specificName"
+})
 public class FunctionColumn extends AbstractChild<Function> {
-
-    public static Comparator<FunctionColumn> natural() {
-        return new Comparator<FunctionColumn>() {
-            @Override
-            public int compare(final FunctionColumn o1,
-                               final FunctionColumn o2) {
-                // by FUNCTION_CAT, FUNCTION_SCHEM, FUNCTION_NAME
-                // and SPECIFIC_NAME.
-                return new CompareToBuilder()
-                        .append(o1.getFunctionCat(), o2.getFunctionCat())
-                        .append(o1.getFunctionSchem(), o2.getFunctionSchem())
-                        .append(o1.getFunctionName(), o2.getFunctionName())
-                        .append(o1.getSpecificName(), o2.getSpecificName())
-                        .build();
-            }
-        };
-    }
 
     @Override
     public String toString() {
         return super.toString() + "{"
                + "functionCat=" + functionCat
-               + ", functionSchem=" + functionSchem
-               + ", functionName=" + functionName
-               + ", columnName=" + columnName
-               + ", columnType=" + columnType
-               + ", dataType=" + dataType
-               + ", typeName=" + typeName
-               + ", precision=" + precision
-               + ", length=" + length
-               + ", scale=" + scale
-               + ", radix=" + radix
-               + ", nullable=" + nullable
-               + ", remarks=" + remarks
-               + ", charOctetLength=" + charOctetLength
-               + ", ordinalPosition=" + ordinalPosition
-               + ", isNullable=" + isNullable
-               + ", specificName=" + specificName
+               + ",functionSchem=" + functionSchem
+               + ",functionName=" + functionName
+               + ",columnName=" + columnName
+               + ",columnType=" + columnType
+               + ",dataType=" + dataType
+               + ",typeName=" + typeName
+               + ",precision=" + precision
+               + ",length=" + length
+               + ",scale=" + scale
+               + ",radix=" + radix
+               + ",nullable=" + nullable
+               + ",remarks=" + remarks
+               + ",charOctetLength=" + charOctetLength
+               + ",ordinalPosition=" + ordinalPosition
+               + ",isNullable=" + isNullable
+               + ",specificName=" + specificName
                + "}";
     }
 
@@ -242,12 +221,12 @@ public class FunctionColumn extends AbstractChild<Function> {
 
     // -------------------------------------------------------------------------
     @Label("FUNCTION_CAT")
-    @_NillableBySpecification
+    @NillableBySpecification
     @XmlAttribute
     private String functionCat;
 
     @Label("FUNCTION_SCHEM")
-    @_NillableBySpecification
+    @NillableBySpecification
     @XmlAttribute
     private String functionSchem;
 
@@ -297,7 +276,7 @@ public class FunctionColumn extends AbstractChild<Function> {
 
     @Label("CHAR_OCTET_LENGTH")
     @XmlElement(required = true)
-    @_NillableBySpecification
+    @NillableBySpecification
     private Integer charOctetLength;
 
     @Label("ORDINAL_POSITION")

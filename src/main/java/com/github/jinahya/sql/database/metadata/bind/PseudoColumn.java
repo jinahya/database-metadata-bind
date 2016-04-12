@@ -15,12 +15,10 @@
  */
 package com.github.jinahya.sql.database.metadata.bind;
 
-import java.util.Comparator;
 import javax.xml.bind.annotation.XmlAttribute;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlType;
-import org.apache.commons.lang3.builder.CompareToBuilder;
 
 /**
  * An entity class for binding the result of
@@ -34,21 +32,6 @@ import org.apache.commons.lang3.builder.CompareToBuilder;
     "columnUsage", "remarks", "charOctetLength", "isNullable"
 })
 public class PseudoColumn extends AbstractChild<Table> {
-
-    public static Comparator<PseudoColumn> natural() {
-        return new Comparator<PseudoColumn>() {
-            @Override
-            public int compare(final PseudoColumn o1, final PseudoColumn o2) {
-                // by TABLE_CAT,TABLE_SCHEM, TABLE_NAME and COLUMN_NAME.
-                return new CompareToBuilder()
-                        .append(o1.getTableCat(), o2.getTableCat())
-                        .append(o1.getTableSchem(), o2.getTableSchem())
-                        .append(o1.getTableName(), o2.getTableName())
-                        .append(o1.getColumnName(), o2.getColumnName())
-                        .build();
-            }
-        };
-    }
 
     @Override
     public String toString() {
@@ -188,12 +171,12 @@ public class PseudoColumn extends AbstractChild<Table> {
 //    }
     // -------------------------------------------------------------------------
     @Label("TABLE_CAT")
-    @_NillableBySpecification
+    @NillableBySpecification
     @XmlAttribute
     private String tableCat;
 
     @Label("TABLE_SCHEM")
-    @_NillableBySpecification
+    @NillableBySpecification
     @XmlAttribute
     private String tableSchem;
 
@@ -214,7 +197,7 @@ public class PseudoColumn extends AbstractChild<Table> {
     private int columnSize;
 
     @Label("DECIMAL_DIGITS")
-    @_NillableBySpecification
+    @NillableBySpecification
     @XmlElement(nillable = true, required = true)
     private Integer decimalDigits;
 
@@ -227,7 +210,7 @@ public class PseudoColumn extends AbstractChild<Table> {
     private String columnUsage;
 
     @Label("REMARKS")
-    @_NillableBySpecification
+    @NillableBySpecification
     @XmlElement(nillable = true, required = true)
     private String remarks;
 

@@ -15,12 +15,10 @@
  */
 package com.github.jinahya.sql.database.metadata.bind;
 
-import java.util.Comparator;
 import javax.xml.bind.annotation.XmlAttribute;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlType;
-import org.apache.commons.lang3.builder.CompareToBuilder;
 
 /**
  * An entity class for binding the result of
@@ -33,18 +31,6 @@ import org.apache.commons.lang3.builder.CompareToBuilder;
     "columnName", "keySeq", "pkName"
 })
 public class PrimaryKey extends AbstractChild<Table> {
-
-    public static Comparator<PrimaryKey> natural() {
-        return new Comparator<PrimaryKey>() {
-            @Override
-            public int compare(final PrimaryKey o1, final PrimaryKey o2) {
-                // by COLUMN_NAME.
-                return new CompareToBuilder()
-                        .append(o1.getColumnName(), o2.getColumnName())
-                        .build();
-            }
-        };
-    }
 
     // ---------------------------------------------------------------- tableCat
     public String getTableCat() {
@@ -112,12 +98,12 @@ public class PrimaryKey extends AbstractChild<Table> {
 //    }
     // -------------------------------------------------------------------------
     @Label("TABLE_CAT")
-    @_NillableBySpecification
+    @NillableBySpecification
     @XmlAttribute
     private String tableCat;
 
     @Label("TABLE_SCHEM")
-    @_NillableBySpecification
+    @NillableBySpecification
     @XmlAttribute
     private String tableSchem;
 
@@ -134,7 +120,7 @@ public class PrimaryKey extends AbstractChild<Table> {
     private short keySeq;
 
     @Label("PK_NAME")
-    @_NillableBySpecification
+    @NillableBySpecification
     @XmlElement(nillable = true, required = true)
     private String pkName;
 }

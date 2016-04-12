@@ -22,7 +22,6 @@ import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlElementRef;
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlType;
-import org.apache.commons.lang3.builder.CompareToBuilder;
 
 /**
  * An entity class for binding the result of
@@ -31,36 +30,23 @@ import org.apache.commons.lang3.builder.CompareToBuilder;
  * @author Jin Kwon &lt;jinahya_at_gmail.com&gt;
  */
 @XmlRootElement
-@XmlType(
-        propOrder = {
-            "typeName", "className", "dataType", "remarks", "baseType",
-            // ---------------------------------------------------------------------
-            "attributes", "superTypes"
-        }
-)
-public class UDT extends AbstractChild<Schema> implements Comparable<UDT> {
-
-    // by DATA_TYPE, TYPE_CAT, TYPE_SCHEM and TYPE_NAME.
-    @Override
-    public int compareTo(final UDT o) {
-        return new CompareToBuilder()
-                .append(dataType, o.getDataType())
-                .append(typeCat, o.getTypeCat())
-                .append(typeSchem, o.getTypeSchem())
-                .append(typeName, o.getTypeName())
-                .build();
-    }
+@XmlType(propOrder = {
+    "typeName", "className", "dataType", "remarks", "baseType",
+    // ---------------------------------------------------------------------
+    "attributes", "superTypes"
+})
+public class UDT extends AbstractChild<Schema> {
 
     @Override
     public String toString() {
         return super.toString() + "{"
                + "typeCat=" + typeCat
-               + ", typeSchem=" + typeSchem
-               + ", typeName=" + typeName
-               + ", className=" + className
-               + ", dataType=" + dataType
-               + ", remarks=" + remarks
-               + ", baseType=" + baseType
+               + ",typeSchem=" + typeSchem
+               + ",typeName=" + typeName
+               + ",className=" + className
+               + ",dataType=" + dataType
+               + ",remarks=" + remarks
+               + ",baseType=" + baseType
                + "}";
     }
 
@@ -156,12 +142,12 @@ public class UDT extends AbstractChild<Schema> implements Comparable<UDT> {
 //    }
     // -------------------------------------------------------------------------
     @Label("TYPE_CAT")
-    @_NillableBySpecification
+    @NillableBySpecification
     @XmlAttribute
     private String typeCat;
 
     @Label("TYPE_SCHEM")
-    @_NillableBySpecification
+    @NillableBySpecification
     @XmlAttribute
     private String typeSchem;
 
@@ -182,7 +168,7 @@ public class UDT extends AbstractChild<Schema> implements Comparable<UDT> {
     private String remarks;
 
     @Label("BASE_TYPE")
-    @_NillableBySpecification
+    @NillableBySpecification
     @XmlElement(nillable = true, required = true)
     private Short baseType;
 

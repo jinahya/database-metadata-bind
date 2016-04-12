@@ -15,12 +15,9 @@
  */
 package com.github.jinahya.sql.database.metadata.bind;
 
-import java.util.Comparator;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlType;
-import org.apache.commons.lang3.builder.CompareToBuilder;
-import org.apache.commons.lang3.builder.ToStringBuilder;
 
 /**
  * An entity class for binding the result of
@@ -34,29 +31,8 @@ import org.apache.commons.lang3.builder.ToStringBuilder;
 })
 public class ClientInfoProperty extends AbstractChild<Metadata> {
 
-    public static Comparator<ClientInfoProperty> natural() {
-        return new Comparator<ClientInfoProperty>() {
-            @Override
-            public int compare(final ClientInfoProperty o1,
-                               final ClientInfoProperty o2) {
-                // by the NAME column
-                return new CompareToBuilder()
-                        .append(o1.getName(), o2.getName())
-                        .build();
-            }
-        };
-    }
-
     @Override
     public String toString() {
-        if (true) {
-            return new ToStringBuilder(this)
-                    .append("name", getName())
-                    .append("maxLen", getMaxLen())
-                    .append("defaultValue", getDefaultValue())
-                    .append("description", getDescription())
-                    .build();
-        }
         return super.toString() + "{"
                + "name=" + name
                + ", maxLen=" + maxLen

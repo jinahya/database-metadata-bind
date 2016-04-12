@@ -16,14 +16,12 @@
 package com.github.jinahya.sql.database.metadata.bind;
 
 import java.util.ArrayList;
-import java.util.Comparator;
 import java.util.List;
 import javax.xml.bind.annotation.XmlAttribute;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlElementRef;
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlType;
-import org.apache.commons.lang3.builder.CompareToBuilder;
 
 /**
  * A entity class for binding the result of
@@ -42,34 +40,19 @@ import org.apache.commons.lang3.builder.CompareToBuilder;
 })
 public class Table extends AbstractChild<Schema> {
 
-    public static Comparator<Table> natural() {
-        return new Comparator<Table>() {
-            @Override
-            public int compare(final Table o1, final Table o2) {
-                // by TABLE_TYPE, TABLE_CAT, TABLE_SCHEM and TABLE_NAME
-                return new CompareToBuilder()
-                        .append(o1.getTableType(), o2.getTableType())
-                        .append(o1.getTableCat(), o2.getTableCat())
-                        .append(o1.getTableSchem(), o2.getTableSchem())
-                        .append(o1.getTableName(), o2.getTableName())
-                        .build();
-            }
-        };
-    }
-
     @Override
     public String toString() {
         return super.toString() + "{"
                + "tableCat=" + tableCat
-               + ", tableSchem=" + tableSchem
-               + ", tableName=" + tableName
-               + ", tableType=" + tableType
-               + ", remarks=" + remarks
-               + ", typeCat=" + typeCat
-               + ", typeSchem=" + typeSchem
-               + ", typeName=" + typeName
-               + ", selfReferencingColName=" + selfReferencingColName
-               + ", refGeneration=" + refGeneration
+               + ",tableSchem=" + tableSchem
+               + ",tableName=" + tableName
+               + ",tableType=" + tableType
+               + ",remarks=" + remarks
+               + ",typeCat=" + typeCat
+               + ",typeSchem=" + typeSchem
+               + ",typeName=" + typeName
+               + ",selfReferencingColName=" + selfReferencingColName
+               + ",refGeneration=" + refGeneration
                + "}";
     }
 
@@ -310,12 +293,12 @@ public class Table extends AbstractChild<Schema> {
 
     // -------------------------------------------------------------------------
     @Label("TABLE_CAT")
-    @_NillableBySpecification
+    @NillableBySpecification
     @XmlAttribute
     private String tableCat;
 
     @Label("TABLE_SCHEM")
-    @_NillableBySpecification
+    @NillableBySpecification
     @XmlAttribute
     private String tableSchem;
 
@@ -332,27 +315,27 @@ public class Table extends AbstractChild<Schema> {
     private String remarks;
 
     @Label("TYPE_CAT")
-    @_NillableBySpecification
+    @NillableBySpecification
     @XmlElement(nillable = true, required = true)
     private String typeCat;
 
     @Label("TYPE_SCHEM")
-    @_NillableBySpecification
+    @NillableBySpecification
     @XmlElement(nillable = true, required = true)
     private String typeSchem;
 
     @Label("TYPE_NAME")
-    @_NillableBySpecification
+    @NillableBySpecification
     @XmlElement(nillable = true, required = true)
     private String typeName;
 
     @Label("SELF_REFERENCING_COL_NAME")
-    @_NillableBySpecification
+    @NillableBySpecification
     @XmlElement(nillable = true, required = true)
     private String selfReferencingColName;
 
     @Label("REF_GENERATION")
-    @_NillableBySpecification
+    @NillableBySpecification
     @XmlElement(nillable = true, required = true)
     private String refGeneration;
 

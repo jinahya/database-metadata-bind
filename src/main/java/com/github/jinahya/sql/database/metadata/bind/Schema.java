@@ -16,14 +16,12 @@
 package com.github.jinahya.sql.database.metadata.bind;
 
 import java.util.ArrayList;
-import java.util.Comparator;
 import java.util.List;
 import javax.xml.bind.annotation.XmlAttribute;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlElementRef;
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlType;
-import org.apache.commons.lang3.builder.CompareToBuilder;
 
 /**
  * An entity class for binding the result of
@@ -41,19 +39,6 @@ import org.apache.commons.lang3.builder.CompareToBuilder;
     "UDTs"
 })
 public class Schema extends AbstractChild<Catalog> implements TableDomain {
-
-    public static Comparator<Schema> narual() {
-        return new Comparator<Schema>() {
-            @Override
-            public int compare(final Schema o1, final Schema o2) {
-                // by TABLE_CATALOG and TABLE_SCHEM.
-                return new CompareToBuilder()
-                        .append(o1.getTableCatalog(), o2.getTableCatalog())
-                        .append(o1.getTableSchem(), o2.getTableSchem())
-                        .build();
-            }
-        };
-    }
 
     @Override
     public List<CrossReference> getCrossReferences() {
@@ -180,7 +165,7 @@ public class Schema extends AbstractChild<Catalog> implements TableDomain {
 
     // -------------------------------------------------------------------------
     @Label("TABLE_CATALOG")
-    @_NillableBySpecification
+    @NillableBySpecification
     @XmlAttribute
     private String tableCatalog;
 

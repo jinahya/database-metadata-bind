@@ -38,9 +38,9 @@
     <maven.compiler.target>1.6</maven.compiler.target>
     <maven.compiler.testSource>1.8</maven.compiler.testSource>
     <maven.compiler.testTarget>1.8</maven.compiler.testTarget>
-    <java.bootstrap.classes>${java.home}/lib/rt.jar</java.bootstrap.classes>
+<!--    <java.bootstrap.classes>${java.home}/lib/rt.jar</java.bootstrap.classes>
     <java.cryptographic.extension.classes>${java.home}/lib/jce.jar</java.cryptographic.extension.classes>
-    <java.secure.socket.extension.classes>${java.home}/lib/jsse.jar</java.secure.socket.extension.classes>
+    <java.secure.socket.extension.classes>${java.home}/lib/jsse.jar</java.secure.socket.extension.classes>-->
   </properties>
 
   <dependencyManagement>
@@ -89,8 +89,7 @@
       <groupId>org.apache.commons</groupId>
       <artifactId>commons-lang3</artifactId>
       <version>3.4</version>
-      <scope>compile</scope>
-      <optional>true</optional>
+      <scope>test</scope>
     </dependency>
     <dependency>
       <groupId>org.apache.derby</groupId>
@@ -162,7 +161,7 @@
           <execution>
             <phase>package</phase>
             <goals>
-              <goal>shade</goal>
+              <!--<goal>shade</goal>-->
             </goals>
             <configuration>
               <createDependencyReducedPom>false</createDependencyReducedPom>
@@ -185,7 +184,7 @@
             <id>proguard</id>
             <phase>package</phase>
             <goals>
-              <goal>proguard</goal>
+              <!--<goal>proguard</goal>-->
             </goals>
           </execution>
         </executions>

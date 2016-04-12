@@ -29,6 +29,7 @@ import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 import static java.sql.DriverManager.getConnection;
+import static java.sql.DriverManager.getConnection;
 
 /**
  *
