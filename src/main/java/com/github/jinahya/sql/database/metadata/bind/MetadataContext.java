@@ -291,8 +291,8 @@ public class MetadataContext {
             final List<Table> tables = ((TableDomain) instance).getTables();
             final List<CrossReference> crossReferences
                     = getCrossReferences(tables);
-            ((TableDomain) instance).setCrossReferences(crossReferences);
-//            ((TableDomain) instance).getCrossReferences().addAll(crossReferences);
+//            ((TableDomain) instance).setCrossReferences(crossReferences);
+            ((TableDomain) instance).getCrossReferences().addAll(crossReferences);
         }
         return instance;
     }

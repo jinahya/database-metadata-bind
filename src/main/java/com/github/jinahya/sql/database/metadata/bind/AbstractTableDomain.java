@@ -35,10 +35,10 @@ public abstract class AbstractTableDomain implements TableDomain {
         return crossReferences;
     }
 
-    @Override
-    public void setCrossReferences(final List<CrossReference> crossReferences) {
-        this.crossReferences = crossReferences;
-    }
+//    @Override
+//    public void setCrossReferences(final List<CrossReference> crossReferences) {
+//        this.crossReferences = crossReferences;
+//    }
 
     @XmlElementRef
     private List<CrossReference> crossReferences;

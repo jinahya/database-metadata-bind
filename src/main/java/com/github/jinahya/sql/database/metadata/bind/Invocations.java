@@ -25,7 +25,6 @@ final class Invocations {
     static <T> Object[] args(final Class<T> klass, final T instance,
                              final Class<?>[] types, final String[] literals)
             throws ReflectiveOperationException {
-
         final Object[] values = new Object[literals.length];
         for (int i = 0; i < literals.length; i++) {
             if ("null".equals(literals[i])) {
@@ -33,15 +32,6 @@ final class Invocations {
                 continue;
             }
             if (literals[i].startsWith(":")) {
-//                final Field field
-//                    = Reflections.field(beanClass, names[i].substring(1));
-////                if (!field.isAccessible()) {
-////                    field.setAccessible(true);
-////                }
-////                values[i] = field.get(beanInstance);
-////                values[i] = Beans.getPropertyValue(
-////                    beanClass, names[i].substring(1), beanInstance);
-//                values[i] = Values.get(field, beanInstance);
                 values[i] = Utils.propertyValue(literals[i].substring(1), instance);
                 continue;
             }
@@ -50,14 +40,12 @@ final class Invocations {
                 continue;
             }
             if (types[i].isPrimitive()) {
-//                types[i] = Reflections.wrapper(types[i]);
                 types[i] = Utils.wrapperClass(types[i]);
             }
             values[i] = types[i]
                     .getMethod("valueOf", String.class)
                     .invoke(null, literals[i]);
         }
-
         return values;
     }
 
