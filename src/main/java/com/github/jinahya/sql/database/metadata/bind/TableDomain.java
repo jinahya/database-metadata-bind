@@ -21,7 +21,7 @@ import java.util.List;
  *
  * @author Jin Kwon &lt;jinahya_at_gmail.com&gt;
  */
-public interface TableDomain {
+interface TableDomain {
 
     List<Table> getTables();
 

@@ -55,16 +55,6 @@ public class Catalog extends AbstractTableDomain {
         return tables;
     }
 
-//    @Override
-//    public List<CrossReference> getCrossReferences() {
-//        return crossReferences;
-//    }
-//
-//    @Override
-//    public void setCrossReferences(final List<CrossReference> crossReferences) {
-//        this.crossReferences = crossReferences;
-//    }
-
     // ---------------------------------------------------------------- tableCat
     public String getTableCat() {
         return tableCat;
@@ -74,11 +64,6 @@ public class Catalog extends AbstractTableDomain {
         this.tableCat = tableCat;
     }
 
-//    Catalog tableCat(final String tableCat) {
-//        setTableCat(tableCat);
-//        return this;
-//    }
-
     // ----------------------------------------------------------------- schemas
     public List<Schema> getSchemas() {
         if (schemas == null) {
@@ -87,17 +72,10 @@ public class Catalog extends AbstractTableDomain {
         return schemas;
     }
 
-//    public void setSchemas(List<Schema> schemas) {
-//        this.schemas = schemas;
-//    }
-
     // -------------------------------------------------------------------------
     @Label("TABLE_CAT")
     @XmlElement(required = true)
     private String tableCat;
-
-//    @XmlElementRef
-//    private List<CrossReference> crossReferences;
 
     @Invoke(name = "getSchemas",
             types = {String.class, String.class},

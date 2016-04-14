@@ -57,7 +57,6 @@ public class Attribute {
                + ",isNullable=" + isNullable
                + ",sourceDataType=" + sourceDataType
                + "}";
-
     }
 
     // ----------------------------------------------------------------- typeCat

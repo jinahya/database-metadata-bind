@@ -35,5 +35,4 @@ import java.lang.annotation.Target;
     Class<?>[] types() default {};
 
     Literals[] args() default {@Literals({})};
-
 }

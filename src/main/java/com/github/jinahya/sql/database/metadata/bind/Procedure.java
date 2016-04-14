@@ -145,8 +145,10 @@ public class Procedure {
     @Invoke(name = "getProcedureColumns",
             types = {String.class, String.class, String.class, String.class},
             args = {
-                @Literals({":procedureCat", ":procedureSchem", ":procedureName", "null"
-        })})
+                @Literals({":procedureCat", ":procedureSchem", ":procedureName",
+                           "null"})
+            }
+    )
     @XmlElementRef
     private List<ProcedureColumn> procedureColumns;
 }

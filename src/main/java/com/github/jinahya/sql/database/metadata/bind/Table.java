@@ -154,7 +154,9 @@ public class Table {
         return bestRowIdentifiers;
     }
 
-    public void setBestRowIdentifiers(List<BestRowIdentifier> bestRowIdentifiers) {
+    @Deprecated
+    public void setBestRowIdentifiers(
+            final List<BestRowIdentifier> bestRowIdentifiers) {
         this.bestRowIdentifiers = bestRowIdentifiers;
     }
 
@@ -166,7 +168,8 @@ public class Table {
         return columns;
     }
 
-    public void setColumns(List<Column> columns) {
+    @Deprecated
+    public void setColumns(final List<Column> columns) {
         this.columns = columns;
     }
 
@@ -322,8 +325,7 @@ public class Table {
     @XmlElement(nillable = true, required = true)
     private String refGeneration;
 
-    @Invoke(
-            name = "getBestRowIdentifier",
+    @Invoke(name = "getBestRowIdentifier",
             types = {
                 String.class, String.class, String.class, int.class, boolean.class
             },
@@ -341,8 +343,7 @@ public class Table {
     @XmlElementRef
     private List<BestRowIdentifier> bestRowIdentifiers;
 
-    @Invoke(
-            name = "getColumns",
+    @Invoke(name = "getColumns",
             types = {String.class, String.class, String.class, String.class},
             args = {
                 @Literals({":tableCat", ":tableSchem", ":tableName", "null"})
@@ -351,8 +352,7 @@ public class Table {
     @XmlElementRef
     private List<Column> columns;
 
-    @Invoke(
-            name = "getExportedKeys",
+    @Invoke(name = "getExportedKeys",
             types = {String.class, String.class, String.class},
             args = {
                 @Literals({":tableCat", ":tableSchem", ":tableName"})
@@ -361,8 +361,7 @@ public class Table {
     @XmlElementRef
     private List<ExportedKey> exportedKeys;
 
-    @Invoke(
-            name = "getImportedKeys",
+    @Invoke(name = "getImportedKeys",
             types = {String.class, String.class, String.class},
             args = {
                 @Literals({":tableCat", ":tableSchem", ":tableName"})
@@ -371,16 +370,14 @@ public class Table {
     @XmlElementRef
     private List<ImportedKey> importedKeys;
 
-    @Invoke(
-            name = "getIndexInfo",
+    @Invoke(name = "getIndexInfo",
             types = {
                 String.class, String.class, String.class, boolean.class,
                 boolean.class
             },
             args = {
-                @Literals({
-            ":tableCat", ":tableSchem", ":tableName", "false", "false"
-        })
+                @Literals({":tableCat", ":tableSchem", ":tableName", "false",
+                           "false"})
             }
     )
     @XmlElementRef

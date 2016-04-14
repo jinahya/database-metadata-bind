@@ -187,7 +187,7 @@ public class MetadataContext {
             }
             for (final Literals invocationArgs : invocation.args()) {
                 final String[] literals = invocationArgs.value();
-                final Object[] values = Invocations.args(
+                final Object[] values = Invocations.invocationValues(
                         bindingType, bindingInstance, types, literals);
                 final Object value;
                 try {

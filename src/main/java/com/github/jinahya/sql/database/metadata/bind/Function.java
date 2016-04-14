@@ -94,7 +94,7 @@ public class Function {
         return functionType;
     }
 
-    public void setFunctionType(short functionType) {
+    public void setFunctionType(final short functionType) {
         this.functionType = functionType;
     }
 
@@ -115,7 +115,8 @@ public class Function {
         return functionColumns;
     }
 
-    public void setFunctionColumns(List<FunctionColumn> functionColumns) {
+    @Deprecated
+    public void setFunctionColumns(final List<FunctionColumn> functionColumns) {
         this.functionColumns = functionColumns;
     }
 

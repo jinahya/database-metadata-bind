@@ -22,8 +22,9 @@ package com.github.jinahya.sql.database.metadata.bind;
  */
 final class Invocations {
 
-    static <T> Object[] args(final Class<T> klass, final T instance,
-                             final Class<?>[] types, final String[] literals)
+    static <T> Object[] invocationValues(final Class<T> klass, final T instance,
+                                         final Class<?>[] types,
+                                         final String[] literals)
             throws ReflectiveOperationException {
         final Object[] values = new Object[literals.length];
         for (int i = 0; i < literals.length; i++) {
@@ -32,7 +33,8 @@ final class Invocations {
                 continue;
             }
             if (literals[i].startsWith(":")) {
-                values[i] = Utils.propertyValue(literals[i].substring(1), instance);
+                values[i] = Utils.propertyValue(
+                        literals[i].substring(1), instance);
                 continue;
             }
             if (types[i] == String.class) {

@@ -96,7 +96,7 @@ public class ColumnPrivilege {
         return grantee;
     }
 
-    public void setGrantee(String grantee) {
+    public void setGrantee(final String grantee) {
         this.grantee = grantee;
     }
 

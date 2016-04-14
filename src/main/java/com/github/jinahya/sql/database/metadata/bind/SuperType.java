@@ -126,5 +126,4 @@ public class SuperType {
     @Label("SUPERTYPE_NAME")
     @XmlElement(required = true)
     private String supertypeName;
-
 }

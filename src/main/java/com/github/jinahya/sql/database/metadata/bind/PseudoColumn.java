@@ -101,7 +101,7 @@ public class PseudoColumn {
         return columnSize;
     }
 
-    public void setColumnSize(int columnSize) {
+    public void setColumnSize(final int columnSize) {
         this.columnSize = columnSize;
     }
 
@@ -128,7 +128,7 @@ public class PseudoColumn {
         return columnUsage;
     }
 
-    public void setColumnUsage(String columnUsage) {
+    public void setColumnUsage(final String columnUsage) {
         this.columnUsage = columnUsage;
     }
 

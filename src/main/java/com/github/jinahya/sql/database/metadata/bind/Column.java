@@ -295,7 +295,9 @@ public class Column {
         return columnPrivileges;
     }
 
-    public void setColumnPrivileges(List<ColumnPrivilege> columnPrivileges) {
+    @Deprecated
+    public void setColumnPrivileges(
+            final List<ColumnPrivilege> columnPrivileges) {
         this.columnPrivileges = columnPrivileges;
     }
 
@@ -408,13 +410,11 @@ public class Column {
     @XmlElement(required = true)
     private String isGeneratedcolumn;
 
-    @Invoke(
-            name = "getColumnPrivileges",
+    @Invoke(name = "getColumnPrivileges",
             types = {String.class, String.class, String.class, String.class},
             args = {
-                @Literals({
-            ":tableCat", ":tableSchem", ":tableName", ":columnName"
-        })
+                @Literals({":tableCat", ":tableSchem", ":tableName",
+                           ":columnName"})
             }
     )
     @XmlElementRef
