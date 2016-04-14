@@ -25,32 +25,30 @@ import javax.xml.bind.annotation.XmlType;
  * @author Jin Kwon &lt;jinahya_at_gmail.com&gt;
  */
 @XmlTransient
-@XmlType(
-        propOrder = {
-            "pkcolumnName", "fktableCat", "fktableSchem",
-            "fktableName", "fkcolumnName", "keySeq", "updateRule",
-            "deleteRule", "fkName", "pkName", "deferrability"
-        }
-)
+@XmlType(propOrder = {
+    "pkcolumnName", "fktableCat", "fktableSchem",
+    "fktableName", "fkcolumnName", "keySeq", "updateRule",
+    "deleteRule", "fkName", "pkName", "deferrability"
+})
 abstract class TableKey {
 
     @Override
     public String toString() {
         return super.toString() + "{"
                + "pktableCat=" + pktableCat
-               + ", pktableSchem=" + pktableSchem
-               + ", pktableName=" + pktableName
-               + ", pkcolumnName=" + pkcolumnName
-               + ", fktableCat=" + fktableCat
-               + ", fktableSchem=" + fktableSchem
-               + ", fktableName=" + fktableName
-               + ", fkcolumnName=" + fkcolumnName
-               + ", keySeq=" + keySeq
-               + ", updateRule=" + updateRule
-               + ", deleteRule=" + deleteRule
-               + ", fkName=" + fkName
-               + ", pkName=" + pkName
-               + ", deferrability=" + deferrability
+               + ",pktableSchem=" + pktableSchem
+               + ",pktableName=" + pktableName
+               + ",pkcolumnName=" + pkcolumnName
+               + ",fktableCat=" + fktableCat
+               + ",fktableSchem=" + fktableSchem
+               + ",fktableName=" + fktableName
+               + ",fkcolumnName=" + fkcolumnName
+               + ",keySeq=" + keySeq
+               + ",updateRule=" + updateRule
+               + ",deleteRule=" + deleteRule
+               + ",fkName=" + fkName
+               + ",pkName=" + pkName
+               + ",deferrability=" + deferrability
                + "}";
     }
 

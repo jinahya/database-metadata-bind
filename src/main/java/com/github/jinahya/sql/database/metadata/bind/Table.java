@@ -178,7 +178,8 @@ public class Table {
         return exportedKeys;
     }
 
-    public void setExportedKeys(List<ExportedKey> exportedKeys) {
+    @Deprecated
+    public void setExportedKeys(final List<ExportedKey> exportedKeys) {
         this.exportedKeys = exportedKeys;
     }
 
@@ -190,7 +191,8 @@ public class Table {
         return importedKeys;
     }
 
-    public void setImportedKeys(List<ImportedKey> importedKeys) {
+    @Deprecated
+    public void setImportedKeys(final List<ImportedKey> importedKeys) {
         this.importedKeys = importedKeys;
     }
 
@@ -202,21 +204,8 @@ public class Table {
         return indexInfo;
     }
 
-    public List<String> getIndexColumnNames(final String indexName) {
-        if (indexName == null) {
-            throw new NullPointerException("null indexName");
-        }
-        final List<String> indexColumnNames = new ArrayList<String>();
-        for (final IndexInfo indexInfo_ : getIndexInfo()) {
-            if (!indexName.equals(indexInfo_.getIndexName())) {
-                continue;
-            }
-            indexColumnNames.add(indexInfo_.getColumnName());
-        }
-        return indexColumnNames;
-    }
-
-    public void setIndexInfo(List<IndexInfo> indexInfo) {
+    @Deprecated
+    public void setIndexInfo(final List<IndexInfo> indexInfo) {
         this.indexInfo = indexInfo;
     }
 
@@ -228,7 +217,8 @@ public class Table {
         return primaryKeys;
     }
 
-    public void setPrimaryKeys(List<PrimaryKey> primaryKeys) {
+    @Deprecated
+    public void setPrimaryKeys(final List<PrimaryKey> primaryKeys) {
         this.primaryKeys = primaryKeys;
     }
 
@@ -240,7 +230,8 @@ public class Table {
         return pseudoColumns;
     }
 
-    public void setPseudoColumns(List<PseudoColumn> pseudoColumns) {
+    @Deprecated
+    public void setPseudoColumns(final List<PseudoColumn> pseudoColumns) {
         this.pseudoColumns = pseudoColumns;
     }
 
@@ -252,7 +243,8 @@ public class Table {
         return superTables;
     }
 
-    public void setSuperTables(List<SuperTable> superTables) {
+    @Deprecated
+    public void setSuperTables(final List<SuperTable> superTables) {
         this.superTables = superTables;
     }
 
@@ -264,7 +256,8 @@ public class Table {
         return tablePrivileges;
     }
 
-    public void setTablePrivileges(List<TablePrivilege> tablePrivileges) {
+    @Deprecated
+    public void setTablePrivileges(final List<TablePrivilege> tablePrivileges) {
         this.tablePrivileges = tablePrivileges;
     }
 
@@ -276,7 +269,8 @@ public class Table {
         return versionColumns;
     }
 
-    public void setVersionColumns(List<VersionColumn> versionColumns) {
+    @Deprecated
+    public void setVersionColumns(final List<VersionColumn> versionColumns) {
         this.versionColumns = versionColumns;
     }
 

@@ -21,7 +21,7 @@ import javax.xml.bind.annotation.XmlType;
 
 /**
  * An entity class for binding the result of
- * {@link java.sql.DatabaseMetaData#getTypeInfo()}.
+ * {@link java.sql.DatabaseMetaData#getTypeInfo() getTypeInfo()}.
  *
  * @author Jin Kwon &lt;jinahya_at_gmail.com&gt;
  */

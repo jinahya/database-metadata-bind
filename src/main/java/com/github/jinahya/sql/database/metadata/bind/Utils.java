@@ -37,10 +37,6 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import static java.util.logging.Logger.getLogger;
 
-/**
- *
- * @author Jin Kwon &lt;jinahya_at_gmail.com&gt;
- */
 class Utils {
 
     private static final Logger logger = getLogger(Metadata.class.getName());
@@ -147,9 +143,9 @@ class Utils {
         return null;
     }
 
-    static Set<String> columnLabels(final ResultSet resultSet)
+    static Set<String> columnLabels(final ResultSet results)
             throws SQLException {
-        final ResultSetMetaData rsmd = resultSet.getMetaData();
+        final ResultSetMetaData rsmd = results.getMetaData();
         final int columnCount = rsmd.getColumnCount();
         final Set<String> columnLabels = new HashSet<String>(columnCount);
         for (int i = 1; i <= columnCount; i++) {
@@ -467,10 +463,10 @@ class Utils {
         return suppression(field.getDeclaringClass(), field);
     }
 
-    static String suppression(final Class<?> beanClass,
-                              final PropertyDescriptor propertyDescriptor) {
-        return decapitalize(beanClass.getSimpleName()) + "/"
-               + propertyDescriptor.getName();
+    static String suppression(final Class<?> declaring,
+                              final PropertyDescriptor descriptor) {
+        return decapitalize(declaring.getSimpleName()) + "/"
+               + descriptor.getName();
     }
 
     private Utils() {

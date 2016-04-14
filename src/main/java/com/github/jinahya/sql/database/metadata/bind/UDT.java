@@ -25,7 +25,7 @@ import javax.xml.bind.annotation.XmlType;
 
 /**
  * An entity class for binding the result of
- * {@link java.sql.DatabaseMetaData#getUDTs(java.lang.String, java.lang.String, java.lang.String, int[])}.
+ * {@link java.sql.DatabaseMetaData#getUDTs(java.lang.String, java.lang.String, java.lang.String, int[]) getUDTs(catalog, schemaPattern, typeNamePattern, types)}.
  *
  * @author Jin Kwon &lt;jinahya_at_gmail.com&gt;
  */
@@ -162,19 +162,19 @@ public class UDT {
     private Short baseType;
 
     @Invoke(name = "getAttributes",
-                types = {String.class, String.class, String.class, String.class},
-                args = {
-                    @Literals({":typeCat", ":typeSchem", ":typeName", "null"})
-                }
+            types = {String.class, String.class, String.class, String.class},
+            args = {
+                @Literals({":typeCat", ":typeSchem", ":typeName", "null"})
+            }
     )
     @XmlElementRef
     private List<Attribute> attributes;
 
     @Invoke(name = "getSuperTypes",
-                types = {String.class, String.class, String.class},
-                args = {
-                    @Literals({":typeCat", ":typeSchem", ":typeName"})
-                }
+            types = {String.class, String.class, String.class},
+            args = {
+                @Literals({":typeCat", ":typeSchem", ":typeName"})
+            }
     )
     @XmlElementRef
     private List<SuperType> superTypes;
