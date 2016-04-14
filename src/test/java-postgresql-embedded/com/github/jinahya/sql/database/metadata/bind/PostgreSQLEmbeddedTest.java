@@ -106,7 +106,10 @@ public class PostgreSQLEmbeddedTest {
                     "table/typeName",
                     "table/typeSchem",
                     "table/pseudoColumns",
-                    "UDT/attributes"
+                    "UDT/attributes",
+                    "UDT/superTypes",
+                    "versionColumn/bufferLength",
+                    "versionColumn/columnSize"
             );
             try {
                 metadata = context.getMetadata();

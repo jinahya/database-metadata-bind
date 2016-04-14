@@ -173,38 +173,10 @@ public class MetadataContext {
                                new Object[]{label, object, klass});
                 }
             }
-
-//            final Set<String> columnLabels = columnLabels(results);
-//            final Field[] fields
-//                    = FieldUtils.getFieldsWithAnnotation(klass, Label.class);
-//            for (final Field field : fields) {
-//                final String fieldLabel
-//                        = field.getAnnotation(Label.class).value();
-//                final String suppression = suppression(klass, field);
-//                final String formatted = String.format(
-//                        "field=%s, label=%s, suppression=%s", field, fieldLabel,
-//                        suppression);
-//                if (suppressed(suppression)) {
-//                    logger.log(Level.FINE, "suppressed; {0}", formatted);
-//                    continue;
-//                }
-//                if (!columnLabels.remove(fieldLabel)) {
-//                    logger.log(Level.WARNING, "unknown label: {0}", formatted);
-//                    continue;
-//                }
-//                final Object value = results.getObject(fieldLabel);
-//                Values.set(field.getName(), instance, value);
-//            }
-//            if (!columnLabels.isEmpty()) {
-//                for (final String columnLabel : columnLabels) {
-//                    final Object resultValue = results.getObject(columnLabel);
-//                    logger.log(Level.WARNING, "unknown column; {0}({1}) {2}",
-//                               new Object[]{columnLabel, resultValue, klass});
-//                }
-//            }
         }
         // invoke
-        final Map<Field, Invoke> fields = Utils.annotatedFields(klass, Invoke.class);
+        final Map<Field, Invoke> fields
+                = Utils.annotatedFields(klass, Invoke.class);
         for (final Entry<Field, Invoke> entry : fields.entrySet()) {
             final Field field = entry.getKey();
             final Invoke invocation = entry.getValue();
@@ -212,6 +184,7 @@ public class MetadataContext {
             final String formatted = String.format(
                     "field=%s, invocation=%s, suppression=%s",
                     field, invocation, suppression);
+            //logger.log(Level.INFO, "invoking {0}", formatted);
             if (suppressed(suppression)) {
                 logger.log(Level.FINE, "suppressed; {0}", formatted);
                 continue;
@@ -242,57 +215,11 @@ public class MetadataContext {
                 }
             }
         }
-
-//        final List<Field> fields = FieldUtils.getFieldsListWithAnnotation(
-//                klass, _Invocation.class);
-//        for (final Field field : fields) {
-//            final _Invocation invocation = field.getAnnotation(_Invocation.class);
-//            final String suppression = suppression(klass, field);
-//            final String info = String.format(
-//                    "field=%s, invocation=%s, suppression=%s",
-//                    field, invocation, suppression);
-//            if (suppressed(suppression)) {
-//                logger.log(Level.FINE, "suppressed; {0}", new Object[]{info});
-//                continue;
-//            }
-//            final String name = invocation.name();
-////            getMethodNames().remove(name);
-//            final Class<?>[] types = invocation.types();
-//            final Method method;
-//            try {
-//                method = DatabaseMetaData.class.getMethod(name, types);
-//            } catch (final NoSuchMethodException nsme) {
-//                final String message = "unknown methods; " + info;
-//                if (!suppressUnknownMethods()) {
-//                    throw new RuntimeException(message);
-//                }
-//                logger.warning(message);
-//                continue;
-//            }
-//            for (final _InvocationArgs invocationArgs : invocation.argsarr()) {
-//                final String[] names = invocationArgs.value();
-//                final Object[] args = _Invocations.args(
-//                        klass, instance, types, names);
-//                final Object value;
-//                try {
-//                    value = method.invoke(context, args);
-//                } catch (final Exception e) {
-//                    logger.log(Level.SEVERE, "failed to invoke" + info, e);
-//                    throw new RuntimeException(e);
-//                } catch (final AbstractMethodError ame) {
-//                    logger.log(Level.SEVERE, "failed by abstract" + info, ame);
-//                    throw ame;
-//                }
-//                setValue(field, instance, value, args);
-//            }
-//        }
         if (TableDomain.class.isAssignableFrom(klass)) {
-//            getMethodNames().remove("getCrossReference");
-            final List<Table> tables = ((TableDomain) instance).getTables();
-            final List<CrossReference> crossReferences
-                    = getCrossReferences(tables);
-//            ((TableDomain) instance).setCrossReferences(crossReferences);
-            ((TableDomain) instance).getCrossReferences().addAll(crossReferences);
+            final TableDomain casted = (TableDomain) instance;
+            final List<Table> tables = casted.getTables();
+            final List<CrossReference> references = getCrossReferences(tables);
+            casted.getCrossReferences().addAll(references);
         }
         return instance;
     }
@@ -756,7 +683,7 @@ public class MetadataContext {
      * @param table table
      * @return a list of {@link VersionColumn}
      * @throws SQLException if a database access error occurs.
-     * @throws ReflectiveOperationException
+     * @throws ReflectiveOperationException if a reflection error occurs
      */
     public List<VersionColumn> getVersionColumns(final String catalog,
                                                  final String schema,

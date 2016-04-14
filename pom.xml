@@ -38,13 +38,11 @@
     <maven.compiler.target>1.6</maven.compiler.target>
     <maven.compiler.testSource>1.8</maven.compiler.testSource>
     <maven.compiler.testTarget>1.8</maven.compiler.testTarget>
-    <!--    <java.bootstrap.classes>${java.home}/lib/rt.jar</java.bootstrap.classes>
-    <java.cryptographic.extension.classes>${java.home}/lib/jce.jar</java.cryptographic.extension.classes>
-    <java.secure.socket.extension.classes>${java.home}/lib/jsse.jar</java.secure.socket.extension.classes>-->
   </properties>
 
   <repositories>
     <repository>
+      <!-- mariaDB4j -->
       <id>bintray-vorburger</id>
       <url>https://dl.bintray.com/vorburger/maven/</url>
     </repository>
@@ -65,7 +63,7 @@
       <dependency>
         <groupId>org.mariadb.jdbc</groupId>
         <artifactId>mariadb-java-client</artifactId>
-        <version>1.4.3</version>
+        <version>1.4.2</version>
       </dependency>
       <dependency>
         <groupId>org.postgresql</groupId>
@@ -400,8 +398,8 @@
       <id>umlgraph</id>
       <properties>
         <additionalparam>
-          -hide java.* -hide AbstractChild -hide Child -hide MetadataContext -hide TableDomain -hide XmlConstants -visibility
-          -collapsible -horizontal
+          -all -hide java.*
+          -collapsible
           -inferdep -inferdepinpackage -inferrel
           -outputencoding UTF-8
         </additionalparam>      
