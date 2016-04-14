@@ -36,9 +36,9 @@ public class SuperTable {
     public String toString() {
         return super.toString() + "{"
                + "tableCat=" + tableCat
-               + ", tableSchem=" + tableSchem
-               + ", tableName=" + tableName
-               + ", supertableName=" + supertableName
+               + ",tableSchem=" + tableSchem
+               + ",tableName=" + tableName
+               + ",supertableName=" + supertableName
                + "}";
     }
 

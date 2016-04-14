@@ -38,7 +38,6 @@ import javax.xml.bind.annotation.XmlType;
     "functionName", "remarks", "functionType", "specificName",
     // ---------------------------------------------------------------------
     "functionColumns"
-
 })
 public class Function {
 
@@ -147,8 +146,7 @@ public class Function {
     @XmlElement(required = true)
     private String specificName;
 
-    @Invoke(
-            name = "getFunctionColumns",
+    @Invoke(name = "getFunctionColumns",
             types = {String.class, String.class, String.class, String.class},
             args = {
                 @Literals({

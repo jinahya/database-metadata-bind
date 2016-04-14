@@ -23,7 +23,6 @@ import java.sql.DatabaseMetaData;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
@@ -42,18 +41,6 @@ public class MetadataContext {
 
     private static final Logger logger
             = Logger.getLogger(Metadata.class.getName());
-
-    public static final String DMDB_SUPPRESS_UNKNOWN_COLUMNS
-            = "dmdb.suppressUnknownColumns";
-
-    public static final String DMDB_SUPPRESS_UNKNOWN_METHODS
-            = "dmdb.suppressUnknownMethods";
-
-    public static final String DMDB_EMPTY_CATALOG_IF_NONE
-            = "dmdb.emptyCatalogIfNone";
-
-    public static final String DMDB_EMPTY_SCHEMA_IF_NONE
-            = "dmdb.emptySchemaIfNone";
 
     private static String suppression(final Class<?> klass, final Field field) {
         return decapitalize(klass.getSimpleName()) + "/" + field.getName();
@@ -141,17 +128,18 @@ public class MetadataContext {
         Utils.propertyValue(field.getName(), bean, value);
     }
 
-    private <T> T bindSingle(final ResultSet results, final Class<T> klass,
-                             final T instance)
+    private <T> T bindSingle(final ResultSet resultSet,
+                             final Class<T> bindingType,
+                             final T bindingInstance)
             throws SQLException, ReflectiveOperationException {
-        if (results != null) { // bind columns to fields
-            final Set<String> labels = Utils.columnLabels(results);
+        if (resultSet != null) { // bind columns to fields
+            final Set<String> labels = Utils.columnLabels(resultSet);
             final Map<Field, Label> fields
-                    = Utils.annotatedFields(klass, Label.class);
+                    = Utils.annotatedFields(bindingType, Label.class);
             for (final Entry<Field, Label> entry : fields.entrySet()) {
                 final Field field = entry.getKey();
                 final String label = entry.getValue().value();
-                final String suppression = suppression(klass, field);
+                final String suppression = suppression(bindingType, field);
                 final String formatted = String.format(
                         "field=%s, label=%s, suppression=%s", field, label,
                         suppression);
@@ -163,28 +151,27 @@ public class MetadataContext {
                     logger.log(Level.WARNING, "unknown label: {0}", formatted);
                     continue;
                 }
-                final Object value = results.getObject(label);
-                Utils.propertyValue(field.getName(), instance, value);
+                final Object value = resultSet.getObject(label);
+                Utils.propertyValue(field.getName(), bindingInstance, value);
             }
             if (!labels.isEmpty()) {
                 for (final String label : labels) {
-                    final Object object = results.getObject(label);
+                    final Object object = resultSet.getObject(label);
                     logger.log(Level.FINE, "unknown column; {0}({1}) {2}",
-                               new Object[]{label, object, klass});
+                               new Object[]{label, object, bindingType});
                 }
             }
         }
         // invoke
         final Map<Field, Invoke> fields
-                = Utils.annotatedFields(klass, Invoke.class);
+                = Utils.annotatedFields(bindingType, Invoke.class);
         for (final Entry<Field, Invoke> entry : fields.entrySet()) {
             final Field field = entry.getKey();
             final Invoke invocation = entry.getValue();
-            final String suppression = suppression(klass, field);
+            final String suppression = suppression(bindingType, field);
             final String formatted = String.format(
                     "field=%s, invocation=%s, suppression=%s",
                     field, invocation, suppression);
-            //logger.log(Level.INFO, "invoking {0}", formatted);
             if (suppressed(suppression)) {
                 logger.log(Level.FINE, "suppressed; {0}", formatted);
                 continue;
@@ -201,11 +188,11 @@ public class MetadataContext {
             for (final Literals invocationArgs : invocation.args()) {
                 final String[] literals = invocationArgs.value();
                 final Object[] values = Invocations.args(
-                        klass, instance, types, literals);
+                        bindingType, bindingInstance, types, literals);
                 final Object value;
                 try {
                     value = method.invoke(context, values);
-                    setValue(field, instance, value, values);
+                    setValue(field, bindingInstance, value, values);
                 } catch (final Exception e) {
                     logger.log(Level.SEVERE, "failed to invoke" + formatted, e);
 //                    throw new RuntimeException(e);
@@ -215,34 +202,36 @@ public class MetadataContext {
                 }
             }
         }
-        if (TableDomain.class.isAssignableFrom(klass)) {
-            final TableDomain casted = (TableDomain) instance;
+        if (TableDomain.class.isAssignableFrom(bindingType)) {
+            final TableDomain casted = (TableDomain) bindingInstance;
             final List<Table> tables = casted.getTables();
             final List<CrossReference> references = getCrossReferences(tables);
             casted.getCrossReferences().addAll(references);
         }
-        return instance;
+        return bindingInstance;
     }
 
-    private <T> T bindSingle(final ResultSet results, final Class<T> klass)
+    private <T> T bindSingle(final ResultSet resultSet,
+                             final Class<T> bindingType)
             throws SQLException, ReflectiveOperationException {
-        return bindSingle(results, klass, klass.newInstance());
+        return bindSingle(resultSet, bindingType, bindingType.newInstance());
     }
 
-    private <T> List<? super T> bindAll(final ResultSet results,
-                                        final Class<T> klass,
-                                        final List<? super T> instances)
+    private <T> List<? super T> bindAll(final ResultSet resultSet,
+                                        final Class<T> bindingType,
+                                        final List<? super T> bindingInstances)
             throws SQLException, ReflectiveOperationException {
-        while (results.next()) {
-            instances.add(bindSingle(results, klass, klass.newInstance()));
+        while (resultSet.next()) {
+            bindingInstances.add(bindSingle(
+                    resultSet, bindingType, bindingType.newInstance()));
         }
-        return instances;
+        return bindingInstances;
     }
 
-    private <T> List<? super T> bindAll(final ResultSet sults,
-                                        final Class<T> klass)
+    private <T> List<? super T> bindAll(final ResultSet resultSet,
+                                        final Class<T> bindingType)
             throws SQLException, ReflectiveOperationException {
-        return bindAll(sults, klass, new ArrayList<T>());
+        return bindAll(resultSet, bindingType, new ArrayList<T>());
     }
 
     /**
@@ -254,15 +243,9 @@ public class MetadataContext {
      */
     public Metadata getMetadata()
             throws SQLException, ReflectiveOperationException {
-        if (!getProperties().containsKey(DMDB_EMPTY_CATALOG_IF_NONE)) {
-            emptyCatalogIfNone(true);
-        }
-        if (!getProperties().containsKey(DMDB_EMPTY_SCHEMA_IF_NONE)) {
-            emptySchemaIfNone(true);
-        }
         final Metadata metadata = bindSingle(null, Metadata.class);
         final List<Catalog> catalogs = metadata.getCatalogs();
-        if (catalogs.isEmpty() && emptyCatalogIfNone()) {
+        if (catalogs.isEmpty()) {
             final Catalog catalog = new Catalog();
             catalog.setTableCat("");
             logger.log(Level.FINE, "adding an empty catalog: {0}",
@@ -272,7 +255,7 @@ public class MetadataContext {
         }
         for (final Catalog catalog : catalogs) {
             final List<Schema> schemas = catalog.getSchemas();
-            if (schemas.isEmpty() && emptySchemaIfNone()) {
+            if (schemas.isEmpty()) {
                 final Schema schema = new Schema();
                 schema.setTableCatalog(catalog.getTableCat());
                 schema.setTableSchem("");
@@ -283,10 +266,9 @@ public class MetadataContext {
             }
         }
         if (!suppressed("metadata/supportsConvert")) {
-//            getMethodNames().remove("supportsConvert");
             final List<SDTSDTBoolean> supportsConvert
                     = new ArrayList<SDTSDTBoolean>();
-            metadata.setSupportsConvert(supportsConvert);
+            metadata.getSupportsConvert().addAll(supportsConvert);
             supportsConvert.add(
                     new SDTSDTBoolean()
                     .fromType(null)
@@ -700,72 +682,6 @@ public class MetadataContext {
         return list;
     }
 
-    protected Map<String, Object> getProperties() {
-        if (properties == null) {
-            properties = new HashMap<String, Object>();
-        }
-        return properties;
-    }
-
-    protected Object getProperty(final String name) {
-        return getProperties().get(name);
-    }
-
-    protected boolean getPropertyAsBoolean(final String name) {
-        final Object value = getProperty(name);
-        if (!(value instanceof Boolean)) {
-            return false;
-        }
-        return (Boolean) value;
-    }
-
-    protected Object setProperty(final String name, final Object value) {
-        if (value == null) {
-            return getProperties().remove(name);
-        }
-        return getProperties().put(name, value);
-    }
-
-    public boolean suppressUnknownColumns() {
-        return getPropertyAsBoolean(DMDB_SUPPRESS_UNKNOWN_COLUMNS);
-    }
-
-    public MetadataContext suppressUnknownColumns(
-            final boolean suppressUnknownColumns) {
-        setProperty(DMDB_SUPPRESS_UNKNOWN_COLUMNS, suppressUnknownColumns);
-        return this;
-    }
-
-    public boolean suppressUnknownMethods() {
-        return getPropertyAsBoolean(DMDB_SUPPRESS_UNKNOWN_METHODS);
-    }
-
-    public MetadataContext suppressUnknownMethods(
-            final boolean suppressUnknownMethods) {
-        setProperty(DMDB_SUPPRESS_UNKNOWN_METHODS, suppressUnknownMethods);
-        return this;
-    }
-
-    public boolean emptyCatalogIfNone() {
-        return getPropertyAsBoolean(DMDB_EMPTY_CATALOG_IF_NONE);
-    }
-
-    public MetadataContext emptyCatalogIfNone(
-            final boolean emptyCatalogIfNone) {
-        setProperty(DMDB_EMPTY_CATALOG_IF_NONE, emptyCatalogIfNone);
-        return this;
-    }
-
-    public boolean emptySchemaIfNone() {
-        return getPropertyAsBoolean(DMDB_EMPTY_SCHEMA_IF_NONE);
-    }
-
-    public MetadataContext emptySchemaIfNone(final boolean emptySchemaIfNone) {
-        setProperty(DMDB_EMPTY_SCHEMA_IF_NONE, emptySchemaIfNone);
-        return this;
-    }
-
     private final DatabaseMetaData context;
-    private Map<String, Object> properties;
     private Set<String> suppressions;
 }

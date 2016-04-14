@@ -31,5 +31,4 @@ import java.lang.annotation.Target;
 @interface Literals {
 
     String[] value();
-
 }
