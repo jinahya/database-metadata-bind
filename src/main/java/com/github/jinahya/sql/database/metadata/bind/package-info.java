@@ -13,21 +13,19 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
-
 @XmlSchema(
-    attributeFormDefault = XmlNsForm.UNQUALIFIED,
-    elementFormDefault = XmlNsForm.QUALIFIED,
-    namespace = XmlConstants.DATABASE_METADATA_NS_URI,
-    xmlns = {
-        @XmlNs(prefix = XMLConstants.DEFAULT_NS_PREFIX,
-               namespaceURI = XmlConstants.DATABASE_METADATA_NS_URI),
-        @XmlNs(prefix = "xsi",
-               namespaceURI = XMLConstants.W3C_XML_SCHEMA_INSTANCE_NS_URI)
-    }
-) @XmlAccessorType(XmlAccessType.NONE)
+        attributeFormDefault = XmlNsForm.UNQUALIFIED,
+        elementFormDefault = XmlNsForm.QUALIFIED,
+        namespace = XmlConstants.DATABASE_METADATA_NS_URI,
+        xmlns = {
+            @XmlNs(prefix = XMLConstants.DEFAULT_NS_PREFIX,
+                   namespaceURI = XmlConstants.DATABASE_METADATA_NS_URI),
+            @XmlNs(prefix = "xsi",
+                   namespaceURI = XMLConstants.W3C_XML_SCHEMA_INSTANCE_NS_URI)
+        }
+)
+@XmlAccessorType(XmlAccessType.NONE)
 package com.github.jinahya.sql.database.metadata.bind;
-
 
 import javax.xml.XMLConstants;
 import javax.xml.bind.annotation.XmlAccessType;

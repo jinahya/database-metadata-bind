@@ -13,18 +13,12 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
-
 package com.github.jinahya.sql.database.metadata.bind;
 
-
-import java.util.Comparator;
 import javax.xml.bind.annotation.XmlAttribute;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlType;
-import org.apache.commons.lang3.builder.CompareToBuilder;
-
 
 /**
  * An entity class for binding the result of
@@ -33,208 +27,131 @@ import org.apache.commons.lang3.builder.CompareToBuilder;
  * @author Jin Kwon &lt;jinahya_at_gmail.com&gt;
  */
 @XmlRootElement
-@XmlType(
-    propOrder = {
-        "grantor", "grantee", "privilege", "isGrantable"
-    }
-)
-public class ColumnPrivilege extends AbstractChild<Column> {
-
-
-    public static Comparator<ColumnPrivilege> natural() {
-
-        return new Comparator<ColumnPrivilege>() {
-
-            @Override
-            public int compare(final ColumnPrivilege o1,
-                               final ColumnPrivilege o2) {
-
-                // by COLUMN_NAME and PRIVILEGE.
-                return new CompareToBuilder()
-                    .append(o1.getColumnName(), o2.getColumnName())
-                    .append(o1.getPrivilege(), o2.getPrivilege())
-                    .build();
-            }
-
-        };
-    }
-
+@XmlType(propOrder = {
+    "grantor", "grantee", "privilege", "isGrantable"
+})
+public class ColumnPrivilege {
 
     @Override
     public String toString() {
-
         return super.toString() + "{"
                + "tableCat=" + tableCat
-               + ", tableSchem=" + tableSchem
-               + ", tableName=" + tableName
-               + ", columnName=" + columnName
-               + ", grantor=" + grantor
-               + ", grantee=" + grantee
-               + ", privilege=" + privilege
-               + ", isGrantable=" + isGrantable
+               + ",tableSchem=" + tableSchem
+               + ",tableName=" + tableName
+               + ",columnName=" + columnName
+               + ",grantor=" + grantor
+               + ",grantee=" + grantee
+               + ",privilege=" + privilege
+               + ",isGrantable=" + isGrantable
                + "}";
     }
 
-
     // ---------------------------------------------------------------- tableCat
     public String getTableCat() {
-
         return tableCat;
     }
 
-
     public void setTableCat(final String tableCat) {
-
         this.tableCat = tableCat;
     }
 
-
     // -------------------------------------------------------------- tableSchem
     public String getTableSchem() {
-
         return tableSchem;
     }
 
-
     public void setTableSchem(final String tableSchem) {
-
         this.tableSchem = tableSchem;
     }
 
-
     // --------------------------------------------------------------- tableName
     public String getTableName() {
-
         return tableName;
     }
 
-
     public void setTableName(final String tableName) {
-
         this.tableName = tableName;
     }
 
-
     // -------------------------------------------------------------- columnName
     public String getColumnName() {
-
         return columnName;
     }
 
-
     public void setColumnName(final String columnName) {
-
         this.columnName = columnName;
     }
 
-
     // ----------------------------------------------------------------- grantor
     public String getGrantor() {
-
         return grantor;
     }
 
-
     public void setGrantor(final String grantor) {
-
         this.grantor = grantor;
     }
 
-
     // ----------------------------------------------------------------- grantee
     public String getGrantee() {
-
         return grantee;
     }
 
-
-    public void setGrantee(String grantee) {
-
+    public void setGrantee(final String grantee) {
         this.grantee = grantee;
     }
 
-
     // --------------------------------------------------------------- privilege
     public String getPrivilege() {
-
         return privilege;
     }
 
-
     public void setPrivilege(final String privilege) {
-
         this.privilege = privilege;
     }
 
-
     // ------------------------------------------------------------- isGrantable
     public String getIsGrantable() {
-
         return isGrantable;
     }
 
-
     public void setIsGrantable(final String isGrantable) {
-
         this.isGrantable = isGrantable;
     }
 
-
-    // ------------------------------------------------------------------ column
-    // just for class diagram
-    private Column getColumn() {
-
-        return getParent();
-    }
-
-
-//    public void setColumn(final Column column) {
-//
-//        setParent(column);
-//    }
     // -------------------------------------------------------------------------
     @Label("TABLE_CAT")
     @NillableBySpecification
     @XmlAttribute
     private String tableCat;
 
-
     @Label("TABLE_SCHEM")
     @NillableBySpecification
     @XmlAttribute
     private String tableSchem;
 
-
     @Label("TABLE_NAME")
     @XmlAttribute
     private String tableName;
 
-
     @Label("COLUMN_NAME")
     @XmlAttribute
     private String columnName;
-
 
     @Label("GRANTOR")
     @NillableBySpecification
     @XmlElement(nillable = true, required = true)
     private String grantor;
 
-
     @Label("GRANTEE")
     @XmlElement(required = true)
     private String grantee;
-
 
     @Label("PRIVILEGE")
     @XmlElement(required = true)
     private String privilege;
 
-
     @Label("IS_GRANTABLE")
     @NillableBySpecification
     @XmlElement(nillable = true, required = true)
     private String isGrantable;
-
 }
-

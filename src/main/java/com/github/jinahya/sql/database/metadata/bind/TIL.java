@@ -13,15 +13,12 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
-
 package com.github.jinahya.sql.database.metadata.bind;
-
 
 import java.sql.Connection;
 
-
 /**
+ * Constants for Transaction Isolation Level.
  *
  * @author Jin Kwon &lt;jinahya_at_gmail.com&gt;
  */
@@ -30,29 +27,21 @@ enum TIL {
     TRANSACTION_NONE(Connection.TRANSACTION_NONE), // 0
     TRANSACTION_READ_UNCOMMITTED(Connection.TRANSACTION_READ_UNCOMMITTED), // 1
     TRANSACTION_READ_COMMITTED(Connection.TRANSACTION_READ_COMMITTED), // 2
-    TRANSACTION_REPEATABLE_READ(Connection.TRANSACTION_REPEATABLE_READ),
-    TRANSACTION_SERIALIZABLE(Connection.TRANSACTION_SERIALIZABLE);
-
+    TRANSACTION_REPEATABLE_READ(Connection.TRANSACTION_REPEATABLE_READ), // 4
+    TRANSACTION_SERIALIZABLE(Connection.TRANSACTION_SERIALIZABLE); // 8
 
     public static TIL valueOf(final int level) {
-
         for (final TIL value : values()) {
             if (value.level == level) {
                 return value;
             }
         }
-
-        throw new IllegalArgumentException("no value for level: " + level);
+        throw new IllegalArgumentException("no value for " + level);
     }
 
-
     private TIL(final int level) {
-
         this.level = level;
     }
 
-
     private final int level;
-
 }
-

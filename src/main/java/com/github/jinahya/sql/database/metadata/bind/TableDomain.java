@@ -13,28 +13,20 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
-
 package com.github.jinahya.sql.database.metadata.bind;
 
-
 import java.util.List;
-
 
 /**
  *
  * @author Jin Kwon &lt;jinahya_at_gmail.com&gt;
  */
-public interface TableDomain {
-
+interface TableDomain {
 
     List<Table> getTables();
 
-
     List<CrossReference> getCrossReferences();
 
-
-    void setCrossReferences(List<CrossReference> crossReferences);
+//    void setCrossReferences(List<CrossReference> crossReferences);
 
 }
-

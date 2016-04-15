@@ -13,15 +13,12 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
-
 package com.github.jinahya.sql.database.metadata.bind;
-
 
 import java.sql.ResultSet;
 
-
 /**
+ * ResultSetType.
  *
  * @author Jin Kwon &lt;jinahya_at_gmail.com&gt;
  */
@@ -31,27 +28,19 @@ enum RST {
     TYPE_SCROLL_INSENSITIVE(ResultSet.TYPE_SCROLL_INSENSITIVE),
     TYPE_SCROLL_SENSITIVE(ResultSet.TYPE_SCROLL_SENSITIVE);
 
-
     public static RST valueOf(final int type) {
-
         for (final RST value : values()) {
             if (value.type == type) {
                 return value;
             }
         }
-
         throw new IllegalArgumentException(
-            "no value for constant: " + type);
+                "no value for type: " + type);
     }
 
-
     private RST(final int type) {
-
         this.type = type;
     }
 
-
     private final int type;
-
 }
-

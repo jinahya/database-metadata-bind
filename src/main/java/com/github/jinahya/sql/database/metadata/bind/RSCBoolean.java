@@ -13,14 +13,10 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
-
 package com.github.jinahya.sql.database.metadata.bind;
-
 
 import javax.xml.bind.annotation.XmlAttribute;
 import javax.xml.bind.annotation.XmlValue;
-
 
 /**
  *
@@ -28,67 +24,45 @@ import javax.xml.bind.annotation.XmlValue;
  */
 class RSCBoolean {
 
-
     static RSCBoolean valueOf(final Object[] args, final Object value) {
-
         final RSCBoolean instance = new RSCBoolean();
-
         instance.setConcurrency((Integer) args[0]);
         instance.setValue((Boolean) value);
-
         return instance;
     }
 
-
     // ------------------------------------------------------------- concurrency
     public int getConcurrency() {
-
         return concurrency;
     }
 
-
     public void setConcurrency(final int concurrency) {
-
         this.concurrency = concurrency;
     }
 
-
     RSCBoolean concurrency(final int concurrency) {
-
         setConcurrency(concurrency);
-
         return this;
     }
-
 
     // ------------------------------------------------------------------- value
     public boolean getValue() {
-
         return value;
     }
 
-
     public void setValue(final boolean value) {
-
         this.value = value;
     }
 
-
     RSCBoolean value(final boolean value) {
-
         setValue(value);
-
         return this;
     }
-
 
     // -------------------------------------------------------------------------
     @XmlAttribute
     private int concurrency;
 
-
     @XmlValue
     private boolean value;
-
 }
-

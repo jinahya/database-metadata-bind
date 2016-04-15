@@ -13,17 +13,11 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
-
 package com.github.jinahya.sql.database.metadata.bind;
 
-
-import java.util.Comparator;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlType;
-import org.apache.commons.lang3.builder.CompareToBuilder;
-
 
 /**
  * An entity class for binding the result of
@@ -32,98 +26,44 @@ import org.apache.commons.lang3.builder.CompareToBuilder;
  * @author Jin Kwon &lt;jinahya_at_gmail.com&gt;
  */
 @XmlRootElement
-@XmlType(
-    propOrder = {
-        "tableSchem", "tableCatalog"
-    }
-)
-public class SchemaName extends AbstractChild<Metadata> {
-
-
-    public static Comparator<SchemaName> natural() {
-
-        return new Comparator<SchemaName>() {
-
-            @Override
-            public int compare(final SchemaName o1, final SchemaName o2) {
-
-                // by TABLE_CATALOG and TABLE_SCHEM
-                return new CompareToBuilder()
-                    .append(o1.getTableCatalog(), o2.getTableCatalog())
-                    .append(o1.getTableSchem(), o2.getTableSchem())
-                    .build();
-            }
-
-        };
-    }
-
+@XmlType(propOrder = {
+    "tableSchem", "tableCatalog"
+})
+public class SchemaName {
 
     @Override
     public String toString() {
-
         return super.toString() + "{"
                + "tableSchem=" + tableSchem
-               + ", tableCatalog=" + tableCatalog
+               + ",tableCatalog=" + tableCatalog
                + "}";
     }
 
-
     // -------------------------------------------------------------- tableSchem
     public String getTableSchem() {
-
         return tableSchem;
     }
 
-
     public void setTableSchem(final String tableSchem) {
-
         this.tableSchem = tableSchem;
     }
 
-
     // ------------------------------------------------------------ tableCatalog
     public String getTableCatalog() {
-
         return tableCatalog;
     }
 
-
     public void setTableCatalog(final String tableCatalog) {
-
         this.tableCatalog = tableCatalog;
     }
 
-
-    // ---------------------------------------------------------------- metadata
-    // just for class diagram
-    private Metadata getMetadata() {
-
-        return getParent();
-    }
-
-
-//    public void setMetadata(final Metadata metadata) {
-//
-//        setParent(metadata);
-//    }
-//
-//
-//    SchemaName metadata(final Metadata metadata) {
-//
-//        setMetadata(metadata);
-//
-//        return this;
-//    }
     // -------------------------------------------------------------------------
     @Label("TABLE_SCHEM")
     @XmlElement(required = true)
     private String tableSchem;
 
-
     @Label("TABLE_CATALOG")
     @NillableBySpecification
     @XmlElement(nillable = true, required = false)
     private String tableCatalog;
-
 }
-

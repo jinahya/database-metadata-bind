@@ -13,16 +13,12 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
-
 package com.github.jinahya.sql.database.metadata.bind;
-
 
 import javax.xml.bind.annotation.XmlAttribute;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlType;
-
 
 /**
  * A entity class for binding the result of
@@ -31,119 +27,73 @@ import javax.xml.bind.annotation.XmlType;
  * @author Jin Kwon &lt;jinahya_at_gmail.com&gt;
  */
 @XmlRootElement
-@XmlType(
-    propOrder = {
-        "tableName", "supertableName"
-    }
-)
-public class SuperTable extends AbstractChild<Table> {
-
+@XmlType(propOrder = {
+    "tableName", "supertableName"
+})
+public class SuperTable {
 
     @Override
     public String toString() {
-
         return super.toString() + "{"
                + "tableCat=" + tableCat
-               + ", tableSchem=" + tableSchem
-               + ", tableName=" + tableName
-               + ", supertableName=" + supertableName
+               + ",tableSchem=" + tableSchem
+               + ",tableName=" + tableName
+               + ",supertableName=" + supertableName
                + "}";
     }
 
-
     // ---------------------------------------------------------------- tableCat
     public String getTableCat() {
-
         return tableCat;
     }
 
-
     public void setTableCat(final String tableCat) {
-
         this.tableCat = tableCat;
     }
 
-
     // -------------------------------------------------------------- tableSchem
     public String getTableSchem() {
-
         return tableSchem;
     }
 
-
     public void setTableSchem(final String tableSchem) {
-
         this.tableSchem = tableSchem;
     }
 
-
     // --------------------------------------------------------------- tableName
     public String getTableName() {
-
         return tableName;
     }
 
-
     public void setTableName(final String tableName) {
-
         this.tableName = tableName;
     }
 
-
     // ---------------------------------------------------------- supertableName
     public String getSupertableName() {
-
         return supertableName;
     }
 
-
     public void setSupertableName(final String supertableName) {
-
         this.supertableName = supertableName;
     }
 
-
-    // ------------------------------------------------------------------- table
-    // just for class diagram
-    private Table getTable() {
-
-        return getParent();
-    }
-
-
-//    public void setTable(final Table table) {
-//
-//        setParent(table);
-//    }
-//
-//
-//    SuperTable table(final Table table) {
-//
-//        setTable(table);
-//
-//        return this;
-//    }
     // -------------------------------------------------------------------------
     @Label("TABLE_CAT")
     @NillableBySpecification
     @XmlAttribute
     private String tableCat;
 
-
     @Label("TABLE_SCHEM")
     @NillableBySpecification
     @XmlAttribute
     private String tableSchem;
 
-
     @Label("TABLE_NAME")
     @XmlElement(required = true)
     private String tableName;
 
-
     @Label("SUPERTABLE_NAME")
     @XmlElement(required = true)
     private String supertableName;
-
 }
-

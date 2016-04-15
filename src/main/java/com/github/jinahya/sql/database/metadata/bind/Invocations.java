@@ -13,13 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
-
 package com.github.jinahya.sql.database.metadata.bind;
-
-
-import org.apache.commons.lang3.ClassUtils;
-
 
 /**
  * A utility class for {@link Invocation}.
@@ -28,52 +22,36 @@ import org.apache.commons.lang3.ClassUtils;
  */
 final class Invocations {
 
-
-    static <T> Object[] args(final Class<T> beanClass, final T beanInstance,
-                             final Class<?>[] types, final String[] names)
-        throws ReflectiveOperationException {
-
-        final Object[] values = new Object[names.length];
-        for (int i = 0; i < names.length; i++) {
-            if ("null".equals(names[i])) {
+    static <T> Object[] invocationValues(final Class<T> klass, final T instance,
+                                         final Class<?>[] types,
+                                         final String[] literals)
+            throws ReflectiveOperationException {
+        final Object[] values = new Object[literals.length];
+        for (int i = 0; i < literals.length; i++) {
+            if ("null".equals(literals[i])) {
                 values[i] = null;
                 continue;
             }
-            if (names[i].startsWith(":")) {
-//                final Field field
-//                    = Reflections.field(beanClass, names[i].substring(1));
-////                if (!field.isAccessible()) {
-////                    field.setAccessible(true);
-////                }
-////                values[i] = field.get(beanInstance);
-////                values[i] = Beans.getPropertyValue(
-////                    beanClass, names[i].substring(1), beanInstance);
-//                values[i] = Values.get(field, beanInstance);
-                values[i] = Values.get(names[i].substring(1), beanInstance);
+            if (literals[i].startsWith(":")) {
+                values[i] = Utils.propertyValue(
+                        literals[i].substring(1), instance);
                 continue;
             }
             if (types[i] == String.class) {
-                values[i] = names[i];
+                values[i] = literals[i];
                 continue;
             }
             if (types[i].isPrimitive()) {
-//                types[i] = Reflections.wrapper(types[i]);
-                types[i] = ClassUtils.primitiveToWrapper(types[i]);
+                types[i] = Utils.wrapperClass(types[i]);
             }
             values[i] = types[i]
-                .getMethod("valueOf", String.class)
-                .invoke(null, names[i]);
+                    .getMethod("valueOf", String.class)
+                    .invoke(null, literals[i]);
         }
-
         return values;
     }
 
-
     private Invocations() {
-
         super();
-
     }
-
 }
-

@@ -13,15 +13,12 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
-
 package com.github.jinahya.sql.database.metadata.bind;
-
 
 import java.sql.ResultSet;
 
-
 /**
+ * Constants for concurrencies of ResultSets.
  *
  * @author Jin Kwon &lt;jinahya_at_gmail.com&gt;
  */
@@ -30,27 +27,19 @@ enum RSC {
     CONCUR_READ_ONLY(ResultSet.CONCUR_READ_ONLY),
     CONCUR_UPDATABLE(ResultSet.CONCUR_UPDATABLE);
 
-
     public static RSC valueOf(final int concurrency) {
-
         for (final RSC value : values()) {
             if (value.concurrency == concurrency) {
                 return value;
             }
         }
-
         throw new IllegalArgumentException(
-            "no value for concurrency: " + concurrency);
+                "no value for concurrency: " + concurrency);
     }
 
-
     private RSC(final int concurrency) {
-
         this.concurrency = concurrency;
     }
 
-
     private final int concurrency;
-
 }
-

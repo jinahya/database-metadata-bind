@@ -13,10 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
-
 package com.github.jinahya.sql.database.metadata.bind;
-
 
 /**
  *
@@ -24,13 +21,10 @@ package com.github.jinahya.sql.database.metadata.bind;
  */
 public final class XmlConstants {
 
-
     public static final String DATABASE_METADATA_NS_URI
-        = "http://github.com/jinahya/sql/database/metadata/bind";
-
+            = "http://github.com/jinahya/sql/database/metadata/bind";
 
     static final String DATABASE_MEATDATA_NS_PREFIX = "m";
-
 
     private XmlConstants() {
 
@@ -38,4 +32,3 @@ public final class XmlConstants {
     }
 
 }
-

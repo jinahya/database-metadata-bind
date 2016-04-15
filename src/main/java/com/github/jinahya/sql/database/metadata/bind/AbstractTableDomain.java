@@ -1,5 +1,5 @@
 /*
- * Copyright 2015 Jin Kwon &lt;jinahya_at_gmail.com&gt;.
+ * Copyright 2016 Jin Kwon &lt;onacit_at_gmail.com&gt;.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,49 +13,28 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
-
 package com.github.jinahya.sql.database.metadata.bind;
 
-
+import java.util.ArrayList;
+import java.util.List;
+import javax.xml.bind.annotation.XmlElementRef;
 import javax.xml.bind.annotation.XmlTransient;
 
-
 /**
- * An abstract class implementing {@code Child}.
  *
- * @author Jin Kwon &lt;jinahya_at_gmail.com&gt;
- * @param <P> parent type parameter
+ * @author Jin Kwon &lt;onacit_at_gmail.com&gt;
  */
 @XmlTransient
-public abstract class AbstractChild<P> implements Child<P> {
+abstract class AbstractTableDomain implements TableDomain {
 
-
-    @Deprecated
-    void beforeMarshal(final javax.xml.bind.Marshaller marshaller) {
-
-        if (parent == null) {
-            System.err.println("null parent: " + this);
+    @Override
+    public List<CrossReference> getCrossReferences() {
+        if (crossReferences == null) {
+            crossReferences = new ArrayList<CrossReference>();
         }
+        return crossReferences;
     }
 
-
-    @Override
-    public P getParent() {
-
-        return parent;
-    }
-
-
-    @Override
-    public void setParent(final P parent) {
-
-        this.parent = parent;
-    }
-
-
-    @XmlTransient
-    private P parent;
-
+    @XmlElementRef
+    private List<CrossReference> crossReferences;
 }
-
