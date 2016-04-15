@@ -39,23 +39,23 @@ public class TypeInfo {
     public String toString() {
         return super.toString() + "{"
                + "typeName=" + typeName
-               + ", dataType=" + dataType
-               + ", precision=" + precision
-               + ", literalPrefix=" + literalPrefix
-               + ", literalSuffix=" + literalSuffix
-               + ", createParams=" + createParams
-               + ", nullable=" + nullable
-               + ", caseSensitive=" + caseSensitive
-               + ", searchable=" + searchable
-               + ", unsignedAttribute=" + unsignedAttribute
-               + ", fixedPrecScale=" + fixedPrecScale
-               + ", autoIncrement=" + autoIncrement
-               + ", localTypeName=" + localTypeName
-               + ", minimumScale=" + minimumScale
-               + ", maximumScale=" + maximumScale
-               + ", sqlDataType=" + sqlDataType
-               + ", sqlDatetimeSub=" + sqlDatetimeSub
-               + ", numPrecRadix=" + numPrecRadix
+               + ",dataType=" + dataType
+               + ",precision=" + precision
+               + ",literalPrefix=" + literalPrefix
+               + ",literalSuffix=" + literalSuffix
+               + ",createParams=" + createParams
+               + ",nullable=" + nullable
+               + ",caseSensitive=" + caseSensitive
+               + ",searchable=" + searchable
+               + ",unsignedAttribute=" + unsignedAttribute
+               + ",fixedPrecScale=" + fixedPrecScale
+               + ",autoIncrement=" + autoIncrement
+               + ",localTypeName=" + localTypeName
+               + ",minimumScale=" + minimumScale
+               + ",maximumScale=" + maximumScale
+               + ",sqlDataType=" + sqlDataType
+               + ",sqlDatetimeSub=" + sqlDatetimeSub
+               + ",numPrecRadix=" + numPrecRadix
                + "}";
     }
 

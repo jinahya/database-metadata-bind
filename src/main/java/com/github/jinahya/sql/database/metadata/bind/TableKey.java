@@ -138,7 +138,7 @@ abstract class TableKey {
         return updateRule;
     }
 
-    public void setUpdateRule(short updateRule) {
+    public void setUpdateRule(final short updateRule) {
         this.updateRule = updateRule;
     }
 

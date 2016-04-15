@@ -84,7 +84,8 @@ public class Schema extends AbstractTableDomain {
         return functions;
     }
 
-    public void setFunctions(List<Function> functions) {
+    @Deprecated
+    public void setFunctions(final List<Function> functions) {
         this.functions = functions;
     }
 
@@ -96,7 +97,8 @@ public class Schema extends AbstractTableDomain {
         return procedures;
     }
 
-    public void setProcedures(List<Procedure> procedures) {
+    @Deprecated
+    public void setProcedures(final List<Procedure> procedures) {
         this.procedures = procedures;
     }
 
@@ -109,7 +111,8 @@ public class Schema extends AbstractTableDomain {
         return tables;
     }
 
-    public void setTables(List<Table> tables) {
+    @Deprecated
+    public void setTables(final List<Table> tables) {
         this.tables = tables;
     }
 
@@ -121,7 +124,8 @@ public class Schema extends AbstractTableDomain {
         return UDTs;
     }
 
-    public void setUDTs(List<UDT> UDTs) {
+    @Deprecated
+    public void setUDTs(final List<UDT> UDTs) {
         this.UDTs = UDTs;
     }
 

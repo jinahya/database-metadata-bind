@@ -111,7 +111,9 @@ public class Procedure {
         return procedureColumns;
     }
 
-    public void setProcedureColumns(List<ProcedureColumn> procedureColumns) {
+    @Deprecated
+    public void setProcedureColumns(
+            final List<ProcedureColumn> procedureColumns) {
         this.procedureColumns = procedureColumns;
     }
 
