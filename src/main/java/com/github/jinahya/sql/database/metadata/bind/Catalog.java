@@ -35,7 +35,6 @@ import javax.xml.bind.annotation.XmlType;
     "crossReferences",
     "schemas"
 })
-//public class Catalog implements TableDomain {
 public class Catalog extends AbstractTableDomain {
 
     @Override

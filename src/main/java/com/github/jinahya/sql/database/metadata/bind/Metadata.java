@@ -154,7 +154,6 @@ public class Metadata implements TableDomain {
 //    public void setCrossReferences(List<CrossReference> crossReferences) {
 //        this.crossReferences = crossReferences;
 //    }
-
     // ----------------------------------- dataDefinitionCausesTransactionCommit
     public boolean isDataDefinitionCausesTransactionCommit() {
         return dataDefinitionCausesTransactionCommit;
@@ -166,6 +165,7 @@ public class Metadata implements TableDomain {
                 = dataDefinitionCausesTransactionCommit;
     }
 
+    // -------------------------------------- dataDefinitionIgnoredInTransaction
     public boolean isDataDefinitionIgnoredInTransactions() {
         return dataDefinitionIgnoredInTransactions;
     }
@@ -181,50 +181,62 @@ public class Metadata implements TableDomain {
         return databaseMajorVersion;
     }
 
-    public void setDatabaseMajorVersion(int databaseMajorVersion) {
+    public void setDatabaseMajorVersion(final int databaseMajorVersion) {
         this.databaseMajorVersion = databaseMajorVersion;
     }
 
+    // ---------------------------------------------------- databaseMinorVersion
     public int getDatabaseMinorVersion() {
         return databaseMinorVersion;
     }
 
-    public void setDatabaseMinorVersion(int databaseMinorVersion) {
+    public void setDatabaseMinorVersion(final int databaseMinorVersion) {
         this.databaseMinorVersion = databaseMinorVersion;
     }
 
+    // ----------------------------------------------------- databaseProductName
     public String getDatabaseProductName() {
         return databaseProductName;
     }
 
-    public void setDatabaseProductName(String databaseProductName) {
+    public void setDatabaseProductName(final String databaseProductName) {
         this.databaseProductName = databaseProductName;
     }
 
+    // -------------------------------------------------- databaseProductVersion
     public String getDatabaseProductVersion() {
         return databaseProductVersion;
     }
 
-    public void setDatabaseProductVersion(String databaseProductVersion) {
+    public void setDatabaseProductVersion(final String databaseProductVersion) {
         this.databaseProductVersion = databaseProductVersion;
     }
 
+    // --------------------------------------------- defaultTransactionIsolation
     public int getDefaultTransactionIsolation() {
         return defaultTransactionIsolation;
     }
 
-    public void setDefaultTransactionIsolation(int defaultTransactionIsolation) {
+    public void setDefaultTransactionIsolation(
+            final int defaultTransactionIsolation) {
         this.defaultTransactionIsolation = defaultTransactionIsolation;
     }
 
+    // ------------------------------------------------------ deletesAreDetected
     public List<RSTBoolean> getDeletesAreDetected() {
+        if (deletesAreDetected == null) {
+            deletesAreDetected = new ArrayList<RSTBoolean>();
+        }
         return deletesAreDetected;
     }
 
-    public void setDeletesAreDetected(List<RSTBoolean> deletesAreDetected) {
+    @Deprecated
+    public void setDeletesAreDetected(
+            final List<RSTBoolean> deletesAreDetected) {
         this.deletesAreDetected = deletesAreDetected;
     }
 
+    // ---------------------------------------------- doesMaxRowSizeIncludeBlobs
     public boolean isDoesMaxRowSizeIncludeBlobs() {
         return doesMaxRowSizeIncludeBlobs;
     }
@@ -234,6 +246,7 @@ public class Metadata implements TableDomain {
         this.doesMaxRowSizeIncludeBlobs = doesMaxRowSizeIncludeBlobs;
     }
 
+    // ------------------------------------------------------ driverMajorVersion
     public int getDriverMajorVersion() {
         return driverMajorVersion;
     }
@@ -242,6 +255,7 @@ public class Metadata implements TableDomain {
         this.driverMajorVersion = driverMajorVersion;
     }
 
+    // ------------------------------------------------------- driverinorVersion
     public int getDriverMinorVersion() {
         return driverMinorVersion;
     }
@@ -250,6 +264,7 @@ public class Metadata implements TableDomain {
         this.driverMinorVersion = driverMinorVersion;
     }
 
+    // -------------------------------------------------------------- driverName
     public String getDriverName() {
         return driverName;
     }
@@ -258,6 +273,7 @@ public class Metadata implements TableDomain {
         this.driverName = driverName;
     }
 
+    // ----------------------------------------------------------- driverVersion
     public String getDriverVersion() {
         return driverVersion;
     }
@@ -266,6 +282,7 @@ public class Metadata implements TableDomain {
         this.driverVersion = driverVersion;
     }
 
+    // ------------------------------------------------------ extraNameChracters
     public String getExtraNameCharacters() {
         return extraNameCharacters;
     }
@@ -274,6 +291,7 @@ public class Metadata implements TableDomain {
         this.extraNameCharacters = extraNameCharacters;
     }
 
+    // ---------------------------------------------- generatedKeyAlwaysReturned
     public boolean isGeneratedKeyAlwaysReturned() {
         return generatedKeyAlwaysReturned;
     }
@@ -283,6 +301,7 @@ public class Metadata implements TableDomain {
         this.generatedKeyAlwaysReturned = generatedKeyAlwaysReturned;
     }
 
+    // --------------------------------------------------- identifierQuoteString
     public String getIdentifierQuoteString() {
         return identifierQuoteString;
     }
@@ -293,10 +312,15 @@ public class Metadata implements TableDomain {
 
     // ------------------------------------------------------ insertsAreDetected
     public List<RSTBoolean> getInsertsAreDetected() {
+        if (insertsAreDetected == null) {
+            insertsAreDetected = new ArrayList<RSTBoolean>();
+        }
         return insertsAreDetected;
     }
 
-    public void setInsertsAreDetected(final List<RSTBoolean> insertsAreDetected) {
+    @Deprecated
+    public void setInsertsAreDetected(
+            final List<RSTBoolean> insertsAreDetected) {
         this.insertsAreDetected = insertsAreDetected;
     }
 
@@ -691,12 +715,10 @@ public class Metadata implements TableDomain {
     }
 
     public String getRowIdLifetimeName() {
-
         return rowIdLifetime == null ? null : rowIdLifetime.name();
     }
 
     public void setRowIdLifetimeName(String rowIdLifetimeName) {
-
         this.rowIdLifetime = rowIdLifetimeName == null
                              ? null : RowIdLifetime.valueOf(rowIdLifetimeName);
     }
@@ -709,6 +731,7 @@ public class Metadata implements TableDomain {
         return schemaNames;
     }
 
+    @Deprecated
     public void setSchemaNames(final List<SchemaName> schemaNames) {
         this.schemaNames = schemaNames;
     }
@@ -791,131 +814,166 @@ public class Metadata implements TableDomain {
                 = storesMixedCaseQuotedIdentifiers;
     }
 
+    // ------------------------------------------------ storesUpperCaseIdentifer
     public boolean isStoresUpperCaseIdentifiers() {
         return storesUpperCaseIdentifiers;
     }
 
-    public void setStoresUpperCaseIdentifiers(boolean storesUpperCaseIdentifiers) {
+    public void setStoresUpperCaseIdentifiers(
+            final boolean storesUpperCaseIdentifiers) {
         this.storesUpperCaseIdentifiers = storesUpperCaseIdentifiers;
     }
 
+    // ---------------------------------------- storesUpperCaseQuotedIdentifiers
     public boolean isStoresUpperCaseQuotedIdentifiers() {
         return storesUpperCaseQuotedIdentifiers;
     }
 
-    public void setStoresUpperCaseQuotedIdentifiers(boolean storesUpperCaseQuotedIdentifiers) {
-        this.storesUpperCaseQuotedIdentifiers = storesUpperCaseQuotedIdentifiers;
+    public void setStoresUpperCaseQuotedIdentifiers(
+            final boolean storesUpperCaseQuotedIdentifiers) {
+        this.storesUpperCaseQuotedIdentifiers
+                = storesUpperCaseQuotedIdentifiers;
     }
 
+    // --------------------------------------------------------- stringFunctions
     public String getStringFunctions() {
         return stringFunctions;
     }
 
-    public void setStringFunctions(String stringFunctions) {
+    public void setStringFunctions(final String stringFunctions) {
         this.stringFunctions = stringFunctions;
     }
 
+    // ----------------------------------------- supportsAlterTableWithAddColumn
     public boolean isSupportsAlterTableWithAddColumn() {
         return supportsAlterTableWithAddColumn;
     }
 
-    public void setSupportsAlterTableWithAddColumn(boolean supportsAlterTableWithAddColumn) {
+    public void setSupportsAlterTableWithAddColumn(
+            final boolean supportsAlterTableWithAddColumn) {
         this.supportsAlterTableWithAddColumn = supportsAlterTableWithAddColumn;
     }
 
+    // ---------------------------------------- supportsAlterTableWithDropColumn
     public boolean isSupportsAlterTableWithDropColumn() {
         return supportsAlterTableWithDropColumn;
     }
 
-    public void setSupportsAlterTableWithDropColumn(boolean supportsAlterTableWithDropColumn) {
-        this.supportsAlterTableWithDropColumn = supportsAlterTableWithDropColumn;
+    public void setSupportsAlterTableWithDropColumn(
+            final boolean supportsAlterTableWithDropColumn) {
+        this.supportsAlterTableWithDropColumn
+                = supportsAlterTableWithDropColumn;
     }
 
+    // --------------------------------------------- supportsANSI92EntryLevelSQL
     public boolean isSupportsANSI92EntryLevelSQL() {
         return supportsANSI92EntryLevelSQL;
     }
 
-    public void setSupportsANSI92EntryLevelSQL(boolean supportsANSI92EntryLevelSQL) {
+    public void setSupportsANSI92EntryLevelSQL(
+            final boolean supportsANSI92EntryLevelSQL) {
         this.supportsANSI92EntryLevelSQL = supportsANSI92EntryLevelSQL;
     }
 
+    // --------------------------------------------------- supportsANSI92FullSQL
     public boolean isSupportsANSI92FullSQL() {
         return supportsANSI92FullSQL;
     }
 
-    public void setSupportsANSI92FullSQL(boolean supportsANSI92FullSQL) {
+    public void setSupportsANSI92FullSQL(final boolean supportsANSI92FullSQL) {
         this.supportsANSI92FullSQL = supportsANSI92FullSQL;
     }
 
+    // ------------------------------------------- supportsANSI92IntermediateSQL
     public boolean isSupportsANSI92IntermediateSQL() {
         return supportsANSI92IntermediateSQL;
     }
 
-    public void setSupportsANSI92IntermediateSQL(boolean supportsANSI92IntermediateSQL) {
+    public void setSupportsANSI92IntermediateSQL(
+            final boolean supportsANSI92IntermediateSQL) {
         this.supportsANSI92IntermediateSQL = supportsANSI92IntermediateSQL;
     }
 
+    // ---------------------------------------------------- supportsBatchUpdates
     public boolean isSupportsBatchUpdates() {
         return supportsBatchUpdates;
     }
 
-    public void setSupportsBatchUpdates(boolean supportsBatchUpdates) {
+    public void setSupportsBatchUpdates(final boolean supportsBatchUpdates) {
         this.supportsBatchUpdates = supportsBatchUpdates;
     }
 
+    // -------------------------------------- supportsCatalogsInDataManipulation
     public boolean isSupportsCatalogsInDataManipulation() {
         return supportsCatalogsInDataManipulation;
     }
 
-    public void setSupportsCatalogsInDataManipulation(boolean supportsCatalogsInDataManipulation) {
-        this.supportsCatalogsInDataManipulation = supportsCatalogsInDataManipulation;
+    public void setSupportsCatalogsInDataManipulation(
+            final boolean supportsCatalogsInDataManipulation) {
+        this.supportsCatalogsInDataManipulation
+                = supportsCatalogsInDataManipulation;
     }
 
+    // -------------------------------------- supportsCatalogsInIndexDefinitions
     public boolean isSupportsCatalogsInIndexDefinitions() {
         return supportsCatalogsInIndexDefinitions;
     }
 
-    public void setSupportsCatalogsInIndexDefinitions(boolean supportsCatalogsInIndexDefinitions) {
-        this.supportsCatalogsInIndexDefinitions = supportsCatalogsInIndexDefinitions;
+    public void setSupportsCatalogsInIndexDefinitions(
+            final boolean supportsCatalogsInIndexDefinitions) {
+        this.supportsCatalogsInIndexDefinitions
+                = supportsCatalogsInIndexDefinitions;
     }
 
+    // ---------------------------------- supportsCatalogsInPrivilegeDefinitions
     public boolean isSupportsCatalogsInPrivilegeDefinitions() {
         return supportsCatalogsInPrivilegeDefinitions;
     }
 
-    public void setSupportsCatalogsInPrivilegeDefinitions(boolean supportsCatalogsInPrivilegeDefinitions) {
-        this.supportsCatalogsInPrivilegeDefinitions = supportsCatalogsInPrivilegeDefinitions;
+    public void setSupportsCatalogsInPrivilegeDefinitions(
+            final boolean supportsCatalogsInPrivilegeDefinitions) {
+        this.supportsCatalogsInPrivilegeDefinitions
+                = supportsCatalogsInPrivilegeDefinitions;
     }
 
+    // ---------------------------------------- supportsCatalogsInProcedureCalls
     public boolean isSupportsCatalogsInProcedureCalls() {
         return supportsCatalogsInProcedureCalls;
     }
 
-    public void setSupportsCatalogsInProcedureCalls(boolean supportsCatalogsInProcedureCalls) {
-        this.supportsCatalogsInProcedureCalls = supportsCatalogsInProcedureCalls;
+    public void setSupportsCatalogsInProcedureCalls(
+            final boolean supportsCatalogsInProcedureCalls) {
+        this.supportsCatalogsInProcedureCalls
+                = supportsCatalogsInProcedureCalls;
     }
 
+    // -------------------------------------- supportsCatalogsInTableDefinitions
     public boolean isSupportsCatalogsInTableDefinitions() {
         return supportsCatalogsInTableDefinitions;
     }
 
-    public void setSupportsCatalogsInTableDefinitions(boolean supportsCatalogsInTableDefinitions) {
-        this.supportsCatalogsInTableDefinitions = supportsCatalogsInTableDefinitions;
+    public void setSupportsCatalogsInTableDefinitions(
+            final boolean supportsCatalogsInTableDefinitions) {
+        this.supportsCatalogsInTableDefinitions
+                = supportsCatalogsInTableDefinitions;
     }
 
+    // -------------------------------------------------- supportsColumnAliasing
     public boolean isSupportsColumnAliasing() {
         return supportsColumnAliasing;
     }
 
-    public void setSupportsColumnAliasing(boolean supportsColumnAliasing) {
+    public void setSupportsColumnAliasing(
+            final boolean supportsColumnAliasing) {
         this.supportsColumnAliasing = supportsColumnAliasing;
     }
 
+    // -------------------------------------------------------- supportsConvert_
     public boolean isSupportsConvert_() {
         return supportsConvert_;
     }
 
-    public void setSupportsConvert_(boolean supportsConvert_) {
+    public void setSupportsConvert_(final boolean supportsConvert_) {
         this.supportsConvert_ = supportsConvert_;
     }
 
@@ -1264,6 +1322,7 @@ public class Metadata implements TableDomain {
         return supportsResultSetConcurrency;
     }
 
+    @Deprecated
     public void setSupportsResultSetConcurrency(
             final List<RSTRSCBoolean> supportsResultSetConcurrency) {
         this.supportsResultSetConcurrency = supportsResultSetConcurrency;
@@ -1277,6 +1336,7 @@ public class Metadata implements TableDomain {
         return supportsResultSetHoldability;
     }
 
+    @Deprecated
     public void setSupportsResultSetHoldability(
             final List<RSHBoolean> supportsResultSetHoldability) {
         this.supportsResultSetHoldability = supportsResultSetHoldability;
@@ -1290,6 +1350,7 @@ public class Metadata implements TableDomain {
         return supportsResultSetType;
     }
 
+    @Deprecated
     public void setSupportsResultSetType(
             final List<RSTBoolean> supportsResultSetType) {
         this.supportsResultSetType = supportsResultSetType;
