@@ -18,8 +18,8 @@ package com.github.jinahya.sql.database.metadata.bind;
 import javax.xml.bind.annotation.XmlRootElement;
 
 /**
- * An entity class for binding the result of
- * {@link java.sql.DatabaseMetaData#getImportedKeys(java.lang.String, java.lang.String, java.lang.String)}.
+ * An entity class for binding the result of {@link java.sql.DatabaseMetaData#getImportedKeys(java.lang.String, java.lang.String, java.lang.String)
+ * DatabaseMetaData#getImportKeys(catalog, schema, table)}.
  *
  * @author Jin Kwon &lt;jinahya_at_gmail.com&gt;
  * @see MetadataContext#getImportedKeys(java.lang.String, java.lang.String,

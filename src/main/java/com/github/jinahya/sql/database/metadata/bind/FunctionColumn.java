@@ -21,8 +21,8 @@ import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlType;
 
 /**
- * An entity class for binding the result of
- * {@link java.sql.DatabaseMetaData#getFunctionColumns(java.lang.String, java.lang.String, java.lang.String, java.lang.String)}.
+ * An entity class for binding the result of {@link java.sql.DatabaseMetaData#getFunctionColumns(java.lang.String, java.lang.String, java.lang.String, java.lang.String)
+ * DatabaseMetaData#getFunctionColumns(catalog, schemaPattern, functionNamePattern, columnNamePattern)}.
  *
  * @author Jin Kwon &lt;jinahya_at_gmail.com&gt;
  */
