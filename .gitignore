@@ -6,3 +6,5 @@
 *.ear
 /target/
 logs/
+.idea
+*.iml
