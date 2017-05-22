@@ -149,7 +149,7 @@ class Utils {
         final int columnCount = rsmd.getColumnCount();
         final Set<String> columnLabels = new HashSet<String>(columnCount);
         for (int i = 1; i <= columnCount; i++) {
-            columnLabels.add(rsmd.getColumnLabel(i));
+            columnLabels.add(rsmd.getColumnLabel(i).toUpperCase());
         }
         return columnLabels;
     }
