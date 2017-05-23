@@ -7,3 +7,5 @@
 /target/
 logs/
 pom.xml.versionsBackup
+.idea
+*.iml
