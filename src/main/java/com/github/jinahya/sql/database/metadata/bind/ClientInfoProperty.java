@@ -15,6 +15,9 @@
  */
 package com.github.jinahya.sql.database.metadata.bind;
 
+import java.io.Serializable;
+import java.util.logging.Logger;
+import static java.util.logging.Logger.getLogger;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlType;
@@ -31,8 +34,15 @@ import lombok.Setter;
 @XmlType(propOrder = {
     "name", "maxLen", "defaultValue", "description"
 })
-public class ClientInfoProperty {
+public class ClientInfoProperty implements Serializable {
 
+    private static final long serialVersionUID = -2913230435651853254L;
+
+    // -------------------------------------------------------------------------
+    private static final Logger logger
+            = getLogger(ClientInfoProperty.class.getName());
+
+    // -------------------------------------------------------------------------
     @Override
     public String toString() {
         return super.toString() + "{"
@@ -76,27 +86,27 @@ public class ClientInfoProperty {
 //        this.description = description;
 //    }
     // -------------------------------------------------------------------------
+    @XmlElement(required = true)
+    @Labeled("NAME")
     @Getter
     @Setter
-    @Labeled("NAME")
-    @XmlElement(required = true)
     private String name;
 
+    @XmlElement(required = true)
+    @Labeled("MAX_LEN")
     @Getter
     @Setter
-    @Labeled("MAX_LEN")
-    @XmlElement(required = true)
     private int maxLen;
 
+    @XmlElement(required = true)
+    @Labeled("DEFAULT_VALUE")
     @Getter
     @Setter
-    @Labeled("DEFAULT_VALUE")
-    @XmlElement(required = true)
     private String defaultValue;
 
+    @XmlElement(required = true)
+    @Labeled("DESCRIPTION")
     @Getter
     @Setter
-    @Labeled("DESCRIPTION")
-    @XmlElement(required = true)
     private String description;
 }

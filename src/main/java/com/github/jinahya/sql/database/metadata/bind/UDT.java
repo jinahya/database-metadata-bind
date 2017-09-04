@@ -15,13 +15,18 @@
  */
 package com.github.jinahya.sql.database.metadata.bind;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.logging.Logger;
+import static java.util.logging.Logger.getLogger;
 import javax.xml.bind.annotation.XmlAttribute;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlElementRef;
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlType;
+import lombok.Getter;
+import lombok.Setter;
 
 /**
  * An entity class for binding the result of
@@ -35,7 +40,12 @@ import javax.xml.bind.annotation.XmlType;
     // ---------------------------------------------------------------------
     "attributes", "superTypes"
 })
-public class UDT {
+public class UDT implements Serializable {
+
+    private static final long serialVersionUID = 8665246093405057553L;
+
+    // -------------------------------------------------------------------------
+    private static final Logger logger = getLogger(UDT.class.getName());
 
     // -------------------------------------------------------------------------
     @Override
@@ -52,68 +62,61 @@ public class UDT {
     }
 
     // ----------------------------------------------------------------- typeCat
-    public String getTypeCat() {
-        return typeCat;
-    }
-
-    public void setTypeCat(final String typeCat) {
-        this.typeCat = typeCat;
-    }
-
+//    public String getTypeCat() {
+//        return typeCat;
+//    }
+//
+//    public void setTypeCat(final String typeCat) {
+//        this.typeCat = typeCat;
+//    }
     // --------------------------------------------------------------- typeSchem
-    public String getTypeSchem() {
-        return typeSchem;
-    }
-
-    public void setTypeSchem(final String typeSchem) {
-        this.typeSchem = typeSchem;
-    }
-
+//    public String getTypeSchem() {
+//        return typeSchem;
+//    }
+//
+//    public void setTypeSchem(final String typeSchem) {
+//        this.typeSchem = typeSchem;
+//    }
     // ---------------------------------------------------------------- typeName
-    public String getTypeName() {
-        return typeName;
-    }
-
-    public void setTypeName(final String typeName) {
-        this.typeName = typeName;
-    }
-
+//    public String getTypeName() {
+//        return typeName;
+//    }
+//
+//    public void setTypeName(final String typeName) {
+//        this.typeName = typeName;
+//    }
     // --------------------------------------------------------------- className
-    public String getClassName() {
-        return className;
-    }
-
-    public void setClassName(final String className) {
-        this.className = className;
-    }
-
+//    public String getClassName() {
+//        return className;
+//    }
+//
+//    public void setClassName(final String className) {
+//        this.className = className;
+//    }
     // ---------------------------------------------------------------- dataType
-    public int getDataType() {
-        return dataType;
-    }
-
-    public void setDataType(final int dataType) {
-        this.dataType = dataType;
-    }
-
+//    public int getDataType() {
+//        return dataType;
+//    }
+//
+//    public void setDataType(final int dataType) {
+//        this.dataType = dataType;
+//    }
     // ----------------------------------------------------------------- remarks
-    public String getRemarks() {
-        return remarks;
-    }
-
-    public void setRemarks(final String remarks) {
-        this.remarks = remarks;
-    }
-
+//    public String getRemarks() {
+//        return remarks;
+//    }
+//
+//    public void setRemarks(final String remarks) {
+//        this.remarks = remarks;
+//    }
     // ---------------------------------------------------------------- baseType
-    public Short getBaseType() {
-        return baseType;
-    }
-
-    public void setBaseType(final Short baseType) {
-        this.baseType = baseType;
-    }
-
+//    public Short getBaseType() {
+//        return baseType;
+//    }
+//
+//    public void setBaseType(final Short baseType) {
+//        this.baseType = baseType;
+//    }
     // -------------------------------------------------------------- attributes
     public List<Attribute> getAttributes() {
         if (attributes == null) {
@@ -131,52 +134,66 @@ public class UDT {
     }
 
     // -------------------------------------------------------------------------
+    @XmlAttribute
     @Labeled("TYPE_CAT")
     @Nillable
-    @XmlAttribute
+    @Getter
+    @Setter
     private String typeCat;
 
+    @XmlAttribute
     @Labeled("TYPE_SCHEM")
     @Nillable
-    @XmlAttribute
+    @Getter
+    @Setter
     private String typeSchem;
 
-    @Labeled("TYPE_NAME")
     @XmlElement(required = true)
+    @Labeled("TYPE_NAME")
+    @Getter
+    @Setter
     private String typeName;
 
-    @Labeled("CLASS_NAME")
     @XmlElement(required = true)
+    @Labeled("CLASS_NAME")
+    @Getter
+    @Setter
     private String className;
 
-    @Labeled("DATA_TYPE")
     @XmlElement(required = true)
+    @Labeled("DATA_TYPE")
+    @Getter
+    @Setter
     private int dataType;
 
-    @Labeled("REMARKS")
     @XmlElement(required = true)
+    @Labeled("REMARKS")
+    @Getter
+    @Setter
     private String remarks;
 
+    @XmlElement(nillable = true, required = true)
     @Labeled("BASE_TYPE")
     @Nillable
-    @XmlElement(nillable = true, required = true)
+    @Getter
+    @Setter
     private Short baseType;
 
-    @Invokable(name = "getAttributes",
-            types = {String.class, String.class, String.class, String.class},
-            args = {
-                @Literals({":typeCat", ":typeSchem", ":typeName", "null"})
-            }
-    )
     @XmlElementRef
+    @Invokable(name = "getAttributes",
+               types = {String.class, String.class, String.class, String.class},
+               args = {
+                   @Literals({":typeCat", ":typeSchem", ":typeName", "null"})
+               }
+    )
     private List<Attribute> attributes;
 
-    @Invokable(name = "getSuperTypes",
-            types = {String.class, String.class, String.class},
-            args = {
-                @Literals({":typeCat", ":typeSchem", ":typeName"})
-            }
-    )
     @XmlElementRef
+    @Invokable(name = "getSuperTypes",
+               types = {String.class, String.class, String.class},
+               args = {
+                   @Literals({":typeCat", ":typeSchem", ":typeName"})
+               }
+    )
     private List<SuperType> superTypes;
 }

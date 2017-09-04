@@ -15,6 +15,7 @@
  */
 package com.github.jinahya.sql.database.metadata.bind;
 
+import java.io.Serializable;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import static java.util.logging.Logger.getLogger;
@@ -25,10 +26,14 @@ import javax.xml.bind.annotation.XmlValue;
  *
  * @author Jin Kwon &lt;jinahya_at_gmail.com&gt;
  */
-class TILBoolean {
+class TILBoolean implements Serializable {
 
+    private static final long serialVersionUID = 2552536006424594913L;
+
+    // -------------------------------------------------------------------------
     private static final Logger logger = getLogger(TILBoolean.class.getName());
 
+    // -------------------------------------------------------------------------
     static TILBoolean valueOf(final Object[] args, final Object value) {
         final TILBoolean instance = new TILBoolean();
         instance.setLevel((Integer) args[0]);

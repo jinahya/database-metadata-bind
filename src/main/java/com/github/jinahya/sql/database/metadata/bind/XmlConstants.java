@@ -26,9 +26,8 @@ public final class XmlConstants {
 
     static final String DATABASE_MEATDATA_NS_PREFIX = "m";
 
+    // -------------------------------------------------------------------------
     private XmlConstants() {
-
         super();
     }
-
 }

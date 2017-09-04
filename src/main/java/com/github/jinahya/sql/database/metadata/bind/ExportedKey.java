@@ -30,4 +30,7 @@ import javax.xml.bind.annotation.XmlRootElement;
 @XmlRootElement
 public class ExportedKey extends TableKey {
 
+    private static final long serialVersionUID = 277210154172135556L;
+
+    // -------------------------------------------------------------------------
 }

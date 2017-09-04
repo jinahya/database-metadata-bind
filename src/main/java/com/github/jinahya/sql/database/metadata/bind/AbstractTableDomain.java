@@ -27,6 +27,7 @@ import javax.xml.bind.annotation.XmlTransient;
 @XmlTransient
 abstract class AbstractTableDomain implements TableDomain {
 
+    // -------------------------------------------------------------------------
     @Override
     public List<CrossReference> getCrossReferences() {
         if (crossReferences == null) {
@@ -35,6 +36,7 @@ abstract class AbstractTableDomain implements TableDomain {
         return crossReferences;
     }
 
+    // -------------------------------------------------------------------------
     @XmlElementRef
     private List<CrossReference> crossReferences;
 }

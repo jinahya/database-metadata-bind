@@ -15,10 +15,15 @@
  */
 package com.github.jinahya.sql.database.metadata.bind;
 
+import java.io.Serializable;
+import java.util.logging.Logger;
+import static java.util.logging.Logger.getLogger;
 import javax.xml.bind.annotation.XmlAttribute;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlType;
+import lombok.Getter;
+import lombok.Setter;
 
 /**
  * An entity class for binding the result of
@@ -33,8 +38,14 @@ import javax.xml.bind.annotation.XmlType;
     "sqlDatetimeSub", "charOctetLength", "ordinalPosition", "isNullable",
     "sourceDataType"
 })
-public class Attribute {
+public class Attribute implements Serializable {
 
+    private static final long serialVersionUID = 4555190007114217973L;
+
+    // -------------------------------------------------------------------------
+    private static final Logger logger = getLogger(Attribute.class.getName());
+
+    // -------------------------------------------------------------------------
     @Override
     public String toString() {
         return super.toString() + "{"
@@ -60,244 +71,262 @@ public class Attribute {
     }
 
     // ----------------------------------------------------------------- typeCat
-    public String getTypeCat() {
-        return typeCat;
-    }
-
-    public void setTypeCat(final String typeCat) {
-        this.typeCat = typeCat;
-    }
-
+//    public String getTypeCat() {
+//        return typeCat;
+//    }
+//
+//    public void setTypeCat(final String typeCat) {
+//        this.typeCat = typeCat;
+//    }
     // --------------------------------------------------------------- typeSchem
-    public String getTypeSchem() {
-        return typeSchem;
-    }
-
-    public void setTypeSchem(final String typeSchem) {
-        this.typeSchem = typeSchem;
-    }
-
+//    public String getTypeSchem() {
+//        return typeSchem;
+//    }
+//
+//    public void setTypeSchem(final String typeSchem) {
+//        this.typeSchem = typeSchem;
+//    }
     // ---------------------------------------------------------------- typeName
-    public String getTypeName() {
-        return typeName;
-    }
-
-    public void setTypeName(final String typeName) {
-        this.typeName = typeName;
-    }
-
+//    public String getTypeName() {
+//        return typeName;
+//    }
+//
+//    public void setTypeName(final String typeName) {
+//        this.typeName = typeName;
+//    }
     // ---------------------------------------------------------------- attrName
-    public String getAttrName() {
-        return attrName;
-    }
-
-    public void setAttrName(final String attrName) {
-        this.attrName = attrName;
-    }
-
+//    public String getAttrName() {
+//        return attrName;
+//    }
+//
+//    public void setAttrName(final String attrName) {
+//        this.attrName = attrName;
+//    }
     // ---------------------------------------------------------------- dataType
-    public int getDataType() {
-        return dataType;
-    }
-
-    public void setDataType(final int dataType) {
-        this.dataType = dataType;
-    }
-
+//    public int getDataType() {
+//        return dataType;
+//    }
+//
+//    public void setDataType(final int dataType) {
+//        this.dataType = dataType;
+//    }
     // ------------------------------------------------------------ attrTypeName
-    public String getAttrTypeName() {
-        return attrTypeName;
-    }
-
-    public void setAttrTypeName(final String attrTypeName) {
-        this.attrTypeName = attrTypeName;
-    }
-
+//    public String getAttrTypeName() {
+//        return attrTypeName;
+//    }
+//
+//    public void setAttrTypeName(final String attrTypeName) {
+//        this.attrTypeName = attrTypeName;
+//    }
     // ---------------------------------------------------------------- attrSize
-    public int getAttrSize() {
-        return attrSize;
-    }
-
-    public void setAttrSize(final int attrSize) {
-        this.attrSize = attrSize;
-    }
-
+//    public int getAttrSize() {
+//        return attrSize;
+//    }
+//
+//    public void setAttrSize(final int attrSize) {
+//        this.attrSize = attrSize;
+//    }
     // ----------------------------------------------------------- decimalDigits
-    public Integer getDecimalDigits() {
-        return decimalDigits;
-    }
-
-    public void setDecimalDigits(final Integer decimalDigits) {
-        this.decimalDigits = decimalDigits;
-    }
-
+//    public Integer getDecimalDigits() {
+//        return decimalDigits;
+//    }
+//
+//    public void setDecimalDigits(final Integer decimalDigits) {
+//        this.decimalDigits = decimalDigits;
+//    }
     // ------------------------------------------------------------ numPrecRadix
-    public int getNumPrecRadix() {
-        return numPrecRadix;
-    }
-
-    public void setNumPrecRadix(final int numPrecRadix) {
-        this.numPrecRadix = numPrecRadix;
-    }
-
+//    public int getNumPrecRadix() {
+//        return numPrecRadix;
+//    }
+//
+//    public void setNumPrecRadix(final int numPrecRadix) {
+//        this.numPrecRadix = numPrecRadix;
+//    }
     // ---------------------------------------------------------------- nullable
-    public int getNullable() {
-        return nullable;
-    }
-
-    public void setNullable(final int nullable) {
-        this.nullable = nullable;
-    }
-
+//    public int getNullable() {
+//        return nullable;
+//    }
+//
+//    public void setNullable(final int nullable) {
+//        this.nullable = nullable;
+//    }
     // ----------------------------------------------------------------- remarks
-    public String getRemarks() {
-        return remarks;
-    }
-
-    public void setRemarks(final String remarks) {
-        this.remarks = remarks;
-    }
-
+//    public String getRemarks() {
+//        return remarks;
+//    }
+//
+//    public void setRemarks(final String remarks) {
+//        this.remarks = remarks;
+//    }
     // ----------------------------------------------------------------- attrDef
-    public String getAttrDef() {
-        return attrDef;
-    }
-
-    public void setAttrDef(final String attrDef) {
-        this.attrDef = attrDef;
-    }
-
+//    public String getAttrDef() {
+//        return attrDef;
+//    }
+//
+//    public void setAttrDef(final String attrDef) {
+//        this.attrDef = attrDef;
+//    }
     // ------------------------------------------------------------- sqlDataType
-    public Integer getSqlDataType() {
-        return sqlDataType;
-    }
-
-    public void setSqlDataType(final Integer sqlDataType) {
-        this.sqlDataType = sqlDataType;
-    }
-
+//    public Integer getSqlDataType() {
+//        return sqlDataType;
+//    }
+//
+//    public void setSqlDataType(final Integer sqlDataType) {
+//        this.sqlDataType = sqlDataType;
+//    }
     // ---------------------------------------------------------- sqlDatetimeSub
-    public Integer getSqlDatetimeSub() {
-        return sqlDatetimeSub;
-    }
-
-    public void setSqlDatetimeSub(final Integer sqlDatetimeSub) {
-        this.sqlDatetimeSub = sqlDatetimeSub;
-    }
-
+//    public Integer getSqlDatetimeSub() {
+//        return sqlDatetimeSub;
+//    }
+//
+//    public void setSqlDatetimeSub(final Integer sqlDatetimeSub) {
+//        this.sqlDatetimeSub = sqlDatetimeSub;
+//    }
     // --------------------------------------------------------- charOctetLength
-    public int getCharOctetLength() {
-        return charOctetLength;
-    }
-
-    public void setCharOctetLength(final int charOctetLength) {
-        this.charOctetLength = charOctetLength;
-    }
-
+//    public int getCharOctetLength() {
+//        return charOctetLength;
+//    }
+//
+//    public void setCharOctetLength(final int charOctetLength) {
+//        this.charOctetLength = charOctetLength;
+//    }
     // --------------------------------------------------------- ordinalPosition
-    public int getOrdinalPosition() {
-        return ordinalPosition;
-    }
-
-    public void setOrdinalPosition(final int ordinalPosition) {
-        this.ordinalPosition = ordinalPosition;
-    }
-
+//    public int getOrdinalPosition() {
+//        return ordinalPosition;
+//    }
+//
+//    public void setOrdinalPosition(final int ordinalPosition) {
+//        this.ordinalPosition = ordinalPosition;
+//    }
     // -------------------------------------------------------------- isNullable
-    public String getIsNullable() {
-        return isNullable;
-    }
-
-    public void setIsNullable(final String isNullable) {
-        this.isNullable = isNullable;
-    }
-
+//    public String getIsNullable() {
+//        return isNullable;
+//    }
+//
+//    public void setIsNullable(final String isNullable) {
+//        this.isNullable = isNullable;
+//    }
     // ---------------------------------------------------------- sourceDataType
-    public Short getSourceDataType() {
-        return sourceDataType;
-    }
-
-    public void setSourceDataType(final Short sourceDataType) {
-        this.sourceDataType = sourceDataType;
-    }
-
+//    public Short getSourceDataType() {
+//        return sourceDataType;
+//    }
+//
+//    public void setSourceDataType(final Short sourceDataType) {
+//        this.sourceDataType = sourceDataType;
+//    }
     // -------------------------------------------------------------------------
+    @XmlAttribute
     @Labeled("TYPE_CAT")
     @Nillable
-    @XmlAttribute
+    @Getter
+    @Setter
     private String typeCat;
 
+    @XmlAttribute
     @Labeled("TYPE_SCHEM")
     @Nillable
-    @XmlAttribute
+    @Getter
+    @Setter
     private String typeSchem;
 
-    @Labeled("TYPE_NAME")
     @XmlAttribute
+    @Labeled("TYPE_NAME")
+    @Getter
+    @Setter
     private String typeName;
 
-    @Labeled("ATTR_NAME")
     @XmlElement(required = true)
+    @Labeled("ATTR_NAME")
+    @Getter
+    @Setter
     private String attrName;
 
-    @Labeled("DATA_TYPE")
     @XmlElement(required = true)
+    @Labeled("DATA_TYPE")
+    @Getter
+    @Setter
     private int dataType;
 
-    @Labeled("ATTR_TYPE_NAME")
     @XmlElement(required = true)
+    @Labeled("ATTR_TYPE_NAME")
+    @Getter
+    @Setter
     private String attrTypeName;
 
-    @Labeled("ATTR_SIZE")
     @XmlElement(required = true)
+    @Labeled("ATTR_SIZE")
+    @Getter
+    @Setter
     private int attrSize;
 
-    @Labeled("DECIMAL_DIGITS")
     @XmlElement(required = true)
+    @Labeled("DECIMAL_DIGITS")
+    @Getter
+    @Setter
     private Integer decimalDigits;
 
-    @Labeled("NUM_PREC_RADIX")
     @XmlElement(required = true)
+    @Labeled("NUM_PREC_RADIX")
+    @Getter
+    @Setter
     private int numPrecRadix;
 
-    @Labeled("NULLABLE")
     @XmlElement(required = true)
+    @Labeled("NULLABLE")
+    @Getter
+    @Setter
     private int nullable;
 
+    @XmlElement(nillable = true, required = true)
     @Labeled("REMARKS")
     @Nillable
-    @XmlElement(nillable = true, required = true)
+    @Getter
+    @Setter
     private String remarks;
 
+    @XmlElement(nillable = true, required = true)
     @Labeled("ATTR_DEF")
     @Nillable
-    @XmlElement(nillable = true, required = true)
+    @Getter
+    @Setter
     private String attrDef;
 
+    @XmlElement(nillable = true, required = true)
     @Labeled("SQL_DATA_TYPE")
     @Unused
-    @XmlElement(nillable = true, required = true)
+    @Getter
+    @Setter
     private Integer sqlDataType;
 
+    @XmlElement(nillable = true, required = true)
     @Labeled("SQL_DATETIME_SUB")
     @Unused
-    @XmlElement(nillable = true, required = true)
+    @Getter
+    @Setter
     private Integer sqlDatetimeSub;
 
-    @Labeled("CHAR_OCTET_LENGTH")
     @XmlElement(required = true)
+    @Labeled("CHAR_OCTET_LENGTH")
+    @Getter
+    @Setter
     private int charOctetLength;
 
-    @Labeled("ORDINAL_POSITION")
     @XmlElement(required = true)
+    @Labeled("ORDINAL_POSITION")
+    @Getter
+    @Setter
     private int ordinalPosition;
 
-    @Labeled("IS_NULLABLE")
     @XmlElement(required = true)
+    @Labeled("IS_NULLABLE")
+    @Getter
+    @Setter
     private String isNullable;
 
+    @XmlElement(nillable = true, required = true)
     @Labeled("SOURCE_DATA_TYPE")
     @Nillable
-    @XmlElement(nillable = true, required = true)
+    @Getter
+    @Setter
     private Short sourceDataType;
 }

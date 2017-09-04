@@ -22,6 +22,7 @@ import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
 /**
+ * A marker annotation for reserved columns.
  *
  * @author Jin Kwon &lt;jinahya_at_gmail.com&gt;
  */

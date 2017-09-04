@@ -15,6 +15,7 @@
  */
 package com.github.jinahya.sql.database.metadata.bind;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Logger;
@@ -43,8 +44,11 @@ import lombok.Setter;
     // ---------------------------------------------------------------------
     "columnPrivileges"
 })
-public class Column {
+public class Column implements Serializable {
 
+    private static final long serialVersionUID = -409653682729081530L;
+
+    // -------------------------------------------------------------------------
     private static final Logger logger = getLogger(Column.class.getName());
 
     // -------------------------------------------------------------------------
@@ -143,148 +147,148 @@ public class Column {
 //        this.bufferLength = bufferLength;
 //    }
     // ----------------------------------------------------------- decimalDigits
-    public Integer getDecimalDigits() {
-        return decimalDigits;
-    }
-
-    public void setDecimalDigits(final Integer decimalDigits) {
-        this.decimalDigits = decimalDigits;
-    }
+//    public Integer getDecimalDigits() {
+//        return decimalDigits;
+//    }
+//
+//    public void setDecimalDigits(final Integer decimalDigits) {
+//        this.decimalDigits = decimalDigits;
+//    }
 
     // ------------------------------------------------------------ numPrecRadix
-    public int getNumPrecRadix() {
-        return numPrecRadix;
-    }
-
-    public void setNumPrecRadix(final int numPrecRadix) {
-        this.numPrecRadix = numPrecRadix;
-    }
+//    public int getNumPrecRadix() {
+//        return numPrecRadix;
+//    }
+//
+//    public void setNumPrecRadix(final int numPrecRadix) {
+//        this.numPrecRadix = numPrecRadix;
+//    }
 
     // ---------------------------------------------------------------- nullable
-    public int getNullable() {
-        return nullable;
-    }
-
-    public void setNullable(final int nullable) {
-        this.nullable = nullable;
-    }
+//    public int getNullable() {
+//        return nullable;
+//    }
+//
+//    public void setNullable(final int nullable) {
+//        this.nullable = nullable;
+//    }
 
     // ----------------------------------------------------------------- remarks
-    public String getRemarks() {
-        return remarks;
-    }
-
-    public void setRemarks(final String remarks) {
-        this.remarks = remarks;
-    }
+//    public String getRemarks() {
+//        return remarks;
+//    }
+//
+//    public void setRemarks(final String remarks) {
+//        this.remarks = remarks;
+//    }
 
     // --------------------------------------------------------------- columnDef
-    public String getColumnDef() {
-        return columnDef;
-    }
-
-    public void setColumnDef(final String columnDef) {
-        this.columnDef = columnDef;
-    }
+//    public String getColumnDef() {
+//        return columnDef;
+//    }
+//
+//    public void setColumnDef(final String columnDef) {
+//        this.columnDef = columnDef;
+//    }
 
     // ------------------------------------------------------------- sqlDataType
-    public Integer getSqlDataType() {
-        return sqlDataType;
-    }
-
-    public void setSqlDataType(final Integer sqlDataType) {
-        this.sqlDataType = sqlDataType;
-    }
+//    public Integer getSqlDataType() {
+//        return sqlDataType;
+//    }
+//
+//    public void setSqlDataType(final Integer sqlDataType) {
+//        this.sqlDataType = sqlDataType;
+//    }
 
     // ---------------------------------------------------------- sqlDatetimeSub
-    public Integer getSqlDatetimeSub() {
-        return sqlDatetimeSub;
-    }
-
-    public void setSqlDatetimeSub(final Integer sqlDatetimeSub) {
-        this.sqlDatetimeSub = sqlDatetimeSub;
-    }
+//    public Integer getSqlDatetimeSub() {
+//        return sqlDatetimeSub;
+//    }
+//
+//    public void setSqlDatetimeSub(final Integer sqlDatetimeSub) {
+//        this.sqlDatetimeSub = sqlDatetimeSub;
+//    }
 
     // --------------------------------------------------------- charOctetLength
-    public int getCharOctetLength() {
-        return charOctetLength;
-    }
-
-    public void setCharOctetLength(final int charOctetLength) {
-        this.charOctetLength = charOctetLength;
-    }
+//    public int getCharOctetLength() {
+//        return charOctetLength;
+//    }
+//
+//    public void setCharOctetLength(final int charOctetLength) {
+//        this.charOctetLength = charOctetLength;
+//    }
 
     // --------------------------------------------------------- ordinalPosition
-    public int getOrdinalPosition() {
-        return ordinalPosition;
-    }
-
-    public void setOrdinalPosition(final int ordinalPosition) {
-        this.ordinalPosition = ordinalPosition;
-    }
+//    public int getOrdinalPosition() {
+//        return ordinalPosition;
+//    }
+//
+//    public void setOrdinalPosition(final int ordinalPosition) {
+//        this.ordinalPosition = ordinalPosition;
+//    }
 
     // -------------------------------------------------------------- isNullable
-    public String getIsNullable() {
-        return isNullable;
-    }
-
-    public void setIsNullable(final String isNullable) {
-        this.isNullable = isNullable;
-    }
+//    public String getIsNullable() {
+//        return isNullable;
+//    }
+//
+//    public void setIsNullable(final String isNullable) {
+//        this.isNullable = isNullable;
+//    }
 
     // ------------------------------------------------------------ scopeCatalog
-    public String getScopeCatalog() {
-        return scopeCatalog;
-    }
-
-    public void setScopeCatalog(final String scopeCatalog) {
-        this.scopeCatalog = scopeCatalog;
-    }
+//    public String getScopeCatalog() {
+//        return scopeCatalog;
+//    }
+//
+//    public void setScopeCatalog(final String scopeCatalog) {
+//        this.scopeCatalog = scopeCatalog;
+//    }
 
     // ------------------------------------------------------------- scopeSchema
-    public String getScopeSchema() {
-        return scopeSchema;
-    }
-
-    public void setScopeSchema(final String scopeSchema) {
-        this.scopeSchema = scopeSchema;
-    }
+//    public String getScopeSchema() {
+//        return scopeSchema;
+//    }
+//
+//    public void setScopeSchema(final String scopeSchema) {
+//        this.scopeSchema = scopeSchema;
+//    }
 
     // -------------------------------------------------------------- scopeTable
-    public String getScopeTable() {
-        return scopeTable;
-    }
-
-    public void setScopeTable(final String scopeTable) {
-        this.scopeTable = scopeTable;
-    }
+//    public String getScopeTable() {
+//        return scopeTable;
+//    }
+//
+//    public void setScopeTable(final String scopeTable) {
+//        this.scopeTable = scopeTable;
+//    }
 
     // ---------------------------------------------------------- sourceDataType
-    public Short getSourceDataType() {
-        return sourceDataType;
-    }
-
-    public void setSourceDataType(final Short sourceDataType) {
-        this.sourceDataType = sourceDataType;
-    }
+//    public Short getSourceDataType() {
+//        return sourceDataType;
+//    }
+//
+//    public void setSourceDataType(final Short sourceDataType) {
+//        this.sourceDataType = sourceDataType;
+//    }
 
     // --------------------------------------------------------- isAutoincrement
-    public String getIsAutoincrement() {
-        return isAutoincrement;
-    }
-
-    public void setIsAutoincrement(final String isAutoincrement) {
-        this.isAutoincrement = isAutoincrement;
-    }
+//    public String getIsAutoincrement() {
+//        return isAutoincrement;
+//    }
+//
+//    public void setIsAutoincrement(final String isAutoincrement) {
+//        this.isAutoincrement = isAutoincrement;
+//    }
 
     // ------------------------------------------------------- isGeneratedcolumn
-    public String getIsGeneratedcolumn() {
-        return isGeneratedcolumn;
-    }
-
-    public void setIsGeneratedcolumn(final String isGeneratedcolumn) {
-        this.isGeneratedcolumn = isGeneratedcolumn;
-    }
+//    public String getIsGeneratedcolumn() {
+//        return isGeneratedcolumn;
+//    }
+//
+//    public void setIsGeneratedcolumn(final String isGeneratedcolumn) {
+//        this.isGeneratedcolumn = isGeneratedcolumn;
+//    }
 
     // -------------------------------------------------------- columnPrivileges
     public List<ColumnPrivilege> getColumnPrivileges() {
@@ -301,130 +305,163 @@ public class Column {
     }
 
     // -------------------------------------------------------------------------
-    @Getter
-    @Setter
+    @XmlAttribute
     @Labeled("TABLE_CAT")
     @Nillable
-    @XmlAttribute
+    @Getter
+    @Setter
     private String tableCat;
 
-    @Getter
-    @Setter
+    @XmlAttribute
     @Labeled("TABLE_SCHEM")
     @Nillable
-    @XmlAttribute
+    @Getter
+    @Setter
     private String tableSchem;
 
+    @XmlAttribute
+    @Labeled("TABLE_NAME")
     @Getter
     @Setter
-    @Labeled("TABLE_NAME")
-    @XmlAttribute
     private String tableName;
 
+    @XmlElement(required = true)
+    @Labeled("COLUMN_NAME")
     @Getter
     @Setter
-    @Labeled("COLUMN_NAME")
-    @XmlElement(required = true)
     private String columnName;
 
+    @XmlElement(required = true)
+    @Labeled("DATA_TYPE")
     @Getter
     @Setter
-    @Labeled("DATA_TYPE")
-    @XmlElement(required = true)
     private int dataType;
 
+    @XmlElement(required = true)
+    @Labeled("TYPE_NAME")
     @Getter
     @Setter
-    @Labeled("TYPE_NAME")
-    @XmlElement(required = true)
     private String typeName;
 
+    @XmlElement(required = true)
+    @Labeled("COLUMN_SIZE")
     @Getter
     @Setter
-    @Labeled("COLUMN_SIZE")
-    @XmlElement(required = true)
     private int columnSize;
 
-    @Getter
-    @Setter
+    @XmlElement(nillable = true, required = true)
     @Labeled("BUFFER_LENGTH")
     @Unused
-    @XmlElement(nillable = true, required = true)
+    @Getter
+    @Setter
     private Integer bufferLength;
 
+    @XmlElement(required = true)
     @Labeled("DECIMAL_DIGITS")
     @Nillable
-    @XmlElement(required = true)
+    @Getter
+    @Setter
     private Integer decimalDigits;
 
-    @Labeled("NUM_PREC_RADIX")
     @XmlElement(required = true)
+    @Labeled("NUM_PREC_RADIX")
+    @Getter
+    @Setter
     private int numPrecRadix;
 
-    @Labeled("NULLABLE")
     @XmlElement(required = true)
+    @Labeled("NULLABLE")
+    @Getter
+    @Setter
     private int nullable;
 
+    @XmlElement(nillable = true, required = true)
     @Labeled("REMARKS")
     @Nillable
-    @XmlElement(nillable = true, required = true)
+    @Getter
+    @Setter
     private String remarks;
 
+    @XmlElement(nillable = true, required = true)
     @Labeled("COLUMN_DEF")
     @Nillable
-    @XmlElement(nillable = true, required = true)
+    @Getter
+    @Setter
     private String columnDef;
 
+    @XmlElement(nillable = true, required = true)
     @Labeled("SQL_DATA_TYPE")
     @Unused
-    @XmlElement(nillable = true, required = true)
+    @Getter
+    @Setter
     private Integer sqlDataType;
 
+    @XmlElement(nillable = true, required = true)
     @Labeled("SQL_DATETIME_SUB")
     @Unused
-    @XmlElement(nillable = true, required = true)
+    @Getter
+    @Setter
     private Integer sqlDatetimeSub;
 
-    @Labeled("CHAR_OCTET_LENGTH")
     @XmlElement(required = true)
+    @Labeled("CHAR_OCTET_LENGTH")
+    @Getter
+    @Setter
     private int charOctetLength;
 
-    @Labeled("ORDINAL_POSITION")
     @XmlElement(required = true)
+    @Labeled("ORDINAL_POSITION")
+    @Getter
+    @Setter
     private int ordinalPosition;
 
-    @Labeled("IS_NULLABLE")
     @XmlElement(required = true)
+    @Labeled("IS_NULLABLE")
+    @Getter
+    @Setter
     private String isNullable;
 
+    @XmlElement(nillable = true, required = true)
     @Labeled("SCOPE_CATALOG")
     @Nillable
-    @XmlElement(nillable = true, required = true)
+    @Getter
+    @Setter
     private String scopeCatalog;
 
+    @XmlElement(nillable = true, required = true)
     @Labeled("SCOPE_SCHEMA")
     @Nillable
-    @XmlElement(nillable = true, required = true)
+    @Getter
+    @Setter
     private String scopeSchema;
 
+    @XmlElement(nillable = true, required = true)
     @Labeled("SCOPE_TABLE")
     @Nillable
-    @XmlElement(nillable = true, required = true)
+    @Getter
+    @Setter
     private String scopeTable;
 
+    @XmlElement(nillable = true, required = true)
     @Labeled("SOURCE_DATA_TYPE")
     @Nillable
-    @XmlElement(nillable = true, required = true)
+    @Getter
+    @Setter
     private Short sourceDataType;
 
-    @Labeled("IS_AUTOINCREMENT")
     @XmlElement(required = true)
+    @Labeled("IS_AUTOINCREMENT")
+    @Getter
+    @Setter
     private String isAutoincrement;
 
-    @Labeled("IS_GENERATEDCOLUMN")
     @XmlElement(required = true)
+    @Labeled("IS_GENERATEDCOLUMN")
+    @Getter
+    @Setter
     private String isGeneratedcolumn;
 
+    @XmlElementRef
     @Invokable(name = "getColumnPrivileges",
                types = {String.class, String.class, String.class, String.class},
                args = {
@@ -432,6 +469,5 @@ public class Column {
                               ":columnName"})
                }
     )
-    @XmlElementRef
     private List<ColumnPrivilege> columnPrivileges;
 }

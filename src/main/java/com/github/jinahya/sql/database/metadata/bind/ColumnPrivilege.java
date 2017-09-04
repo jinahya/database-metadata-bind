@@ -15,6 +15,7 @@
  */
 package com.github.jinahya.sql.database.metadata.bind;
 
+import java.io.Serializable;
 import java.util.logging.Logger;
 import static java.util.logging.Logger.getLogger;
 import javax.xml.bind.annotation.XmlAttribute;
@@ -34,8 +35,11 @@ import lombok.Setter;
 @XmlType(propOrder = {
     "grantor", "grantee", "privilege", "isGrantable"
 })
-public class ColumnPrivilege {
+public class ColumnPrivilege implements Serializable {
 
+    private static final long serialVersionUID = 4384654744147773380L;
+
+    // -------------------------------------------------------------------------
     private static final Logger logger
             = getLogger(ColumnPrivilege.class.getName());
 
@@ -119,55 +123,55 @@ public class ColumnPrivilege {
 //        this.isGrantable = isGrantable;
 //    }
     // -------------------------------------------------------------------------
-    @Getter
-    @Setter
+    @XmlAttribute
     @Labeled("TABLE_CAT")
     @Nillable
-    @XmlAttribute
+    @Getter
+    @Setter
     private String tableCat;
 
-    @Getter
-    @Setter
+    @XmlAttribute
     @Labeled("TABLE_SCHEM")
     @Nillable
-    @XmlAttribute
+    @Getter
+    @Setter
     private String tableSchem;
 
+    @XmlAttribute
+    @Labeled("TABLE_NAME")
     @Getter
     @Setter
-    @Labeled("TABLE_NAME")
-    @XmlAttribute
     private String tableName;
 
+    @XmlAttribute
+    @Labeled("COLUMN_NAME")
     @Getter
     @Setter
-    @Labeled("COLUMN_NAME")
-    @XmlAttribute
     private String columnName;
 
-    @Getter
-    @Setter
+    @XmlElement(nillable = true, required = true)
     @Labeled("GRANTOR")
     @Nillable
-    @XmlElement(nillable = true, required = true)
+    @Getter
+    @Setter
     private String grantor;
 
+    @XmlElement(required = true)
+    @Labeled("GRANTEE")
     @Getter
     @Setter
-    @Labeled("GRANTEE")
-    @XmlElement(required = true)
     private String grantee;
 
+    @XmlElement(required = true)
+    @Labeled("PRIVILEGE")
     @Getter
     @Setter
-    @Labeled("PRIVILEGE")
-    @XmlElement(required = true)
     private String privilege;
 
-    @Getter
-    @Setter
+    @XmlElement(nillable = true, required = true)
     @Labeled("IS_GRANTABLE")
     @Nillable
-    @XmlElement(nillable = true, required = true)
+    @Getter
+    @Setter
     private String isGrantable;
 }

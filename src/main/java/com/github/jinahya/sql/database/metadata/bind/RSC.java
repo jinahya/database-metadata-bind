@@ -27,6 +27,7 @@ enum RSC {
     CONCUR_READ_ONLY(ResultSet.CONCUR_READ_ONLY),
     CONCUR_UPDATABLE(ResultSet.CONCUR_UPDATABLE);
 
+    // -------------------------------------------------------------------------
     public static RSC valueOf(final int concurrency) {
         for (final RSC value : values()) {
             if (value.concurrency == concurrency) {
@@ -41,5 +42,6 @@ enum RSC {
         this.concurrency = concurrency;
     }
 
+    // -------------------------------------------------------------------------
     private final int concurrency;
 }

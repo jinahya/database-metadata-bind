@@ -15,6 +15,9 @@
  */
 package com.github.jinahya.sql.database.metadata.bind;
 
+import java.io.Serializable;
+import java.util.logging.Logger;
+import static java.util.logging.Logger.getLogger;
 import javax.xml.bind.annotation.XmlAttribute;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
@@ -32,7 +35,13 @@ import javax.xml.bind.annotation.XmlType;
     "precision", "length", "scale", "radix", "nullable", "remarks",
     "charOctetLength", "ordinalPosition", "isNullable", "specificName"
 })
-public class FunctionColumn {
+public class FunctionColumn implements Serializable {
+
+    private static final long serialVersionUID = -7445156446214062680L;
+
+    // -------------------------------------------------------------------------
+    private static final Logger logger
+            = getLogger(FunctionColumn.class.getName());
 
     // -------------------------------------------------------------------------
     @Override
@@ -266,8 +275,8 @@ public class FunctionColumn {
     @XmlElement(required = true)
     private String remarks;
 
+    @XmlElement(nillable = true, required = true)
     @Labeled("CHAR_OCTET_LENGTH")
-    @XmlElement(required = true)
     @Nillable
     private Integer charOctetLength;
 

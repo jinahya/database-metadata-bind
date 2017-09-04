@@ -30,6 +30,7 @@ enum TIL {
     TRANSACTION_REPEATABLE_READ(Connection.TRANSACTION_REPEATABLE_READ), // 4
     TRANSACTION_SERIALIZABLE(Connection.TRANSACTION_SERIALIZABLE); // 8
 
+    // -------------------------------------------------------------------------
     public static TIL valueOf(final int level) {
         for (final TIL value : values()) {
             if (value.level == level) {
@@ -39,9 +40,11 @@ enum TIL {
         throw new IllegalArgumentException("no value for " + level);
     }
 
+    // -------------------------------------------------------------------------
     private TIL(final int level) {
         this.level = level;
     }
 
+    // -------------------------------------------------------------------------
     private final int level;
 }

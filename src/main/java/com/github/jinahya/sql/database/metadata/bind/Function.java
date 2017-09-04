@@ -15,13 +15,18 @@
  */
 package com.github.jinahya.sql.database.metadata.bind;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.logging.Logger;
+import static java.util.logging.Logger.getLogger;
 import javax.xml.bind.annotation.XmlAttribute;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlElementRef;
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlType;
+import lombok.Getter;
+import lombok.Setter;
 
 /**
  * An entity class for binding the result of
@@ -39,7 +44,12 @@ import javax.xml.bind.annotation.XmlType;
     // ---------------------------------------------------------------------
     "functionColumns"
 })
-public class Function {
+public class Function implements Serializable {
+
+    private static final long serialVersionUID = -3318947900237453301L;
+
+    // -------------------------------------------------------------------------
+    private static final Logger logger = getLogger(Function.class.getName());
 
     // -------------------------------------------------------------------------
     @Override
@@ -55,59 +65,53 @@ public class Function {
     }
 
     // ------------------------------------------------------------- functionCat
-    public String getFunctionCat() {
-        return functionCat;
-    }
-
-    public void setFunctionCat(final String functionCat) {
-        this.functionCat = functionCat;
-    }
-
+//    public String getFunctionCat() {
+//        return functionCat;
+//    }
+//
+//    public void setFunctionCat(final String functionCat) {
+//        this.functionCat = functionCat;
+//    }
     // ----------------------------------------------------------- functionSchem
-    public String getFunctionSchem() {
-        return functionSchem;
-    }
-
-    public void setFunctionSchem(final String functionSchem) {
-        this.functionSchem = functionSchem;
-    }
-
+//    public String getFunctionSchem() {
+//        return functionSchem;
+//    }
+//
+//    public void setFunctionSchem(final String functionSchem) {
+//        this.functionSchem = functionSchem;
+//    }
     // ------------------------------------------------------------ functionName
-    public String getFunctionName() {
-        return functionName;
-    }
-
-    public void setFunctionName(final String functionName) {
-        this.functionName = functionName;
-    }
-
+//    public String getFunctionName() {
+//        return functionName;
+//    }
+//
+//    public void setFunctionName(final String functionName) {
+//        this.functionName = functionName;
+//    }
     // ----------------------------------------------------------------- remarks
-    public String getRemarks() {
-        return remarks;
-    }
-
-    public void setRemarks(final String remarks) {
-        this.remarks = remarks;
-    }
-
+//    public String getRemarks() {
+//        return remarks;
+//    }
+//
+//    public void setRemarks(final String remarks) {
+//        this.remarks = remarks;
+//    }
     // ------------------------------------------------------------ functionType
-    public short getFunctionType() {
-        return functionType;
-    }
-
-    public void setFunctionType(final short functionType) {
-        this.functionType = functionType;
-    }
-
+//    public short getFunctionType() {
+//        return functionType;
+//    }
+//
+//    public void setFunctionType(final short functionType) {
+//        this.functionType = functionType;
+//    }
     // ------------------------------------------------------------ specificName
-    public String getSpecificName() {
-        return specificName;
-    }
-
-    public void setSpecificName(final String specificName) {
-        this.specificName = specificName;
-    }
-
+//    public String getSpecificName() {
+//        return specificName;
+//    }
+//
+//    public void setSpecificName(final String specificName) {
+//        this.specificName = specificName;
+//    }
     // --------------------------------------------------------- functionColumns
     public List<FunctionColumn> getFunctionColumns() {
         if (functionColumns == null) {
@@ -122,39 +126,51 @@ public class Function {
     }
 
     // -------------------------------------------------------------------------
+    @XmlAttribute
     @Labeled("FUNCTION_CAT")
     @Nillable
-    @XmlAttribute
+    @Getter
+    @Setter
     private String functionCat;
 
+    @XmlAttribute
     @Labeled("FUNCTION_SCHEM")
     @Nillable
-    @XmlAttribute
+    @Getter
+    @Setter
     private String functionSchem;
 
-    @Labeled("FUNCTION_NAME")
     @XmlElement(required = true)
+    @Labeled("FUNCTION_NAME")
+    @Getter
+    @Setter
     private String functionName;
 
-    @Labeled("REMARKS")
     @XmlElement(required = true)
+    @Labeled("REMARKS")
+    @Getter
+    @Setter
     private String remarks;
 
-    @Labeled("FUNCTION_TYPE")
     @XmlElement(required = true)
+    @Labeled("FUNCTION_TYPE")
+    @Getter
+    @Setter
     private short functionType;
 
-    @Labeled("SPECIFIC_NAME")
     @XmlElement(required = true)
+    @Labeled("SPECIFIC_NAME")
+    @Getter
+    @Setter
     private String specificName;
 
-    @Invokable(name = "getFunctionColumns",
-            types = {String.class, String.class, String.class, String.class},
-            args = {
-                @Literals({":functionCat", ":functionSchem", ":functionName",
-                           "null"})
-            }
-    )
     @XmlElementRef
+    @Invokable(name = "getFunctionColumns",
+               types = {String.class, String.class, String.class, String.class},
+               args = {
+                   @Literals({":functionCat", ":functionSchem", ":functionName",
+                              "null"})
+               }
+    )
     private List<FunctionColumn> functionColumns;
 }

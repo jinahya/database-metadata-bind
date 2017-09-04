@@ -22,6 +22,8 @@ import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlElementRef;
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlType;
+import lombok.Getter;
+import lombok.Setter;
 
 /**
  * An entity class for binding the result of
@@ -40,6 +42,8 @@ import javax.xml.bind.annotation.XmlType;
 })
 public class Schema extends AbstractTableDomain {
 
+    private static final long serialVersionUID = 7457236468401244963L;
+
     // -------------------------------------------------------------------------
     @Override
     public String toString() {
@@ -50,33 +54,31 @@ public class Schema extends AbstractTableDomain {
     }
 
     // ------------------------------------------------------------ tableCatalog
-    public String getTableCatalog() {
-        return tableCatalog;
-    }
-
-    public void setTableCatalog(final String tableCatalog) {
-        this.tableCatalog = tableCatalog;
-    }
-
-    Schema tableCatalog(final String tableCatalog) {
-        setTableCatalog(tableCatalog);
-        return this;
-    }
-
+//    public String getTableCatalog() {
+//        return tableCatalog;
+//    }
+//
+//    public void setTableCatalog(final String tableCatalog) {
+//        this.tableCatalog = tableCatalog;
+//    }
+//
+//    Schema tableCatalog(final String tableCatalog) {
+//        setTableCatalog(tableCatalog);
+//        return this;
+//    }
     // -------------------------------------------------------------- tableSchem
-    public String getTableSchem() {
-        return tableSchem;
-    }
-
-    public void setTableSchem(final String tableSchem) {
-        this.tableSchem = tableSchem;
-    }
-
-    Schema tableSchem(final String tableSchem) {
-        setTableSchem(tableSchem);
-        return this;
-    }
-
+//    public String getTableSchem() {
+//        return tableSchem;
+//    }
+//
+//    public void setTableSchem(final String tableSchem) {
+//        this.tableSchem = tableSchem;
+//    }
+//
+//    Schema tableSchem(final String tableSchem) {
+//        setTableSchem(tableSchem);
+//        return this;
+//    }
     // --------------------------------------------------------------- functions
     public List<Function> getFunctions() {
         if (functions == null) {
@@ -134,11 +136,15 @@ public class Schema extends AbstractTableDomain {
     @XmlAttribute
     Boolean virtual;
 
+    @Getter
+    @Setter
     @Labeled("TABLE_CATALOG")
     @Nillable
     @XmlAttribute
     private String tableCatalog;
 
+    @Getter
+    @Setter
     @Labeled("TABLE_SCHEM")
     @XmlElement(required = true)
     private String tableSchem;

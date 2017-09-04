@@ -15,10 +15,15 @@
  */
 package com.github.jinahya.sql.database.metadata.bind;
 
+import java.io.Serializable;
+import java.util.logging.Logger;
+import static java.util.logging.Logger.getLogger;
 import javax.xml.bind.annotation.XmlAttribute;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlType;
+import lombok.Getter;
+import lombok.Setter;
 
 /**
  * An entity class for binding the result of
@@ -30,87 +35,98 @@ import javax.xml.bind.annotation.XmlType;
 @XmlType(propOrder = {
     "columnName", "keySeq", "pkName"
 })
-public class PrimaryKey {
+public class PrimaryKey implements Serializable {
 
-    // ---------------------------------------------------------------- tableCat
-    public String getTableCat() {
-        return tableCat;
-    }
-
-    public void setTableCat(final String tableCat) {
-        this.tableCat = tableCat;
-    }
-
-    // -------------------------------------------------------------- tableSchem
-    public String getTableSchem() {
-        return tableSchem;
-    }
-
-    public void setTableSchem(final String tableSchem) {
-        this.tableSchem = tableSchem;
-    }
-
-    // --------------------------------------------------------------- tableName
-    public String getTableName() {
-        return tableName;
-    }
-
-    public void setTableName(final String tableName) {
-        this.tableName = tableName;
-    }
-
-    // -------------------------------------------------------------- columnName
-    public String getColumnName() {
-        return columnName;
-    }
-
-    public void setColumnName(final String columnName) {
-        this.columnName = columnName;
-    }
-
-    // ------------------------------------------------------------------ keySeq
-    public short getKeySeq() {
-        return keySeq;
-    }
-
-    public void setKeySeq(final short keySeq) {
-        this.keySeq = keySeq;
-    }
-
-    // ------------------------------------------------------------------ pkName
-    public String getPkName() {
-        return pkName;
-    }
-
-    public void setPkName(final String pkName) {
-        this.pkName = pkName;
-    }
+    private static final long serialVersionUID = 3159826510060898330L;
 
     // -------------------------------------------------------------------------
+    private static final Logger logger = getLogger(PrimaryKey.class.getName());
+
+    // ---------------------------------------------------------------- tableCat
+//    public String getTableCat() {
+//        return tableCat;
+//    }
+//
+//    public void setTableCat(final String tableCat) {
+//        this.tableCat = tableCat;
+//    }
+    // -------------------------------------------------------------- tableSchem
+//    public String getTableSchem() {
+//        return tableSchem;
+//    }
+//
+//    public void setTableSchem(final String tableSchem) {
+//        this.tableSchem = tableSchem;
+//    }
+    // --------------------------------------------------------------- tableName
+//    public String getTableName() {
+//        return tableName;
+//    }
+//
+//    public void setTableName(final String tableName) {
+//        this.tableName = tableName;
+//    }
+    // -------------------------------------------------------------- columnName
+//    public String getColumnName() {
+//        return columnName;
+//    }
+//
+//    public void setColumnName(final String columnName) {
+//        this.columnName = columnName;
+//    }
+    // ------------------------------------------------------------------ keySeq
+//    public short getKeySeq() {
+//        return keySeq;
+//    }
+//
+//    public void setKeySeq(final short keySeq) {
+//        this.keySeq = keySeq;
+//    }
+    // ------------------------------------------------------------------ pkName
+//    public String getPkName() {
+//        return pkName;
+//    }
+//
+//    public void setPkName(final String pkName) {
+//        this.pkName = pkName;
+//    }
+    // -------------------------------------------------------------------------
+    @XmlAttribute
     @Labeled("TABLE_CAT")
     @Nillable
-    @XmlAttribute
+    @Getter
+    @Setter
     private String tableCat;
 
+    @XmlAttribute
     @Labeled("TABLE_SCHEM")
     @Nillable
-    @XmlAttribute
+    @Getter
+    @Setter
     private String tableSchem;
 
-    @Labeled("TABLE_NAME")
     @XmlAttribute
+    @Labeled("TABLE_NAME")
+    @Getter
+    @Setter
     private String tableName;
 
-    @Labeled("COLUMN_NAME")
     @XmlElement(required = true)
+    @Labeled("COLUMN_NAME")
+    @Getter
+    @Setter
     private String columnName;
 
-    @Labeled("KEY_SEQ")
     @XmlElement(required = true)
+    @Labeled("KEY_SEQ")
+    @Getter
+    @Setter
     private short keySeq;
 
+    @XmlElement(nillable = true, required = true)
     @Labeled("PK_NAME")
     @Nillable
-    @XmlElement(nillable = true, required = true)
+    @Getter
+    @Setter
     private String pkName;
 }

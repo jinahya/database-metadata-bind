@@ -15,18 +15,18 @@
  */
 package com.github.jinahya.sql.database.metadata.bind;
 
+import java.io.Serializable;
 import java.util.List;
 
 /**
  *
  * @author Jin Kwon &lt;jinahya_at_gmail.com&gt;
  */
-interface TableDomain {
+interface TableDomain extends Serializable {
 
     List<Table> getTables();
 
     List<CrossReference> getCrossReferences();
 
 //    void setCrossReferences(List<CrossReference> crossReferences);
-
 }

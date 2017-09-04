@@ -15,6 +15,8 @@
  */
 package com.github.jinahya.sql.database.metadata.bind;
 
+import java.util.logging.Logger;
+import static java.util.logging.Logger.getLogger;
 import javax.xml.bind.annotation.XmlAttribute;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
@@ -33,6 +35,8 @@ import lombok.Setter;
     "tableName", "supertableName"
 })
 public class SuperTable {
+
+    private static final Logger logger = getLogger(SuperTable.class.getName());
 
     // -------------------------------------------------------------------------
     @Override
@@ -61,7 +65,6 @@ public class SuperTable {
 //    public void setTableSchem(final String tableSchem) {
 //        this.tableSchem = tableSchem;
 //    }
-
 //    // --------------------------------------------------------------- tableName
 //    public String getTableName() {
 //        return tableName;
@@ -70,7 +73,6 @@ public class SuperTable {
 //    public void setTableName(final String tableName) {
 //        this.tableName = tableName;
 //    }
-
 //    // ---------------------------------------------------------- supertableName
 //    public String getSupertableName() {
 //        return supertableName;
@@ -79,7 +81,6 @@ public class SuperTable {
 //    public void setSupertableName(final String supertableName) {
 //        this.supertableName = supertableName;
 //    }
-
     // -------------------------------------------------------------------------
     @Getter
     @Setter

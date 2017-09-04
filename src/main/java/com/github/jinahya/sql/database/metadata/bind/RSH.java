@@ -16,6 +16,8 @@
 package com.github.jinahya.sql.database.metadata.bind;
 
 import java.sql.ResultSet;
+import java.util.logging.Logger;
+import static java.util.logging.Logger.getLogger;
 
 /**
  * Constants for holdabilites of ResultSets.
@@ -27,6 +29,10 @@ enum RSH {
     HOLD_CURSORS_OVER_COMMIT(ResultSet.HOLD_CURSORS_OVER_COMMIT),
     CLOSE_CURSORS_AT_COMMIT(ResultSet.CLOSE_CURSORS_AT_COMMIT);
 
+    // -------------------------------------------------------------------------
+    private static final Logger logger = getLogger(RSH.class.getName());
+
+    // -------------------------------------------------------------------------
     public static RSH valueOf(final int holdability) {
         for (final RSH value : values()) {
             if (value.holdability == holdability) {
@@ -37,9 +43,11 @@ enum RSH {
                 "no value for holdability: " + holdability);
     }
 
+    // -------------------------------------------------------------------------
     private RSH(final int holdability) {
         this.holdability = holdability;
     }
 
+    // -------------------------------------------------------------------------
     private final int holdability;
 }

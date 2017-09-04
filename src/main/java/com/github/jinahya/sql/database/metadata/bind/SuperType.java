@@ -15,6 +15,8 @@
  */
 package com.github.jinahya.sql.database.metadata.bind;
 
+import java.util.logging.Logger;
+import static java.util.logging.Logger.getLogger;
 import javax.xml.bind.annotation.XmlAttribute;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
@@ -34,6 +36,9 @@ import lombok.Setter;
 })
 public class SuperType {
 
+    private static final Logger logger = getLogger(SuperType.class.getName());
+
+    // -------------------------------------------------------------------------
     @Override
     public String toString() {
         return super.toString() + "{"
@@ -99,7 +104,6 @@ public class SuperType {
 //    public void setSupertypeName(final String supertypeName) {
 //        this.supertypeName = supertypeName;
 //    }
-
     // -------------------------------------------------------------------------
     @Getter
     @Setter

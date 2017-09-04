@@ -15,9 +15,14 @@
  */
 package com.github.jinahya.sql.database.metadata.bind;
 
+import java.io.Serializable;
+import java.util.logging.Logger;
+import static java.util.logging.Logger.getLogger;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlType;
+import lombok.Getter;
+import lombok.Setter;
 
 /**
  * An entity class for binding the result of
@@ -29,8 +34,14 @@ import javax.xml.bind.annotation.XmlType;
 @XmlType(propOrder = {
     "tableType"
 })
-public class TableType {
+public class TableType implements Serializable {
 
+    private static final long serialVersionUID = -7630634982776331078L;
+
+    // -------------------------------------------------------------------------
+    private static final Logger logger = getLogger(TableType.class.getName());
+
+    // -------------------------------------------------------------------------
     @Override
     public String toString() {
         return super.toString() + "{"
@@ -39,22 +50,22 @@ public class TableType {
     }
 
     // --------------------------------------------------------------- tableType
-    public String getTableType() {
-        return tableType;
-    }
-
-    public void setTableType(final String tableType) {
-        this.tableType = tableType;
-    }
-
+//    public String getTableType() {
+//        return tableType;
+//    }
+//
+//    public void setTableType(final String tableType) {
+//        this.tableType = tableType;
+//    }
 //    @XmlAttribute // workarounding the bug; @XmlElementRef -> @XmlValue
 //    public String getNothing() {
 //        return null;
 //    }
-
     // -------------------------------------------------------------------------
-    @Labeled("TABLE_TYPE")
     @XmlElement(required = true)
+    @Labeled("TABLE_TYPE")
     //@XmlValue
+    @Getter
+    @Setter
     private String tableType;
 }

@@ -40,6 +40,9 @@ import lombok.Setter;
 })
 public class Catalog extends AbstractTableDomain {
 
+    private static final long serialVersionUID = 6239185259128825953L;
+
+    // -------------------------------------------------------------------------
     @Override
     public String toString() {
         return super.toString() + "{"

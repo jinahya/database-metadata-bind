@@ -15,6 +15,9 @@
  */
 package com.github.jinahya.sql.database.metadata.bind;
 
+import java.io.Serializable;
+import java.util.logging.Logger;
+import static java.util.logging.Logger.getLogger;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlType;
@@ -32,8 +35,15 @@ import lombok.Setter;
     "scope", "columnName", "dataType", "typeName", "columnSize",
     "bufferLength", "decimalDigits", "pseudoColumn"
 })
-public class VersionColumn {
+public class VersionColumn implements Serializable {
 
+    private static final long serialVersionUID = 3587959398829593292L;
+
+    // -------------------------------------------------------------------------
+    private static final Logger logger
+            = getLogger(VersionColumn.class.getName());
+
+    // -------------------------------------------------------------------------
     @Override
     public String toString() {
         return super.toString() + "{"
@@ -89,74 +99,77 @@ public class VersionColumn {
 //        this.columnSize = columnSize;
 //    }
     // ------------------------------------------------------------ bufferLength
-    public int getBufferLength() {
-        return bufferLength;
-    }
-
-    public void setBufferLength(final int bufferLength) {
-        this.bufferLength = bufferLength;
-    }
-
+//    public int getBufferLength() {
+//        return bufferLength;
+//    }
+//
+//    public void setBufferLength(final int bufferLength) {
+//        this.bufferLength = bufferLength;
+//    }
     // ----------------------------------------------------------- decimalDigits
-    public Short getDecimalDigits() {
-        return decimalDigits;
-    }
-
-    public void setDecimalDigits(final Short decimalDigits) {
-        this.decimalDigits = decimalDigits;
-    }
-
+//    public Short getDecimalDigits() {
+//        return decimalDigits;
+//    }
+//
+//    public void setDecimalDigits(final Short decimalDigits) {
+//        this.decimalDigits = decimalDigits;
+//    }
     // ------------------------------------------------------------ pseudoColumn
-    public short getPseudoColumn() {
-        return pseudoColumn;
-    }
-
-    public void setPseudoColumn(final short pseudoColumn) {
-        this.pseudoColumn = pseudoColumn;
-    }
-
+//    public short getPseudoColumn() {
+//        return pseudoColumn;
+//    }
+//
+//    public void setPseudoColumn(final short pseudoColumn) {
+//        this.pseudoColumn = pseudoColumn;
+//    }
     // -------------------------------------------------------------------------
-    @Getter
-    @Setter
+    @XmlElement(nillable = true, required = true)
     @Labeled("SCOPE")
     @Unused
-    @XmlElement(nillable = true, required = true)
+    @Getter
+    @Setter
     private Short scope;
 
+    @XmlElement(required = true)
+    @Labeled("COLUMN_NAME")
     @Getter
     @Setter
-    @Labeled("COLUMN_NAME")
-    @XmlElement(required = true)
     private String columnName;
 
+    @XmlElement(required = true)
+    @Labeled("DATA_TYPE")
     @Getter
     @Setter
-    @Labeled("DATA_TYPE")
-    @XmlElement(required = true)
     private int dataType;
 
+    @XmlElement(required = true)
+    @Labeled("TYPE_NAME")
     @Getter
     @Setter
-    @Labeled("TYPE_NAME")
-    @XmlElement(required = true)
     private String typeName;
 
+    @XmlElement(required = true)
+    @Labeled("COLUMN_SIZE")
     @Getter
     @Setter
-    @Labeled("COLUMN_SIZE")
-    @XmlElement(required = true)
     private int columnSize;
 
-    @Labeled("BUFFER_LENGTH")
     @XmlElement(required = true)
+    @Labeled("BUFFER_LENGTH")
+    @Getter
+    @Setter
     private int bufferLength;
 
+    @XmlElement(nillable = true, required = true)
     @Labeled("DECIMAL_DIGITS")
     @Nillable
-    @XmlElement(nillable = true, required = true)
+    @Getter
+    @Setter
     private Short decimalDigits;
 
-    @Labeled("PSEUDO_COLUMN")
     @XmlElement(required = true)
+    @Labeled("PSEUDO_COLUMN")
+    @Getter
+    @Setter
     private short pseudoColumn;
 }

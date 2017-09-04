@@ -15,9 +15,14 @@
  */
 package com.github.jinahya.sql.database.metadata.bind;
 
+import java.io.Serializable;
+import java.util.logging.Logger;
+import static java.util.logging.Logger.getLogger;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlType;
+import lombok.Getter;
+import lombok.Setter;
 
 /**
  * An entity class for binding the result of
@@ -29,8 +34,14 @@ import javax.xml.bind.annotation.XmlType;
 @XmlType(propOrder = {
     "tableSchem", "tableCatalog"
 })
-public class SchemaName {
+public class SchemaName implements Serializable {
 
+    private static final long serialVersionUID = 5784631477568740816L;
+
+    // -------------------------------------------------------------------------
+    private static final Logger logger = getLogger(SchemaName.class.getName());
+
+    // -------------------------------------------------------------------------
     @Override
     public String toString() {
         return super.toString() + "{"
@@ -40,28 +51,30 @@ public class SchemaName {
     }
 
     // -------------------------------------------------------------- tableSchem
-    public String getTableSchem() {
-        return tableSchem;
-    }
-
-    public void setTableSchem(final String tableSchem) {
-        this.tableSchem = tableSchem;
-    }
-
+//    public String getTableSchem() {
+//        return tableSchem;
+//    }
+//
+//    public void setTableSchem(final String tableSchem) {
+//        this.tableSchem = tableSchem;
+//    }
     // ------------------------------------------------------------ tableCatalog
-    public String getTableCatalog() {
-        return tableCatalog;
-    }
-
-    public void setTableCatalog(final String tableCatalog) {
-        this.tableCatalog = tableCatalog;
-    }
-
+//    public String getTableCatalog() {
+//        return tableCatalog;
+//    }
+//
+//    public void setTableCatalog(final String tableCatalog) {
+//        this.tableCatalog = tableCatalog;
+//    }
     // -------------------------------------------------------------------------
+    @Getter
+    @Setter
     @Labeled("TABLE_SCHEM")
     @XmlElement(required = true)
     private String tableSchem;
 
+    @Getter
+    @Setter
     @Labeled("TABLE_CATALOG")
     @Nillable
     @XmlElement(nillable = true, required = false)

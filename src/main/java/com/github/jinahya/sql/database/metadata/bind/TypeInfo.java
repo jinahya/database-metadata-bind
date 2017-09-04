@@ -15,9 +15,14 @@
  */
 package com.github.jinahya.sql.database.metadata.bind;
 
+import java.io.Serializable;
+import java.util.logging.Logger;
+import static java.util.logging.Logger.getLogger;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlType;
+import lombok.Getter;
+import lombok.Setter;
 
 /**
  * An entity class for binding the result of
@@ -33,8 +38,14 @@ import javax.xml.bind.annotation.XmlType;
     "minimumScale", "maximumScale", "sqlDataType", "sqlDatetimeSub",
     "numPrecRadix"
 })
-public class TypeInfo {
+public class TypeInfo implements Serializable {
 
+    private static final long serialVersionUID = -3964147654019495313L;
+
+    // -------------------------------------------------------------------------
+    private static final Logger logger = getLogger(TypeInfo.class.getName());
+
+    // -------------------------------------------------------------------------
     @Override
     public String toString() {
         return super.toString() + "{"
@@ -60,243 +71,279 @@ public class TypeInfo {
     }
 
     // ---------------------------------------------------------------- typeName
-    public String getTypeName() {
-        return typeName;
-    }
-
-    public void setTypeName(final String typeName) {
-        this.typeName = typeName;
-    }
+//    public String getTypeName() {
+//        return typeName;
+//    }
+//
+//    public void setTypeName(final String typeName) {
+//        this.typeName = typeName;
+//    }
 
     // ------------------------------------------------------------- getDataType
-    public int getDataType() {
-        return dataType;
-    }
-
-    public void setDataType(final int dataType) {
-        this.dataType = dataType;
-    }
+//    public int getDataType() {
+//        return dataType;
+//    }
+//
+//    public void setDataType(final int dataType) {
+//        this.dataType = dataType;
+//    }
 
     // --------------------------------------------------------------- precesion
-    public int getPrecision() {
-        return precision;
-    }
-
-    public void setPrecision(final int precision) {
-        this.precision = precision;
-    }
+//    public int getPrecision() {
+//        return precision;
+//    }
+//
+//    public void setPrecision(final int precision) {
+//        this.precision = precision;
+//    }
 
     // ----------------------------------------------------------- literalPrefix
-    public String getLiteralPrefix() {
-        return literalPrefix;
-    }
-
-    public void setLiteralPrefix(final String literalPrefix) {
-        this.literalPrefix = literalPrefix;
-    }
+//    public String getLiteralPrefix() {
+//        return literalPrefix;
+//    }
+//
+//    public void setLiteralPrefix(final String literalPrefix) {
+//        this.literalPrefix = literalPrefix;
+//    }
 
     // ----------------------------------------------------------- literalSuffix
-    public String getLiteralSuffix() {
-        return literalSuffix;
-    }
-
-    public void setLiteralSuffix(final String literalSuffix) {
-        this.literalSuffix = literalSuffix;
-    }
+//    public String getLiteralSuffix() {
+//        return literalSuffix;
+//    }
+//
+//    public void setLiteralSuffix(final String literalSuffix) {
+//        this.literalSuffix = literalSuffix;
+//    }
 
     // ------------------------------------------------------------ createParams
-    public String getCreateParams() {
-        return createParams;
-    }
-
-    public void setCreateParams(final String createParams) {
-        this.createParams = createParams;
-    }
+//    public String getCreateParams() {
+//        return createParams;
+//    }
+//
+//    public void setCreateParams(final String createParams) {
+//        this.createParams = createParams;
+//    }
 
     // ---------------------------------------------------------------- nullable
-    public short getNullable() {
-        return nullable;
-    }
-
-    public void setNullable(final short nullable) {
-        this.nullable = nullable;
-    }
+//    public short getNullable() {
+//        return nullable;
+//    }
+//
+//    public void setNullable(final short nullable) {
+//        this.nullable = nullable;
+//    }
 
     // ----------------------------------------------------------- caseSensitive
-    public boolean getCaseSensitive() {
-        return caseSensitive;
-    }
-
-    public void setCaseSensitive(final boolean caseSensitive) {
-        this.caseSensitive = caseSensitive;
-    }
+//    public boolean getCaseSensitive() {
+//        return caseSensitive;
+//    }
+//
+//    public void setCaseSensitive(final boolean caseSensitive) {
+//        this.caseSensitive = caseSensitive;
+//    }
 
     // -------------------------------------------------------------- searchable
-    public short getSearchable() {
-        return searchable;
-    }
-
-    public void setSearchable(final short searchable) {
-        this.searchable = searchable;
-    }
+//    public short getSearchable() {
+//        return searchable;
+//    }
+//
+//    public void setSearchable(final short searchable) {
+//        this.searchable = searchable;
+//    }
 
     // ------------------------------------------------------- unsignedAttribute
-    public boolean getUnsignedAttribute() {
-        return unsignedAttribute;
-    }
-
-    public void setUnsignedAttribute(final boolean unsignedAttribute) {
-        this.unsignedAttribute = unsignedAttribute;
-    }
+//    public boolean getUnsignedAttribute() {
+//        return unsignedAttribute;
+//    }
+//
+//    public void setUnsignedAttribute(final boolean unsignedAttribute) {
+//        this.unsignedAttribute = unsignedAttribute;
+//    }
 
     // ---------------------------------------------------------- fixedPrecScale
-    public boolean getFixedPrecScale() {
-        return fixedPrecScale;
-    }
-
-    public void setFixedPrecScale(final boolean fixedPrecScale) {
-        this.fixedPrecScale = fixedPrecScale;
-    }
+//    public boolean getFixedPrecScale() {
+//        return fixedPrecScale;
+//    }
+//
+//    public void setFixedPrecScale(final boolean fixedPrecScale) {
+//        this.fixedPrecScale = fixedPrecScale;
+//    }
 
     // ----------------------------------------------------------- autoIncrement
-    public boolean getAutoIncrement() {
-        return autoIncrement;
-    }
-
-    public void setAutoIncrement(final boolean autoIncrement) {
-        this.autoIncrement = autoIncrement;
-    }
+//    public boolean getAutoIncrement() {
+//        return autoIncrement;
+//    }
+//
+//    public void setAutoIncrement(final boolean autoIncrement) {
+//        this.autoIncrement = autoIncrement;
+//    }
 
     // ----------------------------------------------------------- localTypeName
-    public String getLocalTypeName() {
-        return localTypeName;
-    }
-
-    public void setLocalTypeName(final String localTypeName) {
-        this.localTypeName = localTypeName;
-    }
+//    public String getLocalTypeName() {
+//        return localTypeName;
+//    }
+//
+//    public void setLocalTypeName(final String localTypeName) {
+//        this.localTypeName = localTypeName;
+//    }
 
     // ------------------------------------------------------------ minimumScale
-    public short getMinimumScale() {
-        return minimumScale;
-    }
-
-    public void setMinimumScale(final short minimumScale) {
-        this.minimumScale = minimumScale;
-    }
+//    public short getMinimumScale() {
+//        return minimumScale;
+//    }
+//
+//    public void setMinimumScale(final short minimumScale) {
+//        this.minimumScale = minimumScale;
+//    }
 
     // ------------------------------------------------------------ maximumScale
-    public short getMaximumScale() {
-        return maximumScale;
-    }
-
-    public void setMaximumScale(final short maximumScale) {
-        this.maximumScale = maximumScale;
-    }
+//    public short getMaximumScale() {
+//        return maximumScale;
+//    }
+//
+//    public void setMaximumScale(final short maximumScale) {
+//        this.maximumScale = maximumScale;
+//    }
 
     // ------------------------------------------------------------- sqlDataType
-    public Integer getSqlDataType() {
-        return sqlDataType;
-    }
-
-    public void setSqlDataType(final Integer sqlDataType) {
-        this.sqlDataType = sqlDataType;
-    }
+//    public Integer getSqlDataType() {
+//        return sqlDataType;
+//    }
+//
+//    public void setSqlDataType(final Integer sqlDataType) {
+//        this.sqlDataType = sqlDataType;
+//    }
 
     // ---------------------------------------------------------- sqlDatetimeSub
-    public Integer getSqlDatetimeSub() {
-        return sqlDatetimeSub;
-    }
-
-    public void setSqlDatetimeSub(final Integer sqlDatetimeSub) {
-        this.sqlDatetimeSub = sqlDatetimeSub;
-    }
+//    public Integer getSqlDatetimeSub() {
+//        return sqlDatetimeSub;
+//    }
+//
+//    public void setSqlDatetimeSub(final Integer sqlDatetimeSub) {
+//        this.sqlDatetimeSub = sqlDatetimeSub;
+//    }
 
     // ------------------------------------------------------------ numPrecRadix
-    public int getNumPrecRadix() {
-        return numPrecRadix;
-    }
-
-    public void setNumPrecRadix(final int numPrecRadix) {
-        this.numPrecRadix = numPrecRadix;
-    }
+//    public int getNumPrecRadix() {
+//        return numPrecRadix;
+//    }
+//
+//    public void setNumPrecRadix(final int numPrecRadix) {
+//        this.numPrecRadix = numPrecRadix;
+//    }
 
     // -------------------------------------------------------------------------
-    @Labeled("TYPE_NAME")
     @XmlElement(required = true)
+    @Labeled("TYPE_NAME")
+    @Getter
+    @Setter
     private String typeName;
 
-    @Labeled("DATA_TYPE")
     @XmlElement(required = true)
+    @Labeled("DATA_TYPE")
+    @Getter
+    @Setter
     private int dataType;
 
-    @Labeled("PRECISION")
     @XmlElement(required = true)
+    @Labeled("PRECISION")
+    @Getter
+    @Setter
     private int precision;
 
+    @XmlElement(nillable = true, required = true)
     @Labeled("LITERAL_PREFIX")
     @Nillable
-    @XmlElement(nillable = true, required = true)
+    @Getter
+    @Setter
     private String literalPrefix;
 
+    @XmlElement(nillable = true, required = true)
     @Labeled("LITERAL_SUFFIX")
     @Nillable
-    @XmlElement(nillable = true, required = true)
+    @Getter
+    @Setter
     private String literalSuffix;
 
+    @XmlElement(nillable = true, required = true)
     @Labeled("CREATE_PARAMS")
     @Nillable
-    @XmlElement(nillable = true, required = true)
+    @Getter
+    @Setter
     private String createParams;
 
-    @Labeled("NULLABLE")
     @XmlElement(required = true)
+    @Labeled("NULLABLE")
+    @Getter
+    @Setter
     private short nullable;
 
-    @Labeled("CASE_SENSITIVE")
     @XmlElement(required = true)
+    @Labeled("CASE_SENSITIVE")
+    @Getter
+    @Setter
     private boolean caseSensitive;
 
-    @Labeled("SEARCHABLE")
     @XmlElement(required = true)
+    @Labeled("SEARCHABLE")
+    @Getter
+    @Setter
     private short searchable;
 
-    @Labeled("UNSIGNED_ATTRIBUTE")
     @XmlElement(required = true)
+    @Labeled("UNSIGNED_ATTRIBUTE")
+    @Getter
+    @Setter
     private boolean unsignedAttribute;
 
-    @Labeled("FIXED_PREC_SCALE")
     @XmlElement(required = true)
+    @Labeled("FIXED_PREC_SCALE")
+    @Getter
+    @Setter
     private boolean fixedPrecScale;
 
-    @Labeled("AUTO_INCREMENT")
     @XmlElement(required = true)
+    @Labeled("AUTO_INCREMENT")
+    @Getter
+    @Setter
     private boolean autoIncrement;
 
+    @XmlElement(nillable = true, required = true)
     @Labeled("LOCAL_TYPE_NAME")
     @Nillable
-    @XmlElement(nillable = true, required = true)
+    @Getter
+    @Setter
     private String localTypeName;
 
-    @Labeled("MINIMUM_SCALE")
     @XmlElement(required = true)
+    @Labeled("MINIMUM_SCALE")
+    @Getter
+    @Setter
     private short minimumScale;
 
-    @Labeled("MAXIMUM_SCALE")
     @XmlElement(required = true)
+    @Labeled("MAXIMUM_SCALE")
+    @Getter
+    @Setter
     private short maximumScale;
 
+    @XmlElement(nillable = true, required = true)
     @Labeled("SQL_DATA_TYPE")
     @Unused
-    @XmlElement(nillable = true, required = true)
+    @Getter
+    @Setter
     private Integer sqlDataType;
 
+    @XmlElement(nillable = true, required = true)
     @Labeled("SQL_DATETIME_SUB")
     @Unused
-    @XmlElement(nillable = true, required = true)
+    @Getter
+    @Setter
     private Integer sqlDatetimeSub;
 
-    @Labeled("NUM_PREC_RADIX")
     @XmlElement(required = true)
+    @Labeled("NUM_PREC_RADIX")
+    @Getter
+    @Setter
     private int numPrecRadix;
 }

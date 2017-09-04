@@ -15,6 +15,7 @@
  */
 package com.github.jinahya.sql.database.metadata.bind;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 import javax.xml.bind.annotation.XmlAttribute;
@@ -22,6 +23,8 @@ import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlElementRef;
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlType;
+import lombok.Getter;
+import lombok.Setter;
 
 /**
  * A entity class for binding the result of
@@ -38,7 +41,9 @@ import javax.xml.bind.annotation.XmlType;
     "indexInfo", "primaryKeys", "pseudoColumns", "superTables",
     "tablePrivileges", "versionColumns"
 })
-public class Table {
+public class Table implements Serializable {
+
+    private static final long serialVersionUID = 6590036695540141125L;
 
     // -------------------------------------------------------------------------
     @Override
@@ -58,94 +63,94 @@ public class Table {
     }
 
     // ---------------------------------------------------------------- tableCat
-    public String getTableCat() {
-        return tableCat;
-    }
-
-    public void setTableCat(final String tableCat) {
-        this.tableCat = tableCat;
-    }
+//    public String getTableCat() {
+//        return tableCat;
+//    }
+//
+//    public void setTableCat(final String tableCat) {
+//        this.tableCat = tableCat;
+//    }
 
     // -------------------------------------------------------------- tableSchem
-    public String getTableSchem() {
-        return tableSchem;
-    }
-
-    public void setTableSchem(final String tableSchem) {
-        this.tableSchem = tableSchem;
-    }
+//    public String getTableSchem() {
+//        return tableSchem;
+//    }
+//
+//    public void setTableSchem(final String tableSchem) {
+//        this.tableSchem = tableSchem;
+//    }
 
     // --------------------------------------------------------------- tableName
-    public String getTableName() {
-        return tableName;
-    }
-
-    public void setTableName(final String tableName) {
-        this.tableName = tableName;
-    }
+//    public String getTableName() {
+//        return tableName;
+//    }
+//
+//    public void setTableName(final String tableName) {
+//        this.tableName = tableName;
+//    }
 
     // --------------------------------------------------------------- tableType
-    public String getTableType() {
-        return tableType;
-    }
-
-    public void setTableType(final String tableType) {
-        this.tableType = tableType;
-    }
+//    public String getTableType() {
+//        return tableType;
+//    }
+//
+//    public void setTableType(final String tableType) {
+//        this.tableType = tableType;
+//    }
 
     // ----------------------------------------------------------------- remarks
-    public String getRemarks() {
-        return remarks;
-    }
-
-    public void setRemarks(final String remarks) {
-        this.remarks = remarks;
-    }
+//    public String getRemarks() {
+//        return remarks;
+//    }
+//
+//    public void setRemarks(final String remarks) {
+//        this.remarks = remarks;
+//    }
 
     // ----------------------------------------------------------------- typeCat
-    public String getTypeCat() {
-        return typeCat;
-    }
-
-    public void setTypeCat(final String typeCat) {
-        this.typeCat = typeCat;
-    }
+//    public String getTypeCat() {
+//        return typeCat;
+//    }
+//
+//    public void setTypeCat(final String typeCat) {
+//        this.typeCat = typeCat;
+//    }
 
     // --------------------------------------------------------------- typeSchem
-    public String getTypeSchem() {
-        return typeSchem;
-    }
-
-    public void setTypeSchem(final String typeSchem) {
-        this.typeSchem = typeSchem;
-    }
+//    public String getTypeSchem() {
+//        return typeSchem;
+//    }
+//
+//    public void setTypeSchem(final String typeSchem) {
+//        this.typeSchem = typeSchem;
+//    }
 
     // ---------------------------------------------------------------- typeName
-    public String getTypeName() {
-        return typeName;
-    }
-
-    public void setTypeName(final String typeName) {
-        this.typeName = typeName;
-    }
+//    public String getTypeName() {
+//        return typeName;
+//    }
+//
+//    public void setTypeName(final String typeName) {
+//        this.typeName = typeName;
+//    }
 
     // -------------------------------------------------- selfReferencingColName
-    public String getSelfReferencingColName() {
-        return selfReferencingColName;
-    }
-
-    public void setSelfReferencingColName(final String selfReferencingColName) {
-        this.selfReferencingColName = selfReferencingColName;
-    }
+//    public String getSelfReferencingColName() {
+//        return selfReferencingColName;
+//    }
+//
+//    public void setSelfReferencingColName(final String selfReferencingColName) {
+//        this.selfReferencingColName = selfReferencingColName;
+//    }
 
     // ----------------------------------------------------------- refGeneration
-    public String getRefGeneration() {
-        return refGeneration;
-    }
-
-    public void setRefGeneration(final String refGeneration) {
-        this.refGeneration = refGeneration;
-    }
+//    public String getRefGeneration() {
+//        return refGeneration;
+//    }
+//
+//    public void setRefGeneration(final String refGeneration) {
+//        this.refGeneration = refGeneration;
+//    }
 
     // ------------------------------------------------------ bestRowIdentifiers
     public List<BestRowIdentifier> getBestRowIdentifiers() {
@@ -279,155 +284,176 @@ public class Table {
     }
 
     // -------------------------------------------------------------------------
+    @XmlAttribute
     @Labeled("TABLE_CAT")
     @Nillable
-    @XmlAttribute
+    @Getter
+    @Setter
     private String tableCat;
 
+    @XmlAttribute
     @Labeled("TABLE_SCHEM")
     @Nillable
-    @XmlAttribute
+    @Getter
+    @Setter
     private String tableSchem;
 
-    @Labeled("TABLE_NAME")
     @XmlElement(required = true)
+    @Labeled("TABLE_NAME")
+    @Getter
+    @Setter
     private String tableName;
 
-    @Labeled("TABLE_TYPE")
     @XmlElement(required = true)
+    @Labeled("TABLE_TYPE")
+    @Getter
+    @Setter
     private String tableType;
 
-    @Labeled("REMARKS")
     @XmlElement(required = true)
+    @Labeled("REMARKS")
+    @Getter
+    @Setter
     private String remarks;
 
+    @XmlElement(nillable = true, required = true)
     @Labeled("TYPE_CAT")
     @Nillable
-    @XmlElement(nillable = true, required = true)
+    @Getter
+    @Setter
     private String typeCat;
 
+    @XmlElement(nillable = true, required = true)
     @Labeled("TYPE_SCHEM")
     @Nillable
-    @XmlElement(nillable = true, required = true)
+    @Getter
+    @Setter
     private String typeSchem;
 
+    @XmlElement(nillable = true, required = true)
     @Labeled("TYPE_NAME")
     @Nillable
-    @XmlElement(nillable = true, required = true)
+    @Getter
+    @Setter
     private String typeName;
 
+    @XmlElement(nillable = true, required = true)
     @Labeled("SELF_REFERENCING_COL_NAME")
     @Nillable
-    @XmlElement(nillable = true, required = true)
+    @Getter
+    @Setter
     private String selfReferencingColName;
 
+    @XmlElement(nillable = true, required = true)
     @Labeled("REF_GENERATION")
     @Nillable
-    @XmlElement(nillable = true, required = true)
+    @Getter
+    @Setter
     private String refGeneration;
 
-    @Invokable(name = "getBestRowIdentifier",
-            types = {
-                String.class, String.class, String.class, int.class, boolean.class
-            },
-            args = {
-                @Literals({":tableCat", ":tableSchem", ":tableName",
-                           "0", // bestRowTemporaty
-                           "true"})
-                ,
-                @Literals({":tableCat", ":tableSchem", ":tableName",
-                           "1", // bestRowTransaction
-                           "true"})
-                ,
-                @Literals({":tableCat", ":tableSchem", ":tableName",
-                           "2", // bestRowSession
-                           "true"})}
-    )
     @XmlElementRef
+    @Invokable(name = "getBestRowIdentifier",
+               types = {
+                   String.class, String.class, String.class, int.class,
+                   boolean.class
+               },
+               args = {
+                   @Literals({":tableCat", ":tableSchem", ":tableName",
+                              "0", // bestRowTemporaty
+                              "true"})
+                   ,
+                @Literals({":tableCat", ":tableSchem", ":tableName",
+                              "1", // bestRowTransaction
+                              "true"})
+                   ,
+                @Literals({":tableCat", ":tableSchem", ":tableName",
+                              "2", // bestRowSession
+                              "true"})}
+    )
     private List<BestRowIdentifier> bestRowIdentifiers;
 
-    @Invokable(name = "getColumns",
-            types = {String.class, String.class, String.class, String.class},
-            args = {
-                @Literals({":tableCat", ":tableSchem", ":tableName", "null"})
-            }
-    )
     @XmlElementRef
+    @Invokable(name = "getColumns",
+               types = {String.class, String.class, String.class, String.class},
+               args = {
+                   @Literals({":tableCat", ":tableSchem", ":tableName", "null"})
+               }
+    )
     private List<Column> columns;
 
-    @Invokable(name = "getExportedKeys",
-            types = {String.class, String.class, String.class},
-            args = {
-                @Literals({":tableCat", ":tableSchem", ":tableName"})
-            }
-    )
     @XmlElementRef
+    @Invokable(name = "getExportedKeys",
+               types = {String.class, String.class, String.class},
+               args = {
+                   @Literals({":tableCat", ":tableSchem", ":tableName"})
+               }
+    )
     private List<ExportedKey> exportedKeys;
 
-    @Invokable(name = "getImportedKeys",
-            types = {String.class, String.class, String.class},
-            args = {
-                @Literals({":tableCat", ":tableSchem", ":tableName"})
-            }
-    )
     @XmlElementRef
+    @Invokable(name = "getImportedKeys",
+               types = {String.class, String.class, String.class},
+               args = {
+                   @Literals({":tableCat", ":tableSchem", ":tableName"})
+               }
+    )
     private List<ImportedKey> importedKeys;
 
-    @Invokable(name = "getIndexInfo",
-            types = {
-                String.class, String.class, String.class, boolean.class,
-                boolean.class
-            },
-            args = {
-                @Literals({":tableCat", ":tableSchem", ":tableName", "false",
-                           "false"})
-            }
-    )
     @XmlElementRef
+    @Invokable(name = "getIndexInfo",
+               types = {
+                   String.class, String.class, String.class, boolean.class,
+                   boolean.class
+               },
+               args = {
+                   @Literals({":tableCat", ":tableSchem", ":tableName", "false",
+                              "false"})
+               }
+    )
     private List<IndexInfo> indexInfo;
 
-    @Invokable(name = "getPrimaryKeys",
-            types = {String.class, String.class, String.class},
-            args = {
-                @Literals({":tableCat", ":tableSchem", ":tableName"})
-            }
-    )
     @XmlElementRef
+    @Invokable(name = "getPrimaryKeys",
+               types = {String.class, String.class, String.class},
+               args = {
+                   @Literals({":tableCat", ":tableSchem", ":tableName"})
+               }
+    )
     private List<PrimaryKey> primaryKeys;
 
-    @Invokable(name = "getPseudoColumns",
-            types = {String.class, String.class, String.class, String.class},
-            args = {
-                @Literals({":tableCat", ":tableSchem", ":tableName", "null"})
-            }
-    )
     @XmlElementRef
+    @Invokable(name = "getPseudoColumns",
+               types = {String.class, String.class, String.class, String.class},
+               args = {
+                   @Literals({":tableCat", ":tableSchem", ":tableName", "null"})
+               }
+    )
     private List<PseudoColumn> pseudoColumns;
 
-    @Invokable(name = "getSuperTables",
-            types = {String.class, String.class, String.class},
-            args = {
-                @Literals({":tableCat", ":tableSchem", ":tableName"})
-            }
-    )
     @XmlElementRef
+    @Invokable(name = "getSuperTables",
+               types = {String.class, String.class, String.class},
+               args = {
+                   @Literals({":tableCat", ":tableSchem", ":tableName"})
+               }
+    )
     private List<SuperTable> superTables;
 
-    @Invokable(name = "getTablePrivileges",
-            types = {String.class, String.class, String.class},
-            args = {
-                @Literals({":tableCat", ":tableSchem", ":tableName"})
-            }
-    )
     @XmlElementRef
+    @Invokable(name = "getTablePrivileges",
+               types = {String.class, String.class, String.class},
+               args = {
+                   @Literals({":tableCat", ":tableSchem", ":tableName"})
+               }
+    )
     private List<TablePrivilege> tablePrivileges;
 
-    @Invokable(name = "getVersionColumns",
-            types = {String.class, String.class, String.class},
-            args = {
-                @Literals({":tableCat", ":tableSchem", ":tableName"})
-            }
-    )
     @XmlElementRef
+    @Invokable(name = "getVersionColumns",
+               types = {String.class, String.class, String.class},
+               args = {
+                   @Literals({":tableCat", ":tableSchem", ":tableName"})
+               }
+    )
     private List<VersionColumn> versionColumns;
 }
