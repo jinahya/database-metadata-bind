@@ -119,37 +119,37 @@ public class BestRowIdentifier {
     }
 
     // -------------------------------------------------------------------------
-    @Label("SCOPE")
+    @Labeled("SCOPE")
     @XmlElement(required = true)
     private short scope;
 
-    @Label("COLUMN_NAME")
+    @Labeled("COLUMN_NAME")
     @XmlElement(required = true)
     private String columnName;
 
-    @Label("DATA_TYPE")
+    @Labeled("DATA_TYPE")
     @XmlElement(required = true)
     private int dataType;
 
-    @Label("TYPE_NAME")
+    @Labeled("TYPE_NAME")
     @XmlElement(required = true)
     private String typeName;
 
-    @Label("COLUMN_SIZE")
+    @Labeled("COLUMN_SIZE")
     @XmlElement(required = true)
     private int columnSize;
 
-    @Label("BUFFER_LENGTH")
+    @Labeled("BUFFER_LENGTH")
     @Unused
     @XmlElement(nillable = true, required = true)
     private Integer bufferLength;
 
-    @Label("DECIMAL_DIGITS")
-    @NillableBySpecification
+    @Labeled("DECIMAL_DIGITS")
+    @Nillable
     @XmlElement(nillable = true, required = true)
     private Short decimalDigits;
 
-    @Label("PSEUDO_COLUMN")
+    @Labeled("PSEUDO_COLUMN")
     @XmlElement(required = true)
     private short pseudoColumn;
 }

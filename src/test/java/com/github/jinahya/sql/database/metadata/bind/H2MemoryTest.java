@@ -39,11 +39,23 @@ public class H2MemoryTest {
 
     private static final Logger logger = getLogger(lookup().lookupClass());
 
+    // -------------------------------------------------------------------------
     private static final String DRIVER_NAME = "org.h2.Driver";
+
+    private static final Class<?> DRIVER_CLASS;
+
+    static {
+        try {
+            DRIVER_CLASS = Class.forName(DRIVER_NAME);
+        } catch (ClassNotFoundException cnfe) {
+            throw new InstantiationError(cnfe.getMessage());
+        }
+    }
 
     private static final String CONNECTION_URL
             = "jdbc:h2:mem:test"; //;DB_CLOSE_DELAY=-1";
 
+    // -------------------------------------------------------------------------
     @BeforeClass
     private static void beforeClass() throws SQLException {
     }
@@ -52,6 +64,7 @@ public class H2MemoryTest {
     private static void afterClass() throws SQLException {
     }
 
+    // -------------------------------------------------------------------------
     @Test(enabled = true)
     public void retrieve() throws Exception {
         final Metadata metadata;
@@ -60,9 +73,12 @@ public class H2MemoryTest {
             final MetadataContext context = new MetadataContext(database);
             context.suppressions(
                     "column/isGeneratedcolumn",
-                    "metadata/generatedKeyAlwaysReturned",
-                    "schema/functions",
-                    "table/pseudoColumns"
+                    "clientInfoProperty/defaultValue",
+                    "clientInfoProperty/description",
+                    "clientInfoProperty/maxLen",
+                    //                    "metadata/generatedKeyAlwaysReturned",
+                    "schema/functions"//,
+            //                    "table/pseudoColumns"
             );
             metadata = context.getMetadata();
         }

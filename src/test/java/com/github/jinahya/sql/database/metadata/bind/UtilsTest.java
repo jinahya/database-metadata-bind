@@ -1,5 +1,5 @@
 /*
- * Copyright 2013 <a href="mailto:onacit@gmail.com">Jin Kwon</a>.
+ * Copyright 2017 Jin Kwon &lt;onacit at gmail.com&gt;.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,18 +15,24 @@
  */
 package com.github.jinahya.sql.database.metadata.bind;
 
-import java.util.Objects;
+import static java.lang.invoke.MethodHandles.lookup;
+import java.lang.reflect.Field;
+import org.slf4j.Logger;
+import static org.slf4j.LoggerFactory.getLogger;
+import org.testng.annotations.Test;
 
 /**
  *
  * @author Jin Kwon &lt;onacit at gmail.com&gt;
  */
-public class CatalogVerifier {
+public class UtilsTest {
 
-    static void verify(final Catalog catalog) {
-        Objects.requireNonNull(catalog, "null catalog");
-        // schemas order by name
-        {
-        }
+    private static final Logger logger = getLogger(lookup().lookupClass());
+
+    @Test
+    public void printSqlTypes() throws ReflectiveOperationException {
+        final Field field = Utils.class.getDeclaredField("SQL_TYPES");
+        field.setAccessible(true);
+        logger.debug("SQL_TYPES: {}", field.get(null));
     }
 }

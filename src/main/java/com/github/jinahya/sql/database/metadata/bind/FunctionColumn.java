@@ -34,6 +34,7 @@ import javax.xml.bind.annotation.XmlType;
 })
 public class FunctionColumn {
 
+    // -------------------------------------------------------------------------
     @Override
     public String toString() {
         return super.toString() + "{"
@@ -211,74 +212,74 @@ public class FunctionColumn {
     }
 
     // -------------------------------------------------------------------------
-    @Label("FUNCTION_CAT")
-    @NillableBySpecification
+    @Labeled("FUNCTION_CAT")
+    @Nillable
     @XmlAttribute
     private String functionCat;
 
-    @Label("FUNCTION_SCHEM")
-    @NillableBySpecification
+    @Labeled("FUNCTION_SCHEM")
+    @Nillable
     @XmlAttribute
     private String functionSchem;
 
-    @Label("FUNCTION_NAME")
+    @Labeled("FUNCTION_NAME")
     @XmlAttribute
     private String functionName;
 
-    @Label("COLUMN_NAME")
+    @Labeled("COLUMN_NAME")
     @XmlElement(required = true)
     private String columnName;
 
-    @Label("COLUMN_TYPE")
+    @Labeled("COLUMN_TYPE")
     @XmlElement(required = true)
     private short columnType;
 
-    @Label("DATA_TYPE")
+    @Labeled("DATA_TYPE")
     @XmlElement(required = true)
     private int dataType;
 
-    @Label("TYPE_NAME")
+    @Labeled("TYPE_NAME")
     @XmlElement(required = true)
     private String typeName;
 
-    @Label("PRECISION")
+    @Labeled("PRECISION")
     @XmlElement(required = true)
     private int precision;
 
-    @Label("LENGTH")
+    @Labeled("LENGTH")
     @XmlElement(required = true)
     private int length;
 
-    @Label("SCALE")
+    @Labeled("SCALE")
     @XmlElement(required = true)
     private Short scale;
 
-    @Label("RADIX")
+    @Labeled("RADIX")
     @XmlElement(required = true)
     private short radix;
 
-    @Label("NULLABLE")
+    @Labeled("NULLABLE")
     @XmlElement(required = true)
     private short nullable;
 
-    @Label("REMARKS")
+    @Labeled("REMARKS")
     @XmlElement(required = true)
     private String remarks;
 
-    @Label("CHAR_OCTET_LENGTH")
+    @Labeled("CHAR_OCTET_LENGTH")
     @XmlElement(required = true)
-    @NillableBySpecification
+    @Nillable
     private Integer charOctetLength;
 
-    @Label("ORDINAL_POSITION")
+    @Labeled("ORDINAL_POSITION")
     @XmlElement(required = true)
     private int ordinalPosition;
 
-    @Label("IS_NULLABLE")
+    @Labeled("IS_NULLABLE")
     @XmlElement(required = true)
     private String isNullable;
 
-    @Label("SPECIFIC_NAME")
+    @Labeled("SPECIFIC_NAME")
     @XmlElement(required = true)
     private String specificName;
 }

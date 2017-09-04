@@ -18,11 +18,13 @@ package com.github.jinahya.sql.database.metadata.bind;
 import static java.beans.Introspector.decapitalize;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
+import java.lang.reflect.Modifier;
 import java.lang.reflect.ParameterizedType;
 import java.sql.DatabaseMetaData;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -38,33 +40,46 @@ import java.util.logging.Logger;
  *
  * @author Jin Kwon &lt;jinahya_at_gmail.com&gt;
  */
-public class MetadataContext {
+final class MetadataContextHelper {
 
     private static final Logger logger
             = Logger.getLogger(Metadata.class.getName());
 
     // -------------------------------------------------------------------------
-    private static Map<Class<?>, List<Field>> FIELDS
+    private static Map<Class<?>, List<Field>> F
             = new HashMap<Class<?>, List<Field>>();
 
-    private static Map<Field, Labeled> LABELS = new HashMap<Field, Labeled>();
+    private static Map<Field, Labeled> L = new HashMap<Field, Labeled>();
 
-    private static Map<Field, Invokable> INVOKES = new HashMap<Field, Invokable>();
+    private static Map<Field, Invokable> I = new HashMap<Field, Invokable>();
 
-    private static Map<Field, Nillable> N = new HashMap<Field, Nillable>();
+    private static Map<Field, Nillable> N
+            = new HashMap<Field, Nillable>();
+
+    private static Map<Field, Reserved> R = new HashMap<Field, Reserved>();
 
     private static List<Field> fields(final Class<?> type) {
-        if (!FIELDS.containsKey(type)) {
+        if (type == null) {
+            throw new NullPointerException("type is null");
+        }
+        if (!F.containsKey(type)) {
             final List<Field> value = new ArrayList<Field>();
             for (final Field field : type.getDeclaredFields()) {
+                value.add(field);
+                final int modifiers = field.getModifiers();
+                if (Modifier.isStatic(modifiers)) {
+                    continue;
+                }
                 if (!field.isAccessible()) {
                     field.setAccessible(true);
                 }
-                LABELS.put(field, field.getAnnotation(Labeled.class));
-                INVOKES.put(field, field.getAnnotation(Invokable.class));
+                L.put(field, field.getAnnotation(Labeled.class));
+                I.put(field, field.getAnnotation(Invokable.class));
+                N.put(field, field.getAnnotation(Nillable.class));
+                R.put(field, field.getAnnotation(Reserved.class));
             }
         }
-        return FIELDS.get(type);
+        return F.get(type);
     }
 
     // -------------------------------------------------------------------------
@@ -79,7 +94,7 @@ public class MetadataContext {
      *
      * @param context the {@code DatabaseMetaData} instance to hold.
      */
-    public MetadataContext(final DatabaseMetaData context) {
+    public MetadataContextHelper(final DatabaseMetaData context) {
         super();
         if (context == null) {
             throw new NullPointerException("null context");
@@ -106,7 +121,7 @@ public class MetadataContext {
      *
      * @return this
      */
-    public MetadataContext suppressions(
+    public MetadataContextHelper suppressions(
             final String suppression, final String... otherSuppressions) {
         suppression(suppression);
         if (otherSuppressions != null) {
@@ -278,7 +293,6 @@ public class MetadataContext {
         final List<Catalog> catalogs = metadata.getCatalogs();
         if (catalogs.isEmpty()) {
             final Catalog catalog = new Catalog();
-            catalog.virtual = Boolean.TRUE;
             catalog.setTableCat("");
             catalogs.add(catalog);
             bindSingle(null, Catalog.class, catalog);
@@ -287,7 +301,6 @@ public class MetadataContext {
             final List<Schema> schemas = catalog.getSchemas();
             if (schemas.isEmpty()) {
                 final Schema schema = new Schema();
-                schema.virtual = Boolean.TRUE;
                 schema.setTableCatalog(catalog.getTableCat());
                 schema.setTableSchem("");
                 schemas.add(schema);
@@ -392,6 +405,7 @@ public class MetadataContext {
                                    final String tableNamePattern,
                                    final String columnNamePattern)
             throws SQLException, ReflectiveOperationException {
+        logger.log(Level.INFO, "getColumns({0}, {1}, {2}, {3}", new Object[]{catalog, schemaPattern, tableNamePattern, columnNamePattern});
         final List<Column> list = new ArrayList<Column>();
         final ResultSet resultSet = context.getColumns(
                 catalog, schemaPattern, tableNamePattern, columnNamePattern);

@@ -17,10 +17,13 @@ package com.github.jinahya.sql.database.metadata.bind;
 
 import java.util.ArrayList;
 import java.util.List;
+import javax.xml.bind.annotation.XmlAttribute;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlElementRef;
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlType;
+import lombok.Getter;
+import lombok.Setter;
 
 /**
  * An entity class for binding the result of
@@ -54,15 +57,14 @@ public class Catalog extends AbstractTableDomain {
         return tables;
     }
 
-    // ---------------------------------------------------------------- tableCat
-    public String getTableCat() {
-        return tableCat;
-    }
-
-    public void setTableCat(final String tableCat) {
-        this.tableCat = tableCat;
-    }
-
+//    // ---------------------------------------------------------------- tableCat
+//    public String getTableCat() {
+//        return tableCat;
+//    }
+//
+//    public void setTableCat(final String tableCat) {
+//        this.tableCat = tableCat;
+//    }
     // ----------------------------------------------------------------- schemas
     public List<Schema> getSchemas() {
         if (schemas == null) {
@@ -72,15 +74,20 @@ public class Catalog extends AbstractTableDomain {
     }
 
     // -------------------------------------------------------------------------
-    @Label("TABLE_CAT")
+    @XmlAttribute
+    Boolean virtual;
+
+    @Getter
+    @Setter
+    @Labeled("TABLE_CAT")
     @XmlElement(required = true)
     private String tableCat;
 
-    @Invoke(name = "getSchemas",
-            types = {String.class, String.class},
-            args = {
-                @Literals({":tableCat", "null"})
-            }
+    @Invokable(name = "getSchemas",
+               types = {String.class, String.class},
+               args = {
+                   @Literals({":tableCat", "null"})
+               }
     )
     @XmlElementRef
     private List<Schema> schemas;

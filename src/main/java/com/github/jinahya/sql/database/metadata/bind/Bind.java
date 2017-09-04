@@ -22,13 +22,12 @@ import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
 /**
+ * A marker annotation for binding.
  *
  * @author Jin Kwon &lt;jinahya_at_gmail.com&gt;
  */
 @Documented
-@Retention(RetentionPolicy.SOURCE)
-@Target({ElementType.FIELD, ElementType.METHOD})
-@interface NillableBySpecification {
-
-    String value() default "";
+@Retention(RetentionPolicy.RUNTIME)
+@Target({ElementType.FIELD})
+@interface Bind {
 }

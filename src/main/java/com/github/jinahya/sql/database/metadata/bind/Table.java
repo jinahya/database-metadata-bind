@@ -40,6 +40,7 @@ import javax.xml.bind.annotation.XmlType;
 })
 public class Table {
 
+    // -------------------------------------------------------------------------
     @Override
     public String toString() {
         return super.toString() + "{"
@@ -278,64 +279,66 @@ public class Table {
     }
 
     // -------------------------------------------------------------------------
-    @Label("TABLE_CAT")
-    @NillableBySpecification
+    @Labeled("TABLE_CAT")
+    @Nillable
     @XmlAttribute
     private String tableCat;
 
-    @Label("TABLE_SCHEM")
-    @NillableBySpecification
+    @Labeled("TABLE_SCHEM")
+    @Nillable
     @XmlAttribute
     private String tableSchem;
 
-    @Label("TABLE_NAME")
+    @Labeled("TABLE_NAME")
     @XmlElement(required = true)
     private String tableName;
 
-    @Label("TABLE_TYPE")
+    @Labeled("TABLE_TYPE")
     @XmlElement(required = true)
     private String tableType;
 
-    @Label("REMARKS")
+    @Labeled("REMARKS")
     @XmlElement(required = true)
     private String remarks;
 
-    @Label("TYPE_CAT")
-    @NillableBySpecification
+    @Labeled("TYPE_CAT")
+    @Nillable
     @XmlElement(nillable = true, required = true)
     private String typeCat;
 
-    @Label("TYPE_SCHEM")
-    @NillableBySpecification
+    @Labeled("TYPE_SCHEM")
+    @Nillable
     @XmlElement(nillable = true, required = true)
     private String typeSchem;
 
-    @Label("TYPE_NAME")
-    @NillableBySpecification
+    @Labeled("TYPE_NAME")
+    @Nillable
     @XmlElement(nillable = true, required = true)
     private String typeName;
 
-    @Label("SELF_REFERENCING_COL_NAME")
-    @NillableBySpecification
+    @Labeled("SELF_REFERENCING_COL_NAME")
+    @Nillable
     @XmlElement(nillable = true, required = true)
     private String selfReferencingColName;
 
-    @Label("REF_GENERATION")
-    @NillableBySpecification
+    @Labeled("REF_GENERATION")
+    @Nillable
     @XmlElement(nillable = true, required = true)
     private String refGeneration;
 
-    @Invoke(name = "getBestRowIdentifier",
+    @Invokable(name = "getBestRowIdentifier",
             types = {
                 String.class, String.class, String.class, int.class, boolean.class
             },
             args = {
                 @Literals({":tableCat", ":tableSchem", ":tableName",
                            "0", // bestRowTemporaty
-                           "true"}),
+                           "true"})
+                ,
                 @Literals({":tableCat", ":tableSchem", ":tableName",
                            "1", // bestRowTransaction
-                           "true"}),
+                           "true"})
+                ,
                 @Literals({":tableCat", ":tableSchem", ":tableName",
                            "2", // bestRowSession
                            "true"})}
@@ -343,7 +346,7 @@ public class Table {
     @XmlElementRef
     private List<BestRowIdentifier> bestRowIdentifiers;
 
-    @Invoke(name = "getColumns",
+    @Invokable(name = "getColumns",
             types = {String.class, String.class, String.class, String.class},
             args = {
                 @Literals({":tableCat", ":tableSchem", ":tableName", "null"})
@@ -352,7 +355,7 @@ public class Table {
     @XmlElementRef
     private List<Column> columns;
 
-    @Invoke(name = "getExportedKeys",
+    @Invokable(name = "getExportedKeys",
             types = {String.class, String.class, String.class},
             args = {
                 @Literals({":tableCat", ":tableSchem", ":tableName"})
@@ -361,7 +364,7 @@ public class Table {
     @XmlElementRef
     private List<ExportedKey> exportedKeys;
 
-    @Invoke(name = "getImportedKeys",
+    @Invokable(name = "getImportedKeys",
             types = {String.class, String.class, String.class},
             args = {
                 @Literals({":tableCat", ":tableSchem", ":tableName"})
@@ -370,7 +373,7 @@ public class Table {
     @XmlElementRef
     private List<ImportedKey> importedKeys;
 
-    @Invoke(name = "getIndexInfo",
+    @Invokable(name = "getIndexInfo",
             types = {
                 String.class, String.class, String.class, boolean.class,
                 boolean.class
@@ -383,7 +386,7 @@ public class Table {
     @XmlElementRef
     private List<IndexInfo> indexInfo;
 
-    @Invoke(name = "getPrimaryKeys",
+    @Invokable(name = "getPrimaryKeys",
             types = {String.class, String.class, String.class},
             args = {
                 @Literals({":tableCat", ":tableSchem", ":tableName"})
@@ -392,7 +395,7 @@ public class Table {
     @XmlElementRef
     private List<PrimaryKey> primaryKeys;
 
-    @Invoke(name = "getPseudoColumns",
+    @Invokable(name = "getPseudoColumns",
             types = {String.class, String.class, String.class, String.class},
             args = {
                 @Literals({":tableCat", ":tableSchem", ":tableName", "null"})
@@ -401,7 +404,7 @@ public class Table {
     @XmlElementRef
     private List<PseudoColumn> pseudoColumns;
 
-    @Invoke(name = "getSuperTables",
+    @Invokable(name = "getSuperTables",
             types = {String.class, String.class, String.class},
             args = {
                 @Literals({":tableCat", ":tableSchem", ":tableName"})
@@ -410,7 +413,7 @@ public class Table {
     @XmlElementRef
     private List<SuperTable> superTables;
 
-    @Invoke(name = "getTablePrivileges",
+    @Invokable(name = "getTablePrivileges",
             types = {String.class, String.class, String.class},
             args = {
                 @Literals({":tableCat", ":tableSchem", ":tableName"})
@@ -419,7 +422,7 @@ public class Table {
     @XmlElementRef
     private List<TablePrivilege> tablePrivileges;
 
-    @Invoke(name = "getVersionColumns",
+    @Invokable(name = "getVersionColumns",
             types = {String.class, String.class, String.class},
             args = {
                 @Literals({":tableCat", ":tableSchem", ":tableName"})

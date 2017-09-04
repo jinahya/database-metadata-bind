@@ -22,13 +22,12 @@ import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
 /**
+ * A marker annotation for nillable by specification.
  *
  * @author Jin Kwon &lt;jinahya_at_gmail.com&gt;
  */
 @Documented
-@Retention(RetentionPolicy.RUNTIME)
-@Target({ElementType.FIELD})
-@interface Label {
-
-    String value();
+@Retention(RetentionPolicy.SOURCE)
+@Target({ElementType.FIELD, ElementType.METHOD})
+@interface Nillable {
 }

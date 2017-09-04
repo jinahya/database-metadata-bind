@@ -118,33 +118,33 @@ public class Procedure {
     }
 
     // -------------------------------------------------------------------------
-    @Label("PROCEDURE_CAT")
-    @NillableBySpecification
+    @Labeled("PROCEDURE_CAT")
+    @Nillable
     @XmlAttribute
     private String procedureCat;
 
-    @Label("PROCEDURE_SCHEM")
-    @NillableBySpecification
+    @Labeled("PROCEDURE_SCHEM")
+    @Nillable
     @XmlAttribute
     private String procedureSchem;
 
-    @Label("PROCEDURE_NAME")
+    @Labeled("PROCEDURE_NAME")
     @XmlElement(required = true)
     private String procedureName;
 
-    @Label("REMARKS")
+    @Labeled("REMARKS")
     @XmlElement(required = true)
     private String remarks;
 
-    @Label("PROCEDURE_TYPE")
+    @Labeled("PROCEDURE_TYPE")
     @XmlElement(required = true)
     private short procedureType;
 
-    @Label("SPECIFIC_NAME")
+    @Labeled("SPECIFIC_NAME")
     @XmlElement(required = true)
     private String specificName;
 
-    @Invoke(name = "getProcedureColumns",
+    @Invokable(name = "getProcedureColumns",
             types = {String.class, String.class, String.class, String.class},
             args = {
                 @Literals({":procedureCat", ":procedureSchem", ":procedureName",

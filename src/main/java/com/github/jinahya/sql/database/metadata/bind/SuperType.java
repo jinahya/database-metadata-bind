@@ -19,6 +19,8 @@ import javax.xml.bind.annotation.XmlAttribute;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlType;
+import lombok.Getter;
+import lombok.Setter;
 
 /**
  * An entity class for binding the result of
@@ -44,86 +46,98 @@ public class SuperType {
                + "}";
     }
 
-    // ----------------------------------------------------------------- typeCat
-    public String getTypeCat() {
-        return typeCat;
-    }
-
-    public void setTypeCat(final String typeCat) {
-        this.typeCat = typeCat;
-    }
-
-    // --------------------------------------------------------------- typeSchem
-    public String getTypeSchem() {
-        return typeSchem;
-    }
-
-    public void setTypeSchem(final String typeSchem) {
-        this.typeSchem = typeSchem;
-    }
-
-    // ---------------------------------------------------------------- typeName
-    public String getTypeName() {
-        return typeName;
-    }
-
-    public void setTypeName(final String typeName) {
-        this.typeName = typeName;
-    }
-
-    // ------------------------------------------------------------ supertypeCat
-    public String getSupertypeCat() {
-        return supertypeCat;
-    }
-
-    public void setSupertypeCat(final String supertypeCat) {
-        this.supertypeCat = supertypeCat;
-    }
-
-    // ---------------------------------------------------------- supertypeSchem
-    public String getSupertypeSchem() {
-        return supertypeSchem;
-    }
-
-    public void setSupertypeSchem(final String supertypeSchem) {
-        this.supertypeSchem = supertypeSchem;
-    }
-
-    // ----------------------------------------------------------- supertypeName
-    public String getSupertypeName() {
-        return supertypeName;
-    }
-
-    public void setSupertypeName(final String supertypeName) {
-        this.supertypeName = supertypeName;
-    }
+//    // ----------------------------------------------------------------- typeCat
+//    public String getTypeCat() {
+//        return typeCat;
+//    }
+//
+//    public void setTypeCat(final String typeCat) {
+//        this.typeCat = typeCat;
+//    }
+//
+//    // --------------------------------------------------------------- typeSchem
+//    public String getTypeSchem() {
+//        return typeSchem;
+//    }
+//
+//    public void setTypeSchem(final String typeSchem) {
+//        this.typeSchem = typeSchem;
+//    }
+//
+//    // ---------------------------------------------------------------- typeName
+//    public String getTypeName() {
+//        return typeName;
+//    }
+//
+//    public void setTypeName(final String typeName) {
+//        this.typeName = typeName;
+//    }
+//
+//    // ------------------------------------------------------------ supertypeCat
+//    public String getSupertypeCat() {
+//        return supertypeCat;
+//    }
+//
+//    public void setSupertypeCat(final String supertypeCat) {
+//        this.supertypeCat = supertypeCat;
+//    }
+//
+//    // ---------------------------------------------------------- supertypeSchem
+//    public String getSupertypeSchem() {
+//        return supertypeSchem;
+//    }
+//
+//    public void setSupertypeSchem(final String supertypeSchem) {
+//        this.supertypeSchem = supertypeSchem;
+//    }
+//
+//    // ----------------------------------------------------------- supertypeName
+//    public String getSupertypeName() {
+//        return supertypeName;
+//    }
+//
+//    public void setSupertypeName(final String supertypeName) {
+//        this.supertypeName = supertypeName;
+//    }
 
     // -------------------------------------------------------------------------
-    @Label("TYPE_CAT")
-    @NillableBySpecification
+    @Getter
+    @Setter
+    @Labeled("TYPE_CAT")
+    @Nillable
     @XmlAttribute
     private String typeCat;
 
-    @Label("TYPE_SCHEM")
-    @NillableBySpecification
+    @Getter
+    @Setter
+    @Labeled("TYPE_SCHEM")
+    @Nillable
     @XmlAttribute
     private String typeSchem;
 
-    @Label("TYPE_NAME")
+    @Getter
+    @Setter
+    @Labeled("TYPE_NAME")
     @XmlElement(required = true)
     private String typeName;
 
-    @Label("SUPERTYPE_CAT")
-    @NillableBySpecification
+    @Getter
+    @Setter
+    @Labeled("SUPERTYPE_CAT")
+    @Nillable
     @XmlElement(nillable = true, required = true)
     private String supertypeCat;
 
-    @Label("SUPERTYPE_SCHEM")
-    @NillableBySpecification
+    @Getter
+    @Setter
+    @Labeled("SUPERTYPE_SCHEM")
+    @Nillable
     @XmlElement(nillable = true, required = true)
     private String supertypeSchem;
 
-    @Label("SUPERTYPE_NAME")
+    @Getter
+    @Setter
+    @Labeled("SUPERTYPE_NAME")
     @XmlElement(required = true)
     private String supertypeName;
 }

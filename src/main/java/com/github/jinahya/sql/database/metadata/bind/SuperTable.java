@@ -19,6 +19,8 @@ import javax.xml.bind.annotation.XmlAttribute;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlType;
+import lombok.Getter;
+import lombok.Setter;
 
 /**
  * A entity class for binding the result of
@@ -32,6 +34,7 @@ import javax.xml.bind.annotation.XmlType;
 })
 public class SuperTable {
 
+    // -------------------------------------------------------------------------
     @Override
     public String toString() {
         return super.toString() + "{"
@@ -42,58 +45,65 @@ public class SuperTable {
                + "}";
     }
 
-    // ---------------------------------------------------------------- tableCat
-    public String getTableCat() {
-        return tableCat;
-    }
+//    // ---------------------------------------------------------------- tableCat
+//    public String getTableCat() {
+//        return tableCat;
+//    }
+//
+//    public void setTableCat(final String tableCat) {
+//        this.tableCat = tableCat;
+//    }
+//    // -------------------------------------------------------------- tableSchem
+//    public String getTableSchem() {
+//        return tableSchem;
+//    }
+//
+//    public void setTableSchem(final String tableSchem) {
+//        this.tableSchem = tableSchem;
+//    }
 
-    public void setTableCat(final String tableCat) {
-        this.tableCat = tableCat;
-    }
+//    // --------------------------------------------------------------- tableName
+//    public String getTableName() {
+//        return tableName;
+//    }
+//
+//    public void setTableName(final String tableName) {
+//        this.tableName = tableName;
+//    }
 
-    // -------------------------------------------------------------- tableSchem
-    public String getTableSchem() {
-        return tableSchem;
-    }
-
-    public void setTableSchem(final String tableSchem) {
-        this.tableSchem = tableSchem;
-    }
-
-    // --------------------------------------------------------------- tableName
-    public String getTableName() {
-        return tableName;
-    }
-
-    public void setTableName(final String tableName) {
-        this.tableName = tableName;
-    }
-
-    // ---------------------------------------------------------- supertableName
-    public String getSupertableName() {
-        return supertableName;
-    }
-
-    public void setSupertableName(final String supertableName) {
-        this.supertableName = supertableName;
-    }
+//    // ---------------------------------------------------------- supertableName
+//    public String getSupertableName() {
+//        return supertableName;
+//    }
+//
+//    public void setSupertableName(final String supertableName) {
+//        this.supertableName = supertableName;
+//    }
 
     // -------------------------------------------------------------------------
-    @Label("TABLE_CAT")
-    @NillableBySpecification
+    @Getter
+    @Setter
+    @Labeled("TABLE_CAT")
+    @Nillable
     @XmlAttribute
     private String tableCat;
 
-    @Label("TABLE_SCHEM")
-    @NillableBySpecification
+    @Getter
+    @Setter
+    @Labeled("TABLE_SCHEM")
+    @Nillable
     @XmlAttribute
     private String tableSchem;
 
-    @Label("TABLE_NAME")
+    @Getter
+    @Setter
+    @Labeled("TABLE_NAME")
     @XmlElement(required = true)
     private String tableName;
 
-    @Label("SUPERTABLE_NAME")
+    @Getter
+    @Setter
+    @Labeled("SUPERTABLE_NAME")
     @XmlElement(required = true)
     private String supertableName;
 }

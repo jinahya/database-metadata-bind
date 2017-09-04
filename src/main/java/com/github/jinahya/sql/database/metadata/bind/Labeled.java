@@ -27,12 +27,8 @@ import java.lang.annotation.Target;
  */
 @Documented
 @Retention(RetentionPolicy.RUNTIME)
-@Target({ElementType.FIELD, ElementType.METHOD})
-@interface Invoke {
+@Target({ElementType.FIELD})
+@interface Labeled {
 
-    String name();
-
-    Class<?>[] types() default {};
-
-    Literals[] args() default {@Literals({})};
+    String value();
 }
