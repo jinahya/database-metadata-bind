@@ -53,7 +53,7 @@ public class TableType {
 //    }
 
     // -------------------------------------------------------------------------
-    @Label("TABLE_TYPE")
+    @Labeled("TABLE_TYPE")
     @XmlElement(required = true)
     //@XmlValue
     private String tableType;

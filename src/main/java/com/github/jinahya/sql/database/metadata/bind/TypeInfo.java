@@ -222,81 +222,81 @@ public class TypeInfo {
     }
 
     // -------------------------------------------------------------------------
-    @Label("TYPE_NAME")
+    @Labeled("TYPE_NAME")
     @XmlElement(required = true)
     private String typeName;
 
-    @Label("DATA_TYPE")
+    @Labeled("DATA_TYPE")
     @XmlElement(required = true)
     private int dataType;
 
-    @Label("PRECISION")
+    @Labeled("PRECISION")
     @XmlElement(required = true)
     private int precision;
 
-    @Label("LITERAL_PREFIX")
-    @NillableBySpecification
+    @Labeled("LITERAL_PREFIX")
+    @Nillable
     @XmlElement(nillable = true, required = true)
     private String literalPrefix;
 
-    @Label("LITERAL_SUFFIX")
-    @NillableBySpecification
+    @Labeled("LITERAL_SUFFIX")
+    @Nillable
     @XmlElement(nillable = true, required = true)
     private String literalSuffix;
 
-    @Label("CREATE_PARAMS")
-    @NillableBySpecification
+    @Labeled("CREATE_PARAMS")
+    @Nillable
     @XmlElement(nillable = true, required = true)
     private String createParams;
 
-    @Label("NULLABLE")
+    @Labeled("NULLABLE")
     @XmlElement(required = true)
     private short nullable;
 
-    @Label("CASE_SENSITIVE")
+    @Labeled("CASE_SENSITIVE")
     @XmlElement(required = true)
     private boolean caseSensitive;
 
-    @Label("SEARCHABLE")
+    @Labeled("SEARCHABLE")
     @XmlElement(required = true)
     private short searchable;
 
-    @Label("UNSIGNED_ATTRIBUTE")
+    @Labeled("UNSIGNED_ATTRIBUTE")
     @XmlElement(required = true)
     private boolean unsignedAttribute;
 
-    @Label("FIXED_PREC_SCALE")
+    @Labeled("FIXED_PREC_SCALE")
     @XmlElement(required = true)
     private boolean fixedPrecScale;
 
-    @Label("AUTO_INCREMENT")
+    @Labeled("AUTO_INCREMENT")
     @XmlElement(required = true)
     private boolean autoIncrement;
 
-    @Label("LOCAL_TYPE_NAME")
-    @NillableBySpecification
+    @Labeled("LOCAL_TYPE_NAME")
+    @Nillable
     @XmlElement(nillable = true, required = true)
     private String localTypeName;
 
-    @Label("MINIMUM_SCALE")
+    @Labeled("MINIMUM_SCALE")
     @XmlElement(required = true)
     private short minimumScale;
 
-    @Label("MAXIMUM_SCALE")
+    @Labeled("MAXIMUM_SCALE")
     @XmlElement(required = true)
     private short maximumScale;
 
-    @Label("SQL_DATA_TYPE")
+    @Labeled("SQL_DATA_TYPE")
     @Unused
     @XmlElement(nillable = true, required = true)
     private Integer sqlDataType;
 
-    @Label("SQL_DATETIME_SUB")
+    @Labeled("SQL_DATETIME_SUB")
     @Unused
     @XmlElement(nillable = true, required = true)
     private Integer sqlDatetimeSub;
 
-    @Label("NUM_PREC_RADIX")
+    @Labeled("NUM_PREC_RADIX")
     @XmlElement(required = true)
     private int numPrecRadix;
 }

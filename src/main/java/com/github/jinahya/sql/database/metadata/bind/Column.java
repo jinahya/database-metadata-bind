@@ -17,11 +17,15 @@ package com.github.jinahya.sql.database.metadata.bind;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.logging.Logger;
+import static java.util.logging.Logger.getLogger;
 import javax.xml.bind.annotation.XmlAttribute;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlElementRef;
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlType;
+import lombok.Getter;
+import lombok.Setter;
 
 /**
  * An entity class for binding information from
@@ -41,6 +45,9 @@ import javax.xml.bind.annotation.XmlType;
 })
 public class Column {
 
+    private static final Logger logger = getLogger(Column.class.getName());
+
+    // -------------------------------------------------------------------------
     @Override
     public String toString() {
         return super.toString() + "{"
@@ -72,77 +79,69 @@ public class Column {
     }
 
     // ---------------------------------------------------------------- tableCat
-    public String getTableCat() {
-        return tableCat;
-    }
-
-    public void setTableCat(final String tableCat) {
-        this.tableCat = tableCat;
-    }
-
+//    public String getTableCat() {
+//        return tableCat;
+//    }
+//
+//    public void setTableCat(final String tableCat) {
+//        this.tableCat = tableCat;
+//    }
     // -------------------------------------------------------------- tableSchem
-    public String getTableSchem() {
-        return tableSchem;
-    }
-
-    public void setTableSchem(final String tableSchem) {
-        this.tableSchem = tableSchem;
-    }
-
+//    public String getTableSchem() {
+//        return tableSchem;
+//    }
+//
+//    public void setTableSchem(final String tableSchem) {
+//        this.tableSchem = tableSchem;
+//    }
     // --------------------------------------------------------------- tableName
-    public String getTableName() {
-        return tableName;
-    }
-
-    public void setTableName(final String tableName) {
-        this.tableName = tableName;
-    }
-
+//    public String getTableName() {
+//        return tableName;
+//    }
+//
+//    public void setTableName(final String tableName) {
+//        this.tableName = tableName;
+//    }
     // -------------------------------------------------------------- columnName
-    public String getColumnName() {
-        return columnName;
-    }
-
-    public void setColumnName(final String columnName) {
-        this.columnName = columnName;
-    }
-
+//    public String getColumnName() {
+//        return columnName;
+//    }
+//
+//    public void setColumnName(final String columnName) {
+//        this.columnName = columnName;
+//    }
     // ---------------------------------------------------------------- dataType
-    public int getDataType() {
-        return dataType;
-    }
-
-    public void setDataType(final int dataType) {
-        this.dataType = dataType;
-    }
-
+//    public int getDataType() {
+//        return dataType;
+//    }
+//
+//    public void setDataType(final int dataType) {
+//        this.dataType = dataType;
+//    }
     // ---------------------------------------------------------------- typeName
-    public String getTypeName() {
-        return typeName;
-    }
-
-    public void setTypeName(final String typeName) {
-        this.typeName = typeName;
-    }
-
+//    public String getTypeName() {
+//        return typeName;
+//    }
+//
+//    public void setTypeName(final String typeName) {
+//        this.typeName = typeName;
+//    }
     // -------------------------------------------------------------- columnSize
-    public int getColumnSize() {
-        return columnSize;
-    }
-
-    public void setColumnSize(int columnSize) {
-        this.columnSize = columnSize;
-    }
-
+//    public int getColumnSize() {
+//        return columnSize;
+//    }
+//
+//    public void setColumnSize(int columnSize) {
+//        this.columnSize = columnSize;
+//    }
     // ------------------------------------------------------------ bufferLength
-    public Integer getBufferLength() {
-        return bufferLength;
-    }
-
-    public void setBufferLength(final Integer bufferLength) {
-        this.bufferLength = bufferLength;
-    }
-
+//    public Integer getBufferLength() {
+//        return bufferLength;
+//    }
+//
+//    public void setBufferLength(final Integer bufferLength) {
+//        this.bufferLength = bufferLength;
+//    }
     // ----------------------------------------------------------- decimalDigits
     public Integer getDecimalDigits() {
         return decimalDigits;
@@ -302,120 +301,136 @@ public class Column {
     }
 
     // -------------------------------------------------------------------------
-    @Label("TABLE_CAT")
-    @NillableBySpecification
+    @Getter
+    @Setter
+    @Labeled("TABLE_CAT")
+    @Nillable
     @XmlAttribute
     private String tableCat;
 
-    @Label("TABLE_SCHEM")
-    @NillableBySpecification
+    @Getter
+    @Setter
+    @Labeled("TABLE_SCHEM")
+    @Nillable
     @XmlAttribute
     private String tableSchem;
 
-    @Label("TABLE_NAME")
+    @Getter
+    @Setter
+    @Labeled("TABLE_NAME")
     @XmlAttribute
     private String tableName;
 
-    @Label("COLUMN_NAME")
+    @Getter
+    @Setter
+    @Labeled("COLUMN_NAME")
     @XmlElement(required = true)
     private String columnName;
 
-    @Label("DATA_TYPE")
+    @Getter
+    @Setter
+    @Labeled("DATA_TYPE")
     @XmlElement(required = true)
     private int dataType;
 
-    @Label("TYPE_NAME")
+    @Getter
+    @Setter
+    @Labeled("TYPE_NAME")
     @XmlElement(required = true)
     private String typeName;
 
-    @Label("COLUMN_SIZE")
+    @Getter
+    @Setter
+    @Labeled("COLUMN_SIZE")
     @XmlElement(required = true)
     private int columnSize;
 
-    @Label("BUFFER_LENGTH")
+    @Getter
+    @Setter
+    @Labeled("BUFFER_LENGTH")
     @Unused
     @XmlElement(nillable = true, required = true)
     private Integer bufferLength;
 
-    @Label("DECIMAL_DIGITS")
-    @NillableBySpecification
+    @Labeled("DECIMAL_DIGITS")
+    @Nillable
     @XmlElement(required = true)
     private Integer decimalDigits;
 
-    @Label("NUM_PREC_RADIX")
+    @Labeled("NUM_PREC_RADIX")
     @XmlElement(required = true)
     private int numPrecRadix;
 
-    @Label("NULLABLE")
+    @Labeled("NULLABLE")
     @XmlElement(required = true)
     private int nullable;
 
-    @Label("REMARKS")
-    @NillableBySpecification
+    @Labeled("REMARKS")
+    @Nillable
     @XmlElement(nillable = true, required = true)
     private String remarks;
 
-    @Label("COLUMN_DEF")
-    @NillableBySpecification
+    @Labeled("COLUMN_DEF")
+    @Nillable
     @XmlElement(nillable = true, required = true)
     private String columnDef;
 
-    @Label("SQL_DATA_TYPE")
+    @Labeled("SQL_DATA_TYPE")
     @Unused
     @XmlElement(nillable = true, required = true)
     private Integer sqlDataType;
 
-    @Label("SQL_DATETIME_SUB")
+    @Labeled("SQL_DATETIME_SUB")
     @Unused
     @XmlElement(nillable = true, required = true)
     private Integer sqlDatetimeSub;
 
-    @Label("CHAR_OCTET_LENGTH")
+    @Labeled("CHAR_OCTET_LENGTH")
     @XmlElement(required = true)
     private int charOctetLength;
 
-    @Label("ORDINAL_POSITION")
+    @Labeled("ORDINAL_POSITION")
     @XmlElement(required = true)
     private int ordinalPosition;
 
-    @Label("IS_NULLABLE")
+    @Labeled("IS_NULLABLE")
     @XmlElement(required = true)
     private String isNullable;
 
-    @Label("SCOPE_CATALOG")
-    @NillableBySpecification
+    @Labeled("SCOPE_CATALOG")
+    @Nillable
     @XmlElement(nillable = true, required = true)
     private String scopeCatalog;
 
-    @Label("SCOPE_SCHEMA")
-    @NillableBySpecification
+    @Labeled("SCOPE_SCHEMA")
+    @Nillable
     @XmlElement(nillable = true, required = true)
     private String scopeSchema;
 
-    @Label("SCOPE_TABLE")
-    @NillableBySpecification
+    @Labeled("SCOPE_TABLE")
+    @Nillable
     @XmlElement(nillable = true, required = true)
     private String scopeTable;
 
-    @Label("SOURCE_DATA_TYPE")
-    @NillableBySpecification
+    @Labeled("SOURCE_DATA_TYPE")
+    @Nillable
     @XmlElement(nillable = true, required = true)
     private Short sourceDataType;
 
-    @Label("IS_AUTOINCREMENT")
+    @Labeled("IS_AUTOINCREMENT")
     @XmlElement(required = true)
     private String isAutoincrement;
 
-    @Label("IS_GENERATEDCOLUMN")
+    @Labeled("IS_GENERATEDCOLUMN")
     @XmlElement(required = true)
     private String isGeneratedcolumn;
 
-    @Invoke(name = "getColumnPrivileges",
-            types = {String.class, String.class, String.class, String.class},
-            args = {
-                @Literals({":tableCat", ":tableSchem", ":tableName",
-                           ":columnName"})
-            }
+    @Invokable(name = "getColumnPrivileges",
+               types = {String.class, String.class, String.class, String.class},
+               args = {
+                   @Literals({":tableCat", ":tableSchem", ":tableName",
+                              ":columnName"})
+               }
     )
     @XmlElementRef
     private List<ColumnPrivilege> columnPrivileges;

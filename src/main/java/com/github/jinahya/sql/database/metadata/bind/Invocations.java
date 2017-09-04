@@ -22,6 +22,7 @@ package com.github.jinahya.sql.database.metadata.bind;
  */
 final class Invocations {
 
+    // -------------------------------------------------------------------------
     static <T> Object[] invocationValues(final Class<T> klass, final T instance,
                                          final Class<?>[] types,
                                          final String[] literals)
@@ -51,6 +52,7 @@ final class Invocations {
         return values;
     }
 
+    // -------------------------------------------------------------------------
     private Invocations() {
         super();
     }

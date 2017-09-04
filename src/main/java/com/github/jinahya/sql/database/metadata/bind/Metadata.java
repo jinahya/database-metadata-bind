@@ -25,6 +25,8 @@ import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlElementRef;
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlTransient;
+import lombok.Getter;
+import lombok.Setter;
 
 /**
  * An entity class for holding information from
@@ -45,36 +47,36 @@ public class Metadata implements TableDomain {
         return tables;
     }
 
-    // ------------------------------------------------ allProceduresAreCallable
-    public boolean isAllProceduresAreCallable() {
-        return allProceduresAreCallable;
-    }
+//    // ------------------------------------------------ allProceduresAreCallable
+//    public boolean isAllProceduresAreCallable() {
+//        return allProceduresAreCallable;
+//    }
+//
+//    public void setAllProceduresAreCallable(
+//            final boolean allProceduresAreCallable) {
+//        this.allProceduresAreCallable = allProceduresAreCallable;
+//    }
 
-    public void setAllProceduresAreCallable(
-            final boolean allProceduresAreCallable) {
-        this.allProceduresAreCallable = allProceduresAreCallable;
-    }
+//    // -------------------------------------------------- allTablesAreSelectable
+//    public boolean isAllTablesAreSelectable() {
+//        return allTablesAreSelectable;
+//    }
+//
+//    public void setAllTablesAreSelectable(
+//            final boolean allTablesAreSelectable) {
+//        this.allTablesAreSelectable = allTablesAreSelectable;
+//    }
 
-    // -------------------------------------------------- allTablesAreSelectable
-    public boolean isAllTablesAreSelectable() {
-        return allTablesAreSelectable;
-    }
-
-    public void setAllTablesAreSelectable(
-            final boolean allTablesAreSelectable) {
-        this.allTablesAreSelectable = allTablesAreSelectable;
-    }
-
-    // ------------------------------------ autoCommitFailureClosesAllResultSets
-    public boolean isAutoCommitFailureClosesAllResultSets() {
-        return autoCommitFailureClosesAllResultSets;
-    }
-
-    public void setAutoCommitFailureClosesAllResultSets(
-            final boolean autoCommitFailureClosesAllResultSets) {
-        this.autoCommitFailureClosesAllResultSets
-                = autoCommitFailureClosesAllResultSets;
-    }
+//    // ------------------------------------ autoCommitFailureClosesAllResultSets
+//    public boolean isAutoCommitFailureClosesAllResultSets() {
+//        return autoCommitFailureClosesAllResultSets;
+//    }
+//
+//    public void setAutoCommitFailureClosesAllResultSets(
+//            final boolean autoCommitFailureClosesAllResultSets) {
+//        this.autoCommitFailureClosesAllResultSets
+//                = autoCommitFailureClosesAllResultSets;
+//    }
 
     // ---------------------------------------------------------------- catalogs
     public List<Catalog> getCatalogs() {
@@ -89,32 +91,32 @@ public class Metadata implements TableDomain {
         this.catalogs = catalogs;
     }
 
-    // ---------------------------------------------------------- catalogAtStart
-    public boolean isCatalogAtStart() {
-        return catalogAtStart;
-    }
+//    // ---------------------------------------------------------- catalogAtStart
+//    public boolean isCatalogAtStart() {
+//        return catalogAtStart;
+//    }
+//
+//    public void setCatalogAtStart(boolean catalogAtStart) {
+//        this.catalogAtStart = catalogAtStart;
+//    }
 
-    public void setCatalogAtStart(boolean catalogAtStart) {
-        this.catalogAtStart = catalogAtStart;
-    }
+//    // -------------------------------------------------------- catalogSeparator
+//    public String getCatalogSeparator() {
+//        return catalogSeparator;
+//    }
+//
+//    public void setCatalogSeparator(final String catalogSeparator) {
+//        this.catalogSeparator = catalogSeparator;
+//    }
 
-    // -------------------------------------------------------- catalogSeparator
-    public String getCatalogSeparator() {
-        return catalogSeparator;
-    }
-
-    public void setCatalogSeparator(final String catalogSeparator) {
-        this.catalogSeparator = catalogSeparator;
-    }
-
-    // ------------------------------------------------------------- catalogTerm
-    public String getCatalogTerm() {
-        return catalogTerm;
-    }
-
-    public void setCatalogTerm(final String catalogTerm) {
-        this.catalogTerm = catalogTerm;
-    }
+//    // ------------------------------------------------------------- catalogTerm
+//    public String getCatalogTerm() {
+//        return catalogTerm;
+//    }
+//
+//    public void setCatalogTerm(final String catalogTerm) {
+//        this.catalogTerm = catalogTerm;
+//    }
 
     // ---------------------------------------------------- clientInfoProperties
     public List<ClientInfoProperty> getClientInfoProperties() {
@@ -1647,74 +1649,86 @@ public class Metadata implements TableDomain {
     }
 
     // -------------------------------------------------------------------------
-    @Invoke(name = "allProceduresAreCallable")
+    @Getter
+    @Setter
+    @Invokable(name = "allProceduresAreCallable")
     @XmlElement(required = true)
     private boolean allProceduresAreCallable;
 
-    @Invoke(name = "allTablesAreSelectable")
+    @Getter
+    @Setter
+    @Invokable(name = "allTablesAreSelectable")
     @XmlElement(required = true)
     private boolean allTablesAreSelectable;
 
-    @Invoke(name = "autoCommitFailureClosesAllResultSets")
+    @Getter
+    @Setter
+    @Invokable(name = "autoCommitFailureClosesAllResultSets")
     @XmlElement(required = true)
     private boolean autoCommitFailureClosesAllResultSets;
 
-    @Invoke(name = "getCatalogs")
+    @Invokable(name = "getCatalogs")
     @XmlElementRef
     private List<Catalog> catalogs;
 
-    @Invoke(name = "isCatalogAtStart")
+    @Getter
+    @Setter
+    @Invokable(name = "isCatalogAtStart")
     @XmlElement(required = true)
     private boolean catalogAtStart;
 
-    @Invoke(name = "getCatalogSeparator")
+    @Getter
+    @Setter
+    @Invokable(name = "getCatalogSeparator")
     @XmlElement(nillable = true, required = true)
     private String catalogSeparator;
 
-    @Invoke(name = "getCatalogTerm")
+    @Getter
+    @Setter
+    @Invokable(name = "getCatalogTerm")
     @XmlElement(nillable = true, required = true)
     private String catalogTerm;
 
-    @Invoke(name = "getClientInfoProperties")
+    @Invokable(name = "getClientInfoProperties")
     @XmlElementRef
     private List<ClientInfoProperty> clientInfoProperties;
 
-    @Invoke(name = "getConnection")
+    @Invokable(name = "getConnection")
     @XmlTransient
     private Connection connection;
 
     @XmlElementRef
     private List<CrossReference> crossReferences;
 
-    @Invoke(name = "dataDefinitionCausesTransactionCommit")
+    @Invokable(name = "dataDefinitionCausesTransactionCommit")
     @XmlElement(required = true)
     private boolean dataDefinitionCausesTransactionCommit;
 
-    @Invoke(name = "dataDefinitionIgnoredInTransactions")
+    @Invokable(name = "dataDefinitionIgnoredInTransactions")
     @XmlElement(required = true)
     private boolean dataDefinitionIgnoredInTransactions;
 
-    @Invoke(name = "getDatabaseMajorVersion")
+    @Invokable(name = "getDatabaseMajorVersion")
     @XmlElement(required = true)
     private int databaseMajorVersion;
 
-    @Invoke(name = "getDatabaseMinorVersion")
+    @Invokable(name = "getDatabaseMinorVersion")
     @XmlElement(required = true)
     private int databaseMinorVersion;
 
-    @Invoke(name = "getDatabaseProductName")
+    @Invokable(name = "getDatabaseProductName")
     @XmlElement(required = true)
     private String databaseProductName;
 
-    @Invoke(name = "getDatabaseProductVersion")
+    @Invokable(name = "getDatabaseProductVersion")
     @XmlElement(required = true)
     private String databaseProductVersion;
 
-    @Invoke(name = "getDefaultTransactionIsolation")
+    @Invokable(name = "getDefaultTransactionIsolation")
     @XmlElement(required = true)
     private int defaultTransactionIsolation;
 
-    @Invoke(name = "deletesAreDetected",
+    @Invokable(name = "deletesAreDetected",
             types = {int.class},
             args = {
                 @Literals({"1003"}), // ResultSet.TYPE_FORWARD_ONLY
@@ -1725,39 +1739,39 @@ public class Metadata implements TableDomain {
     @XmlElement
     private List<RSTBoolean> deletesAreDetected;
 
-    @Invoke(name = "doesMaxRowSizeIncludeBlobs")
+    @Invokable(name = "doesMaxRowSizeIncludeBlobs")
     @XmlElement(required = true)
     private boolean doesMaxRowSizeIncludeBlobs;
 
-    @Invoke(name = "getDriverMajorVersion")
+    @Invokable(name = "getDriverMajorVersion")
     @XmlElement(required = true)
     private int driverMajorVersion;
 
-    @Invoke(name = "getDriverMinorVersion")
+    @Invokable(name = "getDriverMinorVersion")
     @XmlElement(required = true)
     private int driverMinorVersion;
 
-    @Invoke(name = "getDriverName")
+    @Invokable(name = "getDriverName")
     @XmlElement(required = true)
     private String driverName;
 
-    @Invoke(name = "getDriverVersion")
+    @Invokable(name = "getDriverVersion")
     @XmlElement(required = true)
     private String driverVersion;
 
-    @Invoke(name = "getExtraNameCharacters")
+    @Invokable(name = "getExtraNameCharacters")
     @XmlElement(required = true)
     private String extraNameCharacters;
 
-    @Invoke(name = "generatedKeyAlwaysReturned")
+    @Invokable(name = "generatedKeyAlwaysReturned")
     @XmlElement(required = true)
     private boolean generatedKeyAlwaysReturned;
 
-    @Invoke(name = "getIdentifierQuoteString")
+    @Invokable(name = "getIdentifierQuoteString")
     @XmlElement(required = true)
     private String identifierQuoteString;
 
-    @Invoke(name = "insertsAreDetected",
+    @Invokable(name = "insertsAreDetected",
             types = {int.class},
             args = {
                 @Literals({"1003"}), // ResultSet.TYPE_FORWARD_ONLY
@@ -1768,127 +1782,127 @@ public class Metadata implements TableDomain {
     @XmlElement
     private List<RSTBoolean> insertsAreDetected;
 
-    @Invoke(name = "getJDBCMajorVersion")
+    @Invokable(name = "getJDBCMajorVersion")
     @XmlElement(required = true)
     private int JDBCMajorVersion;
 
-    @Invoke(name = "getJDBCMinorVersion")
+    @Invokable(name = "getJDBCMinorVersion")
     @XmlElement(required = true)
     private int JDBCMinorVersion;
 
-    @Invoke(name = "locatorsUpdateCopy")
+    @Invokable(name = "locatorsUpdateCopy")
     @XmlElement(required = true)
     private boolean locatorsUpdateCopy;
 
-    @Invoke(name = "getMaxBinaryLiteralLength")
+    @Invokable(name = "getMaxBinaryLiteralLength")
     @XmlElement(required = true)
     private int maxBinaryLiteralLength;
 
-    @Invoke(name = "getMaxCatalogNameLength")
+    @Invokable(name = "getMaxCatalogNameLength")
     @XmlElement(required = true)
     private int maxCatalogNameLength;
 
-    @Invoke(name = "getMaxCharLiteralLength")
+    @Invokable(name = "getMaxCharLiteralLength")
     @XmlElement(required = true)
     private int maxCharLiteralLength;
 
-    @Invoke(name = "getMaxColumnNameLength")
+    @Invokable(name = "getMaxColumnNameLength")
     @XmlElement(required = true)
     private int maxColumnNameLength;
 
-    @Invoke(name = "getMaxColumnsInGroupBy")
+    @Invokable(name = "getMaxColumnsInGroupBy")
     @XmlElement(required = true)
     private int maxColumnsInGroupBy;
 
-    @Invoke(name = "getMaxColumnsInIndex")
+    @Invokable(name = "getMaxColumnsInIndex")
     @XmlElement(required = true)
     private int maxColumnsInIndex;
 
-    @Invoke(name = "getMaxColumnsInOrderBy")
+    @Invokable(name = "getMaxColumnsInOrderBy")
     @XmlElement(required = true)
     private int maxColumnsInOrderBy;
 
-    @Invoke(name = "getMaxColumnsInSelect")
+    @Invokable(name = "getMaxColumnsInSelect")
     @XmlElement(required = true)
     private int maxColumnsInSelect;
 
-    @Invoke(name = "getMaxColumnsInTable")
+    @Invokable(name = "getMaxColumnsInTable")
     @XmlElement(required = true)
     private int maxColumnsInTable;
 
-    @Invoke(name = "getMaxConnections")
+    @Invokable(name = "getMaxConnections")
     @XmlElement(required = true)
     private int maxConnections;
 
-    @Invoke(name = "getMaxCursorNameLength")
+    @Invokable(name = "getMaxCursorNameLength")
     @XmlElement(required = true)
     private int maxCursorNameLength;
 
-    @Invoke(name = "getMaxIndexLength")
+    @Invokable(name = "getMaxIndexLength")
     @XmlElement(required = true)
     private int maxIndexLength;
 
-    @Invoke(name = "getMaxLogicalLobSize")
+    @Invokable(name = "getMaxLogicalLobSize")
     @XmlElement(required = true)
     private long maxLogicalLobSize;
 
-    @Invoke(name = "getMaxProcedureNameLength")
+    @Invokable(name = "getMaxProcedureNameLength")
     @XmlElement(required = true)
     private int maxProcedureNameLength;
 
-    @Invoke(name = "getMaxRowSize")
+    @Invokable(name = "getMaxRowSize")
     @XmlElement(required = true)
     private int maxRowSize;
 
-    @Invoke(name = "getMaxSchemaNameLength")
+    @Invokable(name = "getMaxSchemaNameLength")
     @XmlElement(required = true)
     private int maxSchemaNameLength;
 
-    @Invoke(name = "getMaxStatementLength")
+    @Invokable(name = "getMaxStatementLength")
     @XmlElement(required = true)
     private int maxStatementLength;
 
-    @Invoke(name = "getMaxStatements")
+    @Invokable(name = "getMaxStatements")
     @XmlElement(required = true)
     private int maxStatements;
 
-    @Invoke(name = "getMaxTableNameLength")
+    @Invokable(name = "getMaxTableNameLength")
     @XmlElement(required = true)
     private int maxTableNameLength;
 
-    @Invoke(name = "getMaxTablesInSelect")
+    @Invokable(name = "getMaxTablesInSelect")
     @XmlElement(required = true)
     private int maxTablesInSelect;
 
-    @Invoke(name = "getMaxUserNameLength")
+    @Invokable(name = "getMaxUserNameLength")
     @XmlElement(required = true)
     private int maxUserNameLength;
 
-    @Invoke(name = "nullPlusNonNullIsNull")
+    @Invokable(name = "nullPlusNonNullIsNull")
     @XmlElement(required = true)
     private boolean nullPlusNonNullIsNull;
 
-    @Invoke(name = "nullsAreSortedAtEnd")
+    @Invokable(name = "nullsAreSortedAtEnd")
     @XmlElement(required = true)
     private boolean nullsAreSortedAtEnd;
 
-    @Invoke(name = "nullsAreSortedAtStart")
+    @Invokable(name = "nullsAreSortedAtStart")
     @XmlElement(required = true)
     private boolean nullsAreSortedAtStart;
 
-    @Invoke(name = "nullsAreSortedHigh")
+    @Invokable(name = "nullsAreSortedHigh")
     @XmlElement(required = true)
     private boolean nullsAreSortedHigh;
 
-    @Invoke(name = "nullsAreSortedLow")
+    @Invokable(name = "nullsAreSortedLow")
     @XmlElement(required = true)
     private boolean nullsAreSortedLow;
 
-    @Invoke(name = "getNumericFunctions")
+    @Invokable(name = "getNumericFunctions")
     @XmlElement(required = true)
     private String numericFunctions;
 
-    @Invoke(name = "othersDeletesAreVisible",
+    @Invokable(name = "othersDeletesAreVisible",
             types = {int.class},
             args = {
                 @Literals({"1003"}), // ResultSet.TYPE_FORWARD_ONLY
@@ -1899,7 +1913,7 @@ public class Metadata implements TableDomain {
     @XmlElement
     private List<RSTBoolean> othersDeletesAreVisible;
 
-    @Invoke(name = "othersInsertsAreVisible",
+    @Invokable(name = "othersInsertsAreVisible",
             types = {int.class},
             args = {
                 @Literals({"1003"}), // ResultSet.TYPE_FORWARD_ONLY
@@ -1910,7 +1924,7 @@ public class Metadata implements TableDomain {
     @XmlElement
     private List<RSTBoolean> othersInsertsAreVisible;
 
-    @Invoke(name = "othersUpdatesAreVisible", types = {int.class},
+    @Invokable(name = "othersUpdatesAreVisible", types = {int.class},
             args = {
                 @Literals({"1003"}), // ResultSet.TYPE_FORWARD_ONLY
                 @Literals({"1004"}), // ResultSet.TYPE_SCROLL_INSENSITIVE
@@ -1920,7 +1934,7 @@ public class Metadata implements TableDomain {
     @XmlElement
     private List<RSTBoolean> othersUpdatesAreVisible;
 
-    @Invoke(name = "ownDeletesAreVisible", types = {int.class},
+    @Invokable(name = "ownDeletesAreVisible", types = {int.class},
             args = {
                 @Literals({"1003"}), // ResultSet.TYPE_FORWARD_ONLY
                 @Literals({"1004"}), // ResultSet.TYPE_SCROLL_INSENSITIVE
@@ -1930,7 +1944,7 @@ public class Metadata implements TableDomain {
     @XmlElement
     private List<RSTBoolean> ownDeletesAreVisible;
 
-    @Invoke(name = "ownInsertsAreVisible",
+    @Invokable(name = "ownInsertsAreVisible",
             types = {int.class},
             args = {
                 @Literals({"1003"}), // ResultSet.TYPE_FORWARD_ONLY
@@ -1941,7 +1955,7 @@ public class Metadata implements TableDomain {
     @XmlElement
     private List<RSTBoolean> ownInsertsAreVisible;
 
-    @Invoke(name = "ownUpdatesAreVisible", types = {int.class},
+    @Invokable(name = "ownUpdatesAreVisible", types = {int.class},
             args = {
                 @Literals({"1003"}), // ResultSet.TYPE_FORWARD_ONLY
                 @Literals({"1004"}), // ResultSet.TYPE_SCROLL_INSENSITIVE
@@ -1951,254 +1965,254 @@ public class Metadata implements TableDomain {
     @XmlElement
     private List<RSTBoolean> ownUpdatesAreVisible;
 
-    @Invoke(name = "getProcedureTerm")
+    @Invokable(name = "getProcedureTerm")
     @XmlElement(required = true)
     private String procedureTerm;
 
-    @Invoke(name = "isReadOnly")
+    @Invokable(name = "isReadOnly")
     @XmlElement(required = true)
     private boolean readOnly;
 
-    @Invoke(name = "getResultSetHoldability")
+    @Invokable(name = "getResultSetHoldability")
     @XmlElement(required = true)
     private int resultSetHoldability;
 
-    @Invoke(name = "getRowIdLifetime")
+    @Invokable(name = "getRowIdLifetime")
     @XmlTransient
     private RowIdLifetime rowIdLifetime;
 
-    @Invoke(name = "getSchemas")
+    @Invokable(name = "getSchemas")
     @XmlElementRef
     private List<SchemaName> schemaNames;
 
-    @Invoke(name = "getSchemaTerm")
+    @Invokable(name = "getSchemaTerm")
     @XmlElement(required = true)
     private String schemaTerm;
 
-    @Invoke(name = "getSearchStringEscape")
+    @Invokable(name = "getSearchStringEscape")
     @XmlElement(required = true)
     private String searchStringEscape;
 
-    @Invoke(name = "getSQLKeywords")
+    @Invokable(name = "getSQLKeywords")
     @XmlElement(required = true)
     private String SQLKewords;
 
-    @Invoke(name = "getSQLStateType")
+    @Invokable(name = "getSQLStateType")
     @XmlElement(required = true)
     private int SQLStateType;
 
-    @Invoke(name = "storesLowerCaseIdentifiers")
+    @Invokable(name = "storesLowerCaseIdentifiers")
     @XmlElement(required = true)
     private boolean storesLowerCaseIdentifiers;
 
-    @Invoke(name = "storesLowerCaseQuotedIdentifiers")
+    @Invokable(name = "storesLowerCaseQuotedIdentifiers")
     @XmlElement(required = true)
     private boolean storesLowerCaseQuotedIdentifiers;
 
-    @Invoke(name = "storesMixedCaseIdentifiers")
+    @Invokable(name = "storesMixedCaseIdentifiers")
     @XmlElement(required = true)
     private boolean storesMixedCaseIdentifiers;
 
-    @Invoke(name = "storesMixedCaseQuotedIdentifiers")
+    @Invokable(name = "storesMixedCaseQuotedIdentifiers")
     @XmlElement(required = true)
     private boolean storesMixedCaseQuotedIdentifiers;
 
-    @Invoke(name = "storesUpperCaseIdentifiers")
+    @Invokable(name = "storesUpperCaseIdentifiers")
     @XmlElement(required = true)
     private boolean storesUpperCaseIdentifiers;
 
-    @Invoke(name = "storesUpperCaseQuotedIdentifiers")
+    @Invokable(name = "storesUpperCaseQuotedIdentifiers")
     @XmlElement(required = true)
     private boolean storesUpperCaseQuotedIdentifiers;
 
-    @Invoke(name = "getStringFunctions")
+    @Invokable(name = "getStringFunctions")
     @XmlElement(nillable = true, required = true)
     private String stringFunctions;
 
-    @Invoke(name = "supportsAlterTableWithAddColumn")
+    @Invokable(name = "supportsAlterTableWithAddColumn")
     @XmlElement(required = true)
     private boolean supportsAlterTableWithAddColumn;
 
-    @Invoke(name = "supportsAlterTableWithDropColumn")
+    @Invokable(name = "supportsAlterTableWithDropColumn")
     @XmlElement(required = true)
     private boolean supportsAlterTableWithDropColumn;
 
-    @Invoke(name = "supportsANSI92EntryLevelSQL")
+    @Invokable(name = "supportsANSI92EntryLevelSQL")
     @XmlElement(required = true)
     private boolean supportsANSI92EntryLevelSQL;
 
-    @Invoke(name = "supportsANSI92FullSQL")
+    @Invokable(name = "supportsANSI92FullSQL")
     @XmlElement(required = true)
     private boolean supportsANSI92FullSQL;
 
-    @Invoke(name = "supportsANSI92IntermediateSQL")
+    @Invokable(name = "supportsANSI92IntermediateSQL")
     @XmlElement(required = true)
     private boolean supportsANSI92IntermediateSQL;
 
-    @Invoke(name = "supportsBatchUpdates")
+    @Invokable(name = "supportsBatchUpdates")
     @XmlElement(required = true)
     private boolean supportsBatchUpdates;
 
-    @Invoke(name = "supportsCatalogsInDataManipulation")
+    @Invokable(name = "supportsCatalogsInDataManipulation")
     @XmlElement(required = true)
     private boolean supportsCatalogsInDataManipulation;
 
-    @Invoke(name = "supportsCatalogsInIndexDefinitions")
+    @Invokable(name = "supportsCatalogsInIndexDefinitions")
     @XmlElement(required = true)
     private boolean supportsCatalogsInIndexDefinitions;
 
-    @Invoke(name = "supportsCatalogsInPrivilegeDefinitions")
+    @Invokable(name = "supportsCatalogsInPrivilegeDefinitions")
     @XmlElement(required = true)
     private boolean supportsCatalogsInPrivilegeDefinitions;
 
-    @Invoke(name = "supportsCatalogsInProcedureCalls")
+    @Invokable(name = "supportsCatalogsInProcedureCalls")
     @XmlElement(required = true)
     private boolean supportsCatalogsInProcedureCalls;
 
-    @Invoke(name = "supportsCatalogsInTableDefinitions")
+    @Invokable(name = "supportsCatalogsInTableDefinitions")
     @XmlElement(required = true)
     private boolean supportsCatalogsInTableDefinitions;
 
-    @Invoke(name = "supportsColumnAliasing")
+    @Invokable(name = "supportsColumnAliasing")
     @XmlElement(required = true)
     private boolean supportsColumnAliasing;
 
-    @Invoke(name = "supportsConvert")
+    @Invokable(name = "supportsConvert")
     @XmlTransient
     private boolean supportsConvert_;
 
     @XmlElement
     private List<SDTSDTBoolean> supportsConvert;
 
-    @Invoke(name = "supportsCoreSQLGrammar")
+    @Invokable(name = "supportsCoreSQLGrammar")
     @XmlElement(required = true)
     private boolean supportsCoreSQLGrammar;
 
-    @Invoke(name = "supportsCorrelatedSubqueries")
+    @Invokable(name = "supportsCorrelatedSubqueries")
     @XmlElement(required = true)
     private boolean supportsCorrelatedSubqueries;
 
-    @Invoke(name = "supportsDataDefinitionAndDataManipulationTransactions")
+    @Invokable(name = "supportsDataDefinitionAndDataManipulationTransactions")
     @XmlElement(required = true)
     private boolean supportsDataDefinitionAndDataManipulationTransactions;
 
-    @Invoke(name = "supportsDataManipulationTransactionsOnly")
+    @Invokable(name = "supportsDataManipulationTransactionsOnly")
     @XmlElement(required = true)
     private boolean supportsDataManipulationTransactionsOnly;
 
-    @Invoke(name = "supportsDifferentTableCorrelationNames")
+    @Invokable(name = "supportsDifferentTableCorrelationNames")
     @XmlElement(required = true)
     private boolean supportsDifferentTableCorrelationNames;
 
-    @Invoke(name = "supportsExpressionsInOrderBy")
+    @Invokable(name = "supportsExpressionsInOrderBy")
     @XmlElement(required = true)
     private boolean supportsExpressionsInOrderBy;
 
-    @Invoke(name = "supportsExtendedSQLGrammar")
+    @Invokable(name = "supportsExtendedSQLGrammar")
     @XmlElement(required = true)
     private boolean supportsExtendedSQLGrammar;
 
-    @Invoke(name = "supportsFullOuterJoins")
+    @Invokable(name = "supportsFullOuterJoins")
     @XmlElement(required = true)
     private boolean supportsFullOuterJoins;
 
-    @Invoke(name = "supportsGetGeneratedKeys")
+    @Invokable(name = "supportsGetGeneratedKeys")
     @XmlElement(required = true)
     private boolean supportsGetGeneratedKeys;
 
-    @Invoke(name = "supportsGroupBy")
+    @Invokable(name = "supportsGroupBy")
     @XmlElement(required = true)
     private boolean supportsGroupBy;
 
-    @Invoke(name = "supportsGroupByBeyondSelect")
+    @Invokable(name = "supportsGroupByBeyondSelect")
     @XmlElement(required = true)
     private boolean supportsGroupByBeyondSelect;
 
-    @Invoke(name = "supportsGroupByUnrelated")
+    @Invokable(name = "supportsGroupByUnrelated")
     @XmlElement(required = true)
     private boolean supportsGroupByUnrelated;
 
-    @Invoke(name = "supportsIntegrityEnhancementFacility")
+    @Invokable(name = "supportsIntegrityEnhancementFacility")
     @XmlElement(required = true)
     private boolean supportsIntegrityEnhancementFacility;
 
-    @Invoke(name = "supportsLikeEscapeClause")
+    @Invokable(name = "supportsLikeEscapeClause")
     @XmlElement(required = true)
     private boolean supportsLikeEscapeClause;
 
-    @Invoke(name = "supportsLimitedOuterJoins")
+    @Invokable(name = "supportsLimitedOuterJoins")
     @XmlElement(required = true)
     private boolean supportsLimitedOuterJoins;
 
-    @Invoke(name = "supportsMinimumSQLGrammar")
+    @Invokable(name = "supportsMinimumSQLGrammar")
     @XmlElement(required = true)
     private boolean supportsMinimumSQLGrammar;
 
-    @Invoke(name = "supportsMixedCaseIdentifiers")
+    @Invokable(name = "supportsMixedCaseIdentifiers")
     @XmlElement(required = true)
     private boolean supportsMixedCaseIdentifiers;
 
-    @Invoke(name = "supportsMixedCaseQuotedIdentifiers")
+    @Invokable(name = "supportsMixedCaseQuotedIdentifiers")
     @XmlElement(required = true)
     private boolean supportsMixedCaseQuotedIdentifiers;
 
-    @Invoke(name = "supportsMultipleOpenResults")
+    @Invokable(name = "supportsMultipleOpenResults")
     @XmlElement(required = true)
     private boolean supportsMultipleOpenResults;
 
-    @Invoke(name = "supportsMultipleResultSets")
+    @Invokable(name = "supportsMultipleResultSets")
     @XmlElement(required = true)
     private boolean supportsMultipleResultSets;
 
-    @Invoke(name = "supportsMultipleTransactions")
+    @Invokable(name = "supportsMultipleTransactions")
     @XmlElement(required = true)
     private boolean supportsMultipleTransactions;
 
-    @Invoke(name = "supportsNamedParameters")
+    @Invokable(name = "supportsNamedParameters")
     @XmlElement(required = true)
     private boolean supportsNamedParameters;
 
-    @Invoke(name = "supportsNonNullableColumns")
+    @Invokable(name = "supportsNonNullableColumns")
     @XmlElement(required = true)
     private boolean supportsNonNullableColumns;
 
-    @Invoke(name = "supportsOpenCursorsAcrossCommit")
+    @Invokable(name = "supportsOpenCursorsAcrossCommit")
     @XmlElement(required = true)
     private boolean supportsOpenCursorsAcrossCommit;
 
-    @Invoke(name = "supportsOpenCursorsAcrossRollback")
+    @Invokable(name = "supportsOpenCursorsAcrossRollback")
     @XmlElement(required = true)
     private boolean supportsOpenCursorsAcrossRollback;
 
-    @Invoke(name = "supportsOpenStatementsAcrossCommit")
+    @Invokable(name = "supportsOpenStatementsAcrossCommit")
     @XmlElement(required = true)
     private boolean supportsOpenStatementsAcrossCommit;
 
-    @Invoke(name = "supportsOpenStatementsAcrossRollback")
+    @Invokable(name = "supportsOpenStatementsAcrossRollback")
     @XmlElement(required = true)
     private boolean supportsOpenStatementsAcrossRollback;
 
-    @Invoke(name = "supportsOrderByUnrelated")
+    @Invokable(name = "supportsOrderByUnrelated")
     @XmlElement(required = true)
     private boolean supportsOrderByUnrelated;
 
-    @Invoke(name = "supportsOuterJoins")
+    @Invokable(name = "supportsOuterJoins")
     @XmlElement(required = true)
     private boolean supportsOuterJoins;
 
-    @Invoke(name = "supportsPositionedDelete")
+    @Invokable(name = "supportsPositionedDelete")
     @XmlElement(required = true)
     private boolean supportsPositionedDelete;
 
-    @Invoke(name = "supportsPositionedUpdate")
+    @Invokable(name = "supportsPositionedUpdate")
     @XmlElement(required = true)
     private boolean supportsPositionedUpdate;
 
-    @Invoke(name = "supportsRefCursors")
+    @Invokable(name = "supportsRefCursors")
     @XmlElement(required = true)
     private boolean supportsRefCursors;
 
-    @Invoke(name = "supportsResultSetConcurrency",
+    @Invokable(name = "supportsResultSetConcurrency",
             types = {int.class, int.class},
             args = {
                 @Literals({"1003", "1007"}), // TYPE_FORWARD_ONLY/CONCUR_READ_ONLY
@@ -2212,7 +2226,7 @@ public class Metadata implements TableDomain {
     @XmlElement
     private List<RSTRSCBoolean> supportsResultSetConcurrency;
 
-    @Invoke(name = "supportsResultSetHoldability",
+    @Invokable(name = "supportsResultSetHoldability",
             types = {int.class},
             args = {
                 @Literals({"1"}), // CLOSE_CURSORS_AT_COMMIT
@@ -2222,7 +2236,7 @@ public class Metadata implements TableDomain {
     @XmlElement
     private List<RSHBoolean> supportsResultSetHoldability;
 
-    @Invoke(name = "supportsResultSetType",
+    @Invokable(name = "supportsResultSetType",
             types = {int.class},
             args = {
                 @Literals({"1003"}), // TYPE_FORWARD_ONLY
@@ -2233,67 +2247,67 @@ public class Metadata implements TableDomain {
     @XmlElement
     private List<RSTBoolean> supportsResultSetType;
 
-    @Invoke(name = "supportsSavepoints")
+    @Invokable(name = "supportsSavepoints")
     @XmlElement(required = true)
     private boolean supportsSavepoints;
 
-    @Invoke(name = "supportsSchemasInDataManipulation")
+    @Invokable(name = "supportsSchemasInDataManipulation")
     @XmlElement(required = true)
     private boolean supportsSchemasInDataManipulation;
 
-    @Invoke(name = "supportsSchemasInIndexDefinitions")
+    @Invokable(name = "supportsSchemasInIndexDefinitions")
     @XmlElement(required = true)
     private boolean supportsSchemasInIndexDefinitions;
 
-    @Invoke(name = "supportsSchemasInPrivilegeDefinitions")
+    @Invokable(name = "supportsSchemasInPrivilegeDefinitions")
     @XmlElement(required = true)
     private boolean supportsSchemasInPrivilegeDefinitions;
 
-    @Invoke(name = "supportsSchemasInProcedureCalls")
+    @Invokable(name = "supportsSchemasInProcedureCalls")
     @XmlElement(required = true)
     private boolean supportsSchemasInProcedureCalls;
 
-    @Invoke(name = "supportsSchemasInTableDefinitions")
+    @Invokable(name = "supportsSchemasInTableDefinitions")
     @XmlElement(required = true)
     private boolean supportsSchemasInTableDefinitions;
 
-    @Invoke(name = "supportsSelectForUpdate")
+    @Invokable(name = "supportsSelectForUpdate")
     @XmlElement(required = true)
     private boolean supportsSelectForUpdate;
 
-    @Invoke(name = "supportsStatementPooling")
+    @Invokable(name = "supportsStatementPooling")
     @XmlElement(required = true)
     private boolean supportsStatementPooling;
 
-    @Invoke(name = "supportsStoredFunctionsUsingCallSyntax")
+    @Invokable(name = "supportsStoredFunctionsUsingCallSyntax")
     @XmlElement(required = true)
     private boolean supportsStoredFunctionsUsingCallSyntax;
 
-    @Invoke(name = "supportsStoredProcedures")
+    @Invokable(name = "supportsStoredProcedures")
     @XmlElement(required = true)
     private boolean supportsStoredProcedures;
 
-    @Invoke(name = "supportsSubqueriesInComparisons")
+    @Invokable(name = "supportsSubqueriesInComparisons")
     @XmlElement(required = true)
     private boolean supportsSubqueriesInComparisons;
 
-    @Invoke(name = "supportsSubqueriesInExists")
+    @Invokable(name = "supportsSubqueriesInExists")
     @XmlElement(required = true)
     private boolean supportsSubqueriesInExists;
 
-    @Invoke(name = "supportsSubqueriesInIns")
+    @Invokable(name = "supportsSubqueriesInIns")
     @XmlElement(required = true)
     private boolean supportsSubqueriesInIns;
 
-    @Invoke(name = "supportsSubqueriesInQuantifieds")
+    @Invokable(name = "supportsSubqueriesInQuantifieds")
     @XmlElement(required = true)
     private boolean supportsSubqueriesInQuantifieds;
 
-    @Invoke(name = "supportsTableCorrelationNames")
+    @Invokable(name = "supportsTableCorrelationNames")
     @XmlElement(required = true)
     private boolean supportsTableCorrelationNames;
 
-    @Invoke(name = "supportsTransactionIsolationLevel",
+    @Invokable(name = "supportsTransactionIsolationLevel",
             types = {int.class},
             args = {
                 @Literals({"0"}), // TRANSACTION_NONE
@@ -2306,35 +2320,35 @@ public class Metadata implements TableDomain {
     @XmlElement
     private List<TILBoolean> supportsTransactionIsolationLevel;
 
-    @Invoke(name = "supportsTransactions")
+    @Invokable(name = "supportsTransactions")
     @XmlElement(required = true)
     private boolean supportsTransactions;
 
-    @Invoke(name = "supportsUnion")
+    @Invokable(name = "supportsUnion")
     @XmlElement(required = true)
     private boolean supportsUnion;
 
-    @Invoke(name = "supportsUnionAll")
+    @Invokable(name = "supportsUnionAll")
     @XmlElement(required = true)
     private boolean supportsUnionAll;
 
-    @Invoke(name = "getSystemFunctions")
+    @Invokable(name = "getSystemFunctions")
     @XmlElement(required = true)
     private String systemFunctions;
 
-    @Invoke(name = "getTableTypes")
+    @Invokable(name = "getTableTypes")
     @XmlElementRef
     private List<TableType> tableTypes;
 
-    @Invoke(name = "getTimeDateFunctions")
+    @Invokable(name = "getTimeDateFunctions")
     @XmlElement(required = true)
     private String timeDateFunctions;
 
-    @Invoke(name = "getTypeInfo")
+    @Invokable(name = "getTypeInfo")
     @XmlElementRef
     private List<TypeInfo> typeInfo;
 
-    @Invoke(name = "updatesAreDetected",
+    @Invokable(name = "updatesAreDetected",
             types = {int.class},
             args = {
                 @Literals({"1003"}), // TYPE_FORWARD_ONLY
@@ -2345,19 +2359,19 @@ public class Metadata implements TableDomain {
     @XmlElement
     private List<RSTBoolean> updatesAreDetected;
 
-    @Invoke(name = "getUserName")
+    @Invokable(name = "getUserName")
     @XmlElement(required = true)
     private String userName;
 
-    @Invoke(name = "getURL")
+    @Invokable(name = "getURL")
     @XmlElement(required = true)
     private String URL;
 
-    @Invoke(name = "usesLocalFilePerTable")
+    @Invokable(name = "usesLocalFilePerTable")
     @XmlElement(required = true)
     private boolean usesLocalFilePerTable;
 
-    @Invoke(name = "usesLocalFiles")
+    @Invokable(name = "usesLocalFiles")
     @XmlElement(required = true)
     private boolean usesLocalFiles;
 }

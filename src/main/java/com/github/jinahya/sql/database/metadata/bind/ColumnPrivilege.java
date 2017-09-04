@@ -15,10 +15,14 @@
  */
 package com.github.jinahya.sql.database.metadata.bind;
 
+import java.util.logging.Logger;
+import static java.util.logging.Logger.getLogger;
 import javax.xml.bind.annotation.XmlAttribute;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlType;
+import lombok.Getter;
+import lombok.Setter;
 
 /**
  * An entity class for binding the result of
@@ -32,6 +36,10 @@ import javax.xml.bind.annotation.XmlType;
 })
 public class ColumnPrivilege {
 
+    private static final Logger logger
+            = getLogger(ColumnPrivilege.class.getName());
+
+    // -------------------------------------------------------------------------
     @Override
     public String toString() {
         return super.toString() + "{"
@@ -47,111 +55,119 @@ public class ColumnPrivilege {
     }
 
     // ---------------------------------------------------------------- tableCat
-    public String getTableCat() {
-        return tableCat;
-    }
-
-    public void setTableCat(final String tableCat) {
-        this.tableCat = tableCat;
-    }
-
+//    public String getTableCat() {
+//        return tableCat;
+//    }
+//
+//    public void setTableCat(final String tableCat) {
+//        this.tableCat = tableCat;
+//    }
     // -------------------------------------------------------------- tableSchem
-    public String getTableSchem() {
-        return tableSchem;
-    }
-
-    public void setTableSchem(final String tableSchem) {
-        this.tableSchem = tableSchem;
-    }
-
+//    public String getTableSchem() {
+//        return tableSchem;
+//    }
+//
+//    public void setTableSchem(final String tableSchem) {
+//        this.tableSchem = tableSchem;
+//    }
     // --------------------------------------------------------------- tableName
-    public String getTableName() {
-        return tableName;
-    }
-
-    public void setTableName(final String tableName) {
-        this.tableName = tableName;
-    }
-
+//    public String getTableName() {
+//        return tableName;
+//    }
+//
+//    public void setTableName(final String tableName) {
+//        this.tableName = tableName;
+//    }
     // -------------------------------------------------------------- columnName
-    public String getColumnName() {
-        return columnName;
-    }
-
-    public void setColumnName(final String columnName) {
-        this.columnName = columnName;
-    }
-
+//    public String getColumnName() {
+//        return columnName;
+//    }
+//
+//    public void setColumnName(final String columnName) {
+//        this.columnName = columnName;
+//    }
     // ----------------------------------------------------------------- grantor
-    public String getGrantor() {
-        return grantor;
-    }
-
-    public void setGrantor(final String grantor) {
-        this.grantor = grantor;
-    }
-
+//    public String getGrantor() {
+//        return grantor;
+//    }
+//
+//    public void setGrantor(final String grantor) {
+//        this.grantor = grantor;
+//    }
     // ----------------------------------------------------------------- grantee
-    public String getGrantee() {
-        return grantee;
-    }
-
-    public void setGrantee(final String grantee) {
-        this.grantee = grantee;
-    }
-
+//    public String getGrantee() {
+//        return grantee;
+//    }
+//
+//    public void setGrantee(final String grantee) {
+//        this.grantee = grantee;
+//    }
     // --------------------------------------------------------------- privilege
-    public String getPrivilege() {
-        return privilege;
-    }
-
-    public void setPrivilege(final String privilege) {
-        this.privilege = privilege;
-    }
-
+//    public String getPrivilege() {
+//        return privilege;
+//    }
+//
+//    public void setPrivilege(final String privilege) {
+//        this.privilege = privilege;
+//    }
     // ------------------------------------------------------------- isGrantable
-    public String getIsGrantable() {
-        return isGrantable;
-    }
-
-    public void setIsGrantable(final String isGrantable) {
-        this.isGrantable = isGrantable;
-    }
-
+//    public String getIsGrantable() {
+//        return isGrantable;
+//    }
+//
+//    public void setIsGrantable(final String isGrantable) {
+//        this.isGrantable = isGrantable;
+//    }
     // -------------------------------------------------------------------------
-    @Label("TABLE_CAT")
-    @NillableBySpecification
+    @Getter
+    @Setter
+    @Labeled("TABLE_CAT")
+    @Nillable
     @XmlAttribute
     private String tableCat;
 
-    @Label("TABLE_SCHEM")
-    @NillableBySpecification
+    @Getter
+    @Setter
+    @Labeled("TABLE_SCHEM")
+    @Nillable
     @XmlAttribute
     private String tableSchem;
 
-    @Label("TABLE_NAME")
+    @Getter
+    @Setter
+    @Labeled("TABLE_NAME")
     @XmlAttribute
     private String tableName;
 
-    @Label("COLUMN_NAME")
+    @Getter
+    @Setter
+    @Labeled("COLUMN_NAME")
     @XmlAttribute
     private String columnName;
 
-    @Label("GRANTOR")
-    @NillableBySpecification
+    @Getter
+    @Setter
+    @Labeled("GRANTOR")
+    @Nillable
     @XmlElement(nillable = true, required = true)
     private String grantor;
 
-    @Label("GRANTEE")
+    @Getter
+    @Setter
+    @Labeled("GRANTEE")
     @XmlElement(required = true)
     private String grantee;
 
-    @Label("PRIVILEGE")
+    @Getter
+    @Setter
+    @Labeled("PRIVILEGE")
     @XmlElement(required = true)
     private String privilege;
 
-    @Label("IS_GRANTABLE")
-    @NillableBySpecification
+    @Getter
+    @Setter
+    @Labeled("IS_GRANTABLE")
+    @Nillable
     @XmlElement(nillable = true, required = true)
     private String isGrantable;
 }

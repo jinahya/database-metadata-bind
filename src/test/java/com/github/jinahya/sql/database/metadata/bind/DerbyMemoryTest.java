@@ -18,6 +18,7 @@ package com.github.jinahya.sql.database.metadata.bind;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.OutputStream;
+import static java.lang.invoke.MethodHandles.lookup;
 import java.sql.Connection;
 import java.sql.DatabaseMetaData;
 import java.sql.SQLException;
@@ -37,13 +38,25 @@ import static java.sql.DriverManager.getConnection;
  */
 public class DerbyMemoryTest {
 
-    private static final Logger logger = getLogger(DerbyMemoryTest.class);
+    private static final Logger logger = getLogger(lookup().lookupClass());
 
+    // -------------------------------------------------------------------------
     private static final String DRIVER_NAME
             = "org.apache.derby.jdbc.EmbeddedDriver";
 
+    private static final Class<?> DRIVER_CLASS;
+
+    static {
+        try {
+            DRIVER_CLASS = Class.forName(DRIVER_NAME);
+        } catch (ClassNotFoundException cnfe) {
+            throw new InstantiationError(cnfe.getMessage());
+        }
+    }
+
     private static final String CONNECTION_URL = "jdbc:derby:memory:test";
 
+    // -------------------------------------------------------------------------
     @BeforeClass
     private static void beforeClass() throws SQLException {
         final Properties properties = new Properties();
@@ -72,6 +85,7 @@ public class DerbyMemoryTest {
         }
     }
 
+    // -------------------------------------------------------------------------
     @Test
     public void retrieve() throws Exception {
         final Metadata metadata;

@@ -15,6 +15,8 @@
  */
 package com.github.jinahya.sql.database.metadata.bind;
 
+import java.util.logging.Logger;
+import static java.util.logging.Logger.getLogger;
 import javax.xml.bind.annotation.XmlAttribute;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
@@ -33,6 +35,10 @@ import javax.xml.bind.annotation.XmlType;
 })
 public class CrossReference {
 
+    private static final Logger logger
+            = getLogger(CrossReference.class.getName());
+
+    // -------------------------------------------------------------------------
     @Override
     public String toString() {
         return super.toString() + "{"
@@ -180,65 +186,65 @@ public class CrossReference {
     }
 
     // -------------------------------------------------------------------------
-    @Label("PKTABLE_CAT")
-    @NillableBySpecification
+    @Labeled("PKTABLE_CAT")
+    @Nillable
     @XmlAttribute
     private String pktableCat;
 
-    @Label("PKTABLE_SCHEM")
-    @NillableBySpecification
+    @Labeled("PKTABLE_SCHEM")
+    @Nillable
     @XmlAttribute
     private String pktableSchem;
 
-    @Label("PKTABLE_NAME")
+    @Labeled("PKTABLE_NAME")
     @XmlAttribute
     private String pktableName;
 
-    @Label("PKCOLUMN_NAME")
+    @Labeled("PKCOLUMN_NAME")
     @XmlElement(required = true)
     private String pkcolumnName;
 
-    @Label("FKTABLE_CAT")
-    @NillableBySpecification
+    @Labeled("FKTABLE_CAT")
+    @Nillable
     @XmlAttribute
     private String fktableCat;
 
-    @Label("FKTABLE_NAME")
-    @NillableBySpecification
+    @Labeled("FKTABLE_NAME")
+    @Nillable
     @XmlAttribute
     private String fktableSchem;
 
-    @Label("FKTABLE_NAME")
+    @Labeled("FKTABLE_NAME")
     @XmlAttribute
     private String fktableName;
 
-    @Label("FKCOLUMN_NAME")
+    @Labeled("FKCOLUMN_NAME")
     @XmlElement(required = true)
     private String fkcolumnName;
 
-    @Label("FKCOLUMN_NAME")
+    @Labeled("FKCOLUMN_NAME")
     @XmlElement(required = true)
     private short keySeq;
 
-    @Label("UPDATE_RULE")
+    @Labeled("UPDATE_RULE")
     @XmlElement(required = true)
     private short updateRule;
 
-    @Label("DELETE_RULE")
+    @Labeled("DELETE_RULE")
     @XmlElement(required = true)
     private short deleteRule;
 
-    @Label("FK_NAME")
-    @NillableBySpecification
+    @Labeled("FK_NAME")
+    @Nillable
     @XmlElement(nillable = true, required = true)
     private String fkName;
 
-    @Label("PK_NAME")
-    @NillableBySpecification
+    @Labeled("PK_NAME")
+    @Nillable
     @XmlElement(nillable = true, required = true)
     private String pkName;
 
-    @Label("DEFERRABILITY")
+    @Labeled("DEFERRABILITY")
     @XmlElement(required = true)
     private short deferrability;
 }

@@ -37,6 +37,7 @@ import javax.xml.bind.annotation.XmlType;
 })
 public class UDT {
 
+    // -------------------------------------------------------------------------
     @Override
     public String toString() {
         return super.toString() + "{"
@@ -130,38 +131,38 @@ public class UDT {
     }
 
     // -------------------------------------------------------------------------
-    @Label("TYPE_CAT")
-    @NillableBySpecification
+    @Labeled("TYPE_CAT")
+    @Nillable
     @XmlAttribute
     private String typeCat;
 
-    @Label("TYPE_SCHEM")
-    @NillableBySpecification
+    @Labeled("TYPE_SCHEM")
+    @Nillable
     @XmlAttribute
     private String typeSchem;
 
-    @Label("TYPE_NAME")
+    @Labeled("TYPE_NAME")
     @XmlElement(required = true)
     private String typeName;
 
-    @Label("CLASS_NAME")
+    @Labeled("CLASS_NAME")
     @XmlElement(required = true)
     private String className;
 
-    @Label("DATA_TYPE")
+    @Labeled("DATA_TYPE")
     @XmlElement(required = true)
     private int dataType;
 
-    @Label("REMARKS")
+    @Labeled("REMARKS")
     @XmlElement(required = true)
     private String remarks;
 
-    @Label("BASE_TYPE")
-    @NillableBySpecification
+    @Labeled("BASE_TYPE")
+    @Nillable
     @XmlElement(nillable = true, required = true)
     private Short baseType;
 
-    @Invoke(name = "getAttributes",
+    @Invokable(name = "getAttributes",
             types = {String.class, String.class, String.class, String.class},
             args = {
                 @Literals({":typeCat", ":typeSchem", ":typeName", "null"})
@@ -170,7 +171,7 @@ public class UDT {
     @XmlElementRef
     private List<Attribute> attributes;
 
-    @Invoke(name = "getSuperTypes",
+    @Invokable(name = "getSuperTypes",
             types = {String.class, String.class, String.class},
             args = {
                 @Literals({":typeCat", ":typeSchem", ":typeName"})

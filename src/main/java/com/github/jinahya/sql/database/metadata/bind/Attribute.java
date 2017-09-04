@@ -222,82 +222,82 @@ public class Attribute {
     }
 
     // -------------------------------------------------------------------------
-    @Label("TYPE_CAT")
-    @NillableBySpecification
+    @Labeled("TYPE_CAT")
+    @Nillable
     @XmlAttribute
     private String typeCat;
 
-    @Label("TYPE_SCHEM")
-    @NillableBySpecification
+    @Labeled("TYPE_SCHEM")
+    @Nillable
     @XmlAttribute
     private String typeSchem;
 
-    @Label("TYPE_NAME")
+    @Labeled("TYPE_NAME")
     @XmlAttribute
     private String typeName;
 
-    @Label("ATTR_NAME")
+    @Labeled("ATTR_NAME")
     @XmlElement(required = true)
     private String attrName;
 
-    @Label("DATA_TYPE")
+    @Labeled("DATA_TYPE")
     @XmlElement(required = true)
     private int dataType;
 
-    @Label("ATTR_TYPE_NAME")
+    @Labeled("ATTR_TYPE_NAME")
     @XmlElement(required = true)
     private String attrTypeName;
 
-    @Label("ATTR_SIZE")
+    @Labeled("ATTR_SIZE")
     @XmlElement(required = true)
     private int attrSize;
 
-    @Label("DECIMAL_DIGITS")
+    @Labeled("DECIMAL_DIGITS")
     @XmlElement(required = true)
     private Integer decimalDigits;
 
-    @Label("NUM_PREC_RADIX")
+    @Labeled("NUM_PREC_RADIX")
     @XmlElement(required = true)
     private int numPrecRadix;
 
-    @Label("NULLABLE")
+    @Labeled("NULLABLE")
     @XmlElement(required = true)
     private int nullable;
 
-    @Label("REMARKS")
-    @NillableBySpecification
+    @Labeled("REMARKS")
+    @Nillable
     @XmlElement(nillable = true, required = true)
     private String remarks;
 
-    @Label("ATTR_DEF")
-    @NillableBySpecification
+    @Labeled("ATTR_DEF")
+    @Nillable
     @XmlElement(nillable = true, required = true)
     private String attrDef;
 
-    @Label("SQL_DATA_TYPE")
+    @Labeled("SQL_DATA_TYPE")
     @Unused
     @XmlElement(nillable = true, required = true)
     private Integer sqlDataType;
 
-    @Label("SQL_DATETIME_SUB")
+    @Labeled("SQL_DATETIME_SUB")
     @Unused
     @XmlElement(nillable = true, required = true)
     private Integer sqlDatetimeSub;
 
-    @Label("CHAR_OCTET_LENGTH")
+    @Labeled("CHAR_OCTET_LENGTH")
     @XmlElement(required = true)
     private int charOctetLength;
 
-    @Label("ORDINAL_POSITION")
+    @Labeled("ORDINAL_POSITION")
     @XmlElement(required = true)
     private int ordinalPosition;
 
-    @Label("IS_NULLABLE")
+    @Labeled("IS_NULLABLE")
     @XmlElement(required = true)
     private String isNullable;
 
-    @Label("SOURCE_DATA_TYPE")
-    @NillableBySpecification
+    @Labeled("SOURCE_DATA_TYPE")
+    @Nillable
     @XmlElement(nillable = true, required = true)
     private Short sourceDataType;
 }

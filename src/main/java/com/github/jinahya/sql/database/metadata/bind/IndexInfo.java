@@ -174,62 +174,62 @@ public class IndexInfo {
     }
 
     // -------------------------------------------------------------------------
-    @Label("TABLE_CAT")
-    @NillableBySpecification
+    @Labeled("TABLE_CAT")
+    @Nillable
     @XmlAttribute
     private String tableCat;
 
-    @Label("TABLE_SCHEM")
-    @NillableBySpecification
+    @Labeled("TABLE_SCHEM")
+    @Nillable
     @XmlAttribute
     private String tableSchem;
 
-    @Label("TABLE_NAME")
+    @Labeled("TABLE_NAME")
     @XmlAttribute
     private String tableName;
 
-    @Label("NON_UNIQUE")
+    @Labeled("NON_UNIQUE")
     @XmlElement(required = true)
     private boolean nonUnique;
 
-    @Label("INDEX_QUALIFIER")
-    @NillableBySpecification
+    @Labeled("INDEX_QUALIFIER")
+    @Nillable
     @XmlElement(nillable = true, required = true)
     private String indexQualifier;
 
-    @Label("INDEX_NAME")
-    @NillableBySpecification
+    @Labeled("INDEX_NAME")
+    @Nillable
     @XmlElement(nillable = true, required = true)
     private String indexName;
 
-    @Label("TYPE")
+    @Labeled("TYPE")
     @XmlElement(required = true)
     private short type;
 
-    @Label("ORDINAL_POSITION")
+    @Labeled("ORDINAL_POSITION")
     @XmlElement(required = true)
     private short ordinalPosition;
 
-    @Label("COLUMN_NAME")
-    @NillableBySpecification
+    @Labeled("COLUMN_NAME")
+    @Nillable
     @XmlElement(nillable = true, required = true)
     private String columnName;
 
-    @Label("ASC_OR_DESC")
-    @NillableBySpecification
+    @Labeled("ASC_OR_DESC")
+    @Nillable
     @XmlElement(nillable = true, required = true)
     private String ascOrDesc;
 
-    @Label("CARDINALITY")
+    @Labeled("CARDINALITY")
     @XmlElement(required = true)
     private long cardinality;
 
-    @Label("PAGES")
+    @Labeled("PAGES")
     @XmlElement(required = true)
     private long pages;
 
-    @Label("FILTER_CONDITION")
-    @NillableBySpecification
+    @Labeled("FILTER_CONDITION")
+    @Nillable
     @XmlElement(nillable = true, required = true)
     private String filterCondition;
 }

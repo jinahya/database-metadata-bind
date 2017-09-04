@@ -15,59 +15,83 @@
  */
 package com.github.jinahya.sql.database.metadata.bind;
 
+import ch.vorburger.mariadb4j.DB;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.OutputStream;
 import static java.lang.invoke.MethodHandles.lookup;
 import java.sql.Connection;
 import java.sql.DatabaseMetaData;
-import java.sql.SQLException;
+import static java.sql.DriverManager.getConnection;
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.Marshaller;
 import org.slf4j.Logger;
 import static org.slf4j.LoggerFactory.getLogger;
+import org.testng.SkipException;
 import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
-import static java.sql.DriverManager.getConnection;
 
 /**
  *
  * @author Jin Kwon &lt;jinahya_at_gmail.com&gt;
  */
-public class SQLiteMemoryTest {
+public class MariaDbEmbeddedTest {
 
     private static final Logger logger = getLogger(lookup().lookupClass());
 
     // -------------------------------------------------------------------------
-    private static final String CONNECTION_URL = "jdbc:sqlite::memory:";
+    private static DB DB_;
 
     // -------------------------------------------------------------------------
     @BeforeClass
-    private static void beforeClass() throws SQLException {
+    private static void beforeClass() throws Exception {
+        DB_ = DB.newEmbeddedDB(3306);
+        DB_.start();
+        logger.debug("embedded mariadb started");
     }
 
     @AfterClass
-    private static void afterClass() throws SQLException {
+    private static void afterClass() throws Exception {
+        DB_.stop();
+        logger.debug("embedded mariadb stopped");
+        DB_ = null;
     }
 
-    // -------------------------------------------------------------------------
-    @Test(enabled = true)
+    @Test
     public void retrieve() throws Exception {
-
         final Metadata metadata;
-
-        try (Connection connection = getConnection(CONNECTION_URL)) {
+        final String url = "jdbc:mysql://localhost/test";
+        final String user = "root";
+        final String password = "";
+        try (Connection connection = getConnection(url, user, password)) {
+            logger.debug("connection: {}", connection);
             final DatabaseMetaData database = connection.getMetaData();
+            logger.debug("database: {}", database);
             final MetadataContext context = new MetadataContext(database);
-            metadata = context.getMetadata();
+            context.suppressions("a"
+            );
+            try {
+                metadata = context.getMetadata();
+            } catch (final Exception e) {
+                e.printStackTrace(System.out);
+                System.out.println("---------------------> " + e);
+                System.out.println("---------------------> " + e);
+                System.out.println("---------------------> " + e);
+                System.out.println("---------------------> " + e);
+                System.out.println("---------------------> " + e);
+                System.out.println("---------------------> " + e);
+                System.out.println("---------------------> " + e);
+                System.out.println("---------------------> " + e);
+                System.out.println("---------------------> " + e);
+                throw new SkipException("", e);
+            }
         }
-
         final JAXBContext context = JAXBContext.newInstance(Metadata.class);
         final Marshaller marshaller = context.createMarshaller();
         marshaller.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, Boolean.TRUE);
-
-        final File file = new File("target", "sqlite.memory.metadata.xml");
+        final File file = new File(
+                "target", "mariadb.embedded.metadata.xml");
         try (OutputStream outputStream = new FileOutputStream(file)) {
             marshaller.marshal(metadata, outputStream);
             outputStream.flush();

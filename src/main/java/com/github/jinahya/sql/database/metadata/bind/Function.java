@@ -41,6 +41,7 @@ import javax.xml.bind.annotation.XmlType;
 })
 public class Function {
 
+    // -------------------------------------------------------------------------
     @Override
     public String toString() {
         return super.toString() + "{"
@@ -121,38 +122,39 @@ public class Function {
     }
 
     // -------------------------------------------------------------------------
-    @Label("FUNCTION_CAT")
-    @NillableBySpecification
+    @Labeled("FUNCTION_CAT")
+    @Nillable
     @XmlAttribute
     private String functionCat;
 
-    @Label("FUNCTION_SCHEM")
-    @NillableBySpecification
+    @Labeled("FUNCTION_SCHEM")
+    @Nillable
     @XmlAttribute
     private String functionSchem;
 
-    @Label("FUNCTION_NAME")
+    @Labeled("FUNCTION_NAME")
     @XmlElement(required = true)
     private String functionName;
 
-    @Label("REMARKS")
+    @Labeled("REMARKS")
     @XmlElement(required = true)
     private String remarks;
 
-    @Label("FUNCTION_TYPE")
+    @Labeled("FUNCTION_TYPE")
     @XmlElement(required = true)
     private short functionType;
 
-    @Label("SPECIFIC_NAME")
+    @Labeled("SPECIFIC_NAME")
     @XmlElement(required = true)
     private String specificName;
 
-    @Invoke(name = "getFunctionColumns",
+    @Invokable(name = "getFunctionColumns",
             types = {String.class, String.class, String.class, String.class},
             args = {
-                @Literals({
-            ":functionCat", ":functionSchem", ":functionName", "null"
-        })})
+                @Literals({":functionCat", ":functionSchem", ":functionName",
+                           "null"})
+            }
+    )
     @XmlElementRef
     private List<FunctionColumn> functionColumns;
 }

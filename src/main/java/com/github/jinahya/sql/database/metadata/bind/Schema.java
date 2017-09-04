@@ -40,6 +40,7 @@ import javax.xml.bind.annotation.XmlType;
 })
 public class Schema extends AbstractTableDomain {
 
+    // -------------------------------------------------------------------------
     @Override
     public String toString() {
         return super.toString() + "{"
@@ -130,47 +131,50 @@ public class Schema extends AbstractTableDomain {
     }
 
     // -------------------------------------------------------------------------
-    @Label("TABLE_CATALOG")
-    @NillableBySpecification
+    @XmlAttribute
+    Boolean virtual;
+
+    @Labeled("TABLE_CATALOG")
+    @Nillable
     @XmlAttribute
     private String tableCatalog;
 
-    @Label("TABLE_SCHEM")
+    @Labeled("TABLE_SCHEM")
     @XmlElement(required = true)
     private String tableSchem;
 
-    @Invoke(name = "getFunctions",
-            types = {String.class, String.class, String.class},
-            args = {
-                @Literals({":tableCatalog", ":tableSchem", "null"})
-            }
+    @Invokable(name = "getFunctions",
+               types = {String.class, String.class, String.class},
+               args = {
+                   @Literals({":tableCatalog", ":tableSchem", "null"})
+               }
     )
     @XmlElementRef
     private List<Function> functions;
 
-    @Invoke(name = "getProcedures",
-            types = {String.class, String.class, String.class},
-            args = {
-                @Literals({":tableCatalog", ":tableSchem", "null"})
-            }
+    @Invokable(name = "getProcedures",
+               types = {String.class, String.class, String.class},
+               args = {
+                   @Literals({":tableCatalog", ":tableSchem", "null"})
+               }
     )
     @XmlElementRef
     private List<Procedure> procedures;
 
-    @Invoke(name = "getTables",
-            types = {String.class, String.class, String.class, String[].class},
-            args = {
-                @Literals({":tableCatalog", ":tableSchem", "null", "null"})
-            }
+    @Invokable(name = "getTables",
+               types = {String.class, String.class, String.class, String[].class},
+               args = {
+                   @Literals({":tableCatalog", ":tableSchem", "null", "null"})
+               }
     )
     @XmlElementRef
     private List<Table> tables;
 
-    @Invoke(name = "getUDTs",
-            types = {String.class, String.class, String.class, int[].class},
-            args = {
-                @Literals({":tableCatalog", ":tableSchem", "null", "null"})
-            }
+    @Invokable(name = "getUDTs",
+               types = {String.class, String.class, String.class, int[].class},
+               args = {
+                   @Literals({":tableCatalog", ":tableSchem", "null", "null"})
+               }
     )
     @XmlElementRef
     private List<UDT> UDTs;

@@ -38,10 +38,22 @@ public class HyperSQLMemoryTest {
 
     private static final Logger logger = getLogger(HyperSQLMemoryTest.class);
 
+    // -------------------------------------------------------------------------
     private static final String DRIVER_NAME = "org.hsqldb.jdbc.JDBCDriver";
+
+    private static final Class<?> DRIVER_CLASS;
+
+    static {
+        try {
+            DRIVER_CLASS = Class.forName(DRIVER_NAME);
+        } catch (ClassNotFoundException cnfe) {
+            throw new InstantiationError(cnfe.getMessage());
+        }
+    }
 
     private static final String CONNECTION_URL = "jdbc:hsqldb:mem:test";
 
+    // -------------------------------------------------------------------------
     @BeforeClass
     private static void beforeClass() throws SQLException {
     }
@@ -50,6 +62,7 @@ public class HyperSQLMemoryTest {
     private static void afterClass() throws SQLException {
     }
 
+    // -------------------------------------------------------------------------
     @Test(enabled = true)
     public void retrieve() throws Exception {
         final Metadata metadata;

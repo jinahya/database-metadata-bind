@@ -18,11 +18,10 @@ package com.github.jinahya.sql.database.metadata.bind;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.OutputStream;
-import static java.lang.String.format;
+import static java.lang.invoke.MethodHandles.lookup;
 import java.sql.Connection;
 import java.sql.DatabaseMetaData;
 import static java.sql.DriverManager.getConnection;
-import static java.util.Optional.ofNullable;
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.Marshaller;
 import org.slf4j.Logger;
@@ -31,10 +30,7 @@ import org.testng.SkipException;
 import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
-import ru.yandex.qatools.embed.postgresql.PostgresExecutable;
-import ru.yandex.qatools.embed.postgresql.PostgresProcess;
-import ru.yandex.qatools.embed.postgresql.PostgresStarter;
-import ru.yandex.qatools.embed.postgresql.config.PostgresConfig;
+import ru.yandex.qatools.embed.postgresql.EmbeddedPostgres;
 
 /**
  *
@@ -42,42 +38,43 @@ import ru.yandex.qatools.embed.postgresql.config.PostgresConfig;
  */
 public class PostgreSQLEmbeddedTest {
 
-    private static final Logger logger
-            = getLogger(PostgreSQLEmbeddedTest.class);
+    private static final Logger logger = getLogger(lookup().lookupClass());
 
-    private static PostgresConfig config;
+    // -------------------------------------------------------------------------
+    private static EmbeddedPostgres EMBEDDED_POSTGRES;
 
-    private static PostgresProcess process = null;
+    private static String URL;
 
+    // -------------------------------------------------------------------------
     @BeforeClass
     private static void beforeClass() throws Exception {
-        final PostgresStarter<PostgresExecutable, PostgresProcess> starter
-                = PostgresStarter.getDefaultInstance();
-        config = PostgresConfig.defaultWithDbName("test", "test", "test");
-        final PostgresExecutable exec = starter.prepare(config);
-        process = exec.start();
+//        final PostgresStarter<PostgresExecutable, PostgresProcess> starter
+//                = PostgresStarter.getDefaultInstance();
+//        config = PostgresConfig.defaultWithDbName("test", "test", "test");
+//        final PostgresExecutable exec = starter.prepare(config);
+//        process = exec.start();
+
+        // starting Postgres
+        EMBEDDED_POSTGRES = new EmbeddedPostgres();
+        logger.debug("embedded postgres constructed");
+        URL = EMBEDDED_POSTGRES.start(
+                "localhost", 5432, "dbName", "userName", "password");
+        logger.debug("embedded postgres started on {}", URL);
     }
 
     @AfterClass
     private static void afterClass() throws Exception {
-        ofNullable(process).ifPresent(PostgresProcess::stop);
+        EMBEDDED_POSTGRES.stop();
+        logger.debug("embedded postgres stopped");
     }
 
     @Test
     public void retrieve() throws Exception {
-
         final Metadata metadata;
-
-        final String url = format(
-                "jdbc:postgresql://%s:%s/%s?user=%s&password=%s",
-                config.net().host(),
-                config.net().port(),
-                config.storage().dbName(),
-                config.credentials().username(),
-                config.credentials().password());
-
-        try (Connection connection = getConnection(url)) {
+        try (Connection connection = getConnection(URL)) {
+            logger.debug("connection: {}", connection);
             final DatabaseMetaData database = connection.getMetaData();
+            logger.debug("database: {}", database);
             final MetadataContext context = new MetadataContext(database);
             context.suppressions(
                     "column/isGeneratedcolumn",
@@ -127,13 +124,11 @@ public class PostgreSQLEmbeddedTest {
                 throw new SkipException("", e);
             }
         }
-
         final JAXBContext context = JAXBContext.newInstance(Metadata.class);
         final Marshaller marshaller = context.createMarshaller();
         marshaller.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, Boolean.TRUE);
-
-        final File file
-                = new File("target", "postgresql.embedded.metadata.xml");
+        final File file = new File(
+                "target", "postgresql.embedded.metadata.xml");
         try (OutputStream outputStream = new FileOutputStream(file)) {
             marshaller.marshal(metadata, outputStream);
             outputStream.flush();

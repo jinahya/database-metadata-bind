@@ -33,6 +33,7 @@ import javax.xml.bind.annotation.XmlType;
 })
 public class PseudoColumn {
 
+    // -------------------------------------------------------------------------
     @Override
     public String toString() {
         return super.toString() + "{"
@@ -160,55 +161,55 @@ public class PseudoColumn {
     }
 
     // -------------------------------------------------------------------------
-    @Label("TABLE_CAT")
-    @NillableBySpecification
+    @Labeled("TABLE_CAT")
+    @Nillable
     @XmlAttribute
     private String tableCat;
 
-    @Label("TABLE_SCHEM")
-    @NillableBySpecification
+    @Labeled("TABLE_SCHEM")
+    @Nillable
     @XmlAttribute
     private String tableSchem;
 
-    @Label("TABLE_NAME")
+    @Labeled("TABLE_NAME")
     @XmlAttribute
     private String tableName;
 
-    @Label("COLUMN_NAME")
+    @Labeled("COLUMN_NAME")
     @XmlElement(required = true)
     private String columnName;
 
-    @Label("DATA_TYPE")
+    @Labeled("DATA_TYPE")
     @XmlElement(required = true)
     private int dataType;
 
-    @Label("COLUMN_SIZE")
+    @Labeled("COLUMN_SIZE")
     @XmlElement(required = true)
     private int columnSize;
 
-    @Label("DECIMAL_DIGITS")
-    @NillableBySpecification
+    @Labeled("DECIMAL_DIGITS")
+    @Nillable
     @XmlElement(nillable = true, required = true)
     private Integer decimalDigits;
 
-    @Label("NUM_PREC_RADIX")
+    @Labeled("NUM_PREC_RADIX")
     @XmlElement(required = true)
     private int numPrecRadix;
 
-    @Label("COLUMN_USAGE")
+    @Labeled("COLUMN_USAGE")
     @XmlElement(required = true)
     private String columnUsage;
 
-    @Label("REMARKS")
-    @NillableBySpecification
+    @Labeled("REMARKS")
+    @Nillable
     @XmlElement(nillable = true, required = true)
     private String remarks;
 
-    @Label("CHAR_OCTET_LENGTH")
+    @Labeled("CHAR_OCTET_LENGTH")
     @XmlElement(required = true)
     private int charOctetLength;
 
-    @Label("IS_NULLABLE")
+    @Labeled("IS_NULLABLE")
     @XmlElement(required = true)
     private String isNullable;
 }

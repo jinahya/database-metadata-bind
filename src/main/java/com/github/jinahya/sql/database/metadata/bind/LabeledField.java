@@ -1,5 +1,5 @@
 /*
- * Copyright 2013 <a href="mailto:onacit@gmail.com">Jin Kwon</a>.
+ * Copyright 2017 Jin Kwon &lt;onacit at gmail.com&gt;.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,18 +15,15 @@
  */
 package com.github.jinahya.sql.database.metadata.bind;
 
-import java.util.Objects;
+import java.lang.reflect.Field;
 
 /**
  *
  * @author Jin Kwon &lt;onacit at gmail.com&gt;
  */
-public class CatalogVerifier {
+class LabeledField extends AnnoatedField<Labeled> {
 
-    static void verify(final Catalog catalog) {
-        Objects.requireNonNull(catalog, "null catalog");
-        // schemas order by name
-        {
-        }
+    LabeledField(final Field field, final Labeled label) {
+        super(field, label);
     }
 }

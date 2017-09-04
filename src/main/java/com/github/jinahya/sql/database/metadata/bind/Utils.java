@@ -28,18 +28,33 @@ import java.sql.ResultSet;
 import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
 import java.sql.Types;
+import static java.util.Arrays.asList;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import static java.util.logging.Logger.getLogger;
 
-class Utils {
+final class Utils {
 
     private static final Logger logger = getLogger(Metadata.class.getName());
+
+    // --------------------------------------------------------------- java.lang
+    private static final List<Class<?>> PRIMITIVE_CLASSES = asList(
+            boolean.class,
+            byte.class,
+            short.class,
+            int.class,
+            long.class,
+            char.class,
+            float.class,
+            double.class,
+            void.class
+    );
 
     private static final Map<Class<?>, Class<?>> WRAPPER_CLASSES;
 
@@ -59,15 +74,16 @@ class Utils {
 
     static Class<?> wrapperClass(final Class<?> primitiveClass) {
         if (primitiveClass == null) {
-            throw new NullPointerException("null primitive");
+            throw new NullPointerException("primitiveClass is null");
         }
         if (!primitiveClass.isPrimitive()) {
             throw new IllegalArgumentException(
-                    "not primitive: " + primitiveClass);
+                    "specified class(" + primitiveClass + ") is not primitive");
         }
         return WRAPPER_CLASSES.get(primitiveClass);
     }
 
+    // ------------------------------------------------------- java.lang.reflect
     static Field findField(final Class<?> declaringClass,
                            final String fieldName)
             throws NoSuchFieldException {
@@ -106,7 +122,39 @@ class Utils {
                                new HashMap<Field, T>());
     }
 
+    // ---------------------------------------------------------------- java.sql
+    private static final Map<Integer, String> SQL_TYPES;
+
+    static {
+        final Map<Integer, String> sqlTypes = new HashMap<Integer, String>();
+        for (final Field field : Types.class.getFields()) {
+            final int modifiers = field.getModifiers();
+            if (!Modifier.isPublic(modifiers)) {
+                continue;
+            }
+            if (!Modifier.isStatic(modifiers)) {
+                continue;
+            }
+            if (!Integer.TYPE.equals(field.getType())) {
+                continue;
+            }
+            try {
+                final int type = field.getInt(null);
+                final String name = field.getName();
+                assert sqlTypes.put(type, name) == null :
+                        "duplicate sql type retrived: " + type + " / " + name;
+            } catch (final IllegalAccessException iae) {
+                logger.severe("failed to get sql type value from " + field);
+            }
+        }
+        SQL_TYPES = Collections.unmodifiableMap(sqlTypes);
+    }
+
     static Set<Integer> sqlTypes() throws IllegalAccessException {
+        if (true) {
+            return SQL_TYPES.keySet();
+        }
+        // @todo: remove following block
         final Set<Integer> sqlTypes = new HashSet<Integer>();
         for (final Field field : Types.class.getFields()) {
             final int modifiers = field.getModifiers();
@@ -125,6 +173,10 @@ class Utils {
     }
 
     static String sqlTypeName(final int value) throws IllegalAccessException {
+        if (true) {
+            return SQL_TYPES.get(value);
+        }
+        // @todo: remove following block
         for (final Field field : Types.class.getFields()) {
             final int modifiers = field.getModifiers();
             if (!Modifier.isPublic(modifiers)) {
@@ -143,6 +195,14 @@ class Utils {
         return null;
     }
 
+    /**
+     * Returns a set of column labels of given result set.
+     *
+     * @param results the result set from which column labels are read.
+     * @return a set of column labels
+     * @throws SQLException if a database error occurs.
+     * @see ResultSet#getMetaData()
+     */
     static Set<String> columnLabels(final ResultSet results)
             throws SQLException {
         final ResultSetMetaData rsmd = results.getMetaData();
@@ -201,6 +261,7 @@ class Utils {
                 }
                 final Method writer = descriptor.getWriteMethod();
                 if (writer == null) {
+                    logger.log(Level.WARNING, "no writer method from {0}", descriptor);
                     continue;
                 }
                 final Object adapted = adaptValue(descriptor, value);
@@ -337,8 +398,7 @@ class Utils {
         if (type != null && type.isInstance(value)) {
             return value;
         }
-        if (type != null && !type.isPrimitive()
-            && value == null) {
+        if (type != null && !type.isPrimitive() && value == null) {
             return value;
         }
         final Class<?> valueType = value == null ? null : value.getClass();
@@ -469,6 +529,7 @@ class Utils {
                + descriptor.getName();
     }
 
+    // -------------------------------------------------------------------------
     private Utils() {
         super();
     }

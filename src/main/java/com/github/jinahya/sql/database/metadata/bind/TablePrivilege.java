@@ -109,35 +109,35 @@ public class TablePrivilege {
     }
 
     // -------------------------------------------------------------------------
-    @Label("TABLE_CAT")
-    @NillableBySpecification
+    @Labeled("TABLE_CAT")
+    @Nillable
     @XmlAttribute
     private String tableCat;
 
-    @Label("TABLE_SCHEM")
-    @NillableBySpecification
+    @Labeled("TABLE_SCHEM")
+    @Nillable
     @XmlAttribute
     private String tableSchem;
 
-    @Label("TABLE_NAME")
+    @Labeled("TABLE_NAME")
     @XmlAttribute
     private String tableName;
 
-    @Label("GRANTOR")
-    @NillableBySpecification
+    @Labeled("GRANTOR")
+    @Nillable
     @XmlElement(nillable = true, required = true)
     private String grantor;
 
-    @Label("GRANTEE")
+    @Labeled("GRANTEE")
     @XmlElement(required = true)
     private String grantee;
 
-    @Label("PRIVILEGE")
+    @Labeled("PRIVILEGE")
     @XmlElement(required = true)
     private String privilege;
 
-    @Label("IS_GRANTABLE")
-    @NillableBySpecification
+    @Labeled("IS_GRANTABLE")
+    @Nillable
     @XmlElement(nillable = true, required = true)
     private String isGrantable;
 }

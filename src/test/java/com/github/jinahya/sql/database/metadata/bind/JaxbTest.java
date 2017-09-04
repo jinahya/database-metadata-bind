@@ -65,7 +65,7 @@ public class JaxbTest {
         });
     }
 
-    @Test(enabled = false)
+    @Test(enabled = true)
     public void printSchema() throws JAXBException, IOException {
         final JAXBContext context = JAXBContext.newInstance(
                 JaxbTest.class.getPackage().getName());

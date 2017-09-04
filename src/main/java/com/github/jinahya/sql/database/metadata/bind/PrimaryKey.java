@@ -87,30 +87,30 @@ public class PrimaryKey {
     }
 
     // -------------------------------------------------------------------------
-    @Label("TABLE_CAT")
-    @NillableBySpecification
+    @Labeled("TABLE_CAT")
+    @Nillable
     @XmlAttribute
     private String tableCat;
 
-    @Label("TABLE_SCHEM")
-    @NillableBySpecification
+    @Labeled("TABLE_SCHEM")
+    @Nillable
     @XmlAttribute
     private String tableSchem;
 
-    @Label("TABLE_NAME")
+    @Labeled("TABLE_NAME")
     @XmlAttribute
     private String tableName;
 
-    @Label("COLUMN_NAME")
+    @Labeled("COLUMN_NAME")
     @XmlElement(required = true)
     private String columnName;
 
-    @Label("KEY_SEQ")
+    @Labeled("KEY_SEQ")
     @XmlElement(required = true)
     private short keySeq;
 
-    @Label("PK_NAME")
-    @NillableBySpecification
+    @Labeled("PK_NAME")
+    @Nillable
     @XmlElement(nillable = true, required = true)
     private String pkName;
 }

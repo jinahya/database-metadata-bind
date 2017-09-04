@@ -30,6 +30,7 @@ class SDTSDTBoolean {
     private static final Logger logger
             = getLogger(SDTSDTBoolean.class.getName());
 
+    // -------------------------------------------------------------------------
     static SDTSDTBoolean valueOf(final Object[] args, final Object value) {
         final SDTSDTBoolean instance = new SDTSDTBoolean();
         instance.setFromType((Integer) args[0]);

@@ -18,6 +18,8 @@ package com.github.jinahya.sql.database.metadata.bind;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlType;
+import lombok.Getter;
+import lombok.Setter;
 
 /**
  * An entity class for binding the result of
@@ -47,50 +49,45 @@ public class VersionColumn {
     }
 
     // ------------------------------------------------------------------- scope
-    public Short getScope() {
-        return scope;
-    }
-
-    public void setScope(final Short scope) {
-        this.scope = scope;
-    }
-
+//    public Short getScope() {
+//        return scope;
+//    }
+//
+//    public void setScope(final Short scope) {
+//        this.scope = scope;
+//    }
     // -------------------------------------------------------------- columnName
-    public String getColumnName() {
-        return columnName;
-    }
-
-    public void setColumnName(final String columnName) {
-        this.columnName = columnName;
-    }
-
+//    public String getColumnName() {
+//        return columnName;
+//    }
+//
+//    public void setColumnName(final String columnName) {
+//        this.columnName = columnName;
+//    }
     // ---------------------------------------------------------------- dataType
-    public int getDataType() {
-        return dataType;
-    }
-
-    public void setDataType(final int dataType) {
-        this.dataType = dataType;
-    }
-
+//    public int getDataType() {
+//        return dataType;
+//    }
+//
+//    public void setDataType(final int dataType) {
+//        this.dataType = dataType;
+//    }
     // ---------------------------------------------------------------- typeName
-    public String getTypeName() {
-        return typeName;
-    }
-
-    public void setTypeName(final String typeName) {
-        this.typeName = typeName;
-    }
-
+//    public String getTypeName() {
+//        return typeName;
+//    }
+//
+//    public void setTypeName(final String typeName) {
+//        this.typeName = typeName;
+//    }
     // -------------------------------------------------------------- columnSize
-    public int getColumnSize() {
-        return columnSize;
-    }
-
-    public void setColumnSize(final int columnSize) {
-        this.columnSize = columnSize;
-    }
-
+//    public int getColumnSize() {
+//        return columnSize;
+//    }
+//
+//    public void setColumnSize(final int columnSize) {
+//        this.columnSize = columnSize;
+//    }
     // ------------------------------------------------------------ bufferLength
     public int getBufferLength() {
         return bufferLength;
@@ -119,37 +116,47 @@ public class VersionColumn {
     }
 
     // -------------------------------------------------------------------------
-    @Label("SCOPE")
+    @Getter
+    @Setter
+    @Labeled("SCOPE")
     @Unused
     @XmlElement(nillable = true, required = true)
     private Short scope;
 
-    @Label("COLUMN_NAME")
+    @Getter
+    @Setter
+    @Labeled("COLUMN_NAME")
     @XmlElement(required = true)
     private String columnName;
 
-    @Label("DATA_TYPE")
+    @Getter
+    @Setter
+    @Labeled("DATA_TYPE")
     @XmlElement(required = true)
     private int dataType;
 
-    @Label("TYPE_NAME")
+    @Getter
+    @Setter
+    @Labeled("TYPE_NAME")
     @XmlElement(required = true)
     private String typeName;
 
-    @Label("COLUMN_SIZE")
+    @Getter
+    @Setter
+    @Labeled("COLUMN_SIZE")
     @XmlElement(required = true)
     private int columnSize;
 
-    @Label("BUFFER_LENGTH")
+    @Labeled("BUFFER_LENGTH")
     @XmlElement(required = true)
     private int bufferLength;
 
-    @Label("DECIMAL_DIGITS")
-    @NillableBySpecification
+    @Labeled("DECIMAL_DIGITS")
+    @Nillable
     @XmlElement(nillable = true, required = true)
     private Short decimalDigits;
 
-    @Label("PSEUDO_COLUMN")
+    @Labeled("PSEUDO_COLUMN")
     @XmlElement(required = true)
     private short pseudoColumn;
 }
