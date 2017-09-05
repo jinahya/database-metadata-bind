@@ -93,7 +93,6 @@ public class Catalog extends AbstractTableDomain {
 //            schema.bind(context);
 //        }
 //    }
-
 //    // ---------------------------------------------------------------- tableCat
 //    public String getTableCat() {
 //        return tableCat;
@@ -114,18 +113,18 @@ public class Catalog extends AbstractTableDomain {
     @XmlAttribute
     Boolean virtual;
 
+    @XmlElement(required = true)
+    @Labeled("TABLE_CAT")
     @Getter
     @Setter
-    @Labeled("TABLE_CAT")
-    @XmlElement(required = true)
     private String tableCat;
 
+    @XmlElementRef
     @Invokable(name = "getSchemas",
                types = {String.class, String.class},
                args = {
                    @Literals({":tableCat", "null"})
                }
     )
-    @XmlElementRef
     private List<Schema> schemas;
 }

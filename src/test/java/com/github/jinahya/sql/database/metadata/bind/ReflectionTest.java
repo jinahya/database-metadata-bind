@@ -35,12 +35,14 @@ public class ReflectionTest {
 
     private static final Logger logger = getLogger(lookup().lookupClass());
 
+    // -------------------------------------------------------------------------
     private static void method(Integer v) {
     }
 
     private static void method(int v) {
     }
 
+    // -------------------------------------------------------------------------
     @Test(enabled = false)
     public void test() throws NoSuchMethodException {
 
@@ -89,6 +91,6 @@ public class ReflectionTest {
         }
     }
 
+    // -------------------------------------------------------------------------
     private List<String> list;
-
 }

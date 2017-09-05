@@ -15,6 +15,7 @@
  */
 package com.github.jinahya.sql.database.metadata.bind;
 
+import java.io.Serializable;
 import java.util.logging.Logger;
 import static java.util.logging.Logger.getLogger;
 import javax.xml.bind.annotation.XmlAttribute;
@@ -34,8 +35,11 @@ import lombok.Setter;
 @XmlType(propOrder = {
     "typeName", "supertypeCat", "supertypeSchem", "supertypeName"
 })
-public class SuperType {
+public class SuperType implements Serializable {
 
+    private static final long serialVersionUID = 4603878785941565029L;
+
+    // -------------------------------------------------------------------------
     private static final Logger logger = getLogger(SuperType.class.getName());
 
     // -------------------------------------------------------------------------
@@ -105,43 +109,44 @@ public class SuperType {
 //        this.supertypeName = supertypeName;
 //    }
     // -------------------------------------------------------------------------
-    @Getter
-    @Setter
+    @XmlAttribute
     @Labeled("TYPE_CAT")
     @Nillable
-    @XmlAttribute
+    @Getter
+    @Setter
     private String typeCat;
 
-    @Getter
-    @Setter
+    @XmlAttribute
     @Labeled("TYPE_SCHEM")
     @Nillable
-    @XmlAttribute
+    @Getter
+    @Setter
     private String typeSchem;
 
+    // -------------------------------------------------------------------------
+    @XmlElement(required = true)
+    @Labeled("TYPE_NAME")
     @Getter
     @Setter
-    @Labeled("TYPE_NAME")
-    @XmlElement(required = true)
     private String typeName;
 
-    @Getter
-    @Setter
+    @XmlElement(nillable = true, required = true)
     @Labeled("SUPERTYPE_CAT")
     @Nillable
-    @XmlElement(nillable = true, required = true)
+    @Getter
+    @Setter
     private String supertypeCat;
 
-    @Getter
-    @Setter
+    @XmlElement(nillable = true, required = true)
     @Labeled("SUPERTYPE_SCHEM")
     @Nillable
-    @XmlElement(nillable = true, required = true)
-    private String supertypeSchem;
-
     @Getter
     @Setter
-    @Labeled("SUPERTYPE_NAME")
+    private String supertypeSchem;
+
     @XmlElement(required = true)
+    @Labeled("SUPERTYPE_NAME")
+    @Getter
+    @Setter
     private String supertypeName;
 }

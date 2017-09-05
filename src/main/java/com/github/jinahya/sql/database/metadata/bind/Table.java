@@ -18,6 +18,8 @@ package com.github.jinahya.sql.database.metadata.bind;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.logging.Logger;
+import static java.util.logging.Logger.getLogger;
 import javax.xml.bind.annotation.XmlAttribute;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlElementRef;
@@ -46,6 +48,9 @@ public class Table implements Serializable {
     private static final long serialVersionUID = 6590036695540141125L;
 
     // -------------------------------------------------------------------------
+    private static final Logger logger = getLogger(Table.class.getName());
+
+    // -------------------------------------------------------------------------
     @Override
     public String toString() {
         return super.toString() + "{"
@@ -70,7 +75,6 @@ public class Table implements Serializable {
 //    public void setTableCat(final String tableCat) {
 //        this.tableCat = tableCat;
 //    }
-
     // -------------------------------------------------------------- tableSchem
 //    public String getTableSchem() {
 //        return tableSchem;
@@ -79,7 +83,6 @@ public class Table implements Serializable {
 //    public void setTableSchem(final String tableSchem) {
 //        this.tableSchem = tableSchem;
 //    }
-
     // --------------------------------------------------------------- tableName
 //    public String getTableName() {
 //        return tableName;
@@ -88,7 +91,6 @@ public class Table implements Serializable {
 //    public void setTableName(final String tableName) {
 //        this.tableName = tableName;
 //    }
-
     // --------------------------------------------------------------- tableType
 //    public String getTableType() {
 //        return tableType;
@@ -97,7 +99,6 @@ public class Table implements Serializable {
 //    public void setTableType(final String tableType) {
 //        this.tableType = tableType;
 //    }
-
     // ----------------------------------------------------------------- remarks
 //    public String getRemarks() {
 //        return remarks;
@@ -106,7 +107,6 @@ public class Table implements Serializable {
 //    public void setRemarks(final String remarks) {
 //        this.remarks = remarks;
 //    }
-
     // ----------------------------------------------------------------- typeCat
 //    public String getTypeCat() {
 //        return typeCat;
@@ -115,7 +115,6 @@ public class Table implements Serializable {
 //    public void setTypeCat(final String typeCat) {
 //        this.typeCat = typeCat;
 //    }
-
     // --------------------------------------------------------------- typeSchem
 //    public String getTypeSchem() {
 //        return typeSchem;
@@ -124,7 +123,6 @@ public class Table implements Serializable {
 //    public void setTypeSchem(final String typeSchem) {
 //        this.typeSchem = typeSchem;
 //    }
-
     // ---------------------------------------------------------------- typeName
 //    public String getTypeName() {
 //        return typeName;
@@ -133,7 +131,6 @@ public class Table implements Serializable {
 //    public void setTypeName(final String typeName) {
 //        this.typeName = typeName;
 //    }
-
     // -------------------------------------------------- selfReferencingColName
 //    public String getSelfReferencingColName() {
 //        return selfReferencingColName;
@@ -142,7 +139,6 @@ public class Table implements Serializable {
 //    public void setSelfReferencingColName(final String selfReferencingColName) {
 //        this.selfReferencingColName = selfReferencingColName;
 //    }
-
     // ----------------------------------------------------------- refGeneration
 //    public String getRefGeneration() {
 //        return refGeneration;
@@ -151,7 +147,6 @@ public class Table implements Serializable {
 //    public void setRefGeneration(final String refGeneration) {
 //        this.refGeneration = refGeneration;
 //    }
-
     // ------------------------------------------------------ bestRowIdentifiers
     public List<BestRowIdentifier> getBestRowIdentifiers() {
         if (bestRowIdentifiers == null) {
@@ -160,11 +155,11 @@ public class Table implements Serializable {
         return bestRowIdentifiers;
     }
 
-    @Deprecated
-    public void setBestRowIdentifiers(
-            final List<BestRowIdentifier> bestRowIdentifiers) {
-        this.bestRowIdentifiers = bestRowIdentifiers;
-    }
+//    @Deprecated
+//    public void setBestRowIdentifiers(
+//            final List<BestRowIdentifier> bestRowIdentifiers) {
+//        this.bestRowIdentifiers = bestRowIdentifiers;
+//    }
 
     // ----------------------------------------------------------------- columns
     public List<Column> getColumns() {
@@ -174,10 +169,10 @@ public class Table implements Serializable {
         return columns;
     }
 
-    @Deprecated
-    public void setColumns(final List<Column> columns) {
-        this.columns = columns;
-    }
+//    @Deprecated
+//    public void setColumns(final List<Column> columns) {
+//        this.columns = columns;
+//    }
 
     // ------------------------------------------------------------ exportedKeys
     public List<ExportedKey> getExportedKeys() {
@@ -187,10 +182,10 @@ public class Table implements Serializable {
         return exportedKeys;
     }
 
-    @Deprecated
-    public void setExportedKeys(final List<ExportedKey> exportedKeys) {
-        this.exportedKeys = exportedKeys;
-    }
+//    @Deprecated
+//    public void setExportedKeys(final List<ExportedKey> exportedKeys) {
+//        this.exportedKeys = exportedKeys;
+//    }
 
     // ------------------------------------------------------------ importedKeys
     public List<ImportedKey> getImportedKeys() {
@@ -200,10 +195,10 @@ public class Table implements Serializable {
         return importedKeys;
     }
 
-    @Deprecated
-    public void setImportedKeys(final List<ImportedKey> importedKeys) {
-        this.importedKeys = importedKeys;
-    }
+//    @Deprecated
+//    public void setImportedKeys(final List<ImportedKey> importedKeys) {
+//        this.importedKeys = importedKeys;
+//    }
 
     // --------------------------------------------------------------- indexInfo
     public List<IndexInfo> getIndexInfo() {
@@ -213,10 +208,10 @@ public class Table implements Serializable {
         return indexInfo;
     }
 
-    @Deprecated
-    public void setIndexInfo(final List<IndexInfo> indexInfo) {
-        this.indexInfo = indexInfo;
-    }
+//    @Deprecated
+//    public void setIndexInfo(final List<IndexInfo> indexInfo) {
+//        this.indexInfo = indexInfo;
+//    }
 
     // ------------------------------------------------------------- primaryKeys
     public List<PrimaryKey> getPrimaryKeys() {
@@ -226,10 +221,10 @@ public class Table implements Serializable {
         return primaryKeys;
     }
 
-    @Deprecated
-    public void setPrimaryKeys(final List<PrimaryKey> primaryKeys) {
-        this.primaryKeys = primaryKeys;
-    }
+//    @Deprecated
+//    public void setPrimaryKeys(final List<PrimaryKey> primaryKeys) {
+//        this.primaryKeys = primaryKeys;
+//    }
 
     // ----------------------------------------------------------- pseudoColumns
     public List<PseudoColumn> getPseudoColumns() {
@@ -239,10 +234,10 @@ public class Table implements Serializable {
         return pseudoColumns;
     }
 
-    @Deprecated
-    public void setPseudoColumns(final List<PseudoColumn> pseudoColumns) {
-        this.pseudoColumns = pseudoColumns;
-    }
+//    @Deprecated
+//    public void setPseudoColumns(final List<PseudoColumn> pseudoColumns) {
+//        this.pseudoColumns = pseudoColumns;
+//    }
 
     // ------------------------------------------------------------- superTables
     public List<SuperTable> getSuperTables() {
@@ -252,10 +247,10 @@ public class Table implements Serializable {
         return superTables;
     }
 
-    @Deprecated
-    public void setSuperTables(final List<SuperTable> superTables) {
-        this.superTables = superTables;
-    }
+//    @Deprecated
+//    public void setSuperTables(final List<SuperTable> superTables) {
+//        this.superTables = superTables;
+//    }
 
     // --------------------------------------------------------- tablePrivileges
     public List<TablePrivilege> getTablePrivileges() {
@@ -265,10 +260,10 @@ public class Table implements Serializable {
         return tablePrivileges;
     }
 
-    @Deprecated
-    public void setTablePrivileges(final List<TablePrivilege> tablePrivileges) {
-        this.tablePrivileges = tablePrivileges;
-    }
+//    @Deprecated
+//    public void setTablePrivileges(final List<TablePrivilege> tablePrivileges) {
+//        this.tablePrivileges = tablePrivileges;
+//    }
 
     // ---------------------------------------------------------- versionColumns
     public List<VersionColumn> getVersionColumns() {
@@ -278,10 +273,10 @@ public class Table implements Serializable {
         return versionColumns;
     }
 
-    @Deprecated
-    public void setVersionColumns(final List<VersionColumn> versionColumns) {
-        this.versionColumns = versionColumns;
-    }
+//    @Deprecated
+//    public void setVersionColumns(final List<VersionColumn> versionColumns) {
+//        this.versionColumns = versionColumns;
+//    }
 
     // -------------------------------------------------------------------------
     @XmlAttribute

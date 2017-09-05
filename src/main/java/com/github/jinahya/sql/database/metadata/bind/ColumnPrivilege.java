@@ -149,6 +149,7 @@ public class ColumnPrivilege implements Serializable {
     @Setter
     private String columnName;
 
+    // -------------------------------------------------------------------------
     @XmlElement(nillable = true, required = true)
     @Labeled("GRANTOR")
     @Nillable

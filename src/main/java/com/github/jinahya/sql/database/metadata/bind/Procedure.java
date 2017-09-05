@@ -121,7 +121,6 @@ public class Procedure implements Serializable {
 //            final List<ProcedureColumn> procedureColumns) {
 //        this.procedureColumns = procedureColumns;
 //    }
-
     // -------------------------------------------------------------------------
     @XmlAttribute
     @Labeled("PROCEDURE_CAT")
@@ -137,6 +136,7 @@ public class Procedure implements Serializable {
     @Setter
     private String procedureSchem;
 
+    // -------------------------------------------------------------------------
     @XmlElement(required = true)
     @Labeled("PROCEDURE_NAME")
     @Getter

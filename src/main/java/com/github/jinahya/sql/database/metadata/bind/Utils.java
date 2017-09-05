@@ -35,20 +35,20 @@ import static java.util.logging.Logger.getLogger;
 
 final class Utils {
 
-    private static final Logger logger = getLogger(Metadata.class.getName());
+    private static final Logger logger = getLogger(Utils.class.getName());
 
     // --------------------------------------------------------------- java.lang
-    private static final List<Class<?>> PRIMITIVE_CLASSES = asList(
-            boolean.class,
-            byte.class,
-            short.class,
-            int.class,
-            long.class,
-            char.class,
-            float.class,
-            double.class,
-            void.class
-    );
+//    private static final List<Class<?>> PRIMITIVE_CLASSES = asList(
+//            boolean.class,
+//            byte.class,
+//            short.class,
+//            int.class,
+//            long.class,
+//            char.class,
+//            float.class,
+//            double.class,
+//            void.class
+//    );
 
     private static final Map<Class<?>, Class<?>> WRAPPER_CLASSES;
 

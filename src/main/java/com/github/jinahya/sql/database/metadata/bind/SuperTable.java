@@ -100,6 +100,7 @@ public class SuperTable implements Serializable {
     @Setter
     private String tableSchem;
 
+    // -------------------------------------------------------------------------
     @XmlElement(required = true)
     @Labeled("TABLE_NAME")
     @Getter

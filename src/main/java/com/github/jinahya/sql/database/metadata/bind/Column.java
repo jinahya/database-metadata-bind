@@ -154,7 +154,6 @@ public class Column implements Serializable {
 //    public void setDecimalDigits(final Integer decimalDigits) {
 //        this.decimalDigits = decimalDigits;
 //    }
-
     // ------------------------------------------------------------ numPrecRadix
 //    public int getNumPrecRadix() {
 //        return numPrecRadix;
@@ -163,7 +162,6 @@ public class Column implements Serializable {
 //    public void setNumPrecRadix(final int numPrecRadix) {
 //        this.numPrecRadix = numPrecRadix;
 //    }
-
     // ---------------------------------------------------------------- nullable
 //    public int getNullable() {
 //        return nullable;
@@ -172,7 +170,6 @@ public class Column implements Serializable {
 //    public void setNullable(final int nullable) {
 //        this.nullable = nullable;
 //    }
-
     // ----------------------------------------------------------------- remarks
 //    public String getRemarks() {
 //        return remarks;
@@ -181,7 +178,6 @@ public class Column implements Serializable {
 //    public void setRemarks(final String remarks) {
 //        this.remarks = remarks;
 //    }
-
     // --------------------------------------------------------------- columnDef
 //    public String getColumnDef() {
 //        return columnDef;
@@ -190,7 +186,6 @@ public class Column implements Serializable {
 //    public void setColumnDef(final String columnDef) {
 //        this.columnDef = columnDef;
 //    }
-
     // ------------------------------------------------------------- sqlDataType
 //    public Integer getSqlDataType() {
 //        return sqlDataType;
@@ -199,7 +194,6 @@ public class Column implements Serializable {
 //    public void setSqlDataType(final Integer sqlDataType) {
 //        this.sqlDataType = sqlDataType;
 //    }
-
     // ---------------------------------------------------------- sqlDatetimeSub
 //    public Integer getSqlDatetimeSub() {
 //        return sqlDatetimeSub;
@@ -208,7 +202,6 @@ public class Column implements Serializable {
 //    public void setSqlDatetimeSub(final Integer sqlDatetimeSub) {
 //        this.sqlDatetimeSub = sqlDatetimeSub;
 //    }
-
     // --------------------------------------------------------- charOctetLength
 //    public int getCharOctetLength() {
 //        return charOctetLength;
@@ -217,7 +210,6 @@ public class Column implements Serializable {
 //    public void setCharOctetLength(final int charOctetLength) {
 //        this.charOctetLength = charOctetLength;
 //    }
-
     // --------------------------------------------------------- ordinalPosition
 //    public int getOrdinalPosition() {
 //        return ordinalPosition;
@@ -226,7 +218,6 @@ public class Column implements Serializable {
 //    public void setOrdinalPosition(final int ordinalPosition) {
 //        this.ordinalPosition = ordinalPosition;
 //    }
-
     // -------------------------------------------------------------- isNullable
 //    public String getIsNullable() {
 //        return isNullable;
@@ -235,7 +226,6 @@ public class Column implements Serializable {
 //    public void setIsNullable(final String isNullable) {
 //        this.isNullable = isNullable;
 //    }
-
     // ------------------------------------------------------------ scopeCatalog
 //    public String getScopeCatalog() {
 //        return scopeCatalog;
@@ -244,7 +234,6 @@ public class Column implements Serializable {
 //    public void setScopeCatalog(final String scopeCatalog) {
 //        this.scopeCatalog = scopeCatalog;
 //    }
-
     // ------------------------------------------------------------- scopeSchema
 //    public String getScopeSchema() {
 //        return scopeSchema;
@@ -253,7 +242,6 @@ public class Column implements Serializable {
 //    public void setScopeSchema(final String scopeSchema) {
 //        this.scopeSchema = scopeSchema;
 //    }
-
     // -------------------------------------------------------------- scopeTable
 //    public String getScopeTable() {
 //        return scopeTable;
@@ -262,7 +250,6 @@ public class Column implements Serializable {
 //    public void setScopeTable(final String scopeTable) {
 //        this.scopeTable = scopeTable;
 //    }
-
     // ---------------------------------------------------------- sourceDataType
 //    public Short getSourceDataType() {
 //        return sourceDataType;
@@ -271,7 +258,6 @@ public class Column implements Serializable {
 //    public void setSourceDataType(final Short sourceDataType) {
 //        this.sourceDataType = sourceDataType;
 //    }
-
     // --------------------------------------------------------- isAutoincrement
 //    public String getIsAutoincrement() {
 //        return isAutoincrement;
@@ -280,7 +266,6 @@ public class Column implements Serializable {
 //    public void setIsAutoincrement(final String isAutoincrement) {
 //        this.isAutoincrement = isAutoincrement;
 //    }
-
     // ------------------------------------------------------- isGeneratedcolumn
 //    public String getIsGeneratedcolumn() {
 //        return isGeneratedcolumn;
@@ -289,7 +274,6 @@ public class Column implements Serializable {
 //    public void setIsGeneratedcolumn(final String isGeneratedcolumn) {
 //        this.isGeneratedcolumn = isGeneratedcolumn;
 //    }
-
     // -------------------------------------------------------- columnPrivileges
     public List<ColumnPrivilege> getColumnPrivileges() {
         if (columnPrivileges == null) {
@@ -325,6 +309,7 @@ public class Column implements Serializable {
     @Setter
     private String tableName;
 
+    // -------------------------------------------------------------------------
     @XmlElement(required = true)
     @Labeled("COLUMN_NAME")
     @Getter
@@ -461,6 +446,7 @@ public class Column implements Serializable {
     @Setter
     private String isGeneratedcolumn;
 
+    // -------------------------------------------------------------------------
     @XmlElementRef
     @Invokable(name = "getColumnPrivileges",
                types = {String.class, String.class, String.class, String.class},

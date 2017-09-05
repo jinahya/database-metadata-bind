@@ -15,6 +15,9 @@
  */
 package com.github.jinahya.sql.database.metadata.bind;
 
+import java.io.Serializable;
+import java.util.logging.Logger;
+import static java.util.logging.Logger.getLogger;
 import javax.xml.bind.annotation.XmlAttribute;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
@@ -37,8 +40,14 @@ import lombok.Setter;
     "nonUnique", "indexQualifier", "indexName", "type", "ordinalPosition",
     "columnName", "ascOrDesc", "cardinality", "pages", "filterCondition"
 })
-public class IndexInfo {
+public class IndexInfo implements Serializable {
 
+    private static final long serialVersionUID = -768486884376018474L;
+
+    // -------------------------------------------------------------------------
+    private static final Logger logger = getLogger(IndexInfo.class.getName());
+
+    // -------------------------------------------------------------------------
     @Override
     public String toString() {
         return super.toString() + "{"
@@ -59,103 +68,103 @@ public class IndexInfo {
     }
 
     // ---------------------------------------------------------------- tableCat
-    public String getTableCat() {
-        return tableCat;
-    }
-
-    public void setTableCat(final String tableCat) {
-        this.tableCat = tableCat;
-    }
+//    public String getTableCat() {
+//        return tableCat;
+//    }
+//
+//    public void setTableCat(final String tableCat) {
+//        this.tableCat = tableCat;
+//    }
 
     // -------------------------------------------------------------- tableSchem
-    public String getTableSchem() {
-        return tableSchem;
-    }
-
-    public void setTableSchem(final String tableSchem) {
-        this.tableSchem = tableSchem;
-    }
+//    public String getTableSchem() {
+//        return tableSchem;
+//    }
+//
+//    public void setTableSchem(final String tableSchem) {
+//        this.tableSchem = tableSchem;
+//    }
 
     // --------------------------------------------------------------- tableName
-    public String getTableName() {
-        return tableName;
-    }
-
-    public void setTableName(final String tableName) {
-        this.tableName = tableName;
-    }
+//    public String getTableName() {
+//        return tableName;
+//    }
+//
+//    public void setTableName(final String tableName) {
+//        this.tableName = tableName;
+//    }
 
     // --------------------------------------------------------------- nonUnique
-    public boolean isNonUnique() {
-        return nonUnique;
-    }
-
-    public void setNonUnique(final boolean nonUnique) {
-        this.nonUnique = nonUnique;
-    }
+//    public boolean isNonUnique() {
+//        return nonUnique;
+//    }
+//
+//    public void setNonUnique(final boolean nonUnique) {
+//        this.nonUnique = nonUnique;
+//    }
 
     // ---------------------------------------------------------- indexQualifier
-    public String getIndexQualifier() {
-        return indexQualifier;
-    }
-
-    public void setIndexQualifier(final String indexQualifier) {
-        this.indexQualifier = indexQualifier;
-    }
+//    public String getIndexQualifier() {
+//        return indexQualifier;
+//    }
+//
+//    public void setIndexQualifier(final String indexQualifier) {
+//        this.indexQualifier = indexQualifier;
+//    }
 
     // --------------------------------------------------------------- indexName
-    public String getIndexName() {
-        return indexName;
-    }
-
-    public void setIndexName(final String indexName) {
-        this.indexName = indexName;
-    }
+//    public String getIndexName() {
+//        return indexName;
+//    }
+//
+//    public void setIndexName(final String indexName) {
+//        this.indexName = indexName;
+//    }
 
     // -------------------------------------------------------------------- type
-    public short getType() {
-        return type;
-    }
-
-    public void setType(final short type) {
-        this.type = type;
-    }
+//    public short getType() {
+//        return type;
+//    }
+//
+//    public void setType(final short type) {
+//        this.type = type;
+//    }
 
     // --------------------------------------------------------- ordinalPosition
-    public short getOrdinalPosition() {
-        return ordinalPosition;
-    }
-
-    public void setOrdinalPosition(final short ordinalPosition) {
-        this.ordinalPosition = ordinalPosition;
-    }
+//    public short getOrdinalPosition() {
+//        return ordinalPosition;
+//    }
+//
+//    public void setOrdinalPosition(final short ordinalPosition) {
+//        this.ordinalPosition = ordinalPosition;
+//    }
 
     // -------------------------------------------------------------- columnName
-    public String getColumnName() {
-        return columnName;
-    }
-
-    public void setColumnName(final String columnName) {
-        this.columnName = columnName;
-    }
+//    public String getColumnName() {
+//        return columnName;
+//    }
+//
+//    public void setColumnName(final String columnName) {
+//        this.columnName = columnName;
+//    }
 
     // --------------------------------------------------------------- ascOrDesc
-    public String getAscOrDesc() {
-        return ascOrDesc;
-    }
-
-    public void setAscOrDesc(final String ascOrDesc) {
-        this.ascOrDesc = ascOrDesc;
-    }
+//    public String getAscOrDesc() {
+//        return ascOrDesc;
+//    }
+//
+//    public void setAscOrDesc(final String ascOrDesc) {
+//        this.ascOrDesc = ascOrDesc;
+//    }
 
     // ------------------------------------------------------------- cardinality
-    public long getCardinality() {
-        return cardinality;
-    }
-
-    public void setCardinality(final long cardinality) {
-        this.cardinality = cardinality;
-    }
+//    public long getCardinality() {
+//        return cardinality;
+//    }
+//
+//    public void setCardinality(final long cardinality) {
+//        this.cardinality = cardinality;
+//    }
 
     // ------------------------------------------------------------------- pages
 //    public long getPages() {
@@ -165,65 +174,87 @@ public class IndexInfo {
 //    public void setPages(final long pages) {
 //        this.pages = pages;
 //    }
-
     // --------------------------------------------------------- filterCondition
-    public String getFilterCondition() {
-        return filterCondition;
-    }
-
-    public void setFilterCondition(final String filterCondition) {
-        this.filterCondition = filterCondition;
-    }
+//    public String getFilterCondition() {
+//        return filterCondition;
+//    }
+//
+//    public void setFilterCondition(final String filterCondition) {
+//        this.filterCondition = filterCondition;
+//    }
 
     // -------------------------------------------------------------------------
+    @XmlAttribute
     @Labeled("TABLE_CAT")
     @Nillable
-    @XmlAttribute
+    @Getter
+    @Setter
     private String tableCat;
 
+    @XmlAttribute
     @Labeled("TABLE_SCHEM")
     @Nillable
-    @XmlAttribute
+    @Getter
+    @Setter
     private String tableSchem;
 
-    @Labeled("TABLE_NAME")
     @XmlAttribute
+    @Labeled("TABLE_NAME")
+    @Getter
+    @Setter
     private String tableName;
 
-    @Labeled("NON_UNIQUE")
+    // -------------------------------------------------------------------------
     @XmlElement(required = true)
+    @Labeled("NON_UNIQUE")
+    @Getter
+    @Setter
     private boolean nonUnique;
 
+    @XmlElement(nillable = true, required = true)
     @Labeled("INDEX_QUALIFIER")
     @Nillable
-    @XmlElement(nillable = true, required = true)
+    @Getter
+    @Setter
     private String indexQualifier;
 
+    @XmlElement(nillable = true, required = true)
     @Labeled("INDEX_NAME")
     @Nillable
-    @XmlElement(nillable = true, required = true)
+    @Getter
+    @Setter
     private String indexName;
 
-    @Labeled("TYPE")
     @XmlElement(required = true)
+    @Labeled("TYPE")
+    @Getter
+    @Setter
     private short type;
 
-    @Labeled("ORDINAL_POSITION")
     @XmlElement(required = true)
+    @Labeled("ORDINAL_POSITION")
+    @Getter
+    @Setter
     private short ordinalPosition;
 
+    @XmlElement(nillable = true, required = true)
     @Labeled("COLUMN_NAME")
     @Nillable
-    @XmlElement(nillable = true, required = true)
+    @Getter
+    @Setter
     private String columnName;
 
+    @XmlElement(nillable = true, required = true)
     @Labeled("ASC_OR_DESC")
     @Nillable
-    @XmlElement(nillable = true, required = true)
+    @Getter
+    @Setter
     private String ascOrDesc;
 
-    @Labeled("CARDINALITY")
     @XmlElement(required = true)
+    @Labeled("CARDINALITY")
+    @Getter
+    @Setter
     private long cardinality;
 
     @XmlElement(required = true)
@@ -232,8 +263,10 @@ public class IndexInfo {
     @Setter
     private long pages;
 
+    @XmlElement(nillable = true, required = true)
     @Labeled("FILTER_CONDITION")
     @Nillable
-    @XmlElement(nillable = true, required = true)
+    @Getter
+    @Setter
     private String filterCondition;
 }

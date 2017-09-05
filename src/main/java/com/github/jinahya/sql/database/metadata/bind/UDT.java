@@ -148,6 +148,7 @@ public class UDT implements Serializable {
     @Setter
     private String typeSchem;
 
+    // -------------------------------------------------------------------------
     @XmlElement(required = true)
     @Labeled("TYPE_NAME")
     @Getter

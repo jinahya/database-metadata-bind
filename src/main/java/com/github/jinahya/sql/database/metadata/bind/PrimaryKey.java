@@ -111,6 +111,7 @@ public class PrimaryKey implements Serializable {
     @Setter
     private String tableName;
 
+    // -------------------------------------------------------------------------
     @XmlElement(required = true)
     @Labeled("COLUMN_NAME")
     @Getter

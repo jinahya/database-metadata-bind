@@ -82,7 +82,6 @@ public class Schema extends AbstractTableDomain {
 //            schema.bind(context);
 //        }
 //    }
-
     // ------------------------------------------------------------ tableCatalog
 //    public String getTableCatalog() {
 //        return tableCatalog;
@@ -166,52 +165,55 @@ public class Schema extends AbstractTableDomain {
     @XmlAttribute
     Boolean virtual;
 
+    // -------------------------------------------------------------------------
+    @XmlAttribute
     @Getter
     @Setter
     @Labeled("TABLE_CATALOG")
     @Nillable
-    @XmlAttribute
     private String tableCatalog;
 
+    // -------------------------------------------------------------------------
+    @XmlElement(required = true)
     @Getter
     @Setter
     @Labeled("TABLE_SCHEM")
-    @XmlElement(required = true)
     private String tableSchem;
 
+    // -------------------------------------------------------------------------
+    @XmlElementRef
     @Invokable(name = "getFunctions",
                types = {String.class, String.class, String.class},
                args = {
                    @Literals({":tableCatalog", ":tableSchem", "null"})
                }
     )
-    @XmlElementRef
     private List<Function> functions;
 
+    @XmlElementRef
     @Invokable(name = "getProcedures",
                types = {String.class, String.class, String.class},
                args = {
                    @Literals({":tableCatalog", ":tableSchem", "null"})
                }
     )
-    @XmlElementRef
     private List<Procedure> procedures;
 
+    @XmlElementRef
     @Invokable(name = "getTables",
                types = {String.class, String.class, String.class, String[].class},
                args = {
                    @Literals({":tableCatalog", ":tableSchem", "null", "null"})
                }
     )
-    @XmlElementRef
     private List<Table> tables;
 
+    @XmlElementRef
     @Invokable(name = "getUDTs",
                types = {String.class, String.class, String.class, int[].class},
                args = {
                    @Literals({":tableCatalog", ":tableSchem", "null", "null"})
                }
     )
-    @XmlElementRef
     private List<UDT> UDTs;
 }

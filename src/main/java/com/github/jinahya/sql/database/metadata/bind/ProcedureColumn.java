@@ -15,10 +15,15 @@
  */
 package com.github.jinahya.sql.database.metadata.bind;
 
+import java.io.Serializable;
+import java.util.logging.Logger;
+import static java.util.logging.Logger.getLogger;
 import javax.xml.bind.annotation.XmlAttribute;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlType;
+import lombok.Getter;
+import lombok.Setter;
 
 /**
  * An entity class for binding the result of
@@ -33,8 +38,15 @@ import javax.xml.bind.annotation.XmlType;
     "columnDef", "sqlDataType", "sqlDatetimeSub", "charOctetLength",
     "ordinalPosition", "isNullable", "specificName"
 })
-public class ProcedureColumn {
+public class ProcedureColumn implements Serializable {
 
+    private static final long serialVersionUID = 3894753719381358829L;
+
+    // -------------------------------------------------------------------------
+    private static final Logger logger
+            = getLogger(ProcedureColumn.class.getName());
+
+    // -------------------------------------------------------------------------
     @Override
     public String toString() {
         return super.toString() + "{"
@@ -61,271 +73,312 @@ public class ProcedureColumn {
                + "}";
     }
 
-    // ------------------------------------------------------------ procedureCat
-    public String getProcedureCat() {
-        return procedureCat;
-    }
-
-    public void setProcedureCat(final String procedureCat) {
-        this.procedureCat = procedureCat;
-    }
-
-    // ---------------------------------------------------------- procedureSchem
-    public String getProcedureSchem() {
-        return procedureSchem;
-    }
-
-    public void setProcedureSchem(final String procedureSchem) {
-        this.procedureSchem = procedureSchem;
-    }
-
-    // ----------------------------------------------------------- procedureName
-    public String getProcedureName() {
-        return procedureName;
-    }
-
-    public void setProcedureName(final String procedureName) {
-        this.procedureName = procedureName;
-    }
-
-    // -------------------------------------------------------------- columnName
-    public String getColumnName() {
-        return columnName;
-    }
-
-    public void setColumnName(final String columnName) {
-        this.columnName = columnName;
-    }
-
-    // -------------------------------------------------------------- columnType
-    public short getColumnType() {
-        return columnType;
-    }
-
-    public void setColumnType(final short columnType) {
-        this.columnType = columnType;
-    }
-
-    // ---------------------------------------------------------------- dataType
-    public int getDataType() {
-        return dataType;
-    }
-
-    public void setDataType(final int dataType) {
-        this.dataType = dataType;
-    }
-
-    // ---------------------------------------------------------------- typeName
-    public String getTypeName() {
-        return typeName;
-    }
-
-    public void setTypeName(final String typeName) {
-        this.typeName = typeName;
-    }
-
-    // --------------------------------------------------------------- precision
-    public int getPrecision() {
-        return precision;
-    }
-
-    public void setPrecision(final int precision) {
-        this.precision = precision;
-    }
-
-    // ------------------------------------------------------------------ length
-    public int getLength() {
-        return length;
-    }
-
-    public void setLength(final int length) {
-        this.length = length;
-    }
-
-    // ------------------------------------------------------------------- scale
-    public Short getScale() {
-        return scale;
-    }
-
-    public void setScale(final Short scale) {
-        this.scale = scale;
-    }
-
-    // ------------------------------------------------------------------- radix
-    public short getRadix() {
-        return radix;
-    }
-
-    public void setRadix(final short radix) {
-        this.radix = radix;
-    }
-
-    // ---------------------------------------------------------------- nullable
-    public short getNullable() {
-        return nullable;
-    }
-
-    public void setNullable(final short nullable) {
-        this.nullable = nullable;
-    }
-
-    // ----------------------------------------------------------------- remarks
-    public String getRemarks() {
-        return remarks;
-    }
-
-    public void setRemarks(final String remarks) {
-        this.remarks = remarks;
-    }
-
-    // --------------------------------------------------------------- columnDef
-    public String getColumnDef() {
-        return columnDef;
-    }
-
-    public void setColumnDef(final String columnDef) {
-        this.columnDef = columnDef;
-    }
-
-    // ------------------------------------------------------------- sqlDataType
-    public Integer getSqlDataType() {
-        return sqlDataType;
-    }
-
-    public void setSqlDataType(final Integer sqlDataType) {
-        this.sqlDataType = sqlDataType;
-    }
-
-    // ---------------------------------------------------------- sqlDatetimeSub
-    public Integer getSqlDatetimeSub() {
-        return sqlDatetimeSub;
-    }
-
-    public void setSqlDatetimeSub(final Integer sqlDatetimeSub) {
-        this.sqlDatetimeSub = sqlDatetimeSub;
-    }
-
-    // --------------------------------------------------------- charOctetLength
-    public Integer getCharOctetLength() {
-        return charOctetLength;
-    }
-
-    public void setCharOctetLength(final Integer charOctetLength) {
-        this.charOctetLength = charOctetLength;
-    }
-
-    // --------------------------------------------------------- ordinalPosition
-    public int getOrdinalPosition() {
-        return ordinalPosition;
-    }
-
-    public void setOrdinalPosition(final int ordinalPosition) {
-        this.ordinalPosition = ordinalPosition;
-    }
-
-    // -------------------------------------------------------------- isNullable
-    public String isNullable() {
-        return isNullable;
-    }
-
-    public void setIsNullable(final String isNullable) {
-        this.isNullable = isNullable;
-    }
-
-    // ------------------------------------------------------------ specificName
-    public String getSpecificName() {
-        return specificName;
-    }
-
-    public void setSpecificName(final String specificName) {
-        this.specificName = specificName;
-    }
+//    // ------------------------------------------------------------ procedureCat
+//    public String getProcedureCat() {
+//        return procedureCat;
+//    }
+//
+//    public void setProcedureCat(final String procedureCat) {
+//        this.procedureCat = procedureCat;
+//    }
+//
+//    // ---------------------------------------------------------- procedureSchem
+//    public String getProcedureSchem() {
+//        return procedureSchem;
+//    }
+//
+//    public void setProcedureSchem(final String procedureSchem) {
+//        this.procedureSchem = procedureSchem;
+//    }
+//
+//    // ----------------------------------------------------------- procedureName
+//    public String getProcedureName() {
+//        return procedureName;
+//    }
+//
+//    public void setProcedureName(final String procedureName) {
+//        this.procedureName = procedureName;
+//    }
+//
+//    // -------------------------------------------------------------- columnName
+//    public String getColumnName() {
+//        return columnName;
+//    }
+//
+//    public void setColumnName(final String columnName) {
+//        this.columnName = columnName;
+//    }
+//
+//    // -------------------------------------------------------------- columnType
+//    public short getColumnType() {
+//        return columnType;
+//    }
+//
+//    public void setColumnType(final short columnType) {
+//        this.columnType = columnType;
+//    }
+//
+//    // ---------------------------------------------------------------- dataType
+//    public int getDataType() {
+//        return dataType;
+//    }
+//
+//    public void setDataType(final int dataType) {
+//        this.dataType = dataType;
+//    }
+//
+//    // ---------------------------------------------------------------- typeName
+//    public String getTypeName() {
+//        return typeName;
+//    }
+//
+//    public void setTypeName(final String typeName) {
+//        this.typeName = typeName;
+//    }
+//
+//    // --------------------------------------------------------------- precision
+//    public int getPrecision() {
+//        return precision;
+//    }
+//
+//    public void setPrecision(final int precision) {
+//        this.precision = precision;
+//    }
+//
+//    // ------------------------------------------------------------------ length
+//    public int getLength() {
+//        return length;
+//    }
+//
+//    public void setLength(final int length) {
+//        this.length = length;
+//    }
+//
+//    // ------------------------------------------------------------------- scale
+//    public Short getScale() {
+//        return scale;
+//    }
+//
+//    public void setScale(final Short scale) {
+//        this.scale = scale;
+//    }
+//
+//    // ------------------------------------------------------------------- radix
+//    public short getRadix() {
+//        return radix;
+//    }
+//
+//    public void setRadix(final short radix) {
+//        this.radix = radix;
+//    }
+//
+//    // ---------------------------------------------------------------- nullable
+//    public short getNullable() {
+//        return nullable;
+//    }
+//
+//    public void setNullable(final short nullable) {
+//        this.nullable = nullable;
+//    }
+//
+//    // ----------------------------------------------------------------- remarks
+//    public String getRemarks() {
+//        return remarks;
+//    }
+//
+//    public void setRemarks(final String remarks) {
+//        this.remarks = remarks;
+//    }
+//
+//    // --------------------------------------------------------------- columnDef
+//    public String getColumnDef() {
+//        return columnDef;
+//    }
+//
+//    public void setColumnDef(final String columnDef) {
+//        this.columnDef = columnDef;
+//    }
+//
+//    // ------------------------------------------------------------- sqlDataType
+//    public Integer getSqlDataType() {
+//        return sqlDataType;
+//    }
+//
+//    public void setSqlDataType(final Integer sqlDataType) {
+//        this.sqlDataType = sqlDataType;
+//    }
+//
+//    // ---------------------------------------------------------- sqlDatetimeSub
+//    public Integer getSqlDatetimeSub() {
+//        return sqlDatetimeSub;
+//    }
+//
+//    public void setSqlDatetimeSub(final Integer sqlDatetimeSub) {
+//        this.sqlDatetimeSub = sqlDatetimeSub;
+//    }
+//
+//    // --------------------------------------------------------- charOctetLength
+//    public Integer getCharOctetLength() {
+//        return charOctetLength;
+//    }
+//
+//    public void setCharOctetLength(final Integer charOctetLength) {
+//        this.charOctetLength = charOctetLength;
+//    }
+//
+//    // --------------------------------------------------------- ordinalPosition
+//    public int getOrdinalPosition() {
+//        return ordinalPosition;
+//    }
+//
+//    public void setOrdinalPosition(final int ordinalPosition) {
+//        this.ordinalPosition = ordinalPosition;
+//    }
+//
+//    // -------------------------------------------------------------- isNullable
+//    public String isNullable() {
+//        return isNullable;
+//    }
+//
+//    public void setIsNullable(final String isNullable) {
+//        this.isNullable = isNullable;
+//    }
+//
+//    // ------------------------------------------------------------ specificName
+//    public String getSpecificName() {
+//        return specificName;
+//    }
+//
+//    public void setSpecificName(final String specificName) {
+//        this.specificName = specificName;
+//    }
 
     // -------------------------------------------------------------------------
+    @XmlAttribute
     @Labeled("PROCEDURE_CAT")
     @Nillable
-    @XmlAttribute
+    @Getter
+    @Setter
     private String procedureCat;
 
+    @XmlAttribute
     @Labeled("PROCEDURE_SCHEM")
     @Nillable
-    @XmlAttribute
+    @Getter
+    @Setter
     private String procedureSchem;
 
-    @Labeled("PROCEDURE_NAME")
     @XmlAttribute
+    @Labeled("PROCEDURE_NAME")
+    @Getter
+    @Setter
     private String procedureName;
 
-    @Labeled("COLUMN_NAME")
+    // -------------------------------------------------------------------------
     @XmlElement(required = true)
+    @Labeled("COLUMN_NAME")
+    @Getter
+    @Setter
     private String columnName;
 
-    @Labeled("COLUMN_TYPE")
     @XmlElement(required = true)
+    @Labeled("COLUMN_TYPE")
+    @Getter
+    @Setter
     private short columnType;
 
-    @Labeled("DATA_TYPE")
     @XmlElement(required = true)
+    @Labeled("DATA_TYPE")
+    @Getter
+    @Setter
     private int dataType;
 
-    @Labeled("TYPE_NAME")
     @XmlElement(required = true)
+    @Labeled("TYPE_NAME")
+    @Getter
+    @Setter
     private String typeName;
 
-    @Labeled("PRECISION")
     @XmlElement(required = true)
+    @Labeled("PRECISION")
+    @Getter
+    @Setter
     private int precision;
 
-    @Labeled("LENGTH")
     @XmlElement(required = true)
+    @Labeled("LENGTH")
+    @Getter
+    @Setter
     private int length;
 
+    @XmlElement(required = true)
     @Labeled("SCALE")
     @Nillable
-    @XmlElement(required = true)
+    @Getter
+    @Setter
     private Short scale;
 
-    @Labeled("RADIX")
     @XmlElement(required = true)
+    @Labeled("RADIX")
+    @Getter
+    @Setter
     private short radix;
 
-    @Labeled("NULLABLE")
     @XmlElement(required = true)
+    @Labeled("NULLABLE")
+    @Getter
+    @Setter
     private short nullable;
 
-    @Labeled("REMARKS")
     @XmlElement(required = true)
+    @Labeled("REMARKS")
+    @Getter
+    @Setter
     private String remarks;
 
+    @XmlElement(nillable = true, required = true)
     @Labeled("COLUMN_DEF")
     @Nillable
-    @XmlElement(nillable = true, required = true)
+    @Getter
+    @Setter
     private String columnDef;
 
+    @XmlElement(nillable = true, required = true)
     @Labeled("SQL_DATA_TYPE")
     @Reserved
-    @XmlElement(nillable = true, required = true)
+    @Getter
+    @Setter
     private Integer sqlDataType;
 
+    @XmlElement(nillable = true, required = true)
     @Labeled("SQL_DATETIME_SUB")
     @Reserved
-    @XmlElement(nillable = true, required = true)
+    @Getter
+    @Setter
     private Integer sqlDatetimeSub;
 
+    @XmlElement(nillable = true, required = true)
     @Labeled("CHAR_OCTET_LENGTH")
     @Nillable
-    @XmlElement(nillable = true, required = true)
+    @Getter
+    @Setter
     private Integer charOctetLength;
 
+    @XmlElement(nillable = true, required = true)
     @Labeled("ORDINAL_POSITION")
-    @XmlElement(required = true)
+    @Getter
+    @Setter
     private int ordinalPosition;
 
-    @Labeled("IS_NULLABLE")
     @XmlElement(required = true)
+    @Labeled("IS_NULLABLE")
+    @Getter
+    @Setter
     private String isNullable;
 
-    @Labeled("SPECIFIC_NAME")
     @XmlElement(required = true)
+    @Labeled("SPECIFIC_NAME")
+    @Getter
+    @Setter
     private String specificName;
 }

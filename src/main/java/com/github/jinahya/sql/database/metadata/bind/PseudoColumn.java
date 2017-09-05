@@ -15,10 +15,15 @@
  */
 package com.github.jinahya.sql.database.metadata.bind;
 
+import java.io.Serializable;
+import java.util.logging.Logger;
+import static java.util.logging.Logger.getLogger;
 import javax.xml.bind.annotation.XmlAttribute;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlType;
+import lombok.Getter;
+import lombok.Setter;
 
 /**
  * An entity class for binding the result of
@@ -31,7 +36,13 @@ import javax.xml.bind.annotation.XmlType;
     "columnName", "dataType", "columnSize", "decimalDigits", "numPrecRadix",
     "columnUsage", "remarks", "charOctetLength", "isNullable"
 })
-public class PseudoColumn {
+public class PseudoColumn implements Serializable {
+
+    private static final long serialVersionUID = -5612575879670895510L;
+
+    // -------------------------------------------------------------------------
+    private static final Logger logger
+            = getLogger(PseudoColumn.class.getName());
 
     // -------------------------------------------------------------------------
     @Override
@@ -52,164 +63,189 @@ public class PseudoColumn {
                + "}";
     }
 
-    // ---------------------------------------------------------------- tableCat
-    public String getTableCat() {
-        return tableCat;
-    }
-
-    public void setTableCat(final String tableCat) {
-        this.tableCat = tableCat;
-    }
-
-    // -------------------------------------------------------------- tableSchem
-    public String getTableSchem() {
-        return tableSchem;
-    }
-
-    public void setTableSchem(final String tableSchem) {
-        this.tableSchem = tableSchem;
-    }
-
-    // --------------------------------------------------------------- tableName
-    public String getTableName() {
-        return tableName;
-    }
-
-    public void setTableName(final String tableName) {
-        this.tableName = tableName;
-    }
-
-    // -------------------------------------------------------------- columnName
-    public String getColumnName() {
-        return columnName;
-    }
-
-    public void setColumnName(final String columnName) {
-        this.columnName = columnName;
-    }
-
-    // ---------------------------------------------------------------- dataType
-    public int getDataType() {
-        return dataType;
-    }
-
-    public void setDataType(final int dataType) {
-        this.dataType = dataType;
-    }
-
-    // -------------------------------------------------------------- columnSize
-    public int getColumnSize() {
-        return columnSize;
-    }
-
-    public void setColumnSize(final int columnSize) {
-        this.columnSize = columnSize;
-    }
-
-    // ----------------------------------------------------------- decimalDigits
-    public Integer getDecimalDigits() {
-        return decimalDigits;
-    }
-
-    public void setDecimalDigits(final Integer decimalDigits) {
-        this.decimalDigits = decimalDigits;
-    }
-
-    // ------------------------------------------------------------ numPrecRadix
-    public int getNumPrecRadix() {
-        return numPrecRadix;
-    }
-
-    public void setNumPrecRadix(final int numPrecRadix) {
-        this.numPrecRadix = numPrecRadix;
-    }
-
-    // ------------------------------------------------------------- columnUsage
-    public String getColumnUsage() {
-        return columnUsage;
-    }
-
-    public void setColumnUsage(final String columnUsage) {
-        this.columnUsage = columnUsage;
-    }
-
-    // ----------------------------------------------------------------- remarks
-    public String getRemarks() {
-        return remarks;
-    }
-
-    public void setRemarks(final String remarks) {
-        this.remarks = remarks;
-    }
-
-    // --------------------------------------------------------- charOctetLength
-    public int getCharOctetLength() {
-        return charOctetLength;
-    }
-
-    public void setCharOctetLength(final int charOctetLength) {
-        this.charOctetLength = charOctetLength;
-    }
-
-    // -------------------------------------------------------------- isNullable
-    public String getIsNullable() {
-        return isNullable;
-    }
-
-    public void setIsNullable(final String isNullable) {
-        this.isNullable = isNullable;
-    }
+//    // ---------------------------------------------------------------- tableCat
+//    public String getTableCat() {
+//        return tableCat;
+//    }
+//
+//    public void setTableCat(final String tableCat) {
+//        this.tableCat = tableCat;
+//    }
+//
+//    // -------------------------------------------------------------- tableSchem
+//    public String getTableSchem() {
+//        return tableSchem;
+//    }
+//
+//    public void setTableSchem(final String tableSchem) {
+//        this.tableSchem = tableSchem;
+//    }
+//
+//    // --------------------------------------------------------------- tableName
+//    public String getTableName() {
+//        return tableName;
+//    }
+//
+//    public void setTableName(final String tableName) {
+//        this.tableName = tableName;
+//    }
+//
+//    // -------------------------------------------------------------- columnName
+//    public String getColumnName() {
+//        return columnName;
+//    }
+//
+//    public void setColumnName(final String columnName) {
+//        this.columnName = columnName;
+//    }
+//
+//    // ---------------------------------------------------------------- dataType
+//    public int getDataType() {
+//        return dataType;
+//    }
+//
+//    public void setDataType(final int dataType) {
+//        this.dataType = dataType;
+//    }
+//
+//    // -------------------------------------------------------------- columnSize
+//    public int getColumnSize() {
+//        return columnSize;
+//    }
+//
+//    public void setColumnSize(final int columnSize) {
+//        this.columnSize = columnSize;
+//    }
+//
+//    // ----------------------------------------------------------- decimalDigits
+//    public Integer getDecimalDigits() {
+//        return decimalDigits;
+//    }
+//
+//    public void setDecimalDigits(final Integer decimalDigits) {
+//        this.decimalDigits = decimalDigits;
+//    }
+//
+//    // ------------------------------------------------------------ numPrecRadix
+//    public int getNumPrecRadix() {
+//        return numPrecRadix;
+//    }
+//
+//    public void setNumPrecRadix(final int numPrecRadix) {
+//        this.numPrecRadix = numPrecRadix;
+//    }
+//
+//    // ------------------------------------------------------------- columnUsage
+//    public String getColumnUsage() {
+//        return columnUsage;
+//    }
+//
+//    public void setColumnUsage(final String columnUsage) {
+//        this.columnUsage = columnUsage;
+//    }
+//
+//    // ----------------------------------------------------------------- remarks
+//    public String getRemarks() {
+//        return remarks;
+//    }
+//
+//    public void setRemarks(final String remarks) {
+//        this.remarks = remarks;
+//    }
+//
+//    // --------------------------------------------------------- charOctetLength
+//    public int getCharOctetLength() {
+//        return charOctetLength;
+//    }
+//
+//    public void setCharOctetLength(final int charOctetLength) {
+//        this.charOctetLength = charOctetLength;
+//    }
+//
+//    // -------------------------------------------------------------- isNullable
+//    public String getIsNullable() {
+//        return isNullable;
+//    }
+//
+//    public void setIsNullable(final String isNullable) {
+//        this.isNullable = isNullable;
+//    }
 
     // -------------------------------------------------------------------------
+    @XmlAttribute
     @Labeled("TABLE_CAT")
     @Nillable
-    @XmlAttribute
+    @Getter
+    @Setter
     private String tableCat;
 
+    @XmlAttribute
     @Labeled("TABLE_SCHEM")
     @Nillable
-    @XmlAttribute
+    @Getter
+    @Setter
     private String tableSchem;
 
-    @Labeled("TABLE_NAME")
     @XmlAttribute
+    @Labeled("TABLE_NAME")
+    @Getter
+    @Setter
     private String tableName;
 
-    @Labeled("COLUMN_NAME")
+    // -------------------------------------------------------------------------
     @XmlElement(required = true)
+    @Labeled("COLUMN_NAME")
+    @Getter
+    @Setter
     private String columnName;
 
-    @Labeled("DATA_TYPE")
     @XmlElement(required = true)
+    @Labeled("DATA_TYPE")
+    @Getter
+    @Setter
     private int dataType;
 
-    @Labeled("COLUMN_SIZE")
     @XmlElement(required = true)
+    @Labeled("COLUMN_SIZE")
+    @Getter
+    @Setter
     private int columnSize;
 
+    @XmlElement(nillable = true, required = true)
     @Labeled("DECIMAL_DIGITS")
     @Nillable
-    @XmlElement(nillable = true, required = true)
+    @Getter
+    @Setter
     private Integer decimalDigits;
 
-    @Labeled("NUM_PREC_RADIX")
     @XmlElement(required = true)
+    @Labeled("NUM_PREC_RADIX")
+    @Getter
+    @Setter
     private int numPrecRadix;
 
-    @Labeled("COLUMN_USAGE")
     @XmlElement(required = true)
+    @Labeled("COLUMN_USAGE")
+    @Getter
+    @Setter
     private String columnUsage;
 
+    @XmlElement(nillable = true, required = true)
     @Labeled("REMARKS")
     @Nillable
-    @XmlElement(nillable = true, required = true)
+    @Getter
+    @Setter
     private String remarks;
 
-    @Labeled("CHAR_OCTET_LENGTH")
     @XmlElement(required = true)
+    @Labeled("CHAR_OCTET_LENGTH")
+    @Getter
+    @Setter
     private int charOctetLength;
 
-    @Labeled("IS_NULLABLE")
     @XmlElement(required = true)
+    @Labeled("IS_NULLABLE")
+    @Getter
+    @Setter
     private String isNullable;
 }

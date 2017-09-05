@@ -235,6 +235,7 @@ public class Attribute implements Serializable {
     @Setter
     private String typeName;
 
+    // -------------------------------------------------------------------------
     @XmlElement(required = true)
     @Labeled("ATTR_NAME")
     @Getter

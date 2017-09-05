@@ -198,6 +198,7 @@ public class CrossReference implements Serializable {
     @Setter
     private String pktableName;
 
+    // -------------------------------------------------------------------------
     @XmlElement(required = true)
     @Labeled("PKCOLUMN_NAME")
     @Getter

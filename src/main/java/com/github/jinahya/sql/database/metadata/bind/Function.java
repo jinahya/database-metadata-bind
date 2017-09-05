@@ -140,6 +140,7 @@ public class Function implements Serializable {
     @Setter
     private String functionSchem;
 
+    // -------------------------------------------------------------------------
     @XmlElement(required = true)
     @Labeled("FUNCTION_NAME")
     @Getter
@@ -164,6 +165,7 @@ public class Function implements Serializable {
     @Setter
     private String specificName;
 
+    // -------------------------------------------------------------------------
     @XmlElementRef
     @Invokable(name = "getFunctionColumns",
                types = {String.class, String.class, String.class, String.class},

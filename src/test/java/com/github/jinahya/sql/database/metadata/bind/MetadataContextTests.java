@@ -15,15 +15,14 @@
  */
 package com.github.jinahya.sql.database.metadata.bind;
 
-import java.lang.reflect.Field;
-
 /**
  *
  * @author Jin Kwon &lt;onacit at gmail.com&gt;
  */
-class LabeledField extends AnnoatedField<Labeled> {
+public final class MetadataContextTests {
 
-    LabeledField(final Field field, final Labeled label) {
-        super(field, label);
+    // -------------------------------------------------------------------------
+    private MetadataContextTests() {
+        super();
     }
 }
