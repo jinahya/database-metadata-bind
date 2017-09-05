@@ -19,6 +19,8 @@ import java.sql.Connection;
 import java.sql.RowIdLifetime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.logging.Logger;
+import static java.util.logging.Logger.getLogger;
 import javax.xml.bind.annotation.XmlAccessOrder;
 import javax.xml.bind.annotation.XmlAccessorOrder;
 import javax.xml.bind.annotation.XmlElement;
@@ -36,8 +38,15 @@ import lombok.Setter;
  */
 @XmlAccessorOrder(XmlAccessOrder.ALPHABETICAL)
 @XmlRootElement
+@Deprecated
 public class Metadata implements TableDomain {
 
+    private static final long serialVersionUID = -1811936621437007688L;
+
+    // -------------------------------------------------------------------------
+    private static final Logger logger = getLogger(Metadata.class.getName());
+
+    // -------------------------------------------------------------------------
     @Override
     public List<Table> getTables() {
         final List<Table> tables = new ArrayList<Table>();
@@ -56,7 +65,6 @@ public class Metadata implements TableDomain {
 //            final boolean allProceduresAreCallable) {
 //        this.allProceduresAreCallable = allProceduresAreCallable;
 //    }
-
 //    // -------------------------------------------------- allTablesAreSelectable
 //    public boolean isAllTablesAreSelectable() {
 //        return allTablesAreSelectable;
@@ -66,7 +74,6 @@ public class Metadata implements TableDomain {
 //            final boolean allTablesAreSelectable) {
 //        this.allTablesAreSelectable = allTablesAreSelectable;
 //    }
-
 //    // ------------------------------------ autoCommitFailureClosesAllResultSets
 //    public boolean isAutoCommitFailureClosesAllResultSets() {
 //        return autoCommitFailureClosesAllResultSets;
@@ -77,7 +84,6 @@ public class Metadata implements TableDomain {
 //        this.autoCommitFailureClosesAllResultSets
 //                = autoCommitFailureClosesAllResultSets;
 //    }
-
     // ---------------------------------------------------------------- catalogs
     public List<Catalog> getCatalogs() {
         if (catalogs == null) {
@@ -99,7 +105,6 @@ public class Metadata implements TableDomain {
 //    public void setCatalogAtStart(boolean catalogAtStart) {
 //        this.catalogAtStart = catalogAtStart;
 //    }
-
 //    // -------------------------------------------------------- catalogSeparator
 //    public String getCatalogSeparator() {
 //        return catalogSeparator;
@@ -108,7 +113,6 @@ public class Metadata implements TableDomain {
 //    public void setCatalogSeparator(final String catalogSeparator) {
 //        this.catalogSeparator = catalogSeparator;
 //    }
-
 //    // ------------------------------------------------------------- catalogTerm
 //    public String getCatalogTerm() {
 //        return catalogTerm;
@@ -117,7 +121,6 @@ public class Metadata implements TableDomain {
 //    public void setCatalogTerm(final String catalogTerm) {
 //        this.catalogTerm = catalogTerm;
 //    }
-
     // ---------------------------------------------------- clientInfoProperties
     public List<ClientInfoProperty> getClientInfoProperties() {
         if (clientInfoProperties == null) {
@@ -1631,336 +1634,351 @@ public class Metadata implements TableDomain {
     }
 
     // --------------------------------------------------- usesLocalFilePerTable
-    public boolean isUsesLocalFilePerTable() {
-        return usesLocalFilePerTable;
-    }
-
-    public void setUsesLocalFilePerTable(final boolean usesLocalFilePerTable) {
-        this.usesLocalFilePerTable = usesLocalFilePerTable;
-    }
-
+//    public boolean isUsesLocalFilePerTable() {
+//        return usesLocalFilePerTable;
+//    }
+//
+//    public void setUsesLocalFilePerTable(final boolean usesLocalFilePerTable) {
+//        this.usesLocalFilePerTable = usesLocalFilePerTable;
+//    }
     // ---------------------------------------------------------- usesLocalFiles
-    public boolean isUsesLocalFiles() {
-        return usesLocalFiles;
-    }
-
-    public void setUsesLocalFiles(final boolean usesLocalFiles) {
-        this.usesLocalFiles = usesLocalFiles;
-    }
-
+//    public boolean isUsesLocalFiles() {
+//        return usesLocalFiles;
+//    }
+//
+//    public void setUsesLocalFiles(final boolean usesLocalFiles) {
+//        this.usesLocalFiles = usesLocalFiles;
+//    }
     // -------------------------------------------------------------------------
+    @XmlElement(required = true)
+    @Invokable(name = "allProceduresAreCallable")
     @Getter
     @Setter
-    @Invokable(name = "allProceduresAreCallable")
-    @XmlElement(required = true)
     private boolean allProceduresAreCallable;
 
+    @XmlElement(required = true)
+    @Invokable(name = "allTablesAreSelectable")
     @Getter
     @Setter
-    @Invokable(name = "allTablesAreSelectable")
-    @XmlElement(required = true)
     private boolean allTablesAreSelectable;
 
+    @XmlElement(required = true)
+    @Invokable(name = "autoCommitFailureClosesAllResultSets")
     @Getter
     @Setter
-    @Invokable(name = "autoCommitFailureClosesAllResultSets")
-    @XmlElement(required = true)
     private boolean autoCommitFailureClosesAllResultSets;
 
-    @Invokable(name = "getCatalogs")
     @XmlElementRef
+    @Invokable(name = "getCatalogs")
     private List<Catalog> catalogs;
 
+    @XmlElement(required = true)
+    @Invokable(name = "isCatalogAtStart")
     @Getter
     @Setter
-    @Invokable(name = "isCatalogAtStart")
-    @XmlElement(required = true)
     private boolean catalogAtStart;
 
+    @XmlElement(nillable = true, required = true)
+    @Invokable(name = "getCatalogSeparator")
     @Getter
     @Setter
-    @Invokable(name = "getCatalogSeparator")
-    @XmlElement(nillable = true, required = true)
     private String catalogSeparator;
 
+    @XmlElement(nillable = true, required = true)
+    @Invokable(name = "getCatalogTerm")
     @Getter
     @Setter
-    @Invokable(name = "getCatalogTerm")
-    @XmlElement(nillable = true, required = true)
     private String catalogTerm;
 
-    @Invokable(name = "getClientInfoProperties")
     @XmlElementRef
+    @Invokable(name = "getClientInfoProperties")
     private List<ClientInfoProperty> clientInfoProperties;
 
-    @Invokable(name = "getConnection")
+    @Deprecated
     @XmlTransient
+    @Invokable(name = "getConnection")
     private Connection connection;
 
     @XmlElementRef
     private List<CrossReference> crossReferences;
 
-    @Invokable(name = "dataDefinitionCausesTransactionCommit")
     @XmlElement(required = true)
+    @Invokable(name = "dataDefinitionCausesTransactionCommit")
     private boolean dataDefinitionCausesTransactionCommit;
 
-    @Invokable(name = "dataDefinitionIgnoredInTransactions")
     @XmlElement(required = true)
+    @Invokable(name = "dataDefinitionIgnoredInTransactions")
     private boolean dataDefinitionIgnoredInTransactions;
 
-    @Invokable(name = "getDatabaseMajorVersion")
     @XmlElement(required = true)
+    @Invokable(name = "getDatabaseMajorVersion")
     private int databaseMajorVersion;
 
-    @Invokable(name = "getDatabaseMinorVersion")
     @XmlElement(required = true)
+    @Invokable(name = "getDatabaseMinorVersion")
     private int databaseMinorVersion;
 
-    @Invokable(name = "getDatabaseProductName")
     @XmlElement(required = true)
+    @Invokable(name = "getDatabaseProductName")
     private String databaseProductName;
 
-    @Invokable(name = "getDatabaseProductVersion")
     @XmlElement(required = true)
+    @Invokable(name = "getDatabaseProductVersion")
     private String databaseProductVersion;
 
-    @Invokable(name = "getDefaultTransactionIsolation")
     @XmlElement(required = true)
+    @Invokable(name = "getDefaultTransactionIsolation")
     private int defaultTransactionIsolation;
 
-    @Invokable(name = "deletesAreDetected",
-            types = {int.class},
-            args = {
-                @Literals({"1003"}), // ResultSet.TYPE_FORWARD_ONLY
-                @Literals({"1004"}), // ResultSet.TYPE_SCROLL_INSENSITIVE
-                @Literals({"1005"}) // ResultSet.TYPE_SCROLL_SENSITIVE
-            }
-    )
     @XmlElement
+    @Invokable(name = "deletesAreDetected",
+               types = {int.class},
+               args = {
+                   @Literals({"1003"})
+                   , // ResultSet.TYPE_FORWARD_ONLY
+                @Literals({"1004"})
+                   , // ResultSet.TYPE_SCROLL_INSENSITIVE
+                @Literals({"1005"}) // ResultSet.TYPE_SCROLL_SENSITIVE
+               }
+    )
     private List<RSTBoolean> deletesAreDetected;
 
     @Invokable(name = "doesMaxRowSizeIncludeBlobs")
     @XmlElement(required = true)
     private boolean doesMaxRowSizeIncludeBlobs;
 
-    @Invokable(name = "getDriverMajorVersion")
     @XmlElement(required = true)
+    @Invokable(name = "getDriverMajorVersion")
     private int driverMajorVersion;
 
-    @Invokable(name = "getDriverMinorVersion")
     @XmlElement(required = true)
+    @Invokable(name = "getDriverMinorVersion")
     private int driverMinorVersion;
 
-    @Invokable(name = "getDriverName")
     @XmlElement(required = true)
+    @Invokable(name = "getDriverName")
     private String driverName;
 
-    @Invokable(name = "getDriverVersion")
     @XmlElement(required = true)
+    @Invokable(name = "getDriverVersion")
     private String driverVersion;
 
-    @Invokable(name = "getExtraNameCharacters")
     @XmlElement(required = true)
+    @Invokable(name = "getExtraNameCharacters")
     private String extraNameCharacters;
 
-    @Invokable(name = "generatedKeyAlwaysReturned")
     @XmlElement(required = true)
+    @Invokable(name = "generatedKeyAlwaysReturned")
     private boolean generatedKeyAlwaysReturned;
 
-    @Invokable(name = "getIdentifierQuoteString")
     @XmlElement(required = true)
+    @Invokable(name = "getIdentifierQuoteString")
     private String identifierQuoteString;
 
-    @Invokable(name = "insertsAreDetected",
-            types = {int.class},
-            args = {
-                @Literals({"1003"}), // ResultSet.TYPE_FORWARD_ONLY
-                @Literals({"1004"}), // ResultSet.TYPE_SCROLL_INSENSITIVE
-                @Literals({"1005"}) // ResultSet.TYPE_SCROLL_SENSITIVE
-            }
-    )
     @XmlElement
+    @Invokable(name = "insertsAreDetected",
+               types = {int.class},
+               args = {
+                   @Literals({"1003"})
+                   , // ResultSet.TYPE_FORWARD_ONLY
+                @Literals({"1004"})
+                   , // ResultSet.TYPE_SCROLL_INSENSITIVE
+                @Literals({"1005"}) // ResultSet.TYPE_SCROLL_SENSITIVE
+               }
+    )
     private List<RSTBoolean> insertsAreDetected;
 
-    @Invokable(name = "getJDBCMajorVersion")
     @XmlElement(required = true)
+    @Invokable(name = "getJDBCMajorVersion")
     private int JDBCMajorVersion;
 
-    @Invokable(name = "getJDBCMinorVersion")
     @XmlElement(required = true)
+    @Invokable(name = "getJDBCMinorVersion")
     private int JDBCMinorVersion;
 
-    @Invokable(name = "locatorsUpdateCopy")
     @XmlElement(required = true)
+    @Invokable(name = "locatorsUpdateCopy")
     private boolean locatorsUpdateCopy;
 
-    @Invokable(name = "getMaxBinaryLiteralLength")
     @XmlElement(required = true)
+    @Invokable(name = "getMaxBinaryLiteralLength")
     private int maxBinaryLiteralLength;
 
-    @Invokable(name = "getMaxCatalogNameLength")
     @XmlElement(required = true)
+    @Invokable(name = "getMaxCatalogNameLength")
     private int maxCatalogNameLength;
 
-    @Invokable(name = "getMaxCharLiteralLength")
     @XmlElement(required = true)
+    @Invokable(name = "getMaxCharLiteralLength")
     private int maxCharLiteralLength;
 
-    @Invokable(name = "getMaxColumnNameLength")
     @XmlElement(required = true)
+    @Invokable(name = "getMaxColumnNameLength")
     private int maxColumnNameLength;
 
-    @Invokable(name = "getMaxColumnsInGroupBy")
     @XmlElement(required = true)
+    @Invokable(name = "getMaxColumnsInGroupBy")
     private int maxColumnsInGroupBy;
 
-    @Invokable(name = "getMaxColumnsInIndex")
     @XmlElement(required = true)
+    @Invokable(name = "getMaxColumnsInIndex")
     private int maxColumnsInIndex;
 
     @Invokable(name = "getMaxColumnsInOrderBy")
     @XmlElement(required = true)
     private int maxColumnsInOrderBy;
 
-    @Invokable(name = "getMaxColumnsInSelect")
     @XmlElement(required = true)
+    @Invokable(name = "getMaxColumnsInSelect")
     private int maxColumnsInSelect;
 
-    @Invokable(name = "getMaxColumnsInTable")
     @XmlElement(required = true)
+    @Invokable(name = "getMaxColumnsInTable")
     private int maxColumnsInTable;
 
-    @Invokable(name = "getMaxConnections")
     @XmlElement(required = true)
+    @Invokable(name = "getMaxConnections")
     private int maxConnections;
 
-    @Invokable(name = "getMaxCursorNameLength")
     @XmlElement(required = true)
+    @Invokable(name = "getMaxCursorNameLength")
     private int maxCursorNameLength;
 
-    @Invokable(name = "getMaxIndexLength")
     @XmlElement(required = true)
+    @Invokable(name = "getMaxIndexLength")
     private int maxIndexLength;
 
-    @Invokable(name = "getMaxLogicalLobSize")
     @XmlElement(required = true)
+    @Invokable(name = "getMaxLogicalLobSize")
     private long maxLogicalLobSize;
 
-    @Invokable(name = "getMaxProcedureNameLength")
     @XmlElement(required = true)
+    @Invokable(name = "getMaxProcedureNameLength")
     private int maxProcedureNameLength;
 
-    @Invokable(name = "getMaxRowSize")
     @XmlElement(required = true)
+    @Invokable(name = "getMaxRowSize")
     private int maxRowSize;
 
-    @Invokable(name = "getMaxSchemaNameLength")
     @XmlElement(required = true)
+    @Invokable(name = "getMaxSchemaNameLength")
     private int maxSchemaNameLength;
 
-    @Invokable(name = "getMaxStatementLength")
     @XmlElement(required = true)
+    @Invokable(name = "getMaxStatementLength")
     private int maxStatementLength;
 
     @Invokable(name = "getMaxStatements")
     @XmlElement(required = true)
     private int maxStatements;
 
-    @Invokable(name = "getMaxTableNameLength")
     @XmlElement(required = true)
+    @Invokable(name = "getMaxTableNameLength")
     private int maxTableNameLength;
 
-    @Invokable(name = "getMaxTablesInSelect")
     @XmlElement(required = true)
+    @Invokable(name = "getMaxTablesInSelect")
     private int maxTablesInSelect;
 
-    @Invokable(name = "getMaxUserNameLength")
     @XmlElement(required = true)
+    @Invokable(name = "getMaxUserNameLength")
     private int maxUserNameLength;
 
-    @Invokable(name = "nullPlusNonNullIsNull")
     @XmlElement(required = true)
+    @Invokable(name = "nullPlusNonNullIsNull")
     private boolean nullPlusNonNullIsNull;
 
-    @Invokable(name = "nullsAreSortedAtEnd")
     @XmlElement(required = true)
+    @Invokable(name = "nullsAreSortedAtEnd")
     private boolean nullsAreSortedAtEnd;
 
-    @Invokable(name = "nullsAreSortedAtStart")
     @XmlElement(required = true)
+    @Invokable(name = "nullsAreSortedAtStart")
     private boolean nullsAreSortedAtStart;
 
-    @Invokable(name = "nullsAreSortedHigh")
     @XmlElement(required = true)
+    @Invokable(name = "nullsAreSortedHigh")
     private boolean nullsAreSortedHigh;
 
-    @Invokable(name = "nullsAreSortedLow")
     @XmlElement(required = true)
+    @Invokable(name = "nullsAreSortedLow")
     private boolean nullsAreSortedLow;
 
-    @Invokable(name = "getNumericFunctions")
     @XmlElement(required = true)
+    @Invokable(name = "getNumericFunctions")
     private String numericFunctions;
 
-    @Invokable(name = "othersDeletesAreVisible",
-            types = {int.class},
-            args = {
-                @Literals({"1003"}), // ResultSet.TYPE_FORWARD_ONLY
-                @Literals({"1004"}), // ResultSet.TYPE_SCROLL_INSENSITIVE
-                @Literals({"1005"}) // ResultSet.TYPE_SCROLL_SENSITIVE
-            }
-    )
     @XmlElement
+    @Invokable(name = "othersDeletesAreVisible",
+               types = {int.class},
+               args = {
+                   @Literals({"1003"})
+                   , // ResultSet.TYPE_FORWARD_ONLY
+                @Literals({"1004"})
+                   , // ResultSet.TYPE_SCROLL_INSENSITIVE
+                @Literals({"1005"}) // ResultSet.TYPE_SCROLL_SENSITIVE
+               }
+    )
     private List<RSTBoolean> othersDeletesAreVisible;
 
     @Invokable(name = "othersInsertsAreVisible",
-            types = {int.class},
-            args = {
-                @Literals({"1003"}), // ResultSet.TYPE_FORWARD_ONLY
-                @Literals({"1004"}), // ResultSet.TYPE_SCROLL_INSENSITIVE
+               types = {int.class},
+               args = {
+                   @Literals({"1003"})
+                   , // ResultSet.TYPE_FORWARD_ONLY
+                @Literals({"1004"})
+                   , // ResultSet.TYPE_SCROLL_INSENSITIVE
                 @Literals({"1005"}) // ResultSet.TYPE_SCROLL_SENSITIVE
-            }
+               }
     )
     @XmlElement
     private List<RSTBoolean> othersInsertsAreVisible;
 
     @Invokable(name = "othersUpdatesAreVisible", types = {int.class},
-            args = {
-                @Literals({"1003"}), // ResultSet.TYPE_FORWARD_ONLY
-                @Literals({"1004"}), // ResultSet.TYPE_SCROLL_INSENSITIVE
+               args = {
+                   @Literals({"1003"})
+                   , // ResultSet.TYPE_FORWARD_ONLY
+                @Literals({"1004"})
+                   , // ResultSet.TYPE_SCROLL_INSENSITIVE
                 @Literals({"1005"}) // ResultSet.TYPE_SCROLL_SENSITIVE
-            }
+               }
     )
     @XmlElement
     private List<RSTBoolean> othersUpdatesAreVisible;
 
     @Invokable(name = "ownDeletesAreVisible", types = {int.class},
-            args = {
-                @Literals({"1003"}), // ResultSet.TYPE_FORWARD_ONLY
-                @Literals({"1004"}), // ResultSet.TYPE_SCROLL_INSENSITIVE
+               args = {
+                   @Literals({"1003"})
+                   , // ResultSet.TYPE_FORWARD_ONLY
+                @Literals({"1004"})
+                   , // ResultSet.TYPE_SCROLL_INSENSITIVE
                 @Literals({"1005"}) // ResultSet.TYPE_SCROLL_SENSITIVE
-            }
+               }
     )
     @XmlElement
     private List<RSTBoolean> ownDeletesAreVisible;
 
     @Invokable(name = "ownInsertsAreVisible",
-            types = {int.class},
-            args = {
-                @Literals({"1003"}), // ResultSet.TYPE_FORWARD_ONLY
-                @Literals({"1004"}), // ResultSet.TYPE_SCROLL_INSENSITIVE
+               types = {int.class},
+               args = {
+                   @Literals({"1003"})
+                   , // ResultSet.TYPE_FORWARD_ONLY
+                @Literals({"1004"})
+                   , // ResultSet.TYPE_SCROLL_INSENSITIVE
                 @Literals({"1005"}) // ResultSet.TYPE_SCROLL_SENSITIVE
-            }
+               }
     )
     @XmlElement
     private List<RSTBoolean> ownInsertsAreVisible;
 
     @Invokable(name = "ownUpdatesAreVisible", types = {int.class},
-            args = {
-                @Literals({"1003"}), // ResultSet.TYPE_FORWARD_ONLY
-                @Literals({"1004"}), // ResultSet.TYPE_SCROLL_INSENSITIVE
+               args = {
+                   @Literals({"1003"})
+                   , // ResultSet.TYPE_FORWARD_ONLY
+                @Literals({"1004"})
+                   , // ResultSet.TYPE_SCROLL_INSENSITIVE
                 @Literals({"1005"}) // ResultSet.TYPE_SCROLL_SENSITIVE
-            }
+               }
     )
     @XmlElement
     private List<RSTBoolean> ownUpdatesAreVisible;
@@ -2092,286 +2110,304 @@ public class Metadata implements TableDomain {
     @XmlElement(required = true)
     private boolean supportsCorrelatedSubqueries;
 
-    @Invokable(name = "supportsDataDefinitionAndDataManipulationTransactions")
     @XmlElement(required = true)
+    @Invokable(name = "supportsDataDefinitionAndDataManipulationTransactions")
     private boolean supportsDataDefinitionAndDataManipulationTransactions;
 
-    @Invokable(name = "supportsDataManipulationTransactionsOnly")
     @XmlElement(required = true)
+    @Invokable(name = "supportsDataManipulationTransactionsOnly")
     private boolean supportsDataManipulationTransactionsOnly;
 
-    @Invokable(name = "supportsDifferentTableCorrelationNames")
     @XmlElement(required = true)
+    @Invokable(name = "supportsDifferentTableCorrelationNames")
     private boolean supportsDifferentTableCorrelationNames;
 
-    @Invokable(name = "supportsExpressionsInOrderBy")
     @XmlElement(required = true)
+    @Invokable(name = "supportsExpressionsInOrderBy")
     private boolean supportsExpressionsInOrderBy;
 
-    @Invokable(name = "supportsExtendedSQLGrammar")
     @XmlElement(required = true)
+    @Invokable(name = "supportsExtendedSQLGrammar")
     private boolean supportsExtendedSQLGrammar;
 
-    @Invokable(name = "supportsFullOuterJoins")
     @XmlElement(required = true)
+    @Invokable(name = "supportsFullOuterJoins")
     private boolean supportsFullOuterJoins;
 
-    @Invokable(name = "supportsGetGeneratedKeys")
     @XmlElement(required = true)
+    @Invokable(name = "supportsGetGeneratedKeys")
     private boolean supportsGetGeneratedKeys;
 
-    @Invokable(name = "supportsGroupBy")
     @XmlElement(required = true)
+    @Invokable(name = "supportsGroupBy")
     private boolean supportsGroupBy;
 
-    @Invokable(name = "supportsGroupByBeyondSelect")
     @XmlElement(required = true)
+    @Invokable(name = "supportsGroupByBeyondSelect")
     private boolean supportsGroupByBeyondSelect;
 
-    @Invokable(name = "supportsGroupByUnrelated")
     @XmlElement(required = true)
+    @Invokable(name = "supportsGroupByUnrelated")
     private boolean supportsGroupByUnrelated;
 
-    @Invokable(name = "supportsIntegrityEnhancementFacility")
     @XmlElement(required = true)
+    @Invokable(name = "supportsIntegrityEnhancementFacility")
     private boolean supportsIntegrityEnhancementFacility;
 
-    @Invokable(name = "supportsLikeEscapeClause")
     @XmlElement(required = true)
+    @Invokable(name = "supportsLikeEscapeClause")
     private boolean supportsLikeEscapeClause;
 
-    @Invokable(name = "supportsLimitedOuterJoins")
     @XmlElement(required = true)
+    @Invokable(name = "supportsLimitedOuterJoins")
     private boolean supportsLimitedOuterJoins;
 
-    @Invokable(name = "supportsMinimumSQLGrammar")
     @XmlElement(required = true)
+    @Invokable(name = "supportsMinimumSQLGrammar")
     private boolean supportsMinimumSQLGrammar;
 
-    @Invokable(name = "supportsMixedCaseIdentifiers")
     @XmlElement(required = true)
+    @Invokable(name = "supportsMixedCaseIdentifiers")
     private boolean supportsMixedCaseIdentifiers;
 
-    @Invokable(name = "supportsMixedCaseQuotedIdentifiers")
     @XmlElement(required = true)
+    @Invokable(name = "supportsMixedCaseQuotedIdentifiers")
     private boolean supportsMixedCaseQuotedIdentifiers;
 
-    @Invokable(name = "supportsMultipleOpenResults")
     @XmlElement(required = true)
+    @Invokable(name = "supportsMultipleOpenResults")
     private boolean supportsMultipleOpenResults;
 
-    @Invokable(name = "supportsMultipleResultSets")
     @XmlElement(required = true)
+    @Invokable(name = "supportsMultipleResultSets")
     private boolean supportsMultipleResultSets;
 
-    @Invokable(name = "supportsMultipleTransactions")
     @XmlElement(required = true)
+    @Invokable(name = "supportsMultipleTransactions")
     private boolean supportsMultipleTransactions;
 
-    @Invokable(name = "supportsNamedParameters")
     @XmlElement(required = true)
+    @Invokable(name = "supportsNamedParameters")
     private boolean supportsNamedParameters;
 
-    @Invokable(name = "supportsNonNullableColumns")
     @XmlElement(required = true)
+    @Invokable(name = "supportsNonNullableColumns")
     private boolean supportsNonNullableColumns;
 
-    @Invokable(name = "supportsOpenCursorsAcrossCommit")
     @XmlElement(required = true)
+    @Invokable(name = "supportsOpenCursorsAcrossCommit")
     private boolean supportsOpenCursorsAcrossCommit;
 
-    @Invokable(name = "supportsOpenCursorsAcrossRollback")
     @XmlElement(required = true)
+    @Invokable(name = "supportsOpenCursorsAcrossRollback")
     private boolean supportsOpenCursorsAcrossRollback;
 
-    @Invokable(name = "supportsOpenStatementsAcrossCommit")
     @XmlElement(required = true)
+    @Invokable(name = "supportsOpenStatementsAcrossCommit")
     private boolean supportsOpenStatementsAcrossCommit;
 
-    @Invokable(name = "supportsOpenStatementsAcrossRollback")
     @XmlElement(required = true)
+    @Invokable(name = "supportsOpenStatementsAcrossRollback")
     private boolean supportsOpenStatementsAcrossRollback;
 
-    @Invokable(name = "supportsOrderByUnrelated")
     @XmlElement(required = true)
+    @Invokable(name = "supportsOrderByUnrelated")
     private boolean supportsOrderByUnrelated;
 
-    @Invokable(name = "supportsOuterJoins")
     @XmlElement(required = true)
+    @Invokable(name = "supportsOuterJoins")
     private boolean supportsOuterJoins;
 
-    @Invokable(name = "supportsPositionedDelete")
     @XmlElement(required = true)
+    @Invokable(name = "supportsPositionedDelete")
     private boolean supportsPositionedDelete;
 
-    @Invokable(name = "supportsPositionedUpdate")
     @XmlElement(required = true)
+    @Invokable(name = "supportsPositionedUpdate")
     private boolean supportsPositionedUpdate;
 
-    @Invokable(name = "supportsRefCursors")
     @XmlElement(required = true)
+    @Invokable(name = "supportsRefCursors")
     private boolean supportsRefCursors;
 
-    @Invokable(name = "supportsResultSetConcurrency",
-            types = {int.class, int.class},
-            args = {
-                @Literals({"1003", "1007"}), // TYPE_FORWARD_ONLY/CONCUR_READ_ONLY
-                @Literals({"1003", "1008"}), // TYPE_FORWARD_ONLY/CONCUR_UPDATABLE
-                @Literals({"1004", "1007"}), // TYPE_SCROLL_INSENSITIVE/CONCUR_READ_ONLY
-                @Literals({"1004", "1008"}), // TYPE_SCROLL_INSENSITIVE/CONCUR_UPDATABLE
-                @Literals({"1005", "1007"}), // TYPE_SCROLL_SENSITIVE/CONCUR_READ_ONLY
-                @Literals({"1005", "1008"}) // TYPE_SCROLL_SENSITIVE/CONCUR_UPDATABLE
-            }
-    )
     @XmlElement
+    @Invokable(name = "supportsResultSetConcurrency",
+               types = {int.class, int.class},
+               args = {
+                   @Literals({"1003", "1007"})
+                   , // TYPE_FORWARD_ONLY/CONCUR_READ_ONLY
+                @Literals({"1003", "1008"})
+                   , // TYPE_FORWARD_ONLY/CONCUR_UPDATABLE
+                @Literals({"1004", "1007"})
+                   , // TYPE_SCROLL_INSENSITIVE/CONCUR_READ_ONLY
+                @Literals({"1004", "1008"})
+                   , // TYPE_SCROLL_INSENSITIVE/CONCUR_UPDATABLE
+                @Literals({"1005", "1007"})
+                   , // TYPE_SCROLL_SENSITIVE/CONCUR_READ_ONLY
+                @Literals({"1005", "1008"}) // TYPE_SCROLL_SENSITIVE/CONCUR_UPDATABLE
+               }
+    )
     private List<RSTRSCBoolean> supportsResultSetConcurrency;
 
-    @Invokable(name = "supportsResultSetHoldability",
-            types = {int.class},
-            args = {
-                @Literals({"1"}), // CLOSE_CURSORS_AT_COMMIT
-                @Literals({"2"}) // HOLD_CURSORS_OVER_COMMIT
-            }
-    )
     @XmlElement
+    @Invokable(name = "supportsResultSetHoldability",
+               types = {int.class},
+               args = {
+                   @Literals({"1"})
+                   , // CLOSE_CURSORS_AT_COMMIT
+                @Literals({"2"}) // HOLD_CURSORS_OVER_COMMIT
+               }
+    )
     private List<RSHBoolean> supportsResultSetHoldability;
 
-    @Invokable(name = "supportsResultSetType",
-            types = {int.class},
-            args = {
-                @Literals({"1003"}), // TYPE_FORWARD_ONLY
-                @Literals({"1004"}), // TYPE_SCROLL_INSENSITIVE
-                @Literals({"1005"}) // TYPE_SCROLL_SENSITIVE
-            }
-    )
     @XmlElement
+    @Invokable(name = "supportsResultSetType",
+               types = {int.class},
+               args = {
+                   @Literals({"1003"})
+                   , // TYPE_FORWARD_ONLY
+                @Literals({"1004"})
+                   , // TYPE_SCROLL_INSENSITIVE
+                @Literals({"1005"}) // TYPE_SCROLL_SENSITIVE
+               }
+    )
     private List<RSTBoolean> supportsResultSetType;
 
-    @Invokable(name = "supportsSavepoints")
     @XmlElement(required = true)
+    @Invokable(name = "supportsSavepoints")
     private boolean supportsSavepoints;
 
-    @Invokable(name = "supportsSchemasInDataManipulation")
     @XmlElement(required = true)
+    @Invokable(name = "supportsSchemasInDataManipulation")
     private boolean supportsSchemasInDataManipulation;
 
-    @Invokable(name = "supportsSchemasInIndexDefinitions")
     @XmlElement(required = true)
+    @Invokable(name = "supportsSchemasInIndexDefinitions")
     private boolean supportsSchemasInIndexDefinitions;
 
-    @Invokable(name = "supportsSchemasInPrivilegeDefinitions")
     @XmlElement(required = true)
+    @Invokable(name = "supportsSchemasInPrivilegeDefinitions")
     private boolean supportsSchemasInPrivilegeDefinitions;
 
-    @Invokable(name = "supportsSchemasInProcedureCalls")
     @XmlElement(required = true)
+    @Invokable(name = "supportsSchemasInProcedureCalls")
     private boolean supportsSchemasInProcedureCalls;
 
-    @Invokable(name = "supportsSchemasInTableDefinitions")
     @XmlElement(required = true)
+    @Invokable(name = "supportsSchemasInTableDefinitions")
     private boolean supportsSchemasInTableDefinitions;
 
-    @Invokable(name = "supportsSelectForUpdate")
     @XmlElement(required = true)
+    @Invokable(name = "supportsSelectForUpdate")
     private boolean supportsSelectForUpdate;
 
-    @Invokable(name = "supportsStatementPooling")
     @XmlElement(required = true)
+    @Invokable(name = "supportsStatementPooling")
     private boolean supportsStatementPooling;
 
-    @Invokable(name = "supportsStoredFunctionsUsingCallSyntax")
     @XmlElement(required = true)
+    @Invokable(name = "supportsStoredFunctionsUsingCallSyntax")
     private boolean supportsStoredFunctionsUsingCallSyntax;
 
-    @Invokable(name = "supportsStoredProcedures")
     @XmlElement(required = true)
+    @Invokable(name = "supportsStoredProcedures")
     private boolean supportsStoredProcedures;
 
-    @Invokable(name = "supportsSubqueriesInComparisons")
     @XmlElement(required = true)
+    @Invokable(name = "supportsSubqueriesInComparisons")
     private boolean supportsSubqueriesInComparisons;
 
-    @Invokable(name = "supportsSubqueriesInExists")
     @XmlElement(required = true)
+    @Invokable(name = "supportsSubqueriesInExists")
     private boolean supportsSubqueriesInExists;
 
-    @Invokable(name = "supportsSubqueriesInIns")
     @XmlElement(required = true)
+    @Invokable(name = "supportsSubqueriesInIns")
     private boolean supportsSubqueriesInIns;
 
-    @Invokable(name = "supportsSubqueriesInQuantifieds")
     @XmlElement(required = true)
+    @Invokable(name = "supportsSubqueriesInQuantifieds")
     private boolean supportsSubqueriesInQuantifieds;
 
-    @Invokable(name = "supportsTableCorrelationNames")
     @XmlElement(required = true)
+    @Invokable(name = "supportsTableCorrelationNames")
     private boolean supportsTableCorrelationNames;
 
-    @Invokable(name = "supportsTransactionIsolationLevel",
-            types = {int.class},
-            args = {
-                @Literals({"0"}), // TRANSACTION_NONE
-                @Literals({"1"}), // TRANSACTION_READ_UNCOMMITTED
-                @Literals({"2"}), // TRANSACTION_READ_COMMITTED
-                @Literals({"4"}), // TRANSACTION_REPEATABLE_READ
-                @Literals({"8"}) // TRANSACTION_SERIALIZABLE
-            }
-    )
     @XmlElement
+    @Invokable(name = "supportsTransactionIsolationLevel",
+               types = {int.class},
+               args = {
+                   @Literals({"0"})
+                   , // TRANSACTION_NONE
+                @Literals({"1"})
+                   , // TRANSACTION_READ_UNCOMMITTED
+                @Literals({"2"})
+                   , // TRANSACTION_READ_COMMITTED
+                @Literals({"4"})
+                   , // TRANSACTION_REPEATABLE_READ
+                @Literals({"8"}) // TRANSACTION_SERIALIZABLE
+               }
+    )
     private List<TILBoolean> supportsTransactionIsolationLevel;
 
-    @Invokable(name = "supportsTransactions")
     @XmlElement(required = true)
+    @Invokable(name = "supportsTransactions")
     private boolean supportsTransactions;
 
-    @Invokable(name = "supportsUnion")
     @XmlElement(required = true)
+    @Invokable(name = "supportsUnion")
     private boolean supportsUnion;
 
-    @Invokable(name = "supportsUnionAll")
     @XmlElement(required = true)
+    @Invokable(name = "supportsUnionAll")
     private boolean supportsUnionAll;
 
-    @Invokable(name = "getSystemFunctions")
     @XmlElement(required = true)
+    @Invokable(name = "getSystemFunctions")
     private String systemFunctions;
 
-    @Invokable(name = "getTableTypes")
     @XmlElementRef
+    @Invokable(name = "getTableTypes")
     private List<TableType> tableTypes;
 
-    @Invokable(name = "getTimeDateFunctions")
     @XmlElement(required = true)
+    @Invokable(name = "getTimeDateFunctions")
     private String timeDateFunctions;
 
-    @Invokable(name = "getTypeInfo")
     @XmlElementRef
+    @Invokable(name = "getTypeInfo")
     private List<TypeInfo> typeInfo;
 
-    @Invokable(name = "updatesAreDetected",
-            types = {int.class},
-            args = {
-                @Literals({"1003"}), // TYPE_FORWARD_ONLY
-                @Literals({"1004"}), // TYPE_SCROLL_INSENSITIVE
-                @Literals({"1005"}) // TYPE_SCROLL_SENSITIVE
-            }
-    )
     @XmlElement
+    @Invokable(name = "updatesAreDetected",
+               types = {int.class},
+               args = {
+                   @Literals({"1003"})
+                   , // TYPE_FORWARD_ONLY
+                @Literals({"1004"})
+                   , // TYPE_SCROLL_INSENSITIVE
+                @Literals({"1005"}) // TYPE_SCROLL_SENSITIVE
+               }
+    )
     private List<RSTBoolean> updatesAreDetected;
 
-    @Invokable(name = "getUserName")
     @XmlElement(required = true)
+    @Invokable(name = "getUserName")
     private String userName;
 
-    @Invokable(name = "getURL")
     @XmlElement(required = true)
+    @Invokable(name = "getURL")
     private String URL;
 
-    @Invokable(name = "usesLocalFilePerTable")
     @XmlElement(required = true)
+    @Invokable(name = "usesLocalFilePerTable")
+    @Getter
+    @Setter
     private boolean usesLocalFilePerTable;
 
-    @Invokable(name = "usesLocalFiles")
     @XmlElement(required = true)
+    @Invokable(name = "usesLocalFiles")
+    @Getter
+    @Setter
     private boolean usesLocalFiles;
 }

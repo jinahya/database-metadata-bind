@@ -15,6 +15,7 @@
  */
 package com.github.jinahya.sql.database.metadata.bind;
 
+import java.io.Serializable;
 import java.util.logging.Logger;
 import static java.util.logging.Logger.getLogger;
 import javax.xml.bind.annotation.XmlAttribute;
@@ -34,8 +35,11 @@ import lombok.Setter;
 @XmlType(propOrder = {
     "tableName", "supertableName"
 })
-public class SuperTable {
+public class SuperTable implements Serializable {
 
+    private static final long serialVersionUID = -302335602056528563L;
+
+    // -------------------------------------------------------------------------
     private static final Logger logger = getLogger(SuperTable.class.getName());
 
     // -------------------------------------------------------------------------
@@ -82,29 +86,29 @@ public class SuperTable {
 //        this.supertableName = supertableName;
 //    }
     // -------------------------------------------------------------------------
-    @Getter
-    @Setter
+    @XmlAttribute
     @Labeled("TABLE_CAT")
     @Nillable
-    @XmlAttribute
+    @Getter
+    @Setter
     private String tableCat;
 
-    @Getter
-    @Setter
+    @XmlAttribute
     @Labeled("TABLE_SCHEM")
     @Nillable
-    @XmlAttribute
+    @Getter
+    @Setter
     private String tableSchem;
 
+    @XmlElement(required = true)
+    @Labeled("TABLE_NAME")
     @Getter
     @Setter
-    @Labeled("TABLE_NAME")
-    @XmlElement(required = true)
     private String tableName;
 
+    @XmlElement(required = true)
+    @Labeled("SUPERTABLE_NAME")
     @Getter
     @Setter
-    @Labeled("SUPERTABLE_NAME")
-    @XmlElement(required = true)
     private String supertableName;
 }

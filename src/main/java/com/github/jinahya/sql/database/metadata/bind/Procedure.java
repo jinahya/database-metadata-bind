@@ -116,11 +116,11 @@ public class Procedure implements Serializable {
         return procedureColumns;
     }
 
-    @Deprecated
-    public void setProcedureColumns(
-            final List<ProcedureColumn> procedureColumns) {
-        this.procedureColumns = procedureColumns;
-    }
+//    @Deprecated
+//    public void setProcedureColumns(
+//            final List<ProcedureColumn> procedureColumns) {
+//        this.procedureColumns = procedureColumns;
+//    }
 
     // -------------------------------------------------------------------------
     @XmlAttribute

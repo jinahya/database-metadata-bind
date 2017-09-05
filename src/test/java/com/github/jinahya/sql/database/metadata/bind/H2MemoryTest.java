@@ -71,7 +71,7 @@ public class H2MemoryTest {
         try (Connection connection = getConnection(CONNECTION_URL)) {
             final DatabaseMetaData database = connection.getMetaData();
             final MetadataContext context = new MetadataContext(database);
-            context.suppressions(
+            context.suppress(
                     "column/isGeneratedcolumn",
                     "clientInfoProperty/defaultValue",
                     "clientInfoProperty/description",

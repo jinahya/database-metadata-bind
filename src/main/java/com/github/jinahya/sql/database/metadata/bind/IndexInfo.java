@@ -19,6 +19,8 @@ import javax.xml.bind.annotation.XmlAttribute;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlType;
+import lombok.Getter;
+import lombok.Setter;
 
 /**
  * An entity class for binding the result of
@@ -156,13 +158,13 @@ public class IndexInfo {
     }
 
     // ------------------------------------------------------------------- pages
-    public long getPages() {
-        return pages;
-    }
-
-    public void setPages(final long pages) {
-        this.pages = pages;
-    }
+//    public long getPages() {
+//        return pages;
+//    }
+//
+//    public void setPages(final long pages) {
+//        this.pages = pages;
+//    }
 
     // --------------------------------------------------------- filterCondition
     public String getFilterCondition() {
@@ -224,8 +226,10 @@ public class IndexInfo {
     @XmlElement(required = true)
     private long cardinality;
 
-    @Labeled("PAGES")
     @XmlElement(required = true)
+    @Labeled("PAGES")
+    @Getter
+    @Setter
     private long pages;
 
     @Labeled("FILTER_CONDITION")

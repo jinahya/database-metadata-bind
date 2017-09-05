@@ -69,7 +69,7 @@ public class MariaDbEmbeddedTest {
             final DatabaseMetaData database = connection.getMetaData();
             logger.debug("database: {}", database);
             final MetadataContext context = new MetadataContext(database);
-            context.suppressions("a"
+            context.suppress("a"
             );
             try {
                 metadata = context.getMetadata();

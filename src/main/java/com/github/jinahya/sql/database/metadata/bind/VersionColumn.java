@@ -128,7 +128,7 @@ public class VersionColumn implements Serializable {
     @Unused
     @Getter
     @Setter
-    private Short scope;
+    private short scope;
 
     @XmlElement(required = true)
     @Labeled("COLUMN_NAME")

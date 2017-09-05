@@ -15,7 +15,10 @@
  */
 package com.github.jinahya.sql.database.metadata.bind;
 
-import static java.beans.Introspector.decapitalize;
+import static com.github.jinahya.sql.database.metadata.bind.Utils.annotatedFields;
+import static com.github.jinahya.sql.database.metadata.bind.Utils.columnLabels;
+import static com.github.jinahya.sql.database.metadata.bind.Utils.setFieldValue;
+import static com.github.jinahya.sql.database.metadata.bind.Utils.suppressionPath;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.lang.reflect.ParameterizedType;
@@ -24,13 +27,14 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
-import java.util.TreeSet;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import static java.util.logging.Logger.getLogger;
 
 /**
  * A context class for retrieving information from an instance of
@@ -41,92 +45,23 @@ import java.util.logging.Logger;
 public class MetadataContext {
 
     private static final Logger logger
-            = Logger.getLogger(Metadata.class.getName());
-
-    // -------------------------------------------------------------------------
-    private static Map<Class<?>, List<Field>> FIELDS
-            = new HashMap<Class<?>, List<Field>>();
-
-    private static Map<Field, Labeled> LABELS = new HashMap<Field, Labeled>();
-
-    private static Map<Field, Invokable> INVOKES = new HashMap<Field, Invokable>();
-
-    private static Map<Field, Nillable> N = new HashMap<Field, Nillable>();
-
-    private static List<Field> fields(final Class<?> type) {
-        if (!FIELDS.containsKey(type)) {
-            final List<Field> value = new ArrayList<Field>();
-            for (final Field field : type.getDeclaredFields()) {
-                if (!field.isAccessible()) {
-                    field.setAccessible(true);
-                }
-                LABELS.put(field, field.getAnnotation(Labeled.class));
-                INVOKES.put(field, field.getAnnotation(Invokable.class));
-            }
-        }
-        return FIELDS.get(type);
-    }
-
-    // -------------------------------------------------------------------------
-    // -------------------------------------------------------------------------
-    private static String suppression(final Class<?> klass, final Field field) {
-        return decapitalize(klass.getSimpleName()) + "/" + field.getName();
-    }
+            = getLogger(MetadataContext.class.getName());
 
     // -------------------------------------------------------------------------
     /**
      * Creates a new instance with given {@code DatabaseMetaData}.
      *
-     * @param context the {@code DatabaseMetaData} instance to hold.
+     * @param metaData the {@code DatabaseMetaData} instance to hold.
      */
-    public MetadataContext(final DatabaseMetaData context) {
+    public MetadataContext(final DatabaseMetaData metaData) {
         super();
-        if (context == null) {
-            throw new NullPointerException("null context");
+        if (metaData == null) {
+            throw new NullPointerException("metaData is null");
         }
-        this.context = context;
+        this.metaData = metaData;
     }
 
     // -------------------------------------------------------------------------
-    private boolean suppression(final String suppression) {
-        if (suppression == null) {
-            throw new NullPointerException("null suppression");
-        }
-        if (suppressions == null) {
-            suppressions = new TreeSet<String>();
-        }
-        return suppressions.add(suppression);
-    }
-
-    /**
-     * Add suppression paths.
-     *
-     * @param suppression the first suppression
-     * @param otherSuppressions other suppressions
-     *
-     * @return this
-     */
-    public MetadataContext suppressions(
-            final String suppression, final String... otherSuppressions) {
-        suppression(suppression);
-        if (otherSuppressions != null) {
-            for (final String otherSuppression : otherSuppressions) {
-                suppression(otherSuppression);
-            }
-        }
-        return this;
-    }
-
-    private boolean suppressed(final String suppression) {
-        if (suppression == null) {
-            throw new NullPointerException("null suppression");
-        }
-        if (suppressions == null) {
-            return false;
-        }
-        return suppressions.contains(suppression);
-    }
-
     private void setValue(final Field field, final Object bean,
                           final Object value, final Object[] args)
             throws ReflectiveOperationException, SQLException {
@@ -136,25 +71,31 @@ public class MetadataContext {
                 return;
             }
             @SuppressWarnings("unchecked")
-            List<Object> list
-                    = (List<Object>) Utils.propertyValue(field.getName(), bean);
-            if (list == null) {
-                list = new ArrayList<Object>();
-                Utils.propertyValue(field.getName(), bean, list);
-            }
-            final Class<?> elementType
-                    = (Class<?>) ((ParameterizedType) field.getGenericType())
-                            .getActualTypeArguments()[0];
+            List<Object> list = new ArrayList<Object>();
+//                    = (List<Object>) Utils.propertyValue(field.getName(), bean);
+//            if (list == null) {
+//                list = new ArrayList<Object>();
+//                Utils.propertyValue(field.getName(), bean, list);
+//            }
+//            final Class<?> elementType
+//                    = (Class<?>) ((ParameterizedType) field.getGenericType())
+//                            .getActualTypeArguments()[0];
+            final Class<?> elementType = (Class<?>) ((ParameterizedType) field.getGenericType()).getActualTypeArguments()[0];
             if (value instanceof ResultSet) {
                 bindAll((ResultSet) value, elementType, list);
-                return;
+            } else {
+                list.add(elementType
+                        .getDeclaredMethod("valueOf", Object[].class, Object.class)
+                        .invoke(null, args, value));
             }
-            list.add(elementType
-                    .getDeclaredMethod("valueOf", Object[].class, Object.class)
-                    .invoke(null, args, value));
+            if (!field.isAccessible()) {
+                field.setAccessible(true);
+            }
+            field.set(bean, list);
             return;
         }
-        Utils.propertyValue(field.getName(), bean, value);
+        //Utils.propertyValue(field.getName(), bean, value);
+        setFieldValue(field, bean, value);
     }
 
     private <T> T bindSingle(final ResultSet resultSet,
@@ -162,17 +103,18 @@ public class MetadataContext {
                              final T bindingInstance)
             throws SQLException, ReflectiveOperationException {
         if (resultSet != null) { // bind columns to fields
-            final Set<String> labels = Utils.columnLabels(resultSet);
-            final Map<Field, Labeled> fields
-                    = Utils.annotatedFields(bindingType, Labeled.class);
+            final Set<String> labels = columnLabels(resultSet);
+//            final Map<Field, Labeled> fields
+//                    = Utils.annotatedFields(bindingType, Labeled.class);
+            final Map<Field, Labeled> fields = labledFields(bindingType);
             for (final Entry<Field, Labeled> entry : fields.entrySet()) {
                 final Field field = entry.getKey();
                 final String label = entry.getValue().value();
-                final String suppression = suppression(bindingType, field);
+                final String path = suppressionPath(bindingType, field);
                 final String formatted = String.format(
                         "field=%s, label=%s, suppression=%s", field, label,
-                        suppression);
-                if (suppressed(suppression)) {
+                        path);
+                if (suppressed(path)) {
                     logger.log(Level.FINE, "suppressed; {0}", formatted);
                     continue;
                 }
@@ -181,7 +123,12 @@ public class MetadataContext {
                     continue;
                 }
                 final Object value = resultSet.getObject(label);
-                Utils.propertyValue(field.getName(), bindingInstance, value);
+                //propertyValue(field.getName(), bindingInstance, value);
+                setFieldValue(field, bindingInstance, value);
+                //if (!field.isAccessible()) {
+                //    field.setAccessible(true);
+                //}
+                //field.set(bindingInstance, value);
             }
             if (!labels.isEmpty()) {
                 for (final String label : labels) {
@@ -192,16 +139,17 @@ public class MetadataContext {
             }
         }
         // invoke
-        final Map<Field, Invokable> fields
-                = Utils.annotatedFields(bindingType, Invokable.class);
+//        final Map<Field, Invokable> fields
+//                = Utils.annotatedFields(bindingType, Invokable.class);
+        final Map<Field, Invokable> fields = invocableFields(bindingType);
         for (final Entry<Field, Invokable> entry : fields.entrySet()) {
             final Field field = entry.getKey();
             final Invokable invocation = entry.getValue();
-            final String suppression = suppression(bindingType, field);
+            final String path = suppressionPath(bindingType, field);
             final String formatted = String.format(
                     "field=%s, invocation=%s, suppression=%s",
-                    field, invocation, suppression);
-            if (suppressed(suppression)) {
+                    field, invocation, path);
+            if (suppressed(path)) {
                 logger.log(Level.FINE, "suppressed; {0}", formatted);
                 continue;
             }
@@ -220,7 +168,7 @@ public class MetadataContext {
                         bindingType, bindingInstance, types, literals);
                 final Object value;
                 try {
-                    value = method.invoke(context, values);
+                    value = method.invoke(metaData, values);
                     setValue(field, bindingInstance, value, values);
                 } catch (final Exception e) {
                     logger.log(Level.SEVERE, "failed to invoke " + formatted
@@ -242,6 +190,7 @@ public class MetadataContext {
         return bindingInstance;
     }
 
+    @Deprecated
     private <T> T bindSingle(final ResultSet resultSet,
                              final Class<T> bindingType)
             throws SQLException, ReflectiveOperationException {
@@ -259,19 +208,20 @@ public class MetadataContext {
         return bindingInstances;
     }
 
-    private <T> List<? super T> bindAll(final ResultSet resultSet,
-                                        final Class<T> bindingType)
-            throws SQLException, ReflectiveOperationException {
-        return bindAll(resultSet, bindingType, new ArrayList<T>());
-    }
-
+//    private <T> List<? super T> bindAll(final ResultSet resultSet,
+//                                        final Class<T> bindingType)
+//            throws SQLException, ReflectiveOperationException {
+//        return bindAll(resultSet, bindingType, new ArrayList<T>());
+//    }
     /**
      * Binds all information.
      *
      * @return a Metadata
      * @throws SQLException if a database occurs.
      * @throws ReflectiveOperationException if a reflection error occurs
+     * @deprecated
      */
+    @Deprecated
     public Metadata getMetadata()
             throws SQLException, ReflectiveOperationException {
         final Metadata metadata = bindSingle(null, Metadata.class);
@@ -280,6 +230,7 @@ public class MetadataContext {
             final Catalog catalog = new Catalog();
             catalog.virtual = Boolean.TRUE;
             catalog.setTableCat("");
+            logger.log(Level.FINE, "adding an empty category, {0}", catalog);
             catalogs.add(catalog);
             bindSingle(null, Catalog.class, catalog);
         }
@@ -290,6 +241,7 @@ public class MetadataContext {
                 schema.virtual = Boolean.TRUE;
                 schema.setTableCatalog(catalog.getTableCat());
                 schema.setTableSchem("");
+                logger.log(Level.FINE, "adding an empty schema, {0}", schema);
                 schemas.add(schema);
                 bindSingle(null, Schema.class, schema);
             }
@@ -302,7 +254,7 @@ public class MetadataContext {
                     new SDTSDTBoolean()
                             .fromType(null)
                             .toType(null)
-                            .value(context.supportsConvert()));
+                            .value(metaData.supportsConvert()));
             final Set<Integer> sqlTypes = Utils.sqlTypes();
             for (final int fromType : sqlTypes) {
                 for (final int toType : sqlTypes) {
@@ -310,7 +262,7 @@ public class MetadataContext {
                             new SDTSDTBoolean()
                                     .fromType(fromType)
                                     .toType(toType)
-                                    .value(context.supportsConvert(fromType, toType)));
+                                    .value(metaData.supportsConvert(fromType, toType)));
                 }
             }
         }
@@ -327,7 +279,7 @@ public class MetadataContext {
                                          final String attributeNamePattern)
             throws SQLException, ReflectiveOperationException {
         final List<Attribute> list = new ArrayList<Attribute>();
-        final ResultSet results = context.getAttributes(
+        final ResultSet results = metaData.getAttributes(
                 catalog, schemaPattern, typeNamePattern, attributeNamePattern);
         try {
             bindAll(results, Attribute.class, list);
@@ -342,7 +294,7 @@ public class MetadataContext {
             final int scope, final boolean nullable)
             throws SQLException, ReflectiveOperationException {
         final List<BestRowIdentifier> list = new ArrayList<BestRowIdentifier>();
-        final ResultSet results = context.getBestRowIdentifier(
+        final ResultSet results = metaData.getBestRowIdentifier(
                 catalog, schema, table, scope, nullable);
         try {
             bindAll(results, BestRowIdentifier.class, list);
@@ -356,16 +308,14 @@ public class MetadataContext {
      * Returns catalogs.
      *
      * @return a list of catalogs
-     *
      * @throws SQLException if a database error occurs.
      * @throws ReflectiveOperationException if a reflection error occurs.
-     *
      * @see DatabaseMetaData#getCatalogs()
      */
     public List<Catalog> getCatalogs()
             throws SQLException, ReflectiveOperationException {
         final List<Catalog> list = new ArrayList<Catalog>();
-        final ResultSet results = context.getCatalogs();
+        final ResultSet results = metaData.getCatalogs();
         try {
             bindAll(results, Catalog.class, list);
         } finally {
@@ -374,11 +324,18 @@ public class MetadataContext {
         return list;
     }
 
+    /**
+     * Binds information from {@link DatabaseMetaData#getClientInfoProperties()}
+     *
+     * @return bound information
+     * @throws SQLException if a database error occurs.
+     * @throws ReflectiveOperationException
+     */
     public List<ClientInfoProperty> getClientInfoProperties()
             throws SQLException, ReflectiveOperationException {
         final List<ClientInfoProperty> list
                 = new ArrayList<ClientInfoProperty>();
-        final ResultSet results = context.getClientInfoProperties();
+        final ResultSet results = metaData.getClientInfoProperties();
         try {
             bindAll(results, ClientInfoProperty.class, list);
         } finally {
@@ -393,7 +350,7 @@ public class MetadataContext {
                                    final String columnNamePattern)
             throws SQLException, ReflectiveOperationException {
         final List<Column> list = new ArrayList<Column>();
-        final ResultSet resultSet = context.getColumns(
+        final ResultSet resultSet = metaData.getColumns(
                 catalog, schemaPattern, tableNamePattern, columnNamePattern);
         try {
             bindAll(resultSet, Column.class, list);
@@ -408,7 +365,7 @@ public class MetadataContext {
             final String columnNamePattern)
             throws SQLException, ReflectiveOperationException {
         final List<ColumnPrivilege> list = new ArrayList<ColumnPrivilege>();
-        final ResultSet results = context.getColumnPrivileges(
+        final ResultSet results = metaData.getColumnPrivileges(
                 catalog, schema, table, columnNamePattern);
         try {
             bindAll(results, ColumnPrivilege.class, list);
@@ -425,7 +382,7 @@ public class MetadataContext {
             final String foreignTable)
             throws SQLException, ReflectiveOperationException {
         final List<CrossReference> list = new ArrayList<CrossReference>();
-        final ResultSet results = context.getCrossReference(
+        final ResultSet results = metaData.getCrossReference(
                 parentCatalog, parentSchema, parentTable, foreignCatalog,
                 foreignSchema, foreignTable);
         try {
@@ -463,7 +420,7 @@ public class MetadataContext {
             final String functionNamePattern, final String columnNamePattern)
             throws SQLException, ReflectiveOperationException {
         final List<FunctionColumn> list = new ArrayList<FunctionColumn>();
-        final ResultSet results = context.getFunctionColumns(
+        final ResultSet results = metaData.getFunctionColumns(
                 catalog, schemaPattern, functionNamePattern, columnNamePattern);
         try {
             bindAll(results, FunctionColumn.class, list);
@@ -478,7 +435,7 @@ public class MetadataContext {
                                        final String functionNamePattern)
             throws SQLException, ReflectiveOperationException {
         final List<Function> list = new ArrayList<Function>();
-        final ResultSet results = context.getFunctions(
+        final ResultSet results = metaData.getFunctions(
                 catalog, schemaPattern, functionNamePattern);
         try {
             bindAll(results, Function.class, list);
@@ -492,7 +449,7 @@ public class MetadataContext {
             final String catalog, final String schema, final String table)
             throws SQLException, ReflectiveOperationException {
         final List<ExportedKey> list = new ArrayList<ExportedKey>();
-        final ResultSet results = context.getExportedKeys(
+        final ResultSet results = metaData.getExportedKeys(
                 catalog, schema, table);
         try {
             bindAll(results, ExportedKey.class, list);
@@ -506,7 +463,7 @@ public class MetadataContext {
             final String catalog, final String schema, final String table)
             throws SQLException, ReflectiveOperationException {
         final List<ImportedKey> list = new ArrayList<ImportedKey>();
-        final ResultSet results = context.getImportedKeys(
+        final ResultSet results = metaData.getImportedKeys(
                 catalog, schema, table);
         try {
             bindAll(results, ImportedKey.class, list);
@@ -521,7 +478,7 @@ public class MetadataContext {
             final boolean unique, final boolean approximate)
             throws SQLException, ReflectiveOperationException {
         final List<IndexInfo> list = new ArrayList<IndexInfo>();
-        final ResultSet results = context.getIndexInfo(
+        final ResultSet results = metaData.getIndexInfo(
                 catalog, schema, table, unique, approximate);
         try {
             bindAll(results, IndexInfo.class, list);
@@ -535,7 +492,7 @@ public class MetadataContext {
             final String catalog, final String schema, final String table)
             throws SQLException, ReflectiveOperationException {
         final List<PrimaryKey> list = new ArrayList<PrimaryKey>();
-        final ResultSet results = context.getPrimaryKeys(
+        final ResultSet results = metaData.getPrimaryKeys(
                 catalog, schema, table);
         try {
             bindAll(results, PrimaryKey.class, list);
@@ -550,7 +507,7 @@ public class MetadataContext {
             final String procedureNamePattern, final String columnNamePattern)
             throws SQLException, ReflectiveOperationException {
         final List<ProcedureColumn> list = new ArrayList<ProcedureColumn>();
-        final ResultSet results = context.getProcedureColumns(
+        final ResultSet results = metaData.getProcedureColumns(
                 catalog, schemaPattern, procedureNamePattern, columnNamePattern);
         try {
             bindAll(results, ProcedureColumn.class, list);
@@ -565,7 +522,7 @@ public class MetadataContext {
                                          final String procedureNamePattern)
             throws SQLException, ReflectiveOperationException {
         final List<Procedure> list = new ArrayList<Procedure>();
-        final ResultSet results = context.getProcedures(
+        final ResultSet results = metaData.getProcedures(
                 catalog, schemaPattern, procedureNamePattern);
         try {
             bindAll(results, Procedure.class, list);
@@ -581,7 +538,7 @@ public class MetadataContext {
                                                final String columnNamePattern)
             throws SQLException, ReflectiveOperationException {
         final List<PseudoColumn> list = new ArrayList<PseudoColumn>();
-        final ResultSet results = context.getPseudoColumns(
+        final ResultSet results = metaData.getPseudoColumns(
                 catalog, schemaPattern, tableNamePattern, columnNamePattern);
         try {
             bindAll(results, PseudoColumn.class, list);
@@ -594,7 +551,7 @@ public class MetadataContext {
     public List<SchemaName> getSchemas()
             throws SQLException, ReflectiveOperationException {
         final List<SchemaName> list = new ArrayList<SchemaName>();
-        final ResultSet results = context.getSchemas();
+        final ResultSet results = metaData.getSchemas();
         try {
             bindAll(results, SchemaName.class, list);
         } finally {
@@ -607,7 +564,7 @@ public class MetadataContext {
                                    final String schemaPattern)
             throws SQLException, ReflectiveOperationException {
         final List<Schema> list = new ArrayList<Schema>();
-        final ResultSet results = context.getSchemas(catalog, schemaPattern);
+        final ResultSet results = metaData.getSchemas(catalog, schemaPattern);
         try {
             bindAll(results, Schema.class, list);
         } finally {
@@ -622,7 +579,7 @@ public class MetadataContext {
                                  final String[] types)
             throws SQLException, ReflectiveOperationException {
         final List<Table> list = new ArrayList<Table>();
-        final ResultSet results = context.getTables(
+        final ResultSet results = metaData.getTables(
                 catalog, schemaPattern, tableNamePattern, types);
         try {
             bindAll(results, Table.class, list);
@@ -637,7 +594,7 @@ public class MetadataContext {
             final String tableNamePattern)
             throws SQLException, ReflectiveOperationException {
         final List<TablePrivilege> list = new ArrayList<TablePrivilege>();
-        final ResultSet results = context.getTablePrivileges(
+        final ResultSet results = metaData.getTablePrivileges(
                 catalog, schemaPattern, tableNamePattern);
         try {
             bindAll(results, TablePrivilege.class, list);
@@ -650,7 +607,7 @@ public class MetadataContext {
     public List<TableType> getTableTypes()
             throws SQLException, ReflectiveOperationException {
         final List<TableType> list = new ArrayList<TableType>();
-        final ResultSet results = context.getTableTypes();
+        final ResultSet results = metaData.getTableTypes();
         try {
             bindAll(results, TableType.class, list);
         } finally {
@@ -662,7 +619,7 @@ public class MetadataContext {
     public List<TypeInfo> getTypeInfo()
             throws SQLException, ReflectiveOperationException {
         final List<TypeInfo> list = new ArrayList<TypeInfo>();
-        final ResultSet results = context.getTypeInfo();
+        final ResultSet results = metaData.getTypeInfo();
         try {
             bindAll(results, TypeInfo.class, list);
         } finally {
@@ -675,7 +632,7 @@ public class MetadataContext {
                              final String typeNamePattern, final int[] types)
             throws SQLException, ReflectiveOperationException {
         final List<UDT> list = new ArrayList<UDT>();
-        final ResultSet results = context.getUDTs(
+        final ResultSet results = metaData.getUDTs(
                 catalog, schemaPattern, typeNamePattern, types);
         try {
             bindAll(results, UDT.class, list);
@@ -695,13 +652,15 @@ public class MetadataContext {
      * @return a list of {@link VersionColumn}
      * @throws SQLException if a database access error occurs.
      * @throws ReflectiveOperationException if a reflection error occurs
+     * @see DatabaseMetaData#getVersionColumns(java.lang.String,
+     * java.lang.String, java.lang.String)
      */
     public List<VersionColumn> getVersionColumns(final String catalog,
                                                  final String schema,
                                                  final String table)
             throws SQLException, ReflectiveOperationException {
         final List<VersionColumn> list = new ArrayList<VersionColumn>();
-        final ResultSet results = context.getVersionColumns(
+        final ResultSet results = metaData.getVersionColumns(
                 catalog, schema, table);
         try {
             bindAll(results, VersionColumn.class, list);
@@ -711,8 +670,78 @@ public class MetadataContext {
         return list;
     }
 
-    // -------------------------------------------------------------------------
-    private final DatabaseMetaData context;
+    // ---------------------------------------------------------------- metaData
+    private DatabaseMetaData getMetaData() {
+        return metaData;
+    }
 
-    private Set<String> suppressions;
+    // --------------------------------------------------------- suppressedPaths
+    public boolean suppress(final String path) {
+        if (path == null) {
+            throw new NullPointerException("path is null");
+        }
+        return suppressedPaths.add(path);
+    }
+
+    /**
+     * Add suppression paths.
+     *
+     * @param path the first suppression path
+     * @param otherPaths other suppression paths
+     * @return this
+     */
+    public MetadataContext suppress(final String path,
+                                    final String... otherPaths) {
+        suppress(path);
+        if (otherPaths != null) {
+            for (final String otherPath : otherPaths) {
+                suppress(otherPath);
+            }
+        }
+        return this;
+    }
+
+    private boolean suppressed(final String path) {
+        if (path == null) {
+            throw new NullPointerException("path is null");
+        }
+        return suppressedPaths.contains(path);
+    }
+
+    // ------------------------------------------------------------ labledFields
+    public Map<Field, Labeled> labledFields(final Class<?> type) {
+        if (type == null) {
+            throw new NullPointerException("type is null");
+        }
+        Map<Field, Labeled> value = labeldedFields.get(type);
+        if (value == null) {
+            value = annotatedFields(type, Labeled.class);
+            labeldedFields.put(type, value);
+        }
+        return value;
+    }
+
+    // --------------------------------------------------------- invocableFields
+    public Map<Field, Invokable> invocableFields(final Class<?> type) {
+        if (type == null) {
+            throw new NullPointerException("type is null");
+        }
+        Map<Field, Invokable> value = invocableFields.get(type);
+        if (value == null) {
+            value = annotatedFields(type, Invokable.class);
+            invocableFields.put(type, value);
+        }
+        return value;
+    }
+
+    // -------------------------------------------------------------------------
+    private final DatabaseMetaData metaData;
+
+    private final Set<String> suppressedPaths = new HashSet<String>();
+
+    private final Map<Class<?>, Map<Field, Labeled>> labeldedFields
+            = new HashMap<Class<?>, Map<Field, Labeled>>();
+
+    private final Map<Class<?>, Map<Field, Invokable>> invocableFields
+            = new HashMap<Class<?>, Map<Field, Invokable>>();
 }

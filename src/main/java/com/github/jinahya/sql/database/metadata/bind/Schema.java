@@ -17,6 +17,8 @@ package com.github.jinahya.sql.database.metadata.bind;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.logging.Logger;
+import static java.util.logging.Logger.getLogger;
 import javax.xml.bind.annotation.XmlAttribute;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlElementRef;
@@ -45,6 +47,9 @@ public class Schema extends AbstractTableDomain {
     private static final long serialVersionUID = 7457236468401244963L;
 
     // -------------------------------------------------------------------------
+    private static final Logger logger = getLogger(Schema.class.getName());
+
+    // -------------------------------------------------------------------------
     @Override
     public String toString() {
         return super.toString() + "{"
@@ -52,6 +57,31 @@ public class Schema extends AbstractTableDomain {
                + ",tableSchem=" + tableSchem
                + "}";
     }
+
+//    // -------------------------------------------------------------------------
+//    void bind(final DatabaseMetaData context) throws SQLException {
+//        final ResultSet resultSet = context.getSchemas(tableCat, null);
+//        try {
+//            while (resultSet.next()) {
+//                final Schema schema = new Schema();
+//                getSchemas().add(schema);
+//                schema.setTableSchem(resultSet.getString("TABLE_SCHEM"));
+//                schema.setTableCatalog(resultSet.getString("TABLE_CATALOG"));
+//            }
+//        } finally {
+//            resultSet.close();
+//        }
+//        if (getSchemas().isEmpty()) {
+//            logger.log(Level.FINE, "adding an empty schema to {0}", this);
+//            final Schema schema = new Schema();
+//            schema.virtual = true;
+//            schema.setTableCatalog(tableCat);
+//            schema.setTableSchem("");
+//        }
+//        for (final Schema schema : getSchemas()) {
+//            schema.bind(context);
+//        }
+//    }
 
     // ------------------------------------------------------------ tableCatalog
 //    public String getTableCatalog() {

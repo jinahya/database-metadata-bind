@@ -177,90 +177,90 @@ abstract class TableKey implements Serializable {
 //    }
     // -------------------------------------------------------------------------
     @XmlAttribute
-    @Getter
-    @Setter
     @Labeled("PKTABLE_CAT")
     @Nillable
+    @Getter
+    @Setter
     private String pktableCat;
 
     @XmlAttribute
-    @Getter
-    @Setter
     @Labeled("PKTABLE_SCHEM")
     @Nillable
+    @Getter
+    @Setter
     private String pktableSchem;
 
     @XmlAttribute
+    @Labeled("PKTABLE_NAME")
     @Getter
     @Setter
-    @Labeled("PKTABLE_NAME")
     private String pktableName;
 
     @XmlElement(required = true)
+    @Labeled("PKCOLUMN_NAME")
     @Getter
     @Setter
-    @Labeled("PKCOLUMN_NAME")
     private String pkcolumnName;
 
     @XmlElement(nillable = true, required = true)
-    @Getter
-    @Setter
     @Labeled("FKTABLE_CAT")
     @Nillable
+    @Getter
+    @Setter
     private String fktableCat;
 
     @XmlElement(nillable = true, required = true)
-    @Getter
-    @Setter
     @Labeled("FKTABLE_NAME")
     @Nillable
+    @Getter
+    @Setter
     private String fktableSchem;
 
     @XmlElement(required = true)
+    @Labeled("FKTABLE_NAME")
     @Getter
     @Setter
-    @Labeled("FKTABLE_NAME")
     private String fktableName;
 
     @XmlElement(required = true)
+    @Labeled("FKCOLUMN_NAME")
     @Getter
     @Setter
-    @Labeled("FKCOLUMN_NAME")
     private String fkcolumnName;
 
     @XmlElement(required = true)
+    @Labeled("FKCOLUMN_NAME")
     @Getter
     @Setter
-    @Labeled("FKCOLUMN_NAME")
     private short keySeq;
 
+    @XmlElement(required = true)
+    @Labeled("UPDATE_RULE")
     @Getter
     @Setter
-    @Labeled("UPDATE_RULE")
-    @XmlElement(required = true)
     private short updateRule;
 
     @XmlElement(required = true)
+    @Labeled("DELETE_RULE")
     @Getter
     @Setter
-    @Labeled("DELETE_RULE")
     private short deleteRule;
 
     @XmlElement(required = true)
+    @Labeled("FK_NAME")
     @Getter
     @Setter
-    @Labeled("FK_NAME")
     private String fkName;
 
     @XmlElement(required = true)
+    @Labeled("PK_NAME")
     @Getter
     @Setter
-    @Labeled("PK_NAME")
     private String pkName;
 
     @XmlElement(required = true)
+    @Labeled("DEFERRABILITY")
     @Getter
     @Setter
-    @Labeled("DEFERRABILITY")
     private short deferrability;
 }

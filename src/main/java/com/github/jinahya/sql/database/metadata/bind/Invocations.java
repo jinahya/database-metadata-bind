@@ -15,6 +15,9 @@
  */
 package com.github.jinahya.sql.database.metadata.bind;
 
+import static com.github.jinahya.sql.database.metadata.bind.Utils.findField;
+import java.lang.reflect.Field;
+
 /**
  * A utility class for {@link Invocation}.
  *
@@ -25,7 +28,7 @@ final class Invocations {
     // -------------------------------------------------------------------------
     static <T> Object[] invocationValues(final Class<T> klass, final T instance,
                                          final Class<?>[] types,
-                                         final String[] literals)
+                                         final String[] literals) 
             throws ReflectiveOperationException {
         final Object[] values = new Object[literals.length];
         for (int i = 0; i < literals.length; i++) {
@@ -34,8 +37,14 @@ final class Invocations {
                 continue;
             }
             if (literals[i].startsWith(":")) {
-                values[i] = Utils.propertyValue(
-                        literals[i].substring(1), instance);
+//                values[i] = Utils.propertyValue(
+//                        literals[i].substring(1), instance);
+                final Field field = findField(
+                        instance.getClass(), literals[i].substring(1));
+                if (!field.isAccessible()) {
+                    field.setAccessible(true);
+                }
+                values[i] = field.get(instance);
                 continue;
             }
             if (types[i] == String.class) {

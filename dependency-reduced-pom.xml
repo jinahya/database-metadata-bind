@@ -31,10 +31,6 @@
     <pluginManagement>
       <plugins>
         <plugin>
-          <artifactId>maven-compiler-plugin</artifactId>
-          <version>3.6.1</version>
-        </plugin>
-        <plugin>
           <artifactId>maven-jar-plugin</artifactId>
           <version>3.0.2</version>
         </plugin>
@@ -60,8 +56,17 @@
     </pluginManagement>
     <plugins>
       <plugin>
+        <artifactId>maven-compiler-plugin</artifactId>
+        <version>3.6.2</version>
+        <configuration>
+          <compilerArgs>
+            <arg>-Xlint</arg>
+          </compilerArgs>
+        </configuration>
+      </plugin>
+      <plugin>
         <artifactId>maven-shade-plugin</artifactId>
-        <version>3.0.0</version>
+        <version>3.1.0</version>
         <executions>
           <execution>
             <phase>package</phase>
@@ -117,7 +122,7 @@
       </plugin>
       <plugin>
         <artifactId>maven-surefire-plugin</artifactId>
-        <version>2.19.1</version>
+        <version>2.20</version>
         <configuration>
           <excludes>
             <exclude>**/MariaDbEmbeddedTest.java</exclude>
@@ -133,7 +138,7 @@
       <plugin>
         <groupId>org.codehaus.mojo</groupId>
         <artifactId>animal-sniffer-maven-plugin</artifactId>
-        <version>1.15</version>
+        <version>1.16</version>
         <executions>
           <execution>
             <id>check-against-java17</id>
@@ -373,12 +378,12 @@
       </plugin>
       <plugin>
         <artifactId>maven-pmd-plugin</artifactId>
-        <version>3.7</version>
+        <version>3.8</version>
       </plugin>
       <plugin>
         <groupId>org.codehaus.mojo</groupId>
         <artifactId>findbugs-maven-plugin</artifactId>
-        <version>3.0.4</version>
+        <version>3.0.5</version>
       </plugin>
       <plugin>
         <groupId>org.codehaus.mojo</groupId>
@@ -397,12 +402,12 @@
       <dependency>
         <groupId>org.postgresql</groupId>
         <artifactId>postgresql</artifactId>
-        <version>42.1.4.jre7</version>
+        <version>42.1.4</version>
       </dependency>
       <dependency>
         <groupId>ru.yandex.qatools.embed</groupId>
         <artifactId>postgresql-embedded</artifactId>
-        <version>2.3</version>
+        <version>2.4</version>
       </dependency>
     </dependencies>
   </dependencyManagement>
