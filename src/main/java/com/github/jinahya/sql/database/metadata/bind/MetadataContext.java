@@ -65,8 +65,7 @@ public class MetadataContext {
     private void setValue(final Field field, final Object bean,
                           final Object value, final Object[] args)
             throws ReflectiveOperationException, SQLException {
-        final Class<?> fieldType = field.getType();
-        if (fieldType == List.class) {
+        if (field.getType() == List.class) {
             if (value == null) {
                 return;
             }
@@ -80,13 +79,15 @@ public class MetadataContext {
 //            final Class<?> elementType
 //                    = (Class<?>) ((ParameterizedType) field.getGenericType())
 //                            .getActualTypeArguments()[0];
-            final Class<?> elementType = (Class<?>) ((ParameterizedType) field.getGenericType()).getActualTypeArguments()[0];
+            final Class<?> elementType
+                    = (Class<?>) ((ParameterizedType) field.getGenericType())
+                            .getActualTypeArguments()[0];
             if (value instanceof ResultSet) {
                 bindAll((ResultSet) value, elementType, list);
             } else {
-                list.add(elementType
-                        .getDeclaredMethod("valueOf", Object[].class, Object.class)
-                        .invoke(null, args, value));
+                final Method valueOf = elementType.getDeclaredMethod(
+                        "valueOf", Object[].class, Object.class);
+                list.add(valueOf.invoke(null, args, value));
             }
             if (!field.isAccessible()) {
                 field.setAccessible(true);
@@ -709,7 +710,7 @@ public class MetadataContext {
     }
 
     // ------------------------------------------------------------ labledFields
-    public Map<Field, Labeled> labledFields(final Class<?> type) {
+    private Map<Field, Labeled> labledFields(final Class<?> type) {
         if (type == null) {
             throw new NullPointerException("type is null");
         }
@@ -722,7 +723,7 @@ public class MetadataContext {
     }
 
     // --------------------------------------------------------- invocableFields
-    public Map<Field, Invokable> invocableFields(final Class<?> type) {
+    private Map<Field, Invokable> invocableFields(final Class<?> type) {
         if (type == null) {
             throw new NullPointerException("type is null");
         }
