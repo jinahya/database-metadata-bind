@@ -6,6 +6,7 @@
 *.ear
 /target/
 logs/
+dependency-reduced-pom.xml
 pom.xml.versionsBackup
 .idea
 *.iml
