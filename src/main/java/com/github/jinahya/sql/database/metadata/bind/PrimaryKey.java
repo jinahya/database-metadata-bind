@@ -92,42 +92,48 @@ public class PrimaryKey implements Serializable {
 //    }
     // -------------------------------------------------------------------------
     @XmlAttribute
-    @Labeled("TABLE_CAT")
+    @Label("TABLE_CAT")
+    @Bind(label = "TABLE_CAT", nillable = true)
     @Nillable
-    @Getter
     @Setter
+    @Getter
     private String tableCat;
 
     @XmlAttribute
-    @Labeled("TABLE_SCHEM")
+    @Label("TABLE_SCHEM")
+    @Bind(label = "TABLE_SCHEM", nillable = true)
     @Nillable
-    @Getter
     @Setter
+    @Getter
     private String tableSchem;
 
     @XmlAttribute
-    @Labeled("TABLE_NAME")
-    @Getter
+    @Label("TABLE_NAME")
+    @Bind(label = "TABLE_NAME")
     @Setter
+    @Getter
     private String tableName;
 
     // -------------------------------------------------------------------------
-    @XmlElement(required = true)
-    @Labeled("COLUMN_NAME")
-    @Getter
+    @XmlElement
+    @Label("COLUMN_NAME")
+    @Bind(label = "COLUMN_NAME")
     @Setter
+    @Getter
     private String columnName;
 
-    @XmlElement(required = true)
-    @Labeled("KEY_SEQ")
-    @Getter
+    @XmlElement
+    @Label("KEY_SEQ")
+    @Bind(label = "KEY_SEQ")
     @Setter
+    @Getter
     private short keySeq;
 
-    @XmlElement(nillable = true, required = true)
-    @Labeled("PK_NAME")
+    @XmlElement(nillable = true)
+    @Label("PK_NAME")
+    @Bind(label = "PK_NAME", nillable = true)
     @Nillable
-    @Getter
     @Setter
+    @Getter
     private String pkName;
 }

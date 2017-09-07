@@ -123,53 +123,61 @@ public class VersionColumn implements Serializable {
 //        this.pseudoColumn = pseudoColumn;
 //    }
     // -------------------------------------------------------------------------
-    @XmlElement(nillable = true, required = true)
-    @Labeled("SCOPE")
+    @XmlElement(nillable = true)
+    @Label("SCOPE")
+    @Bind(label = "SCOPE", unused = true)
     @Unused
-    @Getter
     @Setter
+    @Getter
     private short scope;
 
-    @XmlElement(required = true)
-    @Labeled("COLUMN_NAME")
-    @Getter
+    @XmlElement
+    @Label("COLUMN_NAME")
+    @Bind(label = "COLUMN_NAME")
     @Setter
+    @Getter
     private String columnName;
 
-    @XmlElement(required = true)
-    @Labeled("DATA_TYPE")
-    @Getter
+    @XmlElement
+    @Label("DATA_TYPE")
+    @Bind(label = "DATA_TYPE")
     @Setter
+    @Getter
     private int dataType;
 
-    @XmlElement(required = true)
-    @Labeled("TYPE_NAME")
-    @Getter
+    @XmlElement
+    @Label("TYPE_NAME")
+    @Bind(label = "TYPE_NAME")
     @Setter
+    @Getter
     private String typeName;
 
-    @XmlElement(required = true)
-    @Labeled("COLUMN_SIZE")
-    @Getter
+    @XmlElement
+    @Label("COLUMN_SIZE")
+    @Bind(label = "COLUMN_SIZE")
     @Setter
+    @Getter
     private int columnSize;
 
-    @XmlElement(required = true)
-    @Labeled("BUFFER_LENGTH")
-    @Getter
+    @XmlElement
+    @Label("BUFFER_LENGTH")
+    @Bind(label = "BUFFER_LENGTH")
     @Setter
+    @Getter
     private int bufferLength;
 
-    @XmlElement(nillable = true, required = true)
-    @Labeled("DECIMAL_DIGITS")
+    @XmlElement(nillable = true)
+    @Label("DECIMAL_DIGITS")
+    @Bind(label = "DECIMAL_DIGITS", nillable = true)
     @Nillable
-    @Getter
     @Setter
+    @Getter
     private Short decimalDigits;
 
-    @XmlElement(required = true)
-    @Labeled("PSEUDO_COLUMN")
-    @Getter
+    @XmlElement
+    @Label("PSEUDO_COLUMN")
+    @Bind(label = "PSEUDO_COLUMN")
     @Setter
+    @Getter
     private short pseudoColumn;
 }

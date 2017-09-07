@@ -1,5 +1,5 @@
 /*
- * Copyright 2016 Jin Kwon &lt;onacit_at_gmail.com&gt;.
+ * Copyright 2017 Jin Kwon &lt;onacit at gmail.com&gt;.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,28 +15,15 @@
  */
 package com.github.jinahya.sql.database.metadata.bind;
 
-import java.util.ArrayList;
-import java.util.List;
-import javax.xml.bind.annotation.XmlElementRef;
-import javax.xml.bind.annotation.XmlTransient;
+import java.util.logging.Logger;
+import static java.util.logging.Logger.getLogger;
 
-/**
- *
- * @author Jin Kwon &lt;onacit_at_gmail.com&gt;
- */
-@XmlTransient
-abstract class AbstractTableDomain implements TableDomain {
+final class Lebels {
+
+    private static final Logger logger = getLogger(Lebels.class.getName());
 
     // -------------------------------------------------------------------------
-    @Override
-    public List<CrossReference> getCrossReferences() {
-        if (crossReferences == null) {
-            crossReferences = new ArrayList<CrossReference>();
-        }
-        return crossReferences;
+    private Lebels() {
+        super();
     }
-
-    // -------------------------------------------------------------------------
-    @XmlElementRef
-    private List<CrossReference> crossReferences;
 }

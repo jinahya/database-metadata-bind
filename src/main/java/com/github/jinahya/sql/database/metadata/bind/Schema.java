@@ -15,6 +15,8 @@
  */
 package com.github.jinahya.sql.database.metadata.bind;
 
+import java.io.Serializable;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Logger;
@@ -36,18 +38,46 @@ import lombok.Setter;
 @XmlRootElement
 @XmlType(propOrder = {
     "tableSchem",
-    // ---------------------------------------------------------------------
-    "crossReferences",
-    "functions", "procedures",
-    "tables",
-    "UDTs"
+    // -------------------------------------------------------------------------
+    "functions", "procedures", "tables", "UDTs",
+    // -------------------------------------------------------------------------
+    "crossReferences"
 })
-public class Schema extends AbstractTableDomain {
+public class Schema implements Serializable {//extends AbstractTableDomain {
 
     private static final long serialVersionUID = 7457236468401244963L;
 
     // -------------------------------------------------------------------------
     private static final Logger logger = getLogger(Schema.class.getName());
+
+    // -------------------------------------------------------------------------
+    public static final String TABLE_SCHEM_NONE = "";
+
+    // -------------------------------------------------------------------------
+    static Schema newVirtualInstance(final String tableCatalog) {
+        final Schema instance = new Schema();
+        instance.virtual = true;
+        instance.setTableCatalog(tableCatalog);
+        instance.setTableSchem(TABLE_SCHEM_NONE);
+        return instance;
+    }
+
+    public static Schema newVirtualInstance(final MetadataContext context,
+                                            final String tableCatalog)
+            throws SQLException, ReflectiveOperationException {
+        final Schema instance = newVirtualInstance(tableCatalog);
+        instance.getFunctions().addAll(context.getFunctions(
+                instance.getTableCatalog(), instance.getTableSchem(), null));
+        instance.getProcedures().addAll(context.getProcedures(
+                instance.getTableCatalog(), instance.getTableSchem(), null));
+        instance.getTables().addAll(context.getTables(
+                instance.getTableCatalog(), instance.getTableSchem(), null,
+                null));
+        instance.getUDTs().addAll(context.getUDTs(
+                instance.getTableCatalog(), instance.getTableSchem(), null,
+                null));
+        return instance;
+    }
 
     // -------------------------------------------------------------------------
     @Override
@@ -116,11 +146,10 @@ public class Schema extends AbstractTableDomain {
         return functions;
     }
 
-    @Deprecated
-    public void setFunctions(final List<Function> functions) {
-        this.functions = functions;
-    }
-
+//    @Deprecated
+//    public void setFunctions(final List<Function> functions) {
+//        this.functions = functions;
+//    }
     // -------------------------------------------------------------- procedures
     public List<Procedure> getProcedures() {
         if (procedures == null) {
@@ -129,13 +158,12 @@ public class Schema extends AbstractTableDomain {
         return procedures;
     }
 
-    @Deprecated
-    public void setProcedures(final List<Procedure> procedures) {
-        this.procedures = procedures;
-    }
-
+//    @Deprecated
+//    public void setProcedures(final List<Procedure> procedures) {
+//        this.procedures = procedures;
+//    }
     // ------------------------------------------------------------------ tables
-    @Override
+//    @Override
     public List<Table> getTables() {
         if (tables == null) {
             tables = new ArrayList<Table>();
@@ -143,11 +171,10 @@ public class Schema extends AbstractTableDomain {
         return tables;
     }
 
-    @Deprecated
-    public void setTables(final List<Table> tables) {
-        this.tables = tables;
-    }
-
+//    @Deprecated
+//    public void setTables(final List<Table> tables) {
+//        this.tables = tables;
+//    }
     // -------------------------------------------------------------------- UDTs
     public List<UDT> getUDTs() {
         if (UDTs == null) {
@@ -156,9 +183,16 @@ public class Schema extends AbstractTableDomain {
         return UDTs;
     }
 
-    @Deprecated
-    public void setUDTs(final List<UDT> UDTs) {
-        this.UDTs = UDTs;
+//    @Deprecated
+//    public void setUDTs(final List<UDT> UDTs) {
+//        this.UDTs = UDTs;
+//    }
+    // --------------------------------------------------------- crossReferences
+    public List<CrossReference> getCrossReferences() {
+        if (crossReferences == null) {
+            crossReferences = new ArrayList<CrossReference>();
+        }
+        return crossReferences;
     }
 
     // -------------------------------------------------------------------------
@@ -167,53 +201,59 @@ public class Schema extends AbstractTableDomain {
 
     // -------------------------------------------------------------------------
     @XmlAttribute
-    @Getter
     @Setter
-    @Labeled("TABLE_CATALOG")
+    @Getter
+    @Label("TABLE_CATALOG")
+    @Bind(label = "TABLE_CATALOG", nillable = true)
     @Nillable
     private String tableCatalog;
 
     // -------------------------------------------------------------------------
-    @XmlElement(required = true)
-    @Getter
+    @XmlElement
     @Setter
-    @Labeled("TABLE_SCHEM")
+    @Getter
+    @Label("TABLE_SCHEM")
+    @Bind(label = "TABLE_SCHEM")
     private String tableSchem;
 
     // -------------------------------------------------------------------------
     @XmlElementRef
-    @Invokable(name = "getFunctions",
-               types = {String.class, String.class, String.class},
-               args = {
-                   @Literals({":tableCatalog", ":tableSchem", "null"})
-               }
+    @Invoke(name = "getFunctions",
+            types = {String.class, String.class, String.class},
+            parameters = {
+                @Literals({":tableCatalog", ":tableSchem", "null"})
+            }
     )
     private List<Function> functions;
 
     @XmlElementRef
-    @Invokable(name = "getProcedures",
-               types = {String.class, String.class, String.class},
-               args = {
-                   @Literals({":tableCatalog", ":tableSchem", "null"})
-               }
+    @Invoke(name = "getProcedures",
+            types = {String.class, String.class, String.class},
+            parameters = {
+                @Literals({":tableCatalog", ":tableSchem", "null"})
+            }
     )
     private List<Procedure> procedures;
 
     @XmlElementRef
-    @Invokable(name = "getTables",
-               types = {String.class, String.class, String.class, String[].class},
-               args = {
-                   @Literals({":tableCatalog", ":tableSchem", "null", "null"})
-               }
+    @Invoke(name = "getTables",
+            types = {String.class, String.class, String.class,
+                     String[].class},
+            parameters = {
+                @Literals({":tableCatalog", ":tableSchem", "null", "null"})
+            }
     )
     private List<Table> tables;
 
     @XmlElementRef
-    @Invokable(name = "getUDTs",
-               types = {String.class, String.class, String.class, int[].class},
-               args = {
-                   @Literals({":tableCatalog", ":tableSchem", "null", "null"})
-               }
+    @Invoke(name = "getUDTs",
+            types = {String.class, String.class, String.class, int[].class},
+            parameters = {
+                @Literals({":tableCatalog", ":tableSchem", "null", "null"})
+            }
     )
     private List<UDT> UDTs;
+
+    @XmlElementRef
+    private List<CrossReference> crossReferences;
 }

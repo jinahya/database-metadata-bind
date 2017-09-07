@@ -179,93 +179,107 @@ public class CrossReference implements Serializable {
 //    }
     // -------------------------------------------------------------------------
     @XmlAttribute
-    @Labeled("PKTABLE_CAT")
+    @Label("PKTABLE_CAT")
+    @Bind(label = "PKTABLE_CAT", nillable = true)
     @Nillable
-    @Getter
     @Setter
+    @Getter
     private String pktableCat;
 
     @XmlAttribute
-    @Labeled("PKTABLE_SCHEM")
+    @Label("PKTABLE_SCHEM")
+    @Bind(label = "PKTABLE_SCHEM", nillable = true)
     @Nillable
-    @Getter
     @Setter
+    @Getter
     private String pktableSchem;
 
     @XmlAttribute
-    @Labeled("PKTABLE_NAME")
-    @Getter
+    @Label("PKTABLE_NAME")
+    @Bind(label = "PKTABLE_NAME")
     @Setter
+    @Getter
     private String pktableName;
 
     // -------------------------------------------------------------------------
-    @XmlElement(required = true)
-    @Labeled("PKCOLUMN_NAME")
-    @Getter
+    @XmlElement
+    @Label("PKCOLUMN_NAME")
+    @Bind(label = "PKCOLUMN_NAME")
     @Setter
+    @Getter
     private String pkcolumnName;
 
     @XmlAttribute
-    @Labeled("FKTABLE_CAT")
+    @Label("FKTABLE_CAT")
+    @Bind(label = "FKTABLE_CAT", nillable = true)
     @Nillable
-    @Getter
     @Setter
+    @Getter
     private String fktableCat;
 
     @XmlAttribute
-    @Labeled("FKTABLE_NAME")
+    @Label("FKTABLE_NAME")
+    @Bind(label = "FKTABLE_NAME", nillable = true)
     @Nillable
-    @Getter
     @Setter
+    @Getter
     private String fktableSchem;
 
     @XmlAttribute
-    @Labeled("FKTABLE_NAME")
-    @Getter
+    @Label("FKTABLE_NAME")
+    @Bind(label = "FKTABLE_NAME")
     @Setter
+    @Getter
     private String fktableName;
 
-    @XmlElement(required = true)
-    @Labeled("FKCOLUMN_NAME")
-    @Getter
+    @XmlElement
+    @Label("FKCOLUMN_NAME")
+    @Bind(label = "FKCOLUMN_NAME")
     @Setter
+    @Getter
     private String fkcolumnName;
 
-    @XmlElement(required = true)
-    @Labeled("FKCOLUMN_NAME")
-    @Getter
+    @XmlElement
+    @Label("FKCOLUMN_NAME")
+    @Bind(label = "FKCOLUMN_NAME")
     @Setter
+    @Getter
     private short keySeq;
 
-    @XmlElement(required = true)
-    @Labeled("UPDATE_RULE")
-    @Getter
+    @XmlElement
+    @Label("UPDATE_RULE")
+    @Bind(label = "UPDATE_RULE")
     @Setter
+    @Getter
     private short updateRule;
 
-    @XmlElement(required = true)
-    @Labeled("DELETE_RULE")
-    @Getter
+    @XmlElement
+    @Label("DELETE_RULE")
+    @Bind(label = "DELETE_RULE")
     @Setter
+    @Getter
     private short deleteRule;
 
-    @XmlElement(nillable = true, required = true)
-    @Labeled("FK_NAME")
+    @XmlElement(nillable = true)
+    @Label("FK_NAME")
+    @Bind(label = "FK_NAME", nillable = true)
     @Nillable
-    @Getter
     @Setter
+    @Getter
     private String fkName;
 
-    @XmlElement(nillable = true, required = true)
-    @Labeled("PK_NAME")
+    @XmlElement(nillable = true)
+    @Label("PK_NAME")
+    @Bind(label = "PK_NAME", nillable = true)
     @Nillable
-    @Getter
     @Setter
+    @Getter
     private String pkName;
 
-    @XmlElement(required = true)
-    @Labeled("DEFERRABILITY")
-    @Getter
+    @XmlElement
+    @Label("DEFERRABILITY")
+    @Bind(label = "DEFERRABILITY")
     @Setter
+    @Getter
     private short deferrability;
 }

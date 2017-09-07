@@ -15,22 +15,19 @@
  */
 package com.github.jinahya.sql.database.metadata.bind;
 
-import java.io.File;
-import java.io.FileOutputStream;
-import java.io.OutputStream;
+import static com.github.jinahya.sql.database.metadata.bind.MetadataContext.getCatalogs;
 import static java.lang.invoke.MethodHandles.lookup;
 import java.sql.Connection;
 import java.sql.DatabaseMetaData;
 import java.sql.SQLException;
 import java.util.Properties;
-import javax.xml.bind.JAXBContext;
-import javax.xml.bind.Marshaller;
 import org.slf4j.Logger;
 import static org.slf4j.LoggerFactory.getLogger;
 import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 import static java.sql.DriverManager.getConnection;
+import java.util.List;
 
 /**
  *
@@ -49,7 +46,7 @@ public class DerbyMemoryTest {
     static {
         try {
             DRIVER_CLASS = Class.forName(DRIVER_NAME);
-        } catch (ClassNotFoundException cnfe) {
+        } catch (final ClassNotFoundException cnfe) {
             throw new InstantiationError(cnfe.getMessage());
         }
     }
@@ -87,24 +84,26 @@ public class DerbyMemoryTest {
 
     // -------------------------------------------------------------------------
     @Test
-    public void retrieve() throws Exception {
-        final Metadata metadata;
+    public void marshalCategories() throws Exception {
         try (Connection connection = getConnection(CONNECTION_URL)) {
-            final DatabaseMetaData database = connection.getMetaData();
-            final MetadataContext context = new MetadataContext(database);
-            metadata = context.getMetadata();
+            final DatabaseMetaData metadata = connection.getMetaData();
+            final MetadataContext context = new MetadataContext(metadata);
+            final List<Catalog> catalogs = getCatalogs(context, true);
+            for (final Catalog catalog : catalogs) {
+                MetadataContextTests.marshal(catalog, "derby.memory");
+            }
         }
-        final JAXBContext context = JAXBContext.newInstance(Metadata.class);
-        final Marshaller marshaller = context.createMarshaller();
-        marshaller.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, Boolean.TRUE);
-        final File file = new File("target", "derby.memory.metadata.xml");
-        try (OutputStream outputStream = new FileOutputStream(file)) {
-            marshaller.marshal(metadata, outputStream);
-            outputStream.flush();
-        }
+//        final JAXBContext context = JAXBContext.newInstance(Metadata.class);
+//        final Marshaller marshaller = context.createMarshaller();
+//        marshaller.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, Boolean.TRUE);
+//        final File file = new File("target", "derby.memory.metadata.xml");
+//        try (OutputStream outputStream = new FileOutputStream(file)) {
+//            marshaller.marshal(metadata, outputStream);
+//            outputStream.flush();
+//        }
     }
 
-    @Test
+    @Test(enabled = false)
     public void pattern() throws Exception {
         try (Connection connection = getConnection(CONNECTION_URL)) {
             final DatabaseMetaData database = connection.getMetaData();

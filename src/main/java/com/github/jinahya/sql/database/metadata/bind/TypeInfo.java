@@ -78,7 +78,6 @@ public class TypeInfo implements Serializable {
 //    public void setTypeName(final String typeName) {
 //        this.typeName = typeName;
 //    }
-
     // ------------------------------------------------------------- getDataType
 //    public int getDataType() {
 //        return dataType;
@@ -87,7 +86,6 @@ public class TypeInfo implements Serializable {
 //    public void setDataType(final int dataType) {
 //        this.dataType = dataType;
 //    }
-
     // --------------------------------------------------------------- precesion
 //    public int getPrecision() {
 //        return precision;
@@ -96,7 +94,6 @@ public class TypeInfo implements Serializable {
 //    public void setPrecision(final int precision) {
 //        this.precision = precision;
 //    }
-
     // ----------------------------------------------------------- literalPrefix
 //    public String getLiteralPrefix() {
 //        return literalPrefix;
@@ -105,7 +102,6 @@ public class TypeInfo implements Serializable {
 //    public void setLiteralPrefix(final String literalPrefix) {
 //        this.literalPrefix = literalPrefix;
 //    }
-
     // ----------------------------------------------------------- literalSuffix
 //    public String getLiteralSuffix() {
 //        return literalSuffix;
@@ -114,7 +110,6 @@ public class TypeInfo implements Serializable {
 //    public void setLiteralSuffix(final String literalSuffix) {
 //        this.literalSuffix = literalSuffix;
 //    }
-
     // ------------------------------------------------------------ createParams
 //    public String getCreateParams() {
 //        return createParams;
@@ -123,7 +118,6 @@ public class TypeInfo implements Serializable {
 //    public void setCreateParams(final String createParams) {
 //        this.createParams = createParams;
 //    }
-
     // ---------------------------------------------------------------- nullable
 //    public short getNullable() {
 //        return nullable;
@@ -132,7 +126,6 @@ public class TypeInfo implements Serializable {
 //    public void setNullable(final short nullable) {
 //        this.nullable = nullable;
 //    }
-
     // ----------------------------------------------------------- caseSensitive
 //    public boolean getCaseSensitive() {
 //        return caseSensitive;
@@ -141,7 +134,6 @@ public class TypeInfo implements Serializable {
 //    public void setCaseSensitive(final boolean caseSensitive) {
 //        this.caseSensitive = caseSensitive;
 //    }
-
     // -------------------------------------------------------------- searchable
 //    public short getSearchable() {
 //        return searchable;
@@ -150,7 +142,6 @@ public class TypeInfo implements Serializable {
 //    public void setSearchable(final short searchable) {
 //        this.searchable = searchable;
 //    }
-
     // ------------------------------------------------------- unsignedAttribute
 //    public boolean getUnsignedAttribute() {
 //        return unsignedAttribute;
@@ -159,7 +150,6 @@ public class TypeInfo implements Serializable {
 //    public void setUnsignedAttribute(final boolean unsignedAttribute) {
 //        this.unsignedAttribute = unsignedAttribute;
 //    }
-
     // ---------------------------------------------------------- fixedPrecScale
 //    public boolean getFixedPrecScale() {
 //        return fixedPrecScale;
@@ -168,7 +158,6 @@ public class TypeInfo implements Serializable {
 //    public void setFixedPrecScale(final boolean fixedPrecScale) {
 //        this.fixedPrecScale = fixedPrecScale;
 //    }
-
     // ----------------------------------------------------------- autoIncrement
 //    public boolean getAutoIncrement() {
 //        return autoIncrement;
@@ -177,7 +166,6 @@ public class TypeInfo implements Serializable {
 //    public void setAutoIncrement(final boolean autoIncrement) {
 //        this.autoIncrement = autoIncrement;
 //    }
-
     // ----------------------------------------------------------- localTypeName
 //    public String getLocalTypeName() {
 //        return localTypeName;
@@ -186,7 +174,6 @@ public class TypeInfo implements Serializable {
 //    public void setLocalTypeName(final String localTypeName) {
 //        this.localTypeName = localTypeName;
 //    }
-
     // ------------------------------------------------------------ minimumScale
 //    public short getMinimumScale() {
 //        return minimumScale;
@@ -195,7 +182,6 @@ public class TypeInfo implements Serializable {
 //    public void setMinimumScale(final short minimumScale) {
 //        this.minimumScale = minimumScale;
 //    }
-
     // ------------------------------------------------------------ maximumScale
 //    public short getMaximumScale() {
 //        return maximumScale;
@@ -204,7 +190,6 @@ public class TypeInfo implements Serializable {
 //    public void setMaximumScale(final short maximumScale) {
 //        this.maximumScale = maximumScale;
 //    }
-
     // ------------------------------------------------------------- sqlDataType
 //    public Integer getSqlDataType() {
 //        return sqlDataType;
@@ -213,7 +198,6 @@ public class TypeInfo implements Serializable {
 //    public void setSqlDataType(final Integer sqlDataType) {
 //        this.sqlDataType = sqlDataType;
 //    }
-
     // ---------------------------------------------------------- sqlDatetimeSub
 //    public Integer getSqlDatetimeSub() {
 //        return sqlDatetimeSub;
@@ -222,7 +206,6 @@ public class TypeInfo implements Serializable {
 //    public void setSqlDatetimeSub(final Integer sqlDatetimeSub) {
 //        this.sqlDatetimeSub = sqlDatetimeSub;
 //    }
-
     // ------------------------------------------------------------ numPrecRadix
 //    public int getNumPrecRadix() {
 //        return numPrecRadix;
@@ -231,119 +214,136 @@ public class TypeInfo implements Serializable {
 //    public void setNumPrecRadix(final int numPrecRadix) {
 //        this.numPrecRadix = numPrecRadix;
 //    }
-
     // -------------------------------------------------------------------------
-    @XmlElement(required = true)
-    @Labeled("TYPE_NAME")
-    @Getter
+    @XmlElement
+    @Label("TYPE_NAME")
+    @Bind(label = "TYPE_NAME")
     @Setter
+    @Getter
     private String typeName;
 
-    @XmlElement(required = true)
-    @Labeled("DATA_TYPE")
-    @Getter
+    @XmlElement
+    @Label("DATA_TYPE")
+    @Bind(label = "DATA_TYPE")
     @Setter
+    @Getter
     private int dataType;
 
-    @XmlElement(required = true)
-    @Labeled("PRECISION")
-    @Getter
+    @XmlElement
+    @Label("PRECISION")
+    @Bind(label = "PRECISION")
     @Setter
+    @Getter
     private int precision;
 
-    @XmlElement(nillable = true, required = true)
-    @Labeled("LITERAL_PREFIX")
+    @XmlElement(nillable = true)
+    @Label("LITERAL_PREFIX")
+    @Bind(label = "LITERAL_PREFIX", nillable = true)
     @Nillable
-    @Getter
     @Setter
+    @Getter
     private String literalPrefix;
 
-    @XmlElement(nillable = true, required = true)
-    @Labeled("LITERAL_SUFFIX")
+    @XmlElement(nillable = true)
+    @Label("LITERAL_SUFFIX")
+    @Bind(label = "LITERAL_SUFFIX", nillable = true)
     @Nillable
-    @Getter
     @Setter
+    @Getter
     private String literalSuffix;
 
-    @XmlElement(nillable = true, required = true)
-    @Labeled("CREATE_PARAMS")
+    @XmlElement(nillable = true)
+    @Label("CREATE_PARAMS")
+    @Bind(label = "CREATE_PARAMS", nillable = true)
     @Nillable
-    @Getter
     @Setter
+    @Getter
     private String createParams;
 
-    @XmlElement(required = true)
-    @Labeled("NULLABLE")
-    @Getter
+    @XmlElement
+    @Label("NULLABLE")
+    @Bind(label = "NULLABLE")
     @Setter
+    @Getter
     private short nullable;
 
-    @XmlElement(required = true)
-    @Labeled("CASE_SENSITIVE")
-    @Getter
+    @XmlElement
+    @Label("CASE_SENSITIVE")
+    @Bind(label = "CASE_SENSITIVE")
     @Setter
+    @Getter
     private boolean caseSensitive;
 
-    @XmlElement(required = true)
-    @Labeled("SEARCHABLE")
-    @Getter
+    @XmlElement
+    @Label("SEARCHABLE")
+    @Bind(label = "SEARCHABLE")
     @Setter
+    @Getter
     private short searchable;
 
-    @XmlElement(required = true)
-    @Labeled("UNSIGNED_ATTRIBUTE")
-    @Getter
+    @XmlElement
+    @Label("UNSIGNED_ATTRIBUTE")
+    @Bind(label = "UNSIGNED_ATTRIBUTE")
     @Setter
+    @Getter
     private boolean unsignedAttribute;
 
-    @XmlElement(required = true)
-    @Labeled("FIXED_PREC_SCALE")
-    @Getter
+    @XmlElement
+    @Label("FIXED_PREC_SCALE")
+    @Bind(label = "FIXED_PREC_SCALE")
     @Setter
+    @Getter
     private boolean fixedPrecScale;
 
-    @XmlElement(required = true)
-    @Labeled("AUTO_INCREMENT")
-    @Getter
+    @XmlElement
+    @Label("AUTO_INCREMENT")
+    @Bind(label = "AUTO_INCREMENT")
     @Setter
+    @Getter
     private boolean autoIncrement;
 
-    @XmlElement(nillable = true, required = true)
-    @Labeled("LOCAL_TYPE_NAME")
+    @XmlElement(nillable = true)
+    @Label("LOCAL_TYPE_NAME")
+    @Bind(label = "LOCAL_TYPE_NAME", nillable = true)
     @Nillable
-    @Getter
     @Setter
+    @Getter
     private String localTypeName;
 
-    @XmlElement(required = true)
-    @Labeled("MINIMUM_SCALE")
-    @Getter
+    @XmlElement
+    @Label("MINIMUM_SCALE")
+    @Bind(label = "MINIMUM_SCALE")
     @Setter
+    @Getter
     private short minimumScale;
 
-    @XmlElement(required = true)
-    @Labeled("MAXIMUM_SCALE")
-    @Getter
+    @XmlElement
+    @Label("MAXIMUM_SCALE")
+    @Bind(label = "MAXIMUM_SCALE")
     @Setter
+    @Getter
     private short maximumScale;
 
-    @XmlElement(nillable = true, required = true)
-    @Labeled("SQL_DATA_TYPE")
+    @XmlElement(nillable = true)
+    @Label("SQL_DATA_TYPE")
+    @Bind(label = "SQL_DATA_TYPE", unused = true)
     @Unused
-    @Getter
     @Setter
+    @Getter
     private Integer sqlDataType;
 
-    @XmlElement(nillable = true, required = true)
-    @Labeled("SQL_DATETIME_SUB")
+    @XmlElement(nillable = true)
+    @Label("SQL_DATETIME_SUB")
+    @Bind(label = "SQL_DATETIME_SUB", unused = true)
     @Unused
-    @Getter
     @Setter
+    @Getter
     private Integer sqlDatetimeSub;
 
-    @XmlElement(required = true)
-    @Labeled("NUM_PREC_RADIX")
-    @Getter
+    @XmlElement
+    @Label("NUM_PREC_RADIX")
+    @Bind(label = "NUM_PREC_RADIX")
     @Setter
+    @Getter
     private int numPrecRadix;
 }

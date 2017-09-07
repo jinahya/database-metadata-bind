@@ -81,25 +81,11 @@
       <version>2.2.3</version>
       <scope>test</scope>
     </dependency>
-    <!--    <dependency>
-      <groupId>com.google.guava</groupId>
-      <artifactId>guava</artifactId>
-      <version>23.0</version>
-      <scope>compile</scope>
-      <optional>true</optional>
-    </dependency>-->
     <dependency>
       <groupId>com.h2database</groupId>
       <artifactId>h2</artifactId>
       <version>1.4.196</version>
       <scope>test</scope>
-    </dependency>
-    <dependency>
-      <groupId>commons-beanutils</groupId>
-      <artifactId>commons-beanutils</artifactId>
-      <version>1.9.3</version>
-      <scope>compile</scope>
-      <optional>true</optional>
     </dependency>
     <dependency>
       <groupId>org.apache.commons</groupId>
@@ -199,7 +185,7 @@
           <execution>
             <phase>package</phase>
             <goals>
-              <goal>shade</goal>
+              <!--<goal>shade</goal>-->
             </goals>
             <configuration>
               <!--<createDependencyReducedPom>false</createDependencyReducedPom>-->
@@ -209,10 +195,10 @@
                   <pattern>com.google.common</pattern>
                   <shadedPattern>com.github.jinahya.sql.metadata.bind.realocated.com.google.common</shadedPattern>
                 </relocation>-->
-                <relocation>
+<!--                <relocation>
                   <pattern>org.apache.commons</pattern>
                   <shadedPattern>com.github.jinahya.sql.metadata.bind.realocated.org.apache.commons</shadedPattern>
-                </relocation>
+                </relocation>-->
                 <!--                <relocation>
                   <pattern>org.apache.commons.beanutils</pattern>
                   <shadedPattern>com.github.jinahya.sql.metadata.bind.realocated.beanutils</shadedPattern>
@@ -303,7 +289,7 @@
             <configuration>
               <signature>
                 <groupId>org.codehaus.mojo.signature</groupId>
-                <artifactId>java17</artifactId>
+                <artifactId>java16</artifactId>
                 <version>1.0</version>
               </signature>
             </configuration>
@@ -451,7 +437,7 @@
           -collapsible
           -inferdep -inferdepinpackage -inferrel
           -outputencoding UTF-8
-        </additionalparam>      
+        </additionalparam>
       </properties>
     </profile>
   </profiles>

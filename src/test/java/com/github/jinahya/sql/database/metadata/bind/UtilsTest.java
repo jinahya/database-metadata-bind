@@ -29,7 +29,7 @@ public class UtilsTest {
 
     private static final Logger logger = getLogger(lookup().lookupClass());
 
-    @Test
+    @Test(enabled = false)
     public void printSqlTypes() throws ReflectiveOperationException {
         final Field field = Utils.class.getDeclaredField("SQL_TYPES");
         field.setAccessible(true);

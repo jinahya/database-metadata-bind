@@ -62,10 +62,11 @@ public class TableType implements Serializable {
 //        return null;
 //    }
     // -------------------------------------------------------------------------
-    @XmlElement(required = true)
-    @Labeled("TABLE_TYPE")
+    @XmlElement
+    @Label("TABLE_TYPE")
+    @Bind(label = "TABLE_TYPE")
     //@XmlValue
-    @Getter
     @Setter
+    @Getter
     private String tableType;
 }

@@ -16,18 +16,9 @@
 package com.github.jinahya.sql.database.metadata.bind;
 
 import ch.vorburger.mariadb4j.DB;
-import java.io.File;
-import java.io.FileOutputStream;
-import java.io.OutputStream;
 import static java.lang.invoke.MethodHandles.lookup;
-import java.sql.Connection;
-import java.sql.DatabaseMetaData;
-import static java.sql.DriverManager.getConnection;
-import javax.xml.bind.JAXBContext;
-import javax.xml.bind.Marshaller;
 import org.slf4j.Logger;
 import static org.slf4j.LoggerFactory.getLogger;
-import org.testng.SkipException;
 import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
@@ -60,41 +51,41 @@ public class MariaDbEmbeddedTest {
 
     @Test
     public void retrieve() throws Exception {
-        final Metadata metadata;
-        final String url = "jdbc:mysql://localhost/test";
-        final String user = "root";
-        final String password = "";
-        try (Connection connection = getConnection(url, user, password)) {
-            logger.debug("connection: {}", connection);
-            final DatabaseMetaData database = connection.getMetaData();
-            logger.debug("database: {}", database);
-            final MetadataContext context = new MetadataContext(database);
-            context.suppress("a"
-            );
-            try {
-                metadata = context.getMetadata();
-            } catch (final Exception e) {
-                e.printStackTrace(System.out);
-                System.out.println("---------------------> " + e);
-                System.out.println("---------------------> " + e);
-                System.out.println("---------------------> " + e);
-                System.out.println("---------------------> " + e);
-                System.out.println("---------------------> " + e);
-                System.out.println("---------------------> " + e);
-                System.out.println("---------------------> " + e);
-                System.out.println("---------------------> " + e);
-                System.out.println("---------------------> " + e);
-                throw new SkipException("", e);
-            }
-        }
-        final JAXBContext context = JAXBContext.newInstance(Metadata.class);
-        final Marshaller marshaller = context.createMarshaller();
-        marshaller.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, Boolean.TRUE);
-        final File file = new File(
-                "target", "mariadb.embedded.metadata.xml");
-        try (OutputStream outputStream = new FileOutputStream(file)) {
-            marshaller.marshal(metadata, outputStream);
-            outputStream.flush();
-        }
+//        final Metadata metadata;
+//        final String url = "jdbc:mysql://localhost/test";
+//        final String user = "root";
+//        final String password = "";
+//        try (Connection connection = getConnection(url, user, password)) {
+//            logger.debug("connection: {}", connection);
+//            final DatabaseMetaData database = connection.getMetaData();
+//            logger.debug("database: {}", database);
+//            final MetadataContext context = new MetadataContext(database);
+//            context.suppress("a"
+//            );
+//            try {
+//                metadata = context.getMetadata();
+//            } catch (final Exception e) {
+//                e.printStackTrace(System.out);
+//                System.out.println("---------------------> " + e);
+//                System.out.println("---------------------> " + e);
+//                System.out.println("---------------------> " + e);
+//                System.out.println("---------------------> " + e);
+//                System.out.println("---------------------> " + e);
+//                System.out.println("---------------------> " + e);
+//                System.out.println("---------------------> " + e);
+//                System.out.println("---------------------> " + e);
+//                System.out.println("---------------------> " + e);
+//                throw new SkipException("", e);
+//            }
+//        }
+//        final JAXBContext context = JAXBContext.newInstance(Metadata.class);
+//        final Marshaller marshaller = context.createMarshaller();
+//        marshaller.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, Boolean.TRUE);
+//        final File file = new File(
+//                "target", "mariadb.embedded.metadata.xml");
+//        try (OutputStream outputStream = new FileOutputStream(file)) {
+//            marshaller.marshal(metadata, outputStream);
+//            outputStream.flush();
+//        }
     }
 }

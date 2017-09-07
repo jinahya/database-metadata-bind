@@ -67,15 +67,17 @@ public class SchemaName implements Serializable {
 //        this.tableCatalog = tableCatalog;
 //    }
     // -------------------------------------------------------------------------
-    @Getter
     @Setter
-    @Labeled("TABLE_SCHEM")
-    @XmlElement(required = true)
+    @Getter
+    @Label("TABLE_SCHEM")
+    @Bind(label = "TABLE_SCHEM")
+    @XmlElement
     private String tableSchem;
 
-    @Getter
     @Setter
-    @Labeled("TABLE_CATALOG")
+    @Getter
+    @Label("TABLE_CATALOG")
+    @Bind(label = "TABLE_CATALOG", nillable = true)
     @Nillable
     @XmlElement(nillable = true, required = false)
     private String tableCatalog;

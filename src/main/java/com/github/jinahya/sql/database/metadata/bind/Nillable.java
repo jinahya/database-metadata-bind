@@ -28,6 +28,7 @@ import java.lang.annotation.Target;
  */
 @Documented
 @Retention(RetentionPolicy.SOURCE)
-@Target({ElementType.FIELD, ElementType.METHOD})
+@Target({ElementType.FIELD})
+@Deprecated
 @interface Nillable {
 }

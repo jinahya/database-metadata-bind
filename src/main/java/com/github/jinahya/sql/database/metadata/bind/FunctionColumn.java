@@ -223,108 +223,125 @@ public class FunctionColumn implements Serializable {
 //    }
     // -------------------------------------------------------------------------
     @XmlAttribute
-    @Labeled("FUNCTION_CAT")
+    @Label("FUNCTION_CAT")
+    @Bind(label = "FUNCTION_CAT", nillable = true)
     @Nillable
-    @Getter
     @Setter
+    @Getter
     private String functionCat;
 
     @XmlAttribute
-    @Labeled("FUNCTION_SCHEM")
+    @Label("FUNCTION_SCHEM")
+    @Bind(label = "FUNCTION_SCHEM", nillable = true)
     @Nillable
-    @Getter
     @Setter
+    @Getter
     private String functionSchem;
 
     @XmlAttribute
-    @Labeled("FUNCTION_NAME")
-    @Getter
+    @Label("FUNCTION_NAME")
+    @Bind(label = "FUNCTION_NAME")
     @Setter
+    @Getter
     private String functionName;
 
     // -------------------------------------------------------------------------
-    @XmlElement(required = true)
-    @Labeled("COLUMN_NAME")
-    @Getter
+    @XmlElement
+    @Label("COLUMN_NAME")
+    @Bind(label = "COLUMN_NAME")
     @Setter
+    @Getter
     private String columnName;
 
-    @XmlElement(required = true)
-    @Labeled("COLUMN_TYPE")
-    @Getter
+    @XmlElement
+    @Label("COLUMN_TYPE")
+    @Bind(label = "COLUMN_TYPE")
     @Setter
+    @Getter
     private short columnType;
 
-    @XmlElement(required = true)
-    @Labeled("DATA_TYPE")
-    @Getter
+    @XmlElement
+    @Label("DATA_TYPE")
+    @Bind(label = "DATA_TYPE")
     @Setter
+    @Getter
     private int dataType;
 
-    @Labeled("TYPE_NAME")
-    @XmlElement(required = true)
-    @Getter
+    @Label("TYPE_NAME")
+    @Bind(label = "TYPE_NAME")
+    @XmlElement
     @Setter
+    @Getter
     private String typeName;
 
-    @XmlElement(required = true)
-    @Labeled("PRECISION")
-    @Getter
+    @XmlElement
+    @Label("PRECISION")
+    @Bind(label = "PRECISION")
     @Setter
+    @Getter
     private int precision;
 
-    @XmlElement(required = true)
-    @Labeled("LENGTH")
-    @Getter
+    @XmlElement
+    @Label("LENGTH")
+    @Bind(label = "LENGTH")
     @Setter
+    @Getter
     private int length;
 
-    @XmlElement(required = true)
-    @Labeled("SCALE")
-    @Getter
+    @XmlElement
+    @Label("SCALE")
+    @Bind(label = "SCALE")
     @Setter
+    @Getter
     private Short scale;
 
-    @XmlElement(required = true)
-    @Labeled("RADIX")
-    @Getter
+    @XmlElement
+    @Label("RADIX")
+    @Bind(label = "RADIX")
     @Setter
+    @Getter
     private short radix;
 
-    @XmlElement(required = true)
-    @Labeled("NULLABLE")
-    @Getter
+    @XmlElement
+    @Label("NULLABLE")
+    @Bind(label = "NULLABLE")
     @Setter
+    @Getter
     private short nullable;
 
-    @XmlElement(required = true)
-    @Labeled("REMARKS")
-    @Getter
+    @XmlElement
+    @Label("REMARKS")
+    @Bind(label = "REMARKS")
     @Setter
+    @Getter
     private String remarks;
 
-    @XmlElement(nillable = true, required = true)
-    @Labeled("CHAR_OCTET_LENGTH")
+    @XmlElement(nillable = true)
+    @Label("CHAR_OCTET_LENGTH")
+    @Bind(label = "CHAR_OCTET_LENGTH", nillable = true)
     @Nillable
-    @Getter
     @Setter
+    @Getter
     private Integer charOctetLength;
 
-    @XmlElement(required = true)
-    @Labeled("ORDINAL_POSITION")
-    @Getter
+    @XmlElement
+    @Label("ORDINAL_POSITION")
+    @Bind(label = "ORDINAL_POSITION")
     @Setter
+    @Getter
     private int ordinalPosition;
 
-    @XmlElement(required = true)
-    @Labeled("IS_NULLABLE")
-    @Getter
+    @XmlElement
+    @Label("IS_NULLABLE")
+    @Bind(label = "IS_NULLABLE")
     @Setter
+    @Getter
     private String isNullable;
 
-    @XmlElement(required = true)
-    @Labeled("SPECIFIC_NAME")
-    @Getter
+    @XmlElement
+    @Label("SPECIFIC_NAME")
+    @Bind(label = "SPECIFIC_NAME")
     @Setter
+    @Getter
     private String specificName;
 }

@@ -117,53 +117,61 @@ public class BestRowIdentifier implements Serializable {
 //        this.pseudoColumn = pseudoColumn;
 //    }
     // -------------------------------------------------------------------------
-    @Getter
+    @XmlElement
+    @Label("SCOPE")
+    @Bind(label = "SCOPE")
     @Setter
-    @Labeled("SCOPE")
-    @XmlElement(required = true)
+    @Getter
     private short scope;
 
-    @Getter
+    @XmlElement
+    @Label("COLUMN_NAME")
+    @Bind(label = "COLUMN_NAME")
     @Setter
-    @Labeled("COLUMN_NAME")
-    @XmlElement(required = true)
+    @Getter
     private String columnName;
 
-    @Getter
+    @XmlElement
+    @Label("DATA_TYPE")
+    @Bind(label = "DATA_TYPE")
     @Setter
-    @Labeled("DATA_TYPE")
-    @XmlElement(required = true)
+    @Getter
     private int dataType;
 
-    @Getter
+    @XmlElement
+    @Label("TYPE_NAME")
+    @Bind(label = "TYPE_NAME")
     @Setter
-    @Labeled("TYPE_NAME")
-    @XmlElement(required = true)
+    @Getter
     private String typeName;
 
-    @Getter
+    @XmlElement
+    @Label("COLUMN_SIZE")
+    @Bind(label = "COLUMN_SIZE")
     @Setter
-    @Labeled("COLUMN_SIZE")
-    @XmlElement(required = true)
+    @Getter
     private int columnSize;
 
-    @Getter
-    @Setter
-    @Labeled("BUFFER_LENGTH")
+    @XmlElement(nillable = true)
     @Unused
-    @XmlElement(nillable = true, required = true)
+    @Label("BUFFER_LENGTH")
+    @Bind(label = "BUFFER_LENGTH", unused = true)
+    @Setter
+    @Getter
     private Integer bufferLength;
 
-    @Getter
-    @Setter
-    @Labeled("DECIMAL_DIGITS")
+    @XmlElement(nillable = true)
     @Nillable
-    @XmlElement(nillable = true, required = true)
+    @Label("DECIMAL_DIGITS")
+    @Bind(label = "DECIMAL_DIGITS", nillable = true)
+    @Setter
+    @Getter
     private Short decimalDigits;
 
-    @Getter
+    @XmlElement
+    @Label("PSEUDO_COLUMN")
+    @Bind(label = "PSEUDO_COLUMN")
     @Setter
-    @Labeled("PSEUDO_COLUMN")
-    @XmlElement(required = true)
+    @Getter
     private short pseudoColumn;
 }

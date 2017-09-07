@@ -110,43 +110,49 @@ public class SuperType implements Serializable {
 //    }
     // -------------------------------------------------------------------------
     @XmlAttribute
-    @Labeled("TYPE_CAT")
+    @Label("TYPE_CAT")
+    @Bind(label = "TYPE_CAT", nillable = true)
     @Nillable
-    @Getter
     @Setter
+    @Getter
     private String typeCat;
 
     @XmlAttribute
-    @Labeled("TYPE_SCHEM")
+    @Label("TYPE_SCHEM")
+    @Bind(label = "TYPE_SCHEM", nillable = true)
     @Nillable
-    @Getter
     @Setter
+    @Getter
     private String typeSchem;
 
     // -------------------------------------------------------------------------
-    @XmlElement(required = true)
-    @Labeled("TYPE_NAME")
-    @Getter
+    @XmlElement
+    @Label("TYPE_NAME")
+    @Bind(label = "TYPE_NAME")
     @Setter
+    @Getter
     private String typeName;
 
-    @XmlElement(nillable = true, required = true)
-    @Labeled("SUPERTYPE_CAT")
+    @XmlElement(nillable = true)
+    @Label("SUPERTYPE_CAT")
+    @Bind(label = "SUPERTYPE_CAT", nillable = true)
     @Nillable
-    @Getter
     @Setter
+    @Getter
     private String supertypeCat;
 
-    @XmlElement(nillable = true, required = true)
-    @Labeled("SUPERTYPE_SCHEM")
+    @XmlElement(nillable = true)
+    @Label("SUPERTYPE_SCHEM")
+    @Bind(label = "SUPERTYPE_SCHEM", nillable = true)
     @Nillable
-    @Getter
     @Setter
+    @Getter
     private String supertypeSchem;
 
-    @XmlElement(required = true)
-    @Labeled("SUPERTYPE_NAME")
-    @Getter
+    @XmlElement
+    @Label("SUPERTYPE_NAME")
+    @Bind(label = "SUPERTYPE_NAME")
     @Setter
+    @Getter
     private String supertypeName;
 }

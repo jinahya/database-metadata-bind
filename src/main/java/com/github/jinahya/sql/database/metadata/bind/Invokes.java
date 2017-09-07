@@ -15,54 +15,53 @@
  */
 package com.github.jinahya.sql.database.metadata.bind;
 
-import static com.github.jinahya.sql.database.metadata.bind.Utils.findField;
 import java.lang.reflect.Field;
+import static com.github.jinahya.sql.database.metadata.bind.Utils.field;
+import static com.github.jinahya.sql.database.metadata.bind.Utils.wrapper;
 
 /**
  * A utility class for {@link Invocation}.
  *
  * @author Jin Kwon &lt;jinahya_at_gmail.com&gt;
  */
-final class Invocations {
+final class Invokes {
 
     // -------------------------------------------------------------------------
-    static <T> Object[] invocationValues(final Class<T> klass, final T instance,
-                                         final Class<?>[] types,
-                                         final String[] literals) 
+    static <T> Object[] arguments(final Class<T> klass, final T instance,
+                                  final Class<?>[] types,
+                                  final String[] literals)
             throws ReflectiveOperationException {
-        final Object[] values = new Object[literals.length];
+        final Object[] arguments = new Object[literals.length];
         for (int i = 0; i < literals.length; i++) {
             if ("null".equals(literals[i])) {
-                values[i] = null;
+                arguments[i] = null;
                 continue;
             }
             if (literals[i].startsWith(":")) {
-//                values[i] = Utils.propertyValue(
-//                        literals[i].substring(1), instance);
-                final Field field = findField(
-                        instance.getClass(), literals[i].substring(1));
+                final String name = literals[i].substring(1);
+                final Field field = field(klass, name);
                 if (!field.isAccessible()) {
                     field.setAccessible(true);
                 }
-                values[i] = field.get(instance);
+                arguments[i] = field.get(instance);
                 continue;
             }
             if (types[i] == String.class) {
-                values[i] = literals[i];
+                arguments[i] = literals[i];
                 continue;
             }
             if (types[i].isPrimitive()) {
-                types[i] = Utils.wrapperClass(types[i]);
+                types[i] = wrapper(types[i]);
             }
-            values[i] = types[i]
+            arguments[i] = types[i]
                     .getMethod("valueOf", String.class)
                     .invoke(null, literals[i]);
         }
-        return values;
+        return arguments;
     }
 
     // -------------------------------------------------------------------------
-    private Invocations() {
+    private Invokes() {
         super();
     }
 }

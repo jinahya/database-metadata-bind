@@ -21,14 +21,14 @@ import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
-/**
- *
- * @author Jin Kwon &lt;jinahya_at_gmail.com&gt;
- */
 @Documented
 @Retention(RetentionPolicy.RUNTIME)
 @Target({ElementType.FIELD})
-@interface Labeled {
+@interface Invoke {
 
-    String value();
+    String name();
+
+    Class<?>[] types() default {};
+
+    Literals[] parameters() default {};
 }

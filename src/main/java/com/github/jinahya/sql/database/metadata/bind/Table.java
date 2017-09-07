@@ -160,7 +160,6 @@ public class Table implements Serializable {
 //            final List<BestRowIdentifier> bestRowIdentifiers) {
 //        this.bestRowIdentifiers = bestRowIdentifiers;
 //    }
-
     // ----------------------------------------------------------------- columns
     public List<Column> getColumns() {
         if (columns == null) {
@@ -173,7 +172,6 @@ public class Table implements Serializable {
 //    public void setColumns(final List<Column> columns) {
 //        this.columns = columns;
 //    }
-
     // ------------------------------------------------------------ exportedKeys
     public List<ExportedKey> getExportedKeys() {
         if (exportedKeys == null) {
@@ -186,7 +184,6 @@ public class Table implements Serializable {
 //    public void setExportedKeys(final List<ExportedKey> exportedKeys) {
 //        this.exportedKeys = exportedKeys;
 //    }
-
     // ------------------------------------------------------------ importedKeys
     public List<ImportedKey> getImportedKeys() {
         if (importedKeys == null) {
@@ -199,7 +196,6 @@ public class Table implements Serializable {
 //    public void setImportedKeys(final List<ImportedKey> importedKeys) {
 //        this.importedKeys = importedKeys;
 //    }
-
     // --------------------------------------------------------------- indexInfo
     public List<IndexInfo> getIndexInfo() {
         if (indexInfo == null) {
@@ -212,7 +208,6 @@ public class Table implements Serializable {
 //    public void setIndexInfo(final List<IndexInfo> indexInfo) {
 //        this.indexInfo = indexInfo;
 //    }
-
     // ------------------------------------------------------------- primaryKeys
     public List<PrimaryKey> getPrimaryKeys() {
         if (primaryKeys == null) {
@@ -225,7 +220,6 @@ public class Table implements Serializable {
 //    public void setPrimaryKeys(final List<PrimaryKey> primaryKeys) {
 //        this.primaryKeys = primaryKeys;
 //    }
-
     // ----------------------------------------------------------- pseudoColumns
     public List<PseudoColumn> getPseudoColumns() {
         if (pseudoColumns == null) {
@@ -238,7 +232,6 @@ public class Table implements Serializable {
 //    public void setPseudoColumns(final List<PseudoColumn> pseudoColumns) {
 //        this.pseudoColumns = pseudoColumns;
 //    }
-
     // ------------------------------------------------------------- superTables
     public List<SuperTable> getSuperTables() {
         if (superTables == null) {
@@ -251,7 +244,6 @@ public class Table implements Serializable {
 //    public void setSuperTables(final List<SuperTable> superTables) {
 //        this.superTables = superTables;
 //    }
-
     // --------------------------------------------------------- tablePrivileges
     public List<TablePrivilege> getTablePrivileges() {
         if (tablePrivileges == null) {
@@ -264,7 +256,6 @@ public class Table implements Serializable {
 //    public void setTablePrivileges(final List<TablePrivilege> tablePrivileges) {
 //        this.tablePrivileges = tablePrivileges;
 //    }
-
     // ---------------------------------------------------------- versionColumns
     public List<VersionColumn> getVersionColumns() {
         if (versionColumns == null) {
@@ -277,178 +268,187 @@ public class Table implements Serializable {
 //    public void setVersionColumns(final List<VersionColumn> versionColumns) {
 //        this.versionColumns = versionColumns;
 //    }
-
     // -------------------------------------------------------------------------
     @XmlAttribute
-    @Labeled("TABLE_CAT")
     @Nillable
-    @Getter
+    @Label("TABLE_CAT")
+    @Bind(label = "TABLE_CAT", nillable = true)
     @Setter
+    @Getter
     private String tableCat;
 
     @XmlAttribute
-    @Labeled("TABLE_SCHEM")
     @Nillable
-    @Getter
+    @Label("TABLE_SCHEM")
+    @Bind(label = "TABLE_SCHEM", nillable = true)
     @Setter
+    @Getter
     private String tableSchem;
 
-    @XmlElement(required = true)
-    @Labeled("TABLE_NAME")
-    @Getter
+    @XmlElement
+    @Label("TABLE_NAME")
+    @Bind(label = "TABLE_NAME")
     @Setter
+    @Getter
     private String tableName;
 
-    @XmlElement(required = true)
-    @Labeled("TABLE_TYPE")
-    @Getter
+    @XmlElement
+    @Label("TABLE_TYPE")
+    @Bind(label = "TABLE_TYPE")
     @Setter
+    @Getter
     private String tableType;
 
-    @XmlElement(required = true)
-    @Labeled("REMARKS")
-    @Getter
+    @XmlElement
+    @Label("REMARKS")
+    @Bind(label = "REMARKS")
     @Setter
+    @Getter
     private String remarks;
 
-    @XmlElement(nillable = true, required = true)
-    @Labeled("TYPE_CAT")
+    @XmlElement(nillable = true)
+    @Label("TYPE_CAT")
+    @Bind(label = "TYPE_CAT", nillable = true)
     @Nillable
-    @Getter
     @Setter
+    @Getter
     private String typeCat;
 
-    @XmlElement(nillable = true, required = true)
-    @Labeled("TYPE_SCHEM")
+    @XmlElement(nillable = true)
+    @Label("TYPE_SCHEM")
+    @Bind(label = "TYPE_SCHEM", nillable = true)
     @Nillable
-    @Getter
     @Setter
+    @Getter
     private String typeSchem;
 
-    @XmlElement(nillable = true, required = true)
-    @Labeled("TYPE_NAME")
+    @XmlElement(nillable = true)
+    @Label("TYPE_NAME")
+    @Bind(label = "TYPE_NAME", nillable = true)
     @Nillable
-    @Getter
     @Setter
+    @Getter
     private String typeName;
 
-    @XmlElement(nillable = true, required = true)
-    @Labeled("SELF_REFERENCING_COL_NAME")
+    @XmlElement(nillable = true)
+    @Label("SELF_REFERENCING_COL_NAME")
+    @Bind(label = "SELF_REFERENCING_COL_NAME", nillable = true)
     @Nillable
-    @Getter
     @Setter
+    @Getter
     private String selfReferencingColName;
 
-    @XmlElement(nillable = true, required = true)
-    @Labeled("REF_GENERATION")
+    @XmlElement(nillable = true)
+    @Label("REF_GENERATION")
+    @Bind(label = "REF_GENERATION", nillable = true)
     @Nillable
-    @Getter
     @Setter
+    @Getter
     private String refGeneration;
 
     @XmlElementRef
-    @Invokable(name = "getBestRowIdentifier",
-               types = {
-                   String.class, String.class, String.class, int.class,
-                   boolean.class
-               },
-               args = {
-                   @Literals({":tableCat", ":tableSchem", ":tableName",
-                              "0", // bestRowTemporaty
-                              "true"})
-                   ,
+    @Invoke(name = "getBestRowIdentifier",
+            types = {
+                String.class, String.class, String.class, int.class,
+                boolean.class
+            },
+            parameters = {
                 @Literals({":tableCat", ":tableSchem", ":tableName",
-                              "1", // bestRowTransaction
-                              "true"})
-                   ,
+                           "0", // bestRowTemporaty
+                           "true"})
+                ,
                 @Literals({":tableCat", ":tableSchem", ":tableName",
-                              "2", // bestRowSession
-                              "true"})}
+                           "1", // bestRowTransaction
+                           "true"})
+                ,
+                @Literals({":tableCat", ":tableSchem", ":tableName",
+                           "2", // bestRowSession
+                           "true"})}
     )
     private List<BestRowIdentifier> bestRowIdentifiers;
 
     @XmlElementRef
-    @Invokable(name = "getColumns",
-               types = {String.class, String.class, String.class, String.class},
-               args = {
-                   @Literals({":tableCat", ":tableSchem", ":tableName", "null"})
-               }
+    @Invoke(name = "getColumns",
+            types = {String.class, String.class, String.class, String.class},
+            parameters = {
+                @Literals({":tableCat", ":tableSchem", ":tableName", "null"})
+            }
     )
     private List<Column> columns;
 
     @XmlElementRef
-    @Invokable(name = "getExportedKeys",
-               types = {String.class, String.class, String.class},
-               args = {
-                   @Literals({":tableCat", ":tableSchem", ":tableName"})
-               }
+    @Invoke(name = "getExportedKeys",
+            types = {String.class, String.class, String.class},
+            parameters = {
+                @Literals({":tableCat", ":tableSchem", ":tableName"})
+            }
     )
     private List<ExportedKey> exportedKeys;
 
     @XmlElementRef
-    @Invokable(name = "getImportedKeys",
-               types = {String.class, String.class, String.class},
-               args = {
-                   @Literals({":tableCat", ":tableSchem", ":tableName"})
-               }
+    @Invoke(name = "getImportedKeys",
+            types = {String.class, String.class, String.class},
+            parameters = {
+                @Literals({":tableCat", ":tableSchem", ":tableName"})
+            }
     )
     private List<ImportedKey> importedKeys;
 
     @XmlElementRef
-    @Invokable(name = "getIndexInfo",
-               types = {
-                   String.class, String.class, String.class, boolean.class,
-                   boolean.class
-               },
-               args = {
-                   @Literals({":tableCat", ":tableSchem", ":tableName", "false",
-                              "false"})
-               }
+    @Invoke(name = "getIndexInfo",
+            types = {
+                String.class, String.class, String.class, boolean.class,
+                boolean.class
+            },
+            parameters = {
+                @Literals({":tableCat", ":tableSchem", ":tableName", "false",
+                           "false"})
+            }
     )
     private List<IndexInfo> indexInfo;
 
     @XmlElementRef
-    @Invokable(name = "getPrimaryKeys",
-               types = {String.class, String.class, String.class},
-               args = {
-                   @Literals({":tableCat", ":tableSchem", ":tableName"})
-               }
+    @Invoke(name = "getPrimaryKeys",
+            types = {String.class, String.class, String.class},
+            parameters = {
+                @Literals({":tableCat", ":tableSchem", ":tableName"})
+            }
     )
     private List<PrimaryKey> primaryKeys;
 
     @XmlElementRef
-    @Invokable(name = "getPseudoColumns",
-               types = {String.class, String.class, String.class, String.class},
-               args = {
-                   @Literals({":tableCat", ":tableSchem", ":tableName", "null"})
-               }
+    @Invoke(name = "getPseudoColumns",
+            types = {String.class, String.class, String.class, String.class},
+            parameters = {
+                @Literals({":tableCat", ":tableSchem", ":tableName", "null"})
+            }
     )
     private List<PseudoColumn> pseudoColumns;
 
     @XmlElementRef
-    @Invokable(name = "getSuperTables",
-               types = {String.class, String.class, String.class},
-               args = {
-                   @Literals({":tableCat", ":tableSchem", ":tableName"})
-               }
+    @Invoke(name = "getSuperTables",
+            types = {String.class, String.class, String.class},
+            parameters = {
+                @Literals({":tableCat", ":tableSchem", ":tableName"})
+            }
     )
     private List<SuperTable> superTables;
 
     @XmlElementRef
-    @Invokable(name = "getTablePrivileges",
-               types = {String.class, String.class, String.class},
-               args = {
-                   @Literals({":tableCat", ":tableSchem", ":tableName"})
-               }
+    @Invoke(name = "getTablePrivileges",
+            types = {String.class, String.class, String.class},
+            parameters = {
+                @Literals({":tableCat", ":tableSchem", ":tableName"})
+            }
     )
     private List<TablePrivilege> tablePrivileges;
 
     @XmlElementRef
-    @Invokable(name = "getVersionColumns",
-               types = {String.class, String.class, String.class},
-               args = {
-                   @Literals({":tableCat", ":tableSchem", ":tableName"})
-               }
+    @Invoke(name = "getVersionColumns",
+            types = {String.class, String.class, String.class},
+            parameters = {
+                @Literals({":tableCat", ":tableSchem", ":tableName"})
+            }
     )
     private List<VersionColumn> versionColumns;
 }

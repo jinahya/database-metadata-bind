@@ -65,22 +65,20 @@ public class HyperSQLMemoryTest {
     // -------------------------------------------------------------------------
     @Test(enabled = true)
     public void retrieve() throws Exception {
-        final Metadata metadata;
         try (Connection connection = getConnection(CONNECTION_URL)) {
             final DatabaseMetaData database = connection.getMetaData();
             final MetadataContext context = new MetadataContext(database);
             context.suppress(
                     "table/pseudoColumns"
             );
-            metadata = context.getMetadata();
         }
-        final JAXBContext context = JAXBContext.newInstance(Metadata.class);
-        final Marshaller marshaller = context.createMarshaller();
-        marshaller.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, Boolean.TRUE);
-        final File file = new File("target", "hsql.memory.metadata.xml");
-        try (OutputStream outputStream = new FileOutputStream(file)) {
-            marshaller.marshal(metadata, outputStream);
-            outputStream.flush();
-        }
+//        final JAXBContext context = JAXBContext.newInstance(Metadata.class);
+//        final Marshaller marshaller = context.createMarshaller();
+//        marshaller.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, Boolean.TRUE);
+//        final File file = new File("target", "hsql.memory.metadata.xml");
+//        try (OutputStream outputStream = new FileOutputStream(file)) {
+//            marshaller.marshal(metadata, outputStream);
+//            outputStream.flush();
+//        }
     }
 }

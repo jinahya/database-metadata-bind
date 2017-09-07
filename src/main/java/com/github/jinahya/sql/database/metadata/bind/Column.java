@@ -290,170 +290,194 @@ public class Column implements Serializable {
 
     // -------------------------------------------------------------------------
     @XmlAttribute
-    @Labeled("TABLE_CAT")
+    @Label("TABLE_CAT")
+    @Bind(label = "TABLE_CAT", nillable = true)
     @Nillable
-    @Getter
     @Setter
+    @Getter
     private String tableCat;
 
     @XmlAttribute
-    @Labeled("TABLE_SCHEM")
+    @Label("TABLE_SCHEM")
+    @Bind(label = "TABLE_SCHEM", nillable = true)
     @Nillable
-    @Getter
     @Setter
+    @Getter
     private String tableSchem;
 
     @XmlAttribute
-    @Labeled("TABLE_NAME")
-    @Getter
+    @Label("TABLE_NAME")
+    @Bind(label = "TABLE_NAME")
     @Setter
+    @Getter
     private String tableName;
 
     // -------------------------------------------------------------------------
-    @XmlElement(required = true)
-    @Labeled("COLUMN_NAME")
-    @Getter
+    @XmlElement
+    @Label("COLUMN_NAME")
+    @Bind(label = "COLUMN_NAME")
     @Setter
+    @Getter
     private String columnName;
 
-    @XmlElement(required = true)
-    @Labeled("DATA_TYPE")
-    @Getter
+    @XmlElement
+    @Label("DATA_TYPE")
+    @Bind(label = "DATA_TYPE")
     @Setter
+    @Getter
     private int dataType;
 
-    @XmlElement(required = true)
-    @Labeled("TYPE_NAME")
-    @Getter
+    @XmlElement
+    @Label("TYPE_NAME")
+    @Bind(label = "TYPE_NAME")
     @Setter
+    @Getter
     private String typeName;
 
-    @XmlElement(required = true)
-    @Labeled("COLUMN_SIZE")
-    @Getter
+    @XmlElement
+    @Label("COLUMN_SIZE")
+    @Bind(label = "COLUMN_SIZE")
     @Setter
+    @Getter
     private int columnSize;
 
-    @XmlElement(nillable = true, required = true)
-    @Labeled("BUFFER_LENGTH")
+    @XmlElement(nillable = true)
+    @Label("BUFFER_LENGTH")
+    @Bind(label = "BUFFER_LENGTH", unused = true)
     @Unused
-    @Getter
     @Setter
+    @Getter
     private Integer bufferLength;
 
-    @XmlElement(required = true)
-    @Labeled("DECIMAL_DIGITS")
+    @XmlElement
+    @Label("DECIMAL_DIGITS")
+    @Bind(label = "DECIMAL_DIGITS", nillable = true)
     @Nillable
-    @Getter
     @Setter
+    @Getter
     private Integer decimalDigits;
 
-    @XmlElement(required = true)
-    @Labeled("NUM_PREC_RADIX")
-    @Getter
+    @XmlElement
+    @Label("NUM_PREC_RADIX")
+    @Bind(label = "NUM_PREC_RADIX")
     @Setter
+    @Getter
     private int numPrecRadix;
 
-    @XmlElement(required = true)
-    @Labeled("NULLABLE")
-    @Getter
+    @XmlElement
+    @Label("NULLABLE")
+    @Bind(label = "NULLABLE")
     @Setter
+    @Getter
     private int nullable;
 
-    @XmlElement(nillable = true, required = true)
-    @Labeled("REMARKS")
+    @XmlElement(nillable = true)
+    @Label("REMARKS")
+    @Bind(label = "REMARKS", nillable = true)
     @Nillable
-    @Getter
     @Setter
+    @Getter
     private String remarks;
 
-    @XmlElement(nillable = true, required = true)
-    @Labeled("COLUMN_DEF")
+    @XmlElement(nillable = true)
+    @Label("COLUMN_DEF")
+    @Bind(label = "COLUMN_DEF", nillable = true)
     @Nillable
-    @Getter
     @Setter
+    @Getter
     private String columnDef;
 
-    @XmlElement(nillable = true, required = true)
-    @Labeled("SQL_DATA_TYPE")
+    @XmlElement(nillable = true)
+    @Label("SQL_DATA_TYPE")
+    @Bind(label = "SQL_DATA_TYPE", unused = true)
     @Unused
-    @Getter
     @Setter
+    @Getter
     private Integer sqlDataType;
 
-    @XmlElement(nillable = true, required = true)
-    @Labeled("SQL_DATETIME_SUB")
+    @XmlElement(nillable = true)
+    @Label("SQL_DATETIME_SUB")
+    @Bind(label = "SQL_DATETIME_SUB", unused = true)
     @Unused
-    @Getter
     @Setter
+    @Getter
     private Integer sqlDatetimeSub;
 
-    @XmlElement(required = true)
-    @Labeled("CHAR_OCTET_LENGTH")
-    @Getter
+    @XmlElement
+    @Label("CHAR_OCTET_LENGTH")
+    @Bind(label = "CHAR_OCTET_LENGTH")
     @Setter
+    @Getter
     private int charOctetLength;
 
-    @XmlElement(required = true)
-    @Labeled("ORDINAL_POSITION")
-    @Getter
+    @XmlElement
+    @Label("ORDINAL_POSITION")
+    @Bind(label = "ORDINAL_POSITION")
     @Setter
+    @Getter
     private int ordinalPosition;
 
-    @XmlElement(required = true)
-    @Labeled("IS_NULLABLE")
-    @Getter
+    @XmlElement
+    @Label("IS_NULLABLE")
+    @Bind(label = "IS_NULLABLE")
     @Setter
+    @Getter
     private String isNullable;
 
-    @XmlElement(nillable = true, required = true)
-    @Labeled("SCOPE_CATALOG")
+    @XmlElement(nillable = true)
+    @Label("SCOPE_CATALOG")
+    @Bind(label = "SCOPE_CATALOG", nillable = true)
     @Nillable
-    @Getter
     @Setter
+    @Getter
     private String scopeCatalog;
 
-    @XmlElement(nillable = true, required = true)
-    @Labeled("SCOPE_SCHEMA")
+    @XmlElement(nillable = true)
+    @Label("SCOPE_SCHEMA")
+    @Bind(label = "SCOPE_SCHEMA", nillable = true)
     @Nillable
-    @Getter
     @Setter
+    @Getter
     private String scopeSchema;
 
-    @XmlElement(nillable = true, required = true)
-    @Labeled("SCOPE_TABLE")
+    @XmlElement(nillable = true)
+    @Label("SCOPE_TABLE")
+    @Bind(label = "SCOPE_TABLE", nillable = true)
     @Nillable
-    @Getter
     @Setter
+    @Getter
     private String scopeTable;
 
-    @XmlElement(nillable = true, required = true)
-    @Labeled("SOURCE_DATA_TYPE")
+    @XmlElement(nillable = true)
+    @Label("SOURCE_DATA_TYPE")
+    @Bind(label = "SOURCE_DATA_TYPE", nillable = true)
     @Nillable
-    @Getter
     @Setter
+    @Getter
     private Short sourceDataType;
 
-    @XmlElement(required = true)
-    @Labeled("IS_AUTOINCREMENT")
-    @Getter
+    @XmlElement
+    @Label("IS_AUTOINCREMENT")
+    @Bind(label = "IS_AUTOINCREMENT")
     @Setter
+    @Getter
     private String isAutoincrement;
 
-    @XmlElement(required = true)
-    @Labeled("IS_GENERATEDCOLUMN")
-    @Getter
+    @XmlElement
+    @Label("IS_GENERATEDCOLUMN")
+    @Bind(label = "IS_GENERATEDCOLUMN")
     @Setter
+    @Getter
     private String isGeneratedcolumn;
 
     // -------------------------------------------------------------------------
     @XmlElementRef
-    @Invokable(name = "getColumnPrivileges",
-               types = {String.class, String.class, String.class, String.class},
-               args = {
-                   @Literals({":tableCat", ":tableSchem", ":tableName",
-                              ":columnName"})
-               }
+    @Invoke(name = "getColumnPrivileges",
+            types = {String.class, String.class, String.class, String.class},
+            parameters = {
+                @Literals({":tableCat", ":tableSchem", ":tableName",
+                           ":columnName"})
+            }
     )
     private List<ColumnPrivilege> columnPrivileges;
 }

@@ -135,66 +135,73 @@ public class UDT implements Serializable {
 
     // -------------------------------------------------------------------------
     @XmlAttribute
-    @Labeled("TYPE_CAT")
+    @Label("TYPE_CAT")
+    @Bind(label = "TYPE_CAT", nillable = true)
     @Nillable
-    @Getter
     @Setter
+    @Getter
     private String typeCat;
 
     @XmlAttribute
-    @Labeled("TYPE_SCHEM")
+    @Label("TYPE_SCHEM")
+    @Bind(label = "TYPE_SCHEM", nillable = true)
     @Nillable
-    @Getter
     @Setter
+    @Getter
     private String typeSchem;
 
     // -------------------------------------------------------------------------
-    @XmlElement(required = true)
-    @Labeled("TYPE_NAME")
-    @Getter
+    @XmlElement
+    @Label("TYPE_NAME")
+    @Bind(label = "TYPE_NAME")
     @Setter
+    @Getter
     private String typeName;
 
-    @XmlElement(required = true)
-    @Labeled("CLASS_NAME")
-    @Getter
+    @XmlElement
+    @Label("CLASS_NAME")
+    @Bind(label = "CLASS_NAME")
     @Setter
+    @Getter
     private String className;
 
-    @XmlElement(required = true)
-    @Labeled("DATA_TYPE")
-    @Getter
+    @XmlElement
+    @Label("DATA_TYPE")
+    @Bind(label = "DATA_TYPE")
     @Setter
+    @Getter
     private int dataType;
 
-    @XmlElement(required = true)
-    @Labeled("REMARKS")
-    @Getter
+    @XmlElement
+    @Label("REMARKS")
+    @Bind(label = "REMARKS")
     @Setter
+    @Getter
     private String remarks;
 
-    @XmlElement(nillable = true, required = true)
-    @Labeled("BASE_TYPE")
+    @XmlElement(nillable = true)
+    @Label("BASE_TYPE")
+    @Bind(label = "BASE_TYPE", nillable = true)
     @Nillable
-    @Getter
     @Setter
+    @Getter
     private Short baseType;
 
     @XmlElementRef
-    @Invokable(name = "getAttributes",
-               types = {String.class, String.class, String.class, String.class},
-               args = {
-                   @Literals({":typeCat", ":typeSchem", ":typeName", "null"})
-               }
+    @Invoke(name = "getAttributes",
+            types = {String.class, String.class, String.class, String.class},
+            parameters = {
+                @Literals({":typeCat", ":typeSchem", ":typeName", "null"})
+            }
     )
     private List<Attribute> attributes;
 
     @XmlElementRef
-    @Invokable(name = "getSuperTypes",
-               types = {String.class, String.class, String.class},
-               args = {
-                   @Literals({":typeCat", ":typeSchem", ":typeName"})
-               }
+    @Invoke(name = "getSuperTypes",
+            types = {String.class, String.class, String.class},
+            parameters = {
+                @Literals({":typeCat", ":typeSchem", ":typeName"})
+            }
     )
     private List<SuperType> superTypes;
 }

@@ -123,50 +123,56 @@ public class Procedure implements Serializable {
 //    }
     // -------------------------------------------------------------------------
     @XmlAttribute
-    @Labeled("PROCEDURE_CAT")
+    @Label("PROCEDURE_CAT")
+    @Bind(label = "PROCEDURE_CAT", nillable = true)
     @Nillable
-    @Getter
     @Setter
+    @Getter
     private String procedureCat;
 
     @XmlAttribute
-    @Labeled("PROCEDURE_SCHEM")
+    @Label("PROCEDURE_SCHEM")
+    @Bind(label = "PROCEDURE_SCHEM", nillable = true)
     @Nillable
-    @Getter
     @Setter
+    @Getter
     private String procedureSchem;
 
     // -------------------------------------------------------------------------
-    @XmlElement(required = true)
-    @Labeled("PROCEDURE_NAME")
-    @Getter
+    @XmlElement
+    @Label("PROCEDURE_NAME")
+    @Bind(label = "PROCEDURE_NAME")
     @Setter
+    @Getter
     private String procedureName;
 
-    @XmlElement(required = true)
-    @Labeled("REMARKS")
-    @Getter
+    @XmlElement
+    @Label("REMARKS")
+    @Bind(label = "REMARKS")
     @Setter
+    @Getter
     private String remarks;
 
-    @XmlElement(required = true)
-    @Labeled("PROCEDURE_TYPE")
-    @Getter
+    @XmlElement
+    @Label("PROCEDURE_TYPE")
+    @Bind(label = "PROCEDURE_TYPE")
     @Setter
+    @Getter
     private short procedureType;
 
-    @XmlElement(required = true)
-    @Labeled("SPECIFIC_NAME")
-    @Getter
+    @XmlElement
+    @Label("SPECIFIC_NAME")
+    @Bind(label = "SPECIFIC_NAME")
     @Setter
+    @Getter
     private String specificName;
 
-    @Invokable(name = "getProcedureColumns",
-               types = {String.class, String.class, String.class, String.class},
-               args = {
-                   @Literals({":procedureCat", ":procedureSchem",
-                              ":procedureName", "null"})
-               }
+    @Invoke(name = "getProcedureColumns",
+            types = {String.class, String.class, String.class, String.class},
+            parameters = {
+                @Literals({":procedureCat", ":procedureSchem",
+                           ":procedureName", "null"})
+            }
     )
     @XmlElementRef
     private List<ProcedureColumn> procedureColumns;

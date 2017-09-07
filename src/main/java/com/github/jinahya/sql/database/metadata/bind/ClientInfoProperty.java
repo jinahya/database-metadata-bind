@@ -86,27 +86,31 @@ public class ClientInfoProperty implements Serializable {
 //        this.description = description;
 //    }
     // -------------------------------------------------------------------------
-    @XmlElement(required = true)
-    @Labeled("NAME")
-    @Getter
+    @XmlElement
+    @Label("NAME")
+    @Bind(label = "NAME")
     @Setter
+    @Getter
     private String name;
 
-    @XmlElement(required = true)
-    @Labeled("MAX_LEN")
-    @Getter
+    @XmlElement
+    @Label("MAX_LEN")
+    @Bind(label = "MAX_LEN")
     @Setter
+    @Getter
     private int maxLen;
 
-    @XmlElement(required = true)
-    @Labeled("DEFAULT_VALUE")
-    @Getter
+    @XmlElement
+    @Label("DEFAULT_VALUE")
+    @Bind(label = "DEFAULT_VALUE")
     @Setter
+    @Getter
     private String defaultValue;
 
-    @XmlElement(required = true)
-    @Labeled("DESCRIPTION")
-    @Getter
+    @XmlElement
+    @Label("DESCRIPTION")
+    @Bind(label = "DESCRIPTION")
     @Setter
+    @Getter
     private String description;
 }

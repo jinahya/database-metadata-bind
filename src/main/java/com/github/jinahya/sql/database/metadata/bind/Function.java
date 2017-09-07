@@ -127,52 +127,58 @@ public class Function implements Serializable {
 
     // -------------------------------------------------------------------------
     @XmlAttribute
-    @Labeled("FUNCTION_CAT")
+    @Label("FUNCTION_CAT")
+    @Bind(label = "FUNCTION_CAT", nillable = true)
     @Nillable
-    @Getter
     @Setter
+    @Getter
     private String functionCat;
 
     @XmlAttribute
-    @Labeled("FUNCTION_SCHEM")
+    @Label("FUNCTION_SCHEM")
+    @Bind(label = "FUNCTION_SCHEM", nillable = true)
     @Nillable
-    @Getter
     @Setter
+    @Getter
     private String functionSchem;
 
     // -------------------------------------------------------------------------
-    @XmlElement(required = true)
-    @Labeled("FUNCTION_NAME")
-    @Getter
+    @XmlElement
+    @Label("FUNCTION_NAME")
+    @Bind(label = "FUNCTION_NAME")
     @Setter
+    @Getter
     private String functionName;
 
-    @XmlElement(required = true)
-    @Labeled("REMARKS")
-    @Getter
+    @XmlElement
+    @Label("REMARKS")
+    @Bind(label = "REMARKS")
     @Setter
+    @Getter
     private String remarks;
 
-    @XmlElement(required = true)
-    @Labeled("FUNCTION_TYPE")
-    @Getter
+    @XmlElement
+    @Label("FUNCTION_TYPE")
+    @Bind(label = "FUNCTION_TYPE")
     @Setter
+    @Getter
     private short functionType;
 
-    @XmlElement(required = true)
-    @Labeled("SPECIFIC_NAME")
-    @Getter
+    @XmlElement
+    @Label("SPECIFIC_NAME")
+    @Bind(label = "SPECIFIC_NAME")
     @Setter
+    @Getter
     private String specificName;
 
     // -------------------------------------------------------------------------
     @XmlElementRef
-    @Invokable(name = "getFunctionColumns",
-               types = {String.class, String.class, String.class, String.class},
-               args = {
-                   @Literals({":functionCat", ":functionSchem", ":functionName",
-                              "null"})
-               }
+    @Invoke(name = "getFunctionColumns",
+            types = {String.class, String.class, String.class, String.class},
+            parameters = {
+                @Literals({":functionCat", ":functionSchem", ":functionName",
+                           "null"})
+            }
     )
     private List<FunctionColumn> functionColumns;
 }

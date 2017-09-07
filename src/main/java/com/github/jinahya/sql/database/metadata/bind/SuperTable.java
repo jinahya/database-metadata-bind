@@ -87,29 +87,33 @@ public class SuperTable implements Serializable {
 //    }
     // -------------------------------------------------------------------------
     @XmlAttribute
-    @Labeled("TABLE_CAT")
+    @Label("TABLE_CAT")
+    @Bind(label = "TABLE_CAT", nillable = true)
     @Nillable
-    @Getter
     @Setter
+    @Getter
     private String tableCat;
 
     @XmlAttribute
-    @Labeled("TABLE_SCHEM")
+    @Label("TABLE_SCHEM")
+    @Bind(label = "TABLE_SCHEM", nillable = true)
     @Nillable
-    @Getter
     @Setter
+    @Getter
     private String tableSchem;
 
     // -------------------------------------------------------------------------
-    @XmlElement(required = true)
-    @Labeled("TABLE_NAME")
-    @Getter
+    @XmlElement
+    @Label("TABLE_NAME")
+    @Bind(label = "TABLE_NAME")
     @Setter
+    @Getter
     private String tableName;
 
-    @XmlElement(required = true)
-    @Labeled("SUPERTABLE_NAME")
-    @Getter
+    @XmlElement
+    @Label("SUPERTABLE_NAME")
+    @Bind(label = "SUPERTABLE_NAME")
     @Setter
+    @Getter
     private String supertableName;
 }

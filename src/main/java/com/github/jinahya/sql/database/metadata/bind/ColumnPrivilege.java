@@ -124,55 +124,63 @@ public class ColumnPrivilege implements Serializable {
 //    }
     // -------------------------------------------------------------------------
     @XmlAttribute
-    @Labeled("TABLE_CAT")
+    @Label("TABLE_CAT")
+    @Bind(label = "TABLE_CAT", nillable = true)
     @Nillable
-    @Getter
     @Setter
+    @Getter
     private String tableCat;
 
     @XmlAttribute
-    @Labeled("TABLE_SCHEM")
+    @Label("TABLE_SCHEM")
+    @Bind(label = "TABLE_SCHEM", nillable = true)
     @Nillable
-    @Getter
     @Setter
+    @Getter
     private String tableSchem;
 
     @XmlAttribute
-    @Labeled("TABLE_NAME")
-    @Getter
+    @Label("TABLE_NAME")
+    @Bind(label = "TABLE_NAME")
     @Setter
+    @Getter
     private String tableName;
 
     @XmlAttribute
-    @Labeled("COLUMN_NAME")
-    @Getter
+    @Label("COLUMN_NAME")
+    @Bind(label = "COLUMN_NAME")
     @Setter
+    @Getter
     private String columnName;
 
     // -------------------------------------------------------------------------
-    @XmlElement(nillable = true, required = true)
-    @Labeled("GRANTOR")
+    @XmlElement(nillable = true)
+    @Label("GRANTOR")
+    @Bind(label = "GRANTOR", nillable = true)
     @Nillable
-    @Getter
     @Setter
+    @Getter
     private String grantor;
 
-    @XmlElement(required = true)
-    @Labeled("GRANTEE")
-    @Getter
+    @XmlElement
+    @Label("GRANTEE")
+    @Bind(label = "GRANTEE")
     @Setter
+    @Getter
     private String grantee;
 
-    @XmlElement(required = true)
-    @Labeled("PRIVILEGE")
-    @Getter
+    @XmlElement
+    @Label("PRIVILEGE")
+    @Bind(label = "PRIVILEGE")
     @Setter
+    @Getter
     private String privilege;
 
-    @XmlElement(nillable = true, required = true)
-    @Labeled("IS_GRANTABLE")
+    @XmlElement(nillable = true)
+    @Label("IS_GRANTABLE")
+    @Bind(label = "IS_GRANTABLE", nillable = true)
     @Nillable
-    @Getter
     @Setter
+    @Getter
     private String isGrantable;
 }

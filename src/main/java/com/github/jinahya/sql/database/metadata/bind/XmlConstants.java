@@ -16,11 +16,15 @@
 package com.github.jinahya.sql.database.metadata.bind;
 
 /**
+ * Constants for XML binding.
  *
  * @author Jin Kwon &lt;jinahya_at_gmail.com&gt;
  */
 public final class XmlConstants {
 
+    /**
+     * The XML namespace URI.
+     */
     public static final String DATABASE_METADATA_NS_URI
             = "http://github.com/jinahya/sql/database/metadata/bind";
 

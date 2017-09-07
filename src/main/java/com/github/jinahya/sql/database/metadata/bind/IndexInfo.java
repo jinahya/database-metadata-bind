@@ -75,7 +75,6 @@ public class IndexInfo implements Serializable {
 //    public void setTableCat(final String tableCat) {
 //        this.tableCat = tableCat;
 //    }
-
     // -------------------------------------------------------------- tableSchem
 //    public String getTableSchem() {
 //        return tableSchem;
@@ -84,7 +83,6 @@ public class IndexInfo implements Serializable {
 //    public void setTableSchem(final String tableSchem) {
 //        this.tableSchem = tableSchem;
 //    }
-
     // --------------------------------------------------------------- tableName
 //    public String getTableName() {
 //        return tableName;
@@ -93,7 +91,6 @@ public class IndexInfo implements Serializable {
 //    public void setTableName(final String tableName) {
 //        this.tableName = tableName;
 //    }
-
     // --------------------------------------------------------------- nonUnique
 //    public boolean isNonUnique() {
 //        return nonUnique;
@@ -102,7 +99,6 @@ public class IndexInfo implements Serializable {
 //    public void setNonUnique(final boolean nonUnique) {
 //        this.nonUnique = nonUnique;
 //    }
-
     // ---------------------------------------------------------- indexQualifier
 //    public String getIndexQualifier() {
 //        return indexQualifier;
@@ -111,7 +107,6 @@ public class IndexInfo implements Serializable {
 //    public void setIndexQualifier(final String indexQualifier) {
 //        this.indexQualifier = indexQualifier;
 //    }
-
     // --------------------------------------------------------------- indexName
 //    public String getIndexName() {
 //        return indexName;
@@ -120,7 +115,6 @@ public class IndexInfo implements Serializable {
 //    public void setIndexName(final String indexName) {
 //        this.indexName = indexName;
 //    }
-
     // -------------------------------------------------------------------- type
 //    public short getType() {
 //        return type;
@@ -129,7 +123,6 @@ public class IndexInfo implements Serializable {
 //    public void setType(final short type) {
 //        this.type = type;
 //    }
-
     // --------------------------------------------------------- ordinalPosition
 //    public short getOrdinalPosition() {
 //        return ordinalPosition;
@@ -138,7 +131,6 @@ public class IndexInfo implements Serializable {
 //    public void setOrdinalPosition(final short ordinalPosition) {
 //        this.ordinalPosition = ordinalPosition;
 //    }
-
     // -------------------------------------------------------------- columnName
 //    public String getColumnName() {
 //        return columnName;
@@ -147,7 +139,6 @@ public class IndexInfo implements Serializable {
 //    public void setColumnName(final String columnName) {
 //        this.columnName = columnName;
 //    }
-
     // --------------------------------------------------------------- ascOrDesc
 //    public String getAscOrDesc() {
 //        return ascOrDesc;
@@ -156,7 +147,6 @@ public class IndexInfo implements Serializable {
 //    public void setAscOrDesc(final String ascOrDesc) {
 //        this.ascOrDesc = ascOrDesc;
 //    }
-
     // ------------------------------------------------------------- cardinality
 //    public long getCardinality() {
 //        return cardinality;
@@ -165,7 +155,6 @@ public class IndexInfo implements Serializable {
 //    public void setCardinality(final long cardinality) {
 //        this.cardinality = cardinality;
 //    }
-
     // ------------------------------------------------------------------- pages
 //    public long getPages() {
 //        return pages;
@@ -182,91 +171,103 @@ public class IndexInfo implements Serializable {
 //    public void setFilterCondition(final String filterCondition) {
 //        this.filterCondition = filterCondition;
 //    }
-
     // -------------------------------------------------------------------------
     @XmlAttribute
-    @Labeled("TABLE_CAT")
+    @Label("TABLE_CAT")
+    @Bind(label = "TABLE_CAT", nillable = true)
     @Nillable
-    @Getter
     @Setter
+    @Getter
     private String tableCat;
 
     @XmlAttribute
-    @Labeled("TABLE_SCHEM")
+    @Label("TABLE_SCHEM")
+    @Bind(label = "TABLE_SCHEM", nillable = true)
     @Nillable
-    @Getter
     @Setter
+    @Getter
     private String tableSchem;
 
     @XmlAttribute
-    @Labeled("TABLE_NAME")
-    @Getter
+    @Label("TABLE_NAME")
+    @Bind(label = "TABLE_NAME")
     @Setter
+    @Getter
     private String tableName;
 
     // -------------------------------------------------------------------------
-    @XmlElement(required = true)
-    @Labeled("NON_UNIQUE")
-    @Getter
+    @XmlElement
+    @Label("NON_UNIQUE")
+    @Bind(label = "NON_UNIQUE")
     @Setter
+    @Getter
     private boolean nonUnique;
 
-    @XmlElement(nillable = true, required = true)
-    @Labeled("INDEX_QUALIFIER")
+    @XmlElement(nillable = true)
+    @Label("INDEX_QUALIFIER")
+    @Bind(label = "INDEX_QUALIFIER", nillable = true)
     @Nillable
-    @Getter
     @Setter
+    @Getter
     private String indexQualifier;
 
-    @XmlElement(nillable = true, required = true)
-    @Labeled("INDEX_NAME")
+    @XmlElement(nillable = true)
+    @Label("INDEX_NAME")
+    @Bind(label = "INDEX_NAME", nillable = true)
     @Nillable
-    @Getter
     @Setter
+    @Getter
     private String indexName;
 
-    @XmlElement(required = true)
-    @Labeled("TYPE")
-    @Getter
+    @XmlElement
+    @Label("TYPE")
+    @Bind(label = "TYPE")
     @Setter
+    @Getter
     private short type;
 
-    @XmlElement(required = true)
-    @Labeled("ORDINAL_POSITION")
-    @Getter
+    @XmlElement
+    @Label("ORDINAL_POSITION")
+    @Bind(label = "ORDINAL_POSITION")
     @Setter
+    @Getter
     private short ordinalPosition;
 
-    @XmlElement(nillable = true, required = true)
-    @Labeled("COLUMN_NAME")
+    @XmlElement(nillable = true)
+    @Label("COLUMN_NAME")
+    @Bind(label = "COLUMN_NAME", nillable = true)
     @Nillable
-    @Getter
     @Setter
+    @Getter
     private String columnName;
 
-    @XmlElement(nillable = true, required = true)
-    @Labeled("ASC_OR_DESC")
+    @XmlElement(nillable = true)
+    @Label("ASC_OR_DESC")
+    @Bind(label = "ASC_OR_DESC", nillable = true)
     @Nillable
-    @Getter
     @Setter
+    @Getter
     private String ascOrDesc;
 
-    @XmlElement(required = true)
-    @Labeled("CARDINALITY")
-    @Getter
+    @XmlElement
+    @Label("CARDINALITY")
+    @Bind(label = "CARDINALITY")
     @Setter
+    @Getter
     private long cardinality;
 
-    @XmlElement(required = true)
-    @Labeled("PAGES")
-    @Getter
+    @XmlElement
+    @Label("PAGES")
+    @Bind(label = "PAGES")
     @Setter
+    @Getter
     private long pages;
 
-    @XmlElement(nillable = true, required = true)
-    @Labeled("FILTER_CONDITION")
+    @XmlElement(nillable = true)
+    @Label("FILTER_CONDITION")
+    @Bind(label = "FILTER_CONDITION", nillable = true)
     @Nillable
-    @Getter
     @Setter
+    @Getter
     private String filterCondition;
 }

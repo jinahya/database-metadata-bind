@@ -79,13 +79,13 @@ public class ReflectionTest {
                      getClass().getDeclaredMethod("method", int.class));
     }
 
-    @Test
+    @Test(enabled = false)
     public void listType() throws ReflectiveOperationException {
-
         final Field field = getClass().getDeclaredField("list");
         final Type type = field.getGenericType();
         if (type instanceof ParameterizedType) {
-            final Type elementType = ((ParameterizedType) type).getActualTypeArguments()[0];
+            final Type elementType
+                    = ((ParameterizedType) type).getActualTypeArguments()[0];
             final String typeName = elementType.getTypeName();
             logger.debug("typeName: {}", typeName);
         }

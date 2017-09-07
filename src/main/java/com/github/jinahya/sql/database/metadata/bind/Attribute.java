@@ -216,118 +216,136 @@ public class Attribute implements Serializable {
 //    }
     // -------------------------------------------------------------------------
     @XmlAttribute
-    @Labeled("TYPE_CAT")
+    @Label("TYPE_CAT")
     @Nillable
-    @Getter
+    @Bind(label = "TYPE_CAT", nillable = true)
     @Setter
+    @Getter
     private String typeCat;
 
     @XmlAttribute
-    @Labeled("TYPE_SCHEM")
+    @Label("TYPE_SCHEM")
+    @Bind(label = "TYPE_SCHEM", nillable = true)
     @Nillable
-    @Getter
     @Setter
+    @Getter
     private String typeSchem;
 
     @XmlAttribute
-    @Labeled("TYPE_NAME")
-    @Getter
+    @Label("TYPE_NAME")
+    @Bind(label = "TYPE_NAME")
     @Setter
+    @Getter
     private String typeName;
 
     // -------------------------------------------------------------------------
-    @XmlElement(required = true)
-    @Labeled("ATTR_NAME")
-    @Getter
+    @XmlElement
+    @Label("ATTR_NAME")
+    @Bind(label = "ATTR_NAME")
     @Setter
+    @Getter
     private String attrName;
 
-    @XmlElement(required = true)
-    @Labeled("DATA_TYPE")
-    @Getter
+    @XmlElement
+    @Label("DATA_TYPE")
+    @Bind(label = "DATA_TYPE")
     @Setter
+    @Getter
     private int dataType;
 
-    @XmlElement(required = true)
-    @Labeled("ATTR_TYPE_NAME")
-    @Getter
+    @XmlElement
+    @Label("ATTR_TYPE_NAME")
+    @Bind(label = "ATTR_TYPE_NAME")
     @Setter
+    @Getter
     private String attrTypeName;
 
-    @XmlElement(required = true)
-    @Labeled("ATTR_SIZE")
-    @Getter
+    @XmlElement
+    @Label("ATTR_SIZE")
+    @Bind(label = "ATTR_SIZE")
     @Setter
+    @Getter
     private int attrSize;
 
-    @XmlElement(required = true)
-    @Labeled("DECIMAL_DIGITS")
-    @Getter
+    @XmlElement
+    @Label("DECIMAL_DIGITS")
+    @Bind(label = "DECIMAL_DIGITS")
     @Setter
+    @Getter
     private Integer decimalDigits;
 
-    @XmlElement(required = true)
-    @Labeled("NUM_PREC_RADIX")
-    @Getter
+    @XmlElement
+    @Label("NUM_PREC_RADIX")
+    @Bind(label = "NUM_PREC_RADIX")
     @Setter
+    @Getter
     private int numPrecRadix;
 
-    @XmlElement(required = true)
-    @Labeled("NULLABLE")
-    @Getter
+    @XmlElement
+    @Label("NULLABLE")
+    @Bind(label = "NULLABLE")
     @Setter
+    @Getter
     private int nullable;
 
-    @XmlElement(nillable = true, required = true)
-    @Labeled("REMARKS")
+    @XmlElement(nillable = true)
+    @Label("REMARKS")
+    @Bind(label = "REMARKS", nillable = true)
     @Nillable
-    @Getter
     @Setter
+    @Getter
     private String remarks;
 
-    @XmlElement(nillable = true, required = true)
-    @Labeled("ATTR_DEF")
+    @XmlElement(nillable = true)
+    @Label("ATTR_DEF")
+    @Bind(label = "ATTR_DEF", nillable = true)
     @Nillable
-    @Getter
     @Setter
+    @Getter
     private String attrDef;
 
-    @XmlElement(nillable = true, required = true)
-    @Labeled("SQL_DATA_TYPE")
+    @XmlElement(nillable = true)
+    @Label("SQL_DATA_TYPE")
+    @Bind(label = "SQL_DATA_TYPE", unused = true)
     @Unused
-    @Getter
     @Setter
+    @Getter
     private Integer sqlDataType;
 
-    @XmlElement(nillable = true, required = true)
-    @Labeled("SQL_DATETIME_SUB")
+    @XmlElement(nillable = true)
+    @Label("SQL_DATETIME_SUB")
+    @Bind(label = "SQL_DATETIME_SUB", unused = true)
     @Unused
-    @Getter
     @Setter
+    @Getter
     private Integer sqlDatetimeSub;
 
-    @XmlElement(required = true)
-    @Labeled("CHAR_OCTET_LENGTH")
-    @Getter
+    @XmlElement
+    @Label("CHAR_OCTET_LENGTH")
+    @Bind(label = "CHAR_OCTET_LENGTH")
     @Setter
+    @Getter
     private int charOctetLength;
 
-    @XmlElement(required = true)
-    @Labeled("ORDINAL_POSITION")
-    @Getter
+    @XmlElement
+    @Label("ORDINAL_POSITION")
+    @Bind(label = "ORDINAL_POSITION")
     @Setter
+    @Getter
     private int ordinalPosition;
 
-    @XmlElement(required = true)
-    @Labeled("IS_NULLABLE")
-    @Getter
+    @XmlElement
+    @Label("IS_NULLABLE")
+    @Bind(label = "IS_NULLABLE")
     @Setter
+    @Getter
     private String isNullable;
 
-    @XmlElement(nillable = true, required = true)
-    @Labeled("SOURCE_DATA_TYPE")
+    @XmlElement(nillable = true)
     @Nillable
-    @Getter
+    @Label("SOURCE_DATA_TYPE")
+    @Bind(label = "SOURCE_DATA_TYPE", nillable = true)
     @Setter
+    @Getter
     private Short sourceDataType;
 }

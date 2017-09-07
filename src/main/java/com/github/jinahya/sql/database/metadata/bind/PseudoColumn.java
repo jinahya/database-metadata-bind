@@ -170,82 +170,93 @@ public class PseudoColumn implements Serializable {
 //    public void setIsNullable(final String isNullable) {
 //        this.isNullable = isNullable;
 //    }
-
     // -------------------------------------------------------------------------
     @XmlAttribute
-    @Labeled("TABLE_CAT")
+    @Label("TABLE_CAT")
+    @Bind(label = "TABLE_CAT", nillable = true)
     @Nillable
-    @Getter
     @Setter
+    @Getter
     private String tableCat;
 
     @XmlAttribute
-    @Labeled("TABLE_SCHEM")
+    @Label("TABLE_SCHEM")
+    @Bind(label = "TABLE_SCHEM", nillable = true)
     @Nillable
-    @Getter
     @Setter
+    @Getter
     private String tableSchem;
 
     @XmlAttribute
-    @Labeled("TABLE_NAME")
-    @Getter
+    @Label("TABLE_NAME")
+    @Bind(label = "TABLE_NAME")
     @Setter
+    @Getter
     private String tableName;
 
     // -------------------------------------------------------------------------
-    @XmlElement(required = true)
-    @Labeled("COLUMN_NAME")
-    @Getter
+    @XmlElement
+    @Label("COLUMN_NAME")
+    @Bind(label = "COLUMN_NAME")
     @Setter
+    @Getter
     private String columnName;
 
-    @XmlElement(required = true)
-    @Labeled("DATA_TYPE")
-    @Getter
+    @XmlElement
+    @Label("DATA_TYPE")
+    @Bind(label = "DATA_TYPE")
     @Setter
+    @Getter
     private int dataType;
 
-    @XmlElement(required = true)
-    @Labeled("COLUMN_SIZE")
-    @Getter
+    @XmlElement
+    @Label("COLUMN_SIZE")
+    @Bind(label = "COLUMN_SIZE")
     @Setter
+    @Getter
     private int columnSize;
 
-    @XmlElement(nillable = true, required = true)
-    @Labeled("DECIMAL_DIGITS")
+    @XmlElement(nillable = true)
+    @Label("DECIMAL_DIGITS")
+    @Bind(label = "DECIMAL_DIGITS", nillable = true)
     @Nillable
-    @Getter
     @Setter
+    @Getter
     private Integer decimalDigits;
 
-    @XmlElement(required = true)
-    @Labeled("NUM_PREC_RADIX")
-    @Getter
+    @XmlElement
+    @Label("NUM_PREC_RADIX")
+    @Bind(label = "NUM_PREC_RADIX")
     @Setter
+    @Getter
     private int numPrecRadix;
 
-    @XmlElement(required = true)
-    @Labeled("COLUMN_USAGE")
-    @Getter
+    @XmlElement
+    @Label("COLUMN_USAGE")
+    @Bind(label = "COLUMN_USAGE")
     @Setter
+    @Getter
     private String columnUsage;
 
-    @XmlElement(nillable = true, required = true)
-    @Labeled("REMARKS")
+    @XmlElement(nillable = true)
+    @Label("REMARKS")
+    @Bind(label = "REMARKS", nillable = true)
     @Nillable
-    @Getter
     @Setter
+    @Getter
     private String remarks;
 
-    @XmlElement(required = true)
-    @Labeled("CHAR_OCTET_LENGTH")
-    @Getter
+    @XmlElement
+    @Label("CHAR_OCTET_LENGTH")
+    @Bind(label = "CHAR_OCTET_LENGTH")
     @Setter
+    @Getter
     private int charOctetLength;
 
-    @XmlElement(required = true)
-    @Labeled("IS_NULLABLE")
-    @Getter
+    @XmlElement
+    @Label("IS_NULLABLE")
+    @Bind(label = "IS_NULLABLE")
     @Setter
+    @Getter
     private String isNullable;
 }
