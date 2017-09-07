@@ -61,7 +61,7 @@ public class Catalog implements Serializable {//extends AbstractTableDomain {
         return instance;
     }
 
-    public static Catalog newVirtualInstance(final MetadataContext context)
+    static Catalog newVirtualInstance(final MetadataContext context)
             throws SQLException, ReflectiveOperationException {
         final Catalog instance = newVirtualInstance();
         instance.getSchemas().addAll(

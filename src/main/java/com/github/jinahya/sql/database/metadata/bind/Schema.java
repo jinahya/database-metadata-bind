@@ -62,8 +62,8 @@ public class Schema implements Serializable {//extends AbstractTableDomain {
         return instance;
     }
 
-    public static Schema newVirtualInstance(final MetadataContext context,
-                                            final String tableCatalog)
+    static Schema newVirtualInstance(final MetadataContext context,
+                                     final String tableCatalog)
             throws SQLException, ReflectiveOperationException {
         final Schema instance = newVirtualInstance(tableCatalog);
         instance.getFunctions().addAll(context.getFunctions(
