@@ -15,8 +15,8 @@ A library binding various information from [DatabaseMetaData](http://docs.oracle
 
 ```java
 // prepare jdbc information
-final Connection connection = connect();
-final DatabaseMetaData metadata = connection.getDataBaseMetaData();
+final java.sql.Connection connection = connect();
+final java.sql.DatabaseMetaData metadata = connection.getDataBaseMetaData();
 
 // create context, and add suppressions if required
 final MetadataContext context = new MetadataContext(metadata);
@@ -24,18 +24,7 @@ context.suppress("schema/functions", "table/pseudoColumns");
 
 // bind various informations
 final List<Catalog> catalogs = context.getCatalogs();
-if (categories.isEmpty()) {
-    // either there is no concept of catalog
-    // nor actually no catalog exists
-    catalogs.add(Catalog.newVirtualInstance(context));
-}
-for (final Catalog catalog : catalogs) {
-    final List<Schema> schemas = catalog.getSchemas();
-    if (schemas
-}
-
 final List<Schema> schemas = context.getSchemas("", null);
-
 final List<Tables> tables = context.getTables(null, null, null); // list all tables
 final List<PrimaryKeys> primaryKeys
     = context.getPrimaryKeys("PUBLIC", "SYSTEM_LOBS", "BLOCKS");
@@ -43,14 +32,16 @@ final List<PrimaryKeys> primaryKeys
 
 ### XML Binding
 
-All classes are annotated with `@XmlRootElement`.
+Almost all classes are annotated with `@XmlRootElement`.
 
-````java
+```java
 final UDT udt;
 final JAXBContext context = JAXBContext.newInstance(UDT.class);
 final Marshaller marshaller = context.createMarshaller();
 marshaller.mashal(udt, ...);
-````
+```
+
 ----
+
 [![Domate via Paypal](https://img.shields.io/badge/donate-paypal-blue.svg)](https://www.paypal.com/cgi-bin/webscr?cmd=_cart&business=A954LDFBW4B9N&lc=KR&item_name=GitHub&amount=5%2e00&currency_code=USD&button_subtype=products&add=1&bn=PP%2dShopCartBF%3adonate%2dpaypal%2dblue%2epng%3aNonHosted)
 
