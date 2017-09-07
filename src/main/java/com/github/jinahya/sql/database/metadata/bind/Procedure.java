@@ -25,8 +25,6 @@ import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlElementRef;
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlType;
-import lombok.Getter;
-import lombok.Setter;
 
 /**
  * An entity class for binding the result of
@@ -61,53 +59,59 @@ public class Procedure implements Serializable {
     }
 
     // ------------------------------------------------------------ procedureCat
-//    public String getProcedureCat() {
-//        return procedureCat;
-//    }
-//
-//    public void setProcedureCat(final String procedureCat) {
-//        this.procedureCat = procedureCat;
-//    }
+    public String getProcedureCat() {
+        return procedureCat;
+    }
+
+    public void setProcedureCat(final String procedureCat) {
+        this.procedureCat = procedureCat;
+    }
+
     // ---------------------------------------------------------- procedureSchem
-//    public String getProcedureSchem() {
-//        return procedureSchem;
-//    }
-//
-//    public void setProcedureSchem(final String procedureSchem) {
-//        this.procedureSchem = procedureSchem;
-//    }
+    public String getProcedureSchem() {
+        return procedureSchem;
+    }
+
+    public void setProcedureSchem(final String procedureSchem) {
+        this.procedureSchem = procedureSchem;
+    }
+
     // ----------------------------------------------------------- procedureName
-//    public String getProcedureName() {
-//        return procedureName;
-//    }
-//
-//    public void setProcedureName(final String procedureName) {
-//        this.procedureName = procedureName;
-//    }
+    public String getProcedureName() {
+        return procedureName;
+    }
+
+    public void setProcedureName(final String procedureName) {
+        this.procedureName = procedureName;
+    }
+
     // ----------------------------------------------------------------- remarks
-//    public String getRemarks() {
-//        return remarks;
-//    }
-//
-//    public void setRemarks(final String remarks) {
-//        this.remarks = remarks;
-//    }
+    public String getRemarks() {
+        return remarks;
+    }
+
+    public void setRemarks(final String remarks) {
+        this.remarks = remarks;
+    }
+
     // ----------------------------------------------------------- procedureType
-//    public short getProcedureType() {
-//        return procedureType;
-//    }
-//
-//    public void setProcedureType(final short procedureType) {
-//        this.procedureType = procedureType;
-//    }
+    public short getProcedureType() {
+        return procedureType;
+    }
+
+    public void setProcedureType(final short procedureType) {
+        this.procedureType = procedureType;
+    }
+
     // ------------------------------------------------------------ specificName
-//    public String getSpecificName() {
-//        return specificName;
-//    }
-//
-//    public void setSpecificName(final String specificName) {
-//        this.specificName = specificName;
-//    }
+    public String getSpecificName() {
+        return specificName;
+    }
+
+    public void setSpecificName(final String specificName) {
+        this.specificName = specificName;
+    }
+
     // -------------------------------------------------------- procedureColumns
     public List<ProcedureColumn> getProcedureColumns() {
         if (procedureColumns == null) {
@@ -116,57 +120,41 @@ public class Procedure implements Serializable {
         return procedureColumns;
     }
 
-//    @Deprecated
-//    public void setProcedureColumns(
-//            final List<ProcedureColumn> procedureColumns) {
-//        this.procedureColumns = procedureColumns;
-//    }
     // -------------------------------------------------------------------------
     @XmlAttribute
     @Label("PROCEDURE_CAT")
     @Bind(label = "PROCEDURE_CAT", nillable = true)
     @Nillable
-    @Setter
-    @Getter
     private String procedureCat;
 
     @XmlAttribute
     @Label("PROCEDURE_SCHEM")
     @Bind(label = "PROCEDURE_SCHEM", nillable = true)
     @Nillable
-    @Setter
-    @Getter
     private String procedureSchem;
 
     // -------------------------------------------------------------------------
     @XmlElement
     @Label("PROCEDURE_NAME")
     @Bind(label = "PROCEDURE_NAME")
-    @Setter
-    @Getter
     private String procedureName;
 
     @XmlElement
     @Label("REMARKS")
     @Bind(label = "REMARKS")
-    @Setter
-    @Getter
     private String remarks;
 
     @XmlElement
     @Label("PROCEDURE_TYPE")
     @Bind(label = "PROCEDURE_TYPE")
-    @Setter
-    @Getter
     private short procedureType;
 
     @XmlElement
     @Label("SPECIFIC_NAME")
     @Bind(label = "SPECIFIC_NAME")
-    @Setter
-    @Getter
     private String specificName;
 
+    @XmlElementRef
     @Invoke(name = "getProcedureColumns",
             types = {String.class, String.class, String.class, String.class},
             parameters = {
@@ -174,6 +162,5 @@ public class Procedure implements Serializable {
                            ":procedureName", "null"})
             }
     )
-    @XmlElementRef
     private List<ProcedureColumn> procedureColumns;
 }

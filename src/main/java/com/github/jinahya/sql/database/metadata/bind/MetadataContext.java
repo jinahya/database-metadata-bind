@@ -562,8 +562,9 @@ public class MetadataContext {
     }
 
     /**
-     * Binds information from
-     * {@link DatabaseMetaData#getSchemas(java.lang.String, java.lang.String) getSchemas(catalog, schemaPattern)}.
+     * Invokes
+     * {@link DatabaseMetaData#getSchemas(java.lang.String, java.lang.String) DatabaseMetaData#getSchemas}
+     * method with given arguments and returns the result.
      *
      * @param catalog the value for {@code catalog} parameter.
      * @param schemaPattern the value for {@code schemaPattern} parameter.

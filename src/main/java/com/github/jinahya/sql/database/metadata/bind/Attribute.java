@@ -71,13 +71,14 @@ public class Attribute implements Serializable {
     }
 
     // ----------------------------------------------------------------- typeCat
-//    public String getTypeCat() {
-//        return typeCat;
-//    }
-//
-//    public void setTypeCat(final String typeCat) {
-//        this.typeCat = typeCat;
-//    }
+    public String getTypeCat() {
+        return typeCat;
+    }
+
+    public void setTypeCat(final String typeCat) {
+        this.typeCat = typeCat;
+    }
+
     // --------------------------------------------------------------- typeSchem
 //    public String getTypeSchem() {
 //        return typeSchem;
@@ -217,10 +218,8 @@ public class Attribute implements Serializable {
     // -------------------------------------------------------------------------
     @XmlAttribute
     @Label("TYPE_CAT")
-    @Nillable
     @Bind(label = "TYPE_CAT", nillable = true)
-    @Setter
-    @Getter
+    @Nillable
     private String typeCat;
 
     @XmlAttribute
