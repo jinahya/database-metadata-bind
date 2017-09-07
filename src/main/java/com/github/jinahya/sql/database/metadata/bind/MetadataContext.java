@@ -38,6 +38,7 @@ import static com.github.jinahya.sql.database.metadata.bind.Utils.field;
 import static com.github.jinahya.sql.database.metadata.bind.Utils.labels;
 import static com.github.jinahya.sql.database.metadata.bind.Utils.path;
 import java.util.Arrays;
+import org.codehaus.mojo.animal_sniffer.IgnoreJRERequirement;
 
 /**
  * A context class for retrieving information from an instance of
@@ -120,6 +121,10 @@ public class MetadataContext {
             final String path = path(type, field);
             final String formatted = format(
                     "field=%s, path=%s, bind=%s", field, path, bind);
+            if (unused) {
+                logger.fine(format("unused: %s", formatted));
+                continue;
+            }
             if (suppressed(path)) {
                 logger.fine(format("skipping; %s", formatted));
                 continue;
@@ -129,6 +134,14 @@ public class MetadataContext {
                 continue;
             }
             final Object value = results.getObject(label);
+            if (value == null) {
+                if (!nillable) {
+                    logger.warning(format("null value; %s", formatted));
+                }
+                if (field.getType().isPrimitive()) {
+                    logger.warning(format("null value; %s", formatted));
+                }
+            }
             field(field, instance, value);
         }
         final Map<Field, Invoke> ifields = ifields(type);
@@ -165,21 +178,20 @@ public class MetadataContext {
                 final Object result;
                 try {
                     result = method.invoke(metadata, arguments);
-                    if (!ResultSet.class.isInstance(result)) {
-                        logger.severe(format(
-                                "wrong invocation result; %s, result=%s",
-                                formatted, result));
-                        continue;
-                    }
-                } catch (final Exception e) {
+                } catch (final Exception e) { // NoSuchMethod
                     logger.log(SEVERE, format(
                                "failed to invoke %s with %s", formatted,
                                Arrays.toString(arguments)), e);
                     continue;
-                } catch (final Error e) {
+                } catch (final Error e) { // NoSuchMethod/AbstractMethod
                     logger.log(SEVERE, format(
                                "failed to invoke %s with %s",
                                formatted, Arrays.toString(arguments)), e);
+                    continue;
+                }
+                if (!ResultSet.class.isInstance(result)) {
+                    logger.severe(format(
+                            "wrong result; %s for %s", result, formatted));
                     continue;
                 }
                 final List<Object> fvalue = new ArrayList<Object>();
@@ -201,6 +213,19 @@ public class MetadataContext {
         return instances;
     }
 
+    /**
+     * Binds information from
+     * {@link DatabaseMetaData#getAttributes(java.lang.String, java.lang.String, java.lang.String, java.lang.String) getAttributes(catalog, schemaPattern, typeNamePattern, attributeNamePattern)}.
+     *
+     * @param catalog the value for {@code catalog} parameter.
+     * @param schemaPattern the value for {@code schemaPattern} parameter.
+     * @param typeNamePattern the value for {@code typeNamePattern} parameter.
+     * @param attributeNamePattern the value for {@code attributeNamePattern}
+     * parameter.
+     * @return a list of attributes
+     * @throws SQLException if a database error occurs.
+     * @throws ReflectiveOperationException if a reflection error occurs.
+     */
     public List<Attribute> getAttributes(final String catalog,
                                          final String schemaPattern,
                                          final String typeNamePattern,
@@ -253,11 +278,12 @@ public class MetadataContext {
     }
 
     /**
-     * Binds information from {@link DatabaseMetaData#getClientInfoProperties()}
+     * Binds information from
+     * {@link DatabaseMetaData#getClientInfoProperties() getClientInfoProperties()}
      *
-     * @return bound information
+     * @return a list of client info properties
      * @throws SQLException if a database error occurs.
-     * @throws ReflectiveOperationException
+     * @throws ReflectiveOperationException if a reflection error occurs.
      */
     public List<ClientInfoProperty> getClientInfoProperties()
             throws SQLException, ReflectiveOperationException {
@@ -483,6 +509,22 @@ public class MetadataContext {
         return list;
     }
 
+    /**
+     * Binds information from
+     * {@link DatabaseMetaData#getPseudoColumns(java.lang.String, java.lang.String, java.lang.String, java.lang.String) getPseudoColumns(catalog, schemaPattern, tableNamePattern, columnNamePattern)}.
+     * Note that the
+     * {@link DatabaseMetaData#getPseudoColumns(java.lang.String, java.lang.String, java.lang.String, java.lang.String) getPseudoColumns(catalog, schemaPattern, tableNamePattern, columnNamePattern)}
+     * method added since 1.7.
+     *
+     * @param catalog a value for {@code catalog} parameter.
+     * @param schemaPattern a value for {@code schemaPattern} parameter.
+     * @param tableNamePattern a value for {@code tableNamePattern} parameter.
+     * @param columnNamePattern a value for {@code columnNamePattern} parameter.
+     * @return a list of pseudo columns
+     * @throws SQLException if a database error occurs.
+     * @throws ReflectiveOperationException if a reflection error occurs.
+     */
+    @IgnoreJRERequirement // getPseudoColumns since 1.7
     public List<PseudoColumn> getPseudoColumns(final String catalog,
                                                final String schemaPattern,
                                                final String tableNamePattern,
@@ -499,6 +541,14 @@ public class MetadataContext {
         return list;
     }
 
+    /**
+     * Binds information from
+     * {@link DatabaseMetaData#getSchemas() getSchemas()}.
+     *
+     * @return a list of schemas
+     * @throws SQLException if a database error occurs.
+     * @throws ReflectiveOperationException if a reflection error occurs.
+     */
     public List<SchemaName> getSchemas()
             throws SQLException, ReflectiveOperationException {
         final List<SchemaName> list = new ArrayList<SchemaName>();
@@ -511,6 +561,17 @@ public class MetadataContext {
         return list;
     }
 
+    /**
+     * Binds information from
+     * {@link DatabaseMetaData#getSchemas(java.lang.String, java.lang.String) getSchemas(catalog, schemaPattern)}.
+     *
+     * @param catalog the value for {@code catalog} parameter.
+     * @param schemaPattern the value for {@code schemaPattern} parameter.
+     * @return a list of schemas
+     * @throws SQLException if a database error occurs.
+     * @throws ReflectiveOperationException if a reflection error occurs.
+     * @see DatabaseMetaData#getSchemas(java.lang.String, java.lang.String)
+     */
     public List<Schema> getSchemas(final String catalog,
                                    final String schemaPattern)
             throws SQLException, ReflectiveOperationException {

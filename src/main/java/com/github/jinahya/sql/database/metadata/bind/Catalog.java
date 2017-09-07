@@ -27,8 +27,6 @@ import javax.xml.bind.annotation.XmlElementRef;
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlTransient;
 import javax.xml.bind.annotation.XmlType;
-import lombok.Getter;
-import lombok.Setter;
 
 /**
  * An entity class for binding the result of
@@ -78,13 +76,24 @@ public class Catalog implements Serializable {//extends AbstractTableDomain {
     }
 
     // ---------------------------------------------------------------- tableCat
-//    public String getTableCat() {
-//        return tableCat;
-//    }
-//
-//    public void setTableCat(final String tableCat) {
-//        this.tableCat = tableCat;
-//    }
+    /**
+     * Returns the current value of {@code tableCat} property.
+     *
+     * @return the current value of {@code tableCat} property.
+     */
+    public String getTableCat() {
+        return tableCat;
+    }
+
+    /**
+     * Replaces the value of {@code tableCat} property with given.
+     *
+     * @param tableCat new value for {@code tableCat} property.
+     */
+    public void setTableCat(final String tableCat) {
+        this.tableCat = tableCat;
+    }
+
     // ----------------------------------------------------------------- schemas
     public List<Schema> getSchemas() {
         if (schemas == null) {
@@ -118,8 +127,8 @@ public class Catalog implements Serializable {//extends AbstractTableDomain {
     @XmlElement
     @Label("TABLE_CAT")
     @Bind(label = "TABLE_CAT")
-    @Setter
-    @Getter
+//    @Setter
+//    @Getter
     private String tableCat;
 
     @XmlElementRef

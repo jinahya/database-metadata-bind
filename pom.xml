@@ -38,6 +38,7 @@
     <maven.compiler.target>1.6</maven.compiler.target>
     <maven.compiler.testSource>1.8</maven.compiler.testSource>
     <maven.compiler.testTarget>1.8</maven.compiler.testTarget>
+    <version.animal-sniffer>1.16</version.animal-sniffer>
   </properties>
 
   <repositories>
@@ -98,6 +99,12 @@
       <artifactId>derby</artifactId>
       <version>10.13.1.1</version>
       <scope>test</scope>
+    </dependency>
+    <dependency>
+      <groupId>org.codehaus.mojo</groupId>
+      <artifactId>animal-sniffer-annotations</artifactId>
+      <version>${version.animal-sniffer}</version>
+      <scope>provided</scope>
     </dependency>
     <dependency>
       <groupId>org.mariadb.jdbc</groupId>
@@ -195,7 +202,7 @@
                   <pattern>com.google.common</pattern>
                   <shadedPattern>com.github.jinahya.sql.metadata.bind.realocated.com.google.common</shadedPattern>
                 </relocation>-->
-<!--                <relocation>
+                <!--                <relocation>
                   <pattern>org.apache.commons</pattern>
                   <shadedPattern>com.github.jinahya.sql.metadata.bind.realocated.org.apache.commons</shadedPattern>
                 </relocation>-->
@@ -278,8 +285,22 @@
       <plugin>
         <groupId>org.codehaus.mojo</groupId>
         <artifactId>animal-sniffer-maven-plugin</artifactId>
-        <version>1.16</version>
+        <version>${version.animal-sniffer}</version>
         <executions>
+          <execution>
+            <id>check-against-java16</id>
+            <phase>test</phase>
+            <goals>
+              <goal>check</goal>
+            </goals>
+            <configuration>
+              <signature>
+                <groupId>org.codehaus.mojo.signature</groupId>
+                <artifactId>java16</artifactId>
+                <version>1.0</version>
+              </signature>
+            </configuration>
+          </execution>
           <execution>
             <id>check-against-java17</id>
             <phase>test</phase>

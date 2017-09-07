@@ -25,8 +25,6 @@ import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlElementRef;
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlType;
-import lombok.Getter;
-import lombok.Setter;
 
 /**
  * An entity class for binding information from
@@ -83,197 +81,221 @@ public class Column implements Serializable {
     }
 
     // ---------------------------------------------------------------- tableCat
-//    public String getTableCat() {
-//        return tableCat;
-//    }
-//
-//    public void setTableCat(final String tableCat) {
-//        this.tableCat = tableCat;
-//    }
+    public String getTableCat() {
+        return tableCat;
+    }
+
+    public void setTableCat(final String tableCat) {
+        this.tableCat = tableCat;
+    }
+
     // -------------------------------------------------------------- tableSchem
-//    public String getTableSchem() {
-//        return tableSchem;
-//    }
-//
-//    public void setTableSchem(final String tableSchem) {
-//        this.tableSchem = tableSchem;
-//    }
+    public String getTableSchem() {
+        return tableSchem;
+    }
+
+    public void setTableSchem(final String tableSchem) {
+        this.tableSchem = tableSchem;
+    }
+
     // --------------------------------------------------------------- tableName
-//    public String getTableName() {
-//        return tableName;
-//    }
-//
-//    public void setTableName(final String tableName) {
-//        this.tableName = tableName;
-//    }
+    public String getTableName() {
+        return tableName;
+    }
+
+    public void setTableName(final String tableName) {
+        this.tableName = tableName;
+    }
+
     // -------------------------------------------------------------- columnName
-//    public String getColumnName() {
-//        return columnName;
-//    }
-//
-//    public void setColumnName(final String columnName) {
-//        this.columnName = columnName;
-//    }
+    public String getColumnName() {
+        return columnName;
+    }
+
+    public void setColumnName(final String columnName) {
+        this.columnName = columnName;
+    }
+
     // ---------------------------------------------------------------- dataType
-//    public int getDataType() {
-//        return dataType;
-//    }
-//
-//    public void setDataType(final int dataType) {
-//        this.dataType = dataType;
-//    }
+    public int getDataType() {
+        return dataType;
+    }
+
+    public void setDataType(final int dataType) {
+        this.dataType = dataType;
+    }
+
     // ---------------------------------------------------------------- typeName
-//    public String getTypeName() {
-//        return typeName;
-//    }
-//
-//    public void setTypeName(final String typeName) {
-//        this.typeName = typeName;
-//    }
+    public String getTypeName() {
+        return typeName;
+    }
+
+    public void setTypeName(final String typeName) {
+        this.typeName = typeName;
+    }
+
     // -------------------------------------------------------------- columnSize
-//    public int getColumnSize() {
-//        return columnSize;
-//    }
-//
-//    public void setColumnSize(int columnSize) {
-//        this.columnSize = columnSize;
-//    }
+    public int getColumnSize() {
+        return columnSize;
+    }
+
+    public void setColumnSize(int columnSize) {
+        this.columnSize = columnSize;
+    }
+
     // ------------------------------------------------------------ bufferLength
-//    public Integer getBufferLength() {
-//        return bufferLength;
-//    }
-//
-//    public void setBufferLength(final Integer bufferLength) {
-//        this.bufferLength = bufferLength;
-//    }
+    public Integer getBufferLength() {
+        return bufferLength;
+    }
+
+    public void setBufferLength(final Integer bufferLength) {
+        this.bufferLength = bufferLength;
+    }
+
     // ----------------------------------------------------------- decimalDigits
-//    public Integer getDecimalDigits() {
-//        return decimalDigits;
-//    }
-//
-//    public void setDecimalDigits(final Integer decimalDigits) {
-//        this.decimalDigits = decimalDigits;
-//    }
+    public Integer getDecimalDigits() {
+        return decimalDigits;
+    }
+
+    public void setDecimalDigits(final Integer decimalDigits) {
+        this.decimalDigits = decimalDigits;
+    }
+
     // ------------------------------------------------------------ numPrecRadix
-//    public int getNumPrecRadix() {
-//        return numPrecRadix;
-//    }
-//
-//    public void setNumPrecRadix(final int numPrecRadix) {
-//        this.numPrecRadix = numPrecRadix;
-//    }
+    public int getNumPrecRadix() {
+        return numPrecRadix;
+    }
+
+    public void setNumPrecRadix(final int numPrecRadix) {
+        this.numPrecRadix = numPrecRadix;
+    }
+
     // ---------------------------------------------------------------- nullable
-//    public int getNullable() {
-//        return nullable;
-//    }
-//
-//    public void setNullable(final int nullable) {
-//        this.nullable = nullable;
-//    }
+    public int getNullable() {
+        return nullable;
+    }
+
+    public void setNullable(final int nullable) {
+        this.nullable = nullable;
+    }
+
     // ----------------------------------------------------------------- remarks
-//    public String getRemarks() {
-//        return remarks;
-//    }
-//
-//    public void setRemarks(final String remarks) {
-//        this.remarks = remarks;
-//    }
+    public String getRemarks() {
+        return remarks;
+    }
+
+    public void setRemarks(final String remarks) {
+        this.remarks = remarks;
+    }
+
     // --------------------------------------------------------------- columnDef
-//    public String getColumnDef() {
-//        return columnDef;
-//    }
-//
-//    public void setColumnDef(final String columnDef) {
-//        this.columnDef = columnDef;
-//    }
+    public String getColumnDef() {
+        return columnDef;
+    }
+
+    public void setColumnDef(final String columnDef) {
+        this.columnDef = columnDef;
+    }
+
     // ------------------------------------------------------------- sqlDataType
-//    public Integer getSqlDataType() {
-//        return sqlDataType;
-//    }
-//
-//    public void setSqlDataType(final Integer sqlDataType) {
-//        this.sqlDataType = sqlDataType;
-//    }
+    public Integer getSqlDataType() {
+        return sqlDataType;
+    }
+
+    public void setSqlDataType(final Integer sqlDataType) {
+        this.sqlDataType = sqlDataType;
+    }
+
     // ---------------------------------------------------------- sqlDatetimeSub
-//    public Integer getSqlDatetimeSub() {
-//        return sqlDatetimeSub;
-//    }
-//
-//    public void setSqlDatetimeSub(final Integer sqlDatetimeSub) {
-//        this.sqlDatetimeSub = sqlDatetimeSub;
-//    }
+    public Integer getSqlDatetimeSub() {
+        return sqlDatetimeSub;
+    }
+
+    public void setSqlDatetimeSub(final Integer sqlDatetimeSub) {
+        this.sqlDatetimeSub = sqlDatetimeSub;
+    }
+
     // --------------------------------------------------------- charOctetLength
-//    public int getCharOctetLength() {
-//        return charOctetLength;
-//    }
-//
-//    public void setCharOctetLength(final int charOctetLength) {
-//        this.charOctetLength = charOctetLength;
-//    }
+    public int getCharOctetLength() {
+        return charOctetLength;
+    }
+
+    public void setCharOctetLength(final int charOctetLength) {
+        this.charOctetLength = charOctetLength;
+    }
+
     // --------------------------------------------------------- ordinalPosition
-//    public int getOrdinalPosition() {
-//        return ordinalPosition;
-//    }
-//
-//    public void setOrdinalPosition(final int ordinalPosition) {
-//        this.ordinalPosition = ordinalPosition;
-//    }
+    public int getOrdinalPosition() {
+        return ordinalPosition;
+    }
+
+    public void setOrdinalPosition(final int ordinalPosition) {
+        this.ordinalPosition = ordinalPosition;
+    }
+
     // -------------------------------------------------------------- isNullable
-//    public String getIsNullable() {
-//        return isNullable;
-//    }
-//
-//    public void setIsNullable(final String isNullable) {
-//        this.isNullable = isNullable;
-//    }
+    public String getIsNullable() {
+        return isNullable;
+    }
+
+    public void setIsNullable(final String isNullable) {
+        this.isNullable = isNullable;
+    }
+
     // ------------------------------------------------------------ scopeCatalog
-//    public String getScopeCatalog() {
-//        return scopeCatalog;
-//    }
-//
-//    public void setScopeCatalog(final String scopeCatalog) {
-//        this.scopeCatalog = scopeCatalog;
-//    }
+    public String getScopeCatalog() {
+        return scopeCatalog;
+    }
+
+    public void setScopeCatalog(final String scopeCatalog) {
+        this.scopeCatalog = scopeCatalog;
+    }
+
     // ------------------------------------------------------------- scopeSchema
-//    public String getScopeSchema() {
-//        return scopeSchema;
-//    }
-//
-//    public void setScopeSchema(final String scopeSchema) {
-//        this.scopeSchema = scopeSchema;
-//    }
+    public String getScopeSchema() {
+        return scopeSchema;
+    }
+
+    public void setScopeSchema(final String scopeSchema) {
+        this.scopeSchema = scopeSchema;
+    }
+
     // -------------------------------------------------------------- scopeTable
-//    public String getScopeTable() {
-//        return scopeTable;
-//    }
-//
-//    public void setScopeTable(final String scopeTable) {
-//        this.scopeTable = scopeTable;
-//    }
+    public String getScopeTable() {
+        return scopeTable;
+    }
+
+    public void setScopeTable(final String scopeTable) {
+        this.scopeTable = scopeTable;
+    }
+
     // ---------------------------------------------------------- sourceDataType
-//    public Short getSourceDataType() {
-//        return sourceDataType;
-//    }
-//
-//    public void setSourceDataType(final Short sourceDataType) {
-//        this.sourceDataType = sourceDataType;
-//    }
+    public Short getSourceDataType() {
+        return sourceDataType;
+    }
+
+    public void setSourceDataType(final Short sourceDataType) {
+        this.sourceDataType = sourceDataType;
+    }
+
     // --------------------------------------------------------- isAutoincrement
-//    public String getIsAutoincrement() {
-//        return isAutoincrement;
-//    }
-//
-//    public void setIsAutoincrement(final String isAutoincrement) {
-//        this.isAutoincrement = isAutoincrement;
-//    }
+    public String getIsAutoincrement() {
+        return isAutoincrement;
+    }
+
+    public void setIsAutoincrement(final String isAutoincrement) {
+        this.isAutoincrement = isAutoincrement;
+    }
+
     // ------------------------------------------------------- isGeneratedcolumn
-//    public String getIsGeneratedcolumn() {
-//        return isGeneratedcolumn;
-//    }
-//
-//    public void setIsGeneratedcolumn(final String isGeneratedcolumn) {
-//        this.isGeneratedcolumn = isGeneratedcolumn;
-//    }
+    public String getIsGeneratedcolumn() {
+        return isGeneratedcolumn;
+    }
+
+    public void setIsGeneratedcolumn(final String isGeneratedcolumn) {
+        this.isGeneratedcolumn = isGeneratedcolumn;
+    }
+
     // -------------------------------------------------------- columnPrivileges
     public List<ColumnPrivilege> getColumnPrivileges() {
         if (columnPrivileges == null) {
@@ -282,192 +304,138 @@ public class Column implements Serializable {
         return columnPrivileges;
     }
 
-    @Deprecated
-    public void setColumnPrivileges(
-            final List<ColumnPrivilege> columnPrivileges) {
-        this.columnPrivileges = columnPrivileges;
-    }
-
     // -------------------------------------------------------------------------
     @XmlAttribute
     @Label("TABLE_CAT")
     @Bind(label = "TABLE_CAT", nillable = true)
     @Nillable
-    @Setter
-    @Getter
     private String tableCat;
 
     @XmlAttribute
     @Label("TABLE_SCHEM")
     @Bind(label = "TABLE_SCHEM", nillable = true)
     @Nillable
-    @Setter
-    @Getter
     private String tableSchem;
 
     @XmlAttribute
     @Label("TABLE_NAME")
     @Bind(label = "TABLE_NAME")
-    @Setter
-    @Getter
     private String tableName;
 
     // -------------------------------------------------------------------------
     @XmlElement
     @Label("COLUMN_NAME")
     @Bind(label = "COLUMN_NAME")
-    @Setter
-    @Getter
     private String columnName;
 
     @XmlElement
     @Label("DATA_TYPE")
     @Bind(label = "DATA_TYPE")
-    @Setter
-    @Getter
     private int dataType;
 
     @XmlElement
     @Label("TYPE_NAME")
     @Bind(label = "TYPE_NAME")
-    @Setter
-    @Getter
     private String typeName;
 
     @XmlElement
     @Label("COLUMN_SIZE")
     @Bind(label = "COLUMN_SIZE")
-    @Setter
-    @Getter
     private int columnSize;
 
     @XmlElement(nillable = true)
     @Label("BUFFER_LENGTH")
     @Bind(label = "BUFFER_LENGTH", unused = true)
     @Unused
-    @Setter
-    @Getter
     private Integer bufferLength;
 
     @XmlElement
     @Label("DECIMAL_DIGITS")
     @Bind(label = "DECIMAL_DIGITS", nillable = true)
     @Nillable
-    @Setter
-    @Getter
     private Integer decimalDigits;
 
     @XmlElement
     @Label("NUM_PREC_RADIX")
     @Bind(label = "NUM_PREC_RADIX")
-    @Setter
-    @Getter
     private int numPrecRadix;
 
     @XmlElement
     @Label("NULLABLE")
     @Bind(label = "NULLABLE")
-    @Setter
-    @Getter
     private int nullable;
 
     @XmlElement(nillable = true)
     @Label("REMARKS")
     @Bind(label = "REMARKS", nillable = true)
     @Nillable
-    @Setter
-    @Getter
     private String remarks;
 
     @XmlElement(nillable = true)
     @Label("COLUMN_DEF")
     @Bind(label = "COLUMN_DEF", nillable = true)
     @Nillable
-    @Setter
-    @Getter
     private String columnDef;
 
     @XmlElement(nillable = true)
     @Label("SQL_DATA_TYPE")
     @Bind(label = "SQL_DATA_TYPE", unused = true)
     @Unused
-    @Setter
-    @Getter
     private Integer sqlDataType;
 
     @XmlElement(nillable = true)
     @Label("SQL_DATETIME_SUB")
     @Bind(label = "SQL_DATETIME_SUB", unused = true)
     @Unused
-    @Setter
-    @Getter
     private Integer sqlDatetimeSub;
 
     @XmlElement
     @Label("CHAR_OCTET_LENGTH")
     @Bind(label = "CHAR_OCTET_LENGTH")
-    @Setter
-    @Getter
     private int charOctetLength;
 
     @XmlElement
     @Label("ORDINAL_POSITION")
     @Bind(label = "ORDINAL_POSITION")
-    @Setter
-    @Getter
     private int ordinalPosition;
 
     @XmlElement
     @Label("IS_NULLABLE")
     @Bind(label = "IS_NULLABLE")
-    @Setter
-    @Getter
     private String isNullable;
 
     @XmlElement(nillable = true)
     @Label("SCOPE_CATALOG")
     @Bind(label = "SCOPE_CATALOG", nillable = true)
     @Nillable
-    @Setter
-    @Getter
     private String scopeCatalog;
 
     @XmlElement(nillable = true)
     @Label("SCOPE_SCHEMA")
     @Bind(label = "SCOPE_SCHEMA", nillable = true)
     @Nillable
-    @Setter
-    @Getter
     private String scopeSchema;
 
     @XmlElement(nillable = true)
     @Label("SCOPE_TABLE")
     @Bind(label = "SCOPE_TABLE", nillable = true)
     @Nillable
-    @Setter
-    @Getter
     private String scopeTable;
 
     @XmlElement(nillable = true)
     @Label("SOURCE_DATA_TYPE")
     @Bind(label = "SOURCE_DATA_TYPE", nillable = true)
     @Nillable
-    @Setter
-    @Getter
     private Short sourceDataType;
 
     @XmlElement
     @Label("IS_AUTOINCREMENT")
     @Bind(label = "IS_AUTOINCREMENT")
-    @Setter
-    @Getter
     private String isAutoincrement;
 
     @XmlElement
     @Label("IS_GENERATEDCOLUMN")
     @Bind(label = "IS_GENERATEDCOLUMN")
-    @Setter
-    @Getter
     private String isGeneratedcolumn;
 
     // -------------------------------------------------------------------------

@@ -21,8 +21,6 @@ import static java.util.logging.Logger.getLogger;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlType;
-import lombok.Getter;
-import lombok.Setter;
 
 /**
  * An entity class for binding the result of
@@ -54,63 +52,67 @@ public class ClientInfoProperty implements Serializable {
     }
 
     // -------------------------------------------------------------------- name
-//    public String getName() {
-//        return name;
-//    }
-//
-//    public void setName(final String name) {
-//        this.name = name;
-//    }
+    public String getName() {
+        return name;
+    }
+
+    public void setName(final String name) {
+        this.name = name;
+    }
+
     // ------------------------------------------------------------------ maxLen
-//    public int getMaxLen() {
-//        return maxLen;
-//    }
-//
-//    public void setMaxLen(final int maxLen) {
-//        this.maxLen = maxLen;
-//    }
+    public int getMaxLen() {
+        return maxLen;
+    }
+
+    public void setMaxLen(final int maxLen) {
+        this.maxLen = maxLen;
+    }
+
     // ------------------------------------------------------------ defaultValue
-//    public String getDefaultValue() {
-//        return defaultValue;
-//    }
-//
-//    public void setDefaultValue(final String defaultValue) {
-//        this.defaultValue = defaultValue;
-//    }
+    public String getDefaultValue() {
+        return defaultValue;
+    }
+
+    public void setDefaultValue(final String defaultValue) {
+        this.defaultValue = defaultValue;
+    }
+
     // ------------------------------------------------------------- description
-//    public String getDescription() {
-//        return description;
-//    }
-//
-//    public void setDescription(final String description) {
-//        this.description = description;
-//    }
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(final String description) {
+        this.description = description;
+    }
+
     // -------------------------------------------------------------------------
     @XmlElement
     @Label("NAME")
     @Bind(label = "NAME")
-    @Setter
-    @Getter
+//    @Setter
+//    @Getter
     private String name;
 
     @XmlElement
     @Label("MAX_LEN")
     @Bind(label = "MAX_LEN")
-    @Setter
-    @Getter
+//    @Setter
+//    @Getter
     private int maxLen;
 
     @XmlElement
     @Label("DEFAULT_VALUE")
     @Bind(label = "DEFAULT_VALUE")
-    @Setter
-    @Getter
+//    @Setter
+//    @Getter
     private String defaultValue;
 
     @XmlElement
     @Label("DESCRIPTION")
     @Bind(label = "DESCRIPTION")
-    @Setter
-    @Getter
+//    @Setter
+//    @Getter
     private String description;
 }

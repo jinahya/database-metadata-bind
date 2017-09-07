@@ -51,34 +51,32 @@ public class SchemaName implements Serializable {
     }
 
     // -------------------------------------------------------------- tableSchem
-//    public String getTableSchem() {
-//        return tableSchem;
-//    }
-//
-//    public void setTableSchem(final String tableSchem) {
-//        this.tableSchem = tableSchem;
-//    }
+    public String getTableSchem() {
+        return tableSchem;
+    }
+
+    public void setTableSchem(final String tableSchem) {
+        this.tableSchem = tableSchem;
+    }
+
     // ------------------------------------------------------------ tableCatalog
-//    public String getTableCatalog() {
-//        return tableCatalog;
-//    }
-//
-//    public void setTableCatalog(final String tableCatalog) {
-//        this.tableCatalog = tableCatalog;
-//    }
+    public String getTableCatalog() {
+        return tableCatalog;
+    }
+
+    public void setTableCatalog(final String tableCatalog) {
+        this.tableCatalog = tableCatalog;
+    }
+
     // -------------------------------------------------------------------------
-    @Setter
-    @Getter
+    @XmlElement
     @Label("TABLE_SCHEM")
     @Bind(label = "TABLE_SCHEM")
-    @XmlElement
     private String tableSchem;
 
-    @Setter
-    @Getter
+    @XmlElement(nillable = true)
     @Label("TABLE_CATALOG")
     @Bind(label = "TABLE_CATALOG", nillable = true)
     @Nillable
-    @XmlElement(nillable = true, required = false)
     private String tableCatalog;
 }
