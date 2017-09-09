@@ -107,22 +107,21 @@
       <scope>provided</scope>
     </dependency>
     <dependency>
-      <groupId>org.mariadb.jdbc</groupId>
-      <artifactId>mariadb-java-client</artifactId>
-      <version>2.1.0</version>
-      <scope>test</scope>
-    </dependency>
-    <dependency>
       <groupId>org.hsqldb</groupId>
       <artifactId>hsqldb</artifactId>
       <version>2.4.0</version>
       <scope>test</scope>
     </dependency>
     <dependency>
-      <groupId>org.projectlombok</groupId>
-      <artifactId>lombok</artifactId>
-      <version>1.16.18</version>
-      <scope>provided</scope>
+      <groupId>org.mariadb.jdbc</groupId>
+      <artifactId>mariadb-java-client</artifactId>
+      <version>2.1.1</version>
+      <scope>test</scope>
+    </dependency>
+    <dependency>
+      <groupId>org.postgresql</groupId>
+      <artifactId>postgresql</artifactId>
+      <scope>test</scope>
     </dependency>
     <dependency>
       <groupId>org.testng</groupId>
@@ -134,6 +133,11 @@
       <groupId>org.xerial</groupId>
       <artifactId>sqlite-jdbc</artifactId>
       <version>3.20.0</version>
+      <scope>test</scope>
+    </dependency>
+    <dependency>
+      <groupId>ru.yandex.qatools.embed</groupId>
+      <artifactId>postgresql-embedded</artifactId>
       <scope>test</scope>
     </dependency>
   </dependencies>
@@ -272,7 +276,8 @@
         <version>2.20</version>
         <configuration>
           <excludes>
-            <exclude>**/MariaDbEmbeddedTest.java</exclude>
+            <exclude>**/MariaDb4jTest.java</exclude>
+            <exclude>**/PostgresqlEmbeddedTest.java</exclude>
           </excludes>
           <systemProperties>
             <property>
@@ -280,6 +285,7 @@
               <value>target/derby.log</value>
             </property>
           </systemProperties>
+          <trimStackTrace>false</trimStackTrace>
         </configuration>
       </plugin>
       <plugin>

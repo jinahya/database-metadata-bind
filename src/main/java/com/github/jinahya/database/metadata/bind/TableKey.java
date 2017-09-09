@@ -1,0 +1,265 @@
+/*
+ * Copyright 2013 Jin Kwon <onacit at gmail.com>.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+package com.github.jinahya.database.metadata.bind;
+
+import java.io.Serializable;
+import java.util.logging.Logger;
+import static java.util.logging.Logger.getLogger;
+import javax.xml.bind.annotation.XmlAttribute;
+import javax.xml.bind.annotation.XmlElement;
+import javax.xml.bind.annotation.XmlTransient;
+import javax.xml.bind.annotation.XmlType;
+
+/**
+ *
+ * @author Jin Kwon &lt;jinahya_at_gmail.com&gt;
+ */
+@XmlTransient
+@XmlType(propOrder = {
+    "pkcolumnName", "fktableCat", "fktableSchem",
+    "fktableName", "fkcolumnName", "keySeq", "updateRule",
+    "deleteRule", "fkName", "pkName", "deferrability"
+})
+abstract class TableKey implements Serializable {
+
+    private static final long serialVersionUID = 6713872409315471232L;
+
+    // -------------------------------------------------------------------------
+    private static final Logger logger = getLogger(TableKey.class.getName());
+
+    // -------------------------------------------------------------------------
+    @Override
+    public String toString() {
+        return super.toString() + "{"
+               + "pktableCat=" + pktableCat
+               + ",pktableSchem=" + pktableSchem
+               + ",pktableName=" + pktableName
+               + ",pkcolumnName=" + pkcolumnName
+               + ",fktableCat=" + fktableCat
+               + ",fktableSchem=" + fktableSchem
+               + ",fktableName=" + fktableName
+               + ",fkcolumnName=" + fkcolumnName
+               + ",keySeq=" + keySeq
+               + ",updateRule=" + updateRule
+               + ",deleteRule=" + deleteRule
+               + ",fkName=" + fkName
+               + ",pkName=" + pkName
+               + ",deferrability=" + deferrability
+               + "}";
+    }
+
+    // -------------------------------------------------------------- pktableCat
+    public String getPktableCat() {
+        return pktableCat;
+    }
+
+    public void setPktableCat(final String pktableCat) {
+        this.pktableCat = pktableCat;
+    }
+
+    // ------------------------------------------------------------ pktableSchem
+    public String getPktableSchem() {
+        return pktableSchem;
+    }
+
+    public void setPktableSchem(final String pktableSchem) {
+        this.pktableSchem = pktableSchem;
+    }
+
+    // ------------------------------------------------------------- pktableName
+    public String getPktableName() {
+        return pktableName;
+    }
+
+    public void setPktableName(final String pktableName) {
+        this.pktableName = pktableName;
+    }
+
+    // ------------------------------------------------------------ pkColumnName
+    public String getPkcolumnName() {
+        return pkcolumnName;
+    }
+
+    public void setPkcolumnName(final String pkcolumnName) {
+        this.pkcolumnName = pkcolumnName;
+    }
+
+    // -------------------------------------------------------------- fktableCat
+    public String getFktableCat() {
+        return fktableCat;
+    }
+
+    public void setFktableCat(final String fktableCat) {
+        this.fktableCat = fktableCat;
+    }
+
+    // ------------------------------------------------------------ fktableSchem
+    public String getFktableSchem() {
+        return fktableSchem;
+    }
+
+    public void setFktableSchem(final String fktableSchem) {
+        this.fktableSchem = fktableSchem;
+    }
+
+    // ------------------------------------------------------------- fktableName
+    public String getFktableName() {
+        return fktableName;
+    }
+
+    public void setFktableName(final String fktableName) {
+        this.fktableName = fktableName;
+    }
+
+    // ------------------------------------------------------------ fkcolumnName
+    public String getFkcolumnName() {
+        return fkcolumnName;
+    }
+
+    public void setFkcolumnName(final String fkcolumnName) {
+        this.fkcolumnName = fkcolumnName;
+    }
+
+    // ------------------------------------------------------------------ keySeq
+    public short getKeySeq() {
+        return keySeq;
+    }
+
+    public void setKeySeq(final short keySeq) {
+        this.keySeq = keySeq;
+    }
+
+    // -------------------------------------------------------------- updateRule
+    public short getUpdateRule() {
+        return updateRule;
+    }
+
+    public void setUpdateRule(final short updateRule) {
+        this.updateRule = updateRule;
+    }
+
+    // -------------------------------------------------------------- deleteRule
+    public short getDeleteRule() {
+        return deleteRule;
+    }
+
+    public void setDeleteRule(final short deleteRule) {
+        this.deleteRule = deleteRule;
+    }
+
+    // ------------------------------------------------------------------ fnname
+    public String getFkName() {
+        return fkName;
+    }
+
+    public void setFkName(final String fkName) {
+        this.fkName = fkName;
+    }
+
+    // ------------------------------------------------------------------ pkName
+    public String getPkName() {
+        return pkName;
+    }
+
+    public void setPkName(final String pkName) {
+        this.pkName = pkName;
+    }
+
+    // --------------------------------------------------------- deferrerability
+    public short getDeferrability() {
+        return deferrability;
+    }
+
+    public void setDeferrability(final short deferrability) {
+        this.deferrability = deferrability;
+    }
+
+    // -------------------------------------------------------------------------
+    @XmlAttribute
+    @Label("PKTABLE_CAT")
+    @Bind(label = "PKTABLE_CAT", nillable = true)
+    @Nillable
+    private String pktableCat;
+
+    @XmlAttribute
+    @Label("PKTABLE_SCHEM")
+    @Bind(label = "PKTABLE_SCHEM", nillable = true)
+    @Nillable
+    private String pktableSchem;
+
+    @XmlAttribute
+    @Label("PKTABLE_NAME")
+    @Bind(label = "PKTABLE_NAME")
+    private String pktableName;
+
+    // -------------------------------------------------------------------------
+    @XmlElement
+    @Label("PKCOLUMN_NAME")
+    @Bind(label = "PKCOLUMN_NAME")
+    private String pkcolumnName;
+
+    @XmlElement(nillable = true)
+    @Label("FKTABLE_CAT")
+    @Bind(label = "FKTABLE_CAT", nillable = true)
+    @Nillable
+    private String fktableCat;
+
+    @XmlElement(nillable = true)
+    @Label("FKTABLE_NAME")
+    @Bind(label = "FKTABLE_NAME", nillable = true)
+    @Nillable
+    private String fktableSchem;
+
+    @XmlElement
+    @Label("FKTABLE_NAME")
+    @Bind(label = "FKTABLE_NAME")
+    private String fktableName;
+
+    @XmlElement
+    @Label("FKCOLUMN_NAME")
+    @Bind(label = "FKCOLUMN_NAME")
+    private String fkcolumnName;
+
+    @XmlElement
+    @Label("FKCOLUMN_NAME")
+    @Bind(label = "FKCOLUMN_NAME")
+    private short keySeq;
+
+    @XmlElement
+    @Label("UPDATE_RULE")
+    @Bind(label = "UPDATE_RULE")
+    private short updateRule;
+
+    @XmlElement
+    @Label("DELETE_RULE")
+    @Bind(label = "DELETE_RULE")
+    private short deleteRule;
+
+    @XmlElement
+    @Label("FK_NAME")
+    @Bind(label = "FK_NAME")
+    private String fkName;
+
+    @XmlElement
+    @Label("PK_NAME")
+    @Bind(label = "PK_NAME")
+    private String pkName;
+
+    @XmlElement
+    @Label("DEFERRABILITY")
+    @Bind(label = "DEFERRABILITY")
+    private short deferrability;
+}
