@@ -205,7 +205,7 @@ public class PostgresqlEmbeddedTest {
             context.suppress("functionColumn/scale"); // null
             context.suppress("UDT/attributes"); // InvocationTargetException
             context.suppress("UDT/superTypes"); // InvocationTargetException
-            logger.debug("context.paths: {}", context.getPaths());
+//            logger.debug("context.paths: {}", context.getPaths());
             for (final Schema schema : context.getSchemas(null, null)) {
                 store(schema, "postgres.embedded.none");
             }

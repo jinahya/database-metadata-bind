@@ -50,18 +50,18 @@ public final class MetadataContextTests {
                 catalog.getSchemas().add(Schema.newVirtualInstance(context, catalog.getTableCat()));
             }
         }
-        // catalog/schema/crossReferences
-        for (final Catalog catalog : catalogs) {
-            for (final Schema schema : catalog.getSchemas()) {
-                schema.getCrossReferences().addAll(
-                        context.getCrossReferences(schema.getTables()));
-            }
-        }
-        // catalog/crossReferences
-        for (final Catalog catalog : catalogs) {
-            catalog.getCrossReferences().addAll(
-                    context.getCrossReferences(catalog.getTables()));
-        }
+//        // catalog/schema/crossReferences
+//        for (final Catalog catalog : catalogs) {
+//            for (final Schema schema : catalog.getSchemas()) {
+//                schema.getCrossReferences().addAll(
+//                        context.getCrossReferences(schema.getTables()));
+//            }
+//        }
+//        // catalog/crossReferences
+//        for (final Catalog catalog : catalogs) {
+//            catalog.getCrossReferences().addAll(
+//                    context.getCrossReferences(catalog.getTables()));
+//        }
         return catalogs;
     }
 

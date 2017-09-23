@@ -1,6 +1,7 @@
 Attribute
 BestRowIdentifier
 Catalog
+Catalogs
 ClientInfoProperty
 Column
 ColumnPrivilege
@@ -16,6 +17,7 @@ ProcedureColumn
 PseudoColumn
 Schema
 SchemaName
+Schemas
 SuperTable
 SuperType
 Table

@@ -25,7 +25,6 @@ import javax.xml.bind.annotation.XmlAttribute;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlElementRef;
 import javax.xml.bind.annotation.XmlRootElement;
-import javax.xml.bind.annotation.XmlTransient;
 import javax.xml.bind.annotation.XmlType;
 
 /**
@@ -38,9 +37,8 @@ import javax.xml.bind.annotation.XmlType;
 @XmlType(propOrder = {
     "tableCat",
     // -------------------------------------------------------------------------
-    "schemas",
-    // -------------------------------------------------------------------------
-    "crossReferences"
+    "schemas", // -------------------------------------------------------------------------
+//    "crossReferences"
 })
 public class Catalog implements Serializable {//extends AbstractTableDomain {
 
@@ -49,6 +47,7 @@ public class Catalog implements Serializable {//extends AbstractTableDomain {
     // -------------------------------------------------------------------------
     private static final Logger logger = getLogger(Catalog.class.getName());
 
+    // -------------------------------------------------------------------------
     public static final String TABLE_CAT_NONE = "";
 
     // -------------------------------------------------------------------------
@@ -60,7 +59,7 @@ public class Catalog implements Serializable {//extends AbstractTableDomain {
     }
 
     static Catalog newVirtualInstance(final MetadataContext context)
-            throws SQLException {//, ReflectiveOperationException {
+            throws SQLException {
         final Catalog instance = newVirtualInstance();
         if (!context.suppressed("catalog/schemas")) {
             instance.getSchemas().addAll(
@@ -108,27 +107,25 @@ public class Catalog implements Serializable {//extends AbstractTableDomain {
         return schemas;
     }
 
-    // ------------------------------------------------------------------ tables
-    List<Table> getTables(List<Table> tables) {
-        for (final Schema schema : getSchemas()) {
-            tables.addAll(schema.getTables());
-        }
-        return tables;
-    }
-
-    @XmlTransient
-    List<Table> getTables() {
-        return getTables(new ArrayList<Table>());
-    }
-
-    // --------------------------------------------------------- crossReferences
-    public List<CrossReference> getCrossReferences() {
-        if (crossReferences == null) {
-            crossReferences = new ArrayList<CrossReference>();
-        }
-        return crossReferences;
-    }
-
+//    // ------------------------------------------------------------------ tables
+//    List<Table> getTables(List<Table> tables) {
+//        for (final Schema schema : getSchemas()) {
+//            tables.addAll(schema.getTables());
+//        }
+//        return tables;
+//    }
+//
+//    @XmlTransient
+//    List<Table> getTables() {
+//        return getTables(new ArrayList<Table>());
+//    }
+//    // --------------------------------------------------------- crossReferences
+//    public List<CrossReference> getCrossReferences() {
+//        if (crossReferences == null) {
+//            crossReferences = new ArrayList<CrossReference>();
+//        }
+//        return crossReferences;
+//    }
     // -------------------------------------------------------------------------
     @XmlAttribute
     Boolean virtual;
@@ -147,6 +144,6 @@ public class Catalog implements Serializable {//extends AbstractTableDomain {
     )
     private List<Schema> schemas;
 
-    @XmlElementRef
-    private List<CrossReference> crossReferences;
+//    @XmlElementRef
+//    private List<CrossReference> crossReferences;
 }

@@ -124,11 +124,6 @@ public class Function implements Serializable {
         return functionColumns;
     }
 
-    @Deprecated
-    public void setFunctionColumns(final List<FunctionColumn> functionColumns) {
-        this.functionColumns = functionColumns;
-    }
-
     // -------------------------------------------------------------------------
     @XmlAttribute
     @Label("FUNCTION_CAT")

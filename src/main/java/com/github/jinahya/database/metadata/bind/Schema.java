@@ -37,9 +37,8 @@ import javax.xml.bind.annotation.XmlType;
 @XmlType(propOrder = {
     "tableSchem",
     // -------------------------------------------------------------------------
-    "functions", "procedures", "tables", "UDTs",
-    // -------------------------------------------------------------------------
-    "crossReferences"
+    "functions", "procedures", "tables", "UDTs", // -------------------------------------------------------------------------
+//    "crossReferences"
 })
 public class Schema implements Serializable {//extends AbstractTableDomain {
 
@@ -62,7 +61,7 @@ public class Schema implements Serializable {//extends AbstractTableDomain {
 
     static Schema newVirtualInstance(final MetadataContext context,
                                      final String tableCatalog)
-            throws SQLException {//, ReflectiveOperationException {
+            throws SQLException {
         final Schema instance = newVirtualInstance(tableCatalog);
         if (!context.suppressed("schema/functions")) {
             instance.getFunctions().addAll(context.getFunctions(
@@ -198,13 +197,12 @@ public class Schema implements Serializable {//extends AbstractTableDomain {
 //        this.UDTs = UDTs;
 //    }
     // --------------------------------------------------------- crossReferences
-    public List<CrossReference> getCrossReferences() {
-        if (crossReferences == null) {
-            crossReferences = new ArrayList<CrossReference>();
-        }
-        return crossReferences;
-    }
-
+//    public List<CrossReference> getCrossReferences() {
+//        if (crossReferences == null) {
+//            crossReferences = new ArrayList<CrossReference>();
+//        }
+//        return crossReferences;
+//    }
     // -------------------------------------------------------------------------
     @XmlAttribute
     Boolean virtual;
@@ -260,6 +258,6 @@ public class Schema implements Serializable {//extends AbstractTableDomain {
     )
     private List<UDT> UDTs;
 
-    @XmlElementRef
-    private List<CrossReference> crossReferences;
+//    @XmlElementRef
+//    private List<CrossReference> crossReferences;
 }
