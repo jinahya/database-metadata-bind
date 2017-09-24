@@ -44,6 +44,8 @@ marshaller.mashal(udt, ...);
 
 You can retrieve information from existing databases. And, possibly, can report issues.
 
+### Properties
+
 name      |value                            |notes
 ----------|---------------------------------|-----------
 `client`  |version of jdbc client           |
@@ -52,67 +54,27 @@ name      |value                            |notes
 `password`|password                         |
 `paths`   |comma-separated suppression paths|optional
 
-### MySQL
+### Clients and URLs
 
-The value of `client` is for [`mysql:mysql-connector-java`](http://search.maven.org/#search%7Cga%7C1%7Cg%3A%22mysql%22%20a%3A%22mysql-connector-java%22).
+database  |`client` is for the version of                                 |url prefix
+----------|---------------------------------------------------------------|------------------------
+MySQL     |[`mysql:mysql-connector-java`](https://goo.gl/BxuJ5a)          |`jdbc:mysql://...`
+PostgreSQL|[`org.mariadb.jdbc:mariadb-java-client`](https://goo.gl/6yqVxq)|`jdbc:mariadb://...`
+Oracle    |                                                               |`jdbc:oracle:thin://...`
+SQL Server|[`com.microsoft.sqlserver:mssql-jdbc`](https://goo.gl/cpK94Q)  |`jdbc:sqlserver://...`
 
-See, for more information, [MySQL Connector/J 5.1 Developer Guide](https://dev.mysql.com/doc/connector-j/5.1/en/).
 
-```sh
-$ mvn -Dclient="5.1.44" \
-      -Durl="jdbc:mysql://address:port/database" \
-      -Duser="username" \
-      -Dpassword="password" \
-      -Dpaths="schema/tables,schema/functions" \
-      -Dtest=MysqlTest \
-      test
-```
+#### MySQL
 
-You'll get `target/mysql.xml`.
+#### MariaDB
 
-### MariaDB
+#### PostreSQL
 
-The value for `client` is for [`org.mariadb.jdbc:mariadb-java-client`](http://search.maven.org/#search%7Cga%7C1%7Cg%3A%22org.mariadb.jdbc%22%20a%3A%22mariadb-java-client%22).
+#### Oracle
 
-See, for more information, [About MariaDB Connector/J](https://mariadb.com/kb/en/library/about-mariadb-connector-j/).
+Oracle seems don't upload artifact to the central. See [Get Oracle JDBC drivers and UCP from Oracle Maven Repository ](https://blogs.oracle.com/dev2dev/get-oracle-jdbc-drivers-and-ucp-from-oracle-maven-repository-without-ides).
 
-```sh
-$ mvn -Dclient="2.1.1" \
-      -Durl="jdbc:mariadb://address:port/database" \
-      -Duser="username" \
-      -Dpassword="password" \
-      -Dpaths="of/some" \
-      -Dtest=MariadbTest \
-      test
-```
-
-You'll get `target/mariadb.xml`.
-
-### PostreSQL
-
-The value of `client` property is for [`org.postgresql:postgresql`](http://search.maven.org/#search%7Cga%7C1%7Cg%3A%22org.postgresql%22%20a%3A%22postgresql%22).
-
-See, for more information, [PostgreSQL JDBC Driver](https://jdbc.postgresql.org/).
-
-### Oracle
-
-### SQL Server
-
-The value of `client` property is for [`com.microsoft.sqlserver:mssql-jdbc`](http://search.maven.org/#search%7Cgav%7C1%7Cg%3A%22com.microsoft.sqlserver%22%20AND%20a%3A%22mssql-jdbc%22).
-
-See, for more information, [Microsoft JDBC Driver for SQL Server](https://docs.microsoft.com/en-us/sql/connect/jdbc/microsoft-jdbc-driver-for-sql-server).
-
-```sh
-$ mvn -Dclient="x.y.z" \
-      -Durl="jdbc:sqlserver://..." \
-      -Duser="username" \
-      -Dpassword="password" \
-      -Dpaths="of/some" \
-      -Dtest=SqlserverTest \
-      test
-```
-
-You'll get `target/sqlserver.xml`.
+#### SQL Server
 
 ----
 
