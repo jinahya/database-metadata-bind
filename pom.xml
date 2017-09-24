@@ -38,7 +38,9 @@
     <maven.compiler.target>1.6</maven.compiler.target>
     <maven.compiler.testSource>1.8</maven.compiler.testSource>
     <maven.compiler.testTarget>1.8</maven.compiler.testTarget>
+    <client>x.y.z</client>
     <version.animal-sniffer>1.16</version.animal-sniffer>
+    <version.mariadb-java-client>2.1.1</version.mariadb-java-client>
   </properties>
 
   <repositories>
@@ -56,11 +58,6 @@
         <artifactId>mysql-connector-java</artifactId>
         <version>8.0.7</version>
       </dependency>-->
-      <dependency>
-        <groupId>org.postgresql</groupId>
-        <artifactId>postgresql</artifactId>
-        <version>42.1.4</version>
-      </dependency>
       <dependency>
         <groupId>ru.yandex.qatools.embed</groupId>
         <artifactId>postgresql-embedded</artifactId>
@@ -114,12 +111,14 @@
     <dependency>
       <groupId>org.mariadb.jdbc</groupId>
       <artifactId>mariadb-java-client</artifactId>
-      <version>2.1.1</version>
+      <version>${version.mariadb-java-client}</version>
       <scope>test</scope>
     </dependency>
     <dependency>
       <groupId>org.postgresql</groupId>
       <artifactId>postgresql</artifactId>
+      <version>42.1.4</version>
+      <!--<version>${client}</version>-->
       <scope>test</scope>
     </dependency>
     <dependency>
@@ -144,11 +143,16 @@
   <build>
     <pluginManagement>
       <plugins>
-        <!--        <plugin>
+        <plugin>
           <groupId>org.apache.maven.plugins</groupId>
           <artifactId>maven-compiler-plugin</artifactId>
-          <version>3.6.1</version>
-        </plugin>-->
+          <version>3.7.0</version>
+        </plugin>
+        <plugin>
+          <groupId>org.apache.maven.plugins</groupId>
+          <artifactId>maven-surefire-plugin</artifactId>
+          <version>2.20.1</version>
+        </plugin>
         <plugin>
           <groupId>org.apache.maven.plugins</groupId>
           <artifactId>maven-jar-plugin</artifactId>
@@ -180,7 +184,6 @@
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-compiler-plugin</artifactId>
-        <version>3.6.2</version>
         <configuration>
           <compilerArgs>
             <arg>-Xlint</arg>
@@ -189,95 +192,12 @@
       </plugin>
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
-        <artifactId>maven-shade-plugin</artifactId>
-        <version>3.1.0</version>
-        <executions>
-          <execution>
-            <phase>package</phase>
-            <goals>
-              <!--<goal>shade</goal>-->
-            </goals>
-            <configuration>
-              <!--<createDependencyReducedPom>false</createDependencyReducedPom>-->
-              <!--<keepDependenciesWithProvidedScope>true</keepDependenciesWithProvidedScope>-->
-              <relocations>
-                <!--                <relocation>
-                  <pattern>com.google.common</pattern>
-                  <shadedPattern>com.github.jinahya.sql.metadata.bind.realocated.com.google.common</shadedPattern>
-                </relocation>-->
-                <!--                <relocation>
-                  <pattern>org.apache.commons</pattern>
-                  <shadedPattern>com.github.jinahya.sql.metadata.bind.realocated.org.apache.commons</shadedPattern>
-                </relocation>-->
-                <!--                <relocation>
-                  <pattern>org.apache.commons.beanutils</pattern>
-                  <shadedPattern>com.github.jinahya.sql.metadata.bind.realocated.beanutils</shadedPattern>
-                </relocation>-->
-                <!--                <relocation>
-                  <pattern>org.apache.commons.lang3</pattern>
-                  <shadedPattern>com.github.jinahya.sql.metadata.bind.realocated.lang3</shadedPattern>
-                </relocation>-->
-              </relocations>
-            </configuration>
-          </execution>
-        </executions>
-      </plugin>
-      <plugin>
-        <groupId>com.github.wvengen</groupId>
-        <artifactId>proguard-maven-plugin</artifactId>
-        <version>2.0.14</version>
-        <executions>
-          <execution>
-            <id>proguard</id>
-            <phase>package</phase>
-            <goals>
-              <!--<goal>proguard</goal>-->
-            </goals>
-          </execution>
-        </executions>
-        <configuration>
-          <addMavenDescriptor>true</addMavenDescriptor>
-          <includeDependency>flase</includeDependency>
-          <options>
-            <option>
-              -dontobfuscate
-              -dontoptimize
-              -keepattributes *Annotation*
-              -keepattributes Signature
-              -keepattributes InnerClasses
-              -keep class com.github.jinahya.sql.database.metadata.bind.* { *; }
-            </option>
-          </options>
-          <libs>
-            <lib>${java.bootstrap.classes}</lib>
-            <lib>${java.cryptographic.extension.classes}</lib>
-            <lib>${java.secure.socket.extension.classes}</lib>
-          </libs>
-        </configuration>
-        <dependencies>
-          <dependency>
-            <groupId>net.sf.proguard</groupId>
-            <artifactId>proguard-base</artifactId>
-            <version>5.3.3</version>
-            <scope>runtime</scope>
-          </dependency>
-          <!--          <dependency>
-            <groupId>net.sourceforge.cobertura</groupId>
-            <artifactId>cobertura</artifactId>
-            <version>2.1.1</version>
-            <scope>runtime</scope>
-          </dependency>-->
-        </dependencies>
-      </plugin>
-      <plugin>
-        <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-surefire-plugin</artifactId>
-        <version>2.20</version>
         <configuration>
           <excludes>
-            <exclude>**/MariaDb4jTest.java</exclude>
-            <exclude>**/PostgresqlEmbeddedTest.java</exclude>
-            <exclude>**/MysqlTest.java</exclude>
+            <exclude>**/EmbeddedMariadbTest.java</exclude>
+            <exclude>**/EmbeddedPostgresqlTest.java</exclude>
+            <exclude>**/ExternalTest.java</exclude>
           </excludes>
           <systemProperties>
             <property>
@@ -378,7 +298,7 @@
       </properties>
     </profile>
     <profile>
-      <id>postgresql-embedded</id>
+      <id>embedded-postgresql</id>
       <dependencies>
         <dependency>
           <groupId>org.postgresql</groupId>
@@ -423,7 +343,7 @@
       </build>
     </profile>
     <profile>
-      <id>mariadb-embedded</id>
+      <id>eembedded-maraiadb</id>
       <dependencies>
         <dependency>
           <groupId>org.mariadb.jdbc</groupId>
@@ -468,18 +388,18 @@
       </build>
     </profile>
     <profile>
-      <id>mysql</id>
+      <id>external-mysql</id>
       <dependencies>
         <dependency>
           <groupId>mysql</groupId>
           <artifactId>mysql-connector-java</artifactId>
-          <version>${version}</version>
+          <version>${client}</version>
           <scope>test</scope>
         </dependency>
       </dependencies>
       <build>
         <plugins>
-          <plugin>
+          <!--          <plugin>
             <groupId>org.apache.maven.plugins</groupId>
             <artifactId>maven-surefire-plugin</artifactId>
             <configuration>
@@ -487,23 +407,29 @@
                 <include>**/MysqlTest.java</include>
               </includes>
             </configuration>
-          </plugin>
-<!--          <plugin>
-            <groupId>org.codehaus.mojo</groupId>
-            <artifactId>build-helper-maven-plugin</artifactId>
-            <executions>
-              <execution>
-                <id>add-test-source</id>
-                <goals>
-                  <goal>add-test-source</goal>
-                </goals>
-                <configuration>
-                  <sources>
-                    <source>src/test/java-mariadb</source>
-                  </sources>
-                </configuration>
-              </execution>
-            </executions>
+          </plugin>-->
+        </plugins>
+      </build>
+    </profile>
+    <profile>
+      <id>external-postgresql</id>
+      <dependencies>
+        <dependency>
+          <groupId>org.postgresql</groupId>
+          <artifactId>postgresql</artifactId>
+          <version>${client}</version>
+        </dependency>
+      </dependencies>
+      <build>
+        <plugins>
+          <!--          <plugin>
+            <groupId>org.apache.maven.plugins</groupId>
+            <artifactId>maven-surefire-plugin</artifactId>
+            <configuration>
+              <includes>
+                <include>**/MysqlTest.java</include>
+              </includes>
+            </configuration>
           </plugin>-->
         </plugins>
       </build>

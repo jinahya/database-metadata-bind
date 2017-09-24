@@ -36,7 +36,7 @@ import org.testng.annotations.Test;
  * @author Jin Kwon &lt;jinahya_at_gmail.com&gt;
  * @see <a href="https://github.com/vorburger/MariaDB4j">MariaDB4j (GitHub)</a>
  */
-public class MariaDb4jTest {
+public class EmbeddedMariadbTest {
 
     private static final Logger logger = getLogger(lookup().lookupClass());
 

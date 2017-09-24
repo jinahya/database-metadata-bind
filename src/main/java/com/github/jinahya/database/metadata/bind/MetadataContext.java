@@ -60,6 +60,7 @@ public class MetadataContext {
                                           final String catalog,
                                           final boolean nonempty)
             throws SQLException {
+        logger.info("schemas ----" + catalog);
         if (context == null) {
             throw new NullPointerException("context is null");
         }
@@ -87,6 +88,14 @@ public class MetadataContext {
         if (catalogs.isEmpty() && nonempty) {
             logger.fine("adding an empty catalog");
             catalogs.add(Catalog.newVirtualInstance(context));
+        }
+        if (!context.suppressed("catalog/schemas")) {
+            for (final Catalog catalog : catalogs) {
+                if (catalog.getSchemas().isEmpty()) {
+                    catalog.getSchemas().addAll(
+                            getSchemas(context, catalog.getTableCat(), true));
+                }
+            }
         }
 //        if (!context.suppressed(path(Catalog.class, "crossReferences"))) {
 //            for (final Catalog catalog : catalogs) {

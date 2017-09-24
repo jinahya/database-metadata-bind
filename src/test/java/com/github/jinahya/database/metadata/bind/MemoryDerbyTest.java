@@ -34,7 +34,7 @@ import java.util.List;
  *
  * @author Jin Kwon &lt;jinahya_at_gmail.com&gt;
  */
-public class DerbyMemoryTest {
+public class MemoryDerbyTest extends MemoryTest {
 
     private static final Logger logger = getLogger(lookup().lookupClass());
 

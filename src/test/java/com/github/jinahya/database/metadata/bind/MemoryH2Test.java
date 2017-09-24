@@ -16,6 +16,7 @@
 package com.github.jinahya.database.metadata.bind;
 
 import static com.github.jinahya.database.metadata.bind.MetadataContext.getCatalogs;
+import static java.lang.invoke.MethodHandles.lookup;
 import java.sql.Connection;
 import java.sql.DatabaseMetaData;
 import java.sql.SQLException;
@@ -29,14 +30,14 @@ import java.util.List;
 
 /**
  *
- * @author Jin Kwon &lt;onacit_at_gmail.com&gt;
+ * @author Jin Kwon &lt;jinahya_at_gmail.com&gt;
  */
-public class HypersqlMemoryTest {
+public class MemoryH2Test extends MemoryTest {
 
-    private static final Logger logger = getLogger(HypersqlMemoryTest.class);
+    private static final Logger logger = getLogger(lookup().lookupClass());
 
     // -------------------------------------------------------------------------
-    private static final String DRIVER_NAME = "org.hsqldb.jdbc.JDBCDriver";
+    private static final String DRIVER_NAME = "org.h2.Driver";
 
     private static final Class<?> DRIVER_CLASS;
 
@@ -48,7 +49,8 @@ public class HypersqlMemoryTest {
         }
     }
 
-    private static final String CONNECTION_URL = "jdbc:hsqldb:mem:test";
+    private static final String CONNECTION_URL
+            = "jdbc:h2:mem:test"; //;DB_CLOSE_DELAY=-1";
 
     // -------------------------------------------------------------------------
     @BeforeClass
@@ -61,16 +63,21 @@ public class HypersqlMemoryTest {
 
     // -------------------------------------------------------------------------
     @Test(enabled = true)
-    public void marshalCatalogs() throws Exception {
+    public void marshalCategories() throws Exception {
         try (Connection connection = getConnection(CONNECTION_URL)) {
-            final DatabaseMetaData database = connection.getMetaData();
-            final MetadataContext context = new MetadataContext(database);
+            final DatabaseMetaData metadata = connection.getMetaData();
+            final MetadataContext context = new MetadataContext(metadata);
             context.suppress(
+                    "column/isGeneratedcolumn",
+                    //                    "clientInfoProperty/defaultValue",
+                    //                    "clientInfoProperty/description",
+                    //                    "clientInfoProperty/maxLen",
+                    "schema/functions",
                     "table/pseudoColumns"
             );
             final List<Catalog> catalogs = getCatalogs(context, true);
             for (final Catalog catalog : catalogs) {
-                MetadataContextTests.marshal(catalog, "hypersql.memory");
+                MetadataContextTests.marshal(catalog, "h2.memory");
             }
         }
     }

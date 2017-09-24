@@ -35,19 +35,20 @@ import static org.testng.Assert.assertNotNull;
 import org.testng.annotations.Test;
 
 /**
+ * Test class for remote MySQL.
  *
  * @author Jin Kwon &lt;onacit at gmail.com&gt;
  */
-public class MysqlTest {
+public class ExternalTest {
 
     private static final Logger logger = getLogger(lookup().lookupClass());
 
     // -------------------------------------------------------------------------
     @Test
     public void store() throws SQLException, JAXBException, IOException {
-        final String version = System.getProperty("version");
-        assertNotNull(version, "version is null");
-        logger.info("using {}", version);
+        final String client = System.getProperty("client");
+        assertNotNull(client, "client is null");
+        logger.info("using {}", client);
         final String url = System.getProperty("url");
         assertNotNull(url, "url is null");
         logger.info("url: {}", url);
@@ -77,7 +78,7 @@ public class MysqlTest {
             final JAXBContext jaxbc = JAXBContext.newInstance(Catalogs.class);
             final Marshaller marshaller = jaxbc.createMarshaller();
             marshaller.setProperty(JAXB_FORMATTED_OUTPUT, TRUE);
-            final File output = Paths.get("target", "mysql.xml").toFile();
+            final File output = Paths.get("target", "external.xml").toFile();
             logger.info("marsharlling to {}", output);
             marshaller.marshal(catalogs, output);
             logger.info("done");

@@ -39,7 +39,7 @@ import ru.yandex.qatools.embed.postgresql.EmbeddedPostgres;
  * <a href="https://github.com/yandex-qatools/postgresql-embedded">Embedded
  * PostgreSQL Server (GitHub)</a>
  */
-public class PostgresqlEmbeddedTest {
+public class EmbeddedPostgresqlTest {
 
     private static final Logger logger = getLogger(lookup().lookupClass());
 
