@@ -40,6 +40,53 @@ final Marshaller marshaller = context.createMarshaller();
 marshaller.mashal(udt, ...);
 ```
 
+## Testing for existing databases
+
+You can retrieve information from existing databases. And, possibly, can report issues.
+
+```sh
+$ mvn -Dclient="x.y.z" \
+      -Durl="jdbc:...://..." \
+      -Duser="some" \
+      -Dpassword="some" \
+      -Dpaths="of/some,other/others,..." \
+      -Dtest=ExternalTest \
+      test
+$ cat target/external.xml
+```
+
+### Properties
+
+name      |value                            |notes
+----------|---------------------------------|-----------
+`client`  |version of target jdbc client    |
+`url`     |connection url                   |
+`user`    |username                         |
+`password`|password                         |
+`paths`   |comma-separated suppression paths|optional
+
+### Clients and URLs
+
+database  |`client` is for the version of                                 |url prefix
+----------|---------------------------------------------------------------|------------------------
+MySQL     |[`mysql:mysql-connector-java`](https://goo.gl/BxuJ5a)          |`jdbc:mysql://...`
+PostgreSQL|[`org.mariadb.jdbc:mariadb-java-client`](https://goo.gl/6yqVxq)|`jdbc:mariadb://...`
+Oracle    |                                                               |`jdbc:oracle:thin://...`
+SQL Server|[`com.microsoft.sqlserver:mssql-jdbc`](https://goo.gl/cpK94Q)  |`jdbc:sqlserver://...`
+
+
+#### MySQL
+
+#### MariaDB
+
+#### PostreSQL
+
+#### Oracle
+
+Oracle seems don't upload artifact to the central. See [Get Oracle JDBC drivers and UCP from Oracle Maven Repository ](https://blogs.oracle.com/dev2dev/get-oracle-jdbc-drivers-and-ucp-from-oracle-maven-repository-without-ides).
+
+#### SQL Server
+
 ----
 
 [![Domate via Paypal](https://img.shields.io/badge/donate-paypal-blue.svg)](https://www.paypal.com/cgi-bin/webscr?cmd=_cart&business=A954LDFBW4B9N&lc=KR&item_name=GitHub&amount=5%2e00&currency_code=USD&button_subtype=products&add=1&bn=PP%2dShopCartBF%3adonate%2dpaypal%2dblue%2epng%3aNonHosted)
