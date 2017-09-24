@@ -44,11 +44,22 @@ marshaller.mashal(udt, ...);
 
 You can retrieve information from existing databases. And, possibly, can report issues.
 
+```sh
+$ mvn -Dclient="x.y.z" \
+      -Durl="jdbc:...://..." \
+      -Duser="some" \
+      -Dpassword="some" \
+      -Dpaths="of/some,other/others,..." \
+      -Dtest=ExternalTest \
+      test
+$ cat target/external.xml
+```
+
 ### Properties
 
 name      |value                            |notes
 ----------|---------------------------------|-----------
-`client`  |version of jdbc client           |
+`client`  |version of target jdbc client    |
 `url`     |connection url                   |
 `user`    |username                         |
 `password`|password                         |
