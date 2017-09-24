@@ -15,20 +15,15 @@
  */
 package com.github.jinahya.database.metadata.bind;
 
+import static com.github.jinahya.database.metadata.bind.DatabaseMetadataBindTests.marshal;
 import static com.github.jinahya.database.metadata.bind.MetadataContext.getCatalogs;
-import java.io.File;
 import java.io.IOException;
-import static java.lang.Boolean.TRUE;
 import static java.lang.invoke.MethodHandles.lookup;
-import java.nio.file.Paths;
 import java.sql.Connection;
 import java.sql.DatabaseMetaData;
 import static java.sql.DriverManager.getConnection;
 import java.sql.SQLException;
-import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBException;
-import javax.xml.bind.Marshaller;
-import static javax.xml.bind.Marshaller.JAXB_FORMATTED_OUTPUT;
 import org.slf4j.Logger;
 import static org.slf4j.LoggerFactory.getLogger;
 import static org.testng.Assert.assertNotNull;
@@ -72,16 +67,7 @@ public class ExternalTest {
                     context.suppress(path);
                 }
             }
-            final Catalogs catalogs
-                    = Catalogs.of(getCatalogs(context, true));
-            logger.info("bound: {}", catalogs);
-            final JAXBContext jaxbc = JAXBContext.newInstance(Catalogs.class);
-            final Marshaller marshaller = jaxbc.createMarshaller();
-            marshaller.setProperty(JAXB_FORMATTED_OUTPUT, TRUE);
-            final File output = Paths.get("target", "external.xml").toFile();
-            logger.info("marsharlling to {}", output);
-            marshaller.marshal(catalogs, output);
-            logger.info("done");
+            marshal(getCatalogs(context, true), "external");
         }
     }
 }
