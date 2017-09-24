@@ -42,7 +42,7 @@ marshaller.mashal(udt, ...);
 
 ## Testing for existing databases
 
-You can retrieve information from your own databases. And, possibly, can report issues.
+You can retrieve information from existing databases. And, possibly, can report issues.
 
 name      |value                            |notes
 ----------|---------------------------------|-----------
