@@ -44,7 +44,7 @@ marshaller.mashal(udt, ...);
 
 ### Memory
 
-Test cases for in-memory databases such as [Derby](https://db.apache.org/derby/), [H2](http://www.h2database.com/html/main.html), [HyperSQL](http://hsqldb.org/), [SQLite](https://www.sqlite.org/) are prepared.
+Test cases for in-memory databases such as [Derby](https://db.apache.org/derby/), [H2](http://www.h2database.com/html/main.html), [HSQLDB](http://hsqldb.org/), [SQLite](https://www.sqlite.org/) are prepared.
 
 ### Embedded
 
