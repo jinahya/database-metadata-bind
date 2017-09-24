@@ -73,7 +73,7 @@ public class ExternalTest {
                 }
             }
             final Catalogs catalogs
-                    = Catalogs.newInstance(getCatalogs(context, true));
+                    = Catalogs.of(getCatalogs(context, true));
             logger.info("bound: {}", catalogs);
             final JAXBContext jaxbc = JAXBContext.newInstance(Catalogs.class);
             final Marshaller marshaller = jaxbc.createMarshaller();

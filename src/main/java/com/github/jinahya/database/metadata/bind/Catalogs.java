@@ -30,10 +30,8 @@ public class Catalogs extends Plural<Catalog> {
     private static final long serialVersionUID = -3733224702437178402L;
 
     // -------------------------------------------------------------------------
-    static Catalogs newInstance(final List<Catalog> catalogs) {
-        final Catalogs instance = new Catalogs();
-        instance.getCatalogs().addAll(catalogs);
-        return instance;
+    static Catalogs of(final List<Catalog> catalogs) {
+        return of(Catalogs.class, catalogs);
     }
 
     // -------------------------------------------------------------------------

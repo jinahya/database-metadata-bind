@@ -31,9 +31,9 @@ import java.util.List;
  *
  * @author Jin Kwon &lt;onacit_at_gmail.com&gt;
  */
-public class MemoryHypersqlTest extends MemoryTest {
+public class MemoryHsqlTest extends MemoryTest {
 
-    private static final Logger logger = getLogger(MemoryHypersqlTest.class);
+    private static final Logger logger = getLogger(MemoryHsqlTest.class);
 
     // -------------------------------------------------------------------------
     private static final String DRIVER_NAME = "org.hsqldb.jdbc.JDBCDriver";

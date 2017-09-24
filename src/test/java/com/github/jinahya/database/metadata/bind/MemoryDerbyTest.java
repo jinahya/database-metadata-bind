@@ -28,6 +28,7 @@ import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 import static java.sql.DriverManager.getConnection;
 import java.util.List;
+import static org.testng.Assert.fail;
 
 /**
  * Test clss for Apache Derby in memory.
@@ -77,7 +78,9 @@ public class MemoryDerbyTest extends MemoryTest {
             } finally {
                 connection.close();
             }
+            fail("an instance of SQLException should've been thrown");
         } catch (final SQLException sqle) {
+            // https://builds.apache.org/job/Derby-docs/lastSuccessfulBuild/artifact/trunk/out/ref/rrefattrib16471.html
             // this is expected
             // Shutdown commands always raise SQLExceptions.
         }

@@ -16,9 +16,10 @@
 package com.github.jinahya.database.metadata.bind;
 
 /**
+ * An abstract test class for in-memory databases.
  *
  * @author Jin Kwon &lt;onacit at gmail.com&gt;
  */
-public abstract class MemoryTest {
+abstract class MemoryTest {
 
 }

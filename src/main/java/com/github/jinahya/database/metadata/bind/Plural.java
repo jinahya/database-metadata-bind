@@ -32,6 +32,19 @@ class Plural<T> implements Serializable {
     private static final long serialVersionUID = -8704321395991938882L;
 
     // -------------------------------------------------------------------------
+    static <T extends Plural<U>, U> T of(final Class<T> type,
+                                         final List<U> elements) {
+        final T instance;
+        try {
+            instance = type.newInstance();
+        } catch (final ReflectiveOperationException iae) {
+            throw new RuntimeException(iae);
+        }
+        instance.getElements().addAll(elements);
+        return instance;
+    }
+
+    // -------------------------------------------------------------------------
     List<T> getElements() {
         if (elements == null) {
             elements = new ArrayList<T>();
