@@ -50,10 +50,10 @@ Test cases for in-memory databases such as [Derby](https://db.apache.org/derby/)
 
 ### External
 
-You can retrieve information from existing databases. And, possibly, can report issues.
+Tests against existing external databases.
 
 ```sh
-$ mvn -Pexternal-<some> \
+$ mvn -Pexternal-<server> \
       -Dclient="x.y.z" \
       -Durl="jdbc:...://..." \
       -Duser="some" \
@@ -74,14 +74,14 @@ name      |value                            |notes
 `password`|password                         |
 `paths`   |comma-separated suppression paths|optional
 
-#### Clients and URLs
+#### Servers, Clients and URLs
 
-database  |`client` is for the version of                                 |url prefix
-----------|---------------------------------------------------------------|------------------------
-MySQL     |[`mysql:mysql-connector-java`](https://goo.gl/BxuJ5a)          |`jdbc:mysql://...`
-PostgreSQL|[`org.mariadb.jdbc:mariadb-java-client`](https://goo.gl/6yqVxq)|`jdbc:mariadb://...`
-Oracle    |                                                               |`jdbc:oracle:thin://...`
-SQL Server|[`com.microsoft.sqlserver:mssql-jdbc`](https://goo.gl/cpK94Q)  |`jdbc:sqlserver://...`
+database  |`server`  |`client` is for the version of                                 |url prefix
+----------|----------|---------------------------------------------------------------|------------------------
+MySQL     |mysql     |[`mysql:mysql-connector-java`](https://goo.gl/BxuJ5a)          |`jdbc:mysql://...`
+PostgreSQL|postgresql|[`org.mariadb.jdbc:mariadb-java-client`](https://goo.gl/6yqVxq)|`jdbc:mariadb://...`
+Oracle    |oracle    |                                                               |`jdbc:oracle:thin://...`
+SQL Server|sqlserver |[`com.microsoft.sqlserver:mssql-jdbc`](https://goo.gl/cpK94Q)  |`jdbc:sqlserver://...`
 
 
 ##### MySQL
