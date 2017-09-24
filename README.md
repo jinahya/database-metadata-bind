@@ -14,8 +14,8 @@ A library binding various information from [DatabaseMetaData](http://docs.oracle
 
 ```java
 // prepare jdbc information
-final java.sql.Connection connection = connect();
-final java.sql.DatabaseMetaData metadata = connection.getDataBaseMetaData();
+final Connection connection = connect();
+final DatabaseMetaData metadata = connection.getDataBaseMetaData();
 
 // create context, and add suppressions if required
 final MetadataContext context = new MetadataContext(metadata);
@@ -40,12 +40,21 @@ final Marshaller marshaller = context.createMarshaller();
 marshaller.mashal(udt, ...);
 ```
 
-## Testing for existing databases
+## Testing
+
+### Memory
+
+Test cases for in-memory databases such as [Derby](https://db.apache.org/derby/), [H2](http://www.h2database.com/html/main.html), [HyperSQL](http://hsqldb.org/), [SQLite](https://www.sqlite.org/) are prepared.
+
+### Embedded
+
+### External
 
 You can retrieve information from existing databases. And, possibly, can report issues.
 
 ```sh
-$ mvn -Dclient="x.y.z" \
+$ mvn -Pexternal-<some> \
+      -Dclient="x.y.z" \
       -Durl="jdbc:...://..." \
       -Duser="some" \
       -Dpassword="some" \
@@ -55,7 +64,7 @@ $ mvn -Dclient="x.y.z" \
 $ cat target/external.xml
 ```
 
-### Properties
+#### Properties
 
 name      |value                            |notes
 ----------|---------------------------------|-----------
@@ -65,7 +74,7 @@ name      |value                            |notes
 `password`|password                         |
 `paths`   |comma-separated suppression paths|optional
 
-### Clients and URLs
+#### Clients and URLs
 
 database  |`client` is for the version of                                 |url prefix
 ----------|---------------------------------------------------------------|------------------------
@@ -75,17 +84,17 @@ Oracle    |                                                               |`jdbc
 SQL Server|[`com.microsoft.sqlserver:mssql-jdbc`](https://goo.gl/cpK94Q)  |`jdbc:sqlserver://...`
 
 
-#### MySQL
+##### MySQL
 
-#### MariaDB
+##### MariaDB
 
-#### PostreSQL
+##### PostreSQL
 
-#### Oracle
+##### Oracle
 
 Oracle seems don't upload artifact to the central. See [Get Oracle JDBC drivers and UCP from Oracle Maven Repository ](https://blogs.oracle.com/dev2dev/get-oracle-jdbc-drivers-and-ucp-from-oracle-maven-repository-without-ides).
 
-#### SQL Server
+##### SQL Server
 
 ----
 
