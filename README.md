@@ -48,6 +48,18 @@ Test cases for in-memory databases such as [Derby](https://db.apache.org/derby/)
 
 ### Embedded
 
+```sh
+$ mvn -Pexternal-<server> \
+      -Dclient="x.y.z" \
+      -Durl="jdbc:...://..." \
+      -Duser="some" \
+      -Dpassword="some" \
+      -Dpaths="of/some,other/someOthers,..." \
+      -Dtest=ExternalTest \
+      test
+$ cat target/external.xml
+```
+
 ### External
 
 Tests against existing external databases.
@@ -68,21 +80,21 @@ $ cat target/external.xml
 
 name      |value                            |notes
 ----------|---------------------------------|-----------
+`server`  |target database server           |see below
 `client`  |version of target jdbc client    |
 `url`     |connection url                   |
 `user`    |username                         |
 `password`|password                         |
 `paths`   |comma-separated suppression paths|optional
 
-#### Servers, Clients and URLs
+#### servers, clients and urls
 
 database  |`server`  |`client` is for the version of                                 |url prefix
 ----------|----------|---------------------------------------------------------------|------------------------
 MySQL     |mysql     |[`mysql:mysql-connector-java`](https://goo.gl/BxuJ5a)          |`jdbc:mysql://...`
 PostgreSQL|postgresql|[`org.mariadb.jdbc:mariadb-java-client`](https://goo.gl/6yqVxq)|`jdbc:mariadb://...`
-Oracle    |oracle    |                                                               |`jdbc:oracle:thin://...`
 SQL Server|sqlserver |[`com.microsoft.sqlserver:mssql-jdbc`](https://goo.gl/cpK94Q)  |`jdbc:sqlserver://...`
-
+Oracle    |oracle    |                                                               |`jdbc:oracle:thin://...`
 
 ##### MySQL
 
