@@ -81,10 +81,10 @@ $ cat target/external.xml
 name      |value                            |notes
 ----------|---------------------------------|-----------
 `server`  |target database server           |see below
-`client`  |version of target jdbc client    |
-`url`     |connection url                   |
-`user`    |username                         |
-`password`|password                         |
+`client`  |version of target jdbc client    |see below
+`url`     |connection url                   |The first argument of [DriverManager#getConnection](https://goo.gl/9q4zW7)
+`user`    |username                         |The second argument of [DriverManager#getConnection](https://goo.gl/9q4zW7)
+`password`|password                         |The third argument of [DriverManager#getConnection](https://goo.gl/9q4zW7)
 `paths`   |comma-separated suppression paths|optional
 
 #### servers, clients and urls
