@@ -87,7 +87,7 @@ name      |value                            |notes
 `password`|password                         |The third argument of [DriverManager#getConnection](https://goo.gl/9q4zW7)
 `paths`   |comma-separated suppression paths|optional
 
-#### servers, clients and urls
+#### Servers, Clients and URLs
 
 database  |`server`  |`client` is for the version of                                 |`url` prefix
 ----------|----------|---------------------------------------------------------------|------------------------
