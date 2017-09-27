@@ -48,17 +48,7 @@ Test cases for in-memory databases such as [Derby](https://db.apache.org/derby/)
 
 ### Embedded
 
-```sh
-$ mvn -Pexternal-<server> \
-      -Dclient="x.y.z" \
-      -Durl="jdbc:...://..." \
-      -Duser="some" \
-      -Dpassword="some" \
-      -Dpaths="of/some,other/someOthers,..." \
-      -Dtest=ExternalTest \
-      test
-$ cat target/external.xml
-```
+N/A
 
 ### External
 
@@ -89,24 +79,12 @@ name      |value                            |notes
 
 #### Servers, Clients and URLs
 
-database  |`server`  |`client` is for the version of                                 |`url` prefix
+database  |`server`  |`client` is for the version of                                 |`url` prefix            
 ----------|----------|---------------------------------------------------------------|------------------------
-MySQL     |mysql     |[`mysql:mysql-connector-java`](https://goo.gl/BxuJ5a)          |`jdbc:mysql://...`
-PostgreSQL|postgresql|[`org.mariadb.jdbc:mariadb-java-client`](https://goo.gl/6yqVxq)|`jdbc:mariadb://...`
-SQL Server|sqlserver |[`com.microsoft.sqlserver:mssql-jdbc`](https://goo.gl/cpK94Q)  |`jdbc:sqlserver://...`
-Oracle    |oracle    |                                                               |`jdbc:oracle:thin://...`
-
-##### MySQL
-
-##### MariaDB
-
-##### PostreSQL
-
-##### Oracle
-
-Oracle seems don't upload artifact to the central. See [Get Oracle JDBC drivers and UCP from Oracle Maven Repository ](https://blogs.oracle.com/dev2dev/get-oracle-jdbc-drivers-and-ucp-from-oracle-maven-repository-without-ides).
-
-##### SQL Server
+MySQL     |mysql     |[`mysql:mysql-connector-java`](https://goo.gl/BxuJ5a)          |`jdbc:mysql://...`      
+PostgreSQL|postgresql|[`org.mariadb.jdbc:mariadb-java-client`](https://goo.gl/6yqVxq)|`jdbc:mariadb://...`    
+SQL Server|sqlserver |[`com.microsoft.sqlserver:mssql-jdbc`](https://goo.gl/cpK94Q)  |`jdbc:sqlserver://...`  
+Oracle    |oracle    |[`com.oracle.jdbc:ojdbc8`](https://goo.gl/Qe1bPT)              |`jdbc:oracle:thin://...`
 
 ----
 
