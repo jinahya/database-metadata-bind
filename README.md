@@ -89,7 +89,7 @@ name      |value                            |notes
 
 #### servers, clients and urls
 
-database  |`server`  |`client` is for the version of                                 |url prefix
+database  |`server`  |`client` is for the version of                                 |`url` prefix
 ----------|----------|---------------------------------------------------------------|------------------------
 MySQL     |mysql     |[`mysql:mysql-connector-java`](https://goo.gl/BxuJ5a)          |`jdbc:mysql://...`
 PostgreSQL|postgresql|[`org.mariadb.jdbc:mariadb-java-client`](https://goo.gl/6yqVxq)|`jdbc:mariadb://...`
