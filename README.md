@@ -15,7 +15,7 @@ A library binding various information from [DatabaseMetaData](http://docs.oracle
 ```java
 // prepare jdbc information
 final Connection connection = connect();
-final DatabaseMetaData metadata = connection.getDataBaseMetaData();
+final DatabaseMetaData metadata = connection.getMetaData();
 
 // create context, and add suppressions if required
 final MetadataContext context = new MetadataContext(metadata);
