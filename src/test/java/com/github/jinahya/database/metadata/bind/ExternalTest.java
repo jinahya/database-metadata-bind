@@ -15,7 +15,6 @@
  */
 package com.github.jinahya.database.metadata.bind;
 
-import static com.github.jinahya.database.metadata.bind.DatabaseMetadataBindTests.marshal;
 import static com.github.jinahya.database.metadata.bind.MetadataContext.getCatalogs;
 import java.io.IOException;
 import static java.lang.invoke.MethodHandles.lookup;
@@ -23,11 +22,13 @@ import java.sql.Connection;
 import java.sql.DatabaseMetaData;
 import static java.sql.DriverManager.getConnection;
 import java.sql.SQLException;
+import java.util.List;
 import javax.xml.bind.JAXBException;
 import org.slf4j.Logger;
 import static org.slf4j.LoggerFactory.getLogger;
 import static org.testng.Assert.assertNotNull;
 import org.testng.annotations.Test;
+import static com.github.jinahya.database.metadata.bind.JaxbTests.store;
 
 /**
  * Test class for remote MySQL.
@@ -40,7 +41,7 @@ public class ExternalTest {
 
     // -------------------------------------------------------------------------
     @Test
-    public void store() throws SQLException, JAXBException, IOException {
+    public void test() throws SQLException, JAXBException, IOException {
         final String client = System.getProperty("client");
         assertNotNull(client, "client is null");
         logger.info("using {}", client);
@@ -67,7 +68,9 @@ public class ExternalTest {
                     context.suppress(path);
                 }
             }
-            marshal(getCatalogs(context, true), "external");
+            final List<Catalog> catalogs = getCatalogs(context, true);
+            logger.debug("catalogs: {}", catalogs);
+            store(Catalog.class, catalogs);
         }
     }
 }

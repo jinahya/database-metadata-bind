@@ -36,38 +36,38 @@ final class DatabaseMetadataBindTests {
 
     private static final Logger logger = getLogger(lookup().lookupClass());
 
-    // -------------------------------------------------------------------------
-    /**
-     * Marshals given catalogs into {@code target/name.xml}.
-     *
-     * @param catalogs the catalogs to marshal
-     * @param name the name
-     * @throws JAXBException if an XML exception occurs.
-     */
-    static void marshal(final Catalogs catalogs, final String name)
-            throws JAXBException {
-        logger.debug("marshalling {} as {}", catalogs, name);
-        final JAXBContext context = JAXBContext.newInstance(Catalogs.class);
-        final Marshaller marshaller = context.createMarshaller();
-        marshaller.setProperty(JAXB_FORMATTED_OUTPUT, TRUE);
-        final File output = Paths.get("target", name + ".xml").toFile();
-        logger.info("to {}", output);
-        marshaller.marshal(catalogs, output);
-        logger.info("done");
-    }
-
-    /**
-     * Marshals given list of catalogs into {@code target/name.xml} by wrapping
-     * them within an {@link Catalogs}.
-     *
-     * @param catalogs the list of catalogs to marshal
-     * @param name the name
-     * @throws JAXBException if an XML error occurs.
-     */
-    static void marshal(final List<Catalog> catalogs, final String name)
-            throws JAXBException {
-        DatabaseMetadataBindTests.marshal(Catalogs.of(catalogs), name);
-    }
+//    // -------------------------------------------------------------------------
+//    /**
+//     * Marshals given catalogs into {@code target/name.xml}.
+//     *
+//     * @param catalogs the catalogs to marshal
+//     * @param name the name
+//     * @throws JAXBException if an XML exception occurs.
+//     */
+//    static void marshal(final Catalogs catalogs, final String name)
+//            throws JAXBException {
+//        logger.debug("marshalling {} as {}", catalogs, name);
+//        final JAXBContext context = JAXBContext.newInstance(Catalogs.class);
+//        final Marshaller marshaller = context.createMarshaller();
+//        marshaller.setProperty(JAXB_FORMATTED_OUTPUT, TRUE);
+//        final File output = Paths.get("target", name + ".xml").toFile();
+//        logger.info("to {}", output);
+//        marshaller.marshal(catalogs, output);
+//        logger.info("done");
+//    }
+//
+//    /**
+//     * Marshals given list of catalogs into {@code target/name.xml} by wrapping
+//     * them within an {@link Catalogs}.
+//     *
+//     * @param catalogs the list of catalogs to marshal
+//     * @param name the name
+//     * @throws JAXBException if an XML error occurs.
+//     */
+//    static void marshal(final List<Catalog> catalogs, final String name)
+//            throws JAXBException {
+//        DatabaseMetadataBindTests.marshal(Catalogs.of(catalogs), name);
+//    }
 
     // -------------------------------------------------------------------------
     private DatabaseMetadataBindTests() {

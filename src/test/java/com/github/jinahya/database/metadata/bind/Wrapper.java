@@ -15,31 +15,32 @@
  */
 package com.github.jinahya.database.metadata.bind;
 
+import java.beans.Introspector;
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
-import javax.xml.bind.annotation.XmlTransient;
+import javax.xml.bind.annotation.XmlAnyElement;
+import javax.xml.namespace.QName;
 
 /**
- * An abstract class for plural wrappers.
+ * A class for wrapping elements.
  *
  * @author Jin Kwon &lt;onacit at gmail.com&gt;
  * @param <T> element type parameter.
  */
-@XmlTransient
-class Plural<T> implements Serializable {
+class Wrapper<T> implements Serializable {
 
     private static final long serialVersionUID = -8704321395991938882L;
 
     // -------------------------------------------------------------------------
-    static <T extends Plural<U>, U> T of(final Class<T> type,
-                                         final List<U> elements) {
-        final T instance;
-        try {
-            instance = type.newInstance();
-        } catch (final ReflectiveOperationException iae) {
-            throw new RuntimeException(iae);
-        }
+    static final QName NAME = new QName(
+            XmlConstants.NS_URI_DATABASE_METADATA_BIND,
+            Introspector.decapitalize(Wrapper.class.getSimpleName()));
+
+    // -------------------------------------------------------------------------
+    static <T> Wrapper<T> of(final Collection<? extends T> elements) {
+        final Wrapper<T> instance = new Wrapper<>();
         instance.getElements().addAll(elements);
         return instance;
     }
@@ -47,11 +48,12 @@ class Plural<T> implements Serializable {
     // -------------------------------------------------------------------------
     List<T> getElements() {
         if (elements == null) {
-            elements = new ArrayList<T>();
+            elements = new ArrayList<>();
         }
         return elements;
     }
 
     // -------------------------------------------------------------------------
+    @XmlAnyElement(lax = true)
     private List<T> elements;
 }

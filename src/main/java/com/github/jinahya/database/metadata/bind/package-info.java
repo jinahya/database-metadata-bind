@@ -16,10 +16,10 @@
 @XmlSchema(
         attributeFormDefault = XmlNsForm.UNQUALIFIED,
         elementFormDefault = XmlNsForm.QUALIFIED,
-        namespace = XmlConstants.DATABASE_METADATA_NS_URI,
+        namespace = XmlConstants.NS_URI_DATABASE_METADATA_BIND,
         xmlns = {
             @XmlNs(prefix = XMLConstants.DEFAULT_NS_PREFIX,
-                   namespaceURI = XmlConstants.DATABASE_METADATA_NS_URI),
+                   namespaceURI = XmlConstants.NS_URI_DATABASE_METADATA_BIND),
             @XmlNs(prefix = "xsi",
                    namespaceURI = XMLConstants.W3C_XML_SCHEMA_INSTANCE_NS_URI)
         }

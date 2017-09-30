@@ -38,9 +38,7 @@
     <maven.compiler.target>1.6</maven.compiler.target>
     <maven.compiler.testSource>1.8</maven.compiler.testSource>
     <maven.compiler.testTarget>1.8</maven.compiler.testTarget>
-    <client>x.y.z</client>
     <version.animal-sniffer>1.16</version.animal-sniffer>
-    <version.mariadb-java-client>2.1.1</version.mariadb-java-client>
   </properties>
 
   <repositories>
@@ -53,11 +51,6 @@
 
   <dependencyManagement>
     <dependencies>
-      <!--      <dependency>
-        <groupId>mysql</groupId>
-        <artifactId>mysql-connector-java</artifactId>
-        <version>8.0.7</version>
-      </dependency>-->
       <dependency>
         <groupId>ru.yandex.qatools.embed</groupId>
         <artifactId>postgresql-embedded</artifactId>
@@ -91,9 +84,21 @@
       <scope>test</scope>
     </dependency>
     <dependency>
+      <groupId>org.apache.commons</groupId>
+      <artifactId>commons-text</artifactId>
+      <scope>test</scope>
+      <version>1.1</version>
+    </dependency>
+    <dependency>
       <groupId>org.apache.derby</groupId>
       <artifactId>derby</artifactId>
       <version>10.13.1.1</version>
+      <scope>test</scope>
+    </dependency>
+    <dependency>
+      <groupId>org.atteo</groupId>
+      <artifactId>evo-inflector</artifactId>
+      <version>1.2.2</version>
       <scope>test</scope>
     </dependency>
     <dependency>
@@ -106,19 +111,6 @@
       <groupId>org.hsqldb</groupId>
       <artifactId>hsqldb</artifactId>
       <version>2.4.0</version>
-      <scope>test</scope>
-    </dependency>
-    <dependency>
-      <groupId>org.mariadb.jdbc</groupId>
-      <artifactId>mariadb-java-client</artifactId>
-      <version>${version.mariadb-java-client}</version>
-      <scope>test</scope>
-    </dependency>
-    <dependency>
-      <groupId>org.postgresql</groupId>
-      <artifactId>postgresql</artifactId>
-      <version>42.1.4</version>
-      <!--<version>${client}</version>-->
       <scope>test</scope>
     </dependency>
     <dependency>
@@ -136,6 +128,7 @@
     <dependency>
       <groupId>ru.yandex.qatools.embed</groupId>
       <artifactId>postgresql-embedded</artifactId>
+      <version>2.4</version>
       <scope>test</scope>
     </dependency>
   </dependencies>
@@ -301,13 +294,15 @@
       <id>embedded-postgresql</id>
       <dependencies>
         <dependency>
-          <groupId>org.postgresql</groupId>
-          <artifactId>postgresql</artifactId>
+          <groupId>ru.yandex.qatools.embed</groupId>
+          <artifactId>postgresql-embedded</artifactId>
+          <version>${server}</version>
           <scope>test</scope>
         </dependency>
         <dependency>
-          <groupId>ru.yandex.qatools.embed</groupId>
-          <artifactId>postgresql-embedded</artifactId>
+          <groupId>org.postgresql</groupId>
+          <artifactId>postgresql</artifactId>
+          <version>${client}</version>
           <scope>test</scope>
         </dependency>
       </dependencies>
@@ -318,11 +313,11 @@
             <artifactId>maven-surefire-plugin</artifactId>
             <configuration>
               <includes>
-                <include>**/PostgreSQL*Test</include>
+                <include>**/EmbeddedPostgresqlTest</include>
               </includes>
             </configuration>
           </plugin>
-          <plugin>
+          <!--          <plugin>
             <groupId>org.codehaus.mojo</groupId>
             <artifactId>build-helper-maven-plugin</artifactId>
             <executions>
@@ -338,7 +333,7 @@
                 </configuration>
               </execution>
             </executions>
-          </plugin>
+          </plugin>-->
         </plugins>
       </build>
     </profile>
@@ -346,13 +341,15 @@
       <id>eembedded-maraiadb</id>
       <dependencies>
         <dependency>
-          <groupId>org.mariadb.jdbc</groupId>
-          <artifactId>mariadb-java-client</artifactId>
+          <groupId>ch.vorburger.mariaDB4j</groupId>
+          <artifactId>mariaDB4j</artifactId>
+          <version>${server}</version>
           <scope>test</scope>
         </dependency>
         <dependency>
-          <groupId>ch.vorburger.mariaDB4j</groupId>
-          <artifactId>mariaDB4j</artifactId>
+          <groupId>org.mariadb.jdbc</groupId>
+          <artifactId>mariadb-java-client</artifactId>
+          <version>${client}</version>
           <scope>test</scope>
         </dependency>
       </dependencies>
@@ -363,11 +360,11 @@
             <artifactId>maven-surefire-plugin</artifactId>
             <configuration>
               <includes>
-                <include>**/MariaDbEmbeddedTest</include>
+                <include>**/EmbeddedMariadbTest</include>
               </includes>
             </configuration>
           </plugin>
-          <plugin>
+          <!--          <plugin>
             <groupId>org.codehaus.mojo</groupId>
             <artifactId>build-helper-maven-plugin</artifactId>
             <executions>
@@ -383,7 +380,7 @@
                 </configuration>
               </execution>
             </executions>
-          </plugin>
+          </plugin>-->
         </plugins>
       </build>
     </profile>
@@ -397,6 +394,19 @@
           <scope>test</scope>
         </dependency>
       </dependencies>
+      <build>
+        <plugins>
+          <plugin>
+            <groupId>org.apache.maven.plugins</groupId>
+            <artifactId>maven-surefire-plugin</artifactId>
+            <configuration>
+              <includes>
+                <include>**/ExternalTest.java</include>
+              </includes>
+            </configuration>
+          </plugin>
+        </plugins>
+      </build>
     </profile>
     <profile>
       <id>external-postgresql</id>
