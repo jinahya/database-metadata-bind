@@ -63,7 +63,7 @@ $ mvn -Pexternal-<server> \
       -Dpaths="of/some,other/others,..." \
       -Dtest=ExternalTest \
       test
-$ cat target/catalogs.xml
+$ cat target/external.xml
 ```
 
 #### Properties
