@@ -45,14 +45,15 @@ final class JaxbTests {
     }
 
     static <T> void store(final Class<T> type,
-                          final Collection<? extends T> elements)
+                          final Collection<? extends T> elements,
+                          final String name)
             throws JAXBException {
         final JAXBContext context
                 = JAXBContext.newInstance(Wrapper.class, type);
         final Marshaller marshaller = context.createMarshaller();
         marshaller.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, Boolean.TRUE);
         final Wrapper<T> wrapper = Wrapper.of(elements);
-        final File output = Paths.get("target", plural(type) + ".xml").toFile();
+        final File output = Paths.get("target", name + ".xml").toFile();
         marshaller.marshal(
                 new JAXBElement<>(Wrapper.NAME, Wrapper.class, wrapper),
                 output);

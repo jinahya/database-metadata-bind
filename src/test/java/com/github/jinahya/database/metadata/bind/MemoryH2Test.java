@@ -15,6 +15,7 @@
  */
 package com.github.jinahya.database.metadata.bind;
 
+import static com.github.jinahya.database.metadata.bind.JaxbTests.store;
 import static com.github.jinahya.database.metadata.bind.MetadataContext.getCatalogs;
 import static java.lang.invoke.MethodHandles.lookup;
 import java.sql.Connection;
@@ -76,9 +77,7 @@ public class MemoryH2Test extends MemoryTest {
                     "table/pseudoColumns"
             );
             final List<Catalog> catalogs = getCatalogs(context, true);
-            for (final Catalog catalog : catalogs) {
-                MetadataContextTests.marshal(catalog, "h2.memory");
-            }
+            store(Catalog.class, catalogs, "memory.h2");
         }
     }
 }

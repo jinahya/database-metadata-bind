@@ -70,7 +70,7 @@ public class ExternalTest {
             }
             final List<Catalog> catalogs = getCatalogs(context, true);
             logger.debug("catalogs: {}", catalogs);
-            store(Catalog.class, catalogs);
+            store(Catalog.class, catalogs, "external");
         }
     }
 }

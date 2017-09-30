@@ -15,6 +15,7 @@
  */
 package com.github.jinahya.database.metadata.bind;
 
+import static com.github.jinahya.database.metadata.bind.JaxbTests.store;
 import static com.github.jinahya.database.metadata.bind.MetadataContext.getCatalogs;
 import static java.lang.invoke.MethodHandles.lookup;
 import java.sql.Connection;
@@ -88,25 +89,14 @@ public class MemoryDerbyTest extends MemoryTest {
 
     // -------------------------------------------------------------------------
     @Test
-    public void marshalCategories() throws Exception {
+    public void test() throws Exception {
         try (Connection connection = getConnection(CONNECTION_URL)) {
+            logger.debug("connected: {}", connection);
             DatabaseMetaData metadata = connection.getMetaData();
-            //metadata = (DatabaseMetaData) MetadataLogger.newProxy(metadata);
-            logger.debug("catalogTerm: {}", metadata.getCatalogTerm());
             final MetadataContext context = new MetadataContext(metadata);
             final List<Catalog> catalogs = getCatalogs(context, true);
-            for (final Catalog catalog : catalogs) {
-                MetadataContextTests.marshal(catalog, "derby.memory");
-            }
+            store(Catalog.class, catalogs, "memory.derby");
         }
-//        final JAXBContext context = JAXBContext.newInstance(Metadata.class);
-//        final Marshaller marshaller = context.createMarshaller();
-//        marshaller.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, Boolean.TRUE);
-//        final File file = new File("target", "derby.memory.metadata.xml");
-//        try (OutputStream outputStream = new FileOutputStream(file)) {
-//            marshaller.marshal(metadata, outputStream);
-//            outputStream.flush();
-//        }
     }
 
     @Test(enabled = false)
