@@ -125,7 +125,7 @@ public class MetadataContext {
                        final T instance)
             throws SQLException {//{//, ReflectiveOperationException {
         final Set<String> labels = labels(results);
-        for (final Entry<Field, Bind> bfield : bfields(type).entrySet()) {
+        for (final Entry<Field, Bind> bfield : bindFields(type).entrySet()) {
             final Field field = bfield.getKey();
             final Bind bind = bfield.getValue();
             final String label = bind.label();
@@ -168,7 +168,7 @@ public class MetadataContext {
                                    type, label, value));
             }
         }
-        for (final Entry<Field, Invoke> ifield : ifields(type).entrySet()) {
+        for (final Entry<Field, Invoke> ifield : invokeFields(type).entrySet()) {
             final Field field = ifield.getKey();
             if (!field.getType().equals(List.class)) {
                 logger.severe(format("wrong field type: %s", field.getType()));
@@ -197,7 +197,7 @@ public class MetadataContext {
                 continue;
             }
             final List<Object> fvalue = new ArrayList<Object>();
-            final Class<?> ptype = ptype(field);
+            final Class<?> ptype = parameterType(field);
             for (final Literals parameters : invoke.parameters()) {
                 final String[] literals = parameters.value();
                 final Object[] arguments;
@@ -443,27 +443,6 @@ public class MetadataContext {
         return list;
     }
 
-    private List<CrossReference> getCrossReferences(final Table parentTable,
-                                                    final Table foreignTable)
-            throws SQLException {
-        return getCrossReferences(
-                parentTable.getTableCat(), parentTable.getTableSchem(),
-                parentTable.getTableName(),
-                foreignTable.getTableCat(), foreignTable.getTableSchem(),
-                foreignTable.getTableName());
-    }
-
-    public List<CrossReference> getCrossReferences(final List<Table> tables)
-            throws SQLException {
-        final List<CrossReference> list = new ArrayList<CrossReference>();
-        for (final Table parentTable : tables) {
-            for (final Table foreignTable : tables) {
-                list.addAll(getCrossReferences(parentTable, foreignTable));
-            }
-        }
-        return list;
-    }
-
     public List<FunctionColumn> getFunctionColumns(
             final String catalog, final String schemaPattern,
             final String functionNamePattern, final String columnNamePattern)
@@ -479,6 +458,18 @@ public class MetadataContext {
         return list;
     }
 
+    /**
+     * Invokes
+     * {@link DatabaseMetaData#getFunctions(java.lang.String, java.lang.String, java.lang.String) getFunctions}
+     * with given arguments and returns bound information.
+     *
+     * @param catalog the value for {@code catalog} parameter
+     * @param schemaPattern the value for {@code schemaPattern} parameter
+     * @param functionNamePattern the value for {@code functionNamePattern}
+     * parameter
+     * @return a list of {@link Function}s
+     * @throws SQLException if a database error occurs.
+     */
     public List<Function> getFunctions(final String catalog,
                                        final String schemaPattern,
                                        final String functionNamePattern)
@@ -751,8 +742,8 @@ public class MetadataContext {
     }
 
     /**
-     * Invokes {@link DatabaseMetaData#getTypeInfo()} and returns bound
-     * information.
+     * Invokes {@link DatabaseMetaData#getTypeInfo() getTypeInfo} and returns
+     * bound information.
      *
      * @return a list of {@link TypeInfo}
      * @throws SQLException if a database error occurs.
@@ -825,19 +816,19 @@ public class MetadataContext {
         return metadata;
     }
 
-    // ------------------------------------------------------------------- paths
-    private Set<String> getPaths() {
-        if (paths == null) {
-            paths = new HashSet<String>();
+    // --------------------------------------------------------- suppressedPaths
+    public Set<String> getSuppressedPaths() {
+        if (suppressedPaths == null) {
+            suppressedPaths = new HashSet<String>();
         }
-        return paths;
+        return suppressedPaths;
     }
 
     private boolean suppress(final String path) {
         if (path == null) {
             throw new NullPointerException("path is null");
         }
-        return getPaths().add(path);
+        return getSuppressedPaths().add(path);
     }
 
     /**
@@ -863,15 +854,15 @@ public class MetadataContext {
     }
 
     boolean suppressed(final String path) {
-        return getPaths().contains(path);
+        return getSuppressedPaths().contains(path);
     }
 
-    // ----------------------------------------------------------------- bfields
-    private Map<Field, Bind> bfields(final Class<?> klass) {
+    // -------------------------------------------------------------- bindFields
+    private Map<Field, Bind> bindFields(final Class<?> klass) {
         if (klass == null) {
             throw new NullPointerException("klass is null");
         }
-        Map<Field, Bind> value = bfields.get(klass);
+        Map<Field, Bind> value = bindFields.get(klass);
         if (value == null) {
             try {
                 value = fields(klass, Bind.class);
@@ -880,7 +871,7 @@ public class MetadataContext {
                         field.setAccessible(true);
                     }
                 }
-                bfields.put(klass, value);
+                bindFields.put(klass, value);
             } catch (final ReflectiveOperationException roe) {
                 logger.severe(format(
                         "failed to get fields from %s annotated with %s",
@@ -891,12 +882,12 @@ public class MetadataContext {
         return value;
     }
 
-    // ----------------------------------------------------------------- ifields
-    private Map<Field, Invoke> ifields(final Class<?> klass) {
+    // ------------------------------------------------------------ invokeFields
+    private Map<Field, Invoke> invokeFields(final Class<?> klass) {
         if (klass == null) {
             throw new NullPointerException("klass is null");
         }
-        Map<Field, Invoke> value = ifields.get(klass);
+        Map<Field, Invoke> value = invokeFields.get(klass);
         if (value == null) {
             try {
                 value = fields(klass, Invoke.class);
@@ -905,7 +896,7 @@ public class MetadataContext {
                         field.setAccessible(true);
                     }
                 }
-                ifields.put(klass, value);
+                invokeFields.put(klass, value);
             } catch (final ReflectiveOperationException roe) {
                 logger.severe(format(
                         "failed to get fields from %s annotated with %s",
@@ -916,36 +907,37 @@ public class MetadataContext {
         return value;
     }
 
-    // ------------------------------------------------------------------ ptypes
-    private Class<?> ptype(final Field field) {
+    // ---------------------------------------------------------- parameterTypes
+    private Class<?> parameterType(final Field field) {
         if (field == null) {
             throw new NullPointerException("field is null");
         }
-        Class<?> ptype = ptypes.get(field);
-        if (ptype == null) {
+        Class<?> parameterType = parameterTypes.get(field);
+        if (parameterType == null) {
             final ParameterizedType parameterizedType
                     = (ParameterizedType) field.getGenericType();
-            ptype = (Class<?>) parameterizedType.getActualTypeArguments()[0];
-            ptypes.put(field, ptype);
+            parameterType
+                    = (Class<?>) parameterizedType.getActualTypeArguments()[0];
+            parameterTypes.put(field, parameterType);
 
         }
-        return ptype;
+        return parameterType;
     }
 
     // -------------------------------------------------------------------------
     private final DatabaseMetaData metadata;
 
-    private Set<String> paths;
+    private Set<String> suppressedPaths;
 
     // fields with @Bind
-    private final Map<Class<?>, Map<Field, Bind>> bfields
+    private final Map<Class<?>, Map<Field, Bind>> bindFields
             = new HashMap<Class<?>, Map<Field, Bind>>();
 
     // fields with @Invoke
-    private final Map<Class<?>, Map<Field, Invoke>> ifields
+    private final Map<Class<?>, Map<Field, Invoke>> invokeFields
             = new HashMap<Class<?>, Map<Field, Invoke>>();
 
-    // parameterized type of java.util.List fields
-    private final Map<Field, Class<?>> ptypes
+    // parameterized types of java.util.List fields
+    private final Map<Field, Class<?>> parameterTypes
             = new HashMap<Field, Class<?>>();
 }
