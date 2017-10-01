@@ -1,0 +1,2 @@
+#!/bin/sh
+mvn -Pexternal-mysql -Dclient=5.1.44 -Durl="jdbc:mysql://192.168.56.101:3306" -Duser=onacit -Dpassword=1234 -Dtest=ExternalTest clean test

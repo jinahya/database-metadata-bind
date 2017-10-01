@@ -15,6 +15,7 @@
  */
 package com.github.jinahya.database.metadata.bind;
 
+import static com.github.jinahya.database.metadata.bind.JaxbTests.store;
 import static com.github.jinahya.database.metadata.bind.MetadataContext.getCatalogs;
 import java.sql.Connection;
 import java.sql.DatabaseMetaData;
@@ -26,6 +27,7 @@ import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 import static java.sql.DriverManager.getConnection;
 import java.util.List;
+import static jdk.nashorn.internal.codegen.OptimisticTypesPersistence.store;
 
 /**
  *
@@ -69,9 +71,7 @@ public class MemoryHsqlTest extends MemoryTest {
                     "table/pseudoColumns"
             );
             final List<Catalog> catalogs = getCatalogs(context, true);
-            for (final Catalog catalog : catalogs) {
-                MetadataContextTests.marshal(catalog, "hypersql.memory");
-            }
+            store(Catalog.class, catalogs, "memory.hsql");
         }
     }
 }

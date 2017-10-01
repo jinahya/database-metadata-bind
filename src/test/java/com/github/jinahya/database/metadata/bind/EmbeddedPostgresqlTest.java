@@ -15,7 +15,6 @@
  */
 package com.github.jinahya.database.metadata.bind;
 
-import static com.github.jinahya.database.metadata.bind.MetadataContext.getCatalogs;
 import static com.github.jinahya.database.metadata.bind.MetadataContextTests.store;
 import static java.lang.invoke.MethodHandles.lookup;
 import java.sql.Connection;

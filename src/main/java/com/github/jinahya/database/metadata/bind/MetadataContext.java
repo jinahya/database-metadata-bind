@@ -356,7 +356,7 @@ public class MetadataContext {
 
     /**
      * Invokes
-     * {@link DatabaseMetaData#getColumns(java.lang.String, java.lang.String, java.lang.String, java.lang.String)}
+     * {@link DatabaseMetaData#getColumns(java.lang.String, java.lang.String, java.lang.String, java.lang.String) getColumns}
      * with given arguments and returns bound information.
      *
      * @param catalog the value for {@code catalog} parameter
@@ -385,7 +385,7 @@ public class MetadataContext {
 
     /**
      * Invokes
-     * {@link DatabaseMetaData#getColumnPrivileges(java.lang.String, java.lang.String, java.lang.String, java.lang.String)}
+     * {@link DatabaseMetaData#getColumnPrivileges(java.lang.String, java.lang.String, java.lang.String, java.lang.String) getColumnPrivileges}
      * with given arguments and returns bound information.
      *
      * @param catalog the value for {@code catalog} parameter
@@ -411,6 +411,20 @@ public class MetadataContext {
         return list;
     }
 
+    /**
+     * Invokes
+     * {@link DatabaseMetaData#getCrossReference(java.lang.String, java.lang.String, java.lang.String, java.lang.String, java.lang.String, java.lang.String) getCrossReference}
+     * with given arguments and returns bound information.
+     *
+     * @param parentCatalog the value for {@code parentCatalog} parameter
+     * @param parentSchema the value for {@code parentSchema} parameter
+     * @param parentTable the value for {@code parentTable} parameter
+     * @param foreignCatalog the value for {@code foreignCatalog} parameter
+     * @param foreignSchema the value for {@code foreignSchema} parameter
+     * @param foreignTable the value for {@code foreignTable} parameter
+     * @return a list of {@link CrossReference}.
+     * @throws SQLException if a database error occurs.
+     */
     public List<CrossReference> getCrossReferences(
             final String parentCatalog, final String parentSchema,
             final String parentTable,

@@ -15,6 +15,7 @@
  */
 package com.github.jinahya.database.metadata.bind;
 
+import static com.github.jinahya.database.metadata.bind.JaxbTests.store;
 import static com.github.jinahya.database.metadata.bind.MetadataContext.getCatalogs;
 import static java.lang.invoke.MethodHandles.lookup;
 import java.sql.Connection;
@@ -57,9 +58,7 @@ public class MemorySqliteTest extends MemoryTest {
             final MetadataContext context = new MetadataContext(database);
             context.suppress("schema/functions");
             final List<Catalog> catalogs = getCatalogs(context, true);
-            for (final Catalog catalog : catalogs) {
-                MetadataContextTests.marshal(catalog, "sqlite.memory");
-            }
+            store(Catalog.class, catalogs, "memory.sqlite");
         }
 //        final JAXBContext context = JAXBContext.newInstance(Metadata.class);
 //        final Marshaller marshaller = context.createMarshaller();
