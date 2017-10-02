@@ -32,6 +32,7 @@ import javax.xml.bind.annotation.XmlType;
  * {@link java.sql.DatabaseMetaData#getCatalogs()}.
  *
  * @author Jin Kwon &lt;jinahya_at_gmail.com&gt;
+ * @see MetadataContext#getCatalogs()
  */
 @XmlRootElement
 @XmlType(propOrder = {

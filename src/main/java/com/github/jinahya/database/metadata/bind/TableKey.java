@@ -23,10 +23,6 @@ import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlTransient;
 import javax.xml.bind.annotation.XmlType;
 
-/**
- *
- * @author Jin Kwon &lt;jinahya_at_gmail.com&gt;
- */
 @XmlTransient
 @XmlType(propOrder = {
     "pkcolumnName", "fktableCat", "fktableSchem",

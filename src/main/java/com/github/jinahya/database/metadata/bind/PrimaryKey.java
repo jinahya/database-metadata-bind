@@ -28,8 +28,6 @@ import javax.xml.bind.annotation.XmlType;
  * An entity class for primary keys.
  *
  * @author Jin Kwon &lt;jinahya_at_gmail.com&gt;
- * @see DatabaseMetaData#getPrimaryKeys(java.lang.String, java.lang.String,
- * java.lang.String)
  * @see MetadataContext#getPrimaryKeys(java.lang.String, java.lang.String,
  * java.lang.String)
  */

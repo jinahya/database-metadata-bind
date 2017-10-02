@@ -91,6 +91,7 @@ public class ColumnPrivilege implements Serializable {
         this.columnName = columnName;
     }
 
+    // -------------------------------------------------------------------------
     // ----------------------------------------------------------------- grantor
     public String getGrantor() {
         return grantor;

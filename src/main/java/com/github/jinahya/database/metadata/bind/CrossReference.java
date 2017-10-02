@@ -24,10 +24,11 @@ import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlType;
 
 /**
- * An entity class for binding the result of {@link java.sql.DatabaseMetaData#getCrossReference(java.lang.String, java.lang.String, java.lang.String, java.lang.String, java.lang.String, java.lang.String)
- * getCrossReference(parentCatalog, parentSchema, parentTable, foreignCatalog, foreignSchema, foreignTable)}.
+ * An entity class for cross references.
  *
  * @author Jin Kwon &lt;jinahya_at_gmail.com&gt;
+ * @see MetadataContext#getCrossReferences(java.lang.String, java.lang.String,
+ * java.lang.String, java.lang.String, java.lang.String, java.lang.String)
  */
 @XmlRootElement
 @XmlType(propOrder = {

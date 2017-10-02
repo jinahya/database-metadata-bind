@@ -27,6 +27,8 @@ import javax.xml.bind.annotation.XmlType;
  * An entity class for type attributes.
  *
  * @author Jin Kwon &lt;jinahya_at_gmail.com&gt;
+ * @see MetadataContext#getAttributes(java.lang.String, java.lang.String,
+ * java.lang.String, java.lang.String)
  */
 @XmlRootElement
 @XmlType(propOrder = {

@@ -21,9 +21,11 @@ import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlType;
 
 /**
- * An entity class for best row identifiers.
+ * An entity class for best row identifiers of tables.
  *
  * @author Jin Kwon &lt;jinahya_at_gmail.com&gt;
+ * @see MetadataContext#getBestRowIdentifier(java.lang.String, java.lang.String,
+ * java.lang.String, int, boolean)
  */
 @XmlRootElement
 @XmlType(propOrder = {
