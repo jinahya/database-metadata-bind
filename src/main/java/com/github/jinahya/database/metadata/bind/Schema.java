@@ -51,40 +51,40 @@ public class Schema implements Serializable {//extends AbstractTableDomain {
     public static final String TABLE_SCHEM_NONE = "";
 
     // -------------------------------------------------------------------------
-    static Schema newVirtualInstance(final String tableCatalog) {
-        final Schema instance = new Schema();
-        instance.virtual = true;
-        instance.setTableCatalog(tableCatalog);
-        instance.setTableSchem(TABLE_SCHEM_NONE);
-        return instance;
-    }
-
-    static Schema newVirtualInstance(final MetadataContext context,
-                                     final String tableCatalog)
-            throws SQLException {
-        final Schema instance = newVirtualInstance(tableCatalog);
-        if (!context.suppressed("schema/functions")) {
-            instance.getFunctions().addAll(context.getFunctions(
-                    instance.getTableCatalog(), instance.getTableSchem(),
-                    null));
-        }
-        if (!context.suppressed("schema/procedures")) {
-            instance.getProcedures().addAll(context.getProcedures(
-                    instance.getTableCatalog(), instance.getTableSchem(),
-                    null));
-        }
-        if (!context.suppressed("schema/tables")) {
-            instance.getTables().addAll(context.getTables(
-                    instance.getTableCatalog(), instance.getTableSchem(), null,
-                    null));
-        }
-        if (!context.suppressed("schema/UDTs")) {
-            instance.getUDTs().addAll(context.getUDTs(
-                    instance.getTableCatalog(), instance.getTableSchem(), null,
-                    null));
-        }
-        return instance;
-    }
+//    static Schema newVirtualInstance(final String tableCatalog) {
+//        final Schema instance = new Schema();
+//        instance.virtual = true;
+//        instance.setTableCatalog(tableCatalog);
+//        instance.setTableSchem(TABLE_SCHEM_NONE);
+//        return instance;
+//    }
+//
+//    static Schema newVirtualInstance(final MetadataContext context,
+//                                     final String tableCatalog)
+//            throws SQLException {
+//        final Schema instance = newVirtualInstance(tableCatalog);
+//        if (!context.suppressed("schema/functions")) {
+//            instance.getFunctions().addAll(context.getFunctions(
+//                    instance.getTableCatalog(), instance.getTableSchem(),
+//                    null));
+//        }
+//        if (!context.suppressed("schema/procedures")) {
+//            instance.getProcedures().addAll(context.getProcedures(
+//                    instance.getTableCatalog(), instance.getTableSchem(),
+//                    null));
+//        }
+//        if (!context.suppressed("schema/tables")) {
+//            instance.getTables().addAll(context.getTables(
+//                    instance.getTableCatalog(), instance.getTableSchem(), null,
+//                    null));
+//        }
+//        if (!context.suppressed("schema/UDTs")) {
+//            instance.getUDTs().addAll(context.getUDTs(
+//                    instance.getTableCatalog(), instance.getTableSchem(), null,
+//                    null));
+//        }
+//        return instance;
+//    }
 
     // -------------------------------------------------------------------------
     @Override

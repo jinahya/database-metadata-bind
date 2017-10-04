@@ -15,7 +15,9 @@
  */
 package com.github.jinahya.database.metadata.bind;
 
+import static com.github.jinahya.database.metadata.bind.Catalog.TABLE_CAT_NONE;
 import static com.github.jinahya.database.metadata.bind.Invokes.arguments;
+import static com.github.jinahya.database.metadata.bind.Schema.TABLE_SCHEM_NONE;
 import static java.lang.String.format;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
@@ -65,7 +67,31 @@ public class MetadataContext {
         final List<Schema> schemas = context.getSchemas(catalog, null);
         if (schemas.isEmpty() && nonempty) {
             logger.fine("adding an empty schema");
-            schemas.add(Schema.newVirtualInstance(context, catalog));
+            final Schema schema = new Schema();
+            schema.virtual = true;
+            schema.setTableCatalog(catalog);
+            schema.setTableSchem("");
+            if (!context.suppressed("schema/functions")) {
+                schema.getFunctions().addAll(context.getFunctions(
+                        schema.getTableCatalog(), schema.getTableSchem(),
+                        null));
+            }
+            if (!context.suppressed("schema/procedures")) {
+                schema.getProcedures().addAll(context.getProcedures(
+                        schema.getTableCatalog(), schema.getTableSchem(),
+                        null));
+            }
+            if (!context.suppressed("schema/tables")) {
+                schema.getTables().addAll(context.getTables(
+                        schema.getTableCatalog(), schema.getTableSchem(), null,
+                        null));
+            }
+            if (!context.suppressed("schema/UDTs")) {
+                schema.getUDTs().addAll(context.getUDTs(
+                        schema.getTableCatalog(), schema.getTableSchem(), null,
+                        null));
+            }
+            schemas.add(schema);
         }
         return schemas;
     }
@@ -79,7 +105,14 @@ public class MetadataContext {
         final List<Catalog> catalogs = context.getCatalogs();
         if (catalogs.isEmpty() && nonempty) {
             logger.fine("adding an empty catalog");
-            catalogs.add(Catalog.newVirtualInstance(context));
+            final Catalog catalog = new Catalog();
+            catalog.virtual = true;
+            catalog.setTableCat("");
+            catalogs.add(catalog);
+            if (!context.suppressed("catalog/schemas")) {
+                catalog.getSchemas().addAll(
+                        context.getSchemas(catalog.getTableCat(), ""));
+            }
         }
         if (!context.suppressed("catalog/schemas")) {
             boolean allempty = true;
@@ -284,7 +317,7 @@ public class MetadataContext {
 
     /**
      * Invokes
-     * {@link DatabaseMetaData#getBestRowIdentifier(java.lang.String, java.lang.String, java.lang.String, int, boolean) getBestRowIdentifier}
+     * {@link DatabaseMetaData#getBestRowIdentifier(java.lang.String, java.lang.String, java.lang.String, int, boolean)}
      * with given arguments and returns bound information.
      *
      * @param catalog the value for {@code catalog} parameter
@@ -454,7 +487,7 @@ public class MetadataContext {
 
     /**
      * Invokes
-     * {@link DatabaseMetaData#getFunctions(java.lang.String, java.lang.String, java.lang.String) getFunctions}
+     * {@link DatabaseMetaData#getFunctions(java.lang.String, java.lang.String, java.lang.String)}
      * with given arguments and returns bound information.
      *
      * @param catalog the value for {@code catalog} parameter
@@ -796,7 +829,7 @@ public class MetadataContext {
 
     /**
      * Invokes
-     * {@link DatabaseMetaData#getUDTs(java.lang.String, java.lang.String, java.lang.String, int[]) getUDTs}
+     * {@link DatabaseMetaData#getUDTs(java.lang.String, java.lang.String, java.lang.String, int[])}
      * with given arguments and returns bound information.
      *
      * @param catalog the value for {@code catalog} parameter.
@@ -887,8 +920,25 @@ public class MetadataContext {
         return this;
     }
 
-    boolean suppressed(final String path) {
+    private boolean suppressed(final String path) {
         return getSuppressions().contains(path);
+    }
+
+    // ------------------------------------------------------------------- alias
+    private Map<String, String> getAliases() {
+        if (aliases == null) {
+            aliases = new HashMap<String, String>();
+        }
+        return aliases;
+    }
+
+    private MetadataContext alias(final String path, final String alias) {
+        final String previous = getAliases().put(path, alias);
+        return this;
+    }
+
+    private String alias(final String path) {
+        return getAliases().get(path);
     }
 
     // ----------------------------------------------------------------- bfields
@@ -961,6 +1011,8 @@ public class MetadataContext {
     private final DatabaseMetaData metadata;
 
     private Set<String> suppressions;
+
+    private Map<String, String> aliases;
 
     // fields with @Bind
     private final transient Map<Class<?>, Map<Field, Bind>> bfields

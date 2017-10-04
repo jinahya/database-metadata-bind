@@ -52,26 +52,26 @@ public class Catalog implements Serializable {//extends AbstractTableDomain {
     public static final String TABLE_CAT_NONE = "";
 
     // -------------------------------------------------------------------------
-    static Catalog newVirtualInstance() {
-        final Catalog instance = new Catalog();
-        instance.virtual = true;
-        instance.setTableCat(TABLE_CAT_NONE);
-        return instance;
-    }
-
-    static Catalog newVirtualInstance(final MetadataContext context)
-            throws SQLException {
-        final Catalog instance = newVirtualInstance();
-        if (!context.suppressed("catalog/schemas")) {
-            instance.getSchemas().addAll(
-                    context.getSchemas(instance.getTableCat(), null));
-        }
-        if (instance.getSchemas().isEmpty()) {
-            instance.getSchemas().add(
-                    Schema.newVirtualInstance(context, instance.getTableCat()));
-        }
-        return instance;
-    }
+//    static Catalog newVirtualInstance() {
+//        final Catalog instance = new Catalog();
+//        instance.virtual = true;
+//        instance.setTableCat(TABLE_CAT_NONE);
+//        return instance;
+//    }
+//
+//    static Catalog newVirtualInstance(final MetadataContext context)
+//            throws SQLException {
+//        final Catalog instance = newVirtualInstance();
+//        if (!context.suppressed("catalog/schemas")) {
+//            instance.getSchemas().addAll(
+//                    context.getSchemas(instance.getTableCat(), null));
+//        }
+//        if (instance.getSchemas().isEmpty()) {
+//            instance.getSchemas().add(
+//                    Schema.newVirtualInstance(context, instance.getTableCat()));
+//        }
+//        return instance;
+//    }
 
     // -------------------------------------------------------------------------
     @Override
