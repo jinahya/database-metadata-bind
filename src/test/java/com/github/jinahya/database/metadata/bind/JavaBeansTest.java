@@ -149,7 +149,8 @@ public class JavaBeansTest {
             throws URISyntaxException, IOException,
                    ReflectiveOperationException {
         final Package p = getClass().getPackage();
-        final String name = "/" + p.getName().replace('.', '/') + "/jaxb.index";
+        //final String name = "/" + p.getName().replace('.', '/') + "/jaxb.index";
+        final String name = "jaxb.index";
         final URL resource = getClass().getResource(name);
         final Path path = Paths.get(resource.toURI());
         Files.lines(path)

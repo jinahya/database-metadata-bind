@@ -28,6 +28,7 @@ import javax.xml.transform.stream.StreamResult;
 import org.testng.annotations.Test;
 
 /**
+ * Tests for JAXB.
  *
  * @author Jin Kwon &lt;jinahya_at_gmail.com&gt;
  */

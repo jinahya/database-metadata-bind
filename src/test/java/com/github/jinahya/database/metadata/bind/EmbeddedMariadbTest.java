@@ -22,7 +22,6 @@ import static java.lang.invoke.MethodHandles.lookup;
 import java.sql.Connection;
 import java.sql.DatabaseMetaData;
 import static java.sql.DriverManager.getConnection;
-import java.sql.ResultSet;
 import java.util.List;
 import org.slf4j.Logger;
 import static org.slf4j.LoggerFactory.getLogger;
@@ -71,60 +70,13 @@ public class EmbeddedMariadbTest {
     }
 
     @Test
-    public void printCatalogs() throws Exception {
+    public void store() throws Exception {
         try (Connection connection = getConnection(URL, USER, PASSWORD)) {
-            final DatabaseMetaData metadata = connection.getMetaData();
-            try (ResultSet catalogs = metadata.getCatalogs()) {
-                while (catalogs.next()) {
-                    final String tableCat = catalogs.getString("TABLE_CAT");
-                    logger.debug("tableCat: {}", tableCat);
-                }
-            }
-        }
-    }
-
-    @Test
-    public void printSchemaNames() throws Exception {
-        try (Connection connection = getConnection(URL, USER, PASSWORD)) {
-            final DatabaseMetaData metadata = connection.getMetaData();
-            try (ResultSet catalogs = metadata.getSchemas()) {
-                while (catalogs.next()) {
-                    final String tableSchem = catalogs.getString("TABLE_SCHEM");
-                    final String tableCatalog
-                            = catalogs.getString("TABLE_CATALOG");
-                    logger.debug("tableSchem: {}, tableCat: {}", tableSchem,
-                                 tableCatalog);
-                }
-            }
-        }
-    }
-
-    @Test
-    public void printTables() throws Exception {
-        try (Connection connection = getConnection(URL, USER, PASSWORD)) {
-            final DatabaseMetaData metadata = connection.getMetaData();
-            try (ResultSet tables
-                    = metadata.getTables(null, null, null, null)) {
-                while (tables.next()) {
-                    final String tableCat = tables.getString("TABLE_CAT");
-                    final String tableSchem = tables.getString("TABLE_SCHEM");
-                    final String tableName = tables.getString("TABLE_NAME");
-                    logger.debug("tableCat: {}, tableSchem: {}, tableName: {}",
-                                 tableCat, tableSchem, tableName);
-                }
-            }
-        }
-    }
-
-    @Test
-    public void storeCatalogs() throws Exception {
-        try (Connection connection = getConnection(URL, USER, PASSWORD)) {
+            logger.debug("connection: {}", connection);
             final DatabaseMetaData metadata = connection.getMetaData();
             final MetadataContext context = new MetadataContext(metadata);
             final List<Catalog> catalogs = getCatalogs(context, true);
-            for (final Catalog catalog : catalogs) {
-                MetadataContextTests.marshal(catalog, "mariadb.memory");
-            }
+            JaxbTests.store(Catalog.class, catalogs, "embedded.mariadb");
         }
     }
 }

@@ -15,13 +15,10 @@
  */
 package com.github.jinahya.database.metadata.bind;
 
-import static com.github.jinahya.database.metadata.bind.MetadataContextTests.store;
 import static java.lang.invoke.MethodHandles.lookup;
 import java.sql.Connection;
 import java.sql.DatabaseMetaData;
 import static java.sql.DriverManager.getConnection;
-import java.sql.ResultSet;
-import java.util.ArrayList;
 import java.util.List;
 import org.slf4j.Logger;
 import static org.slf4j.LoggerFactory.getLogger;
@@ -71,143 +68,16 @@ public class EmbeddedPostgresqlTest {
     }
 
     // -------------------------------------------------------------------------
-    @Test(enabled = false)
-    public void printCatalogs() throws Exception {
-        try (Connection connection = getConnection(URL)) {
-            final DatabaseMetaData metadata = connection.getMetaData();
-            try (ResultSet catalogs = metadata.getCatalogs()) {
-                while (catalogs.next()) {
-                    final String tableCat = catalogs.getString("TABLE_CAT");
-                    logger.debug("tableCat: {}", tableCat);
-                }
-            }
-        }
-    }
-
-    @Test(enabled = false)
-    public void printSchemaNames() throws Exception {
-        try (Connection connection = getConnection(URL)) {
-            final DatabaseMetaData metadata = connection.getMetaData();
-            try (ResultSet schemas = metadata.getSchemas()) {
-                while (schemas.next()) {
-                    final String tableSchem = schemas.getString("TABLE_SCHEM");
-                    final String tableCatalog
-                            = schemas.getString("TABLE_CATALOG");
-                    logger.debug("tableSchem: {}, tableCatalog: {}", tableSchem,
-                                 tableCatalog);
-                }
-            }
-        }
-    }
-
-    @Test(enabled = false)
-    public void printSchemas() throws Exception {
-        try (Connection connection = getConnection(URL)) {
-            final DatabaseMetaData metadata = connection.getMetaData();
-            try (ResultSet schemas = metadata.getSchemas(null, null)) {
-                while (schemas.next()) {
-                    final String tableSchem = schemas.getString("TABLE_SCHEM");
-                    final String tableCatalog
-                            = schemas.getString("TABLE_CATALOG");
-                    logger.debug("tableSchem: {}, tableCatalog: {}", tableSchem,
-                                 tableCatalog);
-                }
-            }
-        }
-    }
-
-    @Test(enabled = false)
-    public void printTables() throws Exception {
-        try (Connection connection = getConnection(URL)) {
-            final DatabaseMetaData metadata = connection.getMetaData();
-            final List<String> tableSchems = new ArrayList<>();
-            try (ResultSet schemas = metadata.getSchemas(null, null)) {
-                while (schemas.next()) {
-                    final String tableSchem = schemas.getString("TABLE_SCHEM");
-                    final String tableCatalog
-                            = schemas.getString("TABLE_CATALOG");
-                    tableSchems.add(tableSchem);
-                }
-            }
-            final List<String> tableNames = new ArrayList<>();
-            for (final String tableSchem : tableSchems) {
-                logger.debug("-----------------------------------------------");
-                logger.debug("tableSchem: {}", tableSchem);
-                try (ResultSet tables
-                        = metadata.getTables(null, tableSchem, null, null)) {
-                    while (tables.next()) {
-                        final String tableName = tables.getString("TABLE_NAME");
-                        logger.debug("tableName: {}", tableName);
-                        tableNames.add(tableName);
-                    }
-                }
-            }
-            logger.debug("tableNames.size: {}", tableNames.size());
-            final List<String> columnNames = new ArrayList<>();
-            for (final String tableName : tableNames) {
-                columnNames.clear();
-                try (ResultSet columns
-                        = metadata.getColumns(null, null, tableName, null)) {
-                    while (columns.next()) {
-                        final String columnName
-                                = columns.getString("COLUMN_NAME");
-                        columnNames.add(columnName);
-                    }
-                }
-                logger.debug("columnNames.size of {}: {}", tableName,
-                             columnNames.size());
-            }
-        }
-    }
-
-    @Test
-    public void print() throws Exception {
-        try (Connection connection = getConnection(URL)) {
-            final DatabaseMetaData metadata = connection.getMetaData();
-            try (ResultSet ss = metadata.getSchemas(null, null)) {
-                while (ss.next()) {
-                    final String s = ss.getString("TABLE_SCHEM");
-                    logger.debug("-------------------------------------------");
-                    logger.debug("{} <<<<<<<<<<<<<<<", s);
-                    try (ResultSet tt = metadata.getTables(null, s, null, null)) {
-                        while (tt.next()) {
-                            final String t = tt.getString("TABLE_NAME");
-                            logger.debug("\t{}", t);
-                            try (ResultSet cc
-                                    = metadata.getColumns(null, s, t, null)) {
-                                while (cc.next()) {
-                                    final String c
-                                            = cc.getString("COLUMN_NAME");
-                                    logger.debug("\t\t{}", c);
-                                }
-                            }
-                        }
-                    }
-                }
-            }
-        }
-    }
-
     @Test(enabled = true)
-    public void storeCatalogs() throws Exception {
+    public void store() throws Exception {
         try (Connection connection = getConnection(URL)) {
-            DatabaseMetaData metadata = connection.getMetaData();
-            metadata = MetadataLogger.newProxy(metadata);
+            logger.debug("connection: {}", connection);
+            final DatabaseMetaData metadata = connection.getMetaData();
             final MetadataContext context = new MetadataContext(metadata);
-            context.suppress("function/functionColumns");
-            context.suppress("functionColumn/charOctetLength"); // unknown
-            context.suppress("functionColumn/functionCat"); // unknown
-            context.suppress("functionColumn/functionSchem"); // unknown
-            context.suppress("functionColumn/length"); // null
-            context.suppress("functionColumn/radix"); // null
-            context.suppress("functionColumn/remarks"); // null
-            context.suppress("functionColumn/scale"); // null
-            context.suppress("UDT/attributes"); // InvocationTargetException
-            context.suppress("UDT/superTypes"); // InvocationTargetException
-//            logger.debug("context.paths: {}", context.getPaths());
-            for (final Schema schema : context.getSchemas(null, null)) {
-                store(schema, "postgres.embedded.none");
-            }
+            context.suppress("schema/functions");
+            final List<Catalog> catalogs
+                    = MetadataContext.getCatalogs(context, true);
+            JaxbTests.store(Catalog.class, catalogs, "embedded.postresql");
         }
     }
 }

@@ -15,9 +15,7 @@
  */
 package com.github.jinahya.database.metadata.bind;
 
-import static com.github.jinahya.database.metadata.bind.Catalog.TABLE_CAT_NONE;
 import static com.github.jinahya.database.metadata.bind.Invokes.arguments;
-import static com.github.jinahya.database.metadata.bind.Schema.TABLE_SCHEM_NONE;
 import static java.lang.String.format;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
@@ -41,6 +39,7 @@ import static com.github.jinahya.database.metadata.bind.Utils.labels;
 import static com.github.jinahya.database.metadata.bind.Utils.path;
 import java.util.Arrays;
 import static java.util.Collections.emptyMap;
+import static java.util.Collections.unmodifiableMap;
 import org.codehaus.mojo.animal_sniffer.IgnoreJRERequirement;
 
 /**
@@ -54,8 +53,6 @@ public class MetadataContext {
     private static final Logger logger
             = getLogger(MetadataContext.class.getName());
 
-    // -------------------------------------------------------------------------
-//    public static final ThreadLocal<String> BIND = new ThreadLocal<String>();
     // -------------------------------------------------------------------------
     public static List<Schema> getSchemas(final MetadataContext context,
                                           final String catalog,
@@ -449,7 +446,7 @@ public class MetadataContext {
      * @param foreignCatalog the value for {@code foreignCatalog} parameter
      * @param foreignSchema the value for {@code foreignSchema} parameter
      * @param foreignTable the value for {@code foreignTable} parameter
-     * @return a list of {@link CrossReference}.
+     * @return a list of {@link CrossReference}s.
      * @throws SQLException if a database error occurs.
      */
     public List<CrossReference> getCrossReferences(
@@ -470,6 +467,20 @@ public class MetadataContext {
         return list;
     }
 
+    /**
+     * Invokes
+     * {@link DatabaseMetaData#getFunctionColumns(java.lang.String, java.lang.String, java.lang.String, java.lang.String)}
+     * with given arguments and returns bound information.
+     *
+     * @param catalog the value for {@code catalog} parameter
+     * @param schemaPattern the value for {@code schemaPattern} parameter
+     * @param functionNamePattern the value for {@code functionNamePattern}
+     * parameter
+     * @param columnNamePattern the value for {@code columnNamePattern}
+     * parameter
+     * @return a list of {@link FunctionColumn}s
+     * @throws SQLException if a database error occurs.
+     */
     public List<FunctionColumn> getFunctionColumns(
             final String catalog, final String schemaPattern,
             final String functionNamePattern, final String columnNamePattern)
@@ -512,6 +523,17 @@ public class MetadataContext {
         return list;
     }
 
+    /**
+     * Invokes
+     * {@link DatabaseMetaData#getExportedKeys(java.lang.String, java.lang.String, java.lang.String)}
+     * with given arguments and returns bound information.
+     *
+     * @param catalog the value for {@code catalog} parameter
+     * @param schema the value for {@code schema} parameter
+     * @param table the value for {@code table} parameter
+     * @return a list of {@link ExportedKey}s
+     * @throws SQLException if a database error occurs.
+     */
     public List<ExportedKey> getExportedKeys(
             final String catalog, final String schema, final String table)
             throws SQLException {
@@ -932,6 +954,13 @@ public class MetadataContext {
         return aliases;
     }
 
+    /**
+     * Add path aliases and returns this instance.
+     *
+     * @param path the path to alias.
+     * @param alias the alias value.
+     * @return this instance.
+     */
     private MetadataContext alias(final String path, final String alias) {
         final String previous = getAliases().put(path, alias);
         return this;
@@ -955,7 +984,7 @@ public class MetadataContext {
                         field.setAccessible(true);
                     }
                 }
-                bfields.put(klass, value);
+                bfields.put(klass, unmodifiableMap(value));
             } catch (final ReflectiveOperationException roe) {
                 logger.severe(format(
                         "failed to get fields from %s annotated with %s",
@@ -980,7 +1009,7 @@ public class MetadataContext {
                         field.setAccessible(true);
                     }
                 }
-                ifields.put(klass, value);
+                ifields.put(klass, unmodifiableMap(value));
             } catch (final ReflectiveOperationException roe) {
                 logger.severe(format(
                         "failed to get fields from %s annotated with %s",
