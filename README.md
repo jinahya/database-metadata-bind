@@ -106,7 +106,8 @@ name      |value                            |notes
 database                                                 |`server`    |`client` is the version of                           |`url` prefix            
 ---------------------------------------------------------|------------|-----------------------------------------------------|------------------------
 [MySQL](https://www.mysql.com/)                          |`mysql`     |[`mysql:mysql-connector-java`](https://goo.gl/BxuJ5a)          |`jdbc:mysql://...`      
-[PostgreSQL](https://www.postgresql.org/)                |`postgresql`|[`org.mariadb.jdbc:mariadb-java-client`](https://goo.gl/6yqVxq)|`jdbc:mariadb://...`    
+[MariaDB](https://mariadb.org/)                          |`mariadb`   |[`org.mariadb.jdbc:mariadb-java-client`](https://goo.gl/6yqVxq)|`jdbc:mariadb://...`    
+[PostgreSQL](https://www.postgresql.org/)                |`postgresql`|[`org.postgresql:postgresql`](https://goo.gl/b6s3u5)|`jdbc:postgresql://...`    
 [SQL Server](https://www.microsoft.com/en-us/sql-server/)|`sqlserver` |[`com.microsoft.sqlserver:mssql-jdbc`](https://goo.gl/cpK94Q)|`jdbc:sqlserver://...`  
 [Oracle](https://www.oracle.com/database/index.html)     |`oracle`    |[`com.oracle.jdbc:ojdbc8`](https://goo.gl/Qe1bPT)              |`jdbc:oracle:thin://...`
 
