@@ -77,7 +77,13 @@ public class MemoryH2Test extends MemoryTest {
                     "table/pseudoColumns"
             );
             final List<Catalog> catalogs = getCatalogs(context, true);
-            store(Catalog.class, catalogs, "memory.h2");
+            store(Catalog.class, catalogs, "memory.h2.catalogs");
+            store(ClientInfoProperty.class, context.getClientInfoProperties(),
+                  "memory.h2.clientInfoProperties");
+            store(TableType.class, context.getTableTypes(),
+                  "memory.h2.tableTypes");
+            store(TypeInfo.class, context.getTypeInfo(),
+                  "memory.h2.typeInfo");
         }
     }
 }

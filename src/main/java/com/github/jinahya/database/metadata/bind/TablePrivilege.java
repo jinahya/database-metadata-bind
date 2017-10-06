@@ -157,4 +157,8 @@ public class TablePrivilege implements Serializable {
     @Bind(label = "IS_GRANTABLE", nillable = true)
     @Nillable
     private String isGrantable;
+
+    // -------------------------------------------------------------------------
+    @Deprecated
+    private Table table;
 }

@@ -283,8 +283,10 @@
       <id>umlgraph</id>
       <properties>
         <additionalparam>
-          -all -hide java.*
-          -collapsible
+          <!---all-->
+          -hide java.*
+          -hide com.github.jinahya.database.metadata.bind.TableKey
+          -collapsible -horizontal
           -inferdep -inferdepinpackage -inferrel
           -outputencoding UTF-8
         </additionalparam>

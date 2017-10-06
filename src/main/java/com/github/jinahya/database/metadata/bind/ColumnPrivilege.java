@@ -173,4 +173,8 @@ public class ColumnPrivilege implements Serializable {
     @Bind(label = "IS_GRANTABLE", nillable = true)
     @Nillable
     private String isGrantable;
+
+    // -------------------------------------------------------------------------
+    @Deprecated
+    private Column column;
 }

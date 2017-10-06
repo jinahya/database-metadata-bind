@@ -52,13 +52,20 @@ public class MemorySqliteTest extends MemoryTest {
 
     // -------------------------------------------------------------------------
     @Test(enabled = true)
-    public void retrieve() throws Exception {
+    public void test() throws Exception {
         try (Connection connection = getConnection(CONNECTION_URL)) {
             final DatabaseMetaData database = connection.getMetaData();
             final MetadataContext context = new MetadataContext(database);
             context.suppress("schema/functions");
             final List<Catalog> catalogs = getCatalogs(context, true);
-            store(Catalog.class, catalogs, "memory.sqlite");
+            store(Catalog.class, catalogs, "memory.sqlite.catalogs");
+            store(ClientInfoProperty.class,
+                  context.getClientInfoProperties(),
+                  "memory.sqlite.clientInfoProperties");
+            store(TableType.class, context.getTableTypes(),
+                  "memory.sqlite.tableTypes");
+            store(TypeInfo.class, context.getTypeInfo(),
+                  "memory.sqlite.typeInfo");
         }
 //        final JAXBContext context = JAXBContext.newInstance(Metadata.class);
 //        final Marshaller marshaller = context.createMarshaller();

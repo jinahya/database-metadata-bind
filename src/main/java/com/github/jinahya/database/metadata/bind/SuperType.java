@@ -142,4 +142,7 @@ public class SuperType implements Serializable {
     @Label("SUPERTYPE_NAME")
     @Bind(label = "SUPERTYPE_NAME")
     private String supertypeName;
+
+    @Deprecated
+    private UDT udt;
 }

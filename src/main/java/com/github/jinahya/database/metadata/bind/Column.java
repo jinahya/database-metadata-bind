@@ -447,4 +447,8 @@ public class Column implements Serializable {
             }
     )
     private List<ColumnPrivilege> columnPrivileges;
+
+    // -------------------------------------------------------------------------
+    @Deprecated
+    private Table table;
 }

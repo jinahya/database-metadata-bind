@@ -95,7 +95,13 @@ public class MemoryDerbyTest extends MemoryTest {
             DatabaseMetaData metadata = connection.getMetaData();
             final MetadataContext context = new MetadataContext(metadata);
             final List<Catalog> catalogs = getCatalogs(context, true);
-            store(Catalog.class, catalogs, "memory.derby");
+            store(Catalog.class, catalogs, "memory.derby.catalogs");
+            store(ClientInfoProperty.class, context.getClientInfoProperties(),
+                  "memory.derby.clientInfoProperties");
+            store(TableType.class, context.getTableTypes(),
+                  "memory.derby.tableTypes");
+            store(TypeInfo.class, context.getTypeInfo(),
+                  "memory.derby.typeInfo");
         }
     }
 

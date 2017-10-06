@@ -30,4 +30,7 @@ public class ImportedKey extends TableKey {
     private static final long serialVersionUID = 1965229912934042881L;
 
     // -------------------------------------------------------------------------
+    // -------------------------------------------------------------------------
+    @Deprecated
+    private Table table;
 }

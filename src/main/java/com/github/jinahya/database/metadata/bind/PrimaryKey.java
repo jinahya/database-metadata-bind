@@ -16,7 +16,6 @@
 package com.github.jinahya.database.metadata.bind;
 
 import java.io.Serializable;
-import java.sql.DatabaseMetaData;
 import java.util.logging.Logger;
 import static java.util.logging.Logger.getLogger;
 import javax.xml.bind.annotation.XmlAttribute;
@@ -130,4 +129,8 @@ public class PrimaryKey implements Serializable {
     @Bind(label = "PK_NAME", nillable = true)
     @Nillable
     private String pkName;
+
+    // -------------------------------------------------------------------------
+    @Deprecated
+    private Table table;
 }

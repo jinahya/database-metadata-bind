@@ -110,4 +110,8 @@ public class SuperTable implements Serializable {
     @Label("SUPERTABLE_NAME")
     @Bind(label = "SUPERTABLE_NAME")
     private String supertableName;
+
+    // -------------------------------------------------------------------------
+    @Deprecated
+    private Table table;
 }

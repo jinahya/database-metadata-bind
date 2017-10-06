@@ -70,7 +70,13 @@ public class ExternalTest {
             }
             final List<Catalog> catalogs = getCatalogs(context, true);
             logger.debug("catalogs: {}", catalogs);
-            store(Catalog.class, catalogs, "external");
+            store(Catalog.class, catalogs, "external.catalogs");
+            store(ClientInfoProperty.class, context.getClientInfoProperties(),
+                  "external.clientInfoProperties");
+            store(TableType.class, context.getTableTypes(),
+                  "external.tableTypes");
+            store(TypeInfo.class, context.getTypeInfo(), "external.typeInfo");
+
         }
     }
 }

@@ -311,4 +311,8 @@ public class FunctionColumn implements Serializable {
     @Label("SPECIFIC_NAME")
     @Bind(label = "SPECIFIC_NAME")
     private String specificName;
+    
+    // -------------------------------------------------------------------------
+    @Deprecated
+    private Function function;
 }

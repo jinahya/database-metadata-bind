@@ -329,4 +329,7 @@ public class Attribute implements Serializable {
     @Label("SOURCE_DATA_TYPE")
     @Bind(label = "SOURCE_DATA_TYPE", nillable = true)
     private Short sourceDataType;
+
+    @Deprecated
+    private UDT udt;
 }

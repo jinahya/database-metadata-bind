@@ -168,4 +168,8 @@ public class Schema implements Serializable {//extends AbstractTableDomain {
             }
     )
     private List<UDT> UDTs;
+
+    // -------------------------------------------------------------------------
+    @Deprecated
+    private Catalog catalog;
 }

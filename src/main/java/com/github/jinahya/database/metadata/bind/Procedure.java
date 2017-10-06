@@ -163,4 +163,8 @@ public class Procedure implements Serializable {
             }
     )
     private List<ProcedureColumn> procedureColumns;
+
+    // -------------------------------------------------------------------------
+    @Deprecated
+    private Schema schema;
 }

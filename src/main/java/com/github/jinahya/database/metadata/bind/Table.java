@@ -399,4 +399,8 @@ public class Table implements Serializable {
             }
     )
     private List<VersionColumn> versionColumns;
+
+    // -------------------------------------------------------------------------
+    @Deprecated
+    private Schema schema;
 }

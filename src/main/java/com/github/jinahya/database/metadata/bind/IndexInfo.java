@@ -254,4 +254,8 @@ public class IndexInfo implements Serializable {
     @Bind(label = "FILTER_CONDITION", nillable = true)
     @Nillable
     private String filterCondition;
+
+    // -------------------------------------------------------------------------
+    @Deprecated
+    private Table table;
 }

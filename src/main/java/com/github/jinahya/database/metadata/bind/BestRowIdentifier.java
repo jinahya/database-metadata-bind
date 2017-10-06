@@ -165,4 +165,8 @@ public class BestRowIdentifier implements Serializable {
     @Label("PSEUDO_COLUMN")
     @Bind(label = "PSEUDO_COLUMN")
     private short pseudoColumn;
+    
+    // -------------------------------------------------------------------------
+    @Deprecated
+    private Table table;
 }

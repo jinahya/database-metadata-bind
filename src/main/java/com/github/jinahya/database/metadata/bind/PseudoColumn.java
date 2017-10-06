@@ -234,4 +234,8 @@ public class PseudoColumn implements Serializable {
     @Label("IS_NULLABLE")
     @Bind(label = "IS_NULLABLE")
     private String isNullable;
+
+    // -------------------------------------------------------------------------
+    @Deprecated
+    private Table table;
 }

@@ -168,4 +168,8 @@ public class Function implements Serializable {
             }
     )
     private List<FunctionColumn> functionColumns;
+
+    // -------------------------------------------------------------------------
+    @Deprecated
+    private Schema schema;
 }

@@ -27,7 +27,6 @@ import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 import static java.sql.DriverManager.getConnection;
 import java.util.List;
-import static jdk.nashorn.internal.codegen.OptimisticTypesPersistence.store;
 
 /**
  *
@@ -63,7 +62,7 @@ public class MemoryHsqlTest extends MemoryTest {
 
     // -------------------------------------------------------------------------
     @Test(enabled = true)
-    public void marshalCatalogs() throws Exception {
+    public void test() throws Exception {
         try (Connection connection = getConnection(CONNECTION_URL)) {
             final DatabaseMetaData database = connection.getMetaData();
             final MetadataContext context = new MetadataContext(database);
@@ -71,7 +70,14 @@ public class MemoryHsqlTest extends MemoryTest {
                     "table/pseudoColumns"
             );
             final List<Catalog> catalogs = getCatalogs(context, true);
-            store(Catalog.class, catalogs, "memory.hsql");
+            store(Catalog.class, catalogs, "memory.hsql.catalogs");
+            store(ClientInfoProperty.class,
+                  context.getClientInfoProperties(),
+                  "memory.hsql.clientInfoProperties");
+            store(TableType.class, context.getTableTypes(),
+                  "memory.hsql.tableTypes");
+            store(TypeInfo.class, context.getTypeInfo(),
+                  "memory.hsql.typeInfo");
         }
     }
 }

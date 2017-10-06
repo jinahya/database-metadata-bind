@@ -194,4 +194,8 @@ public class UDT implements Serializable {
             }
     )
     private List<SuperType> superTypes;
+
+    // -------------------------------------------------------------------------
+    @Deprecated
+    private Schema schema;
 }

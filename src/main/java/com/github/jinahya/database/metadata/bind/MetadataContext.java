@@ -370,10 +370,12 @@ public class MetadataContext {
         final List<ClientInfoProperty> list
                 = new ArrayList<ClientInfoProperty>();
         final ResultSet results = metadata.getClientInfoProperties();
-        try {
-            bind(results, ClientInfoProperty.class, list);
-        } finally {
-            results.close();
+        if (results != null) {
+            try {
+                bind(results, ClientInfoProperty.class, list);
+            } finally {
+                results.close();
+            }
         }
         return list;
     }

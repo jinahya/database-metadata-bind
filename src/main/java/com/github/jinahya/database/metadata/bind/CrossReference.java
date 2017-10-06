@@ -267,4 +267,11 @@ public class CrossReference implements Serializable {
     @Label("DEFERRABILITY")
     @Bind(label = "DEFERRABILITY")
     private short deferrability;
+
+    // -------------------------------------------------------------------------
+    @Deprecated
+    private Table parentTable;
+
+    @Deprecated
+    private Table foreighTable;
 }
