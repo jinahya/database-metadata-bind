@@ -51,7 +51,7 @@ Test cases for in-memory databases such as [Derby](https://db.apache.org/derby/)
 Tests against predefined embeddable databases.
 
 ```sh
-$ mvn -Pexternal-<server> \
+$ mvn -Pembedded-<server> \
       -Dclient="x.y.z" \
       -Durl="jdbc:...://..." \
       -Duser="some" \
