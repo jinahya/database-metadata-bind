@@ -72,7 +72,7 @@ name      |value                            |notes
 database                                 |`server` is the version of                                            |`client` is the version of                                                         |test prefix            
 -----------------------------------------|----------------------------------------------------------------------|----------------------------------------------------------------------------------|------------------------
 [MariaDB](https://mariadb.org/)          |[`ch.vorburger.mariaDB4j:mariaDB4j`](https://goo.gl/8MmvRc)           |[`org.mariadb.jdbc:mariadb-java-client`](https://goo.gl/nRbU1J)|`Mariadb`      
-[PostgreSQL](https://www.postgresql.org/)|[`ru.yandex.qatools.embed:postgresql-embedded`](https://goo.gl/WoH4K9)|[`org.postgresql:postgresql`](https://goo.gl/JgXCaL)       |`Postgres`    
+[PostgreSQL](https://www.postgresql.org/)|[`ru.yandex.qatools.embed:postgresql-embedded`](https://goo.gl/WoH4K9)|[`org.postgresql:postgresql`](https://goo.gl/JgXCaL)       |`Postgresql`
 
 ### External
 
