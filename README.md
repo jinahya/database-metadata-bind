@@ -48,7 +48,34 @@ Test cases for in-memory databases such as [Derby](https://db.apache.org/derby/)
 
 ### Embedded
 
-N/A
+Tests against predefined embeddable databases.
+
+```sh
+$ mvn -Pexternal-<server> \
+      -Dclient="x.y.z" \
+      -Durl="jdbc:...://..." \
+      -Duser="some" \
+      -Dpassword="some" \
+      -Dpaths="of/some,other/others,..." \
+      -Dtest=<Server>Test \
+      test
+$ cat target/embedded.<server>.xml
+```
+
+#### Properties
+
+name      |value                            |notes
+----------|---------------------------------|-----------
+`server`  |target database server           |see below
+`client`  |version of target jdbc client    |see below
+`paths`   |comma-separated suppression paths|optional
+
+#### Servers, Clients and Tests
+
+database                                                 |`server` is the version of    |`client` is the version of                                 |test prefix            
+---------------------------------------------------------|------------|---------------------------------------------------------------|------------------------
+[MariaDB](https://mariadb.org/)                          |[`ch.vorburger.mariaDB4j:mariaDB4j`](https://goo.gl/8MmvRc)     |[`ch.vorburger.mariaDB4j:mariaDB4j`](https://goo.gl/nRbU1J)          |`Mariadb`      
+[PostgreSQL](https://www.postgresql.org/)                 |[`ru.yandex.qatools.embed:postgresql-embedded`](https://goo.gl/WoH4K9)|[`org.postgresql:postgresql`](https://goo.gl/JgXCaL)|`Postgres`    
 
 ### External
 
