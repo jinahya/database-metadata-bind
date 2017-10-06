@@ -48,7 +48,7 @@ Test cases for in-memory databases such as [Derby](https://db.apache.org/derby/)
 
 ### Embedded
 
-Tests against predefined embeddable databases.
+Tests against predefined embeddable databases. Note that tests for embeddable databases are in experimental state.
 
 ```sh
 $ mvn -Pembedded-<server> \
