@@ -53,9 +53,6 @@ Tests against predefined embeddable databases.
 ```sh
 $ mvn -Pembedded-<server> \
       -Dclient="x.y.z" \
-      -Durl="jdbc:...://..." \
-      -Duser="some" \
-      -Dpassword="some" \
       -Dpaths="of/some,other/others,..." \
       -Dtest=<Server>Test \
       test
@@ -72,10 +69,10 @@ name      |value                            |notes
 
 #### Servers, Clients and Tests
 
-database                                                 |`server` is the version of    |`client` is the version of                                 |test prefix            
----------------------------------------------------------|------------|---------------------------------------------------------------|------------------------
-[MariaDB](https://mariadb.org/)                          |[`ch.vorburger.mariaDB4j:mariaDB4j`](https://goo.gl/8MmvRc)     |[`ch.vorburger.mariaDB4j:mariaDB4j`](https://goo.gl/nRbU1J)          |`Mariadb`      
-[PostgreSQL](https://www.postgresql.org/)                 |[`ru.yandex.qatools.embed:postgresql-embedded`](https://goo.gl/WoH4K9)|[`org.postgresql:postgresql`](https://goo.gl/JgXCaL)|`Postgres`    
+database                                 |`server` is the version of                                            |`client` is the version of                                 |test prefix            
+------------------------- ---------------|----------------------------------------------------------------------|----------------------------------------------------------------------------------|------------------------
+[MariaDB](https://mariadb.org/)          |[`ch.vorburger.mariaDB4j:mariaDB4j`](https://goo.gl/8MmvRc)           |[`ch.vorburger.mariaDB4j:mariaDB4j`](https://goo.gl/nRbU1J)|`Mariadb`      
+[PostgreSQL](https://www.postgresql.org/)|[`ru.yandex.qatools.embed:postgresql-embedded`](https://goo.gl/WoH4K9)|[`org.postgresql:postgresql`](https://goo.gl/JgXCaL)       |`Postgres`    
 
 ### External
 
