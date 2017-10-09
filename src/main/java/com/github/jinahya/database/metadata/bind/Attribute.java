@@ -16,6 +16,7 @@
 package com.github.jinahya.database.metadata.bind;
 
 import java.io.Serializable;
+import java.sql.DatabaseMetaData;
 import java.util.logging.Logger;
 import static java.util.logging.Logger.getLogger;
 import javax.xml.bind.annotation.XmlAttribute;
@@ -43,6 +44,50 @@ public class Attribute implements Serializable {
 
     // -------------------------------------------------------------------------
     private static final Logger logger = getLogger(Attribute.class.getName());
+
+    // -------------------------------------------------------------------------
+    /**
+     * Constants for nullabilities of an attribute.
+     */
+    public static enum Nullable {
+
+        // ---------------------------------------------------------------------
+        /**
+         * Constant for {@link DatabaseMetaData#attributeNoNulls}.
+         */
+        NO_NULLS(DatabaseMetaData.attributeNoNulls),
+        /**
+         * Constant for {@link DatabaseMetaData#attributeNullable}.
+         */
+        NULLABLE(DatabaseMetaData.attributeNullable),
+        /**
+         * Constant for {@link DatabaseMetaData#attributeNullableUnknown}.
+         */
+        NULLABLE_UNKNOWN(DatabaseMetaData.attributeNullableUnknown);
+
+        // ---------------------------------------------------------------------
+        public static Nullable valueOf(final int rawValue) {
+            for (final Nullable value : values()) {
+                if (value.rawValue == rawValue) {
+                    return value;
+                }
+            }
+            throw new IllegalArgumentException("no value for " + rawValue);
+        }
+
+        // ---------------------------------------------------------------------
+        private Nullable(final int rawValue) {
+            this.rawValue = rawValue;
+        }
+
+        // ---------------------------------------------------------------------
+        public int getRawValue() {
+            return rawValue;
+        }
+
+        // ---------------------------------------------------------------------
+        private final int rawValue;
+    }
 
     // -------------------------------------------------------------------------
     @Override

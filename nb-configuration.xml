@@ -41,5 +41,7 @@
         <org-netbeans-modules-editor-indent.text.x-java.CodeStyle.project.text-limit-width>80</org-netbeans-modules-editor-indent.text.x-java.CodeStyle.project.text-limit-width>
         <org-netbeans-modules-editor-indent.text.x-java.CodeStyle.project.expand-tabs>true</org-netbeans-modules-editor-indent.text.x-java.CodeStyle.project.expand-tabs>
         <org-netbeans-modules-editor-indent.text.x-java.CodeStyle.project.blankLinesBeforeFields>1</org-netbeans-modules-editor-indent.text.x-java.CodeStyle.project.blankLinesBeforeFields>
+        <org-netbeans-modules-editor-indent.text.x-java.CodeStyle.project.blankLinesAfterEnumHeader>1</org-netbeans-modules-editor-indent.text.x-java.CodeStyle.project.blankLinesAfterEnumHeader>
+        <netbeans.checkstyle.format>true</netbeans.checkstyle.format>
     </properties>
 </project-shared-configuration>

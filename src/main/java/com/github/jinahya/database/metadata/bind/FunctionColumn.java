@@ -46,6 +46,137 @@ public class FunctionColumn implements Serializable {
             = getLogger(FunctionColumn.class.getName());
 
     // -------------------------------------------------------------------------
+    /**
+     * Constants for column types of function columns.
+     *
+     * @see DatabaseMetaData#getFunctionColumns(java.lang.String,
+     * java.lang.String, java.lang.String, java.lang.String)
+     */
+    public static enum ColumnType {
+
+        /**
+         * Constant for {@link DatabaseMetaData#functionColumnUnknown}.
+         */
+        UNKNOWN(DatabaseMetaData.functionColumnUnknown), // 0
+        /**
+         * Constants for {@link DatabaseMetaData#functionColumnIn}.
+         */
+        IN(DatabaseMetaData.functionColumnIn), // 1
+        /**
+         * Constants for {@link DatabaseMetaData#functionColumnInOut}.
+         */
+        IN_OUT(DatabaseMetaData.functionColumnInOut), // 2
+        /**
+         * Constants for {@link DatabaseMetaData#functionColumnOut}.
+         */
+        OUT(DatabaseMetaData.functionColumnOut), // 3
+        /**
+         * Constant for {@link DatabaseMetaData#functionReturn}.
+         */
+        // https://stackoverflow.com/a/46647586/330457
+        RETURN(DatabaseMetaData.functionReturn), // 4
+        /**
+         * Constants for {@link DatabaseMetaData#functionColumnResult}.
+         */
+        RESULT(DatabaseMetaData.functionColumnResult); // 5
+
+        // ---------------------------------------------------------------------
+        /**
+         * Returns the constant whose raw value equals to given. An instance of
+         * {@link IllegalArgumentException} will be thrown if no constant
+         * matches.
+         *
+         * @param rawValue the raw value
+         * @return the constant whose raw value equals to given.
+         */
+        public static ColumnType valueOf(final int rawValue) {
+            for (final ColumnType value : values()) {
+                if (value.rawValue == rawValue) {
+                    return value;
+                }
+            }
+            throw new IllegalArgumentException("no constant for " + rawValue);
+        }
+
+        // ---------------------------------------------------------------------
+        private ColumnType(final int rawValue) {
+            this.rawValue = rawValue;
+        }
+
+        // ---------------------------------------------------------------------
+        /**
+         * Returns the raw value of this constant.
+         *
+         * @return the raw value of this constant.
+         */
+        public int getRawValue() {
+            return rawValue;
+        }
+
+        // ---------------------------------------------------------------------
+        private final int rawValue;
+    }
+
+    /**
+     * Constants for nullabilities of columns.
+     *
+     * @see DatabaseMetaData#getFunctionColumns(java.lang.String,
+     * java.lang.String, java.lang.String, java.lang.String)
+     */
+    public static enum Nullable {
+
+        /**
+         * Constant for {@link DatabaseMetaData#functionNoNulls}.
+         */
+        NO_NULLS(DatabaseMetaData.functionNoNulls),
+        /**
+         * Constant for {@link DatabaseMetaData#functionNullable}.
+         */
+        NULLABLE(DatabaseMetaData.functionNullable),
+        /**
+         * Constant for {@link DatabaseMetaData#functionNullableUnknown}.
+         */
+        NULLABLE_UNKNOWN(DatabaseMetaData.functionNullableUnknown);
+
+        // ---------------------------------------------------------------------
+        /**
+         * Returns the constant whose raw value equals to given. An instance of
+         * {@link IllegalArgumentException} will be throw if no constants
+         * matches.
+         *
+         * @param rawValue the value value
+         * @return the constant whose raw value equals to given.
+         */
+        public static Nullable valueOf(final int rawValue) {
+            for (final Nullable value : values()) {
+                if (value.rawValue == rawValue) {
+                    return value;
+                }
+            }
+            throw new IllegalArgumentException("no constant for " + rawValue);
+        }
+
+        // ---------------------------------------------------------------------
+        private Nullable(final int rawValue) {
+            this.rawValue = rawValue;
+        }
+
+        // ---------------------------------------------------------------------
+        /**
+         * Returns the raw value of this constant.
+         *
+         * @return the raw value of this constant.
+         */
+        public int getRawValue() {
+            return rawValue;
+        }
+
+        // ---------------------------------------------------------------------
+        private final int rawValue;
+    }
+
+    // -------------------------------------------------------------------------
+    // -------------------------------------------------------------------------
     @Override
     public String toString() {
         return super.toString() + "{"
@@ -311,7 +442,7 @@ public class FunctionColumn implements Serializable {
     @Label("SPECIFIC_NAME")
     @Bind(label = "SPECIFIC_NAME")
     private String specificName;
-    
+
     // -------------------------------------------------------------------------
     @Deprecated
     private Function function;

@@ -16,12 +16,13 @@
 package com.github.jinahya.database.metadata.bind;
 
 import java.io.Serializable;
+import java.sql.DatabaseMetaData;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlType;
 
 /**
- * An entity class for best row identifiers of tables.
+ * Represents best row identifiers of tables.
  *
  * @author Jin Kwon &lt;jinahya_at_gmail.com&gt;
  * @see MetadataContext#getBestRowIdentifier(java.lang.String, java.lang.String,
@@ -35,6 +36,120 @@ import javax.xml.bind.annotation.XmlType;
 public class BestRowIdentifier implements Serializable {
 
     private static final long serialVersionUID = -6733770602373723371L;
+
+    // -------------------------------------------------------------------------
+    /**
+     * Constants for the value of {@code PSEUDO_COLUMN} of best row identifies
+     * of a table.
+     *
+     * @see DatabaseMetaData#getBestRowIdentifier(java.lang.String,
+     * java.lang.String, java.lang.String, int, boolean)
+     */
+    public static enum PseudoColumn {
+
+        /**
+         * Constant for {@link DatabaseMetaData#bestRowUnknown}.
+         */
+        UNKNWON(DatabaseMetaData.bestRowUnknown),
+        /**
+         * Constant for {@link DatabaseMetaData#bestRowNotPseudo}.
+         */
+        NOT_PSEUDO(DatabaseMetaData.bestRowNotPseudo),
+        /**
+         * Constant for {@link DatabaseMetaData#bestRowPseudo}.
+         */
+        PSEUDO(DatabaseMetaData.bestRowPseudo);
+
+        // ---------------------------------------------------------------------
+        /**
+         * Returns the constant whose raw value equals to given.
+         *
+         * @param rawValue the raw value
+         * @return the constant whose raw value equals to given.
+         */
+        public static PseudoColumn valueOf(final int rawValue) {
+            for (PseudoColumn value : values()) {
+                if (value.rawValue == rawValue) {
+                    return value;
+                }
+            }
+            throw new IllegalArgumentException("no value for " + rawValue);
+        }
+
+        // ---------------------------------------------------------------------
+        private PseudoColumn(final int rawValue) {
+            this.rawValue = rawValue;
+        }
+
+        // ---------------------------------------------------------------------
+        /**
+         * Returns the raw value of this constant.
+         *
+         * @return the raw value of this constant.
+         */
+        public int getRawValue() {
+            return rawValue;
+        }
+
+        // ---------------------------------------------------------------------
+        private final int rawValue;
+    }
+
+    /**
+     * Constants for best row identifiers' scope.
+     *
+     * @see DatabaseMetaData#getBestRowIdentifier(java.lang.String,
+     * java.lang.String, java.lang.String, int, boolean)
+     */
+    public static enum Scope {
+
+        /**
+         * Constant for {@link DatabaseMetaData#bestRowUnknown}.
+         */
+        TEMPORARY(DatabaseMetaData.bestRowTemporary),
+        /**
+         * Constant for {@link DatabaseMetaData#bestRowNotPseudo}.
+         */
+        TRANSACTION(DatabaseMetaData.bestRowTransaction),
+        /**
+         * Constant for {@link DatabaseMetaData#bestRowPseudo}.
+         */
+        SESSION(DatabaseMetaData.bestRowSession);
+
+        // ---------------------------------------------------------------------
+        /**
+         * Returns the constant whose raw value equals to given.
+         *
+         * @param rawValue the raw value to compare
+         * @return the constant whose raw value equals to given.
+         */
+        public static Scope valueOf(final int rawValue) {
+            for (Scope value : values()) {
+                if (value.rawValue == rawValue) {
+                    return value;
+                }
+            }
+            throw new IllegalArgumentException("no value for " + rawValue);
+        }
+
+        // ---------------------------------------------------------------------
+        private Scope(final int value) {
+            this.rawValue = value;
+        }
+
+        // ---------------------------------------------------------------------
+        /**
+         * Returns the raw value of this constant.
+         *
+         * @return the raw value of this constant.
+         */
+        public int getRawValue() {
+            return rawValue;
+        }
+
+        // ---------------------------------------------------------------------
+        private final int rawValue;
+    }
 
     // -------------------------------------------------------------------------
     @Override
@@ -165,7 +280,7 @@ public class BestRowIdentifier implements Serializable {
     @Label("PSEUDO_COLUMN")
     @Bind(label = "PSEUDO_COLUMN")
     private short pseudoColumn;
-    
+
     // -------------------------------------------------------------------------
     @Deprecated
     private Table table;

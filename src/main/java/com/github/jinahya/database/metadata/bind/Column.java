@@ -16,6 +16,7 @@
 package com.github.jinahya.database.metadata.bind;
 
 import java.io.Serializable;
+import java.sql.DatabaseMetaData;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Logger;
@@ -48,6 +49,66 @@ public class Column implements Serializable {
     // -------------------------------------------------------------------------
     private static final Logger logger = getLogger(Column.class.getName());
 
+    // -------------------------------------------------------------------------
+    /**
+     * Constants for nullabilities of table columns.
+     *
+     * @see DatabaseMetaData#getColumns(java.lang.String, java.lang.String,
+     * java.lang.String, java.lang.String)
+     */
+    public static enum Nullable {
+
+        /**
+         * Constant for {@link DatabaseMetaData#columnNoNulls}.
+         */
+        NO_NULLS(DatabaseMetaData.columnNoNulls),
+        /**
+         * Constant for {@link DatabaseMetaData#columnNullable}.
+         */
+        NULLABLE(DatabaseMetaData.columnNullable),
+        /**
+         * Constant for {@link DatabaseMetaData#columnNullableUnknown}.
+         */
+        NULLABLE_UNKNOWN(DatabaseMetaData.columnNullableUnknown);
+
+        // ---------------------------------------------------------------------
+        /**
+         * Returns the constant whose raw value equals to given. An instance of
+         * {@link IllegalArgumentException} will be throw if no constants
+         * matches.
+         *
+         * @param rawValue the value value
+         * @return the constant whose raw value equals to given.
+         */
+        public static Nullable valueOf(final int rawValue) {
+            for (final Nullable value : values()) {
+                if (value.rawValue == rawValue) {
+                    return value;
+                }
+            }
+            throw new IllegalArgumentException("no constant for " + rawValue);
+        }
+
+        // ---------------------------------------------------------------------
+        private Nullable(final int rawValue) {
+            this.rawValue = rawValue;
+        }
+
+        // ---------------------------------------------------------------------
+        /**
+         * Returns the raw value of this constant.
+         *
+         * @return the raw value of this constant.
+         */
+        public int getRawValue() {
+            return rawValue;
+        }
+
+        // ---------------------------------------------------------------------
+        private final int rawValue;
+    }
+
+    // -------------------------------------------------------------------------
     // -------------------------------------------------------------------------
     @Override
     public String toString() {

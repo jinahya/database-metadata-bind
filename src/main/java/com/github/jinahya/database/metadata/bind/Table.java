@@ -164,6 +164,11 @@ public class Table implements Serializable {
     }
 
     // ----------------------------------------------------------------- columns
+    /**
+     * Returns columns of this table.
+     *
+     * @return a list of columns of this table
+     */
     public List<Column> getColumns() {
         if (columns == null) {
             columns = new ArrayList<Column>();
@@ -172,6 +177,11 @@ public class Table implements Serializable {
     }
 
     // ------------------------------------------------------------ exportedKeys
+    /**
+     * Returns exported keys of this table.
+     *
+     * @return a list of exported keys.
+     */
     public List<ExportedKey> getExportedKeys() {
         if (exportedKeys == null) {
             exportedKeys = new ArrayList<ExportedKey>();
@@ -180,6 +190,11 @@ public class Table implements Serializable {
     }
 
     // ------------------------------------------------------------ importedKeys
+    /**
+     * Returns imported keys of this table.
+     *
+     * @return a list of imported keys of this table.
+     */
     public List<ImportedKey> getImportedKeys() {
         if (importedKeys == null) {
             importedKeys = new ArrayList<ImportedKey>();
@@ -188,6 +203,11 @@ public class Table implements Serializable {
     }
 
     // --------------------------------------------------------------- indexInfo
+    /**
+     * Returns index info of this table.
+     *
+     * @return a list of index info of this table.
+     */
     public List<IndexInfo> getIndexInfo() {
         if (indexInfo == null) {
             indexInfo = new ArrayList<IndexInfo>();
@@ -196,6 +216,11 @@ public class Table implements Serializable {
     }
 
     // ------------------------------------------------------------- primaryKeys
+    /**
+     * Returns primary keys of this table.
+     *
+     * @return a list of primary keys of this table.
+     */
     public List<PrimaryKey> getPrimaryKeys() {
         if (primaryKeys == null) {
             primaryKeys = new ArrayList<PrimaryKey>();
@@ -204,6 +229,11 @@ public class Table implements Serializable {
     }
 
     // ----------------------------------------------------------- pseudoColumns
+    /**
+     * Returns pseudo columns of this table.
+     *
+     * @return a list of pseudo columns of this table.
+     */
     public List<PseudoColumn> getPseudoColumns() {
         if (pseudoColumns == null) {
             pseudoColumns = new ArrayList<PseudoColumn>();
@@ -212,6 +242,11 @@ public class Table implements Serializable {
     }
 
     // ------------------------------------------------------------- superTables
+    /**
+     * Returns super tables of this table.
+     *
+     * @return a list of super tables of this table.
+     */
     public List<SuperTable> getSuperTables() {
         if (superTables == null) {
             superTables = new ArrayList<SuperTable>();
@@ -220,6 +255,11 @@ public class Table implements Serializable {
     }
 
     // --------------------------------------------------------- tablePrivileges
+    /**
+     * Returns table privileges of this table.
+     *
+     * @return a list of table privileges of this table.
+     */
     public List<TablePrivilege> getTablePrivileges() {
         if (tablePrivileges == null) {
             tablePrivileges = new ArrayList<TablePrivilege>();
@@ -228,6 +268,11 @@ public class Table implements Serializable {
     }
 
     // ---------------------------------------------------------- versionColumns
+    /**
+     * Returns version columns of this table.
+     *
+     * @return a list of version columns of this table.
+     */
     public List<VersionColumn> getVersionColumns() {
         if (versionColumns == null) {
             versionColumns = new ArrayList<VersionColumn>();
@@ -295,6 +340,7 @@ public class Table implements Serializable {
     @Nillable
     private String refGeneration;
 
+    // -------------------------------------------------------------------------
     @XmlElementRef
     @Invoke(name = "getBestRowIdentifier",
             types = {
