@@ -259,9 +259,10 @@ public class Table implements Serializable {
     @Bind(label = "TABLE_TYPE")
     private String tableType;
 
-    @XmlElement
     @Label("REMARKS")
-    @Bind(label = "REMARKS")
+    @Nillable
+    @XmlElement(nillable = true)
+    @Bind(label = "REMARKS", nillable = true)
     private String remarks;
 
     @XmlElement(nillable = true)
