@@ -16,6 +16,10 @@
 package com.github.jinahya.database.metadata.bind;
 
 import java.io.Serializable;
+import java.sql.DatabaseMetaData;
+import static java.sql.DatabaseMetaData.versionColumnNotPseudo;
+import static java.sql.DatabaseMetaData.versionColumnPseudo;
+import static java.sql.DatabaseMetaData.versionColumnUnknown;
 import java.util.logging.Logger;
 import static java.util.logging.Logger.getLogger;
 import javax.xml.bind.annotation.XmlElement;
@@ -23,10 +27,11 @@ import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlType;
 
 /**
- * An entity class for binding the result of
- * {@link java.sql.DatabaseMetaData#getVersionColumns(java.lang.String, java.lang.String, java.lang.String)}.
+ * An entity class for version columns.
  *
  * @author Jin Kwon &lt;jinahya_at_gmail.com&gt;
+ * @see MetadataContext#getVersionColumns(java.lang.String, java.lang.String,
+ * java.lang.String)
  */
 @XmlRootElement
 @XmlType(propOrder = {
@@ -40,6 +45,76 @@ public class VersionColumn implements Serializable {
     // -------------------------------------------------------------------------
     private static final Logger logger
             = getLogger(VersionColumn.class.getName());
+
+    // -------------------------------------------------------------------------
+    /**
+     * Constants for pseudo column values of version columns.
+     *
+     * @see DatabaseMetaData#getVersionColumns(java.lang.String,
+     * java.lang.String, java.lang.String)
+     */
+    public static enum PseudoColumn {
+
+        /**
+         * Constant for {@link DatabaseMetaData#versionColumnUnknown} whose
+         * value is {@value DatabaseMetaData#versionColumnUnknown}.
+         */
+        NO_NULLS(versionColumnUnknown),
+        /**
+         * Constant for {@link DatabaseMetaData#versionColumnNotPseudo} whose
+         * value is {@value DatabaseMetaData#versionColumnNotPseudo}.
+         */
+        NULLABLE(versionColumnNotPseudo),
+        /**
+         * Constant for {@link DatabaseMetaData#versionColumnPseudo} whose value
+         * is {@value DatabaseMetaData#versionColumnPseudo}.
+         */
+        NULLABLE_UNKNOWN(versionColumnPseudo);
+
+        // ---------------------------------------------------------------------
+        /**
+         * Returns the constant whose raw value equals to given. An instance of
+         * {@link IllegalArgumentException} will be throw if no constants
+         * matches.
+         *
+         * @param rawValue the value value
+         * @return the constant whose raw value equals to given.
+         */
+        public static PseudoColumn valueOf(final int rawValue) {
+            for (final PseudoColumn value : values()) {
+                if (value.rawValue == rawValue) {
+                    return value;
+                }
+            }
+            throw new IllegalArgumentException("no constant for " + rawValue);
+        }
+
+        // ---------------------------------------------------------------------
+        private PseudoColumn(final int rawValue) {
+            this.rawValue = rawValue;
+        }
+
+        // ---------------------------------------------------------------------
+        /**
+         * Returns the raw value of this constant.
+         *
+         * @return the raw value of this constant.
+         */
+        public int getRawValue() {
+            return rawValue;
+        }
+
+        // ---------------------------------------------------------------------
+        private final int rawValue;
+    }
+
+    // -------------------------------------------------------------------------
+    /**
+     * Creates a new instance.
+     */
+    public VersionColumn() {
+        super();
+    }
 
     // -------------------------------------------------------------------------
     @Override
@@ -120,10 +195,21 @@ public class VersionColumn implements Serializable {
     }
 
     // ------------------------------------------------------------ pseudoColumn
+    /**
+     * Returns current value of {@code pseudoColumn} property.
+     *
+     * @return current value of {@code pseudoColumn} property.
+     * @see PseudoColumn
+     */
     public short getPseudoColumn() {
         return pseudoColumn;
     }
 
+    /**
+     * Replace the value of {@code pseudoColumn} property with given.
+     *
+     * @param pseudoColumn new value for {@code pseudoColumn} property.
+     */
     public void setPseudoColumn(final short pseudoColumn) {
         this.pseudoColumn = pseudoColumn;
     }

@@ -16,6 +16,13 @@
 package com.github.jinahya.database.metadata.bind;
 
 import java.io.Serializable;
+import java.sql.DatabaseMetaData;
+import static java.sql.DatabaseMetaData.functionColumnResult;
+import static java.sql.DatabaseMetaData.procedureColumnIn;
+import static java.sql.DatabaseMetaData.procedureColumnInOut;
+import static java.sql.DatabaseMetaData.procedureColumnOut;
+import static java.sql.DatabaseMetaData.procedureColumnReturn;
+import static java.sql.DatabaseMetaData.procedureColumnUnknown;
 import java.util.logging.Logger;
 import static java.util.logging.Logger.getLogger;
 import javax.xml.bind.annotation.XmlAttribute;
@@ -43,6 +50,91 @@ public class ProcedureColumn implements Serializable {
     // -------------------------------------------------------------------------
     private static final Logger logger
             = getLogger(ProcedureColumn.class.getName());
+
+    // -------------------------------------------------------------------------
+    /**
+     * Constants for column types of procedure columns.
+     *
+     * @see DatabaseMetaData#getFunctionColumns(java.lang.String,
+     * java.lang.String, java.lang.String, java.lang.String)
+     */
+    public static enum ColumnType {
+
+        /**
+         * Constant for {@link DatabaseMetaData#procedureColumnUnknown} whose
+         * value is {@value DatabaseMetaData#procedureColumnUnknown}.
+         */
+        UNKNOWN(procedureColumnUnknown), // 0
+        /**
+         * Constants for {@link DatabaseMetaData#procedureColumnIn} whose value
+         * is {@value DatabaseMetaData#procedureColumnIn}.
+         */
+        IN(procedureColumnIn), // 1
+        /**
+         * Constants for {@link DatabaseMetaData#procedureColumnInOut} whose
+         * value is {@value DatabaseMetaData#procedureColumnInOut}.
+         */
+        IN_OUT(procedureColumnInOut), // 2
+        /**
+         * Constants for {@link DatabaseMetaData#procedureColumnResult} whose
+         * value is {@value DatabaseMetaData#procedureColumnResult}.
+         */
+        RESULT(functionColumnResult), // 3
+        /**
+         * Constants for {@link DatabaseMetaData#procedureColumnOut} whose value
+         * is {@value DatabaseMetaData#procedureColumnOut}.
+         */
+        OUT(procedureColumnOut), // 4
+        /**
+         * Constant for {@link DatabaseMetaData#procedureColumnReturn} whose
+         * value is {@value DatabaseMetaData#procedureColumnReturn}.
+         */
+        RETURN(procedureColumnReturn); // 5
+
+        // ---------------------------------------------------------------------
+        /**
+         * Returns the constant whose raw value equals to given. An instance of
+         * {@link IllegalArgumentException} will be thrown if no constant
+         * matches.
+         *
+         * @param rawValue the raw value
+         * @return the constant whose raw value equals to given.
+         */
+        public static ColumnType valueOf(final int rawValue) {
+            for (final ColumnType value : values()) {
+                if (value.rawValue == rawValue) {
+                    return value;
+                }
+            }
+            throw new IllegalArgumentException("no constant for " + rawValue);
+        }
+
+        // ---------------------------------------------------------------------
+        private ColumnType(final int rawValue) {
+            this.rawValue = rawValue;
+        }
+
+        // ---------------------------------------------------------------------
+        /**
+         * Returns the raw value of this constant.
+         *
+         * @return the raw value of this constant.
+         */
+        public int getRawValue() {
+            return rawValue;
+        }
+
+        // ---------------------------------------------------------------------
+        private final int rawValue;
+    }
+
+    // -------------------------------------------------------------------------
+    /**
+     * Creates a new instance.
+     */
+    public ProcedureColumn() {
+        super();
+    }
 
     // -------------------------------------------------------------------------
     @Override

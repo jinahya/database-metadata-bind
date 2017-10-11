@@ -15,7 +15,9 @@
  */
 package com.github.jinahya.database.metadata.bind;
 
+import static com.github.jinahya.database.metadata.bind.Attribute.Nullable.values;
 import java.io.Serializable;
+import java.sql.DatabaseMetaData;
 import java.util.logging.Logger;
 import static java.util.logging.Logger.getLogger;
 import javax.xml.bind.annotation.XmlElement;
@@ -42,6 +44,69 @@ public class TypeInfo implements Serializable {
 
     // -------------------------------------------------------------------------
     private static final Logger logger = getLogger(TypeInfo.class.getName());
+
+    // -------------------------------------------------------------------------
+    /**
+     * Constants for nullabilities of an type.
+     */
+    public static enum Nullable implements IntFieldEnum<Nullable> {
+
+        // ---------------------------------------------------------------------
+        /**
+         * Constant for {@link DatabaseMetaData#typeNoNulls} whose value is
+         * {@value DatabaseMetaData#typeNoNulls}.
+         */
+        TYPE_NO_NULLS(DatabaseMetaData.typeNoNulls), // 1
+        /**
+         * Constant for {@link DatabaseMetaData#typeNullable} whose value is
+         * {@value DatabaseMetaData#typeNullable}.
+         */
+        TYPE_NULLABLE(DatabaseMetaData.typeNullable), // 1
+        /**
+         * Constant for {@link DatabaseMetaData#typeNullableUnknown} whose value
+         * is {@value DatabaseMetaData#typeNullableUnknown}.
+         */
+        TYPE_NULLABLE_UNKNOWN(DatabaseMetaData.typeNullableUnknown); // 2
+
+        // ---------------------------------------------------------------------
+        /**
+         * Returns the constant whose raw value matches to given. An instance of
+         * {@link IllegalArgumentException} will be thrown if no value matches.
+         *
+         * @param rawValue the raw value
+         * @return the matched constant
+         */
+        public static Nullable valueOf(final int rawValue) {
+            return IntFieldEnums.valueOf(Nullable.class, rawValue);
+        }
+
+        // ---------------------------------------------------------------------
+        private Nullable(final int rawValue) {
+            this.rawValue = rawValue;
+        }
+
+        // ---------------------------------------------------------------------
+        /**
+         * Returns the raw value of this constant.
+         *
+         * @return the raw value of this constant.
+         */
+        @Override
+        public int getRawValue() {
+            return rawValue;
+        }
+
+        // ---------------------------------------------------------------------
+        private final int rawValue;
+    }
+
+    // -------------------------------------------------------------------------
+    /**
+     * Creates a new instance.
+     */
+    public TypeInfo() {
+        super();
+    }
 
     // -------------------------------------------------------------------------
     @Override
