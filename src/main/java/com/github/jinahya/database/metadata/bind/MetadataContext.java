@@ -480,7 +480,7 @@ public class MetadataContext {
      * @param tableNamePattern the value for {@code tableNameSchema} parameter
      * @param columnNamePattern the value for {@code columnNamePattern}
      * parameter
-     * @return a list of {@link Column}
+     * @return a list of columns
      * @throws SQLException if a database error occurs.
      */
     public List<Column> getColumns(final String catalog,
@@ -513,7 +513,7 @@ public class MetadataContext {
      * @param table the value for {@code table} parameter
      * @param columnNamePattern the value for {@code columnNamePattern}
      * parameter
-     * @return a list of {@link ColumnPrivilege}
+     * @return a list of column privileges
      * @throws SQLException if a database error occurs.
      */
     public List<ColumnPrivilege> getColumnPrivileges(
@@ -546,7 +546,7 @@ public class MetadataContext {
      * @param foreignCatalog the value for {@code foreignCatalog} parameter
      * @param foreignSchema the value for {@code foreignSchema} parameter
      * @param foreignTable the value for {@code foreignTable} parameter
-     * @return a list of {@link CrossReference}s.
+     * @return a list of cross references
      * @throws SQLException if a database error occurs.
      */
     public List<CrossReference> getCrossReferences(
@@ -582,7 +582,7 @@ public class MetadataContext {
      * parameter
      * @param columnNamePattern the value for {@code columnNamePattern}
      * parameter
-     * @return a list of {@link FunctionColumn}s
+     * @return a list of function columns
      * @throws SQLException if a database error occurs.
      */
     public List<FunctionColumn> getFunctionColumns(
@@ -613,7 +613,7 @@ public class MetadataContext {
      * @param schemaPattern the value for {@code schemaPattern} parameter
      * @param functionNamePattern the value for {@code functionNamePattern}
      * parameter
-     * @return a list of {@link Function}s
+     * @return a list of functions
      * @throws SQLException if a database error occurs.
      */
     public List<Function> getFunctions(final String catalog,
@@ -643,7 +643,7 @@ public class MetadataContext {
      * @param catalog the value for {@code catalog} parameter
      * @param schema the value for {@code schema} parameter
      * @param table the value for {@code table} parameter
-     * @return a list of {@link ExportedKey}s
+     * @return a list of exported keys
      * @throws SQLException if a database error occurs.
      */
     public List<ExportedKey> getExportedKeys(
@@ -672,7 +672,7 @@ public class MetadataContext {
      * @param catalog catalog the value for {@code catalog} parameter
      * @param schema schema the value for {@code schema} parameter
      * @param table table the value for {@code table} parameter
-     * @return a list of {@link ImportedKey}.
+     * @return a list of imported keys
      * @throws SQLException if a database error occurs.
      */
     public List<ImportedKey> getImportedKeys(
@@ -704,7 +704,7 @@ public class MetadataContext {
      * @param unique unique the value for {@code unique} parameter
      * @param approximate approximate the value for {@code approximage}
      * parameter
-     * @return a list of {@link IndexInfo}
+     * @return a list of index info
      * @throws SQLException if a database error occurs.
      */
     public List<IndexInfo> getIndexInfo(
@@ -734,7 +734,7 @@ public class MetadataContext {
      * @param catalog the value for {@code catalog} parameter
      * @param schema the value for {@code schema} parameter
      * @param table the value for {@code table} parameter
-     * @return a list of {@link PrimaryKey}s
+     * @return a list of primary keys
      * @throws SQLException if a database error occurs.
      */
     public List<PrimaryKey> getPrimaryKeys(
@@ -766,7 +766,7 @@ public class MetadataContext {
      * parameter
      * @param columnNamePattern the value for {@code columnNamePattern}
      * parameter
-     * @return a list of {@link ProcedureColumn}s
+     * @return a list of procedure columns
      * @throws SQLException if a database error occurs.
      */
     public List<ProcedureColumn> getProcedureColumns(
@@ -798,7 +798,7 @@ public class MetadataContext {
      * @param schemaPattern the value for {@code schemaPattern} parameter
      * @param procedureNamePattern the value for {@code procedureNamePattern}
      * parameter
-     * @return a list of {@link Procedure}s
+     * @return a list of procedures
      * @throws SQLException if a database error occurs.
      */
     public List<Procedure> getProcedures(final String catalog,
@@ -942,7 +942,7 @@ public class MetadataContext {
      * @param catalog the value for {@code catalog} parameter
      * @param schemaPattern the value for {@code schemaPattern} parameter
      * @param tableNamePattern the value for {@code tableNamePattern} parameter
-     * @return a list of {@link TablePrivilege}
+     * @return a list of table privileges
      * @throws SQLException if a database error occurs.
      */
     public List<TablePrivilege> getTablePrivileges(
@@ -968,7 +968,7 @@ public class MetadataContext {
      * Invokes {@link DatabaseMetaData#getTableTypes()} and returns bound
      * information.
      *
-     * @return a list of {@link TableType}.
+     * @return a list of table types
      * @throws SQLException if a database error occurs.
      */
     public List<TableType> getTableTypes() throws SQLException {
@@ -990,7 +990,7 @@ public class MetadataContext {
      * Invokes {@link DatabaseMetaData#getTypeInfo()} and returns bound
      * information.
      *
-     * @return a list of {@link TypeInfo}
+     * @return a list of type info
      * @throws SQLException if a database error occurs.
      */
     public List<TypeInfo> getTypeInfo() throws SQLException {
@@ -1017,7 +1017,7 @@ public class MetadataContext {
      * @param schemaPattern the value for {@code schemaPattern} parameter
      * @param typeNamePattern the value for {@code typeNamePattern} parameter.
      * @param types the value for {@code type} parameter
-     * @return a list of {@link UDT}.
+     * @return a list of UDTs
      * @throws SQLException if a database error occurs.
      */
     public List<UDT> getUDTs(final String catalog, final String schemaPattern,
@@ -1046,7 +1046,7 @@ public class MetadataContext {
      * @param catalog catalog the value for {@code catalog} parameter
      * @param schema schema the value for {@code schema} parameter
      * @param table table the value for {@code table} parameter
-     * @return a list of {@link VersionColumn}
+     * @return a list of version columns
      * @throws SQLException if a database access error occurs.
      */
     public List<VersionColumn> getVersionColumns(final String catalog,

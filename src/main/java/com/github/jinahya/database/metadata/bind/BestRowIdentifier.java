@@ -17,6 +17,12 @@ package com.github.jinahya.database.metadata.bind;
 
 import java.io.Serializable;
 import java.sql.DatabaseMetaData;
+import static java.sql.DatabaseMetaData.bestRowNotPseudo;
+import static java.sql.DatabaseMetaData.bestRowPseudo;
+import static java.sql.DatabaseMetaData.bestRowSession;
+import static java.sql.DatabaseMetaData.bestRowTemporary;
+import static java.sql.DatabaseMetaData.bestRowTransaction;
+import static java.sql.DatabaseMetaData.bestRowUnknown;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlType;
@@ -45,20 +51,20 @@ public class BestRowIdentifier implements Serializable {
      * @see DatabaseMetaData#getBestRowIdentifier(java.lang.String,
      * java.lang.String, java.lang.String, int, boolean)
      */
-    public static enum PseudoColumn {
+    public static enum PseudoColumn implements IntFieldEnum<PseudoColumn> {
 
         /**
          * Constant for {@link DatabaseMetaData#bestRowUnknown}.
          */
-        UNKNWON(DatabaseMetaData.bestRowUnknown),
+        BEST_ROW_UNKNWON(bestRowUnknown),
         /**
          * Constant for {@link DatabaseMetaData#bestRowNotPseudo}.
          */
-        NOT_PSEUDO(DatabaseMetaData.bestRowNotPseudo),
+        BEST_ROW_NOT_PSEUDO(bestRowNotPseudo),
         /**
          * Constant for {@link DatabaseMetaData#bestRowPseudo}.
          */
-        PSEUDO(DatabaseMetaData.bestRowPseudo);
+        BEST_ROW_PSEUDO(bestRowPseudo);
 
         // ---------------------------------------------------------------------
         /**
@@ -68,12 +74,7 @@ public class BestRowIdentifier implements Serializable {
          * @return the constant whose raw value equals to given.
          */
         public static PseudoColumn valueOf(final int rawValue) {
-            for (PseudoColumn value : values()) {
-                if (value.rawValue == rawValue) {
-                    return value;
-                }
-            }
-            throw new IllegalArgumentException("no value for " + rawValue);
+            return IntFieldEnums.valueOf(PseudoColumn.class, rawValue);
         }
 
         // ---------------------------------------------------------------------
@@ -87,6 +88,7 @@ public class BestRowIdentifier implements Serializable {
          *
          * @return the raw value of this constant.
          */
+        @Override
         public int getRawValue() {
             return rawValue;
         }
@@ -101,20 +103,20 @@ public class BestRowIdentifier implements Serializable {
      * @see DatabaseMetaData#getBestRowIdentifier(java.lang.String,
      * java.lang.String, java.lang.String, int, boolean)
      */
-    public static enum Scope {
+    public static enum Scope implements IntFieldEnum<Scope> {
 
         /**
-         * Constant for {@link DatabaseMetaData#bestRowUnknown}.
+         * Constant for {@link DatabaseMetaData#bestRowTemporary}.
          */
-        TEMPORARY(DatabaseMetaData.bestRowTemporary),
+        BEST_ROW_TEMPORARY(bestRowTemporary),
         /**
-         * Constant for {@link DatabaseMetaData#bestRowNotPseudo}.
+         * Constant for {@link DatabaseMetaData#bestRowTransaction}.
          */
-        TRANSACTION(DatabaseMetaData.bestRowTransaction),
+        BEST_ROW_TRANSACTION(bestRowTransaction),
         /**
-         * Constant for {@link DatabaseMetaData#bestRowPseudo}.
+         * Constant for {@link DatabaseMetaData#bestRowSession}.
          */
-        SESSION(DatabaseMetaData.bestRowSession);
+        BEST_ROW_SESSION(bestRowSession);
 
         // ---------------------------------------------------------------------
         /**
@@ -124,12 +126,7 @@ public class BestRowIdentifier implements Serializable {
          * @return the constant whose raw value equals to given.
          */
         public static Scope valueOf(final int rawValue) {
-            for (Scope value : values()) {
-                if (value.rawValue == rawValue) {
-                    return value;
-                }
-            }
-            throw new IllegalArgumentException("no value for " + rawValue);
+            return IntFieldEnums.valueOf(Scope.class, rawValue);
         }
 
         // ---------------------------------------------------------------------
@@ -143,6 +140,7 @@ public class BestRowIdentifier implements Serializable {
          *
          * @return the raw value of this constant.
          */
+        @Override
         public int getRawValue() {
             return rawValue;
         }

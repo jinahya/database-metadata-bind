@@ -17,6 +17,9 @@ package com.github.jinahya.database.metadata.bind;
 
 import java.io.Serializable;
 import java.sql.DatabaseMetaData;
+import static java.sql.DatabaseMetaData.columnNoNulls;
+import static java.sql.DatabaseMetaData.columnNullable;
+import static java.sql.DatabaseMetaData.columnNullableUnknown;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Logger;
@@ -56,20 +59,20 @@ public class Column implements Serializable {
      * @see DatabaseMetaData#getColumns(java.lang.String, java.lang.String,
      * java.lang.String, java.lang.String)
      */
-    public static enum Nullable {
+    public static enum Nullable implements IntFieldEnum<Nullable> {
 
         /**
          * Constant for {@link DatabaseMetaData#columnNoNulls}.
          */
-        NO_NULLS(DatabaseMetaData.columnNoNulls),
+        COLUMN_NO_NULLS(columnNoNulls),
         /**
          * Constant for {@link DatabaseMetaData#columnNullable}.
          */
-        NULLABLE(DatabaseMetaData.columnNullable),
+        COLUMN_NULLABLE(columnNullable),
         /**
          * Constant for {@link DatabaseMetaData#columnNullableUnknown}.
          */
-        NULLABLE_UNKNOWN(DatabaseMetaData.columnNullableUnknown);
+        COLUMN_NULLABLE_UNKNOWN(columnNullableUnknown);
 
         // ---------------------------------------------------------------------
         /**
@@ -81,12 +84,7 @@ public class Column implements Serializable {
          * @return the constant whose raw value equals to given.
          */
         public static Nullable valueOf(final int rawValue) {
-            for (final Nullable value : values()) {
-                if (value.rawValue == rawValue) {
-                    return value;
-                }
-            }
-            throw new IllegalArgumentException("no constant for " + rawValue);
+            return IntFieldEnums.valueOf(Nullable.class, rawValue);
         }
 
         // ---------------------------------------------------------------------
@@ -100,6 +98,7 @@ public class Column implements Serializable {
          *
          * @return the raw value of this constant.
          */
+        @Override
         public int getRawValue() {
             return rawValue;
         }

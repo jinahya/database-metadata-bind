@@ -17,6 +17,9 @@ package com.github.jinahya.database.metadata.bind;
 
 import java.io.Serializable;
 import java.sql.DatabaseMetaData;
+import static java.sql.DatabaseMetaData.attributeNoNulls;
+import static java.sql.DatabaseMetaData.attributeNullable;
+import static java.sql.DatabaseMetaData.attributeNullableUnknown;
 import java.util.logging.Logger;
 import static java.util.logging.Logger.getLogger;
 import javax.xml.bind.annotation.XmlAttribute;
@@ -49,30 +52,25 @@ public class Attribute implements Serializable {
     /**
      * Constants for nullabilities of an attribute.
      */
-    public static enum Nullable {
+    public static enum Nullable implements IntFieldEnum<Nullable> {
 
         // ---------------------------------------------------------------------
         /**
          * Constant for {@link DatabaseMetaData#attributeNoNulls}.
          */
-        NO_NULLS(DatabaseMetaData.attributeNoNulls),
+        ATTRIBUTE_NO_NULLS(attributeNoNulls),
         /**
          * Constant for {@link DatabaseMetaData#attributeNullable}.
          */
-        NULLABLE(DatabaseMetaData.attributeNullable),
+        ATTRIBUTE_NULLABLE(attributeNullable),
         /**
          * Constant for {@link DatabaseMetaData#attributeNullableUnknown}.
          */
-        NULLABLE_UNKNOWN(DatabaseMetaData.attributeNullableUnknown);
+        ATTRIBUTE_NULLABLE_UNKNOWN(attributeNullableUnknown);
 
         // ---------------------------------------------------------------------
         public static Nullable valueOf(final int rawValue) {
-            for (final Nullable value : values()) {
-                if (value.rawValue == rawValue) {
-                    return value;
-                }
-            }
-            throw new IllegalArgumentException("no value for " + rawValue);
+            return IntFieldEnums.valueOf(Nullable.class, rawValue);
         }
 
         // ---------------------------------------------------------------------
@@ -81,6 +79,7 @@ public class Attribute implements Serializable {
         }
 
         // ---------------------------------------------------------------------
+        @Override
         public int getRawValue() {
             return rawValue;
         }

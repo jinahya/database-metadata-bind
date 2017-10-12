@@ -58,38 +58,38 @@ public class ProcedureColumn implements Serializable {
      * @see DatabaseMetaData#getFunctionColumns(java.lang.String,
      * java.lang.String, java.lang.String, java.lang.String)
      */
-    public static enum ColumnType {
+    public static enum ColumnType implements IntFieldEnum<ColumnType> {
 
         /**
          * Constant for {@link DatabaseMetaData#procedureColumnUnknown} whose
          * value is {@value DatabaseMetaData#procedureColumnUnknown}.
          */
-        UNKNOWN(procedureColumnUnknown), // 0
+        PROCEDURE_COLUMN_UNKNOWN(procedureColumnUnknown), // 0
         /**
          * Constants for {@link DatabaseMetaData#procedureColumnIn} whose value
          * is {@value DatabaseMetaData#procedureColumnIn}.
          */
-        IN(procedureColumnIn), // 1
+        PROCEDURE_COLUMN_IN(procedureColumnIn), // 1
         /**
          * Constants for {@link DatabaseMetaData#procedureColumnInOut} whose
          * value is {@value DatabaseMetaData#procedureColumnInOut}.
          */
-        IN_OUT(procedureColumnInOut), // 2
+        PROCEDURE_COLUMN_IN_OUT(procedureColumnInOut), // 2
         /**
          * Constants for {@link DatabaseMetaData#procedureColumnResult} whose
          * value is {@value DatabaseMetaData#procedureColumnResult}.
          */
-        RESULT(functionColumnResult), // 3
+        PROCEDURE_COLUMN_RESULT(functionColumnResult), // 3
         /**
          * Constants for {@link DatabaseMetaData#procedureColumnOut} whose value
          * is {@value DatabaseMetaData#procedureColumnOut}.
          */
-        OUT(procedureColumnOut), // 4
+        PROCEDURE_COLUMN_OUT(procedureColumnOut), // 4
         /**
          * Constant for {@link DatabaseMetaData#procedureColumnReturn} whose
          * value is {@value DatabaseMetaData#procedureColumnReturn}.
          */
-        RETURN(procedureColumnReturn); // 5
+        PROCEDURE_COLUMN_RETURN(procedureColumnReturn); // 5
 
         // ---------------------------------------------------------------------
         /**
@@ -101,12 +101,7 @@ public class ProcedureColumn implements Serializable {
          * @return the constant whose raw value equals to given.
          */
         public static ColumnType valueOf(final int rawValue) {
-            for (final ColumnType value : values()) {
-                if (value.rawValue == rawValue) {
-                    return value;
-                }
-            }
-            throw new IllegalArgumentException("no constant for " + rawValue);
+            return IntFieldEnums.valueOf(ColumnType.class, rawValue);
         }
 
         // ---------------------------------------------------------------------
@@ -120,6 +115,7 @@ public class ProcedureColumn implements Serializable {
          *
          * @return the raw value of this constant.
          */
+        @Override
         public int getRawValue() {
             return rawValue;
         }

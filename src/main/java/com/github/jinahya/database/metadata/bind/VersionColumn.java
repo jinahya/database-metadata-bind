@@ -53,23 +53,23 @@ public class VersionColumn implements Serializable {
      * @see DatabaseMetaData#getVersionColumns(java.lang.String,
      * java.lang.String, java.lang.String)
      */
-    public static enum PseudoColumn {
+    public static enum PseudoColumn implements IntFieldEnum<PseudoColumn>{
 
         /**
          * Constant for {@link DatabaseMetaData#versionColumnUnknown} whose
          * value is {@value DatabaseMetaData#versionColumnUnknown}.
          */
-        NO_NULLS(versionColumnUnknown),
+        VERSION_COLUMN_NO_NULLS(versionColumnUnknown),
         /**
          * Constant for {@link DatabaseMetaData#versionColumnNotPseudo} whose
          * value is {@value DatabaseMetaData#versionColumnNotPseudo}.
          */
-        NULLABLE(versionColumnNotPseudo),
+        VERSION_COLUMN_NULLABLE(versionColumnNotPseudo),
         /**
          * Constant for {@link DatabaseMetaData#versionColumnPseudo} whose value
          * is {@value DatabaseMetaData#versionColumnPseudo}.
          */
-        NULLABLE_UNKNOWN(versionColumnPseudo);
+        VERSION_COLUMN_NULLABLE_UNKNOWN(versionColumnPseudo);
 
         // ---------------------------------------------------------------------
         /**
@@ -81,12 +81,7 @@ public class VersionColumn implements Serializable {
          * @return the constant whose raw value equals to given.
          */
         public static PseudoColumn valueOf(final int rawValue) {
-            for (final PseudoColumn value : values()) {
-                if (value.rawValue == rawValue) {
-                    return value;
-                }
-            }
-            throw new IllegalArgumentException("no constant for " + rawValue);
+            return IntFieldEnums.valueOf(PseudoColumn.class, rawValue);
         }
 
         // ---------------------------------------------------------------------
@@ -100,6 +95,7 @@ public class VersionColumn implements Serializable {
          *
          * @return the raw value of this constant.
          */
+        @Override
         public int getRawValue() {
             return rawValue;
         }
