@@ -99,7 +99,7 @@ public class FunctionColumn implements Serializable {
          * @return the constant whose raw value equals to given.
          */
         public static ColumnType valueOf(final int rawValue) {
-            return IntFieldEnums.valueOf(enumType, rawValue);
+            return IntFieldEnums.valueOf(ColumnType.class, rawValue);
         }
 
         // ---------------------------------------------------------------------
