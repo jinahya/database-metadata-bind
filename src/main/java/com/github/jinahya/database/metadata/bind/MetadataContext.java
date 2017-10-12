@@ -170,7 +170,7 @@ public class MetadataContext {
 
     // -------------------------------------------------------------------------
     /**
-     * Bind given instance from specified record.
+     * Binds given instance from specified record.
      *
      * @param <T> instance type parameter
      * @param results the result set from which the instance is bound
@@ -225,8 +225,8 @@ public class MetadataContext {
                 field(field, instance, results, label);
             }
             catch (final ReflectiveOperationException roe) {
-                logger.severe(format("failed to set %s with %s on %s",
-                                     field, value, instance));
+                logger.log(SEVERE, format("failed to set %s with %s on %s",
+                                          field, value, instance), roe);
                 continue;
             }
         }
@@ -381,6 +381,7 @@ public class MetadataContext {
         final ResultSet results = metadata.getAttributes(
                 catalog, schemaPattern, typeNamePattern, attributeNamePattern);
         if (results == null) {
+            logger.warning("empty result set retrived");
             return list;
         }
         try {
@@ -413,6 +414,7 @@ public class MetadataContext {
         final ResultSet results = metadata.getBestRowIdentifier(
                 catalog, schema, table, scope, nullable);
         if (results == null) {
+            logger.warning("empty result set retrived");
             return list;
         }
         try {
@@ -435,6 +437,7 @@ public class MetadataContext {
         final List<Catalog> list = new ArrayList<Catalog>();
         final ResultSet results = metadata.getCatalogs();
         if (results == null) {
+            logger.warning("empty result set retrived");
             return list;
         }
         try {
@@ -459,6 +462,7 @@ public class MetadataContext {
                 = new ArrayList<ClientInfoProperty>();
         final ResultSet results = metadata.getClientInfoProperties();
         if (results == null) {
+            logger.warning("empty result set retrived");
             return list;
         }
         try {
@@ -492,6 +496,7 @@ public class MetadataContext {
         final ResultSet results = metadata.getColumns(
                 catalog, schemaPattern, tableNamePattern, columnNamePattern);
         if (results == null) {
+            logger.warning("empty result set retrived");
             return list;
         }
         try {
@@ -524,6 +529,7 @@ public class MetadataContext {
         final ResultSet results = metadata.getColumnPrivileges(
                 catalog, schema, table, columnNamePattern);
         if (results == null) {
+            logger.warning("empty result set retrived");
             return list;
         }
         try {
@@ -560,6 +566,7 @@ public class MetadataContext {
                 parentCatalog, parentSchema, parentTable, foreignCatalog,
                 foreignSchema, foreignTable);
         if (results == null) {
+            logger.warning("empty result set retrived");
             return list;
         }
         try {
@@ -593,6 +600,7 @@ public class MetadataContext {
         final ResultSet results = metadata.getFunctionColumns(
                 catalog, schemaPattern, functionNamePattern, columnNamePattern);
         if (results == null) {
+            logger.warning("empty result set retrived");
             return list;
         }
         try {
@@ -624,6 +632,7 @@ public class MetadataContext {
         final ResultSet results = metadata.getFunctions(
                 catalog, schemaPattern, functionNamePattern);
         if (results == null) {
+            logger.warning("empty result set retrived");
             return list;
         }
         try {
@@ -653,6 +662,7 @@ public class MetadataContext {
         final ResultSet results = metadata.getExportedKeys(
                 catalog, schema, table);
         if (results == null) {
+            logger.warning("empty result set retrived");
             return list;
         }
         try {
@@ -682,6 +692,7 @@ public class MetadataContext {
         final ResultSet results = metadata.getImportedKeys(
                 catalog, schema, table);
         if (results == null) {
+            logger.warning("empty result set retrived");
             return list;
         }
         try {
@@ -715,6 +726,7 @@ public class MetadataContext {
         final ResultSet results = metadata.getIndexInfo(
                 catalog, schema, table, unique, approximate);
         if (results == null) {
+            logger.warning("empty result set retrived");
             return list;
         }
         try {
@@ -744,6 +756,7 @@ public class MetadataContext {
         final ResultSet results = metadata.getPrimaryKeys(
                 catalog, schema, table);
         if (results == null) {
+            logger.warning("empty result set retrived");
             return list;
         }
         try {
@@ -778,6 +791,7 @@ public class MetadataContext {
                 catalog, schemaPattern, procedureNamePattern,
                 columnNamePattern);
         if (results == null) {
+            logger.warning("empty result set retrived");
             return list;
         }
         try {
@@ -809,6 +823,7 @@ public class MetadataContext {
         final ResultSet results = metadata.getProcedures(
                 catalog, schemaPattern, procedureNamePattern);
         if (results == null) {
+            logger.warning("empty result set retrived");
             return list;
         }
         try {
@@ -842,6 +857,7 @@ public class MetadataContext {
         final ResultSet results = metadata.getPseudoColumns(
                 catalog, schemaPattern, tableNamePattern, columnNamePattern);
         if (results == null) {
+            logger.warning("empty result set retrived");
             return list;
         }
         try {
@@ -864,6 +880,7 @@ public class MetadataContext {
         final List<SchemaName> list = new ArrayList<SchemaName>();
         final ResultSet results = metadata.getSchemas();
         if (results == null) {
+            logger.warning("empty result set retrived");
             return list;
         }
         try {
@@ -891,6 +908,7 @@ public class MetadataContext {
         final List<Schema> list = new ArrayList<Schema>();
         final ResultSet results = metadata.getSchemas(catalog, schemaPattern);
         if (results == null) {
+            logger.warning("empty result set retrived");
             return list;
         }
         try {
@@ -923,6 +941,7 @@ public class MetadataContext {
         final ResultSet results = metadata.getTables(
                 catalog, schemaPattern, tableNamePattern, types);
         if (results == null) {
+            logger.warning("empty result set retrived");
             return list;
         }
         try {
@@ -953,6 +972,7 @@ public class MetadataContext {
         final ResultSet results = metadata.getTablePrivileges(
                 catalog, schemaPattern, tableNamePattern);
         if (results == null) {
+            logger.warning("empty result set retrived");
             return list;
         }
         try {
@@ -975,6 +995,7 @@ public class MetadataContext {
         final List<TableType> list = new ArrayList<TableType>();
         final ResultSet results = metadata.getTableTypes();
         if (results == null) {
+            logger.warning("empty result set retrived");
             return list;
         }
         try {
@@ -997,6 +1018,7 @@ public class MetadataContext {
         final List<TypeInfo> list = new ArrayList<TypeInfo>();
         final ResultSet results = metadata.getTypeInfo();
         if (results == null) {
+            logger.warning("empty result set retrived");
             return list;
         }
         try {
@@ -1027,6 +1049,7 @@ public class MetadataContext {
         final ResultSet results = metadata.getUDTs(
                 catalog, schemaPattern, typeNamePattern, types);
         if (results == null) {
+            logger.warning("empty result set retrived");
             return list;
         }
         try {
@@ -1057,6 +1080,7 @@ public class MetadataContext {
         final ResultSet results = metadata.getVersionColumns(
                 catalog, schema, table);
         if (results == null) {
+            logger.warning("empty result set retrived");
             return list;
         }
         try {
@@ -1131,7 +1155,7 @@ public class MetadataContext {
      * @return this instance.
      */
     // @todo: make public
-    private MetadataContext alias(final String path, final String alias) {
+    MetadataContext alias(final String path, final String alias) {
         if (path == null) {
             throw new NullPointerException("path is null");
         }
