@@ -16,6 +16,10 @@
 package com.github.jinahya.database.metadata.bind;
 
 import static com.github.jinahya.database.metadata.bind.Invokes.arguments;
+import static com.github.jinahya.database.metadata.bind.Utils.field;
+import static com.github.jinahya.database.metadata.bind.Utils.fields;
+import static com.github.jinahya.database.metadata.bind.Utils.labels;
+import static com.github.jinahya.database.metadata.bind.Utils.path;
 import static java.lang.String.format;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
@@ -24,22 +28,19 @@ import java.sql.DatabaseMetaData;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.Arrays;
+import static java.util.Collections.emptyMap;
+import static java.util.Collections.unmodifiableMap;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
+import static java.util.logging.Level.FINE;
+import static java.util.logging.Level.SEVERE;
 import java.util.logging.Logger;
 import static java.util.logging.Logger.getLogger;
-import static com.github.jinahya.database.metadata.bind.Utils.fields;
-import static java.util.logging.Level.SEVERE;
-import static com.github.jinahya.database.metadata.bind.Utils.field;
-import static com.github.jinahya.database.metadata.bind.Utils.labels;
-import static com.github.jinahya.database.metadata.bind.Utils.path;
-import java.util.Arrays;
-import static java.util.Collections.emptyMap;
-import static java.util.Collections.unmodifiableMap;
 import org.codehaus.mojo.animal_sniffer.IgnoreJRERequirement;
 
 /**
@@ -54,6 +55,17 @@ public class MetadataContext {
             = getLogger(MetadataContext.class.getName());
 
     // -------------------------------------------------------------------------
+    /**
+     * Invokes {@link #getSchemas(java.lang.String, java.lang.String)} on given
+     * {@code context} with given {@code catalog}.
+     *
+     * @param context the context
+     * @param catalog the value for the first parameter of
+     * {@link #getSchemas(java.lang.String, java.lang.String)}.
+     * @param nonempty a flag for non empty
+     * @return a list of schemas
+     * @throws SQLException if a database error occurs.
+     */
     public static List<Schema> getSchemas(final MetadataContext context,
                                           final String catalog,
                                           final boolean nonempty)
@@ -63,7 +75,9 @@ public class MetadataContext {
         }
         final List<Schema> schemas = context.getSchemas(catalog, null);
         if (schemas.isEmpty() && nonempty) {
-            logger.fine("adding an empty schema");
+            if (logger.isLoggable(FINE)) {
+                logger.fine("adding an empty schema");
+            }
             final Schema schema = new Schema();
             schema.virtual = true;
             schema.setTableCatalog(catalog);
@@ -93,6 +107,14 @@ public class MetadataContext {
         return schemas;
     }
 
+    /**
+     * Invokes {@link #getCatalogs()} on given context.
+     *
+     * @param context the context
+     * @param nonempty a flag for non empty list
+     * @return a list of catalogs
+     * @throws SQLException if a database error occurs.
+     */
     public static List<Catalog> getCatalogs(final MetadataContext context,
                                             final boolean nonempty)
             throws SQLException {
@@ -101,7 +123,9 @@ public class MetadataContext {
         }
         final List<Catalog> catalogs = context.getCatalogs();
         if (catalogs.isEmpty() && nonempty) {
-            logger.fine("adding an empty catalog");
+            if (logger.isLoggable(FINE)) {
+                logger.fine("adding an empty catalog");
+            }
             final Catalog catalog = new Catalog();
             catalog.virtual = true;
             catalog.setTableCat("");
@@ -145,6 +169,16 @@ public class MetadataContext {
     }
 
     // -------------------------------------------------------------------------
+    /**
+     * Bind given instance from specified record.
+     *
+     * @param <T> instance type parameter
+     * @param results the result set from which the instance is bound
+     * @param type the type of the instance
+     * @param instance the instance
+     * @return given instance
+     * @throws SQLException if a database error occurs.
+     */
     private <T> T bind(final ResultSet results, final Class<T> type,
                        final T instance)
             throws SQLException {
@@ -152,20 +186,30 @@ public class MetadataContext {
         for (final Entry<Field, Bind> bfield : bfields(type).entrySet()) {
             final Field field = bfield.getKey();
             final Bind bind = bfield.getValue();
-            final String label = bind.label();
+            String label = bind.label();
             final String path = path(type, field);
             final String formatted = format(
                     "field=%s, path=%s, bind=%s", field, path, bind);
             if (!labels.remove(label)) {
                 logger.warning(format("unknown; %s", formatted));
-                continue;
+                label = alias(path);
+                if (label == null) {
+                    continue;
+                }
+                if (logger.isLoggable(FINE)) {
+                    logger.log(FINE, "using alias: {0}", label);
+                }
             }
             if (suppressed(path)) {
-                logger.fine(format("suppressed; %s", formatted));
+                if (logger.isLoggable(FINE)) {
+                    logger.fine(format("suppressed; %s", formatted));
+                }
                 continue;
             }
             if (bind.unused()) {
-                logger.fine(format("unused: %s", formatted));
+                if (logger.isLoggable(FINE)) {
+                    logger.fine(format("unused: %s", formatted));
+                }
                 continue;
             }
             final Object value = results.getObject(label);
@@ -179,7 +223,8 @@ public class MetadataContext {
             }
             try {
                 field(field, instance, results, label);
-            } catch (final ReflectiveOperationException roe) {
+            }
+            catch (final ReflectiveOperationException roe) {
                 logger.severe(format("failed to set %s with %s on %s",
                                      field, value, instance));
                 continue;
@@ -188,8 +233,11 @@ public class MetadataContext {
         if (false) {
             for (String label : labels) {
                 final Object value = results.getObject(label);
-                logger.fine(format("unhandled; klass=%s, label=%s, value=%s",
-                                   type, label, value));
+                if (logger.isLoggable(FINE)) {
+                    logger.fine(format(
+                            "unhandled; klass=%s, label=%s, value=%s",
+                            type, label, value));
+                }
             }
         }
         for (final Entry<Field, Invoke> ifield : ifields(type).entrySet()) {
@@ -203,7 +251,9 @@ public class MetadataContext {
             final String formatted = format(
                     "field=%s, path=%s, invoke=%s", field, path, invoke);
             if (suppressed(path)) {
-                logger.fine(format("skipping; %s", formatted));
+                if (logger.isLoggable(FINE)) {
+                    logger.fine(format("skipping; %s", formatted));
+                }
                 continue;
             }
             final String name = invoke.name();
@@ -211,11 +261,13 @@ public class MetadataContext {
             final Method method;
             try {
                 method = DatabaseMetaData.class.getMethod(name, types);
-            } catch (final NoSuchMethodException nsme) {
+            }
+            catch (final NoSuchMethodException nsme) {
                 logger.log(SEVERE, format("unknown method; {0}", formatted),
                            nsme);
                 continue;
-            } catch (final NoSuchMethodError nsme) {
+            }
+            catch (final NoSuchMethodError nsme) {
                 logger.log(SEVERE, format("unknown method; %s", formatted),
                            nsme);
                 continue;
@@ -227,7 +279,8 @@ public class MetadataContext {
                 final Object[] arguments;
                 try {
                     arguments = arguments(type, instance, types, literals);
-                } catch (final ReflectiveOperationException roe) {
+                }
+                catch (final ReflectiveOperationException roe) {
                     logger.severe(format(
                             "failed to convert arguments from %s on %s",
                             Arrays.toString(literals), type));
@@ -236,12 +289,14 @@ public class MetadataContext {
                 final Object result;
                 try {
                     result = method.invoke(metadata, arguments);
-                } catch (final Exception e) { // NoSuchMethod
+                }
+                catch (final Exception e) { // NoSuchMethod
                     logger.log(SEVERE, format(
                                "failed to invoke %s with %s", formatted,
                                Arrays.toString(arguments)), e);
                     continue;
-                } catch (final Error e) { // NoSuchMethod/AbstractMethod
+                }
+                catch (final Error e) { // NoSuchMethod/AbstractMethod
                     logger.log(SEVERE, format(
                                "failed to invoke %s with %s",
                                formatted, Arrays.toString(arguments)), e);
@@ -256,7 +311,8 @@ public class MetadataContext {
             }
             try {
                 field.set(instance, fvalue);
-            } catch (final ReflectiveOperationException roe) {
+            }
+            catch (final ReflectiveOperationException roe) {
                 logger.severe(format("failed to set %s with %s on %s",
                                      field, fvalue, instance));
             }
@@ -264,15 +320,35 @@ public class MetadataContext {
         return instance;
     }
 
+    /**
+     * Binds all records as given type and add them to specified list.
+     *
+     * @param <T> binding type parameter
+     * @param results the records to bind
+     * @param klass the type of instances
+     * @param instances a list to which instances are added
+     * @return given list
+     * @throws SQLException if a database error occurs.
+     */
     private <T> List<? super T> bind(final ResultSet results,
                                      final Class<T> klass,
                                      final List<? super T> instances)
             throws SQLException {
+        if (results == null) {
+            throw new NullPointerException("results is null");
+        }
+        if (klass == null) {
+            throw new NullPointerException("klass is null");
+        }
+        if (instances == null) {
+            throw new NullPointerException("instances is null");
+        }
         while (results.next()) {
             final T instance;
             try {
                 instance = klass.newInstance();
-            } catch (final ReflectiveOperationException roe) {
+            }
+            catch (final ReflectiveOperationException roe) {
                 logger.log(SEVERE,
                            format("failed to create new instance of %s", klass),
                            roe);
@@ -293,7 +369,7 @@ public class MetadataContext {
      * @param typeNamePattern the value for {@code typeNamePattern} parameter.
      * @param attributeNamePattern the value for {@code attributeNamePattern}
      * parameter.
-     * @return a list of {@link Attribute}
+     * @return a list of attributes.
      * @throws SQLException if a database error occurs.
      */
     public List<Attribute> getAttributes(final String catalog,
@@ -304,9 +380,13 @@ public class MetadataContext {
         final List<Attribute> list = new ArrayList<Attribute>();
         final ResultSet results = metadata.getAttributes(
                 catalog, schemaPattern, typeNamePattern, attributeNamePattern);
+        if (results == null) {
+            return list;
+        }
         try {
             bind(results, Attribute.class, list);
-        } finally {
+        }
+        finally {
             results.close();
         }
         return list;
@@ -322,7 +402,7 @@ public class MetadataContext {
      * @param table the value for {@code table} parameter
      * @param scope the value for {@code scope} parameter
      * @param nullable the value for {@code nullable} parameter
-     * @return a list of {@link BestRowIdentifier}
+     * @return a list of best row identifies
      * @throws SQLException if a database error occurs.
      */
     public List<BestRowIdentifier> getBestRowIdentifier(
@@ -332,9 +412,13 @@ public class MetadataContext {
         final List<BestRowIdentifier> list = new ArrayList<BestRowIdentifier>();
         final ResultSet results = metadata.getBestRowIdentifier(
                 catalog, schema, table, scope, nullable);
+        if (results == null) {
+            return list;
+        }
         try {
             bind(results, BestRowIdentifier.class, list);
-        } finally {
+        }
+        finally {
             results.close();
         }
         return list;
@@ -344,15 +428,19 @@ public class MetadataContext {
      * Invokes {@link DatabaseMetaData#getCatalogs()} and returns bound
      * information.
      *
-     * @return a list of {@link Catalog}
+     * @return a list of catalogs
      * @throws SQLException if a database error occurs.
      */
     public List<Catalog> getCatalogs() throws SQLException {
         final List<Catalog> list = new ArrayList<Catalog>();
         final ResultSet results = metadata.getCatalogs();
+        if (results == null) {
+            return list;
+        }
         try {
             bind(results, Catalog.class, list);
-        } finally {
+        }
+        finally {
             results.close();
         }
         return list;
@@ -362,7 +450,7 @@ public class MetadataContext {
      * Invokes {@link DatabaseMetaData#getClientInfoProperties()} and returns
      * bound information.
      *
-     * @return a list of {@link ClientInfoProperty}
+     * @return a list of client info properties
      * @throws SQLException if a database error occurs.
      */
     public List<ClientInfoProperty> getClientInfoProperties()
@@ -370,12 +458,14 @@ public class MetadataContext {
         final List<ClientInfoProperty> list
                 = new ArrayList<ClientInfoProperty>();
         final ResultSet results = metadata.getClientInfoProperties();
-        if (results != null) {
-            try {
-                bind(results, ClientInfoProperty.class, list);
-            } finally {
-                results.close();
-            }
+        if (results == null) {
+            return list;
+        }
+        try {
+            bind(results, ClientInfoProperty.class, list);
+        }
+        finally {
+            results.close();
         }
         return list;
     }
@@ -399,12 +489,16 @@ public class MetadataContext {
                                    final String columnNamePattern)
             throws SQLException {
         final List<Column> list = new ArrayList<Column>();
-        final ResultSet resultSet = metadata.getColumns(
+        final ResultSet results = metadata.getColumns(
                 catalog, schemaPattern, tableNamePattern, columnNamePattern);
+        if (results == null) {
+            return list;
+        }
         try {
-            bind(resultSet, Column.class, list);
-        } finally {
-            resultSet.close();
+            bind(results, Column.class, list);
+        }
+        finally {
+            results.close();
         }
         return list;
     }
@@ -429,9 +523,13 @@ public class MetadataContext {
         final List<ColumnPrivilege> list = new ArrayList<ColumnPrivilege>();
         final ResultSet results = metadata.getColumnPrivileges(
                 catalog, schema, table, columnNamePattern);
+        if (results == null) {
+            return list;
+        }
         try {
             bind(results, ColumnPrivilege.class, list);
-        } finally {
+        }
+        finally {
             results.close();
         }
         return list;
@@ -461,9 +559,13 @@ public class MetadataContext {
         final ResultSet results = metadata.getCrossReference(
                 parentCatalog, parentSchema, parentTable, foreignCatalog,
                 foreignSchema, foreignTable);
+        if (results == null) {
+            return list;
+        }
         try {
             bind(results, CrossReference.class, list);
-        } finally {
+        }
+        finally {
             results.close();
         }
         return list;
@@ -490,9 +592,13 @@ public class MetadataContext {
         final List<FunctionColumn> list = new ArrayList<FunctionColumn>();
         final ResultSet results = metadata.getFunctionColumns(
                 catalog, schemaPattern, functionNamePattern, columnNamePattern);
+        if (results == null) {
+            return list;
+        }
         try {
             bind(results, FunctionColumn.class, list);
-        } finally {
+        }
+        finally {
             results.close();
         }
         return list;
@@ -517,9 +623,13 @@ public class MetadataContext {
         final List<Function> list = new ArrayList<Function>();
         final ResultSet results = metadata.getFunctions(
                 catalog, schemaPattern, functionNamePattern);
+        if (results == null) {
+            return list;
+        }
         try {
             bind(results, Function.class, list);
-        } finally {
+        }
+        finally {
             results.close();
         }
         return list;
@@ -542,9 +652,13 @@ public class MetadataContext {
         final List<ExportedKey> list = new ArrayList<ExportedKey>();
         final ResultSet results = metadata.getExportedKeys(
                 catalog, schema, table);
+        if (results == null) {
+            return list;
+        }
         try {
             bind(results, ExportedKey.class, list);
-        } finally {
+        }
+        finally {
             results.close();
         }
         return list;
@@ -567,9 +681,13 @@ public class MetadataContext {
         final List<ImportedKey> list = new ArrayList<ImportedKey>();
         final ResultSet results = metadata.getImportedKeys(
                 catalog, schema, table);
+        if (results == null) {
+            return list;
+        }
         try {
             bind(results, ImportedKey.class, list);
-        } finally {
+        }
+        finally {
             results.close();
         }
         return list;
@@ -596,9 +714,13 @@ public class MetadataContext {
         final List<IndexInfo> list = new ArrayList<IndexInfo>();
         final ResultSet results = metadata.getIndexInfo(
                 catalog, schema, table, unique, approximate);
+        if (results == null) {
+            return list;
+        }
         try {
             bind(results, IndexInfo.class, list);
-        } finally {
+        }
+        finally {
             results.close();
         }
         return list;
@@ -621,9 +743,13 @@ public class MetadataContext {
         final List<PrimaryKey> list = new ArrayList<PrimaryKey>();
         final ResultSet results = metadata.getPrimaryKeys(
                 catalog, schema, table);
+        if (results == null) {
+            return list;
+        }
         try {
             bind(results, PrimaryKey.class, list);
-        } finally {
+        }
+        finally {
             results.close();
         }
         return list;
@@ -651,9 +777,13 @@ public class MetadataContext {
         final ResultSet results = metadata.getProcedureColumns(
                 catalog, schemaPattern, procedureNamePattern,
                 columnNamePattern);
+        if (results == null) {
+            return list;
+        }
         try {
             bind(results, ProcedureColumn.class, list);
-        } finally {
+        }
+        finally {
             results.close();
         }
         return list;
@@ -678,9 +808,13 @@ public class MetadataContext {
         final List<Procedure> list = new ArrayList<Procedure>();
         final ResultSet results = metadata.getProcedures(
                 catalog, schemaPattern, procedureNamePattern);
+        if (results == null) {
+            return list;
+        }
         try {
             bind(results, Procedure.class, list);
-        } finally {
+        }
+        finally {
             results.close();
         }
         return list;
@@ -707,9 +841,13 @@ public class MetadataContext {
         final List<PseudoColumn> list = new ArrayList<PseudoColumn>();
         final ResultSet results = metadata.getPseudoColumns(
                 catalog, schemaPattern, tableNamePattern, columnNamePattern);
+        if (results == null) {
+            return list;
+        }
         try {
             bind(results, PseudoColumn.class, list);
-        } finally {
+        }
+        finally {
             results.close();
         }
         return list;
@@ -725,9 +863,13 @@ public class MetadataContext {
     public List<SchemaName> getSchemas() throws SQLException {
         final List<SchemaName> list = new ArrayList<SchemaName>();
         final ResultSet results = metadata.getSchemas();
+        if (results == null) {
+            return list;
+        }
         try {
             bind(results, SchemaName.class, list);
-        } finally {
+        }
+        finally {
             results.close();
         }
         return list;
@@ -749,13 +891,12 @@ public class MetadataContext {
         final List<Schema> list = new ArrayList<Schema>();
         final ResultSet results = metadata.getSchemas(catalog, schemaPattern);
         if (results == null) {
-            // SQLite!!!
-            logger.warning("null result set returned");
             return list;
         }
         try {
             bind(results, Schema.class, list);
-        } finally {
+        }
+        finally {
             results.close();
         }
         return list;
@@ -781,9 +922,13 @@ public class MetadataContext {
         final List<Table> list = new ArrayList<Table>();
         final ResultSet results = metadata.getTables(
                 catalog, schemaPattern, tableNamePattern, types);
+        if (results == null) {
+            return list;
+        }
         try {
             bind(results, Table.class, list);
-        } finally {
+        }
+        finally {
             results.close();
         }
         return list;
@@ -807,9 +952,13 @@ public class MetadataContext {
         final List<TablePrivilege> list = new ArrayList<TablePrivilege>();
         final ResultSet results = metadata.getTablePrivileges(
                 catalog, schemaPattern, tableNamePattern);
+        if (results == null) {
+            return list;
+        }
         try {
             bind(results, TablePrivilege.class, list);
-        } finally {
+        }
+        finally {
             results.close();
         }
         return list;
@@ -825,9 +974,13 @@ public class MetadataContext {
     public List<TableType> getTableTypes() throws SQLException {
         final List<TableType> list = new ArrayList<TableType>();
         final ResultSet results = metadata.getTableTypes();
+        if (results == null) {
+            return list;
+        }
         try {
             bind(results, TableType.class, list);
-        } finally {
+        }
+        finally {
             results.close();
         }
         return list;
@@ -843,9 +996,13 @@ public class MetadataContext {
     public List<TypeInfo> getTypeInfo() throws SQLException {
         final List<TypeInfo> list = new ArrayList<TypeInfo>();
         final ResultSet results = metadata.getTypeInfo();
+        if (results == null) {
+            return list;
+        }
         try {
             bind(results, TypeInfo.class, list);
-        } finally {
+        }
+        finally {
             results.close();
         }
         return list;
@@ -869,9 +1026,13 @@ public class MetadataContext {
         final List<UDT> list = new ArrayList<UDT>();
         final ResultSet results = metadata.getUDTs(
                 catalog, schemaPattern, typeNamePattern, types);
+        if (results == null) {
+            return list;
+        }
         try {
             bind(results, UDT.class, list);
-        } finally {
+        }
+        finally {
             results.close();
         }
         return list;
@@ -895,9 +1056,13 @@ public class MetadataContext {
         final List<VersionColumn> list = new ArrayList<VersionColumn>();
         final ResultSet results = metadata.getVersionColumns(
                 catalog, schema, table);
+        if (results == null) {
+            return list;
+        }
         try {
             bind(results, VersionColumn.class, list);
-        } finally {
+        }
+        finally {
             results.close();
         }
         return list;
@@ -922,7 +1087,9 @@ public class MetadataContext {
             throw new NullPointerException("path is null");
         }
         if (getSuppressions().add(path)) {
-            logger.fine(format("duplicate suppression path: %s", path));
+            if (logger.isLoggable(FINE)) {
+                logger.fine(format("duplicate suppression path: %s", path));
+            }
         }
     }
 
@@ -963,8 +1130,21 @@ public class MetadataContext {
      * @param alias the alias value.
      * @return this instance.
      */
+    // @todo: make public
     private MetadataContext alias(final String path, final String alias) {
+        if (path == null) {
+            throw new NullPointerException("path is null");
+        }
+        if (alias == null) {
+            throw new NullPointerException("alias is null");
+        }
         final String previous = getAliases().put(path, alias);
+        if (previous != null) {
+            if (logger.isLoggable(FINE)) {
+                logger.log(FINE, format("previous alias for %1$s: %2$s", path,
+                                        previous));
+            }
+        }
         return this;
     }
 
@@ -987,7 +1167,8 @@ public class MetadataContext {
                     }
                 }
                 bfields.put(klass, unmodifiableMap(value));
-            } catch (final ReflectiveOperationException roe) {
+            }
+            catch (final ReflectiveOperationException roe) {
                 logger.severe(format(
                         "failed to get fields from %s annotated with %s",
                         klass, Bind.class));
@@ -1012,7 +1193,8 @@ public class MetadataContext {
                     }
                 }
                 ifields.put(klass, unmodifiableMap(value));
-            } catch (final ReflectiveOperationException roe) {
+            }
+            catch (final ReflectiveOperationException roe) {
                 logger.severe(format(
                         "failed to get fields from %s annotated with %s",
                         klass, Invoke.class));
@@ -1041,8 +1223,10 @@ public class MetadataContext {
     // -------------------------------------------------------------------------
     private final DatabaseMetaData metadata;
 
+    // field paths
     private Set<String> suppressions;
 
+    // field paths to column labels
     private Map<String, String> aliases;
 
     // fields with @Bind
