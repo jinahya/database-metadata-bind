@@ -66,7 +66,7 @@ public class MemorySqliteTest extends MemoryTest {
                       context.getClientInfoProperties(),
                       "memory.sqlite.clientInfoProperties");
             } catch (final SQLFeatureNotSupportedException sqlfnse) {
-                logger.warn("getClientProperties not supported", sqlfnse);
+                logger.warn("getClientInfoProperties not supported", sqlfnse);
             }
             store(TableType.class, context.getTableTypes(),
                   "memory.sqlite.tableTypes");
