@@ -22,6 +22,7 @@ import java.sql.Connection;
 import java.sql.DatabaseMetaData;
 import static java.sql.DriverManager.getConnection;
 import java.sql.SQLException;
+import java.sql.SQLFeatureNotSupportedException;
 import java.util.List;
 import org.slf4j.Logger;
 import static org.slf4j.LoggerFactory.getLogger;
@@ -56,12 +57,17 @@ public class MemorySqliteTest extends MemoryTest {
         try (Connection connection = getConnection(CONNECTION_URL)) {
             final DatabaseMetaData database = connection.getMetaData();
             final MetadataContext context = new MetadataContext(database);
+            context.suppress("catalog/schemas");
             context.suppress("schema/functions");
             final List<Catalog> catalogs = getCatalogs(context, true);
             store(Catalog.class, catalogs, "memory.sqlite.catalogs");
-            store(ClientInfoProperty.class,
-                  context.getClientInfoProperties(),
-                  "memory.sqlite.clientInfoProperties");
+            try {
+                store(ClientInfoProperty.class,
+                      context.getClientInfoProperties(),
+                      "memory.sqlite.clientInfoProperties");
+            } catch (final SQLFeatureNotSupportedException sqlfnse) {
+                logger.warn("getClientProperties not supported", sqlfnse);
+            }
             store(TableType.class, context.getTableTypes(),
                   "memory.sqlite.tableTypes");
             store(TypeInfo.class, context.getTypeInfo(),
