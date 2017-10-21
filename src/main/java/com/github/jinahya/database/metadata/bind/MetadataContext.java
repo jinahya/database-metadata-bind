@@ -193,13 +193,14 @@ public class MetadataContext {
                     "field=%s, path=%s, bind=%s", field, path, bind);
             if (!labels.remove(label)) {
                 logger.warning(format("unknown; %s", formatted));
-                label = alias(path);
-                if (label == null) {
-                    continue;
-                }
-                if (logger.isLoggable(FINE)) {
-                    logger.log(FINE, "using alias: {0}", label);
-                }
+                continue;
+//                label = alias(path);
+//                if (label == null) {
+//                    continue;
+//                }
+//                if (logger.isLoggable(FINE)) {
+//                    logger.log(FINE, "using alias: {0}", label);
+//                }
             }
             if (suppressed(path)) {
                 if (logger.isLoggable(FINE)) {
@@ -1142,41 +1143,41 @@ public class MetadataContext {
     }
 
     // ------------------------------------------------------------------- alias
-    private Map<String, String> getAliases() {
-        if (aliases == null) {
-            aliases = new HashMap<String, String>();
-        }
-        return aliases;
-    }
-
-    /**
-     * Add path aliases and returns this instance.
-     *
-     * @param path the path to alias.
-     * @param alias the alias value.
-     * @return this instance.
-     */
-    // @todo: make public
-    MetadataContext alias(final String path, final String alias) {
-        if (path == null) {
-            throw new NullPointerException("path is null");
-        }
-        if (alias == null) {
-            throw new NullPointerException("alias is null");
-        }
-        final String previous = getAliases().put(path, alias);
-        if (previous != null) {
-            if (logger.isLoggable(FINE)) {
-                logger.log(FINE, format("previous alias for %1$s: %2$s", path,
-                                        previous));
-            }
-        }
-        return this;
-    }
-
-    private String alias(final String path) {
-        return getAliases().get(path);
-    }
+//    private Map<String, String> getAliases() {
+//        if (aliases == null) {
+//            aliases = new HashMap<String, String>();
+//        }
+//        return aliases;
+//    }
+//
+//    /**
+//     * Add path aliases and returns this instance.
+//     *
+//     * @param path the path to alias.
+//     * @param alias the alias value.
+//     * @return this instance.
+//     */
+//    // @todo: make public
+//    MetadataContext alias(final String path, final String alias) {
+//        if (path == null) {
+//            throw new NullPointerException("path is null");
+//        }
+//        if (alias == null) {
+//            throw new NullPointerException("alias is null");
+//        }
+//        final String previous = getAliases().put(path, alias);
+//        if (previous != null) {
+//            if (logger.isLoggable(FINE)) {
+//                logger.log(FINE, format("previous alias for %1$s: %2$s", path,
+//                                        previous));
+//            }
+//        }
+//        return this;
+//    }
+//
+//    private String alias(final String path) {
+//        return getAliases().get(path);
+//    }
 
     // ----------------------------------------------------------------- bfields
     private Map<Field, Bind> bfields(final Class<?> klass) {
@@ -1253,7 +1254,7 @@ public class MetadataContext {
     private Set<String> suppressions;
 
     // field paths to column labels
-    private Map<String, String> aliases;
+//    private Map<String, String> aliases;
 
     // fields with @Bind
     private final transient Map<Class<?>, Map<Field, Bind>> bfields
