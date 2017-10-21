@@ -76,7 +76,6 @@ public class ExternalTest {
             store(TableType.class, context.getTableTypes(),
                   "external.tableTypes");
             store(TypeInfo.class, context.getTypeInfo(), "external.typeInfo");
-
         }
     }
 }

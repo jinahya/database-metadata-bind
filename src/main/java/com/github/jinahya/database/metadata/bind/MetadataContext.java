@@ -37,6 +37,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
+import java.util.logging.Level;
 import static java.util.logging.Level.FINE;
 import static java.util.logging.Level.SEVERE;
 import java.util.logging.Logger;
@@ -230,14 +231,15 @@ public class MetadataContext {
                 continue;
             }
         }
-        if (false) {
-            for (String label : labels) {
-                final Object value = results.getObject(label);
-                if (logger.isLoggable(FINE)) {
-                    logger.fine(format(
-                            "unhandled; klass=%s, label=%s, value=%s",
-                            type, label, value));
-                }
+        if (false && !labels.isEmpty()) {
+            logger.log(Level.INFO, "labels:{0}", labels);
+        }
+        for (String label : labels) {
+            final Object value = results.getObject(label);
+            if (logger.isLoggable(FINE)) {
+                logger.fine(format(
+                        "unhandled; klass=%s, label=%s, value=%s",
+                        type, label, value));
             }
         }
         for (final Entry<Field, Invoke> ifield : ifields(type).entrySet()) {

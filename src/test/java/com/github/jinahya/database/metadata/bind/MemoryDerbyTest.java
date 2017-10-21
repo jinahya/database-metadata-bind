@@ -94,6 +94,7 @@ public class MemoryDerbyTest extends MemoryTest {
             logger.debug("connected: {}", connection);
             DatabaseMetaData metadata = connection.getMetaData();
             final MetadataContext context = new MetadataContext(metadata);
+//            context.alias("column/scopeCatalog", "SCOPE_CATLOG");
             final List<Catalog> catalogs = getCatalogs(context, true);
             store(Catalog.class, catalogs, "memory.derby.catalogs");
             store(ClientInfoProperty.class, context.getClientInfoProperties(),
