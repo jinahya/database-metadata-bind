@@ -68,7 +68,6 @@ final class DatabaseMetadataBindTests {
 //            throws JAXBException {
 //        DatabaseMetadataBindTests.marshal(Catalogs.of(catalogs), name);
 //    }
-
     // -------------------------------------------------------------------------
     private DatabaseMetadataBindTests() {
         super();

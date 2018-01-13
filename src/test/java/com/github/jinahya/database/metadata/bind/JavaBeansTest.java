@@ -33,7 +33,7 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
-import java.util.function.Function;
+import static java.util.function.Function.identity;
 import static java.util.stream.Collectors.toMap;
 import org.slf4j.Logger;
 import static org.slf4j.LoggerFactory.getLogger;
@@ -124,8 +124,7 @@ public class JavaBeansTest {
         final BeanInfo info = Introspector.getBeanInfo(klass);
         final Map<String, PropertyDescriptor> descriptors
                 = Arrays.stream(info.getPropertyDescriptors()).collect(
-                        toMap(PropertyDescriptor::getName,
-                              Function.identity()));
+                        toMap(PropertyDescriptor::getName, identity()));
         for (final Field field : klass.getDeclaredFields()) {
             if (field.getAnnotation(Bind.class) == null) {
                 continue;

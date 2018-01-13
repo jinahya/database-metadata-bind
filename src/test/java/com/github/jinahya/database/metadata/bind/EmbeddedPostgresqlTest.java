@@ -37,47 +37,47 @@ import ru.yandex.qatools.embed.postgresql.EmbeddedPostgres;
  */
 public class EmbeddedPostgresqlTest {
 
-    private static final Logger logger = getLogger(lookup().lookupClass());
+  private static final Logger logger = getLogger(lookup().lookupClass());
 
-    // -------------------------------------------------------------------------
-    private static EmbeddedPostgres EMBEDDED_POSTGRES;
+  // -------------------------------------------------------------------------
+  private static EmbeddedPostgres EMBEDDED_POSTGRES;
 
-    private static String URL;
+  private static String URL;
 
-    // -------------------------------------------------------------------------
-    @BeforeClass
-    private static void beforeClass() throws Exception {
+  // -------------------------------------------------------------------------
+  @BeforeClass
+  private static void beforeClass() throws Exception {
 //        final PostgresStarter<PostgresExecutable, PostgresProcess> starter
 //                = PostgresStarter.getDefaultInstance();
 //        config = PostgresConfig.defaultWithDbName("test", "test", "test");
 //        final PostgresExecutable exec = starter.prepare(config);
 //        process = exec.start();
 
-        // starting Postgres
-        EMBEDDED_POSTGRES = new EmbeddedPostgres();
-        logger.debug("embedded postgres constructed");
-        URL = EMBEDDED_POSTGRES.start(
-                "localhost", 5432, "dbName", "userName", "password");
-        logger.debug("embedded postgres started on {}", URL);
-    }
+    // starting Postgres
+    EMBEDDED_POSTGRES = new EmbeddedPostgres();
+    logger.debug("embedded postgres constructed");
+    URL = EMBEDDED_POSTGRES.start(
+            "localhost", 5432, "dbName", "userName", "password");
+    logger.debug("embedded postgres started on {}", URL);
+  }
 
-    @AfterClass
-    private static void afterClass() throws Exception {
-        EMBEDDED_POSTGRES.stop();
-        logger.debug("embedded postgres stopped");
-    }
+  @AfterClass
+  private static void afterClass() throws Exception {
+    EMBEDDED_POSTGRES.stop();
+    logger.debug("embedded postgres stopped");
+  }
 
-    // -------------------------------------------------------------------------
-    @Test(enabled = true)
-    public void store() throws Exception {
-        try (Connection connection = getConnection(URL)) {
-            logger.debug("connection: {}", connection);
-            final DatabaseMetaData metadata = connection.getMetaData();
-            final MetadataContext context = new MetadataContext(metadata);
-            context.suppress("schema/functions");
-            final List<Catalog> catalogs
-                    = MetadataContext.getCatalogs(context, true);
-            JaxbTests.store(Catalog.class, catalogs, "embedded.postresql");
-        }
+  // -------------------------------------------------------------------------
+  @Test(enabled = true)
+  public void store() throws Exception {
+    try (Connection connection = getConnection(URL)) {
+      logger.debug("connection: {}", connection);
+      final DatabaseMetaData metadata = connection.getMetaData();
+      final MetadataContext context = new MetadataContext(metadata);
+      context.suppress("schema/functions");
+      final List<Catalog> catalogs
+              = MetadataContext.getCatalogs(context, true);
+      JaxbTests.store(Catalog.class, catalogs, "embedded.postresql");
     }
+  }
 }

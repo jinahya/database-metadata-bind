@@ -225,8 +225,7 @@ public class MetadataContext {
             }
             try {
                 field(field, instance, results, label);
-            }
-            catch (final ReflectiveOperationException roe) {
+            } catch (final ReflectiveOperationException roe) {
                 logger.log(SEVERE, format("failed to set %s with %s on %s",
                                           field, value, instance), roe);
                 continue;
@@ -264,13 +263,11 @@ public class MetadataContext {
             final Method method;
             try {
                 method = DatabaseMetaData.class.getMethod(name, types);
-            }
-            catch (final NoSuchMethodException nsme) {
+            } catch (final NoSuchMethodException nsme) {
                 logger.log(SEVERE, format("unknown method; {0}", formatted),
                            nsme);
                 continue;
-            }
-            catch (final NoSuchMethodError nsme) {
+            } catch (final NoSuchMethodError nsme) {
                 logger.log(SEVERE, format("unknown method; %s", formatted),
                            nsme);
                 continue;
@@ -282,8 +279,7 @@ public class MetadataContext {
                 final Object[] arguments;
                 try {
                     arguments = arguments(type, instance, types, literals);
-                }
-                catch (final ReflectiveOperationException roe) {
+                } catch (final ReflectiveOperationException roe) {
                     logger.severe(format(
                             "failed to convert arguments from %s on %s",
                             Arrays.toString(literals), type));
@@ -292,14 +288,12 @@ public class MetadataContext {
                 final Object result;
                 try {
                     result = method.invoke(metadata, arguments);
-                }
-                catch (final Exception e) { // NoSuchMethod
+                } catch (final Exception e) { // NoSuchMethod
                     logger.log(SEVERE, format(
                                "failed to invoke %s with %s", formatted,
                                Arrays.toString(arguments)), e);
                     continue;
-                }
-                catch (final Error e) { // NoSuchMethod/AbstractMethod
+                } catch (final Error e) { // NoSuchMethod/AbstractMethod
                     logger.log(SEVERE, format(
                                "failed to invoke %s with %s",
                                formatted, Arrays.toString(arguments)), e);
@@ -314,8 +308,7 @@ public class MetadataContext {
             }
             try {
                 field.set(instance, fvalue);
-            }
-            catch (final ReflectiveOperationException roe) {
+            } catch (final ReflectiveOperationException roe) {
                 logger.severe(format("failed to set %s with %s on %s",
                                      field, fvalue, instance));
             }
@@ -350,8 +343,7 @@ public class MetadataContext {
             final T instance;
             try {
                 instance = klass.newInstance();
-            }
-            catch (final ReflectiveOperationException roe) {
+            } catch (final ReflectiveOperationException roe) {
                 logger.log(SEVERE,
                            format("failed to create new instance of %s", klass),
                            roe);
@@ -389,8 +381,7 @@ public class MetadataContext {
         }
         try {
             bind(results, Attribute.class, list);
-        }
-        finally {
+        } finally {
             results.close();
         }
         return list;
@@ -422,8 +413,7 @@ public class MetadataContext {
         }
         try {
             bind(results, BestRowIdentifier.class, list);
-        }
-        finally {
+        } finally {
             results.close();
         }
         return list;
@@ -445,8 +435,7 @@ public class MetadataContext {
         }
         try {
             bind(results, Catalog.class, list);
-        }
-        finally {
+        } finally {
             results.close();
         }
         return list;
@@ -470,8 +459,7 @@ public class MetadataContext {
         }
         try {
             bind(results, ClientInfoProperty.class, list);
-        }
-        finally {
+        } finally {
             results.close();
         }
         return list;
@@ -504,8 +492,7 @@ public class MetadataContext {
         }
         try {
             bind(results, Column.class, list);
-        }
-        finally {
+        } finally {
             results.close();
         }
         return list;
@@ -537,8 +524,7 @@ public class MetadataContext {
         }
         try {
             bind(results, ColumnPrivilege.class, list);
-        }
-        finally {
+        } finally {
             results.close();
         }
         return list;
@@ -574,8 +560,7 @@ public class MetadataContext {
         }
         try {
             bind(results, CrossReference.class, list);
-        }
-        finally {
+        } finally {
             results.close();
         }
         return list;
@@ -608,8 +593,7 @@ public class MetadataContext {
         }
         try {
             bind(results, FunctionColumn.class, list);
-        }
-        finally {
+        } finally {
             results.close();
         }
         return list;
@@ -640,8 +624,7 @@ public class MetadataContext {
         }
         try {
             bind(results, Function.class, list);
-        }
-        finally {
+        } finally {
             results.close();
         }
         return list;
@@ -670,8 +653,7 @@ public class MetadataContext {
         }
         try {
             bind(results, ExportedKey.class, list);
-        }
-        finally {
+        } finally {
             results.close();
         }
         return list;
@@ -700,8 +682,7 @@ public class MetadataContext {
         }
         try {
             bind(results, ImportedKey.class, list);
-        }
-        finally {
+        } finally {
             results.close();
         }
         return list;
@@ -734,8 +715,7 @@ public class MetadataContext {
         }
         try {
             bind(results, IndexInfo.class, list);
-        }
-        finally {
+        } finally {
             results.close();
         }
         return list;
@@ -764,8 +744,7 @@ public class MetadataContext {
         }
         try {
             bind(results, PrimaryKey.class, list);
-        }
-        finally {
+        } finally {
             results.close();
         }
         return list;
@@ -799,8 +778,7 @@ public class MetadataContext {
         }
         try {
             bind(results, ProcedureColumn.class, list);
-        }
-        finally {
+        } finally {
             results.close();
         }
         return list;
@@ -831,8 +809,7 @@ public class MetadataContext {
         }
         try {
             bind(results, Procedure.class, list);
-        }
-        finally {
+        } finally {
             results.close();
         }
         return list;
@@ -865,8 +842,7 @@ public class MetadataContext {
         }
         try {
             bind(results, PseudoColumn.class, list);
-        }
-        finally {
+        } finally {
             results.close();
         }
         return list;
@@ -888,8 +864,7 @@ public class MetadataContext {
         }
         try {
             bind(results, SchemaName.class, list);
-        }
-        finally {
+        } finally {
             results.close();
         }
         return list;
@@ -916,8 +891,7 @@ public class MetadataContext {
         }
         try {
             bind(results, Schema.class, list);
-        }
-        finally {
+        } finally {
             results.close();
         }
         return list;
@@ -949,8 +923,7 @@ public class MetadataContext {
         }
         try {
             bind(results, Table.class, list);
-        }
-        finally {
+        } finally {
             results.close();
         }
         return list;
@@ -980,8 +953,7 @@ public class MetadataContext {
         }
         try {
             bind(results, TablePrivilege.class, list);
-        }
-        finally {
+        } finally {
             results.close();
         }
         return list;
@@ -1003,8 +975,7 @@ public class MetadataContext {
         }
         try {
             bind(results, TableType.class, list);
-        }
-        finally {
+        } finally {
             results.close();
         }
         return list;
@@ -1026,8 +997,7 @@ public class MetadataContext {
         }
         try {
             bind(results, TypeInfo.class, list);
-        }
-        finally {
+        } finally {
             results.close();
         }
         return list;
@@ -1057,8 +1027,7 @@ public class MetadataContext {
         }
         try {
             bind(results, UDT.class, list);
-        }
-        finally {
+        } finally {
             results.close();
         }
         return list;
@@ -1088,8 +1057,7 @@ public class MetadataContext {
         }
         try {
             bind(results, VersionColumn.class, list);
-        }
-        finally {
+        } finally {
             results.close();
         }
         return list;
@@ -1178,7 +1146,6 @@ public class MetadataContext {
 //    private String alias(final String path) {
 //        return getAliases().get(path);
 //    }
-
     // ----------------------------------------------------------------- bfields
     private Map<Field, Bind> bfields(final Class<?> klass) {
         if (klass == null) {
@@ -1194,8 +1161,7 @@ public class MetadataContext {
                     }
                 }
                 bfields.put(klass, unmodifiableMap(value));
-            }
-            catch (final ReflectiveOperationException roe) {
+            } catch (final ReflectiveOperationException roe) {
                 logger.severe(format(
                         "failed to get fields from %s annotated with %s",
                         klass, Bind.class));
@@ -1220,8 +1186,7 @@ public class MetadataContext {
                     }
                 }
                 ifields.put(klass, unmodifiableMap(value));
-            }
-            catch (final ReflectiveOperationException roe) {
+            } catch (final ReflectiveOperationException roe) {
                 logger.severe(format(
                         "failed to get fields from %s annotated with %s",
                         klass, Invoke.class));
@@ -1255,7 +1220,6 @@ public class MetadataContext {
 
     // field paths to column labels
 //    private Map<String, String> aliases;
-
     // fields with @Bind
     private final transient Map<Class<?>, Map<Field, Bind>> bfields
             = new HashMap<Class<?>, Map<Field, Bind>>();
