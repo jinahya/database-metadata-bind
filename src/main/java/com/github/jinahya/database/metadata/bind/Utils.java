@@ -68,7 +68,8 @@ final class Utils {
             throws NoSuchFieldException {
         try {
             return klass.getDeclaredField(name);
-        } catch (final NoSuchFieldException nsfe) {
+        }
+        catch (final NoSuchFieldException nsfe) {
             final Class<?> superclass = klass.getSuperclass();
             if (superclass == null) {
                 throw nsfe;
@@ -254,7 +255,8 @@ final class Utils {
         }
         try {
             field.set(obj, value);
-        } catch (final IllegalArgumentException iae) {
+        }
+        catch (final IllegalArgumentException iae) {
             if (type == Boolean.class) {
             }
             if (type == Byte.class) {
@@ -330,7 +332,8 @@ final class Utils {
         try {
             field.set(obj, value);
             return;
-        } catch (final IllegalArgumentException iae) {
+        }
+        catch (final IllegalArgumentException iae) {
             logger.log(FINE, format("failed to set %s on %s", value, field),
                        iae);
         }

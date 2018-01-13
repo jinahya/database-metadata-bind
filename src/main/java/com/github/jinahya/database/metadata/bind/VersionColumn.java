@@ -53,7 +53,7 @@ public class VersionColumn implements Serializable {
      * @see DatabaseMetaData#getVersionColumns(java.lang.String,
      * java.lang.String, java.lang.String)
      */
-    public static enum PseudoColumn implements IntFieldEnum<PseudoColumn>{
+    public static enum PseudoColumn implements IntFieldEnum<PseudoColumn> {
 
         /**
          * Constant for {@link DatabaseMetaData#versionColumnUnknown} whose

@@ -1178,7 +1178,6 @@ public class MetadataContext {
 //    private String alias(final String path) {
 //        return getAliases().get(path);
 //    }
-
     // ----------------------------------------------------------------- bfields
     private Map<Field, Bind> bfields(final Class<?> klass) {
         if (klass == null) {
@@ -1255,7 +1254,6 @@ public class MetadataContext {
 
     // field paths to column labels
 //    private Map<String, String> aliases;
-
     // fields with @Bind
     private final transient Map<Class<?>, Map<Field, Bind>> bfields
             = new HashMap<Class<?>, Map<Field, Bind>>();
