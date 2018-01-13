@@ -49,8 +49,7 @@ public class MemoryDerbyTest extends MemoryTest {
     static {
         try {
             DRIVER_CLASS = Class.forName(DRIVER_NAME);
-        }
-        catch (final ClassNotFoundException cnfe) {
+        } catch (final ClassNotFoundException cnfe) {
             throw new InstantiationError(cnfe.getMessage());
         }
     }
@@ -64,8 +63,7 @@ public class MemoryDerbyTest extends MemoryTest {
         properties.put("create", "true");
         final Connection connection = getConnection(CONNECTION_URL, properties);
         try {
-        }
-        finally {
+        } finally {
             connection.close();
         }
     }
@@ -78,13 +76,11 @@ public class MemoryDerbyTest extends MemoryTest {
             final Connection connection
                     = getConnection(CONNECTION_URL, properties);
             try {
-            }
-            finally {
+            } finally {
                 connection.close();
             }
             fail("an instance of SQLException should've been thrown");
-        }
-        catch (final SQLException sqle) {
+        } catch (final SQLException sqle) {
             // https://builds.apache.org/job/Derby-docs/lastSuccessfulBuild/artifact/trunk/out/ref/rrefattrib16471.html
             // this is expected
             // Shutdown commands always raise SQLExceptions.

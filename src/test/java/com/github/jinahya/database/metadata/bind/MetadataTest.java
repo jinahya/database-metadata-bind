@@ -24,6 +24,6 @@ import static org.slf4j.LoggerFactory.getLogger;
  */
 public class MetadataTest {
 
-    private static final Logger logger = getLogger(MetadataTest.class);
+  private static final Logger logger = getLogger(MetadataTest.class);
 
 }

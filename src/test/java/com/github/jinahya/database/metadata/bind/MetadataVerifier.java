@@ -112,7 +112,7 @@ public class MetadataVerifier {
 ////            }
 ////        }
 //    }
-    public void printSchema() {
+  public void printSchema() {
 //        final JAXBContext context =
-    }
+  }
 }

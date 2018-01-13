@@ -45,8 +45,7 @@ public class MemoryH2Test extends MemoryTest {
     static {
         try {
             DRIVER_CLASS = Class.forName(DRIVER_NAME);
-        }
-        catch (ClassNotFoundException cnfe) {
+        } catch (ClassNotFoundException cnfe) {
             throw new InstantiationError(cnfe.getMessage());
         }
     }
