@@ -157,7 +157,8 @@ public class JavaBeansTest {
                 .map(l -> {
                     try {
                         return Class.forName(p.getName() + "." + l);
-                    } catch (final ClassNotFoundException cnfe) {
+                    }
+                    catch (final ClassNotFoundException cnfe) {
                         throw new RuntimeException(cnfe);
                     }
                 })
@@ -167,9 +168,11 @@ public class JavaBeansTest {
                         unused(c);
                         reserved(c);
                         accessor(c);
-                    } catch (final ReflectiveOperationException roe) {
+                    }
+                    catch (final ReflectiveOperationException roe) {
                         throw new RuntimeException(roe);
-                    } catch (final IntrospectionException ie) {
+                    }
+                    catch (final IntrospectionException ie) {
                         throw new RuntimeException(ie);
                     }
                 });
