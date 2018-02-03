@@ -25,7 +25,7 @@ context.suppress("schema/functions", "table/pseudoColumns");
 final List<Catalog> catalogs = context.getCatalogs();
 final List<Schema> schemas = context.getSchemas("", null);
 final List<Tables> tables = context.getTables(null, null, null); // list all tables
-final List<PrimaryKeys> primaryKeys
+final List<PrimaryKey> primaryKeys
     = context.getPrimaryKeys("PUBLIC", "SYSTEM_LOBS", "BLOCKS");
 ```
 
@@ -48,13 +48,14 @@ Test cases for in-memory databases such as [Derby](https://db.apache.org/derby/)
 
 ### Embedded
 
-Tests against predefined embeddable databases. Note that tests for embeddable databases are in experimental state.
+Tests against predefined embeddable databases. Note that tests for embeddable databases are in an experimental state.
 
 ```sh
-$ mvn -Pembedded-<server> \
-      -Dclient="x.y.z" \
+$ mvn -Pembedded-<profile> \
+      -Dserver=<server>
+      -Dclient=<client> \
       -Dpaths="of/some,other/others,..." \
-      -Dtest=<Server>Test \
+      -Dtest=<test> \
       test
 $ cat target/embedded.<server>.xml
 ```
@@ -63,16 +64,16 @@ $ cat target/embedded.<server>.xml
 
 name      |value                            |notes
 ----------|---------------------------------|-----------
-`server`  |target database server           |see below
+`server`  |version of target database server|see below
 `client`  |version of target jdbc client    |see below
 `paths`   |comma-separated suppression paths|optional
 
 #### Servers, Clients and Tests
 
-database                                 |`server` is the version of                                            |`client` is the version of                                                         |test prefix            
------------------------------------------|----------------------------------------------------------------------|----------------------------------------------------------------------------------|------------------------
-[MariaDB](https://mariadb.org/)          |[`ch.vorburger.mariaDB4j:mariaDB4j`](https://goo.gl/8MmvRc)           |[`org.mariadb.jdbc:mariadb-java-client`](https://goo.gl/nRbU1J)|`Mariadb`      
-[PostgreSQL](https://www.postgresql.org/)|[`ru.yandex.qatools.embed:postgresql-embedded`](https://goo.gl/WoH4K9)|[`org.postgresql:postgresql`](https://goo.gl/JgXCaL)       |`Postgresql`
+database                                 |`profile`|`server` is the version of                                            |`client` is the version of                                                         |`test`            
+-----------------------------------------|---------|----------------------------------------------------------------------|----------------------------------------------------------------------------------|------------------------
+[MariaDB](https://mariadb.org/)          |`mariadb`|[`ch.vorburger.mariaDB4j:mariaDB4j`](https://goo.gl/8MmvRc)           |[`org.mariadb.jdbc:mariadb-java-client`](https://goo.gl/nRbU1J)|`EmbeddedMariadbTest`      
+[PostgreSQL](https://www.postgresql.org/)|`postgresql`|[`ru.yandex.qatools.embed:postgresql-embedded`](https://goo.gl/WoH4K9)|[`org.postgresql:postgresql`](https://goo.gl/JgXCaL)       |`EmbeddedPostgresqlTest`
 
 ### External
 
