@@ -46,9 +46,9 @@ marshaller.mashal(udt, ...);
 
 Test cases for in-memory databases such as [Derby](https://db.apache.org/derby/), [H2](http://www.h2database.com/html/main.html), [HSQLDB](http://hsqldb.org/), [SQLite](https://www.sqlite.org/) are prepared.
 
-### Embedded
+### Embedded (Experimental)
 
-Tests against predefined embeddable databases. Note that tests for embeddable databases are in an experimental state.
+Tests against predefined embeddable databases.
 
 ```sh
 $ mvn -Pembedded-<profile> \
