@@ -68,13 +68,10 @@ public class SchemaName implements Serializable {
 
     // -------------------------------------------------------------------------
     @XmlElement
-    @Label("TABLE_SCHEM")
     @Bind(label = "TABLE_SCHEM")
     private String tableSchem;
 
     @XmlElement(nillable = true)
-    @Label("TABLE_CATALOG")
     @Bind(label = "TABLE_CATALOG", nillable = true)
-    @Nillable
     private String tableCatalog;
 }

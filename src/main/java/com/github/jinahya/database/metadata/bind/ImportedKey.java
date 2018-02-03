@@ -159,8 +159,4 @@ public class ImportedKey extends TableKey {
     public ImportedKey() {
         super();
     }
-
-    // -------------------------------------------------------------------------
-    @Deprecated
-    private Table table;
 }

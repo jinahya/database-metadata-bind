@@ -41,14 +41,6 @@
     <version.animal-sniffer>1.16</version.animal-sniffer>
   </properties>
 
-  <repositories>
-    <repository>
-      <!-- mariaDB4j -->
-      <id>bintray-vorburger</id>
-      <url>https://dl.bintray.com/vorburger/maven/</url>
-    </repository>
-  </repositories>
-
   <dependencyManagement>
     <dependencies>
       <dependency>
@@ -293,7 +285,7 @@
       </properties>
     </profile>
     <profile>
-      <id>eembedded-maraiadb</id>
+      <id>embedded-mariadb</id>
       <dependencies>
         <dependency>
           <groupId>ch.vorburger.mariaDB4j</groupId>

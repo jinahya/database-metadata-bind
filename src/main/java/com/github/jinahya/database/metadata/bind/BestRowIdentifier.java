@@ -238,48 +238,34 @@ public class BestRowIdentifier implements Serializable {
 
     // -------------------------------------------------------------------------
     @XmlElement
-    @Label("SCOPE")
     @Bind(label = "SCOPE")
     private short scope;
 
     @XmlElement
-    @Label("COLUMN_NAME")
     @Bind(label = "COLUMN_NAME")
     private String columnName;
 
     @XmlElement
-    @Label("DATA_TYPE")
     @Bind(label = "DATA_TYPE")
     private int dataType;
 
     @XmlElement
-    @Label("TYPE_NAME")
     @Bind(label = "TYPE_NAME")
     private String typeName;
 
     @XmlElement
-    @Label("COLUMN_SIZE")
     @Bind(label = "COLUMN_SIZE")
     private int columnSize;
 
     @XmlElement(nillable = true)
-    @Unused
-    @Label("BUFFER_LENGTH")
     @Bind(label = "BUFFER_LENGTH", unused = true)
     private Integer bufferLength;
 
     @XmlElement(nillable = true)
-    @Nillable
-    @Label("DECIMAL_DIGITS")
     @Bind(label = "DECIMAL_DIGITS", nillable = true)
     private Short decimalDigits;
 
     @XmlElement
-    @Label("PSEUDO_COLUMN")
     @Bind(label = "PSEUDO_COLUMN")
     private short pseudoColumn;
-
-    // -------------------------------------------------------------------------
-    @Deprecated
-    private Table table;
 }

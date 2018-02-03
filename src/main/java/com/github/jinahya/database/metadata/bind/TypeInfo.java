@@ -299,98 +299,74 @@ public class TypeInfo implements Serializable {
 
     // -------------------------------------------------------------------------
     @XmlElement
-    @Label("TYPE_NAME")
     @Bind(label = "TYPE_NAME")
     private String typeName;
 
     @XmlElement
-    @Label("DATA_TYPE")
     @Bind(label = "DATA_TYPE")
     private int dataType;
 
     @XmlElement
-    @Label("PRECISION")
     @Bind(label = "PRECISION")
     private int precision;
 
     @XmlElement(nillable = true)
-    @Label("LITERAL_PREFIX")
     @Bind(label = "LITERAL_PREFIX", nillable = true)
-    @Nillable
     private String literalPrefix;
 
     @XmlElement(nillable = true)
-    @Label("LITERAL_SUFFIX")
     @Bind(label = "LITERAL_SUFFIX", nillable = true)
-    @Nillable
     private String literalSuffix;
 
     @XmlElement(nillable = true)
-    @Label("CREATE_PARAMS")
     @Bind(label = "CREATE_PARAMS", nillable = true)
-    @Nillable
     private String createParams;
 
     @XmlElement
-    @Label("NULLABLE")
     @Bind(label = "NULLABLE")
     private short nullable;
 
     @XmlElement
-    @Label("CASE_SENSITIVE")
     @Bind(label = "CASE_SENSITIVE")
     private boolean caseSensitive;
 
     @XmlElement
-    @Label("SEARCHABLE")
     @Bind(label = "SEARCHABLE")
     private short searchable;
 
     @XmlElement
-    @Label("UNSIGNED_ATTRIBUTE")
     @Bind(label = "UNSIGNED_ATTRIBUTE")
     private boolean unsignedAttribute;
 
     @XmlElement
-    @Label("FIXED_PREC_SCALE")
     @Bind(label = "FIXED_PREC_SCALE")
     private boolean fixedPrecScale;
 
     @XmlElement
-    @Label("AUTO_INCREMENT")
     @Bind(label = "AUTO_INCREMENT")
     private boolean autoIncrement;
 
     @XmlElement(nillable = true)
-    @Label("LOCAL_TYPE_NAME")
     @Bind(label = "LOCAL_TYPE_NAME", nillable = true)
-    @Nillable
     private String localTypeName;
 
     @XmlElement
-    @Label("MINIMUM_SCALE")
     @Bind(label = "MINIMUM_SCALE")
     private short minimumScale;
 
     @XmlElement
-    @Label("MAXIMUM_SCALE")
     @Bind(label = "MAXIMUM_SCALE")
     private short maximumScale;
 
     @XmlElement(nillable = true)
-    @Label("SQL_DATA_TYPE")
     @Bind(label = "SQL_DATA_TYPE", unused = true)
-    @Unused
     private Integer sqlDataType;
 
     @XmlElement(nillable = true)
-    @Label("SQL_DATETIME_SUB")
     @Bind(label = "SQL_DATETIME_SUB", unused = true)
-    @Unused
     private Integer sqlDatetimeSub;
 
     @XmlElement
-    @Label("NUM_PREC_RADIX")
     @Bind(label = "NUM_PREC_RADIX")
     private int numPrecRadix;
 }

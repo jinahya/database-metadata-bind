@@ -126,35 +126,27 @@ public class Function implements Serializable {
 
     // -------------------------------------------------------------------------
     @XmlAttribute
-    @Label("FUNCTION_CAT")
     @Bind(label = "FUNCTION_CAT", nillable = true)
-    @Nillable
     private String functionCat;
 
     @XmlAttribute
-    @Label("FUNCTION_SCHEM")
     @Bind(label = "FUNCTION_SCHEM", nillable = true)
-    @Nillable
     private String functionSchem;
 
     // -------------------------------------------------------------------------
     @XmlElement
-    @Label("FUNCTION_NAME")
     @Bind(label = "FUNCTION_NAME")
     private String functionName;
 
     @XmlElement
-    @Label("REMARKS")
     @Bind(label = "REMARKS")
     private String remarks;
 
     @XmlElement
-    @Label("FUNCTION_TYPE")
     @Bind(label = "FUNCTION_TYPE")
     private short functionType;
 
     @XmlElement
-    @Label("SPECIFIC_NAME")
     @Bind(label = "SPECIFIC_NAME")
     private String specificName;
 
@@ -168,8 +160,4 @@ public class Function implements Serializable {
             }
     )
     private List<FunctionColumn> functionColumns;
-
-    // -------------------------------------------------------------------------
-    @Deprecated
-    private Schema schema;
 }

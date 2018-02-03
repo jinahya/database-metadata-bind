@@ -172,67 +172,51 @@ public class PseudoColumn implements Serializable {
 
     // -------------------------------------------------------------------------
     @XmlAttribute
-    @Label("TABLE_CAT")
     @Bind(label = "TABLE_CAT", nillable = true)
-    @Nillable
     private String tableCat;
 
     @XmlAttribute
-    @Label("TABLE_SCHEM")
     @Bind(label = "TABLE_SCHEM", nillable = true)
-    @Nillable
     private String tableSchem;
 
     @XmlAttribute
-    @Label("TABLE_NAME")
     @Bind(label = "TABLE_NAME")
     private String tableName;
 
     // -------------------------------------------------------------------------
     @XmlElement
-    @Label("COLUMN_NAME")
     @Bind(label = "COLUMN_NAME")
     private String columnName;
 
     @XmlElement
-    @Label("DATA_TYPE")
     @Bind(label = "DATA_TYPE")
     private int dataType;
 
     @XmlElement
-    @Label("COLUMN_SIZE")
     @Bind(label = "COLUMN_SIZE")
     private int columnSize;
 
     @XmlElement(nillable = true)
-    @Label("DECIMAL_DIGITS")
     @Bind(label = "DECIMAL_DIGITS", nillable = true)
-    @Nillable
     private Integer decimalDigits;
 
     @XmlElement
-    @Label("NUM_PREC_RADIX")
     @Bind(label = "NUM_PREC_RADIX")
     private int numPrecRadix;
 
     @XmlElement
-    @Label("COLUMN_USAGE")
     @Bind(label = "COLUMN_USAGE")
     private String columnUsage;
 
     @XmlElement(nillable = true)
-    @Label("REMARKS")
     @Bind(label = "REMARKS", nillable = true)
-    @Nillable
     private String remarks;
 
     @XmlElement
-    @Label("CHAR_OCTET_LENGTH")
     @Bind(label = "CHAR_OCTET_LENGTH")
     private int charOctetLength;
 
     @XmlElement
-    @Label("IS_NULLABLE")
     @Bind(label = "IS_NULLABLE")
     private String isNullable;
 

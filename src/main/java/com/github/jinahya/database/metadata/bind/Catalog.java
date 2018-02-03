@@ -91,7 +91,6 @@ public class Catalog implements Serializable {//extends AbstractTableDomain {
     Boolean virtual;
 
     @XmlElement
-    @Label("TABLE_CAT")
     @Bind(label = "TABLE_CAT")
     private String tableCat;
 

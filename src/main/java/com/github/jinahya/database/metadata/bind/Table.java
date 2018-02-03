@@ -282,62 +282,44 @@ public class Table implements Serializable {
 
     // -------------------------------------------------------------------------
     @XmlAttribute
-    @Nillable
-    @Label("TABLE_CAT")
     @Bind(label = "TABLE_CAT", nillable = true)
     private String tableCat;
 
     @XmlAttribute
-    @Nillable
-    @Label("TABLE_SCHEM")
     @Bind(label = "TABLE_SCHEM", nillable = true)
     private String tableSchem;
 
     // -------------------------------------------------------------------------
     @XmlElement
-    @Label("TABLE_NAME")
     @Bind(label = "TABLE_NAME")
     private String tableName;
 
     @XmlElement
-    @Label("TABLE_TYPE")
     @Bind(label = "TABLE_TYPE")
     private String tableType;
 
-    @Label("REMARKS")
-    @Nillable
     @XmlElement(nillable = true)
     @Bind(label = "REMARKS", nillable = true)
     private String remarks;
 
     @XmlElement(nillable = true)
-    @Label("TYPE_CAT")
     @Bind(label = "TYPE_CAT", nillable = true)
-    @Nillable
     private String typeCat;
 
     @XmlElement(nillable = true)
-    @Label("TYPE_SCHEM")
     @Bind(label = "TYPE_SCHEM", nillable = true)
-    @Nillable
     private String typeSchem;
 
     @XmlElement(nillable = true)
-    @Label("TYPE_NAME")
     @Bind(label = "TYPE_NAME", nillable = true)
-    @Nillable
     private String typeName;
 
     @XmlElement(nillable = true)
-    @Label("SELF_REFERENCING_COL_NAME")
     @Bind(label = "SELF_REFERENCING_COL_NAME", nillable = true)
-    @Nillable
     private String selfReferencingColName;
 
     @XmlElement(nillable = true)
-    @Label("REF_GENERATION")
     @Bind(label = "REF_GENERATION", nillable = true)
-    @Nillable
     private String refGeneration;
 
     // -------------------------------------------------------------------------
@@ -446,8 +428,4 @@ public class Table implements Serializable {
             }
     )
     private List<VersionColumn> versionColumns;
-
-    // -------------------------------------------------------------------------
-    @Deprecated
-    private Schema schema;
 }

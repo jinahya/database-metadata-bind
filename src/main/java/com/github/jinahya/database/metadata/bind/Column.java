@@ -365,135 +365,99 @@ public class Column implements Serializable {
 
     // -------------------------------------------------------------------------
     @XmlAttribute
-    @Label("TABLE_CAT")
     @Bind(label = "TABLE_CAT", nillable = true)
-    @Nillable
     private String tableCat;
 
     @XmlAttribute
-    @Label("TABLE_SCHEM")
     @Bind(label = "TABLE_SCHEM", nillable = true)
-    @Nillable
     private String tableSchem;
 
     @XmlAttribute
-    @Label("TABLE_NAME")
     @Bind(label = "TABLE_NAME")
     private String tableName;
 
     // -------------------------------------------------------------------------
     @XmlElement
-    @Label("COLUMN_NAME")
     @Bind(label = "COLUMN_NAME")
     private String columnName;
 
     @XmlElement
-    @Label("DATA_TYPE")
     @Bind(label = "DATA_TYPE")
     private int dataType;
 
     @XmlElement
-    @Label("TYPE_NAME")
     @Bind(label = "TYPE_NAME")
     private String typeName;
 
     @XmlElement
-    @Label("COLUMN_SIZE")
     @Bind(label = "COLUMN_SIZE")
     private int columnSize;
 
     @XmlElement(nillable = true)
-    @Label("BUFFER_LENGTH")
     @Bind(label = "BUFFER_LENGTH", unused = true)
-    @Unused
     private Integer bufferLength;
 
     @XmlElement
-    @Label("DECIMAL_DIGITS")
     @Bind(label = "DECIMAL_DIGITS", nillable = true)
-    @Nillable
     private Integer decimalDigits;
 
     @XmlElement
-    @Label("NUM_PREC_RADIX")
     @Bind(label = "NUM_PREC_RADIX")
     private int numPrecRadix;
 
     @XmlElement
-    @Label("NULLABLE")
     @Bind(label = "NULLABLE")
     private int nullable;
 
     @XmlElement(nillable = true)
-    @Label("REMARKS")
     @Bind(label = "REMARKS", nillable = true)
-    @Nillable
     private String remarks;
 
     @XmlElement(nillable = true)
-    @Label("COLUMN_DEF")
     @Bind(label = "COLUMN_DEF", nillable = true)
-    @Nillable
     private String columnDef;
 
     @XmlElement(nillable = true)
-    @Label("SQL_DATA_TYPE")
     @Bind(label = "SQL_DATA_TYPE", unused = true)
-    @Unused
     private Integer sqlDataType;
 
     @XmlElement(nillable = true)
-    @Label("SQL_DATETIME_SUB")
     @Bind(label = "SQL_DATETIME_SUB", unused = true)
-    @Unused
     private Integer sqlDatetimeSub;
 
     @XmlElement
-    @Label("CHAR_OCTET_LENGTH")
     @Bind(label = "CHAR_OCTET_LENGTH")
     private int charOctetLength;
 
     @XmlElement
-    @Label("ORDINAL_POSITION")
     @Bind(label = "ORDINAL_POSITION")
     private int ordinalPosition;
 
     @XmlElement
-    @Label("IS_NULLABLE")
     @Bind(label = "IS_NULLABLE")
     private String isNullable;
 
     @XmlElement(nillable = true)
-    @Label("SCOPE_CATALOG")
     @Bind(label = "SCOPE_CATALOG", nillable = true)
-    @Nillable
     private String scopeCatalog;
 
     @XmlElement(nillable = true)
-    @Label("SCOPE_SCHEMA")
     @Bind(label = "SCOPE_SCHEMA", nillable = true)
-    @Nillable
     private String scopeSchema;
 
     @XmlElement(nillable = true)
-    @Label("SCOPE_TABLE")
     @Bind(label = "SCOPE_TABLE", nillable = true)
-    @Nillable
     private String scopeTable;
 
     @XmlElement(nillable = true)
-    @Label("SOURCE_DATA_TYPE")
     @Bind(label = "SOURCE_DATA_TYPE", nillable = true)
-    @Nillable
     private Short sourceDataType;
 
     @XmlElement
-    @Label("IS_AUTOINCREMENT")
     @Bind(label = "IS_AUTOINCREMENT")
     private String isAutoincrement;
 
     @XmlElement
-    @Label("IS_GENERATEDCOLUMN")
     @Bind(label = "IS_GENERATEDCOLUMN")
     private String isGeneratedcolumn;
 
@@ -507,8 +471,4 @@ public class Column implements Serializable {
             }
     )
     private List<ColumnPrivilege> columnPrivileges;
-
-    // -------------------------------------------------------------------------
-    @Deprecated
-    private Table table;
 }

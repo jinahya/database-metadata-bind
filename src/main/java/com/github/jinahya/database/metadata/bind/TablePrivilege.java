@@ -120,42 +120,31 @@ public class TablePrivilege implements Serializable {
 
     // -------------------------------------------------------------------------
     @XmlAttribute
-    @Label("TABLE_CAT")
     @Bind(label = "TABLE_CAT", nillable = true)
-    @Nillable
     private String tableCat;
 
     @XmlAttribute
-    @Label("TABLE_SCHEM")
     @Bind(label = "TABLE_SCHEM", nillable = true)
-    @Nillable
     private String tableSchem;
 
     @XmlAttribute
-    @Label("TABLE_NAME")
     @Bind(label = "TABLE_NAME")
     private String tableName;
 
     @XmlElement(nillable = true)
-    @Label("GRANTOR")
     @Bind(label = "GRANTOR", nillable = true)
-    @Nillable
     private String grantor;
 
     @XmlElement
-    @Label("GRANTEE")
     @Bind(label = "GRANTEE")
     private String grantee;
 
     @XmlElement
-    @Label("PRIVILEGE")
     @Bind(label = "PRIVILEGE")
     private String privilege;
 
     @XmlElement(nillable = true)
-    @Label("IS_GRANTABLE")
     @Bind(label = "IS_GRANTABLE", nillable = true)
-    @Nillable
     private String isGrantable;
 
     // -------------------------------------------------------------------------

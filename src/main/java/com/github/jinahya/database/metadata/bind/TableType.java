@@ -58,7 +58,6 @@ public class TableType implements Serializable {
 
     // -------------------------------------------------------------------------
     @XmlElement
-    @Label("TABLE_TYPE")
     @Bind(label = "TABLE_TYPE")
     private String tableType;
 }

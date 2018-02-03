@@ -109,40 +109,27 @@ public class SuperType implements Serializable {
 
     // -------------------------------------------------------------------------
     @XmlAttribute
-    @Label("TYPE_CAT")
     @Bind(label = "TYPE_CAT", nillable = true)
-    @Nillable
     private String typeCat;
 
     @XmlAttribute
-    @Label("TYPE_SCHEM")
     @Bind(label = "TYPE_SCHEM", nillable = true)
-    @Nillable
     private String typeSchem;
 
     // -------------------------------------------------------------------------
     @XmlElement
-    @Label("TYPE_NAME")
     @Bind(label = "TYPE_NAME")
     private String typeName;
 
     @XmlElement(nillable = true)
-    @Label("SUPERTYPE_CAT")
     @Bind(label = "SUPERTYPE_CAT", nillable = true)
-    @Nillable
     private String supertypeCat;
 
     @XmlElement(nillable = true)
-    @Label("SUPERTYPE_SCHEM")
     @Bind(label = "SUPERTYPE_SCHEM", nillable = true)
-    @Nillable
     private String supertypeSchem;
 
     @XmlElement
-    @Label("SUPERTYPE_NAME")
     @Bind(label = "SUPERTYPE_NAME")
     private String supertypeName;
-
-    @Deprecated
-    private UDT udt;
 }

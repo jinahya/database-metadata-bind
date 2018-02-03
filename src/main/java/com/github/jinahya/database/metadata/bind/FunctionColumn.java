@@ -356,95 +356,71 @@ public class FunctionColumn implements Serializable {
 
     // -------------------------------------------------------------------------
     @XmlAttribute
-    @Label("FUNCTION_CAT")
     @Bind(label = "FUNCTION_CAT", nillable = true)
-    @Nillable
     private String functionCat;
 
     @XmlAttribute
-    @Label("FUNCTION_SCHEM")
     @Bind(label = "FUNCTION_SCHEM", nillable = true)
-    @Nillable
     private String functionSchem;
 
     @XmlAttribute
-    @Label("FUNCTION_NAME")
     @Bind(label = "FUNCTION_NAME")
     private String functionName;
 
     // -------------------------------------------------------------------------
     @XmlElement
-    @Label("COLUMN_NAME")
     @Bind(label = "COLUMN_NAME")
     private String columnName;
 
     @XmlElement
-    @Label("COLUMN_TYPE")
     @Bind(label = "COLUMN_TYPE")
     private short columnType;
 
     @XmlElement
-    @Label("DATA_TYPE")
     @Bind(label = "DATA_TYPE")
     private int dataType;
 
-    @Label("TYPE_NAME")
-    @Bind(label = "TYPE_NAME")
     @XmlElement
+    @Bind(label = "TYPE_NAME")
     private String typeName;
 
     @XmlElement
-    @Label("PRECISION")
     @Bind(label = "PRECISION")
     private int precision;
 
     @XmlElement
-    @Label("LENGTH")
     @Bind(label = "LENGTH")
     private int length;
 
     @XmlElement
-    @Label("SCALE")
     @Bind(label = "SCALE")
     private Short scale;
 
     @XmlElement
-    @Label("RADIX")
     @Bind(label = "RADIX")
     private short radix;
 
     @XmlElement
-    @Label("NULLABLE")
     @Bind(label = "NULLABLE")
     private short nullable;
 
     @XmlElement
-    @Label("REMARKS")
     @Bind(label = "REMARKS")
     private String remarks;
 
     @XmlElement(nillable = true)
-    @Label("CHAR_OCTET_LENGTH")
     @Bind(label = "CHAR_OCTET_LENGTH", nillable = true)
-    @Nillable
     private Integer charOctetLength;
 
     @XmlElement
-    @Label("ORDINAL_POSITION")
     @Bind(label = "ORDINAL_POSITION")
     private int ordinalPosition;
 
     @XmlElement
-    @Label("IS_NULLABLE")
     @Bind(label = "IS_NULLABLE")
     private String isNullable;
 
     @XmlElement
-    @Label("SPECIFIC_NAME")
     @Bind(label = "SPECIFIC_NAME")
     private String specificName;
-
-    // -------------------------------------------------------------------------
-    @Deprecated
-    private Function function;
 }

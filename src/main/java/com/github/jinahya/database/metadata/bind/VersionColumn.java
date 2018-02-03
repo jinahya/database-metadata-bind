@@ -212,48 +212,34 @@ public class VersionColumn implements Serializable {
 
     // -------------------------------------------------------------------------
     @XmlElement(nillable = true)
-    @Label("SCOPE")
     @Bind(label = "SCOPE", unused = true)
-    @Unused
     private short scope;
 
     @XmlElement
-    @Label("COLUMN_NAME")
     @Bind(label = "COLUMN_NAME")
     private String columnName;
 
     @XmlElement
-    @Label("DATA_TYPE")
     @Bind(label = "DATA_TYPE")
     private int dataType;
 
     @XmlElement
-    @Label("TYPE_NAME")
     @Bind(label = "TYPE_NAME")
     private String typeName;
 
     @XmlElement
-    @Label("COLUMN_SIZE")
     @Bind(label = "COLUMN_SIZE")
     private int columnSize;
 
     @XmlElement
-    @Label("BUFFER_LENGTH")
     @Bind(label = "BUFFER_LENGTH")
     private int bufferLength;
 
     @XmlElement(nillable = true)
-    @Label("DECIMAL_DIGITS")
     @Bind(label = "DECIMAL_DIGITS", nillable = true)
-    @Nillable
     private Short decimalDigits;
 
     @XmlElement
-    @Label("PSEUDO_COLUMN")
     @Bind(label = "PSEUDO_COLUMN")
     private short pseudoColumn;
-
-    // -------------------------------------------------------------------------
-    @Deprecated
-    private Table table;
 }

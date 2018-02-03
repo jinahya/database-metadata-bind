@@ -120,14 +120,11 @@ public class Schema implements Serializable {//extends AbstractTableDomain {
 
     // -------------------------------------------------------------------------
     @XmlAttribute
-    @Label("TABLE_CATALOG")
     @Bind(label = "TABLE_CATALOG", nillable = true)
-    @Nillable
     private String tableCatalog;
 
     // -------------------------------------------------------------------------
     @XmlElement
-    @Label("TABLE_SCHEM")
     @Bind(label = "TABLE_SCHEM")
     private String tableSchem;
 
@@ -168,8 +165,4 @@ public class Schema implements Serializable {//extends AbstractTableDomain {
             }
     )
     private List<UDT> UDTs;
-
-    // -------------------------------------------------------------------------
-    @Deprecated
-    private Catalog catalog;
 }

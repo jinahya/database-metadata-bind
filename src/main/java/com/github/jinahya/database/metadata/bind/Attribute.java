@@ -277,103 +277,75 @@ public class Attribute implements Serializable {
 
     // -------------------------------------------------------------------------
     @XmlAttribute
-    @Label("TYPE_CAT")
     @Bind(label = "TYPE_CAT", nillable = true)
-    @Nillable
     private String typeCat;
 
     @XmlAttribute
-    @Label("TYPE_SCHEM")
     @Bind(label = "TYPE_SCHEM", nillable = true)
-    @Nillable
     private String typeSchem;
 
     @XmlAttribute
-    @Label("TYPE_NAME")
     @Bind(label = "TYPE_NAME")
     private String typeName;
 
     // -------------------------------------------------------------------------
     @XmlElement
-    @Label("ATTR_NAME")
     @Bind(label = "ATTR_NAME")
     private String attrName;
 
     @XmlElement
-    @Label("DATA_TYPE")
     @Bind(label = "DATA_TYPE")
     private int dataType;
 
     @XmlElement
-    @Label("ATTR_TYPE_NAME")
     @Bind(label = "ATTR_TYPE_NAME")
     private String attrTypeName;
 
     @XmlElement
-    @Label("ATTR_SIZE")
     @Bind(label = "ATTR_SIZE")
     private int attrSize;
 
     @XmlElement
-    @Label("DECIMAL_DIGITS")
     @Bind(label = "DECIMAL_DIGITS")
     private Integer decimalDigits;
 
     @XmlElement
-    @Label("NUM_PREC_RADIX")
     @Bind(label = "NUM_PREC_RADIX")
     private int numPrecRadix;
 
     @XmlElement
-    @Label("NULLABLE")
     @Bind(label = "NULLABLE")
     private int nullable;
 
     @XmlElement(nillable = true)
-    @Label("REMARKS")
     @Bind(label = "REMARKS", nillable = true)
-    @Nillable
     private String remarks;
 
     @XmlElement(nillable = true)
-    @Label("ATTR_DEF")
     @Bind(label = "ATTR_DEF", nillable = true)
-    @Nillable
     private String attrDef;
 
     @XmlElement(nillable = true)
-    @Label("SQL_DATA_TYPE")
     @Bind(label = "SQL_DATA_TYPE", unused = true)
-    @Unused
     private Integer sqlDataType;
 
     @XmlElement(nillable = true)
-    @Label("SQL_DATETIME_SUB")
     @Bind(label = "SQL_DATETIME_SUB", unused = true)
-    @Unused
     private Integer sqlDatetimeSub;
 
     @XmlElement
-    @Label("CHAR_OCTET_LENGTH")
     @Bind(label = "CHAR_OCTET_LENGTH")
     private int charOctetLength;
 
     @XmlElement
-    @Label("ORDINAL_POSITION")
     @Bind(label = "ORDINAL_POSITION")
     private int ordinalPosition;
 
     @XmlElement
-    @Label("IS_NULLABLE")
     @Bind(label = "IS_NULLABLE")
     private String isNullable;
 
     @XmlElement(nillable = true)
-    @Nillable
-    @Label("SOURCE_DATA_TYPE")
     @Bind(label = "SOURCE_DATA_TYPE", nillable = true)
     private Short sourceDataType;
-
-    @Deprecated
-    private UDT udt;
 }

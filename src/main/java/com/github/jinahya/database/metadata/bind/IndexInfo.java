@@ -183,79 +183,55 @@ public class IndexInfo implements Serializable {
 
     // -------------------------------------------------------------------------
     @XmlAttribute
-    @Label("TABLE_CAT")
     @Bind(label = "TABLE_CAT", nillable = true)
-    @Nillable
     private String tableCat;
 
     @XmlAttribute
-    @Label("TABLE_SCHEM")
     @Bind(label = "TABLE_SCHEM", nillable = true)
-    @Nillable
     private String tableSchem;
 
     @XmlAttribute
-    @Label("TABLE_NAME")
     @Bind(label = "TABLE_NAME")
     private String tableName;
 
     // -------------------------------------------------------------------------
     @XmlElement
-    @Label("NON_UNIQUE")
     @Bind(label = "NON_UNIQUE")
     private boolean nonUnique;
 
     @XmlElement(nillable = true)
-    @Label("INDEX_QUALIFIER")
     @Bind(label = "INDEX_QUALIFIER", nillable = true)
-    @Nillable
     private String indexQualifier;
 
     @XmlElement(nillable = true)
-    @Label("INDEX_NAME")
     @Bind(label = "INDEX_NAME", nillable = true)
-    @Nillable
     private String indexName;
 
     @XmlElement
-    @Label("TYPE")
     @Bind(label = "TYPE")
     private short type;
 
     @XmlElement
-    @Label("ORDINAL_POSITION")
     @Bind(label = "ORDINAL_POSITION")
     private short ordinalPosition;
 
     @XmlElement(nillable = true)
-    @Label("COLUMN_NAME")
     @Bind(label = "COLUMN_NAME", nillable = true)
-    @Nillable
     private String columnName;
 
     @XmlElement(nillable = true)
-    @Label("ASC_OR_DESC")
     @Bind(label = "ASC_OR_DESC", nillable = true)
-    @Nillable
     private String ascOrDesc;
 
     @XmlElement
-    @Label("CARDINALITY")
     @Bind(label = "CARDINALITY")
     private long cardinality;
 
     @XmlElement
-    @Label("PAGES")
     @Bind(label = "PAGES")
     private long pages;
 
     @XmlElement(nillable = true)
-    @Label("FILTER_CONDITION")
     @Bind(label = "FILTER_CONDITION", nillable = true)
-    @Nillable
     private String filterCondition;
-
-    // -------------------------------------------------------------------------
-    @Deprecated
-    private Table table;
 }

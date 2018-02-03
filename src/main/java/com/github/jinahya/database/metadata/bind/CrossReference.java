@@ -192,86 +192,59 @@ public class CrossReference implements Serializable {
 
     // -------------------------------------------------------------------------
     @XmlAttribute
-    @Label("PKTABLE_CAT")
     @Bind(label = "PKTABLE_CAT", nillable = true)
-    @Nillable
     private String pktableCat;
 
     @XmlAttribute
-    @Label("PKTABLE_SCHEM")
     @Bind(label = "PKTABLE_SCHEM", nillable = true)
-    @Nillable
     private String pktableSchem;
 
     @XmlAttribute
-    @Label("PKTABLE_NAME")
     @Bind(label = "PKTABLE_NAME")
     private String pktableName;
 
     // -------------------------------------------------------------------------
     @XmlElement
-    @Label("PKCOLUMN_NAME")
     @Bind(label = "PKCOLUMN_NAME")
     private String pkcolumnName;
 
     @XmlAttribute
-    @Label("FKTABLE_CAT")
     @Bind(label = "FKTABLE_CAT", nillable = true)
-    @Nillable
     private String fktableCat;
 
     @XmlAttribute
-    @Label("FKTABLE_NAME")
     @Bind(label = "FKTABLE_NAME", nillable = true)
-    @Nillable
     private String fktableSchem;
 
     @XmlAttribute
-    @Label("FKTABLE_NAME")
     @Bind(label = "FKTABLE_NAME")
     private String fktableName;
 
     @XmlElement
-    @Label("FKCOLUMN_NAME")
     @Bind(label = "FKCOLUMN_NAME")
     private String fkcolumnName;
 
     @XmlElement
-    @Label("FKCOLUMN_NAME")
     @Bind(label = "FKCOLUMN_NAME")
     private short keySeq;
 
     @XmlElement
-    @Label("UPDATE_RULE")
     @Bind(label = "UPDATE_RULE")
     private short updateRule;
 
     @XmlElement
-    @Label("DELETE_RULE")
     @Bind(label = "DELETE_RULE")
     private short deleteRule;
 
     @XmlElement(nillable = true)
-    @Label("FK_NAME")
     @Bind(label = "FK_NAME", nillable = true)
-    @Nillable
     private String fkName;
 
     @XmlElement(nillable = true)
-    @Label("PK_NAME")
     @Bind(label = "PK_NAME", nillable = true)
-    @Nillable
     private String pkName;
 
     @XmlElement
-    @Label("DEFERRABILITY")
     @Bind(label = "DEFERRABILITY")
     private short deferrability;
-
-    // -------------------------------------------------------------------------
-    @Deprecated
-    private Table parentTable;
-
-    @Deprecated
-    private Table foreighTable;
 }

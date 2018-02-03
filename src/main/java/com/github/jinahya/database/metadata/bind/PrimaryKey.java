@@ -97,40 +97,27 @@ public class PrimaryKey implements Serializable {
 
     // -------------------------------------------------------------------------
     @XmlAttribute
-    @Label("TABLE_CAT")
     @Bind(label = "TABLE_CAT", nillable = true)
-    @Nillable
     private String tableCat;
 
     @XmlAttribute
-    @Label("TABLE_SCHEM")
     @Bind(label = "TABLE_SCHEM", nillable = true)
-    @Nillable
     private String tableSchem;
 
     @XmlAttribute
-    @Label("TABLE_NAME")
     @Bind(label = "TABLE_NAME")
     private String tableName;
 
     // -------------------------------------------------------------------------
     @XmlElement
-    @Label("COLUMN_NAME")
     @Bind(label = "COLUMN_NAME")
     private String columnName;
 
     @XmlElement
-    @Label("KEY_SEQ")
     @Bind(label = "KEY_SEQ")
     private short keySeq;
 
     @XmlElement(nillable = true)
-    @Label("PK_NAME")
     @Bind(label = "PK_NAME", nillable = true)
-    @Nillable
     private String pkName;
-
-    // -------------------------------------------------------------------------
-    @Deprecated
-    private Table table;
 }

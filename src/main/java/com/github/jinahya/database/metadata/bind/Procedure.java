@@ -122,35 +122,27 @@ public class Procedure implements Serializable {
 
     // -------------------------------------------------------------------------
     @XmlAttribute
-    @Label("PROCEDURE_CAT")
     @Bind(label = "PROCEDURE_CAT", nillable = true)
-    @Nillable
     private String procedureCat;
 
     @XmlAttribute
-    @Label("PROCEDURE_SCHEM")
     @Bind(label = "PROCEDURE_SCHEM", nillable = true)
-    @Nillable
     private String procedureSchem;
 
     // -------------------------------------------------------------------------
     @XmlElement
-    @Label("PROCEDURE_NAME")
     @Bind(label = "PROCEDURE_NAME")
     private String procedureName;
 
     @XmlElement
-    @Label("REMARKS")
     @Bind(label = "REMARKS")
     private String remarks;
 
     @XmlElement
-    @Label("PROCEDURE_TYPE")
     @Bind(label = "PROCEDURE_TYPE")
     private short procedureType;
 
     @XmlElement
-    @Label("SPECIFIC_NAME")
     @Bind(label = "SPECIFIC_NAME")
     private String specificName;
 
@@ -163,8 +155,4 @@ public class Procedure implements Serializable {
             }
     )
     private List<ProcedureColumn> procedureColumns;
-
-    // -------------------------------------------------------------------------
-    @Deprecated
-    private Schema schema;
 }

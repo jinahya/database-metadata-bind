@@ -62,17 +62,6 @@ public class JavaBeansTest {
             }
             assertFalse(field.getType().isPrimitive(),
                         "@Bind(nillable); " + field);
-            final Nillable nillable = field.getAnnotation(Nillable.class);
-            assertNotNull(nillable, "!@Nillable; " + field);
-        }
-        for (Entry<Field, Nillable> entry
-             : fields(klass, Nillable.class).entrySet()) {
-            final Field field = entry.getKey();
-            final Nillable nillable = entry.getValue();
-            final Bind bind = field.getAnnotation(Bind.class);
-            assertNotNull(bind, "!@Bind; " + field);
-            assertTrue(bind.nillable(),
-                       "@Nillable; !@Bind(nillable); " + field);
         }
     }
 
@@ -84,16 +73,6 @@ public class JavaBeansTest {
             if (!bind.unused()) {
                 continue;
             }
-            final Unused unused = field.getAnnotation(Unused.class);
-            assertNotNull(unused, "!@Unused; " + field);
-        }
-        for (Entry<Field, Unused> entry
-             : fields(klass, Unused.class).entrySet()) {
-            final Field field = entry.getKey();
-            final Unused unused = entry.getValue();
-            final Bind bind = field.getAnnotation(Bind.class);
-            assertNotNull(bind, "!@Bind; " + field);
-            assertTrue(bind.unused(), "@Unused; !@Bind(unused); " + field);
         }
     }
 
@@ -105,17 +84,6 @@ public class JavaBeansTest {
             if (!bind.reserved()) {
                 continue;
             }
-            final Reserved reserved = field.getAnnotation(Reserved.class);
-            assertNotNull(reserved, "!@Reserved; " + field);
-        }
-        for (Entry<Field, Reserved> entry
-             : fields(klass, Reserved.class).entrySet()) {
-            final Field field = entry.getKey();
-            final Reserved reserved = entry.getValue();
-            final Bind bind = field.getAnnotation(Bind.class);
-            assertNotNull(bind, "!@Bind; " + field);
-            assertTrue(bind.reserved(),
-                       "@Reserved; !@Bind(reserved); " + field);
         }
     }
 

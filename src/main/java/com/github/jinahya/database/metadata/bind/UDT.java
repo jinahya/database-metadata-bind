@@ -139,42 +139,32 @@ public class UDT implements Serializable {
 
     // -------------------------------------------------------------------------
     @XmlAttribute
-    @Label("TYPE_CAT")
     @Bind(label = "TYPE_CAT", nillable = true)
-    @Nillable
     private String typeCat;
 
     @XmlAttribute
-    @Nillable
-    @Label("TYPE_SCHEM")
     @Bind(label = "TYPE_SCHEM", nillable = true)
     private String typeSchem;
 
     // -------------------------------------------------------------------------
     @XmlElement
-    @Label("TYPE_NAME")
     @Bind(label = "TYPE_NAME")
     private String typeName;
 
     @XmlElement
-    @Label("CLASS_NAME")
     @Bind(label = "CLASS_NAME")
     private String className;
 
     @XmlElement
-    @Label("DATA_TYPE")
     @Bind(label = "DATA_TYPE")
     private int dataType;
 
     @XmlElement
-    @Label("REMARKS")
     @Bind(label = "REMARKS")
     private String remarks;
 
     @XmlElement(nillable = true)
-    @Label("BASE_TYPE")
     @Bind(label = "BASE_TYPE", nillable = true)
-    @Nillable
     private Short baseType;
 
     @XmlElementRef
@@ -194,8 +184,4 @@ public class UDT implements Serializable {
             }
     )
     private List<SuperType> superTypes;
-
-    // -------------------------------------------------------------------------
-    @Deprecated
-    private Schema schema;
 }

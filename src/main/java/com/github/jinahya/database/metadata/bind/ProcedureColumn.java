@@ -341,114 +341,83 @@ public class ProcedureColumn implements Serializable {
 
     // -------------------------------------------------------------------------
     @XmlAttribute
-    @Label("PROCEDURE_CAT")
     @Bind(label = "PROCEDURE_CAT", nillable = true)
-    @Nillable
     private String procedureCat;
 
     @XmlAttribute
-    @Label("PROCEDURE_SCHEM")
     @Bind(label = "PROCEDURE_SCHEM", nillable = true)
-    @Nillable
     private String procedureSchem;
 
     @XmlAttribute
-    @Label("PROCEDURE_NAME")
     @Bind(label = "PROCEDURE_NAME")
     private String procedureName;
 
     // -------------------------------------------------------------------------
     @XmlElement
-    @Label("COLUMN_NAME")
     @Bind(label = "COLUMN_NAME")
     private String columnName;
 
     @XmlElement
-    @Label("COLUMN_TYPE")
     @Bind(label = "COLUMN_TYPE")
     private short columnType;
 
     @XmlElement
-    @Label("DATA_TYPE")
     @Bind(label = "DATA_TYPE")
     private int dataType;
 
     @XmlElement
-    @Label("TYPE_NAME")
     @Bind(label = "TYPE_NAME")
     private String typeName;
 
     @XmlElement
-    @Label("PRECISION")
     @Bind(label = "PRECISION")
     private int precision;
 
     @XmlElement
-    @Label("LENGTH")
     @Bind(label = "LENGTH")
     private int length;
 
     @XmlElement
-    @Label("SCALE")
     @Bind(label = "SCALE", nillable = true)
-    @Nillable
     private Short scale;
 
     @XmlElement
-    @Label("RADIX")
     @Bind(label = "RADIX")
     private short radix;
 
     @XmlElement
-    @Label("NULLABLE")
     @Bind(label = "NULLABLE")
     private short nullable;
 
     @XmlElement
-    @Label("REMARKS")
     @Bind(label = "REMARKS")
     private String remarks;
 
     @XmlElement(nillable = true)
-    @Label("COLUMN_DEF")
     @Bind(label = "COLUMN_DEF", nillable = true)
-    @Nillable
     private String columnDef;
 
     @XmlElement(nillable = true)
-    @Label("SQL_DATA_TYPE")
     @Bind(label = "SQL_DATA_TYPE", reserved = true)
-    @Reserved
     private Integer sqlDataType;
 
     @XmlElement(nillable = true)
-    @Label("SQL_DATETIME_SUB")
     @Bind(label = "SQL_DATETIME_SUB", reserved = true)
-    @Reserved
     private Integer sqlDatetimeSub;
 
     @XmlElement(nillable = true)
-    @Label("CHAR_OCTET_LENGTH")
     @Bind(label = "CHAR_OCTET_LENGTH", nillable = true)
-    @Nillable
     private Integer charOctetLength;
 
     @XmlElement(nillable = true)
-    @Label("ORDINAL_POSITION")
     @Bind(label = "ORDINAL_POSITION")
     private int ordinalPosition;
 
     @XmlElement
-    @Label("IS_NULLABLE")
     @Bind(label = "IS_NULLABLE")
     private String isNullable;
 
     @XmlElement
-    @Label("SPECIFIC_NAME")
     @Bind(label = "SPECIFIC_NAME")
     private String specificName;
-
-    // -------------------------------------------------------------------------
-    @Deprecated
-    private Procedure procedure;
 }
