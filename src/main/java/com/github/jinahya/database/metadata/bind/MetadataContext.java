@@ -304,7 +304,11 @@ public class MetadataContext {
                             "wrong result; %s for %s", result, formatted));
                     continue;
                 }
-                bind((ResultSet) result, ptype, fvalue);
+                try {
+                    bind((ResultSet) result, ptype, fvalue);
+                } finally {
+                    ((ResultSet) result).close();
+                }
             }
             try {
                 field.set(instance, fvalue);
@@ -1089,7 +1093,7 @@ public class MetadataContext {
     }
 
     /**
-     * Add suppression paths and returns this instance.
+     * Adds suppression paths and returns this instance.
      *
      * @param path the first suppression path
      * @param otherPaths other suppression paths
