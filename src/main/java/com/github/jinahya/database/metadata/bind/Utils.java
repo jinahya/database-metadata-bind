@@ -311,7 +311,7 @@ final class Utils {
                 field.setInt(obj, results.getInt(label));
                 return;
             } else if (type == long.class) {
-                field.setLong(obj, results.getShort(label));
+                field.setLong(obj, results.getLong(label));
 //                if (value instanceof Number) {
 //                    field.setLong(obj, ((Number) value).longValue());
 //                    return;
