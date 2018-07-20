@@ -5,7 +5,7 @@
   <parent>
     <groupId>com.github.jinahya</groupId>
     <artifactId>jinahya-parent</artifactId>
-    <version>0.7.8</version>
+    <version>0.8.0</version>
   </parent>
 
   <groupId>com.github.jinahya</groupId>
@@ -17,6 +17,10 @@
   <description>bindings for java.sql.DatabaseMetaData</description>
   <url>https://github.com/jinahya/$project.artifactId}</url>
   <inceptionYear>2011</inceptionYear>
+
+  <prerequisites>
+    <maven>3.0.1</maven>
+  </prerequisites>
 
   <scm>
     <connection>scm:git:git@github.com:jinahya/${project.artifactId}.git</connection>
@@ -38,11 +42,11 @@
     <maven.compiler.target>1.6</maven.compiler.target>
     <maven.compiler.testSource>1.8</maven.compiler.testSource>
     <maven.compiler.testTarget>1.8</maven.compiler.testTarget>
-    <version.animal-sniffer>1.16</version.animal-sniffer>
+    <version.animal-sniffer>1.17</version.animal-sniffer>
     <version.postgresql-embedded>2.9</version.postgresql-embedded>
-    <version.postgresql>42.2.2</version.postgresql>
+    <version.postgresql>42.2.4</version.postgresql>
     <version.mariaDB4j>2.3.0</version.mariaDB4j>
-    <version.mariadb-java-client>2.2.5</version.mariadb-java-client>
+    <version.mariadb-java-client>2.2.6</version.mariadb-java-client>
   </properties>
 
   <dependencyManagement>
