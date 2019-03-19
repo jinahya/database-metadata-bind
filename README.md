@@ -23,7 +23,7 @@ context.suppress("schema/functions", "table/pseudoColumns");
 // bind various informations
 final List<Catalog> catalogs = context.getCatalogs();
 final List<Schema> schemas = context.getSchemas("", null);
-final List<Tables> tables = context.getTables(null, null, null); // list all tables
+final List<Table> tables = context.getTables(null, null, null); // list all tables
 final List<PrimaryKey> primaryKeys
     = context.getPrimaryKeys("PUBLIC", "SYSTEM_LOBS", "BLOCKS");
 ```
