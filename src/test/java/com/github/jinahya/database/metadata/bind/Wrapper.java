@@ -15,19 +15,19 @@
  */
 package com.github.jinahya.database.metadata.bind;
 
+import javax.xml.bind.annotation.XmlAnyElement;
+import javax.xml.namespace.QName;
 import java.beans.Introspector;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
-import javax.xml.bind.annotation.XmlAnyElement;
-import javax.xml.namespace.QName;
 
 /**
  * A class for wrapping elements.
  *
- * @author Jin Kwon &lt;onacit at gmail.com&gt;
  * @param <T> element type parameter.
+ * @author Jin Kwon &lt;onacit at gmail.com&gt;
  */
 class Wrapper<T> implements Serializable {
 

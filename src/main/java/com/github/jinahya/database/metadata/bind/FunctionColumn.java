@@ -15,8 +15,14 @@
  */
 package com.github.jinahya.database.metadata.bind;
 
+import javax.xml.bind.annotation.XmlAttribute;
+import javax.xml.bind.annotation.XmlElement;
+import javax.xml.bind.annotation.XmlRootElement;
+import javax.xml.bind.annotation.XmlType;
 import java.io.Serializable;
 import java.sql.DatabaseMetaData;
+import java.util.logging.Logger;
+
 import static java.sql.DatabaseMetaData.functionColumnIn;
 import static java.sql.DatabaseMetaData.functionColumnInOut;
 import static java.sql.DatabaseMetaData.functionColumnOut;
@@ -26,40 +32,32 @@ import static java.sql.DatabaseMetaData.functionNoNulls;
 import static java.sql.DatabaseMetaData.functionNullable;
 import static java.sql.DatabaseMetaData.functionNullableUnknown;
 import static java.sql.DatabaseMetaData.functionReturn;
-import java.util.logging.Logger;
 import static java.util.logging.Logger.getLogger;
-import javax.xml.bind.annotation.XmlAttribute;
-import javax.xml.bind.annotation.XmlElement;
-import javax.xml.bind.annotation.XmlRootElement;
-import javax.xml.bind.annotation.XmlType;
 
 /**
  * An entity class for function columns.
  *
  * @author Jin Kwon &lt;jinahya_at_gmail.com&gt;
- * @see DatabaseMetaData#getFunctionColumns(java.lang.String, java.lang.String,
- * java.lang.String, java.lang.String)
+ * @see DatabaseMetaData#getFunctionColumns(java.lang.String, java.lang.String, java.lang.String, java.lang.String)
  */
 @XmlRootElement
 @XmlType(propOrder = {
-    "functionName", "columnName", "columnType", "dataType", "typeName",
-    "precision", "length", "scale", "radix", "nullable", "remarks",
-    "charOctetLength", "ordinalPosition", "isNullable", "specificName"
+        "functionName", "columnName", "columnType", "dataType", "typeName", "precision", "length", "scale", "radix",
+        "nullable", "remarks", "charOctetLength", "ordinalPosition", "isNullable", "specificName"
 })
 public class FunctionColumn implements Serializable {
 
     private static final long serialVersionUID = -7445156446214062680L;
 
     // -------------------------------------------------------------------------
-    private static final Logger logger
-            = getLogger(FunctionColumn.class.getName());
+    private static final Logger logger = getLogger(FunctionColumn.class.getName());
 
     // -------------------------------------------------------------------------
+
     /**
      * Constants for column types of function columns.
      *
-     * @see DatabaseMetaData#getFunctionColumns(java.lang.String,
-     * java.lang.String, java.lang.String, java.lang.String)
+     * @see DatabaseMetaData#getFunctionColumns(java.lang.String, java.lang.String, java.lang.String, java.lang.String)
      */
     public static enum ColumnType implements IntFieldEnum<ColumnType> {
 
@@ -90,10 +88,10 @@ public class FunctionColumn implements Serializable {
         FUNCTION_COLUMN_RESULT(functionColumnResult); // 5
 
         // ---------------------------------------------------------------------
+
         /**
-         * Returns the constant whose raw value equals to given. An instance of
-         * {@link IllegalArgumentException} will be thrown if no constant
-         * matches.
+         * Returns the constant whose raw value equals to given. An instance of {@link IllegalArgumentException} will be
+         * thrown if no constant matches.
          *
          * @param rawValue the raw value
          * @return the constant whose raw value equals to given.
@@ -108,6 +106,7 @@ public class FunctionColumn implements Serializable {
         }
 
         // ---------------------------------------------------------------------
+
         /**
          * Returns the raw value of this constant.
          *
@@ -125,8 +124,7 @@ public class FunctionColumn implements Serializable {
     /**
      * Constants for nullabilities of columns.
      *
-     * @see DatabaseMetaData#getFunctionColumns(java.lang.String,
-     * java.lang.String, java.lang.String, java.lang.String)
+     * @see DatabaseMetaData#getFunctionColumns(java.lang.String, java.lang.String, java.lang.String, java.lang.String)
      */
     public static enum Nullable implements IntFieldEnum<Nullable> {
 
@@ -144,10 +142,10 @@ public class FunctionColumn implements Serializable {
         FUNCTION_NULLABLE_UNKNOWN(functionNullableUnknown);
 
         // ---------------------------------------------------------------------
+
         /**
-         * Returns the constant whose raw value equals to given. An instance of
-         * {@link IllegalArgumentException} will be throw if no constants
-         * matches.
+         * Returns the constant whose raw value equals to given. An instance of {@link IllegalArgumentException} will be
+         * throw if no constants matches.
          *
          * @param rawValue the value value
          * @return the constant whose raw value equals to given.
@@ -162,6 +160,7 @@ public class FunctionColumn implements Serializable {
         }
 
         // ---------------------------------------------------------------------
+
         /**
          * Returns the raw value of this constant.
          *

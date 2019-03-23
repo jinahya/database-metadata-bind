@@ -15,24 +15,24 @@
  */
 package com.github.jinahya.database.metadata.bind;
 
-import java.io.Serializable;
-import java.util.logging.Logger;
-import static java.util.logging.Logger.getLogger;
 import javax.xml.bind.annotation.XmlAttribute;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlType;
+import java.io.Serializable;
+import java.util.logging.Logger;
+
+import static java.util.logging.Logger.getLogger;
 
 /**
  * An entity class for primary keys.
  *
  * @author Jin Kwon &lt;jinahya_at_gmail.com&gt;
- * @see MetadataContext#getPrimaryKeys(java.lang.String, java.lang.String,
- * java.lang.String)
+ * @see MetadataContext#getPrimaryKeys(java.lang.String, java.lang.String, java.lang.String)
  */
 @XmlRootElement
 @XmlType(propOrder = {
-    "columnName", "keySeq", "pkName"
+        "columnName", "keySeq", "pkName"
 })
 public class PrimaryKey implements Serializable {
 
@@ -95,7 +95,7 @@ public class PrimaryKey implements Serializable {
         this.pkName = pkName;
     }
 
-    // -------------------------------------------------------------------------
+    // -----------------------------------------------------------------------------------------------------------------
     @XmlAttribute
     @Bind(label = "TABLE_CAT", nillable = true)
     private String tableCat;
@@ -108,7 +108,7 @@ public class PrimaryKey implements Serializable {
     @Bind(label = "TABLE_NAME")
     private String tableName;
 
-    // -------------------------------------------------------------------------
+    // -----------------------------------------------------------------------------------------------------------------
     @XmlElement
     @Bind(label = "COLUMN_NAME")
     private String columnName;

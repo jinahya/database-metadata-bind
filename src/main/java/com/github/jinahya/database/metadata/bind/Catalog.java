@@ -15,38 +15,39 @@
  */
 package com.github.jinahya.database.metadata.bind;
 
-import java.io.Serializable;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.logging.Logger;
-import static java.util.logging.Logger.getLogger;
 import javax.xml.bind.annotation.XmlAttribute;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlElementRef;
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlType;
+import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.logging.Logger;
+
+import static java.util.logging.Logger.getLogger;
 
 /**
- * An entity class for binding the result of
- * {@link java.sql.DatabaseMetaData#getCatalogs()}.
+ * An entity class for binding the result of {@link java.sql.DatabaseMetaData#getCatalogs()}.
  *
  * @author Jin Kwon &lt;jinahya_at_gmail.com&gt;
  * @see MetadataContext#getCatalogs()
  */
 @XmlRootElement
 @XmlType(propOrder = {
-    "tableCat",
-    // -------------------------------------------------------------------------
-    "schemas"
+        "tableCat",
+        // -------------------------------------------------------------------------------------------------------------
+        "schemas"
 })
 public class Catalog implements Serializable {//extends AbstractTableDomain {
 
+    // -----------------------------------------------------------------------------------------------------------------
     private static final long serialVersionUID = 6239185259128825953L;
 
-    // -------------------------------------------------------------------------
+    // -----------------------------------------------------------------------------------------------------------------
     private static final Logger logger = getLogger(Catalog.class.getName());
 
-    // -------------------------------------------------------------------------
+    // -----------------------------------------------------------------------------------------------------------------
     @Override
     public String toString() {
         return super.toString() + "{"
@@ -55,6 +56,7 @@ public class Catalog implements Serializable {//extends AbstractTableDomain {
     }
 
     // ---------------------------------------------------------------- tableCat
+
     /**
      * Returns the current value of {@code tableCat} property.
      *
@@ -74,6 +76,7 @@ public class Catalog implements Serializable {//extends AbstractTableDomain {
     }
 
     // ----------------------------------------------------------------- schemas
+
     /**
      * Returns schemas of this catalog.
      *
@@ -98,7 +101,7 @@ public class Catalog implements Serializable {//extends AbstractTableDomain {
     @Invoke(name = "getSchemas",
             types = {String.class, String.class},
             parameters = {
-                @Literals({":tableCat", "null"})
+                    @Literals({":tableCat", "null"})
             }
     )
     private List<Schema> schemas;

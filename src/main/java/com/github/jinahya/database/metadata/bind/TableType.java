@@ -15,22 +15,22 @@
  */
 package com.github.jinahya.database.metadata.bind;
 
-import java.io.Serializable;
-import java.util.logging.Logger;
-import static java.util.logging.Logger.getLogger;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlType;
+import java.io.Serializable;
+import java.util.logging.Logger;
+
+import static java.util.logging.Logger.getLogger;
 
 /**
- * An entity class for binding the result of
- * {@link java.sql.DatabaseMetaData#getTableTypes()}.
+ * An entity class for binding the result of {@link java.sql.DatabaseMetaData#getTableTypes()}.
  *
  * @author Jin Kwon &lt;jinahya_at_gmail.com&gt;
  */
 @XmlRootElement
 @XmlType(propOrder = {
-    "tableType"
+        "tableType"
 })
 public class TableType implements Serializable {
 

@@ -15,67 +15,65 @@
  */
 package com.github.jinahya.database.metadata.bind;
 
-import java.io.Serializable;
-import java.sql.DatabaseMetaData;
-import static java.sql.DatabaseMetaData.versionColumnNotPseudo;
-import static java.sql.DatabaseMetaData.versionColumnPseudo;
-import static java.sql.DatabaseMetaData.versionColumnUnknown;
-import java.util.logging.Logger;
-import static java.util.logging.Logger.getLogger;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlType;
+import java.io.Serializable;
+import java.sql.DatabaseMetaData;
+import java.util.logging.Logger;
+
+import static java.sql.DatabaseMetaData.versionColumnNotPseudo;
+import static java.sql.DatabaseMetaData.versionColumnPseudo;
+import static java.sql.DatabaseMetaData.versionColumnUnknown;
+import static java.util.logging.Logger.getLogger;
 
 /**
  * An entity class for version columns.
  *
  * @author Jin Kwon &lt;jinahya_at_gmail.com&gt;
- * @see MetadataContext#getVersionColumns(java.lang.String, java.lang.String,
- * java.lang.String)
+ * @see MetadataContext#getVersionColumns(java.lang.String, java.lang.String, java.lang.String)
  */
 @XmlRootElement
 @XmlType(propOrder = {
-    "scope", "columnName", "dataType", "typeName", "columnSize",
-    "bufferLength", "decimalDigits", "pseudoColumn"
+        "scope", "columnName", "dataType", "typeName", "columnSize", "bufferLength", "decimalDigits", "pseudoColumn"
 })
 public class VersionColumn implements Serializable {
 
     private static final long serialVersionUID = 3587959398829593292L;
 
     // -------------------------------------------------------------------------
-    private static final Logger logger
-            = getLogger(VersionColumn.class.getName());
+    private static final Logger logger = getLogger(VersionColumn.class.getName());
 
     // -------------------------------------------------------------------------
+
     /**
      * Constants for pseudo column values of version columns.
      *
-     * @see DatabaseMetaData#getVersionColumns(java.lang.String,
-     * java.lang.String, java.lang.String)
+     * @see DatabaseMetaData#getVersionColumns(java.lang.String, java.lang.String, java.lang.String)
      */
     public static enum PseudoColumn implements IntFieldEnum<PseudoColumn> {
 
         /**
-         * Constant for {@link DatabaseMetaData#versionColumnUnknown} whose
-         * value is {@value DatabaseMetaData#versionColumnUnknown}.
+         * Constant for {@link DatabaseMetaData#versionColumnUnknown} whose value is {@value
+         * DatabaseMetaData#versionColumnUnknown}.
          */
         VERSION_COLUMN_NO_NULLS(versionColumnUnknown),
         /**
-         * Constant for {@link DatabaseMetaData#versionColumnNotPseudo} whose
-         * value is {@value DatabaseMetaData#versionColumnNotPseudo}.
+         * Constant for {@link DatabaseMetaData#versionColumnNotPseudo} whose value is {@value
+         * DatabaseMetaData#versionColumnNotPseudo}.
          */
         VERSION_COLUMN_NULLABLE(versionColumnNotPseudo),
         /**
-         * Constant for {@link DatabaseMetaData#versionColumnPseudo} whose value
-         * is {@value DatabaseMetaData#versionColumnPseudo}.
+         * Constant for {@link DatabaseMetaData#versionColumnPseudo} whose value is {@value
+         * DatabaseMetaData#versionColumnPseudo}.
          */
         VERSION_COLUMN_NULLABLE_UNKNOWN(versionColumnPseudo);
 
         // ---------------------------------------------------------------------
+
         /**
-         * Returns the constant whose raw value equals to given. An instance of
-         * {@link IllegalArgumentException} will be throw if no constants
-         * matches.
+         * Returns the constant whose raw value equals to given. An instance of {@link IllegalArgumentException} will be
+         * throw if no constants matches.
          *
          * @param rawValue the value value
          * @return the constant whose raw value equals to given.
@@ -90,6 +88,7 @@ public class VersionColumn implements Serializable {
         }
 
         // ---------------------------------------------------------------------
+
         /**
          * Returns the raw value of this constant.
          *
@@ -105,6 +104,7 @@ public class VersionColumn implements Serializable {
     }
 
     // -------------------------------------------------------------------------
+
     /**
      * Creates a new instance.
      */
@@ -191,6 +191,7 @@ public class VersionColumn implements Serializable {
     }
 
     // ------------------------------------------------------------ pseudoColumn
+
     /**
      * Returns current value of {@code pseudoColumn} property.
      *

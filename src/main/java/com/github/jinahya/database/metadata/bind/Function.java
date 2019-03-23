@@ -15,32 +15,31 @@
  */
 package com.github.jinahya.database.metadata.bind;
 
-import java.io.Serializable;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.logging.Logger;
-import static java.util.logging.Logger.getLogger;
 import javax.xml.bind.annotation.XmlAttribute;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlElementRef;
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlType;
+import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.logging.Logger;
+
+import static java.util.logging.Logger.getLogger;
 
 /**
- * An entity class for binding the result of
- * {@link java.sql.DatabaseMetaData#getFunctions(java.lang.String, java.lang.String, java.lang.String)}.
+ * An entity class for binding the result of {@link java.sql.DatabaseMetaData#getFunctions(java.lang.String,
+ * java.lang.String, java.lang.String)}.
  *
  * @author Jin Kwon &lt;jinahya_at_gmail.com&gt;
- * @see java.sql.DatabaseMetaData#getFunctions(java.lang.String,
- * java.lang.String, java.lang.String)
- * @see MetadataContext#getFunctions(java.lang.String, java.lang.String,
- * java.lang.String)
+ * @see java.sql.DatabaseMetaData#getFunctions(java.lang.String, java.lang.String, java.lang.String)
+ * @see MetadataContext#getFunctions(java.lang.String, java.lang.String, java.lang.String)
  */
 @XmlRootElement
 @XmlType(propOrder = {
-    "functionName", "remarks", "functionType", "specificName",
-    // -------------------------------------------------------------------------
-    "functionColumns"
+        "functionName", "remarks", "functionType", "specificName",
+        // -------------------------------------------------------------------------
+        "functionColumns"
 })
 public class Function implements Serializable {
 
@@ -155,8 +154,8 @@ public class Function implements Serializable {
     @Invoke(name = "getFunctionColumns",
             types = {String.class, String.class, String.class, String.class},
             parameters = {
-                @Literals({":functionCat", ":functionSchem", ":functionName",
-                           "null"})
+                    @Literals({":functionCat", ":functionSchem", ":functionName",
+                               "null"})
             }
     )
     private List<FunctionColumn> functionColumns;

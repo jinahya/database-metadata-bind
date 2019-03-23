@@ -15,7 +15,9 @@
  */
 package com.github.jinahya.database.metadata.bind;
 
+import javax.xml.bind.annotation.XmlRootElement;
 import java.sql.DatabaseMetaData;
+
 import static java.sql.DatabaseMetaData.importedKeyCascade;
 import static java.sql.DatabaseMetaData.importedKeyInitiallyDeferred;
 import static java.sql.DatabaseMetaData.importedKeyInitiallyImmediate;
@@ -24,14 +26,12 @@ import static java.sql.DatabaseMetaData.importedKeyNotDeferrable;
 import static java.sql.DatabaseMetaData.importedKeyRestrict;
 import static java.sql.DatabaseMetaData.importedKeySetDefault;
 import static java.sql.DatabaseMetaData.importedKeySetNull;
-import javax.xml.bind.annotation.XmlRootElement;
 
 /**
  * An entity class for imported keys.
  *
  * @author Jin Kwon &lt;jinahya_at_gmail.com&gt;
- * @see MetadataContext#getImportedKeys(java.lang.String, java.lang.String,
- * java.lang.String)
+ * @see MetadataContext#getImportedKeys(java.lang.String, java.lang.String, java.lang.String)
  */
 @XmlRootElement
 public class ImportedKey extends TableKey {
@@ -42,36 +42,36 @@ public class ImportedKey extends TableKey {
     public static enum Rule implements IntFieldEnum<Rule> {
 
         /**
-         * Constant for {@link DatabaseMetaData#importedKeyCascade} whose value
-         * is {@value DatabaseMetaData#importedKeyCascade}.
+         * Constant for {@link DatabaseMetaData#importedKeyCascade} whose value is {@value
+         * DatabaseMetaData#importedKeyCascade}.
          */
         IMPORTED_KEY_CASCADE(importedKeyCascade), // 0
         /**
-         * Constant for {@link DatabaseMetaData#importedKeyRestrict} whose value
-         * is {@value DatabaseMetaData#importedKeyRestrict}.
+         * Constant for {@link DatabaseMetaData#importedKeyRestrict} whose value is {@value
+         * DatabaseMetaData#importedKeyRestrict}.
          */
         IMPORTED_KEY_RESTRICT(importedKeyRestrict), // 1
         /**
-         * Constant for {@link DatabaseMetaData#importedKeySetNull} whose value
-         * is {@value DatabaseMetaData#importedKeySetNull}.
+         * Constant for {@link DatabaseMetaData#importedKeySetNull} whose value is {@value
+         * DatabaseMetaData#importedKeySetNull}.
          */
         IMPORTED_KEY_SET_NULL(importedKeySetNull), // 2
         /**
-         * Constant for {@link DatabaseMetaData#importedKeyNoAction} whose value
-         * is {@value DatabaseMetaData#importedKeyNoAction}.
+         * Constant for {@link DatabaseMetaData#importedKeyNoAction} whose value is {@value
+         * DatabaseMetaData#importedKeyNoAction}.
          */
         IMPORTED_KEY_NO_ACTION(importedKeyNoAction), // 3
         /**
-         * Constant for {@link DatabaseMetaData#importedKeySetDefault} whose
-         * value is {@value DatabaseMetaData#importedKeySetDefault}.
+         * Constant for {@link DatabaseMetaData#importedKeySetDefault} whose value is {@value
+         * DatabaseMetaData#importedKeySetDefault}.
          */
         IMPORTED_KEY_SET_DEFAULT(importedKeySetDefault); // 4
 
         // ---------------------------------------------------------------------
+
         /**
-         * Returns the constant whose raw value matches to given. An instance of
-         * {@link IllegalArgumentException} will be thrown if no constant
-         * matched.
+         * Returns the constant whose raw value matches to given. An instance of {@link IllegalArgumentException} will
+         * be thrown if no constant matched.
          *
          * @param rawValue the raw value to match
          * @return the matched constant.
@@ -86,6 +86,7 @@ public class ImportedKey extends TableKey {
         }
 
         // ---------------------------------------------------------------------
+
         /**
          * Returns the raw value of this constant.
          *
@@ -102,28 +103,26 @@ public class ImportedKey extends TableKey {
     public static enum Deferrability implements IntFieldEnum<Deferrability> {
 
         /**
-         * Constant for {@link DatabaseMetaData#importedKeyInitiallyDeferred}
-         * whose value is
-         * {@value DatabaseMetaData#importedKeyInitiallyDeferred}.
+         * Constant for {@link DatabaseMetaData#importedKeyInitiallyDeferred} whose value is {@value
+         * DatabaseMetaData#importedKeyInitiallyDeferred}.
          */
         IMPORTED_KEY_INITIALLY_DEFERRED(importedKeyInitiallyDeferred), // 5
         /**
-         * Constant for {@link DatabaseMetaData#importedKeyInitiallyImmediate}
-         * whose value is
-         * {@value DatabaseMetaData#importedKeyInitiallyImmediate}.
+         * Constant for {@link DatabaseMetaData#importedKeyInitiallyImmediate} whose value is {@value
+         * DatabaseMetaData#importedKeyInitiallyImmediate}.
          */
         IMPORTED_KEY_INITIALLY_IMMEDIATE(importedKeyInitiallyImmediate), // 6
         /**
-         * Constant for {@link DatabaseMetaData#importedKeyNotDeferrable} whose
-         * value is {@value DatabaseMetaData#importedKeyNotDeferrable}.
+         * Constant for {@link DatabaseMetaData#importedKeyNotDeferrable} whose value is {@value
+         * DatabaseMetaData#importedKeyNotDeferrable}.
          */
         IMPORTED_KEY_NOT_DEFERRABLE(importedKeyNotDeferrable); // 7
 
         // ---------------------------------------------------------------------
+
         /**
-         * Returns the constant whose raw value matches to given. An instance of
-         * {@link IllegalArgumentException} will be thrown if no constant
-         * matched.
+         * Returns the constant whose raw value matches to given. An instance of {@link IllegalArgumentException} will
+         * be thrown if no constant matched.
          *
          * @param rawValue the raw value
          * @return the matched constant.
@@ -138,6 +137,7 @@ public class ImportedKey extends TableKey {
         }
 
         // ---------------------------------------------------------------------
+
         /**
          * Returns the raw value of this constant.
          *
@@ -153,6 +153,7 @@ public class ImportedKey extends TableKey {
     }
 
     // -------------------------------------------------------------------------
+
     /**
      * Creates a new instance.
      */

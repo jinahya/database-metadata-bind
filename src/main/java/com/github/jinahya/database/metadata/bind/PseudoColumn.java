@@ -15,33 +15,32 @@
  */
 package com.github.jinahya.database.metadata.bind;
 
-import java.io.Serializable;
-import java.util.logging.Logger;
-import static java.util.logging.Logger.getLogger;
 import javax.xml.bind.annotation.XmlAttribute;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlType;
+import java.io.Serializable;
+import java.util.logging.Logger;
+
+import static java.util.logging.Logger.getLogger;
 
 /**
  * An entity class for pseudo columns.
  *
  * @author Jin Kwon &lt;jinahya_at_gmail.com&gt;
- * @see MetadataContext#getPseudoColumns(java.lang.String, java.lang.String,
- * java.lang.String, java.lang.String)
+ * @see MetadataContext#getPseudoColumns(java.lang.String, java.lang.String, java.lang.String, java.lang.String)
  */
 @XmlRootElement
 @XmlType(propOrder = {
-    "columnName", "dataType", "columnSize", "decimalDigits", "numPrecRadix",
-    "columnUsage", "remarks", "charOctetLength", "isNullable"
+        "columnName", "dataType", "columnSize", "decimalDigits", "numPrecRadix", "columnUsage", "remarks",
+        "charOctetLength", "isNullable"
 })
 public class PseudoColumn implements Serializable {
 
     private static final long serialVersionUID = -5612575879670895510L;
 
     // -------------------------------------------------------------------------
-    private static final Logger logger
-            = getLogger(PseudoColumn.class.getName());
+    private static final Logger logger = getLogger(PseudoColumn.class.getName());
 
     // -------------------------------------------------------------------------
     @Override

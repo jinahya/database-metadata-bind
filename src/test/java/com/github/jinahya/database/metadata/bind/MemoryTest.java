@@ -21,4 +21,5 @@ package com.github.jinahya.database.metadata.bind;
  * @author Jin Kwon &lt;onacit at gmail.com&gt;
  */
 abstract class MemoryTest {
+
 }

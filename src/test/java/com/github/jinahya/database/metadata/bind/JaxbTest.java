@@ -15,45 +15,44 @@
  */
 package com.github.jinahya.database.metadata.bind;
 
-import java.io.File;
-import java.io.IOException;
-import java.nio.file.Path;
-import java.nio.file.Paths;
-import java.util.function.BiFunction;
+import lombok.extern.slf4j.Slf4j;
+import org.testng.annotations.Test;
+
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBException;
 import javax.xml.bind.SchemaOutputResolver;
 import javax.xml.transform.Result;
 import javax.xml.transform.stream.StreamResult;
-import org.testng.annotations.Test;
+import java.io.File;
+import java.io.IOException;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.util.function.BiFunction;
 
 /**
  * Tests for JAXB.
  *
  * @author Jin Kwon &lt;jinahya_at_gmail.com&gt;
  */
+@Slf4j
 public class JaxbTest {
 
-    private static void storeSchema(
-            final JAXBContext context,
-            final BiFunction<String, String, File> locator)
+    // -----------------------------------------------------------------------------------------------------------------
+    private static void storeSchema(final JAXBContext context, final BiFunction<String, String, File> locator)
             throws IOException {
         context.generateSchema(new SchemaOutputResolver() {
             @Override
             public Result createOutput(final String namespaceUri,
                                        final String suggestedFileName)
                     throws IOException {
-                final File file
-                        = locator.apply(namespaceUri, suggestedFileName);
+                final File file = locator.apply(namespaceUri, suggestedFileName);
                 final Result output = new StreamResult(file);
-                //output.setSystemId(suggestedFileName);
                 return output;
             }
         });
     }
 
-    private static void printSchema(final JAXBContext context)
-            throws IOException {
+    private static void printSchema(final JAXBContext context) throws IOException {
         context.generateSchema(new SchemaOutputResolver() {
             @Override
             public Result createOutput(final String namespaceUri,
@@ -68,19 +67,17 @@ public class JaxbTest {
 
     @Test(enabled = true)
     public void printSchema() throws JAXBException, IOException {
-        final JAXBContext context = JAXBContext.newInstance(
-                JaxbTest.class.getPackage().getName());
+        final JAXBContext context = JAXBContext.newInstance(JaxbTest.class.getPackage().getName());
         printSchema(context);
     }
 
     @Test
     public void storeSchema() throws JAXBException, IOException {
         final Path schemas = Paths.get("target");
-        final JAXBContext context = JAXBContext.newInstance(
-                JaxbTest.class.getPackage().getName());
+        final JAXBContext context = JAXBContext.newInstance(JaxbTest.class.getPackage().getName());
         storeSchema(context, (namespaceUri, suggestedFileName) -> {
-                final Path path = schemas.resolve(suggestedFileName);
-                return path.toFile();
-            });
+            final Path path = schemas.resolve(suggestedFileName);
+            return path.toFile();
+        });
     }
 }

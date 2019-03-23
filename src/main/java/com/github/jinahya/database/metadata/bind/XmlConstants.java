@@ -25,8 +25,7 @@ public final class XmlConstants {
     /**
      * The XML namespace URI.
      */
-    public static final String NS_URI_DATABASE_METADATA_BIND
-            = "http://github.com/jinahya/database/metadata/bind";
+    public static final String NS_URI_DATABASE_METADATA_BIND = "http://github.com/jinahya/database/metadata/bind";
 
     static final String NS_PREFIX_DATABASE_MEATDATA_BIND = "m";
 

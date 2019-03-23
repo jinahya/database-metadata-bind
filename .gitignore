@@ -1,14 +1,23 @@
-*.class
+# Created by https://www.gitignore.io/api/maven
+# Edit at https://www.gitignore.io/?templates=maven
 
-# Package Files #
-*.jar
-*.war
-*.ear
-/target/
-logs/
-dependency-reduced-pom.xml
+### Maven ###
+target/
+pom.xml.tag
+pom.xml.releaseBackup
 pom.xml.versionsBackup
-.idea
-*.iml
+pom.xml.next
+release.properties
+dependency-reduced-pom.xml
+buildNumber.properties
+.mvn/timing.properties
+.mvn/wrapper/maven-wrapper.jar
 
+# End of https://www.gitignore.io/api/maven
+
+*.iml
+.idea
+!.idea/codeStyles
+
+*.log
 *.sh

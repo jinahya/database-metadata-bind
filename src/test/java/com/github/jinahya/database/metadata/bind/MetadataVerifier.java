@@ -16,12 +16,11 @@
 package com.github.jinahya.database.metadata.bind;
 
 /**
- *
  * @author Jin Kwon &lt;jinahya_at_gmail.com&gt;
  */
 public class MetadataVerifier {
 
-//    public static void verify(final Metadata metadata) {
+    //    public static void verify(final Metadata metadata) {
 //        Objects.requireNonNull(metadata, "null metadata");
 //        // catalogs must be order by catalog.name
 //        {

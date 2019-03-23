@@ -15,23 +15,24 @@
  */
 package com.github.jinahya.database.metadata.bind;
 
-import java.io.Serializable;
-import java.util.logging.Logger;
-import static java.util.logging.Logger.getLogger;
 import javax.xml.bind.annotation.XmlAttribute;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlType;
+import java.io.Serializable;
+import java.util.logging.Logger;
+
+import static java.util.logging.Logger.getLogger;
 
 /**
- * A entity class for binding the result of
- * {@link java.sql.DatabaseMetaData#getSuperTables(java.lang.String, java.lang.String, java.lang.String)}
+ * A entity class for binding the result of {@link java.sql.DatabaseMetaData#getSuperTables(java.lang.String,
+ * java.lang.String, java.lang.String)}
  *
  * @author Jin Kwon &lt;jinahya_at_gmail.com&gt;
  */
 @XmlRootElement
 @XmlType(propOrder = {
-    "supertableName"
+        "supertableName"
 })
 public class SuperTable implements Serializable {
 

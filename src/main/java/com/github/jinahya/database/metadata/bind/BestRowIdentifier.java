@@ -15,58 +15,60 @@
  */
 package com.github.jinahya.database.metadata.bind;
 
+import javax.xml.bind.annotation.XmlElement;
+import javax.xml.bind.annotation.XmlRootElement;
+import javax.xml.bind.annotation.XmlType;
 import java.io.Serializable;
 import java.sql.DatabaseMetaData;
+
 import static java.sql.DatabaseMetaData.bestRowNotPseudo;
 import static java.sql.DatabaseMetaData.bestRowPseudo;
 import static java.sql.DatabaseMetaData.bestRowSession;
 import static java.sql.DatabaseMetaData.bestRowTemporary;
 import static java.sql.DatabaseMetaData.bestRowTransaction;
 import static java.sql.DatabaseMetaData.bestRowUnknown;
-import javax.xml.bind.annotation.XmlElement;
-import javax.xml.bind.annotation.XmlRootElement;
-import javax.xml.bind.annotation.XmlType;
 
 /**
  * Represents best row identifiers of tables.
  *
  * @author Jin Kwon &lt;jinahya_at_gmail.com&gt;
- * @see MetadataContext#getBestRowIdentifier(java.lang.String, java.lang.String,
- * java.lang.String, int, boolean)
+ * @see MetadataContext#getBestRowIdentifier(java.lang.String, java.lang.String, java.lang.String, int, boolean)
  */
 @XmlRootElement
 @XmlType(propOrder = {
-    "scope", "columnName", "dataType", "typeName", "columnSize",
-    "bufferLength", "decimalDigits", "pseudoColumn"
+        "scope", "columnName", "dataType", "typeName", "columnSize", "bufferLength", "decimalDigits", "pseudoColumn"
 })
 public class BestRowIdentifier implements Serializable {
 
+    // -----------------------------------------------------------------------------------------------------------------
     private static final long serialVersionUID = -6733770602373723371L;
 
-    // -------------------------------------------------------------------------
+    // -----------------------------------------------------------------------------------------------------------------
+
     /**
-     * Constants for the value of {@code PSEUDO_COLUMN} of best row identifies
-     * of a table.
+     * Constants for the value of {@code PSEUDO_COLUMN} of best row identifies of a table.
      *
-     * @see DatabaseMetaData#getBestRowIdentifier(java.lang.String,
-     * java.lang.String, java.lang.String, int, boolean)
+     * @see DatabaseMetaData#getBestRowIdentifier(java.lang.String, java.lang.String, java.lang.String, int, boolean)
      */
-    public static enum PseudoColumn implements IntFieldEnum<PseudoColumn> {
+    public enum PseudoColumn implements IntFieldEnum<PseudoColumn> {
 
         /**
          * Constant for {@link DatabaseMetaData#bestRowUnknown}.
          */
         BEST_ROW_UNKNWON(bestRowUnknown),
+
         /**
          * Constant for {@link DatabaseMetaData#bestRowNotPseudo}.
          */
         BEST_ROW_NOT_PSEUDO(bestRowNotPseudo),
+
         /**
          * Constant for {@link DatabaseMetaData#bestRowPseudo}.
          */
         BEST_ROW_PSEUDO(bestRowPseudo);
 
-        // ---------------------------------------------------------------------
+        // -------------------------------------------------------------------------------------------------------------
+
         /**
          * Returns the constant whose raw value equals to given.
          *
@@ -77,12 +79,13 @@ public class BestRowIdentifier implements Serializable {
             return IntFieldEnums.valueOf(PseudoColumn.class, rawValue);
         }
 
-        // ---------------------------------------------------------------------
-        private PseudoColumn(final int rawValue) {
+        // -------------------------------------------------------------------------------------------------------------
+        PseudoColumn(final int rawValue) {
             this.rawValue = rawValue;
         }
 
-        // ---------------------------------------------------------------------
+        // -------------------------------------------------------------------------------------------------------------
+
         /**
          * Returns the raw value of this constant.
          *
@@ -93,32 +96,34 @@ public class BestRowIdentifier implements Serializable {
             return rawValue;
         }
 
-        // ---------------------------------------------------------------------
+        // -----------------------------------------------------------------------------------------------------------------
         private final int rawValue;
     }
 
     /**
      * Constants for best row identifiers' scope.
      *
-     * @see DatabaseMetaData#getBestRowIdentifier(java.lang.String,
-     * java.lang.String, java.lang.String, int, boolean)
+     * @see DatabaseMetaData#getBestRowIdentifier(java.lang.String, java.lang.String, java.lang.String, int, boolean)
      */
-    public static enum Scope implements IntFieldEnum<Scope> {
+    public enum Scope implements IntFieldEnum<Scope> {
 
         /**
          * Constant for {@link DatabaseMetaData#bestRowTemporary}.
          */
         BEST_ROW_TEMPORARY(bestRowTemporary),
+
         /**
          * Constant for {@link DatabaseMetaData#bestRowTransaction}.
          */
         BEST_ROW_TRANSACTION(bestRowTransaction),
+
         /**
          * Constant for {@link DatabaseMetaData#bestRowSession}.
          */
         BEST_ROW_SESSION(bestRowSession);
 
         // ---------------------------------------------------------------------
+
         /**
          * Returns the constant whose raw value equals to given.
          *
@@ -129,12 +134,13 @@ public class BestRowIdentifier implements Serializable {
             return IntFieldEnums.valueOf(Scope.class, rawValue);
         }
 
-        // ---------------------------------------------------------------------
-        private Scope(final int value) {
+        // -------------------------------------------------------------------------------------------------------------
+        Scope(final int value) {
             this.rawValue = value;
         }
 
-        // ---------------------------------------------------------------------
+        // -------------------------------------------------------------------------------------------------------------
+
         /**
          * Returns the raw value of this constant.
          *
@@ -145,11 +151,11 @@ public class BestRowIdentifier implements Serializable {
             return rawValue;
         }
 
-        // ---------------------------------------------------------------------
+        // -------------------------------------------------------------------------------------------------------------
         private final int rawValue;
     }
 
-    // -------------------------------------------------------------------------
+    // -----------------------------------------------------------------------------------------------------------------
     @Override
     public String toString() {
         return super.toString() + "{"

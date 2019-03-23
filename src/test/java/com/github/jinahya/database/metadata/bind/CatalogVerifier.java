@@ -15,11 +15,9 @@
  */
 package com.github.jinahya.database.metadata.bind;
 
-import com.github.jinahya.database.metadata.bind.Catalog;
 import java.util.Objects;
 
 /**
- *
  * @author Jin Kwon &lt;onacit at gmail.com&gt;
  */
 public class CatalogVerifier {

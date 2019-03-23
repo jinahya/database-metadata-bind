@@ -15,22 +15,22 @@
  */
 package com.github.jinahya.database.metadata.bind;
 
-import java.io.Serializable;
-import java.util.logging.Logger;
-import static java.util.logging.Logger.getLogger;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlType;
+import java.io.Serializable;
+import java.util.logging.Logger;
+
+import static java.util.logging.Logger.getLogger;
 
 /**
- * An entity class for binding the result of
- * {@link java.sql.DatabaseMetaData#getSchemas()}.
+ * An entity class for binding the result of {@link java.sql.DatabaseMetaData#getSchemas()}.
  *
  * @author Jin Kwon &lt;jinahya_at_gmail.com&gt;
  */
 @XmlRootElement
 @XmlType(propOrder = {
-    "tableSchem", "tableCatalog"
+        "tableSchem", "tableCatalog"
 })
 public class SchemaName implements Serializable {
 

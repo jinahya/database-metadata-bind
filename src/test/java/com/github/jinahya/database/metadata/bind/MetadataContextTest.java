@@ -15,18 +15,18 @@
  */
 package com.github.jinahya.database.metadata.bind;
 
-import com.github.jinahya.database.metadata.bind.MetadataContext;
-import static java.lang.invoke.MethodHandles.lookup;
+import org.slf4j.Logger;
+import org.testng.annotations.Test;
+
+import javax.xml.bind.JAXBException;
 import java.lang.reflect.Modifier;
 import java.sql.DatabaseMetaData;
 import java.util.Arrays;
-import javax.xml.bind.JAXBException;
-import org.slf4j.Logger;
+
+import static java.lang.invoke.MethodHandles.lookup;
 import static org.slf4j.LoggerFactory.getLogger;
-import org.testng.annotations.Test;
 
 /**
- *
  * @author Jin Kwon &lt;jinahya_at_gmail.com&gt;
  */
 public class MetadataContextTest {

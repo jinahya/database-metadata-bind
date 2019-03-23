@@ -15,46 +15,44 @@
  */
 package com.github.jinahya.database.metadata.bind;
 
-import static com.github.jinahya.database.metadata.bind.MetadataContext.getCatalogs;
-import java.io.IOException;
-import static java.lang.invoke.MethodHandles.lookup;
+import lombok.extern.slf4j.Slf4j;
+import org.testng.annotations.Test;
+
+import javax.xml.bind.JAXBException;
 import java.sql.Connection;
 import java.sql.DatabaseMetaData;
-import static java.sql.DriverManager.getConnection;
 import java.sql.SQLException;
 import java.util.List;
-import javax.xml.bind.JAXBException;
-import org.slf4j.Logger;
-import static org.slf4j.LoggerFactory.getLogger;
-import static org.testng.Assert.assertNotNull;
-import org.testng.annotations.Test;
+
 import static com.github.jinahya.database.metadata.bind.JaxbTests.store;
+import static com.github.jinahya.database.metadata.bind.MetadataContext.getCatalogs;
+import static java.sql.DriverManager.getConnection;
+import static org.testng.Assert.assertNotNull;
 
 /**
  * Test class for remote MySQL.
  *
  * @author Jin Kwon &lt;onacit at gmail.com&gt;
  */
+@Slf4j
 public class ExternalTest {
 
-    private static final Logger logger = getLogger(lookup().lookupClass());
-
-    // -------------------------------------------------------------------------
+    // -----------------------------------------------------------------------------------------------------------------
     @Test
-    public void test() throws SQLException, JAXBException, IOException {
+    public void test() throws SQLException, JAXBException {
         final String client = System.getProperty("client");
         assertNotNull(client, "client is null");
-        logger.info("using {}", client);
+        log.info("using {}", client);
         final String url = System.getProperty("url");
         assertNotNull(url, "url is null");
-        logger.info("url: {}", url);
+        log.info("url: {}", url);
         final String user = System.getProperty("user");
         assertNotNull(user, "user is null");
         final String password = System.getProperty("password");
         assertNotNull(password, "password is null");
-        logger.info("connecting...");
+        log.info("connecting...");
         try (Connection connection = getConnection(url, user, password)) {
-            logger.info("connected: {}", connection);
+            log.info("connected: {}", connection);
             final DatabaseMetaData metadata = connection.getMetaData();
             final MetadataContext context = new MetadataContext(metadata);
             final String paths = System.getProperty("paths");
@@ -64,17 +62,14 @@ public class ExternalTest {
                     if (path.isEmpty()) {
                         continue;
                     }
-                    logger.info("suppressing {}", path);
-                    context.suppress(path);
+                    log.info("suppressing {}", path);
+                    context.addSuppressionPaths(path);
                 }
             }
             final List<Catalog> catalogs = getCatalogs(context, true);
-            logger.debug("catalogs: {}", catalogs);
             store(Catalog.class, catalogs, "external.catalogs");
-            store(ClientInfoProperty.class, context.getClientInfoProperties(),
-                  "external.clientInfoProperties");
-            store(TableType.class, context.getTableTypes(),
-                  "external.tableTypes");
+            store(ClientInfoProperty.class, context.getClientInfoProperties(), "external.clientInfoProperties");
+            store(TableType.class, context.getTableTypes(), "external.tableTypes");
             store(TypeInfo.class, context.getTypeInfo(), "external.typeInfo");
         }
     }

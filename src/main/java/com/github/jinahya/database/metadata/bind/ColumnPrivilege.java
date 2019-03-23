@@ -15,13 +15,14 @@
  */
 package com.github.jinahya.database.metadata.bind;
 
-import java.io.Serializable;
-import java.util.logging.Logger;
-import static java.util.logging.Logger.getLogger;
 import javax.xml.bind.annotation.XmlAttribute;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlType;
+import java.io.Serializable;
+import java.util.logging.Logger;
+
+import static java.util.logging.Logger.getLogger;
 
 /**
  * An entity class for column privileges.
@@ -30,17 +31,17 @@ import javax.xml.bind.annotation.XmlType;
  */
 @XmlRootElement
 @XmlType(propOrder = {
-    "grantor", "grantee", "privilege", "isGrantable"
+        "grantor", "grantee", "privilege", "isGrantable"
 })
 public class ColumnPrivilege implements Serializable {
 
+    // -----------------------------------------------------------------------------------------------------------------
     private static final long serialVersionUID = 4384654744147773380L;
 
-    // -------------------------------------------------------------------------
-    private static final Logger logger
-            = getLogger(ColumnPrivilege.class.getName());
+    // -----------------------------------------------------------------------------------------------------------------
+    private static final Logger logger = getLogger(ColumnPrivilege.class.getName());
 
-    // -------------------------------------------------------------------------
+    // -----------------------------------------------------------------------------------------------------------------
     @Override
     public String toString() {
         return super.toString() + "{"

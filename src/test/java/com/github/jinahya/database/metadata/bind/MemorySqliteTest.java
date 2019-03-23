@@ -15,20 +15,22 @@
  */
 package com.github.jinahya.database.metadata.bind;
 
-import static com.github.jinahya.database.metadata.bind.JaxbTests.store;
-import static com.github.jinahya.database.metadata.bind.MetadataContext.getCatalogs;
-import static java.lang.invoke.MethodHandles.lookup;
-import java.sql.Connection;
-import java.sql.DatabaseMetaData;
-import static java.sql.DriverManager.getConnection;
-import java.sql.SQLException;
-import java.sql.SQLFeatureNotSupportedException;
-import java.util.List;
 import org.slf4j.Logger;
-import static org.slf4j.LoggerFactory.getLogger;
 import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
+
+import java.sql.Connection;
+import java.sql.DatabaseMetaData;
+import java.sql.SQLException;
+import java.sql.SQLFeatureNotSupportedException;
+import java.util.List;
+
+import static com.github.jinahya.database.metadata.bind.JaxbTests.store;
+import static com.github.jinahya.database.metadata.bind.MetadataContext.getCatalogs;
+import static java.lang.invoke.MethodHandles.lookup;
+import static java.sql.DriverManager.getConnection;
+import static org.slf4j.LoggerFactory.getLogger;
 
 /**
  * Test for SQLite.
@@ -55,31 +57,22 @@ public class MemorySqliteTest extends MemoryTest {
     @Test(enabled = true)
     public void test() throws Exception {
         try (Connection connection = getConnection(CONNECTION_URL)) {
-            final DatabaseMetaData database = connection.getMetaData();
-            final MetadataContext context = new MetadataContext(database);
-            context.suppress("catalog/schemas");
-            context.suppress("schema/functions");
+            final DatabaseMetaData metadata = connection.getMetaData();
+            final MetadataContext context = new MetadataContext(metadata);
+            context.addSuppressionPaths(
+                    "catalog/schemas",
+                    "schema/functions"
+            );
             final List<Catalog> catalogs = getCatalogs(context, true);
             store(Catalog.class, catalogs, "memory.sqlite.catalogs");
             try {
-                store(ClientInfoProperty.class,
-                      context.getClientInfoProperties(),
+                store(ClientInfoProperty.class, context.getClientInfoProperties(),
                       "memory.sqlite.clientInfoProperties");
             } catch (final SQLFeatureNotSupportedException sqlfnse) {
                 logger.warn("getClientInfoProperties not supported", sqlfnse);
             }
-            store(TableType.class, context.getTableTypes(),
-                  "memory.sqlite.tableTypes");
-            store(TypeInfo.class, context.getTypeInfo(),
-                  "memory.sqlite.typeInfo");
+            store(TableType.class, context.getTableTypes(), "memory.sqlite.tableTypes");
+            store(TypeInfo.class, context.getTypeInfo(), "memory.sqlite.typeInfo");
         }
-//        final JAXBContext context = JAXBContext.newInstance(Metadata.class);
-//        final Marshaller marshaller = context.createMarshaller();
-//        marshaller.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, Boolean.TRUE);
-//        final File file = new File("target", "sqlite.memory.metadata.xml");
-//        try (OutputStream outputStream = new FileOutputStream(file)) {
-//            marshaller.marshal(metadata, outputStream);
-//            outputStream.flush();
-//        }
     }
 }

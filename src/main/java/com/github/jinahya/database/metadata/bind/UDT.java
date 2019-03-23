@@ -15,16 +15,17 @@
  */
 package com.github.jinahya.database.metadata.bind;
 
-import java.io.Serializable;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.logging.Logger;
-import static java.util.logging.Logger.getLogger;
 import javax.xml.bind.annotation.XmlAttribute;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlElementRef;
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlType;
+import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.logging.Logger;
+
+import static java.util.logging.Logger.getLogger;
 
 /**
  * An entity class for user defined types.
@@ -33,9 +34,9 @@ import javax.xml.bind.annotation.XmlType;
  */
 @XmlRootElement
 @XmlType(propOrder = {
-    "typeName", "className", "dataType", "remarks", "baseType",
-    // ---------------------------------------------------------------------
-    "attributes", "superTypes"
+        "typeName", "className", "dataType", "remarks", "baseType",
+        // ---------------------------------------------------------------------
+        "attributes", "superTypes"
 })
 public class UDT implements Serializable {
 
@@ -171,7 +172,7 @@ public class UDT implements Serializable {
     @Invoke(name = "getAttributes",
             types = {String.class, String.class, String.class, String.class},
             parameters = {
-                @Literals({":typeCat", ":typeSchem", ":typeName", "null"})
+                    @Literals({":typeCat", ":typeSchem", ":typeName", "null"})
             }
     )
     private List<Attribute> attributes;
@@ -180,7 +181,7 @@ public class UDT implements Serializable {
     @Invoke(name = "getSuperTypes",
             types = {String.class, String.class, String.class},
             parameters = {
-                @Literals({":typeCat", ":typeSchem", ":typeName"})
+                    @Literals({":typeCat", ":typeSchem", ":typeName"})
             }
     )
     private List<SuperType> superTypes;

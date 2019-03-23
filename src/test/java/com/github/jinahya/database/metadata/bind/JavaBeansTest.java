@@ -15,14 +15,15 @@
  */
 package com.github.jinahya.database.metadata.bind;
 
-import static com.github.jinahya.database.metadata.bind.Utils.fields;
+import lombok.extern.slf4j.Slf4j;
+import org.slf4j.Logger;
+import org.testng.annotations.Test;
+
 import java.beans.BeanInfo;
 import java.beans.IntrospectionException;
 import java.beans.Introspector;
 import java.beans.PropertyDescriptor;
 import java.io.IOException;
-import static java.lang.String.format;
-import static java.lang.invoke.MethodHandles.lookup;
 import java.lang.reflect.Field;
 import java.net.URISyntaxException;
 import java.net.URL;
@@ -33,19 +34,22 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
+
+import static com.github.jinahya.database.metadata.bind.Utils.fields;
+import static java.lang.String.format;
+import static java.lang.invoke.MethodHandles.lookup;
 import static java.util.function.Function.identity;
 import static java.util.stream.Collectors.toMap;
-import org.slf4j.Logger;
 import static org.slf4j.LoggerFactory.getLogger;
 import static org.testng.Assert.assertFalse;
 import static org.testng.Assert.assertNotNull;
-import org.testng.annotations.Test;
 
 /**
  * Test java beans conformance.
  *
  * @author Jin Kwon &lt;onacit at gmail.com&gt;
  */
+@Slf4j
 public class JavaBeansTest {
 
     private static final Logger logger = getLogger(lookup().lookupClass());
@@ -91,7 +95,7 @@ public class JavaBeansTest {
         final BeanInfo info = Introspector.getBeanInfo(klass);
         final Map<String, PropertyDescriptor> descriptors
                 = Arrays.stream(info.getPropertyDescriptors()).collect(
-                        toMap(PropertyDescriptor::getName, identity()));
+                toMap(PropertyDescriptor::getName, identity()));
         for (final Field field : klass.getDeclaredFields()) {
             if (field.getAnnotation(Bind.class) == null) {
                 continue;

@@ -15,14 +15,16 @@
  */
 package com.github.jinahya.database.metadata.bind;
 
-import static java.lang.invoke.MethodHandles.lookup;
+import org.slf4j.Logger;
+
 import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.Method;
 import java.lang.reflect.Proxy;
 import java.sql.DatabaseMetaData;
 import java.util.Arrays;
+
+import static java.lang.invoke.MethodHandles.lookup;
 import static java.util.Objects.requireNonNull;
-import org.slf4j.Logger;
 import static org.slf4j.LoggerFactory.getLogger;
 
 class MetadataLogger implements InvocationHandler {
@@ -32,7 +34,7 @@ class MetadataLogger implements InvocationHandler {
     static DatabaseMetaData newProxy(final DatabaseMetaData metadata) {
         return (DatabaseMetaData) Proxy.newProxyInstance(
                 MetadataLogger.class.getClassLoader(),
-                new Class<?>[]{DatabaseMetaData.class},
+                new Class<?>[] {DatabaseMetaData.class},
                 new MetadataLogger(metadata));
     }
 

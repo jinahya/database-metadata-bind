@@ -15,31 +15,33 @@
  */
 package com.github.jinahya.database.metadata.bind;
 
-import static java.beans.Introspector.decapitalize;
-import static java.lang.String.format;
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Field;
 import java.sql.ResultSet;
 import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
-import static java.util.Collections.unmodifiableMap;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
-import static java.util.logging.Level.FINE;
 import java.util.logging.Logger;
+
+import static java.beans.Introspector.decapitalize;
+import static java.lang.String.format;
+import static java.util.Collections.unmodifiableMap;
+import static java.util.logging.Level.FINE;
 import static java.util.logging.Logger.getLogger;
 
 final class Utils {
 
+    // -----------------------------------------------------------------------------------------------------------------
     private static final Logger logger = getLogger(Utils.class.getName());
 
-    // -------------------------------------------------------------------------
+    // -----------------------------------------------------------------------------------------------------------------
     private static final Map<Class<?>, Class<?>> WRAPPER;
 
     static {
-        final Map<Class<?>, Class<?>> m = new HashMap<Class<?>, Class<?>>();
+        final Map<Class<?>, Class<?>> m = new HashMap<>();
         m.put(boolean.class, Boolean.class);
         m.put(byte.class, Byte.class);
         m.put(char.class, Character.class);
@@ -57,15 +59,13 @@ final class Utils {
             throw new NullPointerException("primitive is null");
         }
         if (!primitive.isPrimitive()) {
-            throw new IllegalArgumentException(
-                    "specified class(" + primitive + ") is not primitive");
+            throw new IllegalArgumentException("specified class(" + primitive + ") is not primitive");
         }
         return WRAPPER.get(primitive);
     }
 
-    // ------------------------------------------------------- java.lang.reflect
-    static Field field(final Class<?> klass, final String name)
-            throws NoSuchFieldException {
+    // ----------------------------------------------------------------------------------------------- java.lang.reflect
+    static Field field(final Class<?> klass, final String name) throws NoSuchFieldException {
         try {
             return klass.getDeclaredField(name);
         } catch (final NoSuchFieldException nsfe) {
@@ -78,8 +78,7 @@ final class Utils {
     }
 
     private static <T extends Annotation> Map<Field, T> fields(
-            final Class<?> klass, final Class<T> type, final Map<Field, T> map)
-            throws ReflectiveOperationException {
+            final Class<?> klass, final Class<T> type, final Map<Field, T> map) {
         for (final Field field : klass.getDeclaredFields()) {
             final T value = field.getAnnotation(type);
             if (value == null) {
@@ -91,84 +90,10 @@ final class Utils {
         return superclass == null ? map : fields(superclass, type, map);
     }
 
-    static <T extends Annotation> Map<Field, T> fields(
-            final Class<?> c, final Class<T> a)
-            throws ReflectiveOperationException {
-        return fields(c, a, new HashMap<Field, T>());
+    static <T extends Annotation> Map<Field, T> fields(final Class<?> c, final Class<T> a) {
+        return fields(c, a, new HashMap<>());
     }
 
-//    // ---------------------------------------------------------------- java.sql
-//    private static final Map<Integer, String> SQL_TYPES;
-//
-//    static {
-//        final Map<Integer, String> sqlTypes = new HashMap<Integer, String>();
-//        for (final Field field : Types.class.getFields()) {
-//            final int modifiers = field.getModifiers();
-//            if (!Modifier.isPublic(modifiers)) {
-//                continue;
-//            }
-//            if (!Modifier.isStatic(modifiers)) {
-//                continue;
-//            }
-//            if (!Integer.TYPE.equals(field.getType())) {
-//                continue;
-//            }
-//            try {
-//                final int type = field.getInt(null);
-//                final String name = field.getName();
-//                assert sqlTypes.put(type, name) == null :
-//                        "duplicate sql type retrived: " + type + " / " + name;
-//            } catch (final IllegalAccessException iae) {
-//                logger.severe("failed to get sql type value from " + field);
-//            }
-//        }
-//        SQL_TYPES = unmodifiableMap(sqlTypes);
-//    }
-//
-//    static Set<Integer> sqlTypes() throws IllegalAccessException {
-//        if (true) {
-//            return SQL_TYPES.keySet();
-//        }
-//        // @todo: remove following block
-//        final Set<Integer> sqlTypes = new HashSet<Integer>();
-//        for (final Field field : Types.class.getFields()) {
-//            final int modifiers = field.getModifiers();
-//            if (!Modifier.isPublic(modifiers)) {
-//                continue;
-//            }
-//            if (!Modifier.isStatic(modifiers)) {
-//                continue;
-//            }
-//            if (!Integer.TYPE.equals(field.getType())) {
-//                continue;
-//            }
-//            sqlTypes.add(field.getInt(null));
-//        }
-//        return sqlTypes;
-//    }
-//
-//    static String sqlTypeName(final int value) throws IllegalAccessException {
-//        if (true) {
-//            return SQL_TYPES.get(value);
-//        }
-//        // @todo: remove following block
-//        for (final Field field : Types.class.getFields()) {
-//            final int modifiers = field.getModifiers();
-//            if (!Modifier.isPublic(modifiers)) {
-//                continue;
-//            }
-//            if (!Modifier.isStatic(modifiers)) {
-//                continue;
-//            }
-//            if (!Integer.TYPE.equals(field.getType())) {
-//                continue;
-//            }
-//            if (field.getInt(null) == value) {
-//                return field.getName();
-//            }
-//        }
-//        return null;
-//    }
     /**
      * Returns a set of column labels of given result set.
      *
@@ -180,30 +105,29 @@ final class Utils {
     static Set<String> labels(final ResultSet results) throws SQLException {
         final ResultSetMetaData metadata = results.getMetaData();
         final int count = metadata.getColumnCount();
-        final Set<String> labels = new HashSet<String>(count);
+        final Set<String> labels = new HashSet<>(count);
         for (int i = 1; i <= count; i++) {
             labels.add(metadata.getColumnLabel(i).toUpperCase());
         }
         return labels;
     }
 
-    // -------------------------------------------------------------------------
-    static String path(final Class<?> klass, final String name) {
+    // -----------------------------------------------------------------------------------------------------------------
+    static String suppressionPath(final Class<?> klass, final String name) {
         return decapitalize(klass.getSimpleName()) + "/" + name;
     }
 
-    static String path(final Class<?> klass, final Field field) {
-        return path(klass, field.getName());
+    static String suppressionPath(final Class<?> klass, final Field field) {
+        return suppressionPath(klass, field.getName());
     }
 
-    static String path(final Field field) {
-        return path(field.getDeclaringClass(), field);
+    static String suppressionPath(final Field field) {
+        return suppressionPath(field.getDeclaringClass(), field);
     }
 
-    // -------------------------------------------------------------------------
+    // -----------------------------------------------------------------------------------------------------------------
     @Deprecated
-    static void field(final Field field, final Object obj, final Object value)
-            throws ReflectiveOperationException {
+    static void field(final Field field, final Object obj, final Object value) throws ReflectiveOperationException {
         if (!field.isAccessible()) {
             field.setAccessible(true);
         }
@@ -283,12 +207,8 @@ final class Utils {
         }
     }
 
-    static void field(final Field field, final Object obj,
-                      final ResultSet results, final String label)
+    static void field(final Field field, final Object obj, final ResultSet results, final String label)
             throws SQLException, ReflectiveOperationException {
-//        if (!field.isAccessible()) {
-//            field.setAccessible(true);
-//        }
         final Class<?> type = field.getType();
         final Object value = results.getObject(label);
         if (type.isPrimitive()) {
@@ -331,8 +251,7 @@ final class Utils {
             field.set(obj, value);
             return;
         } catch (final IllegalArgumentException iae) {
-            logger.log(FINE, format("failed to set %s on %s", value, field),
-                       iae);
+            logger.log(FINE, format("failed to set %s on %s", value, field), iae);
         }
         if (value instanceof Number) {
             if (type == Boolean.class) {
@@ -368,12 +287,10 @@ final class Utils {
                 return;
             }
         }
-        logger.severe(format(
-                "failed to set value; label=%s, field=%s, value=%s",
-                label, field, value));
+        logger.severe(format("failed to set value; label=%s, field=%s, value=%s", label, field, value));
     }
 
-// -------------------------------------------------------------------------
+    // -----------------------------------------------------------------------------------------------------------------
     private Utils() {
         super();
     }

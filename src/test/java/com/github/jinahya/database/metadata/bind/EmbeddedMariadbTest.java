@@ -17,17 +17,17 @@ package com.github.jinahya.database.metadata.bind;
 
 import ch.vorburger.mariadb4j.DB;
 import ch.vorburger.mariadb4j.DBConfigurationBuilder;
-import static com.github.jinahya.database.metadata.bind.MetadataContext.getCatalogs;
-import static java.lang.invoke.MethodHandles.lookup;
-import java.sql.Connection;
-import java.sql.DatabaseMetaData;
-import static java.sql.DriverManager.getConnection;
-import java.util.List;
-import org.slf4j.Logger;
-import static org.slf4j.LoggerFactory.getLogger;
+import lombok.extern.slf4j.Slf4j;
 import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
+
+import java.sql.Connection;
+import java.sql.DatabaseMetaData;
+import java.util.List;
+
+import static com.github.jinahya.database.metadata.bind.MetadataContext.getCatalogs;
+import static java.sql.DriverManager.getConnection;
 
 /**
  * Test with MariaDB4j.
@@ -35,11 +35,10 @@ import org.testng.annotations.Test;
  * @author Jin Kwon &lt;jinahya_at_gmail.com&gt;
  * @see <a href="https://github.com/vorburger/MariaDB4j">MariaDB4j (GitHub)</a>
  */
+@Slf4j
 public class EmbeddedMariadbTest {
 
-    private static final Logger logger = getLogger(lookup().lookupClass());
-
-    // -------------------------------------------------------------------------
+    // -----------------------------------------------------------------------------------------------------------------
     private static DB DB__;
 
     //private static final String URL = "jdbc:mysql://localhost/test";
@@ -57,22 +56,22 @@ public class EmbeddedMariadbTest {
         builder.setPort(0);
         DB__ = DB.newEmbeddedDB(builder.build());
         DB__.start();
-        logger.debug("embedded mariadb started");
+        log.debug("embedded mariadb started");
         URL = builder.getURL("test");
-        logger.debug("url: {}", URL);
+        log.debug("url: {}", URL);
     }
 
     @AfterClass
     private static void afterClass() throws Exception {
         DB__.stop();
-        logger.debug("embedded mariadb stopped");
+        log.debug("embedded mariadb stopped");
         DB__ = null;
     }
 
     @Test
     public void store() throws Exception {
         try (Connection connection = getConnection(URL, USER, PASSWORD)) {
-            logger.debug("connection: {}", connection);
+            log.debug("connection: {}", connection);
             final DatabaseMetaData metadata = connection.getMetaData();
             final MetadataContext context = new MetadataContext(metadata);
             final List<Catalog> catalogs = getCatalogs(context, true);

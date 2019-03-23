@@ -15,15 +15,16 @@
  */
 package com.github.jinahya.database.metadata.bind;
 
-import static java.lang.invoke.MethodHandles.lookup;
-import java.util.Arrays;
 import org.apache.commons.lang3.ClassUtils;
 import org.slf4j.Logger;
-import static org.slf4j.LoggerFactory.getLogger;
 import org.testng.annotations.Test;
 
+import java.util.Arrays;
+
+import static java.lang.invoke.MethodHandles.lookup;
+import static org.slf4j.LoggerFactory.getLogger;
+
 /**
- *
  * @author Jin Kwon &lt;onacit at gmail.com&gt;
  */
 public class CommonsLangTest {

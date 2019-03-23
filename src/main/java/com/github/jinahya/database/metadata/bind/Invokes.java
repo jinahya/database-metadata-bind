@@ -16,6 +16,7 @@
 package com.github.jinahya.database.metadata.bind;
 
 import java.lang.reflect.Field;
+
 import static com.github.jinahya.database.metadata.bind.Utils.field;
 import static com.github.jinahya.database.metadata.bind.Utils.wrapper;
 

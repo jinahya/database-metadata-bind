@@ -15,30 +15,28 @@
  */
 package com.github.jinahya.database.metadata.bind;
 
-import java.io.Serializable;
-import java.sql.DatabaseMetaData;
-import static java.sql.DatabaseMetaData.typeNoNulls;
-import static java.sql.DatabaseMetaData.typeNullable;
-import static java.sql.DatabaseMetaData.typeNullableUnknown;
-import java.util.logging.Logger;
-import static java.util.logging.Logger.getLogger;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlType;
+import java.io.Serializable;
+import java.sql.DatabaseMetaData;
+import java.util.logging.Logger;
+
+import static java.sql.DatabaseMetaData.typeNoNulls;
+import static java.sql.DatabaseMetaData.typeNullable;
+import static java.sql.DatabaseMetaData.typeNullableUnknown;
+import static java.util.logging.Logger.getLogger;
 
 /**
- * An entity class for binding the result of
- * {@link java.sql.DatabaseMetaData#getTypeInfo() getTypeInfo()}.
+ * An entity class for binding the result of {@link java.sql.DatabaseMetaData#getTypeInfo() getTypeInfo()}.
  *
  * @author Jin Kwon &lt;jinahya_at_gmail.com&gt;
  */
 @XmlRootElement
 @XmlType(propOrder = {
-    "typeName", "dataType", "precision", "literalPrefix", "literalSuffix",
-    "createParams", "nullable", "caseSensitive", "searchable",
-    "unsignedAttribute", "fixedPrecScale", "autoIncrement", "localTypeName",
-    "minimumScale", "maximumScale", "sqlDataType", "sqlDatetimeSub",
-    "numPrecRadix"
+        "typeName", "dataType", "precision", "literalPrefix", "literalSuffix", "createParams", "nullable",
+        "caseSensitive", "searchable", "unsignedAttribute", "fixedPrecScale", "autoIncrement", "localTypeName",
+        "minimumScale", "maximumScale", "sqlDataType", "sqlDatetimeSub", "numPrecRadix"
 })
 public class TypeInfo implements Serializable {
 
@@ -48,6 +46,7 @@ public class TypeInfo implements Serializable {
     private static final Logger logger = getLogger(TypeInfo.class.getName());
 
     // -------------------------------------------------------------------------
+
     /**
      * Constants for nullabilities of an type.
      */
@@ -55,25 +54,24 @@ public class TypeInfo implements Serializable {
 
         // ---------------------------------------------------------------------
         /**
-         * Constant for {@link DatabaseMetaData#typeNoNulls} whose value is
-         * {@value DatabaseMetaData#typeNoNulls}.
+         * Constant for {@link DatabaseMetaData#typeNoNulls} whose value is {@value DatabaseMetaData#typeNoNulls}.
          */
         TYPE_NO_NULLS(typeNoNulls), // 1
         /**
-         * Constant for {@link DatabaseMetaData#typeNullable} whose value is
-         * {@value DatabaseMetaData#typeNullable}.
+         * Constant for {@link DatabaseMetaData#typeNullable} whose value is {@value DatabaseMetaData#typeNullable}.
          */
         TYPE_NULLABLE(typeNullable), // 1
         /**
-         * Constant for {@link DatabaseMetaData#typeNullableUnknown} whose value
-         * is {@value DatabaseMetaData#typeNullableUnknown}.
+         * Constant for {@link DatabaseMetaData#typeNullableUnknown} whose value is {@value
+         * DatabaseMetaData#typeNullableUnknown}.
          */
         TYPE_NULLABLE_UNKNOWN(typeNullableUnknown); // 2
 
         // ---------------------------------------------------------------------
+
         /**
-         * Returns the constant whose raw value matches to given. An instance of
-         * {@link IllegalArgumentException} will be thrown if no value matches.
+         * Returns the constant whose raw value matches to given. An instance of {@link IllegalArgumentException} will
+         * be thrown if no value matches.
          *
          * @param rawValue the raw value
          * @return the matched constant
@@ -88,6 +86,7 @@ public class TypeInfo implements Serializable {
         }
 
         // ---------------------------------------------------------------------
+
         /**
          * Returns the raw value of this constant.
          *
@@ -103,6 +102,7 @@ public class TypeInfo implements Serializable {
     }
 
     // -------------------------------------------------------------------------
+
     /**
      * Creates a new instance.
      */

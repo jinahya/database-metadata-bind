@@ -16,7 +16,6 @@
 package com.github.jinahya.database.metadata.bind;
 
 /**
- *
  * @author Jin Kwon &lt;onacit at wemakeprice.com&gt;
  */
 interface IntFieldEnum<E extends Enum<E>> {

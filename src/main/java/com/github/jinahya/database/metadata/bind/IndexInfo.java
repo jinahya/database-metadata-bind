@@ -15,27 +15,26 @@
  */
 package com.github.jinahya.database.metadata.bind;
 
-import java.io.Serializable;
-import java.util.logging.Logger;
-import static java.util.logging.Logger.getLogger;
 import javax.xml.bind.annotation.XmlAttribute;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlType;
+import java.io.Serializable;
+import java.util.logging.Logger;
+
+import static java.util.logging.Logger.getLogger;
 
 /**
  * An entity class for index info.
  *
  * @author Jin Kwon &lt;jinahya_at_gmail.com&gt;
- * @see java.sql.DatabaseMetaData#getIndexInfo(java.lang.String,
- * java.lang.String, java.lang.String, boolean, boolean)
- * @see MetadataContext#getIndexInfo(java.lang.String, java.lang.String,
- * java.lang.String, boolean, boolean)
+ * @see java.sql.DatabaseMetaData#getIndexInfo(java.lang.String, java.lang.String, java.lang.String, boolean, boolean)
+ * @see MetadataContext#getIndexInfo(java.lang.String, java.lang.String, java.lang.String, boolean, boolean)
  */
 @XmlRootElement
 @XmlType(propOrder = {
-    "nonUnique", "indexQualifier", "indexName", "type", "ordinalPosition",
-    "columnName", "ascOrDesc", "cardinality", "pages", "filterCondition"
+        "nonUnique", "indexQualifier", "indexName", "type", "ordinalPosition", "columnName", "ascOrDesc", "cardinality",
+        "pages", "filterCondition"
 })
 public class IndexInfo implements Serializable {
 

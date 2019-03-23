@@ -15,31 +15,29 @@
  */
 package com.github.jinahya.database.metadata.bind;
 
-import java.io.Serializable;
-import java.sql.DatabaseMetaData;
-import static java.sql.DatabaseMetaData.attributeNoNulls;
-import static java.sql.DatabaseMetaData.attributeNullable;
-import static java.sql.DatabaseMetaData.attributeNullableUnknown;
-import java.util.logging.Logger;
-import static java.util.logging.Logger.getLogger;
 import javax.xml.bind.annotation.XmlAttribute;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlType;
+import java.io.Serializable;
+import java.sql.DatabaseMetaData;
+import java.util.logging.Logger;
+
+import static java.sql.DatabaseMetaData.attributeNoNulls;
+import static java.sql.DatabaseMetaData.attributeNullable;
+import static java.sql.DatabaseMetaData.attributeNullableUnknown;
+import static java.util.logging.Logger.getLogger;
 
 /**
  * An entity class for type attributes.
  *
  * @author Jin Kwon &lt;jinahya_at_gmail.com&gt;
- * @see MetadataContext#getAttributes(java.lang.String, java.lang.String,
- * java.lang.String, java.lang.String)
+ * @see MetadataContext#getAttributes(java.lang.String, java.lang.String, java.lang.String, java.lang.String)
  */
 @XmlRootElement
 @XmlType(propOrder = {
-    "attrName", "dataType", "attrTypeName", "attrSize", "decimalDigits",
-    "numPrecRadix", "nullable", "remarks", "attrDef", "sqlDataType",
-    "sqlDatetimeSub", "charOctetLength", "ordinalPosition", "isNullable",
-    "sourceDataType"
+        "attrName", "dataType", "attrTypeName", "attrSize", "decimalDigits", "numPrecRadix", "nullable", "remarks",
+        "attrDef", "sqlDataType", "sqlDatetimeSub", "charOctetLength", "ordinalPosition", "isNullable", "sourceDataType"
 })
 public class Attribute implements Serializable {
 
@@ -49,6 +47,7 @@ public class Attribute implements Serializable {
     private static final Logger logger = getLogger(Attribute.class.getName());
 
     // -------------------------------------------------------------------------
+
     /**
      * Constants for nullabilities of an attribute.
      */

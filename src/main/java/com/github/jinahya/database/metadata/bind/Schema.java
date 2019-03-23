@@ -15,28 +15,29 @@
  */
 package com.github.jinahya.database.metadata.bind;
 
-import java.io.Serializable;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.logging.Logger;
-import static java.util.logging.Logger.getLogger;
 import javax.xml.bind.annotation.XmlAttribute;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlElementRef;
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlType;
+import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.logging.Logger;
+
+import static java.util.logging.Logger.getLogger;
 
 /**
- * An entity class for binding the result of
- * {@link java.sql.DatabaseMetaData#getSchemas(java.lang.String, java.lang.String)}.
+ * An entity class for binding the result of {@link java.sql.DatabaseMetaData#getSchemas(java.lang.String,
+ * java.lang.String)}.
  *
  * @author Jin Kwon &lt;jinahya_at_gmail.com&gt;
  */
 @XmlRootElement
 @XmlType(propOrder = {
-    "tableSchem",
-    // -------------------------------------------------------------------------
-    "functions", "procedures", "tables", "UDTs"
+        "tableSchem",
+        // -------------------------------------------------------------------------
+        "functions", "procedures", "tables", "UDTs"
 })
 public class Schema implements Serializable {//extends AbstractTableDomain {
 
@@ -133,7 +134,7 @@ public class Schema implements Serializable {//extends AbstractTableDomain {
     @Invoke(name = "getFunctions",
             types = {String.class, String.class, String.class},
             parameters = {
-                @Literals({":tableCatalog", ":tableSchem", "null"})
+                    @Literals({":tableCatalog", ":tableSchem", "null"})
             }
     )
     private List<Function> functions;
@@ -142,7 +143,7 @@ public class Schema implements Serializable {//extends AbstractTableDomain {
     @Invoke(name = "getProcedures",
             types = {String.class, String.class, String.class},
             parameters = {
-                @Literals({":tableCatalog", ":tableSchem", "null"})
+                    @Literals({":tableCatalog", ":tableSchem", "null"})
             }
     )
     private List<Procedure> procedures;
@@ -152,7 +153,7 @@ public class Schema implements Serializable {//extends AbstractTableDomain {
             types = {String.class, String.class, String.class,
                      String[].class},
             parameters = {
-                @Literals({":tableCatalog", ":tableSchem", "null", "null"})
+                    @Literals({":tableCatalog", ":tableSchem", "null", "null"})
             }
     )
     private List<Table> tables;
@@ -161,7 +162,7 @@ public class Schema implements Serializable {//extends AbstractTableDomain {
     @Invoke(name = "getUDTs",
             types = {String.class, String.class, String.class, int[].class},
             parameters = {
-                @Literals({":tableCatalog", ":tableSchem", "null", "null"})
+                    @Literals({":tableCatalog", ":tableSchem", "null", "null"})
             }
     )
     private List<UDT> UDTs;

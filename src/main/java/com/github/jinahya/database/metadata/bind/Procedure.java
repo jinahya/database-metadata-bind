@@ -15,28 +15,29 @@
  */
 package com.github.jinahya.database.metadata.bind;
 
-import java.io.Serializable;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.logging.Logger;
-import static java.util.logging.Logger.getLogger;
 import javax.xml.bind.annotation.XmlAttribute;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlElementRef;
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlType;
+import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.logging.Logger;
+
+import static java.util.logging.Logger.getLogger;
 
 /**
- * An entity class for binding the result of
- * {@link java.sql.DatabaseMetaData#getProcedures(java.lang.String, java.lang.String, java.lang.String)}.
+ * An entity class for binding the result of {@link java.sql.DatabaseMetaData#getProcedures(java.lang.String,
+ * java.lang.String, java.lang.String)}.
  *
  * @author Jin Kwon &lt;jinahya_at_gmail.com&gt;
  */
 @XmlRootElement
 @XmlType(propOrder = {
-    "procedureName", "remarks", "procedureType", "specificName",
-    // ---------------------------------------------------------------------
-    "procedureColumns"
+        "procedureName", "remarks", "procedureType", "specificName",
+        // ---------------------------------------------------------------------
+        "procedureColumns"
 })
 public class Procedure implements Serializable {
 
@@ -150,8 +151,8 @@ public class Procedure implements Serializable {
     @Invoke(name = "getProcedureColumns",
             types = {String.class, String.class, String.class, String.class},
             parameters = {
-                @Literals({":procedureCat", ":procedureSchem",
-                           ":procedureName", "null"})
+                    @Literals({":procedureCat", ":procedureSchem",
+                               ":procedureName", "null"})
             }
     )
     private List<ProcedureColumn> procedureColumns;

@@ -15,12 +15,13 @@
  */
 package com.github.jinahya.database.metadata.bind;
 
-import com.github.jinahya.database.metadata.bind.Utils;
-import static java.lang.invoke.MethodHandles.lookup;
-import java.lang.reflect.Field;
 import org.slf4j.Logger;
-import static org.slf4j.LoggerFactory.getLogger;
 import org.testng.annotations.Test;
+
+import java.lang.reflect.Field;
+
+import static java.lang.invoke.MethodHandles.lookup;
+import static org.slf4j.LoggerFactory.getLogger;
 
 /**
  * Test for {@code Utils}.
@@ -31,7 +32,7 @@ public class UtilsTest {
 
     private static final Logger logger = getLogger(lookup().lookupClass());
 
-    // -------------------------------------------------------------------------
+    // -----------------------------------------------------------------------------------------------------------------
     @Test(enabled = false)
     public void printSqlTypes() throws ReflectiveOperationException {
         final Field field = Utils.class.getDeclaredField("SQL_TYPES");

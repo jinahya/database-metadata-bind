@@ -15,31 +15,31 @@
  */
 package com.github.jinahya.database.metadata.bind;
 
-import java.io.Serializable;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.logging.Logger;
-import static java.util.logging.Logger.getLogger;
 import javax.xml.bind.annotation.XmlAttribute;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlElementRef;
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlType;
+import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.logging.Logger;
+
+import static java.util.logging.Logger.getLogger;
 
 /**
- * A entity class for binding the result of
- * {@link java.sql.DatabaseMetaData#getTables(java.lang.String, java.lang.String, java.lang.String, java.lang.String[])}.
+ * A entity class for binding the result of {@link java.sql.DatabaseMetaData#getTables(java.lang.String,
+ * java.lang.String, java.lang.String, java.lang.String[])}.
  *
  * @author Jin Kwon &lt;jinahya_at_gmail.com&gt;
  */
 @XmlRootElement
 @XmlType(propOrder = {
-    "tableName", "tableType", "remarks", "typeCat", "typeSchem", "typeName",
-    "selfReferencingColName", "refGeneration",
-    // ---------------------------------------------------------------------
-    "bestRowIdentifiers", "columns", "exportedKeys", "importedKeys",
-    "indexInfo", "primaryKeys", "pseudoColumns", "superTables",
-    "tablePrivileges", "versionColumns"
+        "tableName", "tableType", "remarks", "typeCat", "typeSchem", "typeName", "selfReferencingColName",
+        "refGeneration",
+        // ---------------------------------------------------------------------
+        "bestRowIdentifiers", "columns", "exportedKeys", "importedKeys", "indexInfo", "primaryKeys", "pseudoColumns",
+        "superTables", "tablePrivileges", "versionColumns"
 })
 public class Table implements Serializable {
 
@@ -164,6 +164,7 @@ public class Table implements Serializable {
     }
 
     // ----------------------------------------------------------------- columns
+
     /**
      * Returns columns of this table.
      *
@@ -177,6 +178,7 @@ public class Table implements Serializable {
     }
 
     // ------------------------------------------------------------ exportedKeys
+
     /**
      * Returns exported keys of this table.
      *
@@ -190,6 +192,7 @@ public class Table implements Serializable {
     }
 
     // ------------------------------------------------------------ importedKeys
+
     /**
      * Returns imported keys of this table.
      *
@@ -203,6 +206,7 @@ public class Table implements Serializable {
     }
 
     // --------------------------------------------------------------- indexInfo
+
     /**
      * Returns index info of this table.
      *
@@ -216,6 +220,7 @@ public class Table implements Serializable {
     }
 
     // ------------------------------------------------------------- primaryKeys
+
     /**
      * Returns primary keys of this table.
      *
@@ -229,6 +234,7 @@ public class Table implements Serializable {
     }
 
     // ----------------------------------------------------------- pseudoColumns
+
     /**
      * Returns pseudo columns of this table.
      *
@@ -242,6 +248,7 @@ public class Table implements Serializable {
     }
 
     // ------------------------------------------------------------- superTables
+
     /**
      * Returns super tables of this table.
      *
@@ -255,6 +262,7 @@ public class Table implements Serializable {
     }
 
     // --------------------------------------------------------- tablePrivileges
+
     /**
      * Returns table privileges of this table.
      *
@@ -268,6 +276,7 @@ public class Table implements Serializable {
     }
 
     // ---------------------------------------------------------- versionColumns
+
     /**
      * Returns version columns of this table.
      *
@@ -326,21 +335,21 @@ public class Table implements Serializable {
     @XmlElementRef
     @Invoke(name = "getBestRowIdentifier",
             types = {
-                String.class, String.class, String.class, int.class,
-                boolean.class
+                    String.class, String.class, String.class, int.class,
+                    boolean.class
             },
             parameters = {
-                @Literals({":tableCat", ":tableSchem", ":tableName",
-                           "0", // bestRowTemporaty
-                           "true"})
-                ,
-                @Literals({":tableCat", ":tableSchem", ":tableName",
-                           "1", // bestRowTransaction
-                           "true"})
-                ,
-                @Literals({":tableCat", ":tableSchem", ":tableName",
-                           "2", // bestRowSession
-                           "true"})}
+                    @Literals({":tableCat", ":tableSchem", ":tableName",
+                               "0", // bestRowTemporaty
+                               "true"})
+                    ,
+                    @Literals({":tableCat", ":tableSchem", ":tableName",
+                               "1", // bestRowTransaction
+                               "true"})
+                    ,
+                    @Literals({":tableCat", ":tableSchem", ":tableName",
+                               "2", // bestRowSession
+                               "true"})}
     )
     private List<BestRowIdentifier> bestRowIdentifiers;
 
@@ -348,7 +357,7 @@ public class Table implements Serializable {
     @Invoke(name = "getColumns",
             types = {String.class, String.class, String.class, String.class},
             parameters = {
-                @Literals({":tableCat", ":tableSchem", ":tableName", "null"})
+                    @Literals({":tableCat", ":tableSchem", ":tableName", "null"})
             }
     )
     private List<Column> columns;
@@ -357,7 +366,7 @@ public class Table implements Serializable {
     @Invoke(name = "getExportedKeys",
             types = {String.class, String.class, String.class},
             parameters = {
-                @Literals({":tableCat", ":tableSchem", ":tableName"})
+                    @Literals({":tableCat", ":tableSchem", ":tableName"})
             }
     )
     private List<ExportedKey> exportedKeys;
@@ -366,7 +375,7 @@ public class Table implements Serializable {
     @Invoke(name = "getImportedKeys",
             types = {String.class, String.class, String.class},
             parameters = {
-                @Literals({":tableCat", ":tableSchem", ":tableName"})
+                    @Literals({":tableCat", ":tableSchem", ":tableName"})
             }
     )
     private List<ImportedKey> importedKeys;
@@ -374,12 +383,12 @@ public class Table implements Serializable {
     @XmlElementRef
     @Invoke(name = "getIndexInfo",
             types = {
-                String.class, String.class, String.class, boolean.class,
-                boolean.class
+                    String.class, String.class, String.class, boolean.class,
+                    boolean.class
             },
             parameters = {
-                @Literals({":tableCat", ":tableSchem", ":tableName", "false",
-                           "false"})
+                    @Literals({":tableCat", ":tableSchem", ":tableName", "false",
+                               "false"})
             }
     )
     private List<IndexInfo> indexInfo;
@@ -388,7 +397,7 @@ public class Table implements Serializable {
     @Invoke(name = "getPrimaryKeys",
             types = {String.class, String.class, String.class},
             parameters = {
-                @Literals({":tableCat", ":tableSchem", ":tableName"})
+                    @Literals({":tableCat", ":tableSchem", ":tableName"})
             }
     )
     private List<PrimaryKey> primaryKeys;
@@ -397,7 +406,7 @@ public class Table implements Serializable {
     @Invoke(name = "getPseudoColumns",
             types = {String.class, String.class, String.class, String.class},
             parameters = {
-                @Literals({":tableCat", ":tableSchem", ":tableName", "null"})
+                    @Literals({":tableCat", ":tableSchem", ":tableName", "null"})
             }
     )
     private List<PseudoColumn> pseudoColumns;
@@ -406,7 +415,7 @@ public class Table implements Serializable {
     @Invoke(name = "getSuperTables",
             types = {String.class, String.class, String.class},
             parameters = {
-                @Literals({":tableCat", ":tableSchem", ":tableName"})
+                    @Literals({":tableCat", ":tableSchem", ":tableName"})
             }
     )
     private List<SuperTable> superTables;
@@ -415,7 +424,7 @@ public class Table implements Serializable {
     @Invoke(name = "getTablePrivileges",
             types = {String.class, String.class, String.class},
             parameters = {
-                @Literals({":tableCat", ":tableSchem", ":tableName"})
+                    @Literals({":tableCat", ":tableSchem", ":tableName"})
             }
     )
     private List<TablePrivilege> tablePrivileges;
@@ -424,7 +433,7 @@ public class Table implements Serializable {
     @Invoke(name = "getVersionColumns",
             types = {String.class, String.class, String.class},
             parameters = {
-                @Literals({":tableCat", ":tableSchem", ":tableName"})
+                    @Literals({":tableCat", ":tableSchem", ":tableName"})
             }
     )
     private List<VersionColumn> versionColumns;

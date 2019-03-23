@@ -15,21 +15,22 @@
  */
 package com.github.jinahya.database.metadata.bind;
 
-import static com.github.jinahya.database.metadata.bind.JaxbTests.store;
-import static com.github.jinahya.database.metadata.bind.MetadataContext.getCatalogs;
-import java.sql.Connection;
-import java.sql.DatabaseMetaData;
-import java.sql.SQLException;
 import org.slf4j.Logger;
-import static org.slf4j.LoggerFactory.getLogger;
 import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
-import static java.sql.DriverManager.getConnection;
+
+import java.sql.Connection;
+import java.sql.DatabaseMetaData;
+import java.sql.SQLException;
 import java.util.List;
 
+import static com.github.jinahya.database.metadata.bind.JaxbTests.store;
+import static com.github.jinahya.database.metadata.bind.MetadataContext.getCatalogs;
+import static java.sql.DriverManager.getConnection;
+import static org.slf4j.LoggerFactory.getLogger;
+
 /**
- *
  * @author Jin Kwon &lt;onacit_at_gmail.com&gt;
  */
 public class MemoryHsqlTest extends MemoryTest {
@@ -60,24 +61,27 @@ public class MemoryHsqlTest extends MemoryTest {
     private static void afterClass() throws SQLException {
     }
 
-    // -------------------------------------------------------------------------
+    // -----------------------------------------------------------------------------------------------------------------
     @Test(enabled = true)
     public void test() throws Exception {
         try (Connection connection = getConnection(CONNECTION_URL)) {
-            final DatabaseMetaData database = connection.getMetaData();
-            final MetadataContext context = new MetadataContext(database);
-            context.suppress(
+            final DatabaseMetaData metadata = connection.getMetaData();
+            final MetadataContext context = new MetadataContext(metadata);
+            context.addSuppressionPaths(
+                    "clientInfoProperty/defaultValue",
+                    "column/numPrecRadix",
+                    "indexInfo/cardinality",
+                    "procedure/remarks",
+                    "procedureColumn/length",
+                    "procedureColumn/radix", // null value
+                    "procedureColumn/remarks",
                     "table/pseudoColumns"
             );
             final List<Catalog> catalogs = getCatalogs(context, true);
             store(Catalog.class, catalogs, "memory.hsql.catalogs");
-            store(ClientInfoProperty.class,
-                  context.getClientInfoProperties(),
-                  "memory.hsql.clientInfoProperties");
-            store(TableType.class, context.getTableTypes(),
-                  "memory.hsql.tableTypes");
-            store(TypeInfo.class, context.getTypeInfo(),
-                  "memory.hsql.typeInfo");
+            store(ClientInfoProperty.class, context.getClientInfoProperties(), "memory.hsql.clientInfoProperties");
+            store(TableType.class, context.getTableTypes(), "memory.hsql.tableTypes");
+            store(TypeInfo.class, context.getTypeInfo(), "memory.hsql.typeInfo");
         }
     }
 }

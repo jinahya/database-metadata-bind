@@ -15,29 +15,30 @@
  */
 package com.github.jinahya.database.metadata.bind;
 
-import static com.github.jinahya.database.metadata.bind.JaxbTests.store;
-import static com.github.jinahya.database.metadata.bind.MetadataContext.getCatalogs;
-import static java.lang.invoke.MethodHandles.lookup;
-import java.sql.Connection;
-import java.sql.DatabaseMetaData;
-import java.sql.SQLException;
 import org.slf4j.Logger;
-import static org.slf4j.LoggerFactory.getLogger;
 import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
-import static java.sql.DriverManager.getConnection;
+
+import java.sql.Connection;
+import java.sql.DatabaseMetaData;
+import java.sql.SQLException;
 import java.util.List;
 
+import static com.github.jinahya.database.metadata.bind.JaxbTests.store;
+import static com.github.jinahya.database.metadata.bind.MetadataContext.getCatalogs;
+import static java.lang.invoke.MethodHandles.lookup;
+import static java.sql.DriverManager.getConnection;
+import static org.slf4j.LoggerFactory.getLogger;
+
 /**
- *
  * @author Jin Kwon &lt;jinahya_at_gmail.com&gt;
  */
 public class MemoryH2Test extends MemoryTest {
 
     private static final Logger logger = getLogger(lookup().lookupClass());
 
-    // -------------------------------------------------------------------------
+    // -----------------------------------------------------------------------------------------------------------------
     private static final String DRIVER_NAME = "org.h2.Driver";
 
     private static final Class<?> DRIVER_CLASS;
@@ -50,10 +51,9 @@ public class MemoryH2Test extends MemoryTest {
         }
     }
 
-    private static final String CONNECTION_URL
-            = "jdbc:h2:mem:test"; //;DB_CLOSE_DELAY=-1";
+    private static final String CONNECTION_URL = "jdbc:h2:mem:test"; //;DB_CLOSE_DELAY=-1";
 
-    // -------------------------------------------------------------------------
+    // -----------------------------------------------------------------------------------------------------------------
     @BeforeClass
     private static void beforeClass() throws SQLException {
     }
@@ -62,28 +62,23 @@ public class MemoryH2Test extends MemoryTest {
     private static void afterClass() throws SQLException {
     }
 
-    // -------------------------------------------------------------------------
+    // -----------------------------------------------------------------------------------------------------------------
     @Test(enabled = true)
     public void marshalCategories() throws Exception {
         try (Connection connection = getConnection(CONNECTION_URL)) {
             final DatabaseMetaData metadata = connection.getMetaData();
             final MetadataContext context = new MetadataContext(metadata);
-            context.suppress(
+            context.addSuppressionPaths(
                     "column/isGeneratedcolumn",
-                    //                    "clientInfoProperty/defaultValue",
-                    //                    "clientInfoProperty/description",
-                    //                    "clientInfoProperty/maxLen",
                     "schema/functions",
-                    "table/pseudoColumns"
+                    "table/pseudoColumns",
+                    "typeInfo/numPrecRadix"
             );
             final List<Catalog> catalogs = getCatalogs(context, true);
             store(Catalog.class, catalogs, "memory.h2.catalogs");
-            store(ClientInfoProperty.class, context.getClientInfoProperties(),
-                  "memory.h2.clientInfoProperties");
-            store(TableType.class, context.getTableTypes(),
-                  "memory.h2.tableTypes");
-            store(TypeInfo.class, context.getTypeInfo(),
-                  "memory.h2.typeInfo");
+            store(ClientInfoProperty.class, context.getClientInfoProperties(), "memory.h2.clientInfoProperties");
+            store(TableType.class, context.getTableTypes(), "memory.h2.tableTypes");
+            store(TypeInfo.class, context.getTypeInfo(), "memory.h2.typeInfo");
         }
     }
 }

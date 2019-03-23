@@ -15,35 +15,34 @@
  */
 package com.github.jinahya.database.metadata.bind;
 
-import java.io.Serializable;
-import java.util.logging.Logger;
-import static java.util.logging.Logger.getLogger;
 import javax.xml.bind.annotation.XmlAttribute;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlType;
+import java.io.Serializable;
+import java.util.logging.Logger;
+
+import static java.util.logging.Logger.getLogger;
 
 /**
  * An entity class for cross references.
  *
  * @author Jin Kwon &lt;jinahya_at_gmail.com&gt;
- * @see MetadataContext#getCrossReferences(java.lang.String, java.lang.String,
- * java.lang.String, java.lang.String, java.lang.String, java.lang.String)
+ * @see MetadataContext#getCrossReferences(java.lang.String, java.lang.String, java.lang.String, java.lang.String,
+ * java.lang.String, java.lang.String)
  */
 @XmlRootElement
 @XmlType(propOrder = {
-    "pkcolumnName", "fkcolumnName", "keySeq", "updateRule", "deleteRule",
-    "fkName", "pkName", "deferrability"
+        "pkcolumnName", "fkcolumnName", "keySeq", "updateRule", "deleteRule", "fkName", "pkName", "deferrability"
 })
 public class CrossReference implements Serializable {
 
     private static final long serialVersionUID = -5343386346721125961L;
 
-    // -------------------------------------------------------------------------
-    private static final Logger logger
-            = getLogger(CrossReference.class.getName());
+    // -----------------------------------------------------------------------------------------------------------------
+    private static final Logger logger = getLogger(CrossReference.class.getName());
 
-    // -------------------------------------------------------------------------
+    // -----------------------------------------------------------------------------------------------------------------
     @Override
     public String toString() {
         return super.toString() + "{"

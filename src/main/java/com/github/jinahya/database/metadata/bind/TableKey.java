@@ -15,19 +15,19 @@
  */
 package com.github.jinahya.database.metadata.bind;
 
-import java.io.Serializable;
-import java.util.logging.Logger;
-import static java.util.logging.Logger.getLogger;
 import javax.xml.bind.annotation.XmlAttribute;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlTransient;
 import javax.xml.bind.annotation.XmlType;
+import java.io.Serializable;
+import java.util.logging.Logger;
+
+import static java.util.logging.Logger.getLogger;
 
 @XmlTransient
 @XmlType(propOrder = {
-    "pkcolumnName", "fktableCat", "fktableSchem",
-    "fktableName", "fkcolumnName", "keySeq", "updateRule",
-    "deleteRule", "fkName", "pkName", "deferrability"
+        "pkcolumnName", "fktableCat", "fktableSchem", "fktableName", "fkcolumnName", "keySeq", "updateRule",
+        "deleteRule", "fkName", "pkName", "deferrability"
 })
 abstract class TableKey implements Serializable {
 

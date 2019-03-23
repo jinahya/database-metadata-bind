@@ -15,51 +15,44 @@
  */
 package com.github.jinahya.database.metadata.bind;
 
-import java.beans.Introspector;
-import java.io.File;
-import static java.lang.invoke.MethodHandles.lookup;
-import java.nio.file.Paths;
-import java.util.Collection;
+import lombok.extern.slf4j.Slf4j;
+import org.atteo.evo.inflector.English;
+
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBElement;
 import javax.xml.bind.JAXBException;
 import javax.xml.bind.Marshaller;
-import org.atteo.evo.inflector.English;
-import org.slf4j.Logger;
-import static org.slf4j.LoggerFactory.getLogger;
+import java.beans.Introspector;
+import java.io.File;
+import java.nio.file.Paths;
+import java.util.Collection;
 
 /**
  * Test utilities for JAXB functionalities.
  *
  * @author Jin Kwon &lt;onacit at gmail.com&gt;
  */
+@Slf4j
 final class JaxbTests {
 
-    private static final Logger logger = getLogger(lookup().lookupClass());
-
-    // -------------------------------------------------------------------------
+    // -----------------------------------------------------------------------------------------------------------------
     static String plural(final Class<?> type) {
         String singular = type.getSimpleName();
         singular = Introspector.decapitalize(singular);
         return English.plural(singular);
     }
 
-    static <T> void store(final Class<T> type,
-                          final Collection<? extends T> elements,
-                          final String name)
+    static <T> void store(final Class<T> type, final Collection<? extends T> elements, final String name)
             throws JAXBException {
-        final JAXBContext context
-                = JAXBContext.newInstance(Wrapper.class, type);
+        final JAXBContext context = JAXBContext.newInstance(Wrapper.class, type);
         final Marshaller marshaller = context.createMarshaller();
         marshaller.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, Boolean.TRUE);
         final Wrapper<T> wrapper = Wrapper.of(elements);
         final File output = Paths.get("target", name + ".xml").toFile();
-        marshaller.marshal(
-                new JAXBElement<>(Wrapper.NAME, Wrapper.class, wrapper),
-                output);
+        marshaller.marshal(new JAXBElement<>(Wrapper.NAME, Wrapper.class, wrapper), output);
     }
 
-    // -------------------------------------------------------------------------
+    // -----------------------------------------------------------------------------------------------------------------
     private JaxbTests() {
         super();
     }

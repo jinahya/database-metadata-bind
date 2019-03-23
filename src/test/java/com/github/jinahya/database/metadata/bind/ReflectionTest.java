@@ -15,34 +15,35 @@
  */
 package com.github.jinahya.database.metadata.bind;
 
-import static java.lang.invoke.MethodHandles.lookup;
+import org.slf4j.Logger;
+import org.testng.annotations.Test;
+
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
 import java.util.List;
-import org.slf4j.Logger;
+
+import static java.lang.invoke.MethodHandles.lookup;
 import static org.slf4j.LoggerFactory.getLogger;
 import static org.testng.Assert.assertEquals;
 import static org.testng.Assert.assertTrue;
-import org.testng.annotations.Test;
 
 /**
- *
  * @author Jin Kwon &lt;jinahya_at_gmail.com&gt;
  */
 public class ReflectionTest {
 
     private static final Logger logger = getLogger(lookup().lookupClass());
 
-    // -------------------------------------------------------------------------
+    // -----------------------------------------------------------------------------------------------------------------
     private static void method(Integer v) {
     }
 
     private static void method(int v) {
     }
 
-    // -------------------------------------------------------------------------
+    // -----------------------------------------------------------------------------------------------------------------
     @Test(enabled = false)
     public void test() throws NoSuchMethodException {
 
@@ -84,8 +85,7 @@ public class ReflectionTest {
         final Field field = getClass().getDeclaredField("list");
         final Type type = field.getGenericType();
         if (type instanceof ParameterizedType) {
-            final Type elementType
-                    = ((ParameterizedType) type).getActualTypeArguments()[0];
+            final Type elementType = ((ParameterizedType) type).getActualTypeArguments()[0];
             final String typeName = elementType.getTypeName();
             logger.debug("typeName: {}", typeName);
         }

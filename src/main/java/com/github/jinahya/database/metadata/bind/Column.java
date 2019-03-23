@@ -15,20 +15,21 @@
  */
 package com.github.jinahya.database.metadata.bind;
 
-import java.io.Serializable;
-import java.sql.DatabaseMetaData;
-import static java.sql.DatabaseMetaData.columnNoNulls;
-import static java.sql.DatabaseMetaData.columnNullable;
-import static java.sql.DatabaseMetaData.columnNullableUnknown;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.logging.Logger;
-import static java.util.logging.Logger.getLogger;
 import javax.xml.bind.annotation.XmlAttribute;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlElementRef;
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlType;
+import java.io.Serializable;
+import java.sql.DatabaseMetaData;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.logging.Logger;
+
+import static java.sql.DatabaseMetaData.columnNoNulls;
+import static java.sql.DatabaseMetaData.columnNullable;
+import static java.sql.DatabaseMetaData.columnNullableUnknown;
+import static java.util.logging.Logger.getLogger;
 
 /**
  * An entity class for columns
@@ -37,13 +38,11 @@ import javax.xml.bind.annotation.XmlType;
  */
 @XmlRootElement
 @XmlType(propOrder = {
-    "columnName", "dataType", "typeName", "columnSize", "bufferLength",
-    "decimalDigits", "numPrecRadix", "nullable", "remarks", "columnDef",
-    "sqlDataType", "sqlDatetimeSub", "charOctetLength", "ordinalPosition",
-    "isNullable", "scopeCatalog", "scopeSchema", "scopeTable",
-    "sourceDataType", "isAutoincrement", "isGeneratedcolumn",
-    // ---------------------------------------------------------------------
-    "columnPrivileges"
+        "columnName", "dataType", "typeName", "columnSize", "bufferLength", "decimalDigits", "numPrecRadix", "nullable",
+        "remarks", "columnDef", "sqlDataType", "sqlDatetimeSub", "charOctetLength", "ordinalPosition", "isNullable",
+        "scopeCatalog", "scopeSchema", "scopeTable", "sourceDataType", "isAutoincrement", "isGeneratedcolumn",
+        // ---------------------------------------------------------------------
+        "columnPrivileges"
 })
 public class Column implements Serializable {
 
@@ -53,11 +52,11 @@ public class Column implements Serializable {
     private static final Logger logger = getLogger(Column.class.getName());
 
     // -------------------------------------------------------------------------
+
     /**
      * Constants for nullabilities of table columns.
      *
-     * @see DatabaseMetaData#getColumns(java.lang.String, java.lang.String,
-     * java.lang.String, java.lang.String)
+     * @see DatabaseMetaData#getColumns(java.lang.String, java.lang.String, java.lang.String, java.lang.String)
      */
     public static enum Nullable implements IntFieldEnum<Nullable> {
 
@@ -75,10 +74,10 @@ public class Column implements Serializable {
         COLUMN_NULLABLE_UNKNOWN(columnNullableUnknown);
 
         // ---------------------------------------------------------------------
+
         /**
-         * Returns the constant whose raw value equals to given. An instance of
-         * {@link IllegalArgumentException} will be throw if no constants
-         * matches.
+         * Returns the constant whose raw value equals to given. An instance of {@link IllegalArgumentException} will be
+         * throw if no constants matches.
          *
          * @param rawValue the value value
          * @return the constant whose raw value equals to given.
@@ -93,6 +92,7 @@ public class Column implements Serializable {
         }
 
         // ---------------------------------------------------------------------
+
         /**
          * Returns the raw value of this constant.
          *
@@ -466,8 +466,8 @@ public class Column implements Serializable {
     @Invoke(name = "getColumnPrivileges",
             types = {String.class, String.class, String.class, String.class},
             parameters = {
-                @Literals({":tableCat", ":tableSchem", ":tableName",
-                           ":columnName"})
+                    @Literals({":tableCat", ":tableSchem", ":tableName",
+                               ":columnName"})
             }
     )
     private List<ColumnPrivilege> columnPrivileges;

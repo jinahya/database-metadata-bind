@@ -15,12 +15,13 @@
  */
 package com.github.jinahya.database.metadata.bind;
 
-import java.io.Serializable;
-import java.util.logging.Logger;
-import static java.util.logging.Logger.getLogger;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlType;
+import java.io.Serializable;
+import java.util.logging.Logger;
+
+import static java.util.logging.Logger.getLogger;
 
 /**
  * An entity class for client info properties.
@@ -29,17 +30,16 @@ import javax.xml.bind.annotation.XmlType;
  */
 @XmlRootElement
 @XmlType(propOrder = {
-    "name", "maxLen", "defaultValue", "description"
+        "name", "maxLen", "defaultValue", "description"
 })
 public class ClientInfoProperty implements Serializable {
 
     private static final long serialVersionUID = -2913230435651853254L;
 
-    // -------------------------------------------------------------------------
-    private static final Logger logger
-            = getLogger(ClientInfoProperty.class.getName());
+    // -----------------------------------------------------------------------------------------------------------------
+    private static final Logger logger = getLogger(ClientInfoProperty.class.getName());
 
-    // -------------------------------------------------------------------------
+    // -----------------------------------------------------------------------------------------------------------------
     @Override
     public String toString() {
         return super.toString() + "{"

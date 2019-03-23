@@ -15,20 +15,20 @@
  */
 package com.github.jinahya.database.metadata.bind;
 
-import static com.github.jinahya.database.metadata.bind.JaxbTests.store;
-import static com.github.jinahya.database.metadata.bind.MetadataContext.getCatalogs;
-import static java.lang.invoke.MethodHandles.lookup;
-import java.sql.Connection;
-import java.sql.DatabaseMetaData;
-import java.sql.SQLException;
-import java.util.Properties;
-import org.slf4j.Logger;
-import static org.slf4j.LoggerFactory.getLogger;
+import lombok.extern.slf4j.Slf4j;
 import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
-import static java.sql.DriverManager.getConnection;
+
+import java.sql.Connection;
+import java.sql.DatabaseMetaData;
+import java.sql.SQLException;
 import java.util.List;
+import java.util.Properties;
+
+import static com.github.jinahya.database.metadata.bind.JaxbTests.store;
+import static com.github.jinahya.database.metadata.bind.MetadataContext.getCatalogs;
+import static java.sql.DriverManager.getConnection;
 import static org.testng.Assert.fail;
 
 /**
@@ -36,13 +36,11 @@ import static org.testng.Assert.fail;
  *
  * @author Jin Kwon &lt;jinahya_at_gmail.com&gt;
  */
+@Slf4j
 public class MemoryDerbyTest extends MemoryTest {
 
-    private static final Logger logger = getLogger(lookup().lookupClass());
-
-    // -------------------------------------------------------------------------
-    private static final String DRIVER_NAME
-            = "org.apache.derby.jdbc.EmbeddedDriver";
+    // -----------------------------------------------------------------------------------------------------------------
+    private static final String DRIVER_NAME = "org.apache.derby.jdbc.EmbeddedDriver";
 
     private static final Class<?> DRIVER_CLASS;
 
@@ -50,13 +48,14 @@ public class MemoryDerbyTest extends MemoryTest {
         try {
             DRIVER_CLASS = Class.forName(DRIVER_NAME);
         } catch (final ClassNotFoundException cnfe) {
+            cnfe.printStackTrace();
             throw new InstantiationError(cnfe.getMessage());
         }
     }
 
     private static final String CONNECTION_URL = "jdbc:derby:memory:test";
 
-    // -------------------------------------------------------------------------
+    // -----------------------------------------------------------------------------------------------------------------
     @BeforeClass
     private static void beforeClass() throws SQLException {
         final Properties properties = new Properties();
@@ -87,36 +86,47 @@ public class MemoryDerbyTest extends MemoryTest {
         }
     }
 
-    // -------------------------------------------------------------------------
-    @Test
+    // -----------------------------------------------------------------------------------------------------------------
+    @Test(enabled = false)
     public void test() throws Exception {
         try (Connection connection = getConnection(CONNECTION_URL)) {
-            logger.debug("connected: {}", connection);
-            DatabaseMetaData metadata = connection.getMetaData();
+            final DatabaseMetaData metadata = connection.getMetaData();
             final MetadataContext context = new MetadataContext(metadata);
-//            context.alias("column/scopeCatalog", "SCOPE_CATLOG");
+            context.addSuppressionPaths(
+                    "column/charOctetLength",
+                    "column/numPrecRadix",
+                    "functionColumn/radix",
+                    "functionColumn/remarks", // null value
+                    "functionColumn/scale",
+                    "indexInfo/cardinality",
+                    "indexInfo/pages",
+                    "procedureColumn/radix",
+                    "procedureColumn/remarks",
+                    "typeInfo/autoIncrement", // null value
+                    "typeInfo/maximumScale", // null value
+                    "typeInfo/minimumScale", // null value
+                    "typeInfo/numPrecRadix", // null value
+                    "typeInfo/precision", // null value
+                    "typeInfo/unsignedAttribute" // null value
+            );
             final List<Catalog> catalogs = getCatalogs(context, true);
             store(Catalog.class, catalogs, "memory.derby.catalogs");
-            store(ClientInfoProperty.class, context.getClientInfoProperties(),
-                  "memory.derby.clientInfoProperties");
-            store(TableType.class, context.getTableTypes(),
-                  "memory.derby.tableTypes");
-            store(TypeInfo.class, context.getTypeInfo(),
-                  "memory.derby.typeInfo");
+            store(ClientInfoProperty.class, context.getClientInfoProperties(), "memory.derby.clientInfoProperties");
+            store(TableType.class, context.getTableTypes(), "memory.derby.tableTypes");
+            store(TypeInfo.class, context.getTypeInfo(), "memory.derby.typeInfo");
         }
     }
 
     @Test(enabled = false)
     public void pattern() throws Exception {
         try (Connection connection = getConnection(CONNECTION_URL)) {
-            final DatabaseMetaData database = connection.getMetaData();
-            final MetadataContext context = new MetadataContext(database);
-            for (final Table table
-                 : context.getTables(null, null, "SYS%", null)) {
-                logger.debug("table.name: {}", table.getTableName());
+            final DatabaseMetaData metadata = connection.getMetaData();
+            final MetadataContext context = new MetadataContext(metadata);
+            for (final Table table : context.getTables(null, null, "SYS%", null)) {
+                log.debug("table.name: {}", table.getTableName());
             }
             for (final Table table : context.getTables(null, null, "%", null)) {
-                logger.debug("table.name: {}", table.getTableName());
+                log.debug("table.name: {}", table.getTableName());
             }
         }
     }

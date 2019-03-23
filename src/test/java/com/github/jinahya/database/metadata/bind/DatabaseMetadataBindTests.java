@@ -15,16 +15,9 @@
  */
 package com.github.jinahya.database.metadata.bind;
 
-import java.io.File;
-import static java.lang.Boolean.TRUE;
-import static java.lang.invoke.MethodHandles.lookup;
-import java.nio.file.Paths;
-import java.util.List;
-import javax.xml.bind.JAXBContext;
-import javax.xml.bind.JAXBException;
-import javax.xml.bind.Marshaller;
-import static javax.xml.bind.Marshaller.JAXB_FORMATTED_OUTPUT;
 import org.slf4j.Logger;
+
+import static java.lang.invoke.MethodHandles.lookup;
 import static org.slf4j.LoggerFactory.getLogger;
 
 /**
@@ -36,7 +29,7 @@ final class DatabaseMetadataBindTests {
 
     private static final Logger logger = getLogger(lookup().lookupClass());
 
-//    // -------------------------------------------------------------------------
+    //    // -------------------------------------------------------------------------
 //    /**
 //     * Marshals given catalogs into {@code target/name.xml}.
 //     *

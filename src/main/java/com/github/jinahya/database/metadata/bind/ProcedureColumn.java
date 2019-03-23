@@ -15,87 +15,87 @@
  */
 package com.github.jinahya.database.metadata.bind;
 
+import javax.xml.bind.annotation.XmlAttribute;
+import javax.xml.bind.annotation.XmlElement;
+import javax.xml.bind.annotation.XmlRootElement;
+import javax.xml.bind.annotation.XmlType;
 import java.io.Serializable;
 import java.sql.DatabaseMetaData;
+import java.util.logging.Logger;
+
 import static java.sql.DatabaseMetaData.functionColumnResult;
 import static java.sql.DatabaseMetaData.procedureColumnIn;
 import static java.sql.DatabaseMetaData.procedureColumnInOut;
 import static java.sql.DatabaseMetaData.procedureColumnOut;
 import static java.sql.DatabaseMetaData.procedureColumnReturn;
 import static java.sql.DatabaseMetaData.procedureColumnUnknown;
-import java.util.logging.Logger;
 import static java.util.logging.Logger.getLogger;
-import javax.xml.bind.annotation.XmlAttribute;
-import javax.xml.bind.annotation.XmlElement;
-import javax.xml.bind.annotation.XmlRootElement;
-import javax.xml.bind.annotation.XmlType;
 
 /**
- * An entity class for binding the result of
- * {@link java.sql.DatabaseMetaData#getProcedureColumns(java.lang.String, java.lang.String, java.lang.String, java.lang.String)}.
+ * An entity class for binding the result of {@link java.sql.DatabaseMetaData#getProcedureColumns(java.lang.String,
+ * java.lang.String, java.lang.String, java.lang.String)}.
  *
  * @author Jin Kwon &lt;jinahya_at_gmail.com&gt;
  */
 @XmlRootElement
 @XmlType(propOrder = {
-    "columnName", "columnType", "dataType", "typeName",
-    "precision", "length", "scale", "radix", "nullable", "remarks",
-    "columnDef", "sqlDataType", "sqlDatetimeSub", "charOctetLength",
-    "ordinalPosition", "isNullable", "specificName"
+        "columnName", "columnType", "dataType", "typeName",
+        "precision", "length", "scale", "radix", "nullable", "remarks",
+        "columnDef", "sqlDataType", "sqlDatetimeSub", "charOctetLength",
+        "ordinalPosition", "isNullable", "specificName"
 })
 public class ProcedureColumn implements Serializable {
 
     private static final long serialVersionUID = 3894753719381358829L;
 
     // -------------------------------------------------------------------------
-    private static final Logger logger
-            = getLogger(ProcedureColumn.class.getName());
+    private static final Logger logger = getLogger(ProcedureColumn.class.getName());
 
     // -------------------------------------------------------------------------
+
     /**
      * Constants for column types of procedure columns.
      *
-     * @see DatabaseMetaData#getFunctionColumns(java.lang.String,
-     * java.lang.String, java.lang.String, java.lang.String)
+     * @see DatabaseMetaData#getFunctionColumns(java.lang.String, java.lang.String, java.lang.String, java.lang.String)
      */
     public static enum ColumnType implements IntFieldEnum<ColumnType> {
 
         /**
-         * Constant for {@link DatabaseMetaData#procedureColumnUnknown} whose
-         * value is {@value DatabaseMetaData#procedureColumnUnknown}.
+         * Constant for {@link DatabaseMetaData#procedureColumnUnknown} whose value is {@value
+         * DatabaseMetaData#procedureColumnUnknown}.
          */
         PROCEDURE_COLUMN_UNKNOWN(procedureColumnUnknown), // 0
         /**
-         * Constants for {@link DatabaseMetaData#procedureColumnIn} whose value
-         * is {@value DatabaseMetaData#procedureColumnIn}.
+         * Constants for {@link DatabaseMetaData#procedureColumnIn} whose value is {@value
+         * DatabaseMetaData#procedureColumnIn}.
          */
         PROCEDURE_COLUMN_IN(procedureColumnIn), // 1
         /**
-         * Constants for {@link DatabaseMetaData#procedureColumnInOut} whose
-         * value is {@value DatabaseMetaData#procedureColumnInOut}.
+         * Constants for {@link DatabaseMetaData#procedureColumnInOut} whose value is {@value
+         * DatabaseMetaData#procedureColumnInOut}.
          */
         PROCEDURE_COLUMN_IN_OUT(procedureColumnInOut), // 2
         /**
-         * Constants for {@link DatabaseMetaData#procedureColumnResult} whose
-         * value is {@value DatabaseMetaData#procedureColumnResult}.
+         * Constants for {@link DatabaseMetaData#procedureColumnResult} whose value is {@value
+         * DatabaseMetaData#procedureColumnResult}.
          */
         PROCEDURE_COLUMN_RESULT(functionColumnResult), // 3
         /**
-         * Constants for {@link DatabaseMetaData#procedureColumnOut} whose value
-         * is {@value DatabaseMetaData#procedureColumnOut}.
+         * Constants for {@link DatabaseMetaData#procedureColumnOut} whose value is {@value
+         * DatabaseMetaData#procedureColumnOut}.
          */
         PROCEDURE_COLUMN_OUT(procedureColumnOut), // 4
         /**
-         * Constant for {@link DatabaseMetaData#procedureColumnReturn} whose
-         * value is {@value DatabaseMetaData#procedureColumnReturn}.
+         * Constant for {@link DatabaseMetaData#procedureColumnReturn} whose value is {@value
+         * DatabaseMetaData#procedureColumnReturn}.
          */
         PROCEDURE_COLUMN_RETURN(procedureColumnReturn); // 5
 
         // ---------------------------------------------------------------------
+
         /**
-         * Returns the constant whose raw value equals to given. An instance of
-         * {@link IllegalArgumentException} will be thrown if no constant
-         * matches.
+         * Returns the constant whose raw value equals to given. An instance of {@link IllegalArgumentException} will be
+         * thrown if no constant matches.
          *
          * @param rawValue the raw value
          * @return the constant whose raw value equals to given.
@@ -110,6 +110,7 @@ public class ProcedureColumn implements Serializable {
         }
 
         // ---------------------------------------------------------------------
+
         /**
          * Returns the raw value of this constant.
          *
@@ -125,6 +126,7 @@ public class ProcedureColumn implements Serializable {
     }
 
     // -------------------------------------------------------------------------
+
     /**
      * Creates a new instance.
      */
