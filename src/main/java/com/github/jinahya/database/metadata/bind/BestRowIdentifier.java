@@ -242,7 +242,7 @@ public class BestRowIdentifier implements Serializable {
         this.pseudoColumn = pseudoColumn;
     }
 
-    // -------------------------------------------------------------------------
+    // -----------------------------------------------------------------------------------------------------------------
     @XmlElement
     @Bind(label = "SCOPE")
     private short scope;
