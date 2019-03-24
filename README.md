@@ -56,7 +56,7 @@ $ mvn -Pembedded-<profile> \
       -Dpaths="of/some,other/others,..." \
       -Dtest=<test> \
       test
-$ cat target/embedded.<profile>.xml
+$ cat target/embedded.<profile>.catalogs.xml
 ```
 
 #### Properties
