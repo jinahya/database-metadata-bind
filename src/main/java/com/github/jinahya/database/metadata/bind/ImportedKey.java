@@ -1,6 +1,11 @@
-/*
- * Copyright 2013 Jin Kwon <onacit at gmail.com>.
- *
+package com.github.jinahya.database.metadata.bind;
+
+/*-
+ * #%L
+ * database-metadata-bind
+ * %%
+ * Copyright (C) 2011 - 2019 Jinahya, Inc.
+ * %%
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
@@ -12,8 +17,8 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
+ * #L%
  */
-package com.github.jinahya.database.metadata.bind;
 
 import javax.xml.bind.annotation.XmlRootElement;
 import java.sql.DatabaseMetaData;
@@ -39,7 +44,7 @@ public class ImportedKey extends TableKey {
     private static final long serialVersionUID = 1965229912934042881L;
 
     // -------------------------------------------------------------------------
-    public static enum Rule implements IntFieldEnum<Rule> {
+    public enum Rule implements IntFieldEnum<Rule> {
 
         /**
          * Constant for {@link DatabaseMetaData#importedKeyCascade} whose value is {@value
@@ -81,7 +86,7 @@ public class ImportedKey extends TableKey {
         }
 
         // ---------------------------------------------------------------------
-        private Rule(final int rawValue) {
+        Rule(final int rawValue) {
             this.rawValue = rawValue;
         }
 
@@ -100,18 +105,20 @@ public class ImportedKey extends TableKey {
         private final int rawValue;
     }
 
-    public static enum Deferrability implements IntFieldEnum<Deferrability> {
+    public enum Deferrability implements IntFieldEnum<Deferrability> {
 
         /**
          * Constant for {@link DatabaseMetaData#importedKeyInitiallyDeferred} whose value is {@value
          * DatabaseMetaData#importedKeyInitiallyDeferred}.
          */
         IMPORTED_KEY_INITIALLY_DEFERRED(importedKeyInitiallyDeferred), // 5
+
         /**
          * Constant for {@link DatabaseMetaData#importedKeyInitiallyImmediate} whose value is {@value
          * DatabaseMetaData#importedKeyInitiallyImmediate}.
          */
         IMPORTED_KEY_INITIALLY_IMMEDIATE(importedKeyInitiallyImmediate), // 6
+
         /**
          * Constant for {@link DatabaseMetaData#importedKeyNotDeferrable} whose value is {@value
          * DatabaseMetaData#importedKeyNotDeferrable}.
@@ -132,7 +139,7 @@ public class ImportedKey extends TableKey {
         }
 
         // ---------------------------------------------------------------------
-        private Deferrability(final int rawValue) {
+        Deferrability(final int rawValue) {
             this.rawValue = rawValue;
         }
 

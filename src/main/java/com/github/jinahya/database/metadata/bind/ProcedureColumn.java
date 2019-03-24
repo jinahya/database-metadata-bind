@@ -1,6 +1,11 @@
-/*
- * Copyright 2013 Jin Kwon <onacit at gmail.com>.
- *
+package com.github.jinahya.database.metadata.bind;
+
+/*-
+ * #%L
+ * database-metadata-bind
+ * %%
+ * Copyright (C) 2011 - 2019 Jinahya, Inc.
+ * %%
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
@@ -12,8 +17,8 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
+ * #L%
  */
-package com.github.jinahya.database.metadata.bind;
 
 import javax.xml.bind.annotation.XmlAttribute;
 import javax.xml.bind.annotation.XmlElement;
@@ -21,7 +26,6 @@ import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlType;
 import java.io.Serializable;
 import java.sql.DatabaseMetaData;
-import java.util.logging.Logger;
 
 import static java.sql.DatabaseMetaData.functionColumnResult;
 import static java.sql.DatabaseMetaData.procedureColumnIn;
@@ -29,7 +33,6 @@ import static java.sql.DatabaseMetaData.procedureColumnInOut;
 import static java.sql.DatabaseMetaData.procedureColumnOut;
 import static java.sql.DatabaseMetaData.procedureColumnReturn;
 import static java.sql.DatabaseMetaData.procedureColumnUnknown;
-import static java.util.logging.Logger.getLogger;
 
 /**
  * An entity class for binding the result of {@link java.sql.DatabaseMetaData#getProcedureColumns(java.lang.String,
@@ -49,42 +52,44 @@ public class ProcedureColumn implements Serializable {
     private static final long serialVersionUID = 3894753719381358829L;
 
     // -------------------------------------------------------------------------
-    private static final Logger logger = getLogger(ProcedureColumn.class.getName());
-
-    // -------------------------------------------------------------------------
 
     /**
      * Constants for column types of procedure columns.
      *
      * @see DatabaseMetaData#getFunctionColumns(java.lang.String, java.lang.String, java.lang.String, java.lang.String)
      */
-    public static enum ColumnType implements IntFieldEnum<ColumnType> {
+    public enum ColumnType implements IntFieldEnum<ColumnType> {
 
         /**
          * Constant for {@link DatabaseMetaData#procedureColumnUnknown} whose value is {@value
          * DatabaseMetaData#procedureColumnUnknown}.
          */
         PROCEDURE_COLUMN_UNKNOWN(procedureColumnUnknown), // 0
+
         /**
          * Constants for {@link DatabaseMetaData#procedureColumnIn} whose value is {@value
          * DatabaseMetaData#procedureColumnIn}.
          */
         PROCEDURE_COLUMN_IN(procedureColumnIn), // 1
+
         /**
          * Constants for {@link DatabaseMetaData#procedureColumnInOut} whose value is {@value
          * DatabaseMetaData#procedureColumnInOut}.
          */
         PROCEDURE_COLUMN_IN_OUT(procedureColumnInOut), // 2
+
         /**
          * Constants for {@link DatabaseMetaData#procedureColumnResult} whose value is {@value
          * DatabaseMetaData#procedureColumnResult}.
          */
         PROCEDURE_COLUMN_RESULT(functionColumnResult), // 3
+
         /**
          * Constants for {@link DatabaseMetaData#procedureColumnOut} whose value is {@value
          * DatabaseMetaData#procedureColumnOut}.
          */
         PROCEDURE_COLUMN_OUT(procedureColumnOut), // 4
+
         /**
          * Constant for {@link DatabaseMetaData#procedureColumnReturn} whose value is {@value
          * DatabaseMetaData#procedureColumnReturn}.
@@ -105,7 +110,7 @@ public class ProcedureColumn implements Serializable {
         }
 
         // ---------------------------------------------------------------------
-        private ColumnType(final int rawValue) {
+        ColumnType(final int rawValue) {
             this.rawValue = rawValue;
         }
 

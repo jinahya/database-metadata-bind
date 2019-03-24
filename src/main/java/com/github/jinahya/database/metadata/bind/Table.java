@@ -1,6 +1,11 @@
-/*
- * Copyright 2013 Jin Kwon <onacit at gmail.com>.
- *
+package com.github.jinahya.database.metadata.bind;
+
+/*-
+ * #%L
+ * database-metadata-bind
+ * %%
+ * Copyright (C) 2011 - 2019 Jinahya, Inc.
+ * %%
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
@@ -12,8 +17,8 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
+ * #L%
  */
-package com.github.jinahya.database.metadata.bind;
 
 import javax.xml.bind.annotation.XmlAttribute;
 import javax.xml.bind.annotation.XmlElement;
@@ -23,9 +28,6 @@ import javax.xml.bind.annotation.XmlType;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.logging.Logger;
-
-import static java.util.logging.Logger.getLogger;
 
 /**
  * A entity class for binding the result of {@link java.sql.DatabaseMetaData#getTables(java.lang.String,
@@ -43,12 +45,10 @@ import static java.util.logging.Logger.getLogger;
 })
 public class Table implements Serializable {
 
+    // -----------------------------------------------------------------------------------------------------------------
     private static final long serialVersionUID = 6590036695540141125L;
 
-    // -------------------------------------------------------------------------
-    private static final Logger logger = getLogger(Table.class.getName());
-
-    // -------------------------------------------------------------------------
+    // -----------------------------------------------------------------------------------------------------------------
     @Override
     public String toString() {
         return super.toString() + "{"
@@ -65,7 +65,7 @@ public class Table implements Serializable {
                + "}";
     }
 
-    // ---------------------------------------------------------------- tableCat
+    // -------------------------------------------------------------------------------------------------------- tableCat
     public String getTableCat() {
         return tableCat;
     }
@@ -74,7 +74,7 @@ public class Table implements Serializable {
         this.tableCat = tableCat;
     }
 
-    // -------------------------------------------------------------- tableSchem
+    // ------------------------------------------------------------------------------------------------------ tableSchem
     public String getTableSchem() {
         return tableSchem;
     }
@@ -83,7 +83,7 @@ public class Table implements Serializable {
         this.tableSchem = tableSchem;
     }
 
-    // --------------------------------------------------------------- tableName
+    // ------------------------------------------------------------------------------------------------------- tableName
     public String getTableName() {
         return tableName;
     }
@@ -92,7 +92,7 @@ public class Table implements Serializable {
         this.tableName = tableName;
     }
 
-    // --------------------------------------------------------------- tableType
+    // ------------------------------------------------------------------------------------------------------- tableType
     public String getTableType() {
         return tableType;
     }
@@ -101,7 +101,7 @@ public class Table implements Serializable {
         this.tableType = tableType;
     }
 
-    // ----------------------------------------------------------------- remarks
+    // --------------------------------------------------------------------------------------------------------- remarks
     public String getRemarks() {
         return remarks;
     }
@@ -110,7 +110,7 @@ public class Table implements Serializable {
         this.remarks = remarks;
     }
 
-    // ----------------------------------------------------------------- typeCat
+    // --------------------------------------------------------------------------------------------------------- typeCat
     public String getTypeCat() {
         return typeCat;
     }
@@ -119,7 +119,7 @@ public class Table implements Serializable {
         this.typeCat = typeCat;
     }
 
-    // --------------------------------------------------------------- typeSchem
+    // ------------------------------------------------------------------------------------------------------- typeSchem
     public String getTypeSchem() {
         return typeSchem;
     }
@@ -128,7 +128,7 @@ public class Table implements Serializable {
         this.typeSchem = typeSchem;
     }
 
-    // ---------------------------------------------------------------- typeName
+    // -------------------------------------------------------------------------------------------------------- typeName
     public String getTypeName() {
         return typeName;
     }
@@ -137,7 +137,7 @@ public class Table implements Serializable {
         this.typeName = typeName;
     }
 
-    // -------------------------------------------------- selfReferencingColName
+    // ------------------------------------------------------------------------------------------ selfReferencingColName
     public String getSelfReferencingColName() {
         return selfReferencingColName;
     }
@@ -146,7 +146,7 @@ public class Table implements Serializable {
         this.selfReferencingColName = selfReferencingColName;
     }
 
-    // ----------------------------------------------------------- refGeneration
+    // --------------------------------------------------------------------------------------------------- refGeneration
     public String getRefGeneration() {
         return refGeneration;
     }
@@ -155,15 +155,15 @@ public class Table implements Serializable {
         this.refGeneration = refGeneration;
     }
 
-    // ------------------------------------------------------ bestRowIdentifiers
+    // ---------------------------------------------------------------------------------------------- bestRowIdentifiers
     public List<BestRowIdentifier> getBestRowIdentifiers() {
         if (bestRowIdentifiers == null) {
-            bestRowIdentifiers = new ArrayList<BestRowIdentifier>();
+            bestRowIdentifiers = new ArrayList<>();
         }
         return bestRowIdentifiers;
     }
 
-    // ----------------------------------------------------------------- columns
+    // --------------------------------------------------------------------------------------------------------- columns
 
     /**
      * Returns columns of this table.
@@ -172,12 +172,12 @@ public class Table implements Serializable {
      */
     public List<Column> getColumns() {
         if (columns == null) {
-            columns = new ArrayList<Column>();
+            columns = new ArrayList<>();
         }
         return columns;
     }
 
-    // ------------------------------------------------------------ exportedKeys
+    // ---------------------------------------------------------------------------------------------------- exportedKeys
 
     /**
      * Returns exported keys of this table.
@@ -186,12 +186,12 @@ public class Table implements Serializable {
      */
     public List<ExportedKey> getExportedKeys() {
         if (exportedKeys == null) {
-            exportedKeys = new ArrayList<ExportedKey>();
+            exportedKeys = new ArrayList<>();
         }
         return exportedKeys;
     }
 
-    // ------------------------------------------------------------ importedKeys
+    // ---------------------------------------------------------------------------------------------------- importedKeys
 
     /**
      * Returns imported keys of this table.
@@ -200,12 +200,12 @@ public class Table implements Serializable {
      */
     public List<ImportedKey> getImportedKeys() {
         if (importedKeys == null) {
-            importedKeys = new ArrayList<ImportedKey>();
+            importedKeys = new ArrayList<>();
         }
         return importedKeys;
     }
 
-    // --------------------------------------------------------------- indexInfo
+    // ------------------------------------------------------------------------------------------------------- indexInfo
 
     /**
      * Returns index info of this table.
@@ -214,12 +214,12 @@ public class Table implements Serializable {
      */
     public List<IndexInfo> getIndexInfo() {
         if (indexInfo == null) {
-            indexInfo = new ArrayList<IndexInfo>();
+            indexInfo = new ArrayList<>();
         }
         return indexInfo;
     }
 
-    // ------------------------------------------------------------- primaryKeys
+    // ----------------------------------------------------------------------------------------------------- primaryKeys
 
     /**
      * Returns primary keys of this table.
@@ -228,12 +228,12 @@ public class Table implements Serializable {
      */
     public List<PrimaryKey> getPrimaryKeys() {
         if (primaryKeys == null) {
-            primaryKeys = new ArrayList<PrimaryKey>();
+            primaryKeys = new ArrayList<>();
         }
         return primaryKeys;
     }
 
-    // ----------------------------------------------------------- pseudoColumns
+    // --------------------------------------------------------------------------------------------------- pseudoColumns
 
     /**
      * Returns pseudo columns of this table.
@@ -242,12 +242,12 @@ public class Table implements Serializable {
      */
     public List<PseudoColumn> getPseudoColumns() {
         if (pseudoColumns == null) {
-            pseudoColumns = new ArrayList<PseudoColumn>();
+            pseudoColumns = new ArrayList<>();
         }
         return pseudoColumns;
     }
 
-    // ------------------------------------------------------------- superTables
+    // ----------------------------------------------------------------------------------------------------- superTables
 
     /**
      * Returns super tables of this table.
@@ -256,12 +256,12 @@ public class Table implements Serializable {
      */
     public List<SuperTable> getSuperTables() {
         if (superTables == null) {
-            superTables = new ArrayList<SuperTable>();
+            superTables = new ArrayList<>();
         }
         return superTables;
     }
 
-    // --------------------------------------------------------- tablePrivileges
+    // ------------------------------------------------------------------------------------------------- tablePrivileges
 
     /**
      * Returns table privileges of this table.
@@ -270,12 +270,12 @@ public class Table implements Serializable {
      */
     public List<TablePrivilege> getTablePrivileges() {
         if (tablePrivileges == null) {
-            tablePrivileges = new ArrayList<TablePrivilege>();
+            tablePrivileges = new ArrayList<>();
         }
         return tablePrivileges;
     }
 
-    // ---------------------------------------------------------- versionColumns
+    // -------------------------------------------------------------------------------------------------- versionColumns
 
     /**
      * Returns version columns of this table.
@@ -284,12 +284,12 @@ public class Table implements Serializable {
      */
     public List<VersionColumn> getVersionColumns() {
         if (versionColumns == null) {
-            versionColumns = new ArrayList<VersionColumn>();
+            versionColumns = new ArrayList<>();
         }
         return versionColumns;
     }
 
-    // -------------------------------------------------------------------------
+    // -----------------------------------------------------------------------------------------------------------------
     @XmlAttribute
     @Bind(label = "TABLE_CAT", nillable = true)
     private String tableCat;
@@ -298,7 +298,7 @@ public class Table implements Serializable {
     @Bind(label = "TABLE_SCHEM", nillable = true)
     private String tableSchem;
 
-    // -------------------------------------------------------------------------
+    // -----------------------------------------------------------------------------------------------------------------
     @XmlElement
     @Bind(label = "TABLE_NAME")
     private String tableName;
@@ -331,12 +331,11 @@ public class Table implements Serializable {
     @Bind(label = "REF_GENERATION", nillable = true)
     private String refGeneration;
 
-    // -------------------------------------------------------------------------
+    // -----------------------------------------------------------------------------------------------------------------
     @XmlElementRef
     @Invoke(name = "getBestRowIdentifier",
             types = {
-                    String.class, String.class, String.class, int.class,
-                    boolean.class
+                    String.class, String.class, String.class, int.class, boolean.class
             },
             parameters = {
                     @Literals({":tableCat", ":tableSchem", ":tableName",
@@ -349,7 +348,8 @@ public class Table implements Serializable {
                     ,
                     @Literals({":tableCat", ":tableSchem", ":tableName",
                                "2", // bestRowSession
-                               "true"})}
+                               "true"})
+            }
     )
     private List<BestRowIdentifier> bestRowIdentifiers;
 
@@ -383,12 +383,10 @@ public class Table implements Serializable {
     @XmlElementRef
     @Invoke(name = "getIndexInfo",
             types = {
-                    String.class, String.class, String.class, boolean.class,
-                    boolean.class
+                    String.class, String.class, String.class, boolean.class, boolean.class
             },
             parameters = {
-                    @Literals({":tableCat", ":tableSchem", ":tableName", "false",
-                               "false"})
+                    @Literals({":tableCat", ":tableSchem", ":tableName", "false", "false"})
             }
     )
     private List<IndexInfo> indexInfo;

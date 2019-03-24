@@ -1,6 +1,11 @@
-/*
- * Copyright 2013 Jin Kwon <onacit at gmail.com>.
- *
+package com.github.jinahya.database.metadata.bind;
+
+/*-
+ * #%L
+ * database-metadata-bind
+ * %%
+ * Copyright (C) 2011 - 2019 Jinahya, Inc.
+ * %%
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
@@ -12,8 +17,8 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
+ * #L%
  */
-package com.github.jinahya.database.metadata.bind;
 
 import javax.xml.bind.annotation.XmlAttribute;
 import javax.xml.bind.annotation.XmlElement;
@@ -24,12 +29,10 @@ import java.io.Serializable;
 import java.sql.DatabaseMetaData;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.logging.Logger;
 
 import static java.sql.DatabaseMetaData.columnNoNulls;
 import static java.sql.DatabaseMetaData.columnNullable;
 import static java.sql.DatabaseMetaData.columnNullableUnknown;
-import static java.util.logging.Logger.getLogger;
 
 /**
  * An entity class for columns
@@ -49,25 +52,24 @@ public class Column implements Serializable {
     private static final long serialVersionUID = -409653682729081530L;
 
     // -------------------------------------------------------------------------
-    private static final Logger logger = getLogger(Column.class.getName());
-
-    // -------------------------------------------------------------------------
 
     /**
      * Constants for nullabilities of table columns.
      *
      * @see DatabaseMetaData#getColumns(java.lang.String, java.lang.String, java.lang.String, java.lang.String)
      */
-    public static enum Nullable implements IntFieldEnum<Nullable> {
+    public enum Nullable implements IntFieldEnum<Nullable> {
 
         /**
          * Constant for {@link DatabaseMetaData#columnNoNulls}.
          */
         COLUMN_NO_NULLS(columnNoNulls),
+
         /**
          * Constant for {@link DatabaseMetaData#columnNullable}.
          */
         COLUMN_NULLABLE(columnNullable),
+
         /**
          * Constant for {@link DatabaseMetaData#columnNullableUnknown}.
          */
@@ -87,7 +89,7 @@ public class Column implements Serializable {
         }
 
         // ---------------------------------------------------------------------
-        private Nullable(final int rawValue) {
+        Nullable(final int rawValue) {
             this.rawValue = rawValue;
         }
 

@@ -1,6 +1,11 @@
-/*
- * Copyright 2013 Jin Kwon <onacit at gmail.com>.
- *
+package com.github.jinahya.database.metadata.bind;
+
+/*-
+ * #%L
+ * database-metadata-bind
+ * %%
+ * Copyright (C) 2011 - 2019 Jinahya, Inc.
+ * %%
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
@@ -12,17 +17,14 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
+ * #L%
  */
-package com.github.jinahya.database.metadata.bind;
 
 import javax.xml.bind.annotation.XmlAttribute;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlTransient;
 import javax.xml.bind.annotation.XmlType;
 import java.io.Serializable;
-import java.util.logging.Logger;
-
-import static java.util.logging.Logger.getLogger;
 
 @XmlTransient
 @XmlType(propOrder = {
@@ -33,10 +35,7 @@ abstract class TableKey implements Serializable {
 
     private static final long serialVersionUID = 6713872409315471232L;
 
-    // -------------------------------------------------------------------------
-    private static final Logger logger = getLogger(TableKey.class.getName());
-
-    // -------------------------------------------------------------------------
+    // -----------------------------------------------------------------------------------------------------------------
     @Override
     public String toString() {
         return super.toString() + "{"
@@ -57,7 +56,7 @@ abstract class TableKey implements Serializable {
                + "}";
     }
 
-    // -------------------------------------------------------------- pktableCat
+    // ------------------------------------------------------------------------------------------------------ pktableCat
     public String getPktableCat() {
         return pktableCat;
     }
@@ -66,7 +65,7 @@ abstract class TableKey implements Serializable {
         this.pktableCat = pktableCat;
     }
 
-    // ------------------------------------------------------------ pktableSchem
+    // ---------------------------------------------------------------------------------------------------- pktableSchem
     public String getPktableSchem() {
         return pktableSchem;
     }
@@ -75,7 +74,7 @@ abstract class TableKey implements Serializable {
         this.pktableSchem = pktableSchem;
     }
 
-    // ------------------------------------------------------------- pktableName
+    // ----------------------------------------------------------------------------------------------------- pktableName
     public String getPktableName() {
         return pktableName;
     }
@@ -84,7 +83,7 @@ abstract class TableKey implements Serializable {
         this.pktableName = pktableName;
     }
 
-    // ------------------------------------------------------------ pkColumnName
+    // ---------------------------------------------------------------------------------------------------- pkColumnName
     public String getPkcolumnName() {
         return pkcolumnName;
     }
@@ -93,7 +92,7 @@ abstract class TableKey implements Serializable {
         this.pkcolumnName = pkcolumnName;
     }
 
-    // -------------------------------------------------------------- fktableCat
+    // ------------------------------------------------------------------------------------------------------ fktableCat
     public String getFktableCat() {
         return fktableCat;
     }
@@ -102,7 +101,7 @@ abstract class TableKey implements Serializable {
         this.fktableCat = fktableCat;
     }
 
-    // ------------------------------------------------------------ fktableSchem
+    // ---------------------------------------------------------------------------------------------------- fktableSchem
     public String getFktableSchem() {
         return fktableSchem;
     }
@@ -111,7 +110,7 @@ abstract class TableKey implements Serializable {
         this.fktableSchem = fktableSchem;
     }
 
-    // ------------------------------------------------------------- fktableName
+    // ----------------------------------------------------------------------------------------------------- fktableName
     public String getFktableName() {
         return fktableName;
     }
@@ -120,7 +119,7 @@ abstract class TableKey implements Serializable {
         this.fktableName = fktableName;
     }
 
-    // ------------------------------------------------------------ fkcolumnName
+    // ---------------------------------------------------------------------------------------------------- fkcolumnName
     public String getFkcolumnName() {
         return fkcolumnName;
     }
@@ -129,7 +128,7 @@ abstract class TableKey implements Serializable {
         this.fkcolumnName = fkcolumnName;
     }
 
-    // ------------------------------------------------------------------ keySeq
+    // ---------------------------------------------------------------------------------------------------------- keySeq
     public short getKeySeq() {
         return keySeq;
     }
@@ -138,7 +137,7 @@ abstract class TableKey implements Serializable {
         this.keySeq = keySeq;
     }
 
-    // -------------------------------------------------------------- updateRule
+    // ------------------------------------------------------------------------------------------------------ updateRule
     public short getUpdateRule() {
         return updateRule;
     }
@@ -147,7 +146,7 @@ abstract class TableKey implements Serializable {
         this.updateRule = updateRule;
     }
 
-    // -------------------------------------------------------------- deleteRule
+    // ------------------------------------------------------------------------------------------------------ deleteRule
     public short getDeleteRule() {
         return deleteRule;
     }
@@ -156,7 +155,7 @@ abstract class TableKey implements Serializable {
         this.deleteRule = deleteRule;
     }
 
-    // ------------------------------------------------------------------ fnname
+    // ---------------------------------------------------------------------------------------------------------- fnname
     public String getFkName() {
         return fkName;
     }
@@ -165,7 +164,7 @@ abstract class TableKey implements Serializable {
         this.fkName = fkName;
     }
 
-    // ------------------------------------------------------------------ pkName
+    // ---------------------------------------------------------------------------------------------------------- pkName
     public String getPkName() {
         return pkName;
     }
@@ -174,7 +173,7 @@ abstract class TableKey implements Serializable {
         this.pkName = pkName;
     }
 
-    // --------------------------------------------------------- deferrerability
+    // ------------------------------------------------------------------------------------------------- deferrerability
     public short getDeferrability() {
         return deferrability;
     }
@@ -183,7 +182,7 @@ abstract class TableKey implements Serializable {
         this.deferrability = deferrability;
     }
 
-    // -------------------------------------------------------------------------
+    // -----------------------------------------------------------------------------------------------------------------
     @XmlAttribute
     @Bind(label = "PKTABLE_CAT", nillable = true)
     private String pktableCat;
@@ -196,7 +195,7 @@ abstract class TableKey implements Serializable {
     @Bind(label = "PKTABLE_NAME")
     private String pktableName;
 
-    // -------------------------------------------------------------------------
+    // -----------------------------------------------------------------------------------------------------------------
     @XmlElement
     @Bind(label = "PKCOLUMN_NAME")
     private String pkcolumnName;

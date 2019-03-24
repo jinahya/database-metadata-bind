@@ -1,6 +1,11 @@
-/*
- * Copyright 2015 Jin Kwon &lt;jinahya_at_gmail.com&gt;.
- *
+package com.github.jinahya.database.metadata.bind;
+
+/*-
+ * #%L
+ * database-metadata-bind
+ * %%
+ * Copyright (C) 2011 - 2019 Jinahya, Inc.
+ * %%
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
@@ -12,8 +17,8 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
+ * #L%
  */
-package com.github.jinahya.database.metadata.bind;
 
 import lombok.NonNull;
 import org.codehaus.mojo.animal_sniffer.IgnoreJRERequirement;
@@ -96,6 +101,11 @@ public class MetadataContext {
             schemas.add(schema);
         }
         return schemas;
+    }
+
+    public static List<Schema> getSchemas(@NonNull final MetadataContext context, final String catalog)
+            throws SQLException {
+        return getSchemas(context, catalog, false);
     }
 
     /**
@@ -326,18 +336,6 @@ public class MetadataContext {
             }
         }
         return list;
-//        final ResultSet results = databaseMetadata.getAttributes(
-//                catalog, schemaPattern, typeNamePattern, attributeNamePattern);
-//        if (results == null) {
-//            logger.warning("empty result set retrieved");
-//            return list;
-//        }
-//        try {
-//            bind(results, Attribute.class, list);
-//        } finally {
-//            results.close();
-//        }
-//        return list;
     }
 
     /**
@@ -351,20 +349,16 @@ public class MetadataContext {
      * @param nullable the value for {@code nullable} parameter
      * @return a list of best row identifies
      * @throws SQLException if a database error occurs.
+     * @see DatabaseMetaData#getBestRowIdentifier(String, String, String, int, boolean)
      */
     public List<BestRowIdentifier> getBestRowIdentifier(final String catalog, final String schema, final String table,
                                                         final int scope, final boolean nullable)
             throws SQLException {
         final List<BestRowIdentifier> list = new ArrayList<>();
-        final ResultSet results = databaseMetadata.getBestRowIdentifier(catalog, schema, table, scope, nullable);
-        if (results == null) {
-            logger.warning("empty result set retrieved");
-            return list;
-        }
-        try {
-            bind(results, BestRowIdentifier.class, list);
-        } finally {
-            results.close();
+        try (ResultSet results = databaseMetadata.getBestRowIdentifier(catalog, schema, table, scope, nullable)) {
+            if (results != null) {
+                bind(results, BestRowIdentifier.class, list);
+            }
         }
         return list;
     }
@@ -374,18 +368,14 @@ public class MetadataContext {
      *
      * @return a list of catalogs
      * @throws SQLException if a database error occurs.
+     * @see DatabaseMetaData#getCatalogs()
      */
     public List<Catalog> getCatalogs() throws SQLException {
         final List<Catalog> list = new ArrayList<>();
-        final ResultSet results = databaseMetadata.getCatalogs();
-        if (results == null) {
-            logger.warning("empty result set retrieved");
-            return list;
-        }
-        try {
-            bind(results, Catalog.class, list);
-        } finally {
-            results.close();
+        try (ResultSet results = databaseMetadata.getCatalogs()) {
+            if (results != null) {
+                bind(results, Catalog.class, list);
+            }
         }
         return list;
     }
@@ -395,18 +385,14 @@ public class MetadataContext {
      *
      * @return a list of client info properties
      * @throws SQLException if a database error occurs.
+     * @see DatabaseMetaData#getClientInfoProperties()
      */
     public List<ClientInfoProperty> getClientInfoProperties() throws SQLException {
         final List<ClientInfoProperty> list = new ArrayList<>();
-        final ResultSet results = databaseMetadata.getClientInfoProperties();
-        if (results == null) {
-            logger.warning("empty result set retrieved");
-            return list;
-        }
-        try {
-            bind(results, ClientInfoProperty.class, list);
-        } finally {
-            results.close();
+        try (ResultSet results = databaseMetadata.getClientInfoProperties()) {
+            if (results != null) {
+                bind(results, ClientInfoProperty.class, list);
+            }
         }
         return list;
     }
@@ -421,20 +407,17 @@ public class MetadataContext {
      * @param columnNamePattern the value for {@code columnNamePattern} parameter
      * @return a list of columns
      * @throws SQLException if a database error occurs.
+     * @see DatabaseMetaData#getColumns(String, String, String, String)
      */
     public List<Column> getColumns(final String catalog, final String schemaPattern, final String tableNamePattern,
                                    final String columnNamePattern)
             throws SQLException {
         final List<Column> list = new ArrayList<>();
-        final ResultSet results = databaseMetadata.getColumns(catalog, schemaPattern, tableNamePattern, columnNamePattern);
-        if (results == null) {
-            logger.warning("empty result set retrieved");
-            return list;
-        }
-        try {
-            bind(results, Column.class, list);
-        } finally {
-            results.close();
+        try (ResultSet results = databaseMetadata.getColumns(
+                catalog, schemaPattern, tableNamePattern, columnNamePattern)) {
+            if (results != null) {
+                bind(results, Column.class, list);
+            }
         }
         return list;
     }
@@ -449,20 +432,16 @@ public class MetadataContext {
      * @param columnNamePattern the value for {@code columnNamePattern} parameter
      * @return a list of column privileges
      * @throws SQLException if a database error occurs.
+     * @see DatabaseMetaData#getColumnPrivileges(String, String, String, String)
      */
     public List<ColumnPrivilege> getColumnPrivileges(final String catalog, final String schema, final String table,
                                                      final String columnNamePattern)
             throws SQLException {
         final List<ColumnPrivilege> list = new ArrayList<>();
-        final ResultSet results = databaseMetadata.getColumnPrivileges(catalog, schema, table, columnNamePattern);
-        if (results == null) {
-            logger.warning("empty result set retrieved");
-            return list;
-        }
-        try {
-            bind(results, ColumnPrivilege.class, list);
-        } finally {
-            results.close();
+        try (ResultSet results = databaseMetadata.getColumnPrivileges(catalog, schema, table, columnNamePattern)) {
+            if (results != null) {
+                bind(results, ColumnPrivilege.class, list);
+            }
         }
         return list;
     }
@@ -485,16 +464,11 @@ public class MetadataContext {
                                                    final String foreignSchema, final String foreignTable)
             throws SQLException {
         final List<CrossReference> list = new ArrayList<>();
-        final ResultSet results = databaseMetadata.getCrossReference(
-                parentCatalog, parentSchema, parentTable, foreignCatalog, foreignSchema, foreignTable);
-        if (results == null) {
-            logger.warning("empty result set retrieved");
-            return list;
-        }
-        try {
-            bind(results, CrossReference.class, list);
-        } finally {
-            results.close();
+        try (ResultSet results = databaseMetadata.getCrossReference(
+                parentCatalog, parentSchema, parentTable, foreignCatalog, foreignSchema, foreignTable)) {
+            if (results != null) {
+                bind(results, CrossReference.class, list);
+            }
         }
         return list;
     }
@@ -514,16 +488,11 @@ public class MetadataContext {
                                                    final String functionNamePattern, final String columnNamePattern)
             throws SQLException {
         final List<FunctionColumn> list = new ArrayList<>();
-        final ResultSet results = databaseMetadata.getFunctionColumns(
-                catalog, schemaPattern, functionNamePattern, columnNamePattern);
-        if (results == null) {
-            logger.warning("empty result set retrieved");
-            return list;
-        }
-        try {
-            bind(results, FunctionColumn.class, list);
-        } finally {
-            results.close();
+        try (ResultSet results = databaseMetadata.getFunctionColumns(
+                catalog, schemaPattern, functionNamePattern, columnNamePattern)) {
+            if (results != null) {
+                bind(results, FunctionColumn.class, list);
+            }
         }
         return list;
     }
@@ -537,20 +506,16 @@ public class MetadataContext {
      * @param functionNamePattern the value for {@code functionNamePattern} parameter
      * @return a list of functions
      * @throws SQLException if a database error occurs.
+     * @see DatabaseMetaData#getFunctions(String, String, String)
      */
     public List<Function> getFunctions(final String catalog, final String schemaPattern,
                                        final String functionNamePattern)
             throws SQLException {
         final List<Function> list = new ArrayList<>();
-        final ResultSet results = databaseMetadata.getFunctions(catalog, schemaPattern, functionNamePattern);
-        if (results == null) {
-            logger.warning("empty result set retrieved");
-            return list;
-        }
-        try {
-            bind(results, Function.class, list);
-        } finally {
-            results.close();
+        try (ResultSet results = databaseMetadata.getFunctions(catalog, schemaPattern, functionNamePattern)) {
+            if (results != null) {
+                bind(results, Function.class, list);
+            }
         }
         return list;
     }
@@ -568,15 +533,10 @@ public class MetadataContext {
     public List<ExportedKey> getExportedKeys(final String catalog, final String schema, final String table)
             throws SQLException {
         final List<ExportedKey> list = new ArrayList<>();
-        final ResultSet results = databaseMetadata.getExportedKeys(catalog, schema, table);
-        if (results == null) {
-            logger.warning("empty result set retrieved");
-            return list;
-        }
-        try {
-            bind(results, ExportedKey.class, list);
-        } finally {
-            results.close();
+        try (ResultSet results = databaseMetadata.getExportedKeys(catalog, schema, table)) {
+            if (results != null) {
+                bind(results, ExportedKey.class, list);
+            }
         }
         return list;
     }
@@ -594,15 +554,10 @@ public class MetadataContext {
     public List<ImportedKey> getImportedKeys(final String catalog, final String schema, final String table)
             throws SQLException {
         final List<ImportedKey> list = new ArrayList<>();
-        final ResultSet results = databaseMetadata.getImportedKeys(catalog, schema, table);
-        if (results == null) {
-            logger.warning("empty result set retrieved");
-            return list;
-        }
-        try {
-            bind(results, ImportedKey.class, list);
-        } finally {
-            results.close();
+        try (ResultSet results = databaseMetadata.getImportedKeys(catalog, schema, table)) {
+            if (results != null) {
+                bind(results, ImportedKey.class, list);
+            }
         }
         return list;
     }
@@ -623,15 +578,10 @@ public class MetadataContext {
                                         final boolean unique, final boolean approximate)
             throws SQLException {
         final List<IndexInfo> list = new ArrayList<>();
-        final ResultSet results = databaseMetadata.getIndexInfo(catalog, schema, table, unique, approximate);
-        if (results == null) {
-            logger.warning("empty result set retrieved");
-            return list;
-        }
-        try {
-            bind(results, IndexInfo.class, list);
-        } finally {
-            results.close();
+        try (ResultSet results = databaseMetadata.getIndexInfo(catalog, schema, table, unique, approximate)) {
+            if (results != null) {
+                bind(results, IndexInfo.class, list);
+            }
         }
         return list;
     }
@@ -649,15 +599,10 @@ public class MetadataContext {
     public List<PrimaryKey> getPrimaryKeys(final String catalog, final String schema, final String table)
             throws SQLException {
         final List<PrimaryKey> list = new ArrayList<>();
-        final ResultSet results = databaseMetadata.getPrimaryKeys(catalog, schema, table);
-        if (results == null) {
-            logger.warning("empty result set retrieved");
-            return list;
-        }
-        try {
-            bind(results, PrimaryKey.class, list);
-        } finally {
-            results.close();
+        try (ResultSet results = databaseMetadata.getPrimaryKeys(catalog, schema, table)) {
+            if (results != null) {
+                bind(results, PrimaryKey.class, list);
+            }
         }
         return list;
     }
@@ -677,16 +622,11 @@ public class MetadataContext {
                                                      final String procedureNamePattern, final String columnNamePattern)
             throws SQLException {
         final List<ProcedureColumn> list = new ArrayList<>();
-        final ResultSet results = databaseMetadata.getProcedureColumns(
-                catalog, schemaPattern, procedureNamePattern, columnNamePattern);
-        if (results == null) {
-            logger.warning("empty result set retrieved");
-            return list;
-        }
-        try {
-            bind(results, ProcedureColumn.class, list);
-        } finally {
-            results.close();
+        try (ResultSet results = databaseMetadata.getProcedureColumns(
+                catalog, schemaPattern, procedureNamePattern, columnNamePattern)) {
+            if (results != null) {
+                bind(results, ProcedureColumn.class, list);
+            }
         }
         return list;
     }
@@ -705,15 +645,10 @@ public class MetadataContext {
                                          final String procedureNamePattern)
             throws SQLException {
         final List<Procedure> list = new ArrayList<>();
-        final ResultSet results = databaseMetadata.getProcedures(catalog, schemaPattern, procedureNamePattern);
-        if (results == null) {
-            logger.warning("empty result set retrieved");
-            return list;
-        }
-        try {
-            bind(results, Procedure.class, list);
-        } finally {
-            results.close();
+        try (ResultSet results = databaseMetadata.getProcedures(catalog, schemaPattern, procedureNamePattern)) {
+            if (results != null) {
+                bind(results, Procedure.class, list);
+            }
         }
         return list;
     }
@@ -734,16 +669,11 @@ public class MetadataContext {
                                                final String tableNamePattern, final String columnNamePattern)
             throws SQLException {
         final List<PseudoColumn> list = new ArrayList<>();
-        final ResultSet results = databaseMetadata.getPseudoColumns(
-                catalog, schemaPattern, tableNamePattern, columnNamePattern);
-        if (results == null) {
-            logger.warning("empty result set retrieved");
-            return list;
-        }
-        try {
-            bind(results, PseudoColumn.class, list);
-        } finally {
-            results.close();
+        try (ResultSet results = databaseMetadata.getPseudoColumns(
+                catalog, schemaPattern, tableNamePattern, columnNamePattern)) {
+            if (results != null) {
+                bind(results, PseudoColumn.class, list);
+            }
         }
         return list;
     }
@@ -756,15 +686,10 @@ public class MetadataContext {
      */
     public List<SchemaName> getSchemas() throws SQLException {
         final List<SchemaName> list = new ArrayList<>();
-        final ResultSet results = databaseMetadata.getSchemas();
-        if (results == null) {
-            logger.warning("empty result set retrieved");
-            return list;
-        }
-        try {
-            bind(results, SchemaName.class, list);
-        } finally {
-            results.close();
+        try (ResultSet results = databaseMetadata.getSchemas()) {
+            if (results != null) {
+                bind(results, SchemaName.class, list);
+            }
         }
         return list;
     }
@@ -781,15 +706,10 @@ public class MetadataContext {
     public List<Schema> getSchemas(final String catalog, final String schemaPattern)
             throws SQLException {
         final List<Schema> list = new ArrayList<>();
-        final ResultSet results = databaseMetadata.getSchemas(catalog, schemaPattern);
-        if (results == null) {
-            logger.warning("empty result set retrieved");
-            return list;
-        }
-        try {
-            bind(results, Schema.class, list);
-        } finally {
-            results.close();
+        try (ResultSet results = databaseMetadata.getSchemas(catalog, schemaPattern)) {
+            if (results != null) {
+                bind(results, Schema.class, list);
+            }
         }
         return list;
     }
@@ -809,15 +729,10 @@ public class MetadataContext {
                                  final String[] types)
             throws SQLException {
         final List<Table> list = new ArrayList<>();
-        final ResultSet results = databaseMetadata.getTables(catalog, schemaPattern, tableNamePattern, types);
-        if (results == null) {
-            logger.warning("empty result set retrieved");
-            return list;
-        }
-        try {
-            bind(results, Table.class, list);
-        } finally {
-            results.close();
+        try (ResultSet results = databaseMetadata.getTables(catalog, schemaPattern, tableNamePattern, types)) {
+            if (results != null) {
+                bind(results, Table.class, list);
+            }
         }
         return list;
     }
@@ -836,15 +751,10 @@ public class MetadataContext {
                                                    final String tableNamePattern)
             throws SQLException {
         final List<TablePrivilege> list = new ArrayList<>();
-        final ResultSet results = databaseMetadata.getTablePrivileges(catalog, schemaPattern, tableNamePattern);
-        if (results == null) {
-            logger.warning("empty result set retrieved");
-            return list;
-        }
-        try {
-            bind(results, TablePrivilege.class, list);
-        } finally {
-            results.close();
+        try (ResultSet results = databaseMetadata.getTablePrivileges(catalog, schemaPattern, tableNamePattern)) {
+            if (results != null) {
+                bind(results, TablePrivilege.class, list);
+            }
         }
         return list;
     }
@@ -857,15 +767,10 @@ public class MetadataContext {
      */
     public List<TableType> getTableTypes() throws SQLException {
         final List<TableType> list = new ArrayList<>();
-        final ResultSet results = databaseMetadata.getTableTypes();
-        if (results == null) {
-            logger.warning("empty result set retrieved");
-            return list;
-        }
-        try {
-            bind(results, TableType.class, list);
-        } finally {
-            results.close();
+        try (ResultSet results = databaseMetadata.getTableTypes()) {
+            if (results != null) {
+                bind(results, TableType.class, list);
+            }
         }
         return list;
     }
@@ -878,15 +783,10 @@ public class MetadataContext {
      */
     public List<TypeInfo> getTypeInfo() throws SQLException {
         final List<TypeInfo> list = new ArrayList<>();
-        final ResultSet results = databaseMetadata.getTypeInfo();
-        if (results == null) {
-            logger.warning("empty result set retrieved");
-            return list;
-        }
-        try {
-            bind(results, TypeInfo.class, list);
-        } finally {
-            results.close();
+        try (ResultSet results = databaseMetadata.getTypeInfo()) {
+            if (results != null) {
+                bind(results, TypeInfo.class, list);
+            }
         }
         return list;
     }
@@ -906,16 +806,10 @@ public class MetadataContext {
                              final String typeNamePattern, final int[] types)
             throws SQLException {
         final List<UDT> list = new ArrayList<>();
-        final ResultSet results = databaseMetadata.getUDTs(
-                catalog, schemaPattern, typeNamePattern, types);
-        if (results == null) {
-            logger.warning("empty result set retrieved");
-            return list;
-        }
-        try {
-            bind(results, UDT.class, list);
-        } finally {
-            results.close();
+        try (ResultSet results = databaseMetadata.getUDTs(catalog, schemaPattern, typeNamePattern, types)) {
+            if (results != null) {
+                bind(results, UDT.class, list);
+            }
         }
         return list;
     }
@@ -933,15 +827,10 @@ public class MetadataContext {
     public List<VersionColumn> getVersionColumns(final String catalog, final String schema, final String table)
             throws SQLException {
         final List<VersionColumn> list = new ArrayList<>();
-        final ResultSet results = databaseMetadata.getVersionColumns(catalog, schema, table);
-        if (results == null) {
-            logger.warning("empty result set retrieved");
-            return list;
-        }
-        try {
-            bind(results, VersionColumn.class, list);
-        } finally {
-            results.close();
+        try (ResultSet results = databaseMetadata.getVersionColumns(catalog, schema, table)) {
+            if (results != null) {
+                bind(results, VersionColumn.class, list);
+            }
         }
         return list;
     }
@@ -1025,10 +914,10 @@ public class MetadataContext {
         return ptype;
     }
 
-    // -------------------------------------------------------------------------
+    // -----------------------------------------------------------------------------------------------------------------
     private final DatabaseMetaData databaseMetadata;
 
-    // field paths
+    // suppression paths
     private Set<String> suppressedPaths;
 
     // fields with @Bind

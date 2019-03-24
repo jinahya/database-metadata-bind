@@ -18,6 +18,10 @@
   <description>bindings for java.sql.DatabaseMetaData</description>
   <url>https://github.com/jinahya/$project.artifactId}</url>
   <inceptionYear>2011</inceptionYear>
+  <organization>
+    <name>Jinahya, Inc.</name>
+    <url>https://jinahya.com</url>
+  </organization>
 
   <prerequisites>
     <maven>3.0.1</maven>
@@ -297,11 +301,24 @@
           </execution>
         </executions>
       </plugin>
+      <plugin>
+        <groupId>org.codehaus.mojo</groupId>
+        <artifactId>license-maven-plugin</artifactId>
+        <version>1.19</version>
+        <configuration>
+          <licenseName>apache_v2</licenseName>
+        </configuration>
+      </plugin>
     </plugins>
   </build>
 
   <reporting>
     <plugins>
+      <plugin>
+        <groupId>com.github.spotbugs</groupId>
+        <artifactId>spotbugs-maven-plugin</artifactId>
+        <version>3.1.11</version>
+      </plugin>
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-jxr-plugin</artifactId>
@@ -326,11 +343,11 @@
         <artifactId>cobertura-maven-plugin</artifactId>
         <version>2.7</version>
       </plugin>-->
-      <plugin>
-        <groupId>org.codehaus.mojo</groupId>
-        <artifactId>findbugs-maven-plugin</artifactId>
-        <version>3.0.5</version>
-      </plugin>
+      <!--<plugin>-->
+      <!--<groupId>org.codehaus.mojo</groupId>-->
+      <!--<artifactId>findbugs-maven-plugin</artifactId>-->
+      <!--<version>3.0.5</version>-->
+      <!--</plugin>-->
       <plugin>
         <groupId>org.codehaus.mojo</groupId>
         <artifactId>javancss-maven-plugin</artifactId>

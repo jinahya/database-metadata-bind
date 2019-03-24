@@ -1,6 +1,11 @@
-/*
- * Copyright 2013 Jin Kwon <onacit at gmail.com>.
- *
+package com.github.jinahya.database.metadata.bind;
+
+/*-
+ * #%L
+ * database-metadata-bind
+ * %%
+ * Copyright (C) 2011 - 2019 Jinahya, Inc.
+ * %%
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
@@ -12,8 +17,8 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
+ * #L%
  */
-package com.github.jinahya.database.metadata.bind;
 
 import javax.xml.bind.annotation.XmlAttribute;
 import javax.xml.bind.annotation.XmlElement;
@@ -21,12 +26,10 @@ import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlType;
 import java.io.Serializable;
 import java.sql.DatabaseMetaData;
-import java.util.logging.Logger;
 
 import static java.sql.DatabaseMetaData.attributeNoNulls;
 import static java.sql.DatabaseMetaData.attributeNullable;
 import static java.sql.DatabaseMetaData.attributeNullableUnknown;
-import static java.util.logging.Logger.getLogger;
 
 /**
  * An entity class for type attributes.
@@ -43,51 +46,50 @@ public class Attribute implements Serializable {
 
     private static final long serialVersionUID = 4555190007114217973L;
 
-    // -------------------------------------------------------------------------
-    private static final Logger logger = getLogger(Attribute.class.getName());
-
-    // -------------------------------------------------------------------------
+    // -----------------------------------------------------------------------------------------------------------------
 
     /**
      * Constants for nullabilities of an attribute.
      */
-    public static enum Nullable implements IntFieldEnum<Nullable> {
+    public enum Nullable implements IntFieldEnum<Nullable> {
 
-        // ---------------------------------------------------------------------
+        // -------------------------------------------------------------------------------------------------------------
         /**
          * Constant for {@link DatabaseMetaData#attributeNoNulls}.
          */
         ATTRIBUTE_NO_NULLS(attributeNoNulls),
+
         /**
          * Constant for {@link DatabaseMetaData#attributeNullable}.
          */
         ATTRIBUTE_NULLABLE(attributeNullable),
+
         /**
          * Constant for {@link DatabaseMetaData#attributeNullableUnknown}.
          */
         ATTRIBUTE_NULLABLE_UNKNOWN(attributeNullableUnknown);
 
-        // ---------------------------------------------------------------------
+        // -------------------------------------------------------------------------------------------------------------
         public static Nullable valueOf(final int rawValue) {
             return IntFieldEnums.valueOf(Nullable.class, rawValue);
         }
 
-        // ---------------------------------------------------------------------
-        private Nullable(final int rawValue) {
+        // -------------------------------------------------------------------------------------------------------------
+        Nullable(final int rawValue) {
             this.rawValue = rawValue;
         }
 
-        // ---------------------------------------------------------------------
+        // -------------------------------------------------------------------------------------------------------------
         @Override
         public int getRawValue() {
             return rawValue;
         }
 
-        // ---------------------------------------------------------------------
+        // -------------------------------------------------------------------------------------------------------------
         private final int rawValue;
     }
 
-    // -------------------------------------------------------------------------
+    // -----------------------------------------------------------------------------------------------------------------
     @Override
     public String toString() {
         return super.toString() + "{"
@@ -112,7 +114,7 @@ public class Attribute implements Serializable {
                + "}";
     }
 
-    // ----------------------------------------------------------------- typeCat
+    // --------------------------------------------------------------------------------------------------------- typeCat
     public String getTypeCat() {
         return typeCat;
     }
@@ -121,7 +123,7 @@ public class Attribute implements Serializable {
         this.typeCat = typeCat;
     }
 
-    // --------------------------------------------------------------- typeSchem
+    // ------------------------------------------------------------------------------------------------------- typeSchem
     public String getTypeSchem() {
         return typeSchem;
     }
@@ -130,7 +132,7 @@ public class Attribute implements Serializable {
         this.typeSchem = typeSchem;
     }
 
-    // ---------------------------------------------------------------- typeName
+    // -------------------------------------------------------------------------------------------------------- typeName
     public String getTypeName() {
         return typeName;
     }
@@ -139,7 +141,7 @@ public class Attribute implements Serializable {
         this.typeName = typeName;
     }
 
-    // ---------------------------------------------------------------- attrName
+    // -------------------------------------------------------------------------------------------------------- attrName
     public String getAttrName() {
         return attrName;
     }
@@ -148,7 +150,7 @@ public class Attribute implements Serializable {
         this.attrName = attrName;
     }
 
-    // ---------------------------------------------------------------- dataType
+    // -------------------------------------------------------------------------------------------------------- dataType
     public int getDataType() {
         return dataType;
     }
@@ -157,7 +159,7 @@ public class Attribute implements Serializable {
         this.dataType = dataType;
     }
 
-    // ------------------------------------------------------------ attrTypeName
+    // ---------------------------------------------------------------------------------------------------- attrTypeName
     public String getAttrTypeName() {
         return attrTypeName;
     }
@@ -166,7 +168,7 @@ public class Attribute implements Serializable {
         this.attrTypeName = attrTypeName;
     }
 
-    // ---------------------------------------------------------------- attrSize
+    // -------------------------------------------------------------------------------------------------------- attrSize
     public int getAttrSize() {
         return attrSize;
     }
@@ -175,7 +177,7 @@ public class Attribute implements Serializable {
         this.attrSize = attrSize;
     }
 
-    // ----------------------------------------------------------- decimalDigits
+    // --------------------------------------------------------------------------------------------------- decimalDigits
     public Integer getDecimalDigits() {
         return decimalDigits;
     }
@@ -184,7 +186,7 @@ public class Attribute implements Serializable {
         this.decimalDigits = decimalDigits;
     }
 
-    // ------------------------------------------------------------ numPrecRadix
+    // ---------------------------------------------------------------------------------------------------- numPrecRadix
     public int getNumPrecRadix() {
         return numPrecRadix;
     }
@@ -193,7 +195,7 @@ public class Attribute implements Serializable {
         this.numPrecRadix = numPrecRadix;
     }
 
-    // ---------------------------------------------------------------- nullable
+    // -------------------------------------------------------------------------------------------------------- nullable
     public int getNullable() {
         return nullable;
     }
@@ -202,7 +204,7 @@ public class Attribute implements Serializable {
         this.nullable = nullable;
     }
 
-    // ----------------------------------------------------------------- remarks
+    // --------------------------------------------------------------------------------------------------------- remarks
     public String getRemarks() {
         return remarks;
     }
@@ -211,7 +213,7 @@ public class Attribute implements Serializable {
         this.remarks = remarks;
     }
 
-    // ----------------------------------------------------------------- attrDef
+    // --------------------------------------------------------------------------------------------------------- attrDef
     public String getAttrDef() {
         return attrDef;
     }
@@ -220,7 +222,7 @@ public class Attribute implements Serializable {
         this.attrDef = attrDef;
     }
 
-    // ------------------------------------------------------------- sqlDataType
+    // ----------------------------------------------------------------------------------------------------- sqlDataType
     public Integer getSqlDataType() {
         return sqlDataType;
     }
@@ -229,7 +231,7 @@ public class Attribute implements Serializable {
         this.sqlDataType = sqlDataType;
     }
 
-    // ---------------------------------------------------------- sqlDatetimeSub
+    // -------------------------------------------------------------------------------------------------- sqlDatetimeSub
     public Integer getSqlDatetimeSub() {
         return sqlDatetimeSub;
     }
@@ -238,7 +240,7 @@ public class Attribute implements Serializable {
         this.sqlDatetimeSub = sqlDatetimeSub;
     }
 
-    // --------------------------------------------------------- charOctetLength
+    // ------------------------------------------------------------------------------------------------- charOctetLength
     public int getCharOctetLength() {
         return charOctetLength;
     }
@@ -247,7 +249,7 @@ public class Attribute implements Serializable {
         this.charOctetLength = charOctetLength;
     }
 
-    // --------------------------------------------------------- ordinalPosition
+    // ------------------------------------------------------------------------------------------------- ordinalPosition
     public int getOrdinalPosition() {
         return ordinalPosition;
     }
@@ -256,7 +258,7 @@ public class Attribute implements Serializable {
         this.ordinalPosition = ordinalPosition;
     }
 
-    // -------------------------------------------------------------- isNullable
+    // ------------------------------------------------------------------------------------------------------ isNullable
     public String getIsNullable() {
         return isNullable;
     }
@@ -265,7 +267,7 @@ public class Attribute implements Serializable {
         this.isNullable = isNullable;
     }
 
-    // ---------------------------------------------------------- sourceDataType
+    // -------------------------------------------------------------------------------------------------- sourceDataType
     public Short getSourceDataType() {
         return sourceDataType;
     }
@@ -274,7 +276,7 @@ public class Attribute implements Serializable {
         this.sourceDataType = sourceDataType;
     }
 
-    // -------------------------------------------------------------------------
+    // -----------------------------------------------------------------------------------------------------------------
     @XmlAttribute
     @Bind(label = "TYPE_CAT", nillable = true)
     private String typeCat;
@@ -287,7 +289,7 @@ public class Attribute implements Serializable {
     @Bind(label = "TYPE_NAME")
     private String typeName;
 
-    // -------------------------------------------------------------------------
+    // -----------------------------------------------------------------------------------------------------------------
     @XmlElement
     @Bind(label = "ATTR_NAME")
     private String attrName;

@@ -1,6 +1,11 @@
-/*
- * Copyright 2011 Jin Kwon <jinahya at gmail.com>.
- *
+package com.github.jinahya.database.metadata.bind;
+
+/*-
+ * #%L
+ * database-metadata-bind
+ * %%
+ * Copyright (C) 2011 - 2019 Jinahya, Inc.
+ * %%
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
@@ -12,8 +17,8 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
+ * #L%
  */
-package com.github.jinahya.database.metadata.bind;
 
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
@@ -170,7 +175,7 @@ public class BestRowIdentifier implements Serializable {
                + "}";
     }
 
-    // ------------------------------------------------------------------- scope
+    // ----------------------------------------------------------------------------------------------------------- scope
     public short getScope() {
         return scope;
     }
@@ -179,7 +184,7 @@ public class BestRowIdentifier implements Serializable {
         this.scope = scope;
     }
 
-    // -------------------------------------------------------------- columnName
+    // ------------------------------------------------------------------------------------------------------ columnName
     public String getColumnName() {
         return columnName;
     }
@@ -188,7 +193,7 @@ public class BestRowIdentifier implements Serializable {
         this.columnName = columnName;
     }
 
-    // ---------------------------------------------------------------- dataType
+    // -------------------------------------------------------------------------------------------------------- dataType
     public int getDataType() {
         return dataType;
     }
@@ -197,7 +202,7 @@ public class BestRowIdentifier implements Serializable {
         this.dataType = dataType;
     }
 
-    // ---------------------------------------------------------------- typeName
+    // -------------------------------------------------------------------------------------------------------- typeName
     public String getTypeName() {
         return typeName;
     }
@@ -206,7 +211,7 @@ public class BestRowIdentifier implements Serializable {
         this.typeName = typeName;
     }
 
-    // -------------------------------------------------------------- columnSize
+    // ------------------------------------------------------------------------------------------------------ columnSize
     public int getColumnSize() {
         return columnSize;
     }
@@ -215,7 +220,7 @@ public class BestRowIdentifier implements Serializable {
         this.columnSize = columnSize;
     }
 
-    // ------------------------------------------------------------ bufferLength
+    // ---------------------------------------------------------------------------------------------------- bufferLength
     public Integer getBufferLength() {
         return bufferLength;
     }
@@ -224,7 +229,7 @@ public class BestRowIdentifier implements Serializable {
         this.bufferLength = bufferLength;
     }
 
-    // ----------------------------------------------------------- decimalDigits
+    // --------------------------------------------------------------------------------------------------- decimalDigits
     public Short getDecimalDigits() {
         return decimalDigits;
     }
@@ -233,7 +238,7 @@ public class BestRowIdentifier implements Serializable {
         this.decimalDigits = decimalDigits;
     }
 
-    // ------------------------------------------------------------ pseudoColumn
+    // ---------------------------------------------------------------------------------------------------- pseudoColumn
     public short getPseudoColumn() {
         return pseudoColumn;
     }

@@ -1,6 +1,11 @@
-/*
- * Copyright 2013 Jin Kwon <onacit at gmail.com>.
- *
+package com.github.jinahya.database.metadata.bind;
+
+/*-
+ * #%L
+ * database-metadata-bind
+ * %%
+ * Copyright (C) 2011 - 2019 Jinahya, Inc.
+ * %%
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
@@ -12,20 +17,18 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
+ * #L%
  */
-package com.github.jinahya.database.metadata.bind;
 
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlType;
 import java.io.Serializable;
 import java.sql.DatabaseMetaData;
-import java.util.logging.Logger;
 
 import static java.sql.DatabaseMetaData.versionColumnNotPseudo;
 import static java.sql.DatabaseMetaData.versionColumnPseudo;
 import static java.sql.DatabaseMetaData.versionColumnUnknown;
-import static java.util.logging.Logger.getLogger;
 
 /**
  * An entity class for version columns.
@@ -42,35 +45,33 @@ public class VersionColumn implements Serializable {
     private static final long serialVersionUID = 3587959398829593292L;
 
     // -------------------------------------------------------------------------
-    private static final Logger logger = getLogger(VersionColumn.class.getName());
-
-    // -------------------------------------------------------------------------
 
     /**
      * Constants for pseudo column values of version columns.
      *
      * @see DatabaseMetaData#getVersionColumns(java.lang.String, java.lang.String, java.lang.String)
      */
-    public static enum PseudoColumn implements IntFieldEnum<PseudoColumn> {
+    public enum PseudoColumn implements IntFieldEnum<PseudoColumn> {
 
         /**
          * Constant for {@link DatabaseMetaData#versionColumnUnknown} whose value is {@value
          * DatabaseMetaData#versionColumnUnknown}.
          */
         VERSION_COLUMN_NO_NULLS(versionColumnUnknown),
+
         /**
          * Constant for {@link DatabaseMetaData#versionColumnNotPseudo} whose value is {@value
          * DatabaseMetaData#versionColumnNotPseudo}.
          */
         VERSION_COLUMN_NULLABLE(versionColumnNotPseudo),
+
         /**
          * Constant for {@link DatabaseMetaData#versionColumnPseudo} whose value is {@value
          * DatabaseMetaData#versionColumnPseudo}.
          */
         VERSION_COLUMN_NULLABLE_UNKNOWN(versionColumnPseudo);
 
-        // ---------------------------------------------------------------------
-
+        // -----------------------------------------------------------------------------------------------------------------
         /**
          * Returns the constant whose raw value equals to given. An instance of {@link IllegalArgumentException} will be
          * throw if no constants matches.
@@ -83,7 +84,7 @@ public class VersionColumn implements Serializable {
         }
 
         // ---------------------------------------------------------------------
-        private PseudoColumn(final int rawValue) {
+        PseudoColumn(final int rawValue) {
             this.rawValue = rawValue;
         }
 
