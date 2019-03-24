@@ -53,8 +53,7 @@ public class MetadataContextTest {
             return true;
         }).forEach(m -> {
             try {
-                MetadataContext.class.getMethod(
-                        m.getName(), m.getParameterTypes());
+                MetadataContext.class.getMethod(m.getName(), m.getParameterTypes());
             } catch (final NoSuchMethodException nsme) {
                 logger.info("method not covered: {}", m);
             }

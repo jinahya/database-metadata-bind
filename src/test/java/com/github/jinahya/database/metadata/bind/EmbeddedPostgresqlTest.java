@@ -50,13 +50,6 @@ public class EmbeddedPostgresqlTest {
     // -----------------------------------------------------------------------------------------------------------------
     @BeforeClass
     private static void beforeClass() throws Exception {
-//        final PostgresStarter<PostgresExecutable, PostgresProcess> starter
-//                = PostgresStarter.getDefaultInstance();
-//        config = PostgresConfig.defaultWithDbName("test", "test", "test");
-//        final PostgresExecutable exec = starter.prepare(config);
-//        process = exec.start();
-
-        // starting Postgres
         EMBEDDED_POSTGRES = new EmbeddedPostgres();
         log.debug("embedded postgres constructed");
         URL = EMBEDDED_POSTGRES.start("localhost", 5432, "dbName", "userName", "password");

@@ -20,6 +20,7 @@ package com.github.jinahya.database.metadata.bind;
  * #L%
  */
 
+import lombok.NonNull;
 import lombok.extern.slf4j.Slf4j;
 import org.slf4j.Logger;
 import org.testng.annotations.Test;
@@ -60,21 +61,18 @@ public class JavaBeansTest {
     private static final Logger logger = getLogger(lookup().lookupClass());
 
     // -------------------------------------------------------------------------
-    private static void nillable(final Class<?> klass)
-            throws ReflectiveOperationException {
+    private static void nillable(@NonNull final Class<?> klass) {
         for (Entry<Field, Bind> entry : fields(klass, Bind.class).entrySet()) {
             final Field field = entry.getKey();
             final Bind bind = entry.getValue();
             if (!bind.nillable()) {
                 continue;
             }
-            assertFalse(field.getType().isPrimitive(),
-                        "@Bind(nillable); " + field);
+            assertFalse(field.getType().isPrimitive(), "@Bind(nillable); " + field);
         }
     }
 
-    private static void unused(final Class<?> klass)
-            throws ReflectiveOperationException {
+    private static void unused(@NonNull final Class<?> klass) {
         for (Entry<Field, Bind> entry : fields(klass, Bind.class).entrySet()) {
             final Field field = entry.getKey();
             final Bind bind = entry.getValue();
@@ -84,8 +82,7 @@ public class JavaBeansTest {
         }
     }
 
-    private static void reserved(final Class<?> klass)
-            throws ReflectiveOperationException {
+    private static void reserved(@NonNull final Class<?> klass) {
         for (Entry<Field, Bind> entry : fields(klass, Bind.class).entrySet()) {
             final Field field = entry.getKey();
             final Bind bind = entry.getValue();
@@ -95,34 +92,27 @@ public class JavaBeansTest {
         }
     }
 
-    private static void accessor(final Class<?> klass)
-            throws IntrospectionException, ReflectiveOperationException {
+    private static void accessor(@NonNull final Class<?> klass) throws IntrospectionException {
         final BeanInfo info = Introspector.getBeanInfo(klass);
         final Map<String, PropertyDescriptor> descriptors
-                = Arrays.stream(info.getPropertyDescriptors()).collect(
-                toMap(PropertyDescriptor::getName, identity()));
+                = Arrays.stream(info.getPropertyDescriptors()).collect(toMap(PropertyDescriptor::getName, identity()));
         for (final Field field : klass.getDeclaredFields()) {
             if (field.getAnnotation(Bind.class) == null) {
                 continue;
             }
-            final PropertyDescriptor descriptor
-                    = descriptors.get(field.getName());
+            final PropertyDescriptor descriptor = descriptors.get(field.getName());
             assertNotNull(descriptor, format("no descriptor: %s", field));
-            assertNotNull(descriptor.getReadMethod(),
-                          "no read method; " + field);
+            assertNotNull(descriptor.getReadMethod(), "no read method; " + field);
             if (field.getType().equals(List.class)) {
                 continue;
             }
-            assertNotNull(descriptor.getWriteMethod(),
-                          "no write method; " + field);
+            assertNotNull(descriptor.getWriteMethod(), "no write method; " + field);
         }
     }
 
-    // -------------------------------------------------------------------------
+    // -----------------------------------------------------------------------------------------------------------------
     @Test
-    public void test()
-            throws URISyntaxException, IOException,
-                   ReflectiveOperationException {
+    public void test() throws URISyntaxException, IOException {
         final Package p = getClass().getPackage();
         //final String name = "/" + p.getName().replace('.', '/') + "/jaxb.index";
         final String name = "jaxb.index";
@@ -143,8 +133,6 @@ public class JavaBeansTest {
                         unused(c);
                         reserved(c);
                         accessor(c);
-                    } catch (final ReflectiveOperationException roe) {
-                        throw new RuntimeException(roe);
                     } catch (final IntrospectionException ie) {
                         throw new RuntimeException(ie);
                     }

@@ -46,18 +46,16 @@ public class EmbeddedMariadbTest {
     // -----------------------------------------------------------------------------------------------------------------
     private static DB DB__;
 
-    //private static final String URL = "jdbc:mysql://localhost/test";
     private static String URL;
 
     private static final String USER = "root";
 
     private static final String PASSWORD = "";
 
-    // -------------------------------------------------------------------------
+    // -----------------------------------------------------------------------------------------------------------------
     @BeforeClass
     private static void beforeClass() throws Exception {
-        final DBConfigurationBuilder builder
-                = DBConfigurationBuilder.newBuilder();
+        final DBConfigurationBuilder builder = DBConfigurationBuilder.newBuilder();
         builder.setPort(0);
         DB__ = DB.newEmbeddedDB(builder.build());
         DB__.start();
@@ -85,7 +83,7 @@ public class EmbeddedMariadbTest {
                     "indexInfo/pages" // null value
             );
             final List<Catalog> catalogs = getCatalogs(context, true);
-            JaxbTests.store(Catalog.class, catalogs, "embedded.mariadb");
+            JaxbTests.store(Catalog.class, catalogs, "embedded.mariadb.catalogs");
         }
     }
 }

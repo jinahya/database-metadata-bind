@@ -77,12 +77,9 @@ public class ReflectionTest {
             logger.debug("method: {}", method);
         }
 
-        logger.debug("method with Integer: {}",
-                     getClass().getDeclaredMethod("method", Integer.class));
-        logger.debug("method with TYPE: {}",
-                     getClass().getDeclaredMethod("method", Integer.TYPE));
-        logger.debug("method with int: {}",
-                     getClass().getDeclaredMethod("method", int.class));
+        logger.debug("method with Integer: {}", getClass().getDeclaredMethod("method", Integer.class));
+        logger.debug("method with TYPE: {}", getClass().getDeclaredMethod("method", Integer.TYPE));
+        logger.debug("method with int: {}", getClass().getDeclaredMethod("method", int.class));
     }
 
     @Test(enabled = false)
