@@ -87,7 +87,7 @@ public class MemoryDerbyTest extends MemoryTest {
     }
 
     // -----------------------------------------------------------------------------------------------------------------
-    @Test(enabled = false)
+    @Test(enabled = true)
     public void test() throws Exception {
         try (Connection connection = getConnection(CONNECTION_URL)) {
             final DatabaseMetaData metadata = connection.getMetaData();
