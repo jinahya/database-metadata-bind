@@ -47,15 +47,15 @@ public class MemoryDerbyTest extends MemoryTest {
     // -----------------------------------------------------------------------------------------------------------------
     private static final String DRIVER_NAME = "org.apache.derby.jdbc.EmbeddedDriver";
 
-    private static final Class<?> DRIVER_CLASS;
+    //private static final Class<?> DRIVER_CLASS;
 
     static {
-        try {
-            DRIVER_CLASS = Class.forName(DRIVER_NAME);
-        } catch (final ClassNotFoundException cnfe) {
-            cnfe.printStackTrace();
-            throw new InstantiationError(cnfe.getMessage());
-        }
+        //try {
+        //    DRIVER_CLASS = Class.forName(DRIVER_NAME);
+        //} catch (final ClassNotFoundException cnfe) {
+        //    cnfe.printStackTrace();
+        //    throw new InstantiationError(cnfe.getMessage());
+        //}
     }
 
     private static final String CONNECTION_URL = "jdbc:derby:memory:test";
