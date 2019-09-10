@@ -37,14 +37,14 @@ import java.util.List;
 @XmlRootElement
 @XmlType(propOrder = {
         "typeName", "className", "dataType", "remarks", "baseType",
-        // ---------------------------------------------------------------------
+        // -------------------------------------------------------------------------------------------------------------
         "attributes", "superTypes"
 })
 public class UDT implements Serializable {
 
     private static final long serialVersionUID = 8665246093405057553L;
 
-    // -------------------------------------------------------------------------
+    // -----------------------------------------------------------------------------------------------------------------
     @Override
     public String toString() {
         return super.toString() + "{"
@@ -58,7 +58,7 @@ public class UDT implements Serializable {
                + "}";
     }
 
-    // ----------------------------------------------------------------- typeCat
+    // --------------------------------------------------------------------------------------------------------- typeCat
     public String getTypeCat() {
         return typeCat;
     }
@@ -67,7 +67,7 @@ public class UDT implements Serializable {
         this.typeCat = typeCat;
     }
 
-    // --------------------------------------------------------------- typeSchem
+    // ------------------------------------------------------------------------------------------------------- typeSchem
     public String getTypeSchem() {
         return typeSchem;
     }
@@ -76,7 +76,7 @@ public class UDT implements Serializable {
         this.typeSchem = typeSchem;
     }
 
-    // ---------------------------------------------------------------- typeName
+    // -------------------------------------------------------------------------------------------------------- typeName
     public String getTypeName() {
         return typeName;
     }
@@ -85,7 +85,7 @@ public class UDT implements Serializable {
         this.typeName = typeName;
     }
 
-    // --------------------------------------------------------------- className
+    // ------------------------------------------------------------------------------------------------------- className
     public String getClassName() {
         return className;
     }
@@ -94,7 +94,7 @@ public class UDT implements Serializable {
         this.className = className;
     }
 
-    // ---------------------------------------------------------------- dataType
+    // -------------------------------------------------------------------------------------------------------- dataType
     public int getDataType() {
         return dataType;
     }
@@ -103,7 +103,7 @@ public class UDT implements Serializable {
         this.dataType = dataType;
     }
 
-    // ----------------------------------------------------------------- remarks
+    // --------------------------------------------------------------------------------------------------------- remarks
     public String getRemarks() {
         return remarks;
     }
@@ -112,7 +112,7 @@ public class UDT implements Serializable {
         this.remarks = remarks;
     }
 
-    // ---------------------------------------------------------------- baseType
+    // -------------------------------------------------------------------------------------------------------- baseType
     public Short getBaseType() {
         return baseType;
     }
@@ -121,7 +121,7 @@ public class UDT implements Serializable {
         this.baseType = baseType;
     }
 
-    // -------------------------------------------------------------- attributes
+    // ------------------------------------------------------------------------------------------------------ attributes
     public List<Attribute> getAttributes() {
         if (attributes == null) {
             attributes = new ArrayList<Attribute>();
@@ -129,7 +129,7 @@ public class UDT implements Serializable {
         return attributes;
     }
 
-    // -------------------------------------------------------------- superTypes
+    // ------------------------------------------------------------------------------------------------------ superTypes
     public List<SuperType> getSuperTypes() {
         if (superTypes == null) {
             superTypes = new ArrayList<SuperType>();
@@ -137,7 +137,7 @@ public class UDT implements Serializable {
         return superTypes;
     }
 
-    // -------------------------------------------------------------------------
+    // -----------------------------------------------------------------------------------------------------------------
     @XmlAttribute
     @Bind(label = "TYPE_CAT", nillable = true)
     private String typeCat;
@@ -146,7 +146,7 @@ public class UDT implements Serializable {
     @Bind(label = "TYPE_SCHEM", nillable = true)
     private String typeSchem;
 
-    // -------------------------------------------------------------------------
+    // -----------------------------------------------------------------------------------------------------------------
     @XmlElement
     @Bind(label = "TYPE_NAME")
     private String typeName;

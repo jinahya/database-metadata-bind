@@ -179,7 +179,7 @@ public class IndexInfo implements Serializable {
         this.filterCondition = filterCondition;
     }
 
-    // -------------------------------------------------------------------------
+    // -----------------------------------------------------------------------------------------------------------------
     @XmlAttribute
     @Bind(label = "TABLE_CAT", nillable = true)
     private String tableCat;
@@ -192,7 +192,7 @@ public class IndexInfo implements Serializable {
     @Bind(label = "TABLE_NAME")
     private String tableName;
 
-    // -------------------------------------------------------------------------
+    // -----------------------------------------------------------------------------------------------------------------
     @XmlElement
     @Bind(label = "NON_UNIQUE")
     private boolean nonUnique;
