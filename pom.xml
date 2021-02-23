@@ -1,14 +1,14 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
   <modelVersion>4.0.0</modelVersion>
 
   <parent>
     <groupId>com.github.jinahya</groupId>
     <artifactId>jinahya-parent</artifactId>
-    <version>0.8.1</version>
+    <version>0.8.6</version>
   </parent>
 
-  <groupId>com.github.jinahya</groupId>
   <artifactId>database-metadata-bind</artifactId>
   <version>3.0.1-SNAPSHOT</version>
   <packaging>jar</packaging>
@@ -46,12 +46,14 @@
     <maven.compiler.target>1.8</maven.compiler.target>
     <maven.compiler.testSource>1.8</maven.compiler.testSource>
     <maven.compiler.testTarget>1.8</maven.compiler.testTarget>
-    <version.animal-sniffer>1.18</version.animal-sniffer>
+    <version.animal-sniffer>1.20</version.animal-sniffer>
     <version.com.sun.xml.bind>2.3.0.1</version.com.sun.xml.bind>
-    <version.postgresql-embedded>2.10</version.postgresql-embedded>
-    <version.postgresql>42.2.6</version.postgresql>
     <version.mariaDB4j>2.4.0</version.mariaDB4j>
-    <version.mariadb-java-client>2.4.3</version.mariadb-java-client>
+    <version.mariadb-java-client>2.7.2</version.mariadb-java-client>
+    <version.maven-failsave>${version.maven-surefire}</version.maven-failsave>
+    <version.maven-surefire>3.0.0-M4</version.maven-surefire>
+    <version.postgresql-embedded>2.10</version.postgresql-embedded>
+    <version.postgresql>42.2.19.jre7</version.postgresql>
   </properties>
 
   <dependencyManagement>
@@ -84,7 +86,7 @@
     <dependency>
       <groupId>com.h2database</groupId>
       <artifactId>h2</artifactId>
-      <version>1.4.199</version>
+      <version>1.4.200</version>
       <scope>test</scope>
     </dependency>
     <dependency>
@@ -114,19 +116,19 @@
     <dependency>
       <groupId>org.apache.commons</groupId>
       <artifactId>commons-lang3</artifactId>
-      <version>3.9</version>
+      <version>3.11</version>
       <scope>test</scope>
     </dependency>
     <dependency>
       <groupId>org.apache.commons</groupId>
       <artifactId>commons-text</artifactId>
-      <version>1.8</version>
+      <version>1.9</version>
       <scope>test</scope>
     </dependency>
     <dependency>
       <groupId>org.apache.derby</groupId>
       <artifactId>derby</artifactId>
-      <version>10.15.1.3</version>
+      <version>10.15.2.0</version>
       <scope>test</scope>
     </dependency>
     <dependency>
@@ -144,25 +146,25 @@
     <dependency>
       <groupId>org.hsqldb</groupId>
       <artifactId>hsqldb</artifactId>
-      <version>2.5.0</version>
+      <version>2.5.1</version>
       <scope>test</scope>
     </dependency>
     <dependency>
       <groupId>org.testng</groupId>
       <artifactId>testng</artifactId>
-      <version>7.0.0</version>
+      <version>7.3.0</version>
       <scope>test</scope>
     </dependency>
     <dependency>
       <groupId>org.xerial</groupId>
       <artifactId>sqlite-jdbc</artifactId>
-      <version>3.28.0</version>
+      <version>3.34.0</version>
       <scope>test</scope>
     </dependency>
     <dependency>
       <groupId>org.projectlombok</groupId>
       <artifactId>lombok</artifactId>
-      <version>1.18.8</version>
+      <version>1.18.18</version>
       <scope>provided</scope>
     </dependency>
     <dependency>
@@ -179,17 +181,17 @@
         <plugin>
           <groupId>org.apache.maven.plugins</groupId>
           <artifactId>maven-compiler-plugin</artifactId>
-          <version>3.8.0</version>
+          <version>3.8.1</version>
         </plugin>
         <plugin>
           <groupId>org.apache.maven.plugins</groupId>
           <artifactId>maven-surefire-plugin</artifactId>
-          <version>2.22.1</version>
+          <version>${version.maven-surefire}</version>
         </plugin>
         <plugin>
           <groupId>org.apache.maven.plugins</groupId>
           <artifactId>maven-jar-plugin</artifactId>
-          <version>3.1.1</version>
+          <version>3.2.0</version>
         </plugin>
         <plugin>
           <groupId>org.apache.maven.plugins</groupId>
@@ -199,17 +201,22 @@
         <plugin>
           <groupId>org.apache.maven.plugins</groupId>
           <artifactId>maven-site-plugin</artifactId>
-          <version>3.7.1</version>
+          <version>3.9.0</version>
         </plugin>
         <plugin>
           <groupId>org.codehaus.mojo</groupId>
           <artifactId>build-helper-maven-plugin</artifactId>
-          <version>3.0.0</version>
+          <version>3.1.0</version>
+        </plugin>
+        <plugin>
+          <groupId>org.codehaus.mojo</groupId>
+          <artifactId>versions-maven-plugin</artifactId>
+          <version>2.8.1</version>
         </plugin>
         <plugin>
           <groupId>org.codehaus.mojo</groupId>
           <artifactId>sonar-maven-plugin</artifactId>
-          <version>3.4.1.1168</version>
+          <version>3.7.0.1746</version>
         </plugin>
       </plugins>
     </pluginManagement>
@@ -226,40 +233,21 @@
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-enforcer-plugin</artifactId>
-        <version>3.0.0-M2</version>
+        <version>3.0.0-M3</version>
         <executions>
           <execution>
             <id>enforce</id>
             <configuration>
+              <skip>true</skip>
               <rules>
-                <dependencyConvergence />
+                <dependencyConvergence/>
               </rules>
             </configuration>
             <goals>
-              <!--<goal>enforce</goal>-->
+              <goal>enforce</goal>
             </goals>
           </execution>
         </executions>
-      </plugin>
-      <plugin>
-        <groupId>org.apache.maven.plugins</groupId>
-        <artifactId>maven-toolchains-plugin</artifactId>
-        <version>1.1</version>
-        <executions>
-          <execution>
-            <goals>
-<!--              <goal>toolchain</goal>-->
-            </goals>
-          </execution>
-        </executions>
-        <configuration>
-          <toolchains>
-            <jdk>
-              <version>8</version>
-              <vendor>oracle</vendor>
-            </jdk>
-          </toolchains>
-        </configuration>
       </plugin>
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
@@ -303,7 +291,7 @@
       <plugin>
         <groupId>org.codehaus.mojo</groupId>
         <artifactId>license-maven-plugin</artifactId>
-        <version>1.19</version>
+        <version>2.0.0</version>
         <configuration>
           <licenseName>apache_v2</licenseName>
         </configuration>
@@ -316,12 +304,12 @@
       <plugin>
         <groupId>com.github.spotbugs</groupId>
         <artifactId>spotbugs-maven-plugin</artifactId>
-        <version>3.1.11</version>
+        <version>3.1.12.2</version>
       </plugin>
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-jxr-plugin</artifactId>
-        <version>2.5</version>
+        <version>3.0.0</version>
       </plugin>
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
@@ -330,12 +318,12 @@
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-checkstyle-plugin</artifactId>
-        <version>2.17</version>
+        <version>3.1.1</version>
       </plugin>
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-pmd-plugin</artifactId>
-        <version>3.8</version>
+        <version>3.13.0</version>
       </plugin>
       <!--      <plugin>
         <groupId>org.codehaus.mojo</groupId>
@@ -357,16 +345,24 @@
 
   <profiles>
     <profile>
-      <id>umlgraph</id>
-      <properties>
-        <additionalparam>
-          -hide java.*
-          -hide com.github.jinahya.database.metadata.bind.TableKey
-          -collapsible -horizontal
-          -inferdep -inferdepinpackage -inferrel
-          -outputencoding UTF-8
-        </additionalparam>
-      </properties>
+      <id>failsafe</id>
+      <build>
+        <plugins>
+          <plugin>
+            <groupId>org.apache.maven.plugins</groupId>
+            <artifactId>maven-failsafe-plugin</artifactId>
+            <version>${version.maven-failsafe}</version>
+            <executions>
+              <execution>
+                <goals>
+                  <goal>integration-test</goal>
+                  <goal>verify</goal>
+                </goals>
+              </execution>
+            </executions>
+          </plugin>
+        </plugins>
+      </build>
     </profile>
     <profile>
       <id>embedded-mariadb</id>
