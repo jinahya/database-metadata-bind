@@ -41,7 +41,7 @@ import static java.sql.DatabaseMetaData.typeNullableUnknown;
         "caseSensitive", "searchable", "unsignedAttribute", "fixedPrecScale", "autoIncrement", "localTypeName",
         "minimumScale", "maximumScale", "sqlDataType", "sqlDatetimeSub", "numPrecRadix"
 })
-public class TypeInfo implements Serializable {
+public class TypeInfo implements MetadataValue {
 
     private static final long serialVersionUID = -3964147654019495313L;
 

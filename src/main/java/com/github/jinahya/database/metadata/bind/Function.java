@@ -23,9 +23,9 @@ package com.github.jinahya.database.metadata.bind;
 import javax.xml.bind.annotation.XmlAttribute;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlElementRef;
+import javax.xml.bind.annotation.XmlElementWrapper;
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlType;
-import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -36,23 +36,34 @@ import java.util.List;
  * @author Jin Kwon &lt;jinahya_at_gmail.com&gt;
  * @see java.sql.DatabaseMetaData#getFunctions(java.lang.String, java.lang.String, java.lang.String)
  * @see MetadataContext#getFunctions(java.lang.String, java.lang.String, java.lang.String)
+ * @see MetadataContext#getFunctionColumns(String, String, String, String)
  */
 @XmlRootElement
 @XmlType(propOrder = {
-        "functionName", "remarks", "functionType", "specificName",
-        // -------------------------------------------------------------------------
-        "functionColumns"
+        "functionName", "remarks", "functionType", "specificName"
+        // -------------------------------------------------------------------------------------------------------------
+        , "functionColumns"
 })
-public class Function implements Serializable {
+public class Function extends SchemaChild {
 
     private static final long serialVersionUID = -3318947900237453301L;
 
-    // -------------------------------------------------------------------------
+    // -------------------------------------------------------------------------------------- FUNCTION_CAT / functionCat
+    public static final String COLUMN_NAME_FUNCTION_CAT = "FUNCTION_CAT";
+
+    public static final String ATTRIBUTE_NAME_FUNCTION_CAT = "functionCat";
+
+    // -------------------------------------------------------------------------------------- FUNCTION_SCHEM / functionSchem
+    public static final String COLUMN_NAME_FUNCTION_SCHEM = "FUNCTION_SCHEM";
+
+    public static final String ATTRIBUTE_NAME_FUNCTION_SCHEM = "functionSchem";
+
+    // -----------------------------------------------------------------------------------------------------------------
     @Override
     public String toString() {
         return super.toString() + '{'
-               + "functionCat=" + functionCat
-               + ",functionSchem=" + functionSchem
+               + ATTRIBUTE_NAME_FUNCTION_CAT + '=' + functionCat
+               + ',' + ATTRIBUTE_NAME_FUNCTION_SCHEM + '=' + functionSchem
                + ",functionName=" + functionName
                + ",remarks=" + remarks
                + ",functionType=" + functionType
@@ -60,7 +71,7 @@ public class Function implements Serializable {
                + '}';
     }
 
-    // ------------------------------------------------------------- functionCat
+    // ----------------------------------------------------------------------------------------------------- functionCat
     public String getFunctionCat() {
         return functionCat;
     }
@@ -69,7 +80,7 @@ public class Function implements Serializable {
         this.functionCat = functionCat;
     }
 
-    // ----------------------------------------------------------- functionSchem
+    // --------------------------------------------------------------------------------------------------- functionSchem
     public String getFunctionSchem() {
         return functionSchem;
     }
@@ -78,7 +89,7 @@ public class Function implements Serializable {
         this.functionSchem = functionSchem;
     }
 
-    // ------------------------------------------------------------ functionName
+    // ---------------------------------------------------------------------------------------------------- functionName
     public String getFunctionName() {
         return functionName;
     }
@@ -87,7 +98,7 @@ public class Function implements Serializable {
         this.functionName = functionName;
     }
 
-    // ----------------------------------------------------------------- remarks
+    // --------------------------------------------------------------------------------------------------------- remarks
     public String getRemarks() {
         return remarks;
     }
@@ -96,7 +107,7 @@ public class Function implements Serializable {
         this.remarks = remarks;
     }
 
-    // ------------------------------------------------------------ functionType
+    // ---------------------------------------------------------------------------------------------------- functionType
     public short getFunctionType() {
         return functionType;
     }
@@ -105,7 +116,7 @@ public class Function implements Serializable {
         this.functionType = functionType;
     }
 
-    // ------------------------------------------------------------ specificName
+    // ---------------------------------------------------------------------------------------------------- specificName
     public String getSpecificName() {
         return specificName;
     }
@@ -114,48 +125,57 @@ public class Function implements Serializable {
         this.specificName = specificName;
     }
 
-    // --------------------------------------------------------- functionColumns
+    // ------------------------------------------------------------------------------------------------- functionColumns
     public List<FunctionColumn> getFunctionColumns() {
         if (functionColumns == null) {
-            functionColumns = new ArrayList<FunctionColumn>();
+            functionColumns = new ArrayList<>();
         }
         return functionColumns;
     }
 
-    // -------------------------------------------------------------------------
-    @XmlAttribute
-    @Bind(label = "FUNCTION_CAT", nillable = true)
+    // -----------------------------------------------------------------------------------------------------------------
+    @XmlAttribute(required = true)
+    @MayBeNull
+    @Label(COLUMN_NAME_FUNCTION_CAT)
+    @Bind(label = COLUMN_NAME_FUNCTION_CAT, nillable = true)
     private String functionCat;
 
-    @XmlAttribute
-    @Bind(label = "FUNCTION_SCHEM", nillable = true)
+    @XmlAttribute(required = true)
+    @MayBeNull
+    @Label(COLUMN_NAME_FUNCTION_SCHEM)
+    @Bind(label = COLUMN_NAME_FUNCTION_SCHEM, nillable = true)
     private String functionSchem;
 
-    // -------------------------------------------------------------------------
+    // -----------------------------------------------------------------------------------------------------------------
     @XmlElement
+    @Label("FUNCTION_NAME")
     @Bind(label = "FUNCTION_NAME")
     private String functionName;
 
     @XmlElement
+    @Label("REMARKS")
     @Bind(label = "REMARKS")
     private String remarks;
 
     @XmlElement
+    @Label("FUNCTION_TYPE")
     @Bind(label = "FUNCTION_TYPE")
     private short functionType;
 
     @XmlElement
+    @Label("SPECIFIC_NAME")
     @Bind(label = "SPECIFIC_NAME")
     private String specificName;
 
-    // -------------------------------------------------------------------------
+    // -----------------------------------------------------------------------------------------------------------------
+    @XmlElementWrapper
     @XmlElementRef
-    @Invoke(name = "getFunctionColumns",
-            types = {String.class, String.class, String.class, String.class},
-            parameters = {
-                    @Literals({":functionCat", ":functionSchem", ":functionName",
-                               "null"})
-            }
-    )
+//    @Invoke(name = "getFunctionColumns",
+//            types = {String.class, String.class, String.class, String.class},
+//            parameters = {
+//                    @Literals({":functionCat", ":functionSchem", ":functionName",
+//                               "null"})
+//            }
+//    )
     private List<FunctionColumn> functionColumns;
 }

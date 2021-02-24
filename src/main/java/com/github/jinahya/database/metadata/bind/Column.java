@@ -25,7 +25,6 @@ import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlElementRef;
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlType;
-import java.io.Serializable;
 import java.sql.DatabaseMetaData;
 import java.util.ArrayList;
 import java.util.List;
@@ -47,7 +46,7 @@ import static java.sql.DatabaseMetaData.columnNullableUnknown;
         // ---------------------------------------------------------------------
         "columnPrivileges"
 })
-public class Column implements Serializable {
+public class Column extends AbstractChildValue<Table> {
 
     private static final long serialVersionUID = -409653682729081530L;
 
@@ -139,6 +138,15 @@ public class Column implements Serializable {
                + ",isAutoincrement=" + isAutoincrement
                + ",isGeneratedcolumn=" + isGeneratedcolumn
                + '}';
+    }
+
+    // ----------------------------------------------------------------------------------------------------------- table
+    public Table getTable() {
+        return getParent();
+    }
+
+    public void setTable(final Table table) {
+        setParent(table);
     }
 
     // ---------------------------------------------------------------- tableCat

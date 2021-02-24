@@ -24,7 +24,6 @@ import javax.xml.bind.annotation.XmlAttribute;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlType;
-import java.io.Serializable;
 
 /**
  * An entity class for primary keys.
@@ -36,7 +35,7 @@ import java.io.Serializable;
 @XmlType(propOrder = {
         "columnName", "keySeq", "pkName"
 })
-public class PrimaryKey implements Serializable {
+public class PrimaryKey extends TableChild {
 
     private static final long serialVersionUID = 3159826510060898330L;
 

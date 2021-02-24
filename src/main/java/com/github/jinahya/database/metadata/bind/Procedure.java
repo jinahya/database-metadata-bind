@@ -25,7 +25,6 @@ import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlElementRef;
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlType;
-import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -41,7 +40,7 @@ import java.util.List;
         // ---------------------------------------------------------------------
         "procedureColumns"
 })
-public class Procedure implements Serializable {
+public class Procedure extends AbstractChildValue<Schema> {
 
     private static final long serialVersionUID = -6262056388403934829L;
 
@@ -56,6 +55,15 @@ public class Procedure implements Serializable {
                + ",procedureType=" + procedureType
                + ",specificName=" + specificName
                + '}';
+    }
+
+    // ---------------------------------------------------------------------------------------------------------- schema
+    public Schema getSchema() {
+        return getParent();
+    }
+
+    public void setSchema(final Schema schema) {
+        setParent(schema);
     }
 
     // ------------------------------------------------------------ procedureCat

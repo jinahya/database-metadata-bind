@@ -38,7 +38,7 @@ import java.io.Serializable;
         "nonUnique", "indexQualifier", "indexName", "type", "ordinalPosition", "columnName", "ascOrDesc", "cardinality",
         "pages", "filterCondition"
 })
-public class IndexInfo implements Serializable {
+public class IndexInfo extends TableChild {
 
     private static final long serialVersionUID = -768486884376018474L;
 
@@ -179,7 +179,7 @@ public class IndexInfo implements Serializable {
         this.filterCondition = filterCondition;
     }
 
-    // -------------------------------------------------------------------------
+    // -----------------------------------------------------------------------------------------------------------------
     @XmlAttribute
     @Bind(label = "TABLE_CAT", nillable = true)
     private String tableCat;
@@ -192,7 +192,7 @@ public class IndexInfo implements Serializable {
     @Bind(label = "TABLE_NAME")
     private String tableName;
 
-    // -------------------------------------------------------------------------
+    // -----------------------------------------------------------------------------------------------------------------
     @XmlElement
     @Bind(label = "NON_UNIQUE")
     private boolean nonUnique;

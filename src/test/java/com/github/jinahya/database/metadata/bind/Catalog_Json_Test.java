@@ -1,35 +1,27 @@
 package com.github.jinahya.database.metadata.bind;
 
+import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.Test;
-import org.w3c.dom.Node;
-
-import javax.xml.bind.JAXBContext;
-import javax.xml.bind.JAXBException;
-import java.io.IOException;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
+@Slf4j
 class Catalog_Json_Test extends AbstractCatalogTest {
 
     @Test
-    void printSchema() throws JAXBException, IOException {
-        final JAXBContext context = JAXBContext.newInstance(Catalog.class);
-        JaxbTests.printSchema(context);
-    }
-
-    @Test
-    void printDocument() throws JAXBException {
+    void toJson() {
         final Catalog value = new Catalog();
         value.setTableCat("tableCat");
-        JaxbTests.printInstance(Catalog.class, value);
+        final String json = JsonbTests.toJson(value);
+        log.debug("json: {}", json);
     }
 
     @Test
-    void marshalUnmarshalAndCompare() throws JAXBException {
+    void toJsonFromJsonAndCompare() {
         final Catalog expected = new Catalog();
         expected.setTableCat("tableCat");
-        final Node marshalled = JaxbTests.marshal(Catalog.class, expected);
-        final Catalog actual = JaxbTests.unmarshal(Catalog.class, marshalled);
+        final String json = JsonbTests.toJson(expected);
+        final Catalog actual = JsonbTests.fromJson(json, Catalog.class);
         assertThat(actual).isEqualTo(expected);
     }
 }

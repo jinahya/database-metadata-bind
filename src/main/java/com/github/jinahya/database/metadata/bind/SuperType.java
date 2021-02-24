@@ -36,7 +36,7 @@ import java.io.Serializable;
 @XmlType(propOrder = {
         "typeName", "supertypeCat", "supertypeSchem", "supertypeName"
 })
-public class SuperType implements Serializable {
+public class SuperType extends AbstractChildValue<UDT> {
 
     private static final long serialVersionUID = 4603878785941565029L;
 
@@ -51,6 +51,15 @@ public class SuperType implements Serializable {
                + ",supertypeSchem=" + supertypeSchem
                + ",supertypeName=" + supertypeName
                + '}';
+    }
+
+    // ------------------------------------------------------------------------------------------------------------- UDT
+    public UDT getUDT() {
+        return getParent();
+    }
+
+    public void setUDT(final UDT udt) {
+        setParent(udt);
     }
 
     // ----------------------------------------------------------------- typeCat

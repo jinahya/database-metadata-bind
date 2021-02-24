@@ -67,6 +67,15 @@ final class JaxbTests {
         marshaller.marshal(new JAXBElement<>(Wrapper.NAME, Wrapper.class, wrapper), output);
     }
 
+    static <T> void writeToFile(final Class<? super T> type, final T value, final String name)
+            throws JAXBException {
+        final JAXBContext context = JAXBContext.newInstance(Wrapper.class, type);
+        final Marshaller marshaller = context.createMarshaller();
+        marshaller.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, Boolean.TRUE);
+        final File output = Paths.get("target", name + ".xml").toFile();
+        marshaller.marshal(value, output);
+    }
+
     // -----------------------------------------------------------------------------------------------------------------
     static void printSchema(final JAXBContext context) throws IOException {
         requireNonNull(context, "context is null");

@@ -20,19 +20,13 @@ package com.github.jinahya.database.metadata.bind;
  * #L%
  */
 
+import org.junit.jupiter.api.Test;
 import org.slf4j.Logger;
-import org.testng.annotations.AfterClass;
-import org.testng.annotations.BeforeClass;
-import org.testng.annotations.Test;
 
 import java.sql.Connection;
 import java.sql.DatabaseMetaData;
-import java.sql.SQLException;
-import java.sql.SQLFeatureNotSupportedException;
-import java.util.List;
 
 import static com.github.jinahya.database.metadata.bind.JaxbTests.store;
-import static com.github.jinahya.database.metadata.bind.MetadataContext.getCatalogs;
 import static java.lang.invoke.MethodHandles.lookup;
 import static java.sql.DriverManager.getConnection;
 import static org.slf4j.LoggerFactory.getLogger;
@@ -42,41 +36,21 @@ import static org.slf4j.LoggerFactory.getLogger;
  *
  * @author Jin Kwon &lt;jinahya_at_gmail.com&gt;
  */
-public class MemorySqliteTest extends MemoryTest {
+class MemorySqliteTest extends MemoryTest {
 
     private static final Logger logger = getLogger(lookup().lookupClass());
 
     // -------------------------------------------------------------------------
     private static final String CONNECTION_URL = "jdbc:sqlite::memory:";
 
-    // -------------------------------------------------------------------------
-    @BeforeClass
-    private static void beforeClass() throws SQLException {
-    }
-
-    @AfterClass
-    private static void afterClass() throws SQLException {
-    }
-
-    // -------------------------------------------------------------------------
-    @Test(enabled = true)
-    public void test() throws Exception {
+    // -----------------------------------------------------------------------------------------------------------------
+    @Test
+    void writeToFileXml() throws Exception {
         try (Connection connection = getConnection(CONNECTION_URL)) {
-            final DatabaseMetaData metadata = connection.getMetaData();
-            final MetadataContext context = new MetadataContext(metadata);
-            context.addSuppressionPaths(
-                    "catalog/schemas",
-                    "schema/functions"
-            );
-            final List<Catalog> catalogs = getCatalogs(context, true);
-            store(Catalog.class, catalogs, "memory.sqlite.catalogs");
-            try {
-                store(ClientInfoProperty.class, context.getClientInfoProperties(),
-                      "memory.sqlite.clientInfoProperties");
-            } catch (final SQLFeatureNotSupportedException sqlfnse) {
-                logger.warn("getClientInfoProperties not supported", sqlfnse);
-            }
-            store(TableType.class, context.getTableTypes(), "memory.sqlite.tableTypes");
+            final DatabaseMetaData database = connection.getMetaData();
+            final MetadataContext context = new MetadataContext(database);
+            final Metadata metadata = Metadata.newInstance(context);
+            JaxbTests.writeToFile(Metadata.class, metadata, "memory.sqlite.metadata");
             store(TypeInfo.class, context.getTypeInfo(), "memory.sqlite.typeInfo");
         }
     }

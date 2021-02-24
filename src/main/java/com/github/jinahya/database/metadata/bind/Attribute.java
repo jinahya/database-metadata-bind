@@ -45,7 +45,7 @@ import static java.sql.DatabaseMetaData.attributeNullableUnknown;
         "attrName", "dataType", "attrTypeName", "attrSize", "decimalDigits", "numPrecRadix", "nullable", "remarks",
         "attrDef", "sqlDataType", "sqlDatetimeSub", "charOctetLength", "ordinalPosition", "isNullable", "sourceDataType"
 })
-public class Attribute implements Serializable {
+public class Attribute extends AbstractChildValue<UDT> {
 
     private static final long serialVersionUID = 5020389308460154799L;
 
@@ -171,6 +171,24 @@ public class Attribute implements Serializable {
                             ordinalPosition,
                             isNullable,
                             sourceDataType);
+    }
+
+    // ------------------------------------------------------------------------------------------------------------- UDT
+    public UDT getUDT() {
+        return getParent();
+    }
+
+    public void setUDT(final UDT udt) {
+        setParent(udt);
+    }
+
+    // -------------------------------------------------------------------------------------------------------- typeInfo
+    public UDT getTypeInfo() {
+        return getParent();
+    }
+
+    public void setTypeInfo(final UDT udt) {
+        setParent(udt);
     }
 
     // --------------------------------------------------------------------------------------------------------- typeCat
@@ -334,6 +352,9 @@ public class Attribute implements Serializable {
     public void setSourceDataType(final Short sourceDataType) {
         this.sourceDataType = sourceDataType;
     }
+
+    // -----------------------------------------------------------------------------------------------------------------
+    private transient TypeInfo typeInfo;
 
     // -----------------------------------------------------------------------------------------------------------------
     @XmlAttribute

@@ -20,9 +20,12 @@ package com.github.jinahya.database.metadata.bind;
  * #L%
  */
 
+import jakarta.json.bind.annotation.JsonbTransient;
+
 import javax.xml.bind.annotation.XmlAttribute;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
+import javax.xml.bind.annotation.XmlTransient;
 import javax.xml.bind.annotation.XmlType;
 import java.io.Serializable;
 import java.sql.DatabaseMetaData;
@@ -48,7 +51,7 @@ import static java.sql.DatabaseMetaData.functionReturn;
         "functionName", "columnName", "columnType", "dataType", "typeName", "precision", "length", "scale", "radix",
         "nullable", "remarks", "charOctetLength", "ordinalPosition", "isNullable", "specificName"
 })
-public class FunctionColumn implements Serializable {
+public class FunctionColumn extends AbstractChildValue<Function> {
 
     private static final long serialVersionUID = -7445156446214062680L;
 
@@ -205,6 +208,15 @@ public class FunctionColumn implements Serializable {
                + '}';
     }
 
+    // -------------------------------------------------------------------------------------------------------- function
+    public Function getFunction() {
+        return function;
+    }
+
+    public void setFunction(final Function function) {
+        this.function = function;
+    }
+
     // ------------------------------------------------------------- functionCat
     public String getFunctionCat() {
         return functionCat;
@@ -358,7 +370,12 @@ public class FunctionColumn implements Serializable {
         this.specificName = specificName;
     }
 
-    // -------------------------------------------------------------------------
+    // -----------------------------------------------------------------------------------------------------------------
+    //@JsonbTransient
+    //@XmlTransient
+    private transient Function function;
+
+    // -----------------------------------------------------------------------------------------------------------------
     @XmlAttribute
     @Bind(label = "FUNCTION_CAT", nillable = true)
     private String functionCat;
@@ -371,7 +388,8 @@ public class FunctionColumn implements Serializable {
     @Bind(label = "FUNCTION_NAME")
     private String functionName;
 
-    // -------------------------------------------------------------------------
+
+    // -----------------------------------------------------------------------------------------------------------------
     @XmlElement
     @Bind(label = "COLUMN_NAME")
     private String columnName;

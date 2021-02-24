@@ -36,7 +36,7 @@ import java.io.Serializable;
 @XmlType(propOrder = {
         "supertableName"
 })
-public class SuperTable implements Serializable {
+public class SuperTable extends TableChild {
 
     private static final long serialVersionUID = -302335602056528563L;
 

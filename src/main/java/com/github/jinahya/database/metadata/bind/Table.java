@@ -20,12 +20,14 @@ package com.github.jinahya.database.metadata.bind;
  * #L%
  */
 
+import jakarta.json.bind.annotation.JsonbTransient;
+
 import javax.xml.bind.annotation.XmlAttribute;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlElementRef;
 import javax.xml.bind.annotation.XmlRootElement;
+import javax.xml.bind.annotation.XmlTransient;
 import javax.xml.bind.annotation.XmlType;
-import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -43,7 +45,7 @@ import java.util.List;
         "bestRowIdentifiers", "columns", "exportedKeys", "importedKeys", "indexInfo", "primaryKeys", "pseudoColumns",
         "superTables", "tablePrivileges", "versionColumns"
 })
-public class Table implements Serializable {
+public class Table extends AbstractChildValue<Schema> {
 
     // -----------------------------------------------------------------------------------------------------------------
     private static final long serialVersionUID = 6590036695540141125L;
@@ -63,6 +65,15 @@ public class Table implements Serializable {
                + ",selfReferencingColName=" + selfReferencingColName
                + ",refGeneration=" + refGeneration
                + '}';
+    }
+
+    // ---------------------------------------------------------------------------------------------------------- schema
+    public Schema getSchema() {
+        return getParent();
+    }
+
+    public void setSchema(final Schema schema) {
+        setParent(schema);
     }
 
     // -------------------------------------------------------------------------------------------------------- tableCat

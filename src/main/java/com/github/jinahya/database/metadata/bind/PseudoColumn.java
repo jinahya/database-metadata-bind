@@ -37,7 +37,7 @@ import java.io.Serializable;
         "columnName", "dataType", "columnSize", "decimalDigits", "numPrecRadix", "columnUsage", "remarks",
         "charOctetLength", "isNullable"
 })
-public class PseudoColumn implements Serializable {
+public class PseudoColumn extends TableChild {
 
     private static final long serialVersionUID = -5612575879670895510L;
 

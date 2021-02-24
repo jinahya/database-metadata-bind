@@ -35,7 +35,7 @@ import java.io.Serializable;
 @XmlType(propOrder = {
         "grantor", "grantee", "privilege", "isGrantable"
 })
-public class ColumnPrivilege implements Serializable {
+public class ColumnPrivilege extends AbstractChildValue<Column> {
 
     // -----------------------------------------------------------------------------------------------------------------
     private static final long serialVersionUID = 4384654744147773380L;
@@ -53,6 +53,15 @@ public class ColumnPrivilege implements Serializable {
                + ",privilege=" + privilege
                + ",isGrantable=" + isGrantable
                + '}';
+    }
+
+    // ---------------------------------------------------------------------------------------------------------- column
+    public Column getColumn() {
+        return getParent();
+    }
+
+    public void setColumn(final Column column) {
+        setParent(column);
     }
 
     // ---------------------------------------------------------------- tableCat

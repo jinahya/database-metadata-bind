@@ -24,14 +24,13 @@ import javax.xml.bind.annotation.XmlAttribute;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlTransient;
 import javax.xml.bind.annotation.XmlType;
-import java.io.Serializable;
 
 @XmlTransient
 @XmlType(propOrder = {
         "pkcolumnName", "fktableCat", "fktableSchem", "fktableName", "fkcolumnName", "keySeq", "updateRule",
         "deleteRule", "fkName", "pkName", "deferrability"
 })
-abstract class TableKey implements Serializable {
+abstract class TableKey extends AbstractChildValue<Table> {
 
     private static final long serialVersionUID = 6713872409315471232L;
 
@@ -54,6 +53,15 @@ abstract class TableKey implements Serializable {
                + ",pkName=" + pkName
                + ",deferrability=" + deferrability
                + '}';
+    }
+
+    // ----------------------------------------------------------------------------------------------------------- table
+    public Table getTable() {
+        return getParent();
+    }
+
+    public void setTable(final Table table) {
+        setParent(table);
     }
 
     // ------------------------------------------------------------------------------------------------------ pktableCat

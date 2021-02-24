@@ -40,7 +40,7 @@ import static java.sql.DatabaseMetaData.versionColumnUnknown;
 @XmlType(propOrder = {
         "scope", "columnName", "dataType", "typeName", "columnSize", "bufferLength", "decimalDigits", "pseudoColumn"
 })
-public class VersionColumn implements Serializable {
+public class VersionColumn extends TableChild{
 
     private static final long serialVersionUID = 3587959398829593292L;
 

@@ -22,6 +22,7 @@ package com.github.jinahya.database.metadata.bind;
 
 import jakarta.json.bind.annotation.JsonbProperty;
 import jakarta.validation.Valid;
+import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 
 import javax.xml.bind.annotation.XmlAttribute;
@@ -30,10 +31,13 @@ import javax.xml.bind.annotation.XmlElementRef;
 import javax.xml.bind.annotation.XmlElementWrapper;
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlType;
-import java.io.Serializable;
+import java.text.Collator;
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
 import java.util.Objects;
+
+import static java.util.Objects.requireNonNull;
 
 /**
  * An entity class for binding the result of {@link java.sql.DatabaseMetaData#getCatalogs()}.
@@ -43,10 +47,11 @@ import java.util.Objects;
  */
 @XmlRootElement
 @XmlType(propOrder = {
-        "tableCat",
-        "schemas"
+        "tableCat"
+        // -------------------------------------------------------------------------------------------------------------
+        , "schemas"
 })
-public class Catalog implements Serializable {//extends AbstractTableDomain {
+public class Catalog implements MetadataValue {
 
     // -----------------------------------------------------------------------------------------------------------------
     private static final long serialVersionUID = 6239185259128825953L;
@@ -62,6 +67,49 @@ public class Catalog implements Serializable {//extends AbstractTableDomain {
     // -----------------------------------------------------------------------------------------------------------------
 
     /**
+     * A comparator comparing {@value #ATTRIBUTE_NAME_TABLE_CAT} attribute.
+     *
+     * @see #COMPARING_TABLE_CAT_CASE_INSENSITIVE
+     * @see #comparingTableCat(Collator)
+     */
+    public static final Comparator<Catalog> COMPARING_TABLE_CAT = Comparator.comparing(Catalog::getTableCat);
+
+    /**
+     * A comparator comparing {@value #ATTRIBUTE_NAME_TABLE_CAT} attribute in {@link String#CASE_INSENSITIVE_ORDER case
+     * insensitive order}.
+     *
+     * @see #COMPARING_TABLE_CAT
+     * @see #comparingTableCat(Collator)
+     */
+    // https://stackoverflow.com/a/49821834/330457
+    public static final Comparator<Catalog> COMPARING_TABLE_CAT_CASE_INSENSITIVE
+            = Comparator.comparing(Catalog::getTableCat, String.CASE_INSENSITIVE_ORDER);
+
+    /**
+     * Returns a comparator comparing {@value #ATTRIBUTE_NAME_TABLE_CAT} attribute using specified collator.
+     *
+     * @param collator the collator.
+     * @return a comparator.
+     * @see #COMPARING_TABLE_CAT
+     * @see #COMPARING_TABLE_CAT_CASE_INSENSITIVE
+     */
+    // https://stackoverflow.com/a/49821830/330457
+    public static Comparator<Catalog> comparingTableCat(final Collator collator) {
+        requireNonNull(collator, "collator is null");
+        return Comparator.comparing(Catalog::getTableCat, collator);
+    }
+
+    // -----------------------------------------------------------------------------------------------------------------
+    public static Catalog newVirtualInstance() {
+        final Catalog instance = new Catalog();
+        instance.virtual = Boolean.TRUE;
+        instance.setTableCat("");
+        return instance;
+    }
+
+    // -----------------------------------------------------------------------------------------------------------------
+
+    /**
      * Creates a new instance.
      */
     public Catalog() {
@@ -72,7 +120,7 @@ public class Catalog implements Serializable {//extends AbstractTableDomain {
     @Override
     public String toString() {
         return super.toString() + '{'
-               + "tableCat=" + tableCat
+               + ATTRIBUTE_NAME_TABLE_CAT + '=' + tableCat
                + '}';
     }
 
@@ -87,6 +135,17 @@ public class Catalog implements Serializable {//extends AbstractTableDomain {
     @Override
     public int hashCode() {
         return Objects.hash(tableCat);
+    }
+
+    // --------------------------------------------------------------------------------------------------------- virtual
+
+    /**
+     * Indicates whether this instance is a virtual instance.
+     *
+     * @return {@code true} if this instance is a virtual instance; {@code false} otherwise.
+     */
+    public boolean isVirtual() {
+        return virtual != null && virtual;
     }
 
     // -------------------------------------------------------------------------------------------------------- tableCat
@@ -126,21 +185,22 @@ public class Catalog implements Serializable {//extends AbstractTableDomain {
     // -----------------------------------------------------------------------------------------------------------------
     @JsonbProperty(nillable = true)
     @XmlAttribute(required = false)
-    Boolean virtual;
+    Boolean virtual = Boolean.FALSE;
 
     @JsonbProperty(nillable = false)
     @XmlElement(required = true)
+    @NotBlank
     @Bind(label = COLUMN_NAME_TABLE_CAT)
     private String tableCat;
 
     @JsonbProperty(nillable = true)
-    @XmlElementWrapper(required = false)
+    @XmlElementWrapper(required = true)
     @XmlElementRef
-    @Invoke(name = "getSchemas",
-            types = {String.class, String.class},
-            parameters = {
-                    @Literals({":tableCat", "null"})
-            }
-    )
+//    @Invoke(name = "getSchemas",
+//            types = {String.class, String.class},
+//            parameters = {
+//                    @Literals({":tableCat", "null"})
+//            }
+//    )
     private List<@Valid @NotNull Schema> schemas;
 }

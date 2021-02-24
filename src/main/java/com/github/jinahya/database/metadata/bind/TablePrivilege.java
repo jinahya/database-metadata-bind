@@ -39,7 +39,7 @@ import static java.util.logging.Logger.getLogger;
 @XmlType(propOrder = {
         "grantor", "grantee", "privilege", "isGrantable"
 })
-public class TablePrivilege implements Serializable {
+public class TablePrivilege extends TableChild {
 
     private static final long serialVersionUID = -1799954363648972203L;
 

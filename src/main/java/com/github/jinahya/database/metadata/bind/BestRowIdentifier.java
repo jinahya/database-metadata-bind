@@ -43,7 +43,7 @@ import static java.sql.DatabaseMetaData.bestRowUnknown;
 @XmlType(propOrder = {
         "scope", "columnName", "dataType", "typeName", "columnSize", "bufferLength", "decimalDigits", "pseudoColumn"
 })
-public class BestRowIdentifier implements Serializable {
+public class BestRowIdentifier extends AbstractChildValue<Table> {
 
     // -----------------------------------------------------------------------------------------------------------------
     private static final long serialVersionUID = -6733770602373723371L;
@@ -173,6 +173,15 @@ public class BestRowIdentifier implements Serializable {
                + ",decimalDigits=" + decimalDigits
                + ",pseudoColumn=" + pseudoColumn
                + '}';
+    }
+
+    // ----------------------------------------------------------------------------------------------------------- table
+    public Table getTable() {
+        return getParent();
+    }
+
+    void setTable(final Table table) {
+        setParent(table);
     }
 
     // ----------------------------------------------------------------------------------------------------------- scope

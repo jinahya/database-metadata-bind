@@ -1,3 +1,5 @@
+
+
 # Created by https://www.gitignore.io/api/maven
 # Edit at https://www.gitignore.io/?templates=maven
 
@@ -15,9 +17,12 @@ buildNumber.properties
 
 # End of https://www.gitignore.io/api/maven
 
+
 *.iml
 .idea
 !.idea/codeStyles
 
+
 *.log
 *.sh
+

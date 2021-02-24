@@ -147,7 +147,7 @@
     <dependency>
       <groupId>org.apache.derby</groupId>
       <artifactId>derby</artifactId>
-      <version>10.15.2.0</version>
+      <version>10.14.2.0</version> <!-- https://db.apache.org/derby/derby_downloads.html#For+Java+8+and+Higher -->
       <scope>test</scope>
     </dependency>
     <dependency>
