@@ -115,7 +115,7 @@ public class TypeInfo implements Serializable {
     // -------------------------------------------------------------------------
     @Override
     public String toString() {
-        return super.toString() + "{"
+        return super.toString() + '{'
                + "typeName=" + typeName
                + ",dataType=" + dataType
                + ",precision=" + precision
@@ -134,7 +134,7 @@ public class TypeInfo implements Serializable {
                + ",sqlDataType=" + sqlDataType
                + ",sqlDatetimeSub=" + sqlDatetimeSub
                + ",numPrecRadix=" + numPrecRadix
-               + "}";
+               + '}';
     }
 
     // ---------------------------------------------------------------- typeName

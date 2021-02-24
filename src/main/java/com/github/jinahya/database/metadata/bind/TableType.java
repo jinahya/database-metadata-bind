@@ -41,9 +41,9 @@ public class TableType implements Serializable {
     // -------------------------------------------------------------------------
     @Override
     public String toString() {
-        return super.toString() + "{"
+        return super.toString() + '{'
                + "tableType=" + tableType
-               + "}";
+               + '}';
     }
 
     // --------------------------------------------------------------- tableType

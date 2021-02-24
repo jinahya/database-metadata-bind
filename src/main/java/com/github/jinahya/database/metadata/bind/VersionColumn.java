@@ -116,7 +116,7 @@ public class VersionColumn implements Serializable {
     // -------------------------------------------------------------------------
     @Override
     public String toString() {
-        return super.toString() + "{"
+        return super.toString() + '{'
                + "scope=" + scope
                + ",columnName=" + columnName
                + ",dataType=" + dataType
@@ -125,7 +125,7 @@ public class VersionColumn implements Serializable {
                + ",bufferLength=" + bufferLength
                + ",decimalDigits=" + decimalDigits
                + ",pseudoColumn=" + pseudoColumn
-               + "}";
+               + '}';
     }
 
     // ------------------------------------------------------------------- scope

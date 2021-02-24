@@ -44,7 +44,7 @@ public class CrossReference implements Serializable {
     // -----------------------------------------------------------------------------------------------------------------
     @Override
     public String toString() {
-        return super.toString() + "{"
+        return super.toString() + '{'
                + "pktableCat=" + pktableCat
                + ",pktableSchem=" + pktableSchem
                + ",pktableName=" + pktableName
@@ -59,7 +59,7 @@ public class CrossReference implements Serializable {
                + ",fkName=" + fkName
                + ",pkName=" + pkName
                + ",deferrability=" + deferrability
-               + "}";
+               + '}';
     }
 
     // -------------------------------------------------------------- pktableCat

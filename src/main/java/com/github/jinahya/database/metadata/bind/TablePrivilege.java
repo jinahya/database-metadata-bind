@@ -50,7 +50,7 @@ public class TablePrivilege implements Serializable {
     // -------------------------------------------------------------------------
     @Override
     public String toString() {
-        return super.toString() + "{"
+        return super.toString() + '{'
                + "tableCat=" + tableCat
                + ",tableSchem=" + tableSchem
                + ",tableName=" + tableName
@@ -58,7 +58,7 @@ public class TablePrivilege implements Serializable {
                + ",grantee=" + grantee
                + ",privilege=" + privilege
                + ",isGrantable=" + isGrantable
-               + "}";
+               + '}';
     }
 
     // ---------------------------------------------------------------- tableCat

@@ -163,7 +163,7 @@ public class BestRowIdentifier implements Serializable {
     // -----------------------------------------------------------------------------------------------------------------
     @Override
     public String toString() {
-        return super.toString() + "{"
+        return super.toString() + '{'
                + "scope=" + getScope()
                + ",columnName=" + columnName
                + ",dataType=" + dataType
@@ -172,7 +172,7 @@ public class BestRowIdentifier implements Serializable {
                + ",bufferLength=" + bufferLength
                + ",decimalDigits=" + decimalDigits
                + ",pseudoColumn=" + pseudoColumn
-               + "}";
+               + '}';
     }
 
     // ----------------------------------------------------------------------------------------------------------- scope

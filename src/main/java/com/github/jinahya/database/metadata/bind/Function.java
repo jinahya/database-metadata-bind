@@ -50,14 +50,14 @@ public class Function implements Serializable {
     // -------------------------------------------------------------------------
     @Override
     public String toString() {
-        return super.toString() + "{"
+        return super.toString() + '{'
                + "functionCat=" + functionCat
                + ",functionSchem=" + functionSchem
                + ",functionName=" + functionName
                + ",remarks=" + remarks
                + ",functionType=" + functionType
                + ",specificName=" + specificName
-               + "}";
+               + '}';
     }
 
     // ------------------------------------------------------------- functionCat

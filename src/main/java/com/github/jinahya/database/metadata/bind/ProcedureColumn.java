@@ -142,7 +142,7 @@ public class ProcedureColumn implements Serializable {
     // -------------------------------------------------------------------------
     @Override
     public String toString() {
-        return super.toString() + "{"
+        return super.toString() + '{'
                + "procedureCat=" + procedureCat
                + ",procedureSchem=" + procedureSchem
                + ",procedureName=" + procedureName
@@ -163,7 +163,7 @@ public class ProcedureColumn implements Serializable {
                + ",ordinalPosition=" + ordinalPosition
                + ",isNullable=" + isNullable
                + ",specificName=" + specificName
-               + "}";
+               + '}';
     }
 
     // ------------------------------------------------------------ procedureCat

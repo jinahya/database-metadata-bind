@@ -20,12 +20,15 @@ package com.github.jinahya.database.metadata.bind;
  * #L%
  */
 
+import jakarta.validation.constraints.NotBlank;
+
 import javax.xml.bind.annotation.XmlAttribute;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlType;
 import java.io.Serializable;
 import java.sql.DatabaseMetaData;
+import java.util.Objects;
 
 import static java.sql.DatabaseMetaData.attributeNoNulls;
 import static java.sql.DatabaseMetaData.attributeNullable;
@@ -44,7 +47,7 @@ import static java.sql.DatabaseMetaData.attributeNullableUnknown;
 })
 public class Attribute implements Serializable {
 
-    private static final long serialVersionUID = 4555190007114217973L;
+    private static final long serialVersionUID = 5020389308460154799L;
 
     // -----------------------------------------------------------------------------------------------------------------
 
@@ -90,9 +93,18 @@ public class Attribute implements Serializable {
     }
 
     // -----------------------------------------------------------------------------------------------------------------
+
+    /**
+     * Creates a new instance.
+     */
+    public Attribute() {
+        super();
+    }
+
+    // -----------------------------------------------------------------------------------------------------------------
     @Override
     public String toString() {
-        return super.toString() + "{"
+        return super.toString() + '{'
                + "typeCat=" + typeCat
                + ",typeSchem=" + typeSchem
                + ",typeName=" + typeName
@@ -111,7 +123,54 @@ public class Attribute implements Serializable {
                + ",ordinalPosition=" + ordinalPosition
                + ",isNullable=" + isNullable
                + ",sourceDataType=" + sourceDataType
-               + "}";
+               + '}';
+    }
+
+    @Override
+    public boolean equals(final Object obj) {
+        if (this == obj) return true;
+        if (obj == null || getClass() != obj.getClass()) return false;
+        final Attribute that = (Attribute) obj;
+        return dataType == that.dataType
+               && attrSize == that.attrSize
+               && numPrecRadix == that.numPrecRadix
+               && nullable == that.nullable
+               && charOctetLength == that.charOctetLength
+               && ordinalPosition == that.ordinalPosition
+               && Objects.equals(typeCat, that.typeCat)
+               && Objects.equals(typeSchem, that.typeSchem)
+               && Objects.equals(typeName, that.typeName)
+               && Objects.equals(attrName, that.attrName)
+               && Objects.equals(attrTypeName, that.attrTypeName)
+               && Objects.equals(decimalDigits, that.decimalDigits)
+               && Objects.equals(remarks, that.remarks)
+               && Objects.equals(attrDef, that.attrDef)
+               && Objects.equals(sqlDataType, that.sqlDataType)
+               && Objects.equals(sqlDatetimeSub, that.sqlDatetimeSub)
+               && Objects.equals(isNullable, that.isNullable)
+               && Objects.equals(sourceDataType, that.sourceDataType);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(typeCat,
+                            typeSchem,
+                            typeName,
+                            attrName,
+                            dataType,
+                            attrTypeName,
+                            attrSize,
+                            decimalDigits,
+                            numPrecRadix,
+                            nullable,
+                            remarks,
+                            attrDef,
+                            sqlDataType,
+                            sqlDatetimeSub,
+                            charOctetLength,
+                            ordinalPosition,
+                            isNullable,
+                            sourceDataType);
     }
 
     // --------------------------------------------------------------------------------------------------------- typeCat
@@ -286,6 +345,7 @@ public class Attribute implements Serializable {
     private String typeSchem;
 
     @XmlAttribute
+    @NotBlank
     @Bind(label = "TYPE_NAME")
     private String typeName;
 
@@ -327,10 +387,12 @@ public class Attribute implements Serializable {
     private String attrDef;
 
     @XmlElement(nillable = true)
+    @Unused
     @Bind(label = "SQL_DATA_TYPE", unused = true)
     private Integer sqlDataType;
 
     @XmlElement(nillable = true)
+    @Unused
     @Bind(label = "SQL_DATETIME_SUB", unused = true)
     private Integer sqlDatetimeSub;
 

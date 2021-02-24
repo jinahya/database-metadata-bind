@@ -44,7 +44,7 @@ public class PseudoColumn implements Serializable {
     // -------------------------------------------------------------------------
     @Override
     public String toString() {
-        return super.toString() + "{"
+        return super.toString() + '{'
                + "tableCat=" + tableCat
                + ",tableSchem=" + tableSchem
                + ",tableName=" + tableName
@@ -57,7 +57,7 @@ public class PseudoColumn implements Serializable {
                + ",remarks=" + remarks
                + ",charOctetLength=" + charOctetLength
                + ",isNullable=" + isNullable
-               + "}";
+               + '}';
     }
 
     // ---------------------------------------------------------------- tableCat

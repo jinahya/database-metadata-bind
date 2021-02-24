@@ -43,12 +43,12 @@ public class SuperTable implements Serializable {
     // -------------------------------------------------------------------------
     @Override
     public String toString() {
-        return super.toString() + "{"
+        return super.toString() + '{'
                + "tableCat=" + tableCat
                + ",tableSchem=" + tableSchem
                + ",tableName=" + tableName
                + ",supertableName=" + supertableName
-               + "}";
+               + '}';
     }
 
     // ---------------------------------------------------------------- tableCat

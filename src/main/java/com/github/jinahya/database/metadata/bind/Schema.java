@@ -48,10 +48,10 @@ public class Schema implements Serializable {//extends AbstractTableDomain {
     // -------------------------------------------------------------------------
     @Override
     public String toString() {
-        return super.toString() + "{"
+        return super.toString() + '{'
                + "tableCatalog=" + tableCatalog
                + ",tableSchem=" + tableSchem
-               + "}";
+               + '}';
     }
 
     // ------------------------------------------------------------ tableCatalog

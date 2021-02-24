@@ -51,7 +51,7 @@ public class Table implements Serializable {
     // -----------------------------------------------------------------------------------------------------------------
     @Override
     public String toString() {
-        return super.toString() + "{"
+        return super.toString() + '{'
                + "tableCat=" + tableCat
                + ",tableSchem=" + tableSchem
                + ",tableName=" + tableName
@@ -62,7 +62,7 @@ public class Table implements Serializable {
                + ",typeName=" + typeName
                + ",selfReferencingColName=" + selfReferencingColName
                + ",refGeneration=" + refGeneration
-               + "}";
+               + '}';
     }
 
     // -------------------------------------------------------------------------------------------------------- tableCat

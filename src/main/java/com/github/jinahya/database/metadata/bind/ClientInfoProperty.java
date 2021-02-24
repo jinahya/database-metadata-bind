@@ -41,12 +41,12 @@ public class ClientInfoProperty implements Serializable {
     // -----------------------------------------------------------------------------------------------------------------
     @Override
     public String toString() {
-        return super.toString() + "{"
+        return super.toString() + '{'
                + "name=" + name
                + ",maxLen=" + maxLen
                + ",defaultValue=" + defaultValue
                + ",description=" + description
-               + "}";
+               + '}';
     }
 
     // -------------------------------------------------------------------- name

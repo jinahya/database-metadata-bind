@@ -48,14 +48,14 @@ public class Procedure implements Serializable {
     // -------------------------------------------------------------------------
     @Override
     public String toString() {
-        return super.toString() + "{"
+        return super.toString() + '{'
                + "procedureCat=" + procedureCat
                + ",procedureSchem=" + procedureSchem
                + ",procedureName=" + procedureName
                + ",remarks=" + remarks
                + ",procedureType=" + procedureType
                + ",specificName=" + specificName
-               + "}";
+               + '}';
     }
 
     // ------------------------------------------------------------ procedureCat

@@ -184,7 +184,7 @@ public class FunctionColumn implements Serializable {
     // -----------------------------------------------------------------------------------------------------------------
     @Override
     public String toString() {
-        return super.toString() + "{"
+        return super.toString() + '{'
                + "functionCat=" + functionCat
                + ",functionSchem=" + functionSchem
                + ",functionName=" + functionName
@@ -202,7 +202,7 @@ public class FunctionColumn implements Serializable {
                + ",ordinalPosition=" + ordinalPosition
                + ",isNullable=" + isNullable
                + ",specificName=" + specificName
-               + "}";
+               + '}';
     }
 
     // ------------------------------------------------------------- functionCat

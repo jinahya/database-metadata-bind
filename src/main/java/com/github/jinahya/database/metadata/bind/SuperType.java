@@ -43,14 +43,14 @@ public class SuperType implements Serializable {
     // -------------------------------------------------------------------------
     @Override
     public String toString() {
-        return super.toString() + "{"
+        return super.toString() + '{'
                + "typeCat=" + typeCat
                + ",typeSchem=" + typeSchem
                + ",typeName=" + typeName
                + ",supertypeCat=" + supertypeCat
                + ",supertypeSchem=" + supertypeSchem
                + ",supertypeName=" + supertypeName
-               + "}";
+               + '}';
     }
 
     // ----------------------------------------------------------------- typeCat

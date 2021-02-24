@@ -113,7 +113,7 @@ public class Column implements Serializable {
     // -------------------------------------------------------------------------
     @Override
     public String toString() {
-        return super.toString() + "{"
+        return super.toString() + '{'
                + "tableCat=" + tableCat
                + ",tableSchem=" + tableSchem
                + ",tableName=" + tableName
@@ -138,7 +138,7 @@ public class Column implements Serializable {
                + ",sourceDataType=" + sourceDataType
                + ",isAutoincrement=" + isAutoincrement
                + ",isGeneratedcolumn=" + isGeneratedcolumn
-               + "}";
+               + '}';
     }
 
     // ---------------------------------------------------------------- tableCat

@@ -47,7 +47,7 @@ public class UDT implements Serializable {
     // -------------------------------------------------------------------------
     @Override
     public String toString() {
-        return super.toString() + "{"
+        return super.toString() + '{'
                + "typeCat=" + typeCat
                + ",typeSchem=" + typeSchem
                + ",typeName=" + typeName
@@ -55,7 +55,7 @@ public class UDT implements Serializable {
                + ",dataType=" + dataType
                + ",remarks=" + remarks
                + ",baseType=" + baseType
-               + "}";
+               + '}';
     }
 
     // ----------------------------------------------------------------- typeCat

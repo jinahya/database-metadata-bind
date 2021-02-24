@@ -31,12 +31,14 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
+import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import static com.github.jinahya.database.metadata.bind.Invokes.arguments;
@@ -153,13 +155,13 @@ public class MetadataContext {
     // -----------------------------------------------------------------------------------------------------------------
 
     /**
-     * Creates a new instance with given instance of {@link DatabaseMetaData}.
+     * Creates a new instance with specified database meta date.
      *
-     * @param metadata the {@link DatabaseMetaData} instance to hold.
+     * @param databaseMetaData the database meta data to hold.
      */
-    public MetadataContext(final DatabaseMetaData metadata) {
+    public MetadataContext(final DatabaseMetaData databaseMetaData) {
         super();
-        this.databaseMetadata = requireNonNull(metadata, "databaseMetadata is null");
+        this.databaseMetaData = requireNonNull(databaseMetaData, "databaseMetadata is null");
     }
 
     // -----------------------------------------------------------------------------------------------------------------
@@ -253,7 +255,7 @@ public class MetadataContext {
                 }
                 final Object result;
                 try {
-                    result = method.invoke(databaseMetadata, arguments);
+                    result = method.invoke(databaseMetaData, arguments);
                 } catch (final Exception e) { // NoSuchMethod
                     logger.log(SEVERE, format("failed to invoke %s with %s", formatted, Arrays.toString(arguments)), e);
                     continue;
@@ -281,38 +283,34 @@ public class MetadataContext {
     }
 
     /**
-     * Binds all records as given type and add them to specified list.
+     * Binds all records as given type and add them to specified collection.
      *
-     * @param <T>       binding type parameter
-     * @param results   the records to bind
-     * @param klass     the type of instances
-     * @param instances a list to which instances are added
+     * @param <T>        binding type parameter
+     * @param results    the records to bind.
+     * @param type       the type of instances.
+     * @param collection the collection to which bound instances are added
      * @return given list
      * @throws SQLException if a database error occurs.
      */
-    private <T> List<? super T> bind(final ResultSet results, final Class<T> klass, final List<? super T> instances)
+    private <T, C extends Collection<? super T>> C bind(final ResultSet results, final Class<T> type,
+                                                        final C collection)
             throws SQLException {
-        if (results == null) {
-            throw new NullPointerException("results is null");
-        }
-        if (klass == null) {
-            throw new NullPointerException("klass is null");
-        }
-        if (instances == null) {
-            throw new NullPointerException("instances is null");
-        }
+        requireNonNull(results, "results is null");
+        requireNonNull(type, "type is null");
+        requireNonNull(collection, "collection is null");
         while (results.next()) {
             final T instance;
             try {
-                instance = klass.newInstance();
+                instance = type.getConstructor().newInstance();
             } catch (final ReflectiveOperationException roe) {
-                logger.log(SEVERE, format("failed to create new instance of %s", klass), roe);
-                continue;
+                throw new RuntimeException(roe);
             }
-            instances.add(bind(results, klass, instance));
+            collection.add(bind(results, type, instance));
         }
-        return instances;
+        return collection;
     }
+
+    // -----------------------------------------------------------------------------------------------------------------
 
     /**
      * Invokes {@link DatabaseMetaData#getAttributes(java.lang.String, java.lang.String, java.lang.String,
@@ -324,14 +322,17 @@ public class MetadataContext {
      * @param attributeNamePattern the value for {@code attributeNamePattern} parameter.
      * @return a list of attributes.
      * @throws SQLException if a database error occurs.
+     * @see DatabaseMetaData#getAttributes(String, String, String, String)
      */
     public List<Attribute> getAttributes(final String catalog, final String schemaPattern, final String typeNamePattern,
                                          final String attributeNamePattern)
             throws SQLException {
         final List<Attribute> list = new ArrayList<>();
-        try (ResultSet results = databaseMetadata.getAttributes(
+        try (ResultSet results = databaseMetaData.getAttributes(
                 catalog, schemaPattern, typeNamePattern, attributeNamePattern)) {
-            if (results != null) {
+            if (results == null) {
+                logger.log(Level.WARNING, "null results retrieved");
+            } else {
                 bind(results, Attribute.class, list);
             }
         }
@@ -355,8 +356,10 @@ public class MetadataContext {
                                                         final int scope, final boolean nullable)
             throws SQLException {
         final List<BestRowIdentifier> list = new ArrayList<>();
-        try (ResultSet results = databaseMetadata.getBestRowIdentifier(catalog, schema, table, scope, nullable)) {
-            if (results != null) {
+        try (ResultSet results = databaseMetaData.getBestRowIdentifier(catalog, schema, table, scope, nullable)) {
+            if (results == null) {
+                logger.log(Level.WARNING, "null results retrieved");
+            } else {
                 bind(results, BestRowIdentifier.class, list);
             }
         }
@@ -372,7 +375,7 @@ public class MetadataContext {
      */
     public List<Catalog> getCatalogs() throws SQLException {
         final List<Catalog> list = new ArrayList<>();
-        try (ResultSet results = databaseMetadata.getCatalogs()) {
+        try (ResultSet results = databaseMetaData.getCatalogs()) {
             if (results != null) {
                 bind(results, Catalog.class, list);
             }
@@ -389,7 +392,7 @@ public class MetadataContext {
      */
     public List<ClientInfoProperty> getClientInfoProperties() throws SQLException {
         final List<ClientInfoProperty> list = new ArrayList<>();
-        try (ResultSet results = databaseMetadata.getClientInfoProperties()) {
+        try (ResultSet results = databaseMetaData.getClientInfoProperties()) {
             if (results != null) {
                 bind(results, ClientInfoProperty.class, list);
             }
@@ -413,7 +416,7 @@ public class MetadataContext {
                                    final String columnNamePattern)
             throws SQLException {
         final List<Column> list = new ArrayList<>();
-        try (ResultSet results = databaseMetadata.getColumns(
+        try (ResultSet results = databaseMetaData.getColumns(
                 catalog, schemaPattern, tableNamePattern, columnNamePattern)) {
             if (results != null) {
                 bind(results, Column.class, list);
@@ -438,7 +441,7 @@ public class MetadataContext {
                                                      final String columnNamePattern)
             throws SQLException {
         final List<ColumnPrivilege> list = new ArrayList<>();
-        try (ResultSet results = databaseMetadata.getColumnPrivileges(catalog, schema, table, columnNamePattern)) {
+        try (ResultSet results = databaseMetaData.getColumnPrivileges(catalog, schema, table, columnNamePattern)) {
             if (results != null) {
                 bind(results, ColumnPrivilege.class, list);
             }
@@ -464,7 +467,7 @@ public class MetadataContext {
                                                    final String foreignSchema, final String foreignTable)
             throws SQLException {
         final List<CrossReference> list = new ArrayList<>();
-        try (ResultSet results = databaseMetadata.getCrossReference(
+        try (ResultSet results = databaseMetaData.getCrossReference(
                 parentCatalog, parentSchema, parentTable, foreignCatalog, foreignSchema, foreignTable)) {
             if (results != null) {
                 bind(results, CrossReference.class, list);
@@ -488,7 +491,7 @@ public class MetadataContext {
                                                    final String functionNamePattern, final String columnNamePattern)
             throws SQLException {
         final List<FunctionColumn> list = new ArrayList<>();
-        try (ResultSet results = databaseMetadata.getFunctionColumns(
+        try (ResultSet results = databaseMetaData.getFunctionColumns(
                 catalog, schemaPattern, functionNamePattern, columnNamePattern)) {
             if (results != null) {
                 bind(results, FunctionColumn.class, list);
@@ -512,7 +515,7 @@ public class MetadataContext {
                                        final String functionNamePattern)
             throws SQLException {
         final List<Function> list = new ArrayList<>();
-        try (ResultSet results = databaseMetadata.getFunctions(catalog, schemaPattern, functionNamePattern)) {
+        try (ResultSet results = databaseMetaData.getFunctions(catalog, schemaPattern, functionNamePattern)) {
             if (results != null) {
                 bind(results, Function.class, list);
             }
@@ -533,7 +536,7 @@ public class MetadataContext {
     public List<ExportedKey> getExportedKeys(final String catalog, final String schema, final String table)
             throws SQLException {
         final List<ExportedKey> list = new ArrayList<>();
-        try (ResultSet results = databaseMetadata.getExportedKeys(catalog, schema, table)) {
+        try (ResultSet results = databaseMetaData.getExportedKeys(catalog, schema, table)) {
             if (results != null) {
                 bind(results, ExportedKey.class, list);
             }
@@ -554,7 +557,7 @@ public class MetadataContext {
     public List<ImportedKey> getImportedKeys(final String catalog, final String schema, final String table)
             throws SQLException {
         final List<ImportedKey> list = new ArrayList<>();
-        try (ResultSet results = databaseMetadata.getImportedKeys(catalog, schema, table)) {
+        try (ResultSet results = databaseMetaData.getImportedKeys(catalog, schema, table)) {
             if (results != null) {
                 bind(results, ImportedKey.class, list);
             }
@@ -578,7 +581,7 @@ public class MetadataContext {
                                         final boolean unique, final boolean approximate)
             throws SQLException {
         final List<IndexInfo> list = new ArrayList<>();
-        try (ResultSet results = databaseMetadata.getIndexInfo(catalog, schema, table, unique, approximate)) {
+        try (ResultSet results = databaseMetaData.getIndexInfo(catalog, schema, table, unique, approximate)) {
             if (results != null) {
                 bind(results, IndexInfo.class, list);
             }
@@ -599,7 +602,7 @@ public class MetadataContext {
     public List<PrimaryKey> getPrimaryKeys(final String catalog, final String schema, final String table)
             throws SQLException {
         final List<PrimaryKey> list = new ArrayList<>();
-        try (ResultSet results = databaseMetadata.getPrimaryKeys(catalog, schema, table)) {
+        try (ResultSet results = databaseMetaData.getPrimaryKeys(catalog, schema, table)) {
             if (results != null) {
                 bind(results, PrimaryKey.class, list);
             }
@@ -622,7 +625,7 @@ public class MetadataContext {
                                                      final String procedureNamePattern, final String columnNamePattern)
             throws SQLException {
         final List<ProcedureColumn> list = new ArrayList<>();
-        try (ResultSet results = databaseMetadata.getProcedureColumns(
+        try (ResultSet results = databaseMetaData.getProcedureColumns(
                 catalog, schemaPattern, procedureNamePattern, columnNamePattern)) {
             if (results != null) {
                 bind(results, ProcedureColumn.class, list);
@@ -645,7 +648,7 @@ public class MetadataContext {
                                          final String procedureNamePattern)
             throws SQLException {
         final List<Procedure> list = new ArrayList<>();
-        try (ResultSet results = databaseMetadata.getProcedures(catalog, schemaPattern, procedureNamePattern)) {
+        try (ResultSet results = databaseMetaData.getProcedures(catalog, schemaPattern, procedureNamePattern)) {
             if (results != null) {
                 bind(results, Procedure.class, list);
             }
@@ -669,7 +672,7 @@ public class MetadataContext {
                                                final String tableNamePattern, final String columnNamePattern)
             throws SQLException {
         final List<PseudoColumn> list = new ArrayList<>();
-        try (ResultSet results = databaseMetadata.getPseudoColumns(
+        try (ResultSet results = databaseMetaData.getPseudoColumns(
                 catalog, schemaPattern, tableNamePattern, columnNamePattern)) {
             if (results != null) {
                 bind(results, PseudoColumn.class, list);
@@ -686,7 +689,7 @@ public class MetadataContext {
      */
     public List<SchemaName> getSchemas() throws SQLException {
         final List<SchemaName> list = new ArrayList<>();
-        try (ResultSet results = databaseMetadata.getSchemas()) {
+        try (ResultSet results = databaseMetaData.getSchemas()) {
             if (results != null) {
                 bind(results, SchemaName.class, list);
             }
@@ -706,7 +709,7 @@ public class MetadataContext {
     public List<Schema> getSchemas(final String catalog, final String schemaPattern)
             throws SQLException {
         final List<Schema> list = new ArrayList<>();
-        try (ResultSet results = databaseMetadata.getSchemas(catalog, schemaPattern)) {
+        try (ResultSet results = databaseMetaData.getSchemas(catalog, schemaPattern)) {
             if (results != null) {
                 bind(results, Schema.class, list);
             }
@@ -729,7 +732,7 @@ public class MetadataContext {
                                  final String[] types)
             throws SQLException {
         final List<Table> list = new ArrayList<>();
-        try (ResultSet results = databaseMetadata.getTables(catalog, schemaPattern, tableNamePattern, types)) {
+        try (ResultSet results = databaseMetaData.getTables(catalog, schemaPattern, tableNamePattern, types)) {
             if (results != null) {
                 bind(results, Table.class, list);
             }
@@ -751,7 +754,7 @@ public class MetadataContext {
                                                    final String tableNamePattern)
             throws SQLException {
         final List<TablePrivilege> list = new ArrayList<>();
-        try (ResultSet results = databaseMetadata.getTablePrivileges(catalog, schemaPattern, tableNamePattern)) {
+        try (ResultSet results = databaseMetaData.getTablePrivileges(catalog, schemaPattern, tableNamePattern)) {
             if (results != null) {
                 bind(results, TablePrivilege.class, list);
             }
@@ -767,7 +770,7 @@ public class MetadataContext {
      */
     public List<TableType> getTableTypes() throws SQLException {
         final List<TableType> list = new ArrayList<>();
-        try (ResultSet results = databaseMetadata.getTableTypes()) {
+        try (ResultSet results = databaseMetaData.getTableTypes()) {
             if (results != null) {
                 bind(results, TableType.class, list);
             }
@@ -783,7 +786,7 @@ public class MetadataContext {
      */
     public List<TypeInfo> getTypeInfo() throws SQLException {
         final List<TypeInfo> list = new ArrayList<>();
-        try (ResultSet results = databaseMetadata.getTypeInfo()) {
+        try (ResultSet results = databaseMetaData.getTypeInfo()) {
             if (results != null) {
                 bind(results, TypeInfo.class, list);
             }
@@ -806,7 +809,7 @@ public class MetadataContext {
                              final String typeNamePattern, final int[] types)
             throws SQLException {
         final List<UDT> list = new ArrayList<>();
-        try (ResultSet results = databaseMetadata.getUDTs(catalog, schemaPattern, typeNamePattern, types)) {
+        try (ResultSet results = databaseMetaData.getUDTs(catalog, schemaPattern, typeNamePattern, types)) {
             if (results != null) {
                 bind(results, UDT.class, list);
             }
@@ -827,7 +830,7 @@ public class MetadataContext {
     public List<VersionColumn> getVersionColumns(final String catalog, final String schema, final String table)
             throws SQLException {
         final List<VersionColumn> list = new ArrayList<>();
-        try (ResultSet results = databaseMetadata.getVersionColumns(catalog, schema, table)) {
+        try (ResultSet results = databaseMetaData.getVersionColumns(catalog, schema, table)) {
             if (results != null) {
                 bind(results, VersionColumn.class, list);
             }
@@ -838,7 +841,7 @@ public class MetadataContext {
     // ------------------------------------------------------------------------------------------------ databaseMetadata
     @Deprecated
     private DatabaseMetaData getMetaData() {
-        return databaseMetadata;
+        return databaseMetaData;
     }
 
     // ------------------------------------------------------------------------------------------------- suppressedPaths
@@ -915,7 +918,7 @@ public class MetadataContext {
     }
 
     // -----------------------------------------------------------------------------------------------------------------
-    private final DatabaseMetaData databaseMetadata;
+    private final DatabaseMetaData databaseMetaData;
 
     // suppression paths
     private Set<String> suppressedPaths;

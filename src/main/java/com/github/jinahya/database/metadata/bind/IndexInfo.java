@@ -45,7 +45,7 @@ public class IndexInfo implements Serializable {
     // -------------------------------------------------------------------------
     @Override
     public String toString() {
-        return super.toString() + "{"
+        return super.toString() + '{'
                + "tableCat=" + tableCat
                + ",tableSchem=" + tableSchem
                + ",tableName=" + tableName
@@ -59,7 +59,7 @@ public class IndexInfo implements Serializable {
                + ",cardinality=" + cardinality
                + ",pages=" + pages
                + ",filterCondition=" + filterCondition
-               + "}";
+               + '}';
     }
 
     // ---------------------------------------------------------------- tableCat

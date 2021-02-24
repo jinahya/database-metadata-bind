@@ -38,7 +38,7 @@ abstract class TableKey implements Serializable {
     // -----------------------------------------------------------------------------------------------------------------
     @Override
     public String toString() {
-        return super.toString() + "{"
+        return super.toString() + '{'
                + "pktableCat=" + pktableCat
                + ",pktableSchem=" + pktableSchem
                + ",pktableName=" + pktableName
@@ -53,7 +53,7 @@ abstract class TableKey implements Serializable {
                + ",fkName=" + fkName
                + ",pkName=" + pkName
                + ",deferrability=" + deferrability
-               + "}";
+               + '}';
     }
 
     // ------------------------------------------------------------------------------------------------------ pktableCat
