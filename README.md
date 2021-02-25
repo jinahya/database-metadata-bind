@@ -9,36 +9,21 @@ A library binding various information from [DatabaseMetaData](http://docs.oracle
 
 ## Usage
 
-### API Binding
-
 ```java
-// prepare jdbc information
+// create a context from a connection
 final Connection connection = connect();
-final DatabaseMetaData metadata = connection.getMetaData();
+final Context context = Context.newInstance(connection);
 
-// create context, and add suppressions if required
-final MetadataContext context = new MetadataContext(metadata);
-context.suppress("schema/functions", "table/pseudoColumns");
-
-// bind various informations
+// invoke methods
 final List<Catalog> catalogs = context.getCatalogs();
 final List<Schema> schemas = context.getSchemas("", null);
 final List<Table> tables = context.getTables(null, null, null); // list all tables
 final List<PrimaryKey> primaryKeys
-    = context.getPrimaryKeys("PUBLIC", "SYSTEM_LOBS", "BLOCKS");
+        = context.getPrimaryKeys("PUBLIC", "SYSTEM_LOBS", "BLOCKS");
+
+// bind all
+final Metadata metadata = Metadata.newInstance(context);
 ```
-
-### XML Binding
-
-Almost all classes are annotated with `@XmlRootElement`.
-
-```java
-final UDT udt;
-final JAXBContext context = JAXBContext.newInstance(UDT.class);
-final Marshaller marshaller = context.createMarshaller();
-marshaller.mashal(udt, ...);
-```
-
 ## Testing
 
 ### Memory
@@ -48,18 +33,20 @@ See `target/memory.<name>.metadata.xml` files.
 
 ### Container
 
+TODO
+
 ### External
 
 Tests against existing databases.
 
 ```sh
-$ mvn -Pexternal-<server> \
-      -Dclient="x.y.z" \
+$ mvn -Pfailsafe,external-<server> \
+      -Dversion.<client>="x.y.z" \
       -Durl="jdbc:...://..." \
       -Duser="some" \
       -Dpassword="some" \
-      -Dtest=ExternalTest \
-      test
+      -Dit.test=ExternalIT \
+      verify
 $ cat target/external.xml
 ```
 
@@ -72,26 +59,42 @@ name      |value                            |notes
 `url`     |connection url                   |The first argument of [DriverManager#getConnection](https://goo.gl/9q4zW7)
 `user`    |username                         |The second argument of [DriverManager#getConnection](https://goo.gl/9q4zW7)
 `password`|password                         |The third argument of [DriverManager#getConnection](https://goo.gl/9q4zW7)
-`paths`   |comma-separated suppression paths|optional
 
 #### Servers, Clients and URLs
 
-database                                                 |`server`    |`client` is the version of                           |`url` prefix            
----------------------------------------------------------|------------|-----------------------------------------------------|------------------------
-[MySQL](https://www.mysql.com/)                          |`mysql`     |[`mysql:mysql-connector-java`](https://goo.gl/BxuJ5a)          |`jdbc:mysql://...`      
-[MariaDB](https://mariadb.org/)                          |`mariadb`   |[`org.mariadb.jdbc:mariadb-java-client`](https://goo.gl/6yqVxq)|`jdbc:mariadb://...`    
-[PostgreSQL](https://www.postgresql.org/)                |`postgresql`|[`org.postgresql:postgresql`](https://goo.gl/b6s3u5)|`jdbc:postgresql://...`    
-[SQL Server](https://www.microsoft.com/en-us/sql-server/)|`sqlserver` |[`com.microsoft.sqlserver:mssql-jdbc`](https://goo.gl/cpK94Q)|`jdbc:sqlserver://...`  
-[Oracle](https://www.oracle.com/database/index.html)     |`oracle-ojdbc8`|[`com.oracle.database.jdbc:ojdbc8`](https://search.maven.org/search?q=a:ojdbc8)              |`jdbc:oracle:thin://...`
-[Oracle](https://www.oracle.com/database/index.html)     |`oracle-ojdbc10`|[`com.oracle.database.jdbc:ojdbc10`](https://search.maven.org/search?q=a:ojdbc10)              |`jdbc:oracle:thin://...`
-[Oracle](https://www.oracle.com/database/index.html)     |`oracle-ojdbc11`|[`com.oracle.database.jdbc:ojdbc11`](https://search.maven.org/search?q=a:ojdbc11)              |`jdbc:oracle:thin://...`
+database  |`server`        |`<client>` is the version of                  
+----------|----------------|----------------------------------------------
+MariaDB   |`mariadb`       |[`mariadb-java-client`][mariadb-java-client]  
+MySQL     |`mysql`         |[`mysql-connector-java`][mysql-connector-java]
+Oracle    |`oracle-ojdbc6` |[`ojdbc6`][ojdbc6]                            
+Oracle    |`oracle-ojdbc8` |[`ojdbc8`][ojdbc8]                            
+Oracle    |`oracle-ojdbc10`|[`ojdbc10`][ojdbc10]                          
+Oracle    |`oracle-ojdbc11`|[`ojdbc11`][ojdbc11]                          
+PostgreSQL|`postgresql`    |[`postgresql`][postgresql]                    
+SQL Server|`sqlserver`     |[`mssql-jdbc`][mysql-jdbc]                    
 
 e.g.
 ```shell
-$ mvn -Pexternal-oracle
+$ mvn -Pexternal-oracle-ojdbc11 \
+      -Dversion.ojdbc11=21.1.0.0 \
+      -Durl="jdbc:oracle:thin:@//host:port/service" \
+      -Duser=scott \
+      -Dpassword=tiger \
+      -Dit.test=ExternalIT \
+      verify
+$
 ```
 
 ----
 
 [![Domate via Paypal](https://img.shields.io/badge/donate-paypal-blue.svg)](https://www.paypal.com/cgi-bin/webscr?cmd=_cart&business=A954LDFBW4B9N&lc=KR&item_name=GitHub&amount=5%2e00&currency_code=USD&button_subtype=products&add=1&bn=PP%2dShopCartBF%3adonate%2dpaypal%2dblue%2epng%3aNonHosted)
+
+[mariadb-java-client]: https://search.maven.org/artifact/org.mariadb.jdbc/mariadb-java-client
+[mysql-connector-java]: https://search.maven.org/artifact/mysql/mysql-connector-java
+[ojdbc6]: https://search.maven.org/artifact/com.oracle.database.jdbc/ojdbc6
+[ojdbc8]: https://search.maven.org/artifact/com.oracle.database.jdbc/ojdbc8
+[ojdbc10]: https://search.maven.org/artifact/com.oracle.database.jdbc/ojdbc10
+[ojdbc11]: https://search.maven.org/artifact/com.oracle.database.jdbc/ojdbc11
+[postgresql]: https://search.maven.org/artifact/org.postgresql/postgresql
+[mysql-jdbc]: https://search.maven.org/artifact/com.microsoft.sqlserver/mssql-jdbc 
 

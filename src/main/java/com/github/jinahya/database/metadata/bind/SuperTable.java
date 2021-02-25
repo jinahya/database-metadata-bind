@@ -35,7 +35,7 @@ public class SuperTable extends TableChild {
 
     private static final long serialVersionUID = -302335602056528563L;
 
-    // -------------------------------------------------------------------------
+    // -----------------------------------------------------------------------------------------------------------------
     @Override
     public String toString() {
         return super.toString() + '{'
@@ -46,7 +46,7 @@ public class SuperTable extends TableChild {
                + '}';
     }
 
-    // ---------------------------------------------------------------- tableCat
+    // -------------------------------------------------------------------------------------------------------- tableCat
     public String getTableCat() {
         return tableCat;
     }
@@ -55,7 +55,7 @@ public class SuperTable extends TableChild {
         this.tableCat = tableCat;
     }
 
-    // -------------------------------------------------------------- tableSchem
+    // ------------------------------------------------------------------------------------------------------ tableSchem
     public String getTableSchem() {
         return tableSchem;
     }
@@ -64,7 +64,7 @@ public class SuperTable extends TableChild {
         this.tableSchem = tableSchem;
     }
 
-    // --------------------------------------------------------------- tableName
+    // ------------------------------------------------------------------------------------------------------- tableName
     public String getTableName() {
         return tableName;
     }
@@ -73,7 +73,7 @@ public class SuperTable extends TableChild {
         this.tableName = tableName;
     }
 
-    // ---------------------------------------------------------- supertableName
+    // -------------------------------------------------------------------------------------------------- supertableName
     public String getSupertableName() {
         return supertableName;
     }
@@ -82,7 +82,7 @@ public class SuperTable extends TableChild {
         this.supertableName = supertableName;
     }
 
-    // -------------------------------------------------------------------------
+    // -----------------------------------------------------------------------------------------------------------------
     @XmlAttribute
     @MayBeNull
     @Label("TABLE_CAT")
@@ -100,7 +100,7 @@ public class SuperTable extends TableChild {
     @Bind(label = "TABLE_NAME")
     private String tableName;
 
-    // -------------------------------------------------------------------------
+    // -----------------------------------------------------------------------------------------------------------------
     @XmlElement
     @Label("SUPERTABLE_NAME")
     @Bind(label = "SUPERTABLE_NAME")
