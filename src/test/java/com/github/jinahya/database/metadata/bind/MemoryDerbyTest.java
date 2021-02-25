@@ -21,19 +21,15 @@ package com.github.jinahya.database.metadata.bind;
  */
 
 import lombok.extern.slf4j.Slf4j;
-import org.testng.annotations.AfterClass;
-import org.testng.annotations.BeforeClass;
-import org.testng.annotations.Test;
+import org.junit.jupiter.api.AfterAll;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.Test;
 
 import java.sql.Connection;
 import java.sql.DatabaseMetaData;
-import java.sql.DriverManager;
 import java.sql.SQLException;
-import java.util.List;
 import java.util.Properties;
 
-import static com.github.jinahya.database.metadata.bind.JaxbTests.store;
-import static com.github.jinahya.database.metadata.bind.MetadataContext.getCatalogs;
 import static java.sql.DriverManager.getConnection;
 import static org.testng.Assert.fail;
 
@@ -63,8 +59,8 @@ public class MemoryDerbyTest extends MemoryTest {
     private static final String CONNECTION_URL = "jdbc:derby:memory:test";
 
     // -----------------------------------------------------------------------------------------------------------------
-    @BeforeClass
-    private static void beforeClass() throws SQLException {
+    @BeforeAll
+    static void create() throws SQLException {
         final Properties properties = new Properties();
         properties.put("create", "true");
         final Connection connection = getConnection(CONNECTION_URL, properties);
@@ -75,13 +71,12 @@ public class MemoryDerbyTest extends MemoryTest {
         }
     }
 
-    @AfterClass
-    private static void afterClass() throws SQLException {
+    @AfterAll
+    static void shutdown() {
         final Properties properties = new Properties();
         properties.put("shutdown", "true");
         try {
-            final Connection connection
-                    = getConnection(CONNECTION_URL, properties);
+            final Connection connection = getConnection(CONNECTION_URL, properties);
             try {
             } finally {
                 connection.close();
@@ -95,46 +90,45 @@ public class MemoryDerbyTest extends MemoryTest {
     }
 
     // -----------------------------------------------------------------------------------------------------------------
-    @Test(enabled = false)
-    public void test() throws Exception {
+    @Test
+    void writeToFileXml() throws Exception {
         try (Connection connection = getConnection(CONNECTION_URL)) {
-            final DatabaseMetaData metadata = connection.getMetaData();
-            final MetadataContext context = new MetadataContext(metadata);
-            context.addSuppressionPaths(
-                    "column/charOctetLength",
-                    "column/numPrecRadix",
-                    "functionColumn/radix",
-                    "functionColumn/remarks", // null value
-                    "functionColumn/scale",
-                    "indexInfo/cardinality",
-                    "indexInfo/pages",
-                    "procedureColumn/radix",
-                    "procedureColumn/remarks",
-                    "typeInfo/autoIncrement", // null value
-                    "typeInfo/maximumScale", // null value
-                    "typeInfo/minimumScale", // null value
-                    "typeInfo/numPrecRadix", // null value
-                    "typeInfo/precision", // null value
-                    "typeInfo/unsignedAttribute" // null value
-            );
-            final List<Catalog> catalogs = getCatalogs(context, true);
-            store(Catalog.class, catalogs, "memory.derby.catalogs");
-            store(ClientInfoProperty.class, context.getClientInfoProperties(), "memory.derby.clientInfoProperties");
-            store(TableType.class, context.getTableTypes(), "memory.derby.tableTypes");
-            store(TypeInfo.class, context.getTypeInfo(), "memory.derby.typeInfo");
+            final DatabaseMetaData database = connection.getMetaData();
+            final MetadataContext context = new MetadataContext(database);
+            final Metadata metadata = Metadata.newInstance(context);
+            JaxbTests.writeToFile(Metadata.class, metadata, "memory.derby.metadata");
         }
     }
 
-    @Test(enabled = false)
-    public void pattern() throws Exception {
+    @Test
+    void getCatalogs__() throws Exception {
         try (Connection connection = getConnection(CONNECTION_URL)) {
-            final DatabaseMetaData metadata = connection.getMetaData();
-            final MetadataContext context = new MetadataContext(metadata);
-            for (final Table table : context.getTables(null, null, "SYS%", null)) {
-                log.debug("table.name: {}", table.getTableName());
+            final DatabaseMetaData database = connection.getMetaData();
+            final MetadataContext context = new MetadataContext(database);
+            for (final Catalog catalog : context.getCatalogs()) {
+                log.debug("catalog: {}", catalog);
             }
-            for (final Table table : context.getTables(null, null, "%", null)) {
-                log.debug("table.name: {}", table.getTableName());
+        }
+    }
+
+    @Test
+    void getSchemas__() throws Exception {
+        try (Connection connection = getConnection(CONNECTION_URL)) {
+            final DatabaseMetaData database = connection.getMetaData();
+            final MetadataContext context = new MetadataContext(database);
+            for (final Schema schema : context.getSchemas(null, null)) {
+                log.debug("schema: {}", schema);
+            }
+        }
+    }
+
+    @Test
+    void getTables__() throws Exception {
+        try (Connection connection = getConnection(CONNECTION_URL)) {
+            final DatabaseMetaData database = connection.getMetaData();
+            final MetadataContext context = new MetadataContext(database);
+            for (final Table table : context.getTables(null, null, null, null)) {
+                log.debug("table: {}", table);
             }
         }
     }

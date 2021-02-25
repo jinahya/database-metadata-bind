@@ -20,18 +20,13 @@ package com.github.jinahya.database.metadata.bind;
  * #L%
  */
 
+import lombok.extern.slf4j.Slf4j;
+import org.junit.jupiter.api.Test;
 import org.slf4j.Logger;
-import org.testng.annotations.AfterClass;
-import org.testng.annotations.BeforeClass;
-import org.testng.annotations.Test;
 
 import java.sql.Connection;
 import java.sql.DatabaseMetaData;
-import java.sql.SQLException;
-import java.util.List;
 
-import static com.github.jinahya.database.metadata.bind.JaxbTests.store;
-import static com.github.jinahya.database.metadata.bind.MetadataContext.getCatalogs;
 import static java.lang.invoke.MethodHandles.lookup;
 import static java.sql.DriverManager.getConnection;
 import static org.slf4j.LoggerFactory.getLogger;
@@ -39,6 +34,7 @@ import static org.slf4j.LoggerFactory.getLogger;
 /**
  * @author Jin Kwon &lt;jinahya_at_gmail.com&gt;
  */
+@Slf4j
 public class MemoryH2Test extends MemoryTest {
 
     private static final Logger logger = getLogger(lookup().lookupClass());
@@ -59,31 +55,46 @@ public class MemoryH2Test extends MemoryTest {
     private static final String CONNECTION_URL = "jdbc:h2:mem:test"; //;DB_CLOSE_DELAY=-1";
 
     // -----------------------------------------------------------------------------------------------------------------
-    @BeforeClass
-    private static void beforeClass() throws SQLException {
-    }
-
-    @AfterClass
-    private static void afterClass() throws SQLException {
-    }
-
-    // -----------------------------------------------------------------------------------------------------------------
-    @Test(enabled = true)
-    public void marshalCategories() throws Exception {
+    @Test
+    void writeToFileXml() throws Exception {
         try (Connection connection = getConnection(CONNECTION_URL)) {
-            final DatabaseMetaData metadata = connection.getMetaData();
-            final MetadataContext context = new MetadataContext(metadata);
-            context.addSuppressionPaths(
-                    "column/isGeneratedcolumn",
-                    "schema/functions",
-                    "table/pseudoColumns",
-                    "typeInfo/numPrecRadix"
-            );
-            final List<Catalog> catalogs = getCatalogs(context, true);
-            store(Catalog.class, catalogs, "memory.h2.catalogs");
-            store(ClientInfoProperty.class, context.getClientInfoProperties(), "memory.h2.clientInfoProperties");
-            store(TableType.class, context.getTableTypes(), "memory.h2.tableTypes");
-            store(TypeInfo.class, context.getTypeInfo(), "memory.h2.typeInfo");
+            final DatabaseMetaData database = connection.getMetaData();
+            final MetadataContext context = new MetadataContext(database);
+            final Metadata metadata = Metadata.newInstance(context);
+            JaxbTests.writeToFile(Metadata.class, metadata, "memory.h2.metadata");
+        }
+    }
+
+    @Test
+    void getCatalogs__() throws Exception {
+        try (Connection connection = getConnection(CONNECTION_URL)) {
+            final DatabaseMetaData database = connection.getMetaData();
+            final MetadataContext context = new MetadataContext(database);
+            for (final Catalog catalog : context.getCatalogs()) {
+                log.debug("catalog: {}", catalog);
+            }
+        }
+    }
+
+    @Test
+    void getSchemas__() throws Exception {
+        try (Connection connection = getConnection(CONNECTION_URL)) {
+            final DatabaseMetaData database = connection.getMetaData();
+            final MetadataContext context = new MetadataContext(database);
+            for (final Schema schema : context.getSchemas(null, null)) {
+                log.debug("schema: {}", schema);
+            }
+        }
+    }
+
+    @Test
+    void getTables__() throws Exception {
+        try (Connection connection = getConnection(CONNECTION_URL)) {
+            final DatabaseMetaData database = connection.getMetaData();
+            final MetadataContext context = new MetadataContext(database);
+            for (final Table table : context.getTables(null, null, null, null)) {
+                log.debug("table: {}", table);
+            }
         }
     }
 }

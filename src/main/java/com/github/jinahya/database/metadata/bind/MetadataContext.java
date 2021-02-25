@@ -106,11 +106,6 @@ public class MetadataContext {
         return schemas;
     }
 
-    public static List<Schema> getSchemas(@NonNull final MetadataContext context, final String catalog)
-            throws SQLException {
-        return getSchemas(context, catalog, false);
-    }
-
     /**
      * Invokes {@link #getCatalogs()} on given context.
      *
@@ -627,6 +622,7 @@ public class MetadataContext {
     }
 
     // ----------------------------------------------------------------------------------------------- getCrossReference
+
     /**
      * Invokes {@link DatabaseMetaData#getCrossReference(java.lang.String, java.lang.String, java.lang.String,
      * java.lang.String, java.lang.String, java.lang.String)} with given arguments and returns bound information.
@@ -1061,6 +1057,8 @@ public class MetadataContext {
             if (results != null) {
                 bind(results, PseudoColumn.class, collection);
             }
+        } catch (final SQLFeatureNotSupportedException sqlfnse) {
+            logger.log(Level.WARNING, "sql feature not supported", sqlfnse);
         }
         return collection;
     }
@@ -1276,10 +1274,14 @@ public class MetadataContext {
      */
     public <T extends Collection<? super TableType>> T getTableTypes(final T collection) throws SQLException {
         requireNonNull(collection, "collection is null");
-        try (ResultSet results = databaseMetaData.getTableTypes()) {
-            if (results != null) {
-                bind(results, TableType.class, collection);
+        try {
+            try (ResultSet results = databaseMetaData.getTableTypes()) {
+                if (results != null) {
+                    bind(results, TableType.class, collection);
+                }
             }
+        } catch (final SQLFeatureNotSupportedException sqlfnse) {
+            logger.log(Level.WARNING, "sql feature not supported", sqlfnse);
         }
         return collection;
     }

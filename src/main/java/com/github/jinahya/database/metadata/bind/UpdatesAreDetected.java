@@ -15,12 +15,12 @@ import static java.util.Objects.requireNonNull;
  * @author Jin Kwon &lt;onacit_at_gmail.com&gt;
  */
 @XmlRootElement
-public class DeletesAreDetected extends AreDetected {
+public class UpdatesAreDetected extends AreDetected {
 
-    static List<DeletesAreDetected> list(final DatabaseMetaData databaseMetaData) throws SQLException {
+    static List<UpdatesAreDetected> list(final DatabaseMetaData databaseMetaData) throws SQLException {
         requireNonNull(databaseMetaData, "databaseMetaData is null");
-        final List<DeletesAreDetected> list = list(DeletesAreDetected.class);
-        for (final DeletesAreDetected v : list) {
+        final List<UpdatesAreDetected> list = list(UpdatesAreDetected.class);
+        for (final UpdatesAreDetected v : list) {
             try {
                 v.value = databaseMetaData.insertsAreDetected(v.type);
             } catch (final SQLFeatureNotSupportedException sqlfnse) {

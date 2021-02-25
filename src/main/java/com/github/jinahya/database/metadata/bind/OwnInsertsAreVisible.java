@@ -10,19 +10,19 @@ import java.util.logging.Level;
 import static java.util.Objects.requireNonNull;
 
 /**
- * A class for binding result of {@link DatabaseMetaData#insertsAreDetected(int)} method.
+ * A class for binding result of {@link DatabaseMetaData#ownInsertsAreVisible(int)} method.
  *
  * @author Jin Kwon &lt;onacit_at_gmail.com&gt;
  */
 @XmlRootElement
-public class DeletesAreDetected extends AreDetected {
+public class OwnInsertsAreVisible extends AreVisible {
 
-    static List<DeletesAreDetected> list(final DatabaseMetaData databaseMetaData) throws SQLException {
+    static List<OwnInsertsAreVisible> list(final DatabaseMetaData databaseMetaData) throws SQLException {
         requireNonNull(databaseMetaData, "databaseMetaData is null");
-        final List<DeletesAreDetected> list = list(DeletesAreDetected.class);
-        for (final DeletesAreDetected v : list) {
+        final List<OwnInsertsAreVisible> list = list(OwnInsertsAreVisible.class);
+        for (final OwnInsertsAreVisible v : list) {
             try {
-                v.value = databaseMetaData.insertsAreDetected(v.type);
+                v.value = databaseMetaData.ownDeletesAreVisible(v.type);
             } catch (final SQLFeatureNotSupportedException sqlfnse) {
                 logger.log(Level.WARNING, "sql feature not supported", sqlfnse);
             }

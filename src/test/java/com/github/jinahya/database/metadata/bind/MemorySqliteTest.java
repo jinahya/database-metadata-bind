@@ -20,27 +20,24 @@ package com.github.jinahya.database.metadata.bind;
  * #L%
  */
 
+import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.Test;
-import org.slf4j.Logger;
 
 import java.sql.Connection;
 import java.sql.DatabaseMetaData;
 
 import static com.github.jinahya.database.metadata.bind.JaxbTests.store;
-import static java.lang.invoke.MethodHandles.lookup;
 import static java.sql.DriverManager.getConnection;
-import static org.slf4j.LoggerFactory.getLogger;
 
 /**
  * Test for SQLite.
  *
  * @author Jin Kwon &lt;jinahya_at_gmail.com&gt;
  */
+@Slf4j
 class MemorySqliteTest extends MemoryTest {
 
-    private static final Logger logger = getLogger(lookup().lookupClass());
-
-    // -------------------------------------------------------------------------
+    // -----------------------------------------------------------------------------------------------------------------
     private static final String CONNECTION_URL = "jdbc:sqlite::memory:";
 
     // -----------------------------------------------------------------------------------------------------------------
@@ -51,7 +48,39 @@ class MemorySqliteTest extends MemoryTest {
             final MetadataContext context = new MetadataContext(database);
             final Metadata metadata = Metadata.newInstance(context);
             JaxbTests.writeToFile(Metadata.class, metadata, "memory.sqlite.metadata");
-            store(TypeInfo.class, context.getTypeInfo(), "memory.sqlite.typeInfo");
+        }
+    }
+
+    @Test
+    void getCatalogs__() throws Exception {
+        try (Connection connection = getConnection(CONNECTION_URL)) {
+            final DatabaseMetaData database = connection.getMetaData();
+            final MetadataContext context = new MetadataContext(database);
+            for (final Catalog catalog : context.getCatalogs()) {
+                log.debug("catalog: {}", catalog);
+            }
+        }
+    }
+
+    @Test
+    void getSchemas__() throws Exception {
+        try (Connection connection = getConnection(CONNECTION_URL)) {
+            final DatabaseMetaData database = connection.getMetaData();
+            final MetadataContext context = new MetadataContext(database);
+            for (final Schema schema : context.getSchemas(null, null)) {
+                log.debug("schema: {}", schema);
+            }
+        }
+    }
+
+    @Test
+    void getTables__() throws Exception {
+        try (Connection connection = getConnection(CONNECTION_URL)) {
+            final DatabaseMetaData database = connection.getMetaData();
+            final MetadataContext context = new MetadataContext(database);
+            for (final Table table : context.getTables(null, null, null, null)) {
+                log.debug("table: {}", table);
+            }
         }
     }
 }
