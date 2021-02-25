@@ -1,34 +1,36 @@
-database-metadata-bind
-====================
+# database-metadata-bind
+
 [![Java CI with Maven](https://github.com/jinahya/database-metadata-bind/actions/workflows/maven.yml/badge.svg)](https://github.com/jinahya/database-metadata-bind/actions/workflows/maven.yml)
 [![Maven Central](https://img.shields.io/maven-central/v/com.github.jinahya/database-metadata-bind)](https://search.maven.org/artifact/com.github.jinahya/database-metadata-bind)
 [![javadoc](https://javadoc.io/badge2/com.github.jinahya/database-metadata-bind/javadoc.svg)](https://javadoc.io/doc/com.github.jinahya/database-metadata-bind)
 
-A library binding various information from [DatabaseMetaData](http://docs.oracle.com/javase/8/docs/api/java/sql/DatabaseMetaData.html).
+A library for binding various information
+from [DatabaseMetaData](http://docs.oracle.com/javase/8/docs/api/java/sql/DatabaseMetaData.html).
 
 ## Usage
 
 ```java
 // create a context from a connection
-final Connection connection = connect();
-final Context context = Context.newInstance(connection);
+final Connection connection=connect();
+final Context context=Context.newInstance(connection);
 
 // invoke methods
-final List<Catalog> catalogs = context.getCatalogs();
-final List<Schema> schemas = context.getSchemas("", null);
-final List<Table> tables = context.getTables(null, null, null); // list all tables
-final List<PrimaryKey> primaryKeys = context.getPrimaryKeys("PUBLIC", "SYSTEM_LOBS", "BLOCKS");
+final List<Catalog> catalogs=context.getCatalogs();
+final List<Schema> schemas=context.getSchemas("",null);
+final List<Table> tables=context.getTables(null,null,null); // list all tables
+final List<PrimaryKey> primaryKeys=context.getPrimaryKeys("PUBLIC","SYSTEM_LOBS","BLOCKS");
 
 // bind all
-final Metadata metadata = Metadata.newInstance(context);
+final Metadata metadata=Metadata.newInstance(context);
 ```
 
 ## Testing
 
 ### Memory
 
-Test cases for in-memory databases such as [Derby](https://db.apache.org/derby/), [H2](http://www.h2database.com/html/main.html), [HSQLDB](http://hsqldb.org/) and [SQLite](https://www.sqlite.org/) are prepared.
-See `target/memory.<name>.metadata.xml` files.
+Test cases for in-memory databases such as [Derby](https://db.apache.org/derby/)
+, [H2](http://www.h2database.com/html/main.html), [HSQLDB](http://hsqldb.org/) and [SQLite](https://www.sqlite.org/) are
+prepared. See `target/memory.<name>.metadata.xml` files.
 
 ### Container
 
@@ -61,18 +63,19 @@ name      |value                            |notes
 
 #### Servers, Clients and URLs
 
-database  |`<server>`      |`<client>` is the version of                  
+database  |`<server>`      |`<client>` is the version of
 ----------|----------------|----------------------------------------------
-MariaDB   |`mariadb`       |[`mariadb-java-client`][mariadb-java-client]  
+MariaDB   |`mariadb`       |[`mariadb-java-client`][mariadb-java-client]
 MySQL     |`mysql`         |[`mysql-connector-java`][mysql-connector-java]
-Oracle    |`oracle-ojdbc6` |[`ojdbc6`][ojdbc6]                            
-Oracle    |`oracle-ojdbc8` |[`ojdbc8`][ojdbc8]                            
-Oracle    |`oracle-ojdbc10`|[`ojdbc10`][ojdbc10]                          
-Oracle    |`oracle-ojdbc11`|[`ojdbc11`][ojdbc11]                          
-PostgreSQL|`postgresql`    |[`postgresql`][postgresql]                    
-SQL Server|`sqlserver`     |[`mssql-jdbc`][mysql-jdbc]                    
+Oracle    |`oracle-ojdbc6` |[`ojdbc6`][ojdbc6]
+Oracle    |`oracle-ojdbc8` |[`ojdbc8`][ojdbc8]
+Oracle    |`oracle-ojdbc10`|[`ojdbc10`][ojdbc10]
+Oracle    |`oracle-ojdbc11`|[`ojdbc11`][ojdbc11]
+PostgreSQL|`postgresql`    |[`postgresql`][postgresql]
+SQL Server|`sqlserver`     |[`mssql-jdbc`][mysql-jdbc]
 
 e.g.
+
 ```shell
 $ mvn -Pexternal-oracle-ojdbc11 \
       -Dversion.ojdbc11=21.1.0.0 \
@@ -85,12 +88,19 @@ $
 ```
 
 [mariadb-java-client]: https://search.maven.org/artifact/org.mariadb.jdbc/mariadb-java-client
+
 [mysql-connector-java]: https://search.maven.org/artifact/mysql/mysql-connector-java
+
 [ojdbc6]: https://search.maven.org/artifact/com.oracle.database.jdbc/ojdbc6
+
 [ojdbc8]: https://search.maven.org/artifact/com.oracle.database.jdbc/ojdbc8
+
 [ojdbc10]: https://search.maven.org/artifact/com.oracle.database.jdbc/ojdbc10
+
 [ojdbc11]: https://search.maven.org/artifact/com.oracle.database.jdbc/ojdbc11
+
 [postgresql]: https://search.maven.org/artifact/org.postgresql/postgresql
+
 [mysql-jdbc]: https://search.maven.org/artifact/com.microsoft.sqlserver/mssql-jdbc
 
 ----
