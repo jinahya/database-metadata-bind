@@ -20,11 +20,15 @@ package com.github.jinahya.database.metadata.bind;
  * #L%
  */
 
+import jakarta.json.bind.annotation.JsonbTransient;
+import jakarta.validation.Valid;
+import jakarta.validation.constraints.NotNull;
+
 import javax.xml.bind.annotation.XmlAttribute;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlElementRef;
 import javax.xml.bind.annotation.XmlRootElement;
-import javax.xml.bind.annotation.XmlType;
+import javax.xml.bind.annotation.XmlTransient;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -35,12 +39,7 @@ import java.util.List;
  * @author Jin Kwon &lt;jinahya_at_gmail.com&gt;
  */
 @XmlRootElement
-@XmlType(propOrder = {
-        "procedureName", "remarks", "procedureType", "specificName",
-        // ---------------------------------------------------------------------
-        "procedureColumns"
-})
-public class Procedure extends AbstractChildValue<Schema> {
+public class Procedure extends AbstractChild<Schema> {
 
     private static final long serialVersionUID = -6262056388403934829L;
 
@@ -58,6 +57,8 @@ public class Procedure extends AbstractChildValue<Schema> {
     }
 
     // ---------------------------------------------------------------------------------------------------------- schema
+    @JsonbTransient
+    @XmlTransient
     public Schema getSchema() {
         return getParent();
     }
@@ -66,7 +67,7 @@ public class Procedure extends AbstractChildValue<Schema> {
         setParent(schema);
     }
 
-    // ------------------------------------------------------------ procedureCat
+    // ---------------------------------------------------------------------------------------------------- procedureCat
     public String getProcedureCat() {
         return procedureCat;
     }
@@ -120,7 +121,7 @@ public class Procedure extends AbstractChildValue<Schema> {
         this.specificName = specificName;
     }
 
-    // -------------------------------------------------------- procedureColumns
+    // ------------------------------------------------------------------------------------------------ procedureColumns
     public List<ProcedureColumn> getProcedureColumns() {
         if (procedureColumns == null) {
             procedureColumns = new ArrayList<ProcedureColumn>();
@@ -128,39 +129,41 @@ public class Procedure extends AbstractChildValue<Schema> {
         return procedureColumns;
     }
 
-    // -------------------------------------------------------------------------
+    // -----------------------------------------------------------------------------------------------------------------
     @XmlAttribute
+    @MayBeNull
+    @Label("PROCEDURE_CAT")
     @Bind(label = "PROCEDURE_CAT", nillable = true)
     private String procedureCat;
 
     @XmlAttribute
+    @MayBeNull
+    @Label("PROCEDURE_SCHEM")
     @Bind(label = "PROCEDURE_SCHEM", nillable = true)
     private String procedureSchem;
 
-    // -------------------------------------------------------------------------
+    // -----------------------------------------------------------------------------------------------------------------
     @XmlElement
+    @Label("PROCEDURE_NAME")
     @Bind(label = "PROCEDURE_NAME")
     private String procedureName;
 
     @XmlElement
+    @Label("REMARKS")
     @Bind(label = "REMARKS")
     private String remarks;
 
     @XmlElement
+    @Label("PROCEDURE_TYPE")
     @Bind(label = "PROCEDURE_TYPE")
     private short procedureType;
 
     @XmlElement
+    @Label("SPECIFIC_NAME")
     @Bind(label = "SPECIFIC_NAME")
     private String specificName;
 
+    // -----------------------------------------------------------------------------------------------------------------
     @XmlElementRef
-    @Invoke(name = "getProcedureColumns",
-            types = {String.class, String.class, String.class, String.class},
-            parameters = {
-                    @Literals({":procedureCat", ":procedureSchem",
-                               ":procedureName", "null"})
-            }
-    )
-    private List<ProcedureColumn> procedureColumns;
+    private List<@Valid @NotNull ProcedureColumn> procedureColumns;
 }

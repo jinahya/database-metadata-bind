@@ -22,8 +22,6 @@ package com.github.jinahya.database.metadata.bind;
 
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
-import javax.xml.bind.annotation.XmlType;
-import java.io.Serializable;
 import java.sql.DatabaseMetaData;
 
 import static java.sql.DatabaseMetaData.typeNoNulls;
@@ -36,11 +34,6 @@ import static java.sql.DatabaseMetaData.typeNullableUnknown;
  * @author Jin Kwon &lt;jinahya_at_gmail.com&gt;
  */
 @XmlRootElement
-@XmlType(propOrder = {
-        "typeName", "dataType", "precision", "literalPrefix", "literalSuffix", "createParams", "nullable",
-        "caseSensitive", "searchable", "unsignedAttribute", "fixedPrecScale", "autoIncrement", "localTypeName",
-        "minimumScale", "maximumScale", "sqlDataType", "sqlDatetimeSub", "numPrecRadix"
-})
 public class TypeInfo implements MetadataValue {
 
     private static final long serialVersionUID = -3964147654019495313L;
@@ -299,76 +292,100 @@ public class TypeInfo implements MetadataValue {
         this.numPrecRadix = numPrecRadix;
     }
 
-    // -------------------------------------------------------------------------
+    // -----------------------------------------------------------------------------------------------------------------
     @XmlElement
+    @Label("TYPE_NAME")
     @Bind(label = "TYPE_NAME")
     private String typeName;
 
     @XmlElement
+    @Label("DATA_TYPE")
     @Bind(label = "DATA_TYPE")
     private int dataType;
 
     @XmlElement
+    @Label("PRECISION")
     @Bind(label = "PRECISION")
     private int precision;
 
     @XmlElement(nillable = true)
+    @MayBeNull
+    @Label("LITERAL_PREFIX")
     @Bind(label = "LITERAL_PREFIX", nillable = true)
     private String literalPrefix;
 
     @XmlElement(nillable = true)
+    @MayBeNull
+    @Label("LITERAL_SUFFIX")
     @Bind(label = "LITERAL_SUFFIX", nillable = true)
     private String literalSuffix;
 
     @XmlElement(nillable = true)
+    @MayBeNull
+    @Label("CREATE_PARAMS")
     @Bind(label = "CREATE_PARAMS", nillable = true)
     private String createParams;
 
     @XmlElement
+    @Label("NULLABLE")
     @Bind(label = "NULLABLE")
     private short nullable;
 
     @XmlElement
+    @Label("CASE_SENSITIVE")
     @Bind(label = "CASE_SENSITIVE")
     private boolean caseSensitive;
 
     @XmlElement
+    @Label("SEARCHABLE")
     @Bind(label = "SEARCHABLE")
     private short searchable;
 
     @XmlElement
+    @Label("UNSIGNED_ATTRIBUTE")
     @Bind(label = "UNSIGNED_ATTRIBUTE")
     private boolean unsignedAttribute;
 
     @XmlElement
+    @Label("FIXED_PREC_SCALE")
     @Bind(label = "FIXED_PREC_SCALE")
     private boolean fixedPrecScale;
 
     @XmlElement
+    @Label("AUTO_INCREMENT")
     @Bind(label = "AUTO_INCREMENT")
     private boolean autoIncrement;
 
     @XmlElement(nillable = true)
+    @MayBeNull
+    @Label("LOCAL_TYPE_NAME")
     @Bind(label = "LOCAL_TYPE_NAME", nillable = true)
     private String localTypeName;
 
     @XmlElement
+    @Label("MINIMUM_SCALE")
     @Bind(label = "MINIMUM_SCALE")
     private short minimumScale;
 
     @XmlElement
+    @Label("MAXIMUM_SCALE")
     @Bind(label = "MAXIMUM_SCALE")
     private short maximumScale;
 
     @XmlElement(nillable = true)
+    @Unused
+    @Label("SQL_DATA_TYPE")
     @Bind(label = "SQL_DATA_TYPE", unused = true)
     private Integer sqlDataType;
 
     @XmlElement(nillable = true)
+    @Unused
+    @Label("SQL_DATETIME_SUB")
     @Bind(label = "SQL_DATETIME_SUB", unused = true)
     private Integer sqlDatetimeSub;
 
     @XmlElement
+    @Label("NUM_PREC_RADIX")
     @Bind(label = "NUM_PREC_RADIX")
     private int numPrecRadix;
 }

@@ -43,40 +43,14 @@ marshaller.mashal(udt, ...);
 
 ### Memory
 
-Test cases for in-memory databases such as [Derby](https://db.apache.org/derby/), [H2](http://www.h2database.com/html/main.html), [HSQLDB](http://hsqldb.org/), [SQLite](https://www.sqlite.org/) are prepared.
+Test cases for in-memory databases such as [Derby](https://db.apache.org/derby/), [H2](http://www.h2database.com/html/main.html), [HSQLDB](http://hsqldb.org/) and [SQLite](https://www.sqlite.org/) are prepared.
+See `target/memory.<name>.metadata.xml` files.
 
-### Embedded (Experimental)
-
-Tests against predefined embeddable databases.
-
-```sh
-$ mvn -Pembedded-<profile> \
-      -Dserver=<server>
-      -Dclient=<client> \
-      -Dpaths="of/some,other/others,..." \
-      -Dtest=<test> \
-      test
-$ cat target/embedded.<profile>.catalogs.xml
-```
-
-#### Properties
-
-name      |value                            |notes
-----------|---------------------------------|-----------
-`server`  |version of target database server|see below
-`client`  |version of target jdbc client    |see below
-`paths`   |comma-separated suppression paths|optional
-
-#### Servers, Clients and Tests
-
-database                                 |`profile`|`server` is the version of                                            |`client` is the version of                                                         |`test`            
------------------------------------------|---------|----------------------------------------------------------------------|----------------------------------------------------------------------------------|------------------------
-[MariaDB](https://mariadb.org/)          |`mariadb`|[`ch.vorburger.mariaDB4j:mariaDB4j`](https://goo.gl/8MmvRc)           |[`org.mariadb.jdbc:mariadb-java-client`](https://goo.gl/nRbU1J)|`EmbeddedMariadbTest`      
-[PostgreSQL](https://www.postgresql.org/)|`postgresql`|[`ru.yandex.qatools.embed:postgresql-embedded`](https://goo.gl/WoH4K9)|[`org.postgresql:postgresql`](https://goo.gl/JgXCaL)       |`EmbeddedPostgresqlTest`
+### Container
 
 ### External
 
-Tests against existing external databases.
+Tests against existing databases.
 
 ```sh
 $ mvn -Pexternal-<server> \
@@ -84,7 +58,6 @@ $ mvn -Pexternal-<server> \
       -Durl="jdbc:...://..." \
       -Duser="some" \
       -Dpassword="some" \
-      -Dpaths="of/some,other/others,..." \
       -Dtest=ExternalTest \
       test
 $ cat target/external.xml
@@ -109,7 +82,14 @@ database                                                 |`server`    |`client` 
 [MariaDB](https://mariadb.org/)                          |`mariadb`   |[`org.mariadb.jdbc:mariadb-java-client`](https://goo.gl/6yqVxq)|`jdbc:mariadb://...`    
 [PostgreSQL](https://www.postgresql.org/)                |`postgresql`|[`org.postgresql:postgresql`](https://goo.gl/b6s3u5)|`jdbc:postgresql://...`    
 [SQL Server](https://www.microsoft.com/en-us/sql-server/)|`sqlserver` |[`com.microsoft.sqlserver:mssql-jdbc`](https://goo.gl/cpK94Q)|`jdbc:sqlserver://...`  
-[Oracle](https://www.oracle.com/database/index.html)     |`oracle`    |[`com.oracle.jdbc:ojdbc8`](https://goo.gl/Qe1bPT)              |`jdbc:oracle:thin://...`
+[Oracle](https://www.oracle.com/database/index.html)     |`oracle-ojdbc8`|[`com.oracle.database.jdbc:ojdbc8`](https://search.maven.org/search?q=a:ojdbc8)              |`jdbc:oracle:thin://...`
+[Oracle](https://www.oracle.com/database/index.html)     |`oracle-ojdbc10`|[`com.oracle.database.jdbc:ojdbc10`](https://search.maven.org/search?q=a:ojdbc10)              |`jdbc:oracle:thin://...`
+[Oracle](https://www.oracle.com/database/index.html)     |`oracle-ojdbc11`|[`com.oracle.database.jdbc:ojdbc11`](https://search.maven.org/search?q=a:ojdbc11)              |`jdbc:oracle:thin://...`
+
+e.g.
+```shell
+$ mvn -Pexternal-oracle
+```
 
 ----
 

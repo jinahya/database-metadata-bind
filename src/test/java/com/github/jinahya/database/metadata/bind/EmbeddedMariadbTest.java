@@ -23,15 +23,13 @@ package com.github.jinahya.database.metadata.bind;
 import ch.vorburger.mariadb4j.DB;
 import ch.vorburger.mariadb4j.DBConfigurationBuilder;
 import lombok.extern.slf4j.Slf4j;
-import org.testng.annotations.AfterClass;
-import org.testng.annotations.BeforeClass;
-import org.testng.annotations.Test;
+import org.junit.jupiter.api.AfterAll;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.Disabled;
+import org.junit.jupiter.api.Test;
 
 import java.sql.Connection;
-import java.sql.DatabaseMetaData;
-import java.util.List;
 
-import static com.github.jinahya.database.metadata.bind.MetadataContext.getCatalogs;
 import static java.sql.DriverManager.getConnection;
 
 /**
@@ -41,7 +39,7 @@ import static java.sql.DriverManager.getConnection;
  * @see <a href="https://github.com/vorburger/MariaDB4j">MariaDB4j (GitHub)</a>
  */
 @Slf4j
-public class EmbeddedMariadbTest {
+class EmbeddedMariadbTest {
 
     // -----------------------------------------------------------------------------------------------------------------
     private static DB DB__;
@@ -53,8 +51,8 @@ public class EmbeddedMariadbTest {
     private static final String PASSWORD = "";
 
     // -----------------------------------------------------------------------------------------------------------------
-    @BeforeClass
-    private static void beforeClass() throws Exception {
+    @BeforeAll
+    static void beforeClass() throws Exception {
         final DBConfigurationBuilder builder = DBConfigurationBuilder.newBuilder();
         builder.setPort(0);
         DB__ = DB.newEmbeddedDB(builder.build());
@@ -64,26 +62,22 @@ public class EmbeddedMariadbTest {
         log.debug("url: {}", URL);
     }
 
-    @AfterClass
-    private static void afterClass() throws Exception {
+    @AfterAll
+    static void afterClass() throws Exception {
         DB__.stop();
         log.debug("embedded mariadb stopped");
         DB__ = null;
     }
 
+    // -----------------------------------------------------------------------------------------------------------------
+    @Disabled
     @Test
-    public void store() throws Exception {
+    void writeToFiles() throws Exception {
         try (Connection connection = getConnection(URL, USER, PASSWORD)) {
             log.debug("connection: {}", connection);
-            final DatabaseMetaData metadata = connection.getMetaData();
-            final MetadataContext context = new MetadataContext(metadata);
-            context.addSuppressionPaths(
-                    "column/charOctetLength", // null value
-                    "indexInfo/cardinality", //t null value
-                    "indexInfo/pages" // null value
-            );
-            final List<Catalog> catalogs = getCatalogs(context, true);
-            JaxbTests.store(Catalog.class, catalogs, "embedded.mariadb.catalogs");
+            final MetadataContext context = MetadataContext.newInstance(connection);
+            final Metadata metadata = Metadata.newInstance(context);
+            MetadataTests.writeToFiles(metadata, "embedded.mariadb.metadata");
         }
     }
 }

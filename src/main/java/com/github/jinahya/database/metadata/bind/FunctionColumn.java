@@ -20,14 +20,9 @@ package com.github.jinahya.database.metadata.bind;
  * #L%
  */
 
-import jakarta.json.bind.annotation.JsonbTransient;
-
 import javax.xml.bind.annotation.XmlAttribute;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
-import javax.xml.bind.annotation.XmlTransient;
-import javax.xml.bind.annotation.XmlType;
-import java.io.Serializable;
 import java.sql.DatabaseMetaData;
 
 import static java.sql.DatabaseMetaData.functionColumnIn;
@@ -47,11 +42,7 @@ import static java.sql.DatabaseMetaData.functionReturn;
  * @see DatabaseMetaData#getFunctionColumns(java.lang.String, java.lang.String, java.lang.String, java.lang.String)
  */
 @XmlRootElement
-@XmlType(propOrder = {
-        "functionName", "columnName", "columnType", "dataType", "typeName", "precision", "length", "scale", "radix",
-        "nullable", "remarks", "charOctetLength", "ordinalPosition", "isNullable", "specificName"
-})
-public class FunctionColumn extends AbstractChildValue<Function> {
+public class FunctionColumn extends AbstractChild<Function> {
 
     private static final long serialVersionUID = -7445156446214062680L;
 
@@ -170,6 +161,7 @@ public class FunctionColumn extends AbstractChildValue<Function> {
         }
 
         // -----------------------------------------------------------------------------------------------------------------
+
         /**
          * Returns the raw value of this constant.
          *
@@ -377,72 +369,91 @@ public class FunctionColumn extends AbstractChildValue<Function> {
 
     // -----------------------------------------------------------------------------------------------------------------
     @XmlAttribute
+    @MayBeNull
+    @Label("FUNCTION_CAT")
     @Bind(label = "FUNCTION_CAT", nillable = true)
     private String functionCat;
 
     @XmlAttribute
+    @MayBeNull
+    @Label("FUNCTION_SCHEM")
     @Bind(label = "FUNCTION_SCHEM", nillable = true)
     private String functionSchem;
 
     @XmlAttribute
+    @Label("FUNCTION_NAME")
     @Bind(label = "FUNCTION_NAME")
     private String functionName;
 
-
     // -----------------------------------------------------------------------------------------------------------------
     @XmlElement
+    @Label("COLUMN_NAME")
     @Bind(label = "COLUMN_NAME")
     private String columnName;
 
     @XmlElement
+    @Label("COLUMN_TYPE")
     @Bind(label = "COLUMN_TYPE")
     private short columnType;
 
     @XmlElement
+    @Label("DATA_TYPE")
     @Bind(label = "DATA_TYPE")
     private int dataType;
 
     @XmlElement
+    @Label("TYPE_NAME")
     @Bind(label = "TYPE_NAME")
     private String typeName;
 
     @XmlElement
+    @Label("PRECISION")
     @Bind(label = "PRECISION")
     private int precision;
 
     @XmlElement
+    @Label("LENGTH")
     @Bind(label = "LENGTH")
     private int length;
 
     @XmlElement
+    @Label("SCALE")
     @Bind(label = "SCALE")
     private Short scale;
 
     @XmlElement
+    @Label("RADIX")
     @Bind(label = "RADIX")
     private short radix;
 
     @XmlElement
+    @Label("NULLABLE")
     @Bind(label = "NULLABLE")
     private short nullable;
 
     @XmlElement
+    @Label("REMARKS")
     @Bind(label = "REMARKS")
     private String remarks;
 
     @XmlElement(nillable = true)
+    @MayBeNull
+    @Label("CHAR_OCTET_LENGTH")
     @Bind(label = "CHAR_OCTET_LENGTH", nillable = true)
     private Integer charOctetLength;
 
     @XmlElement
+    @Label("ORDINAL_POSITION")
     @Bind(label = "ORDINAL_POSITION")
     private int ordinalPosition;
 
     @XmlElement
+    @Label("IS_NULLABLE")
     @Bind(label = "IS_NULLABLE")
     private String isNullable;
 
     @XmlElement
+    @Label("SPECIFIC_NAME")
     @Bind(label = "SPECIFIC_NAME")
     private String specificName;
 }

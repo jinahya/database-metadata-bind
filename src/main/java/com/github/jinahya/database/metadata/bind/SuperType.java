@@ -23,8 +23,6 @@ package com.github.jinahya.database.metadata.bind;
 import javax.xml.bind.annotation.XmlAttribute;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
-import javax.xml.bind.annotation.XmlType;
-import java.io.Serializable;
 
 /**
  * An entity class for binding the result of {@link java.sql.DatabaseMetaData#getSuperTypes(java.lang.String,
@@ -33,10 +31,7 @@ import java.io.Serializable;
  * @author Jin Kwon &lt;jinahya_at_gmail.com&gt;
  */
 @XmlRootElement
-@XmlType(propOrder = {
-        "typeName", "supertypeCat", "supertypeSchem", "supertypeName"
-})
-public class SuperType extends AbstractChildValue<UDT> {
+public class SuperType extends AbstractChild<UDT> {
 
     private static final long serialVersionUID = 4603878785941565029L;
 
@@ -118,27 +113,37 @@ public class SuperType extends AbstractChildValue<UDT> {
 
     // -------------------------------------------------------------------------
     @XmlAttribute
+    @MayBeNull
+    @Label("TYPE_CAT")
     @Bind(label = "TYPE_CAT", nillable = true)
     private String typeCat;
 
     @XmlAttribute
+    @MayBeNull
+    @Label("TYPE_SCHEM")
     @Bind(label = "TYPE_SCHEM", nillable = true)
     private String typeSchem;
 
     // -------------------------------------------------------------------------
     @XmlElement
+    @Label("TYPE_NAME")
     @Bind(label = "TYPE_NAME")
     private String typeName;
 
     @XmlElement(nillable = true)
+    @MayBeNull
+    @Label("SUPERTYPE_CAT")
     @Bind(label = "SUPERTYPE_CAT", nillable = true)
     private String supertypeCat;
 
     @XmlElement(nillable = true)
+    @MayBeNull
+    @Label("SUPERTYPE_SCHEM")
     @Bind(label = "SUPERTYPE_SCHEM", nillable = true)
     private String supertypeSchem;
 
     @XmlElement
+    @Label("SUPERTYPE_NAME")
     @Bind(label = "SUPERTYPE_NAME")
     private String supertypeName;
 }

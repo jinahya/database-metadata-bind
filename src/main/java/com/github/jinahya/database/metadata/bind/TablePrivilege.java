@@ -23,11 +23,6 @@ package com.github.jinahya.database.metadata.bind;
 import javax.xml.bind.annotation.XmlAttribute;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
-import javax.xml.bind.annotation.XmlType;
-import java.io.Serializable;
-import java.util.logging.Logger;
-
-import static java.util.logging.Logger.getLogger;
 
 /**
  * An entity class for binding the result of {@link java.sql.DatabaseMetaData#getTablePrivileges(java.lang.String,
@@ -36,18 +31,11 @@ import static java.util.logging.Logger.getLogger;
  * @author Jin Kwon &lt;jinahya_at_gmail.com&gt;
  */
 @XmlRootElement
-@XmlType(propOrder = {
-        "grantor", "grantee", "privilege", "isGrantable"
-})
 public class TablePrivilege extends TableChild {
 
     private static final long serialVersionUID = -1799954363648972203L;
 
-    // -------------------------------------------------------------------------
-    private static final Logger logger
-            = getLogger(TablePrivilege.class.getName());
-
-    // -------------------------------------------------------------------------
+    // -----------------------------------------------------------------------------------------------------------------
     @Override
     public String toString() {
         return super.toString() + '{'
@@ -61,7 +49,7 @@ public class TablePrivilege extends TableChild {
                + '}';
     }
 
-    // ---------------------------------------------------------------- tableCat
+    // -------------------------------------------------------------------------------------------------------- tableCat
     public String getTableCat() {
         return tableCat;
     }
@@ -70,7 +58,7 @@ public class TablePrivilege extends TableChild {
         this.tableCat = tableCat;
     }
 
-    // -------------------------------------------------------------- tableSchem
+    // ------------------------------------------------------------------------------------------------------ tableSchem
     public String getTableSchem() {
         return tableSchem;
     }
@@ -79,7 +67,7 @@ public class TablePrivilege extends TableChild {
         this.tableSchem = tableSchem;
     }
 
-    // --------------------------------------------------------------- tableName
+    // ------------------------------------------------------------------------------------------------------- tableName
     public String getTableName() {
         return tableName;
     }
@@ -88,7 +76,7 @@ public class TablePrivilege extends TableChild {
         this.tableName = tableName;
     }
 
-    // ----------------------------------------------------------------- grantor
+    // --------------------------------------------------------------------------------------------------------- grantor
     public String getGrantor() {
         return grantor;
     }
@@ -97,7 +85,7 @@ public class TablePrivilege extends TableChild {
         this.grantor = grantor;
     }
 
-    // ----------------------------------------------------------------- grantee
+    // --------------------------------------------------------------------------------------------------------- grantee
     public String getGrantee() {
         return grantee;
     }
@@ -106,7 +94,7 @@ public class TablePrivilege extends TableChild {
         this.grantee = grantee;
     }
 
-    // --------------------------------------------------------------- privilege
+    // ------------------------------------------------------------------------------------------------------- privilege
     public String getPrivilege() {
         return privilege;
     }
@@ -115,7 +103,7 @@ public class TablePrivilege extends TableChild {
         this.privilege = privilege;
     }
 
-    // ------------------------------------------------------------- isGrantable
+    // ----------------------------------------------------------------------------------------------------- isGrantable
     public String getIsGrantable() {
         return isGrantable;
     }
@@ -124,12 +112,16 @@ public class TablePrivilege extends TableChild {
         this.isGrantable = isGrantable;
     }
 
-    // -------------------------------------------------------------------------
+    // -----------------------------------------------------------------------------------------------------------------
     @XmlAttribute
+    @MayBeNull
+    @Label("TABLE_CAT")
     @Bind(label = "TABLE_CAT", nillable = true)
     private String tableCat;
 
     @XmlAttribute
+    @MayBeNull
+    @Label("TABLE_SCHEM")
     @Bind(label = "TABLE_SCHEM", nillable = true)
     private String tableSchem;
 
@@ -137,23 +129,26 @@ public class TablePrivilege extends TableChild {
     @Bind(label = "TABLE_NAME")
     private String tableName;
 
+    // -----------------------------------------------------------------------------------------------------------------
     @XmlElement(nillable = true)
+    @MayBeNull
+    @Label("GRANTOR")
     @Bind(label = "GRANTOR", nillable = true)
     private String grantor;
 
     @XmlElement
+    @Label("GRANTEE")
     @Bind(label = "GRANTEE")
     private String grantee;
 
     @XmlElement
+    @Label("PRIVILEGE")
     @Bind(label = "PRIVILEGE")
     private String privilege;
 
     @XmlElement(nillable = true)
+    @MayBeNull
+    @Label("IS_GRANTABLE")
     @Bind(label = "IS_GRANTABLE", nillable = true)
     private String isGrantable;
-
-    // -------------------------------------------------------------------------
-    @Deprecated
-    private Table table;
 }

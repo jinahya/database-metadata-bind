@@ -22,7 +22,6 @@ package com.github.jinahya.database.metadata.bind;
 
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
-import javax.xml.bind.annotation.XmlType;
 import java.io.Serializable;
 
 /**
@@ -31,14 +30,11 @@ import java.io.Serializable;
  * @author Jin Kwon &lt;jinahya_at_gmail.com&gt;
  */
 @XmlRootElement
-@XmlType(propOrder = {
-        "tableType"
-})
 public class TableType implements Serializable {
 
     private static final long serialVersionUID = -7630634982776331078L;
 
-    // -------------------------------------------------------------------------
+    // -----------------------------------------------------------------------------------------------------------------
     @Override
     public String toString() {
         return super.toString() + '{'
@@ -46,7 +42,7 @@ public class TableType implements Serializable {
                + '}';
     }
 
-    // --------------------------------------------------------------- tableType
+    // ------------------------------------------------------------------------------------------------------- tableType
     public String getTableType() {
         return tableType;
     }
@@ -55,8 +51,9 @@ public class TableType implements Serializable {
         this.tableType = tableType;
     }
 
-    // -------------------------------------------------------------------------
+    // -----------------------------------------------------------------------------------------------------------------
     @XmlElement
+    @Label("TABLE_TYPE")
     @Bind(label = "TABLE_TYPE")
     private String tableType;
 }

@@ -30,7 +30,6 @@ import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlElementRef;
 import javax.xml.bind.annotation.XmlElementWrapper;
 import javax.xml.bind.annotation.XmlRootElement;
-import javax.xml.bind.annotation.XmlType;
 import java.text.Collator;
 import java.util.ArrayList;
 import java.util.Comparator;
@@ -46,11 +45,6 @@ import static java.util.Objects.requireNonNull;
  * @see MetadataContext#getCatalogs()
  */
 @XmlRootElement
-@XmlType(propOrder = {
-        "tableCat"
-        // -------------------------------------------------------------------------------------------------------------
-        , "schemas"
-})
 public class Catalog implements MetadataValue {
 
     // -----------------------------------------------------------------------------------------------------------------
@@ -190,17 +184,12 @@ public class Catalog implements MetadataValue {
     @JsonbProperty(nillable = false)
     @XmlElement(required = true)
     @NotBlank
+    @Label(COLUMN_NAME_TABLE_CAT)
     @Bind(label = COLUMN_NAME_TABLE_CAT)
     private String tableCat;
 
     @JsonbProperty(nillable = true)
     @XmlElementWrapper(required = true)
     @XmlElementRef
-//    @Invoke(name = "getSchemas",
-//            types = {String.class, String.class},
-//            parameters = {
-//                    @Literals({":tableCat", "null"})
-//            }
-//    )
     private List<@Valid @NotNull Schema> schemas;
 }

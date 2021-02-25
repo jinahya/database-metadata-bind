@@ -1,6 +1,6 @@
 package com.github.jinahya.database.metadata.bind;
 
-abstract class SchemaChild extends AbstractChildValue<Schema> {
+abstract class SchemaChild extends AbstractChild<Schema> {
 
     public Schema getSchema() {
         return getParent();

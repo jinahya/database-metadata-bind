@@ -23,7 +23,6 @@ package com.github.jinahya.database.metadata.bind;
 import javax.xml.bind.annotation.XmlAttribute;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
-import javax.xml.bind.annotation.XmlType;
 
 /**
  * An entity class for primary keys.
@@ -32,9 +31,6 @@ import javax.xml.bind.annotation.XmlType;
  * @see MetadataContext#getPrimaryKeys(java.lang.String, java.lang.String, java.lang.String)
  */
 @XmlRootElement
-@XmlType(propOrder = {
-        "columnName", "keySeq", "pkName"
-})
 public class PrimaryKey extends TableChild {
 
     private static final long serialVersionUID = 3159826510060898330L;
@@ -95,27 +91,36 @@ public class PrimaryKey extends TableChild {
 
     // -----------------------------------------------------------------------------------------------------------------
     @XmlAttribute
+    @MayBeNull
+    @Label("TABLE_CAT")
     @Bind(label = "TABLE_CAT", nillable = true)
     private String tableCat;
 
     @XmlAttribute
+    @MayBeNull
+    @Label("TABLE_SCHEM")
     @Bind(label = "TABLE_SCHEM", nillable = true)
     private String tableSchem;
 
     @XmlAttribute
+    @Label("TABLE_NAME")
     @Bind(label = "TABLE_NAME")
     private String tableName;
 
     // -----------------------------------------------------------------------------------------------------------------
     @XmlElement
+    @Label("COLUMN_NAME")
     @Bind(label = "COLUMN_NAME")
     private String columnName;
 
     @XmlElement
+    @Label("KEY_SEQ")
     @Bind(label = "KEY_SEQ")
     private short keySeq;
 
     @XmlElement(nillable = true)
+    @MayBeNull
+    @Label("PK_NAME")
     @Bind(label = "PK_NAME", nillable = true)
     private String pkName;
 }

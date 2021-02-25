@@ -4,6 +4,12 @@ import jakarta.json.bind.Jsonb;
 import jakarta.json.bind.JsonbBuilder;
 import jakarta.json.bind.JsonbConfig;
 
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.OutputStream;
+import java.nio.file.Paths;
+
 final class JsonbTests {
 
     static Jsonb jsonb() {
@@ -21,6 +27,13 @@ final class JsonbTests {
 
     static <T> T fromJson(final String json, final Class<T> type) {
         return jsonb().fromJson(json, type);
+    }
+
+    static <T> void writeToFile(final T object, final String name) throws IOException {
+        final File output = Paths.get("target", name + ".json").toFile();
+        try (OutputStream stream = new FileOutputStream(output)) {
+            jsonb().toJson(object, stream);
+        }
     }
 
     private JsonbTests() {

@@ -22,8 +22,6 @@ package com.github.jinahya.database.metadata.bind;
 
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
-import javax.xml.bind.annotation.XmlType;
-import java.io.Serializable;
 import java.sql.DatabaseMetaData;
 
 import static java.sql.DatabaseMetaData.bestRowNotPseudo;
@@ -40,10 +38,7 @@ import static java.sql.DatabaseMetaData.bestRowUnknown;
  * @see MetadataContext#getBestRowIdentifier(java.lang.String, java.lang.String, java.lang.String, int, boolean)
  */
 @XmlRootElement
-@XmlType(propOrder = {
-        "scope", "columnName", "dataType", "typeName", "columnSize", "bufferLength", "decimalDigits", "pseudoColumn"
-})
-public class BestRowIdentifier extends AbstractChildValue<Table> {
+public class BestRowIdentifier extends AbstractChild<Table> {
 
     // -----------------------------------------------------------------------------------------------------------------
     private static final long serialVersionUID = -6733770602373723371L;

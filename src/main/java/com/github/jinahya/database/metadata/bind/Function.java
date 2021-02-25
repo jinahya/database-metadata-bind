@@ -23,9 +23,7 @@ package com.github.jinahya.database.metadata.bind;
 import javax.xml.bind.annotation.XmlAttribute;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlElementRef;
-import javax.xml.bind.annotation.XmlElementWrapper;
 import javax.xml.bind.annotation.XmlRootElement;
-import javax.xml.bind.annotation.XmlType;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -39,11 +37,6 @@ import java.util.List;
  * @see MetadataContext#getFunctionColumns(String, String, String, String)
  */
 @XmlRootElement
-@XmlType(propOrder = {
-        "functionName", "remarks", "functionType", "specificName"
-        // -------------------------------------------------------------------------------------------------------------
-        , "functionColumns"
-})
 public class Function extends SchemaChild {
 
     private static final long serialVersionUID = -3318947900237453301L;
@@ -168,14 +161,6 @@ public class Function extends SchemaChild {
     private String specificName;
 
     // -----------------------------------------------------------------------------------------------------------------
-    @XmlElementWrapper
     @XmlElementRef
-//    @Invoke(name = "getFunctionColumns",
-//            types = {String.class, String.class, String.class, String.class},
-//            parameters = {
-//                    @Literals({":functionCat", ":functionSchem", ":functionName",
-//                               "null"})
-//            }
-//    )
     private List<FunctionColumn> functionColumns;
 }

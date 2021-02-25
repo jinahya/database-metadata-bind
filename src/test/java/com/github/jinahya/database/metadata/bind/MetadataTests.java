@@ -23,10 +23,17 @@ package com.github.jinahya.database.metadata.bind;
 import lombok.extern.slf4j.Slf4j;
 
 /**
+ * A utility class for testing {@link Metadata}.
+ *
  * @author Jin Kwon &lt;jinahya_at_gmail.com&gt;
  */
 @Slf4j
 final class MetadataTests {
+
+    static void writeToFiles(final Metadata metadata, final String name) throws Exception {
+        JaxbTests.writeToFile(Metadata.class, metadata, name);
+        JsonbTests.writeToFile(metadata, name);
+    }
 
     private MetadataTests() {
         throw new AssertionError("instantiation is not allowed");

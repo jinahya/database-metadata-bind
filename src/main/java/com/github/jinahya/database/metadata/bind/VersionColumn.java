@@ -22,8 +22,6 @@ package com.github.jinahya.database.metadata.bind;
 
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
-import javax.xml.bind.annotation.XmlType;
-import java.io.Serializable;
 import java.sql.DatabaseMetaData;
 
 import static java.sql.DatabaseMetaData.versionColumnNotPseudo;
@@ -37,10 +35,7 @@ import static java.sql.DatabaseMetaData.versionColumnUnknown;
  * @see MetadataContext#getVersionColumns(java.lang.String, java.lang.String, java.lang.String)
  */
 @XmlRootElement
-@XmlType(propOrder = {
-        "scope", "columnName", "dataType", "typeName", "columnSize", "bufferLength", "decimalDigits", "pseudoColumn"
-})
-public class VersionColumn extends TableChild{
+public class VersionColumn extends TableChild {
 
     private static final long serialVersionUID = 3587959398829593292L;
 
@@ -72,6 +67,7 @@ public class VersionColumn extends TableChild{
         VERSION_COLUMN_NULLABLE_UNKNOWN(versionColumnPseudo);
 
         // -----------------------------------------------------------------------------------------------------------------
+
         /**
          * Returns the constant whose raw value equals to given. An instance of {@link IllegalArgumentException} will be
          * throw if no constants matches.
@@ -214,34 +210,44 @@ public class VersionColumn extends TableChild{
 
     // -------------------------------------------------------------------------
     @XmlElement(nillable = true)
+    @Unused
+    @Label("SCOPE")
     @Bind(label = "SCOPE", unused = true)
     private short scope;
 
     @XmlElement
+    @Label("COLUMN_NAME")
     @Bind(label = "COLUMN_NAME")
     private String columnName;
 
     @XmlElement
+    @Label("DATA_TYPE")
     @Bind(label = "DATA_TYPE")
     private int dataType;
 
     @XmlElement
+    @Label("TYPE_NAME")
     @Bind(label = "TYPE_NAME")
     private String typeName;
 
     @XmlElement
+    @Label("COLUMN_SIZE")
     @Bind(label = "COLUMN_SIZE")
     private int columnSize;
 
     @XmlElement
+    @Label("BUFFER_LENGTH")
     @Bind(label = "BUFFER_LENGTH")
     private int bufferLength;
 
     @XmlElement(nillable = true)
+    @MayBeNull
+    @Label("DECIMAL_DIGITS")
     @Bind(label = "DECIMAL_DIGITS", nillable = true)
     private Short decimalDigits;
 
     @XmlElement
+    @Label("PSEUDO_COLUMN")
     @Bind(label = "PSEUDO_COLUMN")
     private short pseudoColumn;
 }

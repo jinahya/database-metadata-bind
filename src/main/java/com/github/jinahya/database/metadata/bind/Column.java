@@ -20,11 +20,13 @@ package com.github.jinahya.database.metadata.bind;
  * #L%
  */
 
+import jakarta.validation.Valid;
+import jakarta.validation.constraints.NotNull;
+
 import javax.xml.bind.annotation.XmlAttribute;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlElementRef;
 import javax.xml.bind.annotation.XmlRootElement;
-import javax.xml.bind.annotation.XmlType;
 import java.sql.DatabaseMetaData;
 import java.util.ArrayList;
 import java.util.List;
@@ -39,14 +41,7 @@ import static java.sql.DatabaseMetaData.columnNullableUnknown;
  * @author Jin Kwon &lt;jinahya_at_gmail.com&gt;
  */
 @XmlRootElement
-@XmlType(propOrder = {
-        "columnName", "dataType", "typeName", "columnSize", "bufferLength", "decimalDigits", "numPrecRadix", "nullable",
-        "remarks", "columnDef", "sqlDataType", "sqlDatetimeSub", "charOctetLength", "ordinalPosition", "isNullable",
-        "scopeCatalog", "scopeSchema", "scopeTable", "sourceDataType", "isAutoincrement", "isGeneratedcolumn",
-        // ---------------------------------------------------------------------
-        "columnPrivileges"
-})
-public class Column extends AbstractChildValue<Table> {
+public class Column extends AbstractChild<Table> {
 
     private static final long serialVersionUID = -409653682729081530L;
 
@@ -373,112 +368,141 @@ public class Column extends AbstractChildValue<Table> {
         return columnPrivileges;
     }
 
-    // -------------------------------------------------------------------------
+    // -----------------------------------------------------------------------------------------------------------------
     @XmlAttribute
+    @MayBeNull
+    @Label("TABLE_CAT")
     @Bind(label = "TABLE_CAT", nillable = true)
     private String tableCat;
 
     @XmlAttribute
+    @MayBeNull
+    @Label("TABLE_SCHEM")
     @Bind(label = "TABLE_SCHEM", nillable = true)
     private String tableSchem;
 
     @XmlAttribute
+    @Label("TABLE_NAME")
     @Bind(label = "TABLE_NAME")
     private String tableName;
 
-    // -------------------------------------------------------------------------
+    // -----------------------------------------------------------------------------------------------------------------
     @XmlElement
+    @Label("COLUMN_NAME")
     @Bind(label = "COLUMN_NAME")
     private String columnName;
 
     @XmlElement
+    @Label("DATA_TYPE")
     @Bind(label = "DATA_TYPE")
     private int dataType;
 
     @XmlElement
+    @Label("TYPE_NAME")
     @Bind(label = "TYPE_NAME")
     private String typeName;
 
     @XmlElement
+    @Label("COLUMN_SIZE")
     @Bind(label = "COLUMN_SIZE")
     private int columnSize;
 
     @XmlElement(nillable = true)
+    @Unused
+    @Label("BUFFER_LENGTH")
     @Bind(label = "BUFFER_LENGTH", unused = true)
     private Integer bufferLength;
 
     @XmlElement
+    @MayBeNull
+    @Label("DECIMAL_DIGITS")
     @Bind(label = "DECIMAL_DIGITS", nillable = true)
     private Integer decimalDigits;
 
     @XmlElement
+    @Label("NUM_PREC_RADIX")
     @Bind(label = "NUM_PREC_RADIX")
     private int numPrecRadix;
 
     @XmlElement
+    @Label("NULLABLE")
     @Bind(label = "NULLABLE")
     private int nullable;
 
     @XmlElement(nillable = true)
+    @MayBeNull
+    @Label("REMARKS")
     @Bind(label = "REMARKS", nillable = true)
     private String remarks;
 
     @XmlElement(nillable = true)
+    @MayBeNull
+    @Label("COLUMN_DEF")
     @Bind(label = "COLUMN_DEF", nillable = true)
     private String columnDef;
 
     @XmlElement(nillable = true)
+    @Unused
+    @Label("SQL_DATA_TYPE")
     @Bind(label = "SQL_DATA_TYPE", unused = true)
     private Integer sqlDataType;
 
     @XmlElement(nillable = true)
+    @Unused
+    @Label("SQL_DATETIME_SUB")
     @Bind(label = "SQL_DATETIME_SUB", unused = true)
     private Integer sqlDatetimeSub;
 
     @XmlElement
+    @Label("CHAR_OCTET_LENGTH")
     @Bind(label = "CHAR_OCTET_LENGTH")
     private int charOctetLength;
 
     @XmlElement
+    @Label("ORDINAL_POSITION")
     @Bind(label = "ORDINAL_POSITION")
     private int ordinalPosition;
 
     @XmlElement
+    @Label("IS_NULLABLE")
     @Bind(label = "IS_NULLABLE")
     private String isNullable;
 
     @XmlElement(nillable = true)
+    @MayBeNull
+    @Label("SCOPE_CATALOG")
     @Bind(label = "SCOPE_CATALOG", nillable = true)
     private String scopeCatalog;
 
     @XmlElement(nillable = true)
+    @MayBeNull
+    @Label("SCOPE_SCHEMA")
     @Bind(label = "SCOPE_SCHEMA", nillable = true)
     private String scopeSchema;
 
     @XmlElement(nillable = true)
+    @MayBeNull
+    @Label("SCOPE_TABLE")
     @Bind(label = "SCOPE_TABLE", nillable = true)
     private String scopeTable;
 
     @XmlElement(nillable = true)
+    @MayBeNull
+    @Label("SOURCE_DATA_TYPE")
     @Bind(label = "SOURCE_DATA_TYPE", nillable = true)
     private Short sourceDataType;
 
     @XmlElement
+    @Label("IS_AUTOINCREMENT")
     @Bind(label = "IS_AUTOINCREMENT")
     private String isAutoincrement;
 
     @XmlElement
+    @Label("IS_GENERATEDCOLUMN")
     @Bind(label = "IS_GENERATEDCOLUMN")
     private String isGeneratedcolumn;
 
     // -------------------------------------------------------------------------
     @XmlElementRef
-    @Invoke(name = "getColumnPrivileges",
-            types = {String.class, String.class, String.class, String.class},
-            parameters = {
-                    @Literals({":tableCat", ":tableSchem", ":tableName",
-                               ":columnName"})
-            }
-    )
-    private List<ColumnPrivilege> columnPrivileges;
+    private List<@Valid @NotNull ColumnPrivilege> columnPrivileges;
 }

@@ -1,6 +1,5 @@
 package com.github.jinahya.database.metadata.bind;
 
-import javax.xml.bind.annotation.XmlRootElement;
 import java.sql.ResultSet;
 
 enum ResultSetConcurrency implements IntFieldEnum<ResultSetConcurrency> {

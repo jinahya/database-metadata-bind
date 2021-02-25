@@ -23,8 +23,6 @@ package com.github.jinahya.database.metadata.bind;
 import javax.xml.bind.annotation.XmlAttribute;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
-import javax.xml.bind.annotation.XmlType;
-import java.io.Serializable;
 
 /**
  * An entity class for pseudo columns.
@@ -33,10 +31,6 @@ import java.io.Serializable;
  * @see MetadataContext#getPseudoColumns(java.lang.String, java.lang.String, java.lang.String, java.lang.String)
  */
 @XmlRootElement
-@XmlType(propOrder = {
-        "columnName", "dataType", "columnSize", "decimalDigits", "numPrecRadix", "columnUsage", "remarks",
-        "charOctetLength", "isNullable"
-})
 public class PseudoColumn extends TableChild {
 
     private static final long serialVersionUID = -5612575879670895510L;
@@ -168,57 +162,69 @@ public class PseudoColumn extends TableChild {
         this.isNullable = isNullable;
     }
 
-    // -------------------------------------------------------------------------
+    // -----------------------------------------------------------------------------------------------------------------
     @XmlAttribute
+    @MayBeNull
+    @Label("TABLE_CAT")
     @Bind(label = "TABLE_CAT", nillable = true)
     private String tableCat;
 
     @XmlAttribute
+    @MayBeNull
+    @Label("TABLE_SCHEM")
     @Bind(label = "TABLE_SCHEM", nillable = true)
     private String tableSchem;
 
     @XmlAttribute
+    @Label("TABLE_NAME")
     @Bind(label = "TABLE_NAME")
     private String tableName;
 
     // -------------------------------------------------------------------------
     @XmlElement
+    @Label("COLUMN_NAME")
     @Bind(label = "COLUMN_NAME")
     private String columnName;
 
     @XmlElement
+    @Label("DATA_TYPE")
     @Bind(label = "DATA_TYPE")
     private int dataType;
 
     @XmlElement
+    @Label("COLUMN_SIZE")
     @Bind(label = "COLUMN_SIZE")
     private int columnSize;
 
     @XmlElement(nillable = true)
+    @MayBeNull
+    @Label("DECIMAL_DIGITS")
     @Bind(label = "DECIMAL_DIGITS", nillable = true)
     private Integer decimalDigits;
 
     @XmlElement
+    @Label("NUM_PREC_RADIX")
     @Bind(label = "NUM_PREC_RADIX")
     private int numPrecRadix;
 
     @XmlElement
+    @Label("COLUMN_USAGE")
     @Bind(label = "COLUMN_USAGE")
     private String columnUsage;
 
     @XmlElement(nillable = true)
+    @MayBeNull
+    @Label("REMARKS")
     @Bind(label = "REMARKS", nillable = true)
     private String remarks;
 
     @XmlElement
+    @Label("CHAR_OCTET_LENGTH")
     @Bind(label = "CHAR_OCTET_LENGTH")
     private int charOctetLength;
 
     @XmlElement
+    @Label("IS_NULLABLE")
     @Bind(label = "IS_NULLABLE")
     private String isNullable;
-
-    // -------------------------------------------------------------------------
-    @Deprecated
-    private Table table;
 }

@@ -24,14 +24,13 @@ import lombok.NonNull;
 import org.codehaus.mojo.animal_sniffer.IgnoreJRERequirement;
 
 import java.lang.reflect.Field;
-import java.lang.reflect.Method;
 import java.lang.reflect.ParameterizedType;
+import java.sql.Connection;
 import java.sql.DatabaseMetaData;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.SQLFeatureNotSupportedException;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -42,7 +41,6 @@ import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import static com.github.jinahya.database.metadata.bind.Invokes.arguments;
 import static com.github.jinahya.database.metadata.bind.Utils.field;
 import static com.github.jinahya.database.metadata.bind.Utils.fields;
 import static com.github.jinahya.database.metadata.bind.Utils.labels;
@@ -65,46 +63,15 @@ public class MetadataContext {
     private static final Logger logger = getLogger(MetadataContext.class.getName());
 
     // -----------------------------------------------------------------------------------------------------------------
-
-    /**
-     * Invokes {@link #getSchemas(java.lang.String, java.lang.String)} on given {@code context} with given {@code
-     * catalog}.
-     *
-     * @param context  the context
-     * @param catalog  the value for the first parameter of {@link #getSchemas(java.lang.String, java.lang.String)}.
-     * @param nonempty a flag for non empty
-     * @return a list of schemas
-     * @throws SQLException if a database error occurs.
-     */
-    public static List<Schema> getSchemas(@NonNull final MetadataContext context, final String catalog,
-                                          final boolean nonempty)
-            throws SQLException {
-        final List<Schema> schemas = context.getSchemas(catalog, null);
-        if (schemas.isEmpty() && nonempty) {
-            final Schema schema = new Schema();
-            schema.virtual = true;
-            schema.setTableCatalog(catalog);
-            schema.setTableSchem("");
-            if (!context.isSuppressionPath("schema/functions")) {
-//                schema.getFunctions().addAll(context.getFunctions(
-//                        schema.getTableCatalog(), schema.getTableSchem(), null));
-            }
-            if (!context.isSuppressionPath("schema/procedures")) {
-//                schema.getProcedures().addAll(context.getProcedures(
-//                        schema.getTableCatalog(), schema.getTableSchem(), null));
-            }
-            if (!context.isSuppressionPath("schema/tables")) {
-//                schema.getTables().addAll(context.getTables(
-//                        schema.getTableCatalog(), schema.getTableSchem(), null, null));
-            }
-            if (!context.isSuppressionPath("schema/UDTs")) {
-//                schema.getUDTs().addAll(context.getUDTs(
-//                        schema.getTableCatalog(), schema.getTableSchem(), null, null));
-            }
-            schemas.add(schema);
+    public static MetadataContext newInstance(final Connection connection) throws SQLException {
+        requireNonNull(connection, "connection is null");
+        if (connection.isClosed()) {
+            throw new IllegalArgumentException("connection is closed");
         }
-        return schemas;
+        return new MetadataContext(connection.getMetaData());
     }
+
+    // -----------------------------------------------------------------------------------------------------------------
 
     /**
      * Invokes {@link #getCatalogs()} on given context.
@@ -155,7 +122,7 @@ public class MetadataContext {
      *
      * @param databaseMetaData the database meta data to hold.
      */
-    public MetadataContext(final DatabaseMetaData databaseMetaData) {
+    MetadataContext(final DatabaseMetaData databaseMetaData) {
         super();
         this.databaseMetaData = requireNonNull(databaseMetaData, "databaseMetadata is null");
     }
@@ -211,70 +178,6 @@ public class MetadataContext {
                 logger.fine(format("unhandled; klass=%s, label=%s, value=%s", type, label, value));
             }
         }
-        for (final Entry<Field, Invoke> ifield : ifields(type).entrySet()) {
-            final Field field = ifield.getKey();
-            if (!field.getType().equals(List.class)) {
-                logger.severe(format("wrong field type: %s", field.getType()));
-                continue;
-            }
-            final Invoke invoke = ifield.getValue();
-            final String path = Utils.suppressionPath(type, field);
-            final String formatted = format("field=%s, suppressionPath=%s, invoke=%s", field, path, invoke);
-            if (isSuppressionPath(path)) {
-                if (logger.isLoggable(FINE)) {
-                    logger.fine(format("skipping; %s", formatted));
-                }
-                continue;
-            }
-            final String name = invoke.name();
-            final Class<?>[] types = invoke.types();
-            final Method method;
-            try {
-                method = DatabaseMetaData.class.getMethod(name, types);
-            } catch (final NoSuchMethodException nsme) {
-                logger.log(SEVERE, format("unknown method; %1$s", formatted), nsme);
-                continue;
-            } catch (final NoSuchMethodError nsme) {
-                logger.log(SEVERE, format("unknown method; %s", formatted), nsme);
-                continue;
-            }
-            final List<Object> fvalue = new ArrayList<>();
-            final Class<?> ptype = ptype(field);
-            for (final Literals parameters : invoke.parameters()) {
-                final String[] literals = parameters.value();
-                final Object[] arguments;
-                try {
-                    arguments = arguments(type, instance, types, literals);
-                } catch (final ReflectiveOperationException roe) {
-                    logger.severe(format("failed to convert arguments from %s on %s", Arrays.toString(literals), type));
-                    continue;
-                }
-                final Object result;
-                try {
-                    result = method.invoke(databaseMetaData, arguments);
-                } catch (final Exception e) { // NoSuchMethod
-                    logger.log(SEVERE, format("failed to invoke %s with %s", formatted, Arrays.toString(arguments)), e);
-                    continue;
-                } catch (final Error e) { // NoSuchMethod/AbstractMethod
-                    logger.log(SEVERE, format("failed to invoke %s with %s", formatted, Arrays.toString(arguments)), e);
-                    continue;
-                }
-                if (!(result instanceof ResultSet)) {
-                    logger.severe(format("wrong result; %s for %s", result, formatted));
-                    continue;
-                }
-                try {
-                    bind((ResultSet) result, ptype, fvalue);
-                } finally {
-                    ((ResultSet) result).close();
-                }
-            }
-            try {
-                field.set(instance, fvalue);
-            } catch (final ReflectiveOperationException roe) {
-                logger.severe(format("failed to set %s with %s on %s", field, fvalue, instance));
-            }
-        } // end-of-invoke-field-loop
         return instance;
     }
 
@@ -321,9 +224,9 @@ public class MetadataContext {
      * @throws SQLException if a database error occurs.
      * @see DatabaseMetaData#getAttributes(String, String, String, String)
      */
-    public <T extends Collection<? super Attribute>> T getAttributes(final String catalog, final String schemaPattern, final String typeNamePattern,
-                                                                     final String attributeNamePattern,
-                                                                     final T collection)
+    public <T extends Collection<? super Attribute>> T getAttributes(
+            final String catalog, final String schemaPattern, final String typeNamePattern,
+            final String attributeNamePattern, final T collection)
             throws SQLException {
         try (ResultSet results = databaseMetaData.getAttributes(
                 catalog, schemaPattern, typeNamePattern, attributeNamePattern)) {
@@ -1456,14 +1359,14 @@ public class MetadataContext {
                 schema.getTableSchem(),
                 null,
                 null,
-                schema.getUdts())
+                schema.getUDTs())
                 .forEach(t -> {
                     t.setSchema(schema);
                 });
-        for (final UDT udt : schema.getUdts()) {
+        for (final UDT udt : schema.getUDTs()) {
             getAttributes(udt);
         }
-        for (final UDT udt : schema.getUdts()) {
+        for (final UDT udt : schema.getUDTs()) {
             getSuperTypes(udt);
         }
     }
@@ -1571,21 +1474,6 @@ public class MetadataContext {
         return value;
     }
 
-    // --------------------------------------------------------------------------------------------------------- ifields
-    private Map<Field, Invoke> ifields(@NonNull final Class<?> klass) {
-        Map<Field, Invoke> value = ifields.get(klass);
-        if (value == null) {
-            value = fields(klass, Invoke.class);
-            for (Field field : value.keySet()) {
-                if (!field.isAccessible()) {
-                    field.setAccessible(true);
-                }
-            }
-            ifields.put(klass, unmodifiableMap(value));
-        }
-        return value;
-    }
-
     // ---------------------------------------------------------------------------------------------------------- ptypes
     private Class<?> ptype(@NonNull final Field field) {
         Class<?> ptype = ptypes.get(field);
@@ -1605,9 +1493,6 @@ public class MetadataContext {
 
     // fields with @Bind
     private final transient Map<Class<?>, Map<Field, Bind>> bfields = new HashMap<>();
-
-    // fields with @Invoke
-    private final transient Map<Class<?>, Map<Field, Invoke>> ifields = new HashMap<>();
 
     // parameterized types of java.util.List fields
     private final transient Map<Field, Class<?>> ptypes = new HashMap<>();

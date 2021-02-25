@@ -20,17 +20,20 @@ package com.github.jinahya.database.metadata.bind;
  * #L%
  */
 
-import java.util.Objects;
+import java.lang.annotation.Documented;
+import java.lang.annotation.ElementType;
+import java.lang.annotation.Retention;
+import java.lang.annotation.RetentionPolicy;
+import java.lang.annotation.Target;
 
 /**
- * @author Jin Kwon &lt;onacit at gmail.com&gt;
+ * A marker annotation for unused columns.
+ *
+ * @author Jin Kwon &lt;onacit_at_gmail.com&gt;
  */
-public class CatalogVerifier {
+@Documented
+@Retention(RetentionPolicy.RUNTIME)
+@Target({ElementType.FIELD})
+@interface Reserved {
 
-    static void verify(final Catalog catalog) {
-        Objects.requireNonNull(catalog, "null catalog");
-        // schemas order by name
-        {
-        }
-    }
 }

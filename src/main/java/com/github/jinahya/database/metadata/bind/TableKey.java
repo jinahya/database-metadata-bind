@@ -23,14 +23,9 @@ package com.github.jinahya.database.metadata.bind;
 import javax.xml.bind.annotation.XmlAttribute;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlTransient;
-import javax.xml.bind.annotation.XmlType;
 
 @XmlTransient
-@XmlType(propOrder = {
-        "pkcolumnName", "fktableCat", "fktableSchem", "fktableName", "fkcolumnName", "keySeq", "updateRule",
-        "deleteRule", "fkName", "pkName", "deferrability"
-})
-abstract class TableKey extends AbstractChildValue<Table> {
+abstract class TableKey extends AbstractChild<Table> {
 
     private static final long serialVersionUID = 6713872409315471232L;
 
@@ -192,59 +187,77 @@ abstract class TableKey extends AbstractChildValue<Table> {
 
     // -----------------------------------------------------------------------------------------------------------------
     @XmlAttribute
+    @MayBeNull
+    @Label("PKTABLE_CAT")
     @Bind(label = "PKTABLE_CAT", nillable = true)
     private String pktableCat;
 
     @XmlAttribute
+    @MayBeNull
+    @Label("PKTABLE_SCHEM")
     @Bind(label = "PKTABLE_SCHEM", nillable = true)
     private String pktableSchem;
 
     @XmlAttribute
+    @Label("PKTABLE_NAME")
     @Bind(label = "PKTABLE_NAME")
     private String pktableName;
 
     // -----------------------------------------------------------------------------------------------------------------
     @XmlElement
+    @Label("PKCOLUMN_NAME")
     @Bind(label = "PKCOLUMN_NAME")
     private String pkcolumnName;
 
     @XmlElement(nillable = true)
+    @MayBeNull
+    @Label("FKTABLE_CAT")
     @Bind(label = "FKTABLE_CAT", nillable = true)
     private String fktableCat;
 
     @XmlElement(nillable = true)
+    @MayBeNull
+    @Label("FKTABLE_NAME")
     @Bind(label = "FKTABLE_NAME", nillable = true)
     private String fktableSchem;
 
     @XmlElement
+    @Label("FKTABLE_NAME")
     @Bind(label = "FKTABLE_NAME")
     private String fktableName;
 
     @XmlElement
+    @Label("FKCOLUMN_NAME")
     @Bind(label = "FKCOLUMN_NAME")
     private String fkcolumnName;
 
     @XmlElement
+    @Label("FKCOLUMN_NAME")
     @Bind(label = "FKCOLUMN_NAME")
     private short keySeq;
 
     @XmlElement
+    @Label("UPDATE_RULE")
     @Bind(label = "UPDATE_RULE")
     private short updateRule;
 
     @XmlElement
+    @Label("DELETE_RULE")
     @Bind(label = "DELETE_RULE")
     private short deleteRule;
 
     @XmlElement
+    @Label("FK_NAME")
     @Bind(label = "FK_NAME")
     private String fkName;
 
     @XmlElement
+    @Label("PK_NAME")
     @Bind(label = "PK_NAME")
     private String pkName;
 
     @XmlElement
+    @Label("DEFERRABILITY")
     @Bind(label = "DEFERRABILITY")
     private short deferrability;
 }

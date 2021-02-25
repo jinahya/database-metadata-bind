@@ -20,11 +20,12 @@ package com.github.jinahya.database.metadata.bind;
  * #L%
  */
 
+import jakarta.json.bind.annotation.JsonbTransient;
+
 import javax.xml.bind.annotation.XmlAttribute;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
-import javax.xml.bind.annotation.XmlType;
-import java.io.Serializable;
+import javax.xml.bind.annotation.XmlTransient;
 import java.sql.DatabaseMetaData;
 
 import static java.sql.DatabaseMetaData.functionColumnResult;
@@ -41,13 +42,7 @@ import static java.sql.DatabaseMetaData.procedureColumnUnknown;
  * @author Jin Kwon &lt;jinahya_at_gmail.com&gt;
  */
 @XmlRootElement
-@XmlType(propOrder = {
-        "columnName", "columnType", "dataType", "typeName",
-        "precision", "length", "scale", "radix", "nullable", "remarks",
-        "columnDef", "sqlDataType", "sqlDatetimeSub", "charOctetLength",
-        "ordinalPosition", "isNullable", "specificName"
-})
-public class ProcedureColumn implements Serializable {
+public class ProcedureColumn extends AbstractChild<Procedure> {
 
     private static final long serialVersionUID = 3894753719381358829L;
 
@@ -164,6 +159,17 @@ public class ProcedureColumn implements Serializable {
                + ",isNullable=" + isNullable
                + ",specificName=" + specificName
                + '}';
+    }
+
+    // ------------------------------------------------------------------------------------------------------- procedure
+    @JsonbTransient
+    @XmlTransient
+    public Procedure getProcedure() {
+        return getParent();
+    }
+
+    public void setProcedure(final Procedure procedure) {
+        setParent(procedure);
     }
 
     // ------------------------------------------------------------ procedureCat
@@ -346,85 +352,112 @@ public class ProcedureColumn implements Serializable {
         this.specificName = specificName;
     }
 
-    // -------------------------------------------------------------------------
+    // -----------------------------------------------------------------------------------------------------------------
     @XmlAttribute
+    @MayBeNull
+    @Label("PROCEDURE_CAT")
     @Bind(label = "PROCEDURE_CAT", nillable = true)
     private String procedureCat;
 
     @XmlAttribute
+    @MayBeNull
+    @Label("PROCEDURE_SCHEM")
     @Bind(label = "PROCEDURE_SCHEM", nillable = true)
     private String procedureSchem;
 
     @XmlAttribute
+    @Label("PROCEDURE_NAME")
     @Bind(label = "PROCEDURE_NAME")
     private String procedureName;
 
-    // -------------------------------------------------------------------------
+    // -----------------------------------------------------------------------------------------------------------------
     @XmlElement
+    @Label("COLUMN_NAME")
     @Bind(label = "COLUMN_NAME")
     private String columnName;
 
     @XmlElement
+    @Label("COLUMN_TYPE")
     @Bind(label = "COLUMN_TYPE")
     private short columnType;
 
     @XmlElement
+    @Label("DATA_TYPE")
     @Bind(label = "DATA_TYPE")
     private int dataType;
 
     @XmlElement
+    @Label("TYPE_NAME")
     @Bind(label = "TYPE_NAME")
     private String typeName;
 
     @XmlElement
+    @Label("PRECISION")
     @Bind(label = "PRECISION")
     private int precision;
 
     @XmlElement
+    @Label("LENGTH")
     @Bind(label = "LENGTH")
     private int length;
 
     @XmlElement
+    @MayBeNull
+    @Label("SCALE")
     @Bind(label = "SCALE", nillable = true)
     private Short scale;
 
     @XmlElement
+    @Label("RADIX")
     @Bind(label = "RADIX")
     private short radix;
 
     @XmlElement
+    @Label("NULLABLE")
     @Bind(label = "NULLABLE")
     private short nullable;
 
     @XmlElement
+    @Label("REMARKS")
     @Bind(label = "REMARKS")
     private String remarks;
 
     @XmlElement(nillable = true)
+    @MayBeNull
+    @Label("COLUMN_DEF")
     @Bind(label = "COLUMN_DEF", nillable = true)
     private String columnDef;
 
     @XmlElement(nillable = true)
+    @Reserved
+    @Label("SQL_DATA_TYPE")
     @Bind(label = "SQL_DATA_TYPE", reserved = true)
     private Integer sqlDataType;
 
     @XmlElement(nillable = true)
+    @Reserved
+    @Label("SQL_DATETIME_SUB")
     @Bind(label = "SQL_DATETIME_SUB", reserved = true)
     private Integer sqlDatetimeSub;
 
     @XmlElement(nillable = true)
+    @MayBeNull
+    @Label("CHAR_OCTET_LENGTH")
     @Bind(label = "CHAR_OCTET_LENGTH", nillable = true)
     private Integer charOctetLength;
 
     @XmlElement(nillable = true)
+    @Label("ORDINAL_POSITION")
     @Bind(label = "ORDINAL_POSITION")
     private int ordinalPosition;
 
     @XmlElement
+    @Label("IS_NULLABLE")
     @Bind(label = "IS_NULLABLE")
     private String isNullable;
 
     @XmlElement
+    @Label("SPECIFIC_NAME")
     @Bind(label = "SPECIFIC_NAME")
     private String specificName;
 }

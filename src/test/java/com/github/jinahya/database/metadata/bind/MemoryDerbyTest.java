@@ -23,10 +23,8 @@ package com.github.jinahya.database.metadata.bind;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;
-import org.junit.jupiter.api.Test;
 
 import java.sql.Connection;
-import java.sql.DatabaseMetaData;
 import java.sql.SQLException;
 import java.util.Properties;
 
@@ -34,7 +32,7 @@ import static java.sql.DriverManager.getConnection;
 import static org.testng.Assert.fail;
 
 /**
- * Test clss for Apache Derby in memory.
+ * Test clsss for Apache Derby in memory.
  *
  * @author Jin Kwon &lt;jinahya_at_gmail.com&gt;
  */
@@ -90,46 +88,9 @@ public class MemoryDerbyTest extends MemoryTest {
     }
 
     // -----------------------------------------------------------------------------------------------------------------
-    @Test
-    void writeToFileXml() throws Exception {
-        try (Connection connection = getConnection(CONNECTION_URL)) {
-            final DatabaseMetaData database = connection.getMetaData();
-            final MetadataContext context = new MetadataContext(database);
-            final Metadata metadata = Metadata.newInstance(context);
-            JaxbTests.writeToFile(Metadata.class, metadata, "memory.derby.metadata");
-        }
-    }
 
-    @Test
-    void getCatalogs__() throws Exception {
-        try (Connection connection = getConnection(CONNECTION_URL)) {
-            final DatabaseMetaData database = connection.getMetaData();
-            final MetadataContext context = new MetadataContext(database);
-            for (final Catalog catalog : context.getCatalogs()) {
-                log.debug("catalog: {}", catalog);
-            }
-        }
-    }
-
-    @Test
-    void getSchemas__() throws Exception {
-        try (Connection connection = getConnection(CONNECTION_URL)) {
-            final DatabaseMetaData database = connection.getMetaData();
-            final MetadataContext context = new MetadataContext(database);
-            for (final Schema schema : context.getSchemas(null, null)) {
-                log.debug("schema: {}", schema);
-            }
-        }
-    }
-
-    @Test
-    void getTables__() throws Exception {
-        try (Connection connection = getConnection(CONNECTION_URL)) {
-            final DatabaseMetaData database = connection.getMetaData();
-            final MetadataContext context = new MetadataContext(database);
-            for (final Table table : context.getTables(null, null, null, null)) {
-                log.debug("table: {}", table);
-            }
-        }
+    @Override
+    Connection connect() throws SQLException {
+        return getConnection(CONNECTION_URL);
     }
 }

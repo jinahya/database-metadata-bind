@@ -23,8 +23,6 @@ package com.github.jinahya.database.metadata.bind;
 import javax.xml.bind.annotation.XmlAttribute;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
-import javax.xml.bind.annotation.XmlType;
-import java.io.Serializable;
 
 /**
  * An entity class for column privileges.
@@ -32,10 +30,7 @@ import java.io.Serializable;
  * @author Jin Kwon &lt;jinahya_at_gmail.com&gt;
  */
 @XmlRootElement
-@XmlType(propOrder = {
-        "grantor", "grantee", "privilege", "isGrantable"
-})
-public class ColumnPrivilege extends AbstractChildValue<Column> {
+public class ColumnPrivilege extends AbstractChild<Column> {
 
     // -----------------------------------------------------------------------------------------------------------------
     private static final long serialVersionUID = 4384654744147773380L;
@@ -64,7 +59,7 @@ public class ColumnPrivilege extends AbstractChildValue<Column> {
         setParent(column);
     }
 
-    // ---------------------------------------------------------------- tableCat
+    // -------------------------------------------------------------------------------------------------------- tableCat
     public String getTableCat() {
         return tableCat;
     }
@@ -73,7 +68,7 @@ public class ColumnPrivilege extends AbstractChildValue<Column> {
         this.tableCat = tableCat;
     }
 
-    // -------------------------------------------------------------- tableSchem
+    // ------------------------------------------------------------------------------------------------------ tableSchem
     public String getTableSchem() {
         return tableSchem;
     }
@@ -82,7 +77,7 @@ public class ColumnPrivilege extends AbstractChildValue<Column> {
         this.tableSchem = tableSchem;
     }
 
-    // --------------------------------------------------------------- tableName
+    // ------------------------------------------------------------------------------------------------------- tableName
     public String getTableName() {
         return tableName;
     }
@@ -91,7 +86,7 @@ public class ColumnPrivilege extends AbstractChildValue<Column> {
         this.tableName = tableName;
     }
 
-    // -------------------------------------------------------------- columnName
+    // ------------------------------------------------------------------------------------------------------ columnName
     public String getColumnName() {
         return columnName;
     }
@@ -100,8 +95,7 @@ public class ColumnPrivilege extends AbstractChildValue<Column> {
         this.columnName = columnName;
     }
 
-    // -------------------------------------------------------------------------
-    // ----------------------------------------------------------------- grantor
+    // --------------------------------------------------------------------------------------------------------- grantor
     public String getGrantor() {
         return grantor;
     }
@@ -110,7 +104,7 @@ public class ColumnPrivilege extends AbstractChildValue<Column> {
         this.grantor = grantor;
     }
 
-    // ----------------------------------------------------------------- grantee
+    // --------------------------------------------------------------------------------------------------------- grantee
     public String getGrantee() {
         return grantee;
     }
@@ -119,7 +113,7 @@ public class ColumnPrivilege extends AbstractChildValue<Column> {
         this.grantee = grantee;
     }
 
-    // --------------------------------------------------------------- privilege
+    // ------------------------------------------------------------------------------------------------------- privilege
     public String getPrivilege() {
         return privilege;
     }
@@ -128,7 +122,7 @@ public class ColumnPrivilege extends AbstractChildValue<Column> {
         this.privilege = privilege;
     }
 
-    // ------------------------------------------------------------- isGrantable
+    // ----------------------------------------------------------------------------------------------------- isGrantable
     public String getIsGrantable() {
         return isGrantable;
     }
@@ -137,37 +131,49 @@ public class ColumnPrivilege extends AbstractChildValue<Column> {
         this.isGrantable = isGrantable;
     }
 
-    // -------------------------------------------------------------------------
+    // -----------------------------------------------------------------------------------------------------------------
     @XmlAttribute
+    @MayBeNull
+    @Label("TABLE_CAT")
     @Bind(label = "TABLE_CAT", nillable = true)
     private String tableCat;
 
     @XmlAttribute
+    @MayBeNull
+    @Label("TABLE_SCHEM")
     @Bind(label = "TABLE_SCHEM", nillable = true)
     private String tableSchem;
 
     @XmlAttribute
+    @Label("TABLE_NAME")
     @Bind(label = "TABLE_NAME")
     private String tableName;
 
     @XmlAttribute
+    @Label("COLUMN_NAME")
     @Bind(label = "COLUMN_NAME")
     private String columnName;
 
-    // -------------------------------------------------------------------------
+    // -----------------------------------------------------------------------------------------------------------------
     @XmlElement(nillable = true)
+    @MayBeNull
+    @Label("GRANTOR")
     @Bind(label = "GRANTOR", nillable = true)
     private String grantor;
 
     @XmlElement
+    @Label("GRANTEE")
     @Bind(label = "GRANTEE")
     private String grantee;
 
     @XmlElement
+    @Label("PRIVILEGE")
     @Bind(label = "PRIVILEGE")
     private String privilege;
 
     @XmlElement(nillable = true)
+    @MayBeNull
+    @Label("IS_GRANTABLE")
     @Bind(label = "IS_GRANTABLE", nillable = true)
     private String isGrantable;
 }

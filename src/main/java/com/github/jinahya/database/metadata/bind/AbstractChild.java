@@ -3,9 +3,9 @@ package com.github.jinahya.database.metadata.bind;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotNull;
 
-abstract class AbstractChildValue<P extends MetadataValue> implements ChildValue<P> {
+abstract class AbstractChild<P extends MetadataValue> implements Child<P> {
 
-    AbstractChildValue() {
+    AbstractChild() {
         super();
     }
 

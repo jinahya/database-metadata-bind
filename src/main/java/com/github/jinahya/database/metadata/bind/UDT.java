@@ -20,12 +20,13 @@ package com.github.jinahya.database.metadata.bind;
  * #L%
  */
 
+import jakarta.validation.Valid;
+import jakarta.validation.constraints.NotNull;
+
 import javax.xml.bind.annotation.XmlAttribute;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlElementRef;
 import javax.xml.bind.annotation.XmlRootElement;
-import javax.xml.bind.annotation.XmlType;
-import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -35,11 +36,6 @@ import java.util.List;
  * @author Jin Kwon &lt;jinahya_at_gmail.com&gt;
  */
 @XmlRootElement
-@XmlType(propOrder = {
-        "typeName", "className", "dataType", "remarks", "baseType",
-        // -------------------------------------------------------------------------------------------------------------
-        "attributes", "superTypes"
-})
 public class UDT extends SchemaChild {
 
     private static final long serialVersionUID = 8665246093405057553L;
@@ -124,7 +120,7 @@ public class UDT extends SchemaChild {
     // ------------------------------------------------------------------------------------------------------ attributes
     public List<Attribute> getAttributes() {
         if (attributes == null) {
-            attributes = new ArrayList<Attribute>();
+            attributes = new ArrayList<>();
         }
         return attributes;
     }
@@ -132,57 +128,55 @@ public class UDT extends SchemaChild {
     // ------------------------------------------------------------------------------------------------------ superTypes
     public List<SuperType> getSuperTypes() {
         if (superTypes == null) {
-            superTypes = new ArrayList<SuperType>();
+            superTypes = new ArrayList<>();
         }
         return superTypes;
     }
 
     // -----------------------------------------------------------------------------------------------------------------
     @XmlAttribute
+    @MayBeNull
+    @Label("TYPE_CAT")
     @Bind(label = "TYPE_CAT", nillable = true)
     private String typeCat;
 
     @XmlAttribute
+    @MayBeNull
+    @Label("TYPE_SCHEM")
     @Bind(label = "TYPE_SCHEM", nillable = true)
     private String typeSchem;
 
     // -----------------------------------------------------------------------------------------------------------------
     @XmlElement
+    @Label("TYPE_NAME")
     @Bind(label = "TYPE_NAME")
     private String typeName;
 
     @XmlElement
+    @Label("CLASS_NAME")
     @Bind(label = "CLASS_NAME")
     private String className;
 
     @XmlElement
+    @Label("DATA_TYPE")
     @Bind(label = "DATA_TYPE")
     private int dataType;
 
     @XmlElement
+    @Label("REMARKS")
     @Bind(label = "REMARKS")
     private String remarks;
 
     @XmlElement(nillable = true)
+    @MayBeNull
+    @Label("BASE_TYPE")
     @Bind(label = "BASE_TYPE", nillable = true)
     private Short baseType;
 
     // -----------------------------------------------------------------------------------------------------------------
     @XmlElementRef
-    @Invoke(name = "getAttributes",
-            types = {String.class, String.class, String.class, String.class},
-            parameters = {
-                    @Literals({":typeCat", ":typeSchem", ":typeName", "null"})
-            }
-    )
-    private List<Attribute> attributes;
+    private List<@Valid @NotNull Attribute> attributes;
 
     @XmlElementRef
-    @Invoke(name = "getSuperTypes",
-            types = {String.class, String.class, String.class},
-            parameters = {
-                    @Literals({":typeCat", ":typeSchem", ":typeName"})
-            }
-    )
-    private List<SuperType> superTypes;
+    private List<@Valid @NotNull SuperType> superTypes;
 }

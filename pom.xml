@@ -50,8 +50,14 @@
     <version.com.sun.xml.bind>2.3.0.1</version.com.sun.xml.bind>
     <version.mariaDB4j>2.4.0</version.mariaDB4j>
     <version.mariadb-java-client>2.7.2</version.mariadb-java-client>
-    <version.maven-failsave>${version.maven-surefire}</version.maven-failsave>
+    <version.maven-failsafe>${version.maven-surefire}</version.maven-failsafe>
     <version.maven-surefire>3.0.0-M4</version.maven-surefire>
+    <version.mysql-connector-java>8.0.23</version.mysql-connector-java>
+    <version.mssql-jdbc>9.2.0.jre15</version.mssql-jdbc>
+    <version.ojdbc6>11.2.0.4</version.ojdbc6>
+    <version.ojdbc8>21.1.0.0</version.ojdbc8>
+    <version.ojdbc10>19.10.0.0</version.ojdbc10>
+    <version.ojdbc11>21.1.0.0</version.ojdbc11>
     <version.org.junit.jupiter>5.8.0-M1</version.org.junit.jupiter>
     <version.postgresql-embedded>2.10</version.postgresql-embedded>
     <version.postgresql>42.2.19.jre7</version.postgresql>
@@ -60,14 +66,39 @@
   <dependencyManagement>
     <dependencies>
       <dependency>
+        <groupId>com.microsoft.sqlserver</groupId>
+        <artifactId>mssql-jdbc</artifactId>
+        <version>${version.mssql-jdbc}</version>
+      </dependency>
+      <dependency>
+        <groupId>com.oracle.database.jdbc</groupId>
+        <artifactId>ojdbc6</artifactId>
+        <version>${version.ojdbc6}</version>
+      </dependency>
+      <dependency>
+        <groupId>com.oracle.database.jdbc</groupId>
+        <artifactId>ojdbc8</artifactId>
+        <version>${version.ojdbc8}</version>
+      </dependency>
+      <dependency>
+        <groupId>com.oracle.database.jdbc</groupId>
+        <artifactId>ojdbc10</artifactId>
+        <version>${version.ojdbc10}</version>
+      </dependency>
+      <dependency>
+        <groupId>com.oracle.database.jdbc</groupId>
+        <artifactId>ojdbc11</artifactId>
+        <version>${version.ojdbc11}</version>
+      </dependency>
+      <dependency>
+        <groupId>mysql</groupId>
+        <artifactId>mysql-connector-java</artifactId>
+        <version>${version.mysql-connector-java}</version>
+      </dependency>
+      <dependency>
         <groupId>org.mariadb.jdbc</groupId>
         <artifactId>mariadb-java-client</artifactId>
         <version>${version.mariadb-java-client}</version>
-      </dependency>
-      <dependency>
-        <groupId>org.postgresql</groupId>
-        <artifactId>postgresql</artifactId>
-        <version>${version.postgresql}</version>
       </dependency>
     </dependencies>
   </dependencyManagement>
@@ -199,15 +230,9 @@
       <scope>test</scope>
     </dependency>
     <dependency>
-      <groupId>org.testng</groupId>
-      <artifactId>testng</artifactId>
-      <version>7.3.0</version>
-      <scope>test</scope>
-    </dependency>
-    <dependency>
-      <groupId>org.xerial</groupId>
-      <artifactId>sqlite-jdbc</artifactId>
-      <version>3.34.0</version>
+      <groupId>org.mariadb.jdbc</groupId>
+      <artifactId>mariadb-java-client</artifactId>
+      <version>${version.mariadb-java-client}</version>
       <scope>test</scope>
     </dependency>
     <dependency>
@@ -217,9 +242,15 @@
       <scope>provided</scope>
     </dependency>
     <dependency>
-      <groupId>ru.yandex.qatools.embed</groupId>
-      <artifactId>postgresql-embedded</artifactId>
-      <version>${version.postgresql-embedded}</version>
+      <groupId>org.testng</groupId>
+      <artifactId>testng</artifactId>
+      <version>7.3.0</version>
+      <scope>test</scope>
+    </dependency>
+    <dependency>
+      <groupId>org.xerial</groupId>
+      <artifactId>sqlite-jdbc</artifactId>
+      <version>3.34.0</version>
       <scope>test</scope>
     </dependency>
   </dependencies>
@@ -414,77 +445,14 @@
       </build>
     </profile>
     <profile>
-      <id>embedded-mariadb</id>
-      <properties>
-        <server>${version.mariaDB4j}</server>
-        <client>${version.mariadb-java-client}</client>
-      </properties>
+      <id>external-mariadb</id>
       <dependencies>
-        <dependency>
-          <groupId>ch.vorburger.mariaDB4j</groupId>
-          <artifactId>mariaDB4j</artifactId>
-          <version>${server}</version>
-          <scope>test</scope>
-        </dependency>
         <dependency>
           <groupId>org.mariadb.jdbc</groupId>
           <artifactId>mariadb-java-client</artifactId>
-          <version>${client}</version>
           <scope>test</scope>
         </dependency>
       </dependencies>
-      <build>
-        <plugins>
-          <plugin>
-            <groupId>org.apache.maven.plugins</groupId>
-            <artifactId>maven-compiler-plugin</artifactId>
-            <configuration>
-              <excludes>
-                <exclude>**/EmbeddedPostgresqlTest.java</exclude>
-              </excludes>
-            </configuration>
-          </plugin>
-          <plugin>
-            <groupId>org.apache.maven.plugins</groupId>
-            <artifactId>maven-surefire-plugin</artifactId>
-            <configuration>
-              <test>EmbeddedMariadbTest</test>
-            </configuration>
-          </plugin>
-        </plugins>
-      </build>
-    </profile>
-    <profile>
-      <id>embedded-postgresql</id>
-      <properties>
-        <server>${version.postgresql-embedded}</server>
-        <client>${version.postgresql}</client>
-      </properties>
-      <dependencies>
-        <dependency>
-          <groupId>ru.yandex.qatools.embed</groupId>
-          <artifactId>postgresql-embedded</artifactId>
-          <version>${server}</version>
-          <scope>test</scope>
-        </dependency>
-        <dependency>
-          <groupId>org.postgresql</groupId>
-          <artifactId>postgresql</artifactId>
-          <version>${client}</version>
-          <scope>test</scope>
-        </dependency>
-      </dependencies>
-      <build>
-        <plugins>
-          <plugin>
-            <groupId>org.apache.maven.plugins</groupId>
-            <artifactId>maven-surefire-plugin</artifactId>
-            <configuration>
-              <test>EmbeddedPostgresqlTest</test>
-            </configuration>
-          </plugin>
-        </plugins>
-      </build>
     </profile>
     <profile>
       <id>external-mysql</id>
@@ -492,7 +460,46 @@
         <dependency>
           <groupId>mysql</groupId>
           <artifactId>mysql-connector-java</artifactId>
-          <version>${client}</version>
+          <scope>test</scope>
+        </dependency>
+      </dependencies>
+    </profile>
+    <profile>
+      <id>external-oracle-ojdbc6</id>
+      <dependencies>
+        <dependency>
+          <groupId>com.oracle.databse.jdbc</groupId>
+          <artifactId>ojdbc6</artifactId>
+          <scope>test</scope>
+        </dependency>
+      </dependencies>
+    </profile>
+    <profile>
+      <id>external-oracle-ojdbc8</id>
+      <dependencies>
+        <dependency>
+          <groupId>com.oracle.database.jdbc</groupId>
+          <artifactId>ojdbc8</artifactId>
+          <scope>test</scope>
+        </dependency>
+      </dependencies>
+    </profile>
+    <profile>
+      <id>external-oracle-ojdbc10</id>
+      <dependencies>
+        <dependency>
+          <groupId>com.oracle.database.jdbc</groupId>
+          <artifactId>ojdbc8</artifactId>
+          <scope>test</scope>
+        </dependency>
+      </dependencies>
+    </profile>
+    <profile>
+      <id>external-oracle-ojdbc11</id>
+      <dependencies>
+        <dependency>
+          <groupId>com.oracle.database.jdbc</groupId>
+          <artifactId>ojdbc11</artifactId>
           <scope>test</scope>
         </dependency>
       </dependencies>
@@ -513,17 +520,6 @@
         <dependency>
           <groupId>com.microsoft.sqlserver</groupId>
           <artifactId>mssql-jdbc</artifactId>
-          <version>${client}</version>
-        </dependency>
-      </dependencies>
-    </profile>
-    <profile>
-      <id>external-oracle</id>
-      <dependencies>
-        <dependency>
-          <groupId>com.oracle.jdbc</groupId>
-          <artifactId>ojdbc8</artifactId>
-          <version>${client}</version>
         </dependency>
       </dependencies>
     </profile>

@@ -22,7 +22,6 @@ package com.github.jinahya.database.metadata.bind;
 
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
-import javax.xml.bind.annotation.XmlType;
 import java.io.Serializable;
 
 /**
@@ -31,9 +30,6 @@ import java.io.Serializable;
  * @author Jin Kwon &lt;jinahya_at_gmail.com&gt;
  */
 @XmlRootElement
-@XmlType(propOrder = {
-        "tableSchem", "tableCatalog"
-})
 public class SchemaName implements Serializable {
 
     private static final long serialVersionUID = 5784631477568740816L;

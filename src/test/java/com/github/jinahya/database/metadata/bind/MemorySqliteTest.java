@@ -21,12 +21,10 @@ package com.github.jinahya.database.metadata.bind;
  */
 
 import lombok.extern.slf4j.Slf4j;
-import org.junit.jupiter.api.Test;
 
 import java.sql.Connection;
-import java.sql.DatabaseMetaData;
+import java.sql.SQLException;
 
-import static com.github.jinahya.database.metadata.bind.JaxbTests.store;
 import static java.sql.DriverManager.getConnection;
 
 /**
@@ -41,46 +39,9 @@ class MemorySqliteTest extends MemoryTest {
     private static final String CONNECTION_URL = "jdbc:sqlite::memory:";
 
     // -----------------------------------------------------------------------------------------------------------------
-    @Test
-    void writeToFileXml() throws Exception {
-        try (Connection connection = getConnection(CONNECTION_URL)) {
-            final DatabaseMetaData database = connection.getMetaData();
-            final MetadataContext context = new MetadataContext(database);
-            final Metadata metadata = Metadata.newInstance(context);
-            JaxbTests.writeToFile(Metadata.class, metadata, "memory.sqlite.metadata");
-        }
-    }
 
-    @Test
-    void getCatalogs__() throws Exception {
-        try (Connection connection = getConnection(CONNECTION_URL)) {
-            final DatabaseMetaData database = connection.getMetaData();
-            final MetadataContext context = new MetadataContext(database);
-            for (final Catalog catalog : context.getCatalogs()) {
-                log.debug("catalog: {}", catalog);
-            }
-        }
-    }
-
-    @Test
-    void getSchemas__() throws Exception {
-        try (Connection connection = getConnection(CONNECTION_URL)) {
-            final DatabaseMetaData database = connection.getMetaData();
-            final MetadataContext context = new MetadataContext(database);
-            for (final Schema schema : context.getSchemas(null, null)) {
-                log.debug("schema: {}", schema);
-            }
-        }
-    }
-
-    @Test
-    void getTables__() throws Exception {
-        try (Connection connection = getConnection(CONNECTION_URL)) {
-            final DatabaseMetaData database = connection.getMetaData();
-            final MetadataContext context = new MetadataContext(database);
-            for (final Table table : context.getTables(null, null, null, null)) {
-                log.debug("table: {}", table);
-            }
-        }
+    @Override
+    Connection connect() throws SQLException {
+        return getConnection(CONNECTION_URL);
     }
 }

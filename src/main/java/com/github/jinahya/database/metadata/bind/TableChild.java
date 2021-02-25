@@ -1,6 +1,6 @@
 package com.github.jinahya.database.metadata.bind;
 
-abstract class TableChild extends AbstractChildValue<Table> {
+abstract class TableChild extends AbstractChild<Table> {
 
     public Table getTable() {
         return getParent();

@@ -22,8 +22,6 @@ package com.github.jinahya.database.metadata.bind;
 
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
-import javax.xml.bind.annotation.XmlType;
-import java.io.Serializable;
 
 /**
  * An entity class for client info properties.
@@ -31,10 +29,7 @@ import java.io.Serializable;
  * @author Jin Kwon &lt;jinahya_at_gmail.com&gt;
  */
 @XmlRootElement
-@XmlType(propOrder = {
-        "name", "maxLen", "defaultValue", "description"
-})
-public class ClientInfoProperty implements Serializable {
+public class ClientInfoProperty implements MetadataValue {
 
     private static final long serialVersionUID = -2913230435651853254L;
 
@@ -49,7 +44,7 @@ public class ClientInfoProperty implements Serializable {
                + '}';
     }
 
-    // -------------------------------------------------------------------- name
+    // ------------------------------------------------------------------------------------------------------------ name
     public String getName() {
         return name;
     }
@@ -58,7 +53,7 @@ public class ClientInfoProperty implements Serializable {
         this.name = name;
     }
 
-    // ------------------------------------------------------------------ maxLen
+    // ---------------------------------------------------------------------------------------------------------- maxLen
     public int getMaxLen() {
         return maxLen;
     }
@@ -67,7 +62,7 @@ public class ClientInfoProperty implements Serializable {
         this.maxLen = maxLen;
     }
 
-    // ------------------------------------------------------------ defaultValue
+    // ---------------------------------------------------------------------------------------------------- defaultValue
     public String getDefaultValue() {
         return defaultValue;
     }
@@ -76,7 +71,7 @@ public class ClientInfoProperty implements Serializable {
         this.defaultValue = defaultValue;
     }
 
-    // ------------------------------------------------------------- description
+    // ----------------------------------------------------------------------------------------------------- description
     public String getDescription() {
         return description;
     }
@@ -85,20 +80,24 @@ public class ClientInfoProperty implements Serializable {
         this.description = description;
     }
 
-    // -------------------------------------------------------------------------
+    // -----------------------------------------------------------------------------------------------------------------
     @XmlElement
+    @Label("NAME")
     @Bind(label = "NAME")
     private String name;
 
     @XmlElement
+    @Label("MAX_LEN")
     @Bind(label = "MAX_LEN")
     private int maxLen;
 
     @XmlElement
+    @Label("DEFAULT_VALUE")
     @Bind(label = "DEFAULT_VALUE")
     private String defaultValue;
 
     @XmlElement
+    @Label("DESCRIPTION")
     @Bind(label = "DESCRIPTION")
     private String description;
 }

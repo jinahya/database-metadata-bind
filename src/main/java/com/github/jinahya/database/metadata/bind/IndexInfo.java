@@ -23,8 +23,6 @@ package com.github.jinahya.database.metadata.bind;
 import javax.xml.bind.annotation.XmlAttribute;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
-import javax.xml.bind.annotation.XmlType;
-import java.io.Serializable;
 
 /**
  * An entity class for index info.
@@ -34,10 +32,6 @@ import java.io.Serializable;
  * @see MetadataContext#getIndexInfo(java.lang.String, java.lang.String, java.lang.String, boolean, boolean)
  */
 @XmlRootElement
-@XmlType(propOrder = {
-        "nonUnique", "indexQualifier", "indexName", "type", "ordinalPosition", "columnName", "ascOrDesc", "cardinality",
-        "pages", "filterCondition"
-})
 public class IndexInfo extends TableChild {
 
     private static final long serialVersionUID = -768486884376018474L;
@@ -181,55 +175,75 @@ public class IndexInfo extends TableChild {
 
     // -----------------------------------------------------------------------------------------------------------------
     @XmlAttribute
+    @MayBeNull
+    @Label("TABLE_CAT")
     @Bind(label = "TABLE_CAT", nillable = true)
     private String tableCat;
 
     @XmlAttribute
+    @MayBeNull
+    @Label("TABLE_SCHEM")
     @Bind(label = "TABLE_SCHEM", nillable = true)
     private String tableSchem;
 
     @XmlAttribute
+    @Label("TABLE_NAME")
     @Bind(label = "TABLE_NAME")
     private String tableName;
 
     // -----------------------------------------------------------------------------------------------------------------
     @XmlElement
+    @Label("NON_UNIQUE")
     @Bind(label = "NON_UNIQUE")
     private boolean nonUnique;
 
     @XmlElement(nillable = true)
+    @MayBeNull
+    @Label("INDEX_QUALIFIER")
     @Bind(label = "INDEX_QUALIFIER", nillable = true)
     private String indexQualifier;
 
     @XmlElement(nillable = true)
+    @MayBeNull
+    @Label("INDEX_NAME")
     @Bind(label = "INDEX_NAME", nillable = true)
     private String indexName;
 
     @XmlElement
+    @Label("TYPE")
     @Bind(label = "TYPE")
     private short type;
 
     @XmlElement
+    @Label("ORDINAL_POSITION")
     @Bind(label = "ORDINAL_POSITION")
     private short ordinalPosition;
 
     @XmlElement(nillable = true)
+    @MayBeNull
+    @Label("COLUMN_NAME")
     @Bind(label = "COLUMN_NAME", nillable = true)
     private String columnName;
 
     @XmlElement(nillable = true)
+    @MayBeNull
+    @Label("ASC_OR_DESC")
     @Bind(label = "ASC_OR_DESC", nillable = true)
     private String ascOrDesc;
 
     @XmlElement
+    @Label("CARDINALITY")
     @Bind(label = "CARDINALITY")
     private long cardinality;
 
     @XmlElement
+    @Label("PAGES")
     @Bind(label = "PAGES")
     private long pages;
 
     @XmlElement(nillable = true)
+    @MayBeNull
+    @Label("FILTER_CONDITION")
     @Bind(label = "FILTER_CONDITION", nillable = true)
     private String filterCondition;
 }

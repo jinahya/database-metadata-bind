@@ -8,7 +8,8 @@ import javax.xml.bind.annotation.XmlElementRef;
 import javax.xml.bind.annotation.XmlRootElement;
 import java.io.Serializable;
 import java.lang.invoke.MethodHandles;
-import java.sql.ResultSet;
+import java.sql.Connection;
+import java.sql.DatabaseMetaData;
 import java.sql.SQLException;
 import java.sql.SQLFeatureNotSupportedException;
 import java.util.ArrayList;
@@ -788,8 +789,18 @@ public class Metadata implements Serializable {
         } catch (final SQLFeatureNotSupportedException sqlfnse) {
             logger.log(Level.WARNING, "sql feature not supported", sqlfnse);
         }
-        // -----------------------------------------------------------------------------------------------------------------
+        // -------------------------------------------------------------------------------------------------------------
         return instance;
+    }
+
+    public static Metadata newInstance(final DatabaseMetaData metaData) throws SQLException {
+        requireNonNull(metaData, "metaData is null");
+        return newInstance(new MetadataContext(metaData));
+    }
+
+    public static Metadata newInstance(final Connection connection) throws SQLException {
+        requireNonNull(connection, "connection is null");
+        return newInstance(connection.getMetaData());
     }
 
     // -----------------------------------------------------------------------------------------------------------------

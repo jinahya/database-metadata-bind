@@ -21,14 +21,13 @@ package com.github.jinahya.database.metadata.bind;
  */
 
 import jakarta.json.bind.annotation.JsonbProperty;
-import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.Valid;
+import jakarta.validation.constraints.NotNull;
 
 import javax.xml.bind.annotation.XmlAttribute;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlElementRef;
-import javax.xml.bind.annotation.XmlElementWrapper;
 import javax.xml.bind.annotation.XmlRootElement;
-import javax.xml.bind.annotation.XmlType;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
@@ -40,12 +39,7 @@ import java.util.Objects;
  * @author Jin Kwon &lt;jinahya_at_gmail.com&gt;
  */
 @XmlRootElement
-@XmlType(propOrder = {
-        "tableSchem"
-        // -------------------------------------------------------------------------------------------------------------
-        ,"functions", "procedures", "tables", "udts"
-})
-public class Schema extends AbstractChildValue<Catalog> {
+public class Schema extends AbstractChild<Catalog> {
 
     private static final long serialVersionUID = 7457236468401244963L;
 
@@ -149,58 +143,6 @@ public class Schema extends AbstractChildValue<Catalog> {
         return this;
     }
 
-//    // ------------------------------------------------------------------------------------------------------- functions
-//    public List<Function> getFunctions() {
-//        if (functions == null) {
-//            functions = new ArrayList<>();
-//        }
-//        return functions;
-//    }
-//
-//    // ------------------------------------------------------------------------------------------------------ procedures
-//    public List<Procedure> getProcedures() {
-//        if (procedures == null) {
-//            procedures = new ArrayList<>();
-//        }
-//        return procedures;
-//    }
-//
-//    // ---------------------------------------------------------------------------------------------------------- tables
-//    public List<Table> getTables() {
-//        if (tables == null) {
-//            tables = new ArrayList<Table>();
-//        }
-//        return tables;
-//    }
-//
-//    // ------------------------------------------------------------------------------------------------------------ UDTs
-//    public List<UDT> getUDTs() {
-//        if (UDTs == null) {
-//            UDTs = new ArrayList<UDT>();
-//        }
-//        return UDTs;
-//    }
-
-    // -----------------------------------------------------------------------------------------------------------------
-    @JsonbProperty(nillable = true)
-    @XmlAttribute(required = false)
-    Boolean virtual = Boolean.FALSE;
-
-    // -----------------------------------------------------------------------------------------------------------------
-    @JsonbProperty(nillable = true)
-    @XmlAttribute(required = false)
-    @MayBeNull
-    @Label(COLUMN_NAME_TABLE_CATALOG)
-    @Bind(label = COLUMN_NAME_TABLE_CATALOG, nillable = true)
-    private String tableCatalog;
-
-    // -----------------------------------------------------------------------------------------------------------------
-    @XmlElement
-    @NotBlank
-    @Label(COLUMN_NAME_TABLE_SCHEM)
-    @Bind(label = COLUMN_NAME_TABLE_SCHEM)
-    private String tableSchem;
-
     // ------------------------------------------------------------------------------------------------------- functions
     public List<Function> getFunctions() {
         if (functions == null) {
@@ -226,52 +168,43 @@ public class Schema extends AbstractChildValue<Catalog> {
     }
 
     // ------------------------------------------------------------------------------------------------------------ UDTs
-    public List<UDT> getUdts() {
-        if (udts == null) {
-            udts = new ArrayList<>();
+    public List<UDT> getUDTs() {
+        if (UDTs == null) {
+            UDTs = new ArrayList<>();
         }
-        return udts;
+        return UDTs;
     }
 
     // -----------------------------------------------------------------------------------------------------------------
-    @XmlElementWrapper
-    @XmlElementRef
-    @Invoke(name = "getFunctions",
-            types = {String.class, String.class, String.class},
-            parameters = {
-                    @Literals({":tableCatalog", ":tableSchem", "null"})
-            }
-    )
-    private List<Function> functions;
+    @JsonbProperty(nillable = true)
+    @XmlAttribute(required = false)
+    Boolean virtual = Boolean.FALSE;
 
-    @XmlElementWrapper
-    @XmlElementRef
-    @Invoke(name = "getProcedures",
-            types = {String.class, String.class, String.class},
-            parameters = {
-                    @Literals({":tableCatalog", ":tableSchem", "null"})
-            }
-    )
-    private List<Procedure> procedures;
+    // -----------------------------------------------------------------------------------------------------------------
+    @JsonbProperty(nillable = true)
+    @XmlAttribute(required = true)
+    @MayBeNull
+    @Label(COLUMN_NAME_TABLE_CATALOG)
+    @Bind(label = COLUMN_NAME_TABLE_CATALOG, nillable = true)
+    private String tableCatalog;
 
-    @XmlElementWrapper
-    @XmlElementRef
-    @Invoke(name = "getTables",
-            types = {String.class, String.class, String.class,
-                     String[].class},
-            parameters = {
-                    @Literals({":tableCatalog", ":tableSchem", "null", "null"})
-            }
-    )
-    private List<Table> tables;
+    // -----------------------------------------------------------------------------------------------------------------
+    @XmlElement
+    @NotNull
+    @Label(COLUMN_NAME_TABLE_SCHEM)
+    @Bind(label = COLUMN_NAME_TABLE_SCHEM)
+    private String tableSchem;
 
-    @XmlElementWrapper
+    // -----------------------------------------------------------------------------------------------------------------
     @XmlElementRef
-    @Invoke(name = "getUDTs",
-            types = {String.class, String.class, String.class, int[].class},
-            parameters = {
-                    @Literals({":tableCatalog", ":tableSchem", "null", "null"})
-            }
-    )
-    private List<UDT> udts;
+    private List<@Valid @NotNull Function> functions;
+
+    @XmlElementRef
+    private List<@Valid @NotNull Procedure> procedures;
+
+    @XmlElementRef
+    private List<@Valid @NotNull Table> tables;
+
+    @XmlElementRef
+    private List<@Valid @NotNull UDT> UDTs;
 }

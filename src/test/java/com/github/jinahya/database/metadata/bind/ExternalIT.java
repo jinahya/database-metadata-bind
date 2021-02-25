@@ -25,26 +25,22 @@ import org.testng.annotations.Test;
 
 import javax.xml.bind.JAXBException;
 import java.sql.Connection;
-import java.sql.DatabaseMetaData;
 import java.sql.SQLException;
-import java.util.List;
 
-import static com.github.jinahya.database.metadata.bind.JaxbTests.store;
-import static com.github.jinahya.database.metadata.bind.MetadataContext.getCatalogs;
 import static java.sql.DriverManager.getConnection;
 import static org.testng.Assert.assertNotNull;
 
 /**
- * Test class for remote MySQL.
+ * Test class for remote databases.
  *
  * @author Jin Kwon &lt;onacit at gmail.com&gt;
  */
 @Slf4j
-public class ExternalTest {
+public class ExternalIT {
 
     // -----------------------------------------------------------------------------------------------------------------
     @Test
-    public void test() throws SQLException, JAXBException {
+    public void writeToFiles() throws SQLException, JAXBException {
         final String client = System.getProperty("client");
         assertNotNull(client, "client is null");
         log.info("using {}", client);
@@ -58,24 +54,9 @@ public class ExternalTest {
         log.info("connecting...");
         try (Connection connection = getConnection(url, user, password)) {
             log.info("connected: {}", connection);
-            final DatabaseMetaData metadata = connection.getMetaData();
-            final MetadataContext context = new MetadataContext(metadata);
-            final String paths = System.getProperty("paths");
-            if (paths != null) {
-                for (String path : paths.split(",")) {
-                    path = path.trim();
-                    if (path.isEmpty()) {
-                        continue;
-                    }
-                    log.info("suppressing {}", path);
-                    context.addSuppressionPaths(path);
-                }
-            }
-            final List<Catalog> catalogs = getCatalogs(context, true);
-            store(Catalog.class, catalogs, "external.catalogs");
-            store(ClientInfoProperty.class, context.getClientInfoProperties(), "external.clientInfoProperties");
-            store(TableType.class, context.getTableTypes(), "external.tableTypes");
-            store(TypeInfo.class, context.getTypeInfo(), "external.typeInfo");
+            final MetadataContext context = MetadataContext.newInstance(connection);
+            final Metadata metadata = Metadata.newInstance(context);
+            JaxbTests.writeToFile(Metadata.class, metadata, "external");
         }
     }
 }
