@@ -1,9 +1,8 @@
 database-metadata-bind
 ====================
-[![Build Status](https://travis-ci.org/jinahya/database-metadata-bind.svg?branch=develop)](https://travis-ci.org/jinahya/database-metadata-bind)
-[![Maven Central](https://img.shields.io/maven-central/v/com.github.jinahya/database-metadata-bind.svg)](http://search.maven.org/#search%7Cga%7C1%7Cg%3A%22com.github.jinahya%22%20a%3A%22database-metadata-bind%22)
-[![Javadocs](http://javadoc.io/badge/com.github.jinahya/database-metadata-bind.svg)](http://javadoc.io/doc/com.github.jinahya/database-metadata-bind)
-[![Codacy Badge](https://api.codacy.com/project/badge/grade/2e056714e9614bf89b860601cbb2b174)](https://www.codacy.com/app/jinahya/database-metadata-bind)
+[![Java CI with Maven](https://github.com/jinahya/database-metadata-bind/actions/workflows/maven.yml/badge.svg)](https://github.com/jinahya/database-metadata-bind/actions/workflows/maven.yml)
+[![Maven Central](https://img.shields.io/maven-central/v/com.github.jinahya/database-metadata-bind)](https://search.maven.org/artifact/com.github.jinahya/database-metadata-bind)
+[![javadoc](https://javadoc.io/badge2/com.github.jinahya/database-metadata-bind/javadoc.svg)](https://javadoc.io/doc/com.github.jinahya/database-metadata-bind)
 
 A library binding various information from [DatabaseMetaData](http://docs.oracle.com/javase/8/docs/api/java/sql/DatabaseMetaData.html).
 
@@ -18,12 +17,12 @@ final Context context = Context.newInstance(connection);
 final List<Catalog> catalogs = context.getCatalogs();
 final List<Schema> schemas = context.getSchemas("", null);
 final List<Table> tables = context.getTables(null, null, null); // list all tables
-final List<PrimaryKey> primaryKeys
-        = context.getPrimaryKeys("PUBLIC", "SYSTEM_LOBS", "BLOCKS");
+final List<PrimaryKey> primaryKeys = context.getPrimaryKeys("PUBLIC", "SYSTEM_LOBS", "BLOCKS");
 
 // bind all
 final Metadata metadata = Metadata.newInstance(context);
 ```
+
 ## Testing
 
 ### Memory
@@ -62,7 +61,7 @@ name      |value                            |notes
 
 #### Servers, Clients and URLs
 
-database  |`server`        |`<client>` is the version of                  
+database  |`<server>`      |`<client>` is the version of                  
 ----------|----------------|----------------------------------------------
 MariaDB   |`mariadb`       |[`mariadb-java-client`][mariadb-java-client]  
 MySQL     |`mysql`         |[`mysql-connector-java`][mysql-connector-java]
@@ -85,10 +84,6 @@ $ mvn -Pexternal-oracle-ojdbc11 \
 $
 ```
 
-----
-
-[![Domate via Paypal](https://img.shields.io/badge/donate-paypal-blue.svg)](https://www.paypal.com/cgi-bin/webscr?cmd=_cart&business=A954LDFBW4B9N&lc=KR&item_name=GitHub&amount=5%2e00&currency_code=USD&button_subtype=products&add=1&bn=PP%2dShopCartBF%3adonate%2dpaypal%2dblue%2epng%3aNonHosted)
-
 [mariadb-java-client]: https://search.maven.org/artifact/org.mariadb.jdbc/mariadb-java-client
 [mysql-connector-java]: https://search.maven.org/artifact/mysql/mysql-connector-java
 [ojdbc6]: https://search.maven.org/artifact/com.oracle.database.jdbc/ojdbc6
@@ -96,5 +91,10 @@ $
 [ojdbc10]: https://search.maven.org/artifact/com.oracle.database.jdbc/ojdbc10
 [ojdbc11]: https://search.maven.org/artifact/com.oracle.database.jdbc/ojdbc11
 [postgresql]: https://search.maven.org/artifact/org.postgresql/postgresql
-[mysql-jdbc]: https://search.maven.org/artifact/com.microsoft.sqlserver/mssql-jdbc 
+[mysql-jdbc]: https://search.maven.org/artifact/com.microsoft.sqlserver/mssql-jdbc
+
+----
+
+[![Domate via Paypal](https://img.shields.io/badge/donate-paypal-blue.svg)](https://www.paypal.com/cgi-bin/webscr?cmd=_cart&business=A954LDFBW4B9N&lc=KR&item_name=GitHub&amount=5%2e00&currency_code=USD&button_subtype=products&add=1&bn=PP%2dShopCartBF%3adonate%2dpaypal%2dblue%2epng%3aNonHosted)
+
 
