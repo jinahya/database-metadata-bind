@@ -20,24 +20,23 @@ package com.github.jinahya.database.metadata.bind;
  * #L%
  */
 
+import org.junit.jupiter.api.Disabled;
+import org.junit.jupiter.api.Test;
 import org.slf4j.Logger;
-import org.testng.annotations.Test;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
-import java.util.List;
 
 import static java.lang.invoke.MethodHandles.lookup;
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.slf4j.LoggerFactory.getLogger;
-import static org.testng.Assert.assertEquals;
-import static org.testng.Assert.assertTrue;
 
 /**
  * @author Jin Kwon &lt;jinahya_at_gmail.com&gt;
  */
-public class ReflectionTest {
+class ReflectionTest {
 
     private static final Logger logger = getLogger(lookup().lookupClass());
 
@@ -49,29 +48,30 @@ public class ReflectionTest {
     }
 
     // -----------------------------------------------------------------------------------------------------------------
-    @Test(enabled = false)
+    @Disabled
+    @Test
     public void test() throws NoSuchMethodException {
 
         final boolean b1 = true;
         final Boolean b2 = true;
-        assertTrue(Boolean.class.isInstance(b1));
-        assertTrue(Boolean.class.isInstance(b2));
+        assertThat(b1).isInstanceOf(Boolean.class);
+        assertThat(b2).isInstanceOf(Boolean.class);
 
         final int i1 = 1;
         final Integer i2 = 1;
-        assertTrue(Integer.class.isInstance(i1));
-        assertTrue(Integer.class.isInstance(i2));
-        assertTrue(Number.class.isInstance(i1));
-        assertTrue(Number.class.isInstance(i2));
+        assertThat(i1).isInstanceOf(Integer.class);
+        assertThat(i2).isIn(Integer.class);
+        assertThat(i1).isInstanceOf(Number.class);
+        assertThat(i2).isInstanceOf(Number.class);
 
         final long l1 = 1L;
         final Long l2 = 1L;
-        assertTrue(Long.class.isInstance(l1));
-        assertTrue(Long.class.isInstance(l2));
-        assertTrue(Number.class.isInstance(l1));
-        assertTrue(Number.class.isInstance(l2));
+        assertThat(l1).isInstanceOf(Long.class);
+        assertThat(l2).isInstanceOf(Long.class);
+        assertThat(l1).isInstanceOf(Number.class);
+        assertThat(l2).isInstanceOf(Number.class);
 
-        assertEquals(Integer.TYPE, int.class);
+        assertThat(Integer.TYPE).isEqualTo(int.class);
 
         for (Method method : getClass().getDeclaredMethods()) {
             logger.debug("method: {}", method);
@@ -82,7 +82,8 @@ public class ReflectionTest {
         logger.debug("method with int: {}", getClass().getDeclaredMethod("method", int.class));
     }
 
-    @Test(enabled = false)
+    @Disabled
+    @Test
     public void listType() throws ReflectiveOperationException {
         final Field field = getClass().getDeclaredField("list");
         final Type type = field.getGenericType();
@@ -92,7 +93,4 @@ public class ReflectionTest {
             logger.debug("typeName: {}", typeName);
         }
     }
-
-    // -------------------------------------------------------------------------
-    private List<String> list;
 }

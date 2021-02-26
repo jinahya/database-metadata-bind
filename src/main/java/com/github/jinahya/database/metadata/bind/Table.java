@@ -37,7 +37,7 @@ import java.util.List;
  * @author Jin Kwon &lt;jinahya_at_gmail.com&gt;
  */
 @XmlRootElement
-public class Table extends AbstractChild<Schema> {
+public class Table extends SchemaChild {
 
     // -----------------------------------------------------------------------------------------------------------------
     private static final long serialVersionUID = 6590036695540141125L;
@@ -57,15 +57,6 @@ public class Table extends AbstractChild<Schema> {
                + ",selfReferencingColName=" + selfReferencingColName
                + ",refGeneration=" + refGeneration
                + '}';
-    }
-
-    // ---------------------------------------------------------------------------------------------------------- schema
-    public Schema getSchema() {
-        return getParent();
-    }
-
-    public void setSchema(final Schema schema) {
-        setParent(schema);
     }
 
     // -------------------------------------------------------------------------------------------------------- tableCat

@@ -29,7 +29,7 @@ import java.sql.SQLException;
 import java.util.Properties;
 
 import static java.sql.DriverManager.getConnection;
-import static org.testng.Assert.fail;
+import static org.junit.jupiter.api.Assertions.fail;
 
 /**
  * Test clsss for Apache Derby in memory.

@@ -22,8 +22,8 @@ package com.github.jinahya.database.metadata.bind;
 
 import lombok.NonNull;
 import lombok.extern.slf4j.Slf4j;
+import org.junit.jupiter.api.Test;
 import org.slf4j.Logger;
-import org.testng.annotations.Test;
 
 import java.beans.BeanInfo;
 import java.beans.IntrospectionException;
@@ -42,13 +42,11 @@ import java.util.Map;
 import java.util.Map.Entry;
 
 import static com.github.jinahya.database.metadata.bind.Utils.fields;
-import static java.lang.String.format;
 import static java.lang.invoke.MethodHandles.lookup;
 import static java.util.function.Function.identity;
 import static java.util.stream.Collectors.toMap;
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.slf4j.LoggerFactory.getLogger;
-import static org.testng.Assert.assertFalse;
-import static org.testng.Assert.assertNotNull;
 
 /**
  * Test java beans conformance.
@@ -56,11 +54,11 @@ import static org.testng.Assert.assertNotNull;
  * @author Jin Kwon &lt;onacit at gmail.com&gt;
  */
 @Slf4j
-public class JavaBeansTest {
+class JavaBeansTest {
 
     private static final Logger logger = getLogger(lookup().lookupClass());
 
-    // -------------------------------------------------------------------------
+    // -----------------------------------------------------------------------------------------------------------------
     private static void nillable(@NonNull final Class<?> klass) {
         for (Entry<Field, Bind> entry : fields(klass, Bind.class).entrySet()) {
             final Field field = entry.getKey();
@@ -68,7 +66,7 @@ public class JavaBeansTest {
             if (!bind.nillable()) {
                 continue;
             }
-            assertFalse(field.getType().isPrimitive(), "@Bind(nillable); " + field);
+            assertThat(field.getType().isPrimitive()).isFalse();
         }
     }
 
@@ -101,12 +99,12 @@ public class JavaBeansTest {
                 continue;
             }
             final PropertyDescriptor descriptor = descriptors.get(field.getName());
-            assertNotNull(descriptor, format("no descriptor: %s", field));
-            assertNotNull(descriptor.getReadMethod(), "no read method; " + field);
+            assertThat(descriptor).isNotNull();
+            assertThat(descriptor.getReadMethod()).isNotNull();
             if (field.getType().equals(List.class)) {
                 continue;
             }
-            assertNotNull(descriptor.getWriteMethod(), "no write method; " + field);
+            assertThat(descriptor.getWriteMethod()).isNotNull();
         }
     }
 

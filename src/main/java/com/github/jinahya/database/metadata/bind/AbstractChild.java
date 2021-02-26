@@ -3,23 +3,26 @@ package com.github.jinahya.database.metadata.bind;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotNull;
 
-abstract class AbstractChild<P extends MetadataValue> implements Child<P> {
+import javax.xml.bind.annotation.XmlTransient;
+
+abstract class AbstractChild<P extends MetadataType> implements Child<P> {
 
     AbstractChild() {
         super();
     }
 
     @Override
-    public P getParent() {
-        return parent;
+    public P getParent_() {
+        return parent_;
     }
 
     @Override
-    public void setParent(final P parent) {
-        this.parent = parent;
+    public void setParent_(final P parent) {
+        this.parent_ = parent;
     }
 
+    @XmlTransient
     @Valid
     @NotNull
-    private P parent;
+    private P parent_;
 }

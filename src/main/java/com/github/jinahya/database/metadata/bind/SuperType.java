@@ -23,6 +23,7 @@ package com.github.jinahya.database.metadata.bind;
 import javax.xml.bind.annotation.XmlAttribute;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
+import javax.xml.bind.annotation.XmlTransient;
 
 /**
  * An entity class for binding the result of {@link java.sql.DatabaseMetaData#getSuperTypes(java.lang.String,
@@ -35,7 +36,7 @@ public class SuperType extends AbstractChild<UDT> {
 
     private static final long serialVersionUID = 4603878785941565029L;
 
-    // -------------------------------------------------------------------------
+    // -----------------------------------------------------------------------------------------------------------------
     @Override
     public String toString() {
         return super.toString() + '{'
@@ -49,15 +50,16 @@ public class SuperType extends AbstractChild<UDT> {
     }
 
     // ------------------------------------------------------------------------------------------------------------- UDT
-    public UDT getUDT() {
-        return getParent();
+    @XmlTransient
+    UDT getUDT_() {
+        return getParent_();
     }
 
-    public void setUDT(final UDT udt) {
-        setParent(udt);
+    void setUDT_(final UDT udt) {
+        setParent_(udt);
     }
 
-    // ----------------------------------------------------------------- typeCat
+    // --------------------------------------------------------------------------------------------------------- typeCat
     public String getTypeCat() {
         return typeCat;
     }
@@ -66,7 +68,7 @@ public class SuperType extends AbstractChild<UDT> {
         this.typeCat = typeCat;
     }
 
-    // --------------------------------------------------------------- typeSchem
+    // ------------------------------------------------------------------------------------------------------- typeSchem
     public String getTypeSchem() {
         return typeSchem;
     }
@@ -75,7 +77,7 @@ public class SuperType extends AbstractChild<UDT> {
         this.typeSchem = typeSchem;
     }
 
-    // ---------------------------------------------------------------- typeName
+    // -------------------------------------------------------------------------------------------------------- typeName
     public String getTypeName() {
         return typeName;
     }
@@ -84,7 +86,7 @@ public class SuperType extends AbstractChild<UDT> {
         this.typeName = typeName;
     }
 
-    // ------------------------------------------------------------ supertypeCat
+    // ---------------------------------------------------------------------------------------------------- supertypeCat
     public String getSupertypeCat() {
         return supertypeCat;
     }
@@ -93,7 +95,7 @@ public class SuperType extends AbstractChild<UDT> {
         this.supertypeCat = supertypeCat;
     }
 
-    // ---------------------------------------------------------- supertypeSchem
+    // -------------------------------------------------------------------------------------------------- supertypeSchem
     public String getSupertypeSchem() {
         return supertypeSchem;
     }
@@ -102,7 +104,7 @@ public class SuperType extends AbstractChild<UDT> {
         this.supertypeSchem = supertypeSchem;
     }
 
-    // ----------------------------------------------------------- supertypeName
+    // --------------------------------------------------------------------------------------------------- supertypeName
     public String getSupertypeName() {
         return supertypeName;
     }
@@ -111,7 +113,7 @@ public class SuperType extends AbstractChild<UDT> {
         this.supertypeName = supertypeName;
     }
 
-    // -------------------------------------------------------------------------
+    // -----------------------------------------------------------------------------------------------------------------
     @XmlAttribute
     @MayBeNull
     @Label("TYPE_CAT")
@@ -124,7 +126,7 @@ public class SuperType extends AbstractChild<UDT> {
     @Bind(label = "TYPE_SCHEM", nillable = true)
     private String typeSchem;
 
-    // -------------------------------------------------------------------------
+    // -----------------------------------------------------------------------------------------------------------------
     @XmlElement
     @Label("TYPE_NAME")
     @Bind(label = "TYPE_NAME")

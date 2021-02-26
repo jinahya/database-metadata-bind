@@ -31,9 +31,7 @@ import java.sql.DatabaseMetaData;
 import java.util.ArrayList;
 import java.util.List;
 
-import static java.sql.DatabaseMetaData.columnNoNulls;
-import static java.sql.DatabaseMetaData.columnNullable;
-import static java.sql.DatabaseMetaData.columnNullableUnknown;
+import static java.sql.DatabaseMetaData.*;
 
 /**
  * An entity class for columns
@@ -41,7 +39,7 @@ import static java.sql.DatabaseMetaData.columnNullableUnknown;
  * @author Jin Kwon &lt;jinahya_at_gmail.com&gt;
  */
 @XmlRootElement
-public class Column extends AbstractChild<Table> {
+public class Column extends TableChild {
 
     private static final long serialVersionUID = -409653682729081530L;
 
@@ -135,16 +133,7 @@ public class Column extends AbstractChild<Table> {
                + '}';
     }
 
-    // ----------------------------------------------------------------------------------------------------------- table
-    public Table getTable() {
-        return getParent();
-    }
-
-    public void setTable(final Table table) {
-        setParent(table);
-    }
-
-    // ---------------------------------------------------------------- tableCat
+    // -------------------------------------------------------------------------------------------------------- tableCat
     public String getTableCat() {
         return tableCat;
     }
@@ -153,7 +142,7 @@ public class Column extends AbstractChild<Table> {
         this.tableCat = tableCat;
     }
 
-    // -------------------------------------------------------------- tableSchem
+    // ------------------------------------------------------------------------------------------------------ tableSchem
     public String getTableSchem() {
         return tableSchem;
     }

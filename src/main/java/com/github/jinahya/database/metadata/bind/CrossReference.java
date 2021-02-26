@@ -24,13 +24,13 @@ import javax.xml.bind.annotation.XmlAttribute;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
 import java.io.Serializable;
+import java.util.Collection;
 
 /**
  * An entity class for cross references.
  *
  * @author Jin Kwon &lt;jinahya_at_gmail.com&gt;
- * @see MetadataContext#getCrossReferences(java.lang.String, java.lang.String, java.lang.String, java.lang.String,
- * java.lang.String, java.lang.String)
+ * @see MetadataContext#getCrossReferences(String, String, String, String, String, String, Collection)
  */
 @XmlRootElement
 public class CrossReference implements Serializable {

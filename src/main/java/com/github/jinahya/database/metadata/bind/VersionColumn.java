@@ -23,16 +23,15 @@ package com.github.jinahya.database.metadata.bind;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
 import java.sql.DatabaseMetaData;
+import java.util.Collection;
 
-import static java.sql.DatabaseMetaData.versionColumnNotPseudo;
-import static java.sql.DatabaseMetaData.versionColumnPseudo;
-import static java.sql.DatabaseMetaData.versionColumnUnknown;
+import static java.sql.DatabaseMetaData.*;
 
 /**
  * An entity class for version columns.
  *
  * @author Jin Kwon &lt;jinahya_at_gmail.com&gt;
- * @see MetadataContext#getVersionColumns(java.lang.String, java.lang.String, java.lang.String)
+ * @see MetadataContext#getVersionColumns(String, String, String, Collection)
  */
 @XmlRootElement
 public class VersionColumn extends TableChild {

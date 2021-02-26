@@ -12,7 +12,7 @@ import static java.util.Objects.requireNonNull;
 
 abstract class AreVisible {
 
-    protected static final Logger logger = Logger.getLogger(MethodHandles.lookup().lookupClass().getName());
+    static final Logger logger = Logger.getLogger(MethodHandles.lookup().lookupClass().getName());
 
     static <T extends AreVisible> List<T> list(final Class<T> clazz) {
         requireNonNull(clazz, "clazz is null");

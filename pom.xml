@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
   <modelVersion>4.0.0</modelVersion>
 
   <parent>
@@ -21,10 +20,6 @@
     <name>Jinahya, Inc.</name>
     <url>https://jinahya.com</url>
   </organization>
-
-  <prerequisites>
-    <maven>3.0.1</maven>
-  </prerequisites>
 
   <scm>
     <connection>scm:git:git@github.com:jinahya/${project.artifactId}.git</connection>
@@ -61,6 +56,7 @@
     <version.org.junit.jupiter>5.8.0-M1</version.org.junit.jupiter>
     <version.postgresql-embedded>2.10</version.postgresql-embedded>
     <version.postgresql>42.2.19.jre7</version.postgresql>
+    <version.org.testcontainers>1.15.2</version.org.testcontainers>
   </properties>
 
   <dependencyManagement>
@@ -99,6 +95,13 @@
         <groupId>org.mariadb.jdbc</groupId>
         <artifactId>mariadb-java-client</artifactId>
         <version>${version.mariadb-java-client}</version>
+      </dependency>
+      <dependency>
+        <groupId>org.testcontainers</groupId>
+        <artifactId>testcontainers-bom</artifactId>
+        <version>${version.org.testcontainers}</version>
+        <type>pom</type>
+        <scope>import</scope>
       </dependency>
     </dependencies>
   </dependencyManagement>
@@ -146,12 +149,6 @@
       <scope>test</scope>
     </dependency>
     <dependency>
-      <groupId>jakarta.json.bind</groupId>
-      <artifactId>jakarta.json.bind-api</artifactId>
-      <version>2.0.0</version>
-      <scope>provided</scope>
-    </dependency>
-    <dependency>
       <groupId>jakarta.persistence</groupId>
       <artifactId>jakarta.persistence-api</artifactId>
       <version>3.0.0</version>
@@ -178,7 +175,8 @@
     <dependency>
       <groupId>org.apache.derby</groupId>
       <artifactId>derby</artifactId>
-      <version>10.14.2.0</version> <!-- https://db.apache.org/derby/derby_downloads.html#For+Java+8+and+Higher -->
+      <version>10.14.2.0</version>
+      <!-- https://db.apache.org/derby/derby_downloads.html#For+Java+8+and+Higher -->
       <scope>test</scope>
     </dependency>
     <dependency>
@@ -198,18 +196,6 @@
       <artifactId>animal-sniffer-annotations</artifactId>
       <version>${version.animal-sniffer}</version>
       <scope>provided</scope>
-    </dependency>
-    <dependency> <!-- implementation of jakarta.json.bind-api -->
-      <groupId>org.eclipse</groupId>
-      <artifactId>yasson</artifactId>
-      <version>2.0.1</version>
-      <scope>test</scope>
-    </dependency>
-    <dependency> <!-- JSON-P -->
-      <groupId>org.glassfish</groupId>
-      <artifactId>jakarta.json</artifactId>
-      <version>2.0.0</version>
-      <scope>test</scope>
     </dependency>
     <dependency>
       <groupId>org.hsqldb</groupId>
@@ -242,12 +228,6 @@
       <scope>provided</scope>
     </dependency>
     <dependency>
-      <groupId>org.testng</groupId>
-      <artifactId>testng</artifactId>
-      <version>7.3.0</version>
-      <scope>test</scope>
-    </dependency>
-    <dependency>
       <groupId>org.xerial</groupId>
       <artifactId>sqlite-jdbc</artifactId>
       <version>3.34.0</version>
@@ -262,6 +242,11 @@
           <groupId>org.apache.maven.plugins</groupId>
           <artifactId>maven-compiler-plugin</artifactId>
           <version>3.8.1</version>
+        </plugin>
+        <plugin>
+          <groupId>org.apache.maven.plugins</groupId>
+          <artifactId>maven-failsafe-plugin</artifactId>
+          <version>${version.maven-failsafe}</version>
         </plugin>
         <plugin>
           <groupId>org.apache.maven.plugins</groupId>
@@ -326,6 +311,20 @@
             <goals>
               <goal>enforce</goal>
             </goals>
+          </execution>
+          <execution>
+            <id>enforce-require-java-version-to-[1.8.0,)</id>
+            <goals>
+              <goal>enforce</goal>
+            </goals>
+            <configuration>
+              <skip>false</skip>
+              <rules>
+                <requireJavaVersion>
+                  <version>[1.8.0,)</version>
+                </requireJavaVersion>
+              </rules>
+            </configuration>
           </execution>
         </executions>
       </plugin>
@@ -430,6 +429,13 @@
         <plugins>
           <plugin>
             <groupId>org.apache.maven.plugins</groupId>
+            <artifactId>maven-surefire-plugin</artifactId>
+            <configuration>
+              <skipTests>true</skipTests>
+            </configuration>
+          </plugin>
+          <plugin>
+            <groupId>org.apache.maven.plugins</groupId>
             <artifactId>maven-failsafe-plugin</artifactId>
             <version>${version.maven-failsafe}</version>
             <executions>
@@ -443,6 +449,26 @@
           </plugin>
         </plugins>
       </build>
+    </profile>
+    <profile>
+      <id>container-mariadb</id>
+      <dependencies>
+        <dependency>
+          <groupId>org.mariadb.jdbc</groupId>
+          <artifactId>mariadb-java-client</artifactId>
+          <scope>test</scope>
+        </dependency>
+        <dependency>
+          <groupId>org.testcontainers</groupId>
+          <artifactId>mariadb</artifactId>
+          <scope>test</scope>
+        </dependency>
+        <dependency>
+          <groupId>org.testcontainers</groupId>
+          <artifactId>testcontainers</artifactId>
+          <scope>test</scope>
+        </dependency>
+      </dependencies>
     </profile>
     <profile>
       <id>external-mariadb</id>
@@ -510,7 +536,7 @@
         <dependency>
           <groupId>org.postgresql</groupId>
           <artifactId>postgresql</artifactId>
-          <version>${client}</version>
+          <scope>test</scope>
         </dependency>
       </dependencies>
     </profile>
@@ -520,6 +546,7 @@
         <dependency>
           <groupId>com.microsoft.sqlserver</groupId>
           <artifactId>mssql-jdbc</artifactId>
+          <scope>test</scope>
         </dependency>
       </dependencies>
     </profile>

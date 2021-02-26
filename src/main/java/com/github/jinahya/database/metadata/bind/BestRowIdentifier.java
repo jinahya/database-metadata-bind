@@ -24,12 +24,7 @@ import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
 import java.sql.DatabaseMetaData;
 
-import static java.sql.DatabaseMetaData.bestRowNotPseudo;
-import static java.sql.DatabaseMetaData.bestRowPseudo;
-import static java.sql.DatabaseMetaData.bestRowSession;
-import static java.sql.DatabaseMetaData.bestRowTemporary;
-import static java.sql.DatabaseMetaData.bestRowTransaction;
-import static java.sql.DatabaseMetaData.bestRowUnknown;
+import static java.sql.DatabaseMetaData.*;
 
 /**
  * Represents best row identifiers of tables.
@@ -38,7 +33,7 @@ import static java.sql.DatabaseMetaData.bestRowUnknown;
  * @see MetadataContext#getBestRowIdentifier(java.lang.String, java.lang.String, java.lang.String, int, boolean)
  */
 @XmlRootElement
-public class BestRowIdentifier extends AbstractChild<Table> {
+public class BestRowIdentifier extends TableChild {
 
     // -----------------------------------------------------------------------------------------------------------------
     private static final long serialVersionUID = -6733770602373723371L;
@@ -96,7 +91,7 @@ public class BestRowIdentifier extends AbstractChild<Table> {
             return rawValue;
         }
 
-        // -----------------------------------------------------------------------------------------------------------------
+        // -------------------------------------------------------------------------------------------------------------
         private final int rawValue;
     }
 
@@ -122,7 +117,7 @@ public class BestRowIdentifier extends AbstractChild<Table> {
          */
         BEST_ROW_SESSION(bestRowSession);
 
-        // ---------------------------------------------------------------------
+        // -------------------------------------------------------------------------------------------------------------
 
         /**
          * Returns the constant whose raw value equals to given.
@@ -159,7 +154,7 @@ public class BestRowIdentifier extends AbstractChild<Table> {
     @Override
     public String toString() {
         return super.toString() + '{'
-               + "scope=" + getScope()
+               + "scope=" + scope
                + ",columnName=" + columnName
                + ",dataType=" + dataType
                + ",typeName=" + typeName
@@ -168,15 +163,6 @@ public class BestRowIdentifier extends AbstractChild<Table> {
                + ",decimalDigits=" + decimalDigits
                + ",pseudoColumn=" + pseudoColumn
                + '}';
-    }
-
-    // ----------------------------------------------------------------------------------------------------------- table
-    public Table getTable() {
-        return getParent();
-    }
-
-    void setTable(final Table table) {
-        setParent(table);
     }
 
     // ----------------------------------------------------------------------------------------------------------- scope

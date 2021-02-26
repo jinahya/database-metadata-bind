@@ -20,21 +20,13 @@ package com.github.jinahya.database.metadata.bind;
  * #L%
  */
 
-import jakarta.json.bind.annotation.JsonbProperty;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 
-import javax.xml.bind.annotation.XmlAttribute;
-import javax.xml.bind.annotation.XmlElement;
-import javax.xml.bind.annotation.XmlElementRef;
-import javax.xml.bind.annotation.XmlElementWrapper;
-import javax.xml.bind.annotation.XmlRootElement;
+import javax.xml.bind.annotation.*;
 import java.text.Collator;
-import java.util.ArrayList;
-import java.util.Comparator;
-import java.util.List;
-import java.util.Objects;
+import java.util.*;
 
 import static java.util.Objects.requireNonNull;
 
@@ -42,10 +34,10 @@ import static java.util.Objects.requireNonNull;
  * An entity class for binding the result of {@link java.sql.DatabaseMetaData#getCatalogs()}.
  *
  * @author Jin Kwon &lt;jinahya_at_gmail.com&gt;
- * @see MetadataContext#getCatalogs()
+ * @see MetadataContext#getCatalogs(Collection)
  */
 @XmlRootElement
-public class Catalog implements MetadataValue {
+public class Catalog implements MetadataType {
 
     // -----------------------------------------------------------------------------------------------------------------
     private static final long serialVersionUID = 6239185259128825953L;
@@ -177,18 +169,15 @@ public class Catalog implements MetadataValue {
     }
 
     // -----------------------------------------------------------------------------------------------------------------
-    @JsonbProperty(nillable = true)
     @XmlAttribute(required = false)
     Boolean virtual = Boolean.FALSE;
 
-    @JsonbProperty(nillable = false)
     @XmlElement(required = true)
     @NotBlank
     @Label(COLUMN_NAME_TABLE_CAT)
     @Bind(label = COLUMN_NAME_TABLE_CAT)
     private String tableCat;
 
-    @JsonbProperty(nillable = true)
     @XmlElementWrapper(required = true)
     @XmlElementRef
     private List<@Valid @NotNull Schema> schemas;

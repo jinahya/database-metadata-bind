@@ -20,20 +20,13 @@ package com.github.jinahya.database.metadata.bind;
  * #L%
  */
 
-import jakarta.json.bind.annotation.JsonbTransient;
-
 import javax.xml.bind.annotation.XmlAttribute;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlTransient;
 import java.sql.DatabaseMetaData;
 
-import static java.sql.DatabaseMetaData.functionColumnResult;
-import static java.sql.DatabaseMetaData.procedureColumnIn;
-import static java.sql.DatabaseMetaData.procedureColumnInOut;
-import static java.sql.DatabaseMetaData.procedureColumnOut;
-import static java.sql.DatabaseMetaData.procedureColumnReturn;
-import static java.sql.DatabaseMetaData.procedureColumnUnknown;
+import static java.sql.DatabaseMetaData.*;
 
 /**
  * An entity class for binding the result of {@link java.sql.DatabaseMetaData#getProcedureColumns(java.lang.String,
@@ -162,14 +155,13 @@ public class ProcedureColumn extends AbstractChild<Procedure> {
     }
 
     // ------------------------------------------------------------------------------------------------------- procedure
-    @JsonbTransient
     @XmlTransient
-    public Procedure getProcedure() {
-        return getParent();
+    public Procedure getProcedure_() {
+        return getParent_();
     }
 
-    public void setProcedure(final Procedure procedure) {
-        setParent(procedure);
+    public void setProcedure_(final Procedure procedure) {
+        setParent_(procedure);
     }
 
     // ------------------------------------------------------------ procedureCat

@@ -25,7 +25,7 @@ import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlTransient;
 
 @XmlTransient
-abstract class TableKey extends AbstractChild<Table> {
+abstract class TableKey extends TableChild {
 
     private static final long serialVersionUID = 6713872409315471232L;
 
@@ -48,15 +48,6 @@ abstract class TableKey extends AbstractChild<Table> {
                + ",pkName=" + pkName
                + ",deferrability=" + deferrability
                + '}';
-    }
-
-    // ----------------------------------------------------------------------------------------------------------- table
-    public Table getTable() {
-        return getParent();
-    }
-
-    public void setTable(final Table table) {
-        setParent(table);
     }
 
     // ------------------------------------------------------------------------------------------------------ pktableCat

@@ -29,7 +29,7 @@ import javax.xml.bind.annotation.XmlRootElement;
  * @author Jin Kwon &lt;jinahya_at_gmail.com&gt;
  */
 @XmlRootElement
-public class ClientInfoProperty implements MetadataValue {
+public class ClientInfoProperty implements MetadataType {
 
     private static final long serialVersionUID = -2913230435651853254L;
 

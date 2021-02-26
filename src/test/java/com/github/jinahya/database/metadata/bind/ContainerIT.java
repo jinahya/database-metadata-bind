@@ -34,12 +34,10 @@ import static java.sql.DriverManager.getConnection;
  * @author Jin Kwon &lt;onacit at gmail.com&gt;
  */
 @Slf4j
-class ExternalIT {
+class ContainerIT {
 
     // -----------------------------------------------------------------------------------------------------------------
-    @EnabledIfSystemProperty(named = "password", matches = ".+")
-    @EnabledIfSystemProperty(named = "user", matches = ".+")
-    @EnabledIfSystemProperty(named = "url", matches = ".+")
+    @EnabledIfSystemProperty(named = "url", matches = "jdbc:tc:.+")
     @Test
     void writeToFiles() throws Exception {
         final String url = System.getProperty("url");
@@ -50,7 +48,7 @@ class ExternalIT {
             log.info("connected: {}", connection);
             final MetadataContext context = MetadataContext.newInstance(connection);
             final DatabaseMetadata metadata = DatabaseMetadata.newInstance(context);
-            MetadataTests.writeToFiles(metadata, "external");
+            MetadataTests.writeToFiles(metadata, "container");
         }
     }
 }

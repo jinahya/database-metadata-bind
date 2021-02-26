@@ -76,7 +76,7 @@ class EmbeddedMariadbTest {
         try (Connection connection = getConnection(URL, USER, PASSWORD)) {
             log.debug("connection: {}", connection);
             final MetadataContext context = MetadataContext.newInstance(connection);
-            final Metadata metadata = Metadata.newInstance(context);
+            final DatabaseMetadata metadata = DatabaseMetadata.newInstance(context);
             MetadataTests.writeToFiles(metadata, "embedded.mariadb.metadata");
         }
     }

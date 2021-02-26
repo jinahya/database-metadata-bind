@@ -21,7 +21,7 @@ package com.github.jinahya.database.metadata.bind;
  */
 
 import lombok.extern.slf4j.Slf4j;
-import org.testng.annotations.Test;
+import org.junit.jupiter.api.Test;
 
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBException;
@@ -70,7 +70,7 @@ public class JaxbTest {
         });
     }
 
-    @Test(enabled = true)
+    @Test
     public void printSchema() throws JAXBException, IOException {
         final JAXBContext context = JAXBContext.newInstance(JaxbTest.class.getPackage().getName());
         printSchema(context);

@@ -24,9 +24,7 @@ import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
 import java.sql.DatabaseMetaData;
 
-import static java.sql.DatabaseMetaData.typeNoNulls;
-import static java.sql.DatabaseMetaData.typeNullable;
-import static java.sql.DatabaseMetaData.typeNullableUnknown;
+import static java.sql.DatabaseMetaData.*;
 
 /**
  * An entity class for binding the result of {@link java.sql.DatabaseMetaData#getTypeInfo() getTypeInfo()}.
@@ -34,7 +32,7 @@ import static java.sql.DatabaseMetaData.typeNullableUnknown;
  * @author Jin Kwon &lt;jinahya_at_gmail.com&gt;
  */
 @XmlRootElement
-public class TypeInfo implements MetadataValue {
+public class TypeInfo implements MetadataType {
 
     private static final long serialVersionUID = -3964147654019495313L;
 

@@ -21,24 +21,16 @@ package com.github.jinahya.database.metadata.bind;
  */
 
 import lombok.extern.slf4j.Slf4j;
-import org.atteo.evo.inflector.English;
 import org.w3c.dom.Node;
 
-import javax.xml.bind.JAXBContext;
-import javax.xml.bind.JAXBElement;
-import javax.xml.bind.JAXBException;
-import javax.xml.bind.Marshaller;
-import javax.xml.bind.SchemaOutputResolver;
-import javax.xml.bind.Unmarshaller;
+import javax.xml.bind.*;
 import javax.xml.transform.Result;
 import javax.xml.transform.dom.DOMResult;
 import javax.xml.transform.stream.StreamResult;
-import java.beans.Introspector;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Paths;
-import java.util.Collection;
 
 import static java.util.Objects.requireNonNull;
 
@@ -51,25 +43,9 @@ import static java.util.Objects.requireNonNull;
 final class JaxbTests {
 
     // -----------------------------------------------------------------------------------------------------------------
-    static String plural(final Class<?> type) {
-        String singular = type.getSimpleName();
-        singular = Introspector.decapitalize(singular);
-        return English.plural(singular);
-    }
-
-    static <T> void store(final Class<T> type, final Collection<? extends T> elements, final String name)
-            throws JAXBException {
-        final JAXBContext context = JAXBContext.newInstance(Wrapper.class, type);
-        final Marshaller marshaller = context.createMarshaller();
-        marshaller.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, Boolean.TRUE);
-        final Wrapper<T> wrapper = Wrapper.of(elements);
-        final File output = Paths.get("target", name + ".xml").toFile();
-        marshaller.marshal(new JAXBElement<>(Wrapper.NAME, Wrapper.class, wrapper), output);
-    }
-
     static <T> void writeToFile(final Class<? super T> type, final T value, final String name)
             throws JAXBException {
-        final JAXBContext context = JAXBContext.newInstance(Wrapper.class, type);
+        final JAXBContext context = JAXBContext.newInstance(type);
         final Marshaller marshaller = context.createMarshaller();
         marshaller.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, Boolean.TRUE);
         final File output = Paths.get("target", name + ".xml").toFile();
