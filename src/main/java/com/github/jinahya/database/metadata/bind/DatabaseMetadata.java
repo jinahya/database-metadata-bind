@@ -11,9 +11,9 @@ import java.sql.SQLException;
 import java.sql.SQLFeatureNotSupportedException;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import static com.github.jinahya.database.metadata.bind.Utils.logSqlFeatureNotSupportedException;
 import static java.util.Objects.requireNonNull;
 
 @XmlRootElement
@@ -25,35 +25,34 @@ public class DatabaseMetadata implements MetadataType {
     public static DatabaseMetadata newInstance(final MetadataContext context) throws SQLException {
         requireNonNull(context, "context is null");
         final DatabaseMetadata instance = new DatabaseMetadata();
-        final String message = "sql feature not supported";
         // -------------------------------------------------------------------------------------------------------------
         try {
             instance.allProceduresAreCallable = context.databaseMetaData.allProceduresAreCallable();
         } catch (final SQLFeatureNotSupportedException sqlfnse) {
-            logger.log(Level.WARNING, message, sqlfnse);
+            logSqlFeatureNotSupportedException(logger, sqlfnse);
         }
         try {
             instance.allTablesAreSelectable = context.databaseMetaData.allTablesAreSelectable();
         } catch (final SQLFeatureNotSupportedException sqlfnse) {
-            logger.log(Level.WARNING, message, sqlfnse);
+            logSqlFeatureNotSupportedException(logger, sqlfnse);
         }
         try {
             instance.autoCommitFailureClosesAllResultSets
                     = context.databaseMetaData.autoCommitFailureClosesAllResultSets();
         } catch (final SQLFeatureNotSupportedException sqlfnse) {
-            logger.log(Level.WARNING, message, sqlfnse);
+            logSqlFeatureNotSupportedException(logger, sqlfnse);
         }
         try {
             instance.dataDefinitionCausesTransactionCommit
                     = context.databaseMetaData.dataDefinitionCausesTransactionCommit();
         } catch (final SQLFeatureNotSupportedException sqlfnse) {
-            logger.log(Level.WARNING, message, sqlfnse);
+            logSqlFeatureNotSupportedException(logger, sqlfnse);
         }
         try {
             instance.dataDefinitionIgnoredInTransactions
                     = context.databaseMetaData.dataDefinitionIgnoredInTransactions();
         } catch (final SQLFeatureNotSupportedException sqlfnse) {
-            logger.log(Level.WARNING, message, sqlfnse);
+            logSqlFeatureNotSupportedException(logger, sqlfnse);
         }
         // -------------------------------------------------------------------------------------------------------------
         instance.deletesAreDetected = DeletesAreDetected.list(context.databaseMetaData);
@@ -62,13 +61,13 @@ public class DatabaseMetadata implements MetadataType {
             instance.doesMaxRowSizeIncludeBlobs
                     = context.databaseMetaData.doesMaxRowSizeIncludeBlobs();
         } catch (final SQLFeatureNotSupportedException sqlfnse) {
-            logger.log(Level.WARNING, message, sqlfnse);
+            logSqlFeatureNotSupportedException(logger, sqlfnse);
         }
         try {
             instance.generatedKeyAlwaysReturned
                     = context.databaseMetaData.generatedKeyAlwaysReturned();
         } catch (final SQLFeatureNotSupportedException sqlfnse) {
-            logger.log(Level.WARNING, message, sqlfnse);
+            logSqlFeatureNotSupportedException(logger, sqlfnse);
         }
         // ---------------------------------------------------------------------------------------------------- catalogs
         instance.catalog = new ArrayList<>();
@@ -82,12 +81,12 @@ public class DatabaseMetadata implements MetadataType {
         try {
             instance.catalogSeparator = context.databaseMetaData.getCatalogSeparator();
         } catch (final SQLFeatureNotSupportedException sqlfnse) {
-            logger.log(Level.WARNING, message, sqlfnse);
+            logSqlFeatureNotSupportedException(logger, sqlfnse);
         }
         try {
             instance.catalogTerm = context.databaseMetaData.getCatalogTerm();
         } catch (final SQLFeatureNotSupportedException sqlfnse) {
-            logger.log(Level.WARNING, message, sqlfnse);
+            logSqlFeatureNotSupportedException(logger, sqlfnse);
         }
         // ------------------------------------------------------------------------------------------ clientInfoProperty
         instance.clientInfoProperty = new ArrayList<>();
@@ -96,29 +95,29 @@ public class DatabaseMetadata implements MetadataType {
         try {
             instance.databaseMajorVersion = context.databaseMetaData.getDatabaseMajorVersion();
         } catch (final SQLFeatureNotSupportedException sqlfnse) {
-            logger.log(Level.WARNING, message, sqlfnse);
+            logSqlFeatureNotSupportedException(logger, sqlfnse);
         }
         try {
             instance.databaseMinorVersion = context.databaseMetaData.getDatabaseMinorVersion();
         } catch (final SQLFeatureNotSupportedException sqlfnse) {
-            logger.log(Level.WARNING, message, sqlfnse);
+            logSqlFeatureNotSupportedException(logger, sqlfnse);
         }
         // -------------------------------------------------------------------------------------------------------------
         try {
             instance.databaseProductName = context.databaseMetaData.getDatabaseProductName();
         } catch (final SQLFeatureNotSupportedException sqlfnse) {
-            logger.log(Level.WARNING, message, sqlfnse);
+            logSqlFeatureNotSupportedException(logger, sqlfnse);
         }
         try {
             instance.databaseProductVersion = context.databaseMetaData.getDatabaseProductVersion();
         } catch (final SQLFeatureNotSupportedException sqlfnse) {
-            logger.log(Level.WARNING, message, sqlfnse);
+            logSqlFeatureNotSupportedException(logger, sqlfnse);
         }
         // -------------------------------------------------------------------------------------------------------------
         try {
             instance.defaultTransactionIsolation = context.databaseMetaData.getDefaultTransactionIsolation();
         } catch (final SQLFeatureNotSupportedException sqlfnse) {
-            logger.log(Level.WARNING, message, sqlfnse);
+            logSqlFeatureNotSupportedException(logger, sqlfnse);
         }
         // -------------------------------------------------------------------------------------------------------------
         instance.driverMajorVersion = context.databaseMetaData.getDriverMajorVersion();
@@ -127,189 +126,189 @@ public class DatabaseMetadata implements MetadataType {
         try {
             instance.driverName = context.databaseMetaData.getDriverName();
         } catch (final SQLFeatureNotSupportedException sqlfnse) {
-            logger.log(Level.WARNING, message, sqlfnse);
+            logSqlFeatureNotSupportedException(logger, sqlfnse);
         }
         try {
             instance.driverVersion = context.databaseMetaData.getDriverVersion();
         } catch (final SQLFeatureNotSupportedException sqlfnse) {
-            logger.log(Level.WARNING, message, sqlfnse);
+            logSqlFeatureNotSupportedException(logger, sqlfnse);
         }
         // -------------------------------------------------------------------------------------------------------------
         try {
             instance.extraNameCharacters = context.databaseMetaData.getExtraNameCharacters();
         } catch (final SQLFeatureNotSupportedException sqlfnse) {
-            logger.log(Level.WARNING, message, sqlfnse);
+            logSqlFeatureNotSupportedException(logger, sqlfnse);
         }
         // -------------------------------------------------------------------------------------------------------------
         try {
             instance.identifierQuoteString = context.databaseMetaData.getIdentifierQuoteString();
         } catch (final SQLFeatureNotSupportedException sqlfnse) {
-            logger.log(Level.WARNING, message, sqlfnse);
+            logSqlFeatureNotSupportedException(logger, sqlfnse);
         }
         // -------------------------------------------------------------------------------------------------------------
         try {
             instance.JDBCMajorVersion = context.databaseMetaData.getJDBCMajorVersion();
         } catch (final SQLFeatureNotSupportedException sqlfnse) {
-            logger.log(Level.WARNING, message, sqlfnse);
+            logSqlFeatureNotSupportedException(logger, sqlfnse);
         }
         try {
             instance.JDBCMinorVersion = context.databaseMetaData.getJDBCMinorVersion();
         } catch (final SQLFeatureNotSupportedException sqlfnse) {
-            logger.log(Level.WARNING, message, sqlfnse);
+            logSqlFeatureNotSupportedException(logger, sqlfnse);
         }
         // -------------------------------------------------------------------------------------------------------------
         try {
             instance.maxBinaryLiteralLength = context.databaseMetaData.getMaxBinaryLiteralLength();
         } catch (final SQLFeatureNotSupportedException sqlfnse) {
-            logger.log(Level.WARNING, message, sqlfnse);
+            logSqlFeatureNotSupportedException(logger, sqlfnse);
         }
         try {
             instance.maxCatalogNameLength = context.databaseMetaData.getMaxCatalogNameLength();
         } catch (final SQLFeatureNotSupportedException sqlfnse) {
-            logger.log(Level.WARNING, message, sqlfnse);
+            logSqlFeatureNotSupportedException(logger, sqlfnse);
         }
         try {
             instance.maxCharLiteralLength = context.databaseMetaData.getMaxCharLiteralLength();
         } catch (final SQLFeatureNotSupportedException sqlfnse) {
-            logger.log(Level.WARNING, message, sqlfnse);
+            logSqlFeatureNotSupportedException(logger, sqlfnse);
         }
         try {
             instance.maxColumnNameLength = context.databaseMetaData.getMaxColumnNameLength();
         } catch (final SQLFeatureNotSupportedException sqlfnse) {
-            logger.log(Level.WARNING, message, sqlfnse);
+            logSqlFeatureNotSupportedException(logger, sqlfnse);
         }
         // -------------------------------------------------------------------------------------------------------------
         try {
             instance.maxColumnsInGroupBy = context.databaseMetaData.getMaxColumnsInGroupBy();
         } catch (final SQLFeatureNotSupportedException sqlfnse) {
-            logger.log(Level.WARNING, message, sqlfnse);
+            logSqlFeatureNotSupportedException(logger, sqlfnse);
         }
         try {
             instance.maxColumnsInIndex = context.databaseMetaData.getMaxColumnsInIndex();
         } catch (final SQLFeatureNotSupportedException sqlfnse) {
-            logger.log(Level.WARNING, message, sqlfnse);
+            logSqlFeatureNotSupportedException(logger, sqlfnse);
         }
         try {
             instance.maxColumnsInOrderBy = context.databaseMetaData.getMaxColumnsInOrderBy();
         } catch (final SQLFeatureNotSupportedException sqlfnse) {
-            logger.log(Level.WARNING, message, sqlfnse);
+            logSqlFeatureNotSupportedException(logger, sqlfnse);
         }
         try {
             instance.maxColumnsInSelect = context.databaseMetaData.getMaxColumnsInSelect();
         } catch (final SQLFeatureNotSupportedException sqlfnse) {
-            logger.log(Level.WARNING, message, sqlfnse);
+            logSqlFeatureNotSupportedException(logger, sqlfnse);
         }
         try {
             instance.maxColumnsInTable = context.databaseMetaData.getMaxColumnsInTable();
         } catch (final SQLFeatureNotSupportedException sqlfnse) {
-            logger.log(Level.WARNING, message, sqlfnse);
+            logSqlFeatureNotSupportedException(logger, sqlfnse);
         }
         // -------------------------------------------------------------------------------------------------------------
         try {
             instance.maxConnections = context.databaseMetaData.getMaxConnections();
         } catch (final SQLFeatureNotSupportedException sqlfnse) {
-            logger.log(Level.WARNING, message, sqlfnse);
+            logSqlFeatureNotSupportedException(logger, sqlfnse);
         }
         // -------------------------------------------------------------------------------------------------------------
         try {
             instance.maxCursorNameLength = context.databaseMetaData.getMaxCursorNameLength();
         } catch (final SQLFeatureNotSupportedException sqlfnse) {
-            logger.log(Level.WARNING, message, sqlfnse);
+            logSqlFeatureNotSupportedException(logger, sqlfnse);
         }
         try {
             instance.maxIndexLength = context.databaseMetaData.getMaxIndexLength();
         } catch (final SQLFeatureNotSupportedException sqlfnse) {
-            logger.log(Level.WARNING, message, sqlfnse);
+            logSqlFeatureNotSupportedException(logger, sqlfnse);
         }
         try {
             instance.maxLogicalLobSize = context.databaseMetaData.getMaxLogicalLobSize();
         } catch (final SQLFeatureNotSupportedException sqlfnse) {
-            logger.log(Level.WARNING, message, sqlfnse);
+            logSqlFeatureNotSupportedException(logger, sqlfnse);
         }
         try {
             instance.maxProcedureNameLength = context.databaseMetaData.getMaxProcedureNameLength();
         } catch (final SQLFeatureNotSupportedException sqlfnse) {
-            logger.log(Level.WARNING, message, sqlfnse);
+            logSqlFeatureNotSupportedException(logger, sqlfnse);
         }
         try {
             instance.maxRowSize = context.databaseMetaData.getMaxRowSize();
         } catch (final SQLFeatureNotSupportedException sqlfnse) {
-            logger.log(Level.WARNING, message, sqlfnse);
+            logSqlFeatureNotSupportedException(logger, sqlfnse);
         }
         try {
             instance.maxSchemaNameLength = context.databaseMetaData.getMaxSchemaNameLength();
         } catch (final SQLFeatureNotSupportedException sqlfnse) {
-            logger.log(Level.WARNING, message, sqlfnse);
+            logSqlFeatureNotSupportedException(logger, sqlfnse);
         }
         try {
             instance.maxStatementLength = context.databaseMetaData.getMaxStatementLength();
         } catch (final SQLFeatureNotSupportedException sqlfnse) {
-            logger.log(Level.WARNING, message, sqlfnse);
+            logSqlFeatureNotSupportedException(logger, sqlfnse);
         }
         try {
             instance.maxStatements = context.databaseMetaData.getMaxStatements();
         } catch (final SQLFeatureNotSupportedException sqlfnse) {
-            logger.log(Level.WARNING, message, sqlfnse);
+            logSqlFeatureNotSupportedException(logger, sqlfnse);
         }
         try {
             instance.maxTableNameLength = context.databaseMetaData.getMaxTableNameLength();
         } catch (final SQLFeatureNotSupportedException sqlfnse) {
-            logger.log(Level.WARNING, message, sqlfnse);
+            logSqlFeatureNotSupportedException(logger, sqlfnse);
         }
         try {
             instance.maxTablesInSelect = context.databaseMetaData.getMaxTablesInSelect();
         } catch (final SQLFeatureNotSupportedException sqlfnse) {
-            logger.log(Level.WARNING, message, sqlfnse);
+            logSqlFeatureNotSupportedException(logger, sqlfnse);
         }
         try {
             instance.maxUserNameLength = context.databaseMetaData.getMaxUserNameLength();
         } catch (final SQLFeatureNotSupportedException sqlfnse) {
-            logger.log(Level.WARNING, message, sqlfnse);
+            logSqlFeatureNotSupportedException(logger, sqlfnse);
         }
         try {
             instance.numericFunctions = context.databaseMetaData.getNumericFunctions();
         } catch (final SQLFeatureNotSupportedException sqlfnse) {
-            logger.log(Level.WARNING, message, sqlfnse);
+            logSqlFeatureNotSupportedException(logger, sqlfnse);
         }
         try {
             instance.procedureTerm = context.databaseMetaData.getProcedureTerm();
         } catch (final SQLFeatureNotSupportedException sqlfnse) {
-            logger.log(Level.WARNING, message, sqlfnse);
+            logSqlFeatureNotSupportedException(logger, sqlfnse);
         }
         try {
             instance.resultSetHoldability = context.databaseMetaData.getResultSetHoldability();
         } catch (final SQLFeatureNotSupportedException sqlfnse) {
-            logger.log(Level.WARNING, message, sqlfnse);
+            logSqlFeatureNotSupportedException(logger, sqlfnse);
         }
         try {
             instance.schemaTerm = context.databaseMetaData.getSchemaTerm();
         } catch (final SQLFeatureNotSupportedException sqlfnse) {
-            logger.log(Level.WARNING, message, sqlfnse);
+            logSqlFeatureNotSupportedException(logger, sqlfnse);
         }
         try {
             instance.searchStringEscape = context.databaseMetaData.getSearchStringEscape();
         } catch (final SQLFeatureNotSupportedException sqlfnse) {
-            logger.log(Level.WARNING, message, sqlfnse);
+            logSqlFeatureNotSupportedException(logger, sqlfnse);
         }
         try {
             instance.SQLKeywords = context.databaseMetaData.getSQLKeywords();
         } catch (final SQLFeatureNotSupportedException sqlfnse) {
-            logger.log(Level.WARNING, message, sqlfnse);
+            logSqlFeatureNotSupportedException(logger, sqlfnse);
         }
         try {
             instance.SQLStateType = context.databaseMetaData.getSQLStateType();
         } catch (final SQLFeatureNotSupportedException sqlfnse) {
-            logger.log(Level.WARNING, message, sqlfnse);
+            logSqlFeatureNotSupportedException(logger, sqlfnse);
         }
         try {
             instance.SQLStateType = context.databaseMetaData.getSQLStateType();
         } catch (final SQLFeatureNotSupportedException sqlfnse) {
-            logger.log(Level.WARNING, message, sqlfnse);
+            logSqlFeatureNotSupportedException(logger, sqlfnse);
         }
         try {
             instance.systemFunctions = context.databaseMetaData.getSystemFunctions();
         } catch (final SQLFeatureNotSupportedException sqlfnse) {
-            logger.log(Level.WARNING, message, sqlfnse);
+            logSqlFeatureNotSupportedException(logger, sqlfnse);
         }
         // -------------------------------------------------------------------------------------------------------------
         instance.tableType = new ArrayList<>();
@@ -318,7 +317,7 @@ public class DatabaseMetadata implements MetadataType {
         try {
             instance.timeDateFunctions = context.databaseMetaData.getTimeDateFunctions();
         } catch (final SQLFeatureNotSupportedException sqlfnse) {
-            logger.log(Level.WARNING, message, sqlfnse);
+            logSqlFeatureNotSupportedException(logger, sqlfnse);
         }
         // --------------------------------------------------------------------------------------------------- typeInfos
         instance.typeInfo = new ArrayList<>();
@@ -327,12 +326,12 @@ public class DatabaseMetadata implements MetadataType {
         try {
             instance.URL = context.databaseMetaData.getURL();
         } catch (final SQLFeatureNotSupportedException sqlfnse) {
-            logger.log(Level.WARNING, message, sqlfnse);
+            logSqlFeatureNotSupportedException(logger, sqlfnse);
         }
         try {
             instance.userName = context.databaseMetaData.getUserName();
         } catch (final SQLFeatureNotSupportedException sqlfnse) {
-            logger.log(Level.WARNING, message, sqlfnse);
+            logSqlFeatureNotSupportedException(logger, sqlfnse);
         }
         // -------------------------------------------------------------------------------------------------------------
         instance.insertsAreDetected = InsertsAreDetected.list(context.databaseMetaData);
@@ -340,43 +339,43 @@ public class DatabaseMetadata implements MetadataType {
         try {
             instance.catalogAtStart = context.databaseMetaData.isCatalogAtStart();
         } catch (final SQLFeatureNotSupportedException sqlfnse) {
-            logger.log(Level.WARNING, message, sqlfnse);
+            logSqlFeatureNotSupportedException(logger, sqlfnse);
         }
         try {
             instance.readOnly = context.databaseMetaData.isReadOnly();
         } catch (final SQLFeatureNotSupportedException sqlfnse) {
-            logger.log(Level.WARNING, message, sqlfnse);
+            logSqlFeatureNotSupportedException(logger, sqlfnse);
         }
         try {
             instance.locatorsUpdateCopy = context.databaseMetaData.locatorsUpdateCopy();
         } catch (final SQLFeatureNotSupportedException sqlfnse) {
-            logger.log(Level.WARNING, message, sqlfnse);
+            logSqlFeatureNotSupportedException(logger, sqlfnse);
         }
         // -------------------------------------------------------------------------------------------------------------
         try {
             instance.nullPlusNonNullIsNull = context.databaseMetaData.nullPlusNonNullIsNull();
         } catch (final SQLFeatureNotSupportedException sqlfnse) {
-            logger.log(Level.WARNING, message, sqlfnse);
+            logSqlFeatureNotSupportedException(logger, sqlfnse);
         }
         try {
             instance.nullsAreSortedAtEnd = context.databaseMetaData.nullsAreSortedAtEnd();
         } catch (final SQLFeatureNotSupportedException sqlfnse) {
-            logger.log(Level.WARNING, message, sqlfnse);
+            logSqlFeatureNotSupportedException(logger, sqlfnse);
         }
         try {
             instance.nullsAreSortedAtStart = context.databaseMetaData.nullsAreSortedAtStart();
         } catch (final SQLFeatureNotSupportedException sqlfnse) {
-            logger.log(Level.WARNING, message, sqlfnse);
+            logSqlFeatureNotSupportedException(logger, sqlfnse);
         }
         try {
             instance.nullsAreSortedHigh = context.databaseMetaData.nullsAreSortedHigh();
         } catch (final SQLFeatureNotSupportedException sqlfnse) {
-            logger.log(Level.WARNING, message, sqlfnse);
+            logSqlFeatureNotSupportedException(logger, sqlfnse);
         }
         try {
             instance.nullsAreSortedLow = context.databaseMetaData.nullsAreSortedLow();
         } catch (final SQLFeatureNotSupportedException sqlfnse) {
-            logger.log(Level.WARNING, message, sqlfnse);
+            logSqlFeatureNotSupportedException(logger, sqlfnse);
         }
         // -------------------------------------------------------------------------------------------------------------
         instance.othersDeletesAreVisible = OthersDeletesAreVisible.list(context.databaseMetaData);
@@ -389,283 +388,283 @@ public class DatabaseMetadata implements MetadataType {
         try {
             instance.storesLowerCaseIdentifiers = context.databaseMetaData.storesLowerCaseIdentifiers();
         } catch (final SQLFeatureNotSupportedException sqlfnse) {
-            logger.log(Level.WARNING, message, sqlfnse);
+            logSqlFeatureNotSupportedException(logger, sqlfnse);
         }
         try {
             instance.storesLowerCaseQuotedIdentifiers
                     = context.databaseMetaData.storesLowerCaseQuotedIdentifiers();
         } catch (final SQLFeatureNotSupportedException sqlfnse) {
-            logger.log(Level.WARNING, message, sqlfnse);
+            logSqlFeatureNotSupportedException(logger, sqlfnse);
         }
         try {
             instance.storesMixedCaseIdentifiers = context.databaseMetaData.storesMixedCaseIdentifiers();
         } catch (final SQLFeatureNotSupportedException sqlfnse) {
-            logger.log(Level.WARNING, message, sqlfnse);
+            logSqlFeatureNotSupportedException(logger, sqlfnse);
         }
         try {
             instance.storesMixedCaseQuotedIdentifiers
                     = context.databaseMetaData.storesMixedCaseQuotedIdentifiers();
         } catch (final SQLFeatureNotSupportedException sqlfnse) {
-            logger.log(Level.WARNING, message, sqlfnse);
+            logSqlFeatureNotSupportedException(logger, sqlfnse);
         }
         // -------------------------------------------------------------------------------------------------------------
         try {
             instance.supportsAlterTableWithAddColumn
                     = context.databaseMetaData.supportsAlterTableWithAddColumn();
         } catch (final SQLFeatureNotSupportedException sqlfnse) {
-            logger.log(Level.WARNING, message, sqlfnse);
+            logSqlFeatureNotSupportedException(logger, sqlfnse);
         }
         try {
             instance.supportsAlterTableWithDropColumn
                     = context.databaseMetaData.supportsAlterTableWithDropColumn();
         } catch (final SQLFeatureNotSupportedException sqlfnse) {
-            logger.log(Level.WARNING, message, sqlfnse);
+            logSqlFeatureNotSupportedException(logger, sqlfnse);
         }
         // -------------------------------------------------------------------------------------------------------------
         try {
             instance.supportsANSI92EntryLevelSQL = context.databaseMetaData.supportsANSI92EntryLevelSQL();
         } catch (final SQLFeatureNotSupportedException sqlfnse) {
-            logger.log(Level.WARNING, message, sqlfnse);
+            logSqlFeatureNotSupportedException(logger, sqlfnse);
         }
         try {
             instance.supportsANSI92FullSQL = context.databaseMetaData.supportsANSI92FullSQL();
         } catch (final SQLFeatureNotSupportedException sqlfnse) {
-            logger.log(Level.WARNING, message, sqlfnse);
+            logSqlFeatureNotSupportedException(logger, sqlfnse);
         }
         try {
             instance.supportsANSI92IntermediateSQL = context.databaseMetaData.supportsANSI92IntermediateSQL();
         } catch (final SQLFeatureNotSupportedException sqlfnse) {
-            logger.log(Level.WARNING, message, sqlfnse);
+            logSqlFeatureNotSupportedException(logger, sqlfnse);
         }
         // -------------------------------------------------------------------------------------------------------------
         try {
             instance.supportsBatchUpdates = context.databaseMetaData.supportsBatchUpdates();
         } catch (final SQLFeatureNotSupportedException sqlfnse) {
-            logger.log(Level.WARNING, message, sqlfnse);
+            logSqlFeatureNotSupportedException(logger, sqlfnse);
         }
         // -------------------------------------------------------------------------------------------------------------
         try {
             instance.supportsCatalogsInDataManipulation
                     = context.databaseMetaData.supportsCatalogsInDataManipulation();
         } catch (final SQLFeatureNotSupportedException sqlfnse) {
-            logger.log(Level.WARNING, message, sqlfnse);
+            logSqlFeatureNotSupportedException(logger, sqlfnse);
         }
         try {
             instance.supportsCatalogsInIndexDefinitions
                     = context.databaseMetaData.supportsCatalogsInIndexDefinitions();
         } catch (final SQLFeatureNotSupportedException sqlfnse) {
-            logger.log(Level.WARNING, message, sqlfnse);
+            logSqlFeatureNotSupportedException(logger, sqlfnse);
         }
         try {
             instance.supportsCatalogsInPrivilegeDefinitions
                     = context.databaseMetaData.supportsCatalogsInPrivilegeDefinitions();
         } catch (final SQLFeatureNotSupportedException sqlfnse) {
-            logger.log(Level.WARNING, message, sqlfnse);
+            logSqlFeatureNotSupportedException(logger, sqlfnse);
         }
         try {
             instance.supportsCatalogsInProcedureCalls
                     = context.databaseMetaData.supportsCatalogsInProcedureCalls();
         } catch (final SQLFeatureNotSupportedException sqlfnse) {
-            logger.log(Level.WARNING, message, sqlfnse);
+            logSqlFeatureNotSupportedException(logger, sqlfnse);
         }
         try {
             instance.supportsCatalogsInTableDefinitions
                     = context.databaseMetaData.supportsCatalogsInTableDefinitions();
         } catch (final SQLFeatureNotSupportedException sqlfnse) {
-            logger.log(Level.WARNING, message, sqlfnse);
+            logSqlFeatureNotSupportedException(logger, sqlfnse);
         }
         // -------------------------------------------------------------------------------------------------------------
         try {
             instance.supportsColumnAliasing = context.databaseMetaData.supportsColumnAliasing();
         } catch (final SQLFeatureNotSupportedException sqlfnse) {
-            logger.log(Level.WARNING, message, sqlfnse);
+            logSqlFeatureNotSupportedException(logger, sqlfnse);
         }
         // -------------------------------------------------------------------------------------------------------------
         try {
             instance.supportsConvert = context.databaseMetaData.supportsConvert();
         } catch (final SQLFeatureNotSupportedException sqlfnse) {
-            logger.log(Level.WARNING, message, sqlfnse);
+            logSqlFeatureNotSupportedException(logger, sqlfnse);
         }
         instance.supportsConvert_ = SupportsConvert.list(context.databaseMetaData);
         // -------------------------------------------------------------------------------------------------------------
         try {
             instance.supportsCoreSQLGrammar = context.databaseMetaData.supportsCoreSQLGrammar();
         } catch (final SQLFeatureNotSupportedException sqlfnse) {
-            logger.log(Level.WARNING, message, sqlfnse);
+            logSqlFeatureNotSupportedException(logger, sqlfnse);
         }
         try {
             instance.supportsCorrelatedSubqueries = context.databaseMetaData.supportsCorrelatedSubqueries();
         } catch (final SQLFeatureNotSupportedException sqlfnse) {
-            logger.log(Level.WARNING, message, sqlfnse);
+            logSqlFeatureNotSupportedException(logger, sqlfnse);
         }
         try {
             instance.supportsDataDefinitionAndDataManipulationTransactions
                     = context.databaseMetaData.supportsDataDefinitionAndDataManipulationTransactions();
         } catch (final SQLFeatureNotSupportedException sqlfnse) {
-            logger.log(Level.WARNING, message, sqlfnse);
+            logSqlFeatureNotSupportedException(logger, sqlfnse);
         }
         try {
             instance.supportsDataManipulationTransactionsOnly
                     = context.databaseMetaData.supportsDataManipulationTransactionsOnly();
         } catch (final SQLFeatureNotSupportedException sqlfnse) {
-            logger.log(Level.WARNING, message, sqlfnse);
+            logSqlFeatureNotSupportedException(logger, sqlfnse);
         }
         try {
             instance.supportsDifferentTableCorrelationNames
                     = context.databaseMetaData.supportsDifferentTableCorrelationNames();
         } catch (final SQLFeatureNotSupportedException sqlfnse) {
-            logger.log(Level.WARNING, message, sqlfnse);
+            logSqlFeatureNotSupportedException(logger, sqlfnse);
         }
         try {
             instance.supportsExpressionsInOrderBy
                     = context.databaseMetaData.supportsExpressionsInOrderBy();
         } catch (final SQLFeatureNotSupportedException sqlfnse) {
-            logger.log(Level.WARNING, message, sqlfnse);
+            logSqlFeatureNotSupportedException(logger, sqlfnse);
         }
         try {
             instance.supportsExtendedSQLGrammar = context.databaseMetaData.supportsExtendedSQLGrammar();
         } catch (final SQLFeatureNotSupportedException sqlfnse) {
-            logger.log(Level.WARNING, message, sqlfnse);
+            logSqlFeatureNotSupportedException(logger, sqlfnse);
         }
         try {
             instance.supportsFullOuterJoins = context.databaseMetaData.supportsFullOuterJoins();
         } catch (final SQLFeatureNotSupportedException sqlfnse) {
-            logger.log(Level.WARNING, message, sqlfnse);
+            logSqlFeatureNotSupportedException(logger, sqlfnse);
         }
         try {
             instance.supportsGetGeneratedKeys = context.databaseMetaData.supportsGetGeneratedKeys();
         } catch (final SQLFeatureNotSupportedException sqlfnse) {
-            logger.log(Level.WARNING, message, sqlfnse);
+            logSqlFeatureNotSupportedException(logger, sqlfnse);
         }
         try {
             instance.supportsGroupBy = context.databaseMetaData.supportsGroupBy();
         } catch (final SQLFeatureNotSupportedException sqlfnse) {
-            logger.log(Level.WARNING, message, sqlfnse);
+            logSqlFeatureNotSupportedException(logger, sqlfnse);
         }
         try {
             instance.supportsGroupByBeyondSelect = context.databaseMetaData.supportsGroupByBeyondSelect();
         } catch (final SQLFeatureNotSupportedException sqlfnse) {
-            logger.log(Level.WARNING, message, sqlfnse);
+            logSqlFeatureNotSupportedException(logger, sqlfnse);
         }
         try {
             instance.supportsGroupByUnrelated = context.databaseMetaData.supportsGroupByUnrelated();
         } catch (final SQLFeatureNotSupportedException sqlfnse) {
-            logger.log(Level.WARNING, message, sqlfnse);
+            logSqlFeatureNotSupportedException(logger, sqlfnse);
         }
         // -------------------------------------------------------------------------------------------------------------
         try {
             instance.supportsIntegrityEnhancementFacility
                     = context.databaseMetaData.supportsIntegrityEnhancementFacility();
         } catch (final SQLFeatureNotSupportedException sqlfnse) {
-            logger.log(Level.WARNING, message, sqlfnse);
+            logSqlFeatureNotSupportedException(logger, sqlfnse);
         }
         try {
             instance.supportsLikeEscapeClause = context.databaseMetaData.supportsLikeEscapeClause();
         } catch (final SQLFeatureNotSupportedException sqlfnse) {
-            logger.log(Level.WARNING, message, sqlfnse);
+            logSqlFeatureNotSupportedException(logger, sqlfnse);
         }
         try {
             instance.supportsLimitedOuterJoins = context.databaseMetaData.supportsLimitedOuterJoins();
         } catch (final SQLFeatureNotSupportedException sqlfnse) {
-            logger.log(Level.WARNING, message, sqlfnse);
+            logSqlFeatureNotSupportedException(logger, sqlfnse);
         }
         try {
             instance.supportsMinimumSQLGrammar = context.databaseMetaData.supportsMinimumSQLGrammar();
         } catch (final SQLFeatureNotSupportedException sqlfnse) {
-            logger.log(Level.WARNING, message, sqlfnse);
+            logSqlFeatureNotSupportedException(logger, sqlfnse);
         }
         // -------------------------------------------------------------------------------------------------------------
         try {
             instance.supportsMixedCaseIdentifiers = context.databaseMetaData.supportsMixedCaseIdentifiers();
         } catch (final SQLFeatureNotSupportedException sqlfnse) {
-            logger.log(Level.WARNING, message, sqlfnse);
+            logSqlFeatureNotSupportedException(logger, sqlfnse);
         }
         try {
             instance.supportsMixedCaseQuotedIdentifiers
                     = context.databaseMetaData.supportsMixedCaseQuotedIdentifiers();
         } catch (final SQLFeatureNotSupportedException sqlfnse) {
-            logger.log(Level.WARNING, message, sqlfnse);
+            logSqlFeatureNotSupportedException(logger, sqlfnse);
         }
         // -------------------------------------------------------------------------------------------------------------
         try {
             instance.supportsMultipleOpenResults = context.databaseMetaData.supportsMultipleOpenResults();
         } catch (final SQLFeatureNotSupportedException sqlfnse) {
-            logger.log(Level.WARNING, message, sqlfnse);
+            logSqlFeatureNotSupportedException(logger, sqlfnse);
         }
         try {
             instance.supportsMultipleResultSets = context.databaseMetaData.supportsMultipleResultSets();
         } catch (final SQLFeatureNotSupportedException sqlfnse) {
-            logger.log(Level.WARNING, message, sqlfnse);
+            logSqlFeatureNotSupportedException(logger, sqlfnse);
         }
         try {
             instance.supportsMultipleTransactions = context.databaseMetaData.supportsMultipleTransactions();
         } catch (final SQLFeatureNotSupportedException sqlfnse) {
-            logger.log(Level.WARNING, message, sqlfnse);
+            logSqlFeatureNotSupportedException(logger, sqlfnse);
         }
         // -------------------------------------------------------------------------------------------------------------
         try {
             instance.supportsNamedParameters = context.databaseMetaData.supportsNamedParameters();
         } catch (final SQLFeatureNotSupportedException sqlfnse) {
-            logger.log(Level.WARNING, message, sqlfnse);
+            logSqlFeatureNotSupportedException(logger, sqlfnse);
         }
         try {
             instance.supportsNonNullableColumns = context.databaseMetaData.supportsNonNullableColumns();
         } catch (final SQLFeatureNotSupportedException sqlfnse) {
-            logger.log(Level.WARNING, message, sqlfnse);
+            logSqlFeatureNotSupportedException(logger, sqlfnse);
         }
         // -------------------------------------------------------------------------------------------------------------
         try {
             instance.supportsOpenCursorsAcrossCommit
                     = context.databaseMetaData.supportsOpenCursorsAcrossCommit();
         } catch (final SQLFeatureNotSupportedException sqlfnse) {
-            logger.log(Level.WARNING, message, sqlfnse);
+            logSqlFeatureNotSupportedException(logger, sqlfnse);
         }
         try {
             instance.supportsOpenCursorsAcrossRollBack
                     = context.databaseMetaData.supportsOpenCursorsAcrossRollback();
         } catch (final SQLFeatureNotSupportedException sqlfnse) {
-            logger.log(Level.WARNING, message, sqlfnse);
+            logSqlFeatureNotSupportedException(logger, sqlfnse);
         }
         // -------------------------------------------------------------------------------------------------------------
         try {
             instance.supportsOpenStatementsAcrossCommit
                     = context.databaseMetaData.supportsOpenStatementsAcrossCommit();
         } catch (final SQLFeatureNotSupportedException sqlfnse) {
-            logger.log(Level.WARNING, message, sqlfnse);
+            logSqlFeatureNotSupportedException(logger, sqlfnse);
         }
         try {
             instance.supportsOpenStatementsAcrossRollBack
                     = context.databaseMetaData.supportsOpenStatementsAcrossRollback();
         } catch (final SQLFeatureNotSupportedException sqlfnse) {
-            logger.log(Level.WARNING, message, sqlfnse);
+            logSqlFeatureNotSupportedException(logger, sqlfnse);
         }
         // -------------------------------------------------------------------------------------------------------------
         try {
             instance.supportsOrderByUnrelated = context.databaseMetaData.supportsOrderByUnrelated();
         } catch (final SQLFeatureNotSupportedException sqlfnse) {
-            logger.log(Level.WARNING, message, sqlfnse);
+            logSqlFeatureNotSupportedException(logger, sqlfnse);
         }
         try {
             instance.supportsOuterJoins = context.databaseMetaData.supportsOuterJoins();
         } catch (final SQLFeatureNotSupportedException sqlfnse) {
-            logger.log(Level.WARNING, message, sqlfnse);
+            logSqlFeatureNotSupportedException(logger, sqlfnse);
         }
         // -------------------------------------------------------------------------------------------------------------
         try {
             instance.supportsPositionedDelete = context.databaseMetaData.supportsPositionedDelete();
         } catch (final SQLFeatureNotSupportedException sqlfnse) {
-            logger.log(Level.WARNING, message, sqlfnse);
+            logSqlFeatureNotSupportedException(logger, sqlfnse);
         }
         try {
             instance.supportsPositionedUpdate = context.databaseMetaData.supportsPositionedUpdate();
         } catch (final SQLFeatureNotSupportedException sqlfnse) {
-            logger.log(Level.WARNING, message, sqlfnse);
+            logSqlFeatureNotSupportedException(logger, sqlfnse);
         }
         // -------------------------------------------------------------------------------------------------------------
         try {
             instance.supportsRefCursors = context.databaseMetaData.supportsRefCursors();
         } catch (final SQLFeatureNotSupportedException sqlfnse) {
-            logger.log(Level.WARNING, message, sqlfnse);
+            logSqlFeatureNotSupportedException(logger, sqlfnse);
         }
         // -------------------------------------------------------------------------------------------------------------
         instance.supportsResultSetConcurrency = SupportsResultSetConcurrency.list(context.databaseMetaData);
@@ -675,134 +674,134 @@ public class DatabaseMetadata implements MetadataType {
         try {
             instance.supportsSavepoints = context.databaseMetaData.supportsSavepoints();
         } catch (final SQLFeatureNotSupportedException sqlfnse) {
-            logger.log(Level.WARNING, message, sqlfnse);
+            logSqlFeatureNotSupportedException(logger, sqlfnse);
         }
         // -------------------------------------------------------------------------------------------------------------
         try {
             instance.supportsSchemasInDataManipulation
                     = context.databaseMetaData.supportsSchemasInDataManipulation();
         } catch (final SQLFeatureNotSupportedException sqlfnse) {
-            logger.log(Level.WARNING, message, sqlfnse);
+            logSqlFeatureNotSupportedException(logger, sqlfnse);
         }
         try {
             instance.supportsSchemasInIndexDefinitions
                     = context.databaseMetaData.supportsSchemasInIndexDefinitions();
         } catch (final SQLFeatureNotSupportedException sqlfnse) {
-            logger.log(Level.WARNING, message, sqlfnse);
+            logSqlFeatureNotSupportedException(logger, sqlfnse);
         }
         try {
             instance.supportsSchemasInPrivilegeDefinitions
                     = context.databaseMetaData.supportsSchemasInPrivilegeDefinitions();
         } catch (final SQLFeatureNotSupportedException sqlfnse) {
-            logger.log(Level.WARNING, message, sqlfnse);
+            logSqlFeatureNotSupportedException(logger, sqlfnse);
         }
         try {
             instance.supportsSchemasInProcedureCalls
                     = context.databaseMetaData.supportsSchemasInProcedureCalls();
         } catch (final SQLFeatureNotSupportedException sqlfnse) {
-            logger.log(Level.WARNING, message, sqlfnse);
+            logSqlFeatureNotSupportedException(logger, sqlfnse);
         }
         try {
             instance.supportsSchemasInTableDefinitions
                     = context.databaseMetaData.supportsSchemasInTableDefinitions();
         } catch (final SQLFeatureNotSupportedException sqlfnse) {
-            logger.log(Level.WARNING, message, sqlfnse);
+            logSqlFeatureNotSupportedException(logger, sqlfnse);
         }
         // -------------------------------------------------------------------------------------------------------------
         try {
             instance.supportsSelectForUpdate = context.databaseMetaData.supportsSelectForUpdate();
         } catch (final SQLFeatureNotSupportedException sqlfnse) {
-            logger.log(Level.WARNING, message, sqlfnse);
+            logSqlFeatureNotSupportedException(logger, sqlfnse);
         }
 //        try {
 //            instance.supportsSharding = context.databaseMetaData.supportsSharding(); // Since 9;
 //        } catch (final SQLFeatureNotSupportedException sqlfnse) {
-//            logger.log(Level.WARNING, message, sqlfnse);
+//            Utils.logSqlFeatureNotSupportedException(logger, sqlfnse);
 //        }
         try {
             instance.supportsStatementPooling = context.databaseMetaData.supportsStatementPooling();
         } catch (final SQLFeatureNotSupportedException sqlfnse) {
-            logger.log(Level.WARNING, message, sqlfnse);
+            logSqlFeatureNotSupportedException(logger, sqlfnse);
         }
         try {
             instance.supportsStoredFunctionsUsingCallSyntax
                     = context.databaseMetaData.supportsStoredFunctionsUsingCallSyntax();
         } catch (final SQLFeatureNotSupportedException sqlfnse) {
-            logger.log(Level.WARNING, message, sqlfnse);
+            logSqlFeatureNotSupportedException(logger, sqlfnse);
         }
         try {
             instance.supportsStoredProcedures = context.databaseMetaData.supportsStoredProcedures();
         } catch (final SQLFeatureNotSupportedException sqlfnse) {
-            logger.log(Level.WARNING, message, sqlfnse);
+            logSqlFeatureNotSupportedException(logger, sqlfnse);
         }
         // -------------------------------------------------------------------------------------------------------------
         try {
             instance.supportsSubqueriesInComparisons
                     = context.databaseMetaData.supportsSubqueriesInComparisons();
         } catch (final SQLFeatureNotSupportedException sqlfnse) {
-            logger.log(Level.WARNING, message, sqlfnse);
+            logSqlFeatureNotSupportedException(logger, sqlfnse);
         }
         try {
             instance.supportsSubqueriesInExists = context.databaseMetaData.supportsSubqueriesInExists();
         } catch (final SQLFeatureNotSupportedException sqlfnse) {
-            logger.log(Level.WARNING, message, sqlfnse);
+            logSqlFeatureNotSupportedException(logger, sqlfnse);
         }
         try {
             instance.supportsSubqueriesInIns = context.databaseMetaData.supportsSubqueriesInIns();
         } catch (final SQLFeatureNotSupportedException sqlfnse) {
-            logger.log(Level.WARNING, message, sqlfnse);
+            logSqlFeatureNotSupportedException(logger, sqlfnse);
         }
         try {
             instance.supportsSubqueriesInQuantifieds
                     = context.databaseMetaData.supportsSubqueriesInQuantifieds();
         } catch (final SQLFeatureNotSupportedException sqlfnse) {
-            logger.log(Level.WARNING, message, sqlfnse);
+            logSqlFeatureNotSupportedException(logger, sqlfnse);
         }
         // -------------------------------------------------------------------------------------------------------------
         try {
             instance.supportsTableCorrelationNames = context.databaseMetaData.supportsTableCorrelationNames();
         } catch (final SQLFeatureNotSupportedException sqlfnse) {
-            logger.log(Level.WARNING, message, sqlfnse);
+            logSqlFeatureNotSupportedException(logger, sqlfnse);
         }
         // -------------------------------------------------------------------------------------------------------------
         try {
             instance.supportsTransactionIsolationLevel
                     = SupportsTransactionIsolationLevel.list(context.databaseMetaData);
         } catch (final SQLFeatureNotSupportedException sqlfnse) {
-            logger.log(Level.WARNING, message, sqlfnse);
+            logSqlFeatureNotSupportedException(logger, sqlfnse);
         }
         try {
             instance.supportsTransactions = context.databaseMetaData.supportsTransactions();
         } catch (final SQLFeatureNotSupportedException sqlfnse) {
-            logger.log(Level.WARNING, message, sqlfnse);
+            logSqlFeatureNotSupportedException(logger, sqlfnse);
         }
         // -------------------------------------------------------------------------------------------------------------
         try {
             instance.supportsUnion = context.databaseMetaData.supportsUnion();
         } catch (final SQLFeatureNotSupportedException sqlfnse) {
-            logger.log(Level.WARNING, message, sqlfnse);
+            logSqlFeatureNotSupportedException(logger, sqlfnse);
         }
         try {
             instance.supportsUnionAll = context.databaseMetaData.supportsUnionAll();
         } catch (final SQLFeatureNotSupportedException sqlfnse) {
-            logger.log(Level.WARNING, message, sqlfnse);
+            logSqlFeatureNotSupportedException(logger, sqlfnse);
         }
         // -------------------------------------------------------------------------------------------------------------
         try {
             instance.updatesAreDetected = UpdatesAreDetected.list(context.databaseMetaData);
         } catch (final SQLFeatureNotSupportedException sqlfnse) {
-            logger.log(Level.WARNING, message, sqlfnse);
+            logSqlFeatureNotSupportedException(logger, sqlfnse);
         }
         // -------------------------------------------------------------------------------------------------------------
         try {
             instance.usesLocalFilePerTable = context.databaseMetaData.usesLocalFilePerTable();
         } catch (final SQLFeatureNotSupportedException sqlfnse) {
-            logger.log(Level.WARNING, message, sqlfnse);
+            logSqlFeatureNotSupportedException(logger, sqlfnse);
         }
         try {
             instance.usesLocalFiles = context.databaseMetaData.usesLocalFiles();
         } catch (final SQLFeatureNotSupportedException sqlfnse) {
-            logger.log(Level.WARNING, message, sqlfnse);
+            logSqlFeatureNotSupportedException(logger, sqlfnse);
         }
         // -------------------------------------------------------------------------------------------------------------
         return instance;
@@ -819,30 +818,30 @@ public class DatabaseMetadata implements MetadataType {
 
     // -----------------------------------------------------------------------------------------------------------------
     @XmlElement(nillable = true)
-    private Boolean allProceduresAreCallable;
+    public Boolean allProceduresAreCallable;
 
     @XmlElement(nillable = true)
-    private Boolean allTablesAreSelectable;
+    public Boolean allTablesAreSelectable;
 
     @XmlElement(nillable = true)
-    private Boolean autoCommitFailureClosesAllResultSets;
+    public Boolean autoCommitFailureClosesAllResultSets;
 
     @XmlElement(nillable = true)
-    private Boolean dataDefinitionCausesTransactionCommit;
+    public Boolean dataDefinitionCausesTransactionCommit;
 
     @XmlElement(nillable = true)
-    private Boolean dataDefinitionIgnoredInTransactions;
-
-    // -----------------------------------------------------------------------------------------------------------------
-    @XmlElement(nillable = true)
-    private List<@Valid @NotNull DeletesAreDetected> deletesAreDetected;
+    public Boolean dataDefinitionIgnoredInTransactions;
 
     // -----------------------------------------------------------------------------------------------------------------
     @XmlElement(nillable = true)
-    private Boolean doesMaxRowSizeIncludeBlobs;
+    public List<@Valid @NotNull DeletesAreDetected> deletesAreDetected;
+
+    // -----------------------------------------------------------------------------------------------------------------
+    @XmlElement(nillable = true)
+    public Boolean doesMaxRowSizeIncludeBlobs;
 
     @XmlElement(nillable = true)
-    private Boolean generatedKeyAlwaysReturned;
+    public Boolean generatedKeyAlwaysReturned;
 
     @XmlElementRef
     public List<@Valid @NotNull Catalog> catalog;

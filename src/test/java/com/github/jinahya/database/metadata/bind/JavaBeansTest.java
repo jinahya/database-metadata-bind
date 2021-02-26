@@ -41,7 +41,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 
-import static com.github.jinahya.database.metadata.bind.Utils.fields;
+import static com.github.jinahya.database.metadata.bind.Utils.getFieldsAnnotatedWith;
 import static java.lang.invoke.MethodHandles.lookup;
 import static java.util.function.Function.identity;
 import static java.util.stream.Collectors.toMap;
@@ -60,7 +60,7 @@ class JavaBeansTest {
 
     // -----------------------------------------------------------------------------------------------------------------
     private static void nillable(@NonNull final Class<?> klass) {
-        for (Entry<Field, Bind> entry : fields(klass, Bind.class).entrySet()) {
+        for (Entry<Field, Bind> entry : getFieldsAnnotatedWith(klass, Bind.class).entrySet()) {
             final Field field = entry.getKey();
             final Bind bind = entry.getValue();
             if (!bind.nillable()) {
@@ -71,7 +71,7 @@ class JavaBeansTest {
     }
 
     private static void unused(@NonNull final Class<?> klass) {
-        for (Entry<Field, Bind> entry : fields(klass, Bind.class).entrySet()) {
+        for (Entry<Field, Bind> entry : getFieldsAnnotatedWith(klass, Bind.class).entrySet()) {
             final Field field = entry.getKey();
             final Bind bind = entry.getValue();
             if (!bind.unused()) {
@@ -81,7 +81,7 @@ class JavaBeansTest {
     }
 
     private static void reserved(@NonNull final Class<?> klass) {
-        for (Entry<Field, Bind> entry : fields(klass, Bind.class).entrySet()) {
+        for (Entry<Field, Bind> entry : getFieldsAnnotatedWith(klass, Bind.class).entrySet()) {
             final Field field = entry.getKey();
             final Bind bind = entry.getValue();
             if (!bind.reserved()) {
@@ -110,7 +110,7 @@ class JavaBeansTest {
 
     // -----------------------------------------------------------------------------------------------------------------
     @Test
-    public void test() throws URISyntaxException, IOException {
+    void test() throws URISyntaxException, IOException {
         final Package p = getClass().getPackage();
         //final String name = "/" + p.getName().replace('.', '/') + "/jaxb.index";
         final String name = "jaxb.index";

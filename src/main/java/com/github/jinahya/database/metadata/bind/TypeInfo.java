@@ -43,24 +43,20 @@ public class TypeInfo implements MetadataType {
      */
     public enum Nullable implements IntFieldEnum<Nullable> {
 
-        // ---------------------------------------------------------------------
         /**
-         * Constant for {@link DatabaseMetaData#typeNoNulls} whose value is {@value DatabaseMetaData#typeNoNulls}.
+         * Constant for {@link DatabaseMetaData#typeNoNulls}({@value DatabaseMetaData#typeNoNulls}).
          */
         TYPE_NO_NULLS(typeNoNulls), // 1
 
         /**
-         * Constant for {@link DatabaseMetaData#typeNullable} whose value is {@value DatabaseMetaData#typeNullable}.
+         * Constant for {@link DatabaseMetaData#typeNullable}({@value DatabaseMetaData#typeNullable}).
          */
         TYPE_NULLABLE(typeNullable), // 1
 
         /**
-         * Constant for {@link DatabaseMetaData#typeNullableUnknown} whose value is {@value
-         * DatabaseMetaData#typeNullableUnknown}.
+         * Constant for {@link DatabaseMetaData#typeNullableUnknown}({@value DatabaseMetaData#typeNullableUnknown}).
          */
         TYPE_NULLABLE_UNKNOWN(typeNullableUnknown); // 2
-
-        // ---------------------------------------------------------------------
 
         /**
          * Returns the constant whose raw value matches to given. An instance of {@link IllegalArgumentException} will
@@ -73,12 +69,9 @@ public class TypeInfo implements MetadataType {
             return IntFieldEnums.valueOf(Nullable.class, rawValue);
         }
 
-        // ---------------------------------------------------------------------
         Nullable(final int rawValue) {
             this.rawValue = rawValue;
         }
-
-        // ---------------------------------------------------------------------
 
         /**
          * Returns the raw value of this constant.
@@ -90,12 +83,10 @@ public class TypeInfo implements MetadataType {
             return rawValue;
         }
 
-        // ---------------------------------------------------------------------
         private final int rawValue;
     }
 
-    // -------------------------------------------------------------------------
-
+    // -----------------------------------------------------------------------------------------------------------------
     /**
      * Creates a new instance.
      */
@@ -103,7 +94,7 @@ public class TypeInfo implements MetadataType {
         super();
     }
 
-    // -------------------------------------------------------------------------
+    // -----------------------------------------------------------------------------------------------------------------
     @Override
     public String toString() {
         return super.toString() + '{'
@@ -128,7 +119,7 @@ public class TypeInfo implements MetadataType {
                + '}';
     }
 
-    // ---------------------------------------------------------------- typeName
+    // -------------------------------------------------------------------------------------------------------- typeName
     public String getTypeName() {
         return typeName;
     }
@@ -137,7 +128,7 @@ public class TypeInfo implements MetadataType {
         this.typeName = typeName;
     }
 
-    // ------------------------------------------------------------- getDataType
+    // ----------------------------------------------------------------------------------------------------- getDataType
     public int getDataType() {
         return dataType;
     }
@@ -146,7 +137,7 @@ public class TypeInfo implements MetadataType {
         this.dataType = dataType;
     }
 
-    // --------------------------------------------------------------- precesion
+    // ------------------------------------------------------------------------------------------------------- precesion
     public int getPrecision() {
         return precision;
     }
@@ -155,7 +146,7 @@ public class TypeInfo implements MetadataType {
         this.precision = precision;
     }
 
-    // ----------------------------------------------------------- literalPrefix
+    // --------------------------------------------------------------------------------------------------- literalPrefix
     public String getLiteralPrefix() {
         return literalPrefix;
     }
@@ -164,7 +155,7 @@ public class TypeInfo implements MetadataType {
         this.literalPrefix = literalPrefix;
     }
 
-    // ----------------------------------------------------------- literalSuffix
+    // --------------------------------------------------------------------------------------------------- literalSuffix
     public String getLiteralSuffix() {
         return literalSuffix;
     }
@@ -173,7 +164,7 @@ public class TypeInfo implements MetadataType {
         this.literalSuffix = literalSuffix;
     }
 
-    // ------------------------------------------------------------ createParams
+    // ---------------------------------------------------------------------------------------------------- createParams
     public String getCreateParams() {
         return createParams;
     }
@@ -182,7 +173,7 @@ public class TypeInfo implements MetadataType {
         this.createParams = createParams;
     }
 
-    // ---------------------------------------------------------------- nullable
+    // -------------------------------------------------------------------------------------------------------- nullable
     public short getNullable() {
         return nullable;
     }
@@ -191,7 +182,7 @@ public class TypeInfo implements MetadataType {
         this.nullable = nullable;
     }
 
-    // ----------------------------------------------------------- caseSensitive
+    // --------------------------------------------------------------------------------------------------- caseSensitive
     public boolean getCaseSensitive() {
         return caseSensitive;
     }
@@ -200,7 +191,7 @@ public class TypeInfo implements MetadataType {
         this.caseSensitive = caseSensitive;
     }
 
-    // -------------------------------------------------------------- searchable
+    // ------------------------------------------------------------------------------------------------------ searchable
     public short getSearchable() {
         return searchable;
     }
@@ -209,7 +200,7 @@ public class TypeInfo implements MetadataType {
         this.searchable = searchable;
     }
 
-    // ------------------------------------------------------- unsignedAttribute
+    // ----------------------------------------------------------------------------------------------- unsignedAttribute
     public boolean getUnsignedAttribute() {
         return unsignedAttribute;
     }
@@ -218,7 +209,7 @@ public class TypeInfo implements MetadataType {
         this.unsignedAttribute = unsignedAttribute;
     }
 
-    // ---------------------------------------------------------- fixedPrecScale
+    // -------------------------------------------------------------------------------------------------- fixedPrecScale
     public boolean getFixedPrecScale() {
         return fixedPrecScale;
     }
@@ -227,7 +218,7 @@ public class TypeInfo implements MetadataType {
         this.fixedPrecScale = fixedPrecScale;
     }
 
-    // ----------------------------------------------------------- autoIncrement
+    // --------------------------------------------------------------------------------------------------- autoIncrement
     public boolean getAutoIncrement() {
         return autoIncrement;
     }
@@ -236,7 +227,7 @@ public class TypeInfo implements MetadataType {
         this.autoIncrement = autoIncrement;
     }
 
-    // ----------------------------------------------------------- localTypeName
+    // --------------------------------------------------------------------------------------------------- localTypeName
     public String getLocalTypeName() {
         return localTypeName;
     }
@@ -245,7 +236,7 @@ public class TypeInfo implements MetadataType {
         this.localTypeName = localTypeName;
     }
 
-    // ------------------------------------------------------------ minimumScale
+    // ---------------------------------------------------------------------------------------------------- minimumScale
     public short getMinimumScale() {
         return minimumScale;
     }
@@ -254,7 +245,7 @@ public class TypeInfo implements MetadataType {
         this.minimumScale = minimumScale;
     }
 
-    // ------------------------------------------------------------ maximumScale
+    // ---------------------------------------------------------------------------------------------------- maximumScale
     public short getMaximumScale() {
         return maximumScale;
     }
@@ -263,7 +254,7 @@ public class TypeInfo implements MetadataType {
         this.maximumScale = maximumScale;
     }
 
-    // ------------------------------------------------------------- sqlDataType
+    // ----------------------------------------------------------------------------------------------------- sqlDataType
     public Integer getSqlDataType() {
         return sqlDataType;
     }
@@ -272,7 +263,7 @@ public class TypeInfo implements MetadataType {
         this.sqlDataType = sqlDataType;
     }
 
-    // ---------------------------------------------------------- sqlDatetimeSub
+    // -------------------------------------------------------------------------------------------------- sqlDatetimeSub
     public Integer getSqlDatetimeSub() {
         return sqlDatetimeSub;
     }
@@ -281,7 +272,7 @@ public class TypeInfo implements MetadataType {
         this.sqlDatetimeSub = sqlDatetimeSub;
     }
 
-    // ------------------------------------------------------------ numPrecRadix
+    // ---------------------------------------------------------------------------------------------------- numPrecRadix
     public int getNumPrecRadix() {
         return numPrecRadix;
     }

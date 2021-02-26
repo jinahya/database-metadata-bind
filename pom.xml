@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
   <modelVersion>4.0.0</modelVersion>
 
   <parent>
@@ -43,7 +44,6 @@
     <maven.compiler.testTarget>${maven.compiler.testSource}</maven.compiler.testTarget>
     <version.animal-sniffer>1.20</version.animal-sniffer>
     <version.com.sun.xml.bind>2.3.0.1</version.com.sun.xml.bind>
-    <version.mariaDB4j>2.4.0</version.mariaDB4j>
     <version.mariadb-java-client>2.7.2</version.mariadb-java-client>
     <version.maven-failsafe>${version.maven-surefire}</version.maven-failsafe>
     <version.maven-surefire>3.0.0-M4</version.maven-surefire>
@@ -54,7 +54,6 @@
     <version.ojdbc10>19.10.0.0</version.ojdbc10>
     <version.ojdbc11>21.1.0.0</version.ojdbc11>
     <version.org.junit.jupiter>5.8.0-M1</version.org.junit.jupiter>
-    <version.postgresql-embedded>2.10</version.postgresql-embedded>
     <version.postgresql>42.2.19.jre7</version.postgresql>
     <version.org.testcontainers>1.15.2</version.org.testcontainers>
   </properties>
@@ -97,6 +96,11 @@
         <version>${version.mariadb-java-client}</version>
       </dependency>
       <dependency>
+        <groupId>org.postgresql</groupId>
+        <artifactId>postgresql</artifactId>
+        <version>${version.postgresql}</version>
+      </dependency>
+      <dependency>
         <groupId>org.testcontainers</groupId>
         <artifactId>testcontainers-bom</artifactId>
         <version>${version.org.testcontainers}</version>
@@ -110,12 +114,6 @@
       <groupId>ch.qos.logback</groupId>
       <artifactId>logback-classic</artifactId>
       <version>1.2.3</version>
-      <scope>test</scope>
-    </dependency>
-    <dependency>
-      <groupId>ch.vorburger.mariaDB4j</groupId>
-      <artifactId>mariaDB4j</artifactId>
-      <version>${version.mariaDB4j}</version>
       <scope>test</scope>
     </dependency>
     <dependency>
@@ -216,12 +214,6 @@
       <scope>test</scope>
     </dependency>
     <dependency>
-      <groupId>org.mariadb.jdbc</groupId>
-      <artifactId>mariadb-java-client</artifactId>
-      <version>${version.mariadb-java-client}</version>
-      <scope>test</scope>
-    </dependency>
-    <dependency>
       <groupId>org.projectlombok</groupId>
       <artifactId>lombok</artifactId>
       <version>1.18.18</version>
@@ -283,6 +275,11 @@
           <artifactId>sonar-maven-plugin</artifactId>
           <version>3.7.0.1746</version>
         </plugin>
+        <plugin>
+          <groupId>org.jacoco</groupId>
+          <artifactId>jacoco-maven-plugin</artifactId>
+          <version>0.8.6</version>
+        </plugin>
       </plugins>
     </pluginManagement>
     <plugins>
@@ -332,11 +329,6 @@
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-surefire-plugin</artifactId>
         <configuration>
-          <excludes>
-            <exclude>**/EmbeddedMariadbTest.java</exclude>
-            <exclude>**/EmbeddedPostgresqlTest.java</exclude>
-            <exclude>**/ExternalTest.java</exclude>
-          </excludes>
           <systemProperties>
             <property>
               <name>derby.stream.error.file</name>
@@ -375,6 +367,24 @@
           <licenseName>apache_v2</licenseName>
         </configuration>
       </plugin>
+      <plugin>
+        <groupId>org.jacoco</groupId>
+        <artifactId>jacoco-maven-plugin</artifactId>
+        <executions>
+          <execution>
+            <id>default-prepare-agent</id>
+            <goals>
+              <goal>prepare-agent</goal>
+            </goals>
+          </execution>
+          <execution>
+            <id>default-report</id>
+            <goals>
+              <goal>report</goal>
+            </goals>
+          </execution>
+        </executions>
+      </plugin>
     </plugins>
   </build>
 
@@ -404,20 +414,16 @@
         <artifactId>maven-pmd-plugin</artifactId>
         <version>3.13.0</version>
       </plugin>
-      <!--      <plugin>
-        <groupId>org.codehaus.mojo</groupId>
-        <artifactId>cobertura-maven-plugin</artifactId>
-        <version>2.7</version>
-      </plugin>-->
-      <!--<plugin>-->
-      <!--<groupId>org.codehaus.mojo</groupId>-->
-      <!--<artifactId>findbugs-maven-plugin</artifactId>-->
-      <!--<version>3.0.5</version>-->
-      <!--</plugin>-->
       <plugin>
-        <groupId>org.codehaus.mojo</groupId>
-        <artifactId>javancss-maven-plugin</artifactId>
-        <version>2.1</version>
+        <groupId>org.jacoco</groupId>
+        <artifactId>jacoco-maven-plugin</artifactId>
+        <reportSets>
+          <reportSet>
+            <reports>
+              <report>report</report>
+            </reports>
+          </reportSet>
+        </reportSets>
       </plugin>
     </plugins>
   </reporting>

@@ -23,7 +23,6 @@ package com.github.jinahya.database.metadata.bind;
 import javax.xml.bind.annotation.XmlAttribute;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
-import java.io.Serializable;
 import java.util.Collection;
 
 /**
@@ -33,7 +32,7 @@ import java.util.Collection;
  * @see MetadataContext#getCrossReferences(String, String, String, String, String, String, Collection)
  */
 @XmlRootElement
-public class CrossReference implements Serializable {
+public class CrossReference implements MetadataType {
 
     private static final long serialVersionUID = -5343386346721125961L;
 
@@ -58,7 +57,7 @@ public class CrossReference implements Serializable {
                + '}';
     }
 
-    // -------------------------------------------------------------- pktableCat
+    // ------------------------------------------------------------------------------------------------------ pktableCat
     public String getPktableCat() {
         return pktableCat;
     }
@@ -67,7 +66,7 @@ public class CrossReference implements Serializable {
         this.pktableCat = pktableCat;
     }
 
-    // ------------------------------------------------------------ pktableSchem
+    // ---------------------------------------------------------------------------------------------------- pktableSchem
     public String getPktableSchem() {
         return pktableSchem;
     }
@@ -76,7 +75,7 @@ public class CrossReference implements Serializable {
         this.pktableSchem = pktableSchem;
     }
 
-    // ------------------------------------------------------------- pktableName
+    // ----------------------------------------------------------------------------------------------------- pktableName
     public String getPktableName() {
         return pktableName;
     }
@@ -85,7 +84,7 @@ public class CrossReference implements Serializable {
         this.pktableName = pktableName;
     }
 
-    // ------------------------------------------------------------ pkColumnName
+    // ---------------------------------------------------------------------------------------------------- pkColumnName
     public String getPkcolumnName() {
         return pkcolumnName;
     }
@@ -94,7 +93,7 @@ public class CrossReference implements Serializable {
         this.pkcolumnName = pkcolumnName;
     }
 
-    // -------------------------------------------------------------- fktableCat
+    // ------------------------------------------------------------------------------------------------------ fktableCat
     public String getFktableCat() {
         return fktableCat;
     }
@@ -103,7 +102,7 @@ public class CrossReference implements Serializable {
         this.fktableCat = fktableCat;
     }
 
-    // ------------------------------------------------------------ fktableSchem
+    // ---------------------------------------------------------------------------------------------------- fktableSchem
     public String getFktableSchem() {
         return fktableSchem;
     }
@@ -112,7 +111,7 @@ public class CrossReference implements Serializable {
         this.fktableSchem = fktableSchem;
     }
 
-    // ------------------------------------------------------------- fktableName
+    // ----------------------------------------------------------------------------------------------------- fktableName
     public String getFktableName() {
         return fktableName;
     }
@@ -121,7 +120,7 @@ public class CrossReference implements Serializable {
         this.fktableName = fktableName;
     }
 
-    // ------------------------------------------------------------ fkcolumnName
+    // ---------------------------------------------------------------------------------------------------- fkcolumnName
     public String getFkcolumnName() {
         return fkcolumnName;
     }
@@ -130,7 +129,7 @@ public class CrossReference implements Serializable {
         this.fkcolumnName = fkcolumnName;
     }
 
-    // ------------------------------------------------------------------ keySeq
+    // ---------------------------------------------------------------------------------------------------------- keySeq
     public short getKeySeq() {
         return keySeq;
     }
@@ -139,7 +138,7 @@ public class CrossReference implements Serializable {
         this.keySeq = keySeq;
     }
 
-    // -------------------------------------------------------------- updateRule
+    // ------------------------------------------------------------------------------------------------------ updateRule
     public short getUpdateRule() {
         return updateRule;
     }
@@ -148,7 +147,7 @@ public class CrossReference implements Serializable {
         this.updateRule = updateRule;
     }
 
-    // -------------------------------------------------------------- deleteRule
+    // ------------------------------------------------------------------------------------------------------ deleteRule
     public short getDeleteRule() {
         return deleteRule;
     }
@@ -157,7 +156,7 @@ public class CrossReference implements Serializable {
         this.deleteRule = deleteRule;
     }
 
-    // ------------------------------------------------------------------ fnname
+    // ---------------------------------------------------------------------------------------------------------- fnname
     public String getFkName() {
         return fkName;
     }
@@ -166,7 +165,7 @@ public class CrossReference implements Serializable {
         this.fkName = fkName;
     }
 
-    // ------------------------------------------------------------------ pkName
+    // ---------------------------------------------------------------------------------------------------------- pkName
     public String getPkName() {
         return pkName;
     }
@@ -175,7 +174,7 @@ public class CrossReference implements Serializable {
         this.pkName = pkName;
     }
 
-    // --------------------------------------------------------- deferrerability
+    // ------------------------------------------------------------------------------------------------- deferrerability
     public short getDeferrability() {
         return deferrability;
     }

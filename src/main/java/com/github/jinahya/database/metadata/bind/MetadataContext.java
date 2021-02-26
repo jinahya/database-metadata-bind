@@ -20,8 +20,6 @@ package com.github.jinahya.database.metadata.bind;
  * #L%
  */
 
-import lombok.NonNull;
-
 import java.lang.reflect.Field;
 import java.sql.*;
 import java.util.*;
@@ -29,11 +27,8 @@ import java.util.Map.Entry;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import static com.github.jinahya.database.metadata.bind.Utils.*;
 import static java.lang.String.format;
-import static java.util.Collections.unmodifiableMap;
 import static java.util.Objects.requireNonNull;
-import static java.util.logging.Level.FINE;
 import static java.util.logging.Level.SEVERE;
 import static java.util.logging.Logger.getLogger;
 
@@ -71,50 +66,72 @@ public class MetadataContext {
     // -----------------------------------------------------------------------------------------------------------------
 
     /**
-     * Binds given instance from specified record.
+     * Binds given value from specified result set.
      *
-     * @param <T>      instance type parameter
-     * @param results  the result set from which the instance is bound
-     * @param type     the type of the instance
-     * @param instance the instance
-     * @return given instance
+     * @param <T>      value type parameter
+     * @param results  the result set from which the value is bound.
+     * @param type     the type of the value.
+     * @param instance the value.
+     * @return given {@code value}.
      * @throws SQLException if a database error occurs.
      */
-    private <T> T bind(final ResultSet results, final Class<T> type, final T instance) throws SQLException {
-        final Set<String> labels = labels(results);
-        for (final Entry<Field, Bind> bfield : bfields(type).entrySet()) {
-            final Field field = bfield.getKey();
-            final Bind bind = bfield.getValue();
-            String label = bind.label();
-            final String path = suppressionPath(type, field);
-            final String formatted = format("field=%s, suppressionPath=%s, bind=%s", field, path, bind);
-            if (!labels.remove(label)) {
-                logger.warning(format("unknown label; %s", formatted));
+    private <T extends MetadataType> T bind(final ResultSet results, final Class<T> type, final T instance)
+            throws SQLException {
+        final Set<String> resultSetLabels = Utils.getLabels(results);
+        for (final Entry<Field, Label> labeledField : getLabeledFields(type).entrySet()) {
+            final Field field = labeledField.getKey();
+            final Label label = labeledField.getValue();
+            if (!resultSetLabels.remove(label.value())) {
+                logger.warning(() -> format("unknown label; %s on %s", label, field));
                 continue;
             }
-            if (bind.unused()) {
+            if (field.getAnnotation(Unused.class) != null) {
                 continue;
             }
-            final Object value = results.getObject(label);
-            if (value == null) {
-                if (!bind.nillable() && !bind.unused() && !bind.reserved()) {
-                    logger.warning(format("null value; %s", formatted));
-                }
-                if (field.getType().isPrimitive()) {
-                    logger.warning(format("null value; %s", formatted));
-                }
+            if (field.getAnnotation(Reserved.class) != null) {
+                continue;
+            }
+            final Object value = results.getObject(label.value());
+            if (value == null && (field.getAnnotation(MayBeNull.class) == null || field.getType().isPrimitive())) {
+                logger.warning(() -> format("null value for %s", field));
             }
             try {
-                field(field, instance, results, label);
+                Utils.field(field, instance, results, label.value());
             } catch (final ReflectiveOperationException roe) {
-                logger.log(SEVERE, format("failed to set %s with %s on %s", field, value, instance), roe);
+                logger.log(SEVERE, format("failed to set %s with %s on %s", field, value, value), roe);
             }
         }
-        for (String label : labels) {
-            final Object value = results.getObject(label);
-            if (logger.isLoggable(FINE)) {
-                logger.fine(format("unhandled; klass=%s, label=%s, value=%s", type, label, value));
-            }
+//        for (final Entry<Field, Bind> bfield : bfields(type).entrySet()) {
+//            final Field field = bfield.getKey();
+//            final Bind bind = bfield.getValue();
+//            String label = bind.label();
+//            final String path = Utils.suppressionPath(type, field);
+//            final String formatted = format("field=%s, suppressionPath=%s, bind=%s", field, path, bind);
+//            if (!resultSetLabels.remove(label)) {
+//                logger.warning(format("unknown label; %s", formatted));
+//                continue;
+//            }
+//            if (bind.unused()) {
+//                continue;
+//            }
+//            final Object value = results.getObject(label);
+//            if (value == null) {
+//                if (!bind.nillable() && !bind.unused() && !bind.reserved()) {
+//                    logger.warning(format("null value; %s", formatted));
+//                }
+//                if (field.getType().isPrimitive()) {
+//                    logger.warning(format("null value; %s", formatted));
+//                }
+//            }
+//            try {
+//                Utils.field(field, value, results, label);
+//            } catch (final ReflectiveOperationException roe) {
+//                logger.log(SEVERE, format("failed to set %s with %s on %s", field, value, value), roe);
+//            }
+//        }
+        for (final String remainedLabel : resultSetLabels) {
+            final Object value = results.getObject(remainedLabel);
+            logger.info(() -> format("remained result for %s; label: %s, value: %s", type, remainedLabel, value));
         }
         return instance;
     }
@@ -129,20 +146,20 @@ public class MetadataContext {
      * @return given list
      * @throws SQLException if a database error occurs.
      */
-    private <T, C extends Collection<? super T>> C bind(final ResultSet results, final Class<T> type,
-                                                        final C collection)
+    private <T extends MetadataType, C extends Collection<? super T>> C bind(
+            final ResultSet results, final Class<T> type, final C collection)
             throws SQLException {
         requireNonNull(results, "results is null");
         requireNonNull(type, "type is null");
         requireNonNull(collection, "collection is null");
         while (results.next()) {
-            final T instance;
+            final T value;
             try {
-                instance = type.getConstructor().newInstance();
+                value = type.getConstructor().newInstance();
             } catch (final ReflectiveOperationException roe) {
                 throw new RuntimeException(roe);
             }
-            collection.add(bind(results, type, instance));
+            collection.add(bind(results, type, value));
         }
         return collection;
     }
@@ -173,7 +190,7 @@ public class MetadataContext {
                 bind(results, Attribute.class, collection);
             }
         } catch (final SQLFeatureNotSupportedException sqlfnse) {
-            logger.log(Level.WARNING, "sql feature not supported", sqlfnse);
+            Utils.logSqlFeatureNotSupportedException(logger, sqlfnse);
         }
         return collection;
     }
@@ -235,7 +252,7 @@ public class MetadataContext {
                 bind(results, BestRowIdentifier.class, collection);
             }
         } catch (final SQLFeatureNotSupportedException sqlfnse) {
-            logger.log(Level.WARNING, "sql feature not supported", sqlfnse);
+            Utils.logSqlFeatureNotSupportedException(logger, sqlfnse);
         }
         return collection;
     }
@@ -290,7 +307,7 @@ public class MetadataContext {
                 bind(results, Catalog.class, collection);
             }
         } catch (final SQLFeatureNotSupportedException sqlfnse) {
-            logger.log(Level.WARNING, "sql feature not supported", sqlfnse);
+            Utils.logSqlFeatureNotSupportedException(logger, sqlfnse);
         }
         return collection;
     }
@@ -313,7 +330,7 @@ public class MetadataContext {
                 bind(results, ClientInfoProperty.class, collection);
             }
         } catch (final SQLFeatureNotSupportedException sqlfnse) {
-            logger.log(Level.WARNING, "sql feature not supported", sqlfnse);
+            Utils.logSqlFeatureNotSupportedException(logger, sqlfnse);
         }
         return collection;
     }
@@ -343,7 +360,7 @@ public class MetadataContext {
                 bind(results, ColumnPrivilege.class, collection);
             }
         } catch (final SQLFeatureNotSupportedException sqlfnse) {
-            logger.log(Level.WARNING, "sql feature not supported", sqlfnse);
+            Utils.logSqlFeatureNotSupportedException(logger, sqlfnse);
         }
         return collection;
     }
@@ -386,7 +403,7 @@ public class MetadataContext {
                 bind(results, Column.class, collection);
             }
         } catch (final SQLFeatureNotSupportedException sqlfnse) {
-            logger.log(Level.WARNING, "sql feature not supported", sqlfnse);
+            Utils.logSqlFeatureNotSupportedException(logger, sqlfnse);
         }
         return collection;
     }
@@ -435,7 +452,7 @@ public class MetadataContext {
                 bind(results, CrossReference.class, collection);
             }
         } catch (final SQLFeatureNotSupportedException sqlfnse) {
-            logger.log(Level.WARNING, "sql feature not supported", sqlfnse);
+            Utils.logSqlFeatureNotSupportedException(logger, sqlfnse);
         }
         return collection;
     }
@@ -464,7 +481,7 @@ public class MetadataContext {
                 bind(results, Function.class, collection);
             }
         } catch (final SQLFeatureNotSupportedException sqlfnse) {
-            logger.log(Level.WARNING, "sql feature not supported", sqlfnse);
+            Utils.logSqlFeatureNotSupportedException(logger, sqlfnse);
         }
         return collection;
     }
@@ -505,7 +522,7 @@ public class MetadataContext {
                 bind(results, FunctionColumn.class, collection);
             }
         } catch (final SQLFeatureNotSupportedException sqlfnse) {
-            logger.log(Level.WARNING, "sql feature not supported", sqlfnse);
+            Utils.logSqlFeatureNotSupportedException(logger, sqlfnse);
         }
         return collection;
     }
@@ -545,7 +562,7 @@ public class MetadataContext {
                 bind(results, ExportedKey.class, collection);
             }
         } catch (final SQLFeatureNotSupportedException sqlfnse) {
-            logger.log(Level.WARNING, "sql feature not supported", sqlfnse);
+            Utils.logSqlFeatureNotSupportedException(logger, sqlfnse);
         }
         return collection;
     }
@@ -584,7 +601,7 @@ public class MetadataContext {
                 bind(results, ImportedKey.class, collection);
             }
         } catch (final SQLFeatureNotSupportedException sqlfnsee) {
-            logger.log(Level.WARNING, "sql feature not supported", sqlfnsee);
+            Utils.logSqlFeatureNotSupportedException(logger, sqlfnsee);
         }
         return collection;
     }
@@ -626,7 +643,7 @@ public class MetadataContext {
                 bind(results, IndexInfo.class, collection);
             }
         } catch (final SQLFeatureNotSupportedException sqlfnsee) {
-            logger.log(Level.WARNING, "sql feature not supported", sqlfnsee);
+            Utils.logSqlFeatureNotSupportedException(logger, sqlfnsee);
         }
         return collection;
     }
@@ -666,7 +683,7 @@ public class MetadataContext {
                 bind(results, PrimaryKey.class, collection);
             }
         } catch (final SQLFeatureNotSupportedException sqlfnsee) {
-            logger.log(Level.WARNING, "sql feature not supported", sqlfnsee);
+            Utils.logSqlFeatureNotSupportedException(logger, sqlfnsee);
         }
         return collection;
     }
@@ -706,7 +723,7 @@ public class MetadataContext {
                 bind(results, ProcedureColumn.class, collection);
             }
         } catch (final SQLFeatureNotSupportedException sqlfnsee) {
-            logger.log(Level.WARNING, "sql feature not supported", sqlfnsee);
+            Utils.logSqlFeatureNotSupportedException(logger, sqlfnsee);
         }
         return collection;
     }
@@ -747,7 +764,7 @@ public class MetadataContext {
                 bind(results, Procedure.class, collection);
             }
         } catch (final SQLFeatureNotSupportedException sqlfnsee) {
-            logger.log(Level.WARNING, "sql feature not supported", sqlfnsee);
+            Utils.logSqlFeatureNotSupportedException(logger, sqlfnsee);
         }
         return collection;
     }
@@ -791,7 +808,7 @@ public class MetadataContext {
                 bind(results, PseudoColumn.class, collection);
             }
         } catch (final SQLFeatureNotSupportedException sqlfnse) {
-            logger.log(Level.WARNING, "sql feature not supported", sqlfnse);
+            Utils.logSqlFeatureNotSupportedException(logger, sqlfnse);
         }
         return collection;
     }
@@ -825,7 +842,7 @@ public class MetadataContext {
                 bind(results, SchemaName.class, collection);
             }
         } catch (final SQLFeatureNotSupportedException sqlfnse) {
-            logger.log(Level.WARNING, "sql feature not supported", sqlfnse);
+            Utils.logSqlFeatureNotSupportedException(logger, sqlfnse);
         }
         return collection;
     }
@@ -853,7 +870,7 @@ public class MetadataContext {
                 }
             }
         } catch (final SQLFeatureNotSupportedException sqlfnse) {
-            logger.log(Level.WARNING, "sql feature not supported", sqlfnse);
+            Utils.logSqlFeatureNotSupportedException(logger, sqlfnse);
         }
         return collection;
     }
@@ -907,7 +924,7 @@ public class MetadataContext {
                 bind(results, SuperTable.class, collection);
             }
         } catch (final SQLFeatureNotSupportedException sqlfnse) {
-            logger.log(Level.WARNING, "sql feature not supported", sqlfnse);
+            Utils.logSqlFeatureNotSupportedException(logger, sqlfnse);
         }
         return collection;
     }
@@ -947,7 +964,7 @@ public class MetadataContext {
                 bind(results, SuperType.class, collection);
             }
         } catch (final SQLFeatureNotSupportedException sqlfnse) {
-            logger.log(Level.WARNING, "sql feature not supported", sqlfnse);
+            Utils.logSqlFeatureNotSupportedException(logger, sqlfnse);
         }
         return collection;
     }
@@ -985,7 +1002,7 @@ public class MetadataContext {
                 bind(results, TablePrivilege.class, collection);
             }
         } catch (final SQLFeatureNotSupportedException sqlfnse) {
-            logger.log(Level.WARNING, "sql feature not supported", sqlfnse);
+            Utils.logSqlFeatureNotSupportedException(logger, sqlfnse);
         }
         return collection;
     }
@@ -1019,7 +1036,7 @@ public class MetadataContext {
                 }
             }
         } catch (final SQLFeatureNotSupportedException sqlfnse) {
-            logger.log(Level.WARNING, "sql feature not supported", sqlfnse);
+            Utils.logSqlFeatureNotSupportedException(logger, sqlfnse);
         }
         return collection;
     }
@@ -1049,7 +1066,7 @@ public class MetadataContext {
                 bind(results, Table.class, collection);
             }
         } catch (final SQLFeatureNotSupportedException sqlfnse) {
-            logger.log(Level.WARNING, "sql feature not supported", sqlfnse);
+            Utils.logSqlFeatureNotSupportedException(logger, sqlfnse);
         }
         return collection;
     }
@@ -1113,7 +1130,7 @@ public class MetadataContext {
                 bind(results, TypeInfo.class, collection);
             }
         } catch (final SQLFeatureNotSupportedException sqlfnse) {
-            logger.log(Level.WARNING, "sql feature not supported", sqlfnse);
+            Utils.logSqlFeatureNotSupportedException(logger, sqlfnse);
         }
         return collection;
     }
@@ -1142,7 +1159,7 @@ public class MetadataContext {
                 bind(results, UDT.class, collection);
             }
         } catch (final SQLFeatureNotSupportedException sqlfnse) {
-            logger.log(Level.WARNING, "sql feature not supported", sqlfnse);
+            Utils.logSqlFeatureNotSupportedException(logger, sqlfnse);
         }
         return collection;
     }
@@ -1188,7 +1205,7 @@ public class MetadataContext {
                 bind(results, VersionColumn.class, collection);
             }
         } catch (final SQLFeatureNotSupportedException sqlfnse) {
-            logger.log(Level.WARNING, "sql feature not supported", sqlfnse);
+            Utils.logSqlFeatureNotSupportedException(logger, sqlfnse);
         }
         return collection;
     }
@@ -1205,23 +1222,29 @@ public class MetadataContext {
     }
 
     // --------------------------------------------------------------------------------------------------------- bfields
-    private Map<Field, Bind> bfields(@NonNull final Class<?> klass) {
-        Map<Field, Bind> value = bfields.get(klass);
-        if (value == null) {
-            value = fields(klass, Bind.class);
-            for (Field field : value.keySet()) {
+    private Map<Field, Bind> bfields(final Class<?> clazz) {
+        requireNonNull(clazz, "clazz is null");
+        return bfields.computeIfAbsent(clazz, c -> {
+            final Map<Field, Bind> fields = Utils.getFieldsAnnotatedWith(clazz, Bind.class);
+            for (Field field : fields.keySet()) {
                 if (!field.isAccessible()) {
                     field.setAccessible(true);
                 }
             }
-            bfields.put(klass, unmodifiableMap(value));
-        }
-        return value;
+            return fields;
+        });
+    }
+
+    private Map<Field, Label> getLabeledFields(final Class<?> clazz) {
+        requireNonNull(clazz, "clazz is null");
+        return labeledFields.computeIfAbsent(clazz, c -> Utils.getFieldsAnnotatedWith(clazz, Label.class));
     }
 
     // -----------------------------------------------------------------------------------------------------------------
     final DatabaseMetaData databaseMetaData;
 
     // fields with @Bind
-    private final transient Map<Class<?>, Map<Field, Bind>> bfields = new HashMap<>();
+    private final Map<Class<?>, Map<Field, Bind>> bfields = new HashMap<>();
+
+    private final Map<Class<?>, Map<Field, Label>> labeledFields = new HashMap<>();
 }

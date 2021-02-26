@@ -50,7 +50,7 @@ class ReflectionTest {
     // -----------------------------------------------------------------------------------------------------------------
     @Disabled
     @Test
-    public void test() throws NoSuchMethodException {
+    void test() throws NoSuchMethodException {
 
         final boolean b1 = true;
         final Boolean b2 = true;
@@ -84,7 +84,7 @@ class ReflectionTest {
 
     @Disabled
     @Test
-    public void listType() throws ReflectiveOperationException {
+    void listType() throws ReflectiveOperationException {
         final Field field = getClass().getDeclaredField("list");
         final Type type = field.getGenericType();
         if (type instanceof ParameterizedType) {

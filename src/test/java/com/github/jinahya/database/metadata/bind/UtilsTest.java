@@ -34,14 +34,14 @@ import static org.slf4j.LoggerFactory.getLogger;
  *
  * @author Jin Kwon &lt;onacit at gmail.com&gt;
  */
-public class UtilsTest {
+class UtilsTest {
 
     private static final Logger logger = getLogger(lookup().lookupClass());
 
     // -----------------------------------------------------------------------------------------------------------------
     @Disabled
     @Test
-    public void printSqlTypes() throws ReflectiveOperationException {
+    void printSqlTypes() throws ReflectiveOperationException {
         final Field field = Utils.class.getDeclaredField("SQL_TYPES");
         field.setAccessible(true);
         logger.debug("SQL_TYPES: {}", field.get(null));

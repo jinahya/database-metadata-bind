@@ -22,7 +22,7 @@ public class OwnUpdatesAreVisible extends AreVisible {
         final List<OwnUpdatesAreVisible> list = list(OwnUpdatesAreVisible.class);
         for (final OwnUpdatesAreVisible v : list) {
             try {
-                v.value = databaseMetaData.ownDeletesAreVisible(v.type);
+                v.value = databaseMetaData.ownUpdatesAreVisible(v.type);
             } catch (final SQLFeatureNotSupportedException sqlfnse) {
                 logger.log(Level.WARNING, "sql feature not supported", sqlfnse);
             }

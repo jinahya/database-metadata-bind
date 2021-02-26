@@ -43,7 +43,7 @@ public class VersionColumn extends TableChild {
     /**
      * Constants for pseudo column values of version columns.
      *
-     * @see DatabaseMetaData#getVersionColumns(java.lang.String, java.lang.String, java.lang.String)
+     * @see MetadataContext#getVersionColumns(String, String, String, Collection)
      */
     public enum PseudoColumn implements IntFieldEnum<PseudoColumn> {
 

@@ -22,7 +22,6 @@ package com.github.jinahya.database.metadata.bind;
 
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
-import java.io.Serializable;
 
 /**
  * An entity class for binding the result of {@link java.sql.DatabaseMetaData#getTableTypes()}.
@@ -30,7 +29,7 @@ import java.io.Serializable;
  * @author Jin Kwon &lt;jinahya_at_gmail.com&gt;
  */
 @XmlRootElement
-public class TableType implements Serializable {
+public class TableType implements MetadataType {
 
     private static final long serialVersionUID = -7630634982776331078L;
 
