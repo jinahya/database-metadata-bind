@@ -18,7 +18,7 @@ import static java.util.Objects.requireNonNull;
  */
 abstract class AreDetected {
 
-    protected static final Logger logger = Logger.getLogger(MethodHandles.lookup().lookupClass().getName());
+    static final Logger logger = Logger.getLogger(MethodHandles.lookup().lookupClass().getName());
 
     static <T extends AreDetected> List<T> list(final Class<T> type) {
         requireNonNull(type, "type is null");

@@ -36,7 +36,7 @@ import static org.slf4j.LoggerFactory.getLogger;
  * @author Jin Kwon &lt;jinahya_at_gmail.com&gt;
  */
 @Slf4j
-public class MemoryH2Test extends MemoryTest {
+class MemoryH2Test extends MemoryTest {
 
     private static final Logger logger = getLogger(lookup().lookupClass());
 

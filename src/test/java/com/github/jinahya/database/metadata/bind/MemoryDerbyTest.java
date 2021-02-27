@@ -29,7 +29,7 @@ import java.sql.SQLException;
 import java.util.Properties;
 
 import static java.sql.DriverManager.getConnection;
-import static org.testng.Assert.fail;
+import static org.junit.jupiter.api.Assertions.fail;
 
 /**
  * Test clsss for Apache Derby in memory.
@@ -37,7 +37,7 @@ import static org.testng.Assert.fail;
  * @author Jin Kwon &lt;jinahya_at_gmail.com&gt;
  */
 @Slf4j
-public class MemoryDerbyTest extends MemoryTest {
+class MemoryDerbyTest extends MemoryTest {
 
     // -----------------------------------------------------------------------------------------------------------------
     private static final String DRIVER_NAME = "org.apache.derby.jdbc.EmbeddedDriver";

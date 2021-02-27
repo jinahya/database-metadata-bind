@@ -23,12 +23,13 @@ package com.github.jinahya.database.metadata.bind;
 import javax.xml.bind.annotation.XmlAttribute;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
+import java.util.Collection;
 
 /**
  * An entity class for pseudo columns.
  *
  * @author Jin Kwon &lt;jinahya_at_gmail.com&gt;
- * @see MetadataContext#getPseudoColumns(java.lang.String, java.lang.String, java.lang.String, java.lang.String)
+ * @see MetadataContext#getPseudoColumns(String, String, String, String, Collection)
  */
 @XmlRootElement
 public class PseudoColumn extends TableChild {

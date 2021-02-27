@@ -25,15 +25,17 @@ import java.lang.reflect.Field;
 import java.sql.ResultSet;
 import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
+import java.sql.SQLFeatureNotSupportedException;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
+import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import static java.beans.Introspector.decapitalize;
 import static java.lang.String.format;
 import static java.util.Collections.unmodifiableMap;
+import static java.util.Objects.requireNonNull;
 import static java.util.logging.Level.FINE;
 import static java.util.logging.Logger.getLogger;
 
@@ -70,34 +72,27 @@ final class Utils {
     }
 
     // ----------------------------------------------------------------------------------------------- java.lang.reflect
-    static Field field(final Class<?> klass, final String name) throws NoSuchFieldException {
-        try {
-            return klass.getDeclaredField(name);
-        } catch (final NoSuchFieldException nsfe) {
-            final Class<?> superclass = klass.getSuperclass();
-            if (superclass == null) {
-                throw nsfe;
-            }
-            return field(superclass, name);
-        }
-    }
-
-    private static <T extends Annotation> Map<Field, T> fields(
-            final Class<?> klass, final Class<T> type, final Map<Field, T> map) {
-        for (final Field field : klass.getDeclaredFields()) {
-            final T value = field.getAnnotation(type);
+    private static <T extends Annotation> Map<Field, T> getFieldsAnnotatedWith(
+            final Class<?> c, final Class<T> a, final Map<Field, T> m) {
+        for (final Field field : c.getDeclaredFields()) {
+            final T value = field.getAnnotation(a);
             if (value == null) {
                 continue;
             }
-            map.put(field, value);
+            if (!field.isEnumConstant()) {
+                field.setAccessible(true);
+            }
+            m.put(field, value);
         }
-        final Class<?> superclass = klass.getSuperclass();
-        return superclass == null ? map : fields(superclass, type, map);
+        final Class<?> superclass = c.getSuperclass();
+        return superclass == null ? m : getFieldsAnnotatedWith(superclass, a, m);
     }
 
-    static <T extends Annotation> Map<Field, T> fields(final Class<?> c, final Class<T> a) {
-        return fields(c, a, new HashMap<>());
+    static <T extends Annotation> Map<Field, T> getFieldsAnnotatedWith(final Class<?> c, final Class<T> a) {
+        return getFieldsAnnotatedWith(c, a, new HashMap<>());
     }
+
+    // -----------------------------------------------------------------------------------------------------------------
 
     /**
      * Returns a set of column labels of given result set.
@@ -107,7 +102,7 @@ final class Utils {
      * @throws SQLException if a database error occurs.
      * @see ResultSet#getMetaData()
      */
-    static Set<String> labels(final ResultSet results) throws SQLException {
+    static Set<String> getLabels(final ResultSet results) throws SQLException {
         final ResultSetMetaData metadata = results.getMetaData();
         final int count = metadata.getColumnCount();
         final Set<String> labels = new HashSet<>(count);
@@ -118,21 +113,8 @@ final class Utils {
     }
 
     // -----------------------------------------------------------------------------------------------------------------
-    static String suppressionPath(final Class<?> klass, final String name) {
-        return decapitalize(klass.getSimpleName()) + "/" + name;
-    }
-
-    static String suppressionPath(final Class<?> klass, final Field field) {
-        return suppressionPath(klass, field.getName());
-    }
-
-    static String suppressionPath(final Field field) {
-        return suppressionPath(field.getDeclaringClass(), field);
-    }
-
-    // -----------------------------------------------------------------------------------------------------------------
     @Deprecated
-    static void field(final Field field, final Object obj, final Object value) throws ReflectiveOperationException {
+    static void field(final Field field, final Object instance, final Object value) throws ReflectiveOperationException {
         if (!field.isAccessible()) {
             field.setAccessible(true);
         }
@@ -143,46 +125,46 @@ final class Utils {
                 return;
             }
             if (type == boolean.class) {
-                field.setBoolean(obj, (Boolean) value);
+                field.setBoolean(instance, (Boolean) value);
                 return;
             }
             if (type == byte.class) {
-                field.setByte(obj, (Byte) value);
+                field.setByte(instance, (Byte) value);
                 return;
             }
             if (type == char.class) {
-                field.setChar(obj, (Character) value);
+                field.setChar(instance, (Character) value);
                 return;
             }
             if (type == double.class) {
-                field.setDouble(obj, (Double) value);
+                field.setDouble(instance, (Double) value);
                 return;
             }
             if (type == float.class) {
-                field.setFloat(obj, (Float) value);
+                field.setFloat(instance, (Float) value);
                 return;
             }
             if (type == int.class) {
-                field.setInt(obj, (Integer) value);
+                field.setInt(instance, (Integer) value);
                 return;
             }
             if (type == long.class) {
 //                field.setLong(obj, (Long) value);
                 if (value instanceof Number) {
-                    field.setLong(obj, ((Number) value).longValue());
+                    field.setLong(instance, ((Number) value).longValue());
                     return;
                 }
                 return;
             }
             if (type == short.class) {
                 if (value instanceof Number) {
-                    field.setShort(obj, ((Number) value).shortValue());
+                    field.setShort(instance, ((Number) value).shortValue());
                     return;
                 }
             }
         }
         try {
-            field.set(obj, value);
+            field.set(instance, value);
         } catch (final IllegalArgumentException iae) {
             if (type == Boolean.class) {
             }
@@ -190,13 +172,13 @@ final class Utils {
             }
             if (type == Short.class) {
                 if (value instanceof Number) {
-                    field.set(obj, ((Number) value).shortValue());
+                    field.set(instance, ((Number) value).shortValue());
                     return;
                 }
             }
             if (type == Integer.class) {
                 if (value instanceof Number) {
-                    field.set(obj, ((Number) value).intValue());
+                    field.set(instance, ((Number) value).intValue());
                     return;
                 }
             }
@@ -214,6 +196,10 @@ final class Utils {
 
     static void field(final Field field, final Object obj, final ResultSet results, final String label)
             throws SQLException, ReflectiveOperationException {
+        requireNonNull(field, "field is null");
+        requireNonNull(obj, "obj is null");
+        requireNonNull(results, "results is null");
+        requireNonNull(label, "label is null");
         final Class<?> type = field.getType();
         final Object value = results.getObject(label);
         if (type.isPrimitive()) {
@@ -296,7 +282,14 @@ final class Utils {
     }
 
     // -----------------------------------------------------------------------------------------------------------------
+    static void logSqlFeatureNotSupportedException(final Logger logger, final SQLFeatureNotSupportedException sqlfnse) {
+        requireNonNull(logger, "logger is null");
+        requireNonNull(sqlfnse, "sqlfnse is null");
+        logger.log(Level.WARNING, "sql feature not supported", sqlfnse);
+    }
+
+    // -----------------------------------------------------------------------------------------------------------------
     private Utils() {
-        super();
+        throw new AssertionError("instantiation is not allowed");
     }
 }

@@ -20,31 +20,33 @@ package com.github.jinahya.database.metadata.bind;
  * #L%
  */
 
-import org.slf4j.Logger;
-import org.testng.annotations.Test;
+import lombok.extern.slf4j.Slf4j;
+import org.junit.jupiter.api.Disabled;
+import org.junit.jupiter.api.Test;
 
-import javax.xml.bind.JAXBException;
 import java.lang.reflect.Modifier;
 import java.sql.DatabaseMetaData;
 import java.util.Arrays;
 
-import static java.lang.invoke.MethodHandles.lookup;
-import static org.slf4j.LoggerFactory.getLogger;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 /**
+ * A class for testing {@link DatabaseMetadata} class.
+ *
  * @author Jin Kwon &lt;jinahya_at_gmail.com&gt;
  */
-public class MetadataContextTest {
+@Slf4j
+class MetadataContextTest {
 
-    private static final Logger logger = getLogger(lookup().lookupClass());
-
-    @Test(expectedExceptions = {NullPointerException.class})
-    public void constructWithNullDatabaseMetaData() {
-        final MetadataContext context = new MetadataContext(null);
+    @Test
+    void newInstance_NullPointerException_Null() {
+        assertThatThrownBy(() -> MetadataContext.newInstance(null))
+                .isInstanceOf(NullPointerException.class);
     }
 
-    @Test(enabled = false)
-    public void checkMethodBinding() throws JAXBException {
+    @Disabled
+    @Test
+    void checkMethodBinding() {
         Arrays.stream(DatabaseMetaData.class.getMethods()).filter(m -> {
             final int modifiers = m.getModifiers();
             if (Modifier.isStatic(modifiers)) {
@@ -55,7 +57,7 @@ public class MetadataContextTest {
             try {
                 MetadataContext.class.getMethod(m.getName(), m.getParameterTypes());
             } catch (final NoSuchMethodException nsme) {
-                logger.info("method not covered: {}", m);
+                log.debug("method not covered: {}", m);
             }
         });
     }

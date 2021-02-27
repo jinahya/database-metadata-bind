@@ -24,9 +24,7 @@ import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
 import java.sql.DatabaseMetaData;
 
-import static java.sql.DatabaseMetaData.typeNoNulls;
-import static java.sql.DatabaseMetaData.typeNullable;
-import static java.sql.DatabaseMetaData.typeNullableUnknown;
+import static java.sql.DatabaseMetaData.*;
 
 /**
  * An entity class for binding the result of {@link java.sql.DatabaseMetaData#getTypeInfo() getTypeInfo()}.
@@ -34,7 +32,7 @@ import static java.sql.DatabaseMetaData.typeNullableUnknown;
  * @author Jin Kwon &lt;jinahya_at_gmail.com&gt;
  */
 @XmlRootElement
-public class TypeInfo implements MetadataValue {
+public class TypeInfo implements MetadataType {
 
     private static final long serialVersionUID = -3964147654019495313L;
 
@@ -45,24 +43,20 @@ public class TypeInfo implements MetadataValue {
      */
     public enum Nullable implements IntFieldEnum<Nullable> {
 
-        // ---------------------------------------------------------------------
         /**
-         * Constant for {@link DatabaseMetaData#typeNoNulls} whose value is {@value DatabaseMetaData#typeNoNulls}.
+         * Constant for {@link DatabaseMetaData#typeNoNulls}({@value DatabaseMetaData#typeNoNulls}).
          */
         TYPE_NO_NULLS(typeNoNulls), // 1
 
         /**
-         * Constant for {@link DatabaseMetaData#typeNullable} whose value is {@value DatabaseMetaData#typeNullable}.
+         * Constant for {@link DatabaseMetaData#typeNullable}({@value DatabaseMetaData#typeNullable}).
          */
         TYPE_NULLABLE(typeNullable), // 1
 
         /**
-         * Constant for {@link DatabaseMetaData#typeNullableUnknown} whose value is {@value
-         * DatabaseMetaData#typeNullableUnknown}.
+         * Constant for {@link DatabaseMetaData#typeNullableUnknown}({@value DatabaseMetaData#typeNullableUnknown}).
          */
         TYPE_NULLABLE_UNKNOWN(typeNullableUnknown); // 2
-
-        // ---------------------------------------------------------------------
 
         /**
          * Returns the constant whose raw value matches to given. An instance of {@link IllegalArgumentException} will
@@ -75,12 +69,9 @@ public class TypeInfo implements MetadataValue {
             return IntFieldEnums.valueOf(Nullable.class, rawValue);
         }
 
-        // ---------------------------------------------------------------------
         Nullable(final int rawValue) {
             this.rawValue = rawValue;
         }
-
-        // ---------------------------------------------------------------------
 
         /**
          * Returns the raw value of this constant.
@@ -92,12 +83,10 @@ public class TypeInfo implements MetadataValue {
             return rawValue;
         }
 
-        // ---------------------------------------------------------------------
         private final int rawValue;
     }
 
-    // -------------------------------------------------------------------------
-
+    // -----------------------------------------------------------------------------------------------------------------
     /**
      * Creates a new instance.
      */
@@ -105,7 +94,7 @@ public class TypeInfo implements MetadataValue {
         super();
     }
 
-    // -------------------------------------------------------------------------
+    // -----------------------------------------------------------------------------------------------------------------
     @Override
     public String toString() {
         return super.toString() + '{'
@@ -130,7 +119,7 @@ public class TypeInfo implements MetadataValue {
                + '}';
     }
 
-    // ---------------------------------------------------------------- typeName
+    // -------------------------------------------------------------------------------------------------------- typeName
     public String getTypeName() {
         return typeName;
     }
@@ -139,7 +128,7 @@ public class TypeInfo implements MetadataValue {
         this.typeName = typeName;
     }
 
-    // ------------------------------------------------------------- getDataType
+    // ----------------------------------------------------------------------------------------------------- getDataType
     public int getDataType() {
         return dataType;
     }
@@ -148,7 +137,7 @@ public class TypeInfo implements MetadataValue {
         this.dataType = dataType;
     }
 
-    // --------------------------------------------------------------- precesion
+    // ------------------------------------------------------------------------------------------------------- precesion
     public int getPrecision() {
         return precision;
     }
@@ -157,7 +146,7 @@ public class TypeInfo implements MetadataValue {
         this.precision = precision;
     }
 
-    // ----------------------------------------------------------- literalPrefix
+    // --------------------------------------------------------------------------------------------------- literalPrefix
     public String getLiteralPrefix() {
         return literalPrefix;
     }
@@ -166,7 +155,7 @@ public class TypeInfo implements MetadataValue {
         this.literalPrefix = literalPrefix;
     }
 
-    // ----------------------------------------------------------- literalSuffix
+    // --------------------------------------------------------------------------------------------------- literalSuffix
     public String getLiteralSuffix() {
         return literalSuffix;
     }
@@ -175,7 +164,7 @@ public class TypeInfo implements MetadataValue {
         this.literalSuffix = literalSuffix;
     }
 
-    // ------------------------------------------------------------ createParams
+    // ---------------------------------------------------------------------------------------------------- createParams
     public String getCreateParams() {
         return createParams;
     }
@@ -184,7 +173,7 @@ public class TypeInfo implements MetadataValue {
         this.createParams = createParams;
     }
 
-    // ---------------------------------------------------------------- nullable
+    // -------------------------------------------------------------------------------------------------------- nullable
     public short getNullable() {
         return nullable;
     }
@@ -193,7 +182,7 @@ public class TypeInfo implements MetadataValue {
         this.nullable = nullable;
     }
 
-    // ----------------------------------------------------------- caseSensitive
+    // --------------------------------------------------------------------------------------------------- caseSensitive
     public boolean getCaseSensitive() {
         return caseSensitive;
     }
@@ -202,7 +191,7 @@ public class TypeInfo implements MetadataValue {
         this.caseSensitive = caseSensitive;
     }
 
-    // -------------------------------------------------------------- searchable
+    // ------------------------------------------------------------------------------------------------------ searchable
     public short getSearchable() {
         return searchable;
     }
@@ -211,7 +200,7 @@ public class TypeInfo implements MetadataValue {
         this.searchable = searchable;
     }
 
-    // ------------------------------------------------------- unsignedAttribute
+    // ----------------------------------------------------------------------------------------------- unsignedAttribute
     public boolean getUnsignedAttribute() {
         return unsignedAttribute;
     }
@@ -220,7 +209,7 @@ public class TypeInfo implements MetadataValue {
         this.unsignedAttribute = unsignedAttribute;
     }
 
-    // ---------------------------------------------------------- fixedPrecScale
+    // -------------------------------------------------------------------------------------------------- fixedPrecScale
     public boolean getFixedPrecScale() {
         return fixedPrecScale;
     }
@@ -229,7 +218,7 @@ public class TypeInfo implements MetadataValue {
         this.fixedPrecScale = fixedPrecScale;
     }
 
-    // ----------------------------------------------------------- autoIncrement
+    // --------------------------------------------------------------------------------------------------- autoIncrement
     public boolean getAutoIncrement() {
         return autoIncrement;
     }
@@ -238,7 +227,7 @@ public class TypeInfo implements MetadataValue {
         this.autoIncrement = autoIncrement;
     }
 
-    // ----------------------------------------------------------- localTypeName
+    // --------------------------------------------------------------------------------------------------- localTypeName
     public String getLocalTypeName() {
         return localTypeName;
     }
@@ -247,7 +236,7 @@ public class TypeInfo implements MetadataValue {
         this.localTypeName = localTypeName;
     }
 
-    // ------------------------------------------------------------ minimumScale
+    // ---------------------------------------------------------------------------------------------------- minimumScale
     public short getMinimumScale() {
         return minimumScale;
     }
@@ -256,7 +245,7 @@ public class TypeInfo implements MetadataValue {
         this.minimumScale = minimumScale;
     }
 
-    // ------------------------------------------------------------ maximumScale
+    // ---------------------------------------------------------------------------------------------------- maximumScale
     public short getMaximumScale() {
         return maximumScale;
     }
@@ -265,7 +254,7 @@ public class TypeInfo implements MetadataValue {
         this.maximumScale = maximumScale;
     }
 
-    // ------------------------------------------------------------- sqlDataType
+    // ----------------------------------------------------------------------------------------------------- sqlDataType
     public Integer getSqlDataType() {
         return sqlDataType;
     }
@@ -274,7 +263,7 @@ public class TypeInfo implements MetadataValue {
         this.sqlDataType = sqlDataType;
     }
 
-    // ---------------------------------------------------------- sqlDatetimeSub
+    // -------------------------------------------------------------------------------------------------- sqlDatetimeSub
     public Integer getSqlDatetimeSub() {
         return sqlDatetimeSub;
     }
@@ -283,7 +272,7 @@ public class TypeInfo implements MetadataValue {
         this.sqlDatetimeSub = sqlDatetimeSub;
     }
 
-    // ------------------------------------------------------------ numPrecRadix
+    // ---------------------------------------------------------------------------------------------------- numPrecRadix
     public int getNumPrecRadix() {
         return numPrecRadix;
     }

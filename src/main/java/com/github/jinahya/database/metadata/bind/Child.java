@@ -1,8 +1,11 @@
 package com.github.jinahya.database.metadata.bind;
 
-interface Child<P extends MetadataValue> extends MetadataValue {
+import javax.xml.bind.annotation.XmlTransient;
 
-    P getParent();
+interface Child<P extends MetadataType> extends MetadataType {
 
-    void setParent(P parent);
+    @XmlTransient
+    P getParent_();
+
+    void setParent_(P parent);
 }

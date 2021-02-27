@@ -2,11 +2,11 @@ package com.github.jinahya.database.metadata.bind;
 
 abstract class TableChild extends AbstractChild<Table> {
 
-    public Table getTable() {
-        return getParent();
+    public Table getTable_() {
+        return getParent_();
     }
 
-    public void setTable(final Table table) {
-        setParent(table);
+    public void setTable_(final Table table) {
+        setParent_(table);
     }
 }

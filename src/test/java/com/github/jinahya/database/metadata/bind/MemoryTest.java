@@ -24,8 +24,8 @@ import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.Test;
 
 import java.sql.Connection;
-import java.sql.DatabaseMetaData;
 import java.sql.SQLException;
+import java.util.ArrayList;
 
 /**
  * An abstract test class for in-memory databases.
@@ -42,7 +42,7 @@ abstract class MemoryTest {
     void writeToFiles() throws Exception {
         try (Connection connection = connect()) {
             final MetadataContext context = MetadataContext.newInstance(connection);
-            final Metadata metadata = Metadata.newInstance(context);
+            final DatabaseMetadata metadata = DatabaseMetadata.newInstance(context);
             final String name;
             {
                 final String simpleName = getClass().getSimpleName();
@@ -56,9 +56,8 @@ abstract class MemoryTest {
     @Test
     void getCatalogs__() throws Exception {
         try (Connection connection = connect()) {
-            final DatabaseMetaData database = connection.getMetaData();
-            final MetadataContext context = new MetadataContext(database);
-            for (final Catalog catalog : context.getCatalogs()) {
+            final MetadataContext metadataContext = MetadataContext.newInstance(connection);
+            for (final Catalog catalog : metadataContext.getCatalogs(new ArrayList<>())) {
                 log.debug("catalog: {}", catalog);
             }
         }
@@ -67,9 +66,8 @@ abstract class MemoryTest {
     @Test
     void getSchemas__() throws Exception {
         try (Connection connection = connect()) {
-            final DatabaseMetaData database = connection.getMetaData();
-            final MetadataContext context = new MetadataContext(database);
-            for (final Schema schema : context.getSchemas(null, null)) {
+            final MetadataContext metadataContext = MetadataContext.newInstance(connection);
+            for (final Schema schema : metadataContext.getSchemas(null, null, new ArrayList<>())) {
                 log.debug("schema: {}", schema);
             }
         }
@@ -78,9 +76,8 @@ abstract class MemoryTest {
     @Test
     void getTables__() throws Exception {
         try (Connection connection = connect()) {
-            final DatabaseMetaData database = connection.getMetaData();
-            final MetadataContext context = new MetadataContext(database);
-            for (final Table table : context.getTables(null, null, null, null)) {
+            final MetadataContext metadataContext = MetadataContext.newInstance(connection);
+            for (final Table table : metadataContext.getTables(null, null, null, null, new ArrayList<>())) {
                 log.debug("table: {}", table);
             }
         }

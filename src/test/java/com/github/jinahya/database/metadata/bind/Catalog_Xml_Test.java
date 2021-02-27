@@ -1,5 +1,6 @@
 package com.github.jinahya.database.metadata.bind;
 
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.w3c.dom.Node;
 
@@ -11,12 +12,14 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 class Catalog_Xml_Test extends AbstractCatalogTest {
 
+    @Disabled
     @Test
     void printSchema() throws JAXBException, IOException {
         final JAXBContext context = JAXBContext.newInstance(Catalog.class);
         JaxbTests.printSchema(context);
     }
 
+    @Disabled
     @Test
     void printDocument() throws JAXBException {
         final Catalog value = new Catalog();

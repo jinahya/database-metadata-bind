@@ -5,6 +5,7 @@ ClientInfoProperty
 Column
 ColumnPrivilege
 CrossReference
+DatabaseMetadata
 ExportedKey
 Function
 FunctionColumn

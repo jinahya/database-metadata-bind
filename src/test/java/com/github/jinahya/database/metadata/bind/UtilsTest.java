@@ -20,8 +20,9 @@ package com.github.jinahya.database.metadata.bind;
  * #L%
  */
 
+import org.junit.jupiter.api.Disabled;
+import org.junit.jupiter.api.Test;
 import org.slf4j.Logger;
-import org.testng.annotations.Test;
 
 import java.lang.reflect.Field;
 
@@ -33,13 +34,14 @@ import static org.slf4j.LoggerFactory.getLogger;
  *
  * @author Jin Kwon &lt;onacit at gmail.com&gt;
  */
-public class UtilsTest {
+class UtilsTest {
 
     private static final Logger logger = getLogger(lookup().lookupClass());
 
     // -----------------------------------------------------------------------------------------------------------------
-    @Test(enabled = false)
-    public void printSqlTypes() throws ReflectiveOperationException {
+    @Disabled
+    @Test
+    void printSqlTypes() throws ReflectiveOperationException {
         final Field field = Utils.class.getDeclaredField("SQL_TYPES");
         field.setAccessible(true);
         logger.debug("SQL_TYPES: {}", field.get(null));

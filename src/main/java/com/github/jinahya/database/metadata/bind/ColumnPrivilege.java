@@ -23,6 +23,7 @@ package com.github.jinahya.database.metadata.bind;
 import javax.xml.bind.annotation.XmlAttribute;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
+import javax.xml.bind.annotation.XmlTransient;
 
 /**
  * An entity class for column privileges.
@@ -51,12 +52,13 @@ public class ColumnPrivilege extends AbstractChild<Column> {
     }
 
     // ---------------------------------------------------------------------------------------------------------- column
-    public Column getColumn() {
-        return getParent();
+    @XmlTransient
+    Column getColumn_() {
+        return getParent_();
     }
 
-    public void setColumn(final Column column) {
-        setParent(column);
+    void setColumn_(final Column column_) {
+        setParent_(column_);
     }
 
     // -------------------------------------------------------------------------------------------------------- tableCat

@@ -20,14 +20,10 @@ package com.github.jinahya.database.metadata.bind;
  * #L%
  */
 
-import jakarta.json.bind.annotation.JsonbProperty;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotNull;
 
-import javax.xml.bind.annotation.XmlAttribute;
-import javax.xml.bind.annotation.XmlElement;
-import javax.xml.bind.annotation.XmlElementRef;
-import javax.xml.bind.annotation.XmlRootElement;
+import javax.xml.bind.annotation.*;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
@@ -57,7 +53,7 @@ public class Schema extends AbstractChild<Catalog> {
     public static Schema newVirtualInstance(final Catalog catalog) {
         final Schema instance = new Schema();
         instance.virtual = Boolean.TRUE;
-        instance.setParent(catalog);
+        instance.setParent_(catalog);
         instance.setTableSchem("");
         return instance;
     }
@@ -106,13 +102,14 @@ public class Schema extends AbstractChild<Catalog> {
         return virtual != null && virtual;
     }
 
-    // --------------------------------------------------------------------------------------------------------- catalog
-    public Catalog getCatalog() {
-        return getParent();
+    // -------------------------------------------------------------------------------------------------------- catalog_
+    @XmlTransient
+    Catalog getCatalog_() {
+        return getParent_();
     }
 
-    void setCatalog(final Catalog catalog) {
-        setParent(catalog);
+    void setCatalog_(final Catalog catalog_) {
+        setParent_(catalog_);
     }
 
     // ---------------------------------------------------------------------------------------------------- tableCatalog
@@ -176,12 +173,10 @@ public class Schema extends AbstractChild<Catalog> {
     }
 
     // -----------------------------------------------------------------------------------------------------------------
-    @JsonbProperty(nillable = true)
     @XmlAttribute(required = false)
     Boolean virtual = Boolean.FALSE;
 
     // -----------------------------------------------------------------------------------------------------------------
-    @JsonbProperty(nillable = true)
     @XmlAttribute(required = true)
     @MayBeNull
     @Label(COLUMN_NAME_TABLE_CATALOG)

@@ -20,7 +20,6 @@ package com.github.jinahya.database.metadata.bind;
  * #L%
  */
 
-import jakarta.json.bind.annotation.JsonbTransient;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotNull;
 
@@ -28,7 +27,6 @@ import javax.xml.bind.annotation.XmlAttribute;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlElementRef;
 import javax.xml.bind.annotation.XmlRootElement;
-import javax.xml.bind.annotation.XmlTransient;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -39,7 +37,7 @@ import java.util.List;
  * @author Jin Kwon &lt;jinahya_at_gmail.com&gt;
  */
 @XmlRootElement
-public class Procedure extends AbstractChild<Schema> {
+public class Procedure extends SchemaChild {
 
     private static final long serialVersionUID = -6262056388403934829L;
 
@@ -54,17 +52,6 @@ public class Procedure extends AbstractChild<Schema> {
                + ",procedureType=" + procedureType
                + ",specificName=" + specificName
                + '}';
-    }
-
-    // ---------------------------------------------------------------------------------------------------------- schema
-    @JsonbTransient
-    @XmlTransient
-    public Schema getSchema() {
-        return getParent();
-    }
-
-    public void setSchema(final Schema schema) {
-        setParent(schema);
     }
 
     // ---------------------------------------------------------------------------------------------------- procedureCat
@@ -124,7 +111,7 @@ public class Procedure extends AbstractChild<Schema> {
     // ------------------------------------------------------------------------------------------------ procedureColumns
     public List<ProcedureColumn> getProcedureColumns() {
         if (procedureColumns == null) {
-            procedureColumns = new ArrayList<ProcedureColumn>();
+            procedureColumns = new ArrayList<>();
         }
         return procedureColumns;
     }

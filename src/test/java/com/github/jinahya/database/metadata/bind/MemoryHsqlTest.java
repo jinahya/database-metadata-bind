@@ -33,7 +33,7 @@ import static org.slf4j.LoggerFactory.getLogger;
  * @author Jin Kwon &lt;onacit_at_gmail.com&gt;
  */
 @Slf4j
-public class MemoryHsqlTest extends MemoryTest {
+class MemoryHsqlTest extends MemoryTest {
 
     private static final Logger logger = getLogger(MemoryHsqlTest.class);
 

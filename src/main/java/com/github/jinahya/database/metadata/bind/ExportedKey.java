@@ -21,12 +21,13 @@ package com.github.jinahya.database.metadata.bind;
  */
 
 import javax.xml.bind.annotation.XmlRootElement;
+import java.util.Collection;
 
 /**
  * An entity class for exported keys.
  *
  * @author Jin Kwon &lt;jinahya_at_gmail.com&gt;
- * @see MetadataContext#getExportedKeys(java.lang.String, java.lang.String, java.lang.String)
+ * @see MetadataContext#getExportedKeys(String, String, String, Collection)
  */
 @XmlRootElement
 public class ExportedKey extends TableKey {

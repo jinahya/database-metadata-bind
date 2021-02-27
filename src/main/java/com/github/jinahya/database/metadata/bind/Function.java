@@ -25,6 +25,7 @@ import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlElementRef;
 import javax.xml.bind.annotation.XmlRootElement;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 
 /**
@@ -33,8 +34,8 @@ import java.util.List;
  *
  * @author Jin Kwon &lt;jinahya_at_gmail.com&gt;
  * @see java.sql.DatabaseMetaData#getFunctions(java.lang.String, java.lang.String, java.lang.String)
- * @see MetadataContext#getFunctions(java.lang.String, java.lang.String, java.lang.String)
- * @see MetadataContext#getFunctionColumns(String, String, String, String)
+ * @see MetadataContext#getFunctions(String, String, String, Collection)
+ * @see FunctionColumn
  */
 @XmlRootElement
 public class Function extends SchemaChild {
@@ -46,7 +47,7 @@ public class Function extends SchemaChild {
 
     public static final String ATTRIBUTE_NAME_FUNCTION_CAT = "functionCat";
 
-    // -------------------------------------------------------------------------------------- FUNCTION_SCHEM / functionSchem
+    // ---------------------------------------------------------------------------------- FUNCTION_SCHEM / functionSchem
     public static final String COLUMN_NAME_FUNCTION_SCHEM = "FUNCTION_SCHEM";
 
     public static final String ATTRIBUTE_NAME_FUNCTION_SCHEM = "functionSchem";
@@ -119,6 +120,12 @@ public class Function extends SchemaChild {
     }
 
     // ------------------------------------------------------------------------------------------------- functionColumns
+
+    /**
+     * Returns a list of function columns of this function.
+     *
+     * @return a list of function columns of this function.
+     */
     public List<FunctionColumn> getFunctionColumns() {
         if (functionColumns == null) {
             functionColumns = new ArrayList<>();

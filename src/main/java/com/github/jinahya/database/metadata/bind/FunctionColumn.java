@@ -23,17 +23,10 @@ package com.github.jinahya.database.metadata.bind;
 import javax.xml.bind.annotation.XmlAttribute;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
+import javax.xml.bind.annotation.XmlTransient;
 import java.sql.DatabaseMetaData;
 
-import static java.sql.DatabaseMetaData.functionColumnIn;
-import static java.sql.DatabaseMetaData.functionColumnInOut;
-import static java.sql.DatabaseMetaData.functionColumnOut;
-import static java.sql.DatabaseMetaData.functionColumnResult;
-import static java.sql.DatabaseMetaData.functionColumnUnknown;
-import static java.sql.DatabaseMetaData.functionNoNulls;
-import static java.sql.DatabaseMetaData.functionNullable;
-import static java.sql.DatabaseMetaData.functionNullableUnknown;
-import static java.sql.DatabaseMetaData.functionReturn;
+import static java.sql.DatabaseMetaData.*;
 
 /**
  * An entity class for function columns.
@@ -46,7 +39,7 @@ public class FunctionColumn extends AbstractChild<Function> {
 
     private static final long serialVersionUID = -7445156446214062680L;
 
-    // -------------------------------------------------------------------------
+    // -----------------------------------------------------------------------------------------------------------------
 
     /**
      * Constants for column types of function columns.
@@ -142,7 +135,7 @@ public class FunctionColumn extends AbstractChild<Function> {
          */
         FUNCTION_NULLABLE_UNKNOWN(functionNullableUnknown);
 
-        // ---------------------------------------------------------------------
+        // -------------------------------------------------------------------------------------------------------------
 
         /**
          * Returns the constant whose raw value equals to given. An instance of {@link IllegalArgumentException} will be
@@ -155,12 +148,12 @@ public class FunctionColumn extends AbstractChild<Function> {
             return IntFieldEnums.valueOf(Nullable.class, rawValue);
         }
 
-        // -----------------------------------------------------------------------------------------------------------------
+        // -------------------------------------------------------------------------------------------------------------
         Nullable(final int rawValue) {
             this.rawValue = rawValue;
         }
 
-        // -----------------------------------------------------------------------------------------------------------------
+        // -------------------------------------------------------------------------------------------------------------
 
         /**
          * Returns the raw value of this constant.
@@ -200,16 +193,16 @@ public class FunctionColumn extends AbstractChild<Function> {
                + '}';
     }
 
-    // -------------------------------------------------------------------------------------------------------- function
-    public Function getFunction() {
-        return function;
+    // ------------------------------------------------------------------------------------------------------- function_
+    public Function getFunction_() {
+        return function_;
     }
 
-    public void setFunction(final Function function) {
-        this.function = function;
+    public void setFunction_(final Function function_) {
+        this.function_ = function_;
     }
 
-    // ------------------------------------------------------------- functionCat
+    // ----------------------------------------------------------------------------------------------------- functionCat
     public String getFunctionCat() {
         return functionCat;
     }
@@ -218,7 +211,7 @@ public class FunctionColumn extends AbstractChild<Function> {
         this.functionCat = functionCat;
     }
 
-    // ----------------------------------------------------------- functionSchem
+    // --------------------------------------------------------------------------------------------------- functionSchem
     public String getFunctionSchem() {
         return functionSchem;
     }
@@ -227,7 +220,7 @@ public class FunctionColumn extends AbstractChild<Function> {
         this.functionSchem = functionSchem;
     }
 
-    // ------------------------------------------------------------ functionName
+    // ---------------------------------------------------------------------------------------------------- functionName
     public String getFunctionName() {
         return functionName;
     }
@@ -236,7 +229,7 @@ public class FunctionColumn extends AbstractChild<Function> {
         this.functionName = functionName;
     }
 
-    // -------------------------------------------------------------- columnName
+    // ------------------------------------------------------------------------------------------------------ columnName
     public String getColumnName() {
         return columnName;
     }
@@ -245,7 +238,7 @@ public class FunctionColumn extends AbstractChild<Function> {
         this.columnName = columnName;
     }
 
-    // -------------------------------------------------------------- columnType
+    // ------------------------------------------------------------------------------------------------------ columnType
     public short getColumnType() {
         return columnType;
     }
@@ -254,7 +247,7 @@ public class FunctionColumn extends AbstractChild<Function> {
         this.columnType = columnType;
     }
 
-    // ---------------------------------------------------------------- dataType
+    // -------------------------------------------------------------------------------------------------------- dataType
     public int getDataType() {
         return dataType;
     }
@@ -263,7 +256,7 @@ public class FunctionColumn extends AbstractChild<Function> {
         this.dataType = dataType;
     }
 
-    // ---------------------------------------------------------------- typeName
+    // -------------------------------------------------------------------------------------------------------- typeName
     public String getTypeName() {
         return typeName;
     }
@@ -272,7 +265,7 @@ public class FunctionColumn extends AbstractChild<Function> {
         this.typeName = typeName;
     }
 
-    // --------------------------------------------------------------- precision
+    // ------------------------------------------------------------------------------------------------------- precision
     public int getPrecision() {
         return precision;
     }
@@ -281,7 +274,7 @@ public class FunctionColumn extends AbstractChild<Function> {
         this.precision = precision;
     }
 
-    // ------------------------------------------------------------------ length
+    // ---------------------------------------------------------------------------------------------------------- length
     public int getLength() {
         return length;
     }
@@ -290,7 +283,7 @@ public class FunctionColumn extends AbstractChild<Function> {
         this.length = length;
     }
 
-    // ------------------------------------------------------------------- scale
+    // ----------------------------------------------------------------------------------------------------------- scale
     public Short getScale() {
         return scale;
     }
@@ -299,7 +292,7 @@ public class FunctionColumn extends AbstractChild<Function> {
         this.scale = scale;
     }
 
-    // ------------------------------------------------------------------- radix
+    // ----------------------------------------------------------------------------------------------------------- radix
     public short getRadix() {
         return radix;
     }
@@ -308,7 +301,7 @@ public class FunctionColumn extends AbstractChild<Function> {
         this.radix = radix;
     }
 
-    // ---------------------------------------------------------------- nullable
+    // -------------------------------------------------------------------------------------------------------- nullable
     public short getNullable() {
         return nullable;
     }
@@ -317,7 +310,7 @@ public class FunctionColumn extends AbstractChild<Function> {
         this.nullable = nullable;
     }
 
-    // ----------------------------------------------------------------- remarks
+    // --------------------------------------------------------------------------------------------------------- remarks
     public String getRemarks() {
         return remarks;
     }
@@ -326,7 +319,7 @@ public class FunctionColumn extends AbstractChild<Function> {
         this.remarks = remarks;
     }
 
-    // --------------------------------------------------------- charOctetLength
+    // ------------------------------------------------------------------------------------------------- charOctetLength
     public Integer getCharOctetLength() {
         return charOctetLength;
     }
@@ -335,7 +328,7 @@ public class FunctionColumn extends AbstractChild<Function> {
         this.charOctetLength = charOctetLength;
     }
 
-    // --------------------------------------------------------- ordinalPosition
+    // ------------------------------------------------------------------------------------------------- ordinalPosition
     public int getOrdinalPosition() {
         return ordinalPosition;
     }
@@ -344,7 +337,7 @@ public class FunctionColumn extends AbstractChild<Function> {
         this.ordinalPosition = ordinalPosition;
     }
 
-    // -------------------------------------------------------------- isNullable
+    // ------------------------------------------------------------------------------------------------------ isNullable
     public String getIsNullable() {
         return isNullable;
     }
@@ -353,7 +346,7 @@ public class FunctionColumn extends AbstractChild<Function> {
         this.isNullable = isNullable;
     }
 
-    // ------------------------------------------------------------ specificName
+    // ---------------------------------------------------------------------------------------------------- specificName
     public String getSpecificName() {
         return specificName;
     }
@@ -363,9 +356,8 @@ public class FunctionColumn extends AbstractChild<Function> {
     }
 
     // -----------------------------------------------------------------------------------------------------------------
-    //@JsonbTransient
-    //@XmlTransient
-    private transient Function function;
+    @XmlTransient
+    private Function function_;
 
     // -----------------------------------------------------------------------------------------------------------------
     @XmlAttribute

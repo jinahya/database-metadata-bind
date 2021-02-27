@@ -23,13 +23,14 @@ package com.github.jinahya.database.metadata.bind;
 import javax.xml.bind.annotation.XmlAttribute;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
+import java.util.Collection;
 
 /**
  * An entity class for index info.
  *
  * @author Jin Kwon &lt;jinahya_at_gmail.com&gt;
  * @see java.sql.DatabaseMetaData#getIndexInfo(java.lang.String, java.lang.String, java.lang.String, boolean, boolean)
- * @see MetadataContext#getIndexInfo(java.lang.String, java.lang.String, java.lang.String, boolean, boolean)
+ * @see MetadataContext#getIndexInfo(String, String, String, boolean, boolean, Collection)
  */
 @XmlRootElement
 public class IndexInfo extends TableChild {

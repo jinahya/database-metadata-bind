@@ -28,9 +28,7 @@ import javax.xml.bind.annotation.XmlRootElement;
 import java.sql.DatabaseMetaData;
 import java.util.Objects;
 
-import static java.sql.DatabaseMetaData.attributeNoNulls;
-import static java.sql.DatabaseMetaData.attributeNullable;
-import static java.sql.DatabaseMetaData.attributeNullableUnknown;
+import static java.sql.DatabaseMetaData.*;
 
 /**
  * An entity class for type attributes.
@@ -169,20 +167,20 @@ public class Attribute extends AbstractChild<UDT> {
 
     // ------------------------------------------------------------------------------------------------------------- UDT
     public UDT getUDT() {
-        return getParent();
+        return getParent_();
     }
 
     public void setUDT(final UDT udt) {
-        setParent(udt);
+        setParent_(udt);
     }
 
     // -------------------------------------------------------------------------------------------------------- typeInfo
     public UDT getTypeInfo() {
-        return getParent();
+        return getParent_();
     }
 
     public void setTypeInfo(final UDT udt) {
-        setParent(udt);
+        setParent_(udt);
     }
 
     // --------------------------------------------------------------------------------------------------------- typeCat

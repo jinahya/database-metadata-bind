@@ -22,8 +22,8 @@ package com.github.jinahya.database.metadata.bind;
 
 import lombok.NonNull;
 import lombok.extern.slf4j.Slf4j;
+import org.junit.jupiter.api.Test;
 import org.slf4j.Logger;
-import org.testng.annotations.Test;
 
 import java.beans.BeanInfo;
 import java.beans.IntrospectionException;
@@ -41,14 +41,12 @@ import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 
-import static com.github.jinahya.database.metadata.bind.Utils.fields;
-import static java.lang.String.format;
+import static com.github.jinahya.database.metadata.bind.Utils.getFieldsAnnotatedWith;
 import static java.lang.invoke.MethodHandles.lookup;
 import static java.util.function.Function.identity;
 import static java.util.stream.Collectors.toMap;
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.slf4j.LoggerFactory.getLogger;
-import static org.testng.Assert.assertFalse;
-import static org.testng.Assert.assertNotNull;
 
 /**
  * Test java beans conformance.
@@ -56,24 +54,24 @@ import static org.testng.Assert.assertNotNull;
  * @author Jin Kwon &lt;onacit at gmail.com&gt;
  */
 @Slf4j
-public class JavaBeansTest {
+class JavaBeansTest {
 
     private static final Logger logger = getLogger(lookup().lookupClass());
 
-    // -------------------------------------------------------------------------
+    // -----------------------------------------------------------------------------------------------------------------
     private static void nillable(@NonNull final Class<?> klass) {
-        for (Entry<Field, Bind> entry : fields(klass, Bind.class).entrySet()) {
+        for (Entry<Field, Bind> entry : getFieldsAnnotatedWith(klass, Bind.class).entrySet()) {
             final Field field = entry.getKey();
             final Bind bind = entry.getValue();
             if (!bind.nillable()) {
                 continue;
             }
-            assertFalse(field.getType().isPrimitive(), "@Bind(nillable); " + field);
+            assertThat(field.getType().isPrimitive()).isFalse();
         }
     }
 
     private static void unused(@NonNull final Class<?> klass) {
-        for (Entry<Field, Bind> entry : fields(klass, Bind.class).entrySet()) {
+        for (Entry<Field, Bind> entry : getFieldsAnnotatedWith(klass, Bind.class).entrySet()) {
             final Field field = entry.getKey();
             final Bind bind = entry.getValue();
             if (!bind.unused()) {
@@ -83,7 +81,7 @@ public class JavaBeansTest {
     }
 
     private static void reserved(@NonNull final Class<?> klass) {
-        for (Entry<Field, Bind> entry : fields(klass, Bind.class).entrySet()) {
+        for (Entry<Field, Bind> entry : getFieldsAnnotatedWith(klass, Bind.class).entrySet()) {
             final Field field = entry.getKey();
             final Bind bind = entry.getValue();
             if (!bind.reserved()) {
@@ -101,18 +99,18 @@ public class JavaBeansTest {
                 continue;
             }
             final PropertyDescriptor descriptor = descriptors.get(field.getName());
-            assertNotNull(descriptor, format("no descriptor: %s", field));
-            assertNotNull(descriptor.getReadMethod(), "no read method; " + field);
+            assertThat(descriptor).isNotNull();
+            assertThat(descriptor.getReadMethod()).isNotNull();
             if (field.getType().equals(List.class)) {
                 continue;
             }
-            assertNotNull(descriptor.getWriteMethod(), "no write method; " + field);
+            assertThat(descriptor.getWriteMethod()).isNotNull();
         }
     }
 
     // -----------------------------------------------------------------------------------------------------------------
     @Test
-    public void test() throws URISyntaxException, IOException {
+    void test() throws URISyntaxException, IOException {
         final Package p = getClass().getPackage();
         //final String name = "/" + p.getName().replace('.', '/') + "/jaxb.index";
         final String name = "jaxb.index";

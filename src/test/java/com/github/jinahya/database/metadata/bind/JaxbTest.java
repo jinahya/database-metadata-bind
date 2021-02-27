@@ -21,7 +21,8 @@ package com.github.jinahya.database.metadata.bind;
  */
 
 import lombok.extern.slf4j.Slf4j;
-import org.testng.annotations.Test;
+import org.junit.jupiter.api.Disabled;
+import org.junit.jupiter.api.Test;
 
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBException;
@@ -40,7 +41,7 @@ import java.util.function.BiFunction;
  * @author Jin Kwon &lt;jinahya_at_gmail.com&gt;
  */
 @Slf4j
-public class JaxbTest {
+class JaxbTest {
 
     // -----------------------------------------------------------------------------------------------------------------
     private static void storeSchema(final JAXBContext context, final BiFunction<String, String, File> locator)
@@ -70,14 +71,15 @@ public class JaxbTest {
         });
     }
 
-    @Test(enabled = true)
-    public void printSchema() throws JAXBException, IOException {
+    @Disabled
+    @Test
+    void printSchema() throws JAXBException, IOException {
         final JAXBContext context = JAXBContext.newInstance(JaxbTest.class.getPackage().getName());
         printSchema(context);
     }
 
     @Test
-    public void storeSchema() throws JAXBException, IOException {
+    void storeSchema() throws JAXBException, IOException {
         final Path schemas = Paths.get("target");
         final JAXBContext context = JAXBContext.newInstance(JaxbTest.class.getPackage().getName());
         storeSchema(context, (namespaceUri, suggestedFileName) -> {
