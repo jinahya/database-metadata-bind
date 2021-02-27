@@ -118,7 +118,7 @@ public class UDT extends AbstractChild<Schema> {
     }
 
     // ------------------------------------------------------------------------------------------------------ attributes
-    public List<Attribute> getAttributes() {
+    List<Attribute> getAttributes() {
         if (attributes == null) {
             attributes = new ArrayList<>();
         }
@@ -126,7 +126,7 @@ public class UDT extends AbstractChild<Schema> {
     }
 
     // ------------------------------------------------------------------------------------------------------ superTypes
-    public List<SuperType> getSuperTypes() {
+    List<SuperType> getSuperTypes() {
         if (superTypes == null) {
             superTypes = new ArrayList<>();
         }

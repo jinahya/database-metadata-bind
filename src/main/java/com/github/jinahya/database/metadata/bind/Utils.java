@@ -92,7 +92,6 @@ final class Utils {
         requireNonNull(label, "label is null");
         assert field.isAccessible();
         final Class<?> type = field.getType();
-        final Object value = results.getObject(label);
         if (type.isPrimitive()) {
             if (type == boolean.class) {
                 field.setBoolean(obj, results.getBoolean(label));
@@ -121,11 +120,25 @@ final class Utils {
             }
         }
         assert !type.isPrimitive();
+        final Object value = results.getObject(label);
+        if (value == null) {
+            if (type.isPrimitive()) {
+                logger.warning(() -> format("null value for a primitive field: %s", field));
+            }
+            if (field.getAnnotation(MayBeNull.class) == null) {
+                if (field.getAnnotation(MayBeNullByVendor.class) == null) {
+                    logger.warning(() -> format("null value for a non-null field: %s", field));
+                }
+            }
+            return;
+        }
+        assert value != null;
         try {
             field.set(obj, value);
             return;
         } catch (final IllegalArgumentException iae) {
-            logger.log(Level.WARNING, iae, () -> format("unable to set %s with %s labeled as %s", field, value, label));
+            logger.log(Level.WARNING, iae, () -> format("unable to set %s with %s(%s) labeled as %s",
+                                                        field, value.getClass(), value, label));
         }
         if (value instanceof Number) {
             if (type == Boolean.class) {

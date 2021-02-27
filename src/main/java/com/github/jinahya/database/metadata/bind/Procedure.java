@@ -109,7 +109,7 @@ public class Procedure extends AbstractChild<Schema> {
     }
 
     // ------------------------------------------------------------------------------------------------ procedureColumns
-    public List<ProcedureColumn> getProcedureColumns() {
+    List<ProcedureColumn> getProcedureColumns() {
         if (procedureColumns == null) {
             procedureColumns = new ArrayList<>();
         }

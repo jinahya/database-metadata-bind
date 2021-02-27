@@ -201,15 +201,6 @@ public class FunctionColumn extends AbstractChild<Function> {
                + '}';
     }
 
-    // ------------------------------------------------------------------------------------------------------- function_
-    public Function getFunction_() {
-        return function_;
-    }
-
-    public void setFunction_(final Function function_) {
-        this.function_ = function_;
-    }
-
     // ----------------------------------------------------------------------------------------------------- functionCat
     public String getFunctionCat() {
         return functionCat;
@@ -364,10 +355,6 @@ public class FunctionColumn extends AbstractChild<Function> {
     }
 
     // -----------------------------------------------------------------------------------------------------------------
-    @XmlTransient
-    private Function function_;
-
-    // -----------------------------------------------------------------------------------------------------------------
     @XmlAttribute
     @MayBeNull
     @Label("FUNCTION_CAT")
@@ -416,6 +403,7 @@ public class FunctionColumn extends AbstractChild<Function> {
     @Bind(label = "LENGTH")
     private int length;
 
+    // https://issues.apache.org/jira/browse/DERBY-7102
     @XmlElement
     @MayBeNull
     @Label("SCALE")
@@ -433,6 +421,7 @@ public class FunctionColumn extends AbstractChild<Function> {
     private short nullable;
 
     @XmlElement
+    @MayBeNullByVendor("derby") // https://issues.apache.org/jira/browse/DERBY-7100
     @Label("REMARKS")
     @Bind(label = "REMARKS")
     private String remarks;

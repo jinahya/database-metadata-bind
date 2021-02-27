@@ -169,7 +169,7 @@ public class ProcedureColumn extends AbstractChild<Procedure> {
         setParent_(procedure);
     }
 
-    // ------------------------------------------------------------ procedureCat
+    // ---------------------------------------------------------------------------------------------------- procedureCat
     public String getProcedureCat() {
         return procedureCat;
     }
@@ -178,7 +178,7 @@ public class ProcedureColumn extends AbstractChild<Procedure> {
         this.procedureCat = procedureCat;
     }
 
-    // ---------------------------------------------------------- procedureSchem
+    // -------------------------------------------------------------------------------------------------- procedureSchem
     public String getProcedureSchem() {
         return procedureSchem;
     }
@@ -187,7 +187,7 @@ public class ProcedureColumn extends AbstractChild<Procedure> {
         this.procedureSchem = procedureSchem;
     }
 
-    // ----------------------------------------------------------- procedureName
+    // --------------------------------------------------------------------------------------------------- procedureName
     public String getProcedureName() {
         return procedureName;
     }
@@ -196,7 +196,7 @@ public class ProcedureColumn extends AbstractChild<Procedure> {
         this.procedureName = procedureName;
     }
 
-    // -------------------------------------------------------------- columnName
+    // ------------------------------------------------------------------------------------------------------ columnName
     public String getColumnName() {
         return columnName;
     }
@@ -205,7 +205,7 @@ public class ProcedureColumn extends AbstractChild<Procedure> {
         this.columnName = columnName;
     }
 
-    // -------------------------------------------------------------- columnType
+    // ------------------------------------------------------------------------------------------------------ columnType
     public short getColumnType() {
         return columnType;
     }
@@ -214,7 +214,7 @@ public class ProcedureColumn extends AbstractChild<Procedure> {
         this.columnType = columnType;
     }
 
-    // ---------------------------------------------------------------- dataType
+    // -------------------------------------------------------------------------------------------------------- dataType
     public int getDataType() {
         return dataType;
     }
@@ -223,7 +223,7 @@ public class ProcedureColumn extends AbstractChild<Procedure> {
         this.dataType = dataType;
     }
 
-    // ---------------------------------------------------------------- typeName
+    // -------------------------------------------------------------------------------------------------------- typeName
     public String getTypeName() {
         return typeName;
     }
@@ -232,7 +232,7 @@ public class ProcedureColumn extends AbstractChild<Procedure> {
         this.typeName = typeName;
     }
 
-    // --------------------------------------------------------------- precision
+    // ------------------------------------------------------------------------------------------------------- precision
     public int getPrecision() {
         return precision;
     }
@@ -241,7 +241,7 @@ public class ProcedureColumn extends AbstractChild<Procedure> {
         this.precision = precision;
     }
 
-    // ------------------------------------------------------------------ length
+    // ---------------------------------------------------------------------------------------------------------- length
     public int getLength() {
         return length;
     }
@@ -250,7 +250,7 @@ public class ProcedureColumn extends AbstractChild<Procedure> {
         this.length = length;
     }
 
-    // ------------------------------------------------------------------- scale
+    // ----------------------------------------------------------------------------------------------------------- scale
     public Short getScale() {
         return scale;
     }
@@ -259,7 +259,7 @@ public class ProcedureColumn extends AbstractChild<Procedure> {
         this.scale = scale;
     }
 
-    // ------------------------------------------------------------------- radix
+    // ----------------------------------------------------------------------------------------------------------- radix
     public short getRadix() {
         return radix;
     }
@@ -268,7 +268,7 @@ public class ProcedureColumn extends AbstractChild<Procedure> {
         this.radix = radix;
     }
 
-    // ---------------------------------------------------------------- nullable
+    // -------------------------------------------------------------------------------------------------------- nullable
     public short getNullable() {
         return nullable;
     }
@@ -277,7 +277,7 @@ public class ProcedureColumn extends AbstractChild<Procedure> {
         this.nullable = nullable;
     }
 
-    // ----------------------------------------------------------------- remarks
+    // --------------------------------------------------------------------------------------------------------- remarks
     public String getRemarks() {
         return remarks;
     }
@@ -286,7 +286,7 @@ public class ProcedureColumn extends AbstractChild<Procedure> {
         this.remarks = remarks;
     }
 
-    // --------------------------------------------------------------- columnDef
+    // ------------------------------------------------------------------------------------------------------- columnDef
     public String getColumnDef() {
         return columnDef;
     }
@@ -295,7 +295,7 @@ public class ProcedureColumn extends AbstractChild<Procedure> {
         this.columnDef = columnDef;
     }
 
-    // ------------------------------------------------------------- sqlDataType
+    // ----------------------------------------------------------------------------------------------------- sqlDataType
     public Integer getSqlDataType() {
         return sqlDataType;
     }
@@ -304,7 +304,7 @@ public class ProcedureColumn extends AbstractChild<Procedure> {
         this.sqlDataType = sqlDataType;
     }
 
-    // ---------------------------------------------------------- sqlDatetimeSub
+    // -------------------------------------------------------------------------------------------------- sqlDatetimeSub
     public Integer getSqlDatetimeSub() {
         return sqlDatetimeSub;
     }
@@ -313,7 +313,7 @@ public class ProcedureColumn extends AbstractChild<Procedure> {
         this.sqlDatetimeSub = sqlDatetimeSub;
     }
 
-    // --------------------------------------------------------- charOctetLength
+    // ------------------------------------------------------------------------------------------------- charOctetLength
     public Integer getCharOctetLength() {
         return charOctetLength;
     }
@@ -322,7 +322,7 @@ public class ProcedureColumn extends AbstractChild<Procedure> {
         this.charOctetLength = charOctetLength;
     }
 
-    // --------------------------------------------------------- ordinalPosition
+    // ------------------------------------------------------------------------------------------------- ordinalPosition
     public int getOrdinalPosition() {
         return ordinalPosition;
     }
@@ -331,7 +331,7 @@ public class ProcedureColumn extends AbstractChild<Procedure> {
         this.ordinalPosition = ordinalPosition;
     }
 
-    // -------------------------------------------------------------- isNullable
+    // ------------------------------------------------------------------------------------------------------ isNullable
     public String getIsNullable() {
         return isNullable;
     }
@@ -340,7 +340,7 @@ public class ProcedureColumn extends AbstractChild<Procedure> {
         this.isNullable = isNullable;
     }
 
-    // ------------------------------------------------------------ specificName
+    // ---------------------------------------------------------------------------------------------------- specificName
     public String getSpecificName() {
         return specificName;
     }
@@ -398,6 +398,7 @@ public class ProcedureColumn extends AbstractChild<Procedure> {
     @Bind(label = "LENGTH")
     private int length;
 
+    // https://issues.apache.org/jira/browse/DERBY-7103
     @XmlElement
     @MayBeNull
     @Label("SCALE")
@@ -415,6 +416,7 @@ public class ProcedureColumn extends AbstractChild<Procedure> {
     private short nullable;
 
     @XmlElement
+    @MayBeNullByVendor("derby") // https://issues.apache.org/jira/browse/DERBY-7101
     @Label("REMARKS")
     @Bind(label = "REMARKS")
     private String remarks;

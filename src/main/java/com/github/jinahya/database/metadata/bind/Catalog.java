@@ -169,7 +169,7 @@ public class Catalog implements MetadataType {
      *
      * @return a list of schemas
      */
-    public List<Schema> getSchemas() {
+    List<Schema> getSchemas() {
         if (schemas == null) {
             schemas = new ArrayList<>();
         }

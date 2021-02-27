@@ -126,7 +126,7 @@ public class Function extends AbstractChild<Schema> {
      *
      * @return a list of function columns of this function.
      */
-    public List<FunctionColumn> getFunctionColumns() {
+    List<FunctionColumn> getFunctionColumns() {
         if (functionColumns == null) {
             functionColumns = new ArrayList<>();
         }

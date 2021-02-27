@@ -150,7 +150,7 @@ public class Table extends AbstractChild<Schema> {
     }
 
     // ---------------------------------------------------------------------------------------------- bestRowIdentifiers
-    public List<BestRowIdentifier> getBestRowIdentifiers() {
+    List<BestRowIdentifier> getBestRowIdentifiers() {
         if (bestRowIdentifiers == null) {
             bestRowIdentifiers = new ArrayList<>();
         }
@@ -164,7 +164,7 @@ public class Table extends AbstractChild<Schema> {
      *
      * @return a list of columns of this table
      */
-    public List<Column> getColumns() {
+    List<Column> getColumns() {
         if (columns == null) {
             columns = new ArrayList<>();
         }
@@ -178,7 +178,7 @@ public class Table extends AbstractChild<Schema> {
      *
      * @return a list of exported keys.
      */
-    public List<ExportedKey> getExportedKeys() {
+    List<ExportedKey> getExportedKeys() {
         if (exportedKeys == null) {
             exportedKeys = new ArrayList<>();
         }
@@ -192,7 +192,7 @@ public class Table extends AbstractChild<Schema> {
      *
      * @return a list of imported keys of this table.
      */
-    public List<ImportedKey> getImportedKeys() {
+    List<ImportedKey> getImportedKeys() {
         if (importedKeys == null) {
             importedKeys = new ArrayList<>();
         }
@@ -206,7 +206,7 @@ public class Table extends AbstractChild<Schema> {
      *
      * @return a list of index info of this table.
      */
-    public List<IndexInfo> getIndexInfo() {
+    List<IndexInfo> getIndexInfo() {
         if (indexInfo == null) {
             indexInfo = new ArrayList<>();
         }
@@ -220,7 +220,7 @@ public class Table extends AbstractChild<Schema> {
      *
      * @return a list of primary keys of this table.
      */
-    public List<PrimaryKey> getPrimaryKeys() {
+    List<PrimaryKey> getPrimaryKeys() {
         if (primaryKeys == null) {
             primaryKeys = new ArrayList<>();
         }
@@ -234,7 +234,7 @@ public class Table extends AbstractChild<Schema> {
      *
      * @return a list of pseudo columns of this table.
      */
-    public List<PseudoColumn> getPseudoColumns() {
+    List<PseudoColumn> getPseudoColumns() {
         if (pseudoColumns == null) {
             pseudoColumns = new ArrayList<>();
         }
@@ -248,7 +248,7 @@ public class Table extends AbstractChild<Schema> {
      *
      * @return a list of super tables of this table.
      */
-    public List<SuperTable> getSuperTables() {
+    List<SuperTable> getSuperTables() {
         if (superTables == null) {
             superTables = new ArrayList<>();
         }
@@ -262,7 +262,7 @@ public class Table extends AbstractChild<Schema> {
      *
      * @return a list of table privileges of this table.
      */
-    public List<TablePrivilege> getTablePrivileges() {
+    List<TablePrivilege> getTablePrivileges() {
         if (tablePrivileges == null) {
             tablePrivileges = new ArrayList<>();
         }
@@ -276,7 +276,7 @@ public class Table extends AbstractChild<Schema> {
      *
      * @return a list of version columns of this table.
      */
-    public List<VersionColumn> getVersionColumns() {
+    List<VersionColumn> getVersionColumns() {
         if (versionColumns == null) {
             versionColumns = new ArrayList<>();
         }
@@ -284,7 +284,7 @@ public class Table extends AbstractChild<Schema> {
     }
 
     // -------------------------------------------------------------------------------------------------- crossReference
-    public List<CrossReference> getCrossReference() {
+    List<CrossReference> getCrossReference() {
         if (crossReference == null) {
             return crossReference = new ArrayList<>();
         }

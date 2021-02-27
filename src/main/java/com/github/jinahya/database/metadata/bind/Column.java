@@ -352,7 +352,7 @@ public class Column extends AbstractChild<Table> {
     }
 
     // -------------------------------------------------------- columnPrivileges
-    public List<ColumnPrivilege> getColumnPrivileges() {
+    List<ColumnPrivilege> getColumnPrivileges() {
         if (columnPrivileges == null) {
             columnPrivileges = new ArrayList<ColumnPrivilege>();
         }

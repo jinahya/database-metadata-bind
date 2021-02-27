@@ -106,16 +106,6 @@ public class Schema extends AbstractChild<Catalog> {
         return virtual != null && virtual;
     }
 
-    // -------------------------------------------------------------------------------------------------------- catalog_
-    @XmlTransient
-    Catalog getCatalog_() {
-        return getParent_();
-    }
-
-    void setCatalog_(final Catalog catalog_) {
-        setParent_(catalog_);
-    }
-
     // ---------------------------------------------------------------------------------------------------- tableCatalog
     public String getTableCatalog() {
         return tableCatalog;
@@ -145,7 +135,7 @@ public class Schema extends AbstractChild<Catalog> {
     }
 
     // ------------------------------------------------------------------------------------------------------- functions
-    public List<Function> getFunctions() {
+    List<Function> getFunctions() {
         if (functions == null) {
             functions = new ArrayList<>();
         }
@@ -153,7 +143,7 @@ public class Schema extends AbstractChild<Catalog> {
     }
 
     // ------------------------------------------------------------------------------------------------------ procedures
-    public List<Procedure> getProcedures() {
+    List<Procedure> getProcedures() {
         if (procedures == null) {
             procedures = new ArrayList<>();
         }
@@ -161,7 +151,7 @@ public class Schema extends AbstractChild<Catalog> {
     }
 
     // ---------------------------------------------------------------------------------------------------------- tables
-    public List<Table> getTables() {
+    List<Table> getTables() {
         if (tables == null) {
             tables = new ArrayList<>();
         }
@@ -169,7 +159,7 @@ public class Schema extends AbstractChild<Catalog> {
     }
 
     // ------------------------------------------------------------------------------------------------------------ UDTs
-    public List<UDT> getUDTs() {
+    List<UDT> getUDTs() {
         if (UDTs == null) {
             UDTs = new ArrayList<>();
         }
