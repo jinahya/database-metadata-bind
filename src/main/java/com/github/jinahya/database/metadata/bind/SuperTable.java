@@ -31,7 +31,7 @@ import javax.xml.bind.annotation.XmlRootElement;
  * @author Jin Kwon &lt;jinahya_at_gmail.com&gt;
  */
 @XmlRootElement
-public class SuperTable extends TableChild {
+public class SuperTable extends AbstractChild<Table> {
 
     private static final long serialVersionUID = -302335602056528563L;
 

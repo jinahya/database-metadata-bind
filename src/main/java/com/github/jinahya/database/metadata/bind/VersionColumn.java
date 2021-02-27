@@ -25,16 +25,18 @@ import javax.xml.bind.annotation.XmlRootElement;
 import java.sql.DatabaseMetaData;
 import java.util.Collection;
 
-import static java.sql.DatabaseMetaData.*;
+import static java.sql.DatabaseMetaData.versionColumnNotPseudo;
+import static java.sql.DatabaseMetaData.versionColumnPseudo;
+import static java.sql.DatabaseMetaData.versionColumnUnknown;
 
 /**
  * An entity class for version columns.
  *
  * @author Jin Kwon &lt;jinahya_at_gmail.com&gt;
- * @see MetadataContext#getVersionColumns(String, String, String, Collection)
+ * @see Context#getVersionColumns(String, String, String, Collection)
  */
 @XmlRootElement
-public class VersionColumn extends TableChild {
+public class VersionColumn extends AbstractChild<Table> {
 
     private static final long serialVersionUID = 3587959398829593292L;
 
@@ -43,7 +45,7 @@ public class VersionColumn extends TableChild {
     /**
      * Constants for pseudo column values of version columns.
      *
-     * @see MetadataContext#getVersionColumns(String, String, String, Collection)
+     * @see Context#getVersionColumns(String, String, String, Collection)
      */
     public enum PseudoColumn implements IntFieldEnum<PseudoColumn> {
 
@@ -78,12 +80,14 @@ public class VersionColumn extends TableChild {
             return IntFieldEnums.valueOf(PseudoColumn.class, rawValue);
         }
 
-        // ---------------------------------------------------------------------
+        /**
+         * Creates a new instance with specified raw value.
+         *
+         * @param rawValue the raw value.
+         */
         PseudoColumn(final int rawValue) {
             this.rawValue = rawValue;
         }
-
-        // ---------------------------------------------------------------------
 
         /**
          * Returns the raw value of this constant.
@@ -95,11 +99,10 @@ public class VersionColumn extends TableChild {
             return rawValue;
         }
 
-        // ---------------------------------------------------------------------
         private final int rawValue;
     }
 
-    // -------------------------------------------------------------------------
+    // -----------------------------------------------------------------------------------------------------------------
 
     /**
      * Creates a new instance.
@@ -108,7 +111,7 @@ public class VersionColumn extends TableChild {
         super();
     }
 
-    // -------------------------------------------------------------------------
+    // -----------------------------------------------------------------------------------------------------------------
     @Override
     public String toString() {
         return super.toString() + '{'
@@ -123,7 +126,7 @@ public class VersionColumn extends TableChild {
                + '}';
     }
 
-    // ------------------------------------------------------------------- scope
+    // ----------------------------------------------------------------------------------------------------------- scope
     public Short getScope() {
         return scope;
     }
@@ -132,7 +135,7 @@ public class VersionColumn extends TableChild {
         this.scope = scope;
     }
 
-    // -------------------------------------------------------------- columnName
+    // ------------------------------------------------------------------------------------------------------ columnName
     public String getColumnName() {
         return columnName;
     }
@@ -141,7 +144,7 @@ public class VersionColumn extends TableChild {
         this.columnName = columnName;
     }
 
-    // ---------------------------------------------------------------- dataType
+    // -------------------------------------------------------------------------------------------------------- dataType
     public int getDataType() {
         return dataType;
     }
@@ -150,7 +153,7 @@ public class VersionColumn extends TableChild {
         this.dataType = dataType;
     }
 
-    // ---------------------------------------------------------------- typeName
+    // -------------------------------------------------------------------------------------------------------- typeName
     public String getTypeName() {
         return typeName;
     }
@@ -159,7 +162,7 @@ public class VersionColumn extends TableChild {
         this.typeName = typeName;
     }
 
-    // -------------------------------------------------------------- columnSize
+    // ------------------------------------------------------------------------------------------------------ columnSize
     public int getColumnSize() {
         return columnSize;
     }
@@ -168,7 +171,7 @@ public class VersionColumn extends TableChild {
         this.columnSize = columnSize;
     }
 
-    // ------------------------------------------------------------ bufferLength
+    // ---------------------------------------------------------------------------------------------------- bufferLength
     public int getBufferLength() {
         return bufferLength;
     }
@@ -177,7 +180,7 @@ public class VersionColumn extends TableChild {
         this.bufferLength = bufferLength;
     }
 
-    // ----------------------------------------------------------- decimalDigits
+    // --------------------------------------------------------------------------------------------------- decimalDigits
     public Short getDecimalDigits() {
         return decimalDigits;
     }
@@ -186,7 +189,7 @@ public class VersionColumn extends TableChild {
         this.decimalDigits = decimalDigits;
     }
 
-    // ------------------------------------------------------------ pseudoColumn
+    // ---------------------------------------------------------------------------------------------------- pseudoColumn
 
     /**
      * Returns current value of {@code pseudoColumn} property.
@@ -207,13 +210,14 @@ public class VersionColumn extends TableChild {
         this.pseudoColumn = pseudoColumn;
     }
 
-    // -------------------------------------------------------------------------
+    // -----------------------------------------------------------------------------------------------------------------
     @XmlElement(nillable = true)
     @Unused
     @Label("SCOPE")
     @Bind(label = "SCOPE", unused = true)
     private short scope;
 
+    // -----------------------------------------------------------------------------------------------------------------
     @XmlElement
     @Label("COLUMN_NAME")
     @Bind(label = "COLUMN_NAME")

@@ -29,10 +29,10 @@ import java.util.Collection;
  * An entity class for pseudo columns.
  *
  * @author Jin Kwon &lt;jinahya_at_gmail.com&gt;
- * @see MetadataContext#getPseudoColumns(String, String, String, String, Collection)
+ * @see Context#getPseudoColumns(String, String, String, String, Collection)
  */
 @XmlRootElement
-public class PseudoColumn extends TableChild {
+public class PseudoColumn extends AbstractChild<Table> {
 
     private static final long serialVersionUID = -5612575879670895510L;
 

@@ -24,7 +24,9 @@ import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
 import java.sql.DatabaseMetaData;
 
-import static java.sql.DatabaseMetaData.*;
+import static java.sql.DatabaseMetaData.typeNoNulls;
+import static java.sql.DatabaseMetaData.typeNullable;
+import static java.sql.DatabaseMetaData.typeNullableUnknown;
 
 /**
  * An entity class for binding the result of {@link java.sql.DatabaseMetaData#getTypeInfo() getTypeInfo()}.
@@ -87,6 +89,7 @@ public class TypeInfo implements MetadataType {
     }
 
     // -----------------------------------------------------------------------------------------------------------------
+
     /**
      * Creates a new instance.
      */

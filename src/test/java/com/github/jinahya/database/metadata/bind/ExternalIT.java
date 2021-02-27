@@ -48,8 +48,8 @@ class ExternalIT {
         log.info("connecting...");
         try (Connection connection = getConnection(url, user, password)) {
             log.info("connected: {}", connection);
-            final MetadataContext context = MetadataContext.newInstance(connection);
-            final DatabaseMetadata metadata = DatabaseMetadata.newInstance(context);
+            final Context context = Context.newInstance(connection);
+            final Metadata metadata = Metadata.newInstance(context);
             MetadataTests.writeToFiles(metadata, "external");
         }
     }

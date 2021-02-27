@@ -31,16 +31,16 @@ import java.util.Arrays;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 /**
- * A class for testing {@link DatabaseMetadata} class.
+ * A class for testing {@link Metadata} class.
  *
  * @author Jin Kwon &lt;jinahya_at_gmail.com&gt;
  */
 @Slf4j
-class MetadataContextTest {
+class ContextTest {
 
     @Test
     void newInstance_NullPointerException_Null() {
-        assertThatThrownBy(() -> MetadataContext.newInstance(null))
+        assertThatThrownBy(() -> Context.newInstance(null))
                 .isInstanceOf(NullPointerException.class);
     }
 
@@ -55,7 +55,7 @@ class MetadataContextTest {
             return true;
         }).forEach(m -> {
             try {
-                MetadataContext.class.getMethod(m.getName(), m.getParameterTypes());
+                Context.class.getMethod(m.getName(), m.getParameterTypes());
             } catch (final NoSuchMethodException nsme) {
                 log.debug("method not covered: {}", m);
             }

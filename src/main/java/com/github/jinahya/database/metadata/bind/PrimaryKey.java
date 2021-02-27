@@ -29,10 +29,10 @@ import java.util.Collection;
  * An entity class for primary keys.
  *
  * @author Jin Kwon &lt;jinahya_at_gmail.com&gt;
- * @see MetadataContext#getPrimaryKeys(String, String, String, Collection)
+ * @see Context#getPrimaryKeys(String, String, String, Collection)
  */
 @XmlRootElement
-public class PrimaryKey extends TableChild {
+public class PrimaryKey extends AbstractChild<Table> {
 
     private static final long serialVersionUID = 3159826510060898330L;
 

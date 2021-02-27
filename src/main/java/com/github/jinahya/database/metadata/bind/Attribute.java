@@ -28,13 +28,15 @@ import javax.xml.bind.annotation.XmlRootElement;
 import java.sql.DatabaseMetaData;
 import java.util.Objects;
 
-import static java.sql.DatabaseMetaData.*;
+import static java.sql.DatabaseMetaData.attributeNoNulls;
+import static java.sql.DatabaseMetaData.attributeNullable;
+import static java.sql.DatabaseMetaData.attributeNullableUnknown;
 
 /**
  * An entity class for type attributes.
  *
  * @author Jin Kwon &lt;jinahya_at_gmail.com&gt;
- * @see MetadataContext#getAttributes(java.lang.String, java.lang.String, java.lang.String, java.lang.String)
+ * @see Context#getAttributes(java.lang.String, java.lang.String, java.lang.String, java.lang.String)
  */
 @XmlRootElement
 public class Attribute extends AbstractChild<UDT> {
@@ -163,15 +165,6 @@ public class Attribute extends AbstractChild<UDT> {
                             ordinalPosition,
                             isNullable,
                             sourceDataType);
-    }
-
-    // ------------------------------------------------------------------------------------------------------------- UDT
-    public UDT getUDT() {
-        return getParent_();
-    }
-
-    public void setUDT(final UDT udt) {
-        setParent_(udt);
     }
 
     // -------------------------------------------------------------------------------------------------------- typeInfo

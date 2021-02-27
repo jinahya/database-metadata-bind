@@ -27,7 +27,7 @@ import java.util.Collection;
  * An entity class for exported keys.
  *
  * @author Jin Kwon &lt;jinahya_at_gmail.com&gt;
- * @see MetadataContext#getExportedKeys(String, String, String, Collection)
+ * @see Context#getExportedKeys(String, String, String, Collection)
  */
 @XmlRootElement
 public class ExportedKey extends TableKey {

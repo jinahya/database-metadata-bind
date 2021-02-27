@@ -26,7 +26,15 @@ import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlTransient;
 import java.sql.DatabaseMetaData;
 
-import static java.sql.DatabaseMetaData.*;
+import static java.sql.DatabaseMetaData.functionColumnIn;
+import static java.sql.DatabaseMetaData.functionColumnInOut;
+import static java.sql.DatabaseMetaData.functionColumnOut;
+import static java.sql.DatabaseMetaData.functionColumnResult;
+import static java.sql.DatabaseMetaData.functionColumnUnknown;
+import static java.sql.DatabaseMetaData.functionNoNulls;
+import static java.sql.DatabaseMetaData.functionNullable;
+import static java.sql.DatabaseMetaData.functionNullableUnknown;
+import static java.sql.DatabaseMetaData.functionReturn;
 
 /**
  * An entity class for function columns.
@@ -409,6 +417,7 @@ public class FunctionColumn extends AbstractChild<Function> {
     private int length;
 
     @XmlElement
+    @MayBeNull
     @Label("SCALE")
     @Bind(label = "SCALE")
     private Short scale;

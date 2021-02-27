@@ -37,7 +37,7 @@ import java.util.List;
  * @author Jin Kwon &lt;jinahya_at_gmail.com&gt;
  */
 @XmlRootElement
-public class Table extends SchemaChild {
+public class Table extends AbstractChild<Schema> {
 
     // -----------------------------------------------------------------------------------------------------------------
     private static final long serialVersionUID = 6590036695540141125L;
@@ -283,6 +283,14 @@ public class Table extends SchemaChild {
         return versionColumns;
     }
 
+    // -------------------------------------------------------------------------------------------------- crossReference
+    public List<CrossReference> getCrossReference() {
+        if (crossReference == null) {
+            return crossReference = new ArrayList<>();
+        }
+        return crossReference;
+    }
+
     // -----------------------------------------------------------------------------------------------------------------
     @XmlAttribute
     @MayBeNull
@@ -373,4 +381,8 @@ public class Table extends SchemaChild {
 
     @XmlElementRef
     private List<@Valid @NotNull VersionColumn> versionColumns;
+
+    // -----------------------------------------------------------------------------------------------------------------
+    @XmlElementRef
+    private List<@Valid @NotNull CrossReference> crossReference;
 }

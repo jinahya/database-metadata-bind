@@ -34,11 +34,11 @@ import java.util.List;
  *
  * @author Jin Kwon &lt;jinahya_at_gmail.com&gt;
  * @see java.sql.DatabaseMetaData#getFunctions(java.lang.String, java.lang.String, java.lang.String)
- * @see MetadataContext#getFunctions(String, String, String, Collection)
+ * @see Context#getFunctions(String, String, String, Collection)
  * @see FunctionColumn
  */
 @XmlRootElement
-public class Function extends SchemaChild {
+public class Function extends AbstractChild<Schema> {
 
     private static final long serialVersionUID = -3318947900237453301L;
 

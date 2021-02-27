@@ -1,7 +1,6 @@
 package com.github.jinahya.database.metadata.bind;
 
 import jakarta.validation.Valid;
-import jakarta.validation.constraints.NotNull;
 
 import javax.xml.bind.annotation.XmlTransient;
 
@@ -23,6 +22,5 @@ abstract class AbstractChild<P extends MetadataType> implements Child<P> {
 
     @XmlTransient
     @Valid
-    @NotNull
     private P parent_;
 }

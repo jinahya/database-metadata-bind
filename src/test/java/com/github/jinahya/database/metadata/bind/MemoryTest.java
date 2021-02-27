@@ -35,14 +35,20 @@ import java.util.ArrayList;
 @Slf4j
 abstract class MemoryTest {
 
+    /**
+     * Returns a connection
+     *
+     * @return a connection.
+     * @throws SQLException if a database error occurs.
+     */
     abstract Connection connect() throws SQLException;
 
     // -----------------------------------------------------------------------------------------------------------------
     @Test
-    void writeToFiles() throws Exception {
+    void writeMetadataToFiles() throws Exception {
         try (Connection connection = connect()) {
-            final MetadataContext context = MetadataContext.newInstance(connection);
-            final DatabaseMetadata metadata = DatabaseMetadata.newInstance(context);
+            final Context context = Context.newInstance(connection);
+            final Metadata metadata = Metadata.newInstance(context);
             final String name;
             {
                 final String simpleName = getClass().getSimpleName();
@@ -56,8 +62,8 @@ abstract class MemoryTest {
     @Test
     void getCatalogs__() throws Exception {
         try (Connection connection = connect()) {
-            final MetadataContext metadataContext = MetadataContext.newInstance(connection);
-            for (final Catalog catalog : metadataContext.getCatalogs(new ArrayList<>())) {
+            final Context context = Context.newInstance(connection);
+            for (final Catalog catalog : context.getCatalogs()) {
                 log.debug("catalog: {}", catalog);
             }
         }
@@ -66,8 +72,8 @@ abstract class MemoryTest {
     @Test
     void getSchemas__() throws Exception {
         try (Connection connection = connect()) {
-            final MetadataContext metadataContext = MetadataContext.newInstance(connection);
-            for (final Schema schema : metadataContext.getSchemas(null, null, new ArrayList<>())) {
+            final Context context = Context.newInstance(connection);
+            for (final Schema schema : context.getSchemas(null, null, new ArrayList<>())) {
                 log.debug("schema: {}", schema);
             }
         }
@@ -76,10 +82,15 @@ abstract class MemoryTest {
     @Test
     void getTables__() throws Exception {
         try (Connection connection = connect()) {
-            final MetadataContext metadataContext = MetadataContext.newInstance(connection);
-            for (final Table table : metadataContext.getTables(null, null, null, null, new ArrayList<>())) {
+            final Context context = Context.newInstance(connection);
+            for (final Table table : context.getTables(null, null, null, null, new ArrayList<>())) {
                 log.debug("table: {}", table);
             }
         }
+    }
+
+    // -----------------------------------------------------------------------------------------------------------------
+    @Test
+    void getCrossREf__() {
     }
 }

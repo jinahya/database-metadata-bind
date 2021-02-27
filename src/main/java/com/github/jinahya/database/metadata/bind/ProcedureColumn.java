@@ -26,7 +26,12 @@ import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlTransient;
 import java.sql.DatabaseMetaData;
 
-import static java.sql.DatabaseMetaData.*;
+import static java.sql.DatabaseMetaData.functionColumnResult;
+import static java.sql.DatabaseMetaData.procedureColumnIn;
+import static java.sql.DatabaseMetaData.procedureColumnInOut;
+import static java.sql.DatabaseMetaData.procedureColumnOut;
+import static java.sql.DatabaseMetaData.procedureColumnReturn;
+import static java.sql.DatabaseMetaData.procedureColumnUnknown;
 
 /**
  * An entity class for binding the result of {@link java.sql.DatabaseMetaData#getProcedureColumns(java.lang.String,

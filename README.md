@@ -11,59 +11,47 @@ from [DatabaseMetaData](http://docs.oracle.com/javase/8/docs/api/java/sql/Databa
 
 ```java
 // create a context from a connection
-final Connection connection=connect();
-final Context context=Context.newInstance(connection);
+final java.sql.Connection connection = connect();
+final Context context = Context.newInstance(connection);
 
 // invoke methods
-final List<Catalog> catalogs=context.getCatalogs();
-final List<Schema> schemas=context.getSchemas("",null);
-final List<Table> tables=context.getTables(null,null,null); // list all tables
-final List<PrimaryKey> primaryKeys=context.getPrimaryKeys("PUBLIC","SYSTEM_LOBS","BLOCKS");
+final List<Catalog> catalogs = context.getCatalogs(new ArrayList<>());
+final List<Schema> schemas = context.getSchemas("", null, new ArrayList<>());
+final List<Table> tables = context.getTables(null, null, null, new ArrayList<>());
 
 // bind all
-final Metadata metadata=Metadata.newInstance(context);
+final Metadata metadata = Metadata.newInstance(context);
 ```
 
-## Testing
+## Gathering metadata from existing databases
 
-### Memory
-
-Test cases for in-memory databases such as [Derby](https://db.apache.org/derby/)
-, [H2](http://www.h2database.com/html/main.html), [HSQLDB](http://hsqldb.org/) and [SQLite](https://www.sqlite.org/) are
-prepared. See `target/memory.<name>.metadata.xml` files.
-
-### Container
-
-TODO
-
-### External
-
-Tests against existing databases.
-
-```sh
+```shell
 $ mvn -Pfailsafe,external-<server> \
-      -Dversion.<client>="x.y.z" \
-      -Durl="jdbc:...://..." \
-      -Duser="some" \
-      -Dpassword="some" \
+      -Dversion.<client>=x.y.z \
+      -Durl=jdbc:...://... \
+      -Duser=... \
+      -Dpassword=... \
       -Dit.test=ExternalIT \
       verify
+...
 $ cat target/external.xml
+...
+$
 ```
 
 #### Properties
 
 name      |value                            |notes
 ----------|---------------------------------|-----------
-`server`  |target database server           |see below
-`client`  |version of target jdbc client    |see below
-`url`     |connection url                   |The first argument of [DriverManager#getConnection](https://goo.gl/9q4zW7)
-`user`    |username                         |The second argument of [DriverManager#getConnection](https://goo.gl/9q4zW7)
-`password`|password                         |The third argument of [DriverManager#getConnection](https://goo.gl/9q4zW7)
+`<server>`|server identifier                |see below
+`<client>`|jdbc client identifier           |see below
+`url`     |connection url                   |
+`user`    |username                         |
+`password`|password                         |
 
-#### Servers, Clients and URLs
+##### `<server>` / `<client>`
 
-database  |`<server>`      |`<client>` is the version of
+database  |`<server>`      |`<client>`
 ----------|----------------|----------------------------------------------
 MariaDB   |`mariadb`       |[`mariadb-java-client`][mariadb-java-client]
 MySQL     |`mysql`         |[`mysql-connector-java`][mysql-connector-java]
@@ -79,11 +67,14 @@ e.g.
 ```shell
 $ mvn -Pexternal-oracle-ojdbc11 \
       -Dversion.ojdbc11=21.1.0.0 \
-      -Durl="jdbc:oracle:thin:@//host:port/service" \
+      -Durl=jdbc:oracle:thin:@//host:port/service \
       -Duser=scott \
       -Dpassword=tiger \
       -Dit.test=ExternalIT \
       verify
+...
+$ cat target/external.xml
+...
 $
 ```
 
@@ -102,9 +93,3 @@ $
 [postgresql]: https://search.maven.org/artifact/org.postgresql/postgresql
 
 [mysql-jdbc]: https://search.maven.org/artifact/com.microsoft.sqlserver/mssql-jdbc
-
-----
-
-[![Domate via Paypal](https://img.shields.io/badge/donate-paypal-blue.svg)](https://www.paypal.com/cgi-bin/webscr?cmd=_cart&business=A954LDFBW4B9N&lc=KR&item_name=GitHub&amount=5%2e00&currency_code=USD&button_subtype=products&add=1&bn=PP%2dShopCartBF%3adonate%2dpaypal%2dblue%2epng%3aNonHosted)
-
-

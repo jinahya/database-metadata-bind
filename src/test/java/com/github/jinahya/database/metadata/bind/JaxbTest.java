@@ -21,6 +21,7 @@ package com.github.jinahya.database.metadata.bind;
  */
 
 import lombok.extern.slf4j.Slf4j;
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 
@@ -69,6 +70,12 @@ class JaxbTest {
                 return output;
             }
         });
+    }
+
+    // -----------------------------------------------------------------------------------------------------------------
+    @Test
+    void JAXBContextNewInstance_DoesNotThrow_PackageName() {
+        Assertions.assertDoesNotThrow(() -> JAXBContext.newInstance(getClass().getPackage().getName()));
     }
 
     @Disabled

@@ -21,9 +21,18 @@ package com.github.jinahya.database.metadata.bind;
  */
 
 import java.lang.reflect.Field;
-import java.sql.*;
-import java.util.*;
+import java.sql.Connection;
+import java.sql.DatabaseMetaData;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.SQLFeatureNotSupportedException;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 import java.util.Map.Entry;
+import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -37,18 +46,18 @@ import static java.util.logging.Logger.getLogger;
  *
  * @author Jin Kwon &lt;jinahya_at_gmail.com&gt;
  */
-public class MetadataContext {
+public class Context {
 
     // -----------------------------------------------------------------------------------------------------------------
-    private static final Logger logger = getLogger(MetadataContext.class.getName());
+    private static final Logger logger = getLogger(Context.class.getName());
 
     // -----------------------------------------------------------------------------------------------------------------
-    public static MetadataContext newInstance(final Connection connection) throws SQLException {
+    public static Context newInstance(final Connection connection) throws SQLException {
         requireNonNull(connection, "connection is null");
         if (connection.isClosed()) {
             throw new IllegalArgumentException("connection is closed");
         }
-        return new MetadataContext(connection.getMetaData());
+        return new Context(connection.getMetaData());
     }
 
     // -----------------------------------------------------------------------------------------------------------------
@@ -58,7 +67,7 @@ public class MetadataContext {
      *
      * @param metadata the database meta data to hold.
      */
-    MetadataContext(final DatabaseMetaData metadata) {
+    Context(final DatabaseMetaData metadata) {
         super();
         this.databaseMetaData = requireNonNull(metadata, "metadata is null");
     }
@@ -96,42 +105,16 @@ public class MetadataContext {
                 logger.warning(() -> format("null value for %s", field));
             }
             try {
-                Utils.field(field, instance, results, label.value());
+                Utils.setFieldValue(field, instance, results, label.value());
             } catch (final ReflectiveOperationException roe) {
-                logger.log(SEVERE, format("failed to set %s with %s on %s", field, value, value), roe);
+                logger.log(SEVERE, format("failed to set %s", field), roe);
             }
         }
-//        for (final Entry<Field, Bind> bfield : bfields(type).entrySet()) {
-//            final Field field = bfield.getKey();
-//            final Bind bind = bfield.getValue();
-//            String label = bind.label();
-//            final String path = Utils.suppressionPath(type, field);
-//            final String formatted = format("field=%s, suppressionPath=%s, bind=%s", field, path, bind);
-//            if (!resultSetLabels.remove(label)) {
-//                logger.warning(format("unknown label; %s", formatted));
-//                continue;
-//            }
-//            if (bind.unused()) {
-//                continue;
-//            }
-//            final Object value = results.getObject(label);
-//            if (value == null) {
-//                if (!bind.nillable() && !bind.unused() && !bind.reserved()) {
-//                    logger.warning(format("null value; %s", formatted));
-//                }
-//                if (field.getType().isPrimitive()) {
-//                    logger.warning(format("null value; %s", formatted));
-//                }
-//            }
-//            try {
-//                Utils.field(field, value, results, label);
-//            } catch (final ReflectiveOperationException roe) {
-//                logger.log(SEVERE, format("failed to set %s with %s on %s", field, value, value), roe);
-//            }
-//        }
-        for (final String remainedLabel : resultSetLabels) {
-            final Object value = results.getObject(remainedLabel);
-            logger.info(() -> format("remained result for %s; label: %s, value: %s", type, remainedLabel, value));
+        if (logger.isLoggable(Level.FINE)) {
+            for (final String remainedLabel : resultSetLabels) {
+                final Object value = results.getObject(remainedLabel);
+                logger.fine(() -> format("remained result for %s; label: %s, value: %s", type, remainedLabel, value));
+            }
         }
         return instance;
     }
@@ -214,13 +197,13 @@ public class MetadataContext {
     }
 
     private void getAttributes(final UDT udt) throws SQLException {
-        getAttributes(udt.getSchema_().getCatalog_().getTableCat(),
-                      udt.getSchema_().getTableSchem(),
+        getAttributes(udt.getParent_().getCatalog_().getTableCat(),
+                      udt.getParent_().getTableSchem(),
                       udt.getTypeName(),
                       null,
                       udt.getAttributes())
                 .forEach(a -> {
-                    a.setUDT(udt);
+                    a.setParent_(udt);
                 });
     }
 
@@ -259,7 +242,7 @@ public class MetadataContext {
 
     /**
      * Invokes {@link DatabaseMetaData#getBestRowIdentifier(java.lang.String, java.lang.String, java.lang.String, int,
-     * boolean)} with given arguments and returns bound information.
+     * boolean)} with given arguments and returns bound values.
      *
      * @param catalog  the value for {@code catalog} parameter
      * @param schema   the value for {@code schema} parameter
@@ -278,14 +261,14 @@ public class MetadataContext {
 
     private void getBestRowIdentifier(final Table table) throws SQLException {
         for (final BestRowIdentifier.Scope scope : BestRowIdentifier.Scope.values()) {
-            getBestRowIdentifier(table.getSchema_().getCatalog_().getTableCat(),
-                                 table.getSchema_().getTableSchem(),
+            getBestRowIdentifier(table.getParent_().getCatalog_().getTableCat(),
+                                 table.getParent_().getTableSchem(),
                                  table.getTableName(),
                                  scope.getRawValue(),
                                  true,
                                  table.getBestRowIdentifiers())
                     .forEach(i -> {
-                        i.setTable_(table);
+                        i.setParent_(table);
                     });
         }
     }
@@ -312,6 +295,16 @@ public class MetadataContext {
         return collection;
     }
 
+    /**
+     * Invokes {@link DatabaseMetaData#getCatalogs()} method and returns bound values.
+     *
+     * @return a list of categories.
+     * @throws SQLException if a database error occurs.
+     */
+    public List<Catalog> getCatalogs() throws SQLException {
+        return getCatalogs(new ArrayList<>());
+    }
+
     // ----------------------------------------------------------------------------------------- getClientInfoProperties
 
     /**
@@ -333,6 +326,17 @@ public class MetadataContext {
             Utils.logSqlFeatureNotSupportedException(logger, sqlfnse);
         }
         return collection;
+    }
+
+    /**
+     * Invokes {@link DatabaseMetaData#getClientInfoProperties()} method and returns bound values.
+     *
+     * @return a list of bound values.
+     * @throws SQLException if a database error occurs.
+     * @see DatabaseMetaData#getClientInfoProperties()
+     */
+    public List<ClientInfoProperty> getClientInfoProperties() throws SQLException {
+        return getClientInfoProperties(new ArrayList<>());
     }
 
     // --------------------------------------------------------------------------------------------- getColumnPrivileges
@@ -365,15 +369,33 @@ public class MetadataContext {
         return collection;
     }
 
+    /**
+     * Invokes {@link DatabaseMetaData#getColumnPrivileges(java.lang.String, java.lang.String, java.lang.String,
+     * java.lang.String)} method with given arguments and returns bound values.
+     *
+     * @param catalog           a value for {@code catalog} parameter.
+     * @param schema            a value for {@code schema} parameter.
+     * @param table             a value for {@code table} parameter.
+     * @param columnNamePattern a value for {@code columnNamePattern} parameter.
+     * @return a list of bound values.
+     * @throws SQLException if a database error occurs.
+     * @see DatabaseMetaData#getColumnPrivileges(String, String, String, String)
+     */
+    public List<ColumnPrivilege> getColumnPrivileges(
+            final String catalog, final String schema, final String table, final String columnNamePattern)
+            throws SQLException {
+        return getColumnPrivileges(catalog, schema, table, columnNamePattern, new ArrayList<>());
+    }
+
     private void getColumnPrivileges(final Column column) throws SQLException {
         requireNonNull(column, "column is null");
-        getColumnPrivileges(column.getTable_().getSchema_().getCatalog_().getTableCat(),
-                            column.getTable_().getSchema_().getTableSchem(),
-                            column.getTable_().getTableName(),
+        getColumnPrivileges(column.getParent_().getParent_().getCatalog_().getTableCat(),
+                            column.getParent_().getParent_().getTableSchem(),
+                            column.getParent_().getTableName(),
                             column.getColumnName(),
                             column.getColumnPrivileges())
                 .forEach(p -> {
-                    p.setColumn_(column);
+                    p.setParent_(column);
                 });
     }
 
@@ -408,15 +430,33 @@ public class MetadataContext {
         return collection;
     }
 
+    /**
+     * Invokes {@link DatabaseMetaData#getColumns(java.lang.String, java.lang.String, java.lang.String,
+     * java.lang.String)} method with given arguments and returns bound values.
+     *
+     * @param catalog           a value for {@code catalog} parameter.
+     * @param schemaPattern     a value for {@code schemaPattern} parameter.
+     * @param tableNamePattern  a value for {@code tableNameSchema} parameter.
+     * @param columnNamePattern a value for {@code columnNamePattern} parameter.
+     * @return a list of bound values.
+     * @throws SQLException if a database error occurs.
+     * @see DatabaseMetaData#getColumns(String, String, String, String)
+     */
+    public List<Column> getColumns(final String catalog, final String schemaPattern, final String tableNamePattern,
+                                   final String columnNamePattern)
+            throws SQLException {
+        return getColumns(catalog, schemaPattern, tableNamePattern, columnNamePattern, new ArrayList<>());
+    }
+
     private void getColumns(final Table table) throws SQLException {
         requireNonNull(table, "table is null");
-        getColumns(table.getSchema_().getCatalog_().getTableCat(),
-                   table.getSchema_().getTableSchem(),
+        getColumns(table.getParent_().getCatalog_().getTableCat(),
+                   table.getParent_().getTableSchem(),
                    table.getTableName(),
                    null,
                    table.getColumns())
                 .forEach(c -> {
-                    c.setTable_(table);
+                    c.setParent_(table);
                 });
         for (final Column column : table.getColumns()) {
             getColumnPrivileges(column);
@@ -455,6 +495,28 @@ public class MetadataContext {
             Utils.logSqlFeatureNotSupportedException(logger, sqlfnse);
         }
         return collection;
+    }
+
+    /**
+     * Invokes {@link DatabaseMetaData#getCrossReference(java.lang.String, java.lang.String, java.lang.String,
+     * java.lang.String, java.lang.String, java.lang.String)} method with given arguments and returns bound values.
+     *
+     * @param parentCatalog  a value for {@code parentCatalog} parameter
+     * @param parentSchema   a value for {@code parentSchema} parameter
+     * @param parentTable    a value for {@code parentTable} parameter
+     * @param foreignCatalog a value for {@code foreignCatalog} parameter
+     * @param foreignSchema  av value for {@code foreignSchema} parameter
+     * @param foreignTable   a value for {@code foreignTable} parameter
+     * @return a list of bound values.
+     * @throws SQLException if a database error occurs.
+     */
+    public List<CrossReference> getCrossReferences(
+            final String parentCatalog, final String parentSchema, final String parentTable,
+            final String foreignCatalog, final String foreignSchema, final String foreignTable)
+            throws SQLException {
+        return getCrossReferences(parentCatalog, parentSchema, parentTable,
+                                  foreignCatalog, foreignSchema, foreignTable,
+                                  new ArrayList<>());
     }
 
     // ---------------------------------------------------------------------------------------------------- getFunctions
@@ -529,8 +591,8 @@ public class MetadataContext {
 
     private void getFunctionColumns(final Function function) throws SQLException {
         requireNonNull(function, "function is null");
-        getFunctionColumns(function.getSchema_().getCatalog_().getTableCat(),
-                           function.getSchema_().getTableSchem(),
+        getFunctionColumns(function.getParent_().getCatalog_().getTableCat(),
+                           function.getParent_().getTableSchem(),
                            function.getFunctionName(),
                            null,
                            function.getFunctionColumns())
@@ -569,12 +631,12 @@ public class MetadataContext {
 
     private void getExportedKeys(final Table table) throws SQLException {
         requireNonNull(table, "table is null");
-        getExportedKeys(table.getSchema_().getCatalog_().getTableCat(),
-                        table.getSchema_().getTableSchem(),
+        getExportedKeys(table.getParent_().getCatalog_().getTableCat(),
+                        table.getParent_().getTableSchem(),
                         table.getTableName(),
                         table.getExportedKeys())
                 .forEach(k -> {
-                    k.setTable_(table);
+                    k.setParent_(table);
                 });
     }
 
@@ -608,12 +670,12 @@ public class MetadataContext {
 
     private void getImportedKeys(final Table table) throws SQLException {
         requireNonNull(table, "table is null");
-        getImportedKeys(table.getSchema_().getCatalog_().getTableCat(),
-                        table.getSchema_().getTableSchem(),
+        getImportedKeys(table.getParent_().getCatalog_().getTableCat(),
+                        table.getParent_().getTableSchem(),
                         table.getTableName(),
                         table.getImportedKeys())
                 .forEach(k -> {
-                    k.setTable_(table);
+                    k.setParent_(table);
                 });
     }
 
@@ -650,14 +712,14 @@ public class MetadataContext {
 
     private void getIndexInfo(final Table table) throws SQLException {
         requireNonNull(table, "table is null");
-        getIndexInfo(table.getSchema_().getCatalog_().getTableCat(),
-                     table.getSchema_().getTableSchem(),
+        getIndexInfo(table.getParent_().getCatalog_().getTableCat(),
+                     table.getParent_().getTableSchem(),
                      table.getTableName(),
                      false,
                      true,
                      table.getIndexInfo())
                 .forEach(i -> {
-                    i.setTable_(table);
+                    i.setParent_(table);
                 });
     }
 
@@ -689,12 +751,12 @@ public class MetadataContext {
     }
 
     private void getPrimaryKeys(final Table table) throws SQLException {
-        getPrimaryKeys(table.getSchema_().getCatalog_().getTableCat(),
-                       table.getSchema_().getTableSchem(),
+        getPrimaryKeys(table.getParent_().getCatalog_().getTableCat(),
+                       table.getParent_().getTableSchem(),
                        table.getTableName(),
                        table.getPrimaryKeys())
                 .forEach(k -> {
-                    k.setTable_(table);
+                    k.setParent_(table);
                 });
     }
 
@@ -730,8 +792,8 @@ public class MetadataContext {
 
     private void getProcedureColumns(final Procedure procedure) throws SQLException {
         requireNonNull(procedure, "procedure is null");
-        getProcedureColumns(procedure.getSchema_().getCatalog_().getTableCat(),
-                            procedure.getSchema_().getTableSchem(),
+        getProcedureColumns(procedure.getParent_().getCatalog_().getTableCat(),
+                            procedure.getParent_().getTableSchem(),
                             procedure.getProcedureName(),
                             null,
                             procedure.getProcedureColumns())
@@ -776,7 +838,7 @@ public class MetadataContext {
                       null,
                       schema.getProcedures())
                 .forEach(p -> {
-                    p.setSchema_(schema);
+                    p.setParent_(schema);
                 });
         for (final Procedure procedure : schema.getProcedures()) {
             getProcedureColumns(procedure);
@@ -815,13 +877,13 @@ public class MetadataContext {
 
     private void getPseudoColumns(final Table table) throws SQLException {
         requireNonNull(table, "table is null");
-        getPseudoColumns(table.getSchema_().getCatalog_().getTableCat(),
-                         table.getSchema_().getTableSchem(),
+        getPseudoColumns(table.getParent_().getCatalog_().getTableCat(),
+                         table.getParent_().getTableSchem(),
                          table.getTableName(),
                          null,
                          table.getPseudoColumns())
                 .forEach(c -> {
-                    c.setTable_(table);
+                    c.setParent_(table);
                 });
     }
 
@@ -873,6 +935,20 @@ public class MetadataContext {
             Utils.logSqlFeatureNotSupportedException(logger, sqlfnse);
         }
         return collection;
+    }
+
+    /**
+     * Invokes {@link DatabaseMetaData#getSchemas(String, String)} method with given arguments and returns bound
+     * values.
+     *
+     * @param catalog       a value for {@code catalog} parameter.
+     * @param schemaPattern a value for {@code schemaPattern} parameter.
+     * @return a list of bound values.
+     * @throws SQLException if a database error occurs.
+     * @see DatabaseMetaData#getSchemas(String, String)
+     */
+    public List<Schema> getSchemas(final String catalog, final String schemaPattern) throws SQLException {
+        return getSchemas(catalog, schemaPattern, new ArrayList<>());
     }
 
     void getSchemas(final Catalog catalog) throws SQLException {
@@ -931,12 +1007,12 @@ public class MetadataContext {
 
     private void getSuperTables(final Table table) throws SQLException {
         requireNonNull(table, "table is null");
-        getSuperTables(table.getSchema_().getCatalog_().getTableCat(),
-                       table.getSchema_().getTableSchem(),
+        getSuperTables(table.getParent_().getCatalog_().getTableCat(),
+                       table.getParent_().getTableSchem(),
                        table.getTableName(),
                        table.getSuperTables())
                 .forEach(t -> {
-                    t.setTable_(table);
+                    t.setParent_(table);
                 });
     }
 
@@ -1172,7 +1248,7 @@ public class MetadataContext {
                 null,
                 schema.getUDTs())
                 .forEach(t -> {
-                    t.setSchema_(schema);
+                    t.setParent_(schema);
                 });
         for (final UDT udt : schema.getUDTs()) {
             getAttributes(udt);
@@ -1221,20 +1297,7 @@ public class MetadataContext {
                 });
     }
 
-    // --------------------------------------------------------------------------------------------------------- bfields
-    private Map<Field, Bind> bfields(final Class<?> clazz) {
-        requireNonNull(clazz, "clazz is null");
-        return bfields.computeIfAbsent(clazz, c -> {
-            final Map<Field, Bind> fields = Utils.getFieldsAnnotatedWith(clazz, Bind.class);
-            for (Field field : fields.keySet()) {
-                if (!field.isAccessible()) {
-                    field.setAccessible(true);
-                }
-            }
-            return fields;
-        });
-    }
-
+    // -----------------------------------------------------------------------------------------------------------------
     private Map<Field, Label> getLabeledFields(final Class<?> clazz) {
         requireNonNull(clazz, "clazz is null");
         return labeledFields.computeIfAbsent(clazz, c -> Utils.getFieldsAnnotatedWith(clazz, Label.class));
@@ -1243,8 +1306,6 @@ public class MetadataContext {
     // -----------------------------------------------------------------------------------------------------------------
     final DatabaseMetaData databaseMetaData;
 
-    // fields with @Bind
-    private final Map<Class<?>, Map<Field, Bind>> bfields = new HashMap<>();
-
+    // -----------------------------------------------------------------------------------------------------------------
     private final Map<Class<?>, Map<Field, Label>> labeledFields = new HashMap<>();
 }

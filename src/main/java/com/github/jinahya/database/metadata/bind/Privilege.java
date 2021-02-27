@@ -25,7 +25,7 @@ import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlTransient;
 
 @XmlTransient
-abstract class Privilege extends TableChild {
+abstract class Privilege extends AbstractChild<Table> {
 
     private static final long serialVersionUID = -1799954363648972203L;
 

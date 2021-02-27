@@ -36,7 +36,7 @@ import java.util.List;
  * @author Jin Kwon &lt;jinahya_at_gmail.com&gt;
  */
 @XmlRootElement
-public class UDT extends SchemaChild {
+public class UDT extends AbstractChild<Schema> {
 
     private static final long serialVersionUID = 8665246093405057553L;
 

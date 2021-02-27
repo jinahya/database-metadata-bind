@@ -30,10 +30,10 @@ import java.util.Collection;
  *
  * @author Jin Kwon &lt;jinahya_at_gmail.com&gt;
  * @see java.sql.DatabaseMetaData#getIndexInfo(java.lang.String, java.lang.String, java.lang.String, boolean, boolean)
- * @see MetadataContext#getIndexInfo(String, String, String, boolean, boolean, Collection)
+ * @see Context#getIndexInfo(String, String, String, boolean, boolean, Collection)
  */
 @XmlRootElement
-public class IndexInfo extends TableChild {
+public class IndexInfo extends AbstractChild<Table> {
 
     private static final long serialVersionUID = -768486884376018474L;
 

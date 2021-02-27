@@ -24,13 +24,20 @@ import javax.xml.bind.annotation.XmlRootElement;
 import java.sql.DatabaseMetaData;
 import java.util.Collection;
 
-import static java.sql.DatabaseMetaData.*;
+import static java.sql.DatabaseMetaData.importedKeyCascade;
+import static java.sql.DatabaseMetaData.importedKeyInitiallyDeferred;
+import static java.sql.DatabaseMetaData.importedKeyInitiallyImmediate;
+import static java.sql.DatabaseMetaData.importedKeyNoAction;
+import static java.sql.DatabaseMetaData.importedKeyNotDeferrable;
+import static java.sql.DatabaseMetaData.importedKeyRestrict;
+import static java.sql.DatabaseMetaData.importedKeySetDefault;
+import static java.sql.DatabaseMetaData.importedKeySetNull;
 
 /**
  * An entity class for imported keys.
  *
  * @author Jin Kwon &lt;jinahya_at_gmail.com&gt;
- * @see MetadataContext#getImportedKeys(String, String, String, Collection)
+ * @see Context#getImportedKeys(String, String, String, Collection)
  */
 @XmlRootElement
 public class ImportedKey extends TableKey {

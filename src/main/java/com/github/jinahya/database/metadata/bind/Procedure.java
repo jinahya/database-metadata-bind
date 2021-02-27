@@ -37,7 +37,7 @@ import java.util.List;
  * @author Jin Kwon &lt;jinahya_at_gmail.com&gt;
  */
 @XmlRootElement
-public class Procedure extends SchemaChild {
+public class Procedure extends AbstractChild<Schema> {
 
     private static final long serialVersionUID = -6262056388403934829L;
 

@@ -12,19 +12,20 @@ import java.sql.SQLFeatureNotSupportedException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Logger;
+import java.util.stream.Collectors;
 
 import static com.github.jinahya.database.metadata.bind.Utils.logSqlFeatureNotSupportedException;
 import static java.util.Objects.requireNonNull;
 
 @XmlRootElement
-public class DatabaseMetadata implements MetadataType {
+public class Metadata implements MetadataType {
 
     private static final Logger logger = Logger.getLogger(MethodHandles.lookup().lookupClass().getName());
 
     // -----------------------------------------------------------------------------------------------------------------
-    public static DatabaseMetadata newInstance(final MetadataContext context) throws SQLException {
+    public static Metadata newInstance(final Context context) throws SQLException {
         requireNonNull(context, "context is null");
-        final DatabaseMetadata instance = new DatabaseMetadata();
+        final Metadata instance = new Metadata();
         // -------------------------------------------------------------------------------------------------------------
         try {
             instance.allProceduresAreCallable = context.databaseMetaData.allProceduresAreCallable();
@@ -70,13 +71,23 @@ public class DatabaseMetadata implements MetadataType {
             logSqlFeatureNotSupportedException(logger, sqlfnse);
         }
         // ---------------------------------------------------------------------------------------------------- catalogs
-        instance.catalog = new ArrayList<>();
-        context.getCatalogs(instance.catalog);
+        instance.catalog = context.getCatalogs();
         if (instance.catalog.isEmpty()) {
             instance.catalog.add(Catalog.newVirtualInstance());
         }
         for (final Catalog catalog : instance.catalog) {
             context.getSchemas(catalog);
+        }
+        final List<Table> tables = instance.catalog.stream()
+                .flatMap(c -> c.getSchemas().stream())
+                .flatMap(s -> s.getTables().stream())
+                .collect(Collectors.toList());
+        for (final Table foreign : tables) {
+            for (final Table parent : tables) {
+                context.getCrossReferences(parent.getTableCat(), parent.getTableSchem(), parent.getTableName(),
+                                           foreign.getTableCat(), foreign.getTableSchem(), foreign.getTableName(),
+                                           foreign.getCrossReference());
+            }
         }
         try {
             instance.catalogSeparator = context.databaseMetaData.getCatalogSeparator();
@@ -812,7 +823,7 @@ public class DatabaseMetadata implements MetadataType {
     /**
      * Creates a new instance.
      */
-    private DatabaseMetadata() {
+    private Metadata() {
         super();
     }
 

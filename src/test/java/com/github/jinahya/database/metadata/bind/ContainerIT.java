@@ -39,15 +39,15 @@ class ContainerIT {
     // -----------------------------------------------------------------------------------------------------------------
     @EnabledIfSystemProperty(named = "url", matches = "jdbc:tc:.+")
     @Test
-    void writeToFiles() throws Exception {
+    void writeMetadataToFiles() throws Exception {
         final String url = System.getProperty("url");
         final String user = System.getProperty("user");
         final String password = System.getProperty("password");
         log.info("connecting...");
         try (Connection connection = getConnection(url, user, password)) {
             log.info("connected: {}", connection);
-            final MetadataContext context = MetadataContext.newInstance(connection);
-            final DatabaseMetadata metadata = DatabaseMetadata.newInstance(context);
+            final Context context = Context.newInstance(connection);
+            final Metadata metadata = Metadata.newInstance(context);
             MetadataTests.writeToFiles(metadata, "container");
         }
     }

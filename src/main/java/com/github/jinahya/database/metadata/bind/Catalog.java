@@ -24,9 +24,17 @@ import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 
-import javax.xml.bind.annotation.*;
+import javax.xml.bind.annotation.XmlAttribute;
+import javax.xml.bind.annotation.XmlElement;
+import javax.xml.bind.annotation.XmlElementRef;
+import javax.xml.bind.annotation.XmlElementWrapper;
+import javax.xml.bind.annotation.XmlRootElement;
 import java.text.Collator;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Comparator;
+import java.util.List;
+import java.util.Objects;
 
 import static java.util.Objects.requireNonNull;
 
@@ -34,7 +42,7 @@ import static java.util.Objects.requireNonNull;
  * An entity class for binding the result of {@link java.sql.DatabaseMetaData#getCatalogs()}.
  *
  * @author Jin Kwon &lt;jinahya_at_gmail.com&gt;
- * @see MetadataContext#getCatalogs(Collection)
+ * @see Context#getCatalogs(Collection)
  */
 @XmlRootElement
 public class Catalog implements MetadataType {
@@ -86,7 +94,7 @@ public class Catalog implements MetadataType {
     }
 
     // -----------------------------------------------------------------------------------------------------------------
-    public static Catalog newVirtualInstance() {
+    static Catalog newVirtualInstance() {
         final Catalog instance = new Catalog();
         instance.virtual = Boolean.TRUE;
         instance.setTableCat("");

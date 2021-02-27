@@ -24,16 +24,21 @@ import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
 import java.sql.DatabaseMetaData;
 
-import static java.sql.DatabaseMetaData.*;
+import static java.sql.DatabaseMetaData.bestRowNotPseudo;
+import static java.sql.DatabaseMetaData.bestRowPseudo;
+import static java.sql.DatabaseMetaData.bestRowSession;
+import static java.sql.DatabaseMetaData.bestRowTemporary;
+import static java.sql.DatabaseMetaData.bestRowTransaction;
+import static java.sql.DatabaseMetaData.bestRowUnknown;
 
 /**
  * Represents best row identifiers of tables.
  *
  * @author Jin Kwon &lt;jinahya_at_gmail.com&gt;
- * @see MetadataContext#getBestRowIdentifier(java.lang.String, java.lang.String, java.lang.String, int, boolean)
+ * @see Context#getBestRowIdentifier(java.lang.String, java.lang.String, java.lang.String, int, boolean)
  */
 @XmlRootElement
-public class BestRowIdentifier extends TableChild {
+public class BestRowIdentifier extends AbstractChild<Table> {
 
     // -----------------------------------------------------------------------------------------------------------------
     private static final long serialVersionUID = -6733770602373723371L;

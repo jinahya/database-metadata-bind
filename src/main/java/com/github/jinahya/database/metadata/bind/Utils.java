@@ -34,9 +34,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import static java.lang.String.format;
-import static java.util.Collections.unmodifiableMap;
 import static java.util.Objects.requireNonNull;
-import static java.util.logging.Level.FINE;
 import static java.util.logging.Logger.getLogger;
 
 final class Utils {
@@ -45,33 +43,6 @@ final class Utils {
     private static final Logger logger = getLogger(Utils.class.getName());
 
     // -----------------------------------------------------------------------------------------------------------------
-    private static final Map<Class<?>, Class<?>> WRAPPER;
-
-    static {
-        final Map<Class<?>, Class<?>> m = new HashMap<>();
-        m.put(boolean.class, Boolean.class);
-        m.put(byte.class, Byte.class);
-        m.put(char.class, Character.class);
-        m.put(double.class, Double.class);
-        m.put(float.class, Float.class);
-        m.put(int.class, Integer.class);
-        m.put(long.class, Long.class);
-        m.put(short.class, Short.class);
-        m.put(void.class, Void.class);
-        WRAPPER = unmodifiableMap(m);
-    }
-
-    static Class<?> wrapper(final Class<?> primitive) {
-        if (primitive == null) {
-            throw new NullPointerException("primitive is null");
-        }
-        if (!primitive.isPrimitive()) {
-            throw new IllegalArgumentException("specified class(" + primitive + ") is not primitive");
-        }
-        return WRAPPER.get(primitive);
-    }
-
-    // ----------------------------------------------------------------------------------------------- java.lang.reflect
     private static <T extends Annotation> Map<Field, T> getFieldsAnnotatedWith(
             final Class<?> c, final Class<T> a, final Map<Field, T> m) {
         for (final Field field : c.getDeclaredFields()) {
@@ -113,127 +84,39 @@ final class Utils {
     }
 
     // -----------------------------------------------------------------------------------------------------------------
-    @Deprecated
-    static void field(final Field field, final Object instance, final Object value) throws ReflectiveOperationException {
-        if (!field.isAccessible()) {
-            field.setAccessible(true);
-        }
-        final Class<?> type = field.getType();
-        if (type.isPrimitive()) {
-            if (value == null) {
-                // @todo: WARN
-                return;
-            }
-            if (type == boolean.class) {
-                field.setBoolean(instance, (Boolean) value);
-                return;
-            }
-            if (type == byte.class) {
-                field.setByte(instance, (Byte) value);
-                return;
-            }
-            if (type == char.class) {
-                field.setChar(instance, (Character) value);
-                return;
-            }
-            if (type == double.class) {
-                field.setDouble(instance, (Double) value);
-                return;
-            }
-            if (type == float.class) {
-                field.setFloat(instance, (Float) value);
-                return;
-            }
-            if (type == int.class) {
-                field.setInt(instance, (Integer) value);
-                return;
-            }
-            if (type == long.class) {
-//                field.setLong(obj, (Long) value);
-                if (value instanceof Number) {
-                    field.setLong(instance, ((Number) value).longValue());
-                    return;
-                }
-                return;
-            }
-            if (type == short.class) {
-                if (value instanceof Number) {
-                    field.setShort(instance, ((Number) value).shortValue());
-                    return;
-                }
-            }
-        }
-        try {
-            field.set(instance, value);
-        } catch (final IllegalArgumentException iae) {
-            if (type == Boolean.class) {
-            }
-            if (type == Byte.class) {
-            }
-            if (type == Short.class) {
-                if (value instanceof Number) {
-                    field.set(instance, ((Number) value).shortValue());
-                    return;
-                }
-            }
-            if (type == Integer.class) {
-                if (value instanceof Number) {
-                    field.set(instance, ((Number) value).intValue());
-                    return;
-                }
-            }
-            if (type == Long.class) {
-            }
-            if (type == Character.class) {
-            }
-            if (type == Float.class) {
-            }
-            if (type == Double.class) {
-            }
-            throw iae;
-        }
-    }
-
-    static void field(final Field field, final Object obj, final ResultSet results, final String label)
+    static void setFieldValue(final Field field, final Object obj, final ResultSet results, final String label)
             throws SQLException, ReflectiveOperationException {
         requireNonNull(field, "field is null");
         requireNonNull(obj, "obj is null");
         requireNonNull(results, "results is null");
         requireNonNull(label, "label is null");
+        assert field.isAccessible();
         final Class<?> type = field.getType();
         final Object value = results.getObject(label);
         if (type.isPrimitive()) {
             if (type == boolean.class) {
-                //field.setBoolean(obj, results.getBoolean(label));
+                field.setBoolean(obj, results.getBoolean(label));
                 return;
             } else if (type == byte.class) {
-                field.setByte(obj, results.getByte(label));
+                logger.severe(() -> format("byte field found, fix me: %1$s", field));
                 return;
             } else if (type == char.class) {
-                logger.severe("field type char.class!!!");
+                logger.severe(() -> format("char field found, fix me: %1$s", field));
                 return;
             } else if (type == double.class) {
-                field.setDouble(obj, results.getDouble(label));
+                logger.severe(() -> format("double field found, fix me: %1$s", field));
                 return;
             } else if (type == float.class) {
-                field.setFloat(obj, results.getFloat(label));
+                logger.severe(() -> format("float field found, fix me: %1$s", field));
                 return;
             } else if (type == int.class) {
                 field.setInt(obj, results.getInt(label));
                 return;
             } else if (type == long.class) {
                 field.setLong(obj, results.getLong(label));
-//                if (value instanceof Number) {
-//                    field.setLong(obj, ((Number) value).longValue());
-//                    return;
-//                }
                 return;
             } else if (type == short.class) {
                 field.setShort(obj, results.getShort(label));
-//                if (value instanceof Number) {
-//                    field.setShort(obj, ((Number) value).shortValue());
-//                    return;
-//                }
                 return;
             }
         }
@@ -242,15 +125,15 @@ final class Utils {
             field.set(obj, value);
             return;
         } catch (final IllegalArgumentException iae) {
-            logger.log(FINE, format("failed to set %s on %s", value, field), iae);
+            logger.log(Level.WARNING, iae, () -> format("unable to set %s with %s labeled as %s", field, value, label));
         }
         if (value instanceof Number) {
             if (type == Boolean.class) {
-                logger.severe(format("Boolean field: %s", field));
+                logger.severe(() -> format("Boolean field found, fix me: %1$s", field));
                 return;
             }
             if (type == Byte.class) {
-                logger.severe(format("Byte field: %s", field));
+                logger.severe(() -> format("Byte field found, fix me: %1$s", field));
                 return;
             }
             if (type == Short.class) {
@@ -262,23 +145,23 @@ final class Utils {
                 return;
             }
             if (type == Long.class) {
-                field.set(obj, ((Number) value).longValue());
+                logger.severe(() -> format("Long field found, fix me: %1$s", field));
                 return;
             }
             if (type == Character.class) {
-                logger.severe(format("Character field: %s", field));
+                logger.severe(() -> format("Character field found, fix me: %1$s", field));
                 return;
             }
             if (type == Float.class) {
-                logger.severe(format("Float field: %s", field));
+                logger.severe(() -> format("Float field found, fix me: %1$s", field));
                 return;
             }
             if (type == Double.class) {
-                logger.severe(format("Double field: %s", field));
+                logger.severe(() -> format("Double field found, fix me: %1$s", field));
                 return;
             }
         }
-        logger.severe(format("failed to set value; label=%s, field=%s, value=%s", label, field, value));
+        logger.severe(() -> format("failed to set value; label: %s, value: %s, field: %s", label, value, field));
     }
 
     // -----------------------------------------------------------------------------------------------------------------

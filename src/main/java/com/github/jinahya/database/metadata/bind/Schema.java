@@ -23,7 +23,11 @@ package com.github.jinahya.database.metadata.bind;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotNull;
 
-import javax.xml.bind.annotation.*;
+import javax.xml.bind.annotation.XmlAttribute;
+import javax.xml.bind.annotation.XmlElement;
+import javax.xml.bind.annotation.XmlElementRef;
+import javax.xml.bind.annotation.XmlRootElement;
+import javax.xml.bind.annotation.XmlTransient;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
@@ -50,7 +54,7 @@ public class Schema extends AbstractChild<Catalog> {
     public static final String ATTRIBUTE_NAME_TABLE_CATALOG = "tableCatalog";
 
     // -----------------------------------------------------------------------------------------------------------------
-    public static Schema newVirtualInstance(final Catalog catalog) {
+    static Schema newVirtualInstance(final Catalog catalog) {
         final Schema instance = new Schema();
         instance.virtual = Boolean.TRUE;
         instance.setParent_(catalog);
