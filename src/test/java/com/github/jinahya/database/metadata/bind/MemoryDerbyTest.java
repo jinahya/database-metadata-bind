@@ -32,7 +32,7 @@ import static java.sql.DriverManager.getConnection;
 import static org.junit.jupiter.api.Assertions.fail;
 
 /**
- * Test clsss for Apache Derby in memory.
+ * Test class for Apache Derby in memory.
  *
  * @author Jin Kwon &lt;jinahya_at_gmail.com&gt;
  */

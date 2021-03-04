@@ -1,8 +1,7 @@
 package com.github.jinahya.database.metadata.bind;
 
-import jakarta.validation.Valid;
-import jakarta.validation.constraints.NotNull;
-
+import javax.validation.Valid;
+import javax.validation.constraints.NotNull;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlElementRef;
 import javax.xml.bind.annotation.XmlRootElement;

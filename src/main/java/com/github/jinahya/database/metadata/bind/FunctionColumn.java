@@ -23,7 +23,6 @@ package com.github.jinahya.database.metadata.bind;
 import javax.xml.bind.annotation.XmlAttribute;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
-import javax.xml.bind.annotation.XmlTransient;
 import java.sql.DatabaseMetaData;
 
 import static java.sql.DatabaseMetaData.functionColumnIn;

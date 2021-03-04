@@ -11,7 +11,6 @@ import java.sql.SQLFeatureNotSupportedException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.stream.Collectors;
 
@@ -43,7 +42,7 @@ public class SupportsConvert {
                 try {
                     v.value = m.supportsConvert(v.fromType, v.toType);
                 } catch (final SQLFeatureNotSupportedException sqlfnse) {
-                    logger.log(Level.WARNING, "sql feature not supported", sqlfnse);
+                    Utils.logSqlFeatureNotSupportedException(logger, sqlfnse);
                 }
                 list.add(v);
             }

@@ -1,7 +1,6 @@
 package com.github.jinahya.database.metadata.bind;
 
-import jakarta.validation.Valid;
-
+import javax.validation.Valid;
 import javax.xml.bind.annotation.XmlTransient;
 
 abstract class AbstractChild<P extends MetadataType> implements Child<P> {

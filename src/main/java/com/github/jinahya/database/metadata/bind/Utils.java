@@ -137,8 +137,8 @@ final class Utils {
             field.set(obj, value);
             return;
         } catch (final IllegalArgumentException iae) {
-            logger.log(Level.WARNING, iae, () -> format("unable to set %s with %s(%s) labeled as %s",
-                                                        field, value.getClass(), value, label));
+            logger.log(Level.WARNING, iae, () -> format("unable to set %1$s with %2$s(%3$s) labeled as %4$s",
+                                                        field, value, value.getClass(), label));
         }
         if (value instanceof Number) {
             if (type == Boolean.class) {

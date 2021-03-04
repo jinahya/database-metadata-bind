@@ -9,7 +9,6 @@ import java.sql.SQLException;
 import java.sql.SQLFeatureNotSupportedException;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import static java.util.Objects.requireNonNull;
@@ -37,7 +36,7 @@ public class SupportsResultSetConcurrency {
                 try {
                     v.value = m.supportsResultSetConcurrency(v.type, v.concurrency);
                 } catch (final SQLFeatureNotSupportedException sqlfnse) {
-                    logger.log(Level.WARNING, "sql feature not supported", sqlfnse);
+                    Utils.logSqlFeatureNotSupportedException(logger, sqlfnse);
                 }
                 list.add(v);
             }
