@@ -436,6 +436,13 @@
 
   <profiles>
     <profile>
+      <id>memory</id>
+      <properties>
+        <memory>true</memory>
+        <surefire.exitTimeout>900</surefire.exitTimeout>
+      </properties>
+    </profile>
+    <profile>
       <id>failsafe</id>
       <build>
         <plugins>

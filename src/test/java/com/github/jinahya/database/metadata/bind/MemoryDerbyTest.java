@@ -36,6 +36,7 @@ import static org.junit.jupiter.api.Assertions.fail;
  *
  * @author Jin Kwon &lt;jinahya_at_gmail.com&gt;
  */
+@org.junit.jupiter.api.condition.EnabledIfSystemProperty(named = "memory", matches = "true")
 @Slf4j
 class MemoryDerbyTest extends MemoryTest {
 

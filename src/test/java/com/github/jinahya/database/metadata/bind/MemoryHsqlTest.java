@@ -32,6 +32,7 @@ import static org.slf4j.LoggerFactory.getLogger;
 /**
  * @author Jin Kwon &lt;onacit_at_gmail.com&gt;
  */
+@org.junit.jupiter.api.condition.EnabledIfSystemProperty(named = "memory", matches = "true")
 @Slf4j
 class MemoryHsqlTest extends MemoryTest {
 
