@@ -21,14 +21,11 @@ package com.github.jinahya.database.metadata.bind;
  */
 
 import lombok.extern.slf4j.Slf4j;
-import org.slf4j.Logger;
 
 import java.sql.Connection;
 import java.sql.SQLException;
 
-import static java.lang.invoke.MethodHandles.lookup;
 import static java.sql.DriverManager.getConnection;
-import static org.slf4j.LoggerFactory.getLogger;
 
 /**
  * A class for testing against H2.
@@ -38,8 +35,6 @@ import static org.slf4j.LoggerFactory.getLogger;
 @org.junit.jupiter.api.condition.EnabledIfSystemProperty(named = "memory", matches = "true")
 @Slf4j
 class MemoryH2Test extends MemoryTest {
-
-    private static final Logger logger = getLogger(lookup().lookupClass());
 
     // -----------------------------------------------------------------------------------------------------------------
     private static final String DRIVER_NAME = "org.h2.Driver";

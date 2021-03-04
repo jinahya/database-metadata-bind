@@ -20,23 +20,19 @@ package com.github.jinahya.database.metadata.bind;
  * #L%
  */
 
+import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
-import org.slf4j.Logger;
 
 import java.lang.reflect.Field;
-
-import static java.lang.invoke.MethodHandles.lookup;
-import static org.slf4j.LoggerFactory.getLogger;
 
 /**
  * Test for {@code Utils}.
  *
  * @author Jin Kwon &lt;onacit at gmail.com&gt;
  */
+@Slf4j
 class UtilsTest {
-
-    private static final Logger logger = getLogger(lookup().lookupClass());
 
     // -----------------------------------------------------------------------------------------------------------------
     @Disabled
@@ -44,6 +40,6 @@ class UtilsTest {
     void printSqlTypes() throws ReflectiveOperationException {
         final Field field = Utils.class.getDeclaredField("SQL_TYPES");
         field.setAccessible(true);
-        logger.debug("SQL_TYPES: {}", field.get(null));
+        log.debug("SQL_TYPES: {}", field.get(null));
     }
 }

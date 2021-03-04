@@ -20,25 +20,22 @@ package com.github.jinahya.database.metadata.bind;
  * #L%
  */
 
+import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
-import org.slf4j.Logger;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
 
-import static java.lang.invoke.MethodHandles.lookup;
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.slf4j.LoggerFactory.getLogger;
 
 /**
  * @author Jin Kwon &lt;jinahya_at_gmail.com&gt;
  */
+@Slf4j
 class ReflectionTest {
-
-    private static final Logger logger = getLogger(lookup().lookupClass());
 
     // -----------------------------------------------------------------------------------------------------------------
     private static void method(Integer v) {
@@ -74,12 +71,12 @@ class ReflectionTest {
         assertThat(Integer.TYPE).isEqualTo(int.class);
 
         for (Method method : getClass().getDeclaredMethods()) {
-            logger.debug("method: {}", method);
+            log.debug("method: {}", method);
         }
 
-        logger.debug("method with Integer: {}", getClass().getDeclaredMethod("method", Integer.class));
-        logger.debug("method with TYPE: {}", getClass().getDeclaredMethod("method", Integer.TYPE));
-        logger.debug("method with int: {}", getClass().getDeclaredMethod("method", int.class));
+        log.debug("method with Integer: {}", getClass().getDeclaredMethod("method", Integer.class));
+        log.debug("method with TYPE: {}", getClass().getDeclaredMethod("method", Integer.TYPE));
+        log.debug("method with int: {}", getClass().getDeclaredMethod("method", int.class));
     }
 
     @Disabled
@@ -90,7 +87,7 @@ class ReflectionTest {
         if (type instanceof ParameterizedType) {
             final Type elementType = ((ParameterizedType) type).getActualTypeArguments()[0];
             final String typeName = elementType.getTypeName();
-            logger.debug("typeName: {}", typeName);
+            log.debug("typeName: {}", typeName);
         }
     }
 }

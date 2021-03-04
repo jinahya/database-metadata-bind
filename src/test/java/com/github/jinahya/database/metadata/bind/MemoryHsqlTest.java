@@ -21,13 +21,11 @@ package com.github.jinahya.database.metadata.bind;
  */
 
 import lombok.extern.slf4j.Slf4j;
-import org.slf4j.Logger;
 
 import java.sql.Connection;
 import java.sql.SQLException;
 
 import static java.sql.DriverManager.getConnection;
-import static org.slf4j.LoggerFactory.getLogger;
 
 /**
  * @author Jin Kwon &lt;onacit_at_gmail.com&gt;
@@ -35,8 +33,6 @@ import static org.slf4j.LoggerFactory.getLogger;
 @org.junit.jupiter.api.condition.EnabledIfSystemProperty(named = "memory", matches = "true")
 @Slf4j
 class MemoryHsqlTest extends MemoryTest {
-
-    private static final Logger logger = getLogger(MemoryHsqlTest.class);
 
     // -----------------------------------------------------------------------------------------------------------------
     private static final String DRIVER_NAME = "org.hsqldb.jdbc.JDBCDriver";

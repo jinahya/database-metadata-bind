@@ -23,7 +23,6 @@ package com.github.jinahya.database.metadata.bind;
 import lombok.NonNull;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.Test;
-import org.slf4j.Logger;
 
 import java.beans.BeanInfo;
 import java.beans.IntrospectionException;
@@ -42,11 +41,9 @@ import java.util.Map;
 import java.util.Map.Entry;
 
 import static com.github.jinahya.database.metadata.bind.Utils.getFieldsAnnotatedWith;
-import static java.lang.invoke.MethodHandles.lookup;
 import static java.util.function.Function.identity;
 import static java.util.stream.Collectors.toMap;
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.slf4j.LoggerFactory.getLogger;
 
 /**
  * Test java beans conformance.
@@ -55,8 +52,6 @@ import static org.slf4j.LoggerFactory.getLogger;
  */
 @Slf4j
 class JavaBeansTest {
-
-    private static final Logger logger = getLogger(lookup().lookupClass());
 
     // -----------------------------------------------------------------------------------------------------------------
     private static void nillable(@NonNull final Class<?> klass) {
