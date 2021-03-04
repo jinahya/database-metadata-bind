@@ -15,9 +15,9 @@ final java.sql.Connection connection = connect();
 final Context context = Context.newInstance(connection);
 
 // invoke methods
-final List<Catalog> catalogs = context.getCatalogs(new ArrayList<>());
-final List<Schema> schemas = context.getSchemas("", null, new ArrayList<>());
-final List<Table> tables = context.getTables(null, null, null, new ArrayList<>());
+final List<Catalog> catalogs = context.getCatalogs();
+final List<Schema> schemas = context.getSchemas("", null);
+final List<Table> tables = context.getTables(null, null, null);
 
 // bind all
 final Metadata metadata = Metadata.newInstance(context);
@@ -41,13 +41,14 @@ $
 
 #### Properties
 
-name      |value                            |notes
-----------|---------------------------------|-----------
-`<server>`|server identifier                |see below
-`<client>`|jdbc client identifier           |see below
-`url`     |connection url                   |
-`user`    |username                         |
-`password`|password                         |
+name              |value                 |notes
+------------------|----------------------|-----------
+`<server>`        |server identifier     |see below
+`<client>`        |jdbc client identifier|see below
+`version-<client>`| version of `<client>`|see below
+`url`             |connection url        |
+`user`            |user                  |
+`password`        |password              |
 
 ##### `<server>` / `<client>`
 
