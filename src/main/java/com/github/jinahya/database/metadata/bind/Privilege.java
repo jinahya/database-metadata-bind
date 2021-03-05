@@ -32,13 +32,13 @@ abstract class Privilege extends TableChild {
     @Override
     public String toString() {
         return super.toString() + '{'
-                + "tableCat=" + tableCat
-                + ",tableSchem=" + tableSchem
-                + ",grantor=" + grantor
-                + ",grantee=" + grantee
-                + ",privilege=" + privilege
-                + ",isGrantable=" + isGrantable
-                + '}';
+               + "tableCat=" + tableCat
+               + ",tableSchem=" + tableSchem
+               + ",grantor=" + grantor
+               + ",grantee=" + grantee
+               + ",privilege=" + privilege
+               + ",isGrantable=" + isGrantable
+               + '}';
     }
 
     // -------------------------------------------------------------------------------------------------------- tableCat

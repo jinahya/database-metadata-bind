@@ -38,11 +38,11 @@ public class ClientInfoProperty implements MetadataType {
     @Override
     public String toString() {
         return super.toString() + '{'
-                + "name=" + name
-                + ",maxLen=" + maxLen
-                + ",defaultValue=" + defaultValue
-                + ",description=" + description
-                + '}';
+               + "name=" + name
+               + ",maxLen=" + maxLen
+               + ",defaultValue=" + defaultValue
+               + ",description=" + description
+               + '}';
     }
 
     @Override
@@ -51,17 +51,17 @@ public class ClientInfoProperty implements MetadataType {
         if (obj == null || getClass() != obj.getClass()) return false;
         final ClientInfoProperty that = (ClientInfoProperty) obj;
         return maxLen == that.maxLen
-                && Objects.equals(name, that.name)
-                && Objects.equals(defaultValue, that.defaultValue)
-                && Objects.equals(description, that.description);
+               && Objects.equals(name, that.name)
+               && Objects.equals(defaultValue, that.defaultValue)
+               && Objects.equals(description, that.description);
     }
 
     @Override
     public int hashCode() {
         return Objects.hash(name,
-                maxLen,
-                defaultValue,
-                description);
+                            maxLen,
+                            defaultValue,
+                            description);
     }
 
     // ------------------------------------------------------------------------------------------------------------ name

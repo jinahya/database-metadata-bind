@@ -33,21 +33,21 @@ abstract class TableKey extends TableChild {
     @Override
     public String toString() {
         return super.toString() + '{'
-                + "pktableCat=" + pktableCat
-                + ",pktableSchem=" + pktableSchem
-                + ",pktableName=" + pktableName
-                + ",pkcolumnName=" + pkcolumnName
-                + ",fktableCat=" + fktableCat
-                + ",fktableSchem=" + fktableSchem
-                + ",fktableName=" + fktableName
-                + ",fkcolumnName=" + fkcolumnName
-                + ",keySeq=" + keySeq
-                + ",updateRule=" + updateRule
-                + ",deleteRule=" + deleteRule
-                + ",fkName=" + fkName
-                + ",pkName=" + pkName
-                + ",deferrability=" + deferrability
-                + '}';
+               + "pktableCat=" + pktableCat
+               + ",pktableSchem=" + pktableSchem
+               + ",pktableName=" + pktableName
+               + ",pkcolumnName=" + pkcolumnName
+               + ",fktableCat=" + fktableCat
+               + ",fktableSchem=" + fktableSchem
+               + ",fktableName=" + fktableName
+               + ",fkcolumnName=" + fkcolumnName
+               + ",keySeq=" + keySeq
+               + ",updateRule=" + updateRule
+               + ",deleteRule=" + deleteRule
+               + ",fkName=" + fkName
+               + ",pkName=" + pkName
+               + ",deferrability=" + deferrability
+               + '}';
     }
 
     @Override
@@ -56,37 +56,37 @@ abstract class TableKey extends TableChild {
         if (obj == null || getClass() != obj.getClass()) return false;
         final TableKey that = (TableKey) obj;
         return keySeq == that.keySeq
-                && updateRule == that.updateRule
-                && deleteRule == that.deleteRule
-                && deferrability == that.deferrability
-                && Objects.equals(pktableCat, that.pktableCat)
-                && Objects.equals(pktableSchem, that.pktableSchem)
-                && Objects.equals(pktableName, that.pktableName)
-                && Objects.equals(pkcolumnName, that.pkcolumnName)
-                && Objects.equals(fktableCat, that.fktableCat)
-                && Objects.equals(fktableSchem, that.fktableSchem)
-                && Objects.equals(fktableName, that.fktableName)
-                && Objects.equals(fkcolumnName, that.fkcolumnName)
-                && Objects.equals(fkName, that.fkName)
-                && Objects.equals(pkName, that.pkName);
+               && updateRule == that.updateRule
+               && deleteRule == that.deleteRule
+               && deferrability == that.deferrability
+               && Objects.equals(pktableCat, that.pktableCat)
+               && Objects.equals(pktableSchem, that.pktableSchem)
+               && Objects.equals(pktableName, that.pktableName)
+               && Objects.equals(pkcolumnName, that.pkcolumnName)
+               && Objects.equals(fktableCat, that.fktableCat)
+               && Objects.equals(fktableSchem, that.fktableSchem)
+               && Objects.equals(fktableName, that.fktableName)
+               && Objects.equals(fkcolumnName, that.fkcolumnName)
+               && Objects.equals(fkName, that.fkName)
+               && Objects.equals(pkName, that.pkName);
     }
 
     @Override
     public int hashCode() {
         return Objects.hash(pktableCat,
-                pktableSchem,
-                pktableName,
-                pkcolumnName,
-                fktableCat,
-                fktableSchem,
-                fktableName,
-                fkcolumnName,
-                keySeq,
-                updateRule,
-                deleteRule,
-                fkName,
-                pkName,
-                deferrability);
+                            pktableSchem,
+                            pktableName,
+                            pkcolumnName,
+                            fktableCat,
+                            fktableSchem,
+                            fktableName,
+                            fkcolumnName,
+                            keySeq,
+                            updateRule,
+                            deleteRule,
+                            fkName,
+                            pkName,
+                            deferrability);
     }
 
     // ------------------------------------------------------------------------------------------------------ pktableCat

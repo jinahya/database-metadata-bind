@@ -157,8 +157,8 @@ public class Metadata implements MetadataType {
         for (final Table foreign : tables) {
             for (final Table parent : tables) {
                 context.getCrossReferences(parent.getTableCat(), parent.getTableSchem(), parent.getTableName(),
-                        foreign.getTableCat(), foreign.getTableSchem(), foreign.getTableName(),
-                        foreign.getCrossReference());
+                                           foreign.getTableCat(), foreign.getTableSchem(), foreign.getTableName(),
+                                           foreign.getCrossReference());
             }
         }
         try {
@@ -936,163 +936,162 @@ public class Metadata implements MetadataType {
 
     // -----------------------------------------------------------------------------------------------------------------
 
-
     @Override
     public String toString() {
         return super.toString() + '{'
-                + "allProceduresAreCallable=" + allProceduresAreCallable
-                + ",allTablesAreSelectable=" + allTablesAreSelectable
-                + ",autoCommitFailureClosesAllResultSets=" + autoCommitFailureClosesAllResultSets
-                + ",dataDefinitionCausesTransactionCommit=" + dataDefinitionCausesTransactionCommit
-                + ",dataDefinitionIgnoredInTransactions=" + dataDefinitionIgnoredInTransactions
-                + ",deletesAreDetected=" + deletesAreDetected
-                + ",doesMaxRowSizeIncludeBlobs=" + doesMaxRowSizeIncludeBlobs
-                + ",generatedKeyAlwaysReturned=" + generatedKeyAlwaysReturned
-                + ",catalog=" + catalog
-                + ",catalogSeparator=" + catalogSeparator
-                + ",catalogTerm=" + catalogTerm
-                + ",clientInfoProperty=" + clientInfoProperty
-                + ",databaseMajorVersion=" + databaseMajorVersion
-                + ",databaseMinorVersion=" + databaseMinorVersion
-                + ",databaseProductName=" + databaseProductName
-                + ",databaseProductVersion=" + databaseProductVersion
-                + ",defaultTransactionIsolation=" + defaultTransactionIsolation
-                + ",driverMajorVersion=" + driverMajorVersion
-                + ",driverMinorVersion=" + driverMinorVersion
-                + ",driverName=" + driverName
-                + ",driverVersion=" + driverVersion
-                + ",extraNameCharacters=" + extraNameCharacters
-                + ",identifierQuoteString=" + identifierQuoteString
-                + ",JDBCMajorVersion=" + JDBCMajorVersion
-                + ",JDBCMinorVersion=" + JDBCMinorVersion
-                + ",maxBinaryLiteralLength=" + maxBinaryLiteralLength
-                + ",maxCatalogNameLength=" + maxCatalogNameLength
-                + ",maxCharLiteralLength=" + maxCharLiteralLength
-                + ",maxColumnNameLength=" + maxColumnNameLength
-                + ",maxColumnsInGroupBy=" + maxColumnsInGroupBy
-                + ",maxColumnsInIndex=" + maxColumnsInIndex
-                + ",maxColumnsInOrderBy=" + maxColumnsInOrderBy
-                + ",maxColumnsInSelect=" + maxColumnsInSelect
-                + ",maxColumnsInTable=" + maxColumnsInTable
-                + ",maxConnections=" + maxConnections
-                + ",maxCursorNameLength=" + maxCursorNameLength
-                + ",maxIndexLength=" + maxIndexLength
-                + ",maxLogicalLobSize=" + maxLogicalLobSize
-                + ",maxProcedureNameLength=" + maxProcedureNameLength
-                + ",maxRowSize=" + maxRowSize
-                + ",maxSchemaNameLength=" + maxSchemaNameLength
-                + ",maxStatementLength=" + maxStatementLength
-                + ",maxStatements=" + maxStatements
-                + ",maxTableNameLength=" + maxTableNameLength
-                + ",maxTablesInSelect=" + maxTablesInSelect
-                + ",maxUserNameLength=" + maxUserNameLength
-                + ",numericFunctions=" + numericFunctions
-                + ",procedureTerm=" + procedureTerm
-                + ",resultSetHoldability=" + resultSetHoldability
-                + ",schemaTerm=" + schemaTerm
-                + ",searchStringEscape=" + searchStringEscape
-                + ",SQLKeywords=" + SQLKeywords
-                + ",SQLStateType=" + SQLStateType
-                + ",stringFunctions=" + stringFunctions
-                + ",systemFunctions=" + systemFunctions
-                + ",tableType=" + tableType
-                + ",timeDateFunctions=" + timeDateFunctions
-                + ",typeInfo=" + typeInfo
-                + ",URL=" + URL
-                + ",userName=" + userName
-                + ",insertsAreDetected=" + insertsAreDetected
-                + ",catalogAtStart=" + catalogAtStart
-                + ",readOnly=" + readOnly
-                + ",locatorsUpdateCopy=" + locatorsUpdateCopy
-                + ",nullPlusNonNullIsNull=" + nullPlusNonNullIsNull
-                + ",nullsAreSortedAtEnd=" + nullsAreSortedAtEnd
-                + ",nullsAreSortedAtStart=" + nullsAreSortedAtStart
-                + ",nullsAreSortedHigh=" + nullsAreSortedHigh
-                + ",nullsAreSortedLow=" + nullsAreSortedLow
-                + ",othersDeletesAreVisible=" + othersDeletesAreVisible
-                + ",othersInsertsAreVisible=" + othersInsertsAreVisible
-                + ",othersUpdatesAreVisible=" + othersUpdatesAreVisible
-                + ",ownDeletesAreVisible=" + ownDeletesAreVisible
-                + ",ownInsertsAreVisible=" + ownInsertsAreVisible
-                + ",ownUpdatesAreVisible=" + ownUpdatesAreVisible
-                + ",storesLowerCaseIdentifiers=" + storesLowerCaseIdentifiers
-                + ",storesLowerCaseQuotedIdentifiers=" + storesLowerCaseQuotedIdentifiers
-                + ",storesMixedCaseIdentifiers=" + storesMixedCaseIdentifiers
-                + ",storesMixedCaseQuotedIdentifiers=" + storesMixedCaseQuotedIdentifiers
-                + ",supportsAlterTableWithAddColumn=" + supportsAlterTableWithAddColumn
-                + ",supportsAlterTableWithDropColumn=" + supportsAlterTableWithDropColumn
-                + ",supportsANSI92EntryLevelSQL=" + supportsANSI92EntryLevelSQL
-                + ",supportsANSI92FullSQL=" + supportsANSI92FullSQL
-                + ",supportsANSI92IntermediateSQL=" + supportsANSI92IntermediateSQL
-                + ",supportsBatchUpdates=" + supportsBatchUpdates
-                + ",supportsCatalogsInDataManipulation=" + supportsCatalogsInDataManipulation
-                + ",supportsCatalogsInIndexDefinitions=" + supportsCatalogsInIndexDefinitions
-                + ",supportsCatalogsInPrivilegeDefinitions=" + supportsCatalogsInPrivilegeDefinitions
-                + ",supportsCatalogsInProcedureCalls=" + supportsCatalogsInProcedureCalls
-                + ",supportsCatalogsInTableDefinitions=" + supportsCatalogsInTableDefinitions
-                + ",supportsColumnAliasing=" + supportsColumnAliasing
-                + ",supportsConvert=" + supportsConvert
-                + ",supportsConvert_=" + supportsConvert_
-                + ",supportsCoreSQLGrammar=" + supportsCoreSQLGrammar
-                + ",supportsCorrelatedSubqueries=" + supportsCorrelatedSubqueries
-                + ",supportsDataDefinitionAndDataManipulationTransactions="
-                + supportsDataDefinitionAndDataManipulationTransactions
-                + ",supportsDataManipulationTransactionsOnly=" + supportsDataManipulationTransactionsOnly
-                + ",supportsDifferentTableCorrelationNames=" + supportsDifferentTableCorrelationNames
-                + ",supportsExpressionsInOrderBy=" + supportsExpressionsInOrderBy
-                + ",supportsExtendedSQLGrammar=" + supportsExtendedSQLGrammar
-                + ",supportsFullOuterJoins=" + supportsFullOuterJoins
-                + ",supportsGetGeneratedKeys=" + supportsGetGeneratedKeys
-                + ",supportsGroupBy=" + supportsGroupBy
-                + ",supportsGroupByBeyondSelect=" + supportsGroupByBeyondSelect
-                + ",supportsGroupByUnrelated=" + supportsGroupByUnrelated
-                + ",supportsIntegrityEnhancementFacility=" + supportsIntegrityEnhancementFacility
-                + ",supportsLikeEscapeClause=" + supportsLikeEscapeClause
-                + ",supportsLimitedOuterJoins=" + supportsLimitedOuterJoins
-                + ",supportsMinimumSQLGrammar=" + supportsMinimumSQLGrammar
-                + ",supportsMixedCaseIdentifiers=" + supportsMixedCaseIdentifiers
-                + ",supportsMixedCaseQuotedIdentifiers=" + supportsMixedCaseQuotedIdentifiers
-                + ",supportsMultipleOpenResults=" + supportsMultipleOpenResults
-                + ",supportsMultipleResultSets=" + supportsMultipleResultSets
-                + ",supportsMultipleTransactions=" + supportsMultipleTransactions
-                + ",supportsNamedParameters=" + supportsNamedParameters
-                + ",supportsNonNullableColumns=" + supportsNonNullableColumns
-                + ",supportsOpenCursorsAcrossCommit=" + supportsOpenCursorsAcrossCommit
-                + ",supportsOpenCursorsAcrossRollBack=" + supportsOpenCursorsAcrossRollback
-                + ",supportsOpenStatementsAcrossCommit=" + supportsOpenStatementsAcrossCommit
-                + ",supportsOpenStatementsAcrossRollBack=" + supportsOpenStatementsAcrossRollback
-                + ",supportsOrderByUnrelated=" + supportsOrderByUnrelated
-                + ",supportsOuterJoins=" + supportsOuterJoins
-                + ",supportsPositionedDelete=" + supportsPositionedDelete
-                + ",supportsPositionedUpdate=" + supportsPositionedUpdate
-                + ",supportsRefCursors=" + supportsRefCursors
-                + ",supportsResultSetConcurrency=" + supportsResultSetConcurrency
-                + ",supportsResultSetHoldability=" + supportsResultSetHoldability
-                + ",supportsResultSetType=" + supportsResultSetType
-                + ",supportsSavepoints=" + supportsSavepoints
-                + ",supportsSchemasInDataManipulation=" + supportsSchemasInDataManipulation
-                + ",supportsSchemasInIndexDefinitions=" + supportsSchemasInIndexDefinitions
-                + ",supportsSchemasInPrivilegeDefinitions=" + supportsSchemasInPrivilegeDefinitions
-                + ",supportsSchemasInProcedureCalls=" + supportsSchemasInProcedureCalls
-                + ",supportsSchemasInTableDefinitions=" + supportsSchemasInTableDefinitions
-                + ",supportsSelectForUpdate=" + supportsSelectForUpdate
-                + ",supportsSharding=" + supportsSharding
-                + ",supportsStatementPooling=" + supportsStatementPooling
-                + ",supportsStoredFunctionsUsingCallSyntax=" + supportsStoredFunctionsUsingCallSyntax
-                + ",supportsStoredProcedures=" + supportsStoredProcedures
-                + ",supportsSubqueriesInComparisons=" + supportsSubqueriesInComparisons
-                + ",supportsSubqueriesInExists=" + supportsSubqueriesInExists
-                + ",supportsSubqueriesInIns=" + supportsSubqueriesInIns
-                + ",supportsSubqueriesInQuantifieds=" + supportsSubqueriesInQuantifieds
-                + ",supportsTableCorrelationNames=" + supportsTableCorrelationNames
-                + ",supportsTransactionIsolationLevel=" + supportsTransactionIsolationLevel
-                + ",supportsTransactions=" + supportsTransactions
-                + ",supportsUnion=" + supportsUnion
-                + ",supportsUnionAll=" + supportsUnionAll
-                + ",updatesAreDetected=" + updatesAreDetected
-                + ",usesLocalFilePerTable=" + usesLocalFilePerTable
-                + ",usesLocalFiles=" + usesLocalFiles
-                + '}';
+               + "allProceduresAreCallable=" + allProceduresAreCallable
+               + ",allTablesAreSelectable=" + allTablesAreSelectable
+               + ",autoCommitFailureClosesAllResultSets=" + autoCommitFailureClosesAllResultSets
+               + ",dataDefinitionCausesTransactionCommit=" + dataDefinitionCausesTransactionCommit
+               + ",dataDefinitionIgnoredInTransactions=" + dataDefinitionIgnoredInTransactions
+               + ",deletesAreDetected=" + deletesAreDetected
+               + ",doesMaxRowSizeIncludeBlobs=" + doesMaxRowSizeIncludeBlobs
+               + ",generatedKeyAlwaysReturned=" + generatedKeyAlwaysReturned
+               + ",catalog=" + catalog
+               + ",catalogSeparator=" + catalogSeparator
+               + ",catalogTerm=" + catalogTerm
+               + ",clientInfoProperty=" + clientInfoProperty
+               + ",databaseMajorVersion=" + databaseMajorVersion
+               + ",databaseMinorVersion=" + databaseMinorVersion
+               + ",databaseProductName=" + databaseProductName
+               + ",databaseProductVersion=" + databaseProductVersion
+               + ",defaultTransactionIsolation=" + defaultTransactionIsolation
+               + ",driverMajorVersion=" + driverMajorVersion
+               + ",driverMinorVersion=" + driverMinorVersion
+               + ",driverName=" + driverName
+               + ",driverVersion=" + driverVersion
+               + ",extraNameCharacters=" + extraNameCharacters
+               + ",identifierQuoteString=" + identifierQuoteString
+               + ",JDBCMajorVersion=" + JDBCMajorVersion
+               + ",JDBCMinorVersion=" + JDBCMinorVersion
+               + ",maxBinaryLiteralLength=" + maxBinaryLiteralLength
+               + ",maxCatalogNameLength=" + maxCatalogNameLength
+               + ",maxCharLiteralLength=" + maxCharLiteralLength
+               + ",maxColumnNameLength=" + maxColumnNameLength
+               + ",maxColumnsInGroupBy=" + maxColumnsInGroupBy
+               + ",maxColumnsInIndex=" + maxColumnsInIndex
+               + ",maxColumnsInOrderBy=" + maxColumnsInOrderBy
+               + ",maxColumnsInSelect=" + maxColumnsInSelect
+               + ",maxColumnsInTable=" + maxColumnsInTable
+               + ",maxConnections=" + maxConnections
+               + ",maxCursorNameLength=" + maxCursorNameLength
+               + ",maxIndexLength=" + maxIndexLength
+               + ",maxLogicalLobSize=" + maxLogicalLobSize
+               + ",maxProcedureNameLength=" + maxProcedureNameLength
+               + ",maxRowSize=" + maxRowSize
+               + ",maxSchemaNameLength=" + maxSchemaNameLength
+               + ",maxStatementLength=" + maxStatementLength
+               + ",maxStatements=" + maxStatements
+               + ",maxTableNameLength=" + maxTableNameLength
+               + ",maxTablesInSelect=" + maxTablesInSelect
+               + ",maxUserNameLength=" + maxUserNameLength
+               + ",numericFunctions=" + numericFunctions
+               + ",procedureTerm=" + procedureTerm
+               + ",resultSetHoldability=" + resultSetHoldability
+               + ",schemaTerm=" + schemaTerm
+               + ",searchStringEscape=" + searchStringEscape
+               + ",SQLKeywords=" + SQLKeywords
+               + ",SQLStateType=" + SQLStateType
+               + ",stringFunctions=" + stringFunctions
+               + ",systemFunctions=" + systemFunctions
+               + ",tableType=" + tableType
+               + ",timeDateFunctions=" + timeDateFunctions
+               + ",typeInfo=" + typeInfo
+               + ",URL=" + URL
+               + ",userName=" + userName
+               + ",insertsAreDetected=" + insertsAreDetected
+               + ",catalogAtStart=" + catalogAtStart
+               + ",readOnly=" + readOnly
+               + ",locatorsUpdateCopy=" + locatorsUpdateCopy
+               + ",nullPlusNonNullIsNull=" + nullPlusNonNullIsNull
+               + ",nullsAreSortedAtEnd=" + nullsAreSortedAtEnd
+               + ",nullsAreSortedAtStart=" + nullsAreSortedAtStart
+               + ",nullsAreSortedHigh=" + nullsAreSortedHigh
+               + ",nullsAreSortedLow=" + nullsAreSortedLow
+               + ",othersDeletesAreVisible=" + othersDeletesAreVisible
+               + ",othersInsertsAreVisible=" + othersInsertsAreVisible
+               + ",othersUpdatesAreVisible=" + othersUpdatesAreVisible
+               + ",ownDeletesAreVisible=" + ownDeletesAreVisible
+               + ",ownInsertsAreVisible=" + ownInsertsAreVisible
+               + ",ownUpdatesAreVisible=" + ownUpdatesAreVisible
+               + ",storesLowerCaseIdentifiers=" + storesLowerCaseIdentifiers
+               + ",storesLowerCaseQuotedIdentifiers=" + storesLowerCaseQuotedIdentifiers
+               + ",storesMixedCaseIdentifiers=" + storesMixedCaseIdentifiers
+               + ",storesMixedCaseQuotedIdentifiers=" + storesMixedCaseQuotedIdentifiers
+               + ",supportsAlterTableWithAddColumn=" + supportsAlterTableWithAddColumn
+               + ",supportsAlterTableWithDropColumn=" + supportsAlterTableWithDropColumn
+               + ",supportsANSI92EntryLevelSQL=" + supportsANSI92EntryLevelSQL
+               + ",supportsANSI92FullSQL=" + supportsANSI92FullSQL
+               + ",supportsANSI92IntermediateSQL=" + supportsANSI92IntermediateSQL
+               + ",supportsBatchUpdates=" + supportsBatchUpdates
+               + ",supportsCatalogsInDataManipulation=" + supportsCatalogsInDataManipulation
+               + ",supportsCatalogsInIndexDefinitions=" + supportsCatalogsInIndexDefinitions
+               + ",supportsCatalogsInPrivilegeDefinitions=" + supportsCatalogsInPrivilegeDefinitions
+               + ",supportsCatalogsInProcedureCalls=" + supportsCatalogsInProcedureCalls
+               + ",supportsCatalogsInTableDefinitions=" + supportsCatalogsInTableDefinitions
+               + ",supportsColumnAliasing=" + supportsColumnAliasing
+               + ",supportsConvert=" + supportsConvert
+               + ",supportsConvert_=" + supportsConvert_
+               + ",supportsCoreSQLGrammar=" + supportsCoreSQLGrammar
+               + ",supportsCorrelatedSubqueries=" + supportsCorrelatedSubqueries
+               + ",supportsDataDefinitionAndDataManipulationTransactions="
+               + supportsDataDefinitionAndDataManipulationTransactions
+               + ",supportsDataManipulationTransactionsOnly=" + supportsDataManipulationTransactionsOnly
+               + ",supportsDifferentTableCorrelationNames=" + supportsDifferentTableCorrelationNames
+               + ",supportsExpressionsInOrderBy=" + supportsExpressionsInOrderBy
+               + ",supportsExtendedSQLGrammar=" + supportsExtendedSQLGrammar
+               + ",supportsFullOuterJoins=" + supportsFullOuterJoins
+               + ",supportsGetGeneratedKeys=" + supportsGetGeneratedKeys
+               + ",supportsGroupBy=" + supportsGroupBy
+               + ",supportsGroupByBeyondSelect=" + supportsGroupByBeyondSelect
+               + ",supportsGroupByUnrelated=" + supportsGroupByUnrelated
+               + ",supportsIntegrityEnhancementFacility=" + supportsIntegrityEnhancementFacility
+               + ",supportsLikeEscapeClause=" + supportsLikeEscapeClause
+               + ",supportsLimitedOuterJoins=" + supportsLimitedOuterJoins
+               + ",supportsMinimumSQLGrammar=" + supportsMinimumSQLGrammar
+               + ",supportsMixedCaseIdentifiers=" + supportsMixedCaseIdentifiers
+               + ",supportsMixedCaseQuotedIdentifiers=" + supportsMixedCaseQuotedIdentifiers
+               + ",supportsMultipleOpenResults=" + supportsMultipleOpenResults
+               + ",supportsMultipleResultSets=" + supportsMultipleResultSets
+               + ",supportsMultipleTransactions=" + supportsMultipleTransactions
+               + ",supportsNamedParameters=" + supportsNamedParameters
+               + ",supportsNonNullableColumns=" + supportsNonNullableColumns
+               + ",supportsOpenCursorsAcrossCommit=" + supportsOpenCursorsAcrossCommit
+               + ",supportsOpenCursorsAcrossRollBack=" + supportsOpenCursorsAcrossRollback
+               + ",supportsOpenStatementsAcrossCommit=" + supportsOpenStatementsAcrossCommit
+               + ",supportsOpenStatementsAcrossRollBack=" + supportsOpenStatementsAcrossRollback
+               + ",supportsOrderByUnrelated=" + supportsOrderByUnrelated
+               + ",supportsOuterJoins=" + supportsOuterJoins
+               + ",supportsPositionedDelete=" + supportsPositionedDelete
+               + ",supportsPositionedUpdate=" + supportsPositionedUpdate
+               + ",supportsRefCursors=" + supportsRefCursors
+               + ",supportsResultSetConcurrency=" + supportsResultSetConcurrency
+               + ",supportsResultSetHoldability=" + supportsResultSetHoldability
+               + ",supportsResultSetType=" + supportsResultSetType
+               + ",supportsSavepoints=" + supportsSavepoints
+               + ",supportsSchemasInDataManipulation=" + supportsSchemasInDataManipulation
+               + ",supportsSchemasInIndexDefinitions=" + supportsSchemasInIndexDefinitions
+               + ",supportsSchemasInPrivilegeDefinitions=" + supportsSchemasInPrivilegeDefinitions
+               + ",supportsSchemasInProcedureCalls=" + supportsSchemasInProcedureCalls
+               + ",supportsSchemasInTableDefinitions=" + supportsSchemasInTableDefinitions
+               + ",supportsSelectForUpdate=" + supportsSelectForUpdate
+               + ",supportsSharding=" + supportsSharding
+               + ",supportsStatementPooling=" + supportsStatementPooling
+               + ",supportsStoredFunctionsUsingCallSyntax=" + supportsStoredFunctionsUsingCallSyntax
+               + ",supportsStoredProcedures=" + supportsStoredProcedures
+               + ",supportsSubqueriesInComparisons=" + supportsSubqueriesInComparisons
+               + ",supportsSubqueriesInExists=" + supportsSubqueriesInExists
+               + ",supportsSubqueriesInIns=" + supportsSubqueriesInIns
+               + ",supportsSubqueriesInQuantifieds=" + supportsSubqueriesInQuantifieds
+               + ",supportsTableCorrelationNames=" + supportsTableCorrelationNames
+               + ",supportsTransactionIsolationLevel=" + supportsTransactionIsolationLevel
+               + ",supportsTransactions=" + supportsTransactions
+               + ",supportsUnion=" + supportsUnion
+               + ",supportsUnionAll=" + supportsUnionAll
+               + ",updatesAreDetected=" + updatesAreDetected
+               + ",usesLocalFilePerTable=" + usesLocalFilePerTable
+               + ",usesLocalFiles=" + usesLocalFiles
+               + '}';
     }
 
     @Override
@@ -1101,313 +1100,313 @@ public class Metadata implements MetadataType {
         if (obj == null || getClass() != obj.getClass()) return false;
         final Metadata that = (Metadata) obj;
         return Objects.equals(allProceduresAreCallable, that.allProceduresAreCallable)
-                && Objects.equals(allTablesAreSelectable, that.allTablesAreSelectable)
-                && Objects.equals(autoCommitFailureClosesAllResultSets, that.autoCommitFailureClosesAllResultSets)
-                && Objects.equals(dataDefinitionCausesTransactionCommit, that.dataDefinitionCausesTransactionCommit)
-                && Objects.equals(dataDefinitionIgnoredInTransactions, that.dataDefinitionIgnoredInTransactions)
-                && Objects.equals(deletesAreDetected, that.deletesAreDetected)
-                && Objects.equals(doesMaxRowSizeIncludeBlobs, that.doesMaxRowSizeIncludeBlobs)
-                && Objects.equals(generatedKeyAlwaysReturned, that.generatedKeyAlwaysReturned)
-                && Objects.equals(catalog, that.catalog)
-                && Objects.equals(catalogSeparator, that.catalogSeparator)
-                && Objects.equals(catalogTerm, that.catalogTerm)
-                && Objects.equals(clientInfoProperty, that.clientInfoProperty)
-                && Objects.equals(databaseMajorVersion, that.databaseMajorVersion)
-                && Objects.equals(databaseMinorVersion, that.databaseMinorVersion)
-                && Objects.equals(databaseProductName, that.databaseProductName)
-                && Objects.equals(databaseProductVersion, that.databaseProductVersion)
-                && Objects.equals(defaultTransactionIsolation, that.defaultTransactionIsolation)
-                && Objects.equals(driverMajorVersion, that.driverMajorVersion)
-                && Objects.equals(driverMinorVersion, that.driverMinorVersion)
-                && Objects.equals(driverName, that.driverName)
-                && Objects.equals(driverVersion, that.driverVersion)
-                && Objects.equals(extraNameCharacters, that.extraNameCharacters)
-                && Objects.equals(identifierQuoteString, that.identifierQuoteString)
-                && Objects.equals(JDBCMajorVersion, that.JDBCMajorVersion)
-                && Objects.equals(JDBCMinorVersion, that.JDBCMinorVersion)
-                && Objects.equals(maxBinaryLiteralLength, that.maxBinaryLiteralLength)
-                && Objects.equals(maxCatalogNameLength, that.maxCatalogNameLength)
-                && Objects.equals(maxCharLiteralLength, that.maxCharLiteralLength)
-                && Objects.equals(maxColumnNameLength, that.maxColumnNameLength)
-                && Objects.equals(maxColumnsInGroupBy, that.maxColumnsInGroupBy)
-                && Objects.equals(maxColumnsInIndex, that.maxColumnsInIndex)
-                && Objects.equals(maxColumnsInOrderBy, that.maxColumnsInOrderBy)
-                && Objects.equals(maxColumnsInSelect, that.maxColumnsInSelect)
-                && Objects.equals(maxColumnsInTable, that.maxColumnsInTable)
-                && Objects.equals(maxConnections, that.maxConnections)
-                && Objects.equals(maxCursorNameLength, that.maxCursorNameLength)
-                && Objects.equals(maxIndexLength, that.maxIndexLength)
-                && Objects.equals(maxLogicalLobSize, that.maxLogicalLobSize)
-                && Objects.equals(maxProcedureNameLength, that.maxProcedureNameLength)
-                && Objects.equals(maxRowSize, that.maxRowSize)
-                && Objects.equals(maxSchemaNameLength, that.maxSchemaNameLength)
-                && Objects.equals(maxStatementLength, that.maxStatementLength)
-                && Objects.equals(maxStatements, that.maxStatements)
-                && Objects.equals(maxTableNameLength, that.maxTableNameLength)
-                && Objects.equals(maxTablesInSelect, that.maxTablesInSelect)
-                && Objects.equals(maxUserNameLength, that.maxUserNameLength)
-                && Objects.equals(numericFunctions, that.numericFunctions)
-                && Objects.equals(procedureTerm, that.procedureTerm)
-                && Objects.equals(resultSetHoldability, that.resultSetHoldability)
-                && Objects.equals(schemaTerm, that.schemaTerm)
-                && Objects.equals(searchStringEscape, that.searchStringEscape)
-                && Objects.equals(SQLKeywords, that.SQLKeywords)
-                && Objects.equals(SQLStateType, that.SQLStateType)
-                && Objects.equals(stringFunctions, that.stringFunctions)
-                && Objects.equals(systemFunctions, that.systemFunctions)
-                && Objects.equals(tableType, that.tableType)
-                && Objects.equals(timeDateFunctions, that.timeDateFunctions)
-                && Objects.equals(typeInfo, that.typeInfo)
-                && Objects.equals(URL, that.URL)
-                && Objects.equals(userName, that.userName)
-                && Objects.equals(insertsAreDetected, that.insertsAreDetected)
-                && Objects.equals(catalogAtStart, that.catalogAtStart)
-                && Objects.equals(readOnly, that.readOnly)
-                && Objects.equals(locatorsUpdateCopy, that.locatorsUpdateCopy)
-                && Objects.equals(nullPlusNonNullIsNull, that.nullPlusNonNullIsNull)
-                && Objects.equals(nullsAreSortedAtEnd, that.nullsAreSortedAtEnd)
-                && Objects.equals(nullsAreSortedAtStart, that.nullsAreSortedAtStart)
-                && Objects.equals(nullsAreSortedHigh, that.nullsAreSortedHigh)
-                && Objects.equals(nullsAreSortedLow, that.nullsAreSortedLow)
-                && Objects.equals(othersDeletesAreVisible, that.othersDeletesAreVisible)
-                && Objects.equals(othersInsertsAreVisible, that.othersInsertsAreVisible)
-                && Objects.equals(othersUpdatesAreVisible, that.othersUpdatesAreVisible)
-                && Objects.equals(ownDeletesAreVisible, that.ownDeletesAreVisible)
-                && Objects.equals(ownInsertsAreVisible, that.ownInsertsAreVisible)
-                && Objects.equals(ownUpdatesAreVisible, that.ownUpdatesAreVisible)
-                && Objects.equals(storesLowerCaseIdentifiers, that.storesLowerCaseIdentifiers)
-                && Objects.equals(storesLowerCaseQuotedIdentifiers, that.storesLowerCaseQuotedIdentifiers)
-                && Objects.equals(storesMixedCaseIdentifiers, that.storesMixedCaseIdentifiers)
-                && Objects.equals(storesMixedCaseQuotedIdentifiers, that.storesMixedCaseQuotedIdentifiers)
-                && Objects.equals(supportsAlterTableWithAddColumn, that.supportsAlterTableWithAddColumn)
-                && Objects.equals(supportsAlterTableWithDropColumn, that.supportsAlterTableWithDropColumn)
-                && Objects.equals(supportsANSI92EntryLevelSQL, that.supportsANSI92EntryLevelSQL)
-                && Objects.equals(supportsANSI92FullSQL, that.supportsANSI92FullSQL)
-                && Objects.equals(supportsANSI92IntermediateSQL, that.supportsANSI92IntermediateSQL)
-                && Objects.equals(supportsBatchUpdates, that.supportsBatchUpdates)
-                && Objects.equals(supportsCatalogsInDataManipulation, that.supportsCatalogsInDataManipulation)
-                && Objects.equals(supportsCatalogsInIndexDefinitions, that.supportsCatalogsInIndexDefinitions)
-                && Objects.equals(supportsCatalogsInPrivilegeDefinitions, that.supportsCatalogsInPrivilegeDefinitions)
-                && Objects.equals(supportsCatalogsInProcedureCalls, that.supportsCatalogsInProcedureCalls)
-                && Objects.equals(supportsCatalogsInTableDefinitions, that.supportsCatalogsInTableDefinitions)
-                && Objects.equals(supportsColumnAliasing, that.supportsColumnAliasing)
-                && Objects.equals(supportsConvert, that.supportsConvert)
-                && Objects.equals(supportsConvert_, that.supportsConvert_)
-                && Objects.equals(supportsCoreSQLGrammar, that.supportsCoreSQLGrammar)
-                && Objects.equals(supportsCorrelatedSubqueries, that.supportsCorrelatedSubqueries)
-                && Objects.equals(supportsDataDefinitionAndDataManipulationTransactions,
-                that.supportsDataDefinitionAndDataManipulationTransactions)
-                && Objects.equals(supportsDataManipulationTransactionsOnly,
-                that.supportsDataManipulationTransactionsOnly)
-                && Objects.equals(supportsDifferentTableCorrelationNames, that.supportsDifferentTableCorrelationNames)
-                && Objects.equals(supportsExpressionsInOrderBy, that.supportsExpressionsInOrderBy)
-                && Objects.equals(supportsExtendedSQLGrammar, that.supportsExtendedSQLGrammar)
-                && Objects.equals(supportsFullOuterJoins, that.supportsFullOuterJoins)
-                && Objects.equals(supportsGetGeneratedKeys, that.supportsGetGeneratedKeys)
-                && Objects.equals(supportsGroupBy, that.supportsGroupBy)
-                && Objects.equals(supportsGroupByBeyondSelect, that.supportsGroupByBeyondSelect)
-                && Objects.equals(supportsGroupByUnrelated, that.supportsGroupByUnrelated)
-                && Objects.equals(supportsIntegrityEnhancementFacility, that.supportsIntegrityEnhancementFacility)
-                && Objects.equals(supportsLikeEscapeClause, that.supportsLikeEscapeClause)
-                && Objects.equals(supportsLimitedOuterJoins, that.supportsLimitedOuterJoins)
-                && Objects.equals(supportsMinimumSQLGrammar, that.supportsMinimumSQLGrammar)
-                && Objects.equals(supportsMixedCaseIdentifiers, that.supportsMixedCaseIdentifiers)
-                && Objects.equals(supportsMixedCaseQuotedIdentifiers, that.supportsMixedCaseQuotedIdentifiers)
-                && Objects.equals(supportsMultipleOpenResults, that.supportsMultipleOpenResults)
-                && Objects.equals(supportsMultipleResultSets, that.supportsMultipleResultSets)
-                && Objects.equals(supportsMultipleTransactions, that.supportsMultipleTransactions)
-                && Objects.equals(supportsNamedParameters, that.supportsNamedParameters)
-                && Objects.equals(supportsNonNullableColumns, that.supportsNonNullableColumns)
-                && Objects.equals(supportsOpenCursorsAcrossCommit, that.supportsOpenCursorsAcrossCommit)
-                && Objects.equals(supportsOpenCursorsAcrossRollback, that.supportsOpenCursorsAcrossRollback)
-                && Objects.equals(supportsOpenStatementsAcrossCommit, that.supportsOpenStatementsAcrossCommit)
-                && Objects.equals(supportsOpenStatementsAcrossRollback, that.supportsOpenStatementsAcrossRollback)
-                && Objects.equals(supportsOrderByUnrelated, that.supportsOrderByUnrelated)
-                && Objects.equals(supportsOuterJoins, that.supportsOuterJoins)
-                && Objects.equals(supportsPositionedDelete, that.supportsPositionedDelete)
-                && Objects.equals(supportsPositionedUpdate, that.supportsPositionedUpdate)
-                && Objects.equals(supportsRefCursors, that.supportsRefCursors)
-                && Objects.equals(supportsResultSetConcurrency, that.supportsResultSetConcurrency)
-                && Objects.equals(supportsResultSetHoldability, that.supportsResultSetHoldability)
-                && Objects.equals(supportsResultSetType, that.supportsResultSetType)
-                && Objects.equals(supportsSavepoints, that.supportsSavepoints)
-                && Objects.equals(supportsSchemasInDataManipulation, that.supportsSchemasInDataManipulation)
-                && Objects.equals(supportsSchemasInIndexDefinitions, that.supportsSchemasInIndexDefinitions)
-                && Objects.equals(supportsSchemasInPrivilegeDefinitions, that.supportsSchemasInPrivilegeDefinitions)
-                && Objects.equals(supportsSchemasInProcedureCalls, that.supportsSchemasInProcedureCalls)
-                && Objects.equals(supportsSchemasInTableDefinitions, that.supportsSchemasInTableDefinitions)
-                && Objects.equals(supportsSelectForUpdate, that.supportsSelectForUpdate)
-                && Objects.equals(supportsSharding, that.supportsSharding)
-                && Objects.equals(supportsStatementPooling, that.supportsStatementPooling)
-                && Objects.equals(supportsStoredFunctionsUsingCallSyntax, that.supportsStoredFunctionsUsingCallSyntax)
-                && Objects.equals(supportsStoredProcedures, that.supportsStoredProcedures)
-                && Objects.equals(supportsSubqueriesInComparisons, that.supportsSubqueriesInComparisons)
-                && Objects.equals(supportsSubqueriesInExists, that.supportsSubqueriesInExists)
-                && Objects.equals(supportsSubqueriesInIns, that.supportsSubqueriesInIns)
-                && Objects.equals(supportsSubqueriesInQuantifieds, that.supportsSubqueriesInQuantifieds)
-                && Objects.equals(supportsTableCorrelationNames, that.supportsTableCorrelationNames)
-                && Objects.equals(supportsTransactionIsolationLevel, that.supportsTransactionIsolationLevel)
-                && Objects.equals(supportsTransactions, that.supportsTransactions)
-                && Objects.equals(supportsUnion, that.supportsUnion)
-                && Objects.equals(supportsUnionAll, that.supportsUnionAll)
-                && Objects.equals(updatesAreDetected, that.updatesAreDetected)
-                && Objects.equals(usesLocalFilePerTable, that.usesLocalFilePerTable)
-                && Objects.equals(usesLocalFiles, that.usesLocalFiles);
+               && Objects.equals(allTablesAreSelectable, that.allTablesAreSelectable)
+               && Objects.equals(autoCommitFailureClosesAllResultSets, that.autoCommitFailureClosesAllResultSets)
+               && Objects.equals(dataDefinitionCausesTransactionCommit, that.dataDefinitionCausesTransactionCommit)
+               && Objects.equals(dataDefinitionIgnoredInTransactions, that.dataDefinitionIgnoredInTransactions)
+               && Objects.equals(deletesAreDetected, that.deletesAreDetected)
+               && Objects.equals(doesMaxRowSizeIncludeBlobs, that.doesMaxRowSizeIncludeBlobs)
+               && Objects.equals(generatedKeyAlwaysReturned, that.generatedKeyAlwaysReturned)
+               && Objects.equals(catalog, that.catalog)
+               && Objects.equals(catalogSeparator, that.catalogSeparator)
+               && Objects.equals(catalogTerm, that.catalogTerm)
+               && Objects.equals(clientInfoProperty, that.clientInfoProperty)
+               && Objects.equals(databaseMajorVersion, that.databaseMajorVersion)
+               && Objects.equals(databaseMinorVersion, that.databaseMinorVersion)
+               && Objects.equals(databaseProductName, that.databaseProductName)
+               && Objects.equals(databaseProductVersion, that.databaseProductVersion)
+               && Objects.equals(defaultTransactionIsolation, that.defaultTransactionIsolation)
+               && Objects.equals(driverMajorVersion, that.driverMajorVersion)
+               && Objects.equals(driverMinorVersion, that.driverMinorVersion)
+               && Objects.equals(driverName, that.driverName)
+               && Objects.equals(driverVersion, that.driverVersion)
+               && Objects.equals(extraNameCharacters, that.extraNameCharacters)
+               && Objects.equals(identifierQuoteString, that.identifierQuoteString)
+               && Objects.equals(JDBCMajorVersion, that.JDBCMajorVersion)
+               && Objects.equals(JDBCMinorVersion, that.JDBCMinorVersion)
+               && Objects.equals(maxBinaryLiteralLength, that.maxBinaryLiteralLength)
+               && Objects.equals(maxCatalogNameLength, that.maxCatalogNameLength)
+               && Objects.equals(maxCharLiteralLength, that.maxCharLiteralLength)
+               && Objects.equals(maxColumnNameLength, that.maxColumnNameLength)
+               && Objects.equals(maxColumnsInGroupBy, that.maxColumnsInGroupBy)
+               && Objects.equals(maxColumnsInIndex, that.maxColumnsInIndex)
+               && Objects.equals(maxColumnsInOrderBy, that.maxColumnsInOrderBy)
+               && Objects.equals(maxColumnsInSelect, that.maxColumnsInSelect)
+               && Objects.equals(maxColumnsInTable, that.maxColumnsInTable)
+               && Objects.equals(maxConnections, that.maxConnections)
+               && Objects.equals(maxCursorNameLength, that.maxCursorNameLength)
+               && Objects.equals(maxIndexLength, that.maxIndexLength)
+               && Objects.equals(maxLogicalLobSize, that.maxLogicalLobSize)
+               && Objects.equals(maxProcedureNameLength, that.maxProcedureNameLength)
+               && Objects.equals(maxRowSize, that.maxRowSize)
+               && Objects.equals(maxSchemaNameLength, that.maxSchemaNameLength)
+               && Objects.equals(maxStatementLength, that.maxStatementLength)
+               && Objects.equals(maxStatements, that.maxStatements)
+               && Objects.equals(maxTableNameLength, that.maxTableNameLength)
+               && Objects.equals(maxTablesInSelect, that.maxTablesInSelect)
+               && Objects.equals(maxUserNameLength, that.maxUserNameLength)
+               && Objects.equals(numericFunctions, that.numericFunctions)
+               && Objects.equals(procedureTerm, that.procedureTerm)
+               && Objects.equals(resultSetHoldability, that.resultSetHoldability)
+               && Objects.equals(schemaTerm, that.schemaTerm)
+               && Objects.equals(searchStringEscape, that.searchStringEscape)
+               && Objects.equals(SQLKeywords, that.SQLKeywords)
+               && Objects.equals(SQLStateType, that.SQLStateType)
+               && Objects.equals(stringFunctions, that.stringFunctions)
+               && Objects.equals(systemFunctions, that.systemFunctions)
+               && Objects.equals(tableType, that.tableType)
+               && Objects.equals(timeDateFunctions, that.timeDateFunctions)
+               && Objects.equals(typeInfo, that.typeInfo)
+               && Objects.equals(URL, that.URL)
+               && Objects.equals(userName, that.userName)
+               && Objects.equals(insertsAreDetected, that.insertsAreDetected)
+               && Objects.equals(catalogAtStart, that.catalogAtStart)
+               && Objects.equals(readOnly, that.readOnly)
+               && Objects.equals(locatorsUpdateCopy, that.locatorsUpdateCopy)
+               && Objects.equals(nullPlusNonNullIsNull, that.nullPlusNonNullIsNull)
+               && Objects.equals(nullsAreSortedAtEnd, that.nullsAreSortedAtEnd)
+               && Objects.equals(nullsAreSortedAtStart, that.nullsAreSortedAtStart)
+               && Objects.equals(nullsAreSortedHigh, that.nullsAreSortedHigh)
+               && Objects.equals(nullsAreSortedLow, that.nullsAreSortedLow)
+               && Objects.equals(othersDeletesAreVisible, that.othersDeletesAreVisible)
+               && Objects.equals(othersInsertsAreVisible, that.othersInsertsAreVisible)
+               && Objects.equals(othersUpdatesAreVisible, that.othersUpdatesAreVisible)
+               && Objects.equals(ownDeletesAreVisible, that.ownDeletesAreVisible)
+               && Objects.equals(ownInsertsAreVisible, that.ownInsertsAreVisible)
+               && Objects.equals(ownUpdatesAreVisible, that.ownUpdatesAreVisible)
+               && Objects.equals(storesLowerCaseIdentifiers, that.storesLowerCaseIdentifiers)
+               && Objects.equals(storesLowerCaseQuotedIdentifiers, that.storesLowerCaseQuotedIdentifiers)
+               && Objects.equals(storesMixedCaseIdentifiers, that.storesMixedCaseIdentifiers)
+               && Objects.equals(storesMixedCaseQuotedIdentifiers, that.storesMixedCaseQuotedIdentifiers)
+               && Objects.equals(supportsAlterTableWithAddColumn, that.supportsAlterTableWithAddColumn)
+               && Objects.equals(supportsAlterTableWithDropColumn, that.supportsAlterTableWithDropColumn)
+               && Objects.equals(supportsANSI92EntryLevelSQL, that.supportsANSI92EntryLevelSQL)
+               && Objects.equals(supportsANSI92FullSQL, that.supportsANSI92FullSQL)
+               && Objects.equals(supportsANSI92IntermediateSQL, that.supportsANSI92IntermediateSQL)
+               && Objects.equals(supportsBatchUpdates, that.supportsBatchUpdates)
+               && Objects.equals(supportsCatalogsInDataManipulation, that.supportsCatalogsInDataManipulation)
+               && Objects.equals(supportsCatalogsInIndexDefinitions, that.supportsCatalogsInIndexDefinitions)
+               && Objects.equals(supportsCatalogsInPrivilegeDefinitions, that.supportsCatalogsInPrivilegeDefinitions)
+               && Objects.equals(supportsCatalogsInProcedureCalls, that.supportsCatalogsInProcedureCalls)
+               && Objects.equals(supportsCatalogsInTableDefinitions, that.supportsCatalogsInTableDefinitions)
+               && Objects.equals(supportsColumnAliasing, that.supportsColumnAliasing)
+               && Objects.equals(supportsConvert, that.supportsConvert)
+               && Objects.equals(supportsConvert_, that.supportsConvert_)
+               && Objects.equals(supportsCoreSQLGrammar, that.supportsCoreSQLGrammar)
+               && Objects.equals(supportsCorrelatedSubqueries, that.supportsCorrelatedSubqueries)
+               && Objects.equals(supportsDataDefinitionAndDataManipulationTransactions,
+                                 that.supportsDataDefinitionAndDataManipulationTransactions)
+               && Objects.equals(supportsDataManipulationTransactionsOnly,
+                                 that.supportsDataManipulationTransactionsOnly)
+               && Objects.equals(supportsDifferentTableCorrelationNames, that.supportsDifferentTableCorrelationNames)
+               && Objects.equals(supportsExpressionsInOrderBy, that.supportsExpressionsInOrderBy)
+               && Objects.equals(supportsExtendedSQLGrammar, that.supportsExtendedSQLGrammar)
+               && Objects.equals(supportsFullOuterJoins, that.supportsFullOuterJoins)
+               && Objects.equals(supportsGetGeneratedKeys, that.supportsGetGeneratedKeys)
+               && Objects.equals(supportsGroupBy, that.supportsGroupBy)
+               && Objects.equals(supportsGroupByBeyondSelect, that.supportsGroupByBeyondSelect)
+               && Objects.equals(supportsGroupByUnrelated, that.supportsGroupByUnrelated)
+               && Objects.equals(supportsIntegrityEnhancementFacility, that.supportsIntegrityEnhancementFacility)
+               && Objects.equals(supportsLikeEscapeClause, that.supportsLikeEscapeClause)
+               && Objects.equals(supportsLimitedOuterJoins, that.supportsLimitedOuterJoins)
+               && Objects.equals(supportsMinimumSQLGrammar, that.supportsMinimumSQLGrammar)
+               && Objects.equals(supportsMixedCaseIdentifiers, that.supportsMixedCaseIdentifiers)
+               && Objects.equals(supportsMixedCaseQuotedIdentifiers, that.supportsMixedCaseQuotedIdentifiers)
+               && Objects.equals(supportsMultipleOpenResults, that.supportsMultipleOpenResults)
+               && Objects.equals(supportsMultipleResultSets, that.supportsMultipleResultSets)
+               && Objects.equals(supportsMultipleTransactions, that.supportsMultipleTransactions)
+               && Objects.equals(supportsNamedParameters, that.supportsNamedParameters)
+               && Objects.equals(supportsNonNullableColumns, that.supportsNonNullableColumns)
+               && Objects.equals(supportsOpenCursorsAcrossCommit, that.supportsOpenCursorsAcrossCommit)
+               && Objects.equals(supportsOpenCursorsAcrossRollback, that.supportsOpenCursorsAcrossRollback)
+               && Objects.equals(supportsOpenStatementsAcrossCommit, that.supportsOpenStatementsAcrossCommit)
+               && Objects.equals(supportsOpenStatementsAcrossRollback, that.supportsOpenStatementsAcrossRollback)
+               && Objects.equals(supportsOrderByUnrelated, that.supportsOrderByUnrelated)
+               && Objects.equals(supportsOuterJoins, that.supportsOuterJoins)
+               && Objects.equals(supportsPositionedDelete, that.supportsPositionedDelete)
+               && Objects.equals(supportsPositionedUpdate, that.supportsPositionedUpdate)
+               && Objects.equals(supportsRefCursors, that.supportsRefCursors)
+               && Objects.equals(supportsResultSetConcurrency, that.supportsResultSetConcurrency)
+               && Objects.equals(supportsResultSetHoldability, that.supportsResultSetHoldability)
+               && Objects.equals(supportsResultSetType, that.supportsResultSetType)
+               && Objects.equals(supportsSavepoints, that.supportsSavepoints)
+               && Objects.equals(supportsSchemasInDataManipulation, that.supportsSchemasInDataManipulation)
+               && Objects.equals(supportsSchemasInIndexDefinitions, that.supportsSchemasInIndexDefinitions)
+               && Objects.equals(supportsSchemasInPrivilegeDefinitions, that.supportsSchemasInPrivilegeDefinitions)
+               && Objects.equals(supportsSchemasInProcedureCalls, that.supportsSchemasInProcedureCalls)
+               && Objects.equals(supportsSchemasInTableDefinitions, that.supportsSchemasInTableDefinitions)
+               && Objects.equals(supportsSelectForUpdate, that.supportsSelectForUpdate)
+               && Objects.equals(supportsSharding, that.supportsSharding)
+               && Objects.equals(supportsStatementPooling, that.supportsStatementPooling)
+               && Objects.equals(supportsStoredFunctionsUsingCallSyntax, that.supportsStoredFunctionsUsingCallSyntax)
+               && Objects.equals(supportsStoredProcedures, that.supportsStoredProcedures)
+               && Objects.equals(supportsSubqueriesInComparisons, that.supportsSubqueriesInComparisons)
+               && Objects.equals(supportsSubqueriesInExists, that.supportsSubqueriesInExists)
+               && Objects.equals(supportsSubqueriesInIns, that.supportsSubqueriesInIns)
+               && Objects.equals(supportsSubqueriesInQuantifieds, that.supportsSubqueriesInQuantifieds)
+               && Objects.equals(supportsTableCorrelationNames, that.supportsTableCorrelationNames)
+               && Objects.equals(supportsTransactionIsolationLevel, that.supportsTransactionIsolationLevel)
+               && Objects.equals(supportsTransactions, that.supportsTransactions)
+               && Objects.equals(supportsUnion, that.supportsUnion)
+               && Objects.equals(supportsUnionAll, that.supportsUnionAll)
+               && Objects.equals(updatesAreDetected, that.updatesAreDetected)
+               && Objects.equals(usesLocalFilePerTable, that.usesLocalFilePerTable)
+               && Objects.equals(usesLocalFiles, that.usesLocalFiles);
     }
 
     @Override
     public int hashCode() {
         return Objects.hash(allProceduresAreCallable,
-                allTablesAreSelectable,
-                autoCommitFailureClosesAllResultSets,
-                dataDefinitionCausesTransactionCommit,
-                dataDefinitionIgnoredInTransactions,
-                deletesAreDetected,
-                doesMaxRowSizeIncludeBlobs,
-                generatedKeyAlwaysReturned,
-                catalog,
-                catalogSeparator,
-                catalogTerm,
-                clientInfoProperty,
-                databaseMajorVersion,
-                databaseMinorVersion,
-                databaseProductName,
-                databaseProductVersion,
-                defaultTransactionIsolation,
-                driverMajorVersion,
-                driverMinorVersion,
-                driverName,
-                driverVersion,
-                extraNameCharacters,
-                identifierQuoteString,
-                JDBCMajorVersion,
-                JDBCMinorVersion,
-                maxBinaryLiteralLength,
-                maxCatalogNameLength,
-                maxCharLiteralLength,
-                maxColumnNameLength,
-                maxColumnsInGroupBy,
-                maxColumnsInIndex,
-                maxColumnsInOrderBy,
-                maxColumnsInSelect,
-                maxColumnsInTable,
-                maxConnections,
-                maxCursorNameLength,
-                maxIndexLength,
-                maxLogicalLobSize,
-                maxProcedureNameLength,
-                maxRowSize,
-                maxSchemaNameLength,
-                maxStatementLength,
-                maxStatements,
-                maxTableNameLength,
-                maxTablesInSelect,
-                maxUserNameLength,
-                numericFunctions,
-                procedureTerm,
-                resultSetHoldability,
-                schemaTerm,
-                searchStringEscape,
-                SQLKeywords,
-                SQLStateType,
-                stringFunctions,
-                systemFunctions,
-                tableType,
-                timeDateFunctions,
-                typeInfo,
-                URL,
-                userName,
-                insertsAreDetected,
-                catalogAtStart,
-                readOnly,
-                locatorsUpdateCopy,
-                nullPlusNonNullIsNull,
-                nullsAreSortedAtEnd,
-                nullsAreSortedAtStart,
-                nullsAreSortedHigh,
-                nullsAreSortedLow,
-                othersDeletesAreVisible,
-                othersInsertsAreVisible,
-                othersUpdatesAreVisible,
-                ownDeletesAreVisible,
-                ownInsertsAreVisible,
-                ownUpdatesAreVisible,
-                storesLowerCaseIdentifiers,
-                storesLowerCaseQuotedIdentifiers,
-                storesMixedCaseIdentifiers,
-                storesMixedCaseQuotedIdentifiers,
-                supportsAlterTableWithAddColumn,
-                supportsAlterTableWithDropColumn,
-                supportsANSI92EntryLevelSQL,
-                supportsANSI92FullSQL,
-                supportsANSI92IntermediateSQL,
-                supportsBatchUpdates,
-                supportsCatalogsInDataManipulation,
-                supportsCatalogsInIndexDefinitions,
-                supportsCatalogsInPrivilegeDefinitions,
-                supportsCatalogsInProcedureCalls,
-                supportsCatalogsInTableDefinitions,
-                supportsColumnAliasing,
-                supportsConvert,
-                supportsConvert_,
-                supportsCoreSQLGrammar,
-                supportsCorrelatedSubqueries,
-                supportsDataDefinitionAndDataManipulationTransactions,
-                supportsDataManipulationTransactionsOnly,
-                supportsDifferentTableCorrelationNames,
-                supportsExpressionsInOrderBy,
-                supportsExtendedSQLGrammar,
-                supportsFullOuterJoins,
-                supportsGetGeneratedKeys,
-                supportsGroupBy,
-                supportsGroupByBeyondSelect,
-                supportsGroupByUnrelated,
-                supportsIntegrityEnhancementFacility,
-                supportsLikeEscapeClause,
-                supportsLimitedOuterJoins,
-                supportsMinimumSQLGrammar,
-                supportsMixedCaseIdentifiers,
-                supportsMixedCaseQuotedIdentifiers,
-                supportsMultipleOpenResults,
-                supportsMultipleResultSets,
-                supportsMultipleTransactions,
-                supportsNamedParameters,
-                supportsNonNullableColumns,
-                supportsOpenCursorsAcrossCommit,
-                supportsOpenCursorsAcrossRollback,
-                supportsOpenStatementsAcrossCommit,
-                supportsOpenStatementsAcrossRollback,
-                supportsOrderByUnrelated,
-                supportsOuterJoins,
-                supportsPositionedDelete,
-                supportsPositionedUpdate,
-                supportsRefCursors,
-                supportsResultSetConcurrency,
-                supportsResultSetHoldability,
-                supportsResultSetType,
-                supportsSavepoints,
-                supportsSchemasInDataManipulation,
-                supportsSchemasInIndexDefinitions,
-                supportsSchemasInPrivilegeDefinitions,
-                supportsSchemasInProcedureCalls,
-                supportsSchemasInTableDefinitions,
-                supportsSelectForUpdate,
-                supportsSharding,
-                supportsStatementPooling,
-                supportsStoredFunctionsUsingCallSyntax,
-                supportsStoredProcedures,
-                supportsSubqueriesInComparisons,
-                supportsSubqueriesInExists,
-                supportsSubqueriesInIns,
-                supportsSubqueriesInQuantifieds,
-                supportsTableCorrelationNames,
-                supportsTransactionIsolationLevel,
-                supportsTransactions,
-                supportsUnion,
-                supportsUnionAll,
-                updatesAreDetected,
-                usesLocalFilePerTable,
-                usesLocalFiles);
+                            allTablesAreSelectable,
+                            autoCommitFailureClosesAllResultSets,
+                            dataDefinitionCausesTransactionCommit,
+                            dataDefinitionIgnoredInTransactions,
+                            deletesAreDetected,
+                            doesMaxRowSizeIncludeBlobs,
+                            generatedKeyAlwaysReturned,
+                            catalog,
+                            catalogSeparator,
+                            catalogTerm,
+                            clientInfoProperty,
+                            databaseMajorVersion,
+                            databaseMinorVersion,
+                            databaseProductName,
+                            databaseProductVersion,
+                            defaultTransactionIsolation,
+                            driverMajorVersion,
+                            driverMinorVersion,
+                            driverName,
+                            driverVersion,
+                            extraNameCharacters,
+                            identifierQuoteString,
+                            JDBCMajorVersion,
+                            JDBCMinorVersion,
+                            maxBinaryLiteralLength,
+                            maxCatalogNameLength,
+                            maxCharLiteralLength,
+                            maxColumnNameLength,
+                            maxColumnsInGroupBy,
+                            maxColumnsInIndex,
+                            maxColumnsInOrderBy,
+                            maxColumnsInSelect,
+                            maxColumnsInTable,
+                            maxConnections,
+                            maxCursorNameLength,
+                            maxIndexLength,
+                            maxLogicalLobSize,
+                            maxProcedureNameLength,
+                            maxRowSize,
+                            maxSchemaNameLength,
+                            maxStatementLength,
+                            maxStatements,
+                            maxTableNameLength,
+                            maxTablesInSelect,
+                            maxUserNameLength,
+                            numericFunctions,
+                            procedureTerm,
+                            resultSetHoldability,
+                            schemaTerm,
+                            searchStringEscape,
+                            SQLKeywords,
+                            SQLStateType,
+                            stringFunctions,
+                            systemFunctions,
+                            tableType,
+                            timeDateFunctions,
+                            typeInfo,
+                            URL,
+                            userName,
+                            insertsAreDetected,
+                            catalogAtStart,
+                            readOnly,
+                            locatorsUpdateCopy,
+                            nullPlusNonNullIsNull,
+                            nullsAreSortedAtEnd,
+                            nullsAreSortedAtStart,
+                            nullsAreSortedHigh,
+                            nullsAreSortedLow,
+                            othersDeletesAreVisible,
+                            othersInsertsAreVisible,
+                            othersUpdatesAreVisible,
+                            ownDeletesAreVisible,
+                            ownInsertsAreVisible,
+                            ownUpdatesAreVisible,
+                            storesLowerCaseIdentifiers,
+                            storesLowerCaseQuotedIdentifiers,
+                            storesMixedCaseIdentifiers,
+                            storesMixedCaseQuotedIdentifiers,
+                            supportsAlterTableWithAddColumn,
+                            supportsAlterTableWithDropColumn,
+                            supportsANSI92EntryLevelSQL,
+                            supportsANSI92FullSQL,
+                            supportsANSI92IntermediateSQL,
+                            supportsBatchUpdates,
+                            supportsCatalogsInDataManipulation,
+                            supportsCatalogsInIndexDefinitions,
+                            supportsCatalogsInPrivilegeDefinitions,
+                            supportsCatalogsInProcedureCalls,
+                            supportsCatalogsInTableDefinitions,
+                            supportsColumnAliasing,
+                            supportsConvert,
+                            supportsConvert_,
+                            supportsCoreSQLGrammar,
+                            supportsCorrelatedSubqueries,
+                            supportsDataDefinitionAndDataManipulationTransactions,
+                            supportsDataManipulationTransactionsOnly,
+                            supportsDifferentTableCorrelationNames,
+                            supportsExpressionsInOrderBy,
+                            supportsExtendedSQLGrammar,
+                            supportsFullOuterJoins,
+                            supportsGetGeneratedKeys,
+                            supportsGroupBy,
+                            supportsGroupByBeyondSelect,
+                            supportsGroupByUnrelated,
+                            supportsIntegrityEnhancementFacility,
+                            supportsLikeEscapeClause,
+                            supportsLimitedOuterJoins,
+                            supportsMinimumSQLGrammar,
+                            supportsMixedCaseIdentifiers,
+                            supportsMixedCaseQuotedIdentifiers,
+                            supportsMultipleOpenResults,
+                            supportsMultipleResultSets,
+                            supportsMultipleTransactions,
+                            supportsNamedParameters,
+                            supportsNonNullableColumns,
+                            supportsOpenCursorsAcrossCommit,
+                            supportsOpenCursorsAcrossRollback,
+                            supportsOpenStatementsAcrossCommit,
+                            supportsOpenStatementsAcrossRollback,
+                            supportsOrderByUnrelated,
+                            supportsOuterJoins,
+                            supportsPositionedDelete,
+                            supportsPositionedUpdate,
+                            supportsRefCursors,
+                            supportsResultSetConcurrency,
+                            supportsResultSetHoldability,
+                            supportsResultSetType,
+                            supportsSavepoints,
+                            supportsSchemasInDataManipulation,
+                            supportsSchemasInIndexDefinitions,
+                            supportsSchemasInPrivilegeDefinitions,
+                            supportsSchemasInProcedureCalls,
+                            supportsSchemasInTableDefinitions,
+                            supportsSelectForUpdate,
+                            supportsSharding,
+                            supportsStatementPooling,
+                            supportsStoredFunctionsUsingCallSyntax,
+                            supportsStoredProcedures,
+                            supportsSubqueriesInComparisons,
+                            supportsSubqueriesInExists,
+                            supportsSubqueriesInIns,
+                            supportsSubqueriesInQuantifieds,
+                            supportsTableCorrelationNames,
+                            supportsTransactionIsolationLevel,
+                            supportsTransactions,
+                            supportsUnion,
+                            supportsUnionAll,
+                            updatesAreDetected,
+                            usesLocalFilePerTable,
+                            usesLocalFiles);
     }
 
     // -----------------------------------------------------------------------------------------------------------------

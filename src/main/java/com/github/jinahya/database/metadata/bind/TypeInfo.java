@@ -100,25 +100,25 @@ public class TypeInfo implements MetadataType {
     @Override
     public String toString() {
         return super.toString() + '{'
-                + "typeName=" + typeName
-                + ",dataType=" + dataType
-                + ",precision=" + precision
-                + ",literalPrefix=" + literalPrefix
-                + ",literalSuffix=" + literalSuffix
-                + ",createParams=" + createParams
-                + ",nullable=" + nullable
-                + ",caseSensitive=" + caseSensitive
-                + ",searchable=" + searchable
-                + ",unsignedAttribute=" + unsignedAttribute
-                + ",fixedPrecScale=" + fixedPrecScale
-                + ",autoIncrement=" + autoIncrement
-                + ",localTypeName=" + localTypeName
-                + ",minimumScale=" + minimumScale
-                + ",maximumScale=" + maximumScale
-                + ",sqlDataType=" + sqlDataType
-                + ",sqlDatetimeSub=" + sqlDatetimeSub
-                + ",numPrecRadix=" + numPrecRadix
-                + '}';
+               + "typeName=" + typeName
+               + ",dataType=" + dataType
+               + ",precision=" + precision
+               + ",literalPrefix=" + literalPrefix
+               + ",literalSuffix=" + literalSuffix
+               + ",createParams=" + createParams
+               + ",nullable=" + nullable
+               + ",caseSensitive=" + caseSensitive
+               + ",searchable=" + searchable
+               + ",unsignedAttribute=" + unsignedAttribute
+               + ",fixedPrecScale=" + fixedPrecScale
+               + ",autoIncrement=" + autoIncrement
+               + ",localTypeName=" + localTypeName
+               + ",minimumScale=" + minimumScale
+               + ",maximumScale=" + maximumScale
+               + ",sqlDataType=" + sqlDataType
+               + ",sqlDatetimeSub=" + sqlDatetimeSub
+               + ",numPrecRadix=" + numPrecRadix
+               + '}';
     }
 
     @Override
@@ -127,45 +127,45 @@ public class TypeInfo implements MetadataType {
         if (obj == null || getClass() != obj.getClass()) return false;
         final TypeInfo that = (TypeInfo) obj;
         return dataType == that.dataType
-                && precision == that.precision
-                && nullable == that.nullable
-                && caseSensitive == that.caseSensitive
-                && searchable == that.searchable
-                && unsignedAttribute == that.unsignedAttribute
-                && fixedPrecScale == that.fixedPrecScale
-                && autoIncrement == that.autoIncrement
-                && minimumScale == that.minimumScale
-                && maximumScale == that.maximumScale
-                && numPrecRadix == that.numPrecRadix
-                && Objects.equals(typeName, that.typeName)
-                && Objects.equals(literalPrefix, that.literalPrefix)
-                && Objects.equals(literalSuffix, that.literalSuffix)
-                && Objects.equals(createParams, that.createParams)
-                && Objects.equals(localTypeName, that.localTypeName)
-                && Objects.equals(sqlDataType, that.sqlDataType)
-                && Objects.equals(sqlDatetimeSub, that.sqlDatetimeSub);
+               && precision == that.precision
+               && nullable == that.nullable
+               && caseSensitive == that.caseSensitive
+               && searchable == that.searchable
+               && unsignedAttribute == that.unsignedAttribute
+               && fixedPrecScale == that.fixedPrecScale
+               && autoIncrement == that.autoIncrement
+               && minimumScale == that.minimumScale
+               && maximumScale == that.maximumScale
+               && numPrecRadix == that.numPrecRadix
+               && Objects.equals(typeName, that.typeName)
+               && Objects.equals(literalPrefix, that.literalPrefix)
+               && Objects.equals(literalSuffix, that.literalSuffix)
+               && Objects.equals(createParams, that.createParams)
+               && Objects.equals(localTypeName, that.localTypeName)
+               && Objects.equals(sqlDataType, that.sqlDataType)
+               && Objects.equals(sqlDatetimeSub, that.sqlDatetimeSub);
     }
 
     @Override
     public int hashCode() {
         return Objects.hash(typeName,
-                dataType,
-                precision,
-                literalPrefix,
-                literalSuffix,
-                createParams,
-                nullable,
-                caseSensitive,
-                searchable,
-                unsignedAttribute,
-                fixedPrecScale,
-                autoIncrement,
-                localTypeName,
-                minimumScale,
-                maximumScale,
-                sqlDataType,
-                sqlDatetimeSub,
-                numPrecRadix);
+                            dataType,
+                            precision,
+                            literalPrefix,
+                            literalSuffix,
+                            createParams,
+                            nullable,
+                            caseSensitive,
+                            searchable,
+                            unsignedAttribute,
+                            fixedPrecScale,
+                            autoIncrement,
+                            localTypeName,
+                            minimumScale,
+                            maximumScale,
+                            sqlDataType,
+                            sqlDatetimeSub,
+                            numPrecRadix);
     }
 
     // -------------------------------------------------------------------------------------------------------- typeName

@@ -48,11 +48,11 @@ public class SuperTable extends TableChild {
     @Override
     public String toString() {
         return super.toString() + '{'
-                + "tableCat=" + tableCat
-                + ",tableSchem=" + tableSchem
-                + ",tableName=" + tableName
-                + ",supertableName=" + supertableName
-                + '}';
+               + "tableCat=" + tableCat
+               + ",tableSchem=" + tableSchem
+               + ",tableName=" + tableName
+               + ",supertableName=" + supertableName
+               + '}';
     }
 
     @Override
@@ -61,17 +61,17 @@ public class SuperTable extends TableChild {
         if (obj == null || getClass() != obj.getClass()) return false;
         final SuperTable that = (SuperTable) obj;
         return Objects.equals(tableCat, that.tableCat)
-                && Objects.equals(tableSchem, that.tableSchem)
-                && Objects.equals(tableName, that.tableName)
-                && Objects.equals(supertableName, that.supertableName);
+               && Objects.equals(tableSchem, that.tableSchem)
+               && Objects.equals(tableName, that.tableName)
+               && Objects.equals(supertableName, that.supertableName);
     }
 
     @Override
     public int hashCode() {
         return Objects.hash(tableCat,
-                tableSchem,
-                tableName,
-                supertableName);
+                            tableSchem,
+                            tableName,
+                            supertableName);
     }
 
     // -------------------------------------------------------------------------------------------------------- tableCat

@@ -73,9 +73,9 @@ public class Schema extends CatalogChild {
     @Override
     public String toString() {
         return super.toString() + '{'
-                + ATTRIBUTE_NAME_TABLE_SCHEM + '=' + tableCatalog
-                + ',' + ATTRIBUTE_NAME_TABLE_SCHEM + '=' + tableSchem
-                + '}';
+               + ATTRIBUTE_NAME_TABLE_SCHEM + '=' + tableCatalog
+               + ',' + ATTRIBUTE_NAME_TABLE_SCHEM + '=' + tableSchem
+               + '}';
     }
 
     @Override
@@ -84,13 +84,13 @@ public class Schema extends CatalogChild {
         if (obj == null || getClass() != obj.getClass()) return false;
         final Schema that = (Schema) obj;
         return Objects.equals(tableCatalog, that.tableCatalog)
-                && Objects.equals(tableSchem, that.tableSchem);
+               && Objects.equals(tableSchem, that.tableSchem);
     }
 
     @Override
     public int hashCode() {
         return Objects.hash(tableCatalog,
-                tableSchem);
+                            tableSchem);
     }
 
     // --------------------------------------------------------------------------------------------------------- catalog

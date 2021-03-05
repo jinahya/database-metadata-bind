@@ -53,13 +53,13 @@ public class Procedure extends SchemaChild {
     @Override
     public String toString() {
         return super.toString() + '{'
-                + "procedureCat=" + procedureCat
-                + ",procedureSchem=" + procedureSchem
-                + ",procedureName=" + procedureName
-                + ",remarks=" + remarks
-                + ",procedureType=" + procedureType
-                + ",specificName=" + specificName
-                + '}';
+               + "procedureCat=" + procedureCat
+               + ",procedureSchem=" + procedureSchem
+               + ",procedureName=" + procedureName
+               + ",remarks=" + remarks
+               + ",procedureType=" + procedureType
+               + ",specificName=" + specificName
+               + '}';
     }
 
     @Override
@@ -68,21 +68,21 @@ public class Procedure extends SchemaChild {
         if (obj == null || getClass() != obj.getClass()) return false;
         final Procedure that = (Procedure) obj;
         return procedureType == that.procedureType
-                && Objects.equals(procedureCat, that.procedureCat)
-                && Objects.equals(procedureSchem, that.procedureSchem)
-                && Objects.equals(procedureName, that.procedureName)
-                && Objects.equals(remarks, that.remarks)
-                && Objects.equals(specificName, that.specificName);
+               && Objects.equals(procedureCat, that.procedureCat)
+               && Objects.equals(procedureSchem, that.procedureSchem)
+               && Objects.equals(procedureName, that.procedureName)
+               && Objects.equals(remarks, that.remarks)
+               && Objects.equals(specificName, that.specificName);
     }
 
     @Override
     public int hashCode() {
         return Objects.hash(procedureCat,
-                procedureSchem,
-                procedureName,
-                remarks,
-                procedureType,
-                specificName);
+                            procedureSchem,
+                            procedureName,
+                            remarks,
+                            procedureType,
+                            specificName);
     }
 
     // ---------------------------------------------------------------------------------------------------- procedureCat

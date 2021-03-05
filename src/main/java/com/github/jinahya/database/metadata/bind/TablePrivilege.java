@@ -48,14 +48,14 @@ public class TablePrivilege extends TableChild {
     @Override
     public String toString() {
         return super.toString() + '{'
-                + "tableCat=" + tableCat
-                + ",tableSchem=" + tableSchem
-                + ",tableName=" + tableName
-                + ",grantor=" + grantor
-                + ",grantee=" + grantee
-                + ",privilege=" + privilege
-                + ",isGrantable=" + isGrantable
-                + '}';
+               + "tableCat=" + tableCat
+               + ",tableSchem=" + tableSchem
+               + ",tableName=" + tableName
+               + ",grantor=" + grantor
+               + ",grantee=" + grantee
+               + ",privilege=" + privilege
+               + ",isGrantable=" + isGrantable
+               + '}';
     }
 
     @Override
@@ -64,23 +64,23 @@ public class TablePrivilege extends TableChild {
         if (obj == null || getClass() != obj.getClass()) return false;
         final TablePrivilege that = (TablePrivilege) obj;
         return Objects.equals(tableCat, that.tableCat)
-                && Objects.equals(tableSchem, that.tableSchem)
-                && Objects.equals(tableName, that.tableName)
-                && Objects.equals(grantor, that.grantor)
-                && Objects.equals(grantee, that.grantee)
-                && Objects.equals(privilege, that.privilege)
-                && Objects.equals(isGrantable, that.isGrantable);
+               && Objects.equals(tableSchem, that.tableSchem)
+               && Objects.equals(tableName, that.tableName)
+               && Objects.equals(grantor, that.grantor)
+               && Objects.equals(grantee, that.grantee)
+               && Objects.equals(privilege, that.privilege)
+               && Objects.equals(isGrantable, that.isGrantable);
     }
 
     @Override
     public int hashCode() {
         return Objects.hash(tableCat,
-                tableSchem,
-                tableName,
-                grantor,
-                grantee,
-                privilege,
-                isGrantable);
+                            tableSchem,
+                            tableName,
+                            grantor,
+                            grantee,
+                            privilege,
+                            isGrantable);
     }
 
     // -------------------------------------------------------------------------------------------------------- tableCat

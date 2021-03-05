@@ -56,13 +56,13 @@ public class Function extends SchemaChild {
     @Override
     public String toString() {
         return super.toString() + '{'
-                + ATTRIBUTE_NAME_FUNCTION_CAT + '=' + functionCat
-                + ',' + ATTRIBUTE_NAME_FUNCTION_SCHEM + '=' + functionSchem
-                + ",functionName=" + functionName
-                + ",remarks=" + remarks
-                + ",functionType=" + functionType
-                + ",specificName=" + specificName
-                + '}';
+               + ATTRIBUTE_NAME_FUNCTION_CAT + '=' + functionCat
+               + ',' + ATTRIBUTE_NAME_FUNCTION_SCHEM + '=' + functionSchem
+               + ",functionName=" + functionName
+               + ",remarks=" + remarks
+               + ",functionType=" + functionType
+               + ",specificName=" + specificName
+               + '}';
     }
 
     @Override
@@ -71,21 +71,21 @@ public class Function extends SchemaChild {
         if (obj == null || getClass() != obj.getClass()) return false;
         final Function that = (Function) obj;
         return functionType == that.functionType
-                && Objects.equals(functionCat, that.functionCat)
-                && Objects.equals(functionSchem, that.functionSchem)
-                && Objects.equals(functionName, that.functionName)
-                && Objects.equals(remarks, that.remarks)
-                && Objects.equals(specificName, that.specificName);
+               && Objects.equals(functionCat, that.functionCat)
+               && Objects.equals(functionSchem, that.functionSchem)
+               && Objects.equals(functionName, that.functionName)
+               && Objects.equals(remarks, that.remarks)
+               && Objects.equals(specificName, that.specificName);
     }
 
     @Override
     public int hashCode() {
         return Objects.hash(functionCat,
-                functionSchem,
-                functionName,
-                remarks,
-                functionType,
-                specificName);
+                            functionSchem,
+                            functionName,
+                            remarks,
+                            functionType,
+                            specificName);
     }
 
     // ----------------------------------------------------------------------------------------------------- functionCat

@@ -47,9 +47,9 @@ public class SchemaName implements MetadataType {
     @Override
     public String toString() {
         return super.toString() + '{'
-                + "tableSchem=" + tableSchem
-                + ",tableCatalog=" + tableCatalog
-                + '}';
+               + "tableSchem=" + tableSchem
+               + ",tableCatalog=" + tableCatalog
+               + '}';
     }
 
     @Override
@@ -58,13 +58,13 @@ public class SchemaName implements MetadataType {
         if (obj == null || getClass() != obj.getClass()) return false;
         final SchemaName that = (SchemaName) obj;
         return Objects.equals(tableSchem, that.tableSchem)
-                && Objects.equals(tableCatalog, that.tableCatalog);
+               && Objects.equals(tableCatalog, that.tableCatalog);
     }
 
     @Override
     public int hashCode() {
         return Objects.hash(tableSchem,
-                tableCatalog);
+                            tableCatalog);
     }
 
     // ------------------------------------------------------------------------------------------------------ tableSchem

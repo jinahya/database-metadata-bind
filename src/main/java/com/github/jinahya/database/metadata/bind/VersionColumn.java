@@ -112,15 +112,15 @@ public class VersionColumn extends TableChild {
     @Override
     public String toString() {
         return super.toString() + '{'
-                + "scope=" + scope
-                + ",columnName=" + columnName
-                + ",dataType=" + dataType
-                + ",typeName=" + typeName
-                + ",columnSize=" + columnSize
-                + ",bufferLength=" + bufferLength
-                + ",decimalDigits=" + decimalDigits
-                + ",pseudoColumn=" + pseudoColumn
-                + '}';
+               + "scope=" + scope
+               + ",columnName=" + columnName
+               + ",dataType=" + dataType
+               + ",typeName=" + typeName
+               + ",columnSize=" + columnSize
+               + ",bufferLength=" + bufferLength
+               + ",decimalDigits=" + decimalDigits
+               + ",pseudoColumn=" + pseudoColumn
+               + '}';
     }
 
     @Override
@@ -129,25 +129,25 @@ public class VersionColumn extends TableChild {
         if (obj == null || getClass() != obj.getClass()) return false;
         final VersionColumn that = (VersionColumn) obj;
         return dataType == that.dataType
-                && columnSize == that.columnSize
-                && bufferLength == that.bufferLength
-                && pseudoColumn == that.pseudoColumn
-                && Objects.equals(scope, that.scope)
-                && Objects.equals(columnName, that.columnName)
-                && Objects.equals(typeName, that.typeName)
-                && Objects.equals(decimalDigits, that.decimalDigits);
+               && columnSize == that.columnSize
+               && bufferLength == that.bufferLength
+               && pseudoColumn == that.pseudoColumn
+               && Objects.equals(scope, that.scope)
+               && Objects.equals(columnName, that.columnName)
+               && Objects.equals(typeName, that.typeName)
+               && Objects.equals(decimalDigits, that.decimalDigits);
     }
 
     @Override
     public int hashCode() {
         return Objects.hash(scope,
-                columnName,
-                dataType,
-                typeName,
-                columnSize,
-                bufferLength,
-                decimalDigits,
-                pseudoColumn);
+                            columnName,
+                            dataType,
+                            typeName,
+                            columnSize,
+                            bufferLength,
+                            decimalDigits,
+                            pseudoColumn);
     }
 
     // ----------------------------------------------------------------------------------------------------------- scope

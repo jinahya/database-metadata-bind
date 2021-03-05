@@ -48,13 +48,13 @@ public class PrimaryKey extends TableChild {
     @Override
     public String toString() {
         return super.toString() + '{'
-                + "tableCat=" + tableCat
-                + ",tableSchem=" + tableSchem
-                + ",tableName=" + tableName
-                + ",columnName=" + columnName
-                + ",keySeq=" + keySeq
-                + ",pkName=" + pkName
-                + '}';
+               + "tableCat=" + tableCat
+               + ",tableSchem=" + tableSchem
+               + ",tableName=" + tableName
+               + ",columnName=" + columnName
+               + ",keySeq=" + keySeq
+               + ",pkName=" + pkName
+               + '}';
     }
 
     @Override
@@ -63,21 +63,21 @@ public class PrimaryKey extends TableChild {
         if (obj == null || getClass() != obj.getClass()) return false;
         final PrimaryKey that = (PrimaryKey) obj;
         return keySeq == that.keySeq
-                && Objects.equals(tableCat, that.tableCat)
-                && Objects.equals(tableSchem, that.tableSchem)
-                && Objects.equals(tableName, that.tableName)
-                && Objects.equals(columnName, that.columnName)
-                && Objects.equals(pkName, that.pkName);
+               && Objects.equals(tableCat, that.tableCat)
+               && Objects.equals(tableSchem, that.tableSchem)
+               && Objects.equals(tableName, that.tableName)
+               && Objects.equals(columnName, that.columnName)
+               && Objects.equals(pkName, that.pkName);
     }
 
     @Override
     public int hashCode() {
         return Objects.hash(tableCat,
-                tableSchem,
-                tableName,
-                columnName,
-                keySeq,
-                pkName);
+                            tableSchem,
+                            tableName,
+                            columnName,
+                            keySeq,
+                            pkName);
     }
 
     // -------------------------------------------------------------------------------------------------------- tableCat

@@ -39,15 +39,15 @@ public class ColumnPrivilege extends ColumnChild {
     @Override
     public String toString() {
         return super.toString() + '{'
-                + "tableCat=" + tableCat
-                + ",tableSchem=" + tableSchem
-                + ",tableName=" + tableName
-                + ",columnName=" + columnName
-                + ",grantor=" + grantor
-                + ",grantee=" + grantee
-                + ",privilege=" + privilege
-                + ",isGrantable=" + isGrantable
-                + '}';
+               + "tableCat=" + tableCat
+               + ",tableSchem=" + tableSchem
+               + ",tableName=" + tableName
+               + ",columnName=" + columnName
+               + ",grantor=" + grantor
+               + ",grantee=" + grantee
+               + ",privilege=" + privilege
+               + ",isGrantable=" + isGrantable
+               + '}';
     }
 
     @Override
@@ -56,25 +56,25 @@ public class ColumnPrivilege extends ColumnChild {
         if (obj == null || getClass() != obj.getClass()) return false;
         final ColumnPrivilege that = (ColumnPrivilege) obj;
         return Objects.equals(tableCat, that.tableCat)
-                && Objects.equals(tableSchem, that.tableSchem)
-                && Objects.equals(tableName, that.tableName)
-                && Objects.equals(columnName, that.columnName)
-                && Objects.equals(grantor, that.grantor)
-                && Objects.equals(grantee, that.grantee)
-                && Objects.equals(privilege, that.privilege)
-                && Objects.equals(isGrantable, that.isGrantable);
+               && Objects.equals(tableSchem, that.tableSchem)
+               && Objects.equals(tableName, that.tableName)
+               && Objects.equals(columnName, that.columnName)
+               && Objects.equals(grantor, that.grantor)
+               && Objects.equals(grantee, that.grantee)
+               && Objects.equals(privilege, that.privilege)
+               && Objects.equals(isGrantable, that.isGrantable);
     }
 
     @Override
     public int hashCode() {
         return Objects.hash(tableCat,
-                tableSchem,
-                tableName,
-                columnName,
-                grantor,
-                grantee,
-                privilege,
-                isGrantable);
+                            tableSchem,
+                            tableName,
+                            columnName,
+                            grantor,
+                            grantee,
+                            privilege,
+                            isGrantable);
     }
 
     // -------------------------------------------------------------------------------------------------------- tableCat

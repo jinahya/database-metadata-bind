@@ -124,27 +124,27 @@ public class ProcedureColumn extends ProcedureChild {
     @Override
     public String toString() {
         return super.toString() + '{'
-                + "procedureCat=" + procedureCat
-                + ",procedureSchem=" + procedureSchem
-                + ",procedureName=" + procedureName
-                + ",columnName=" + columnName
-                + ",columnType=" + columnType
-                + ",dataType=" + dataType
-                + ",typeName=" + typeName
-                + ",precision=" + precision
-                + ",length=" + length
-                + ",scale=" + scale
-                + ",radix=" + radix
-                + ",nullable=" + nullable
-                + ",remarks=" + remarks
-                + ",columnDef=" + columnDef
-                + ",sqlDataType=" + sqlDataType
-                + ",sqlDatetimeSub=" + sqlDatetimeSub
-                + ",charOctetLength=" + charOctetLength
-                + ",ordinalPosition=" + ordinalPosition
-                + ",isNullable=" + isNullable
-                + ",specificName=" + specificName
-                + '}';
+               + "procedureCat=" + procedureCat
+               + ",procedureSchem=" + procedureSchem
+               + ",procedureName=" + procedureName
+               + ",columnName=" + columnName
+               + ",columnType=" + columnType
+               + ",dataType=" + dataType
+               + ",typeName=" + typeName
+               + ",precision=" + precision
+               + ",length=" + length
+               + ",scale=" + scale
+               + ",radix=" + radix
+               + ",nullable=" + nullable
+               + ",remarks=" + remarks
+               + ",columnDef=" + columnDef
+               + ",sqlDataType=" + sqlDataType
+               + ",sqlDatetimeSub=" + sqlDatetimeSub
+               + ",charOctetLength=" + charOctetLength
+               + ",ordinalPosition=" + ordinalPosition
+               + ",isNullable=" + isNullable
+               + ",specificName=" + specificName
+               + '}';
     }
 
     @Override
@@ -153,49 +153,49 @@ public class ProcedureColumn extends ProcedureChild {
         if (obj == null || getClass() != obj.getClass()) return false;
         final ProcedureColumn that = (ProcedureColumn) obj;
         return columnType == that.columnType
-                && dataType == that.dataType
-                && precision == that.precision
-                && length == that.length
-                && radix == that.radix
-                && nullable == that.nullable
-                && ordinalPosition == that.ordinalPosition
-                && Objects.equals(procedureCat, that.procedureCat)
-                && Objects.equals(procedureSchem, that.procedureSchem)
-                && Objects.equals(procedureName, that.procedureName)
-                && Objects.equals(columnName, that.columnName)
-                && Objects.equals(typeName, that.typeName)
-                && Objects.equals(scale, that.scale)
-                && Objects.equals(remarks, that.remarks)
-                && Objects.equals(columnDef, that.columnDef)
-                && Objects.equals(sqlDataType, that.sqlDataType)
-                && Objects.equals(sqlDatetimeSub, that.sqlDatetimeSub)
-                && Objects.equals(charOctetLength, that.charOctetLength)
-                && Objects.equals(isNullable, that.isNullable)
-                && Objects.equals(specificName, that.specificName);
+               && dataType == that.dataType
+               && precision == that.precision
+               && length == that.length
+               && radix == that.radix
+               && nullable == that.nullable
+               && ordinalPosition == that.ordinalPosition
+               && Objects.equals(procedureCat, that.procedureCat)
+               && Objects.equals(procedureSchem, that.procedureSchem)
+               && Objects.equals(procedureName, that.procedureName)
+               && Objects.equals(columnName, that.columnName)
+               && Objects.equals(typeName, that.typeName)
+               && Objects.equals(scale, that.scale)
+               && Objects.equals(remarks, that.remarks)
+               && Objects.equals(columnDef, that.columnDef)
+               && Objects.equals(sqlDataType, that.sqlDataType)
+               && Objects.equals(sqlDatetimeSub, that.sqlDatetimeSub)
+               && Objects.equals(charOctetLength, that.charOctetLength)
+               && Objects.equals(isNullable, that.isNullable)
+               && Objects.equals(specificName, that.specificName);
     }
 
     @Override
     public int hashCode() {
         return Objects.hash(procedureCat,
-                procedureSchem,
-                procedureName,
-                columnName,
-                columnType,
-                dataType,
-                typeName,
-                precision,
-                length,
-                scale,
-                radix,
-                nullable,
-                remarks,
-                columnDef,
-                sqlDataType,
-                sqlDatetimeSub,
-                charOctetLength,
-                ordinalPosition,
-                isNullable,
-                specificName);
+                            procedureSchem,
+                            procedureName,
+                            columnName,
+                            columnType,
+                            dataType,
+                            typeName,
+                            precision,
+                            length,
+                            scale,
+                            radix,
+                            nullable,
+                            remarks,
+                            columnDef,
+                            sqlDataType,
+                            sqlDatetimeSub,
+                            charOctetLength,
+                            ordinalPosition,
+                            isNullable,
+                            specificName);
     }
 
     // ---------------------------------------------------------------------------------------------------- procedureCat

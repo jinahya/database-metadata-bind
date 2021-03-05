@@ -48,13 +48,13 @@ public class SuperType extends UDTChild {
     @Override
     public String toString() {
         return super.toString() + '{'
-                + "typeCat=" + typeCat
-                + ",typeSchem=" + typeSchem
-                + ",typeName=" + typeName
-                + ",supertypeCat=" + supertypeCat
-                + ",supertypeSchem=" + supertypeSchem
-                + ",supertypeName=" + supertypeName
-                + '}';
+               + "typeCat=" + typeCat
+               + ",typeSchem=" + typeSchem
+               + ",typeName=" + typeName
+               + ",supertypeCat=" + supertypeCat
+               + ",supertypeSchem=" + supertypeSchem
+               + ",supertypeName=" + supertypeName
+               + '}';
     }
 
     @Override
@@ -63,21 +63,21 @@ public class SuperType extends UDTChild {
         if (obj == null || getClass() != obj.getClass()) return false;
         final SuperType that = (SuperType) obj;
         return Objects.equals(typeCat, that.typeCat)
-                && Objects.equals(typeSchem, that.typeSchem)
-                && Objects.equals(typeName, that.typeName)
-                && Objects.equals(supertypeCat, that.supertypeCat)
-                && Objects.equals(supertypeSchem, that.supertypeSchem)
-                && Objects.equals(supertypeName, that.supertypeName);
+               && Objects.equals(typeSchem, that.typeSchem)
+               && Objects.equals(typeName, that.typeName)
+               && Objects.equals(supertypeCat, that.supertypeCat)
+               && Objects.equals(supertypeSchem, that.supertypeSchem)
+               && Objects.equals(supertypeName, that.supertypeName);
     }
 
     @Override
     public int hashCode() {
         return Objects.hash(typeCat,
-                typeSchem,
-                typeName,
-                supertypeCat,
-                supertypeSchem,
-                supertypeName);
+                            typeSchem,
+                            typeName,
+                            supertypeCat,
+                            supertypeSchem,
+                            supertypeName);
     }
 
     // --------------------------------------------------------------------------------------------------------- typeCat

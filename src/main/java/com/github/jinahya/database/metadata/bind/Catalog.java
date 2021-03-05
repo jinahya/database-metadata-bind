@@ -108,8 +108,8 @@ public class Catalog implements MetadataType {
     @Override
     public String toString() {
         return super.toString() + '{'
-                + ATTRIBUTE_NAME_TABLE_CAT + '=' + tableCat
-                + '}';
+               + ATTRIBUTE_NAME_TABLE_CAT + '=' + tableCat
+               + '}';
     }
 
     @Override

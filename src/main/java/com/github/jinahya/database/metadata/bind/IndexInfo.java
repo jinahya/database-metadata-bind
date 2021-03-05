@@ -50,20 +50,20 @@ public class IndexInfo extends TableChild {
     @Override
     public String toString() {
         return super.toString() + '{'
-                + "tableCat=" + tableCat
-                + ",tableSchem=" + tableSchem
-                + ",tableName=" + tableName
-                + ",nonUnique=" + nonUnique
-                + ",indexQualifier=" + indexQualifier
-                + ",indexName=" + indexName
-                + ",type=" + type
-                + ",ordinalPosition=" + ordinalPosition
-                + ",columnName=" + columnName
-                + ",ascOrDesc=" + ascOrDesc
-                + ",cardinality=" + cardinality
-                + ",pages=" + pages
-                + ",filterCondition=" + filterCondition
-                + '}';
+               + "tableCat=" + tableCat
+               + ",tableSchem=" + tableSchem
+               + ",tableName=" + tableName
+               + ",nonUnique=" + nonUnique
+               + ",indexQualifier=" + indexQualifier
+               + ",indexName=" + indexName
+               + ",type=" + type
+               + ",ordinalPosition=" + ordinalPosition
+               + ",columnName=" + columnName
+               + ",ascOrDesc=" + ascOrDesc
+               + ",cardinality=" + cardinality
+               + ",pages=" + pages
+               + ",filterCondition=" + filterCondition
+               + '}';
     }
 
     @Override
@@ -72,35 +72,35 @@ public class IndexInfo extends TableChild {
         if (obj == null || getClass() != obj.getClass()) return false;
         final IndexInfo that = (IndexInfo) obj;
         return nonUnique == that.nonUnique
-                && type == that.type
-                && ordinalPosition == that.ordinalPosition
-                && cardinality == that.cardinality
-                && pages == that.pages
-                && Objects.equals(tableCat, that.tableCat)
-                && Objects.equals(tableSchem, that.tableSchem)
-                && Objects.equals(tableName, that.tableName)
-                && Objects.equals(indexQualifier, that.indexQualifier)
-                && Objects.equals(indexName, that.indexName)
-                && Objects.equals(columnName, that.columnName)
-                && Objects.equals(ascOrDesc, that.ascOrDesc)
-                && Objects.equals(filterCondition, that.filterCondition);
+               && type == that.type
+               && ordinalPosition == that.ordinalPosition
+               && cardinality == that.cardinality
+               && pages == that.pages
+               && Objects.equals(tableCat, that.tableCat)
+               && Objects.equals(tableSchem, that.tableSchem)
+               && Objects.equals(tableName, that.tableName)
+               && Objects.equals(indexQualifier, that.indexQualifier)
+               && Objects.equals(indexName, that.indexName)
+               && Objects.equals(columnName, that.columnName)
+               && Objects.equals(ascOrDesc, that.ascOrDesc)
+               && Objects.equals(filterCondition, that.filterCondition);
     }
 
     @Override
     public int hashCode() {
         return Objects.hash(tableCat,
-                tableSchem,
-                tableName,
-                nonUnique,
-                indexQualifier,
-                indexName,
-                type,
-                ordinalPosition,
-                columnName,
-                ascOrDesc,
-                cardinality,
-                pages,
-                filterCondition);
+                            tableSchem,
+                            tableName,
+                            nonUnique,
+                            indexQualifier,
+                            indexName,
+                            type,
+                            ordinalPosition,
+                            columnName,
+                            ascOrDesc,
+                            cardinality,
+                            pages,
+                            filterCondition);
     }
 
     // -------------------------------------------------------------------------------------------------------- tableCat

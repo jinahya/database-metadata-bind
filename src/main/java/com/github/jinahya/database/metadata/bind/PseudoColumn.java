@@ -45,19 +45,19 @@ public class PseudoColumn extends TableChild {
     @Override
     public String toString() {
         return super.toString() + '{'
-                + "tableCat=" + tableCat
-                + ",tableSchem=" + tableSchem
-                + ",tableName=" + tableName
-                + ",columnName=" + columnName
-                + ",dataType=" + dataType
-                + ",columnSize=" + columnSize
-                + ",decimalDigits=" + decimalDigits
-                + ",numPrecRadix=" + numPrecRadix
-                + ",columnUsage=" + columnUsage
-                + ",remarks=" + remarks
-                + ",charOctetLength=" + charOctetLength
-                + ",isNullable=" + isNullable
-                + '}';
+               + "tableCat=" + tableCat
+               + ",tableSchem=" + tableSchem
+               + ",tableName=" + tableName
+               + ",columnName=" + columnName
+               + ",dataType=" + dataType
+               + ",columnSize=" + columnSize
+               + ",decimalDigits=" + decimalDigits
+               + ",numPrecRadix=" + numPrecRadix
+               + ",columnUsage=" + columnUsage
+               + ",remarks=" + remarks
+               + ",charOctetLength=" + charOctetLength
+               + ",isNullable=" + isNullable
+               + '}';
     }
 
     @Override
@@ -66,33 +66,33 @@ public class PseudoColumn extends TableChild {
         if (obj == null || getClass() != obj.getClass()) return false;
         final PseudoColumn that = (PseudoColumn) obj;
         return dataType == that.dataType
-                && columnSize == that.columnSize
-                && numPrecRadix == that.numPrecRadix
-                && charOctetLength == that.charOctetLength
-                && Objects.equals(tableCat, that.tableCat)
-                && Objects.equals(tableSchem, that.tableSchem)
-                && Objects.equals(tableName, that.tableName)
-                && Objects.equals(columnName, that.columnName)
-                && Objects.equals(decimalDigits, that.decimalDigits)
-                && Objects.equals(columnUsage, that.columnUsage)
-                && Objects.equals(remarks, that.remarks)
-                && Objects.equals(isNullable, that.isNullable);
+               && columnSize == that.columnSize
+               && numPrecRadix == that.numPrecRadix
+               && charOctetLength == that.charOctetLength
+               && Objects.equals(tableCat, that.tableCat)
+               && Objects.equals(tableSchem, that.tableSchem)
+               && Objects.equals(tableName, that.tableName)
+               && Objects.equals(columnName, that.columnName)
+               && Objects.equals(decimalDigits, that.decimalDigits)
+               && Objects.equals(columnUsage, that.columnUsage)
+               && Objects.equals(remarks, that.remarks)
+               && Objects.equals(isNullable, that.isNullable);
     }
 
     @Override
     public int hashCode() {
         return Objects.hash(tableCat,
-                tableSchem,
-                tableName,
-                columnName,
-                dataType,
-                columnSize,
-                decimalDigits,
-                numPrecRadix,
-                columnUsage,
-                remarks,
-                charOctetLength,
-                isNullable);
+                            tableSchem,
+                            tableName,
+                            columnName,
+                            dataType,
+                            columnSize,
+                            decimalDigits,
+                            numPrecRadix,
+                            columnUsage,
+                            remarks,
+                            charOctetLength,
+                            isNullable);
     }
 
     // -------------------------------------------------------------------------------------------------------- tableCat

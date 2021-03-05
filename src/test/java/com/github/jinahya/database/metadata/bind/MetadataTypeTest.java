@@ -55,7 +55,7 @@ abstract class MetadataTypeTest<T extends MetadataType> {
     }
 
     @Test
-    void equals_Equal_Self() throws ReflectiveOperationException{
+    void equals_Equal_Self() throws ReflectiveOperationException {
         final Method method = typeClass.getMethod("equals", Object.class);
         if (method.getDeclaringClass() == Object.class) {
             return;
@@ -93,7 +93,7 @@ abstract class MetadataTypeTest<T extends MetadataType> {
                 assertThat(writeMethod).isNotNull();
                 if (!field.getType().isPrimitive()) {
                     try {
-                        writeMethod.invoke(typeInstance(), new Object[]{null});
+                        writeMethod.invoke(typeInstance(), new Object[] {null});
                     } catch (final ReflectiveOperationException roe) {
                         throw new RuntimeException(roe);
                     }

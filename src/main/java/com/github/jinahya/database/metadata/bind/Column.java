@@ -98,31 +98,31 @@ public class Column extends TableChild {
     @Override
     public String toString() {
         return super.toString() + '{'
-                + "tableCat=" + tableCat
-                + ",tableSchem=" + tableSchem
-                + ",tableName=" + tableName
-                + ",columnName=" + columnName
-                + ",dataType=" + dataType
-                + ",typeName=" + typeName
-                + ",columnSize=" + columnSize
-                + ",bufferLength=" + bufferLength
-                + ",decimalDigits=" + decimalDigits
-                + ",numPrecRadix=" + numPrecRadix
-                + ",nullable=" + nullable
-                + ",remarks=" + remarks
-                + ",columnDef=" + columnDef
-                + ",sqlDataType=" + sqlDataType
-                + ",sqlDatetimeSub=" + sqlDatetimeSub
-                + ",charOctetLength=" + charOctetLength
-                + ",ordinalPosition=" + ordinalPosition
-                + ",isNullable=" + isNullable
-                + ",scopeCatalog=" + scopeCatalog
-                + ",scopeSchema=" + scopeSchema
-                + ",scopeTable=" + scopeTable
-                + ",sourceDataType=" + sourceDataType
-                + ",isAutoincrement=" + isAutoincrement
-                + ",isGeneratedcolumn=" + isGeneratedcolumn
-                + '}';
+               + "tableCat=" + tableCat
+               + ",tableSchem=" + tableSchem
+               + ",tableName=" + tableName
+               + ",columnName=" + columnName
+               + ",dataType=" + dataType
+               + ",typeName=" + typeName
+               + ",columnSize=" + columnSize
+               + ",bufferLength=" + bufferLength
+               + ",decimalDigits=" + decimalDigits
+               + ",numPrecRadix=" + numPrecRadix
+               + ",nullable=" + nullable
+               + ",remarks=" + remarks
+               + ",columnDef=" + columnDef
+               + ",sqlDataType=" + sqlDataType
+               + ",sqlDatetimeSub=" + sqlDatetimeSub
+               + ",charOctetLength=" + charOctetLength
+               + ",ordinalPosition=" + ordinalPosition
+               + ",isNullable=" + isNullable
+               + ",scopeCatalog=" + scopeCatalog
+               + ",scopeSchema=" + scopeSchema
+               + ",scopeTable=" + scopeTable
+               + ",sourceDataType=" + sourceDataType
+               + ",isAutoincrement=" + isAutoincrement
+               + ",isGeneratedcolumn=" + isGeneratedcolumn
+               + '}';
     }
 
     @Override
@@ -131,57 +131,57 @@ public class Column extends TableChild {
         if (obj == null || getClass() != obj.getClass()) return false;
         final Column that = (Column) obj;
         return dataType == that.dataType
-                && columnSize == that.columnSize
-                && numPrecRadix == that.numPrecRadix
-                && nullable == that.nullable
-                && charOctetLength == that.charOctetLength
-                && ordinalPosition == that.ordinalPosition
-                && Objects.equals(tableCat, that.tableCat)
-                && Objects.equals(tableSchem, that.tableSchem)
-                && Objects.equals(tableName, that.tableName)
-                && Objects.equals(columnName, that.columnName)
-                && Objects.equals(typeName, that.typeName)
-                && Objects.equals(bufferLength, that.bufferLength)
-                && Objects.equals(decimalDigits, that.decimalDigits)
-                && Objects.equals(remarks, that.remarks)
-                && Objects.equals(columnDef, that.columnDef)
-                && Objects.equals(sqlDataType, that.sqlDataType)
-                && Objects.equals(sqlDatetimeSub, that.sqlDatetimeSub)
-                && Objects.equals(isNullable, that.isNullable)
-                && Objects.equals(scopeCatalog, that.scopeCatalog)
-                && Objects.equals(scopeSchema, that.scopeSchema)
-                && Objects.equals(scopeTable, that.scopeTable)
-                && Objects.equals(sourceDataType, that.sourceDataType)
-                && Objects.equals(isAutoincrement, that.isAutoincrement)
-                && Objects.equals(isGeneratedcolumn, that.isGeneratedcolumn);
+               && columnSize == that.columnSize
+               && numPrecRadix == that.numPrecRadix
+               && nullable == that.nullable
+               && charOctetLength == that.charOctetLength
+               && ordinalPosition == that.ordinalPosition
+               && Objects.equals(tableCat, that.tableCat)
+               && Objects.equals(tableSchem, that.tableSchem)
+               && Objects.equals(tableName, that.tableName)
+               && Objects.equals(columnName, that.columnName)
+               && Objects.equals(typeName, that.typeName)
+               && Objects.equals(bufferLength, that.bufferLength)
+               && Objects.equals(decimalDigits, that.decimalDigits)
+               && Objects.equals(remarks, that.remarks)
+               && Objects.equals(columnDef, that.columnDef)
+               && Objects.equals(sqlDataType, that.sqlDataType)
+               && Objects.equals(sqlDatetimeSub, that.sqlDatetimeSub)
+               && Objects.equals(isNullable, that.isNullable)
+               && Objects.equals(scopeCatalog, that.scopeCatalog)
+               && Objects.equals(scopeSchema, that.scopeSchema)
+               && Objects.equals(scopeTable, that.scopeTable)
+               && Objects.equals(sourceDataType, that.sourceDataType)
+               && Objects.equals(isAutoincrement, that.isAutoincrement)
+               && Objects.equals(isGeneratedcolumn, that.isGeneratedcolumn);
     }
 
     @Override
     public int hashCode() {
         return Objects.hash(tableCat,
-                tableSchem,
-                tableName,
-                columnName,
-                dataType,
-                typeName,
-                columnSize,
-                bufferLength,
-                decimalDigits,
-                numPrecRadix,
-                nullable,
-                remarks,
-                columnDef,
-                sqlDataType,
-                sqlDatetimeSub,
-                charOctetLength,
-                ordinalPosition,
-                isNullable,
-                scopeCatalog,
-                scopeSchema,
-                scopeTable,
-                sourceDataType,
-                isAutoincrement,
-                isGeneratedcolumn);
+                            tableSchem,
+                            tableName,
+                            columnName,
+                            dataType,
+                            typeName,
+                            columnSize,
+                            bufferLength,
+                            decimalDigits,
+                            numPrecRadix,
+                            nullable,
+                            remarks,
+                            columnDef,
+                            sqlDataType,
+                            sqlDatetimeSub,
+                            charOctetLength,
+                            ordinalPosition,
+                            isNullable,
+                            scopeCatalog,
+                            scopeSchema,
+                            scopeTable,
+                            sourceDataType,
+                            isAutoincrement,
+                            isGeneratedcolumn);
     }
 
     // -------------------------------------------------------------------------------------------------------- tableCat

@@ -169,24 +169,24 @@ public class FunctionColumn extends FunctionChild {
     @Override
     public String toString() {
         return super.toString() + '{'
-                + "functionCat=" + functionCat
-                + ",functionSchem=" + functionSchem
-                + ",functionName=" + functionName
-                + ",columnName=" + columnName
-                + ",columnType=" + columnType
-                + ",dataType=" + dataType
-                + ",typeName=" + typeName
-                + ",precision=" + precision
-                + ",length=" + length
-                + ",scale=" + scale
-                + ",radix=" + radix
-                + ",nullable=" + nullable
-                + ",remarks=" + remarks
-                + ",charOctetLength=" + charOctetLength
-                + ",ordinalPosition=" + ordinalPosition
-                + ",isNullable=" + isNullable
-                + ",specificName=" + specificName
-                + '}';
+               + "functionCat=" + functionCat
+               + ",functionSchem=" + functionSchem
+               + ",functionName=" + functionName
+               + ",columnName=" + columnName
+               + ",columnType=" + columnType
+               + ",dataType=" + dataType
+               + ",typeName=" + typeName
+               + ",precision=" + precision
+               + ",length=" + length
+               + ",scale=" + scale
+               + ",radix=" + radix
+               + ",nullable=" + nullable
+               + ",remarks=" + remarks
+               + ",charOctetLength=" + charOctetLength
+               + ",ordinalPosition=" + ordinalPosition
+               + ",isNullable=" + isNullable
+               + ",specificName=" + specificName
+               + '}';
     }
 
     @Override
@@ -195,43 +195,43 @@ public class FunctionColumn extends FunctionChild {
         if (obj == null || getClass() != obj.getClass()) return false;
         final FunctionColumn that = (FunctionColumn) obj;
         return columnType == that.columnType
-                && dataType == that.dataType
-                && precision == that.precision
-                && length == that.length
-                && radix == that.radix
-                && nullable == that.nullable
-                && ordinalPosition == that.ordinalPosition
-                && Objects.equals(functionCat, that.functionCat)
-                && Objects.equals(functionSchem, that.functionSchem)
-                && Objects.equals(functionName, that.functionName)
-                && Objects.equals(columnName, that.columnName)
-                && Objects.equals(typeName, that.typeName)
-                && Objects.equals(scale, that.scale)
-                && Objects.equals(remarks, that.remarks)
-                && Objects.equals(charOctetLength, that.charOctetLength)
-                && Objects.equals(isNullable, that.isNullable)
-                && Objects.equals(specificName, that.specificName);
+               && dataType == that.dataType
+               && precision == that.precision
+               && length == that.length
+               && radix == that.radix
+               && nullable == that.nullable
+               && ordinalPosition == that.ordinalPosition
+               && Objects.equals(functionCat, that.functionCat)
+               && Objects.equals(functionSchem, that.functionSchem)
+               && Objects.equals(functionName, that.functionName)
+               && Objects.equals(columnName, that.columnName)
+               && Objects.equals(typeName, that.typeName)
+               && Objects.equals(scale, that.scale)
+               && Objects.equals(remarks, that.remarks)
+               && Objects.equals(charOctetLength, that.charOctetLength)
+               && Objects.equals(isNullable, that.isNullable)
+               && Objects.equals(specificName, that.specificName);
     }
 
     @Override
     public int hashCode() {
         return Objects.hash(functionCat,
-                functionSchem,
-                functionName,
-                columnName,
-                columnType,
-                dataType,
-                typeName,
-                precision,
-                length,
-                scale,
-                radix,
-                nullable,
-                remarks,
-                charOctetLength,
-                ordinalPosition,
-                isNullable,
-                specificName);
+                            functionSchem,
+                            functionName,
+                            columnName,
+                            columnType,
+                            dataType,
+                            typeName,
+                            precision,
+                            length,
+                            scale,
+                            radix,
+                            nullable,
+                            remarks,
+                            charOctetLength,
+                            ordinalPosition,
+                            isNullable,
+                            specificName);
     }
 
     // ----------------------------------------------------------------------------------------------------- functionCat

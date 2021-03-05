@@ -155,15 +155,15 @@ public class BestRowIdentifier extends TableChild {
     @Override
     public String toString() {
         return super.toString() + '{'
-                + "scope=" + scope
-                + ",columnName=" + columnName
-                + ",dataType=" + dataType
-                + ",typeName=" + typeName
-                + ",columnSize=" + columnSize
-                + ",bufferLength=" + bufferLength
-                + ",decimalDigits=" + decimalDigits
-                + ",pseudoColumn=" + pseudoColumn
-                + '}';
+               + "scope=" + scope
+               + ",columnName=" + columnName
+               + ",dataType=" + dataType
+               + ",typeName=" + typeName
+               + ",columnSize=" + columnSize
+               + ",bufferLength=" + bufferLength
+               + ",decimalDigits=" + decimalDigits
+               + ",pseudoColumn=" + pseudoColumn
+               + '}';
     }
 
     @Override
@@ -172,13 +172,13 @@ public class BestRowIdentifier extends TableChild {
         if (obj == null || getClass() != obj.getClass()) return false;
         final BestRowIdentifier that = (BestRowIdentifier) obj;
         return scope == that.scope
-                && dataType == that.dataType
-                && columnSize == that.columnSize
-                && pseudoColumn == that.pseudoColumn
-                && Objects.equals(columnName, that.columnName)
-                && Objects.equals(typeName, that.typeName)
-                && Objects.equals(bufferLength, that.bufferLength)
-                && Objects.equals(decimalDigits, that.decimalDigits);
+               && dataType == that.dataType
+               && columnSize == that.columnSize
+               && pseudoColumn == that.pseudoColumn
+               && Objects.equals(columnName, that.columnName)
+               && Objects.equals(typeName, that.typeName)
+               && Objects.equals(bufferLength, that.bufferLength)
+               && Objects.equals(decimalDigits, that.decimalDigits);
     }
 
     @Override

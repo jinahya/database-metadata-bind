@@ -54,17 +54,17 @@ public class Table extends SchemaChild {
     @Override
     public String toString() {
         return super.toString() + '{'
-                + "tableCat=" + tableCat
-                + ",tableSchem=" + tableSchem
-                + ",tableName=" + tableName
-                + ",tableType=" + tableType
-                + ",remarks=" + remarks
-                + ",typeCat=" + typeCat
-                + ",typeSchem=" + typeSchem
-                + ",typeName=" + typeName
-                + ",selfReferencingColName=" + selfReferencingColName
-                + ",refGeneration=" + refGeneration
-                + '}';
+               + "tableCat=" + tableCat
+               + ",tableSchem=" + tableSchem
+               + ",tableName=" + tableName
+               + ",tableType=" + tableType
+               + ",remarks=" + remarks
+               + ",typeCat=" + typeCat
+               + ",typeSchem=" + typeSchem
+               + ",typeName=" + typeName
+               + ",selfReferencingColName=" + selfReferencingColName
+               + ",refGeneration=" + refGeneration
+               + '}';
     }
 
     @Override
@@ -73,29 +73,29 @@ public class Table extends SchemaChild {
         if (obj == null || getClass() != obj.getClass()) return false;
         final Table that = (Table) obj;
         return Objects.equals(tableCat, that.tableCat)
-                && Objects.equals(tableSchem, that.tableSchem)
-                && Objects.equals(tableName, that.tableName)
-                && Objects.equals(tableType, that.tableType)
-                && Objects.equals(remarks, that.remarks)
-                && Objects.equals(typeCat, that.typeCat)
-                && Objects.equals(typeSchem, that.typeSchem)
-                && Objects.equals(typeName, that.typeName)
-                && Objects.equals(selfReferencingColName, that.selfReferencingColName)
-                && Objects.equals(refGeneration, that.refGeneration);
+               && Objects.equals(tableSchem, that.tableSchem)
+               && Objects.equals(tableName, that.tableName)
+               && Objects.equals(tableType, that.tableType)
+               && Objects.equals(remarks, that.remarks)
+               && Objects.equals(typeCat, that.typeCat)
+               && Objects.equals(typeSchem, that.typeSchem)
+               && Objects.equals(typeName, that.typeName)
+               && Objects.equals(selfReferencingColName, that.selfReferencingColName)
+               && Objects.equals(refGeneration, that.refGeneration);
     }
 
     @Override
     public int hashCode() {
         return Objects.hash(tableCat,
-                tableSchem,
-                tableName,
-                tableType,
-                remarks,
-                typeCat,
-                typeSchem,
-                typeName,
-                selfReferencingColName,
-                refGeneration);
+                            tableSchem,
+                            tableName,
+                            tableType,
+                            remarks,
+                            typeCat,
+                            typeSchem,
+                            typeName,
+                            selfReferencingColName,
+                            refGeneration);
     }
 
     // -------------------------------------------------------------------------------------------------------- tableCat

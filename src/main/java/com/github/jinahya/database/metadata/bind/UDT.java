@@ -52,14 +52,14 @@ public class UDT extends SchemaChild {
     @Override
     public String toString() {
         return super.toString() + '{'
-                + "typeCat=" + typeCat
-                + ",typeSchem=" + typeSchem
-                + ",typeName=" + typeName
-                + ",className=" + className
-                + ",dataType=" + dataType
-                + ",remarks=" + remarks
-                + ",baseType=" + baseType
-                + '}';
+               + "typeCat=" + typeCat
+               + ",typeSchem=" + typeSchem
+               + ",typeName=" + typeName
+               + ",className=" + className
+               + ",dataType=" + dataType
+               + ",remarks=" + remarks
+               + ",baseType=" + baseType
+               + '}';
     }
 
     @Override
@@ -68,23 +68,23 @@ public class UDT extends SchemaChild {
         if (obj == null || getClass() != obj.getClass()) return false;
         final UDT that = (UDT) obj;
         return dataType == that.dataType
-                && Objects.equals(typeCat, that.typeCat)
-                && Objects.equals(typeSchem, that.typeSchem)
-                && Objects.equals(typeName, that.typeName)
-                && Objects.equals(className, that.className)
-                && Objects.equals(remarks, that.remarks)
-                && Objects.equals(baseType, that.baseType);
+               && Objects.equals(typeCat, that.typeCat)
+               && Objects.equals(typeSchem, that.typeSchem)
+               && Objects.equals(typeName, that.typeName)
+               && Objects.equals(className, that.className)
+               && Objects.equals(remarks, that.remarks)
+               && Objects.equals(baseType, that.baseType);
     }
 
     @Override
     public int hashCode() {
         return Objects.hash(typeCat,
-                typeSchem,
-                typeName,
-                className,
-                dataType,
-                remarks,
-                baseType);
+                            typeSchem,
+                            typeName,
+                            className,
+                            dataType,
+                            remarks,
+                            baseType);
     }
 
     // --------------------------------------------------------------------------------------------------------- typeCat

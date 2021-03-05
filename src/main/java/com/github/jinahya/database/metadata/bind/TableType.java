@@ -43,8 +43,8 @@ public class TableType implements MetadataType {
     @Override
     public String toString() {
         return super.toString() + '{'
-                + "tableType=" + tableType
-                + '}';
+               + "tableType=" + tableType
+               + '}';
     }
 
     @Override

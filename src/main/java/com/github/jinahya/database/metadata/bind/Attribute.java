@@ -95,25 +95,25 @@ public class Attribute extends UDTChild {
     @Override
     public String toString() {
         return super.toString() + '{'
-                + "typeCat=" + typeCat
-                + ",typeSchem=" + typeSchem
-                + ",typeName=" + typeName
-                + ",attrName=" + attrName
-                + ",dataType=" + dataType
-                + ",attrTypeName=" + attrTypeName
-                + ",attrSize=" + attrSize
-                + ",decimalDigits=" + decimalDigits
-                + ",numPrecRadix=" + numPrecRadix
-                + ",nullable=" + nullable
-                + ",remarks=" + remarks
-                + ",attrDef=" + attrDef
-                + ",sqlDataType=" + sqlDataType
-                + ",sqlDatetimeSub=" + sqlDatetimeSub
-                + ",charOctetLength=" + charOctetLength
-                + ",ordinalPosition=" + ordinalPosition
-                + ",isNullable=" + isNullable
-                + ",sourceDataType=" + sourceDataType
-                + '}';
+               + "typeCat=" + typeCat
+               + ",typeSchem=" + typeSchem
+               + ",typeName=" + typeName
+               + ",attrName=" + attrName
+               + ",dataType=" + dataType
+               + ",attrTypeName=" + attrTypeName
+               + ",attrSize=" + attrSize
+               + ",decimalDigits=" + decimalDigits
+               + ",numPrecRadix=" + numPrecRadix
+               + ",nullable=" + nullable
+               + ",remarks=" + remarks
+               + ",attrDef=" + attrDef
+               + ",sqlDataType=" + sqlDataType
+               + ",sqlDatetimeSub=" + sqlDatetimeSub
+               + ",charOctetLength=" + charOctetLength
+               + ",ordinalPosition=" + ordinalPosition
+               + ",isNullable=" + isNullable
+               + ",sourceDataType=" + sourceDataType
+               + '}';
     }
 
     @Override
@@ -122,45 +122,45 @@ public class Attribute extends UDTChild {
         if (obj == null || getClass() != obj.getClass()) return false;
         final Attribute that = (Attribute) obj;
         return dataType == that.dataType
-                && attrSize == that.attrSize
-                && numPrecRadix == that.numPrecRadix
-                && nullable == that.nullable
-                && charOctetLength == that.charOctetLength
-                && ordinalPosition == that.ordinalPosition
-                && Objects.equals(typeCat, that.typeCat)
-                && Objects.equals(typeSchem, that.typeSchem)
-                && Objects.equals(typeName, that.typeName)
-                && Objects.equals(attrName, that.attrName)
-                && Objects.equals(attrTypeName, that.attrTypeName)
-                && Objects.equals(decimalDigits, that.decimalDigits)
-                && Objects.equals(remarks, that.remarks)
-                && Objects.equals(attrDef, that.attrDef)
-                && Objects.equals(sqlDataType, that.sqlDataType)
-                && Objects.equals(sqlDatetimeSub, that.sqlDatetimeSub)
-                && Objects.equals(isNullable, that.isNullable)
-                && Objects.equals(sourceDataType, that.sourceDataType);
+               && attrSize == that.attrSize
+               && numPrecRadix == that.numPrecRadix
+               && nullable == that.nullable
+               && charOctetLength == that.charOctetLength
+               && ordinalPosition == that.ordinalPosition
+               && Objects.equals(typeCat, that.typeCat)
+               && Objects.equals(typeSchem, that.typeSchem)
+               && Objects.equals(typeName, that.typeName)
+               && Objects.equals(attrName, that.attrName)
+               && Objects.equals(attrTypeName, that.attrTypeName)
+               && Objects.equals(decimalDigits, that.decimalDigits)
+               && Objects.equals(remarks, that.remarks)
+               && Objects.equals(attrDef, that.attrDef)
+               && Objects.equals(sqlDataType, that.sqlDataType)
+               && Objects.equals(sqlDatetimeSub, that.sqlDatetimeSub)
+               && Objects.equals(isNullable, that.isNullable)
+               && Objects.equals(sourceDataType, that.sourceDataType);
     }
 
     @Override
     public int hashCode() {
         return Objects.hash(typeCat,
-                typeSchem,
-                typeName,
-                attrName,
-                dataType,
-                attrTypeName,
-                attrSize,
-                decimalDigits,
-                numPrecRadix,
-                nullable,
-                remarks,
-                attrDef,
-                sqlDataType,
-                sqlDatetimeSub,
-                charOctetLength,
-                ordinalPosition,
-                isNullable,
-                sourceDataType);
+                            typeSchem,
+                            typeName,
+                            attrName,
+                            dataType,
+                            attrTypeName,
+                            attrSize,
+                            decimalDigits,
+                            numPrecRadix,
+                            nullable,
+                            remarks,
+                            attrDef,
+                            sqlDataType,
+                            sqlDatetimeSub,
+                            charOctetLength,
+                            ordinalPosition,
+                            isNullable,
+                            sourceDataType);
     }
 
     // -------------------------------------------------------------------------------------------------------- typeInfo
