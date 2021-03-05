@@ -24,10 +24,9 @@ import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
 import java.sql.DatabaseMetaData;
 import java.util.Collection;
+import java.util.Objects;
 
-import static java.sql.DatabaseMetaData.versionColumnNotPseudo;
-import static java.sql.DatabaseMetaData.versionColumnPseudo;
-import static java.sql.DatabaseMetaData.versionColumnUnknown;
+import static java.sql.DatabaseMetaData.*;
 
 /**
  * An entity class for version columns.
@@ -36,11 +35,11 @@ import static java.sql.DatabaseMetaData.versionColumnUnknown;
  * @see Context#getVersionColumns(String, String, String, Collection)
  */
 @XmlRootElement
-public class VersionColumn extends AbstractChild<Table> {
+public class VersionColumn extends TableChild {
 
     private static final long serialVersionUID = 3587959398829593292L;
 
-    // -------------------------------------------------------------------------
+    // -----------------------------------------------------------------------------------------------------------------
 
     /**
      * Constants for pseudo column values of version columns.
@@ -66,8 +65,6 @@ public class VersionColumn extends AbstractChild<Table> {
          * DatabaseMetaData#versionColumnPseudo}.
          */
         VERSION_COLUMN_NULLABLE_UNKNOWN(versionColumnPseudo);
-
-        // -----------------------------------------------------------------------------------------------------------------
 
         /**
          * Returns the constant whose raw value equals to given. An instance of {@link IllegalArgumentException} will be
@@ -115,15 +112,42 @@ public class VersionColumn extends AbstractChild<Table> {
     @Override
     public String toString() {
         return super.toString() + '{'
-               + "scope=" + scope
-               + ",columnName=" + columnName
-               + ",dataType=" + dataType
-               + ",typeName=" + typeName
-               + ",columnSize=" + columnSize
-               + ",bufferLength=" + bufferLength
-               + ",decimalDigits=" + decimalDigits
-               + ",pseudoColumn=" + pseudoColumn
-               + '}';
+                + "scope=" + scope
+                + ",columnName=" + columnName
+                + ",dataType=" + dataType
+                + ",typeName=" + typeName
+                + ",columnSize=" + columnSize
+                + ",bufferLength=" + bufferLength
+                + ",decimalDigits=" + decimalDigits
+                + ",pseudoColumn=" + pseudoColumn
+                + '}';
+    }
+
+    @Override
+    public boolean equals(final Object obj) {
+        if (this == obj) return true;
+        if (obj == null || getClass() != obj.getClass()) return false;
+        final VersionColumn that = (VersionColumn) obj;
+        return dataType == that.dataType
+                && columnSize == that.columnSize
+                && bufferLength == that.bufferLength
+                && pseudoColumn == that.pseudoColumn
+                && Objects.equals(scope, that.scope)
+                && Objects.equals(columnName, that.columnName)
+                && Objects.equals(typeName, that.typeName)
+                && Objects.equals(decimalDigits, that.decimalDigits);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(scope,
+                columnName,
+                dataType,
+                typeName,
+                columnSize,
+                bufferLength,
+                decimalDigits,
+                pseudoColumn);
     }
 
     // ----------------------------------------------------------------------------------------------------------- scope
@@ -211,46 +235,38 @@ public class VersionColumn extends AbstractChild<Table> {
     }
 
     // -----------------------------------------------------------------------------------------------------------------
-    @XmlElement(nillable = true)
+    @XmlElement(required = true, nillable = true)
     @Unused
     @Label("SCOPE")
-    @Bind(label = "SCOPE", unused = true)
-    private short scope;
+    private Short scope;
 
     // -----------------------------------------------------------------------------------------------------------------
-    @XmlElement
+    @XmlElement(required = true)
     @Label("COLUMN_NAME")
-    @Bind(label = "COLUMN_NAME")
     private String columnName;
 
-    @XmlElement
+    @XmlElement(required = true)
     @Label("DATA_TYPE")
-    @Bind(label = "DATA_TYPE")
     private int dataType;
 
-    @XmlElement
+    @XmlElement(required = true)
     @Label("TYPE_NAME")
-    @Bind(label = "TYPE_NAME")
     private String typeName;
 
-    @XmlElement
+    @XmlElement(required = true)
     @Label("COLUMN_SIZE")
-    @Bind(label = "COLUMN_SIZE")
     private int columnSize;
 
-    @XmlElement
+    @XmlElement(required = true)
     @Label("BUFFER_LENGTH")
-    @Bind(label = "BUFFER_LENGTH")
     private int bufferLength;
 
-    @XmlElement(nillable = true)
+    @XmlElement(required = true, nillable = true)
     @MayBeNull
     @Label("DECIMAL_DIGITS")
-    @Bind(label = "DECIMAL_DIGITS", nillable = true)
     private Short decimalDigits;
 
-    @XmlElement
+    @XmlElement(required = true)
     @Label("PSEUDO_COLUMN")
-    @Bind(label = "PSEUDO_COLUMN")
     private short pseudoColumn;
 }

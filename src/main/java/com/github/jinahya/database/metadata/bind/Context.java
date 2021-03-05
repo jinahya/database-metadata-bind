@@ -21,18 +21,9 @@ package com.github.jinahya.database.metadata.bind;
  */
 
 import java.lang.reflect.Field;
-import java.sql.Connection;
-import java.sql.DatabaseMetaData;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.sql.SQLFeatureNotSupportedException;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.sql.*;
+import java.util.*;
 import java.util.Map.Entry;
-import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -194,13 +185,13 @@ public class Context {
 
     private void getAttributes(final UDT udt) throws SQLException {
         requireNonNull(udt, "udt is null");
-        getAttributes(udt.getParent_().getParent_().getTableCat(),
-                      udt.getParent_().getTableSchem(),
-                      udt.getTypeName(),
-                      null,
-                      udt.getAttributes())
+        getAttributes(udt.getParent().getParent().getTableCat(),
+                udt.getParent().getTableSchem(),
+                udt.getTypeName(),
+                null,
+                udt.getAttributes())
                 .forEach(a -> {
-                    a.setParent_(udt);
+                    a.setParent(udt);
                 });
     }
 
@@ -258,14 +249,14 @@ public class Context {
 
     private void getBestRowIdentifier(final Table table) throws SQLException {
         for (final BestRowIdentifier.Scope scope : BestRowIdentifier.Scope.values()) {
-            getBestRowIdentifier(table.getParent_().getParent_().getTableCat(),
-                                 table.getParent_().getTableSchem(),
-                                 table.getTableName(),
-                                 scope.getRawValue(),
-                                 true,
-                                 table.getBestRowIdentifiers())
+            getBestRowIdentifier(table.getParent().getParent().getTableCat(),
+                    table.getParent().getTableSchem(),
+                    table.getTableName(),
+                    scope.getRawValue(),
+                    true,
+                    table.getBestRowIdentifiers())
                     .forEach(i -> {
-                        i.setParent_(table);
+                        i.setParent(table);
                     });
         }
     }
@@ -362,6 +353,8 @@ public class Context {
             }
         } catch (final SQLFeatureNotSupportedException sqlfnse) {
             Utils.logSqlFeatureNotSupportedException(logger, sqlfnse);
+        } catch (final SQLSyntaxErrorException sqlsee) {
+            Utils.logSqlSyntaxErrorException(logger, sqlsee);
         }
         return collection;
     }
@@ -386,13 +379,13 @@ public class Context {
 
     private void getColumnPrivileges(final Column column) throws SQLException {
         requireNonNull(column, "column is null");
-        getColumnPrivileges(column.getParent_().getParent_().getParent_().getTableCat(),
-                            column.getParent_().getParent_().getTableSchem(),
-                            column.getParent_().getTableName(),
-                            column.getColumnName(),
-                            column.getColumnPrivileges())
+        getColumnPrivileges(column.getParent().getParent().getParent().getTableCat(),
+                column.getParent().getParent().getTableSchem(),
+                column.getParent().getTableName(),
+                column.getColumnName(),
+                column.getColumnPrivileges())
                 .forEach(p -> {
-                    p.setParent_(column);
+                    p.setParent(column);
                 });
     }
 
@@ -447,13 +440,13 @@ public class Context {
 
     private void getColumns(final Table table) throws SQLException {
         requireNonNull(table, "table is null");
-        getColumns(table.getParent_().getParent_().getTableCat(),
-                   table.getParent_().getTableSchem(),
-                   table.getTableName(),
-                   null,
-                   table.getColumns())
+        getColumns(table.getParent().getParent().getTableCat(),
+                table.getParent().getTableSchem(),
+                table.getTableName(),
+                null,
+                table.getColumns())
                 .forEach(c -> {
-                    c.setParent_(table);
+                    c.setParent(table);
                 });
         for (final Column column : table.getColumns()) {
             getColumnPrivileges(column);
@@ -512,8 +505,8 @@ public class Context {
             final String foreignCatalog, final String foreignSchema, final String foreignTable)
             throws SQLException {
         return getCrossReferences(parentCatalog, parentSchema, parentTable,
-                                  foreignCatalog, foreignSchema, foreignTable,
-                                  new ArrayList<>());
+                foreignCatalog, foreignSchema, foreignTable,
+                new ArrayList<>());
     }
 
     // ---------------------------------------------------------------------------------------------------- getFunctions
@@ -547,12 +540,12 @@ public class Context {
 
     private void getFunctions(final Schema schema) throws SQLException {
         requireNonNull(schema, "schema is null");
-        getFunctions(schema.getParent_().getTableCat(),
-                     schema.getTableSchem(),
-                     null,
-                     schema.getFunctions())
+        getFunctions(schema.getParent().getTableCat(),
+                schema.getTableSchem(),
+                null,
+                schema.getFunctions())
                 .forEach(f -> {
-                    f.setParent_(schema);
+                    f.setParent(schema);
                 });
         for (final Function function : schema.getFunctions()) {
             getFunctionColumns(function);
@@ -591,13 +584,13 @@ public class Context {
 
     private void getFunctionColumns(final Function function) throws SQLException {
         requireNonNull(function, "function is null");
-        getFunctionColumns(function.getParent_().getParent_().getTableCat(),
-                           function.getParent_().getTableSchem(),
-                           function.getFunctionName(),
-                           null,
-                           function.getFunctionColumns())
+        getFunctionColumns(function.getParent().getParent().getTableCat(),
+                function.getParent().getTableSchem(),
+                function.getFunctionName(),
+                null,
+                function.getFunctionColumns())
                 .forEach(c -> {
-                    c.setParent_(function);
+                    c.setParent(function);
                 });
     }
 
@@ -631,12 +624,12 @@ public class Context {
 
     private void getExportedKeys(final Table table) throws SQLException {
         requireNonNull(table, "table is null");
-        getExportedKeys(table.getParent_().getParent_().getTableCat(),
-                        table.getParent_().getTableSchem(),
-                        table.getTableName(),
-                        table.getExportedKeys())
+        getExportedKeys(table.getParent().getParent().getTableCat(),
+                table.getParent().getTableSchem(),
+                table.getTableName(),
+                table.getExportedKeys())
                 .forEach(k -> {
-                    k.setParent_(table);
+                    k.setParent(table);
                 });
     }
 
@@ -670,12 +663,12 @@ public class Context {
 
     private void getImportedKeys(final Table table) throws SQLException {
         requireNonNull(table, "table is null");
-        getImportedKeys(table.getParent_().getParent_().getTableCat(),
-                        table.getParent_().getTableSchem(),
-                        table.getTableName(),
-                        table.getImportedKeys())
+        getImportedKeys(table.getParent().getParent().getTableCat(),
+                table.getParent().getTableSchem(),
+                table.getTableName(),
+                table.getImportedKeys())
                 .forEach(k -> {
-                    k.setParent_(table);
+                    k.setParent(table);
                 });
     }
 
@@ -712,14 +705,14 @@ public class Context {
 
     private void getIndexInfo(final Table table) throws SQLException {
         requireNonNull(table, "table is null");
-        getIndexInfo(table.getParent_().getParent_().getTableCat(),
-                     table.getParent_().getTableSchem(),
-                     table.getTableName(),
-                     false,
-                     true,
-                     table.getIndexInfo())
+        getIndexInfo(table.getParent().getParent().getTableCat(),
+                table.getParent().getTableSchem(),
+                table.getTableName(),
+                false,
+                true,
+                table.getIndexInfo())
                 .forEach(i -> {
-                    i.setParent_(table);
+                    i.setParent(table);
                 });
     }
 
@@ -751,12 +744,12 @@ public class Context {
     }
 
     private void getPrimaryKeys(final Table table) throws SQLException {
-        getPrimaryKeys(table.getParent_().getParent_().getTableCat(),
-                       table.getParent_().getTableSchem(),
-                       table.getTableName(),
-                       table.getPrimaryKeys())
+        getPrimaryKeys(table.getParent().getParent().getTableCat(),
+                table.getParent().getTableSchem(),
+                table.getTableName(),
+                table.getPrimaryKeys())
                 .forEach(k -> {
-                    k.setParent_(table);
+                    k.setParent(table);
                 });
     }
 
@@ -792,13 +785,13 @@ public class Context {
 
     private void getProcedureColumns(final Procedure procedure) throws SQLException {
         requireNonNull(procedure, "procedure is null");
-        getProcedureColumns(procedure.getParent_().getParent_().getTableCat(),
-                            procedure.getParent_().getTableSchem(),
-                            procedure.getProcedureName(),
-                            null,
-                            procedure.getProcedureColumns())
+        getProcedureColumns(procedure.getSchema().getCatalog().getTableCat(),
+                procedure.getSchema().getTableSchem(),
+                procedure.getProcedureName(),
+                null,
+                procedure.getProcedureColumns())
                 .forEach(c -> {
-                    c.setProcedure_(procedure);
+                    c.setProcedure(procedure);
                 });
     }
 
@@ -833,12 +826,12 @@ public class Context {
 
     private void getProcedures(final Schema schema) throws SQLException {
         requireNonNull(schema, "schema is null");
-        getProcedures(schema.getParent_().getTableCat(),
-                      schema.getTableSchem(),
-                      null,
-                      schema.getProcedures())
+        getProcedures(schema.getParent().getTableCat(),
+                schema.getTableSchem(),
+                null,
+                schema.getProcedures())
                 .forEach(p -> {
-                    p.setParent_(schema);
+                    p.setParent(schema);
                 });
         for (final Procedure procedure : schema.getProcedures()) {
             getProcedureColumns(procedure);
@@ -877,13 +870,13 @@ public class Context {
 
     private void getPseudoColumns(final Table table) throws SQLException {
         requireNonNull(table, "table is null");
-        getPseudoColumns(table.getParent_().getParent_().getTableCat(),
-                         table.getParent_().getTableSchem(),
-                         table.getTableName(),
-                         null,
-                         table.getPseudoColumns())
+        getPseudoColumns(table.getParent().getParent().getTableCat(),
+                table.getParent().getTableSchem(),
+                table.getTableName(),
+                null,
+                table.getPseudoColumns())
                 .forEach(c -> {
-                    c.setParent_(table);
+                    c.setParent(table);
                 });
     }
 
@@ -954,10 +947,10 @@ public class Context {
     void getSchemas(final Catalog catalog) throws SQLException {
         requireNonNull(catalog, "catalog is null");
         getSchemas(catalog.getTableCat(),
-                   null,
-                   catalog.getSchemas())
+                null,
+                catalog.getSchemas())
                 .forEach(s -> {
-                    s.setParent_(catalog);
+                    s.setParent(catalog);
                 });
         if (catalog.getSchemas().isEmpty()) {
             catalog.getSchemas().add(Schema.newVirtualInstance(catalog));
@@ -1007,12 +1000,12 @@ public class Context {
 
     private void getSuperTables(final Table table) throws SQLException {
         requireNonNull(table, "table is null");
-        getSuperTables(table.getParent_().getParent_().getTableCat(),
-                       table.getParent_().getTableSchem(),
-                       table.getTableName(),
-                       table.getSuperTables())
+        getSuperTables(table.getParent().getParent().getTableCat(),
+                table.getParent().getTableSchem(),
+                table.getTableName(),
+                table.getSuperTables())
                 .forEach(t -> {
-                    t.setParent_(table);
+                    t.setParent(table);
                 });
     }
 
@@ -1047,12 +1040,12 @@ public class Context {
 
     private void getSuperTypes(final UDT udt) throws SQLException {
         requireNonNull(udt, "udt is null");
-        getSuperTypes(udt.getParent_().getParent_().getTableCat(),
-                      udt.getParent_().getTableSchem(),
-                      udt.getTypeName(),
-                      udt.getSuperTypes())
+        getSuperTypes(udt.getParent().getParent().getTableCat(),
+                udt.getParent().getTableSchem(),
+                udt.getTypeName(),
+                udt.getSuperTypes())
                 .forEach(t -> {
-                    t.setParent_(udt);
+                    t.setParent(udt);
                 });
     }
 
@@ -1079,17 +1072,19 @@ public class Context {
             }
         } catch (final SQLFeatureNotSupportedException sqlfnse) {
             Utils.logSqlFeatureNotSupportedException(logger, sqlfnse);
+        } catch (final SQLSyntaxErrorException sqlsee) {
+            Utils.logSqlSyntaxErrorException(logger, sqlsee);
         }
         return collection;
     }
 
     private void getTablePrivileges(final Table table) throws SQLException {
-        getTablePrivileges(table.getParent_().getParent_().getTableCat(),
-                           table.getParent_().getTableSchem(),
-                           table.getTableName(),
-                           table.getTablePrivileges())
+        getTablePrivileges(table.getParent().getParent().getTableCat(),
+                table.getParent().getTableSchem(),
+                table.getTableName(),
+                table.getTablePrivileges())
                 .forEach(p -> {
-                    p.setParent_(table);
+                    p.setParent(table);
                 });
     }
 
@@ -1149,13 +1144,13 @@ public class Context {
 
     private void getTables(final Schema schema) throws SQLException {
         requireNonNull(schema, "schema is null");
-        getTables(schema.getParent_().getTableCat(),
-                  schema.getTableSchem(),
-                  null,
-                  null,
-                  schema.getTables())
+        getTables(schema.getParent().getTableCat(),
+                schema.getTableSchem(),
+                null,
+                null,
+                schema.getTables())
                 .forEach(t -> {
-                    t.setParent_(schema);
+                    t.setParent(schema);
                 });
         for (final Table table : schema.getTables()) {
             getBestRowIdentifier(table);
@@ -1242,13 +1237,13 @@ public class Context {
 
     private void getUDTs(final Schema schema) throws SQLException {
         requireNonNull(schema, "schema is null");
-        getUDTs(schema.getParent_().getTableCat(),
+        getUDTs(schema.getParent().getTableCat(),
                 schema.getTableSchem(),
                 null,
                 null,
                 schema.getUDTs())
                 .forEach(t -> {
-                    t.setParent_(schema);
+                    t.setParent(schema);
                 });
         for (final UDT udt : schema.getUDTs()) {
             getAttributes(udt);
@@ -1288,12 +1283,12 @@ public class Context {
 
     private void getVersionColumns(final Table table) throws SQLException {
         requireNonNull(table, "table is null");
-        getVersionColumns(table.getParent_().getParent_().getTableCat(),
-                          table.getParent_().getTableSchem(),
-                          table.getTableName(),
-                          table.getVersionColumns())
+        getVersionColumns(table.getParent().getParent().getTableCat(),
+                table.getParent().getTableSchem(),
+                table.getTableName(),
+                table.getVersionColumns())
                 .forEach(c -> {
-                    c.setParent_(table);
+                    c.setParent(table);
                 });
     }
 

@@ -22,12 +22,12 @@ package com.github.jinahya.database.metadata.bind;
 
 import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
-import javax.xml.bind.annotation.XmlAttribute;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlElementRef;
 import javax.xml.bind.annotation.XmlRootElement;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 /**
  * An entity class for binding the result of {@link java.sql.DatabaseMetaData#getProcedures(java.lang.String,
@@ -36,21 +36,53 @@ import java.util.List;
  * @author Jin Kwon &lt;jinahya_at_gmail.com&gt;
  */
 @XmlRootElement
-public class Procedure extends AbstractChild<Schema> {
+public class Procedure extends SchemaChild {
 
     private static final long serialVersionUID = -6262056388403934829L;
 
-    // -------------------------------------------------------------------------
+    // -----------------------------------------------------------------------------------------------------------------
+
+    /**
+     * Creates a new instance.
+     */
+    public Procedure() {
+        super();
+    }
+
+    // -----------------------------------------------------------------------------------------------------------------
     @Override
     public String toString() {
         return super.toString() + '{'
-               + "procedureCat=" + procedureCat
-               + ",procedureSchem=" + procedureSchem
-               + ",procedureName=" + procedureName
-               + ",remarks=" + remarks
-               + ",procedureType=" + procedureType
-               + ",specificName=" + specificName
-               + '}';
+                + "procedureCat=" + procedureCat
+                + ",procedureSchem=" + procedureSchem
+                + ",procedureName=" + procedureName
+                + ",remarks=" + remarks
+                + ",procedureType=" + procedureType
+                + ",specificName=" + specificName
+                + '}';
+    }
+
+    @Override
+    public boolean equals(final Object obj) {
+        if (this == obj) return true;
+        if (obj == null || getClass() != obj.getClass()) return false;
+        final Procedure that = (Procedure) obj;
+        return procedureType == that.procedureType
+                && Objects.equals(procedureCat, that.procedureCat)
+                && Objects.equals(procedureSchem, that.procedureSchem)
+                && Objects.equals(procedureName, that.procedureName)
+                && Objects.equals(remarks, that.remarks)
+                && Objects.equals(specificName, that.specificName);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(procedureCat,
+                procedureSchem,
+                procedureName,
+                remarks,
+                procedureType,
+                specificName);
     }
 
     // ---------------------------------------------------------------------------------------------------- procedureCat
@@ -62,7 +94,7 @@ public class Procedure extends AbstractChild<Schema> {
         this.procedureCat = procedureCat;
     }
 
-    // ---------------------------------------------------------- procedureSchem
+    // -------------------------------------------------------------------------------------------------- procedureSchem
     public String getProcedureSchem() {
         return procedureSchem;
     }
@@ -71,7 +103,7 @@ public class Procedure extends AbstractChild<Schema> {
         this.procedureSchem = procedureSchem;
     }
 
-    // ----------------------------------------------------------- procedureName
+    // --------------------------------------------------------------------------------------------------- procedureName
     public String getProcedureName() {
         return procedureName;
     }
@@ -80,7 +112,7 @@ public class Procedure extends AbstractChild<Schema> {
         this.procedureName = procedureName;
     }
 
-    // ----------------------------------------------------------------- remarks
+    // --------------------------------------------------------------------------------------------------------- remarks
     public String getRemarks() {
         return remarks;
     }
@@ -89,7 +121,7 @@ public class Procedure extends AbstractChild<Schema> {
         this.remarks = remarks;
     }
 
-    // ----------------------------------------------------------- procedureType
+    // --------------------------------------------------------------------------------------------------- procedureType
     public short getProcedureType() {
         return procedureType;
     }
@@ -98,7 +130,7 @@ public class Procedure extends AbstractChild<Schema> {
         this.procedureType = procedureType;
     }
 
-    // ------------------------------------------------------------ specificName
+    // ---------------------------------------------------------------------------------------------------- specificName
     public String getSpecificName() {
         return specificName;
     }
@@ -116,37 +148,31 @@ public class Procedure extends AbstractChild<Schema> {
     }
 
     // -----------------------------------------------------------------------------------------------------------------
-    @XmlAttribute
+    @XmlElement(required = true, nillable = true)
     @MayBeNull
     @Label("PROCEDURE_CAT")
-    @Bind(label = "PROCEDURE_CAT", nillable = true)
     private String procedureCat;
 
-    @XmlAttribute
+    @XmlElement(required = true, nillable = true)
     @MayBeNull
     @Label("PROCEDURE_SCHEM")
-    @Bind(label = "PROCEDURE_SCHEM", nillable = true)
     private String procedureSchem;
 
-    // -----------------------------------------------------------------------------------------------------------------
-    @XmlElement
+    @XmlElement(required = true)
     @Label("PROCEDURE_NAME")
-    @Bind(label = "PROCEDURE_NAME")
     private String procedureName;
 
-    @XmlElement
+    // -----------------------------------------------------------------------------------------------------------------
+    @XmlElement(required = true)
     @Label("REMARKS")
-    @Bind(label = "REMARKS")
     private String remarks;
 
-    @XmlElement
+    @XmlElement(required = true)
     @Label("PROCEDURE_TYPE")
-    @Bind(label = "PROCEDURE_TYPE")
     private short procedureType;
 
-    @XmlElement
+    @XmlElement(required = true)
     @Label("SPECIFIC_NAME")
-    @Bind(label = "SPECIFIC_NAME")
     private String specificName;
 
     // -----------------------------------------------------------------------------------------------------------------

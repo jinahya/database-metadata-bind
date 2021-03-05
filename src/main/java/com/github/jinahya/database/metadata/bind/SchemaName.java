@@ -22,6 +22,7 @@ package com.github.jinahya.database.metadata.bind;
 
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
+import java.util.Objects;
 
 /**
  * An entity class for binding the result of {@link java.sql.DatabaseMetaData#getSchemas()}.
@@ -33,16 +34,40 @@ public class SchemaName implements MetadataType {
 
     private static final long serialVersionUID = 5784631477568740816L;
 
-    // -------------------------------------------------------------------------
+    // -----------------------------------------------------------------------------------------------------------------
+
+    /**
+     * Creates a new instance.
+     */
+    public SchemaName() {
+        super();
+    }
+
+    // -----------------------------------------------------------------------------------------------------------------
     @Override
     public String toString() {
         return super.toString() + '{'
-               + "tableSchem=" + tableSchem
-               + ",tableCatalog=" + tableCatalog
-               + '}';
+                + "tableSchem=" + tableSchem
+                + ",tableCatalog=" + tableCatalog
+                + '}';
     }
 
-    // -------------------------------------------------------------- tableSchem
+    @Override
+    public boolean equals(final Object obj) {
+        if (this == obj) return true;
+        if (obj == null || getClass() != obj.getClass()) return false;
+        final SchemaName that = (SchemaName) obj;
+        return Objects.equals(tableSchem, that.tableSchem)
+                && Objects.equals(tableCatalog, that.tableCatalog);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(tableSchem,
+                tableCatalog);
+    }
+
+    // ------------------------------------------------------------------------------------------------------ tableSchem
     public String getTableSchem() {
         return tableSchem;
     }
@@ -51,7 +76,7 @@ public class SchemaName implements MetadataType {
         this.tableSchem = tableSchem;
     }
 
-    // ------------------------------------------------------------ tableCatalog
+    // ---------------------------------------------------------------------------------------------------- tableCatalog
     public String getTableCatalog() {
         return tableCatalog;
     }
@@ -60,12 +85,13 @@ public class SchemaName implements MetadataType {
         this.tableCatalog = tableCatalog;
     }
 
-    // -------------------------------------------------------------------------
-    @XmlElement
-    @Bind(label = "TABLE_SCHEM")
+    // -----------------------------------------------------------------------------------------------------------------
+    @XmlElement(required = true)
+    @Label("TABLE_SCHEM")
     private String tableSchem;
 
-    @XmlElement(nillable = true)
-    @Bind(label = "TABLE_CATALOG", nillable = true)
+    @XmlElement(required = true, nillable = true)
+    @MayBeNull
+    @Label("TABLE_CATALOG")
     private String tableCatalog;
 }

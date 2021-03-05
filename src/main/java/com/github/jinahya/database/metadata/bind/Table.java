@@ -22,12 +22,12 @@ package com.github.jinahya.database.metadata.bind;
 
 import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
-import javax.xml.bind.annotation.XmlAttribute;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlElementRef;
 import javax.xml.bind.annotation.XmlRootElement;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 /**
  * A entity class for binding the result of {@link java.sql.DatabaseMetaData#getTables(java.lang.String,
@@ -36,26 +36,66 @@ import java.util.List;
  * @author Jin Kwon &lt;jinahya_at_gmail.com&gt;
  */
 @XmlRootElement
-public class Table extends AbstractChild<Schema> {
+public class Table extends SchemaChild {
 
     // -----------------------------------------------------------------------------------------------------------------
     private static final long serialVersionUID = 6590036695540141125L;
 
     // -----------------------------------------------------------------------------------------------------------------
+
+    /**
+     * Creates a new instance.
+     */
+    public Table() {
+        super();
+    }
+
+    // -----------------------------------------------------------------------------------------------------------------
     @Override
     public String toString() {
         return super.toString() + '{'
-               + "tableCat=" + tableCat
-               + ",tableSchem=" + tableSchem
-               + ",tableName=" + tableName
-               + ",tableType=" + tableType
-               + ",remarks=" + remarks
-               + ",typeCat=" + typeCat
-               + ",typeSchem=" + typeSchem
-               + ",typeName=" + typeName
-               + ",selfReferencingColName=" + selfReferencingColName
-               + ",refGeneration=" + refGeneration
-               + '}';
+                + "tableCat=" + tableCat
+                + ",tableSchem=" + tableSchem
+                + ",tableName=" + tableName
+                + ",tableType=" + tableType
+                + ",remarks=" + remarks
+                + ",typeCat=" + typeCat
+                + ",typeSchem=" + typeSchem
+                + ",typeName=" + typeName
+                + ",selfReferencingColName=" + selfReferencingColName
+                + ",refGeneration=" + refGeneration
+                + '}';
+    }
+
+    @Override
+    public boolean equals(final Object obj) {
+        if (this == obj) return true;
+        if (obj == null || getClass() != obj.getClass()) return false;
+        final Table that = (Table) obj;
+        return Objects.equals(tableCat, that.tableCat)
+                && Objects.equals(tableSchem, that.tableSchem)
+                && Objects.equals(tableName, that.tableName)
+                && Objects.equals(tableType, that.tableType)
+                && Objects.equals(remarks, that.remarks)
+                && Objects.equals(typeCat, that.typeCat)
+                && Objects.equals(typeSchem, that.typeSchem)
+                && Objects.equals(typeName, that.typeName)
+                && Objects.equals(selfReferencingColName, that.selfReferencingColName)
+                && Objects.equals(refGeneration, that.refGeneration);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(tableCat,
+                tableSchem,
+                tableName,
+                tableType,
+                remarks,
+                typeCat,
+                typeSchem,
+                typeName,
+                selfReferencingColName,
+                refGeneration);
     }
 
     // -------------------------------------------------------------------------------------------------------- tableCat
@@ -291,63 +331,53 @@ public class Table extends AbstractChild<Schema> {
     }
 
     // -----------------------------------------------------------------------------------------------------------------
-    @XmlAttribute
+    @XmlElement(required = true, nillable = true)
     @MayBeNull
     @Label("TABLE_CAT")
-    @Bind(label = "TABLE_CAT", nillable = true)
     private String tableCat;
 
-    @XmlAttribute
+    @XmlElement(required = true, nillable = true)
     @MayBeNull
     @Label("TABLE_SCHEM")
-    @Bind(label = "TABLE_SCHEM", nillable = true)
     private String tableSchem;
 
-    // -----------------------------------------------------------------------------------------------------------------
-    @XmlElement
+    @XmlElement(required = true)
     @Label("TABLE_NAME")
-    @Bind(label = "TABLE_NAME")
     private String tableName;
 
-    @XmlElement
+    // -----------------------------------------------------------------------------------------------------------------
+    @XmlElement(required = true)
     @Label("TABLE_TYPE")
-    @Bind(label = "TABLE_TYPE")
     private String tableType;
 
-    @XmlElement(nillable = true)
+    @XmlElement(required = true, nillable = true)
     @MayBeNull
     @Label("REMARKS")
-    @Bind(label = "REMARKS", nillable = true)
     private String remarks;
 
-    @XmlElement(nillable = true)
+    @XmlElement(required = true, nillable = true)
     @MayBeNull
     @Label("TYPE_CAT")
-    @Bind(label = "TYPE_CAT", nillable = true)
     private String typeCat;
 
-    @XmlElement(nillable = true)
+    @XmlElement(required = true, nillable = true)
     @MayBeNull
     @Label("TYPE_SCHEM")
-    @Bind(label = "TYPE_SCHEM", nillable = true)
     private String typeSchem;
 
-    @XmlElement(nillable = true)
+    @XmlElement(required = true, nillable = true)
     @MayBeNull
     @Label("TYPE_NAME")
-    @Bind(label = "TYPE_NAME", nillable = true)
     private String typeName;
 
-    @XmlElement(nillable = true)
+    @XmlElement(required = true, nillable = true)
     @MayBeNull
     @Label("SELF_REFERENCING_COL_NAME")
-    @Bind(label = "SELF_REFERENCING_COL_NAME", nillable = true)
     private String selfReferencingColName;
 
-    @XmlElement(nillable = true)
+    @XmlElement(required = true, nillable = true)
     @MayBeNull
     @Label("REF_GENERATION")
-    @Bind(label = "REF_GENERATION", nillable = true)
     private String refGeneration;
 
     // -----------------------------------------------------------------------------------------------------------------

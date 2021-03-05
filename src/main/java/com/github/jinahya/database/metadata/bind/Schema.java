@@ -37,7 +37,7 @@ import java.util.Objects;
  * @author Jin Kwon &lt;jinahya_at_gmail.com&gt;
  */
 @XmlRootElement
-public class Schema extends AbstractChild<Catalog> {
+public class Schema extends CatalogChild {
 
     private static final long serialVersionUID = 7457236468401244963L;
 
@@ -55,7 +55,7 @@ public class Schema extends AbstractChild<Catalog> {
     static Schema newVirtualInstance(final Catalog catalog) {
         final Schema instance = new Schema();
         instance.virtual = Boolean.TRUE;
-        instance.setParent_(catalog);
+        instance.setParent(catalog);
         instance.setTableSchem("");
         return instance;
     }
@@ -73,9 +73,9 @@ public class Schema extends AbstractChild<Catalog> {
     @Override
     public String toString() {
         return super.toString() + '{'
-               + ATTRIBUTE_NAME_TABLE_SCHEM + '=' + tableCatalog
-               + ',' + ATTRIBUTE_NAME_TABLE_SCHEM + '=' + tableSchem
-               + '}';
+                + ATTRIBUTE_NAME_TABLE_SCHEM + '=' + tableCatalog
+                + ',' + ATTRIBUTE_NAME_TABLE_SCHEM + '=' + tableSchem
+                + '}';
     }
 
     @Override
@@ -84,25 +84,18 @@ public class Schema extends AbstractChild<Catalog> {
         if (obj == null || getClass() != obj.getClass()) return false;
         final Schema that = (Schema) obj;
         return Objects.equals(tableCatalog, that.tableCatalog)
-               && Objects.equals(tableSchem, that.tableSchem);
+                && Objects.equals(tableSchem, that.tableSchem);
     }
 
     @Override
     public int hashCode() {
         return Objects.hash(tableCatalog,
-                            tableSchem);
+                tableSchem);
     }
+
+    // --------------------------------------------------------------------------------------------------------- catalog
 
     // --------------------------------------------------------------------------------------------------------- virtual
-
-    /**
-     * Indicates whether this instance is a virtual instance.
-     *
-     * @return {@code true} if this instance is a virtual instance; {@code false} otherwise.
-     */
-    public boolean isVirtual() {
-        return virtual != null && virtual;
-    }
 
     // ---------------------------------------------------------------------------------------------------- tableCatalog
     public String getTableCatalog() {
@@ -113,11 +106,6 @@ public class Schema extends AbstractChild<Catalog> {
         this.tableCatalog = tableCatalog;
     }
 
-    Schema tableCatalog(final String tableCatalog) {
-        setTableCatalog(tableCatalog);
-        return this;
-    }
-
     // ------------------------------------------------------------------------------------------------------ tableSchem
     public String getTableSchem() {
         return tableSchem;
@@ -125,11 +113,6 @@ public class Schema extends AbstractChild<Catalog> {
 
     public void setTableSchem(final String tableSchem) {
         this.tableSchem = tableSchem;
-    }
-
-    Schema tableSchem(final String tableSchem) {
-        setTableSchem(tableSchem);
-        return this;
     }
 
     // ------------------------------------------------------------------------------------------------------- functions
@@ -169,17 +152,15 @@ public class Schema extends AbstractChild<Catalog> {
     Boolean virtual = Boolean.FALSE;
 
     // -----------------------------------------------------------------------------------------------------------------
-    @XmlAttribute(required = true)
+    @XmlElement(required = true, nillable = true)
     @MayBeNull
     @Label(COLUMN_NAME_TABLE_CATALOG)
-    @Bind(label = COLUMN_NAME_TABLE_CATALOG, nillable = true)
     private String tableCatalog;
 
     // -----------------------------------------------------------------------------------------------------------------
-    @XmlElement
+    @XmlElement(required = true)
     @NotNull
     @Label(COLUMN_NAME_TABLE_SCHEM)
-    @Bind(label = COLUMN_NAME_TABLE_SCHEM)
     private String tableSchem;
 
     // -----------------------------------------------------------------------------------------------------------------

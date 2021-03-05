@@ -20,10 +20,9 @@ package com.github.jinahya.database.metadata.bind;
  * #L%
  */
 
-import javax.xml.bind.annotation.XmlAttribute;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
-import javax.xml.bind.annotation.XmlTransient;
+import java.util.Objects;
 
 /**
  * An entity class for column privileges.
@@ -31,7 +30,7 @@ import javax.xml.bind.annotation.XmlTransient;
  * @author Jin Kwon &lt;jinahya_at_gmail.com&gt;
  */
 @XmlRootElement
-public class ColumnPrivilege extends AbstractChild<Column> {
+public class ColumnPrivilege extends ColumnChild {
 
     // -----------------------------------------------------------------------------------------------------------------
     private static final long serialVersionUID = 4384654744147773380L;
@@ -40,25 +39,42 @@ public class ColumnPrivilege extends AbstractChild<Column> {
     @Override
     public String toString() {
         return super.toString() + '{'
-               + "tableCat=" + tableCat
-               + ",tableSchem=" + tableSchem
-               + ",tableName=" + tableName
-               + ",columnName=" + columnName
-               + ",grantor=" + grantor
-               + ",grantee=" + grantee
-               + ",privilege=" + privilege
-               + ",isGrantable=" + isGrantable
-               + '}';
+                + "tableCat=" + tableCat
+                + ",tableSchem=" + tableSchem
+                + ",tableName=" + tableName
+                + ",columnName=" + columnName
+                + ",grantor=" + grantor
+                + ",grantee=" + grantee
+                + ",privilege=" + privilege
+                + ",isGrantable=" + isGrantable
+                + '}';
     }
 
-    // ---------------------------------------------------------------------------------------------------------- column
-    @XmlTransient
-    Column getColumn_() {
-        return getParent_();
+    @Override
+    public boolean equals(final Object obj) {
+        if (this == obj) return true;
+        if (obj == null || getClass() != obj.getClass()) return false;
+        final ColumnPrivilege that = (ColumnPrivilege) obj;
+        return Objects.equals(tableCat, that.tableCat)
+                && Objects.equals(tableSchem, that.tableSchem)
+                && Objects.equals(tableName, that.tableName)
+                && Objects.equals(columnName, that.columnName)
+                && Objects.equals(grantor, that.grantor)
+                && Objects.equals(grantee, that.grantee)
+                && Objects.equals(privilege, that.privilege)
+                && Objects.equals(isGrantable, that.isGrantable);
     }
 
-    void setColumn_(final Column column_) {
-        setParent_(column_);
+    @Override
+    public int hashCode() {
+        return Objects.hash(tableCat,
+                tableSchem,
+                tableName,
+                columnName,
+                grantor,
+                grantee,
+                privilege,
+                isGrantable);
     }
 
     // -------------------------------------------------------------------------------------------------------- tableCat
@@ -134,48 +150,40 @@ public class ColumnPrivilege extends AbstractChild<Column> {
     }
 
     // -----------------------------------------------------------------------------------------------------------------
-    @XmlAttribute
+    @XmlElement(required = true, nillable = true)
     @MayBeNull
     @Label("TABLE_CAT")
-    @Bind(label = "TABLE_CAT", nillable = true)
     private String tableCat;
 
-    @XmlAttribute
+    @XmlElement(required = true, nillable = true)
     @MayBeNull
     @Label("TABLE_SCHEM")
-    @Bind(label = "TABLE_SCHEM", nillable = true)
     private String tableSchem;
 
-    @XmlAttribute
+    @XmlElement(required = true)
     @Label("TABLE_NAME")
-    @Bind(label = "TABLE_NAME")
     private String tableName;
 
-    @XmlAttribute
+    @XmlElement(required = true)
     @Label("COLUMN_NAME")
-    @Bind(label = "COLUMN_NAME")
     private String columnName;
 
     // -----------------------------------------------------------------------------------------------------------------
-    @XmlElement(nillable = true)
+    @XmlElement(nillable = true, required = true)
     @MayBeNull
     @Label("GRANTOR")
-    @Bind(label = "GRANTOR", nillable = true)
     private String grantor;
 
-    @XmlElement
+    @XmlElement(required = true)
     @Label("GRANTEE")
-    @Bind(label = "GRANTEE")
     private String grantee;
 
-    @XmlElement
+    @XmlElement(required = true)
     @Label("PRIVILEGE")
-    @Bind(label = "PRIVILEGE")
     private String privilege;
 
-    @XmlElement(nillable = true)
+    @XmlElement(nillable = true, required = true)
     @MayBeNull
     @Label("IS_GRANTABLE")
-    @Bind(label = "IS_GRANTABLE", nillable = true)
     private String isGrantable;
 }

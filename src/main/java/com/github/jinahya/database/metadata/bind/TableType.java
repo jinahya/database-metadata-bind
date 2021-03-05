@@ -22,6 +22,7 @@ package com.github.jinahya.database.metadata.bind;
 
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
+import java.util.Objects;
 
 /**
  * An entity class for binding the result of {@link java.sql.DatabaseMetaData#getTableTypes()}.
@@ -34,11 +35,29 @@ public class TableType implements MetadataType {
     private static final long serialVersionUID = -7630634982776331078L;
 
     // -----------------------------------------------------------------------------------------------------------------
+    public TableType() {
+        super();
+    }
+
+    // -----------------------------------------------------------------------------------------------------------------
     @Override
     public String toString() {
         return super.toString() + '{'
-               + "tableType=" + tableType
-               + '}';
+                + "tableType=" + tableType
+                + '}';
+    }
+
+    @Override
+    public boolean equals(final Object obj) {
+        if (this == obj) return true;
+        if (obj == null || getClass() != obj.getClass()) return false;
+        final TableType that = (TableType) obj;
+        return Objects.equals(tableType, that.tableType);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(tableType);
     }
 
     // ------------------------------------------------------------------------------------------------------- tableType
@@ -51,8 +70,7 @@ public class TableType implements MetadataType {
     }
 
     // -----------------------------------------------------------------------------------------------------------------
-    @XmlElement
+    @XmlElement(required = true)
     @Label("TABLE_TYPE")
-    @Bind(label = "TABLE_TYPE")
     private String tableType;
 }

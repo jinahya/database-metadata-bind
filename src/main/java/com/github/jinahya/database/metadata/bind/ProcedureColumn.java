@@ -20,18 +20,12 @@ package com.github.jinahya.database.metadata.bind;
  * #L%
  */
 
-import javax.xml.bind.annotation.XmlAttribute;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
-import javax.xml.bind.annotation.XmlTransient;
 import java.sql.DatabaseMetaData;
+import java.util.Objects;
 
-import static java.sql.DatabaseMetaData.functionColumnResult;
-import static java.sql.DatabaseMetaData.procedureColumnIn;
-import static java.sql.DatabaseMetaData.procedureColumnInOut;
-import static java.sql.DatabaseMetaData.procedureColumnOut;
-import static java.sql.DatabaseMetaData.procedureColumnReturn;
-import static java.sql.DatabaseMetaData.procedureColumnUnknown;
+import static java.sql.DatabaseMetaData.*;
 
 /**
  * An entity class for binding the result of {@link java.sql.DatabaseMetaData#getProcedureColumns(java.lang.String,
@@ -40,11 +34,11 @@ import static java.sql.DatabaseMetaData.procedureColumnUnknown;
  * @author Jin Kwon &lt;jinahya_at_gmail.com&gt;
  */
 @XmlRootElement
-public class ProcedureColumn extends AbstractChild<Procedure> {
+public class ProcedureColumn extends ProcedureChild {
 
     private static final long serialVersionUID = 3894753719381358829L;
 
-    // -------------------------------------------------------------------------
+    // -----------------------------------------------------------------------------------------------------------------
 
     /**
      * Constants for column types of procedure columns.
@@ -89,8 +83,6 @@ public class ProcedureColumn extends AbstractChild<Procedure> {
          */
         PROCEDURE_COLUMN_RETURN(procedureColumnReturn); // 5
 
-        // ---------------------------------------------------------------------
-
         /**
          * Returns the constant whose raw value equals to given. An instance of {@link IllegalArgumentException} will be
          * thrown if no constant matches.
@@ -102,12 +94,9 @@ public class ProcedureColumn extends AbstractChild<Procedure> {
             return IntFieldEnums.valueOf(ColumnType.class, rawValue);
         }
 
-        // ---------------------------------------------------------------------
         ColumnType(final int rawValue) {
             this.rawValue = rawValue;
         }
-
-        // ---------------------------------------------------------------------
 
         /**
          * Returns the raw value of this constant.
@@ -119,11 +108,10 @@ public class ProcedureColumn extends AbstractChild<Procedure> {
             return rawValue;
         }
 
-        // ---------------------------------------------------------------------
         private final int rawValue;
     }
 
-    // -------------------------------------------------------------------------
+    // -----------------------------------------------------------------------------------------------------------------
 
     /**
      * Creates a new instance.
@@ -132,41 +120,82 @@ public class ProcedureColumn extends AbstractChild<Procedure> {
         super();
     }
 
-    // -------------------------------------------------------------------------
+    // -----------------------------------------------------------------------------------------------------------------
     @Override
     public String toString() {
         return super.toString() + '{'
-               + "procedureCat=" + procedureCat
-               + ",procedureSchem=" + procedureSchem
-               + ",procedureName=" + procedureName
-               + ",columnName=" + columnName
-               + ",columnType=" + columnType
-               + ",dataType=" + dataType
-               + ",typeName=" + typeName
-               + ",precision=" + precision
-               + ",length=" + length
-               + ",scale=" + scale
-               + ",radix=" + radix
-               + ",nullable=" + nullable
-               + ",remarks=" + remarks
-               + ",columnDef=" + columnDef
-               + ",sqlDataType=" + sqlDataType
-               + ",sqlDatetimeSub=" + sqlDatetimeSub
-               + ",charOctetLength=" + charOctetLength
-               + ",ordinalPosition=" + ordinalPosition
-               + ",isNullable=" + isNullable
-               + ",specificName=" + specificName
-               + '}';
+                + "procedureCat=" + procedureCat
+                + ",procedureSchem=" + procedureSchem
+                + ",procedureName=" + procedureName
+                + ",columnName=" + columnName
+                + ",columnType=" + columnType
+                + ",dataType=" + dataType
+                + ",typeName=" + typeName
+                + ",precision=" + precision
+                + ",length=" + length
+                + ",scale=" + scale
+                + ",radix=" + radix
+                + ",nullable=" + nullable
+                + ",remarks=" + remarks
+                + ",columnDef=" + columnDef
+                + ",sqlDataType=" + sqlDataType
+                + ",sqlDatetimeSub=" + sqlDatetimeSub
+                + ",charOctetLength=" + charOctetLength
+                + ",ordinalPosition=" + ordinalPosition
+                + ",isNullable=" + isNullable
+                + ",specificName=" + specificName
+                + '}';
     }
 
-    // ------------------------------------------------------------------------------------------------------- procedure
-    @XmlTransient
-    public Procedure getProcedure_() {
-        return getParent_();
+    @Override
+    public boolean equals(final Object obj) {
+        if (this == obj) return true;
+        if (obj == null || getClass() != obj.getClass()) return false;
+        final ProcedureColumn that = (ProcedureColumn) obj;
+        return columnType == that.columnType
+                && dataType == that.dataType
+                && precision == that.precision
+                && length == that.length
+                && radix == that.radix
+                && nullable == that.nullable
+                && ordinalPosition == that.ordinalPosition
+                && Objects.equals(procedureCat, that.procedureCat)
+                && Objects.equals(procedureSchem, that.procedureSchem)
+                && Objects.equals(procedureName, that.procedureName)
+                && Objects.equals(columnName, that.columnName)
+                && Objects.equals(typeName, that.typeName)
+                && Objects.equals(scale, that.scale)
+                && Objects.equals(remarks, that.remarks)
+                && Objects.equals(columnDef, that.columnDef)
+                && Objects.equals(sqlDataType, that.sqlDataType)
+                && Objects.equals(sqlDatetimeSub, that.sqlDatetimeSub)
+                && Objects.equals(charOctetLength, that.charOctetLength)
+                && Objects.equals(isNullable, that.isNullable)
+                && Objects.equals(specificName, that.specificName);
     }
 
-    public void setProcedure_(final Procedure procedure) {
-        setParent_(procedure);
+    @Override
+    public int hashCode() {
+        return Objects.hash(procedureCat,
+                procedureSchem,
+                procedureName,
+                columnName,
+                columnType,
+                dataType,
+                typeName,
+                precision,
+                length,
+                scale,
+                radix,
+                nullable,
+                remarks,
+                columnDef,
+                sqlDataType,
+                sqlDatetimeSub,
+                charOctetLength,
+                ordinalPosition,
+                isNullable,
+                specificName);
     }
 
     // ---------------------------------------------------------------------------------------------------- procedureCat
@@ -350,113 +379,93 @@ public class ProcedureColumn extends AbstractChild<Procedure> {
     }
 
     // -----------------------------------------------------------------------------------------------------------------
-    @XmlAttribute
+    @XmlElement(required = true, nillable = true)
     @MayBeNull
     @Label("PROCEDURE_CAT")
-    @Bind(label = "PROCEDURE_CAT", nillable = true)
     private String procedureCat;
 
-    @XmlAttribute
+    @XmlElement(required = true, nillable = true)
     @MayBeNull
     @Label("PROCEDURE_SCHEM")
-    @Bind(label = "PROCEDURE_SCHEM", nillable = true)
     private String procedureSchem;
 
-    @XmlAttribute
+    @XmlElement(required = true)
     @Label("PROCEDURE_NAME")
-    @Bind(label = "PROCEDURE_NAME")
     private String procedureName;
 
     // -----------------------------------------------------------------------------------------------------------------
-    @XmlElement
+    @XmlElement(required = true)
     @Label("COLUMN_NAME")
-    @Bind(label = "COLUMN_NAME")
     private String columnName;
 
-    @XmlElement
+    @XmlElement(required = true)
     @Label("COLUMN_TYPE")
-    @Bind(label = "COLUMN_TYPE")
     private short columnType;
 
-    @XmlElement
+    @XmlElement(required = true)
     @Label("DATA_TYPE")
-    @Bind(label = "DATA_TYPE")
     private int dataType;
 
-    @XmlElement
+    @XmlElement(required = true)
     @Label("TYPE_NAME")
-    @Bind(label = "TYPE_NAME")
     private String typeName;
 
-    @XmlElement
+    @XmlElement(required = true)
     @Label("PRECISION")
-    @Bind(label = "PRECISION")
     private int precision;
 
-    @XmlElement
+    @XmlElement(required = true)
     @Label("LENGTH")
-    @Bind(label = "LENGTH")
     private int length;
 
     // https://issues.apache.org/jira/browse/DERBY-7103
-    @XmlElement
+    @XmlElement(required = true, nillable = true)
     @MayBeNull
     @Label("SCALE")
-    @Bind(label = "SCALE", nillable = true)
     private Short scale;
 
-    @XmlElement
+    @XmlElement(required = true)
     @Label("RADIX")
-    @Bind(label = "RADIX")
     private short radix;
 
-    @XmlElement
+    @XmlElement(required = true)
     @Label("NULLABLE")
-    @Bind(label = "NULLABLE")
     private short nullable;
 
-    @XmlElement
+    @XmlElement(required = true, nillable = true)
     @MayBeNullByVendor("derby") // https://issues.apache.org/jira/browse/DERBY-7101
     @Label("REMARKS")
-    @Bind(label = "REMARKS")
     private String remarks;
 
-    @XmlElement(nillable = true)
+    @XmlElement(required = true, nillable = true)
     @MayBeNull
     @Label("COLUMN_DEF")
-    @Bind(label = "COLUMN_DEF", nillable = true)
     private String columnDef;
 
-    @XmlElement(nillable = true)
+    @XmlElement(required = true, nillable = true)
     @Reserved
     @Label("SQL_DATA_TYPE")
-    @Bind(label = "SQL_DATA_TYPE", reserved = true)
     private Integer sqlDataType;
 
-    @XmlElement(nillable = true)
+    @XmlElement(required = true, nillable = true)
     @Reserved
     @Label("SQL_DATETIME_SUB")
-    @Bind(label = "SQL_DATETIME_SUB", reserved = true)
     private Integer sqlDatetimeSub;
 
-    @XmlElement(nillable = true)
+    @XmlElement(required = true, nillable = true)
     @MayBeNull
     @Label("CHAR_OCTET_LENGTH")
-    @Bind(label = "CHAR_OCTET_LENGTH", nillable = true)
     private Integer charOctetLength;
 
-    @XmlElement(nillable = true)
+    @XmlElement(required = true)
     @Label("ORDINAL_POSITION")
-    @Bind(label = "ORDINAL_POSITION")
     private int ordinalPosition;
 
-    @XmlElement
+    @XmlElement(required = true)
     @Label("IS_NULLABLE")
-    @Bind(label = "IS_NULLABLE")
     private String isNullable;
 
-    @XmlElement
+    @XmlElement(required = true)
     @Label("SPECIFIC_NAME")
-    @Bind(label = "SPECIFIC_NAME")
     private String specificName;
 }

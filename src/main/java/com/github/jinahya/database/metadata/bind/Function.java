@@ -20,13 +20,13 @@ package com.github.jinahya.database.metadata.bind;
  * #L%
  */
 
-import javax.xml.bind.annotation.XmlAttribute;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlElementRef;
 import javax.xml.bind.annotation.XmlRootElement;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
+import java.util.Objects;
 
 /**
  * An entity class for binding the result of {@link java.sql.DatabaseMetaData#getFunctions(java.lang.String,
@@ -38,7 +38,7 @@ import java.util.List;
  * @see FunctionColumn
  */
 @XmlRootElement
-public class Function extends AbstractChild<Schema> {
+public class Function extends SchemaChild {
 
     private static final long serialVersionUID = -3318947900237453301L;
 
@@ -56,13 +56,36 @@ public class Function extends AbstractChild<Schema> {
     @Override
     public String toString() {
         return super.toString() + '{'
-               + ATTRIBUTE_NAME_FUNCTION_CAT + '=' + functionCat
-               + ',' + ATTRIBUTE_NAME_FUNCTION_SCHEM + '=' + functionSchem
-               + ",functionName=" + functionName
-               + ",remarks=" + remarks
-               + ",functionType=" + functionType
-               + ",specificName=" + specificName
-               + '}';
+                + ATTRIBUTE_NAME_FUNCTION_CAT + '=' + functionCat
+                + ',' + ATTRIBUTE_NAME_FUNCTION_SCHEM + '=' + functionSchem
+                + ",functionName=" + functionName
+                + ",remarks=" + remarks
+                + ",functionType=" + functionType
+                + ",specificName=" + specificName
+                + '}';
+    }
+
+    @Override
+    public boolean equals(final Object obj) {
+        if (this == obj) return true;
+        if (obj == null || getClass() != obj.getClass()) return false;
+        final Function that = (Function) obj;
+        return functionType == that.functionType
+                && Objects.equals(functionCat, that.functionCat)
+                && Objects.equals(functionSchem, that.functionSchem)
+                && Objects.equals(functionName, that.functionName)
+                && Objects.equals(remarks, that.remarks)
+                && Objects.equals(specificName, that.specificName);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(functionCat,
+                functionSchem,
+                functionName,
+                remarks,
+                functionType,
+                specificName);
     }
 
     // ----------------------------------------------------------------------------------------------------- functionCat
@@ -134,37 +157,31 @@ public class Function extends AbstractChild<Schema> {
     }
 
     // -----------------------------------------------------------------------------------------------------------------
-    @XmlAttribute(required = true)
+    @XmlElement(required = true, nillable = true)
     @MayBeNull
     @Label(COLUMN_NAME_FUNCTION_CAT)
-    @Bind(label = COLUMN_NAME_FUNCTION_CAT, nillable = true)
     private String functionCat;
 
-    @XmlAttribute(required = true)
+    @XmlElement(required = true, nillable = true)
     @MayBeNull
     @Label(COLUMN_NAME_FUNCTION_SCHEM)
-    @Bind(label = COLUMN_NAME_FUNCTION_SCHEM, nillable = true)
     private String functionSchem;
 
-    // -----------------------------------------------------------------------------------------------------------------
-    @XmlElement
+    @XmlElement(required = true)
     @Label("FUNCTION_NAME")
-    @Bind(label = "FUNCTION_NAME")
     private String functionName;
 
-    @XmlElement
+    // -----------------------------------------------------------------------------------------------------------------
+    @XmlElement(required = true)
     @Label("REMARKS")
-    @Bind(label = "REMARKS")
     private String remarks;
 
-    @XmlElement
+    @XmlElement(required = true)
     @Label("FUNCTION_TYPE")
-    @Bind(label = "FUNCTION_TYPE")
     private short functionType;
 
-    @XmlElement
+    @XmlElement(required = true)
     @Label("SPECIFIC_NAME")
-    @Bind(label = "SPECIFIC_NAME")
     private String specificName;
 
     // -----------------------------------------------------------------------------------------------------------------

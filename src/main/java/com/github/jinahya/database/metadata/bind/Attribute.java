@@ -21,15 +21,12 @@ package com.github.jinahya.database.metadata.bind;
  */
 
 import javax.validation.constraints.NotBlank;
-import javax.xml.bind.annotation.XmlAttribute;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
 import java.sql.DatabaseMetaData;
 import java.util.Objects;
 
-import static java.sql.DatabaseMetaData.attributeNoNulls;
-import static java.sql.DatabaseMetaData.attributeNullable;
-import static java.sql.DatabaseMetaData.attributeNullableUnknown;
+import static java.sql.DatabaseMetaData.*;
 
 /**
  * An entity class for type attributes.
@@ -38,7 +35,7 @@ import static java.sql.DatabaseMetaData.attributeNullableUnknown;
  * @see Context#getAttributes(java.lang.String, java.lang.String, java.lang.String, java.lang.String)
  */
 @XmlRootElement
-public class Attribute extends AbstractChild<UDT> {
+public class Attribute extends UDTChild {
 
     private static final long serialVersionUID = 5020389308460154799L;
 
@@ -98,25 +95,25 @@ public class Attribute extends AbstractChild<UDT> {
     @Override
     public String toString() {
         return super.toString() + '{'
-               + "typeCat=" + typeCat
-               + ",typeSchem=" + typeSchem
-               + ",typeName=" + typeName
-               + ",attrName=" + attrName
-               + ",dataType=" + dataType
-               + ",attrTypeName=" + attrTypeName
-               + ",attrSize=" + attrSize
-               + ",decimalDigits=" + decimalDigits
-               + ",numPrecRadix=" + numPrecRadix
-               + ",nullable=" + nullable
-               + ",remarks=" + remarks
-               + ",attrDef=" + attrDef
-               + ",sqlDataType=" + sqlDataType
-               + ",sqlDatetimeSub=" + sqlDatetimeSub
-               + ",charOctetLength=" + charOctetLength
-               + ",ordinalPosition=" + ordinalPosition
-               + ",isNullable=" + isNullable
-               + ",sourceDataType=" + sourceDataType
-               + '}';
+                + "typeCat=" + typeCat
+                + ",typeSchem=" + typeSchem
+                + ",typeName=" + typeName
+                + ",attrName=" + attrName
+                + ",dataType=" + dataType
+                + ",attrTypeName=" + attrTypeName
+                + ",attrSize=" + attrSize
+                + ",decimalDigits=" + decimalDigits
+                + ",numPrecRadix=" + numPrecRadix
+                + ",nullable=" + nullable
+                + ",remarks=" + remarks
+                + ",attrDef=" + attrDef
+                + ",sqlDataType=" + sqlDataType
+                + ",sqlDatetimeSub=" + sqlDatetimeSub
+                + ",charOctetLength=" + charOctetLength
+                + ",ordinalPosition=" + ordinalPosition
+                + ",isNullable=" + isNullable
+                + ",sourceDataType=" + sourceDataType
+                + '}';
     }
 
     @Override
@@ -125,54 +122,54 @@ public class Attribute extends AbstractChild<UDT> {
         if (obj == null || getClass() != obj.getClass()) return false;
         final Attribute that = (Attribute) obj;
         return dataType == that.dataType
-               && attrSize == that.attrSize
-               && numPrecRadix == that.numPrecRadix
-               && nullable == that.nullable
-               && charOctetLength == that.charOctetLength
-               && ordinalPosition == that.ordinalPosition
-               && Objects.equals(typeCat, that.typeCat)
-               && Objects.equals(typeSchem, that.typeSchem)
-               && Objects.equals(typeName, that.typeName)
-               && Objects.equals(attrName, that.attrName)
-               && Objects.equals(attrTypeName, that.attrTypeName)
-               && Objects.equals(decimalDigits, that.decimalDigits)
-               && Objects.equals(remarks, that.remarks)
-               && Objects.equals(attrDef, that.attrDef)
-               && Objects.equals(sqlDataType, that.sqlDataType)
-               && Objects.equals(sqlDatetimeSub, that.sqlDatetimeSub)
-               && Objects.equals(isNullable, that.isNullable)
-               && Objects.equals(sourceDataType, that.sourceDataType);
+                && attrSize == that.attrSize
+                && numPrecRadix == that.numPrecRadix
+                && nullable == that.nullable
+                && charOctetLength == that.charOctetLength
+                && ordinalPosition == that.ordinalPosition
+                && Objects.equals(typeCat, that.typeCat)
+                && Objects.equals(typeSchem, that.typeSchem)
+                && Objects.equals(typeName, that.typeName)
+                && Objects.equals(attrName, that.attrName)
+                && Objects.equals(attrTypeName, that.attrTypeName)
+                && Objects.equals(decimalDigits, that.decimalDigits)
+                && Objects.equals(remarks, that.remarks)
+                && Objects.equals(attrDef, that.attrDef)
+                && Objects.equals(sqlDataType, that.sqlDataType)
+                && Objects.equals(sqlDatetimeSub, that.sqlDatetimeSub)
+                && Objects.equals(isNullable, that.isNullable)
+                && Objects.equals(sourceDataType, that.sourceDataType);
     }
 
     @Override
     public int hashCode() {
         return Objects.hash(typeCat,
-                            typeSchem,
-                            typeName,
-                            attrName,
-                            dataType,
-                            attrTypeName,
-                            attrSize,
-                            decimalDigits,
-                            numPrecRadix,
-                            nullable,
-                            remarks,
-                            attrDef,
-                            sqlDataType,
-                            sqlDatetimeSub,
-                            charOctetLength,
-                            ordinalPosition,
-                            isNullable,
-                            sourceDataType);
+                typeSchem,
+                typeName,
+                attrName,
+                dataType,
+                attrTypeName,
+                attrSize,
+                decimalDigits,
+                numPrecRadix,
+                nullable,
+                remarks,
+                attrDef,
+                sqlDataType,
+                sqlDatetimeSub,
+                charOctetLength,
+                ordinalPosition,
+                isNullable,
+                sourceDataType);
     }
 
     // -------------------------------------------------------------------------------------------------------- typeInfo
     public UDT getTypeInfo() {
-        return getParent_();
+        return getParent();
     }
 
     public void setTypeInfo(final UDT udt) {
-        setParent_(udt);
+        setParent(udt);
     }
 
     // --------------------------------------------------------------------------------------------------------- typeCat
@@ -341,102 +338,84 @@ public class Attribute extends AbstractChild<UDT> {
     private transient TypeInfo typeInfo;
 
     // -----------------------------------------------------------------------------------------------------------------
-    @XmlAttribute
+    @XmlElement(nillable = true, required = true)
     @MayBeNull
     @Label("TYPE_CAT")
-    @Bind(label = "TYPE_CAT", nillable = true)
     private String typeCat;
 
-    @XmlAttribute
+    @XmlElement(nillable = true, required = true)
     @MayBeNull
     @Label("TYPE_SCHEM")
-    @Bind(label = "TYPE_SCHEM", nillable = true)
     private String typeSchem;
 
-    @XmlAttribute
+    @XmlElement(required = true)
     @NotBlank
     @Label("TYPE_NAME")
-    @Bind(label = "TYPE_NAME")
     private String typeName;
 
     // -----------------------------------------------------------------------------------------------------------------
-    @XmlElement
+    @XmlElement(required = true)
     @Label("ATTR_NAME")
-    @Bind(label = "ATTR_NAME")
     private String attrName;
 
-    @XmlElement
+    @XmlElement(required = true)
     @Label("DATA_TYPE")
-    @Bind(label = "DATA_TYPE")
     private int dataType;
 
-    @XmlElement
+    @XmlElement(required = true)
     @Label("ATTR_TYPE_NAME")
-    @Bind(label = "ATTR_TYPE_NAME")
     private String attrTypeName;
 
-    @XmlElement
+    @XmlElement(required = true)
     @Label("ATTR_SIZE")
-    @Bind(label = "ATTR_SIZE")
     private int attrSize;
 
-    @XmlElement
+    @XmlElement(required = true)
     @Label("DECIMAL_DIGITS")
-    @Bind(label = "DECIMAL_DIGITS")
     private Integer decimalDigits;
 
-    @XmlElement
+    @XmlElement(required = true)
     @Label("NUM_PREC_RADIX")
-    @Bind(label = "NUM_PREC_RADIX")
     private int numPrecRadix;
 
-    @XmlElement
+    @XmlElement(required = true)
     @Label("NULLABLE")
-    @Bind(label = "NULLABLE")
     private int nullable;
 
-    @XmlElement(nillable = true)
+    @XmlElement(nillable = true, required = true)
     @MayBeNull
     @Label("REMARKS")
-    @Bind(label = "REMARKS", nillable = true)
     private String remarks;
 
-    @XmlElement(nillable = true)
+    @XmlElement(nillable = true, required = true)
     @MayBeNull
     @Label("ATTR_DEF")
-    @Bind(label = "ATTR_DEF", nillable = true)
     private String attrDef;
 
-    @XmlElement(nillable = true)
+    @XmlElement(nillable = true, required = true)
     @Unused
     @Label("SQL_DATA_TYPE")
-    @Bind(label = "SQL_DATA_TYPE", unused = true)
     private Integer sqlDataType;
 
-    @XmlElement(nillable = true)
+    @XmlElement(required = true, nillable = true)
     @Unused
     @Label("SQL_DATETIME_SUB")
-    @Bind(label = "SQL_DATETIME_SUB", unused = true)
     private Integer sqlDatetimeSub;
 
-    @XmlElement
+    @XmlElement(required = true)
     @Label("CHAR_OCTET_LENGTH")
-    @Bind(label = "CHAR_OCTET_LENGTH")
     private int charOctetLength;
 
-    @XmlElement
+    @XmlElement(required = true)
     @Label("ORDINAL_POSITION")
-    @Bind(label = "ORDINAL_POSITION")
     private int ordinalPosition;
 
-    @XmlElement
+    @XmlElement(required = true)
     @Label("IS_NULLABLE")
-    @Bind(label = "IS_NULLABLE")
     private String isNullable;
 
-    @XmlElement(nillable = true)
+    @XmlElement(nillable = true, required = true)
     @MayBeNull
     @Label("SOURCE_DATA_TYPE")
-    @Bind(label = "SOURCE_DATA_TYPE", nillable = true)
     private Short sourceDataType;
 }

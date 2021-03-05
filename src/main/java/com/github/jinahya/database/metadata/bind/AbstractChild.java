@@ -23,23 +23,23 @@ package com.github.jinahya.database.metadata.bind;
 import javax.validation.Valid;
 import javax.xml.bind.annotation.XmlTransient;
 
-abstract class AbstractChild<P extends MetadataType> implements Child<P> {
+@XmlTransient
+abstract class AbstractChild<P extends MetadataType> implements MetadataType {
 
     AbstractChild() {
         super();
     }
 
-    @Override
-    public P getParent_() {
-        return parent_;
+    @XmlTransient
+    P getParent() {
+        return parent;
     }
 
-    @Override
-    public void setParent_(final P parent) {
-        this.parent_ = parent;
+    void setParent(final P parent) {
+        this.parent = parent;
     }
 
     @XmlTransient
     @Valid
-    private P parent_;
+    private P parent;
 }

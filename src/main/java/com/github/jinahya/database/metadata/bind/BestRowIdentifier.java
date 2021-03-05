@@ -23,13 +23,9 @@ package com.github.jinahya.database.metadata.bind;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
 import java.sql.DatabaseMetaData;
+import java.util.Objects;
 
-import static java.sql.DatabaseMetaData.bestRowNotPseudo;
-import static java.sql.DatabaseMetaData.bestRowPseudo;
-import static java.sql.DatabaseMetaData.bestRowSession;
-import static java.sql.DatabaseMetaData.bestRowTemporary;
-import static java.sql.DatabaseMetaData.bestRowTransaction;
-import static java.sql.DatabaseMetaData.bestRowUnknown;
+import static java.sql.DatabaseMetaData.*;
 
 /**
  * Represents best row identifiers of tables.
@@ -38,7 +34,7 @@ import static java.sql.DatabaseMetaData.bestRowUnknown;
  * @see Context#getBestRowIdentifier(java.lang.String, java.lang.String, java.lang.String, int, boolean)
  */
 @XmlRootElement
-public class BestRowIdentifier extends AbstractChild<Table> {
+public class BestRowIdentifier extends TableChild {
 
     // -----------------------------------------------------------------------------------------------------------------
     private static final long serialVersionUID = -6733770602373723371L;
@@ -159,15 +155,43 @@ public class BestRowIdentifier extends AbstractChild<Table> {
     @Override
     public String toString() {
         return super.toString() + '{'
-               + "scope=" + scope
-               + ",columnName=" + columnName
-               + ",dataType=" + dataType
-               + ",typeName=" + typeName
-               + ",columnSize=" + columnSize
-               + ",bufferLength=" + bufferLength
-               + ",decimalDigits=" + decimalDigits
-               + ",pseudoColumn=" + pseudoColumn
-               + '}';
+                + "scope=" + scope
+                + ",columnName=" + columnName
+                + ",dataType=" + dataType
+                + ",typeName=" + typeName
+                + ",columnSize=" + columnSize
+                + ",bufferLength=" + bufferLength
+                + ",decimalDigits=" + decimalDigits
+                + ",pseudoColumn=" + pseudoColumn
+                + '}';
+    }
+
+    @Override
+    public boolean equals(final Object obj) {
+        if (this == obj) return true;
+        if (obj == null || getClass() != obj.getClass()) return false;
+        final BestRowIdentifier that = (BestRowIdentifier) obj;
+        return scope == that.scope
+                && dataType == that.dataType
+                && columnSize == that.columnSize
+                && pseudoColumn == that.pseudoColumn
+                && Objects.equals(columnName, that.columnName)
+                && Objects.equals(typeName, that.typeName)
+                && Objects.equals(bufferLength, that.bufferLength)
+                && Objects.equals(decimalDigits, that.decimalDigits);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(
+                scope,
+                columnName,
+                dataType,
+                typeName,
+                columnSize,
+                bufferLength,
+                decimalDigits,
+                pseudoColumn);
     }
 
     // ----------------------------------------------------------------------------------------------------------- scope

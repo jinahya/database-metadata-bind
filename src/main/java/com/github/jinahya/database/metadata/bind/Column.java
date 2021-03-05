@@ -22,17 +22,15 @@ package com.github.jinahya.database.metadata.bind;
 
 import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
-import javax.xml.bind.annotation.XmlAttribute;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlElementRef;
 import javax.xml.bind.annotation.XmlRootElement;
 import java.sql.DatabaseMetaData;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
-import static java.sql.DatabaseMetaData.columnNoNulls;
-import static java.sql.DatabaseMetaData.columnNullable;
-import static java.sql.DatabaseMetaData.columnNullableUnknown;
+import static java.sql.DatabaseMetaData.*;
 
 /**
  * An entity class for columns
@@ -40,11 +38,11 @@ import static java.sql.DatabaseMetaData.columnNullableUnknown;
  * @author Jin Kwon &lt;jinahya_at_gmail.com&gt;
  */
 @XmlRootElement
-public class Column extends AbstractChild<Table> {
+public class Column extends TableChild {
 
     private static final long serialVersionUID = -409653682729081530L;
 
-    // -------------------------------------------------------------------------
+    // -----------------------------------------------------------------------------------------------------------------
 
     /**
      * Constants for nullabilities of table columns.
@@ -68,8 +66,6 @@ public class Column extends AbstractChild<Table> {
          */
         COLUMN_NULLABLE_UNKNOWN(columnNullableUnknown);
 
-        // ---------------------------------------------------------------------
-
         /**
          * Returns the constant whose raw value equals to given. An instance of {@link IllegalArgumentException} will be
          * throw if no constants matches.
@@ -81,12 +77,9 @@ public class Column extends AbstractChild<Table> {
             return IntFieldEnums.valueOf(Nullable.class, rawValue);
         }
 
-        // ---------------------------------------------------------------------
         Nullable(final int rawValue) {
             this.rawValue = rawValue;
         }
-
-        // ---------------------------------------------------------------------
 
         /**
          * Returns the raw value of this constant.
@@ -98,40 +91,97 @@ public class Column extends AbstractChild<Table> {
             return rawValue;
         }
 
-        // ---------------------------------------------------------------------
         private final int rawValue;
     }
 
-    // -------------------------------------------------------------------------
-    // -------------------------------------------------------------------------
+    // -----------------------------------------------------------------------------------------------------------------
     @Override
     public String toString() {
         return super.toString() + '{'
-               + "tableCat=" + tableCat
-               + ",tableSchem=" + tableSchem
-               + ",tableName=" + tableName
-               + ",columnName=" + columnName
-               + ",dataType=" + dataType
-               + ",typeName=" + typeName
-               + ",columnSize=" + columnSize
-               + ",bufferLength=" + bufferLength
-               + ",decimalDigits=" + decimalDigits
-               + ",numPrecRadix=" + numPrecRadix
-               + ",nullable=" + nullable
-               + ",remarks=" + remarks
-               + ",columnDef=" + columnDef
-               + ",sqlDataType=" + sqlDataType
-               + ",sqlDatetimeSub=" + sqlDatetimeSub
-               + ",charOctetLength=" + charOctetLength
-               + ",ordinalPosition=" + ordinalPosition
-               + ",isNullable=" + isNullable
-               + ",scopeCatalog=" + scopeCatalog
-               + ",scopeSchema=" + scopeSchema
-               + ",scopeTable=" + scopeTable
-               + ",sourceDataType=" + sourceDataType
-               + ",isAutoincrement=" + isAutoincrement
-               + ",isGeneratedcolumn=" + isGeneratedcolumn
-               + '}';
+                + "tableCat=" + tableCat
+                + ",tableSchem=" + tableSchem
+                + ",tableName=" + tableName
+                + ",columnName=" + columnName
+                + ",dataType=" + dataType
+                + ",typeName=" + typeName
+                + ",columnSize=" + columnSize
+                + ",bufferLength=" + bufferLength
+                + ",decimalDigits=" + decimalDigits
+                + ",numPrecRadix=" + numPrecRadix
+                + ",nullable=" + nullable
+                + ",remarks=" + remarks
+                + ",columnDef=" + columnDef
+                + ",sqlDataType=" + sqlDataType
+                + ",sqlDatetimeSub=" + sqlDatetimeSub
+                + ",charOctetLength=" + charOctetLength
+                + ",ordinalPosition=" + ordinalPosition
+                + ",isNullable=" + isNullable
+                + ",scopeCatalog=" + scopeCatalog
+                + ",scopeSchema=" + scopeSchema
+                + ",scopeTable=" + scopeTable
+                + ",sourceDataType=" + sourceDataType
+                + ",isAutoincrement=" + isAutoincrement
+                + ",isGeneratedcolumn=" + isGeneratedcolumn
+                + '}';
+    }
+
+    @Override
+    public boolean equals(final Object obj) {
+        if (this == obj) return true;
+        if (obj == null || getClass() != obj.getClass()) return false;
+        final Column that = (Column) obj;
+        return dataType == that.dataType
+                && columnSize == that.columnSize
+                && numPrecRadix == that.numPrecRadix
+                && nullable == that.nullable
+                && charOctetLength == that.charOctetLength
+                && ordinalPosition == that.ordinalPosition
+                && Objects.equals(tableCat, that.tableCat)
+                && Objects.equals(tableSchem, that.tableSchem)
+                && Objects.equals(tableName, that.tableName)
+                && Objects.equals(columnName, that.columnName)
+                && Objects.equals(typeName, that.typeName)
+                && Objects.equals(bufferLength, that.bufferLength)
+                && Objects.equals(decimalDigits, that.decimalDigits)
+                && Objects.equals(remarks, that.remarks)
+                && Objects.equals(columnDef, that.columnDef)
+                && Objects.equals(sqlDataType, that.sqlDataType)
+                && Objects.equals(sqlDatetimeSub, that.sqlDatetimeSub)
+                && Objects.equals(isNullable, that.isNullable)
+                && Objects.equals(scopeCatalog, that.scopeCatalog)
+                && Objects.equals(scopeSchema, that.scopeSchema)
+                && Objects.equals(scopeTable, that.scopeTable)
+                && Objects.equals(sourceDataType, that.sourceDataType)
+                && Objects.equals(isAutoincrement, that.isAutoincrement)
+                && Objects.equals(isGeneratedcolumn, that.isGeneratedcolumn);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(tableCat,
+                tableSchem,
+                tableName,
+                columnName,
+                dataType,
+                typeName,
+                columnSize,
+                bufferLength,
+                decimalDigits,
+                numPrecRadix,
+                nullable,
+                remarks,
+                columnDef,
+                sqlDataType,
+                sqlDatetimeSub,
+                charOctetLength,
+                ordinalPosition,
+                isNullable,
+                scopeCatalog,
+                scopeSchema,
+                scopeTable,
+                sourceDataType,
+                isAutoincrement,
+                isGeneratedcolumn);
     }
 
     // -------------------------------------------------------------------------------------------------------- tableCat
@@ -152,7 +202,7 @@ public class Column extends AbstractChild<Table> {
         this.tableSchem = tableSchem;
     }
 
-    // --------------------------------------------------------------- tableName
+    // ------------------------------------------------------------------------------------------------------- tableName
     public String getTableName() {
         return tableName;
     }
@@ -161,7 +211,7 @@ public class Column extends AbstractChild<Table> {
         this.tableName = tableName;
     }
 
-    // -------------------------------------------------------------- columnName
+    // ------------------------------------------------------------------------------------------------------ columnName
     public String getColumnName() {
         return columnName;
     }
@@ -170,7 +220,7 @@ public class Column extends AbstractChild<Table> {
         this.columnName = columnName;
     }
 
-    // ---------------------------------------------------------------- dataType
+    // -------------------------------------------------------------------------------------------------------- dataType
     public int getDataType() {
         return dataType;
     }
@@ -179,7 +229,7 @@ public class Column extends AbstractChild<Table> {
         this.dataType = dataType;
     }
 
-    // ---------------------------------------------------------------- typeName
+    // -------------------------------------------------------------------------------------------------------- typeName
     public String getTypeName() {
         return typeName;
     }
@@ -188,7 +238,7 @@ public class Column extends AbstractChild<Table> {
         this.typeName = typeName;
     }
 
-    // -------------------------------------------------------------- columnSize
+    // ------------------------------------------------------------------------------------------------------ columnSize
     public int getColumnSize() {
         return columnSize;
     }
@@ -197,7 +247,7 @@ public class Column extends AbstractChild<Table> {
         this.columnSize = columnSize;
     }
 
-    // ------------------------------------------------------------ bufferLength
+    // ---------------------------------------------------------------------------------------------------- bufferLength
     public Integer getBufferLength() {
         return bufferLength;
     }
@@ -206,7 +256,7 @@ public class Column extends AbstractChild<Table> {
         this.bufferLength = bufferLength;
     }
 
-    // ----------------------------------------------------------- decimalDigits
+    // --------------------------------------------------------------------------------------------------- decimalDigits
     public Integer getDecimalDigits() {
         return decimalDigits;
     }
@@ -215,7 +265,7 @@ public class Column extends AbstractChild<Table> {
         this.decimalDigits = decimalDigits;
     }
 
-    // ------------------------------------------------------------ numPrecRadix
+    // ---------------------------------------------------------------------------------------------------- numPrecRadix
     public int getNumPrecRadix() {
         return numPrecRadix;
     }
@@ -224,7 +274,7 @@ public class Column extends AbstractChild<Table> {
         this.numPrecRadix = numPrecRadix;
     }
 
-    // ---------------------------------------------------------------- nullable
+    // -------------------------------------------------------------------------------------------------------- nullable
     public int getNullable() {
         return nullable;
     }
@@ -233,7 +283,7 @@ public class Column extends AbstractChild<Table> {
         this.nullable = nullable;
     }
 
-    // ----------------------------------------------------------------- remarks
+    // --------------------------------------------------------------------------------------------------------- remarks
     public String getRemarks() {
         return remarks;
     }
@@ -242,7 +292,7 @@ public class Column extends AbstractChild<Table> {
         this.remarks = remarks;
     }
 
-    // --------------------------------------------------------------- columnDef
+    // ------------------------------------------------------------------------------------------------------- columnDef
     public String getColumnDef() {
         return columnDef;
     }
@@ -251,7 +301,7 @@ public class Column extends AbstractChild<Table> {
         this.columnDef = columnDef;
     }
 
-    // ------------------------------------------------------------- sqlDataType
+    // ----------------------------------------------------------------------------------------------------- sqlDataType
     public Integer getSqlDataType() {
         return sqlDataType;
     }
@@ -260,7 +310,7 @@ public class Column extends AbstractChild<Table> {
         this.sqlDataType = sqlDataType;
     }
 
-    // ---------------------------------------------------------- sqlDatetimeSub
+    // -------------------------------------------------------------------------------------------------- sqlDatetimeSub
     public Integer getSqlDatetimeSub() {
         return sqlDatetimeSub;
     }
@@ -269,7 +319,7 @@ public class Column extends AbstractChild<Table> {
         this.sqlDatetimeSub = sqlDatetimeSub;
     }
 
-    // --------------------------------------------------------- charOctetLength
+    // ------------------------------------------------------------------------------------------------- charOctetLength
     public int getCharOctetLength() {
         return charOctetLength;
     }
@@ -278,7 +328,7 @@ public class Column extends AbstractChild<Table> {
         this.charOctetLength = charOctetLength;
     }
 
-    // --------------------------------------------------------- ordinalPosition
+    // ------------------------------------------------------------------------------------------------- ordinalPosition
     public int getOrdinalPosition() {
         return ordinalPosition;
     }
@@ -287,7 +337,7 @@ public class Column extends AbstractChild<Table> {
         this.ordinalPosition = ordinalPosition;
     }
 
-    // -------------------------------------------------------------- isNullable
+    // ------------------------------------------------------------------------------------------------------ isNullable
     public String getIsNullable() {
         return isNullable;
     }
@@ -296,7 +346,7 @@ public class Column extends AbstractChild<Table> {
         this.isNullable = isNullable;
     }
 
-    // ------------------------------------------------------------ scopeCatalog
+    // ---------------------------------------------------------------------------------------------------- scopeCatalog
     public String getScopeCatalog() {
         return scopeCatalog;
     }
@@ -305,7 +355,7 @@ public class Column extends AbstractChild<Table> {
         this.scopeCatalog = scopeCatalog;
     }
 
-    // ------------------------------------------------------------- scopeSchema
+    // ----------------------------------------------------------------------------------------------------- scopeSchema
     public String getScopeSchema() {
         return scopeSchema;
     }
@@ -314,7 +364,7 @@ public class Column extends AbstractChild<Table> {
         this.scopeSchema = scopeSchema;
     }
 
-    // -------------------------------------------------------------- scopeTable
+    // ------------------------------------------------------------------------------------------------------ scopeTable
     public String getScopeTable() {
         return scopeTable;
     }
@@ -323,7 +373,7 @@ public class Column extends AbstractChild<Table> {
         this.scopeTable = scopeTable;
     }
 
-    // ---------------------------------------------------------- sourceDataType
+    // -------------------------------------------------------------------------------------------------- sourceDataType
     public Short getSourceDataType() {
         return sourceDataType;
     }
@@ -332,7 +382,7 @@ public class Column extends AbstractChild<Table> {
         this.sourceDataType = sourceDataType;
     }
 
-    // --------------------------------------------------------- isAutoincrement
+    // ------------------------------------------------------------------------------------------------- isAutoincrement
     public String getIsAutoincrement() {
         return isAutoincrement;
     }
@@ -341,7 +391,7 @@ public class Column extends AbstractChild<Table> {
         this.isAutoincrement = isAutoincrement;
     }
 
-    // ------------------------------------------------------- isGeneratedcolumn
+    // ----------------------------------------------------------------------------------------------- isGeneratedcolumn
     public String getIsGeneratedcolumn() {
         return isGeneratedcolumn;
     }
@@ -350,146 +400,122 @@ public class Column extends AbstractChild<Table> {
         this.isGeneratedcolumn = isGeneratedcolumn;
     }
 
-    // -------------------------------------------------------- columnPrivileges
+    // ------------------------------------------------------------------------------------------------ columnPrivileges
     List<ColumnPrivilege> getColumnPrivileges() {
         if (columnPrivileges == null) {
-            columnPrivileges = new ArrayList<ColumnPrivilege>();
+            columnPrivileges = new ArrayList<>();
         }
         return columnPrivileges;
     }
 
     // -----------------------------------------------------------------------------------------------------------------
-    @XmlAttribute
+    @XmlElement(required = true, nillable = true)
     @MayBeNull
     @Label("TABLE_CAT")
-    @Bind(label = "TABLE_CAT", nillable = true)
     private String tableCat;
 
-    @XmlAttribute
+    @XmlElement(required = true, nillable = true)
     @MayBeNull
     @Label("TABLE_SCHEM")
-    @Bind(label = "TABLE_SCHEM", nillable = true)
     private String tableSchem;
 
-    @XmlAttribute
+    @XmlElement(required = true)
     @Label("TABLE_NAME")
-    @Bind(label = "TABLE_NAME")
     private String tableName;
 
     // -----------------------------------------------------------------------------------------------------------------
-    @XmlElement
+    @XmlElement(required = true)
     @Label("COLUMN_NAME")
-    @Bind(label = "COLUMN_NAME")
     private String columnName;
 
-    @XmlElement
+    @XmlElement(required = true)
     @Label("DATA_TYPE")
-    @Bind(label = "DATA_TYPE")
     private int dataType;
 
-    @XmlElement
+    @XmlElement(required = true)
     @Label("TYPE_NAME")
-    @Bind(label = "TYPE_NAME")
     private String typeName;
 
-    @XmlElement
+    @XmlElement(required = true)
     @Label("COLUMN_SIZE")
-    @Bind(label = "COLUMN_SIZE")
     private int columnSize;
 
-    @XmlElement(nillable = true)
+    @XmlElement(required = true, nillable = true)
     @Unused
     @Label("BUFFER_LENGTH")
-    @Bind(label = "BUFFER_LENGTH", unused = true)
     private Integer bufferLength;
 
-    @XmlElement
+    @XmlElement(required = true, nillable = true)
     @MayBeNull
     @Label("DECIMAL_DIGITS")
-    @Bind(label = "DECIMAL_DIGITS", nillable = true)
     private Integer decimalDigits;
 
-    @XmlElement
+    @XmlElement(required = true)
     @Label("NUM_PREC_RADIX")
-    @Bind(label = "NUM_PREC_RADIX")
     private int numPrecRadix;
 
-    @XmlElement
+    @XmlElement(required = true)
     @Label("NULLABLE")
-    @Bind(label = "NULLABLE")
     private int nullable;
 
-    @XmlElement(nillable = true)
+    @XmlElement(required = true, nillable = true)
     @MayBeNull
     @Label("REMARKS")
-    @Bind(label = "REMARKS", nillable = true)
     private String remarks;
 
-    @XmlElement(nillable = true)
+    @XmlElement(required = true, nillable = true)
     @MayBeNull
     @Label("COLUMN_DEF")
-    @Bind(label = "COLUMN_DEF", nillable = true)
     private String columnDef;
 
-    @XmlElement(nillable = true)
+    @XmlElement(required = true, nillable = true)
     @Unused
     @Label("SQL_DATA_TYPE")
-    @Bind(label = "SQL_DATA_TYPE", unused = true)
     private Integer sqlDataType;
 
-    @XmlElement(nillable = true)
+    @XmlElement(required = true, nillable = true)
     @Unused
     @Label("SQL_DATETIME_SUB")
-    @Bind(label = "SQL_DATETIME_SUB", unused = true)
     private Integer sqlDatetimeSub;
 
-    @XmlElement
+    @XmlElement(required = true)
     @Label("CHAR_OCTET_LENGTH")
-    @Bind(label = "CHAR_OCTET_LENGTH")
     private int charOctetLength;
 
-    @XmlElement
+    @XmlElement(required = true)
     @Label("ORDINAL_POSITION")
-    @Bind(label = "ORDINAL_POSITION")
     private int ordinalPosition;
 
-    @XmlElement
+    @XmlElement(required = true)
     @Label("IS_NULLABLE")
-    @Bind(label = "IS_NULLABLE")
     private String isNullable;
 
-    @XmlElement(nillable = true)
+    @XmlElement(nillable = true, required = true)
     @MayBeNull
     @Label("SCOPE_CATALOG")
-    @Bind(label = "SCOPE_CATALOG", nillable = true)
     private String scopeCatalog;
 
-    @XmlElement(nillable = true)
+    @XmlElement(nillable = true, required = true)
     @MayBeNull
     @Label("SCOPE_SCHEMA")
-    @Bind(label = "SCOPE_SCHEMA", nillable = true)
     private String scopeSchema;
 
-    @XmlElement(nillable = true)
+    @XmlElement(nillable = true, required = true)
     @MayBeNull
     @Label("SCOPE_TABLE")
-    @Bind(label = "SCOPE_TABLE", nillable = true)
     private String scopeTable;
 
-    @XmlElement(nillable = true)
+    @XmlElement(nillable = true, required = true)
     @MayBeNull
     @Label("SOURCE_DATA_TYPE")
-    @Bind(label = "SOURCE_DATA_TYPE", nillable = true)
     private Short sourceDataType;
 
-    @XmlElement
+    @XmlElement(required = true)
     @Label("IS_AUTOINCREMENT")
-    @Bind(label = "IS_AUTOINCREMENT")
     private String isAutoincrement;
 
-    @XmlElement
+    @XmlElement(required = true)
     @Label("IS_GENERATEDCOLUMN")
-    @Bind(label = "IS_GENERATEDCOLUMN")
     private String isGeneratedcolumn;
 
     // -------------------------------------------------------------------------

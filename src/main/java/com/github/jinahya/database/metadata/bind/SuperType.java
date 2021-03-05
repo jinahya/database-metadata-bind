@@ -20,10 +20,9 @@ package com.github.jinahya.database.metadata.bind;
  * #L%
  */
 
-import javax.xml.bind.annotation.XmlAttribute;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
-import javax.xml.bind.annotation.XmlTransient;
+import java.util.Objects;
 
 /**
  * An entity class for binding the result of {@link java.sql.DatabaseMetaData#getSuperTypes(java.lang.String,
@@ -32,31 +31,53 @@ import javax.xml.bind.annotation.XmlTransient;
  * @author Jin Kwon &lt;jinahya_at_gmail.com&gt;
  */
 @XmlRootElement
-public class SuperType extends AbstractChild<UDT> {
+public class SuperType extends UDTChild {
 
     private static final long serialVersionUID = 4603878785941565029L;
+
+    // -----------------------------------------------------------------------------------------------------------------
+
+    /**
+     * Creates a new instance.
+     */
+    public SuperType() {
+        super();
+    }
 
     // -----------------------------------------------------------------------------------------------------------------
     @Override
     public String toString() {
         return super.toString() + '{'
-               + "typeCat=" + typeCat
-               + ",typeSchem=" + typeSchem
-               + ",typeName=" + typeName
-               + ",supertypeCat=" + supertypeCat
-               + ",supertypeSchem=" + supertypeSchem
-               + ",supertypeName=" + supertypeName
-               + '}';
+                + "typeCat=" + typeCat
+                + ",typeSchem=" + typeSchem
+                + ",typeName=" + typeName
+                + ",supertypeCat=" + supertypeCat
+                + ",supertypeSchem=" + supertypeSchem
+                + ",supertypeName=" + supertypeName
+                + '}';
     }
 
-    // ------------------------------------------------------------------------------------------------------------- UDT
-    @XmlTransient
-    UDT getUDT_() {
-        return getParent_();
+    @Override
+    public boolean equals(final Object obj) {
+        if (this == obj) return true;
+        if (obj == null || getClass() != obj.getClass()) return false;
+        final SuperType that = (SuperType) obj;
+        return Objects.equals(typeCat, that.typeCat)
+                && Objects.equals(typeSchem, that.typeSchem)
+                && Objects.equals(typeName, that.typeName)
+                && Objects.equals(supertypeCat, that.supertypeCat)
+                && Objects.equals(supertypeSchem, that.supertypeSchem)
+                && Objects.equals(supertypeName, that.supertypeName);
     }
 
-    void setUDT_(final UDT udt) {
-        setParent_(udt);
+    @Override
+    public int hashCode() {
+        return Objects.hash(typeCat,
+                typeSchem,
+                typeName,
+                supertypeCat,
+                supertypeSchem,
+                supertypeName);
     }
 
     // --------------------------------------------------------------------------------------------------------- typeCat
@@ -114,38 +135,32 @@ public class SuperType extends AbstractChild<UDT> {
     }
 
     // -----------------------------------------------------------------------------------------------------------------
-    @XmlAttribute
+    @XmlElement(required = true, nillable = true)
     @MayBeNull
     @Label("TYPE_CAT")
-    @Bind(label = "TYPE_CAT", nillable = true)
     private String typeCat;
 
-    @XmlAttribute
+    @XmlElement(required = true, nillable = true)
     @MayBeNull
     @Label("TYPE_SCHEM")
-    @Bind(label = "TYPE_SCHEM", nillable = true)
     private String typeSchem;
 
-    // -----------------------------------------------------------------------------------------------------------------
-    @XmlElement
+    @XmlElement(required = true)
     @Label("TYPE_NAME")
-    @Bind(label = "TYPE_NAME")
     private String typeName;
 
-    @XmlElement(nillable = true)
+    // -----------------------------------------------------------------------------------------------------------------
+    @XmlElement(required = true, nillable = true)
     @MayBeNull
     @Label("SUPERTYPE_CAT")
-    @Bind(label = "SUPERTYPE_CAT", nillable = true)
     private String supertypeCat;
 
-    @XmlElement(nillable = true)
+    @XmlElement(required = true, nillable = true)
     @MayBeNull
     @Label("SUPERTYPE_SCHEM")
-    @Bind(label = "SUPERTYPE_SCHEM", nillable = true)
     private String supertypeSchem;
 
-    @XmlElement
+    @XmlElement(required = true)
     @Label("SUPERTYPE_NAME")
-    @Bind(label = "SUPERTYPE_NAME")
     private String supertypeName;
 }

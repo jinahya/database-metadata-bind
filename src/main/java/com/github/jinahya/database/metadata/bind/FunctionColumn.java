@@ -20,20 +20,12 @@ package com.github.jinahya.database.metadata.bind;
  * #L%
  */
 
-import javax.xml.bind.annotation.XmlAttribute;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
 import java.sql.DatabaseMetaData;
+import java.util.Objects;
 
-import static java.sql.DatabaseMetaData.functionColumnIn;
-import static java.sql.DatabaseMetaData.functionColumnInOut;
-import static java.sql.DatabaseMetaData.functionColumnOut;
-import static java.sql.DatabaseMetaData.functionColumnResult;
-import static java.sql.DatabaseMetaData.functionColumnUnknown;
-import static java.sql.DatabaseMetaData.functionNoNulls;
-import static java.sql.DatabaseMetaData.functionNullable;
-import static java.sql.DatabaseMetaData.functionNullableUnknown;
-import static java.sql.DatabaseMetaData.functionReturn;
+import static java.sql.DatabaseMetaData.*;
 
 /**
  * An entity class for function columns.
@@ -42,7 +34,7 @@ import static java.sql.DatabaseMetaData.functionReturn;
  * @see DatabaseMetaData#getFunctionColumns(java.lang.String, java.lang.String, java.lang.String, java.lang.String)
  */
 @XmlRootElement
-public class FunctionColumn extends AbstractChild<Function> {
+public class FunctionColumn extends FunctionChild {
 
     private static final long serialVersionUID = -7445156446214062680L;
 
@@ -86,8 +78,6 @@ public class FunctionColumn extends AbstractChild<Function> {
          */
         FUNCTION_COLUMN_RESULT(functionColumnResult); // 5
 
-        // ---------------------------------------------------------------------
-
         /**
          * Returns the constant whose raw value equals to given. An instance of {@link IllegalArgumentException} will be
          * thrown if no constant matches.
@@ -99,12 +89,9 @@ public class FunctionColumn extends AbstractChild<Function> {
             return IntFieldEnums.valueOf(ColumnType.class, rawValue);
         }
 
-        // ---------------------------------------------------------------------
         ColumnType(final int rawValue) {
             this.rawValue = rawValue;
         }
-
-        // ---------------------------------------------------------------------
 
         /**
          * Returns the raw value of this constant.
@@ -116,7 +103,6 @@ public class FunctionColumn extends AbstractChild<Function> {
             return rawValue;
         }
 
-        // ---------------------------------------------------------------------
         private final int rawValue;
     }
 
@@ -142,8 +128,6 @@ public class FunctionColumn extends AbstractChild<Function> {
          */
         FUNCTION_NULLABLE_UNKNOWN(functionNullableUnknown);
 
-        // -------------------------------------------------------------------------------------------------------------
-
         /**
          * Returns the constant whose raw value equals to given. An instance of {@link IllegalArgumentException} will be
          * throw if no constants matches.
@@ -155,12 +139,9 @@ public class FunctionColumn extends AbstractChild<Function> {
             return IntFieldEnums.valueOf(Nullable.class, rawValue);
         }
 
-        // -------------------------------------------------------------------------------------------------------------
         Nullable(final int rawValue) {
             this.rawValue = rawValue;
         }
-
-        // -------------------------------------------------------------------------------------------------------------
 
         /**
          * Returns the raw value of this constant.
@@ -172,32 +153,85 @@ public class FunctionColumn extends AbstractChild<Function> {
             return rawValue;
         }
 
-        // -------------------------------------------------------------------------------------------------------------
         private final int rawValue;
+    }
+
+    // -----------------------------------------------------------------------------------------------------------------
+
+    /**
+     * Creates a new instance.
+     */
+    public FunctionColumn() {
+        super();
     }
 
     // -----------------------------------------------------------------------------------------------------------------
     @Override
     public String toString() {
         return super.toString() + '{'
-               + "functionCat=" + functionCat
-               + ",functionSchem=" + functionSchem
-               + ",functionName=" + functionName
-               + ",columnName=" + columnName
-               + ",columnType=" + columnType
-               + ",dataType=" + dataType
-               + ",typeName=" + typeName
-               + ",precision=" + precision
-               + ",length=" + length
-               + ",scale=" + scale
-               + ",radix=" + radix
-               + ",nullable=" + nullable
-               + ",remarks=" + remarks
-               + ",charOctetLength=" + charOctetLength
-               + ",ordinalPosition=" + ordinalPosition
-               + ",isNullable=" + isNullable
-               + ",specificName=" + specificName
-               + '}';
+                + "functionCat=" + functionCat
+                + ",functionSchem=" + functionSchem
+                + ",functionName=" + functionName
+                + ",columnName=" + columnName
+                + ",columnType=" + columnType
+                + ",dataType=" + dataType
+                + ",typeName=" + typeName
+                + ",precision=" + precision
+                + ",length=" + length
+                + ",scale=" + scale
+                + ",radix=" + radix
+                + ",nullable=" + nullable
+                + ",remarks=" + remarks
+                + ",charOctetLength=" + charOctetLength
+                + ",ordinalPosition=" + ordinalPosition
+                + ",isNullable=" + isNullable
+                + ",specificName=" + specificName
+                + '}';
+    }
+
+    @Override
+    public boolean equals(final Object obj) {
+        if (this == obj) return true;
+        if (obj == null || getClass() != obj.getClass()) return false;
+        final FunctionColumn that = (FunctionColumn) obj;
+        return columnType == that.columnType
+                && dataType == that.dataType
+                && precision == that.precision
+                && length == that.length
+                && radix == that.radix
+                && nullable == that.nullable
+                && ordinalPosition == that.ordinalPosition
+                && Objects.equals(functionCat, that.functionCat)
+                && Objects.equals(functionSchem, that.functionSchem)
+                && Objects.equals(functionName, that.functionName)
+                && Objects.equals(columnName, that.columnName)
+                && Objects.equals(typeName, that.typeName)
+                && Objects.equals(scale, that.scale)
+                && Objects.equals(remarks, that.remarks)
+                && Objects.equals(charOctetLength, that.charOctetLength)
+                && Objects.equals(isNullable, that.isNullable)
+                && Objects.equals(specificName, that.specificName);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(functionCat,
+                functionSchem,
+                functionName,
+                columnName,
+                columnType,
+                dataType,
+                typeName,
+                precision,
+                length,
+                scale,
+                radix,
+                nullable,
+                remarks,
+                charOctetLength,
+                ordinalPosition,
+                isNullable,
+                specificName);
     }
 
     // ----------------------------------------------------------------------------------------------------- functionCat
@@ -354,95 +388,81 @@ public class FunctionColumn extends AbstractChild<Function> {
     }
 
     // -----------------------------------------------------------------------------------------------------------------
-    @XmlAttribute
+    @XmlElement(required = true, nillable = true)
     @MayBeNull
     @Label("FUNCTION_CAT")
-    @Bind(label = "FUNCTION_CAT", nillable = true)
     private String functionCat;
 
-    @XmlAttribute
+    @XmlElement(required = true, nillable = true)
     @MayBeNull
     @Label("FUNCTION_SCHEM")
-    @Bind(label = "FUNCTION_SCHEM", nillable = true)
     private String functionSchem;
 
-    @XmlAttribute
+    @XmlElement(required = true)
     @Label("FUNCTION_NAME")
-    @Bind(label = "FUNCTION_NAME")
     private String functionName;
 
-    // -----------------------------------------------------------------------------------------------------------------
-    @XmlElement
+    @XmlElement(required = true)
     @Label("COLUMN_NAME")
     @Bind(label = "COLUMN_NAME")
     private String columnName;
 
-    @XmlElement
+    // -----------------------------------------------------------------------------------------------------------------
+    @XmlElement(required = true)
     @Label("COLUMN_TYPE")
-    @Bind(label = "COLUMN_TYPE")
     private short columnType;
 
-    @XmlElement
+    @XmlElement(required = true)
     @Label("DATA_TYPE")
-    @Bind(label = "DATA_TYPE")
     private int dataType;
 
-    @XmlElement
+    @XmlElement(required = true)
     @Label("TYPE_NAME")
-    @Bind(label = "TYPE_NAME")
     private String typeName;
 
-    @XmlElement
+    @XmlElement(required = true)
     @Label("PRECISION")
-    @Bind(label = "PRECISION")
     private int precision;
 
-    @XmlElement
+    @XmlElement(required = true)
     @Label("LENGTH")
-    @Bind(label = "LENGTH")
     private int length;
 
     // https://issues.apache.org/jira/browse/DERBY-7102
-    @XmlElement
+    @XmlElement(required = true, nillable = true)
     @MayBeNull
     @Label("SCALE")
-    @Bind(label = "SCALE")
     private Short scale;
 
-    @XmlElement
+    @XmlElement(required = true)
     @Label("RADIX")
     @Bind(label = "RADIX")
     private short radix;
 
-    @XmlElement
+    @XmlElement(required = true)
     @Label("NULLABLE")
     @Bind(label = "NULLABLE")
     private short nullable;
 
-    @XmlElement
+    @XmlElement(required = true, nillable = true)
     @MayBeNullByVendor("derby") // https://issues.apache.org/jira/browse/DERBY-7100
     @Label("REMARKS")
-    @Bind(label = "REMARKS")
     private String remarks;
 
-    @XmlElement(nillable = true)
+    @XmlElement(required = true, nillable = true)
     @MayBeNull
     @Label("CHAR_OCTET_LENGTH")
-    @Bind(label = "CHAR_OCTET_LENGTH", nillable = true)
     private Integer charOctetLength;
 
-    @XmlElement
+    @XmlElement(required = true)
     @Label("ORDINAL_POSITION")
-    @Bind(label = "ORDINAL_POSITION")
     private int ordinalPosition;
 
-    @XmlElement
+    @XmlElement(required = true)
     @Label("IS_NULLABLE")
-    @Bind(label = "IS_NULLABLE")
     private String isNullable;
 
-    @XmlElement
+    @XmlElement(required = true)
     @Label("SPECIFIC_NAME")
-    @Bind(label = "SPECIFIC_NAME")
     private String specificName;
 }

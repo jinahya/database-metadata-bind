@@ -26,6 +26,9 @@ import lombok.extern.slf4j.Slf4j;
  * @author Jin Kwon &lt;jinahya_at_gmail.com&gt;
  */
 @Slf4j
-class MetadataTest {
+class MetadataTest extends MetadataTypeTest<Metadata> {
 
+    MetadataTest() {
+        super(Metadata.class);
+    }
 }

@@ -20,12 +20,12 @@ package com.github.jinahya.database.metadata.bind;
  * #L%
  */
 
-import javax.xml.bind.annotation.XmlAttribute;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlTransient;
+import java.util.Objects;
 
 @XmlTransient
-abstract class TableKey extends AbstractChild<Table> {
+abstract class TableKey extends TableChild {
 
     private static final long serialVersionUID = 6713872409315471232L;
 
@@ -33,21 +33,60 @@ abstract class TableKey extends AbstractChild<Table> {
     @Override
     public String toString() {
         return super.toString() + '{'
-               + "pktableCat=" + pktableCat
-               + ",pktableSchem=" + pktableSchem
-               + ",pktableName=" + pktableName
-               + ",pkcolumnName=" + pkcolumnName
-               + ",fktableCat=" + fktableCat
-               + ",fktableSchem=" + fktableSchem
-               + ",fktableName=" + fktableName
-               + ",fkcolumnName=" + fkcolumnName
-               + ",keySeq=" + keySeq
-               + ",updateRule=" + updateRule
-               + ",deleteRule=" + deleteRule
-               + ",fkName=" + fkName
-               + ",pkName=" + pkName
-               + ",deferrability=" + deferrability
-               + '}';
+                + "pktableCat=" + pktableCat
+                + ",pktableSchem=" + pktableSchem
+                + ",pktableName=" + pktableName
+                + ",pkcolumnName=" + pkcolumnName
+                + ",fktableCat=" + fktableCat
+                + ",fktableSchem=" + fktableSchem
+                + ",fktableName=" + fktableName
+                + ",fkcolumnName=" + fkcolumnName
+                + ",keySeq=" + keySeq
+                + ",updateRule=" + updateRule
+                + ",deleteRule=" + deleteRule
+                + ",fkName=" + fkName
+                + ",pkName=" + pkName
+                + ",deferrability=" + deferrability
+                + '}';
+    }
+
+    @Override
+    public boolean equals(final Object obj) {
+        if (this == obj) return true;
+        if (obj == null || getClass() != obj.getClass()) return false;
+        final TableKey that = (TableKey) obj;
+        return keySeq == that.keySeq
+                && updateRule == that.updateRule
+                && deleteRule == that.deleteRule
+                && deferrability == that.deferrability
+                && Objects.equals(pktableCat, that.pktableCat)
+                && Objects.equals(pktableSchem, that.pktableSchem)
+                && Objects.equals(pktableName, that.pktableName)
+                && Objects.equals(pkcolumnName, that.pkcolumnName)
+                && Objects.equals(fktableCat, that.fktableCat)
+                && Objects.equals(fktableSchem, that.fktableSchem)
+                && Objects.equals(fktableName, that.fktableName)
+                && Objects.equals(fkcolumnName, that.fkcolumnName)
+                && Objects.equals(fkName, that.fkName)
+                && Objects.equals(pkName, that.pkName);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(pktableCat,
+                pktableSchem,
+                pktableName,
+                pkcolumnName,
+                fktableCat,
+                fktableSchem,
+                fktableName,
+                fkcolumnName,
+                keySeq,
+                updateRule,
+                deleteRule,
+                fkName,
+                pkName,
+                deferrability);
     }
 
     // ------------------------------------------------------------------------------------------------------ pktableCat
@@ -177,78 +216,64 @@ abstract class TableKey extends AbstractChild<Table> {
     }
 
     // -----------------------------------------------------------------------------------------------------------------
-    @XmlAttribute
+    @XmlElement(required = true, nillable = true)
     @MayBeNull
     @Label("PKTABLE_CAT")
-    @Bind(label = "PKTABLE_CAT", nillable = true)
     private String pktableCat;
 
-    @XmlAttribute
+    @XmlElement(required = true, nillable = true)
     @MayBeNull
     @Label("PKTABLE_SCHEM")
-    @Bind(label = "PKTABLE_SCHEM", nillable = true)
     private String pktableSchem;
 
-    @XmlAttribute
+    @XmlElement(required = true)
     @Label("PKTABLE_NAME")
-    @Bind(label = "PKTABLE_NAME")
     private String pktableName;
 
     // -----------------------------------------------------------------------------------------------------------------
-    @XmlElement
+    @XmlElement(required = true)
     @Label("PKCOLUMN_NAME")
-    @Bind(label = "PKCOLUMN_NAME")
     private String pkcolumnName;
 
-    @XmlElement(nillable = true)
+    @XmlElement(required = true, nillable = true)
     @MayBeNull
     @Label("FKTABLE_CAT")
-    @Bind(label = "FKTABLE_CAT", nillable = true)
     private String fktableCat;
 
-    @XmlElement(nillable = true)
+    @XmlElement(required = true, nillable = true)
     @MayBeNull
     @Label("FKTABLE_NAME")
-    @Bind(label = "FKTABLE_NAME", nillable = true)
     private String fktableSchem;
 
-    @XmlElement
+    @XmlElement(required = true)
     @Label("FKTABLE_NAME")
-    @Bind(label = "FKTABLE_NAME")
     private String fktableName;
 
-    @XmlElement
+    @XmlElement(required = true)
     @Label("FKCOLUMN_NAME")
-    @Bind(label = "FKCOLUMN_NAME")
     private String fkcolumnName;
 
-    @XmlElement
+    @XmlElement(required = true)
     @Label("FKCOLUMN_NAME")
-    @Bind(label = "FKCOLUMN_NAME")
     private short keySeq;
 
-    @XmlElement
+    @XmlElement(required = true)
     @Label("UPDATE_RULE")
-    @Bind(label = "UPDATE_RULE")
     private short updateRule;
 
-    @XmlElement
+    @XmlElement(required = true)
     @Label("DELETE_RULE")
-    @Bind(label = "DELETE_RULE")
     private short deleteRule;
 
-    @XmlElement
+    @XmlElement(required = true)
     @Label("FK_NAME")
-    @Bind(label = "FK_NAME")
     private String fkName;
 
-    @XmlElement
+    @XmlElement(required = true)
     @Label("PK_NAME")
-    @Bind(label = "PK_NAME")
     private String pkName;
 
-    @XmlElement
+    @XmlElement(required = true)
     @Label("DEFERRABILITY")
-    @Bind(label = "DEFERRABILITY")
     private short deferrability;
 }

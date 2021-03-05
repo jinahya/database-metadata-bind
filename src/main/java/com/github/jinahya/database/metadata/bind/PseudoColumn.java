@@ -20,10 +20,10 @@ package com.github.jinahya.database.metadata.bind;
  * #L%
  */
 
-import javax.xml.bind.annotation.XmlAttribute;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
 import java.util.Collection;
+import java.util.Objects;
 
 /**
  * An entity class for pseudo columns.
@@ -32,30 +32,70 @@ import java.util.Collection;
  * @see Context#getPseudoColumns(String, String, String, String, Collection)
  */
 @XmlRootElement
-public class PseudoColumn extends AbstractChild<Table> {
+public class PseudoColumn extends TableChild {
 
     private static final long serialVersionUID = -5612575879670895510L;
 
-    // -------------------------------------------------------------------------
+    // -----------------------------------------------------------------------------------------------------------------
+    public PseudoColumn() {
+        super();
+    }
+
+    // -----------------------------------------------------------------------------------------------------------------
     @Override
     public String toString() {
         return super.toString() + '{'
-               + "tableCat=" + tableCat
-               + ",tableSchem=" + tableSchem
-               + ",tableName=" + tableName
-               + ",columnName=" + columnName
-               + ",dataType=" + dataType
-               + ",columnSize=" + columnSize
-               + ",decimalDigits=" + decimalDigits
-               + ",numPrecRadix=" + numPrecRadix
-               + ",columnUsage=" + columnUsage
-               + ",remarks=" + remarks
-               + ",charOctetLength=" + charOctetLength
-               + ",isNullable=" + isNullable
-               + '}';
+                + "tableCat=" + tableCat
+                + ",tableSchem=" + tableSchem
+                + ",tableName=" + tableName
+                + ",columnName=" + columnName
+                + ",dataType=" + dataType
+                + ",columnSize=" + columnSize
+                + ",decimalDigits=" + decimalDigits
+                + ",numPrecRadix=" + numPrecRadix
+                + ",columnUsage=" + columnUsage
+                + ",remarks=" + remarks
+                + ",charOctetLength=" + charOctetLength
+                + ",isNullable=" + isNullable
+                + '}';
     }
 
-    // ---------------------------------------------------------------- tableCat
+    @Override
+    public boolean equals(final Object obj) {
+        if (this == obj) return true;
+        if (obj == null || getClass() != obj.getClass()) return false;
+        final PseudoColumn that = (PseudoColumn) obj;
+        return dataType == that.dataType
+                && columnSize == that.columnSize
+                && numPrecRadix == that.numPrecRadix
+                && charOctetLength == that.charOctetLength
+                && Objects.equals(tableCat, that.tableCat)
+                && Objects.equals(tableSchem, that.tableSchem)
+                && Objects.equals(tableName, that.tableName)
+                && Objects.equals(columnName, that.columnName)
+                && Objects.equals(decimalDigits, that.decimalDigits)
+                && Objects.equals(columnUsage, that.columnUsage)
+                && Objects.equals(remarks, that.remarks)
+                && Objects.equals(isNullable, that.isNullable);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(tableCat,
+                tableSchem,
+                tableName,
+                columnName,
+                dataType,
+                columnSize,
+                decimalDigits,
+                numPrecRadix,
+                columnUsage,
+                remarks,
+                charOctetLength,
+                isNullable);
+    }
+
+    // -------------------------------------------------------------------------------------------------------- tableCat
     public String getTableCat() {
         return tableCat;
     }
@@ -64,7 +104,7 @@ public class PseudoColumn extends AbstractChild<Table> {
         this.tableCat = tableCat;
     }
 
-    // -------------------------------------------------------------- tableSchem
+    // ------------------------------------------------------------------------------------------------------ tableSchem
     public String getTableSchem() {
         return tableSchem;
     }
@@ -73,7 +113,7 @@ public class PseudoColumn extends AbstractChild<Table> {
         this.tableSchem = tableSchem;
     }
 
-    // --------------------------------------------------------------- tableName
+    // ------------------------------------------------------------------------------------------------------- tableName
     public String getTableName() {
         return tableName;
     }
@@ -82,7 +122,7 @@ public class PseudoColumn extends AbstractChild<Table> {
         this.tableName = tableName;
     }
 
-    // -------------------------------------------------------------- columnName
+    // ------------------------------------------------------------------------------------------------------ columnName
     public String getColumnName() {
         return columnName;
     }
@@ -91,7 +131,7 @@ public class PseudoColumn extends AbstractChild<Table> {
         this.columnName = columnName;
     }
 
-    // ---------------------------------------------------------------- dataType
+    // -------------------------------------------------------------------------------------------------------- dataType
     public int getDataType() {
         return dataType;
     }
@@ -100,7 +140,7 @@ public class PseudoColumn extends AbstractChild<Table> {
         this.dataType = dataType;
     }
 
-    // -------------------------------------------------------------- columnSize
+    // ------------------------------------------------------------------------------------------------------ columnSize
     public int getColumnSize() {
         return columnSize;
     }
@@ -109,7 +149,7 @@ public class PseudoColumn extends AbstractChild<Table> {
         this.columnSize = columnSize;
     }
 
-    // ----------------------------------------------------------- decimalDigits
+    // --------------------------------------------------------------------------------------------------- decimalDigits
     public Integer getDecimalDigits() {
         return decimalDigits;
     }
@@ -118,7 +158,7 @@ public class PseudoColumn extends AbstractChild<Table> {
         this.decimalDigits = decimalDigits;
     }
 
-    // ------------------------------------------------------------ numPrecRadix
+    // ---------------------------------------------------------------------------------------------------- numPrecRadix
     public int getNumPrecRadix() {
         return numPrecRadix;
     }
@@ -127,7 +167,7 @@ public class PseudoColumn extends AbstractChild<Table> {
         this.numPrecRadix = numPrecRadix;
     }
 
-    // ------------------------------------------------------------- columnUsage
+    // ----------------------------------------------------------------------------------------------------- columnUsage
     public String getColumnUsage() {
         return columnUsage;
     }
@@ -136,7 +176,7 @@ public class PseudoColumn extends AbstractChild<Table> {
         this.columnUsage = columnUsage;
     }
 
-    // ----------------------------------------------------------------- remarks
+    // --------------------------------------------------------------------------------------------------------- remarks
     public String getRemarks() {
         return remarks;
     }
@@ -145,7 +185,7 @@ public class PseudoColumn extends AbstractChild<Table> {
         this.remarks = remarks;
     }
 
-    // --------------------------------------------------------- charOctetLength
+    // ------------------------------------------------------------------------------------------------- charOctetLength
     public int getCharOctetLength() {
         return charOctetLength;
     }
@@ -154,7 +194,7 @@ public class PseudoColumn extends AbstractChild<Table> {
         this.charOctetLength = charOctetLength;
     }
 
-    // -------------------------------------------------------------- isNullable
+    // ------------------------------------------------------------------------------------------------------ isNullable
     public String getIsNullable() {
         return isNullable;
     }
@@ -164,68 +204,56 @@ public class PseudoColumn extends AbstractChild<Table> {
     }
 
     // -----------------------------------------------------------------------------------------------------------------
-    @XmlAttribute
+    @XmlElement(required = true, nillable = true)
     @MayBeNull
     @Label("TABLE_CAT")
-    @Bind(label = "TABLE_CAT", nillable = true)
     private String tableCat;
 
-    @XmlAttribute
+    @XmlElement(required = true, nillable = true)
     @MayBeNull
     @Label("TABLE_SCHEM")
-    @Bind(label = "TABLE_SCHEM", nillable = true)
     private String tableSchem;
 
-    @XmlAttribute
+    @XmlElement(required = true)
     @Label("TABLE_NAME")
-    @Bind(label = "TABLE_NAME")
     private String tableName;
 
-    // -------------------------------------------------------------------------
-    @XmlElement
+    // -----------------------------------------------------------------------------------------------------------------
+    @XmlElement(required = true)
     @Label("COLUMN_NAME")
-    @Bind(label = "COLUMN_NAME")
     private String columnName;
 
-    @XmlElement
+    @XmlElement(required = true)
     @Label("DATA_TYPE")
-    @Bind(label = "DATA_TYPE")
     private int dataType;
 
-    @XmlElement
+    @XmlElement(required = true)
     @Label("COLUMN_SIZE")
-    @Bind(label = "COLUMN_SIZE")
     private int columnSize;
 
-    @XmlElement(nillable = true)
+    @XmlElement(required = true, nillable = true)
     @MayBeNull
     @Label("DECIMAL_DIGITS")
-    @Bind(label = "DECIMAL_DIGITS", nillable = true)
     private Integer decimalDigits;
 
-    @XmlElement
+    @XmlElement(required = true)
     @Label("NUM_PREC_RADIX")
-    @Bind(label = "NUM_PREC_RADIX")
     private int numPrecRadix;
 
-    @XmlElement
+    @XmlElement(required = true)
     @Label("COLUMN_USAGE")
-    @Bind(label = "COLUMN_USAGE")
     private String columnUsage;
 
-    @XmlElement(nillable = true)
+    @XmlElement(required = true, nillable = true)
     @MayBeNull
     @Label("REMARKS")
-    @Bind(label = "REMARKS", nillable = true)
     private String remarks;
 
-    @XmlElement
+    @XmlElement(required = true)
     @Label("CHAR_OCTET_LENGTH")
-    @Bind(label = "CHAR_OCTET_LENGTH")
     private int charOctetLength;
 
-    @XmlElement
+    @XmlElement(required = true)
     @Label("IS_NULLABLE")
-    @Bind(label = "IS_NULLABLE")
     private String isNullable;
 }

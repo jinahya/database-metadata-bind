@@ -20,10 +20,10 @@ package com.github.jinahya.database.metadata.bind;
  * #L%
  */
 
-import javax.xml.bind.annotation.XmlAttribute;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
 import java.util.Collection;
+import java.util.Objects;
 
 /**
  * An entity class for index info.
@@ -33,31 +33,77 @@ import java.util.Collection;
  * @see Context#getIndexInfo(String, String, String, boolean, boolean, Collection)
  */
 @XmlRootElement
-public class IndexInfo extends AbstractChild<Table> {
+public class IndexInfo extends TableChild {
 
     private static final long serialVersionUID = -768486884376018474L;
 
-    // -------------------------------------------------------------------------
+    // -----------------------------------------------------------------------------------------------------------------
+
+    /**
+     * Creates a new instance.
+     */
+    public IndexInfo() {
+        super();
+    }
+
+    // -----------------------------------------------------------------------------------------------------------------
     @Override
     public String toString() {
         return super.toString() + '{'
-               + "tableCat=" + tableCat
-               + ",tableSchem=" + tableSchem
-               + ",tableName=" + tableName
-               + ",nonUnique=" + nonUnique
-               + ",indexQualifier=" + indexQualifier
-               + ",indexName=" + indexName
-               + ",type=" + type
-               + ",ordinalPosition=" + ordinalPosition
-               + ",columnName=" + columnName
-               + ",ascOrDesc=" + ascOrDesc
-               + ",cardinality=" + cardinality
-               + ",pages=" + pages
-               + ",filterCondition=" + filterCondition
-               + '}';
+                + "tableCat=" + tableCat
+                + ",tableSchem=" + tableSchem
+                + ",tableName=" + tableName
+                + ",nonUnique=" + nonUnique
+                + ",indexQualifier=" + indexQualifier
+                + ",indexName=" + indexName
+                + ",type=" + type
+                + ",ordinalPosition=" + ordinalPosition
+                + ",columnName=" + columnName
+                + ",ascOrDesc=" + ascOrDesc
+                + ",cardinality=" + cardinality
+                + ",pages=" + pages
+                + ",filterCondition=" + filterCondition
+                + '}';
     }
 
-    // ---------------------------------------------------------------- tableCat
+    @Override
+    public boolean equals(final Object obj) {
+        if (this == obj) return true;
+        if (obj == null || getClass() != obj.getClass()) return false;
+        final IndexInfo that = (IndexInfo) obj;
+        return nonUnique == that.nonUnique
+                && type == that.type
+                && ordinalPosition == that.ordinalPosition
+                && cardinality == that.cardinality
+                && pages == that.pages
+                && Objects.equals(tableCat, that.tableCat)
+                && Objects.equals(tableSchem, that.tableSchem)
+                && Objects.equals(tableName, that.tableName)
+                && Objects.equals(indexQualifier, that.indexQualifier)
+                && Objects.equals(indexName, that.indexName)
+                && Objects.equals(columnName, that.columnName)
+                && Objects.equals(ascOrDesc, that.ascOrDesc)
+                && Objects.equals(filterCondition, that.filterCondition);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(tableCat,
+                tableSchem,
+                tableName,
+                nonUnique,
+                indexQualifier,
+                indexName,
+                type,
+                ordinalPosition,
+                columnName,
+                ascOrDesc,
+                cardinality,
+                pages,
+                filterCondition);
+    }
+
+    // -------------------------------------------------------------------------------------------------------- tableCat
     public String getTableCat() {
         return tableCat;
     }
@@ -66,7 +112,7 @@ public class IndexInfo extends AbstractChild<Table> {
         this.tableCat = tableCat;
     }
 
-    // -------------------------------------------------------------- tableSchem
+    // ------------------------------------------------------------------------------------------------------ tableSchem
     public String getTableSchem() {
         return tableSchem;
     }
@@ -75,7 +121,7 @@ public class IndexInfo extends AbstractChild<Table> {
         this.tableSchem = tableSchem;
     }
 
-    // --------------------------------------------------------------- tableName
+    // ------------------------------------------------------------------------------------------------------- tableName
     public String getTableName() {
         return tableName;
     }
@@ -84,7 +130,7 @@ public class IndexInfo extends AbstractChild<Table> {
         this.tableName = tableName;
     }
 
-    // --------------------------------------------------------------- nonUnique
+    // ------------------------------------------------------------------------------------------------------- nonUnique
     public boolean isNonUnique() {
         return nonUnique;
     }
@@ -93,7 +139,7 @@ public class IndexInfo extends AbstractChild<Table> {
         this.nonUnique = nonUnique;
     }
 
-    // ---------------------------------------------------------- indexQualifier
+    // -------------------------------------------------------------------------------------------------- indexQualifier
     public String getIndexQualifier() {
         return indexQualifier;
     }
@@ -102,7 +148,7 @@ public class IndexInfo extends AbstractChild<Table> {
         this.indexQualifier = indexQualifier;
     }
 
-    // --------------------------------------------------------------- indexName
+    // ------------------------------------------------------------------------------------------------------- indexName
     public String getIndexName() {
         return indexName;
     }
@@ -111,7 +157,7 @@ public class IndexInfo extends AbstractChild<Table> {
         this.indexName = indexName;
     }
 
-    // -------------------------------------------------------------------- type
+    // ------------------------------------------------------------------------------------------------------------ type
     public short getType() {
         return type;
     }
@@ -120,7 +166,7 @@ public class IndexInfo extends AbstractChild<Table> {
         this.type = type;
     }
 
-    // --------------------------------------------------------- ordinalPosition
+    // ------------------------------------------------------------------------------------------------- ordinalPosition
     public short getOrdinalPosition() {
         return ordinalPosition;
     }
@@ -129,7 +175,7 @@ public class IndexInfo extends AbstractChild<Table> {
         this.ordinalPosition = ordinalPosition;
     }
 
-    // -------------------------------------------------------------- columnName
+    // ------------------------------------------------------------------------------------------------------ columnName
     public String getColumnName() {
         return columnName;
     }
@@ -138,7 +184,7 @@ public class IndexInfo extends AbstractChild<Table> {
         this.columnName = columnName;
     }
 
-    // --------------------------------------------------------------- ascOrDesc
+    // ------------------------------------------------------------------------------------------------------- ascOrDesc
     public String getAscOrDesc() {
         return ascOrDesc;
     }
@@ -147,7 +193,7 @@ public class IndexInfo extends AbstractChild<Table> {
         this.ascOrDesc = ascOrDesc;
     }
 
-    // ------------------------------------------------------------- cardinality
+    // ----------------------------------------------------------------------------------------------------- cardinality
     public long getCardinality() {
         return cardinality;
     }
@@ -156,7 +202,7 @@ public class IndexInfo extends AbstractChild<Table> {
         this.cardinality = cardinality;
     }
 
-    // ------------------------------------------------------------------- pages
+    // ----------------------------------------------------------------------------------------------------------- pages
     public long getPages() {
         return pages;
     }
@@ -165,7 +211,7 @@ public class IndexInfo extends AbstractChild<Table> {
         this.pages = pages;
     }
 
-    // --------------------------------------------------------- filterCondition
+    // ------------------------------------------------------------------------------------------------- filterCondition
     public String getFilterCondition() {
         return filterCondition;
     }
@@ -175,76 +221,63 @@ public class IndexInfo extends AbstractChild<Table> {
     }
 
     // -----------------------------------------------------------------------------------------------------------------
-    @XmlAttribute
+    @XmlElement(required = true, nillable = true)
     @MayBeNull
     @Label("TABLE_CAT")
-    @Bind(label = "TABLE_CAT", nillable = true)
     private String tableCat;
 
-    @XmlAttribute
+    @XmlElement(required = true, nillable = true)
     @MayBeNull
     @Label("TABLE_SCHEM")
-    @Bind(label = "TABLE_SCHEM", nillable = true)
     private String tableSchem;
 
-    @XmlAttribute
+    @XmlElement(required = true)
     @Label("TABLE_NAME")
-    @Bind(label = "TABLE_NAME")
     private String tableName;
 
     // -----------------------------------------------------------------------------------------------------------------
-    @XmlElement
+    @XmlElement(required = true)
     @Label("NON_UNIQUE")
-    @Bind(label = "NON_UNIQUE")
     private boolean nonUnique;
 
-    @XmlElement(nillable = true)
+    @XmlElement(required = true, nillable = true)
     @MayBeNull
     @Label("INDEX_QUALIFIER")
-    @Bind(label = "INDEX_QUALIFIER", nillable = true)
     private String indexQualifier;
 
-    @XmlElement(nillable = true)
+    @XmlElement(required = true, nillable = true)
     @MayBeNull
     @Label("INDEX_NAME")
-    @Bind(label = "INDEX_NAME", nillable = true)
     private String indexName;
 
-    @XmlElement
+    @XmlElement(required = true)
     @Label("TYPE")
-    @Bind(label = "TYPE")
     private short type;
 
-    @XmlElement
+    @XmlElement(required = true)
     @Label("ORDINAL_POSITION")
-    @Bind(label = "ORDINAL_POSITION")
     private short ordinalPosition;
 
-    @XmlElement(nillable = true)
+    @XmlElement(required = true, nillable = true)
     @MayBeNull
     @Label("COLUMN_NAME")
-    @Bind(label = "COLUMN_NAME", nillable = true)
     private String columnName;
 
-    @XmlElement(nillable = true)
+    @XmlElement(required = true, nillable = true)
     @MayBeNull
     @Label("ASC_OR_DESC")
-    @Bind(label = "ASC_OR_DESC", nillable = true)
     private String ascOrDesc;
 
-    @XmlElement
+    @XmlElement(required = true)
     @Label("CARDINALITY")
-    @Bind(label = "CARDINALITY")
     private long cardinality;
 
-    @XmlElement
+    @XmlElement(required = true)
     @Label("PAGES")
-    @Bind(label = "PAGES")
     private long pages;
 
-    @XmlElement(nillable = true)
+    @XmlElement(required = true, nillable = true)
     @MayBeNull
     @Label("FILTER_CONDITION")
-    @Bind(label = "FILTER_CONDITION", nillable = true)
     private String filterCondition;
 }

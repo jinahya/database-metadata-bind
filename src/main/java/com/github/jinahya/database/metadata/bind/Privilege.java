@@ -20,12 +20,11 @@ package com.github.jinahya.database.metadata.bind;
  * #L%
  */
 
-import javax.xml.bind.annotation.XmlAttribute;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlTransient;
 
 @XmlTransient
-abstract class Privilege extends AbstractChild<Table> {
+abstract class Privilege extends TableChild {
 
     private static final long serialVersionUID = -1799954363648972203L;
 
@@ -33,13 +32,13 @@ abstract class Privilege extends AbstractChild<Table> {
     @Override
     public String toString() {
         return super.toString() + '{'
-               + "tableCat=" + tableCat
-               + ",tableSchem=" + tableSchem
-               + ",grantor=" + grantor
-               + ",grantee=" + grantee
-               + ",privilege=" + privilege
-               + ",isGrantable=" + isGrantable
-               + '}';
+                + "tableCat=" + tableCat
+                + ",tableSchem=" + tableSchem
+                + ",grantor=" + grantor
+                + ",grantee=" + grantee
+                + ",privilege=" + privilege
+                + ",isGrantable=" + isGrantable
+                + '}';
     }
 
     // -------------------------------------------------------------------------------------------------------- tableCat
@@ -97,38 +96,32 @@ abstract class Privilege extends AbstractChild<Table> {
     }
 
     // -----------------------------------------------------------------------------------------------------------------
-    @XmlAttribute
+    @XmlElement(required = true, nillable = true)
     @MayBeNull
     @Label("TABLE_CAT")
-    @Bind(label = "TABLE_CAT", nillable = true)
     private String tableCat;
 
-    @XmlAttribute
+    @XmlElement(required = true, nillable = true)
     @MayBeNull
     @Label("TABLE_SCHEM")
-    @Bind(label = "TABLE_SCHEM", nillable = true)
     private String tableSchem;
 
     // -----------------------------------------------------------------------------------------------------------------
-    @XmlElement(nillable = true)
+    @XmlElement(required = true, nillable = true)
     @MayBeNull
     @Label("GRANTOR")
-    @Bind(label = "GRANTOR", nillable = true)
     private String grantor;
 
-    @XmlElement
+    @XmlElement(required = true)
     @Label("GRANTEE")
-    @Bind(label = "GRANTEE")
     private String grantee;
 
-    @XmlElement
+    @XmlElement(required = true)
     @Label("PRIVILEGE")
-    @Bind(label = "PRIVILEGE")
     private String privilege;
 
-    @XmlElement(nillable = true)
+    @XmlElement(required = true, nillable = true)
     @MayBeNull
     @Label("IS_GRANTABLE")
-    @Bind(label = "IS_GRANTABLE", nillable = true)
     private String isGrantable;
 }

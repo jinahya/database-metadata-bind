@@ -24,14 +24,7 @@ import javax.xml.bind.annotation.XmlRootElement;
 import java.sql.DatabaseMetaData;
 import java.util.Collection;
 
-import static java.sql.DatabaseMetaData.importedKeyCascade;
-import static java.sql.DatabaseMetaData.importedKeyInitiallyDeferred;
-import static java.sql.DatabaseMetaData.importedKeyInitiallyImmediate;
-import static java.sql.DatabaseMetaData.importedKeyNoAction;
-import static java.sql.DatabaseMetaData.importedKeyNotDeferrable;
-import static java.sql.DatabaseMetaData.importedKeyRestrict;
-import static java.sql.DatabaseMetaData.importedKeySetDefault;
-import static java.sql.DatabaseMetaData.importedKeySetNull;
+import static java.sql.DatabaseMetaData.*;
 
 /**
  * An entity class for imported keys.
@@ -44,7 +37,7 @@ public class ImportedKey extends TableKey {
 
     private static final long serialVersionUID = 1965229912934042881L;
 
-    // -------------------------------------------------------------------------
+    // -----------------------------------------------------------------------------------------------------------------
     public enum Rule implements IntFieldEnum<Rule> {
 
         /**
@@ -73,8 +66,6 @@ public class ImportedKey extends TableKey {
          */
         IMPORTED_KEY_SET_DEFAULT(importedKeySetDefault); // 4
 
-        // ---------------------------------------------------------------------
-
         /**
          * Returns the constant whose raw value matches to given. An instance of {@link IllegalArgumentException} will
          * be thrown if no constant matched.
@@ -86,12 +77,9 @@ public class ImportedKey extends TableKey {
             return IntFieldEnums.valueOf(Rule.class, rawValue);
         }
 
-        // ---------------------------------------------------------------------
         Rule(final int rawValue) {
             this.rawValue = rawValue;
         }
-
-        // ---------------------------------------------------------------------
 
         /**
          * Returns the raw value of this constant.
@@ -102,7 +90,6 @@ public class ImportedKey extends TableKey {
             return rawValue;
         }
 
-        // ---------------------------------------------------------------------
         private final int rawValue;
     }
 
@@ -126,8 +113,6 @@ public class ImportedKey extends TableKey {
          */
         IMPORTED_KEY_NOT_DEFERRABLE(importedKeyNotDeferrable); // 7
 
-        // ---------------------------------------------------------------------
-
         /**
          * Returns the constant whose raw value matches to given. An instance of {@link IllegalArgumentException} will
          * be thrown if no constant matched.
@@ -139,12 +124,9 @@ public class ImportedKey extends TableKey {
             return IntFieldEnums.valueOf(Deferrability.class, rawValue);
         }
 
-        // ---------------------------------------------------------------------
         Deferrability(final int rawValue) {
             this.rawValue = rawValue;
         }
-
-        // ---------------------------------------------------------------------
 
         /**
          * Returns the raw value of this constant.
@@ -156,11 +138,10 @@ public class ImportedKey extends TableKey {
             return rawValue;
         }
 
-        // ---------------------------------------------------------------------
         private final int rawValue;
     }
 
-    // -------------------------------------------------------------------------
+    // -----------------------------------------------------------------------------------------------------------------
 
     /**
      * Creates a new instance.

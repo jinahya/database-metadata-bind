@@ -20,8 +20,10 @@ package com.github.jinahya.database.metadata.bind;
  * #L%
  */
 
+import javax.xml.bind.annotation.XmlTransient;
 import java.io.Serializable;
 
+@XmlTransient
 interface MetadataType extends Serializable {
 
 }

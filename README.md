@@ -23,6 +23,8 @@ final List<Table> tables = context.getTables(null, null, null);
 final Metadata metadata = Metadata.newInstance(context);
 ```
 
+## Testing with [TestContainers](https://www.testcontainers.org/)
+
 ## Gathering metadata from existing databases
 
 ```shell

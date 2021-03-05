@@ -20,10 +20,10 @@ package com.github.jinahya.database.metadata.bind;
  * #L%
  */
 
-import javax.xml.bind.annotation.XmlAttribute;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
 import java.util.Collection;
+import java.util.Objects;
 
 /**
  * An entity class for primary keys.
@@ -32,11 +32,55 @@ import java.util.Collection;
  * @see Context#getPrimaryKeys(String, String, String, Collection)
  */
 @XmlRootElement
-public class PrimaryKey extends AbstractChild<Table> {
+public class PrimaryKey extends TableChild {
 
     private static final long serialVersionUID = 3159826510060898330L;
 
-    // ---------------------------------------------------------------- tableCat
+    // -----------------------------------------------------------------------------------------------------------------
+
+    /**
+     * Creates a new instance.
+     */
+    public PrimaryKey() {
+        super();
+    }
+
+    @Override
+    public String toString() {
+        return super.toString() + '{'
+                + "tableCat=" + tableCat
+                + ",tableSchem=" + tableSchem
+                + ",tableName=" + tableName
+                + ",columnName=" + columnName
+                + ",keySeq=" + keySeq
+                + ",pkName=" + pkName
+                + '}';
+    }
+
+    @Override
+    public boolean equals(final Object obj) {
+        if (this == obj) return true;
+        if (obj == null || getClass() != obj.getClass()) return false;
+        final PrimaryKey that = (PrimaryKey) obj;
+        return keySeq == that.keySeq
+                && Objects.equals(tableCat, that.tableCat)
+                && Objects.equals(tableSchem, that.tableSchem)
+                && Objects.equals(tableName, that.tableName)
+                && Objects.equals(columnName, that.columnName)
+                && Objects.equals(pkName, that.pkName);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(tableCat,
+                tableSchem,
+                tableName,
+                columnName,
+                keySeq,
+                pkName);
+    }
+
+    // -------------------------------------------------------------------------------------------------------- tableCat
     public String getTableCat() {
         return tableCat;
     }
@@ -45,7 +89,7 @@ public class PrimaryKey extends AbstractChild<Table> {
         this.tableCat = tableCat;
     }
 
-    // -------------------------------------------------------------- tableSchem
+    // ------------------------------------------------------------------------------------------------------ tableSchem
     public String getTableSchem() {
         return tableSchem;
     }
@@ -54,7 +98,7 @@ public class PrimaryKey extends AbstractChild<Table> {
         this.tableSchem = tableSchem;
     }
 
-    // --------------------------------------------------------------- tableName
+    // ------------------------------------------------------------------------------------------------------- tableName
     public String getTableName() {
         return tableName;
     }
@@ -63,7 +107,7 @@ public class PrimaryKey extends AbstractChild<Table> {
         this.tableName = tableName;
     }
 
-    // -------------------------------------------------------------- columnName
+    // ------------------------------------------------------------------------------------------------------ columnName
     public String getColumnName() {
         return columnName;
     }
@@ -72,7 +116,7 @@ public class PrimaryKey extends AbstractChild<Table> {
         this.columnName = columnName;
     }
 
-    // ------------------------------------------------------------------ keySeq
+    // ---------------------------------------------------------------------------------------------------------- keySeq
     public short getKeySeq() {
         return keySeq;
     }
@@ -81,7 +125,7 @@ public class PrimaryKey extends AbstractChild<Table> {
         this.keySeq = keySeq;
     }
 
-    // ------------------------------------------------------------------ pkName
+    // ---------------------------------------------------------------------------------------------------------- pkName
     public String getPkName() {
         return pkName;
     }
@@ -91,37 +135,31 @@ public class PrimaryKey extends AbstractChild<Table> {
     }
 
     // -----------------------------------------------------------------------------------------------------------------
-    @XmlAttribute
+    @XmlElement(nillable = true, required = true)
     @MayBeNull
     @Label("TABLE_CAT")
-    @Bind(label = "TABLE_CAT", nillable = true)
     private String tableCat;
 
-    @XmlAttribute
+    @XmlElement(nillable = true, required = true)
     @MayBeNull
     @Label("TABLE_SCHEM")
-    @Bind(label = "TABLE_SCHEM", nillable = true)
     private String tableSchem;
 
-    @XmlAttribute
+    @XmlElement(required = true)
     @Label("TABLE_NAME")
-    @Bind(label = "TABLE_NAME")
     private String tableName;
 
     // -----------------------------------------------------------------------------------------------------------------
-    @XmlElement
+    @XmlElement(required = true)
     @Label("COLUMN_NAME")
-    @Bind(label = "COLUMN_NAME")
     private String columnName;
 
-    @XmlElement
+    @XmlElement(required = true)
     @Label("KEY_SEQ")
-    @Bind(label = "KEY_SEQ")
     private short keySeq;
 
-    @XmlElement(nillable = true)
+    @XmlElement(nillable = true, required = true)
     @MayBeNull
     @Label("PK_NAME")
-    @Bind(label = "PK_NAME", nillable = true)
     private String pkName;
 }

@@ -23,10 +23,9 @@ package com.github.jinahya.database.metadata.bind;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
 import java.sql.DatabaseMetaData;
+import java.util.Objects;
 
-import static java.sql.DatabaseMetaData.typeNoNulls;
-import static java.sql.DatabaseMetaData.typeNullable;
-import static java.sql.DatabaseMetaData.typeNullableUnknown;
+import static java.sql.DatabaseMetaData.*;
 
 /**
  * An entity class for binding the result of {@link java.sql.DatabaseMetaData#getTypeInfo() getTypeInfo()}.
@@ -38,7 +37,7 @@ public class TypeInfo implements MetadataType {
 
     private static final long serialVersionUID = -3964147654019495313L;
 
-    // -------------------------------------------------------------------------
+    // -----------------------------------------------------------------------------------------------------------------
 
     /**
      * Constants for nullabilities of an type.
@@ -101,25 +100,72 @@ public class TypeInfo implements MetadataType {
     @Override
     public String toString() {
         return super.toString() + '{'
-               + "typeName=" + typeName
-               + ",dataType=" + dataType
-               + ",precision=" + precision
-               + ",literalPrefix=" + literalPrefix
-               + ",literalSuffix=" + literalSuffix
-               + ",createParams=" + createParams
-               + ",nullable=" + nullable
-               + ",caseSensitive=" + caseSensitive
-               + ",searchable=" + searchable
-               + ",unsignedAttribute=" + unsignedAttribute
-               + ",fixedPrecScale=" + fixedPrecScale
-               + ",autoIncrement=" + autoIncrement
-               + ",localTypeName=" + localTypeName
-               + ",minimumScale=" + minimumScale
-               + ",maximumScale=" + maximumScale
-               + ",sqlDataType=" + sqlDataType
-               + ",sqlDatetimeSub=" + sqlDatetimeSub
-               + ",numPrecRadix=" + numPrecRadix
-               + '}';
+                + "typeName=" + typeName
+                + ",dataType=" + dataType
+                + ",precision=" + precision
+                + ",literalPrefix=" + literalPrefix
+                + ",literalSuffix=" + literalSuffix
+                + ",createParams=" + createParams
+                + ",nullable=" + nullable
+                + ",caseSensitive=" + caseSensitive
+                + ",searchable=" + searchable
+                + ",unsignedAttribute=" + unsignedAttribute
+                + ",fixedPrecScale=" + fixedPrecScale
+                + ",autoIncrement=" + autoIncrement
+                + ",localTypeName=" + localTypeName
+                + ",minimumScale=" + minimumScale
+                + ",maximumScale=" + maximumScale
+                + ",sqlDataType=" + sqlDataType
+                + ",sqlDatetimeSub=" + sqlDatetimeSub
+                + ",numPrecRadix=" + numPrecRadix
+                + '}';
+    }
+
+    @Override
+    public boolean equals(final Object obj) {
+        if (this == obj) return true;
+        if (obj == null || getClass() != obj.getClass()) return false;
+        final TypeInfo that = (TypeInfo) obj;
+        return dataType == that.dataType
+                && precision == that.precision
+                && nullable == that.nullable
+                && caseSensitive == that.caseSensitive
+                && searchable == that.searchable
+                && unsignedAttribute == that.unsignedAttribute
+                && fixedPrecScale == that.fixedPrecScale
+                && autoIncrement == that.autoIncrement
+                && minimumScale == that.minimumScale
+                && maximumScale == that.maximumScale
+                && numPrecRadix == that.numPrecRadix
+                && Objects.equals(typeName, that.typeName)
+                && Objects.equals(literalPrefix, that.literalPrefix)
+                && Objects.equals(literalSuffix, that.literalSuffix)
+                && Objects.equals(createParams, that.createParams)
+                && Objects.equals(localTypeName, that.localTypeName)
+                && Objects.equals(sqlDataType, that.sqlDataType)
+                && Objects.equals(sqlDatetimeSub, that.sqlDatetimeSub);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(typeName,
+                dataType,
+                precision,
+                literalPrefix,
+                literalSuffix,
+                createParams,
+                nullable,
+                caseSensitive,
+                searchable,
+                unsignedAttribute,
+                fixedPrecScale,
+                autoIncrement,
+                localTypeName,
+                minimumScale,
+                maximumScale,
+                sqlDataType,
+                sqlDatetimeSub,
+                numPrecRadix);
     }
 
     // -------------------------------------------------------------------------------------------------------- typeName
@@ -285,99 +331,81 @@ public class TypeInfo implements MetadataType {
     }
 
     // -----------------------------------------------------------------------------------------------------------------
-    @XmlElement
+    @XmlElement(required = true)
     @Label("TYPE_NAME")
-    @Bind(label = "TYPE_NAME")
     private String typeName;
 
-    @XmlElement
+    @XmlElement(required = true)
     @Label("DATA_TYPE")
-    @Bind(label = "DATA_TYPE")
     private int dataType;
 
-    @XmlElement
+    @XmlElement(required = true)
     @Label("PRECISION")
-    @Bind(label = "PRECISION")
     private int precision;
 
-    @XmlElement(nillable = true)
+    @XmlElement(required = true, nillable = true)
     @MayBeNull
     @Label("LITERAL_PREFIX")
-    @Bind(label = "LITERAL_PREFIX", nillable = true)
     private String literalPrefix;
 
-    @XmlElement(nillable = true)
+    @XmlElement(required = true, nillable = true)
     @MayBeNull
     @Label("LITERAL_SUFFIX")
-    @Bind(label = "LITERAL_SUFFIX", nillable = true)
     private String literalSuffix;
 
-    @XmlElement(nillable = true)
+    @XmlElement(required = true, nillable = true)
     @MayBeNull
     @Label("CREATE_PARAMS")
-    @Bind(label = "CREATE_PARAMS", nillable = true)
     private String createParams;
 
-    @XmlElement
+    @XmlElement(required = true)
     @Label("NULLABLE")
-    @Bind(label = "NULLABLE")
     private short nullable;
 
-    @XmlElement
+    @XmlElement(required = true)
     @Label("CASE_SENSITIVE")
-    @Bind(label = "CASE_SENSITIVE")
     private boolean caseSensitive;
 
-    @XmlElement
+    @XmlElement(required = true)
     @Label("SEARCHABLE")
-    @Bind(label = "SEARCHABLE")
     private short searchable;
 
-    @XmlElement
+    @XmlElement(required = true)
     @Label("UNSIGNED_ATTRIBUTE")
-    @Bind(label = "UNSIGNED_ATTRIBUTE")
     private boolean unsignedAttribute;
 
-    @XmlElement
+    @XmlElement(required = true)
     @Label("FIXED_PREC_SCALE")
-    @Bind(label = "FIXED_PREC_SCALE")
     private boolean fixedPrecScale;
 
-    @XmlElement
+    @XmlElement(required = true)
     @Label("AUTO_INCREMENT")
-    @Bind(label = "AUTO_INCREMENT")
     private boolean autoIncrement;
 
-    @XmlElement(nillable = true)
+    @XmlElement(required = true, nillable = true)
     @MayBeNull
     @Label("LOCAL_TYPE_NAME")
-    @Bind(label = "LOCAL_TYPE_NAME", nillable = true)
     private String localTypeName;
 
-    @XmlElement
+    @XmlElement(required = true)
     @Label("MINIMUM_SCALE")
-    @Bind(label = "MINIMUM_SCALE")
     private short minimumScale;
 
-    @XmlElement
+    @XmlElement(required = true)
     @Label("MAXIMUM_SCALE")
-    @Bind(label = "MAXIMUM_SCALE")
     private short maximumScale;
 
-    @XmlElement(nillable = true)
+    @XmlElement(required = true, nillable = true)
     @Unused
     @Label("SQL_DATA_TYPE")
-    @Bind(label = "SQL_DATA_TYPE", unused = true)
     private Integer sqlDataType;
 
-    @XmlElement(nillable = true)
+    @XmlElement(required = true, nillable = true)
     @Unused
     @Label("SQL_DATETIME_SUB")
-    @Bind(label = "SQL_DATETIME_SUB", unused = true)
     private Integer sqlDatetimeSub;
 
-    @XmlElement
+    @XmlElement(required = true)
     @Label("NUM_PREC_RADIX")
-    @Bind(label = "NUM_PREC_RADIX")
     private int numPrecRadix;
 }

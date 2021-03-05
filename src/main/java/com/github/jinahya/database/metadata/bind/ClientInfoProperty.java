@@ -22,6 +22,7 @@ package com.github.jinahya.database.metadata.bind;
 
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
+import java.util.Objects;
 
 /**
  * An entity class for client info properties.
@@ -37,11 +38,30 @@ public class ClientInfoProperty implements MetadataType {
     @Override
     public String toString() {
         return super.toString() + '{'
-               + "name=" + name
-               + ",maxLen=" + maxLen
-               + ",defaultValue=" + defaultValue
-               + ",description=" + description
-               + '}';
+                + "name=" + name
+                + ",maxLen=" + maxLen
+                + ",defaultValue=" + defaultValue
+                + ",description=" + description
+                + '}';
+    }
+
+    @Override
+    public boolean equals(final Object obj) {
+        if (this == obj) return true;
+        if (obj == null || getClass() != obj.getClass()) return false;
+        final ClientInfoProperty that = (ClientInfoProperty) obj;
+        return maxLen == that.maxLen
+                && Objects.equals(name, that.name)
+                && Objects.equals(defaultValue, that.defaultValue)
+                && Objects.equals(description, that.description);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(name,
+                maxLen,
+                defaultValue,
+                description);
     }
 
     // ------------------------------------------------------------------------------------------------------------ name
@@ -81,23 +101,19 @@ public class ClientInfoProperty implements MetadataType {
     }
 
     // -----------------------------------------------------------------------------------------------------------------
-    @XmlElement
+    @XmlElement(required = true)
     @Label("NAME")
-    @Bind(label = "NAME")
     private String name;
 
-    @XmlElement
+    @XmlElement(required = true)
     @Label("MAX_LEN")
-    @Bind(label = "MAX_LEN")
     private int maxLen;
 
-    @XmlElement
+    @XmlElement(required = true)
     @Label("DEFAULT_VALUE")
-    @Bind(label = "DEFAULT_VALUE")
     private String defaultValue;
 
-    @XmlElement
+    @XmlElement(required = true)
     @Label("DESCRIPTION")
-    @Bind(label = "DESCRIPTION")
     private String description;
 }

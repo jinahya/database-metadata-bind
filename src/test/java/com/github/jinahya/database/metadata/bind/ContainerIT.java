@@ -41,10 +41,11 @@ class ContainerIT {
     @Test
     void writeMetadataToFiles() throws Exception {
         final String url = System.getProperty("url");
-        final String user = System.getProperty("user");
-        final String password = System.getProperty("password");
+//        final String user = System.getProperty("user");
+//        final String password = System.getProperty("password");
         log.info("connecting...");
-        try (Connection connection = getConnection(url, user, password)) {
+//        try (Connection connection = getConnection(url, user, password)) {
+        try (Connection connection = getConnection(url)) {
             log.info("connected: {}", connection);
             final Context context = Context.newInstance(connection);
             final Metadata metadata = Metadata.newInstance(context);

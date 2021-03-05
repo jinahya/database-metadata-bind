@@ -26,14 +26,9 @@ import javax.validation.constraints.NotNull;
 import javax.xml.bind.annotation.XmlAttribute;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlElementRef;
-import javax.xml.bind.annotation.XmlElementWrapper;
 import javax.xml.bind.annotation.XmlRootElement;
 import java.text.Collator;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Comparator;
-import java.util.List;
-import java.util.Objects;
+import java.util.*;
 
 import static java.util.Objects.requireNonNull;
 
@@ -113,8 +108,8 @@ public class Catalog implements MetadataType {
     @Override
     public String toString() {
         return super.toString() + '{'
-               + ATTRIBUTE_NAME_TABLE_CAT + '=' + tableCat
-               + '}';
+                + ATTRIBUTE_NAME_TABLE_CAT + '=' + tableCat
+                + '}';
     }
 
     @Override
@@ -182,10 +177,9 @@ public class Catalog implements MetadataType {
     @XmlElement(required = true)
     @NotBlank
     @Label(COLUMN_NAME_TABLE_CAT)
-    @Bind(label = COLUMN_NAME_TABLE_CAT)
     private String tableCat;
 
-    @XmlElementWrapper(required = true)
+    //@XmlElementWrapper(required = true)
     @XmlElementRef
     private List<@Valid @NotNull Schema> schemas;
 }

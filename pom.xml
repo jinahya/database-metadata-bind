@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
   <modelVersion>4.0.0</modelVersion>
 
   <parent>
@@ -54,6 +55,7 @@
     <version.ojdbc11>21.1.0.0</version.ojdbc11>
     <version.org.junit.jupiter>5.8.0-M1</version.org.junit.jupiter>
     <version.postgresql>42.2.19.jre7</version.postgresql>
+    <version.presto-jdbc>350</version.presto-jdbc>
     <version.org.testcontainers>1.15.2</version.org.testcontainers>
   </properties>
 
@@ -83,6 +85,11 @@
         <groupId>com.oracle.database.jdbc</groupId>
         <artifactId>ojdbc11</artifactId>
         <version>${version.ojdbc11}</version>
+      </dependency>
+      <dependency>
+        <groupId>io.prestosql</groupId>
+        <artifactId>presto-jdbc</artifactId>
+        <version>${version.presto-jdbc}</version>
       </dependency>
       <dependency>
         <groupId>mysql</groupId>
@@ -157,18 +164,18 @@
       <version>2.0.2</version>
       <scope>provided</scope>
     </dependency>
-<!--    <dependency>-->
-<!--      <groupId>org.apache.commons</groupId>-->
-<!--      <artifactId>commons-lang3</artifactId>-->
-<!--      <version>3.12.0</version>-->
-<!--      <scope>test</scope>-->
-<!--    </dependency>-->
-<!--    <dependency>-->
-<!--      <groupId>org.apache.commons</groupId>-->
-<!--      <artifactId>commons-text</artifactId>-->
-<!--      <version>1.9</version>-->
-<!--      <scope>test</scope>-->
-<!--    </dependency>-->
+    <!--    <dependency>-->
+    <!--      <groupId>org.apache.commons</groupId>-->
+    <!--      <artifactId>commons-lang3</artifactId>-->
+    <!--      <version>3.12.0</version>-->
+    <!--      <scope>test</scope>-->
+    <!--    </dependency>-->
+    <!--    <dependency>-->
+    <!--      <groupId>org.apache.commons</groupId>-->
+    <!--      <artifactId>commons-text</artifactId>-->
+    <!--      <version>1.9</version>-->
+    <!--      <scope>test</scope>-->
+    <!--    </dependency>-->
     <dependency>
       <groupId>org.apache.derby</groupId>
       <artifactId>derby</artifactId>
@@ -182,12 +189,12 @@
       <version>3.19.0</version>
       <scope>test</scope>
     </dependency>
-<!--    <dependency>-->
-<!--      <groupId>org.atteo</groupId>-->
-<!--      <artifactId>evo-inflector</artifactId>-->
-<!--      <version>1.2.2</version>-->
-<!--      <scope>test</scope>-->
-<!--    </dependency>-->
+    <!--    <dependency>-->
+    <!--      <groupId>org.atteo</groupId>-->
+    <!--      <artifactId>evo-inflector</artifactId>-->
+    <!--      <version>1.2.2</version>-->
+    <!--      <scope>test</scope>-->
+    <!--    </dependency>-->
     <dependency>
       <groupId>org.codehaus.mojo</groupId>
       <artifactId>animal-sniffer-annotations</artifactId>
@@ -307,7 +314,7 @@
             <configuration>
               <skip>true</skip>
               <rules>
-                <dependencyConvergence />
+                <dependencyConvergence/>
               </rules>
             </configuration>
             <goals>
@@ -436,10 +443,21 @@
   <profiles>
     <profile>
       <id>memory</id>
-      <properties>
-        <memory>true</memory>
-        <surefire.exitTimeout>900</surefire.exitTimeout>
-      </properties>
+      <build>
+        <plugins>
+          <plugin>
+            <groupId>org.apache.maven.plugins</groupId>
+            <artifactId>maven-surefire-plugin</artifactId>
+            <configuration>
+              <forkedProcessExitTimeoutInSeconds>900</forkedProcessExitTimeoutInSeconds>
+              <forkedProcessTimeoutInSeconds>0</forkedProcessTimeoutInSeconds>
+              <systemPropertyVariables>
+                <memory>true</memory>
+              </systemPropertyVariables>
+            </configuration>
+          </plugin>
+        </plugins>
+      </build>
     </profile>
     <profile>
       <id>failsafe</id>
@@ -469,6 +487,16 @@
       </build>
     </profile>
     <profile>
+      <id>container</id>
+      <dependencies>
+        <dependency>
+          <groupId>org.testcontainers</groupId>
+          <artifactId>testcontainers</artifactId>
+          <scope>test</scope>
+        </dependency>
+      </dependencies>
+    </profile>
+    <profile>
       <id>container-mariadb</id>
       <dependencies>
         <dependency>
@@ -479,6 +507,21 @@
         <dependency>
           <groupId>org.testcontainers</groupId>
           <artifactId>mariadb</artifactId>
+          <scope>test</scope>
+        </dependency>
+      </dependencies>
+    </profile>
+    <profile>
+      <id>container-mssqlserver</id>
+      <dependencies>
+        <dependency>
+          <groupId>com.microsoft.sqlserver</groupId>
+          <artifactId>mssql-jdbc</artifactId>
+          <scope>test</scope>
+        </dependency>
+        <dependency>
+          <groupId>org.testcontainers</groupId>
+          <artifactId>mssqlserver</artifactId>
           <scope>test</scope>
         </dependency>
         <dependency>
@@ -501,9 +544,34 @@
           <artifactId>mysql</artifactId>
           <scope>test</scope>
         </dependency>
+      </dependencies>
+    </profile>
+    <profile>
+      <id>container-postgresql</id>
+      <dependencies>
+        <dependency>
+          <groupId>org.postgresql</groupId>
+          <artifactId>postgresql</artifactId>
+          <scope>test</scope>
+        </dependency>
         <dependency>
           <groupId>org.testcontainers</groupId>
-          <artifactId>testcontainers</artifactId>
+          <artifactId>postgresql</artifactId>
+          <scope>test</scope>
+        </dependency>
+      </dependencies>
+    </profile>
+    <profile>
+      <id>container-presto</id>
+      <dependencies>
+        <dependency>
+          <groupId>io.prestosql</groupId>
+          <artifactId>presto-jdbc</artifactId>
+          <scope>test</scope>
+        </dependency>
+        <dependency>
+          <groupId>org.testcontainers</groupId>
+          <artifactId>presto</artifactId>
           <scope>test</scope>
         </dependency>
       </dependencies>

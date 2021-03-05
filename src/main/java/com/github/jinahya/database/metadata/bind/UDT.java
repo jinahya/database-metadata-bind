@@ -22,12 +22,12 @@ package com.github.jinahya.database.metadata.bind;
 
 import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
-import javax.xml.bind.annotation.XmlAttribute;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlElementRef;
 import javax.xml.bind.annotation.XmlRootElement;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 /**
  * An entity class for user defined types.
@@ -35,22 +35,56 @@ import java.util.List;
  * @author Jin Kwon &lt;jinahya_at_gmail.com&gt;
  */
 @XmlRootElement
-public class UDT extends AbstractChild<Schema> {
+public class UDT extends SchemaChild {
 
     private static final long serialVersionUID = 8665246093405057553L;
+
+    // -----------------------------------------------------------------------------------------------------------------
+
+    /**
+     * Creates a new instance.
+     */
+    public UDT() {
+        super();
+    }
 
     // -----------------------------------------------------------------------------------------------------------------
     @Override
     public String toString() {
         return super.toString() + '{'
-               + "typeCat=" + typeCat
-               + ",typeSchem=" + typeSchem
-               + ",typeName=" + typeName
-               + ",className=" + className
-               + ",dataType=" + dataType
-               + ",remarks=" + remarks
-               + ",baseType=" + baseType
-               + '}';
+                + "typeCat=" + typeCat
+                + ",typeSchem=" + typeSchem
+                + ",typeName=" + typeName
+                + ",className=" + className
+                + ",dataType=" + dataType
+                + ",remarks=" + remarks
+                + ",baseType=" + baseType
+                + '}';
+    }
+
+    @Override
+    public boolean equals(final Object obj) {
+        if (this == obj) return true;
+        if (obj == null || getClass() != obj.getClass()) return false;
+        final UDT that = (UDT) obj;
+        return dataType == that.dataType
+                && Objects.equals(typeCat, that.typeCat)
+                && Objects.equals(typeSchem, that.typeSchem)
+                && Objects.equals(typeName, that.typeName)
+                && Objects.equals(className, that.className)
+                && Objects.equals(remarks, that.remarks)
+                && Objects.equals(baseType, that.baseType);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(typeCat,
+                typeSchem,
+                typeName,
+                className,
+                dataType,
+                remarks,
+                baseType);
     }
 
     // --------------------------------------------------------------------------------------------------------- typeCat
@@ -133,43 +167,37 @@ public class UDT extends AbstractChild<Schema> {
     }
 
     // -----------------------------------------------------------------------------------------------------------------
-    @XmlAttribute
+    @XmlElement(required = true, nillable = true)
     @MayBeNull
     @Label("TYPE_CAT")
-    @Bind(label = "TYPE_CAT", nillable = true)
     private String typeCat;
 
-    @XmlAttribute
+    @XmlElement(required = true, nillable = true)
     @MayBeNull
     @Label("TYPE_SCHEM")
-    @Bind(label = "TYPE_SCHEM", nillable = true)
     private String typeSchem;
 
-    // -----------------------------------------------------------------------------------------------------------------
-    @XmlElement
+    @XmlElement(required = true)
     @Label("TYPE_NAME")
     @Bind(label = "TYPE_NAME")
     private String typeName;
 
-    @XmlElement
+    // -----------------------------------------------------------------------------------------------------------------
+    @XmlElement(required = true)
     @Label("CLASS_NAME")
-    @Bind(label = "CLASS_NAME")
     private String className;
 
-    @XmlElement
+    @XmlElement(required = true)
     @Label("DATA_TYPE")
-    @Bind(label = "DATA_TYPE")
     private int dataType;
 
-    @XmlElement
+    @XmlElement(required = true)
     @Label("REMARKS")
-    @Bind(label = "REMARKS")
     private String remarks;
 
-    @XmlElement(nillable = true)
+    @XmlElement(required = true, nillable = true)
     @MayBeNull
     @Label("BASE_TYPE")
-    @Bind(label = "BASE_TYPE", nillable = true)
     private Short baseType;
 
     // -----------------------------------------------------------------------------------------------------------------
