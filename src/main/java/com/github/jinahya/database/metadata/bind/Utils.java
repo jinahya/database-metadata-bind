@@ -25,8 +25,6 @@ import java.lang.reflect.Field;
 import java.sql.ResultSet;
 import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
-import java.sql.SQLFeatureNotSupportedException;
-import java.sql.SQLSyntaxErrorException;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
@@ -176,19 +174,6 @@ final class Utils {
             }
         }
         logger.severe(() -> format("failed to set value; label: %s, value: %s, field: %s", label, value, field));
-    }
-
-    // -----------------------------------------------------------------------------------------------------------------
-    static void logSqlFeatureNotSupportedException(final Logger logger, final SQLFeatureNotSupportedException sqlfnse) {
-        requireNonNull(logger, "logger is null");
-        requireNonNull(sqlfnse, "sqlfnse is null");
-        logger.log(Level.WARNING, "sql feature not supported", sqlfnse);
-    }
-
-    static void logSqlSyntaxErrorException(final Logger logger, final SQLSyntaxErrorException sqlsee) {
-        requireNonNull(logger, "logger is null");
-        requireNonNull(sqlsee, "sqlsee is null");
-        logger.log(Level.WARNING, "sql syntax error occured", sqlsee);
     }
 
     // -----------------------------------------------------------------------------------------------------------------

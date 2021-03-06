@@ -28,6 +28,10 @@ enum ResultSetConcurrency implements IntFieldEnum<ResultSetConcurrency> {
 
     CONCUR_UPDATABLE(ResultSet.CONCUR_UPDATABLE);
 
+    public static ResultSetConcurrency valueOfRawValue(final int rawValue) {
+        return IntFieldEnums.valueOfRawValue(ResultSetConcurrency.class, rawValue);
+    }
+
     ResultSetConcurrency(final int rawValue) {
         this.rawValue = rawValue;
     }
@@ -37,5 +41,5 @@ enum ResultSetConcurrency implements IntFieldEnum<ResultSetConcurrency> {
         return rawValue;
     }
 
-    public final int rawValue;
+    private final int rawValue;
 }

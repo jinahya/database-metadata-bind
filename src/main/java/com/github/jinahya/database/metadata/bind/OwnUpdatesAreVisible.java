@@ -45,9 +45,7 @@ public class OwnUpdatesAreVisible extends AreVisible {
             } catch (final SQLException sqle) {
                 logger.log(Level.WARNING, sqle,
                            () -> String.format("failed to invoke ownUpdatesAreDetected(%1$d)", v.getType()));
-                if (!context.isSuppressed(sqle)) {
-                    throw sqle;
-                }
+                context.throwIfNotSuppressed(sqle);
             }
         }
         return list;

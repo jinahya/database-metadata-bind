@@ -27,10 +27,10 @@ import java.lang.invoke.MethodHandles;
 import java.sql.DatabaseMetaData;
 import java.sql.JDBCType;
 import java.sql.SQLException;
-import java.sql.SQLFeatureNotSupportedException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.stream.Collectors;
 
@@ -46,8 +46,8 @@ public class SupportsConvert {
 
     private static final Logger logger = Logger.getLogger(MethodHandles.lookup().lookupClass().getName());
 
-    static List<SupportsConvert> list(final DatabaseMetaData m) throws SQLException {
-        requireNonNull(m, "m is null");
+    static List<SupportsConvert> list(final Context context) throws SQLException {
+        requireNonNull(context, "context is null");
         final List<SupportsConvert> list = new ArrayList<>();
         final List<JDBCType> types = Arrays.stream(JDBCType.values())
                 .filter(v -> "java.sql".equals(v.getVendor()))
@@ -60,9 +60,14 @@ public class SupportsConvert {
                 v.toType = toType.getVendorTypeNumber();
                 v.toTypeName = toType.getName();
                 try {
-                    v.value = m.supportsConvert(v.fromType, v.toType);
-                } catch (final SQLFeatureNotSupportedException sqlfnse) {
-                    Utils.logSqlFeatureNotSupportedException(logger, sqlfnse);
+                    v.value = context.databaseMetaData.supportsConvert(v.fromType, v.toType);
+                } catch (final SQLException sqle) {
+                    logger.log(Level.WARNING, sqle,
+                               () -> String.format("failed to invoke supportsConvert(%1$d, %2$d)", v.fromType,
+                                                   v.toType));
+                    if (!context.isSuppressed(sqle)) {
+                        throw sqle;
+                    }
                 }
                 list.add(v);
             }
@@ -70,18 +75,58 @@ public class SupportsConvert {
         return list;
     }
 
-    @XmlAttribute(required = true)
-    public int fromType;
+    public int getFromType() {
+        return fromType;
+    }
+
+    public void setFromType(final int fromType) {
+        this.fromType = fromType;
+    }
+
+    public String getFromTypeName() {
+        return fromTypeName;
+    }
+
+    public void setFromTypeName(final String fromTypeName) {
+        this.fromTypeName = fromTypeName;
+    }
+
+    public int getToType() {
+        return toType;
+    }
+
+    public void setToType(final int toType) {
+        this.toType = toType;
+    }
+
+    public String getToTypeName() {
+        return toTypeName;
+    }
+
+    public void setToTypeName(final String toTypeName) {
+        this.toTypeName = toTypeName;
+    }
+
+    public Boolean getValue() {
+        return value;
+    }
+
+    public void setValue(final Boolean value) {
+        this.value = value;
+    }
 
     @XmlAttribute(required = true)
-    public String fromTypeName;
+    private int fromType;
 
     @XmlAttribute(required = true)
-    public int toType;
+    private String fromTypeName;
 
     @XmlAttribute(required = true)
-    public String toTypeName;
+    private int toType;
+
+    @XmlAttribute(required = true)
+    private String toTypeName;
 
     @XmlValue
-    public Boolean value;
+    private Boolean value;
 }

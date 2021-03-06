@@ -44,9 +44,7 @@ public class OthersInsertsAreVisible extends AreVisible {
             } catch (final SQLException sqle) {
                 logger.log(Level.WARNING, sqle,
                            () -> String.format("failed to invoke othersInsertsAreDetected(%1$d)", v.getType()));
-                if (!context.isSuppressed(sqle)) {
-                    throw sqle;
-                }
+                context.throwIfNotSuppressed(sqle);
             }
         }
         return list;

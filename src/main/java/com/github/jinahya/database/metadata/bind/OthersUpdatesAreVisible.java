@@ -44,9 +44,7 @@ public class OthersUpdatesAreVisible extends AreVisible {
             } catch (final SQLException sqle) {
                 logger.log(Level.WARNING, sqle,
                            () -> String.format("failed to invoke othersUpdatesAreDetected(%1$d)", v.getType()));
-                if (!context.isSuppressed(sqle)) {
-                    throw sqle;
-                }
+                context.throwIfNotSuppressed(sqle);
             }
         }
         return list;

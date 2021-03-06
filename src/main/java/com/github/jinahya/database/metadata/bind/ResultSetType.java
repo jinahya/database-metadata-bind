@@ -30,6 +30,10 @@ enum ResultSetType implements IntFieldEnum<ResultSetType> {
 
     TYPE_SCROLL_SENSITIVE(ResultSet.TYPE_SCROLL_SENSITIVE);
 
+    public static ResultSetType valueOfRawValue(final int rawValue) {
+        return IntFieldEnums.valueOfRawValue(ResultSetType.class, rawValue);
+    }
+
     ResultSetType(final int rawValue) {
         this.rawValue = rawValue;
     }
@@ -39,5 +43,5 @@ enum ResultSetType implements IntFieldEnum<ResultSetType> {
         return rawValue;
     }
 
-    public final int rawValue;
+    private final int rawValue;
 }

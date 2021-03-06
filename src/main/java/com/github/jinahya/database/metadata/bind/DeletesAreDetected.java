@@ -45,9 +45,7 @@ public class DeletesAreDetected extends AreDetected {
             } catch (final SQLException sqle) {
                 logger.log(Level.WARNING, sqle,
                            () -> String.format("failed to invoke deletesAreDetected(%1$d)", v.getType()));
-                if (!context.isSuppressed(sqle)) {
-                    throw sqle;
-                }
+                context.throwIfNotSuppressed(sqle);
             }
         }
         return list;

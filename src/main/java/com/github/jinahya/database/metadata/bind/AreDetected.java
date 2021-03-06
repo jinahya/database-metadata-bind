@@ -55,7 +55,7 @@ abstract class AreDetected {
                     } catch (final ReflectiveOperationException roe) {
                         throw new RuntimeException("failed to instantiate " + type, roe);
                     }
-                    v.setType(c.rawValue);
+                    v.setType(c.getRawValue());
                     v.setTypeName(c.name());
                     return v;
                 })

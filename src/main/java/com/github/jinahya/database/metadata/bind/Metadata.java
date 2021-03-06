@@ -32,7 +32,6 @@ import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
 import java.sql.DatabaseMetaData;
 import java.sql.SQLException;
-import java.sql.SQLFeatureNotSupportedException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
@@ -46,7 +45,6 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.stream.Collectors;
 
-import static com.github.jinahya.database.metadata.bind.Utils.logSqlFeatureNotSupportedException;
 import static java.lang.String.format;
 import static java.util.Objects.requireNonNull;
 
@@ -97,9 +95,13 @@ public class Metadata implements MetadataType {
                             throw new RuntimeException(iae);
                         } catch (final InvocationTargetException ite) {
                             final Throwable cause = ite.getCause();
-                            if (cause instanceof SQLFeatureNotSupportedException) {
-                                logSqlFeatureNotSupportedException(
-                                        logger, (SQLFeatureNotSupportedException) cause);
+                            if (cause instanceof SQLException) {
+                                final SQLException sqle = (SQLException) cause;
+                                final Method m = method;
+                                logger.log(Level.WARNING, sqle, () -> "failed to invoke " + m);
+                                if (!context.isSuppressed(sqle)) {
+                                    throw new RuntimeException(sqle);
+                                }
                             } else {
                                 throw new RuntimeException(cause);
                             }
@@ -601,7 +603,7 @@ public class Metadata implements MetadataType {
 //        } catch (final SQLFeatureNotSupportedException sqlfnse) {
 //            logSqlFeatureNotSupportedException(logger, sqlfnse);
 //        }
-        instance.supportsConvert_ = SupportsConvert.list(context.databaseMetaData);
+        instance.supportsConvert_ = SupportsConvert.list(context);
         // -------------------------------------------------------------------------------------------------------------
 //        try {
 //            instance.supportsCoreSQLGrammar = context.databaseMetaData.supportsCoreSQLGrammar();
@@ -783,9 +785,9 @@ public class Metadata implements MetadataType {
 //            logSqlFeatureNotSupportedException(logger, sqlfnse);
 //        }
         // -------------------------------------------------------------------------------------------------------------
-        instance.supportsResultSetConcurrency = SupportsResultSetConcurrency.list(context.databaseMetaData);
-        instance.supportsResultSetHoldability = SupportsResultSetHoldability.list(context.databaseMetaData);
-        instance.supportsResultSetType = SupportsResultSetType.list(context.databaseMetaData);
+        instance.supportsResultSetConcurrency = SupportsResultSetConcurrency.list(context);
+        instance.supportsResultSetHoldability = SupportsResultSetHoldability.list(context);
+        instance.supportsResultSetType = SupportsResultSetType.list(context);
         // -------------------------------------------------------------------------------------------------------------
 //        try {
 //            instance.supportsSavepoints = context.databaseMetaData.supportsSavepoints();
@@ -880,12 +882,7 @@ public class Metadata implements MetadataType {
 //            logSqlFeatureNotSupportedException(logger, sqlfnse);
 //        }
         // -------------------------------------------------------------------------------------------------------------
-        try {
-            instance.supportsTransactionIsolationLevel
-                    = SupportsTransactionIsolationLevel.list(context.databaseMetaData);
-        } catch (final SQLFeatureNotSupportedException sqlfnse) {
-            logSqlFeatureNotSupportedException(logger, sqlfnse);
-        }
+        instance.supportsTransactionIsolationLevel = SupportsTransactionIsolationLevel.list(context);
 //        try {
 //            instance.supportsTransactions = context.databaseMetaData.supportsTransactions();
 //        } catch (final SQLFeatureNotSupportedException sqlfnse) {
@@ -903,11 +900,7 @@ public class Metadata implements MetadataType {
 //            logSqlFeatureNotSupportedException(logger, sqlfnse);
 //        }
         // -------------------------------------------------------------------------------------------------------------
-        try {
-            instance.updatesAreDetected = UpdatesAreDetected.list(context);
-        } catch (final SQLFeatureNotSupportedException sqlfnse) {
-            logSqlFeatureNotSupportedException(logger, sqlfnse);
-        }
+        instance.updatesAreDetected = UpdatesAreDetected.list(context);
         // -------------------------------------------------------------------------------------------------------------
 //        try {
 //            instance.usesLocalFilePerTable = context.databaseMetaData.usesLocalFilePerTable();

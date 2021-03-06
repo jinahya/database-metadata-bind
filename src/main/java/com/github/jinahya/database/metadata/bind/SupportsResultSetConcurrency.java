@@ -24,11 +24,10 @@ import javax.xml.bind.annotation.XmlAttribute;
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlValue;
 import java.lang.invoke.MethodHandles;
-import java.sql.DatabaseMetaData;
 import java.sql.SQLException;
-import java.sql.SQLFeatureNotSupportedException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import static java.util.Objects.requireNonNull;
@@ -43,20 +42,25 @@ public class SupportsResultSetConcurrency {
 
     private static final Logger logger = Logger.getLogger(MethodHandles.lookup().lookupClass().getName());
 
-    static List<SupportsResultSetConcurrency> list(final DatabaseMetaData m) throws SQLException {
-        requireNonNull(m, "m is null");
+    static List<SupportsResultSetConcurrency> list(final Context context) throws SQLException {
+        requireNonNull(context, "context is null");
         final List<SupportsResultSetConcurrency> list = new ArrayList<>();
         for (final ResultSetType type : ResultSetType.values()) {
             for (final ResultSetConcurrency concurrency : ResultSetConcurrency.values()) {
                 final SupportsResultSetConcurrency v = new SupportsResultSetConcurrency();
-                v.type = type.rawValue;
+                v.type = type.getRawValue();
                 v.typeName = type.name();
-                v.concurrency = concurrency.rawValue;
+                v.concurrency = concurrency.getRawValue();
                 v.concurrencyName = concurrency.name();
                 try {
-                    v.value = m.supportsResultSetConcurrency(v.type, v.concurrency);
-                } catch (final SQLFeatureNotSupportedException sqlfnse) {
-                    Utils.logSqlFeatureNotSupportedException(logger, sqlfnse);
+                    v.value = context.databaseMetaData.supportsResultSetConcurrency(v.type, v.concurrency);
+                } catch (final SQLException sqle) {
+                    logger.log(Level.WARNING, sqle,
+                               () -> String.format("failed to invoke supportsResultSetConcurrency(%1$d, %2$d)",
+                                                   v.type, v.concurrency));
+                    if (!context.isSuppressed(sqle)) {
+                        throw sqle;
+                    }
                 }
                 list.add(v);
             }
@@ -64,18 +68,58 @@ public class SupportsResultSetConcurrency {
         return list;
     }
 
-    @XmlAttribute(required = true)
-    public int type;
+    public int getType() {
+        return type;
+    }
+
+    public void setType(final int type) {
+        this.type = type;
+    }
+
+    public String getTypeName() {
+        return typeName;
+    }
+
+    public void setTypeName(final String typeName) {
+        this.typeName = typeName;
+    }
+
+    public int getConcurrency() {
+        return concurrency;
+    }
+
+    public void setConcurrency(final int concurrency) {
+        this.concurrency = concurrency;
+    }
+
+    public String getConcurrencyName() {
+        return concurrencyName;
+    }
+
+    public void setConcurrencyName(final String concurrencyName) {
+        this.concurrencyName = concurrencyName;
+    }
+
+    public Boolean getValue() {
+        return value;
+    }
+
+    public void setValue(final Boolean value) {
+        this.value = value;
+    }
 
     @XmlAttribute(required = true)
-    public String typeName;
+    private int type;
 
     @XmlAttribute(required = true)
-    public int concurrency;
+    private String typeName;
 
     @XmlAttribute(required = true)
-    public String concurrencyName;
+    private int concurrency;
+
+    @XmlAttribute(required = true)
+    private String concurrencyName;
 
     @XmlValue
-    public Boolean value;
+    private Boolean value;
 }

@@ -51,7 +51,7 @@ abstract class AreVisible {
                     } catch (final ReflectiveOperationException roe) {
                         throw new RuntimeException("failed to instantiate " + type, roe);
                     }
-                    v.setType(t.rawValue);
+                    v.setType(t.getRawValue());
                     v.setTypeName(t.name());
                     return v;
                 })

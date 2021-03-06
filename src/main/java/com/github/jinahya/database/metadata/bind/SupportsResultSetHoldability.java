@@ -26,7 +26,6 @@ import javax.xml.bind.annotation.XmlValue;
 import java.lang.invoke.MethodHandles;
 import java.sql.DatabaseMetaData;
 import java.sql.SQLException;
-import java.sql.SQLFeatureNotSupportedException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Level;
@@ -44,29 +43,55 @@ public class SupportsResultSetHoldability {
 
     private static final Logger logger = Logger.getLogger(MethodHandles.lookup().lookupClass().getName());
 
-    static List<SupportsResultSetHoldability> list(final DatabaseMetaData m) throws SQLException {
-        requireNonNull(m, "m is null");
+    static List<SupportsResultSetHoldability> list(final Context context) throws SQLException {
+        requireNonNull(context, "context is null");
         final List<SupportsResultSetHoldability> list = new ArrayList<>();
         for (final ResultSetHoldability holdability : ResultSetHoldability.values()) {
             final SupportsResultSetHoldability v = new SupportsResultSetHoldability();
-            v.holdability = holdability.rawValue;
+            v.holdability = holdability.getRawValue();
             v.holdabilityName = holdability.name();
             try {
-                v.value = m.supportsResultSetHoldability(v.holdability);
-            } catch (final SQLFeatureNotSupportedException sqlfnse) {
-                logger.log(Level.WARNING, "sql feature not supported", sqlfnse);
+                v.value = context.databaseMetaData.supportsResultSetHoldability(v.holdability);
+            } catch (final SQLException sqle) {
+                logger.log(Level.WARNING, sqle,
+                           () -> String.format("failed to invoke supportsResultSetHoldability(%1$d)", v.holdability));
+                context.throwIfNotSuppressed(sqle);
             }
             list.add(v);
         }
         return list;
     }
 
-    @XmlAttribute(required = true)
-    public int holdability;
+    public int getHoldability() {
+        return holdability;
+    }
+
+    public void setHoldability(final int holdability) {
+        this.holdability = holdability;
+    }
+
+    public String getHoldabilityName() {
+        return holdabilityName;
+    }
+
+    public void setHoldabilityName(final String holdabilityName) {
+        this.holdabilityName = holdabilityName;
+    }
+
+    public Boolean getValue() {
+        return value;
+    }
+
+    public void setValue(final Boolean value) {
+        this.value = value;
+    }
 
     @XmlAttribute(required = true)
-    public String holdabilityName;
+    private int holdability;
+
+    @XmlAttribute(required = true)
+    private String holdabilityName;
 
     @XmlValue
-    public Boolean value;
+    private Boolean value;
 }

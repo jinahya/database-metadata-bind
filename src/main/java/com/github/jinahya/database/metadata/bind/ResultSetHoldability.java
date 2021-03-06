@@ -37,5 +37,5 @@ enum ResultSetHoldability implements IntFieldEnum<ResultSetHoldability> {
         return rawValue;
     }
 
-    public final int rawValue;
+    private final int rawValue;
 }

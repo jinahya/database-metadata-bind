@@ -45,9 +45,7 @@ public class UpdatesAreDetected extends AreDetected {
             } catch (final SQLException sqle) {
                 logger.log(Level.WARNING, sqle,
                            () -> String.format("failed to invoke updatesAreDetected(%1$d)", v.getType()));
-                if (!context.isSuppressed(sqle)) {
-                    throw sqle;
-                }
+                context.throwIfNotSuppressed(sqle);
             }
         }
         return list;

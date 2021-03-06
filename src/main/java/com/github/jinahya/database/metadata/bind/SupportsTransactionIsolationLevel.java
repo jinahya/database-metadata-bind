@@ -27,7 +27,6 @@ import java.lang.invoke.MethodHandles;
 import java.sql.Connection;
 import java.sql.DatabaseMetaData;
 import java.sql.SQLException;
-import java.sql.SQLFeatureNotSupportedException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Level;
@@ -45,8 +44,8 @@ public class SupportsTransactionIsolationLevel {
 
     private static final Logger logger = Logger.getLogger(MethodHandles.lookup().lookupClass().getName());
 
-    static List<SupportsTransactionIsolationLevel> list(final DatabaseMetaData m) throws SQLException {
-        requireNonNull(m, "m is null");
+    static List<SupportsTransactionIsolationLevel> list(final Context context) throws SQLException {
+        requireNonNull(context, "context is null");
         final List<SupportsTransactionIsolationLevel> list = new ArrayList<>();
         {
             final SupportsTransactionIsolationLevel v = new SupportsTransactionIsolationLevel();
@@ -80,9 +79,10 @@ public class SupportsTransactionIsolationLevel {
         }
         for (final SupportsTransactionIsolationLevel v : list) {
             try {
-                v.value = m.supportsTransactionIsolationLevel(v.level);
-            } catch (final SQLFeatureNotSupportedException sqlfnse) {
-                logger.log(Level.WARNING, "sql feature not supported", sqlfnse);
+                v.value = context.databaseMetaData.supportsTransactionIsolationLevel(v.level);
+            } catch (final SQLException sqle) {
+                logger.log(Level.WARNING, sqle, () -> String.format("failed to invoke supportsTransactionIsolationLevel(%1$d)", v.level));
+                context.throwIfNotSuppressed(sqle);
             }
         }
         return list;
