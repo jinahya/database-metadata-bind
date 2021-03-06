@@ -23,7 +23,11 @@ package com.github.jinahya.database.metadata.bind;
 import lombok.extern.slf4j.Slf4j;
 import org.w3c.dom.Node;
 
-import javax.xml.bind.*;
+import javax.xml.bind.JAXBContext;
+import javax.xml.bind.JAXBException;
+import javax.xml.bind.Marshaller;
+import javax.xml.bind.SchemaOutputResolver;
+import javax.xml.bind.Unmarshaller;
 import javax.xml.transform.Result;
 import javax.xml.transform.dom.DOMResult;
 import javax.xml.transform.stream.StreamResult;

@@ -20,12 +20,11 @@ package com.github.jinahya.database.metadata.bind;
  * #L%
  */
 
+import javax.validation.constraints.AssertTrue;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
 import java.sql.DatabaseMetaData;
 import java.util.Objects;
-
-import static java.sql.DatabaseMetaData.*;
 
 /**
  * Represents best row identifiers of tables.
@@ -36,10 +35,7 @@ import static java.sql.DatabaseMetaData.*;
 @XmlRootElement
 public class BestRowIdentifier extends TableChild {
 
-    // -----------------------------------------------------------------------------------------------------------------
     private static final long serialVersionUID = -6733770602373723371L;
-
-    // -----------------------------------------------------------------------------------------------------------------
 
     /**
      * Constants for the value of {@code PSEUDO_COLUMN} of best row identifies of a table.
@@ -51,19 +47,17 @@ public class BestRowIdentifier extends TableChild {
         /**
          * Constant for {@link DatabaseMetaData#bestRowUnknown}.
          */
-        BEST_ROW_UNKNWON(bestRowUnknown),
+        BEST_ROW_UNKNOWN(DatabaseMetaData.bestRowUnknown),
 
         /**
          * Constant for {@link DatabaseMetaData#bestRowNotPseudo}.
          */
-        BEST_ROW_NOT_PSEUDO(bestRowNotPseudo),
+        BEST_ROW_NOT_PSEUDO(DatabaseMetaData.bestRowNotPseudo),
 
         /**
          * Constant for {@link DatabaseMetaData#bestRowPseudo}.
          */
-        BEST_ROW_PSEUDO(bestRowPseudo);
-
-        // -------------------------------------------------------------------------------------------------------------
+        BEST_ROW_PSEUDO(DatabaseMetaData.bestRowPseudo);
 
         /**
          * Returns the constant whose raw value equals to given.
@@ -72,15 +66,12 @@ public class BestRowIdentifier extends TableChild {
          * @return the constant whose raw value equals to given.
          */
         public static PseudoColumn valueOf(final int rawValue) {
-            return IntFieldEnums.valueOf(PseudoColumn.class, rawValue);
+            return IntFieldEnums.valueOfRawValue(PseudoColumn.class, rawValue);
         }
 
-        // -------------------------------------------------------------------------------------------------------------
         PseudoColumn(final int rawValue) {
             this.rawValue = rawValue;
         }
-
-        // -------------------------------------------------------------------------------------------------------------
 
         /**
          * Returns the raw value of this constant.
@@ -92,7 +83,6 @@ public class BestRowIdentifier extends TableChild {
             return rawValue;
         }
 
-        // -------------------------------------------------------------------------------------------------------------
         private final int rawValue;
     }
 
@@ -106,19 +96,17 @@ public class BestRowIdentifier extends TableChild {
         /**
          * Constant for {@link DatabaseMetaData#bestRowTemporary}.
          */
-        BEST_ROW_TEMPORARY(bestRowTemporary),
+        BEST_ROW_TEMPORARY(DatabaseMetaData.bestRowTemporary),
 
         /**
          * Constant for {@link DatabaseMetaData#bestRowTransaction}.
          */
-        BEST_ROW_TRANSACTION(bestRowTransaction),
+        BEST_ROW_TRANSACTION(DatabaseMetaData.bestRowTransaction),
 
         /**
          * Constant for {@link DatabaseMetaData#bestRowSession}.
          */
-        BEST_ROW_SESSION(bestRowSession);
-
-        // -------------------------------------------------------------------------------------------------------------
+        BEST_ROW_SESSION(DatabaseMetaData.bestRowSession);
 
         /**
          * Returns the constant whose raw value equals to given.
@@ -127,15 +115,12 @@ public class BestRowIdentifier extends TableChild {
          * @return the constant whose raw value equals to given.
          */
         public static Scope valueOf(final int rawValue) {
-            return IntFieldEnums.valueOf(Scope.class, rawValue);
+            return IntFieldEnums.valueOfRawValue(Scope.class, rawValue);
         }
 
-        // -------------------------------------------------------------------------------------------------------------
         Scope(final int value) {
             this.rawValue = value;
         }
-
-        // -------------------------------------------------------------------------------------------------------------
 
         /**
          * Returns the raw value of this constant.
@@ -147,11 +132,16 @@ public class BestRowIdentifier extends TableChild {
             return rawValue;
         }
 
-        // -------------------------------------------------------------------------------------------------------------
         private final int rawValue;
     }
 
-    // -----------------------------------------------------------------------------------------------------------------
+    /**
+     * Creates a new instance.
+     */
+    public BestRowIdentifier() {
+        super();
+    }
+
     @Override
     public String toString() {
         return super.toString() + '{'
@@ -194,6 +184,14 @@ public class BestRowIdentifier extends TableChild {
                 pseudoColumn);
     }
 
+    // ------------------------------------------------------------------------------------------------- Bean-Validation
+    @AssertTrue
+    private boolean isScopeValid() {
+        return scope == DatabaseMetaData.bestRowTemporary
+               || scope == DatabaseMetaData.bestRowTransaction
+               || scope == DatabaseMetaData.bestRowSession;
+    }
+
     // ----------------------------------------------------------------------------------------------------------- scope
     public short getScope() {
         return scope;
@@ -201,6 +199,10 @@ public class BestRowIdentifier extends TableChild {
 
     public void setScope(final short scope) {
         this.scope = scope;
+    }
+
+    public void setScope(final int scope) {
+        setScope((short) scope);
     }
 
     // ------------------------------------------------------------------------------------------------------ columnName
@@ -266,36 +268,43 @@ public class BestRowIdentifier extends TableChild {
         this.pseudoColumn = pseudoColumn;
     }
 
+    public void setPseudoColumn(final int pseudoColumn) {
+        setPseudoColumn((short) pseudoColumn);
+    }
+
     // -----------------------------------------------------------------------------------------------------------------
-    @XmlElement
-    @Bind(label = "SCOPE")
+    @XmlElement(required = true)
+    @Label("SCOPE")
     private short scope;
 
-    @XmlElement
-    @Bind(label = "COLUMN_NAME")
+    // -----------------------------------------------------------------------------------------------------------------
+    @XmlElement(required = true)
+    @Label("COLUMN_NAME")
     private String columnName;
 
-    @XmlElement
-    @Bind(label = "DATA_TYPE")
+    @XmlElement(required = true)
+    @Label("DATA_TYPE")
     private int dataType;
 
-    @XmlElement
-    @Bind(label = "TYPE_NAME")
+    @XmlElement(required = true)
+    @Label("TYPE_NAME")
     private String typeName;
 
-    @XmlElement
-    @Bind(label = "COLUMN_SIZE")
+    @XmlElement(required = true)
+    @Label("COLUMN_SIZE")
     private int columnSize;
 
-    @XmlElement(nillable = true)
-    @Bind(label = "BUFFER_LENGTH", unused = true)
+    @XmlElement(required = true, nillable = true)
+    @Unused
+    @Label("BUFFER_LENGTH")
     private Integer bufferLength;
 
-    @XmlElement(nillable = true)
-    @Bind(label = "DECIMAL_DIGITS", nillable = true)
+    @XmlElement(required = true, nillable = true)
+    @MayBeNull
+    @Label("DECIMAL_DIGITS")
     private Short decimalDigits;
 
-    @XmlElement
-    @Bind(label = "PSEUDO_COLUMN")
+    @XmlElement(required = true)
+    @Label("PSEUDO_COLUMN")
     private short pseudoColumn;
 }

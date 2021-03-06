@@ -179,7 +179,6 @@ public class UDT extends SchemaChild {
 
     @XmlElement(required = true)
     @Label("TYPE_NAME")
-    @Bind(label = "TYPE_NAME")
     private String typeName;
 
     // -----------------------------------------------------------------------------------------------------------------

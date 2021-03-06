@@ -12,7 +12,8 @@ from [DatabaseMetaData](http://docs.oracle.com/javase/8/docs/api/java/sql/Databa
 ```java
 // create a context from a connection
 final java.sql.Connection connection = connect();
-final Context context = Context.newInstance(connection);
+final Context context = Context.newInstance(connection)
+        .suppress(SQLFeatureNotSupportedException.class);
 
 // invoke methods
 final List<Catalog> catalogs = context.getCatalogs();

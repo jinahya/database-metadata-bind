@@ -26,7 +26,9 @@ import java.sql.DatabaseMetaData;
 import java.util.Collection;
 import java.util.Objects;
 
-import static java.sql.DatabaseMetaData.*;
+import static java.sql.DatabaseMetaData.versionColumnNotPseudo;
+import static java.sql.DatabaseMetaData.versionColumnPseudo;
+import static java.sql.DatabaseMetaData.versionColumnUnknown;
 
 /**
  * An entity class for version columns.
@@ -74,7 +76,7 @@ public class VersionColumn extends TableChild {
          * @return the constant whose raw value equals to given.
          */
         public static PseudoColumn valueOf(final int rawValue) {
-            return IntFieldEnums.valueOf(PseudoColumn.class, rawValue);
+            return IntFieldEnums.valueOfRawValue(PseudoColumn.class, rawValue);
         }
 
         /**

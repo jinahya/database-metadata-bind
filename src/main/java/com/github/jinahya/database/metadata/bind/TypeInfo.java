@@ -25,7 +25,9 @@ import javax.xml.bind.annotation.XmlRootElement;
 import java.sql.DatabaseMetaData;
 import java.util.Objects;
 
-import static java.sql.DatabaseMetaData.*;
+import static java.sql.DatabaseMetaData.typeNoNulls;
+import static java.sql.DatabaseMetaData.typeNullable;
+import static java.sql.DatabaseMetaData.typeNullableUnknown;
 
 /**
  * An entity class for binding the result of {@link java.sql.DatabaseMetaData#getTypeInfo() getTypeInfo()}.
@@ -67,7 +69,7 @@ public class TypeInfo implements MetadataType {
          * @return the matched constant
          */
         public static Nullable valueOf(final int rawValue) {
-            return IntFieldEnums.valueOf(Nullable.class, rawValue);
+            return IntFieldEnums.valueOfRawValue(Nullable.class, rawValue);
         }
 
         Nullable(final int rawValue) {

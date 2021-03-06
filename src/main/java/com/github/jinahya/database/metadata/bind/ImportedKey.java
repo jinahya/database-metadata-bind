@@ -24,8 +24,6 @@ import javax.xml.bind.annotation.XmlRootElement;
 import java.sql.DatabaseMetaData;
 import java.util.Collection;
 
-import static java.sql.DatabaseMetaData.*;
-
 /**
  * An entity class for imported keys.
  *
@@ -38,33 +36,37 @@ public class ImportedKey extends TableKey {
     private static final long serialVersionUID = 1965229912934042881L;
 
     // -----------------------------------------------------------------------------------------------------------------
+
+    /**
+     * Constants for {@code UPDATE_URL} or {@code DELETE_RULE}.
+     */
     public enum Rule implements IntFieldEnum<Rule> {
 
         /**
          * Constant for {@link DatabaseMetaData#importedKeyCascade} whose value is {@value
          * DatabaseMetaData#importedKeyCascade}.
          */
-        IMPORTED_KEY_CASCADE(importedKeyCascade), // 0
+        IMPORTED_KEY_CASCADE(DatabaseMetaData.importedKeyCascade), // 0
         /**
          * Constant for {@link DatabaseMetaData#importedKeyRestrict} whose value is {@value
          * DatabaseMetaData#importedKeyRestrict}.
          */
-        IMPORTED_KEY_RESTRICT(importedKeyRestrict), // 1
+        IMPORTED_KEY_RESTRICT(DatabaseMetaData.importedKeyRestrict), // 1
         /**
          * Constant for {@link DatabaseMetaData#importedKeySetNull} whose value is {@value
          * DatabaseMetaData#importedKeySetNull}.
          */
-        IMPORTED_KEY_SET_NULL(importedKeySetNull), // 2
+        IMPORTED_KEY_SET_NULL(DatabaseMetaData.importedKeySetNull), // 2
         /**
          * Constant for {@link DatabaseMetaData#importedKeyNoAction} whose value is {@value
          * DatabaseMetaData#importedKeyNoAction}.
          */
-        IMPORTED_KEY_NO_ACTION(importedKeyNoAction), // 3
+        IMPORTED_KEY_NO_ACTION(DatabaseMetaData.importedKeyNoAction), // 3
         /**
          * Constant for {@link DatabaseMetaData#importedKeySetDefault} whose value is {@value
          * DatabaseMetaData#importedKeySetDefault}.
          */
-        IMPORTED_KEY_SET_DEFAULT(importedKeySetDefault); // 4
+        IMPORTED_KEY_SET_DEFAULT(DatabaseMetaData.importedKeySetDefault); // 4
 
         /**
          * Returns the constant whose raw value matches to given. An instance of {@link IllegalArgumentException} will
@@ -73,19 +75,15 @@ public class ImportedKey extends TableKey {
          * @param rawValue the raw value to match
          * @return the matched constant.
          */
-        public static Rule valueOf(final int rawValue) {
-            return IntFieldEnums.valueOf(Rule.class, rawValue);
+        public static Rule valueOfRawValue(final int rawValue) {
+            return IntFieldEnums.valueOfRawValue(Rule.class, rawValue);
         }
 
         Rule(final int rawValue) {
             this.rawValue = rawValue;
         }
 
-        /**
-         * Returns the raw value of this constant.
-         *
-         * @return the raw value of this constant.
-         */
+        @Override
         public int getRawValue() {
             return rawValue;
         }
@@ -93,46 +91,44 @@ public class ImportedKey extends TableKey {
         private final int rawValue;
     }
 
+    /**
+     * Constants for {@code DEFERRABILITY}.
+     */
     public enum Deferrability implements IntFieldEnum<Deferrability> {
 
         /**
          * Constant for {@link DatabaseMetaData#importedKeyInitiallyDeferred} whose value is {@value
          * DatabaseMetaData#importedKeyInitiallyDeferred}.
          */
-        IMPORTED_KEY_INITIALLY_DEFERRED(importedKeyInitiallyDeferred), // 5
+        IMPORTED_KEY_INITIALLY_DEFERRED(DatabaseMetaData.importedKeyInitiallyDeferred), // 5
 
         /**
          * Constant for {@link DatabaseMetaData#importedKeyInitiallyImmediate} whose value is {@value
          * DatabaseMetaData#importedKeyInitiallyImmediate}.
          */
-        IMPORTED_KEY_INITIALLY_IMMEDIATE(importedKeyInitiallyImmediate), // 6
+        IMPORTED_KEY_INITIALLY_IMMEDIATE(DatabaseMetaData.importedKeyInitiallyImmediate), // 6
 
         /**
          * Constant for {@link DatabaseMetaData#importedKeyNotDeferrable} whose value is {@value
          * DatabaseMetaData#importedKeyNotDeferrable}.
          */
-        IMPORTED_KEY_NOT_DEFERRABLE(importedKeyNotDeferrable); // 7
+        IMPORTED_KEY_NOT_DEFERRABLE(DatabaseMetaData.importedKeyNotDeferrable); // 7
 
         /**
          * Returns the constant whose raw value matches to given. An instance of {@link IllegalArgumentException} will
          * be thrown if no constant matched.
          *
-         * @param rawValue the raw value
+         * @param rawValue the raw value to match
          * @return the matched constant.
          */
-        public static Deferrability valueOf(final int rawValue) {
-            return IntFieldEnums.valueOf(Deferrability.class, rawValue);
+        public static Deferrability valueOfRawValue(final int rawValue) {
+            return IntFieldEnums.valueOfRawValue(Deferrability.class, rawValue);
         }
 
         Deferrability(final int rawValue) {
             this.rawValue = rawValue;
         }
 
-        /**
-         * Returns the raw value of this constant.
-         *
-         * @return the raw value of this constant.
-         */
         @Override
         public int getRawValue() {
             return rawValue;

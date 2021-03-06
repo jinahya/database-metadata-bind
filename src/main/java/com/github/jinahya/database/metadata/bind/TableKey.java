@@ -24,6 +24,8 @@ import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlTransient;
 import java.util.Objects;
 
+import static java.util.Objects.requireNonNull;
+
 @XmlTransient
 abstract class TableKey extends TableChild {
 
@@ -179,6 +181,14 @@ abstract class TableKey extends TableChild {
         this.updateRule = updateRule;
     }
 
+    public void setUpdateRule(final int updateRule) {
+        setUpdateRule((short) updateRule);
+    }
+
+    public void setUpdateRule(final ImportedKey.Rule rule) {
+        setUpdateRule(requireNonNull(rule, "updateRule is null").getRawValue());
+    }
+
     // ------------------------------------------------------------------------------------------------------ deleteRule
     public short getDeleteRule() {
         return deleteRule;
@@ -186,6 +196,14 @@ abstract class TableKey extends TableChild {
 
     public void setDeleteRule(final short deleteRule) {
         this.deleteRule = deleteRule;
+    }
+
+    public void setDeleteRule(final int deleteRule) {
+        setDeleteRule((short) deleteRule);
+    }
+
+    public void setDeleteRule(final ImportedKey.Rule deleteRule) {
+        setDeleteRule(requireNonNull(deleteRule, "deleteRule is null").getRawValue());
     }
 
     // ---------------------------------------------------------------------------------------------------------- fnname
@@ -213,6 +231,14 @@ abstract class TableKey extends TableChild {
 
     public void setDeferrability(final short deferrability) {
         this.deferrability = deferrability;
+    }
+
+    public void setDeferrability(final int deferrability) {
+        setDeferrability((short) deferrability);
+    }
+
+    public void setDeferrability(final ImportedKey.Deferrability deferrability) {
+        setDeferrability(requireNonNull(deferrability, "deferrability is null").getRawValue());
     }
 
     // -----------------------------------------------------------------------------------------------------------------
@@ -265,11 +291,13 @@ abstract class TableKey extends TableChild {
     @Label("DELETE_RULE")
     private short deleteRule;
 
-    @XmlElement(required = true)
+    @XmlElement(required = true, nillable = true)
+    @MayBeNull
     @Label("FK_NAME")
     private String fkName;
 
-    @XmlElement(required = true)
+    @XmlElement(required = true, nillable = true)
+    @MayBeNull
     @Label("PK_NAME")
     private String pkName;
 

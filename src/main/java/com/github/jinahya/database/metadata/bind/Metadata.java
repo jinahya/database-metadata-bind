@@ -33,7 +33,15 @@ import java.lang.reflect.Modifier;
 import java.sql.DatabaseMetaData;
 import java.sql.SQLException;
 import java.sql.SQLFeatureNotSupportedException;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Map;
+import java.util.Objects;
+import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.stream.Collectors;
@@ -128,7 +136,7 @@ public class Metadata implements MetadataType {
 //            logSqlFeatureNotSupportedException(logger, sqlfnse);
 //        }
         // -------------------------------------------------------------------------------------------------------------
-        instance.deletesAreDetected = DeletesAreDetected.list(context.databaseMetaData);
+        instance.deletesAreDetected = DeletesAreDetected.list(context);
         // -------------------------------------------------------------------------------------------------------------
 //        try {
 //            instance.doesMaxRowSizeIncludeBlobs
@@ -437,7 +445,7 @@ public class Metadata implements MetadataType {
 //            logSqlFeatureNotSupportedException(logger, sqlfnse);
 //        }
         // -------------------------------------------------------------------------------------------------------------
-        instance.insertsAreDetected = InsertsAreDetected.list(context.databaseMetaData);
+        instance.insertsAreDetected = InsertsAreDetected.list(context);
         try {
             all.remove(Metadata.class.getDeclaredField("insertsAreDetected"));
         } catch (final ReflectiveOperationException roe) {
@@ -486,12 +494,12 @@ public class Metadata implements MetadataType {
 //            logSqlFeatureNotSupportedException(logger, sqlfnse);
 //        }
         // -------------------------------------------------------------------------------------------------------------
-        instance.othersDeletesAreVisible = OthersDeletesAreVisible.list(context.databaseMetaData);
-        instance.othersInsertsAreVisible = OthersInsertsAreVisible.list(context.databaseMetaData);
-        instance.othersUpdatesAreVisible = OthersUpdatesAreVisible.list(context.databaseMetaData);
-        instance.ownDeletesAreVisible = OwnDeletesAreVisible.list(context.databaseMetaData);
-        instance.ownInsertsAreVisible = OwnInsertsAreVisible.list(context.databaseMetaData);
-        instance.ownUpdatesAreVisible = OwnUpdatesAreVisible.list(context.databaseMetaData);
+        instance.othersDeletesAreVisible = OthersDeletesAreVisible.list(context);
+        instance.othersInsertsAreVisible = OthersInsertsAreVisible.list(context);
+        instance.othersUpdatesAreVisible = OthersUpdatesAreVisible.list(context);
+        instance.ownDeletesAreVisible = OwnDeletesAreVisible.list(context);
+        instance.ownInsertsAreVisible = OwnInsertsAreVisible.list(context);
+        instance.ownUpdatesAreVisible = OwnUpdatesAreVisible.list(context);
         // -------------------------------------------------------------------------------------------------------------
 //        try {
 //            instance.storesLowerCaseIdentifiers = context.databaseMetaData.storesLowerCaseIdentifiers();
@@ -896,7 +904,7 @@ public class Metadata implements MetadataType {
 //        }
         // -------------------------------------------------------------------------------------------------------------
         try {
-            instance.updatesAreDetected = UpdatesAreDetected.list(context.databaseMetaData);
+            instance.updatesAreDetected = UpdatesAreDetected.list(context);
         } catch (final SQLFeatureNotSupportedException sqlfnse) {
             logSqlFeatureNotSupportedException(logger, sqlfnse);
         }

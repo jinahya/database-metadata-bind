@@ -25,7 +25,12 @@ import javax.xml.bind.annotation.XmlRootElement;
 import java.sql.DatabaseMetaData;
 import java.util.Objects;
 
-import static java.sql.DatabaseMetaData.*;
+import static java.sql.DatabaseMetaData.functionColumnResult;
+import static java.sql.DatabaseMetaData.procedureColumnIn;
+import static java.sql.DatabaseMetaData.procedureColumnInOut;
+import static java.sql.DatabaseMetaData.procedureColumnOut;
+import static java.sql.DatabaseMetaData.procedureColumnReturn;
+import static java.sql.DatabaseMetaData.procedureColumnUnknown;
 
 /**
  * An entity class for binding the result of {@link java.sql.DatabaseMetaData#getProcedureColumns(java.lang.String,
@@ -91,7 +96,7 @@ public class ProcedureColumn extends ProcedureChild {
          * @return the constant whose raw value equals to given.
          */
         public static ColumnType valueOf(final int rawValue) {
-            return IntFieldEnums.valueOf(ColumnType.class, rawValue);
+            return IntFieldEnums.valueOfRawValue(ColumnType.class, rawValue);
         }
 
         ColumnType(final int rawValue) {

@@ -148,8 +148,8 @@ public class Schema extends CatalogChild {
     }
 
     // -----------------------------------------------------------------------------------------------------------------
-    @XmlAttribute(required = false)
-    Boolean virtual = Boolean.FALSE;
+    @XmlAttribute
+    Boolean virtual;
 
     // -----------------------------------------------------------------------------------------------------------------
     @XmlElement(required = true, nillable = true)

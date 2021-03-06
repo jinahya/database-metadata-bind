@@ -20,12 +20,13 @@ package com.github.jinahya.database.metadata.bind;
  * #L%
  */
 
+import javax.validation.constraints.AssertTrue;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
 import java.sql.DatabaseMetaData;
 import java.util.Objects;
 
-import static java.sql.DatabaseMetaData.*;
+import static java.util.Objects.requireNonNull;
 
 /**
  * An entity class for function columns.
@@ -50,33 +51,33 @@ public class FunctionColumn extends FunctionChild {
         /**
          * Constant for {@link DatabaseMetaData#functionColumnUnknown}.
          */
-        FUNCTION_COLUMN_UNKNOWN(functionColumnUnknown), // 0
+        FUNCTION_COLUMN_UNKNOWN(DatabaseMetaData.functionColumnUnknown), // 0
 
         /**
          * Constants for {@link DatabaseMetaData#functionColumnIn}.
          */
-        FUNCTION_COLUMN_IN(functionColumnIn), // 1
+        FUNCTION_COLUMN_IN(DatabaseMetaData.functionColumnIn), // 1
 
         /**
          * Constants for {@link DatabaseMetaData#functionColumnInOut}.
          */
-        FUNCTION_COLUMN_IN_OUT(functionColumnInOut), // 2
+        FUNCTION_COLUMN_IN_OUT(DatabaseMetaData.functionColumnInOut), // 2
 
         /**
          * Constants for {@link DatabaseMetaData#functionColumnOut}.
          */
-        FUNCTION_COLUMN_OUT(functionColumnOut), // 3
+        FUNCTION_COLUMN_OUT(DatabaseMetaData.functionColumnOut), // 3
 
         /**
          * Constant for {@link DatabaseMetaData#functionReturn}.
          */
         // https://stackoverflow.com/a/46647586/330457
-        FUNCTION_COLUMN_RETURN(functionReturn), // 4
+        FUNCTION_COLUMN_RETURN(DatabaseMetaData.functionReturn), // 4
 
         /**
          * Constants for {@link DatabaseMetaData#functionColumnResult}.
          */
-        FUNCTION_COLUMN_RESULT(functionColumnResult); // 5
+        FUNCTION_COLUMN_RESULT(DatabaseMetaData.functionColumnResult); // 5
 
         /**
          * Returns the constant whose raw value equals to given. An instance of {@link IllegalArgumentException} will be
@@ -86,7 +87,7 @@ public class FunctionColumn extends FunctionChild {
          * @return the constant whose raw value equals to given.
          */
         public static ColumnType valueOf(final int rawValue) {
-            return IntFieldEnums.valueOf(ColumnType.class, rawValue);
+            return IntFieldEnums.valueOfRawValue(ColumnType.class, rawValue);
         }
 
         ColumnType(final int rawValue) {
@@ -116,17 +117,17 @@ public class FunctionColumn extends FunctionChild {
         /**
          * Constant for {@link DatabaseMetaData#functionNoNulls}.
          */
-        FUNCTION_NO_NULLS(functionNoNulls),
+        FUNCTION_NO_NULLS(DatabaseMetaData.functionNoNulls),
 
         /**
          * Constant for {@link DatabaseMetaData#functionNullable}.
          */
-        FUNCTION_NULLABLE(functionNullable),
+        FUNCTION_NULLABLE(DatabaseMetaData.functionNullable),
 
         /**
          * Constant for {@link DatabaseMetaData#functionNullableUnknown}.
          */
-        FUNCTION_NULLABLE_UNKNOWN(functionNullableUnknown);
+        FUNCTION_NULLABLE_UNKNOWN(DatabaseMetaData.functionNullableUnknown);
 
         /**
          * Returns the constant whose raw value equals to given. An instance of {@link IllegalArgumentException} will be
@@ -136,7 +137,7 @@ public class FunctionColumn extends FunctionChild {
          * @return the constant whose raw value equals to given.
          */
         public static Nullable valueOf(final int rawValue) {
-            return IntFieldEnums.valueOf(Nullable.class, rawValue);
+            return IntFieldEnums.valueOfRawValue(Nullable.class, rawValue);
         }
 
         Nullable(final int rawValue) {
@@ -154,6 +155,33 @@ public class FunctionColumn extends FunctionChild {
         }
 
         private final int rawValue;
+    }
+
+    /**
+     * Constants for {@code IS_NULLABLE} column value.
+     */
+    public enum IsNullable implements FieldEnum<IsNullable, String> {
+
+        UNKNOWN(""),
+
+        YES("YES"),
+
+        NO("NO");
+
+        public static IsNullable valueOfRawValue(final String rawValue) {
+            return FieldEnums.valueOfRawValue(IsNullable.class, rawValue);
+        }
+
+        IsNullable(final String rawValue) {
+            this.rawValue = requireNonNull(rawValue, "rawValue is null");
+        }
+
+        @Override
+        public String getRawValue() {
+            return rawValue;
+        }
+
+        private final String rawValue;
     }
 
     // -----------------------------------------------------------------------------------------------------------------
@@ -234,6 +262,21 @@ public class FunctionColumn extends FunctionChild {
                             specificName);
     }
 
+    // ------------------------------------------------------------------------------------------------- Bean-Validation
+    @AssertTrue
+    private boolean isIsNullableValid() {
+        if (isNullable == null) {
+            return true;
+        }
+        try {
+            final IsNullable value = IsNullable.valueOfRawValue(isNullable);
+            assert value != null;
+            return true;
+        } catch (final IllegalArgumentException iae) {
+            return false;
+        }
+    }
+
     // ----------------------------------------------------------------------------------------------------- functionCat
     public String getFunctionCat() {
         return functionCat;
@@ -277,6 +320,15 @@ public class FunctionColumn extends FunctionChild {
 
     public void setColumnType(final short columnType) {
         this.columnType = columnType;
+    }
+
+    public void setColumnType(final int columnType) {
+        setColumnType((short) columnType);
+    }
+
+    public void setColumnType(final ColumnType columnType) {
+        requireNonNull(columnType, "columnType is null");
+        setColumnType(columnType.rawValue);
     }
 
     // -------------------------------------------------------------------------------------------------------- dataType
@@ -342,6 +394,15 @@ public class FunctionColumn extends FunctionChild {
         this.nullable = nullable;
     }
 
+    public void setNullable(final int nullable) {
+        setNullable((short) nullable);
+    }
+
+    public void setNullable(final Nullable nullable) {
+        requireNonNull(nullable, "nullable is null");
+        setNullable(nullable.rawValue);
+    }
+
     // --------------------------------------------------------------------------------------------------------- remarks
     public String getRemarks() {
         return remarks;
@@ -378,6 +439,11 @@ public class FunctionColumn extends FunctionChild {
         this.isNullable = isNullable;
     }
 
+    public void setIsNullable(final IsNullable isNullable) {
+        requireNonNull(isNullable, "isNullable is null");
+        setIsNullable(isNullable.rawValue);
+    }
+
     // ---------------------------------------------------------------------------------------------------- specificName
     public String getSpecificName() {
         return specificName;
@@ -404,7 +470,6 @@ public class FunctionColumn extends FunctionChild {
 
     @XmlElement(required = true)
     @Label("COLUMN_NAME")
-    @Bind(label = "COLUMN_NAME")
     private String columnName;
 
     // -----------------------------------------------------------------------------------------------------------------
@@ -436,12 +501,10 @@ public class FunctionColumn extends FunctionChild {
 
     @XmlElement(required = true)
     @Label("RADIX")
-    @Bind(label = "RADIX")
     private short radix;
 
     @XmlElement(required = true)
     @Label("NULLABLE")
-    @Bind(label = "NULLABLE")
     private short nullable;
 
     @XmlElement(required = true, nillable = true)

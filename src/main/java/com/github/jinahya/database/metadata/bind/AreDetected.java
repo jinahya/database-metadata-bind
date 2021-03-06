@@ -23,6 +23,7 @@ package com.github.jinahya.database.metadata.bind;
 import javax.xml.bind.annotation.XmlAttribute;
 import javax.xml.bind.annotation.XmlValue;
 import java.lang.invoke.MethodHandles;
+import java.lang.reflect.Constructor;
 import java.sql.DatabaseMetaData;
 import java.util.Arrays;
 import java.util.List;
@@ -46,23 +47,51 @@ abstract class AreDetected {
                 .map(c -> {
                     final T v;
                     try {
-                        v = type.getConstructor().newInstance();
+                        final Constructor<T> constructor = type.getDeclaredConstructor();
+                        if (!constructor.isAccessible()) {
+                            constructor.setAccessible(true);
+                        }
+                        v = constructor.newInstance();
                     } catch (final ReflectiveOperationException roe) {
-                        throw new RuntimeException(roe);
+                        throw new RuntimeException("failed to instantiate " + type, roe);
                     }
-                    v.type = c.rawValue;
-                    v.typeName = c.name();
+                    v.setType(c.rawValue);
+                    v.setTypeName(c.name());
                     return v;
                 })
                 .collect(Collectors.toList());
     }
 
-    @XmlAttribute(required = true)
-    public int type;
+    public int getType() {
+        return type;
+    }
+
+    public void setType(final int type) {
+        this.type = type;
+    }
+
+    public String getTypeName() {
+        return typeName;
+    }
+
+    public void setTypeName(final String typeName) {
+        this.typeName = typeName;
+    }
+
+    public Boolean getValue() {
+        return value;
+    }
+
+    public void setValue(final Boolean value) {
+        this.value = value;
+    }
 
     @XmlAttribute(required = true)
-    public String typeName;
+    private int type;
+
+    @XmlAttribute(required = true)
+    private String typeName;
 
     @XmlValue
-    public Boolean value;
+    private Boolean value;
 }

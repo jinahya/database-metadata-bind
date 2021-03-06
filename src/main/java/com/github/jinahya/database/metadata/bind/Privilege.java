@@ -22,11 +22,12 @@ package com.github.jinahya.database.metadata.bind;
 
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlTransient;
+import java.util.Objects;
 
 @XmlTransient
-abstract class Privilege extends TableChild {
+abstract class Privilege<P extends MetadataType> extends AbstractChild<P> {
 
-    private static final long serialVersionUID = -1799954363648972203L;
+    private static final long serialVersionUID = -816800473142195431L;
 
     // -----------------------------------------------------------------------------------------------------------------
     @Override
@@ -34,11 +35,37 @@ abstract class Privilege extends TableChild {
         return super.toString() + '{'
                + "tableCat=" + tableCat
                + ",tableSchem=" + tableSchem
+               + ",tableName=" + tableName
                + ",grantor=" + grantor
                + ",grantee=" + grantee
                + ",privilege=" + privilege
                + ",isGrantable=" + isGrantable
                + '}';
+    }
+
+    @Override
+    public boolean equals(final Object obj) {
+        if (this == obj) return true;
+        if (obj == null || getClass() != obj.getClass()) return false;
+        final Privilege<?> that = (Privilege<?>) obj;
+        return Objects.equals(tableCat, that.tableCat)
+               && Objects.equals(tableSchem, that.tableSchem)
+               && Objects.equals(tableName, that.tableName)
+               && Objects.equals(grantor, that.grantor)
+               && Objects.equals(grantee, that.grantee)
+               && Objects.equals(privilege, that.privilege)
+               && Objects.equals(isGrantable, that.isGrantable);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(tableCat,
+                            tableSchem,
+                            tableName,
+                            grantor,
+                            grantee,
+                            privilege,
+                            isGrantable);
     }
 
     // -------------------------------------------------------------------------------------------------------- tableCat
@@ -57,6 +84,15 @@ abstract class Privilege extends TableChild {
 
     public void setTableSchem(final String tableSchem) {
         this.tableSchem = tableSchem;
+    }
+
+    // ------------------------------------------------------------------------------------------------------- tableName
+    public String getTableName() {
+        return tableName;
+    }
+
+    public void setTableName(final String tableName) {
+        this.tableName = tableName;
     }
 
     // --------------------------------------------------------------------------------------------------------- grantor
@@ -105,6 +141,10 @@ abstract class Privilege extends TableChild {
     @MayBeNull
     @Label("TABLE_SCHEM")
     private String tableSchem;
+
+    @XmlElement(required = true)
+    @Label("TABLE_NAME")
+    private String tableName;
 
     // -----------------------------------------------------------------------------------------------------------------
     @XmlElement(required = true, nillable = true)

@@ -22,8 +22,7 @@ package com.github.jinahya.database.metadata.bind;
 
 final class IntFieldEnums {
 
-    static <E extends Enum<E> & IntFieldEnum<E>> int[] rawValues(
-            final Class<E> enumType) {
+    static <E extends Enum<E> & IntFieldEnum<E>> int[] rawValues(final Class<E> enumType) {
         final E[] enumConstants = enumType.getEnumConstants();
         final int[] rawValues = new int[enumConstants.length];
         for (int i = 0; i < rawValues.length; i++) {
@@ -32,8 +31,7 @@ final class IntFieldEnums {
         return rawValues;
     }
 
-    static <E extends Enum<E> & IntFieldEnum<E>> E valueOf(
-            final Class<E> enumType, final int rawValue) {
+    static <E extends Enum<E> & IntFieldEnum<E>> E valueOfRawValue(final Class<E> enumType, final int rawValue) {
         for (final E enumConstant : enumType.getEnumConstants()) {
             final int constantFieldValue = enumConstant.getRawValue();
             if (constantFieldValue == rawValue) {
@@ -43,8 +41,8 @@ final class IntFieldEnums {
         throw new IllegalArgumentException("unknown raw value: " + rawValue);
     }
 
-    // -------------------------------------------------------------------------    
+    // -----------------------------------------------------------------------------------------------------------------
     private IntFieldEnums() {
-        super();
+        throw new AssertionError("instantiation is not allowed");
     }
 }

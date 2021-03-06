@@ -26,7 +26,9 @@ import javax.xml.bind.annotation.XmlRootElement;
 import java.sql.DatabaseMetaData;
 import java.util.Objects;
 
-import static java.sql.DatabaseMetaData.*;
+import static java.sql.DatabaseMetaData.attributeNoNulls;
+import static java.sql.DatabaseMetaData.attributeNullable;
+import static java.sql.DatabaseMetaData.attributeNullableUnknown;
 
 /**
  * An entity class for type attributes.
@@ -64,7 +66,7 @@ public class Attribute extends UDTChild {
 
         // -------------------------------------------------------------------------------------------------------------
         public static Nullable valueOf(final int rawValue) {
-            return IntFieldEnums.valueOf(Nullable.class, rawValue);
+            return IntFieldEnums.valueOfRawValue(Nullable.class, rawValue);
         }
 
         // -------------------------------------------------------------------------------------------------------------
@@ -161,15 +163,6 @@ public class Attribute extends UDTChild {
                             ordinalPosition,
                             isNullable,
                             sourceDataType);
-    }
-
-    // -------------------------------------------------------------------------------------------------------- typeInfo
-    public UDT getTypeInfo() {
-        return getParent();
-    }
-
-    public void setTypeInfo(final UDT udt) {
-        setParent(udt);
     }
 
     // --------------------------------------------------------------------------------------------------------- typeCat
@@ -325,6 +318,33 @@ public class Attribute extends UDTChild {
         this.isNullable = isNullable;
     }
 
+    // ---------------------------------------------------------------------------------------------------- scopeCatalog
+    public String getScopeCatalog() {
+        return scopeCatalog;
+    }
+
+    public void setScopeCatalog(String scopeCatalog) {
+        this.scopeCatalog = scopeCatalog;
+    }
+
+    // ----------------------------------------------------------------------------------------------------- scopeSchema
+    public String getScopeSchema() {
+        return scopeSchema;
+    }
+
+    public void setScopeSchema(final String scopeSchema) {
+        this.scopeSchema = scopeSchema;
+    }
+
+    // ------------------------------------------------------------------------------------------------------ scopeTable
+    public String getScopeTable() {
+        return scopeTable;
+    }
+
+    public void setScopeTable(final String scopeTable) {
+        this.scopeTable = scopeTable;
+    }
+
     // -------------------------------------------------------------------------------------------------- sourceDataType
     public Short getSourceDataType() {
         return sourceDataType;
@@ -333,9 +353,6 @@ public class Attribute extends UDTChild {
     public void setSourceDataType(final Short sourceDataType) {
         this.sourceDataType = sourceDataType;
     }
-
-    // -----------------------------------------------------------------------------------------------------------------
-    private transient TypeInfo typeInfo;
 
     // -----------------------------------------------------------------------------------------------------------------
     @XmlElement(nillable = true, required = true)
@@ -382,12 +399,12 @@ public class Attribute extends UDTChild {
     @Label("NULLABLE")
     private int nullable;
 
-    @XmlElement(nillable = true, required = true)
+    @XmlElement(required = true, nillable = true)
     @MayBeNull
     @Label("REMARKS")
     private String remarks;
 
-    @XmlElement(nillable = true, required = true)
+    @XmlElement(required = true, nillable = true)
     @MayBeNull
     @Label("ATTR_DEF")
     private String attrDef;
@@ -414,7 +431,22 @@ public class Attribute extends UDTChild {
     @Label("IS_NULLABLE")
     private String isNullable;
 
-    @XmlElement(nillable = true, required = true)
+    @XmlElement(required = true, nillable = true)
+    @MayBeNull
+    @Label("SCOPE_CATALOG")
+    private String scopeCatalog;
+
+    @XmlElement(required = true, nillable = true)
+    @MayBeNull
+    @Label("SCOPE_SCHEMA")
+    private String scopeSchema;
+
+    @XmlElement(required = true, nillable = true)
+    @MayBeNull
+    @Label("SCOPE_TABLE")
+    private String scopeTable;
+
+    @XmlElement(required = true, nillable = true)
     @MayBeNull
     @Label("SOURCE_DATA_TYPE")
     private Short sourceDataType;

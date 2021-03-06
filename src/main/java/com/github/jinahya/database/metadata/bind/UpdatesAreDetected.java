@@ -23,7 +23,6 @@ package com.github.jinahya.database.metadata.bind;
 import javax.xml.bind.annotation.XmlRootElement;
 import java.sql.DatabaseMetaData;
 import java.sql.SQLException;
-import java.sql.SQLFeatureNotSupportedException;
 import java.util.List;
 import java.util.logging.Level;
 
@@ -37,14 +36,18 @@ import static java.util.Objects.requireNonNull;
 @XmlRootElement
 public class UpdatesAreDetected extends AreDetected {
 
-    static List<UpdatesAreDetected> list(final DatabaseMetaData databaseMetaData) throws SQLException {
-        requireNonNull(databaseMetaData, "databaseMetaData is null");
+    static List<UpdatesAreDetected> list(final Context context) throws SQLException {
+        requireNonNull(context, "context is null");
         final List<UpdatesAreDetected> list = list(UpdatesAreDetected.class);
         for (final UpdatesAreDetected v : list) {
             try {
-                v.value = databaseMetaData.insertsAreDetected(v.type);
-            } catch (final SQLFeatureNotSupportedException sqlfnse) {
-                logger.log(Level.WARNING, "sql feature not supported", sqlfnse);
+                v.setValue(context.databaseMetaData.updatesAreDetected(v.getType()));
+            } catch (final SQLException sqle) {
+                logger.log(Level.WARNING, sqle,
+                           () -> String.format("failed to invoke updatesAreDetected(%1$d)", v.getType()));
+                if (!context.isSuppressed(sqle)) {
+                    throw sqle;
+                }
             }
         }
         return list;

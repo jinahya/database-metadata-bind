@@ -23,8 +23,8 @@ package com.github.jinahya.database.metadata.bind;
 import javax.xml.bind.annotation.XmlRootElement;
 import java.sql.DatabaseMetaData;
 import java.sql.SQLException;
-import java.sql.SQLFeatureNotSupportedException;
 import java.util.List;
+import java.util.logging.Level;
 
 import static java.util.Objects.requireNonNull;
 
@@ -36,16 +36,27 @@ import static java.util.Objects.requireNonNull;
 @XmlRootElement
 public class DeletesAreDetected extends AreDetected {
 
-    static List<DeletesAreDetected> list(final DatabaseMetaData databaseMetaData) throws SQLException {
-        requireNonNull(databaseMetaData, "databaseMetaData is null");
+    static List<DeletesAreDetected> list(final Context context) throws SQLException {
+        requireNonNull(context, "context is null");
         final List<DeletesAreDetected> list = list(DeletesAreDetected.class);
         for (final DeletesAreDetected v : list) {
             try {
-                v.value = databaseMetaData.insertsAreDetected(v.type);
-            } catch (final SQLFeatureNotSupportedException sqlfnse) {
-                Utils.logSqlFeatureNotSupportedException(logger, sqlfnse);
+                v.setValue(context.databaseMetaData.deletesAreDetected(v.getType()));
+            } catch (final SQLException sqle) {
+                logger.log(Level.WARNING, sqle,
+                           () -> String.format("failed to invoke deletesAreDetected(%1$d)", v.getType()));
+                if (!context.isSuppressed(sqle)) {
+                    throw sqle;
+                }
             }
         }
         return list;
+    }
+
+    /**
+     * Creates a new instance.
+     */
+    public DeletesAreDetected() {
+        super();
     }
 }

@@ -74,7 +74,6 @@ abstract class MetadataTypeTest<T extends MetadataType> {
     @Test
     void fieldsWithLabel_Exist_Accessors() throws IntrospectionException {
         for (final Field field : getFieldsWithLabel().keySet()) {
-            log.debug("field: {}", field);
             final Class<?> declaringClass = field.getDeclaringClass();
             final BeanInfo beanInfo = Introspector.getBeanInfo(declaringClass);
             final Optional<PropertyDescriptor> propertyDescriptor
@@ -106,7 +105,6 @@ abstract class MetadataTypeTest<T extends MetadataType> {
     @Test
     void fieldsWithLabel_ShouldBeAnnotatedWithXmlElementWithRequiredTrue() {
         for (final Field field : getFieldsWithLabel().keySet()) {
-            log.debug("field: {}", field);
             assertThat(field.getAnnotation(Label.class)).isNotNull();
             final XmlElement xmlElement = field.getAnnotation(XmlElement.class);
             assertThat(xmlElement).isNotNull();
@@ -138,7 +136,6 @@ abstract class MetadataTypeTest<T extends MetadataType> {
     @Test
     void fieldsWithMayBeNull_ShouldBeAnnotatedWithXmlElementWithNillableTrue() {
         for (final Field field : getFieldsWithMayBeNull().keySet()) {
-            log.debug("field : {}", field);
             assertThat(field.getAnnotation(MayBeNull.class)).isNotNull();
             assertThat(field.getAnnotation(XmlElement.class)).isNotNull().satisfies(a -> {
                 assertThat(a.nillable()).isTrue();
@@ -150,7 +147,6 @@ abstract class MetadataTypeTest<T extends MetadataType> {
     @Test
     void fieldsWithMayBeNull_TypeShouldNotBePrimitive() {
         for (final Field field : getFieldsWithMayBeNull().keySet()) {
-            log.debug("field : {}", field);
             assertThat(field.getAnnotation(MayBeNull.class)).isNotNull();
             assertThat(field.getType().isPrimitive()).isFalse();
         }

@@ -35,6 +35,10 @@ public class TableType implements MetadataType {
     private static final long serialVersionUID = -7630634982776331078L;
 
     // -----------------------------------------------------------------------------------------------------------------
+
+    /**
+     * Creates a new instance.
+     */
     public TableType() {
         super();
     }

@@ -28,7 +28,11 @@ import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlElementRef;
 import javax.xml.bind.annotation.XmlRootElement;
 import java.text.Collator;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Comparator;
+import java.util.List;
+import java.util.Objects;
 
 import static java.util.Objects.requireNonNull;
 
@@ -41,7 +45,6 @@ import static java.util.Objects.requireNonNull;
 @XmlRootElement
 public class Catalog implements MetadataType {
 
-    // -----------------------------------------------------------------------------------------------------------------
     private static final long serialVersionUID = 6239185259128825953L;
 
     // -------------------------------------------------------------------------------------------- TABLE_CAT / tableCat
@@ -171,15 +174,15 @@ public class Catalog implements MetadataType {
     }
 
     // -----------------------------------------------------------------------------------------------------------------
-    @XmlAttribute(required = false)
-    Boolean virtual = Boolean.FALSE;
+    @XmlAttribute
+    Boolean virtual;
 
+    // -----------------------------------------------------------------------------------------------------------------
     @XmlElement(required = true)
     @NotBlank
     @Label(COLUMN_NAME_TABLE_CAT)
     private String tableCat;
 
-    //@XmlElementWrapper(required = true)
     @XmlElementRef
     private List<@Valid @NotNull Schema> schemas;
 }

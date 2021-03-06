@@ -20,13 +20,17 @@ package com.github.jinahya.database.metadata.bind;
  * #L%
  */
 
-import java.lang.annotation.*;
+/**
+ * An interface for field enums.
+ *
+ * @author Jin Kwon &lt;onacit at wemakeprice.com&gt;
+ */
+interface FieldEnum<E extends Enum<E> & FieldEnum<E, T>, T> {
 
-@Documented
-@Repeatable(ArgsContainer.class)
-@Retention(RetentionPolicy.RUNTIME)
-@Target({ElementType.FIELD})
-@interface Args {
-
-    String[] value() default "";
+    /**
+     * Returns the raw value of this constant
+     *
+     * @return the raw value of this constant.
+     */
+    T getRawValue();
 }

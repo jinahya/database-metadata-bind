@@ -25,6 +25,7 @@ import org.junit.jupiter.api.Test;
 
 import java.sql.Connection;
 import java.sql.SQLException;
+import java.sql.SQLFeatureNotSupportedException;
 import java.util.ArrayList;
 
 /**
@@ -47,7 +48,7 @@ abstract class MemoryTest {
     @Test
     void writeMetadataToFiles() throws Exception {
         try (Connection connection = connect()) {
-            final Context context = Context.newInstance(connection);
+            final Context context = Context.newInstance(connection).suppress(SQLFeatureNotSupportedException.class);
             final Metadata metadata = Metadata.newInstance(context);
             final String name;
             {
@@ -62,7 +63,7 @@ abstract class MemoryTest {
     @Test
     void getCatalogs__() throws Exception {
         try (Connection connection = connect()) {
-            final Context context = Context.newInstance(connection);
+            final Context context = Context.newInstance(connection).suppress(SQLFeatureNotSupportedException.class);
             for (final Catalog catalog : context.getCatalogs()) {
                 log.debug("catalog: {}", catalog);
             }
@@ -72,7 +73,7 @@ abstract class MemoryTest {
     @Test
     void getSchemas__() throws Exception {
         try (Connection connection = connect()) {
-            final Context context = Context.newInstance(connection);
+            final Context context = Context.newInstance(connection).suppress(SQLFeatureNotSupportedException.class);
             for (final Schema schema : context.getSchemas(null, null, new ArrayList<>())) {
                 log.debug("schema: {}", schema);
             }
@@ -82,7 +83,7 @@ abstract class MemoryTest {
     @Test
     void getTables__() throws Exception {
         try (Connection connection = connect()) {
-            final Context context = Context.newInstance(connection);
+            final Context context = Context.newInstance(connection).suppress(SQLFeatureNotSupportedException.class);
             for (final Table table : context.getTables(null, null, null, null, new ArrayList<>())) {
                 log.debug("table: {}", table);
             }

@@ -30,8 +30,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
-import static java.sql.DatabaseMetaData.*;
-
 /**
  * An entity class for columns
  *
@@ -54,17 +52,17 @@ public class Column extends TableChild {
         /**
          * Constant for {@link DatabaseMetaData#columnNoNulls}.
          */
-        COLUMN_NO_NULLS(columnNoNulls),
+        COLUMN_NO_NULLS(DatabaseMetaData.columnNoNulls),
 
         /**
          * Constant for {@link DatabaseMetaData#columnNullable}.
          */
-        COLUMN_NULLABLE(columnNullable),
+        COLUMN_NULLABLE(DatabaseMetaData.columnNullable),
 
         /**
          * Constant for {@link DatabaseMetaData#columnNullableUnknown}.
          */
-        COLUMN_NULLABLE_UNKNOWN(columnNullableUnknown);
+        COLUMN_NULLABLE_UNKNOWN(DatabaseMetaData.columnNullableUnknown);
 
         /**
          * Returns the constant whose raw value equals to given. An instance of {@link IllegalArgumentException} will be
@@ -73,8 +71,8 @@ public class Column extends TableChild {
          * @param rawValue the value value
          * @return the constant whose raw value equals to given.
          */
-        public static Nullable valueOf(final int rawValue) {
-            return IntFieldEnums.valueOf(Nullable.class, rawValue);
+        public static Nullable valueOfRawValue(final int rawValue) {
+            return IntFieldEnums.valueOfRawValue(Nullable.class, rawValue);
         }
 
         Nullable(final int rawValue) {
