@@ -43,12 +43,14 @@
     <maven.compiler.testSource>${maven.compiler.source}</maven.compiler.testSource>
     <maven.compiler.testTarget>${maven.compiler.testSource}</maven.compiler.testTarget>
     <version.animal-sniffer>1.20</version.animal-sniffer>
-    <version.com.sun.xml.bind>2.3.0.1</version.com.sun.xml.bind>
+    <version.com.sun.xml.bind>${version.jakarta.xml.bind-api}</version.com.sun.xml.bind>
+    <version.jakarta.validation-api>2.0.2</version.jakarta.validation-api>
+    <version.jakarta.xml.bind-api>2.3.3</version.jakarta.xml.bind-api>
     <version.mariadb-java-client>2.7.2</version.mariadb-java-client>
     <version.maven-failsafe>${version.maven-surefire}</version.maven-failsafe>
     <version.maven-surefire>3.0.0-M4</version.maven-surefire>
     <version.mysql-connector-java>8.0.23</version.mysql-connector-java>
-    <version.mssql-jdbc>9.2.0.jre15</version.mssql-jdbc>
+    <version.mssql-jdbc>9.2.1.jre15</version.mssql-jdbc>
     <version.ojdbc6>11.2.0.4</version.ojdbc6>
     <version.ojdbc8>21.1.0.0</version.ojdbc8>
     <version.ojdbc10>19.10.0.0</version.ojdbc10>
@@ -129,11 +131,17 @@
       <scope>test</scope>
     </dependency>
     <dependency>
-      <groupId>com.sun.xml.bind</groupId>
-      <artifactId>jaxb-core</artifactId>
-      <version>${version.com.sun.xml.bind}</version>
+      <groupId>com.launchableinc</groupId>
+      <artifactId>cyyoung</artifactId>
+      <version>1.0</version>
       <scope>test</scope>
     </dependency>
+<!--    <dependency>-->
+<!--      <groupId>com.sun.xml.bind</groupId>-->
+<!--      <artifactId>jaxb-core</artifactId>-->
+<!--      <version>${version.com.sun.xml.bind}</version>-->
+<!--      <scope>test</scope>-->
+<!--    </dependency>-->
     <dependency>
       <groupId>com.sun.xml.bind</groupId>
       <artifactId>jaxb-impl</artifactId>
@@ -141,41 +149,17 @@
       <scope>test</scope>
     </dependency>
     <dependency>
-      <groupId>javax.xml.bind</groupId>
-      <artifactId>jaxb-api</artifactId>
-      <version>2.3.0</version>
-      <scope>provided</scope>
-    </dependency>
-    <dependency>
-      <groupId>javax.activation</groupId>
-      <artifactId>activation</artifactId>
-      <version>1.1.1</version>
-      <scope>test</scope>
-    </dependency>
-    <dependency>
-      <groupId>jakarta.persistence</groupId>
-      <artifactId>jakarta.persistence-api</artifactId>
-      <version>3.0.0</version>
+      <groupId>jakarta.xml.bind</groupId>
+      <artifactId>jakarta.xml.bind-api</artifactId>
+      <version>2.3.3</version>
       <scope>provided</scope>
     </dependency>
     <dependency>
       <groupId>jakarta.validation</groupId>
       <artifactId>jakarta.validation-api</artifactId>
-      <version>2.0.2</version>
+      <version>${version.jakarta.validation-api}</version>
       <scope>provided</scope>
     </dependency>
-    <!--    <dependency>-->
-    <!--      <groupId>org.apache.commons</groupId>-->
-    <!--      <artifactId>commons-lang3</artifactId>-->
-    <!--      <version>3.12.0</version>-->
-    <!--      <scope>test</scope>-->
-    <!--    </dependency>-->
-    <!--    <dependency>-->
-    <!--      <groupId>org.apache.commons</groupId>-->
-    <!--      <artifactId>commons-text</artifactId>-->
-    <!--      <version>1.9</version>-->
-    <!--      <scope>test</scope>-->
-    <!--    </dependency>-->
     <dependency>
       <groupId>org.apache.derby</groupId>
       <artifactId>derby</artifactId>
@@ -189,12 +173,6 @@
       <version>3.19.0</version>
       <scope>test</scope>
     </dependency>
-    <!--    <dependency>-->
-    <!--      <groupId>org.atteo</groupId>-->
-    <!--      <artifactId>evo-inflector</artifactId>-->
-    <!--      <version>1.2.2</version>-->
-    <!--      <scope>test</scope>-->
-    <!--    </dependency>-->
     <dependency>
       <groupId>org.codehaus.mojo</groupId>
       <artifactId>animal-sniffer-annotations</artifactId>
@@ -204,7 +182,7 @@
     <dependency>
       <groupId>org.hibernate.validator</groupId>
       <artifactId>hibernate-validator</artifactId>
-      <version>6.2.0.Final</version>
+      <version>6.1.7.Final</version>
       <scope>test</scope>
     </dependency>
     <dependency>
