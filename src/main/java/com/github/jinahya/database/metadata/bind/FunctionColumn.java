@@ -35,7 +35,7 @@ import static java.util.Objects.requireNonNull;
  * @see DatabaseMetaData#getFunctionColumns(java.lang.String, java.lang.String, java.lang.String, java.lang.String)
  */
 @XmlRootElement
-public class FunctionColumn extends FunctionChild {
+public class FunctionColumn implements MetadataType {
 
     private static final long serialVersionUID = -7445156446214062680L;
 

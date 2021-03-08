@@ -25,7 +25,7 @@ import javax.xml.bind.annotation.XmlTransient;
 import java.util.Objects;
 
 @XmlTransient
-abstract class Privilege<P extends MetadataType> extends AbstractChild<P> {
+abstract class Privilege<P extends MetadataType> implements MetadataType {
 
     private static final long serialVersionUID = -816800473142195431L;
 

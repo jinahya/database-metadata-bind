@@ -37,7 +37,7 @@ import static java.sql.DatabaseMetaData.attributeNullableUnknown;
  * @see Context#getAttributes(java.lang.String, java.lang.String, java.lang.String, java.lang.String)
  */
 @XmlRootElement
-public class Attribute extends UDTChild {
+public class Attribute implements MetadataType {
 
     private static final long serialVersionUID = 5020389308460154799L;
 

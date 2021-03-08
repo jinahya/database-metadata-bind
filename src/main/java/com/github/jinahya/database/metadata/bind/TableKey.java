@@ -27,7 +27,7 @@ import java.util.Objects;
 import static java.util.Objects.requireNonNull;
 
 @XmlTransient
-abstract class TableKey extends TableChild {
+abstract class TableKey implements MetadataType {
 
     private static final long serialVersionUID = 6713872409315471232L;
 

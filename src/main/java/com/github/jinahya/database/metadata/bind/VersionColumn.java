@@ -37,7 +37,7 @@ import static java.sql.DatabaseMetaData.versionColumnUnknown;
  * @see Context#getVersionColumns(String, String, String, Collection)
  */
 @XmlRootElement
-public class VersionColumn extends TableChild {
+public class VersionColumn implements MetadataType {
 
     private static final long serialVersionUID = 3587959398829593292L;
 

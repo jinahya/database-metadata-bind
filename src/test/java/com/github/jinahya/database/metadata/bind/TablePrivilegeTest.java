@@ -1,6 +1,6 @@
 package com.github.jinahya.database.metadata.bind;
 
-class TablePrivilegeTest extends TableChildTest<TablePrivilege> {
+class TablePrivilegeTest extends MetadataTypeTest<TablePrivilege> {
 
     TablePrivilegeTest() {
         super(TablePrivilege.class);

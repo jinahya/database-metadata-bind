@@ -23,23 +23,18 @@ package com.github.jinahya.database.metadata.bind;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
 import java.sql.DatabaseMetaData;
+import java.util.Collection;
 import java.util.Objects;
-
-import static java.sql.DatabaseMetaData.functionColumnResult;
-import static java.sql.DatabaseMetaData.procedureColumnIn;
-import static java.sql.DatabaseMetaData.procedureColumnInOut;
-import static java.sql.DatabaseMetaData.procedureColumnOut;
-import static java.sql.DatabaseMetaData.procedureColumnReturn;
-import static java.sql.DatabaseMetaData.procedureColumnUnknown;
 
 /**
  * An entity class for binding the result of {@link java.sql.DatabaseMetaData#getProcedureColumns(java.lang.String,
  * java.lang.String, java.lang.String, java.lang.String)}.
  *
  * @author Jin Kwon &lt;jinahya_at_gmail.com&gt;
+ * @see Context#getProcedureColumns(String, String, String, String, Collection)
  */
 @XmlRootElement
-public class ProcedureColumn extends ProcedureChild {
+public class ProcedureColumn implements MetadataType {
 
     private static final long serialVersionUID = 3894753719381358829L;
 
@@ -56,37 +51,37 @@ public class ProcedureColumn extends ProcedureChild {
          * Constant for {@link DatabaseMetaData#procedureColumnUnknown} whose value is {@value
          * DatabaseMetaData#procedureColumnUnknown}.
          */
-        PROCEDURE_COLUMN_UNKNOWN(procedureColumnUnknown), // 0
+        PROCEDURE_COLUMN_UNKNOWN(DatabaseMetaData.procedureColumnUnknown), // 0
 
         /**
          * Constants for {@link DatabaseMetaData#procedureColumnIn} whose value is {@value
          * DatabaseMetaData#procedureColumnIn}.
          */
-        PROCEDURE_COLUMN_IN(procedureColumnIn), // 1
+        PROCEDURE_COLUMN_IN(DatabaseMetaData.procedureColumnIn), // 1
 
         /**
          * Constants for {@link DatabaseMetaData#procedureColumnInOut} whose value is {@value
          * DatabaseMetaData#procedureColumnInOut}.
          */
-        PROCEDURE_COLUMN_IN_OUT(procedureColumnInOut), // 2
+        PROCEDURE_COLUMN_IN_OUT(DatabaseMetaData.procedureColumnInOut), // 2
 
         /**
          * Constants for {@link DatabaseMetaData#procedureColumnResult} whose value is {@value
          * DatabaseMetaData#procedureColumnResult}.
          */
-        PROCEDURE_COLUMN_RESULT(functionColumnResult), // 3
+        PROCEDURE_COLUMN_RESULT(DatabaseMetaData.functionColumnResult), // 3
 
         /**
          * Constants for {@link DatabaseMetaData#procedureColumnOut} whose value is {@value
          * DatabaseMetaData#procedureColumnOut}.
          */
-        PROCEDURE_COLUMN_OUT(procedureColumnOut), // 4
+        PROCEDURE_COLUMN_OUT(DatabaseMetaData.procedureColumnOut), // 4
 
         /**
          * Constant for {@link DatabaseMetaData#procedureColumnReturn} whose value is {@value
          * DatabaseMetaData#procedureColumnReturn}.
          */
-        PROCEDURE_COLUMN_RETURN(procedureColumnReturn); // 5
+        PROCEDURE_COLUMN_RETURN(DatabaseMetaData.procedureColumnReturn); // 5
 
         /**
          * Returns the constant whose raw value equals to given. An instance of {@link IllegalArgumentException} will be

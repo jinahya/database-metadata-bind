@@ -26,17 +26,22 @@ import java.util.Collection;
 import java.util.Objects;
 
 /**
- * An entity class for pseudo columns.
+ * A class for binding the result of {@link java.sql.DatabaseMetaData#getPseudoColumns(String, String, String, String)}
+ * method.
  *
  * @author Jin Kwon &lt;jinahya_at_gmail.com&gt;
  * @see Context#getPseudoColumns(String, String, String, String, Collection)
  */
 @XmlRootElement
-public class PseudoColumn extends TableChild {
+public class PseudoColumn implements MetadataType {
 
     private static final long serialVersionUID = -5612575879670895510L;
 
     // -----------------------------------------------------------------------------------------------------------------
+
+    /**
+     * Creates a new instance.
+     */
     public PseudoColumn() {
         super();
     }

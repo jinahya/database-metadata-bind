@@ -33,7 +33,7 @@ import java.util.Objects;
  * @see Context#getBestRowIdentifier(java.lang.String, java.lang.String, java.lang.String, int, boolean)
  */
 @XmlRootElement
-public class BestRowIdentifier extends TableChild {
+public class BestRowIdentifier implements MetadataType {
 
     private static final long serialVersionUID = -6733770602373723371L;
 

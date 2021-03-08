@@ -1,6 +1,6 @@
 package com.github.jinahya.database.metadata.bind;
 
-class ProcedureTest extends SchemaChildTest<Procedure> {
+class ProcedureTest extends MetadataTypeTest<Procedure> {
 
     ProcedureTest() {
         super(Procedure.class);

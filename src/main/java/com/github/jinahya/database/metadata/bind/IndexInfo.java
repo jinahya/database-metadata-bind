@@ -33,7 +33,7 @@ import java.util.Objects;
  * @see Context#getIndexInfo(String, String, String, boolean, boolean, Collection)
  */
 @XmlRootElement
-public class IndexInfo extends TableChild {
+public class IndexInfo implements MetadataType {
 
     private static final long serialVersionUID = -768486884376018474L;
 

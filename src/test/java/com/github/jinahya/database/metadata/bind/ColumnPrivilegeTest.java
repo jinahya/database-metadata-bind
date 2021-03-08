@@ -1,6 +1,6 @@
 package com.github.jinahya.database.metadata.bind;
 
-class ColumnPrivilegeTest extends ColumnChildTest<ColumnPrivilege> {
+class ColumnPrivilegeTest extends MetadataTypeTest<ColumnPrivilege> {
 
     ColumnPrivilegeTest() {
         super(ColumnPrivilege.class);

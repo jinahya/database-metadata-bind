@@ -31,7 +31,7 @@ import java.util.Objects;
  * @author Jin Kwon &lt;jinahya_at_gmail.com&gt;
  */
 @XmlRootElement
-public class SuperTable extends TableChild {
+public class SuperTable implements MetadataType {
 
     private static final long serialVersionUID = -302335602056528563L;
 

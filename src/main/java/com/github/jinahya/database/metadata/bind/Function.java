@@ -38,7 +38,7 @@ import java.util.Objects;
  * @see FunctionColumn
  */
 @XmlRootElement
-public class Function extends SchemaChild {
+public class Function implements MetadataType {
 
     private static final long serialVersionUID = -3318947900237453301L;
 

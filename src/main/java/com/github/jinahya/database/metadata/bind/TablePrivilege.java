@@ -31,7 +31,7 @@ import java.util.Objects;
  * @author Jin Kwon &lt;jinahya_at_gmail.com&gt;
  */
 @XmlRootElement
-public class TablePrivilege extends TableChild {
+public class TablePrivilege implements MetadataType {
 
     private static final long serialVersionUID = -1799954363648972203L;
 

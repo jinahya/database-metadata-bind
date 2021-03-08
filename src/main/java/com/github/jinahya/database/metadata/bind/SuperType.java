@@ -31,7 +31,7 @@ import java.util.Objects;
  * @author Jin Kwon &lt;jinahya_at_gmail.com&gt;
  */
 @XmlRootElement
-public class SuperType extends UDTChild {
+public class SuperType implements MetadataType {
 
     private static final long serialVersionUID = 4603878785941565029L;
 

@@ -38,7 +38,7 @@ import java.util.Objects;
  * @author Jin Kwon &lt;jinahya_at_gmail.com&gt;
  */
 @XmlRootElement
-public class Schema extends CatalogChild {
+public class Schema implements MetadataType {
 
     private static final long serialVersionUID = 7457236468401244963L;
 
@@ -53,14 +53,6 @@ public class Schema extends CatalogChild {
     public static final String ATTRIBUTE_NAME_TABLE_CATALOG = "tableCatalog";
 
     // -----------------------------------------------------------------------------------------------------------------
-    static Schema newVirtualInstance(final Catalog catalog) {
-        final Schema instance = new Schema();
-        instance.virtual = Boolean.TRUE;
-        instance.setParent(catalog);
-        instance.setTableSchem("_virtual_");
-        return instance;
-    }
-
     static Schema newVirtualInstance(final String tableCatalog, final String tableSchem) {
         final Schema instance = new Schema();
         instance.virtual = Boolean.TRUE;

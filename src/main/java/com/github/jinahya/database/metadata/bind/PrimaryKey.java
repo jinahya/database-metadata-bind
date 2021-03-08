@@ -32,7 +32,7 @@ import java.util.Objects;
  * @see Context#getPrimaryKeys(String, String, String, Collection)
  */
 @XmlRootElement
-public class PrimaryKey extends TableChild {
+public class PrimaryKey implements MetadataType {
 
     private static final long serialVersionUID = 3159826510060898330L;
 

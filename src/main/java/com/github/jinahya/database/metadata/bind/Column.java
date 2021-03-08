@@ -36,7 +36,7 @@ import java.util.Objects;
  * @author Jin Kwon &lt;jinahya_at_gmail.com&gt;
  */
 @XmlRootElement
-public class Column extends TableChild {
+public class Column implements MetadataType {
 
     private static final long serialVersionUID = -409653682729081530L;
 

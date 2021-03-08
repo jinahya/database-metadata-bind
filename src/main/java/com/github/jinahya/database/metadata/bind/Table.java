@@ -36,7 +36,7 @@ import java.util.Objects;
  * @author Jin Kwon &lt;jinahya_at_gmail.com&gt;
  */
 @XmlRootElement
-public class Table extends SchemaChild {
+public class Table implements MetadataType {
 
     // -----------------------------------------------------------------------------------------------------------------
     private static final long serialVersionUID = 6590036695540141125L;

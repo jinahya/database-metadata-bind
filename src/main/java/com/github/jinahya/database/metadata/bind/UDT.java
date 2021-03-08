@@ -35,7 +35,7 @@ import java.util.Objects;
  * @author Jin Kwon &lt;jinahya_at_gmail.com&gt;
  */
 @XmlRootElement
-public class UDT extends SchemaChild {
+public class UDT implements MetadataType {
 
     private static final long serialVersionUID = 8665246093405057553L;
 

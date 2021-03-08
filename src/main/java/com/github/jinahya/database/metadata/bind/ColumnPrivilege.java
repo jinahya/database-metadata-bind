@@ -30,7 +30,7 @@ import java.util.Objects;
  * @author Jin Kwon &lt;jinahya_at_gmail.com&gt;
  */
 @XmlRootElement
-public class ColumnPrivilege extends ColumnChild {
+public class ColumnPrivilege implements MetadataType {
 
     // -----------------------------------------------------------------------------------------------------------------
     private static final long serialVersionUID = 4384654744147773380L;

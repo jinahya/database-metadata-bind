@@ -26,17 +26,19 @@ import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlElementRef;
 import javax.xml.bind.annotation.XmlRootElement;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 import java.util.Objects;
 
 /**
- * An entity class for binding the result of {@link java.sql.DatabaseMetaData#getProcedures(java.lang.String,
- * java.lang.String, java.lang.String)}.
+ * A class for binding the result of {@link java.sql.DatabaseMetaData#getProcedures(java.lang.String, java.lang.String,
+ * java.lang.String)}.
  *
  * @author Jin Kwon &lt;jinahya_at_gmail.com&gt;
+ * @see Context#getProcedures(String, String, String, Collection)
  */
 @XmlRootElement
-public class Procedure extends SchemaChild {
+public class Procedure implements MetadataType {
 
     private static final long serialVersionUID = -6262056388403934829L;
 
