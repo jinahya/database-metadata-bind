@@ -27,14 +27,10 @@ import javax.xml.bind.annotation.XmlAttribute;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlElementRef;
 import javax.xml.bind.annotation.XmlRootElement;
-import java.text.Collator;
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.Comparator;
 import java.util.List;
 import java.util.Objects;
-
-import static java.util.Objects.requireNonNull;
 
 /**
  * An entity class for binding the result of {@link java.sql.DatabaseMetaData#getCatalogs()}.
@@ -58,43 +54,14 @@ public class Catalog implements MetadataType {
     // -----------------------------------------------------------------------------------------------------------------
 
     /**
-     * A comparator comparing {@value #ATTRIBUTE_NAME_TABLE_CAT} attribute.
+     * Creates a new instance whose {@code virtual} is {@code true}.
      *
-     * @see #COMPARING_TABLE_CAT_CASE_INSENSITIVE
-     * @see #comparingTableCat(Collator)
+     * @return a new instance whose {@code virtual} is {@code true}.
      */
-    public static final Comparator<Catalog> COMPARING_TABLE_CAT = Comparator.comparing(Catalog::getTableCat);
-
-    /**
-     * A comparator comparing {@value #ATTRIBUTE_NAME_TABLE_CAT} attribute in {@link String#CASE_INSENSITIVE_ORDER case
-     * insensitive order}.
-     *
-     * @see #COMPARING_TABLE_CAT
-     * @see #comparingTableCat(Collator)
-     */
-    // https://stackoverflow.com/a/49821834/330457
-    public static final Comparator<Catalog> COMPARING_TABLE_CAT_CASE_INSENSITIVE
-            = Comparator.comparing(Catalog::getTableCat, String.CASE_INSENSITIVE_ORDER);
-
-    /**
-     * Returns a comparator comparing {@value #ATTRIBUTE_NAME_TABLE_CAT} attribute using specified collator.
-     *
-     * @param collator the collator.
-     * @return a comparator.
-     * @see #COMPARING_TABLE_CAT
-     * @see #COMPARING_TABLE_CAT_CASE_INSENSITIVE
-     */
-    // https://stackoverflow.com/a/49821830/330457
-    public static Comparator<Catalog> comparingTableCat(final Collator collator) {
-        requireNonNull(collator, "collator is null");
-        return Comparator.comparing(Catalog::getTableCat, collator);
-    }
-
-    // -----------------------------------------------------------------------------------------------------------------
-    static Catalog newVirtualInstance() {
+    static @Valid @NotNull Catalog newVirtualInstance() {
         final Catalog instance = new Catalog();
         instance.virtual = Boolean.TRUE;
-        instance.setTableCat("");
+        instance.tableCat = "_vertual_";
         return instance;
     }
 
@@ -165,8 +132,9 @@ public class Catalog implements MetadataType {
      * Returns schemas of this catalog.
      *
      * @return a list of schemas
+     * @see Context#getSchemas(Collection)
      */
-    List<Schema> getSchemas() {
+    public List<Schema> getSchemas() {
         if (schemas == null) {
             schemas = new ArrayList<>();
         }
@@ -175,7 +143,7 @@ public class Catalog implements MetadataType {
 
     // -----------------------------------------------------------------------------------------------------------------
     @XmlAttribute
-    Boolean virtual;
+    private Boolean virtual;
 
     // -----------------------------------------------------------------------------------------------------------------
     @XmlElement(required = true)

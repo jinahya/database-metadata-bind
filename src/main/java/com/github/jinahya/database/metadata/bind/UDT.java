@@ -151,7 +151,7 @@ public class UDT extends SchemaChild {
     }
 
     // ------------------------------------------------------------------------------------------------------ attributes
-    List<Attribute> getAttributes() {
+    public @NotNull List<@Valid @NotNull Attribute> getAttributes() {
         if (attributes == null) {
             attributes = new ArrayList<>();
         }
@@ -159,7 +159,7 @@ public class UDT extends SchemaChild {
     }
 
     // ------------------------------------------------------------------------------------------------------ superTypes
-    List<SuperType> getSuperTypes() {
+    public @NotNull List<@Valid @NotNull SuperType> getSuperTypes() {
         if (superTypes == null) {
             superTypes = new ArrayList<>();
         }

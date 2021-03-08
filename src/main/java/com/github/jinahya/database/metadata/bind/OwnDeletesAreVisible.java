@@ -22,8 +22,8 @@ package com.github.jinahya.database.metadata.bind;
 
 import javax.xml.bind.annotation.XmlRootElement;
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.List;
-import java.util.logging.Level;
 
 import static java.util.Objects.requireNonNull;
 
@@ -33,20 +33,21 @@ import static java.util.Objects.requireNonNull;
  * @author Jin Kwon &lt;onacit_at_gmail.com&gt;
  */
 @XmlRootElement
-public class OwnDeletesAreVisible extends AreVisible {
+public class OwnDeletesAreVisible extends AreVisible<OwnDeletesAreVisible> {
 
-    static List<OwnDeletesAreVisible> list(final Context context) throws SQLException {
+    static List<OwnDeletesAreVisible> all(final Context context) throws SQLException {
         requireNonNull(context, "context is null");
-        final List<OwnDeletesAreVisible> list = list(OwnDeletesAreVisible.class);
-        for (final OwnDeletesAreVisible v : list) {
-            try {
-                v.setValue(context.databaseMetaData.ownDeletesAreVisible(v.getType()));
-            } catch (final SQLException sqle) {
-                logger.log(Level.WARNING, sqle,
-                           () -> String.format("failed to invoke ownDeletesAreDetected(%1$d)", v.getType()));
-                context.throwIfNotSuppressed(sqle);
-            }
+        final List<OwnDeletesAreVisible> all = new ArrayList<>();
+        for (final ResultSetType type : ResultSetType.values()) {
+            all.add(context.ownDeletesAreVisible(type));
         }
-        return list;
+        return all;
+    }
+
+    /**
+     * Creates a new instance.
+     */
+    public OwnDeletesAreVisible() {
+        super();
     }
 }

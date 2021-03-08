@@ -138,7 +138,7 @@ public class Metadata implements MetadataType {
 //            logSqlFeatureNotSupportedException(logger, sqlfnse);
 //        }
         // -------------------------------------------------------------------------------------------------------------
-        instance.deletesAreDetected = DeletesAreDetected.list(context);
+        instance.deletesAreDetected = DeletesAreDetected.all(context);
         // -------------------------------------------------------------------------------------------------------------
 //        try {
 //            instance.doesMaxRowSizeIncludeBlobs
@@ -153,13 +153,7 @@ public class Metadata implements MetadataType {
 //            logSqlFeatureNotSupportedException(logger, sqlfnse);
 //        }
         // ---------------------------------------------------------------------------------------------------- catalogs
-        instance.catalog = context.getCatalogs();
-        if (instance.catalog.isEmpty()) {
-            instance.catalog.add(Catalog.newVirtualInstance());
-        }
-        for (final Catalog catalog : instance.catalog) {
-            context.getSchemas(catalog);
-        }
+        instance.catalog = context.getCatalogs(new ArrayList<>());
         final List<Table> tables = instance.catalog.stream()
                 .flatMap(c -> c.getSchemas().stream())
                 .flatMap(s -> s.getTables().stream())
@@ -447,7 +441,7 @@ public class Metadata implements MetadataType {
 //            logSqlFeatureNotSupportedException(logger, sqlfnse);
 //        }
         // -------------------------------------------------------------------------------------------------------------
-        instance.insertsAreDetected = InsertsAreDetected.list(context);
+        instance.insertsAreDetected = InsertsAreDetected.all(context);
         try {
             all.remove(Metadata.class.getDeclaredField("insertsAreDetected"));
         } catch (final ReflectiveOperationException roe) {
@@ -496,12 +490,12 @@ public class Metadata implements MetadataType {
 //            logSqlFeatureNotSupportedException(logger, sqlfnse);
 //        }
         // -------------------------------------------------------------------------------------------------------------
-        instance.othersDeletesAreVisible = OthersDeletesAreVisible.list(context);
-        instance.othersInsertsAreVisible = OthersInsertsAreVisible.list(context);
-        instance.othersUpdatesAreVisible = OthersUpdatesAreVisible.list(context);
-        instance.ownDeletesAreVisible = OwnDeletesAreVisible.list(context);
-        instance.ownInsertsAreVisible = OwnInsertsAreVisible.list(context);
-        instance.ownUpdatesAreVisible = OwnUpdatesAreVisible.list(context);
+        instance.othersDeletesAreVisible = OthersDeletesAreVisible.all(context);
+        instance.othersInsertsAreVisible = OthersInsertsAreVisible.all(context);
+        instance.othersUpdatesAreVisible = OthersUpdatesAreVisible.all(context);
+        instance.ownDeletesAreVisible = OwnDeletesAreVisible.all(context);
+        instance.ownInsertsAreVisible = OwnInsertsAreVisible.all(context);
+        instance.ownUpdatesAreVisible = OwnUpdatesAreVisible.all(context);
         // -------------------------------------------------------------------------------------------------------------
 //        try {
 //            instance.storesLowerCaseIdentifiers = context.databaseMetaData.storesLowerCaseIdentifiers();
@@ -900,7 +894,7 @@ public class Metadata implements MetadataType {
 //            logSqlFeatureNotSupportedException(logger, sqlfnse);
 //        }
         // -------------------------------------------------------------------------------------------------------------
-        instance.updatesAreDetected = UpdatesAreDetected.list(context);
+        instance.updatesAreDetected = UpdatesAreDetected.all(context);
         // -------------------------------------------------------------------------------------------------------------
 //        try {
 //            instance.usesLocalFilePerTable = context.databaseMetaData.usesLocalFilePerTable();

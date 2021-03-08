@@ -8,6 +8,7 @@ import javax.xml.bind.Unmarshaller;
 import javax.xml.bind.annotation.XmlAnyElement;
 import javax.xml.namespace.QName;
 import javax.xml.transform.Source;
+import java.beans.Introspector;
 import java.lang.reflect.Method;
 import java.util.Arrays;
 import java.util.List;
@@ -51,7 +52,6 @@ public final class Wrapper<T> {
      *
      * @param type     the element type.
      * @param elements the elements to marshal.
-     * @param name     a local part of the wrapping root element.
      * @param target   the target to which elements are marshalled.
      * @param operator an operator for decorating a marshaller; may be {@code null};
      * @param <T>      element type parameter
@@ -59,14 +59,15 @@ public final class Wrapper<T> {
      * @see #marshal(Class, List, String, Object)
      */
     @SuppressWarnings({"unchecked"})
-    public static <T> void marshal(final Class<T> type, final List<T> elements, final String name, final Object target,
+    public static <T> void marshal(final Class<T> type, final List<T> elements, final Object target,
                                    final UnaryOperator<Marshaller> operator)
             throws JAXBException {
         requireNonNull(type, "type is null");
         requireNonNull(target, "target is null");
         final JAXBContext context = JAXBContext.newInstance(Wrapper.class, type);
         final JAXBElement<Wrapper<T>> wrapped = new JAXBElement<>(
-                new QName(XmlConstants.NS_URI_DATABASE_METADATA_BIND, name),
+                new QName(XmlConstants.NS_URI_DATABASE_METADATA_BIND,
+                          Introspector.decapitalize(Wrapper.class.getSimpleName())),
                 (Class<Wrapper<T>>) (Class<?>) Wrapper.class, Wrapper.of(elements));
         Marshaller marshaller = context.createMarshaller();
         if (operator != null) {
@@ -96,15 +97,14 @@ public final class Wrapper<T> {
      *
      * @param type     the element type.
      * @param elements the elements to marshal.
-     * @param name     a local part of the wrapping root element.
      * @param target   the target to which elements are marshalled.
      * @param <T>      element type parameter
      * @throws JAXBException if failed to marshal.
-     * @see #marshal(Class, List, String, Object, UnaryOperator)
+     * @see #marshal(Class, List, Object, UnaryOperator)
      */
-    public static <T> void marshal(final Class<T> type, final List<T> elements, final String name, final Object target)
+    public static <T> void marshal(final Class<T> type, final List<T> elements, final Object target)
             throws JAXBException {
-        marshal(type, elements, name, target, null);
+        marshal(type, elements, target, null);
     }
 
     private static <T> Wrapper<T> of(final List<T> elements) {

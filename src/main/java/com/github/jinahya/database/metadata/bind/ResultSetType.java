@@ -22,14 +22,35 @@ package com.github.jinahya.database.metadata.bind;
 
 import java.sql.ResultSet;
 
+/**
+ * Constants for {@link ResultSet#TYPE_FORWARD_ONLY}, {@link ResultSet#TYPE_SCROLL_INSENSITIVE}, and {@link
+ * ResultSet#TYPE_SCROLL_SENSITIVE}.
+ *
+ * @author Jin Kwon &lt;onacit_at_gmail.com&gt;
+ */
 enum ResultSetType implements IntFieldEnum<ResultSetType> {
 
+    /**
+     * A constant for {@link ResultSet#TYPE_FORWARD_ONLY}.
+     */
     TYPE_FORWARD_ONLY(ResultSet.TYPE_FORWARD_ONLY),
 
+    /**
+     * A constant for {@link ResultSet#TYPE_SCROLL_INSENSITIVE}.
+     */
     TYPE_SCROLL_INSENSITIVE(ResultSet.TYPE_SCROLL_INSENSITIVE),
 
+    /**
+     * A constant for {@link ResultSet#TYPE_SCROLL_SENSITIVE}.
+     */
     TYPE_SCROLL_SENSITIVE(ResultSet.TYPE_SCROLL_SENSITIVE);
 
+    /**
+     * Returns the value whose {@link #getRawValue() rawValue} is equal to specified value.
+     *
+     * @param rawValue the {@code rawValue} to compare.
+     * @return the value whose {@link #getRawValue() rawValue} is equal to specified value.
+     */
     public static ResultSetType valueOfRawValue(final int rawValue) {
         return IntFieldEnums.valueOfRawValue(ResultSetType.class, rawValue);
     }

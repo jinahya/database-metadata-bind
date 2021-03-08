@@ -23,12 +23,9 @@ package com.github.jinahya.database.metadata.bind;
 import javax.xml.bind.annotation.XmlAttribute;
 import javax.xml.bind.annotation.XmlValue;
 import java.lang.invoke.MethodHandles;
-import java.lang.reflect.Constructor;
 import java.sql.DatabaseMetaData;
-import java.util.Arrays;
-import java.util.List;
+import java.util.Objects;
 import java.util.logging.Logger;
-import java.util.stream.Collectors;
 
 import static java.util.Objects.requireNonNull;
 
@@ -36,32 +33,55 @@ import static java.util.Objects.requireNonNull;
  * A class for binding result of {@link DatabaseMetaData#deletesAreDetected(int)} method.
  *
  * @author Jin Kwon &lt;onacit_at_gmail.com&gt;
+ * @see DeletesAreDetected
+ * @see InsertsAreDetected
+ * @see UpdatesAreDetected
  */
-abstract class AreDetected {
+abstract class AreDetected<T extends AreDetected<T>> implements Comparable<T> {
 
     static final Logger logger = Logger.getLogger(MethodHandles.lookup().lookupClass().getName());
 
-    static <T extends AreDetected> List<T> list(final Class<T> type) {
-        requireNonNull(type, "type is null");
-        return Arrays.stream(ResultSetType.values())
-                .map(c -> {
-                    final T v;
-                    try {
-                        final Constructor<T> constructor = type.getDeclaredConstructor();
-                        if (!constructor.isAccessible()) {
-                            constructor.setAccessible(true);
-                        }
-                        v = constructor.newInstance();
-                    } catch (final ReflectiveOperationException roe) {
-                        throw new RuntimeException("failed to instantiate " + type, roe);
-                    }
-                    v.setType(c.getRawValue());
-                    v.setTypeName(c.name());
-                    return v;
-                })
-                .collect(Collectors.toList());
+    // -----------------------------------------------------------------------------------------------------------------
+
+    @Override
+    public String toString() {
+        return super.toString() + '{'
+               + "type=" + type
+               + ",typeName=" + typeName
+               + ",value=" + value
+               + '}';
     }
 
+    @Override
+    public boolean equals(final Object obj) {
+        if (this == obj) return true;
+        if (obj == null || getClass() != obj.getClass()) return false;
+        final AreDetected<?> that = (AreDetected<?>) obj;
+        return type == that.type
+               && Objects.equals(value, that.value);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(type, value);
+    }
+
+    // -----------------------------------------------------------------------------------------------------------------
+
+    @Override
+    public int compareTo(final T o) {
+        requireNonNull(o, "o is null");
+        return Integer.compare(type, o.getType());
+    }
+
+    // -----------------------------------------------------------------------------------------------------------------
+    void setType(final ResultSetType type) {
+        requireNonNull(type, "type is null");
+        setType(type.getRawValue());
+        setTypeName(type.name());
+    }
+
+    // -----------------------------------------------------------------------------------------------------------------
     public int getType() {
         return type;
     }
@@ -86,10 +106,11 @@ abstract class AreDetected {
         this.value = value;
     }
 
+    // -----------------------------------------------------------------------------------------------------------------
     @XmlAttribute(required = true)
     private int type;
 
-    @XmlAttribute(required = true)
+    @XmlAttribute
     private String typeName;
 
     @XmlValue

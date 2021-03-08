@@ -23,8 +23,8 @@ package com.github.jinahya.database.metadata.bind;
 import javax.xml.bind.annotation.XmlRootElement;
 import java.sql.DatabaseMetaData;
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.List;
-import java.util.logging.Level;
 
 import static java.util.Objects.requireNonNull;
 
@@ -34,20 +34,21 @@ import static java.util.Objects.requireNonNull;
  * @author Jin Kwon &lt;onacit_at_gmail.com&gt;
  */
 @XmlRootElement
-public class OwnUpdatesAreVisible extends AreVisible {
+public class OwnUpdatesAreVisible extends AreVisible<OwnUpdatesAreVisible> {
 
-    static List<OwnUpdatesAreVisible> list(final Context context) throws SQLException {
+    static List<OwnUpdatesAreVisible> all(final Context context) throws SQLException {
         requireNonNull(context, "context is null");
-        final List<OwnUpdatesAreVisible> list = list(OwnUpdatesAreVisible.class);
-        for (final OwnUpdatesAreVisible v : list) {
-            try {
-                v.setValue(context.databaseMetaData.ownUpdatesAreVisible(v.getType()));
-            } catch (final SQLException sqle) {
-                logger.log(Level.WARNING, sqle,
-                           () -> String.format("failed to invoke ownUpdatesAreDetected(%1$d)", v.getType()));
-                context.throwIfNotSuppressed(sqle);
-            }
+        final List<OwnUpdatesAreVisible> all = new ArrayList<>();
+        for (final ResultSetType type : ResultSetType.values()) {
+            all.add(context.ownUpdatesAreVisible(type));
         }
-        return list;
+        return all;
+    }
+
+    /**
+     * Creates a new instance.
+     */
+    public OwnUpdatesAreVisible() {
+        super();
     }
 }

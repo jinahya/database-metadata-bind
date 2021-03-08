@@ -22,8 +22,8 @@ package com.github.jinahya.database.metadata.bind;
 
 import javax.xml.bind.annotation.XmlRootElement;
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.List;
-import java.util.logging.Level;
 
 import static java.util.Objects.requireNonNull;
 
@@ -33,20 +33,21 @@ import static java.util.Objects.requireNonNull;
  * @author Jin Kwon &lt;onacit_at_gmail.com&gt;
  */
 @XmlRootElement
-public class OthersInsertsAreVisible extends AreVisible {
+public class OthersInsertsAreVisible extends AreVisible<OthersInsertsAreVisible> {
 
-    static List<OthersInsertsAreVisible> list(final Context context) throws SQLException {
+    static List<OthersInsertsAreVisible> all(final Context context) throws SQLException {
         requireNonNull(context, "databaseMetaData is null");
-        final List<OthersInsertsAreVisible> list = list(OthersInsertsAreVisible.class);
-        for (final OthersInsertsAreVisible v : list) {
-            try {
-                v.setValue(context.databaseMetaData.othersDeletesAreVisible(v.getType()));
-            } catch (final SQLException sqle) {
-                logger.log(Level.WARNING, sqle,
-                           () -> String.format("failed to invoke othersInsertsAreDetected(%1$d)", v.getType()));
-                context.throwIfNotSuppressed(sqle);
-            }
+        final List<OthersInsertsAreVisible> all = new ArrayList<>();
+        for (final ResultSetType type : ResultSetType.values()) {
+            all.add(context.othersInsertsAreVisible(type));
         }
-        return list;
+        return all;
+    }
+
+    /**
+     * Creates a new instance.
+     */
+    public OthersInsertsAreVisible() {
+        super();
     }
 }

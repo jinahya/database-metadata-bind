@@ -21,10 +21,12 @@ package com.github.jinahya.database.metadata.bind;
  */
 
 import javax.validation.Valid;
+import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
 import java.lang.reflect.Field;
 import java.sql.Connection;
 import java.sql.DatabaseMetaData;
+import java.sql.JDBCType;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
@@ -35,13 +37,11 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
-import java.util.Optional;
 import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import static java.util.Objects.requireNonNull;
-import static java.util.Optional.ofNullable;
 import static java.util.logging.Level.SEVERE;
 import static java.util.logging.Logger.getLogger;
 
@@ -100,7 +100,7 @@ public class Context {
             final Field field = labeledField.getKey();
             final Label label = labeledField.getValue();
             if (!resultSetLabels.remove(label.value())) {
-                logger.warning(() -> String.format("unknown label; %s on %s", label, field));
+                logger.severe(() -> String.format("unknown label; %s on %s", label, field));
                 continue;
             }
             if (field.getAnnotation(Unused.class) != null) {
@@ -182,9 +182,7 @@ public class Context {
             logger.log(Level.WARNING, sqle,
                        () -> String.format("failed to getAttributes(%1$s, %2$s, %3$s, %4$s)",
                                            catalog, schemaPattern, typeNamePattern, attributeNamePattern));
-            if (!isSuppressed(sqle.getClass())) {
-                throw sqle;
-            }
+            throwIfNotSuppressed(sqle);
         }
         return collection;
     }
@@ -208,18 +206,6 @@ public class Context {
         return getAttributes(catalog, schemaPattern, typeNamePattern, attributeNamePattern, new ArrayList<>());
     }
 
-    private void getAttributes(final UDT udt) throws SQLException {
-        requireNonNull(udt, "udt is null");
-        getAttributes(udt.getSchema().getCatalog().getTableCat(),
-                      udt.getSchema().getTableSchem(),
-                      udt.getTypeName(),
-                      null,
-                      udt.getAttributes())
-                .forEach(a -> {
-                    a.setUDT(udt);
-                });
-    }
-
     // -------------------------------------------------------------------------------------------- getBestRowIdentifier
 
     /**
@@ -237,23 +223,19 @@ public class Context {
      * @throws SQLException if a database error occurs.
      * @see DatabaseMetaData#getBestRowIdentifier(String, String, String, int, boolean)
      */
-    public <T extends Collection<? super BestRowIdentifier>> T getBestRowIdentifier(
+    public <T extends Collection<? super BestRowIdentifier>> @NotNull T getBestRowIdentifier(
             final String catalog, final String schema, final String table, final int scope, final boolean nullable,
-            final T collection)
+            @NotNull final T collection)
             throws SQLException {
         try (ResultSet results = databaseMetaData.getBestRowIdentifier(catalog, schema, table, scope, nullable)) {
-            if (results == null) {
-                logger.log(Level.WARNING, "null results retrieved");
-            } else {
+            if (results != null) {
                 bind(results, BestRowIdentifier.class, collection);
             }
         } catch (final SQLException sqle) {
             logger.log(Level.WARNING, sqle,
                        () -> String.format("failed to getBestRowIdentifier(%1$s, %2$s, %3$s, %4$d, %5$b",
                                            catalog, schema, table, scope, nullable));
-            if (!isSuppressed(sqle.getClass())) {
-                throw sqle;
-            }
+            throwIfNotSuppressed(sqle);
         }
         return collection;
     }
@@ -271,37 +253,23 @@ public class Context {
      * @throws SQLException if a database error occurs.
      * @see #getBestRowIdentifier(String, String, String, int, boolean, Collection)
      */
-    public List<BestRowIdentifier> getBestRowIdentifier(final String catalog, final String schema, final String table,
-                                                        final int scope, final boolean nullable)
+    public @NotNull List<@Valid @NotNull BestRowIdentifier> getBestRowIdentifier(
+            final String catalog, final String schema, final String table, final int scope, final boolean nullable)
             throws SQLException {
         return getBestRowIdentifier(catalog, schema, table, scope, nullable, new ArrayList<>());
-    }
-
-    private void getBestRowIdentifier(@NotNull final Table table) throws SQLException {
-        for (final BestRowIdentifier.Scope scope : BestRowIdentifier.Scope.values()) {
-            getBestRowIdentifier(table.getSchema().getCatalog().getTableCat(),
-                                 table.getSchema().getTableSchem(),
-                                 table.getTableName(),
-                                 scope.getRawValue(),
-                                 true,
-                                 table.getBestRowIdentifiers())
-                    .forEach(i -> {
-                        i.setTable(table);
-                    });
-        }
     }
 
     // ----------------------------------------------------------------------------------------------------- catCatalogs
 
     /**
-     * Invokes {@link DatabaseMetaData#getCatalogs()} method and adds all bound entities to specified collection.
+     * Invokes {@link DatabaseMetaData#getCatalogs()} method and adds all bound values to specified collection.
      *
      * @param collection the collection to which bound values are added.
      * @param <T>        element type parameter of the {@code collection}
      * @return given {@code collection}.
      * @throws SQLException if a database error occurs.
      */
-    public <T extends Collection<? super Catalog>> @NotNull T getCatalogs(@NotNull final T collection)
+    public <T extends Collection<? super Catalog>> @NotEmpty T getCatalogs(final @NotNull T collection)
             throws SQLException {
         requireNonNull(collection, "collection is null");
         try (ResultSet results = databaseMetaData.getCatalogs()) {
@@ -310,23 +278,30 @@ public class Context {
             }
         } catch (final SQLException sqle) {
             logger.log(Level.WARNING, "failed to getCatalogs()", sqle);
-            if (!isSuppressed(sqle.getClass())) {
-                throw sqle;
+            throwIfNotSuppressed(sqle);
+        }
+        if (collection.isEmpty()) {
+            collection.add(Catalog.newVirtualInstance());
+        }
+        for (final Object element : collection) {
+            if (element instanceof Catalog) {
+                final Catalog catalog = (Catalog) element;
+                getSchemas(catalog.isVirtual() ? "" : catalog.getTableCat(), null, catalog.getSchemas());
             }
         }
         return collection;
     }
 
-    /**
-     * Invokes {@link DatabaseMetaData#getCatalogs()} method and returns bound values.
-     *
-     * @return a list of categories.
-     * @throws SQLException if a database error occurs.
-     * @see #getCatalogs(Collection)
-     */
-    public List<Catalog> getCatalogs() throws SQLException {
-        return getCatalogs(new ArrayList<>());
-    }
+//    /**
+//     * Invokes {@link DatabaseMetaData#getCatalogs()} method and returns bound values.
+//     *
+//     * @return a list of categories.
+//     * @throws SQLException if a database error occurs.
+//     * @see #getCatalogs(Collection)
+//     */
+//    @NotEmpty List<@Valid @NotNull Catalog> getCatalogs() throws SQLException {
+//        return getCatalogs(new ArrayList<>());
+//    }
 
     // ----------------------------------------------------------------------------------------- getClientInfoProperties
 
@@ -354,16 +329,16 @@ public class Context {
         return collection;
     }
 
-    /**
-     * Invokes {@link DatabaseMetaData#getClientInfoProperties()} method and returns bound values.
-     *
-     * @return a list of bound values.
-     * @throws SQLException if a database error occurs.
-     * @see #getClientInfoProperties(Collection)
-     */
-    public List<ClientInfoProperty> getClientInfoProperties() throws SQLException {
-        return getClientInfoProperties(new ArrayList<>());
-    }
+//    /**
+//     * Invokes {@link DatabaseMetaData#getClientInfoProperties()} method and returns bound values.
+//     *
+//     * @return a list of bound values.
+//     * @throws SQLException if a database error occurs.
+//     * @see #getClientInfoProperties(Collection)
+//     */
+//    public @NotNull List<@Valid @NotNull ClientInfoProperty> getClientInfoProperties() throws SQLException {
+//        return getClientInfoProperties(new ArrayList<>());
+//    }
 
     // --------------------------------------------------------------------------------------------- getColumnPrivileges
 
@@ -393,42 +368,28 @@ public class Context {
             logger.log(Level.WARNING, sqle,
                        () -> String.format("failed to getColumnPrivileges(%1$s, %2$s, %3$s, %4$s)",
                                            catalog, schema, table, columnNamePattern));
-            if (!isSuppressed(sqle.getClass())) {
-                throw sqle;
-            }
+            throwIfNotSuppressed(sqle);
         }
         return collection;
     }
 
-    /**
-     * Invokes {@link DatabaseMetaData#getColumnPrivileges(java.lang.String, java.lang.String, java.lang.String,
-     * java.lang.String)} method with given arguments and returns bound values.
-     *
-     * @param catalog           a value for {@code catalog} parameter.
-     * @param schema            a value for {@code schema} parameter.
-     * @param table             a value for {@code table} parameter.
-     * @param columnNamePattern a value for {@code columnNamePattern} parameter.
-     * @return a list of bound values.
-     * @throws SQLException if a database error occurs.
-     * @see #getColumnPrivileges(String, String, String, String, Collection)
-     */
-    public List<ColumnPrivilege> getColumnPrivileges(
-            final String catalog, final String schema, final String table, final String columnNamePattern)
-            throws SQLException {
-        return getColumnPrivileges(catalog, schema, table, columnNamePattern, new ArrayList<>());
-    }
-
-    private void getColumnPrivileges(final Column column) throws SQLException {
-        requireNonNull(column, "column is null");
-        getColumnPrivileges(column.getParent().getParent().getParent().getTableCat(),
-                            column.getParent().getParent().getTableSchem(),
-                            column.getParent().getTableName(),
-                            column.getColumnName(),
-                            column.getColumnPrivileges())
-                .forEach(p -> {
-                    p.setColumn(column);
-                });
-    }
+//    /**
+//     * Invokes {@link DatabaseMetaData#getColumnPrivileges(java.lang.String, java.lang.String, java.lang.String,
+//     * java.lang.String)} method with given arguments and returns bound values.
+//     *
+//     * @param catalog           a value for {@code catalog} parameter.
+//     * @param schema            a value for {@code schema} parameter.
+//     * @param table             a value for {@code table} parameter.
+//     * @param columnNamePattern a value for {@code columnNamePattern} parameter.
+//     * @return a list of bound values.
+//     * @throws SQLException if a database error occurs.
+//     * @see #getColumnPrivileges(String, String, String, String, Collection)
+//     */
+//    public List<ColumnPrivilege> getColumnPrivileges(
+//            final String catalog, final String schema, final String table, final String columnNamePattern)
+//            throws SQLException {
+//        return getColumnPrivileges(catalog, schema, table, columnNamePattern, new ArrayList<>());
+//    }
 
     // ------------------------------------------------------------------------------------------------------ getColumns
 
@@ -459,45 +420,35 @@ public class Context {
             logger.log(Level.WARNING, sqle,
                        () -> String.format("failed to getColumns(%1$s, %2$s, %3$s, %4$s)",
                                            catalog, schemaPattern, tableNamePattern, columnNamePattern));
-            if (!isSuppressed(sqle.getClass())) {
-                throw sqle;
+            throwIfNotSuppressed(sqle);
+        }
+        for (final Object element : collection) {
+            if (element instanceof Column) {
+                final Column column = (Column) element;
+                getColumnPrivileges(column.getTableCat(), column.getTableSchem(), column.getTableName(),
+                                    column.getColumnName(), column.getColumnPrivileges());
             }
         }
         return collection;
     }
 
-    /**
-     * Invokes {@link DatabaseMetaData#getColumns(java.lang.String, java.lang.String, java.lang.String,
-     * java.lang.String)} method with given arguments and returns bound values.
-     *
-     * @param catalog           a value for {@code catalog} parameter.
-     * @param schemaPattern     a value for {@code schemaPattern} parameter.
-     * @param tableNamePattern  a value for {@code tableNameSchema} parameter.
-     * @param columnNamePattern a value for {@code columnNamePattern} parameter.
-     * @return a list of bound values.
-     * @throws SQLException if a database error occurs.
-     * @see #getColumns(String, String, String, String, Collection)
-     */
-    public List<Column> getColumns(final String catalog, final String schemaPattern, final String tableNamePattern,
-                                   final String columnNamePattern)
-            throws SQLException {
-        return getColumns(catalog, schemaPattern, tableNamePattern, columnNamePattern, new ArrayList<>());
-    }
-
-    private void getColumns(final Table table) throws SQLException {
-        requireNonNull(table, "table is null");
-        getColumns(table.getParent().getParent().getTableCat(),
-                   table.getParent().getTableSchem(),
-                   table.getTableName(),
-                   null,
-                   table.getColumns())
-                .forEach(c -> {
-                    c.setTable(table);
-                });
-        for (final Column column : table.getColumns()) {
-            getColumnPrivileges(column);
-        }
-    }
+//    /**
+//     * Invokes {@link DatabaseMetaData#getColumns(java.lang.String, java.lang.String, java.lang.String,
+//     * java.lang.String)} method with given arguments and returns bound values.
+//     *
+//     * @param catalog           a value for {@code catalog} parameter.
+//     * @param schemaPattern     a value for {@code schemaPattern} parameter.
+//     * @param tableNamePattern  a value for {@code tableNameSchema} parameter.
+//     * @param columnNamePattern a value for {@code columnNamePattern} parameter.
+//     * @return a list of bound values.
+//     * @throws SQLException if a database error occurs.
+//     * @see #getColumns(String, String, String, String, Collection)
+//     */
+//    public List<Column> getColumns(final String catalog, final String schemaPattern, final String tableNamePattern,
+//                                   final String columnNamePattern)
+//            throws SQLException {
+//        return getColumns(catalog, schemaPattern, tableNamePattern, columnNamePattern, new ArrayList<>());
+//    }
 
     // ----------------------------------------------------------------------------------------------- getCrossReference
 
@@ -539,28 +490,28 @@ public class Context {
         return collection;
     }
 
-    /**
-     * Invokes {@link DatabaseMetaData#getCrossReference(java.lang.String, java.lang.String, java.lang.String,
-     * java.lang.String, java.lang.String, java.lang.String)} method with given arguments and returns bound values.
-     *
-     * @param parentCatalog  a value for {@code parentCatalog} parameter
-     * @param parentSchema   a value for {@code parentSchema} parameter
-     * @param parentTable    a value for {@code parentTable} parameter
-     * @param foreignCatalog a value for {@code foreignCatalog} parameter
-     * @param foreignSchema  av value for {@code foreignSchema} parameter
-     * @param foreignTable   a value for {@code foreignTable} parameter
-     * @return a list of bound values.
-     * @throws SQLException if a database error occurs.
-     * @see #getCrossReferences(String, String, String, String, String, String, Collection)
-     */
-    public List<CrossReference> getCrossReferences(
-            final String parentCatalog, final String parentSchema, final String parentTable,
-            final String foreignCatalog, final String foreignSchema, final String foreignTable)
-            throws SQLException {
-        return getCrossReferences(parentCatalog, parentSchema, parentTable,
-                                  foreignCatalog, foreignSchema, foreignTable,
-                                  new ArrayList<>());
-    }
+//    /**
+//     * Invokes {@link DatabaseMetaData#getCrossReference(java.lang.String, java.lang.String, java.lang.String,
+//     * java.lang.String, java.lang.String, java.lang.String)} method with given arguments and returns bound values.
+//     *
+//     * @param parentCatalog  a value for {@code parentCatalog} parameter
+//     * @param parentSchema   a value for {@code parentSchema} parameter
+//     * @param parentTable    a value for {@code parentTable} parameter
+//     * @param foreignCatalog a value for {@code foreignCatalog} parameter
+//     * @param foreignSchema  av value for {@code foreignSchema} parameter
+//     * @param foreignTable   a value for {@code foreignTable} parameter
+//     * @return a list of bound values.
+//     * @throws SQLException if a database error occurs.
+//     * @see #getCrossReferences(String, String, String, String, String, String, Collection)
+//     */
+//    public List<CrossReference> getCrossReferences(
+//            final String parentCatalog, final String parentSchema, final String parentTable,
+//            final String foreignCatalog, final String foreignSchema, final String foreignTable)
+//            throws SQLException {
+//        return getCrossReferences(parentCatalog, parentSchema, parentTable,
+//                                  foreignCatalog, foreignSchema, foreignTable,
+//                                  new ArrayList<>());
+//    }
 
     // ---------------------------------------------------------------------------------------------------- getFunctions
 
@@ -589,43 +540,34 @@ public class Context {
             logger.log(Level.WARNING, sqle,
                        () -> String.format("failed to getFunctions(%1$s, %2$s, %3$s)",
                                            catalog, schemaPattern, functionNamePattern));
-            if (!isSuppressed(sqle.getClass())) {
-                throw sqle;
+            throwIfNotSuppressed(sqle);
+        }
+        for (final Object element : collection) {
+            if (element instanceof Function) {
+                final Function function = (Function) element;
+                getFunctionColumns(catalog, schemaPattern, function.getFunctionName(), null,
+                                   function.getFunctionColumns());
             }
         }
         return collection;
     }
 
-    /**
-     * Invokes {@link DatabaseMetaData#getFunctions(java.lang.String, java.lang.String, java.lang.String)} method with
-     * given arguments and returns bound values.
-     *
-     * @param catalog             a value for {@code catalog} parameter.
-     * @param schemaPattern       a value for {@code schemaPattern} parameter.
-     * @param functionNamePattern a value for {@code functionNamePattern} parameter.
-     * @return given {@code collection}.
-     * @throws SQLException if a database error occurs.
-     * @see #getFunctions(String, String, String, Collection)
-     */
-    public @NotNull List<@Valid @NotNull Function> getFunctions(final String catalog, final String schemaPattern,
-                                                                final String functionNamePattern)
-            throws SQLException {
-        return getFunctions(catalog, schemaPattern, functionNamePattern, new ArrayList<>());
-    }
-
-    private void getFunctions(@Valid @NotNull final Schema schema) throws SQLException {
-        requireNonNull(schema, "schema is null");
-        getFunctions(schema.getCatalog().getTableCat(),
-                     schema.getTableSchem(),
-                     null,
-                     schema.getFunctions())
-                .forEach(f -> {
-                    f.setSchema(schema);
-                });
-        for (final Function function : schema.getFunctions()) {
-            getFunctionColumns(function);
-        }
-    }
+//    /**
+//     * Invokes {@link DatabaseMetaData#getFunctions(java.lang.String, java.lang.String, java.lang.String)} method with
+//     * given arguments and returns bound values.
+//     *
+//     * @param catalog             a value for {@code catalog} parameter.
+//     * @param schemaPattern       a value for {@code schemaPattern} parameter.
+//     * @param functionNamePattern a value for {@code functionNamePattern} parameter.
+//     * @return given {@code collection}.
+//     * @throws SQLException if a database error occurs.
+//     * @see #getFunctions(String, String, String, Collection)
+//     */
+//    public @NotNull List<@Valid @NotNull Function> getFunctions(final String catalog, final String schemaPattern,
+//                                                                final String functionNamePattern)
+//            throws SQLException {
+//        return getFunctions(catalog, schemaPattern, functionNamePattern, new ArrayList<>());
+//    }
 
     // --------------------------------------------------------------------------------------------- getFunctionsColumns
 
@@ -663,36 +605,24 @@ public class Context {
         return collection;
     }
 
-    /**
-     * Invokes {@link DatabaseMetaData#getFunctionColumns(java.lang.String, java.lang.String, java.lang.String,
-     * java.lang.String)} method with given arguments and returns bound values.
-     *
-     * @param catalog             a value for {@code catalog} parameter.
-     * @param schemaPattern       a value for {@code schemaPattern} parameter.
-     * @param functionNamePattern a value for {@code functionNamePattern} parameter.
-     * @param columnNamePattern   a value for {@code columnNamePattern} parameter.
-     * @return a lsit of bound values.
-     * @throws SQLException if a database error occurs.
-     * @see #getFunctionColumns(String, String, String, String, Collection)
-     */
-    public @NotNull List<@Valid @NotNull FunctionColumn> getFunctionColumns(
-            final String catalog, final String schemaPattern, final String functionNamePattern,
-            final String columnNamePattern)
-            throws SQLException {
-        return getFunctionColumns(catalog, schemaPattern, functionNamePattern, columnNamePattern, new ArrayList<>());
-    }
-
-    private void getFunctionColumns(@NotNull final Function function) throws SQLException {
-        requireNonNull(function, "function is null");
-        getFunctionColumns(function.getParent().getParent().getTableCat(),
-                           function.getParent().getTableSchem(),
-                           function.getFunctionName(),
-                           null,
-                           function.getFunctionColumns())
-                .forEach(c -> {
-                    c.setFunction(function);
-                });
-    }
+//    /**
+//     * Invokes {@link DatabaseMetaData#getFunctionColumns(java.lang.String, java.lang.String, java.lang.String,
+//     * java.lang.String)} method with given arguments and returns bound values.
+//     *
+//     * @param catalog             a value for {@code catalog} parameter.
+//     * @param schemaPattern       a value for {@code schemaPattern} parameter.
+//     * @param functionNamePattern a value for {@code functionNamePattern} parameter.
+//     * @param columnNamePattern   a value for {@code columnNamePattern} parameter.
+//     * @return a lsit of bound values.
+//     * @throws SQLException if a database access error occurs.
+//     * @see #getFunctionColumns(String, String, String, String, Collection)
+//     */
+//    public @NotNull List<@Valid @NotNull FunctionColumn> getFunctionColumns(
+//            final String catalog, final String schemaPattern, final String functionNamePattern,
+//            final String columnNamePattern)
+//            throws SQLException {
+//        return getFunctionColumns(catalog, schemaPattern, functionNamePattern, columnNamePattern, new ArrayList<>());
+//    }
 
     // ------------------------------------------------------------------------------------------------- getExportedKeys
 
@@ -726,31 +656,20 @@ public class Context {
         return collection;
     }
 
-    /**
-     * Invokes {@link DatabaseMetaData#getExportedKeys(java.lang.String, java.lang.String, java.lang.String)} method
-     * with given arguments and returns bound values.
-     *
-     * @param catalog a value for {@code catalog} parameter
-     * @param schema  a value for {@code schema} parameter
-     * @param table   a value for {@code table} parameter
-     * @return a list bound values.
-     * @throws SQLException if a database error occurs.
-     */
-    public List<ExportedKey> getExportedKeys(final String catalog, final String schema, final String table)
-            throws SQLException {
-        return getExportedKeys(catalog, schema, table, new ArrayList<>());
-    }
-
-    private void getExportedKeys(final Table table) throws SQLException {
-        requireNonNull(table, "table is null");
-        getExportedKeys(table.getSchema().getCatalog().getTableCat(),
-                        table.getSchema().getTableSchem(),
-                        table.getTableName(),
-                        table.getExportedKeys())
-                .forEach(k -> {
-                    k.setTable(table);
-                });
-    }
+//    /**
+//     * Invokes {@link DatabaseMetaData#getExportedKeys(java.lang.String, java.lang.String, java.lang.String)} method
+//     * with given arguments and returns bound values.
+//     *
+//     * @param catalog a value for {@code catalog} parameter
+//     * @param schema  a value for {@code schema} parameter
+//     * @param table   a value for {@code table} parameter
+//     * @return a list bound values.
+//     * @throws SQLException if a database error occurs.
+//     */
+//    public List<ExportedKey> getExportedKeys(final String catalog, final String schema, final String table)
+//            throws SQLException {
+//        return getExportedKeys(catalog, schema, table, new ArrayList<>());
+//    }
 
     // ------------------------------------------------------------------------------------------------- getImportedKeys
 
@@ -784,32 +703,21 @@ public class Context {
         return collection;
     }
 
-    /**
-     * Invokes {@link DatabaseMetaData#getImportedKeys(java.lang.String, java.lang.String, java.lang.String)} method
-     * with given arguments and returns bound values.
-     *
-     * @param catalog a value for {@code catalog} parameter.
-     * @param schema  a value for {@code schema} parameter.
-     * @param table   a value for {@code table} parameter.
-     * @return given {@code collection}.
-     * @throws SQLException if a database error occurs.
-     * @see #getImportedKeys(String, String, String, Collection)
-     */
-    public List<ImportedKey> getImportedKeys(final String catalog, final String schema, final String table)
-            throws SQLException {
-        return getImportedKeys(catalog, schema, table, new ArrayList<>());
-    }
-
-    private void getImportedKeys(final Table table) throws SQLException {
-        requireNonNull(table, "table is null");
-        getImportedKeys(table.getSchema().getCatalog().getTableCat(),
-                        table.getSchema().getTableSchem(),
-                        table.getTableName(),
-                        table.getImportedKeys())
-                .forEach(k -> {
-                    k.setTable(table);
-                });
-    }
+//    /**
+//     * Invokes {@link DatabaseMetaData#getImportedKeys(java.lang.String, java.lang.String, java.lang.String)} method
+//     * with given arguments and returns bound values.
+//     *
+//     * @param catalog a value for {@code catalog} parameter.
+//     * @param schema  a value for {@code schema} parameter.
+//     * @param table   a value for {@code table} parameter.
+//     * @return given {@code collection}.
+//     * @throws SQLException if a database error occurs.
+//     * @see #getImportedKeys(String, String, String, Collection)
+//     */
+//    public List<ImportedKey> getImportedKeys(final String catalog, final String schema, final String table)
+//            throws SQLException {
+//        return getImportedKeys(catalog, schema, table, new ArrayList<>());
+//    }
 
     // ---------------------------------------------------------------------------------------------------- getIndexInfo
 
@@ -846,37 +754,24 @@ public class Context {
         return collection;
     }
 
-    /**
-     * Invokes {@link DatabaseMetaData#getIndexInfo(java.lang.String, java.lang.String, java.lang.String, boolean,
-     * boolean)} method with given arguments and returns bound values.
-     *
-     * @param catalog     a value for {@code catalog} parameter.
-     * @param schema      a value for {@code schema} parameter.
-     * @param table       a value for {@code table} parameter.
-     * @param unique      a value for {@code unique} parameter.
-     * @param approximate a value for {@code approximate} parameter.
-     * @return a list of bound values.
-     * @throws SQLException if a database error occurs.
-     * @see #getIndexInfo(String, String, String, boolean, boolean, Collection)
-     */
-    public List<IndexInfo> getIndexInfo(final String catalog, final String schema, final String table,
-                                        final boolean unique, final boolean approximate)
-            throws SQLException {
-        return getIndexInfo(catalog, schema, table, unique, approximate, new ArrayList<>());
-    }
-
-    private void getIndexInfo(final Table table) throws SQLException {
-        requireNonNull(table, "table is null");
-        getIndexInfo(table.getSchema().getCatalog().getTableCat(),
-                     table.getSchema().getTableSchem(),
-                     table.getTableName(),
-                     false,
-                     true,
-                     table.getIndexInfo())
-                .forEach(i -> {
-                    i.setTable(table);
-                });
-    }
+//    /**
+//     * Invokes {@link DatabaseMetaData#getIndexInfo(java.lang.String, java.lang.String, java.lang.String, boolean,
+//     * boolean)} method with given arguments and returns bound values.
+//     *
+//     * @param catalog     a value for {@code catalog} parameter.
+//     * @param schema      a value for {@code schema} parameter.
+//     * @param table       a value for {@code table} parameter.
+//     * @param unique      a value for {@code unique} parameter.
+//     * @param approximate a value for {@code approximate} parameter.
+//     * @return a list of bound values.
+//     * @throws SQLException if a database error occurs.
+//     * @see #getIndexInfo(String, String, String, boolean, boolean, Collection)
+//     */
+//    public List<IndexInfo> getIndexInfo(final String catalog, final String schema, final String table,
+//                                        final boolean unique, final boolean approximate)
+//            throws SQLException {
+//        return getIndexInfo(catalog, schema, table, unique, approximate, new ArrayList<>());
+//    }
 
     // -------------------------------------------------------------------------------------------------- getPrimaryKeys
 
@@ -891,6 +786,7 @@ public class Context {
      * @param <T>        {@code collection}'s element type parameter
      * @return given {@code collection}.
      * @throws SQLException if a database error occurs.
+     * @see DatabaseMetaData#getPrimaryKeys(String, String, String)
      */
     public <T extends Collection<? super PrimaryKey>> T getPrimaryKeys(
             final String catalog, final String schema, final String table, final T collection)
@@ -902,22 +798,26 @@ public class Context {
         } catch (final SQLException sqle) {
             logger.log(Level.WARNING, sqle,
                        () -> String.format("failed to getPrimaryKeys(%1$s, %2$s, %3$s)", catalog, schema, table));
-            if (!isSuppressed(sqle.getClass())) {
-                throw sqle;
-            }
+            throwIfNotSuppressed(sqle);
         }
         return collection;
     }
 
-    private void getPrimaryKeys(final Table table) throws SQLException {
-        getPrimaryKeys(table.getSchema().getCatalog().getTableCat(),
-                       table.getSchema().getTableSchem(),
-                       table.getTableName(),
-                       table.getPrimaryKeys())
-                .forEach(k -> {
-                    k.setTable(table);
-                });
-    }
+//    /**
+//     * Invokes {@link DatabaseMetaData#getPrimaryKeys(java.lang.String, java.lang.String, java.lang.String)} method with
+//     * given arguments and returns bound values.
+//     *
+//     * @param catalog a value for {@code catalog} parameter.
+//     * @param schema  a value for {@code schema} parameter.
+//     * @param table   a value for {@code table} parameter.
+//     * @return a list of bound values.
+//     * @throws SQLException if a database error occurs.
+//     * @see #getPrimaryKeys(String, String, String, Collection)
+//     */
+//    public List<PrimaryKey> getPrimaryKeys(final String catalog, final String schema, final String table)
+//            throws SQLException {
+//        return getPrimaryKeys(catalog, schema, table, new ArrayList<>());
+//    }
 
     // -----------------------------------------------------------------------------------------------------------------
 
@@ -954,35 +854,23 @@ public class Context {
         return collection;
     }
 
-    /**
-     * Invokes {@link DatabaseMetaData#getProcedureColumns(java.lang.String, java.lang.String, java.lang.String,
-     * java.lang.String)} method with given arguments and returns bound values.
-     *
-     * @param catalog              a value for {@code catalog} parameter.
-     * @param schemaPattern        a value for {@code schemaPattern} parameter.
-     * @param procedureNamePattern a value for {@code procedureNamePattern} parameter.
-     * @param columnNamePattern    a value for {@code columnNamePattern} parameter.
-     * @return a list of bound values.
-     * @throws SQLException if a database error occurs.
-     */
-    public List<ProcedureColumn> getProcedureColumns(
-            final String catalog, final String schemaPattern, final String procedureNamePattern,
-            final String columnNamePattern)
-            throws SQLException {
-        return getProcedureColumns(catalog, schemaPattern, procedureNamePattern, columnNamePattern, new ArrayList<>());
-    }
-
-    private void getProcedureColumns(final Procedure procedure) throws SQLException {
-        requireNonNull(procedure, "procedure is null");
-        getProcedureColumns(procedure.getSchema().getCatalog().getTableCat(),
-                            procedure.getSchema().getTableSchem(),
-                            procedure.getProcedureName(),
-                            null,
-                            procedure.getProcedureColumns())
-                .forEach(c -> {
-                    c.setProcedure(procedure);
-                });
-    }
+//    /**
+//     * Invokes {@link DatabaseMetaData#getProcedureColumns(java.lang.String, java.lang.String, java.lang.String,
+//     * java.lang.String)} method with given arguments and returns bound values.
+//     *
+//     * @param catalog              a value for {@code catalog} parameter.
+//     * @param schemaPattern        a value for {@code schemaPattern} parameter.
+//     * @param procedureNamePattern a value for {@code procedureNamePattern} parameter.
+//     * @param columnNamePattern    a value for {@code columnNamePattern} parameter.
+//     * @return a list of bound values.
+//     * @throws SQLException if a database error occurs.
+//     */
+//    public List<ProcedureColumn> getProcedureColumns(
+//            final String catalog, final String schemaPattern, final String procedureNamePattern,
+//            final String columnNamePattern)
+//            throws SQLException {
+//        return getProcedureColumns(catalog, schemaPattern, procedureNamePattern, columnNamePattern, new ArrayList<>());
+//    }
 
     // --------------------------------------------------------------------------------------------------- getProcedures
 
@@ -1015,38 +903,31 @@ public class Context {
                 throw sqle;
             }
         }
+        for (final Object element : collection) {
+            if (element instanceof Procedure) {
+                final Procedure procedure = (Procedure) element;
+                getProcedureColumns(catalog, schemaPattern, procedure.getProcedureName(), null,
+                                    procedure.getProcedureColumns());
+            }
+        }
         return collection;
     }
 
-    /**
-     * Invokes {@link DatabaseMetaData#getProcedures(java.lang.String, java.lang.String, java.lang.String)} method with
-     * given arguments and returns bound values.
-     *
-     * @param catalog              a value for {@code catalog} parameter.
-     * @param schemaPattern        a value for {@code schemaPattern} parameter.
-     * @param procedureNamePattern a value for {@code procedureNamePattern} parameter.
-     * @return given {@code collection}.
-     * @throws SQLException if a database error occurs.
-     */
-    public List<Procedure> getProcedures(final String catalog, final String schemaPattern,
-                                         final String procedureNamePattern)
-            throws SQLException {
-        return getProcedures(catalog, schemaPattern, procedureNamePattern, new ArrayList<>());
-    }
-
-    private void getProcedures(final Schema schema) throws SQLException {
-        requireNonNull(schema, "schema is null");
-        getProcedures(schema.getCatalog().getTableCat(),
-                      schema.getTableSchem(),
-                      null,
-                      schema.getProcedures())
-                .forEach(p -> {
-                    p.setSchema(schema);
-                });
-        for (final Procedure procedure : schema.getProcedures()) {
-            getProcedureColumns(procedure);
-        }
-    }
+//    /**
+//     * Invokes {@link DatabaseMetaData#getProcedures(java.lang.String, java.lang.String, java.lang.String)} method with
+//     * given arguments and returns bound values.
+//     *
+//     * @param catalog              a value for {@code catalog} parameter.
+//     * @param schemaPattern        a value for {@code schemaPattern} parameter.
+//     * @param procedureNamePattern a value for {@code procedureNamePattern} parameter.
+//     * @return given {@code collection}.
+//     * @throws SQLException if a database error occurs.
+//     */
+//    public List<Procedure> getProcedures(final String catalog, final String schemaPattern,
+//                                         final String procedureNamePattern)
+//            throws SQLException {
+//        return getProcedures(catalog, schemaPattern, procedureNamePattern, new ArrayList<>());
+//    }
 
     // ------------------------------------------------------------------------------------------------ getPseudoColumns
 
@@ -1076,43 +957,29 @@ public class Context {
             logger.log(Level.WARNING, sqle,
                        () -> String.format("failed to getPseudoColumns(%1$s, %2$s, %3$s, %4$s)",
                                            catalog, schemaPattern, tableNamePattern, columnNamePattern));
-            if (!isSuppressed(sqle.getClass())) {
-                throw sqle;
-            }
+            throwIfNotSuppressed(sqle);
         }
         return collection;
     }
 
-    /**
-     * Invokes {@link DatabaseMetaData#getPseudoColumns(java.lang.String, java.lang.String, java.lang.String,
-     * java.lang.String)} method with given arguments and returns bound values.
-     *
-     * @param catalog           a value for {@code catalog} parameter.
-     * @param schemaPattern     a value for {@code schemaPattern} parameter.
-     * @param tableNamePattern  a value for {@code tableNamePattern} parameter.
-     * @param columnNamePattern a value for {@code columnNamePattern} parameter.
-     * @return a list of bound values.
-     * @throws SQLException if a database error occurs.
-     * @see #getPseudoColumns(String, String, String, String, Collection)
-     */
-    public List<PseudoColumn> getPseudoColumns(
-            final String catalog, final String schemaPattern, final String tableNamePattern,
-            final String columnNamePattern)
-            throws SQLException {
-        return getPseudoColumns(catalog, schemaPattern, tableNamePattern, columnNamePattern, new ArrayList<>());
-    }
-
-    private void getPseudoColumns(final Table table) throws SQLException {
-        requireNonNull(table, "table is null");
-        getPseudoColumns(table.getSchema().getCatalog().getTableCat(),
-                         table.getSchema().getTableSchem(),
-                         table.getTableName(),
-                         null,
-                         table.getPseudoColumns())
-                .forEach(c -> {
-                    c.setTable(table);
-                });
-    }
+//    /**
+//     * Invokes {@link DatabaseMetaData#getPseudoColumns(java.lang.String, java.lang.String, java.lang.String,
+//     * java.lang.String)} method with given arguments and returns bound values.
+//     *
+//     * @param catalog           a value for {@code catalog} parameter.
+//     * @param schemaPattern     a value for {@code schemaPattern} parameter.
+//     * @param tableNamePattern  a value for {@code tableNamePattern} parameter.
+//     * @param columnNamePattern a value for {@code columnNamePattern} parameter.
+//     * @return a list of bound values.
+//     * @throws SQLException if a database error occurs.
+//     * @see #getPseudoColumns(String, String, String, String, Collection)
+//     */
+//    public List<PseudoColumn> getPseudoColumns(
+//            final String catalog, final String schemaPattern, final String tableNamePattern,
+//            final String columnNamePattern)
+//            throws SQLException {
+//        return getPseudoColumns(catalog, schemaPattern, tableNamePattern, columnNamePattern, new ArrayList<>());
+//    }
 
     // ------------------------------------------------------------------------------------------------------ getSchemas
 
@@ -1139,16 +1006,16 @@ public class Context {
         return collection;
     }
 
-    /**
-     * Invokes {@link DatabaseMetaData#getSchemas()} method and returns bound values.
-     *
-     * @return a list of bound values.
-     * @throws SQLException if a database error occurs.
-     * @see #getSchemas(Collection)
-     */
-    public List<SchemaName> getSchemas() throws SQLException {
-        return getSchemas(new ArrayList<>());
-    }
+//    /**
+//     * Invokes {@link DatabaseMetaData#getSchemas()} method and returns bound values.
+//     *
+//     * @return a list of bound values.
+//     * @throws SQLException if a database error occurs.
+//     * @see #getSchemas(Collection)
+//     */
+//    public List<SchemaName> getSchemas() throws SQLException {
+//        return getSchemas(new ArrayList<>());
+//    }
 
     // ------------------------------------------------------------------------------------------------------ getSchemas
 
@@ -1164,8 +1031,8 @@ public class Context {
      * @throws SQLException if a database error occurs.
      * @see DatabaseMetaData#getSchemas(String, String)
      */
-    public <T extends Collection<? super Schema>> T getSchemas(final String catalog, final String schemaPattern,
-                                                               final T collection)
+    public <T extends Collection<? super Schema>> @NotEmpty T getSchemas(
+            final String catalog, final String schemaPattern, @NotNull final T collection)
             throws SQLException {
         requireNonNull(collection, "collection is null");
         try {
@@ -1177,51 +1044,37 @@ public class Context {
         } catch (final SQLException sqle) {
             logger.log(Level.WARNING, sqle,
                        () -> String.format("failed to getSchemas(%1$s, %2$s)", catalog, schemaPattern));
-            if (!isSuppressed(sqle.getClass())) {
-                throw sqle;
+            throwIfNotSuppressed(sqle);
+        }
+        if (collection.isEmpty()) {
+            collection.add(Schema.newVirtualInstance(null, "_virtual_"));
+        }
+        for (final Object element : collection) {
+            if (element instanceof Schema) {
+                final Schema schema = (Schema) element;
+                final String schemaPattern_ = schema.isVirtual() ? "" : schema.getTableSchem();
+                getFunctions(catalog, schemaPattern_, null, schema.getFunctions());
+                getProcedures(catalog, schemaPattern_, null, schema.getProcedures());
+                getTables(catalog, schemaPattern_, null, null, schema.getTables());
+                getUDTs(catalog, schemaPattern_, null, null, schema.getUDTs());
             }
         }
         return collection;
     }
 
-    /**
-     * Invokes {@link DatabaseMetaData#getSchemas(String, String)} method with given arguments and returns bound
-     * values.
-     *
-     * @param catalog       a value for {@code catalog} parameter.
-     * @param schemaPattern a value for {@code schemaPattern} parameter.
-     * @return a list of bound values.
-     * @throws SQLException if a database error occurs.
-     * @see #getSchemas(String, String, Collection)
-     */
-    public List<Schema> getSchemas(final String catalog, final String schemaPattern) throws SQLException {
-        return getSchemas(catalog, schemaPattern, new ArrayList<>());
-    }
-
-    void getSchemas(final Catalog catalog) throws SQLException {
-        requireNonNull(catalog, "catalog is null");
-        getSchemas(catalog.getTableCat(),
-                   null,
-                   catalog.getSchemas())
-                .forEach(s -> {
-                    s.setCatalog(catalog);
-                });
-        if (catalog.getSchemas().isEmpty()) {
-            catalog.getSchemas().add(Schema.newVirtualInstance(catalog));
-        }
-        for (final Schema schema : catalog.getSchemas()) {
-            getFunctions(schema);
-        }
-        for (final Schema schema : catalog.getSchemas()) {
-            getProcedures(schema);
-        }
-        for (final Schema schema : catalog.getSchemas()) {
-            getTables(schema);
-        }
-        for (final Schema schema : catalog.getSchemas()) {
-            getUDTs(schema);
-        }
-    }
+//    /**
+//     * Invokes {@link DatabaseMetaData#getSchemas(String, String)} method with given arguments and returns bound
+//     * values.
+//     *
+//     * @param catalog       a value for {@code catalog} parameter.
+//     * @param schemaPattern a value for {@code schemaPattern} parameter.
+//     * @return a list of bound values.
+//     * @throws SQLException if a database error occurs.
+//     * @see #getSchemas(String, String, Collection)
+//     */
+//    public List<Schema> getSchemas(final String catalog, final String schemaPattern) throws SQLException {
+//        return getSchemas(catalog, schemaPattern, new ArrayList<>());
+//    }
 
     // -------------------------------------------------------------------------------------------------- getSuperTables
 
@@ -1238,9 +1091,9 @@ public class Context {
      * @throws SQLException if a database error occurs.
      * @see DatabaseMetaData#getSuperTables(String, String, String)
      */
-    public <T extends Collection<? super SuperTable>> T getSuperTables(final String catalog, final String schemaPattern,
-                                                                       final String tableNamePattern,
-                                                                       final T collection)
+    public <T extends Collection<? super SuperTable>> @NotNull T getSuperTables(
+            final String catalog, final String schemaPattern, final String tableNamePattern,
+            final @NotNull T collection)
             throws SQLException {
         requireNonNull(collection, "collection is null");
         try (ResultSet results = databaseMetaData.getSuperTables(catalog, schemaPattern, tableNamePattern)) {
@@ -1258,33 +1111,22 @@ public class Context {
         return collection;
     }
 
-    /**
-     * Invokes {@link DatabaseMetaData#getSuperTables(String, String, String)} method with given arguments and returns
-     * bound values.
-     *
-     * @param catalog          a value for {@code catalog}.
-     * @param schemaPattern    a value for {@code schemaPattern}.
-     * @param tableNamePattern a value for {@code tableNamePattern}.
-     * @return a list of bound values.
-     * @throws SQLException if a database error occurs.
-     * @see #getSuperTables(String, String, String, Collection)
-     */
-    public List<SuperTable> getSuperTables(final String catalog, final String schemaPattern,
-                                           final String tableNamePattern)
-            throws SQLException {
-        return getSuperTables(catalog, schemaPattern, tableNamePattern, new ArrayList<>());
-    }
-
-    private void getSuperTables(final Table table) throws SQLException {
-        requireNonNull(table, "table is null");
-        getSuperTables(table.getSchema().getCatalog().getTableCat(),
-                       table.getSchema().getTableSchem(),
-                       table.getTableName(),
-                       table.getSuperTables())
-                .forEach(t -> {
-                    t.setTable(table);
-                });
-    }
+//    /**
+//     * Invokes {@link DatabaseMetaData#getSuperTables(String, String, String)} method with given arguments and returns
+//     * bound values.
+//     *
+//     * @param catalog          a value for {@code catalog}.
+//     * @param schemaPattern    a value for {@code schemaPattern}.
+//     * @param tableNamePattern a value for {@code tableNamePattern}.
+//     * @return a list of bound values.
+//     * @throws SQLException if a database error occurs.
+//     * @see #getSuperTables(String, String, String, Collection)
+//     */
+//    public @NotNull List<@Valid @NotNull SuperTable> getSuperTables(final String catalog, final String schemaPattern,
+//                                                                    final String tableNamePattern)
+//            throws SQLException {
+//        return getSuperTables(catalog, schemaPattern, tableNamePattern, new ArrayList<>());
+//    }
 
     // --------------------------------------------------------------------------------------------------- getSuperTypes
 
@@ -1300,9 +1142,8 @@ public class Context {
      * @return given {@code collection}.
      * @throws SQLException if a database error occurs.
      */
-    public <T extends Collection<? super SuperType>> T getSuperTypes(final String catalog, final String schemaPattern,
-                                                                     final String typeNamePattern,
-                                                                     final T collection)
+    public <T extends Collection<? super SuperType>> @NotNull T getSuperTypes(
+            final String catalog, final String schemaPattern, final String typeNamePattern, @NotNull final T collection)
             throws SQLException {
         requireNonNull(collection, "collection is null");
         try (ResultSet results = databaseMetaData.getSuperTypes(catalog, schemaPattern, typeNamePattern)) {
@@ -1313,22 +1154,9 @@ public class Context {
             logger.log(Level.WARNING, sqle,
                        () -> String.format("failed to getSuperTypes(%1$s, %2$s, %3$s)",
                                            catalog, schemaPattern, typeNamePattern));
-            if (!isSuppressed(sqle.getClass())) {
-                throw sqle;
-            }
+            throwIfNotSuppressed(sqle);
         }
         return collection;
-    }
-
-    private void getSuperTypes(final UDT udt) throws SQLException {
-        requireNonNull(udt, "udt is null");
-        getSuperTypes(ofNullable(udt.getSchema()).map(Schema::getCatalog).map(Catalog::getTableCat).orElse(null),
-                      ofNullable(udt.getSchema()).map(Schema::getTableSchem).orElse(null),
-                      udt.getTypeName(),
-                      udt.getSuperTypes())
-                .forEach(t -> {
-                    t.setUDT(udt);
-                });
     }
 
     // ---------------------------------------------------------------------------------------------- getTablePrivileges
@@ -1345,8 +1173,9 @@ public class Context {
      * @return given {@code collection}.
      * @throws SQLException if a database error occurs.
      */
-    public <T extends Collection<? super TablePrivilege>> T getTablePrivileges(
-            final String catalog, final String schemaPattern, final String tableNamePattern, final T collection)
+    public <T extends Collection<? super TablePrivilege>> @NotNull T getTablePrivileges(
+            final String catalog, final String schemaPattern, final String tableNamePattern,
+            @NotNull final T collection)
             throws SQLException {
         try (ResultSet results = databaseMetaData.getTablePrivileges(catalog, schemaPattern, tableNamePattern)) {
             if (results != null) {
@@ -1356,40 +1185,27 @@ public class Context {
             logger.log(Level.WARNING, sqle,
                        () -> String.format("failed to getTablePrivileges(%1$s, %2$s, %3$s)",
                                            catalog, schemaPattern, tableNamePattern));
-            if (!isSuppressed(sqle.getClass())) {
-                throw sqle;
-            }
+            throwIfNotSuppressed(sqle);
         }
         return collection;
     }
 
-    /**
-     * Invokes {@link DatabaseMetaData#getTablePrivileges(java.lang.String, java.lang.String, java.lang.String)} method
-     * with given arguments and returns bound values.
-     *
-     * @param catalog          a value for {@code catalog} parameter.
-     * @param schemaPattern    a value for {@code schemaPattern} parameter.
-     * @param tableNamePattern a value for {@code tableNamePattern} parameter.
-     * @return a list of bound values.
-     * @throws SQLException if a database error occurs.
-     * @see #getTablePrivileges(String, String, String, Collection)
-     */
-    public List<TablePrivilege> getTablePrivileges(final String catalog, final String schemaPattern,
-                                                   final String tableNamePattern)
-            throws SQLException {
-        return getTablePrivileges(catalog, schemaPattern, tableNamePattern, new ArrayList<>());
-    }
-
-    private void getTablePrivileges(final Table table) throws SQLException {
-        requireNonNull(table, "table is null");
-        getTablePrivileges(table.getParent().getParent().getTableCat(),
-                           Optional.ofNullable(table.getSchema()).map(Schema::getTableSchem).orElse(null),
-                           table.getTableName(),
-                           table.getTablePrivileges())
-                .forEach(p -> {
-                    p.setTable(table);
-                });
-    }
+//    /**
+//     * Invokes {@link DatabaseMetaData#getTablePrivileges(java.lang.String, java.lang.String, java.lang.String)} method
+//     * with given arguments and returns bound values.
+//     *
+//     * @param catalog          a value for {@code catalog} parameter.
+//     * @param schemaPattern    a value for {@code schemaPattern} parameter.
+//     * @param tableNamePattern a value for {@code tableNamePattern} parameter.
+//     * @return a list of bound values.
+//     * @throws SQLException if a database error occurs.
+//     * @see #getTablePrivileges(String, String, String, Collection)
+//     */
+//    public @NotNull List<@Valid @NotNull TablePrivilege> getTablePrivileges(
+//            final String catalog, final String schemaPattern, final String tableNamePattern)
+//            throws SQLException {
+//        return getTablePrivileges(catalog, schemaPattern, tableNamePattern, new ArrayList<>());
+//    }
 
     // --------------------------------------------------------------------------------------------------- getTableTypes
 
@@ -1418,15 +1234,15 @@ public class Context {
         return collection;
     }
 
-    /**
-     * Invokes {@link DatabaseMetaData#getTableTypes()} method and returns bound values.
-     *
-     * @return a list of bound values.
-     * @throws SQLException if a database error occurs.
-     */
-    public List<TableType> getTableTypes() throws SQLException {
-        return getTableTypes(new ArrayList<>());
-    }
+//    /**
+//     * Invokes {@link DatabaseMetaData#getTableTypes()} method and returns bound values.
+//     *
+//     * @return a list of bound values.
+//     * @throws SQLException if a database error occurs.
+//     */
+//    public List<TableType> getTableTypes() throws SQLException {
+//        return getTableTypes(new ArrayList<>());
+//    }
 
     // ------------------------------------------------------------------------------------------------------- getTables
 
@@ -1456,72 +1272,54 @@ public class Context {
             logger.log(Level.WARNING, sqle,
                        () -> String.format("failed to getTables(%1$s, %2$s, %3$s, %4$s)",
                                            catalog, schemaPattern, tableNamePattern, Arrays.toString(types)));
-            if (!isSuppressed(sqle.getClass())) {
-                throw sqle;
+            throwIfNotSuppressed(sqle);
+        }
+        for (final Object element : collection) {
+            if (element instanceof Table) {
+                final Table table = (Table) element;
+                for (final BestRowIdentifier.Scope scope : BestRowIdentifier.Scope.values()) {
+                    getBestRowIdentifier(table.getTableCat(), table.getTableSchem(), table.getTableName(),
+                                         scope.getRawValue(), true, table.getBestRowIdentifiers());
+                }
+                getColumns(table.getTableCat(), table.getTableSchem(), table.getTableName(), null, table.getColumns());
+                getExportedKeys(table.getTableCat(), table.getTableSchem(), table.getTableName(),
+                                table.getExportedKeys());
+                getImportedKeys(table.getTableCat(), table.getTableSchem(), table.getTableName(),
+                                table.getImportedKeys());
+                getIndexInfo(table.getTableCat(), table.getTableSchem(), table.getTableName(), true, true,
+                             table.getIndexInfo());
+                getPrimaryKeys(table.getTableCat(), table.getTableSchem(), table.getTableName(),
+                               table.getPrimaryKeys());
+                getPseudoColumns(table.getTableCat(), table.getTableSchem(), table.getTableName(), null,
+                                 table.getPseudoColumns());
+                getSuperTables(table.getTableCat(), table.getTableSchem(), table.getTableName(),
+                               table.getSuperTables());
+                getTablePrivileges(table.getTableCat(), table.getTableSchem(), table.getTableName(),
+                                   table.getTablePrivileges());
+                getVersionColumns(table.getTableCat(), table.getTableSchem(), table.getTableName(),
+                                  table.getVersionColumns());
             }
         }
         return collection;
     }
 
-    /**
-     * Invokes {@link DatabaseMetaData#getTables(java.lang.String, java.lang.String, java.lang.String,
-     * java.lang.String[])} method with given arguments and returns bound values.
-     *
-     * @param catalog          a value for {@code catalog} parameter.
-     * @param schemaPattern    a value for {@code schemaPattern} parameter.
-     * @param tableNamePattern a value for {@code tableNamePattern} parameter.
-     * @param types            a value for {@code types} parameter.
-     * @return a list of bound values.
-     * @throws SQLException if a database error occurs.
-     * @see #getSuperTables(String, String, String, Collection)
-     */
-    public List<Table> getTables(final String catalog, final String schemaPattern, final String tableNamePattern,
-                                 final String[] types)
-            throws SQLException {
-        return getTables(catalog, schemaPattern, tableNamePattern, types, new ArrayList<>());
-    }
-
-    private void getTables(final Schema schema) throws SQLException {
-        requireNonNull(schema, "schema is null");
-        getTables(schema.getParent().getTableCat(),
-                  schema.getTableSchem(),
-                  null,
-                  null,
-                  schema.getTables())
-                .forEach(t -> {
-                    t.setSchema(schema);
-                });
-        for (final Table table : schema.getTables()) {
-            getBestRowIdentifier(table);
-        }
-        for (final Table table : schema.getTables()) {
-            getColumns(table);
-        }
-        for (final Table table : schema.getTables()) {
-            getExportedKeys(table);
-        }
-        for (final Table table : schema.getTables()) {
-            getImportedKeys(table);
-        }
-        for (final Table table : schema.getTables()) {
-            getIndexInfo(table);
-        }
-        for (final Table table : schema.getTables()) {
-            getPrimaryKeys(table);
-        }
-        for (final Table table : schema.getTables()) {
-            getPseudoColumns(table);
-        }
-        for (final Table table : schema.getTables()) {
-            getSuperTables(table);
-        }
-        for (final Table table : schema.getTables()) {
-            getTablePrivileges(table);
-        }
-        for (final Table table : schema.getTables()) {
-            getVersionColumns(table);
-        }
-    }
+//    /**
+//     * Invokes {@link DatabaseMetaData#getTables(java.lang.String, java.lang.String, java.lang.String,
+//     * java.lang.String[])} method with given arguments and returns bound values.
+//     *
+//     * @param catalog          a value for {@code catalog} parameter.
+//     * @param schemaPattern    a value for {@code schemaPattern} parameter.
+//     * @param tableNamePattern a value for {@code tableNamePattern} parameter.
+//     * @param types            a value for {@code types} parameter.
+//     * @return a list of bound values.
+//     * @throws SQLException if a database error occurs.
+//     * @see #getSuperTables(String, String, String, Collection)
+//     */
+//    public List<Table> getTables(final String catalog, final String schemaPattern, final String tableNamePattern,
+//                                 final String[] types)
+//            throws SQLException {
+//        return getTables(catalog, schemaPattern, tableNamePattern, types, new ArrayList<>());
+//    }
 
     // ----------------------------------------------------------------------------------------------------- getTypeInfo
 
@@ -1548,15 +1346,15 @@ public class Context {
         return collection;
     }
 
-    /**
-     * Invokes {@link DatabaseMetaData#getTypeInfo()} method and returns bound values.
-     *
-     * @return a list of bound values.
-     * @throws SQLException if a database error occurs.
-     */
-    public List<TypeInfo> getTypeInfo() throws SQLException {
-        return getTypeInfo(new ArrayList<>());
-    }
+//    /**
+//     * Invokes {@link DatabaseMetaData#getTypeInfo()} method and returns bound values.
+//     *
+//     * @return a list of bound values.
+//     * @throws SQLException if a database error occurs.
+//     */
+//    public List<TypeInfo> getTypeInfo() throws SQLException {
+//        return getTypeInfo(new ArrayList<>());
+//    }
 
     // --------------------------------------------------------------------------------------------------------- getUDTs
 
@@ -1573,9 +1371,9 @@ public class Context {
      * @return given {@code collection}.
      * @throws SQLException if a database error occurs.
      */
-    public <T extends Collection<? super UDT>> T getUDTs(final String catalog, final String schemaPattern,
-                                                         final String typeNamePattern, final int[] types,
-                                                         final T collection)
+    public <T extends Collection<? super UDT>> @NotNull T getUDTs(
+            final String catalog, final String schemaPattern, final String typeNamePattern, final int[] types,
+            @NotNull final T collection)
             throws SQLException {
         try (ResultSet results = databaseMetaData.getUDTs(catalog, schemaPattern, typeNamePattern, types)) {
             if (results != null) {
@@ -1585,47 +1383,32 @@ public class Context {
             logger.log(Level.WARNING, sqle,
                        () -> String.format("failed to getUDTs(%1$s, %2$s, %3$s, %4$s)",
                                            catalog, schemaPattern, typeNamePattern, Arrays.toString(types)));
-            if (!isSuppressed(sqle.getClass())) {
-                throw sqle;
-            }
+            throwIfNotSuppressed(sqle);
+        }
+        for (final Object element : collection) {
+            final UDT udt = (UDT) element;
+            getAttributes(udt.getTypeCat(), udt.getTypeSchem(), udt.getTypeName(), null, udt.getAttributes());
+            getSuperTypes(udt.getTypeCat(), udt.getTypeSchem(), udt.getTypeName(), udt.getSuperTypes());
         }
         return collection;
     }
 
-    /**
-     * Invokes {@link DatabaseMetaData#getUDTs(java.lang.String, java.lang.String, java.lang.String, int[])} method with
-     * given arguments and returns bound values.
-     *
-     * @param catalog         a value for {@code catalog} parameter.
-     * @param schemaPattern   a value for {@code schemaPattern} parameter
-     * @param typeNamePattern a value for {@code typeNamePattern} parameter.
-     * @param types           a value for {@code type} parameter
-     * @return given {@code collection}.
-     * @throws SQLException if a database error occurs.
-     */
-    public List<UDT> getUDTs(final String catalog, final String schemaPattern, final String typeNamePattern,
-                             final int[] types)
-            throws SQLException {
-        return getUDTs(catalog, schemaPattern, typeNamePattern, types, new ArrayList<>());
-    }
-
-    private void getUDTs(final Schema schema) throws SQLException {
-        requireNonNull(schema, "schema is null");
-        getUDTs(schema.getParent().getTableCat(),
-                schema.getTableSchem(),
-                null,
-                null,
-                schema.getUDTs())
-                .forEach(t -> {
-                    t.setSchema(schema);
-                });
-        for (final UDT udt : schema.getUDTs()) {
-            getAttributes(udt);
-        }
-        for (final UDT udt : schema.getUDTs()) {
-            getSuperTypes(udt);
-        }
-    }
+//    /**
+//     * Invokes {@link DatabaseMetaData#getUDTs(java.lang.String, java.lang.String, java.lang.String, int[])} method with
+//     * given arguments and returns bound values.
+//     *
+//     * @param catalog         a value for {@code catalog} parameter.
+//     * @param schemaPattern   a value for {@code schemaPattern} parameter
+//     * @param typeNamePattern a value for {@code typeNamePattern} parameter.
+//     * @param types           a value for {@code type} parameter
+//     * @return given {@code collection}.
+//     * @throws SQLException if a database error occurs.
+//     */
+//    public List<UDT> getUDTs(final String catalog, final String schemaPattern, final String typeNamePattern,
+//                             final int[] types)
+//            throws SQLException {
+//        return getUDTs(catalog, schemaPattern, typeNamePattern, types, new ArrayList<>());
+//    }
 
     // ----------------------------------------------------------------------------------------------- getVersionColumns
 
@@ -1641,8 +1424,8 @@ public class Context {
      * @return given {@code collection}.
      * @throws SQLException if a database access error occurs.
      */
-    public <T extends Collection<? super VersionColumn>> T getVersionColumns(
-            final String catalog, final String schema, final String table, final T collection)
+    public <T extends Collection<? super VersionColumn>> @NotNull T getVersionColumns(
+            final String catalog, final String schema, final String table, @NotNull final T collection)
             throws SQLException {
         requireNonNull(collection, "collection is null");
         try (ResultSet results = databaseMetaData.getVersionColumns(catalog, schema, table)) {
@@ -1652,38 +1435,324 @@ public class Context {
         } catch (final SQLException sqle) {
             logger.log(Level.WARNING, sqle,
                        () -> String.format("failed to getVersionColumns(%1$s, %2$s, %3$s)", catalog, schema, table));
-            if (!isSuppressed(sqle.getClass())) {
-                throw sqle;
-            }
+            throwIfNotSuppressed(sqle);
         }
         return collection;
     }
 
-    /**
-     * Invokes {@link DatabaseMetaData#getVersionColumns(java.lang.String, java.lang.String, java.lang.String)} method
-     * with given arguments and returns bound values.
-     *
-     * @param catalog a value for {@code catalog} parameter.
-     * @param schema  a value for {@code schema} parameter.
-     * @param table   a value for {@code table} parameter.
-     * @return a list of bound values.
-     * @throws SQLException if a database access error occurs.
-     * @see #getVersionColumns(String, String, String, Collection)
-     */
-    public List<VersionColumn> getVersionColumns(final String catalog, final String schema, final String table)
-            throws SQLException {
-        return getVersionColumns(catalog, schema, table, new ArrayList<>());
+//    /**
+//     * Invokes {@link DatabaseMetaData#getVersionColumns(java.lang.String, java.lang.String, java.lang.String)} method
+//     * with given arguments and returns bound values.
+//     *
+//     * @param catalog a value for {@code catalog} parameter.
+//     * @param schema  a value for {@code schema} parameter.
+//     * @param table   a value for {@code table} parameter.
+//     * @return a list of bound values.
+//     * @throws SQLException if a database access error occurs.
+//     * @see #getVersionColumns(String, String, String, Collection)
+//     */
+//    public List<VersionColumn> getVersionColumns(final String catalog, final String schema, final String table)
+//            throws SQLException {
+//        return getVersionColumns(catalog, schema, table, new ArrayList<>());
+//    }
+
+    // -------------------------------------------------------------------------------------------------- ...AreDetected
+    @Valid @NotNull DeletesAreDetected deletesAreDetected(final ResultSetType type) throws SQLException {
+        requireNonNull(type, "type is null");
+        final DeletesAreDetected value = new DeletesAreDetected();
+        value.setType(type);
+        try {
+            value.setValue(databaseMetaData.deletesAreDetected(type.getRawValue()));
+        } catch (final SQLException sqle) {
+            logger.log(Level.WARNING, sqle,
+                       () -> String.format("failed to invoke deletesAreDetected(%1$d)", type.getRawValue()));
+            throwIfNotSuppressed(sqle);
+        }
+        return value;
     }
 
-    private void getVersionColumns(final Table table) throws SQLException {
-        requireNonNull(table, "table is null");
-        getVersionColumns(ofNullable(table.getSchema()).map(Schema::getCatalog).map(Catalog::getTableCat).orElse(null),
-                          ofNullable(table.getSchema()).map(Schema::getTableSchem).orElse(null),
-                          table.getTableName(),
-                          table.getVersionColumns())
-                .forEach(c -> {
-                    c.setTable(table);
-                });
+    /**
+     * Invokes {@link DatabaseMetaData#deletesAreDetected(int)} with specified argument and returns a bound value.
+     *
+     * @param type a value for {@code type} parameter.
+     * @return a bound value whose {@code value} may be {@code null} when the thrown {@link SQLException} has been
+     * suppressed.
+     * @throws SQLException if a database access error occurs.
+     */
+    public @Valid @NotNull DeletesAreDetected deletesAreDetected(final int type) throws SQLException {
+        return deletesAreDetected(ResultSetType.valueOfRawValue(type));
+    }
+
+    @Valid @NotNull InsertsAreDetected insertsAreDetected(final ResultSetType type) throws SQLException {
+        final InsertsAreDetected value = new InsertsAreDetected();
+        value.setType(type);
+        try {
+            value.setValue(databaseMetaData.insertsAreDetected(type.getRawValue()));
+        } catch (final SQLException sqle) {
+            logger.log(Level.WARNING, sqle,
+                       () -> String.format("failed to invoke insertsAreDetected(%1$d)", type.getRawValue()));
+            throwIfNotSuppressed(sqle);
+        }
+        return value;
+    }
+
+    /**
+     * Invokes {@link DatabaseMetaData#insertsAreDetected(int)} with specified argument and returns a bound value.
+     *
+     * @param type a value for {@code type} parameter.
+     * @return a bound value whose {@code value} may be {@code null} when the thrown {@link SQLException} has been
+     * suppressed.
+     * @throws SQLException if a database access error occurs.
+     */
+    public @Valid @NotNull InsertsAreDetected insertsAreDetected(final int type) throws SQLException {
+        return insertsAreDetected(ResultSetType.valueOfRawValue(type));
+    }
+
+    @Valid @NotNull UpdatesAreDetected updatesAreDetected(final ResultSetType type) throws SQLException {
+        final UpdatesAreDetected value = new UpdatesAreDetected();
+        value.setType(type);
+        try {
+            value.setValue(databaseMetaData.updatesAreDetected(type.getRawValue()));
+        } catch (final SQLException sqle) {
+            logger.log(Level.WARNING, sqle,
+                       () -> String.format("failed to invoke updatesAreDetected(%1$d)", type.getRawValue()));
+            throwIfNotSuppressed(sqle);
+        }
+        return value;
+    }
+
+    /**
+     * Invokes {@link DatabaseMetaData#updatesAreDetected(int)} method with specified argument and returns a bound
+     * value.
+     *
+     * @param type a value for {@code type} parameter.
+     * @return a bound value whose {@code value} may be {@code null} when the thrown {@link SQLException} has been
+     * suppressed.
+     * @throws SQLException if a database access error occurs.
+     */
+    public @Valid @NotNull UpdatesAreDetected updatesAreDetected(final int type) throws SQLException {
+        return updatesAreDetected(ResultSetType.valueOfRawValue(type));
+    }
+
+    // ----------------------------------------------------------------------------------------- othersDeletesAreVisible
+    @Valid @NotNull OthersDeletesAreVisible othersDeletesAreVisible(final ResultSetType type) throws SQLException {
+        requireNonNull(type, "type is null");
+        final OthersDeletesAreVisible result = new OthersDeletesAreVisible();
+        result.setType(type);
+        try {
+            result.setValue(databaseMetaData.othersDeletesAreVisible(result.getType()));
+        } catch (final SQLException sqle) {
+            logger.log(Level.WARNING, sqle,
+                       () -> String.format("failed to invoke othersDeletesAreVisible(%1$d)", result.getType()));
+            throwIfNotSuppressed(sqle);
+        }
+        return result;
+    }
+
+    /**
+     * Invokes {@link DatabaseMetaData#othersDeletesAreVisible(int)} method with specified value and returns a bound
+     * value.
+     *
+     * @param type a value for {@code type} parameter.
+     * @return a bound value whose {@code value} property may be {@code null} when the {@link SQLException} suppressed.
+     * @throws SQLException if a database access error occurs.
+     * @see DatabaseMetaData#othersDeletesAreVisible(int)
+     * @see ResultSet#TYPE_FORWARD_ONLY
+     * @see ResultSet#TYPE_SCROLL_INSENSITIVE
+     * @see ResultSet#TYPE_SCROLL_SENSITIVE
+     */
+    public @Valid @NotNull OthersDeletesAreVisible othersDeletesAreVisible(final int type) throws SQLException {
+        return othersDeletesAreVisible(ResultSetType.valueOfRawValue(type));
+    }
+
+    // ----------------------------------------------------------------------------------------- othersInsertsAreVisible
+    @Valid @NotNull OthersInsertsAreVisible othersInsertsAreVisible(final ResultSetType type) throws SQLException {
+        requireNonNull(type, "type is null");
+        final OthersInsertsAreVisible result = new OthersInsertsAreVisible();
+        result.setType(type);
+        try {
+            result.setValue(databaseMetaData.othersInsertsAreVisible(result.getType()));
+        } catch (final SQLException sqle) {
+            logger.log(Level.WARNING, sqle,
+                       () -> String.format("failed to invoke othersInsertsAreVisible(%1$d)", result.getType()));
+            throwIfNotSuppressed(sqle);
+        }
+        return result;
+    }
+
+    /**
+     * Invokes {@link DatabaseMetaData#othersInsertsAreVisible(int)} method with specified value and returns a bound
+     * value.
+     *
+     * @param type a value for {@code type} parameter.
+     * @return a bound value whose {@code value} property may be {@code null} when the {@link SQLException} suppressed.
+     * @throws SQLException if a database access error occurs.
+     * @see DatabaseMetaData#othersInsertsAreVisible(int)
+     * @see ResultSet#TYPE_FORWARD_ONLY
+     * @see ResultSet#TYPE_SCROLL_INSENSITIVE
+     * @see ResultSet#TYPE_SCROLL_SENSITIVE
+     */
+    public @Valid @NotNull OthersInsertsAreVisible othersInsertsAreVisible(final int type) throws SQLException {
+        return othersInsertsAreVisible(ResultSetType.valueOfRawValue(type));
+    }
+
+    // ----------------------------------------------------------------------------------------- othersUpdatesAreVisible
+    @Valid @NotNull OthersUpdatesAreVisible othersUpdatesAreVisible(final ResultSetType type) throws SQLException {
+        requireNonNull(type, "type is null");
+        final OthersUpdatesAreVisible result = new OthersUpdatesAreVisible();
+        result.setType(type);
+        try {
+            result.setValue(databaseMetaData.othersUpdatesAreVisible(result.getType()));
+        } catch (final SQLException sqle) {
+            logger.log(Level.WARNING, sqle,
+                       () -> String.format("failed to invoke othersUpdatesAreVisible(%1$d)", result.getType()));
+            throwIfNotSuppressed(sqle);
+        }
+        return result;
+    }
+
+    /**
+     * Invokes {@link DatabaseMetaData#othersUpdatesAreVisible(int)} method with specified value and returns a bound
+     * value.
+     *
+     * @param type a value for {@code type} parameter.
+     * @return a bound value whose {@code value} property may be {@code null} when the {@link SQLException} suppressed.
+     * @throws SQLException if a database access error occurs.
+     * @see DatabaseMetaData#othersUpdatesAreVisible(int)
+     * @see ResultSet#TYPE_FORWARD_ONLY
+     * @see ResultSet#TYPE_SCROLL_INSENSITIVE
+     * @see ResultSet#TYPE_SCROLL_SENSITIVE
+     */
+    public @Valid @NotNull OthersUpdatesAreVisible othersUpdatesAreVisible(final int type) throws SQLException {
+        return othersUpdatesAreVisible(ResultSetType.valueOfRawValue(type));
+    }
+
+    // -------------------------------------------------------------------------------------------- ownDeletesAreVisible
+    @Valid @NotNull OwnDeletesAreVisible ownDeletesAreVisible(final ResultSetType type) throws SQLException {
+        requireNonNull(type, "type is null");
+        final OwnDeletesAreVisible value = new OwnDeletesAreVisible();
+        value.setType(type);
+        try {
+            value.setValue(databaseMetaData.ownDeletesAreVisible(value.getType()));
+        } catch (final SQLException sqle) {
+            logger.log(Level.WARNING, sqle,
+                       () -> String.format("failed to invoke ownDeletesAreVisible(%1$d)", value.getType()));
+            throwIfNotSuppressed(sqle);
+        }
+        return value;
+    }
+
+    /**
+     * Invokes {@link DatabaseMetaData#ownDeletesAreVisible(int)} method with specified value and returns a bound
+     * value.
+     *
+     * @param type a value for {@code type} parameter.
+     * @return a bound value whose {@code value} property may be {@code null} when the {@link SQLException} suppressed.
+     * @throws SQLException if a database access error occurs.
+     * @see DatabaseMetaData#ownDeletesAreVisible(int)
+     * @see ResultSet#TYPE_FORWARD_ONLY
+     * @see ResultSet#TYPE_SCROLL_INSENSITIVE
+     * @see ResultSet#TYPE_SCROLL_SENSITIVE
+     */
+    public @Valid @NotNull OwnDeletesAreVisible ownDeletesAreVisible(final int type) throws SQLException {
+        return ownDeletesAreVisible(ResultSetType.valueOfRawValue(type));
+    }
+
+    // -------------------------------------------------------------------------------------------- ownInsertsAreVisible
+    @Valid @NotNull OwnInsertsAreVisible ownInsertsAreVisible(final ResultSetType type) throws SQLException {
+        requireNonNull(type, "type is null");
+        final OwnInsertsAreVisible value = new OwnInsertsAreVisible();
+        value.setType(type);
+        try {
+            value.setValue(databaseMetaData.ownInsertsAreVisible(value.getType()));
+        } catch (final SQLException sqle) {
+            logger.log(Level.WARNING, sqle,
+                       () -> String.format("failed to invoke ownInsertsAreVisible(%1$d)", value.getType()));
+            throwIfNotSuppressed(sqle);
+        }
+        return value;
+    }
+
+    /**
+     * Invokes {@link DatabaseMetaData#ownInsertsAreVisible(int)} method with specified value and returns a bound
+     * value.
+     *
+     * @param type a value for {@code type} parameter.
+     * @return a bound value whose {@code value} property may be {@code null} when the {@link SQLException} suppressed.
+     * @throws SQLException if a database access error occurs.
+     * @see DatabaseMetaData#ownInsertsAreVisible(int)
+     * @see ResultSet#TYPE_FORWARD_ONLY
+     * @see ResultSet#TYPE_SCROLL_INSENSITIVE
+     * @see ResultSet#TYPE_SCROLL_SENSITIVE
+     */
+    public @Valid @NotNull OwnInsertsAreVisible ownInsertsAreVisible(final int type) throws SQLException {
+        return ownInsertsAreVisible(ResultSetType.valueOfRawValue(type));
+    }
+
+    // -------------------------------------------------------------------------------------------- ownUpdatesAreVisible
+    @Valid @NotNull OwnUpdatesAreVisible ownUpdatesAreVisible(final ResultSetType type) throws SQLException {
+        requireNonNull(type, "type is null");
+        final OwnUpdatesAreVisible value = new OwnUpdatesAreVisible();
+        value.setType(type);
+        try {
+            value.setValue(databaseMetaData.ownUpdatesAreVisible(value.getType()));
+        } catch (final SQLException sqle) {
+            logger.log(Level.WARNING, sqle,
+                       () -> String.format("failed to invoke ownUpdatesAreVisible(%1$d)", value.getType()));
+            throwIfNotSuppressed(sqle);
+        }
+        return value;
+    }
+
+    /**
+     * Invokes {@link DatabaseMetaData#ownUpdatesAreVisible(int)} method with  specified type and returns a bound
+     * value.
+     *
+     * @param type a value for {@code type} parameter.
+     * @return a bound value whose {@code value} property may be {@code null} when the {@link SQLException} suppressed.
+     * @throws SQLException if a database access error occurs.
+     * @see DatabaseMetaData#ownUpdatesAreVisible(int)
+     * @see ResultSet#TYPE_FORWARD_ONLY
+     * @see ResultSet#TYPE_SCROLL_INSENSITIVE
+     * @see ResultSet#TYPE_SCROLL_SENSITIVE
+     */
+    public @Valid @NotNull OwnUpdatesAreVisible ownUpdatesAreVisible(final int type) throws SQLException {
+        return ownUpdatesAreVisible(ResultSetType.valueOfRawValue(type));
+    }
+
+    // -----------------------------------------------------------------------------------------------------------------
+
+    /**
+     * Invokes {@link DatabaseMetaData#supportsConvert(int, int)} with given arguments and returns a bound value.
+     *
+     * @param fromType a value for {@code fromType} parameter.
+     * @param toType   a value for {@code toType} parameter.
+     * @return a bound value whose {@code value} may be {@code null} if an {@link SQLException} has been thrown and
+     * suppressed.
+     * @throws SQLException if a database access error occurs.
+     */
+    public SupportsConvert supportsConvert(final int fromType, final int toType) throws SQLException {
+        final SupportsConvert value = new SupportsConvert();
+        value.setFromType(fromType);
+        try {
+            value.setFromTypeName(JDBCType.valueOf(fromType).name());
+        } catch (final IllegalArgumentException iae) {
+            logger.warning("unknown fromType: " + fromType);
+        }
+        value.setToType(toType);
+        try {
+            value.setToTypeName(JDBCType.valueOf(toType).name());
+        } catch (final IllegalArgumentException iae) {
+            logger.warning("unknown toType: " + toType);
+        }
+        try {
+            value.setValue(databaseMetaData.supportsConvert(fromType, toType));
+        } catch (final SQLException sqle) {
+            logger.log(Level.WARNING, sqle,
+                       () -> String.format("failed to invoke supportsConvert(%1$d, %2$d)", fromType, toType));
+            throwIfNotSuppressed(sqle);
+        }
+        return value;
     }
 
     // -----------------------------------------------------------------------------------------------------------------
@@ -1692,7 +1761,7 @@ public class Context {
         return this;
     }
 
-    <T extends SQLException> boolean isSuppressed(final Class<T> exceptionClass) {
+    private <T extends SQLException> boolean isSuppressed(final Class<T> exceptionClass) {
         if (suppressedExceptionClasses.contains(requireNonNull(exceptionClass, "exceptionClass is null"))) {
             return true;
         }

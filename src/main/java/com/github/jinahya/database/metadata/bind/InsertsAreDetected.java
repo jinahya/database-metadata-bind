@@ -22,6 +22,7 @@ package com.github.jinahya.database.metadata.bind;
 
 import javax.xml.bind.annotation.XmlRootElement;
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Level;
 
@@ -33,20 +34,27 @@ import static java.util.Objects.requireNonNull;
  * @author Jin Kwon &lt;onacit_at_gmail.com&gt;
  */
 @XmlRootElement
-public class InsertsAreDetected extends AreDetected {
+public class InsertsAreDetected extends AreDetected<InsertsAreDetected> {
 
-    static List<InsertsAreDetected> list(final Context context) throws SQLException {
+    static List<InsertsAreDetected> all(final Context context) throws SQLException {
         requireNonNull(context, "context is null");
-        final List<InsertsAreDetected> list = list(InsertsAreDetected.class);
-        for (final InsertsAreDetected v : list) {
+        final List<InsertsAreDetected> result = new ArrayList<>();
+        for (final ResultSetType type : ResultSetType.values()) {
             try {
-                v.setValue(context.databaseMetaData.insertsAreDetected(v.getType()));
+                result.add(context.insertsAreDetected(type));
             } catch (final SQLException sqle) {
                 logger.log(Level.WARNING, sqle,
-                           () -> String.format("failed to invoke insertsAreDetected(%1$d)", v.getType()));
+                           () -> String.format("failed to invoke insertsAreDetected(%1$d)", type.getRawValue()));
                 context.throwIfNotSuppressed(sqle);
             }
         }
-        return list;
+        return result;
+    }
+
+    /**
+     * Creates a new instance.
+     */
+    public InsertsAreDetected() {
+        super();
     }
 }

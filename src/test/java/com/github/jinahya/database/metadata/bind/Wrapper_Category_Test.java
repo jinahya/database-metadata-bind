@@ -26,7 +26,9 @@ class Wrapper_Category_Test {
         catalogs.add(new Catalog());
         catalogs.add(new Catalog());
         Wrapper.marshal(Catalog.class,
-                        catalogs, "catalogs", file, m -> {
+                        catalogs,
+                        file,
+                        m -> {
                             try {
                                 m.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, Boolean.TRUE);
                                 return m;
@@ -34,8 +36,7 @@ class Wrapper_Category_Test {
                                 CyYoung.pitch(pe);
                                 return null;
                             }
-                        }
-        );
+                        });
         try {
             for (final String line : Files.readAllLines(file.toPath())) {
                 System.out.println(line);
@@ -51,7 +52,7 @@ class Wrapper_Category_Test {
         final List<Catalog> expected = new ArrayList<>();
         expected.add(new Catalog());
         expected.add(new Catalog());
-        Wrapper.marshal(Catalog.class, expected, "catalogs", file);
+        Wrapper.marshal(Catalog.class, expected, file);
         final List<Catalog> actual = Wrapper.unmarshal(Catalog.class, new StreamSource(file));
         assertThat(actual).isEqualTo(expected);
     }

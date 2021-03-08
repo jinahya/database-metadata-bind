@@ -21,12 +21,16 @@ package com.github.jinahya.database.metadata.bind;
  */
 
 import lombok.extern.slf4j.Slf4j;
+import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.Test;
 
 import java.sql.Connection;
 import java.sql.SQLException;
 import java.sql.SQLFeatureNotSupportedException;
 import java.util.ArrayList;
+import java.util.List;
+
+import static org.assertj.core.api.Assertions.assertThat;
 
 /**
  * An abstract test class for in-memory databases.
@@ -64,7 +68,7 @@ abstract class MemoryTest {
     void getCatalogs__() throws Exception {
         try (Connection connection = connect()) {
             final Context context = Context.newInstance(connection).suppress(SQLFeatureNotSupportedException.class);
-            for (final Catalog catalog : context.getCatalogs()) {
+            for (final Catalog catalog : context.getCatalogs(new ArrayList<>())) {
                 log.debug("catalog: {}", catalog);
             }
         }
@@ -87,6 +91,134 @@ abstract class MemoryTest {
             for (final Table table : context.getTables(null, null, null, null, new ArrayList<>())) {
                 log.debug("table: {}", table);
             }
+        }
+    }
+
+    // -------------------------------------------------------------------------------------------------- ...AreDetected
+    @Test
+    void deletesAreDetected() throws SQLException {
+        try (Connection connection = connect()) {
+            final Context context = Context.newInstance(connection).suppress(SQLFeatureNotSupportedException.class);
+            final List<DeletesAreDetected> deletesAreDetectedList = DeletesAreDetected.all(context);
+            assertThat(deletesAreDetectedList)
+                    .hasSizeLessThanOrEqualTo(ResultSetType.values().length)
+                    .doesNotContainNull();
+            deletesAreDetectedList.forEach(v -> {
+                log.debug("deletesAreDetected: {}", v);
+            });
+        }
+    }
+
+    @Test
+    void insertsAreDetected() throws SQLException {
+        try (Connection connection = connect()) {
+            final Context context = Context.newInstance(connection).suppress(SQLFeatureNotSupportedException.class);
+            final List<InsertsAreDetected> insertsAreDetectedList = InsertsAreDetected.all(context);
+            assertThat(insertsAreDetectedList)
+                    .hasSizeLessThanOrEqualTo(ResultSetType.values().length)
+                    .doesNotContainNull();
+            insertsAreDetectedList.forEach(v -> {
+                log.debug("insertsAreDetected: {}", v);
+            });
+        }
+    }
+
+    @Test
+    void updatesAreDetected() throws SQLException {
+        try (Connection connection = connect()) {
+            final Context context = Context.newInstance(connection).suppress(SQLFeatureNotSupportedException.class);
+            final List<UpdatesAreDetected> updatesAreDetectedList = UpdatesAreDetected.all(context);
+            assertThat(updatesAreDetectedList)
+                    .hasSizeLessThanOrEqualTo(ResultSetType.values().length)
+                    .doesNotContainNull();
+            updatesAreDetectedList.forEach(v -> {
+                log.debug("updatesAreDetected: {}", v);
+            });
+        }
+    }
+
+    // --------------------------------------------------------------------------------------------------- ...AreVisible
+    @Test
+    void othersDeletesAreVisible() throws SQLException {
+        try (Connection connection = connect()) {
+            final Context context = Context.newInstance(connection).suppress(SQLFeatureNotSupportedException.class);
+            final List<OthersDeletesAreVisible> all = OthersDeletesAreVisible.all(context);
+            Assertions.assertThat(all)
+                    .doesNotContainNull()
+                    .hasSizeLessThanOrEqualTo(ResultSetType.values().length);
+            all.forEach(v -> {
+                log.debug("othersDeletesAreVisible: {}", v);
+            });
+        }
+    }
+
+    @Test
+    void othersInsertsAreVisible() throws SQLException {
+        try (Connection connection = connect()) {
+            final Context context = Context.newInstance(connection).suppress(SQLFeatureNotSupportedException.class);
+            final List<OthersInsertsAreVisible> all = OthersInsertsAreVisible.all(context);
+            Assertions.assertThat(all)
+                    .doesNotContainNull()
+                    .hasSizeLessThanOrEqualTo(ResultSetType.values().length);
+            all.forEach(v -> {
+                log.debug("othersInsertsAreVisible: {}", v);
+            });
+        }
+    }
+
+    @Test
+    void othersUpdatesAreVisible() throws SQLException {
+        try (Connection connection = connect()) {
+            final Context context = Context.newInstance(connection).suppress(SQLFeatureNotSupportedException.class);
+            final List<OthersUpdatesAreVisible> all = OthersUpdatesAreVisible.all(context);
+            Assertions.assertThat(all)
+                    .doesNotContainNull()
+                    .hasSizeLessThanOrEqualTo(ResultSetType.values().length);
+            all.forEach(v -> {
+                log.debug("othersUpdatesAreVisible: {}", v);
+            });
+        }
+    }
+
+    @Test
+    void ownDeletesAreVisible() throws SQLException {
+        try (Connection connection = connect()) {
+            final Context context = Context.newInstance(connection).suppress(SQLFeatureNotSupportedException.class);
+            final List<OwnDeletesAreVisible> all = OwnDeletesAreVisible.all(context);
+            Assertions.assertThat(all)
+                    .doesNotContainNull()
+                    .hasSizeLessThanOrEqualTo(ResultSetType.values().length);
+            all.forEach(v -> {
+                log.debug("ownDeletesAreVisible: {}", v);
+            });
+        }
+    }
+
+    @Test
+    void ownInsertsAreVisible() throws SQLException {
+        try (Connection connection = connect()) {
+            final Context context = Context.newInstance(connection).suppress(SQLFeatureNotSupportedException.class);
+            final List<OwnInsertsAreVisible> all = OwnInsertsAreVisible.all(context);
+            Assertions.assertThat(all)
+                    .doesNotContainNull()
+                    .hasSizeLessThanOrEqualTo(ResultSetType.values().length);
+            all.forEach(v -> {
+                log.debug("ownInsertsAreVisible: {}", v);
+            });
+        }
+    }
+
+    @Test
+    void ownUpdatesAreVisible() throws SQLException {
+        try (Connection connection = connect()) {
+            final Context context = Context.newInstance(connection).suppress(SQLFeatureNotSupportedException.class);
+            final List<OwnUpdatesAreVisible> all = OwnUpdatesAreVisible.all(context);
+            Assertions.assertThat(all)
+                    .doesNotContainNull()
+                    .hasSizeLessThanOrEqualTo(ResultSetType.values().length);
+            all.forEach(v -> {
+                log.debug("ownUpdatesAreVisible: {}", v);
+            });
         }
     }
 }

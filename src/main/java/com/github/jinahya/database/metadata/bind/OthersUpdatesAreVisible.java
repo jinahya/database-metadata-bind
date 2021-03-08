@@ -22,8 +22,8 @@ package com.github.jinahya.database.metadata.bind;
 
 import javax.xml.bind.annotation.XmlRootElement;
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.List;
-import java.util.logging.Level;
 
 import static java.util.Objects.requireNonNull;
 
@@ -33,20 +33,21 @@ import static java.util.Objects.requireNonNull;
  * @author Jin Kwon &lt;onacit_at_gmail.com&gt;
  */
 @XmlRootElement
-public class OthersUpdatesAreVisible extends AreVisible {
+public class OthersUpdatesAreVisible extends AreVisible<OthersUpdatesAreVisible> {
 
-    static List<OthersUpdatesAreVisible> list(final Context context) throws SQLException {
+    static List<OthersUpdatesAreVisible> all(final Context context) throws SQLException {
         requireNonNull(context, "context is null");
-        final List<OthersUpdatesAreVisible> list = list(OthersUpdatesAreVisible.class);
-        for (final OthersUpdatesAreVisible v : list) {
-            try {
-                v.setValue(context.databaseMetaData.othersUpdatesAreVisible(v.getType()));
-            } catch (final SQLException sqle) {
-                logger.log(Level.WARNING, sqle,
-                           () -> String.format("failed to invoke othersUpdatesAreDetected(%1$d)", v.getType()));
-                context.throwIfNotSuppressed(sqle);
-            }
+        final List<OthersUpdatesAreVisible> all = new ArrayList<>();
+        for (final ResultSetType type : ResultSetType.values()) {
+            all.add(context.othersUpdatesAreVisible(type));
         }
-        return list;
+        return all;
+    }
+
+    /**
+     * Creates a new instance.
+     */
+    public OthersUpdatesAreVisible() {
+        super();
     }
 }

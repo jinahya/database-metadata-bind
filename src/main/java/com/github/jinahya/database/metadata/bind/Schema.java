@@ -21,6 +21,7 @@ package com.github.jinahya.database.metadata.bind;
  */
 
 import javax.validation.Valid;
+import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import javax.xml.bind.annotation.XmlAttribute;
 import javax.xml.bind.annotation.XmlElement;
@@ -56,7 +57,15 @@ public class Schema extends CatalogChild {
         final Schema instance = new Schema();
         instance.virtual = Boolean.TRUE;
         instance.setParent(catalog);
-        instance.setTableSchem("");
+        instance.setTableSchem("_virtual_");
+        return instance;
+    }
+
+    static Schema newVirtualInstance(final String tableCatalog, final String tableSchem) {
+        final Schema instance = new Schema();
+        instance.virtual = Boolean.TRUE;
+        instance.tableCatalog = tableCatalog;
+        instance.tableSchem = tableSchem;
         return instance;
     }
 
@@ -91,6 +100,11 @@ public class Schema extends CatalogChild {
     public int hashCode() {
         return Objects.hash(tableCatalog,
                             tableSchem);
+    }
+
+    // --------------------------------------------------------------------------------------------------------- virtual
+    public boolean isVirtual() {
+        return virtual != null && virtual;
     }
 
     // --------------------------------------------------------------------------------------------------------- catalog
@@ -149,7 +163,7 @@ public class Schema extends CatalogChild {
 
     // -----------------------------------------------------------------------------------------------------------------
     @XmlAttribute
-    Boolean virtual;
+    private Boolean virtual;
 
     // -----------------------------------------------------------------------------------------------------------------
     @XmlElement(required = true, nillable = true)
@@ -159,7 +173,7 @@ public class Schema extends CatalogChild {
 
     // -----------------------------------------------------------------------------------------------------------------
     @XmlElement(required = true)
-    @NotNull
+    @NotBlank
     @Label(COLUMN_NAME_TABLE_SCHEM)
     private String tableSchem;
 
