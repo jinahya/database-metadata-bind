@@ -136,12 +136,12 @@
       <version>1.0</version>
       <scope>test</scope>
     </dependency>
-<!--    <dependency>-->
-<!--      <groupId>com.sun.xml.bind</groupId>-->
-<!--      <artifactId>jaxb-core</artifactId>-->
-<!--      <version>${version.com.sun.xml.bind}</version>-->
-<!--      <scope>test</scope>-->
-<!--    </dependency>-->
+    <!--    <dependency>-->
+    <!--      <groupId>com.sun.xml.bind</groupId>-->
+    <!--      <artifactId>jaxb-core</artifactId>-->
+    <!--      <version>${version.com.sun.xml.bind}</version>-->
+    <!--      <scope>test</scope>-->
+    <!--    </dependency>-->
     <dependency>
       <groupId>com.sun.xml.bind</groupId>
       <artifactId>jaxb-impl</artifactId>
@@ -429,6 +429,12 @@
             <configuration>
               <forkedProcessExitTimeoutInSeconds>900</forkedProcessExitTimeoutInSeconds>
               <forkedProcessTimeoutInSeconds>0</forkedProcessTimeoutInSeconds>
+              <includes>
+                <include>MemoryDerbyTest.java</include>
+                <include>MemoryH2Test.java</include>
+                <include>MemoryHsqlTest.java</include>
+                <include>MemorySqliteTest.java</include>
+              </includes>
               <systemPropertyVariables>
                 <memory>true</memory>
               </systemPropertyVariables>
@@ -465,13 +471,17 @@
       </build>
     </profile>
     <profile>
-      <id>container</id>
+      <id>container-only</id>
+      <properties>
+<!--        <skipTests>true</skipTests>-->
+        <it.test>ContainerIT</it.test>
+      </properties>
       <dependencies>
-        <dependency>
-          <groupId>org.testcontainers</groupId>
-          <artifactId>testcontainers</artifactId>
-          <scope>test</scope>
-        </dependency>
+<!--        <dependency>-->
+<!--          <groupId>org.testcontainers</groupId>-->
+<!--          <artifactId>testcontainers</artifactId>-->
+<!--          <scope>test</scope>-->
+<!--        </dependency>-->
       </dependencies>
     </profile>
     <profile>
@@ -487,6 +497,11 @@
           <artifactId>mariadb</artifactId>
           <scope>test</scope>
         </dependency>
+<!--        <dependency>-->
+<!--          <groupId>org.testcontainers</groupId>-->
+<!--          <artifactId>testcontainers</artifactId>-->
+<!--          <scope>test</scope>-->
+<!--        </dependency>-->
       </dependencies>
     </profile>
     <profile>
@@ -520,6 +535,11 @@
         <dependency>
           <groupId>org.testcontainers</groupId>
           <artifactId>mysql</artifactId>
+          <scope>test</scope>
+        </dependency>
+        <dependency>
+          <groupId>org.testcontainers</groupId>
+          <artifactId>testcontainers</artifactId>
           <scope>test</scope>
         </dependency>
       </dependencies>

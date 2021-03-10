@@ -43,6 +43,15 @@ abstract class AreDetected<T extends AreDetected<T>> implements Comparable<T> {
 
     // -----------------------------------------------------------------------------------------------------------------
 
+    /**
+     * Creates a new instance.
+     */
+    protected AreDetected() {
+        super();
+    }
+
+    // -----------------------------------------------------------------------------------------------------------------
+
     @Override
     public String toString() {
         return super.toString() + '{'
@@ -98,6 +107,7 @@ abstract class AreDetected<T extends AreDetected<T>> implements Comparable<T> {
         this.typeName = typeName;
     }
 
+    // -----------------------------------------------------------------------------------------------------------------
     public Boolean getValue() {
         return value;
     }
@@ -113,6 +123,7 @@ abstract class AreDetected<T extends AreDetected<T>> implements Comparable<T> {
     @XmlAttribute
     private String typeName;
 
+    // -----------------------------------------------------------------------------------------------------------------
     @XmlValue
     private Boolean value;
 }

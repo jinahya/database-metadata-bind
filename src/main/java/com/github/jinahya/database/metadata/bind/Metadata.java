@@ -160,9 +160,9 @@ public class Metadata implements MetadataType {
                 .collect(Collectors.toList());
         for (final Table foreign : tables) {
             for (final Table parent : tables) {
-                context.getCrossReferences(parent.getTableCat(), parent.getTableSchem(), parent.getTableName(),
-                                           foreign.getTableCat(), foreign.getTableSchem(), foreign.getTableName(),
-                                           foreign.getCrossReference());
+                context.getCrossReference(parent.getTableCat(), parent.getTableSchem(), parent.getTableName(),
+                                          foreign.getTableCat(), foreign.getTableSchem(), foreign.getTableName(),
+                                          foreign.getCrossReference());
             }
         }
         try {
@@ -441,7 +441,7 @@ public class Metadata implements MetadataType {
 //            logSqlFeatureNotSupportedException(logger, sqlfnse);
 //        }
         // -------------------------------------------------------------------------------------------------------------
-        instance.insertsAreDetected = InsertsAreDetected.all(context);
+        instance.insertsAreDetected = InsertsAreDetected.getAllInstances(context);
         try {
             all.remove(Metadata.class.getDeclaredField("insertsAreDetected"));
         } catch (final ReflectiveOperationException roe) {
@@ -597,7 +597,7 @@ public class Metadata implements MetadataType {
 //        } catch (final SQLFeatureNotSupportedException sqlfnse) {
 //            logSqlFeatureNotSupportedException(logger, sqlfnse);
 //        }
-        instance.supportsConvert_ = SupportsConvert.list(context);
+        instance.supportsConvert_ = SupportsConvert.getAllInstances(context);
         // -------------------------------------------------------------------------------------------------------------
 //        try {
 //            instance.supportsCoreSQLGrammar = context.databaseMetaData.supportsCoreSQLGrammar();
@@ -779,9 +779,9 @@ public class Metadata implements MetadataType {
 //            logSqlFeatureNotSupportedException(logger, sqlfnse);
 //        }
         // -------------------------------------------------------------------------------------------------------------
-        instance.supportsResultSetConcurrency = SupportsResultSetConcurrency.list(context);
-        instance.supportsResultSetHoldability = SupportsResultSetHoldability.list(context);
-        instance.supportsResultSetType = SupportsResultSetType.list(context);
+        instance.supportsResultSetConcurrency = SupportsResultSetConcurrency.getAllInstances(context);
+        instance.supportsResultSetHoldability = SupportsResultSetHoldability.getAllInstances(context);
+        instance.supportsResultSetType = SupportsResultSetType.getAllInstances(context);
         // -------------------------------------------------------------------------------------------------------------
 //        try {
 //            instance.supportsSavepoints = context.databaseMetaData.supportsSavepoints();
@@ -876,7 +876,7 @@ public class Metadata implements MetadataType {
 //            logSqlFeatureNotSupportedException(logger, sqlfnse);
 //        }
         // -------------------------------------------------------------------------------------------------------------
-        instance.supportsTransactionIsolationLevel = SupportsTransactionIsolationLevel.list(context);
+        instance.supportsTransactionIsolationLevel = SupportsTransactionIsolationLevel.getAllInstances(context);
 //        try {
 //            instance.supportsTransactions = context.databaseMetaData.supportsTransactions();
 //        } catch (final SQLFeatureNotSupportedException sqlfnse) {
@@ -894,7 +894,7 @@ public class Metadata implements MetadataType {
 //            logSqlFeatureNotSupportedException(logger, sqlfnse);
 //        }
         // -------------------------------------------------------------------------------------------------------------
-        instance.updatesAreDetected = UpdatesAreDetected.all(context);
+        instance.updatesAreDetected = UpdatesAreDetected.getAllInstances(context);
         // -------------------------------------------------------------------------------------------------------------
 //        try {
 //            instance.usesLocalFilePerTable = context.databaseMetaData.usesLocalFilePerTable();

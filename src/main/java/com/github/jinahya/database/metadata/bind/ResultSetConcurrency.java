@@ -22,12 +22,29 @@ package com.github.jinahya.database.metadata.bind;
 
 import java.sql.ResultSet;
 
-enum ResultSetConcurrency implements IntFieldEnum<ResultSetConcurrency> {
+/**
+ * Constants for concurrencies defined in {@link ResultSet}.
+ *
+ * @author Jin Kwon &lt;onacit_at_gmail.com&gt;
+ */
+enum ResultSetConcurrency implements IntFieldEnum<ResultSetConcurrency>, MetadataType {
 
+    /**
+     * Constant for {@link ResultSet#CONCUR_READ_ONLY}({@value ResultSet#CONCUR_READ_ONLY}).
+     */
     CONCUR_READ_ONLY(ResultSet.CONCUR_READ_ONLY),
 
+    /**
+     * Constant for {@link ResultSet#CONCUR_UPDATABLE}({@value ResultSet#CONCUR_UPDATABLE}).
+     */
     CONCUR_UPDATABLE(ResultSet.CONCUR_UPDATABLE);
 
+    /**
+     * Returns the value whose {@code rawValue} matches to specified value.
+     *
+     * @param rawValue the {@code rawValue} to match.
+     * @return a value whose {@code rawValue} matches.
+     */
     public static ResultSetConcurrency valueOfRawValue(final int rawValue) {
         return IntFieldEnums.valueOfRawValue(ResultSetConcurrency.class, rawValue);
     }

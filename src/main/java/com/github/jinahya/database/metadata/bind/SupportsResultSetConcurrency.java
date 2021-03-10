@@ -20,6 +20,9 @@ package com.github.jinahya.database.metadata.bind;
  * #L%
  */
 
+import javax.validation.Valid;
+import javax.validation.constraints.NotEmpty;
+import javax.validation.constraints.NotNull;
 import javax.xml.bind.annotation.XmlAttribute;
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlValue;
@@ -27,7 +30,7 @@ import java.lang.invoke.MethodHandles;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.logging.Level;
+import java.util.Objects;
 import java.util.logging.Logger;
 
 import static java.util.Objects.requireNonNull;
@@ -36,38 +39,76 @@ import static java.util.Objects.requireNonNull;
  * A class for binding result of {@link java.sql.DatabaseMetaData#supportsResultSetConcurrency(int, int)} method.
  *
  * @author Jin Kwon &lt;onacit_at_gmail.com&gt;
+ * @see Context#supportsResultSetConcurrency(int, int)
  */
 @XmlRootElement
-public class SupportsResultSetConcurrency {
+public class SupportsResultSetConcurrency implements MetadataType {
 
     private static final Logger logger = Logger.getLogger(MethodHandles.lookup().lookupClass().getName());
 
-    static List<SupportsResultSetConcurrency> list(final Context context) throws SQLException {
+    // -----------------------------------------------------------------------------------------------------------------
+
+    /**
+     * Invokes {@link Context#supportsResultSetConcurrency(int, int)} method for all combinations of types and
+     * concurrencies and returns bound values.
+     *
+     * @param context a context.
+     * @return a list of bound values.
+     * @throws SQLException if a database access error occurs.
+     */
+    public static @NotEmpty List<@Valid @NotNull SupportsResultSetConcurrency> getAllInstances(
+            final @NotNull Context context)
+            throws SQLException {
         requireNonNull(context, "context is null");
-        final List<SupportsResultSetConcurrency> list = new ArrayList<>();
+        final List<SupportsResultSetConcurrency> all = new ArrayList<>();
         for (final ResultSetType type : ResultSetType.values()) {
             for (final ResultSetConcurrency concurrency : ResultSetConcurrency.values()) {
-                final SupportsResultSetConcurrency v = new SupportsResultSetConcurrency();
-                v.type = type.getRawValue();
-                v.typeName = type.name();
-                v.concurrency = concurrency.getRawValue();
-                v.concurrencyName = concurrency.name();
-                try {
-                    v.value = context.databaseMetaData.supportsResultSetConcurrency(v.type, v.concurrency);
-                } catch (final SQLException sqle) {
-                    logger.log(Level.WARNING, sqle,
-                               () -> String.format("failed to invoke supportsResultSetConcurrency(%1$d, %2$d)",
-                                                   v.type, v.concurrency));
-                    if (!context.isSuppressed(sqle)) {
-                        throw sqle;
-                    }
-                }
-                list.add(v);
+                all.add(context.supportsResultSetConcurrency(type, concurrency));
             }
         }
-        return list;
+        return all;
     }
 
+    // -----------------------------------------------------------------------------------------------------------------
+
+    /**
+     * Creates a new instance.
+     */
+    public SupportsResultSetConcurrency() {
+        super();
+    }
+
+    // -----------------------------------------------------------------------------------------------------------------
+
+    @Override
+    public String toString() {
+        return super.toString() + '{'
+               + "type=" + type
+               + ",typeName=" + typeName
+               + ",concurrency=" + concurrency
+               + ",concurrencyName=" + concurrencyName
+               + ",value=" + value
+               + '}';
+    }
+
+    @Override
+    public boolean equals(final Object obj) {
+        if (this == obj) return true;
+        if (obj == null || getClass() != obj.getClass()) return false;
+        final SupportsResultSetConcurrency that = (SupportsResultSetConcurrency) obj;
+        return type == that.type
+               && concurrency == that.concurrency
+               && Objects.equals(value, that.value);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(type,
+                            concurrency,
+                            value);
+    }
+
+    // -----------------------------------------------------------------------------------------------------------------
     public int getType() {
         return type;
     }
@@ -84,6 +125,7 @@ public class SupportsResultSetConcurrency {
         this.typeName = typeName;
     }
 
+    // -----------------------------------------------------------------------------------------------------------------
     public int getConcurrency() {
         return concurrency;
     }
@@ -100,6 +142,7 @@ public class SupportsResultSetConcurrency {
         this.concurrencyName = concurrencyName;
     }
 
+    // -----------------------------------------------------------------------------------------------------------------
     public Boolean getValue() {
         return value;
     }
@@ -108,18 +151,21 @@ public class SupportsResultSetConcurrency {
         this.value = value;
     }
 
+    // -----------------------------------------------------------------------------------------------------------------
     @XmlAttribute(required = true)
     private int type;
 
-    @XmlAttribute(required = true)
+    @XmlAttribute
     private String typeName;
 
+    // -----------------------------------------------------------------------------------------------------------------
     @XmlAttribute(required = true)
     private int concurrency;
 
-    @XmlAttribute(required = true)
+    @XmlAttribute
     private String concurrencyName;
 
+    // -----------------------------------------------------------------------------------------------------------------
     @XmlValue
     private Boolean value;
 }

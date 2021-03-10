@@ -20,6 +20,9 @@ package com.github.jinahya.database.metadata.bind;
  * #L%
  */
 
+import javax.validation.Valid;
+import javax.validation.constraints.NotEmpty;
+import javax.validation.constraints.NotNull;
 import javax.xml.bind.annotation.XmlAttribute;
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlValue;
@@ -28,7 +31,7 @@ import java.sql.DatabaseMetaData;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.logging.Level;
+import java.util.Objects;
 import java.util.logging.Logger;
 
 import static java.util.Objects.requireNonNull;
@@ -39,29 +42,66 @@ import static java.util.Objects.requireNonNull;
  * @author Jin Kwon &lt;onacit_at_gmail.com&gt;
  */
 @XmlRootElement
-public class SupportsResultSetType {
+public class SupportsResultSetType implements MetadataType {
 
     private static final Logger logger = Logger.getLogger(MethodHandles.lookup().lookupClass().getName());
 
-    static List<SupportsResultSetType> list(final Context context) throws SQLException {
+    // -----------------------------------------------------------------------------------------------------------------
+
+    /**
+     * Invokes {@link Context#supportsResultSetType(int)} method for all types defined in {@link java.sql.ResultSet} and
+     * returns bound values.
+     *
+     * @param context a context.
+     * @return a list of bound values.
+     * @throws SQLException if a database access error occurs.
+     */
+    public static @NotEmpty List<@Valid @NotNull SupportsResultSetType> getAllInstances(final @NotNull Context context)
+            throws SQLException {
         requireNonNull(context, "context is null");
-        final List<SupportsResultSetType> list = new ArrayList<>();
+        final List<SupportsResultSetType> all = new ArrayList<>();
         for (final ResultSetType type : ResultSetType.values()) {
-            final SupportsResultSetType v = new SupportsResultSetType();
-            v.type = type.getRawValue();
-            v.typeName = type.name();
-            try {
-                v.value = context.databaseMetaData.supportsResultSetType(v.type);
-            } catch (final SQLException sqle) {
-                logger.log(Level.WARNING, sqle,
-                           () -> String.format("failed to invoke supportsResultType(%1$d)", v.type));
-                context.throwIfNotSuppressed(sqle);
-            }
-            list.add(v);
+            all.add(context.supportsResultSetType(type));
         }
-        return list;
+        return all;
     }
 
+    // -----------------------------------------------------------------------------------------------------------------
+
+    /**
+     * Creates a new instance.
+     */
+    public SupportsResultSetType() {
+        super();
+    }
+
+    // -----------------------------------------------------------------------------------------------------------------
+
+    @Override
+    public String toString() {
+        return super.toString() + '{'
+               + "type=" + type
+               + ",typeName=" + typeName
+               + ",value=" + value
+               + '}';
+    }
+
+    @Override
+    public boolean equals(final Object obj) {
+        if (this == obj) return true;
+        if (obj == null || getClass() != obj.getClass()) return false;
+        final SupportsResultSetType that = (SupportsResultSetType) obj;
+        return type == that.type
+               && Objects.equals(value, that.value);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(type,
+                            value);
+    }
+
+    // ------------------------------------------------------------------------------------------------------------ type
     public int getType() {
         return type;
     }
@@ -78,6 +118,7 @@ public class SupportsResultSetType {
         this.typeName = typeName;
     }
 
+    // ----------------------------------------------------------------------------------------------------------- value
     public Boolean getValue() {
         return value;
     }
@@ -86,12 +127,14 @@ public class SupportsResultSetType {
         this.value = value;
     }
 
+    // -----------------------------------------------------------------------------------------------------------------
     @XmlAttribute(required = true)
     private int type;
 
     @XmlAttribute(required = true)
     private String typeName;
 
+    // -----------------------------------------------------------------------------------------------------------------
     @XmlValue
     private Boolean value;
 }

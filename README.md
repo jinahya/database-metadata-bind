@@ -7,24 +7,40 @@
 A library for binding various information
 from [DatabaseMetaData](http://docs.oracle.com/javase/8/docs/api/java/sql/DatabaseMetaData.html).
 
+All methods defined in [DatabaseMetaData][DatabaseMetaData] meet following conditions has been bound with corresponding
+result types.
+
+* is an instance method.
+* has at least one parameter.
+  * (or) result type is a [ResultSet][ResultSet].
+
 ## Usage
 
 ```java
 // create a context from a connection
-final java.sql.Connection connection = connect();
-final Context context = Context.newInstance(connection)
+final java.sql.Connection connection=connect();
+final Context context=Context.newInstance(connection)
         .suppress(SQLFeatureNotSupportedException.class);
 
 // invoke methods
-final List<Catalog> catalogs = context.getCatalogs();
-final List<Schema> schemas = context.getSchemas("", null);
-final List<Table> tables = context.getTables(null, null, null);
-
-// bind all
-final Metadata metadata = Metadata.newInstance(context);
+final List<Catalog> catalogs=context.getCatalogs(new ArrayList<>());
+final List<Schema> schemas=context.getSchemas("",null,new ArrayList<>());
+final Set<Table> tables=context.getTables(null,null,null,new HashSet<>());
 ```
 
 ## Testing with [TestContainers](https://www.testcontainers.org/)
+
+```shell
+$ mvn -Pfailsafe,container-<module> \
+      -Dversion.<client>=x.y.z \
+      -Durl=jdbc:tc:<image>:<tag>://... \
+      -Dit.test=ContainerIT \
+      clean verify
+...
+$ cat target/external.xml
+...
+$
+```
 
 ## Gathering metadata from existing databases
 
@@ -81,6 +97,10 @@ $ cat target/external.xml
 ...
 $
 ```
+
+[DatabaseMetaData]: https://docs.oracle.com/en/java/javase/11/docs/api/java.sql/java/sql/DatabaseMetaData.html
+
+[ResultSet]: https://docs.oracle.com/en/java/javase/11/docs/api/java.sql/java/sql/ResultSet.html
 
 [mariadb-java-client]: https://search.maven.org/artifact/org.mariadb.jdbc/mariadb-java-client
 

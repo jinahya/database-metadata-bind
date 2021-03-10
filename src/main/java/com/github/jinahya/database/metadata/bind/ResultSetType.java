@@ -23,38 +23,42 @@ package com.github.jinahya.database.metadata.bind;
 import java.sql.ResultSet;
 
 /**
- * Constants for {@link ResultSet#TYPE_FORWARD_ONLY}, {@link ResultSet#TYPE_SCROLL_INSENSITIVE}, and {@link
- * ResultSet#TYPE_SCROLL_SENSITIVE}.
+ * Constants for types defined in {@link ResultSet}.
  *
  * @author Jin Kwon &lt;onacit_at_gmail.com&gt;
  */
-enum ResultSetType implements IntFieldEnum<ResultSetType> {
+enum ResultSetType implements IntFieldEnum<ResultSetType>, MetadataType {
 
     /**
-     * A constant for {@link ResultSet#TYPE_FORWARD_ONLY}.
+     * A constant for {@link ResultSet#TYPE_FORWARD_ONLY}({@value ResultSet#TYPE_FORWARD_ONLY}).
      */
     TYPE_FORWARD_ONLY(ResultSet.TYPE_FORWARD_ONLY),
 
     /**
-     * A constant for {@link ResultSet#TYPE_SCROLL_INSENSITIVE}.
+     * A constant for {@link ResultSet#TYPE_SCROLL_INSENSITIVE}({@value ResultSet#TYPE_SCROLL_INSENSITIVE}).
      */
     TYPE_SCROLL_INSENSITIVE(ResultSet.TYPE_SCROLL_INSENSITIVE),
 
     /**
-     * A constant for {@link ResultSet#TYPE_SCROLL_SENSITIVE}.
+     * A constant for {@link ResultSet#TYPE_SCROLL_SENSITIVE}({@value ResultSet#TYPE_SCROLL_SENSITIVE}).
      */
     TYPE_SCROLL_SENSITIVE(ResultSet.TYPE_SCROLL_SENSITIVE);
 
     /**
-     * Returns the value whose {@link #getRawValue() rawValue} is equal to specified value.
+     * Returns the value whose {@code rawValue} matches to specified value.
      *
-     * @param rawValue the {@code rawValue} to compare.
-     * @return the value whose {@link #getRawValue() rawValue} is equal to specified value.
+     * @param rawValue the {@code rawValue} to match.
+     * @return a value whose {@code rawValue} matches.
      */
     public static ResultSetType valueOfRawValue(final int rawValue) {
         return IntFieldEnums.valueOfRawValue(ResultSetType.class, rawValue);
     }
 
+    /**
+     * Creates a new instance with specified raw value.
+     *
+     * @param rawValue the raw value of this constant.
+     */
     ResultSetType(final int rawValue) {
         this.rawValue = rawValue;
     }

@@ -20,11 +20,13 @@ package com.github.jinahya.database.metadata.bind;
  * #L%
  */
 
+import javax.validation.Valid;
+import javax.validation.constraints.NotEmpty;
+import javax.validation.constraints.NotNull;
 import javax.xml.bind.annotation.XmlRootElement;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.logging.Level;
 
 import static java.util.Objects.requireNonNull;
 
@@ -32,23 +34,28 @@ import static java.util.Objects.requireNonNull;
  * A class for binding result of {@link java.sql.DatabaseMetaData#insertsAreDetected(int)} method.
  *
  * @author Jin Kwon &lt;onacit_at_gmail.com&gt;
+ * @see java.sql.DatabaseMetaData#insertsAreDetected(int)
  */
 @XmlRootElement
 public class InsertsAreDetected extends AreDetected<InsertsAreDetected> {
 
-    static List<InsertsAreDetected> all(final Context context) throws SQLException {
+    /**
+     * Invokes {@link Context#insertsAreDetected(int)} method for all types defined in {@link java.sql.ResultSet} and
+     * returns bound values.
+     *
+     * @param context a context.
+     * @return a list of bound values.
+     * @throws SQLException if a database error occurs.
+     * @see Context#insertsAreDetected(int)
+     */
+    public static @NotEmpty List<@Valid @NotNull InsertsAreDetected> getAllInstances(final @NotNull Context context)
+            throws SQLException {
         requireNonNull(context, "context is null");
-        final List<InsertsAreDetected> result = new ArrayList<>();
+        final List<InsertsAreDetected> all = new ArrayList<>();
         for (final ResultSetType type : ResultSetType.values()) {
-            try {
-                result.add(context.insertsAreDetected(type));
-            } catch (final SQLException sqle) {
-                logger.log(Level.WARNING, sqle,
-                           () -> String.format("failed to invoke insertsAreDetected(%1$d)", type.getRawValue()));
-                context.throwIfNotSuppressed(sqle);
-            }
+            all.add(context.insertsAreDetected(type));
         }
-        return result;
+        return all;
     }
 
     /**

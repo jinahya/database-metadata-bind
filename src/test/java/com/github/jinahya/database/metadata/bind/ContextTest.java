@@ -21,12 +21,14 @@ package com.github.jinahya.database.metadata.bind;
  */
 
 import lombok.extern.slf4j.Slf4j;
-import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 
+import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
 import java.sql.DatabaseMetaData;
+import java.sql.ResultSet;
 import java.util.Arrays;
+import java.util.Collection;
 
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
@@ -39,26 +41,32 @@ import static org.assertj.core.api.Assertions.assertThatThrownBy;
 class ContextTest {
 
     @Test
+    void assertAllMethodsBound() throws ReflectiveOperationException {
+        for (final Method method : DatabaseMetaData.class.getMethods()) {
+            final int modifier = method.getModifiers();
+            if (Modifier.isStatic(modifier)) {
+                continue;
+            }
+            if (method.getDeclaringClass() != DatabaseMetaData.class) {
+                continue;
+            }
+            if (method.getParameterCount() == 0) {
+                continue;
+            }
+            if (ResultSet.class.isAssignableFrom(method.getReturnType())) {
+                final Class<?>[] parameterTypes
+                        = Arrays.copyOf(method.getParameterTypes(), method.getParameterCount() + 1);
+                parameterTypes[parameterTypes.length - 1] = Collection.class;
+                final Method bound = Context.class.getMethod(method.getName(), parameterTypes);
+                continue;
+            }
+            final Method bound = Context.class.getMethod(method.getName(), method.getParameterTypes());
+        }
+    }
+
+    @Test
     void newInstance_NullPointerException_Null() {
         assertThatThrownBy(() -> Context.newInstance(null))
                 .isInstanceOf(NullPointerException.class);
-    }
-
-    @Disabled
-    @Test
-    void checkMethodBinding() {
-        Arrays.stream(DatabaseMetaData.class.getMethods()).filter(m -> {
-            final int modifiers = m.getModifiers();
-            if (Modifier.isStatic(modifiers)) {
-                return false;
-            }
-            return true;
-        }).forEach(m -> {
-            try {
-                Context.class.getMethod(m.getName(), m.getParameterTypes());
-            } catch (final NoSuchMethodException nsme) {
-                log.debug("method not covered: {}", m);
-            }
-        });
     }
 }

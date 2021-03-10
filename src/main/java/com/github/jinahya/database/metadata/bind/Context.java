@@ -468,7 +468,7 @@ public class Context {
      * @return given {@code collection}.
      * @throws SQLException if a database error occurs.
      */
-    public <T extends Collection<? super CrossReference>> T getCrossReferences(
+    public <T extends Collection<? super CrossReference>> T getCrossReference(
             final String parentCatalog, final String parentSchema, final String parentTable,
             final String foreignCatalog, final String foreignSchema, final String foreignTable,
             final T collection)
@@ -483,9 +483,7 @@ public class Context {
                        () -> String.format("failed to getCrossReferences(%1$s, %2$s, %3$s, %4$s, %5$s, %6$s)",
                                            parentCatalog, parentSchema, parentTable, foreignCatalog, foreignSchema,
                                            foreignTable));
-            if (!isSuppressed(sqle.getClass())) {
-                throw sqle;
-            }
+            throwIfNotSuppressed(sqle);
         }
         return collection;
     }
@@ -1456,7 +1454,7 @@ public class Context {
 //        return getVersionColumns(catalog, schema, table, new ArrayList<>());
 //    }
 
-    // -------------------------------------------------------------------------------------------------- ...AreDetected
+    // ---------------------------------------------------------------------------------------------- deletesAreDetected
     @Valid @NotNull DeletesAreDetected deletesAreDetected(final ResultSetType type) throws SQLException {
         requireNonNull(type, "type is null");
         final DeletesAreDetected value = new DeletesAreDetected();
@@ -1483,19 +1481,7 @@ public class Context {
         return deletesAreDetected(ResultSetType.valueOfRawValue(type));
     }
 
-    @Valid @NotNull InsertsAreDetected insertsAreDetected(final ResultSetType type) throws SQLException {
-        final InsertsAreDetected value = new InsertsAreDetected();
-        value.setType(type);
-        try {
-            value.setValue(databaseMetaData.insertsAreDetected(type.getRawValue()));
-        } catch (final SQLException sqle) {
-            logger.log(Level.WARNING, sqle,
-                       () -> String.format("failed to invoke insertsAreDetected(%1$d)", type.getRawValue()));
-            throwIfNotSuppressed(sqle);
-        }
-        return value;
-    }
-
+    // ---------------------------------------------------------------------------------------------- insertsAreDetected
     /**
      * Invokes {@link DatabaseMetaData#insertsAreDetected(int)} with specified argument and returns a bound value.
      *
@@ -1505,33 +1491,54 @@ public class Context {
      * @throws SQLException if a database access error occurs.
      */
     public @Valid @NotNull InsertsAreDetected insertsAreDetected(final int type) throws SQLException {
-        return insertsAreDetected(ResultSetType.valueOfRawValue(type));
-    }
-
-    @Valid @NotNull UpdatesAreDetected updatesAreDetected(final ResultSetType type) throws SQLException {
-        final UpdatesAreDetected value = new UpdatesAreDetected();
+        final InsertsAreDetected value = new InsertsAreDetected();
         value.setType(type);
         try {
-            value.setValue(databaseMetaData.updatesAreDetected(type.getRawValue()));
+            value.setTypeName(ResultSetType.valueOfRawValue(value.getType()).name());
+        } catch (final IllegalArgumentException iae) {
+            logger.warning(() -> "unknown type: " + type);
+        }
+        try {
+            value.setValue(databaseMetaData.insertsAreDetected(value.getType()));
         } catch (final SQLException sqle) {
             logger.log(Level.WARNING, sqle,
-                       () -> String.format("failed to invoke updatesAreDetected(%1$d)", type.getRawValue()));
+                       () -> String.format("failed to invoke insertsAreDetected(%1$d)", value.getType()));
             throwIfNotSuppressed(sqle);
         }
         return value;
     }
 
+    @Valid @NotNull InsertsAreDetected insertsAreDetected(final ResultSetType type) throws SQLException {
+        requireNonNull(type, "type is null");
+        return insertsAreDetected(type.getRawValue());
+    }
+
+    // ---------------------------------------------------------------------------------------------- updatesAreDetected
     /**
      * Invokes {@link DatabaseMetaData#updatesAreDetected(int)} method with specified argument and returns a bound
      * value.
      *
      * @param type a value for {@code type} parameter.
-     * @return a bound value whose {@code value} may be {@code null} when the thrown {@link SQLException} has been
-     * suppressed.
+     * @return a bound value.
      * @throws SQLException if a database access error occurs.
      */
     public @Valid @NotNull UpdatesAreDetected updatesAreDetected(final int type) throws SQLException {
-        return updatesAreDetected(ResultSetType.valueOfRawValue(type));
+        final UpdatesAreDetected value = new UpdatesAreDetected();
+        value.setType(type);
+        value.setTypeName(ResultSetType.valueOfRawValue(value.getType()).name());
+        try {
+            value.setValue(databaseMetaData.updatesAreDetected(value.getType()));
+        } catch (final SQLException sqle) {
+            logger.log(Level.WARNING, sqle,
+                       () -> String.format("failed to invoke updatesAreDetected(%1$d)", value.getType()));
+            throwIfNotSuppressed(sqle);
+        }
+        return value;
+    }
+
+    @Valid @NotNull UpdatesAreDetected updatesAreDetected(final @NotNull ResultSetType type) throws SQLException {
+        requireNonNull(type, "type is null");
+        return updatesAreDetected(type.getRawValue());
     }
 
     // ----------------------------------------------------------------------------------------- othersDeletesAreVisible
@@ -1720,39 +1727,207 @@ public class Context {
         return ownUpdatesAreVisible(ResultSetType.valueOfRawValue(type));
     }
 
-    // -----------------------------------------------------------------------------------------------------------------
+    // ------------------------------------------------------------------------------------------------- supportsConvert
 
     /**
-     * Invokes {@link DatabaseMetaData#supportsConvert(int, int)} with given arguments and returns a bound value.
+     * Invokes {@link DatabaseMetaData#supportsConvert(int, int)} method with given arguments and returns a bound value.
+     * The result may have {@code null} {@code value} when the {@link SQLException} has been {@link #suppress(Class)
+     * suppressed}.
      *
      * @param fromType a value for {@code fromType} parameter.
      * @param toType   a value for {@code toType} parameter.
-     * @return a bound value whose {@code value} may be {@code null} if an {@link SQLException} has been thrown and
-     * suppressed.
+     * @return a bound value.
      * @throws SQLException if a database access error occurs.
+     * @see DatabaseMetaData#supportsConvert(int, int)
      */
     public SupportsConvert supportsConvert(final int fromType, final int toType) throws SQLException {
         final SupportsConvert value = new SupportsConvert();
         value.setFromType(fromType);
         try {
-            value.setFromTypeName(JDBCType.valueOf(fromType).name());
+            value.setFromTypeName(JDBCType.valueOf(value.getFromType()).name());
         } catch (final IllegalArgumentException iae) {
             logger.warning("unknown fromType: " + fromType);
         }
         value.setToType(toType);
         try {
-            value.setToTypeName(JDBCType.valueOf(toType).name());
+            value.setToTypeName(JDBCType.valueOf(value.getToType()).name());
         } catch (final IllegalArgumentException iae) {
             logger.warning("unknown toType: " + toType);
         }
         try {
-            value.setValue(databaseMetaData.supportsConvert(fromType, toType));
+            value.setValue(databaseMetaData.supportsConvert(value.getFromType(), value.getToType()));
         } catch (final SQLException sqle) {
             logger.log(Level.WARNING, sqle,
-                       () -> String.format("failed to invoke supportsConvert(%1$d, %2$d)", fromType, toType));
+                       () -> String.format("failed to invoke supportsConvert(%1$d, %2$d)", value.getFromType(),
+                                           value.getToType()));
             throwIfNotSuppressed(sqle);
         }
         return value;
+    }
+
+    @NotNull SupportsConvert supportsConvert(final @NotNull JDBCType fromType, final @NotNull JDBCType toType)
+            throws SQLException {
+        requireNonNull(fromType, "fromType is null");
+        requireNonNull(toType, "toType is null");
+        return supportsConvert(fromType.getVendorTypeNumber(), toType.getVendorTypeNumber());
+    }
+
+    // ------------------------------------------------------------------------------------ supportsResultSetConcurrency
+
+    /**
+     * Invokes {@link DatabaseMetaData#supportsResultSetConcurrency(int, int)} method with given arguments and returns a
+     * bound value. The result may have {@code null} {@code value} when the {@link SQLException} has been {@link
+     * #suppress(Class) suppressed}.
+     *
+     * @param type        a value for {@code type} parameter.
+     * @param concurrency a value for {@code concurrency} parameter.
+     * @return a bound value.
+     * @throws SQLException if a database access error occurs.
+     * @see DatabaseMetaData#supportsResultSetConcurrency(int, int)
+     */
+    public SupportsResultSetConcurrency supportsResultSetConcurrency(final int type, final int concurrency)
+            throws SQLException {
+        final SupportsResultSetConcurrency value = new SupportsResultSetConcurrency();
+        value.setType(type);
+        try {
+            value.setTypeName(JDBCType.valueOf(value.getType()).name());
+        } catch (final IllegalArgumentException iae) {
+            logger.warning("unknown type: " + type);
+        }
+        value.setConcurrency(concurrency);
+        try {
+            value.setConcurrencyName(ResultSetConcurrency.valueOfRawValue(value.getConcurrency()).name());
+        } catch (final IllegalArgumentException iae) {
+            logger.warning("unknown concurrency: " + concurrency);
+        }
+        try {
+            value.setValue(databaseMetaData.supportsResultSetConcurrency(value.getType(), value.getConcurrency()));
+        } catch (final SQLException sqle) {
+            logger.log(Level.WARNING, sqle,
+                       () -> String.format("failed to invoke supportsResultSetConcurrency(%1$d, %2$d)",
+                                           value.getType(), value.getConcurrency()));
+            throwIfNotSuppressed(sqle);
+        }
+        return value;
+    }
+
+    @NotNull SupportsResultSetConcurrency supportsResultSetConcurrency(final @NotNull ResultSetType type,
+                                                                       final @NotNull ResultSetConcurrency concurrency)
+            throws SQLException {
+        requireNonNull(type, "type is null");
+        requireNonNull(concurrency, "concurrency is null");
+        return supportsResultSetConcurrency(type.getRawValue(), concurrency.getRawValue());
+    }
+
+    // ------------------------------------------------------------------------------------ supportsResultSetHoldability
+
+    /**
+     * Invokes {@link DatabaseMetaData#supportsResultSetHoldability(int)} method with given argument and returns a bound
+     * value. The result may have {@code null} {@code value} when the {@link SQLException} has been {@link
+     * #suppress(Class) suppressed}.
+     *
+     * @param holdability a value for {@code holdability} parameter.
+     * @return a bound value.
+     * @throws SQLException if a database access error occurs.
+     * @see DatabaseMetaData#supportsResultSetHoldability(int)
+     */
+    public SupportsResultSetHoldability supportsResultSetHoldability(final int holdability)
+            throws SQLException {
+        final SupportsResultSetHoldability value = new SupportsResultSetHoldability();
+        value.setHoldability(holdability);
+        try {
+            value.setHoldabilityName(ResultSetHoldability.valueOfRawValue(value.getHoldability()).name());
+        } catch (final IllegalArgumentException iae) {
+            logger.warning("unknown holdability: " + holdability);
+        }
+        try {
+            value.setValue(databaseMetaData.supportsResultSetHoldability(value.getHoldability()));
+        } catch (final SQLException sqle) {
+            logger.log(Level.WARNING, sqle,
+                       () -> String.format("failed to invoke supportsResultSetHoldability(%1$d)",
+                                           value.getHoldability()));
+            throwIfNotSuppressed(sqle);
+        }
+        return value;
+    }
+
+    @NotNull SupportsResultSetHoldability supportsResultSetHoldability(final @NotNull ResultSetHoldability holdability)
+            throws SQLException {
+        requireNonNull(holdability, "holdability is null");
+        return supportsResultSetHoldability(holdability.getRawValue());
+    }
+
+    // ------------------------------------------------------------------------------------ supportsResultSetType
+
+    /**
+     * Invokes {@link DatabaseMetaData#supportsResultSetType(int)} method with given argument and returns a bound value.
+     * The result may have {@code null} {@code value} when the {@link SQLException} has been {@link #suppress(Class)
+     * suppressed}.
+     *
+     * @param type a value for {@code type} parameter.
+     * @return a bound value.
+     * @throws SQLException if a database access error occurs.
+     * @see DatabaseMetaData#supportsResultSetType(int)
+     */
+    public SupportsResultSetType supportsResultSetType(final int type) throws SQLException {
+        final SupportsResultSetType value = new SupportsResultSetType();
+        value.setType(type);
+        try {
+            value.setTypeName(ResultSetType.valueOfRawValue(value.getType()).name());
+        } catch (final IllegalArgumentException iae) {
+            logger.warning("unknown holdability: " + type);
+        }
+        try {
+            value.setValue(databaseMetaData.supportsResultSetType(value.getType()));
+        } catch (final SQLException sqle) {
+            logger.log(Level.WARNING, sqle,
+                       () -> String.format("failed to invoke supportsResultSetType(%1$d)", value.getType()));
+            throwIfNotSuppressed(sqle);
+        }
+        return value;
+    }
+
+    @NotNull SupportsResultSetType supportsResultSetType(final @NotNull ResultSetType type) throws SQLException {
+        requireNonNull(type, "type is null");
+        return supportsResultSetType(type.getRawValue());
+    }
+
+    // ------------------------------------------------------------------------------- supportsTransactionIsolationLevel
+
+    /**
+     * Invokes {@link DatabaseMetaData#supportsTransactionIsolationLevel(int)} method with given argument and returns a
+     * bound value. The result may have {@code null} {@code value} when the {@link SQLException} has been {@link
+     * #suppress(Class) suppressed}.
+     *
+     * @param level a value for {@code level} parameter.
+     * @return a bound value.
+     * @throws SQLException if a database access error occurs.
+     * @see DatabaseMetaData#supportsTransactionIsolationLevel(int)
+     */
+    public SupportsTransactionIsolationLevel supportsTransactionIsolationLevel(final int level)
+            throws SQLException {
+        final SupportsTransactionIsolationLevel value = new SupportsTransactionIsolationLevel();
+        value.setLevel(level);
+        try {
+            value.setLevelName(ConnectionTransactionIsolationLevel.valueOfRawValue(value.getLevel()).name());
+        } catch (final IllegalArgumentException iae) {
+            logger.warning("unknown lavel: " + level);
+        }
+        try {
+            value.setValue(databaseMetaData.supportsTransactionIsolationLevel(level));
+        } catch (final SQLException sqle) {
+            logger.log(Level.WARNING, sqle,
+                       () -> String.format("failed to invoke supportsTransactionIsolationLevel(%1$d)", level));
+            throwIfNotSuppressed(sqle);
+        }
+        return value;
+    }
+
+    @NotNull SupportsTransactionIsolationLevel supportsTransactionIsolationLevel(
+            final @NotNull ConnectionTransactionIsolationLevel level)
+            throws SQLException {
+        requireNonNull(level, "level is null");
+        return supportsTransactionIsolationLevel(level.getRawValue());
     }
 
     // -----------------------------------------------------------------------------------------------------------------

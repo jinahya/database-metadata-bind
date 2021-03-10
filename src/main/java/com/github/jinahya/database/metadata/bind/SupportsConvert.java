@@ -20,19 +20,21 @@ package com.github.jinahya.database.metadata.bind;
  * #L%
  */
 
+import javax.validation.Valid;
+import javax.validation.constraints.NotEmpty;
+import javax.validation.constraints.NotNull;
 import javax.xml.bind.annotation.XmlAttribute;
 import javax.xml.bind.annotation.XmlRootElement;
+import javax.xml.bind.annotation.XmlTransient;
 import javax.xml.bind.annotation.XmlValue;
 import java.lang.invoke.MethodHandles;
 import java.sql.DatabaseMetaData;
 import java.sql.JDBCType;
 import java.sql.SQLException;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
-import java.util.logging.Level;
+import java.util.Objects;
 import java.util.logging.Logger;
-import java.util.stream.Collectors;
 
 import static java.util.Objects.requireNonNull;
 
@@ -40,41 +42,88 @@ import static java.util.Objects.requireNonNull;
  * A class for binding result of {@link DatabaseMetaData#supportsConvert(int, int)} method.
  *
  * @author Jin Kwon &lt;onacit_at_gmail.com&gt;
+ * @see Context#supportsConvert(int, int)
  */
 @XmlRootElement
-public class SupportsConvert {
+public class SupportsConvert implements MetadataType {
 
     private static final Logger logger = Logger.getLogger(MethodHandles.lookup().lookupClass().getName());
 
-    static List<SupportsConvert> list(final Context context) throws SQLException {
+    // -----------------------------------------------------------------------------------------------------------------
+
+    /**
+     * Invokes {@link Context#supportsConvert(int, int)} method for all types defined in {@link JDBCType} and returns
+     * bound values.
+     *
+     * @param context a context.
+     * @return a list of bound values.
+     * @throws SQLException if a database access error occurs.
+     * @see Context#supportsConvert(int, int)
+     */
+    public static @NotEmpty List<@Valid @NotNull SupportsConvert> getAllInstances(final @NotNull Context context)
+            throws SQLException {
         requireNonNull(context, "context is null");
-        final List<SupportsConvert> list = new ArrayList<>();
-        final List<JDBCType> types = Arrays.stream(JDBCType.values())
-                .filter(v -> "java.sql".equals(v.getVendor()))
-                .collect(Collectors.toList());
-        for (final JDBCType fromType : types) {
-            for (final JDBCType toType : types) {
-                final SupportsConvert v = new SupportsConvert();
-                v.fromType = fromType.getVendorTypeNumber();
-                v.fromTypeName = fromType.getName();
-                v.toType = toType.getVendorTypeNumber();
-                v.toTypeName = toType.getName();
-                try {
-                    v.value = context.databaseMetaData.supportsConvert(v.fromType, v.toType);
-                } catch (final SQLException sqle) {
-                    logger.log(Level.WARNING, sqle,
-                               () -> String.format("failed to invoke supportsConvert(%1$d, %2$d)", v.fromType,
-                                                   v.toType));
-                    if (!context.isSuppressed(sqle)) {
-                        throw sqle;
-                    }
-                }
-                list.add(v);
+        final List<SupportsConvert> all = new ArrayList<>();
+        for (final JDBCType fromType : JDBCType.values()) {
+            for (final JDBCType toType : JDBCType.values()) {
+                all.add(context.supportsConvert(fromType, toType));
             }
         }
-        return list;
+        return all;
     }
 
+    // -----------------------------------------------------------------------------------------------------------------
+
+    /**
+     * Creates a new instance.
+     */
+    public SupportsConvert() {
+        super();
+    }
+
+    // -----------------------------------------------------------------------------------------------------------------
+
+    @Override
+    public String toString() {
+        return super.toString() + '{'
+               + "fromType=" + fromType
+               + ",fromTypeName=" + fromTypeName
+               + ",toType=" + toType
+               + ",toTypeName=" + toTypeName
+               + ",value=" + value
+               + '}';
+    }
+
+    @Override
+    public boolean equals(final Object obj) {
+        if (this == obj) return true;
+        if (obj == null || getClass() != obj.getClass()) return false;
+        final SupportsConvert that = (SupportsConvert) obj;
+        return fromType == that.fromType
+               && toType == that.toType
+               && Objects.equals(value, that.value);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(fromType,
+                            toType,
+                            value);
+    }
+
+    // -----------------------------------------------------------------------------------------------------------------
+
+    /**
+     * Indicates whether {@code toType} is same as {@code fromType}.
+     *
+     * @return {@code true} if {@code toType} is same as {@code fromType}; {@code false} otherwise;
+     */
+    @XmlTransient
+    public boolean isForSelfConversion() {
+        return toType == fromType;
+    }
+
+    // -----------------------------------------------------------------------------------------------------------------
     public int getFromType() {
         return fromType;
     }
@@ -91,6 +140,7 @@ public class SupportsConvert {
         this.fromTypeName = fromTypeName;
     }
 
+    // -----------------------------------------------------------------------------------------------------------------
     public int getToType() {
         return toType;
     }
@@ -107,6 +157,7 @@ public class SupportsConvert {
         this.toTypeName = toTypeName;
     }
 
+    // -----------------------------------------------------------------------------------------------------------------
     public Boolean getValue() {
         return value;
     }
@@ -115,18 +166,20 @@ public class SupportsConvert {
         this.value = value;
     }
 
+    // -----------------------------------------------------------------------------------------------------------------
     @XmlAttribute(required = true)
     private int fromType;
 
-    @XmlAttribute(required = true)
+    @XmlAttribute
     private String fromTypeName;
 
     @XmlAttribute(required = true)
     private int toType;
 
-    @XmlAttribute(required = true)
+    @XmlAttribute
     private String toTypeName;
 
+    // -----------------------------------------------------------------------------------------------------------------
     @XmlValue
     private Boolean value;
 }

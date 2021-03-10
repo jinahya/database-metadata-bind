@@ -22,11 +22,32 @@ package com.github.jinahya.database.metadata.bind;
 
 import java.sql.ResultSet;
 
-enum ResultSetHoldability implements IntFieldEnum<ResultSetHoldability> {
+/**
+ * Constants for holdabilities defined in {@link ResultSet}.
+ *
+ * @author Jin Kwon &lt;onacit_at_gmail.com&gt;
+ */
+enum ResultSetHoldability implements IntFieldEnum<ResultSetHoldability>, MetadataType {
 
+    /**
+     * Constants for {@link ResultSet#HOLD_CURSORS_OVER_COMMIT}({@value ResultSet#HOLD_CURSORS_OVER_COMMIT}).
+     */
     HOLD_CURSORS_OVER_COMMIT(ResultSet.HOLD_CURSORS_OVER_COMMIT),
 
+    /**
+     * Constants for {@link ResultSet#CLOSE_CURSORS_AT_COMMIT}({@value ResultSet#CLOSE_CURSORS_AT_COMMIT}).
+     */
     CLOSE_CURSORS_AT_COMMIT(ResultSet.CLOSE_CURSORS_AT_COMMIT);
+
+    /**
+     * Returns the value whose {@code rawValue} matches to specified value.
+     *
+     * @param rawValue the {@code rawValue} to match.
+     * @return a value whose {@code rawValue} matches.
+     */
+    public static ResultSetHoldability valueOfRawValue(final int rawValue) {
+        return IntFieldEnums.valueOfRawValue(ResultSetHoldability.class, rawValue);
+    }
 
     ResultSetHoldability(final int rawValue) {
         this.rawValue = rawValue;

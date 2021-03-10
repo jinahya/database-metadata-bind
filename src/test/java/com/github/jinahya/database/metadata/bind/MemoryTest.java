@@ -24,6 +24,9 @@ import lombok.extern.slf4j.Slf4j;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.Test;
 
+import javax.xml.bind.JAXBException;
+import java.io.File;
+import java.nio.file.Paths;
 import java.sql.Connection;
 import java.sql.SQLException;
 import java.sql.SQLFeatureNotSupportedException;
@@ -65,12 +68,16 @@ abstract class MemoryTest {
 
     // -----------------------------------------------------------------------------------------------------------------
     @Test
-    void getCatalogs__() throws Exception {
+    void getCatalogs__() throws SQLException, JAXBException {
         try (Connection connection = connect()) {
             final Context context = Context.newInstance(connection).suppress(SQLFeatureNotSupportedException.class);
-            for (final Catalog catalog : context.getCatalogs(new ArrayList<>())) {
+            final List<Catalog> catalogs = context.getCatalogs(new ArrayList<>());
+            for (final Catalog catalog : catalogs) {
                 log.debug("catalog: {}", catalog);
             }
+            final String pathname = TestUtils.getFilenamePrefix(context) + ".catalogs.xml";
+            final File target = Paths.get("target", pathname).toFile();
+            Wrapper.marshalFormatted(Catalog.class, catalogs, target);
         }
     }
 
@@ -94,52 +101,78 @@ abstract class MemoryTest {
         }
     }
 
+    // ------------------------------------------------------------------------------------------------- supportsConvert
+    @Test
+    void supportsConvert() throws SQLException, JAXBException {
+        try (Connection connection = connect()) {
+            final Context context = Context.newInstance(connection).suppress(SQLFeatureNotSupportedException.class);
+            final List<SupportsConvert> all = SupportsConvert.getAllInstances(context);
+            assertThat(all)
+                    .doesNotContainNull();
+            all.forEach(v -> {
+                log.debug("supportsConvert: {}", v);
+            });
+            final String pathname = TestUtils.getFilenamePrefix(context) + ".supportsConvert.xml";
+            final File target = Paths.get("target", pathname).toFile();
+            Wrapper.marshalFormatted(SupportsConvert.class, all, target);
+        }
+    }
+
     // -------------------------------------------------------------------------------------------------- ...AreDetected
     @Test
-    void deletesAreDetected() throws SQLException {
+    void deletesAreDetected() throws SQLException, JAXBException {
         try (Connection connection = connect()) {
             final Context context = Context.newInstance(connection).suppress(SQLFeatureNotSupportedException.class);
-            final List<DeletesAreDetected> deletesAreDetectedList = DeletesAreDetected.all(context);
-            assertThat(deletesAreDetectedList)
+            final List<DeletesAreDetected> all = DeletesAreDetected.all(context);
+            assertThat(all)
                     .hasSizeLessThanOrEqualTo(ResultSetType.values().length)
                     .doesNotContainNull();
-            deletesAreDetectedList.forEach(v -> {
+            all.forEach(v -> {
                 log.debug("deletesAreDetected: {}", v);
             });
+            final String pathname = TestUtils.getFilenamePrefix(context) + ".deletesAreDetected.xml";
+            final File target = Paths.get("target", pathname).toFile();
+            Wrapper.marshalFormatted(DeletesAreDetected.class, all, target);
         }
     }
 
     @Test
-    void insertsAreDetected() throws SQLException {
+    void insertsAreDetected() throws SQLException, JAXBException {
         try (Connection connection = connect()) {
             final Context context = Context.newInstance(connection).suppress(SQLFeatureNotSupportedException.class);
-            final List<InsertsAreDetected> insertsAreDetectedList = InsertsAreDetected.all(context);
-            assertThat(insertsAreDetectedList)
+            final List<InsertsAreDetected> all = InsertsAreDetected.getAllInstances(context);
+            assertThat(all)
                     .hasSizeLessThanOrEqualTo(ResultSetType.values().length)
                     .doesNotContainNull();
-            insertsAreDetectedList.forEach(v -> {
+            all.forEach(v -> {
                 log.debug("insertsAreDetected: {}", v);
             });
+            final String pathname = TestUtils.getFilenamePrefix(context) + ".insertsAreDetected.xml";
+            final File target = Paths.get("target", pathname).toFile();
+            Wrapper.marshalFormatted(InsertsAreDetected.class, all, target);
         }
     }
 
     @Test
-    void updatesAreDetected() throws SQLException {
+    void updatesAreDetected() throws SQLException, JAXBException {
         try (Connection connection = connect()) {
             final Context context = Context.newInstance(connection).suppress(SQLFeatureNotSupportedException.class);
-            final List<UpdatesAreDetected> updatesAreDetectedList = UpdatesAreDetected.all(context);
-            assertThat(updatesAreDetectedList)
+            final List<UpdatesAreDetected> all = UpdatesAreDetected.getAllInstances(context);
+            assertThat(all)
                     .hasSizeLessThanOrEqualTo(ResultSetType.values().length)
                     .doesNotContainNull();
-            updatesAreDetectedList.forEach(v -> {
+            all.forEach(v -> {
                 log.debug("updatesAreDetected: {}", v);
             });
+            final String pathname = TestUtils.getFilenamePrefix(context) + ".updatesAreDetected.xml";
+            final File target = Paths.get("target", pathname).toFile();
+            Wrapper.marshalFormatted(UpdatesAreDetected.class, all, target);
         }
     }
 
     // --------------------------------------------------------------------------------------------------- ...AreVisible
     @Test
-    void othersDeletesAreVisible() throws SQLException {
+    void othersDeletesAreVisible() throws SQLException, JAXBException {
         try (Connection connection = connect()) {
             final Context context = Context.newInstance(connection).suppress(SQLFeatureNotSupportedException.class);
             final List<OthersDeletesAreVisible> all = OthersDeletesAreVisible.all(context);
@@ -149,11 +182,14 @@ abstract class MemoryTest {
             all.forEach(v -> {
                 log.debug("othersDeletesAreVisible: {}", v);
             });
+            final String pathname = TestUtils.getFilenamePrefix(context) + ".othersDeletesAreVisible.xml";
+            final File target = Paths.get("target", pathname).toFile();
+            Wrapper.marshalFormatted(OthersDeletesAreVisible.class, all, target);
         }
     }
 
     @Test
-    void othersInsertsAreVisible() throws SQLException {
+    void othersInsertsAreVisible() throws SQLException, JAXBException {
         try (Connection connection = connect()) {
             final Context context = Context.newInstance(connection).suppress(SQLFeatureNotSupportedException.class);
             final List<OthersInsertsAreVisible> all = OthersInsertsAreVisible.all(context);
@@ -163,11 +199,14 @@ abstract class MemoryTest {
             all.forEach(v -> {
                 log.debug("othersInsertsAreVisible: {}", v);
             });
+            final String pathname = TestUtils.getFilenamePrefix(context) + ".othersInsertsAreVisible.xml";
+            final File target = Paths.get("target", pathname).toFile();
+            Wrapper.marshalFormatted(OthersInsertsAreVisible.class, all, target);
         }
     }
 
     @Test
-    void othersUpdatesAreVisible() throws SQLException {
+    void othersUpdatesAreVisible() throws SQLException, JAXBException {
         try (Connection connection = connect()) {
             final Context context = Context.newInstance(connection).suppress(SQLFeatureNotSupportedException.class);
             final List<OthersUpdatesAreVisible> all = OthersUpdatesAreVisible.all(context);
@@ -177,11 +216,14 @@ abstract class MemoryTest {
             all.forEach(v -> {
                 log.debug("othersUpdatesAreVisible: {}", v);
             });
+            final String pathname = TestUtils.getFilenamePrefix(context) + ".othersUpdatesAreVisible.xml";
+            final File target = Paths.get("target", pathname).toFile();
+            Wrapper.marshalFormatted(OthersUpdatesAreVisible.class, all, target);
         }
     }
 
     @Test
-    void ownDeletesAreVisible() throws SQLException {
+    void ownDeletesAreVisible() throws SQLException, JAXBException {
         try (Connection connection = connect()) {
             final Context context = Context.newInstance(connection).suppress(SQLFeatureNotSupportedException.class);
             final List<OwnDeletesAreVisible> all = OwnDeletesAreVisible.all(context);
@@ -191,11 +233,14 @@ abstract class MemoryTest {
             all.forEach(v -> {
                 log.debug("ownDeletesAreVisible: {}", v);
             });
+            final String pathname = TestUtils.getFilenamePrefix(context) + ".ownDeletesAreVisible.xml";
+            final File target = Paths.get("target", pathname).toFile();
+            Wrapper.marshalFormatted(OwnDeletesAreVisible.class, all, target);
         }
     }
 
     @Test
-    void ownInsertsAreVisible() throws SQLException {
+    void ownInsertsAreVisible() throws SQLException, JAXBException {
         try (Connection connection = connect()) {
             final Context context = Context.newInstance(connection).suppress(SQLFeatureNotSupportedException.class);
             final List<OwnInsertsAreVisible> all = OwnInsertsAreVisible.all(context);
@@ -205,11 +250,14 @@ abstract class MemoryTest {
             all.forEach(v -> {
                 log.debug("ownInsertsAreVisible: {}", v);
             });
+            final String pathname = TestUtils.getFilenamePrefix(context) + ".ownInsertsAreVisible.xml";
+            final File target = Paths.get("target", pathname).toFile();
+            Wrapper.marshalFormatted(OwnInsertsAreVisible.class, all, target);
         }
     }
 
     @Test
-    void ownUpdatesAreVisible() throws SQLException {
+    void ownUpdatesAreVisible() throws SQLException, JAXBException {
         try (Connection connection = connect()) {
             final Context context = Context.newInstance(connection).suppress(SQLFeatureNotSupportedException.class);
             final List<OwnUpdatesAreVisible> all = OwnUpdatesAreVisible.all(context);
@@ -219,6 +267,9 @@ abstract class MemoryTest {
             all.forEach(v -> {
                 log.debug("ownUpdatesAreVisible: {}", v);
             });
+            final String pathname = TestUtils.getFilenamePrefix(context) + ".ownUpdatesAreVisible.xml";
+            final File target = Paths.get("target", pathname).toFile();
+            Wrapper.marshalFormatted(OwnUpdatesAreVisible.class, all, target);
         }
     }
 }

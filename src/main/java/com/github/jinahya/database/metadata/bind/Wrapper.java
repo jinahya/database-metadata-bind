@@ -4,21 +4,30 @@ import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBElement;
 import javax.xml.bind.JAXBException;
 import javax.xml.bind.Marshaller;
+import javax.xml.bind.PropertyException;
 import javax.xml.bind.Unmarshaller;
 import javax.xml.bind.annotation.XmlAnyElement;
 import javax.xml.namespace.QName;
 import javax.xml.transform.Source;
 import java.beans.Introspector;
+import java.lang.invoke.MethodHandles;
+import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.Arrays;
 import java.util.List;
 import java.util.function.UnaryOperator;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import static java.util.Objects.requireNonNull;
 
 // http://blog.bdoughan.com/2012/11/creating-generic-list-wrapper-in-jaxb.html
 // http://blog.bdoughan.com/2010/12/jaxb-and-immutable-objects.html
 public final class Wrapper<T> {
+
+    private static final Logger logger = Logger.getLogger(MethodHandles.lookup().lookupClass().getName());
+
+    // -----------------------------------------------------------------------------------------------------------------
 
     /**
      * Unmarshalls a list of specified type from specified source.
@@ -33,8 +42,7 @@ public final class Wrapper<T> {
      * @throws JAXBException if failed to unmarshal.
      */
     @SuppressWarnings({"unchecked"})
-    public static <T> List<T> unmarshal(final Class<T> type, final Source source)
-            throws JAXBException {
+    public static <T> List<T> unmarshal(final Class<T> type, final Source source) throws JAXBException {
         requireNonNull(type, "type is null");
         requireNonNull(source, "source is null");
         final JAXBContext context = JAXBContext.newInstance(Wrapper.class, type);
@@ -56,7 +64,7 @@ public final class Wrapper<T> {
      * @param operator an operator for decorating a marshaller; may be {@code null};
      * @param <T>      element type parameter
      * @throws JAXBException if failed to marshal.
-     * @see #marshal(Class, List, String, Object)
+     * @see #marshal(Class, List, Object)
      */
     @SuppressWarnings({"unchecked"})
     public static <T> void marshal(final Class<T> type, final List<T> elements, final Object target,
@@ -84,7 +92,11 @@ public final class Wrapper<T> {
         try {
             method.invoke(marshaller, wrapped, target);
         } catch (final ReflectiveOperationException roe) {
-            throw new RuntimeException("failed to marshal to " + target, roe);
+            final Throwable cause = roe.getCause();
+            if (roe instanceof InvocationTargetException && cause instanceof JAXBException) {
+                throw (JAXBException) cause;
+            }
+            throw new RuntimeException("failed to marshal from " + target, roe);
         }
     }
 
@@ -92,7 +104,7 @@ public final class Wrapper<T> {
      * Marshals given elements of specified type to specified target.
      * <blockquote><pre>{@code
      * List<Category> categories = getCategories();
-     * marshal(Category.class, categories, "categories", new File("categories.xml");
+     * marshal(Category.class, categories, new File("categories.xml");
      * }</pre></blockquote>
      *
      * @param type     the element type.
@@ -107,6 +119,33 @@ public final class Wrapper<T> {
         marshal(type, elements, target, null);
     }
 
+    /**
+     * Marshals, as formatted, given elements of specified type to specified target.
+     * <blockquote><pre>{@code
+     * List<Category> categories = getCategories();
+     * marshalFormatted(Category.class, categories, new File("categories.xml");
+     * }</pre></blockquote>
+     *
+     * @param type     the element type.
+     * @param elements the elements to marshal.
+     * @param target   the target to which elements are marshalled.
+     * @param <T>      element type parameter
+     * @throws JAXBException if failed to marshal.
+     * @see #marshal(Class, List, Object, UnaryOperator)
+     */
+    public static <T> void marshalFormatted(final Class<T> type, final List<T> elements, final Object target)
+            throws JAXBException {
+        marshal(type, elements, target, m -> {
+            try {
+                m.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, Boolean.TRUE);
+            } catch (final PropertyException pe) {
+                logger.log(Level.WARNING, pe, () -> "failed to set " + Marshaller.JAXB_FORMATTED_OUTPUT);
+            }
+            return m;
+        });
+    }
+
+    // -----------------------------------------------------------------------------------------------------------------
     private static <T> Wrapper<T> of(final List<T> elements) {
         requireNonNull(elements, "elements is null");
         final Wrapper<T> instance = new Wrapper<>();
@@ -114,10 +153,12 @@ public final class Wrapper<T> {
         return instance;
     }
 
+    // -----------------------------------------------------------------------------------------------------------------
     private Wrapper() {
         super();
     }
 
+    // -----------------------------------------------------------------------------------------------------------------
     @XmlAnyElement(lax = true)
     private List<T> elements;
 }

@@ -20,16 +20,18 @@ package com.github.jinahya.database.metadata.bind;
  * #L%
  */
 
+import javax.validation.Valid;
+import javax.validation.constraints.NotEmpty;
+import javax.validation.constraints.NotNull;
 import javax.xml.bind.annotation.XmlAttribute;
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlValue;
 import java.lang.invoke.MethodHandles;
-import java.sql.Connection;
 import java.sql.DatabaseMetaData;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.logging.Level;
+import java.util.Objects;
 import java.util.logging.Logger;
 
 import static java.util.Objects.requireNonNull;
@@ -40,60 +42,100 @@ import static java.util.Objects.requireNonNull;
  * @author Jin Kwon &lt;onacit_at_gmail.com&gt;
  */
 @XmlRootElement
-public class SupportsTransactionIsolationLevel {
+public class SupportsTransactionIsolationLevel implements MetadataType {
 
     private static final Logger logger = Logger.getLogger(MethodHandles.lookup().lookupClass().getName());
 
-    static List<SupportsTransactionIsolationLevel> list(final Context context) throws SQLException {
+    // -----------------------------------------------------------------------------------------------------------------
+
+    /**
+     * Invokes {@link Context#supportsTransactionIsolationLevel(int)} method for all transaction isolation levels
+     * defined in {@link java.sql.ResultSet} and returns bound values.
+     *
+     * @param context a context.
+     * @return a list of bound values.
+     * @throws SQLException if a database access error occurs.
+     */
+    public static @NotEmpty List<@Valid @NotNull SupportsTransactionIsolationLevel> getAllInstances(
+            final @NotNull Context context)
+            throws SQLException {
         requireNonNull(context, "context is null");
-        final List<SupportsTransactionIsolationLevel> list = new ArrayList<>();
-        {
-            final SupportsTransactionIsolationLevel v = new SupportsTransactionIsolationLevel();
-            v.level = Connection.TRANSACTION_NONE;
-            v.levelName = "TRANSACTION_NONE";
-            list.add(v);
+        final List<SupportsTransactionIsolationLevel> all = new ArrayList<>();
+        for (final ConnectionTransactionIsolationLevel level : ConnectionTransactionIsolationLevel.values()) {
+            all.add(context.supportsTransactionIsolationLevel(level));
         }
-        {
-            final SupportsTransactionIsolationLevel v = new SupportsTransactionIsolationLevel();
-            v.level = Connection.TRANSACTION_READ_UNCOMMITTED;
-            v.levelName = "TRANSACTION_READ_UNCOMMITTED";
-            list.add(v);
-        }
-        {
-            final SupportsTransactionIsolationLevel v = new SupportsTransactionIsolationLevel();
-            v.level = Connection.TRANSACTION_READ_COMMITTED;
-            v.levelName = "TRANSACTION_READ_COMMITTED";
-            list.add(v);
-        }
-        {
-            final SupportsTransactionIsolationLevel v = new SupportsTransactionIsolationLevel();
-            v.level = Connection.TRANSACTION_REPEATABLE_READ;
-            v.levelName = "TRANSACTION_REPEATABLE_READ";
-            list.add(v);
-        }
-        {
-            final SupportsTransactionIsolationLevel v = new SupportsTransactionIsolationLevel();
-            v.level = Connection.TRANSACTION_SERIALIZABLE;
-            v.levelName = "TRANSACTION_SERIALIZABLE";
-            list.add(v);
-        }
-        for (final SupportsTransactionIsolationLevel v : list) {
-            try {
-                v.value = context.databaseMetaData.supportsTransactionIsolationLevel(v.level);
-            } catch (final SQLException sqle) {
-                logger.log(Level.WARNING, sqle, () -> String.format("failed to invoke supportsTransactionIsolationLevel(%1$d)", v.level));
-                context.throwIfNotSuppressed(sqle);
-            }
-        }
-        return list;
+        return all;
     }
 
-    @XmlAttribute(required = true)
-    public int level;
+    // -----------------------------------------------------------------------------------------------------------------
 
-    @XmlAttribute(required = true)
-    public String levelName;
+    /**
+     * Creates a new instance.
+     */
+    public SupportsTransactionIsolationLevel() {
+        super();
+    }
 
+    // -----------------------------------------------------------------------------------------------------------------
+
+    @Override
+    public String toString() {
+        return super.toString() + '{'
+               + "level=" + level
+               + ",levelName='" + levelName
+               + ",value=" + value
+               + '}';
+    }
+
+    @Override
+    public boolean equals(final Object obj) {
+        if (this == obj) return true;
+        if (obj == null || getClass() != obj.getClass()) return false;
+        final SupportsTransactionIsolationLevel that = (SupportsTransactionIsolationLevel) obj;
+        return level == that.level
+               && Objects.equals(value, that.value);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(level,
+                            value);
+    }
+
+    // ----------------------------------------------------------------------------------------------------------- level
+    public int getLevel() {
+        return level;
+    }
+
+    public void setLevel(final int level) {
+        this.level = level;
+    }
+
+    public String getLevelName() {
+        return levelName;
+    }
+
+    public void setLevelName(final String levelName) {
+        this.levelName = levelName;
+    }
+
+    // ----------------------------------------------------------------------------------------------------------- value
+    public Boolean getValue() {
+        return value;
+    }
+
+    public void setValue(final Boolean value) {
+        this.value = value;
+    }
+
+    // -----------------------------------------------------------------------------------------------------------------
+    @XmlAttribute(required = true)
+    private int level;
+
+    @XmlAttribute
+    private String levelName;
+
+    // -----------------------------------------------------------------------------------------------------------------
     @XmlValue
-    public Boolean value;
+    private Boolean value;
 }

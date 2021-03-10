@@ -47,21 +47,25 @@ public class ImportedKey extends TableKey {
          * DatabaseMetaData#importedKeyCascade}.
          */
         IMPORTED_KEY_CASCADE(DatabaseMetaData.importedKeyCascade), // 0
+
         /**
          * Constant for {@link DatabaseMetaData#importedKeyRestrict} whose value is {@value
          * DatabaseMetaData#importedKeyRestrict}.
          */
         IMPORTED_KEY_RESTRICT(DatabaseMetaData.importedKeyRestrict), // 1
+
         /**
          * Constant for {@link DatabaseMetaData#importedKeySetNull} whose value is {@value
          * DatabaseMetaData#importedKeySetNull}.
          */
         IMPORTED_KEY_SET_NULL(DatabaseMetaData.importedKeySetNull), // 2
+
         /**
          * Constant for {@link DatabaseMetaData#importedKeyNoAction} whose value is {@value
          * DatabaseMetaData#importedKeyNoAction}.
          */
         IMPORTED_KEY_NO_ACTION(DatabaseMetaData.importedKeyNoAction), // 3
+
         /**
          * Constant for {@link DatabaseMetaData#importedKeySetDefault} whose value is {@value
          * DatabaseMetaData#importedKeySetDefault}.

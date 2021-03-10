@@ -20,6 +20,9 @@ package com.github.jinahya.database.metadata.bind;
  * #L%
  */
 
+import javax.validation.Valid;
+import javax.validation.constraints.NotEmpty;
+import javax.validation.constraints.NotNull;
 import javax.xml.bind.annotation.XmlAttribute;
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlValue;
@@ -28,7 +31,7 @@ import java.sql.DatabaseMetaData;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.logging.Level;
+import java.util.Objects;
 import java.util.logging.Logger;
 
 import static java.util.Objects.requireNonNull;
@@ -39,29 +42,66 @@ import static java.util.Objects.requireNonNull;
  * @author Jin Kwon &lt;onacit_at_gmail.com&gt;
  */
 @XmlRootElement
-public class SupportsResultSetHoldability {
+public class SupportsResultSetHoldability implements MetadataType {
 
     private static final Logger logger = Logger.getLogger(MethodHandles.lookup().lookupClass().getName());
 
-    static List<SupportsResultSetHoldability> list(final Context context) throws SQLException {
+    // -----------------------------------------------------------------------------------------------------------------
+
+    /**
+     * Invokes {@link Context#supportsResultSetHoldability(int)} method for all holdabilities and returns bound values.
+     *
+     * @param context a context.
+     * @return a list of bound values.
+     * @throws SQLException if a database error occurs.
+     */
+    public static @NotEmpty List<@Valid @NotNull SupportsResultSetHoldability> getAllInstances(
+            final @NotNull Context context)
+            throws SQLException {
         requireNonNull(context, "context is null");
-        final List<SupportsResultSetHoldability> list = new ArrayList<>();
+        final List<SupportsResultSetHoldability> all = new ArrayList<>();
         for (final ResultSetHoldability holdability : ResultSetHoldability.values()) {
-            final SupportsResultSetHoldability v = new SupportsResultSetHoldability();
-            v.holdability = holdability.getRawValue();
-            v.holdabilityName = holdability.name();
-            try {
-                v.value = context.databaseMetaData.supportsResultSetHoldability(v.holdability);
-            } catch (final SQLException sqle) {
-                logger.log(Level.WARNING, sqle,
-                           () -> String.format("failed to invoke supportsResultSetHoldability(%1$d)", v.holdability));
-                context.throwIfNotSuppressed(sqle);
-            }
-            list.add(v);
+            all.add(context.supportsResultSetHoldability(holdability));
         }
-        return list;
+        return all;
     }
 
+    // -----------------------------------------------------------------------------------------------------------------
+
+    /**
+     * Creates a new instance.
+     */
+    public SupportsResultSetHoldability() {
+        super();
+    }
+
+    // -----------------------------------------------------------------------------------------------------------------
+
+    @Override
+    public String toString() {
+        return super.toString() + '{'
+               + "holdability=" + holdability
+               + ",holdabilityName='" + holdabilityName
+               + ",value=" + value
+               + '}';
+    }
+
+    @Override
+    public boolean equals(final Object obj) {
+        if (this == obj) return true;
+        if (obj == null || getClass() != obj.getClass()) return false;
+        final SupportsResultSetHoldability that = (SupportsResultSetHoldability) obj;
+        return holdability == that.holdability
+               && Objects.equals(value, that.value);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(holdability,
+                            value);
+    }
+
+    // -----------------------------------------------------------------------------------------------------------------
     public int getHoldability() {
         return holdability;
     }
@@ -78,6 +118,7 @@ public class SupportsResultSetHoldability {
         this.holdabilityName = holdabilityName;
     }
 
+    // -----------------------------------------------------------------------------------------------------------------
     public Boolean getValue() {
         return value;
     }
@@ -86,12 +127,14 @@ public class SupportsResultSetHoldability {
         this.value = value;
     }
 
+    // -----------------------------------------------------------------------------------------------------------------
     @XmlAttribute(required = true)
     private int holdability;
 
-    @XmlAttribute(required = true)
+    @XmlAttribute
     private String holdabilityName;
 
+    // -----------------------------------------------------------------------------------------------------------------
     @XmlValue
     private Boolean value;
 }
