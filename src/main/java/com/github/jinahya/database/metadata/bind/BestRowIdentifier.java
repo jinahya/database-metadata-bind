@@ -24,13 +24,14 @@ import javax.validation.constraints.AssertTrue;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
 import java.sql.DatabaseMetaData;
+import java.util.Collection;
 import java.util.Objects;
 
 /**
  * Represents best row identifiers of tables.
  *
  * @author Jin Kwon &lt;jinahya_at_gmail.com&gt;
- * @see Context#getBestRowIdentifier(java.lang.String, java.lang.String, java.lang.String, int, boolean)
+ * @see Context#getBestRowIdentifier(String, String, String, int, boolean, Collection)
  */
 @XmlRootElement
 public class BestRowIdentifier implements MetadataType {
@@ -38,24 +39,25 @@ public class BestRowIdentifier implements MetadataType {
     private static final long serialVersionUID = -6733770602373723371L;
 
     /**
-     * Constants for the value of {@code PSEUDO_COLUMN} of best row identifies of a table.
+     * Constants for {@code PSEUDO_COLUMN} column values of a result of {@link DatabaseMetaData#getBestRowIdentifier(String,
+     * String, String, int, boolean)} method.
      *
      * @see DatabaseMetaData#getBestRowIdentifier(java.lang.String, java.lang.String, java.lang.String, int, boolean)
      */
     public enum PseudoColumn implements IntFieldEnum<PseudoColumn> {
 
         /**
-         * Constant for {@link DatabaseMetaData#bestRowUnknown}.
+         * Constant for {@link DatabaseMetaData#bestRowUnknown}({@link DatabaseMetaData#bestRowUnknown}).
          */
         BEST_ROW_UNKNOWN(DatabaseMetaData.bestRowUnknown),
 
         /**
-         * Constant for {@link DatabaseMetaData#bestRowNotPseudo}.
+         * Constant for {@link DatabaseMetaData#bestRowNotPseudo}({@link DatabaseMetaData#bestRowNotPseudo}).
          */
         BEST_ROW_NOT_PSEUDO(DatabaseMetaData.bestRowNotPseudo),
 
         /**
-         * Constant for {@link DatabaseMetaData#bestRowPseudo}.
+         * Constant for {@link DatabaseMetaData#bestRowPseudo}({@link DatabaseMetaData#bestRowPseudo}).
          */
         BEST_ROW_PSEUDO(DatabaseMetaData.bestRowPseudo);
 
@@ -65,7 +67,7 @@ public class BestRowIdentifier implements MetadataType {
          * @param rawValue the raw value
          * @return the constant whose raw value equals to given.
          */
-        public static PseudoColumn valueOf(final int rawValue) {
+        public static PseudoColumn valueOfRawValue(final int rawValue) {
             return IntFieldEnums.valueOfRawValue(PseudoColumn.class, rawValue);
         }
 
@@ -73,11 +75,6 @@ public class BestRowIdentifier implements MetadataType {
             this.rawValue = rawValue;
         }
 
-        /**
-         * Returns the raw value of this constant.
-         *
-         * @return the raw value of this constant.
-         */
         @Override
         public int getRawValue() {
             return rawValue;
@@ -87,24 +84,25 @@ public class BestRowIdentifier implements MetadataType {
     }
 
     /**
-     * Constants for best row identifiers' scope.
+     * Constants for {@code SCOPE} column values of a result of {@link DatabaseMetaData#getBestRowIdentifier(String,
+     * String, String, int, boolean)} method.
      *
      * @see DatabaseMetaData#getBestRowIdentifier(java.lang.String, java.lang.String, java.lang.String, int, boolean)
      */
     public enum Scope implements IntFieldEnum<Scope> {
 
         /**
-         * Constant for {@link DatabaseMetaData#bestRowTemporary}.
+         * Constant for {@link DatabaseMetaData#bestRowTemporary}({@link DatabaseMetaData#bestRowTemporary}).
          */
         BEST_ROW_TEMPORARY(DatabaseMetaData.bestRowTemporary),
 
         /**
-         * Constant for {@link DatabaseMetaData#bestRowTransaction}.
+         * Constant for {@link DatabaseMetaData#bestRowTransaction}({@link DatabaseMetaData#bestRowTransaction}).
          */
         BEST_ROW_TRANSACTION(DatabaseMetaData.bestRowTransaction),
 
         /**
-         * Constant for {@link DatabaseMetaData#bestRowSession}.
+         * Constant for {@link DatabaseMetaData#bestRowSession}({@link DatabaseMetaData#bestRowSession}).
          */
         BEST_ROW_SESSION(DatabaseMetaData.bestRowSession);
 
@@ -114,7 +112,7 @@ public class BestRowIdentifier implements MetadataType {
          * @param rawValue the raw value to compare
          * @return the constant whose raw value equals to given.
          */
-        public static Scope valueOf(final int rawValue) {
+        public static Scope valueOfRawValue(final int rawValue) {
             return IntFieldEnums.valueOfRawValue(Scope.class, rawValue);
         }
 
@@ -122,11 +120,6 @@ public class BestRowIdentifier implements MetadataType {
             this.rawValue = value;
         }
 
-        /**
-         * Returns the raw value of this constant.
-         *
-         * @return the raw value of this constant.
-         */
         @Override
         public int getRawValue() {
             return rawValue;
@@ -173,15 +166,14 @@ public class BestRowIdentifier implements MetadataType {
 
     @Override
     public int hashCode() {
-        return Objects.hash(
-                scope,
-                columnName,
-                dataType,
-                typeName,
-                columnSize,
-                bufferLength,
-                decimalDigits,
-                pseudoColumn);
+        return Objects.hash(scope,
+                            columnName,
+                            dataType,
+                            typeName,
+                            columnSize,
+                            bufferLength,
+                            decimalDigits,
+                            pseudoColumn);
     }
 
     // ------------------------------------------------------------------------------------------------- Bean-Validation

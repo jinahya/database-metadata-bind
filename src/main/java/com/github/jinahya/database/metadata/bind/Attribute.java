@@ -24,17 +24,14 @@ import javax.validation.constraints.NotBlank;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
 import java.sql.DatabaseMetaData;
+import java.util.Collection;
 import java.util.Objects;
-
-import static java.sql.DatabaseMetaData.attributeNoNulls;
-import static java.sql.DatabaseMetaData.attributeNullable;
-import static java.sql.DatabaseMetaData.attributeNullableUnknown;
 
 /**
  * An entity class for type attributes.
  *
  * @author Jin Kwon &lt;jinahya_at_gmail.com&gt;
- * @see Context#getAttributes(java.lang.String, java.lang.String, java.lang.String, java.lang.String)
+ * @see Context#getAttributes(String, String, String, String, Collection)
  */
 @XmlRootElement
 public class Attribute implements MetadataType {
@@ -48,39 +45,39 @@ public class Attribute implements MetadataType {
      */
     public enum Nullable implements IntFieldEnum<Nullable> {
 
-        // -------------------------------------------------------------------------------------------------------------
         /**
-         * Constant for {@link DatabaseMetaData#attributeNoNulls}.
+         * Constant for {@link DatabaseMetaData#attributeNoNulls}({@value DatabaseMetaData#attributeNoNulls}).
          */
-        ATTRIBUTE_NO_NULLS(attributeNoNulls),
+        ATTRIBUTE_NO_NULLS(DatabaseMetaData.attributeNoNulls),
 
         /**
-         * Constant for {@link DatabaseMetaData#attributeNullable}.
+         * Constant for {@link DatabaseMetaData#attributeNullable}({@link DatabaseMetaData#attributeNullable}).
          */
-        ATTRIBUTE_NULLABLE(attributeNullable),
+        ATTRIBUTE_NULLABLE(DatabaseMetaData.attributeNullable),
 
         /**
-         * Constant for {@link DatabaseMetaData#attributeNullableUnknown}.
+         * Constant for {@link DatabaseMetaData#attributeNullableUnknown}({@link DatabaseMetaData#attributeNullableUnknown}).
          */
-        ATTRIBUTE_NULLABLE_UNKNOWN(attributeNullableUnknown);
+        ATTRIBUTE_NULLABLE_UNKNOWN(DatabaseMetaData.attributeNullableUnknown);
 
-        // -------------------------------------------------------------------------------------------------------------
-        public static Nullable valueOf(final int rawValue) {
+        /**
+         * Returns the value whose {@link #getRawValue() rawValue} matches to specified value.
+         * @param rawValue the {@code rawValue} to match.
+         * @return a matched value.
+         */
+        public static Nullable valueOfRawValue(final int rawValue) {
             return IntFieldEnums.valueOfRawValue(Nullable.class, rawValue);
         }
 
-        // -------------------------------------------------------------------------------------------------------------
         Nullable(final int rawValue) {
             this.rawValue = rawValue;
         }
 
-        // -------------------------------------------------------------------------------------------------------------
         @Override
         public int getRawValue() {
             return rawValue;
         }
 
-        // -------------------------------------------------------------------------------------------------------------
         private final int rawValue;
     }
 

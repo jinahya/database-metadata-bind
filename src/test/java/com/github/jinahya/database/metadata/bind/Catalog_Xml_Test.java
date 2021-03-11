@@ -30,7 +30,7 @@ import java.io.IOException;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-class Catalog_Xml_Test extends AbstractCatalogTest {
+class Catalog_Xml_Test {
 
     @Disabled
     @Test

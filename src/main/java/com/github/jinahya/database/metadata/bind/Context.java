@@ -29,16 +29,13 @@ import java.sql.DatabaseMetaData;
 import java.sql.JDBCType;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.HashSet;
-import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
-import java.util.function.Consumer;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -129,33 +126,6 @@ public class Context {
     /**
      * Binds all records as given type and adds them to specified collection.
      *
-     * @param <T>      binding type parameter
-     * @param results  the records to bind.
-     * @param type     the type of instances.
-     * @param consumer the collection to which bound instances are added
-     * @return given {@code collection}.
-     * @throws SQLException if a database error occurs.
-     */
-    private <T extends MetadataType> void bind2(@NotNull final ResultSet results, @NotNull final Class<T> type,
-                                               @NotNull final Consumer<? super T> consumer)
-            throws SQLException {
-        requireNonNull(results, "results is null");
-        requireNonNull(type, "type is null");
-        requireNonNull(consumer, "consumer is null");
-        while (results.next()) {
-            final T value;
-            try {
-                value = type.getConstructor().newInstance();
-            } catch (final ReflectiveOperationException roe) {
-                throw new RuntimeException("failed to instantiate " + type, roe);
-            }
-            consumer.accept(bind(results, type, value));
-        }
-    }
-
-    /**
-     * Binds all records as given type and adds them to specified collection.
-     *
      * @param <T>        binding type parameter
      * @param results    the records to bind.
      * @param type       the type of instances.
@@ -169,10 +139,6 @@ public class Context {
         requireNonNull(results, "results is null");
         requireNonNull(type, "type is null");
         requireNonNull(collection, "collection is null");
-        if (true) {
-            bind2(results, type, collection::add);
-            return collection;
-        }
         while (results.next()) {
             final T value;
             try {
@@ -186,35 +152,6 @@ public class Context {
     }
 
     // -----------------------------------------------------------------------------------------------------------------
-
-    /**
-     * Invokes {@link DatabaseMetaData#getAttributes(java.lang.String, java.lang.String, java.lang.String,
-     * java.lang.String)} method with given arguments and accepts bound values to specified consumer.
-     *
-     * @param catalog              a value for {@code catalog} parameter.
-     * @param schemaPattern        a value for {@code schemaPattern} parameter.
-     * @param typeNamePattern      a value for {@code typeNamePattern} parameter.
-     * @param attributeNamePattern a value for {@code attributeNamePattern} parameter.
-     * @param consumer             the consumer to which bound values are accepted.
-     * @throws SQLException if a database error occurs.
-     * @see DatabaseMetaData#getAttributes(String, String, String, String)
-     */
-    public void getAttributes2(final String catalog, final String schemaPattern, final String typeNamePattern,
-                              final String attributeNamePattern, @NotNull final Consumer<? super Attribute> consumer)
-            throws SQLException {
-        requireNonNull(consumer, "consumer is null");
-        try (ResultSet results = databaseMetaData.getAttributes(
-                catalog, schemaPattern, typeNamePattern, attributeNamePattern)) {
-            if (results != null) {
-                bind2(results, Attribute.class, consumer);
-            }
-        } catch (final SQLException sqle) {
-            logger.log(Level.WARNING, sqle,
-                       () -> String.format("failed to getAttributes(%1$s, %2$s, %3$s, %4$s)",
-                                           catalog, schemaPattern, typeNamePattern, attributeNamePattern));
-            throwIfNotSuppressed(sqle);
-        }
-    }
 
     /**
      * Invokes {@link DatabaseMetaData#getAttributes(java.lang.String, java.lang.String, java.lang.String,
@@ -234,10 +171,6 @@ public class Context {
             final String catalog, final String schemaPattern, final String typeNamePattern,
             final String attributeNamePattern, @NotNull final T collection)
             throws SQLException {
-        if (true) {
-            getAttributes2(catalog, schemaPattern, typeNamePattern, attributeNamePattern, v -> collection.add(v));
-            return collection;
-        }
         try (ResultSet results = databaseMetaData.getAttributes(
                 catalog, schemaPattern, typeNamePattern, attributeNamePattern)) {
             if (results != null) {
@@ -252,24 +185,24 @@ public class Context {
         return collection;
     }
 
-    /**
-     * Invokes {@link DatabaseMetaData#getAttributes(java.lang.String, java.lang.String, java.lang.String,
-     * java.lang.String)} method with given arguments and returns bound values.
-     *
-     * @param catalog              a value for {@code catalog} parameter.
-     * @param schemaPattern        a value for {@code schemaPattern} parameter.
-     * @param typeNamePattern      a value for {@code typeNamePattern} parameter.
-     * @param attributeNamePattern a value for {@code attributeNamePattern} parameter.
-     * @return a list of attributes.
-     * @throws SQLException if a database error occurs.
-     * @see #getAttributes(String, String, String, String, Collection)
-     */
-    public @NotNull List<@Valid @NotNull Attribute> getAttributes(final String catalog, final String schemaPattern,
-                                                                  final String typeNamePattern,
-                                                                  final String attributeNamePattern)
-            throws SQLException {
-        return getAttributes(catalog, schemaPattern, typeNamePattern, attributeNamePattern, new ArrayList<>());
-    }
+//    /**
+//     * Invokes {@link DatabaseMetaData#getAttributes(java.lang.String, java.lang.String, java.lang.String,
+//     * java.lang.String)} method with given arguments and returns bound values.
+//     *
+//     * @param catalog              a value for {@code catalog} parameter.
+//     * @param schemaPattern        a value for {@code schemaPattern} parameter.
+//     * @param typeNamePattern      a value for {@code typeNamePattern} parameter.
+//     * @param attributeNamePattern a value for {@code attributeNamePattern} parameter.
+//     * @return a list of attributes.
+//     * @throws SQLException if a database error occurs.
+//     * @see #getAttributes(String, String, String, String, Collection)
+//     */
+//    public @NotNull List<@Valid @NotNull Attribute> getAttributes(final String catalog, final String schemaPattern,
+//                                                                  final String typeNamePattern,
+//                                                                  final String attributeNamePattern)
+//            throws SQLException {
+//        return getAttributes(catalog, schemaPattern, typeNamePattern, attributeNamePattern, new ArrayList<>());
+//    }
 
     // -------------------------------------------------------------------------------------------- getBestRowIdentifier
 
@@ -277,13 +210,13 @@ public class Context {
      * Invokes {@link DatabaseMetaData#getBestRowIdentifier(java.lang.String, java.lang.String, java.lang.String, int,
      * boolean)} method with given arguments and adds bound values to specified collection.
      *
-     * @param catalog    a value for {@code catalog} parameter
-     * @param schema     a value for {@code schema} parameter
-     * @param table      a value for {@code table} parameter
-     * @param scope      a value for {@code scope} parameter
-     * @param nullable   a value for {@code nullable} parameter
+     * @param catalog    a value for {@code catalog} parameter.
+     * @param schema     a value for {@code schema} parameter.
+     * @param table      a value for {@code table} parameter.
+     * @param scope      a value for {@code scope} parameter.
+     * @param nullable   a value for {@code nullable} parameter.
      * @param collection the collection to which bound values are added.
-     * @param <T>        collection element type parameter
+     * @param <T>        the type of elements in {@code collection}.
      * @return given {@code collection}.
      * @throws SQLException if a database error occurs.
      * @see DatabaseMetaData#getBestRowIdentifier(String, String, String, int, boolean)
@@ -305,24 +238,24 @@ public class Context {
         return collection;
     }
 
-    /**
-     * Invokes {@link DatabaseMetaData#getBestRowIdentifier(java.lang.String, java.lang.String, java.lang.String, int,
-     * boolean)} with given arguments and returns bound values.
-     *
-     * @param catalog  the value for {@code catalog} parameter
-     * @param schema   the value for {@code schema} parameter
-     * @param table    the value for {@code table} parameter
-     * @param scope    the value for {@code scope} parameter
-     * @param nullable the value for {@code nullable} parameter
-     * @return a list of bound values.
-     * @throws SQLException if a database error occurs.
-     * @see #getBestRowIdentifier(String, String, String, int, boolean, Collection)
-     */
-    public @NotNull List<@Valid @NotNull BestRowIdentifier> getBestRowIdentifier(
-            final String catalog, final String schema, final String table, final int scope, final boolean nullable)
-            throws SQLException {
-        return getBestRowIdentifier(catalog, schema, table, scope, nullable, new ArrayList<>());
-    }
+//    /**
+//     * Invokes {@link DatabaseMetaData#getBestRowIdentifier(java.lang.String, java.lang.String, java.lang.String, int,
+//     * boolean)} with given arguments and returns bound values.
+//     *
+//     * @param catalog  the value for {@code catalog} parameter
+//     * @param schema   the value for {@code schema} parameter
+//     * @param table    the value for {@code table} parameter
+//     * @param scope    the value for {@code scope} parameter
+//     * @param nullable the value for {@code nullable} parameter
+//     * @return a list of bound values.
+//     * @throws SQLException if a database error occurs.
+//     * @see #getBestRowIdentifier(String, String, String, int, boolean, Collection)
+//     */
+//    public @NotNull List<@Valid @NotNull BestRowIdentifier> getBestRowIdentifier(
+//            final String catalog, final String schema, final String table, final int scope, final boolean nullable)
+//            throws SQLException {
+//        return getBestRowIdentifier(catalog, schema, table, scope, nullable, new ArrayList<>());
+//    }
 
     // ----------------------------------------------------------------------------------------------------- catCatalogs
 
@@ -330,7 +263,7 @@ public class Context {
      * Invokes {@link DatabaseMetaData#getCatalogs()} method and adds all bound values to specified collection.
      *
      * @param collection the collection to which bound values are added.
-     * @param <T>        element type parameter of the {@code collection}
+     * @param <T>        the type of elements in {@code collection}.
      * @return given {@code collection}.
      * @throws SQLException if a database error occurs.
      */
@@ -351,7 +284,7 @@ public class Context {
         for (final Object element : collection) {
             if (element instanceof Catalog) {
                 final Catalog catalog = (Catalog) element;
-                getSchemas(catalog.isVirtual() ? "" : catalog.getTableCat(), null, catalog.getSchemas());
+                getSchemas(catalog.getTableCat(), null, catalog.getSchemas());
             }
         }
         return collection;
@@ -374,22 +307,21 @@ public class Context {
      * Invokes {@link DatabaseMetaData#getClientInfoProperties()} method and adds bound values to specified collection.
      *
      * @param collection the collection to which bound values are added.
-     * @param <T>        element type parameter of the {@code collection}
+     * @param <T>        the type of elements in {@code collection}.
      * @return given {@code collection}.
      * @throws SQLException if a database error occurs.
      * @see DatabaseMetaData#getClientInfoProperties()
      */
     public <T extends Collection<? super ClientInfoProperty>> T getClientInfoProperties(final T collection)
             throws SQLException {
+        requireNonNull(collection, "collection is null");
         try (ResultSet results = databaseMetaData.getClientInfoProperties()) {
             if (results != null) {
                 bind(results, ClientInfoProperty.class, collection);
             }
         } catch (final SQLException sqle) {
             logger.log(Level.WARNING, "failed to getClientInfoProperties()", sqle);
-            if (!isSuppressed(sqle.getClass())) {
-                throw sqle;
-            }
+            throwIfNotSuppressed(sqle);
         }
         return collection;
     }
@@ -416,7 +348,7 @@ public class Context {
      * @param table             a value for {@code table} parameter.
      * @param columnNamePattern a value for {@code columnNamePattern} parameter.
      * @param collection        the collection to which bound values are added.
-     * @param <T>               element type parameter of the {@code collection}
+     * @param <T>               the type of elements in {@code collection}.
      * @return given {@code collection}.
      * @throws SQLException if a database error occurs.
      * @see DatabaseMetaData#getColumnPrivileges(String, String, String, String)
@@ -467,7 +399,7 @@ public class Context {
      * @param tableNamePattern  a value for {@code tableNameSchema} parameter.
      * @param columnNamePattern a value for {@code columnNamePattern} parameter.
      * @param collection        the collection to which bound values are added.
-     * @param <T>               element type parameter of the {@code collection}
+     * @param <T>               the type of elements in {@code collection}.
      * @return given {@code collection}.
      * @throws SQLException if a database error occurs.
      * @see DatabaseMetaData#getColumns(String, String, String, String)
@@ -529,7 +461,7 @@ public class Context {
      * @param foreignSchema  av value for {@code foreignSchema} parameter
      * @param foreignTable   a value for {@code foreignTable} parameter
      * @param collection     the collection to which bound values are added.
-     * @param <T>            {@code collection}'s element type parameter
+     * @param <T>            the type of elements in {@code collection}.
      * @return given {@code collection}.
      * @throws SQLException if a database error occurs.
      */
@@ -586,7 +518,7 @@ public class Context {
      * @param schemaPattern       a value for {@code schemaPattern} parameter.
      * @param functionNamePattern a value for {@code functionNamePattern} parameter.
      * @param collection          the collection to which bound values are added.
-     * @param <T>                 {@code collection}'s element type parameter
+     * @param <T>                 the type of elements in {@code collection}.
      * @return given {@code collection}.
      * @throws SQLException if a database error occurs.
      * @see DatabaseMetaData#getFunctions(String, String, String)
@@ -643,7 +575,7 @@ public class Context {
      * @param functionNamePattern a value for {@code functionNamePattern} parameter.
      * @param columnNamePattern   a value for {@code columnNamePattern} parameter.
      * @param collection          the collection to which bound values are added.
-     * @param <T>                 {@code collection}'s element type parameter
+     * @param <T>                 the type of elements in {@code collection}.
      * @return given {@code collection}.
      * @throws SQLException if a database error occurs.
      * @see DatabaseMetaData#getFunctionColumns(String, String, String, String)
@@ -697,7 +629,7 @@ public class Context {
      * @param schema     a value for {@code schema} parameter
      * @param table      a value for {@code table} parameter
      * @param collection the collection to which bound values are added.
-     * @param <T>        {@code collection}'s element type parameter
+     * @param <T>        the type of elements in {@code collection}.
      * @return given {@code collection}.
      * @throws SQLException if a database error occurs.
      */
@@ -744,7 +676,7 @@ public class Context {
      * @param schema     a value for {@code schema} parameter.
      * @param table      a value for {@code table} parameter.
      * @param collection the collection to which bound values are added.
-     * @param <T>        {@code collection}'s element type parameter
+     * @param <T>        the type of elements in {@code collection}.
      * @return given {@code collection}.
      * @throws SQLException if a database error occurs.
      * @see DatabaseMetaData#getImportedKeys(String, String, String)
@@ -794,7 +726,7 @@ public class Context {
      * @param unique      a value for {@code unique} parameter.
      * @param approximate a value for {@code approximate} parameter.
      * @param collection  the collection to which bound values are added.
-     * @param <T>         {@code collection}'s element type parameter
+     * @param <T>         the type of elements in {@code collection}.
      * @return given {@code collection}.
      * @throws SQLException if a database error occurs.
      * @see DatabaseMetaData#getIndexInfo(String, String, String, boolean, boolean)
@@ -846,7 +778,7 @@ public class Context {
      * @param schema     a value for {@code schema} parameter.
      * @param table      a value for {@code table} parameter.
      * @param collection the collection to which bound values are added.
-     * @param <T>        {@code collection}'s element type parameter
+     * @param <T>        the type of elements in {@code collection}.
      * @return given {@code collection}.
      * @throws SQLException if a database error occurs.
      * @see DatabaseMetaData#getPrimaryKeys(String, String, String)
@@ -893,7 +825,7 @@ public class Context {
      * @param procedureNamePattern a value for {@code procedureNamePattern} parameter.
      * @param columnNamePattern    a value for {@code columnNamePattern} parameter.
      * @param collection           the collection to which bound values are added.
-     * @param <T>                  {@code collection}'s element type parameter
+     * @param <T>                  the type of elements in {@code collection}.
      * @return given {@code collection}.
      * @throws SQLException if a database error occurs.
      */
@@ -945,7 +877,7 @@ public class Context {
      * @param schemaPattern        a value for {@code schemaPattern} parameter.
      * @param procedureNamePattern a value for {@code procedureNamePattern} parameter.
      * @param collection           the collection to which bound values are added.
-     * @param <T>                  {@code collection}'s element type parameter
+     * @param <T>                  the type of elements in {@code collection}.
      * @return given {@code collection}.
      * @throws SQLException if a database error occurs.
      */
@@ -1003,7 +935,7 @@ public class Context {
      * @param tableNamePattern  a value for {@code tableNamePattern} parameter.
      * @param columnNamePattern a value for {@code columnNamePattern} parameter.
      * @param collection        the collection to which bound values are added.
-     * @param <T>               {@code collection}'s element type parameter
+     * @param <T>               the type of elements in {@code collection}.
      * @return given {@code collection}.
      * @throws SQLException if a database error occurs.
      */
@@ -1050,7 +982,7 @@ public class Context {
      * Invokes {@link DatabaseMetaData#getSchemas()} method and adds bound values to specified collection.
      *
      * @param collection the collection to which bound values are added.
-     * @param <T>        {@code collection}'s element type parameter
+     * @param <T>        the type of elements in {@code collection}.
      * @return given {@code collection}.
      * @throws SQLException if a database error occurs.
      * @see DatabaseMetaData#getSchemas()
@@ -1089,7 +1021,7 @@ public class Context {
      * @param catalog       a value for {@code catalog} parameter.
      * @param schemaPattern a value for {@code schemaPattern} parameter.
      * @param collection    the collection to which bound values are added.
-     * @param <T>           {@code collection}'s element type parameter
+     * @param <T>           the type of elements in {@code collection}.
      * @return given {@code collection}.
      * @throws SQLException if a database error occurs.
      * @see DatabaseMetaData#getSchemas(String, String)
@@ -1135,7 +1067,7 @@ public class Context {
      * @param schemaPattern    a value for {@code schemaPattern}.
      * @param tableNamePattern a value for {@code tableNamePattern}.
      * @param collection       the collection to which bound values are added.
-     * @param <T>              {@code collection}'s element type parameter
+     * @param <T>              the type of elements in {@code collection}.
      * @return given {@code collection}.
      * @throws SQLException if a database error occurs.
      * @see DatabaseMetaData#getSuperTables(String, String, String)
@@ -1187,7 +1119,7 @@ public class Context {
      * @param schemaPattern   a value for {@code schemaPattern} parameter.
      * @param typeNamePattern a value for {@code typeNamePattern} parameter.
      * @param collection      the collection to which bound values are added.
-     * @param <T>             element type parameter of the {@code collection}.
+     * @param <T>             the type of elements in {@code collection}.
      * @return given {@code collection}.
      * @throws SQLException if a database error occurs.
      */
@@ -1218,7 +1150,7 @@ public class Context {
      * @param schemaPattern    a value for {@code schemaPattern} parameter.
      * @param tableNamePattern a value for {@code tableNamePattern} parameter.
      * @param collection       the collection to which bound values are added.
-     * @param <T>              element type parameter of the {@code collection}.
+     * @param <T>              the type of elements in {@code collection}.
      * @return given {@code collection}.
      * @throws SQLException if a database error occurs.
      */
@@ -1262,7 +1194,7 @@ public class Context {
      * Invokes {@link DatabaseMetaData#getTableTypes()} method and adds bound values to specified collection.
      *
      * @param collection the collection to which bound values are added.
-     * @param <T>        element type parameter of the {@code collection}.
+     * @param <T>        the type of elements in {@code collection}.
      * @return given {@code collection}.
      * @throws SQLException if a database error occurs.
      */
@@ -1304,7 +1236,7 @@ public class Context {
      * @param tableNamePattern a value for {@code tableNamePattern} parameter.
      * @param types            a value for {@code types} parameter.
      * @param collection       the collection to which values are added.
-     * @param <T>              element type parameter of the {@code collection}.
+     * @param <T>              the type of elements in {@code collection}.
      * @return given {@code collection}.
      * @throws SQLException if a database error occurs.
      * @see DatabaseMetaData#getTables(String, String, String, String[])
@@ -1376,7 +1308,7 @@ public class Context {
      * Invokes {@link DatabaseMetaData#getTypeInfo()} method and adds bound values to specified collection.
      *
      * @param collection the collection to which bound values are added.
-     * @param <T>        element type parameter of the {@code collection}.
+     * @param <T>        the type of elements in {@code collection}.
      * @return given {@code collection}.
      * @throws SQLException if a database error occurs.
      */
@@ -1416,7 +1348,7 @@ public class Context {
      * @param typeNamePattern a value for {@code typeNamePattern} parameter.
      * @param types           a value for {@code type} parameter
      * @param collection      the collection to which bound values are added.
-     * @param <T>             element type parameter of the {@code collection}.
+     * @param <T>             the type of elements in {@code collection}.
      * @return given {@code collection}.
      * @throws SQLException if a database error occurs.
      */
@@ -1469,7 +1401,7 @@ public class Context {
      * @param schema     a value for {@code schema} parameter.
      * @param table      a value for {@code table} parameter.
      * @param collection the collection to which bound values are added.
-     * @param <T>        element type parameter of the {@code collection}
+     * @param <T>        the type of elements in {@code collection}.
      * @return given {@code collection}.
      * @throws SQLException if a database access error occurs.
      */

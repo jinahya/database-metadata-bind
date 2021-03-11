@@ -22,9 +22,12 @@ package com.github.jinahya.database.metadata.bind;
 
 import javax.validation.constraints.AssertTrue;
 import javax.xml.bind.annotation.XmlElement;
+import javax.xml.bind.annotation.XmlEnum;
+import javax.xml.bind.annotation.XmlEnumValue;
 import javax.xml.bind.annotation.XmlRootElement;
 import java.sql.DatabaseMetaData;
 import java.util.Objects;
+import java.util.Optional;
 
 import static java.util.Objects.requireNonNull;
 
@@ -46,47 +49,48 @@ public class FunctionColumn implements MetadataType {
      *
      * @see DatabaseMetaData#getFunctionColumns(java.lang.String, java.lang.String, java.lang.String, java.lang.String)
      */
+    @XmlEnum
     public enum ColumnType implements IntFieldEnum<ColumnType> {
 
         /**
-         * Constant for {@link DatabaseMetaData#functionColumnUnknown}.
+         * Constant for {@link DatabaseMetaData#functionColumnUnknown}({@link DatabaseMetaData#functionColumnUnknown}).
          */
         FUNCTION_COLUMN_UNKNOWN(DatabaseMetaData.functionColumnUnknown), // 0
 
         /**
-         * Constants for {@link DatabaseMetaData#functionColumnIn}.
+         * Constants for {@link DatabaseMetaData#functionColumnIn}({@link DatabaseMetaData#functionColumnIn}).
          */
         FUNCTION_COLUMN_IN(DatabaseMetaData.functionColumnIn), // 1
 
         /**
-         * Constants for {@link DatabaseMetaData#functionColumnInOut}.
+         * Constants for {@link DatabaseMetaData#functionColumnInOut}({@link DatabaseMetaData#functionColumnInOut}).
          */
         FUNCTION_COLUMN_IN_OUT(DatabaseMetaData.functionColumnInOut), // 2
 
         /**
-         * Constants for {@link DatabaseMetaData#functionColumnOut}.
+         * Constants for {@link DatabaseMetaData#functionColumnOut}({@link DatabaseMetaData#functionColumnOut}).
          */
         FUNCTION_COLUMN_OUT(DatabaseMetaData.functionColumnOut), // 3
 
         /**
-         * Constant for {@link DatabaseMetaData#functionReturn}.
+         * Constant for {@link DatabaseMetaData#functionReturn}({@link DatabaseMetaData#functionReturn}).
          */
         // https://stackoverflow.com/a/46647586/330457
         FUNCTION_COLUMN_RETURN(DatabaseMetaData.functionReturn), // 4
 
         /**
-         * Constants for {@link DatabaseMetaData#functionColumnResult}.
+         * Constants for {@link DatabaseMetaData#functionColumnResult}({@link DatabaseMetaData#functionColumnResult}).
          */
         FUNCTION_COLUMN_RESULT(DatabaseMetaData.functionColumnResult); // 5
 
         /**
-         * Returns the constant whose raw value equals to given. An instance of {@link IllegalArgumentException} will be
-         * thrown if no constant matches.
+         * Returns the constant whose raw value equals to given. An {@link IllegalArgumentException} will be thrown if
+         * no constant matches.
          *
          * @param rawValue the raw value
          * @return the constant whose raw value equals to given.
          */
-        public static ColumnType valueOf(final int rawValue) {
+        public static ColumnType valueOfRawValue(final int rawValue) {
             return IntFieldEnums.valueOfRawValue(ColumnType.class, rawValue);
         }
 
@@ -112,20 +116,21 @@ public class FunctionColumn implements MetadataType {
      *
      * @see DatabaseMetaData#getFunctionColumns(java.lang.String, java.lang.String, java.lang.String, java.lang.String)
      */
+    @XmlEnum
     public enum Nullable implements IntFieldEnum<Nullable> {
 
         /**
-         * Constant for {@link DatabaseMetaData#functionNoNulls}.
+         * Constant for {@link DatabaseMetaData#functionNoNulls}({@link DatabaseMetaData#functionNoNulls}).
          */
         FUNCTION_NO_NULLS(DatabaseMetaData.functionNoNulls),
 
         /**
-         * Constant for {@link DatabaseMetaData#functionNullable}.
+         * Constant for {@link DatabaseMetaData#functionNullable}({@link DatabaseMetaData#functionNullable}).
          */
         FUNCTION_NULLABLE(DatabaseMetaData.functionNullable),
 
         /**
-         * Constant for {@link DatabaseMetaData#functionNullableUnknown}.
+         * Constant for {@link DatabaseMetaData#functionNullableUnknown}({@link DatabaseMetaData#functionNullableUnknown}).
          */
         FUNCTION_NULLABLE_UNKNOWN(DatabaseMetaData.functionNullableUnknown);
 
@@ -136,7 +141,7 @@ public class FunctionColumn implements MetadataType {
          * @param rawValue the value value
          * @return the constant whose raw value equals to given.
          */
-        public static Nullable valueOf(final int rawValue) {
+        public static Nullable valueOfRawValue(final int rawValue) {
             return IntFieldEnums.valueOfRawValue(Nullable.class, rawValue);
         }
 
@@ -160,14 +165,33 @@ public class FunctionColumn implements MetadataType {
     /**
      * Constants for {@code IS_NULLABLE} column value.
      */
+    @XmlEnum
     public enum IsNullable implements FieldEnum<IsNullable, String> {
 
+        /**
+         * Constant for {@code ""}.
+         */
+        @XmlEnumValue("")
         UNKNOWN(""),
 
+        /**
+         * Constant for {@code "YES"}.
+         */
+        //@XmlEnumValue("YES") // defaults to Enum.name()
         YES("YES"),
 
+        /**
+         * Constant for {@code "NO"}.
+         */
+        //@XmlEnumValue("NO") // defaults to Enum.name()
         NO("NO");
 
+        /**
+         * Returns the constant whose {@link #getRawValue() rawValue} matches to specified value.
+         *
+         * @param rawValue the value for {@link #getRawValue() rawValue} to match.
+         * @return a matched constant.
+         */
         public static IsNullable valueOfRawValue(final String rawValue) {
             return FieldEnums.valueOfRawValue(IsNullable.class, rawValue);
         }
@@ -184,8 +208,6 @@ public class FunctionColumn implements MetadataType {
         private final String rawValue;
     }
 
-    // -----------------------------------------------------------------------------------------------------------------
-
     /**
      * Creates a new instance.
      */
@@ -193,7 +215,6 @@ public class FunctionColumn implements MetadataType {
         super();
     }
 
-    // -----------------------------------------------------------------------------------------------------------------
     @Override
     public String toString() {
         return super.toString() + '{'
@@ -439,7 +460,13 @@ public class FunctionColumn implements MetadataType {
         this.isNullable = isNullable;
     }
 
-    public void setIsNullable(final IsNullable isNullable) {
+    public IsNullable getIsNullableAsEnum() {
+        return Optional.ofNullable(getIsNullable())
+                .map(IsNullable::valueOfRawValue)
+                .orElse(null);
+    }
+
+    public void setIsNullableAsEnum(final IsNullable isNullable) {
         requireNonNull(isNullable, "isNullable is null");
         setIsNullable(isNullable.rawValue);
     }

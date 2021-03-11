@@ -1,50 +1,24 @@
 package com.github.jinahya.database.metadata.bind;
 
-import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
-import javax.validation.constraints.NotEmpty;
-import javax.validation.constraints.NotNull;
 import java.lang.reflect.Method;
 import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
-import java.util.stream.IntStream;
+import java.util.stream.Stream;
 
 import static java.util.Objects.requireNonNull;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 
-/**
- * An abstract class for testing enum classes implement {@link IntFieldEnum} interface.
- *
- * @param <E> enum type parameter
- * @author Jin Kwon &lt;onacit_at_gmail.com&gt;
- */
-@Slf4j
-abstract class IntFieldEnumTest<E extends Enum<E> & IntFieldEnum<E>> {
+abstract class FieldEnumTest<E extends Enum<E> & FieldEnum<E, T>, T> {
 
-    /**
-     * Creates a new instance with specified enum class.
-     *
-     * @param enumClass the enum class to test.
-     * @see #enumClass
-     */
-    protected IntFieldEnumTest(final Class<E> enumClass) {
+    protected FieldEnumTest(final Class<E> enumClass, final Class<T> fieldClass) {
         super();
         this.enumClass = requireNonNull(enumClass, "enumClass is null");
-    }
-
-    // -----------------------------------------------------------------------------------------------------------------
-
-    /**
-     * Returns a stream of raw values of all enum constants.
-     *
-     * @return a stream of raw values of all enum constants.
-     */
-    protected @NotNull IntStream rawValueStream() {
-        return Arrays.stream(enumClass.getEnumConstants()).mapToInt(IntFieldEnum::getRawValue);
+        this.fieldClass = requireNonNull(fieldClass, "fieldClass is null");
     }
 
     /**
@@ -52,11 +26,18 @@ abstract class IntFieldEnumTest<E extends Enum<E> & IntFieldEnum<E>> {
      *
      * @return a stream of raw values of all enum constants.
      */
-    protected @NotEmpty List<@NotNull Integer> rawValueList() {
-        return rawValueStream().boxed().collect(Collectors.toList());
+    protected Stream<T> rawValueStream() {
+        return Arrays.stream(enumClass.getEnumConstants()).map(FieldEnum::getRawValue);
     }
 
-    // -----------------------------------------------------------------------------------------------------------------
+    /**
+     * Returns a list of raw values of all enum constants.
+     *
+     * @return a list of raw values of all enum constants.
+     */
+    protected List<T> rawValueList() {
+        return rawValueStream().collect(Collectors.toList());
+    }
 
     /**
      * Asserts {@code valueOfRawValue(int)} method, defined in specified enum class, invoked with each enum constant's
@@ -65,7 +46,7 @@ abstract class IntFieldEnumTest<E extends Enum<E> & IntFieldEnum<E>> {
     @DisplayName("valueOfRawValue(c.getRawValue()) returns c")
     @Test
     void valueOfRawValue_ReturnsTheConstant_ForItsRawValue() throws ReflectiveOperationException {
-        final Method method = enumClass.getMethod("valueOfRawValue", int.class);
+        final Method method = enumClass.getMethod("valueOfRawValue", fieldClass);
         for (final E enumConstant : enumClass.getEnumConstants()) {
             @SuppressWarnings({"unchecked"})
             final E value = (E) method.invoke(null, enumConstant.getRawValue());
@@ -73,22 +54,15 @@ abstract class IntFieldEnumTest<E extends Enum<E> & IntFieldEnum<E>> {
         }
     }
 
-    @DisplayName("values.rawValue() are sorted")
-    @Test
-    void getRawValue_Sorted_ForAll() {
-        assertThat(rawValueStream())
-                .isSorted();
-    }
-
-    @DisplayName("all raw values are unique to each other")
+    @DisplayName("values.rawValue() are unique to each other")
     @Test
     void getRawValue_NoDuplicates_ForAll() {
         // id this the best you got?
-        assertThat(rawValueStream().distinct().boxed().collect(Collectors.toList()))
+        assertThat(rawValueStream().distinct().collect(Collectors.toList()))
                 .hasSameElementsAs(rawValueList());
     }
 
-    @DisplayName("getRawValue() does not throw any exception")
+    @DisplayName("getRawValue() does not throw any exceptions")
     @Test
     void getRawValue_DoesNotThrow_() {
         for (final E enumConstant : enumClass.getEnumConstants()) {
@@ -97,12 +71,11 @@ abstract class IntFieldEnumTest<E extends Enum<E> & IntFieldEnum<E>> {
             // https://bugs.java.com/bugdatabase/view_bug.do?bug_id=8141508
             // https://bugs.java.com/bugdatabase/view_bug.do?bug_id=8142476
             // final int rawValue = assertDoesNotThrow(enumConstant::getRawValue);
-            final int rawValue = assertDoesNotThrow(() -> enumConstant.getRawValue());
+            final T rawValue = assertDoesNotThrow(() -> enumConstant.getRawValue());
         }
     }
 
-    /**
-     * The enum class to test.
-     */
     protected final Class<E> enumClass;
+
+    protected final Class<T> fieldClass;
 }

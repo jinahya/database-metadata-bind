@@ -50,17 +50,17 @@ public class Column implements MetadataType {
     public enum Nullable implements IntFieldEnum<Nullable> {
 
         /**
-         * Constant for {@link DatabaseMetaData#columnNoNulls}.
+         * Constant for {@link DatabaseMetaData#columnNoNulls}({@link DatabaseMetaData#columnNoNulls}).
          */
         COLUMN_NO_NULLS(DatabaseMetaData.columnNoNulls),
 
         /**
-         * Constant for {@link DatabaseMetaData#columnNullable}.
+         * Constant for {@link DatabaseMetaData#columnNullable}({@link DatabaseMetaData#columnNullable}).
          */
         COLUMN_NULLABLE(DatabaseMetaData.columnNullable),
 
         /**
-         * Constant for {@link DatabaseMetaData#columnNullableUnknown}.
+         * Constant for {@link DatabaseMetaData#columnNullableUnknown}({@link DatabaseMetaData#columnNullableUnknown}).
          */
         COLUMN_NULLABLE_UNKNOWN(DatabaseMetaData.columnNullableUnknown);
 
@@ -79,11 +79,6 @@ public class Column implements MetadataType {
             this.rawValue = rawValue;
         }
 
-        /**
-         * Returns the raw value of this constant.
-         *
-         * @return the raw value of this constant.
-         */
         @Override
         public int getRawValue() {
             return rawValue;

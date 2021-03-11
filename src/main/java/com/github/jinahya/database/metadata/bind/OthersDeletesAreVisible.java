@@ -20,6 +20,9 @@ package com.github.jinahya.database.metadata.bind;
  * #L%
  */
 
+import javax.validation.Valid;
+import javax.validation.constraints.NotEmpty;
+import javax.validation.constraints.NotNull;
 import javax.xml.bind.annotation.XmlRootElement;
 import java.sql.SQLException;
 import java.util.ArrayList;
@@ -35,13 +38,23 @@ import static java.util.Objects.requireNonNull;
 @XmlRootElement
 public class OthersDeletesAreVisible extends AreVisible<OthersDeletesAreVisible> {
 
-    static List<OthersDeletesAreVisible> all(final Context context) throws SQLException {
+    /**
+     * Invokes {@link Context#othersDeletesAreVisible(int)} method for all types defined in {@link ResultSetType} and
+     * returns bound values.
+     *
+     * @param context a context.
+     * @return a list of bound values.
+     * @throws SQLException if a database access error occurs.
+     */
+    public static @NotEmpty List<@Valid @NotNull OthersDeletesAreVisible> getAllInstances(
+            final @NotNull Context context)
+            throws SQLException {
         requireNonNull(context, "context is null");
-        final List<OthersDeletesAreVisible> result = new ArrayList<>();
+        final List<OthersDeletesAreVisible> all = new ArrayList<>();
         for (final ResultSetType type : ResultSetType.values()) {
-            result.add(context.othersDeletesAreVisible(type));
+            all.add(context.othersDeletesAreVisible(type));
         }
-        return result;
+        return all;
     }
 
     /**

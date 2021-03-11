@@ -175,7 +175,7 @@ abstract class MemoryTest {
     void othersDeletesAreVisible() throws SQLException, JAXBException {
         try (Connection connection = connect()) {
             final Context context = Context.newInstance(connection).suppress(SQLFeatureNotSupportedException.class);
-            final List<OthersDeletesAreVisible> all = OthersDeletesAreVisible.all(context);
+            final List<OthersDeletesAreVisible> all = OthersDeletesAreVisible.getAllInstances(context);
             Assertions.assertThat(all)
                     .doesNotContainNull()
                     .hasSizeLessThanOrEqualTo(ResultSetType.values().length);
@@ -192,7 +192,7 @@ abstract class MemoryTest {
     void othersInsertsAreVisible() throws SQLException, JAXBException {
         try (Connection connection = connect()) {
             final Context context = Context.newInstance(connection).suppress(SQLFeatureNotSupportedException.class);
-            final List<OthersInsertsAreVisible> all = OthersInsertsAreVisible.all(context);
+            final List<OthersInsertsAreVisible> all = OthersInsertsAreVisible.getAllInstances(context);
             Assertions.assertThat(all)
                     .doesNotContainNull()
                     .hasSizeLessThanOrEqualTo(ResultSetType.values().length);
@@ -209,7 +209,7 @@ abstract class MemoryTest {
     void othersUpdatesAreVisible() throws SQLException, JAXBException {
         try (Connection connection = connect()) {
             final Context context = Context.newInstance(connection).suppress(SQLFeatureNotSupportedException.class);
-            final List<OthersUpdatesAreVisible> all = OthersUpdatesAreVisible.all(context);
+            final List<OthersUpdatesAreVisible> all = OthersUpdatesAreVisible.getAllInstances(context);
             Assertions.assertThat(all)
                     .doesNotContainNull()
                     .hasSizeLessThanOrEqualTo(ResultSetType.values().length);

@@ -20,6 +20,9 @@ package com.github.jinahya.database.metadata.bind;
  * #L%
  */
 
+import javax.validation.Valid;
+import javax.validation.constraints.NotEmpty;
+import javax.validation.constraints.NotNull;
 import javax.xml.bind.annotation.XmlRootElement;
 import java.sql.SQLException;
 import java.util.ArrayList;
@@ -31,11 +34,22 @@ import static java.util.Objects.requireNonNull;
  * A class for binding result of {@link java.sql.DatabaseMetaData#othersInsertsAreVisible(int)} method.
  *
  * @author Jin Kwon &lt;onacit_at_gmail.com&gt;
+ * @see Context#othersInsertsAreVisible(int)
  */
 @XmlRootElement
 public class OthersInsertsAreVisible extends AreVisible<OthersInsertsAreVisible> {
 
-    static List<OthersInsertsAreVisible> all(final Context context) throws SQLException {
+    /**
+     * Invokes {@link Context#othersInsertsAreVisible(int)} method for all types defined in {@link ResultSetType} and
+     * returns bound values.
+     *
+     * @param context a context.
+     * @return a list of bound values.
+     * @throws SQLException if a database access error occurs.
+     */
+    public static @NotEmpty List<@Valid @NotNull OthersInsertsAreVisible> getAllInstances(
+            final @NotNull Context context)
+            throws SQLException {
         requireNonNull(context, "databaseMetaData is null");
         final List<OthersInsertsAreVisible> all = new ArrayList<>();
         for (final ResultSetType type : ResultSetType.values()) {

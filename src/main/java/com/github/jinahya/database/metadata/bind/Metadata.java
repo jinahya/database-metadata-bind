@@ -490,9 +490,9 @@ public class Metadata implements MetadataType {
 //            logSqlFeatureNotSupportedException(logger, sqlfnse);
 //        }
         // -------------------------------------------------------------------------------------------------------------
-        instance.othersDeletesAreVisible = OthersDeletesAreVisible.all(context);
-        instance.othersInsertsAreVisible = OthersInsertsAreVisible.all(context);
-        instance.othersUpdatesAreVisible = OthersUpdatesAreVisible.all(context);
+        instance.othersDeletesAreVisible = OthersDeletesAreVisible.getAllInstances(context);
+        instance.othersInsertsAreVisible = OthersInsertsAreVisible.getAllInstances(context);
+        instance.othersUpdatesAreVisible = OthersUpdatesAreVisible.getAllInstances(context);
         instance.ownDeletesAreVisible = OwnDeletesAreVisible.all(context);
         instance.ownInsertsAreVisible = OwnInsertsAreVisible.all(context);
         instance.ownUpdatesAreVisible = OwnUpdatesAreVisible.all(context);
