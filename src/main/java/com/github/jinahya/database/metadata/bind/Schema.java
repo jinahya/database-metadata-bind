@@ -53,12 +53,32 @@ public class Schema implements MetadataType {
     public static final String ATTRIBUTE_NAME_TABLE_CATALOG = "tableCatalog";
 
     // -----------------------------------------------------------------------------------------------------------------
+
+    /**
+     * Creates a new virtual instance with following property values.
+     *
+     * @param tableCatalog a value for {@code tableCatalog} property.
+     * @param tableSchem   a value for {@code tableSchem} property.
+     * @return a new virtual instance.
+     * @see Catalog#newVirtualInstance()
+     */
     static Schema newVirtualInstance(final String tableCatalog, final String tableSchem) {
         final Schema instance = new Schema();
         instance.virtual = Boolean.TRUE;
         instance.tableCatalog = tableCatalog;
         instance.tableSchem = tableSchem;
         return instance;
+    }
+
+    /**
+     * Creates a new virtual instance with specified table catalog.
+     *
+     * @param tableCatalog the value for {@code tableCatalog} property.
+     * @return a new virtual instance.
+     * @see Catalog#newVirtualInstance()
+     */
+    static Schema newVirtualInstance(final String tableCatalog) {
+        return newVirtualInstance(tableCatalog, "");
     }
 
     // -----------------------------------------------------------------------------------------------------------------

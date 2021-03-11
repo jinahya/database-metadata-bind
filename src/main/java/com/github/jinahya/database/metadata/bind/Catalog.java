@@ -57,11 +57,12 @@ public class Catalog implements MetadataType {
      * Creates a new instance whose {@code virtual} is {@code true}.
      *
      * @return a new instance whose {@code virtual} is {@code true}.
+     * @see Schema#newVirtualInstance(String, String)
      */
     static @Valid @NotNull Catalog newVirtualInstance() {
         final Catalog instance = new Catalog();
         instance.virtual = Boolean.TRUE;
-        instance.tableCat = "_vertual_";
+        instance.tableCat = "";
         return instance;
     }
 

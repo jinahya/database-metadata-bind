@@ -38,6 +38,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
+import java.util.function.Consumer;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -128,6 +129,33 @@ public class Context {
     /**
      * Binds all records as given type and adds them to specified collection.
      *
+     * @param <T>      binding type parameter
+     * @param results  the records to bind.
+     * @param type     the type of instances.
+     * @param consumer the collection to which bound instances are added
+     * @return given {@code collection}.
+     * @throws SQLException if a database error occurs.
+     */
+    private <T extends MetadataType> void bind2(@NotNull final ResultSet results, @NotNull final Class<T> type,
+                                               @NotNull final Consumer<? super T> consumer)
+            throws SQLException {
+        requireNonNull(results, "results is null");
+        requireNonNull(type, "type is null");
+        requireNonNull(consumer, "consumer is null");
+        while (results.next()) {
+            final T value;
+            try {
+                value = type.getConstructor().newInstance();
+            } catch (final ReflectiveOperationException roe) {
+                throw new RuntimeException("failed to instantiate " + type, roe);
+            }
+            consumer.accept(bind(results, type, value));
+        }
+    }
+
+    /**
+     * Binds all records as given type and adds them to specified collection.
+     *
      * @param <T>        binding type parameter
      * @param results    the records to bind.
      * @param type       the type of instances.
@@ -141,6 +169,10 @@ public class Context {
         requireNonNull(results, "results is null");
         requireNonNull(type, "type is null");
         requireNonNull(collection, "collection is null");
+        if (true) {
+            bind2(results, type, collection::add);
+            return collection;
+        }
         while (results.next()) {
             final T value;
             try {
@@ -154,6 +186,35 @@ public class Context {
     }
 
     // -----------------------------------------------------------------------------------------------------------------
+
+    /**
+     * Invokes {@link DatabaseMetaData#getAttributes(java.lang.String, java.lang.String, java.lang.String,
+     * java.lang.String)} method with given arguments and accepts bound values to specified consumer.
+     *
+     * @param catalog              a value for {@code catalog} parameter.
+     * @param schemaPattern        a value for {@code schemaPattern} parameter.
+     * @param typeNamePattern      a value for {@code typeNamePattern} parameter.
+     * @param attributeNamePattern a value for {@code attributeNamePattern} parameter.
+     * @param consumer             the consumer to which bound values are accepted.
+     * @throws SQLException if a database error occurs.
+     * @see DatabaseMetaData#getAttributes(String, String, String, String)
+     */
+    public void getAttributes2(final String catalog, final String schemaPattern, final String typeNamePattern,
+                              final String attributeNamePattern, @NotNull final Consumer<? super Attribute> consumer)
+            throws SQLException {
+        requireNonNull(consumer, "consumer is null");
+        try (ResultSet results = databaseMetaData.getAttributes(
+                catalog, schemaPattern, typeNamePattern, attributeNamePattern)) {
+            if (results != null) {
+                bind2(results, Attribute.class, consumer);
+            }
+        } catch (final SQLException sqle) {
+            logger.log(Level.WARNING, sqle,
+                       () -> String.format("failed to getAttributes(%1$s, %2$s, %3$s, %4$s)",
+                                           catalog, schemaPattern, typeNamePattern, attributeNamePattern));
+            throwIfNotSuppressed(sqle);
+        }
+    }
 
     /**
      * Invokes {@link DatabaseMetaData#getAttributes(java.lang.String, java.lang.String, java.lang.String,
@@ -173,6 +234,10 @@ public class Context {
             final String catalog, final String schemaPattern, final String typeNamePattern,
             final String attributeNamePattern, @NotNull final T collection)
             throws SQLException {
+        if (true) {
+            getAttributes2(catalog, schemaPattern, typeNamePattern, attributeNamePattern, v -> collection.add(v));
+            return collection;
+        }
         try (ResultSet results = databaseMetaData.getAttributes(
                 catalog, schemaPattern, typeNamePattern, attributeNamePattern)) {
             if (results != null) {
@@ -1045,7 +1110,7 @@ public class Context {
             throwIfNotSuppressed(sqle);
         }
         if (collection.isEmpty()) {
-            collection.add(Schema.newVirtualInstance(null, "_virtual_"));
+            collection.add(Schema.newVirtualInstance(null));
         }
         for (final Object element : collection) {
             if (element instanceof Schema) {
@@ -1059,20 +1124,6 @@ public class Context {
         }
         return collection;
     }
-
-//    /**
-//     * Invokes {@link DatabaseMetaData#getSchemas(String, String)} method with given arguments and returns bound
-//     * values.
-//     *
-//     * @param catalog       a value for {@code catalog} parameter.
-//     * @param schemaPattern a value for {@code schemaPattern} parameter.
-//     * @return a list of bound values.
-//     * @throws SQLException if a database error occurs.
-//     * @see #getSchemas(String, String, Collection)
-//     */
-//    public List<Schema> getSchemas(final String catalog, final String schemaPattern) throws SQLException {
-//        return getSchemas(catalog, schemaPattern, new ArrayList<>());
-//    }
 
     // -------------------------------------------------------------------------------------------------- getSuperTables
 
@@ -1455,19 +1506,6 @@ public class Context {
 //    }
 
     // ---------------------------------------------------------------------------------------------- deletesAreDetected
-    @Valid @NotNull DeletesAreDetected deletesAreDetected(final ResultSetType type) throws SQLException {
-        requireNonNull(type, "type is null");
-        final DeletesAreDetected value = new DeletesAreDetected();
-        value.setType(type);
-        try {
-            value.setValue(databaseMetaData.deletesAreDetected(type.getRawValue()));
-        } catch (final SQLException sqle) {
-            logger.log(Level.WARNING, sqle,
-                       () -> String.format("failed to invoke deletesAreDetected(%1$d)", type.getRawValue()));
-            throwIfNotSuppressed(sqle);
-        }
-        return value;
-    }
 
     /**
      * Invokes {@link DatabaseMetaData#deletesAreDetected(int)} with specified argument and returns a bound value.
@@ -1478,10 +1516,29 @@ public class Context {
      * @throws SQLException if a database access error occurs.
      */
     public @Valid @NotNull DeletesAreDetected deletesAreDetected(final int type) throws SQLException {
-        return deletesAreDetected(ResultSetType.valueOfRawValue(type));
+        final DeletesAreDetected value = new DeletesAreDetected();
+        value.setType(type);
+        try {
+            value.setTypeName(ResultSetType.valueOfRawValue(value.getType()).name());
+        } catch (final IllegalArgumentException iae) {
+            logger.warning("unknown type: " + type);
+        }
+        try {
+            value.setValue(databaseMetaData.deletesAreDetected(value.getType()));
+        } catch (final SQLException sqle) {
+            logger.log(Level.WARNING, sqle,
+                       () -> String.format("failed to invoke deletesAreDetected(%1$d)", value.getType()));
+            throwIfNotSuppressed(sqle);
+        }
+        return value;
+    }
+
+    @Valid @NotNull DeletesAreDetected deletesAreDetected(final ResultSetType type) throws SQLException {
+        return deletesAreDetected(type.getRawValue());
     }
 
     // ---------------------------------------------------------------------------------------------- insertsAreDetected
+
     /**
      * Invokes {@link DatabaseMetaData#insertsAreDetected(int)} with specified argument and returns a bound value.
      *
@@ -1514,6 +1571,7 @@ public class Context {
     }
 
     // ---------------------------------------------------------------------------------------------- updatesAreDetected
+
     /**
      * Invokes {@link DatabaseMetaData#updatesAreDetected(int)} method with specified argument and returns a bound
      * value.

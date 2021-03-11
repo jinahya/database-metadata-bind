@@ -20,12 +20,14 @@ package com.github.jinahya.database.metadata.bind;
  * #L%
  */
 
+import javax.validation.Valid;
+import javax.validation.constraints.NotEmpty;
+import javax.validation.constraints.NotNull;
 import javax.xml.bind.annotation.XmlRootElement;
 import java.sql.DatabaseMetaData;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.logging.Level;
 
 import static java.util.Objects.requireNonNull;
 
@@ -33,23 +35,27 @@ import static java.util.Objects.requireNonNull;
  * A class for binding result of {@link DatabaseMetaData#insertsAreDetected(int)} method.
  *
  * @author Jin Kwon &lt;onacit_at_gmail.com&gt;
+ * @see Context#deletesAreDetected(int)
  */
 @XmlRootElement
 public class DeletesAreDetected extends AreDetected<DeletesAreDetected> {
 
-    static List<DeletesAreDetected> all(final Context context) throws SQLException {
+    /**
+     * Invokes {@link Context#deletesAreDetected(int)} for all types defined in {@link java.sql.ResultSet} and returns
+     * bound values.
+     *
+     * @param context a context.
+     * @return a list of bound values.
+     * @throws SQLException if a database access error occurs.
+     */
+    public static @NotEmpty List<@Valid @NotNull DeletesAreDetected> getAllInstances(final @NotNull Context context)
+            throws SQLException {
         requireNonNull(context, "context is null");
-        final List<DeletesAreDetected> result = new ArrayList<>();
+        final List<DeletesAreDetected> all = new ArrayList<>();
         for (final ResultSetType type : ResultSetType.values()) {
-            try {
-                result.add(context.deletesAreDetected(type));
-            } catch (final SQLException sqle) {
-                logger.log(Level.WARNING, sqle,
-                           () -> String.format("failed to invoke deletesAreDetected(%1$d)", type.getRawValue()));
-                context.throwIfNotSuppressed(sqle);
-            }
+            all.add(context.deletesAreDetected(type));
         }
-        return result;
+        return all;
     }
 
     /**

@@ -123,7 +123,7 @@ abstract class MemoryTest {
     void deletesAreDetected() throws SQLException, JAXBException {
         try (Connection connection = connect()) {
             final Context context = Context.newInstance(connection).suppress(SQLFeatureNotSupportedException.class);
-            final List<DeletesAreDetected> all = DeletesAreDetected.all(context);
+            final List<DeletesAreDetected> all = DeletesAreDetected.getAllInstances(context);
             assertThat(all)
                     .hasSizeLessThanOrEqualTo(ResultSetType.values().length)
                     .doesNotContainNull();

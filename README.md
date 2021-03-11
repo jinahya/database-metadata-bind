@@ -13,6 +13,18 @@ result types.
 * is an instance method.
 * has at least one parameter.
   * (or) result type is a [ResultSet][ResultSet].
+  
+## Testing with in-memory databases.
+
+Tests for in-memory databases, such as Apache Derby, H2, HSQLDB, and SQLite, are prepared.
+
+```
+$ mvn -Pmemory clean test
+...
+$
+```
+
+See target directory for output files.
 
 ## Usage
 

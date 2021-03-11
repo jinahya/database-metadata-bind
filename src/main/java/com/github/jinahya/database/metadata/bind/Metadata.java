@@ -138,7 +138,7 @@ public class Metadata implements MetadataType {
 //            logSqlFeatureNotSupportedException(logger, sqlfnse);
 //        }
         // -------------------------------------------------------------------------------------------------------------
-        instance.deletesAreDetected = DeletesAreDetected.all(context);
+        instance.deletesAreDetected = DeletesAreDetected.getAllInstances(context);
         // -------------------------------------------------------------------------------------------------------------
 //        try {
 //            instance.doesMaxRowSizeIncludeBlobs
