@@ -20,6 +20,9 @@ package com.github.jinahya.database.metadata.bind;
  * #L%
  */
 
+import javax.validation.Valid;
+import javax.validation.constraints.NotEmpty;
+import javax.validation.constraints.NotNull;
 import javax.xml.bind.annotation.XmlRootElement;
 import java.sql.DatabaseMetaData;
 import java.sql.SQLException;
@@ -32,11 +35,24 @@ import static java.util.Objects.requireNonNull;
  * A class for binding result of {@link DatabaseMetaData#ownUpdatesAreVisible(int)} method.
  *
  * @author Jin Kwon &lt;onacit_at_gmail.com&gt;
+ * @see Context#ownUpdatesAreVisible(int)
  */
 @XmlRootElement
 public class OwnUpdatesAreVisible extends AreVisible<OwnUpdatesAreVisible> {
 
-    static List<OwnUpdatesAreVisible> all(final Context context) throws SQLException {
+    private static final long serialVersionUID = -1214124846951421149L;
+
+    /**
+     * Invokes {@link Context#ownUpdatesAreVisible(int)} method for all types defined in {@link java.sql.ResultSet} and
+     * returns bound values.
+     *
+     * @param context a context.
+     * @return a list of bound values.
+     * @throws SQLException if a database access error occurs.
+     * @see Context#ownUpdatesAreVisible(int)
+     */
+    public static @NotEmpty List<@Valid @NotEmpty OwnUpdatesAreVisible> getAllInstances(final @NotNull Context context)
+            throws SQLException {
         requireNonNull(context, "context is null");
         final List<OwnUpdatesAreVisible> all = new ArrayList<>();
         for (final ResultSetType type : ResultSetType.values()) {

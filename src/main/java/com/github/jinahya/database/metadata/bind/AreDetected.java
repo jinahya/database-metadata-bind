@@ -33,11 +33,10 @@ import static java.util.Objects.requireNonNull;
  * A class for binding result of {@link DatabaseMetaData#deletesAreDetected(int)} method.
  *
  * @author Jin Kwon &lt;onacit_at_gmail.com&gt;
- * @see DeletesAreDetected
- * @see InsertsAreDetected
- * @see UpdatesAreDetected
  */
-abstract class AreDetected<T extends AreDetected<T>> implements Comparable<T> {
+abstract class AreDetected<T extends AreDetected<T>> implements MetadataType, Comparable<T> {
+
+    private static final long serialVersionUID = 472228030784272988L;
 
     static final Logger logger = Logger.getLogger(MethodHandles.lookup().lookupClass().getName());
 

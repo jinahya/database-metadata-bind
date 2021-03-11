@@ -33,15 +33,11 @@ import static java.util.Objects.requireNonNull;
  * An abstract class for binding {@code ...AreVisible} values.
  *
  * @param <T> subclass type parameter
- * @see OthersDeletesAreVisible
- * @see OthersInsertsAreVisible
- * @see OthersUpdatesAreVisible
- * @see OwnDeletesAreVisible
- * @see OwnInsertsAreVisible
- * @see OwnUpdatesAreVisible
  */
 @XmlTransient
-abstract class AreVisible<T extends AreVisible<T>> implements Comparable<T> {
+abstract class AreVisible<T extends AreVisible<T>> implements MetadataType, Comparable<T> {
+
+    private static final long serialVersionUID = 8635936632512182596L;
 
     static final Logger logger = Logger.getLogger(MethodHandles.lookup().lookupClass().getName());
 

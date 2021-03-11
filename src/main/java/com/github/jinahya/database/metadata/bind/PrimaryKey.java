@@ -45,6 +45,7 @@ public class PrimaryKey implements MetadataType {
         super();
     }
 
+    // -----------------------------------------------------------------------------------------------------------------
     @Override
     public String toString() {
         return super.toString() + '{'

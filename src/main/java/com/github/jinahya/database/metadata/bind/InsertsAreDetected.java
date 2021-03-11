@@ -39,6 +39,8 @@ import static java.util.Objects.requireNonNull;
 @XmlRootElement
 public class InsertsAreDetected extends AreDetected<InsertsAreDetected> {
 
+    private static final long serialVersionUID = 8464348704439999572L;
+
     /**
      * Invokes {@link Context#insertsAreDetected(int)} method for all types defined in {@link java.sql.ResultSet} and
      * returns bound values.

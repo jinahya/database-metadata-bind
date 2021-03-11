@@ -40,6 +40,8 @@ import static java.util.Objects.requireNonNull;
 @XmlRootElement
 public class UpdatesAreDetected extends AreDetected<UpdatesAreDetected> {
 
+    private static final long serialVersionUID = -7538643762491010895L;
+
     /**
      * Invokes {@link Context#updatesAreDetected(int)} for all types defined in {@link java.sql.ResultSet} and returns
      * bound values.

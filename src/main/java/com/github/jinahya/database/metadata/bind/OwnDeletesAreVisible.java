@@ -20,6 +20,9 @@ package com.github.jinahya.database.metadata.bind;
  * #L%
  */
 
+import javax.validation.Valid;
+import javax.validation.constraints.NotEmpty;
+import javax.validation.constraints.NotNull;
 import javax.xml.bind.annotation.XmlRootElement;
 import java.sql.SQLException;
 import java.util.ArrayList;
@@ -31,11 +34,24 @@ import static java.util.Objects.requireNonNull;
  * A class for binding result of {@link java.sql.DatabaseMetaData#deletesAreDetected(int)} method.
  *
  * @author Jin Kwon &lt;onacit_at_gmail.com&gt;
+ * @see Context#ownDeletesAreVisible(int)
  */
 @XmlRootElement
 public class OwnDeletesAreVisible extends AreVisible<OwnDeletesAreVisible> {
 
-    static List<OwnDeletesAreVisible> all(final Context context) throws SQLException {
+    private static final long serialVersionUID = -8947169068054773215L;
+
+    /**
+     * Invokes {@link Context#ownDeletesAreVisible(int)} method for all types defined in {@link java.sql.ResultSet} and
+     * returns bound values.
+     *
+     * @param context a context.
+     * @return a list of bound values.
+     * @throws SQLException if a database access error occurs.
+     * @see Context#ownDeletesAreVisible(int)
+     */
+    public static @NotEmpty List<@Valid @NotNull OwnDeletesAreVisible> all(final @NotNull Context context)
+            throws SQLException {
         requireNonNull(context, "context is null");
         final List<OwnDeletesAreVisible> all = new ArrayList<>();
         for (final ResultSetType type : ResultSetType.values()) {

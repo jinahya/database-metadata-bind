@@ -34,17 +34,21 @@ import static java.util.Objects.requireNonNull;
  * A class for binding result of {@link java.sql.DatabaseMetaData#othersDeletesAreVisible(int)} method.
  *
  * @author Jin Kwon &lt;onacit_at_gmail.com&gt;
+ * @see Context#othersDeletesAreVisible(int)
  */
 @XmlRootElement
 public class OthersDeletesAreVisible extends AreVisible<OthersDeletesAreVisible> {
 
+    private static final long serialVersionUID = 2430566341274616215L;
+
     /**
-     * Invokes {@link Context#othersDeletesAreVisible(int)} method for all types defined in {@link ResultSetType} and
-     * returns bound values.
+     * Invokes {@link Context#othersDeletesAreVisible(int)} method for all types defined in {@link java.sql.ResultSet}
+     * and returns bound values.
      *
      * @param context a context.
      * @return a list of bound values.
      * @throws SQLException if a database access error occurs.
+     * @see Context#othersDeletesAreVisible(int)
      */
     public static @NotEmpty List<@Valid @NotNull OthersDeletesAreVisible> getAllInstances(
             final @NotNull Context context)

@@ -494,8 +494,8 @@ public class Metadata implements MetadataType {
         instance.othersInsertsAreVisible = OthersInsertsAreVisible.getAllInstances(context);
         instance.othersUpdatesAreVisible = OthersUpdatesAreVisible.getAllInstances(context);
         instance.ownDeletesAreVisible = OwnDeletesAreVisible.all(context);
-        instance.ownInsertsAreVisible = OwnInsertsAreVisible.all(context);
-        instance.ownUpdatesAreVisible = OwnUpdatesAreVisible.all(context);
+        instance.ownInsertsAreVisible = OwnInsertsAreVisible.getAllInstances(context);
+        instance.ownUpdatesAreVisible = OwnUpdatesAreVisible.getAllInstances(context);
         // -------------------------------------------------------------------------------------------------------------
 //        try {
 //            instance.storesLowerCaseIdentifiers = context.databaseMetaData.storesLowerCaseIdentifiers();

@@ -40,6 +40,8 @@ import static java.util.Objects.requireNonNull;
 @XmlRootElement
 public class DeletesAreDetected extends AreDetected<DeletesAreDetected> {
 
+    private static final long serialVersionUID = -7476108814185270988L;
+
     /**
      * Invokes {@link Context#deletesAreDetected(int)} for all types defined in {@link java.sql.ResultSet} and returns
      * bound values.

@@ -243,7 +243,7 @@ abstract class MemoryTest {
     void ownInsertsAreVisible() throws SQLException, JAXBException {
         try (Connection connection = connect()) {
             final Context context = Context.newInstance(connection).suppress(SQLFeatureNotSupportedException.class);
-            final List<OwnInsertsAreVisible> all = OwnInsertsAreVisible.all(context);
+            final List<OwnInsertsAreVisible> all = OwnInsertsAreVisible.getAllInstances(context);
             Assertions.assertThat(all)
                     .doesNotContainNull()
                     .hasSizeLessThanOrEqualTo(ResultSetType.values().length);
@@ -260,7 +260,7 @@ abstract class MemoryTest {
     void ownUpdatesAreVisible() throws SQLException, JAXBException {
         try (Connection connection = connect()) {
             final Context context = Context.newInstance(connection).suppress(SQLFeatureNotSupportedException.class);
-            final List<OwnUpdatesAreVisible> all = OwnUpdatesAreVisible.all(context);
+            final List<OwnUpdatesAreVisible> all = OwnUpdatesAreVisible.getAllInstances(context);
             Assertions.assertThat(all)
                     .doesNotContainNull()
                     .hasSizeLessThanOrEqualTo(ResultSetType.values().length);

@@ -39,9 +39,11 @@ import static java.util.Objects.requireNonNull;
 @XmlRootElement
 public class OthersInsertsAreVisible extends AreVisible<OthersInsertsAreVisible> {
 
+    private static final long serialVersionUID = 1507862473680389478L;
+
     /**
-     * Invokes {@link Context#othersInsertsAreVisible(int)} method for all types defined in {@link ResultSetType} and
-     * returns bound values.
+     * Invokes {@link Context#othersInsertsAreVisible(int)} method for all types defined in {@link java.sql.ResultSet}
+     * and returns bound values.
      *
      * @param context a context.
      * @return a list of bound values.

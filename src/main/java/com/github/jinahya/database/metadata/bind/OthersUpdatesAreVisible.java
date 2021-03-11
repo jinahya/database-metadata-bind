@@ -39,6 +39,8 @@ import static java.util.Objects.requireNonNull;
 @XmlRootElement
 public class OthersUpdatesAreVisible extends AreVisible<OthersUpdatesAreVisible> {
 
+    private static final long serialVersionUID = 1642723778082421974L;
+
     /**
      * Invokes {@link Context#othersUpdatesAreVisible(int)} method for all types defined in {@link java.sql.ResultSet}
      * and returns bound values.
