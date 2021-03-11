@@ -7,18 +7,18 @@
 A library for binding various information
 from [DatabaseMetaData](http://docs.oracle.com/javase/8/docs/api/java/sql/DatabaseMetaData.html).
 
-All methods defined in [DatabaseMetaData][DatabaseMetaData] meet following conditions has been bound with corresponding
+All methods defined in [DatabaseMetaData][DatabaseMetaData] meet following conditions have been bound with corresponding
 result types.
 
 * is an instance method.
 * has at least one parameter.
-  * (or) result type is a [ResultSet][ResultSet].
+  * (and/or) result type is a [ResultSet][ResultSet].
   
 ## Testing with in-memory databases.
 
 Tests for in-memory databases, such as Apache Derby, H2, HSQLDB, and SQLite, are prepared.
 
-```
+```shell
 $ mvn -Pmemory clean test
 ...
 $

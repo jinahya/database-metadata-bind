@@ -1780,7 +1780,7 @@ public class Context {
         final SupportsResultSetConcurrency value = new SupportsResultSetConcurrency();
         value.setType(type);
         try {
-            value.setTypeName(JDBCType.valueOf(value.getType()).name());
+            value.setTypeName(ResultSetType.valueOfRawValue(value.getType()).name());
         } catch (final IllegalArgumentException iae) {
             logger.warning("unknown type: " + type);
         }

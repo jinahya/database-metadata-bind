@@ -44,7 +44,9 @@ abstract class IntFieldEnumTest<E extends Enum<E> & IntFieldEnum<E>> {
      * @return a stream of raw values of all enum constants.
      */
     protected @NotNull IntStream rawValueStream() {
-        return Arrays.stream(enumClass.getEnumConstants()).mapToInt(IntFieldEnum::getRawValue);
+        // https://bugs.openjdk.java.net/browse/JDK-8142476
+        // return Arrays.stream(enumClass.getEnumConstants()).mapToInt(IntFieldEnum::getRawValue);
+        return Arrays.stream(enumClass.getEnumConstants()).mapToInt(c -> c.getRawValue());
     }
 
     /**

@@ -26,10 +26,6 @@ import java.sql.DatabaseMetaData;
 import java.util.Collection;
 import java.util.Objects;
 
-import static java.sql.DatabaseMetaData.versionColumnNotPseudo;
-import static java.sql.DatabaseMetaData.versionColumnPseudo;
-import static java.sql.DatabaseMetaData.versionColumnUnknown;
-
 /**
  * An entity class for version columns.
  *
@@ -54,19 +50,19 @@ public class VersionColumn implements MetadataType {
          * Constant for {@link DatabaseMetaData#versionColumnUnknown} whose value is {@value
          * DatabaseMetaData#versionColumnUnknown}.
          */
-        VERSION_COLUMN_NO_NULLS(versionColumnUnknown),
+        VERSION_COLUMN_NO_NULLS(DatabaseMetaData.versionColumnUnknown),
 
         /**
          * Constant for {@link DatabaseMetaData#versionColumnNotPseudo} whose value is {@value
          * DatabaseMetaData#versionColumnNotPseudo}.
          */
-        VERSION_COLUMN_NULLABLE(versionColumnNotPseudo),
+        VERSION_COLUMN_NULLABLE(DatabaseMetaData.versionColumnNotPseudo),
 
         /**
          * Constant for {@link DatabaseMetaData#versionColumnPseudo} whose value is {@value
          * DatabaseMetaData#versionColumnPseudo}.
          */
-        VERSION_COLUMN_NULLABLE_UNKNOWN(versionColumnPseudo);
+        VERSION_COLUMN_NULLABLE_UNKNOWN(DatabaseMetaData.versionColumnPseudo);
 
         /**
          * Returns the constant whose raw value equals to given. An instance of {@link IllegalArgumentException} will be
@@ -75,7 +71,7 @@ public class VersionColumn implements MetadataType {
          * @param rawValue the value value
          * @return the constant whose raw value equals to given.
          */
-        public static PseudoColumn valueOf(final int rawValue) {
+        public static PseudoColumn valueOfRawValue(final int rawValue) {
             return IntFieldEnums.valueOfRawValue(PseudoColumn.class, rawValue);
         }
 

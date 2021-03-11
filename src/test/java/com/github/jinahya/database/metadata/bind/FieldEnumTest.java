@@ -27,7 +27,9 @@ abstract class FieldEnumTest<E extends Enum<E> & FieldEnum<E, T>, T> {
      * @return a stream of raw values of all enum constants.
      */
     protected Stream<T> rawValueStream() {
-        return Arrays.stream(enumClass.getEnumConstants()).map(FieldEnum::getRawValue);
+        // https://bugs.openjdk.java.net/browse/JDK-8142476
+        //return Arrays.stream(enumClass.getEnumConstants()).map(FieldEnum::getRawValue);
+        return Arrays.stream(enumClass.getEnumConstants()).map(c -> c.getRawValue());
     }
 
     /**

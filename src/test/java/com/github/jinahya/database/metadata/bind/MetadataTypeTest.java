@@ -21,6 +21,7 @@ package com.github.jinahya.database.metadata.bind;
  */
 
 import lombok.extern.slf4j.Slf4j;
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
@@ -34,10 +35,9 @@ import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.util.Arrays;
 import java.util.Collections;
-import java.util.HashSet;
 import java.util.Map;
 import java.util.Optional;
-import java.util.Set;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.stream.Collectors;
 
 import static java.util.Objects.requireNonNull;
@@ -47,7 +47,7 @@ import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 @Slf4j
 abstract class MetadataTypeTest<T extends MetadataType> {
 
-    private static final Set<Long> SERIAL_VERSION_UIDS = Collections.synchronizedSet(new HashSet<>());
+    private static final Map<Long, Class<?>> SERIAL_VERSION_UIDS = new ConcurrentHashMap<>();
 
     MetadataTypeTest(final Class<T> typeClass) {
         this.typeClass = requireNonNull(typeClass, "typeClass is null");
@@ -55,12 +55,27 @@ abstract class MetadataTypeTest<T extends MetadataType> {
 
     @Test
     void serialVersionUID_Unique_() throws ReflectiveOperationException {
-        final Field field = typeClass.getDeclaredField("serialVersionUID");
-        if (!field.isAccessible()) {
-            field.setAccessible(true);
+        for (Class<?> c = typeClass; MetadataType.class.isAssignableFrom(c); c = c.getSuperclass()) {
+            if (SERIAL_VERSION_UIDS.containsValue(c)) {
+                continue;
+            }
+            final Field field = c.getDeclaredField("serialVersionUID");
+            if (field.getDeclaringClass() != c) {
+                log.error("{} is not declaring serialVersionUID", c);
+                Assertions.fail();
+                return;
+            }
+            if (!field.isAccessible()) {
+                field.setAccessible(true);
+            }
+            final long serialVersionUID = field.getLong(null);
+            final Class<?> previous = SERIAL_VERSION_UIDS.put(serialVersionUID, c);
+            if (previous != null) {
+                log.debug("{}#serialVersionUID({}) conflicts with {}", c, serialVersionUID, previous);
+                Assertions.fail();
+                return;
+            }
         }
-        final Long value = (Long) field.get(null);
-        assertThat(SERIAL_VERSION_UIDS.add(value)).isTrue();
     }
 
     @Test

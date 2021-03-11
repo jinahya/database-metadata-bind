@@ -32,7 +32,6 @@ import java.util.Objects;
 @XmlRootElement
 public class ColumnPrivilege implements MetadataType {
 
-    // -----------------------------------------------------------------------------------------------------------------
     private static final long serialVersionUID = 4384654744147773380L;
 
     // -----------------------------------------------------------------------------------------------------------------

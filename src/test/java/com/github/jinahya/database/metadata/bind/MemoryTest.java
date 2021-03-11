@@ -75,29 +75,9 @@ abstract class MemoryTest {
             for (final Catalog catalog : catalogs) {
                 log.debug("catalog: {}", catalog);
             }
-            final String pathname = TestUtils.getFilenamePrefix(context) + ".catalogs.xml";
+            final String pathname = TestUtils.getFilenamePrefix(context) + " - catalogs.xml";
             final File target = Paths.get("target", pathname).toFile();
             Wrapper.marshalFormatted(Catalog.class, catalogs, target);
-        }
-    }
-
-    @Test
-    void getSchemas__() throws Exception {
-        try (Connection connection = connect()) {
-            final Context context = Context.newInstance(connection).suppress(SQLFeatureNotSupportedException.class);
-            for (final Schema schema : context.getSchemas(null, null, new ArrayList<>())) {
-                log.debug("schema: {}", schema);
-            }
-        }
-    }
-
-    @Test
-    void getTables__() throws Exception {
-        try (Connection connection = connect()) {
-            final Context context = Context.newInstance(connection).suppress(SQLFeatureNotSupportedException.class);
-            for (final Table table : context.getTables(null, null, null, null, new ArrayList<>())) {
-                log.debug("table: {}", table);
-            }
         }
     }
 
@@ -109,10 +89,7 @@ abstract class MemoryTest {
             final List<SupportsConvert> all = SupportsConvert.getAllInstances(context);
             assertThat(all)
                     .doesNotContainNull();
-            all.forEach(v -> {
-                log.debug("supportsConvert: {}", v);
-            });
-            final String pathname = TestUtils.getFilenamePrefix(context) + ".supportsConvert.xml";
+            final String pathname = TestUtils.getFilenamePrefix(context) + " - supportsConvert.xml";
             final File target = Paths.get("target", pathname).toFile();
             Wrapper.marshalFormatted(SupportsConvert.class, all, target);
         }
@@ -127,10 +104,7 @@ abstract class MemoryTest {
             assertThat(all)
                     .hasSizeLessThanOrEqualTo(ResultSetType.values().length)
                     .doesNotContainNull();
-            all.forEach(v -> {
-                log.debug("deletesAreDetected: {}", v);
-            });
-            final String pathname = TestUtils.getFilenamePrefix(context) + ".deletesAreDetected.xml";
+            final String pathname = TestUtils.getFilenamePrefix(context) + " - deletesAreDetected.xml";
             final File target = Paths.get("target", pathname).toFile();
             Wrapper.marshalFormatted(DeletesAreDetected.class, all, target);
         }
@@ -144,10 +118,7 @@ abstract class MemoryTest {
             assertThat(all)
                     .hasSizeLessThanOrEqualTo(ResultSetType.values().length)
                     .doesNotContainNull();
-            all.forEach(v -> {
-                log.debug("insertsAreDetected: {}", v);
-            });
-            final String pathname = TestUtils.getFilenamePrefix(context) + ".insertsAreDetected.xml";
+            final String pathname = TestUtils.getFilenamePrefix(context) + " - insertsAreDetected.xml";
             final File target = Paths.get("target", pathname).toFile();
             Wrapper.marshalFormatted(InsertsAreDetected.class, all, target);
         }
@@ -161,10 +132,7 @@ abstract class MemoryTest {
             assertThat(all)
                     .hasSizeLessThanOrEqualTo(ResultSetType.values().length)
                     .doesNotContainNull();
-            all.forEach(v -> {
-                log.debug("updatesAreDetected: {}", v);
-            });
-            final String pathname = TestUtils.getFilenamePrefix(context) + ".updatesAreDetected.xml";
+            final String pathname = TestUtils.getFilenamePrefix(context) + " - updatesAreDetected.xml";
             final File target = Paths.get("target", pathname).toFile();
             Wrapper.marshalFormatted(UpdatesAreDetected.class, all, target);
         }
@@ -179,10 +147,7 @@ abstract class MemoryTest {
             Assertions.assertThat(all)
                     .doesNotContainNull()
                     .hasSizeLessThanOrEqualTo(ResultSetType.values().length);
-            all.forEach(v -> {
-                log.debug("othersDeletesAreVisible: {}", v);
-            });
-            final String pathname = TestUtils.getFilenamePrefix(context) + ".othersDeletesAreVisible.xml";
+            final String pathname = TestUtils.getFilenamePrefix(context) + " - othersDeletesAreVisible.xml";
             final File target = Paths.get("target", pathname).toFile();
             Wrapper.marshalFormatted(OthersDeletesAreVisible.class, all, target);
         }
@@ -196,10 +161,7 @@ abstract class MemoryTest {
             Assertions.assertThat(all)
                     .doesNotContainNull()
                     .hasSizeLessThanOrEqualTo(ResultSetType.values().length);
-            all.forEach(v -> {
-                log.debug("othersInsertsAreVisible: {}", v);
-            });
-            final String pathname = TestUtils.getFilenamePrefix(context) + ".othersInsertsAreVisible.xml";
+            final String pathname = TestUtils.getFilenamePrefix(context) + " - othersInsertsAreVisible.xml";
             final File target = Paths.get("target", pathname).toFile();
             Wrapper.marshalFormatted(OthersInsertsAreVisible.class, all, target);
         }
@@ -213,10 +175,7 @@ abstract class MemoryTest {
             Assertions.assertThat(all)
                     .doesNotContainNull()
                     .hasSizeLessThanOrEqualTo(ResultSetType.values().length);
-            all.forEach(v -> {
-                log.debug("othersUpdatesAreVisible: {}", v);
-            });
-            final String pathname = TestUtils.getFilenamePrefix(context) + ".othersUpdatesAreVisible.xml";
+            final String pathname = TestUtils.getFilenamePrefix(context) + " - othersUpdatesAreVisible.xml";
             final File target = Paths.get("target", pathname).toFile();
             Wrapper.marshalFormatted(OthersUpdatesAreVisible.class, all, target);
         }
@@ -230,10 +189,7 @@ abstract class MemoryTest {
             Assertions.assertThat(all)
                     .doesNotContainNull()
                     .hasSizeLessThanOrEqualTo(ResultSetType.values().length);
-            all.forEach(v -> {
-                log.debug("ownDeletesAreVisible: {}", v);
-            });
-            final String pathname = TestUtils.getFilenamePrefix(context) + ".ownDeletesAreVisible.xml";
+            final String pathname = TestUtils.getFilenamePrefix(context) + " - ownDeletesAreVisible.xml";
             final File target = Paths.get("target", pathname).toFile();
             Wrapper.marshalFormatted(OwnDeletesAreVisible.class, all, target);
         }
@@ -247,10 +203,7 @@ abstract class MemoryTest {
             Assertions.assertThat(all)
                     .doesNotContainNull()
                     .hasSizeLessThanOrEqualTo(ResultSetType.values().length);
-            all.forEach(v -> {
-                log.debug("ownInsertsAreVisible: {}", v);
-            });
-            final String pathname = TestUtils.getFilenamePrefix(context) + ".ownInsertsAreVisible.xml";
+            final String pathname = TestUtils.getFilenamePrefix(context) + " - ownInsertsAreVisible.xml";
             final File target = Paths.get("target", pathname).toFile();
             Wrapper.marshalFormatted(OwnInsertsAreVisible.class, all, target);
         }
@@ -264,10 +217,7 @@ abstract class MemoryTest {
             Assertions.assertThat(all)
                     .doesNotContainNull()
                     .hasSizeLessThanOrEqualTo(ResultSetType.values().length);
-            all.forEach(v -> {
-                log.debug("ownUpdatesAreVisible: {}", v);
-            });
-            final String pathname = TestUtils.getFilenamePrefix(context) + ".ownUpdatesAreVisible.xml";
+            final String pathname = TestUtils.getFilenamePrefix(context) + " - ownUpdatesAreVisible.xml";
             final File target = Paths.get("target", pathname).toFile();
             Wrapper.marshalFormatted(OwnUpdatesAreVisible.class, all, target);
         }

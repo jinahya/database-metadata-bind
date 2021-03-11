@@ -33,7 +33,7 @@ import java.util.Collection;
 @XmlRootElement
 public class ImportedKey extends TableKey {
 
-    private static final long serialVersionUID = 1965229912934042881L;
+    private static final long serialVersionUID = 1478290412906203629L;
 
     // -----------------------------------------------------------------------------------------------------------------
 
@@ -43,32 +43,27 @@ public class ImportedKey extends TableKey {
     public enum Rule implements IntFieldEnum<Rule> {
 
         /**
-         * Constant for {@link DatabaseMetaData#importedKeyCascade} whose value is {@value
-         * DatabaseMetaData#importedKeyCascade}.
+         * Constant for {@link DatabaseMetaData#importedKeyCascade}({@value DatabaseMetaData#importedKeyCascade}).
          */
         IMPORTED_KEY_CASCADE(DatabaseMetaData.importedKeyCascade), // 0
 
         /**
-         * Constant for {@link DatabaseMetaData#importedKeyRestrict} whose value is {@value
-         * DatabaseMetaData#importedKeyRestrict}.
+         * Constant for {@link DatabaseMetaData#importedKeyRestrict}({@value DatabaseMetaData#importedKeyRestrict}).
          */
         IMPORTED_KEY_RESTRICT(DatabaseMetaData.importedKeyRestrict), // 1
 
         /**
-         * Constant for {@link DatabaseMetaData#importedKeySetNull} whose value is {@value
-         * DatabaseMetaData#importedKeySetNull}.
+         * Constant for {@link DatabaseMetaData#importedKeySetNull}({@value DatabaseMetaData#importedKeySetNull}).
          */
         IMPORTED_KEY_SET_NULL(DatabaseMetaData.importedKeySetNull), // 2
 
         /**
-         * Constant for {@link DatabaseMetaData#importedKeyNoAction} whose value is {@value
-         * DatabaseMetaData#importedKeyNoAction}.
+         * Constant for {@link DatabaseMetaData#importedKeyNoAction}({@value DatabaseMetaData#importedKeyNoAction}).
          */
         IMPORTED_KEY_NO_ACTION(DatabaseMetaData.importedKeyNoAction), // 3
 
         /**
-         * Constant for {@link DatabaseMetaData#importedKeySetDefault} whose value is {@value
-         * DatabaseMetaData#importedKeySetDefault}.
+         * Constant for {@link DatabaseMetaData#importedKeySetDefault}({@value DatabaseMetaData#importedKeySetDefault}).
          */
         IMPORTED_KEY_SET_DEFAULT(DatabaseMetaData.importedKeySetDefault); // 4
 
@@ -101,20 +96,19 @@ public class ImportedKey extends TableKey {
     public enum Deferrability implements IntFieldEnum<Deferrability> {
 
         /**
-         * Constant for {@link DatabaseMetaData#importedKeyInitiallyDeferred} whose value is {@value
-         * DatabaseMetaData#importedKeyInitiallyDeferred}.
+         * Constant for {@link DatabaseMetaData#importedKeyInitiallyDeferred}({@value
+         * DatabaseMetaData#importedKeyInitiallyDeferred}).
          */
         IMPORTED_KEY_INITIALLY_DEFERRED(DatabaseMetaData.importedKeyInitiallyDeferred), // 5
 
         /**
-         * Constant for {@link DatabaseMetaData#importedKeyInitiallyImmediate} whose value is {@value
-         * DatabaseMetaData#importedKeyInitiallyImmediate}.
+         * Constant for {@link DatabaseMetaData#importedKeyInitiallyImmediate}({@value
+         * DatabaseMetaData#importedKeyInitiallyImmediate}).
          */
         IMPORTED_KEY_INITIALLY_IMMEDIATE(DatabaseMetaData.importedKeyInitiallyImmediate), // 6
 
         /**
-         * Constant for {@link DatabaseMetaData#importedKeyNotDeferrable} whose value is {@value
-         * DatabaseMetaData#importedKeyNotDeferrable}.
+         * Constant for {@link DatabaseMetaData#importedKeyNotDeferrable}({@value DatabaseMetaData#importedKeyNotDeferrable}).
          */
         IMPORTED_KEY_NOT_DEFERRABLE(DatabaseMetaData.importedKeyNotDeferrable); // 7
 

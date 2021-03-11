@@ -29,6 +29,7 @@ import java.sql.DatabaseMetaData;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
+import java.util.Optional;
 
 /**
  * An entity class for columns
@@ -43,7 +44,8 @@ public class Column implements MetadataType {
     // -----------------------------------------------------------------------------------------------------------------
 
     /**
-     * Constants for nullabilities of table columns.
+     * Constants for {@code NULLABLE} column values from {@link DatabaseMetaData#getColumns(String, String, String,
+     * String)}.
      *
      * @see DatabaseMetaData#getColumns(java.lang.String, java.lang.String, java.lang.String, java.lang.String)
      */
@@ -85,6 +87,93 @@ public class Column implements MetadataType {
         }
 
         private final int rawValue;
+    }
+
+    // -----------------------------------------------------------------------------------------------------------------
+    public static final String COLUMN_NAME_IS_AUTOINCREMENT = "IS_AUTOINCREMENT";
+
+    public static final String ATTRIBUTE_NAME_IS_AUTOINCREMENT = "isAutoincrement";
+
+    /**
+     * Constants for {@value #COLUMN_NAME_IS_AUTOINCREMENT} colum value from the result of {@link
+     * DatabaseMetaData#getColumns(String, String, String, String)}.
+     */
+    public enum IsAutoincrement implements FieldEnum<IsAutoincrement, String> {
+
+        YES("YES"),
+
+        NO("NO"),
+
+        UNKNOWN("");
+
+        /**
+         * Returns the constant whose {@link #getRawValue() rawValue} matches to specified value.
+         *
+         * @param rawValue the value for {@link #getRawValue() rawValue} to match.
+         * @return the constant whose {@link #getRawValue() rawValue} matches to {@code rawValue}.
+         */
+        public static IsAutoincrement valueOfRawValue(final String rawValue) {
+            return FieldEnums.valueOfRawValue(IsAutoincrement.class, rawValue);
+        }
+
+        IsAutoincrement(final String rawValue) {
+            this.rawValue = Objects.requireNonNull(rawValue, "rawValue is null");
+        }
+
+        @Override
+        public String getRawValue() {
+            return rawValue;
+        }
+
+        private final String rawValue;
+    }
+
+    // -----------------------------------------------------------------------------------------------------------------
+    public static final String COLUMN_NAME_IS_GENERATEDCOLUMN = "IS_GENERATEDCOLUMN";
+
+    public static final String ATTRIBUTE_NAME_IS_GENERATEDCOLUMN = "isGeneratedcolumn";
+
+    /**
+     * Constants for {@value #COLUMN_NAME_IS_GENERATEDCOLUMN} colum value from the result of {@link
+     * DatabaseMetaData#getColumns(String, String, String, String)}.
+     */
+    public enum IsGeneratedcolumn implements FieldEnum<IsGeneratedcolumn, String> {
+
+        YES("YES"),
+
+        NO("NO"),
+
+        UNKNOWN("");
+
+        /**
+         * Returns the constant whose {@link #getRawValue() rawValue} matches to specified value.
+         *
+         * @param rawValue the value for {@link #getRawValue() rawValue} to match.
+         * @return the constant whose {@link #getRawValue() rawValue} matches to {@code rawValue}.
+         */
+        public static IsGeneratedcolumn valueOfRawValue(final String rawValue) {
+            return FieldEnums.valueOfRawValue(IsGeneratedcolumn.class, rawValue);
+        }
+
+        IsGeneratedcolumn(final String rawValue) {
+            this.rawValue = Objects.requireNonNull(rawValue, "rawValue is null");
+        }
+
+        @Override
+        public String getRawValue() {
+            return rawValue;
+        }
+
+        private final String rawValue;
+    }
+
+    // -----------------------------------------------------------------------------------------------------------------
+
+    /**
+     * Creates a new column.
+     */
+    public Column() {
+        super();
     }
 
     // -----------------------------------------------------------------------------------------------------------------
@@ -276,6 +365,15 @@ public class Column implements MetadataType {
         this.nullable = nullable;
     }
 
+    public Nullable getNullableAsEnum() {
+        return Nullable.valueOfRawValue(getNullable());
+    }
+
+    public void setNullableAsEnum(final Nullable nullableAsEnum) {
+        Objects.requireNonNull(nullableAsEnum, "nullableAsEnum is null");
+        setNullable(nullableAsEnum.getRawValue());
+    }
+
     // --------------------------------------------------------------------------------------------------------- remarks
     public String getRemarks() {
         return remarks;
@@ -384,6 +482,14 @@ public class Column implements MetadataType {
         this.isAutoincrement = isAutoincrement;
     }
 
+    public IsAutoincrement getIsAutoincrementAsEnum() {
+        return Optional.ofNullable(getIsAutoincrement()).map(IsAutoincrement::valueOfRawValue).orElse(null);
+    }
+
+    public void setIsAutoincrementAsEnum(final IsAutoincrement isAutoincrementAsEnum) {
+        setIsAutoincrement(Optional.ofNullable(isAutoincrementAsEnum).map(FieldEnum::getRawValue).orElse(null));
+    }
+
     // ----------------------------------------------------------------------------------------------- isGeneratedcolumn
     public String getIsGeneratedcolumn() {
         return isGeneratedcolumn;
@@ -393,8 +499,22 @@ public class Column implements MetadataType {
         this.isGeneratedcolumn = isGeneratedcolumn;
     }
 
+    public IsGeneratedcolumn getIsGeneratedcolumnAsEnum() {
+        return Optional.ofNullable(getIsGeneratedcolumn()).map(IsGeneratedcolumn::valueOfRawValue).orElse(null);
+    }
+
+    public void setIsGeneratedcolumnAsEnum(final IsGeneratedcolumn isGeneratedcolumnAsEnum) {
+        setIsGeneratedcolumn(Optional.ofNullable(isGeneratedcolumnAsEnum).map(FieldEnum::getRawValue).orElse(null));
+    }
+
     // ------------------------------------------------------------------------------------------------ columnPrivileges
-    List<ColumnPrivilege> getColumnPrivileges() {
+
+    /**
+     * Returns column privileges of this column.
+     *
+     * @return column privileges of this column.
+     */
+    public @NotNull List<@Valid @NotNull ColumnPrivilege> getColumnPrivileges() {
         if (columnPrivileges == null) {
             columnPrivileges = new ArrayList<>();
         }
@@ -483,35 +603,35 @@ public class Column implements MetadataType {
     @Label("IS_NULLABLE")
     private String isNullable;
 
-    @XmlElement(nillable = true, required = true)
+    @XmlElement(required = true, nillable = true)
     @MayBeNull
     @Label("SCOPE_CATALOG")
     private String scopeCatalog;
 
-    @XmlElement(nillable = true, required = true)
+    @XmlElement( required = true, nillable = true)
     @MayBeNull
     @Label("SCOPE_SCHEMA")
     private String scopeSchema;
 
-    @XmlElement(nillable = true, required = true)
+    @XmlElement(required = true, nillable = true)
     @MayBeNull
     @Label("SCOPE_TABLE")
     private String scopeTable;
 
-    @XmlElement(nillable = true, required = true)
+    @XmlElement(required = true, nillable = true)
     @MayBeNull
     @Label("SOURCE_DATA_TYPE")
     private Short sourceDataType;
 
     @XmlElement(required = true)
-    @Label("IS_AUTOINCREMENT")
+    @Label(COLUMN_NAME_IS_AUTOINCREMENT)
     private String isAutoincrement;
 
     @XmlElement(required = true)
-    @Label("IS_GENERATEDCOLUMN")
+    @Label(COLUMN_NAME_IS_GENERATEDCOLUMN)
     private String isGeneratedcolumn;
 
-    // -------------------------------------------------------------------------
+    // -----------------------------------------------------------------------------------------------------------------
     @XmlElementRef
     private List<@Valid @NotNull ColumnPrivilege> columnPrivileges;
 }
