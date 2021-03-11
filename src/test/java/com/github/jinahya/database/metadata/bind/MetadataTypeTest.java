@@ -34,8 +34,10 @@ import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.util.Arrays;
 import java.util.Collections;
+import java.util.HashSet;
 import java.util.Map;
 import java.util.Optional;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 import static java.util.Objects.requireNonNull;
@@ -45,8 +47,20 @@ import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 @Slf4j
 abstract class MetadataTypeTest<T extends MetadataType> {
 
+    private static final Set<Long> SERIAL_VERSION_UIDS = Collections.synchronizedSet(new HashSet<>());
+
     MetadataTypeTest(final Class<T> typeClass) {
         this.typeClass = requireNonNull(typeClass, "typeClass is null");
+    }
+
+    @Test
+    void serialVersionUID_Unique_() throws ReflectiveOperationException {
+        final Field field = typeClass.getDeclaredField("serialVersionUID");
+        if (!field.isAccessible()) {
+            field.setAccessible(true);
+        }
+        final Long value = (Long) field.get(null);
+        assertThat(SERIAL_VERSION_UIDS.add(value)).isTrue();
     }
 
     @Test

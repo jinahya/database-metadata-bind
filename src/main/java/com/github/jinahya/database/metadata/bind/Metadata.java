@@ -51,6 +51,8 @@ import static java.util.Objects.requireNonNull;
 @XmlRootElement
 public class Metadata implements MetadataType {
 
+    private static final long serialVersionUID = 2473494165958655239L;
+
     private static final Logger logger = Logger.getLogger(MethodHandles.lookup().lookupClass().getName());
 
     private static final Map<String, Method> METHODS_WITH_NO_PARAMETERS = Collections.unmodifiableMap(

@@ -62,6 +62,7 @@ public class Attribute implements MetadataType {
 
         /**
          * Returns the value whose {@link #getRawValue() rawValue} matches to specified value.
+         *
          * @param rawValue the {@code rawValue} to match.
          * @return a matched value.
          */

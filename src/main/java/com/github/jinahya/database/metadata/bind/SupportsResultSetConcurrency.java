@@ -44,6 +44,8 @@ import static java.util.Objects.requireNonNull;
 @XmlRootElement
 public class SupportsResultSetConcurrency implements MetadataType {
 
+    private static final long serialVersionUID = -4192322973387966785L;
+
     private static final Logger logger = Logger.getLogger(MethodHandles.lookup().lookupClass().getName());
 
     // -----------------------------------------------------------------------------------------------------------------
