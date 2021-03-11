@@ -38,7 +38,7 @@ final class IntFieldEnums {
                 return enumConstant;
             }
         }
-        throw new IllegalArgumentException("unknown raw value: " + rawValue);
+        throw new IllegalArgumentException("no value for raw value: " + rawValue);
     }
 
     // -----------------------------------------------------------------------------------------------------------------
