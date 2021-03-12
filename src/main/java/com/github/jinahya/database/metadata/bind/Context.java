@@ -177,7 +177,7 @@ public class Context {
                 bind(results, Attribute.class, collection);
             }
         } catch (final SQLException sqle) {
-            logger.log(Level.WARNING, sqle,
+            logger.log(levelForSqlException(sqle), sqle,
                        () -> String.format("failed to getAttributes(%1$s, %2$s, %3$s, %4$s)",
                                            catalog, schemaPattern, typeNamePattern, attributeNamePattern));
             throwIfNotSuppressed(sqle);
@@ -211,7 +211,7 @@ public class Context {
                 bind(results, BestRowIdentifier.class, collection);
             }
         } catch (final SQLException sqle) {
-            logger.log(Level.WARNING, sqle,
+            logger.log(levelForSqlException(sqle), sqle,
                        () -> String.format("failed to getBestRowIdentifier(%1$s, %2$s, %3$s, %4$d, %5$b",
                                            catalog, schema, table, scope, nullable));
             throwIfNotSuppressed(sqle);
@@ -237,7 +237,7 @@ public class Context {
                 bind(results, Catalog.class, collection);
             }
         } catch (final SQLException sqle) {
-            logger.log(Level.WARNING, "failed to getCatalogs()", sqle);
+            logger.log(levelForSqlException(sqle), "failed to getCatalogs()", sqle);
             throwIfNotSuppressed(sqle);
         }
         if (collection.isEmpty()) {
@@ -271,7 +271,7 @@ public class Context {
                 bind(results, ClientInfoProperty.class, collection);
             }
         } catch (final SQLException sqle) {
-            logger.log(Level.WARNING, "failed to getClientInfoProperties()", sqle);
+            logger.log(levelForSqlException(sqle), "failed to getClientInfoProperties()", sqle);
             throwIfNotSuppressed(sqle);
         }
         return collection;
@@ -302,7 +302,7 @@ public class Context {
                 bind(results, ColumnPrivilege.class, collection);
             }
         } catch (final SQLException sqle) {
-            logger.log(Level.WARNING, sqle,
+            logger.log(levelForSqlException(sqle), sqle,
                        () -> String.format("failed to getColumnPrivileges(%1$s, %2$s, %3$s, %4$s)",
                                            catalog, schema, table, columnNamePattern));
             throwIfNotSuppressed(sqle);
@@ -337,7 +337,7 @@ public class Context {
                 bind(results, Column.class, collection);
             }
         } catch (final SQLException sqle) {
-            logger.log(Level.WARNING, sqle,
+            logger.log(levelForSqlException(sqle), sqle,
                        () -> String.format("failed to getColumns(%1$s, %2$s, %3$s, %4$s)",
                                            catalog, schemaPattern, tableNamePattern, columnNamePattern));
             throwIfNotSuppressed(sqle);
@@ -381,7 +381,7 @@ public class Context {
                 bind(results, CrossReference.class, collection);
             }
         } catch (final SQLException sqle) {
-            logger.log(Level.WARNING, sqle,
+            logger.log(levelForSqlException(sqle), sqle,
                        () -> String.format("failed to getCrossReferences(%1$s, %2$s, %3$s, %4$s, %5$s, %6$s)",
                                            parentCatalog, parentSchema, parentTable, foreignCatalog, foreignSchema,
                                            foreignTable));
@@ -414,7 +414,7 @@ public class Context {
                 bind(results, Function.class, collection);
             }
         } catch (final SQLException sqle) {
-            logger.log(Level.WARNING, sqle,
+            logger.log(levelForSqlException(sqle), sqle,
                        () -> String.format("failed to getFunctions(%1$s, %2$s, %3$s)",
                                            catalog, schemaPattern, functionNamePattern));
             throwIfNotSuppressed(sqle);
@@ -455,7 +455,7 @@ public class Context {
                 bind(results, FunctionColumn.class, collection);
             }
         } catch (final SQLException sqle) {
-            logger.log(Level.WARNING, sqle,
+            logger.log(levelForSqlException(sqle), sqle,
                        () -> String.format("failed to getFunctionColumns(%1$s, %2$s, %3$s, %4$s)",
                                            catalog, schemaPattern, functionNamePattern, columnNamePattern));
             throwIfNotSuppressed(sqle);
@@ -469,16 +469,16 @@ public class Context {
      * Invokes {@link DatabaseMetaData#getExportedKeys(java.lang.String, java.lang.String, java.lang.String)} method
      * with given arguments and adds bound values to specified collection.
      *
-     * @param catalog    a value for {@code catalog} parameter
-     * @param schema     a value for {@code schema} parameter
-     * @param table      a value for {@code table} parameter
+     * @param catalog    a value for {@code catalog} parameter.
+     * @param schema     a value for {@code schema} parameter.
+     * @param table      a value for {@code table} parameter.
      * @param collection the collection to which bound values are added.
      * @param <T>        the type of elements in {@code collection}.
      * @return given {@code collection}.
      * @throws SQLException if a database error occurs.
      */
-    public <T extends Collection<? super ExportedKey>> T getExportedKeys(final String catalog, final String schema,
-                                                                         final String table, final T collection)
+    public <T extends Collection<@Valid @NotNull ? super ExportedKey>> @NotNull T getExportedKeys(
+            final String catalog, final String schema, final String table, final @NotNull T collection)
             throws SQLException {
         requireNonNull(collection, "collection is null");
         try (ResultSet results = databaseMetaData.getExportedKeys(catalog, schema, table)) {
@@ -486,7 +486,7 @@ public class Context {
                 bind(results, ExportedKey.class, collection);
             }
         } catch (final SQLException sqle) {
-            logger.log(Level.WARNING, sqle,
+            logger.log(levelForSqlException(sqle), sqle,
                        () -> String.format("failed to getExportedKeys(%1$s, %2$s, %3$s)", catalog, schema, table));
             throwIfNotSuppressed(sqle);
         }
@@ -516,7 +516,7 @@ public class Context {
                 bind(results, ImportedKey.class, collection);
             }
         } catch (final SQLException sqle) {
-            logger.log(Level.WARNING, sqle,
+            logger.log(levelForSqlException(sqle), sqle,
                        () -> String.format("failed to getImportedKeys(%1$s, %2$s, %3$s)", catalog, schema, table));
             throwIfNotSuppressed(sqle);
         }
@@ -549,7 +549,7 @@ public class Context {
                 bind(results, IndexInfo.class, collection);
             }
         } catch (final SQLException sqle) {
-            logger.log(Level.WARNING, sqle,
+            logger.log(levelForSqlException(sqle), sqle,
                        () -> String.format("failed to getIndexInfo(%1$s, %2$s, %3$s)", catalog, schema, table));
             throwIfNotSuppressed(sqle);
         }
@@ -579,7 +579,7 @@ public class Context {
                 bind(results, PrimaryKey.class, collection);
             }
         } catch (final SQLException sqle) {
-            logger.log(Level.WARNING, sqle,
+            logger.log(levelForSqlException(sqle), sqle,
                        () -> String.format("failed to getPrimaryKeys(%1$s, %2$s, %3$s)", catalog, schema, table));
             throwIfNotSuppressed(sqle);
         }
@@ -611,7 +611,7 @@ public class Context {
                 bind(results, ProcedureColumn.class, collection);
             }
         } catch (final SQLException sqle) {
-            logger.log(Level.WARNING, sqle,
+            logger.log(levelForSqlException(sqle), sqle,
                        () -> String.format("failed to getProcedureColumns(%1$s, %2$s, %3$s, %4$s)",
                                            catalog, schemaPattern, procedureNamePattern, columnNamePattern));
             throwIfNotSuppressed(sqle);
@@ -643,7 +643,7 @@ public class Context {
                 bind(results, Procedure.class, collection);
             }
         } catch (final SQLException sqle) {
-            logger.log(Level.WARNING, sqle,
+            logger.log(levelForSqlException(sqle), sqle,
                        () -> String.format("failed to getProcedures(%1$s, %2$s, %3$s)",
                                            catalog, schemaPattern, procedureNamePattern));
             throwIfNotSuppressed(sqle);
@@ -683,7 +683,7 @@ public class Context {
                 bind(results, PseudoColumn.class, collection);
             }
         } catch (final SQLException sqle) {
-            logger.log(Level.WARNING, sqle,
+            logger.log(levelForSqlException(sqle), sqle,
                        () -> String.format("failed to getPseudoColumns(%1$s, %2$s, %3$s, %4$s)",
                                            catalog, schemaPattern, tableNamePattern, columnNamePattern));
             throwIfNotSuppressed(sqle);
@@ -708,7 +708,7 @@ public class Context {
                 bind(results, SchemaName.class, collection);
             }
         } catch (final SQLException sqle) {
-            logger.log(Level.WARNING, "failed to getSchemas()", sqle);
+            logger.log(levelForSqlException(sqle), "failed to getSchemas()", sqle);
             throwIfNotSuppressed(sqle);
         }
         return collection;
@@ -739,7 +739,7 @@ public class Context {
                 }
             }
         } catch (final SQLException sqle) {
-            logger.log(Level.WARNING, sqle,
+            logger.log(levelForSqlException(sqle), sqle,
                        () -> String.format("failed to getSchemas(%1$s, %2$s)", catalog, schemaPattern));
             throwIfNotSuppressed(sqle);
         }
@@ -783,7 +783,7 @@ public class Context {
                 bind(results, SuperTable.class, collection);
             }
         } catch (final SQLException sqle) {
-            logger.log(Level.WARNING, sqle,
+            logger.log(levelForSqlException(sqle), sqle,
                        () -> String.format("failed to getSuperTables(%1$s, %2$s, %3$s)",
                                            catalog, schemaPattern, tableNamePattern));
             throwIfNotSuppressed(sqle);
@@ -814,7 +814,7 @@ public class Context {
                 bind(results, SuperType.class, collection);
             }
         } catch (final SQLException sqle) {
-            logger.log(Level.WARNING, sqle,
+            logger.log(levelForSqlException(sqle), sqle,
                        () -> String.format("failed to getSuperTypes(%1$s, %2$s, %3$s)",
                                            catalog, schemaPattern, typeNamePattern));
             throwIfNotSuppressed(sqle);
@@ -845,7 +845,7 @@ public class Context {
                 bind(results, TablePrivilege.class, collection);
             }
         } catch (final SQLException sqle) {
-            logger.log(Level.WARNING, sqle,
+            logger.log(levelForSqlException(sqle), sqle,
                        () -> String.format("failed to getTablePrivileges(%1$s, %2$s, %3$s)",
                                            catalog, schemaPattern, tableNamePattern));
             throwIfNotSuppressed(sqle);
@@ -872,7 +872,7 @@ public class Context {
                 }
             }
         } catch (final SQLException sqle) {
-            logger.log(Level.WARNING, "failed to getTableTypes()", sqle);
+            logger.log(levelForSqlException(sqle), "failed to getTableTypes()", sqle);
             throwIfNotSuppressed(sqle);
         }
         return collection;
@@ -903,7 +903,7 @@ public class Context {
                 bind(results, Table.class, collection);
             }
         } catch (final SQLException sqle) {
-            logger.log(Level.WARNING, sqle,
+            logger.log(levelForSqlException(sqle), sqle,
                        () -> String.format("failed to getTables(%1$s, %2$s, %3$s, %4$s)",
                                            catalog, schemaPattern, tableNamePattern, Arrays.toString(types)));
             throwIfNotSuppressed(sqle);
@@ -955,7 +955,7 @@ public class Context {
                 bind(results, TypeInfo.class, collection);
             }
         } catch (final SQLException sqle) {
-            logger.log(Level.WARNING, "failed to getTypeInfo()", sqle);
+            logger.log(levelForSqlException(sqle), "failed to getTypeInfo()", sqle);
             throwIfNotSuppressed(sqle);
         }
         return collection;
@@ -985,7 +985,7 @@ public class Context {
                 bind(results, UDT.class, collection);
             }
         } catch (final SQLException sqle) {
-            logger.log(Level.WARNING, sqle,
+            logger.log(levelForSqlException(sqle), sqle,
                        () -> String.format("failed to getUDTs(%1$s, %2$s, %3$s, %4$s)",
                                            catalog, schemaPattern, typeNamePattern, Arrays.toString(types)));
             throwIfNotSuppressed(sqle);
@@ -1021,7 +1021,7 @@ public class Context {
                 bind(results, VersionColumn.class, collection);
             }
         } catch (final SQLException sqle) {
-            logger.log(Level.WARNING, sqle,
+            logger.log(levelForSqlException(sqle), sqle,
                        () -> String.format("failed to getVersionColumns(%1$s, %2$s, %3$s)", catalog, schema, table));
             throwIfNotSuppressed(sqle);
         }
@@ -1049,7 +1049,7 @@ public class Context {
         try {
             value.setValue(databaseMetaData.deletesAreDetected(value.getType()));
         } catch (final SQLException sqle) {
-            logger.log(Level.WARNING, sqle,
+            logger.log(levelForSqlException(sqle), sqle,
                        () -> String.format("failed to invoke deletesAreDetected(%1$d)", value.getType()));
             throwIfNotSuppressed(sqle);
         }
@@ -1081,7 +1081,7 @@ public class Context {
         try {
             value.setValue(databaseMetaData.insertsAreDetected(value.getType()));
         } catch (final SQLException sqle) {
-            logger.log(Level.WARNING, sqle,
+            logger.log(levelForSqlException(sqle), sqle,
                        () -> String.format("failed to invoke insertsAreDetected(%1$d)", value.getType()));
             throwIfNotSuppressed(sqle);
         }
@@ -1110,7 +1110,7 @@ public class Context {
         try {
             value.setValue(databaseMetaData.updatesAreDetected(value.getType()));
         } catch (final SQLException sqle) {
-            logger.log(Level.WARNING, sqle,
+            logger.log(levelForSqlException(sqle), sqle,
                        () -> String.format("failed to invoke updatesAreDetected(%1$d)", value.getType()));
             throwIfNotSuppressed(sqle);
         }
@@ -1142,7 +1142,7 @@ public class Context {
         try {
             result.setValue(databaseMetaData.othersDeletesAreVisible(result.getType()));
         } catch (final SQLException sqle) {
-            logger.log(Level.WARNING, sqle,
+            logger.log(levelForSqlException(sqle), sqle,
                        () -> String.format("failed to invoke othersDeletesAreVisible(%1$d)", result.getType()));
             throwIfNotSuppressed(sqle);
         }
@@ -1175,7 +1175,7 @@ public class Context {
         try {
             result.setValue(databaseMetaData.othersInsertsAreVisible(result.getType()));
         } catch (final SQLException sqle) {
-            logger.log(Level.WARNING, sqle,
+            logger.log(levelForSqlException(sqle), sqle,
                        () -> String.format("failed to invoke othersInsertsAreVisible(%1$d)", result.getType()));
             throwIfNotSuppressed(sqle);
         }
@@ -1208,7 +1208,7 @@ public class Context {
         try {
             result.setValue(databaseMetaData.othersUpdatesAreVisible(result.getType()));
         } catch (final SQLException sqle) {
-            logger.log(Level.WARNING, sqle,
+            logger.log(levelForSqlException(sqle), sqle,
                        () -> String.format("failed to invoke othersUpdatesAreVisible(%1$d)", result.getType()));
             throwIfNotSuppressed(sqle);
         }
@@ -1241,7 +1241,7 @@ public class Context {
         try {
             value.setValue(databaseMetaData.ownDeletesAreVisible(value.getType()));
         } catch (final SQLException sqle) {
-            logger.log(Level.WARNING, sqle,
+            logger.log(levelForSqlException(sqle), sqle,
                        () -> String.format("failed to invoke ownDeletesAreVisible(%1$d)", value.getType()));
             throwIfNotSuppressed(sqle);
         }
@@ -1307,7 +1307,7 @@ public class Context {
         try {
             value.setValue(databaseMetaData.ownUpdatesAreVisible(value.getType()));
         } catch (final SQLException sqle) {
-            logger.log(Level.WARNING, sqle,
+            logger.log(levelForSqlException(sqle), sqle,
                        () -> String.format("failed to invoke ownUpdatesAreVisible(%1$d)", value.getType()));
             throwIfNotSuppressed(sqle);
         }
@@ -1349,7 +1349,7 @@ public class Context {
         try {
             value.setValue(databaseMetaData.supportsConvert(value.getFromType(), value.getToType()));
         } catch (final SQLException sqle) {
-            logger.log(Level.WARNING, sqle,
+            logger.log(levelForSqlException(sqle), sqle,
                        () -> String.format("failed to invoke supportsConvert(%1$d, %2$d)", value.getFromType(),
                                            value.getToType()));
             throwIfNotSuppressed(sqle);
@@ -1395,7 +1395,7 @@ public class Context {
         try {
             value.setValue(databaseMetaData.supportsResultSetConcurrency(value.getType(), value.getConcurrency()));
         } catch (final SQLException sqle) {
-            logger.log(Level.WARNING, sqle,
+            logger.log(levelForSqlException(sqle), sqle,
                        () -> String.format("failed to invoke supportsResultSetConcurrency(%1$d, %2$d)",
                                            value.getType(), value.getConcurrency()));
             throwIfNotSuppressed(sqle);
@@ -1435,7 +1435,7 @@ public class Context {
         try {
             value.setValue(databaseMetaData.supportsResultSetHoldability(value.getHoldability()));
         } catch (final SQLException sqle) {
-            logger.log(Level.WARNING, sqle,
+            logger.log(levelForSqlException(sqle), sqle,
                        () -> String.format("failed to invoke supportsResultSetHoldability(%1$d)",
                                            value.getHoldability()));
             throwIfNotSuppressed(sqle);
@@ -1473,7 +1473,7 @@ public class Context {
         try {
             value.setValue(databaseMetaData.supportsResultSetType(value.getType()));
         } catch (final SQLException sqle) {
-            logger.log(Level.WARNING, sqle,
+            logger.log(levelForSqlException(sqle), sqle,
                        () -> String.format("failed to invoke supportsResultSetType(%1$d)", value.getType()));
             throwIfNotSuppressed(sqle);
         }
@@ -1508,7 +1508,7 @@ public class Context {
         try {
             value.setValue(databaseMetaData.supportsTransactionIsolationLevel(level));
         } catch (final SQLException sqle) {
-            logger.log(Level.WARNING, sqle,
+            logger.log(levelForSqlException(sqle), sqle,
                        () -> String.format(
                                "failed to invoke supportsTransactionIsolationLevel(%1$d)", value.getLevel()));
             throwIfNotSuppressed(sqle);
@@ -1524,23 +1524,30 @@ public class Context {
     }
 
     // -----------------------------------------------------------------------------------------------------------------
-    public <T extends SQLException> Context suppress(final @NotNull Class<T> exceptionClass) {
-        requireNonNull(exceptionClass, "exceptionClass is null");
-        suppressedExceptionClasses.add(exceptionClass);
+    private @NotNull Map<@NotNull Field, @NotNull Label> getLabeledFields(final @NotNull Class<?> clazz) {
+        requireNonNull(clazz, "clazz is null");
+        return classesAndLabeledFields.computeIfAbsent(clazz, c -> Utils.getFieldsAnnotatedWith(c, Label.class));
+    }
+
+
+    // -----------------------------------------------------------------------------------------------------------------
+    public <T extends Throwable> Context suppress(final @NotNull Class<T> throwableClass) {
+        requireNonNull(throwableClass, "throwableClass is null");
+        suppressedThrowableClasses.add(throwableClass);
         return this;
     }
 
-    private <T extends SQLException> boolean isSuppressed(final @NotNull Class<T> exceptionClass) {
+    private <T extends Throwable> boolean isSuppressed(final @NotNull Class<T> exceptionClass) {
         requireNonNull(exceptionClass, "exceptionClass is null");
-        if (suppressedExceptionClasses.contains(exceptionClass)) {
+        if (suppressedThrowableClasses.contains(exceptionClass)) {
             return true;
         }
-        return suppressedExceptionClasses.stream().anyMatch(c -> c.isAssignableFrom(exceptionClass));
+        return suppressedThrowableClasses.stream().anyMatch(c -> c.isAssignableFrom(exceptionClass));
     }
 
-    boolean isSuppressed(final @NotNull SQLException sqle) {
-        requireNonNull(sqle, "sqle is null");
-        return isSuppressed(sqle.getClass());
+    boolean isSuppressed(final @NotNull Throwable t) {
+        requireNonNull(t, "t is null");
+        return isSuppressed(t.getClass());
     }
 
     void throwIfNotSuppressed(final @NotNull SQLException sqle) throws SQLException {
@@ -1550,10 +1557,27 @@ public class Context {
         }
     }
 
-    // -----------------------------------------------------------------------------------------------------------------
-    private @NotNull Map<@NotNull Field, @NotNull Label> getLabeledFields(final @NotNull Class<?> clazz) {
-        requireNonNull(clazz, "clazz is null");
-        return classesAndLabeledFields.computeIfAbsent(clazz, c -> Utils.getFieldsAnnotatedWith(c, Label.class));
+    // ------------------------------------------------------------------------------------ levelForSuppressedExceptions
+    public Level getLevelForSqlException() {
+        return levelForSqlException;
+    }
+
+    public void setLevelForSqlException(final Level levelForSqlException) {
+        requireNonNull(levelForSqlException, "levelForSqlException is null");
+        this.levelForSqlException = levelForSqlException;
+    }
+
+    public Context levelForSqlException(final Level levelForSqlException) {
+        setLevelForSqlException(levelForSqlException);
+        return this;
+    }
+
+    private Level levelForSqlException(final SQLException sqle) {
+        requireNonNull(sqle, "sqle is null");
+        if (isSuppressed(sqle)) {
+            return levelForSqlException;
+        }
+        return Level.WARNING;
     }
 
     // -----------------------------------------------------------------------------------------------------------------
@@ -1563,5 +1587,8 @@ public class Context {
     private final @NotNull Map<@NotNull Class<?>, @NotNull Map<@NotNull Field, @NotNull Label>> classesAndLabeledFields
             = new HashMap<>();
 
-    private final @NotNull Set<@NotNull Class<?>> suppressedExceptionClasses = new HashSet<>();
+    // -----------------------------------------------------------------------------------------------------------------
+    private final @NotNull Set<@NotNull Class<?>> suppressedThrowableClasses = new HashSet<>();
+
+    private @NotNull Level levelForSqlException = Level.WARNING;
 }

@@ -54,7 +54,7 @@ class MemoryH2Test extends MemoryTest {
     // -----------------------------------------------------------------------------------------------------------------
 
     @Override
-    Connection connect() throws SQLException {
+    protected Connection connect() throws SQLException {
         return getConnection(CONNECTION_URL);
     }
 }

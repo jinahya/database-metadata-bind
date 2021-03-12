@@ -20,6 +20,8 @@ package com.github.jinahya.database.metadata.bind;
  * #L%
  */
 
+import com.diffplug.common.base.Errors;
+import com.diffplug.common.base.Throwing;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.Test;
 
@@ -31,7 +33,9 @@ import java.sql.SQLException;
 import java.sql.SQLFeatureNotSupportedException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.logging.Level;
 
+import static java.util.Objects.requireNonNull;
 import static org.assertj.core.api.Assertions.assertThat;
 
 /**
@@ -48,21 +52,40 @@ abstract class MemoryTest {
      * @return a connection.
      * @throws SQLException if a database error occurs.
      */
-    abstract Connection connect() throws SQLException;
+    protected abstract Connection connect() throws SQLException;
+
+    protected <R> R applyContext(final Throwing.Function<? super Context, ? extends R> function)
+            throws SQLException {
+        requireNonNull(function, "function is null");
+        try (Connection connection = connect()) {
+            final Context context = Context.newInstance(connection)
+                    .suppress(SQLFeatureNotSupportedException.class)
+                    .levelForSqlException(Level.FINE);
+            return Errors.rethrow().wrapFunction(function).apply(context);
+        }
+    }
+
+    protected void acceptContext(final Throwing.Consumer<? super Context> consumer)
+            throws SQLException {
+        requireNonNull(consumer, "consumer is null");
+        applyContext(c -> {
+            consumer.accept(c);
+            return null;
+        });
+    }
 
     // -----------------------------------------------------------------------------------------------------------------
     @Test
     void writeMetadataToFiles() throws Exception {
-        try (Connection connection = connect()) {
-            final Context context = Context.newInstance(connection).suppress(SQLFeatureNotSupportedException.class);
-            final Metadata metadata = Metadata.newInstance(context);
+        acceptContext(c -> {
+            final Metadata metadata = Metadata.newInstance(c);
             final String name;
             {
                 final String simpleName = getClass().getSimpleName();
                 name = ("memory." + (simpleName.substring(6, simpleName.indexOf("Test"))) + ".metadata").toLowerCase();
             }
             MetadataTests.writeToFiles(metadata, name);
-        }
+        });
     }
 
     // -----------------------------------------------------------------------------------------------------------------
@@ -71,25 +94,19 @@ abstract class MemoryTest {
             return catalogs;
         }
         catalogs = new ArrayList<>();
-        try (Connection connection = connect()) {
-            final Context context = Context.newInstance(connection).suppress(SQLFeatureNotSupportedException.class);
-            context.getCatalogs(catalogs);
-        }
+        applyContext(c -> c.getCatalogs(catalogs));
         return catalogs;
     }
 
     @Test
     void getCatalogs__() throws SQLException, JAXBException {
-        try (Connection connection = connect()) {
-            final Context context = Context.newInstance(connection).suppress(SQLFeatureNotSupportedException.class);
-            final List<Catalog> catalogs = getCatalogs();
-            for (final Catalog catalog : catalogs) {
-                BeanValidationTestUtils.requireValid(catalog);
-            }
-            final String pathname = TestUtils.getFilenamePrefix(context) + " - catalogs.xml";
-            final File target = Paths.get("target", pathname).toFile();
-            Wrapper.marshalFormatted(Catalog.class, getCatalogs(), target);
+        final List<Catalog> catalogs = getCatalogs();
+        for (final Catalog catalog : catalogs) {
+            BeanValidationTestUtils.requireValid(catalog);
         }
+        final String pathname = applyContext(c -> TestUtils.getFilenamePrefix(c) + " - catalogs.xml");
+        final File target = Paths.get("target", pathname).toFile();
+        Wrapper.marshalFormatted(Catalog.class, getCatalogs(), target);
     }
 
     // -----------------------------------------------------------------------------------------------------------------
