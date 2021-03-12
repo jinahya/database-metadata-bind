@@ -48,8 +48,8 @@ class ContainerIT {
         try (Connection connection = getConnection(url)) {
             log.info("connected: {}", connection);
             final Context context = Context.newInstance(connection);
-            final Metadata metadata = Metadata.newInstance(context);
-            MetadataTests.writeToFiles(metadata, "container");
+//            final Metadata metadata = Metadata.newInstance(context);
+//            MetadataTests.writeToFiles(metadata, "container");
         }
     }
 }

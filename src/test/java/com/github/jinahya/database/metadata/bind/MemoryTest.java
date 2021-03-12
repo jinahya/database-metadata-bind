@@ -20,23 +20,14 @@ package com.github.jinahya.database.metadata.bind;
  * #L%
  */
 
-import com.diffplug.common.base.Errors;
-import com.diffplug.common.base.Throwing;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.Test;
 
 import javax.xml.bind.JAXBException;
-import java.io.File;
-import java.nio.file.Paths;
 import java.sql.Connection;
 import java.sql.SQLException;
 import java.sql.SQLFeatureNotSupportedException;
-import java.util.ArrayList;
-import java.util.List;
 import java.util.logging.Level;
-
-import static java.util.Objects.requireNonNull;
-import static org.assertj.core.api.Assertions.assertThat;
 
 /**
  * An abstract test class for in-memory databases.
@@ -54,219 +45,13 @@ abstract class MemoryTest {
      */
     protected abstract Connection connect() throws SQLException;
 
-    protected <R> R applyContext(final Throwing.Function<? super Context, ? extends R> function)
-            throws SQLException {
-        requireNonNull(function, "function is null");
+    @Test
+    void writeFiles() throws SQLException, JAXBException {
         try (Connection connection = connect()) {
             final Context context = Context.newInstance(connection)
                     .suppress(SQLFeatureNotSupportedException.class)
                     .levelForSqlException(Level.FINE);
-            return Errors.rethrow().wrapFunction(function).apply(context);
+            ContextTests.writeFiles(context);
         }
     }
-
-    protected void acceptContext(final Throwing.Consumer<? super Context> consumer)
-            throws SQLException {
-        requireNonNull(consumer, "consumer is null");
-        applyContext(c -> {
-            consumer.accept(c);
-            return null;
-        });
-    }
-
-    // -----------------------------------------------------------------------------------------------------------------
-    @Test
-    void writeMetadataToFiles() throws Exception {
-        acceptContext(c -> {
-            final Metadata metadata = Metadata.newInstance(c);
-            final String name;
-            {
-                final String simpleName = getClass().getSimpleName();
-                name = ("memory." + (simpleName.substring(6, simpleName.indexOf("Test"))) + ".metadata").toLowerCase();
-            }
-            MetadataTests.writeToFiles(metadata, name);
-        });
-    }
-
-    // -----------------------------------------------------------------------------------------------------------------
-    protected List<Catalog> getCatalogs() throws SQLException {
-        if (catalogs != null) {
-            return catalogs;
-        }
-        catalogs = new ArrayList<>();
-        applyContext(c -> c.getCatalogs(catalogs));
-        return catalogs;
-    }
-
-    @Test
-    void getCatalogs__() throws SQLException, JAXBException {
-        final List<Catalog> catalogs = getCatalogs();
-        for (final Catalog catalog : catalogs) {
-            BeanValidationTestUtils.requireValid(catalog);
-        }
-        final String pathname = applyContext(c -> TestUtils.getFilenamePrefix(c) + " - catalogs.xml");
-        final File target = Paths.get("target", pathname).toFile();
-        Wrapper.marshalFormatted(Catalog.class, getCatalogs(), target);
-    }
-
-    // -----------------------------------------------------------------------------------------------------------------
-    @Test
-    void getTypeInfo__() throws SQLException, JAXBException {
-        try (Connection connection = connect()) {
-            final Context context = Context.newInstance(connection).suppress(SQLFeatureNotSupportedException.class);
-            final List<TypeInfo> typeInfo = context.getTypeInfo(new ArrayList<>());
-            for (final TypeInfo v : typeInfo) {
-                BeanValidationTestUtils.requireValid(v);
-                assertThat(v.getNullableAsEnum()).isNotNull();
-                assertThat(v.getSearchableAsEnum()).isNotNull();
-                final String pathname = TestUtils.getFilenamePrefix(context) + " - typeInfo.xml";
-                final File target = Paths.get("target", pathname).toFile();
-                Wrapper.marshalFormatted(TypeInfo.class, typeInfo, target);
-            }
-        }
-    }
-
-    // ------------------------------------------------------------------------------------------------- supportsConvert
-    @Test
-    void supportsConvert() throws SQLException, JAXBException {
-        try (Connection connection = connect()) {
-            final Context context = Context.newInstance(connection).suppress(SQLFeatureNotSupportedException.class);
-            final List<SupportsConvert> all = SupportsConvert.getAllInstances(context);
-            assertThat(all)
-                    .doesNotContainNull();
-            final String pathname = TestUtils.getFilenamePrefix(context) + " - supportsConvert.xml";
-            final File target = Paths.get("target", pathname).toFile();
-            Wrapper.marshalFormatted(SupportsConvert.class, all, target);
-        }
-    }
-
-    // -------------------------------------------------------------------------------------------------- ...AreDetected
-    @Test
-    void deletesAreDetected() throws SQLException, JAXBException {
-        try (Connection connection = connect()) {
-            final Context context = Context.newInstance(connection).suppress(SQLFeatureNotSupportedException.class);
-            final List<DeletesAreDetected> all = DeletesAreDetected.getAllInstances(context);
-            assertThat(all)
-                    .hasSizeLessThanOrEqualTo(ResultSetType.values().length)
-                    .doesNotContainNull();
-            final String pathname = TestUtils.getFilenamePrefix(context) + " - deletesAreDetected.xml";
-            final File target = Paths.get("target", pathname).toFile();
-            Wrapper.marshalFormatted(DeletesAreDetected.class, all, target);
-        }
-    }
-
-    @Test
-    void insertsAreDetected() throws SQLException, JAXBException {
-        try (Connection connection = connect()) {
-            final Context context = Context.newInstance(connection).suppress(SQLFeatureNotSupportedException.class);
-            final List<InsertsAreDetected> all = InsertsAreDetected.getAllInstances(context);
-            assertThat(all)
-                    .hasSizeLessThanOrEqualTo(ResultSetType.values().length)
-                    .doesNotContainNull();
-            final String pathname = TestUtils.getFilenamePrefix(context) + " - insertsAreDetected.xml";
-            final File target = Paths.get("target", pathname).toFile();
-            Wrapper.marshalFormatted(InsertsAreDetected.class, all, target);
-        }
-    }
-
-    @Test
-    void updatesAreDetected() throws SQLException, JAXBException {
-        try (Connection connection = connect()) {
-            final Context context = Context.newInstance(connection).suppress(SQLFeatureNotSupportedException.class);
-            final List<UpdatesAreDetected> all = UpdatesAreDetected.getAllInstances(context);
-            assertThat(all)
-                    .hasSizeLessThanOrEqualTo(ResultSetType.values().length)
-                    .doesNotContainNull();
-            final String pathname = TestUtils.getFilenamePrefix(context) + " - updatesAreDetected.xml";
-            final File target = Paths.get("target", pathname).toFile();
-            Wrapper.marshalFormatted(UpdatesAreDetected.class, all, target);
-        }
-    }
-
-    // --------------------------------------------------------------------------------------------------- ...AreVisible
-    @Test
-    void othersDeletesAreVisible() throws SQLException, JAXBException {
-        try (Connection connection = connect()) {
-            final Context context = Context.newInstance(connection).suppress(SQLFeatureNotSupportedException.class);
-            final List<OthersDeletesAreVisible> all = OthersDeletesAreVisible.getAllInstances(context);
-            assertThat(all)
-                    .doesNotContainNull()
-                    .hasSizeLessThanOrEqualTo(ResultSetType.values().length);
-            final String pathname = TestUtils.getFilenamePrefix(context) + " - othersDeletesAreVisible.xml";
-            final File target = Paths.get("target", pathname).toFile();
-            Wrapper.marshalFormatted(OthersDeletesAreVisible.class, all, target);
-        }
-    }
-
-    @Test
-    void othersInsertsAreVisible() throws SQLException, JAXBException {
-        try (Connection connection = connect()) {
-            final Context context = Context.newInstance(connection).suppress(SQLFeatureNotSupportedException.class);
-            final List<OthersInsertsAreVisible> all = OthersInsertsAreVisible.getAllInstances(context);
-            assertThat(all)
-                    .doesNotContainNull()
-                    .hasSizeLessThanOrEqualTo(ResultSetType.values().length);
-            final String pathname = TestUtils.getFilenamePrefix(context) + " - othersInsertsAreVisible.xml";
-            final File target = Paths.get("target", pathname).toFile();
-            Wrapper.marshalFormatted(OthersInsertsAreVisible.class, all, target);
-        }
-    }
-
-    @Test
-    void othersUpdatesAreVisible() throws SQLException, JAXBException {
-        try (Connection connection = connect()) {
-            final Context context = Context.newInstance(connection).suppress(SQLFeatureNotSupportedException.class);
-            final List<OthersUpdatesAreVisible> all = OthersUpdatesAreVisible.getAllInstances(context);
-            assertThat(all)
-                    .doesNotContainNull()
-                    .hasSizeLessThanOrEqualTo(ResultSetType.values().length);
-            final String pathname = TestUtils.getFilenamePrefix(context) + " - othersUpdatesAreVisible.xml";
-            final File target = Paths.get("target", pathname).toFile();
-            Wrapper.marshalFormatted(OthersUpdatesAreVisible.class, all, target);
-        }
-    }
-
-    @Test
-    void ownDeletesAreVisible() throws SQLException, JAXBException {
-        try (Connection connection = connect()) {
-            final Context context = Context.newInstance(connection).suppress(SQLFeatureNotSupportedException.class);
-            final List<OwnDeletesAreVisible> all = OwnDeletesAreVisible.all(context);
-            assertThat(all)
-                    .doesNotContainNull()
-                    .hasSizeLessThanOrEqualTo(ResultSetType.values().length);
-            final String pathname = TestUtils.getFilenamePrefix(context) + " - ownDeletesAreVisible.xml";
-            final File target = Paths.get("target", pathname).toFile();
-            Wrapper.marshalFormatted(OwnDeletesAreVisible.class, all, target);
-        }
-    }
-
-    @Test
-    void ownInsertsAreVisible() throws SQLException, JAXBException {
-        try (Connection connection = connect()) {
-            final Context context = Context.newInstance(connection).suppress(SQLFeatureNotSupportedException.class);
-            final List<OwnInsertsAreVisible> all = OwnInsertsAreVisible.getAllInstances(context);
-            assertThat(all)
-                    .doesNotContainNull()
-                    .hasSizeLessThanOrEqualTo(ResultSetType.values().length);
-            final String pathname = TestUtils.getFilenamePrefix(context) + " - ownInsertsAreVisible.xml";
-            final File target = Paths.get("target", pathname).toFile();
-            Wrapper.marshalFormatted(OwnInsertsAreVisible.class, all, target);
-        }
-    }
-
-    @Test
-    void ownUpdatesAreVisible() throws SQLException, JAXBException {
-        try (Connection connection = connect()) {
-            final Context context = Context.newInstance(connection).suppress(SQLFeatureNotSupportedException.class);
-            final List<OwnUpdatesAreVisible> all = OwnUpdatesAreVisible.getAllInstances(context);
-            assertThat(all)
-                    .doesNotContainNull()
-                    .hasSizeLessThanOrEqualTo(ResultSetType.values().length);
-            final String pathname = TestUtils.getFilenamePrefix(context) + " - ownUpdatesAreVisible.xml";
-            final File target = Paths.get("target", pathname).toFile();
-            Wrapper.marshalFormatted(OwnUpdatesAreVisible.class, all, target);
-        }
-    }
-
-    private List<Catalog> catalogs;
 }

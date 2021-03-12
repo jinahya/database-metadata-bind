@@ -1529,7 +1529,6 @@ public class Context {
         return classesAndLabeledFields.computeIfAbsent(clazz, c -> Utils.getFieldsAnnotatedWith(c, Label.class));
     }
 
-
     // -----------------------------------------------------------------------------------------------------------------
     public <T extends Throwable> Context suppress(final @NotNull Class<T> throwableClass) {
         requireNonNull(throwableClass, "throwableClass is null");

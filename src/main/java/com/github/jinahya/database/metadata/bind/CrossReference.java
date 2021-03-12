@@ -25,6 +25,8 @@ import javax.xml.bind.annotation.XmlRootElement;
 import java.util.Collection;
 import java.util.Objects;
 
+import static java.util.Objects.requireNonNull;
+
 /**
  * A class for binding results of {@link java.sql.DatabaseMetaData#getCrossReference(String, String, String, String,
  * String, String)} method.
@@ -36,6 +38,11 @@ import java.util.Objects;
 public class CrossReference implements MetadataType {
 
     private static final long serialVersionUID = -5343386346721125961L;
+
+    // ---------------------------------------------------------------------------------------- UPDATE_RULE / updateRule
+    public static final String COLUMN_NAME_UPDATE_RULE = "UPDATE_RULE";
+
+    public static final String ATTRIBUTE_NAME_UPDATE_RULE = "updateRule";
 
     // -----------------------------------------------------------------------------------------------------------------
 
@@ -196,6 +203,23 @@ public class CrossReference implements MetadataType {
         this.updateRule = updateRule;
     }
 
+    public int getUpdateRuleAsInt() {
+        return getUpdateRule();
+    }
+
+    public void setUpdateRuleAsInt(final int updateRuleAsInt) {
+        setUpdateRule((short) updateRuleAsInt);
+    }
+
+    public ImportedKey.Rule getUpdateRuleAsEnum() {
+        return ImportedKey.Rule.valueOfRawValue(getUpdateRuleAsInt());
+    }
+
+    public void setUpdateRuleAsEnum(final ImportedKey.Rule updateRuleAsEnum) {
+        requireNonNull(updateRuleAsEnum, "updateRuleAsEnum is null");
+        setUpdateRuleAsInt(updateRuleAsEnum.getRawValue());
+    }
+
     // ------------------------------------------------------------------------------------------------------ deleteRule
     public short getDeleteRule() {
         return deleteRule;
@@ -203,6 +227,23 @@ public class CrossReference implements MetadataType {
 
     public void setDeleteRule(final short deleteRule) {
         this.deleteRule = deleteRule;
+    }
+
+    public int getDeleteRuleAsInt() {
+        return getDeleteRule();
+    }
+
+    public void setDeleteRuleAsInt(final int deleteRuleAsInt) {
+        setDeleteRule((short) deleteRuleAsInt);
+    }
+
+    public ImportedKey.Rule getDeleteRuleAsEnum() {
+        return ImportedKey.Rule.valueOfRawValue(getDeleteRuleAsInt());
+    }
+
+    public void setDeleteRuleAsEnum(final ImportedKey.Rule deleteRuleAsEnum) {
+        requireNonNull(deleteRuleAsEnum, "deleteRuleAsEnum is null");
+        setDeleteRuleAsInt(deleteRuleAsEnum.getRawValue());
     }
 
     // ---------------------------------------------------------------------------------------------------------- fnname
@@ -223,13 +264,30 @@ public class CrossReference implements MetadataType {
         this.pkName = pkName;
     }
 
-    // ------------------------------------------------------------------------------------------------- deferrerability
+    // --------------------------------------------------------------------------------------------------- deferrability
     public short getDeferrability() {
         return deferrability;
     }
 
     public void setDeferrability(final short deferrability) {
         this.deferrability = deferrability;
+    }
+
+    public int getDeferrabilityAsInt() {
+        return getDeferrability();
+    }
+
+    public void setDeferrabilityAsInt(final int deferrabilityAsInt) {
+        setDeferrability((short) deferrabilityAsInt);
+    }
+
+    public ImportedKey.Rule getDeferrabilityAsEnum() {
+        return ImportedKey.Rule.valueOfRawValue(getDeferrabilityAsInt());
+    }
+
+    public void setDeferrabilityAsEnum(final ImportedKey.Rule deferrabilityAsEnum) {
+        requireNonNull(deferrabilityAsEnum, "deferrabilityAsEnum is null");
+        setDeferrabilityAsInt(deferrabilityAsEnum.getRawValue());
     }
 
     // -----------------------------------------------------------------------------------------------------------------

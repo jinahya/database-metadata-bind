@@ -35,10 +35,30 @@ public class ImportedKey extends TableKey {
 
     private static final long serialVersionUID = 1478290412906203629L;
 
+    // ---------------------------------------------------------------------------------------- UPDATE_RULE / updateRule
+    public static final String COLUMN_NAME_UPDATE_RULE = "UPDATE_RULE";
+
+    public static final String ATTRIBUTE_NAME_UPDATE_RULE = "updateRule";
+
+    // ---------------------------------------------------------------------------------------- DELETE_RULE / deleteRule
+    public static final String COLUMN_NAME_DELETE_RULE = "DELETE_RULE";
+
+    public static final String ATTRIBUTE_NAME_DELETE_RULE = "deleteRule";
+
+    // ----------------------------------------------------------------------------------- DEFERRABILITY / deferrability
+    public static final String COLUMN_NAME_DEFERRABILITY = "DEFERRABILITY";
+
+    public static final String ATTRIBUTE_NAME_DEFERRABILITY = "deferrability";
+
     // -----------------------------------------------------------------------------------------------------------------
 
     /**
-     * Constants for {@code UPDATE_URL} or {@code DELETE_RULE}.
+     * Constants for {@value com.github.jinahya.database.metadata.bind.ImportedKey#COLUMN_NAME_UPDATE_RULE} column
+     * values and {@value com.github.jinahya.database.metadata.bind.ImportedKey#COLUMN_NAME_DELETE_RULE} column values
+     * of a result of {@link DatabaseMetaData#getImportedKeys(String, String, String)} method.
+     *
+     * @author Jin Kwon &lt;onacit_at_gmail.com&gt;
+     * @see DatabaseMetaData#getImportedKeys(String, String, String)
      */
     public enum Rule implements IntFieldEnum<Rule> {
 
@@ -78,32 +98,47 @@ public class ImportedKey extends TableKey {
             return IntFieldEnums.valueOfRawValue(Rule.class, rawValue);
         }
 
+        /**
+         * Creates a new instance with specified raw value.
+         *
+         * @param rawValue the raw value.
+         */
         Rule(final int rawValue) {
             this.rawValue = rawValue;
         }
 
+        /**
+         * {@inheritDoc}
+         *
+         * @return {@inheritDoc}
+         */
         @Override
         public int getRawValue() {
             return rawValue;
         }
 
+        /**
+         * The raw value of this constant.
+         */
         private final int rawValue;
     }
 
     /**
-     * Constants for {@code DEFERRABILITY}.
+     * Constants for {@value com.github.jinahya.database.metadata.bind.ImportedKey#COLUMN_NAME_DEFERRABILITY} column
+     * values of a result of {@link DatabaseMetaData#getCrossReference(String, String, String, String, String, String)}
+     * method.
      */
     public enum Deferrability implements IntFieldEnum<Deferrability> {
 
         /**
          * Constant for {@link DatabaseMetaData#importedKeyInitiallyDeferred}({@value
-         * DatabaseMetaData#importedKeyInitiallyDeferred}).
+         * java.sql.DatabaseMetaData#importedKeyInitiallyDeferred}).
          */
         IMPORTED_KEY_INITIALLY_DEFERRED(DatabaseMetaData.importedKeyInitiallyDeferred), // 5
 
         /**
          * Constant for {@link DatabaseMetaData#importedKeyInitiallyImmediate}({@value
-         * DatabaseMetaData#importedKeyInitiallyImmediate}).
+         * java.sql.DatabaseMetaData#importedKeyInitiallyImmediate}).
          */
         IMPORTED_KEY_INITIALLY_IMMEDIATE(DatabaseMetaData.importedKeyInitiallyImmediate), // 6
 
@@ -113,27 +148,31 @@ public class ImportedKey extends TableKey {
         IMPORTED_KEY_NOT_DEFERRABLE(DatabaseMetaData.importedKeyNotDeferrable); // 7
 
         /**
-         * Returns the constant whose raw value matches to given. An instance of {@link IllegalArgumentException} will
-         * be thrown if no constant matched.
+         * Creates a new instance with specified raw value.
          *
-         * @param rawValue the raw value to match
-         * @return the matched constant.
+         * @param rawValue the raw value.
          */
-        public static Deferrability valueOfRawValue(final int rawValue) {
-            return IntFieldEnums.valueOfRawValue(Deferrability.class, rawValue);
-        }
-
         Deferrability(final int rawValue) {
             this.rawValue = rawValue;
         }
 
+        /**
+         * {@inheritDoc}
+         *
+         * @return {@inheritDoc}
+         */
         @Override
         public int getRawValue() {
             return rawValue;
         }
 
+        /**
+         * The raw value of this constant.
+         */
         private final int rawValue;
     }
+
+    // -----------------------------------------------------------------------------------------------------------------
 
     // -----------------------------------------------------------------------------------------------------------------
 
