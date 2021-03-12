@@ -21,31 +21,52 @@ package com.github.jinahya.database.metadata.bind;
  */
 
 import javax.validation.constraints.AssertTrue;
+import javax.validation.constraints.NotNull;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlEnum;
-import javax.xml.bind.annotation.XmlEnumValue;
 import javax.xml.bind.annotation.XmlRootElement;
 import java.sql.DatabaseMetaData;
+import java.sql.JDBCType;
+import java.sql.SQLType;
+import java.util.Collection;
 import java.util.Objects;
 import java.util.Optional;
+import java.util.function.IntFunction;
+import java.util.function.ToIntFunction;
 
 import static java.util.Objects.requireNonNull;
 
 /**
- * An entity class for function columns.
+ * A class for binding results of {@link DatabaseMetaData#getFunctionColumns(String, String, String, String)}.
  *
  * @author Jin Kwon &lt;jinahya_at_gmail.com&gt;
- * @see DatabaseMetaData#getFunctionColumns(java.lang.String, java.lang.String, java.lang.String, java.lang.String)
+ * @see Context#getFunctionColumns(String, String, String, String, Collection)
  */
 @XmlRootElement
 public class FunctionColumn implements MetadataType {
 
     private static final long serialVersionUID = -7445156446214062680L;
 
+    // ---------------------------------------------------------------------------------------- COLUMN_TYPE / columnType
+    public static final String COLUMN_NAME_COLUMN_TYPE = "COLUMN_TYPE";
+
+    public static final String ATTRIBUTE_NAME_COLUMN_TYPE = "columnType";
+
+    // --------------------------------------------------------------------------------------------- NULLABLE / nullable
+    public static final String COLUMN_NAME_NULLABLE = "NULLABLE";
+
+    public static final String ATTRIBUTE_NAME_NULLABLE = "nullable";
+
+    // ---------------------------------------------------------------------------------------- IS_NULLABLE / isNullable
+    public static final String COLUMN_NAME_IS_NULLABLE = "IS_NULLABLE";
+
+    public static final String ATTRIBUTE_NAME_IS_NULLABLE = "isNullable";
+
     // -----------------------------------------------------------------------------------------------------------------
 
     /**
-     * Constants for column types of function columns.
+     * Constants for {@link #COLUMN_NAME_COLUMN_TYPE} column values of the results of {@link
+     * DatabaseMetaData#getFunctionColumns(String, String, String, String)}.
      *
      * @see DatabaseMetaData#getFunctionColumns(java.lang.String, java.lang.String, java.lang.String, java.lang.String)
      */
@@ -53,33 +74,33 @@ public class FunctionColumn implements MetadataType {
     public enum ColumnType implements IntFieldEnum<ColumnType> {
 
         /**
-         * Constant for {@link DatabaseMetaData#functionColumnUnknown}({@link DatabaseMetaData#functionColumnUnknown}).
+         * Constant for {@link DatabaseMetaData#functionColumnUnknown}({@value java.sql.DatabaseMetaData#functionColumnUnknown}).
          */
         FUNCTION_COLUMN_UNKNOWN(DatabaseMetaData.functionColumnUnknown), // 0
 
         /**
-         * Constants for {@link DatabaseMetaData#functionColumnIn}({@link DatabaseMetaData#functionColumnIn}).
+         * Constants for {@link DatabaseMetaData#functionColumnIn}({@value java.sql.DatabaseMetaData#functionColumnIn}).
          */
         FUNCTION_COLUMN_IN(DatabaseMetaData.functionColumnIn), // 1
 
         /**
-         * Constants for {@link DatabaseMetaData#functionColumnInOut}({@link DatabaseMetaData#functionColumnInOut}).
+         * Constants for {@link DatabaseMetaData#functionColumnInOut}({@value java.sql.DatabaseMetaData#functionColumnInOut}).
          */
         FUNCTION_COLUMN_IN_OUT(DatabaseMetaData.functionColumnInOut), // 2
 
         /**
-         * Constants for {@link DatabaseMetaData#functionColumnOut}({@link DatabaseMetaData#functionColumnOut}).
+         * Constants for {@link DatabaseMetaData#functionColumnOut}({@value java.sql.DatabaseMetaData#functionColumnOut}).
          */
         FUNCTION_COLUMN_OUT(DatabaseMetaData.functionColumnOut), // 3
 
         /**
-         * Constant for {@link DatabaseMetaData#functionReturn}({@link DatabaseMetaData#functionReturn}).
+         * Constant for {@link DatabaseMetaData#functionReturn}({@value java.sql.DatabaseMetaData#functionReturn}).
          */
         // https://stackoverflow.com/a/46647586/330457
         FUNCTION_COLUMN_RETURN(DatabaseMetaData.functionReturn), // 4
 
         /**
-         * Constants for {@link DatabaseMetaData#functionColumnResult}({@link DatabaseMetaData#functionColumnResult}).
+         * Constants for {@link DatabaseMetaData#functionColumnResult}({@value java.sql.DatabaseMetaData#functionColumnResult}).
          */
         FUNCTION_COLUMN_RESULT(DatabaseMetaData.functionColumnResult); // 5
 
@@ -112,7 +133,8 @@ public class FunctionColumn implements MetadataType {
     }
 
     /**
-     * Constants for nullabilities of columns.
+     * Constants for {@link #COLUMN_NAME_NULLABLE} column values of the results of {@link
+     * DatabaseMetaData#getFunctionColumns(String, String, String, String)}.
      *
      * @see DatabaseMetaData#getFunctionColumns(java.lang.String, java.lang.String, java.lang.String, java.lang.String)
      */
@@ -120,17 +142,17 @@ public class FunctionColumn implements MetadataType {
     public enum Nullable implements IntFieldEnum<Nullable> {
 
         /**
-         * Constant for {@link DatabaseMetaData#functionNoNulls}({@link DatabaseMetaData#functionNoNulls}).
+         * Constant for {@link DatabaseMetaData#functionNoNulls}({@value java.sql.DatabaseMetaData#functionNoNulls}).
          */
         FUNCTION_NO_NULLS(DatabaseMetaData.functionNoNulls),
 
         /**
-         * Constant for {@link DatabaseMetaData#functionNullable}({@link DatabaseMetaData#functionNullable}).
+         * Constant for {@link DatabaseMetaData#functionNullable}({@value java.sql.DatabaseMetaData#functionNullable}).
          */
         FUNCTION_NULLABLE(DatabaseMetaData.functionNullable),
 
         /**
-         * Constant for {@link DatabaseMetaData#functionNullableUnknown}({@link DatabaseMetaData#functionNullableUnknown}).
+         * Constant for {@link DatabaseMetaData#functionNullableUnknown}({@value java.sql.DatabaseMetaData#functionNullableUnknown}).
          */
         FUNCTION_NULLABLE_UNKNOWN(DatabaseMetaData.functionNullableUnknown);
 
@@ -163,7 +185,10 @@ public class FunctionColumn implements MetadataType {
     }
 
     /**
-     * Constants for {@code IS_NULLABLE} column value.
+     * Constants for {@link #COLUMN_NAME_IS_NULLABLE} column values of the results of {@link
+     * DatabaseMetaData#getFunctionColumns(String, String, String, String)}.
+     *
+     * @see DatabaseMetaData#getFunctionColumns(java.lang.String, java.lang.String, java.lang.String, java.lang.String)
      */
     @XmlEnum
     public enum IsNullable implements FieldEnum<IsNullable, String> {
@@ -171,19 +196,16 @@ public class FunctionColumn implements MetadataType {
         /**
          * Constant for {@code ""}.
          */
-        @XmlEnumValue("")
         UNKNOWN(""),
 
         /**
          * Constant for {@code "YES"}.
          */
-        //@XmlEnumValue("YES") // defaults to Enum.name()
         YES("YES"),
 
         /**
          * Constant for {@code "NO"}.
          */
-        //@XmlEnumValue("NO") // defaults to Enum.name()
         NO("NO");
 
         /**
@@ -196,6 +218,11 @@ public class FunctionColumn implements MetadataType {
             return FieldEnums.valueOfRawValue(IsNullable.class, rawValue);
         }
 
+        /**
+         * Creates a new instance with specified raw value.
+         *
+         * @param rawValue the raw value.
+         */
         IsNullable(final String rawValue) {
             this.rawValue = requireNonNull(rawValue, "rawValue is null");
         }
@@ -359,6 +386,17 @@ public class FunctionColumn implements MetadataType {
 
     public void setDataType(final int dataType) {
         this.dataType = dataType;
+    }
+
+    public @NotNull JDBCType getDataTypeAsJDBCType() {
+        return JDBCType.valueOf(getDataType());
+    }
+
+    public void setDataTypeAsSQLType(final @NotNull SQLType dataTypeAsSQLType) {
+        requireNonNull(dataTypeAsSQLType, "dataTypeAsSQLType is null");
+        setDataType(Optional.ofNullable(dataTypeAsSQLType.getVendorTypeNumber())
+                            .orElseThrow(() -> new IllegalArgumentException(
+                                    "null vendorTypeNumber from " + dataTypeAsSQLType)));
     }
 
     // -------------------------------------------------------------------------------------------------------- typeName

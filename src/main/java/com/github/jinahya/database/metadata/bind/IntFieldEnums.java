@@ -20,6 +20,11 @@ package com.github.jinahya.database.metadata.bind;
  * #L%
  */
 
+/**
+ * A utility class for {@link IntFieldEnum}.
+ *
+ * @author Jin Kwon &lt;onacit_at_gmail.com&gt;
+ */
 final class IntFieldEnums {
 
     static <E extends Enum<E> & IntFieldEnum<E>> int[] rawValues(final Class<E> enumType) {
@@ -41,7 +46,6 @@ final class IntFieldEnums {
         throw new IllegalArgumentException("no value for raw value: " + rawValue);
     }
 
-    // -----------------------------------------------------------------------------------------------------------------
     private IntFieldEnums() {
         throw new AssertionError("instantiation is not allowed");
     }

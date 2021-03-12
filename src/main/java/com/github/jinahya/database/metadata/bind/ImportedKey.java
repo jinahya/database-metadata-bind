@@ -43,27 +43,27 @@ public class ImportedKey extends TableKey {
     public enum Rule implements IntFieldEnum<Rule> {
 
         /**
-         * Constant for {@link DatabaseMetaData#importedKeyCascade}({@value DatabaseMetaData#importedKeyCascade}).
+         * Constant for {@link DatabaseMetaData#importedKeyCascade}({@value java.sql.DatabaseMetaData#importedKeyCascade}).
          */
         IMPORTED_KEY_CASCADE(DatabaseMetaData.importedKeyCascade), // 0
 
         /**
-         * Constant for {@link DatabaseMetaData#importedKeyRestrict}({@value DatabaseMetaData#importedKeyRestrict}).
+         * Constant for {@link DatabaseMetaData#importedKeyRestrict}({@value java.sql.DatabaseMetaData#importedKeyRestrict}).
          */
         IMPORTED_KEY_RESTRICT(DatabaseMetaData.importedKeyRestrict), // 1
 
         /**
-         * Constant for {@link DatabaseMetaData#importedKeySetNull}({@value DatabaseMetaData#importedKeySetNull}).
+         * Constant for {@link DatabaseMetaData#importedKeySetNull}({@value java.sql.DatabaseMetaData#importedKeySetNull}).
          */
         IMPORTED_KEY_SET_NULL(DatabaseMetaData.importedKeySetNull), // 2
 
         /**
-         * Constant for {@link DatabaseMetaData#importedKeyNoAction}({@value DatabaseMetaData#importedKeyNoAction}).
+         * Constant for {@link DatabaseMetaData#importedKeyNoAction}({@value java.sql.DatabaseMetaData#importedKeyNoAction}).
          */
         IMPORTED_KEY_NO_ACTION(DatabaseMetaData.importedKeyNoAction), // 3
 
         /**
-         * Constant for {@link DatabaseMetaData#importedKeySetDefault}({@value DatabaseMetaData#importedKeySetDefault}).
+         * Constant for {@link DatabaseMetaData#importedKeySetDefault}({@value java.sql.DatabaseMetaData#importedKeySetDefault}).
          */
         IMPORTED_KEY_SET_DEFAULT(DatabaseMetaData.importedKeySetDefault); // 4
 
@@ -108,7 +108,7 @@ public class ImportedKey extends TableKey {
         IMPORTED_KEY_INITIALLY_IMMEDIATE(DatabaseMetaData.importedKeyInitiallyImmediate), // 6
 
         /**
-         * Constant for {@link DatabaseMetaData#importedKeyNotDeferrable}({@value DatabaseMetaData#importedKeyNotDeferrable}).
+         * Constant for {@link DatabaseMetaData#importedKeyNotDeferrable}({@value java.sql.DatabaseMetaData#importedKeyNotDeferrable}).
          */
         IMPORTED_KEY_NOT_DEFERRABLE(DatabaseMetaData.importedKeyNotDeferrable); // 7
 

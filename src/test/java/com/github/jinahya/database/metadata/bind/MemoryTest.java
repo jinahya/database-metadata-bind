@@ -67,17 +67,29 @@ abstract class MemoryTest {
     }
 
     // -----------------------------------------------------------------------------------------------------------------
+    protected List<Catalog> getCatalogs() throws SQLException {
+        if (catalogs != null) {
+            return catalogs;
+        }
+        catalogs = new ArrayList<>();
+        try (Connection connection = connect()) {
+            final Context context = Context.newInstance(connection).suppress(SQLFeatureNotSupportedException.class);
+            context.getCatalogs(catalogs);
+        }
+        return catalogs;
+    }
+
     @Test
     void getCatalogs__() throws SQLException, JAXBException {
         try (Connection connection = connect()) {
             final Context context = Context.newInstance(connection).suppress(SQLFeatureNotSupportedException.class);
-            final List<Catalog> catalogs = context.getCatalogs(new ArrayList<>());
+            final List<Catalog> catalogs = getCatalogs();
             for (final Catalog catalog : catalogs) {
                 log.debug("catalog: {}", catalog);
             }
             final String pathname = TestUtils.getFilenamePrefix(context) + " - catalogs.xml";
             final File target = Paths.get("target", pathname).toFile();
-            Wrapper.marshalFormatted(Catalog.class, catalogs, target);
+            Wrapper.marshalFormatted(Catalog.class, getCatalogs(), target);
         }
     }
 
@@ -222,4 +234,6 @@ abstract class MemoryTest {
             Wrapper.marshalFormatted(OwnUpdatesAreVisible.class, all, target);
         }
     }
+
+    private List<Catalog> catalogs;
 }

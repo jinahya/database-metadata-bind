@@ -48,38 +48,32 @@ public class ProcedureColumn implements MetadataType {
     public enum ColumnType implements IntFieldEnum<ColumnType> {
 
         /**
-         * Constant for {@link DatabaseMetaData#procedureColumnUnknown} whose value is {@value
-         * DatabaseMetaData#procedureColumnUnknown}.
+         * Constant for {@link DatabaseMetaData#procedureColumnUnknown}({@link DatabaseMetaData#procedureColumnUnknown}).
          */
         PROCEDURE_COLUMN_UNKNOWN(DatabaseMetaData.procedureColumnUnknown), // 0
 
         /**
-         * Constants for {@link DatabaseMetaData#procedureColumnIn} whose value is {@value
-         * DatabaseMetaData#procedureColumnIn}.
+         * Constants for {@link DatabaseMetaData#procedureColumnIn}({@value java.sql.DatabaseMetaData#procedureColumnIn}).
          */
         PROCEDURE_COLUMN_IN(DatabaseMetaData.procedureColumnIn), // 1
 
         /**
-         * Constants for {@link DatabaseMetaData#procedureColumnInOut} whose value is {@value
-         * DatabaseMetaData#procedureColumnInOut}.
+         * Constants for {@link DatabaseMetaData#procedureColumnInOut}({@value java.sql.DatabaseMetaData#procedureColumnInOut}).
          */
         PROCEDURE_COLUMN_IN_OUT(DatabaseMetaData.procedureColumnInOut), // 2
 
         /**
-         * Constants for {@link DatabaseMetaData#procedureColumnResult} whose value is {@value
-         * DatabaseMetaData#procedureColumnResult}.
+         * Constants for {@link DatabaseMetaData#procedureColumnResult}({@value java.sql.DatabaseMetaData#procedureColumnResult}).
          */
         PROCEDURE_COLUMN_RESULT(DatabaseMetaData.functionColumnResult), // 3
 
         /**
-         * Constants for {@link DatabaseMetaData#procedureColumnOut} whose value is {@value
-         * DatabaseMetaData#procedureColumnOut}.
+         * Constants for {@link DatabaseMetaData#procedureColumnOut}({@value java.sql.DatabaseMetaData#procedureColumnOut}).
          */
         PROCEDURE_COLUMN_OUT(DatabaseMetaData.procedureColumnOut), // 4
 
         /**
-         * Constant for {@link DatabaseMetaData#procedureColumnReturn} whose value is {@value
-         * DatabaseMetaData#procedureColumnReturn}.
+         * Constant for {@link DatabaseMetaData#procedureColumnReturn}({@value java.sql.DatabaseMetaData#procedureColumnReturn}).
          */
         PROCEDURE_COLUMN_RETURN(DatabaseMetaData.procedureColumnReturn); // 5
 

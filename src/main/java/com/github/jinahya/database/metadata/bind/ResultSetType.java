@@ -30,17 +30,17 @@ import java.sql.ResultSet;
 enum ResultSetType implements IntFieldEnum<ResultSetType>, MetadataType {
 
     /**
-     * A constant for {@link ResultSet#TYPE_FORWARD_ONLY}({@value ResultSet#TYPE_FORWARD_ONLY}).
+     * A constant for {@link ResultSet#TYPE_FORWARD_ONLY}({@value java.sql.ResultSet#TYPE_FORWARD_ONLY}).
      */
     TYPE_FORWARD_ONLY(ResultSet.TYPE_FORWARD_ONLY),
 
     /**
-     * A constant for {@link ResultSet#TYPE_SCROLL_INSENSITIVE}({@value ResultSet#TYPE_SCROLL_INSENSITIVE}).
+     * A constant for {@link ResultSet#TYPE_SCROLL_INSENSITIVE}({@value java.sql.ResultSet#TYPE_SCROLL_INSENSITIVE}).
      */
     TYPE_SCROLL_INSENSITIVE(ResultSet.TYPE_SCROLL_INSENSITIVE),
 
     /**
-     * A constant for {@link ResultSet#TYPE_SCROLL_SENSITIVE}({@value ResultSet#TYPE_SCROLL_SENSITIVE}).
+     * A constant for {@link ResultSet#TYPE_SCROLL_SENSITIVE}({@value java.sql.ResultSet#TYPE_SCROLL_SENSITIVE}).
      */
     TYPE_SCROLL_SENSITIVE(ResultSet.TYPE_SCROLL_SENSITIVE);
 

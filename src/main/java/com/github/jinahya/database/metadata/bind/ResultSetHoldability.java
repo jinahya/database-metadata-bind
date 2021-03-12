@@ -30,12 +30,12 @@ import java.sql.ResultSet;
 enum ResultSetHoldability implements IntFieldEnum<ResultSetHoldability>, MetadataType {
 
     /**
-     * Constants for {@link ResultSet#HOLD_CURSORS_OVER_COMMIT}({@value ResultSet#HOLD_CURSORS_OVER_COMMIT}).
+     * Constants for {@link ResultSet#HOLD_CURSORS_OVER_COMMIT}({@value java.sql.ResultSet#HOLD_CURSORS_OVER_COMMIT}).
      */
     HOLD_CURSORS_OVER_COMMIT(ResultSet.HOLD_CURSORS_OVER_COMMIT),
 
     /**
-     * Constants for {@link ResultSet#CLOSE_CURSORS_AT_COMMIT}({@value ResultSet#CLOSE_CURSORS_AT_COMMIT}).
+     * Constants for {@link ResultSet#CLOSE_CURSORS_AT_COMMIT}({@value java.sql.ResultSet#CLOSE_CURSORS_AT_COMMIT}).
      */
     CLOSE_CURSORS_AT_COMMIT(ResultSet.CLOSE_CURSORS_AT_COMMIT);
 

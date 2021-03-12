@@ -52,17 +52,17 @@ public class Column implements MetadataType {
     public enum Nullable implements IntFieldEnum<Nullable> {
 
         /**
-         * Constant for {@link DatabaseMetaData#columnNoNulls}({@link DatabaseMetaData#columnNoNulls}).
+         * Constant for {@link DatabaseMetaData#columnNoNulls}({@value java.sql.DatabaseMetaData#columnNoNulls}).
          */
         COLUMN_NO_NULLS(DatabaseMetaData.columnNoNulls),
 
         /**
-         * Constant for {@link DatabaseMetaData#columnNullable}({@link DatabaseMetaData#columnNullable}).
+         * Constant for {@link DatabaseMetaData#columnNullable}({@value java.sql.DatabaseMetaData#columnNullable}).
          */
         COLUMN_NULLABLE(DatabaseMetaData.columnNullable),
 
         /**
-         * Constant for {@link DatabaseMetaData#columnNullableUnknown}({@link DatabaseMetaData#columnNullableUnknown}).
+         * Constant for {@link DatabaseMetaData#columnNullableUnknown}({@value java.sql.DatabaseMetaData#columnNullableUnknown}).
          */
         COLUMN_NULLABLE_UNKNOWN(DatabaseMetaData.columnNullableUnknown);
 
@@ -608,7 +608,7 @@ public class Column implements MetadataType {
     @Label("SCOPE_CATALOG")
     private String scopeCatalog;
 
-    @XmlElement( required = true, nillable = true)
+    @XmlElement(required = true, nillable = true)
     @MayBeNull
     @Label("SCOPE_SCHEMA")
     private String scopeSchema;

@@ -20,6 +20,8 @@ package com.github.jinahya.database.metadata.bind;
  * #L%
  */
 
+import javax.validation.Valid;
+import javax.validation.constraints.NotNull;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlElementRef;
 import javax.xml.bind.annotation.XmlRootElement;
@@ -51,6 +53,15 @@ public class Function implements MetadataType {
     public static final String COLUMN_NAME_FUNCTION_SCHEM = "FUNCTION_SCHEM";
 
     public static final String ATTRIBUTE_NAME_FUNCTION_SCHEM = "functionSchem";
+
+    // -----------------------------------------------------------------------------------------------------------------
+
+    /**
+     * Creates a new instance.
+     */
+    public Function() {
+        super();
+    }
 
     // -----------------------------------------------------------------------------------------------------------------
     @Override
@@ -149,7 +160,7 @@ public class Function implements MetadataType {
      *
      * @return a list of function columns of this function.
      */
-    List<FunctionColumn> getFunctionColumns() {
+    public @NotNull List<@Valid @NotNull FunctionColumn> getFunctionColumns() {
         if (functionColumns == null) {
             functionColumns = new ArrayList<>();
         }

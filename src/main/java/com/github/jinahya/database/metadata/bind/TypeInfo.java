@@ -47,17 +47,17 @@ public class TypeInfo implements MetadataType {
     public enum Nullable implements IntFieldEnum<Nullable> {
 
         /**
-         * Constant for {@link DatabaseMetaData#typeNoNulls}({@value DatabaseMetaData#typeNoNulls}).
+         * Constant for {@link DatabaseMetaData#typeNoNulls}({@value java.sql.DatabaseMetaData#typeNoNulls}).
          */
         TYPE_NO_NULLS(typeNoNulls), // 1
 
         /**
-         * Constant for {@link DatabaseMetaData#typeNullable}({@value DatabaseMetaData#typeNullable}).
+         * Constant for {@link DatabaseMetaData#typeNullable}({@value java.sql.DatabaseMetaData#typeNullable}).
          */
         TYPE_NULLABLE(typeNullable), // 1
 
         /**
-         * Constant for {@link DatabaseMetaData#typeNullableUnknown}({@value DatabaseMetaData#typeNullableUnknown}).
+         * Constant for {@link DatabaseMetaData#typeNullableUnknown}({@value java.sql.DatabaseMetaData#typeNullableUnknown}).
          */
         TYPE_NULLABLE_UNKNOWN(typeNullableUnknown); // 2
 

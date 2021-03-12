@@ -26,7 +26,8 @@ import java.util.Collection;
 import java.util.Objects;
 
 /**
- * An entity class for cross references.
+ * A class for binding results of {@link java.sql.DatabaseMetaData#getCrossReference(String, String, String, String,
+ * String, String)} method.
  *
  * @author Jin Kwon &lt;jinahya_at_gmail.com&gt;
  * @see Context#getCrossReference(String, String, String, String, String, String, Collection)
@@ -35,6 +36,15 @@ import java.util.Objects;
 public class CrossReference implements MetadataType {
 
     private static final long serialVersionUID = -5343386346721125961L;
+
+    // -----------------------------------------------------------------------------------------------------------------
+
+    /**
+     * Creates a new instance.
+     */
+    public CrossReference() {
+        super();
+    }
 
     // -----------------------------------------------------------------------------------------------------------------
     @Override

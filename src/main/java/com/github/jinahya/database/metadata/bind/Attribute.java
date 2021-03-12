@@ -46,17 +46,17 @@ public class Attribute implements MetadataType {
     public enum Nullable implements IntFieldEnum<Nullable> {
 
         /**
-         * Constant for {@link DatabaseMetaData#attributeNoNulls}({@value DatabaseMetaData#attributeNoNulls}).
+         * Constant for {@link DatabaseMetaData#attributeNoNulls}({@value java.sql.DatabaseMetaData#attributeNoNulls}).
          */
         ATTRIBUTE_NO_NULLS(DatabaseMetaData.attributeNoNulls),
 
         /**
-         * Constant for {@link DatabaseMetaData#attributeNullable}({@link DatabaseMetaData#attributeNullable}).
+         * Constant for {@link DatabaseMetaData#attributeNullable}({@value java.sql.DatabaseMetaData#attributeNullable}).
          */
         ATTRIBUTE_NULLABLE(DatabaseMetaData.attributeNullable),
 
         /**
-         * Constant for {@link DatabaseMetaData#attributeNullableUnknown}({@link DatabaseMetaData#attributeNullableUnknown}).
+         * Constant for {@link DatabaseMetaData#attributeNullableUnknown}({@value java.sql.DatabaseMetaData#attributeNullableUnknown}).
          */
         ATTRIBUTE_NULLABLE_UNKNOWN(DatabaseMetaData.attributeNullableUnknown);
 

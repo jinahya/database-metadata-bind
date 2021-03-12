@@ -30,12 +30,12 @@ import java.sql.ResultSet;
 enum ResultSetConcurrency implements IntFieldEnum<ResultSetConcurrency>, MetadataType {
 
     /**
-     * Constant for {@link ResultSet#CONCUR_READ_ONLY}({@value ResultSet#CONCUR_READ_ONLY}).
+     * Constant for {@link ResultSet#CONCUR_READ_ONLY}({@value java.sql.ResultSet#CONCUR_READ_ONLY}).
      */
     CONCUR_READ_ONLY(ResultSet.CONCUR_READ_ONLY),
 
     /**
-     * Constant for {@link ResultSet#CONCUR_UPDATABLE}({@value ResultSet#CONCUR_UPDATABLE}).
+     * Constant for {@link ResultSet#CONCUR_UPDATABLE}({@value java.sql.ResultSet#CONCUR_UPDATABLE}).
      */
     CONCUR_UPDATABLE(ResultSet.CONCUR_UPDATABLE);
 

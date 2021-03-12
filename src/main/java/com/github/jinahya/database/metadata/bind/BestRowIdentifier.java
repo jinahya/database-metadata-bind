@@ -47,17 +47,17 @@ public class BestRowIdentifier implements MetadataType {
     public enum PseudoColumn implements IntFieldEnum<PseudoColumn> {
 
         /**
-         * Constant for {@link DatabaseMetaData#bestRowUnknown}({@link DatabaseMetaData#bestRowUnknown}).
+         * Constant for {@link DatabaseMetaData#bestRowUnknown}({@value java.sql.DatabaseMetaData#bestRowUnknown}).
          */
         BEST_ROW_UNKNOWN(DatabaseMetaData.bestRowUnknown),
 
         /**
-         * Constant for {@link DatabaseMetaData#bestRowNotPseudo}({@link DatabaseMetaData#bestRowNotPseudo}).
+         * Constant for {@link DatabaseMetaData#bestRowNotPseudo}({@value java.sql.DatabaseMetaData#bestRowNotPseudo}).
          */
         BEST_ROW_NOT_PSEUDO(DatabaseMetaData.bestRowNotPseudo),
 
         /**
-         * Constant for {@link DatabaseMetaData#bestRowPseudo}({@link DatabaseMetaData#bestRowPseudo}).
+         * Constant for {@link DatabaseMetaData#bestRowPseudo}({@value java.sql.DatabaseMetaData#bestRowPseudo}).
          */
         BEST_ROW_PSEUDO(DatabaseMetaData.bestRowPseudo);
 
@@ -92,17 +92,17 @@ public class BestRowIdentifier implements MetadataType {
     public enum Scope implements IntFieldEnum<Scope> {
 
         /**
-         * Constant for {@link DatabaseMetaData#bestRowTemporary}({@link DatabaseMetaData#bestRowTemporary}).
+         * Constant for {@link DatabaseMetaData#bestRowTemporary}({@value java.sql.DatabaseMetaData#bestRowTemporary}).
          */
         BEST_ROW_TEMPORARY(DatabaseMetaData.bestRowTemporary),
 
         /**
-         * Constant for {@link DatabaseMetaData#bestRowTransaction}({@link DatabaseMetaData#bestRowTransaction}).
+         * Constant for {@link DatabaseMetaData#bestRowTransaction}({@value java.sql.DatabaseMetaData#bestRowTransaction}).
          */
         BEST_ROW_TRANSACTION(DatabaseMetaData.bestRowTransaction),
 
         /**
-         * Constant for {@link DatabaseMetaData#bestRowSession}({@link DatabaseMetaData#bestRowSession}).
+         * Constant for {@link DatabaseMetaData#bestRowSession}({@value java.sql.DatabaseMetaData#bestRowSession}).
          */
         BEST_ROW_SESSION(DatabaseMetaData.bestRowSession);
 
