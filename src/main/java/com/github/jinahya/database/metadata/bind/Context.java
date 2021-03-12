@@ -458,9 +458,7 @@ public class Context {
             logger.log(Level.WARNING, sqle,
                        () -> String.format("failed to getFunctionColumns(%1$s, %2$s, %3$s, %4$s)",
                                            catalog, schemaPattern, functionNamePattern, columnNamePattern));
-            if (!isSuppressed(sqle.getClass())) {
-                throw sqle;
-            }
+            throwIfNotSuppressed(sqle);
         }
         return collection;
     }
@@ -490,9 +488,7 @@ public class Context {
         } catch (final SQLException sqle) {
             logger.log(Level.WARNING, sqle,
                        () -> String.format("failed to getExportedKeys(%1$s, %2$s, %3$s)", catalog, schema, table));
-            if (!isSuppressed(sqle.getClass())) {
-                throw sqle;
-            }
+            throwIfNotSuppressed(sqle);
         }
         return collection;
     }
@@ -522,9 +518,7 @@ public class Context {
         } catch (final SQLException sqle) {
             logger.log(Level.WARNING, sqle,
                        () -> String.format("failed to getImportedKeys(%1$s, %2$s, %3$s)", catalog, schema, table));
-            if (!isSuppressed(sqle.getClass())) {
-                throw sqle;
-            }
+            throwIfNotSuppressed(sqle);
         }
         return collection;
     }
@@ -557,9 +551,7 @@ public class Context {
         } catch (final SQLException sqle) {
             logger.log(Level.WARNING, sqle,
                        () -> String.format("failed to getIndexInfo(%1$s, %2$s, %3$s)", catalog, schema, table));
-            if (!isSuppressed(sqle.getClass())) {
-                throw sqle;
-            }
+            throwIfNotSuppressed(sqle);
         }
         return collection;
     }
@@ -622,9 +614,7 @@ public class Context {
             logger.log(Level.WARNING, sqle,
                        () -> String.format("failed to getProcedureColumns(%1$s, %2$s, %3$s, %4$s)",
                                            catalog, schemaPattern, procedureNamePattern, columnNamePattern));
-            if (!isSuppressed(sqle.getClass())) {
-                throw sqle;
-            }
+            throwIfNotSuppressed(sqle);
         }
         return collection;
     }
@@ -656,9 +646,7 @@ public class Context {
             logger.log(Level.WARNING, sqle,
                        () -> String.format("failed to getProcedures(%1$s, %2$s, %3$s)",
                                            catalog, schemaPattern, procedureNamePattern));
-            if (!isSuppressed(sqle.getClass())) {
-                throw sqle;
-            }
+            throwIfNotSuppressed(sqle);
         }
         for (final Object element : collection) {
             if (element instanceof Procedure) {
@@ -721,9 +709,7 @@ public class Context {
             }
         } catch (final SQLException sqle) {
             logger.log(Level.WARNING, "failed to getSchemas()", sqle);
-            if (!isSuppressed(sqle.getClass())) {
-                throw sqle;
-            }
+            throwIfNotSuppressed(sqle);
         }
         return collection;
     }
@@ -800,9 +786,7 @@ public class Context {
             logger.log(Level.WARNING, sqle,
                        () -> String.format("failed to getSuperTables(%1$s, %2$s, %3$s)",
                                            catalog, schemaPattern, tableNamePattern));
-            if (!isSuppressed(sqle.getClass())) {
-                throw sqle;
-            }
+            throwIfNotSuppressed(sqle);
         }
         return collection;
     }
@@ -889,9 +873,7 @@ public class Context {
             }
         } catch (final SQLException sqle) {
             logger.log(Level.WARNING, "failed to getTableTypes()", sqle);
-            if (!isSuppressed(sqle.getClass())) {
-                throw sqle;
-            }
+            throwIfNotSuppressed(sqle);
         }
         return collection;
     }
@@ -965,7 +947,8 @@ public class Context {
      * @return given {@code collection}.
      * @throws SQLException if a database error occurs.
      */
-    public <T extends Collection<? super TypeInfo>> T getTypeInfo(final T collection) throws SQLException {
+    public <T extends Collection<@Valid @NotNull ? super TypeInfo>> @NotNull T getTypeInfo(final @NotNull T collection)
+            throws SQLException {
         requireNonNull(collection, "collection is null");
         try (ResultSet results = databaseMetaData.getTypeInfo()) {
             if (results != null) {
@@ -973,9 +956,7 @@ public class Context {
             }
         } catch (final SQLException sqle) {
             logger.log(Level.WARNING, "failed to getTypeInfo()", sqle);
-            if (!isSuppressed(sqle.getClass())) {
-                throw sqle;
-            }
+            throwIfNotSuppressed(sqle);
         }
         return collection;
     }
