@@ -20,7 +20,6 @@ package com.github.jinahya.database.metadata.bind;
  * #L%
  */
 
-import javax.validation.constraints.AssertTrue;
 import javax.validation.constraints.NotNull;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlEnum;
@@ -31,8 +30,6 @@ import java.sql.SQLType;
 import java.util.Collection;
 import java.util.Objects;
 import java.util.Optional;
-import java.util.function.IntFunction;
-import java.util.function.ToIntFunction;
 
 import static java.util.Objects.requireNonNull;
 
@@ -211,8 +208,8 @@ public class FunctionColumn implements MetadataType {
         /**
          * Returns the constant whose {@link #getRawValue() rawValue} matches to specified value.
          *
-         * @param rawValue the value for {@link #getRawValue() rawValue} to match.
-         * @return a matched constant.
+         * @param rawValue the raw value to match.
+         * @return the value of {@code rawValue}.
          */
         public static IsNullable valueOfRawValue(final String rawValue) {
             return FieldEnums.valueOfRawValue(IsNullable.class, rawValue);
@@ -227,6 +224,11 @@ public class FunctionColumn implements MetadataType {
             this.rawValue = requireNonNull(rawValue, "rawValue is null");
         }
 
+        /**
+         * {@inheritDoc}
+         *
+         * @return {@inheritDoc}
+         */
         @Override
         public String getRawValue() {
             return rawValue;
@@ -308,21 +310,6 @@ public class FunctionColumn implements MetadataType {
                             ordinalPosition,
                             isNullable,
                             specificName);
-    }
-
-    // ------------------------------------------------------------------------------------------------- Bean-Validation
-    @AssertTrue
-    private boolean isIsNullableValid() {
-        if (isNullable == null) {
-            return true;
-        }
-        try {
-            final IsNullable value = IsNullable.valueOfRawValue(isNullable);
-            assert value != null;
-            return true;
-        } catch (final IllegalArgumentException iae) {
-            return false;
-        }
     }
 
     // ----------------------------------------------------------------------------------------------------- functionCat

@@ -67,8 +67,8 @@ public class Column implements MetadataType {
         COLUMN_NULLABLE_UNKNOWN(DatabaseMetaData.columnNullableUnknown);
 
         /**
-         * Returns the constant whose raw value equals to given. An instance of {@link IllegalArgumentException} will be
-         * throw if no constants matches.
+         * Returns the constant whose raw value equals to given. An {@link IllegalArgumentException} will be thrown if
+         * no constants matches.
          *
          * @param rawValue the value value
          * @return the constant whose raw value equals to given.

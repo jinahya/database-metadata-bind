@@ -7,51 +7,24 @@
 A library for binding various information
 from [DatabaseMetaData](http://docs.oracle.com/javase/8/docs/api/java/sql/DatabaseMetaData.html).
 
-All methods defined in [DatabaseMetaData][DatabaseMetaData] meet following conditions have been bound with corresponding
-result types.
+All methods defined in [DatabaseMetaData][DatabaseMetaData] meet following conditions have been bound with corresponding result types.
 
 * is an instance method.
-* has at least one parameter.
-  * (and/or) result type is a [ResultSet][ResultSet].
+* has at least one parameter
+  * (and/or) result type is [ResultSet][ResultSet].
   
-## Testing with in-memory databases.
-
-Tests for in-memory databases, such as Apache Derby, H2, HSQLDB, and SQLite, are prepared.
-
-```shell
-$ mvn -Pmemory clean test
-...
-$
-```
-
-See target directory for output files.
-
 ## Usage
 
 ```java
 // create a context from a connection
-final java.sql.Connection connection=connect();
-final Context context=Context.newInstance(connection)
+java.sql.Connection connection = connect();
+Context context = Context.newInstance(connection)
         .suppress(SQLFeatureNotSupportedException.class);
 
 // invoke methods
-final List<Catalog> catalogs=context.getCatalogs(new ArrayList<>());
-final List<Schema> schemas=context.getSchemas("",null,new ArrayList<>());
-final Set<Table> tables=context.getTables(null,null,null,new HashSet<>());
-```
-
-## Testing with [TestContainers](https://www.testcontainers.org/)
-
-```shell
-$ mvn -Pfailsafe,container-<module> \
-      -Dversion.<client>=x.y.z \
-      -Durl=jdbc:tc:<image>:<tag>://... \
-      -Dit.test=ContainerIT \
-      clean verify
-...
-$ cat target/external.xml
-...
-$
+List<Catalog> catalogs = context.getCatalogs(new ArrayList<>());
+List<Schema> schemas = context.getSchemas("", null, new LinkedList<>());
+Set<Table> tables = context.getTables(null, null, null, new HashSet<>());
 ```
 
 ## Gathering metadata from existing databases
@@ -105,9 +78,7 @@ $ mvn -Pexternal-oracle-ojdbc11 \
       -Dit.test=ExternalIT \
       verify
 ...
-$ cat target/external.xml
-...
-$
+$      
 ```
 
 [DatabaseMetaData]: https://docs.oracle.com/en/java/javase/11/docs/api/java.sql/java/sql/DatabaseMetaData.html

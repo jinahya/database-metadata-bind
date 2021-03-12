@@ -21,12 +21,12 @@ package com.github.jinahya.database.metadata.bind;
  */
 
 import javax.validation.Valid;
-import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import javax.xml.bind.annotation.XmlAttribute;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlElementRef;
 import javax.xml.bind.annotation.XmlRootElement;
+import javax.xml.bind.annotation.XmlSchemaType;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
@@ -142,7 +142,7 @@ public class Schema implements MetadataType {
     }
 
     // ------------------------------------------------------------------------------------------------------- functions
-    List<Function> getFunctions() {
+    public List<Function> getFunctions() {
         if (functions == null) {
             functions = new ArrayList<>();
         }
@@ -150,7 +150,7 @@ public class Schema implements MetadataType {
     }
 
     // ------------------------------------------------------------------------------------------------------ procedures
-    List<Procedure> getProcedures() {
+    public List<Procedure> getProcedures() {
         if (procedures == null) {
             procedures = new ArrayList<>();
         }
@@ -158,7 +158,7 @@ public class Schema implements MetadataType {
     }
 
     // ---------------------------------------------------------------------------------------------------------- tables
-    List<Table> getTables() {
+    public List<Table> getTables() {
         if (tables == null) {
             tables = new ArrayList<>();
         }
@@ -166,7 +166,7 @@ public class Schema implements MetadataType {
     }
 
     // ------------------------------------------------------------------------------------------------------------ UDTs
-    List<UDT> getUDTs() {
+    public List<UDT> getUDTs() {
         if (UDTs == null) {
             UDTs = new ArrayList<>();
         }
@@ -179,13 +179,15 @@ public class Schema implements MetadataType {
 
     // -----------------------------------------------------------------------------------------------------------------
     @XmlElement(required = true, nillable = true)
+    @XmlSchemaType(name = "token")
     @MayBeNull
     @Label(COLUMN_NAME_TABLE_CATALOG)
     private String tableCatalog;
 
     // -----------------------------------------------------------------------------------------------------------------
     @XmlElement(required = true)
-    @NotBlank
+    @XmlSchemaType(name = "token")
+    @NotNull
     @Label(COLUMN_NAME_TABLE_SCHEM)
     private String tableSchem;
 

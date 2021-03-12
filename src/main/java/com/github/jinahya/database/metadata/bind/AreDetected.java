@@ -21,6 +21,8 @@ package com.github.jinahya.database.metadata.bind;
  */
 
 import javax.xml.bind.annotation.XmlAttribute;
+import javax.xml.bind.annotation.XmlSchemaType;
+import javax.xml.bind.annotation.XmlTransient;
 import javax.xml.bind.annotation.XmlValue;
 import java.lang.invoke.MethodHandles;
 import java.sql.DatabaseMetaData;
@@ -34,6 +36,7 @@ import static java.util.Objects.requireNonNull;
  *
  * @author Jin Kwon &lt;onacit_at_gmail.com&gt;
  */
+@XmlTransient
 abstract class AreDetected<T extends AreDetected<T>> implements MetadataType, Comparable<T> {
 
     private static final long serialVersionUID = 472228030784272988L;
@@ -120,6 +123,7 @@ abstract class AreDetected<T extends AreDetected<T>> implements MetadataType, Co
     private int type;
 
     @XmlAttribute
+    @XmlSchemaType(name = "token")
     private String typeName;
 
     // -----------------------------------------------------------------------------------------------------------------

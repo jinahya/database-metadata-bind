@@ -21,7 +21,6 @@ package com.github.jinahya.database.metadata.bind;
  */
 
 import lombok.extern.slf4j.Slf4j;
-import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.Test;
 
 import javax.xml.bind.JAXBException;
@@ -85,11 +84,28 @@ abstract class MemoryTest {
             final Context context = Context.newInstance(connection).suppress(SQLFeatureNotSupportedException.class);
             final List<Catalog> catalogs = getCatalogs();
             for (final Catalog catalog : catalogs) {
-                log.debug("catalog: {}", catalog);
+                BeanValidationTestUtils.requireValid(catalog);
             }
             final String pathname = TestUtils.getFilenamePrefix(context) + " - catalogs.xml";
             final File target = Paths.get("target", pathname).toFile();
             Wrapper.marshalFormatted(Catalog.class, getCatalogs(), target);
+        }
+    }
+
+    // -----------------------------------------------------------------------------------------------------------------
+    @Test
+    void getTypeInfo__() throws SQLException, JAXBException {
+        try (Connection connection = connect()) {
+            final Context context = Context.newInstance(connection).suppress(SQLFeatureNotSupportedException.class);
+            final List<TypeInfo> typeInfo = context.getTypeInfo(new ArrayList<>());
+            for (final TypeInfo v : typeInfo) {
+                BeanValidationTestUtils.requireValid(v);
+                assertThat(v.getNullableAsEnum()).isNotNull();
+                assertThat(v.getSearchableAsEnum()).isNotNull();
+                final String pathname = TestUtils.getFilenamePrefix(context) + " - typeInfo.xml";
+                final File target = Paths.get("target", pathname).toFile();
+                Wrapper.marshalFormatted(TypeInfo.class, typeInfo, target);
+            }
         }
     }
 
@@ -156,7 +172,7 @@ abstract class MemoryTest {
         try (Connection connection = connect()) {
             final Context context = Context.newInstance(connection).suppress(SQLFeatureNotSupportedException.class);
             final List<OthersDeletesAreVisible> all = OthersDeletesAreVisible.getAllInstances(context);
-            Assertions.assertThat(all)
+            assertThat(all)
                     .doesNotContainNull()
                     .hasSizeLessThanOrEqualTo(ResultSetType.values().length);
             final String pathname = TestUtils.getFilenamePrefix(context) + " - othersDeletesAreVisible.xml";
@@ -170,7 +186,7 @@ abstract class MemoryTest {
         try (Connection connection = connect()) {
             final Context context = Context.newInstance(connection).suppress(SQLFeatureNotSupportedException.class);
             final List<OthersInsertsAreVisible> all = OthersInsertsAreVisible.getAllInstances(context);
-            Assertions.assertThat(all)
+            assertThat(all)
                     .doesNotContainNull()
                     .hasSizeLessThanOrEqualTo(ResultSetType.values().length);
             final String pathname = TestUtils.getFilenamePrefix(context) + " - othersInsertsAreVisible.xml";
@@ -184,7 +200,7 @@ abstract class MemoryTest {
         try (Connection connection = connect()) {
             final Context context = Context.newInstance(connection).suppress(SQLFeatureNotSupportedException.class);
             final List<OthersUpdatesAreVisible> all = OthersUpdatesAreVisible.getAllInstances(context);
-            Assertions.assertThat(all)
+            assertThat(all)
                     .doesNotContainNull()
                     .hasSizeLessThanOrEqualTo(ResultSetType.values().length);
             final String pathname = TestUtils.getFilenamePrefix(context) + " - othersUpdatesAreVisible.xml";
@@ -198,7 +214,7 @@ abstract class MemoryTest {
         try (Connection connection = connect()) {
             final Context context = Context.newInstance(connection).suppress(SQLFeatureNotSupportedException.class);
             final List<OwnDeletesAreVisible> all = OwnDeletesAreVisible.all(context);
-            Assertions.assertThat(all)
+            assertThat(all)
                     .doesNotContainNull()
                     .hasSizeLessThanOrEqualTo(ResultSetType.values().length);
             final String pathname = TestUtils.getFilenamePrefix(context) + " - ownDeletesAreVisible.xml";
@@ -212,7 +228,7 @@ abstract class MemoryTest {
         try (Connection connection = connect()) {
             final Context context = Context.newInstance(connection).suppress(SQLFeatureNotSupportedException.class);
             final List<OwnInsertsAreVisible> all = OwnInsertsAreVisible.getAllInstances(context);
-            Assertions.assertThat(all)
+            assertThat(all)
                     .doesNotContainNull()
                     .hasSizeLessThanOrEqualTo(ResultSetType.values().length);
             final String pathname = TestUtils.getFilenamePrefix(context) + " - ownInsertsAreVisible.xml";
@@ -226,7 +242,7 @@ abstract class MemoryTest {
         try (Connection connection = connect()) {
             final Context context = Context.newInstance(connection).suppress(SQLFeatureNotSupportedException.class);
             final List<OwnUpdatesAreVisible> all = OwnUpdatesAreVisible.getAllInstances(context);
-            Assertions.assertThat(all)
+            assertThat(all)
                     .doesNotContainNull()
                     .hasSizeLessThanOrEqualTo(ResultSetType.values().length);
             final String pathname = TestUtils.getFilenamePrefix(context) + " - ownUpdatesAreVisible.xml";

@@ -20,14 +20,13 @@ package com.github.jinahya.database.metadata.bind;
  * #L%
  */
 
+import javax.validation.constraints.NotNull;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
 import java.sql.DatabaseMetaData;
 import java.util.Objects;
 
-import static java.sql.DatabaseMetaData.typeNoNulls;
-import static java.sql.DatabaseMetaData.typeNullable;
-import static java.sql.DatabaseMetaData.typeNullableUnknown;
+import static java.util.Objects.requireNonNull;
 
 /**
  * An entity class for binding the result of {@link java.sql.DatabaseMetaData#getTypeInfo() getTypeInfo()}.
@@ -39,27 +38,40 @@ public class TypeInfo implements MetadataType {
 
     private static final long serialVersionUID = -3964147654019495313L;
 
+    // --------------------------------------------------------------------------------------------- NULLABLE / nullable
+    public static final String COLUMN_NAME_NULLABLE = "nullable";
+
+    public static final String ATTRIBUTE_NAME_NULLABLE = "nullable";
+
+    // ----------------------------------------------------------------------------------------- SEARCHABLE / searchable
+    public static final String COLUMN_NAME_SEARCHABLE = "searchable";
+
+    public static final String ATTRIBUTE_NAME_SEARCHABLE = "searchable";
+
     // -----------------------------------------------------------------------------------------------------------------
 
     /**
-     * Constants for nullabilities of an type.
+     * Constants for {@value com.github.jinahya.database.metadata.bind.TypeInfo#COLUMN_NAME_NULLABLE} column values of a
+     * result of {@link DatabaseMetaData#getTypeInfo()} method.
+     *
+     * @author Jin Kwon &lt;onacit_at_gmail.com&gt;
      */
     public enum Nullable implements IntFieldEnum<Nullable> {
 
         /**
          * Constant for {@link DatabaseMetaData#typeNoNulls}({@value java.sql.DatabaseMetaData#typeNoNulls}).
          */
-        TYPE_NO_NULLS(typeNoNulls), // 1
+        TYPE_NO_NULLS(DatabaseMetaData.typeNoNulls), // 0
 
         /**
          * Constant for {@link DatabaseMetaData#typeNullable}({@value java.sql.DatabaseMetaData#typeNullable}).
          */
-        TYPE_NULLABLE(typeNullable), // 1
+        TYPE_NULLABLE(DatabaseMetaData.typeNullable), // 1
 
         /**
          * Constant for {@link DatabaseMetaData#typeNullableUnknown}({@value java.sql.DatabaseMetaData#typeNullableUnknown}).
          */
-        TYPE_NULLABLE_UNKNOWN(typeNullableUnknown); // 2
+        TYPE_NULLABLE_UNKNOWN(DatabaseMetaData.typeNullableUnknown); // 2
 
         /**
          * Returns the constant whose raw value matches to given. An instance of {@link IllegalArgumentException} will
@@ -68,10 +80,15 @@ public class TypeInfo implements MetadataType {
          * @param rawValue the raw value
          * @return the matched constant
          */
-        public static Nullable valueOf(final int rawValue) {
+        public static Nullable valueOfRawValue(final int rawValue) {
             return IntFieldEnums.valueOfRawValue(Nullable.class, rawValue);
         }
 
+        /**
+         * Creates a new instance with specified raw value.
+         *
+         * @param rawValue the raw value.
+         */
         Nullable(final int rawValue) {
             this.rawValue = rawValue;
         }
@@ -86,6 +103,73 @@ public class TypeInfo implements MetadataType {
             return rawValue;
         }
 
+        /**
+         * The raw value of this constant.
+         */
+        private final int rawValue;
+    }
+
+    /**
+     * Constants for {@value com.github.jinahya.database.metadata.bind.TypeInfo#COLUMN_NAME_SEARCHABLE} column values of
+     * a result of {@link DatabaseMetaData#getTypeInfo()} method.
+     *
+     * @author Jin Kwon &lt;onacit_at_gmail.com&gt;
+     */
+    public enum Searchable implements IntFieldEnum<Searchable> {
+
+        /**
+         * Constant for {@link DatabaseMetaData#typePredNone}({@value java.sql.DatabaseMetaData#typePredNone}).
+         */
+        TYPE_PRED_NONE(DatabaseMetaData.typePredNone), // 0
+
+        /**
+         * Constant for {@link DatabaseMetaData#typePredChar}({@value java.sql.DatabaseMetaData#typePredChar}).
+         */
+        TYPE_PRED_CHAR(DatabaseMetaData.typePredChar), // 1
+
+        /**
+         * Constant for {@link DatabaseMetaData#typePredBasic}({@value java.sql.DatabaseMetaData#typePredBasic}).
+         */
+        TYPE_PRED_BASIC(DatabaseMetaData.typePredBasic), // 2
+
+        /**
+         * Constant for {@link DatabaseMetaData#typeSearchable}({@value java.sql.DatabaseMetaData#typeSearchable}).
+         */
+        TYPE_SEARCHABLE(DatabaseMetaData.typeSearchable); // 3
+
+        /**
+         * Returns the constant whose raw value matches to given. An instance of {@link IllegalArgumentException} will
+         * be thrown if no value matches.
+         *
+         * @param rawValue the raw value.
+         * @return the matched constant.
+         */
+        public static Searchable valueOfRawValue(final int rawValue) {
+            return IntFieldEnums.valueOfRawValue(Searchable.class, rawValue);
+        }
+
+        /**
+         * Creates a new instance with specified raw value.
+         *
+         * @param rawValue the raw value.
+         */
+        Searchable(final int rawValue) {
+            this.rawValue = rawValue;
+        }
+
+        /**
+         * Returns the raw value of this constant.
+         *
+         * @return the raw value of this constant.
+         */
+        @Override
+        public int getRawValue() {
+            return rawValue;
+        }
+
+        /**
+         * The raw value of this constant.
+         */
         private final int rawValue;
     }
 
@@ -233,6 +317,19 @@ public class TypeInfo implements MetadataType {
         this.nullable = nullable;
     }
 
+    public void setNullableAsInt(final int nullableAsInt) {
+        setNullable((short) nullableAsInt);
+    }
+
+    public @NotNull Nullable getNullableAsEnum() {
+        return Nullable.valueOfRawValue(getNullable());
+    }
+
+    public void setNullableAsEnum(final @NotNull Nullable nullableAsEnum) {
+        requireNonNull(nullableAsEnum, "nullableAsEnum is null");
+        setNullableAsInt(nullableAsEnum.getRawValue());
+    }
+
     // --------------------------------------------------------------------------------------------------- caseSensitive
     public boolean getCaseSensitive() {
         return caseSensitive;
@@ -249,6 +346,19 @@ public class TypeInfo implements MetadataType {
 
     public void setSearchable(final short searchable) {
         this.searchable = searchable;
+    }
+
+    public void setSearchableAsInt(final int searchableAsInt) {
+        setSearchable((short) searchableAsInt);
+    }
+
+    public @NotNull Searchable getSearchableAsEnum() {
+        return Searchable.valueOfRawValue(getSearchable());
+    }
+
+    public void setSearchableAsEnum(final @NotNull Searchable searchableAsEnum) {
+        requireNonNull(searchableAsEnum, "searchableAsEnum is null");
+        setSearchableAsInt(searchableAsEnum.getRawValue());
     }
 
     // ----------------------------------------------------------------------------------------------- unsignedAttribute

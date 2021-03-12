@@ -66,7 +66,7 @@ final class JaxbTests {
                 return new StreamResult(baos) {
                     @Override
                     public String getSystemId() {
-                        return "catalog";
+                        return "noid";
                     }
                 };
             }

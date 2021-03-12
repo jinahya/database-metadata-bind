@@ -21,12 +21,12 @@ package com.github.jinahya.database.metadata.bind;
  */
 
 import javax.validation.Valid;
-import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import javax.xml.bind.annotation.XmlAttribute;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlElementRef;
 import javax.xml.bind.annotation.XmlRootElement;
+import javax.xml.bind.annotation.XmlSchemaType;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
@@ -148,7 +148,8 @@ public class Catalog implements MetadataType {
 
     // -----------------------------------------------------------------------------------------------------------------
     @XmlElement(required = true)
-    @NotBlank
+    @XmlSchemaType(name = "token")
+    @NotNull
     @Label(COLUMN_NAME_TABLE_CAT)
     private String tableCat;
 

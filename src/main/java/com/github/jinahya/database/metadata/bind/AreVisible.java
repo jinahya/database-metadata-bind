@@ -21,6 +21,7 @@ package com.github.jinahya.database.metadata.bind;
  */
 
 import javax.xml.bind.annotation.XmlAttribute;
+import javax.xml.bind.annotation.XmlSchemaType;
 import javax.xml.bind.annotation.XmlTransient;
 import javax.xml.bind.annotation.XmlValue;
 import java.lang.invoke.MethodHandles;
@@ -39,9 +40,17 @@ abstract class AreVisible<T extends AreVisible<T>> implements MetadataType, Comp
 
     private static final long serialVersionUID = 8635936632512182596L;
 
+    // -----------------------------------------------------------------------------------------------------------------
     static final Logger logger = Logger.getLogger(MethodHandles.lookup().lookupClass().getName());
 
     // -----------------------------------------------------------------------------------------------------------------
+
+    /**
+     * Creates a new instance.
+     */
+    protected AreVisible() {
+        super();
+    }
 
     @Override
     public String toString() {
@@ -81,7 +90,6 @@ abstract class AreVisible<T extends AreVisible<T>> implements MetadataType, Comp
     }
 
     // -----------------------------------------------------------------------------------------------------------------
-
     public int getType() {
         return type;
     }
@@ -114,6 +122,7 @@ abstract class AreVisible<T extends AreVisible<T>> implements MetadataType, Comp
     private int type;
 
     @XmlAttribute
+    @XmlSchemaType(name = "token")
     private String typeName;
 
     @XmlValue

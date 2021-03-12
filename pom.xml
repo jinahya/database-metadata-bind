@@ -55,10 +55,11 @@
     <version.ojdbc8>21.1.0.0</version.ojdbc8>
     <version.ojdbc10>19.10.0.0</version.ojdbc10>
     <version.ojdbc11>21.1.0.0</version.ojdbc11>
+    <version.org.hibernate.validator>6.2.0.Final</version.org.hibernate.validator>
     <version.org.junit.jupiter>5.8.0-M1</version.org.junit.jupiter>
+    <version.org.testcontainers>1.15.2</version.org.testcontainers>
     <version.postgresql>42.2.19.jre7</version.postgresql>
     <version.presto-jdbc>350</version.presto-jdbc>
-    <version.org.testcontainers>1.15.2</version.org.testcontainers>
   </properties>
 
   <dependencyManagement>
@@ -180,9 +181,16 @@
       <scope>provided</scope>
     </dependency>
     <dependency>
+      <groupId>org.glassfish</groupId>
+      <artifactId>jakarta.el</artifactId>
+      <version>3.0.3</version>
+      <scope>test</scope>
+    </dependency>
+    <dependency>
       <groupId>org.hibernate.validator</groupId>
       <artifactId>hibernate-validator</artifactId>
-      <version>6.1.7.Final</version>
+      <!--      <version>6.1.7.Final</version>-->
+      <version>${version.org.hibernate.validator}</version>
       <scope>test</scope>
     </dependency>
     <dependency>
@@ -473,15 +481,15 @@
     <profile>
       <id>container-only</id>
       <properties>
-<!--        <skipTests>true</skipTests>-->
+        <!--        <skipTests>true</skipTests>-->
         <it.test>ContainerIT</it.test>
       </properties>
       <dependencies>
-<!--        <dependency>-->
-<!--          <groupId>org.testcontainers</groupId>-->
-<!--          <artifactId>testcontainers</artifactId>-->
-<!--          <scope>test</scope>-->
-<!--        </dependency>-->
+        <!--        <dependency>-->
+        <!--          <groupId>org.testcontainers</groupId>-->
+        <!--          <artifactId>testcontainers</artifactId>-->
+        <!--          <scope>test</scope>-->
+        <!--        </dependency>-->
       </dependencies>
     </profile>
     <profile>
@@ -497,11 +505,11 @@
           <artifactId>mariadb</artifactId>
           <scope>test</scope>
         </dependency>
-<!--        <dependency>-->
-<!--          <groupId>org.testcontainers</groupId>-->
-<!--          <artifactId>testcontainers</artifactId>-->
-<!--          <scope>test</scope>-->
-<!--        </dependency>-->
+        <!--        <dependency>-->
+        <!--          <groupId>org.testcontainers</groupId>-->
+        <!--          <artifactId>testcontainers</artifactId>-->
+        <!--          <scope>test</scope>-->
+        <!--        </dependency>-->
       </dependencies>
     </profile>
     <profile>

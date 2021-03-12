@@ -22,12 +22,15 @@ package com.github.jinahya.database.metadata.bind;
 
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
+import javax.xml.bind.annotation.XmlSchemaType;
+import java.sql.DatabaseMetaData;
 import java.util.Objects;
 
 /**
- * An entity class for binding the result of {@link java.sql.DatabaseMetaData#getSchemas()}.
+ * A class for binding results of {@link DatabaseMetaData#getSchemas()} method.
  *
  * @author Jin Kwon &lt;jinahya_at_gmail.com&gt;
+ * @see DatabaseMetaData#getSchemas()
  */
 @XmlRootElement
 public class SchemaName implements MetadataType {
@@ -87,10 +90,12 @@ public class SchemaName implements MetadataType {
 
     // -----------------------------------------------------------------------------------------------------------------
     @XmlElement(required = true)
+    @XmlSchemaType(name = "token")
     @Label("TABLE_SCHEM")
     private String tableSchem;
 
     @XmlElement(required = true, nillable = true)
+    @XmlSchemaType(name = "token")
     @MayBeNull
     @Label("TABLE_CATALOG")
     private String tableCatalog;
