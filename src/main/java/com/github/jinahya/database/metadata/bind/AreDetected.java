@@ -24,10 +24,8 @@ import javax.xml.bind.annotation.XmlAttribute;
 import javax.xml.bind.annotation.XmlSchemaType;
 import javax.xml.bind.annotation.XmlTransient;
 import javax.xml.bind.annotation.XmlValue;
-import java.lang.invoke.MethodHandles;
 import java.sql.DatabaseMetaData;
 import java.util.Objects;
-import java.util.logging.Logger;
 
 import static java.util.Objects.requireNonNull;
 

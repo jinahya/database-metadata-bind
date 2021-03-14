@@ -16,8 +16,8 @@ final class TestUtils {
 
     static <T extends MetadataType> void testEquals(final List<? extends T> list) {
         requireNonNull(list, "list is null");
-        for (int i = 0; i < list.size();i++) {
-            for (int j = 0; j < list.size();j++) {
+        for (int i = 0; i < list.size(); i++) {
+            for (int j = 0; j < list.size(); j++) {
                 if (j == i) {
                     assertThat(list.get(i)).isEqualTo(list.get(j));
                     assertThat(list.get(j)).isEqualTo(list.get(i));
