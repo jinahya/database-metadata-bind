@@ -38,8 +38,22 @@ import java.util.Objects;
 @XmlRootElement
 public class Table implements MetadataType {
 
-    // -----------------------------------------------------------------------------------------------------------------
     private static final long serialVersionUID = 6590036695540141125L;
+
+    // -------------------------------------------------------------------------------------------- TABLE_CAT / tableCat
+    public static final String COLUMN_LABEL_TABLE_CAT = "TABLE_CAT";
+
+    public static final String ATTRIBUTE_NAME_TABLE_CAT = "tableCat";
+
+    // ---------------------------------------------------------------------------------------- TABLE_SCHEM / tableSchem
+    public static final String COLUMN_LABEL_TABLE_SCHEM = "TABLE_SCHEM";
+
+    public static final String ATTRIBUTE_NAME_TABLE_SCHEM = "tableSchem";
+
+    // ------------------------------------------------------------------------------------------ TABLE_NAME / tableName
+    public static final String COLUMN_LABEL_TABLE_NAME = "TABLE_NAME";
+
+    public static final String ATTRIBUTE_NAME_TABLE_NAME = "tableName";
 
     // -----------------------------------------------------------------------------------------------------------------
 
@@ -333,16 +347,16 @@ public class Table implements MetadataType {
     // -----------------------------------------------------------------------------------------------------------------
     @XmlElement(required = true, nillable = true)
     @MayBeNull
-    @Label("TABLE_CAT")
+    @Label(COLUMN_LABEL_TABLE_CAT)
     private String tableCat;
 
     @XmlElement(required = true, nillable = true)
     @MayBeNull
-    @Label("TABLE_SCHEM")
+    @Label(COLUMN_LABEL_TABLE_SCHEM)
     private String tableSchem;
 
     @XmlElement(required = true)
-    @Label("TABLE_NAME")
+    @Label(COLUMN_LABEL_TABLE_NAME)
     private String tableName;
 
     // -----------------------------------------------------------------------------------------------------------------

@@ -62,6 +62,22 @@ final class Utils {
         return getFieldsAnnotatedWith(c, a, new HashMap<>());
     }
 
+    static Field getLabeledField(final Class<?> clazz, final String label) {
+        requireNonNull(clazz, "clazz is null");
+        requireNonNull(label, "label is null");
+        for (final Field field : clazz.getDeclaredFields()) {
+            final Label annotation = field.getAnnotation(Label.class);
+            if (annotation == null) {
+                continue;
+            }
+            if (label.equalsIgnoreCase(annotation.value())) {
+                return field;
+            }
+        }
+        final Class<?> superclass = clazz.getSuperclass();
+        return superclass == null ? null : getLabeledField(superclass, label);
+    }
+
     // -----------------------------------------------------------------------------------------------------------------
 
     /**

@@ -12,7 +12,6 @@ FunctionColumn
 ImportedKey
 IndexInfo
 InsertsAreDetected
-Metadata
 OthersDeletesAreVisible
 OthersInsertsAreVisible
 OthersUpdatesAreVisible

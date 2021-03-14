@@ -41,8 +41,6 @@ abstract class AreDetected<T extends AreDetected<T>> implements MetadataType, Co
 
     private static final long serialVersionUID = 472228030784272988L;
 
-    static final Logger logger = Logger.getLogger(MethodHandles.lookup().lookupClass().getName());
-
     // -----------------------------------------------------------------------------------------------------------------
 
     /**
@@ -83,13 +81,6 @@ abstract class AreDetected<T extends AreDetected<T>> implements MetadataType, Co
     public int compareTo(final T o) {
         requireNonNull(o, "o is null");
         return Integer.compare(type, o.getType());
-    }
-
-    // -----------------------------------------------------------------------------------------------------------------
-    void setType(final ResultSetType type) {
-        requireNonNull(type, "type is null");
-        setType(type.getRawValue());
-        setTypeName(type.name());
     }
 
     // -----------------------------------------------------------------------------------------------------------------
