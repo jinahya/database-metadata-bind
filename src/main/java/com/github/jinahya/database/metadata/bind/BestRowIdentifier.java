@@ -49,17 +49,17 @@ public class BestRowIdentifier implements MetadataType {
         /**
          * Constant for {@link DatabaseMetaData#bestRowUnknown}({@value java.sql.DatabaseMetaData#bestRowUnknown}).
          */
-        BEST_ROW_UNKNOWN(DatabaseMetaData.bestRowUnknown),
+        BEST_ROW_UNKNOWN(DatabaseMetaData.bestRowUnknown), // 0
 
         /**
          * Constant for {@link DatabaseMetaData#bestRowNotPseudo}({@value java.sql.DatabaseMetaData#bestRowNotPseudo}).
          */
-        BEST_ROW_NOT_PSEUDO(DatabaseMetaData.bestRowNotPseudo),
+        BEST_ROW_NOT_PSEUDO(DatabaseMetaData.bestRowNotPseudo), // 1
 
         /**
          * Constant for {@link DatabaseMetaData#bestRowPseudo}({@value java.sql.DatabaseMetaData#bestRowPseudo}).
          */
-        BEST_ROW_PSEUDO(DatabaseMetaData.bestRowPseudo);
+        BEST_ROW_PSEUDO(DatabaseMetaData.bestRowPseudo); // 2
 
         /**
          * Returns the constant whose raw value equals to given.

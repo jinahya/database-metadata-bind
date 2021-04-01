@@ -21,6 +21,7 @@ package com.github.jinahya.database.metadata.bind;
  */
 
 import java.lang.annotation.Annotation;
+import java.lang.invoke.MethodHandles;
 import java.lang.reflect.Field;
 import java.sql.ResultSet;
 import java.sql.ResultSetMetaData;
@@ -39,7 +40,7 @@ import static java.util.logging.Logger.getLogger;
 final class Utils {
 
     // -----------------------------------------------------------------------------------------------------------------
-    private static final Logger logger = getLogger(Utils.class.getName());
+    private static final Logger logger = getLogger(MethodHandles.lookup().lookupClass().getName());
 
     // -----------------------------------------------------------------------------------------------------------------
     private static <T extends Annotation> Map<Field, T> getFieldsAnnotatedWith(
@@ -80,6 +81,24 @@ final class Utils {
             labels.add(metadata.getColumnLabel(i).toUpperCase());
         }
         return labels;
+    }
+
+    /**
+     * Returns a map of column labels and column indices of given result set.
+     *
+     * @param results the result set from which column labels and indices are read.
+     * @return a map of column labels and column indices.
+     * @throws SQLException if a database error occurs.
+     * @see ResultSet#getMetaData()
+     */
+    static Map<String, Integer> getLabelsAndIndices(final ResultSet results) throws SQLException {
+        final ResultSetMetaData metadata = results.getMetaData();
+        final int count = metadata.getColumnCount();
+        final Map<String, Integer> labelsAndIndices = new HashMap<>(count);
+        for (int i = 1; i <= count; i++) {
+            labelsAndIndices.put(metadata.getColumnLabel(i), i);
+        }
+        return labelsAndIndices;
     }
 
     // -----------------------------------------------------------------------------------------------------------------
