@@ -165,7 +165,8 @@ public class Procedure implements MetadataType {
     private String procedureName;
 
     // -----------------------------------------------------------------------------------------------------------------
-    @XmlElement(required = true)
+    @XmlElement(required = true, nillable = true)
+    @MayBeNullByVendor("HSQL")
     @Label("REMARKS")
     private String remarks;
 

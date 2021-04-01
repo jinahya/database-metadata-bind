@@ -28,14 +28,16 @@ import javax.xml.bind.annotation.XmlElementRef;
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlSchemaType;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 import java.util.Objects;
 
 /**
- * An entity class for binding the result of {@link java.sql.DatabaseMetaData#getSchemas(java.lang.String,
- * java.lang.String)}.
+ * A class for binding a result of {@link java.sql.DatabaseMetaData#getSchemas(java.lang.String, java.lang.String)}
+ * method.
  *
  * @author Jin Kwon &lt;jinahya_at_gmail.com&gt;
+ * @see Context#getSchemas(Collection)
  */
 @XmlRootElement
 public class Schema implements MetadataType {
@@ -43,12 +45,12 @@ public class Schema implements MetadataType {
     private static final long serialVersionUID = 7457236468401244963L;
 
     // ---------------------------------------------------------------------------------------- TABLE_SCHEM / tableSchem
-    public static final String COLUMN_NAME_TABLE_SCHEM = "TABLE_SCHEM";
+    public static final String COLUMN_LABEL_TABLE_SCHEM = "TABLE_SCHEM";
 
     public static final String ATTRIBUTE_NAME_TABLE_SCHEM = "tableSchem";
 
     // ------------------------------------------------------------------------------------ TABLE_CATALOG / tableCatalog
-    public static final String COLUMN_NAME_TABLE_CATALOG = "TABLE_CATALOG";
+    public static final String COLUMN_LABEL_TABLE_CATALOG = "TABLE_CATALOG";
 
     public static final String ATTRIBUTE_NAME_TABLE_CATALOG = "tableCatalog";
 
@@ -115,13 +117,15 @@ public class Schema implements MetadataType {
     }
 
     // --------------------------------------------------------------------------------------------------------- virtual
+
+    /**
+     * Indicates whether this schema is a virtual instance.
+     *
+     * @return {@code true} if this schema instance is a virtual instance; {@code false} otherwise.
+     */
     public boolean isVirtual() {
         return virtual != null && virtual;
     }
-
-    // --------------------------------------------------------------------------------------------------------- catalog
-
-    // --------------------------------------------------------------------------------------------------------- virtual
 
     // ---------------------------------------------------------------------------------------------------- tableCatalog
     public String getTableCatalog() {
@@ -158,7 +162,13 @@ public class Schema implements MetadataType {
     }
 
     // ---------------------------------------------------------------------------------------------------------- tables
-    public List<Table> getTables() {
+
+    /**
+     * Returns tables of this schema.
+     *
+     * @return a list of table of this schema.
+     */
+    public @NotNull List<@Valid @NotNull Table> getTables() {
         if (tables == null) {
             tables = new ArrayList<>();
         }
@@ -166,7 +176,13 @@ public class Schema implements MetadataType {
     }
 
     // ------------------------------------------------------------------------------------------------------------ UDTs
-    public List<UDT> getUDTs() {
+
+    /**
+     * Returns user defined types of this schema.
+     *
+     * @return a list of user defined types of this schema.
+     */
+    public @NotNull List<@Valid @NotNull UDT> getUDTs() {
         if (UDTs == null) {
             UDTs = new ArrayList<>();
         }
@@ -181,14 +197,13 @@ public class Schema implements MetadataType {
     @XmlElement(required = true, nillable = true)
     @XmlSchemaType(name = "token")
     @MayBeNull
-    @Label(COLUMN_NAME_TABLE_CATALOG)
+    @Label(COLUMN_LABEL_TABLE_CATALOG)
     private String tableCatalog;
 
-    // -----------------------------------------------------------------------------------------------------------------
     @XmlElement(required = true)
     @XmlSchemaType(name = "token")
     @NotNull
-    @Label(COLUMN_NAME_TABLE_SCHEM)
+    @Label(COLUMN_LABEL_TABLE_SCHEM)
     private String tableSchem;
 
     // -----------------------------------------------------------------------------------------------------------------

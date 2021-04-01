@@ -24,10 +24,8 @@ import javax.xml.bind.annotation.XmlAttribute;
 import javax.xml.bind.annotation.XmlSchemaType;
 import javax.xml.bind.annotation.XmlTransient;
 import javax.xml.bind.annotation.XmlValue;
-import java.lang.invoke.MethodHandles;
 import java.sql.DatabaseMetaData;
 import java.util.Objects;
-import java.util.logging.Logger;
 
 import static java.util.Objects.requireNonNull;
 
@@ -40,8 +38,6 @@ import static java.util.Objects.requireNonNull;
 abstract class AreDetected<T extends AreDetected<T>> implements MetadataType, Comparable<T> {
 
     private static final long serialVersionUID = 472228030784272988L;
-
-    static final Logger logger = Logger.getLogger(MethodHandles.lookup().lookupClass().getName());
 
     // -----------------------------------------------------------------------------------------------------------------
 
@@ -83,13 +79,6 @@ abstract class AreDetected<T extends AreDetected<T>> implements MetadataType, Co
     public int compareTo(final T o) {
         requireNonNull(o, "o is null");
         return Integer.compare(type, o.getType());
-    }
-
-    // -----------------------------------------------------------------------------------------------------------------
-    void setType(final ResultSetType type) {
-        requireNonNull(type, "type is null");
-        setType(type.getRawValue());
-        setTypeName(type.name());
     }
 
     // -----------------------------------------------------------------------------------------------------------------

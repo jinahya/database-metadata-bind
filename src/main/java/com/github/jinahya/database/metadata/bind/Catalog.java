@@ -44,7 +44,7 @@ public class Catalog implements MetadataType {
     private static final long serialVersionUID = 6239185259128825953L;
 
     // -------------------------------------------------------------------------------------------- TABLE_CAT / tableCat
-    public static final String COLUMN_NAME_TABLE_CAT = "TABLE_CAT";
+    public static final String COLUMN_LABEL_TABLE_CAT = "TABLE_CAT";
 
     public static final String ATTRIBUTE_NAME_TABLE_CAT = "tableCat";
 
@@ -150,7 +150,7 @@ public class Catalog implements MetadataType {
     @XmlElement(required = true)
     @XmlSchemaType(name = "token")
     @NotNull
-    @Label(COLUMN_NAME_TABLE_CAT)
+    @Label(COLUMN_LABEL_TABLE_CAT)
     private String tableCat;
 
     @XmlElementRef

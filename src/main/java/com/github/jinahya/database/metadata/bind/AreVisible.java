@@ -83,13 +83,6 @@ abstract class AreVisible<T extends AreVisible<T>> implements MetadataType, Comp
     }
 
     // -----------------------------------------------------------------------------------------------------------------
-    void setType(final ResultSetType type) {
-        requireNonNull(type, "type is null");
-        setType(type.getRawValue());
-        setTypeName(type.name());
-    }
-
-    // -----------------------------------------------------------------------------------------------------------------
     public int getType() {
         return type;
     }
