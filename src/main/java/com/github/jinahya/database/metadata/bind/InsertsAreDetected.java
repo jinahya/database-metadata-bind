@@ -20,10 +20,10 @@ package com.github.jinahya.database.metadata.bind;
  * #L%
  */
 
-import javax.validation.Valid;
-import javax.validation.constraints.NotEmpty;
-import javax.validation.constraints.NotNull;
+import lombok.NoArgsConstructor;
+
 import javax.xml.bind.annotation.XmlRootElement;
+import java.sql.DatabaseMetaData;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
@@ -31,13 +31,14 @@ import java.util.List;
 import static java.util.Objects.requireNonNull;
 
 /**
- * A class for binding result of {@link java.sql.DatabaseMetaData#insertsAreDetected(int)} method.
+ * A class for binding results of {@link DatabaseMetaData#insertsAreDetected(int)} method.
  *
  * @author Jin Kwon &lt;onacit_at_gmail.com&gt;
- * @see java.sql.DatabaseMetaData#insertsAreDetected(int)
+ * @see DatabaseMetaData#insertsAreDetected(int)
  */
 @XmlRootElement
-public class InsertsAreDetected extends AreDetected<InsertsAreDetected> {
+@NoArgsConstructor
+public class InsertsAreDetected extends AreDetected {
 
     private static final long serialVersionUID = 8464348704439999572L;
 
@@ -48,22 +49,15 @@ public class InsertsAreDetected extends AreDetected<InsertsAreDetected> {
      * @param context a context.
      * @return a list of bound values.
      * @throws SQLException if a database error occurs.
+     * @see ResultSetType
      * @see Context#insertsAreDetected(int)
      */
-    public static @NotEmpty List<@Valid @NotNull InsertsAreDetected> getAllInstances(final @NotNull Context context)
-            throws SQLException {
+    public static List<InsertsAreDetected> getAllInstances(final Context context) throws SQLException {
         requireNonNull(context, "context is null");
         final List<InsertsAreDetected> all = new ArrayList<>();
         for (final ResultSetType type : ResultSetType.values()) {
-            all.add(context.insertsAreDetected(type));
+            all.add(context.insertsAreDetected(type.getRawValue()));
         }
         return all;
-    }
-
-    /**
-     * Creates a new instance.
-     */
-    public InsertsAreDetected() {
-        super();
     }
 }

@@ -20,19 +20,16 @@ package com.github.jinahya.database.metadata.bind;
  * #L%
  */
 
-import javax.validation.Valid;
-import javax.validation.constraints.NotEmpty;
-import javax.validation.constraints.NotNull;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+
 import javax.xml.bind.annotation.XmlAttribute;
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlValue;
-import java.lang.invoke.MethodHandles;
 import java.sql.DatabaseMetaData;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Objects;
-import java.util.logging.Logger;
 
 import static java.util.Objects.requireNonNull;
 
@@ -42,9 +39,9 @@ import static java.util.Objects.requireNonNull;
  * @author Jin Kwon &lt;onacit_at_gmail.com&gt;
  */
 @XmlRootElement
+@Data
+@NoArgsConstructor
 public class SupportsResultSetType implements MetadataType {
-
-    private static final Logger logger = Logger.getLogger(MethodHandles.lookup().lookupClass().getName());
 
     // -----------------------------------------------------------------------------------------------------------------
 
@@ -56,83 +53,18 @@ public class SupportsResultSetType implements MetadataType {
      * @return a list of bound values.
      * @throws SQLException if a database access error occurs.
      */
-    public static @NotEmpty List<@Valid @NotNull SupportsResultSetType> getAllInstances(final @NotNull Context context)
-            throws SQLException {
+    public static List<SupportsResultSetType> getAllInstances(final Context context) throws SQLException {
         requireNonNull(context, "context is null");
         final List<SupportsResultSetType> all = new ArrayList<>();
-        for (final ResultSetType type : ResultSetType.values()) {
-            all.add(context.supportsResultSetType(type));
+        for (final ResultSetType value : ResultSetType.values()) {
+            all.add(context.supportsResultSetType(value.getRawValue()));
         }
         return all;
     }
 
     // -----------------------------------------------------------------------------------------------------------------
-
-    /**
-     * Creates a new instance.
-     */
-    public SupportsResultSetType() {
-        super();
-    }
-
-    // -----------------------------------------------------------------------------------------------------------------
-
-    @Override
-    public String toString() {
-        return super.toString() + '{'
-               + "type=" + type
-               + ",typeName=" + typeName
-               + ",value=" + value
-               + '}';
-    }
-
-    @Override
-    public boolean equals(final Object obj) {
-        if (this == obj) return true;
-        if (obj == null || getClass() != obj.getClass()) return false;
-        final SupportsResultSetType that = (SupportsResultSetType) obj;
-        return type == that.type
-               && Objects.equals(value, that.value);
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(type,
-                            value);
-    }
-
-    // ------------------------------------------------------------------------------------------------------------ type
-    public int getType() {
-        return type;
-    }
-
-    public void setType(final int type) {
-        this.type = type;
-    }
-
-    public String getTypeName() {
-        return typeName;
-    }
-
-    public void setTypeName(final String typeName) {
-        this.typeName = typeName;
-    }
-
-    // ----------------------------------------------------------------------------------------------------------- value
-    public Boolean getValue() {
-        return value;
-    }
-
-    public void setValue(final Boolean value) {
-        this.value = value;
-    }
-
-    // -----------------------------------------------------------------------------------------------------------------
     @XmlAttribute(required = true)
     private int type;
-
-    @XmlAttribute(required = true)
-    private String typeName;
 
     // -----------------------------------------------------------------------------------------------------------------
     @XmlValue

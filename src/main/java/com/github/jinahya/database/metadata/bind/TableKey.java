@@ -20,226 +20,25 @@ package com.github.jinahya.database.metadata.bind;
  * #L%
  */
 
+import lombok.AccessLevel;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlTransient;
-import java.util.Objects;
 
-import static java.util.Objects.requireNonNull;
-
+/**
+ * .
+ *
+ * @see ImportedKey
+ * @see ExportedKey
+ */
 @XmlTransient
+@Data
+@NoArgsConstructor(access = AccessLevel.PACKAGE)
 abstract class TableKey implements MetadataType {
 
     private static final long serialVersionUID = 6713872409315471232L;
-
-    // -----------------------------------------------------------------------------------------------------------------
-    @Override
-    public String toString() {
-        return super.toString() + '{'
-               + "pktableCat=" + pktableCat
-               + ",pktableSchem=" + pktableSchem
-               + ",pktableName=" + pktableName
-               + ",pkcolumnName=" + pkcolumnName
-               + ",fktableCat=" + fktableCat
-               + ",fktableSchem=" + fktableSchem
-               + ",fktableName=" + fktableName
-               + ",fkcolumnName=" + fkcolumnName
-               + ",keySeq=" + keySeq
-               + ",updateRule=" + updateRule
-               + ",deleteRule=" + deleteRule
-               + ",fkName=" + fkName
-               + ",pkName=" + pkName
-               + ",deferrability=" + deferrability
-               + '}';
-    }
-
-    @Override
-    public boolean equals(final Object obj) {
-        if (this == obj) return true;
-        if (obj == null || getClass() != obj.getClass()) return false;
-        final TableKey that = (TableKey) obj;
-        return keySeq == that.keySeq
-               && updateRule == that.updateRule
-               && deleteRule == that.deleteRule
-               && deferrability == that.deferrability
-               && Objects.equals(pktableCat, that.pktableCat)
-               && Objects.equals(pktableSchem, that.pktableSchem)
-               && Objects.equals(pktableName, that.pktableName)
-               && Objects.equals(pkcolumnName, that.pkcolumnName)
-               && Objects.equals(fktableCat, that.fktableCat)
-               && Objects.equals(fktableSchem, that.fktableSchem)
-               && Objects.equals(fktableName, that.fktableName)
-               && Objects.equals(fkcolumnName, that.fkcolumnName)
-               && Objects.equals(fkName, that.fkName)
-               && Objects.equals(pkName, that.pkName);
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(pktableCat,
-                            pktableSchem,
-                            pktableName,
-                            pkcolumnName,
-                            fktableCat,
-                            fktableSchem,
-                            fktableName,
-                            fkcolumnName,
-                            keySeq,
-                            updateRule,
-                            deleteRule,
-                            fkName,
-                            pkName,
-                            deferrability);
-    }
-
-    // ------------------------------------------------------------------------------------------------------ pktableCat
-    public String getPktableCat() {
-        return pktableCat;
-    }
-
-    public void setPktableCat(final String pktableCat) {
-        this.pktableCat = pktableCat;
-    }
-
-    // ---------------------------------------------------------------------------------------------------- pktableSchem
-    public String getPktableSchem() {
-        return pktableSchem;
-    }
-
-    public void setPktableSchem(final String pktableSchem) {
-        this.pktableSchem = pktableSchem;
-    }
-
-    // ----------------------------------------------------------------------------------------------------- pktableName
-    public String getPktableName() {
-        return pktableName;
-    }
-
-    public void setPktableName(final String pktableName) {
-        this.pktableName = pktableName;
-    }
-
-    // ---------------------------------------------------------------------------------------------------- pkColumnName
-    public String getPkcolumnName() {
-        return pkcolumnName;
-    }
-
-    public void setPkcolumnName(final String pkcolumnName) {
-        this.pkcolumnName = pkcolumnName;
-    }
-
-    // ------------------------------------------------------------------------------------------------------ fktableCat
-    public String getFktableCat() {
-        return fktableCat;
-    }
-
-    public void setFktableCat(final String fktableCat) {
-        this.fktableCat = fktableCat;
-    }
-
-    // ---------------------------------------------------------------------------------------------------- fktableSchem
-    public String getFktableSchem() {
-        return fktableSchem;
-    }
-
-    public void setFktableSchem(final String fktableSchem) {
-        this.fktableSchem = fktableSchem;
-    }
-
-    // ----------------------------------------------------------------------------------------------------- fktableName
-    public String getFktableName() {
-        return fktableName;
-    }
-
-    public void setFktableName(final String fktableName) {
-        this.fktableName = fktableName;
-    }
-
-    // ---------------------------------------------------------------------------------------------------- fkcolumnName
-    public String getFkcolumnName() {
-        return fkcolumnName;
-    }
-
-    public void setFkcolumnName(final String fkcolumnName) {
-        this.fkcolumnName = fkcolumnName;
-    }
-
-    // ---------------------------------------------------------------------------------------------------------- keySeq
-    public short getKeySeq() {
-        return keySeq;
-    }
-
-    public void setKeySeq(final short keySeq) {
-        this.keySeq = keySeq;
-    }
-
-    // ------------------------------------------------------------------------------------------------------ updateRule
-    public short getUpdateRule() {
-        return updateRule;
-    }
-
-    public void setUpdateRule(final short updateRule) {
-        this.updateRule = updateRule;
-    }
-
-    public void setUpdateRule(final int updateRule) {
-        setUpdateRule((short) updateRule);
-    }
-
-    public void setUpdateRule(final ImportedKey.Rule rule) {
-        setUpdateRule(requireNonNull(rule, "updateRule is null").getRawValue());
-    }
-
-    // ------------------------------------------------------------------------------------------------------ deleteRule
-    public short getDeleteRule() {
-        return deleteRule;
-    }
-
-    public void setDeleteRule(final short deleteRule) {
-        this.deleteRule = deleteRule;
-    }
-
-    public void setDeleteRule(final int deleteRule) {
-        setDeleteRule((short) deleteRule);
-    }
-
-    public void setDeleteRule(final ImportedKey.Rule deleteRule) {
-        setDeleteRule(requireNonNull(deleteRule, "deleteRule is null").getRawValue());
-    }
-
-    // ---------------------------------------------------------------------------------------------------------- fnname
-    public String getFkName() {
-        return fkName;
-    }
-
-    public void setFkName(final String fkName) {
-        this.fkName = fkName;
-    }
-
-    // ---------------------------------------------------------------------------------------------------------- pkName
-    public String getPkName() {
-        return pkName;
-    }
-
-    public void setPkName(final String pkName) {
-        this.pkName = pkName;
-    }
-
-    // ------------------------------------------------------------------------------------------------- deferrerability
-    public short getDeferrability() {
-        return deferrability;
-    }
-
-    public void setDeferrability(final short deferrability) {
-        this.deferrability = deferrability;
-    }
-
-    public void setDeferrability(final int deferrability) {
-        setDeferrability((short) deferrability);
-    }
-
-    public void setDeferrability(final ImportedKey.Deferrability deferrability) {
-        setDeferrability(requireNonNull(deferrability, "deferrability is null").getRawValue());
-    }
 
     // -----------------------------------------------------------------------------------------------------------------
     @XmlElement(required = true, nillable = true)

@@ -20,13 +20,13 @@ package com.github.jinahya.database.metadata.bind;
  * #L%
  */
 
-import javax.validation.Valid;
-import javax.validation.constraints.NotEmpty;
-import javax.validation.constraints.NotNull;
+import lombok.NoArgsConstructor;
+
 import javax.xml.bind.annotation.XmlRootElement;
 import java.sql.DatabaseMetaData;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 
 import static java.util.Objects.requireNonNull;
@@ -38,32 +38,44 @@ import static java.util.Objects.requireNonNull;
  * @see Context#deletesAreDetected(int)
  */
 @XmlRootElement
-public class DeletesAreDetected extends AreDetected<DeletesAreDetected> {
+@NoArgsConstructor
+public class DeletesAreDetected
+        extends AreDetected {
 
     private static final long serialVersionUID = -7476108814185270988L;
 
     /**
-     * Invokes {@link Context#deletesAreDetected(int)} for all types defined in {@link java.sql.ResultSet} and returns
-     * bound values.
+     * Retrieves values for all constants defined in {@link ResultSetType} and adds bound values to specified
+     * collection.
+     *
+     * @param context    a context.
+     * @param collection the collection to which bound values are added.
+     * @param <C>        the type of {@code collection}
+     * @return given {@code collection}.
+     * @throws SQLException if a database access error occurs.
+     * @see ResultSetType
+     * @see Context#insertsAreDetected(int)
+     */
+    public static <C extends Collection<? super DeletesAreDetected>> C getAllInstances(
+            final Context context, final C collection)
+            throws SQLException {
+        requireNonNull(context, "context is null");
+        for (final ResultSetType type : ResultSetType.values()) {
+            collection.add(context.deletesAreDetected(type.getRawValue()));
+        }
+        return collection;
+    }
+
+    /**
+     * Retrieves values for all constants defined in {@link ResultSetType}.
      *
      * @param context a context.
      * @return a list of bound values.
      * @throws SQLException if a database access error occurs.
+     * @see ResultSetType
+     * @see Context#insertsAreDetected(int)
      */
-    public static @NotEmpty List<@Valid @NotNull DeletesAreDetected> getAllInstances(final @NotNull Context context)
-            throws SQLException {
-        requireNonNull(context, "context is null");
-        final List<DeletesAreDetected> all = new ArrayList<>();
-        for (final ResultSetType type : ResultSetType.values()) {
-            all.add(context.deletesAreDetected(type));
-        }
-        return all;
-    }
-
-    /**
-     * Creates a new instance.
-     */
-    public DeletesAreDetected() {
-        super();
+    public static List<DeletesAreDetected> getAllInstances(final Context context) throws SQLException {
+        return getAllInstances(context, new ArrayList<>());
     }
 }

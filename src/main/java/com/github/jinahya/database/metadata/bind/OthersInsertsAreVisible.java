@@ -20,9 +20,8 @@ package com.github.jinahya.database.metadata.bind;
  * #L%
  */
 
-import javax.validation.Valid;
-import javax.validation.constraints.NotEmpty;
-import javax.validation.constraints.NotNull;
+import lombok.NoArgsConstructor;
+
 import javax.xml.bind.annotation.XmlRootElement;
 import java.sql.SQLException;
 import java.util.ArrayList;
@@ -37,7 +36,9 @@ import static java.util.Objects.requireNonNull;
  * @see Context#othersInsertsAreVisible(int)
  */
 @XmlRootElement
-public class OthersInsertsAreVisible extends AreVisible<OthersInsertsAreVisible> {
+@NoArgsConstructor
+public class OthersInsertsAreVisible
+        extends AreVisible {
 
     private static final long serialVersionUID = 1507862473680389478L;
 
@@ -49,21 +50,12 @@ public class OthersInsertsAreVisible extends AreVisible<OthersInsertsAreVisible>
      * @return a list of bound values.
      * @throws SQLException if a database access error occurs.
      */
-    public static @NotEmpty List<@Valid @NotNull OthersInsertsAreVisible> getAllInstances(
-            final @NotNull Context context)
-            throws SQLException {
+    public static List<OthersInsertsAreVisible> getAllInstances(final Context context) throws SQLException {
         requireNonNull(context, "databaseMetaData is null");
         final List<OthersInsertsAreVisible> all = new ArrayList<>();
         for (final ResultSetType type : ResultSetType.values()) {
-            all.add(context.othersInsertsAreVisible(type));
+            all.add(context.othersInsertsAreVisible(type.getRawValue()));
         }
         return all;
-    }
-
-    /**
-     * Creates a new instance.
-     */
-    public OthersInsertsAreVisible() {
-        super();
     }
 }

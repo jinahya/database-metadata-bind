@@ -20,9 +20,8 @@ package com.github.jinahya.database.metadata.bind;
  * #L%
  */
 
-import javax.validation.Valid;
-import javax.validation.constraints.NotEmpty;
-import javax.validation.constraints.NotNull;
+import lombok.NoArgsConstructor;
+
 import javax.xml.bind.annotation.XmlRootElement;
 import java.sql.DatabaseMetaData;
 import java.sql.SQLException;
@@ -38,7 +37,9 @@ import static java.util.Objects.requireNonNull;
  * @see Context#ownInsertsAreVisible(int)
  */
 @XmlRootElement
-public class OwnInsertsAreVisible extends AreVisible<OwnInsertsAreVisible> {
+@NoArgsConstructor
+public class OwnInsertsAreVisible
+        extends AreVisible {
 
     private static final long serialVersionUID = -2185655212494659817L;
 
@@ -51,20 +52,12 @@ public class OwnInsertsAreVisible extends AreVisible<OwnInsertsAreVisible> {
      * @throws SQLException if a database access error occurs.
      * @see Context#ownInsertsAreVisible(int)
      */
-    public static @NotEmpty List<@Valid @NotNull OwnInsertsAreVisible> getAllInstances(final @NotNull Context context)
-            throws SQLException {
+    public static List<OwnInsertsAreVisible> getAllInstances(final Context context) throws SQLException {
         requireNonNull(context, "context is null");
         final List<OwnInsertsAreVisible> all = new ArrayList<>();
         for (final ResultSetType type : ResultSetType.values()) {
-            all.add(context.ownInsertsAreVisible(type));
+            all.add(context.ownInsertsAreVisible(type.getRawValue()));
         }
         return all;
-    }
-
-    /**
-     * Creates a new instance.
-     */
-    public OwnInsertsAreVisible() {
-        super();
     }
 }

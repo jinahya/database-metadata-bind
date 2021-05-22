@@ -1,5 +1,7 @@
 package com.github.jinahya.database.metadata.bind;
 
+import lombok.extern.slf4j.Slf4j;
+
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBElement;
 import javax.xml.bind.JAXBException;
@@ -10,22 +12,18 @@ import javax.xml.bind.annotation.XmlAnyElement;
 import javax.xml.namespace.QName;
 import javax.xml.transform.Source;
 import java.beans.Introspector;
-import java.lang.invoke.MethodHandles;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.Arrays;
 import java.util.List;
 import java.util.function.UnaryOperator;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 import static java.util.Objects.requireNonNull;
 
 // http://blog.bdoughan.com/2012/11/creating-generic-list-wrapper-in-jaxb.html
 // http://blog.bdoughan.com/2010/12/jaxb-and-immutable-objects.html
+@Slf4j
 public final class Wrapper<T> {
-
-    private static final Logger logger = Logger.getLogger(MethodHandles.lookup().lookupClass().getName());
 
     // -----------------------------------------------------------------------------------------------------------------
 
@@ -139,7 +137,7 @@ public final class Wrapper<T> {
             try {
                 m.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, Boolean.TRUE);
             } catch (final PropertyException pe) {
-                logger.log(Level.WARNING, pe, () -> "failed to set " + Marshaller.JAXB_FORMATTED_OUTPUT);
+                log.warn("failed to set {}", Marshaller.JAXB_FORMATTED_OUTPUT, pe);
             }
             return m;
         });

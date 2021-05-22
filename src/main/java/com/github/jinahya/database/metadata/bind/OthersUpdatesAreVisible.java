@@ -20,9 +20,8 @@ package com.github.jinahya.database.metadata.bind;
  * #L%
  */
 
-import javax.validation.Valid;
-import javax.validation.constraints.NotEmpty;
-import javax.validation.constraints.NotNull;
+import lombok.NoArgsConstructor;
+
 import javax.xml.bind.annotation.XmlRootElement;
 import java.sql.SQLException;
 import java.util.ArrayList;
@@ -37,7 +36,9 @@ import static java.util.Objects.requireNonNull;
  * @see Context#othersUpdatesAreVisible(int)
  */
 @XmlRootElement
-public class OthersUpdatesAreVisible extends AreVisible<OthersUpdatesAreVisible> {
+@NoArgsConstructor
+public class OthersUpdatesAreVisible
+        extends AreVisible {
 
     private static final long serialVersionUID = 1642723778082421974L;
 
@@ -50,21 +51,12 @@ public class OthersUpdatesAreVisible extends AreVisible<OthersUpdatesAreVisible>
      * @throws SQLException if a database access error occurs.
      * @see Context#othersUpdatesAreVisible(int)
      */
-    public static @NotEmpty List<@Valid @NotNull OthersUpdatesAreVisible> getAllInstances(
-            final @NotNull Context context)
-            throws SQLException {
+    public static List<OthersUpdatesAreVisible> getAllInstances(final Context context) throws SQLException {
         requireNonNull(context, "context is null");
         final List<OthersUpdatesAreVisible> all = new ArrayList<>();
         for (final ResultSetType type : ResultSetType.values()) {
-            all.add(context.othersUpdatesAreVisible(type));
+            all.add(context.othersUpdatesAreVisible(type.getRawValue()));
         }
         return all;
-    }
-
-    /**
-     * Creates a new instance.
-     */
-    public OthersUpdatesAreVisible() {
-        super();
     }
 }

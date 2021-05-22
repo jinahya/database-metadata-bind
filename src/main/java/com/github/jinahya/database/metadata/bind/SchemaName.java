@@ -20,73 +20,28 @@ package com.github.jinahya.database.metadata.bind;
  * #L%
  */
 
+import lombok.Data;
+import lombok.NoArgsConstructor;
+
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlSchemaType;
 import java.sql.DatabaseMetaData;
-import java.util.Objects;
+import java.util.Collection;
 
 /**
  * A class for binding results of {@link DatabaseMetaData#getSchemas()} method.
  *
  * @author Jin Kwon &lt;jinahya_at_gmail.com&gt;
  * @see DatabaseMetaData#getSchemas()
+ * @see Context#getSchemas(Collection)
  */
 @XmlRootElement
+@Data
+@NoArgsConstructor
 public class SchemaName implements MetadataType {
 
     private static final long serialVersionUID = 5784631477568740816L;
-
-    // -----------------------------------------------------------------------------------------------------------------
-
-    /**
-     * Creates a new instance.
-     */
-    public SchemaName() {
-        super();
-    }
-
-    // -----------------------------------------------------------------------------------------------------------------
-    @Override
-    public String toString() {
-        return super.toString() + '{'
-               + "tableSchem=" + tableSchem
-               + ",tableCatalog=" + tableCatalog
-               + '}';
-    }
-
-    @Override
-    public boolean equals(final Object obj) {
-        if (this == obj) return true;
-        if (obj == null || getClass() != obj.getClass()) return false;
-        final SchemaName that = (SchemaName) obj;
-        return Objects.equals(tableSchem, that.tableSchem)
-               && Objects.equals(tableCatalog, that.tableCatalog);
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(tableSchem,
-                            tableCatalog);
-    }
-
-    // ------------------------------------------------------------------------------------------------------ tableSchem
-    public String getTableSchem() {
-        return tableSchem;
-    }
-
-    public void setTableSchem(final String tableSchem) {
-        this.tableSchem = tableSchem;
-    }
-
-    // ---------------------------------------------------------------------------------------------------- tableCatalog
-    public String getTableCatalog() {
-        return tableCatalog;
-    }
-
-    public void setTableCatalog(final String tableCatalog) {
-        this.tableCatalog = tableCatalog;
-    }
 
     // -----------------------------------------------------------------------------------------------------------------
     @XmlElement(required = true)

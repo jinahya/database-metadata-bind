@@ -38,7 +38,7 @@ import static org.assertj.core.api.Assertions.assertThat;
  * @author Jin Kwon &lt;onacit at gmail.com&gt;
  */
 @Slf4j
-final class ContextTests {
+final class ContextTestUtils {
 
     static void writeCatalogs(final Context context) throws SQLException, JAXBException {
         final List<Catalog> catalogs = context.getCatalogs(new ArrayList<>());
@@ -99,7 +99,7 @@ final class ContextTests {
     }
 
     static void writeOwnDeletesAreVisible(final Context context) throws SQLException, JAXBException {
-        final List<OwnDeletesAreVisible> all = OwnDeletesAreVisible.all(context);
+        final List<OwnDeletesAreVisible> all = OwnDeletesAreVisible.allInstances(context);
         assertThat(all)
                 .doesNotContainNull()
                 .hasSizeLessThanOrEqualTo(ResultSetType.values().length);
@@ -128,6 +128,13 @@ final class ContextTests {
         Wrapper.marshalFormatted(OwnUpdatesAreVisible.class, all, target);
     }
 
+    static void writeSchemas(final Context context) throws SQLException, JAXBException {
+        final List<Schema> schemas = context.getSchemas((String) null, null, new ArrayList<>());
+        final String pathname = TestUtils.getFilenamePrefix(context) + " - schemas.xml";
+        final File target = Paths.get("target", pathname).toFile();
+        Wrapper.marshalFormatted(Schema.class, schemas, target);
+    }
+
     static void writeSupportsConvert(final Context context) throws SQLException, JAXBException {
         requireNonNull(context, "context is null");
         final List<SupportsConvert> all = SupportsConvert.getAllInstances(context);
@@ -136,6 +143,13 @@ final class ContextTests {
         final String pathname = TestUtils.getFilenamePrefix(context) + " - supportsConvert.xml";
         final File target = Paths.get("target", pathname).toFile();
         Wrapper.marshalFormatted(SupportsConvert.class, all, target);
+    }
+
+    static void writeTables(final Context context) throws SQLException, JAXBException {
+        final List<Table> tables = context.getTables(null, null, null, null, new ArrayList<>());
+        final String pathname = TestUtils.getFilenamePrefix(context) + " - tables.xml";
+        final File target = Paths.get("target", pathname).toFile();
+        Wrapper.marshalFormatted(Table.class, tables, target);
     }
 
     static void writeTypeInfo(final Context context) throws SQLException, JAXBException {
@@ -170,13 +184,15 @@ final class ContextTests {
         writeOwnDeletesAreVisible(context);
         writeOwnInsertsAreVisible(context);
         writeOwnUpdatesAreVisible(context);
+        writeSchemas(context);
+        writeTables(context);
     }
 
     // --------------------------------------------------------------------------------------------------- ...AreVisible
 
     private List<Catalog> catalogs;
 
-    private ContextTests() {
+    private ContextTestUtils() {
         throw new AssertionError("instantiation is not allowed");
     }
 }

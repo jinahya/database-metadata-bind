@@ -20,9 +20,6 @@ package com.github.jinahya.database.metadata.bind;
  * #L%
  */
 
-import javax.validation.Valid;
-import javax.validation.constraints.NotEmpty;
-import javax.validation.constraints.NotNull;
 import javax.xml.bind.annotation.XmlRootElement;
 import java.sql.DatabaseMetaData;
 import java.sql.SQLException;
@@ -38,7 +35,7 @@ import static java.util.Objects.requireNonNull;
  * @see Context#updatesAreDetected(int)
  */
 @XmlRootElement
-public class UpdatesAreDetected extends AreDetected<UpdatesAreDetected> {
+public class UpdatesAreDetected extends AreDetected {
 
     private static final long serialVersionUID = -7538643762491010895L;
 
@@ -50,20 +47,12 @@ public class UpdatesAreDetected extends AreDetected<UpdatesAreDetected> {
      * @return a list of bound values.
      * @throws SQLException if a database access error occurs.
      */
-    public static @NotEmpty List<@Valid @NotNull UpdatesAreDetected> getAllInstances(final @NotNull Context context)
-            throws SQLException {
+    public static List<UpdatesAreDetected> getAllInstances(final Context context) throws SQLException {
         requireNonNull(context, "context is null");
         final List<UpdatesAreDetected> all = new ArrayList<>();
         for (final ResultSetType type : ResultSetType.values()) {
-            all.add(context.updatesAreDetected(type));
+            all.add(context.updatesAreDetected(type.getRawValue()));
         }
         return all;
-    }
-
-    /**
-     * Creates a new instance.
-     */
-    public UpdatesAreDetected() {
-        super();
     }
 }

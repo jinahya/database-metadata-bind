@@ -20,20 +20,26 @@ package com.github.jinahya.database.metadata.bind;
  * #L%
  */
 
+import lombok.Data;
+import lombok.NoArgsConstructor;
+
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
 import java.sql.DatabaseMetaData;
 import java.util.Collection;
-import java.util.Objects;
 
 /**
- * An entity class for version columns.
+ * A class for binding results of {@link DatabaseMetaData#getVersionColumns(String, String, String)} method.
  *
  * @author Jin Kwon &lt;jinahya_at_gmail.com&gt;
  * @see Context#getVersionColumns(String, String, String, Collection)
  */
 @XmlRootElement
-public class VersionColumn implements MetadataType {
+@Data
+@NoArgsConstructor
+public class VersionColumn
+        implements MetadataType,
+                   ChildOf<Table> {
 
     private static final long serialVersionUID = 3587959398829593292L;
 
@@ -95,141 +101,6 @@ public class VersionColumn implements MetadataType {
         }
 
         private final int rawValue;
-    }
-
-    // -----------------------------------------------------------------------------------------------------------------
-
-    /**
-     * Creates a new instance.
-     */
-    public VersionColumn() {
-        super();
-    }
-
-    // -----------------------------------------------------------------------------------------------------------------
-    @Override
-    public String toString() {
-        return super.toString() + '{'
-               + "scope=" + scope
-               + ",columnName=" + columnName
-               + ",dataType=" + dataType
-               + ",typeName=" + typeName
-               + ",columnSize=" + columnSize
-               + ",bufferLength=" + bufferLength
-               + ",decimalDigits=" + decimalDigits
-               + ",pseudoColumn=" + pseudoColumn
-               + '}';
-    }
-
-    @Override
-    public boolean equals(final Object obj) {
-        if (this == obj) return true;
-        if (obj == null || getClass() != obj.getClass()) return false;
-        final VersionColumn that = (VersionColumn) obj;
-        return dataType == that.dataType
-               && columnSize == that.columnSize
-               && bufferLength == that.bufferLength
-               && pseudoColumn == that.pseudoColumn
-               && Objects.equals(scope, that.scope)
-               && Objects.equals(columnName, that.columnName)
-               && Objects.equals(typeName, that.typeName)
-               && Objects.equals(decimalDigits, that.decimalDigits);
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(scope,
-                            columnName,
-                            dataType,
-                            typeName,
-                            columnSize,
-                            bufferLength,
-                            decimalDigits,
-                            pseudoColumn);
-    }
-
-    // ----------------------------------------------------------------------------------------------------------- scope
-    public Short getScope() {
-        return scope;
-    }
-
-    public void setScope(final Short scope) {
-        this.scope = scope;
-    }
-
-    // ------------------------------------------------------------------------------------------------------ columnName
-    public String getColumnName() {
-        return columnName;
-    }
-
-    public void setColumnName(final String columnName) {
-        this.columnName = columnName;
-    }
-
-    // -------------------------------------------------------------------------------------------------------- dataType
-    public int getDataType() {
-        return dataType;
-    }
-
-    public void setDataType(final int dataType) {
-        this.dataType = dataType;
-    }
-
-    // -------------------------------------------------------------------------------------------------------- typeName
-    public String getTypeName() {
-        return typeName;
-    }
-
-    public void setTypeName(final String typeName) {
-        this.typeName = typeName;
-    }
-
-    // ------------------------------------------------------------------------------------------------------ columnSize
-    public int getColumnSize() {
-        return columnSize;
-    }
-
-    public void setColumnSize(final int columnSize) {
-        this.columnSize = columnSize;
-    }
-
-    // ---------------------------------------------------------------------------------------------------- bufferLength
-    public int getBufferLength() {
-        return bufferLength;
-    }
-
-    public void setBufferLength(final int bufferLength) {
-        this.bufferLength = bufferLength;
-    }
-
-    // --------------------------------------------------------------------------------------------------- decimalDigits
-    public Short getDecimalDigits() {
-        return decimalDigits;
-    }
-
-    public void setDecimalDigits(final Short decimalDigits) {
-        this.decimalDigits = decimalDigits;
-    }
-
-    // ---------------------------------------------------------------------------------------------------- pseudoColumn
-
-    /**
-     * Returns current value of {@code pseudoColumn} property.
-     *
-     * @return current value of {@code pseudoColumn} property.
-     * @see PseudoColumn
-     */
-    public short getPseudoColumn() {
-        return pseudoColumn;
-    }
-
-    /**
-     * Replace the value of {@code pseudoColumn} property with given.
-     *
-     * @param pseudoColumn new value for {@code pseudoColumn} property.
-     */
-    public void setPseudoColumn(final short pseudoColumn) {
-        this.pseudoColumn = pseudoColumn;
     }
 
     // -----------------------------------------------------------------------------------------------------------------

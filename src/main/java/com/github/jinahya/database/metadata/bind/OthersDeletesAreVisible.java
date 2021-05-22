@@ -20,9 +20,8 @@ package com.github.jinahya.database.metadata.bind;
  * #L%
  */
 
-import javax.validation.Valid;
-import javax.validation.constraints.NotEmpty;
-import javax.validation.constraints.NotNull;
+import lombok.NoArgsConstructor;
+
 import javax.xml.bind.annotation.XmlRootElement;
 import java.sql.SQLException;
 import java.util.ArrayList;
@@ -37,7 +36,9 @@ import static java.util.Objects.requireNonNull;
  * @see Context#othersDeletesAreVisible(int)
  */
 @XmlRootElement
-public class OthersDeletesAreVisible extends AreVisible<OthersDeletesAreVisible> {
+@NoArgsConstructor
+public class OthersDeletesAreVisible
+        extends AreVisible {
 
     private static final long serialVersionUID = 2430566341274616215L;
 
@@ -50,21 +51,12 @@ public class OthersDeletesAreVisible extends AreVisible<OthersDeletesAreVisible>
      * @throws SQLException if a database access error occurs.
      * @see Context#othersDeletesAreVisible(int)
      */
-    public static @NotEmpty List<@Valid @NotNull OthersDeletesAreVisible> getAllInstances(
-            final @NotNull Context context)
-            throws SQLException {
+    public static List<OthersDeletesAreVisible> getAllInstances(final Context context) throws SQLException {
         requireNonNull(context, "context is null");
         final List<OthersDeletesAreVisible> all = new ArrayList<>();
         for (final ResultSetType type : ResultSetType.values()) {
-            all.add(context.othersDeletesAreVisible(type));
+            all.add(context.othersDeletesAreVisible(type.getRawValue()));
         }
         return all;
-    }
-
-    /**
-     * Creates a new instance.
-     */
-    public OthersDeletesAreVisible() {
-        super();
     }
 }

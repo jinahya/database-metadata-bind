@@ -20,27 +20,33 @@ package com.github.jinahya.database.metadata.bind;
  * #L%
  */
 
-import javax.validation.Valid;
-import javax.validation.constraints.NotNull;
+import lombok.Data;
+import lombok.EqualsAndHashCode;
+import lombok.NoArgsConstructor;
+import lombok.ToString;
+
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlElementRef;
 import javax.xml.bind.annotation.XmlRootElement;
+import java.sql.DatabaseMetaData;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
-import java.util.Objects;
 
 /**
- * An entity class for binding the result of {@link java.sql.DatabaseMetaData#getFunctions(java.lang.String,
- * java.lang.String, java.lang.String)}.
+ * A class for binding results of {@link DatabaseMetaData#getFunctions(java.lang.String, java.lang.String,
+ * java.lang.String)} method.
  *
  * @author Jin Kwon &lt;jinahya_at_gmail.com&gt;
- * @see java.sql.DatabaseMetaData#getFunctions(java.lang.String, java.lang.String, java.lang.String)
  * @see Context#getFunctions(String, String, String, Collection)
  * @see FunctionColumn
  */
 @XmlRootElement
-public class Function implements MetadataType {
+@Data
+@NoArgsConstructor
+public class Function
+        implements MetadataType,
+                   ChildOf<Schema> {
 
     private static final long serialVersionUID = -3318947900237453301L;
 
@@ -54,113 +60,14 @@ public class Function implements MetadataType {
 
     public static final String ATTRIBUTE_NAME_FUNCTION_SCHEM = "functionSchem";
 
-    // -----------------------------------------------------------------------------------------------------------------
-
-    /**
-     * Creates a new instance.
-     */
-    public Function() {
-        super();
-    }
-
-    // -----------------------------------------------------------------------------------------------------------------
-    @Override
-    public String toString() {
-        return super.toString() + '{'
-               + ATTRIBUTE_NAME_FUNCTION_CAT + '=' + functionCat
-               + ',' + ATTRIBUTE_NAME_FUNCTION_SCHEM + '=' + functionSchem
-               + ",functionName=" + functionName
-               + ",remarks=" + remarks
-               + ",functionType=" + functionType
-               + ",specificName=" + specificName
-               + '}';
-    }
-
-    @Override
-    public boolean equals(final Object obj) {
-        if (this == obj) return true;
-        if (obj == null || getClass() != obj.getClass()) return false;
-        final Function that = (Function) obj;
-        return functionType == that.functionType
-               && Objects.equals(functionCat, that.functionCat)
-               && Objects.equals(functionSchem, that.functionSchem)
-               && Objects.equals(functionName, that.functionName)
-               && Objects.equals(remarks, that.remarks)
-               && Objects.equals(specificName, that.specificName);
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(functionCat,
-                            functionSchem,
-                            functionName,
-                            remarks,
-                            functionType,
-                            specificName);
-    }
-
-    // ----------------------------------------------------------------------------------------------------- functionCat
-    public String getFunctionCat() {
-        return functionCat;
-    }
-
-    public void setFunctionCat(final String functionCat) {
-        this.functionCat = functionCat;
-    }
-
-    // --------------------------------------------------------------------------------------------------- functionSchem
-    public String getFunctionSchem() {
-        return functionSchem;
-    }
-
-    public void setFunctionSchem(final String functionSchem) {
-        this.functionSchem = functionSchem;
-    }
-
-    // ---------------------------------------------------------------------------------------------------- functionName
-    public String getFunctionName() {
-        return functionName;
-    }
-
-    public void setFunctionName(final String functionName) {
-        this.functionName = functionName;
-    }
-
-    // --------------------------------------------------------------------------------------------------------- remarks
-    public String getRemarks() {
-        return remarks;
-    }
-
-    public void setRemarks(final String remarks) {
-        this.remarks = remarks;
-    }
-
-    // ---------------------------------------------------------------------------------------------------- functionType
-    public short getFunctionType() {
-        return functionType;
-    }
-
-    public void setFunctionType(final short functionType) {
-        this.functionType = functionType;
-    }
-
-    // ---------------------------------------------------------------------------------------------------- specificName
-    public String getSpecificName() {
-        return specificName;
-    }
-
-    public void setSpecificName(final String specificName) {
-        this.specificName = specificName;
-    }
-
     // ------------------------------------------------------------------------------------------------- functionColumns
 
     /**
-     * Returns a list of function columns of this function.
+     * Returns function columns of this function.
      *
      * @return a list of function columns of this function.
      */
-    public @NotNull List<@Valid @NotNull FunctionColumn> getFunctionColumns() {
+    public List<FunctionColumn> getFunctionColumns() {
         if (functionColumns == null) {
             functionColumns = new ArrayList<>();
         }
@@ -180,6 +87,7 @@ public class Function implements MetadataType {
 
     @XmlElement(required = true)
     @Label("FUNCTION_NAME")
+    @EqualsAndHashCode.Exclude
     private String functionName;
 
     // -----------------------------------------------------------------------------------------------------------------
@@ -197,5 +105,7 @@ public class Function implements MetadataType {
 
     // -----------------------------------------------------------------------------------------------------------------
     @XmlElementRef
+    @EqualsAndHashCode.Exclude
+    @ToString.Exclude
     private List<FunctionColumn> functionColumns;
 }

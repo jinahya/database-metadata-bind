@@ -20,205 +20,27 @@ package com.github.jinahya.database.metadata.bind;
  * #L%
  */
 
+import lombok.Data;
+import lombok.NoArgsConstructor;
+
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
+import java.sql.DatabaseMetaData;
 import java.util.Collection;
-import java.util.Objects;
 
 /**
- * An entity class for index info.
+ * A class for binding results of {@link DatabaseMetaData#getIndexInfo(String, String, String, boolean, boolean)}
+ * method.
  *
  * @author Jin Kwon &lt;jinahya_at_gmail.com&gt;
- * @see java.sql.DatabaseMetaData#getIndexInfo(java.lang.String, java.lang.String, java.lang.String, boolean, boolean)
  * @see Context#getIndexInfo(String, String, String, boolean, boolean, Collection)
  */
 @XmlRootElement
+@Data
+@NoArgsConstructor
 public class IndexInfo implements MetadataType {
 
     private static final long serialVersionUID = -768486884376018474L;
-
-    // -----------------------------------------------------------------------------------------------------------------
-
-    /**
-     * Creates a new instance.
-     */
-    public IndexInfo() {
-        super();
-    }
-
-    // -----------------------------------------------------------------------------------------------------------------
-    @Override
-    public String toString() {
-        return super.toString() + '{'
-               + "tableCat=" + tableCat
-               + ",tableSchem=" + tableSchem
-               + ",tableName=" + tableName
-               + ",nonUnique=" + nonUnique
-               + ",indexQualifier=" + indexQualifier
-               + ",indexName=" + indexName
-               + ",type=" + type
-               + ",ordinalPosition=" + ordinalPosition
-               + ",columnName=" + columnName
-               + ",ascOrDesc=" + ascOrDesc
-               + ",cardinality=" + cardinality
-               + ",pages=" + pages
-               + ",filterCondition=" + filterCondition
-               + '}';
-    }
-
-    @Override
-    public boolean equals(final Object obj) {
-        if (this == obj) return true;
-        if (obj == null || getClass() != obj.getClass()) return false;
-        final IndexInfo that = (IndexInfo) obj;
-        return nonUnique == that.nonUnique
-               && type == that.type
-               && ordinalPosition == that.ordinalPosition
-               && cardinality == that.cardinality
-               && pages == that.pages
-               && Objects.equals(tableCat, that.tableCat)
-               && Objects.equals(tableSchem, that.tableSchem)
-               && Objects.equals(tableName, that.tableName)
-               && Objects.equals(indexQualifier, that.indexQualifier)
-               && Objects.equals(indexName, that.indexName)
-               && Objects.equals(columnName, that.columnName)
-               && Objects.equals(ascOrDesc, that.ascOrDesc)
-               && Objects.equals(filterCondition, that.filterCondition);
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(tableCat,
-                            tableSchem,
-                            tableName,
-                            nonUnique,
-                            indexQualifier,
-                            indexName,
-                            type,
-                            ordinalPosition,
-                            columnName,
-                            ascOrDesc,
-                            cardinality,
-                            pages,
-                            filterCondition);
-    }
-
-    // -------------------------------------------------------------------------------------------------------- tableCat
-    public String getTableCat() {
-        return tableCat;
-    }
-
-    public void setTableCat(final String tableCat) {
-        this.tableCat = tableCat;
-    }
-
-    // ------------------------------------------------------------------------------------------------------ tableSchem
-    public String getTableSchem() {
-        return tableSchem;
-    }
-
-    public void setTableSchem(final String tableSchem) {
-        this.tableSchem = tableSchem;
-    }
-
-    // ------------------------------------------------------------------------------------------------------- tableName
-    public String getTableName() {
-        return tableName;
-    }
-
-    public void setTableName(final String tableName) {
-        this.tableName = tableName;
-    }
-
-    // ------------------------------------------------------------------------------------------------------- nonUnique
-    public boolean isNonUnique() {
-        return nonUnique;
-    }
-
-    public void setNonUnique(final boolean nonUnique) {
-        this.nonUnique = nonUnique;
-    }
-
-    // -------------------------------------------------------------------------------------------------- indexQualifier
-    public String getIndexQualifier() {
-        return indexQualifier;
-    }
-
-    public void setIndexQualifier(final String indexQualifier) {
-        this.indexQualifier = indexQualifier;
-    }
-
-    // ------------------------------------------------------------------------------------------------------- indexName
-    public String getIndexName() {
-        return indexName;
-    }
-
-    public void setIndexName(final String indexName) {
-        this.indexName = indexName;
-    }
-
-    // ------------------------------------------------------------------------------------------------------------ type
-    public short getType() {
-        return type;
-    }
-
-    public void setType(final short type) {
-        this.type = type;
-    }
-
-    // ------------------------------------------------------------------------------------------------- ordinalPosition
-    public short getOrdinalPosition() {
-        return ordinalPosition;
-    }
-
-    public void setOrdinalPosition(final short ordinalPosition) {
-        this.ordinalPosition = ordinalPosition;
-    }
-
-    // ------------------------------------------------------------------------------------------------------ columnName
-    public String getColumnName() {
-        return columnName;
-    }
-
-    public void setColumnName(final String columnName) {
-        this.columnName = columnName;
-    }
-
-    // ------------------------------------------------------------------------------------------------------- ascOrDesc
-    public String getAscOrDesc() {
-        return ascOrDesc;
-    }
-
-    public void setAscOrDesc(final String ascOrDesc) {
-        this.ascOrDesc = ascOrDesc;
-    }
-
-    // ----------------------------------------------------------------------------------------------------- cardinality
-    public long getCardinality() {
-        return cardinality;
-    }
-
-    public void setCardinality(final long cardinality) {
-        this.cardinality = cardinality;
-    }
-
-    // ----------------------------------------------------------------------------------------------------------- pages
-    public long getPages() {
-        return pages;
-    }
-
-    public void setPages(final long pages) {
-        this.pages = pages;
-    }
-
-    // ------------------------------------------------------------------------------------------------- filterCondition
-    public String getFilterCondition() {
-        return filterCondition;
-    }
-
-    public void setFilterCondition(final String filterCondition) {
-        this.filterCondition = filterCondition;
-    }
 
     // -----------------------------------------------------------------------------------------------------------------
     @XmlElement(required = true, nillable = true)

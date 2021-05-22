@@ -20,120 +20,26 @@ package com.github.jinahya.database.metadata.bind;
  * #L%
  */
 
+import lombok.Data;
+import lombok.NoArgsConstructor;
+
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
+import java.sql.DatabaseMetaData;
 import java.util.Collection;
-import java.util.Objects;
 
 /**
- * An entity class for primary keys.
+ * A class for binding results of {@link DatabaseMetaData#getPrimaryKeys(String, String, String)} method.
  *
  * @author Jin Kwon &lt;jinahya_at_gmail.com&gt;
  * @see Context#getPrimaryKeys(String, String, String, Collection)
  */
 @XmlRootElement
+@Data
+@NoArgsConstructor
 public class PrimaryKey implements MetadataType {
 
     private static final long serialVersionUID = 3159826510060898330L;
-
-    // -----------------------------------------------------------------------------------------------------------------
-
-    /**
-     * Creates a new instance.
-     */
-    public PrimaryKey() {
-        super();
-    }
-
-    // -----------------------------------------------------------------------------------------------------------------
-    @Override
-    public String toString() {
-        return super.toString() + '{'
-               + "tableCat=" + tableCat
-               + ",tableSchem=" + tableSchem
-               + ",tableName=" + tableName
-               + ",columnName=" + columnName
-               + ",keySeq=" + keySeq
-               + ",pkName=" + pkName
-               + '}';
-    }
-
-    @Override
-    public boolean equals(final Object obj) {
-        if (this == obj) return true;
-        if (obj == null || getClass() != obj.getClass()) return false;
-        final PrimaryKey that = (PrimaryKey) obj;
-        return keySeq == that.keySeq
-               && Objects.equals(tableCat, that.tableCat)
-               && Objects.equals(tableSchem, that.tableSchem)
-               && Objects.equals(tableName, that.tableName)
-               && Objects.equals(columnName, that.columnName)
-               && Objects.equals(pkName, that.pkName);
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(tableCat,
-                            tableSchem,
-                            tableName,
-                            columnName,
-                            keySeq,
-                            pkName);
-    }
-
-    // -------------------------------------------------------------------------------------------------------- tableCat
-    public String getTableCat() {
-        return tableCat;
-    }
-
-    public void setTableCat(final String tableCat) {
-        this.tableCat = tableCat;
-    }
-
-    // ------------------------------------------------------------------------------------------------------ tableSchem
-    public String getTableSchem() {
-        return tableSchem;
-    }
-
-    public void setTableSchem(final String tableSchem) {
-        this.tableSchem = tableSchem;
-    }
-
-    // ------------------------------------------------------------------------------------------------------- tableName
-    public String getTableName() {
-        return tableName;
-    }
-
-    public void setTableName(final String tableName) {
-        this.tableName = tableName;
-    }
-
-    // ------------------------------------------------------------------------------------------------------ columnName
-    public String getColumnName() {
-        return columnName;
-    }
-
-    public void setColumnName(final String columnName) {
-        this.columnName = columnName;
-    }
-
-    // ---------------------------------------------------------------------------------------------------------- keySeq
-    public short getKeySeq() {
-        return keySeq;
-    }
-
-    public void setKeySeq(final short keySeq) {
-        this.keySeq = keySeq;
-    }
-
-    // ---------------------------------------------------------------------------------------------------------- pkName
-    public String getPkName() {
-        return pkName;
-    }
-
-    public void setPkName(final String pkName) {
-        this.pkName = pkName;
-    }
 
     // -----------------------------------------------------------------------------------------------------------------
     @XmlElement(nillable = true, required = true)

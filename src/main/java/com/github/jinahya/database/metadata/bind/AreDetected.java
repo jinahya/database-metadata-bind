@@ -20,102 +20,33 @@ package com.github.jinahya.database.metadata.bind;
  * #L%
  */
 
+import lombok.AccessLevel;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+
 import javax.xml.bind.annotation.XmlAttribute;
-import javax.xml.bind.annotation.XmlSchemaType;
 import javax.xml.bind.annotation.XmlTransient;
 import javax.xml.bind.annotation.XmlValue;
 import java.sql.DatabaseMetaData;
-import java.util.Objects;
-
-import static java.util.Objects.requireNonNull;
 
 /**
  * A class for binding result of {@link DatabaseMetaData#deletesAreDetected(int)} method.
  *
  * @author Jin Kwon &lt;onacit_at_gmail.com&gt;
+ * @see DeletesAreDetected
+ * @see InsertsAreDetected
+ * @see UpdatesAreDetected
  */
 @XmlTransient
-abstract class AreDetected<T extends AreDetected<T>> implements MetadataType, Comparable<T> {
+@Data
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
+abstract class AreDetected implements MetadataType {
 
     private static final long serialVersionUID = 472228030784272988L;
 
-    // -----------------------------------------------------------------------------------------------------------------
-
-    /**
-     * Creates a new instance.
-     */
-    protected AreDetected() {
-        super();
-    }
-
-    // -----------------------------------------------------------------------------------------------------------------
-
-    @Override
-    public String toString() {
-        return super.toString() + '{'
-               + "type=" + type
-               + ",typeName=" + typeName
-               + ",value=" + value
-               + '}';
-    }
-
-    @Override
-    public boolean equals(final Object obj) {
-        if (this == obj) return true;
-        if (obj == null || getClass() != obj.getClass()) return false;
-        final AreDetected<?> that = (AreDetected<?>) obj;
-        return type == that.type
-               && Objects.equals(value, that.value);
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(type, value);
-    }
-
-    // -----------------------------------------------------------------------------------------------------------------
-
-    @Override
-    public int compareTo(final T o) {
-        requireNonNull(o, "o is null");
-        return Integer.compare(type, o.getType());
-    }
-
-    // -----------------------------------------------------------------------------------------------------------------
-    public int getType() {
-        return type;
-    }
-
-    public void setType(final int type) {
-        this.type = type;
-    }
-
-    public String getTypeName() {
-        return typeName;
-    }
-
-    public void setTypeName(final String typeName) {
-        this.typeName = typeName;
-    }
-
-    // -----------------------------------------------------------------------------------------------------------------
-    public Boolean getValue() {
-        return value;
-    }
-
-    public void setValue(final Boolean value) {
-        this.value = value;
-    }
-
-    // -----------------------------------------------------------------------------------------------------------------
     @XmlAttribute(required = true)
     private int type;
 
-    @XmlAttribute
-    @XmlSchemaType(name = "token")
-    private String typeName;
-
-    // -----------------------------------------------------------------------------------------------------------------
     @XmlValue
     private Boolean value;
 }

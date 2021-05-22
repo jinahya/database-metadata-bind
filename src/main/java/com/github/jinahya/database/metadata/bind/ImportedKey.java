@@ -20,17 +20,20 @@ package com.github.jinahya.database.metadata.bind;
  * #L%
  */
 
+import lombok.NoArgsConstructor;
+
 import javax.xml.bind.annotation.XmlRootElement;
 import java.sql.DatabaseMetaData;
 import java.util.Collection;
 
 /**
- * An entity class for imported keys.
+ * A class for binding results of {@link DatabaseMetaData#getImportedKeys(String, String, String)} method.
  *
  * @author Jin Kwon &lt;jinahya_at_gmail.com&gt;
  * @see Context#getImportedKeys(String, String, String, Collection)
  */
 @XmlRootElement
+@NoArgsConstructor
 public class ImportedKey extends TableKey {
 
     private static final long serialVersionUID = 1478290412906203629L;
@@ -170,16 +173,5 @@ public class ImportedKey extends TableKey {
          * The raw value of this constant.
          */
         private final int rawValue;
-    }
-
-    // -----------------------------------------------------------------------------------------------------------------
-
-    // -----------------------------------------------------------------------------------------------------------------
-
-    /**
-     * Creates a new instance.
-     */
-    public ImportedKey() {
-        super();
     }
 }

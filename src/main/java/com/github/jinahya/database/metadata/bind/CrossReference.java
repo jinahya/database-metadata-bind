@@ -20,21 +20,24 @@ package com.github.jinahya.database.metadata.bind;
  * #L%
  */
 
+import lombok.Data;
+import lombok.NoArgsConstructor;
+
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
+import java.sql.DatabaseMetaData;
 import java.util.Collection;
-import java.util.Objects;
-
-import static java.util.Objects.requireNonNull;
 
 /**
- * A class for binding results of {@link java.sql.DatabaseMetaData#getCrossReference(String, String, String, String,
- * String, String)} method.
+ * A class for binding results of {@link DatabaseMetaData#getCrossReference(String, String, String, String, String,
+ * String)} method.
  *
  * @author Jin Kwon &lt;jinahya_at_gmail.com&gt;
  * @see Context#getCrossReference(String, String, String, String, String, String, Collection)
  */
 @XmlRootElement
+@Data
+@NoArgsConstructor
 public class CrossReference implements MetadataType {
 
     private static final long serialVersionUID = -5343386346721125961L;
@@ -43,252 +46,6 @@ public class CrossReference implements MetadataType {
     public static final String COLUMN_NAME_UPDATE_RULE = "UPDATE_RULE";
 
     public static final String ATTRIBUTE_NAME_UPDATE_RULE = "updateRule";
-
-    // -----------------------------------------------------------------------------------------------------------------
-
-    /**
-     * Creates a new instance.
-     */
-    public CrossReference() {
-        super();
-    }
-
-    // -----------------------------------------------------------------------------------------------------------------
-    @Override
-    public String toString() {
-        return super.toString() + '{'
-               + "pktableCat=" + pktableCat
-               + ",pktableSchem=" + pktableSchem
-               + ",pktableName=" + pktableName
-               + ",pkcolumnName=" + pkcolumnName
-               + ",fktableCat=" + fktableCat
-               + ",fktableSchem=" + fktableSchem
-               + ",fktableName=" + fktableName
-               + ",fkcolumnName=" + fkcolumnName
-               + ",keySeq=" + keySeq
-               + ",updateRule=" + updateRule
-               + ",deleteRule=" + deleteRule
-               + ",fkName=" + fkName
-               + ",pkName=" + pkName
-               + ",deferrability=" + deferrability
-               + '}';
-    }
-
-    @Override
-    public boolean equals(final Object obj) {
-        if (this == obj) return true;
-        if (obj == null || getClass() != obj.getClass()) return false;
-        final CrossReference that = (CrossReference) obj;
-        return keySeq == that.keySeq
-               && updateRule == that.updateRule
-               && deleteRule == that.deleteRule
-               && deferrability == that.deferrability
-               && Objects.equals(pktableCat, that.pktableCat)
-               && Objects.equals(pktableSchem, that.pktableSchem)
-               && Objects.equals(pktableName, that.pktableName)
-               && Objects.equals(pkcolumnName, that.pkcolumnName)
-               && Objects.equals(fktableCat, that.fktableCat)
-               && Objects.equals(fktableSchem, that.fktableSchem)
-               && Objects.equals(fktableName, that.fktableName)
-               && Objects.equals(fkcolumnName, that.fkcolumnName)
-               && Objects.equals(fkName, that.fkName)
-               && Objects.equals(pkName, that.pkName);
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(pktableCat,
-                            pktableSchem,
-                            pktableName,
-                            pkcolumnName,
-                            fktableCat,
-                            fktableSchem,
-                            fktableName,
-                            fkcolumnName,
-                            keySeq,
-                            updateRule,
-                            deleteRule,
-                            fkName,
-                            pkName,
-                            deferrability);
-    }
-
-    // ------------------------------------------------------------------------------------------------------ pktableCat
-    public String getPktableCat() {
-        return pktableCat;
-    }
-
-    public void setPktableCat(final String pktableCat) {
-        this.pktableCat = pktableCat;
-    }
-
-    // ---------------------------------------------------------------------------------------------------- pktableSchem
-    public String getPktableSchem() {
-        return pktableSchem;
-    }
-
-    public void setPktableSchem(final String pktableSchem) {
-        this.pktableSchem = pktableSchem;
-    }
-
-    // ----------------------------------------------------------------------------------------------------- pktableName
-    public String getPktableName() {
-        return pktableName;
-    }
-
-    public void setPktableName(final String pktableName) {
-        this.pktableName = pktableName;
-    }
-
-    // ---------------------------------------------------------------------------------------------------- pkColumnName
-    public String getPkcolumnName() {
-        return pkcolumnName;
-    }
-
-    public void setPkcolumnName(final String pkcolumnName) {
-        this.pkcolumnName = pkcolumnName;
-    }
-
-    // ------------------------------------------------------------------------------------------------------ fktableCat
-    public String getFktableCat() {
-        return fktableCat;
-    }
-
-    public void setFktableCat(final String fktableCat) {
-        this.fktableCat = fktableCat;
-    }
-
-    // ---------------------------------------------------------------------------------------------------- fktableSchem
-    public String getFktableSchem() {
-        return fktableSchem;
-    }
-
-    public void setFktableSchem(final String fktableSchem) {
-        this.fktableSchem = fktableSchem;
-    }
-
-    // ----------------------------------------------------------------------------------------------------- fktableName
-    public String getFktableName() {
-        return fktableName;
-    }
-
-    public void setFktableName(final String fktableName) {
-        this.fktableName = fktableName;
-    }
-
-    // ---------------------------------------------------------------------------------------------------- fkcolumnName
-    public String getFkcolumnName() {
-        return fkcolumnName;
-    }
-
-    public void setFkcolumnName(final String fkcolumnName) {
-        this.fkcolumnName = fkcolumnName;
-    }
-
-    // ---------------------------------------------------------------------------------------------------------- keySeq
-    public short getKeySeq() {
-        return keySeq;
-    }
-
-    public void setKeySeq(final short keySeq) {
-        this.keySeq = keySeq;
-    }
-
-    // ------------------------------------------------------------------------------------------------------ updateRule
-    public short getUpdateRule() {
-        return updateRule;
-    }
-
-    public void setUpdateRule(final short updateRule) {
-        this.updateRule = updateRule;
-    }
-
-    public int getUpdateRuleAsInt() {
-        return getUpdateRule();
-    }
-
-    public void setUpdateRuleAsInt(final int updateRuleAsInt) {
-        setUpdateRule((short) updateRuleAsInt);
-    }
-
-    public ImportedKey.Rule getUpdateRuleAsEnum() {
-        return ImportedKey.Rule.valueOfRawValue(getUpdateRuleAsInt());
-    }
-
-    public void setUpdateRuleAsEnum(final ImportedKey.Rule updateRuleAsEnum) {
-        requireNonNull(updateRuleAsEnum, "updateRuleAsEnum is null");
-        setUpdateRuleAsInt(updateRuleAsEnum.getRawValue());
-    }
-
-    // ------------------------------------------------------------------------------------------------------ deleteRule
-    public short getDeleteRule() {
-        return deleteRule;
-    }
-
-    public void setDeleteRule(final short deleteRule) {
-        this.deleteRule = deleteRule;
-    }
-
-    public int getDeleteRuleAsInt() {
-        return getDeleteRule();
-    }
-
-    public void setDeleteRuleAsInt(final int deleteRuleAsInt) {
-        setDeleteRule((short) deleteRuleAsInt);
-    }
-
-    public ImportedKey.Rule getDeleteRuleAsEnum() {
-        return ImportedKey.Rule.valueOfRawValue(getDeleteRuleAsInt());
-    }
-
-    public void setDeleteRuleAsEnum(final ImportedKey.Rule deleteRuleAsEnum) {
-        requireNonNull(deleteRuleAsEnum, "deleteRuleAsEnum is null");
-        setDeleteRuleAsInt(deleteRuleAsEnum.getRawValue());
-    }
-
-    // ---------------------------------------------------------------------------------------------------------- fnname
-    public String getFkName() {
-        return fkName;
-    }
-
-    public void setFkName(final String fkName) {
-        this.fkName = fkName;
-    }
-
-    // ---------------------------------------------------------------------------------------------------------- pkName
-    public String getPkName() {
-        return pkName;
-    }
-
-    public void setPkName(final String pkName) {
-        this.pkName = pkName;
-    }
-
-    // --------------------------------------------------------------------------------------------------- deferrability
-    public short getDeferrability() {
-        return deferrability;
-    }
-
-    public void setDeferrability(final short deferrability) {
-        this.deferrability = deferrability;
-    }
-
-    public int getDeferrabilityAsInt() {
-        return getDeferrability();
-    }
-
-    public void setDeferrabilityAsInt(final int deferrabilityAsInt) {
-        setDeferrability((short) deferrabilityAsInt);
-    }
-
-    public ImportedKey.Rule getDeferrabilityAsEnum() {
-        return ImportedKey.Rule.valueOfRawValue(getDeferrabilityAsInt());
-    }
-
-    public void setDeferrabilityAsEnum(final ImportedKey.Rule deferrabilityAsEnum) {
-        requireNonNull(deferrabilityAsEnum, "deferrabilityAsEnum is null");
-        setDeferrabilityAsInt(deferrabilityAsEnum.getRawValue());
-    }
 
     // -----------------------------------------------------------------------------------------------------------------
     @XmlElement(required = true, nillable = true)

@@ -26,8 +26,6 @@ import org.junit.jupiter.api.condition.EnabledIfSystemProperty;
 
 import java.sql.Connection;
 import java.sql.SQLException;
-import java.sql.SQLSyntaxErrorException;
-import java.util.logging.Level;
 
 import static java.sql.DriverManager.getConnection;
 
@@ -52,9 +50,8 @@ class ExternalIT {
         try (Connection connection = getConnection(url, user, password)) {
             log.info("connected: {}", connection);
             final Context context = Context.newInstance(connection)
-                    .suppress(SQLException.class)
-                    ;
-            ContextTests.writeFiles(context);
+                    .suppress(SQLException.class);
+            ContextTestUtils.writeFiles(context);
         }
     }
 }

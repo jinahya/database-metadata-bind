@@ -20,85 +20,28 @@ package com.github.jinahya.database.metadata.bind;
  * #L%
  */
 
+import lombok.Data;
+import lombok.NoArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
-import java.util.Objects;
+import java.sql.DatabaseMetaData;
+import java.util.Collection;
 
 /**
- * An entity class for client info properties.
+ * A class for binding results of {@link DatabaseMetaData#getClientInfoProperties()} method.
  *
  * @author Jin Kwon &lt;jinahya_at_gmail.com&gt;
+ * @see Context#getClientInfoProperties(Collection)
  */
 @XmlRootElement
+@Data
+@NoArgsConstructor
+@Slf4j
 public class ClientInfoProperty implements MetadataType {
 
     private static final long serialVersionUID = -2913230435651853254L;
-
-    // -----------------------------------------------------------------------------------------------------------------
-    @Override
-    public String toString() {
-        return super.toString() + '{'
-               + "name=" + name
-               + ",maxLen=" + maxLen
-               + ",defaultValue=" + defaultValue
-               + ",description=" + description
-               + '}';
-    }
-
-    @Override
-    public boolean equals(final Object obj) {
-        if (this == obj) return true;
-        if (obj == null || getClass() != obj.getClass()) return false;
-        final ClientInfoProperty that = (ClientInfoProperty) obj;
-        return maxLen == that.maxLen
-               && Objects.equals(name, that.name)
-               && Objects.equals(defaultValue, that.defaultValue)
-               && Objects.equals(description, that.description);
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(name,
-                            maxLen,
-                            defaultValue,
-                            description);
-    }
-
-    // ------------------------------------------------------------------------------------------------------------ name
-    public String getName() {
-        return name;
-    }
-
-    public void setName(final String name) {
-        this.name = name;
-    }
-
-    // ---------------------------------------------------------------------------------------------------------- maxLen
-    public int getMaxLen() {
-        return maxLen;
-    }
-
-    public void setMaxLen(final int maxLen) {
-        this.maxLen = maxLen;
-    }
-
-    // ---------------------------------------------------------------------------------------------------- defaultValue
-    public String getDefaultValue() {
-        return defaultValue;
-    }
-
-    public void setDefaultValue(final String defaultValue) {
-        this.defaultValue = defaultValue;
-    }
-
-    // ----------------------------------------------------------------------------------------------------- description
-    public String getDescription() {
-        return description;
-    }
-
-    public void setDescription(final String description) {
-        this.description = description;
-    }
 
     // -----------------------------------------------------------------------------------------------------------------
     @XmlElement(required = true)

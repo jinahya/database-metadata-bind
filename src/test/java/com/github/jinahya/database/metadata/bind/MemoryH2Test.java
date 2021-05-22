@@ -57,4 +57,9 @@ class MemoryH2Test extends MemoryTest {
     protected Connection connect() throws SQLException {
         return getConnection(CONNECTION_URL);
     }
+
+    Context context(Connection connection) throws SQLException {
+        return super.context(connection)
+                ;
+    }
 }

@@ -20,6 +20,14 @@ package com.github.jinahya.database.metadata.bind;
  * #L%
  */
 
+import lombok.AccessLevel;
+import lombok.Data;
+import lombok.EqualsAndHashCode;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+import lombok.ToString;
+
 import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
 import javax.xml.bind.annotation.XmlAttribute;
@@ -30,7 +38,6 @@ import javax.xml.bind.annotation.XmlSchemaType;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
-import java.util.Objects;
 
 /**
  * A class for binding a result of {@link java.sql.DatabaseMetaData#getSchemas(java.lang.String, java.lang.String)}
@@ -38,9 +45,14 @@ import java.util.Objects;
  *
  * @author Jin Kwon &lt;jinahya_at_gmail.com&gt;
  * @see Context#getSchemas(Collection)
+ * @see Context#getSchemas(String, String, Collection)
  */
 @XmlRootElement
-public class Schema implements MetadataType {
+@Data
+@NoArgsConstructor
+public class Schema
+        implements MetadataType,
+                   ChildOf<Catalog> {
 
     private static final long serialVersionUID = 7457236468401244963L;
 
@@ -62,7 +74,6 @@ public class Schema implements MetadataType {
      * @param tableCatalog a value for {@code tableCatalog} property.
      * @param tableSchem   a value for {@code tableSchem} property.
      * @return a new virtual instance.
-     * @see Catalog#newVirtualInstance()
      */
     static Schema newVirtualInstance(final String tableCatalog, final String tableSchem) {
         final Schema instance = new Schema();
@@ -77,43 +88,13 @@ public class Schema implements MetadataType {
      *
      * @param tableCatalog the value for {@code tableCatalog} property.
      * @return a new virtual instance.
-     * @see Catalog#newVirtualInstance()
      */
     static Schema newVirtualInstance(final String tableCatalog) {
         return newVirtualInstance(tableCatalog, "");
     }
 
-    // -----------------------------------------------------------------------------------------------------------------
-
-    /**
-     * Creates a new instance.
-     */
-    public Schema() {
-        super();
-    }
-
-    // -----------------------------------------------------------------------------------------------------------------
-    @Override
-    public String toString() {
-        return super.toString() + '{'
-               + ATTRIBUTE_NAME_TABLE_SCHEM + '=' + tableCatalog
-               + ',' + ATTRIBUTE_NAME_TABLE_SCHEM + '=' + tableSchem
-               + '}';
-    }
-
-    @Override
-    public boolean equals(final Object obj) {
-        if (this == obj) return true;
-        if (obj == null || getClass() != obj.getClass()) return false;
-        final Schema that = (Schema) obj;
-        return Objects.equals(tableCatalog, that.tableCatalog)
-               && Objects.equals(tableSchem, that.tableSchem);
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(tableCatalog,
-                            tableSchem);
+    static Schema newVirtualInstance(final Catalog catalog) {
+        return newVirtualInstance(catalog.getTableCat());
     }
 
     // --------------------------------------------------------------------------------------------------------- virtual
@@ -162,13 +143,7 @@ public class Schema implements MetadataType {
     }
 
     // ---------------------------------------------------------------------------------------------------------- tables
-
-    /**
-     * Returns tables of this schema.
-     *
-     * @return a list of table of this schema.
-     */
-    public @NotNull List<@Valid @NotNull Table> getTables() {
+    public List<Table> getTables() {
         if (tables == null) {
             tables = new ArrayList<>();
         }
@@ -176,13 +151,7 @@ public class Schema implements MetadataType {
     }
 
     // ------------------------------------------------------------------------------------------------------------ UDTs
-
-    /**
-     * Returns user defined types of this schema.
-     *
-     * @return a list of user defined types of this schema.
-     */
-    public @NotNull List<@Valid @NotNull UDT> getUDTs() {
+    public List<UDT> getUDTs() {
         if (UDTs == null) {
             UDTs = new ArrayList<>();
         }
@@ -191,6 +160,8 @@ public class Schema implements MetadataType {
 
     // -----------------------------------------------------------------------------------------------------------------
     @XmlAttribute
+    @Setter(AccessLevel.NONE)
+    @Getter(AccessLevel.NONE)
     private Boolean virtual;
 
     // -----------------------------------------------------------------------------------------------------------------
@@ -208,14 +179,30 @@ public class Schema implements MetadataType {
 
     // -----------------------------------------------------------------------------------------------------------------
     @XmlElementRef
+    @Setter(AccessLevel.NONE)
+    @Getter(AccessLevel.NONE)
+    @EqualsAndHashCode.Exclude
+    @ToString.Exclude
     private List<@Valid @NotNull Function> functions;
 
     @XmlElementRef
+    @Setter(AccessLevel.NONE)
+    @Getter(AccessLevel.NONE)
+    @EqualsAndHashCode.Exclude
+    @ToString.Exclude
     private List<@Valid @NotNull Procedure> procedures;
 
     @XmlElementRef
+    @Setter(AccessLevel.NONE)
+    @Getter(AccessLevel.NONE)
+    @EqualsAndHashCode.Exclude
+    @ToString.Exclude
     private List<@Valid @NotNull Table> tables;
 
     @XmlElementRef
+    @Setter(AccessLevel.NONE)
+    @Getter(AccessLevel.NONE)
+    @EqualsAndHashCode.Exclude
+    @ToString.Exclude
     private List<@Valid @NotNull UDT> UDTs;
 }

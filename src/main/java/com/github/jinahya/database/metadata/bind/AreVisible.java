@@ -20,103 +20,34 @@ package com.github.jinahya.database.metadata.bind;
  * #L%
  */
 
+import lombok.AccessLevel;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+
 import javax.xml.bind.annotation.XmlAttribute;
-import javax.xml.bind.annotation.XmlSchemaType;
 import javax.xml.bind.annotation.XmlTransient;
 import javax.xml.bind.annotation.XmlValue;
-import java.lang.invoke.MethodHandles;
-import java.util.Objects;
-import java.util.logging.Logger;
-
-import static java.util.Objects.requireNonNull;
 
 /**
  * An abstract class for binding {@code ...AreVisible} values.
  *
- * @param <T> subclass type parameter
+ * @see OthersDeletesAreVisible
+ * @see OthersInsertsAreVisible
+ * @see OthersUpdatesAreVisible
+ * @see OwnDeletesAreVisible
+ * @see OwnInsertsAreVisible
+ * @see OwnUpdatesAreVisible
  */
 @XmlTransient
-abstract class AreVisible<T extends AreVisible<T>> implements MetadataType, Comparable<T> {
+@Data
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
+abstract class AreVisible
+        implements MetadataType {
 
     private static final long serialVersionUID = 8635936632512182596L;
 
-    // -----------------------------------------------------------------------------------------------------------------
-    static final Logger logger = Logger.getLogger(MethodHandles.lookup().lookupClass().getName());
-
-    // -----------------------------------------------------------------------------------------------------------------
-
-    /**
-     * Creates a new instance.
-     */
-    protected AreVisible() {
-        super();
-    }
-
-    @Override
-    public String toString() {
-        return super.toString() + '{'
-               + "type=" + type
-               + ",typeName=" + typeName
-               + ",value=" + value
-               + '}';
-    }
-
-    @Override
-    public boolean equals(final Object obj) {
-        if (this == obj) return true;
-        if (obj == null || getClass() != obj.getClass()) return false;
-        final AreVisible<?> that = (AreVisible<?>) obj;
-        return type == that.type && Objects.equals(value, that.value);
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(type, value);
-    }
-
-    // -----------------------------------------------------------------------------------------------------------------
-
-    @Override
-    public int compareTo(final T o) {
-        requireNonNull(o, "o is null");
-        return Integer.compare(type, o.getType());
-    }
-
-    // -----------------------------------------------------------------------------------------------------------------
-    public int getType() {
-        return type;
-    }
-
-    public void setType(final int type) {
-        this.type = type;
-    }
-
-    // -----------------------------------------------------------------------------------------------------------------
-
-    public String getTypeName() {
-        return typeName;
-    }
-
-    public void setTypeName(final String typeName) {
-        this.typeName = typeName;
-    }
-
-    // -----------------------------------------------------------------------------------------------------------------
-    public Boolean getValue() {
-        return value;
-    }
-
-    public void setValue(final Boolean value) {
-        this.value = value;
-    }
-
-    // -----------------------------------------------------------------------------------------------------------------
     @XmlAttribute(required = true)
     private int type;
-
-    @XmlAttribute
-    @XmlSchemaType(name = "token")
-    private String typeName;
 
     @XmlValue
     private Boolean value;

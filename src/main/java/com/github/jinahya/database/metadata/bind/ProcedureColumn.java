@@ -20,20 +20,24 @@ package com.github.jinahya.database.metadata.bind;
  * #L%
  */
 
+import lombok.Data;
+import lombok.NoArgsConstructor;
+
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
 import java.sql.DatabaseMetaData;
 import java.util.Collection;
-import java.util.Objects;
 
 /**
- * An entity class for binding the result of {@link java.sql.DatabaseMetaData#getProcedureColumns(java.lang.String,
- * java.lang.String, java.lang.String, java.lang.String)}.
+ * A class for binding results of {@link DatabaseMetaData#getProcedureColumns(java.lang.String, java.lang.String,
+ * java.lang.String, java.lang.String)}.
  *
  * @author Jin Kwon &lt;jinahya_at_gmail.com&gt;
  * @see Context#getProcedureColumns(String, String, String, String, Collection)
  */
 @XmlRootElement
+@Data
+@NoArgsConstructor
 public class ProcedureColumn implements MetadataType {
 
     private static final long serialVersionUID = 3894753719381358829L;
@@ -53,27 +57,27 @@ public class ProcedureColumn implements MetadataType {
         PROCEDURE_COLUMN_UNKNOWN(DatabaseMetaData.procedureColumnUnknown), // 0
 
         /**
-         * Constants for {@link DatabaseMetaData#procedureColumnIn}({@value java.sql.DatabaseMetaData#procedureColumnIn}).
+         * Constants for {@link DatabaseMetaData#procedureColumnIn}({@value DatabaseMetaData#procedureColumnIn}).
          */
         PROCEDURE_COLUMN_IN(DatabaseMetaData.procedureColumnIn), // 1
 
         /**
-         * Constants for {@link DatabaseMetaData#procedureColumnInOut}({@value java.sql.DatabaseMetaData#procedureColumnInOut}).
+         * Constants for {@link DatabaseMetaData#procedureColumnInOut}({@value DatabaseMetaData#procedureColumnInOut}).
          */
         PROCEDURE_COLUMN_IN_OUT(DatabaseMetaData.procedureColumnInOut), // 2
 
         /**
-         * Constants for {@link DatabaseMetaData#procedureColumnResult}({@value java.sql.DatabaseMetaData#procedureColumnResult}).
+         * Constants for {@link DatabaseMetaData#procedureColumnResult}({@value DatabaseMetaData#procedureColumnResult}).
          */
         PROCEDURE_COLUMN_RESULT(DatabaseMetaData.functionColumnResult), // 3
 
         /**
-         * Constants for {@link DatabaseMetaData#procedureColumnOut}({@value java.sql.DatabaseMetaData#procedureColumnOut}).
+         * Constants for {@link DatabaseMetaData#procedureColumnOut}({@value DatabaseMetaData#procedureColumnOut}).
          */
         PROCEDURE_COLUMN_OUT(DatabaseMetaData.procedureColumnOut), // 4
 
         /**
-         * Constant for {@link DatabaseMetaData#procedureColumnReturn}({@value java.sql.DatabaseMetaData#procedureColumnReturn}).
+         * Constant for {@link DatabaseMetaData#procedureColumnReturn}({@value DatabaseMetaData#procedureColumnReturn}).
          */
         PROCEDURE_COLUMN_RETURN(DatabaseMetaData.procedureColumnReturn); // 5
 
@@ -103,273 +107,6 @@ public class ProcedureColumn implements MetadataType {
         }
 
         private final int rawValue;
-    }
-
-    // -----------------------------------------------------------------------------------------------------------------
-
-    /**
-     * Creates a new instance.
-     */
-    public ProcedureColumn() {
-        super();
-    }
-
-    // -----------------------------------------------------------------------------------------------------------------
-    @Override
-    public String toString() {
-        return super.toString() + '{'
-               + "procedureCat=" + procedureCat
-               + ",procedureSchem=" + procedureSchem
-               + ",procedureName=" + procedureName
-               + ",columnName=" + columnName
-               + ",columnType=" + columnType
-               + ",dataType=" + dataType
-               + ",typeName=" + typeName
-               + ",precision=" + precision
-               + ",length=" + length
-               + ",scale=" + scale
-               + ",radix=" + radix
-               + ",nullable=" + nullable
-               + ",remarks=" + remarks
-               + ",columnDef=" + columnDef
-               + ",sqlDataType=" + sqlDataType
-               + ",sqlDatetimeSub=" + sqlDatetimeSub
-               + ",charOctetLength=" + charOctetLength
-               + ",ordinalPosition=" + ordinalPosition
-               + ",isNullable=" + isNullable
-               + ",specificName=" + specificName
-               + '}';
-    }
-
-    @Override
-    public boolean equals(final Object obj) {
-        if (this == obj) return true;
-        if (obj == null || getClass() != obj.getClass()) return false;
-        final ProcedureColumn that = (ProcedureColumn) obj;
-        return columnType == that.columnType
-               && dataType == that.dataType
-               && precision == that.precision
-               && length == that.length
-               && radix == that.radix
-               && nullable == that.nullable
-               && ordinalPosition == that.ordinalPosition
-               && Objects.equals(procedureCat, that.procedureCat)
-               && Objects.equals(procedureSchem, that.procedureSchem)
-               && Objects.equals(procedureName, that.procedureName)
-               && Objects.equals(columnName, that.columnName)
-               && Objects.equals(typeName, that.typeName)
-               && Objects.equals(scale, that.scale)
-               && Objects.equals(remarks, that.remarks)
-               && Objects.equals(columnDef, that.columnDef)
-               && Objects.equals(sqlDataType, that.sqlDataType)
-               && Objects.equals(sqlDatetimeSub, that.sqlDatetimeSub)
-               && Objects.equals(charOctetLength, that.charOctetLength)
-               && Objects.equals(isNullable, that.isNullable)
-               && Objects.equals(specificName, that.specificName);
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(procedureCat,
-                            procedureSchem,
-                            procedureName,
-                            columnName,
-                            columnType,
-                            dataType,
-                            typeName,
-                            precision,
-                            length,
-                            scale,
-                            radix,
-                            nullable,
-                            remarks,
-                            columnDef,
-                            sqlDataType,
-                            sqlDatetimeSub,
-                            charOctetLength,
-                            ordinalPosition,
-                            isNullable,
-                            specificName);
-    }
-
-    // ---------------------------------------------------------------------------------------------------- procedureCat
-    public String getProcedureCat() {
-        return procedureCat;
-    }
-
-    public void setProcedureCat(final String procedureCat) {
-        this.procedureCat = procedureCat;
-    }
-
-    // -------------------------------------------------------------------------------------------------- procedureSchem
-    public String getProcedureSchem() {
-        return procedureSchem;
-    }
-
-    public void setProcedureSchem(final String procedureSchem) {
-        this.procedureSchem = procedureSchem;
-    }
-
-    // --------------------------------------------------------------------------------------------------- procedureName
-    public String getProcedureName() {
-        return procedureName;
-    }
-
-    public void setProcedureName(final String procedureName) {
-        this.procedureName = procedureName;
-    }
-
-    // ------------------------------------------------------------------------------------------------------ columnName
-    public String getColumnName() {
-        return columnName;
-    }
-
-    public void setColumnName(final String columnName) {
-        this.columnName = columnName;
-    }
-
-    // ------------------------------------------------------------------------------------------------------ columnType
-    public short getColumnType() {
-        return columnType;
-    }
-
-    public void setColumnType(final short columnType) {
-        this.columnType = columnType;
-    }
-
-    // -------------------------------------------------------------------------------------------------------- dataType
-    public int getDataType() {
-        return dataType;
-    }
-
-    public void setDataType(final int dataType) {
-        this.dataType = dataType;
-    }
-
-    // -------------------------------------------------------------------------------------------------------- typeName
-    public String getTypeName() {
-        return typeName;
-    }
-
-    public void setTypeName(final String typeName) {
-        this.typeName = typeName;
-    }
-
-    // ------------------------------------------------------------------------------------------------------- precision
-    public int getPrecision() {
-        return precision;
-    }
-
-    public void setPrecision(final int precision) {
-        this.precision = precision;
-    }
-
-    // ---------------------------------------------------------------------------------------------------------- length
-    public int getLength() {
-        return length;
-    }
-
-    public void setLength(final int length) {
-        this.length = length;
-    }
-
-    // ----------------------------------------------------------------------------------------------------------- scale
-    public Short getScale() {
-        return scale;
-    }
-
-    public void setScale(final Short scale) {
-        this.scale = scale;
-    }
-
-    // ----------------------------------------------------------------------------------------------------------- radix
-    public short getRadix() {
-        return radix;
-    }
-
-    public void setRadix(final short radix) {
-        this.radix = radix;
-    }
-
-    // -------------------------------------------------------------------------------------------------------- nullable
-    public short getNullable() {
-        return nullable;
-    }
-
-    public void setNullable(final short nullable) {
-        this.nullable = nullable;
-    }
-
-    // --------------------------------------------------------------------------------------------------------- remarks
-    public String getRemarks() {
-        return remarks;
-    }
-
-    public void setRemarks(final String remarks) {
-        this.remarks = remarks;
-    }
-
-    // ------------------------------------------------------------------------------------------------------- columnDef
-    public String getColumnDef() {
-        return columnDef;
-    }
-
-    public void setColumnDef(final String columnDef) {
-        this.columnDef = columnDef;
-    }
-
-    // ----------------------------------------------------------------------------------------------------- sqlDataType
-    public Integer getSqlDataType() {
-        return sqlDataType;
-    }
-
-    public void setSqlDataType(final Integer sqlDataType) {
-        this.sqlDataType = sqlDataType;
-    }
-
-    // -------------------------------------------------------------------------------------------------- sqlDatetimeSub
-    public Integer getSqlDatetimeSub() {
-        return sqlDatetimeSub;
-    }
-
-    public void setSqlDatetimeSub(final Integer sqlDatetimeSub) {
-        this.sqlDatetimeSub = sqlDatetimeSub;
-    }
-
-    // ------------------------------------------------------------------------------------------------- charOctetLength
-    public Integer getCharOctetLength() {
-        return charOctetLength;
-    }
-
-    public void setCharOctetLength(final Integer charOctetLength) {
-        this.charOctetLength = charOctetLength;
-    }
-
-    // ------------------------------------------------------------------------------------------------- ordinalPosition
-    public int getOrdinalPosition() {
-        return ordinalPosition;
-    }
-
-    public void setOrdinalPosition(final int ordinalPosition) {
-        this.ordinalPosition = ordinalPosition;
-    }
-
-    // ------------------------------------------------------------------------------------------------------ isNullable
-    public String getIsNullable() {
-        return isNullable;
-    }
-
-    public void setIsNullable(final String isNullable) {
-        this.isNullable = isNullable;
-    }
-
-    // ---------------------------------------------------------------------------------------------------- specificName
-    public String getSpecificName() {
-        return specificName;
-    }
-
-    public void setSpecificName(final String specificName) {
-        this.specificName = specificName;
     }
 
     // -----------------------------------------------------------------------------------------------------------------

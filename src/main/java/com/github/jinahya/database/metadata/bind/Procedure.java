@@ -20,126 +20,37 @@ package com.github.jinahya.database.metadata.bind;
  * #L%
  */
 
+import lombok.AccessLevel;
+import lombok.Data;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+import lombok.ToString;
+
 import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlElementRef;
 import javax.xml.bind.annotation.XmlRootElement;
+import java.sql.DatabaseMetaData;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
-import java.util.Objects;
 
 /**
- * A class for binding the result of {@link java.sql.DatabaseMetaData#getProcedures(java.lang.String, java.lang.String,
+ * A class for binding results of {@link DatabaseMetaData#getProcedures(java.lang.String, java.lang.String,
  * java.lang.String)}.
  *
  * @author Jin Kwon &lt;jinahya_at_gmail.com&gt;
  * @see Context#getProcedures(String, String, String, Collection)
+ * @see Context#getProcedureColumns(Procedure, String)
  */
 @XmlRootElement
+@Data
+@NoArgsConstructor
 public class Procedure implements MetadataType {
 
     private static final long serialVersionUID = -6262056388403934829L;
-
-    // -----------------------------------------------------------------------------------------------------------------
-
-    /**
-     * Creates a new instance.
-     */
-    public Procedure() {
-        super();
-    }
-
-    // -----------------------------------------------------------------------------------------------------------------
-    @Override
-    public String toString() {
-        return super.toString() + '{'
-               + "procedureCat=" + procedureCat
-               + ",procedureSchem=" + procedureSchem
-               + ",procedureName=" + procedureName
-               + ",remarks=" + remarks
-               + ",procedureType=" + procedureType
-               + ",specificName=" + specificName
-               + '}';
-    }
-
-    @Override
-    public boolean equals(final Object obj) {
-        if (this == obj) return true;
-        if (obj == null || getClass() != obj.getClass()) return false;
-        final Procedure that = (Procedure) obj;
-        return procedureType == that.procedureType
-               && Objects.equals(procedureCat, that.procedureCat)
-               && Objects.equals(procedureSchem, that.procedureSchem)
-               && Objects.equals(procedureName, that.procedureName)
-               && Objects.equals(remarks, that.remarks)
-               && Objects.equals(specificName, that.specificName);
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(procedureCat,
-                            procedureSchem,
-                            procedureName,
-                            remarks,
-                            procedureType,
-                            specificName);
-    }
-
-    // ---------------------------------------------------------------------------------------------------- procedureCat
-    public String getProcedureCat() {
-        return procedureCat;
-    }
-
-    public void setProcedureCat(final String procedureCat) {
-        this.procedureCat = procedureCat;
-    }
-
-    // -------------------------------------------------------------------------------------------------- procedureSchem
-    public String getProcedureSchem() {
-        return procedureSchem;
-    }
-
-    public void setProcedureSchem(final String procedureSchem) {
-        this.procedureSchem = procedureSchem;
-    }
-
-    // --------------------------------------------------------------------------------------------------- procedureName
-    public String getProcedureName() {
-        return procedureName;
-    }
-
-    public void setProcedureName(final String procedureName) {
-        this.procedureName = procedureName;
-    }
-
-    // --------------------------------------------------------------------------------------------------------- remarks
-    public String getRemarks() {
-        return remarks;
-    }
-
-    public void setRemarks(final String remarks) {
-        this.remarks = remarks;
-    }
-
-    // --------------------------------------------------------------------------------------------------- procedureType
-    public short getProcedureType() {
-        return procedureType;
-    }
-
-    public void setProcedureType(final short procedureType) {
-        this.procedureType = procedureType;
-    }
-
-    // ---------------------------------------------------------------------------------------------------- specificName
-    public String getSpecificName() {
-        return specificName;
-    }
-
-    public void setSpecificName(final String specificName) {
-        this.specificName = specificName;
-    }
 
     // ------------------------------------------------------------------------------------------------ procedureColumns
     List<ProcedureColumn> getProcedureColumns() {
@@ -180,5 +91,8 @@ public class Procedure implements MetadataType {
 
     // -----------------------------------------------------------------------------------------------------------------
     @XmlElementRef
+    @Setter(AccessLevel.NONE)
+    @Getter(AccessLevel.NONE)
+    @ToString.Exclude
     private List<@Valid @NotNull ProcedureColumn> procedureColumns;
 }

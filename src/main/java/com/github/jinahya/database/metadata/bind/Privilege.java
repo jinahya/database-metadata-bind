@@ -20,116 +20,19 @@ package com.github.jinahya.database.metadata.bind;
  * #L%
  */
 
+import lombok.AccessLevel;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlTransient;
-import java.util.Objects;
 
 @XmlTransient
-abstract class Privilege<P extends MetadataType> implements MetadataType {
+@Data
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
+abstract class Privilege implements MetadataType {
 
     private static final long serialVersionUID = -816800473142195431L;
-
-    // -----------------------------------------------------------------------------------------------------------------
-    @Override
-    public String toString() {
-        return super.toString() + '{'
-               + "tableCat=" + tableCat
-               + ",tableSchem=" + tableSchem
-               + ",tableName=" + tableName
-               + ",grantor=" + grantor
-               + ",grantee=" + grantee
-               + ",privilege=" + privilege
-               + ",isGrantable=" + isGrantable
-               + '}';
-    }
-
-    @Override
-    public boolean equals(final Object obj) {
-        if (this == obj) return true;
-        if (obj == null || getClass() != obj.getClass()) return false;
-        final Privilege<?> that = (Privilege<?>) obj;
-        return Objects.equals(tableCat, that.tableCat)
-               && Objects.equals(tableSchem, that.tableSchem)
-               && Objects.equals(tableName, that.tableName)
-               && Objects.equals(grantor, that.grantor)
-               && Objects.equals(grantee, that.grantee)
-               && Objects.equals(privilege, that.privilege)
-               && Objects.equals(isGrantable, that.isGrantable);
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(tableCat,
-                            tableSchem,
-                            tableName,
-                            grantor,
-                            grantee,
-                            privilege,
-                            isGrantable);
-    }
-
-    // -------------------------------------------------------------------------------------------------------- tableCat
-    public String getTableCat() {
-        return tableCat;
-    }
-
-    public void setTableCat(final String tableCat) {
-        this.tableCat = tableCat;
-    }
-
-    // ------------------------------------------------------------------------------------------------------ tableSchem
-    public String getTableSchem() {
-        return tableSchem;
-    }
-
-    public void setTableSchem(final String tableSchem) {
-        this.tableSchem = tableSchem;
-    }
-
-    // ------------------------------------------------------------------------------------------------------- tableName
-    public String getTableName() {
-        return tableName;
-    }
-
-    public void setTableName(final String tableName) {
-        this.tableName = tableName;
-    }
-
-    // --------------------------------------------------------------------------------------------------------- grantor
-    public String getGrantor() {
-        return grantor;
-    }
-
-    public void setGrantor(final String grantor) {
-        this.grantor = grantor;
-    }
-
-    // --------------------------------------------------------------------------------------------------------- grantee
-    public String getGrantee() {
-        return grantee;
-    }
-
-    public void setGrantee(final String grantee) {
-        this.grantee = grantee;
-    }
-
-    // ------------------------------------------------------------------------------------------------------- privilege
-    public String getPrivilege() {
-        return privilege;
-    }
-
-    public void setPrivilege(final String privilege) {
-        this.privilege = privilege;
-    }
-
-    // ----------------------------------------------------------------------------------------------------- isGrantable
-    public String getIsGrantable() {
-        return isGrantable;
-    }
-
-    public void setIsGrantable(final String isGrantable) {
-        this.isGrantable = isGrantable;
-    }
 
     // -----------------------------------------------------------------------------------------------------------------
     @XmlElement(required = true, nillable = true)

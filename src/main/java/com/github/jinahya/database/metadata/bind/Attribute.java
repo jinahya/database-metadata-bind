@@ -20,21 +20,29 @@ package com.github.jinahya.database.metadata.bind;
  * #L%
  */
 
+import lombok.Data;
+import lombok.NoArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+
 import javax.validation.constraints.NotBlank;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
 import java.sql.DatabaseMetaData;
 import java.util.Collection;
-import java.util.Objects;
 
 /**
- * An entity class for type attributes.
+ * A class for binding results of {@link DatabaseMetaData#getAttributes(String, String, String, String)} method.
  *
  * @author Jin Kwon &lt;jinahya_at_gmail.com&gt;
  * @see Context#getAttributes(String, String, String, String, Collection)
  */
 @XmlRootElement
-public class Attribute implements MetadataType {
+@Data
+@NoArgsConstructor
+@Slf4j
+public class Attribute
+        implements MetadataType,
+                   ChildOf<UDT> {
 
     private static final long serialVersionUID = 5020389308460154799L;
 
@@ -80,276 +88,6 @@ public class Attribute implements MetadataType {
         }
 
         private final int rawValue;
-    }
-
-    // -----------------------------------------------------------------------------------------------------------------
-
-    /**
-     * Creates a new instance.
-     */
-    public Attribute() {
-        super();
-    }
-
-    // -----------------------------------------------------------------------------------------------------------------
-    @Override
-    public String toString() {
-        return super.toString() + '{'
-               + "typeCat=" + typeCat
-               + ",typeSchem=" + typeSchem
-               + ",typeName=" + typeName
-               + ",attrName=" + attrName
-               + ",dataType=" + dataType
-               + ",attrTypeName=" + attrTypeName
-               + ",attrSize=" + attrSize
-               + ",decimalDigits=" + decimalDigits
-               + ",numPrecRadix=" + numPrecRadix
-               + ",nullable=" + nullable
-               + ",remarks=" + remarks
-               + ",attrDef=" + attrDef
-               + ",sqlDataType=" + sqlDataType
-               + ",sqlDatetimeSub=" + sqlDatetimeSub
-               + ",charOctetLength=" + charOctetLength
-               + ",ordinalPosition=" + ordinalPosition
-               + ",isNullable=" + isNullable
-               + ",sourceDataType=" + sourceDataType
-               + '}';
-    }
-
-    @Override
-    public boolean equals(final Object obj) {
-        if (this == obj) return true;
-        if (obj == null || getClass() != obj.getClass()) return false;
-        final Attribute that = (Attribute) obj;
-        return dataType == that.dataType
-               && attrSize == that.attrSize
-               && numPrecRadix == that.numPrecRadix
-               && nullable == that.nullable
-               && charOctetLength == that.charOctetLength
-               && ordinalPosition == that.ordinalPosition
-               && Objects.equals(typeCat, that.typeCat)
-               && Objects.equals(typeSchem, that.typeSchem)
-               && Objects.equals(typeName, that.typeName)
-               && Objects.equals(attrName, that.attrName)
-               && Objects.equals(attrTypeName, that.attrTypeName)
-               && Objects.equals(decimalDigits, that.decimalDigits)
-               && Objects.equals(remarks, that.remarks)
-               && Objects.equals(attrDef, that.attrDef)
-               && Objects.equals(sqlDataType, that.sqlDataType)
-               && Objects.equals(sqlDatetimeSub, that.sqlDatetimeSub)
-               && Objects.equals(isNullable, that.isNullable)
-               && Objects.equals(sourceDataType, that.sourceDataType);
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(typeCat,
-                            typeSchem,
-                            typeName,
-                            attrName,
-                            dataType,
-                            attrTypeName,
-                            attrSize,
-                            decimalDigits,
-                            numPrecRadix,
-                            nullable,
-                            remarks,
-                            attrDef,
-                            sqlDataType,
-                            sqlDatetimeSub,
-                            charOctetLength,
-                            ordinalPosition,
-                            isNullable,
-                            sourceDataType);
-    }
-
-    // --------------------------------------------------------------------------------------------------------- typeCat
-    public String getTypeCat() {
-        return typeCat;
-    }
-
-    public void setTypeCat(final String typeCat) {
-        this.typeCat = typeCat;
-    }
-
-    // ------------------------------------------------------------------------------------------------------- typeSchem
-    public String getTypeSchem() {
-        return typeSchem;
-    }
-
-    public void setTypeSchem(final String typeSchem) {
-        this.typeSchem = typeSchem;
-    }
-
-    // -------------------------------------------------------------------------------------------------------- typeName
-    public String getTypeName() {
-        return typeName;
-    }
-
-    public void setTypeName(final String typeName) {
-        this.typeName = typeName;
-    }
-
-    // -------------------------------------------------------------------------------------------------------- attrName
-    public String getAttrName() {
-        return attrName;
-    }
-
-    public void setAttrName(final String attrName) {
-        this.attrName = attrName;
-    }
-
-    // -------------------------------------------------------------------------------------------------------- dataType
-    public int getDataType() {
-        return dataType;
-    }
-
-    public void setDataType(final int dataType) {
-        this.dataType = dataType;
-    }
-
-    // ---------------------------------------------------------------------------------------------------- attrTypeName
-    public String getAttrTypeName() {
-        return attrTypeName;
-    }
-
-    public void setAttrTypeName(final String attrTypeName) {
-        this.attrTypeName = attrTypeName;
-    }
-
-    // -------------------------------------------------------------------------------------------------------- attrSize
-    public int getAttrSize() {
-        return attrSize;
-    }
-
-    public void setAttrSize(final int attrSize) {
-        this.attrSize = attrSize;
-    }
-
-    // --------------------------------------------------------------------------------------------------- decimalDigits
-    public Integer getDecimalDigits() {
-        return decimalDigits;
-    }
-
-    public void setDecimalDigits(final Integer decimalDigits) {
-        this.decimalDigits = decimalDigits;
-    }
-
-    // ---------------------------------------------------------------------------------------------------- numPrecRadix
-    public int getNumPrecRadix() {
-        return numPrecRadix;
-    }
-
-    public void setNumPrecRadix(final int numPrecRadix) {
-        this.numPrecRadix = numPrecRadix;
-    }
-
-    // -------------------------------------------------------------------------------------------------------- nullable
-    public int getNullable() {
-        return nullable;
-    }
-
-    public void setNullable(final int nullable) {
-        this.nullable = nullable;
-    }
-
-    // --------------------------------------------------------------------------------------------------------- remarks
-    public String getRemarks() {
-        return remarks;
-    }
-
-    public void setRemarks(final String remarks) {
-        this.remarks = remarks;
-    }
-
-    // --------------------------------------------------------------------------------------------------------- attrDef
-    public String getAttrDef() {
-        return attrDef;
-    }
-
-    public void setAttrDef(final String attrDef) {
-        this.attrDef = attrDef;
-    }
-
-    // ----------------------------------------------------------------------------------------------------- sqlDataType
-    public Integer getSqlDataType() {
-        return sqlDataType;
-    }
-
-    public void setSqlDataType(final Integer sqlDataType) {
-        this.sqlDataType = sqlDataType;
-    }
-
-    // -------------------------------------------------------------------------------------------------- sqlDatetimeSub
-    public Integer getSqlDatetimeSub() {
-        return sqlDatetimeSub;
-    }
-
-    public void setSqlDatetimeSub(final Integer sqlDatetimeSub) {
-        this.sqlDatetimeSub = sqlDatetimeSub;
-    }
-
-    // ------------------------------------------------------------------------------------------------- charOctetLength
-    public int getCharOctetLength() {
-        return charOctetLength;
-    }
-
-    public void setCharOctetLength(final int charOctetLength) {
-        this.charOctetLength = charOctetLength;
-    }
-
-    // ------------------------------------------------------------------------------------------------- ordinalPosition
-    public int getOrdinalPosition() {
-        return ordinalPosition;
-    }
-
-    public void setOrdinalPosition(final int ordinalPosition) {
-        this.ordinalPosition = ordinalPosition;
-    }
-
-    // ------------------------------------------------------------------------------------------------------ isNullable
-    public String getIsNullable() {
-        return isNullable;
-    }
-
-    public void setIsNullable(final String isNullable) {
-        this.isNullable = isNullable;
-    }
-
-    // ---------------------------------------------------------------------------------------------------- scopeCatalog
-    public String getScopeCatalog() {
-        return scopeCatalog;
-    }
-
-    public void setScopeCatalog(String scopeCatalog) {
-        this.scopeCatalog = scopeCatalog;
-    }
-
-    // ----------------------------------------------------------------------------------------------------- scopeSchema
-    public String getScopeSchema() {
-        return scopeSchema;
-    }
-
-    public void setScopeSchema(final String scopeSchema) {
-        this.scopeSchema = scopeSchema;
-    }
-
-    // ------------------------------------------------------------------------------------------------------ scopeTable
-    public String getScopeTable() {
-        return scopeTable;
-    }
-
-    public void setScopeTable(final String scopeTable) {
-        this.scopeTable = scopeTable;
-    }
-
-    // -------------------------------------------------------------------------------------------------- sourceDataType
-    public Short getSourceDataType() {
-        return sourceDataType;
-    }
-
-    public void setSourceDataType(final Short sourceDataType) {
-        this.sourceDataType = sourceDataType;
     }
 
     // -----------------------------------------------------------------------------------------------------------------

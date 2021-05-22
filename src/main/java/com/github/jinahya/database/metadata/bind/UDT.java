@@ -20,138 +20,41 @@ package com.github.jinahya.database.metadata.bind;
  * #L%
  */
 
+import lombok.AccessLevel;
+import lombok.Data;
+import lombok.EqualsAndHashCode;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+import lombok.ToString;
+
 import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlElementRef;
 import javax.xml.bind.annotation.XmlRootElement;
+import java.sql.DatabaseMetaData;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
-import java.util.Objects;
 
 /**
- * An entity class for user defined types.
+ * A class for binding results of {@link DatabaseMetaData#getUDTs(String, String, String, int[])} method.
  *
  * @author Jin Kwon &lt;jinahya_at_gmail.com&gt;
+ * @see Context#getUDTs(String, String, String, int[], Collection)
  */
 @XmlRootElement
-public class UDT implements MetadataType {
+@Data
+@NoArgsConstructor
+public class UDT
+        implements MetadataType,
+                   ChildOf<Schema> {
 
     private static final long serialVersionUID = 8665246093405057553L;
 
-    // -----------------------------------------------------------------------------------------------------------------
-
-    /**
-     * Creates a new instance.
-     */
-    public UDT() {
-        super();
-    }
-
-    // -----------------------------------------------------------------------------------------------------------------
-    @Override
-    public String toString() {
-        return super.toString() + '{'
-               + "typeCat=" + typeCat
-               + ",typeSchem=" + typeSchem
-               + ",typeName=" + typeName
-               + ",className=" + className
-               + ",dataType=" + dataType
-               + ",remarks=" + remarks
-               + ",baseType=" + baseType
-               + '}';
-    }
-
-    @Override
-    public boolean equals(final Object obj) {
-        if (this == obj) return true;
-        if (obj == null || getClass() != obj.getClass()) return false;
-        final UDT that = (UDT) obj;
-        return dataType == that.dataType
-               && Objects.equals(typeCat, that.typeCat)
-               && Objects.equals(typeSchem, that.typeSchem)
-               && Objects.equals(typeName, that.typeName)
-               && Objects.equals(className, that.className)
-               && Objects.equals(remarks, that.remarks)
-               && Objects.equals(baseType, that.baseType);
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(typeCat,
-                            typeSchem,
-                            typeName,
-                            className,
-                            dataType,
-                            remarks,
-                            baseType);
-    }
-
-    // --------------------------------------------------------------------------------------------------------- typeCat
-    public String getTypeCat() {
-        return typeCat;
-    }
-
-    public void setTypeCat(final String typeCat) {
-        this.typeCat = typeCat;
-    }
-
-    // ------------------------------------------------------------------------------------------------------- typeSchem
-    public String getTypeSchem() {
-        return typeSchem;
-    }
-
-    public void setTypeSchem(final String typeSchem) {
-        this.typeSchem = typeSchem;
-    }
-
-    // -------------------------------------------------------------------------------------------------------- typeName
-    public String getTypeName() {
-        return typeName;
-    }
-
-    public void setTypeName(final String typeName) {
-        this.typeName = typeName;
-    }
-
-    // ------------------------------------------------------------------------------------------------------- className
-    public String getClassName() {
-        return className;
-    }
-
-    public void setClassName(final String className) {
-        this.className = className;
-    }
-
-    // -------------------------------------------------------------------------------------------------------- dataType
-    public int getDataType() {
-        return dataType;
-    }
-
-    public void setDataType(final int dataType) {
-        this.dataType = dataType;
-    }
-
-    // --------------------------------------------------------------------------------------------------------- remarks
-    public String getRemarks() {
-        return remarks;
-    }
-
-    public void setRemarks(final String remarks) {
-        this.remarks = remarks;
-    }
-
-    // -------------------------------------------------------------------------------------------------------- baseType
-    public Short getBaseType() {
-        return baseType;
-    }
-
-    public void setBaseType(final Short baseType) {
-        this.baseType = baseType;
-    }
-
     // ------------------------------------------------------------------------------------------------------ attributes
-    public @NotNull List<@Valid @NotNull Attribute> getAttributes() {
+    public List<Attribute> getAttributes() {
         if (attributes == null) {
             attributes = new ArrayList<>();
         }
@@ -159,7 +62,7 @@ public class UDT implements MetadataType {
     }
 
     // ------------------------------------------------------------------------------------------------------ superTypes
-    public @NotNull List<@Valid @NotNull SuperType> getSuperTypes() {
+    public List<SuperType> getSuperTypes() {
         if (superTypes == null) {
             superTypes = new ArrayList<>();
         }
@@ -201,8 +104,16 @@ public class UDT implements MetadataType {
 
     // -----------------------------------------------------------------------------------------------------------------
     @XmlElementRef
+    @Setter(AccessLevel.NONE)
+    @Getter(AccessLevel.NONE)
+    @EqualsAndHashCode.Exclude
+    @ToString.Exclude
     private List<@Valid @NotNull Attribute> attributes;
 
     @XmlElementRef
+    @Setter(AccessLevel.NONE)
+    @Getter(AccessLevel.NONE)
+    @EqualsAndHashCode.Exclude
+    @ToString.Exclude
     private List<@Valid @NotNull SuperType> superTypes;
 }

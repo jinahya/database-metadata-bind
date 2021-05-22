@@ -55,4 +55,10 @@ class MemoryHsqlTest extends MemoryTest {
     protected Connection connect() throws SQLException {
         return getConnection(CONNECTION_URL);
     }
+
+    @Override
+    Context context(Connection connection) throws SQLException {
+        return super.context(connection)
+                ;
+    }
 }
