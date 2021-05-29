@@ -18,9 +18,9 @@ public class Metadata {
     public static Metadata newInstance(final Context context) throws SQLException {
         requireNonNull(context, "context is null");
         final Metadata instance = new Metadata();
-        instance.deletesAreDetecteds = DeletesAreDetected.getAllInstances(context);
-        instance.insertsAreDetecteds = InsertsAreDetected.getAllInstances(context);
-        instance.updatesAreDetecteds = UpdatesAreDetected.getAllInstances(context);
+        instance.deletesAreDetecteds = DeletesAreDetected.getAllInstances(context, new ArrayList<>());
+        instance.insertsAreDetecteds = InsertsAreDetected.getAllInstances(context, new ArrayList<>());
+        instance.updatesAreDetecteds = UpdatesAreDetected.getAllInstances(context, new ArrayList<>());
         instance.catalogs = context.getCatalogs(new ArrayList<>());
         if (instance.catalogs.isEmpty()) {
             instance.catalogs.add(Catalog.newVirtualInstance());
@@ -31,27 +31,27 @@ public class Metadata {
                 catalog.getSchemas().add(Schema.newVirtualInstance(catalog));
             }
             for (final Schema schema : catalog.getSchemas()) {
-                context.getFunctions(schema, null);
+                context.getFunctions(schema, null, schema.getFunctions());
                 for (final Function function : schema.getFunctions()) {
-                    context.getFunctionColumns(function, null);
+                    context.getFunctionColumns(function, null, function.getFunctionColumns());
                 }
-                context.getProcedures(schema, null);
+                context.getProcedures(schema, null, schema.getProcedures());
                 for (final Procedure procedure : schema.getProcedures()) {
-                    context.getProcedureColumns(procedure, null);
+                    context.getProcedureColumns(procedure, null, procedure.getProcedureColumns());
                 }
                 context.getTables(schema, null, null, schema.getTables());
                 for (final Table table : schema.getTables()) {
                     for (final BestRowIdentifier.Scope value : BestRowIdentifier.Scope.values()) {
-                        context.getBestRowIdentifier(table, value.getRawValue(), true);
+                        context.getBestRowIdentifier(table, value.getRawValue(), true, table.getBestRowIdentifiers());
                     }
                     context.getColumns(table, null, table.getColumns());
                     context.getColumnPrivileges(table, null, table.getColumnPrivileges());
-                    context.getIndexInfo(table, false, true);
-                    context.getPrimaryKeys(table);
-                    context.getPseudoColumns(table, null);
-                    context.getSuperTables(table);
-                    context.getTablePrivileges(table);
-                    context.getVersionColumns(table);
+                    context.getIndexInfo(table, false, true, table.getIndexInfo());
+                    context.getPrimaryKeys(table, table.getPrimaryKeys());
+                    context.getPseudoColumns(table, null, table.getPseudoColumns());
+                    context.getSuperTables(table, table.getSuperTables());
+                    context.getTablePrivileges(table, table.getTablePrivileges());
+                    context.getVersionColumns(table, table.getVersionColumns());
                 }
                 context.getUDTs(schema, null, null, schema.getUDTs());
                 for (final UDT udt : schema.getUDTs()) {

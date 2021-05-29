@@ -32,7 +32,6 @@ import java.util.Arrays;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.HashSet;
-import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
@@ -148,7 +147,7 @@ public class Context {
         return collection;
     }
 
-    // -----------------------------------------------------------------------------------------------------------------
+    // --------------------------------------------------------------------------------------------------- getAttributes
 
     /**
      * Invokes {@link DatabaseMetaData#getAttributes(java.lang.String, java.lang.String, java.lang.String,
@@ -169,6 +168,7 @@ public class Context {
                                                                      final String attributeNamePattern,
                                                                      final C collection)
             throws SQLException {
+        requireNonNull(collection, "collection is null");
         try (ResultSet results = databaseMetaData.getAttributes(
                 catalog, schemaPattern, typeNamePattern, attributeNamePattern)) {
             if (results != null) {
@@ -221,6 +221,7 @@ public class Context {
             final String catalog, final String schema, final String table, final int scope, final boolean nullable,
             final C collection)
             throws SQLException {
+        requireNonNull(collection, "collection is null");
         try (ResultSet results = databaseMetaData.getBestRowIdentifier(catalog, schema, table, scope, nullable)) {
             if (results != null) {
                 bind(results, BestRowIdentifier.class, collection);
@@ -253,24 +254,7 @@ public class Context {
                                     collection);
     }
 
-    /**
-     * Retrieves best row identifiers for specified table and adds bound values to specified collection.
-     *
-     * @param table    the table whose best row identifiers are retrieved.
-     * @param scope    a value for {@code scope} parameter.
-     * @param nullable a value for {@code nullable} parameter.
-     * @return given {@code collection}.
-     * @throws SQLException if a database error occurs.
-     * @see Table#getBestRowIdentifiers()
-     * @see #getBestRowIdentifier(Table, int, boolean, Collection)
-     */
-    public List<BestRowIdentifier> getBestRowIdentifier(final Table table, final int scope, final boolean nullable)
-            throws SQLException {
-        requireNonNull(table, "table is null");
-        return getBestRowIdentifier(table, scope, nullable, table.getBestRowIdentifiers());
-    }
-
-    // ----------------------------------------------------------------------------------------------------- catCatalogs
+    // ----------------------------------------------------------------------------------------------------- getCatalogs
 
     /**
      * Invokes {@link DatabaseMetaData#getCatalogs()} method and adds all bound values to specified collection.
@@ -281,6 +265,7 @@ public class Context {
      * @throws SQLException if a database error occurs.
      */
     public <C extends Collection<? super Catalog>> C getCatalogs(final C collection) throws SQLException {
+        requireNonNull(collection, "collection is null");
         try (ResultSet results = databaseMetaData.getCatalogs()) {
             if (results != null) {
                 bind(results, Catalog.class, collection);
@@ -305,6 +290,7 @@ public class Context {
      */
     public <C extends Collection<? super ClientInfoProperty>> C getClientInfoProperties(final C collection)
             throws SQLException {
+        requireNonNull(collection, "collection is null");
         try (ResultSet results = databaseMetaData.getClientInfoProperties()) {
             if (results != null) {
                 bind(results, ClientInfoProperty.class, collection);
@@ -336,6 +322,7 @@ public class Context {
             final String catalog, final String schema, final String table, final String columnNamePattern,
             final C collection)
             throws SQLException {
+        requireNonNull(collection, "collection is null");
         try (ResultSet results = databaseMetaData.getColumnPrivileges(catalog, schema, table, columnNamePattern)) {
             if (results != null) {
                 bind(results, ColumnPrivilege.class, collection);
@@ -384,6 +371,7 @@ public class Context {
                                                                final String tableNamePattern,
                                                                final String columnNamePattern, final C collection)
             throws SQLException {
+        requireNonNull(collection, "collection is null");
         try (ResultSet results = databaseMetaData.getColumns(
                 catalog, schemaPattern, tableNamePattern, columnNamePattern)) {
             if (results != null) {
@@ -436,9 +424,9 @@ public class Context {
      */
     public <C extends Collection<? super CrossReference>> C getCrossReference(
             final String parentCatalog, final String parentSchema, final String parentTable,
-            final String foreignCatalog, final String foreignSchema, final String foreignTable,
-            final C collection)
+            final String foreignCatalog, final String foreignSchema, final String foreignTable, final C collection)
             throws SQLException {
+        requireNonNull(collection, "collection is null");
         try (ResultSet results = databaseMetaData.getCrossReference(
                 parentCatalog, parentSchema, parentTable, foreignCatalog, foreignSchema, foreignTable)) {
             if (results != null) {
@@ -470,6 +458,7 @@ public class Context {
     public <C extends Collection<? super Function>> C getFunctions(
             final String catalog, final String schemaPattern, final String functionNamePattern, final C collection)
             throws SQLException {
+        requireNonNull(collection, "collection is null");
         try (ResultSet results = databaseMetaData.getFunctions(catalog, schemaPattern, functionNamePattern)) {
             if (results != null) {
                 bind(results, Function.class, collection);
@@ -499,21 +488,6 @@ public class Context {
         return getFunctions(schema.getTableCatalog(), schema.getTableSchem(), functionNamePattern, collection);
     }
 
-    /**
-     * Retrieves functions for specified schema and adds bound values to specified schema.
-     *
-     * @param schema              the schema whose functions are retrieved.
-     * @param functionNamePattern a value for {@code functionNamePattern} parameter.
-     * @return {@code schema.functions}.
-     * @throws SQLException if a database error occurs.
-     * @see Schema#getFunctions()
-     * @see #getFunctions(Schema, String, Collection)
-     */
-    public List<Function> getFunctions(final Schema schema, final String functionNamePattern) throws SQLException {
-        requireNonNull(schema, "schema is null");
-        return getFunctions(schema, functionNamePattern, schema.getFunctions());
-    }
-
     // --------------------------------------------------------------------------------------------- getFunctionsColumns
 
     /**
@@ -534,6 +508,7 @@ public class Context {
             final String catalog, final String schemaPattern, final String functionNamePattern,
             final String columnNamePattern, final C collection)
             throws SQLException {
+        requireNonNull(collection, "collection is null");
         try (ResultSet results = databaseMetaData.getFunctionColumns(
                 catalog, schemaPattern, functionNamePattern, columnNamePattern)) {
             if (results != null) {
@@ -567,22 +542,6 @@ public class Context {
                                   columnNamePattern, collection);
     }
 
-    /**
-     * Retrieves function columns with specified arguments and adds bound values to specified function.
-     *
-     * @param function          the function whose function columns are retrieved.
-     * @param columnNamePattern a value for {@code columnNamePattern} parameter.
-     * @return {@code function.functionColumns}.
-     * @throws SQLException if a database error occurs.
-     * @see Function#getFunctionColumns()
-     * @see #getFunctionColumns(Function, String)
-     */
-    public List<FunctionColumn> getFunctionColumns(final Function function, final String columnNamePattern)
-            throws SQLException {
-        requireNonNull(function, "function is null");
-        return getFunctionColumns(function, columnNamePattern, function.getFunctionColumns());
-    }
-
     // ------------------------------------------------------------------------------------------------- getExportedKeys
 
     /**
@@ -600,6 +559,7 @@ public class Context {
     public <C extends Collection<? super ExportedKey>> C getExportedKeys(
             final String catalog, final String schema, final String table, final C collection)
             throws SQLException {
+        requireNonNull(collection, "collection is null");
         try (ResultSet results = databaseMetaData.getExportedKeys(catalog, schema, table)) {
             if (results != null) {
                 bind(results, ExportedKey.class, collection);
@@ -611,10 +571,27 @@ public class Context {
         return collection;
     }
 
+    /**
+     * Retrieves exported keys of specified table and adds bound values to specified collection.
+     *
+     * @param table      tht table whose exported keys are retrieved.
+     * @param collection the collection to which bound values are added.
+     * @param <C>        the type of {@code collection}
+     * @return given {@code collection}.
+     * @throws SQLException if a database error occurs.
+     * @see #getExportedKeys(String, String, String, Collection)
+     */
+    public <C extends Collection<? super ExportedKey>> C getExportedKeys(final Table table, final C collection)
+            throws SQLException {
+        requireNonNull(table, "table is null");
+        return getExportedKeys(table.getTableCat(), table.getTableSchem(), table.getTableName(), collection);
+    }
+
     // ------------------------------------------------------------------------------------------------- getImportedKeys
 
     /**
-     * Retrieves imported keys with specified arguments and adds bound values to specified collection.
+     * Invokes {@link DatabaseMetaData#getImportedKeys(String, String, String)} method with given arguments and adds
+     * bound values to specified collection.
      *
      * @param catalog    a value for {@code catalog} parameter.
      * @param schema     a value for {@code schema} parameter.
@@ -628,6 +605,7 @@ public class Context {
     public <C extends Collection<? super ImportedKey>> C getImportedKeys(
             final String catalog, final String schema, final String table, final C collection)
             throws SQLException {
+        requireNonNull(collection, "collection is null");
         try (ResultSet results = databaseMetaData.getImportedKeys(catalog, schema, table)) {
             if (results != null) {
                 bind(results, ImportedKey.class, collection);
@@ -640,7 +618,7 @@ public class Context {
     }
 
     /**
-     * Retrieves imported keys with specified arguments and adds bound values to specified collection.
+     * Retrieves imported keys of specified table and adds bound values to specified collection.
      *
      * @param table      the table whose imported keys are retrieved.
      * @param collection the collection to which bound values are added.
@@ -676,6 +654,7 @@ public class Context {
             final String catalog, final String schema, final String table, final boolean unique,
             final boolean approximate, final C collection)
             throws SQLException {
+        requireNonNull(collection, "collection is null");
         try (ResultSet results = databaseMetaData.getIndexInfo(catalog, schema, table, unique, approximate)) {
             if (results != null) {
                 bind(results, IndexInfo.class, collection);
@@ -707,22 +686,6 @@ public class Context {
                             collection);
     }
 
-    /**
-     * Retrieves index info of specified table and adds bound values to specified table.
-     *
-     * @param table       the table whose index info is retrieved.
-     * @param unique      a value for {@code unique} parameter.
-     * @param approximate a value for {@code approximate} parameter.
-     * @return {@code table.indexInfo}.
-     * @throws SQLException if a database error occurs.
-     * @see #getIndexInfo(Table, boolean, boolean, Collection)
-     */
-    public List<IndexInfo> getIndexInfo(final Table table, final boolean unique, final boolean approximate)
-            throws SQLException {
-        requireNonNull(table, "table is null");
-        return getIndexInfo(table, unique, approximate, table.getIndexInfo());
-    }
-
     // -------------------------------------------------------------------------------------------------- getPrimaryKeys
 
     /**
@@ -741,6 +704,7 @@ public class Context {
     public <C extends Collection<? super PrimaryKey>> C getPrimaryKeys(
             final String catalog, final String schema, final String table, final C collection)
             throws SQLException {
+        requireNonNull(collection, "collection is null");
         try (ResultSet results = databaseMetaData.getPrimaryKeys(catalog, schema, table)) {
             if (results != null) {
                 bind(results, PrimaryKey.class, collection);
@@ -768,19 +732,6 @@ public class Context {
         return getPrimaryKeys(table.getTableCat(), table.getTableSchem(), table.getTableName(), collection);
     }
 
-    /**
-     * Retrieves primary keys of specified table adds bound values to the table.
-     *
-     * @param table the table whose primary keys are retrieved.
-     * @return {@code table.primaryKeys}.
-     * @throws SQLException if a database error occurs.
-     * @see #getPrimaryKeys(Table, Collection)
-     */
-    public List<PrimaryKey> getPrimaryKeys(final Table table) throws SQLException {
-        requireNonNull(table, "table is null");
-        return getPrimaryKeys(table, table.getPrimaryKeys());
-    }
-
     // --------------------------------------------------------------------------------------------- getProcedureColumns
 
     /**
@@ -801,6 +752,7 @@ public class Context {
             final String catalog, final String schemaPattern, final String procedureNamePattern,
             final String columnNamePattern, final C collection)
             throws SQLException {
+        requireNonNull(collection, "collection is null");
         try (ResultSet results = databaseMetaData.getProcedureColumns(
                 catalog, schemaPattern, procedureNamePattern, columnNamePattern)) {
             if (results != null) {
@@ -833,22 +785,6 @@ public class Context {
                                    procedure.getProcedureName(), columnNamePattern, collection);
     }
 
-    /**
-     * Retrieves procedure columns of specified procedure and adds values to specified procedure.
-     *
-     * @param procedure         the procedure whose procedure columns are retrieved.
-     * @param columnNamePattern a value for {@code columnNamePattern} parameter.
-     * @return {@code procedure.procedureColumns}.
-     * @throws SQLException if a database error occurs.
-     * @see Procedure#getProcedureColumns()
-     * @see #getProcedureColumns(Procedure, String, Collection)
-     */
-    public List<ProcedureColumn> getProcedureColumns(final Procedure procedure, final String columnNamePattern)
-            throws SQLException {
-        requireNonNull(procedure, "procedure is null");
-        return getProcedureColumns(procedure, columnNamePattern, procedure.getProcedureColumns());
-    }
-
     // --------------------------------------------------------------------------------------------------- getProcedures
 
     /**
@@ -869,6 +805,7 @@ public class Context {
                                                                      final String procedureNamePattern,
                                                                      final C collection)
             throws SQLException {
+        requireNonNull(collection, "collection is null");
         try (ResultSet results = databaseMetaData.getProcedures(catalog, schemaPattern, procedureNamePattern)) {
             if (results != null) {
                 bind(results, Procedure.class, collection);
@@ -899,21 +836,6 @@ public class Context {
         return getProcedures(schema.getTableCatalog(), schema.getTableSchem(), procedureNamePattern, collection);
     }
 
-    /**
-     * Retrieves procedures of specified schema and adds bounds values to the schema.
-     *
-     * @param schema               the schema whose procedures are retrieved.
-     * @param procedureNamePattern a value for {@code procedureNamePattern} parameter.
-     * @return {@code schema.procedures}.
-     * @throws SQLException if a database error occurs.
-     * @see Schema#getProcedures()
-     * @see #getProcedures(Schema, String, Collection)
-     */
-    public List<Procedure> getProcedures(final Schema schema, final String procedureNamePattern) throws SQLException {
-        requireNonNull(schema, "schema is null");
-        return getProcedures(schema, procedureNamePattern, schema.getProcedures());
-    }
-
     // ------------------------------------------------------------------------------------------------ getPseudoColumns
 
     /**
@@ -934,6 +856,7 @@ public class Context {
             final String catalog, final String schemaPattern, final String tableNamePattern,
             final String columnNamePattern, final C collection)
             throws SQLException {
+        requireNonNull(collection, "collection is null");
         try (ResultSet results = databaseMetaData.getPseudoColumns(
                 catalog, schemaPattern, tableNamePattern, columnNamePattern)) {
             if (results != null) {
@@ -966,21 +889,6 @@ public class Context {
                                 collection);
     }
 
-    /**
-     * Retrieves pseudo columns of specified table and adds bound values to specified table.
-     *
-     * @param table             the table whose pseudo columns are retrieved.
-     * @param columnNamePattern a value for {@code columnNamePattern} parameter.
-     * @return {@code table.pseudoColumns}.
-     * @throws SQLException if a database error occurs.
-     * @see Table#getPseudoColumns()
-     * @see #getPseudoColumns(Table, String, Collection)
-     */
-    public List<PseudoColumn> getPseudoColumns(final Table table, final String columnNamePattern) throws SQLException {
-        requireNonNull(table, "table is null");
-        return getPseudoColumns(table, columnNamePattern, table.getPseudoColumns());
-    }
-
     // ------------------------------------------------------------------------------------------------------ getSchemas
 
     /**
@@ -993,6 +901,7 @@ public class Context {
      * @see DatabaseMetaData#getSchemas()
      */
     public <C extends Collection<? super SchemaName>> C getSchemas(final C collection) throws SQLException {
+        requireNonNull(collection, "collection is null");
         try (ResultSet results = databaseMetaData.getSchemas()) {
             if (results != null) {
                 bind(results, SchemaName.class, collection);
@@ -1021,6 +930,7 @@ public class Context {
     public <C extends Collection<? super Schema>> C getSchemas(final String catalog, final String schemaPattern,
                                                                final C collection)
             throws SQLException {
+        requireNonNull(collection, "collection is null");
         try (ResultSet results = databaseMetaData.getSchemas(catalog, schemaPattern)) {
             if (results != null) {
                 bind(results, Schema.class, collection);
@@ -1050,21 +960,6 @@ public class Context {
         return getSchemas(catalog.getTableCat(), schemaPattern, collection);
     }
 
-    /**
-     * Retrieves schemas of specified catalog and adds bounds values to specified schema.
-     *
-     * @param catalog       the catalog whose schemas are retrieved.
-     * @param schemaPattern a value for {@code schemaPattern} parameter.
-     * @return {@code catalog.schemas}.
-     * @throws SQLException if a database error occurs.
-     * @see Catalog#getSchemas()
-     * @see #getSchemas(Catalog, String, Collection)
-     */
-    public List<Schema> getSchemas(final Catalog catalog, final String schemaPattern) throws SQLException {
-        requireNonNull(catalog, "catalog is null");
-        return getSchemas(catalog, schemaPattern, catalog.getSchemas());
-    }
-
     // -------------------------------------------------------------------------------------------------- getSuperTables
 
     /**
@@ -1082,6 +977,7 @@ public class Context {
     public <C extends Collection<? super SuperTable>> C getSuperTables(
             final String catalog, final String schemaPattern, final String tableNamePattern, final C collection)
             throws SQLException {
+        requireNonNull(collection, "collection is null");
         try (ResultSet results = databaseMetaData.getSuperTables(catalog, schemaPattern, tableNamePattern)) {
             if (results != null) {
                 bind(results, SuperTable.class, collection);
@@ -1109,20 +1005,6 @@ public class Context {
         return getSuperTables(table.getTableCat(), table.getTableSchem(), table.getTableName(), collection);
     }
 
-    /**
-     * Retrieves super tables of specified table and adds bounds values to specified table.
-     *
-     * @param table the table whose super tables are retrieved.
-     * @return {@code table.superTable}.
-     * @throws SQLException if a database error occurs.
-     * @see Table#getSuperTables()
-     * @see #getSuperTables(Table, Collection)
-     */
-    public List<SuperTable> getSuperTables(final Table table) throws SQLException {
-        requireNonNull(table, "table is null");
-        return getSuperTables(table, table.getSuperTables());
-    }
-
     // --------------------------------------------------------------------------------------------------- getSuperTypes
 
     /**
@@ -1140,6 +1022,7 @@ public class Context {
     public <C extends Collection<? super SuperType>> C getSuperTypes(final String catalog, final String schemaPattern,
                                                                      final String typeNamePattern, final C collection)
             throws SQLException {
+        requireNonNull(collection, "collection is null");
         try (ResultSet results = databaseMetaData.getSuperTypes(catalog, schemaPattern, typeNamePattern)) {
             if (results != null) {
                 bind(results, SuperType.class, collection);
@@ -1167,20 +1050,6 @@ public class Context {
         return getSuperTypes(udt.getTypeCat(), udt.getTypeSchem(), udt.getTypeName(), collection);
     }
 
-    /**
-     * Retrieves super types of specified user-defined type and adds bound values to specified user-defined type.
-     *
-     * @param udt the user-defined type whose supertypes are retrieved.
-     * @return {@code udt.superTypes}.
-     * @throws SQLException if a database error occurs.
-     * @see UDT#getSuperTypes()
-     * @see #getSuperTypes(UDT, Collection)
-     */
-    public List<SuperType> getSuperTypes(final UDT udt) throws SQLException {
-        requireNonNull(udt, "udt is null");
-        return getSuperTypes(udt, udt.getSuperTypes());
-    }
-
     // ---------------------------------------------------------------------------------------------- getTablePrivileges
 
     /**
@@ -1198,6 +1067,7 @@ public class Context {
     public <C extends Collection<? super TablePrivilege>> C getTablePrivileges(
             final String catalog, final String schemaPattern, final String tableNamePattern, final C collection)
             throws SQLException {
+        requireNonNull(collection, "collection is null");
         try (ResultSet results = databaseMetaData.getTablePrivileges(catalog, schemaPattern, tableNamePattern)) {
             if (results != null) {
                 bind(results, TablePrivilege.class, collection);
@@ -1224,18 +1094,6 @@ public class Context {
         return getTablePrivileges(table.getTableCat(), table.getTableSchem(), table.getTableName(), collection);
     }
 
-    /**
-     * Retrieves table privileges of specified table and adds bound values to specified table.
-     *
-     * @param table a value for {@code catalog} parameter.
-     * @return {@code table.tablePrivileges}.
-     * @throws SQLException if a database error occurs.
-     */
-    public List<TablePrivilege> getTablePrivileges(final Table table) throws SQLException {
-        requireNonNull(table, "table is null");
-        return getTablePrivileges(table, table.getTablePrivileges());
-    }
-
     // --------------------------------------------------------------------------------------------------- getTableTypes
 
     /**
@@ -1247,6 +1105,7 @@ public class Context {
      * @throws SQLException if a database error occurs.
      */
     public <C extends Collection<? super TableType>> C getTableTypes(final C collection) throws SQLException {
+        requireNonNull(collection, "collection is null");
         try (ResultSet results = databaseMetaData.getTableTypes()) {
             if (results != null) {
                 bind(results, TableType.class, collection);
@@ -1278,6 +1137,7 @@ public class Context {
                                                              final String tableNamePattern, final String[] types,
                                                              final C collection)
             throws SQLException {
+        requireNonNull(collection, "collection is null");
         try (ResultSet results = databaseMetaData.getTables(catalog, schemaPattern, tableNamePattern, types)) {
             if (results != null) {
                 bind(results, Table.class, collection);
@@ -1309,23 +1169,6 @@ public class Context {
         return getTables(schema.getTableCatalog(), schema.getTableSchem(), tableNamePattern, types, collection);
     }
 
-    /**
-     * Retrieves tables of specified schema and adds all bound values to specified schema.
-     *
-     * @param schema           the schema whose tables are retrieved.
-     * @param tableNamePattern a value for {@code tableNamePattern} parameter.
-     * @param types            a value for {@code types} parameter.
-     * @return {@code schema.tables}.
-     * @throws SQLException if a database error occurs.
-     * @see Schema#getTables()
-     * @see #getTables(Schema, String, String[], Collection)
-     */
-    public List<Table> getTables(final Schema schema, final String tableNamePattern, final String[] types)
-            throws SQLException {
-        requireNonNull(schema, "schema is null");
-        return getTables(schema, tableNamePattern, types, schema.getTables());
-    }
-
     // ----------------------------------------------------------------------------------------------------- getTypeInfo
 
     /**
@@ -1338,6 +1181,7 @@ public class Context {
      */
     public <C extends Collection<? super TypeInfo>> C getTypeInfo(final C collection)
             throws SQLException {
+        requireNonNull(collection, "collection is null");
         try (ResultSet results = databaseMetaData.getTypeInfo()) {
             if (results != null) {
                 bind(results, TypeInfo.class, collection);
@@ -1371,6 +1215,7 @@ public class Context {
                                                          final String typeNamePattern, final int[] types,
                                                          final C collection)
             throws SQLException {
+        requireNonNull(collection, "collection is null");
         try (ResultSet results = databaseMetaData.getUDTs(catalog, schemaPattern, typeNamePattern, types)) {
             if (results != null) {
                 bind(results, UDT.class, collection);
@@ -1402,23 +1247,6 @@ public class Context {
         return getUDTs(schema.getTableCatalog(), schema.getTableSchem(), typeNamePattern, types, collection);
     }
 
-    /**
-     * Retrieves type info of specified schema and adds all bound values to specified schema.
-     *
-     * @param schema          the schema whose type info is retrieved.
-     * @param typeNamePattern a value for {@code typeNamePattern} parameter.
-     * @param types           a value for {@code type} parameter
-     * @return {@code schema.UDTs}.
-     * @throws SQLException if a database error occurs.
-     * @see Schema#getUDTs()
-     * @see #getUDTs(Schema, String, int[], Collection)
-     */
-    public List<UDT> getUDTs(final Schema schema, final String typeNamePattern, final int[] types)
-            throws SQLException {
-        requireNonNull(schema, "schema is null");
-        return getUDTs(schema, typeNamePattern, types, schema.getUDTs());
-    }
-
     // ----------------------------------------------------------------------------------------------- getVersionColumns
 
     /**
@@ -1436,6 +1264,7 @@ public class Context {
     public <C extends Collection<? super VersionColumn>> C getVersionColumns(
             final String catalog, final String schema, final String table, final C collection)
             throws SQLException {
+        requireNonNull(collection, "collection is null");
         try (ResultSet results = databaseMetaData.getVersionColumns(catalog, schema, table)) {
             if (results != null) {
                 bind(results, VersionColumn.class, collection);
@@ -1463,20 +1292,6 @@ public class Context {
         return getVersionColumns(table.getTableCat(), table.getTableSchem(), table.getTableName(), collection);
     }
 
-    /**
-     * Retrieves version columns of specified table and adds bound values to specified table.
-     *
-     * @param table a value for {@code catalog} parameter.
-     * @return {@code table.versionColumns}.
-     * @throws SQLException if a database access error occurs.
-     * @see Table#getVersionColumns()
-     * @see #getVersionColumns(Table, Collection)
-     */
-    public List<VersionColumn> getVersionColumns(final Table table) throws SQLException {
-        requireNonNull(table, "table is null");
-        return getVersionColumns(table, table.getVersionColumns());
-    }
-
     // ---------------------------------------------------------------------------------------------- deletesAreDetected
 
     /**
@@ -1485,6 +1300,7 @@ public class Context {
      * @param type a value for {@code type} parameter.
      * @return given {@code collection}.
      * @throws SQLException if a database access error occurs.
+     * @see DeletesAreDetected#getAllInstances(Context, Collection)
      */
     public DeletesAreDetected deletesAreDetected(final int type) throws SQLException {
         final DeletesAreDetected value = new DeletesAreDetected();
@@ -1506,6 +1322,7 @@ public class Context {
      * @param type a value for {@code type} parameter.
      * @return given {@code collection}.
      * @throws SQLException if a database access error occurs.
+     * @see InsertsAreDetected#getAllInstances(Context, Collection)
      */
     public InsertsAreDetected insertsAreDetected(final int type) throws SQLException {
         final InsertsAreDetected value = new InsertsAreDetected();
@@ -1528,6 +1345,7 @@ public class Context {
      * @param type a value for {@code type} parameter.
      * @return a bound value.
      * @throws SQLException if a database access error occurs.
+     * @see UpdatesAreDetected#getAllInstances(Context, Collection)
      */
     public UpdatesAreDetected updatesAreDetected(final int type) throws SQLException {
         final UpdatesAreDetected value = new UpdatesAreDetected();
@@ -1550,10 +1368,7 @@ public class Context {
      * @param type a value for {@code type} parameter.
      * @return a bound value whose {@code value} property may be {@code null} when the {@link SQLException} suppressed.
      * @throws SQLException if a database access error occurs.
-     * @see DatabaseMetaData#othersDeletesAreVisible(int)
-     * @see ResultSet#TYPE_FORWARD_ONLY
-     * @see ResultSet#TYPE_SCROLL_INSENSITIVE
-     * @see ResultSet#TYPE_SCROLL_SENSITIVE
+     * @see OthersDeletesAreVisible#getAllInstances(Context, Collection)
      */
     public OthersDeletesAreVisible othersDeletesAreVisible(final int type) throws SQLException {
         final OthersDeletesAreVisible result = new OthersDeletesAreVisible();
@@ -1576,10 +1391,7 @@ public class Context {
      * @param type a value for {@code type} parameter.
      * @return a bound value whose {@code value} property may be {@code null} when the {@link SQLException} suppressed.
      * @throws SQLException if a database access error occurs.
-     * @see DatabaseMetaData#othersInsertsAreVisible(int)
-     * @see ResultSet#TYPE_FORWARD_ONLY
-     * @see ResultSet#TYPE_SCROLL_INSENSITIVE
-     * @see ResultSet#TYPE_SCROLL_SENSITIVE
+     * @see OthersInsertsAreVisible#getAllInstances(Context, Collection)
      */
     public OthersInsertsAreVisible othersInsertsAreVisible(final int type) throws SQLException {
         final OthersInsertsAreVisible result = new OthersInsertsAreVisible();
@@ -1602,10 +1414,7 @@ public class Context {
      * @param type a value for {@code type} parameter.
      * @return a bound value whose {@code value} property may be {@code null} when the {@link SQLException} suppressed.
      * @throws SQLException if a database access error occurs.
-     * @see DatabaseMetaData#othersUpdatesAreVisible(int)
-     * @see ResultSet#TYPE_FORWARD_ONLY
-     * @see ResultSet#TYPE_SCROLL_INSENSITIVE
-     * @see ResultSet#TYPE_SCROLL_SENSITIVE
+     * @see OthersUpdatesAreVisible#getAllInstances(Context, Collection)
      */
     public OthersUpdatesAreVisible othersUpdatesAreVisible(final int type) throws SQLException {
         final OthersUpdatesAreVisible result = new OthersUpdatesAreVisible();

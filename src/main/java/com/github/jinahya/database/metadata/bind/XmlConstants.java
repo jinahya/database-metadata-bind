@@ -34,7 +34,7 @@ public final class XmlConstants {
      */
     public static final String NS_URI_DATABASE_METADATA_BIND = "http://github.com/jinahya/database/metadata/bind";
 
-    static final String NS_PREFIX_DATABASE_MEATDATA_BIND = "m";
+    static final String NS_PREFIX_DATABASE_MEATDATA_BIND = "dmb";
 
     // -----------------------------------------------------------------------------------------------------------------
 
@@ -42,6 +42,6 @@ public final class XmlConstants {
      * Creates a new instance.
      */
     private XmlConstants() {
-        super();
+        throw new AssertionError("instantiation is not allowed");
     }
 }

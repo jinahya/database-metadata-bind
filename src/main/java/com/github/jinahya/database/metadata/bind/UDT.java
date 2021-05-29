@@ -45,11 +45,13 @@ import java.util.List;
  * @see Context#getUDTs(String, String, String, int[], Collection)
  */
 @XmlRootElement
+@ChildOf(Schema.class)
+@ParentOf(Attribute.class)
+@ParentOf(SuperType.class)
 @Data
 @NoArgsConstructor
 public class UDT
-        implements MetadataType,
-                   ChildOf<Schema> {
+        implements MetadataType {
 
     private static final long serialVersionUID = 8665246093405057553L;
 

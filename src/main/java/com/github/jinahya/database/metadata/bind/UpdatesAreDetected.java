@@ -23,8 +23,7 @@ package com.github.jinahya.database.metadata.bind;
 import javax.xml.bind.annotation.XmlRootElement;
 import java.sql.DatabaseMetaData;
 import java.sql.SQLException;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.Collection;
 
 import static java.util.Objects.requireNonNull;
 
@@ -40,19 +39,22 @@ public class UpdatesAreDetected extends AreDetected {
     private static final long serialVersionUID = -7538643762491010895L;
 
     /**
-     * Invokes {@link Context#updatesAreDetected(int)} for all types defined in {@link java.sql.ResultSet} and returns
-     * bound values.
+     * Invokes {@link Context#updatesAreDetected(int)} for all types defined in {@link java.sql.ResultSet} and adds all
+     * bound values to specified collection.
      *
-     * @param context a context.
-     * @return a list of bound values.
+     * @param context    a context.
+     * @param collection the collection to which bound values are added.
+     * @param <C>        type of {@code collection}
+     * @return given {@code collection}.
      * @throws SQLException if a database access error occurs.
      */
-    public static List<UpdatesAreDetected> getAllInstances(final Context context) throws SQLException {
+    public static <C extends Collection<? super UpdatesAreDetected>> C getAllInstances(
+            final Context context, final C collection)
+            throws SQLException {
         requireNonNull(context, "context is null");
-        final List<UpdatesAreDetected> all = new ArrayList<>();
         for (final ResultSetType type : ResultSetType.values()) {
-            all.add(context.updatesAreDetected(type.getRawValue()));
+            collection.add(context.updatesAreDetected(type.getRawValue()));
         }
-        return all;
+        return collection;
     }
 }

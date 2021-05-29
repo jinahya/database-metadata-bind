@@ -48,11 +48,15 @@ import java.util.List;
  * @see Context#getSchemas(String, String, Collection)
  */
 @XmlRootElement
+@ChildOf(Catalog.class)
+@ParentOf(Function.class)
+@ParentOf(Procedure.class)
+@ParentOf(Table.class)
+@ParentOf(UDT.class)
 @Data
 @NoArgsConstructor
 public class Schema
-        implements MetadataType,
-                   ChildOf<Catalog> {
+        implements MetadataType {
 
     private static final long serialVersionUID = 7457236468401244963L;
 

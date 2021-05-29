@@ -25,9 +25,7 @@ import lombok.NoArgsConstructor;
 import javax.xml.bind.annotation.XmlRootElement;
 import java.sql.DatabaseMetaData;
 import java.sql.SQLException;
-import java.util.ArrayList;
 import java.util.Collection;
-import java.util.List;
 
 import static java.util.Objects.requireNonNull;
 
@@ -56,26 +54,13 @@ public class DeletesAreDetected
      * @see ResultSetType
      * @see Context#insertsAreDetected(int)
      */
-    public static <C extends Collection<? super DeletesAreDetected>> C getAllInstances(
-            final Context context, final C collection)
+    public static <C extends Collection<? super DeletesAreDetected>> C getAllInstances(final Context context,
+                                                                                       final C collection)
             throws SQLException {
         requireNonNull(context, "context is null");
         for (final ResultSetType type : ResultSetType.values()) {
             collection.add(context.deletesAreDetected(type.getRawValue()));
         }
         return collection;
-    }
-
-    /**
-     * Retrieves values for all constants defined in {@link ResultSetType}.
-     *
-     * @param context a context.
-     * @return a list of bound values.
-     * @throws SQLException if a database access error occurs.
-     * @see ResultSetType
-     * @see Context#insertsAreDetected(int)
-     */
-    public static List<DeletesAreDetected> getAllInstances(final Context context) throws SQLException {
-        return getAllInstances(context, new ArrayList<>());
     }
 }

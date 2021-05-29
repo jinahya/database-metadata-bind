@@ -47,10 +47,12 @@ import java.util.List;
  * @see Context#getCatalogs(Collection)
  */
 @XmlRootElement
+@ParentOf(Schema.class)
 @Data
 @NoArgsConstructor
 @Slf4j
-public class Catalog implements MetadataType {
+public class Catalog
+        implements MetadataType {
 
     private static final long serialVersionUID = 6239185259128825953L;
 

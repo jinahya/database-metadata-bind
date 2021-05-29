@@ -39,8 +39,7 @@ import java.util.Collection;
 @Data
 @NoArgsConstructor
 public class SuperType
-        implements MetadataType,
-                   ChildOf<UDT> {
+        implements MetadataType {
 
     private static final long serialVersionUID = 4603878785941565029L;
 

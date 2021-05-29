@@ -49,7 +49,7 @@ final class ContextTestUtils {
 
     static void writeDeletesAreDetected(final Context context) throws SQLException, JAXBException {
         requireNonNull(context, "context is null");
-        final List<DeletesAreDetected> all = DeletesAreDetected.getAllInstances(context);
+        final List<DeletesAreDetected> all = DeletesAreDetected.getAllInstances(context, new ArrayList<>());
         assertThat(all)
                 .hasSizeLessThanOrEqualTo(ResultSetType.values().length)
                 .doesNotContainNull();
@@ -59,7 +59,7 @@ final class ContextTestUtils {
     }
 
     static void writeInsertsAreDetected(final Context context) throws SQLException, JAXBException {
-        final List<InsertsAreDetected> all = InsertsAreDetected.getAllInstances(context);
+        final List<InsertsAreDetected> all = InsertsAreDetected.getAllInstances(context, new ArrayList<>());
         assertThat(all)
                 .hasSizeLessThanOrEqualTo(ResultSetType.values().length)
                 .doesNotContainNull();
@@ -69,7 +69,7 @@ final class ContextTestUtils {
     }
 
     static void writeOthersDeletesAreVisible(final Context context) throws SQLException, JAXBException {
-        final List<OthersDeletesAreVisible> all = OthersDeletesAreVisible.getAllInstances(context);
+        final List<OthersDeletesAreVisible> all = OthersDeletesAreVisible.getAllInstances(context, new ArrayList<>());
         assertThat(all)
                 .doesNotContainNull()
                 .hasSizeLessThanOrEqualTo(ResultSetType.values().length);
@@ -79,7 +79,7 @@ final class ContextTestUtils {
     }
 
     static void writeOthersInsertsAreVisible(final Context context) throws SQLException, JAXBException {
-        final List<OthersInsertsAreVisible> all = OthersInsertsAreVisible.getAllInstances(context);
+        final List<OthersInsertsAreVisible> all = OthersInsertsAreVisible.getAllInstances(context, new ArrayList<>());
         assertThat(all)
                 .doesNotContainNull()
                 .hasSizeLessThanOrEqualTo(ResultSetType.values().length);
@@ -89,7 +89,7 @@ final class ContextTestUtils {
     }
 
     static void writeOthersUpdatesAreVisible(final Context context) throws SQLException, JAXBException {
-        final List<OthersUpdatesAreVisible> all = OthersUpdatesAreVisible.getAllInstances(context);
+        final List<OthersUpdatesAreVisible> all = OthersUpdatesAreVisible.getAllInstances(context, new ArrayList<>());
         assertThat(all)
                 .doesNotContainNull()
                 .hasSizeLessThanOrEqualTo(ResultSetType.values().length);
@@ -160,7 +160,7 @@ final class ContextTestUtils {
     }
 
     static void writeUpdatesAreDetected(final Context context) throws SQLException, JAXBException {
-        final List<UpdatesAreDetected> all = UpdatesAreDetected.getAllInstances(context);
+        final List<UpdatesAreDetected> all = UpdatesAreDetected.getAllInstances(context, new ArrayList<>());
         assertThat(all)
                 .hasSizeLessThanOrEqualTo(ResultSetType.values().length)
                 .doesNotContainNull();

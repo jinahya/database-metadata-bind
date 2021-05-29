@@ -33,11 +33,11 @@ import javax.xml.bind.annotation.XmlRootElement;
  * @author Jin Kwon &lt;jinahya_at_gmail.com&gt;
  */
 @XmlRootElement
+@ChildOf(Table.class)
 @Data
 @NoArgsConstructor
 public class TablePrivilege
-        implements MetadataType,
-                   ChildOf<Table> {
+        implements MetadataType {
 
     private static final long serialVersionUID = -1799954363648972203L;
 

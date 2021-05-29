@@ -35,11 +35,11 @@ import java.util.Collection;
  * @see Context#getVersionColumns(String, String, String, Collection)
  */
 @XmlRootElement
+@ChildOf(Table.class)
 @Data
 @NoArgsConstructor
 public class VersionColumn
-        implements MetadataType,
-                   ChildOf<Table> {
+        implements MetadataType {
 
     private static final long serialVersionUID = 3587959398829593292L;
 

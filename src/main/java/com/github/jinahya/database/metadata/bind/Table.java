@@ -21,10 +21,8 @@ package com.github.jinahya.database.metadata.bind;
  */
 
 import lombok.AccessLevel;
-import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
-import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
 
@@ -43,16 +41,20 @@ import java.util.List;
  *
  * @author Jin Kwon &lt;jinahya_at_gmail.com&gt;
  * @see Context#getTables(String, String, String, String[], Collection)
- * @see Context#getPrimaryKeys(Table)
- * @see Context#getPseudoColumns(Table, String)
- * @see Context#getTablePrivileges(Table)
  */
 @XmlRootElement
-@Data
-@NoArgsConstructor
+@ChildOf(Schema.class)
+@ParentOf(BestRowIdentifier.class)
+@ParentOf(Column.class)
+@ParentOf(ColumnPrivilege.class)
+@ParentOf(IndexInfo.class)
+@ParentOf(PrimaryKey.class)
+@ParentOf(PseudoColumn.class)
+@ParentOf(SuperTable.class)
+@ParentOf(TablePrivilege.class)
+@ParentOf(VersionColumn.class)
 public class Table
-        implements MetadataType,
-                   ChildOf<Schema> {
+        implements MetadataType {
 
     private static final long serialVersionUID = 6590036695540141125L;
 
@@ -70,6 +72,123 @@ public class Table
     public static final String COLUMN_LABEL_TABLE_NAME = "TABLE_NAME";
 
     public static final String ATTRIBUTE_NAME_TABLE_NAME = "tableName";
+
+    // -----------------------------------------------------------------------------------------------------------------
+
+    /**
+     * Creates a new instance.
+     */
+    public Table() {
+        super();
+    }
+
+    // -----------------------------------------------------------------------------------------------------------------
+    @Override
+    public String toString() {
+        return super.toString() + '{'
+               + "tableCat=" + tableCat
+               + ",tableSchem=" + tableSchem
+               + ",tableName=" + tableName
+               + ",tableType=" + tableType
+               + ",remarks=" + remarks
+               + ",typeCat=" + typeCat
+               + ",typeSchem=" + typeSchem
+               + ",typeName=" + typeName
+               + ",selfReferencingColName=" + selfReferencingColName
+               + ",refGeneration=" + refGeneration
+               + ",bestRowIdentifiers=" + bestRowIdentifiers
+               + ",columns=" + columns
+               + ",columnPrivileges=" + columnPrivileges
+               + ",indexInfo=" + indexInfo
+               + ",primaryKeys=" + primaryKeys
+               + ",pseudoColumns=" + pseudoColumns
+               + ",superTables=" + superTables
+               + ",tablePrivileges=" + tablePrivileges
+               + ",versionColumns=" + versionColumns
+               + '}';
+    }
+
+    // -----------------------------------------------------------------------------------------------------------------
+
+    public String getTableCat() {
+        return tableCat;
+    }
+
+    public void setTableCat(final String tableCat) {
+        this.tableCat = tableCat;
+    }
+
+    public String getTableSchem() {
+        return tableSchem;
+    }
+
+    public void setTableSchem(final String tableSchem) {
+        this.tableSchem = tableSchem;
+    }
+
+    public String getTableName() {
+        return tableName;
+    }
+
+    public void setTableName(final String tableName) {
+        this.tableName = tableName;
+    }
+
+    public String getTableType() {
+        return tableType;
+    }
+
+    public void setTableType(final String tableType) {
+        this.tableType = tableType;
+    }
+
+    public String getRemarks() {
+        return remarks;
+    }
+
+    public void setRemarks(final String remarks) {
+        this.remarks = remarks;
+    }
+
+    public String getTypeCat() {
+        return typeCat;
+    }
+
+    public void setTypeCat(final String typeCat) {
+        this.typeCat = typeCat;
+    }
+
+    public String getTypeSchem() {
+        return typeSchem;
+    }
+
+    public void setTypeSchem(final String typeSchem) {
+        this.typeSchem = typeSchem;
+    }
+
+    public String getTypeName() {
+        return typeName;
+    }
+
+    public void setTypeName(final String typeName) {
+        this.typeName = typeName;
+    }
+
+    public String getSelfReferencingColName() {
+        return selfReferencingColName;
+    }
+
+    public void setSelfReferencingColName(final String selfReferencingColName) {
+        this.selfReferencingColName = selfReferencingColName;
+    }
+
+    public String getRefGeneration() {
+        return refGeneration;
+    }
+
+    public void setRefGeneration(final String refGeneration) {
+        this.refGeneration = refGeneration;
+    }
 
     // ---------------------------------------------------------------------------------------------- bestRowIdentifiers
     public List<BestRowIdentifier> getBestRowIdentifiers() {

@@ -24,8 +24,7 @@ import lombok.NoArgsConstructor;
 
 import javax.xml.bind.annotation.XmlRootElement;
 import java.sql.SQLException;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.Collection;
 
 import static java.util.Objects.requireNonNull;
 
@@ -44,18 +43,22 @@ public class OthersInsertsAreVisible
 
     /**
      * Invokes {@link Context#othersInsertsAreVisible(int)} method for all types defined in {@link java.sql.ResultSet}
-     * and returns bound values.
+     * and adds bound values to specified collection.
      *
-     * @param context a context.
-     * @return a list of bound values.
+     * @param context    a context.
+     * @param collection the collection to which bound values are added.
+     * @param <C>        the type of {@code collection}
+     * @return given {@code collection}.
      * @throws SQLException if a database access error occurs.
      */
-    public static List<OthersInsertsAreVisible> getAllInstances(final Context context) throws SQLException {
+    public static <C extends Collection<? super OthersInsertsAreVisible>> C getAllInstances(final Context context,
+                                                                                            final C collection)
+            throws SQLException {
         requireNonNull(context, "databaseMetaData is null");
-        final List<OthersInsertsAreVisible> all = new ArrayList<>();
+        requireNonNull(collection, "collection is null");
         for (final ResultSetType type : ResultSetType.values()) {
-            all.add(context.othersInsertsAreVisible(type.getRawValue()));
+            collection.add(context.othersInsertsAreVisible(type.getRawValue()));
         }
-        return all;
+        return collection;
     }
 }

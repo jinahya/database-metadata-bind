@@ -38,11 +38,11 @@ import static java.util.Objects.requireNonNull;
  * @see Context#getFunctionColumns(String, String, String, String, Collection)
  */
 @XmlRootElement
+@ChildOf(Function.class)
 @Data
 @NoArgsConstructor
 public class FunctionColumn
-        implements MetadataType,
-                   ChildOf<Function> {
+        implements MetadataType {
 
     private static final long serialVersionUID = -7445156446214062680L;
 

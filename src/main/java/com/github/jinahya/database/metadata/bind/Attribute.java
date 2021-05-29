@@ -20,10 +20,6 @@ package com.github.jinahya.database.metadata.bind;
  * #L%
  */
 
-import lombok.Data;
-import lombok.NoArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
-
 import javax.validation.constraints.NotBlank;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
@@ -35,14 +31,12 @@ import java.util.Collection;
  *
  * @author Jin Kwon &lt;jinahya_at_gmail.com&gt;
  * @see Context#getAttributes(String, String, String, String, Collection)
+ * @see Context#getAttributes(UDT, String, Collection)
  */
 @XmlRootElement
-@Data
-@NoArgsConstructor
-@Slf4j
+@ChildOf(UDT.class)
 public class Attribute
-        implements MetadataType,
-                   ChildOf<UDT> {
+        implements MetadataType {
 
     private static final long serialVersionUID = 5020389308460154799L;
 
@@ -88,6 +82,213 @@ public class Attribute
         }
 
         private final int rawValue;
+    }
+
+    // -----------------------------------------------------------------------------------------------------------------
+
+    /**
+     * Creates a new instance.
+     */
+    public Attribute() {
+        super();
+    }
+
+    // -----------------------------------------------------------------------------------------------------------------
+    @Override
+    public String toString() {
+        return super.toString() + '{'
+               + "typeCat=" + typeCat
+               + ",typeSchem=" + typeSchem
+               + ",typeName=" + typeName
+               + ",attrName=" + attrName
+               + ",dataType=" + dataType
+               + ",attrTypeName=" + attrTypeName
+               + ",attrSize=" + attrSize
+               + ",decimalDigits=" + decimalDigits
+               + ",numPrecRadix=" + numPrecRadix
+               + ",nullable=" + nullable
+               + ",remarks=" + remarks
+               + ",attrDef=" + attrDef
+               + ",sqlDataType=" + sqlDataType
+               + ",sqlDatetimeSub=" + sqlDatetimeSub
+               + ",charOctetLength=" + charOctetLength
+               + ",ordinalPosition=" + ordinalPosition
+               + ",isNullable=" + isNullable
+               + ",scopeCatalog=" + scopeCatalog
+               + ",scopeSchema=" + scopeSchema
+               + ",scopeTable=" + scopeTable
+               + ",sourceDataType=" + sourceDataType
+               + '}';
+    }
+
+    // -----------------------------------------------------------------------------------------------------------------
+
+    public String getTypeCat() {
+        return typeCat;
+    }
+
+    public void setTypeCat(final String typeCat) {
+        this.typeCat = typeCat;
+    }
+
+    public String getTypeSchem() {
+        return typeSchem;
+    }
+
+    public void setTypeSchem(final String typeSchem) {
+        this.typeSchem = typeSchem;
+    }
+
+    public String getTypeName() {
+        return typeName;
+    }
+
+    public void setTypeName(final String typeName) {
+        this.typeName = typeName;
+    }
+
+    public String getAttrName() {
+        return attrName;
+    }
+
+    public void setAttrName(final String attrName) {
+        this.attrName = attrName;
+    }
+
+    public int getDataType() {
+        return dataType;
+    }
+
+    public void setDataType(final int dataType) {
+        this.dataType = dataType;
+    }
+
+    public String getAttrTypeName() {
+        return attrTypeName;
+    }
+
+    public void setAttrTypeName(final String attrTypeName) {
+        this.attrTypeName = attrTypeName;
+    }
+
+    public int getAttrSize() {
+        return attrSize;
+    }
+
+    public void setAttrSize(final int attrSize) {
+        this.attrSize = attrSize;
+    }
+
+    public Integer getDecimalDigits() {
+        return decimalDigits;
+    }
+
+    public void setDecimalDigits(final Integer decimalDigits) {
+        this.decimalDigits = decimalDigits;
+    }
+
+    public int getNumPrecRadix() {
+        return numPrecRadix;
+    }
+
+    public void setNumPrecRadix(final int numPrecRadix) {
+        this.numPrecRadix = numPrecRadix;
+    }
+
+    public int getNullable() {
+        return nullable;
+    }
+
+    public void setNullable(final int nullable) {
+        this.nullable = nullable;
+    }
+
+    public String getRemarks() {
+        return remarks;
+    }
+
+    public void setRemarks(final String remarks) {
+        this.remarks = remarks;
+    }
+
+    public String getAttrDef() {
+        return attrDef;
+    }
+
+    public void setAttrDef(final String attrDef) {
+        this.attrDef = attrDef;
+    }
+
+    public Integer getSqlDataType() {
+        return sqlDataType;
+    }
+
+    public void setSqlDataType(final Integer sqlDataType) {
+        this.sqlDataType = sqlDataType;
+    }
+
+    public Integer getSqlDatetimeSub() {
+        return sqlDatetimeSub;
+    }
+
+    public void setSqlDatetimeSub(final Integer sqlDatetimeSub) {
+        this.sqlDatetimeSub = sqlDatetimeSub;
+    }
+
+    public int getCharOctetLength() {
+        return charOctetLength;
+    }
+
+    public void setCharOctetLength(final int charOctetLength) {
+        this.charOctetLength = charOctetLength;
+    }
+
+    public int getOrdinalPosition() {
+        return ordinalPosition;
+    }
+
+    public void setOrdinalPosition(final int ordinalPosition) {
+        this.ordinalPosition = ordinalPosition;
+    }
+
+    public String getIsNullable() {
+        return isNullable;
+    }
+
+    public void setIsNullable(final String isNullable) {
+        this.isNullable = isNullable;
+    }
+
+    public String getScopeCatalog() {
+        return scopeCatalog;
+    }
+
+    public void setScopeCatalog(final String scopeCatalog) {
+        this.scopeCatalog = scopeCatalog;
+    }
+
+    public String getScopeSchema() {
+        return scopeSchema;
+    }
+
+    public void setScopeSchema(final String scopeSchema) {
+        this.scopeSchema = scopeSchema;
+    }
+
+    public String getScopeTable() {
+        return scopeTable;
+    }
+
+    public void setScopeTable(final String scopeTable) {
+        this.scopeTable = scopeTable;
+    }
+
+    public Short getSourceDataType() {
+        return sourceDataType;
+    }
+
+    public void setSourceDataType(final Short sourceDataType) {
+        this.sourceDataType = sourceDataType;
     }
 
     // -----------------------------------------------------------------------------------------------------------------

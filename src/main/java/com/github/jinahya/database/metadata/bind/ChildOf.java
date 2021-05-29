@@ -1,12 +1,15 @@
 package com.github.jinahya.database.metadata.bind;
 
-/**
- * A marker interface for representing a child in the type hierarchy.
- *
- * @param <PARENT> parent type parameter
- * @author Jin Kwon &lt;onacit_at_gmail.com&gt;
- * @see ParentOf
- */
-public interface ChildOf<PARENT extends MetadataType> {
+import java.lang.annotation.Documented;
+import java.lang.annotation.ElementType;
+import java.lang.annotation.Retention;
+import java.lang.annotation.RetentionPolicy;
+import java.lang.annotation.Target;
 
+@Documented
+@Retention(RetentionPolicy.RUNTIME)
+@Target({ElementType.TYPE})
+public @interface ChildOf {
+
+    Class<?> value();
 }

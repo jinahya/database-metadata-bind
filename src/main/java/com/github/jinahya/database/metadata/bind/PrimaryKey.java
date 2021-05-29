@@ -35,6 +35,7 @@ import java.util.Collection;
  * @see Context#getPrimaryKeys(String, String, String, Collection)
  */
 @XmlRootElement
+@ChildOf(Table.class)
 @Data
 @NoArgsConstructor
 public class PrimaryKey implements MetadataType {

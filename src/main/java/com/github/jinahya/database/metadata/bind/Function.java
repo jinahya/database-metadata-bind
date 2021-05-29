@@ -42,11 +42,12 @@ import java.util.List;
  * @see FunctionColumn
  */
 @XmlRootElement
+@ChildOf(Schema.class)
+@ParentOf(FunctionColumn.class)
 @Data
 @NoArgsConstructor
 public class Function
-        implements MetadataType,
-                   ChildOf<Schema> {
+        implements MetadataType {
 
     private static final long serialVersionUID = -3318947900237453301L;
 

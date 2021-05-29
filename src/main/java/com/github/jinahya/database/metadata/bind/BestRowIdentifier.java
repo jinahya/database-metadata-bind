@@ -36,11 +36,11 @@ import java.util.Collection;
  * @see Context#getBestRowIdentifier(String, String, String, int, boolean, Collection)
  */
 @XmlRootElement
+@ChildOf(Table.class)
 @Data
 @Slf4j
 public class BestRowIdentifier
-        implements MetadataType,
-                   ChildOf<Table> {
+        implements MetadataType {
 
     private static final long serialVersionUID = -6733770602373723371L;
 

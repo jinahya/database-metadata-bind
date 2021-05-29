@@ -36,9 +36,11 @@ import java.util.Objects;
  * @see Context#getColumns(String, String, String, String, Collection)
  */
 @XmlRootElement
+@ChildOf(Table.class)
 @Data
 @NoArgsConstructor
-public class Column implements MetadataType {
+public class Column
+        implements MetadataType {
 
     private static final long serialVersionUID = -409653682729081530L;
 

@@ -24,10 +24,12 @@ import lombok.extern.slf4j.Slf4j;
 import org.w3c.dom.Node;
 
 import javax.xml.bind.JAXBContext;
+import javax.xml.bind.JAXBElement;
 import javax.xml.bind.JAXBException;
 import javax.xml.bind.Marshaller;
 import javax.xml.bind.SchemaOutputResolver;
 import javax.xml.bind.Unmarshaller;
+import javax.xml.namespace.QName;
 import javax.xml.transform.Result;
 import javax.xml.transform.dom.DOMResult;
 import javax.xml.transform.stream.StreamResult;
@@ -45,6 +47,15 @@ import static java.util.Objects.requireNonNull;
  */
 @Slf4j
 final class JaxbTests {
+
+    static QName qName(final String localPart) {
+        return new QName(XmlConstants.NS_URI_DATABASE_METADATA_BIND, localPart);
+    }
+
+    static <T extends MetadataType> JAXBElement<T> jaxbElement(final String localPart, final Class<T> declaredType,
+                                                               final T value) {
+        return new JAXBElement<>(qName(localPart), declaredType, value);
+    }
 
     // -----------------------------------------------------------------------------------------------------------------
     static <T> void writeToFile(final Class<? super T> type, final T value, final String name)

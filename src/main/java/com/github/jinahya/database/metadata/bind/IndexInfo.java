@@ -36,6 +36,7 @@ import java.util.Collection;
  * @see Context#getIndexInfo(String, String, String, boolean, boolean, Collection)
  */
 @XmlRootElement
+@ChildOf(Table.class)
 @Data
 @NoArgsConstructor
 public class IndexInfo implements MetadataType {

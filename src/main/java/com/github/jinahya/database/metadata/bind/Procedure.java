@@ -43,9 +43,10 @@ import java.util.List;
  *
  * @author Jin Kwon &lt;jinahya_at_gmail.com&gt;
  * @see Context#getProcedures(String, String, String, Collection)
- * @see Context#getProcedureColumns(Procedure, String)
  */
 @XmlRootElement
+@ChildOf(Schema.class)
+@ParentOf(ProcedureColumn.class)
 @Data
 @NoArgsConstructor
 public class Procedure implements MetadataType {

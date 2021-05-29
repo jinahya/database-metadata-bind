@@ -35,11 +35,11 @@ import java.util.Collection;
  * @see Context#getPseudoColumns(String, String, String, String, Collection)
  */
 @XmlRootElement
+@ChildOf(Table.class)
 @Data
 @NoArgsConstructor
 public class PseudoColumn
-        implements MetadataType,
-                   ChildOf<Table> {
+        implements MetadataType {
 
     private static final long serialVersionUID = -5612575879670895510L;
 

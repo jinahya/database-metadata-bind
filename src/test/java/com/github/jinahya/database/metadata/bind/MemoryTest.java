@@ -84,7 +84,8 @@ abstract class MemoryTest {
             context.getCatalogs(new ArrayList<>()).forEach(catalog -> {
                 final String string = assertDoesNotThrow(catalog::toString);
                 final int hashCode = assertDoesNotThrow(catalog::hashCode);
-                final String tableCat = (String) catalog.getLabeledValue(Catalog.COLUMN_LABEL_TABLE_CAT);
+                final String tableCat = (String) MetadataTypeUtils.getLabeledValue(
+                        Catalog.class, catalog, Catalog.COLUMN_LABEL_TABLE_CAT);
                 assertThat(tableCat).isNotNull();
             });
         }
@@ -100,8 +101,10 @@ abstract class MemoryTest {
             for (final Schema schema : schemas) {
                 final String string = assertDoesNotThrow(schema::toString);
                 final int hashCode = assertDoesNotThrow(schema::hashCode);
-                final String tableCatalog = (String) schema.getLabeledValue(Schema.COLUMN_LABEL_TABLE_CATALOG);
-                final String tableSchem = (String) schema.getLabeledValue(Schema.COLUMN_LABEL_TABLE_SCHEM);
+                final String tableCatalog = (String) MetadataTypeUtils.getLabeledValue(
+                        Schema.class, schema, Schema.COLUMN_LABEL_TABLE_CATALOG);
+                final String tableSchem = (String) MetadataTypeUtils.getLabeledValue(
+                        Schema.class, schema, Schema.COLUMN_LABEL_TABLE_SCHEM);
             }
         }
     }
@@ -116,9 +119,12 @@ abstract class MemoryTest {
             for (final Table table : tables) {
                 final String string = assertDoesNotThrow(table::toString);
                 final int hashCode = assertDoesNotThrow(table::hashCode);
-                final String tableCat = (String) table.getLabeledValue(Table.COLUMN_LABEL_TABLE_CAT);
-                final String tableSchem = (String) table.getLabeledValue(Table.COLUMN_LABEL_TABLE_SCHEM);
-                final String tableName = (String) table.getLabeledValue(Table.COLUMN_LABEL_TABLE_NAME);
+                final String tableCat = (String) MetadataTypeUtils.getLabeledValue(
+                        Table.class, table, Table.COLUMN_LABEL_TABLE_CAT);
+                final String tableSchem = (String) MetadataTypeUtils.getLabeledValue(
+                        Table.class, table, Table.COLUMN_LABEL_TABLE_SCHEM);
+                final String tableName = (String) MetadataTypeUtils.getLabeledValue(
+                        Table.class, table, Table.COLUMN_LABEL_TABLE_NAME);
             }
         }
     }
@@ -128,7 +134,7 @@ abstract class MemoryTest {
         try (Connection connection = connect()) {
             final Context context = Context.newInstance(connection)
                     .suppress(SQLFeatureNotSupportedException.class);
-            assertThat(DeletesAreDetected.getAllInstances(context))
+            assertThat(DeletesAreDetected.getAllInstances(context, new ArrayList<>()))
                     .doesNotContainNull()
                     .hasSize(ResultSetType.values().length)
                     .satisfies(TestUtils::testEquals)
@@ -144,7 +150,7 @@ abstract class MemoryTest {
         try (Connection connection = connect()) {
             final Context context = Context.newInstance(connection)
                     .suppress(SQLFeatureNotSupportedException.class);
-            assertThat(InsertsAreDetected.getAllInstances(context))
+            assertThat(InsertsAreDetected.getAllInstances(context, new ArrayList<>()))
                     .doesNotContainNull()
                     .hasSize(ResultSetType.values().length)
                     .satisfies(TestUtils::testEquals)
@@ -160,7 +166,7 @@ abstract class MemoryTest {
         try (Connection connection = connect()) {
             final Context context = Context.newInstance(connection)
                     .suppress(SQLFeatureNotSupportedException.class);
-            assertThat(UpdatesAreDetected.getAllInstances(context))
+            assertThat(UpdatesAreDetected.getAllInstances(context, new ArrayList<>()))
                     .doesNotContainNull()
                     .hasSize(ResultSetType.values().length)
                     .satisfies(TestUtils::testEquals)
