@@ -34,7 +34,8 @@ import static java.util.Objects.requireNonNull;
  * @see Context#updatesAreDetected(int)
  */
 @XmlRootElement
-public class UpdatesAreDetected extends AreDetected {
+public class UpdatesAreDetected
+        extends AreDetected {
 
     private static final long serialVersionUID = -7538643762491010895L;
 
@@ -56,5 +57,14 @@ public class UpdatesAreDetected extends AreDetected {
             collection.add(context.updatesAreDetected(type.getRawValue()));
         }
         return collection;
+    }
+
+    // -----------------------------------------------------------------------------------------------------------------
+
+    /**
+     * Creates a new instance.
+     */
+    public UpdatesAreDetected() {
+        super();
     }
 }

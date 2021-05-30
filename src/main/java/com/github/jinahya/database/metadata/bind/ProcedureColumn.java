@@ -20,9 +20,6 @@ package com.github.jinahya.database.metadata.bind;
  * #L%
  */
 
-import lombok.Data;
-import lombok.NoArgsConstructor;
-
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
 import java.sql.DatabaseMetaData;
@@ -36,9 +33,9 @@ import java.util.Collection;
  * @see Context#getProcedureColumns(String, String, String, String, Collection)
  */
 @XmlRootElement
-@Data
-@NoArgsConstructor
-public class ProcedureColumn implements MetadataType {
+@ChildOf(Procedure.class)
+public class ProcedureColumn
+        implements MetadataType {
 
     private static final long serialVersionUID = 3894753719381358829L;
 
@@ -52,22 +49,22 @@ public class ProcedureColumn implements MetadataType {
     public enum ColumnType implements IntFieldEnum<ColumnType> {
 
         /**
-         * Constant for {@link DatabaseMetaData#procedureColumnUnknown}({@link DatabaseMetaData#procedureColumnUnknown}).
+         * Constant for {@link DatabaseMetaData#procedureColumnUnknown}({@value java.sql.DatabaseMetaData#procedureColumnUnknown}).
          */
         PROCEDURE_COLUMN_UNKNOWN(DatabaseMetaData.procedureColumnUnknown), // 0
 
         /**
-         * Constants for {@link DatabaseMetaData#procedureColumnIn}({@value DatabaseMetaData#procedureColumnIn}).
+         * Constants for {@link DatabaseMetaData#procedureColumnIn}({@value java.sql.DatabaseMetaData#procedureColumnIn}).
          */
         PROCEDURE_COLUMN_IN(DatabaseMetaData.procedureColumnIn), // 1
 
         /**
-         * Constants for {@link DatabaseMetaData#procedureColumnInOut}({@value DatabaseMetaData#procedureColumnInOut}).
+         * Constants for {@link DatabaseMetaData#procedureColumnInOut}({@value java.sql.DatabaseMetaData#procedureColumnInOut}).
          */
         PROCEDURE_COLUMN_IN_OUT(DatabaseMetaData.procedureColumnInOut), // 2
 
         /**
-         * Constants for {@link DatabaseMetaData#procedureColumnResult}({@value DatabaseMetaData#procedureColumnResult}).
+         * Constants for {@link DatabaseMetaData#procedureColumnResult}({@value java.sql.DatabaseMetaData#procedureColumnResult}).
          */
         PROCEDURE_COLUMN_RESULT(DatabaseMetaData.functionColumnResult), // 3
 
@@ -77,7 +74,7 @@ public class ProcedureColumn implements MetadataType {
         PROCEDURE_COLUMN_OUT(DatabaseMetaData.procedureColumnOut), // 4
 
         /**
-         * Constant for {@link DatabaseMetaData#procedureColumnReturn}({@value DatabaseMetaData#procedureColumnReturn}).
+         * Constant for {@link DatabaseMetaData#procedureColumnReturn}({@value java.sql.DatabaseMetaData#procedureColumnReturn}).
          */
         PROCEDURE_COLUMN_RETURN(DatabaseMetaData.procedureColumnReturn); // 5
 
@@ -107,6 +104,204 @@ public class ProcedureColumn implements MetadataType {
         }
 
         private final int rawValue;
+    }
+
+    // -----------------------------------------------------------------------------------------------------------------
+
+    /**
+     * Creates a new instance.
+     */
+    public ProcedureColumn() {
+        super();
+    }
+
+    // -----------------------------------------------------------------------------------------------------------------
+
+    @Override
+    public String toString() {
+        return super.toString() + '{'
+               + "procedureCat=" + procedureCat
+               + ",procedureSchem=" + procedureSchem
+               + ",procedureName=" + procedureName
+               + ",columnName=" + columnName
+               + ",columnType=" + columnType
+               + ",dataType=" + dataType
+               + ",typeName=" + typeName
+               + ",precision=" + precision
+               + ",length=" + length
+               + ",scale=" + scale
+               + ",radix=" + radix
+               + ",nullable=" + nullable
+               + ",remarks=" + remarks
+               + ",columnDef=" + columnDef
+               + ",sqlDataType=" + sqlDataType
+               + ",sqlDatetimeSub=" + sqlDatetimeSub
+               + ",charOctetLength=" + charOctetLength
+               + ",ordinalPosition=" + ordinalPosition
+               + ",isNullable=" + isNullable
+               + ",specificName=" + specificName
+               + '}';
+    }
+
+    // -----------------------------------------------------------------------------------------------------------------
+    public String getProcedureCat() {
+        return procedureCat;
+    }
+
+    public void setProcedureCat(final String procedureCat) {
+        this.procedureCat = procedureCat;
+    }
+
+    public String getProcedureSchem() {
+        return procedureSchem;
+    }
+
+    public void setProcedureSchem(final String procedureSchem) {
+        this.procedureSchem = procedureSchem;
+    }
+
+    public String getProcedureName() {
+        return procedureName;
+    }
+
+    public void setProcedureName(final String procedureName) {
+        this.procedureName = procedureName;
+    }
+
+    public String getColumnName() {
+        return columnName;
+    }
+
+    public void setColumnName(final String columnName) {
+        this.columnName = columnName;
+    }
+
+    public short getColumnType() {
+        return columnType;
+    }
+
+    public void setColumnType(final short columnType) {
+        this.columnType = columnType;
+    }
+
+    public int getDataType() {
+        return dataType;
+    }
+
+    public void setDataType(final int dataType) {
+        this.dataType = dataType;
+    }
+
+    public String getTypeName() {
+        return typeName;
+    }
+
+    public void setTypeName(final String typeName) {
+        this.typeName = typeName;
+    }
+
+    public int getPrecision() {
+        return precision;
+    }
+
+    public void setPrecision(final int precision) {
+        this.precision = precision;
+    }
+
+    public int getLength() {
+        return length;
+    }
+
+    public void setLength(final int length) {
+        this.length = length;
+    }
+
+    public Short getScale() {
+        return scale;
+    }
+
+    public void setScale(final Short scale) {
+        this.scale = scale;
+    }
+
+    public short getRadix() {
+        return radix;
+    }
+
+    public void setRadix(final short radix) {
+        this.radix = radix;
+    }
+
+    public short getNullable() {
+        return nullable;
+    }
+
+    public void setNullable(final short nullable) {
+        this.nullable = nullable;
+    }
+
+    public String getRemarks() {
+        return remarks;
+    }
+
+    public void setRemarks(final String remarks) {
+        this.remarks = remarks;
+    }
+
+    public String getColumnDef() {
+        return columnDef;
+    }
+
+    public void setColumnDef(final String columnDef) {
+        this.columnDef = columnDef;
+    }
+
+    public Integer getSqlDataType() {
+        return sqlDataType;
+    }
+
+    public void setSqlDataType(final Integer sqlDataType) {
+        this.sqlDataType = sqlDataType;
+    }
+
+    public Integer getSqlDatetimeSub() {
+        return sqlDatetimeSub;
+    }
+
+    public void setSqlDatetimeSub(final Integer sqlDatetimeSub) {
+        this.sqlDatetimeSub = sqlDatetimeSub;
+    }
+
+    public Integer getCharOctetLength() {
+        return charOctetLength;
+    }
+
+    public void setCharOctetLength(final Integer charOctetLength) {
+        this.charOctetLength = charOctetLength;
+    }
+
+    public int getOrdinalPosition() {
+        return ordinalPosition;
+    }
+
+    public void setOrdinalPosition(final int ordinalPosition) {
+        this.ordinalPosition = ordinalPosition;
+    }
+
+    public String getIsNullable() {
+        return isNullable;
+    }
+
+    public void setIsNullable(final String isNullable) {
+        this.isNullable = isNullable;
+    }
+
+    public String getSpecificName() {
+        return specificName;
+    }
+
+    public void setSpecificName(final String specificName) {
+        this.specificName = specificName;
     }
 
     // -----------------------------------------------------------------------------------------------------------------

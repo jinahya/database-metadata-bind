@@ -20,10 +20,6 @@ package com.github.jinahya.database.metadata.bind;
  * #L%
  */
 
-import lombok.AccessLevel;
-import lombok.Data;
-import lombok.NoArgsConstructor;
-
 import javax.xml.bind.annotation.XmlAttribute;
 import javax.xml.bind.annotation.XmlTransient;
 import javax.xml.bind.annotation.XmlValue;
@@ -38,12 +34,46 @@ import java.sql.DatabaseMetaData;
  * @see UpdatesAreDetected
  */
 @XmlTransient
-@Data
-@NoArgsConstructor(access = AccessLevel.PROTECTED)
 abstract class AreDetected implements MetadataType {
 
     private static final long serialVersionUID = 472228030784272988L;
 
+    // -----------------------------------------------------------------------------------------------------------------
+
+    /**
+     * Creates a new instance.
+     */
+    protected AreDetected() {
+        super();
+    }
+
+    // -----------------------------------------------------------------------------------------------------------------
+    @Override
+    public String toString() {
+        return super.toString() + '{'
+               + "type=" + type
+               + ",value=" + value
+               + '}';
+    }
+
+    // -----------------------------------------------------------------------------------------------------------------
+    public int getType() {
+        return type;
+    }
+
+    public void setType(final int type) {
+        this.type = type;
+    }
+
+    public Boolean getValue() {
+        return value;
+    }
+
+    public void setValue(final Boolean value) {
+        this.value = value;
+    }
+
+    // -----------------------------------------------------------------------------------------------------------------
     @XmlAttribute(required = true)
     private int type;
 

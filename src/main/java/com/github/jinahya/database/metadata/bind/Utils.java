@@ -120,38 +120,38 @@ final class Utils {
         requireNonNull(results, "results is null");
         requireNonNull(label, "label is null");
         assert field.isAccessible();
-        final Class<?> type = field.getType();
-        if (type.isPrimitive()) {
-            if (type == boolean.class) {
+        final Class<?> fieldType = field.getType();
+        if (fieldType.isPrimitive()) {
+            if (fieldType == boolean.class) {
                 field.setBoolean(obj, results.getBoolean(label));
                 return;
-            } else if (type == byte.class) {
+            } else if (fieldType == byte.class) {
                 log.error("byte field found, fix me: {}", field);
                 return;
-            } else if (type == char.class) {
+            } else if (fieldType == char.class) {
                 log.error("char field found, fix me: {}", field);
                 return;
-            } else if (type == double.class) {
+            } else if (fieldType == double.class) {
                 log.error("double field found, fix me: {}", field);
                 return;
-            } else if (type == float.class) {
+            } else if (fieldType == float.class) {
                 log.error("float field found, fix me: {}", field);
                 return;
-            } else if (type == int.class) {
+            } else if (fieldType == int.class) {
                 field.setInt(obj, results.getInt(label));
                 return;
-            } else if (type == long.class) {
+            } else if (fieldType == long.class) {
                 field.setLong(obj, results.getLong(label));
                 return;
-            } else if (type == short.class) {
+            } else if (fieldType == short.class) {
                 field.setShort(obj, results.getShort(label));
                 return;
             }
         }
-        assert !type.isPrimitive();
+        assert !fieldType.isPrimitive();
         final Object value = results.getObject(label);
         if (value == null) {
-            if (type.isPrimitive()) {
+            if (fieldType.isPrimitive()) {
                 log.warn("null value for a primitive field: {}", field);
             }
             if (field.getAnnotation(MayBeNull.class) == null) {
@@ -167,39 +167,39 @@ final class Utils {
             return;
         } catch (final IllegalArgumentException iae) {
             if (log.isDebugEnabled()) {
-                log.debug("unable to set {} with {}({}) labeled as {}", field, value, value.getClass(), label, iae);
+//                log.debug("unable to set {} with {}({}) labeled as {}", field, value, value.getClass(), label, iae);
             }
         }
         if (value instanceof Number) {
-            if (type == Boolean.class) {
+            if (fieldType == Boolean.class) {
                 log.error("Boolean field found, fix me: {}", field);
                 return;
             }
-            if (type == Byte.class) {
+            if (fieldType == Byte.class) {
                 log.error("Byte field found, fix me: {}", field);
                 return;
             }
-            if (type == Short.class) {
+            if (fieldType == Short.class) {
                 field.set(obj, ((Number) value).shortValue());
                 return;
             }
-            if (type == Integer.class) {
+            if (fieldType == Integer.class) {
                 field.set(obj, ((Number) value).intValue());
                 return;
             }
-            if (type == Long.class) {
+            if (fieldType == Long.class) {
                 log.error("Long field found, fix me: {}", field);
                 return;
             }
-            if (type == Character.class) {
+            if (fieldType == Character.class) {
                 log.error("Character field found, fix me: {}", field);
                 return;
             }
-            if (type == Float.class) {
+            if (fieldType == Float.class) {
                 log.error("Float field found, fix me: {}", field);
                 return;
             }
-            if (type == Double.class) {
+            if (fieldType == Double.class) {
                 log.error("Double field found, fix me: %1$s", field);
                 return;
             }

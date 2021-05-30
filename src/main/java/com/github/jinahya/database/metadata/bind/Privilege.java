@@ -30,7 +30,8 @@ import javax.xml.bind.annotation.XmlTransient;
 @XmlTransient
 @Data
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-abstract class Privilege implements MetadataType {
+abstract class Privilege
+        implements MetadataType {
 
     private static final long serialVersionUID = -816800473142195431L;
 

@@ -20,13 +20,15 @@ package com.github.jinahya.database.metadata.bind;
  * #L%
  */
 
-import lombok.Data;
-import lombok.NoArgsConstructor;
-
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
 import java.sql.DatabaseMetaData;
+import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.Collection;
+import java.util.List;
+
+import static java.util.Objects.requireNonNull;
 
 /**
  * A class for binding results of {@link DatabaseMetaData#getCrossReference(String, String, String, String, String,
@@ -36,16 +38,174 @@ import java.util.Collection;
  * @see Context#getCrossReference(String, String, String, String, String, String, Collection)
  */
 @XmlRootElement
-@Data
-@NoArgsConstructor
-public class CrossReference implements MetadataType {
+public class CrossReference
+        implements MetadataType {
 
     private static final long serialVersionUID = -5343386346721125961L;
+
+    // -----------------------------------------------------------------------------------------------------------------
+    public static <C extends Collection<? super CrossReference>> C getAllInstance(final Context context,
+                                                                                  final C collection)
+            throws SQLException {
+        requireNonNull(context, "context is null");
+        requireNonNull(collection, "collection is null");
+        final List<Table> tables = context.getTables(null, null, "%", null, new ArrayList<>());
+        for (final Table parentTable : tables) {
+            for (final Table foreignTable : tables) {
+                context.getCrossReference(parentTable, foreignTable, collection);
+            }
+        }
+        return collection;
+    }
 
     // ---------------------------------------------------------------------------------------- UPDATE_RULE / updateRule
     public static final String COLUMN_NAME_UPDATE_RULE = "UPDATE_RULE";
 
     public static final String ATTRIBUTE_NAME_UPDATE_RULE = "updateRule";
+
+    // -----------------------------------------------------------------------------------------------------------------
+
+    /**
+     * Creates a new instance.
+     */
+    public CrossReference() {
+        super();
+    }
+
+    // -----------------------------------------------------------------------------------------------------------------
+    @Override
+    public String toString() {
+        return super.toString() + '{'
+               + "pktableCat=" + pktableCat
+               + ",pktableSchem=" + pktableSchem
+               + ",pktableName=" + pktableName
+               + ",pkcolumnName=" + pkcolumnName
+               + ",fktableCat=" + fktableCat
+               + ",fktableSchem=" + fktableSchem
+               + ",fktableName=" + fktableName
+               + ",fkcolumnName=" + fkcolumnName
+               + ",keySeq=" + keySeq
+               + ",updateRule=" + updateRule
+               + ",deleteRule=" + deleteRule
+               + ",fkName=" + fkName
+               + ",pkName=" + pkName
+               + ",deferrability=" + deferrability
+               + '}';
+    }
+
+    // -----------------------------------------------------------------------------------------------------------------
+
+    public String getPktableCat() {
+        return pktableCat;
+    }
+
+    public void setPktableCat(final String pktableCat) {
+        this.pktableCat = pktableCat;
+    }
+
+    public String getPktableSchem() {
+        return pktableSchem;
+    }
+
+    public void setPktableSchem(final String pktableSchem) {
+        this.pktableSchem = pktableSchem;
+    }
+
+    public String getPktableName() {
+        return pktableName;
+    }
+
+    public void setPktableName(final String pktableName) {
+        this.pktableName = pktableName;
+    }
+
+    public String getPkcolumnName() {
+        return pkcolumnName;
+    }
+
+    public void setPkcolumnName(final String pkcolumnName) {
+        this.pkcolumnName = pkcolumnName;
+    }
+
+    public String getFktableCat() {
+        return fktableCat;
+    }
+
+    public void setFktableCat(final String fktableCat) {
+        this.fktableCat = fktableCat;
+    }
+
+    public String getFktableSchem() {
+        return fktableSchem;
+    }
+
+    public void setFktableSchem(final String fktableSchem) {
+        this.fktableSchem = fktableSchem;
+    }
+
+    public String getFktableName() {
+        return fktableName;
+    }
+
+    public void setFktableName(final String fktableName) {
+        this.fktableName = fktableName;
+    }
+
+    public String getFkcolumnName() {
+        return fkcolumnName;
+    }
+
+    public void setFkcolumnName(final String fkcolumnName) {
+        this.fkcolumnName = fkcolumnName;
+    }
+
+    public short getKeySeq() {
+        return keySeq;
+    }
+
+    public void setKeySeq(final short keySeq) {
+        this.keySeq = keySeq;
+    }
+
+    public short getUpdateRule() {
+        return updateRule;
+    }
+
+    public void setUpdateRule(final short updateRule) {
+        this.updateRule = updateRule;
+    }
+
+    public short getDeleteRule() {
+        return deleteRule;
+    }
+
+    public void setDeleteRule(final short deleteRule) {
+        this.deleteRule = deleteRule;
+    }
+
+    public String getFkName() {
+        return fkName;
+    }
+
+    public void setFkName(final String fkName) {
+        this.fkName = fkName;
+    }
+
+    public String getPkName() {
+        return pkName;
+    }
+
+    public void setPkName(final String pkName) {
+        this.pkName = pkName;
+    }
+
+    public short getDeferrability() {
+        return deferrability;
+    }
+
+    public void setDeferrability(final short deferrability) {
+        this.deferrability = deferrability;
+    }
 
     // -----------------------------------------------------------------------------------------------------------------
     @XmlElement(required = true, nillable = true)

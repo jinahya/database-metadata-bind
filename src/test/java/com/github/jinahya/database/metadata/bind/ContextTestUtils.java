@@ -188,10 +188,7 @@ final class ContextTestUtils {
         writeTables(context);
     }
 
-    // --------------------------------------------------------------------------------------------------- ...AreVisible
-
-    private List<Catalog> catalogs;
-
+    // -----------------------------------------------------------------------------------------------------------------
     private ContextTestUtils() {
         throw new AssertionError("instantiation is not allowed");
     }

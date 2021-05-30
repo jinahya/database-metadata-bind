@@ -20,8 +20,6 @@ package com.github.jinahya.database.metadata.bind;
  * #L%
  */
 
-import lombok.NoArgsConstructor;
-
 import javax.xml.bind.annotation.XmlRootElement;
 import java.sql.DatabaseMetaData;
 import java.util.Collection;
@@ -31,10 +29,21 @@ import java.util.Collection;
  *
  * @author Jin Kwon &lt;jinahya_at_gmail.com&gt;
  * @see Context#getExportedKeys(String, String, String, Collection)
+ * @see ImportedKey
  */
 @XmlRootElement
-@NoArgsConstructor
-public class ExportedKey extends TableKey {
+@ChildOf(Table.class)
+public class ExportedKey
+        extends TableKey {
 
     private static final long serialVersionUID = 277210154172135556L;
+
+    // -----------------------------------------------------------------------------------------------------------------
+
+    /**
+     * Creates a new instance.
+     */
+    public ExportedKey() {
+        super();
+    }
 }

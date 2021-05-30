@@ -47,6 +47,8 @@ import java.util.List;
 @ParentOf(BestRowIdentifier.class)
 @ParentOf(Column.class)
 @ParentOf(ColumnPrivilege.class)
+@ParentOf(ExportedKey.class)
+@ParentOf(ImportedKey.class)
 @ParentOf(IndexInfo.class)
 @ParentOf(PrimaryKey.class)
 @ParentOf(PseudoColumn.class)
@@ -214,6 +216,22 @@ public class Table
         return columnPrivileges;
     }
 
+    // ---------------------------------------------------------------------------------------------------- exportedKeys
+    public List<ExportedKey> getExportedKeys() {
+        if (exportedKeys == null) {
+            exportedKeys = new ArrayList<>();
+        }
+        return exportedKeys;
+    }
+
+    // ---------------------------------------------------------------------------------------------------- importedKeys
+    public List<ImportedKey> getImportedKeys() {
+        if (importedKeys == null) {
+            importedKeys = new ArrayList<>();
+        }
+        return importedKeys;
+    }
+
     // ------------------------------------------------------------------------------------------------------- indexInfo
     public List<IndexInfo> getIndexInfo() {
         if (indexInfo == null) {
@@ -333,6 +351,20 @@ public class Table
     @EqualsAndHashCode.Exclude
     @ToString.Exclude
     private List<ColumnPrivilege> columnPrivileges;
+
+    @XmlElementRef
+    @Setter(AccessLevel.NONE)
+    @Getter(AccessLevel.NONE)
+    @EqualsAndHashCode.Exclude
+    @ToString.Exclude
+    private List<@Valid @NotNull ExportedKey> exportedKeys;
+
+    @XmlElementRef
+    @Setter(AccessLevel.NONE)
+    @Getter(AccessLevel.NONE)
+    @EqualsAndHashCode.Exclude
+    @ToString.Exclude
+    private List<@Valid @NotNull ImportedKey> importedKeys;
 
     @XmlElementRef
     @Setter(AccessLevel.NONE)

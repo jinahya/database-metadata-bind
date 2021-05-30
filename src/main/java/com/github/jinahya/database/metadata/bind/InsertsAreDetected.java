@@ -20,8 +20,6 @@ package com.github.jinahya.database.metadata.bind;
  * #L%
  */
 
-import lombok.NoArgsConstructor;
-
 import javax.xml.bind.annotation.XmlRootElement;
 import java.sql.DatabaseMetaData;
 import java.sql.SQLException;
@@ -36,8 +34,8 @@ import static java.util.Objects.requireNonNull;
  * @see DatabaseMetaData#insertsAreDetected(int)
  */
 @XmlRootElement
-@NoArgsConstructor
-public class InsertsAreDetected extends AreDetected {
+public class InsertsAreDetected
+        extends AreDetected {
 
     private static final long serialVersionUID = 8464348704439999572L;
 
@@ -62,5 +60,14 @@ public class InsertsAreDetected extends AreDetected {
             collection.add(context.insertsAreDetected(type.getRawValue()));
         }
         return collection;
+    }
+
+    // -----------------------------------------------------------------------------------------------------------------
+
+    /**
+     * Creates a new instance.
+     */
+    public InsertsAreDetected() {
+        super();
     }
 }

@@ -30,6 +30,7 @@ import java.sql.SQLFeatureNotSupportedException;
 import java.util.ArrayList;
 import java.util.List;
 
+import static java.util.Objects.requireNonNull;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 
@@ -49,15 +50,6 @@ abstract class MemoryTest {
      */
     protected abstract Connection connect() throws SQLException;
 
-    @Test
-    void writeFiles() throws SQLException, JAXBException {
-        try (Connection connection = connect()) {
-            final Context context = Context.newInstance(connection)
-                    .suppress(SQLFeatureNotSupportedException.class);
-            ContextTestUtils.writeFiles(context);
-        }
-    }
-
     Context context(final Connection connection) throws SQLException {
         return Context.newInstance(connection)
                 .suppress(SQLFeatureNotSupportedException.class);
@@ -65,6 +57,28 @@ abstract class MemoryTest {
 
     Metadata metadata(final Context context) throws SQLException {
         return Metadata.newInstance(context);
+    }
+
+    protected <R> R applyContext(final java.util.function.Function<? super Context, ? extends R> function)
+            throws SQLException {
+        requireNonNull(function, "function is null");
+        try (Connection connection = connect()) {
+            final Context context = context(connection);
+            return function.apply(context);
+        }
+    }
+
+    protected <R> R applyMetadata(final java.util.function.Function<? super Metadata, ? extends R> function)
+            throws SQLException {
+        requireNonNull(function, "function is null");
+        return applyContext(c -> {
+            try {
+                final Metadata metadata = metadata(c);
+                return function.apply(metadata);
+            } catch (final SQLException sqle) {
+                throw new RuntimeException(sqle);
+            }
+        });
     }
 
     @Test
@@ -175,5 +189,17 @@ abstract class MemoryTest {
                         final int hashCode = assertDoesNotThrow(v::hashCode);
                     });
         }
+    }
+
+    @Test
+    void writeContextToFiles() throws SQLException {
+        applyContext(c -> {
+            try {
+                ContextTestUtils.writeFiles(c);
+                return null;
+            } catch (SQLException | JAXBException e) {
+                throw new RuntimeException(e);
+            }
+        });
     }
 }

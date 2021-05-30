@@ -454,6 +454,34 @@ public class Context {
         return collection;
     }
 
+    /**
+     * Retrieves cross references of specified parent table and foreign table and adds bound values to specified
+     * collection.
+     *
+     * @param parentTable  the parent table.
+     * @param foreignTable the foreign table.
+     * @param collection   the collection to which bound values are added.
+     * @param <C>          the type of {@code collection}
+     * @return given {@code collection}.
+     * @throws SQLException if a database error occurs.
+     * @apiNote This method invokes {@link #getCrossReference(String, String, String, String, String, String,
+     * Collection)} with {@link Table#getTableCat() parentTable.tableCat}, {@link Table#getTableSchem()
+     * parentTable.tableSchem}, {@link Table#getTableName() parentTable.tableName} parentTable.tableName} {@link
+     * Table#getTableCat() foreignTable.tableCat}, {@link Table#getTableSchem() foreignTable.tableSchem}, {@link
+     * Table#getTableName() foreignTable.tableName} foreignTable.tableName}, and {@code collection} and returns the
+     * result.
+     * @see #getCrossReference(String, String, String, String, String, String, Collection)
+     */
+    public <C extends Collection<? super CrossReference>> C getCrossReference(
+            final Table parentTable, final Table foreignTable, final C collection)
+            throws SQLException {
+        requireNonNull(parentTable, "parentTable is null");
+        requireNonNull(foreignTable, "foreignTable is null");
+        return getCrossReference(parentTable.getTableCat(), parentTable.getTableSchem(), parentTable.getTableName(),
+                                 foreignTable.getTableCat(), foreignTable.getTableSchem(), foreignTable.getTableName(),
+                                 collection);
+    }
+
     // ---------------------------------------------------------------------------------------------------- getFunctions
 
     /**

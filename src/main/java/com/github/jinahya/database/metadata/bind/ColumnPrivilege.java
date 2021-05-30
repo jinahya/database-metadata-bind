@@ -52,7 +52,7 @@ public class ColumnPrivilege
     @Override
     public String toString() {
         return super.toString() + '{'
-               + "tableCat='" + tableCat
+               + "tableCat=" + tableCat
                + ",tableSchem=" + tableSchem
                + ",tableName=" + tableName
                + ",columnName=" + columnName
@@ -63,7 +63,7 @@ public class ColumnPrivilege
                + '}';
     }
 
-    // -----------------------------------------------------------------------------------------------------------------
+    // -------------------------------------------------------------------------------------------------------- tableCat
 
     public String getTableCat() {
         return tableCat;
@@ -73,6 +73,7 @@ public class ColumnPrivilege
         this.tableCat = tableCat;
     }
 
+    // ------------------------------------------------------------------------------------------------------ tableSchem
     public String getTableSchem() {
         return tableSchem;
     }
@@ -81,6 +82,7 @@ public class ColumnPrivilege
         this.tableSchem = tableSchem;
     }
 
+    // ------------------------------------------------------------------------------------------------------- tableName
     public String getTableName() {
         return tableName;
     }
@@ -89,6 +91,7 @@ public class ColumnPrivilege
         this.tableName = tableName;
     }
 
+    // ------------------------------------------------------------------------------------------------------ columnName
     public String getColumnName() {
         return columnName;
     }
@@ -97,6 +100,7 @@ public class ColumnPrivilege
         this.columnName = columnName;
     }
 
+    // --------------------------------------------------------------------------------------------------------- grantor
     public String getGrantor() {
         return grantor;
     }
@@ -105,6 +109,7 @@ public class ColumnPrivilege
         this.grantor = grantor;
     }
 
+    // --------------------------------------------------------------------------------------------------------- grantee
     public String getGrantee() {
         return grantee;
     }
@@ -113,6 +118,7 @@ public class ColumnPrivilege
         this.grantee = grantee;
     }
 
+    // ------------------------------------------------------------------------------------------------------- privilege
     public String getPrivilege() {
         return privilege;
     }
@@ -121,6 +127,7 @@ public class ColumnPrivilege
         this.privilege = privilege;
     }
 
+    // ----------------------------------------------------------------------------------------------------- isGrantable
     public String getIsGrantable() {
         return isGrantable;
     }

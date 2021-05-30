@@ -20,25 +20,165 @@ package com.github.jinahya.database.metadata.bind;
  * #L%
  */
 
-import lombok.AccessLevel;
-import lombok.Data;
-import lombok.NoArgsConstructor;
-
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlTransient;
 
 /**
- * .
+ * An abstract class for binding results of {@link java.sql.DatabaseMetaData#getExportedKeys(String, String, String)}
+ * method and {@link java.sql.DatabaseMetaData#getImportedKeys(String, String, String)} method.
  *
  * @see ImportedKey
  * @see ExportedKey
  */
 @XmlTransient
-@Data
-@NoArgsConstructor(access = AccessLevel.PACKAGE)
-abstract class TableKey implements MetadataType {
+abstract class TableKey
+        implements MetadataType {
 
     private static final long serialVersionUID = 6713872409315471232L;
+
+    // -----------------------------------------------------------------------------------------------------------------
+
+    /**
+     * Creates a new instance.
+     */
+    protected TableKey() {
+        super();
+    }
+
+    // -----------------------------------------------------------------------------------------------------------------
+
+    @Override
+    public String toString() {
+        return super.toString() + '{'
+               + "pktableCat=" + pktableCat
+               + ",pktableSchem=" + pktableSchem
+               + ",pktableName=" + pktableName
+               + ",pkcolumnName=" + pkcolumnName
+               + ",fktableCat=" + fktableCat
+               + ",fktableSchem=" + fktableSchem
+               + ",fktableName=" + fktableName
+               + ",fkcolumnName=" + fkcolumnName
+               + ",keySeq=" + keySeq
+               + ",updateRule=" + updateRule
+               + ",deleteRule=" + deleteRule
+               + ",fkName=" + fkName
+               + ",pkName=" + pkName
+               + ",deferrability=" + deferrability
+               + '}';
+    }
+
+    // -----------------------------------------------------------------------------------------------------------------
+    public String getPktableCat() {
+        return pktableCat;
+    }
+
+    public void setPktableCat(final String pktableCat) {
+        this.pktableCat = pktableCat;
+    }
+
+    public String getPktableSchem() {
+        return pktableSchem;
+    }
+
+    public void setPktableSchem(final String pktableSchem) {
+        this.pktableSchem = pktableSchem;
+    }
+
+    public String getPktableName() {
+        return pktableName;
+    }
+
+    public void setPktableName(final String pktableName) {
+        this.pktableName = pktableName;
+    }
+
+    public String getPkcolumnName() {
+        return pkcolumnName;
+    }
+
+    public void setPkcolumnName(final String pkcolumnName) {
+        this.pkcolumnName = pkcolumnName;
+    }
+
+    public String getFktableCat() {
+        return fktableCat;
+    }
+
+    public void setFktableCat(final String fktableCat) {
+        this.fktableCat = fktableCat;
+    }
+
+    public String getFktableSchem() {
+        return fktableSchem;
+    }
+
+    public void setFktableSchem(final String fktableSchem) {
+        this.fktableSchem = fktableSchem;
+    }
+
+    public String getFktableName() {
+        return fktableName;
+    }
+
+    public void setFktableName(final String fktableName) {
+        this.fktableName = fktableName;
+    }
+
+    public String getFkcolumnName() {
+        return fkcolumnName;
+    }
+
+    public void setFkcolumnName(final String fkcolumnName) {
+        this.fkcolumnName = fkcolumnName;
+    }
+
+    public short getKeySeq() {
+        return keySeq;
+    }
+
+    public void setKeySeq(final short keySeq) {
+        this.keySeq = keySeq;
+    }
+
+    public short getUpdateRule() {
+        return updateRule;
+    }
+
+    public void setUpdateRule(final short updateRule) {
+        this.updateRule = updateRule;
+    }
+
+    public short getDeleteRule() {
+        return deleteRule;
+    }
+
+    public void setDeleteRule(final short deleteRule) {
+        this.deleteRule = deleteRule;
+    }
+
+    public String getFkName() {
+        return fkName;
+    }
+
+    public void setFkName(final String fkName) {
+        this.fkName = fkName;
+    }
+
+    public String getPkName() {
+        return pkName;
+    }
+
+    public void setPkName(final String pkName) {
+        this.pkName = pkName;
+    }
+
+    public short getDeferrability() {
+        return deferrability;
+    }
+
+    public void setDeferrability(final short deferrability) {
+        this.deferrability = deferrability;
+    }
 
     // -----------------------------------------------------------------------------------------------------------------
     @XmlElement(required = true, nillable = true)

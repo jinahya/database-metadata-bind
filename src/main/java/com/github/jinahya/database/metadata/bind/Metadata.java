@@ -38,6 +38,7 @@ public class Metadata {
     public static Metadata newInstance(final Context context) throws SQLException {
         requireNonNull(context, "context is null");
         final Metadata instance = new Metadata();
+        CrossReference.getAllInstance(context, instance.crossReferences = new ArrayList<>());
         instance.deletesAreDetecteds = DeletesAreDetected.getAllInstances(context, new ArrayList<>());
         instance.insertsAreDetecteds = InsertsAreDetected.getAllInstances(context, new ArrayList<>());
         instance.updatesAreDetecteds = UpdatesAreDetected.getAllInstances(context, new ArrayList<>());
@@ -66,6 +67,8 @@ public class Metadata {
                     }
                     context.getColumns(table, "%", table.getColumns());
                     context.getColumnPrivileges(table, "%", table.getColumnPrivileges());
+                    context.getExportedKeys(table, table.getExportedKeys());
+                    context.getImportedKeys(table, table.getImportedKeys());
                     context.getIndexInfo(table, false, true, table.getIndexInfo());
                     context.getPrimaryKeys(table, table.getPrimaryKeys());
                     context.getPseudoColumns(table, "%", table.getPseudoColumns());
@@ -97,6 +100,11 @@ public class Metadata {
     }
 
     // --------------------------------------------------------------------------------------------------------------- \
+    @XmlElementRef
+    @Setter(AccessLevel.NONE)
+    @Getter(AccessLevel.NONE)
+    private List<CrossReference> crossReferences;
+
     @XmlElementRef
     @Setter(AccessLevel.NONE)
     @Getter(AccessLevel.NONE)

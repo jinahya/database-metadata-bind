@@ -20,9 +20,6 @@ package com.github.jinahya.database.metadata.bind;
  * #L%
  */
 
-import lombok.Data;
-import lombok.NoArgsConstructor;
-
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
 import java.sql.DatabaseMetaData;
@@ -37,11 +34,145 @@ import java.util.Collection;
  */
 @XmlRootElement
 @ChildOf(Table.class)
-@Data
-@NoArgsConstructor
-public class IndexInfo implements MetadataType {
+public class IndexInfo
+        implements MetadataType {
 
     private static final long serialVersionUID = -768486884376018474L;
+
+    // -----------------------------------------------------------------------------------------------------------------
+
+    /**
+     * Creates a new instance.
+     */
+    public IndexInfo() {
+        super();
+    }
+
+    // -----------------------------------------------------------------------------------------------------------------
+
+    @Override
+    public String toString() {
+        return super.toString() + '{'
+               + "tableCat=" + tableCat
+               + ",tableSchem=" + tableSchem
+               + ",tableName=" + tableName
+               + ",nonUnique=" + nonUnique
+               + ",indexQualifier=" + indexQualifier
+               + ",indexName=" + indexName
+               + ",type=" + type
+               + ",ordinalPosition=" + ordinalPosition
+               + ",columnName=" + columnName
+               + ",ascOrDesc=" + ascOrDesc
+               + ",cardinality=" + cardinality
+               + ",pages=" + pages
+               + ",filterCondition=" + filterCondition
+               + '}';
+    }
+
+    // -----------------------------------------------------------------------------------------------------------------
+    public String getTableCat() {
+        return tableCat;
+    }
+
+    public void setTableCat(final String tableCat) {
+        this.tableCat = tableCat;
+    }
+
+    public String getTableSchem() {
+        return tableSchem;
+    }
+
+    public void setTableSchem(final String tableSchem) {
+        this.tableSchem = tableSchem;
+    }
+
+    public String getTableName() {
+        return tableName;
+    }
+
+    public void setTableName(final String tableName) {
+        this.tableName = tableName;
+    }
+
+    public boolean isNonUnique() {
+        return nonUnique;
+    }
+
+    public void setNonUnique(final boolean nonUnique) {
+        this.nonUnique = nonUnique;
+    }
+
+    public String getIndexQualifier() {
+        return indexQualifier;
+    }
+
+    public void setIndexQualifier(final String indexQualifier) {
+        this.indexQualifier = indexQualifier;
+    }
+
+    public String getIndexName() {
+        return indexName;
+    }
+
+    public void setIndexName(final String indexName) {
+        this.indexName = indexName;
+    }
+
+    public short getType() {
+        return type;
+    }
+
+    public void setType(final short type) {
+        this.type = type;
+    }
+
+    public short getOrdinalPosition() {
+        return ordinalPosition;
+    }
+
+    public void setOrdinalPosition(final short ordinalPosition) {
+        this.ordinalPosition = ordinalPosition;
+    }
+
+    public String getColumnName() {
+        return columnName;
+    }
+
+    public void setColumnName(final String columnName) {
+        this.columnName = columnName;
+    }
+
+    public String getAscOrDesc() {
+        return ascOrDesc;
+    }
+
+    public void setAscOrDesc(final String ascOrDesc) {
+        this.ascOrDesc = ascOrDesc;
+    }
+
+    public long getCardinality() {
+        return cardinality;
+    }
+
+    public void setCardinality(final long cardinality) {
+        this.cardinality = cardinality;
+    }
+
+    public long getPages() {
+        return pages;
+    }
+
+    public void setPages(final long pages) {
+        this.pages = pages;
+    }
+
+    public String getFilterCondition() {
+        return filterCondition;
+    }
+
+    public void setFilterCondition(final String filterCondition) {
+        this.filterCondition = filterCondition;
+    }
 
     // -----------------------------------------------------------------------------------------------------------------
     @XmlElement(required = true, nillable = true)

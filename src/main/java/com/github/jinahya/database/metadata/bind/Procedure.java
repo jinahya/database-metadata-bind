@@ -21,9 +21,8 @@ package com.github.jinahya.database.metadata.bind;
  */
 
 import lombok.AccessLevel;
-import lombok.Data;
+import lombok.EqualsAndHashCode;
 import lombok.Getter;
-import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
 
@@ -47,14 +46,86 @@ import java.util.List;
 @XmlRootElement
 @ChildOf(Schema.class)
 @ParentOf(ProcedureColumn.class)
-@Data
-@NoArgsConstructor
-public class Procedure implements MetadataType {
+public class Procedure
+        implements MetadataType {
 
     private static final long serialVersionUID = -6262056388403934829L;
 
+    // -----------------------------------------------------------------------------------------------------------------
+
+    /**
+     * Creates a new instance.
+     */
+    public Procedure() {
+        super();
+    }
+
+    // -----------------------------------------------------------------------------------------------------------------
+
+    @Override
+    public String toString() {
+        return super.toString() + '{' +
+               "procedureCat=" + procedureCat
+               + ",procedureSchem=" + procedureSchem
+               + ",procedureName=" + procedureName
+               + ",remarks=" + remarks
+               + ",procedureType=" + procedureType
+               + ",specificName=" + specificName
+               + '}';
+    }
+
+    // -----------------------------------------------------------------------------------------------------------------
+
+    public String getProcedureCat() {
+        return procedureCat;
+    }
+
+    public void setProcedureCat(final String procedureCat) {
+        this.procedureCat = procedureCat;
+    }
+
+    public String getProcedureSchem() {
+        return procedureSchem;
+    }
+
+    public void setProcedureSchem(final String procedureSchem) {
+        this.procedureSchem = procedureSchem;
+    }
+
+    public String getProcedureName() {
+        return procedureName;
+    }
+
+    public void setProcedureName(final String procedureName) {
+        this.procedureName = procedureName;
+    }
+
+    public String getRemarks() {
+        return remarks;
+    }
+
+    public void setRemarks(final String remarks) {
+        this.remarks = remarks;
+    }
+
+    public short getProcedureType() {
+        return procedureType;
+    }
+
+    public void setProcedureType(final short procedureType) {
+        this.procedureType = procedureType;
+    }
+
+    public String getSpecificName() {
+        return specificName;
+    }
+
+    public void setSpecificName(final String specificName) {
+        this.specificName = specificName;
+    }
+
     // ------------------------------------------------------------------------------------------------ procedureColumns
-    List<ProcedureColumn> getProcedureColumns() {
+    public List<ProcedureColumn> getProcedureColumns() {
         if (procedureColumns == null) {
             procedureColumns = new ArrayList<>();
         }
@@ -94,6 +165,7 @@ public class Procedure implements MetadataType {
     @XmlElementRef
     @Setter(AccessLevel.NONE)
     @Getter(AccessLevel.NONE)
+    @EqualsAndHashCode.Exclude
     @ToString.Exclude
     private List<@Valid @NotNull ProcedureColumn> procedureColumns;
 }

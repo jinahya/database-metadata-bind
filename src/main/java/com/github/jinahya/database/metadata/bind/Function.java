@@ -20,9 +20,7 @@ package com.github.jinahya.database.metadata.bind;
  * #L%
  */
 
-import lombok.Data;
 import lombok.EqualsAndHashCode;
-import lombok.NoArgsConstructor;
 import lombok.ToString;
 
 import javax.xml.bind.annotation.XmlElement;
@@ -44,8 +42,6 @@ import java.util.List;
 @XmlRootElement
 @ChildOf(Schema.class)
 @ParentOf(FunctionColumn.class)
-@Data
-@NoArgsConstructor
 public class Function
         implements MetadataType {
 
@@ -60,6 +56,79 @@ public class Function
     public static final String COLUMN_NAME_FUNCTION_SCHEM = "FUNCTION_SCHEM";
 
     public static final String ATTRIBUTE_NAME_FUNCTION_SCHEM = "functionSchem";
+
+    // -----------------------------------------------------------------------------------------------------------------
+
+    /**
+     * Creates a new instance.
+     */
+    public Function() {
+        super();
+    }
+
+    // -----------------------------------------------------------------------------------------------------------------
+
+    @Override
+    public String toString() {
+        return super.toString() + '{'
+               + "functionCat=" + functionCat
+               + ",functionSchem=" + functionSchem
+               + ",functionName=" + functionName
+               + ",remarks=" + remarks
+               + ",functionType=" + functionType
+               + ",specificName=" + specificName
+               + '}';
+    }
+
+    // -----------------------------------------------------------------------------------------------------------------
+
+    public String getFunctionCat() {
+        return functionCat;
+    }
+
+    public void setFunctionCat(final String functionCat) {
+        this.functionCat = functionCat;
+    }
+
+    public String getFunctionSchem() {
+        return functionSchem;
+    }
+
+    public void setFunctionSchem(final String functionSchem) {
+        this.functionSchem = functionSchem;
+    }
+
+    public String getFunctionName() {
+        return functionName;
+    }
+
+    public void setFunctionName(final String functionName) {
+        this.functionName = functionName;
+    }
+
+    public String getRemarks() {
+        return remarks;
+    }
+
+    public void setRemarks(final String remarks) {
+        this.remarks = remarks;
+    }
+
+    public short getFunctionType() {
+        return functionType;
+    }
+
+    public void setFunctionType(final short functionType) {
+        this.functionType = functionType;
+    }
+
+    public String getSpecificName() {
+        return specificName;
+    }
+
+    public void setSpecificName(final String specificName) {
+        this.specificName = specificName;
+    }
 
     // ------------------------------------------------------------------------------------------------- functionColumns
 

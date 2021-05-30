@@ -20,8 +20,6 @@ package com.github.jinahya.database.metadata.bind;
  * #L%
  */
 
-import lombok.NoArgsConstructor;
-
 import javax.xml.bind.annotation.XmlRootElement;
 import java.sql.DatabaseMetaData;
 import java.sql.SQLException;
@@ -36,7 +34,6 @@ import static java.util.Objects.requireNonNull;
  * @see Context#ownUpdatesAreVisible(int)
  */
 @XmlRootElement
-@NoArgsConstructor
 public class OwnUpdatesAreVisible
         extends AreVisible {
 
@@ -62,5 +59,14 @@ public class OwnUpdatesAreVisible
             collection.add(context.ownUpdatesAreVisible(type.getRawValue()));
         }
         return collection;
+    }
+
+    // -----------------------------------------------------------------------------------------------------------------
+
+    /**
+     * Creates a new instance.
+     */
+    public OwnUpdatesAreVisible() {
+        super();
     }
 }
