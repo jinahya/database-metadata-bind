@@ -20,9 +20,6 @@ package com.github.jinahya.database.metadata.bind;
  * #L%
  */
 
-import lombok.Data;
-import lombok.NoArgsConstructor;
-
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
 import java.sql.DatabaseMetaData;
@@ -36,11 +33,101 @@ import java.util.Collection;
  */
 @XmlRootElement
 @ChildOf(Table.class)
-@Data
-@NoArgsConstructor
-public class ColumnPrivilege implements MetadataType {
+public class ColumnPrivilege
+        implements MetadataType {
 
     private static final long serialVersionUID = 4384654744147773380L;
+
+    // -----------------------------------------------------------------------------------------------------------------
+
+    /**
+     * Creates a new instance.
+     */
+    public ColumnPrivilege() {
+        super();
+    }
+
+    // -----------------------------------------------------------------------------------------------------------------
+
+    @Override
+    public String toString() {
+        return super.toString() + '{'
+               + "tableCat='" + tableCat
+               + ",tableSchem=" + tableSchem
+               + ",tableName=" + tableName
+               + ",columnName=" + columnName
+               + ",grantor=" + grantor
+               + ",grantee=" + grantee
+               + ",privilege=" + privilege
+               + ",isGrantable=" + isGrantable
+               + '}';
+    }
+
+    // -----------------------------------------------------------------------------------------------------------------
+
+    public String getTableCat() {
+        return tableCat;
+    }
+
+    public void setTableCat(final String tableCat) {
+        this.tableCat = tableCat;
+    }
+
+    public String getTableSchem() {
+        return tableSchem;
+    }
+
+    public void setTableSchem(final String tableSchem) {
+        this.tableSchem = tableSchem;
+    }
+
+    public String getTableName() {
+        return tableName;
+    }
+
+    public void setTableName(final String tableName) {
+        this.tableName = tableName;
+    }
+
+    public String getColumnName() {
+        return columnName;
+    }
+
+    public void setColumnName(final String columnName) {
+        this.columnName = columnName;
+    }
+
+    public String getGrantor() {
+        return grantor;
+    }
+
+    public void setGrantor(final String grantor) {
+        this.grantor = grantor;
+    }
+
+    public String getGrantee() {
+        return grantee;
+    }
+
+    public void setGrantee(final String grantee) {
+        this.grantee = grantee;
+    }
+
+    public String getPrivilege() {
+        return privilege;
+    }
+
+    public void setPrivilege(final String privilege) {
+        this.privilege = privilege;
+    }
+
+    public String getIsGrantable() {
+        return isGrantable;
+    }
+
+    public void setIsGrantable(final String isGrantable) {
+        this.isGrantable = isGrantable;
+    }
 
     // -----------------------------------------------------------------------------------------------------------------
     @XmlElement(required = true, nillable = true)

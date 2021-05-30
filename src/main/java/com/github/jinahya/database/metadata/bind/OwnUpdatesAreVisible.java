@@ -25,8 +25,7 @@ import lombok.NoArgsConstructor;
 import javax.xml.bind.annotation.XmlRootElement;
 import java.sql.DatabaseMetaData;
 import java.sql.SQLException;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.Collection;
 
 import static java.util.Objects.requireNonNull;
 
@@ -45,19 +44,23 @@ public class OwnUpdatesAreVisible
 
     /**
      * Invokes {@link Context#ownUpdatesAreVisible(int)} method for all types defined in {@link java.sql.ResultSet} and
-     * returns bound values.
+     * adds bound values to specified collection.
      *
-     * @param context a context.
-     * @return a list of bound values.
+     * @param context    a context.
+     * @param collection the collection to which bound values are added.
+     * @param <C>        the type of {@code collection}
+     * @return given {@code collection}.
      * @throws SQLException if a database access error occurs.
      * @see Context#ownUpdatesAreVisible(int)
      */
-    public static List<OwnUpdatesAreVisible> getAllInstances(final Context context) throws SQLException {
+    public static <C extends Collection<? super OwnUpdatesAreVisible>> C getAllInstances(final Context context,
+                                                                                         final C collection)
+            throws SQLException {
         requireNonNull(context, "context is null");
-        final List<OwnUpdatesAreVisible> all = new ArrayList<>();
+        requireNonNull(collection, "collection is null");
         for (final ResultSetType type : ResultSetType.values()) {
-            all.add(context.ownUpdatesAreVisible(type.getRawValue()));
+            collection.add(context.ownUpdatesAreVisible(type.getRawValue()));
         }
-        return all;
+        return collection;
     }
 }

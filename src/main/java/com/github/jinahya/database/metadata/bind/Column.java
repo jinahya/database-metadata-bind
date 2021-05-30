@@ -20,14 +20,13 @@ package com.github.jinahya.database.metadata.bind;
  * #L%
  */
 
-import lombok.Data;
-import lombok.NoArgsConstructor;
-
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
 import java.sql.DatabaseMetaData;
 import java.util.Collection;
 import java.util.Objects;
+
+import static java.util.Optional.ofNullable;
 
 /**
  * A class for binding results of {@link DatabaseMetaData#getColumns(String, String, String, String)} method.
@@ -37,8 +36,6 @@ import java.util.Objects;
  */
 @XmlRootElement
 @ChildOf(Table.class)
-@Data
-@NoArgsConstructor
 public class Column
         implements MetadataType {
 
@@ -171,6 +168,277 @@ public class Column
     }
 
     // -----------------------------------------------------------------------------------------------------------------
+
+    /**
+     * Creates a new instance.
+     */
+    public Column() {
+        super();
+    }
+
+    // -----------------------------------------------------------------------------------------------------------------
+
+    @Override
+    public String toString() {
+        return super.toString() + '{'
+               + "tableCat=" + tableCat
+               + ",tableSchem=" + tableSchem
+               + ",tableName=" + tableName
+               + ",columnName=" + columnName
+               + ",dataType=" + dataType
+               + ",typeName=" + typeName
+               + ",columnSize=" + columnSize
+               + ",bufferLength=" + bufferLength
+               + ",decimalDigits=" + decimalDigits
+               + ",numPrecRadix=" + numPrecRadix
+               + ",nullable=" + nullable
+               + ",remarks=" + remarks
+               + ",columnDef=" + columnDef
+               + ",sqlDataType=" + sqlDataType
+               + ",sqlDatetimeSub=" + sqlDatetimeSub
+               + ",charOctetLength=" + charOctetLength
+               + ",ordinalPosition=" + ordinalPosition
+               + ",isNullable=" + isNullable
+               + ",scopeCatalog=" + scopeCatalog
+               + ",scopeSchema=" + scopeSchema
+               + ",scopeTable=" + scopeTable
+               + ",sourceDataType=" + sourceDataType
+               + ",isAutoincrement=" + isAutoincrement
+               + ",isGeneratedcolumn=" + isGeneratedcolumn
+               + '}';
+    }
+
+    @Override
+    public boolean equals(final Object obj) {
+        if (this == obj) return true;
+        if (obj == null || getClass() != obj.getClass()) return false;
+        final Column that = (Column) obj;
+        return Objects.equals(tableCat, that.tableCat)
+               && Objects.equals(tableSchem, that.tableSchem)
+               && Objects.equals(tableName, that.tableName)
+               && Objects.equals(columnName, that.columnName);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(tableCat, tableSchem, tableName, columnName);
+    }
+
+    // -----------------------------------------------------------------------------------------------------------------
+
+    public String getTableCat() {
+        return tableCat;
+    }
+
+    public void setTableCat(final String tableCat) {
+        this.tableCat = tableCat;
+    }
+
+    public String getTableSchem() {
+        return tableSchem;
+    }
+
+    public void setTableSchem(final String tableSchem) {
+        this.tableSchem = tableSchem;
+    }
+
+    public String getTableName() {
+        return tableName;
+    }
+
+    public void setTableName(final String tableName) {
+        this.tableName = tableName;
+    }
+
+    public String getColumnName() {
+        return columnName;
+    }
+
+    public void setColumnName(final String columnName) {
+        this.columnName = columnName;
+    }
+
+    public int getDataType() {
+        return dataType;
+    }
+
+    public void setDataType(final int dataType) {
+        this.dataType = dataType;
+    }
+
+    public String getTypeName() {
+        return typeName;
+    }
+
+    public void setTypeName(final String typeName) {
+        this.typeName = typeName;
+    }
+
+    public int getColumnSize() {
+        return columnSize;
+    }
+
+    public void setColumnSize(final int columnSize) {
+        this.columnSize = columnSize;
+    }
+
+    public Integer getBufferLength() {
+        return bufferLength;
+    }
+
+    public void setBufferLength(final Integer bufferLength) {
+        this.bufferLength = bufferLength;
+    }
+
+    public Integer getDecimalDigits() {
+        return decimalDigits;
+    }
+
+    public void setDecimalDigits(final Integer decimalDigits) {
+        this.decimalDigits = decimalDigits;
+    }
+
+    public int getNumPrecRadix() {
+        return numPrecRadix;
+    }
+
+    public void setNumPrecRadix(final int numPrecRadix) {
+        this.numPrecRadix = numPrecRadix;
+    }
+
+    public int getNullable() {
+        return nullable;
+    }
+
+    public void setNullable(final int nullable) {
+        this.nullable = nullable;
+    }
+
+    public String getRemarks() {
+        return remarks;
+    }
+
+    public void setRemarks(final String remarks) {
+        this.remarks = remarks;
+    }
+
+    public String getColumnDef() {
+        return columnDef;
+    }
+
+    public void setColumnDef(final String columnDef) {
+        this.columnDef = columnDef;
+    }
+
+    public Integer getSqlDataType() {
+        return sqlDataType;
+    }
+
+    public void setSqlDataType(final Integer sqlDataType) {
+        this.sqlDataType = sqlDataType;
+    }
+
+    public Integer getSqlDatetimeSub() {
+        return sqlDatetimeSub;
+    }
+
+    public void setSqlDatetimeSub(final Integer sqlDatetimeSub) {
+        this.sqlDatetimeSub = sqlDatetimeSub;
+    }
+
+    public int getCharOctetLength() {
+        return charOctetLength;
+    }
+
+    public void setCharOctetLength(final int charOctetLength) {
+        this.charOctetLength = charOctetLength;
+    }
+
+    public int getOrdinalPosition() {
+        return ordinalPosition;
+    }
+
+    public void setOrdinalPosition(final int ordinalPosition) {
+        this.ordinalPosition = ordinalPosition;
+    }
+
+    public String getIsNullable() {
+        return isNullable;
+    }
+
+    public void setIsNullable(final String isNullable) {
+        this.isNullable = isNullable;
+    }
+
+    public String getScopeCatalog() {
+        return scopeCatalog;
+    }
+
+    public void setScopeCatalog(final String scopeCatalog) {
+        this.scopeCatalog = scopeCatalog;
+    }
+
+    public String getScopeSchema() {
+        return scopeSchema;
+    }
+
+    public void setScopeSchema(final String scopeSchema) {
+        this.scopeSchema = scopeSchema;
+    }
+
+    // ------------------------------------------------------------------------------------------------------ scopeTable
+    public String getScopeTable() {
+        return scopeTable;
+    }
+
+    public void setScopeTable(final String scopeTable) {
+        this.scopeTable = scopeTable;
+    }
+
+    // -------------------------------------------------------------------------------------------------- sourceDataType
+    public Short getSourceDataType() {
+        return sourceDataType;
+    }
+
+    public void setSourceDataType(final Short sourceDataType) {
+        this.sourceDataType = sourceDataType;
+    }
+
+    // ------------------------------------------------------------------------------------------------- isAutoincrement
+    public String getIsAutoincrement() {
+        return isAutoincrement;
+    }
+
+    public void setIsAutoincrement(final String isAutoincrement) {
+        this.isAutoincrement = isAutoincrement;
+    }
+
+    public IsAutoincrement getIsAutoincrementAsEnum() {
+        return ofNullable(getIsAutoincrement()).map(IsAutoincrement::valueOf).orElse(null);
+    }
+
+    public void setIsAutoincrementAsEnum(final IsAutoincrement isAutoincrementAsEnum) {
+        setIsAutoincrement(ofNullable(isAutoincrementAsEnum).map(Enum::name).orElse(null));
+    }
+
+    // ----------------------------------------------------------------------------------------------- isGeneratedcolumn
+    public String getIsGeneratedcolumn() {
+        return isGeneratedcolumn;
+    }
+
+    public void setIsGeneratedcolumn(final String isGeneratedcolumn) {
+        this.isGeneratedcolumn = isGeneratedcolumn;
+    }
+
+    public IsGeneratedcolumn getIsGeneratedcolumnAsEnum() {
+        return ofNullable(getIsGeneratedcolumn()).map(IsGeneratedcolumn::valueOf).orElse(null);
+    }
+
+    public void setIsGeneratedColumnAsEnum(final IsGeneratedcolumn isGeneratedColumnAsEnum) {
+        setIsGeneratedcolumn(ofNullable(isGeneratedColumnAsEnum).map(Enum::name).orElse(null));
+    }
+
+    // -----------------------------------------------------------------------------------------------------------------
     @XmlElement(required = true, nillable = true)
     @MayBeNull
     @Label("TABLE_CAT")
@@ -190,6 +458,7 @@ public class Column
     @Label("COLUMN_NAME")
     private String columnName;
 
+    // -----------------------------------------------------------------------------------------------------------------
     @XmlElement(required = true)
     @Label("DATA_TYPE")
     private int dataType;

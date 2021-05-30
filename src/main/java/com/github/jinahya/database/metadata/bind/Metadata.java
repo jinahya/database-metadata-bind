@@ -1,5 +1,25 @@
 package com.github.jinahya.database.metadata.bind;
 
+/*-
+ * #%L
+ * database-metadata-bind
+ * %%
+ * Copyright (C) 2011 - 2021 Jinahya, Inc.
+ * %%
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ * #L%
+ */
+
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.Setter;
@@ -23,43 +43,49 @@ public class Metadata {
         instance.updatesAreDetecteds = UpdatesAreDetected.getAllInstances(context, new ArrayList<>());
         instance.catalogs = context.getCatalogs(new ArrayList<>());
         if (instance.catalogs.isEmpty()) {
-            instance.catalogs.add(Catalog.newVirtualInstance());
+            instance.catalogs.add(Catalog.newVirtualInstance()); // ""
         }
         for (final Catalog catalog : instance.catalogs) {
             context.getSchemas(catalog, null, catalog.getSchemas());
             if (catalog.getSchemas().isEmpty()) {
-                catalog.getSchemas().add(Schema.newVirtualInstance(catalog));
+                catalog.getSchemas().add(Schema.newVirtualInstance(catalog)); // ""
             }
             for (final Schema schema : catalog.getSchemas()) {
-                context.getFunctions(schema, null, schema.getFunctions());
+                context.getFunctions(schema, "%", schema.getFunctions());
                 for (final Function function : schema.getFunctions()) {
-                    context.getFunctionColumns(function, null, function.getFunctionColumns());
+                    context.getFunctionColumns(function, "%", function.getFunctionColumns());
                 }
-                context.getProcedures(schema, null, schema.getProcedures());
+                context.getProcedures(schema, "%", schema.getProcedures());
                 for (final Procedure procedure : schema.getProcedures()) {
-                    context.getProcedureColumns(procedure, null, procedure.getProcedureColumns());
+                    context.getProcedureColumns(procedure, "%", procedure.getProcedureColumns());
                 }
-                context.getTables(schema, null, null, schema.getTables());
+                context.getTables(schema, "%", null, schema.getTables());
                 for (final Table table : schema.getTables()) {
                     for (final BestRowIdentifier.Scope value : BestRowIdentifier.Scope.values()) {
                         context.getBestRowIdentifier(table, value.getRawValue(), true, table.getBestRowIdentifiers());
                     }
-                    context.getColumns(table, null, table.getColumns());
-                    context.getColumnPrivileges(table, null, table.getColumnPrivileges());
+                    context.getColumns(table, "%", table.getColumns());
+                    context.getColumnPrivileges(table, "%", table.getColumnPrivileges());
                     context.getIndexInfo(table, false, true, table.getIndexInfo());
                     context.getPrimaryKeys(table, table.getPrimaryKeys());
-                    context.getPseudoColumns(table, null, table.getPseudoColumns());
+                    context.getPseudoColumns(table, "%", table.getPseudoColumns());
                     context.getSuperTables(table, table.getSuperTables());
                     context.getTablePrivileges(table, table.getTablePrivileges());
                     context.getVersionColumns(table, table.getVersionColumns());
                 }
-                context.getUDTs(schema, null, null, schema.getUDTs());
+                context.getUDTs(schema, "%", null, schema.getUDTs());
                 for (final UDT udt : schema.getUDTs()) {
-                    context.getAttributes(udt, null, udt.getAttributes());
+                    context.getAttributes(udt, "%", udt.getAttributes());
                     context.getSuperTypes(udt, udt.getSuperTypes());
                 }
             }
         }
+        OthersDeletesAreVisible.getAllInstances(context, instance.othersDeletesAreVisibles = new ArrayList<>());
+        OthersInsertsAreVisible.getAllInstances(context, instance.othersInsertsAreVisibles = new ArrayList<>());
+        OthersUpdatesAreVisible.getAllInstances(context, instance.othersUpdatesAreVisibles = new ArrayList<>());
+        OwnDeletesAreVisible.getAllInstances(context, instance.ownDeletesAreVisibles = new ArrayList<>());
+        OwnInsertsAreVisible.getAllInstances(context, instance.ownInsertsAreVisibles = new ArrayList<>());
+        OwnUpdatesAreVisible.getAllInstances(context, instance.ownUpdatesAreVisibles = new ArrayList<>());
         instance.tableTypes = context.getTableTypes(new ArrayList<>());
         // -------------------------------------------------------------------------------------------------------------
         return instance;
@@ -90,6 +116,36 @@ public class Metadata {
     @Setter(AccessLevel.NONE)
     @Getter(AccessLevel.NONE)
     private List<Catalog> catalogs;
+
+    @XmlElementRef
+    @Setter(AccessLevel.NONE)
+    @Getter(AccessLevel.NONE)
+    private List<OthersDeletesAreVisible> othersDeletesAreVisibles;
+
+    @XmlElementRef
+    @Setter(AccessLevel.NONE)
+    @Getter(AccessLevel.NONE)
+    private List<OthersInsertsAreVisible> othersInsertsAreVisibles;
+
+    @XmlElementRef
+    @Setter(AccessLevel.NONE)
+    @Getter(AccessLevel.NONE)
+    private List<OthersUpdatesAreVisible> othersUpdatesAreVisibles;
+
+    @XmlElementRef
+    @Setter(AccessLevel.NONE)
+    @Getter(AccessLevel.NONE)
+    private List<OwnDeletesAreVisible> ownDeletesAreVisibles;
+
+    @XmlElementRef
+    @Setter(AccessLevel.NONE)
+    @Getter(AccessLevel.NONE)
+    private List<OwnInsertsAreVisible> ownInsertsAreVisibles;
+
+    @XmlElementRef
+    @Setter(AccessLevel.NONE)
+    @Getter(AccessLevel.NONE)
+    private List<OwnUpdatesAreVisible> ownUpdatesAreVisibles;
 
     @XmlElementRef
     @Setter(AccessLevel.NONE)

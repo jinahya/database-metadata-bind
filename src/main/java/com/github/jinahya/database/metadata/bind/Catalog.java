@@ -21,13 +21,10 @@ package com.github.jinahya.database.metadata.bind;
  */
 
 import lombok.AccessLevel;
-import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
-import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
-import lombok.extern.slf4j.Slf4j;
 
 import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
@@ -39,6 +36,7 @@ import javax.xml.bind.annotation.XmlSchemaType;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
+import java.util.Objects;
 
 /**
  * A class for binding results of {@link java.sql.DatabaseMetaData#getCatalogs()} method.
@@ -48,9 +46,6 @@ import java.util.List;
  */
 @XmlRootElement
 @ParentOf(Schema.class)
-@Data
-@NoArgsConstructor
-@Slf4j
 public class Catalog
         implements MetadataType {
 
@@ -69,7 +64,47 @@ public class Catalog
         return instance;
     }
 
-    // --------------------------------------------------------------------------------------------------------- schemas
+    // -----------------------------------------------------------------------------------------------------------------
+
+    /**
+     * Creates a new instance.
+     */
+    public Catalog() {
+        super();
+    }
+
+    // -----------------------------------------------------------------------------------------------------------------
+
+    @Override
+    public String toString() {
+        return super.toString() + '{'
+               + "tableCat=" + tableCat
+               + '}';
+    }
+
+    @Override
+    public boolean equals(final Object obj) {
+        if (this == obj) return true;
+        if (obj == null || getClass() != obj.getClass()) return false;
+        final Catalog that = (Catalog) obj;
+        return Objects.equals(tableCat, that.tableCat);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(tableCat);
+    }
+
+    // -----------------------------------------------------------------------------------------------------------------
+    public String getTableCat() {
+        return tableCat;
+    }
+
+    public void setTableCat(final String tableCat) {
+        this.tableCat = tableCat;
+    }
+
+    // -----------------------------------------------------------------------------------------------------------------
     public List<Schema> getSchemas() {
         if (schemas == null) {
             schemas = new ArrayList<>();
@@ -92,8 +127,6 @@ public class Catalog
 
     // -----------------------------------------------------------------------------------------------------------------
     @XmlElementRef
-    @Setter(AccessLevel.NONE)
-    @Getter(AccessLevel.NONE)
     @EqualsAndHashCode.Exclude
     @ToString.Exclude
     private List<@Valid @NotNull Schema> schemas;

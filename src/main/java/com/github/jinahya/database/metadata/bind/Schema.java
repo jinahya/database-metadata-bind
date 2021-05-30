@@ -21,10 +21,8 @@ package com.github.jinahya.database.metadata.bind;
  */
 
 import lombok.AccessLevel;
-import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
-import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
 
@@ -38,6 +36,7 @@ import javax.xml.bind.annotation.XmlSchemaType;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
+import java.util.Objects;
 
 /**
  * A class for binding a result of {@link java.sql.DatabaseMetaData#getSchemas(java.lang.String, java.lang.String)}
@@ -53,8 +52,6 @@ import java.util.List;
 @ParentOf(Procedure.class)
 @ParentOf(Table.class)
 @ParentOf(UDT.class)
-@Data
-@NoArgsConstructor
 public class Schema
         implements MetadataType {
 
@@ -99,6 +96,38 @@ public class Schema
 
     static Schema newVirtualInstance(final Catalog catalog) {
         return newVirtualInstance(catalog.getTableCat());
+    }
+
+    // -----------------------------------------------------------------------------------------------------------------
+
+    /**
+     * Creates a new instance.
+     */
+    public Schema() {
+        super();
+    }
+
+    // -----------------------------------------------------------------------------------------------------------------
+    @Override
+    public String toString() {
+        return super.toString() + '{'
+               + "tableCatalog=" + tableCatalog
+               + ",tableSchem=" + tableSchem
+               + '}';
+    }
+
+    @Override
+    public boolean equals(final Object obj) {
+        if (this == obj) return true;
+        if (obj == null || getClass() != obj.getClass()) return false;
+        final Schema that = (Schema) obj;
+        return Objects.equals(tableCatalog, that.tableCatalog)
+               && Objects.equals(tableSchem, that.tableSchem);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(tableCatalog, tableSchem);
     }
 
     // --------------------------------------------------------------------------------------------------------- virtual

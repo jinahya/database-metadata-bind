@@ -99,7 +99,7 @@ final class ContextTestUtils {
     }
 
     static void writeOwnDeletesAreVisible(final Context context) throws SQLException, JAXBException {
-        final List<OwnDeletesAreVisible> all = OwnDeletesAreVisible.allInstances(context);
+        final List<OwnDeletesAreVisible> all = OwnDeletesAreVisible.getAllInstances(context, new ArrayList<>());
         assertThat(all)
                 .doesNotContainNull()
                 .hasSizeLessThanOrEqualTo(ResultSetType.values().length);
@@ -109,7 +109,7 @@ final class ContextTestUtils {
     }
 
     static void writeOwnInsertsAreVisible(final Context context) throws SQLException, JAXBException {
-        final List<OwnInsertsAreVisible> all = OwnInsertsAreVisible.getAllInstances(context);
+        final List<OwnInsertsAreVisible> all = OwnInsertsAreVisible.getAllInstances(context, new ArrayList<>());
         assertThat(all)
                 .doesNotContainNull()
                 .hasSizeLessThanOrEqualTo(ResultSetType.values().length);
@@ -119,7 +119,7 @@ final class ContextTestUtils {
     }
 
     static void writeOwnUpdatesAreVisible(final Context context) throws SQLException, JAXBException {
-        final List<OwnUpdatesAreVisible> all = OwnUpdatesAreVisible.getAllInstances(context);
+        final List<OwnUpdatesAreVisible> all = OwnUpdatesAreVisible.getAllInstances(context, new ArrayList<>());
         assertThat(all)
                 .doesNotContainNull()
                 .hasSizeLessThanOrEqualTo(ResultSetType.values().length);

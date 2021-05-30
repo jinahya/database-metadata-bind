@@ -20,9 +20,6 @@ package com.github.jinahya.database.metadata.bind;
  * #L%
  */
 
-import lombok.Data;
-import lombok.extern.slf4j.Slf4j;
-
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
 import java.sql.DatabaseMetaData;
@@ -37,8 +34,6 @@ import java.util.Collection;
  */
 @XmlRootElement
 @ChildOf(Table.class)
-@Data
-@Slf4j
 public class BestRowIdentifier
         implements MetadataType {
 
@@ -50,7 +45,8 @@ public class BestRowIdentifier
      *
      * @see DatabaseMetaData#getBestRowIdentifier(java.lang.String, java.lang.String, java.lang.String, int, boolean)
      */
-    public enum PseudoColumn implements IntFieldEnum<PseudoColumn> {
+    public enum PseudoColumn
+            implements IntFieldEnum<PseudoColumn> {
 
         /**
          * Constant for {@link DatabaseMetaData#bestRowUnknown}({@value java.sql.DatabaseMetaData#bestRowUnknown}).
@@ -95,7 +91,8 @@ public class BestRowIdentifier
      *
      * @see DatabaseMetaData#getBestRowIdentifier(java.lang.String, java.lang.String, java.lang.String, int, boolean)
      */
-    public enum Scope implements IntFieldEnum<Scope> {
+    public enum Scope
+            implements IntFieldEnum<Scope> {
 
         /**
          * Constant for {@link DatabaseMetaData#bestRowTemporary}({@value java.sql.DatabaseMetaData#bestRowTemporary}).
@@ -141,6 +138,88 @@ public class BestRowIdentifier
      */
     public BestRowIdentifier() {
         super();
+    }
+
+    // -----------------------------------------------------------------------------------------------------------------
+
+    @Override
+    public String toString() {
+        return super.toString() + '{'
+               + "scope=" + scope
+               + ",columnName=" + columnName
+               + ",dataType=" + dataType
+               + ",typeName=" + typeName
+               + ",columnSize=" + columnSize
+               + ",bufferLength=" + bufferLength
+               + ",decimalDigits=" + decimalDigits
+               + ",pseudoColumn=" + pseudoColumn
+               + '}';
+    }
+
+    // -----------------------------------------------------------------------------------------------------------------
+
+    public short getScope() {
+        return scope;
+    }
+
+    public void setScope(final short scope) {
+        this.scope = scope;
+    }
+
+    public String getColumnName() {
+        return columnName;
+    }
+
+    public void setColumnName(final String columnName) {
+        this.columnName = columnName;
+    }
+
+    public int getDataType() {
+        return dataType;
+    }
+
+    public void setDataType(final int dataType) {
+        this.dataType = dataType;
+    }
+
+    public String getTypeName() {
+        return typeName;
+    }
+
+    public void setTypeName(final String typeName) {
+        this.typeName = typeName;
+    }
+
+    public int getColumnSize() {
+        return columnSize;
+    }
+
+    public void setColumnSize(final int columnSize) {
+        this.columnSize = columnSize;
+    }
+
+    public Integer getBufferLength() {
+        return bufferLength;
+    }
+
+    public void setBufferLength(final Integer bufferLength) {
+        this.bufferLength = bufferLength;
+    }
+
+    public Short getDecimalDigits() {
+        return decimalDigits;
+    }
+
+    public void setDecimalDigits(final Short decimalDigits) {
+        this.decimalDigits = decimalDigits;
+    }
+
+    public short getPseudoColumn() {
+        return pseudoColumn;
+    }
+
+    public void setPseudoColumn(final short pseudoColumn) {
+        this.pseudoColumn = pseudoColumn;
     }
 
     // -----------------------------------------------------------------------------------------------------------------

@@ -191,6 +191,9 @@ public class Context {
      * @param <C>                  the type of {@code collection}
      * @return given {@code collection}.
      * @throws SQLException if a database error occurs.
+     * @apiNote This method invokes {@link #getAttributes(String, String, String, String, Collection)} method with
+     * {@link UDT#getTypeCat() udt.typeCat}, {@link UDT#getTypeSchem() udt.typeSchem}, {@link UDT#getTypeName()
+     * udt.typeName}, {@code attributePattern}, and {@code collection} and returns the result.
      * @see #getAttributes(String, String, String, String, Collection)
      */
     public <C extends Collection<? super Attribute>> C getAttributes(final UDT udt, final String attributeNamePattern,
@@ -216,6 +219,7 @@ public class Context {
      * @return given {@code collection}.
      * @throws SQLException if a database error occurs.
      * @see DatabaseMetaData#getBestRowIdentifier(String, String, String, int, boolean)
+     * @see BestRowIdentifier.Scope
      */
     public <C extends Collection<? super BestRowIdentifier>> C getBestRowIdentifier(
             final String catalog, final String schema, final String table, final int scope, final boolean nullable,
@@ -244,6 +248,10 @@ public class Context {
      * @param <C>        the type of {@code collection}
      * @return given {@code collection}.
      * @throws SQLException if a database error occurs.
+     * @apiNote This method invokes {@link #getBestRowIdentifier(String, String, String, int, boolean, Collection)}
+     * method with {@link Table#getTableCat() table.tableCat}, {@link Table#getTableSchem() table.tableSchem}, {@link
+     * Table#getTableName() table.tableName}, {@code scope}, {@code nullable}, and {@code collection} and returns the
+     * result.
      * @see #getBestRowIdentifier(String, String, String, int, boolean, Collection)
      */
     public <C extends Collection<? super BestRowIdentifier>> C getBestRowIdentifier(
@@ -335,7 +343,7 @@ public class Context {
     }
 
     /**
-     * Retrieves column privileges of specified table.
+     * Retrieves column privileges of specified table and adds bound values to specified collection.
      *
      * @param table             the table whose column privileges are retrieved.
      * @param columnNamePattern a value for {@code columnNamePattern} parameter.
@@ -343,6 +351,9 @@ public class Context {
      * @param <C>               the type of {@code collection}
      * @return given {@code collection}.
      * @throws SQLException if a database error occurs.
+     * @apiNote This method invokes {@link #getColumnPrivileges(String, String, String, String, Collection)} method with
+     * {@link Table#getTableCat() table.tableCat}, {@link Table#getTableSchem() table.tableSchem}, {@link
+     * Table#getTableName() table.tableName}, {@code columnNamePattern}, and {@code collection} and returns the result.
      * @see #getColumnPrivileges(String, String, String, String, Collection)
      */
     public <C extends Collection<? super ColumnPrivilege>> C getColumnPrivileges(
@@ -386,7 +397,7 @@ public class Context {
     }
 
     /**
-     * Retrieves column of specified table and adds bound values to specified collection.
+     * Retrieves columns of specified table and adds bound values to specified collection.
      *
      * @param table             the table whose columns are retrieved.
      * @param columnNamePattern a value for {@code columnNamePattern} parameter.
@@ -394,6 +405,9 @@ public class Context {
      * @param <C>               the type of {@code collection}
      * @return given {@code collection}.
      * @throws SQLException if a database error occurs.
+     * @apiNote This method invokes {@link #getColumns(String, String, String, String, Collection)} method with {@link
+     * Table#getTableCat() table.tableCat}, {@link Table#getTableSchem() table.tableSchem}, {@link Table#getTableName()
+     * table.tableName}, {@code columnNamePattern}, and {@code collection} and returns the result.
      * @see #getColumns(String, String, String, String, Collection)
      */
     public <C extends Collection<? super Column>> C getColumns(final Table table, final String columnNamePattern,
@@ -443,7 +457,8 @@ public class Context {
     // ---------------------------------------------------------------------------------------------------- getFunctions
 
     /**
-     * Retrieves functions for given arguments and adds bound values to specified collection.
+     * Invokes {@link DatabaseMetaData#getFunctions(String, String, String)} method with given arguments and adds bound
+     * values to specified collection.
      *
      * @param catalog             a value for {@code catalog} parameter.
      * @param schemaPattern       a value for {@code schemaPattern} parameter.
@@ -471,7 +486,7 @@ public class Context {
     }
 
     /**
-     * Retrieves functions for specified schema and adds bound values to specified collection.
+     * Retrieves functions of specified schema and adds bound values to specified collection.
      *
      * @param schema              the schema whose functions are retrieved.
      * @param functionNamePattern a value for {@code functionNamePattern} parameter.
@@ -1437,10 +1452,7 @@ public class Context {
      * @param type a value for {@code type} parameter.
      * @return a bound value whose {@code value} property may be {@code null} when the {@link SQLException} suppressed.
      * @throws SQLException if a database access error occurs.
-     * @see DatabaseMetaData#ownDeletesAreVisible(int)
-     * @see ResultSet#TYPE_FORWARD_ONLY
-     * @see ResultSet#TYPE_SCROLL_INSENSITIVE
-     * @see ResultSet#TYPE_SCROLL_SENSITIVE
+     * @see OwnDeletesAreVisible#getAllInstances(Context, Collection)
      */
     public OwnDeletesAreVisible ownDeletesAreVisible(final int type) throws SQLException {
         final OwnDeletesAreVisible value = new OwnDeletesAreVisible();
@@ -1463,10 +1475,7 @@ public class Context {
      * @param type a value for {@code type} parameter.
      * @return a bound value whose {@code value} property may be {@code null} when the {@link SQLException} suppressed.
      * @throws SQLException if a database access error occurs.
-     * @see DatabaseMetaData#ownInsertsAreVisible(int)
-     * @see ResultSet#TYPE_FORWARD_ONLY
-     * @see ResultSet#TYPE_SCROLL_INSENSITIVE
-     * @see ResultSet#TYPE_SCROLL_SENSITIVE
+     * @see OwnInsertsAreVisible#getAllInstances(Context, Collection)
      */
     public OwnInsertsAreVisible ownInsertsAreVisible(final int type) throws SQLException {
         final OwnInsertsAreVisible value = new OwnInsertsAreVisible();
@@ -1489,10 +1498,7 @@ public class Context {
      * @param type a value for {@code type} parameter.
      * @return a bound value whose {@code value} property may be {@code null} when the {@link SQLException} suppressed.
      * @throws SQLException if a database access error occurs.
-     * @see DatabaseMetaData#ownUpdatesAreVisible(int)
-     * @see ResultSet#TYPE_FORWARD_ONLY
-     * @see ResultSet#TYPE_SCROLL_INSENSITIVE
-     * @see ResultSet#TYPE_SCROLL_SENSITIVE
+     * @see OwnUpdatesAreVisible#getAllInstances(Context, Collection)
      */
     public OwnUpdatesAreVisible ownUpdatesAreVisible(final int type) throws SQLException {
         final OwnUpdatesAreVisible value = new OwnUpdatesAreVisible();
