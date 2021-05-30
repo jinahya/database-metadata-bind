@@ -38,7 +38,7 @@ public class Metadata {
     public static Metadata newInstance(final Context context) throws SQLException {
         requireNonNull(context, "context is null");
         final Metadata instance = new Metadata();
-        CrossReference.getAllInstance(context, instance.crossReferences = new ArrayList<>());
+        instance.crossReferences = CrossReference.getAllInstance(context, new ArrayList<>());
         instance.deletesAreDetecteds = DeletesAreDetected.getAllInstances(context, new ArrayList<>());
         instance.insertsAreDetecteds = InsertsAreDetected.getAllInstances(context, new ArrayList<>());
         instance.updatesAreDetecteds = UpdatesAreDetected.getAllInstances(context, new ArrayList<>());
@@ -83,12 +83,12 @@ public class Metadata {
                 }
             }
         }
-        OthersDeletesAreVisible.getAllInstances(context, instance.othersDeletesAreVisibles = new ArrayList<>());
-        OthersInsertsAreVisible.getAllInstances(context, instance.othersInsertsAreVisibles = new ArrayList<>());
-        OthersUpdatesAreVisible.getAllInstances(context, instance.othersUpdatesAreVisibles = new ArrayList<>());
-        OwnDeletesAreVisible.getAllInstances(context, instance.ownDeletesAreVisibles = new ArrayList<>());
-        OwnInsertsAreVisible.getAllInstances(context, instance.ownInsertsAreVisibles = new ArrayList<>());
-        OwnUpdatesAreVisible.getAllInstances(context, instance.ownUpdatesAreVisibles = new ArrayList<>());
+        instance.othersDeletesAreVisibles = OthersDeletesAreVisible.getAllInstances(context, new ArrayList<>());
+        instance.othersInsertsAreVisibles = OthersInsertsAreVisible.getAllInstances(context, new ArrayList<>());
+        instance.othersUpdatesAreVisibles = OthersUpdatesAreVisible.getAllInstances(context, new ArrayList<>());
+        instance.ownDeletesAreVisibles = OwnDeletesAreVisible.getAllInstances(context, new ArrayList<>());
+        instance.ownInsertsAreVisibles = OwnInsertsAreVisible.getAllInstances(context, new ArrayList<>());
+        instance.ownUpdatesAreVisibles = OwnUpdatesAreVisible.getAllInstances(context, new ArrayList<>());
         instance.tableTypes = context.getTableTypes(new ArrayList<>());
         // -------------------------------------------------------------------------------------------------------------
         return instance;
