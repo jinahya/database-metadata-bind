@@ -405,9 +405,9 @@ public class Context {
      * @param <C>               the type of {@code collection}
      * @return given {@code collection}.
      * @throws SQLException if a database error occurs.
-     * @apiNote This method invokes {@link #getColumns(String, String, String, String, Collection)} method with {@link
-     * Table#getTableCat() table.tableCat}, {@link Table#getTableSchem() table.tableSchem}, {@link Table#getTableName()
-     * table.tableName}, {@code columnNamePattern}, and {@code collection} and returns the result.
+     * @apiNote This method invokes {@link #getColumns(String, String, String, String, Collection) getColumns} method
+     * with ({@link Table#getTableCat() table.tableCat}, {@link Table#getTableSchem() table.tableSchem}, {@link
+     * Table#getTableName() table.tableName}, {@code columnNamePattern}, {@code collection}) and returns the result.
      * @see #getColumns(String, String, String, String, Collection)
      */
     public <C extends Collection<? super Column>> C getColumns(final Table table, final String columnNamePattern,

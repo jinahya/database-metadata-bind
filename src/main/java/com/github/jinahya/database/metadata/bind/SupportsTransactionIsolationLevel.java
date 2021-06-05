@@ -49,13 +49,14 @@ public class SupportsTransactionIsolationLevel
      * @param <C>        the type of {@code collection}
      * @return given {@code collection}.
      * @throws SQLException if a database access error occurs.
+     * @see ConnectionTransactionIsolationLevel
      */
     public static <C extends Collection<? super SupportsTransactionIsolationLevel>> C getAllInstances(
             final Context context, final C collection)
             throws SQLException {
         requireNonNull(context, "context is null");
         requireNonNull(collection, "collection is null");
-        for (final TransactionIsolationLevel value : TransactionIsolationLevel.values()) {
+        for (final ConnectionTransactionIsolationLevel value : ConnectionTransactionIsolationLevel.values()) {
             collection.add(context.supportsTransactionIsolationLevel(value.getRawValue()));
         }
         return collection;
@@ -85,7 +86,8 @@ public class SupportsTransactionIsolationLevel
         if (this == obj) return true;
         if (obj == null || getClass() != obj.getClass()) return false;
         final SupportsTransactionIsolationLevel that = (SupportsTransactionIsolationLevel) obj;
-        return level == that.level && Objects.equals(value, that.value);
+        return level == that.level
+               && Objects.equals(value, that.value);
     }
 
     @Override
