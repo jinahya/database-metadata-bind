@@ -24,6 +24,7 @@ import javax.xml.bind.annotation.XmlTransient;
 import java.io.Serializable;
 
 @XmlTransient
-interface MetadataType extends Serializable {
+interface MetadataType
+        extends Serializable {
 
 }

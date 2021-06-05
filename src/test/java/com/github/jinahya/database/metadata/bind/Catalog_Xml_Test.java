@@ -53,6 +53,6 @@ class Catalog_Xml_Test {
         expected.setTableCat("tableCat");
         final Node marshalled = JaxbTests.marshal(Catalog.class, expected);
         final Catalog actual = JaxbTests.unmarshal(Catalog.class, marshalled);
-        assertThat(actual).isEqualTo(expected);
+        assertThat(actual.getTableCat()).isEqualTo(expected.getTableCat());
     }
 }

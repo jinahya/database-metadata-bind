@@ -38,6 +38,8 @@ import java.util.Collection;
 import java.util.List;
 import java.util.Objects;
 
+import static java.util.Objects.requireNonNull;
+
 /**
  * A class for binding a result of {@link java.sql.DatabaseMetaData#getSchemas(java.lang.String, java.lang.String)}
  * method.
@@ -70,31 +72,34 @@ public class Schema
     // -----------------------------------------------------------------------------------------------------------------
 
     /**
-     * Creates a new virtual instance with following property values.
+     * Creates a new instance with specified property values.
      *
      * @param tableCatalog a value for {@code tableCatalog} property.
      * @param tableSchem   a value for {@code tableSchem} property.
-     * @return a new virtual instance.
+     * @return a new instance of {@code tableCatalog} and {@code tableSchem}.
      */
-    static Schema newVirtualInstance(final String tableCatalog, final String tableSchem) {
+    public static Schema of(final String tableCatalog, final String tableSchem) {
         final Schema instance = new Schema();
-        instance.virtual = Boolean.TRUE;
-        instance.tableCatalog = tableCatalog;
-        instance.tableSchem = tableSchem;
+        instance.setTableCatalog(tableCatalog);
+        instance.setTableSchem(tableSchem);
         return instance;
     }
 
     /**
-     * Creates a new virtual instance with specified table catalog.
+     * Creates a new virtual instance with following property values.
      *
-     * @param tableCatalog the value for {@code tableCatalog} property.
+     * @param tableCatalog a value for {@code tableCatalog} property.
      * @return a new virtual instance.
      */
-    static Schema newVirtualInstance(final String tableCatalog) {
-        return newVirtualInstance(tableCatalog, "");
+    public static Schema newVirtualInstance(final String tableCatalog) {
+        requireNonNull(tableCatalog, "tableCatalog is null");
+        final Schema instance = of(tableCatalog, "");
+        instance.virtual = Boolean.TRUE;
+        return instance;
     }
 
-    static Schema newVirtualInstance(final Catalog catalog) {
+    public static Schema newVirtualInstance(final Catalog catalog) {
+        requireNonNull(catalog, "catalog is null");
         return newVirtualInstance(catalog.getTableCat());
     }
 

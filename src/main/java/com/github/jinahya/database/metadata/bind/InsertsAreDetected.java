@@ -48,8 +48,8 @@ public class InsertsAreDetected
      * @param <C>        the type of {@code collection}
      * @return given {@code collection}.
      * @throws SQLException if a database error occurs.
-     * @see ResultSetType
      * @see Context#insertsAreDetected(int)
+     * @see ResultSetType
      */
     public static <C extends Collection<? super InsertsAreDetected>> C getAllInstances(final Context context,
                                                                                        final C collection)

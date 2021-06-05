@@ -20,9 +20,6 @@ package com.github.jinahya.database.metadata.bind;
  * #L%
  */
 
-import lombok.Data;
-import lombok.NoArgsConstructor;
-
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
 import java.sql.DatabaseMetaData;
@@ -36,8 +33,6 @@ import java.util.Collection;
  */
 @XmlRootElement
 @ChildOf(Table.class)
-@Data
-@NoArgsConstructor
 public class VersionColumn
         implements MetadataType {
 
@@ -50,7 +45,8 @@ public class VersionColumn
      *
      * @see Context#getVersionColumns(String, String, String, Collection)
      */
-    public enum PseudoColumn implements IntFieldEnum<PseudoColumn> {
+    public enum PseudoColumn
+            implements IntFieldEnum<PseudoColumn> {
 
         /**
          * Constant for {@link DatabaseMetaData#versionColumnUnknown} whose value is {@value
@@ -101,6 +97,96 @@ public class VersionColumn
         }
 
         private final int rawValue;
+    }
+
+    // -----------------------------------------------------------------------------------------------------------------
+
+    /**
+     * Creates a new instance.
+     */
+    public VersionColumn() {
+        super();
+    }
+
+    // -----------------------------------------------------------------------------------------------------------------
+
+    @Override
+    public String toString() {
+        return super.toString() + '{'
+               + "scope=" + scope
+               + ",columnName='" + columnName
+               + ",dataType=" + dataType
+               + ",typeName='" + typeName
+               + ",columnSize=" + columnSize
+               + ",bufferLength=" + bufferLength
+               + ",decimalDigits=" + decimalDigits
+               + ",pseudoColumn=" + pseudoColumn
+               + '}';
+    }
+
+    // -----------------------------------------------------------------------------------------------------------------
+    public Short getScope() {
+        return scope;
+    }
+
+    public void setScope(final Short scope) {
+        this.scope = scope;
+    }
+
+    public String getColumnName() {
+        return columnName;
+    }
+
+    public void setColumnName(final String columnName) {
+        this.columnName = columnName;
+    }
+
+    public int getDataType() {
+        return dataType;
+    }
+
+    public void setDataType(final int dataType) {
+        this.dataType = dataType;
+    }
+
+    public String getTypeName() {
+        return typeName;
+    }
+
+    public void setTypeName(final String typeName) {
+        this.typeName = typeName;
+    }
+
+    public int getColumnSize() {
+        return columnSize;
+    }
+
+    public void setColumnSize(final int columnSize) {
+        this.columnSize = columnSize;
+    }
+
+    public int getBufferLength() {
+        return bufferLength;
+    }
+
+    public void setBufferLength(final int bufferLength) {
+        this.bufferLength = bufferLength;
+    }
+
+    public Short getDecimalDigits() {
+        return decimalDigits;
+    }
+
+    public void setDecimalDigits(final Short decimalDigits) {
+        this.decimalDigits = decimalDigits;
+    }
+
+    public short getPseudoColumn() {
+        return pseudoColumn;
+    }
+
+    public void setPseudoColumn(final short pseudoColumn) {
+        this.pseudoColumn = pseudoColumn;
     }
 
     // -----------------------------------------------------------------------------------------------------------------

@@ -7,7 +7,7 @@
 A library for binding various information
 from [DatabaseMetaData](http://docs.oracle.com/javase/8/docs/api/java/sql/DatabaseMetaData.html).
 
-All methods defined in [DatabaseMetaData][DatabaseMetaData] meet following conditions have been bound with corresponding result types.
+All methods defined in [DatabaseMetaData][DatabaseMetaData] meet following conditions have been defined along with corresponding result types.
 
 * is an instance method.
 * has at least one parameter
@@ -16,15 +16,27 @@ All methods defined in [DatabaseMetaData][DatabaseMetaData] meet following condi
 ## Usage
 
 ```java
-// create a context from a connection
 java.sql.Connection connection = connect();
 Context context = Context.newInstance(connection)
         .suppress(SQLFeatureNotSupportedException.class);
 
-// invoke methods
 List<Catalog> catalogs = context.getCatalogs(new ArrayList<>());
-List<Schema> schemas = context.getSchemas("", null, new LinkedList<>());
-Set<Table> tables = context.getTables(null, null, null, new HashSet<>());
+if (catalogs.isEmpty()) {
+    catalogs.add(Catalog.newVirtualInstance());
+}
+
+for (Catalog catalog : catalogs) {
+    context.getSchemas(catalog, null, catalog.getSchemas());
+    if (catalog.getSchemas().isEmpty()) {
+        catalog.getSchemas().add(Schema.newVirtualInstance(catalog));
+    }
+    for (Schema schema : catalog.getSchemas()) {
+        context.getTables(schema, "%", null, schema.getTables());
+    }
+}
+
+// Gather almost all information
+Metadata metadata = Metadata.newInstance(cotext);
 ```
 
 ## Gathering metadata from existing databases
@@ -48,13 +60,12 @@ $
 name              |value                 |notes
 ------------------|----------------------|-----------
 `<server>`        |server identifier     |see below
-`<client>`        |jdbc client identifier|see below
-`version-<client>`| version of `<client>`|see below
+`version.<client>`|version of `<client>` |see below
 `url`             |connection url        |
 `user`            |user                  |
 `password`        |password              |
 
-##### `<server>` / `<client>`
+#### `<server>` / `<client>`
 
 database  |`<server>`      |`<client>`
 ----------|----------------|----------------------------------------------
@@ -70,15 +81,27 @@ SQL Server|`sqlserver`     |[`mssql-jdbc`][mysql-jdbc]
 e.g.
 
 ```shell
+$ mvn -Pfailsafe,external-mysql \
+      -Dversion.mysql-connector-java=8.0.25
+      -Durl=jdbc:mysql://host:port/database
+      -Duser=...
+      -Dpassword=...
+      -Dit.test=ExternalIT \
+      verify
+...
+$ 
+```
+
+```shell
 $ mvn -Pexternal-oracle-ojdbc11 \
-      -Dversion.ojdbc11=21.1.0.0 \
+      -Dversion-ojdbc11=21.1.0.0 \
       -Durl=jdbc:oracle:thin:@//host:port/service \
       -Duser=scott \
       -Dpassword=tiger \
       -Dit.test=ExternalIT \
       verify
 ...
-$      
+$ 
 ```
 
 [DatabaseMetaData]: https://docs.oracle.com/en/java/javase/11/docs/api/java.sql/java/sql/DatabaseMetaData.html

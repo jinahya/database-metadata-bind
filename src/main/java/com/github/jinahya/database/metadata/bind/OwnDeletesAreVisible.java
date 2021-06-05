@@ -27,7 +27,7 @@ import java.util.Collection;
 import static java.util.Objects.requireNonNull;
 
 /**
- * A class for binding result of {@link java.sql.DatabaseMetaData#deletesAreDetected(int)} method.
+ * A class for binding result of {@link java.sql.DatabaseMetaData#ownDeletesAreVisible(int)} method.
  *
  * @author Jin Kwon &lt;onacit_at_gmail.com&gt;
  * @see Context#ownDeletesAreVisible(int)
@@ -48,6 +48,7 @@ public class OwnDeletesAreVisible
      * @return given {@code collection}.
      * @throws SQLException if a database access error occurs.
      * @see Context#ownDeletesAreVisible(int)
+     * @see ResultSetType
      */
     public static <C extends Collection<? super OwnDeletesAreVisible>> C getAllInstances(final Context context,
                                                                                          final C collection)

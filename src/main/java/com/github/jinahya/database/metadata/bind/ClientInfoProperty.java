@@ -32,7 +32,8 @@ import java.util.Collection;
  * @see Context#getClientInfoProperties(Collection)
  */
 @XmlRootElement
-public class ClientInfoProperty implements MetadataType {
+public class ClientInfoProperty
+        implements MetadataType {
 
     private static final long serialVersionUID = -2913230435651853254L;
 
@@ -57,8 +58,7 @@ public class ClientInfoProperty implements MetadataType {
                + '}';
     }
 
-    // -----------------------------------------------------------------------------------------------------------------
-
+    // ------------------------------------------------------------------------------------------------------------ name
     public String getName() {
         return name;
     }
@@ -67,6 +67,7 @@ public class ClientInfoProperty implements MetadataType {
         this.name = name;
     }
 
+    // ---------------------------------------------------------------------------------------------------------- maxLen
     public int getMaxLen() {
         return maxLen;
     }
@@ -75,6 +76,7 @@ public class ClientInfoProperty implements MetadataType {
         this.maxLen = maxLen;
     }
 
+    // ---------------------------------------------------------------------------------------------------- defaultValue
     public String getDefaultValue() {
         return defaultValue;
     }
@@ -83,6 +85,7 @@ public class ClientInfoProperty implements MetadataType {
         this.defaultValue = defaultValue;
     }
 
+    // ----------------------------------------------------------------------------------------------------- description
     public String getDescription() {
         return description;
     }

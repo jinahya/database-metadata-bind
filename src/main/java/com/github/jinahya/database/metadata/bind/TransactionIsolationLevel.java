@@ -27,7 +27,8 @@ import java.sql.Connection;
  *
  * @author Jin Kwon &lt;onacit_at_gmail.com&gt;
  */
-enum ConnectionTransactionIsolationLevel implements IntFieldEnum<ConnectionTransactionIsolationLevel> {
+public enum TransactionIsolationLevel
+        implements IntFieldEnum<TransactionIsolationLevel> {
 
     /**
      * Constant for {@link Connection#TRANSACTION_NONE}({@value java.sql.Connection#TRANSACTION_NONE}).
@@ -60,8 +61,8 @@ enum ConnectionTransactionIsolationLevel implements IntFieldEnum<ConnectionTrans
      * @param rawValue the {@code rawValue} to match.
      * @return the value of {@code rawValue}.
      */
-    public static ConnectionTransactionIsolationLevel valueOfRawValue(final int rawValue) {
-        return IntFieldEnums.valueOfRawValue(ConnectionTransactionIsolationLevel.class, rawValue);
+    public static TransactionIsolationLevel valueOfRawValue(final int rawValue) {
+        return IntFieldEnums.valueOfRawValue(TransactionIsolationLevel.class, rawValue);
     }
 
     /**
@@ -69,7 +70,7 @@ enum ConnectionTransactionIsolationLevel implements IntFieldEnum<ConnectionTrans
      *
      * @param rawValue the raw value.
      */
-    ConnectionTransactionIsolationLevel(final int rawValue) {
+    TransactionIsolationLevel(final int rawValue) {
         this.rawValue = rawValue;
     }
 

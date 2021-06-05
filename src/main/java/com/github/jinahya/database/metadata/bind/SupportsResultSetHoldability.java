@@ -20,45 +20,96 @@ package com.github.jinahya.database.metadata.bind;
  * #L%
  */
 
-import lombok.Data;
-import lombok.NoArgsConstructor;
-
 import javax.xml.bind.annotation.XmlAttribute;
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlValue;
 import java.sql.DatabaseMetaData;
 import java.sql.SQLException;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.Collection;
+import java.util.Objects;
 
 import static java.util.Objects.requireNonNull;
 
 /**
- * A class for binding result of {@link DatabaseMetaData#supportsResultSetHoldability(int)} method.
+ * A class for binding results of {@link DatabaseMetaData#supportsResultSetHoldability(int)} method.
  *
  * @author Jin Kwon &lt;onacit_at_gmail.com&gt;
+ * @see Context#supportsResultSetHoldability(int)
  */
 @XmlRootElement
-@Data
-@NoArgsConstructor
-public class SupportsResultSetHoldability implements MetadataType {
+public class SupportsResultSetHoldability
+        implements MetadataType {
 
     // -----------------------------------------------------------------------------------------------------------------
 
     /**
-     * Invokes {@link Context#supportsResultSetHoldability(int)} method for all holdabilities and returns bound values.
+     * Invokes {@link Context#supportsResultSetHoldability(int)} method for all holdabilities and adds bound values to
+     * specified collection.
      *
-     * @param context a context.
-     * @return a list of bound values.
+     * @param context    a context.
+     * @param collection the collection to which bound values are added.
+     * @param <C>        the type of {@code collection}
+     * @return given {@code collection}.
      * @throws SQLException if a database error occurs.
      */
-    public static List<SupportsResultSetHoldability> getAllInstances(final Context context) throws SQLException {
+    public static <C extends Collection<? super SupportsResultSetHoldability>> C getAllInstances(final Context context,
+                                                                                                 final C collection)
+            throws SQLException {
         requireNonNull(context, "context is null");
-        final List<SupportsResultSetHoldability> all = new ArrayList<>();
         for (final ResultSetHoldability value : ResultSetHoldability.values()) {
-            all.add(context.supportsResultSetHoldability(value.getRawValue()));
+            collection.add(context.supportsResultSetHoldability(value.getRawValue()));
         }
-        return all;
+        return collection;
+    }
+
+    // -----------------------------------------------------------------------------------------------------------------
+
+    /**
+     * Creates a new instance.
+     */
+    public SupportsResultSetHoldability() {
+        super();
+    }
+
+    // -----------------------------------------------------------------------------------------------------------------
+
+    @Override
+    public String toString() {
+        return super.toString() + '{'
+               + "type=" + holdability
+               + ",value=" + value
+               + '}';
+    }
+
+    @Override
+    public boolean equals(final Object obj) {
+        if (this == obj) return true;
+        if (obj == null || getClass() != obj.getClass()) return false;
+        final SupportsResultSetHoldability that = (SupportsResultSetHoldability) obj;
+        return holdability == that.holdability
+               && Objects.equals(value, that.value);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(holdability, value);
+    }
+
+    // -----------------------------------------------------------------------------------------------------------------
+    public int getHoldability() {
+        return holdability;
+    }
+
+    public void setHoldability(final int holdability) {
+        this.holdability = holdability;
+    }
+
+    public Boolean getValue() {
+        return value;
+    }
+
+    public void setValue(final Boolean value) {
+        this.value = value;
     }
 
     // -----------------------------------------------------------------------------------------------------------------

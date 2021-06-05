@@ -36,7 +36,6 @@ import javax.xml.bind.annotation.XmlSchemaType;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
-import java.util.Objects;
 
 /**
  * A class for binding results of {@link java.sql.DatabaseMetaData#getCatalogs()} method.
@@ -57,9 +56,14 @@ public class Catalog
     public static final String ATTRIBUTE_NAME_TABLE_CAT = "tableCat";
 
     // -----------------------------------------------------------------------------------------------------------------
-    static Catalog newVirtualInstance() {
+    public static Catalog of(final String tableCat) {
         final Catalog instance = new Catalog();
-        instance.tableCat = "";
+        instance.setTableCat(tableCat);
+        return instance;
+    }
+
+    public static Catalog newVirtualInstance() {
+        final Catalog instance = of("");
         instance.virtual = Boolean.TRUE;
         return instance;
     }
@@ -82,20 +86,7 @@ public class Catalog
                + '}';
     }
 
-    @Override
-    public boolean equals(final Object obj) {
-        if (this == obj) return true;
-        if (obj == null || getClass() != obj.getClass()) return false;
-        final Catalog that = (Catalog) obj;
-        return Objects.equals(tableCat, that.tableCat);
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(tableCat);
-    }
-
-    // -----------------------------------------------------------------------------------------------------------------
+    // -------------------------------------------------------------------------------------------------------- tableCat
     public String getTableCat() {
         return tableCat;
     }
@@ -104,7 +95,7 @@ public class Catalog
         this.tableCat = tableCat;
     }
 
-    // -----------------------------------------------------------------------------------------------------------------
+    // --------------------------------------------------------------------------------------------------------- schemas
     public List<Schema> getSchemas() {
         if (schemas == null) {
             schemas = new ArrayList<>();

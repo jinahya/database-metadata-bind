@@ -48,6 +48,7 @@ public class OthersUpdatesAreVisible
      * @return given {@code collection}.
      * @throws SQLException if a database access error occurs.
      * @see Context#othersUpdatesAreVisible(int)
+     * @see ResultSetType
      */
     public static <C extends Collection<? super OthersUpdatesAreVisible>> C getAllInstances(final Context context,
                                                                                             final C collection)

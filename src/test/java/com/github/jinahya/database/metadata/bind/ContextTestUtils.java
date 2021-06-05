@@ -137,7 +137,7 @@ final class ContextTestUtils {
 
     static void writeSupportsConvert(final Context context) throws SQLException, JAXBException {
         requireNonNull(context, "context is null");
-        final List<SupportsConvert> all = SupportsConvert.getAllInstances(context);
+        final List<SupportsConvert> all = SupportsConvert.getAllInstances(context, new ArrayList<>());
         assertThat(all)
                 .doesNotContainNull();
         final String pathname = TestUtils.getFilenamePrefix(context) + " - supportsConvert.xml";

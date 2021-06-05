@@ -25,7 +25,7 @@ import javax.xml.bind.annotation.XmlTransient;
 import javax.xml.bind.annotation.XmlValue;
 
 /**
- * An abstract class for binding {@code ...AreVisible} values.
+ * An abstract class for binding results of  {@code DatabaseMetaData#...DeletesAreVisible(int)} method.
  *
  * @see OthersDeletesAreVisible
  * @see OthersInsertsAreVisible
@@ -41,11 +41,15 @@ abstract class AreVisible
     private static final long serialVersionUID = 8635936632512182596L;
 
     // -----------------------------------------------------------------------------------------------------------------
+
+    /**
+     * Creates a new instance.
+     */
     protected AreVisible() {
         super();
     }
 
-    // -----------------------------------------------------------------------------------------------------------------
+    // ------------------------------------------------------------------------------------------------------------ type
     public int getType() {
         return type;
     }
@@ -54,6 +58,7 @@ abstract class AreVisible
         this.type = type;
     }
 
+    // ----------------------------------------------------------------------------------------------------------- value
     public Boolean getValue() {
         return value;
     }
@@ -62,6 +67,7 @@ abstract class AreVisible
         this.value = value;
     }
 
+    // -----------------------------------------------------------------------------------------------------------------
     @XmlAttribute(required = true)
     private int type;
 

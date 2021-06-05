@@ -38,10 +38,18 @@ public class Metadata {
     public static Metadata newInstance(final Context context) throws SQLException {
         requireNonNull(context, "context is null");
         final Metadata instance = new Metadata();
-        instance.crossReferences = CrossReference.getAllInstance(context, new ArrayList<>());
+        // -------------------------------------------------------------------------------------------------------------
         instance.deletesAreDetecteds = DeletesAreDetected.getAllInstances(context, new ArrayList<>());
         instance.insertsAreDetecteds = InsertsAreDetected.getAllInstances(context, new ArrayList<>());
         instance.updatesAreDetecteds = UpdatesAreDetected.getAllInstances(context, new ArrayList<>());
+        // -------------------------------------------------------------------------------------------------------------
+        instance.othersDeletesAreVisibles = OthersDeletesAreVisible.getAllInstances(context, new ArrayList<>());
+        instance.othersInsertsAreVisibles = OthersInsertsAreVisible.getAllInstances(context, new ArrayList<>());
+        instance.othersUpdatesAreVisibles = OthersUpdatesAreVisible.getAllInstances(context, new ArrayList<>());
+        instance.ownDeletesAreVisibles = OwnDeletesAreVisible.getAllInstances(context, new ArrayList<>());
+        instance.ownInsertsAreVisibles = OwnInsertsAreVisible.getAllInstances(context, new ArrayList<>());
+        instance.ownUpdatesAreVisibles = OwnUpdatesAreVisible.getAllInstances(context, new ArrayList<>());
+        // -------------------------------------------------------------------------------------------------------------
         instance.catalogs = context.getCatalogs(new ArrayList<>());
         if (instance.catalogs.isEmpty()) {
             instance.catalogs.add(Catalog.newVirtualInstance()); // ""
@@ -83,12 +91,19 @@ public class Metadata {
                 }
             }
         }
-        instance.othersDeletesAreVisibles = OthersDeletesAreVisible.getAllInstances(context, new ArrayList<>());
-        instance.othersInsertsAreVisibles = OthersInsertsAreVisible.getAllInstances(context, new ArrayList<>());
-        instance.othersUpdatesAreVisibles = OthersUpdatesAreVisible.getAllInstances(context, new ArrayList<>());
-        instance.ownDeletesAreVisibles = OwnDeletesAreVisible.getAllInstances(context, new ArrayList<>());
-        instance.ownInsertsAreVisibles = OwnInsertsAreVisible.getAllInstances(context, new ArrayList<>());
-        instance.ownUpdatesAreVisibles = OwnUpdatesAreVisible.getAllInstances(context, new ArrayList<>());
+        instance.clientInfoProperties = context.getClientInfoProperties(new ArrayList<>());
+        // -------------------------------------------------------------------------------------------------------------
+        instance.crossReferences = CrossReference.getAllInstance(context, new ArrayList<>());
+        // -------------------------------------------------------------------------------------------------------------
+        instance.supportsConverts = SupportsConvert.getAllInstances(context, new ArrayList<>());
+        instance.supportsResultSetConcurrencies
+                = SupportsResultSetConcurrency.getAllInstances(context, new ArrayList<>());
+        instance.supportsResultSetHoldabilities
+                = SupportsResultSetHoldability.getAllInstances(context, new ArrayList<>());
+        instance.supportsResultSetTypes = SupportsResultSetType.getAllInstances(context, new ArrayList<>());
+        instance.supportsTransactionIsolationLevels
+                = SupportsTransactionIsolationLevel.getAllInstances(context, new ArrayList<>());
+        // -------------------------------------------------------------------------------------------------------------
         instance.tableTypes = context.getTableTypes(new ArrayList<>());
         // -------------------------------------------------------------------------------------------------------------
         return instance;
@@ -103,11 +118,6 @@ public class Metadata {
     @XmlElementRef
     @Setter(AccessLevel.NONE)
     @Getter(AccessLevel.NONE)
-    private List<CrossReference> crossReferences;
-
-    @XmlElementRef
-    @Setter(AccessLevel.NONE)
-    @Getter(AccessLevel.NONE)
     private List<DeletesAreDetected> deletesAreDetecteds;
 
     @XmlElementRef
@@ -119,11 +129,6 @@ public class Metadata {
     @Setter(AccessLevel.NONE)
     @Getter(AccessLevel.NONE)
     private List<UpdatesAreDetected> updatesAreDetecteds;
-
-    @XmlElementRef
-    @Setter(AccessLevel.NONE)
-    @Getter(AccessLevel.NONE)
-    private List<Catalog> catalogs;
 
     @XmlElementRef
     @Setter(AccessLevel.NONE)
@@ -154,6 +159,46 @@ public class Metadata {
     @Setter(AccessLevel.NONE)
     @Getter(AccessLevel.NONE)
     private List<OwnUpdatesAreVisible> ownUpdatesAreVisibles;
+
+    @XmlElementRef
+    @Setter(AccessLevel.NONE)
+    @Getter(AccessLevel.NONE)
+    private List<Catalog> catalogs;
+
+    @XmlElementRef
+    @Setter(AccessLevel.NONE)
+    @Getter(AccessLevel.NONE)
+    private List<ClientInfoProperty> clientInfoProperties;
+
+    @XmlElementRef
+    @Setter(AccessLevel.NONE)
+    @Getter(AccessLevel.NONE)
+    private List<CrossReference> crossReferences;
+
+    @XmlElementRef
+    @Setter(AccessLevel.NONE)
+    @Getter(AccessLevel.NONE)
+    private List<SupportsConvert> supportsConverts;
+
+    @XmlElementRef
+    @Setter(AccessLevel.NONE)
+    @Getter(AccessLevel.NONE)
+    private List<SupportsResultSetConcurrency> supportsResultSetConcurrencies;
+
+    @XmlElementRef
+    @Setter(AccessLevel.NONE)
+    @Getter(AccessLevel.NONE)
+    private List<SupportsResultSetHoldability> supportsResultSetHoldabilities;
+
+    @XmlElementRef
+    @Setter(AccessLevel.NONE)
+    @Getter(AccessLevel.NONE)
+    private List<SupportsResultSetType> supportsResultSetTypes;
+
+    @XmlElementRef
+    @Setter(AccessLevel.NONE)
+    @Getter(AccessLevel.NONE)
+    private List<SupportsTransactionIsolationLevel> supportsTransactionIsolationLevels;
 
     @XmlElementRef
     @Setter(AccessLevel.NONE)

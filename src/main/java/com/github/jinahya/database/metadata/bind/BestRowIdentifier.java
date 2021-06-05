@@ -39,11 +39,11 @@ public class BestRowIdentifier
 
     private static final long serialVersionUID = -6733770602373723371L;
 
+    // -----------------------------------------------------------------------------------------------------------------
+
     /**
      * Constants for {@code PSEUDO_COLUMN} column values of a result of {@link DatabaseMetaData#getBestRowIdentifier(String,
      * String, String, int, boolean)} method.
-     *
-     * @see DatabaseMetaData#getBestRowIdentifier(java.lang.String, java.lang.String, java.lang.String, int, boolean)
      */
     public enum PseudoColumn
             implements IntFieldEnum<PseudoColumn> {
@@ -88,8 +88,6 @@ public class BestRowIdentifier
     /**
      * Constants for {@code SCOPE} column values of a result of {@link DatabaseMetaData#getBestRowIdentifier(String,
      * String, String, int, boolean)} method.
-     *
-     * @see DatabaseMetaData#getBestRowIdentifier(java.lang.String, java.lang.String, java.lang.String, int, boolean)
      */
     public enum Scope
             implements IntFieldEnum<Scope> {
@@ -156,8 +154,7 @@ public class BestRowIdentifier
                + '}';
     }
 
-    // -----------------------------------------------------------------------------------------------------------------
-
+    // ----------------------------------------------------------------------------------------------------------- scope
     public short getScope() {
         return scope;
     }
@@ -166,6 +163,7 @@ public class BestRowIdentifier
         this.scope = scope;
     }
 
+    // ------------------------------------------------------------------------------------------------------ columnName
     public String getColumnName() {
         return columnName;
     }
@@ -174,6 +172,7 @@ public class BestRowIdentifier
         this.columnName = columnName;
     }
 
+    // -------------------------------------------------------------------------------------------------------- dataType
     public int getDataType() {
         return dataType;
     }
@@ -182,6 +181,7 @@ public class BestRowIdentifier
         this.dataType = dataType;
     }
 
+    // -------------------------------------------------------------------------------------------------------- typeName
     public String getTypeName() {
         return typeName;
     }
@@ -190,6 +190,7 @@ public class BestRowIdentifier
         this.typeName = typeName;
     }
 
+    // ------------------------------------------------------------------------------------------------------ columnSize
     public int getColumnSize() {
         return columnSize;
     }
@@ -198,6 +199,7 @@ public class BestRowIdentifier
         this.columnSize = columnSize;
     }
 
+    // ---------------------------------------------------------------------------------------------------- bufferLength
     public Integer getBufferLength() {
         return bufferLength;
     }
@@ -206,6 +208,7 @@ public class BestRowIdentifier
         this.bufferLength = bufferLength;
     }
 
+    // --------------------------------------------------------------------------------------------------- decimalDigits
     public Short getDecimalDigits() {
         return decimalDigits;
     }
@@ -214,6 +217,7 @@ public class BestRowIdentifier
         this.decimalDigits = decimalDigits;
     }
 
+    // ---------------------------------------------------------------------------------------------------- pseudoColumn
     public short getPseudoColumn() {
         return pseudoColumn;
     }

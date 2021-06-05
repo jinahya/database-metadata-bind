@@ -28,7 +28,7 @@ import java.util.Collection;
 import static java.util.Objects.requireNonNull;
 
 /**
- * A class for binding result of {@link DatabaseMetaData#insertsAreDetected(int)} method.
+ * A class for binding result of {@link DatabaseMetaData#updatesAreDetected(int)} method.
  *
  * @author Jin Kwon &lt;onacit_at_gmail.com&gt;
  * @see Context#updatesAreDetected(int)

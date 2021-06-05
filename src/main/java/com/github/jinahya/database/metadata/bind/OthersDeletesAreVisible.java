@@ -48,6 +48,7 @@ public class OthersDeletesAreVisible
      * @return given {@code collection}.
      * @throws SQLException if a database access error occurs.
      * @see Context#othersDeletesAreVisible(int)
+     * @see ResultSetType
      */
     public static <C extends Collection<? super OthersDeletesAreVisible>> C getAllInstances(final Context context,
                                                                                             final C collection)

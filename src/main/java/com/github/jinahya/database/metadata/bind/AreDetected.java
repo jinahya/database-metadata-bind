@@ -23,10 +23,9 @@ package com.github.jinahya.database.metadata.bind;
 import javax.xml.bind.annotation.XmlAttribute;
 import javax.xml.bind.annotation.XmlTransient;
 import javax.xml.bind.annotation.XmlValue;
-import java.sql.DatabaseMetaData;
 
 /**
- * A class for binding result of {@link DatabaseMetaData#deletesAreDetected(int)} method.
+ * An abstract class for binding results of {@code DatabaseMetaData#...AreDetected(int)} method.
  *
  * @author Jin Kwon &lt;onacit_at_gmail.com&gt;
  * @see DeletesAreDetected
@@ -34,7 +33,8 @@ import java.sql.DatabaseMetaData;
  * @see UpdatesAreDetected
  */
 @XmlTransient
-abstract class AreDetected implements MetadataType {
+abstract class AreDetected
+        implements MetadataType {
 
     private static final long serialVersionUID = 472228030784272988L;
 
@@ -56,7 +56,7 @@ abstract class AreDetected implements MetadataType {
                + '}';
     }
 
-    // -----------------------------------------------------------------------------------------------------------------
+    // ------------------------------------------------------------------------------------------------------------ type
     public int getType() {
         return type;
     }
@@ -65,6 +65,7 @@ abstract class AreDetected implements MetadataType {
         this.type = type;
     }
 
+    // ----------------------------------------------------------------------------------------------------------- value
     public Boolean getValue() {
         return value;
     }

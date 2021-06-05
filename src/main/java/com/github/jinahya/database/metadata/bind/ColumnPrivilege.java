@@ -64,7 +64,6 @@ public class ColumnPrivilege
     }
 
     // -------------------------------------------------------------------------------------------------------- tableCat
-
     public String getTableCat() {
         return tableCat;
     }
@@ -151,11 +150,11 @@ public class ColumnPrivilege
     @Label("TABLE_NAME")
     private String tableName;
 
-    // -----------------------------------------------------------------------------------------------------------------
     @XmlElement(required = true)
     @Label("COLUMN_NAME")
     private String columnName;
 
+    // -----------------------------------------------------------------------------------------------------------------
     @XmlElement(nillable = true, required = true)
     @MayBeNull
     @Label("GRANTOR")

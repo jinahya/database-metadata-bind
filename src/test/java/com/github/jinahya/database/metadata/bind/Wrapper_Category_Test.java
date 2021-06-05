@@ -74,6 +74,9 @@ class Wrapper_Category_Test {
         expected.add(new Catalog());
         Wrapper.marshal(Catalog.class, expected, file);
         final List<Catalog> actual = Wrapper.unmarshal(Catalog.class, new StreamSource(file));
-        assertThat(actual).isEqualTo(expected);
+        assertThat(actual).hasSameSizeAs(expected);
+        for (int i = 0; i < actual.size(); i++) {
+            assertThat(actual.get(i).getTableCat()).isEqualTo(expected.get(i).getTableCat());
+        }
     }
 }

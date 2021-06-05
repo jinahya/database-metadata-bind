@@ -21,10 +21,8 @@ package com.github.jinahya.database.metadata.bind;
  */
 
 import lombok.AccessLevel;
-import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
-import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
 
@@ -48,12 +46,82 @@ import java.util.List;
 @ChildOf(Schema.class)
 @ParentOf(Attribute.class)
 @ParentOf(SuperType.class)
-@Data
-@NoArgsConstructor
 public class UDT
         implements MetadataType {
 
     private static final long serialVersionUID = 8665246093405057553L;
+
+    // -----------------------------------------------------------------------------------------------------------------
+
+    /**
+     * Creates a new instance.
+     */
+    public UDT() {
+        super();
+    }
+
+    // --------------------------------------------------------------------------------------------------------- typeCat
+    public String getTypeCat() {
+        return typeCat;
+    }
+
+    public void setTypeCat(final String typeCat) {
+        this.typeCat = typeCat;
+    }
+
+    // ------------------------------------------------------------------------------------------------------- typeSchem
+    public String getTypeSchem() {
+        return typeSchem;
+    }
+
+    public void setTypeSchem(final String typeSchem) {
+        this.typeSchem = typeSchem;
+    }
+
+    // -------------------------------------------------------------------------------------------------------- typeName
+    public String getTypeName() {
+        return typeName;
+    }
+
+    public void setTypeName(final String typeName) {
+        this.typeName = typeName;
+    }
+
+    // ------------------------------------------------------------------------------------------------------ className
+    public String getClassName() {
+        return className;
+    }
+
+    public void setClassName(final String className) {
+        this.className = className;
+    }
+
+    // -------------------------------------------------------------------------------------------------------- dataType
+    public int getDataType() {
+        return dataType;
+    }
+
+    public void setDataType(final int dataType) {
+        this.dataType = dataType;
+    }
+
+    // --------------------------------------------------------------------------------------------------------- remarks
+    public String getRemarks() {
+        return remarks;
+    }
+
+    public void setRemarks(final String remarks) {
+        this.remarks = remarks;
+    }
+
+    // -------------------------------------------------------------------------------------------------------- baseType
+    public Short getBaseType() {
+        return baseType;
+    }
+
+    public void setBaseType(final Short baseType) {
+        this.baseType = baseType;
+    }
 
     // ------------------------------------------------------------------------------------------------------ attributes
     public List<Attribute> getAttributes() {

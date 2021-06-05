@@ -49,6 +49,7 @@ public class OwnInsertsAreVisible
      * @return given {@code collection}.
      * @throws SQLException if a database access error occurs.
      * @see Context#ownInsertsAreVisible(int)
+     * @see ResultSetType
      */
     public static <C extends Collection<? super OwnInsertsAreVisible>> C getAllInstances(final Context context,
                                                                                          final C collection)

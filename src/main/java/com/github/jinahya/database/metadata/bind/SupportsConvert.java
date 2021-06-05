@@ -20,17 +20,14 @@ package com.github.jinahya.database.metadata.bind;
  * #L%
  */
 
-import lombok.Data;
-import lombok.NoArgsConstructor;
-
 import javax.xml.bind.annotation.XmlAttribute;
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlValue;
 import java.sql.DatabaseMetaData;
 import java.sql.JDBCType;
 import java.sql.SQLException;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.Collection;
+import java.util.Objects;
 
 import static java.util.Objects.requireNonNull;
 
@@ -41,28 +38,90 @@ import static java.util.Objects.requireNonNull;
  * @see Context#supportsConvert(int, int)
  */
 @XmlRootElement
-@Data
-@NoArgsConstructor
-public class SupportsConvert implements MetadataType {
+public class SupportsConvert
+        implements MetadataType {
 
     /**
-     * Invokes {@link Context#supportsConvert(int, int)} method for all types defined in {@link JDBCType} and returns
-     * bound values.
+     * Invokes {@link Context#supportsConvert(int, int)} method for all combinations of all types defined in {@link
+     * JDBCType} and adds bounds values to specified collection.
      *
-     * @param context a context.
-     * @return a list of bound values.
+     * @param context    a context.
+     * @param collection the collection to which bound values are added.
+     * @param <C>        the type of {@code collection}
+     * @return given {@code collection}.
      * @throws SQLException if a database access error occurs.
-     * @see Context#supportsConvert(int, int)
      */
-    public static List<SupportsConvert> getAllInstances(final Context context) throws SQLException {
+    public static <C extends Collection<? super SupportsConvert>> C getAllInstances(final Context context,
+                                                                                    final C collection)
+            throws SQLException {
         requireNonNull(context, "context is null");
-        final List<SupportsConvert> all = new ArrayList<>();
         for (final JDBCType fromType : JDBCType.values()) {
             for (final JDBCType toType : JDBCType.values()) {
-                all.add(context.supportsConvert(fromType.getVendorTypeNumber(), toType.getVendorTypeNumber()));
+                if (false && toType == fromType) {
+                    continue;
+                }
+                collection.add(context.supportsConvert(fromType.getVendorTypeNumber(), toType.getVendorTypeNumber()));
             }
         }
-        return all;
+        return collection;
+    }
+
+    // -----------------------------------------------------------------------------------------------------------------
+
+    /**
+     * Creates a new instance.
+     */
+    public SupportsConvert() {
+        super();
+    }
+
+    // -----------------------------------------------------------------------------------------------------------------
+
+    @Override
+    public String toString() {
+        return super.toString() + '{'
+               + "fromType=" + fromType
+               + ",toType=" + toType
+               + ",value=" + value
+               + '}';
+    }
+
+    @Override
+    public boolean equals(final Object obj) {
+        if (this == obj) return true;
+        if (obj == null || getClass() != obj.getClass()) return false;
+        final SupportsConvert that = (SupportsConvert) obj;
+        return fromType == that.fromType && toType == that.toType && Objects.equals(value, that.value);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(fromType, toType, value);
+    }
+
+    // -----------------------------------------------------------------------------------------------------------------
+    public int getFromType() {
+        return fromType;
+    }
+
+    public void setFromType(final int fromType) {
+        this.fromType = fromType;
+    }
+
+    public int getToType() {
+        return toType;
+    }
+
+    public void setToType(final int toType) {
+        this.toType = toType;
+    }
+
+    public Boolean getValue() {
+        return value;
+    }
+
+    public void setValue(final Boolean value) {
+        this.value = value;
     }
 
     // -----------------------------------------------------------------------------------------------------------------

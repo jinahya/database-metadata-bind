@@ -26,8 +26,6 @@ import javax.xml.bind.annotation.XmlRootElement;
 import java.sql.DatabaseMetaData;
 import java.util.Collection;
 
-import static java.util.Objects.requireNonNull;
-
 /**
  * A class for binding results of {@link DatabaseMetaData#getFunctionColumns(String, String, String, String)} method.
  *
@@ -176,62 +174,6 @@ public class FunctionColumn
         }
 
         private final int rawValue;
-    }
-
-    /**
-     * Constants for {@link #COLUMN_NAME_IS_NULLABLE} column values of the results of {@link
-     * DatabaseMetaData#getFunctionColumns(String, String, String, String)}.
-     *
-     * @see DatabaseMetaData#getFunctionColumns(java.lang.String, java.lang.String, java.lang.String, java.lang.String)
-     */
-    @XmlEnum
-    public enum IsNullable implements FieldEnum<IsNullable, String> {
-
-        /**
-         * Constant for {@code ""}.
-         */
-        UNKNOWN(""),
-
-        /**
-         * Constant for {@code "YES"}.
-         */
-        YES("YES"),
-
-        /**
-         * Constant for {@code "NO"}.
-         */
-        NO("NO");
-
-        /**
-         * Returns the constant whose {@link #getRawValue() rawValue} matches to specified value.
-         *
-         * @param rawValue the raw value to match.
-         * @return the value of {@code rawValue}.
-         */
-        public static IsNullable valueOfRawValue(final String rawValue) {
-            return FieldEnums.valueOfRawValue(IsNullable.class, rawValue);
-        }
-
-        /**
-         * Creates a new instance with specified raw value.
-         *
-         * @param rawValue the raw value.
-         */
-        IsNullable(final String rawValue) {
-            this.rawValue = requireNonNull(rawValue, "rawValue is null");
-        }
-
-        /**
-         * {@inheritDoc}
-         *
-         * @return {@inheritDoc}
-         */
-        @Override
-        public String getRawValue() {
-            return rawValue;
-        }
-
-        private final String rawValue;
     }
 
     // -----------------------------------------------------------------------------------------------------------------
@@ -397,6 +339,7 @@ public class FunctionColumn
         this.isNullable = isNullable;
     }
 
+    // ---------------------------------------------------------------------------------------------------- specificName
     public String getSpecificName() {
         return specificName;
     }

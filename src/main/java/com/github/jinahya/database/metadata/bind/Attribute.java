@@ -23,8 +23,11 @@ package com.github.jinahya.database.metadata.bind;
 import javax.validation.constraints.NotBlank;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
+import javax.xml.bind.annotation.XmlTransient;
 import java.sql.DatabaseMetaData;
 import java.util.Collection;
+
+import static java.util.Objects.requireNonNull;
 
 /**
  * A class for binding results of {@link DatabaseMetaData#getAttributes(String, String, String, String)} method.
@@ -121,7 +124,7 @@ public class Attribute
                + '}';
     }
 
-    // -----------------------------------------------------------------------------------------------------------------
+    // --------------------------------------------------------------------------------------------------------- typeCat
 
     public String getTypeCat() {
         return typeCat;
@@ -131,6 +134,7 @@ public class Attribute
         this.typeCat = typeCat;
     }
 
+    // ------------------------------------------------------------------------------------------------------- typeSchem
     public String getTypeSchem() {
         return typeSchem;
     }
@@ -139,6 +143,7 @@ public class Attribute
         this.typeSchem = typeSchem;
     }
 
+    // -------------------------------------------------------------------------------------------------------- typeName
     public String getTypeName() {
         return typeName;
     }
@@ -147,6 +152,7 @@ public class Attribute
         this.typeName = typeName;
     }
 
+    // -------------------------------------------------------------------------------------------------------- attrName
     public String getAttrName() {
         return attrName;
     }
@@ -155,6 +161,7 @@ public class Attribute
         this.attrName = attrName;
     }
 
+    // -------------------------------------------------------------------------------------------------------- dataType
     public int getDataType() {
         return dataType;
     }
@@ -163,6 +170,7 @@ public class Attribute
         this.dataType = dataType;
     }
 
+    // ---------------------------------------------------------------------------------------------------- attrTypeName
     public String getAttrTypeName() {
         return attrTypeName;
     }
@@ -171,6 +179,7 @@ public class Attribute
         this.attrTypeName = attrTypeName;
     }
 
+    // --------------------------------------------------------------------------------------------------- attributeSize
     public int getAttrSize() {
         return attrSize;
     }
@@ -179,6 +188,7 @@ public class Attribute
         this.attrSize = attrSize;
     }
 
+    // --------------------------------------------------------------------------------------------------- decimalDigits
     public Integer getDecimalDigits() {
         return decimalDigits;
     }
@@ -187,6 +197,7 @@ public class Attribute
         this.decimalDigits = decimalDigits;
     }
 
+    // ---------------------------------------------------------------------------------------------------- numPrecRadix
     public int getNumPrecRadix() {
         return numPrecRadix;
     }
@@ -195,6 +206,7 @@ public class Attribute
         this.numPrecRadix = numPrecRadix;
     }
 
+    // -------------------------------------------------------------------------------------------------------- nullable
     public int getNullable() {
         return nullable;
     }
@@ -203,6 +215,17 @@ public class Attribute
         this.nullable = nullable;
     }
 
+    @XmlTransient
+    public Nullable getNullableAsEnum() {
+        return Nullable.valueOfRawValue(getNullable());
+    }
+
+    public void setNullableAsEnum(final Nullable nullableAsEnum) {
+        requireNonNull(nullableAsEnum, "nullableAsEnum is null");
+        setNullable(nullableAsEnum.getRawValue());
+    }
+
+    // --------------------------------------------------------------------------------------------------------- remarks
     public String getRemarks() {
         return remarks;
     }
@@ -211,6 +234,7 @@ public class Attribute
         this.remarks = remarks;
     }
 
+    // --------------------------------------------------------------------------------------------------------- attrDef
     public String getAttrDef() {
         return attrDef;
     }
@@ -219,6 +243,7 @@ public class Attribute
         this.attrDef = attrDef;
     }
 
+    // ----------------------------------------------------------------------------------------------------- sqlDataType
     public Integer getSqlDataType() {
         return sqlDataType;
     }
@@ -227,6 +252,7 @@ public class Attribute
         this.sqlDataType = sqlDataType;
     }
 
+    // -------------------------------------------------------------------------------------------------- sqlDatetimeSub
     public Integer getSqlDatetimeSub() {
         return sqlDatetimeSub;
     }
@@ -235,6 +261,7 @@ public class Attribute
         this.sqlDatetimeSub = sqlDatetimeSub;
     }
 
+    // ------------------------------------------------------------------------------------------------- charOctetLength
     public int getCharOctetLength() {
         return charOctetLength;
     }
@@ -243,6 +270,7 @@ public class Attribute
         this.charOctetLength = charOctetLength;
     }
 
+    // ------------------------------------------------------------------------------------------------- ordinalPosition
     public int getOrdinalPosition() {
         return ordinalPosition;
     }
@@ -251,6 +279,7 @@ public class Attribute
         this.ordinalPosition = ordinalPosition;
     }
 
+    // ------------------------------------------------------------------------------------------------------ isNullable
     public String getIsNullable() {
         return isNullable;
     }
@@ -259,6 +288,7 @@ public class Attribute
         this.isNullable = isNullable;
     }
 
+    // ---------------------------------------------------------------------------------------------------- scopeCatalog
     public String getScopeCatalog() {
         return scopeCatalog;
     }
@@ -267,6 +297,7 @@ public class Attribute
         this.scopeCatalog = scopeCatalog;
     }
 
+    // ----------------------------------------------------------------------------------------------------- scopeSchema
     public String getScopeSchema() {
         return scopeSchema;
     }
@@ -275,6 +306,7 @@ public class Attribute
         this.scopeSchema = scopeSchema;
     }
 
+    // ------------------------------------------------------------------------------------------------------ scopeTable
     public String getScopeTable() {
         return scopeTable;
     }
@@ -283,6 +315,7 @@ public class Attribute
         this.scopeTable = scopeTable;
     }
 
+    // -------------------------------------------------------------------------------------------------- sourceDataType
     public Short getSourceDataType() {
         return sourceDataType;
     }
@@ -307,11 +340,11 @@ public class Attribute
     @Label("TYPE_NAME")
     private String typeName;
 
-    // -----------------------------------------------------------------------------------------------------------------
     @XmlElement(required = true)
     @Label("ATTR_NAME")
     private String attrName;
 
+    // -----------------------------------------------------------------------------------------------------------------
     @XmlElement(required = true)
     @Label("DATA_TYPE")
     private int dataType;

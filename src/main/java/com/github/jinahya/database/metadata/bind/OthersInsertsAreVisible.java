@@ -47,6 +47,7 @@ public class OthersInsertsAreVisible
      * @param <C>        the type of {@code collection}
      * @return given {@code collection}.
      * @throws SQLException if a database access error occurs.
+     * @see ResultSetType
      */
     public static <C extends Collection<? super OthersInsertsAreVisible>> C getAllInstances(final Context context,
                                                                                             final C collection)

@@ -26,8 +26,6 @@ import java.sql.DatabaseMetaData;
 import java.util.Collection;
 import java.util.Objects;
 
-import static java.util.Optional.ofNullable;
-
 /**
  * A class for binding results of {@link DatabaseMetaData#getColumns(String, String, String, String)} method.
  *
@@ -94,78 +92,10 @@ public class Column
 
     public static final String ATTRIBUTE_NAME_IS_AUTOINCREMENT = "isAutoincrement";
 
-    /**
-     * Constants for {@value #COLUMN_NAME_IS_AUTOINCREMENT} colum value from the result of {@link
-     * DatabaseMetaData#getColumns(String, String, String, String)}.
-     */
-    public enum IsAutoincrement implements FieldEnum<IsAutoincrement, String> {
-
-        YES("YES"),
-
-        NO("NO"),
-
-        UNKNOWN("");
-
-        /**
-         * Returns the constant whose {@link #getRawValue() rawValue} matches to specified value.
-         *
-         * @param rawValue the value for {@link #getRawValue() rawValue} to match.
-         * @return the constant whose {@link #getRawValue() rawValue} matches to {@code rawValue}.
-         */
-        public static IsAutoincrement valueOfRawValue(final String rawValue) {
-            return FieldEnums.valueOfRawValue(IsAutoincrement.class, rawValue);
-        }
-
-        IsAutoincrement(final String rawValue) {
-            this.rawValue = Objects.requireNonNull(rawValue, "rawValue is null");
-        }
-
-        @Override
-        public String getRawValue() {
-            return rawValue;
-        }
-
-        private final String rawValue;
-    }
-
     // -----------------------------------------------------------------------------------------------------------------
     public static final String COLUMN_NAME_IS_GENERATEDCOLUMN = "IS_GENERATEDCOLUMN";
 
     public static final String ATTRIBUTE_NAME_IS_GENERATEDCOLUMN = "isGeneratedcolumn";
-
-    /**
-     * Constants for {@value #COLUMN_NAME_IS_GENERATEDCOLUMN} colum value from the result of {@link
-     * DatabaseMetaData#getColumns(String, String, String, String)}.
-     */
-    public enum IsGeneratedcolumn implements FieldEnum<IsGeneratedcolumn, String> {
-
-        YES("YES"),
-
-        NO("NO"),
-
-        UNKNOWN("");
-
-        /**
-         * Returns the constant whose {@link #getRawValue() rawValue} matches to specified value.
-         *
-         * @param rawValue the value for {@link #getRawValue() rawValue} to match.
-         * @return the constant whose {@link #getRawValue() rawValue} matches to {@code rawValue}.
-         */
-        public static IsGeneratedcolumn valueOfRawValue(final String rawValue) {
-            return FieldEnums.valueOfRawValue(IsGeneratedcolumn.class, rawValue);
-        }
-
-        IsGeneratedcolumn(final String rawValue) {
-            this.rawValue = Objects.requireNonNull(rawValue, "rawValue is null");
-        }
-
-        @Override
-        public String getRawValue() {
-            return rawValue;
-        }
-
-        private final String rawValue;
-    }
 
     // -----------------------------------------------------------------------------------------------------------------
 
@@ -224,8 +154,7 @@ public class Column
         return Objects.hash(tableCat, tableSchem, tableName, columnName);
     }
 
-    // -----------------------------------------------------------------------------------------------------------------
-
+    // -------------------------------------------------------------------------------------------------------- tableCat
     public String getTableCat() {
         return tableCat;
     }
@@ -234,6 +163,7 @@ public class Column
         this.tableCat = tableCat;
     }
 
+    // ------------------------------------------------------------------------------------------------------ tableSchem
     public String getTableSchem() {
         return tableSchem;
     }
@@ -242,6 +172,7 @@ public class Column
         this.tableSchem = tableSchem;
     }
 
+    // ------------------------------------------------------------------------------------------------------- tableName
     public String getTableName() {
         return tableName;
     }
@@ -250,6 +181,7 @@ public class Column
         this.tableName = tableName;
     }
 
+    // ------------------------------------------------------------------------------------------------------ columnName
     public String getColumnName() {
         return columnName;
     }
@@ -258,6 +190,7 @@ public class Column
         this.columnName = columnName;
     }
 
+    // -------------------------------------------------------------------------------------------------------- dataType
     public int getDataType() {
         return dataType;
     }
@@ -266,6 +199,7 @@ public class Column
         this.dataType = dataType;
     }
 
+    // -------------------------------------------------------------------------------------------------------- typeName
     public String getTypeName() {
         return typeName;
     }
@@ -274,6 +208,7 @@ public class Column
         this.typeName = typeName;
     }
 
+    // ------------------------------------------------------------------------------------------------------ columnSize
     public int getColumnSize() {
         return columnSize;
     }
@@ -282,6 +217,7 @@ public class Column
         this.columnSize = columnSize;
     }
 
+    // ---------------------------------------------------------------------------------------------------- bufferLength
     public Integer getBufferLength() {
         return bufferLength;
     }
@@ -290,6 +226,7 @@ public class Column
         this.bufferLength = bufferLength;
     }
 
+    // --------------------------------------------------------------------------------------------------- decimalDigits
     public Integer getDecimalDigits() {
         return decimalDigits;
     }
@@ -298,6 +235,7 @@ public class Column
         this.decimalDigits = decimalDigits;
     }
 
+    // ---------------------------------------------------------------------------------------------------- numPrecRadix
     public int getNumPrecRadix() {
         return numPrecRadix;
     }
@@ -306,6 +244,7 @@ public class Column
         this.numPrecRadix = numPrecRadix;
     }
 
+    // -------------------------------------------------------------------------------------------------------- nullable
     public int getNullable() {
         return nullable;
     }
@@ -314,6 +253,7 @@ public class Column
         this.nullable = nullable;
     }
 
+    // --------------------------------------------------------------------------------------------------------- remarks
     public String getRemarks() {
         return remarks;
     }
@@ -322,6 +262,7 @@ public class Column
         this.remarks = remarks;
     }
 
+    // ------------------------------------------------------------------------------------------------------- columnDef
     public String getColumnDef() {
         return columnDef;
     }
@@ -330,6 +271,7 @@ public class Column
         this.columnDef = columnDef;
     }
 
+    // -------------------------------------------------------------------------------------------------------- dataType
     public Integer getSqlDataType() {
         return sqlDataType;
     }
@@ -338,6 +280,7 @@ public class Column
         this.sqlDataType = sqlDataType;
     }
 
+    // -------------------------------------------------------------------------------------------------- sqlDatetimeSub
     public Integer getSqlDatetimeSub() {
         return sqlDatetimeSub;
     }
@@ -346,6 +289,7 @@ public class Column
         this.sqlDatetimeSub = sqlDatetimeSub;
     }
 
+    // ------------------------------------------------------------------------------------------------- charOctetLength
     public int getCharOctetLength() {
         return charOctetLength;
     }
@@ -354,6 +298,7 @@ public class Column
         this.charOctetLength = charOctetLength;
     }
 
+    // ------------------------------------------------------------------------------------------------- ordinalPosition
     public int getOrdinalPosition() {
         return ordinalPosition;
     }
@@ -362,6 +307,7 @@ public class Column
         this.ordinalPosition = ordinalPosition;
     }
 
+    // ------------------------------------------------------------------------------------------------------ isNullable
     public String getIsNullable() {
         return isNullable;
     }
@@ -370,6 +316,7 @@ public class Column
         this.isNullable = isNullable;
     }
 
+    // ---------------------------------------------------------------------------------------------------- scopeCatalog
     public String getScopeCatalog() {
         return scopeCatalog;
     }
@@ -378,6 +325,7 @@ public class Column
         this.scopeCatalog = scopeCatalog;
     }
 
+    // ----------------------------------------------------------------------------------------------------- scopeSchema
     public String getScopeSchema() {
         return scopeSchema;
     }
@@ -413,14 +361,6 @@ public class Column
         this.isAutoincrement = isAutoincrement;
     }
 
-    public IsAutoincrement getIsAutoincrementAsEnum() {
-        return ofNullable(getIsAutoincrement()).map(IsAutoincrement::valueOf).orElse(null);
-    }
-
-    public void setIsAutoincrementAsEnum(final IsAutoincrement isAutoincrementAsEnum) {
-        setIsAutoincrement(ofNullable(isAutoincrementAsEnum).map(Enum::name).orElse(null));
-    }
-
     // ----------------------------------------------------------------------------------------------- isGeneratedcolumn
     public String getIsGeneratedcolumn() {
         return isGeneratedcolumn;
@@ -428,14 +368,6 @@ public class Column
 
     public void setIsGeneratedcolumn(final String isGeneratedcolumn) {
         this.isGeneratedcolumn = isGeneratedcolumn;
-    }
-
-    public IsGeneratedcolumn getIsGeneratedcolumnAsEnum() {
-        return ofNullable(getIsGeneratedcolumn()).map(IsGeneratedcolumn::valueOf).orElse(null);
-    }
-
-    public void setIsGeneratedColumnAsEnum(final IsGeneratedcolumn isGeneratedColumnAsEnum) {
-        setIsGeneratedcolumn(ofNullable(isGeneratedColumnAsEnum).map(Enum::name).orElse(null));
     }
 
     // -----------------------------------------------------------------------------------------------------------------
