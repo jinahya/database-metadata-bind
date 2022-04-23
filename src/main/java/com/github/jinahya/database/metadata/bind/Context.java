@@ -101,7 +101,7 @@ public class Context {
             try {
                 Utils.setFieldValue(field, instance, results, label.value());
             } catch (final ReflectiveOperationException roe) {
-                logger.log(Level.SEVERE, "failed to set " + field, roe);
+                logger.log(Level.SEVERE, String.format("failed to set %1$s", field), roe);
             }
         }
         if (logger.isLoggable(Level.FINE)) {
