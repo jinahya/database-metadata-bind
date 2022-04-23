@@ -31,8 +31,8 @@ import java.util.List;
 import static java.util.Objects.requireNonNull;
 
 /**
- * A class for binding results of {@link DatabaseMetaData#getCrossReference(String, String, String, String, String,
- * String)} method.
+ * A class for binding results of
+ * {@link DatabaseMetaData#getCrossReference(String, String, String, String, String, String)} method.
  *
  * @author Jin Kwon &lt;jinahya_at_gmail.com&gt;
  * @see Context#getCrossReference(String, String, String, String, String, String, Collection)
@@ -43,7 +43,6 @@ public class CrossReference
 
     private static final long serialVersionUID = -5343386346721125961L;
 
-    // -----------------------------------------------------------------------------------------------------------------
     public static <C extends Collection<? super CrossReference>> C getAllInstance(final Context context,
                                                                                   final C collection)
             throws SQLException {
@@ -63,8 +62,6 @@ public class CrossReference
 
     public static final String ATTRIBUTE_NAME_UPDATE_RULE = "updateRule";
 
-    // -----------------------------------------------------------------------------------------------------------------
-
     /**
      * Creates a new instance.
      */
@@ -72,7 +69,6 @@ public class CrossReference
         super();
     }
 
-    // -----------------------------------------------------------------------------------------------------------------
     @Override
     public String toString() {
         return super.toString() + '{'
@@ -92,8 +88,6 @@ public class CrossReference
                + ",deferrability=" + deferrability
                + '}';
     }
-
-    // -----------------------------------------------------------------------------------------------------------------
 
     public String getPktableCat() {
         return pktableCat;
@@ -207,14 +201,13 @@ public class CrossReference
         this.deferrability = deferrability;
     }
 
-    // -----------------------------------------------------------------------------------------------------------------
     @XmlElement(required = true, nillable = true)
-    @MayBeNull
+    @NullableBySpecification
     @Label("PKTABLE_CAT")
     private String pktableCat;
 
     @XmlElement(required = true, nillable = true)
-    @MayBeNull
+    @NullableBySpecification
     @Label("PKTABLE_SCHEM")
     private String pktableSchem;
 
@@ -226,14 +219,13 @@ public class CrossReference
     @Label("PKCOLUMN_NAME")
     private String pkcolumnName;
 
-    // -----------------------------------------------------------------------------------------------------------------
     @XmlElement(required = true, nillable = true)
-    @MayBeNull
+    @NullableBySpecification
     @Label("FKTABLE_CAT")
     private String fktableCat;
 
     @XmlElement(required = true, nillable = true)
-    @MayBeNull
+    @NullableBySpecification
     @Label("FKTABLE_NAME")
     private String fktableSchem;
 
@@ -245,7 +237,6 @@ public class CrossReference
     @Label("FKCOLUMN_NAME")
     private String fkcolumnName;
 
-    // -----------------------------------------------------------------------------------------------------------------
     @XmlElement(required = true)
     @Label("FKCOLUMN_NAME")
     private short keySeq;
@@ -259,12 +250,12 @@ public class CrossReference
     private short deleteRule;
 
     @XmlElement(required = true, nillable = true)
-    @MayBeNull
+    @NullableBySpecification
     @Label("FK_NAME")
     private String fkName;
 
     @XmlElement(required = true, nillable = true)
-    @MayBeNull
+    @NullableBySpecification
     @Label("PK_NAME")
     private String pkName;
 

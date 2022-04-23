@@ -36,17 +36,20 @@ public enum ConnectionTransactionIsolationLevel
     TRANSACTION_NONE(Connection.TRANSACTION_NONE), // 0
 
     /**
-     * Constant for {@link Connection#TRANSACTION_READ_UNCOMMITTED}({@value java.sql.Connection#TRANSACTION_READ_UNCOMMITTED}).
+     * Constant for
+     * {@link Connection#TRANSACTION_READ_UNCOMMITTED}({@value java.sql.Connection#TRANSACTION_READ_UNCOMMITTED}).
      */
     TRANSACTION_READ_UNCOMMITTED(Connection.TRANSACTION_READ_UNCOMMITTED), // 1
 
     /**
-     * Constant for {@link Connection#TRANSACTION_READ_COMMITTED}({@value java.sql.Connection#TRANSACTION_READ_COMMITTED}).
+     * Constant for
+     * {@link Connection#TRANSACTION_READ_COMMITTED}({@value java.sql.Connection#TRANSACTION_READ_COMMITTED}).
      */
     TRANSACTION_READ_COMMITTED(Connection.TRANSACTION_READ_COMMITTED), // 2
 
     /**
-     * Constant for {@link Connection#TRANSACTION_REPEATABLE_READ}({@value java.sql.Connection#TRANSACTION_REPEATABLE_READ}).
+     * Constant for
+     * {@link Connection#TRANSACTION_REPEATABLE_READ}({@value java.sql.Connection#TRANSACTION_REPEATABLE_READ}).
      */
     TRANSACTION_REPEATABLE_READ(Connection.TRANSACTION_REPEATABLE_READ), // 4
 

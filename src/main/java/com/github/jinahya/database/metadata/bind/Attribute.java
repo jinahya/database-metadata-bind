@@ -20,14 +20,17 @@ package com.github.jinahya.database.metadata.bind;
  * #L%
  */
 
+import lombok.EqualsAndHashCode;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+import lombok.ToString;
+
 import javax.validation.constraints.NotBlank;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
-import javax.xml.bind.annotation.XmlTransient;
 import java.sql.DatabaseMetaData;
 import java.util.Collection;
-
-import static java.util.Objects.requireNonNull;
 
 /**
  * A class for binding results of {@link DatabaseMetaData#getAttributes(String, String, String, String)} method.
@@ -38,12 +41,15 @@ import static java.util.Objects.requireNonNull;
  */
 @XmlRootElement
 @ChildOf(UDT.class)
+@Setter
+@Getter
+@EqualsAndHashCode
+@ToString
+@NoArgsConstructor
 public class Attribute
         implements MetadataType {
 
     private static final long serialVersionUID = 5020389308460154799L;
-
-    // -----------------------------------------------------------------------------------------------------------------
 
     /**
      * Constants for nullabilities of an attribute.
@@ -56,12 +62,15 @@ public class Attribute
         ATTRIBUTE_NO_NULLS(DatabaseMetaData.attributeNoNulls),
 
         /**
-         * Constant for {@link DatabaseMetaData#attributeNullable}({@value java.sql.DatabaseMetaData#attributeNullable}).
+         * Constant for
+         * {@link DatabaseMetaData#attributeNullable}({@value java.sql.DatabaseMetaData#attributeNullable}).
          */
         ATTRIBUTE_NULLABLE(DatabaseMetaData.attributeNullable),
 
         /**
-         * Constant for {@link DatabaseMetaData#attributeNullableUnknown}({@value java.sql.DatabaseMetaData#attributeNullableUnknown}).
+         * Constant for
+         * {@link DatabaseMetaData#attributeNullableUnknown}({@value
+         * java.sql.DatabaseMetaData#attributeNullableUnknown}).
          */
         ATTRIBUTE_NULLABLE_UNKNOWN(DatabaseMetaData.attributeNullableUnknown);
 
@@ -87,251 +96,13 @@ public class Attribute
         private final int rawValue;
     }
 
-    // -----------------------------------------------------------------------------------------------------------------
-
-    /**
-     * Creates a new instance.
-     */
-    public Attribute() {
-        super();
-    }
-
-    // -----------------------------------------------------------------------------------------------------------------
-    @Override
-    public String toString() {
-        return super.toString() + '{'
-               + "typeCat=" + typeCat
-               + ",typeSchem=" + typeSchem
-               + ",typeName=" + typeName
-               + ",attrName=" + attrName
-               + ",dataType=" + dataType
-               + ",attrTypeName=" + attrTypeName
-               + ",attrSize=" + attrSize
-               + ",decimalDigits=" + decimalDigits
-               + ",numPrecRadix=" + numPrecRadix
-               + ",nullable=" + nullable
-               + ",remarks=" + remarks
-               + ",attrDef=" + attrDef
-               + ",sqlDataType=" + sqlDataType
-               + ",sqlDatetimeSub=" + sqlDatetimeSub
-               + ",charOctetLength=" + charOctetLength
-               + ",ordinalPosition=" + ordinalPosition
-               + ",isNullable=" + isNullable
-               + ",scopeCatalog=" + scopeCatalog
-               + ",scopeSchema=" + scopeSchema
-               + ",scopeTable=" + scopeTable
-               + ",sourceDataType=" + sourceDataType
-               + '}';
-    }
-
-    // --------------------------------------------------------------------------------------------------------- typeCat
-
-    public String getTypeCat() {
-        return typeCat;
-    }
-
-    public void setTypeCat(final String typeCat) {
-        this.typeCat = typeCat;
-    }
-
-    // ------------------------------------------------------------------------------------------------------- typeSchem
-    public String getTypeSchem() {
-        return typeSchem;
-    }
-
-    public void setTypeSchem(final String typeSchem) {
-        this.typeSchem = typeSchem;
-    }
-
-    // -------------------------------------------------------------------------------------------------------- typeName
-    public String getTypeName() {
-        return typeName;
-    }
-
-    public void setTypeName(final String typeName) {
-        this.typeName = typeName;
-    }
-
-    // -------------------------------------------------------------------------------------------------------- attrName
-    public String getAttrName() {
-        return attrName;
-    }
-
-    public void setAttrName(final String attrName) {
-        this.attrName = attrName;
-    }
-
-    // -------------------------------------------------------------------------------------------------------- dataType
-    public int getDataType() {
-        return dataType;
-    }
-
-    public void setDataType(final int dataType) {
-        this.dataType = dataType;
-    }
-
-    // ---------------------------------------------------------------------------------------------------- attrTypeName
-    public String getAttrTypeName() {
-        return attrTypeName;
-    }
-
-    public void setAttrTypeName(final String attrTypeName) {
-        this.attrTypeName = attrTypeName;
-    }
-
-    // --------------------------------------------------------------------------------------------------- attributeSize
-    public int getAttrSize() {
-        return attrSize;
-    }
-
-    public void setAttrSize(final int attrSize) {
-        this.attrSize = attrSize;
-    }
-
-    // --------------------------------------------------------------------------------------------------- decimalDigits
-    public Integer getDecimalDigits() {
-        return decimalDigits;
-    }
-
-    public void setDecimalDigits(final Integer decimalDigits) {
-        this.decimalDigits = decimalDigits;
-    }
-
-    // ---------------------------------------------------------------------------------------------------- numPrecRadix
-    public int getNumPrecRadix() {
-        return numPrecRadix;
-    }
-
-    public void setNumPrecRadix(final int numPrecRadix) {
-        this.numPrecRadix = numPrecRadix;
-    }
-
-    // -------------------------------------------------------------------------------------------------------- nullable
-    public int getNullable() {
-        return nullable;
-    }
-
-    public void setNullable(final int nullable) {
-        this.nullable = nullable;
-    }
-
-    @XmlTransient
-    public Nullable getNullableAsEnum() {
-        return Nullable.valueOfRawValue(getNullable());
-    }
-
-    public void setNullableAsEnum(final Nullable nullableAsEnum) {
-        requireNonNull(nullableAsEnum, "nullableAsEnum is null");
-        setNullable(nullableAsEnum.getRawValue());
-    }
-
-    // --------------------------------------------------------------------------------------------------------- remarks
-    public String getRemarks() {
-        return remarks;
-    }
-
-    public void setRemarks(final String remarks) {
-        this.remarks = remarks;
-    }
-
-    // --------------------------------------------------------------------------------------------------------- attrDef
-    public String getAttrDef() {
-        return attrDef;
-    }
-
-    public void setAttrDef(final String attrDef) {
-        this.attrDef = attrDef;
-    }
-
-    // ----------------------------------------------------------------------------------------------------- sqlDataType
-    public Integer getSqlDataType() {
-        return sqlDataType;
-    }
-
-    public void setSqlDataType(final Integer sqlDataType) {
-        this.sqlDataType = sqlDataType;
-    }
-
-    // -------------------------------------------------------------------------------------------------- sqlDatetimeSub
-    public Integer getSqlDatetimeSub() {
-        return sqlDatetimeSub;
-    }
-
-    public void setSqlDatetimeSub(final Integer sqlDatetimeSub) {
-        this.sqlDatetimeSub = sqlDatetimeSub;
-    }
-
-    // ------------------------------------------------------------------------------------------------- charOctetLength
-    public int getCharOctetLength() {
-        return charOctetLength;
-    }
-
-    public void setCharOctetLength(final int charOctetLength) {
-        this.charOctetLength = charOctetLength;
-    }
-
-    // ------------------------------------------------------------------------------------------------- ordinalPosition
-    public int getOrdinalPosition() {
-        return ordinalPosition;
-    }
-
-    public void setOrdinalPosition(final int ordinalPosition) {
-        this.ordinalPosition = ordinalPosition;
-    }
-
-    // ------------------------------------------------------------------------------------------------------ isNullable
-    public String getIsNullable() {
-        return isNullable;
-    }
-
-    public void setIsNullable(final String isNullable) {
-        this.isNullable = isNullable;
-    }
-
-    // ---------------------------------------------------------------------------------------------------- scopeCatalog
-    public String getScopeCatalog() {
-        return scopeCatalog;
-    }
-
-    public void setScopeCatalog(final String scopeCatalog) {
-        this.scopeCatalog = scopeCatalog;
-    }
-
-    // ----------------------------------------------------------------------------------------------------- scopeSchema
-    public String getScopeSchema() {
-        return scopeSchema;
-    }
-
-    public void setScopeSchema(final String scopeSchema) {
-        this.scopeSchema = scopeSchema;
-    }
-
-    // ------------------------------------------------------------------------------------------------------ scopeTable
-    public String getScopeTable() {
-        return scopeTable;
-    }
-
-    public void setScopeTable(final String scopeTable) {
-        this.scopeTable = scopeTable;
-    }
-
-    // -------------------------------------------------------------------------------------------------- sourceDataType
-    public Short getSourceDataType() {
-        return sourceDataType;
-    }
-
-    public void setSourceDataType(final Short sourceDataType) {
-        this.sourceDataType = sourceDataType;
-    }
-
-    // -----------------------------------------------------------------------------------------------------------------
     @XmlElement(nillable = true, required = true)
-    @MayBeNull
+    @NullableBySpecification
     @Label("TYPE_CAT")
     private String typeCat;
 
     @XmlElement(nillable = true, required = true)
-    @MayBeNull
+    @NullableBySpecification
     @Label("TYPE_SCHEM")
     private String typeSchem;
 
@@ -344,7 +115,6 @@ public class Attribute
     @Label("ATTR_NAME")
     private String attrName;
 
-    // -----------------------------------------------------------------------------------------------------------------
     @XmlElement(required = true)
     @Label("DATA_TYPE")
     private int dataType;
@@ -370,12 +140,12 @@ public class Attribute
     private int nullable;
 
     @XmlElement(required = true, nillable = true)
-    @MayBeNull
+    @NullableBySpecification
     @Label("REMARKS")
     private String remarks;
 
     @XmlElement(required = true, nillable = true)
-    @MayBeNull
+    @NullableBySpecification
     @Label("ATTR_DEF")
     private String attrDef;
 
@@ -402,22 +172,22 @@ public class Attribute
     private String isNullable;
 
     @XmlElement(required = true, nillable = true)
-    @MayBeNull
+    @NullableBySpecification
     @Label("SCOPE_CATALOG")
     private String scopeCatalog;
 
     @XmlElement(required = true, nillable = true)
-    @MayBeNull
+    @NullableBySpecification
     @Label("SCOPE_SCHEMA")
     private String scopeSchema;
 
     @XmlElement(required = true, nillable = true)
-    @MayBeNull
+    @NullableBySpecification
     @Label("SCOPE_TABLE")
     private String scopeTable;
 
     @XmlElement(required = true, nillable = true)
-    @MayBeNull
+    @NullableBySpecification
     @Label("SOURCE_DATA_TYPE")
     private Short sourceDataType;
 }

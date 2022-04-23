@@ -40,14 +40,11 @@ public class PseudoColumn
 
     private static final long serialVersionUID = -5612575879670895510L;
 
-    // -----------------------------------------------------------------------------------------------------------------
     public static final Comparator<PseudoColumn> COMPARING_IN_NATURAL =
             Comparator.comparing(PseudoColumn::getTableCat)
                     .thenComparing(PseudoColumn::getTableSchem)
                     .thenComparing(PseudoColumn::getTableName)
                     .thenComparing(PseudoColumn::getColumnName);
-
-    // -----------------------------------------------------------------------------------------------------------------
 
     /**
      * Creates a new instance.
@@ -55,8 +52,6 @@ public class PseudoColumn
     public PseudoColumn() {
         super();
     }
-
-    // -----------------------------------------------------------------------------------------------------------------
 
     @Override
     public String toString() {
@@ -91,8 +86,6 @@ public class PseudoColumn
     public int hashCode() {
         return Objects.hash(tableCat, tableSchem, tableName, columnName);
     }
-
-    // -----------------------------------------------------------------------------------------------------------------
 
     public String getTableCat() {
         return tableCat;
@@ -190,14 +183,13 @@ public class PseudoColumn
         this.isNullable = isNullable;
     }
 
-    // -----------------------------------------------------------------------------------------------------------------
     @XmlElement(required = true, nillable = true)
-    @MayBeNull
+    @NullableBySpecification
     @Label("TABLE_CAT")
     private String tableCat;
 
     @XmlElement(required = true, nillable = true)
-    @MayBeNull
+    @NullableBySpecification
     @Label("TABLE_SCHEM")
     private String tableSchem;
 
@@ -209,7 +201,6 @@ public class PseudoColumn
     @Label("COLUMN_NAME")
     private String columnName;
 
-    // -----------------------------------------------------------------------------------------------------------------
     @XmlElement(required = true)
     @Label("DATA_TYPE")
     private int dataType;
@@ -219,7 +210,7 @@ public class PseudoColumn
     private int columnSize;
 
     @XmlElement(required = true, nillable = true)
-    @MayBeNull
+    @NullableBySpecification
     @Label("DECIMAL_DIGITS")
     private Integer decimalDigits;
 
@@ -232,7 +223,7 @@ public class PseudoColumn
     private String columnUsage;
 
     @XmlElement(required = true, nillable = true)
-    @MayBeNull
+    @NullableBySpecification
     @Label("REMARKS")
     private String remarks;
 

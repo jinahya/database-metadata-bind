@@ -61,8 +61,6 @@ public class OthersDeletesAreVisible
         return collection;
     }
 
-    // -----------------------------------------------------------------------------------------------------------------
-
     /**
      * Creates a new instance.
      */

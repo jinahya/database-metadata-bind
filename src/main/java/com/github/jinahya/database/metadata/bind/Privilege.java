@@ -35,14 +35,13 @@ abstract class Privilege
 
     private static final long serialVersionUID = -816800473142195431L;
 
-    // -----------------------------------------------------------------------------------------------------------------
     @XmlElement(required = true, nillable = true)
-    @MayBeNull
+    @NullableBySpecification
     @Label("TABLE_CAT")
     private String tableCat;
 
     @XmlElement(required = true, nillable = true)
-    @MayBeNull
+    @NullableBySpecification
     @Label("TABLE_SCHEM")
     private String tableSchem;
 
@@ -50,9 +49,8 @@ abstract class Privilege
     @Label("TABLE_NAME")
     private String tableName;
 
-    // -----------------------------------------------------------------------------------------------------------------
     @XmlElement(required = true, nillable = true)
-    @MayBeNull
+    @NullableBySpecification
     @Label("GRANTOR")
     private String grantor;
 
@@ -65,7 +63,7 @@ abstract class Privilege
     private String privilege;
 
     @XmlElement(required = true, nillable = true)
-    @MayBeNull
+    @NullableBySpecification
     @Label("IS_GRANTABLE")
     private String isGrantable;
 }

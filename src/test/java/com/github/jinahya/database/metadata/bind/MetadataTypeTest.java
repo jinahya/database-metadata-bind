@@ -165,7 +165,7 @@ abstract class MetadataTypeTest<T extends MetadataType> {
     @Test
     void fieldsWithMayBeNull_ShouldBeAnnotatedWithXmlElementWithNillableTrue() {
         for (final Field field : getFieldsWithMayBeNull().keySet()) {
-            assertThat(field.getAnnotation(MayBeNull.class)).isNotNull();
+            assertThat(field.getAnnotation(NullableBySpecification.class)).isNotNull();
             assertThat(field.getAnnotation(XmlElement.class)).isNotNull().satisfies(a -> {
                 assertThat(a.nillable()).isTrue();
             });
@@ -176,7 +176,7 @@ abstract class MetadataTypeTest<T extends MetadataType> {
     @Test
     void fieldsWithMayBeNull_TypeShouldNotBePrimitive() {
         for (final Field field : getFieldsWithMayBeNull().keySet()) {
-            assertThat(field.getAnnotation(MayBeNull.class)).isNotNull();
+            assertThat(field.getAnnotation(NullableBySpecification.class)).isNotNull();
             assertThat(field.getType().isPrimitive()).isFalse();
         }
     }
@@ -185,7 +185,7 @@ abstract class MetadataTypeTest<T extends MetadataType> {
     @Test
     void fieldsWithMayBeNullByVendor_ShouldBeAnnotatedWithXmlElementWithNillableTrue() {
         for (final Field field : getFieldsWithMayBeNullByVendor().keySet()) {
-            assertThat(field.getAnnotation(MayBeNullByVendor.class)).isNotNull();
+            assertThat(field.getAnnotation(NullableByVendor.class)).isNotNull();
             assertThat(field.getAnnotation(XmlElement.class)).isNotNull().satisfies(a -> {
                 assertThat(a.nillable()).isTrue();
             });
@@ -196,12 +196,11 @@ abstract class MetadataTypeTest<T extends MetadataType> {
     @Test
     void fieldsWithMayBeNullByVendor_ShouldBePrimitive_Type() {
         for (final Field field : getFieldsWithMayBeNullByVendor().keySet()) {
-            assertThat(field.getAnnotation(MayBeNullByVendor.class)).isNotNull();
+            assertThat(field.getAnnotation(NullableByVendor.class)).isNotNull();
             assertThat(field.getType().isPrimitive()).isFalse();
         }
     }
 
-    // -----------------------------------------------------------------------------------------------------------------
     T typeInstance() {
         try {
             final Constructor<T> constructor = typeClass.getDeclaredConstructor();
@@ -214,17 +213,16 @@ abstract class MetadataTypeTest<T extends MetadataType> {
         }
     }
 
-    // -----------------------------------------------------------------------------------------------------------------
-    Map<Field, MayBeNullByVendor> getFieldsWithMayBeNullByVendor() {
+    Map<Field, NullableByVendor> getFieldsWithMayBeNullByVendor() {
         return getFieldsWithLabel().entrySet().stream()
-                .filter(e -> e.getKey().getAnnotation(MayBeNullByVendor.class) != null)
-                .collect(Collectors.toMap(Map.Entry::getKey, e -> e.getKey().getAnnotation(MayBeNullByVendor.class)));
+                .filter(e -> e.getKey().getAnnotation(NullableByVendor.class) != null)
+                .collect(Collectors.toMap(Map.Entry::getKey, e -> e.getKey().getAnnotation(NullableByVendor.class)));
     }
 
-    Map<Field, MayBeNull> getFieldsWithMayBeNull() {
+    Map<Field, NullableBySpecification> getFieldsWithMayBeNull() {
         return getFieldsWithLabel().entrySet().stream()
-                .filter(e -> e.getKey().getAnnotation(MayBeNull.class) != null)
-                .collect(Collectors.toMap(Map.Entry::getKey, e -> e.getKey().getAnnotation(MayBeNull.class)));
+                .filter(e -> e.getKey().getAnnotation(NullableBySpecification.class) != null)
+                .collect(Collectors.toMap(Map.Entry::getKey, e -> e.getKey().getAnnotation(NullableBySpecification.class)));
     }
 
     Map<Field, Unused> getFieldsWithUnused() {

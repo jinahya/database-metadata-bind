@@ -34,8 +34,6 @@ public class TableType implements MetadataType {
 
     private static final long serialVersionUID = -7630634982776331078L;
 
-    // -----------------------------------------------------------------------------------------------------------------
-
     /**
      * Creates a new instance.
      */
@@ -43,7 +41,6 @@ public class TableType implements MetadataType {
         super();
     }
 
-    // -----------------------------------------------------------------------------------------------------------------
     @Override
     public String toString() {
         return super.toString() + '{'
@@ -73,7 +70,6 @@ public class TableType implements MetadataType {
         this.tableType = tableType;
     }
 
-    // -----------------------------------------------------------------------------------------------------------------
     @XmlElement(required = true)
     @Label("TABLE_TYPE")
     private String tableType;

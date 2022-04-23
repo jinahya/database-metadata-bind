@@ -20,6 +20,12 @@ package com.github.jinahya.database.metadata.bind;
  * #L%
  */
 
+import lombok.EqualsAndHashCode;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+import lombok.ToString;
+
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
 import java.sql.DatabaseMetaData;
@@ -33,92 +39,23 @@ import java.util.Collection;
  */
 @XmlRootElement
 @ChildOf(Table.class)
+@Setter
+@Getter
+@EqualsAndHashCode
+@ToString(callSuper = true)
+@NoArgsConstructor
 public class PrimaryKey
         implements MetadataType {
 
     private static final long serialVersionUID = 3159826510060898330L;
 
-    // -----------------------------------------------------------------------------------------------------------------
-
-    /**
-     * Creates a new instance.
-     */
-    public PrimaryKey() {
-        super();
-    }
-
-    // -----------------------------------------------------------------------------------------------------------------
-
-    @Override
-    public String toString() {
-        return super.toString() + '{'
-               + "tableCat=" + tableCat
-               + ",tableSchem=" + tableSchem
-               + ",tableName=" + tableName
-               + ",columnName=" + columnName
-               + ",keySeq=" + keySeq
-               + ",pkName=" + pkName
-               + '}';
-    }
-
-    // -----------------------------------------------------------------------------------------------------------------
-
-    public String getTableCat() {
-        return tableCat;
-    }
-
-    public void setTableCat(final String tableCat) {
-        this.tableCat = tableCat;
-    }
-
-    public String getTableSchem() {
-        return tableSchem;
-    }
-
-    public void setTableSchem(final String tableSchem) {
-        this.tableSchem = tableSchem;
-    }
-
-    public String getTableName() {
-        return tableName;
-    }
-
-    public void setTableName(final String tableName) {
-        this.tableName = tableName;
-    }
-
-    public String getColumnName() {
-        return columnName;
-    }
-
-    public void setColumnName(final String columnName) {
-        this.columnName = columnName;
-    }
-
-    public short getKeySeq() {
-        return keySeq;
-    }
-
-    public void setKeySeq(final short keySeq) {
-        this.keySeq = keySeq;
-    }
-
-    public String getPkName() {
-        return pkName;
-    }
-
-    public void setPkName(final String pkName) {
-        this.pkName = pkName;
-    }
-
-    // -----------------------------------------------------------------------------------------------------------------
     @XmlElement(nillable = true, required = true)
-    @MayBeNull
+    @NullableBySpecification
     @Label("TABLE_CAT")
     private String tableCat;
 
     @XmlElement(nillable = true, required = true)
-    @MayBeNull
+    @NullableBySpecification
     @Label("TABLE_SCHEM")
     private String tableSchem;
 
@@ -126,7 +63,6 @@ public class PrimaryKey
     @Label("TABLE_NAME")
     private String tableName;
 
-    // -----------------------------------------------------------------------------------------------------------------
     @XmlElement(required = true)
     @Label("COLUMN_NAME")
     private String columnName;
@@ -136,7 +72,7 @@ public class PrimaryKey
     private short keySeq;
 
     @XmlElement(nillable = true, required = true)
-    @MayBeNull
+    @NullableBySpecification
     @Label("PK_NAME")
     private String pkName;
 }

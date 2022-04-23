@@ -62,8 +62,6 @@ public class InsertsAreDetected
         return collection;
     }
 
-    // -----------------------------------------------------------------------------------------------------------------
-
     /**
      * Creates a new instance.
      */

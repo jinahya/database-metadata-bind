@@ -20,6 +20,12 @@ package com.github.jinahya.database.metadata.bind;
  * #L%
  */
 
+import lombok.EqualsAndHashCode;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+import lombok.ToString;
+
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
 import java.sql.DatabaseMetaData;
@@ -34,16 +40,19 @@ import java.util.Collection;
  */
 @XmlRootElement
 @ChildOf(Table.class)
+@Setter
+@Getter
+@EqualsAndHashCode
+@ToString
+@NoArgsConstructor
 public class BestRowIdentifier
         implements MetadataType {
 
     private static final long serialVersionUID = -6733770602373723371L;
 
-    // -----------------------------------------------------------------------------------------------------------------
-
     /**
-     * Constants for {@code PSEUDO_COLUMN} column values of a result of {@link DatabaseMetaData#getBestRowIdentifier(String,
-     * String, String, int, boolean)} method.
+     * Constants for {@code PSEUDO_COLUMN} column values of a result of
+     * {@link DatabaseMetaData#getBestRowIdentifier(String, String, String, int, boolean)} method.
      */
     public enum PseudoColumn
             implements IntFieldEnum<PseudoColumn> {
@@ -86,8 +95,8 @@ public class BestRowIdentifier
     }
 
     /**
-     * Constants for {@code SCOPE} column values of a result of {@link DatabaseMetaData#getBestRowIdentifier(String,
-     * String, String, int, boolean)} method.
+     * Constants for {@code SCOPE} column values of a result of
+     * {@link DatabaseMetaData#getBestRowIdentifier(String, String, String, int, boolean)} method.
      */
     public enum Scope
             implements IntFieldEnum<Scope> {
@@ -98,7 +107,8 @@ public class BestRowIdentifier
         BEST_ROW_TEMPORARY(DatabaseMetaData.bestRowTemporary),
 
         /**
-         * Constant for {@link DatabaseMetaData#bestRowTransaction}({@value java.sql.DatabaseMetaData#bestRowTransaction}).
+         * Constant for
+         * {@link DatabaseMetaData#bestRowTransaction}({@value java.sql.DatabaseMetaData#bestRowTransaction}).
          */
         BEST_ROW_TRANSACTION(DatabaseMetaData.bestRowTransaction),
 
@@ -129,109 +139,10 @@ public class BestRowIdentifier
         private final int rawValue;
     }
 
-    // -----------------------------------------------------------------------------------------------------------------
-
-    /**
-     * Creates a new instance.
-     */
-    public BestRowIdentifier() {
-        super();
-    }
-
-    // -----------------------------------------------------------------------------------------------------------------
-
-    @Override
-    public String toString() {
-        return super.toString() + '{'
-               + "scope=" + scope
-               + ",columnName=" + columnName
-               + ",dataType=" + dataType
-               + ",typeName=" + typeName
-               + ",columnSize=" + columnSize
-               + ",bufferLength=" + bufferLength
-               + ",decimalDigits=" + decimalDigits
-               + ",pseudoColumn=" + pseudoColumn
-               + '}';
-    }
-
-    // ----------------------------------------------------------------------------------------------------------- scope
-    public short getScope() {
-        return scope;
-    }
-
-    public void setScope(final short scope) {
-        this.scope = scope;
-    }
-
-    // ------------------------------------------------------------------------------------------------------ columnName
-    public String getColumnName() {
-        return columnName;
-    }
-
-    public void setColumnName(final String columnName) {
-        this.columnName = columnName;
-    }
-
-    // -------------------------------------------------------------------------------------------------------- dataType
-    public int getDataType() {
-        return dataType;
-    }
-
-    public void setDataType(final int dataType) {
-        this.dataType = dataType;
-    }
-
-    // -------------------------------------------------------------------------------------------------------- typeName
-    public String getTypeName() {
-        return typeName;
-    }
-
-    public void setTypeName(final String typeName) {
-        this.typeName = typeName;
-    }
-
-    // ------------------------------------------------------------------------------------------------------ columnSize
-    public int getColumnSize() {
-        return columnSize;
-    }
-
-    public void setColumnSize(final int columnSize) {
-        this.columnSize = columnSize;
-    }
-
-    // ---------------------------------------------------------------------------------------------------- bufferLength
-    public Integer getBufferLength() {
-        return bufferLength;
-    }
-
-    public void setBufferLength(final Integer bufferLength) {
-        this.bufferLength = bufferLength;
-    }
-
-    // --------------------------------------------------------------------------------------------------- decimalDigits
-    public Short getDecimalDigits() {
-        return decimalDigits;
-    }
-
-    public void setDecimalDigits(final Short decimalDigits) {
-        this.decimalDigits = decimalDigits;
-    }
-
-    // ---------------------------------------------------------------------------------------------------- pseudoColumn
-    public short getPseudoColumn() {
-        return pseudoColumn;
-    }
-
-    public void setPseudoColumn(final short pseudoColumn) {
-        this.pseudoColumn = pseudoColumn;
-    }
-
-    // -----------------------------------------------------------------------------------------------------------------
     @XmlElement(required = true)
     @Label("SCOPE")
     private short scope;
 
-    // -----------------------------------------------------------------------------------------------------------------
     @XmlElement(required = true)
     @Label("COLUMN_NAME")
     private String columnName;
@@ -254,7 +165,7 @@ public class BestRowIdentifier
     private Integer bufferLength;
 
     @XmlElement(required = true, nillable = true)
-    @MayBeNull
+    @NullableBySpecification
     @Label("DECIMAL_DIGITS")
     private Short decimalDigits;
 

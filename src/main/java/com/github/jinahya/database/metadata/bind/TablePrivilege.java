@@ -27,8 +27,8 @@ import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
 
 /**
- * An entity class for binding the result of {@link java.sql.DatabaseMetaData#getTablePrivileges(java.lang.String,
- * java.lang.String, java.lang.String)}.
+ * An entity class for binding the result of
+ * {@link java.sql.DatabaseMetaData#getTablePrivileges(java.lang.String, java.lang.String, java.lang.String)}.
  *
  * @author Jin Kwon &lt;jinahya_at_gmail.com&gt;
  */
@@ -41,14 +41,13 @@ public class TablePrivilege
 
     private static final long serialVersionUID = -1799954363648972203L;
 
-    // -----------------------------------------------------------------------------------------------------------------
     @XmlElement(required = true, nillable = true)
-    @MayBeNull
+    @NullableBySpecification
     @Label("TABLE_CAT")
     private String tableCat;
 
     @XmlElement(required = true, nillable = true)
-    @MayBeNull
+    @NullableBySpecification
     @Label("TABLE_SCHEM")
     private String tableSchem;
 
@@ -56,9 +55,8 @@ public class TablePrivilege
     @Label("TABLE_NAME")
     private String tableName;
 
-    // -----------------------------------------------------------------------------------------------------------------
     @XmlElement(required = true, nillable = true)
-    @MayBeNull
+    @NullableBySpecification
     @Label("GRANTOR")
     private String grantor;
 
@@ -71,7 +69,7 @@ public class TablePrivilege
     private String privilege;
 
     @XmlElement(required = true, nillable = true)
-    @MayBeNull
+    @NullableBySpecification
     @Label("IS_GRANTABLE")
     private String isGrantable;
 }

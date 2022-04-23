@@ -36,8 +36,9 @@ import java.util.Collection;
 import java.util.List;
 
 /**
- * A class for binding results of {@link java.sql.DatabaseMetaData#getTables(java.lang.String, java.lang.String,
- * java.lang.String, java.lang.String[])} method.
+ * A class for binding results of
+ * {@link java.sql.DatabaseMetaData#getTables(java.lang.String, java.lang.String, java.lang.String, java.lang.String[])}
+ * method.
  *
  * @author Jin Kwon &lt;jinahya_at_gmail.com&gt;
  * @see Context#getTables(String, String, String, String[], Collection)
@@ -75,8 +76,6 @@ public class Table
 
     public static final String ATTRIBUTE_NAME_TABLE_NAME = "tableName";
 
-    // -----------------------------------------------------------------------------------------------------------------
-
     /**
      * Creates a new instance.
      */
@@ -84,7 +83,6 @@ public class Table
         super();
     }
 
-    // -----------------------------------------------------------------------------------------------------------------
     @Override
     public String toString() {
         return super.toString() + '{'
@@ -109,8 +107,6 @@ public class Table
                + ",versionColumns=" + versionColumns
                + '}';
     }
-
-    // -----------------------------------------------------------------------------------------------------------------
 
     public String getTableCat() {
         return tableCat;
@@ -280,14 +276,13 @@ public class Table
         return versionColumns;
     }
 
-    // -----------------------------------------------------------------------------------------------------------------
     @XmlElement(required = true, nillable = true)
-    @MayBeNull
+    @NullableBySpecification
     @Label(COLUMN_LABEL_TABLE_CAT)
     private String tableCat;
 
     @XmlElement(required = true, nillable = true)
-    @MayBeNull
+    @NullableBySpecification
     @Label(COLUMN_LABEL_TABLE_SCHEM)
     private String tableSchem;
 
@@ -295,42 +290,40 @@ public class Table
     @Label(COLUMN_LABEL_TABLE_NAME)
     private String tableName;
 
-    // -----------------------------------------------------------------------------------------------------------------
     @XmlElement(required = true)
     @Label("TABLE_TYPE")
     private String tableType;
 
     @XmlElement(required = true, nillable = true)
-    @MayBeNull
+    @NullableBySpecification
     @Label("REMARKS")
     private String remarks;
 
     @XmlElement(required = true, nillable = true)
-    @MayBeNull
+    @NullableBySpecification
     @Label("TYPE_CAT")
     private String typeCat;
 
     @XmlElement(required = true, nillable = true)
-    @MayBeNull
+    @NullableBySpecification
     @Label("TYPE_SCHEM")
     private String typeSchem;
 
     @XmlElement(required = true, nillable = true)
-    @MayBeNull
+    @NullableBySpecification
     @Label("TYPE_NAME")
     private String typeName;
 
     @XmlElement(required = true, nillable = true)
-    @MayBeNull
+    @NullableBySpecification
     @Label("SELF_REFERENCING_COL_NAME")
     private String selfReferencingColName;
 
     @XmlElement(required = true, nillable = true)
-    @MayBeNull
+    @NullableBySpecification
     @Label("REF_GENERATION")
     private String refGeneration;
 
-    // -----------------------------------------------------------------------------------------------------------------
     @XmlElementRef
     @Setter(AccessLevel.NONE)
     @Getter(AccessLevel.NONE)

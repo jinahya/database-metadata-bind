@@ -25,8 +25,8 @@ import javax.xml.bind.annotation.XmlRootElement;
 import java.util.Objects;
 
 /**
- * A entity class for binding the result of {@link java.sql.DatabaseMetaData#getSuperTables(java.lang.String,
- * java.lang.String, java.lang.String)}
+ * A entity class for binding the result of
+ * {@link java.sql.DatabaseMetaData#getSuperTables(java.lang.String, java.lang.String, java.lang.String)}
  *
  * @author Jin Kwon &lt;jinahya_at_gmail.com&gt;
  */
@@ -37,8 +37,6 @@ public class SuperTable
 
     private static final long serialVersionUID = -302335602056528563L;
 
-    // -----------------------------------------------------------------------------------------------------------------
-
     /**
      * Creates a new instance.
      */
@@ -46,7 +44,6 @@ public class SuperTable
         super();
     }
 
-    // -----------------------------------------------------------------------------------------------------------------
     @Override
     public String toString() {
         return super.toString() + '{'
@@ -112,14 +109,13 @@ public class SuperTable
         this.supertableName = supertableName;
     }
 
-    // -----------------------------------------------------------------------------------------------------------------
     @XmlElement(required = true, nillable = true)
-    @MayBeNull
+    @NullableBySpecification
     @Label("TABLE_CAT")
     private String tableCat;
 
     @XmlElement(required = true, nillable = true)
-    @MayBeNull
+    @NullableBySpecification
     @Label("TABLE_SCHEM")
     private String tableSchem;
 
@@ -127,7 +123,6 @@ public class SuperTable
     @Label("TABLE_NAME")
     private String tableName;
 
-    // -----------------------------------------------------------------------------------------------------------------
     @XmlElement(required = true)
     @Label("SUPERTABLE_NAME")
     private String supertableName;

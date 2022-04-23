@@ -62,16 +62,12 @@ public class SupportsTransactionIsolationLevel
         return collection;
     }
 
-    // -----------------------------------------------------------------------------------------------------------------
-
     /**
      * Creates a new instance.
      */
     public SupportsTransactionIsolationLevel() {
         super();
     }
-
-    // -----------------------------------------------------------------------------------------------------------------
 
     @Override
     public String toString() {
@@ -95,7 +91,6 @@ public class SupportsTransactionIsolationLevel
         return Objects.hash(level, value);
     }
 
-    // -----------------------------------------------------------------------------------------------------------------
     public int getLevel() {
         return level;
     }
@@ -112,11 +107,9 @@ public class SupportsTransactionIsolationLevel
         this.value = value;
     }
 
-    // -----------------------------------------------------------------------------------------------------------------
     @XmlAttribute(required = true)
     private int level;
 
-    // -----------------------------------------------------------------------------------------------------------------
     @XmlValue
     private Boolean value;
 }

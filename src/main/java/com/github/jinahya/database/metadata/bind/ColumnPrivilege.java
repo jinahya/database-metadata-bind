@@ -38,16 +38,12 @@ public class ColumnPrivilege
 
     private static final long serialVersionUID = 4384654744147773380L;
 
-    // -----------------------------------------------------------------------------------------------------------------
-
     /**
      * Creates a new instance.
      */
     public ColumnPrivilege() {
         super();
     }
-
-    // -----------------------------------------------------------------------------------------------------------------
 
     @Override
     public String toString() {
@@ -135,14 +131,13 @@ public class ColumnPrivilege
         this.isGrantable = isGrantable;
     }
 
-    // -----------------------------------------------------------------------------------------------------------------
     @XmlElement(required = true, nillable = true)
-    @MayBeNull
+    @NullableBySpecification
     @Label("TABLE_CAT")
     private String tableCat;
 
     @XmlElement(required = true, nillable = true)
-    @MayBeNull
+    @NullableBySpecification
     @Label("TABLE_SCHEM")
     private String tableSchem;
 
@@ -154,9 +149,8 @@ public class ColumnPrivilege
     @Label("COLUMN_NAME")
     private String columnName;
 
-    // -----------------------------------------------------------------------------------------------------------------
     @XmlElement(nillable = true, required = true)
-    @MayBeNull
+    @NullableBySpecification
     @Label("GRANTOR")
     private String grantor;
 
@@ -169,7 +163,7 @@ public class ColumnPrivilege
     private String privilege;
 
     @XmlElement(nillable = true, required = true)
-    @MayBeNull
+    @NullableBySpecification
     @Label("IS_GRANTABLE")
     private String isGrantable;
 }

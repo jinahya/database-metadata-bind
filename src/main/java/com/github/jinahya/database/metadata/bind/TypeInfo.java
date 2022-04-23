@@ -48,8 +48,6 @@ public class TypeInfo implements MetadataType {
 
     public static final String ATTRIBUTE_NAME_SEARCHABLE = "searchable";
 
-    // -----------------------------------------------------------------------------------------------------------------
-
     /**
      * Constants for {@value com.github.jinahya.database.metadata.bind.TypeInfo#COLUMN_NAME_NULLABLE} column values of a
      * result of {@link DatabaseMetaData#getTypeInfo()} method.
@@ -69,7 +67,8 @@ public class TypeInfo implements MetadataType {
         TYPE_NULLABLE(DatabaseMetaData.typeNullable), // 1
 
         /**
-         * Constant for {@link DatabaseMetaData#typeNullableUnknown}({@value java.sql.DatabaseMetaData#typeNullableUnknown}).
+         * Constant for
+         * {@link DatabaseMetaData#typeNullableUnknown}({@value java.sql.DatabaseMetaData#typeNullableUnknown}).
          */
         TYPE_NULLABLE_UNKNOWN(DatabaseMetaData.typeNullableUnknown); // 2
 
@@ -173,8 +172,6 @@ public class TypeInfo implements MetadataType {
         private final int rawValue;
     }
 
-    // -----------------------------------------------------------------------------------------------------------------
-
     /**
      * Creates a new instance.
      */
@@ -182,7 +179,6 @@ public class TypeInfo implements MetadataType {
         super();
     }
 
-    // -----------------------------------------------------------------------------------------------------------------
     @Override
     public String toString() {
         return super.toString() + '{'
@@ -442,7 +438,6 @@ public class TypeInfo implements MetadataType {
         this.numPrecRadix = numPrecRadix;
     }
 
-    // -----------------------------------------------------------------------------------------------------------------
     @XmlElement(required = true)
     @Label("TYPE_NAME")
     private String typeName;
@@ -456,17 +451,17 @@ public class TypeInfo implements MetadataType {
     private int precision;
 
     @XmlElement(required = true, nillable = true)
-    @MayBeNull
+    @NullableBySpecification
     @Label("LITERAL_PREFIX")
     private String literalPrefix;
 
     @XmlElement(required = true, nillable = true)
-    @MayBeNull
+    @NullableBySpecification
     @Label("LITERAL_SUFFIX")
     private String literalSuffix;
 
     @XmlElement(required = true, nillable = true)
-    @MayBeNull
+    @NullableBySpecification
     @Label("CREATE_PARAMS")
     private String createParams;
 
@@ -495,7 +490,7 @@ public class TypeInfo implements MetadataType {
     private boolean autoIncrement;
 
     @XmlElement(required = true, nillable = true)
-    @MayBeNull
+    @NullableBySpecification
     @Label("LOCAL_TYPE_NAME")
     private String localTypeName;
 

@@ -60,8 +60,6 @@ public class OthersInsertsAreVisible
         return collection;
     }
 
-    // -----------------------------------------------------------------------------------------------------------------
-
     /**
      * Creates a new instance.
      */

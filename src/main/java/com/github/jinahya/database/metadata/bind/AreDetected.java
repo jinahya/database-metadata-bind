@@ -20,6 +20,12 @@ package com.github.jinahya.database.metadata.bind;
  * #L%
  */
 
+import lombok.AccessLevel;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+import lombok.ToString;
+
 import javax.xml.bind.annotation.XmlAttribute;
 import javax.xml.bind.annotation.XmlTransient;
 import javax.xml.bind.annotation.XmlValue;
@@ -33,48 +39,15 @@ import javax.xml.bind.annotation.XmlValue;
  * @see UpdatesAreDetected
  */
 @XmlTransient
+@Setter
+@Getter
+@ToString(callSuper = true)
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 abstract class AreDetected
         implements MetadataType {
 
     private static final long serialVersionUID = 472228030784272988L;
 
-    // -----------------------------------------------------------------------------------------------------------------
-
-    /**
-     * Creates a new instance.
-     */
-    protected AreDetected() {
-        super();
-    }
-
-    // -----------------------------------------------------------------------------------------------------------------
-    @Override
-    public String toString() {
-        return super.toString() + '{'
-               + "type=" + type
-               + ",value=" + value
-               + '}';
-    }
-
-    // ------------------------------------------------------------------------------------------------------------ type
-    public int getType() {
-        return type;
-    }
-
-    public void setType(final int type) {
-        this.type = type;
-    }
-
-    // ----------------------------------------------------------------------------------------------------------- value
-    public Boolean getValue() {
-        return value;
-    }
-
-    public void setValue(final Boolean value) {
-        this.value = value;
-    }
-
-    // -----------------------------------------------------------------------------------------------------------------
     @XmlAttribute(required = true)
     private int type;
 

@@ -39,16 +39,12 @@ public class IndexInfo
 
     private static final long serialVersionUID = -768486884376018474L;
 
-    // -----------------------------------------------------------------------------------------------------------------
-
     /**
      * Creates a new instance.
      */
     public IndexInfo() {
         super();
     }
-
-    // -----------------------------------------------------------------------------------------------------------------
 
     @Override
     public String toString() {
@@ -69,7 +65,6 @@ public class IndexInfo
                + '}';
     }
 
-    // -----------------------------------------------------------------------------------------------------------------
     public String getTableCat() {
         return tableCat;
     }
@@ -174,14 +169,13 @@ public class IndexInfo
         this.filterCondition = filterCondition;
     }
 
-    // -----------------------------------------------------------------------------------------------------------------
     @XmlElement(required = true, nillable = true)
-    @MayBeNull
+    @NullableBySpecification
     @Label("TABLE_CAT")
     private String tableCat;
 
     @XmlElement(required = true, nillable = true)
-    @MayBeNull
+    @NullableBySpecification
     @Label("TABLE_SCHEM")
     private String tableSchem;
 
@@ -189,18 +183,17 @@ public class IndexInfo
     @Label("TABLE_NAME")
     private String tableName;
 
-    // -----------------------------------------------------------------------------------------------------------------
     @XmlElement(required = true)
     @Label("NON_UNIQUE")
     private boolean nonUnique;
 
     @XmlElement(required = true, nillable = true)
-    @MayBeNull
+    @NullableBySpecification
     @Label("INDEX_QUALIFIER")
     private String indexQualifier;
 
     @XmlElement(required = true, nillable = true)
-    @MayBeNull
+    @NullableBySpecification
     @Label("INDEX_NAME")
     private String indexName;
 
@@ -213,12 +206,12 @@ public class IndexInfo
     private short ordinalPosition;
 
     @XmlElement(required = true, nillable = true)
-    @MayBeNull
+    @NullableBySpecification
     @Label("COLUMN_NAME")
     private String columnName;
 
     @XmlElement(required = true, nillable = true)
-    @MayBeNull
+    @NullableBySpecification
     @Label("ASC_OR_DESC")
     private String ascOrDesc;
 
@@ -231,7 +224,7 @@ public class IndexInfo
     private long pages;
 
     @XmlElement(required = true, nillable = true)
-    @MayBeNull
+    @NullableBySpecification
     @Label("FILTER_CONDITION")
     private String filterCondition;
 }

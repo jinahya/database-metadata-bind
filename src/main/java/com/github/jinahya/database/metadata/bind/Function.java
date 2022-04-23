@@ -32,8 +32,8 @@ import java.util.Collection;
 import java.util.List;
 
 /**
- * A class for binding results of {@link DatabaseMetaData#getFunctions(java.lang.String, java.lang.String,
- * java.lang.String)} method.
+ * A class for binding results of
+ * {@link DatabaseMetaData#getFunctions(java.lang.String, java.lang.String, java.lang.String)} method.
  *
  * @author Jin Kwon &lt;jinahya_at_gmail.com&gt;
  * @see Context#getFunctions(String, String, String, Collection)
@@ -57,16 +57,12 @@ public class Function
 
     public static final String ATTRIBUTE_NAME_FUNCTION_SCHEM = "functionSchem";
 
-    // -----------------------------------------------------------------------------------------------------------------
-
     /**
      * Creates a new instance.
      */
     public Function() {
         super();
     }
-
-    // -----------------------------------------------------------------------------------------------------------------
 
     @Override
     public String toString() {
@@ -79,8 +75,6 @@ public class Function
                + ",specificName=" + specificName
                + '}';
     }
-
-    // -----------------------------------------------------------------------------------------------------------------
 
     public String getFunctionCat() {
         return functionCat;
@@ -144,14 +138,13 @@ public class Function
         return functionColumns;
     }
 
-    // -----------------------------------------------------------------------------------------------------------------
     @XmlElement(required = true, nillable = true)
-    @MayBeNull
+    @NullableBySpecification
     @Label(COLUMN_NAME_FUNCTION_CAT)
     private String functionCat;
 
     @XmlElement(required = true, nillable = true)
-    @MayBeNull
+    @NullableBySpecification
     @Label(COLUMN_NAME_FUNCTION_SCHEM)
     private String functionSchem;
 
@@ -160,7 +153,6 @@ public class Function
     @EqualsAndHashCode.Exclude
     private String functionName;
 
-    // -----------------------------------------------------------------------------------------------------------------
     @XmlElement(required = true)
     @Label("REMARKS")
     private String remarks;
@@ -173,7 +165,6 @@ public class Function
     @Label("SPECIFIC_NAME")
     private String specificName;
 
-    // -----------------------------------------------------------------------------------------------------------------
     @XmlElementRef
     @EqualsAndHashCode.Exclude
     @ToString.Exclude

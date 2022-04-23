@@ -168,12 +168,17 @@ public class Context {
         requireNonNull(collection, "collection is null");
         try (ResultSet results = databaseMetaData.getAttributes(
                 catalog, schemaPattern, typeNamePattern, attributeNamePattern)) {
-            if (results != null) {
-                bind(results, Attribute.class, collection);
+            if (results == null) {
+                logger.warning(() -> String.format("null results from getAttributes(%1$s, %2$s, %3$s, %4$s)",
+                                                   catalog, schemaPattern, typeNamePattern, attributeNamePattern));
+                return collection;
             }
+            bind(results, Attribute.class, collection);
         } catch (final SQLException sqle) {
-            //log..error("failed to getAttributes({}, {}, {}, {})",
-//                    catalog, schemaPattern, typeNamePattern, attributeNamePattern, sqle);
+            logger.log(Level.SEVERE,
+                       String.format("failed to getAttributes(%1$s, %2$s, %3$s, %4$s)",
+                                     catalog, schemaPattern, typeNamePattern, attributeNamePattern),
+                       sqle);
             throwIfNotSuppressed(sqle);
         }
         return collection;
@@ -1697,6 +1702,7 @@ public class Context {
         if (!isSuppressed(sqle)) {
             throw sqle;
         }
+        logger.fine(() -> String.format("suppressed: %1$s", sqle));
     }
 
     final DatabaseMetaData databaseMetaData;

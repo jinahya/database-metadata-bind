@@ -37,7 +37,6 @@ import static java.sql.DriverManager.getConnection;
 @Slf4j
 class ExternalIT {
 
-    // -----------------------------------------------------------------------------------------------------------------
     @EnabledIfSystemProperty(named = "password", matches = ".+")
     @EnabledIfSystemProperty(named = "user", matches = ".+")
     @EnabledIfSystemProperty(named = "url", matches = ".+")

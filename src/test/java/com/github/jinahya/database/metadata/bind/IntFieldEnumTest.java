@@ -56,8 +56,6 @@ abstract class IntFieldEnumTest<E extends Enum<E> & IntFieldEnum<E>> {
         this.enumClass = requireNonNull(enumClass, "enumClass is null");
     }
 
-    // -----------------------------------------------------------------------------------------------------------------
-
     /**
      * Returns a stream of raw values of all enum constants.
      *
@@ -77,8 +75,6 @@ abstract class IntFieldEnumTest<E extends Enum<E> & IntFieldEnum<E>> {
     protected @NotEmpty List<@NotNull Integer> rawValueList() {
         return rawValueStream().boxed().collect(Collectors.toList());
     }
-
-    // -----------------------------------------------------------------------------------------------------------------
 
     /**
      * Asserts {@code valueOfRawValue(int)} method, defined in specified enum class, invoked with each enum constant's

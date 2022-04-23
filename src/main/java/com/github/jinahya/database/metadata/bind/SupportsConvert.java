@@ -42,8 +42,8 @@ public class SupportsConvert
         implements MetadataType {
 
     /**
-     * Invokes {@link Context#supportsConvert(int, int)} method for all combinations of all types defined in {@link
-     * JDBCType} and adds bounds values to specified collection.
+     * Invokes {@link Context#supportsConvert(int, int)} method for all combinations of all types defined in
+     * {@link JDBCType} and adds bounds values to specified collection.
      *
      * @param context    a context.
      * @param collection the collection to which bound values are added.
@@ -66,16 +66,12 @@ public class SupportsConvert
         return collection;
     }
 
-    // -----------------------------------------------------------------------------------------------------------------
-
     /**
      * Creates a new instance.
      */
     public SupportsConvert() {
         super();
     }
-
-    // -----------------------------------------------------------------------------------------------------------------
 
     @Override
     public String toString() {
@@ -99,7 +95,6 @@ public class SupportsConvert
         return Objects.hash(fromType, toType, value);
     }
 
-    // -----------------------------------------------------------------------------------------------------------------
     public int getFromType() {
         return fromType;
     }
@@ -124,14 +119,12 @@ public class SupportsConvert
         this.value = value;
     }
 
-    // -----------------------------------------------------------------------------------------------------------------
     @XmlAttribute(required = true)
     private int fromType;
 
     @XmlAttribute(required = true)
     private int toType;
 
-    // -----------------------------------------------------------------------------------------------------------------
     @XmlValue
     private Boolean value;
 }

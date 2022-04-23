@@ -37,16 +37,12 @@ public class ClientInfoProperty
 
     private static final long serialVersionUID = -2913230435651853254L;
 
-    // -----------------------------------------------------------------------------------------------------------------
-
     /**
      * Creates a new instance.
      */
     public ClientInfoProperty() {
         super();
     }
-
-    // -----------------------------------------------------------------------------------------------------------------
 
     @Override
     public String toString() {
@@ -94,7 +90,6 @@ public class ClientInfoProperty
         this.description = description;
     }
 
-    // -----------------------------------------------------------------------------------------------------------------
     @XmlElement(required = true)
     @Label("NAME")
     private String name;

@@ -61,8 +61,6 @@ public class OwnDeletesAreVisible
         return collection;
     }
 
-    // -----------------------------------------------------------------------------------------------------------------
-
     /**
      * Creates a new instance.
      */

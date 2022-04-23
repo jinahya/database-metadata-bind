@@ -44,7 +44,6 @@ import java.util.function.BiFunction;
 @Slf4j
 class JaxbTest {
 
-    // -----------------------------------------------------------------------------------------------------------------
     private static void storeSchema(final JAXBContext context, final BiFunction<String, String, File> locator)
             throws IOException {
         context.generateSchema(new SchemaOutputResolver() {
@@ -72,7 +71,6 @@ class JaxbTest {
         });
     }
 
-    // -----------------------------------------------------------------------------------------------------------------
     @Test
     void JAXBContextNewInstance_DoesNotThrow_PackageName() {
         Assertions.assertDoesNotThrow(() -> JAXBContext.newInstance(getClass().getPackage().getName()));

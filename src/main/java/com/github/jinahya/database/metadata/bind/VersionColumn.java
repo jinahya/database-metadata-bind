@@ -38,8 +38,6 @@ public class VersionColumn
 
     private static final long serialVersionUID = 3587959398829593292L;
 
-    // -----------------------------------------------------------------------------------------------------------------
-
     /**
      * Constants for pseudo column values of version columns.
      *
@@ -49,20 +47,20 @@ public class VersionColumn
             implements IntFieldEnum<PseudoColumn> {
 
         /**
-         * Constant for {@link DatabaseMetaData#versionColumnUnknown} whose value is {@value
-         * DatabaseMetaData#versionColumnUnknown}.
+         * Constant for {@link DatabaseMetaData#versionColumnUnknown} whose value is
+         * {@value DatabaseMetaData#versionColumnUnknown}.
          */
         VERSION_COLUMN_NO_NULLS(DatabaseMetaData.versionColumnUnknown),
 
         /**
-         * Constant for {@link DatabaseMetaData#versionColumnNotPseudo} whose value is {@value
-         * DatabaseMetaData#versionColumnNotPseudo}.
+         * Constant for {@link DatabaseMetaData#versionColumnNotPseudo} whose value is
+         * {@value DatabaseMetaData#versionColumnNotPseudo}.
          */
         VERSION_COLUMN_NULLABLE(DatabaseMetaData.versionColumnNotPseudo),
 
         /**
-         * Constant for {@link DatabaseMetaData#versionColumnPseudo} whose value is {@value
-         * DatabaseMetaData#versionColumnPseudo}.
+         * Constant for {@link DatabaseMetaData#versionColumnPseudo} whose value is
+         * {@value DatabaseMetaData#versionColumnPseudo}.
          */
         VERSION_COLUMN_NULLABLE_UNKNOWN(DatabaseMetaData.versionColumnPseudo);
 
@@ -99,16 +97,12 @@ public class VersionColumn
         private final int rawValue;
     }
 
-    // -----------------------------------------------------------------------------------------------------------------
-
     /**
      * Creates a new instance.
      */
     public VersionColumn() {
         super();
     }
-
-    // -----------------------------------------------------------------------------------------------------------------
 
     @Override
     public String toString() {
@@ -124,7 +118,6 @@ public class VersionColumn
                + '}';
     }
 
-    // -----------------------------------------------------------------------------------------------------------------
     public Short getScope() {
         return scope;
     }
@@ -189,13 +182,11 @@ public class VersionColumn
         this.pseudoColumn = pseudoColumn;
     }
 
-    // -----------------------------------------------------------------------------------------------------------------
     @XmlElement(required = true, nillable = true)
     @Unused
     @Label("SCOPE")
     private Short scope;
 
-    // -----------------------------------------------------------------------------------------------------------------
     @XmlElement(required = true)
     @Label("COLUMN_NAME")
     private String columnName;
@@ -217,7 +208,7 @@ public class VersionColumn
     private int bufferLength;
 
     @XmlElement(required = true, nillable = true)
-    @MayBeNull
+    @NullableBySpecification
     @Label("DECIMAL_DIGITS")
     private Short decimalDigits;
 

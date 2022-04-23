@@ -34,7 +34,6 @@ import java.lang.reflect.Field;
 @Slf4j
 class UtilsTest {
 
-    // -----------------------------------------------------------------------------------------------------------------
     @Disabled
     @Test
     void printSqlTypes() throws ReflectiveOperationException {

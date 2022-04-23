@@ -38,8 +38,6 @@ public class ExportedKey
 
     private static final long serialVersionUID = 277210154172135556L;
 
-    // -----------------------------------------------------------------------------------------------------------------
-
     /**
      * Creates a new instance.
      */

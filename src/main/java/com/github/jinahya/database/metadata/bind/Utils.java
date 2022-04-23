@@ -35,9 +35,9 @@ import java.util.logging.Logger;
 import static java.util.Objects.requireNonNull;
 
 final class Utils {
+
     private static final Logger logger = Logger.getLogger(MethodHandles.lookup().lookupClass().getName());
 
-    // -----------------------------------------------------------------------------------------------------------------
     private static <T extends Annotation> Map<Field, T> getFieldsAnnotatedWith(
             final Class<?> c, final Class<T> a, final Map<Field, T> m) {
         for (final Field field : c.getDeclaredFields()) {
@@ -73,8 +73,6 @@ final class Utils {
         final Class<?> superclass = clazz.getSuperclass();
         return superclass == null ? null : getLabeledField(superclass, label);
     }
-
-    // -----------------------------------------------------------------------------------------------------------------
 
     /**
      * Returns a set of column labels of given result set.
@@ -112,7 +110,6 @@ final class Utils {
         return labelsAndIndices;
     }
 
-    // -----------------------------------------------------------------------------------------------------------------
     static void setFieldValue(final Field field, final Object obj, final ResultSet results, final String label)
             throws SQLException, ReflectiveOperationException {
         requireNonNull(field, "field is null");
@@ -154,8 +151,8 @@ final class Utils {
             if (fieldType.isPrimitive()) {
 //                log.warn("null value for a primitive field: {}", field);
             }
-            if (field.getAnnotation(MayBeNull.class) == null) {
-                if (field.getAnnotation(MayBeNullByVendor.class) == null) {
+            if (field.getAnnotation(NullableBySpecification.class) == null) {
+                if (field.getAnnotation(NullableByVendor.class) == null) {
 //                    log.warn("null value for a non-null field: {}", field);
                 }
             }
@@ -207,7 +204,6 @@ final class Utils {
 //        log.error("failed to set value; label: {}, value: {}, field: {}", label, value, field);
     }
 
-    // -----------------------------------------------------------------------------------------------------------------
     private Utils() {
         throw new AssertionError("instantiation is not allowed");
     }

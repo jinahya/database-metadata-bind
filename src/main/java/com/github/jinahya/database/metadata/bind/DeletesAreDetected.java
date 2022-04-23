@@ -20,6 +20,8 @@ package com.github.jinahya.database.metadata.bind;
  * #L%
  */
 
+import lombok.NoArgsConstructor;
+
 import javax.xml.bind.annotation.XmlRootElement;
 import java.sql.DatabaseMetaData;
 import java.sql.SQLException;
@@ -34,6 +36,7 @@ import static java.util.Objects.requireNonNull;
  * @see Context#deletesAreDetected(int)
  */
 @XmlRootElement
+@NoArgsConstructor
 public class DeletesAreDetected
         extends AreDetected {
 
@@ -51,22 +54,13 @@ public class DeletesAreDetected
      * @see ResultSetType
      * @see Context#insertsAreDetected(int)
      */
-    public static <C extends Collection<? super DeletesAreDetected>> C getAllInstances(final Context context,
-                                                                                       final C collection)
+    static <C extends Collection<? super DeletesAreDetected>> C getAllInstances(final Context context,
+                                                                                final C collection)
             throws SQLException {
         requireNonNull(context, "context is null");
         for (final ResultSetType type : ResultSetType.values()) {
             collection.add(context.deletesAreDetected(type.getRawValue()));
         }
         return collection;
-    }
-
-    // -----------------------------------------------------------------------------------------------------------------
-
-    /**
-     * Creates a new instance.
-     */
-    public DeletesAreDetected() {
-        super();
     }
 }

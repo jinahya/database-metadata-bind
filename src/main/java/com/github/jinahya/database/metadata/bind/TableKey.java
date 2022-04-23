@@ -36,16 +36,12 @@ abstract class TableKey
 
     private static final long serialVersionUID = 6713872409315471232L;
 
-    // -----------------------------------------------------------------------------------------------------------------
-
     /**
      * Creates a new instance.
      */
     protected TableKey() {
         super();
     }
-
-    // -----------------------------------------------------------------------------------------------------------------
 
     @Override
     public String toString() {
@@ -67,7 +63,6 @@ abstract class TableKey
                + '}';
     }
 
-    // -----------------------------------------------------------------------------------------------------------------
     public String getPktableCat() {
         return pktableCat;
     }
@@ -180,14 +175,13 @@ abstract class TableKey
         this.deferrability = deferrability;
     }
 
-    // -----------------------------------------------------------------------------------------------------------------
     @XmlElement(required = true, nillable = true)
-    @MayBeNull
+    @NullableBySpecification
     @Label("PKTABLE_CAT")
     private String pktableCat;
 
     @XmlElement(required = true, nillable = true)
-    @MayBeNull
+    @NullableBySpecification
     @Label("PKTABLE_SCHEM")
     private String pktableSchem;
 
@@ -195,18 +189,17 @@ abstract class TableKey
     @Label("PKTABLE_NAME")
     private String pktableName;
 
-    // -----------------------------------------------------------------------------------------------------------------
     @XmlElement(required = true)
     @Label("PKCOLUMN_NAME")
     private String pkcolumnName;
 
     @XmlElement(required = true, nillable = true)
-    @MayBeNull
+    @NullableBySpecification
     @Label("FKTABLE_CAT")
     private String fktableCat;
 
     @XmlElement(required = true, nillable = true)
-    @MayBeNull
+    @NullableBySpecification
     @Label("FKTABLE_NAME")
     private String fktableSchem;
 
@@ -231,12 +224,12 @@ abstract class TableKey
     private short deleteRule;
 
     @XmlElement(required = true, nillable = true)
-    @MayBeNull
+    @NullableBySpecification
     @Label("FK_NAME")
     private String fkName;
 
     @XmlElement(required = true, nillable = true)
-    @MayBeNull
+    @NullableBySpecification
     @Label("PK_NAME")
     private String pkName;
 

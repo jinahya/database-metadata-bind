@@ -39,11 +39,9 @@ public class Column
 
     private static final long serialVersionUID = -409653682729081530L;
 
-    // -----------------------------------------------------------------------------------------------------------------
-
     /**
-     * Constants for {@code NULLABLE} column values from {@link DatabaseMetaData#getColumns(String, String, String,
-     * String)}.
+     * Constants for {@code NULLABLE} column values from
+     * {@link DatabaseMetaData#getColumns(String, String, String, String)}.
      *
      * @see DatabaseMetaData#getColumns(java.lang.String, java.lang.String, java.lang.String, java.lang.String)
      */
@@ -60,7 +58,8 @@ public class Column
         COLUMN_NULLABLE(DatabaseMetaData.columnNullable),
 
         /**
-         * Constant for {@link DatabaseMetaData#columnNullableUnknown}({@value java.sql.DatabaseMetaData#columnNullableUnknown}).
+         * Constant for
+         * {@link DatabaseMetaData#columnNullableUnknown}({@value java.sql.DatabaseMetaData#columnNullableUnknown}).
          */
         COLUMN_NULLABLE_UNKNOWN(DatabaseMetaData.columnNullableUnknown);
 
@@ -87,17 +86,13 @@ public class Column
         private final int rawValue;
     }
 
-    // -----------------------------------------------------------------------------------------------------------------
     public static final String COLUMN_NAME_IS_AUTOINCREMENT = "IS_AUTOINCREMENT";
 
     public static final String ATTRIBUTE_NAME_IS_AUTOINCREMENT = "isAutoincrement";
 
-    // -----------------------------------------------------------------------------------------------------------------
     public static final String COLUMN_NAME_IS_GENERATEDCOLUMN = "IS_GENERATEDCOLUMN";
 
     public static final String ATTRIBUTE_NAME_IS_GENERATEDCOLUMN = "isGeneratedcolumn";
-
-    // -----------------------------------------------------------------------------------------------------------------
 
     /**
      * Creates a new instance.
@@ -105,8 +100,6 @@ public class Column
     public Column() {
         super();
     }
-
-    // -----------------------------------------------------------------------------------------------------------------
 
     @Override
     public String toString() {
@@ -370,14 +363,13 @@ public class Column
         this.isGeneratedcolumn = isGeneratedcolumn;
     }
 
-    // -----------------------------------------------------------------------------------------------------------------
     @XmlElement(required = true, nillable = true)
-    @MayBeNull
+    @NullableBySpecification
     @Label("TABLE_CAT")
     private String tableCat;
 
     @XmlElement(required = true, nillable = true)
-    @MayBeNull
+    @NullableBySpecification
     @Label("TABLE_SCHEM")
     private String tableSchem;
 
@@ -385,12 +377,10 @@ public class Column
     @Label("TABLE_NAME")
     private String tableName;
 
-    // -----------------------------------------------------------------------------------------------------------------
     @XmlElement(required = true)
     @Label("COLUMN_NAME")
     private String columnName;
 
-    // -----------------------------------------------------------------------------------------------------------------
     @XmlElement(required = true)
     @Label("DATA_TYPE")
     private int dataType;
@@ -409,7 +399,7 @@ public class Column
     private Integer bufferLength;
 
     @XmlElement(required = true, nillable = true)
-    @MayBeNull
+    @NullableBySpecification
     @Label("DECIMAL_DIGITS")
     private Integer decimalDigits;
 
@@ -422,12 +412,12 @@ public class Column
     private int nullable;
 
     @XmlElement(required = true, nillable = true)
-    @MayBeNull
+    @NullableBySpecification
     @Label("REMARKS")
     private String remarks;
 
     @XmlElement(required = true, nillable = true)
-    @MayBeNull
+    @NullableBySpecification
     @Label("COLUMN_DEF")
     private String columnDef;
 
@@ -454,22 +444,22 @@ public class Column
     private String isNullable;
 
     @XmlElement(required = true, nillable = true)
-    @MayBeNull
+    @NullableBySpecification
     @Label("SCOPE_CATALOG")
     private String scopeCatalog;
 
     @XmlElement(required = true, nillable = true)
-    @MayBeNull
+    @NullableBySpecification
     @Label("SCOPE_SCHEMA")
     private String scopeSchema;
 
     @XmlElement(required = true, nillable = true)
-    @MayBeNull
+    @NullableBySpecification
     @Label("SCOPE_TABLE")
     private String scopeTable;
 
     @XmlElement(required = true, nillable = true)
-    @MayBeNull
+    @NullableBySpecification
     @Label("SOURCE_DATA_TYPE")
     private Short sourceDataType;
 

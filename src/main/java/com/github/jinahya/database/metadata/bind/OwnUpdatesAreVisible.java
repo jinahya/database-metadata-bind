@@ -62,8 +62,6 @@ public class OwnUpdatesAreVisible
         return collection;
     }
 
-    // -----------------------------------------------------------------------------------------------------------------
-
     /**
      * Creates a new instance.
      */

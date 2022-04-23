@@ -7,12 +7,13 @@
 A library for binding various information
 from [DatabaseMetaData](http://docs.oracle.com/javase/8/docs/api/java/sql/DatabaseMetaData.html).
 
-All methods defined in [DatabaseMetaData][DatabaseMetaData] meet following conditions have been defined along with corresponding result types.
+All methods defined in [DatabaseMetaData][DatabaseMetaData] meet following conditions have been defined along with
+corresponding result types.
 
 * is an instance method.
 * has at least one parameter
-  * (and/or) result type is [ResultSet][ResultSet].
-  
+    * (and/or) result type is [ResultSet][ResultSet].
+
 ## Usage
 
 ```java

@@ -41,8 +41,6 @@ public class SupportsResultSetConcurrency
 
     private static final long serialVersionUID = -4192322973387966785L;
 
-    // -----------------------------------------------------------------------------------------------------------------
-
     /**
      * Invokes {@link Context#supportsResultSetConcurrency(int, int)} method for all combinations of types and
      * concurrencies and adds bound values to specified collection.
@@ -65,16 +63,12 @@ public class SupportsResultSetConcurrency
         return collection;
     }
 
-    // -----------------------------------------------------------------------------------------------------------------
-
     /**
      * Creates a new instance.
      */
     public SupportsResultSetConcurrency() {
         super();
     }
-
-    // -----------------------------------------------------------------------------------------------------------------
 
     @Override
     public String toString() {
@@ -127,14 +121,12 @@ public class SupportsResultSetConcurrency
         this.value = value;
     }
 
-    // -----------------------------------------------------------------------------------------------------------------
     @XmlAttribute(required = true)
     private int type;
 
     @XmlAttribute(required = true)
     private int concurrency;
 
-    // -----------------------------------------------------------------------------------------------------------------
     @XmlValue
     private Boolean value;
 }

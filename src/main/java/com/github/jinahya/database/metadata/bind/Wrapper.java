@@ -20,7 +20,12 @@ package com.github.jinahya.database.metadata.bind;
  * #L%
  */
 
-import javax.xml.bind.*;
+import javax.xml.bind.JAXBContext;
+import javax.xml.bind.JAXBElement;
+import javax.xml.bind.JAXBException;
+import javax.xml.bind.Marshaller;
+import javax.xml.bind.PropertyException;
+import javax.xml.bind.Unmarshaller;
 import javax.xml.bind.annotation.XmlAnyElement;
 import javax.xml.namespace.QName;
 import javax.xml.transform.Source;
@@ -36,8 +41,6 @@ import static java.util.Objects.requireNonNull;
 // http://blog.bdoughan.com/2012/11/creating-generic-list-wrapper-in-jaxb.html
 // http://blog.bdoughan.com/2010/12/jaxb-and-immutable-objects.html
 public final class Wrapper<T> {
-
-    // -----------------------------------------------------------------------------------------------------------------
 
     /**
      * Unmarshalls a list of specified type from specified source.
@@ -85,7 +88,7 @@ public final class Wrapper<T> {
         final JAXBContext context = JAXBContext.newInstance(Wrapper.class, type);
         final JAXBElement<Wrapper<T>> wrapped = new JAXBElement<>(
                 new QName(XmlConstants.NS_URI_DATABASE_METADATA_BIND,
-                        Introspector.decapitalize(Wrapper.class.getSimpleName())),
+                          Introspector.decapitalize(Wrapper.class.getSimpleName())),
                 (Class<Wrapper<T>>) (Class<?>) Wrapper.class, Wrapper.of(elements));
         Marshaller marshaller = context.createMarshaller();
         if (operator != null) {
@@ -155,7 +158,6 @@ public final class Wrapper<T> {
         });
     }
 
-    // -----------------------------------------------------------------------------------------------------------------
     private static <T> Wrapper<T> of(final List<T> elements) {
         requireNonNull(elements, "elements is null");
         final Wrapper<T> instance = new Wrapper<>();
@@ -163,12 +165,10 @@ public final class Wrapper<T> {
         return instance;
     }
 
-    // -----------------------------------------------------------------------------------------------------------------
     private Wrapper() {
         super();
     }
 
-    // -----------------------------------------------------------------------------------------------------------------
     @XmlAnyElement(lax = true)
     private List<T> elements;
 }

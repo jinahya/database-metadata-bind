@@ -37,14 +37,12 @@ import static org.assertj.core.api.Assertions.assertThat;
 @Slf4j
 class ReflectionTest {
 
-    // -----------------------------------------------------------------------------------------------------------------
     private static void method(Integer v) {
     }
 
     private static void method(int v) {
     }
 
-    // -----------------------------------------------------------------------------------------------------------------
     @Disabled
     @Test
     void test() throws NoSuchMethodException {

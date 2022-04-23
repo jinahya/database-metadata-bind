@@ -26,8 +26,9 @@ import java.sql.DatabaseMetaData;
 import java.util.Collection;
 
 /**
- * A class for binding results of {@link DatabaseMetaData#getProcedureColumns(java.lang.String, java.lang.String,
- * java.lang.String, java.lang.String)}.
+ * A class for binding results of
+ * {@link DatabaseMetaData#getProcedureColumns(java.lang.String, java.lang.String, java.lang.String,
+ * java.lang.String)}.
  *
  * @author Jin Kwon &lt;jinahya_at_gmail.com&gt;
  * @see Context#getProcedureColumns(String, String, String, String, Collection)
@@ -39,8 +40,6 @@ public class ProcedureColumn
 
     private static final long serialVersionUID = 3894753719381358829L;
 
-    // -----------------------------------------------------------------------------------------------------------------
-
     /**
      * Constants for column types of procedure columns.
      *
@@ -49,22 +48,26 @@ public class ProcedureColumn
     public enum ColumnType implements IntFieldEnum<ColumnType> {
 
         /**
-         * Constant for {@link DatabaseMetaData#procedureColumnUnknown}({@value java.sql.DatabaseMetaData#procedureColumnUnknown}).
+         * Constant for
+         * {@link DatabaseMetaData#procedureColumnUnknown}({@value java.sql.DatabaseMetaData#procedureColumnUnknown}).
          */
         PROCEDURE_COLUMN_UNKNOWN(DatabaseMetaData.procedureColumnUnknown), // 0
 
         /**
-         * Constants for {@link DatabaseMetaData#procedureColumnIn}({@value java.sql.DatabaseMetaData#procedureColumnIn}).
+         * Constants for
+         * {@link DatabaseMetaData#procedureColumnIn}({@value java.sql.DatabaseMetaData#procedureColumnIn}).
          */
         PROCEDURE_COLUMN_IN(DatabaseMetaData.procedureColumnIn), // 1
 
         /**
-         * Constants for {@link DatabaseMetaData#procedureColumnInOut}({@value java.sql.DatabaseMetaData#procedureColumnInOut}).
+         * Constants for
+         * {@link DatabaseMetaData#procedureColumnInOut}({@value java.sql.DatabaseMetaData#procedureColumnInOut}).
          */
         PROCEDURE_COLUMN_IN_OUT(DatabaseMetaData.procedureColumnInOut), // 2
 
         /**
-         * Constants for {@link DatabaseMetaData#procedureColumnResult}({@value java.sql.DatabaseMetaData#procedureColumnResult}).
+         * Constants for
+         * {@link DatabaseMetaData#procedureColumnResult}({@value java.sql.DatabaseMetaData#procedureColumnResult}).
          */
         PROCEDURE_COLUMN_RESULT(DatabaseMetaData.functionColumnResult), // 3
 
@@ -74,7 +77,8 @@ public class ProcedureColumn
         PROCEDURE_COLUMN_OUT(DatabaseMetaData.procedureColumnOut), // 4
 
         /**
-         * Constant for {@link DatabaseMetaData#procedureColumnReturn}({@value java.sql.DatabaseMetaData#procedureColumnReturn}).
+         * Constant for
+         * {@link DatabaseMetaData#procedureColumnReturn}({@value java.sql.DatabaseMetaData#procedureColumnReturn}).
          */
         PROCEDURE_COLUMN_RETURN(DatabaseMetaData.procedureColumnReturn); // 5
 
@@ -106,16 +110,12 @@ public class ProcedureColumn
         private final int rawValue;
     }
 
-    // -----------------------------------------------------------------------------------------------------------------
-
     /**
      * Creates a new instance.
      */
     public ProcedureColumn() {
         super();
     }
-
-    // -----------------------------------------------------------------------------------------------------------------
 
     @Override
     public String toString() {
@@ -143,7 +143,6 @@ public class ProcedureColumn
                + '}';
     }
 
-    // -----------------------------------------------------------------------------------------------------------------
     public String getProcedureCat() {
         return procedureCat;
     }
@@ -304,14 +303,13 @@ public class ProcedureColumn
         this.specificName = specificName;
     }
 
-    // -----------------------------------------------------------------------------------------------------------------
     @XmlElement(required = true, nillable = true)
-    @MayBeNull
+    @NullableBySpecification
     @Label("PROCEDURE_CAT")
     private String procedureCat;
 
     @XmlElement(required = true, nillable = true)
-    @MayBeNull
+    @NullableBySpecification
     @Label("PROCEDURE_SCHEM")
     private String procedureSchem;
 
@@ -319,7 +317,6 @@ public class ProcedureColumn
     @Label("PROCEDURE_NAME")
     private String procedureName;
 
-    // -----------------------------------------------------------------------------------------------------------------
     @XmlElement(required = true)
     @Label("COLUMN_NAME")
     private String columnName;
@@ -346,7 +343,7 @@ public class ProcedureColumn
 
     // https://issues.apache.org/jira/browse/DERBY-7103
     @XmlElement(required = true, nillable = true)
-    @MayBeNull
+    @NullableBySpecification
     @Label("SCALE")
     private Short scale;
 
@@ -359,12 +356,12 @@ public class ProcedureColumn
     private short nullable;
 
     @XmlElement(required = true, nillable = true)
-    @MayBeNullByVendor("derby") // https://issues.apache.org/jira/browse/DERBY-7101
+    @NullableByVendor("derby") // https://issues.apache.org/jira/browse/DERBY-7101
     @Label("REMARKS")
     private String remarks;
 
     @XmlElement(required = true, nillable = true)
-    @MayBeNull
+    @NullableBySpecification
     @Label("COLUMN_DEF")
     private String columnDef;
 
@@ -379,7 +376,7 @@ public class ProcedureColumn
     private Integer sqlDatetimeSub;
 
     @XmlElement(required = true, nillable = true)
-    @MayBeNull
+    @NullableBySpecification
     @Label("CHAR_OCTET_LENGTH")
     private Integer charOctetLength;
 

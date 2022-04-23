@@ -51,8 +51,6 @@ public class UDT
 
     private static final long serialVersionUID = 8665246093405057553L;
 
-    // -----------------------------------------------------------------------------------------------------------------
-
     /**
      * Creates a new instance.
      */
@@ -139,14 +137,13 @@ public class UDT
         return superTypes;
     }
 
-    // -----------------------------------------------------------------------------------------------------------------
     @XmlElement(required = true, nillable = true)
-    @MayBeNull
+    @NullableBySpecification
     @Label("TYPE_CAT")
     private String typeCat;
 
     @XmlElement(required = true, nillable = true)
-    @MayBeNull
+    @NullableBySpecification
     @Label("TYPE_SCHEM")
     private String typeSchem;
 
@@ -154,7 +151,6 @@ public class UDT
     @Label("TYPE_NAME")
     private String typeName;
 
-    // -----------------------------------------------------------------------------------------------------------------
     @XmlElement(required = true)
     @Label("CLASS_NAME")
     private String className;
@@ -168,11 +164,10 @@ public class UDT
     private String remarks;
 
     @XmlElement(required = true, nillable = true)
-    @MayBeNull
+    @NullableBySpecification
     @Label("BASE_TYPE")
     private Short baseType;
 
-    // -----------------------------------------------------------------------------------------------------------------
     @XmlElementRef
     @Setter(AccessLevel.NONE)
     @Getter(AccessLevel.NONE)

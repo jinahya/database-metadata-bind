@@ -40,8 +40,6 @@ import static java.util.Objects.requireNonNull;
 public class SupportsResultSetType
         implements MetadataType {
 
-    // -----------------------------------------------------------------------------------------------------------------
-
     /**
      * Invokes {@link Context#supportsResultSetType(int)} method for all types defined in {@link java.sql.ResultSet} and
      * adds bound values to specified collection.
@@ -63,16 +61,12 @@ public class SupportsResultSetType
         return collection;
     }
 
-    // -----------------------------------------------------------------------------------------------------------------
-
     /**
      * Creates a new instance.
      */
     public SupportsResultSetType() {
         super();
     }
-
-    // -----------------------------------------------------------------------------------------------------------------
 
     @Override
     public String toString() {
@@ -95,7 +89,6 @@ public class SupportsResultSetType
         return Objects.hash(type, value);
     }
 
-    // -----------------------------------------------------------------------------------------------------------------
     public int getType() {
         return type;
     }
@@ -112,11 +105,9 @@ public class SupportsResultSetType
         this.value = value;
     }
 
-    // -----------------------------------------------------------------------------------------------------------------
     @XmlAttribute(required = true)
     private int type;
 
-    // -----------------------------------------------------------------------------------------------------------------
     @XmlValue
     private Boolean value;
 }

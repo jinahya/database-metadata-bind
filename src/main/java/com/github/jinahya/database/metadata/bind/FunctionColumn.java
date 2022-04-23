@@ -54,11 +54,9 @@ public class FunctionColumn
 
     public static final String ATTRIBUTE_NAME_IS_NULLABLE = "isNullable";
 
-    // -----------------------------------------------------------------------------------------------------------------
-
     /**
-     * Constants for {@link #COLUMN_NAME_COLUMN_TYPE} column values of the results of {@link
-     * DatabaseMetaData#getFunctionColumns(String, String, String, String)}.
+     * Constants for {@link #COLUMN_NAME_COLUMN_TYPE} column values of the results of
+     * {@link DatabaseMetaData#getFunctionColumns(String, String, String, String)}.
      *
      * @see DatabaseMetaData#getFunctionColumns(java.lang.String, java.lang.String, java.lang.String, java.lang.String)
      */
@@ -66,22 +64,26 @@ public class FunctionColumn
     public enum ColumnType implements IntFieldEnum<ColumnType> {
 
         /**
-         * Constant for {@link DatabaseMetaData#functionColumnUnknown}({@value java.sql.DatabaseMetaData#functionColumnUnknown}).
+         * Constant for
+         * {@link DatabaseMetaData#functionColumnUnknown}({@value java.sql.DatabaseMetaData#functionColumnUnknown}).
          */
         FUNCTION_COLUMN_UNKNOWN(DatabaseMetaData.functionColumnUnknown), // 0
 
         /**
-         * Constants for {@link DatabaseMetaData#functionColumnIn}({@value java.sql.DatabaseMetaData#functionColumnIn}).
+         * Constants for
+         * {@link DatabaseMetaData#functionColumnIn}({@value java.sql.DatabaseMetaData#functionColumnIn}).
          */
         FUNCTION_COLUMN_IN(DatabaseMetaData.functionColumnIn), // 1
 
         /**
-         * Constants for {@link DatabaseMetaData#functionColumnInOut}({@value java.sql.DatabaseMetaData#functionColumnInOut}).
+         * Constants for
+         * {@link DatabaseMetaData#functionColumnInOut}({@value java.sql.DatabaseMetaData#functionColumnInOut}).
          */
         FUNCTION_COLUMN_IN_OUT(DatabaseMetaData.functionColumnInOut), // 2
 
         /**
-         * Constants for {@link DatabaseMetaData#functionColumnOut}({@value java.sql.DatabaseMetaData#functionColumnOut}).
+         * Constants for
+         * {@link DatabaseMetaData#functionColumnOut}({@value java.sql.DatabaseMetaData#functionColumnOut}).
          */
         FUNCTION_COLUMN_OUT(DatabaseMetaData.functionColumnOut), // 3
 
@@ -92,7 +94,8 @@ public class FunctionColumn
         FUNCTION_COLUMN_RETURN(DatabaseMetaData.functionReturn), // 4
 
         /**
-         * Constants for {@link DatabaseMetaData#functionColumnResult}({@value java.sql.DatabaseMetaData#functionColumnResult}).
+         * Constants for
+         * {@link DatabaseMetaData#functionColumnResult}({@value java.sql.DatabaseMetaData#functionColumnResult}).
          */
         FUNCTION_COLUMN_RESULT(DatabaseMetaData.functionColumnResult); // 5
 
@@ -125,8 +128,8 @@ public class FunctionColumn
     }
 
     /**
-     * Constants for {@link #COLUMN_NAME_NULLABLE} column values of the results of {@link
-     * DatabaseMetaData#getFunctionColumns(String, String, String, String)}.
+     * Constants for {@link #COLUMN_NAME_NULLABLE} column values of the results of
+     * {@link DatabaseMetaData#getFunctionColumns(String, String, String, String)}.
      *
      * @see DatabaseMetaData#getFunctionColumns(java.lang.String, java.lang.String, java.lang.String, java.lang.String)
      */
@@ -144,7 +147,9 @@ public class FunctionColumn
         FUNCTION_NULLABLE(DatabaseMetaData.functionNullable),
 
         /**
-         * Constant for {@link DatabaseMetaData#functionNullableUnknown}({@value java.sql.DatabaseMetaData#functionNullableUnknown}).
+         * Constant for
+         * {@link DatabaseMetaData#functionNullableUnknown}({@value
+         * java.sql.DatabaseMetaData#functionNullableUnknown}).
          */
         FUNCTION_NULLABLE_UNKNOWN(DatabaseMetaData.functionNullableUnknown);
 
@@ -176,16 +181,12 @@ public class FunctionColumn
         private final int rawValue;
     }
 
-    // -----------------------------------------------------------------------------------------------------------------
-
     /**
      * Creates a new instance.
      */
     public FunctionColumn() {
         super();
     }
-
-    // -----------------------------------------------------------------------------------------------------------------
 
     @Override
     public String toString() {
@@ -210,7 +211,6 @@ public class FunctionColumn
                + '}';
     }
 
-    // -----------------------------------------------------------------------------------------------------------------
     public String getFunctionCat() {
         return functionCat;
     }
@@ -348,14 +348,13 @@ public class FunctionColumn
         this.specificName = specificName;
     }
 
-    // -----------------------------------------------------------------------------------------------------------------
     @XmlElement(required = true, nillable = true)
-    @MayBeNull
+    @NullableBySpecification
     @Label("FUNCTION_CAT")
     private String functionCat;
 
     @XmlElement(required = true, nillable = true)
-    @MayBeNull
+    @NullableBySpecification
     @Label("FUNCTION_SCHEM")
     private String functionSchem;
 
@@ -363,7 +362,6 @@ public class FunctionColumn
     @Label("FUNCTION_NAME")
     private String functionName;
 
-    // -----------------------------------------------------------------------------------------------------------------
     @XmlElement(required = true)
     @Label("COLUMN_NAME")
     private String columnName;
@@ -390,7 +388,7 @@ public class FunctionColumn
 
     // https://issues.apache.org/jira/browse/DERBY-7102
     @XmlElement(required = true, nillable = true)
-    @MayBeNull
+    @NullableBySpecification
     @Label("SCALE")
     private Short scale;
 
@@ -403,12 +401,12 @@ public class FunctionColumn
     private short nullable;
 
     @XmlElement(required = true, nillable = true)
-    @MayBeNullByVendor("derby") // https://issues.apache.org/jira/browse/DERBY-7100
+    @NullableByVendor("derby") // https://issues.apache.org/jira/browse/DERBY-7100
     @Label("REMARKS")
     private String remarks;
 
     @XmlElement(required = true, nillable = true)
-    @MayBeNull
+    @NullableBySpecification
     @Label("CHAR_OCTET_LENGTH")
     private Integer charOctetLength;
 

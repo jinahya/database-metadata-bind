@@ -23,6 +23,7 @@ package com.github.jinahya.database.metadata.bind;
 import lombok.AccessLevel;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
 
@@ -45,17 +46,20 @@ import java.util.List;
  */
 @XmlRootElement
 @ParentOf(Schema.class)
+@EqualsAndHashCode
+@ToString(callSuper = true)
+@Setter
+@Getter
+@NoArgsConstructor
 public class Catalog
         implements MetadataType {
 
     private static final long serialVersionUID = 6239185259128825953L;
 
-    // -------------------------------------------------------------------------------------------- TABLE_CAT / tableCat
     public static final String COLUMN_LABEL_TABLE_CAT = "TABLE_CAT";
 
     public static final String ATTRIBUTE_NAME_TABLE_CAT = "tableCat";
 
-    // -----------------------------------------------------------------------------------------------------------------
     public static Catalog of(final String tableCat) {
         final Catalog instance = new Catalog();
         instance.setTableCat(tableCat);
@@ -68,34 +72,6 @@ public class Catalog
         return instance;
     }
 
-    // -----------------------------------------------------------------------------------------------------------------
-
-    /**
-     * Creates a new instance.
-     */
-    public Catalog() {
-        super();
-    }
-
-    // -----------------------------------------------------------------------------------------------------------------
-
-    @Override
-    public String toString() {
-        return super.toString() + '{'
-               + "tableCat=" + tableCat
-               + '}';
-    }
-
-    // -------------------------------------------------------------------------------------------------------- tableCat
-    public String getTableCat() {
-        return tableCat;
-    }
-
-    public void setTableCat(final String tableCat) {
-        this.tableCat = tableCat;
-    }
-
-    // --------------------------------------------------------------------------------------------------------- schemas
     public List<Schema> getSchemas() {
         if (schemas == null) {
             schemas = new ArrayList<>();
@@ -103,20 +79,17 @@ public class Catalog
         return schemas;
     }
 
-    // -----------------------------------------------------------------------------------------------------------------
-    @XmlAttribute
+    @XmlAttribute(required = false)
     @Setter(AccessLevel.NONE)
     @Getter(AccessLevel.NONE)
     private Boolean virtual;
 
-    // -----------------------------------------------------------------------------------------------------------------
     @XmlElement(required = true)
     @XmlSchemaType(name = "token")
     @NotNull
     @Label(COLUMN_LABEL_TABLE_CAT)
     private String tableCat;
 
-    // -----------------------------------------------------------------------------------------------------------------
     @XmlElementRef
     @EqualsAndHashCode.Exclude
     @ToString.Exclude

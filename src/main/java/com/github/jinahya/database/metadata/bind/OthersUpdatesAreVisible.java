@@ -61,8 +61,6 @@ public class OthersUpdatesAreVisible
         return collection;
     }
 
-    // -----------------------------------------------------------------------------------------------------------------
-
     /**
      * Creates a new instance.
      */

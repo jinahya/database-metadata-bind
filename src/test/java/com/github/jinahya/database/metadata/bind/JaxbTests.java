@@ -57,7 +57,6 @@ final class JaxbTests {
         return new JAXBElement<>(qName(localPart), declaredType, value);
     }
 
-    // -----------------------------------------------------------------------------------------------------------------
     static <T> void writeToFile(final Class<? super T> type, final T value, final String name)
             throws JAXBException {
         final JAXBContext context = JAXBContext.newInstance(type);
@@ -67,7 +66,6 @@ final class JaxbTests {
         marshaller.marshal(value, output);
     }
 
-    // -----------------------------------------------------------------------------------------------------------------
     static void printSchema(final JAXBContext context) throws IOException {
         requireNonNull(context, "context is null");
         final ByteArrayOutputStream baos = new ByteArrayOutputStream();
@@ -108,7 +106,6 @@ final class JaxbTests {
         return unmarshaller.unmarshal(node, type).getValue();
     }
 
-    // -----------------------------------------------------------------------------------------------------------------
     private JaxbTests() {
         throw new AssertionError("instantiation is not allowed");
     }

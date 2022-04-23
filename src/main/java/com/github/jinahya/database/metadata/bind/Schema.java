@@ -23,6 +23,7 @@ package com.github.jinahya.database.metadata.bind;
 import lombok.AccessLevel;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
 
@@ -36,7 +37,6 @@ import javax.xml.bind.annotation.XmlSchemaType;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
-import java.util.Objects;
 
 import static java.util.Objects.requireNonNull;
 
@@ -49,11 +49,16 @@ import static java.util.Objects.requireNonNull;
  * @see Context#getSchemas(String, String, Collection)
  */
 @XmlRootElement
-@ChildOf(Catalog.class)
 @ParentOf(Function.class)
 @ParentOf(Procedure.class)
 @ParentOf(Table.class)
 @ParentOf(UDT.class)
+@ChildOf(Catalog.class)
+@Setter
+@Getter
+@EqualsAndHashCode
+@ToString(callSuper = true)
+@NoArgsConstructor
 public class Schema
         implements MetadataType {
 
@@ -68,8 +73,6 @@ public class Schema
     public static final String COLUMN_LABEL_TABLE_CATALOG = "TABLE_CATALOG";
 
     public static final String ATTRIBUTE_NAME_TABLE_CATALOG = "tableCatalog";
-
-    // -----------------------------------------------------------------------------------------------------------------
 
     /**
      * Creates a new instance with specified property values.
@@ -103,68 +106,6 @@ public class Schema
         return newVirtualInstance(catalog.getTableCat());
     }
 
-    // -----------------------------------------------------------------------------------------------------------------
-
-    /**
-     * Creates a new instance.
-     */
-    public Schema() {
-        super();
-    }
-
-    // -----------------------------------------------------------------------------------------------------------------
-    @Override
-    public String toString() {
-        return super.toString() + '{'
-               + "tableCatalog=" + tableCatalog
-               + ",tableSchem=" + tableSchem
-               + '}';
-    }
-
-    @Override
-    public boolean equals(final Object obj) {
-        if (this == obj) return true;
-        if (obj == null || getClass() != obj.getClass()) return false;
-        final Schema that = (Schema) obj;
-        return Objects.equals(tableCatalog, that.tableCatalog)
-               && Objects.equals(tableSchem, that.tableSchem);
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(tableCatalog, tableSchem);
-    }
-
-    // --------------------------------------------------------------------------------------------------------- virtual
-
-    /**
-     * Indicates whether this schema is a virtual instance.
-     *
-     * @return {@code true} if this schema instance is a virtual instance; {@code false} otherwise.
-     */
-    public boolean isVirtual() {
-        return virtual != null && virtual;
-    }
-
-    // ---------------------------------------------------------------------------------------------------- tableCatalog
-    public String getTableCatalog() {
-        return tableCatalog;
-    }
-
-    public void setTableCatalog(final String tableCatalog) {
-        this.tableCatalog = tableCatalog;
-    }
-
-    // ------------------------------------------------------------------------------------------------------ tableSchem
-    public String getTableSchem() {
-        return tableSchem;
-    }
-
-    public void setTableSchem(final String tableSchem) {
-        this.tableSchem = tableSchem;
-    }
-
-    // ------------------------------------------------------------------------------------------------------- functions
     public List<Function> getFunctions() {
         if (functions == null) {
             functions = new ArrayList<>();
@@ -172,7 +113,6 @@ public class Schema
         return functions;
     }
 
-    // ------------------------------------------------------------------------------------------------------ procedures
     public List<Procedure> getProcedures() {
         if (procedures == null) {
             procedures = new ArrayList<>();
@@ -180,7 +120,6 @@ public class Schema
         return procedures;
     }
 
-    // ---------------------------------------------------------------------------------------------------------- tables
     public List<Table> getTables() {
         if (tables == null) {
             tables = new ArrayList<>();
@@ -188,7 +127,6 @@ public class Schema
         return tables;
     }
 
-    // ------------------------------------------------------------------------------------------------------------ UDTs
     public List<UDT> getUDTs() {
         if (UDTs == null) {
             UDTs = new ArrayList<>();
@@ -196,16 +134,14 @@ public class Schema
         return UDTs;
     }
 
-    // -----------------------------------------------------------------------------------------------------------------
-    @XmlAttribute
+    @XmlAttribute(required = false)
     @Setter(AccessLevel.NONE)
     @Getter(AccessLevel.NONE)
     private Boolean virtual;
 
-    // -----------------------------------------------------------------------------------------------------------------
     @XmlElement(required = true, nillable = true)
     @XmlSchemaType(name = "token")
-    @MayBeNull
+    @NullableBySpecification
     @Label(COLUMN_LABEL_TABLE_CATALOG)
     private String tableCatalog;
 
@@ -215,7 +151,6 @@ public class Schema
     @Label(COLUMN_LABEL_TABLE_SCHEM)
     private String tableSchem;
 
-    // -----------------------------------------------------------------------------------------------------------------
     @XmlElementRef
     @Setter(AccessLevel.NONE)
     @Getter(AccessLevel.NONE)

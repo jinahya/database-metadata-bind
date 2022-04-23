@@ -169,7 +169,6 @@ final class ContextTestUtils {
         Wrapper.marshalFormatted(UpdatesAreDetected.class, all, target);
     }
 
-    // -----------------------------------------------------------------------------------------------------------------
     static void writeFiles(final Context context) throws SQLException, JAXBException {
         requireNonNull(context, "context is null");
         writeCatalogs(context);
@@ -188,7 +187,6 @@ final class ContextTestUtils {
         writeTables(context);
     }
 
-    // -----------------------------------------------------------------------------------------------------------------
     private ContextTestUtils() {
         throw new AssertionError("instantiation is not allowed");
     }

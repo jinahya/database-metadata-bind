@@ -40,8 +40,6 @@ import static java.util.Objects.requireNonNull;
 public class SupportsResultSetHoldability
         implements MetadataType {
 
-    // -----------------------------------------------------------------------------------------------------------------
-
     /**
      * Invokes {@link Context#supportsResultSetHoldability(int)} method for all holdabilities and adds bound values to
      * specified collection.
@@ -62,16 +60,12 @@ public class SupportsResultSetHoldability
         return collection;
     }
 
-    // -----------------------------------------------------------------------------------------------------------------
-
     /**
      * Creates a new instance.
      */
     public SupportsResultSetHoldability() {
         super();
     }
-
-    // -----------------------------------------------------------------------------------------------------------------
 
     @Override
     public String toString() {
@@ -95,7 +89,6 @@ public class SupportsResultSetHoldability
         return Objects.hash(holdability, value);
     }
 
-    // -----------------------------------------------------------------------------------------------------------------
     public int getHoldability() {
         return holdability;
     }
@@ -112,11 +105,9 @@ public class SupportsResultSetHoldability
         this.value = value;
     }
 
-    // -----------------------------------------------------------------------------------------------------------------
     @XmlAttribute(required = true)
     private int holdability;
 
-    // -----------------------------------------------------------------------------------------------------------------
     @XmlValue
     private Boolean value;
 }

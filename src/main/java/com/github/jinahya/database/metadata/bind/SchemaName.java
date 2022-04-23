@@ -43,7 +43,6 @@ public class SchemaName implements MetadataType {
 
     private static final long serialVersionUID = 5784631477568740816L;
 
-    // -----------------------------------------------------------------------------------------------------------------
     @XmlElement(required = true)
     @XmlSchemaType(name = "token")
     @Label("TABLE_SCHEM")
@@ -51,7 +50,7 @@ public class SchemaName implements MetadataType {
 
     @XmlElement(required = true, nillable = true)
     @XmlSchemaType(name = "token")
-    @MayBeNull
+    @NullableBySpecification
     @Label("TABLE_CATALOG")
     private String tableCatalog;
 }

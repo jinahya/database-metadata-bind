@@ -26,8 +26,8 @@ import java.sql.DatabaseMetaData;
 import java.util.Collection;
 
 /**
- * A class for binding results of {@link DatabaseMetaData#getSuperTypes(java.lang.String, java.lang.String,
- * java.lang.String)} method.
+ * A class for binding results of
+ * {@link DatabaseMetaData#getSuperTypes(java.lang.String, java.lang.String, java.lang.String)} method.
  *
  * @author Jin Kwon &lt;jinahya_at_gmail.com&gt;
  * @see Context#getSuperTypes(String, String, String, Collection)
@@ -39,15 +39,12 @@ public class SuperType
 
     private static final long serialVersionUID = 4603878785941565029L;
 
-    // -----------------------------------------------------------------------------------------------------------------
-
     /**
      * Creates a new instance.
      */
     public SuperType() {
         super();
     }
-    // -----------------------------------------------------------------------------------------------------------------
 
     @Override
     public String toString() {
@@ -61,7 +58,6 @@ public class SuperType
                + '}';
     }
 
-    // -----------------------------------------------------------------------------------------------------------------
     public String getTypeCat() {
         return typeCat;
     }
@@ -111,14 +107,13 @@ public class SuperType
         this.supertypeName = supertypeName;
     }
 
-    // -----------------------------------------------------------------------------------------------------------------
     @XmlElement(required = true, nillable = true)
-    @MayBeNull
+    @NullableBySpecification
     @Label("TYPE_CAT")
     private String typeCat;
 
     @XmlElement(required = true, nillable = true)
-    @MayBeNull
+    @NullableBySpecification
     @Label("TYPE_SCHEM")
     private String typeSchem;
 
@@ -126,14 +121,13 @@ public class SuperType
     @Label("TYPE_NAME")
     private String typeName;
 
-    // -----------------------------------------------------------------------------------------------------------------
     @XmlElement(required = true, nillable = true)
-    @MayBeNull
+    @NullableBySpecification
     @Label("SUPERTYPE_CAT")
     private String supertypeCat;
 
     @XmlElement(required = true, nillable = true)
-    @MayBeNull
+    @NullableBySpecification
     @Label("SUPERTYPE_SCHEM")
     private String supertypeSchem;
 
