@@ -20,9 +20,8 @@ package com.github.jinahya.database.metadata.bind;
  * #L%
  */
 
-import lombok.extern.slf4j.Slf4j;
-
 import java.lang.annotation.Annotation;
+import java.lang.invoke.MethodHandles;
 import java.lang.reflect.Field;
 import java.sql.ResultSet;
 import java.sql.ResultSetMetaData;
@@ -31,11 +30,12 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
+import java.util.logging.Logger;
 
 import static java.util.Objects.requireNonNull;
 
-@Slf4j
 final class Utils {
+    private static final Logger logger = Logger.getLogger(MethodHandles.lookup().lookupClass().getName());
 
     // -----------------------------------------------------------------------------------------------------------------
     private static <T extends Annotation> Map<Field, T> getFieldsAnnotatedWith(
@@ -126,16 +126,16 @@ final class Utils {
                 field.setBoolean(obj, results.getBoolean(label));
                 return;
             } else if (fieldType == byte.class) {
-                log.error("byte field found, fix me: {}", field);
+//                log.error("byte field found, fix me: {}", field);
                 return;
             } else if (fieldType == char.class) {
-                log.error("char field found, fix me: {}", field);
+//                log.error("char field found, fix me: {}", field);
                 return;
             } else if (fieldType == double.class) {
-                log.error("double field found, fix me: {}", field);
+//                log.error("double field found, fix me: {}", field);
                 return;
             } else if (fieldType == float.class) {
-                log.error("float field found, fix me: {}", field);
+//                log.error("float field found, fix me: {}", field);
                 return;
             } else if (fieldType == int.class) {
                 field.setInt(obj, results.getInt(label));
@@ -152,11 +152,11 @@ final class Utils {
         final Object value = results.getObject(label);
         if (value == null) {
             if (fieldType.isPrimitive()) {
-                log.warn("null value for a primitive field: {}", field);
+//                log.warn("null value for a primitive field: {}", field);
             }
             if (field.getAnnotation(MayBeNull.class) == null) {
                 if (field.getAnnotation(MayBeNullByVendor.class) == null) {
-                    log.warn("null value for a non-null field: {}", field);
+//                    log.warn("null value for a non-null field: {}", field);
                 }
             }
             return;
@@ -166,17 +166,17 @@ final class Utils {
             field.set(obj, value);
             return;
         } catch (final IllegalArgumentException iae) {
-            if (log.isDebugEnabled()) {
+//            if (log.isDebugEnabled()) {
 //                log.debug("unable to set {} with {}({}) labeled as {}", field, value, value.getClass(), label, iae);
-            }
+//            }
         }
         if (value instanceof Number) {
             if (fieldType == Boolean.class) {
-                log.error("Boolean field found, fix me: {}", field);
+//                log.error("Boolean field found, fix me: {}", field);
                 return;
             }
             if (fieldType == Byte.class) {
-                log.error("Byte field found, fix me: {}", field);
+//                log.error("Byte field found, fix me: {}", field);
                 return;
             }
             if (fieldType == Short.class) {
@@ -188,23 +188,23 @@ final class Utils {
                 return;
             }
             if (fieldType == Long.class) {
-                log.error("Long field found, fix me: {}", field);
+//                log.error("Long field found, fix me: {}", field);
                 return;
             }
             if (fieldType == Character.class) {
-                log.error("Character field found, fix me: {}", field);
+//                log.error("Character field found, fix me: {}", field);
                 return;
             }
             if (fieldType == Float.class) {
-                log.error("Float field found, fix me: {}", field);
+//                log.error("Float field found, fix me: {}", field);
                 return;
             }
             if (fieldType == Double.class) {
-                log.error("Double field found, fix me: %1$s", field);
+//                log.error("Double field found, fix me: %1$s", field);
                 return;
             }
         }
-        log.error("failed to set value; label: {}, value: {}, field: {}", label, value, field);
+//        log.error("failed to set value; label: {}, value: {}, field: {}", label, value, field);
     }
 
     // -----------------------------------------------------------------------------------------------------------------

@@ -34,7 +34,6 @@ import static java.sql.DriverManager.getConnection;
 @Slf4j
 class MemoryHsqlTest extends MemoryTest {
 
-    // -----------------------------------------------------------------------------------------------------------------
     private static final String DRIVER_NAME = "org.hsqldb.jdbc.JDBCDriver";
 
     private static final Class<?> DRIVER_CLASS;
@@ -48,8 +47,6 @@ class MemoryHsqlTest extends MemoryTest {
     }
 
     private static final String CONNECTION_URL = "jdbc:hsqldb:mem:test";
-
-    // -----------------------------------------------------------------------------------------------------------------
 
     @Override
     protected Connection connect() throws SQLException {

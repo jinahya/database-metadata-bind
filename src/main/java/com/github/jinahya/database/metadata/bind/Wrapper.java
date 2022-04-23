@@ -20,14 +20,7 @@ package com.github.jinahya.database.metadata.bind;
  * #L%
  */
 
-import lombok.extern.slf4j.Slf4j;
-
-import javax.xml.bind.JAXBContext;
-import javax.xml.bind.JAXBElement;
-import javax.xml.bind.JAXBException;
-import javax.xml.bind.Marshaller;
-import javax.xml.bind.PropertyException;
-import javax.xml.bind.Unmarshaller;
+import javax.xml.bind.*;
 import javax.xml.bind.annotation.XmlAnyElement;
 import javax.xml.namespace.QName;
 import javax.xml.transform.Source;
@@ -42,7 +35,6 @@ import static java.util.Objects.requireNonNull;
 
 // http://blog.bdoughan.com/2012/11/creating-generic-list-wrapper-in-jaxb.html
 // http://blog.bdoughan.com/2010/12/jaxb-and-immutable-objects.html
-@Slf4j
 public final class Wrapper<T> {
 
     // -----------------------------------------------------------------------------------------------------------------
@@ -93,7 +85,7 @@ public final class Wrapper<T> {
         final JAXBContext context = JAXBContext.newInstance(Wrapper.class, type);
         final JAXBElement<Wrapper<T>> wrapped = new JAXBElement<>(
                 new QName(XmlConstants.NS_URI_DATABASE_METADATA_BIND,
-                          Introspector.decapitalize(Wrapper.class.getSimpleName())),
+                        Introspector.decapitalize(Wrapper.class.getSimpleName())),
                 (Class<Wrapper<T>>) (Class<?>) Wrapper.class, Wrapper.of(elements));
         Marshaller marshaller = context.createMarshaller();
         if (operator != null) {
@@ -157,7 +149,7 @@ public final class Wrapper<T> {
             try {
                 m.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, Boolean.TRUE);
             } catch (final PropertyException pe) {
-                log.warn("failed to set {}", Marshaller.JAXB_FORMATTED_OUTPUT, pe);
+//                log.warn("failed to set {}", Marshaller.JAXB_FORMATTED_OUTPUT, pe);
             }
             return m;
         });

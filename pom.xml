@@ -6,7 +6,7 @@
   <parent>
     <groupId>com.github.jinahya</groupId>
     <artifactId>jinahya-parent</artifactId>
-    <version>0.8.6</version>
+    <version>0.8.8</version>
   </parent>
 
   <artifactId>database-metadata-bind</artifactId>
@@ -42,22 +42,21 @@
     <maven.compiler.target>${maven.compiler.source}</maven.compiler.target>
     <maven.compiler.testSource>${maven.compiler.source}</maven.compiler.testSource>
     <maven.compiler.testTarget>${maven.compiler.testSource}</maven.compiler.testTarget>
-    <version.animal-sniffer>1.20</version.animal-sniffer>
+    <version.animal-sniffer>1.21</version.animal-sniffer>
     <version.com.sun.xml.bind>${version.jakarta.xml.bind-api}</version.com.sun.xml.bind>
     <version.jakarta.validation-api>2.0.2</version.jakarta.validation-api>
     <version.jakarta.xml.bind-api>2.3.3</version.jakarta.xml.bind-api>
     <version.mariadb-java-client>2.7.2</version.mariadb-java-client>
     <version.maven-failsafe>${version.maven-surefire}</version.maven-failsafe>
-    <version.maven-surefire>3.0.0-M4</version.maven-surefire>
+    <version.maven-surefire>3.0.0-M5</version.maven-surefire>
     <version.mysql-connector-java>8.0.23</version.mysql-connector-java>
     <version.mssql-jdbc>9.2.1.jre15</version.mssql-jdbc>
     <version.ojdbc6>11.2.0.4</version.ojdbc6>
-    <version.ojdbc8>21.1.0.0</version.ojdbc8>
-    <version.ojdbc10>19.10.0.0</version.ojdbc10>
-    <version.ojdbc11>21.1.0.0</version.ojdbc11>
+    <version.ojdbc8>21.5.0.0</version.ojdbc8>
+    <version.ojdbc10>19.14.0.0</version.ojdbc10>
+    <version.ojdbc11>21.5.0.0</version.ojdbc11>
     <version.org.hibernate.validator>6.2.0.Final</version.org.hibernate.validator>
-    <version.org.junit.jupiter>5.8.0-M1</version.org.junit.jupiter>
-    <version.org.testcontainers>1.15.3</version.org.testcontainers>
+    <version.org.testcontainers>1.17.1</version.org.testcontainers>
     <version.postgresql>42.2.19.jre7</version.postgresql>
     <version.presto-jdbc>350</version.presto-jdbc>
   </properties>
@@ -122,7 +121,7 @@
     <dependency>
       <groupId>ch.qos.logback</groupId>
       <artifactId>logback-classic</artifactId>
-      <version>1.2.3</version>
+      <version>1.2.9</version>
       <scope>test</scope>
     </dependency>
     <dependency>
@@ -177,7 +176,7 @@
     <dependency>
       <groupId>org.assertj</groupId>
       <artifactId>assertj-core</artifactId>
-      <version>3.19.0</version>
+      <version>3.22.0</version>
       <scope>test</scope>
     </dependency>
     <dependency>
@@ -202,37 +201,31 @@
     <dependency>
       <groupId>org.hsqldb</groupId>
       <artifactId>hsqldb</artifactId>
-      <version>2.5.2</version>
+      <version>2.6.1</version>
       <scope>test</scope>
     </dependency>
     <dependency>
       <groupId>org.junit.jupiter</groupId>
-      <artifactId>junit-jupiter-api</artifactId>
-      <version>${version.org.junit.jupiter}</version>
-      <scope>test</scope>
-    </dependency>
-    <dependency>
-      <groupId>org.junit.jupiter</groupId>
-      <artifactId>junit-jupiter-engine</artifactId>
-      <version>${version.org.junit.jupiter}</version>
+      <artifactId>junit-jupiter</artifactId>
+      <version>5.8.2</version>
       <scope>test</scope>
     </dependency>
     <dependency>
       <groupId>org.projectlombok</groupId>
       <artifactId>lombok</artifactId>
-      <version>1.18.20</version>
+      <version>1.18.24</version>
       <scope>provided</scope>
     </dependency>
-    <dependency>
-      <groupId>org.slf4j</groupId>
-      <artifactId>slf4j-api</artifactId>
-      <version>1.7.25</version>
-      <scope>compile</scope>
-    </dependency>
+<!--    <dependency>-->
+<!--      <groupId>org.slf4j</groupId>-->
+<!--      <artifactId>slf4j-api</artifactId>-->
+<!--      <version>1.7.25</version>-->
+<!--      <scope>compile</scope>-->
+<!--    </dependency>-->
     <dependency>
       <groupId>org.xerial</groupId>
       <artifactId>sqlite-jdbc</artifactId>
-      <version>3.34.0</version>
+      <version>3.36.0.3</version>
       <scope>test</scope>
     </dependency>
   </dependencies>
@@ -243,12 +236,12 @@
         <plugin>
           <groupId>org.apache.maven.plugins</groupId>
           <artifactId>maven-compiler-plugin</artifactId>
-          <version>3.8.1</version>
+          <version>3.10.0</version>
         </plugin>
         <plugin>
           <groupId>org.apache.maven.plugins</groupId>
           <artifactId>maven-javadoc-plugin</artifactId>
-          <version>3.3.0</version>
+          <version>3.4.0</version>
           <configuration>
             <tags>
               <tag>
@@ -287,37 +280,37 @@
         <plugin>
           <groupId>org.apache.maven.plugins</groupId>
           <artifactId>maven-jar-plugin</artifactId>
-          <version>3.2.0</version>
+          <version>3.2.2</version>
         </plugin>
         <plugin>
           <groupId>org.apache.maven.plugins</groupId>
           <artifactId>maven-project-info-reports-plugin</artifactId>
-          <version>3.0.0</version>
+          <version>3.1.2</version>
         </plugin>
         <plugin>
           <groupId>org.apache.maven.plugins</groupId>
           <artifactId>maven-site-plugin</artifactId>
-          <version>3.9.0</version>
+          <version>3.10.0</version>
         </plugin>
         <plugin>
           <groupId>org.codehaus.mojo</groupId>
           <artifactId>build-helper-maven-plugin</artifactId>
-          <version>3.1.0</version>
+          <version>3.3.0</version>
         </plugin>
         <plugin>
           <groupId>org.codehaus.mojo</groupId>
           <artifactId>versions-maven-plugin</artifactId>
-          <version>2.8.1</version>
+          <version>2.10.0</version>
         </plugin>
         <plugin>
           <groupId>org.codehaus.mojo</groupId>
           <artifactId>sonar-maven-plugin</artifactId>
-          <version>3.7.0.1746</version>
+          <version>3.9.1.2184</version>
         </plugin>
         <plugin>
           <groupId>org.jacoco</groupId>
           <artifactId>jacoco-maven-plugin</artifactId>
-          <version>0.8.6</version>
+          <version>0.8.7</version>
         </plugin>
       </plugins>
     </pluginManagement>
@@ -334,7 +327,7 @@
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-enforcer-plugin</artifactId>
-        <version>3.0.0-M3</version>
+        <version>3.0.0</version>
         <executions>
           <execution>
             <id>enforce</id>
@@ -359,6 +352,19 @@
                 <requireJavaVersion>
                   <version>[1.8.0,)</version>
                 </requireJavaVersion>
+              </rules>
+            </configuration>
+          </execution>
+          <execution>
+            <id>enforce-require-maven-version</id>
+            <goals>
+              <goal>enforce</goal>
+            </goals>
+            <configuration>
+              <rules>
+                <requireMavenVersion>
+                  <version>[3.5.4,)</version>
+                </requireMavenVersion>
               </rules>
             </configuration>
           </execution>
@@ -432,12 +438,12 @@
       <plugin>
         <groupId>com.github.spotbugs</groupId>
         <artifactId>spotbugs-maven-plugin</artifactId>
-        <version>3.1.12.2</version>
+        <version>4.5.3.0</version>
       </plugin>
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-jxr-plugin</artifactId>
-        <version>3.0.0</version>
+        <version>3.2.0</version>
       </plugin>
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
@@ -446,12 +452,12 @@
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-checkstyle-plugin</artifactId>
-        <version>3.1.1</version>
+        <version>3.1.2</version>
       </plugin>
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-pmd-plugin</artifactId>
-        <version>3.13.0</version>
+        <version>3.16.0</version>
       </plugin>
       <plugin>
         <groupId>org.jacoco</groupId>

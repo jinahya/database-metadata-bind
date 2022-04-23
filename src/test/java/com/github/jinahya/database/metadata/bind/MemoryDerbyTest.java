@@ -40,7 +40,6 @@ import static org.junit.jupiter.api.Assertions.fail;
 @Slf4j
 class MemoryDerbyTest extends MemoryTest {
 
-    // -----------------------------------------------------------------------------------------------------------------
     private static final String DRIVER_NAME = "org.apache.derby.jdbc.EmbeddedDriver";
 
     private static final Class<?> DRIVER_CLASS;
@@ -57,7 +56,6 @@ class MemoryDerbyTest extends MemoryTest {
 
     private static final String CONNECTION_URL = "jdbc:derby:memory:test";
 
-    // -----------------------------------------------------------------------------------------------------------------
     @BeforeAll
     static void create() throws SQLException {
         final Properties properties = new Properties();
@@ -87,8 +85,6 @@ class MemoryDerbyTest extends MemoryTest {
             // Shutdown commands always raise SQLExceptions.
         }
     }
-
-    // -----------------------------------------------------------------------------------------------------------------
 
     @Override
     protected Connection connect() throws SQLException {

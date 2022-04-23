@@ -36,10 +36,7 @@ import static java.sql.DriverManager.getConnection;
 @Slf4j
 class MemorySqliteTest extends MemoryTest {
 
-    // -----------------------------------------------------------------------------------------------------------------
     private static final String CONNECTION_URL = "jdbc:sqlite::memory:";
-
-    // -----------------------------------------------------------------------------------------------------------------
 
     @Override
     protected Connection connect() throws SQLException {

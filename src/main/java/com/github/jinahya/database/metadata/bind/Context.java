@@ -20,21 +20,21 @@ package com.github.jinahya.database.metadata.bind;
  * #L%
  */
 
-import lombok.extern.slf4j.Slf4j;
-
 import javax.validation.constraints.NotNull;
+import java.lang.invoke.MethodHandles;
 import java.lang.reflect.Field;
 import java.sql.Connection;
 import java.sql.DatabaseMetaData;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.Arrays;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import static java.util.Objects.requireNonNull;
 
@@ -43,10 +43,9 @@ import static java.util.Objects.requireNonNull;
  *
  * @author Jin Kwon &lt;jinahya_at_gmail.com&gt;
  */
-@Slf4j
 public class Context {
 
-    // -----------------------------------------------------------------------------------------------------------------
+    private static final Logger logger = Logger.getLogger(MethodHandles.lookup().lookupClass().getName());
 
     /**
      * Creates a new instance from specified connection.
@@ -63,8 +62,6 @@ public class Context {
         return new Context(connection.getMetaData());
     }
 
-    // ---------------------------------------------------------------------------------------------------- constructors
-
     /**
      * Creates a new instance with specified database meta date.
      *
@@ -74,8 +71,6 @@ public class Context {
         super();
         this.databaseMetaData = requireNonNull(metadata, "metadata is null");
     }
-
-    // -----------------------------------------------------------------------------------------------------------------
 
     /**
      * Binds given value from specified result set.
@@ -94,7 +89,7 @@ public class Context {
             final Field field = labeledField.getKey();
             final Label label = labeledField.getValue();
             if (!resultSetLabels.remove(label.value())) {
-                log.error("unknown label; {} on {}", label, field);
+                logger.log(Level.WARNING, () -> String.format("unknown label; %1$s on %2$s", label, field));
                 continue;
             }
             if (field.getAnnotation(Unused.class) != null) {
@@ -106,13 +101,14 @@ public class Context {
             try {
                 Utils.setFieldValue(field, instance, results, label.value());
             } catch (final ReflectiveOperationException roe) {
-                log.error("failed to set {}", field, roe);
+                logger.log(Level.SEVERE, "failed to set " + field, roe);
             }
         }
-        if (log.isDebugEnabled()) {
-            for (final String remainedLabel : resultSetLabels) {
-                final Object value = results.getObject(remainedLabel);
-                log.debug("remained result for {}; label: {}, value: {}", type, remainedLabel, value);
+        if (logger.isLoggable(Level.FINE)) {
+            for (final String l : resultSetLabels) {
+                final Object v = results.getObject(l);
+                logger.log(Level.FINE,
+                           () -> String.format("remained result; type: %1$s; label: %2$s, value: %3$s", type, l, v));
             }
         }
         return instance;
@@ -150,8 +146,9 @@ public class Context {
     // --------------------------------------------------------------------------------------------------- getAttributes
 
     /**
-     * Invokes {@link DatabaseMetaData#getAttributes(java.lang.String, java.lang.String, java.lang.String,
-     * java.lang.String)} method with given arguments and adds bound values to specified collection.
+     * Invokes
+     * {@link DatabaseMetaData#getAttributes(java.lang.String, java.lang.String, java.lang.String, java.lang.String)}
+     * method with given arguments and adds bound values to specified collection.
      *
      * @param catalog              a value for {@code catalog} parameter.
      * @param schemaPattern        a value for {@code schemaPattern} parameter.
@@ -175,8 +172,8 @@ public class Context {
                 bind(results, Attribute.class, collection);
             }
         } catch (final SQLException sqle) {
-            log.error("failed to getAttributes({}, {}, {}, {})",
-                      catalog, schemaPattern, typeNamePattern, attributeNamePattern, sqle);
+            //log..error("failed to getAttributes({}, {}, {}, {})",
+//                    catalog, schemaPattern, typeNamePattern, attributeNamePattern, sqle);
             throwIfNotSuppressed(sqle);
         }
         return collection;
@@ -192,8 +189,8 @@ public class Context {
      * @return given {@code collection}.
      * @throws SQLException if a database error occurs.
      * @apiNote This method invokes {@link #getAttributes(String, String, String, String, Collection)} method with
-     * {@link UDT#getTypeCat() udt.typeCat}, {@link UDT#getTypeSchem() udt.typeSchem}, {@link UDT#getTypeName()
-     * udt.typeName}, {@code attributePattern}, and {@code collection} and returns the result.
+     * {@link UDT#getTypeCat() udt.typeCat}, {@link UDT#getTypeSchem() udt.typeSchem},
+     * {@link UDT#getTypeName() udt.typeName}, {@code attributePattern}, and {@code collection} and returns the result.
      * @see #getAttributes(String, String, String, String, Collection)
      */
     public <C extends Collection<? super Attribute>> C getAttributes(final UDT udt, final String attributeNamePattern,
@@ -206,8 +203,9 @@ public class Context {
     // -------------------------------------------------------------------------------------------- getBestRowIdentifier
 
     /**
-     * Invokes {@link DatabaseMetaData#getBestRowIdentifier(java.lang.String, java.lang.String, java.lang.String, int,
-     * boolean)} method with given arguments and adds bound values to specified collection.
+     * Invokes
+     * {@link DatabaseMetaData#getBestRowIdentifier(java.lang.String, java.lang.String, java.lang.String, int, boolean)}
+     * method with given arguments and adds bound values to specified collection.
      *
      * @param catalog    a value for {@code catalog} parameter.
      * @param schema     a value for {@code schema} parameter.
@@ -231,8 +229,8 @@ public class Context {
                 bind(results, BestRowIdentifier.class, collection);
             }
         } catch (final SQLException sqle) {
-            log.error("failed to getBestRowIdentifier({}, {}, {}, {}, {}",
-                      catalog, schema, table, scope, nullable, sqle);
+            //log..error("failed to getBestRowIdentifier({}, {}, {}, {}, {}",
+//                    catalog, schema, table, scope, nullable, sqle);
             throwIfNotSuppressed(sqle);
         }
         return collection;
@@ -249,9 +247,9 @@ public class Context {
      * @return given {@code collection}.
      * @throws SQLException if a database error occurs.
      * @apiNote This method invokes {@link #getBestRowIdentifier(String, String, String, int, boolean, Collection)}
-     * method with {@link Table#getTableCat() table.tableCat}, {@link Table#getTableSchem() table.tableSchem}, {@link
-     * Table#getTableName() table.tableName}, {@code scope}, {@code nullable}, and {@code collection} and returns the
-     * result.
+     * method with {@link Table#getTableCat() table.tableCat}, {@link Table#getTableSchem() table.tableSchem},
+     * {@link Table#getTableName() table.tableName}, {@code scope}, {@code nullable}, and {@code collection} and returns
+     * the result.
      * @see #getBestRowIdentifier(String, String, String, int, boolean, Collection)
      */
     public <C extends Collection<? super BestRowIdentifier>> C getBestRowIdentifier(
@@ -279,7 +277,7 @@ public class Context {
                 bind(results, Catalog.class, collection);
             }
         } catch (final SQLException sqle) {
-            log.error("failed to getCatalogs()", sqle);
+            //log..error("failed to getCatalogs()", sqle);
             throwIfNotSuppressed(sqle);
         }
         return collection;
@@ -304,7 +302,7 @@ public class Context {
                 bind(results, ClientInfoProperty.class, collection);
             }
         } catch (final SQLException sqle) {
-            log.error("failed to getClientInfoProperties()", sqle);
+            //log..error("failed to getClientInfoProperties()", sqle);
             throwIfNotSuppressed(sqle);
         }
         return collection;
@@ -313,7 +311,8 @@ public class Context {
     // --------------------------------------------------------------------------------------------- getColumnPrivileges
 
     /**
-     * Invokes {@link DatabaseMetaData#getColumnPrivileges(java.lang.String, java.lang.String, java.lang.String,
+     * Invokes
+     * {@link DatabaseMetaData#getColumnPrivileges(java.lang.String, java.lang.String, java.lang.String,
      * java.lang.String)} method with given arguments and adds bound values to specified collection.
      *
      * @param catalog           a value for {@code catalog} parameter.
@@ -336,7 +335,7 @@ public class Context {
                 bind(results, ColumnPrivilege.class, collection);
             }
         } catch (final SQLException sqle) {
-            log.error("failed to getColumnPrivileges({}, {}, {}, {})", catalog, schema, table, columnNamePattern, sqle);
+            //log..error("failed to getColumnPrivileges({}, {}, {}, {})", catalog, schema, table, columnNamePattern, sqle);
             throwIfNotSuppressed(sqle);
         }
         return collection;
@@ -352,8 +351,9 @@ public class Context {
      * @return given {@code collection}.
      * @throws SQLException if a database error occurs.
      * @apiNote This method invokes {@link #getColumnPrivileges(String, String, String, String, Collection)} method with
-     * {@link Table#getTableCat() table.tableCat}, {@link Table#getTableSchem() table.tableSchem}, {@link
-     * Table#getTableName() table.tableName}, {@code columnNamePattern}, and {@code collection} and returns the result.
+     * {@link Table#getTableCat() table.tableCat}, {@link Table#getTableSchem() table.tableSchem},
+     * {@link Table#getTableName() table.tableName}, {@code columnNamePattern}, and {@code collection} and returns the
+     * result.
      * @see #getColumnPrivileges(String, String, String, String, Collection)
      */
     public <C extends Collection<? super ColumnPrivilege>> C getColumnPrivileges(
@@ -389,8 +389,8 @@ public class Context {
                 bind(results, Column.class, collection);
             }
         } catch (final SQLException sqle) {
-            log.error("failed to getColumns({}, {}, {}, {})",
-                      catalog, schemaPattern, tableNamePattern, columnNamePattern, sqle);
+            //log..error("failed to getColumns({}, {}, {}, {})",
+//                    catalog, schemaPattern, tableNamePattern, columnNamePattern, sqle);
             throwIfNotSuppressed(sqle);
         }
         return collection;
@@ -406,8 +406,9 @@ public class Context {
      * @return given {@code collection}.
      * @throws SQLException if a database error occurs.
      * @apiNote This method invokes {@link #getColumns(String, String, String, String, Collection) getColumns} method
-     * with ({@link Table#getTableCat() table.tableCat}, {@link Table#getTableSchem() table.tableSchem}, {@link
-     * Table#getTableName() table.tableName}, {@code columnNamePattern}, {@code collection}) and returns the result.
+     * with ({@link Table#getTableCat() table.tableCat}, {@link Table#getTableSchem() table.tableSchem},
+     * {@link Table#getTableName() table.tableName}, {@code columnNamePattern}, {@code collection}) and returns the
+     * result.
      * @see #getColumns(String, String, String, String, Collection)
      */
     public <C extends Collection<? super Column>> C getColumns(final Table table, final String columnNamePattern,
@@ -421,9 +422,9 @@ public class Context {
     // ----------------------------------------------------------------------------------------------- getCrossReference
 
     /**
-     * Invokes {@link DatabaseMetaData#getCrossReference(java.lang.String, java.lang.String, java.lang.String,
-     * java.lang.String, java.lang.String, java.lang.String)} method with given arguments and adds bound values to
-     * specified collection.
+     * Invokes
+     * {@link DatabaseMetaData#getCrossReference(java.lang.String, java.lang.String, java.lang.String, java.lang.String,
+     * java.lang.String, java.lang.String)} method with given arguments and adds bound values to specified collection.
      *
      * @param parentCatalog  a value for {@code parentCatalog} parameter
      * @param parentSchema   a value for {@code parentSchema} parameter
@@ -447,8 +448,8 @@ public class Context {
                 bind(results, CrossReference.class, collection);
             }
         } catch (final SQLException sqle) {
-            log.error("failed to getCrossReferences({}, {}, {}, {}, {}, {})",
-                      parentCatalog, parentSchema, parentTable, foreignCatalog, foreignSchema, foreignTable, sqle);
+            //log..error("failed to getCrossReferences({}, {}, {}, {}, {}, {})",
+//                    parentCatalog, parentSchema, parentTable, foreignCatalog, foreignSchema, foreignTable, sqle);
             throwIfNotSuppressed(sqle);
         }
         return collection;
@@ -464,12 +465,13 @@ public class Context {
      * @param <C>          the type of {@code collection}
      * @return given {@code collection}.
      * @throws SQLException if a database error occurs.
-     * @apiNote This method invokes {@link #getCrossReference(String, String, String, String, String, String,
-     * Collection)} with {@link Table#getTableCat() parentTable.tableCat}, {@link Table#getTableSchem()
-     * parentTable.tableSchem}, {@link Table#getTableName() parentTable.tableName} parentTable.tableName} {@link
-     * Table#getTableCat() foreignTable.tableCat}, {@link Table#getTableSchem() foreignTable.tableSchem}, {@link
-     * Table#getTableName() foreignTable.tableName} foreignTable.tableName}, and {@code collection} and returns the
-     * result.
+     * @apiNote This method invokes
+     * {@link #getCrossReference(String, String, String, String, String, String, Collection)} with
+     * {@link Table#getTableCat() parentTable.tableCat}, {@link Table#getTableSchem() parentTable.tableSchem},
+     * {@link Table#getTableName() parentTable.tableName} parentTable.tableName}
+     * {@link Table#getTableCat() foreignTable.tableCat}, {@link Table#getTableSchem() foreignTable.tableSchem},
+     * {@link Table#getTableName() foreignTable.tableName} foreignTable.tableName}, and {@code collection} and returns
+     * the result.
      * @see #getCrossReference(String, String, String, String, String, String, Collection)
      */
     public <C extends Collection<? super CrossReference>> C getCrossReference(
@@ -507,7 +509,7 @@ public class Context {
                 bind(results, Function.class, collection);
             }
         } catch (final SQLException sqle) {
-            log.error("failed to getFunctions({}, {}, {})", catalog, schemaPattern, functionNamePattern, sqle);
+            //log..error("failed to getFunctions({}, {}, {})", catalog, schemaPattern, functionNamePattern, sqle);
             throwIfNotSuppressed(sqle);
         }
         return collection;
@@ -558,8 +560,8 @@ public class Context {
                 bind(results, FunctionColumn.class, collection);
             }
         } catch (final SQLException sqle) {
-            log.error("failed to getFunctionColumns({}, {}, {}, {})",
-                      catalog, schemaPattern, functionNamePattern, columnNamePattern, sqle);
+            //log..error("failed to getFunctionColumns({}, {}, {}, {})",
+//                    catalog, schemaPattern, functionNamePattern, columnNamePattern, sqle);
             throwIfNotSuppressed(sqle);
         }
         return collection;
@@ -608,7 +610,7 @@ public class Context {
                 bind(results, ExportedKey.class, collection);
             }
         } catch (final SQLException sqle) {
-            log.error("failed to getExportedKeys({}, {}, {})", catalog, schema, table, sqle);
+            //log..error("failed to getExportedKeys({}, {}, {})", catalog, schema, table, sqle);
             throwIfNotSuppressed(sqle);
         }
         return collection;
@@ -654,7 +656,7 @@ public class Context {
                 bind(results, ImportedKey.class, collection);
             }
         } catch (final SQLException sqle) {
-            log.error("failed to getImportedKeys({}, {}, {})", catalog, schema, table, sqle);
+            //log..error("failed to getImportedKeys({}, {}, {})", catalog, schema, table, sqle);
             throwIfNotSuppressed(sqle);
         }
         return collection;
@@ -703,7 +705,7 @@ public class Context {
                 bind(results, IndexInfo.class, collection);
             }
         } catch (final SQLException sqle) {
-            log.error("failed to getIndexInfo({}, {}, {})", catalog, schema, table, sqle);
+            //log..error("failed to getIndexInfo({}, {}, {})", catalog, schema, table, sqle);
             throwIfNotSuppressed(sqle);
         }
         return collection;
@@ -753,7 +755,7 @@ public class Context {
                 bind(results, PrimaryKey.class, collection);
             }
         } catch (final SQLException sqle) {
-            log.error("failed to getPrimaryKeys({}, {}, {})", catalog, schema, table, sqle);
+            //log..error("failed to getPrimaryKeys({}, {}, {})", catalog, schema, table, sqle);
             throwIfNotSuppressed(sqle);
         }
         return collection;
@@ -802,8 +804,8 @@ public class Context {
                 bind(results, ProcedureColumn.class, collection);
             }
         } catch (final SQLException sqle) {
-            log.error("failed to getProcedureColumns({}, {}, {}, {})",
-                      catalog, schemaPattern, procedureNamePattern, columnNamePattern, sqle);
+            //log..error("failed to getProcedureColumns({}, {}, {}, {})",
+//                    catalog, schemaPattern, procedureNamePattern, columnNamePattern, sqle);
             throwIfNotSuppressed(sqle);
         }
         return collection;
@@ -854,7 +856,7 @@ public class Context {
                 bind(results, Procedure.class, collection);
             }
         } catch (final SQLException sqle) {
-            log.error("failed to getProcedures({}, {}, {})", catalog, schemaPattern, procedureNamePattern, sqle);
+            //log..error("failed to getProcedures({}, {}, {})", catalog, schemaPattern, procedureNamePattern, sqle);
             throwIfNotSuppressed(sqle);
         }
         return collection;
@@ -882,8 +884,9 @@ public class Context {
     // ------------------------------------------------------------------------------------------------ getPseudoColumns
 
     /**
-     * Invokes {@link DatabaseMetaData#getPseudoColumns(java.lang.String, java.lang.String, java.lang.String,
-     * java.lang.String)} method with given arguments and adds bound values to specified collection.
+     * Invokes
+     * {@link DatabaseMetaData#getPseudoColumns(java.lang.String, java.lang.String, java.lang.String, java.lang.String)}
+     * method with given arguments and adds bound values to specified collection.
      *
      * @param catalog           a value for {@code catalog} parameter.
      * @param schemaPattern     a value for {@code schemaPattern} parameter.
@@ -906,8 +909,8 @@ public class Context {
                 bind(results, PseudoColumn.class, collection);
             }
         } catch (final SQLException sqle) {
-            log.error("failed to getPseudoColumns({}, {}, {}, {})",
-                      catalog, schemaPattern, tableNamePattern, columnNamePattern, sqle);
+            //log..error("failed to getPseudoColumns({}, {}, {}, {})",
+//                    catalog, schemaPattern, tableNamePattern, columnNamePattern, sqle);
             throwIfNotSuppressed(sqle);
         }
         return collection;
@@ -950,7 +953,7 @@ public class Context {
                 bind(results, SchemaName.class, collection);
             }
         } catch (final SQLException sqle) {
-            log.error("failed to getSchemas()", sqle);
+            //log..error("failed to getSchemas()", sqle);
             throwIfNotSuppressed(sqle);
         }
         return collection;
@@ -979,7 +982,7 @@ public class Context {
                 bind(results, Schema.class, collection);
             }
         } catch (final SQLException sqle) {
-            log.error("failed to getSchemas({}, {})", catalog, schemaPattern, sqle);
+            //log..error("failed to getSchemas({}, {})", catalog, schemaPattern, sqle);
             throwIfNotSuppressed(sqle);
         }
         return collection;
@@ -1026,7 +1029,7 @@ public class Context {
                 bind(results, SuperTable.class, collection);
             }
         } catch (final SQLException sqle) {
-            log.error("failed to getSuperTables({}, {}, {})", catalog, schemaPattern, tableNamePattern, sqle);
+            //log..error("failed to getSuperTables({}, {}, {})", catalog, schemaPattern, tableNamePattern, sqle);
             throwIfNotSuppressed(sqle);
         }
         return collection;
@@ -1071,7 +1074,7 @@ public class Context {
                 bind(results, SuperType.class, collection);
             }
         } catch (final SQLException sqle) {
-            log.error("failed to getSuperTypes({}, {}, {})", catalog, schemaPattern, typeNamePattern, sqle);
+            //log..error("failed to getSuperTypes({}, {}, {})", catalog, schemaPattern, typeNamePattern, sqle);
             throwIfNotSuppressed(sqle);
         }
         return collection;
@@ -1116,7 +1119,7 @@ public class Context {
                 bind(results, TablePrivilege.class, collection);
             }
         } catch (final SQLException sqle) {
-            log.error("failed to getTablePrivileges({}, {}, {})", catalog, schemaPattern, tableNamePattern, sqle);
+            //log..error("failed to getTablePrivileges({}, {}, {})", catalog, schemaPattern, tableNamePattern, sqle);
             throwIfNotSuppressed(sqle);
         }
         return collection;
@@ -1154,7 +1157,7 @@ public class Context {
                 bind(results, TableType.class, collection);
             }
         } catch (final SQLException sqle) {
-            log.error("failed to getTableTypes()", sqle);
+            //log..error("failed to getTableTypes()", sqle);
             throwIfNotSuppressed(sqle);
         }
         return collection;
@@ -1163,8 +1166,9 @@ public class Context {
     // ------------------------------------------------------------------------------------------------------- getTables
 
     /**
-     * Invokes {@link DatabaseMetaData#getTables(java.lang.String, java.lang.String, java.lang.String,
-     * java.lang.String[])} method with given arguments and adds all bound values to specified collection.
+     * Invokes
+     * {@link DatabaseMetaData#getTables(java.lang.String, java.lang.String, java.lang.String, java.lang.String[])}
+     * method with given arguments and adds all bound values to specified collection.
      *
      * @param catalog          a value for {@code catalog} parameter.
      * @param schemaPattern    a value for {@code schemaPattern} parameter.
@@ -1186,8 +1190,8 @@ public class Context {
                 bind(results, Table.class, collection);
             }
         } catch (final SQLException sqle) {
-            log.error("failed to getTables({}, {}, {}, {})",
-                      catalog, schemaPattern, tableNamePattern, Arrays.toString(types), sqle);
+            //log..error("failed to getTables({}, {}, {}, {})",
+//                    catalog, schemaPattern, tableNamePattern, Arrays.toString(types), sqle);
             throwIfNotSuppressed(sqle);
         }
         return collection;
@@ -1230,7 +1234,7 @@ public class Context {
                 bind(results, TypeInfo.class, collection);
             }
         } catch (final SQLException sqle) {
-            log.error("failed to getTypeInfo()", sqle);
+            //log..error("failed to getTypeInfo()", sqle);
             throwIfNotSuppressed(sqle);
         }
         return collection;
@@ -1264,8 +1268,8 @@ public class Context {
                 bind(results, UDT.class, collection);
             }
         } catch (final SQLException sqle) {
-            log.error("failed to getUDTs({}, {}, {}, {})",
-                      catalog, schemaPattern, typeNamePattern, Arrays.toString(types), sqle);
+            //log..error("failed to getUDTs({}, {}, {}, {})",
+//                    catalog, schemaPattern, typeNamePattern, Arrays.toString(types), sqle);
             throwIfNotSuppressed(sqle);
         }
         return collection;
@@ -1313,7 +1317,7 @@ public class Context {
                 bind(results, VersionColumn.class, collection);
             }
         } catch (final SQLException sqle) {
-            log.error("failed to getVersionColumns({}, {}, {})", catalog, schema, table, sqle);
+            //log..error("failed to getVersionColumns({}, {}, {})", catalog, schema, table, sqle);
             throwIfNotSuppressed(sqle);
         }
         return collection;
@@ -1351,7 +1355,7 @@ public class Context {
         try {
             value.setValue(databaseMetaData.deletesAreDetected(value.getType()));
         } catch (final SQLException sqle) {
-            log.error("failed to invoke deletesAreDetected({})", value.getType(), sqle);
+            //log..error("failed to invoke deletesAreDetected({})", value.getType(), sqle);
             throwIfNotSuppressed(sqle);
         }
         return value;
@@ -1373,7 +1377,7 @@ public class Context {
         try {
             value.setValue(databaseMetaData.insertsAreDetected(value.getType()));
         } catch (final SQLException sqle) {
-            log.error("failed to invoke insertsAreDetected({})", value.getType(), sqle);
+            //log..error("failed to invoke insertsAreDetected({})", value.getType(), sqle);
             throwIfNotSuppressed(sqle);
         }
         return value;
@@ -1396,7 +1400,7 @@ public class Context {
         try {
             value.setValue(databaseMetaData.updatesAreDetected(value.getType()));
         } catch (final SQLException sqle) {
-            log.error("failed to invoke updatesAreDetected({})", value.getType(), sqle);
+            //log..error("failed to invoke updatesAreDetected({})", value.getType(), sqle);
             throwIfNotSuppressed(sqle);
         }
         return value;
@@ -1419,7 +1423,7 @@ public class Context {
         try {
             result.setValue(databaseMetaData.othersDeletesAreVisible(result.getType()));
         } catch (final SQLException sqle) {
-            log.error("failed to invoke othersDeletesAreVisible({})", result.getType(), sqle);
+            //log..error("failed to invoke othersDeletesAreVisible({})", result.getType(), sqle);
             throwIfNotSuppressed(sqle);
         }
         return result;
@@ -1442,7 +1446,7 @@ public class Context {
         try {
             result.setValue(databaseMetaData.othersInsertsAreVisible(result.getType()));
         } catch (final SQLException sqle) {
-            log.error("failed to invoke othersInsertsAreVisible({})", result.getType(), sqle);
+            //log..error("failed to invoke othersInsertsAreVisible({})", result.getType(), sqle);
             throwIfNotSuppressed(sqle);
         }
         return result;
@@ -1465,7 +1469,7 @@ public class Context {
         try {
             result.setValue(databaseMetaData.othersUpdatesAreVisible(result.getType()));
         } catch (final SQLException sqle) {
-            log.error("failed to invoke othersUpdatesAreVisible({})", result.getType(), sqle);
+            //log..error("failed to invoke othersUpdatesAreVisible({})", result.getType(), sqle);
             throwIfNotSuppressed(sqle);
         }
         return result;
@@ -1488,7 +1492,7 @@ public class Context {
         try {
             value.setValue(databaseMetaData.ownDeletesAreVisible(value.getType()));
         } catch (final SQLException sqle) {
-            log.error("failed to invoke ownDeletesAreVisible({})", value.getType(), sqle);
+            //log..error("failed to invoke ownDeletesAreVisible({})", value.getType(), sqle);
             throwIfNotSuppressed(sqle);
         }
         return value;
@@ -1511,7 +1515,7 @@ public class Context {
         try {
             value.setValue(databaseMetaData.ownInsertsAreVisible(value.getType()));
         } catch (final SQLException sqle) {
-            log.error("failed to invoke ownInsertsAreVisible({})", value.getType(), sqle);
+            //log..error("failed to invoke ownInsertsAreVisible({})", value.getType(), sqle);
             throwIfNotSuppressed(sqle);
         }
         return value;
@@ -1534,7 +1538,7 @@ public class Context {
         try {
             value.setValue(databaseMetaData.ownUpdatesAreVisible(value.getType()));
         } catch (final SQLException sqle) {
-            log.error("failed to invoke ownUpdatesAreVisible({})", value.getType(), sqle);
+            //log..error("failed to invoke ownUpdatesAreVisible({})", value.getType(), sqle);
             throwIfNotSuppressed(sqle);
         }
         return value;
@@ -1559,7 +1563,7 @@ public class Context {
         try {
             value.setValue(databaseMetaData.supportsConvert(value.getFromType(), value.getToType()));
         } catch (final SQLException sqle) {
-            log.error("failed to invoke supportsConvert({}, {})", value.getFromType(), value.getToType(), sqle);
+            //log..error("failed to invoke supportsConvert({}, {})", value.getFromType(), value.getToType(), sqle);
             throwIfNotSuppressed(sqle);
         }
         return value;
@@ -1585,8 +1589,8 @@ public class Context {
         try {
             value.setValue(databaseMetaData.supportsResultSetConcurrency(value.getType(), value.getConcurrency()));
         } catch (final SQLException sqle) {
-            log.error("failed to invoke supportsResultSetConcurrency({}, {})",
-                      value.getType(), value.getConcurrency(), sqle);
+            //log..error("failed to invoke supportsResultSetConcurrency({}, {})",
+//                    value.getType(), value.getConcurrency(), sqle);
             throwIfNotSuppressed(sqle);
         }
         return value;
@@ -1610,7 +1614,7 @@ public class Context {
         try {
             value.setValue(databaseMetaData.supportsResultSetHoldability(value.getHoldability()));
         } catch (final SQLException sqle) {
-            log.error("failed to invoke supportsResultSetHoldability({})", value.getHoldability(), sqle);
+            //log..error("failed to invoke supportsResultSetHoldability({})", value.getHoldability(), sqle);
             throwIfNotSuppressed(sqle);
         }
         return value;
@@ -1620,8 +1624,8 @@ public class Context {
 
     /**
      * Invokes {@link DatabaseMetaData#supportsResultSetType(int)} method with given argument and returns a bound value.
-     * The result may have {@code null} {@code value} when the {@link SQLException} has been {@link #suppress(Class)
-     * suppressed}.
+     * The result may have {@code null} {@code value} when the {@link SQLException} has been
+     * {@link #suppress(Class) suppressed}.
      *
      * @param type a value for {@code type} parameter.
      * @return a bound value.
@@ -1634,7 +1638,7 @@ public class Context {
         try {
             value.setValue(databaseMetaData.supportsResultSetType(value.getType()));
         } catch (final SQLException sqle) {
-            log.error("failed to invoke supportsResultSetType({})", value.getType(), sqle);
+            //log..error("failed to invoke supportsResultSetType({})", value.getType(), sqle);
             throwIfNotSuppressed(sqle);
         }
         return value;
@@ -1657,20 +1661,18 @@ public class Context {
         try {
             value.setValue(databaseMetaData.supportsTransactionIsolationLevel(level));
         } catch (final SQLException sqle) {
-            log.error("failed to invoke supportsTransactionIsolationLevel({})", value.getLevel(), sqle);
+            //log..error("failed to invoke supportsTransactionIsolationLevel({})", value.getLevel(), sqle);
             throwIfNotSuppressed(sqle);
         }
         return value;
     }
 
-    // -----------------------------------------------------------------------------------------------------------------
     private @NotNull
     Map<@NotNull Field, @NotNull Label> getLabeledFields(final @NotNull Class<?> clazz) {
         requireNonNull(clazz, "clazz is null");
         return classesAndLabeledFields.computeIfAbsent(clazz, c -> Utils.getFieldsAnnotatedWith(c, Label.class));
     }
 
-    // -----------------------------------------------------------------------------------------------------------------
     public <T extends Throwable> Context suppress(final Class<T> throwableClass) {
         requireNonNull(throwableClass, "throwableClass is null");
         suppressedThrowableClasses.add(throwableClass);
@@ -1697,12 +1699,9 @@ public class Context {
         }
     }
 
-    // -----------------------------------------------------------------------------------------------------------------
     final DatabaseMetaData databaseMetaData;
 
-    // -----------------------------------------------------------------------------------------------------------------
     private final Map<Class<?>, Map<Field, Label>> classesAndLabeledFields = new HashMap<>();
 
-    // -----------------------------------------------------------------------------------------------------------------
     private final Set<Class<?>> suppressedThrowableClasses = new HashSet<>();
 }

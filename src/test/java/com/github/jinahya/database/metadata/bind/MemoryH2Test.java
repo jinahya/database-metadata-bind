@@ -36,7 +36,6 @@ import static java.sql.DriverManager.getConnection;
 @Slf4j
 class MemoryH2Test extends MemoryTest {
 
-    // -----------------------------------------------------------------------------------------------------------------
     private static final String DRIVER_NAME = "org.h2.Driver";
 
     private static final Class<?> DRIVER_CLASS;
@@ -50,8 +49,6 @@ class MemoryH2Test extends MemoryTest {
     }
 
     private static final String CONNECTION_URL = "jdbc:h2:mem:test"; //;DB_CLOSE_DELAY=-1";
-
-    // -----------------------------------------------------------------------------------------------------------------
 
     @Override
     protected Connection connect() throws SQLException {
