@@ -503,12 +503,12 @@ public class TypeInfo implements MetadataType {
     private short maximumScale;
 
     @XmlElement(required = true, nillable = true)
-    @Unused
+    @NotUsedBySpecification
     @Label("SQL_DATA_TYPE")
     private Integer sqlDataType;
 
     @XmlElement(required = true, nillable = true)
-    @Unused
+    @NotUsedBySpecification
     @Label("SQL_DATETIME_SUB")
     private Integer sqlDatetimeSub;
 

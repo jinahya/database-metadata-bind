@@ -26,7 +26,6 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
 
-import javax.validation.constraints.NotBlank;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
 import java.sql.DatabaseMetaData;
@@ -107,7 +106,6 @@ public class Attribute
     private String typeSchem;
 
     @XmlElement(required = true)
-    @NotBlank
     @Label("TYPE_NAME")
     private String typeName;
 
@@ -150,12 +148,12 @@ public class Attribute
     private String attrDef;
 
     @XmlElement(nillable = true, required = true)
-    @Unused
+    @NotUsedBySpecification
     @Label("SQL_DATA_TYPE")
     private Integer sqlDataType;
 
     @XmlElement(required = true, nillable = true)
-    @Unused
+    @NotUsedBySpecification
     @Label("SQL_DATETIME_SUB")
     private Integer sqlDatetimeSub;
 

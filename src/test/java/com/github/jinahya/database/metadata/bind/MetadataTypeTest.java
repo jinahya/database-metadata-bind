@@ -145,7 +145,7 @@ abstract class MetadataTypeTest<T extends MetadataType> {
     @Test
     void fieldsWithUnused_ShouldBeAnnotatedWithXmlElementWithNillableTrue() {
         for (final Field field : getFieldsWithUnused().keySet()) {
-            assertThat(field.getAnnotation(Unused.class)).isNotNull();
+            assertThat(field.getAnnotation(NotUsedBySpecification.class)).isNotNull();
             assertThat(field.getAnnotation(XmlElement.class)).isNotNull().satisfies(a -> {
                 assertThat(a.nillable()).isTrue();
             });
@@ -156,7 +156,7 @@ abstract class MetadataTypeTest<T extends MetadataType> {
     @Test
     void fieldsWithUnused_TypeShouldNotBePrimitive() {
         for (final Field field : getFieldsWithUnused().keySet()) {
-            assertThat(field.getAnnotation(Unused.class)).isNotNull();
+            assertThat(field.getAnnotation(NotUsedBySpecification.class)).isNotNull();
             assertThat(field.getType().isPrimitive()).isFalse();
         }
     }
@@ -225,10 +225,10 @@ abstract class MetadataTypeTest<T extends MetadataType> {
                 .collect(Collectors.toMap(Map.Entry::getKey, e -> e.getKey().getAnnotation(NullableBySpecification.class)));
     }
 
-    Map<Field, Unused> getFieldsWithUnused() {
+    Map<Field, NotUsedBySpecification> getFieldsWithUnused() {
         return getFieldsWithLabel().entrySet().stream()
-                .filter(e -> e.getKey().getAnnotation(Unused.class) != null)
-                .collect(Collectors.toMap(Map.Entry::getKey, e -> e.getKey().getAnnotation(Unused.class)));
+                .filter(e -> e.getKey().getAnnotation(NotUsedBySpecification.class) != null)
+                .collect(Collectors.toMap(Map.Entry::getKey, e -> e.getKey().getAnnotation(NotUsedBySpecification.class)));
     }
 
     Map<Field, Label> getFieldsWithLabel() {

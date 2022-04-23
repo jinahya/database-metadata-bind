@@ -183,7 +183,7 @@ public class VersionColumn
     }
 
     @XmlElement(required = true, nillable = true)
-    @Unused
+    @NotUsedBySpecification
     @Label("SCOPE")
     private Short scope;
 

@@ -21,9 +21,9 @@ package com.github.jinahya.database.metadata.bind;
  */
 
 import lombok.AccessLevel;
+import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
-import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
 
@@ -46,19 +46,13 @@ import java.util.List;
  */
 @XmlRootElement
 @ParentOf(Schema.class)
-@EqualsAndHashCode
-@ToString(callSuper = true)
-@Setter
-@Getter
-@NoArgsConstructor
+@Data
 public class Catalog
         implements MetadataType {
 
     private static final long serialVersionUID = 6239185259128825953L;
 
     public static final String COLUMN_LABEL_TABLE_CAT = "TABLE_CAT";
-
-    public static final String ATTRIBUTE_NAME_TABLE_CAT = "tableCat";
 
     public static Catalog of(final String tableCat) {
         final Catalog instance = new Catalog();

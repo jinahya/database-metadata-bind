@@ -20,11 +20,7 @@ package com.github.jinahya.database.metadata.bind;
  * #L%
  */
 
-import lombok.EqualsAndHashCode;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
-import lombok.ToString;
+import lombok.Data;
 
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
@@ -40,11 +36,7 @@ import java.util.Collection;
  */
 @XmlRootElement
 @ChildOf(Table.class)
-@Setter
-@Getter
-@EqualsAndHashCode
-@ToString
-@NoArgsConstructor
+@Data
 public class BestRowIdentifier
         implements MetadataType {
 
@@ -160,7 +152,7 @@ public class BestRowIdentifier
     private int columnSize;
 
     @XmlElement(required = true, nillable = true)
-    @Unused
+    @NotUsedBySpecification
     @Label("BUFFER_LENGTH")
     private Integer bufferLength;
 

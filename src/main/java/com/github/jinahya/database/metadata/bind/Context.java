@@ -92,7 +92,7 @@ public class Context {
                 logger.log(Level.WARNING, () -> String.format("unknown label; %1$s on %2$s", label, field));
                 continue;
             }
-            if (field.getAnnotation(Unused.class) != null) {
+            if (field.getAnnotation(NotUsedBySpecification.class) != null) {
                 continue;
             }
             if (field.getAnnotation(Reserved.class) != null) {
