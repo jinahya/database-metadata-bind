@@ -23,7 +23,6 @@ package com.github.jinahya.database.metadata.bind;
 import lombok.AccessLevel;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
-import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
 
@@ -89,7 +88,6 @@ public class Procedure
 
     @XmlElementRef
     @Setter(AccessLevel.NONE)
-    @Getter(AccessLevel.NONE)
     @EqualsAndHashCode.Exclude
     @ToString.Exclude
     private List<@Valid @NotNull ProcedureColumn> procedureColumns;

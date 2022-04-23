@@ -22,21 +22,14 @@ package com.github.jinahya.database.metadata.bind;
 
 import java.lang.annotation.Documented;
 import java.lang.annotation.ElementType;
-import java.lang.annotation.Repeatable;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
-/**
- * A marker annotation for columns may be {@code null}.
- *
- * @author Jin Kwon &lt;onacit_at_gmail.com&gt;
- */
-@Repeatable(NullableByVendors.class)
 @Documented
 @Retention(RetentionPolicy.RUNTIME)
 @Target({ElementType.FIELD})
-@interface NullableByVendor {
+@interface NullableByVendors {
 
-    String value();
+    NullableByVendor[] value();
 }
