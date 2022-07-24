@@ -30,6 +30,7 @@ import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
 import java.sql.DatabaseMetaData;
 import java.util.Collection;
+import java.util.Objects;
 
 /**
  * A class for binding results of {@link DatabaseMetaData#getAttributes(String, String, String, String)} method.
@@ -95,6 +96,20 @@ public class Attribute
         private final int rawValue;
     }
 
+    public static final String VALUE_IS_NULLABLE_YES = "YES";
+
+    public static final String VALUE_IS_NULLABLE_NO = "NO";
+
+    public static final String VALUE_IS_NULLABLE_EMPTY = "";
+
+    public Nullable getNullableAsEnum() {
+        return Nullable.valueOfRawValue(getNullable());
+    }
+
+    public void setNullableAsEnum(final Nullable nullableAsEnum) {
+        setNullable(Objects.requireNonNull(nullableAsEnum, "nullableAsEnum is null").getRawValue());
+    }
+
     @XmlElement(nillable = true, required = true)
     @NullableBySpecification
     @Label("TYPE_CAT")
@@ -105,31 +120,32 @@ public class Attribute
     @Label("TYPE_SCHEM")
     private String typeSchem;
 
-    @XmlElement(required = true)
+    @XmlElement(nillable = false, required = true)
     @Label("TYPE_NAME")
     private String typeName;
 
-    @XmlElement(required = true)
+    @XmlElement(nillable = false, required = true)
     @Label("ATTR_NAME")
     private String attrName;
 
-    @XmlElement(required = true)
+    @XmlElement(nillable = false, required = true)
     @Label("DATA_TYPE")
     private int dataType;
 
-    @XmlElement(required = true)
+    @XmlElement(nillable = false, required = true)
     @Label("ATTR_TYPE_NAME")
     private String attrTypeName;
 
-    @XmlElement(required = true)
+    @XmlElement(nillable = false, required = true)
     @Label("ATTR_SIZE")
     private int attrSize;
 
-    @XmlElement(required = true)
+    @XmlElement(nillable = false, required = true)
+    @NullableBySpecification
     @Label("DECIMAL_DIGITS")
     private Integer decimalDigits;
 
-    @XmlElement(required = true)
+    @XmlElement(nillable = false, required = true)
     @Label("NUM_PREC_RADIX")
     private int numPrecRadix;
 
@@ -137,12 +153,12 @@ public class Attribute
     @Label("NULLABLE")
     private int nullable;
 
-    @XmlElement(required = true, nillable = true)
+    @XmlElement(nillable = true, required = true)
     @NullableBySpecification
     @Label("REMARKS")
     private String remarks;
 
-    @XmlElement(required = true, nillable = true)
+    @XmlElement(nillable = true, required = true)
     @NullableBySpecification
     @Label("ATTR_DEF")
     private String attrDef;
@@ -152,39 +168,39 @@ public class Attribute
     @Label("SQL_DATA_TYPE")
     private Integer sqlDataType;
 
-    @XmlElement(required = true, nillable = true)
+    @XmlElement(nillable = true, required = true)
     @NotUsedBySpecification
     @Label("SQL_DATETIME_SUB")
     private Integer sqlDatetimeSub;
 
-    @XmlElement(required = true)
+    @XmlElement(nillable = false, required = true)
     @Label("CHAR_OCTET_LENGTH")
     private int charOctetLength;
 
-    @XmlElement(required = true)
+    @XmlElement(nillable = false, required = true)
     @Label("ORDINAL_POSITION")
     private int ordinalPosition;
 
-    @XmlElement(required = true)
+    @XmlElement(nillable = false, required = true)
     @Label("IS_NULLABLE")
     private String isNullable;
 
-    @XmlElement(required = true, nillable = true)
+    @XmlElement(nillable = true, required = true)
     @NullableBySpecification
     @Label("SCOPE_CATALOG")
     private String scopeCatalog;
 
-    @XmlElement(required = true, nillable = true)
+    @XmlElement(nillable = true, required = true)
     @NullableBySpecification
     @Label("SCOPE_SCHEMA")
     private String scopeSchema;
 
-    @XmlElement(required = true, nillable = true)
+    @XmlElement(nillable = true, required = true)
     @NullableBySpecification
     @Label("SCOPE_TABLE")
     private String scopeTable;
 
-    @XmlElement(required = true, nillable = true)
+    @XmlElement(nillable = true, required = true)
     @NullableBySpecification
     @Label("SOURCE_DATA_TYPE")
     private Short sourceDataType;

@@ -78,13 +78,15 @@ public class Catalog
     @Getter(AccessLevel.NONE)
     private Boolean virtual;
 
-    @XmlElement(required = true)
+    @XmlElement(nillable = false, required = true)
     @XmlSchemaType(name = "token")
     @NotNull
     @Label(COLUMN_LABEL_TABLE_CAT)
     private String tableCat;
 
     @XmlElementRef
+    @Setter(AccessLevel.NONE)
+    @Getter(AccessLevel.NONE)
     @EqualsAndHashCode.Exclude
     @ToString.Exclude
     private List<@Valid @NotNull Schema> schemas;

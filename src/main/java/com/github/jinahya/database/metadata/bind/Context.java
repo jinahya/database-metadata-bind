@@ -32,11 +32,10 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Map.Entry;
+import java.util.Objects;
 import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-
-import static java.util.Objects.requireNonNull;
 
 /**
  * A class for retrieving information from an instance of {@link java.sql.DatabaseMetaData}.
@@ -55,7 +54,7 @@ public class Context {
      * @throws SQLException if a database error occurs.
      */
     public static Context newInstance(final Connection connection) throws SQLException {
-        requireNonNull(connection, "connection is null");
+        Objects.requireNonNull(connection, "connection is null");
         if (connection.isClosed()) {
             throw new IllegalArgumentException("connection is closed");
         }
@@ -69,7 +68,7 @@ public class Context {
      */
     Context(final DatabaseMetaData metadata) {
         super();
-        this.databaseMetaData = requireNonNull(metadata, "metadata is null");
+        this.databaseMetaData = Objects.requireNonNull(metadata, "metadata is null");
     }
 
     /**
@@ -89,13 +88,13 @@ public class Context {
             final Field field = labeledField.getKey();
             final Label label = labeledField.getValue();
             if (!resultSetLabels.remove(label.value())) {
-                logger.log(Level.WARNING, () -> String.format("unknown label; %1$s on %2$s", label, field));
+                logger.warning(() -> String.format("unknown label; %1$s on %2$s", label, field));
                 continue;
             }
-            if (field.getAnnotation(NotUsedBySpecification.class) != null) {
+            if (field.isAnnotationPresent(NotUsedBySpecification.class)) {
                 continue;
             }
-            if (field.getAnnotation(Reserved.class) != null) {
+            if (field.isAnnotationPresent(Reserved.class)) {
                 continue;
             }
             try {
@@ -107,8 +106,7 @@ public class Context {
         if (logger.isLoggable(Level.FINE)) {
             for (final String l : resultSetLabels) {
                 final Object v = results.getObject(l);
-                logger.log(Level.FINE,
-                           () -> String.format("remained result; type: %1$s; label: %2$s, value: %3$s", type, l, v));
+                logger.fine(() -> String.format("remained result; type: %1$s; label: %2$s, value: %3$s", type, l, v));
             }
         }
         return instance;
@@ -128,9 +126,9 @@ public class Context {
     private <T extends MetadataType, C extends Collection<? super T>> C bind(final ResultSet results,
                                                                              final Class<T> type, final C collection)
             throws SQLException {
-        requireNonNull(results, "results is null");
-        requireNonNull(type, "type is null");
-        requireNonNull(collection, "collection is null");
+        Objects.requireNonNull(results, "results is null");
+        Objects.requireNonNull(type, "type is null");
+        Objects.requireNonNull(collection, "collection is null");
         while (results.next()) {
             final T value;
             try {
@@ -142,8 +140,6 @@ public class Context {
         }
         return collection;
     }
-
-    // --------------------------------------------------------------------------------------------------- getAttributes
 
     /**
      * Invokes
@@ -165,11 +161,13 @@ public class Context {
                                                                      final String attributeNamePattern,
                                                                      final C collection)
             throws SQLException {
-        requireNonNull(collection, "collection is null");
+        Objects.requireNonNull(typeNamePattern, "typeNamePattern is null");
+        Objects.requireNonNull(attributeNamePattern, "attributeNamePattern is null");
+        Objects.requireNonNull(collection, "collection is null");
         try (ResultSet results = databaseMetaData.getAttributes(
                 catalog, schemaPattern, typeNamePattern, attributeNamePattern)) {
             if (results == null) {
-                logger.warning(() -> String.format("null results from getAttributes(%1$s, %2$s, %3$s, %4$s)",
+                logger.warning(() -> String.format("null returned from getAttributes(%1$s, %2$s, %3$s, %4$s)",
                                                    catalog, schemaPattern, typeNamePattern, attributeNamePattern));
                 return collection;
             }
@@ -179,7 +177,7 @@ public class Context {
                        String.format("failed to getAttributes(%1$s, %2$s, %3$s, %4$s)",
                                      catalog, schemaPattern, typeNamePattern, attributeNamePattern),
                        sqle);
-            throwIfNotSuppressed(sqle);
+            throwUnlessSuppressed(sqle);
         }
         return collection;
     }
@@ -201,11 +199,15 @@ public class Context {
     public <C extends Collection<? super Attribute>> C getAttributes(final UDT udt, final String attributeNamePattern,
                                                                      final C collection)
             throws SQLException {
-        requireNonNull(udt, "udt is null");
-        return getAttributes(udt.getTypeCat(), udt.getTypeSchem(), udt.getTypeName(), attributeNamePattern, collection);
+        Objects.requireNonNull(udt, "udt is null");
+        return getAttributes(
+                udt.getTypeCat(),
+                udt.getTypeSchem(),
+                Objects.requireNonNull(udt.getTypeName(), "udt.typeName is null"),
+                attributeNamePattern,
+                collection
+        );
     }
-
-    // -------------------------------------------------------------------------------------------- getBestRowIdentifier
 
     /**
      * Invokes
@@ -228,15 +230,14 @@ public class Context {
             final String catalog, final String schema, final String table, final int scope, final boolean nullable,
             final C collection)
             throws SQLException {
-        requireNonNull(collection, "collection is null");
+        Objects.requireNonNull(table, "table is null");
+        Objects.requireNonNull(collection, "collection is null");
         try (ResultSet results = databaseMetaData.getBestRowIdentifier(catalog, schema, table, scope, nullable)) {
             if (results != null) {
                 bind(results, BestRowIdentifier.class, collection);
             }
         } catch (final SQLException sqle) {
-            //log..error("failed to getBestRowIdentifier({}, {}, {}, {}, {}",
-//                    catalog, schema, table, scope, nullable, sqle);
-            throwIfNotSuppressed(sqle);
+            throwUnlessSuppressed(sqle);
         }
         return collection;
     }
@@ -260,12 +261,16 @@ public class Context {
     public <C extends Collection<? super BestRowIdentifier>> C getBestRowIdentifier(
             final Table table, final int scope, final boolean nullable, final C collection)
             throws SQLException {
-        requireNonNull(table, "table is null");
-        return getBestRowIdentifier(table.getTableCat(), table.getTableSchem(), table.getTableName(), scope, nullable,
-                                    collection);
+        Objects.requireNonNull(table, "table is null");
+        return getBestRowIdentifier(
+                table.getTableCat(),
+                table.getTableSchem(),
+                Objects.requireNonNull(table.getTableName(), "table.tableName is null"),
+                scope,
+                nullable,
+                collection
+        );
     }
-
-    // ----------------------------------------------------------------------------------------------------- getCatalogs
 
     /**
      * Invokes {@link DatabaseMetaData#getCatalogs()} method and adds all bound values to specified collection.
@@ -276,14 +281,13 @@ public class Context {
      * @throws SQLException if a database error occurs.
      */
     public <C extends Collection<? super Catalog>> C getCatalogs(final C collection) throws SQLException {
-        requireNonNull(collection, "collection is null");
+        Objects.requireNonNull(collection, "collection is null");
         try (ResultSet results = databaseMetaData.getCatalogs()) {
             if (results != null) {
                 bind(results, Catalog.class, collection);
             }
         } catch (final SQLException sqle) {
-            //log..error("failed to getCatalogs()", sqle);
-            throwIfNotSuppressed(sqle);
+            throwUnlessSuppressed(sqle);
         }
         return collection;
     }
@@ -301,14 +305,14 @@ public class Context {
      */
     public <C extends Collection<? super ClientInfoProperty>> C getClientInfoProperties(final C collection)
             throws SQLException {
-        requireNonNull(collection, "collection is null");
+        Objects.requireNonNull(collection, "collection is null");
         try (ResultSet results = databaseMetaData.getClientInfoProperties()) {
             if (results != null) {
                 bind(results, ClientInfoProperty.class, collection);
             }
         } catch (final SQLException sqle) {
             //log..error("failed to getClientInfoProperties()", sqle);
-            throwIfNotSuppressed(sqle);
+            throwUnlessSuppressed(sqle);
         }
         return collection;
     }
@@ -334,14 +338,14 @@ public class Context {
             final String catalog, final String schema, final String table, final String columnNamePattern,
             final C collection)
             throws SQLException {
-        requireNonNull(collection, "collection is null");
+        Objects.requireNonNull(collection, "collection is null");
         try (ResultSet results = databaseMetaData.getColumnPrivileges(catalog, schema, table, columnNamePattern)) {
             if (results != null) {
                 bind(results, ColumnPrivilege.class, collection);
             }
         } catch (final SQLException sqle) {
             //log..error("failed to getColumnPrivileges({}, {}, {}, {})", catalog, schema, table, columnNamePattern, sqle);
-            throwIfNotSuppressed(sqle);
+            throwUnlessSuppressed(sqle);
         }
         return collection;
     }
@@ -387,7 +391,7 @@ public class Context {
                                                                final String tableNamePattern,
                                                                final String columnNamePattern, final C collection)
             throws SQLException {
-        requireNonNull(collection, "collection is null");
+        Objects.requireNonNull(collection, "collection is null");
         try (ResultSet results = databaseMetaData.getColumns(
                 catalog, schemaPattern, tableNamePattern, columnNamePattern)) {
             if (results != null) {
@@ -396,7 +400,7 @@ public class Context {
         } catch (final SQLException sqle) {
             //log..error("failed to getColumns({}, {}, {}, {})",
 //                    catalog, schemaPattern, tableNamePattern, columnNamePattern, sqle);
-            throwIfNotSuppressed(sqle);
+            throwUnlessSuppressed(sqle);
         }
         return collection;
     }
@@ -419,7 +423,7 @@ public class Context {
     public <C extends Collection<? super Column>> C getColumns(final Table table, final String columnNamePattern,
                                                                final C collection)
             throws SQLException {
-        requireNonNull(table, "table is null");
+        Objects.requireNonNull(table, "table is null");
         return getColumns(table.getTableCat(), table.getTableSchem(), table.getTableName(), columnNamePattern,
                           collection);
     }
@@ -446,7 +450,7 @@ public class Context {
             final String parentCatalog, final String parentSchema, final String parentTable,
             final String foreignCatalog, final String foreignSchema, final String foreignTable, final C collection)
             throws SQLException {
-        requireNonNull(collection, "collection is null");
+        Objects.requireNonNull(collection, "collection is null");
         try (ResultSet results = databaseMetaData.getCrossReference(
                 parentCatalog, parentSchema, parentTable, foreignCatalog, foreignSchema, foreignTable)) {
             if (results != null) {
@@ -455,7 +459,7 @@ public class Context {
         } catch (final SQLException sqle) {
             //log..error("failed to getCrossReferences({}, {}, {}, {}, {}, {})",
 //                    parentCatalog, parentSchema, parentTable, foreignCatalog, foreignSchema, foreignTable, sqle);
-            throwIfNotSuppressed(sqle);
+            throwUnlessSuppressed(sqle);
         }
         return collection;
     }
@@ -482,8 +486,8 @@ public class Context {
     public <C extends Collection<? super CrossReference>> C getCrossReference(
             final Table parentTable, final Table foreignTable, final C collection)
             throws SQLException {
-        requireNonNull(parentTable, "parentTable is null");
-        requireNonNull(foreignTable, "foreignTable is null");
+        Objects.requireNonNull(parentTable, "parentTable is null");
+        Objects.requireNonNull(foreignTable, "foreignTable is null");
         return getCrossReference(parentTable.getTableCat(), parentTable.getTableSchem(), parentTable.getTableName(),
                                  foreignTable.getTableCat(), foreignTable.getTableSchem(), foreignTable.getTableName(),
                                  collection);
@@ -508,14 +512,14 @@ public class Context {
     public <C extends Collection<? super Function>> C getFunctions(
             final String catalog, final String schemaPattern, final String functionNamePattern, final C collection)
             throws SQLException {
-        requireNonNull(collection, "collection is null");
+        Objects.requireNonNull(collection, "collection is null");
         try (ResultSet results = databaseMetaData.getFunctions(catalog, schemaPattern, functionNamePattern)) {
             if (results != null) {
                 bind(results, Function.class, collection);
             }
         } catch (final SQLException sqle) {
             //log..error("failed to getFunctions({}, {}, {})", catalog, schemaPattern, functionNamePattern, sqle);
-            throwIfNotSuppressed(sqle);
+            throwUnlessSuppressed(sqle);
         }
         return collection;
     }
@@ -534,7 +538,7 @@ public class Context {
     public <C extends Collection<? super Function>> C getFunctions(final Schema schema,
                                                                    final String functionNamePattern, final C collection)
             throws SQLException {
-        requireNonNull(schema, "schema is null");
+        Objects.requireNonNull(schema, "schema is null");
         return getFunctions(schema.getTableCatalog(), schema.getTableSchem(), functionNamePattern, collection);
     }
 
@@ -558,7 +562,7 @@ public class Context {
             final String catalog, final String schemaPattern, final String functionNamePattern,
             final String columnNamePattern, final C collection)
             throws SQLException {
-        requireNonNull(collection, "collection is null");
+        Objects.requireNonNull(collection, "collection is null");
         try (ResultSet results = databaseMetaData.getFunctionColumns(
                 catalog, schemaPattern, functionNamePattern, columnNamePattern)) {
             if (results != null) {
@@ -567,7 +571,7 @@ public class Context {
         } catch (final SQLException sqle) {
             //log..error("failed to getFunctionColumns({}, {}, {}, {})",
 //                    catalog, schemaPattern, functionNamePattern, columnNamePattern, sqle);
-            throwIfNotSuppressed(sqle);
+            throwUnlessSuppressed(sqle);
         }
         return collection;
     }
@@ -587,7 +591,7 @@ public class Context {
                                                                                final String columnNamePattern,
                                                                                final C collection)
             throws SQLException {
-        requireNonNull(function, "function is null");
+        Objects.requireNonNull(function, "function is null");
         return getFunctionColumns(function.getFunctionCat(), function.getFunctionSchem(), function.getFunctionName(),
                                   columnNamePattern, collection);
     }
@@ -609,14 +613,14 @@ public class Context {
     public <C extends Collection<? super ExportedKey>> C getExportedKeys(
             final String catalog, final String schema, final String table, final C collection)
             throws SQLException {
-        requireNonNull(collection, "collection is null");
+        Objects.requireNonNull(collection, "collection is null");
         try (ResultSet results = databaseMetaData.getExportedKeys(catalog, schema, table)) {
             if (results != null) {
                 bind(results, ExportedKey.class, collection);
             }
         } catch (final SQLException sqle) {
             //log..error("failed to getExportedKeys({}, {}, {})", catalog, schema, table, sqle);
-            throwIfNotSuppressed(sqle);
+            throwUnlessSuppressed(sqle);
         }
         return collection;
     }
@@ -633,7 +637,7 @@ public class Context {
      */
     public <C extends Collection<? super ExportedKey>> C getExportedKeys(final Table table, final C collection)
             throws SQLException {
-        requireNonNull(table, "table is null");
+        Objects.requireNonNull(table, "table is null");
         return getExportedKeys(table.getTableCat(), table.getTableSchem(), table.getTableName(), collection);
     }
 
@@ -655,14 +659,14 @@ public class Context {
     public <C extends Collection<? super ImportedKey>> C getImportedKeys(
             final String catalog, final String schema, final String table, final C collection)
             throws SQLException {
-        requireNonNull(collection, "collection is null");
+        Objects.requireNonNull(collection, "collection is null");
         try (ResultSet results = databaseMetaData.getImportedKeys(catalog, schema, table)) {
             if (results != null) {
                 bind(results, ImportedKey.class, collection);
             }
         } catch (final SQLException sqle) {
             //log..error("failed to getImportedKeys({}, {}, {})", catalog, schema, table, sqle);
-            throwIfNotSuppressed(sqle);
+            throwUnlessSuppressed(sqle);
         }
         return collection;
     }
@@ -679,7 +683,7 @@ public class Context {
      */
     public <C extends Collection<? super ImportedKey>> C getImportedKeys(final Table table, final C collection)
             throws SQLException {
-        requireNonNull(table, "table is null");
+        Objects.requireNonNull(table, "table is null");
         return getImportedKeys(table.getTableCat(), table.getTableSchem(), table.getTableName(), collection);
     }
 
@@ -704,14 +708,14 @@ public class Context {
             final String catalog, final String schema, final String table, final boolean unique,
             final boolean approximate, final C collection)
             throws SQLException {
-        requireNonNull(collection, "collection is null");
+        Objects.requireNonNull(collection, "collection is null");
         try (ResultSet results = databaseMetaData.getIndexInfo(catalog, schema, table, unique, approximate)) {
             if (results != null) {
                 bind(results, IndexInfo.class, collection);
             }
         } catch (final SQLException sqle) {
             //log..error("failed to getIndexInfo({}, {}, {})", catalog, schema, table, sqle);
-            throwIfNotSuppressed(sqle);
+            throwUnlessSuppressed(sqle);
         }
         return collection;
     }
@@ -731,7 +735,7 @@ public class Context {
     public <C extends Collection<? super IndexInfo>> C getIndexInfo(final Table table, final boolean unique,
                                                                     final boolean approximate, final C collection)
             throws SQLException {
-        requireNonNull(table, "table is null");
+        Objects.requireNonNull(table, "table is null");
         return getIndexInfo(table.getTableCat(), table.getTableSchem(), table.getTableName(), unique, approximate,
                             collection);
     }
@@ -754,14 +758,14 @@ public class Context {
     public <C extends Collection<? super PrimaryKey>> C getPrimaryKeys(
             final String catalog, final String schema, final String table, final C collection)
             throws SQLException {
-        requireNonNull(collection, "collection is null");
+        Objects.requireNonNull(collection, "collection is null");
         try (ResultSet results = databaseMetaData.getPrimaryKeys(catalog, schema, table)) {
             if (results != null) {
                 bind(results, PrimaryKey.class, collection);
             }
         } catch (final SQLException sqle) {
             //log..error("failed to getPrimaryKeys({}, {}, {})", catalog, schema, table, sqle);
-            throwIfNotSuppressed(sqle);
+            throwUnlessSuppressed(sqle);
         }
         return collection;
     }
@@ -778,7 +782,7 @@ public class Context {
      */
     public <C extends Collection<? super PrimaryKey>> C getPrimaryKeys(final Table table, final C collection)
             throws SQLException {
-        requireNonNull(table, "table is null");
+        Objects.requireNonNull(table, "table is null");
         return getPrimaryKeys(table.getTableCat(), table.getTableSchem(), table.getTableName(), collection);
     }
 
@@ -802,7 +806,7 @@ public class Context {
             final String catalog, final String schemaPattern, final String procedureNamePattern,
             final String columnNamePattern, final C collection)
             throws SQLException {
-        requireNonNull(collection, "collection is null");
+        Objects.requireNonNull(collection, "collection is null");
         try (ResultSet results = databaseMetaData.getProcedureColumns(
                 catalog, schemaPattern, procedureNamePattern, columnNamePattern)) {
             if (results != null) {
@@ -811,7 +815,7 @@ public class Context {
         } catch (final SQLException sqle) {
             //log..error("failed to getProcedureColumns({}, {}, {}, {})",
 //                    catalog, schemaPattern, procedureNamePattern, columnNamePattern, sqle);
-            throwIfNotSuppressed(sqle);
+            throwUnlessSuppressed(sqle);
         }
         return collection;
     }
@@ -830,7 +834,7 @@ public class Context {
     public <C extends Collection<? super ProcedureColumn>> C getProcedureColumns(
             final Procedure procedure, final String columnNamePattern, final C collection)
             throws SQLException {
-        requireNonNull(procedure, "procedure is null");
+        Objects.requireNonNull(procedure, "procedure is null");
         return getProcedureColumns(procedure.getProcedureCat(), procedure.getProcedureSchem(),
                                    procedure.getProcedureName(), columnNamePattern, collection);
     }
@@ -855,14 +859,14 @@ public class Context {
                                                                      final String procedureNamePattern,
                                                                      final C collection)
             throws SQLException {
-        requireNonNull(collection, "collection is null");
+        Objects.requireNonNull(collection, "collection is null");
         try (ResultSet results = databaseMetaData.getProcedures(catalog, schemaPattern, procedureNamePattern)) {
             if (results != null) {
                 bind(results, Procedure.class, collection);
             }
         } catch (final SQLException sqle) {
             //log..error("failed to getProcedures({}, {}, {})", catalog, schemaPattern, procedureNamePattern, sqle);
-            throwIfNotSuppressed(sqle);
+            throwUnlessSuppressed(sqle);
         }
         return collection;
     }
@@ -882,7 +886,7 @@ public class Context {
                                                                      final String procedureNamePattern,
                                                                      final C collection)
             throws SQLException {
-        requireNonNull(schema, "schema is null");
+        Objects.requireNonNull(schema, "schema is null");
         return getProcedures(schema.getTableCatalog(), schema.getTableSchem(), procedureNamePattern, collection);
     }
 
@@ -907,7 +911,7 @@ public class Context {
             final String catalog, final String schemaPattern, final String tableNamePattern,
             final String columnNamePattern, final C collection)
             throws SQLException {
-        requireNonNull(collection, "collection is null");
+        Objects.requireNonNull(collection, "collection is null");
         try (ResultSet results = databaseMetaData.getPseudoColumns(
                 catalog, schemaPattern, tableNamePattern, columnNamePattern)) {
             if (results != null) {
@@ -916,7 +920,7 @@ public class Context {
         } catch (final SQLException sqle) {
             //log..error("failed to getPseudoColumns({}, {}, {}, {})",
 //                    catalog, schemaPattern, tableNamePattern, columnNamePattern, sqle);
-            throwIfNotSuppressed(sqle);
+            throwUnlessSuppressed(sqle);
         }
         return collection;
     }
@@ -935,7 +939,7 @@ public class Context {
     public <C extends Collection<? super PseudoColumn>> C getPseudoColumns(
             final Table table, final String columnNamePattern, final C collection)
             throws SQLException {
-        requireNonNull(table, "table is null");
+        Objects.requireNonNull(table, "table is null");
         return getPseudoColumns(table.getTableCat(), table.getTableSchem(), table.getTableName(), columnNamePattern,
                                 collection);
     }
@@ -952,14 +956,14 @@ public class Context {
      * @see DatabaseMetaData#getSchemas()
      */
     public <C extends Collection<? super SchemaName>> C getSchemas(final C collection) throws SQLException {
-        requireNonNull(collection, "collection is null");
+        Objects.requireNonNull(collection, "collection is null");
         try (ResultSet results = databaseMetaData.getSchemas()) {
             if (results != null) {
                 bind(results, SchemaName.class, collection);
             }
         } catch (final SQLException sqle) {
             //log..error("failed to getSchemas()", sqle);
-            throwIfNotSuppressed(sqle);
+            throwUnlessSuppressed(sqle);
         }
         return collection;
     }
@@ -981,14 +985,14 @@ public class Context {
     public <C extends Collection<? super Schema>> C getSchemas(final String catalog, final String schemaPattern,
                                                                final C collection)
             throws SQLException {
-        requireNonNull(collection, "collection is null");
+        Objects.requireNonNull(collection, "collection is null");
         try (ResultSet results = databaseMetaData.getSchemas(catalog, schemaPattern)) {
             if (results != null) {
                 bind(results, Schema.class, collection);
             }
         } catch (final SQLException sqle) {
             //log..error("failed to getSchemas({}, {})", catalog, schemaPattern, sqle);
-            throwIfNotSuppressed(sqle);
+            throwUnlessSuppressed(sqle);
         }
         return collection;
     }
@@ -1007,7 +1011,7 @@ public class Context {
     public <C extends Collection<? super Schema>> C getSchemas(final Catalog catalog, final String schemaPattern,
                                                                final C collection)
             throws SQLException {
-        requireNonNull(catalog, "catalog is null");
+        Objects.requireNonNull(catalog, "catalog is null");
         return getSchemas(catalog.getTableCat(), schemaPattern, collection);
     }
 
@@ -1028,14 +1032,14 @@ public class Context {
     public <C extends Collection<? super SuperTable>> C getSuperTables(
             final String catalog, final String schemaPattern, final String tableNamePattern, final C collection)
             throws SQLException {
-        requireNonNull(collection, "collection is null");
+        Objects.requireNonNull(collection, "collection is null");
         try (ResultSet results = databaseMetaData.getSuperTables(catalog, schemaPattern, tableNamePattern)) {
             if (results != null) {
                 bind(results, SuperTable.class, collection);
             }
         } catch (final SQLException sqle) {
             //log..error("failed to getSuperTables({}, {}, {})", catalog, schemaPattern, tableNamePattern, sqle);
-            throwIfNotSuppressed(sqle);
+            throwUnlessSuppressed(sqle);
         }
         return collection;
     }
@@ -1052,7 +1056,7 @@ public class Context {
      */
     public <C extends Collection<? super SuperTable>> C getSuperTables(final Table table, final C collection)
             throws SQLException {
-        requireNonNull(table, "table is null");
+        Objects.requireNonNull(table, "table is null");
         return getSuperTables(table.getTableCat(), table.getTableSchem(), table.getTableName(), collection);
     }
 
@@ -1073,14 +1077,14 @@ public class Context {
     public <C extends Collection<? super SuperType>> C getSuperTypes(final String catalog, final String schemaPattern,
                                                                      final String typeNamePattern, final C collection)
             throws SQLException {
-        requireNonNull(collection, "collection is null");
+        Objects.requireNonNull(collection, "collection is null");
         try (ResultSet results = databaseMetaData.getSuperTypes(catalog, schemaPattern, typeNamePattern)) {
             if (results != null) {
                 bind(results, SuperType.class, collection);
             }
         } catch (final SQLException sqle) {
             //log..error("failed to getSuperTypes({}, {}, {})", catalog, schemaPattern, typeNamePattern, sqle);
-            throwIfNotSuppressed(sqle);
+            throwUnlessSuppressed(sqle);
         }
         return collection;
     }
@@ -1097,7 +1101,7 @@ public class Context {
      */
     public <C extends Collection<? super SuperType>> C getSuperTypes(final UDT udt, final C collection)
             throws SQLException {
-        requireNonNull(udt, "udt is null");
+        Objects.requireNonNull(udt, "udt is null");
         return getSuperTypes(udt.getTypeCat(), udt.getTypeSchem(), udt.getTypeName(), collection);
     }
 
@@ -1118,14 +1122,14 @@ public class Context {
     public <C extends Collection<? super TablePrivilege>> C getTablePrivileges(
             final String catalog, final String schemaPattern, final String tableNamePattern, final C collection)
             throws SQLException {
-        requireNonNull(collection, "collection is null");
+        Objects.requireNonNull(collection, "collection is null");
         try (ResultSet results = databaseMetaData.getTablePrivileges(catalog, schemaPattern, tableNamePattern)) {
             if (results != null) {
                 bind(results, TablePrivilege.class, collection);
             }
         } catch (final SQLException sqle) {
             //log..error("failed to getTablePrivileges({}, {}, {})", catalog, schemaPattern, tableNamePattern, sqle);
-            throwIfNotSuppressed(sqle);
+            throwUnlessSuppressed(sqle);
         }
         return collection;
     }
@@ -1141,7 +1145,7 @@ public class Context {
      */
     public <C extends Collection<? super TablePrivilege>> C getTablePrivileges(final Table table, final C collection)
             throws SQLException {
-        requireNonNull(table, "table is null");
+        Objects.requireNonNull(table, "table is null");
         return getTablePrivileges(table.getTableCat(), table.getTableSchem(), table.getTableName(), collection);
     }
 
@@ -1156,14 +1160,14 @@ public class Context {
      * @throws SQLException if a database error occurs.
      */
     public <C extends Collection<? super TableType>> C getTableTypes(final C collection) throws SQLException {
-        requireNonNull(collection, "collection is null");
+        Objects.requireNonNull(collection, "collection is null");
         try (ResultSet results = databaseMetaData.getTableTypes()) {
             if (results != null) {
                 bind(results, TableType.class, collection);
             }
         } catch (final SQLException sqle) {
             //log..error("failed to getTableTypes()", sqle);
-            throwIfNotSuppressed(sqle);
+            throwUnlessSuppressed(sqle);
         }
         return collection;
     }
@@ -1189,7 +1193,7 @@ public class Context {
                                                              final String tableNamePattern, final String[] types,
                                                              final C collection)
             throws SQLException {
-        requireNonNull(collection, "collection is null");
+        Objects.requireNonNull(collection, "collection is null");
         try (ResultSet results = databaseMetaData.getTables(catalog, schemaPattern, tableNamePattern, types)) {
             if (results != null) {
                 bind(results, Table.class, collection);
@@ -1197,7 +1201,7 @@ public class Context {
         } catch (final SQLException sqle) {
             //log..error("failed to getTables({}, {}, {}, {})",
 //                    catalog, schemaPattern, tableNamePattern, Arrays.toString(types), sqle);
-            throwIfNotSuppressed(sqle);
+            throwUnlessSuppressed(sqle);
         }
         return collection;
     }
@@ -1217,7 +1221,7 @@ public class Context {
     public <C extends Collection<? super Table>> C getTables(final Schema schema, final String tableNamePattern,
                                                              final String[] types, final C collection)
             throws SQLException {
-        requireNonNull(schema, "schema is null");
+        Objects.requireNonNull(schema, "schema is null");
         return getTables(schema.getTableCatalog(), schema.getTableSchem(), tableNamePattern, types, collection);
     }
 
@@ -1233,14 +1237,14 @@ public class Context {
      */
     public <C extends Collection<? super TypeInfo>> C getTypeInfo(final C collection)
             throws SQLException {
-        requireNonNull(collection, "collection is null");
+        Objects.requireNonNull(collection, "collection is null");
         try (ResultSet results = databaseMetaData.getTypeInfo()) {
             if (results != null) {
                 bind(results, TypeInfo.class, collection);
             }
         } catch (final SQLException sqle) {
             //log..error("failed to getTypeInfo()", sqle);
-            throwIfNotSuppressed(sqle);
+            throwUnlessSuppressed(sqle);
         }
         return collection;
     }
@@ -1267,7 +1271,7 @@ public class Context {
                                                          final String typeNamePattern, final int[] types,
                                                          final C collection)
             throws SQLException {
-        requireNonNull(collection, "collection is null");
+        Objects.requireNonNull(collection, "collection is null");
         try (ResultSet results = databaseMetaData.getUDTs(catalog, schemaPattern, typeNamePattern, types)) {
             if (results != null) {
                 bind(results, UDT.class, collection);
@@ -1275,7 +1279,7 @@ public class Context {
         } catch (final SQLException sqle) {
             //log..error("failed to getUDTs({}, {}, {}, {})",
 //                    catalog, schemaPattern, typeNamePattern, Arrays.toString(types), sqle);
-            throwIfNotSuppressed(sqle);
+            throwUnlessSuppressed(sqle);
         }
         return collection;
     }
@@ -1295,7 +1299,7 @@ public class Context {
     public <C extends Collection<? super UDT>> C getUDTs(final Schema schema, final String typeNamePattern,
                                                          final int[] types, final C collection)
             throws SQLException {
-        requireNonNull(schema, "schema is null");
+        Objects.requireNonNull(schema, "schema is null");
         return getUDTs(schema.getTableCatalog(), schema.getTableSchem(), typeNamePattern, types, collection);
     }
 
@@ -1316,14 +1320,14 @@ public class Context {
     public <C extends Collection<? super VersionColumn>> C getVersionColumns(
             final String catalog, final String schema, final String table, final C collection)
             throws SQLException {
-        requireNonNull(collection, "collection is null");
+        Objects.requireNonNull(collection, "collection is null");
         try (ResultSet results = databaseMetaData.getVersionColumns(catalog, schema, table)) {
             if (results != null) {
                 bind(results, VersionColumn.class, collection);
             }
         } catch (final SQLException sqle) {
             //log..error("failed to getVersionColumns({}, {}, {})", catalog, schema, table, sqle);
-            throwIfNotSuppressed(sqle);
+            throwUnlessSuppressed(sqle);
         }
         return collection;
     }
@@ -1340,7 +1344,7 @@ public class Context {
      */
     public <C extends Collection<? super VersionColumn>> C getVersionColumns(final Table table, final C collection)
             throws SQLException {
-        requireNonNull(table, "table is null");
+        Objects.requireNonNull(table, "table is null");
         return getVersionColumns(table.getTableCat(), table.getTableSchem(), table.getTableName(), collection);
     }
 
@@ -1361,7 +1365,7 @@ public class Context {
             value.setValue(databaseMetaData.deletesAreDetected(value.getType()));
         } catch (final SQLException sqle) {
             //log..error("failed to invoke deletesAreDetected({})", value.getType(), sqle);
-            throwIfNotSuppressed(sqle);
+            throwUnlessSuppressed(sqle);
         }
         return value;
     }
@@ -1383,7 +1387,7 @@ public class Context {
             value.setValue(databaseMetaData.insertsAreDetected(value.getType()));
         } catch (final SQLException sqle) {
             //log..error("failed to invoke insertsAreDetected({})", value.getType(), sqle);
-            throwIfNotSuppressed(sqle);
+            throwUnlessSuppressed(sqle);
         }
         return value;
     }
@@ -1406,7 +1410,7 @@ public class Context {
             value.setValue(databaseMetaData.updatesAreDetected(value.getType()));
         } catch (final SQLException sqle) {
             //log..error("failed to invoke updatesAreDetected({})", value.getType(), sqle);
-            throwIfNotSuppressed(sqle);
+            throwUnlessSuppressed(sqle);
         }
         return value;
     }
@@ -1429,7 +1433,7 @@ public class Context {
             result.setValue(databaseMetaData.othersDeletesAreVisible(result.getType()));
         } catch (final SQLException sqle) {
             //log..error("failed to invoke othersDeletesAreVisible({})", result.getType(), sqle);
-            throwIfNotSuppressed(sqle);
+            throwUnlessSuppressed(sqle);
         }
         return result;
     }
@@ -1452,7 +1456,7 @@ public class Context {
             result.setValue(databaseMetaData.othersInsertsAreVisible(result.getType()));
         } catch (final SQLException sqle) {
             //log..error("failed to invoke othersInsertsAreVisible({})", result.getType(), sqle);
-            throwIfNotSuppressed(sqle);
+            throwUnlessSuppressed(sqle);
         }
         return result;
     }
@@ -1475,7 +1479,7 @@ public class Context {
             result.setValue(databaseMetaData.othersUpdatesAreVisible(result.getType()));
         } catch (final SQLException sqle) {
             //log..error("failed to invoke othersUpdatesAreVisible({})", result.getType(), sqle);
-            throwIfNotSuppressed(sqle);
+            throwUnlessSuppressed(sqle);
         }
         return result;
     }
@@ -1498,7 +1502,7 @@ public class Context {
             value.setValue(databaseMetaData.ownDeletesAreVisible(value.getType()));
         } catch (final SQLException sqle) {
             //log..error("failed to invoke ownDeletesAreVisible({})", value.getType(), sqle);
-            throwIfNotSuppressed(sqle);
+            throwUnlessSuppressed(sqle);
         }
         return value;
     }
@@ -1521,7 +1525,7 @@ public class Context {
             value.setValue(databaseMetaData.ownInsertsAreVisible(value.getType()));
         } catch (final SQLException sqle) {
             //log..error("failed to invoke ownInsertsAreVisible({})", value.getType(), sqle);
-            throwIfNotSuppressed(sqle);
+            throwUnlessSuppressed(sqle);
         }
         return value;
     }
@@ -1544,7 +1548,7 @@ public class Context {
             value.setValue(databaseMetaData.ownUpdatesAreVisible(value.getType()));
         } catch (final SQLException sqle) {
             //log..error("failed to invoke ownUpdatesAreVisible({})", value.getType(), sqle);
-            throwIfNotSuppressed(sqle);
+            throwUnlessSuppressed(sqle);
         }
         return value;
     }
@@ -1569,7 +1573,7 @@ public class Context {
             value.setValue(databaseMetaData.supportsConvert(value.getFromType(), value.getToType()));
         } catch (final SQLException sqle) {
             //log..error("failed to invoke supportsConvert({}, {})", value.getFromType(), value.getToType(), sqle);
-            throwIfNotSuppressed(sqle);
+            throwUnlessSuppressed(sqle);
         }
         return value;
     }
@@ -1596,7 +1600,7 @@ public class Context {
         } catch (final SQLException sqle) {
             //log..error("failed to invoke supportsResultSetConcurrency({}, {})",
 //                    value.getType(), value.getConcurrency(), sqle);
-            throwIfNotSuppressed(sqle);
+            throwUnlessSuppressed(sqle);
         }
         return value;
     }
@@ -1620,7 +1624,7 @@ public class Context {
             value.setValue(databaseMetaData.supportsResultSetHoldability(value.getHoldability()));
         } catch (final SQLException sqle) {
             //log..error("failed to invoke supportsResultSetHoldability({})", value.getHoldability(), sqle);
-            throwIfNotSuppressed(sqle);
+            throwUnlessSuppressed(sqle);
         }
         return value;
     }
@@ -1644,7 +1648,7 @@ public class Context {
             value.setValue(databaseMetaData.supportsResultSetType(value.getType()));
         } catch (final SQLException sqle) {
             //log..error("failed to invoke supportsResultSetType({})", value.getType(), sqle);
-            throwIfNotSuppressed(sqle);
+            throwUnlessSuppressed(sqle);
         }
         return value;
     }
@@ -1667,25 +1671,25 @@ public class Context {
             value.setValue(databaseMetaData.supportsTransactionIsolationLevel(level));
         } catch (final SQLException sqle) {
             //log..error("failed to invoke supportsTransactionIsolationLevel({})", value.getLevel(), sqle);
-            throwIfNotSuppressed(sqle);
+            throwUnlessSuppressed(sqle);
         }
         return value;
     }
 
     private @NotNull
     Map<@NotNull Field, @NotNull Label> getLabeledFields(final @NotNull Class<?> clazz) {
-        requireNonNull(clazz, "clazz is null");
+        Objects.requireNonNull(clazz, "clazz is null");
         return classesAndLabeledFields.computeIfAbsent(clazz, c -> Utils.getFieldsAnnotatedWith(c, Label.class));
     }
 
     public <T extends Throwable> Context suppress(final Class<T> throwableClass) {
-        requireNonNull(throwableClass, "throwableClass is null");
+        Objects.requireNonNull(throwableClass, "throwableClass is null");
         suppressedThrowableClasses.add(throwableClass);
         return this;
     }
 
     private <T extends Throwable> boolean isSuppressed(final Class<T> exceptionClass) {
-        requireNonNull(exceptionClass, "exceptionClass is null");
+        Objects.requireNonNull(exceptionClass, "exceptionClass is null");
         if (suppressedThrowableClasses.contains(exceptionClass)) {
             return true;
         }
@@ -1693,12 +1697,12 @@ public class Context {
     }
 
     private boolean isSuppressed(final Throwable t) {
-        requireNonNull(t, "t is null");
+        Objects.requireNonNull(t, "t is null");
         return isSuppressed(t.getClass());
     }
 
-    private void throwIfNotSuppressed(final SQLException sqle) throws SQLException {
-        requireNonNull(sqle, "sqle is null");
+    private void throwUnlessSuppressed(final SQLException sqle) throws SQLException {
+        Objects.requireNonNull(sqle, "sqle is null");
         if (!isSuppressed(sqle)) {
             throw sqle;
         }
