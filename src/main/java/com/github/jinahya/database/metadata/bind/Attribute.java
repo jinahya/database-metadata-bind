@@ -27,6 +27,8 @@ import lombok.Setter;
 import lombok.ToString;
 
 import javax.xml.bind.annotation.XmlElement;
+import javax.xml.bind.annotation.XmlEnum;
+import javax.xml.bind.annotation.XmlEnumValue;
 import javax.xml.bind.annotation.XmlRootElement;
 import java.sql.DatabaseMetaData;
 import java.util.Collection;
@@ -54,6 +56,7 @@ public class Attribute
     /**
      * Constants for nullabilities of an attribute.
      */
+    @XmlEnum
     public enum Nullable implements IntFieldEnum<Nullable> {
 
         /**
@@ -102,12 +105,54 @@ public class Attribute
 
     public static final String VALUE_IS_NULLABLE_EMPTY = "";
 
+    @XmlEnum
+    public enum IsNullable implements FieldEnum<IsNullable, String> {
+
+        @XmlEnumValue(VALUE_IS_NULLABLE_YES)
+        YES(VALUE_IS_NULLABLE_YES),
+
+        @XmlEnumValue(VALUE_IS_NULLABLE_NO)
+        NO(VALUE_IS_NULLABLE_NO),
+
+        @XmlEnumValue(VALUE_IS_NULLABLE_EMPTY)
+        EMPTY(VALUE_IS_NULLABLE_EMPTY);
+
+        /**
+         * Returns the value whose {@link #getRawValue() rawValue} matches to specified value.
+         *
+         * @param rawValue the {@code rawValue} to match.
+         * @return a matched value.
+         */
+        public static IsNullable valueOfRawValue(final String rawValue) {
+            return FieldEnums.valueOfRawValue(IsNullable.class, rawValue);
+        }
+
+        IsNullable(final String rawValue) {
+            this.rawValue = Objects.requireNonNull(rawValue, "rawValue is null");
+        }
+
+        @Override
+        public String getRawValue() {
+            return rawValue;
+        }
+
+        private final String rawValue;
+    }
+
     public Nullable getNullableAsEnum() {
         return Nullable.valueOfRawValue(getNullable());
     }
 
     public void setNullableAsEnum(final Nullable nullableAsEnum) {
         setNullable(Objects.requireNonNull(nullableAsEnum, "nullableAsEnum is null").getRawValue());
+    }
+
+    public IsNullable getIsNullableAsEnum() {
+        return IsNullable.valueOfRawValue(getIsNullable());
+    }
+
+    public void setIsNullableAsEnum(final IsNullable isNullableAsEnum) {
+        setIsNullable(Objects.requireNonNull(isNullableAsEnum, "isNullableAsEnum is null").getRawValue());
     }
 
     @XmlElement(nillable = true, required = true)
@@ -140,7 +185,7 @@ public class Attribute
     @Label("ATTR_SIZE")
     private int attrSize;
 
-    @XmlElement(nillable = false, required = true)
+    @XmlElement(nillable = true, required = true)
     @NullableBySpecification
     @Label("DECIMAL_DIGITS")
     private Integer decimalDigits;
@@ -203,5 +248,5 @@ public class Attribute
     @XmlElement(nillable = true, required = true)
     @NullableBySpecification
     @Label("SOURCE_DATA_TYPE")
-    private Short sourceDataType;
+    private Integer sourceDataType;
 }

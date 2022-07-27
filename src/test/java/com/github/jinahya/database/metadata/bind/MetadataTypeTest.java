@@ -167,7 +167,9 @@ abstract class MetadataTypeTest<T extends MetadataType> {
         for (final Field field : getFieldsWithMayBeNull().keySet()) {
             assertThat(field.getAnnotation(NullableBySpecification.class)).isNotNull();
             assertThat(field.getAnnotation(XmlElement.class)).isNotNull().satisfies(a -> {
-                assertThat(a.nillable()).isTrue();
+                assertThat(a.nillable())
+                        .as("XmlElement#nillable on %s", field)
+                        .isTrue();
             });
         }
     }

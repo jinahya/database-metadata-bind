@@ -37,8 +37,7 @@ import javax.xml.bind.annotation.XmlSchemaType;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
-
-import static java.util.Objects.requireNonNull;
+import java.util.Objects;
 
 /**
  * A class for binding a result of {@link java.sql.DatabaseMetaData#getSchemas(java.lang.String, java.lang.String)}
@@ -95,14 +94,14 @@ public class Schema
      * @return a new virtual instance.
      */
     public static Schema newVirtualInstance(final String tableCatalog) {
-        requireNonNull(tableCatalog, "tableCatalog is null");
+        Objects.requireNonNull(tableCatalog, "tableCatalog is null");
         final Schema instance = of(tableCatalog, "");
         instance.virtual = Boolean.TRUE;
         return instance;
     }
 
     public static Schema newVirtualInstance(final Catalog catalog) {
-        requireNonNull(catalog, "catalog is null");
+        Objects.requireNonNull(catalog, "catalog is null");
         return newVirtualInstance(catalog.getTableCat());
     }
 

@@ -23,9 +23,11 @@ package com.github.jinahya.database.metadata.bind;
 import lombok.Data;
 
 import javax.xml.bind.annotation.XmlElement;
+import javax.xml.bind.annotation.XmlEnum;
 import javax.xml.bind.annotation.XmlRootElement;
 import java.sql.DatabaseMetaData;
 import java.util.Collection;
+import java.util.Objects;
 
 /**
  * A class for binding results of {@link DatabaseMetaData#getBestRowIdentifier(String, String, String, int, boolean)}
@@ -46,6 +48,7 @@ public class BestRowIdentifier
      * Constants for {@code PSEUDO_COLUMN} column values of a result of
      * {@link DatabaseMetaData#getBestRowIdentifier(String, String, String, int, boolean)} method.
      */
+    @XmlEnum
     public enum PseudoColumn
             implements IntFieldEnum<PseudoColumn> {
 
@@ -90,6 +93,7 @@ public class BestRowIdentifier
      * Constants for {@code SCOPE} column values of a result of
      * {@link DatabaseMetaData#getBestRowIdentifier(String, String, String, int, boolean)} method.
      */
+    @XmlEnum
     public enum Scope
             implements IntFieldEnum<Scope> {
 
@@ -131,11 +135,19 @@ public class BestRowIdentifier
         private final int rawValue;
     }
 
-    @XmlElement(required = true)
-    @Label("SCOPE")
-    private short scope;
+    public PseudoColumn getPseudoColumnAsEnum() {
+        return PseudoColumn.valueOfRawValue(getPseudoColumn());
+    }
+
+    public void setPseudoColumnAsEnum(final PseudoColumn pseudoColumnAsEnum) {
+        setPseudoColumn(Objects.requireNonNull(pseudoColumnAsEnum, "pseudoColumnAsEnum is null").getRawValue());
+    }
 
     @XmlElement(required = true)
+    @Label("SCOPE")
+    private int scope;
+
+    @XmlElement(nillable = false, required = true)
     @Label("COLUMN_NAME")
     private String columnName;
 
@@ -151,7 +163,7 @@ public class BestRowIdentifier
     @Label("COLUMN_SIZE")
     private int columnSize;
 
-    @XmlElement(required = true, nillable = true)
+    @XmlElement(nillable = true, required = true)
     @NotUsedBySpecification
     @Label("BUFFER_LENGTH")
     private Integer bufferLength;
@@ -159,9 +171,9 @@ public class BestRowIdentifier
     @XmlElement(required = true, nillable = true)
     @NullableBySpecification
     @Label("DECIMAL_DIGITS")
-    private Short decimalDigits;
+    private Integer decimalDigits;
 
     @XmlElement(required = true)
     @Label("PSEUDO_COLUMN")
-    private short pseudoColumn;
+    private int pseudoColumn;
 }
