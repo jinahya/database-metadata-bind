@@ -33,7 +33,6 @@ import javax.xml.bind.annotation.XmlAttribute;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlElementRef;
 import javax.xml.bind.annotation.XmlRootElement;
-import javax.xml.bind.annotation.XmlSchemaType;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
@@ -47,8 +46,7 @@ import java.util.List;
 @XmlRootElement
 @ParentOf(Schema.class)
 @Data
-public class Catalog
-        implements MetadataType {
+public class Catalog implements MetadataType {
 
     private static final long serialVersionUID = 6239185259128825953L;
 
@@ -60,10 +58,14 @@ public class Catalog
         return instance;
     }
 
-    public static Catalog newVirtualInstance() {
-        final Catalog instance = of("");
+    public static Catalog newVirtualInstance(final String tableCat) {
+        final Catalog instance = of(tableCat);
         instance.virtual = Boolean.TRUE;
         return instance;
+    }
+
+    public static Catalog newVirtualInstance() {
+        return newVirtualInstance("");
     }
 
     public List<Schema> getSchemas() {
@@ -79,7 +81,6 @@ public class Catalog
     private Boolean virtual;
 
     @XmlElement(nillable = false, required = true)
-    @XmlSchemaType(name = "token")
     @NotNull
     @Label(COLUMN_LABEL_TABLE_CAT)
     private String tableCat;
