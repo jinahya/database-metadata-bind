@@ -64,11 +64,11 @@ public class Context {
     /**
      * Creates a new instance with specified database meta date.
      *
-     * @param metadata the database meta data to hold.
+     * @param databaseMetaData the database databaseMetaData to hold.
      */
-    Context(final DatabaseMetaData metadata) {
+    Context(final DatabaseMetaData databaseMetaData) {
         super();
-        this.databaseMetaData = Objects.requireNonNull(metadata, "metadata is null");
+        this.databaseMetaData = Objects.requireNonNull(databaseMetaData, "databaseMetaData is null");
     }
 
     /**
