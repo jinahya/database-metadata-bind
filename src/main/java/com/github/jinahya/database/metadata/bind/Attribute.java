@@ -118,7 +118,7 @@ public class Attribute
         EMPTY(VALUE_IS_NULLABLE_EMPTY);
 
         /**
-         * Returns the value whose {@link #getRawValue() rawValue} matches to specified value.
+         * Returns the value whose {@link #rawValue() rawValue} matches to specified value.
          *
          * @param rawValue the {@code rawValue} to match.
          * @return a matched value.
@@ -132,7 +132,7 @@ public class Attribute
         }
 
         @Override
-        public String getRawValue() {
+        public String rawValue() {
             return rawValue;
         }
 
@@ -152,7 +152,7 @@ public class Attribute
     }
 
     public void setIsNullableAsEnum(final IsNullable isNullableAsEnum) {
-        setIsNullable(Objects.requireNonNull(isNullableAsEnum, "isNullableAsEnum is null").getRawValue());
+        setIsNullable(Objects.requireNonNull(isNullableAsEnum, "isNullableAsEnum is null").rawValue());
     }
 
     @XmlElement(nillable = true, required = true)

@@ -49,7 +49,7 @@ abstract class FieldEnumTest<E extends Enum<E> & FieldEnum<E, T>, T> {
     protected Stream<T> rawValueStream() {
         // https://bugs.openjdk.java.net/browse/JDK-8142476
         //return Arrays.stream(enumClass.getEnumConstants()).map(FieldEnum::getRawValue);
-        return Arrays.stream(enumClass.getEnumConstants()).map(c -> c.getRawValue());
+        return Arrays.stream(enumClass.getEnumConstants()).map(c -> c.rawValue());
     }
 
     /**
@@ -71,7 +71,7 @@ abstract class FieldEnumTest<E extends Enum<E> & FieldEnum<E, T>, T> {
         final Method method = enumClass.getMethod("valueOfRawValue", fieldClass);
         for (final E enumConstant : enumClass.getEnumConstants()) {
             @SuppressWarnings({"unchecked"})
-            final E value = (E) method.invoke(null, enumConstant.getRawValue());
+            final E value = (E) method.invoke(null, enumConstant.rawValue());
             assertThat(value).isNotNull().isSameAs(enumConstant);
         }
     }
@@ -93,7 +93,7 @@ abstract class FieldEnumTest<E extends Enum<E> & FieldEnum<E, T>, T> {
             // https://bugs.java.com/bugdatabase/view_bug.do?bug_id=8141508
             // https://bugs.java.com/bugdatabase/view_bug.do?bug_id=8142476
             // final int rawValue = assertDoesNotThrow(enumConstant::getRawValue);
-            final T rawValue = assertDoesNotThrow(() -> enumConstant.getRawValue());
+            final T rawValue = assertDoesNotThrow(() -> enumConstant.rawValue());
         }
     }
 

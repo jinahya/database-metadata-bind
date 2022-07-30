@@ -4,7 +4,7 @@ package com.github.jinahya.database.metadata.bind;
  * #%L
  * database-metadata-bind
  * %%
- * Copyright (C) 2011 - 2019 Jinahya, Inc.
+ * Copyright (C) 2011 - 2021 Jinahya, Inc.
  * %%
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -20,17 +20,9 @@ package com.github.jinahya.database.metadata.bind;
  * #L%
  */
 
-/**
- * An interface for field enums.
- *
- * @author Jin Kwon &lt;onacit at wemakeprice.com&gt;
- */
-interface FieldEnum<E extends Enum<E> & FieldEnum<E, T>, T> {
+class IndexInfoTypeTest extends IntFieldEnumTest<IndexInfo.Type> {
 
-    /**
-     * Returns the raw value of this constant
-     *
-     * @return the raw value of this constant.
-     */
-    T rawValue();
+    IndexInfoTypeTest() {
+        super(IndexInfo.Type.class);
+    }
 }

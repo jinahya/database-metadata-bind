@@ -20,11 +20,17 @@ package com.github.jinahya.database.metadata.bind;
  * #L%
  */
 
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Positive;
+import lombok.Data;
+
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlEnum;
 import javax.xml.bind.annotation.XmlRootElement;
 import java.sql.DatabaseMetaData;
 import java.util.Collection;
+import java.util.Objects;
 
 /**
  * A class for binding results of {@link DatabaseMetaData#getFunctionColumns(String, String, String, String)} method.
@@ -34,8 +40,8 @@ import java.util.Collection;
  */
 @XmlRootElement
 @ChildOf(Function.class)
-public class FunctionColumn
-        implements MetadataType {
+@Data
+public class FunctionColumn implements MetadataType {
 
     private static final long serialVersionUID = -7445156446214062680L;
 
@@ -100,11 +106,11 @@ public class FunctionColumn
         FUNCTION_COLUMN_RESULT(DatabaseMetaData.functionColumnResult); // 5
 
         /**
-         * Returns the constant whose raw value equals to given. An {@link IllegalArgumentException} will be thrown if
-         * no constant matches.
+         * Returns the constant whose raw value equals to given value. An {@link IllegalArgumentException} will be
+         * thrown if no constant matches.
          *
          * @param rawValue the raw value
-         * @return the constant whose raw value equals to given.
+         * @return the constant whose raw value equals to given value.
          */
         public static ColumnType valueOfRawValue(final int rawValue) {
             return IntFieldEnums.valueOfRawValue(ColumnType.class, rawValue);
@@ -114,11 +120,6 @@ public class FunctionColumn
             this.rawValue = rawValue;
         }
 
-        /**
-         * Returns the raw value of this constant.
-         *
-         * @return the raw value of this constant.
-         */
         @Override
         public int rawValue() {
             return rawValue;
@@ -181,244 +182,95 @@ public class FunctionColumn
         private final int rawValue;
     }
 
-    /**
-     * Creates a new instance.
-     */
-    public FunctionColumn() {
-        super();
+    // -----------------------------------------------------------------------------------------------------------------
+    public ColumnType getColumnTypeAsEnum() {
+        return ColumnType.valueOfRawValue(getColumnType());
     }
 
-    @Override
-    public String toString() {
-        return super.toString() + '{'
-               + "functionCat=" + functionCat
-               + ",functionSchem=" + functionSchem
-               + ",functionName=" + functionName
-               + ",columnName=" + columnName
-               + ",columnType=" + columnType
-               + ",dataType=" + dataType
-               + ",typeName=" + typeName
-               + ",precision=" + precision
-               + ",length=" + length
-               + ",scale=" + scale
-               + ",radix=" + radix
-               + ",nullable=" + nullable
-               + ",remarks=" + remarks
-               + ",charOctetLength=" + charOctetLength
-               + ",ordinalPosition=" + ordinalPosition
-               + ",isNullable=" + isNullable
-               + ",specificName=" + specificName
-               + '}';
+    public void setColumnTypeAsEnum(final ColumnType columnTypeAsEnum) {
+        setColumnType(Objects.requireNonNull(columnTypeAsEnum, "columnTypeAsEnum is null").rawValue());
     }
 
-    public String getFunctionCat() {
-        return functionCat;
-    }
-
-    public void setFunctionCat(final String functionCat) {
-        this.functionCat = functionCat;
-    }
-
-    public String getFunctionSchem() {
-        return functionSchem;
-    }
-
-    public void setFunctionSchem(final String functionSchem) {
-        this.functionSchem = functionSchem;
-    }
-
-    public String getFunctionName() {
-        return functionName;
-    }
-
-    public void setFunctionName(final String functionName) {
-        this.functionName = functionName;
-    }
-
-    public String getColumnName() {
-        return columnName;
-    }
-
-    public void setColumnName(final String columnName) {
-        this.columnName = columnName;
-    }
-
-    public short getColumnType() {
-        return columnType;
-    }
-
-    public void setColumnType(final short columnType) {
-        this.columnType = columnType;
-    }
-
-    public int getDataType() {
-        return dataType;
-    }
-
-    public void setDataType(final int dataType) {
-        this.dataType = dataType;
-    }
-
-    public String getTypeName() {
-        return typeName;
-    }
-
-    public void setTypeName(final String typeName) {
-        this.typeName = typeName;
-    }
-
-    public int getPrecision() {
-        return precision;
-    }
-
-    public void setPrecision(final int precision) {
-        this.precision = precision;
-    }
-
-    public int getLength() {
-        return length;
-    }
-
-    public void setLength(final int length) {
-        this.length = length;
-    }
-
-    public Short getScale() {
-        return scale;
-    }
-
-    public void setScale(final Short scale) {
-        this.scale = scale;
-    }
-
-    public short getRadix() {
-        return radix;
-    }
-
-    public void setRadix(final short radix) {
-        this.radix = radix;
-    }
-
-    public short getNullable() {
-        return nullable;
-    }
-
-    public void setNullable(final short nullable) {
-        this.nullable = nullable;
-    }
-
-    public String getRemarks() {
-        return remarks;
-    }
-
-    public void setRemarks(final String remarks) {
-        this.remarks = remarks;
-    }
-
-    public Integer getCharOctetLength() {
-        return charOctetLength;
-    }
-
-    public void setCharOctetLength(final Integer charOctetLength) {
-        this.charOctetLength = charOctetLength;
-    }
-
-    public int getOrdinalPosition() {
-        return ordinalPosition;
-    }
-
-    public void setOrdinalPosition(final int ordinalPosition) {
-        this.ordinalPosition = ordinalPosition;
-    }
-
-    public String getIsNullable() {
-        return isNullable;
-    }
-
-    public void setIsNullable(final String isNullable) {
-        this.isNullable = isNullable;
-    }
-
-    // ---------------------------------------------------------------------------------------------------- specificName
-    public String getSpecificName() {
-        return specificName;
-    }
-
-    public void setSpecificName(final String specificName) {
-        this.specificName = specificName;
-    }
-
-    @XmlElement(required = true, nillable = true)
+    // -----------------------------------------------------------------------------------------------------------------
+    @XmlElement(nillable = true, required = true)
     @NullableBySpecification
     @Label("FUNCTION_CAT")
     private String functionCat;
 
-    @XmlElement(required = true, nillable = true)
+    @XmlElement(nillable = true, required = true)
     @NullableBySpecification
     @Label("FUNCTION_SCHEM")
     private String functionSchem;
 
-    @XmlElement(required = true)
+    // -----------------------------------------------------------------------------------------------------------------
+    @XmlElement(nillable = false, required = true)
+    @NotBlank
     @Label("FUNCTION_NAME")
     private String functionName;
 
-    @XmlElement(required = true)
+    @XmlElement(nillable = false, required = true)
+    @NotBlank
     @Label("COLUMN_NAME")
     private String columnName;
 
-    @XmlElement(required = true)
+    @XmlElement(nillable = false, required = true)
     @Label("COLUMN_TYPE")
-    private short columnType;
+    private int columnType;
 
-    @XmlElement(required = true)
+    @XmlElement(nillable = false, required = true)
     @Label("DATA_TYPE")
     private int dataType;
 
-    @XmlElement(required = true)
+    @XmlElement(nillable = false, required = true)
+    @NotNull
     @Label("TYPE_NAME")
     private String typeName;
 
-    @XmlElement(required = true)
+    @XmlElement(nillable = true, required = true)
+    @NullableBySpecification // Null is returned for data types where the column size is not applicable.
     @Label("PRECISION")
-    private int precision;
+    private Integer precision;
 
-    @XmlElement(required = true)
+    @XmlElement(nillable = false, required = true)
     @Label("LENGTH")
     private int length;
 
     // https://issues.apache.org/jira/browse/DERBY-7102
-    @XmlElement(required = true, nillable = true)
+    @XmlElement(nillable = true, required = true)
     @NullableBySpecification
     @Label("SCALE")
-    private Short scale;
+    private Integer scale;
 
-    @XmlElement(required = true)
+    @XmlElement(nillable = false, required = true)
     @Label("RADIX")
-    private short radix;
+    private int radix;
 
-    @XmlElement(required = true)
+    @XmlElement(nillable = false, required = true)
     @Label("NULLABLE")
-    private short nullable;
+    private int nullable;
 
-    @XmlElement(required = true, nillable = true)
+    @XmlElement(nillable = true, required = true)
     @NullableByVendor("derby") // https://issues.apache.org/jira/browse/DERBY-7100
     @Label("REMARKS")
     private String remarks;
 
-    @XmlElement(required = true, nillable = true)
+    @XmlElement(nillable = true, required = true)
     @NullableBySpecification
     @Label("CHAR_OCTET_LENGTH")
     private Integer charOctetLength;
 
-    @XmlElement(required = true)
+    @XmlElement(nillable = false, required = true)
+    @Positive
     @Label("ORDINAL_POSITION")
     private int ordinalPosition;
 
     @XmlElement(required = true)
+    @NotNull
     @Label("IS_NULLABLE")
     private String isNullable;
 
-    @XmlElement(required = true)
+    @XmlElement(nillable = true, required = true)
+    @NotNull
     @Label("SPECIFIC_NAME")
     private String specificName;
 }
