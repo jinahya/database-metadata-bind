@@ -55,7 +55,7 @@ public class SupportsResultSetHoldability
             throws SQLException {
         requireNonNull(context, "context is null");
         for (final ResultSetHoldability value : ResultSetHoldability.values()) {
-            collection.add(context.supportsResultSetHoldability(value.getRawValue()));
+            collection.add(context.supportsResultSetHoldability(value.rawValue()));
         }
         return collection;
     }

@@ -20,6 +20,11 @@ package com.github.jinahya.database.metadata.bind;
  * #L%
  */
 
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.Positive;
+import jakarta.validation.constraints.PositiveOrZero;
+import lombok.Data;
+
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlTransient;
 
@@ -31,209 +36,84 @@ import javax.xml.bind.annotation.XmlTransient;
  * @see ExportedKey
  */
 @XmlTransient
-abstract class TableKey
-        implements MetadataType {
+@Data
+abstract class TableKey implements MetadataType, HasUpdateRule, HasDeleteRule, HasDeferrability {
 
     private static final long serialVersionUID = 6713872409315471232L;
 
-    /**
-     * Creates a new instance.
-     */
-    protected TableKey() {
-        super();
-    }
-
-    @Override
-    public String toString() {
-        return super.toString() + '{'
-               + "pktableCat=" + pktableCat
-               + ",pktableSchem=" + pktableSchem
-               + ",pktableName=" + pktableName
-               + ",pkcolumnName=" + pkcolumnName
-               + ",fktableCat=" + fktableCat
-               + ",fktableSchem=" + fktableSchem
-               + ",fktableName=" + fktableName
-               + ",fkcolumnName=" + fkcolumnName
-               + ",keySeq=" + keySeq
-               + ",updateRule=" + updateRule
-               + ",deleteRule=" + deleteRule
-               + ",fkName=" + fkName
-               + ",pkName=" + pkName
-               + ",deferrability=" + deferrability
-               + '}';
-    }
-
-    public String getPktableCat() {
-        return pktableCat;
-    }
-
-    public void setPktableCat(final String pktableCat) {
-        this.pktableCat = pktableCat;
-    }
-
-    public String getPktableSchem() {
-        return pktableSchem;
-    }
-
-    public void setPktableSchem(final String pktableSchem) {
-        this.pktableSchem = pktableSchem;
-    }
-
-    public String getPktableName() {
-        return pktableName;
-    }
-
-    public void setPktableName(final String pktableName) {
-        this.pktableName = pktableName;
-    }
-
-    public String getPkcolumnName() {
-        return pkcolumnName;
-    }
-
-    public void setPkcolumnName(final String pkcolumnName) {
-        this.pkcolumnName = pkcolumnName;
-    }
-
-    public String getFktableCat() {
-        return fktableCat;
-    }
-
-    public void setFktableCat(final String fktableCat) {
-        this.fktableCat = fktableCat;
-    }
-
-    public String getFktableSchem() {
-        return fktableSchem;
-    }
-
-    public void setFktableSchem(final String fktableSchem) {
-        this.fktableSchem = fktableSchem;
-    }
-
-    public String getFktableName() {
-        return fktableName;
-    }
-
-    public void setFktableName(final String fktableName) {
-        this.fktableName = fktableName;
-    }
-
-    public String getFkcolumnName() {
-        return fkcolumnName;
-    }
-
-    public void setFkcolumnName(final String fkcolumnName) {
-        this.fkcolumnName = fkcolumnName;
-    }
-
-    public short getKeySeq() {
-        return keySeq;
-    }
-
-    public void setKeySeq(final short keySeq) {
-        this.keySeq = keySeq;
-    }
-
-    public short getUpdateRule() {
-        return updateRule;
-    }
-
-    public void setUpdateRule(final short updateRule) {
-        this.updateRule = updateRule;
-    }
-
-    public short getDeleteRule() {
-        return deleteRule;
-    }
-
-    public void setDeleteRule(final short deleteRule) {
-        this.deleteRule = deleteRule;
-    }
-
-    public String getFkName() {
-        return fkName;
-    }
-
-    public void setFkName(final String fkName) {
-        this.fkName = fkName;
-    }
-
-    public String getPkName() {
-        return pkName;
-    }
-
-    public void setPkName(final String pkName) {
-        this.pkName = pkName;
-    }
-
-    public short getDeferrability() {
-        return deferrability;
-    }
-
-    public void setDeferrability(final short deferrability) {
-        this.deferrability = deferrability;
-    }
-
-    @XmlElement(required = true, nillable = true)
+    // -----------------------------------------------------------------------------------------------------------------
+    @XmlElement(nillable = true, required = true)
     @NullableBySpecification
     @Label("PKTABLE_CAT")
     private String pktableCat;
 
-    @XmlElement(required = true, nillable = true)
+    @XmlElement(nillable = true, required = true)
     @NullableBySpecification
     @Label("PKTABLE_SCHEM")
     private String pktableSchem;
 
+    // -----------------------------------------------------------------------------------------------------------------
     @XmlElement(required = true)
+    @NotBlank
     @Label("PKTABLE_NAME")
     private String pktableName;
 
     @XmlElement(required = true)
+    @NotBlank
     @Label("PKCOLUMN_NAME")
     private String pkcolumnName;
 
-    @XmlElement(required = true, nillable = true)
+    // -----------------------------------------------------------------------------------------------------------------
+    @XmlElement(nillable = true, required = true)
     @NullableBySpecification
     @Label("FKTABLE_CAT")
     private String fktableCat;
 
-    @XmlElement(required = true, nillable = true)
+    @XmlElement(nillable = true, required = true)
     @NullableBySpecification
     @Label("FKTABLE_NAME")
     private String fktableSchem;
 
-    @XmlElement(required = true)
+    // -----------------------------------------------------------------------------------------------------------------
+    @XmlElement(nillable = false, required = true)
+    @NotBlank
     @Label("FKTABLE_NAME")
     private String fktableName;
 
-    @XmlElement(required = true)
+    @XmlElement(nillable = false, required = true)
+    @NotBlank
     @Label("FKCOLUMN_NAME")
     private String fkcolumnName;
 
-    @XmlElement(required = true)
+    // -----------------------------------------------------------------------------------------------------------------
+    @XmlElement(nillable = false, required = true)
+    @Positive
     @Label("FKCOLUMN_NAME")
-    private short keySeq;
+    private int keySeq;
 
-    @XmlElement(required = true)
+    @XmlElement(nillable = false, required = true)
+    @PositiveOrZero
     @Label("UPDATE_RULE")
-    private short updateRule;
+    private int updateRule;
 
-    @XmlElement(required = true)
+    @XmlElement(nillable = false, required = true)
+    @PositiveOrZero
     @Label("DELETE_RULE")
-    private short deleteRule;
+    private int deleteRule;
 
-    @XmlElement(required = true, nillable = true)
+    // -----------------------------------------------------------------------------------------------------------------
+    @XmlElement(nillable = true, required = true)
     @NullableBySpecification
     @Label("FK_NAME")
     private String fkName;
 
-    @XmlElement(required = true, nillable = true)
+    @XmlElement(nillable = true, required = true)
     @NullableBySpecification
     @Label("PK_NAME")
     private String pkName;
 
-    @XmlElement(required = true)
+    // -----------------------------------------------------------------------------------------------------------------
+    @XmlElement(nillable = false, required = true)
     @Label("DEFERRABILITY")
-    private short deferrability;
+    private int deferrability;
 }

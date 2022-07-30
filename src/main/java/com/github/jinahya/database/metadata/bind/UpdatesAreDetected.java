@@ -54,7 +54,7 @@ public class UpdatesAreDetected
             throws SQLException {
         requireNonNull(context, "context is null");
         for (final ResultSetType type : ResultSetType.values()) {
-            collection.add(context.updatesAreDetected(type.getRawValue()));
+            collection.add(context.updatesAreDetected(type.rawValue()));
         }
         return collection;
     }

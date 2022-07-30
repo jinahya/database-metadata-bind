@@ -20,20 +20,19 @@ package com.github.jinahya.database.metadata.bind;
  * #L%
  */
 
-import javax.xml.bind.annotation.XmlRootElement;
-import java.sql.DatabaseMetaData;
-import java.util.Collection;
+import java.util.Objects;
 
-/**
- * An abstract class for binding the result of {@link DatabaseMetaData#getExportedKeys(String, String, String)} method.
- *
- * @author Jin Kwon &lt;jinahya_at_gmail.com&gt;
- * @see Context#getExportedKeys(String, String, String, Collection)
- * @see ImportedKey
- */
-@XmlRootElement
-@ChildOf(Table.class)
-public class ExportedKey extends TableKey {
+interface HasDeferrability {
 
-    private static final long serialVersionUID = 277210154172135556L;
+    int getDeferrability();
+
+    void setDeferrability(int deferrability);
+
+    default ImportedKeyDeferrability getDeferrabilityAsEnum() {
+        return ImportedKeyDeferrability.valueOfRawValue(getDeferrability());
+    }
+
+    default void setDeferrabilityAsEnum(final ImportedKeyDeferrability deferrabilityAsEnum) {
+        setDeferrability(Objects.requireNonNull(deferrabilityAsEnum, "deferrabilityAsEnum is null").rawValue());
+    }
 }

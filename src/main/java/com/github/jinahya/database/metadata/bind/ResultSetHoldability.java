@@ -54,7 +54,7 @@ enum ResultSetHoldability implements IntFieldEnum<ResultSetHoldability>, Metadat
     }
 
     @Override
-    public int getRawValue() {
+    public int rawValue() {
         return rawValue;
     }
 

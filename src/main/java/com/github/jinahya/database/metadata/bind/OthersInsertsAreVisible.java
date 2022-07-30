@@ -55,7 +55,7 @@ public class OthersInsertsAreVisible
         requireNonNull(context, "databaseMetaData is null");
         requireNonNull(collection, "collection is null");
         for (final ResultSetType type : ResultSetType.values()) {
-            collection.add(context.othersInsertsAreVisible(type.getRawValue()));
+            collection.add(context.othersInsertsAreVisible(type.rawValue()));
         }
         return collection;
     }

@@ -56,7 +56,7 @@ public class OwnInsertsAreVisible
             throws SQLException {
         requireNonNull(context, "context is null");
         for (final ResultSetType type : ResultSetType.values()) {
-            collection.add(context.ownInsertsAreVisible(type.getRawValue()));
+            collection.add(context.ownInsertsAreVisible(type.rawValue()));
         }
         return collection;
     }

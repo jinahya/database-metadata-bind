@@ -46,7 +46,7 @@
     <maven.compiler.testRelease>${maven.compiler.testTarget}</maven.compiler.testRelease>
     <version.animal-sniffer>1.21</version.animal-sniffer>
     <version.com.sun.xml.bind>${version.jakarta.xml.bind-api}</version.com.sun.xml.bind>
-    <version.jakarta.validation-api>2.0.2</version.jakarta.validation-api>
+    <version.jakarta.validation-api>3.0.2</version.jakarta.validation-api>
     <version.jakarta.xml.bind-api>2.3.3</version.jakarta.xml.bind-api>
     <version.lombok>1.18.24</version.lombok>
     <version.mariadb-java-client>2.7.2</version.mariadb-java-client>

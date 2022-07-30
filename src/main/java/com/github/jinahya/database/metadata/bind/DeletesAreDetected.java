@@ -59,7 +59,7 @@ public class DeletesAreDetected
             throws SQLException {
         requireNonNull(context, "context is null");
         for (final ResultSetType type : ResultSetType.values()) {
-            collection.add(context.deletesAreDetected(type.getRawValue()));
+            collection.add(context.deletesAreDetected(type.rawValue()));
         }
         return collection;
     }

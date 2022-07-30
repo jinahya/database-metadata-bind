@@ -57,7 +57,7 @@ public class SupportsResultSetConcurrency
         requireNonNull(context, "context is null");
         for (final ResultSetType type : ResultSetType.values()) {
             for (final ResultSetConcurrency concurrency : ResultSetConcurrency.values()) {
-                collection.add(context.supportsResultSetConcurrency(type.getRawValue(), concurrency.getRawValue()));
+                collection.add(context.supportsResultSetConcurrency(type.rawValue(), concurrency.rawValue()));
             }
         }
         return collection;

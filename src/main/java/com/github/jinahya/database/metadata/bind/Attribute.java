@@ -78,7 +78,7 @@ public class Attribute
         ATTRIBUTE_NULLABLE_UNKNOWN(DatabaseMetaData.attributeNullableUnknown);
 
         /**
-         * Returns the value whose {@link #getRawValue() rawValue} matches to specified value.
+         * Returns the value whose {@link #rawValue() rawValue} matches to specified value.
          *
          * @param rawValue the {@code rawValue} to match.
          * @return a matched value.
@@ -92,7 +92,7 @@ public class Attribute
         }
 
         @Override
-        public int getRawValue() {
+        public int rawValue() {
             return rawValue;
         }
 
@@ -144,7 +144,7 @@ public class Attribute
     }
 
     public void setNullableAsEnum(final Nullable nullableAsEnum) {
-        setNullable(Objects.requireNonNull(nullableAsEnum, "nullableAsEnum is null").getRawValue());
+        setNullable(Objects.requireNonNull(nullableAsEnum, "nullableAsEnum is null").rawValue());
     }
 
     public IsNullable getIsNullableAsEnum() {

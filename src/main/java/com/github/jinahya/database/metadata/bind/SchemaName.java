@@ -25,7 +25,6 @@ import lombok.NoArgsConstructor;
 
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
-import javax.xml.bind.annotation.XmlSchemaType;
 import java.sql.DatabaseMetaData;
 import java.util.Collection;
 
@@ -44,12 +43,10 @@ public class SchemaName implements MetadataType {
     private static final long serialVersionUID = 5784631477568740816L;
 
     @XmlElement(required = true)
-    @XmlSchemaType(name = "token")
     @Label("TABLE_SCHEM")
     private String tableSchem;
 
     @XmlElement(required = true, nillable = true)
-    @XmlSchemaType(name = "token")
     @NullableBySpecification
     @Label("TABLE_CATALOG")
     private String tableCatalog;

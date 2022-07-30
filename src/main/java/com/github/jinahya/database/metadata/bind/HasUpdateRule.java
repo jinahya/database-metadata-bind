@@ -20,20 +20,19 @@ package com.github.jinahya.database.metadata.bind;
  * #L%
  */
 
-import javax.xml.bind.annotation.XmlRootElement;
-import java.sql.DatabaseMetaData;
-import java.util.Collection;
+import java.util.Objects;
 
-/**
- * An abstract class for binding the result of {@link DatabaseMetaData#getExportedKeys(String, String, String)} method.
- *
- * @author Jin Kwon &lt;jinahya_at_gmail.com&gt;
- * @see Context#getExportedKeys(String, String, String, Collection)
- * @see ImportedKey
- */
-@XmlRootElement
-@ChildOf(Table.class)
-public class ExportedKey extends TableKey {
+interface HasUpdateRule {
 
-    private static final long serialVersionUID = 277210154172135556L;
+    int getUpdateRule();
+
+    void setUpdateRule(int updateRule);
+
+    default UpdateRule getUpdateRuleAsEnum() {
+        return UpdateRule.valueOfRawValue(getUpdateRule());
+    }
+
+    default void setUpdateRuleAsEnum(UpdateRule updateRuleAsEnum) {
+        setUpdateRule(Objects.requireNonNull(updateRuleAsEnum, "updateRuleAsEnum is null").rawValue());
+    }
 }

@@ -20,7 +20,8 @@ package com.github.jinahya.database.metadata.bind;
  * #L%
  */
 
-import javax.validation.constraints.NotNull;
+import jakarta.validation.constraints.NotNull;
+
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
 import java.sql.DatabaseMetaData;
@@ -98,7 +99,7 @@ public class TypeInfo implements MetadataType {
          * @return the raw value of this constant.
          */
         @Override
-        public int getRawValue() {
+        public int rawValue() {
             return rawValue;
         }
 
@@ -162,7 +163,7 @@ public class TypeInfo implements MetadataType {
          * @return the raw value of this constant.
          */
         @Override
-        public int getRawValue() {
+        public int rawValue() {
             return rawValue;
         }
 
@@ -323,7 +324,7 @@ public class TypeInfo implements MetadataType {
 
     public void setNullableAsEnum(final @NotNull Nullable nullableAsEnum) {
         requireNonNull(nullableAsEnum, "nullableAsEnum is null");
-        setNullableAsInt(nullableAsEnum.getRawValue());
+        setNullableAsInt(nullableAsEnum.rawValue());
     }
 
     // --------------------------------------------------------------------------------------------------- caseSensitive
@@ -354,7 +355,7 @@ public class TypeInfo implements MetadataType {
 
     public void setSearchableAsEnum(final @NotNull Searchable searchableAsEnum) {
         requireNonNull(searchableAsEnum, "searchableAsEnum is null");
-        setSearchableAsInt(searchableAsEnum.getRawValue());
+        setSearchableAsInt(searchableAsEnum.rawValue());
     }
 
     // ----------------------------------------------------------------------------------------------- unsignedAttribute

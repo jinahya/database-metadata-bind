@@ -54,7 +54,7 @@ enum ResultSetConcurrency implements IntFieldEnum<ResultSetConcurrency>, Metadat
     }
 
     @Override
-    public int getRawValue() {
+    public int rawValue() {
         return rawValue;
     }
 

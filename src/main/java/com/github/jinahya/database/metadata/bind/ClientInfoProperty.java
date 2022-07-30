@@ -28,15 +28,14 @@ import java.sql.DatabaseMetaData;
 import java.util.Collection;
 
 /**
- * A class for binding results of {@link DatabaseMetaData#getClientInfoProperties()} method.
+ * A class for binding the result of {@link DatabaseMetaData#getClientInfoProperties()} method.
  *
  * @author Jin Kwon &lt;jinahya_at_gmail.com&gt;
  * @see Context#getClientInfoProperties(Collection)
  */
 @XmlRootElement
 @Data
-public class ClientInfoProperty
-        implements MetadataType {
+public class ClientInfoProperty implements MetadataType {
 
     private static final long serialVersionUID = -2913230435651853254L;
 

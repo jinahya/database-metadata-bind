@@ -57,7 +57,7 @@ public class InsertsAreDetected
         requireNonNull(context, "context is null");
         requireNonNull(collection, "collection is null");
         for (final ResultSetType type : ResultSetType.values()) {
-            collection.add(context.insertsAreDetected(type.getRawValue()));
+            collection.add(context.insertsAreDetected(type.rawValue()));
         }
         return collection;
     }

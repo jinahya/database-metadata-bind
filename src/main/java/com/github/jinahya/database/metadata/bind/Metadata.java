@@ -71,7 +71,7 @@ public class Metadata {
                 context.getTables(schema, "%", null, schema.getTables());
                 for (final Table table : schema.getTables()) {
                     for (final BestRowIdentifier.Scope value : BestRowIdentifier.Scope.values()) {
-                        context.getBestRowIdentifier(table, value.getRawValue(), true, table.getBestRowIdentifiers());
+                        context.getBestRowIdentifier(table, value.rawValue(), true, table.getBestRowIdentifiers());
                     }
                     context.getColumns(table, "%", table.getColumns());
                     context.getColumnPrivileges(table, "%", table.getColumnPrivileges());

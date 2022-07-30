@@ -31,14 +31,14 @@ final class IntFieldEnums {
         final E[] enumConstants = enumType.getEnumConstants();
         final int[] rawValues = new int[enumConstants.length];
         for (int i = 0; i < rawValues.length; i++) {
-            rawValues[i] = enumConstants[i].getRawValue();
+            rawValues[i] = enumConstants[i].rawValue();
         }
         return rawValues;
     }
 
     static <E extends Enum<E> & IntFieldEnum<E>> E valueOfRawValue(final Class<E> enumType, final int rawValue) {
         for (final E enumConstant : enumType.getEnumConstants()) {
-            final int constantFieldValue = enumConstant.getRawValue();
+            final int constantFieldValue = enumConstant.rawValue();
             if (constantFieldValue == rawValue) {
                 return enumConstant;
             }

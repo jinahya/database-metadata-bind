@@ -56,7 +56,7 @@ public class SupportsResultSetType
         requireNonNull(context, "context is null");
         requireNonNull(collection, "collection is null");
         for (final ResultSetType value : ResultSetType.values()) {
-            collection.add(context.supportsResultSetType(value.getRawValue()));
+            collection.add(context.supportsResultSetType(value.rawValue()));
         }
         return collection;
     }

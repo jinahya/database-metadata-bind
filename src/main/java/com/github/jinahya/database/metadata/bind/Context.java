@@ -20,7 +20,8 @@ package com.github.jinahya.database.metadata.bind;
  * #L%
  */
 
-import javax.validation.constraints.NotNull;
+import jakarta.validation.constraints.NotNull;
+
 import java.lang.invoke.MethodHandles;
 import java.lang.reflect.Field;
 import java.sql.Connection;
@@ -1676,8 +1677,7 @@ public class Context {
         return value;
     }
 
-    private @NotNull
-    Map<@NotNull Field, @NotNull Label> getLabeledFields(final @NotNull Class<?> clazz) {
+    private @NotNull Map<@NotNull Field, @NotNull Label> getLabeledFields(final @NotNull Class<?> clazz) {
         Objects.requireNonNull(clazz, "clazz is null");
         return classesAndLabeledFields.computeIfAbsent(clazz, c -> Utils.getFieldsAnnotatedWith(c, Label.class));
     }

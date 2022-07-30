@@ -20,12 +20,15 @@ package com.github.jinahya.database.metadata.bind;
  * #L%
  */
 
+import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Positive;
 import lombok.Data;
 
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
 import java.sql.DatabaseMetaData;
 import java.util.Collection;
+import java.util.Objects;
 
 /**
  * A class for binding results of {@link DatabaseMetaData#getColumns(String, String, String, String)} method.
@@ -36,8 +39,7 @@ import java.util.Collection;
 @XmlRootElement
 @ChildOf(Table.class)
 @Data
-public class Column
-        implements MetadataType {
+public class Column implements MetadataType {
 
     private static final long serialVersionUID = -409653682729081530L;
 
@@ -81,7 +83,7 @@ public class Column
         }
 
         @Override
-        public int getRawValue() {
+        public int rawValue() {
             return rawValue;
         }
 
@@ -92,111 +94,123 @@ public class Column
 
     public static final String COLUMN_NAME_IS_GENERATEDCOLUMN = "IS_GENERATEDCOLUMN";
 
-    @XmlElement(required = true, nillable = true)
+    public Nullable getNullableAsEnum() {
+        return Nullable.valueOfRawValue(getNullable());
+    }
+
+    public void setNullableAsEnum(final Nullable nullableAsEnum) {
+        setNullable(Objects.requireNonNull(nullableAsEnum, "nullableAsEnum is null").rawValue());
+    }
+
+    @XmlElement(nillable = true, required = true)
     @NullableBySpecification
     @Label("TABLE_CAT")
     private String tableCat;
 
-    @XmlElement(required = true, nillable = true)
+    @XmlElement(nillable = true, required = true)
     @NullableBySpecification
     @Label("TABLE_SCHEM")
     private String tableSchem;
 
-    @XmlElement(required = true)
+    @XmlElement(nillable = false, required = true)
     @Label("TABLE_NAME")
     private String tableName;
 
-    @XmlElement(required = true)
+    @XmlElement(nillable = false, required = true)
     @Label("COLUMN_NAME")
     private String columnName;
 
-    @XmlElement(required = true)
+    @XmlElement(nillable = false, required = true)
     @Label("DATA_TYPE")
     private int dataType;
 
-    @XmlElement(required = true)
+    @XmlElement(nillable = false, required = true)
     @Label("TYPE_NAME")
     private String typeName;
 
-    @XmlElement(required = true)
+    @XmlElement(nillable = false, required = true)
     @Label("COLUMN_SIZE")
     private int columnSize;
 
-    @XmlElement(required = true, nillable = true)
+    @XmlElement(nillable = true, required = true)
     @NotUsedBySpecification
     @Label("BUFFER_LENGTH")
     private Integer bufferLength;
 
-    @XmlElement(required = true, nillable = true)
+    @XmlElement(nillable = true, required = true)
     @NullableBySpecification
     @Label("DECIMAL_DIGITS")
     private Integer decimalDigits;
 
-    @XmlElement(required = true)
+    @XmlElement(nillable = false, required = true)
     @Label("NUM_PREC_RADIX")
     private int numPrecRadix;
 
-    @XmlElement(required = true)
+    @XmlElement(nillable = true, required = true)
     @Label("NULLABLE")
     private int nullable;
 
-    @XmlElement(required = true, nillable = true)
+    @XmlElement(nillable = true, required = true)
     @NullableBySpecification
     @Label("REMARKS")
     private String remarks;
 
-    @XmlElement(required = true, nillable = true)
+    @XmlElement(nillable = true, required = true)
     @NullableBySpecification
     @Label("COLUMN_DEF")
     private String columnDef;
 
-    @XmlElement(required = true, nillable = true)
+    @XmlElement(nillable = true, required = true)
     @NotUsedBySpecification
     @Label("SQL_DATA_TYPE")
     private Integer sqlDataType;
 
-    @XmlElement(required = true, nillable = true)
+    @XmlElement(nillable = true, required = true)
     @NotUsedBySpecification
     @Label("SQL_DATETIME_SUB")
     private Integer sqlDatetimeSub;
 
-    @XmlElement(required = true)
+    @XmlElement(nillable = false, required = true)
     @Label("CHAR_OCTET_LENGTH")
     private int charOctetLength;
 
-    @XmlElement(required = true)
+    @XmlElement(nillable = false, required = true)
+    @Positive
     @Label("ORDINAL_POSITION")
     private int ordinalPosition;
 
-    @XmlElement(required = true)
+    @XmlElement(nillable = false, required = true)
+    @NotNull
     @Label("IS_NULLABLE")
     private String isNullable;
 
-    @XmlElement(required = true, nillable = true)
+    @XmlElement(nillable = true, required = true)
     @NullableBySpecification
     @Label("SCOPE_CATALOG")
     private String scopeCatalog;
 
-    @XmlElement(required = true, nillable = true)
+    @XmlElement(nillable = true, required = true)
     @NullableBySpecification
     @Label("SCOPE_SCHEMA")
     private String scopeSchema;
 
-    @XmlElement(required = true, nillable = true)
+    @XmlElement(nillable = true, required = true)
     @NullableBySpecification
     @Label("SCOPE_TABLE")
     private String scopeTable;
 
-    @XmlElement(required = true, nillable = true)
+    @XmlElement(nillable = true, required = true)
     @NullableBySpecification
     @Label("SOURCE_DATA_TYPE")
-    private Short sourceDataType;
+    private Integer sourceDataType;
 
-    @XmlElement(required = true)
+    @XmlElement(nillable = false, required = true)
+    @NotNull
     @Label(COLUMN_NAME_IS_AUTOINCREMENT)
     private String isAutoincrement;
 
-    @XmlElement(required = true)
+    @XmlElement(nillable = false, required = true)
+    @NotNull
     @Label(COLUMN_NAME_IS_GENERATEDCOLUMN)
     private String isGeneratedcolumn;
 }

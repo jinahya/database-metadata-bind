@@ -57,7 +57,7 @@ public class SupportsTransactionIsolationLevel
         requireNonNull(context, "context is null");
         requireNonNull(collection, "collection is null");
         for (final ConnectionTransactionIsolationLevel value : ConnectionTransactionIsolationLevel.values()) {
-            collection.add(context.supportsTransactionIsolationLevel(value.getRawValue()));
+            collection.add(context.supportsTransactionIsolationLevel(value.rawValue()));
         }
         return collection;
     }

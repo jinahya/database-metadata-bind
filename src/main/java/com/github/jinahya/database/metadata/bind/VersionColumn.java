@@ -90,7 +90,7 @@ public class VersionColumn
          * @return the raw value of this constant.
          */
         @Override
-        public int getRawValue() {
+        public int rawValue() {
             return rawValue;
         }
 

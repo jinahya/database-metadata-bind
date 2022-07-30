@@ -20,6 +20,8 @@ package com.github.jinahya.database.metadata.bind;
  * #L%
  */
 
+import jakarta.validation.Valid;
+import jakarta.validation.constraints.NotNull;
 import lombok.AccessLevel;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
@@ -27,13 +29,10 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
 
-import javax.validation.Valid;
-import javax.validation.constraints.NotNull;
 import javax.xml.bind.annotation.XmlAttribute;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlElementRef;
 import javax.xml.bind.annotation.XmlRootElement;
-import javax.xml.bind.annotation.XmlSchemaType;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
@@ -139,13 +138,11 @@ public class Schema
     private Boolean virtual;
 
     @XmlElement(required = true, nillable = true)
-    @XmlSchemaType(name = "token")
     @NullableBySpecification
     @Label(COLUMN_LABEL_TABLE_CATALOG)
     private String tableCatalog;
 
     @XmlElement(required = true)
-    @XmlSchemaType(name = "token")
     @NotNull
     @Label(COLUMN_LABEL_TABLE_SCHEM)
     private String tableSchem;

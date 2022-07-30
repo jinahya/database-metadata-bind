@@ -82,7 +82,7 @@ public class BestRowIdentifier
         }
 
         @Override
-        public int getRawValue() {
+        public int rawValue() {
             return rawValue;
         }
 
@@ -128,7 +128,7 @@ public class BestRowIdentifier
         }
 
         @Override
-        public int getRawValue() {
+        public int rawValue() {
             return rawValue;
         }
 
@@ -140,7 +140,7 @@ public class BestRowIdentifier
     }
 
     public void setPseudoColumnAsEnum(final PseudoColumn pseudoColumnAsEnum) {
-        setPseudoColumn(Objects.requireNonNull(pseudoColumnAsEnum, "pseudoColumnAsEnum is null").getRawValue());
+        setPseudoColumn(Objects.requireNonNull(pseudoColumnAsEnum, "pseudoColumnAsEnum is null").rawValue());
     }
 
     @XmlElement(required = true)

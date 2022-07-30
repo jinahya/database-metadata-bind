@@ -20,14 +20,14 @@ package com.github.jinahya.database.metadata.bind;
  * #L%
  */
 
+import jakarta.validation.Valid;
+import jakarta.validation.constraints.NotNull;
 import lombok.AccessLevel;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.Setter;
 import lombok.ToString;
 
-import javax.validation.Valid;
-import javax.validation.constraints.NotNull;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlElementRef;
 import javax.xml.bind.annotation.XmlRootElement;
@@ -47,8 +47,7 @@ import java.util.List;
 @ChildOf(Schema.class)
 @ParentOf(ProcedureColumn.class)
 @Data
-public class Procedure
-        implements MetadataType {
+public class Procedure implements MetadataType {
 
     private static final long serialVersionUID = -6262056388403934829L;
 

@@ -57,7 +57,7 @@ public class OwnUpdatesAreVisible
         requireNonNull(context, "context is null");
         requireNonNull(collection, "collection is null");
         for (final ResultSetType type : ResultSetType.values()) {
-            collection.add(context.ownUpdatesAreVisible(type.getRawValue()));
+            collection.add(context.ownUpdatesAreVisible(type.rawValue()));
         }
         return collection;
     }

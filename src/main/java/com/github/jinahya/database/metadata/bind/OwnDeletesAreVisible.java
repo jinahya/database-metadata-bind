@@ -56,7 +56,7 @@ public class OwnDeletesAreVisible
         requireNonNull(context, "context is null");
         requireNonNull(collection, "collection is null");
         for (final ResultSetType type : ResultSetType.values()) {
-            collection.add(context.ownDeletesAreVisible(type.getRawValue()));
+            collection.add(context.ownDeletesAreVisible(type.rawValue()));
         }
         return collection;
     }
