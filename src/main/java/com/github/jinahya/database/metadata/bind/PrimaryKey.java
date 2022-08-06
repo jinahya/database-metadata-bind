@@ -20,6 +20,8 @@ package com.github.jinahya.database.metadata.bind;
  * #L%
  */
 
+import jakarta.validation.Valid;
+import lombok.AccessLevel;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -28,8 +30,10 @@ import lombok.ToString;
 
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
+import javax.xml.bind.annotation.XmlTransient;
 import java.sql.DatabaseMetaData;
 import java.util.Collection;
+import java.util.Comparator;
 
 /**
  * A class for binding results of {@link DatabaseMetaData#getPrimaryKeys(String, String, String)} method.
@@ -48,6 +52,8 @@ public class PrimaryKey
         implements MetadataType {
 
     private static final long serialVersionUID = 3159826510060898330L;
+
+    public static final Comparator<PrimaryKey> COMPARATOR = Comparator.comparing(PrimaryKey::getColumnName);
 
     @XmlElement(nillable = true, required = true)
     @NullableBySpecification
@@ -75,4 +81,13 @@ public class PrimaryKey
     @NullableBySpecification
     @Label("PK_NAME")
     private String pkName;
+
+    // -----------------------------------------------------------------------------------------------------------------
+    @XmlTransient
+    @Valid
+    @Setter(AccessLevel.NONE)
+    @Getter(AccessLevel.NONE)
+    @EqualsAndHashCode.Exclude
+    @ToString.Exclude
+    private Table table;
 }

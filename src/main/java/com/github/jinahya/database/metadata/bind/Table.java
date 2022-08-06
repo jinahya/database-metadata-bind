@@ -336,7 +336,7 @@ public class Table
     @Getter(AccessLevel.NONE)
     @EqualsAndHashCode.Exclude
     @ToString.Exclude
-    private List<Column> columns;
+    private List<@Valid @NotNull Column> columns;
 
     @XmlElementRef
     @Setter(AccessLevel.NONE)

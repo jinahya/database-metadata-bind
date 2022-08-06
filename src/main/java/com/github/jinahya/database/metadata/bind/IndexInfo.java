@@ -20,16 +20,24 @@ package com.github.jinahya.database.metadata.bind;
  * #L%
  */
 
+import jakarta.validation.Valid;
 import jakarta.validation.constraints.AssertTrue;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.PositiveOrZero;
+import lombok.AccessLevel;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
+import lombok.Getter;
+import lombok.Setter;
+import lombok.ToString;
 
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlEnum;
 import javax.xml.bind.annotation.XmlRootElement;
+import javax.xml.bind.annotation.XmlTransient;
 import java.sql.DatabaseMetaData;
 import java.util.Collection;
+import java.util.Comparator;
 import java.util.Objects;
 
 /**
@@ -42,9 +50,16 @@ import java.util.Objects;
 @XmlRootElement
 @ChildOf(Table.class)
 @Data
-public class IndexInfo implements MetadataType {
+public class IndexInfo
+        implements MetadataType {
 
     private static final long serialVersionUID = -768486884376018474L;
+
+    public static final Comparator<IndexInfo> COMPARATOR
+            = Comparator.comparing(IndexInfo::isNonUnique)
+            .thenComparing(IndexInfo::getType)
+            .thenComparing(IndexInfo::getIndexName)
+            .thenComparing(IndexInfo::getOrdinalPosition);
 
     public static final String COLUMN_NAME_TYPE = "TYPE";
 
@@ -215,4 +230,13 @@ public class IndexInfo implements MetadataType {
     @NullableBySpecification
     @Label("FILTER_CONDITION")
     private String filterCondition;
+
+    // -----------------------------------------------------------------------------------------------------------------
+    @XmlTransient
+    @Valid
+    @Setter(AccessLevel.NONE)
+    @Getter(AccessLevel.NONE)
+    @EqualsAndHashCode.Exclude
+    @ToString.Exclude
+    private Table table;
 }

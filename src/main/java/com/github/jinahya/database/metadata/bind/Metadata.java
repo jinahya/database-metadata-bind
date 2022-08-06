@@ -26,14 +26,20 @@ import lombok.Setter;
 
 import javax.xml.bind.annotation.XmlElementRef;
 import javax.xml.bind.annotation.XmlRootElement;
+import java.lang.invoke.MethodHandles;
 import java.sql.SQLException;
+import java.sql.SQLFeatureNotSupportedException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import static java.util.Objects.requireNonNull;
 
 @XmlRootElement
 public class Metadata {
+
+    private static final Logger logger = Logger.getLogger(MethodHandles.lookup().lookupClass().getName());
 
     public static Metadata newInstance(final Context context) throws SQLException {
         requireNonNull(context, "context is null");
@@ -60,7 +66,13 @@ public class Metadata {
                 catalog.getSchemas().add(Schema.newVirtualInstance(catalog)); // ""
             }
             for (final Schema schema : catalog.getSchemas()) {
-                context.getFunctions(schema, "%", schema.getFunctions());
+                try {
+                    context.getFunctions(
+                            schema.getTableCatalog(), schema.getTableSchem(), "%", schema.getFunctions()
+                    );
+                } catch (final SQLFeatureNotSupportedException sqlfnse) {
+                    sqlfnse.printStackTrace();
+                }
                 for (final Function function : schema.getFunctions()) {
                     context.getFunctionColumns(function, "%", function.getFunctionColumns());
                 }

@@ -20,10 +20,16 @@ package com.github.jinahya.database.metadata.bind;
  * #L%
  */
 
+import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Positive;
 import jakarta.validation.constraints.PositiveOrZero;
+import lombok.AccessLevel;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
+import lombok.Getter;
+import lombok.Setter;
+import lombok.ToString;
 
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlTransient;
@@ -116,4 +122,13 @@ abstract class TableKey implements MetadataType, HasUpdateRule, HasDeleteRule, H
     @XmlElement(nillable = false, required = true)
     @Label("DEFERRABILITY")
     private int deferrability;
+
+    // -----------------------------------------------------------------------------------------------------------------
+    @XmlTransient
+    @Valid
+    @Setter(AccessLevel.NONE)
+    @Getter(AccessLevel.NONE)
+    @EqualsAndHashCode.Exclude
+    @ToString.Exclude
+    private Table table;
 }

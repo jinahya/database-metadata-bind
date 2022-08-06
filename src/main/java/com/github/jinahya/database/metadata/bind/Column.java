@@ -20,14 +20,23 @@ package com.github.jinahya.database.metadata.bind;
  * #L%
  */
 
+import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Positive;
+import lombok.AccessLevel;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
+import lombok.Getter;
+import lombok.Setter;
+import lombok.ToString;
 
 import javax.xml.bind.annotation.XmlElement;
+import javax.xml.bind.annotation.XmlElementRef;
 import javax.xml.bind.annotation.XmlRootElement;
 import java.sql.DatabaseMetaData;
+import java.util.ArrayList;
 import java.util.Collection;
+import java.util.List;
 import java.util.Objects;
 
 /**
@@ -102,6 +111,13 @@ public class Column implements MetadataType {
         setNullable(Objects.requireNonNull(nullableAsEnum, "nullableAsEnum is null").rawValue());
     }
 
+    public List<ColumnPrivilege> getColumnPrivileges() {
+        if (columnPrivileges == null) {
+            columnPrivileges = new ArrayList<>();
+        }
+        return columnPrivileges;
+    }
+
     @XmlElement(nillable = true, required = true)
     @NullableBySpecification
     @Label("TABLE_CAT")
@@ -128,9 +144,10 @@ public class Column implements MetadataType {
     @Label("TYPE_NAME")
     private String typeName;
 
-    @XmlElement(nillable = false, required = true)
+    @XmlElement(nillable = true, required = true)
+    @NullableBySpecification
     @Label("COLUMN_SIZE")
-    private int columnSize;
+    private Integer columnSize;
 
     @XmlElement(nillable = true, required = true)
     @NotUsedBySpecification
@@ -213,4 +230,11 @@ public class Column implements MetadataType {
     @NotNull
     @Label(COLUMN_NAME_IS_GENERATEDCOLUMN)
     private String isGeneratedcolumn;
+
+    @XmlElementRef
+    @Setter(AccessLevel.NONE)
+    @Getter(AccessLevel.NONE)
+    @EqualsAndHashCode.Exclude
+    @ToString.Exclude
+    private List<@Valid @NotNull ColumnPrivilege> columnPrivileges;
 }

@@ -20,14 +20,21 @@ package com.github.jinahya.database.metadata.bind;
  * #L%
  */
 
+import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Positive;
+import lombok.AccessLevel;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
+import lombok.Getter;
+import lombok.Setter;
+import lombok.ToString;
 
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlEnum;
 import javax.xml.bind.annotation.XmlRootElement;
+import javax.xml.bind.annotation.XmlTransient;
 import java.sql.DatabaseMetaData;
 import java.util.Collection;
 import java.util.Objects;
@@ -227,7 +234,7 @@ public class FunctionColumn implements MetadataType {
     private String typeName;
 
     @XmlElement(nillable = true, required = true)
-    @NullableBySpecification // Null is returned for data types where the column size is not applicable.
+    @NullableBySpecification // > Null is returned for data types where the column size is not applicable.
     @Label("PRECISION")
     private Integer precision;
 
@@ -273,4 +280,13 @@ public class FunctionColumn implements MetadataType {
     @NotNull
     @Label("SPECIFIC_NAME")
     private String specificName;
+
+    // -----------------------------------------------------------------------------------------------------------------
+    @XmlTransient
+    @Valid
+    @Setter(AccessLevel.NONE)
+    @Getter(AccessLevel.NONE)
+    @EqualsAndHashCode.Exclude
+    @ToString.Exclude
+    private Function function;
 }

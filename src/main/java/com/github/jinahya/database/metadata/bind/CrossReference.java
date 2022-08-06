@@ -34,7 +34,7 @@ import java.util.List;
 import java.util.Objects;
 
 /**
- * A class for binding results of
+ * A class for binding the result of
  * {@link DatabaseMetaData#getCrossReference(String, String, String, String, String, String)} method.
  *
  * @author Jin Kwon &lt;jinahya_at_gmail.com&gt;
@@ -60,7 +60,6 @@ public class CrossReference implements MetadataType {
         return collection;
     }
 
-    // ---------------------------------------------------------------------------------------- UPDATE_RULE / updateRule
     public static final String COLUMN_NAME_UPDATE_RULE = "UPDATE_RULE";
 
     public static final String ATTRIBUTE_NAME_UPDATE_RULE = "updateRule";
@@ -129,6 +128,7 @@ public class CrossReference implements MetadataType {
     @Label("FKCOLUMN_NAME")
     private String fkcolumnName;
 
+    @Positive
     @XmlElement(nillable = false, required = true)
     @Positive
     @Label("FKCOLUMN_NAME")

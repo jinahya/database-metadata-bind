@@ -113,6 +113,35 @@ abstract class MemoryTest {
     }
 
     @Test
+    void functions() throws SQLException {
+        try (Connection connection = connect()) {
+            final Context context = Context.newInstance(connection)
+                    .suppress(SQLFeatureNotSupportedException.class);
+            final List<Function> functions;
+            try {
+                functions = context.getFunctions(null, null, "%", new ArrayList<>());
+            } catch (final SQLFeatureNotSupportedException sqlfnse) {
+                log.error("getFunctions not supported", sqlfnse);
+                return;
+            }
+            TestUtils.testEquals(functions);
+            for (final Function function : functions) {
+                log.debug("function: {}", function);
+                context.getFunctionColumns(
+                        function.getFunctionCat(),
+                        function.getFunctionSchem(),
+                        function.getFunctionName(),
+                        "%",
+                        function.getFunctionColumns()
+                );
+                function.getFunctionColumns().forEach(fc -> {
+                    log.debug("functionColumn: {}", fc);
+                });
+            }
+        }
+    }
+
+    @Test
     void schemas() throws SQLException {
         try (Connection connection = connect()) {
             final Context context = Context.newInstance(connection)

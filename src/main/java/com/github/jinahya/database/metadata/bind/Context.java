@@ -20,6 +20,7 @@ package com.github.jinahya.database.metadata.bind;
  * #L%
  */
 
+import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 
 import java.lang.invoke.MethodHandles;
@@ -373,6 +374,14 @@ public class Context {
                                    collection);
     }
 
+    public Column getColumnPrivileges(final Column column)
+            throws SQLException {
+        Objects.requireNonNull(column, "column is null");
+        getColumnPrivileges(column.getTableCat(), column.getTableSchem(), column.getTableName(),
+                            column.getColumnName(), column.getColumnPrivileges());
+        return column;
+    }
+
     // ------------------------------------------------------------------------------------------------------ getColumns
 
     /**
@@ -429,6 +438,23 @@ public class Context {
                           collection);
     }
 
+    /**
+     * Retrieves columns of specified table and adds bound values to specified table's
+     * {@link Table#getColumns() columns}.
+     *
+     * @param table the table whose columns are retrieved.
+     * @return given {@code collection}.
+     * @throws SQLException if a database error occurs.
+     * @apiNote This method invokes {@link #getColumns(String, String, String, String, Collection) getColumns} method
+     * with {@link Table#getTableCat() table.tableCat}, {@link Table#getTableSchem() table.tableSchem}, "{@code %}",
+     * {@link Table#getColumns() table.columns} and returns given {@code table}.
+     */
+    public Table getColumns(final Table table) throws SQLException {
+        Objects.requireNonNull(table, "table is null");
+        getColumns(table.getTableCat(), table.getTableSchem(), table.getTableName(), "%", table.getColumns());
+        return table;
+    }
+
     // ----------------------------------------------------------------------------------------------- getCrossReference
 
     /**
@@ -451,6 +477,8 @@ public class Context {
             final String parentCatalog, final String parentSchema, final String parentTable,
             final String foreignCatalog, final String foreignSchema, final String foreignTable, final C collection)
             throws SQLException {
+        Objects.requireNonNull(parentTable, "parentTable is null");
+        Objects.requireNonNull(foreignTable, "foreignTable is null");
         Objects.requireNonNull(collection, "collection is null");
         try (ResultSet results = databaseMetaData.getCrossReference(
                 parentCatalog, parentSchema, parentTable, foreignCatalog, foreignSchema, foreignTable)) {
@@ -511,16 +539,18 @@ public class Context {
      * @see #getFunctionColumns(String, String, String, String, Collection)
      */
     public <C extends Collection<? super Function>> C getFunctions(
-            final String catalog, final String schemaPattern, final String functionNamePattern, final C collection)
+            final String catalog, final String schemaPattern, @NotBlank final String functionNamePattern,
+            @NotNull final C collection)
             throws SQLException {
+        Objects.requireNonNull(functionNamePattern, "functionNamePattern is null");
         Objects.requireNonNull(collection, "collection is null");
         try (ResultSet results = databaseMetaData.getFunctions(catalog, schemaPattern, functionNamePattern)) {
             if (results != null) {
                 bind(results, Function.class, collection);
             }
-        } catch (final SQLException sqle) {
-            //log..error("failed to getFunctions({}, {}, {})", catalog, schemaPattern, functionNamePattern, sqle);
-            throwUnlessSuppressed(sqle);
+//        } catch (final SQLException sqle) {
+//            //log..error("failed to getFunctions({}, {}, {})", catalog, schemaPattern, functionNamePattern, sqle);
+//            throwUnlessSuppressed(sqle);
         }
         return collection;
     }
@@ -557,22 +587,24 @@ public class Context {
      * @param <C>                 the type of {@code collection}
      * @return given {@code collection}.
      * @throws SQLException if a database error occurs.
-     * @see DatabaseMetaData#getFunctionColumns(String, String, String, String)
      */
-    public <C extends Collection<? super FunctionColumn>> C getFunctionColumns(
-            final String catalog, final String schemaPattern, final String functionNamePattern,
-            final String columnNamePattern, final C collection)
+    public <C extends Collection<? super FunctionColumn>> @NotNull C getFunctionColumns(
+            final String catalog, final String schemaPattern, @NotBlank final String functionNamePattern,
+            @NotBlank final String columnNamePattern, @NotNull final C collection)
             throws SQLException {
+        Objects.requireNonNull(functionNamePattern, "functionNamePattern is null");
+        Objects.requireNonNull(columnNamePattern, "columnNamePattern is null");
         Objects.requireNonNull(collection, "collection is null");
         try (ResultSet results = databaseMetaData.getFunctionColumns(
                 catalog, schemaPattern, functionNamePattern, columnNamePattern)) {
-            if (results != null) {
-                bind(results, FunctionColumn.class, collection);
-            }
-        } catch (final SQLException sqle) {
-            //log..error("failed to getFunctionColumns({}, {}, {}, {})",
-//                    catalog, schemaPattern, functionNamePattern, columnNamePattern, sqle);
-            throwUnlessSuppressed(sqle);
+            assert results != null;
+//            if (results != null) {
+            bind(results, FunctionColumn.class, collection);
+//            }
+//        } catch (final SQLException sqle) {
+//            //log..error("failed to getFunctionColumns({}, {}, {}, {})",
+////                    catalog, schemaPattern, functionNamePattern, columnNamePattern, sqle);
+//            throwUnlessSuppressed(sqle);
         }
         return collection;
     }
@@ -706,9 +738,10 @@ public class Context {
      * @see DatabaseMetaData#getIndexInfo(String, String, String, boolean, boolean)
      */
     public <C extends Collection<? super IndexInfo>> C getIndexInfo(
-            final String catalog, final String schema, final String table, final boolean unique,
-            final boolean approximate, final C collection)
+            final String catalog, final String schema, @NotBlank final String table, final boolean unique,
+            final boolean approximate, @NotNull final C collection)
             throws SQLException {
+        Objects.requireNonNull(table, "table is null");
         Objects.requireNonNull(collection, "collection is null");
         try (ResultSet results = databaseMetaData.getIndexInfo(catalog, schema, table, unique, approximate)) {
             if (results != null) {
