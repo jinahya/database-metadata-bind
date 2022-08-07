@@ -22,19 +22,23 @@ package com.github.jinahya.database.metadata.bind;
 
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotNull;
+import jakarta.xml.bind.annotation.XmlAttribute;
+import jakarta.xml.bind.annotation.XmlElement;
+import jakarta.xml.bind.annotation.XmlElementRef;
+import jakarta.xml.bind.annotation.XmlRootElement;
+import jakarta.xml.bind.annotation.XmlTransient;
 import lombok.AccessLevel;
+import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
+import lombok.experimental.SuperBuilder;
 
-import javax.xml.bind.annotation.XmlAttribute;
-import javax.xml.bind.annotation.XmlElement;
-import javax.xml.bind.annotation.XmlElementRef;
-import javax.xml.bind.annotation.XmlRootElement;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Comparator;
 import java.util.List;
 import java.util.Objects;
 
@@ -52,39 +56,24 @@ import java.util.Objects;
 @ParentOf(Table.class)
 @ParentOf(UDT.class)
 @ChildOf(Catalog.class)
-@Setter
-@Getter
-@EqualsAndHashCode
-@ToString(callSuper = true)
+@Data
 @NoArgsConstructor
+@SuperBuilder(toBuilder = true)
 public class Schema
         implements MetadataType {
 
     private static final long serialVersionUID = 7457236468401244963L;
 
-    // ---------------------------------------------------------------------------------------- TABLE_SCHEM / tableSchem
-    public static final String COLUMN_LABEL_TABLE_SCHEM = "TABLE_SCHEM";
+    public static final Comparator<Schema> COMPARATOR =
+            Comparator.comparing(Schema::extractCatalog, Comparator.nullsFirst(Catalog.COMPARATOR))
+                    .thenComparing(Schema::getTableSchem);
 
-    public static final String ATTRIBUTE_NAME_TABLE_SCHEM = "tableSchem";
-
-    // ------------------------------------------------------------------------------------ TABLE_CATALOG / tableCatalog
+    // -----------------------------------------------------------------------------------------------------------------
     public static final String COLUMN_LABEL_TABLE_CATALOG = "TABLE_CATALOG";
 
-    public static final String ATTRIBUTE_NAME_TABLE_CATALOG = "tableCatalog";
+    public static final String COLUMN_LABEL_TABLE_SCHEM = "TABLE_SCHEM";
 
-    /**
-     * Creates a new instance with specified property values.
-     *
-     * @param tableCatalog a value for {@code tableCatalog} property.
-     * @param tableSchem   a value for {@code tableSchem} property.
-     * @return a new instance of {@code tableCatalog} and {@code tableSchem}.
-     */
-    public static Schema of(final String tableCatalog, final String tableSchem) {
-        final Schema instance = new Schema();
-        instance.setTableCatalog(tableCatalog);
-        instance.setTableSchem(tableSchem);
-        return instance;
-    }
+    // -----------------------------------------------------------------------------------------------------------------
 
     /**
      * Creates a new virtual instance with following property values.
@@ -94,16 +83,25 @@ public class Schema
      */
     public static Schema newVirtualInstance(final String tableCatalog) {
         Objects.requireNonNull(tableCatalog, "tableCatalog is null");
-        final Schema instance = of(tableCatalog, "");
-        instance.virtual = Boolean.TRUE;
-        return instance;
+        return builder()
+                .virtual(Boolean.TRUE)
+                .tableCatalog(tableCatalog)
+                .tableSchem("")
+                .build();
     }
 
-    public static Schema newVirtualInstance(final Catalog catalog) {
-        Objects.requireNonNull(catalog, "catalog is null");
-        return newVirtualInstance(catalog.getTableCat());
+    // -----------------------------------------------------------------------------------------------------------------
+    public boolean isVirtual() {
+        return virtual != null && virtual;
     }
 
+    Catalog extractCatalog() {
+        return Catalog.builder()
+                .tableCat(getTableCatalog())
+                .build();
+    }
+
+    // -----------------------------------------------------------------------------------------------------------------
     public List<Function> getFunctions() {
         if (functions == null) {
             functions = new ArrayList<>();
@@ -116,6 +114,13 @@ public class Schema
             procedures = new ArrayList<>();
         }
         return procedures;
+    }
+
+    public List<SuperTable> getSuperTables() {
+        if (superTables == null) {
+            superTables = new ArrayList<>();
+        }
+        return superTables;
     }
 
     public List<Table> getTables() {
@@ -132,21 +137,33 @@ public class Schema
         return UDTs;
     }
 
+    // -----------------------------------------------------------------------------------------------------------------
     @XmlAttribute(required = false)
     @Setter(AccessLevel.NONE)
     @Getter(AccessLevel.NONE)
     private Boolean virtual;
 
-    @XmlElement(required = true, nillable = true)
+    // -----------------------------------------------------------------------------------------------------------------
+    @XmlElement(nillable = true, required = true)
     @NullableBySpecification
     @Label(COLUMN_LABEL_TABLE_CATALOG)
     private String tableCatalog;
 
-    @XmlElement(required = true)
+    @XmlElement(nillable = false, required = true)
     @NotNull
     @Label(COLUMN_LABEL_TABLE_SCHEM)
     private String tableSchem;
 
+    // -----------------------------------------------------------------------------------------------------------------
+    @XmlTransient
+    @Valid
+    @Setter(AccessLevel.PACKAGE)
+    @Getter(AccessLevel.PACKAGE)
+    @EqualsAndHashCode.Exclude
+    @ToString.Exclude
+    private Catalog catalog;
+
+    // -----------------------------------------------------------------------------------------------------------------
     @XmlElementRef
     @Setter(AccessLevel.NONE)
     @Getter(AccessLevel.NONE)
@@ -160,6 +177,13 @@ public class Schema
     @EqualsAndHashCode.Exclude
     @ToString.Exclude
     private List<@Valid @NotNull Procedure> procedures;
+
+    @XmlElementRef
+    @Setter(AccessLevel.NONE)
+    @Getter(AccessLevel.NONE)
+    @EqualsAndHashCode.Exclude
+    @ToString.Exclude
+    private List<@Valid @NotNull SuperTable> superTables;
 
     @XmlElementRef
     @Setter(AccessLevel.NONE)

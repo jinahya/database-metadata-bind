@@ -20,10 +20,10 @@ package com.github.jinahya.database.metadata.bind;
  * #L%
  */
 
+import jakarta.xml.bind.JAXBException;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.Test;
 
-import javax.xml.bind.JAXBException;
 import java.sql.Connection;
 import java.sql.SQLException;
 import java.sql.SQLFeatureNotSupportedException;
@@ -160,26 +160,6 @@ abstract class MemoryTest {
     }
 
     @Test
-    void tables() throws SQLException {
-        try (Connection connection = connect()) {
-            final Context context = Context.newInstance(connection)
-                    .suppress(SQLFeatureNotSupportedException.class);
-            final List<Table> tables = context.getTables(null, null, null, null, new ArrayList<>());
-            TestUtils.testEquals(tables);
-            for (final Table table : tables) {
-                final String string = assertDoesNotThrow(table::toString);
-                final int hashCode = assertDoesNotThrow(table::hashCode);
-                final String tableCat = (String) MetadataTypeUtils.getLabeledValue(
-                        Table.class, table, Table.COLUMN_LABEL_TABLE_CAT);
-                final String tableSchem = (String) MetadataTypeUtils.getLabeledValue(
-                        Table.class, table, Table.COLUMN_LABEL_TABLE_SCHEM);
-                final String tableName = (String) MetadataTypeUtils.getLabeledValue(
-                        Table.class, table, Table.COLUMN_LABEL_TABLE_NAME);
-            }
-        }
-    }
-
-    @Test
     void deletesAreDetected() throws SQLException {
         try (Connection connection = connect()) {
             final Context context = Context.newInstance(connection)
@@ -224,6 +204,133 @@ abstract class MemoryTest {
                         final String string = assertDoesNotThrow(v::toString);
                         final int hashCode = assertDoesNotThrow(v::hashCode);
                     });
+        }
+    }
+
+    @Test
+    void getProcedures__() throws SQLException {
+        try (var connection = connect()) {
+            final Context context = Context.newInstance(connection)
+                    .suppress(SQLFeatureNotSupportedException.class);
+            final List<Procedure> procedures;
+            try {
+                procedures = context.getProcedures(null, null, "%", new ArrayList<>());
+            } catch (final SQLFeatureNotSupportedException slqfnse) {
+                log.error("not supported; getProcedures", slqfnse);
+                return;
+            }
+            for (final var procedure : procedures) {
+                assertThat(procedure)
+                        .usingComparator(Procedure.COMPARATOR)
+                        .isEqualTo(procedure);
+                context.getProcedureColumns(
+                        procedure.getProcedureCat(),
+                        procedure.getProcedureSchem(),
+                        procedure.getProcedureName(),
+                        "%",
+                        procedure.getProcedureColumns()
+                );
+                for (final var procedureColumn : procedure.getProcedureColumns()) {
+                    assertThat(procedureColumn)
+                            .isNotNull()
+                            .usingComparator(ProcedureColumn.COMPARATOR)
+                            .isEqualTo(procedureColumn);
+                }
+            }
+        }
+    }
+
+    @Test
+    void getPseudoColumns__() throws SQLException {
+        try (var connection = connect()) {
+            final Context context = Context.newInstance(connection)
+                    .suppress(SQLFeatureNotSupportedException.class);
+            final List<PseudoColumn> pseudoColumns;
+            try {
+                pseudoColumns = context.getPseudoColumns(null, null, "%", "%", new ArrayList<>());
+            } catch (final SQLFeatureNotSupportedException slqfnse) {
+                log.error("not supported; getPseudoColumns", slqfnse);
+                return;
+            }
+        }
+    }
+
+    @Test
+    void getTables__() throws SQLException {
+        try (Connection connection = connect()) {
+            final Context context = Context.newInstance(connection)
+                    .suppress(SQLFeatureNotSupportedException.class);
+            final List<Table> tables = context.getTables(null, null, null, null, new ArrayList<>());
+            TestUtils.testEquals(tables);
+            for (final var table : tables) {
+                final String string = assertDoesNotThrow(table::toString);
+                final int hashCode = assertDoesNotThrow(table::hashCode);
+                final String tableCat = (String) MetadataTypeUtils.getLabeledValue(
+                        Table.class, table, Table.COLUMN_LABEL_TABLE_CAT);
+                final String tableSchem = (String) MetadataTypeUtils.getLabeledValue(
+                        Table.class, table, Table.COLUMN_LABEL_TABLE_SCHEM);
+                final String tableName = (String) MetadataTypeUtils.getLabeledValue(
+                        Table.class, table, Table.COLUMN_LABEL_TABLE_NAME);
+            }
+            for (final var table : tables) {
+                for (final var scope : BestRowIdentifier.Scope.values()) {
+                    for (final var nullable : new boolean[] {true, false}) {
+                        final var bestRowIdentifiers = context.getBestRowIdentifier(
+                                table.getTableCat(),
+                                table.getTableSchem(),
+                                table.getTableName(),
+                                scope.rawValue(),
+                                nullable,
+                                new ArrayList<>()
+                        );
+                        bestRowIdentifiers.forEach(bri -> {
+                            log.debug("bestRowIdentifier(scope: {}, nullable: {}): {}", scope, nullable, bri);
+                        });
+                    }
+                }
+            }
+        }
+    }
+
+    @Test
+    void getTablePrivileges__() throws SQLException {
+        try (Connection connection = connect()) {
+            final Context context = Context.newInstance(connection)
+                    .suppress(SQLFeatureNotSupportedException.class);
+            final List<TablePrivilege> tablePrivileges = context.getTablePrivileges(null, null, "%", new ArrayList<>());
+            for (final var tablePrivilege : tablePrivileges) {
+                log.debug("tablePrivilege: {}", tablePrivilege);
+                final String string = assertDoesNotThrow(tablePrivilege::toString);
+                final int hashCode = assertDoesNotThrow(tablePrivilege::hashCode);
+            }
+        }
+    }
+
+    @Test
+    void getTypeInfo__() throws SQLException {
+        try (Connection connection = connect()) {
+            final Context context = Context.newInstance(connection)
+                    .suppress(SQLFeatureNotSupportedException.class);
+            final List<TypeInfo> typeInfo = context.getTypeInfo(new ArrayList<>());
+            for (final var each : typeInfo) {
+                log.debug("typeInfo: {}", each);
+                final String string = assertDoesNotThrow(each::toString);
+                final int hashCode = assertDoesNotThrow(each::hashCode);
+            }
+        }
+    }
+
+    @Test
+    void getUDTs__() throws SQLException {
+        try (Connection connection = connect()) {
+            final Context context = Context.newInstance(connection)
+                    .suppress(SQLFeatureNotSupportedException.class);
+            final List<UDT> UDTs = context.getUDTs(null, null, "%", null, new ArrayList<>());
+            for (final var udt : UDTs) {
+                log.debug("UDT: {}", udt);
+                final String string = assertDoesNotThrow(udt::toString);
+                final int hashCode = assertDoesNotThrow(udt::hashCode);
+            }
         }
     }
 

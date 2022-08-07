@@ -22,19 +22,22 @@ package com.github.jinahya.database.metadata.bind;
 
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotNull;
+import jakarta.xml.bind.annotation.XmlAttribute;
+import jakarta.xml.bind.annotation.XmlElement;
+import jakarta.xml.bind.annotation.XmlElementRef;
+import jakarta.xml.bind.annotation.XmlRootElement;
 import lombok.AccessLevel;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
+import lombok.experimental.SuperBuilder;
 
-import javax.xml.bind.annotation.XmlAttribute;
-import javax.xml.bind.annotation.XmlElement;
-import javax.xml.bind.annotation.XmlElementRef;
-import javax.xml.bind.annotation.XmlRootElement;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Comparator;
 import java.util.List;
 
 /**
@@ -46,9 +49,13 @@ import java.util.List;
 @XmlRootElement
 @ParentOf(Schema.class)
 @Data
+@NoArgsConstructor
+@SuperBuilder(toBuilder = true)
 public class Catalog implements MetadataType {
 
     private static final long serialVersionUID = 6239185259128825953L;
+
+    public static final Comparator<Catalog> COMPARATOR = Comparator.comparing(Catalog::getTableCat);
 
     public static final String COLUMN_LABEL_TABLE_CAT = "TABLE_CAT";
 

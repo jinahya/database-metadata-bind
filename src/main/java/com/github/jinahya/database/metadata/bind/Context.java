@@ -228,9 +228,10 @@ public class Context {
      * @see DatabaseMetaData#getBestRowIdentifier(String, String, String, int, boolean)
      * @see BestRowIdentifier.Scope
      */
+    @NotNull
     public <C extends Collection<? super BestRowIdentifier>> C getBestRowIdentifier(
-            final String catalog, final String schema, final String table, final int scope, final boolean nullable,
-            final C collection)
+            final String catalog, final String schema, @NotBlank final String table, final int scope,
+            final boolean nullable, @NotNull final C collection)
             throws SQLException {
         Objects.requireNonNull(table, "table is null");
         Objects.requireNonNull(collection, "collection is null");
@@ -238,40 +239,10 @@ public class Context {
             if (results != null) {
                 bind(results, BestRowIdentifier.class, collection);
             }
-        } catch (final SQLException sqle) {
-            throwUnlessSuppressed(sqle);
+//        } catch (final SQLException sqle) {
+//            throwUnlessSuppressed(sqle);
         }
         return collection;
-    }
-
-    /**
-     * Retrieves best row identifiers for specified table and adds bound values to specified collection.
-     *
-     * @param table      the table whose best row identifiers are retrieved.
-     * @param scope      a value for {@code scope} parameter.
-     * @param nullable   a value for {@code nullable} parameter.
-     * @param collection the collection to which bound values are added.
-     * @param <C>        the type of {@code collection}
-     * @return given {@code collection}.
-     * @throws SQLException if a database error occurs.
-     * @apiNote This method invokes {@link #getBestRowIdentifier(String, String, String, int, boolean, Collection)}
-     * method with {@link Table#getTableCat() table.tableCat}, {@link Table#getTableSchem() table.tableSchem},
-     * {@link Table#getTableName() table.tableName}, {@code scope}, {@code nullable}, and {@code collection} and returns
-     * the result.
-     * @see #getBestRowIdentifier(String, String, String, int, boolean, Collection)
-     */
-    public <C extends Collection<? super BestRowIdentifier>> C getBestRowIdentifier(
-            final Table table, final int scope, final boolean nullable, final C collection)
-            throws SQLException {
-        Objects.requireNonNull(table, "table is null");
-        return getBestRowIdentifier(
-                table.getTableCat(),
-                table.getTableSchem(),
-                Objects.requireNonNull(table.getTableName(), "table.tableName is null"),
-                scope,
-                nullable,
-                collection
-        );
     }
 
     /**
@@ -936,25 +907,27 @@ public class Context {
      * @param tableNamePattern  a value for {@code tableNamePattern} parameter.
      * @param columnNamePattern a value for {@code columnNamePattern} parameter.
      * @param collection        the collection to which bound values are added.
-     * @param <C>               the type of {@code collection}
+     * @param <C>               the type of elements in the {@code collection}
      * @return given {@code collection}.
      * @throws SQLException if a database error occurs.
      * @see DatabaseMetaData#getPseudoColumns(String, String, String, String)
      */
     public <C extends Collection<? super PseudoColumn>> C getPseudoColumns(
-            final String catalog, final String schemaPattern, final String tableNamePattern,
-            final String columnNamePattern, final C collection)
+            final String catalog, final String schemaPattern, @NotBlank final String tableNamePattern,
+            @NotBlank final String columnNamePattern, @NotNull final C collection)
             throws SQLException {
+        Objects.requireNonNull(tableNamePattern, "tableNamePattern is null");
+        Objects.requireNonNull(columnNamePattern, "columnNamePattern is null");
         Objects.requireNonNull(collection, "collection is null");
         try (ResultSet results = databaseMetaData.getPseudoColumns(
                 catalog, schemaPattern, tableNamePattern, columnNamePattern)) {
             if (results != null) {
                 bind(results, PseudoColumn.class, collection);
             }
-        } catch (final SQLException sqle) {
-            //log..error("failed to getPseudoColumns({}, {}, {}, {})",
-//                    catalog, schemaPattern, tableNamePattern, columnNamePattern, sqle);
-            throwUnlessSuppressed(sqle);
+//        } catch (final SQLException sqle) {
+//            //log..error("failed to getPseudoColumns({}, {}, {}, {})",
+////                    catalog, schemaPattern, tableNamePattern, columnNamePattern, sqle);
+//            throwUnlessSuppressed(sqle);
         }
         return collection;
     }
@@ -978,31 +951,28 @@ public class Context {
                                 collection);
     }
 
-    // ------------------------------------------------------------------------------------------------------ getSchemas
-
     /**
      * Invokes {@link DatabaseMetaData#getSchemas()} method and adds bound values to specified collection.
      *
      * @param collection the collection to which bound values are added.
-     * @param <C>        the type of {@code collection}
+     * @param <C>        the type of elements of the {@code collection}
      * @return given {@code collection}.
      * @throws SQLException if a database error occurs.
      * @see DatabaseMetaData#getSchemas()
+     * @see #getSchemas(String, String, Collection)
      */
-    public <C extends Collection<? super SchemaName>> C getSchemas(final C collection) throws SQLException {
+    public <C extends Collection<? super Schema>> C getSchemas(@NotNull final C collection) throws SQLException {
         Objects.requireNonNull(collection, "collection is null");
         try (ResultSet results = databaseMetaData.getSchemas()) {
             if (results != null) {
-                bind(results, SchemaName.class, collection);
+                bind(results, Schema.class, collection);
             }
-        } catch (final SQLException sqle) {
-            //log..error("failed to getSchemas()", sqle);
-            throwUnlessSuppressed(sqle);
+//        } catch (final SQLException sqle) {
+//            //log..error("failed to getSchemas()", sqle);
+//            throwUnlessSuppressed(sqle);
         }
         return collection;
     }
-
-    // ------------------------------------------------------------------------------------------------------ getSchemas
 
     /**
      * Invokes {@link DatabaseMetaData#getSchemas(String, String)} method with given arguments and adds bounds values to
@@ -1011,90 +981,58 @@ public class Context {
      * @param catalog       a value for {@code catalog} parameter.
      * @param schemaPattern a value for {@code schemaPattern} parameter.
      * @param collection    the collection to which bound values are added.
-     * @param <C>           the type of {@code collection}
+     * @param <C>           the type of elements of the {@code collection}
      * @return given {@code collection}.
      * @throws SQLException if a database error occurs.
      * @see DatabaseMetaData#getSchemas(String, String)
+     * @see #getSchemas(Collection)
      */
+    @NotNull
     public <C extends Collection<? super Schema>> C getSchemas(final String catalog, final String schemaPattern,
-                                                               final C collection)
+                                                               @NotNull final C collection)
             throws SQLException {
         Objects.requireNonNull(collection, "collection is null");
         try (ResultSet results = databaseMetaData.getSchemas(catalog, schemaPattern)) {
             if (results != null) {
                 bind(results, Schema.class, collection);
             }
-        } catch (final SQLException sqle) {
-            //log..error("failed to getSchemas({}, {})", catalog, schemaPattern, sqle);
-            throwUnlessSuppressed(sqle);
+//        } catch (final SQLException sqle) {
+//            //log..error("failed to getSchemas({}, {})", catalog, schemaPattern, sqle);
+//            throwUnlessSuppressed(sqle);
         }
         return collection;
     }
-
-    /**
-     * Retrieves schemas of specified catalog and adds bounds values to specified collection.
-     *
-     * @param catalog       the catalog whose schemas are retrieved.
-     * @param schemaPattern a value for {@code schemaPattern} parameter.
-     * @param collection    the collection to which bound values are added.
-     * @param <C>           the type of {@code collection}
-     * @return given {@code collection}.
-     * @throws SQLException if a database error occurs.
-     * @see #getSchemas(String, String, Collection)
-     */
-    public <C extends Collection<? super Schema>> C getSchemas(final Catalog catalog, final String schemaPattern,
-                                                               final C collection)
-            throws SQLException {
-        Objects.requireNonNull(catalog, "catalog is null");
-        return getSchemas(catalog.getTableCat(), schemaPattern, collection);
-    }
-
-    // -------------------------------------------------------------------------------------------------- getSuperTables
 
     /**
      * Invokes {@link DatabaseMetaData#getSuperTables(String, String, String)} method with given arguments and adds
      * bounds values to specified collection.
      *
-     * @param catalog          a value for {@code catalog}.
-     * @param schemaPattern    a value for {@code schemaPattern}.
-     * @param tableNamePattern a value for {@code tableNamePattern}.
+     * @param catalog          a value for {@code catalog} parameter.
+     * @param schemaPattern    a value for {@code schemaPattern} paramter.
+     * @param tableNamePattern a value for {@code tableNamePattern} parameter.
      * @param collection       the collection to which bound values are added.
-     * @param <C>              the type of {@code collection}
+     * @param <C>              the type of elements of the {@code collection}
      * @return given {@code collection}.
      * @throws SQLException if a database error occurs.
      */
+    @NotNull
     public <C extends Collection<? super SuperTable>> C getSuperTables(
-            final String catalog, final String schemaPattern, final String tableNamePattern, final C collection)
+            final String catalog, @NotNull final String schemaPattern, @NotBlank final String tableNamePattern,
+            @NotNull final C collection)
             throws SQLException {
+        Objects.requireNonNull(schemaPattern, "schemaPattern is null");
+        Objects.requireNonNull(tableNamePattern, "tableNamePattern is null");
         Objects.requireNonNull(collection, "collection is null");
         try (ResultSet results = databaseMetaData.getSuperTables(catalog, schemaPattern, tableNamePattern)) {
             if (results != null) {
                 bind(results, SuperTable.class, collection);
             }
-        } catch (final SQLException sqle) {
-            //log..error("failed to getSuperTables({}, {}, {})", catalog, schemaPattern, tableNamePattern, sqle);
-            throwUnlessSuppressed(sqle);
+//        } catch (final SQLException sqle) {
+//            //log..error("failed to getSuperTables({}, {}, {})", catalog, schemaPattern, tableNamePattern, sqle);
+//            throwUnlessSuppressed(sqle);
         }
         return collection;
     }
-
-    /**
-     * Retrieves super tables of specified table and adds bounds values to specified collection.
-     *
-     * @param table      the table whose super tables are retrieved.
-     * @param collection the collection to which bound values are added.
-     * @param <C>        the type of {@code collection}
-     * @return given {@code collection}.
-     * @throws SQLException if a database error occurs.
-     * @see #getSuperTables(String, String, String, Collection)
-     */
-    public <C extends Collection<? super SuperTable>> C getSuperTables(final Table table, final C collection)
-            throws SQLException {
-        Objects.requireNonNull(table, "table is null");
-        return getSuperTables(table.getTableCat(), table.getTableSchem(), table.getTableName(), collection);
-    }
-
-    // --------------------------------------------------------------------------------------------------- getSuperTypes
 
     /**
      * Invokes {@link DatabaseMetaData#getSuperTypes(String, String, String)} method with given arguments and adds bound
@@ -1104,42 +1042,29 @@ public class Context {
      * @param schemaPattern   a value for {@code schemaPattern} parameter.
      * @param typeNamePattern a value for {@code typeNamePattern} parameter.
      * @param collection      the collection to which bound values are added.
-     * @param <C>             the type of {@code collection}
+     * @param <C>             the type of elements of the {@code collection}
      * @return given {@code collection}.
      * @throws SQLException if a database error occurs.
      */
-    public <C extends Collection<? super SuperType>> C getSuperTypes(final String catalog, final String schemaPattern,
-                                                                     final String typeNamePattern, final C collection)
+    @NotNull
+    public <C extends Collection<? super SuperType>> C getSuperTypes(final String catalog,
+                                                                     @NotNull final String schemaPattern,
+                                                                     @NotBlank final String typeNamePattern,
+                                                                     @NotNull final C collection)
             throws SQLException {
+        Objects.requireNonNull(schemaPattern, "schemaPattern is null");
+        Objects.requireNonNull(typeNamePattern, "typeNamePattern is null");
         Objects.requireNonNull(collection, "collection is null");
         try (ResultSet results = databaseMetaData.getSuperTypes(catalog, schemaPattern, typeNamePattern)) {
             if (results != null) {
                 bind(results, SuperType.class, collection);
             }
-        } catch (final SQLException sqle) {
-            //log..error("failed to getSuperTypes({}, {}, {})", catalog, schemaPattern, typeNamePattern, sqle);
-            throwUnlessSuppressed(sqle);
+//        } catch (final SQLException sqle) {
+//            //log..error("failed to getSuperTypes({}, {}, {})", catalog, schemaPattern, typeNamePattern, sqle);
+//            throwUnlessSuppressed(sqle);
         }
         return collection;
     }
-
-    /**
-     * Retrieves super types of specified user-defined type and adds bound values to specified collection.
-     *
-     * @param udt        the user-defined type whose supertypes are retrieved.
-     * @param collection the collection to which bound values are added.
-     * @param <C>        the type of {@code collection}
-     * @return given {@code collection}.
-     * @throws SQLException if a database error occurs.
-     * @see #getSuperTypes(String, String, String, Collection)
-     */
-    public <C extends Collection<? super SuperType>> C getSuperTypes(final UDT udt, final C collection)
-            throws SQLException {
-        Objects.requireNonNull(udt, "udt is null");
-        return getSuperTypes(udt.getTypeCat(), udt.getTypeSchem(), udt.getTypeName(), collection);
-    }
-
-    // ---------------------------------------------------------------------------------------------- getTablePrivileges
 
     /**
      * Invokes {@link DatabaseMetaData#getTablePrivileges(java.lang.String, java.lang.String, java.lang.String)} method
@@ -1153,17 +1078,20 @@ public class Context {
      * @return given {@code collection}.
      * @throws SQLException if a database error occurs.
      */
+    @NotNull
     public <C extends Collection<? super TablePrivilege>> C getTablePrivileges(
-            final String catalog, final String schemaPattern, final String tableNamePattern, final C collection)
+            final String catalog, final String schemaPattern, @NotBlank final String tableNamePattern,
+            @NotNull final C collection)
             throws SQLException {
+        Objects.requireNonNull(tableNamePattern, "tableNamePattern is null");
         Objects.requireNonNull(collection, "collection is null");
         try (ResultSet results = databaseMetaData.getTablePrivileges(catalog, schemaPattern, tableNamePattern)) {
             if (results != null) {
                 bind(results, TablePrivilege.class, collection);
             }
-        } catch (final SQLException sqle) {
-            //log..error("failed to getTablePrivileges({}, {}, {})", catalog, schemaPattern, tableNamePattern, sqle);
-            throwUnlessSuppressed(sqle);
+//        } catch (final SQLException sqle) {
+//            //log..error("failed to getTablePrivileges({}, {}, {})", catalog, schemaPattern, tableNamePattern, sqle);
+//            throwUnlessSuppressed(sqle);
         }
         return collection;
     }
@@ -1193,20 +1121,19 @@ public class Context {
      * @return given {@code collection}.
      * @throws SQLException if a database error occurs.
      */
-    public <C extends Collection<? super TableType>> C getTableTypes(final C collection) throws SQLException {
+    @NotNull
+    public <C extends Collection<? super TableType>> C getTableTypes(@NotNull final C collection) throws SQLException {
         Objects.requireNonNull(collection, "collection is null");
         try (ResultSet results = databaseMetaData.getTableTypes()) {
             if (results != null) {
                 bind(results, TableType.class, collection);
             }
-        } catch (final SQLException sqle) {
-            //log..error("failed to getTableTypes()", sqle);
-            throwUnlessSuppressed(sqle);
+//        } catch (final SQLException sqle) {
+//            //log..error("failed to getTableTypes()", sqle);
+//            throwUnlessSuppressed(sqle);
         }
         return collection;
     }
-
-    // ------------------------------------------------------------------------------------------------------- getTables
 
     /**
      * Invokes
@@ -1223,40 +1150,23 @@ public class Context {
      * @throws SQLException if a database error occurs.
      * @see DatabaseMetaData#getTables(String, String, String, String[])
      */
+    @NotNull
     public <C extends Collection<? super Table>> C getTables(final String catalog, final String schemaPattern,
-                                                             final String tableNamePattern, final String[] types,
-                                                             final C collection)
+                                                             @NotBlank final String tableNamePattern,
+                                                             final String[] types, @NotNull final C collection)
             throws SQLException {
+        Objects.requireNonNull(tableNamePattern, "tableNamePattern is null");
         Objects.requireNonNull(collection, "collection is null");
         try (ResultSet results = databaseMetaData.getTables(catalog, schemaPattern, tableNamePattern, types)) {
             if (results != null) {
                 bind(results, Table.class, collection);
             }
-        } catch (final SQLException sqle) {
-            //log..error("failed to getTables({}, {}, {}, {})",
-//                    catalog, schemaPattern, tableNamePattern, Arrays.toString(types), sqle);
-            throwUnlessSuppressed(sqle);
+//        } catch (final SQLException sqle) {
+//            //log..error("failed to getTables({}, {}, {}, {})",
+////                    catalog, schemaPattern, tableNamePattern, Arrays.toString(types), sqle);
+//            throwUnlessSuppressed(sqle);
         }
         return collection;
-    }
-
-    /**
-     * Retrieves tables of specified schema and adds all bound values to specified collection.
-     *
-     * @param schema           the schema whose tables are retrieved.
-     * @param tableNamePattern a value for {@code tableNamePattern} parameter.
-     * @param types            a value for {@code types} parameter.
-     * @param collection       the collection to which values are added.
-     * @param <C>              the type of {@code collection}
-     * @return given {@code collection}.
-     * @throws SQLException if a database error occurs.
-     * @see #getTables(String, String, String, String[], Collection)
-     */
-    public <C extends Collection<? super Table>> C getTables(final Schema schema, final String tableNamePattern,
-                                                             final String[] types, final C collection)
-            throws SQLException {
-        Objects.requireNonNull(schema, "schema is null");
-        return getTables(schema.getTableCatalog(), schema.getTableSchem(), tableNamePattern, types, collection);
     }
 
     // ----------------------------------------------------------------------------------------------------- getTypeInfo
@@ -1294,26 +1204,26 @@ public class Context {
      * @param typeNamePattern a value for {@code typeNamePattern} parameter.
      * @param types           a value for {@code type} parameter
      * @param collection      the collection to which bound values are added.
-     * @param <C>             the type of {@code collection}
+     * @param <C>             the type of elements of the {@code collection}
      * @return given {@code collection}.
      * @throws SQLException if a database error occurs.
      * @see DatabaseMetaData#getUDTs(String, String, String, int[])
      * @see #getAttributes(UDT, String, Collection)
-     * @see #getSuperTypes(UDT, Collection)
      */
+    @NotNull
     public <C extends Collection<? super UDT>> C getUDTs(final String catalog, final String schemaPattern,
-                                                         final String typeNamePattern, final int[] types,
-                                                         final C collection)
+                                                         @NotBlank final String typeNamePattern, final int[] types,
+                                                         @NotNull final C collection)
             throws SQLException {
         Objects.requireNonNull(collection, "collection is null");
         try (ResultSet results = databaseMetaData.getUDTs(catalog, schemaPattern, typeNamePattern, types)) {
             if (results != null) {
                 bind(results, UDT.class, collection);
             }
-        } catch (final SQLException sqle) {
-            //log..error("failed to getUDTs({}, {}, {}, {})",
-//                    catalog, schemaPattern, typeNamePattern, Arrays.toString(types), sqle);
-            throwUnlessSuppressed(sqle);
+//        } catch (final SQLException sqle) {
+//            //log..error("failed to getUDTs({}, {}, {}, {})",
+////                    catalog, schemaPattern, typeNamePattern, Arrays.toString(types), sqle);
+//            throwUnlessSuppressed(sqle);
         }
         return collection;
     }
@@ -1351,17 +1261,20 @@ public class Context {
      * @return given {@code collection}.
      * @throws SQLException if a database access error occurs.
      */
-    public <C extends Collection<? super VersionColumn>> C getVersionColumns(
-            final String catalog, final String schema, final String table, final C collection)
+    @NotNull
+    public <C extends Collection<? super VersionColumn>> C getVersionColumns(final String catalog, final String schema,
+                                                                             @NotBlank final String table,
+                                                                             @NotNull final C collection)
             throws SQLException {
+        Objects.requireNonNull(table, "table is null");
         Objects.requireNonNull(collection, "collection is null");
         try (ResultSet results = databaseMetaData.getVersionColumns(catalog, schema, table)) {
             if (results != null) {
                 bind(results, VersionColumn.class, collection);
             }
-        } catch (final SQLException sqle) {
-            //log..error("failed to getVersionColumns({}, {}, {})", catalog, schema, table, sqle);
-            throwUnlessSuppressed(sqle);
+//        } catch (final SQLException sqle) {
+//            //log..error("failed to getVersionColumns({}, {}, {})", catalog, schema, table, sqle);
+//            throwUnlessSuppressed(sqle);
         }
         return collection;
     }

@@ -21,16 +21,20 @@ package com.github.jinahya.database.metadata.bind;
  */
 
 import jakarta.validation.Valid;
+import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
+import jakarta.xml.bind.annotation.XmlElement;
+import jakarta.xml.bind.annotation.XmlElementRef;
+import jakarta.xml.bind.annotation.XmlRootElement;
 import lombok.AccessLevel;
+import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
+import lombok.experimental.SuperBuilder;
 
-import javax.xml.bind.annotation.XmlElement;
-import javax.xml.bind.annotation.XmlElementRef;
-import javax.xml.bind.annotation.XmlRootElement;
 import java.sql.DatabaseMetaData;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -46,82 +50,14 @@ import java.util.List;
 @ChildOf(Schema.class)
 @ParentOf(Attribute.class)
 @ParentOf(SuperType.class)
+@Data
+@NoArgsConstructor
+@SuperBuilder
 public class UDT
         implements MetadataType {
 
     private static final long serialVersionUID = 8665246093405057553L;
 
-    /**
-     * Creates a new instance.
-     */
-    public UDT() {
-        super();
-    }
-
-    // --------------------------------------------------------------------------------------------------------- typeCat
-    public String getTypeCat() {
-        return typeCat;
-    }
-
-    public void setTypeCat(final String typeCat) {
-        this.typeCat = typeCat;
-    }
-
-    // ------------------------------------------------------------------------------------------------------- typeSchem
-    public String getTypeSchem() {
-        return typeSchem;
-    }
-
-    public void setTypeSchem(final String typeSchem) {
-        this.typeSchem = typeSchem;
-    }
-
-    // -------------------------------------------------------------------------------------------------------- typeName
-    public String getTypeName() {
-        return typeName;
-    }
-
-    public void setTypeName(final String typeName) {
-        this.typeName = typeName;
-    }
-
-    // ------------------------------------------------------------------------------------------------------ className
-    public String getClassName() {
-        return className;
-    }
-
-    public void setClassName(final String className) {
-        this.className = className;
-    }
-
-    // -------------------------------------------------------------------------------------------------------- dataType
-    public int getDataType() {
-        return dataType;
-    }
-
-    public void setDataType(final int dataType) {
-        this.dataType = dataType;
-    }
-
-    // --------------------------------------------------------------------------------------------------------- remarks
-    public String getRemarks() {
-        return remarks;
-    }
-
-    public void setRemarks(final String remarks) {
-        this.remarks = remarks;
-    }
-
-    // -------------------------------------------------------------------------------------------------------- baseType
-    public Short getBaseType() {
-        return baseType;
-    }
-
-    public void setBaseType(final Short baseType) {
-        this.baseType = baseType;
-    }
-
-    // ------------------------------------------------------------------------------------------------------ attributes
     public List<Attribute> getAttributes() {
         if (attributes == null) {
             attributes = new ArrayList<>();
@@ -129,7 +65,6 @@ public class UDT
         return attributes;
     }
 
-    // ------------------------------------------------------------------------------------------------------ superTypes
     public List<SuperType> getSuperTypes() {
         if (superTypes == null) {
             superTypes = new ArrayList<>();
@@ -137,37 +72,39 @@ public class UDT
         return superTypes;
     }
 
-    @XmlElement(required = true, nillable = true)
+    @XmlElement(nillable = true, required = true)
     @NullableBySpecification
     @Label("TYPE_CAT")
     private String typeCat;
 
-    @XmlElement(required = true, nillable = true)
+    @XmlElement(nillable = true,required = true)
     @NullableBySpecification
     @Label("TYPE_SCHEM")
     private String typeSchem;
 
-    @XmlElement(required = true)
+    @XmlElement(nillable = false, required = true)
+    @NotBlank
     @Label("TYPE_NAME")
     private String typeName;
 
-    @XmlElement(required = true)
+    @XmlElement(nillable = false, required = true)
     @Label("CLASS_NAME")
     private String className;
 
-    @XmlElement(required = true)
+    @XmlElement(nillable = false, required = true)
     @Label("DATA_TYPE")
     private int dataType;
 
-    @XmlElement(required = true)
+    @XmlElement(nillable = false, required = true)
     @Label("REMARKS")
     private String remarks;
 
-    @XmlElement(required = true, nillable = true)
+    @XmlElement(nillable = true, required = true)
     @NullableBySpecification
     @Label("BASE_TYPE")
-    private Short baseType;
+    private Integer baseType;
 
+    // -----------------------------------------------------------------------------------------------------------------
     @XmlElementRef
     @Setter(AccessLevel.NONE)
     @Getter(AccessLevel.NONE)

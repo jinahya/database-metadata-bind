@@ -22,18 +22,23 @@ package com.github.jinahya.database.metadata.bind;
 
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotNull;
+import jakarta.xml.bind.annotation.XmlElement;
+import jakarta.xml.bind.annotation.XmlElementRef;
+import jakarta.xml.bind.annotation.XmlRootElement;
+import jakarta.xml.bind.annotation.XmlTransient;
 import lombok.AccessLevel;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
+import lombok.experimental.SuperBuilder;
 
-import javax.xml.bind.annotation.XmlElement;
-import javax.xml.bind.annotation.XmlElementRef;
-import javax.xml.bind.annotation.XmlRootElement;
 import java.sql.DatabaseMetaData;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Comparator;
 import java.util.List;
 
 /**
@@ -47,9 +52,17 @@ import java.util.List;
 @ChildOf(Schema.class)
 @ParentOf(ProcedureColumn.class)
 @Data
+@NoArgsConstructor
+@SuperBuilder(toBuilder = true)
 public class Procedure implements MetadataType {
 
     private static final long serialVersionUID = -6262056388403934829L;
+
+    public static final Comparator<Procedure> COMPARATOR =
+            Comparator.comparing(Procedure::getProcedureCat, Comparator.nullsFirst(Comparator.naturalOrder()))
+                    .thenComparing(Procedure::getProcedureSchem, Comparator.nullsFirst(Comparator.naturalOrder()))
+                    .thenComparing(Procedure::getProcedureName)
+                    .thenComparing(Procedure::getSpecificName);
 
     public List<ProcedureColumn> getProcedureColumns() {
         if (procedureColumns == null) {
@@ -58,35 +71,45 @@ public class Procedure implements MetadataType {
         return procedureColumns;
     }
 
-    @XmlElement(required = true, nillable = true)
+    @XmlElement(nillable = true, required = true)
     @NullableBySpecification
     @Label("PROCEDURE_CAT")
     private String procedureCat;
 
-    @XmlElement(required = true, nillable = true)
+    @XmlElement(nillable = true, required = true)
     @NullableBySpecification
     @Label("PROCEDURE_SCHEM")
     private String procedureSchem;
 
-    @XmlElement(required = true)
+    @XmlElement(nillable = false, required = true)
     @Label("PROCEDURE_NAME")
     private String procedureName;
 
-    @XmlElement(required = true, nillable = true)
+    @XmlElement(nillable = true, required = true)
     @NullableByVendor("HSQL")
     @Label("REMARKS")
     private String remarks;
 
-    @XmlElement(required = true)
+    @XmlElement(nillable = false, required = true)
     @Label("PROCEDURE_TYPE")
     private short procedureType;
 
-    @XmlElement(required = true)
+    @XmlElement(nillable = false, required = true)
     @Label("SPECIFIC_NAME")
     private String specificName;
 
+    // -----------------------------------------------------------------------------------------------------------------
+    @XmlTransient
+    @Valid
+    @Setter(AccessLevel.NONE)
+    @Getter(AccessLevel.NONE)
+    @EqualsAndHashCode.Exclude
+    @ToString.Exclude
+    private Schema schema;
+
     @XmlElementRef
     @Setter(AccessLevel.NONE)
+    @Getter(AccessLevel.NONE)
     @EqualsAndHashCode.Exclude
     @ToString.Exclude
     private List<@Valid @NotNull ProcedureColumn> procedureColumns;

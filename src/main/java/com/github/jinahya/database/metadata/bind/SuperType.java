@@ -20,8 +20,12 @@ package com.github.jinahya.database.metadata.bind;
  * #L%
  */
 
-import javax.xml.bind.annotation.XmlElement;
-import javax.xml.bind.annotation.XmlRootElement;
+import jakarta.xml.bind.annotation.XmlElement;
+import jakarta.xml.bind.annotation.XmlRootElement;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+import lombok.experimental.SuperBuilder;
+
 import java.sql.DatabaseMetaData;
 import java.util.Collection;
 
@@ -34,104 +38,39 @@ import java.util.Collection;
  */
 @XmlRootElement
 @ChildOf(UDT.class)
+@Data
+@NoArgsConstructor
+@SuperBuilder(toBuilder = true)
 public class SuperType
         implements MetadataType {
 
     private static final long serialVersionUID = 4603878785941565029L;
 
-    /**
-     * Creates a new instance.
-     */
-    public SuperType() {
-        super();
-    }
-
-    @Override
-    public String toString() {
-        return super.toString() + '{'
-               + "typeCat='" + typeCat
-               + ",typeSchem=" + typeSchem
-               + ",typeName=" + typeName
-               + ",supertypeCat=" + supertypeCat
-               + ",supertypeSchem=" + supertypeSchem
-               + ",supertypeName=" + supertypeName
-               + '}';
-    }
-
-    public String getTypeCat() {
-        return typeCat;
-    }
-
-    public void setTypeCat(final String typeCat) {
-        this.typeCat = typeCat;
-    }
-
-    public String getTypeSchem() {
-        return typeSchem;
-    }
-
-    public void setTypeSchem(final String typeSchem) {
-        this.typeSchem = typeSchem;
-    }
-
-    public String getTypeName() {
-        return typeName;
-    }
-
-    public void setTypeName(final String typeName) {
-        this.typeName = typeName;
-    }
-
-    public String getSupertypeCat() {
-        return supertypeCat;
-    }
-
-    public void setSupertypeCat(final String supertypeCat) {
-        this.supertypeCat = supertypeCat;
-    }
-
-    public String getSupertypeSchem() {
-        return supertypeSchem;
-    }
-
-    public void setSupertypeSchem(final String supertypeSchem) {
-        this.supertypeSchem = supertypeSchem;
-    }
-
-    // --------------------------------------------------------------------------------------------------- supertypeName
-    public String getSupertypeName() {
-        return supertypeName;
-    }
-
-    public void setSupertypeName(final String supertypeName) {
-        this.supertypeName = supertypeName;
-    }
-
-    @XmlElement(required = true, nillable = true)
+    @XmlElement(nillable = true, required = true)
     @NullableBySpecification
     @Label("TYPE_CAT")
     private String typeCat;
 
-    @XmlElement(required = true, nillable = true)
+    @XmlElement(nillable = true, required = true)
     @NullableBySpecification
     @Label("TYPE_SCHEM")
     private String typeSchem;
 
-    @XmlElement(required = true)
+    @XmlElement(nillable = false, required = true)
     @Label("TYPE_NAME")
     private String typeName;
 
-    @XmlElement(required = true, nillable = true)
+    @XmlElement(nillable = true, required = true)
     @NullableBySpecification
     @Label("SUPERTYPE_CAT")
     private String supertypeCat;
 
-    @XmlElement(required = true, nillable = true)
+    @XmlElement(nillable = true, required = true)
     @NullableBySpecification
     @Label("SUPERTYPE_SCHEM")
     private String supertypeSchem;
 
-    @XmlElement(required = true)
+    @XmlElement(nillable = false, required = true)
     @Label("SUPERTYPE_NAME")
     private String supertypeName;
 }

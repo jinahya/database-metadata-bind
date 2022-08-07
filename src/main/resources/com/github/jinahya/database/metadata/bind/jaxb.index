@@ -23,7 +23,6 @@ Procedure
 ProcedureColumn
 PseudoColumn
 Schema
-SchemaName
 SuperTable
 SuperType
 SupportsConvert

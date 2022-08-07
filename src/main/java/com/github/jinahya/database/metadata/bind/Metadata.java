@@ -20,18 +20,17 @@ package com.github.jinahya.database.metadata.bind;
  * #L%
  */
 
+import jakarta.xml.bind.annotation.XmlElementRef;
+import jakarta.xml.bind.annotation.XmlRootElement;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.Setter;
 
-import javax.xml.bind.annotation.XmlElementRef;
-import javax.xml.bind.annotation.XmlRootElement;
 import java.lang.invoke.MethodHandles;
 import java.sql.SQLException;
 import java.sql.SQLFeatureNotSupportedException;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import static java.util.Objects.requireNonNull;
@@ -61,9 +60,9 @@ public class Metadata {
             instance.catalogs.add(Catalog.newVirtualInstance()); // ""
         }
         for (final Catalog catalog : instance.catalogs) {
-            context.getSchemas(catalog, null, catalog.getSchemas());
+            context.getSchemas(catalog.getTableCat(), null, catalog.getSchemas());
             if (catalog.getSchemas().isEmpty()) {
-                catalog.getSchemas().add(Schema.newVirtualInstance(catalog)); // ""
+                catalog.getSchemas().add(Schema.newVirtualInstance(catalog.getTableCat())); // ""
             }
             for (final Schema schema : catalog.getSchemas()) {
                 try {
@@ -80,10 +79,22 @@ public class Metadata {
                 for (final Procedure procedure : schema.getProcedures()) {
                     context.getProcedureColumns(procedure, "%", procedure.getProcedureColumns());
                 }
-                context.getTables(schema, "%", null, schema.getTables());
+                context.getTables(
+                        schema.getTableCatalog(),
+                        schema.getTableSchem(),
+                        "%",
+                        null,
+                        schema.getTables()
+                );
                 for (final Table table : schema.getTables()) {
                     for (final BestRowIdentifier.Scope value : BestRowIdentifier.Scope.values()) {
-                        context.getBestRowIdentifier(table, value.rawValue(), true, table.getBestRowIdentifiers());
+                        context.getBestRowIdentifier(
+                                table.getTableCat(),
+                                table.getTableSchem(),
+                                table.getTableName(),
+                                value.rawValue(),
+                                true,
+                                table.getBestRowIdentifiers());
                     }
                     context.getColumns(table, "%", table.getColumns());
                     context.getColumnPrivileges(table, "%", table.getColumnPrivileges());
@@ -92,14 +103,14 @@ public class Metadata {
                     context.getIndexInfo(table, false, true, table.getIndexInfo());
                     context.getPrimaryKeys(table, table.getPrimaryKeys());
                     context.getPseudoColumns(table, "%", table.getPseudoColumns());
-                    context.getSuperTables(table, table.getSuperTables());
+//                    context.getSuperTables(table.getTableCat(), table.getTableSchem(), "%", table.getSuperTables());
                     context.getTablePrivileges(table, table.getTablePrivileges());
                     context.getVersionColumns(table, table.getVersionColumns());
                 }
                 context.getUDTs(schema, "%", null, schema.getUDTs());
                 for (final UDT udt : schema.getUDTs()) {
                     context.getAttributes(udt, "%", udt.getAttributes());
-                    context.getSuperTypes(udt, udt.getSuperTypes());
+                    context.getSuperTypes(udt.getTypeCat(), udt.getTypeSchem(), udt.getTypeName(), udt.getSuperTypes());
                 }
             }
         }

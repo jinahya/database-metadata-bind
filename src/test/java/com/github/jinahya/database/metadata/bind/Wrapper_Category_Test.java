@@ -21,12 +21,12 @@ package com.github.jinahya.database.metadata.bind;
  */
 
 import com.launchableinc.CyYoung;
+import jakarta.xml.bind.JAXBException;
+import jakarta.xml.bind.Marshaller;
+import jakarta.xml.bind.PropertyException;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.io.TempDir;
 
-import javax.xml.bind.JAXBException;
-import javax.xml.bind.Marshaller;
-import javax.xml.bind.PropertyException;
 import javax.xml.transform.stream.StreamSource;
 import java.io.File;
 import java.io.IOException;

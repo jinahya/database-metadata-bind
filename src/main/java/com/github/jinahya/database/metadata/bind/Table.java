@@ -21,18 +21,23 @@ package com.github.jinahya.database.metadata.bind;
  */
 
 import jakarta.validation.Valid;
+import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
+import jakarta.xml.bind.annotation.XmlElement;
+import jakarta.xml.bind.annotation.XmlElementRef;
+import jakarta.xml.bind.annotation.XmlRootElement;
 import lombok.AccessLevel;
+import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
+import lombok.experimental.SuperBuilder;
 
-import javax.xml.bind.annotation.XmlElement;
-import javax.xml.bind.annotation.XmlElementRef;
-import javax.xml.bind.annotation.XmlRootElement;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Comparator;
 import java.util.List;
 
 /**
@@ -56,10 +61,19 @@ import java.util.List;
 @ParentOf(SuperTable.class)
 @ParentOf(TablePrivilege.class)
 @ParentOf(VersionColumn.class)
+@Data
+@NoArgsConstructor
+@SuperBuilder(toBuilder = true)
 public class Table
         implements MetadataType {
 
     private static final long serialVersionUID = 6590036695540141125L;
+
+    public static final Comparator<Table> COMPARATOR =
+            Comparator.comparing(Table::getTableType)
+                    .thenComparing(Table::getTableCat, Comparator.nullsFirst(Comparator.naturalOrder()))
+                    .thenComparing(Table::getTableSchem, Comparator.nullsFirst(Comparator.naturalOrder()))
+                    .thenComparing(Table::getTableName);
 
     // -------------------------------------------------------------------------------------------- TABLE_CAT / tableCat
     public static final String COLUMN_LABEL_TABLE_CAT = "TABLE_CAT";
@@ -76,119 +90,6 @@ public class Table
 
     public static final String ATTRIBUTE_NAME_TABLE_NAME = "tableName";
 
-    /**
-     * Creates a new instance.
-     */
-    public Table() {
-        super();
-    }
-
-    @Override
-    public String toString() {
-        return super.toString() + '{'
-               + "tableCat=" + tableCat
-               + ",tableSchem=" + tableSchem
-               + ",tableName=" + tableName
-               + ",tableType=" + tableType
-               + ",remarks=" + remarks
-               + ",typeCat=" + typeCat
-               + ",typeSchem=" + typeSchem
-               + ",typeName=" + typeName
-               + ",selfReferencingColName=" + selfReferencingColName
-               + ",refGeneration=" + refGeneration
-               + ",bestRowIdentifiers=" + bestRowIdentifiers
-               + ",columns=" + columns
-               + ",columnPrivileges=" + columnPrivileges
-               + ",indexInfo=" + indexInfo
-               + ",primaryKeys=" + primaryKeys
-               + ",pseudoColumns=" + pseudoColumns
-               + ",superTables=" + superTables
-               + ",tablePrivileges=" + tablePrivileges
-               + ",versionColumns=" + versionColumns
-               + '}';
-    }
-
-    public String getTableCat() {
-        return tableCat;
-    }
-
-    public void setTableCat(final String tableCat) {
-        this.tableCat = tableCat;
-    }
-
-    public String getTableSchem() {
-        return tableSchem;
-    }
-
-    public void setTableSchem(final String tableSchem) {
-        this.tableSchem = tableSchem;
-    }
-
-    public String getTableName() {
-        return tableName;
-    }
-
-    public void setTableName(final String tableName) {
-        this.tableName = tableName;
-    }
-
-    public String getTableType() {
-        return tableType;
-    }
-
-    public void setTableType(final String tableType) {
-        this.tableType = tableType;
-    }
-
-    public String getRemarks() {
-        return remarks;
-    }
-
-    public void setRemarks(final String remarks) {
-        this.remarks = remarks;
-    }
-
-    public String getTypeCat() {
-        return typeCat;
-    }
-
-    public void setTypeCat(final String typeCat) {
-        this.typeCat = typeCat;
-    }
-
-    public String getTypeSchem() {
-        return typeSchem;
-    }
-
-    public void setTypeSchem(final String typeSchem) {
-        this.typeSchem = typeSchem;
-    }
-
-    public String getTypeName() {
-        return typeName;
-    }
-
-    public void setTypeName(final String typeName) {
-        this.typeName = typeName;
-    }
-
-    public String getSelfReferencingColName() {
-        return selfReferencingColName;
-    }
-
-    public void setSelfReferencingColName(final String selfReferencingColName) {
-        this.selfReferencingColName = selfReferencingColName;
-    }
-
-    public String getRefGeneration() {
-        return refGeneration;
-    }
-
-    public void setRefGeneration(final String refGeneration) {
-        this.refGeneration = refGeneration;
-    }
-
-    // ---------------------------------------------------------------------------------------------- bestRowIdentifiers
     public List<BestRowIdentifier> getBestRowIdentifiers() {
         if (bestRowIdentifiers == null) {
             bestRowIdentifiers = new ArrayList<>();
@@ -196,7 +97,6 @@ public class Table
         return bestRowIdentifiers;
     }
 
-    // --------------------------------------------------------------------------------------------------------- columns
     public List<Column> getColumns() {
         if (columns == null) {
             columns = new ArrayList<>();
@@ -204,7 +104,6 @@ public class Table
         return columns;
     }
 
-    // ------------------------------------------------------------------------------------------------ columnPrivileges
     public List<ColumnPrivilege> getColumnPrivileges() {
         if (columnPrivileges == null) {
             columnPrivileges = new ArrayList<>();
@@ -212,7 +111,6 @@ public class Table
         return columnPrivileges;
     }
 
-    // ---------------------------------------------------------------------------------------------------- exportedKeys
     public List<ExportedKey> getExportedKeys() {
         if (exportedKeys == null) {
             exportedKeys = new ArrayList<>();
@@ -220,7 +118,6 @@ public class Table
         return exportedKeys;
     }
 
-    // ---------------------------------------------------------------------------------------------------- importedKeys
     public List<ImportedKey> getImportedKeys() {
         if (importedKeys == null) {
             importedKeys = new ArrayList<>();
@@ -228,7 +125,6 @@ public class Table
         return importedKeys;
     }
 
-    // ------------------------------------------------------------------------------------------------------- indexInfo
     public List<IndexInfo> getIndexInfo() {
         if (indexInfo == null) {
             indexInfo = new ArrayList<>();
@@ -236,7 +132,6 @@ public class Table
         return indexInfo;
     }
 
-    // ----------------------------------------------------------------------------------------------------- primaryKeys
     public List<PrimaryKey> getPrimaryKeys() {
         if (primaryKeys == null) {
             primaryKeys = new ArrayList<>();
@@ -244,7 +139,6 @@ public class Table
         return primaryKeys;
     }
 
-    // --------------------------------------------------------------------------------------------------- pseudoColumns
     public List<PseudoColumn> getPseudoColumns() {
         if (pseudoColumns == null) {
             pseudoColumns = new ArrayList<>();
@@ -252,15 +146,6 @@ public class Table
         return pseudoColumns;
     }
 
-    // ----------------------------------------------------------------------------------------------------- superTables
-    public List<SuperTable> getSuperTables() {
-        if (superTables == null) {
-            superTables = new ArrayList<>();
-        }
-        return superTables;
-    }
-
-    // ------------------------------------------------------------------------------------------------- tablePrivileges
     public List<TablePrivilege> getTablePrivileges() {
         if (tablePrivileges == null) {
             tablePrivileges = new ArrayList<>();
@@ -268,7 +153,6 @@ public class Table
         return tablePrivileges;
     }
 
-    // -------------------------------------------------------------------------------------------------- versionColumns
     public List<VersionColumn> getVersionColumns() {
         if (versionColumns == null) {
             versionColumns = new ArrayList<>();
@@ -276,60 +160,63 @@ public class Table
         return versionColumns;
     }
 
-    @XmlElement(required = true, nillable = true)
+    @XmlElement(nillable = true, required = true)
     @NullableBySpecification
     @Label(COLUMN_LABEL_TABLE_CAT)
     private String tableCat;
 
-    @XmlElement(required = true, nillable = true)
+    @XmlElement(nillable = true, required = true)
     @NullableBySpecification
     @Label(COLUMN_LABEL_TABLE_SCHEM)
     private String tableSchem;
 
-    @XmlElement(required = true)
+    @XmlElement(nillable = false, required = true)
+    @NotBlank
     @Label(COLUMN_LABEL_TABLE_NAME)
     private String tableName;
 
-    @XmlElement(required = true)
+    @XmlElement(nillable = false, required = true)
+    @NotBlank
     @Label("TABLE_TYPE")
     private String tableType;
 
-    @XmlElement(required = true, nillable = true)
+    @XmlElement(nillable = true, required = true)
     @NullableBySpecification
     @Label("REMARKS")
     private String remarks;
 
-    @XmlElement(required = true, nillable = true)
+    @XmlElement(nillable = true, required = true)
     @NullableBySpecification
     @Label("TYPE_CAT")
     private String typeCat;
 
-    @XmlElement(required = true, nillable = true)
+    @XmlElement(nillable = true, required = true)
     @NullableBySpecification
     @Label("TYPE_SCHEM")
     private String typeSchem;
 
-    @XmlElement(required = true, nillable = true)
+    @XmlElement(nillable = true, required = true)
     @NullableBySpecification
     @Label("TYPE_NAME")
     private String typeName;
 
-    @XmlElement(required = true, nillable = true)
+    @XmlElement(nillable = true, required = true)
     @NullableBySpecification
     @Label("SELF_REFERENCING_COL_NAME")
     private String selfReferencingColName;
 
-    @XmlElement(required = true, nillable = true)
+    @XmlElement(nillable = true, required = true)
     @NullableBySpecification
     @Label("REF_GENERATION")
     private String refGeneration;
 
+    // -----------------------------------------------------------------------------------------------------------------
     @XmlElementRef
     @Setter(AccessLevel.NONE)
     @Getter(AccessLevel.NONE)
     @EqualsAndHashCode.Exclude
     @ToString.Exclude
-    private List<BestRowIdentifier> bestRowIdentifiers;
+    private List<@Valid @NotNull BestRowIdentifier> bestRowIdentifiers;
 
     @XmlElementRef
     @Setter(AccessLevel.NONE)
@@ -343,7 +230,7 @@ public class Table
     @Getter(AccessLevel.NONE)
     @EqualsAndHashCode.Exclude
     @ToString.Exclude
-    private List<ColumnPrivilege> columnPrivileges;
+    private List<@Valid @NotNull ColumnPrivilege> columnPrivileges;
 
     @XmlElementRef
     @Setter(AccessLevel.NONE)
@@ -379,13 +266,6 @@ public class Table
     @EqualsAndHashCode.Exclude
     @ToString.Exclude
     private List<@Valid @NotNull PseudoColumn> pseudoColumns;
-
-    @XmlElementRef
-    @Setter(AccessLevel.NONE)
-    @Getter(AccessLevel.NONE)
-    @EqualsAndHashCode.Exclude
-    @ToString.Exclude
-    private List<@Valid @NotNull SuperTable> superTables;
 
     @XmlElementRef
     @Setter(AccessLevel.NONE)

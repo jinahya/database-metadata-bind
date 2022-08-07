@@ -20,9 +20,11 @@ package com.github.jinahya.database.metadata.bind;
  * #L%
  */
 
-import javax.xml.bind.annotation.XmlElement;
-import javax.xml.bind.annotation.XmlRootElement;
-import java.util.Objects;
+import jakarta.xml.bind.annotation.XmlElement;
+import jakarta.xml.bind.annotation.XmlRootElement;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+import lombok.experimental.SuperBuilder;
 
 /**
  * A entity class for binding the result of
@@ -31,99 +33,30 @@ import java.util.Objects;
  * @author Jin Kwon &lt;jinahya_at_gmail.com&gt;
  */
 @XmlRootElement
-@ChildOf(Table.class)
+@ChildOf(Schema.class)
+@Data
+@NoArgsConstructor
+@SuperBuilder(toBuilder = true)
 public class SuperTable
         implements MetadataType {
 
     private static final long serialVersionUID = -302335602056528563L;
 
-    /**
-     * Creates a new instance.
-     */
-    public SuperTable() {
-        super();
-    }
-
-    @Override
-    public String toString() {
-        return super.toString() + '{'
-               + "tableCat=" + tableCat
-               + ",tableSchem=" + tableSchem
-               + ",tableName=" + tableName
-               + ",supertableName=" + supertableName
-               + '}';
-    }
-
-    @Override
-    public boolean equals(final Object obj) {
-        if (this == obj) return true;
-        if (obj == null || getClass() != obj.getClass()) return false;
-        final SuperTable that = (SuperTable) obj;
-        return Objects.equals(tableCat, that.tableCat)
-               && Objects.equals(tableSchem, that.tableSchem)
-               && Objects.equals(tableName, that.tableName)
-               && Objects.equals(supertableName, that.supertableName);
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(tableCat,
-                            tableSchem,
-                            tableName,
-                            supertableName);
-    }
-
-    // -------------------------------------------------------------------------------------------------------- tableCat
-    public String getTableCat() {
-        return tableCat;
-    }
-
-    public void setTableCat(final String tableCat) {
-        this.tableCat = tableCat;
-    }
-
-    // ------------------------------------------------------------------------------------------------------ tableSchem
-    public String getTableSchem() {
-        return tableSchem;
-    }
-
-    public void setTableSchem(final String tableSchem) {
-        this.tableSchem = tableSchem;
-    }
-
-    // ------------------------------------------------------------------------------------------------------- tableName
-    public String getTableName() {
-        return tableName;
-    }
-
-    public void setTableName(final String tableName) {
-        this.tableName = tableName;
-    }
-
-    // -------------------------------------------------------------------------------------------------- supertableName
-    public String getSupertableName() {
-        return supertableName;
-    }
-
-    public void setSupertableName(final String supertableName) {
-        this.supertableName = supertableName;
-    }
-
-    @XmlElement(required = true, nillable = true)
+    @XmlElement(nillable = true, required = true)
     @NullableBySpecification
     @Label("TABLE_CAT")
     private String tableCat;
 
-    @XmlElement(required = true, nillable = true)
+    @XmlElement(nillable = true, required = true)
     @NullableBySpecification
     @Label("TABLE_SCHEM")
     private String tableSchem;
 
-    @XmlElement(required = true)
+    @XmlElement(nillable = false, required = true)
     @Label("TABLE_NAME")
     private String tableName;
 
-    @XmlElement(required = true)
+    @XmlElement(nillable = false, required = true)
     @Label("SUPERTABLE_NAME")
     private String supertableName;
 }

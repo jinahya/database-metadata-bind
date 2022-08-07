@@ -20,9 +20,9 @@ package com.github.jinahya.database.metadata.bind;
  * #L%
  */
 
+import jakarta.xml.bind.JAXBException;
 import lombok.extern.slf4j.Slf4j;
 
-import javax.xml.bind.JAXBException;
 import java.io.File;
 import java.nio.file.Paths;
 import java.sql.SQLException;
@@ -162,6 +162,37 @@ final class ContextTestUtils {
         Wrapper.marshalFormatted(OwnUpdatesAreVisible.class, all, target);
     }
 
+    static void writeProcedures(final Context context) throws SQLException, JAXBException {
+        final List<Procedure> procedures;
+        try {
+            procedures = context.getProcedures(null, null, "%", new ArrayList<>());
+        } catch (final SQLFeatureNotSupportedException slqfnse) {
+            log.error("not supported; getProcedures", slqfnse);
+            return;
+        }
+        for (final var procedure : procedures) {
+            assertThat(procedure)
+                    .usingComparator(Procedure.COMPARATOR)
+                    .isEqualTo(procedure);
+            context.getProcedureColumns(
+                    procedure.getProcedureCat(),
+                    procedure.getProcedureSchem(),
+                    procedure.getProcedureName(),
+                    "%",
+                    procedure.getProcedureColumns()
+            );
+            for (final var procedureColumn : procedure.getProcedureColumns()) {
+//                assertThat(procedureColumn)
+//                        .isNotNull()
+//                        .usingComparator(ProcedureColumn.COMPARATOR)
+//                        .isEqualTo(procedureColumn);
+            }
+        }
+        final String pathname = TestUtils.getFilenamePrefix(context) + " - procedures.xml";
+        final File target = Paths.get("target", pathname).toFile();
+        Wrapper.marshalFormatted(Procedure.class, procedures, target);
+    }
+
     static void writeSchemas(final Context context) throws SQLException, JAXBException {
         final List<Schema> schemas = context.getSchemas((String) null, null, new ArrayList<>());
         final String pathname = TestUtils.getFilenamePrefix(context) + " - schemas.xml";
@@ -181,7 +212,7 @@ final class ContextTestUtils {
 
     static void writeTables(final Context context) throws SQLException, JAXBException {
         final List<Table> tables = context.getTables(null, null, null, null, new ArrayList<>());
-        for (final Table table : tables) {
+        for (final var table : tables) {
             context.getIndexInfo(
                     table.getTableCat(),
                     table.getTableSchem(),
@@ -195,6 +226,13 @@ final class ContextTestUtils {
                     table.getTableSchem(),
                     table.getTableName(),
                     table.getPrimaryKeys()
+            );
+            context.getPseudoColumns(
+                    table.getTableCat(),
+                    table.getTableSchem(),
+                    table.getTableName(),
+                    "%",
+                    table.getPseudoColumns()
             );
         }
         final String pathname = TestUtils.getFilenamePrefix(context) + " - tables.xml";
@@ -235,6 +273,7 @@ final class ContextTestUtils {
         writeOwnDeletesAreVisible(context);
         writeOwnInsertsAreVisible(context);
         writeOwnUpdatesAreVisible(context);
+        writeProcedures(context);
         writeSchemas(context);
         writeTables(context);
     }

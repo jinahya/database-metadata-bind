@@ -47,7 +47,7 @@
     <version.animal-sniffer>1.21</version.animal-sniffer>
     <version.com.sun.xml.bind>${version.jakarta.xml.bind-api}</version.com.sun.xml.bind>
     <version.jakarta.validation-api>3.0.2</version.jakarta.validation-api>
-    <version.jakarta.xml.bind-api>2.3.3</version.jakarta.xml.bind-api>
+    <version.jakarta.xml.bind-api>4.0.0</version.jakarta.xml.bind-api>
     <version.lombok>1.18.24</version.lombok>
     <version.mariadb-java-client>2.7.2</version.mariadb-java-client>
     <version.maven-failsafe>${version.maven-surefire}</version.maven-failsafe>
@@ -136,7 +136,7 @@
     <dependency>
       <groupId>com.h2database</groupId>
       <artifactId>h2</artifactId>
-      <version>1.4.200</version>
+      <version>2.1.214</version>
       <scope>test</scope>
     </dependency>
     <dependency>
@@ -160,7 +160,7 @@
     <dependency>
       <groupId>jakarta.xml.bind</groupId>
       <artifactId>jakarta.xml.bind-api</artifactId>
-      <version>2.3.3</version>
+      <version>${version.jakarta.xml.bind-api}</version>
       <scope>provided</scope>
     </dependency>
     <dependency>
@@ -204,13 +204,19 @@
     <dependency>
       <groupId>org.hsqldb</groupId>
       <artifactId>hsqldb</artifactId>
-      <version>2.6.1</version>
+      <version>2.7.0</version>
+      <scope>test</scope>
+    </dependency>
+    <dependency>
+      <groupId>org.jboss.weld</groupId>
+      <artifactId>weld-junit5</artifactId>
+      <version>4.0.0.Final</version>
       <scope>test</scope>
     </dependency>
     <dependency>
       <groupId>org.junit.jupiter</groupId>
       <artifactId>junit-jupiter</artifactId>
-      <version>5.8.2</version>
+      <version>5.9.0</version>
       <scope>test</scope>
     </dependency>
     <dependency>
@@ -228,7 +234,7 @@
     <dependency>
       <groupId>org.xerial</groupId>
       <artifactId>sqlite-jdbc</artifactId>
-      <version>3.36.0.3</version>
+      <version>3.39.2.0</version>
       <scope>test</scope>
     </dependency>
   </dependencies>
