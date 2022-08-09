@@ -20,9 +20,9 @@ package com.github.jinahya.database.metadata.bind;
  * #L%
  */
 
-class SupportsResultSetConcurrencyTest extends MetadataTypeTest<SupportsResultSetConcurrency> {
+class SupportsResultSetConcurrencyTest { //extends MetadataTypeTest<SupportsResultSetConcurrency> {
 
-    SupportsResultSetConcurrencyTest() {
-        super(SupportsResultSetConcurrency.class);
-    }
+//    SupportsResultSetConcurrencyTest() {
+//        super(SupportsResultSetConcurrency.class);
+//    }
 }

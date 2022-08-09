@@ -20,11 +20,14 @@ package com.github.jinahya.database.metadata.bind;
  * #L%
  */
 
+import jakarta.validation.constraints.NotBlank;
 import jakarta.xml.bind.annotation.XmlElement;
 import jakarta.xml.bind.annotation.XmlRootElement;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.experimental.SuperBuilder;
+
+import java.sql.SQLException;
 
 /**
  * A entity class for binding the result of
@@ -42,6 +45,10 @@ public class SuperTable
 
     private static final long serialVersionUID = -302335602056528563L;
 
+    @Override
+    public void retrieveChildren(final Context context) throws SQLException {
+    }
+
     @XmlElement(nillable = true, required = true)
     @NullableBySpecification
     @Label("TABLE_CAT")
@@ -53,10 +60,12 @@ public class SuperTable
     private String tableSchem;
 
     @XmlElement(nillable = false, required = true)
+    @NotBlank
     @Label("TABLE_NAME")
     private String tableName;
 
     @XmlElement(nillable = false, required = true)
+    @NotBlank
     @Label("SUPERTABLE_NAME")
     private String supertableName;
 }

@@ -32,6 +32,7 @@ import lombok.Setter;
 import lombok.ToString;
 
 import java.sql.DatabaseMetaData;
+import java.sql.SQLException;
 import java.util.Collection;
 import java.util.Comparator;
 
@@ -54,6 +55,10 @@ public class PrimaryKey
     private static final long serialVersionUID = 3159826510060898330L;
 
     public static final Comparator<PrimaryKey> COMPARATOR = Comparator.comparing(PrimaryKey::getColumnName);
+
+    @Override
+    public void retrieveChildren(final Context context) throws SQLException {
+    }
 
     @XmlElement(nillable = true, required = true)
     @NullableBySpecification

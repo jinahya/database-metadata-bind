@@ -24,14 +24,16 @@ import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import jakarta.xml.bind.annotation.XmlElement;
 import jakarta.xml.bind.annotation.XmlEnum;
+import jakarta.xml.bind.annotation.XmlEnumValue;
 import jakarta.xml.bind.annotation.XmlRootElement;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.experimental.SuperBuilder;
+import lombok.extern.java.Log;
 
 import java.sql.DatabaseMetaData;
+import java.sql.SQLException;
 import java.util.Collection;
-import java.util.Comparator;
 import java.util.Objects;
 
 /**
@@ -46,36 +48,38 @@ import java.util.Objects;
 @Data
 @NoArgsConstructor
 @SuperBuilder(toBuilder = true)
+@Log
 public class BestRowIdentifier
         implements MetadataType {
 
-    private static final long serialVersionUID = -6733770602373723371L;
-
-    public static final Comparator<BestRowIdentifier> COMPARATOR = Comparator.comparing(BestRowIdentifier::getScope);
+    private static final long serialVersionUID = -1512051574198028399L;
 
     /**
-     * Constants for {@code SCOPE} column values of a result of
+     * Constants for {@code SCOPE} column values of the result of
      * {@link DatabaseMetaData#getBestRowIdentifier(String, String, String, int, boolean)} method.
      */
-    @XmlEnum
+    @XmlEnum(Integer.class)
     public enum Scope
             implements IntFieldEnum<Scope> {
 
         /**
          * Constant for {@link DatabaseMetaData#bestRowTemporary}({@value java.sql.DatabaseMetaData#bestRowTemporary}).
          */
-        BEST_ROW_TEMPORARY(DatabaseMetaData.bestRowTemporary),
+        @XmlEnumValue("0")
+        BEST_ROW_TEMPORARY(DatabaseMetaData.bestRowTemporary), // 0
 
         /**
          * Constant for
          * {@link DatabaseMetaData#bestRowTransaction}({@value java.sql.DatabaseMetaData#bestRowTransaction}).
          */
-        BEST_ROW_TRANSACTION(DatabaseMetaData.bestRowTransaction),
+        @XmlEnumValue("1")
+        BEST_ROW_TRANSACTION(DatabaseMetaData.bestRowTransaction), // 1
 
         /**
          * Constant for {@link DatabaseMetaData#bestRowSession}({@value java.sql.DatabaseMetaData#bestRowSession}).
          */
-        BEST_ROW_SESSION(DatabaseMetaData.bestRowSession);
+        @XmlEnumValue("2")
+        BEST_ROW_SESSION(DatabaseMetaData.bestRowSession); // 2
 
         /**
          * Returns the constant whose raw value equals to given.
@@ -103,23 +107,26 @@ public class BestRowIdentifier
      * Constants for {@code PSEUDO_COLUMN} column values of a result of
      * {@link DatabaseMetaData#getBestRowIdentifier(String, String, String, int, boolean)} method.
      */
-    @XmlEnum
+    @XmlEnum(Integer.class)
     public enum PseudoColumn
             implements IntFieldEnum<PseudoColumn> {
 
         /**
          * Constant for {@link DatabaseMetaData#bestRowUnknown}({@value java.sql.DatabaseMetaData#bestRowUnknown}).
          */
+        @XmlEnumValue("0")
         BEST_ROW_UNKNOWN(DatabaseMetaData.bestRowUnknown), // 0
 
         /**
          * Constant for {@link DatabaseMetaData#bestRowNotPseudo}({@value java.sql.DatabaseMetaData#bestRowNotPseudo}).
          */
+        @XmlEnumValue("1")
         BEST_ROW_NOT_PSEUDO(DatabaseMetaData.bestRowNotPseudo), // 1
 
         /**
          * Constant for {@link DatabaseMetaData#bestRowPseudo}({@value java.sql.DatabaseMetaData#bestRowPseudo}).
          */
+        @XmlEnumValue("2")
         BEST_ROW_PSEUDO(DatabaseMetaData.bestRowPseudo); // 2
 
         /**
@@ -144,15 +151,21 @@ public class BestRowIdentifier
         private final int rawValue;
     }
 
+    @Override
+    public void retrieveChildren(final Context context) throws SQLException {
+    }
+
+    @NotNull
     public Scope getScopeAsEnum() {
         return Scope.valueOfRawValue(getScope());
     }
 
-    public void setScopeAsEnum(final Scope scopeAsEnum) {
+    public void setScopeAsEnum(@NotNull final Scope scopeAsEnum) {
         Objects.requireNonNull(scopeAsEnum, "scopeAsEnum is null");
         setScope(scopeAsEnum.rawValue());
     }
 
+    @NotNull
     public PseudoColumn getPseudoColumnAsEnum() {
         return PseudoColumn.valueOfRawValue(getPseudoColumn());
     }

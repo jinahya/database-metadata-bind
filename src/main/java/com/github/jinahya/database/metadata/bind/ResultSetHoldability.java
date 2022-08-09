@@ -27,7 +27,7 @@ import java.sql.ResultSet;
  *
  * @author Jin Kwon &lt;onacit_at_gmail.com&gt;
  */
-enum ResultSetHoldability implements IntFieldEnum<ResultSetHoldability>, MetadataType {
+enum ResultSetHoldability implements IntFieldEnum<ResultSetHoldability> {
 
     /**
      * Constants for {@link ResultSet#HOLD_CURSORS_OVER_COMMIT}({@value java.sql.ResultSet#HOLD_CURSORS_OVER_COMMIT}).

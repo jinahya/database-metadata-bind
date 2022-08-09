@@ -36,6 +36,7 @@ import lombok.Setter;
 import lombok.ToString;
 
 import java.sql.DatabaseMetaData;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
@@ -52,16 +53,15 @@ import java.util.List;
 @ChildOf(Schema.class)
 @ParentOf(FunctionColumn.class)
 @Data
-public class Function implements MetadataType {
+public class Function
+        implements MetadataType {
 
     private static final long serialVersionUID = -3318947900237453301L;
 
-    // -------------------------------------------------------------------------------------- FUNCTION_CAT / functionCat
     public static final String COLUMN_NAME_FUNCTION_CAT = "FUNCTION_CAT";
 
     public static final String ATTRIBUTE_NAME_FUNCTION_CAT = "functionCat";
 
-    // ---------------------------------------------------------------------------------- FUNCTION_SCHEM / functionSchem
     public static final String COLUMN_NAME_FUNCTION_SCHEM = "FUNCTION_SCHEM";
 
     public static final String ATTRIBUTE_NAME_FUNCTION_SCHEM = "functionSchem";
@@ -114,7 +114,21 @@ public class Function implements MetadataType {
         private final int rawValue;
     }
 
-    // -----------------------------------------------------------------------------------------------------------------
+    @Override
+    public void retrieveChildren(final Context context) throws SQLException {
+        {
+            context.getFunctionColumns(
+                    getFunctionCat(),
+                    getFunctionSchem(),
+                    getFunctionName(),
+                    "%",
+                    getFunctionColumns()
+            );
+            for (final FunctionColumn functionColumn : getFunctionColumns()) {
+                functionColumn.retrieveChildren(context);
+            }
+        }
+    }
 
     /**
      * Returns function columns of this function.
@@ -128,7 +142,6 @@ public class Function implements MetadataType {
         return functionColumns;
     }
 
-    // -----------------------------------------------------------------------------------------------------------------
     @XmlElement(nillable = true, required = true)
     @NullableBySpecification
     @Label(COLUMN_NAME_FUNCTION_CAT)
@@ -139,7 +152,6 @@ public class Function implements MetadataType {
     @Label(COLUMN_NAME_FUNCTION_SCHEM)
     private String functionSchem;
 
-    // -----------------------------------------------------------------------------------------------------------------
     @XmlElement(nillable = false, required = true)
     @NotBlank
     @Label("FUNCTION_NAME")
@@ -159,7 +171,6 @@ public class Function implements MetadataType {
     @Label("SPECIFIC_NAME")
     private String specificName;
 
-    // -----------------------------------------------------------------------------------------------------------------
     @XmlTransient
     @Valid
     @Setter(AccessLevel.NONE)

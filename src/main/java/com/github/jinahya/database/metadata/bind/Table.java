@@ -35,10 +35,17 @@ import lombok.Setter;
 import lombok.ToString;
 import lombok.experimental.SuperBuilder;
 
+import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
+import java.util.Objects;
+import java.util.Set;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 /**
  * A class for binding results of
@@ -90,11 +97,289 @@ public class Table
 
     public static final String ATTRIBUTE_NAME_TABLE_NAME = "tableName";
 
-    public List<BestRowIdentifier> getBestRowIdentifiers() {
-        if (bestRowIdentifiers == null) {
-            bestRowIdentifiers = new ArrayList<>();
+    @XmlRootElement
+    @Getter
+    @EqualsAndHashCode
+    @ToString
+    public static class BestRowIdentifierCategory {
+
+        private static final Set<BestRowIdentifierCategory> VALUES = Collections.unmodifiableSet(
+                Arrays.stream(BestRowIdentifier.Scope.values())
+                        .map(IntFieldEnum::rawValue)
+                        .flatMap(rv -> Stream.of(new BestRowIdentifierCategory(rv, false),
+                                                 new BestRowIdentifierCategory(rv, true)))
+                        .collect(Collectors.toSet())
+        );
+
+        public static BestRowIdentifierCategory valueOf(final int scope, final boolean nullable) {
+            return VALUES.stream()
+                    .filter(v -> v.getScope() == scope && v.isNullable() == nullable)
+                    .findFirst()
+                    .orElseThrow(() -> new IllegalArgumentException(
+                            "no value matches; scope: " + scope + ", nullable: " + nullable));
         }
-        return bestRowIdentifiers;
+
+        public BestRowIdentifierCategory(final int scope, final boolean nullable) {
+            super();
+            this.scope = scope;
+            this.nullable = nullable;
+        }
+
+        private BestRowIdentifierCategory() {
+            this(0, false);
+        }
+
+        private final int scope;
+
+        private final boolean nullable;
+    }
+
+    @XmlRootElement
+    public static class CategorizedBestRowIdentifiers {
+
+        public CategorizedBestRowIdentifiers(@NotNull final BestRowIdentifierCategory bestRowIdentifierCategory) {
+            super();
+            this.bestRowIdentifierCategory =
+                    Objects.requireNonNull(bestRowIdentifierCategory, "bestRowIdentifierCategory is null");
+        }
+
+        private CategorizedBestRowIdentifiers() {
+            super();
+            this.bestRowIdentifierCategory = null;
+        }
+
+        @NotNull
+        public List<BestRowIdentifier> getBestRowIdentifiers() {
+            if (bestRowIdentifiers == null) {
+                bestRowIdentifiers = new ArrayList<>();
+            }
+            return bestRowIdentifiers;
+        }
+
+        @XmlElement(nillable = false, required = true)
+        @Valid
+        @NotNull
+        @Setter(AccessLevel.NONE)
+        @Getter
+        private final BestRowIdentifierCategory bestRowIdentifierCategory;
+
+        @XmlElementRef
+        @Setter(AccessLevel.NONE)
+        @Getter(AccessLevel.NONE)
+        private List<@Valid @NotNull BestRowIdentifier> bestRowIdentifiers;
+    }
+
+    @XmlRootElement
+    @Getter
+    @EqualsAndHashCode
+    @ToString
+    public static class IndexInfoCategory {
+
+        private static final Set<IndexInfoCategory> VALUES = Collections.unmodifiableSet(
+                Stream.of(true, false)
+                        .flatMap(u -> Stream.of(new IndexInfoCategory(u, false),
+                                                new IndexInfoCategory(u, true)))
+                        .collect(Collectors.toSet())
+        );
+
+        public static IndexInfoCategory valueOf(final boolean unique, final boolean approximate) {
+            return VALUES.stream()
+                    .filter(v -> v.unique == unique && v.approximate == approximate)
+                    .findFirst()
+                    .orElseThrow(() -> new IllegalArgumentException(
+                            "no value matches; unique: " + unique + ", approximate: " + approximate));
+        }
+
+        private IndexInfoCategory() {
+            this(false, false);
+        }
+
+        private IndexInfoCategory(final boolean unique, final boolean approximate) {
+            super();
+            this.unique = unique;
+            this.approximate = approximate;
+        }
+
+        private final boolean unique;
+
+        private final boolean approximate;
+    }
+
+    @XmlRootElement
+    public static class CategorizedIndexInfo {
+
+        public CategorizedIndexInfo(@NotNull final IndexInfoCategory indexInfoCategory) {
+            super();
+            this.indexInfoCategory =
+                    Objects.requireNonNull(indexInfoCategory, "indexInfoCategory is null");
+        }
+
+        private CategorizedIndexInfo() {
+            super();
+            indexInfoCategory = null;
+        }
+
+        @NotNull
+        public List<IndexInfo> getIndexInfo() {
+            if (indexInfo == null) {
+                indexInfo = new ArrayList<>();
+            }
+            return indexInfo;
+        }
+
+        @XmlElement(nillable = false, required = true)
+        @Valid
+        @NotNull
+        @Setter(AccessLevel.NONE)
+        @Getter
+        private final IndexInfoCategory indexInfoCategory;
+
+        @XmlElementRef
+        @Setter(AccessLevel.NONE)
+        @Getter(AccessLevel.NONE)
+        private List<@Valid @NotNull IndexInfo> indexInfo;
+    }
+
+    @Override
+    public void retrieveChildren(final Context context) throws SQLException {
+        {
+            for (final BestRowIdentifierCategory category : BestRowIdentifierCategory.VALUES) {
+                final CategorizedBestRowIdentifiers categorized = new CategorizedBestRowIdentifiers(category);
+                context.getBestRowIdentifier(
+                        getTypeCat(),
+                        getTableSchem(),
+                        getTableName(),
+                        category.getScope(),
+                        category.isNullable(),
+                        categorized.getBestRowIdentifiers()
+                );
+                for (final BestRowIdentifier identifier : categorized.getBestRowIdentifiers()) {
+                    identifier.retrieveChildren(context);
+                }
+                getCategorizedBestRowIdentifiers().add(categorized);
+            }
+        }
+        {
+            context.getColumns(
+                    getTableCat(),
+                    getTableSchem(),
+                    getTableName(),
+                    "%",
+                    getColumns());
+            for (final Column column : getColumns()) {
+                column.retrieveChildren(context);
+            }
+        }
+        {
+            context.getColumnPrivileges(
+                    getTableCat(),
+                    getTableSchem(),
+                    getTableName(),
+                    "%",
+                    getColumnPrivileges()
+            );
+            for (final ColumnPrivilege columnPrivilege : getColumnPrivileges()) {
+                columnPrivilege.retrieveChildren(context);
+            }
+        }
+        {
+            context.getExportedKeys(
+                    getTableCat(),
+                    getTableSchem(),
+                    getTableName(),
+                    getExportedKeys()
+            );
+            for (final ExportedKey exportedKey : getExportedKeys()) {
+                exportedKey.retrieveChildren(context);
+            }
+        }
+        {
+            context.getImportedKeys(
+                    getTableCat(),
+                    getTableSchem(),
+                    getTableName(),
+                    getImportedKeys()
+            );
+            for (final ImportedKey importedKey : getImportedKeys()) {
+                importedKey.retrieveChildren(context);
+            }
+        }
+        {
+            for (final IndexInfoCategory category : IndexInfoCategory.VALUES) {
+                final CategorizedIndexInfo categorized = new CategorizedIndexInfo(category);
+                context.getIndexInfo(
+                        getTypeCat(),
+                        getTableSchem(),
+                        getTableName(),
+                        category.isUnique(),
+                        category.isApproximate(),
+                        categorized.getIndexInfo()
+                );
+                for (final IndexInfo indexInfo : categorized.getIndexInfo()) {
+                    indexInfo.retrieveChildren(context);
+                }
+                getCategorizedIndexInfo().add(categorized);
+            }
+        }
+        {
+            context.getPrimaryKeys(
+                    getTableCat(),
+                    getTableSchem(),
+                    getTableName(),
+                    getPrimaryKeys()
+            );
+            for (final PrimaryKey primaryKey : getPrimaryKeys()) {
+                primaryKey.retrieveChildren(context);
+            }
+        }
+        {
+            context.getPseudoColumns(
+                    getTableCat(),
+                    getTableSchem(),
+                    getTableName(),
+                    "%",
+                    getPseudoColumns()
+            );
+            for (final PseudoColumn pseudoColumn : getPseudoColumns()) {
+                pseudoColumn.retrieveChildren(context);
+            }
+        }
+        {
+            context.getTablePrivileges(
+                    getTableCat(),
+                    getTableSchem(),
+                    getTableName(),
+                    getTablePrivileges()
+            );
+            for (final TablePrivilege tablePrivilege : getTablePrivileges()) {
+                tablePrivilege.retrieveChildren(context);
+            }
+        }
+        {
+            context.getVersionColumns(
+                    getTableCat(),
+                    getTableSchem(),
+                    getTableName(),
+                    getVersionColumns()
+            );
+            for (final VersionColumn versionColumn : getVersionColumns()) {
+                versionColumn.retrieveChildren(context);
+            }
+        }
+    }
+
+//    public List<BestRowIdentifier> getBestRowIdentifiers() {
+//        if (bestRowIdentifiers == null) {
+//            bestRowIdentifiers = new ArrayList<>();
+//        }
+//        return bestRowIdentifiers;
+//    }
+
+    public List<CategorizedBestRowIdentifiers> getCategorizedBestRowIdentifiers() {
+        if (categorizedBestRowIdentifiers == null) {
+            categorizedBestRowIdentifiers = new ArrayList<>();
+        }
+        return categorizedBestRowIdentifiers;
     }
 
     public List<Column> getColumns() {
@@ -125,11 +410,18 @@ public class Table
         return importedKeys;
     }
 
-    public List<IndexInfo> getIndexInfo() {
-        if (indexInfo == null) {
-            indexInfo = new ArrayList<>();
+//    public List<IndexInfo> getIndexInfo() {
+//        if (indexInfo == null) {
+//            indexInfo = new ArrayList<>();
+//        }
+//        return indexInfo;
+//    }
+
+    public List<CategorizedIndexInfo> getCategorizedIndexInfo() {
+        if (categorizedIndexInfo == null) {
+            categorizedIndexInfo = new ArrayList<>();
         }
-        return indexInfo;
+        return categorizedIndexInfo;
     }
 
     public List<PrimaryKey> getPrimaryKeys() {
@@ -211,12 +503,19 @@ public class Table
     private String refGeneration;
 
     // -----------------------------------------------------------------------------------------------------------------
+//    @XmlElementRef
+//    @Setter(AccessLevel.NONE)
+//    @Getter(AccessLevel.NONE)
+//    @EqualsAndHashCode.Exclude
+//    @ToString.Exclude
+//    private List<@Valid @NotNull BestRowIdentifier> bestRowIdentifiers;
+
     @XmlElementRef
     @Setter(AccessLevel.NONE)
     @Getter(AccessLevel.NONE)
     @EqualsAndHashCode.Exclude
     @ToString.Exclude
-    private List<@Valid @NotNull BestRowIdentifier> bestRowIdentifiers;
+    private List<@Valid @NotNull CategorizedBestRowIdentifiers> categorizedBestRowIdentifiers;
 
     @XmlElementRef
     @Setter(AccessLevel.NONE)
@@ -246,12 +545,19 @@ public class Table
     @ToString.Exclude
     private List<@Valid @NotNull ImportedKey> importedKeys;
 
+//    @XmlElementRef
+//    @Setter(AccessLevel.NONE)
+//    @Getter(AccessLevel.NONE)
+//    @EqualsAndHashCode.Exclude
+//    @ToString.Exclude
+//    private List<@Valid @NotNull IndexInfo> indexInfo;
+
     @XmlElementRef
     @Setter(AccessLevel.NONE)
     @Getter(AccessLevel.NONE)
     @EqualsAndHashCode.Exclude
     @ToString.Exclude
-    private List<@Valid @NotNull IndexInfo> indexInfo;
+    private List<@Valid @NotNull CategorizedIndexInfo> categorizedIndexInfo;
 
     @XmlElementRef
     @Setter(AccessLevel.NONE)

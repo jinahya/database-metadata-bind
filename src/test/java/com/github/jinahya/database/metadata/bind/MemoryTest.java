@@ -98,17 +98,20 @@ abstract class MemoryTest {
         }
     }
 
+    // -----------------------------------------------------------------------------------------------------------------
+
     @Test
-    void catalogs() throws SQLException {
-        try (Connection connection = connect()) {
-            final Context context = context(connection);
-            context.getCatalogs(new ArrayList<>()).forEach(catalog -> {
+    void getCatalogs__() throws SQLException {
+        try (var connection = connect()) {
+            final var context = context(connection);
+            final var catalogs = context.getCatalogs(new ArrayList<>());
+            for (final var catalog : catalogs) {
                 final String string = assertDoesNotThrow(catalog::toString);
                 final int hashCode = assertDoesNotThrow(catalog::hashCode);
-                final String tableCat = (String) MetadataTypeUtils.getLabeledValue(
-                        Catalog.class, catalog, Catalog.COLUMN_LABEL_TABLE_CAT);
-                assertThat(tableCat).isNotNull();
-            });
+                assertThat(catalog.getTableCat())
+                        .isNotNull();
+                catalog.retrieveChildren(context);
+            }
         }
     }
 
@@ -142,24 +145,6 @@ abstract class MemoryTest {
     }
 
     @Test
-    void schemas() throws SQLException {
-        try (Connection connection = connect()) {
-            final Context context = Context.newInstance(connection)
-                    .suppress(SQLFeatureNotSupportedException.class);
-            final List<Schema> schemas = context.getSchemas((String) null, null, new ArrayList<>());
-            TestUtils.testEquals(schemas);
-            for (final Schema schema : schemas) {
-                final String string = assertDoesNotThrow(schema::toString);
-                final int hashCode = assertDoesNotThrow(schema::hashCode);
-                final String tableCatalog = (String) MetadataTypeUtils.getLabeledValue(
-                        Schema.class, schema, Schema.COLUMN_LABEL_TABLE_CATALOG);
-                final String tableSchem = (String) MetadataTypeUtils.getLabeledValue(
-                        Schema.class, schema, Schema.COLUMN_LABEL_TABLE_SCHEM);
-            }
-        }
-    }
-
-    @Test
     void deletesAreDetected() throws SQLException {
         try (Connection connection = connect()) {
             final Context context = Context.newInstance(connection)
@@ -167,7 +152,7 @@ abstract class MemoryTest {
             assertThat(DeletesAreDetected.getAllInstances(context, new ArrayList<>()))
                     .doesNotContainNull()
                     .hasSize(ResultSetType.values().length)
-                    .satisfies(TestUtils::testEquals)
+//                    .satisfies(TestUtils::testEquals)
                     .allSatisfy(v -> {
                         final String string = assertDoesNotThrow(v::toString);
                         final int hashCode = assertDoesNotThrow(v::hashCode);
@@ -183,7 +168,7 @@ abstract class MemoryTest {
             assertThat(InsertsAreDetected.getAllInstances(context, new ArrayList<>()))
                     .doesNotContainNull()
                     .hasSize(ResultSetType.values().length)
-                    .satisfies(TestUtils::testEquals)
+//                    .satisfies(TestUtils::testEquals)
                     .allSatisfy(v -> {
                         final String string = assertDoesNotThrow(v::toString);
                         final int hashCode = assertDoesNotThrow(v::hashCode);
@@ -199,7 +184,7 @@ abstract class MemoryTest {
             assertThat(UpdatesAreDetected.getAllInstances(context, new ArrayList<>()))
                     .doesNotContainNull()
                     .hasSize(ResultSetType.values().length)
-                    .satisfies(TestUtils::testEquals)
+//                    .satisfies(TestUtils::testEquals)
                     .allSatisfy(v -> {
                         final String string = assertDoesNotThrow(v::toString);
                         final int hashCode = assertDoesNotThrow(v::hashCode);
@@ -256,11 +241,53 @@ abstract class MemoryTest {
     }
 
     @Test
+    void getSchemas__() throws SQLException {
+        try (Connection connection = connect()) {
+            final Context context = Context.newInstance(connection);
+            final List<Schema> schemas = context.getSchemas(null, null, new ArrayList<>());
+            if (schemas.isEmpty()) {
+                schemas.add(Schema.newVirtualInstance());
+            }
+            TestUtils.testEquals(schemas);
+            for (final Schema schema : schemas) {
+                final String string = assertDoesNotThrow(schema::toString);
+                final int hashCode = assertDoesNotThrow(schema::hashCode);
+                final String tableCatalog = (String) MetadataTypeUtils.getLabeledValue(
+                        Schema.class, schema, Schema.LABEL_TABLE_CATALOG);
+                final String tableSchem = (String) MetadataTypeUtils.getLabeledValue(
+                        Schema.class, schema, Schema.LABEL_TABLE_SCHEM);
+            }
+            for (final var schema : schemas) {
+                final var superTables = context.getSuperTables(
+                        schema.getTableCatalog(),
+                        schema.getTableSchem(),
+                        "%",
+                        schema.getSuperTables()
+                );
+                for (final var superTable : superTables) {
+                    log.debug("super table: {}", superTable);
+                }
+            }
+        }
+    }
+
+    @Test
+    void getSuperTables__() throws SQLException {
+        try (var connection = connect()) {
+            final var context = Context.newInstance(connection);
+            final var superTables = context.getSuperTables(null, "%", "%", new ArrayList<>());
+            for (final var superTable : superTables) {
+                log.debug("super table: {}", superTable);
+            }
+        }
+    }
+
+    @Test
     void getTables__() throws SQLException {
         try (Connection connection = connect()) {
             final Context context = Context.newInstance(connection)
                     .suppress(SQLFeatureNotSupportedException.class);
-            final List<Table> tables = context.getTables(null, null, null, null, new ArrayList<>());
+            final List<Table> tables = context.getTables(null, null, "%", null, new ArrayList<>());
             TestUtils.testEquals(tables);
             for (final var table : tables) {
                 final String string = assertDoesNotThrow(table::toString);

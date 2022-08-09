@@ -38,8 +38,7 @@ import static java.util.Objects.requireNonNull;
  * @see Context#supportsTransactionIsolationLevel(int)
  */
 @XmlRootElement
-public class SupportsTransactionIsolationLevel
-        implements MetadataType {
+public class SupportsTransactionIsolationLevel {
 
     /**
      * Invokes {@link Context#supportsTransactionIsolationLevel(int)} method for all transaction isolation levels

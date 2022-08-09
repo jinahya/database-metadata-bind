@@ -37,8 +37,7 @@ import static java.util.Objects.requireNonNull;
  * @see Context#supportsResultSetConcurrency(int, int)
  */
 @XmlRootElement
-public class SupportsResultSetConcurrency
-        implements MetadataType {
+public class SupportsResultSetConcurrency {
 
     private static final long serialVersionUID = -4192322973387966785L;
 

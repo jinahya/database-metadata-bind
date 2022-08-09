@@ -33,6 +33,8 @@ import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
 
+import java.sql.SQLException;
+
 /**
  * An abstract class for binding results of {@link java.sql.DatabaseMetaData#getExportedKeys(String, String, String)}
  * method and {@link java.sql.DatabaseMetaData#getImportedKeys(String, String, String)} method.
@@ -45,6 +47,10 @@ import lombok.ToString;
 abstract class TableKey implements MetadataType, HasUpdateRule, HasDeleteRule, HasDeferrability {
 
     private static final long serialVersionUID = 6713872409315471232L;
+
+    @Override
+    public void retrieveChildren(final Context context) throws SQLException {
+    }
 
     // -----------------------------------------------------------------------------------------------------------------
     @XmlElement(nillable = true, required = true)

@@ -39,8 +39,7 @@ import static java.util.Objects.requireNonNull;
  * @see Context#supportsConvert(int, int)
  */
 @XmlRootElement
-public class SupportsConvert
-        implements MetadataType {
+public class SupportsConvert {
 
     /**
      * Invokes {@link Context#supportsConvert(int, int)} method for all combinations of all types defined in

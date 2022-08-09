@@ -26,6 +26,7 @@ import jakarta.xml.bind.annotation.XmlAttribute;
 import jakarta.xml.bind.annotation.XmlElement;
 import jakarta.xml.bind.annotation.XmlElementRef;
 import jakarta.xml.bind.annotation.XmlRootElement;
+import jakarta.xml.bind.annotation.XmlTransient;
 import lombok.AccessLevel;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
@@ -35,6 +36,7 @@ import lombok.Setter;
 import lombok.ToString;
 import lombok.experimental.SuperBuilder;
 
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Comparator;
@@ -51,30 +53,58 @@ import java.util.List;
 @Data
 @NoArgsConstructor
 @SuperBuilder(toBuilder = true)
-public class Catalog implements MetadataType {
+public class Catalog
+        implements MetadataType {
 
     private static final long serialVersionUID = 6239185259128825953L;
 
     public static final Comparator<Catalog> COMPARATOR = Comparator.comparing(Catalog::getTableCat);
 
-    public static final String COLUMN_LABEL_TABLE_CAT = "TABLE_CAT";
+    public static final String LABEL_TABLE_CAT = "TABLE_CAT";
 
-    public static Catalog of(final String tableCat) {
-        final Catalog instance = new Catalog();
-        instance.setTableCat(tableCat);
-        return instance;
-    }
+    public static final String VALUE_TABLE_CAT_EMPTY = "";
 
-    public static Catalog newVirtualInstance(final String tableCat) {
-        final Catalog instance = of(tableCat);
-        instance.virtual = Boolean.TRUE;
-        return instance;
-    }
-
+    /**
+     * Creates a new <em>virtual</em> instance whose {@code tableCat} property is {@value #VALUE_TABLE_CAT_EMPTY}.
+     *
+     * @return a new <em>virtual</em> instance.
+     */
     public static Catalog newVirtualInstance() {
-        return newVirtualInstance("");
+        return builder()
+                .tableCat(VALUE_TABLE_CAT_EMPTY)
+                .virtual(Boolean.TRUE)
+                .build();
     }
 
+    @Override
+    public void retrieveChildren(final Context context) throws SQLException {
+        {
+            context.getSchemas(getTableCat(), "%", getSchemas());
+            if (getSchemas().isEmpty()) {
+                getSchemas().add(Schema.newVirtualInstance(getTableCat()));
+            }
+            for (final Schema schema : getSchemas()) {
+                schema.retrieveChildren(context);
+            }
+        }
+    }
+
+    /**
+     * Indicates whether this catalog is a <em>virtual</em> instance.
+     *
+     * @return {@code true} if this catalog is a <em>virtual</em> instance; {@code false} otherwise.
+     */
+    @XmlTransient
+    public boolean isVirtual() {
+        return virtual != null && virtual;
+    }
+
+    /**
+     * Returns a list of schemas of this catalog.
+     *
+     * @return a list of schemas of this catalog; never {@code null}.
+     */
+    @NotNull
     public List<Schema> getSchemas() {
         if (schemas == null) {
             schemas = new ArrayList<>();
@@ -89,7 +119,7 @@ public class Catalog implements MetadataType {
 
     @XmlElement(nillable = false, required = true)
     @NotNull
-    @Label(COLUMN_LABEL_TABLE_CAT)
+    @Label(LABEL_TABLE_CAT)
     private String tableCat;
 
     @XmlElementRef

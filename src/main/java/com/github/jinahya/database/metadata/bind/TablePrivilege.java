@@ -27,6 +27,8 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.experimental.SuperBuilder;
 
+import java.sql.SQLException;
+
 /**
  * An entity class for binding the result of
  * {@link java.sql.DatabaseMetaData#getTablePrivileges(java.lang.String, java.lang.String, java.lang.String)}.
@@ -42,6 +44,10 @@ public class TablePrivilege
         implements MetadataType {
 
     private static final long serialVersionUID = -1799954363648972203L;
+
+    @Override
+    public void retrieveChildren(final Context context) throws SQLException {
+    }
 
     @XmlElement(nillable = true, required = true)
     @NullableBySpecification

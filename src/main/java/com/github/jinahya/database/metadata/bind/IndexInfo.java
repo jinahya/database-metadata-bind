@@ -36,6 +36,7 @@ import lombok.Setter;
 import lombok.ToString;
 
 import java.sql.DatabaseMetaData;
+import java.sql.SQLException;
 import java.util.Collection;
 import java.util.Comparator;
 import java.util.Objects;
@@ -160,6 +161,10 @@ public class IndexInfo
             return true;
         }
         return getAscOrDesc() == null;
+    }
+
+    @Override
+    public void retrieveChildren(final Context context) throws SQLException {
     }
 
     public Type getTypeAsEnum() {

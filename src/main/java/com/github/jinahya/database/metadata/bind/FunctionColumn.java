@@ -36,6 +36,7 @@ import lombok.Setter;
 import lombok.ToString;
 
 import java.sql.DatabaseMetaData;
+import java.sql.SQLException;
 import java.util.Collection;
 import java.util.Objects;
 
@@ -189,7 +190,10 @@ public class FunctionColumn implements MetadataType {
         private final int rawValue;
     }
 
-    // -----------------------------------------------------------------------------------------------------------------
+    @Override
+    public void retrieveChildren(final Context context) throws SQLException {
+    }
+
     public ColumnType getColumnTypeAsEnum() {
         return ColumnType.valueOfRawValue(getColumnType());
     }
@@ -198,7 +202,6 @@ public class FunctionColumn implements MetadataType {
         setColumnType(Objects.requireNonNull(columnTypeAsEnum, "columnTypeAsEnum is null").rawValue());
     }
 
-    // -----------------------------------------------------------------------------------------------------------------
     @XmlElement(nillable = true, required = true)
     @NullableBySpecification
     @Label("FUNCTION_CAT")
@@ -209,7 +212,6 @@ public class FunctionColumn implements MetadataType {
     @Label("FUNCTION_SCHEM")
     private String functionSchem;
 
-    // -----------------------------------------------------------------------------------------------------------------
     @XmlElement(nillable = false, required = true)
     @NotBlank
     @Label("FUNCTION_NAME")
@@ -281,7 +283,6 @@ public class FunctionColumn implements MetadataType {
     @Label("SPECIFIC_NAME")
     private String specificName;
 
-    // -----------------------------------------------------------------------------------------------------------------
     @XmlTransient
     @Valid
     @Setter(AccessLevel.NONE)

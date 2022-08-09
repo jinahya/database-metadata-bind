@@ -28,7 +28,7 @@ import java.sql.ResultSet;
  * @author Jin Kwon &lt;onacit_at_gmail.com&gt;
  */
 public enum ResultSetType
-        implements IntFieldEnum<ResultSetType>, MetadataType {
+        implements IntFieldEnum<ResultSetType> {
 
     /**
      * A constant for {@link ResultSet#TYPE_FORWARD_ONLY}({@value java.sql.ResultSet#TYPE_FORWARD_ONLY}).

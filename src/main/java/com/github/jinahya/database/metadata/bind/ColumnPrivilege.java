@@ -25,6 +25,7 @@ import jakarta.xml.bind.annotation.XmlRootElement;
 import lombok.Data;
 
 import java.sql.DatabaseMetaData;
+import java.sql.SQLException;
 import java.util.Collection;
 
 /**
@@ -39,6 +40,10 @@ import java.util.Collection;
 public class ColumnPrivilege implements MetadataType {
 
     private static final long serialVersionUID = 4384654744147773380L;
+
+    @Override
+    public void retrieveChildren(final Context context) throws SQLException {
+    }
 
     @XmlElement(nillable = true, required = true)
     @NullableBySpecification

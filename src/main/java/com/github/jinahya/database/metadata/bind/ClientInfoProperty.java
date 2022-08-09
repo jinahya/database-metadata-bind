@@ -25,6 +25,7 @@ import jakarta.xml.bind.annotation.XmlRootElement;
 import lombok.Data;
 
 import java.sql.DatabaseMetaData;
+import java.sql.SQLException;
 import java.util.Collection;
 
 /**
@@ -35,9 +36,14 @@ import java.util.Collection;
  */
 @XmlRootElement
 @Data
-public class ClientInfoProperty implements MetadataType {
+public class ClientInfoProperty
+        implements MetadataType {
 
     private static final long serialVersionUID = -2913230435651853254L;
+
+    @Override
+    public void retrieveChildren(final Context context) throws SQLException {
+    }
 
     @XmlElement(required = true)
     @Label("NAME")

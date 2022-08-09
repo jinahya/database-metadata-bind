@@ -29,6 +29,7 @@ import lombok.NoArgsConstructor;
 import lombok.experimental.SuperBuilder;
 
 import java.sql.DatabaseMetaData;
+import java.sql.SQLException;
 import java.util.Objects;
 
 /**
@@ -177,6 +178,10 @@ public class TypeInfo
          * The raw value of this constant.
          */
         private final int rawValue;
+    }
+
+    @Override
+    public void retrieveChildren(final Context context) throws SQLException {
     }
 
     @NotNull

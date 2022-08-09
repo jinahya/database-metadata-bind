@@ -36,6 +36,7 @@ import lombok.Setter;
 import lombok.ToString;
 import lombok.experimental.SuperBuilder;
 
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Comparator;
@@ -51,10 +52,10 @@ import java.util.Objects;
  * @see Context#getSchemas(String, String, Collection)
  */
 @XmlRootElement
-@ParentOf(Function.class)
-@ParentOf(Procedure.class)
-@ParentOf(Table.class)
 @ParentOf(UDT.class)
+@ParentOf(Table.class)
+@ParentOf(Procedure.class)
+@ParentOf(Function.class)
 @ChildOf(Catalog.class)
 @Data
 @NoArgsConstructor
@@ -68,29 +69,72 @@ public class Schema
             Comparator.comparing(Schema::extractCatalog, Comparator.nullsFirst(Catalog.COMPARATOR))
                     .thenComparing(Schema::getTableSchem);
 
-    // -----------------------------------------------------------------------------------------------------------------
-    public static final String COLUMN_LABEL_TABLE_CATALOG = "TABLE_CATALOG";
+    public static final String LABEL_TABLE_CATALOG = "TABLE_CATALOG";
 
-    public static final String COLUMN_LABEL_TABLE_SCHEM = "TABLE_SCHEM";
+    public static final String LABEL_TABLE_SCHEM = "TABLE_SCHEM";
 
-    // -----------------------------------------------------------------------------------------------------------------
+    public static final String VALUE_TABLE_SCHEM_EMPTY = "";
 
     /**
-     * Creates a new virtual instance with following property values.
+     * Creates a new <em>virtual</em> instance with specified {@code tableCat} property value.
      *
-     * @param tableCatalog a value for {@code tableCatalog} property.
-     * @return a new virtual instance.
+     * @param tableCatalog the value for {@code tableCatalog} property.
+     * @return a new <em>virtual</em> instance.
      */
     public static Schema newVirtualInstance(final String tableCatalog) {
         Objects.requireNonNull(tableCatalog, "tableCatalog is null");
         return builder()
                 .virtual(Boolean.TRUE)
                 .tableCatalog(tableCatalog)
-                .tableSchem("")
+                .tableSchem(VALUE_TABLE_SCHEM_EMPTY)
                 .build();
     }
 
-    // -----------------------------------------------------------------------------------------------------------------
+    /**
+     * Creates a new <em>virtual</em> instance whose {@code tableCat} property is {@value Catalog#VALUE_TABLE_CAT_EMPTY}
+     * and {@code tableSchem} property is {@value #VALUE_TABLE_SCHEM_EMPTY}.
+     *
+     * @return a new <em>virtual</em> instance.
+     */
+    public static Schema newVirtualInstance() {
+        return newVirtualInstance(Catalog.VALUE_TABLE_CAT_EMPTY);
+    }
+
+    @Override
+    public void retrieveChildren(final Context context) throws SQLException {
+        {
+            context.getFunctions(getTableCatalog(), getTableSchem(), "%", getFunctions());
+            for (final Function function : getFunctions()) {
+                function.retrieveChildren(context);
+            }
+        }
+        {
+            context.getProcedures(getTableCatalog(), getTableSchem(), "%", getProcedures());
+            for (final Procedure procedure : getProcedures()) {
+                procedure.retrieveChildren(context);
+            }
+        }
+        {
+            context.getSuperTables(getTableCatalog(), getTableSchem(), "%", getSuperTables());
+            for (final SuperTable superTable : getSuperTables()) {
+                superTable.retrieveChildren(context);
+            }
+        }
+        {
+            context.getTables(getTableCatalog(), getTableSchem(), "%", null, getTables());
+            for (final Table table : getTables()) {
+                table.retrieveChildren(context);
+            }
+        }
+        {
+            context.getUDTs(getTableCatalog(), getTableSchem(), "%", null, getUDTs());
+            for (final UDT udt : getUDTs()) {
+                udt.retrieveChildren(context);
+            }
+        }
+    }
+
+    @XmlTransient
     public boolean isVirtual() {
         return virtual != null && virtual;
     }
@@ -101,7 +145,6 @@ public class Schema
                 .build();
     }
 
-    // -----------------------------------------------------------------------------------------------------------------
     public List<Function> getFunctions() {
         if (functions == null) {
             functions = new ArrayList<>();
@@ -137,24 +180,21 @@ public class Schema
         return UDTs;
     }
 
-    // -----------------------------------------------------------------------------------------------------------------
     @XmlAttribute(required = false)
     @Setter(AccessLevel.NONE)
     @Getter(AccessLevel.NONE)
     private Boolean virtual;
 
-    // -----------------------------------------------------------------------------------------------------------------
     @XmlElement(nillable = true, required = true)
     @NullableBySpecification
-    @Label(COLUMN_LABEL_TABLE_CATALOG)
+    @Label(LABEL_TABLE_CATALOG)
     private String tableCatalog;
 
     @XmlElement(nillable = false, required = true)
     @NotNull
-    @Label(COLUMN_LABEL_TABLE_SCHEM)
+    @Label(LABEL_TABLE_SCHEM)
     private String tableSchem;
 
-    // -----------------------------------------------------------------------------------------------------------------
     @XmlTransient
     @Valid
     @Setter(AccessLevel.PACKAGE)
@@ -163,7 +203,6 @@ public class Schema
     @ToString.Exclude
     private Catalog catalog;
 
-    // -----------------------------------------------------------------------------------------------------------------
     @XmlElementRef
     @Setter(AccessLevel.NONE)
     @Getter(AccessLevel.NONE)

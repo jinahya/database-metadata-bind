@@ -28,6 +28,7 @@ import lombok.NoArgsConstructor;
 import lombok.experimental.SuperBuilder;
 
 import java.sql.DatabaseMetaData;
+import java.sql.SQLException;
 import java.util.Collection;
 import java.util.Comparator;
 
@@ -52,6 +53,10 @@ public class PseudoColumn
                     .thenComparing(PseudoColumn::getTableSchem, Comparator.nullsFirst(Comparator.naturalOrder()))
                     .thenComparing(PseudoColumn::getTableName)
                     .thenComparing(PseudoColumn::getColumnName);
+
+    @Override
+    public void retrieveChildren(final Context context) throws SQLException {
+    }
 
     @XmlElement(nillable = true, required = true)
     @NullableBySpecification

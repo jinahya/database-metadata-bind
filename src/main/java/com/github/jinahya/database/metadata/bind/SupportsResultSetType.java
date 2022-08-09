@@ -38,8 +38,7 @@ import static java.util.Objects.requireNonNull;
  * @see Context#supportsResultSetType(int)
  */
 @XmlRootElement
-public class SupportsResultSetType
-        implements MetadataType {
+public class SupportsResultSetType {
 
     /**
      * Invokes {@link Context#supportsResultSetType(int)} method for all types defined in {@link java.sql.ResultSet} and

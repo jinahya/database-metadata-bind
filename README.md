@@ -11,33 +11,14 @@ All methods defined in [DatabaseMetaData][DatabaseMetaData] meet following condi
 corresponding result types.
 
 * is an instance method.
-* has at least one parameter
-    * (and/or) result type is [ResultSet][ResultSet].
+* whose result type is [ResultSet][ResultSet].
 
 ## Usage
 
 ```java
-java.sql.Connection connection = connect();
-Context context = Context.newInstance(connection)
-        .suppress(SQLFeatureNotSupportedException.class);
-
-List<Catalog> catalogs = context.getCatalogs(new ArrayList<>());
-if (catalogs.isEmpty()) {
-    catalogs.add(Catalog.newVirtualInstance());
+try(Connection connection = connect()){
+    Context context = Context.newInstance(connection);
 }
-
-for (Catalog catalog : catalogs) {
-    context.getSchemas(catalog, null, catalog.getSchemas());
-    if (catalog.getSchemas().isEmpty()) {
-        catalog.getSchemas().add(Schema.newVirtualInstance(catalog));
-    }
-    for (Schema schema : catalog.getSchemas()) {
-        context.getTables(schema, "%", null, schema.getTables());
-    }
-}
-
-// Gather almost all information
-Metadata metadata = Metadata.newInstance(cotext);
 ```
 
 ## Gathering metadata from existing databases

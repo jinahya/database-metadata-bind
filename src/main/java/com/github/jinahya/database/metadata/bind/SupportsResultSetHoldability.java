@@ -38,8 +38,7 @@ import static java.util.Objects.requireNonNull;
  * @see Context#supportsResultSetHoldability(int)
  */
 @XmlRootElement
-public class SupportsResultSetHoldability
-        implements MetadataType {
+public class SupportsResultSetHoldability {
 
     /**
      * Invokes {@link Context#supportsResultSetHoldability(int)} method for all holdabilities and adds bound values to

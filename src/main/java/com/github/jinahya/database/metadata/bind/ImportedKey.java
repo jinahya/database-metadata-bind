@@ -23,6 +23,7 @@ package com.github.jinahya.database.metadata.bind;
 import jakarta.xml.bind.annotation.XmlRootElement;
 
 import java.sql.DatabaseMetaData;
+import java.sql.SQLException;
 import java.util.Collection;
 
 /**
@@ -34,7 +35,13 @@ import java.util.Collection;
  */
 @XmlRootElement
 @ChildOf(Table.class)
-public class ImportedKey extends TableKey {
+public class ImportedKey
+        extends TableKey {
 
     private static final long serialVersionUID = 1478290412906203629L;
+
+    @Override
+    public void retrieveChildren(final Context context) throws SQLException {
+        super.retrieveChildren(context);
+    }
 }

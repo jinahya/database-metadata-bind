@@ -24,10 +24,15 @@ import jakarta.xml.bind.annotation.XmlAttribute;
 import jakarta.xml.bind.annotation.XmlTransient;
 import jakarta.xml.bind.annotation.XmlValue;
 import lombok.AccessLevel;
+import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
+import lombok.experimental.SuperBuilder;
+import lombok.extern.java.Log;
+
+import java.io.Serializable;
 
 /**
  * An abstract class for binding results of  {@code DatabaseMetaData#...DeletesAreVisible(int)} method.
@@ -42,12 +47,15 @@ import lombok.ToString;
 @XmlTransient
 @Setter
 @Getter
+@EqualsAndHashCode
 @ToString(callSuper = true)
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
+@SuperBuilder(toBuilder = true)
+@Log
 abstract class AreVisible
-        implements MetadataType {
+        implements Serializable {
 
-    private static final long serialVersionUID = 8635936632512182596L;
+    private static final long serialVersionUID = -4539635096087360299L;
 
     @XmlAttribute(required = true)
     private int type;

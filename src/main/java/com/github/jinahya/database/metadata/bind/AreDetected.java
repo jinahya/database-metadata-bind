@@ -28,6 +28,9 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
+import lombok.extern.java.Log;
+
+import java.io.Serializable;
 
 /**
  * An abstract class for binding results of {@code DatabaseMetaData#...AreDetected(int)} method.
@@ -42,10 +45,11 @@ import lombok.ToString;
 @Getter
 @ToString(callSuper = true)
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
+@Log
 abstract class AreDetected
-        implements MetadataType {
+        implements Serializable {
 
-    private static final long serialVersionUID = 472228030784272988L;
+    private static final long serialVersionUID = 7505598364855010122L;
 
     @XmlAttribute(required = true)
     private int type;

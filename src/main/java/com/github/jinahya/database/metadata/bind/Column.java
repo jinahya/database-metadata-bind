@@ -34,6 +34,7 @@ import lombok.Setter;
 import lombok.ToString;
 
 import java.sql.DatabaseMetaData;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
@@ -48,7 +49,8 @@ import java.util.Objects;
 @XmlRootElement
 @ChildOf(Table.class)
 @Data
-public class Column implements MetadataType {
+public class Column
+        implements MetadataType {
 
     private static final long serialVersionUID = -409653682729081530L;
 
@@ -102,6 +104,10 @@ public class Column implements MetadataType {
     public static final String COLUMN_NAME_IS_AUTOINCREMENT = "IS_AUTOINCREMENT";
 
     public static final String COLUMN_NAME_IS_GENERATEDCOLUMN = "IS_GENERATEDCOLUMN";
+
+    @Override
+    public void retrieveChildren(final Context context) throws SQLException {
+    }
 
     public Nullable getNullableAsEnum() {
         return Nullable.valueOfRawValue(getNullable());

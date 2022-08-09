@@ -211,29 +211,9 @@ final class ContextTestUtils {
     }
 
     static void writeTables(final Context context) throws SQLException, JAXBException {
-        final List<Table> tables = context.getTables(null, null, null, null, new ArrayList<>());
+        final List<Table> tables = context.getTables(null, null, "%", null, new ArrayList<>());
         for (final var table : tables) {
-            context.getIndexInfo(
-                    table.getTableCat(),
-                    table.getTableSchem(),
-                    table.getTableName(),
-                    false,
-                    true,
-                    table.getIndexInfo()
-            );
-            context.getPrimaryKeys(
-                    table.getTableCat(),
-                    table.getTableSchem(),
-                    table.getTableName(),
-                    table.getPrimaryKeys()
-            );
-            context.getPseudoColumns(
-                    table.getTableCat(),
-                    table.getTableSchem(),
-                    table.getTableName(),
-                    "%",
-                    table.getPseudoColumns()
-            );
+            table.retrieveChildren(context);
         }
         final String pathname = TestUtils.getFilenamePrefix(context) + " - tables.xml";
         final File target = Paths.get("target", pathname).toFile();

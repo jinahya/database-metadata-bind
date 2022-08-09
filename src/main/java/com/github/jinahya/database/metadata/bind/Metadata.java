@@ -28,7 +28,6 @@ import lombok.Setter;
 
 import java.lang.invoke.MethodHandles;
 import java.sql.SQLException;
-import java.sql.SQLFeatureNotSupportedException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Logger;
@@ -64,55 +63,7 @@ public class Metadata {
             if (catalog.getSchemas().isEmpty()) {
                 catalog.getSchemas().add(Schema.newVirtualInstance(catalog.getTableCat())); // ""
             }
-            for (final Schema schema : catalog.getSchemas()) {
-                try {
-                    context.getFunctions(
-                            schema.getTableCatalog(), schema.getTableSchem(), "%", schema.getFunctions()
-                    );
-                } catch (final SQLFeatureNotSupportedException sqlfnse) {
-                    sqlfnse.printStackTrace();
-                }
-                for (final Function function : schema.getFunctions()) {
-                    context.getFunctionColumns(function, "%", function.getFunctionColumns());
-                }
-                context.getProcedures(schema, "%", schema.getProcedures());
-                for (final Procedure procedure : schema.getProcedures()) {
-                    context.getProcedureColumns(procedure, "%", procedure.getProcedureColumns());
-                }
-                context.getTables(
-                        schema.getTableCatalog(),
-                        schema.getTableSchem(),
-                        "%",
-                        null,
-                        schema.getTables()
-                );
-                for (final Table table : schema.getTables()) {
-                    for (final BestRowIdentifier.Scope value : BestRowIdentifier.Scope.values()) {
-                        context.getBestRowIdentifier(
-                                table.getTableCat(),
-                                table.getTableSchem(),
-                                table.getTableName(),
-                                value.rawValue(),
-                                true,
-                                table.getBestRowIdentifiers());
-                    }
-                    context.getColumns(table, "%", table.getColumns());
-                    context.getColumnPrivileges(table, "%", table.getColumnPrivileges());
-                    context.getExportedKeys(table, table.getExportedKeys());
-                    context.getImportedKeys(table, table.getImportedKeys());
-                    context.getIndexInfo(table, false, true, table.getIndexInfo());
-                    context.getPrimaryKeys(table, table.getPrimaryKeys());
-                    context.getPseudoColumns(table, "%", table.getPseudoColumns());
-//                    context.getSuperTables(table.getTableCat(), table.getTableSchem(), "%", table.getSuperTables());
-                    context.getTablePrivileges(table, table.getTablePrivileges());
-                    context.getVersionColumns(table, table.getVersionColumns());
-                }
-                context.getUDTs(schema, "%", null, schema.getUDTs());
-                for (final UDT udt : schema.getUDTs()) {
-                    context.getAttributes(udt, "%", udt.getAttributes());
-                    context.getSuperTypes(udt.getTypeCat(), udt.getTypeSchem(), udt.getTypeName(), udt.getSuperTypes());
-                }
-            }
+            catalog.retrieveChildren(context);
         }
         instance.clientInfoProperties = context.getClientInfoProperties(new ArrayList<>());
         // -------------------------------------------------------------------------------------------------------------

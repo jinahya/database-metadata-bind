@@ -20,12 +20,21 @@ package com.github.jinahya.database.metadata.bind;
  * #L%
  */
 
+import jakarta.validation.constraints.NotNull;
 import jakarta.xml.bind.annotation.XmlTransient;
 
 import java.io.Serializable;
+import java.sql.SQLException;
 
 @XmlTransient
 interface MetadataType
         extends Serializable {
 
+    /**
+     * Retrieves child values using specified context.
+     *
+     * @param context the context.
+     * @throws SQLException if a database error occurs.
+     */
+    void retrieveChildren(@NotNull Context context) throws SQLException;
 }

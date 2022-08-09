@@ -42,7 +42,8 @@ import java.util.Objects;
  */
 @XmlRootElement
 @Data
-public class CrossReference implements MetadataType {
+public class CrossReference
+        implements MetadataType {
 
     private static final long serialVersionUID = -5343386346721125961L;
 
@@ -54,7 +55,15 @@ public class CrossReference implements MetadataType {
         final List<Table> tables = context.getTables(null, null, "%", null, new ArrayList<>());
         for (final Table parentTable : tables) {
             for (final Table foreignTable : tables) {
-                context.getCrossReference(parentTable, foreignTable, collection);
+                context.getCrossReference(
+                        parentTable.getTableCat(),
+                        parentTable.getTableSchem(),
+                        parentTable.getTableName(),
+                        foreignTable.getTableCat(),
+                        foreignTable.getTableSchem(),
+                        foreignTable.getTableName(),
+                        collection
+                );
             }
         }
         return collection;
@@ -63,6 +72,10 @@ public class CrossReference implements MetadataType {
     public static final String COLUMN_NAME_UPDATE_RULE = "UPDATE_RULE";
 
     public static final String ATTRIBUTE_NAME_UPDATE_RULE = "updateRule";
+
+    @Override
+    public void retrieveChildren(final Context context) throws SQLException {
+    }
 
     public UpdateRule getUpdateRuleAsEnum() {
         return UpdateRule.valueOfRawValue(getUpdateRule());

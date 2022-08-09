@@ -27,6 +27,7 @@ import lombok.NoArgsConstructor;
 import lombok.experimental.SuperBuilder;
 
 import java.sql.DatabaseMetaData;
+import java.sql.SQLException;
 import java.util.Collection;
 
 /**
@@ -45,6 +46,10 @@ public class SuperType
         implements MetadataType {
 
     private static final long serialVersionUID = 4603878785941565029L;
+
+    @Override
+    public void retrieveChildren(final Context context) throws SQLException {
+    }
 
     @XmlElement(nillable = true, required = true)
     @NullableBySpecification

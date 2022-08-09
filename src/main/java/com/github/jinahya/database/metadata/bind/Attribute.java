@@ -24,13 +24,12 @@ import jakarta.xml.bind.annotation.XmlElement;
 import jakarta.xml.bind.annotation.XmlEnum;
 import jakarta.xml.bind.annotation.XmlEnumValue;
 import jakarta.xml.bind.annotation.XmlRootElement;
-import lombok.EqualsAndHashCode;
-import lombok.Getter;
+import lombok.Data;
 import lombok.NoArgsConstructor;
-import lombok.Setter;
-import lombok.ToString;
+import lombok.experimental.SuperBuilder;
 
 import java.sql.DatabaseMetaData;
+import java.sql.SQLException;
 import java.util.Collection;
 import java.util.Objects;
 
@@ -39,43 +38,43 @@ import java.util.Objects;
  *
  * @author Jin Kwon &lt;jinahya_at_gmail.com&gt;
  * @see Context#getAttributes(String, String, String, String, Collection)
- * @see Context#getAttributes(UDT, String, Collection)
  */
 @XmlRootElement
 @ChildOf(UDT.class)
-@Setter
-@Getter
-@EqualsAndHashCode
-@ToString
+@Data
 @NoArgsConstructor
+@SuperBuilder(toBuilder = true)
 public class Attribute
         implements MetadataType {
 
-    private static final long serialVersionUID = 5020389308460154799L;
+    private static final long serialVersionUID = 1913681105410440186L;
 
     /**
-     * Constants for nullabilities of an attribute.
+     * Constants for nullabilities of attributes.
      */
-    @XmlEnum
+    @XmlEnum(Integer.class)
     public enum Nullable implements IntFieldEnum<Nullable> {
 
         /**
          * Constant for {@link DatabaseMetaData#attributeNoNulls}({@value java.sql.DatabaseMetaData#attributeNoNulls}).
          */
-        ATTRIBUTE_NO_NULLS(DatabaseMetaData.attributeNoNulls),
+        @XmlEnumValue("0")
+        ATTRIBUTE_NO_NULLS(DatabaseMetaData.attributeNoNulls), // 0
 
         /**
          * Constant for
          * {@link DatabaseMetaData#attributeNullable}({@value java.sql.DatabaseMetaData#attributeNullable}).
          */
-        ATTRIBUTE_NULLABLE(DatabaseMetaData.attributeNullable),
+        @XmlEnumValue("1")
+        ATTRIBUTE_NULLABLE(DatabaseMetaData.attributeNullable), // 1
 
         /**
          * Constant for
          * {@link DatabaseMetaData#attributeNullableUnknown}({@value
          * java.sql.DatabaseMetaData#attributeNullableUnknown}).
          */
-        ATTRIBUTE_NULLABLE_UNKNOWN(DatabaseMetaData.attributeNullableUnknown);
+        @XmlEnumValue("2")
+        ATTRIBUTE_NULLABLE_UNKNOWN(DatabaseMetaData.attributeNullableUnknown); // 2
 
         /**
          * Returns the value whose {@link #rawValue() rawValue} matches to specified value.
@@ -139,12 +138,19 @@ public class Attribute
         private final String rawValue;
     }
 
+    @Override
+    public void retrieveChildren(final Context context) throws SQLException {
+    }
+
     public Nullable getNullableAsEnum() {
         return Nullable.valueOfRawValue(getNullable());
     }
 
     public void setNullableAsEnum(final Nullable nullableAsEnum) {
-        setNullable(Objects.requireNonNull(nullableAsEnum, "nullableAsEnum is null").rawValue());
+        setNullable(
+                Objects.requireNonNull(nullableAsEnum, "nullableAsEnum is null")
+                        .rawValue()
+        );
     }
 
     public IsNullable getIsNullableAsEnum() {
@@ -152,7 +158,10 @@ public class Attribute
     }
 
     public void setIsNullableAsEnum(final IsNullable isNullableAsEnum) {
-        setIsNullable(Objects.requireNonNull(isNullableAsEnum, "isNullableAsEnum is null").rawValue());
+        setIsNullable(
+                Objects.requireNonNull(isNullableAsEnum, "isNullableAsEnum is null")
+                        .rawValue()
+        );
     }
 
     @XmlElement(nillable = true, required = true)

@@ -36,6 +36,7 @@ import lombok.ToString;
 import lombok.experimental.SuperBuilder;
 
 import java.sql.DatabaseMetaData;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
@@ -58,6 +59,22 @@ public class UDT
 
     private static final long serialVersionUID = 8665246093405057553L;
 
+    @Override
+    public void retrieveChildren(final Context context) throws SQLException {
+        {
+            context.getAttributes(getTypeCat(), getTypeSchem(), getTypeName(), "%", getAttributes());
+            for (final Attribute attribute : getAttributes()) {
+                attribute.retrieveChildren(context);
+            }
+        }
+        {
+            context.getSuperTypes(getTypeCat(), getTypeSchem(), getTypeName(), getSuperTypes());
+            for (final SuperType superType : getSuperTypes()) {
+                superType.retrieveChildren(context);
+            }
+        }
+    }
+
     public List<Attribute> getAttributes() {
         if (attributes == null) {
             attributes = new ArrayList<>();
@@ -77,7 +94,7 @@ public class UDT
     @Label("TYPE_CAT")
     private String typeCat;
 
-    @XmlElement(nillable = true,required = true)
+    @XmlElement(nillable = true, required = true)
     @NullableBySpecification
     @Label("TYPE_SCHEM")
     private String typeSchem;

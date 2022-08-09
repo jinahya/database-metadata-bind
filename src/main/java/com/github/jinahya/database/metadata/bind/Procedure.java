@@ -36,6 +36,7 @@ import lombok.ToString;
 import lombok.experimental.SuperBuilder;
 
 import java.sql.DatabaseMetaData;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Comparator;
@@ -63,6 +64,22 @@ public class Procedure implements MetadataType {
                     .thenComparing(Procedure::getProcedureSchem, Comparator.nullsFirst(Comparator.naturalOrder()))
                     .thenComparing(Procedure::getProcedureName)
                     .thenComparing(Procedure::getSpecificName);
+
+    @Override
+    public void retrieveChildren(final Context context) throws SQLException {
+        {
+            context.getProcedureColumns(
+                    getProcedureCat(),
+                    getProcedureSchem(),
+                    getProcedureName(),
+                    "%",
+                    getProcedureColumns()
+            );
+            for (final ProcedureColumn procedureColumn : getProcedureColumns()) {
+                procedureColumn.retrieveChildren(context);
+            }
+        }
+    }
 
     public List<ProcedureColumn> getProcedureColumns() {
         if (procedureColumns == null) {
