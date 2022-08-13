@@ -23,7 +23,6 @@ package com.github.jinahya.database.metadata.bind;
 import jakarta.xml.bind.annotation.XmlRootElement;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
-import lombok.NoArgsConstructor;
 import lombok.ToString;
 
 import java.sql.DatabaseMetaData;
