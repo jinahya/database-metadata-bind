@@ -30,8 +30,10 @@ import lombok.AccessLevel;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
+import lombok.experimental.SuperBuilder;
 
 import java.sql.DatabaseMetaData;
 import java.sql.SQLException;
@@ -50,6 +52,8 @@ import java.util.Objects;
 @XmlRootElement
 //@ChildOf__(Procedure.class)
 @Data
+@NoArgsConstructor(access = AccessLevel.PACKAGE)
+@SuperBuilder(toBuilder = true)
 public class ProcedureColumn
         implements MetadataType,
                    ChildOf<Procedure> {

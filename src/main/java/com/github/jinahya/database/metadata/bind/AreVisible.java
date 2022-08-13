@@ -30,7 +30,6 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
 import lombok.experimental.SuperBuilder;
-import lombok.extern.java.Log;
 
 import java.io.Serializable;
 import java.sql.SQLException;
@@ -57,9 +56,8 @@ import java.sql.SQLException;
 @Getter
 @EqualsAndHashCode
 @ToString(callSuper = true)
-@NoArgsConstructor(access = AccessLevel.PROTECTED)
+@NoArgsConstructor(access = AccessLevel.PACKAGE)
 @SuperBuilder(toBuilder = true)
-@Log
 public abstract class AreVisible
         implements Serializable,
                    MetadataType {
