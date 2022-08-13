@@ -91,9 +91,9 @@ abstract class MemoryTest {
 
     @Test
     void writeMetadata() throws SQLException, JAXBException {
-        try (Connection connection = connect()) {
-            final Context context = context(connection);
-            final Metadata metadata = metadata(context);
+        try (var connection = connect()) {
+            final var context = context(connection);
+            final Metadata metadata = Metadata.newInstance(context);
             final String name = TestUtils.getFilenamePrefix(context) + " - metadata";
             JaxbTests.writeToFile(Metadata.class, metadata, name);
         }

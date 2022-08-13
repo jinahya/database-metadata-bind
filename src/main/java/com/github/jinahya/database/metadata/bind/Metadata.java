@@ -54,20 +54,27 @@ public class Metadata {
         instance.ownInsertsAreVisibles = OwnInsertsAreVisible.getAllInstances(context, new ArrayList<>());
         instance.ownUpdatesAreVisibles = OwnUpdatesAreVisible.getAllInstances(context, new ArrayList<>());
         // -------------------------------------------------------------------------------------------------------------
-        instance.catalogs = context.getCatalogs(new ArrayList<>());
-        if (instance.catalogs.isEmpty()) {
-            instance.catalogs.add(Catalog.newVirtualInstance()); // ""
-        }
-        for (final Catalog catalog : instance.catalogs) {
-            context.getSchemas(catalog.getTableCat(), null, catalog.getSchemas());
-            if (catalog.getSchemas().isEmpty()) {
-                catalog.getSchemas().add(Schema.newVirtualInstance(catalog.getTableCat())); // ""
+        {
+            instance.catalogs = context.getCatalogs(new ArrayList<>());
+            if (instance.catalogs.isEmpty()) {
+                instance.catalogs.add(Catalog.newVirtualInstance()); // ""
             }
-            catalog.retrieveChildren(context);
+            for (final Catalog catalog : instance.catalogs) {
+                catalog.retrieveChildren(context);
+            }
         }
-        instance.clientInfoProperties = context.getClientInfoProperties(new ArrayList<>());
-        // -------------------------------------------------------------------------------------------------------------
-        instance.crossReferences = CrossReference.getAllInstance(context, new ArrayList<>());
+        {
+            instance.clientInfoProperties = context.getClientInfoProperties(new ArrayList<>());
+            for (final ClientInfoProperty each : instance.clientInfoProperties) {
+                each.retrieveChildren(context);
+            }
+        }
+        {
+            instance.crossReferences = CrossReference.getAllInstance(context, new ArrayList<>());
+            for (final CrossReference each : instance.crossReferences) {
+                each.retrieveChildren(context);
+            }
+        }
         // -------------------------------------------------------------------------------------------------------------
         instance.supportsConverts = SupportsConvert.getAllInstances(context, new ArrayList<>());
         instance.supportsResultSetConcurrencies
@@ -78,7 +85,12 @@ public class Metadata {
         instance.supportsTransactionIsolationLevels
                 = SupportsTransactionIsolationLevel.getAllInstances(context, new ArrayList<>());
         // -------------------------------------------------------------------------------------------------------------
-        instance.tableTypes = context.getTableTypes(new ArrayList<>());
+        {
+            instance.tableTypes = context.getTableTypes(new ArrayList<>());
+            for (final TableType each : instance.tableTypes) {
+                each.retrieveChildren(context);
+            }
+        }
         // -------------------------------------------------------------------------------------------------------------
         return instance;
     }
