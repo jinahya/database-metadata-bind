@@ -22,6 +22,7 @@ package com.github.jinahya.database.metadata.bind;
 
 import jakarta.xml.bind.annotation.XmlAttribute;
 import jakarta.xml.bind.annotation.XmlRootElement;
+import jakarta.xml.bind.annotation.XmlTransient;
 import jakarta.xml.bind.annotation.XmlValue;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
@@ -81,14 +82,26 @@ public class SupportsConvert
         // no children.
     }
 
-    @XmlAttribute(required = false)
+    //    @XmlAttribute(required = false)
+    @XmlTransient
     public JDBCType getFromTypeAsEnum() {
         return JDBCType.valueOf(getFromType());
     }
 
     @XmlAttribute(required = false)
+    public String getFromTypeName() {
+        return getFromTypeAsEnum().getName();
+    }
+
+    //    @XmlAttribute(required = false)
+    @XmlTransient
     public JDBCType getToTypeAsEnum() {
         return JDBCType.valueOf(getToType());
+    }
+
+    @XmlAttribute(required = false)
+    public String getToTypeName() {
+        return getToTypeAsEnum().getName();
     }
 
     @XmlAttribute(required = true)

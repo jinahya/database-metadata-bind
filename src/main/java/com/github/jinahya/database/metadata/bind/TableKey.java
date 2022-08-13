@@ -20,18 +20,16 @@ package com.github.jinahya.database.metadata.bind;
  * #L%
  */
 
-import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Positive;
 import jakarta.validation.constraints.PositiveOrZero;
 import jakarta.xml.bind.annotation.XmlElement;
+import jakarta.xml.bind.annotation.XmlSeeAlso;
 import jakarta.xml.bind.annotation.XmlTransient;
 import lombok.AccessLevel;
 import lombok.Data;
-import lombok.EqualsAndHashCode;
-import lombok.Getter;
-import lombok.Setter;
-import lombok.ToString;
+import lombok.NoArgsConstructor;
+import lombok.experimental.SuperBuilder;
 
 import java.sql.SQLException;
 
@@ -39,17 +37,35 @@ import java.sql.SQLException;
  * An abstract class for binding results of {@link java.sql.DatabaseMetaData#getExportedKeys(String, String, String)}
  * method and {@link java.sql.DatabaseMetaData#getImportedKeys(String, String, String)} method.
  *
- * @see ImportedKey
  * @see ExportedKey
+ * @see ImportedKey
  */
 @XmlTransient
+@XmlSeeAlso({ExportedKey.class, ImportedKey.class})
 @Data
-abstract class TableKey implements MetadataType, HasUpdateRule, HasDeleteRule, HasDeferrability {
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
+@SuperBuilder(toBuilder = true)
+public abstract class TableKey
+        implements MetadataType,
+                   ChildOf<Table>,
+                   HasUpdateRule,
+                   HasDeleteRule,
+                   HasDeferrability {
 
     private static final long serialVersionUID = 6713872409315471232L;
 
     @Override
     public void retrieveChildren(final Context context) throws SQLException {
+        // no children.
+    }
+
+    @Override
+    public Table extractParent() {
+        return Table.builder()
+                .tableCat(getPktableCat())
+                .tableCat(getPktableSchem())
+                .tableCat(getPktableName())
+                .build();
     }
 
     // -----------------------------------------------------------------------------------------------------------------
@@ -127,13 +143,4 @@ abstract class TableKey implements MetadataType, HasUpdateRule, HasDeleteRule, H
     @XmlElement(nillable = false, required = true)
     @Label("DEFERRABILITY")
     private int deferrability;
-
-    // -----------------------------------------------------------------------------------------------------------------
-    @XmlTransient
-    @Valid
-    @Setter(AccessLevel.NONE)
-    @Getter(AccessLevel.NONE)
-    @EqualsAndHashCode.Exclude
-    @ToString.Exclude
-    private Table table;
 }

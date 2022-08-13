@@ -3,7 +3,9 @@
         elementFormDefault = XmlNsForm.QUALIFIED,
         namespace = XmlConstants.NS_URI_DATABASE_METADATA_BIND,
         xmlns = {
-                @XmlNs(prefix = XMLConstants.DEFAULT_NS_PREFIX,
+//                @XmlNs(prefix = XMLConstants.DEFAULT_NS_PREFIX,
+//                       namespaceURI = XmlConstants.NS_URI_DATABASE_METADATA_BIND),
+                @XmlNs(prefix = XmlConstants.NS_PREFIX_DATABASE_MEATDATA_BIND,
                        namespaceURI = XmlConstants.NS_URI_DATABASE_METADATA_BIND),
                 @XmlNs(prefix = "xsi", namespaceURI = XMLConstants.W3C_XML_SCHEMA_INSTANCE_NS_URI)
         }

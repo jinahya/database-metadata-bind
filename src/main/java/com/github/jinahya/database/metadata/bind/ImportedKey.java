@@ -21,9 +21,14 @@ package com.github.jinahya.database.metadata.bind;
  */
 
 import jakarta.xml.bind.annotation.XmlRootElement;
+import lombok.AccessLevel;
+import lombok.Data;
+import lombok.EqualsAndHashCode;
+import lombok.NoArgsConstructor;
+import lombok.ToString;
+import lombok.experimental.SuperBuilder;
 
 import java.sql.DatabaseMetaData;
-import java.sql.SQLException;
 import java.util.Collection;
 
 /**
@@ -34,14 +39,13 @@ import java.util.Collection;
  * @see ExportedKey
  */
 @XmlRootElement
-@ChildOf__(Table.class)
+@Data
+@EqualsAndHashCode(callSuper = true)
+@ToString(callSuper = true)
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
+@SuperBuilder(toBuilder = true)
 public class ImportedKey
         extends TableKey {
 
     private static final long serialVersionUID = 1478290412906203629L;
-
-    @Override
-    public void retrieveChildren(final Context context) throws SQLException {
-        super.retrieveChildren(context);
-    }
 }
