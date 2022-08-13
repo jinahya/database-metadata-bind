@@ -23,6 +23,7 @@ package com.github.jinahya.database.metadata.bind;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
+import jakarta.xml.bind.annotation.XmlAttribute;
 import jakarta.xml.bind.annotation.XmlElement;
 import jakarta.xml.bind.annotation.XmlElementRef;
 import jakarta.xml.bind.annotation.XmlRootElement;
@@ -56,7 +57,7 @@ import java.util.stream.Stream;
  * @see Context#getTables(String, String, String, String[], Collection)
  */
 @XmlRootElement
-@ChildOf(Schema.class)
+@ChildOf__(Schema.class)
 @ParentOf(BestRowIdentifier.class)
 @ParentOf(Column.class)
 @ParentOf(ColumnPrivilege.class)
@@ -129,8 +130,10 @@ public class Table
             this(0, false);
         }
 
+        @XmlAttribute(required = true)
         private final int scope;
 
+        @XmlAttribute(required = true)
         private final boolean nullable;
     }
 

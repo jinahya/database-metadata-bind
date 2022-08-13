@@ -49,7 +49,7 @@ import java.util.Objects;
  * @see Context#getIndexInfo(String, String, String, boolean, boolean, Collection)
  */
 @XmlRootElement
-@ChildOf(Table.class)
+@ChildOf__(Table.class)
 @Data
 public class IndexInfo
         implements MetadataType {

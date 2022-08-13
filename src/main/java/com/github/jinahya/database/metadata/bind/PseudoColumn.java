@@ -39,7 +39,7 @@ import java.util.Comparator;
  * @see Context#getPseudoColumns(String, String, String, String, Collection)
  */
 @XmlRootElement
-@ChildOf(Table.class)
+@ChildOf__(Table.class)
 @Data
 @NoArgsConstructor
 @SuperBuilder(toBuilder = true)

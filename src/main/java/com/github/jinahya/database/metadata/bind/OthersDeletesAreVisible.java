@@ -21,6 +21,7 @@ package com.github.jinahya.database.metadata.bind;
  */
 
 import jakarta.xml.bind.annotation.XmlRootElement;
+import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -40,8 +41,7 @@ import static java.util.Objects.requireNonNull;
  * @see Context#othersDeletesAreVisible(int)
  */
 @XmlRootElement
-@Setter
-@Getter
+@Data
 @EqualsAndHashCode(callSuper = true)
 @ToString(callSuper = true)
 @NoArgsConstructor

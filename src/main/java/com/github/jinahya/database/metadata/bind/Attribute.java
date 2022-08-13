@@ -40,12 +40,13 @@ import java.util.Objects;
  * @see Context#getAttributes(String, String, String, String, Collection)
  */
 @XmlRootElement
-@ChildOf(UDT.class)
+@ChildOf__(UDT.class)
 @Data
 @NoArgsConstructor
 @SuperBuilder(toBuilder = true)
 public class Attribute
-        implements MetadataType {
+        implements MetadataType,
+                   ChildOf<UDT> {
 
     private static final long serialVersionUID = 1913681105410440186L;
 
@@ -140,6 +141,16 @@ public class Attribute
 
     @Override
     public void retrieveChildren(final Context context) throws SQLException {
+        // no children
+    }
+
+    @Override
+    public UDT extractParent() {
+        return UDT.builder()
+                .typeCat(getTypeCat())
+                .typeSchem(getTypeSchem())
+                .typeName(getTypeName())
+                .build();
     }
 
     public Nullable getNullableAsEnum() {

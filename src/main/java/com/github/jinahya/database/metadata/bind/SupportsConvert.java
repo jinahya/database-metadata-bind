@@ -28,7 +28,6 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
-import lombok.extern.slf4j.Slf4j;
 
 import java.sql.DatabaseMetaData;
 import java.sql.JDBCType;
@@ -48,7 +47,8 @@ import java.util.Objects;
 @EqualsAndHashCode
 @ToString
 @NoArgsConstructor
-public class SupportsConvert {
+public class SupportsConvert
+        implements MetadataType {
 
     /**
      * Invokes {@link Context#supportsConvert(int, int)} method for all combinations of all types defined in
@@ -74,6 +74,21 @@ public class SupportsConvert {
             }
         }
         return collection;
+    }
+
+    @Override
+    public void retrieveChildren(Context context) throws SQLException {
+        // no children.
+    }
+
+    @XmlAttribute(required = false)
+    public JDBCType getFromTypeAsEnum() {
+        return JDBCType.valueOf(getFromType());
+    }
+
+    @XmlAttribute(required = false)
+    public JDBCType getToTypeAsEnum() {
+        return JDBCType.valueOf(getToType());
     }
 
     @XmlAttribute(required = true)

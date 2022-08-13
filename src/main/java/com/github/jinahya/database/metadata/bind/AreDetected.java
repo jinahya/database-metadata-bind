@@ -23,14 +23,10 @@ package com.github.jinahya.database.metadata.bind;
 import jakarta.xml.bind.annotation.XmlAttribute;
 import jakarta.xml.bind.annotation.XmlSeeAlso;
 import jakarta.xml.bind.annotation.XmlValue;
-import lombok.AccessLevel;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
-import lombok.ToString;
-import lombok.extern.java.Log;
+import lombok.Data;
 
 import java.io.Serializable;
+import java.sql.SQLException;
 
 /**
  * An abstract class for binding results of {@code DatabaseMetaData#...AreDetected(int)} method.
@@ -45,15 +41,22 @@ import java.io.Serializable;
         InsertsAreDetected.class,
         UpdatesAreDetected.class
 })
-@Setter
-@Getter
-@ToString(callSuper = true)
-@NoArgsConstructor(access = AccessLevel.PROTECTED)
-@Log
+@Data
 public abstract class AreDetected
-        implements Serializable {
+        implements Serializable,
+                   MetadataType {
 
     private static final long serialVersionUID = 7505598364855010122L;
+
+    @Override
+    public void retrieveChildren(Context context) throws SQLException {
+        // no children.
+    }
+
+    @XmlAttribute(required = false)
+    public ResultSetType getTypeAsEnum() {
+        return ResultSetType.valueOfRawValue(getType());
+    }
 
     @XmlAttribute(required = true)
     private int type;

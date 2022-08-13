@@ -32,8 +32,10 @@ import lombok.AccessLevel;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
+import lombok.experimental.SuperBuilder;
 
 import java.sql.DatabaseMetaData;
 import java.sql.SQLException;
@@ -47,9 +49,12 @@ import java.util.Objects;
  * @see Context#getFunctionColumns(String, String, String, String, Collection)
  */
 @XmlRootElement
-@ChildOf(Function.class)
 @Data
-public class FunctionColumn implements MetadataType {
+@NoArgsConstructor(access = AccessLevel.PACKAGE)
+@SuperBuilder(toBuilder = true)
+public class FunctionColumn
+        implements MetadataType,
+                   ChildOf<Function> {
 
     private static final long serialVersionUID = -7445156446214062680L;
 
@@ -192,6 +197,16 @@ public class FunctionColumn implements MetadataType {
 
     @Override
     public void retrieveChildren(final Context context) throws SQLException {
+        // no children
+    }
+
+    @Override
+    public Function extractParent() {
+        return Function.builder()
+                .functionCat(getFunctionCat())
+                .functionSchem(getFunctionSchem())
+                .functionName(getFunctionName())
+                .build();
     }
 
     public ColumnType getColumnTypeAsEnum() {

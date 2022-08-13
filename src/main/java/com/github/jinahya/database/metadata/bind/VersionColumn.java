@@ -38,7 +38,7 @@ import java.util.Collection;
  * @see Context#getVersionColumns(String, String, String, Collection)
  */
 @XmlRootElement
-@ChildOf(Table.class)
+@ChildOf__(Table.class)
 @Data
 @NoArgsConstructor
 @SuperBuilder(toBuilder = true)

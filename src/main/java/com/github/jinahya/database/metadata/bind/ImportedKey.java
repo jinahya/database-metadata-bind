@@ -34,7 +34,7 @@ import java.util.Collection;
  * @see ExportedKey
  */
 @XmlRootElement
-@ChildOf(Table.class)
+@ChildOf__(Table.class)
 public class ImportedKey
         extends TableKey {
 

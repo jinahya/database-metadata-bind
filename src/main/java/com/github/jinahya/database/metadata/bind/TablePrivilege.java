@@ -36,7 +36,7 @@ import java.sql.SQLException;
  * @author Jin Kwon &lt;jinahya_at_gmail.com&gt;
  */
 @XmlRootElement
-@ChildOf(Table.class)
+@ChildOf__(Table.class)
 @Data
 @NoArgsConstructor
 @SuperBuilder(toBuilder = true)

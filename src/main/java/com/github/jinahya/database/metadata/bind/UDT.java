@@ -48,17 +48,18 @@ import java.util.List;
  * @see Context#getUDTs(String, String, String, int[], Collection)
  */
 @XmlRootElement
-@ChildOf(Schema.class)
+@ChildOf__(Schema.class)
 @ParentOf(Attribute.class)
-@ParentOf(SuperType.class)
 @Data
 @NoArgsConstructor
 @SuperBuilder
 public class UDT
-        implements MetadataType {
+        implements MetadataType,
+                   ChildOf<Schema> {
 
     private static final long serialVersionUID = 8665246093405057553L;
 
+    // -----------------------------------------------------------------------------------------------------------------
     @Override
     public void retrieveChildren(final Context context) throws SQLException {
         {
@@ -67,14 +68,17 @@ public class UDT
                 attribute.retrieveChildren(context);
             }
         }
-        {
-            context.getSuperTypes(getTypeCat(), getTypeSchem(), getTypeName(), getSuperTypes());
-            for (final SuperType superType : getSuperTypes()) {
-                superType.retrieveChildren(context);
-            }
-        }
     }
 
+    @Override
+    public Schema extractParent() {
+        return Schema.builder()
+                .tableCatalog(getTypeCat())
+                .tableSchem(getTypeSchem())
+                .build();
+    }
+
+    // -----------------------------------------------------------------------------------------------------------------
     public List<Attribute> getAttributes() {
         if (attributes == null) {
             attributes = new ArrayList<>();
@@ -82,13 +86,7 @@ public class UDT
         return attributes;
     }
 
-    public List<SuperType> getSuperTypes() {
-        if (superTypes == null) {
-            superTypes = new ArrayList<>();
-        }
-        return superTypes;
-    }
-
+    // -----------------------------------------------------------------------------------------------------------------
     @XmlElement(nillable = true, required = true)
     @NullableBySpecification
     @Label("TYPE_CAT")
@@ -128,11 +126,4 @@ public class UDT
     @EqualsAndHashCode.Exclude
     @ToString.Exclude
     private List<@Valid @NotNull Attribute> attributes;
-
-    @XmlElementRef
-    @Setter(AccessLevel.NONE)
-    @Getter(AccessLevel.NONE)
-    @EqualsAndHashCode.Exclude
-    @ToString.Exclude
-    private List<@Valid @NotNull SuperType> superTypes;
 }

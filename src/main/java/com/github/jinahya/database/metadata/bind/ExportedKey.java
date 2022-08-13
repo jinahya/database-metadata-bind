@@ -33,7 +33,7 @@ import java.util.Collection;
  * @see ImportedKey
  */
 @XmlRootElement
-@ChildOf(Table.class)
+@ChildOf__(Table.class)
 public class ExportedKey extends TableKey {
 
     private static final long serialVersionUID = 277210154172135556L;

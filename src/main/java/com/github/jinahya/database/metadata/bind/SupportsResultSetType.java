@@ -23,6 +23,11 @@ package com.github.jinahya.database.metadata.bind;
 import jakarta.xml.bind.annotation.XmlAttribute;
 import jakarta.xml.bind.annotation.XmlRootElement;
 import jakarta.xml.bind.annotation.XmlValue;
+import lombok.EqualsAndHashCode;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+import lombok.ToString;
 
 import java.sql.DatabaseMetaData;
 import java.sql.SQLException;
@@ -36,7 +41,13 @@ import java.util.Objects;
  * @see Context#supportsResultSetType(int)
  */
 @XmlRootElement
-public class SupportsResultSetType {
+@Setter
+@Getter
+@EqualsAndHashCode
+@ToString
+@NoArgsConstructor
+public class SupportsResultSetType
+        implements MetadataType {
 
     /**
      * Invokes {@link Context#supportsResultSetType(int)} method for all types defined in {@link java.sql.ResultSet} and
@@ -59,48 +70,14 @@ public class SupportsResultSetType {
         return collection;
     }
 
-    /**
-     * Creates a new instance.
-     */
-    public SupportsResultSetType() {
-        super();
-    }
-
     @Override
-    public String toString() {
-        return super.toString() + '{'
-               + "type=" + type
-               + ",value=" + value
-               + '}';
+    public void retrieveChildren(Context context) throws SQLException {
+        // no children.
     }
 
-    @Override
-    public boolean equals(final Object obj) {
-        if (this == obj) return true;
-        if (obj == null || getClass() != obj.getClass()) return false;
-        final SupportsResultSetType that = (SupportsResultSetType) obj;
-        return type == that.type && Objects.equals(value, that.value);
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(type, value);
-    }
-
-    public int getType() {
-        return type;
-    }
-
-    public void setType(final int type) {
-        this.type = type;
-    }
-
-    public Boolean getValue() {
-        return value;
-    }
-
-    public void setValue(final Boolean value) {
-        this.value = value;
+    @XmlAttribute(required = false)
+    public ResultSetType getTypeAsEnum() {
+        return ResultSetType.valueOfRawValue(getType());
     }
 
     @XmlAttribute(required = true)

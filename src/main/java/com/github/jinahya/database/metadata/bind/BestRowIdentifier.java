@@ -44,7 +44,7 @@ import java.util.Objects;
  * @see Context#getBestRowIdentifier(String, String, String, int, boolean, Collection)
  */
 @XmlRootElement
-@ChildOf(Table.class)
+@ChildOf__(Table.class)
 @Data
 @NoArgsConstructor
 @SuperBuilder(toBuilder = true)

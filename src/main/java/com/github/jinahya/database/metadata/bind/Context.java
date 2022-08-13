@@ -25,6 +25,7 @@ import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import lombok.extern.java.Log;
 
+import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
 import java.sql.Connection;
 import java.sql.DatabaseMetaData;
@@ -134,7 +135,11 @@ public class Context {
         while (results.next()) {
             final T value;
             try {
-                value = type.getConstructor().newInstance();
+                final Constructor<T> constructor = type.getDeclaredConstructor();
+                if (!constructor.isAccessible()) {
+                    constructor.setAccessible(true);
+                }
+                value = constructor.newInstance();
             } catch (final ReflectiveOperationException roe) {
                 throw new RuntimeException("failed to instantiate " + type, roe);
             }
@@ -261,7 +266,7 @@ public class Context {
             }
             log.warning("null returned; getClientInfoProperties()");
         } catch (final SQLFeatureNotSupportedException sqlfnse) {
-            log.log(Level.WARNING, "null returned; getClientInfoProperties()", sqlfnse);
+            log.log(Level.WARNING, "not supported; getClientInfoProperties()", sqlfnse);
         }
         return collection;
     }
@@ -282,13 +287,9 @@ public class Context {
      * @see DatabaseMetaData#getColumnPrivileges(String, String, String, String)
      */
     @NotNull
-    public <C extends Collection<@Valid @NotNull ? super ColumnPrivilege>> C getColumnPrivileges(final String catalog,
-                                                                                                 final String schema,
-                                                                                                 @NotBlank
-                                                                                                 final String table,
-                                                                                                 @NotBlank
-                                                                                                 final String columnNamePattern,
-                                                                                                 final C collection)
+    public <C extends Collection<@Valid @NotNull ? super ColumnPrivilege>> C getColumnPrivileges(
+            final String catalog, final String schema, @NotBlank final String table,
+            @NotBlank final String columnNamePattern, final C collection)
             throws SQLException {
         Objects.requireNonNull(table, "table is null");
         Objects.requireNonNull(collection, "collection is null");
@@ -811,10 +812,11 @@ public class Context {
      * @throws SQLException if a database error occurs.
      */
     @NotNull
-    public <C extends Collection<@Valid @NotNull ? super SuperType>> C getSuperTypes(final String catalog, @NotNull
-    final String schemaPattern, @NotBlank final String typeNamePattern, @NotNull final C collection)
+    public <C extends Collection<@Valid @NotNull ? super SuperType>> C getSuperTypes(
+            final String catalog, /*@NotNull*/ final String schemaPattern, @NotBlank final String typeNamePattern,
+            @NotNull final C collection)
             throws SQLException {
-        Objects.requireNonNull(schemaPattern, "schemaPattern is null");
+//        Objects.requireNonNull(schemaPattern, "schemaPattern is null");
         Objects.requireNonNull(typeNamePattern, "typeNamePattern is null");
         Objects.requireNonNull(collection, "collection is null");
         try (ResultSet results = databaseMetaData.getSuperTypes(catalog, schemaPattern, typeNamePattern)) {

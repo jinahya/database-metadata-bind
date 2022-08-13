@@ -22,11 +22,13 @@ package com.github.jinahya.database.metadata.bind;
 
 import jakarta.xml.bind.JAXBException;
 import lombok.extern.slf4j.Slf4j;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 
+import java.io.File;
+import java.nio.file.Paths;
 import java.sql.Connection;
 import java.sql.SQLException;
-import java.sql.SQLFeatureNotSupportedException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -100,53 +102,54 @@ abstract class MemoryTest {
     // -----------------------------------------------------------------------------------------------------------------
 
     @Test
-    void getCatalogs__() throws SQLException {
+    void getCatalogs__() throws SQLException, JAXBException {
         try (var connection = connect()) {
             final var context = context(connection);
             final var catalogs = context.getCatalogs(new ArrayList<>());
+            if (catalogs.isEmpty()) {
+                catalogs.add(Catalog.newVirtualInstance());
+            }
+            assertThat(catalogs)
+                    .allSatisfy(v -> {
+                        final var string = assertDoesNotThrow(v::toString);
+                        final var hashCode = assertDoesNotThrow(v::hashCode);
+                    });
             for (final var catalog : catalogs) {
-                final var string = assertDoesNotThrow(catalog::toString);
-                final var hashCode = assertDoesNotThrow(catalog::hashCode);
-                assertThat(catalog.getTableCat())
-                        .isNotNull();
                 catalog.retrieveChildren(context);
             }
+            final var pathname = TestUtils.getFilenamePrefix(context) + " - catalogs.xml";
+            final var target = Paths.get("target", pathname).toFile();
+            Wrapper.marshalFormatted(Catalog.class, catalogs, target);
         }
     }
 
     @Test
-    void functions() throws SQLException {
+    void getFunctions__() throws SQLException, JAXBException {
         try (Connection connection = connect()) {
             final var context = Context.newInstance(connection);
-            final List<Function> functions;
-            try {
-                functions = context.getFunctions(null, null, "%", new ArrayList<>());
-            } catch (final SQLFeatureNotSupportedException sqlfnse) {
-                log.error("getFunctions not supported", sqlfnse);
-                return;
-            }
-            TestUtils.testEquals(functions);
+            final List<Function> functions = context.getFunctions(null, null, "%", new ArrayList<>());
+            assertThat(functions)
+                    .doesNotContainNull()
+                    .satisfies(TestUtils::testEquals)
+                    .allSatisfy(v -> {
+                        final var string = assertDoesNotThrow(v::toString);
+                        final var hashCode = assertDoesNotThrow(v::hashCode);
+                    });
             for (final Function function : functions) {
-                log.debug("function: {}", function);
-                context.getFunctionColumns(
-                        function.getFunctionCat(),
-                        function.getFunctionSchem(),
-                        function.getFunctionName(),
-                        "%",
-                        function.getFunctionColumns()
-                );
-                function.getFunctionColumns().forEach(fc -> {
-                    log.debug("functionColumn: {}", fc);
-                });
+                function.retrieveChildren(context);
             }
+            final var pathname = TestUtils.getFilenamePrefix(context) + " - functions.xml";
+            final var target = Paths.get("target", pathname).toFile();
+            Wrapper.marshalFormatted(Function.class, functions, target);
         }
     }
 
     @Test
-    void deletesAreDetected() throws SQLException {
+    void deletesAreDetected() throws SQLException, JAXBException {
         try (Connection connection = connect()) {
             final var context = Context.newInstance(connection);
-            assertThat(DeletesAreDetected.getAllInstances(context, new ArrayList<>()))
+            final var allInstance = DeletesAreDetected.getAllInstances(context, new ArrayList<>());
+            assertThat(allInstance)
                     .doesNotContainNull()
                     .hasSize(ResultSetType.values().length)
 //                    .satisfies(TestUtils::testEquals)
@@ -154,14 +157,21 @@ abstract class MemoryTest {
                         final var string = assertDoesNotThrow(v::toString);
                         final var hashCode = assertDoesNotThrow(v::hashCode);
                     });
+            for (final var each : allInstance) {
+                each.retrieveChildren(context);
+            }
+            final var pathname = TestUtils.getFilenamePrefix(context) + " - deletesAreDetected.xml";
+            final var target = Paths.get("target", pathname).toFile();
+            Wrapper.marshalFormatted(DeletesAreDetected.class, allInstance, target);
         }
     }
 
     @Test
-    void insertsAreDetected() throws SQLException {
+    void insertsAreDetected() throws SQLException, JAXBException {
         try (Connection connection = connect()) {
             final var context = Context.newInstance(connection);
-            assertThat(InsertsAreDetected.getAllInstances(context, new ArrayList<>()))
+            final var allInstance = InsertsAreDetected.getAllInstances(context, new ArrayList<>());
+            assertThat(allInstance)
                     .doesNotContainNull()
                     .hasSize(ResultSetType.values().length)
 //                    .satisfies(TestUtils::testEquals)
@@ -169,6 +179,12 @@ abstract class MemoryTest {
                         final var string = assertDoesNotThrow(v::toString);
                         final var hashCode = assertDoesNotThrow(v::hashCode);
                     });
+            for (final var each : allInstance) {
+                each.retrieveChildren(context);
+            }
+            final var pathname = TestUtils.getFilenamePrefix(context) + " - insertsAreDetected.xml";
+            final var target = Paths.get("target", pathname).toFile();
+            Wrapper.marshalFormatted(InsertsAreDetected.class, allInstance, target);
         }
     }
 
@@ -176,7 +192,8 @@ abstract class MemoryTest {
     void updatesAreDetected() throws SQLException, JAXBException {
         try (Connection connection = connect()) {
             final var context = Context.newInstance(connection);
-            assertThat(UpdatesAreDetected.getAllInstances(context, new ArrayList<>()))
+            final var allInstance = UpdatesAreDetected.getAllInstances(context, new ArrayList<>());
+            assertThat(allInstance)
                     .doesNotContainNull()
                     .hasSize(ResultSetType.values().length)
 //                    .satisfies(TestUtils::testEquals)
@@ -184,14 +201,21 @@ abstract class MemoryTest {
                         final var string = assertDoesNotThrow(v::toString);
                         final var hashCode = assertDoesNotThrow(v::hashCode);
                     });
+            for (final var each : allInstance) {
+                each.retrieveChildren(context);
+            }
+            final var pathname = TestUtils.getFilenamePrefix(context) + " - updatesAreDetected.xml";
+            final var target = Paths.get("target", pathname).toFile();
+            Wrapper.marshalFormatted(UpdatesAreDetected.class, allInstance, target);
         }
     }
 
     @Test
     void othersDeletesAreVisible__() throws SQLException, JAXBException {
-        try (Connection connection = connect()) {
+        try (var connection = connect()) {
             final var context = Context.newInstance(connection);
-            assertThat(OthersDeletesAreVisible.getAllInstances(context, new ArrayList<>()))
+            final var allInstance = OthersDeletesAreVisible.getAllInstances(context, new ArrayList<>());
+            assertThat(allInstance)
                     .doesNotContainNull()
                     .hasSize(ResultSetType.values().length)
 //                    .satisfies(TestUtils::testEquals)
@@ -199,14 +223,21 @@ abstract class MemoryTest {
                         final var string = assertDoesNotThrow(v::toString);
                         final var hashCode = assertDoesNotThrow(v::hashCode);
                     });
+            for (final var each : allInstance) {
+                each.retrieveChildren(context);
+            }
+            final var pathname = TestUtils.getFilenamePrefix(context) + " - othersDeletesAreVisible.xml";
+            final var target = Paths.get("target", pathname).toFile();
+            Wrapper.marshalFormatted(OthersDeletesAreVisible.class, allInstance, target);
         }
     }
 
     @Test
     void othersInsertsAreVisible__() throws SQLException, JAXBException {
-        try (Connection connection = connect()) {
+        try (var connection = connect()) {
             final var context = Context.newInstance(connection);
-            assertThat(OthersInsertsAreVisible.getAllInstances(context, new ArrayList<>()))
+            final var allInstance = OthersInsertsAreVisible.getAllInstances(context, new ArrayList<>());
+            assertThat(allInstance)
                     .doesNotContainNull()
                     .hasSize(ResultSetType.values().length)
 //                    .satisfies(TestUtils::testEquals)
@@ -214,14 +245,21 @@ abstract class MemoryTest {
                         final var string = assertDoesNotThrow(v::toString);
                         final var hashCode = assertDoesNotThrow(v::hashCode);
                     });
+            for (final var each : allInstance) {
+                each.retrieveChildren(context);
+            }
+            final var pathname = TestUtils.getFilenamePrefix(context) + " - othersInsertsAreVisible.xml";
+            final var target = Paths.get("target", pathname).toFile();
+            Wrapper.marshalFormatted(OthersInsertsAreVisible.class, allInstance, target);
         }
     }
 
     @Test
     void othersUpdatesAreVisible__() throws SQLException, JAXBException {
-        try (Connection connection = connect()) {
+        try (var connection = connect()) {
             final var context = Context.newInstance(connection);
-            assertThat(OthersUpdatesAreVisible.getAllInstances(context, new ArrayList<>()))
+            final var allInstance = OthersUpdatesAreVisible.getAllInstances(context, new ArrayList<>());
+            assertThat(allInstance)
                     .doesNotContainNull()
                     .hasSize(ResultSetType.values().length)
 //                    .satisfies(TestUtils::testEquals)
@@ -229,14 +267,21 @@ abstract class MemoryTest {
                         final var string = assertDoesNotThrow(v::toString);
                         final var hashCode = assertDoesNotThrow(v::hashCode);
                     });
+            for (final var each : allInstance) {
+                each.retrieveChildren(context);
+            }
+            final var pathname = TestUtils.getFilenamePrefix(context) + " - othersUpdatesAreVisible.xml";
+            final var target = Paths.get("target", pathname).toFile();
+            Wrapper.marshalFormatted(OthersUpdatesAreVisible.class, allInstance, target);
         }
     }
 
     @Test
     void ownDeletesAreVisible__() throws SQLException, JAXBException {
-        try (Connection connection = connect()) {
+        try (var connection = connect()) {
             final var context = Context.newInstance(connection);
-            assertThat(OwnDeletesAreVisible.getAllInstances(context, new ArrayList<>()))
+            final var allInstance = OwnDeletesAreVisible.getAllInstances(context, new ArrayList<>());
+            assertThat(allInstance)
                     .doesNotContainNull()
                     .hasSize(ResultSetType.values().length)
 //                    .satisfies(TestUtils::testEquals)
@@ -244,14 +289,21 @@ abstract class MemoryTest {
                         final var string = assertDoesNotThrow(v::toString);
                         final var hashCode = assertDoesNotThrow(v::hashCode);
                     });
+            for (final var each : allInstance) {
+                each.retrieveChildren(context);
+            }
+            final var pathname = TestUtils.getFilenamePrefix(context) + " - ownDeletesAreVisible.xml";
+            final var target = Paths.get("target", pathname).toFile();
+            Wrapper.marshalFormatted(OwnDeletesAreVisible.class, allInstance, target);
         }
     }
 
     @Test
     void ownInsertsAreVisible__() throws SQLException, JAXBException {
-        try (Connection connection = connect()) {
+        try (var connection = connect()) {
             final var context = Context.newInstance(connection);
-            assertThat(OwnInsertsAreVisible.getAllInstances(context, new ArrayList<>()))
+            final var allInstance = OwnInsertsAreVisible.getAllInstances(context, new ArrayList<>());
+            assertThat(allInstance)
                     .doesNotContainNull()
                     .hasSize(ResultSetType.values().length)
 //                    .satisfies(TestUtils::testEquals)
@@ -259,14 +311,21 @@ abstract class MemoryTest {
                         final var string = assertDoesNotThrow(v::toString);
                         final var hashCode = assertDoesNotThrow(v::hashCode);
                     });
+            for (final var each : allInstance) {
+                each.retrieveChildren(context);
+            }
+            final var pathname = TestUtils.getFilenamePrefix(context) + " - ownInsertsAreVisible.xml";
+            final var target = Paths.get("target", pathname).toFile();
+            Wrapper.marshalFormatted(OwnInsertsAreVisible.class, allInstance, target);
         }
     }
 
     @Test
     void ownUpdatesAreVisible__() throws SQLException, JAXBException {
-        try (Connection connection = connect()) {
+        try (var connection = connect()) {
             final var context = Context.newInstance(connection);
-            assertThat(OwnUpdatesAreVisible.getAllInstances(context, new ArrayList<>()))
+            final var allInstance = OwnUpdatesAreVisible.getAllInstances(context, new ArrayList<>());
+            assertThat(allInstance)
                     .doesNotContainNull()
                     .hasSize(ResultSetType.values().length)
 //                    .satisfies(TestUtils::testEquals)
@@ -274,45 +333,49 @@ abstract class MemoryTest {
                         final var string = assertDoesNotThrow(v::toString);
                         final var hashCode = assertDoesNotThrow(v::hashCode);
                     });
+            for (final var each : allInstance) {
+                each.retrieveChildren(context);
+            }
+            final var pathname = TestUtils.getFilenamePrefix(context) + " - ownUpdatesAreVisible.xml";
+            final var target = Paths.get("target", pathname).toFile();
+            Wrapper.marshalFormatted(OwnUpdatesAreVisible.class, allInstance, target);
         }
     }
 
     @Test
-    void getProcedures__() throws SQLException {
+    void getProcedures__() throws SQLException, JAXBException {
         try (var connection = connect()) {
             final var context = Context.newInstance(connection);
             final var procedures = context.getProcedures(null, null, "%", new ArrayList<>());
             for (final var procedure : procedures) {
-                assertThat(procedure)
-                        .usingComparator(Procedure.COMPARATOR)
-                        .isEqualTo(procedure);
-                context.getProcedureColumns(
-                        procedure.getProcedureCat(),
-                        procedure.getProcedureSchem(),
-                        procedure.getProcedureName(),
-                        "%",
-                        procedure.getProcedureColumns()
-                );
-                for (final var procedureColumn : procedure.getProcedureColumns()) {
-                    assertThat(procedureColumn)
-                            .isNotNull()
-                            .usingComparator(ProcedureColumn.COMPARATOR)
-                            .isEqualTo(procedureColumn);
-                }
+                final var string = assertDoesNotThrow(procedure::toString);
+                final var hashCode = assertDoesNotThrow(procedure::hashCode);
+                procedure.retrieveChildren(context);
             }
+            final var pathname = TestUtils.getFilenamePrefix(context) + " - procedures.xml";
+            final var target = Paths.get("target", pathname).toFile();
+            Wrapper.marshalFormatted(Procedure.class, procedures, target);
         }
     }
 
     @Test
-    void getPseudoColumns__() throws SQLException {
+    void getPseudoColumns__() throws SQLException, JAXBException {
         try (var connection = connect()) {
             final var context = Context.newInstance(connection);
             final var pseudoColumns = context.getPseudoColumns(null, null, "%", "%", new ArrayList<>());
+            for (final var pseudoColumn : pseudoColumns) {
+                final var string = assertDoesNotThrow(pseudoColumn::toString);
+                final var hashCode = assertDoesNotThrow(pseudoColumn::hashCode);
+                pseudoColumn.retrieveChildren(context);
+            }
+            final var pathname = TestUtils.getFilenamePrefix(context) + " - pseudoColumns.xml";
+            final var target = Paths.get("target", pathname).toFile();
+            Wrapper.marshalFormatted(PseudoColumn.class, pseudoColumns, target);
         }
     }
 
     @Test
-    void getSchemas__() throws SQLException {
+    void getSchemas__() throws SQLException, JAXBException {
         try (var connection = connect()) {
             final var context = Context.newInstance(connection);
             final var schemas = context.getSchemas(null, null, new ArrayList<>());
@@ -323,23 +386,44 @@ abstract class MemoryTest {
             for (final var schema : schemas) {
                 final var string = assertDoesNotThrow(schema::toString);
                 final var hashCode = assertDoesNotThrow(schema::hashCode);
-                final var tableCatalog = (String) MetadataTypeUtils.getLabeledValue(
-                        Schema.class, schema, Schema.LABEL_TABLE_CATALOG);
-                final var tableSchem = (String) MetadataTypeUtils.getLabeledValue(
-                        Schema.class, schema, Schema.LABEL_TABLE_SCHEM);
                 schema.retrieveChildren(context);
             }
+            final var pathname = TestUtils.getFilenamePrefix(context) + " - schemas.xml";
+            final var target = Paths.get("target", pathname).toFile();
+            Wrapper.marshalFormatted(Schema.class, schemas, target);
         }
     }
 
     @Test
-    void getSuperTables__() throws SQLException {
+    void getSuperTables__() throws SQLException, JAXBException {
         try (var connection = connect()) {
             final var context = Context.newInstance(connection);
             final var superTables = context.getSuperTables(null, "%", "%", new ArrayList<>());
             for (final var superTable : superTables) {
                 log.debug("super table: {}", superTable);
+                superTable.retrieveChildren(context);
             }
+            final var pathname = TestUtils.getFilenamePrefix(context) + " - superTables.xml";
+            final var target = Paths.get("target", pathname).toFile();
+            Wrapper.marshalFormatted(SuperTable.class, superTables, target);
+        }
+    }
+
+    @Test
+    void getSuperTypes__() throws SQLException, JAXBException {
+        try (var connection = connect()) {
+            final var context = Context.newInstance(connection);
+            final var superTypes = context.getSuperTypes(null, null, "%", new ArrayList<>());
+            for (final var superType : superTypes) {
+                assertThat(superType.extractType())
+                        .isNotNull();
+                assertThat(superType.extractSuperType())
+                        .isNotNull();
+                superType.retrieveChildren(context);
+            }
+            final var pathname = TestUtils.getFilenamePrefix(context) + " - superTypes.xml";
+            final var target = Paths.get("target", pathname).toFile();
+            Wrapper.marshalFormatted(SuperType.class, superTypes, target);
         }
     }
 
@@ -347,13 +431,20 @@ abstract class MemoryTest {
     void supportsConvert__() throws SQLException, JAXBException {
         try (Connection connection = connect()) {
             final var context = Context.newInstance(connection);
-            assertThat(SupportsConvert.getAllInstances(context, new ArrayList<>()))
+            final var allInstances = SupportsConvert.getAllInstances(context, new ArrayList<>());
+            assertThat(allInstances)
                     .doesNotContainNull()
 //                    .satisfies(TestUtils::testEquals)
                     .allSatisfy(v -> {
                         final var string = assertDoesNotThrow(v::toString);
                         final var hashCode = assertDoesNotThrow(v::hashCode);
                     });
+            for (final var supportConvert : allInstances) {
+                supportConvert.retrieveChildren(context);
+            }
+            final var pathname = TestUtils.getFilenamePrefix(context) + " - supportsConvert.xml";
+            final var target = Paths.get("target", pathname).toFile();
+            Wrapper.marshalFormatted(SupportsConvert.class, allInstances, target);
         }
     }
 
@@ -361,13 +452,17 @@ abstract class MemoryTest {
     void supportsResultSetConcurrency__() throws SQLException, JAXBException {
         try (Connection connection = connect()) {
             final var context = Context.newInstance(connection);
-            assertThat(SupportsResultSetConcurrency.getAllInstances(context, new ArrayList<>()))
+            final var allInstances = SupportsResultSetConcurrency.getAllInstances(context, new ArrayList<>());
+            assertThat(allInstances)
                     .doesNotContainNull()
 //                    .satisfies(TestUtils::testEquals)
                     .allSatisfy(v -> {
                         final var string = assertDoesNotThrow(v::toString);
                         final var hashCode = assertDoesNotThrow(v::hashCode);
                     });
+            final var pathname = TestUtils.getFilenamePrefix(context) + " - supportsResultSetConcurrency.xml";
+            final var target = Paths.get("target", pathname).toFile();
+            Wrapper.marshalFormatted(SupportsResultSetConcurrency.class, allInstances, target);
         }
     }
 
@@ -375,13 +470,17 @@ abstract class MemoryTest {
     void supportsResultSetHoldability__() throws SQLException, JAXBException {
         try (Connection connection = connect()) {
             final var context = Context.newInstance(connection);
-            assertThat(SupportsResultSetHoldability.getAllInstances(context, new ArrayList<>()))
+            final var allInstances = SupportsResultSetHoldability.getAllInstances(context, new ArrayList<>());
+            assertThat(allInstances)
                     .doesNotContainNull()
 //                    .satisfies(TestUtils::testEquals)
                     .allSatisfy(v -> {
                         final var string = assertDoesNotThrow(v::toString);
                         final var hashCode = assertDoesNotThrow(v::hashCode);
                     });
+            final var pathname = TestUtils.getFilenamePrefix(context) + " - supportsResultSetHoldability.xml";
+            final var target = Paths.get("target", pathname).toFile();
+            Wrapper.marshalFormatted(SupportsResultSetHoldability.class, allInstances, target);
         }
     }
 
@@ -389,13 +488,17 @@ abstract class MemoryTest {
     void supportsResultSetType__() throws SQLException, JAXBException {
         try (Connection connection = connect()) {
             final var context = Context.newInstance(connection);
-            assertThat(SupportsResultSetType.getAllInstances(context, new ArrayList<>()))
+            final var allInstances = SupportsResultSetType.getAllInstances(context, new ArrayList<>());
+            assertThat(allInstances)
                     .doesNotContainNull()
 //                    .satisfies(TestUtils::testEquals)
                     .allSatisfy(v -> {
                         final var string = assertDoesNotThrow(v::toString);
                         final var hashCode = assertDoesNotThrow(v::hashCode);
                     });
+            final var pathname = TestUtils.getFilenamePrefix(context) + " - supportsResultSetType.xml";
+            final var target = Paths.get("target", pathname).toFile();
+            Wrapper.marshalFormatted(SupportsResultSetType.class, allInstances, target);
         }
     }
 
@@ -403,37 +506,39 @@ abstract class MemoryTest {
     void supportsTransactionIsolationLevel__() throws SQLException, JAXBException {
         try (Connection connection = connect()) {
             final var context = Context.newInstance(connection);
-            assertThat(SupportsTransactionIsolationLevel.getAllInstances(context, new ArrayList<>()))
+            final var allInstances = SupportsTransactionIsolationLevel.getAllInstances(context, new ArrayList<>());
+            assertThat(allInstances)
                     .doesNotContainNull()
 //                    .satisfies(TestUtils::testEquals)
                     .allSatisfy(v -> {
                         final var string = assertDoesNotThrow(v::toString);
                         final var hashCode = assertDoesNotThrow(v::hashCode);
                     });
+            final var pathname = TestUtils.getFilenamePrefix(context) + " - supportsTransactionIsolationLevel.xml";
+            final var target = Paths.get("target", pathname).toFile();
+            Wrapper.marshalFormatted(SupportsTransactionIsolationLevel.class, allInstances, target);
         }
     }
 
     @Test
-    void getTables__() throws SQLException {
-        try (Connection connection = connect()) {
+    void getTables__() throws SQLException, JAXBException {
+        try (var connection = connect()) {
             final var context = Context.newInstance(connection);
             final var tables = context.getTables(null, null, "%", null, new ArrayList<>());
             TestUtils.testEquals(tables);
             for (final var table : tables) {
                 final var string = assertDoesNotThrow(table::toString);
                 final var hashCode = assertDoesNotThrow(table::hashCode);
-                final var tableCat = (String) MetadataTypeUtils.getLabeledValue(
-                        Table.class, table, Table.COLUMN_LABEL_TABLE_CAT);
-                final var tableSchem = (String) MetadataTypeUtils.getLabeledValue(
-                        Table.class, table, Table.COLUMN_LABEL_TABLE_SCHEM);
-                final var tableName = (String) MetadataTypeUtils.getLabeledValue(
-                        Table.class, table, Table.COLUMN_LABEL_TABLE_NAME);
+                table.retrieveChildren(context);
             }
+            final var pathname = TestUtils.getFilenamePrefix(context) + " - tables.xml";
+            final var target = Paths.get("target", pathname).toFile();
+            Wrapper.marshalFormatted(Table.class, tables, target);
         }
     }
 
     @Test
-    void getTablePrivileges__() throws SQLException {
+    void getTablePrivileges__() throws SQLException, JAXBException {
         try (var connection = connect()) {
             final var context = Context.newInstance(connection);
             final var tablePrivileges = context.getTablePrivileges(null, null, "%", new ArrayList<>());
@@ -441,12 +546,16 @@ abstract class MemoryTest {
                 log.debug("tablePrivilege: {}", tablePrivilege);
                 final var string = assertDoesNotThrow(tablePrivilege::toString);
                 final var hashCode = assertDoesNotThrow(tablePrivilege::hashCode);
+                tablePrivilege.retrieveChildren(context);
             }
+            final var pathname = TestUtils.getFilenamePrefix(context) + " - tablePrivileges.xml";
+            final var target = Paths.get("target", pathname).toFile();
+            Wrapper.marshalFormatted(TablePrivilege.class, tablePrivileges, target);
         }
     }
 
     @Test
-    void getTypeInfo__() throws SQLException {
+    void getTypeInfo__() throws SQLException, JAXBException {
         try (var connection = connect()) {
             final var context = Context.newInstance(connection);
             final var typeInfo = context.getTypeInfo(new ArrayList<>());
@@ -454,12 +563,16 @@ abstract class MemoryTest {
                 log.debug("typeInfo: {}", each);
                 final var string = assertDoesNotThrow(each::toString);
                 final var hashCode = assertDoesNotThrow(each::hashCode);
+                each.retrieveChildren(context);
             }
+            final String pathname = TestUtils.getFilenamePrefix(context) + " - typeInfo.xml";
+            final File target = Paths.get("target", pathname).toFile();
+            Wrapper.marshalFormatted(TypeInfo.class, typeInfo, target);
         }
     }
 
     @Test
-    void getUDTs__() throws SQLException {
+    void getUDTs__() throws SQLException, JAXBException {
         try (var connection = connect()) {
             final var context = Context.newInstance(connection);
             final var UDTs = context.getUDTs(null, null, "%", null, new ArrayList<>());
@@ -467,10 +580,15 @@ abstract class MemoryTest {
                 log.debug("UDT: {}", udt);
                 final var string = assertDoesNotThrow(udt::toString);
                 final var hashCode = assertDoesNotThrow(udt::hashCode);
+                udt.retrieveChildren(context);
             }
+            final String pathname = TestUtils.getFilenamePrefix(context) + " - UDTs.xml";
+            final File target = Paths.get("target", pathname).toFile();
+            Wrapper.marshalFormatted(UDT.class, UDTs, target);
         }
     }
 
+    @Disabled
     @Test
     void writeContextToFiles() throws SQLException {
         applyContext(c -> {

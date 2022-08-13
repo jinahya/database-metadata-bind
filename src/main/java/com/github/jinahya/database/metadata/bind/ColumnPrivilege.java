@@ -35,7 +35,7 @@ import java.util.Collection;
  * @see Context#getColumnPrivileges(String, String, String, String, Collection)
  */
 @XmlRootElement
-@ChildOf(Table.class)
+@ChildOf__(Table.class)
 @Data
 public class ColumnPrivilege implements MetadataType {
 

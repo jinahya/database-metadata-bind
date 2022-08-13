@@ -43,7 +43,7 @@ import java.util.Comparator;
  * @see Context#getPrimaryKeys(String, String, String, Collection)
  */
 @XmlRootElement
-@ChildOf(Table.class)
+@ChildOf__(Table.class)
 @Setter
 @Getter
 @EqualsAndHashCode

@@ -33,6 +33,7 @@ import lombok.experimental.SuperBuilder;
 import lombok.extern.java.Log;
 
 import java.io.Serializable;
+import java.sql.SQLException;
 
 /**
  * An abstract class for binding the result of {@code DatabaseMetaData#...DeletesAreVisible(int)} method.
@@ -60,9 +61,20 @@ import java.io.Serializable;
 @SuperBuilder(toBuilder = true)
 @Log
 public abstract class AreVisible
-        implements Serializable {
+        implements Serializable,
+                   MetadataType {
 
     private static final long serialVersionUID = -4539635096087360299L;
+
+    @Override
+    public void retrieveChildren(Context context) throws SQLException {
+        // no children.
+    }
+
+    @XmlAttribute(required = false)
+    public ResultSetType getTypeAsEnum() {
+        return ResultSetType.valueOfRawValue(getType());
+    }
 
     @XmlAttribute(required = true)
     private int type;

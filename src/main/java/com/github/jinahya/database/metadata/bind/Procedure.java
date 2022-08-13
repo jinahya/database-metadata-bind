@@ -50,7 +50,7 @@ import java.util.List;
  * @see Context#getProcedures(String, String, String, Collection)
  */
 @XmlRootElement
-@ChildOf(Schema.class)
+@ChildOf__(Schema.class)
 @ParentOf(ProcedureColumn.class)
 @Data
 @NoArgsConstructor

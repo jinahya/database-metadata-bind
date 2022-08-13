@@ -21,7 +21,10 @@ package com.github.jinahya.database.metadata.bind;
  */
 
 import jakarta.xml.bind.annotation.XmlRootElement;
+import lombok.Data;
+import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
+import lombok.ToString;
 
 import java.sql.DatabaseMetaData;
 import java.sql.SQLException;
@@ -36,7 +39,9 @@ import static java.util.Objects.requireNonNull;
  * @see DatabaseMetaData#insertsAreDetected(int)
  */
 @XmlRootElement
-@NoArgsConstructor
+@Data
+@EqualsAndHashCode(callSuper = true)
+@ToString(callSuper = true)
 public class InsertsAreDetected
         extends AreDetected {
 

@@ -26,7 +26,6 @@ import jakarta.xml.bind.annotation.XmlAttribute;
 import jakarta.xml.bind.annotation.XmlElement;
 import jakarta.xml.bind.annotation.XmlElementRef;
 import jakarta.xml.bind.annotation.XmlRootElement;
-import jakarta.xml.bind.annotation.XmlTransient;
 import lombok.AccessLevel;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
@@ -56,17 +55,18 @@ import java.util.Objects;
 @ParentOf(Table.class)
 @ParentOf(Procedure.class)
 @ParentOf(Function.class)
-@ChildOf(Catalog.class)
+@ChildOf__(Catalog.class)
 @Data
 @NoArgsConstructor
 @SuperBuilder(toBuilder = true)
 public class Schema
-        implements MetadataType {
+        implements MetadataType,
+                   ChildOf<Catalog> {
 
     private static final long serialVersionUID = 7457236468401244963L;
 
     public static final Comparator<Schema> COMPARATOR =
-            Comparator.comparing(Schema::extractCatalog, Comparator.nullsFirst(Catalog.COMPARATOR))
+            Comparator.comparing(Schema::extractParent, Comparator.nullsFirst(Catalog.COMPARATOR))
                     .thenComparing(Schema::getTableSchem);
 
     public static final String LABEL_TABLE_CATALOG = "TABLE_CATALOG";
@@ -121,6 +121,12 @@ public class Schema
             }
         }
         {
+            context.getSuperTypes(getTableCatalog(), getTableSchem(), "%", getSuperTypes());
+            for (final SuperType superType : getSuperTypes()) {
+                superType.retrieveChildren(context);
+            }
+        }
+        {
             context.getTables(getTableCatalog(), getTableSchem(), "%", null, getTables());
             for (final Table table : getTables()) {
                 table.retrieveChildren(context);
@@ -134,15 +140,15 @@ public class Schema
         }
     }
 
-    @XmlTransient
-    public boolean isVirtual() {
-        return virtual != null && virtual;
-    }
-
-    Catalog extractCatalog() {
+    @Override
+    public Catalog extractParent() {
         return Catalog.builder()
                 .tableCat(getTableCatalog())
                 .build();
+    }
+
+    public boolean isVirtual() {
+        return virtual != null && virtual;
     }
 
     public List<Function> getFunctions() {
@@ -166,6 +172,13 @@ public class Schema
         return superTables;
     }
 
+    public List<SuperType> getSuperTypes() {
+        if (superTypes == null) {
+            superTypes = new ArrayList<>();
+        }
+        return superTypes;
+    }
+
     public List<Table> getTables() {
         if (tables == null) {
             tables = new ArrayList<>();
@@ -180,6 +193,7 @@ public class Schema
         return UDTs;
     }
 
+    // -----------------------------------------------------------------------------------------------------------------
     @XmlAttribute(required = false)
     @Setter(AccessLevel.NONE)
     @Getter(AccessLevel.NONE)
@@ -195,14 +209,7 @@ public class Schema
     @Label(LABEL_TABLE_SCHEM)
     private String tableSchem;
 
-    @XmlTransient
-    @Valid
-    @Setter(AccessLevel.PACKAGE)
-    @Getter(AccessLevel.PACKAGE)
-    @EqualsAndHashCode.Exclude
-    @ToString.Exclude
-    private Catalog catalog;
-
+    // -----------------------------------------------------------------------------------------------------------------
     @XmlElementRef
     @Setter(AccessLevel.NONE)
     @Getter(AccessLevel.NONE)
@@ -223,6 +230,13 @@ public class Schema
     @EqualsAndHashCode.Exclude
     @ToString.Exclude
     private List<@Valid @NotNull SuperTable> superTables;
+
+    @XmlElementRef
+    @Setter(AccessLevel.NONE)
+    @Getter(AccessLevel.NONE)
+    @EqualsAndHashCode.Exclude
+    @ToString.Exclude
+    private List<@Valid @NotNull SuperType> superTypes;
 
     @XmlElementRef
     @Setter(AccessLevel.NONE)

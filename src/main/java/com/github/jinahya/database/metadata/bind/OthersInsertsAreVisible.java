@@ -21,6 +21,11 @@ package com.github.jinahya.database.metadata.bind;
  */
 
 import jakarta.xml.bind.annotation.XmlRootElement;
+import lombok.Data;
+import lombok.EqualsAndHashCode;
+import lombok.NoArgsConstructor;
+import lombok.ToString;
+import lombok.experimental.SuperBuilder;
 
 import java.sql.SQLException;
 import java.util.Collection;
@@ -34,6 +39,11 @@ import static java.util.Objects.requireNonNull;
  * @see Context#othersInsertsAreVisible(int)
  */
 @XmlRootElement
+@Data
+@EqualsAndHashCode(callSuper = true)
+@ToString(callSuper = true)
+@NoArgsConstructor
+@SuperBuilder(toBuilder = true)
 public class OthersInsertsAreVisible
         extends AreVisible {
 
@@ -59,12 +69,5 @@ public class OthersInsertsAreVisible
             collection.add(context.othersInsertsAreVisible(type.rawValue()));
         }
         return collection;
-    }
-
-    /**
-     * Creates a new instance.
-     */
-    public OthersInsertsAreVisible() {
-        super();
     }
 }

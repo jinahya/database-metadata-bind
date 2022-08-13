@@ -20,24 +20,16 @@ package com.github.jinahya.database.metadata.bind;
  * #L%
  */
 
-import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Positive;
 import jakarta.xml.bind.annotation.XmlElement;
-import jakarta.xml.bind.annotation.XmlElementRef;
 import jakarta.xml.bind.annotation.XmlRootElement;
-import lombok.AccessLevel;
+import jakarta.xml.bind.annotation.XmlTransient;
 import lombok.Data;
-import lombok.EqualsAndHashCode;
-import lombok.Getter;
-import lombok.Setter;
-import lombok.ToString;
 
 import java.sql.DatabaseMetaData;
 import java.sql.SQLException;
-import java.util.ArrayList;
 import java.util.Collection;
-import java.util.List;
 import java.util.Objects;
 
 /**
@@ -47,10 +39,11 @@ import java.util.Objects;
  * @see Context#getColumns(String, String, String, String, Collection)
  */
 @XmlRootElement
-@ChildOf(Table.class)
+@ChildOf__(Table.class)
 @Data
 public class Column
-        implements MetadataType {
+        implements MetadataType,
+                   ChildOf<Table> {
 
     private static final long serialVersionUID = -409653682729081530L;
 
@@ -107,8 +100,19 @@ public class Column
 
     @Override
     public void retrieveChildren(final Context context) throws SQLException {
+        // no children.
     }
 
+    @Override
+    public Table extractParent() {
+        return Table.builder()
+                .tableCat(getTableCat())
+                .tableSchem(getTableSchem())
+                .tableName(getTableName())
+                .build();
+    }
+
+    @XmlTransient
     public Nullable getNullableAsEnum() {
         return Nullable.valueOfRawValue(getNullable());
     }
@@ -117,13 +121,7 @@ public class Column
         setNullable(Objects.requireNonNull(nullableAsEnum, "nullableAsEnum is null").rawValue());
     }
 
-    public List<ColumnPrivilege> getColumnPrivileges() {
-        if (columnPrivileges == null) {
-            columnPrivileges = new ArrayList<>();
-        }
-        return columnPrivileges;
-    }
-
+    // -----------------------------------------------------------------------------------------------------------------
     @XmlElement(nillable = true, required = true)
     @NullableBySpecification
     @Label("TABLE_CAT")
@@ -142,6 +140,7 @@ public class Column
     @Label("COLUMN_NAME")
     private String columnName;
 
+    // -----------------------------------------------------------------------------------------------------------------
     @XmlElement(nillable = false, required = true)
     @Label("DATA_TYPE")
     private int dataType;
@@ -236,11 +235,4 @@ public class Column
     @NotNull
     @Label(COLUMN_NAME_IS_GENERATEDCOLUMN)
     private String isGeneratedcolumn;
-
-    @XmlElementRef
-    @Setter(AccessLevel.NONE)
-    @Getter(AccessLevel.NONE)
-    @EqualsAndHashCode.Exclude
-    @ToString.Exclude
-    private List<@Valid @NotNull ColumnPrivilege> columnPrivileges;
 }

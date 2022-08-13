@@ -23,10 +23,10 @@ package com.github.jinahya.database.metadata.bind;
 import jakarta.xml.bind.annotation.XmlAttribute;
 import jakarta.xml.bind.annotation.XmlRootElement;
 import jakarta.xml.bind.annotation.XmlValue;
+import lombok.Data;
 
 import java.sql.SQLException;
 import java.util.Collection;
-import java.util.Objects;
 
 import static java.util.Objects.requireNonNull;
 
@@ -37,7 +37,9 @@ import static java.util.Objects.requireNonNull;
  * @see Context#supportsResultSetConcurrency(int, int)
  */
 @XmlRootElement
-public class SupportsResultSetConcurrency {
+@Data
+public class SupportsResultSetConcurrency
+        implements MetadataType {
 
     private static final long serialVersionUID = -4192322973387966785L;
 
@@ -64,62 +66,14 @@ public class SupportsResultSetConcurrency {
         return collection;
     }
 
-    /**
-     * Creates a new instance.
-     */
-    public SupportsResultSetConcurrency() {
-        super();
-    }
-
     @Override
-    public String toString() {
-        return super.toString() + '{'
-               + "type=" + type
-               + ",concurrency=" + concurrency
-               + ",value=" + value
-               + '}';
+    public void retrieveChildren(final Context context) throws SQLException {
+        // no children.
     }
 
-    @Override
-    public boolean equals(final Object obj) {
-        if (this == obj) return true;
-        if (obj == null || getClass() != obj.getClass()) return false;
-        final SupportsResultSetConcurrency that = (SupportsResultSetConcurrency) obj;
-        return type == that.type
-               && concurrency == that.concurrency
-               && Objects.equals(value, that.value);
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(type, concurrency, value);
-    }
-
-    // ------------------------------------------------------------------------------------------------------------ type
-    public int getType() {
-        return type;
-    }
-
-    public void setType(final int type) {
-        this.type = type;
-    }
-
-    // ----------------------------------------------------------------------------------------------------- concurrency
-    public int getConcurrency() {
-        return concurrency;
-    }
-
-    public void setConcurrency(final int concurrency) {
-        this.concurrency = concurrency;
-    }
-
-    // ----------------------------------------------------------------------------------------------------------- value
-    public Boolean getValue() {
-        return value;
-    }
-
-    public void setValue(final Boolean value) {
-        this.value = value;
+    @XmlAttribute(required = false)
+    public ResultSetConcurrency getTypeAsEnum() {
+        return ResultSetConcurrency.valueOfRawValue(getConcurrency());
     }
 
     @XmlAttribute(required = true)

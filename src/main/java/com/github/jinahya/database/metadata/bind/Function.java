@@ -32,8 +32,10 @@ import lombok.AccessLevel;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
+import lombok.experimental.SuperBuilder;
 
 import java.sql.DatabaseMetaData;
 import java.sql.SQLException;
@@ -50,11 +52,13 @@ import java.util.List;
  * @see FunctionColumn
  */
 @XmlRootElement
-@ChildOf(Schema.class)
 @ParentOf(FunctionColumn.class)
 @Data
+@NoArgsConstructor(access = AccessLevel.PACKAGE)
+@SuperBuilder(toBuilder = true)
 public class Function
-        implements MetadataType {
+        implements MetadataType,
+                   ChildOf<Schema> {
 
     private static final long serialVersionUID = -3318947900237453301L;
 
@@ -128,6 +132,14 @@ public class Function
                 functionColumn.retrieveChildren(context);
             }
         }
+    }
+
+    @Override
+    public Schema extractParent() {
+        return Schema.builder()
+                .tableSchem(getFunctionCat())
+                .tableSchem(getFunctionSchem())
+                .build();
     }
 
     /**

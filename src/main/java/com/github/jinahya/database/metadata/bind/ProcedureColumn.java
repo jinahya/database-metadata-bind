@@ -48,15 +48,16 @@ import java.util.Objects;
  * @see Context#getProcedureColumns(String, String, String, String, Collection)
  */
 @XmlRootElement
-@ChildOf(Procedure.class)
+//@ChildOf__(Procedure.class)
 @Data
 public class ProcedureColumn
-        implements MetadataType {
+        implements MetadataType,
+                   ChildOf<Procedure> {
 
     private static final long serialVersionUID = 3894753719381358829L;
 
     public static final Comparator<ProcedureColumn> COMPARATOR =
-            Comparator.comparing(ProcedureColumn::extractProcedure, Procedure.COMPARATOR);
+            Comparator.comparing(ProcedureColumn::extractParent, Procedure.COMPARATOR);
 
     /**
      * Constants for column types of procedure columns.
@@ -130,6 +131,16 @@ public class ProcedureColumn
 
     @Override
     public void retrieveChildren(final Context context) throws SQLException {
+        // no children.
+    }
+
+    @Override
+    public Procedure extractParent() {
+        return Procedure.builder()
+                .procedureCat(getProcedureCat())
+                .procedureSchem(getProcedureSchem())
+                .procedureName(getProcedureName())
+                .build();
     }
 
     public ColumnType getColumnTypeAsEnum() {
@@ -139,15 +150,6 @@ public class ProcedureColumn
     public void setColumnTypeAsEnum(final ColumnType columnTypeAsEnum) {
         Objects.requireNonNull(columnTypeAsEnum, "columnTypeAsEnum is null");
         setColumnType(columnTypeAsEnum.rawValue);
-    }
-
-    Procedure extractProcedure() {
-        return Procedure.builder()
-                .procedureCat(getProcedureCat())
-                .procedureSchem(getProcedureSchem())
-                .procedureName(getProcedureName())
-                .specificName(getSpecificName())
-                .build();
     }
 
     // -----------------------------------------------------------------------------------------------------------------

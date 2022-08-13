@@ -38,17 +38,43 @@ import java.util.Collection;
  * @see Context#getSuperTypes(String, String, String, Collection)
  */
 @XmlRootElement
-@ChildOf(UDT.class)
+@ChildOf__(Schema.class)
 @Data
 @NoArgsConstructor
 @SuperBuilder(toBuilder = true)
 public class SuperType
-        implements MetadataType {
+        implements MetadataType,
+                   ChildOf<Schema> {
 
     private static final long serialVersionUID = 4603878785941565029L;
 
     @Override
     public void retrieveChildren(final Context context) throws SQLException {
+        // no children.
+    }
+
+    @Override
+    public Schema extractParent() {
+        return Schema.builder()
+                .tableCatalog(getTypeCat())
+                .tableSchem(getTypeSchem())
+                .build();
+    }
+
+    public UDT extractType() {
+        return UDT.builder()
+                .typeCat(getTypeCat())
+                .typeSchem(getTypeSchem())
+                .typeName(getTypeName())
+                .build();
+    }
+
+    public UDT extractSuperType() {
+        return UDT.builder()
+                .typeCat(getSupertypeCat())
+                .typeSchem(getSupertypeSchem())
+                .typeName(getSupertypeName())
+                .build();
     }
 
     @XmlElement(nillable = true, required = true)
