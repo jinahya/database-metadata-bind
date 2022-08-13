@@ -20,6 +20,8 @@ package com.github.jinahya.database.metadata.bind;
  * #L%
  */
 
+import java.util.Objects;
+
 /**
  * A utility class for {@link IntFieldEnum}.
  *
@@ -37,7 +39,7 @@ final class IntFieldEnums {
     }
 
     static <E extends Enum<E> & IntFieldEnum<E>> E valueOfRawValue(final Class<E> enumType, final int rawValue) {
-        for (final E enumConstant : enumType.getEnumConstants()) {
+        for (final E enumConstant : Objects.requireNonNull(enumType, "enumType is null").getEnumConstants()) {
             final int constantFieldValue = enumConstant.rawValue();
             if (constantFieldValue == rawValue) {
                 return enumConstant;

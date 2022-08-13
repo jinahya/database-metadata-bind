@@ -21,12 +21,12 @@ package com.github.jinahya.database.metadata.bind;
  */
 
 import jakarta.xml.bind.annotation.XmlRootElement;
+import lombok.NoArgsConstructor;
 
 import java.sql.DatabaseMetaData;
 import java.sql.SQLException;
 import java.util.Collection;
-
-import static java.util.Objects.requireNonNull;
+import java.util.Objects;
 
 /**
  * A class for binding result of {@link DatabaseMetaData#updatesAreDetected(int)} method.
@@ -35,35 +35,31 @@ import static java.util.Objects.requireNonNull;
  * @see Context#updatesAreDetected(int)
  */
 @XmlRootElement
+@NoArgsConstructor
 public class UpdatesAreDetected
         extends AreDetected {
 
     private static final long serialVersionUID = -7538643762491010895L;
 
     /**
-     * Invokes {@link Context#updatesAreDetected(int)} for all types defined in {@link java.sql.ResultSet} and adds all
-     * bound values to specified collection.
+     * Invokes {@link Context#updatesAreDetected(int)} on specified context for each value of {@link ResultSetType} and
+     * adds bound values to specified collection.
      *
-     * @param context    a context.
+     * @param context    the context.
      * @param collection the collection to which bound values are added.
-     * @param <C>        type of {@code collection}
+     * @param <C>        the type of elements in the {@code collection}
      * @return given {@code collection}.
      * @throws SQLException if a database access error occurs.
+     * @see Context#updatesAreDetected(int)
      */
-    public static <C extends Collection<? super UpdatesAreDetected>> C getAllInstances(
-            final Context context, final C collection)
+    public static <C extends Collection<? super UpdatesAreDetected>> C getAllInstances(final Context context,
+                                                                                       final C collection)
             throws SQLException {
-        requireNonNull(context, "context is null");
+        Objects.requireNonNull(context, "context is null");
+        Objects.requireNonNull(collection, "collection is null");
         for (final ResultSetType type : ResultSetType.values()) {
             collection.add(context.updatesAreDetected(type.rawValue()));
         }
         return collection;
-    }
-
-    /**
-     * Creates a new instance.
-     */
-    public UpdatesAreDetected() {
-        super();
     }
 }

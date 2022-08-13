@@ -29,8 +29,6 @@ import java.sql.SQLException;
 import java.util.Collection;
 import java.util.Objects;
 
-import static java.util.Objects.requireNonNull;
-
 /**
  * A class for binding results of {@link DatabaseMetaData#supportsResultSetType(int)} method.
  *
@@ -53,8 +51,8 @@ public class SupportsResultSetType {
     public static <C extends Collection<? super SupportsResultSetType>> C getAllInstances(final Context context,
                                                                                           final C collection)
             throws SQLException {
-        requireNonNull(context, "context is null");
-        requireNonNull(collection, "collection is null");
+        Objects.requireNonNull(context, "context is null");
+        Objects.requireNonNull(collection, "collection is null");
         for (final ResultSetType value : ResultSetType.values()) {
             collection.add(context.supportsResultSetType(value.rawValue()));
         }

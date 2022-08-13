@@ -58,8 +58,7 @@ abstract class MemoryTest {
     protected abstract Connection connect() throws SQLException;
 
     Context context(final Connection connection) throws SQLException {
-        return Context.newInstance(connection)
-                .suppress(SQLFeatureNotSupportedException.class);
+        return Context.newInstance(connection);
     }
 
     Metadata metadata(final Context context) throws SQLException {
@@ -106,8 +105,8 @@ abstract class MemoryTest {
             final var context = context(connection);
             final var catalogs = context.getCatalogs(new ArrayList<>());
             for (final var catalog : catalogs) {
-                final String string = assertDoesNotThrow(catalog::toString);
-                final int hashCode = assertDoesNotThrow(catalog::hashCode);
+                final var string = assertDoesNotThrow(catalog::toString);
+                final var hashCode = assertDoesNotThrow(catalog::hashCode);
                 assertThat(catalog.getTableCat())
                         .isNotNull();
                 catalog.retrieveChildren(context);
@@ -118,8 +117,7 @@ abstract class MemoryTest {
     @Test
     void functions() throws SQLException {
         try (Connection connection = connect()) {
-            final Context context = Context.newInstance(connection)
-                    .suppress(SQLFeatureNotSupportedException.class);
+            final var context = Context.newInstance(connection);
             final List<Function> functions;
             try {
                 functions = context.getFunctions(null, null, "%", new ArrayList<>());
@@ -147,15 +145,14 @@ abstract class MemoryTest {
     @Test
     void deletesAreDetected() throws SQLException {
         try (Connection connection = connect()) {
-            final Context context = Context.newInstance(connection)
-                    .suppress(SQLFeatureNotSupportedException.class);
+            final var context = Context.newInstance(connection);
             assertThat(DeletesAreDetected.getAllInstances(context, new ArrayList<>()))
                     .doesNotContainNull()
                     .hasSize(ResultSetType.values().length)
 //                    .satisfies(TestUtils::testEquals)
                     .allSatisfy(v -> {
-                        final String string = assertDoesNotThrow(v::toString);
-                        final int hashCode = assertDoesNotThrow(v::hashCode);
+                        final var string = assertDoesNotThrow(v::toString);
+                        final var hashCode = assertDoesNotThrow(v::hashCode);
                     });
         }
     }
@@ -163,15 +160,14 @@ abstract class MemoryTest {
     @Test
     void insertsAreDetected() throws SQLException {
         try (Connection connection = connect()) {
-            final Context context = Context.newInstance(connection)
-                    .suppress(SQLFeatureNotSupportedException.class);
+            final var context = Context.newInstance(connection);
             assertThat(InsertsAreDetected.getAllInstances(context, new ArrayList<>()))
                     .doesNotContainNull()
                     .hasSize(ResultSetType.values().length)
 //                    .satisfies(TestUtils::testEquals)
                     .allSatisfy(v -> {
-                        final String string = assertDoesNotThrow(v::toString);
-                        final int hashCode = assertDoesNotThrow(v::hashCode);
+                        final var string = assertDoesNotThrow(v::toString);
+                        final var hashCode = assertDoesNotThrow(v::hashCode);
                     });
         }
     }
@@ -179,15 +175,104 @@ abstract class MemoryTest {
     @Test
     void updatesAreDetected() throws SQLException, JAXBException {
         try (Connection connection = connect()) {
-            final Context context = Context.newInstance(connection)
-                    .suppress(SQLFeatureNotSupportedException.class);
+            final var context = Context.newInstance(connection);
             assertThat(UpdatesAreDetected.getAllInstances(context, new ArrayList<>()))
                     .doesNotContainNull()
                     .hasSize(ResultSetType.values().length)
 //                    .satisfies(TestUtils::testEquals)
                     .allSatisfy(v -> {
-                        final String string = assertDoesNotThrow(v::toString);
-                        final int hashCode = assertDoesNotThrow(v::hashCode);
+                        final var string = assertDoesNotThrow(v::toString);
+                        final var hashCode = assertDoesNotThrow(v::hashCode);
+                    });
+        }
+    }
+
+    @Test
+    void othersDeletesAreVisible__() throws SQLException, JAXBException {
+        try (Connection connection = connect()) {
+            final var context = Context.newInstance(connection);
+            assertThat(OthersDeletesAreVisible.getAllInstances(context, new ArrayList<>()))
+                    .doesNotContainNull()
+                    .hasSize(ResultSetType.values().length)
+//                    .satisfies(TestUtils::testEquals)
+                    .allSatisfy(v -> {
+                        final var string = assertDoesNotThrow(v::toString);
+                        final var hashCode = assertDoesNotThrow(v::hashCode);
+                    });
+        }
+    }
+
+    @Test
+    void othersInsertsAreVisible__() throws SQLException, JAXBException {
+        try (Connection connection = connect()) {
+            final var context = Context.newInstance(connection);
+            assertThat(OthersInsertsAreVisible.getAllInstances(context, new ArrayList<>()))
+                    .doesNotContainNull()
+                    .hasSize(ResultSetType.values().length)
+//                    .satisfies(TestUtils::testEquals)
+                    .allSatisfy(v -> {
+                        final var string = assertDoesNotThrow(v::toString);
+                        final var hashCode = assertDoesNotThrow(v::hashCode);
+                    });
+        }
+    }
+
+    @Test
+    void othersUpdatesAreVisible__() throws SQLException, JAXBException {
+        try (Connection connection = connect()) {
+            final var context = Context.newInstance(connection);
+            assertThat(OthersUpdatesAreVisible.getAllInstances(context, new ArrayList<>()))
+                    .doesNotContainNull()
+                    .hasSize(ResultSetType.values().length)
+//                    .satisfies(TestUtils::testEquals)
+                    .allSatisfy(v -> {
+                        final var string = assertDoesNotThrow(v::toString);
+                        final var hashCode = assertDoesNotThrow(v::hashCode);
+                    });
+        }
+    }
+
+    @Test
+    void ownDeletesAreVisible__() throws SQLException, JAXBException {
+        try (Connection connection = connect()) {
+            final var context = Context.newInstance(connection);
+            assertThat(OwnDeletesAreVisible.getAllInstances(context, new ArrayList<>()))
+                    .doesNotContainNull()
+                    .hasSize(ResultSetType.values().length)
+//                    .satisfies(TestUtils::testEquals)
+                    .allSatisfy(v -> {
+                        final var string = assertDoesNotThrow(v::toString);
+                        final var hashCode = assertDoesNotThrow(v::hashCode);
+                    });
+        }
+    }
+
+    @Test
+    void ownInsertsAreVisible__() throws SQLException, JAXBException {
+        try (Connection connection = connect()) {
+            final var context = Context.newInstance(connection);
+            assertThat(OwnInsertsAreVisible.getAllInstances(context, new ArrayList<>()))
+                    .doesNotContainNull()
+                    .hasSize(ResultSetType.values().length)
+//                    .satisfies(TestUtils::testEquals)
+                    .allSatisfy(v -> {
+                        final var string = assertDoesNotThrow(v::toString);
+                        final var hashCode = assertDoesNotThrow(v::hashCode);
+                    });
+        }
+    }
+
+    @Test
+    void ownUpdatesAreVisible__() throws SQLException, JAXBException {
+        try (Connection connection = connect()) {
+            final var context = Context.newInstance(connection);
+            assertThat(OwnUpdatesAreVisible.getAllInstances(context, new ArrayList<>()))
+                    .doesNotContainNull()
+                    .hasSize(ResultSetType.values().length)
+//                    .satisfies(TestUtils::testEquals)
+                    .allSatisfy(v -> {
+                        final var string = assertDoesNotThrow(v::toString);
+                        final var hashCode = assertDoesNotThrow(v::hashCode);
                     });
         }
     }
@@ -195,15 +280,8 @@ abstract class MemoryTest {
     @Test
     void getProcedures__() throws SQLException {
         try (var connection = connect()) {
-            final Context context = Context.newInstance(connection)
-                    .suppress(SQLFeatureNotSupportedException.class);
-            final List<Procedure> procedures;
-            try {
-                procedures = context.getProcedures(null, null, "%", new ArrayList<>());
-            } catch (final SQLFeatureNotSupportedException slqfnse) {
-                log.error("not supported; getProcedures", slqfnse);
-                return;
-            }
+            final var context = Context.newInstance(connection);
+            final var procedures = context.getProcedures(null, null, "%", new ArrayList<>());
             for (final var procedure : procedures) {
                 assertThat(procedure)
                         .usingComparator(Procedure.COMPARATOR)
@@ -228,45 +306,28 @@ abstract class MemoryTest {
     @Test
     void getPseudoColumns__() throws SQLException {
         try (var connection = connect()) {
-            final Context context = Context.newInstance(connection)
-                    .suppress(SQLFeatureNotSupportedException.class);
-            final List<PseudoColumn> pseudoColumns;
-            try {
-                pseudoColumns = context.getPseudoColumns(null, null, "%", "%", new ArrayList<>());
-            } catch (final SQLFeatureNotSupportedException slqfnse) {
-                log.error("not supported; getPseudoColumns", slqfnse);
-                return;
-            }
+            final var context = Context.newInstance(connection);
+            final var pseudoColumns = context.getPseudoColumns(null, null, "%", "%", new ArrayList<>());
         }
     }
 
     @Test
     void getSchemas__() throws SQLException {
-        try (Connection connection = connect()) {
-            final Context context = Context.newInstance(connection);
-            final List<Schema> schemas = context.getSchemas(null, null, new ArrayList<>());
+        try (var connection = connect()) {
+            final var context = Context.newInstance(connection);
+            final var schemas = context.getSchemas(null, null, new ArrayList<>());
             if (schemas.isEmpty()) {
                 schemas.add(Schema.newVirtualInstance());
             }
             TestUtils.testEquals(schemas);
-            for (final Schema schema : schemas) {
-                final String string = assertDoesNotThrow(schema::toString);
-                final int hashCode = assertDoesNotThrow(schema::hashCode);
-                final String tableCatalog = (String) MetadataTypeUtils.getLabeledValue(
-                        Schema.class, schema, Schema.LABEL_TABLE_CATALOG);
-                final String tableSchem = (String) MetadataTypeUtils.getLabeledValue(
-                        Schema.class, schema, Schema.LABEL_TABLE_SCHEM);
-            }
             for (final var schema : schemas) {
-                final var superTables = context.getSuperTables(
-                        schema.getTableCatalog(),
-                        schema.getTableSchem(),
-                        "%",
-                        schema.getSuperTables()
-                );
-                for (final var superTable : superTables) {
-                    log.debug("super table: {}", superTable);
-                }
+                final var string = assertDoesNotThrow(schema::toString);
+                final var hashCode = assertDoesNotThrow(schema::hashCode);
+                final var tableCatalog = (String) MetadataTypeUtils.getLabeledValue(
+                        Schema.class, schema, Schema.LABEL_TABLE_CATALOG);
+                final var tableSchem = (String) MetadataTypeUtils.getLabeledValue(
+                        Schema.class, schema, Schema.LABEL_TABLE_SCHEM);
+                schema.retrieveChildren(context);
             }
         }
     }
@@ -283,80 +344,129 @@ abstract class MemoryTest {
     }
 
     @Test
+    void supportsConvert__() throws SQLException, JAXBException {
+        try (Connection connection = connect()) {
+            final var context = Context.newInstance(connection);
+            assertThat(SupportsConvert.getAllInstances(context, new ArrayList<>()))
+                    .doesNotContainNull()
+//                    .satisfies(TestUtils::testEquals)
+                    .allSatisfy(v -> {
+                        final var string = assertDoesNotThrow(v::toString);
+                        final var hashCode = assertDoesNotThrow(v::hashCode);
+                    });
+        }
+    }
+
+    @Test
+    void supportsResultSetConcurrency__() throws SQLException, JAXBException {
+        try (Connection connection = connect()) {
+            final var context = Context.newInstance(connection);
+            assertThat(SupportsResultSetConcurrency.getAllInstances(context, new ArrayList<>()))
+                    .doesNotContainNull()
+//                    .satisfies(TestUtils::testEquals)
+                    .allSatisfy(v -> {
+                        final var string = assertDoesNotThrow(v::toString);
+                        final var hashCode = assertDoesNotThrow(v::hashCode);
+                    });
+        }
+    }
+
+    @Test
+    void supportsResultSetHoldability__() throws SQLException, JAXBException {
+        try (Connection connection = connect()) {
+            final var context = Context.newInstance(connection);
+            assertThat(SupportsResultSetHoldability.getAllInstances(context, new ArrayList<>()))
+                    .doesNotContainNull()
+//                    .satisfies(TestUtils::testEquals)
+                    .allSatisfy(v -> {
+                        final var string = assertDoesNotThrow(v::toString);
+                        final var hashCode = assertDoesNotThrow(v::hashCode);
+                    });
+        }
+    }
+
+    @Test
+    void supportsResultSetType__() throws SQLException, JAXBException {
+        try (Connection connection = connect()) {
+            final var context = Context.newInstance(connection);
+            assertThat(SupportsResultSetType.getAllInstances(context, new ArrayList<>()))
+                    .doesNotContainNull()
+//                    .satisfies(TestUtils::testEquals)
+                    .allSatisfy(v -> {
+                        final var string = assertDoesNotThrow(v::toString);
+                        final var hashCode = assertDoesNotThrow(v::hashCode);
+                    });
+        }
+    }
+
+    @Test
+    void supportsTransactionIsolationLevel__() throws SQLException, JAXBException {
+        try (Connection connection = connect()) {
+            final var context = Context.newInstance(connection);
+            assertThat(SupportsTransactionIsolationLevel.getAllInstances(context, new ArrayList<>()))
+                    .doesNotContainNull()
+//                    .satisfies(TestUtils::testEquals)
+                    .allSatisfy(v -> {
+                        final var string = assertDoesNotThrow(v::toString);
+                        final var hashCode = assertDoesNotThrow(v::hashCode);
+                    });
+        }
+    }
+
+    @Test
     void getTables__() throws SQLException {
         try (Connection connection = connect()) {
-            final Context context = Context.newInstance(connection)
-                    .suppress(SQLFeatureNotSupportedException.class);
-            final List<Table> tables = context.getTables(null, null, "%", null, new ArrayList<>());
+            final var context = Context.newInstance(connection);
+            final var tables = context.getTables(null, null, "%", null, new ArrayList<>());
             TestUtils.testEquals(tables);
             for (final var table : tables) {
-                final String string = assertDoesNotThrow(table::toString);
-                final int hashCode = assertDoesNotThrow(table::hashCode);
-                final String tableCat = (String) MetadataTypeUtils.getLabeledValue(
+                final var string = assertDoesNotThrow(table::toString);
+                final var hashCode = assertDoesNotThrow(table::hashCode);
+                final var tableCat = (String) MetadataTypeUtils.getLabeledValue(
                         Table.class, table, Table.COLUMN_LABEL_TABLE_CAT);
-                final String tableSchem = (String) MetadataTypeUtils.getLabeledValue(
+                final var tableSchem = (String) MetadataTypeUtils.getLabeledValue(
                         Table.class, table, Table.COLUMN_LABEL_TABLE_SCHEM);
-                final String tableName = (String) MetadataTypeUtils.getLabeledValue(
+                final var tableName = (String) MetadataTypeUtils.getLabeledValue(
                         Table.class, table, Table.COLUMN_LABEL_TABLE_NAME);
-            }
-            for (final var table : tables) {
-                for (final var scope : BestRowIdentifier.Scope.values()) {
-                    for (final var nullable : new boolean[] {true, false}) {
-                        final var bestRowIdentifiers = context.getBestRowIdentifier(
-                                table.getTableCat(),
-                                table.getTableSchem(),
-                                table.getTableName(),
-                                scope.rawValue(),
-                                nullable,
-                                new ArrayList<>()
-                        );
-                        bestRowIdentifiers.forEach(bri -> {
-                            log.debug("bestRowIdentifier(scope: {}, nullable: {}): {}", scope, nullable, bri);
-                        });
-                    }
-                }
             }
         }
     }
 
     @Test
     void getTablePrivileges__() throws SQLException {
-        try (Connection connection = connect()) {
-            final Context context = Context.newInstance(connection)
-                    .suppress(SQLFeatureNotSupportedException.class);
-            final List<TablePrivilege> tablePrivileges = context.getTablePrivileges(null, null, "%", new ArrayList<>());
+        try (var connection = connect()) {
+            final var context = Context.newInstance(connection);
+            final var tablePrivileges = context.getTablePrivileges(null, null, "%", new ArrayList<>());
             for (final var tablePrivilege : tablePrivileges) {
                 log.debug("tablePrivilege: {}", tablePrivilege);
-                final String string = assertDoesNotThrow(tablePrivilege::toString);
-                final int hashCode = assertDoesNotThrow(tablePrivilege::hashCode);
+                final var string = assertDoesNotThrow(tablePrivilege::toString);
+                final var hashCode = assertDoesNotThrow(tablePrivilege::hashCode);
             }
         }
     }
 
     @Test
     void getTypeInfo__() throws SQLException {
-        try (Connection connection = connect()) {
-            final Context context = Context.newInstance(connection)
-                    .suppress(SQLFeatureNotSupportedException.class);
-            final List<TypeInfo> typeInfo = context.getTypeInfo(new ArrayList<>());
+        try (var connection = connect()) {
+            final var context = Context.newInstance(connection);
+            final var typeInfo = context.getTypeInfo(new ArrayList<>());
             for (final var each : typeInfo) {
                 log.debug("typeInfo: {}", each);
-                final String string = assertDoesNotThrow(each::toString);
-                final int hashCode = assertDoesNotThrow(each::hashCode);
+                final var string = assertDoesNotThrow(each::toString);
+                final var hashCode = assertDoesNotThrow(each::hashCode);
             }
         }
     }
 
     @Test
     void getUDTs__() throws SQLException {
-        try (Connection connection = connect()) {
-            final Context context = Context.newInstance(connection)
-                    .suppress(SQLFeatureNotSupportedException.class);
-            final List<UDT> UDTs = context.getUDTs(null, null, "%", null, new ArrayList<>());
+        try (var connection = connect()) {
+            final var context = Context.newInstance(connection);
+            final var UDTs = context.getUDTs(null, null, "%", null, new ArrayList<>());
             for (final var udt : UDTs) {
                 log.debug("UDT: {}", udt);
-                final String string = assertDoesNotThrow(udt::toString);
-                final int hashCode = assertDoesNotThrow(udt::hashCode);
+                final var string = assertDoesNotThrow(udt::toString);
+                final var hashCode = assertDoesNotThrow(udt::hashCode);
             }
         }
     }

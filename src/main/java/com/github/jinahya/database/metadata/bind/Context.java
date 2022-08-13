@@ -34,7 +34,6 @@ import java.sql.SQLFeatureNotSupportedException;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Objects;
@@ -163,23 +162,23 @@ public class Context {
     public <C extends Collection<? super Attribute>> C getAttributes(final String catalog, final String schemaPattern,
                                                                      final String typeNamePattern,
                                                                      final String attributeNamePattern,
-                                                                     final C collection)
-            throws SQLException {
+                                                                     final C collection) throws SQLException {
         Objects.requireNonNull(typeNamePattern, "typeNamePattern is null");
         Objects.requireNonNull(attributeNamePattern, "attributeNamePattern is null");
         Objects.requireNonNull(collection, "collection is null");
-        try (ResultSet results = databaseMetaData.getAttributes(
-                catalog, schemaPattern, typeNamePattern, attributeNamePattern)) {
+        try (ResultSet results = databaseMetaData.getAttributes(catalog, schemaPattern, typeNamePattern,
+                                                                attributeNamePattern)) {
             if (results == null) {
-                log.warning(String.format("null returned; getAttributes(%1$s, %2$s, %3$s, %4$s)",
-                                          catalog, schemaPattern, typeNamePattern, attributeNamePattern));
+                log.warning(
+                        String.format("null returned; getAttributes(%1$s, %2$s, %3$s, %4$s)", catalog, schemaPattern,
+                                      typeNamePattern, attributeNamePattern));
                 return collection;
             }
             return bind(results, Attribute.class, collection);
         } catch (final SQLFeatureNotSupportedException sqlfnse) {
-            log.log(Level.WARNING, String.format("not supported; getAttributes(%1$s, %2$s, %3$s, %4$s)",
-                                                 catalog, schemaPattern, typeNamePattern, attributeNamePattern),
-                    sqlfnse);
+            log.log(Level.WARNING,
+                    String.format("not supported; getAttributes(%1$s, %2$s, %3$s, %4$s)", catalog, schemaPattern,
+                                  typeNamePattern, attributeNamePattern), sqlfnse);
         }
         return collection;
     }
@@ -204,21 +203,20 @@ public class Context {
     @NotNull
     public <C extends Collection<@Valid @NotNull ? super BestRowIdentifier>> C getBestRowIdentifier(
             final String catalog, final String schema, @NotBlank final String table, final int scope,
-            final boolean nullable, @NotNull final C collection)
-            throws SQLException {
+            final boolean nullable, @NotNull final C collection) throws SQLException {
         Objects.requireNonNull(table, "table is null");
         Objects.requireNonNull(collection, "collection is null");
         try (ResultSet results = databaseMetaData.getBestRowIdentifier(catalog, schema, table, scope, nullable)) {
             if (results == null) {
-                log.warning(String.format("null returned; getBestRowIdentifier(%1$s, %1$s, %3$s, %4$d, %5$s)",
-                                          catalog, schema, table, scope, nullable));
+                log.warning(String.format("null returned; getBestRowIdentifier(%1$s, %1$s, %3$s, %4$d, %5$s)", catalog,
+                                          schema, table, scope, nullable));
                 return collection;
             }
             return bind(results, BestRowIdentifier.class, collection);
         } catch (final SQLFeatureNotSupportedException sqlfnse) {
-            log.log(Level.WARNING, String.format("not supported; getBestRowIdentifier(%1$s, %1$s, %3$s, %4$d, %5$s)",
-                                                 catalog, schema, table, scope, nullable),
-                    sqlfnse);
+            log.log(Level.WARNING,
+                    String.format("not supported; getBestRowIdentifier(%1$s, %1$s, %3$s, %4$d, %5$s)", catalog, schema,
+                                  table, scope, nullable), sqlfnse);
         }
         return collection;
     }
@@ -284,9 +282,13 @@ public class Context {
      * @see DatabaseMetaData#getColumnPrivileges(String, String, String, String)
      */
     @NotNull
-    public <C extends Collection<@Valid @NotNull ? super ColumnPrivilege>> C getColumnPrivileges(
-            final String catalog, final String schema, @NotBlank final String table,
-            @NotBlank final String columnNamePattern, final C collection)
+    public <C extends Collection<@Valid @NotNull ? super ColumnPrivilege>> C getColumnPrivileges(final String catalog,
+                                                                                                 final String schema,
+                                                                                                 @NotBlank
+                                                                                                 final String table,
+                                                                                                 @NotBlank
+                                                                                                 final String columnNamePattern,
+                                                                                                 final C collection)
             throws SQLException {
         Objects.requireNonNull(table, "table is null");
         Objects.requireNonNull(collection, "collection is null");
@@ -294,13 +296,13 @@ public class Context {
             if (results != null) {
                 return bind(results, ColumnPrivilege.class, collection);
             }
-            log.warning(String.format("null returned; getColumnPrivileges(%1$s, %2$s, %3$s, %4$s", catalog, schema,
-                                      table, columnNamePattern));
+            log.warning(
+                    String.format("null returned; getColumnPrivileges(%1$s, %2$s, %3$s, %4$s", catalog, schema, table,
+                                  columnNamePattern));
         } catch (final SQLFeatureNotSupportedException sqlfnse) {
             log.log(Level.WARNING,
                     String.format("not supported; getColumnPrivileges(%1$s, %2$s, %3$s, %4$s", catalog, schema, table,
-                                  columnNamePattern),
-                    sqlfnse);
+                                  columnNamePattern), sqlfnse);
         }
         return collection;
     }
@@ -323,23 +325,21 @@ public class Context {
     public <C extends Collection<? super Column>> C getColumns(final String catalog, final String schemaPattern,
                                                                @NotBlank final String tableNamePattern,
                                                                @NotBlank final String columnNamePattern,
-                                                               @NotNull final C collection)
-            throws SQLException {
+                                                               @NotNull final C collection) throws SQLException {
         Objects.requireNonNull(tableNamePattern, "tableNamePattern is null");
         Objects.requireNonNull(columnNamePattern, "columnNamePattern is null");
         Objects.requireNonNull(collection, "collection is null");
-        try (ResultSet results = databaseMetaData.getColumns(
-                catalog, schemaPattern, tableNamePattern, columnNamePattern)) {
+        try (ResultSet results = databaseMetaData.getColumns(catalog, schemaPattern, tableNamePattern,
+                                                             columnNamePattern)) {
             if (results != null) {
                 return bind(results, Column.class, collection);
             }
-            log.warning(String.format("null returned; getColumns(%1$s, %2$s, %3$s, %4$s", catalog, schemaPattern,
+            log.warning(String.format("null returned; getColumns(%1$s, %2$s, %3$s, %4$s)", catalog, schemaPattern,
                                       tableNamePattern, columnNamePattern));
         } catch (final SQLFeatureNotSupportedException sqlfnse) {
             log.log(Level.WARNING,
-                    String.format("not supported; getColumns(%1$s, %2$s, %3$s, %4$s", catalog, schemaPattern,
-                                  tableNamePattern, columnNamePattern),
-                    sqlfnse);
+                    String.format("not supported; getColumns(%1$s, %2$s, %3$s, %4$s)", catalog, schemaPattern,
+                                  tableNamePattern, columnNamePattern), sqlfnse);
         }
         return collection;
     }
@@ -364,24 +364,22 @@ public class Context {
     public <C extends Collection<@Valid @NotNull ? super CrossReference>> C getCrossReference(
             final String parentCatalog, final String parentSchema, @NotBlank final String parentTable,
             final String foreignCatalog, final String foreignSchema, @NotBlank final String foreignTable,
-            @NotNull final C collection)
-            throws SQLException {
+            @NotNull final C collection) throws SQLException {
         Objects.requireNonNull(parentTable, "parentTable is null");
         Objects.requireNonNull(foreignTable, "foreignTable is null");
         Objects.requireNonNull(collection, "collection is null");
-        try (ResultSet results = databaseMetaData.getCrossReference(
-                parentCatalog, parentSchema, parentTable, foreignCatalog, foreignSchema, foreignTable)) {
+        try (ResultSet results = databaseMetaData.getCrossReference(parentCatalog, parentSchema, parentTable,
+                                                                    foreignCatalog, foreignSchema, foreignTable)) {
             if (results != null) {
                 return bind(results, CrossReference.class, collection);
             }
-            log.warning(String.format("null returned; getCrossReference(%1$s, %2$s, %3$s, %4$s, %5$s, %6$s)",
-                                      parentCatalog, parentSchema, parentTable, foreignCatalog, foreignSchema,
-                                      foreignTable));
+            log.warning(
+                    String.format("null returned; getCrossReference(%1$s, %2$s, %3$s, %4$s, %5$s, %6$s)", parentCatalog,
+                                  parentSchema, parentTable, foreignCatalog, foreignSchema, foreignTable));
         } catch (final SQLFeatureNotSupportedException sqlfnse) {
-            log.log(Level.WARNING, String.format("not supported; getCrossReference(%1$s, %2$s, %3$s, %4$s, %5$s, %6$s)",
-                                                 parentCatalog, parentSchema, parentTable, foreignCatalog,
-                                                 foreignSchema, foreignTable),
-                    sqlfnse);
+            log.log(Level.WARNING,
+                    String.format("not supported; getCrossReference(%1$s, %2$s, %3$s, %4$s, %5$s, %6$s)", parentCatalog,
+                                  parentSchema, parentTable, foreignCatalog, foreignSchema, foreignTable), sqlfnse);
         }
         return collection;
     }
@@ -400,8 +398,10 @@ public class Context {
      * @see DatabaseMetaData#getExportedKeys(String, String, String)
      */
     @NotNull
-    public <C extends Collection<@Valid @NotNull ? super ExportedKey>> C getExportedKeys(
-            final String catalog, final String schema, @NotBlank final String table, @NotNull final C collection)
+    public <C extends Collection<@Valid @NotNull ? super ExportedKey>> C getExportedKeys(final String catalog,
+                                                                                         final String schema,
+                                                                                         @NotBlank final String table,
+                                                                                         @NotNull final C collection)
             throws SQLException {
         Objects.requireNonNull(table, "table is null");
         Objects.requireNonNull(collection, "collection is null");
@@ -412,8 +412,7 @@ public class Context {
             log.warning(String.format("null returned; getExportedKeys(%1$s, %2$s, %3$s)", catalog, schema, table));
         } catch (final SQLFeatureNotSupportedException sqlfnse) {
             log.log(Level.WARNING,
-                    String.format("null returned; getExportedKeys(%1$s, %2$s, %3$s)", catalog, schema, table),
-                    sqlfnse);
+                    String.format("null returned; getExportedKeys(%1$s, %2$s, %3$s)", catalog, schema, table), sqlfnse);
         }
         return collection;
     }
@@ -432,23 +431,21 @@ public class Context {
      * @see DatabaseMetaData#getFunctions(String, String, String)
      */
     @NotNull
-    public <C extends Collection<? super Function>> C getFunctions(
-            final String catalog, final String schemaPattern, @NotBlank final String functionNamePattern,
-            @NotNull final C collection)
-            throws SQLException {
+    public <C extends Collection<? super Function>> C getFunctions(final String catalog, final String schemaPattern,
+                                                                   @NotBlank final String functionNamePattern,
+                                                                   @NotNull final C collection) throws SQLException {
         Objects.requireNonNull(functionNamePattern, "functionNamePattern is null");
         Objects.requireNonNull(collection, "collection is null");
         try (ResultSet results = databaseMetaData.getFunctions(catalog, schemaPattern, functionNamePattern)) {
             if (results != null) {
                 return bind(results, Function.class, collection);
             }
-            log.warning(String.format("null returned; getFunctions(%1$s, %1$s, %3$s)", catalog, schemaPattern,
+            log.warning(String.format("null returned; getFunctions(%1$s, %2$s, %3$s)", catalog, schemaPattern,
                                       functionNamePattern));
         } catch (final SQLFeatureNotSupportedException sqlfnse) {
             log.log(Level.WARNING,
                     String.format("not supported; getFunctions(%1$s, %2$s, %3$s)", catalog, schemaPattern,
-                                  functionNamePattern),
-                    sqlfnse);
+                                  functionNamePattern), sqlfnse);
         }
         return collection;
     }
@@ -467,26 +464,29 @@ public class Context {
      * @throws SQLException if a database error occurs.
      */
     @NotNull
-    public <C extends Collection<? super FunctionColumn>> @NotNull C getFunctionColumns(
-            final String catalog, final String schemaPattern, @NotBlank final String functionNamePattern,
-            @NotBlank final String columnNamePattern, @NotNull final C collection)
+    public <C extends Collection<? super FunctionColumn>> @NotNull C getFunctionColumns(final String catalog,
+                                                                                        final String schemaPattern,
+                                                                                        @NotBlank
+                                                                                        final String functionNamePattern,
+                                                                                        @NotBlank
+                                                                                        final String columnNamePattern,
+                                                                                        @NotNull final C collection)
             throws SQLException {
         Objects.requireNonNull(functionNamePattern, "functionNamePattern is null");
         Objects.requireNonNull(columnNamePattern, "columnNamePattern is null");
         Objects.requireNonNull(collection, "collection is null");
-        try (ResultSet results = databaseMetaData.getFunctionColumns(
-                catalog, schemaPattern, functionNamePattern, columnNamePattern)) {
+        try (ResultSet results = databaseMetaData.getFunctionColumns(catalog, schemaPattern, functionNamePattern,
+                                                                     columnNamePattern)) {
             if (results != null) {
                 return bind(results, FunctionColumn.class, collection);
             }
-            log.warning(String.format("null returned; getFunctionColumns(%1$s, %2$s, %3$s, %4$s)", catalog,
-                                      schemaPattern, functionNamePattern, columnNamePattern));
+            log.warning(
+                    String.format("null returned; getFunctionColumns(%1$s, %2$s, %3$s, %4$s)", catalog, schemaPattern,
+                                  functionNamePattern, columnNamePattern));
         } catch (final SQLFeatureNotSupportedException sqlfnse) {
             log.log(Level.WARNING,
                     String.format("not supported; getFunctionColumns(%1$s, %2$s, %3$s, %4$s)", catalog, schemaPattern,
-                                  functionNamePattern, columnNamePattern),
-                    sqlfnse
-            );
+                                  functionNamePattern, columnNamePattern), sqlfnse);
         }
         return collection;
     }
@@ -504,8 +504,8 @@ public class Context {
      * @throws SQLException if a database error occurs.
      * @see DatabaseMetaData#getImportedKeys(String, String, String)
      */
-    public <C extends Collection<? super ImportedKey>> C getImportedKeys(
-            final String catalog, final String schema, final String table, final C collection)
+    public <C extends Collection<? super ImportedKey>> C getImportedKeys(final String catalog, final String schema,
+                                                                         final String table, final C collection)
             throws SQLException {
         Objects.requireNonNull(collection, "collection is null");
         try (ResultSet results = databaseMetaData.getImportedKeys(catalog, schema, table)) {
@@ -515,8 +515,7 @@ public class Context {
             log.warning(String.format("null returned; getImportedKeys(%1$s, %2$s, %3$s)", catalog, schema, table));
         } catch (final SQLFeatureNotSupportedException sqlfnse) {
             log.log(Level.WARNING,
-                    String.format("null returned; getImportedKeys(%1$s, %2$s, %3$s)", catalog, schema, table),
-                    sqlfnse);
+                    String.format("null returned; getImportedKeys(%1$s, %2$s, %3$s)", catalog, schema, table), sqlfnse);
         }
         return collection;
     }
@@ -537,18 +536,19 @@ public class Context {
      * @see DatabaseMetaData#getIndexInfo(String, String, String, boolean, boolean)
      */
     @NotNull
-    public <C extends Collection<? super IndexInfo>> C getIndexInfo(
-            final String catalog, final String schema, @NotBlank final String table, final boolean unique,
-            final boolean approximate, @NotNull final C collection)
-            throws SQLException {
+    public <C extends Collection<? super IndexInfo>> C getIndexInfo(final String catalog, final String schema,
+                                                                    @NotBlank final String table, final boolean unique,
+                                                                    final boolean approximate,
+                                                                    @NotNull final C collection) throws SQLException {
         Objects.requireNonNull(table, "table is null");
         Objects.requireNonNull(collection, "collection is null");
         try (ResultSet results = databaseMetaData.getIndexInfo(catalog, schema, table, unique, approximate)) {
             if (results != null) {
                 return bind(results, IndexInfo.class, collection);
             }
-            log.warning(String.format("null returned; getIndexInfo(%1$s, %2$s, %3$s, %4$b, %5$b)", catalog, schema,
-                                      table, unique, approximate));
+            log.warning(
+                    String.format("null returned; getIndexInfo(%1$s, %2$s, %3$s, %4$b, %5$b)", catalog, schema, table,
+                                  unique, approximate));
         } catch (final SQLFeatureNotSupportedException sqlfnse) {
             log.log(Level.WARNING,
                     String.format("not supported; getIndexInfo(%1$s, %2$s, %3$s, %4$b, %5$b)", catalog, schema, table,
@@ -571,8 +571,9 @@ public class Context {
      * @see DatabaseMetaData#getPrimaryKeys(String, String, String)
      */
     @NotNull
-    public <C extends Collection<? super PrimaryKey>> C getPrimaryKeys(
-            final String catalog, final String schema, @NotBlank final String table, @NotNull final C collection)
+    public <C extends Collection<? super PrimaryKey>> C getPrimaryKeys(final String catalog, final String schema,
+                                                                       @NotBlank final String table,
+                                                                       @NotNull final C collection)
             throws SQLException {
         Objects.requireNonNull(table, "table is null");
         Objects.requireNonNull(collection, "collection is null");
@@ -583,8 +584,7 @@ public class Context {
             log.warning(String.format("null results; getPrimaryKeys(%1$s, %2$s, %3$s)", catalog, schema, table));
         } catch (final SQLFeatureNotSupportedException sqlfnse) {
             log.log(Level.WARNING,
-                    String.format("null results; getPrimaryKeys(%1$s, %2$s, %3$s)", catalog, schema, table),
-                    sqlfnse);
+                    String.format("null results; getPrimaryKeys(%1$s, %2$s, %3$s)", catalog, schema, table), sqlfnse);
         }
         return collection;
     }
@@ -604,15 +604,20 @@ public class Context {
      * @see DatabaseMetaData#getProcedureColumns(String, String, String, String)
      */
     @NotNull
-    public <C extends Collection<@Valid @NotNull ? super ProcedureColumn>> C getProcedureColumns(
-            final String catalog, final String schemaPattern, @NotBlank final String procedureNamePattern,
-            @NotBlank final String columnNamePattern, @NotNull final C collection)
+    public <C extends Collection<@Valid @NotNull ? super ProcedureColumn>> C getProcedureColumns(final String catalog,
+                                                                                                 final String schemaPattern,
+                                                                                                 @NotBlank
+                                                                                                 final String procedureNamePattern,
+                                                                                                 @NotBlank
+                                                                                                 final String columnNamePattern,
+                                                                                                 @NotNull
+                                                                                                 final C collection)
             throws SQLException {
         Objects.requireNonNull(procedureNamePattern, "procedureNamePattern is null");
         Objects.requireNonNull(columnNamePattern, "columnNamePattern is null");
         Objects.requireNonNull(collection, "collection is null");
-        try (ResultSet results = databaseMetaData.getProcedureColumns(
-                catalog, schemaPattern, procedureNamePattern, columnNamePattern)) {
+        try (ResultSet results = databaseMetaData.getProcedureColumns(catalog, schemaPattern, procedureNamePattern,
+                                                                      columnNamePattern)) {
             if (results != null) {
                 return bind(results, ProcedureColumn.class, collection);
             }
@@ -622,8 +627,7 @@ public class Context {
         } catch (final SQLFeatureNotSupportedException sqlfnse) {
             log.log(Level.WARNING,
                     String.format("not supported; getProcedureColumns(%1$s, %2$s, %3$s, %4$s)", catalog, schemaPattern,
-                                  procedureNamePattern, columnNamePattern),
-                    sqlfnse);
+                                  procedureNamePattern, columnNamePattern), sqlfnse);
         }
         return collection;
     }
@@ -642,9 +646,11 @@ public class Context {
      * @see DatabaseMetaData#getProcedures(String, String, String)
      */
     @NotNull
-    public <C extends Collection<@Valid @NotNull ? super Procedure>> C getProcedures(
-            final String catalog, final String schemaPattern, @NotBlank final String procedureNamePattern,
-            @NotNull final C collection)
+    public <C extends Collection<@Valid @NotNull ? super Procedure>> C getProcedures(final String catalog,
+                                                                                     final String schemaPattern,
+                                                                                     @NotBlank
+                                                                                     final String procedureNamePattern,
+                                                                                     @NotNull final C collection)
             throws SQLException {
         Objects.requireNonNull(procedureNamePattern, "procedureNamePattern is null");
         Objects.requireNonNull(collection, "collection is null");
@@ -657,8 +663,7 @@ public class Context {
         } catch (final SQLFeatureNotSupportedException sqlfnse) {
             log.log(Level.WARNING,
                     String.format("null returned; getProcedures(%1$s, %2$s, %3$s)", catalog, schemaPattern,
-                                  procedureNamePattern),
-                    sqlfnse);
+                                  procedureNamePattern), sqlfnse);
         }
         return collection;
     }
@@ -679,15 +684,19 @@ public class Context {
      * @see DatabaseMetaData#getPseudoColumns(String, String, String, String)
      */
     @NotNull
-    public <C extends Collection<@Valid @NotNull ? super PseudoColumn>> C getPseudoColumns(
-            final String catalog, final String schemaPattern, @NotBlank final String tableNamePattern,
-            @NotBlank final String columnNamePattern, @NotNull final C collection)
+    public <C extends Collection<@Valid @NotNull ? super PseudoColumn>> C getPseudoColumns(final String catalog,
+                                                                                           final String schemaPattern,
+                                                                                           @NotBlank
+                                                                                           final String tableNamePattern,
+                                                                                           @NotBlank
+                                                                                           final String columnNamePattern,
+                                                                                           @NotNull final C collection)
             throws SQLException {
         Objects.requireNonNull(tableNamePattern, "tableNamePattern is null");
         Objects.requireNonNull(columnNamePattern, "columnNamePattern is null");
         Objects.requireNonNull(collection, "collection is null");
-        try (ResultSet results = databaseMetaData.getPseudoColumns(
-                catalog, schemaPattern, tableNamePattern, columnNamePattern)) {
+        try (ResultSet results = databaseMetaData.getPseudoColumns(catalog, schemaPattern, tableNamePattern,
+                                                                   columnNamePattern)) {
             if (results != null) {
                 return bind(results, PseudoColumn.class, collection);
             }
@@ -696,8 +705,7 @@ public class Context {
         } catch (final SQLFeatureNotSupportedException sqlfnse) {
             log.log(Level.WARNING,
                     String.format("no supported; getPseudoColumns(%1$s, %2$s, %3$s, %4$s)", catalog, schemaPattern,
-                                  tableNamePattern, columnNamePattern),
-                    sqlfnse);
+                                  tableNamePattern, columnNamePattern), sqlfnse);
         }
         return collection;
     }
@@ -740,8 +748,9 @@ public class Context {
      * @see DatabaseMetaData#getSchemas(String, String)
      */
     @NotNull
-    public <C extends Collection<@Valid @NotNull ? super Schema>> C getSchemas(
-            final String catalog, final String schemaPattern, @NotNull final C collection)
+    public <C extends Collection<@Valid @NotNull ? super Schema>> C getSchemas(final String catalog,
+                                                                               final String schemaPattern,
+                                                                               @NotNull final C collection)
             throws SQLException {
         Objects.requireNonNull(collection, "collection is null");
         try (ResultSet results = databaseMetaData.getSchemas(catalog, schemaPattern)) {
@@ -750,8 +759,7 @@ public class Context {
             }
             log.warning(String.format("null returned; getSchemas(%1$s, %2$s)", catalog, schemaPattern));
         } catch (final SQLFeatureNotSupportedException sqlfnse) {
-            log.log(Level.WARNING,
-                    String.format("not supported; getSchemas(%1$s, %2$s)", catalog, schemaPattern),
+            log.log(Level.WARNING, String.format("not supported; getSchemas(%1$s, %2$s)", catalog, schemaPattern),
                     sqlfnse);
         }
         return collection;
@@ -770,9 +778,8 @@ public class Context {
      * @throws SQLException if a database error occurs.
      */
     @NotNull
-    public <C extends Collection<@Valid @NotNull ? super SuperTable>> C getSuperTables(
-            final String catalog, @NotNull final String schemaPattern, @NotBlank final String tableNamePattern,
-            @NotNull final C collection)
+    public <C extends Collection<@Valid @NotNull ? super SuperTable>> C getSuperTables(final String catalog, @NotNull
+    final String schemaPattern, @NotBlank final String tableNamePattern, @NotNull final C collection)
             throws SQLException {
         Objects.requireNonNull(schemaPattern, "schemaPattern is null");
         Objects.requireNonNull(tableNamePattern, "tableNamePattern is null");
@@ -786,8 +793,7 @@ public class Context {
         } catch (final SQLFeatureNotSupportedException sqlfnse) {
             log.log(Level.WARNING,
                     String.format("null returned; getSuperTables(%1$s, %2$s, %3$s)", catalog, schemaPattern,
-                                  tableNamePattern),
-                    sqlfnse);
+                                  tableNamePattern), sqlfnse);
         }
         return collection;
     }
@@ -805,9 +811,8 @@ public class Context {
      * @throws SQLException if a database error occurs.
      */
     @NotNull
-    public <C extends Collection<@Valid @NotNull ? super SuperType>> C getSuperTypes(
-            final String catalog, @NotNull final String schemaPattern, @NotBlank final String typeNamePattern,
-            @NotNull final C collection)
+    public <C extends Collection<@Valid @NotNull ? super SuperType>> C getSuperTypes(final String catalog, @NotNull
+    final String schemaPattern, @NotBlank final String typeNamePattern, @NotNull final C collection)
             throws SQLException {
         Objects.requireNonNull(schemaPattern, "schemaPattern is null");
         Objects.requireNonNull(typeNamePattern, "typeNamePattern is null");
@@ -819,8 +824,7 @@ public class Context {
             log.warning(String.format("getSuperTypes(%1$s, %2$s, %3$S)", catalog, schemaPattern, typeNamePattern));
         } catch (final SQLFeatureNotSupportedException sqlfnse) {
             log.log(Level.WARNING,
-                    String.format("getSuperTypes(%1$s, %2$s, %3$S)", catalog, schemaPattern, typeNamePattern),
-                    sqlfnse);
+                    String.format("getSuperTypes(%1$s, %2$s, %3$S)", catalog, schemaPattern, typeNamePattern), sqlfnse);
         }
         return collection;
     }
@@ -838,9 +842,10 @@ public class Context {
      * @throws SQLException if a database error occurs.
      */
     @NotNull
-    public <C extends Collection<? super TablePrivilege>> C getTablePrivileges(
-            final String catalog, final String schemaPattern, @NotBlank final String tableNamePattern,
-            @NotNull final C collection)
+    public <C extends Collection<? super TablePrivilege>> C getTablePrivileges(final String catalog,
+                                                                               final String schemaPattern,
+                                                                               @NotBlank final String tableNamePattern,
+                                                                               @NotNull final C collection)
             throws SQLException {
         Objects.requireNonNull(tableNamePattern, "tableNamePattern is null");
         Objects.requireNonNull(collection, "collection is null");
@@ -853,8 +858,7 @@ public class Context {
         } catch (final SQLFeatureNotSupportedException sqlfnse) {
             log.log(Level.WARNING,
                     String.format("not supported; getTablePrivileges(%1$s, %2$s, %3$s)", catalog, schemaPattern,
-                                  tableNamePattern),
-                    sqlfnse);
+                                  tableNamePattern), sqlfnse);
         }
         return collection;
     }
@@ -898,9 +902,11 @@ public class Context {
      * @see DatabaseMetaData#getTables(String, String, String, String[])
      */
     @NotNull
-    public <C extends Collection<@Valid @NotNull ? super Table>> C getTables(
-            final String catalog, final String schemaPattern, @NotBlank final String tableNamePattern,
-            final String[] types, @NotNull final C collection)
+    public <C extends Collection<@Valid @NotNull ? super Table>> C getTables(final String catalog,
+                                                                             final String schemaPattern,
+                                                                             @NotBlank final String tableNamePattern,
+                                                                             final String[] types,
+                                                                             @NotNull final C collection)
             throws SQLException {
         Objects.requireNonNull(tableNamePattern, "tableNamePattern is null");
         Objects.requireNonNull(collection, "collection is null");
@@ -913,8 +919,7 @@ public class Context {
         } catch (final SQLFeatureNotSupportedException sqlfnse) {
             log.log(Level.WARNING,
                     String.format("not supported; getTables(%1$s, %2$s, %3$s, %4$s)", catalog, schemaPattern,
-                                  tableNamePattern, Arrays.toString(types)),
-                    sqlfnse);
+                                  tableNamePattern, Arrays.toString(types)), sqlfnse);
         }
         return collection;
     }
@@ -955,9 +960,10 @@ public class Context {
      * @see DatabaseMetaData#getUDTs(String, String, String, int[])
      */
     @NotNull
-    public <C extends Collection<@Valid @NotNull ? super UDT>> C getUDTs(
-            final String catalog, final String schemaPattern, @NotBlank final String typeNamePattern, final int[] types,
-            @NotNull final C collection)
+    public <C extends Collection<@Valid @NotNull ? super UDT>> C getUDTs(final String catalog,
+                                                                         final String schemaPattern,
+                                                                         @NotBlank final String typeNamePattern,
+                                                                         final int[] types, @NotNull final C collection)
             throws SQLException {
         Objects.requireNonNull(typeNamePattern, "typeNamePattern is null");
         Objects.requireNonNull(collection, "collection is null");
@@ -970,8 +976,7 @@ public class Context {
         } catch (final SQLFeatureNotSupportedException sqlfnse) {
             log.log(Level.WARNING,
                     String.format("not supported; getUDTs(%1$s, %2$s, %3$s, %4$s)", catalog, schemaPattern,
-                                  typeNamePattern, Arrays.toString(types)),
-                    sqlfnse);
+                                  typeNamePattern, Arrays.toString(types)), sqlfnse);
         }
         return collection;
     }
@@ -1009,48 +1014,48 @@ public class Context {
     }
 
     /**
-     * Invokes {@link DatabaseMetaData#deletesAreDetected(int)} with specified argument and returns a bound value.
+     * Invokes {@link DatabaseMetaData#deletesAreDetected(int)} method with specified argument and returns a bound
+     * value.
      *
      * @param type a value for {@code type} parameter.
      * @return given {@code collection}.
      * @throws SQLException if a database access error occurs.
+     * @see DatabaseMetaData#deletesAreDetected(int)
      * @see DeletesAreDetected#getAllInstances(Context, Collection)
+     * @see ResultSetType
      */
     public DeletesAreDetected deletesAreDetected(final int type) throws SQLException {
         final DeletesAreDetected value = new DeletesAreDetected();
         value.setType(type);
         try {
             value.setValue(databaseMetaData.deletesAreDetected(value.getType()));
-        } catch (final SQLException sqle) {
-            //log..error("failed to invoke deletesAreDetected({})", value.getType(), sqle);
-            throwUnlessSuppressed(sqle);
+        } catch (final SQLFeatureNotSupportedException sqlfnse) {
+            log.warning(String.format("not supported; deletesAreDetected(%1$d)", type));
         }
         return value;
     }
 
-    // ---------------------------------------------------------------------------------------------- insertsAreDetected
-
     /**
-     * Invokes {@link DatabaseMetaData#insertsAreDetected(int)} with specified argument and returns a bound value.
+     * Invokes {@link DatabaseMetaData#insertsAreDetected(int)} method with specified argument and returns a bound
+     * value.
      *
      * @param type a value for {@code type} parameter.
      * @return given {@code collection}.
      * @throws SQLException if a database access error occurs.
+     * @see DatabaseMetaData#insertsAreDetected(int)
      * @see InsertsAreDetected#getAllInstances(Context, Collection)
+     * @see ResultSetType
      */
     public InsertsAreDetected insertsAreDetected(final int type) throws SQLException {
         final InsertsAreDetected value = new InsertsAreDetected();
         value.setType(type);
         try {
             value.setValue(databaseMetaData.insertsAreDetected(value.getType()));
-        } catch (final SQLException sqle) {
-            //log..error("failed to invoke insertsAreDetected({})", value.getType(), sqle);
-            throwUnlessSuppressed(sqle);
+        } catch (final SQLFeatureNotSupportedException sqlfnse) {
+            log.warning(String.format("not supported; insertsAreDetected(%1$d)", type));
         }
         return value;
     }
-
-    // ---------------------------------------------------------------------------------------------- updatesAreDetected
 
     /**
      * Invokes {@link DatabaseMetaData#updatesAreDetected(int)} method with specified argument and returns a bound
@@ -1059,21 +1064,20 @@ public class Context {
      * @param type a value for {@code type} parameter.
      * @return a bound value.
      * @throws SQLException if a database access error occurs.
+     * @see DatabaseMetaData#updatesAreDetected(int)
      * @see UpdatesAreDetected#getAllInstances(Context, Collection)
+     * @see ResultSetType
      */
     public UpdatesAreDetected updatesAreDetected(final int type) throws SQLException {
         final UpdatesAreDetected value = new UpdatesAreDetected();
         value.setType(type);
         try {
             value.setValue(databaseMetaData.updatesAreDetected(value.getType()));
-        } catch (final SQLException sqle) {
-            //log..error("failed to invoke updatesAreDetected({})", value.getType(), sqle);
-            throwUnlessSuppressed(sqle);
+        } catch (final SQLFeatureNotSupportedException sqlfnse) {
+            log.warning(String.format("not supported; updatesAreDetected(%1$d)", type));
         }
         return value;
     }
-
-    // ----------------------------------------------------------------------------------------- othersDeletesAreVisible
 
     /**
      * Invokes {@link DatabaseMetaData#othersDeletesAreVisible(int)} method with specified argument and returns a bound
@@ -1082,21 +1086,20 @@ public class Context {
      * @param type a value for {@code type} parameter.
      * @return a bound value whose {@code value} property may be {@code null} when the {@link SQLException} suppressed.
      * @throws SQLException if a database access error occurs.
+     * @see DatabaseMetaData#othersDeletesAreVisible(int)
      * @see OthersDeletesAreVisible#getAllInstances(Context, Collection)
+     * @see ResultSetType
      */
     public OthersDeletesAreVisible othersDeletesAreVisible(final int type) throws SQLException {
         final OthersDeletesAreVisible result = new OthersDeletesAreVisible();
         result.setType(type);
         try {
             result.setValue(databaseMetaData.othersDeletesAreVisible(result.getType()));
-        } catch (final SQLException sqle) {
-            //log..error("failed to invoke othersDeletesAreVisible({})", result.getType(), sqle);
-            throwUnlessSuppressed(sqle);
+        } catch (final SQLFeatureNotSupportedException sqlfnse) {
+            log.warning(String.format("not supported; othersDeletesAreVisible(%1$d)", type));
         }
         return result;
     }
-
-    // ----------------------------------------------------------------------------------------- othersInsertsAreVisible
 
     /**
      * Invokes {@link DatabaseMetaData#othersInsertsAreVisible(int)} method with specified argument and returns a bound
@@ -1105,21 +1108,20 @@ public class Context {
      * @param type a value for {@code type} parameter.
      * @return a bound value whose {@code value} property may be {@code null} when the {@link SQLException} suppressed.
      * @throws SQLException if a database access error occurs.
+     * @see DatabaseMetaData#othersInsertsAreVisible(int)
      * @see OthersInsertsAreVisible#getAllInstances(Context, Collection)
+     * @see ResultSetType
      */
     public OthersInsertsAreVisible othersInsertsAreVisible(final int type) throws SQLException {
         final OthersInsertsAreVisible result = new OthersInsertsAreVisible();
         result.setType(type);
         try {
             result.setValue(databaseMetaData.othersInsertsAreVisible(result.getType()));
-        } catch (final SQLException sqle) {
-            //log..error("failed to invoke othersInsertsAreVisible({})", result.getType(), sqle);
-            throwUnlessSuppressed(sqle);
+        } catch (final SQLFeatureNotSupportedException sqlfnse) {
+            log.warning(String.format("not supported; othersInsertsAreVisible(%1$d)", type));
         }
         return result;
     }
-
-    // ----------------------------------------------------------------------------------------- othersUpdatesAreVisible
 
     /**
      * Invokes {@link DatabaseMetaData#othersUpdatesAreVisible(int)} method with specified argument and returns a bound
@@ -1128,21 +1130,20 @@ public class Context {
      * @param type a value for {@code type} parameter.
      * @return a bound value whose {@code value} property may be {@code null} when the {@link SQLException} suppressed.
      * @throws SQLException if a database access error occurs.
+     * @see DatabaseMetaData#othersUpdatesAreVisible(int)
      * @see OthersUpdatesAreVisible#getAllInstances(Context, Collection)
+     * @see ResultSetType
      */
     public OthersUpdatesAreVisible othersUpdatesAreVisible(final int type) throws SQLException {
         final OthersUpdatesAreVisible result = new OthersUpdatesAreVisible();
         result.setType(type);
         try {
             result.setValue(databaseMetaData.othersUpdatesAreVisible(result.getType()));
-        } catch (final SQLException sqle) {
-            //log..error("failed to invoke othersUpdatesAreVisible({})", result.getType(), sqle);
-            throwUnlessSuppressed(sqle);
+        } catch (final SQLFeatureNotSupportedException sqlfnse) {
+            log.warning(String.format("not supported; othersUpdatesAreVisible(%1$d)", type));
         }
         return result;
     }
-
-    // -------------------------------------------------------------------------------------------- ownDeletesAreVisible
 
     /**
      * Invokes {@link DatabaseMetaData#ownDeletesAreVisible(int)} method with specified value and returns a bound
@@ -1151,21 +1152,20 @@ public class Context {
      * @param type a value for {@code type} parameter.
      * @return a bound value whose {@code value} property may be {@code null} when the {@link SQLException} suppressed.
      * @throws SQLException if a database access error occurs.
+     * @see DatabaseMetaData#ownDeletesAreVisible(int)
      * @see OwnDeletesAreVisible#getAllInstances(Context, Collection)
+     * @see ResultSetType
      */
     public OwnDeletesAreVisible ownDeletesAreVisible(final int type) throws SQLException {
         final OwnDeletesAreVisible value = new OwnDeletesAreVisible();
         value.setType(type);
         try {
             value.setValue(databaseMetaData.ownDeletesAreVisible(value.getType()));
-        } catch (final SQLException sqle) {
-            //log..error("failed to invoke ownDeletesAreVisible({})", value.getType(), sqle);
-            throwUnlessSuppressed(sqle);
+        } catch (final SQLFeatureNotSupportedException sqlfnse) {
+            log.warning(String.format("not supported; ownDeletesAreVisible(%1$d)", type));
         }
         return value;
     }
-
-    // -------------------------------------------------------------------------------------------- ownInsertsAreVisible
 
     /**
      * Invokes {@link DatabaseMetaData#ownInsertsAreVisible(int)} method with specified value and returns a bound
@@ -1174,21 +1174,20 @@ public class Context {
      * @param type a value for {@code type} parameter.
      * @return a bound value whose {@code value} property may be {@code null} when the {@link SQLException} suppressed.
      * @throws SQLException if a database access error occurs.
+     * @see DatabaseMetaData#ownInsertsAreVisible(int)
      * @see OwnInsertsAreVisible#getAllInstances(Context, Collection)
+     * @see ResultSetType
      */
     public OwnInsertsAreVisible ownInsertsAreVisible(final int type) throws SQLException {
         final OwnInsertsAreVisible value = new OwnInsertsAreVisible();
         value.setType(type);
         try {
             value.setValue(databaseMetaData.ownInsertsAreVisible(value.getType()));
-        } catch (final SQLException sqle) {
-            //log..error("failed to invoke ownInsertsAreVisible({})", value.getType(), sqle);
-            throwUnlessSuppressed(sqle);
+        } catch (final SQLFeatureNotSupportedException sqlfnse) {
+            log.warning(String.format("not supported; ownInsertsAreVisible(%1$d)", type));
         }
         return value;
     }
-
-    // -------------------------------------------------------------------------------------------- ownUpdatesAreVisible
 
     /**
      * Invokes {@link DatabaseMetaData#ownUpdatesAreVisible(int)} method with  specified type and returns a bound
@@ -1197,21 +1196,20 @@ public class Context {
      * @param type a value for {@code type} parameter.
      * @return a bound value whose {@code value} property may be {@code null} when the {@link SQLException} suppressed.
      * @throws SQLException if a database access error occurs.
+     * @see DatabaseMetaData#ownUpdatesAreVisible(int)
      * @see OwnUpdatesAreVisible#getAllInstances(Context, Collection)
+     * @see ResultSetType
      */
     public OwnUpdatesAreVisible ownUpdatesAreVisible(final int type) throws SQLException {
         final OwnUpdatesAreVisible value = new OwnUpdatesAreVisible();
         value.setType(type);
         try {
             value.setValue(databaseMetaData.ownUpdatesAreVisible(value.getType()));
-        } catch (final SQLException sqle) {
-            //log..error("failed to invoke ownUpdatesAreVisible({})", value.getType(), sqle);
-            throwUnlessSuppressed(sqle);
+        } catch (final SQLFeatureNotSupportedException sqlfnse) {
+            log.warning(String.format("not supported; ownUpdatesAreVisible(%1$d)", type));
         }
         return value;
     }
-
-    // ------------------------------------------------------------------------------------------------- supportsConvert
 
     /**
      * Invokes {@link DatabaseMetaData#supportsConvert(int, int)} method with given arguments and returns a bound
@@ -1222,6 +1220,8 @@ public class Context {
      * @return a bound value.
      * @throws SQLException if a database access error occurs.
      * @see DatabaseMetaData#supportsConvert(int, int)
+     * @see SupportsConvert#getAllInstances(Context, Collection)
+     * @see java.sql.JDBCType
      */
     public SupportsConvert supportsConvert(final int fromType, final int toType) throws SQLException {
         final SupportsConvert value = new SupportsConvert();
@@ -1229,14 +1229,11 @@ public class Context {
         value.setToType(toType);
         try {
             value.setValue(databaseMetaData.supportsConvert(value.getFromType(), value.getToType()));
-        } catch (final SQLException sqle) {
-            //log..error("failed to invoke supportsConvert({}, {})", value.getFromType(), value.getToType(), sqle);
-            throwUnlessSuppressed(sqle);
+        } catch (final SQLFeatureNotSupportedException sqlfnse) {
+            log.warning(String.format("not supported; supportsConvert(%1$d, %2$d)", fromType, toType));
         }
         return value;
     }
-
-    // ------------------------------------------------------------------------------------ supportsResultSetConcurrency
 
     /**
      * Invokes {@link DatabaseMetaData#supportsResultSetConcurrency(int, int)} method with given arguments and returns a
@@ -1247,6 +1244,9 @@ public class Context {
      * @return a bound value.
      * @throws SQLException if a database access error occurs.
      * @see DatabaseMetaData#supportsResultSetConcurrency(int, int)
+     * @see SupportsResultSetConcurrency#getAllInstances(Context, Collection)
+     * @see java.sql.JDBCType
+     * @see ResultSetConcurrency
      */
     public SupportsResultSetConcurrency supportsResultSetConcurrency(final int type, final int concurrency)
             throws SQLException {
@@ -1255,15 +1255,11 @@ public class Context {
         value.setConcurrency(concurrency);
         try {
             value.setValue(databaseMetaData.supportsResultSetConcurrency(value.getType(), value.getConcurrency()));
-        } catch (final SQLException sqle) {
-            //log..error("failed to invoke supportsResultSetConcurrency({}, {})",
-//                    value.getType(), value.getConcurrency(), sqle);
-            throwUnlessSuppressed(sqle);
+        } catch (final SQLFeatureNotSupportedException sqlfnse) {
+            log.warning(String.format("not supported; supportsResultSetConcurrency(%1$d, %2$d)", type, concurrency));
         }
         return value;
     }
-
-    // ------------------------------------------------------------------------------------ supportsResultSetHoldability
 
     /**
      * Invokes {@link DatabaseMetaData#supportsResultSetHoldability(int)} method with given argument and returns a bound
@@ -1273,21 +1269,19 @@ public class Context {
      * @return a bound value.
      * @throws SQLException if a database access error occurs.
      * @see DatabaseMetaData#supportsResultSetHoldability(int)
+     * @see SupportsResultSetHoldability#getAllInstances(Context, Collection)
+     * @see ResultSetHoldability
      */
-    public SupportsResultSetHoldability supportsResultSetHoldability(final int holdability)
-            throws SQLException {
+    public SupportsResultSetHoldability supportsResultSetHoldability(final int holdability) throws SQLException {
         final SupportsResultSetHoldability value = new SupportsResultSetHoldability();
         value.setHoldability(holdability);
         try {
             value.setValue(databaseMetaData.supportsResultSetHoldability(value.getHoldability()));
-        } catch (final SQLException sqle) {
-            //log..error("failed to invoke supportsResultSetHoldability({})", value.getHoldability(), sqle);
-            throwUnlessSuppressed(sqle);
+        } catch (final SQLFeatureNotSupportedException sqlfnse) {
+            log.warning(String.format("not supported; supportsResultSetHoldability(%1$d)", holdability));
         }
         return value;
     }
-
-    // ------------------------------------------------------------------------------------------- supportsResultSetType
 
     /**
      * Invokes {@link DatabaseMetaData#supportsResultSetType(int)} method with given argument and returns a bound value.
@@ -1298,20 +1292,19 @@ public class Context {
      * @return a bound value.
      * @throws SQLException if a database access error occurs.
      * @see DatabaseMetaData#supportsResultSetType(int)
+     * @see SupportsResultSetType#getAllInstances(Context, Collection)
+     * @see ResultSetType
      */
     public SupportsResultSetType supportsResultSetType(final int type) throws SQLException {
         final SupportsResultSetType value = new SupportsResultSetType();
         value.setType(type);
         try {
             value.setValue(databaseMetaData.supportsResultSetType(value.getType()));
-        } catch (final SQLException sqle) {
-            //log..error("failed to invoke supportsResultSetType({})", value.getType(), sqle);
-            throwUnlessSuppressed(sqle);
+        } catch (final SQLFeatureNotSupportedException sqlfnse) {
+            log.warning(String.format("not supported; supportsResultSetType(%1$d)", type));
         }
         return value;
     }
-
-    // ------------------------------------------------------------------------------- supportsTransactionIsolationLevel
 
     /**
      * Invokes {@link DatabaseMetaData#supportsTransactionIsolationLevel(int)} method with given argument and returns a
@@ -1321,15 +1314,16 @@ public class Context {
      * @return a bound value.
      * @throws SQLException if a database access error occurs.
      * @see DatabaseMetaData#supportsTransactionIsolationLevel(int)
+     * @see SupportsTransactionIsolationLevel#getAllInstances(Context, Collection)
+     * @see ConnectionTransactionIsolationLevel
      */
     public SupportsTransactionIsolationLevel supportsTransactionIsolationLevel(final int level) throws SQLException {
         final SupportsTransactionIsolationLevel value = new SupportsTransactionIsolationLevel();
         value.setLevel(level);
         try {
             value.setValue(databaseMetaData.supportsTransactionIsolationLevel(level));
-        } catch (final SQLException sqle) {
-            //log..error("failed to invoke supportsTransactionIsolationLevel({})", value.getLevel(), sqle);
-            throwUnlessSuppressed(sqle);
+        } catch (final SQLFeatureNotSupportedException sqlfnse) {
+            log.warning(String.format("not supported; supportsTransactionIsolationLevel(%1$d)", level));
         }
         return value;
     }
@@ -1339,36 +1333,7 @@ public class Context {
         return classesAndLabeledFields.computeIfAbsent(clazz, c -> Utils.getFieldsAnnotatedWith(c, Label.class));
     }
 
-    public <T extends Throwable> Context suppress(final Class<T> throwableClass) {
-        Objects.requireNonNull(throwableClass, "throwableClass is null");
-        suppressedThrowableClasses.add(throwableClass);
-        return this;
-    }
-
-    private <T extends Throwable> boolean isSuppressed(final Class<T> exceptionClass) {
-        Objects.requireNonNull(exceptionClass, "exceptionClass is null");
-        if (suppressedThrowableClasses.contains(exceptionClass)) {
-            return true;
-        }
-        return suppressedThrowableClasses.stream().anyMatch(c -> c.isAssignableFrom(exceptionClass));
-    }
-
-    private boolean isSuppressed(final Throwable t) {
-        Objects.requireNonNull(t, "t is null");
-        return isSuppressed(t.getClass());
-    }
-
-    private void throwUnlessSuppressed(final SQLException sqle) throws SQLException {
-        Objects.requireNonNull(sqle, "sqle is null");
-        if (!isSuppressed(sqle)) {
-            throw sqle;
-        }
-        log.fine(() -> String.format("suppressed: %1$s", sqle));
-    }
-
     final DatabaseMetaData databaseMetaData;
 
     private final Map<Class<?>, Map<Field, Label>> classesAndLabeledFields = new HashMap<>();
-
-    private final Set<Class<?>> suppressedThrowableClasses = new HashSet<>();
 }

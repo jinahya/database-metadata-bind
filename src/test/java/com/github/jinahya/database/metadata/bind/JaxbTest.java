@@ -36,6 +36,8 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.function.BiFunction;
 
+import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
+
 /**
  * Tests for JAXB.
  *
@@ -73,7 +75,7 @@ class JaxbTest {
 
     @Test
     void JAXBContextNewInstance_DoesNotThrow_PackageName() {
-        Assertions.assertDoesNotThrow(() -> JAXBContext.newInstance(getClass().getPackage().getName()));
+        assertDoesNotThrow(() -> JAXBContext.newInstance(getClass().getPackage().getName()));
     }
 
     @Disabled

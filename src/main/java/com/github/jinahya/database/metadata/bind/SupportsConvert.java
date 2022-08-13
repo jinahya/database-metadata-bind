@@ -23,14 +23,18 @@ package com.github.jinahya.database.metadata.bind;
 import jakarta.xml.bind.annotation.XmlAttribute;
 import jakarta.xml.bind.annotation.XmlRootElement;
 import jakarta.xml.bind.annotation.XmlValue;
+import lombok.EqualsAndHashCode;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+import lombok.ToString;
+import lombok.extern.slf4j.Slf4j;
 
 import java.sql.DatabaseMetaData;
 import java.sql.JDBCType;
 import java.sql.SQLException;
 import java.util.Collection;
 import java.util.Objects;
-
-import static java.util.Objects.requireNonNull;
 
 /**
  * A class for binding results of {@link DatabaseMetaData#supportsConvert(int, int)} method.
@@ -39,6 +43,11 @@ import static java.util.Objects.requireNonNull;
  * @see Context#supportsConvert(int, int)
  */
 @XmlRootElement
+@Setter
+@Getter
+@EqualsAndHashCode
+@ToString
+@NoArgsConstructor
 public class SupportsConvert {
 
     /**
@@ -47,14 +56,15 @@ public class SupportsConvert {
      *
      * @param context    a context.
      * @param collection the collection to which bound values are added.
-     * @param <C>        the type of {@code collection}
+     * @param <C>        the type of elements in the {@code collection}
      * @return given {@code collection}.
      * @throws SQLException if a database access error occurs.
      */
     public static <C extends Collection<? super SupportsConvert>> C getAllInstances(final Context context,
                                                                                     final C collection)
             throws SQLException {
-        requireNonNull(context, "context is null");
+        Objects.requireNonNull(context, "context is null");
+        Objects.requireNonNull(collection, "collection is null");
         for (final JDBCType fromType : JDBCType.values()) {
             for (final JDBCType toType : JDBCType.values()) {
                 if (false && toType == fromType) {
@@ -64,59 +74,6 @@ public class SupportsConvert {
             }
         }
         return collection;
-    }
-
-    /**
-     * Creates a new instance.
-     */
-    public SupportsConvert() {
-        super();
-    }
-
-    @Override
-    public String toString() {
-        return super.toString() + '{'
-               + "fromType=" + fromType
-               + ",toType=" + toType
-               + ",value=" + value
-               + '}';
-    }
-
-    @Override
-    public boolean equals(final Object obj) {
-        if (this == obj) return true;
-        if (obj == null || getClass() != obj.getClass()) return false;
-        final SupportsConvert that = (SupportsConvert) obj;
-        return fromType == that.fromType && toType == that.toType && Objects.equals(value, that.value);
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(fromType, toType, value);
-    }
-
-    public int getFromType() {
-        return fromType;
-    }
-
-    public void setFromType(final int fromType) {
-        this.fromType = fromType;
-    }
-
-    public int getToType() {
-        return toType;
-    }
-
-    public void setToType(final int toType) {
-        this.toType = toType;
-    }
-
-    public Boolean getValue() {
-        return value;
-    }
-
-    public void setValue(final Boolean value) {
-        this.value = value;
     }
 
     @XmlAttribute(required = true)

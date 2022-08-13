@@ -55,6 +55,7 @@ public class SupportsResultSetConcurrency {
                                                                                                  final C collection)
             throws SQLException {
         requireNonNull(context, "context is null");
+        requireNonNull(collection, "collection is null");
         for (final ResultSetType type : ResultSetType.values()) {
             for (final ResultSetConcurrency concurrency : ResultSetConcurrency.values()) {
                 collection.add(context.supportsResultSetConcurrency(type.rawValue(), concurrency.rawValue()));

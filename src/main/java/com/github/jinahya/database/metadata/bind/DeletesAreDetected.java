@@ -26,8 +26,7 @@ import lombok.NoArgsConstructor;
 import java.sql.DatabaseMetaData;
 import java.sql.SQLException;
 import java.util.Collection;
-
-import static java.util.Objects.requireNonNull;
+import java.util.Objects;
 
 /**
  * A class for binding result of {@link DatabaseMetaData#insertsAreDetected(int)} method.
@@ -57,7 +56,8 @@ public class DeletesAreDetected
     static <C extends Collection<? super DeletesAreDetected>> C getAllInstances(final Context context,
                                                                                 final C collection)
             throws SQLException {
-        requireNonNull(context, "context is null");
+        Objects.requireNonNull(context, "context is null");
+        Objects.requireNonNull(collection, "collection is null");
         for (final ResultSetType type : ResultSetType.values()) {
             collection.add(context.deletesAreDetected(type.rawValue()));
         }

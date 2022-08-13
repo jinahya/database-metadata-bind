@@ -29,8 +29,6 @@ import java.sql.SQLException;
 import java.util.Collection;
 import java.util.Objects;
 
-import static java.util.Objects.requireNonNull;
-
 /**
  * A class for binding results of {@link DatabaseMetaData#supportsTransactionIsolationLevel(int)} method.
  *
@@ -54,8 +52,8 @@ public class SupportsTransactionIsolationLevel {
     public static <C extends Collection<? super SupportsTransactionIsolationLevel>> C getAllInstances(
             final Context context, final C collection)
             throws SQLException {
-        requireNonNull(context, "context is null");
-        requireNonNull(collection, "collection is null");
+        Objects.requireNonNull(context, "context is null");
+        Objects.requireNonNull(collection, "collection is null");
         for (final ConnectionTransactionIsolationLevel value : ConnectionTransactionIsolationLevel.values()) {
             collection.add(context.supportsTransactionIsolationLevel(value.rawValue()));
         }

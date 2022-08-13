@@ -33,17 +33,17 @@ public enum ResultSetType
     /**
      * A constant for {@link ResultSet#TYPE_FORWARD_ONLY}({@value java.sql.ResultSet#TYPE_FORWARD_ONLY}).
      */
-    TYPE_FORWARD_ONLY(ResultSet.TYPE_FORWARD_ONLY),
+    TYPE_FORWARD_ONLY(ResultSet.TYPE_FORWARD_ONLY), // 1003
 
     /**
      * A constant for {@link ResultSet#TYPE_SCROLL_INSENSITIVE}({@value java.sql.ResultSet#TYPE_SCROLL_INSENSITIVE}).
      */
-    TYPE_SCROLL_INSENSITIVE(ResultSet.TYPE_SCROLL_INSENSITIVE),
+    TYPE_SCROLL_INSENSITIVE(ResultSet.TYPE_SCROLL_INSENSITIVE), // 1004
 
     /**
      * A constant for {@link ResultSet#TYPE_SCROLL_SENSITIVE}({@value java.sql.ResultSet#TYPE_SCROLL_SENSITIVE}).
      */
-    TYPE_SCROLL_SENSITIVE(ResultSet.TYPE_SCROLL_SENSITIVE);
+    TYPE_SCROLL_SENSITIVE(ResultSet.TYPE_SCROLL_SENSITIVE); // 1005
 
     /**
      * Returns the value whose {@code rawValue} matches to specified value.

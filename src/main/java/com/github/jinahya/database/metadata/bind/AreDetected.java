@@ -21,7 +21,7 @@ package com.github.jinahya.database.metadata.bind;
  */
 
 import jakarta.xml.bind.annotation.XmlAttribute;
-import jakarta.xml.bind.annotation.XmlTransient;
+import jakarta.xml.bind.annotation.XmlSeeAlso;
 import jakarta.xml.bind.annotation.XmlValue;
 import lombok.AccessLevel;
 import lombok.Getter;
@@ -40,13 +40,17 @@ import java.io.Serializable;
  * @see InsertsAreDetected
  * @see UpdatesAreDetected
  */
-@XmlTransient
+@XmlSeeAlso({
+        DeletesAreDetected.class,
+        InsertsAreDetected.class,
+        UpdatesAreDetected.class
+})
 @Setter
 @Getter
 @ToString(callSuper = true)
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Log
-abstract class AreDetected
+public abstract class AreDetected
         implements Serializable {
 
     private static final long serialVersionUID = 7505598364855010122L;

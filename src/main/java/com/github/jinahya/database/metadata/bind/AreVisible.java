@@ -21,7 +21,7 @@ package com.github.jinahya.database.metadata.bind;
  */
 
 import jakarta.xml.bind.annotation.XmlAttribute;
-import jakarta.xml.bind.annotation.XmlTransient;
+import jakarta.xml.bind.annotation.XmlSeeAlso;
 import jakarta.xml.bind.annotation.XmlValue;
 import lombok.AccessLevel;
 import lombok.EqualsAndHashCode;
@@ -35,7 +35,7 @@ import lombok.extern.java.Log;
 import java.io.Serializable;
 
 /**
- * An abstract class for binding results of  {@code DatabaseMetaData#...DeletesAreVisible(int)} method.
+ * An abstract class for binding the result of {@code DatabaseMetaData#...DeletesAreVisible(int)} method.
  *
  * @see OthersDeletesAreVisible
  * @see OthersInsertsAreVisible
@@ -44,7 +44,14 @@ import java.io.Serializable;
  * @see OwnInsertsAreVisible
  * @see OwnUpdatesAreVisible
  */
-@XmlTransient
+@XmlSeeAlso({
+        OthersDeletesAreVisible.class,
+        OthersInsertsAreVisible.class,
+        OthersUpdatesAreVisible.class,
+        OwnDeletesAreVisible.class,
+        OwnInsertsAreVisible.class,
+        OwnUpdatesAreVisible.class
+})
 @Setter
 @Getter
 @EqualsAndHashCode
@@ -52,7 +59,7 @@ import java.io.Serializable;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @SuperBuilder(toBuilder = true)
 @Log
-abstract class AreVisible
+public abstract class AreVisible
         implements Serializable {
 
     private static final long serialVersionUID = -4539635096087360299L;
