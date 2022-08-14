@@ -44,13 +44,6 @@ import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 abstract class MemoryTest {
 
     /**
-     * Creates a new instance.
-     */
-    MemoryTest() {
-        super();
-    }
-
-    /**
      * Returns a connection
      *
      * @return a connection.

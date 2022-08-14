@@ -295,13 +295,13 @@ public class Context {
             if (results != null) {
                 return bind(results, ColumnPrivilege.class, collection);
             }
-            log.warning(
-                    String.format("null returned; getColumnPrivileges(%1$s, %2$s, %3$s, %4$s", catalog, schema, table,
-                                  columnNamePattern));
+            log.warning(String.format("null returned; getColumnPrivileges(%1$s, %2$s, %3$s, %4$s)", catalog, schema,
+                                      table, columnNamePattern));
         } catch (final SQLFeatureNotSupportedException sqlfnse) {
             log.log(Level.WARNING,
-                    String.format("not supported; getColumnPrivileges(%1$s, %2$s, %3$s, %4$s", catalog, schema, table,
-                                  columnNamePattern), sqlfnse);
+                    String.format("not supported; getColumnPrivileges(%1$s, %2$s, %3$s, %4$s)", catalog, schema, table,
+                                  columnNamePattern),
+                    sqlfnse);
         }
         return collection;
     }
@@ -321,15 +321,14 @@ public class Context {
      * @see DatabaseMetaData#getColumns(String, String, String, String)
      */
     @NotNull
-    public <C extends Collection<? super Column>> C getColumns(final String catalog, final String schemaPattern,
-                                                               @NotBlank final String tableNamePattern,
-                                                               @NotBlank final String columnNamePattern,
-                                                               @NotNull final C collection) throws SQLException {
+    public <C extends Collection<? super Column>> C getColumns(
+            final String catalog, final String schemaPattern, @NotBlank final String tableNamePattern,
+            @NotBlank final String columnNamePattern, @NotNull final C collection) throws SQLException {
 //        Objects.requireNonNull(tableNamePattern, "tableNamePattern is null");
 //        Objects.requireNonNull(columnNamePattern, "columnNamePattern is null");
 //        Objects.requireNonNull(collection, "collection is null");
-        try (ResultSet results = databaseMetaData.getColumns(catalog, schemaPattern, tableNamePattern,
-                                                             columnNamePattern)) {
+        try (ResultSet results = databaseMetaData.getColumns(
+                catalog, schemaPattern, tableNamePattern, columnNamePattern)) {
             if (results != null) {
                 return bind(results, Column.class, collection);
             }
@@ -338,7 +337,8 @@ public class Context {
         } catch (final SQLFeatureNotSupportedException sqlfnse) {
             log.log(Level.WARNING,
                     String.format("not supported; getColumns(%1$s, %2$s, %3$s, %4$s)", catalog, schemaPattern,
-                                  tableNamePattern, columnNamePattern), sqlfnse);
+                                  tableNamePattern, columnNamePattern),
+                    sqlfnse);
         }
         return collection;
     }
@@ -367,18 +367,19 @@ public class Context {
 //        Objects.requireNonNull(parentTable, "parentTable is null");
 //        Objects.requireNonNull(foreignTable, "foreignTable is null");
 //        Objects.requireNonNull(collection, "collection is null");
-        try (ResultSet results = databaseMetaData.getCrossReference(parentCatalog, parentSchema, parentTable,
-                                                                    foreignCatalog, foreignSchema, foreignTable)) {
+        try (ResultSet results = databaseMetaData.getCrossReference(
+                parentCatalog, parentSchema, parentTable, foreignCatalog, foreignSchema, foreignTable)) {
             if (results != null) {
                 return bind(results, CrossReference.class, collection);
             }
-            log.warning(
-                    String.format("null returned; getCrossReference(%1$s, %2$s, %3$s, %4$s, %5$s, %6$s)", parentCatalog,
-                                  parentSchema, parentTable, foreignCatalog, foreignSchema, foreignTable));
+            log.warning(String.format("null returned; getCrossReference(%1$s, %2$s, %3$s, %4$s, %5$s, %6$s)",
+                                      parentCatalog, parentSchema, parentTable, foreignCatalog, foreignSchema,
+                                      foreignTable));
         } catch (final SQLFeatureNotSupportedException sqlfnse) {
             log.log(Level.WARNING,
                     String.format("not supported; getCrossReference(%1$s, %2$s, %3$s, %4$s, %5$s, %6$s)", parentCatalog,
-                                  parentSchema, parentTable, foreignCatalog, foreignSchema, foreignTable), sqlfnse);
+                                  parentSchema, parentTable, foreignCatalog, foreignSchema, foreignTable),
+                    sqlfnse);
         }
         return collection;
     }
@@ -471,8 +472,8 @@ public class Context {
 //        Objects.requireNonNull(functionNamePattern, "functionNamePattern is null");
 //        Objects.requireNonNull(columnNamePattern, "columnNamePattern is null");
 //        Objects.requireNonNull(collection, "collection is null");
-        try (ResultSet results = databaseMetaData.getFunctionColumns(catalog, schemaPattern, functionNamePattern,
-                                                                     columnNamePattern)) {
+        try (ResultSet results = databaseMetaData.getFunctionColumns(
+                catalog, schemaPattern, functionNamePattern, columnNamePattern)) {
             if (results != null) {
                 return bind(results, FunctionColumn.class, collection);
             }
@@ -544,13 +545,13 @@ public class Context {
             if (results != null) {
                 return bind(results, IndexInfo.class, collection);
             }
-            log.warning(
-                    String.format("null returned; getIndexInfo(%1$s, %2$s, %3$s, %4$b, %5$b)", catalog, schema, table,
-                                  unique, approximate));
+            log.warning(String.format("null returned; getIndexInfo(%1$s, %2$s, %3$s, %4$b, %5$b)", catalog, schema,
+                                      table, unique, approximate));
         } catch (final SQLFeatureNotSupportedException sqlfnse) {
             log.log(Level.WARNING,
                     String.format("not supported; getIndexInfo(%1$s, %2$s, %3$s, %4$b, %5$b)", catalog, schema, table,
-                                  unique, approximate), sqlfnse);
+                                  unique, approximate),
+                    sqlfnse);
         }
         return collection;
     }
@@ -581,7 +582,8 @@ public class Context {
             log.warning(String.format("null results; getPrimaryKeys(%1$s, %2$s, %3$s)", catalog, schema, table));
         } catch (final SQLFeatureNotSupportedException sqlfnse) {
             log.log(Level.WARNING,
-                    String.format("null results; getPrimaryKeys(%1$s, %2$s, %3$s)", catalog, schema, table), sqlfnse);
+                    String.format("null results; getPrimaryKeys(%1$s, %2$s, %3$s)", catalog, schema, table),
+                    sqlfnse);
         }
         return collection;
     }
@@ -608,14 +610,13 @@ public class Context {
 //        Objects.requireNonNull(procedureNamePattern, "procedureNamePattern is null");
 //        Objects.requireNonNull(columnNamePattern, "columnNamePattern is null");
 //        Objects.requireNonNull(collection, "collection is null");
-        try (ResultSet results = databaseMetaData.getProcedureColumns(catalog, schemaPattern, procedureNamePattern,
-                                                                      columnNamePattern)) {
+        try (ResultSet results = databaseMetaData.getProcedureColumns(
+                catalog, schemaPattern, procedureNamePattern, columnNamePattern)) {
             if (results != null) {
                 return bind(results, ProcedureColumn.class, collection);
             }
-            log.warning(
-                    String.format("null returned; getProcedureColumns(%1$s, %2$s, %3$s, %4$s)", catalog, schemaPattern,
-                                  procedureNamePattern, columnNamePattern));
+            log.warning(String.format("null returned; getProcedureColumns(%1$s, %2$s, %3$s, %4$s)", catalog,
+                                      schemaPattern, procedureNamePattern, columnNamePattern));
         } catch (final SQLFeatureNotSupportedException sqlfnse) {
             log.log(Level.WARNING,
                     String.format("not supported; getProcedureColumns(%1$s, %2$s, %3$s, %4$s)", catalog, schemaPattern,
@@ -683,8 +684,8 @@ public class Context {
 //        Objects.requireNonNull(tableNamePattern, "tableNamePattern is null");
 //        Objects.requireNonNull(columnNamePattern, "columnNamePattern is null");
 //        Objects.requireNonNull(collection, "collection is null");
-        try (ResultSet results = databaseMetaData.getPseudoColumns(catalog, schemaPattern, tableNamePattern,
-                                                                   columnNamePattern)) {
+        try (ResultSet results = databaseMetaData.getPseudoColumns(
+                catalog, schemaPattern, tableNamePattern, columnNamePattern)) {
             if (results != null) {
                 return bind(results, PseudoColumn.class, collection);
             }
@@ -782,7 +783,8 @@ public class Context {
         } catch (final SQLFeatureNotSupportedException sqlfnse) {
             log.log(Level.WARNING,
                     String.format("not supported; getSuperTables(%1$s, %2$s, %3$s)", catalog, schemaPattern,
-                                  tableNamePattern), sqlfnse);
+                                  tableNamePattern),
+                    sqlfnse);
         }
         return collection;
     }
@@ -814,7 +816,8 @@ public class Context {
             log.warning(String.format("getSuperTypes(%1$s, %2$s, %3$S)", catalog, schemaPattern, typeNamePattern));
         } catch (final SQLFeatureNotSupportedException sqlfnse) {
             log.log(Level.WARNING,
-                    String.format("getSuperTypes(%1$s, %2$s, %3$S)", catalog, schemaPattern, typeNamePattern), sqlfnse);
+                    String.format("getSuperTypes(%1$s, %2$s, %3$S)", catalog, schemaPattern, typeNamePattern),
+                    sqlfnse);
         }
         return collection;
     }
