@@ -7,6 +7,30 @@
 A library for binding various information
 from [DatabaseMetaData](http://docs.oracle.com/javase/8/docs/api/java/sql/DatabaseMetaData.html).
 
+## Coordinates
+
+See [Maven Central](https://search.maven.org/artifact/com.github.jinahya/database-metadata-bind) for available versions.
+
+```xml
+<dependency>
+  <groupId>com.github.jinahya</groupId>
+  <artifactId>database-metadata-bind</artifactId>
+</dependency>
+```
+
+### Classifiers
+
+Default target is `1.8` with `javax.*` namespaces.
+
+classifier          |notes
+--------------------|-----
+none                | for Java 8+ with `javax.*`
+`jakarta`           | for Java 8+ with `jakarta.*`
+`release-11`        | for Java 11+ with `javax.*`
+`release-11-jakarta`| for Java 11+ with `jakarta.*`
+`release-17`        | for Java 17+ with `javax.*`
+`release-17-jakarta`| for Java 17+ with `jakarta.*`
+
 ## Usage
 
 ```java
