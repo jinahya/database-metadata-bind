@@ -275,8 +275,8 @@
           <configuration>
             <additionalOptions>
               <additionalOption>-Xdoclint:${doclint}</additionalOption>
+              <!-- https://issues.apache.org/jira/browse/MJAVADOC-720 -->
 <!--              <sourcepath>${project.build.directory}/generated-sources/delombok</sourcepath>-->
-              <sourcepath>${project.build.directory}/generated-sources/delombok</sourcepath>
             </additionalOptions>
             <links>
               <link>https://javadoc.io/doc/jakarta.persistence/jakarta.persistence-api/latest</link>
