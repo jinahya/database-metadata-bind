@@ -105,7 +105,7 @@ public class VersionColumn
 
     @Override
     public void retrieveChildren(final Context context) throws SQLException {
-        // no children
+        // no children.
     }
 
     @Override

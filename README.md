@@ -7,17 +7,18 @@
 A library for binding various information
 from [DatabaseMetaData](http://docs.oracle.com/javase/8/docs/api/java/sql/DatabaseMetaData.html).
 
-All methods defined in [DatabaseMetaData][DatabaseMetaData] meet following conditions have been defined along with
-corresponding result types.
-
-* is an instance method.
-* whose result type is [ResultSet][ResultSet].
-
 ## Usage
 
 ```java
-try(Connection connection = connect()){
-    Context context = Context.newInstance(connection);
+try(var connection = connect()){
+    final var context = Context.newInstance(connection);
+    final var catalogs = context.getCatalogs(null, new ArrayList<>());
+    if (catalogs.isEmpty()) {
+        catalogs.add(Catalog.newVirtualInstance());
+    }
+    for (final var catalog : catalogs) {
+        catalog.retrieveChildren(context);
+    }
 }
 ```
 
@@ -37,7 +38,7 @@ $ cat target/external.xml
 $
 ```
 
-#### Properties
+### Properties
 
 name              |value                 |notes
 ------------------|----------------------|-----------
@@ -47,7 +48,7 @@ name              |value                 |notes
 `user`            |user                  |
 `password`        |password              |
 
-#### `<server>` / `<client>`
+### `<server>` / `<client>`
 
 database  |`<server>`      |`<client>`
 ----------|----------------|----------------------------------------------
