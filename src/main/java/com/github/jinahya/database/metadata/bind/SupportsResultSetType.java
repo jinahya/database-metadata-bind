@@ -20,15 +20,14 @@ package com.github.jinahya.database.metadata.bind;
  * #L%
  */
 
-import jakarta.xml.bind.annotation.XmlAttribute;
-import jakarta.xml.bind.annotation.XmlRootElement;
-import jakarta.xml.bind.annotation.XmlValue;
-import lombok.EqualsAndHashCode;
-import lombok.Getter;
+import lombok.AccessLevel;
+import lombok.Data;
 import lombok.NoArgsConstructor;
-import lombok.Setter;
-import lombok.ToString;
+import lombok.experimental.SuperBuilder;
 
+import javax.xml.bind.annotation.XmlAttribute;
+import javax.xml.bind.annotation.XmlRootElement;
+import javax.xml.bind.annotation.XmlValue;
 import java.sql.DatabaseMetaData;
 import java.sql.SQLException;
 import java.util.Collection;
@@ -41,13 +40,13 @@ import java.util.Objects;
  * @see Context#supportsResultSetType(int)
  */
 @XmlRootElement
-@Setter
-@Getter
-@EqualsAndHashCode
-@ToString
-@NoArgsConstructor
+@Data
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
+@SuperBuilder(toBuilder = true)
 public class SupportsResultSetType
         implements MetadataType {
+
+    private static final long serialVersionUID = -7966340530205147556L;
 
     /**
      * Invokes {@link Context#supportsResultSetType(int)} method for all types defined in {@link java.sql.ResultSet} and
@@ -59,13 +58,13 @@ public class SupportsResultSetType
      * @return given {@code collection}.
      * @throws SQLException if a database access error occurs.
      */
-    public static <C extends Collection<? super SupportsResultSetType>> C getAllInstances(final Context context,
-                                                                                          final C collection)
+    public static <C extends Collection<? super SupportsResultSetType>> C getAllInstances(
+            final Context context, final C collection)
             throws SQLException {
         Objects.requireNonNull(context, "context is null");
         Objects.requireNonNull(collection, "collection is null");
         for (final ResultSetType value : ResultSetType.values()) {
-            collection.add(context.supportsResultSetType(value.rawValue()));
+            collection.add(context.supportsResultSetType(value.rawValueAsInt()));
         }
         return collection;
     }

@@ -20,11 +20,11 @@ package com.github.jinahya.database.metadata.bind;
  * #L%
  */
 
-import jakarta.xml.bind.annotation.XmlRootElement;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.ToString;
 
+import javax.xml.bind.annotation.XmlRootElement;
 import java.sql.DatabaseMetaData;
 import java.sql.SQLException;
 import java.util.Collection;
@@ -62,7 +62,7 @@ public class UpdatesAreDetected
         Objects.requireNonNull(context, "context is null");
         Objects.requireNonNull(collection, "collection is null");
         for (final ResultSetType type : ResultSetType.values()) {
-            collection.add(context.updatesAreDetected(type.rawValue()));
+            collection.add(context.updatesAreDetected(type.rawValueAsInt()));
         }
         return collection;
     }

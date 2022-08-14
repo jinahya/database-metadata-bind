@@ -20,40 +20,37 @@ package com.github.jinahya.database.metadata.bind;
  * #L%
  */
 
-import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.Positive;
-import jakarta.validation.constraints.PositiveOrZero;
-import jakarta.xml.bind.annotation.XmlElement;
-import jakarta.xml.bind.annotation.XmlSeeAlso;
-import jakarta.xml.bind.annotation.XmlTransient;
 import lombok.AccessLevel;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.experimental.SuperBuilder;
 
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.Positive;
+import javax.validation.constraints.PositiveOrZero;
+import javax.xml.bind.annotation.XmlElement;
+import javax.xml.bind.annotation.XmlSeeAlso;
 import java.sql.SQLException;
+import java.util.Objects;
 
 /**
  * An abstract class for binding results of {@link java.sql.DatabaseMetaData#getExportedKeys(String, String, String)}
- * method and {@link java.sql.DatabaseMetaData#getImportedKeys(String, String, String)} method.
+ * method or {@link java.sql.DatabaseMetaData#getImportedKeys(String, String, String)} method.
  *
  * @see ExportedKey
  * @see ImportedKey
  */
-@XmlTransient
 @XmlSeeAlso({ExportedKey.class, ImportedKey.class})
 @Data
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @SuperBuilder(toBuilder = true)
 public abstract class TableKey
         implements MetadataType,
-                   ChildOf<Table>,
-                   HasUpdateRule,
-                   HasDeleteRule,
-                   HasDeferrability {
+                   ChildOf<Table> {
 
     private static final long serialVersionUID = 6713872409315471232L;
 
+    // -----------------------------------------------------------------------------------------------------------------
     @Override
     public void retrieveChildren(final Context context) throws SQLException {
         // no children.
@@ -69,6 +66,53 @@ public abstract class TableKey
     }
 
     // -----------------------------------------------------------------------------------------------------------------
+    public Column extractPkColumn() {
+        return Column.builder()
+                .tableCat(getPktableCat())
+                .tableSchem(getPktableSchem())
+                .tableName(getPktableName())
+                .columnName(getPkcolumnName())
+                .build();
+    }
+
+    public Column extractFkColumn() {
+        return Column.builder()
+                .tableCat(getFktableCat())
+                .tableSchem(getFktableSchem())
+                .tableName(getFktableName())
+                .columnName(getFkcolumnName())
+                .build();
+    }
+
+    // -----------------------------------------------------------------------------------------------------------------
+
+    public ImportedKeyRule getUpdateRuleAsEnum() {
+        return ImportedKeyRule.valueOfRawValue(getUpdateRule());
+    }
+
+    public void setUpdateRuleAsEnum(final ImportedKeyRule updateRuleAsEnum) {
+        Objects.requireNonNull(updateRuleAsEnum, "updateRuleAsEnum is null");
+        setUpdateRule(updateRuleAsEnum.rawValueAsInt());
+    }
+
+    public ImportedKeyRule getDeleteRuleAsEnum() {
+        return ImportedKeyRule.valueOfRawValue(getDeleteRule());
+    }
+
+    public void setDeleteRuleAsEnum(final ImportedKeyRule deleteRuleAsEnum) {
+        Objects.requireNonNull(deleteRuleAsEnum, "deleteRuleAsEnum is null");
+        setDeleteRule(deleteRuleAsEnum.rawValueAsInt());
+    }
+
+    public ImportedKeyDeferrability getDeferrabilityAsEnum() {
+        return ImportedKeyDeferrability.valueOfRawValue(getDeferrability());
+    }
+
+    public void setDeferrabilityAsEnum(final ImportedKeyDeferrability deferrabilityAsEnum) {
+        setDeferrability(deferrabilityAsEnum.rawValueAsInt());
+    }
+
+    // -----------------------------------------------------------------------------------------------------------------
     @XmlElement(nillable = true, required = true)
     @NullableBySpecification
     @Label("PKTABLE_CAT")
@@ -79,7 +123,6 @@ public abstract class TableKey
     @Label("PKTABLE_SCHEM")
     private String pktableSchem;
 
-    // -----------------------------------------------------------------------------------------------------------------
     @XmlElement(required = true)
     @NotBlank
     @Label("PKTABLE_NAME")
@@ -101,7 +144,6 @@ public abstract class TableKey
     @Label("FKTABLE_NAME")
     private String fktableSchem;
 
-    // -----------------------------------------------------------------------------------------------------------------
     @XmlElement(nillable = false, required = true)
     @NotBlank
     @Label("FKTABLE_NAME")

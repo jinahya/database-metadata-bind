@@ -20,13 +20,6 @@ package com.github.jinahya.database.metadata.bind;
  * #L%
  */
 
-import jakarta.validation.Valid;
-import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.NotNull;
-import jakarta.xml.bind.annotation.XmlAttribute;
-import jakarta.xml.bind.annotation.XmlElement;
-import jakarta.xml.bind.annotation.XmlElementRef;
-import jakarta.xml.bind.annotation.XmlRootElement;
 import lombok.AccessLevel;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
@@ -36,6 +29,13 @@ import lombok.Setter;
 import lombok.ToString;
 import lombok.experimental.SuperBuilder;
 
+import javax.validation.Valid;
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
+import javax.xml.bind.annotation.XmlAttribute;
+import javax.xml.bind.annotation.XmlElement;
+import javax.xml.bind.annotation.XmlElementRef;
+import javax.xml.bind.annotation.XmlRootElement;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -57,7 +57,6 @@ import java.util.stream.Stream;
  * @see Context#getTables(String, String, String, String[], Collection)
  */
 @XmlRootElement
-@ChildOf__(Schema.class)
 @ParentOf(BestRowIdentifier.class)
 @ParentOf(Column.class)
 @ParentOf(ColumnPrivilege.class)
@@ -70,10 +69,11 @@ import java.util.stream.Stream;
 @ParentOf(TablePrivilege.class)
 @ParentOf(VersionColumn.class)
 @Data
-@NoArgsConstructor
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 @SuperBuilder(toBuilder = true)
 public class Table
-        implements MetadataType {
+        implements MetadataType,
+                   ChildOf<Schema> {
 
     private static final long serialVersionUID = 6590036695540141125L;
 
@@ -106,7 +106,7 @@ public class Table
 
         private static final Set<BestRowIdentifierCategory> VALUES = Collections.unmodifiableSet(
                 Arrays.stream(BestRowIdentifier.Scope.values())
-                        .map(IntFieldEnum::rawValue)
+                        .map(IntFieldEnum::rawValueAsInt)
                         .flatMap(rv -> Stream.of(new BestRowIdentifierCategory(rv, false),
                                                  new BestRowIdentifierCategory(rv, true)))
                         .collect(Collectors.toSet())
@@ -366,18 +366,21 @@ public class Table
                     getVersionColumns()
             );
             for (final VersionColumn versionColumn : getVersionColumns()) {
+                versionColumn.table = this;
                 versionColumn.retrieveChildren(context);
             }
         }
     }
 
-//    public List<BestRowIdentifier> getBestRowIdentifiers() {
-//        if (bestRowIdentifiers == null) {
-//            bestRowIdentifiers = new ArrayList<>();
-//        }
-//        return bestRowIdentifiers;
-//    }
+    @Override
+    public Schema extractParent() {
+        return Schema.builder()
+                .tableCatalog(getTableCat())
+                .tableSchem(getTableSchem())
+                .build();
+    }
 
+    // -----------------------------------------------------------------------------------------------------------------
     public List<CategorizedBestRowIdentifiers> getCategorizedBestRowIdentifiers() {
         if (categorizedBestRowIdentifiers == null) {
             categorizedBestRowIdentifiers = new ArrayList<>();
@@ -412,13 +415,6 @@ public class Table
         }
         return importedKeys;
     }
-
-//    public List<IndexInfo> getIndexInfo() {
-//        if (indexInfo == null) {
-//            indexInfo = new ArrayList<>();
-//        }
-//        return indexInfo;
-//    }
 
     public List<CategorizedIndexInfo> getCategorizedIndexInfo() {
         if (categorizedIndexInfo == null) {
@@ -455,6 +451,7 @@ public class Table
         return versionColumns;
     }
 
+    // -----------------------------------------------------------------------------------------------------------------
     @XmlElement(nillable = true, required = true)
     @NullableBySpecification
     @Label(COLUMN_LABEL_TABLE_CAT)
@@ -470,6 +467,7 @@ public class Table
     @Label(COLUMN_LABEL_TABLE_NAME)
     private String tableName;
 
+    // -----------------------------------------------------------------------------------------------------------------
     @XmlElement(nillable = false, required = true)
     @NotBlank
     @Label("TABLE_TYPE")
@@ -506,13 +504,6 @@ public class Table
     private String refGeneration;
 
     // -----------------------------------------------------------------------------------------------------------------
-//    @XmlElementRef
-//    @Setter(AccessLevel.NONE)
-//    @Getter(AccessLevel.NONE)
-//    @EqualsAndHashCode.Exclude
-//    @ToString.Exclude
-//    private List<@Valid @NotNull BestRowIdentifier> bestRowIdentifiers;
-
     @XmlElementRef
     @Setter(AccessLevel.NONE)
     @Getter(AccessLevel.NONE)
@@ -547,13 +538,6 @@ public class Table
     @EqualsAndHashCode.Exclude
     @ToString.Exclude
     private List<@Valid @NotNull ImportedKey> importedKeys;
-
-//    @XmlElementRef
-//    @Setter(AccessLevel.NONE)
-//    @Getter(AccessLevel.NONE)
-//    @EqualsAndHashCode.Exclude
-//    @ToString.Exclude
-//    private List<@Valid @NotNull IndexInfo> indexInfo;
 
     @XmlElementRef
     @Setter(AccessLevel.NONE)

@@ -20,17 +20,18 @@ package com.github.jinahya.database.metadata.bind;
  * #L%
  */
 
-import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.NotNull;
-import jakarta.xml.bind.annotation.XmlElement;
-import jakarta.xml.bind.annotation.XmlEnum;
-import jakarta.xml.bind.annotation.XmlEnumValue;
-import jakarta.xml.bind.annotation.XmlRootElement;
+import lombok.AccessLevel;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.experimental.SuperBuilder;
 import lombok.extern.java.Log;
 
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
+import javax.xml.bind.annotation.XmlElement;
+import javax.xml.bind.annotation.XmlEnum;
+import javax.xml.bind.annotation.XmlEnumValue;
+import javax.xml.bind.annotation.XmlRootElement;
 import java.sql.DatabaseMetaData;
 import java.sql.SQLException;
 import java.util.Collection;
@@ -44,9 +45,8 @@ import java.util.Objects;
  * @see Context#getBestRowIdentifier(String, String, String, int, boolean, Collection)
  */
 @XmlRootElement
-@ChildOf__(Table.class)
 @Data
-@NoArgsConstructor
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 @SuperBuilder(toBuilder = true)
 @Log
 public class BestRowIdentifier
@@ -96,7 +96,7 @@ public class BestRowIdentifier
         }
 
         @Override
-        public int rawValue() {
+        public int rawValueAsInt() {
             return rawValue;
         }
 
@@ -144,7 +144,7 @@ public class BestRowIdentifier
         }
 
         @Override
-        public int rawValue() {
+        public int rawValueAsInt() {
             return rawValue;
         }
 
@@ -162,7 +162,7 @@ public class BestRowIdentifier
 
     public void setScopeAsEnum(@NotNull final Scope scopeAsEnum) {
         Objects.requireNonNull(scopeAsEnum, "scopeAsEnum is null");
-        setScope(scopeAsEnum.rawValue());
+        setScope(scopeAsEnum.rawValueAsInt());
     }
 
     @NotNull
@@ -172,7 +172,7 @@ public class BestRowIdentifier
 
     public void setPseudoColumnAsEnum(@NotNull final PseudoColumn pseudoColumnAsEnum) {
         Objects.requireNonNull(pseudoColumnAsEnum, "pseudoColumnAsEnum is null");
-        setPseudoColumn(pseudoColumnAsEnum.rawValue());
+        setPseudoColumn(pseudoColumnAsEnum.rawValueAsInt());
     }
 
     @XmlElement(nillable = false, required = true)

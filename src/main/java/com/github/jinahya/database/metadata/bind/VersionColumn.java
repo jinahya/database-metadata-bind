@@ -20,16 +20,23 @@ package com.github.jinahya.database.metadata.bind;
  * #L%
  */
 
-import jakarta.validation.constraints.NotBlank;
-import jakarta.xml.bind.annotation.XmlElement;
-import jakarta.xml.bind.annotation.XmlRootElement;
+import lombok.AccessLevel;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
+import lombok.ToString;
 import lombok.experimental.SuperBuilder;
 
+import javax.validation.constraints.NotBlank;
+import javax.xml.bind.annotation.XmlElement;
+import javax.xml.bind.annotation.XmlRootElement;
+import javax.xml.bind.annotation.XmlTransient;
 import java.sql.DatabaseMetaData;
 import java.sql.SQLException;
 import java.util.Collection;
+import java.util.Objects;
 
 /**
  * A class for binding results of {@link DatabaseMetaData#getVersionColumns(String, String, String)} method.
@@ -38,12 +45,12 @@ import java.util.Collection;
  * @see Context#getVersionColumns(String, String, String, Collection)
  */
 @XmlRootElement
-@ChildOf__(Table.class)
 @Data
-@NoArgsConstructor
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 @SuperBuilder(toBuilder = true)
 public class VersionColumn
-        implements MetadataType {
+        implements MetadataType,
+                   ChildOf<Table> {
 
     private static final long serialVersionUID = 3587959398829593292L;
 
@@ -89,7 +96,7 @@ public class VersionColumn
         }
 
         @Override
-        public int rawValue() {
+        public int rawValueAsInt() {
             return rawValue;
         }
 
@@ -98,6 +105,12 @@ public class VersionColumn
 
     @Override
     public void retrieveChildren(final Context context) throws SQLException {
+        // no children
+    }
+
+    @Override
+    public Table extractParent() {
+        return Objects.requireNonNull(table, "table is null");
     }
 
     @XmlElement(nillable = true, required = true)
@@ -135,4 +148,12 @@ public class VersionColumn
     @XmlElement(nillable = false, required = true)
     @Label("PSEUDO_COLUMN")
     private int pseudoColumn;
+
+    // -----------------------------------------------------------------------------------------------------------------
+    @XmlTransient
+    @Setter(AccessLevel.NONE)
+    @Getter(AccessLevel.NONE)
+    @EqualsAndHashCode.Exclude
+    @ToString.Exclude
+    Table table;
 }

@@ -20,15 +20,15 @@ package com.github.jinahya.database.metadata.bind;
  * #L%
  */
 
-import jakarta.validation.constraints.NotNull;
-import jakarta.validation.constraints.Positive;
-import jakarta.xml.bind.annotation.XmlElement;
-import jakarta.xml.bind.annotation.XmlRootElement;
 import lombok.AccessLevel;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.experimental.SuperBuilder;
 
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Positive;
+import javax.xml.bind.annotation.XmlElement;
+import javax.xml.bind.annotation.XmlRootElement;
 import java.sql.DatabaseMetaData;
 import java.sql.SQLException;
 import java.util.ArrayList;
@@ -80,22 +80,24 @@ public class CrossReference
 
     @Override
     public void retrieveChildren(final Context context) throws SQLException {
+        // no chidren.
     }
 
+    // -----------------------------------------------------------------------------------------------------------------
     public UpdateRule getUpdateRuleAsEnum() {
         return UpdateRule.valueOfRawValue(getUpdateRule());
     }
 
     public void setUpdateRuleAsEnum(UpdateRule updateRuleAsEnum) {
-        setUpdateRule(Objects.requireNonNull(updateRuleAsEnum, "updateRuleAsEnum is null").rawValue());
+        setUpdateRule(Objects.requireNonNull(updateRuleAsEnum, "updateRuleAsEnum is null").rawValueAsInt());
     }
 
-    public DeleteRule getDeleteRuleAsEnum() {
-        return DeleteRule.valueOfRawValue(getDeleteRule());
+    public ImportedKeyRule getDeleteRuleAsEnum() {
+        return ImportedKeyRule.valueOfRawValue(getDeleteRule());
     }
 
-    public void setDeleteRuleAsEnum(final DeleteRule deleteRuleAsEnum) {
-        setDeleteRule(Objects.requireNonNull(deleteRuleAsEnum, "deleteRuleAsEnum is null").rawValue());
+    public void setDeleteRuleAsEnum(final ImportedKeyRule deleteRuleAsEnum) {
+        setDeleteRule(Objects.requireNonNull(deleteRuleAsEnum, "deleteRuleAsEnum is null").rawValueAsInt());
     }
 
     public ImportedKeyDeferrability getDeferrabilityAsEnum() {
@@ -103,9 +105,29 @@ public class CrossReference
     }
 
     public void setDeferrabilityAsEnum(final ImportedKeyDeferrability deferrabilityAsEnum) {
-        setDeferrability(Objects.requireNonNull(deferrabilityAsEnum, "deferrabilityAsEnum is null").rawValue());
+        setDeferrability(Objects.requireNonNull(deferrabilityAsEnum, "deferrabilityAsEnum is null").rawValueAsInt());
     }
 
+    // -----------------------------------------------------------------------------------------------------------------
+    public Column extractPkColumn() {
+        return Column.builder()
+                .tableCat(getPktableCat())
+                .tableSchem(getPktableSchem())
+                .tableName(getPktableName())
+                .columnName(getPkcolumnName())
+                .build();
+    }
+
+    public Column extractFkColumn() {
+        return Column.builder()
+                .tableCat(getFktableCat())
+                .tableSchem(getFktableSchem())
+                .tableName(getFktableName())
+                .columnName(getFkcolumnName())
+                .build();
+    }
+
+    // -----------------------------------------------------------------------------------------------------------------
     @XmlElement(nillable = true, required = true)
     @NullableBySpecification
     @Label("PKTABLE_CAT")
@@ -126,6 +148,7 @@ public class CrossReference
     @Label("PKCOLUMN_NAME")
     private String pkcolumnName;
 
+    // -----------------------------------------------------------------------------------------------------------------
     @XmlElement(nillable = true, required = true)
     @NullableBySpecification
     @Label("FKTABLE_CAT")
@@ -146,6 +169,7 @@ public class CrossReference
     @Label("FKCOLUMN_NAME")
     private String fkcolumnName;
 
+    // -----------------------------------------------------------------------------------------------------------------
     @Positive
     @XmlElement(nillable = false, required = true)
     @Positive

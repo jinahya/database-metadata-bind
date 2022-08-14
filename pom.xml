@@ -45,9 +45,12 @@
     <maven.compiler.testRelease>${maven.compiler.testTarget}</maven.compiler.testRelease>
     <doclint>none</doclint>
     <version.animal-sniffer>1.21</version.animal-sniffer>
-    <version.com.sun.xml.bind>${version.jakarta.xml.bind-api}</version.com.sun.xml.bind>
-    <version.jakarta.validation-api>3.0.2</version.jakarta.validation-api>
-    <version.jakarta.xml.bind-api>4.0.0</version.jakarta.xml.bind-api>
+<!--    <version.com.sun.xml.bind>${version.jakarta.xml.bind-api}</version.com.sun.xml.bind>-->
+    <version.com.sun.xml.bind>2.3.6</version.com.sun.xml.bind>
+<!--    <version.jakarta.validation-api>3.0.2</version.jakarta.validation-api>-->
+    <version.jakarta.validation-api>2.0.2</version.jakarta.validation-api>
+<!--    <version.jakarta.xml.bind-api>4.0.0</version.jakarta.xml.bind-api>-->
+    <version.jakarta.xml.bind-api>2.3.3</version.jakarta.xml.bind-api>
     <version.lombok>1.18.24</version.lombok>
     <version.mariadb-java-client>2.7.2</version.mariadb-java-client>
     <version.maven-failsafe>${version.maven-surefire}</version.maven-failsafe>
@@ -59,7 +62,8 @@
     <version.ojdbc10>19.14.0.0</version.ojdbc10>
     <version.ojdbc11>21.5.0.0</version.ojdbc11>
     <version.org.eclipse.transformer>0.5.0</version.org.eclipse.transformer>
-    <version.org.hibernate.validator>6.2.0.Final</version.org.hibernate.validator>
+<!--    <version.org.hibernate.validator>6.2.0.Final</version.org.hibernate.validator>-->
+    <version.org.hibernate.validator>6.2.4.Final</version.org.hibernate.validator>
     <version.org.testcontainers>1.17.3</version.org.testcontainers>
     <version.postgresql>42.2.19.jre7</version.postgresql>
     <version.presto-jdbc>350</version.presto-jdbc>

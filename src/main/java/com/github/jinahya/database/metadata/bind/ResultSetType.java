@@ -65,7 +65,7 @@ public enum ResultSetType
     }
 
     @Override
-    public int rawValue() {
+    public int rawValueAsInt() {
         return rawValue;
     }
 

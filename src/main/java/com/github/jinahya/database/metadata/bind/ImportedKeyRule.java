@@ -20,45 +20,48 @@ package com.github.jinahya.database.metadata.bind;
  * #L%
  */
 
+import javax.xml.bind.annotation.XmlEnum;
 import java.sql.DatabaseMetaData;
 
-public enum DeleteRule implements IntFieldEnum<DeleteRule> {
+@XmlEnum
+public enum ImportedKeyRule
+        implements IntFieldEnum<ImportedKeyRule> {
 
     /**
      * A constant for {@link DatabaseMetaData#importedKeyCascade}({@value DatabaseMetaData#importedKeyCascade}).
      */
-    IMPORTED_KEY_CASCADE(DatabaseMetaData.importedKeyCascade),
+    IMPORTED_KEY_CASCADE(DatabaseMetaData.importedKeyCascade), // 0
 
     /**
      * A constant for {@link DatabaseMetaData#importedKeyRestrict}({@value DatabaseMetaData#importedKeyRestrict}).
      */
-    IMPORTED_KEY_RESTRICT(DatabaseMetaData.importedKeyRestrict),
+    IMPORTED_KEY_RESTRICT(DatabaseMetaData.importedKeyRestrict), // 1
 
     /**
      * A constant for {@link DatabaseMetaData#importedKeySetNull}({@value DatabaseMetaData#importedKeySetNull}).
      */
-    IMPORTED_KEY_SET_NULL(DatabaseMetaData.importedKeySetNull),
+    IMPORTED_KEY_SET_NULL(DatabaseMetaData.importedKeySetNull), // 2
 
     /**
      * A constant for {@link DatabaseMetaData#importedKeyNoAction}({@value DatabaseMetaData#importedKeyNoAction}).
      */
-    IMPORTED_KEY_NO_ACTION(DatabaseMetaData.importedKeyNoAction),
+    IMPORTED_KEY_NO_ACTION(DatabaseMetaData.importedKeyNoAction), // 3
 
     /**
      * A constant for {@link DatabaseMetaData#importedKeySetDefault}({@value DatabaseMetaData#importedKeySetDefault}).
      */
-    IMPORTED_KEY_SET_DEFAULT(DatabaseMetaData.importedKeySetDefault);
+    IMPORTED_KEY_SET_DEFAULT(DatabaseMetaData.importedKeySetDefault); // 4
 
-    public static DeleteRule valueOfRawValue(final int rawValue) {
-        return IntFieldEnums.valueOfRawValue(DeleteRule.class, rawValue);
+    public static ImportedKeyRule valueOfRawValue(final int rawValue) {
+        return IntFieldEnums.valueOfRawValue(ImportedKeyRule.class, rawValue);
     }
 
-    DeleteRule(final int rawValue) {
+    ImportedKeyRule(final int rawValue) {
         this.rawValue = rawValue;
     }
 
     @Override
-    public int rawValue() {
+    public int rawValueAsInt() {
         return rawValue;
     }
 

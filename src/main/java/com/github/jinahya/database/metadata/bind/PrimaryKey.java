@@ -20,17 +20,19 @@ package com.github.jinahya.database.metadata.bind;
  * #L%
  */
 
-import jakarta.validation.Valid;
-import jakarta.xml.bind.annotation.XmlElement;
-import jakarta.xml.bind.annotation.XmlRootElement;
-import jakarta.xml.bind.annotation.XmlTransient;
 import lombok.AccessLevel;
+import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
+import lombok.experimental.SuperBuilder;
 
+import javax.validation.Valid;
+import javax.xml.bind.annotation.XmlElement;
+import javax.xml.bind.annotation.XmlRootElement;
+import javax.xml.bind.annotation.XmlTransient;
 import java.sql.DatabaseMetaData;
 import java.sql.SQLException;
 import java.util.Collection;
@@ -43,14 +45,12 @@ import java.util.Comparator;
  * @see Context#getPrimaryKeys(String, String, String, Collection)
  */
 @XmlRootElement
-@ChildOf__(Table.class)
-@Setter
-@Getter
-@EqualsAndHashCode
-@ToString(callSuper = true)
-@NoArgsConstructor
+@Data
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
+@SuperBuilder
 public class PrimaryKey
-        implements MetadataType {
+        implements MetadataType,
+                   ChildOf<Table> {
 
     private static final long serialVersionUID = 3159826510060898330L;
 
@@ -58,6 +58,16 @@ public class PrimaryKey
 
     @Override
     public void retrieveChildren(final Context context) throws SQLException {
+        // no children.
+    }
+
+    @Override
+    public Table extractParent() {
+        return Table.builder()
+                .tableCat(getTableCat())
+                .tableSchem(getTableSchem())
+                .tableName(getTableName())
+                .build();
     }
 
     @XmlElement(nillable = true, required = true)

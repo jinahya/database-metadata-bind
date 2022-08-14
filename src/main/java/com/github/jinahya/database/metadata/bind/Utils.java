@@ -20,8 +20,9 @@ package com.github.jinahya.database.metadata.bind;
  * #L%
  */
 
+import lombok.extern.java.Log;
+
 import java.lang.annotation.Annotation;
-import java.lang.invoke.MethodHandles;
 import java.lang.reflect.Field;
 import java.sql.ResultSet;
 import java.sql.ResultSetMetaData;
@@ -29,14 +30,11 @@ import java.sql.SQLException;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
+import java.util.Objects;
 import java.util.Set;
-import java.util.logging.Logger;
 
-import static java.util.Objects.requireNonNull;
-
+@Log
 final class Utils {
-
-    private static final Logger logger = Logger.getLogger(MethodHandles.lookup().lookupClass().getName());
 
     private static <T extends Annotation> Map<Field, T> getFieldsAnnotatedWith(
             final Class<?> c, final Class<T> a, final Map<Field, T> m) {
@@ -59,8 +57,8 @@ final class Utils {
     }
 
     static Field getLabeledField(final Class<?> clazz, final String label) {
-        requireNonNull(clazz, "clazz is null");
-        requireNonNull(label, "label is null");
+        Objects.requireNonNull(clazz, "clazz is null");
+        Objects.requireNonNull(label, "label is null");
         for (final Field field : clazz.getDeclaredFields()) {
             final Label annotation = field.getAnnotation(Label.class);
             if (annotation == null) {
@@ -112,10 +110,10 @@ final class Utils {
 
     static void setFieldValue(final Field field, final Object obj, final ResultSet results, final String label)
             throws SQLException, ReflectiveOperationException {
-        requireNonNull(field, "field is null");
-        requireNonNull(obj, "obj is null");
-        requireNonNull(results, "results is null");
-        requireNonNull(label, "label is null");
+        Objects.requireNonNull(field, "field is null");
+        Objects.requireNonNull(obj, "obj is null");
+        Objects.requireNonNull(results, "results is null");
+        Objects.requireNonNull(label, "label is null");
         assert field.isAccessible();
         final Class<?> fieldType = field.getType();
         if (fieldType.isPrimitive()) {

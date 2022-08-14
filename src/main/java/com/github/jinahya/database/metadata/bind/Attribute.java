@@ -20,14 +20,15 @@ package com.github.jinahya.database.metadata.bind;
  * #L%
  */
 
-import jakarta.xml.bind.annotation.XmlElement;
-import jakarta.xml.bind.annotation.XmlEnum;
-import jakarta.xml.bind.annotation.XmlEnumValue;
-import jakarta.xml.bind.annotation.XmlRootElement;
+import lombok.AccessLevel;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.experimental.SuperBuilder;
 
+import javax.xml.bind.annotation.XmlElement;
+import javax.xml.bind.annotation.XmlEnum;
+import javax.xml.bind.annotation.XmlEnumValue;
+import javax.xml.bind.annotation.XmlRootElement;
 import java.sql.DatabaseMetaData;
 import java.sql.SQLException;
 import java.util.Collection;
@@ -40,9 +41,8 @@ import java.util.Objects;
  * @see Context#getAttributes(String, String, String, String, Collection)
  */
 @XmlRootElement
-@ChildOf__(UDT.class)
 @Data
-@NoArgsConstructor
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 @SuperBuilder(toBuilder = true)
 public class Attribute
         implements MetadataType,
@@ -78,7 +78,7 @@ public class Attribute
         ATTRIBUTE_NULLABLE_UNKNOWN(DatabaseMetaData.attributeNullableUnknown); // 2
 
         /**
-         * Returns the value whose {@link #rawValue() rawValue} matches to specified value.
+         * Returns the value whose {@link #rawValueAsInt() rawValue} matches to specified value.
          *
          * @param rawValue the {@code rawValue} to match.
          * @return a matched value.
@@ -92,7 +92,7 @@ public class Attribute
         }
 
         @Override
-        public int rawValue() {
+        public int rawValueAsInt() {
             return rawValue;
         }
 
@@ -160,7 +160,7 @@ public class Attribute
     public void setNullableAsEnum(final Nullable nullableAsEnum) {
         setNullable(
                 Objects.requireNonNull(nullableAsEnum, "nullableAsEnum is null")
-                        .rawValue()
+                        .rawValueAsInt()
         );
     }
 

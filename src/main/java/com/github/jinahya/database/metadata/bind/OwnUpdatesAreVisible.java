@@ -20,18 +20,18 @@ package com.github.jinahya.database.metadata.bind;
  * #L%
  */
 
-import jakarta.xml.bind.annotation.XmlRootElement;
+import lombok.AccessLevel;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
 import lombok.experimental.SuperBuilder;
 
+import javax.xml.bind.annotation.XmlRootElement;
 import java.sql.DatabaseMetaData;
 import java.sql.SQLException;
 import java.util.Collection;
-
-import static java.util.Objects.requireNonNull;
+import java.util.Objects;
 
 /**
  * A class for binding result of {@link DatabaseMetaData#ownUpdatesAreVisible(int)} method.
@@ -43,7 +43,7 @@ import static java.util.Objects.requireNonNull;
 @Data
 @EqualsAndHashCode(callSuper = true)
 @ToString(callSuper = true)
-@NoArgsConstructor
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 @SuperBuilder(toBuilder = true)
 public class OwnUpdatesAreVisible
         extends AreVisible {
@@ -65,10 +65,10 @@ public class OwnUpdatesAreVisible
     public static <C extends Collection<? super OwnUpdatesAreVisible>> C getAllInstances(final Context context,
                                                                                          final C collection)
             throws SQLException {
-        requireNonNull(context, "context is null");
-        requireNonNull(collection, "collection is null");
+        Objects.requireNonNull(context, "context is null");
+        Objects.requireNonNull(collection, "collection is null");
         for (final ResultSetType type : ResultSetType.values()) {
-            collection.add(context.ownUpdatesAreVisible(type.rawValue()));
+            collection.add(context.ownUpdatesAreVisible(type.rawValueAsInt()));
         }
         return collection;
     }

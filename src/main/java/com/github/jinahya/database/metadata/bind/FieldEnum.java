@@ -21,9 +21,11 @@ package com.github.jinahya.database.metadata.bind;
  */
 
 /**
- * An interface for field enums.
+ * An interface for enums of field constants.
  *
  * @author Jin Kwon &lt;onacit at wemakeprice.com&gt;
+ * @see FieldEnums
+ * @see IntFieldEnum
  */
 interface FieldEnum<E extends Enum<E> & FieldEnum<E, T>, T> {
 

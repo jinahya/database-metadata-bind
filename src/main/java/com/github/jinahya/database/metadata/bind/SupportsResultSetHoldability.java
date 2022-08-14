@@ -20,20 +20,18 @@ package com.github.jinahya.database.metadata.bind;
  * #L%
  */
 
-import jakarta.xml.bind.annotation.XmlAttribute;
-import jakarta.xml.bind.annotation.XmlRootElement;
-import jakarta.xml.bind.annotation.XmlValue;
-import lombok.EqualsAndHashCode;
-import lombok.Getter;
+import lombok.AccessLevel;
+import lombok.Data;
 import lombok.NoArgsConstructor;
-import lombok.Setter;
-import lombok.ToString;
+import lombok.experimental.SuperBuilder;
 
+import javax.xml.bind.annotation.XmlAttribute;
+import javax.xml.bind.annotation.XmlRootElement;
+import javax.xml.bind.annotation.XmlValue;
 import java.sql.DatabaseMetaData;
 import java.sql.SQLException;
 import java.util.Collection;
-
-import static java.util.Objects.requireNonNull;
+import java.util.Objects;
 
 /**
  * A class for binding results of {@link DatabaseMetaData#supportsResultSetHoldability(int)} method.
@@ -42,13 +40,13 @@ import static java.util.Objects.requireNonNull;
  * @see Context#supportsResultSetHoldability(int)
  */
 @XmlRootElement
-@Setter
-@Getter
-@EqualsAndHashCode
-@ToString
-@NoArgsConstructor
+@Data
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
+@SuperBuilder(toBuilder = true)
 public class SupportsResultSetHoldability
         implements MetadataType {
+
+    private static final long serialVersionUID = -4927096350529087348L;
 
     /**
      * Invokes {@link Context#supportsResultSetHoldability(int)} method for all holdabilities and adds bound values to
@@ -60,12 +58,12 @@ public class SupportsResultSetHoldability
      * @return given {@code collection}.
      * @throws SQLException if a database error occurs.
      */
-    public static <C extends Collection<? super SupportsResultSetHoldability>> C getAllInstances(final Context context,
-                                                                                                 final C collection)
+    public static <C extends Collection<? super SupportsResultSetHoldability>> C getAllInstances(
+            final Context context, final C collection)
             throws SQLException {
-        requireNonNull(context, "context is null");
+        Objects.requireNonNull(context, "context is null");
         for (final ResultSetHoldability value : ResultSetHoldability.values()) {
-            collection.add(context.supportsResultSetHoldability(value.rawValue()));
+            collection.add(context.supportsResultSetHoldability(value.rawValueAsInt()));
         }
         return collection;
     }

@@ -54,7 +54,7 @@ enum ResultSetConcurrency implements IntFieldEnum<ResultSetConcurrency> {
     }
 
     @Override
-    public int rawValue() {
+    public int rawValueAsInt() {
         return rawValue;
     }
 

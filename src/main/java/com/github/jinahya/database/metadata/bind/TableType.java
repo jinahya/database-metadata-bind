@@ -20,13 +20,14 @@ package com.github.jinahya.database.metadata.bind;
  * #L%
  */
 
-import jakarta.validation.constraints.NotBlank;
-import jakarta.xml.bind.annotation.XmlElement;
-import jakarta.xml.bind.annotation.XmlRootElement;
+import lombok.AccessLevel;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.experimental.SuperBuilder;
 
+import javax.validation.constraints.NotBlank;
+import javax.xml.bind.annotation.XmlElement;
+import javax.xml.bind.annotation.XmlRootElement;
 import java.sql.SQLException;
 import java.util.Collection;
 import java.util.Comparator;
@@ -39,7 +40,7 @@ import java.util.Comparator;
  */
 @XmlRootElement
 @Data
-@NoArgsConstructor
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 @SuperBuilder(toBuilder = true)
 public class TableType
         implements MetadataType {
@@ -50,6 +51,7 @@ public class TableType
 
     @Override
     public void retrieveChildren(final Context context) throws SQLException {
+        // no children
     }
 
     @XmlElement(nillable = false, required = true)

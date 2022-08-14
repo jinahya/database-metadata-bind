@@ -20,14 +20,6 @@ package com.github.jinahya.database.metadata.bind;
  * #L%
  */
 
-import jakarta.validation.Valid;
-import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.NotNull;
-import jakarta.validation.constraints.Positive;
-import jakarta.xml.bind.annotation.XmlElement;
-import jakarta.xml.bind.annotation.XmlEnum;
-import jakarta.xml.bind.annotation.XmlRootElement;
-import jakarta.xml.bind.annotation.XmlTransient;
 import lombok.AccessLevel;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
@@ -37,6 +29,14 @@ import lombok.Setter;
 import lombok.ToString;
 import lombok.experimental.SuperBuilder;
 
+import javax.validation.Valid;
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Positive;
+import javax.xml.bind.annotation.XmlElement;
+import javax.xml.bind.annotation.XmlEnum;
+import javax.xml.bind.annotation.XmlRootElement;
+import javax.xml.bind.annotation.XmlTransient;
 import java.sql.DatabaseMetaData;
 import java.sql.SQLException;
 import java.util.Collection;
@@ -50,7 +50,7 @@ import java.util.Objects;
  */
 @XmlRootElement
 @Data
-@NoArgsConstructor(access = AccessLevel.PACKAGE)
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 @SuperBuilder(toBuilder = true)
 public class FunctionColumn
         implements MetadataType,
@@ -134,7 +134,7 @@ public class FunctionColumn
         }
 
         @Override
-        public int rawValue() {
+        public int rawValueAsInt() {
             return rawValue;
         }
 
@@ -188,7 +188,7 @@ public class FunctionColumn
          * @return the raw value of this constant.
          */
         @Override
-        public int rawValue() {
+        public int rawValueAsInt() {
             return rawValue;
         }
 
@@ -214,7 +214,7 @@ public class FunctionColumn
     }
 
     public void setColumnTypeAsEnum(final ColumnType columnTypeAsEnum) {
-        setColumnType(Objects.requireNonNull(columnTypeAsEnum, "columnTypeAsEnum is null").rawValue());
+        setColumnType(Objects.requireNonNull(columnTypeAsEnum, "columnTypeAsEnum is null").rawValueAsInt());
     }
 
     @XmlElement(nillable = true, required = true)

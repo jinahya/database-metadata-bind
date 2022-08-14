@@ -20,13 +20,14 @@ package com.github.jinahya.database.metadata.bind;
  * #L%
  */
 
-import jakarta.validation.constraints.NotNull;
-import jakarta.xml.bind.annotation.XmlElement;
-import jakarta.xml.bind.annotation.XmlRootElement;
+import lombok.AccessLevel;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.experimental.SuperBuilder;
 
+import javax.validation.constraints.NotNull;
+import javax.xml.bind.annotation.XmlElement;
+import javax.xml.bind.annotation.XmlRootElement;
 import java.sql.DatabaseMetaData;
 import java.sql.SQLException;
 import java.util.Collection;
@@ -39,12 +40,12 @@ import java.util.Comparator;
  * @see Context#getPseudoColumns(String, String, String, String, Collection)
  */
 @XmlRootElement
-@ChildOf__(Table.class)
 @Data
-@NoArgsConstructor
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 @SuperBuilder(toBuilder = true)
 public class PseudoColumn
-        implements MetadataType {
+        implements MetadataType,
+                   ChildOf<Table> {
 
     private static final long serialVersionUID = -5612575879670895510L;
 
@@ -56,8 +57,19 @@ public class PseudoColumn
 
     @Override
     public void retrieveChildren(final Context context) throws SQLException {
+        // no children.
     }
 
+    @Override
+    public Table extractParent() {
+        return Table.builder()
+                .tableCat(getTableCat())
+                .tableSchem(getTableSchem())
+                .tableName(getTableName())
+                .build();
+    }
+
+    // -----------------------------------------------------------------------------------------------------------------
     @XmlElement(nillable = true, required = true)
     @NullableBySpecification
     @Label("TABLE_CAT")
@@ -78,6 +90,7 @@ public class PseudoColumn
     @Label("COLUMN_NAME")
     private String columnName;
 
+    // -----------------------------------------------------------------------------------------------------------------
     @XmlElement(nillable = false, required = true)
     @Label("DATA_TYPE")
     private int dataType;

@@ -20,21 +20,23 @@ package com.github.jinahya.database.metadata.bind;
  * #L%
  */
 
-import jakarta.validation.Valid;
-import jakarta.validation.constraints.AssertTrue;
-import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.PositiveOrZero;
-import jakarta.xml.bind.annotation.XmlElement;
-import jakarta.xml.bind.annotation.XmlEnum;
-import jakarta.xml.bind.annotation.XmlRootElement;
-import jakarta.xml.bind.annotation.XmlTransient;
 import lombok.AccessLevel;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
+import lombok.experimental.SuperBuilder;
 
+import javax.validation.Valid;
+import javax.validation.constraints.AssertTrue;
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.PositiveOrZero;
+import javax.xml.bind.annotation.XmlElement;
+import javax.xml.bind.annotation.XmlEnum;
+import javax.xml.bind.annotation.XmlRootElement;
+import javax.xml.bind.annotation.XmlTransient;
 import java.sql.DatabaseMetaData;
 import java.sql.SQLException;
 import java.util.Collection;
@@ -49,10 +51,12 @@ import java.util.Objects;
  * @see Context#getIndexInfo(String, String, String, boolean, boolean, Collection)
  */
 @XmlRootElement
-@ChildOf__(Table.class)
 @Data
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
+@SuperBuilder(toBuilder = true)
 public class IndexInfo
-        implements MetadataType {
+        implements MetadataType,
+                   ChildOf<Table> {
 
     private static final long serialVersionUID = -768486884376018474L;
 
@@ -108,7 +112,7 @@ public class IndexInfo
         }
 
         @Override
-        public int rawValue() {
+        public int rawValueAsInt() {
             return rawValue;
         }
 
@@ -165,14 +169,25 @@ public class IndexInfo
 
     @Override
     public void retrieveChildren(final Context context) throws SQLException {
+        // no children.
     }
 
+    @Override
+    public Table extractParent() {
+        return Table.builder()
+                .tableCat(getTableCat())
+                .tableSchem(getTableSchem())
+                .tableName(getTableName())
+                .build();
+    }
+
+    @XmlElement(required = true)
     public Type getTypeAsEnum() {
         return Type.valueOfRawValue(getType());
     }
 
     public void setTypeAsIndex(final Type typeAsIndex) {
-        setType(Objects.requireNonNull(typeAsIndex, "typeAsIndex is null").rawValue());
+        setType(Objects.requireNonNull(typeAsIndex, "typeAsIndex is null").rawValueAsInt());
     }
 
     @XmlElement(nillable = true, required = true)

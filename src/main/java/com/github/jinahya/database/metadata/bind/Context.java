@@ -20,11 +20,11 @@ package com.github.jinahya.database.metadata.bind;
  * #L%
  */
 
-import jakarta.validation.Valid;
-import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.NotNull;
 import lombok.extern.java.Log;
 
+import javax.validation.Valid;
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
 import java.sql.Connection;
@@ -126,8 +126,8 @@ public class Context {
      * @return given {@code collection}.
      * @throws SQLException if a database error occurs.
      */
-    private <T extends MetadataType, C extends Collection<? super T>> C bind(final ResultSet results,
-                                                                             final Class<T> type, final C collection)
+    private <T extends MetadataType, C extends Collection<? super T>> C bind(
+            final ResultSet results, final Class<T> type, final C collection)
             throws SQLException {
         Objects.requireNonNull(results, "results is null");
         Objects.requireNonNull(type, "type is null");
@@ -164,26 +164,25 @@ public class Context {
      * @throws SQLException if a database error occurs.
      * @see DatabaseMetaData#getAttributes(String, String, String, String)
      */
-    public <C extends Collection<? super Attribute>> C getAttributes(final String catalog, final String schemaPattern,
-                                                                     final String typeNamePattern,
-                                                                     final String attributeNamePattern,
-                                                                     final C collection) throws SQLException {
-        Objects.requireNonNull(typeNamePattern, "typeNamePattern is null");
-        Objects.requireNonNull(attributeNamePattern, "attributeNamePattern is null");
-        Objects.requireNonNull(collection, "collection is null");
+    public <C extends Collection<? super Attribute>> C getAttributes(
+            final String catalog, final String schemaPattern, @NotBlank final String typeNamePattern,
+            @NotBlank final String attributeNamePattern, @NotNull final C collection)
+            throws SQLException {
+//        Objects.requireNonNull(typeNamePattern, "typeNamePattern is null");
+//        Objects.requireNonNull(attributeNamePattern, "attributeNamePattern is null");
+//        Objects.requireNonNull(collection, "collection is null");
         try (ResultSet results = databaseMetaData.getAttributes(catalog, schemaPattern, typeNamePattern,
                                                                 attributeNamePattern)) {
-            if (results == null) {
-                log.warning(
-                        String.format("null returned; getAttributes(%1$s, %2$s, %3$s, %4$s)", catalog, schemaPattern,
-                                      typeNamePattern, attributeNamePattern));
-                return collection;
+            if (results != null) {
+                return bind(results, Attribute.class, collection);
             }
-            return bind(results, Attribute.class, collection);
+            log.warning(String.format("null returned; getAttributes(%1$s, %2$s, %3$s, %4$s)", catalog, schemaPattern,
+                                      typeNamePattern, attributeNamePattern));
         } catch (final SQLFeatureNotSupportedException sqlfnse) {
             log.log(Level.WARNING,
                     String.format("not supported; getAttributes(%1$s, %2$s, %3$s, %4$s)", catalog, schemaPattern,
-                                  typeNamePattern, attributeNamePattern), sqlfnse);
+                                  typeNamePattern, attributeNamePattern),
+                    sqlfnse);
         }
         return collection;
     }
@@ -209,18 +208,17 @@ public class Context {
     public <C extends Collection<@Valid @NotNull ? super BestRowIdentifier>> C getBestRowIdentifier(
             final String catalog, final String schema, @NotBlank final String table, final int scope,
             final boolean nullable, @NotNull final C collection) throws SQLException {
-        Objects.requireNonNull(table, "table is null");
-        Objects.requireNonNull(collection, "collection is null");
+//        Objects.requireNonNull(table, "table is null");
+//        Objects.requireNonNull(collection, "collection is null");
         try (ResultSet results = databaseMetaData.getBestRowIdentifier(catalog, schema, table, scope, nullable)) {
-            if (results == null) {
-                log.warning(String.format("null returned; getBestRowIdentifier(%1$s, %1$s, %3$s, %4$d, %5$s)", catalog,
-                                          schema, table, scope, nullable));
-                return collection;
+            if (results != null) {
+                return bind(results, BestRowIdentifier.class, collection);
             }
-            return bind(results, BestRowIdentifier.class, collection);
+            log.warning(String.format("null returned; getBestRowIdentifier(%1$s, %2$s, %3$s, %4$d, %5$s)", catalog,
+                                      schema, table, scope, nullable));
         } catch (final SQLFeatureNotSupportedException sqlfnse) {
             log.log(Level.WARNING,
-                    String.format("not supported; getBestRowIdentifier(%1$s, %1$s, %3$s, %4$d, %5$s)", catalog, schema,
+                    String.format("not supported; getBestRowIdentifier(%1$s, %2$s, %3$s, %4$d, %5$s)", catalog, schema,
                                   table, scope, nullable), sqlfnse);
         }
         return collection;
@@ -236,7 +234,7 @@ public class Context {
      */
     @NotNull
     public <C extends Collection<? super Catalog>> C getCatalogs(@NotNull final C collection) throws SQLException {
-        Objects.requireNonNull(collection, "collection is null");
+//        Objects.requireNonNull(collection, "collection is null");
         try (ResultSet results = databaseMetaData.getCatalogs()) {
             if (results != null) {
                 return bind(results, Catalog.class, collection);
@@ -259,7 +257,7 @@ public class Context {
      */
     public <C extends Collection<? super ClientInfoProperty>> C getClientInfoProperties(final C collection)
             throws SQLException {
-        Objects.requireNonNull(collection, "collection is null");
+//        Objects.requireNonNull(collection, "collection is null");
         try (ResultSet results = databaseMetaData.getClientInfoProperties()) {
             if (results != null) {
                 return bind(results, ClientInfoProperty.class, collection);
@@ -291,8 +289,8 @@ public class Context {
             final String catalog, final String schema, @NotBlank final String table,
             @NotBlank final String columnNamePattern, final C collection)
             throws SQLException {
-        Objects.requireNonNull(table, "table is null");
-        Objects.requireNonNull(collection, "collection is null");
+//        Objects.requireNonNull(table, "table is null");
+//        Objects.requireNonNull(collection, "collection is null");
         try (ResultSet results = databaseMetaData.getColumnPrivileges(catalog, schema, table, columnNamePattern)) {
             if (results != null) {
                 return bind(results, ColumnPrivilege.class, collection);
@@ -327,9 +325,9 @@ public class Context {
                                                                @NotBlank final String tableNamePattern,
                                                                @NotBlank final String columnNamePattern,
                                                                @NotNull final C collection) throws SQLException {
-        Objects.requireNonNull(tableNamePattern, "tableNamePattern is null");
-        Objects.requireNonNull(columnNamePattern, "columnNamePattern is null");
-        Objects.requireNonNull(collection, "collection is null");
+//        Objects.requireNonNull(tableNamePattern, "tableNamePattern is null");
+//        Objects.requireNonNull(columnNamePattern, "columnNamePattern is null");
+//        Objects.requireNonNull(collection, "collection is null");
         try (ResultSet results = databaseMetaData.getColumns(catalog, schemaPattern, tableNamePattern,
                                                              columnNamePattern)) {
             if (results != null) {
@@ -366,9 +364,9 @@ public class Context {
             final String parentCatalog, final String parentSchema, @NotBlank final String parentTable,
             final String foreignCatalog, final String foreignSchema, @NotBlank final String foreignTable,
             @NotNull final C collection) throws SQLException {
-        Objects.requireNonNull(parentTable, "parentTable is null");
-        Objects.requireNonNull(foreignTable, "foreignTable is null");
-        Objects.requireNonNull(collection, "collection is null");
+//        Objects.requireNonNull(parentTable, "parentTable is null");
+//        Objects.requireNonNull(foreignTable, "foreignTable is null");
+//        Objects.requireNonNull(collection, "collection is null");
         try (ResultSet results = databaseMetaData.getCrossReference(parentCatalog, parentSchema, parentTable,
                                                                     foreignCatalog, foreignSchema, foreignTable)) {
             if (results != null) {
@@ -399,13 +397,11 @@ public class Context {
      * @see DatabaseMetaData#getExportedKeys(String, String, String)
      */
     @NotNull
-    public <C extends Collection<@Valid @NotNull ? super ExportedKey>> C getExportedKeys(final String catalog,
-                                                                                         final String schema,
-                                                                                         @NotBlank final String table,
-                                                                                         @NotNull final C collection)
+    public <C extends Collection<@Valid @NotNull ? super ExportedKey>> C getExportedKeys(
+            final String catalog, final String schema, @NotBlank final String table, @NotNull final C collection)
             throws SQLException {
-        Objects.requireNonNull(table, "table is null");
-        Objects.requireNonNull(collection, "collection is null");
+//        Objects.requireNonNull(table, "table is null");
+//        Objects.requireNonNull(collection, "collection is null");
         try (ResultSet results = databaseMetaData.getExportedKeys(catalog, schema, table)) {
             if (results != null) {
                 return bind(results, ExportedKey.class, collection);
@@ -413,7 +409,8 @@ public class Context {
             log.warning(String.format("null returned; getExportedKeys(%1$s, %2$s, %3$s)", catalog, schema, table));
         } catch (final SQLFeatureNotSupportedException sqlfnse) {
             log.log(Level.WARNING,
-                    String.format("null returned; getExportedKeys(%1$s, %2$s, %3$s)", catalog, schema, table), sqlfnse);
+                    String.format("not supported; getExportedKeys(%1$s, %2$s, %3$s)", catalog, schema, table),
+                    sqlfnse);
         }
         return collection;
     }
@@ -432,11 +429,12 @@ public class Context {
      * @see DatabaseMetaData#getFunctions(String, String, String)
      */
     @NotNull
-    public <C extends Collection<? super Function>> C getFunctions(final String catalog, final String schemaPattern,
-                                                                   @NotBlank final String functionNamePattern,
-                                                                   @NotNull final C collection) throws SQLException {
-        Objects.requireNonNull(functionNamePattern, "functionNamePattern is null");
-        Objects.requireNonNull(collection, "collection is null");
+    public <C extends Collection<? super Function>> C getFunctions(
+            final String catalog, final String schemaPattern, @NotBlank final String functionNamePattern,
+            @NotNull final C collection)
+            throws SQLException {
+//        Objects.requireNonNull(functionNamePattern, "functionNamePattern is null");
+//        Objects.requireNonNull(collection, "collection is null");
         try (ResultSet results = databaseMetaData.getFunctions(catalog, schemaPattern, functionNamePattern)) {
             if (results != null) {
                 return bind(results, Function.class, collection);
@@ -446,7 +444,8 @@ public class Context {
         } catch (final SQLFeatureNotSupportedException sqlfnse) {
             log.log(Level.WARNING,
                     String.format("not supported; getFunctions(%1$s, %2$s, %3$s)", catalog, schemaPattern,
-                                  functionNamePattern), sqlfnse);
+                                  functionNamePattern),
+                    sqlfnse);
         }
         return collection;
     }
@@ -465,29 +464,25 @@ public class Context {
      * @throws SQLException if a database error occurs.
      */
     @NotNull
-    public <C extends Collection<? super FunctionColumn>> @NotNull C getFunctionColumns(final String catalog,
-                                                                                        final String schemaPattern,
-                                                                                        @NotBlank
-                                                                                        final String functionNamePattern,
-                                                                                        @NotBlank
-                                                                                        final String columnNamePattern,
-                                                                                        @NotNull final C collection)
+    public <C extends Collection<? super FunctionColumn>> @NotNull C getFunctionColumns(
+            final String catalog, final String schemaPattern, @NotBlank final String functionNamePattern,
+            @NotBlank final String columnNamePattern, @NotNull final C collection)
             throws SQLException {
-        Objects.requireNonNull(functionNamePattern, "functionNamePattern is null");
-        Objects.requireNonNull(columnNamePattern, "columnNamePattern is null");
-        Objects.requireNonNull(collection, "collection is null");
+//        Objects.requireNonNull(functionNamePattern, "functionNamePattern is null");
+//        Objects.requireNonNull(columnNamePattern, "columnNamePattern is null");
+//        Objects.requireNonNull(collection, "collection is null");
         try (ResultSet results = databaseMetaData.getFunctionColumns(catalog, schemaPattern, functionNamePattern,
                                                                      columnNamePattern)) {
             if (results != null) {
                 return bind(results, FunctionColumn.class, collection);
             }
-            log.warning(
-                    String.format("null returned; getFunctionColumns(%1$s, %2$s, %3$s, %4$s)", catalog, schemaPattern,
-                                  functionNamePattern, columnNamePattern));
+            log.warning(String.format("null returned; getFunctionColumns(%1$s, %2$s, %3$s, %4$s)", catalog,
+                                      schemaPattern, functionNamePattern, columnNamePattern));
         } catch (final SQLFeatureNotSupportedException sqlfnse) {
             log.log(Level.WARNING,
                     String.format("not supported; getFunctionColumns(%1$s, %2$s, %3$s, %4$s)", catalog, schemaPattern,
-                                  functionNamePattern, columnNamePattern), sqlfnse);
+                                  functionNamePattern, columnNamePattern),
+                    sqlfnse);
         }
         return collection;
     }
@@ -505,10 +500,11 @@ public class Context {
      * @throws SQLException if a database error occurs.
      * @see DatabaseMetaData#getImportedKeys(String, String, String)
      */
-    public <C extends Collection<? super ImportedKey>> C getImportedKeys(final String catalog, final String schema,
-                                                                         final String table, final C collection)
+    public <C extends Collection<@Valid @NotNull ? super ImportedKey>> C getImportedKeys(
+            final String catalog, final String schema, @NotBlank final String table, @NotNull final C collection)
             throws SQLException {
-        Objects.requireNonNull(collection, "collection is null");
+//        Objects.requireNonNull(table, "table is null");
+//        Objects.requireNonNull(collection, "collection is null");
         try (ResultSet results = databaseMetaData.getImportedKeys(catalog, schema, table)) {
             if (results != null) {
                 return bind(results, ImportedKey.class, collection);
@@ -516,7 +512,8 @@ public class Context {
             log.warning(String.format("null returned; getImportedKeys(%1$s, %2$s, %3$s)", catalog, schema, table));
         } catch (final SQLFeatureNotSupportedException sqlfnse) {
             log.log(Level.WARNING,
-                    String.format("null returned; getImportedKeys(%1$s, %2$s, %3$s)", catalog, schema, table), sqlfnse);
+                    String.format("not supported; getImportedKeys(%1$s, %2$s, %3$s)", catalog, schema, table),
+                    sqlfnse);
         }
         return collection;
     }
@@ -537,12 +534,12 @@ public class Context {
      * @see DatabaseMetaData#getIndexInfo(String, String, String, boolean, boolean)
      */
     @NotNull
-    public <C extends Collection<? super IndexInfo>> C getIndexInfo(final String catalog, final String schema,
-                                                                    @NotBlank final String table, final boolean unique,
-                                                                    final boolean approximate,
-                                                                    @NotNull final C collection) throws SQLException {
-        Objects.requireNonNull(table, "table is null");
-        Objects.requireNonNull(collection, "collection is null");
+    public <C extends Collection<@Valid @NotNull ? super IndexInfo>> C getIndexInfo(
+            final String catalog, final String schema, @NotBlank final String table, final boolean unique,
+            final boolean approximate, @NotNull final C collection)
+            throws SQLException {
+//        Objects.requireNonNull(table, "table is null");
+//        Objects.requireNonNull(collection, "collection is null");
         try (ResultSet results = databaseMetaData.getIndexInfo(catalog, schema, table, unique, approximate)) {
             if (results != null) {
                 return bind(results, IndexInfo.class, collection);
@@ -572,12 +569,11 @@ public class Context {
      * @see DatabaseMetaData#getPrimaryKeys(String, String, String)
      */
     @NotNull
-    public <C extends Collection<? super PrimaryKey>> C getPrimaryKeys(final String catalog, final String schema,
-                                                                       @NotBlank final String table,
-                                                                       @NotNull final C collection)
+    public <C extends Collection<@Valid @NotNull ? super PrimaryKey>> C getPrimaryKeys(
+            final String catalog, final String schema, @NotBlank final String table, @NotNull final C collection)
             throws SQLException {
-        Objects.requireNonNull(table, "table is null");
-        Objects.requireNonNull(collection, "collection is null");
+//        Objects.requireNonNull(table, "table is null");
+//        Objects.requireNonNull(collection, "collection is null");
         try (ResultSet results = databaseMetaData.getPrimaryKeys(catalog, schema, table)) {
             if (results != null) {
                 return bind(results, PrimaryKey.class, collection);
@@ -605,18 +601,13 @@ public class Context {
      * @see DatabaseMetaData#getProcedureColumns(String, String, String, String)
      */
     @NotNull
-    public <C extends Collection<@Valid @NotNull ? super ProcedureColumn>> C getProcedureColumns(final String catalog,
-                                                                                                 final String schemaPattern,
-                                                                                                 @NotBlank
-                                                                                                 final String procedureNamePattern,
-                                                                                                 @NotBlank
-                                                                                                 final String columnNamePattern,
-                                                                                                 @NotNull
-                                                                                                 final C collection)
+    public <C extends Collection<@Valid @NotNull ? super ProcedureColumn>> C getProcedureColumns(
+            final String catalog, final String schemaPattern, @NotBlank final String procedureNamePattern,
+            @NotBlank final String columnNamePattern, @NotNull final C collection)
             throws SQLException {
-        Objects.requireNonNull(procedureNamePattern, "procedureNamePattern is null");
-        Objects.requireNonNull(columnNamePattern, "columnNamePattern is null");
-        Objects.requireNonNull(collection, "collection is null");
+//        Objects.requireNonNull(procedureNamePattern, "procedureNamePattern is null");
+//        Objects.requireNonNull(columnNamePattern, "columnNamePattern is null");
+//        Objects.requireNonNull(collection, "collection is null");
         try (ResultSet results = databaseMetaData.getProcedureColumns(catalog, schemaPattern, procedureNamePattern,
                                                                       columnNamePattern)) {
             if (results != null) {
@@ -628,7 +619,8 @@ public class Context {
         } catch (final SQLFeatureNotSupportedException sqlfnse) {
             log.log(Level.WARNING,
                     String.format("not supported; getProcedureColumns(%1$s, %2$s, %3$s, %4$s)", catalog, schemaPattern,
-                                  procedureNamePattern, columnNamePattern), sqlfnse);
+                                  procedureNamePattern, columnNamePattern),
+                    sqlfnse);
         }
         return collection;
     }
@@ -647,14 +639,12 @@ public class Context {
      * @see DatabaseMetaData#getProcedures(String, String, String)
      */
     @NotNull
-    public <C extends Collection<@Valid @NotNull ? super Procedure>> C getProcedures(final String catalog,
-                                                                                     final String schemaPattern,
-                                                                                     @NotBlank
-                                                                                     final String procedureNamePattern,
-                                                                                     @NotNull final C collection)
+    public <C extends Collection<@Valid @NotNull ? super Procedure>> C getProcedures(
+            final String catalog, final String schemaPattern, @NotBlank final String procedureNamePattern,
+            @NotNull final C collection)
             throws SQLException {
-        Objects.requireNonNull(procedureNamePattern, "procedureNamePattern is null");
-        Objects.requireNonNull(collection, "collection is null");
+//        Objects.requireNonNull(procedureNamePattern, "procedureNamePattern is null");
+//        Objects.requireNonNull(collection, "collection is null");
         try (ResultSet results = databaseMetaData.getProcedures(catalog, schemaPattern, procedureNamePattern)) {
             if (results != null) {
                 return bind(results, Procedure.class, collection);
@@ -663,8 +653,9 @@ public class Context {
                                       procedureNamePattern));
         } catch (final SQLFeatureNotSupportedException sqlfnse) {
             log.log(Level.WARNING,
-                    String.format("null returned; getProcedures(%1$s, %2$s, %3$s)", catalog, schemaPattern,
-                                  procedureNamePattern), sqlfnse);
+                    String.format("not supported; getProcedures(%1$s, %2$s, %3$s)", catalog, schemaPattern,
+                                  procedureNamePattern),
+                    sqlfnse);
         }
         return collection;
     }
@@ -685,17 +676,13 @@ public class Context {
      * @see DatabaseMetaData#getPseudoColumns(String, String, String, String)
      */
     @NotNull
-    public <C extends Collection<@Valid @NotNull ? super PseudoColumn>> C getPseudoColumns(final String catalog,
-                                                                                           final String schemaPattern,
-                                                                                           @NotBlank
-                                                                                           final String tableNamePattern,
-                                                                                           @NotBlank
-                                                                                           final String columnNamePattern,
-                                                                                           @NotNull final C collection)
+    public <C extends Collection<@Valid @NotNull ? super PseudoColumn>> C getPseudoColumns(
+            final String catalog, final String schemaPattern, @NotBlank final String tableNamePattern,
+            @NotBlank final String columnNamePattern, @NotNull final C collection)
             throws SQLException {
-        Objects.requireNonNull(tableNamePattern, "tableNamePattern is null");
-        Objects.requireNonNull(columnNamePattern, "columnNamePattern is null");
-        Objects.requireNonNull(collection, "collection is null");
+//        Objects.requireNonNull(tableNamePattern, "tableNamePattern is null");
+//        Objects.requireNonNull(columnNamePattern, "columnNamePattern is null");
+//        Objects.requireNonNull(collection, "collection is null");
         try (ResultSet results = databaseMetaData.getPseudoColumns(catalog, schemaPattern, tableNamePattern,
                                                                    columnNamePattern)) {
             if (results != null) {
@@ -706,7 +693,8 @@ public class Context {
         } catch (final SQLFeatureNotSupportedException sqlfnse) {
             log.log(Level.WARNING,
                     String.format("no supported; getPseudoColumns(%1$s, %2$s, %3$s, %4$s)", catalog, schemaPattern,
-                                  tableNamePattern, columnNamePattern), sqlfnse);
+                                  tableNamePattern, columnNamePattern),
+                    sqlfnse);
         }
         return collection;
     }
@@ -724,7 +712,7 @@ public class Context {
     @NotNull
     public <C extends Collection<@Valid @NotNull ? super Schema>> C getSchemas(@NotNull final C collection)
             throws SQLException {
-        Objects.requireNonNull(collection, "collection is null");
+//        Objects.requireNonNull(collection, "collection is null");
         try (ResultSet results = databaseMetaData.getSchemas()) {
             if (results != null) {
                 return bind(results, Schema.class, collection);
@@ -749,18 +737,18 @@ public class Context {
      * @see DatabaseMetaData#getSchemas(String, String)
      */
     @NotNull
-    public <C extends Collection<@Valid @NotNull ? super Schema>> C getSchemas(final String catalog,
-                                                                               final String schemaPattern,
-                                                                               @NotNull final C collection)
+    public <C extends Collection<@Valid @NotNull ? super Schema>> C getSchemas(
+            final String catalog, final String schemaPattern, @NotNull final C collection)
             throws SQLException {
-        Objects.requireNonNull(collection, "collection is null");
+//        Objects.requireNonNull(collection, "collection is null");
         try (ResultSet results = databaseMetaData.getSchemas(catalog, schemaPattern)) {
             if (results != null) {
                 return bind(results, Schema.class, collection);
             }
             log.warning(String.format("null returned; getSchemas(%1$s, %2$s)", catalog, schemaPattern));
         } catch (final SQLFeatureNotSupportedException sqlfnse) {
-            log.log(Level.WARNING, String.format("not supported; getSchemas(%1$s, %2$s)", catalog, schemaPattern),
+            log.log(Level.WARNING,
+                    String.format("not supported; getSchemas(%1$s, %2$s)", catalog, schemaPattern),
                     sqlfnse);
         }
         return collection;
@@ -782,9 +770,9 @@ public class Context {
     public <C extends Collection<@Valid @NotNull ? super SuperTable>> C getSuperTables(final String catalog, @NotNull
     final String schemaPattern, @NotBlank final String tableNamePattern, @NotNull final C collection)
             throws SQLException {
-        Objects.requireNonNull(schemaPattern, "schemaPattern is null");
-        Objects.requireNonNull(tableNamePattern, "tableNamePattern is null");
-        Objects.requireNonNull(collection, "collection is null");
+//        Objects.requireNonNull(schemaPattern, "schemaPattern is null");
+//        Objects.requireNonNull(tableNamePattern, "tableNamePattern is null");
+//        Objects.requireNonNull(collection, "collection is null");
         try (ResultSet results = databaseMetaData.getSuperTables(catalog, schemaPattern, tableNamePattern)) {
             if (results != null) {
                 return bind(results, SuperTable.class, collection);
@@ -793,7 +781,7 @@ public class Context {
                                       tableNamePattern));
         } catch (final SQLFeatureNotSupportedException sqlfnse) {
             log.log(Level.WARNING,
-                    String.format("null returned; getSuperTables(%1$s, %2$s, %3$s)", catalog, schemaPattern,
+                    String.format("not supported; getSuperTables(%1$s, %2$s, %3$s)", catalog, schemaPattern,
                                   tableNamePattern), sqlfnse);
         }
         return collection;
@@ -817,8 +805,8 @@ public class Context {
             @NotNull final C collection)
             throws SQLException {
 //        Objects.requireNonNull(schemaPattern, "schemaPattern is null");
-        Objects.requireNonNull(typeNamePattern, "typeNamePattern is null");
-        Objects.requireNonNull(collection, "collection is null");
+//        Objects.requireNonNull(typeNamePattern, "typeNamePattern is null");
+//        Objects.requireNonNull(collection, "collection is null");
         try (ResultSet results = databaseMetaData.getSuperTypes(catalog, schemaPattern, typeNamePattern)) {
             if (results != null) {
                 return bind(results, SuperType.class, collection);
@@ -844,13 +832,12 @@ public class Context {
      * @throws SQLException if a database error occurs.
      */
     @NotNull
-    public <C extends Collection<? super TablePrivilege>> C getTablePrivileges(final String catalog,
-                                                                               final String schemaPattern,
-                                                                               @NotBlank final String tableNamePattern,
-                                                                               @NotNull final C collection)
+    public <C extends Collection<@Valid @NotNull ? super TablePrivilege>> C getTablePrivileges(
+            final String catalog, final String schemaPattern, @NotBlank final String tableNamePattern,
+            @NotNull final C collection)
             throws SQLException {
-        Objects.requireNonNull(tableNamePattern, "tableNamePattern is null");
-        Objects.requireNonNull(collection, "collection is null");
+//        Objects.requireNonNull(tableNamePattern, "tableNamePattern is null");
+//        Objects.requireNonNull(collection, "collection is null");
         try (ResultSet results = databaseMetaData.getTablePrivileges(catalog, schemaPattern, tableNamePattern)) {
             if (results != null) {
                 return bind(results, TablePrivilege.class, collection);
@@ -860,7 +847,8 @@ public class Context {
         } catch (final SQLFeatureNotSupportedException sqlfnse) {
             log.log(Level.WARNING,
                     String.format("not supported; getTablePrivileges(%1$s, %2$s, %3$s)", catalog, schemaPattern,
-                                  tableNamePattern), sqlfnse);
+                                  tableNamePattern),
+                    sqlfnse);
         }
         return collection;
     }
@@ -876,14 +864,14 @@ public class Context {
     @NotNull
     public <C extends Collection<@Valid @NotNull ? super TableType>> C getTableTypes(@NotNull final C collection)
             throws SQLException {
-        Objects.requireNonNull(collection, "collection is null");
+//        Objects.requireNonNull(collection, "collection is null");
         try (ResultSet results = databaseMetaData.getTableTypes()) {
             if (results != null) {
                 return bind(results, TableType.class, collection);
             }
             log.warning("null returned; getTableTypes()");
         } catch (final SQLFeatureNotSupportedException sqlfnse) {
-            log.log(Level.WARNING, "null returned; getTableTypes()", sqlfnse);
+            log.log(Level.WARNING, "not supported; getTableTypes()", sqlfnse);
         }
         return collection;
     }
@@ -904,14 +892,12 @@ public class Context {
      * @see DatabaseMetaData#getTables(String, String, String, String[])
      */
     @NotNull
-    public <C extends Collection<@Valid @NotNull ? super Table>> C getTables(final String catalog,
-                                                                             final String schemaPattern,
-                                                                             @NotBlank final String tableNamePattern,
-                                                                             final String[] types,
-                                                                             @NotNull final C collection)
+    public <C extends Collection<@Valid @NotNull ? super Table>> C getTables(
+            final String catalog, final String schemaPattern, @NotBlank final String tableNamePattern,
+            final String[] types, @NotNull final C collection)
             throws SQLException {
-        Objects.requireNonNull(tableNamePattern, "tableNamePattern is null");
-        Objects.requireNonNull(collection, "collection is null");
+//        Objects.requireNonNull(tableNamePattern, "tableNamePattern is null");
+//        Objects.requireNonNull(collection, "collection is null");
         try (ResultSet results = databaseMetaData.getTables(catalog, schemaPattern, tableNamePattern, types)) {
             if (results != null) {
                 return bind(results, Table.class, collection);
@@ -921,7 +907,8 @@ public class Context {
         } catch (final SQLFeatureNotSupportedException sqlfnse) {
             log.log(Level.WARNING,
                     String.format("not supported; getTables(%1$s, %2$s, %3$s, %4$s)", catalog, schemaPattern,
-                                  tableNamePattern, Arrays.toString(types)), sqlfnse);
+                                  tableNamePattern, Arrays.toString(types)),
+                    sqlfnse);
         }
         return collection;
     }
@@ -934,8 +921,9 @@ public class Context {
      * @return given {@code collection}.
      * @throws SQLException if a database error occurs.
      */
-    public <C extends Collection<? super TypeInfo>> C getTypeInfo(final C collection) throws SQLException {
-        Objects.requireNonNull(collection, "collection is null");
+    public <C extends Collection<@Valid @NotNull ? super TypeInfo>> C getTypeInfo(@NotNull final C collection)
+            throws SQLException {
+//        Objects.requireNonNull(collection, "collection is null");
         try (ResultSet results = databaseMetaData.getTypeInfo()) {
             if (results != null) {
                 return bind(results, TypeInfo.class, collection);
@@ -962,13 +950,12 @@ public class Context {
      * @see DatabaseMetaData#getUDTs(String, String, String, int[])
      */
     @NotNull
-    public <C extends Collection<@Valid @NotNull ? super UDT>> C getUDTs(final String catalog,
-                                                                         final String schemaPattern,
-                                                                         @NotBlank final String typeNamePattern,
-                                                                         final int[] types, @NotNull final C collection)
+    public <C extends Collection<@Valid @NotNull ? super UDT>> C getUDTs(
+            final String catalog, final String schemaPattern, @NotBlank final String typeNamePattern,
+            final int[] types, @NotNull final C collection)
             throws SQLException {
-        Objects.requireNonNull(typeNamePattern, "typeNamePattern is null");
-        Objects.requireNonNull(collection, "collection is null");
+//        Objects.requireNonNull(typeNamePattern, "typeNamePattern is null");
+//        Objects.requireNonNull(collection, "collection is null");
         try (ResultSet results = databaseMetaData.getUDTs(catalog, schemaPattern, typeNamePattern, types)) {
             if (results != null) {
                 return bind(results, UDT.class, collection);
@@ -978,7 +965,8 @@ public class Context {
         } catch (final SQLFeatureNotSupportedException sqlfnse) {
             log.log(Level.WARNING,
                     String.format("not supported; getUDTs(%1$s, %2$s, %3$s, %4$s)", catalog, schemaPattern,
-                                  typeNamePattern, Arrays.toString(types)), sqlfnse);
+                                  typeNamePattern, Arrays.toString(types)),
+                    sqlfnse);
         }
         return collection;
     }
@@ -1000,8 +988,8 @@ public class Context {
     public <C extends Collection<@Valid @NotNull ? super VersionColumn>> C getVersionColumns(
             final String catalog, final String schema, @NotBlank final String table, @NotNull final C collection)
             throws SQLException {
-        Objects.requireNonNull(table, "table is null");
-        Objects.requireNonNull(collection, "collection is null");
+//        Objects.requireNonNull(table, "table is null");
+//        Objects.requireNonNull(collection, "collection is null");
         try (ResultSet results = databaseMetaData.getVersionColumns(catalog, schema, table)) {
             if (results != null) {
                 return bind(results, VersionColumn.class, collection);

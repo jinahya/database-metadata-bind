@@ -20,14 +20,13 @@ package com.github.jinahya.database.metadata.bind;
  * #L%
  */
 
-import jakarta.xml.bind.JAXBContext;
-import jakarta.xml.bind.JAXBElement;
-import jakarta.xml.bind.JAXBException;
-import jakarta.xml.bind.Marshaller;
-import jakarta.xml.bind.PropertyException;
-import jakarta.xml.bind.Unmarshaller;
-import jakarta.xml.bind.annotation.XmlAnyElement;
-
+import javax.xml.bind.JAXBContext;
+import javax.xml.bind.JAXBElement;
+import javax.xml.bind.JAXBException;
+import javax.xml.bind.Marshaller;
+import javax.xml.bind.PropertyException;
+import javax.xml.bind.Unmarshaller;
+import javax.xml.bind.annotation.XmlAnyElement;
 import javax.xml.namespace.QName;
 import javax.xml.transform.Source;
 import java.beans.Introspector;
@@ -35,9 +34,8 @@ import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Objects;
 import java.util.function.UnaryOperator;
-
-import static java.util.Objects.requireNonNull;
 
 // http://blog.bdoughan.com/2012/11/creating-generic-list-wrapper-in-jaxb.html
 // http://blog.bdoughan.com/2010/12/jaxb-and-immutable-objects.html
@@ -57,8 +55,8 @@ public final class Wrapper<T> {
      */
     @SuppressWarnings({"unchecked"})
     public static <T> List<T> unmarshal(final Class<T> type, final Source source) throws JAXBException {
-        requireNonNull(type, "type is null");
-        requireNonNull(source, "source is null");
+        Objects.requireNonNull(type, "type is null");
+        Objects.requireNonNull(source, "source is null");
         final JAXBContext context = JAXBContext.newInstance(Wrapper.class, type);
         final Unmarshaller unmarshaller = context.createUnmarshaller();
         final Wrapper<T> wrapper = unmarshaller.unmarshal(source, Wrapper.class).getValue();
@@ -84,8 +82,8 @@ public final class Wrapper<T> {
     public static <T> void marshal(final Class<T> type, final List<T> elements, final Object target,
                                    final UnaryOperator<Marshaller> operator)
             throws JAXBException {
-        requireNonNull(type, "type is null");
-        requireNonNull(target, "target is null");
+        Objects.requireNonNull(type, "type is null");
+        Objects.requireNonNull(target, "target is null");
         final JAXBContext context = JAXBContext.newInstance(Wrapper.class, type);
         final JAXBElement<Wrapper<T>> wrapped = new JAXBElement<>(
                 new QName(XmlConstants.NS_URI_DATABASE_METADATA_BIND,
@@ -160,7 +158,7 @@ public final class Wrapper<T> {
     }
 
     private static <T> Wrapper<T> of(final List<T> elements) {
-        requireNonNull(elements, "elements is null");
+        Objects.requireNonNull(elements, "elements is null");
         final Wrapper<T> instance = new Wrapper<>();
         instance.elements = elements;
         return instance;

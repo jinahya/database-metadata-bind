@@ -20,16 +20,15 @@ package com.github.jinahya.database.metadata.bind;
  * #L%
  */
 
-import jakarta.xml.bind.annotation.XmlAttribute;
-import jakarta.xml.bind.annotation.XmlRootElement;
-import jakarta.xml.bind.annotation.XmlTransient;
-import jakarta.xml.bind.annotation.XmlValue;
-import lombok.EqualsAndHashCode;
-import lombok.Getter;
+import lombok.AccessLevel;
+import lombok.Data;
 import lombok.NoArgsConstructor;
-import lombok.Setter;
-import lombok.ToString;
+import lombok.experimental.SuperBuilder;
 
+import javax.xml.bind.annotation.XmlAttribute;
+import javax.xml.bind.annotation.XmlRootElement;
+import javax.xml.bind.annotation.XmlTransient;
+import javax.xml.bind.annotation.XmlValue;
 import java.sql.DatabaseMetaData;
 import java.sql.JDBCType;
 import java.sql.SQLException;
@@ -43,13 +42,13 @@ import java.util.Objects;
  * @see Context#supportsConvert(int, int)
  */
 @XmlRootElement
-@Setter
-@Getter
-@EqualsAndHashCode
-@ToString
-@NoArgsConstructor
+@Data
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
+@SuperBuilder(toBuilder = true)
 public class SupportsConvert
         implements MetadataType {
+
+    private static final long serialVersionUID = 9044839986850181341L;
 
     /**
      * Invokes {@link Context#supportsConvert(int, int)} method for all combinations of all types defined in
@@ -61,8 +60,8 @@ public class SupportsConvert
      * @return given {@code collection}.
      * @throws SQLException if a database access error occurs.
      */
-    public static <C extends Collection<? super SupportsConvert>> C getAllInstances(final Context context,
-                                                                                    final C collection)
+    public static <C extends Collection<? super SupportsConvert>> C getAllInstances(
+            final Context context, final C collection)
             throws SQLException {
         Objects.requireNonNull(context, "context is null");
         Objects.requireNonNull(collection, "collection is null");
@@ -82,7 +81,6 @@ public class SupportsConvert
         // no children.
     }
 
-    //    @XmlAttribute(required = false)
     @XmlTransient
     public JDBCType getFromTypeAsEnum() {
         return JDBCType.valueOf(getFromType());
@@ -93,7 +91,6 @@ public class SupportsConvert
         return getFromTypeAsEnum().getName();
     }
 
-    //    @XmlAttribute(required = false)
     @XmlTransient
     public JDBCType getToTypeAsEnum() {
         return JDBCType.valueOf(getToType());

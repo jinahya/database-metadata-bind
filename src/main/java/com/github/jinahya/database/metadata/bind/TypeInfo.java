@@ -20,14 +20,15 @@ package com.github.jinahya.database.metadata.bind;
  * #L%
  */
 
-import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.NotNull;
-import jakarta.xml.bind.annotation.XmlElement;
-import jakarta.xml.bind.annotation.XmlRootElement;
+import lombok.AccessLevel;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.experimental.SuperBuilder;
 
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
+import javax.xml.bind.annotation.XmlElement;
+import javax.xml.bind.annotation.XmlRootElement;
 import java.sql.DatabaseMetaData;
 import java.sql.SQLException;
 import java.util.Objects;
@@ -39,7 +40,7 @@ import java.util.Objects;
  */
 @XmlRootElement
 @Data
-@NoArgsConstructor
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 @SuperBuilder(toBuilder = true)
 public class TypeInfo
         implements MetadataType {
@@ -106,7 +107,7 @@ public class TypeInfo
          * @return the raw value of this constant.
          */
         @Override
-        public int rawValue() {
+        public int rawValueAsInt() {
             return rawValue;
         }
 
@@ -170,7 +171,7 @@ public class TypeInfo
          * @return the raw value of this constant.
          */
         @Override
-        public int rawValue() {
+        public int rawValueAsInt() {
             return rawValue;
         }
 
@@ -191,7 +192,7 @@ public class TypeInfo
 
     public void setNullableAsEnum(@NotNull final Nullable nullableAsEnum) {
         Objects.requireNonNull(nullableAsEnum, "nullableAsEnum is null");
-        setNullable(nullableAsEnum.rawValue());
+        setNullable(nullableAsEnum.rawValueAsInt());
     }
 
     @NotNull
@@ -201,7 +202,7 @@ public class TypeInfo
 
     public void setSearchableAsEnum(@NotNull final Searchable searchableAsEnum) {
         Objects.requireNonNull(searchableAsEnum, "searchableAsEnum is null");
-        setSearchable(searchableAsEnum.rawValue());
+        setSearchable(searchableAsEnum.rawValueAsInt());
     }
 
     @XmlElement(nillable = false, required = true)

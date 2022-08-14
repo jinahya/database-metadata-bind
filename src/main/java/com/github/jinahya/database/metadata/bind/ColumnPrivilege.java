@@ -20,10 +20,13 @@ package com.github.jinahya.database.metadata.bind;
  * #L%
  */
 
-import jakarta.xml.bind.annotation.XmlElement;
-import jakarta.xml.bind.annotation.XmlRootElement;
+import lombok.AccessLevel;
 import lombok.Data;
+import lombok.NoArgsConstructor;
+import lombok.experimental.SuperBuilder;
 
+import javax.xml.bind.annotation.XmlElement;
+import javax.xml.bind.annotation.XmlRootElement;
 import java.sql.DatabaseMetaData;
 import java.sql.SQLException;
 import java.util.Collection;
@@ -35,14 +38,27 @@ import java.util.Collection;
  * @see Context#getColumnPrivileges(String, String, String, String, Collection)
  */
 @XmlRootElement
-@ChildOf__(Table.class)
 @Data
-public class ColumnPrivilege implements MetadataType {
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
+@SuperBuilder(toBuilder = true)
+public class ColumnPrivilege
+        implements MetadataType,
+                   ChildOf<Table> {
 
     private static final long serialVersionUID = 4384654744147773380L;
 
     @Override
     public void retrieveChildren(final Context context) throws SQLException {
+        // no child
+    }
+
+    @Override
+    public Table extractParent() {
+        return Table.builder()
+                .tableCat(getTableCat())
+                .tableSchem(getTableSchem())
+                .tableName(getTableName())
+                .build();
     }
 
     @XmlElement(nillable = true, required = true)

@@ -63,7 +63,7 @@ abstract class FieldEnumTest<E extends Enum<E> & FieldEnum<E, T>, T> {
 
     /**
      * Asserts {@code valueOfRawValue(int)} method, defined in specified enum class, invoked with each enum constant's
-     * {@link IntFieldEnum#rawValue() rawValue} returns the same enum constant.
+     * {@link IntFieldEnum#rawValueAsInt() rawValue} returns the same enum constant.
      */
     @DisplayName("valueOfRawValue(c.getRawValue()) returns c")
     @Test

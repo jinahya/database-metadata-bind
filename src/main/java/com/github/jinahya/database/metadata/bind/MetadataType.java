@@ -20,9 +20,8 @@ package com.github.jinahya.database.metadata.bind;
  * #L%
  */
 
-import jakarta.validation.constraints.NotNull;
-import jakarta.xml.bind.annotation.XmlTransient;
-
+import javax.validation.constraints.NotNull;
+import javax.xml.bind.annotation.XmlTransient;
 import java.io.Serializable;
 import java.sql.SQLException;
 

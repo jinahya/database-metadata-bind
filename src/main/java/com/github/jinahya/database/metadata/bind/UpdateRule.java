@@ -58,7 +58,7 @@ public enum UpdateRule implements IntFieldEnum<UpdateRule> {
     }
 
     @Override
-    public int rawValue() {
+    public int rawValueAsInt() {
         return rawValue;
     }
 

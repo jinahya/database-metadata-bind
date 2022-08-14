@@ -20,15 +20,14 @@ package com.github.jinahya.database.metadata.bind;
  * #L%
  */
 
-import jakarta.xml.bind.annotation.XmlAttribute;
-import jakarta.xml.bind.annotation.XmlRootElement;
-import jakarta.xml.bind.annotation.XmlValue;
-import lombok.EqualsAndHashCode;
-import lombok.Getter;
+import lombok.AccessLevel;
+import lombok.Data;
 import lombok.NoArgsConstructor;
-import lombok.Setter;
-import lombok.ToString;
+import lombok.experimental.SuperBuilder;
 
+import javax.xml.bind.annotation.XmlAttribute;
+import javax.xml.bind.annotation.XmlRootElement;
+import javax.xml.bind.annotation.XmlValue;
 import java.sql.DatabaseMetaData;
 import java.sql.SQLException;
 import java.util.Collection;
@@ -41,13 +40,13 @@ import java.util.Objects;
  * @see Context#supportsTransactionIsolationLevel(int)
  */
 @XmlRootElement
-@Setter
-@Getter
-@EqualsAndHashCode
-@ToString
-@NoArgsConstructor
+@Data
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
+@SuperBuilder(toBuilder = true)
 public class SupportsTransactionIsolationLevel
         implements MetadataType {
+
+    private static final long serialVersionUID = -2241618224708597472L;
 
     /**
      * Invokes {@link Context#supportsTransactionIsolationLevel(int)} method for all transaction isolation levels
@@ -66,7 +65,7 @@ public class SupportsTransactionIsolationLevel
         Objects.requireNonNull(context, "context is null");
         Objects.requireNonNull(collection, "collection is null");
         for (final ConnectionTransactionIsolationLevel value : ConnectionTransactionIsolationLevel.values()) {
-            collection.add(context.supportsTransactionIsolationLevel(value.rawValue()));
+            collection.add(context.supportsTransactionIsolationLevel(value.rawValueAsInt()));
         }
         return collection;
     }

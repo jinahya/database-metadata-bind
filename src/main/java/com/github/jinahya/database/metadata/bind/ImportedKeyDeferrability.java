@@ -20,27 +20,30 @@ package com.github.jinahya.database.metadata.bind;
  * #L%
  */
 
+import javax.xml.bind.annotation.XmlEnum;
 import java.sql.DatabaseMetaData;
 
-public enum ImportedKeyDeferrability implements IntFieldEnum<ImportedKeyDeferrability> {
+@XmlEnum
+public enum ImportedKeyDeferrability
+        implements IntFieldEnum<ImportedKeyDeferrability> {
 
     /**
      * A constant for
      * {@link DatabaseMetaData#importedKeyInitiallyDeferred}({@value DatabaseMetaData#importedKeyInitiallyDeferred}).
      */
-    IMPORTED_KEY_INITIALLY_DEFERRED(DatabaseMetaData.importedKeyInitiallyDeferred),
+    IMPORTED_KEY_INITIALLY_DEFERRED(DatabaseMetaData.importedKeyInitiallyDeferred), // 5
 
     /**
      * A constant for
      * {@link DatabaseMetaData#importedKeyInitiallyImmediate}({@value DatabaseMetaData#importedKeyInitiallyImmediate}).
      */
-    IMPORTED_KEY_INITIALLY_IMMEDIATE(DatabaseMetaData.importedKeyInitiallyImmediate),
+    IMPORTED_KEY_INITIALLY_IMMEDIATE(DatabaseMetaData.importedKeyInitiallyImmediate), // 6
 
     /**
      * A constant for
      * {@link DatabaseMetaData#importedKeyNotDeferrable}({@value DatabaseMetaData#importedKeyNotDeferrable}).
      */
-    IMPORTED_KEY_NOT_DEFERRABLE(DatabaseMetaData.importedKeyNotDeferrable);
+    IMPORTED_KEY_NOT_DEFERRABLE(DatabaseMetaData.importedKeyNotDeferrable); // 7
 
     public static ImportedKeyDeferrability valueOfRawValue(final int rawValue) {
         return IntFieldEnums.valueOfRawValue(ImportedKeyDeferrability.class, rawValue);
@@ -51,7 +54,7 @@ public enum ImportedKeyDeferrability implements IntFieldEnum<ImportedKeyDeferrab
     }
 
     @Override
-    public int rawValue() {
+    public int rawValueAsInt() {
         return rawValue;
     }
 

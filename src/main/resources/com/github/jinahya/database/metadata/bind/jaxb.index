@@ -1,18 +1,18 @@
 AreDetected
 AreVisible
-Attribute
+#Attribute
 BestRowIdentifier
 Catalog
 ClientInfoProperty
-Column
-ColumnPrivilege
+#Column
+#ColumnPrivilege
 CrossReference
 #DeletesAreDetected
 #ExportedKey
-Function
-FunctionColumn
+#Function
+#FunctionColumn
 #ImportedKey
-IndexInfo
+#IndexInfo
 #InsertsAreDetected
 #OthersDeletesAreVisible
 #OthersInsertsAreVisible
@@ -20,23 +20,23 @@ IndexInfo
 #OwnDeletesAreVisible
 #OwnInsertsAreVisible
 #OwnUpdatesAreVisible
-PrimaryKey
-Procedure
-ProcedureColumn
-PseudoColumn
-Schema
-SuperTable
-SuperType
+#PrimaryKey
+#Procedure
+#ProcedureColumn
+#PseudoColumn #Table
+#Schema #Catalog
+#SuperTable #Schema
+#SuperType #Schema
 SupportsConvert
 SupportsResultSetConcurrency
 SupportsResultSetHoldability
 SupportsResultSetType
 SupportsTransactionIsolationLevel
-Table
+#Table
 TableKey
 TablePrivilege
 TableType
 TypeInfo
-UDT
+#UDT
 #UpdatesAreDetected
 VersionColumn

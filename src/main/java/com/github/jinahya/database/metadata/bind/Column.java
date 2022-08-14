@@ -20,13 +20,16 @@ package com.github.jinahya.database.metadata.bind;
  * #L%
  */
 
-import jakarta.validation.constraints.NotNull;
-import jakarta.validation.constraints.Positive;
-import jakarta.xml.bind.annotation.XmlElement;
-import jakarta.xml.bind.annotation.XmlRootElement;
-import jakarta.xml.bind.annotation.XmlTransient;
+import lombok.AccessLevel;
 import lombok.Data;
+import lombok.NoArgsConstructor;
+import lombok.experimental.SuperBuilder;
 
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Positive;
+import javax.xml.bind.annotation.XmlElement;
+import javax.xml.bind.annotation.XmlRootElement;
+import javax.xml.bind.annotation.XmlTransient;
 import java.sql.DatabaseMetaData;
 import java.sql.SQLException;
 import java.util.Collection;
@@ -39,8 +42,9 @@ import java.util.Objects;
  * @see Context#getColumns(String, String, String, String, Collection)
  */
 @XmlRootElement
-@ChildOf__(Table.class)
 @Data
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
+@SuperBuilder(toBuilder = true)
 public class Column
         implements MetadataType,
                    ChildOf<Table> {
@@ -87,7 +91,7 @@ public class Column
         }
 
         @Override
-        public int rawValue() {
+        public int rawValueAsInt() {
             return rawValue;
         }
 
@@ -118,7 +122,7 @@ public class Column
     }
 
     public void setNullableAsEnum(final Nullable nullableAsEnum) {
-        setNullable(Objects.requireNonNull(nullableAsEnum, "nullableAsEnum is null").rawValue());
+        setNullable(Objects.requireNonNull(nullableAsEnum, "nullableAsEnum is null").rawValueAsInt());
     }
 
     // -----------------------------------------------------------------------------------------------------------------

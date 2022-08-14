@@ -20,34 +20,37 @@ package com.github.jinahya.database.metadata.bind;
  * #L%
  */
 
-import jakarta.xml.bind.annotation.XmlElementRef;
-import jakarta.xml.bind.annotation.XmlRootElement;
 import lombok.AccessLevel;
+import lombok.Data;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
+import lombok.experimental.SuperBuilder;
+import lombok.extern.java.Log;
 
-import java.lang.invoke.MethodHandles;
+import javax.xml.bind.annotation.XmlElementRef;
+import javax.xml.bind.annotation.XmlRootElement;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.logging.Logger;
-
-import static java.util.Objects.requireNonNull;
+import java.util.Objects;
 
 @XmlRootElement
+@Data
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
+@SuperBuilder(toBuilder = true)
+@Log
 public class Metadata {
 
-    private static final Logger logger = Logger.getLogger(MethodHandles.lookup().lookupClass().getName());
-
     public static Metadata newInstance(final Context context) throws SQLException {
-        requireNonNull(context, "context is null");
+        Objects.requireNonNull(context, "context is null");
         final Metadata instance = new Metadata();
         // -------------------------------------------------------------------------------------------------------------
-        instance.deletesAreDetecteds = DeletesAreDetected.getAllInstances(context, new ArrayList<>());
-        instance.insertsAreDetecteds = InsertsAreDetected.getAllInstances(context, new ArrayList<>());
-        instance.updatesAreDetecteds = UpdatesAreDetected.getAllInstances(context, new ArrayList<>());
+        instance.deletesAreDetectedList = DeletesAreDetected.getAllInstances(context, new ArrayList<>());
+        instance.insertsAreDetectedList = InsertsAreDetected.getAllInstances(context, new ArrayList<>());
+        instance.updatesAreDetectedList = UpdatesAreDetected.getAllInstances(context, new ArrayList<>());
         // -------------------------------------------------------------------------------------------------------------
-        instance.othersDeletesAreVisibles = OthersDeletesAreVisible.getAllInstances(context, new ArrayList<>());
+        instance.othersDeletesAreVisibleList = OthersDeletesAreVisible.getAllInstances(context, new ArrayList<>());
         instance.othersInsertsAreVisibles = OthersInsertsAreVisible.getAllInstances(context, new ArrayList<>());
         instance.othersUpdatesAreVisibles = OthersUpdatesAreVisible.getAllInstances(context, new ArrayList<>());
         instance.ownDeletesAreVisibles = OwnDeletesAreVisible.getAllInstances(context, new ArrayList<>());
@@ -95,30 +98,26 @@ public class Metadata {
         return instance;
     }
 
-    Metadata() {
-        super();
-    }
-
     // --------------------------------------------------------------------------------------------------------------- \
-    @XmlElementRef
+    @XmlElementRef(name = "deletesAreDetected")
     @Setter(AccessLevel.NONE)
     @Getter(AccessLevel.NONE)
-    private List<DeletesAreDetected> deletesAreDetecteds;
+    private List<DeletesAreDetected> deletesAreDetectedList;
 
-    @XmlElementRef
+    @XmlElementRef(name = "insertsAreDetected")
     @Setter(AccessLevel.NONE)
     @Getter(AccessLevel.NONE)
-    private List<InsertsAreDetected> insertsAreDetecteds;
+    private List<InsertsAreDetected> insertsAreDetectedList;
 
-    @XmlElementRef
+    @XmlElementRef(name = "updatesAreDetected")
     @Setter(AccessLevel.NONE)
     @Getter(AccessLevel.NONE)
-    private List<UpdatesAreDetected> updatesAreDetecteds;
+    private List<UpdatesAreDetected> updatesAreDetectedList;
 
-    @XmlElementRef
+    @XmlElementRef(name = "othersDeletesAreVisible")
     @Setter(AccessLevel.NONE)
     @Getter(AccessLevel.NONE)
-    private List<OthersDeletesAreVisible> othersDeletesAreVisibles;
+    private List<OthersDeletesAreVisible> othersDeletesAreVisibleList;
 
     @XmlElementRef
     @Setter(AccessLevel.NONE)

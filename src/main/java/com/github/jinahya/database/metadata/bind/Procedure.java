@@ -20,12 +20,6 @@ package com.github.jinahya.database.metadata.bind;
  * #L%
  */
 
-import jakarta.validation.Valid;
-import jakarta.validation.constraints.NotNull;
-import jakarta.xml.bind.annotation.XmlElement;
-import jakarta.xml.bind.annotation.XmlElementRef;
-import jakarta.xml.bind.annotation.XmlRootElement;
-import jakarta.xml.bind.annotation.XmlTransient;
 import lombok.AccessLevel;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
@@ -35,6 +29,11 @@ import lombok.Setter;
 import lombok.ToString;
 import lombok.experimental.SuperBuilder;
 
+import javax.validation.Valid;
+import javax.validation.constraints.NotNull;
+import javax.xml.bind.annotation.XmlElement;
+import javax.xml.bind.annotation.XmlElementRef;
+import javax.xml.bind.annotation.XmlRootElement;
 import java.sql.DatabaseMetaData;
 import java.sql.SQLException;
 import java.util.ArrayList;
@@ -50,12 +49,13 @@ import java.util.List;
  * @see Context#getProcedures(String, String, String, Collection)
  */
 @XmlRootElement
-@ChildOf__(Schema.class)
 @ParentOf(ProcedureColumn.class)
 @Data
-@NoArgsConstructor
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 @SuperBuilder(toBuilder = true)
-public class Procedure implements MetadataType {
+public class Procedure
+        implements MetadataType,
+                   ChildOf<Schema> {
 
     private static final long serialVersionUID = -6262056388403934829L;
 
@@ -79,6 +79,14 @@ public class Procedure implements MetadataType {
                 procedureColumn.retrieveChildren(context);
             }
         }
+    }
+
+    @Override
+    public Schema extractParent() {
+        return Schema.builder()
+                .tableCatalog(getProcedureCat())
+                .tableSchem(getProcedureSchem())
+                .build();
     }
 
     public List<ProcedureColumn> getProcedureColumns() {
@@ -116,14 +124,6 @@ public class Procedure implements MetadataType {
     private String specificName;
 
     // -----------------------------------------------------------------------------------------------------------------
-    @XmlTransient
-    @Valid
-    @Setter(AccessLevel.NONE)
-    @Getter(AccessLevel.NONE)
-    @EqualsAndHashCode.Exclude
-    @ToString.Exclude
-    private Schema schema;
-
     @XmlElementRef
     @Setter(AccessLevel.NONE)
     @Getter(AccessLevel.NONE)
