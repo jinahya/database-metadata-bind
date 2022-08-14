@@ -20,14 +20,17 @@ package com.github.jinahya.database.metadata.bind;
  * #L%
  */
 
+import lombok.AccessLevel;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+import lombok.experimental.SuperBuilder;
+
 import javax.xml.bind.annotation.XmlAttribute;
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlValue;
 import java.sql.SQLException;
 import java.util.Collection;
 import java.util.Objects;
-
-import static java.util.Objects.requireNonNull;
 
 /**
  * A class for binding result of {@link java.sql.DatabaseMetaData#supportsResultSetConcurrency(int, int)} method.
@@ -36,6 +39,9 @@ import static java.util.Objects.requireNonNull;
  * @see Context#supportsResultSetConcurrency(int, int)
  */
 @XmlRootElement
+@Data
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
+@SuperBuilder(toBuilder = true)
 public class SupportsResultSetConcurrency
         implements MetadataType {
 
@@ -54,71 +60,24 @@ public class SupportsResultSetConcurrency
     public static <C extends Collection<? super SupportsResultSetConcurrency>> C getAllInstances(final Context context,
                                                                                                  final C collection)
             throws SQLException {
-        requireNonNull(context, "context is null");
+        Objects.requireNonNull(context, "context is null");
+        Objects.requireNonNull(collection, "collection is null");
         for (final ResultSetType type : ResultSetType.values()) {
             for (final ResultSetConcurrency concurrency : ResultSetConcurrency.values()) {
-                collection.add(context.supportsResultSetConcurrency(type.getRawValue(), concurrency.getRawValue()));
+                collection.add(context.supportsResultSetConcurrency(type.rawValue(), concurrency.rawValue()));
             }
         }
         return collection;
     }
 
-    /**
-     * Creates a new instance.
-     */
-    public SupportsResultSetConcurrency() {
-        super();
-    }
-
     @Override
-    public String toString() {
-        return super.toString() + '{'
-               + "type=" + type
-               + ",concurrency=" + concurrency
-               + ",value=" + value
-               + '}';
+    public void retrieveChildren(final Context context) throws SQLException {
+        // no children.
     }
 
-    @Override
-    public boolean equals(final Object obj) {
-        if (this == obj) return true;
-        if (obj == null || getClass() != obj.getClass()) return false;
-        final SupportsResultSetConcurrency that = (SupportsResultSetConcurrency) obj;
-        return type == that.type
-               && concurrency == that.concurrency
-               && Objects.equals(value, that.value);
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(type, concurrency, value);
-    }
-
-    // ------------------------------------------------------------------------------------------------------------ type
-    public int getType() {
-        return type;
-    }
-
-    public void setType(final int type) {
-        this.type = type;
-    }
-
-    // ----------------------------------------------------------------------------------------------------- concurrency
-    public int getConcurrency() {
-        return concurrency;
-    }
-
-    public void setConcurrency(final int concurrency) {
-        this.concurrency = concurrency;
-    }
-
-    // ----------------------------------------------------------------------------------------------------------- value
-    public Boolean getValue() {
-        return value;
-    }
-
-    public void setValue(final Boolean value) {
-        this.value = value;
+    @XmlAttribute(required = false)
+    public ResultSetConcurrency getTypeAsEnum() {
+        return ResultSetConcurrency.valueOfRawValue(getConcurrency());
     }
 
     @XmlAttribute(required = true)

@@ -20,15 +20,19 @@ package com.github.jinahya.database.metadata.bind;
  * #L%
  */
 
+import jakarta.json.bind.annotation.JsonbProperty;
 import lombok.AccessLevel;
-import lombok.Getter;
+import lombok.Data;
+import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
-import lombok.Setter;
 import lombok.ToString;
+import lombok.experimental.SuperBuilder;
 
 import javax.xml.bind.annotation.XmlAttribute;
-import javax.xml.bind.annotation.XmlTransient;
+import javax.xml.bind.annotation.XmlSeeAlso;
 import javax.xml.bind.annotation.XmlValue;
+import java.io.Serializable;
+import java.sql.SQLException;
 
 /**
  * An abstract class for binding results of {@code DatabaseMetaData#...AreDetected(int)} method.
@@ -38,15 +42,37 @@ import javax.xml.bind.annotation.XmlValue;
  * @see InsertsAreDetected
  * @see UpdatesAreDetected
  */
-@XmlTransient
-@Setter
-@Getter
+@XmlSeeAlso({
+        DeletesAreDetected.class,
+        InsertsAreDetected.class,
+        UpdatesAreDetected.class
+})
+@Data
+@EqualsAndHashCode
 @ToString(callSuper = true)
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-abstract class AreDetected
-        implements MetadataType {
+@SuperBuilder(toBuilder = true)
+public abstract class AreDetected
+        implements Serializable,
+                   MetadataType {
 
-    private static final long serialVersionUID = 472228030784272988L;
+    private static final long serialVersionUID = 7505598364855010122L;
+
+    @Override
+    public void retrieveChildren(Context context) throws SQLException {
+        // no children.
+    }
+
+    @JsonbProperty
+    @XmlAttribute(required = false)
+    public ResultSetType getTypeAsEnum() {
+        return ResultSetType.valueOfRawValue(getType());
+    }
+
+//    @XmlAttribute(required = false)
+//    public String getTypeName() {
+//        return ResultSetType.valueOfRawValue(getType()).name();
+//    }
 
     @XmlAttribute(required = true)
     private int type;

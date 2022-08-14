@@ -20,57 +20,42 @@ package com.github.jinahya.database.metadata.bind;
  * #L%
  */
 
+import lombok.AccessLevel;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+import lombok.experimental.SuperBuilder;
+
+import javax.validation.constraints.NotBlank;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
-import java.util.Objects;
+import java.sql.SQLException;
+import java.util.Collection;
+import java.util.Comparator;
 
 /**
  * An entity class for binding the result of {@link java.sql.DatabaseMetaData#getTableTypes()}.
  *
  * @author Jin Kwon &lt;jinahya_at_gmail.com&gt;
+ * @see Context#getTableTypes(Collection)
  */
 @XmlRootElement
-public class TableType implements MetadataType {
+@Data
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
+@SuperBuilder(toBuilder = true)
+public class TableType
+        implements MetadataType {
 
     private static final long serialVersionUID = -7630634982776331078L;
 
-    /**
-     * Creates a new instance.
-     */
-    public TableType() {
-        super();
-    }
+    public static final Comparator<TableType> COMPARATOR = Comparator.comparing(TableType::getTableType);
 
     @Override
-    public String toString() {
-        return super.toString() + '{'
-               + "tableType=" + tableType
-               + '}';
+    public void retrieveChildren(final Context context) throws SQLException {
+        // no children
     }
 
-    @Override
-    public boolean equals(final Object obj) {
-        if (this == obj) return true;
-        if (obj == null || getClass() != obj.getClass()) return false;
-        final TableType that = (TableType) obj;
-        return Objects.equals(tableType, that.tableType);
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(tableType);
-    }
-
-    // ------------------------------------------------------------------------------------------------------- tableType
-    public String getTableType() {
-        return tableType;
-    }
-
-    public void setTableType(final String tableType) {
-        this.tableType = tableType;
-    }
-
-    @XmlElement(required = true)
+    @XmlElement(nillable = false, required = true)
+    @NotBlank
     @Label("TABLE_TYPE")
     private String tableType;
 }

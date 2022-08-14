@@ -27,8 +27,8 @@ import java.sql.Connection;
  *
  * @author Jin Kwon &lt;onacit_at_gmail.com&gt;
  */
-public enum ConnectionTransactionIsolationLevel
-        implements IntFieldEnum<ConnectionTransactionIsolationLevel> {
+public enum TransactionIsolationLevel
+        implements IntFieldEnum<TransactionIsolationLevel> {
 
     /**
      * Constant for {@link Connection#TRANSACTION_NONE}({@value java.sql.Connection#TRANSACTION_NONE}).
@@ -59,13 +59,13 @@ public enum ConnectionTransactionIsolationLevel
     TRANSACTION_SERIALIZABLE(Connection.TRANSACTION_SERIALIZABLE); // 8
 
     /**
-     * Returns the value whose {@link #getRawValue() rawVaue} matches to specified value.
+     * Returns the value whose {@link #rawValue() rawVaue} matches to specified value.
      *
      * @param rawValue the {@code rawValue} to match.
      * @return the value of {@code rawValue}.
      */
-    public static ConnectionTransactionIsolationLevel valueOfRawValue(final int rawValue) {
-        return IntFieldEnums.valueOfRawValue(ConnectionTransactionIsolationLevel.class, rawValue);
+    public static TransactionIsolationLevel valueOfRawValue(final int rawValue) {
+        return IntFieldEnums.valueOfRawValue(TransactionIsolationLevel.class, rawValue);
     }
 
     /**
@@ -73,7 +73,7 @@ public enum ConnectionTransactionIsolationLevel
      *
      * @param rawValue the raw value.
      */
-    ConnectionTransactionIsolationLevel(final int rawValue) {
+    TransactionIsolationLevel(final int rawValue) {
         this.rawValue = rawValue;
     }
 
@@ -83,7 +83,7 @@ public enum ConnectionTransactionIsolationLevel
      * @return {@inheritDoc}
      */
     @Override
-    public int getRawValue() {
+    public int rawValue() {
         return rawValue;
     }
 

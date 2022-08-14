@@ -20,62 +20,62 @@ package com.github.jinahya.database.metadata.bind;
  * #L%
  */
 
-import lombok.EqualsAndHashCode;
-import lombok.Getter;
+import lombok.AccessLevel;
+import lombok.Data;
 import lombok.NoArgsConstructor;
-import lombok.Setter;
-import lombok.ToString;
+import lombok.experimental.SuperBuilder;
 
-import javax.validation.constraints.NotBlank;
 import javax.xml.bind.annotation.XmlElement;
+import javax.xml.bind.annotation.XmlEnum;
+import javax.xml.bind.annotation.XmlEnumValue;
 import javax.xml.bind.annotation.XmlRootElement;
 import java.sql.DatabaseMetaData;
+import java.sql.SQLException;
 import java.util.Collection;
+import java.util.Objects;
 
 /**
  * A class for binding results of {@link DatabaseMetaData#getAttributes(String, String, String, String)} method.
  *
  * @author Jin Kwon &lt;jinahya_at_gmail.com&gt;
  * @see Context#getAttributes(String, String, String, String, Collection)
- * @see Context#getAttributes(UDT, String, Collection)
  */
 @XmlRootElement
-@ChildOf(UDT.class)
-@Setter
-@Getter
-@EqualsAndHashCode
-@ToString
-@NoArgsConstructor
+@Data
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
+@SuperBuilder(toBuilder = true)
 public class Attribute
-        implements MetadataType {
+        implements MetadataType,
+                   ChildOf<UDT> {
 
-    private static final long serialVersionUID = 5020389308460154799L;
+    private static final long serialVersionUID = 1913681105410440186L;
 
     /**
-     * Constants for nullabilities of an attribute.
+     * Constants for nullabilities of attributes.
      */
+    @XmlEnum
     public enum Nullable implements IntFieldEnum<Nullable> {
 
         /**
          * Constant for {@link DatabaseMetaData#attributeNoNulls}({@value java.sql.DatabaseMetaData#attributeNoNulls}).
          */
-        ATTRIBUTE_NO_NULLS(DatabaseMetaData.attributeNoNulls),
+        ATTRIBUTE_NO_NULLS(DatabaseMetaData.attributeNoNulls), // 0
 
         /**
          * Constant for
          * {@link DatabaseMetaData#attributeNullable}({@value java.sql.DatabaseMetaData#attributeNullable}).
          */
-        ATTRIBUTE_NULLABLE(DatabaseMetaData.attributeNullable),
+        ATTRIBUTE_NULLABLE(DatabaseMetaData.attributeNullable), // 1
 
         /**
          * Constant for
          * {@link DatabaseMetaData#attributeNullableUnknown}({@value
          * java.sql.DatabaseMetaData#attributeNullableUnknown}).
          */
-        ATTRIBUTE_NULLABLE_UNKNOWN(DatabaseMetaData.attributeNullableUnknown);
+        ATTRIBUTE_NULLABLE_UNKNOWN(DatabaseMetaData.attributeNullableUnknown); // 2
 
         /**
-         * Returns the value whose {@link #getRawValue() rawValue} matches to specified value.
+         * Returns the value whose {@link #rawValue() rawValue} matches to specified value.
          *
          * @param rawValue the {@code rawValue} to match.
          * @return a matched value.
@@ -89,11 +89,87 @@ public class Attribute
         }
 
         @Override
-        public int getRawValue() {
+        public int rawValue() {
             return rawValue;
         }
 
         private final int rawValue;
+    }
+
+    public static final String VALUE_IS_NULLABLE_YES = "YES";
+
+    public static final String VALUE_IS_NULLABLE_NO = "NO";
+
+    public static final String VALUE_IS_NULLABLE_EMPTY = "";
+
+    @XmlEnum
+    public enum IsNullable implements FieldEnum<IsNullable, String> {
+
+        @XmlEnumValue(VALUE_IS_NULLABLE_YES)
+        YES(VALUE_IS_NULLABLE_YES),
+
+        @XmlEnumValue(VALUE_IS_NULLABLE_NO)
+        NO(VALUE_IS_NULLABLE_NO),
+
+        @XmlEnumValue(VALUE_IS_NULLABLE_EMPTY)
+        EMPTY(VALUE_IS_NULLABLE_EMPTY);
+
+        /**
+         * Returns the value whose {@link #rawValue() rawValue} matches to specified value.
+         *
+         * @param rawValue the {@code rawValue} to match.
+         * @return a matched value.
+         */
+        public static IsNullable valueOfRawValue(final String rawValue) {
+            return FieldEnums.valueOfRawValue(IsNullable.class, rawValue);
+        }
+
+        IsNullable(final String rawValue) {
+            this.rawValue = Objects.requireNonNull(rawValue, "rawValue is null");
+        }
+
+        @Override
+        public String rawValue() {
+            return rawValue;
+        }
+
+        private final String rawValue;
+    }
+
+    @Override
+    public void retrieveChildren(final Context context) throws SQLException {
+        // no children
+    }
+
+    @Override
+    public UDT extractParent() {
+        return UDT.builder()
+                .typeCat(getTypeCat())
+                .typeSchem(getTypeSchem())
+                .typeName(getTypeName())
+                .build();
+    }
+
+    public Nullable getNullableAsEnum() {
+        return Nullable.valueOfRawValue(getNullable());
+    }
+
+    public void setNullableAsEnum(final Nullable nullableAsEnum) {
+        setNullable(
+                Objects.requireNonNull(nullableAsEnum, "nullableAsEnum is null")
+                        .rawValue()
+        );
+    }
+
+    public IsNullable getIsNullableAsEnum() {
+        return IsNullable.valueOfRawValue(getIsNullable());
+    }
+
+    public void setIsNullableAsEnum(final IsNullable isNullableAsEnum) {
+        setIsNullable(
+                Objects.requireNonNull(isNullableAsEnum, "isNullableAsEnum is null")
+                        .rawValue()
+        );
     }
 
     @XmlElement(nillable = true, required = true)
@@ -106,32 +182,32 @@ public class Attribute
     @Label("TYPE_SCHEM")
     private String typeSchem;
 
-    @XmlElement(required = true)
-    @NotBlank
+    @XmlElement(nillable = false, required = true)
     @Label("TYPE_NAME")
     private String typeName;
 
-    @XmlElement(required = true)
+    @XmlElement(nillable = false, required = true)
     @Label("ATTR_NAME")
     private String attrName;
 
-    @XmlElement(required = true)
+    @XmlElement(nillable = false, required = true)
     @Label("DATA_TYPE")
     private int dataType;
 
-    @XmlElement(required = true)
+    @XmlElement(nillable = false, required = true)
     @Label("ATTR_TYPE_NAME")
     private String attrTypeName;
 
-    @XmlElement(required = true)
+    @XmlElement(nillable = false, required = true)
     @Label("ATTR_SIZE")
     private int attrSize;
 
-    @XmlElement(required = true)
+    @XmlElement(nillable = true, required = true)
+    @NullableBySpecification
     @Label("DECIMAL_DIGITS")
     private Integer decimalDigits;
 
-    @XmlElement(required = true)
+    @XmlElement(nillable = false, required = true)
     @Label("NUM_PREC_RADIX")
     private int numPrecRadix;
 
@@ -139,55 +215,55 @@ public class Attribute
     @Label("NULLABLE")
     private int nullable;
 
-    @XmlElement(required = true, nillable = true)
+    @XmlElement(nillable = true, required = true)
     @NullableBySpecification
     @Label("REMARKS")
     private String remarks;
 
-    @XmlElement(required = true, nillable = true)
+    @XmlElement(nillable = true, required = true)
     @NullableBySpecification
     @Label("ATTR_DEF")
     private String attrDef;
 
     @XmlElement(nillable = true, required = true)
-    @Unused
+    @NotUsedBySpecification
     @Label("SQL_DATA_TYPE")
     private Integer sqlDataType;
 
-    @XmlElement(required = true, nillable = true)
-    @Unused
+    @XmlElement(nillable = true, required = true)
+    @NotUsedBySpecification
     @Label("SQL_DATETIME_SUB")
     private Integer sqlDatetimeSub;
 
-    @XmlElement(required = true)
+    @XmlElement(nillable = false, required = true)
     @Label("CHAR_OCTET_LENGTH")
     private int charOctetLength;
 
-    @XmlElement(required = true)
+    @XmlElement(nillable = false, required = true)
     @Label("ORDINAL_POSITION")
     private int ordinalPosition;
 
-    @XmlElement(required = true)
+    @XmlElement(nillable = false, required = true)
     @Label("IS_NULLABLE")
     private String isNullable;
 
-    @XmlElement(required = true, nillable = true)
+    @XmlElement(nillable = true, required = true)
     @NullableBySpecification
     @Label("SCOPE_CATALOG")
     private String scopeCatalog;
 
-    @XmlElement(required = true, nillable = true)
+    @XmlElement(nillable = true, required = true)
     @NullableBySpecification
     @Label("SCOPE_SCHEMA")
     private String scopeSchema;
 
-    @XmlElement(required = true, nillable = true)
+    @XmlElement(nillable = true, required = true)
     @NullableBySpecification
     @Label("SCOPE_TABLE")
     private String scopeTable;
 
-    @XmlElement(required = true, nillable = true)
+    @XmlElement(nillable = true, required = true)
     @NullableBySpecification
     @Label("SOURCE_DATA_TYPE")
-    private Short sourceDataType;
+    private Integer sourceDataType;
 }

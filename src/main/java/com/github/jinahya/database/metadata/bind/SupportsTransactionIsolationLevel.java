@@ -20,6 +20,11 @@ package com.github.jinahya.database.metadata.bind;
  * #L%
  */
 
+import lombok.AccessLevel;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+import lombok.experimental.SuperBuilder;
+
 import javax.xml.bind.annotation.XmlAttribute;
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlValue;
@@ -28,8 +33,6 @@ import java.sql.SQLException;
 import java.util.Collection;
 import java.util.Objects;
 
-import static java.util.Objects.requireNonNull;
-
 /**
  * A class for binding results of {@link DatabaseMetaData#supportsTransactionIsolationLevel(int)} method.
  *
@@ -37,8 +40,13 @@ import static java.util.Objects.requireNonNull;
  * @see Context#supportsTransactionIsolationLevel(int)
  */
 @XmlRootElement
+@Data
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
+@SuperBuilder(toBuilder = true)
 public class SupportsTransactionIsolationLevel
         implements MetadataType {
+
+    private static final long serialVersionUID = -2241618224708597472L;
 
     /**
      * Invokes {@link Context#supportsTransactionIsolationLevel(int)} method for all transaction isolation levels
@@ -49,62 +57,27 @@ public class SupportsTransactionIsolationLevel
      * @param <C>        the type of {@code collection}
      * @return given {@code collection}.
      * @throws SQLException if a database access error occurs.
-     * @see ConnectionTransactionIsolationLevel
+     * @see TransactionIsolationLevel
      */
     public static <C extends Collection<? super SupportsTransactionIsolationLevel>> C getAllInstances(
             final Context context, final C collection)
             throws SQLException {
-        requireNonNull(context, "context is null");
-        requireNonNull(collection, "collection is null");
-        for (final ConnectionTransactionIsolationLevel value : ConnectionTransactionIsolationLevel.values()) {
-            collection.add(context.supportsTransactionIsolationLevel(value.getRawValue()));
+        Objects.requireNonNull(context, "context is null");
+        Objects.requireNonNull(collection, "collection is null");
+        for (final TransactionIsolationLevel value : TransactionIsolationLevel.values()) {
+            collection.add(context.supportsTransactionIsolationLevel(value.rawValue()));
         }
         return collection;
     }
 
-    /**
-     * Creates a new instance.
-     */
-    public SupportsTransactionIsolationLevel() {
-        super();
-    }
-
     @Override
-    public String toString() {
-        return super.toString() + '{'
-               + "level=" + level
-               + ",value=" + value
-               + '}';
+    public void retrieveChildren(Context context) throws SQLException {
+        // no children
     }
 
-    @Override
-    public boolean equals(final Object obj) {
-        if (this == obj) return true;
-        if (obj == null || getClass() != obj.getClass()) return false;
-        final SupportsTransactionIsolationLevel that = (SupportsTransactionIsolationLevel) obj;
-        return level == that.level
-               && Objects.equals(value, that.value);
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(level, value);
-    }
-
-    public int getLevel() {
-        return level;
-    }
-
-    public void setLevel(final int level) {
-        this.level = level;
-    }
-
-    public Boolean getValue() {
-        return value;
-    }
-
-    public void setValue(final Boolean value) {
-        this.value = value;
+    @XmlAttribute(required = false)
+    public TransactionIsolationLevel getLevelAsEnum() {
+        return TransactionIsolationLevel.valueOfRawValue(getLevel());
     }
 
     @XmlAttribute(required = true)

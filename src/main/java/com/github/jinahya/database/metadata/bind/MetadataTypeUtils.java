@@ -21,15 +21,14 @@ package com.github.jinahya.database.metadata.bind;
  */
 
 import java.lang.reflect.Field;
-
-import static java.util.Objects.requireNonNull;
+import java.util.Objects;
 
 final class MetadataTypeUtils {
 
     static <T extends MetadataType> Object getLabeledValue(final Class<T> clazz, final T instance, final String label) {
-        requireNonNull(clazz, "clazz is null");
-        requireNonNull(instance, "instance is null");
-        requireNonNull(label, "label is null");
+        Objects.requireNonNull(clazz, "clazz is null");
+        Objects.requireNonNull(instance, "instance is null");
+        Objects.requireNonNull(label, "label is null");
         final Field field = Utils.getLabeledField(clazz, label);
         if (field == null) {
             throw new IllegalArgumentException("no field labeled as " + label);

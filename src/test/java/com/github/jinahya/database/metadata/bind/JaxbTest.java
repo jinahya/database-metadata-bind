@@ -21,7 +21,6 @@ package com.github.jinahya.database.metadata.bind;
  */
 
 import lombok.extern.slf4j.Slf4j;
-import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 
@@ -35,6 +34,8 @@ import java.io.IOException;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.function.BiFunction;
+
+import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 
 /**
  * Tests for JAXB.
@@ -73,7 +74,7 @@ class JaxbTest {
 
     @Test
     void JAXBContextNewInstance_DoesNotThrow_PackageName() {
-        Assertions.assertDoesNotThrow(() -> JAXBContext.newInstance(getClass().getPackage().getName()));
+        assertDoesNotThrow(() -> JAXBContext.newInstance(getClass().getPackage().getName()));
     }
 
     @Disabled

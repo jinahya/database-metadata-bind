@@ -20,10 +20,26 @@ package com.github.jinahya.database.metadata.bind;
  * #L%
  */
 
+import lombok.AccessLevel;
+import lombok.Data;
+import lombok.EqualsAndHashCode;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+import lombok.ToString;
+import lombok.experimental.SuperBuilder;
+
+import javax.validation.Valid;
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Positive;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
+import javax.xml.bind.annotation.XmlTransient;
 import java.sql.DatabaseMetaData;
+import java.sql.SQLException;
 import java.util.Collection;
+import java.util.Comparator;
+import java.util.Objects;
 
 /**
  * A class for binding results of
@@ -34,16 +50,23 @@ import java.util.Collection;
  * @see Context#getProcedureColumns(String, String, String, String, Collection)
  */
 @XmlRootElement
-@ChildOf(Procedure.class)
+//@ChildOf__(Procedure.class)
+@Data
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
+@SuperBuilder(toBuilder = true)
 public class ProcedureColumn
-        implements MetadataType {
+        implements MetadataType,
+                   ChildOf<Procedure> {
 
     private static final long serialVersionUID = 3894753719381358829L;
+
+    public static final Comparator<ProcedureColumn> COMPARATOR =
+            Comparator.comparing(ProcedureColumn::extractParent, Procedure.COMPARATOR);
 
     /**
      * Constants for column types of procedure columns.
      *
-     * @see DatabaseMetaData#getFunctionColumns(java.lang.String, java.lang.String, java.lang.String, java.lang.String)
+     * @see DatabaseMetaData#getProcedureColumns(String, String, String, String)
      */
     public enum ColumnType implements IntFieldEnum<ColumnType> {
 
@@ -83,13 +106,13 @@ public class ProcedureColumn
         PROCEDURE_COLUMN_RETURN(DatabaseMetaData.procedureColumnReturn); // 5
 
         /**
-         * Returns the constant whose raw value equals to given. An instance of {@link IllegalArgumentException} will be
-         * thrown if no constant matches.
+         * Returns the constant whose raw value equals to specified raw value. An instance of
+         * {@link IllegalArgumentException} will be thrown if no constant matches.
          *
-         * @param rawValue the raw value
-         * @return the constant whose raw value equals to given.
+         * @param rawValue the raw value.
+         * @return the constant whose raw value equals to {@code rawValue}.
          */
-        public static ColumnType valueOf(final int rawValue) {
+        public static ColumnType valueOfRawValue(final int rawValue) {
             return IntFieldEnums.valueOfRawValue(ColumnType.class, rawValue);
         }
 
@@ -103,206 +126,37 @@ public class ProcedureColumn
          * @return the raw value of this constant.
          */
         @Override
-        public int getRawValue() {
+        public int rawValue() {
             return rawValue;
         }
 
         private final int rawValue;
     }
 
-    /**
-     * Creates a new instance.
-     */
-    public ProcedureColumn() {
-        super();
+    @Override
+    public void retrieveChildren(final Context context) throws SQLException {
+        // no children.
     }
 
     @Override
-    public String toString() {
-        return super.toString() + '{'
-               + "procedureCat=" + procedureCat
-               + ",procedureSchem=" + procedureSchem
-               + ",procedureName=" + procedureName
-               + ",columnName=" + columnName
-               + ",columnType=" + columnType
-               + ",dataType=" + dataType
-               + ",typeName=" + typeName
-               + ",precision=" + precision
-               + ",length=" + length
-               + ",scale=" + scale
-               + ",radix=" + radix
-               + ",nullable=" + nullable
-               + ",remarks=" + remarks
-               + ",columnDef=" + columnDef
-               + ",sqlDataType=" + sqlDataType
-               + ",sqlDatetimeSub=" + sqlDatetimeSub
-               + ",charOctetLength=" + charOctetLength
-               + ",ordinalPosition=" + ordinalPosition
-               + ",isNullable=" + isNullable
-               + ",specificName=" + specificName
-               + '}';
+    public Procedure extractParent() {
+        return Procedure.builder()
+                .procedureCat(getProcedureCat())
+                .procedureSchem(getProcedureSchem())
+                .procedureName(getProcedureName())
+                .build();
     }
 
-    public String getProcedureCat() {
-        return procedureCat;
+    public ColumnType getColumnTypeAsEnum() {
+        return ColumnType.valueOfRawValue(getColumnType());
     }
 
-    public void setProcedureCat(final String procedureCat) {
-        this.procedureCat = procedureCat;
+    public void setColumnTypeAsEnum(final ColumnType columnTypeAsEnum) {
+        Objects.requireNonNull(columnTypeAsEnum, "columnTypeAsEnum is null");
+        setColumnType(columnTypeAsEnum.rawValue);
     }
 
-    public String getProcedureSchem() {
-        return procedureSchem;
-    }
-
-    public void setProcedureSchem(final String procedureSchem) {
-        this.procedureSchem = procedureSchem;
-    }
-
-    public String getProcedureName() {
-        return procedureName;
-    }
-
-    public void setProcedureName(final String procedureName) {
-        this.procedureName = procedureName;
-    }
-
-    public String getColumnName() {
-        return columnName;
-    }
-
-    public void setColumnName(final String columnName) {
-        this.columnName = columnName;
-    }
-
-    public short getColumnType() {
-        return columnType;
-    }
-
-    public void setColumnType(final short columnType) {
-        this.columnType = columnType;
-    }
-
-    public int getDataType() {
-        return dataType;
-    }
-
-    public void setDataType(final int dataType) {
-        this.dataType = dataType;
-    }
-
-    public String getTypeName() {
-        return typeName;
-    }
-
-    public void setTypeName(final String typeName) {
-        this.typeName = typeName;
-    }
-
-    public int getPrecision() {
-        return precision;
-    }
-
-    public void setPrecision(final int precision) {
-        this.precision = precision;
-    }
-
-    public int getLength() {
-        return length;
-    }
-
-    public void setLength(final int length) {
-        this.length = length;
-    }
-
-    public Short getScale() {
-        return scale;
-    }
-
-    public void setScale(final Short scale) {
-        this.scale = scale;
-    }
-
-    public short getRadix() {
-        return radix;
-    }
-
-    public void setRadix(final short radix) {
-        this.radix = radix;
-    }
-
-    public short getNullable() {
-        return nullable;
-    }
-
-    public void setNullable(final short nullable) {
-        this.nullable = nullable;
-    }
-
-    public String getRemarks() {
-        return remarks;
-    }
-
-    public void setRemarks(final String remarks) {
-        this.remarks = remarks;
-    }
-
-    public String getColumnDef() {
-        return columnDef;
-    }
-
-    public void setColumnDef(final String columnDef) {
-        this.columnDef = columnDef;
-    }
-
-    public Integer getSqlDataType() {
-        return sqlDataType;
-    }
-
-    public void setSqlDataType(final Integer sqlDataType) {
-        this.sqlDataType = sqlDataType;
-    }
-
-    public Integer getSqlDatetimeSub() {
-        return sqlDatetimeSub;
-    }
-
-    public void setSqlDatetimeSub(final Integer sqlDatetimeSub) {
-        this.sqlDatetimeSub = sqlDatetimeSub;
-    }
-
-    public Integer getCharOctetLength() {
-        return charOctetLength;
-    }
-
-    public void setCharOctetLength(final Integer charOctetLength) {
-        this.charOctetLength = charOctetLength;
-    }
-
-    public int getOrdinalPosition() {
-        return ordinalPosition;
-    }
-
-    public void setOrdinalPosition(final int ordinalPosition) {
-        this.ordinalPosition = ordinalPosition;
-    }
-
-    public String getIsNullable() {
-        return isNullable;
-    }
-
-    public void setIsNullable(final String isNullable) {
-        this.isNullable = isNullable;
-    }
-
-    public String getSpecificName() {
-        return specificName;
-    }
-
-    public void setSpecificName(final String specificName) {
-        this.specificName = specificName;
-    }
-
+    // -----------------------------------------------------------------------------------------------------------------
     @XmlElement(required = true, nillable = true)
     @NullableBySpecification
     @Label("PROCEDURE_CAT")
@@ -317,13 +171,14 @@ public class ProcedureColumn
     @Label("PROCEDURE_NAME")
     private String procedureName;
 
-    @XmlElement(required = true)
+    // -----------------------------------------------------------------------------------------------------------------
+    @XmlElement(nillable = false, required = true)
     @Label("COLUMN_NAME")
     private String columnName;
 
-    @XmlElement(required = true)
+    @XmlElement(nillable = false, required = true)
     @Label("COLUMN_TYPE")
-    private short columnType;
+    private int columnType;
 
     @XmlElement(required = true)
     @Label("DATA_TYPE")
@@ -333,34 +188,35 @@ public class ProcedureColumn
     @Label("TYPE_NAME")
     private String typeName;
 
-    @XmlElement(required = true)
+    @XmlElement(nillable = true, required = true)
+    @NullableBySpecification
     @Label("PRECISION")
-    private int precision;
+    private Integer precision;
 
-    @XmlElement(required = true)
+    @XmlElement(nillable = false, required = true)
     @Label("LENGTH")
     private int length;
 
     // https://issues.apache.org/jira/browse/DERBY-7103
-    @XmlElement(required = true, nillable = true)
+    @XmlElement(nillable = true, required = true)
     @NullableBySpecification
     @Label("SCALE")
-    private Short scale;
+    private Integer scale;
 
-    @XmlElement(required = true)
+    @XmlElement(nillable = false, required = true)
     @Label("RADIX")
-    private short radix;
+    private int radix;
 
-    @XmlElement(required = true)
+    @XmlElement(nillable = false, required = true)
     @Label("NULLABLE")
-    private short nullable;
+    private int nullable;
 
     @XmlElement(required = true, nillable = true)
     @NullableByVendor("derby") // https://issues.apache.org/jira/browse/DERBY-7101
     @Label("REMARKS")
     private String remarks;
 
-    @XmlElement(required = true, nillable = true)
+    @XmlElement(nillable = true, required = true)
     @NullableBySpecification
     @Label("COLUMN_DEF")
     private String columnDef;
@@ -375,20 +231,32 @@ public class ProcedureColumn
     @Label("SQL_DATETIME_SUB")
     private Integer sqlDatetimeSub;
 
-    @XmlElement(required = true, nillable = true)
+    @XmlElement(nillable = true, required = true)
     @NullableBySpecification
     @Label("CHAR_OCTET_LENGTH")
     private Integer charOctetLength;
 
     @XmlElement(required = true)
+    @Positive // > A value of 0 is returned if this row describes the procedure's return value.
     @Label("ORDINAL_POSITION")
     private int ordinalPosition;
 
-    @XmlElement(required = true)
+    @XmlElement(nillable = false, required = true)
+    @NotNull
     @Label("IS_NULLABLE")
     private String isNullable;
 
-    @XmlElement(required = true)
+    @XmlElement(nillable = false, required = true)
+    @NotNull
     @Label("SPECIFIC_NAME")
     private String specificName;
+
+    // -----------------------------------------------------------------------------------------------------------------
+    @XmlTransient
+    @Valid
+    @Setter(AccessLevel.NONE)
+    @Getter(AccessLevel.NONE)
+    @EqualsAndHashCode.Exclude
+    @ToString.Exclude
+    private Procedure procedure;
 }

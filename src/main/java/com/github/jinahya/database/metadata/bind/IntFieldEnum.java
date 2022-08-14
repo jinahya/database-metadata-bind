@@ -21,7 +21,11 @@ package com.github.jinahya.database.metadata.bind;
  */
 
 /**
+ * An interface for enum of int raw values.
+ *
  * @author Jin Kwon &lt;onacit at wemakeprice.com&gt;
+ * @see IntFieldEnums
+ * @see FieldEnum
  */
 interface IntFieldEnum<E extends Enum<E> & IntFieldEnum<E>> {
 
@@ -30,5 +34,5 @@ interface IntFieldEnum<E extends Enum<E> & IntFieldEnum<E>> {
      *
      * @return the raw value of this constant.
      */
-    int getRawValue();
+    int rawValue();
 }

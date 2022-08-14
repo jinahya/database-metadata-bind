@@ -21,11 +21,13 @@ package com.github.jinahya.database.metadata.bind;
  */
 
 import lombok.AccessLevel;
+import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
+import lombok.experimental.SuperBuilder;
 
 import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
@@ -33,12 +35,12 @@ import javax.xml.bind.annotation.XmlAttribute;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlElementRef;
 import javax.xml.bind.annotation.XmlRootElement;
-import javax.xml.bind.annotation.XmlSchemaType;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Comparator;
 import java.util.List;
-
-import static java.util.Objects.requireNonNull;
+import java.util.Objects;
 
 /**
  * A class for binding a result of {@link java.sql.DatabaseMetaData#getSchemas(java.lang.String, java.lang.String)}
@@ -49,61 +51,103 @@ import static java.util.Objects.requireNonNull;
  * @see Context#getSchemas(String, String, Collection)
  */
 @XmlRootElement
-@ParentOf(Function.class)
-@ParentOf(Procedure.class)
-@ParentOf(Table.class)
 @ParentOf(UDT.class)
-@ChildOf(Catalog.class)
-@Setter
-@Getter
-@EqualsAndHashCode
-@ToString(callSuper = true)
-@NoArgsConstructor
+@ParentOf(Table.class)
+@ParentOf(Procedure.class)
+@ParentOf(Function.class)
+@Data
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
+@SuperBuilder(toBuilder = true)
 public class Schema
-        implements MetadataType {
+        implements MetadataType,
+                   ChildOf<Catalog> {
 
     private static final long serialVersionUID = 7457236468401244963L;
 
-    // ---------------------------------------------------------------------------------------- TABLE_SCHEM / tableSchem
-    public static final String COLUMN_LABEL_TABLE_SCHEM = "TABLE_SCHEM";
+    public static final Comparator<Schema> COMPARATOR =
+            Comparator.comparing(Schema::extractParent, Comparator.nullsFirst(Catalog.COMPARATOR))
+                    .thenComparing(Schema::getTableSchem);
 
-    public static final String ATTRIBUTE_NAME_TABLE_SCHEM = "tableSchem";
+    public static final String LABEL_TABLE_CATALOG = "TABLE_CATALOG";
 
-    // ------------------------------------------------------------------------------------ TABLE_CATALOG / tableCatalog
-    public static final String COLUMN_LABEL_TABLE_CATALOG = "TABLE_CATALOG";
+    public static final String LABEL_TABLE_SCHEM = "TABLE_SCHEM";
 
-    public static final String ATTRIBUTE_NAME_TABLE_CATALOG = "tableCatalog";
-
-    /**
-     * Creates a new instance with specified property values.
-     *
-     * @param tableCatalog a value for {@code tableCatalog} property.
-     * @param tableSchem   a value for {@code tableSchem} property.
-     * @return a new instance of {@code tableCatalog} and {@code tableSchem}.
-     */
-    public static Schema of(final String tableCatalog, final String tableSchem) {
-        final Schema instance = new Schema();
-        instance.setTableCatalog(tableCatalog);
-        instance.setTableSchem(tableSchem);
-        return instance;
-    }
+    public static final String VALUE_TABLE_SCHEM_EMPTY = "";
 
     /**
-     * Creates a new virtual instance with following property values.
+     * Creates a new <em>virtual</em> instance with specified {@code tableCat} property value.
      *
-     * @param tableCatalog a value for {@code tableCatalog} property.
-     * @return a new virtual instance.
+     * @param tableCatalog the value for {@code tableCatalog} property.
+     * @return a new <em>virtual</em> instance.
      */
     public static Schema newVirtualInstance(final String tableCatalog) {
-        requireNonNull(tableCatalog, "tableCatalog is null");
-        final Schema instance = of(tableCatalog, "");
-        instance.virtual = Boolean.TRUE;
-        return instance;
+        Objects.requireNonNull(tableCatalog, "tableCatalog is null");
+        return builder()
+                .virtual(Boolean.TRUE)
+                .tableCatalog(tableCatalog)
+                .tableSchem(VALUE_TABLE_SCHEM_EMPTY)
+                .build();
     }
 
-    public static Schema newVirtualInstance(final Catalog catalog) {
-        requireNonNull(catalog, "catalog is null");
-        return newVirtualInstance(catalog.getTableCat());
+    /**
+     * Creates a new <em>virtual</em> instance whose {@code tableCat} property is {@value Catalog#VALUE_TABLE_CAT_EMPTY}
+     * and {@code tableSchem} property is {@value #VALUE_TABLE_SCHEM_EMPTY}.
+     *
+     * @return a new <em>virtual</em> instance.
+     */
+    public static Schema newVirtualInstance() {
+        return newVirtualInstance(Catalog.VALUE_TABLE_CAT_EMPTY);
+    }
+
+    @Override
+    public void retrieveChildren(final Context context) throws SQLException {
+        {
+            context.getFunctions(getTableCatalog(), getTableSchem(), "%", getFunctions());
+            for (final Function function : getFunctions()) {
+                function.retrieveChildren(context);
+            }
+        }
+        {
+            context.getProcedures(getTableCatalog(), getTableSchem(), "%", getProcedures());
+            for (final Procedure procedure : getProcedures()) {
+                procedure.retrieveChildren(context);
+            }
+        }
+        {
+            context.getSuperTables(getTableCatalog(), getTableSchem(), "%", getSuperTables());
+            for (final SuperTable superTable : getSuperTables()) {
+                superTable.retrieveChildren(context);
+            }
+        }
+        {
+            context.getSuperTypes(getTableCatalog(), getTableSchem(), "%", getSuperTypes());
+            for (final SuperType superType : getSuperTypes()) {
+                superType.retrieveChildren(context);
+            }
+        }
+        {
+            context.getTables(getTableCatalog(), getTableSchem(), "%", null, getTables());
+            for (final Table table : getTables()) {
+                table.retrieveChildren(context);
+            }
+        }
+        {
+            context.getUDTs(getTableCatalog(), getTableSchem(), "%", null, getUDTs());
+            for (final UDT udt : getUDTs()) {
+                udt.retrieveChildren(context);
+            }
+        }
+    }
+
+    @Override
+    public Catalog extractParent() {
+        return Catalog.builder()
+                .tableCat(getTableCatalog())
+                .build();
+    }
+
+    public boolean isVirtual() {
+        return virtual != null && virtual;
     }
 
     public List<Function> getFunctions() {
@@ -120,6 +164,20 @@ public class Schema
         return procedures;
     }
 
+    public List<SuperTable> getSuperTables() {
+        if (superTables == null) {
+            superTables = new ArrayList<>();
+        }
+        return superTables;
+    }
+
+    public List<SuperType> getSuperTypes() {
+        if (superTypes == null) {
+            superTypes = new ArrayList<>();
+        }
+        return superTypes;
+    }
+
     public List<Table> getTables() {
         if (tables == null) {
             tables = new ArrayList<>();
@@ -134,23 +192,23 @@ public class Schema
         return UDTs;
     }
 
+    // -----------------------------------------------------------------------------------------------------------------
     @XmlAttribute(required = false)
     @Setter(AccessLevel.NONE)
     @Getter(AccessLevel.NONE)
     private Boolean virtual;
 
-    @XmlElement(required = true, nillable = true)
-    @XmlSchemaType(name = "token")
+    @XmlElement(nillable = true, required = true)
     @NullableBySpecification
-    @Label(COLUMN_LABEL_TABLE_CATALOG)
+    @Label(LABEL_TABLE_CATALOG)
     private String tableCatalog;
 
-    @XmlElement(required = true)
-    @XmlSchemaType(name = "token")
+    @XmlElement(nillable = false, required = true)
     @NotNull
-    @Label(COLUMN_LABEL_TABLE_SCHEM)
+    @Label(LABEL_TABLE_SCHEM)
     private String tableSchem;
 
+    // -----------------------------------------------------------------------------------------------------------------
     @XmlElementRef
     @Setter(AccessLevel.NONE)
     @Getter(AccessLevel.NONE)
@@ -164,6 +222,20 @@ public class Schema
     @EqualsAndHashCode.Exclude
     @ToString.Exclude
     private List<@Valid @NotNull Procedure> procedures;
+
+    @XmlElementRef
+    @Setter(AccessLevel.NONE)
+    @Getter(AccessLevel.NONE)
+    @EqualsAndHashCode.Exclude
+    @ToString.Exclude
+    private List<@Valid @NotNull SuperTable> superTables;
+
+    @XmlElementRef
+    @Setter(AccessLevel.NONE)
+    @Getter(AccessLevel.NONE)
+    @EqualsAndHashCode.Exclude
+    @ToString.Exclude
+    private List<@Valid @NotNull SuperType> superTypes;
 
     @XmlElementRef
     @Setter(AccessLevel.NONE)

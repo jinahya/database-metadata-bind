@@ -20,6 +20,13 @@ package com.github.jinahya.database.metadata.bind;
  * #L%
  */
 
+import lombok.AccessLevel;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+import lombok.experimental.SuperBuilder;
+
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Positive;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
 import java.sql.DatabaseMetaData;
@@ -27,17 +34,19 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
-
-import static java.util.Objects.requireNonNull;
+import java.util.Objects;
 
 /**
- * A class for binding results of
+ * A class for binding the result of
  * {@link DatabaseMetaData#getCrossReference(String, String, String, String, String, String)} method.
  *
  * @author Jin Kwon &lt;jinahya_at_gmail.com&gt;
  * @see Context#getCrossReference(String, String, String, String, String, String, Collection)
  */
 @XmlRootElement
+@Data
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
+@SuperBuilder(toBuilder = true)
 public class CrossReference
         implements MetadataType {
 
@@ -46,220 +55,147 @@ public class CrossReference
     public static <C extends Collection<? super CrossReference>> C getAllInstance(final Context context,
                                                                                   final C collection)
             throws SQLException {
-        requireNonNull(context, "context is null");
-        requireNonNull(collection, "collection is null");
+        Objects.requireNonNull(context, "context is null");
+        Objects.requireNonNull(collection, "collection is null");
         final List<Table> tables = context.getTables(null, null, "%", null, new ArrayList<>());
         for (final Table parentTable : tables) {
             for (final Table foreignTable : tables) {
-                context.getCrossReference(parentTable, foreignTable, collection);
+                context.getCrossReference(
+                        parentTable.getTableCat(),
+                        parentTable.getTableSchem(),
+                        parentTable.getTableName(),
+                        foreignTable.getTableCat(),
+                        foreignTable.getTableSchem(),
+                        foreignTable.getTableName(),
+                        collection
+                );
             }
         }
         return collection;
     }
 
-    // ---------------------------------------------------------------------------------------- UPDATE_RULE / updateRule
     public static final String COLUMN_NAME_UPDATE_RULE = "UPDATE_RULE";
 
     public static final String ATTRIBUTE_NAME_UPDATE_RULE = "updateRule";
 
-    /**
-     * Creates a new instance.
-     */
-    public CrossReference() {
-        super();
-    }
-
     @Override
-    public String toString() {
-        return super.toString() + '{'
-               + "pktableCat=" + pktableCat
-               + ",pktableSchem=" + pktableSchem
-               + ",pktableName=" + pktableName
-               + ",pkcolumnName=" + pkcolumnName
-               + ",fktableCat=" + fktableCat
-               + ",fktableSchem=" + fktableSchem
-               + ",fktableName=" + fktableName
-               + ",fkcolumnName=" + fkcolumnName
-               + ",keySeq=" + keySeq
-               + ",updateRule=" + updateRule
-               + ",deleteRule=" + deleteRule
-               + ",fkName=" + fkName
-               + ",pkName=" + pkName
-               + ",deferrability=" + deferrability
-               + '}';
+    public void retrieveChildren(final Context context) throws SQLException {
+        // no chidren.
     }
 
-    public String getPktableCat() {
-        return pktableCat;
+    // -----------------------------------------------------------------------------------------------------------------
+    public UpdateRule getUpdateRuleAsEnum() {
+        return UpdateRule.valueOfRawValue(getUpdateRule());
     }
 
-    public void setPktableCat(final String pktableCat) {
-        this.pktableCat = pktableCat;
+    public void setUpdateRuleAsEnum(UpdateRule updateRuleAsEnum) {
+        setUpdateRule(Objects.requireNonNull(updateRuleAsEnum, "updateRuleAsEnum is null").rawValue());
     }
 
-    public String getPktableSchem() {
-        return pktableSchem;
+    public ImportedKeyRule getDeleteRuleAsEnum() {
+        return ImportedKeyRule.valueOfRawValue(getDeleteRule());
     }
 
-    public void setPktableSchem(final String pktableSchem) {
-        this.pktableSchem = pktableSchem;
+    public void setDeleteRuleAsEnum(final ImportedKeyRule deleteRuleAsEnum) {
+        setDeleteRule(Objects.requireNonNull(deleteRuleAsEnum, "deleteRuleAsEnum is null").rawValue());
     }
 
-    public String getPktableName() {
-        return pktableName;
+    public ImportedKeyDeferrability getDeferrabilityAsEnum() {
+        return ImportedKeyDeferrability.valueOfRawValue(getDeferrability());
     }
 
-    public void setPktableName(final String pktableName) {
-        this.pktableName = pktableName;
+    public void setDeferrabilityAsEnum(final ImportedKeyDeferrability deferrabilityAsEnum) {
+        setDeferrability(Objects.requireNonNull(deferrabilityAsEnum, "deferrabilityAsEnum is null").rawValue());
     }
 
-    public String getPkcolumnName() {
-        return pkcolumnName;
+    // -----------------------------------------------------------------------------------------------------------------
+    public Column extractPkColumn() {
+        return Column.builder()
+                .tableCat(getPktableCat())
+                .tableSchem(getPktableSchem())
+                .tableName(getPktableName())
+                .columnName(getPkcolumnName())
+                .build();
     }
 
-    public void setPkcolumnName(final String pkcolumnName) {
-        this.pkcolumnName = pkcolumnName;
+    public Column extractFkColumn() {
+        return Column.builder()
+                .tableCat(getFktableCat())
+                .tableSchem(getFktableSchem())
+                .tableName(getFktableName())
+                .columnName(getFkcolumnName())
+                .build();
     }
 
-    public String getFktableCat() {
-        return fktableCat;
-    }
-
-    public void setFktableCat(final String fktableCat) {
-        this.fktableCat = fktableCat;
-    }
-
-    public String getFktableSchem() {
-        return fktableSchem;
-    }
-
-    public void setFktableSchem(final String fktableSchem) {
-        this.fktableSchem = fktableSchem;
-    }
-
-    public String getFktableName() {
-        return fktableName;
-    }
-
-    public void setFktableName(final String fktableName) {
-        this.fktableName = fktableName;
-    }
-
-    public String getFkcolumnName() {
-        return fkcolumnName;
-    }
-
-    public void setFkcolumnName(final String fkcolumnName) {
-        this.fkcolumnName = fkcolumnName;
-    }
-
-    public short getKeySeq() {
-        return keySeq;
-    }
-
-    public void setKeySeq(final short keySeq) {
-        this.keySeq = keySeq;
-    }
-
-    public short getUpdateRule() {
-        return updateRule;
-    }
-
-    public void setUpdateRule(final short updateRule) {
-        this.updateRule = updateRule;
-    }
-
-    public short getDeleteRule() {
-        return deleteRule;
-    }
-
-    public void setDeleteRule(final short deleteRule) {
-        this.deleteRule = deleteRule;
-    }
-
-    public String getFkName() {
-        return fkName;
-    }
-
-    public void setFkName(final String fkName) {
-        this.fkName = fkName;
-    }
-
-    public String getPkName() {
-        return pkName;
-    }
-
-    public void setPkName(final String pkName) {
-        this.pkName = pkName;
-    }
-
-    public short getDeferrability() {
-        return deferrability;
-    }
-
-    public void setDeferrability(final short deferrability) {
-        this.deferrability = deferrability;
-    }
-
-    @XmlElement(required = true, nillable = true)
+    // -----------------------------------------------------------------------------------------------------------------
+    @XmlElement(nillable = true, required = true)
     @NullableBySpecification
     @Label("PKTABLE_CAT")
     private String pktableCat;
 
-    @XmlElement(required = true, nillable = true)
+    @XmlElement(nillable = true, required = true)
     @NullableBySpecification
     @Label("PKTABLE_SCHEM")
     private String pktableSchem;
 
-    @XmlElement(required = true)
+    @XmlElement(nillable = false, required = true)
+    @NotNull
     @Label("PKTABLE_NAME")
     private String pktableName;
 
-    @XmlElement(required = true)
+    @XmlElement(nillable = false, required = true)
+    @NotNull
     @Label("PKCOLUMN_NAME")
     private String pkcolumnName;
 
-    @XmlElement(required = true, nillable = true)
+    // -----------------------------------------------------------------------------------------------------------------
+    @XmlElement(nillable = true, required = true)
     @NullableBySpecification
     @Label("FKTABLE_CAT")
     private String fktableCat;
 
-    @XmlElement(required = true, nillable = true)
+    @XmlElement(nillable = true, required = true)
     @NullableBySpecification
     @Label("FKTABLE_NAME")
     private String fktableSchem;
 
-    @XmlElement(required = true)
+    @XmlElement(nillable = false, required = true)
+    @NotNull
     @Label("FKTABLE_NAME")
     private String fktableName;
 
-    @XmlElement(required = true)
+    @XmlElement(nillable = false, required = true)
+    @NotNull
     @Label("FKCOLUMN_NAME")
     private String fkcolumnName;
 
-    @XmlElement(required = true)
+    // -----------------------------------------------------------------------------------------------------------------
+    @Positive
+    @XmlElement(nillable = false, required = true)
+    @Positive
     @Label("FKCOLUMN_NAME")
-    private short keySeq;
+    private int keySeq;
 
-    @XmlElement(required = true)
+    @XmlElement(nillable = false, required = true)
     @Label("UPDATE_RULE")
-    private short updateRule;
+    private int updateRule;
 
-    @XmlElement(required = true)
+    @XmlElement(nillable = false, required = true)
     @Label("DELETE_RULE")
-    private short deleteRule;
+    private int deleteRule;
 
-    @XmlElement(required = true, nillable = true)
+    @XmlElement(nillable = true, required = true)
     @NullableBySpecification
     @Label("FK_NAME")
     private String fkName;
 
-    @XmlElement(required = true, nillable = true)
+    @XmlElement(nillable = true, required = true)
     @NullableBySpecification
     @Label("PK_NAME")
     private String pkName;
 
-    @XmlElement(required = true)
+    @XmlElement(nillable = false, required = true)
+    @Positive
     @Label("DEFERRABILITY")
-    private short deferrability;
+    private int deferrability;
 }

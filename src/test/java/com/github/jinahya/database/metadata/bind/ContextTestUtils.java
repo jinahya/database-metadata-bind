@@ -26,10 +26,11 @@ import javax.xml.bind.JAXBException;
 import java.io.File;
 import java.nio.file.Paths;
 import java.sql.SQLException;
+import java.sql.SQLFeatureNotSupportedException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
-import static java.util.Objects.requireNonNull;
 import static org.assertj.core.api.Assertions.assertThat;
 
 /**
@@ -48,7 +49,7 @@ final class ContextTestUtils {
     }
 
     static void writeDeletesAreDetected(final Context context) throws SQLException, JAXBException {
-        requireNonNull(context, "context is null");
+        Objects.requireNonNull(context, "context is null");
         final List<DeletesAreDetected> all = DeletesAreDetected.getAllInstances(context, new ArrayList<>());
         assertThat(all)
                 .hasSizeLessThanOrEqualTo(ResultSetType.values().length)
@@ -56,6 +57,39 @@ final class ContextTestUtils {
         final String pathname = TestUtils.getFilenamePrefix(context) + " - deletesAreDetected.xml";
         final File target = Paths.get("target", pathname).toFile();
         Wrapper.marshalFormatted(DeletesAreDetected.class, all, target);
+    }
+
+    static void writeFunctions(final Context context) throws SQLException, JAXBException {
+        assert context != null;
+        final List<Function> functions;
+        try {
+            functions = context.getFunctions(null, null, "%", new ArrayList<>());
+        } catch (final SQLFeatureNotSupportedException sqlfnse) {
+            log.error("not supported; getFunctions", sqlfnse);
+            return;
+        }
+        final String pathname = TestUtils.getFilenamePrefix(context) + " - functions.xml";
+        final File target = Paths.get("target", pathname).toFile();
+        Wrapper.marshalFormatted(Function.class, functions, target);
+    }
+
+    static void writeFunctionColumns(final Context context) throws SQLException, JAXBException {
+        assert context != null;
+        final var productName = context.databaseMetaData.getDatabaseProductName();
+        if (Objects.equals(productName, "SQLite")) {
+            log.debug("skipping for product name: {}", productName);
+            return;
+        }
+        final List<FunctionColumn> functionColumns;
+        try {
+            functionColumns = context.getFunctionColumns(null, null, "%", "%", new ArrayList<>());
+        } catch (final SQLFeatureNotSupportedException sqlfnse) {
+            log.error("not supported; getFunctionColumns", sqlfnse);
+            return;
+        }
+        final String pathname = TestUtils.getFilenamePrefix(context) + " - functionColumns.xml";
+        final File target = Paths.get("target", pathname).toFile();
+        Wrapper.marshalFormatted(FunctionColumn.class, functionColumns, target);
     }
 
     static void writeInsertsAreDetected(final Context context) throws SQLException, JAXBException {
@@ -128,6 +162,37 @@ final class ContextTestUtils {
         Wrapper.marshalFormatted(OwnUpdatesAreVisible.class, all, target);
     }
 
+    static void writeProcedures(final Context context) throws SQLException, JAXBException {
+        final List<Procedure> procedures;
+        try {
+            procedures = context.getProcedures(null, null, "%", new ArrayList<>());
+        } catch (final SQLFeatureNotSupportedException slqfnse) {
+            log.error("not supported; getProcedures", slqfnse);
+            return;
+        }
+        for (final var procedure : procedures) {
+            assertThat(procedure)
+                    .usingComparator(Procedure.COMPARATOR)
+                    .isEqualTo(procedure);
+            context.getProcedureColumns(
+                    procedure.getProcedureCat(),
+                    procedure.getProcedureSchem(),
+                    procedure.getProcedureName(),
+                    "%",
+                    procedure.getProcedureColumns()
+            );
+            for (final var procedureColumn : procedure.getProcedureColumns()) {
+//                assertThat(procedureColumn)
+//                        .isNotNull()
+//                        .usingComparator(ProcedureColumn.COMPARATOR)
+//                        .isEqualTo(procedureColumn);
+            }
+        }
+        final String pathname = TestUtils.getFilenamePrefix(context) + " - procedures.xml";
+        final File target = Paths.get("target", pathname).toFile();
+        Wrapper.marshalFormatted(Procedure.class, procedures, target);
+    }
+
     static void writeSchemas(final Context context) throws SQLException, JAXBException {
         final List<Schema> schemas = context.getSchemas((String) null, null, new ArrayList<>());
         final String pathname = TestUtils.getFilenamePrefix(context) + " - schemas.xml";
@@ -136,7 +201,7 @@ final class ContextTestUtils {
     }
 
     static void writeSupportsConvert(final Context context) throws SQLException, JAXBException {
-        requireNonNull(context, "context is null");
+        Objects.requireNonNull(context, "context is null");
         final List<SupportsConvert> all = SupportsConvert.getAllInstances(context, new ArrayList<>());
         assertThat(all)
                 .doesNotContainNull();
@@ -146,7 +211,10 @@ final class ContextTestUtils {
     }
 
     static void writeTables(final Context context) throws SQLException, JAXBException {
-        final List<Table> tables = context.getTables(null, null, null, null, new ArrayList<>());
+        final List<Table> tables = context.getTables(null, null, "%", null, new ArrayList<>());
+        for (final var table : tables) {
+            table.retrieveChildren(context);
+        }
         final String pathname = TestUtils.getFilenamePrefix(context) + " - tables.xml";
         final File target = Paths.get("target", pathname).toFile();
         Wrapper.marshalFormatted(Table.class, tables, target);
@@ -170,11 +238,13 @@ final class ContextTestUtils {
     }
 
     static void writeFiles(final Context context) throws SQLException, JAXBException {
-        requireNonNull(context, "context is null");
+        Objects.requireNonNull(context, "context is null");
         writeCatalogs(context);
         writeSupportsConvert(context);
         writeTypeInfo(context);
         writeDeletesAreDetected(context);
+        writeFunctions(context);
+        writeFunctionColumns(context);
         writeInsertsAreDetected(context);
         writeUpdatesAreDetected(context);
         writeOthersDeletesAreVisible(context);
@@ -183,6 +253,7 @@ final class ContextTestUtils {
         writeOwnDeletesAreVisible(context);
         writeOwnInsertsAreVisible(context);
         writeOwnUpdatesAreVisible(context);
+        writeProcedures(context);
         writeSchemas(context);
         writeTables(context);
     }

@@ -25,8 +25,6 @@ import java.util.List;
 import java.util.Objects;
 import java.util.stream.Collectors;
 
-import static java.util.Objects.requireNonNull;
-
 /**
  * A utility class for {@link FieldEnum}.
  *
@@ -34,19 +32,17 @@ import static java.util.Objects.requireNonNull;
  */
 final class FieldEnums {
 
-    static <E extends Enum<E> & FieldEnum<E, T>, T> List<T> rawValues(final Class<E> enumType) {
-        requireNonNull(enumType, "enumType is null");
+    static <E extends Enum<E> & FieldEnum<E, T>, T> List<T> rawValueList(final Class<E> enumType) {
+        Objects.requireNonNull(enumType, "enumType is null");
         return Arrays.stream(enumType.getEnumConstants())
-                .map(FieldEnum::getRawValue)
+                .map(FieldEnum::rawValue)
                 .collect(Collectors.toList());
     }
 
     static <E extends Enum<E> & FieldEnum<E, T>, T> E valueOfRawValue(final Class<E> enumType, final T rawValue) {
-        requireNonNull(enumType, "enumType is null");
-        return Arrays.stream(enumType.getEnumConstants())
-                .filter(e -> Objects.equals(e.getRawValue(), rawValue))
-                .findFirst()
-                .orElseThrow(() -> new IllegalArgumentException("unknown raw value: " + rawValue));
+        Objects.requireNonNull(enumType, "enumType is null");
+        return Arrays.stream(enumType.getEnumConstants()).filter(e -> Objects.equals(e.rawValue(), rawValue))
+                .findFirst().orElseThrow(() -> new IllegalArgumentException("no value for raw value: " + rawValue));
     }
 
     private FieldEnums() {

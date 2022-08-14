@@ -20,6 +20,11 @@ package com.github.jinahya.database.metadata.bind;
  * #L%
  */
 
+import lombok.AccessLevel;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+import lombok.experimental.SuperBuilder;
+
 import javax.xml.bind.annotation.XmlAttribute;
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlValue;
@@ -28,8 +33,6 @@ import java.sql.SQLException;
 import java.util.Collection;
 import java.util.Objects;
 
-import static java.util.Objects.requireNonNull;
-
 /**
  * A class for binding results of {@link DatabaseMetaData#supportsResultSetHoldability(int)} method.
  *
@@ -37,8 +40,13 @@ import static java.util.Objects.requireNonNull;
  * @see Context#supportsResultSetHoldability(int)
  */
 @XmlRootElement
+@Data
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
+@SuperBuilder(toBuilder = true)
 public class SupportsResultSetHoldability
         implements MetadataType {
+
+    private static final long serialVersionUID = -4927096350529087348L;
 
     /**
      * Invokes {@link Context#supportsResultSetHoldability(int)} method for all holdabilities and adds bound values to
@@ -50,59 +58,24 @@ public class SupportsResultSetHoldability
      * @return given {@code collection}.
      * @throws SQLException if a database error occurs.
      */
-    public static <C extends Collection<? super SupportsResultSetHoldability>> C getAllInstances(final Context context,
-                                                                                                 final C collection)
+    public static <C extends Collection<? super SupportsResultSetHoldability>> C getAllInstances(
+            final Context context, final C collection)
             throws SQLException {
-        requireNonNull(context, "context is null");
+        Objects.requireNonNull(context, "context is null");
         for (final ResultSetHoldability value : ResultSetHoldability.values()) {
-            collection.add(context.supportsResultSetHoldability(value.getRawValue()));
+            collection.add(context.supportsResultSetHoldability(value.rawValue()));
         }
         return collection;
     }
 
-    /**
-     * Creates a new instance.
-     */
-    public SupportsResultSetHoldability() {
-        super();
-    }
-
     @Override
-    public String toString() {
-        return super.toString() + '{'
-               + "type=" + holdability
-               + ",value=" + value
-               + '}';
+    public void retrieveChildren(Context context) throws SQLException {
+        // no children
     }
 
-    @Override
-    public boolean equals(final Object obj) {
-        if (this == obj) return true;
-        if (obj == null || getClass() != obj.getClass()) return false;
-        final SupportsResultSetHoldability that = (SupportsResultSetHoldability) obj;
-        return holdability == that.holdability
-               && Objects.equals(value, that.value);
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(holdability, value);
-    }
-
-    public int getHoldability() {
-        return holdability;
-    }
-
-    public void setHoldability(final int holdability) {
-        this.holdability = holdability;
-    }
-
-    public Boolean getValue() {
-        return value;
-    }
-
-    public void setValue(final Boolean value) {
-        this.value = value;
+    @XmlAttribute(required = false)
+    public ResultSetHoldability getHoldabilityAsEnum() {
+        return ResultSetHoldability.valueOfRawValue(getHoldability());
     }
 
     @XmlAttribute(required = true)

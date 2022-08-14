@@ -27,6 +27,11 @@ import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
+/**
+ * A marker interface for relating binding types to their parent types.
+ *
+ * @author Jin Kwon &lt;onacit_at_gmail.com&gt;
+ */
 @Repeatable(ParentOf.ParentsOf.class)
 @Documented
 @Retention(RetentionPolicy.RUNTIME)
@@ -41,5 +46,10 @@ public @interface ParentOf {
         ParentOf[] value();
     }
 
+    /**
+     * Returns the parent class.
+     *
+     * @return the parent class.
+     */
     Class<?> value();
 }

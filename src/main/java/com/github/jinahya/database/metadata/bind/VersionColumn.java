@@ -20,10 +20,23 @@ package com.github.jinahya.database.metadata.bind;
  * #L%
  */
 
+import lombok.AccessLevel;
+import lombok.Data;
+import lombok.EqualsAndHashCode;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+import lombok.ToString;
+import lombok.experimental.SuperBuilder;
+
+import javax.validation.constraints.NotBlank;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
+import javax.xml.bind.annotation.XmlTransient;
 import java.sql.DatabaseMetaData;
+import java.sql.SQLException;
 import java.util.Collection;
+import java.util.Objects;
 
 /**
  * A class for binding results of {@link DatabaseMetaData#getVersionColumns(String, String, String)} method.
@@ -32,9 +45,12 @@ import java.util.Collection;
  * @see Context#getVersionColumns(String, String, String, Collection)
  */
 @XmlRootElement
-@ChildOf(Table.class)
+@Data
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
+@SuperBuilder(toBuilder = true)
 public class VersionColumn
-        implements MetadataType {
+        implements MetadataType,
+                   ChildOf<Table> {
 
     private static final long serialVersionUID = 3587959398829593292L;
 
@@ -50,169 +66,94 @@ public class VersionColumn
          * Constant for {@link DatabaseMetaData#versionColumnUnknown} whose value is
          * {@value DatabaseMetaData#versionColumnUnknown}.
          */
-        VERSION_COLUMN_NO_NULLS(DatabaseMetaData.versionColumnUnknown),
+        VERSION_COLUMN_NO_NULLS(DatabaseMetaData.versionColumnUnknown), // 0
 
         /**
          * Constant for {@link DatabaseMetaData#versionColumnNotPseudo} whose value is
          * {@value DatabaseMetaData#versionColumnNotPseudo}.
          */
-        VERSION_COLUMN_NULLABLE(DatabaseMetaData.versionColumnNotPseudo),
+        VERSION_COLUMN_NULLABLE(DatabaseMetaData.versionColumnNotPseudo), // 1
 
         /**
          * Constant for {@link DatabaseMetaData#versionColumnPseudo} whose value is
          * {@value DatabaseMetaData#versionColumnPseudo}.
          */
-        VERSION_COLUMN_NULLABLE_UNKNOWN(DatabaseMetaData.versionColumnPseudo);
+        VERSION_COLUMN_NULLABLE_UNKNOWN(DatabaseMetaData.versionColumnPseudo); // 2
 
         /**
-         * Returns the constant whose raw value equals to given. An instance of {@link IllegalArgumentException} will be
-         * throw if no constants matches.
+         * Returns the constant whose raw value equals to specified raw value. An instance of
+         * {@link IllegalArgumentException} will be thrown if no constants matches.
          *
-         * @param rawValue the value value
-         * @return the constant whose raw value equals to given.
+         * @param rawValue the raw value.
+         * @return the constant whose raw value equals to {@code rawValue}.
          */
         public static PseudoColumn valueOfRawValue(final int rawValue) {
             return IntFieldEnums.valueOfRawValue(PseudoColumn.class, rawValue);
         }
 
-        /**
-         * Creates a new instance with specified raw value.
-         *
-         * @param rawValue the raw value.
-         */
         PseudoColumn(final int rawValue) {
             this.rawValue = rawValue;
         }
 
-        /**
-         * Returns the raw value of this constant.
-         *
-         * @return the raw value of this constant.
-         */
         @Override
-        public int getRawValue() {
+        public int rawValue() {
             return rawValue;
         }
 
         private final int rawValue;
     }
 
-    /**
-     * Creates a new instance.
-     */
-    public VersionColumn() {
-        super();
+    @Override
+    public void retrieveChildren(final Context context) throws SQLException {
+        // no children
     }
 
     @Override
-    public String toString() {
-        return super.toString() + '{'
-               + "scope=" + scope
-               + ",columnName='" + columnName
-               + ",dataType=" + dataType
-               + ",typeName='" + typeName
-               + ",columnSize=" + columnSize
-               + ",bufferLength=" + bufferLength
-               + ",decimalDigits=" + decimalDigits
-               + ",pseudoColumn=" + pseudoColumn
-               + '}';
+    public Table extractParent() {
+        return Objects.requireNonNull(table, "table is null");
     }
 
-    public Short getScope() {
-        return scope;
-    }
-
-    public void setScope(final Short scope) {
-        this.scope = scope;
-    }
-
-    public String getColumnName() {
-        return columnName;
-    }
-
-    public void setColumnName(final String columnName) {
-        this.columnName = columnName;
-    }
-
-    public int getDataType() {
-        return dataType;
-    }
-
-    public void setDataType(final int dataType) {
-        this.dataType = dataType;
-    }
-
-    public String getTypeName() {
-        return typeName;
-    }
-
-    public void setTypeName(final String typeName) {
-        this.typeName = typeName;
-    }
-
-    public int getColumnSize() {
-        return columnSize;
-    }
-
-    public void setColumnSize(final int columnSize) {
-        this.columnSize = columnSize;
-    }
-
-    public int getBufferLength() {
-        return bufferLength;
-    }
-
-    public void setBufferLength(final int bufferLength) {
-        this.bufferLength = bufferLength;
-    }
-
-    public Short getDecimalDigits() {
-        return decimalDigits;
-    }
-
-    public void setDecimalDigits(final Short decimalDigits) {
-        this.decimalDigits = decimalDigits;
-    }
-
-    public short getPseudoColumn() {
-        return pseudoColumn;
-    }
-
-    public void setPseudoColumn(final short pseudoColumn) {
-        this.pseudoColumn = pseudoColumn;
-    }
-
-    @XmlElement(required = true, nillable = true)
-    @Unused
+    @XmlElement(nillable = true, required = true)
+    @NotUsedBySpecification
     @Label("SCOPE")
-    private Short scope;
+    private Integer scope;
 
-    @XmlElement(required = true)
+    @XmlElement(nillable = false, required = true)
+    @NotBlank
     @Label("COLUMN_NAME")
     private String columnName;
 
-    @XmlElement(required = true)
+    @XmlElement(nillable = false, required = true)
     @Label("DATA_TYPE")
     private int dataType;
 
-    @XmlElement(required = true)
+    @XmlElement(nillable = false, required = true)
     @Label("TYPE_NAME")
     private String typeName;
 
-    @XmlElement(required = true)
+    @XmlElement(nillable = true, required = true)
+    @NullableBySpecification
     @Label("COLUMN_SIZE")
-    private int columnSize;
+    private Integer columnSize;
 
-    @XmlElement(required = true)
+    @XmlElement(nillable = false, required = true)
     @Label("BUFFER_LENGTH")
     private int bufferLength;
 
-    @XmlElement(required = true, nillable = true)
+    @XmlElement(nillable = true, required = true)
     @NullableBySpecification
     @Label("DECIMAL_DIGITS")
-    private Short decimalDigits;
+    private Integer decimalDigits;
 
-    @XmlElement(required = true)
+    @XmlElement(nillable = false, required = true)
     @Label("PSEUDO_COLUMN")
-    private short pseudoColumn;
+    private int pseudoColumn;
+
+    // -----------------------------------------------------------------------------------------------------------------
+    @XmlTransient
+    @Setter(AccessLevel.NONE)
+    @Getter(AccessLevel.NONE)
+    @EqualsAndHashCode.Exclude
+    @ToString.Exclude
+    Table table;
 }

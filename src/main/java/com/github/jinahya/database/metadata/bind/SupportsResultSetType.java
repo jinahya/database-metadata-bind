@@ -20,6 +20,11 @@ package com.github.jinahya.database.metadata.bind;
  * #L%
  */
 
+import lombok.AccessLevel;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+import lombok.experimental.SuperBuilder;
+
 import javax.xml.bind.annotation.XmlAttribute;
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlValue;
@@ -28,8 +33,6 @@ import java.sql.SQLException;
 import java.util.Collection;
 import java.util.Objects;
 
-import static java.util.Objects.requireNonNull;
-
 /**
  * A class for binding results of {@link DatabaseMetaData#supportsResultSetType(int)} method.
  *
@@ -37,8 +40,13 @@ import static java.util.Objects.requireNonNull;
  * @see Context#supportsResultSetType(int)
  */
 @XmlRootElement
+@Data
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
+@SuperBuilder(toBuilder = true)
 public class SupportsResultSetType
         implements MetadataType {
+
+    private static final long serialVersionUID = -7966340530205147556L;
 
     /**
      * Invokes {@link Context#supportsResultSetType(int)} method for all types defined in {@link java.sql.ResultSet} and
@@ -50,59 +58,25 @@ public class SupportsResultSetType
      * @return given {@code collection}.
      * @throws SQLException if a database access error occurs.
      */
-    public static <C extends Collection<? super SupportsResultSetType>> C getAllInstances(final Context context,
-                                                                                          final C collection)
+    public static <C extends Collection<? super SupportsResultSetType>> C getAllInstances(
+            final Context context, final C collection)
             throws SQLException {
-        requireNonNull(context, "context is null");
-        requireNonNull(collection, "collection is null");
+        Objects.requireNonNull(context, "context is null");
+        Objects.requireNonNull(collection, "collection is null");
         for (final ResultSetType value : ResultSetType.values()) {
-            collection.add(context.supportsResultSetType(value.getRawValue()));
+            collection.add(context.supportsResultSetType(value.rawValue()));
         }
         return collection;
     }
 
-    /**
-     * Creates a new instance.
-     */
-    public SupportsResultSetType() {
-        super();
-    }
-
     @Override
-    public String toString() {
-        return super.toString() + '{'
-               + "type=" + type
-               + ",value=" + value
-               + '}';
+    public void retrieveChildren(Context context) throws SQLException {
+        // no children.
     }
 
-    @Override
-    public boolean equals(final Object obj) {
-        if (this == obj) return true;
-        if (obj == null || getClass() != obj.getClass()) return false;
-        final SupportsResultSetType that = (SupportsResultSetType) obj;
-        return type == that.type && Objects.equals(value, that.value);
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(type, value);
-    }
-
-    public int getType() {
-        return type;
-    }
-
-    public void setType(final int type) {
-        this.type = type;
-    }
-
-    public Boolean getValue() {
-        return value;
-    }
-
-    public void setValue(final Boolean value) {
-        this.value = value;
+    @XmlAttribute(required = false)
+    public ResultSetType getTypeAsEnum() {
+        return ResultSetType.valueOfRawValue(getType());
     }
 
     @XmlAttribute(required = true)

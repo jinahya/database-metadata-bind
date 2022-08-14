@@ -4,7 +4,7 @@ package com.github.jinahya.database.metadata.bind;
  * #%L
  * database-metadata-bind
  * %%
- * Copyright (C) 2011 - 2019 Jinahya, Inc.
+ * Copyright (C) 2011 - 2021 Jinahya, Inc.
  * %%
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -20,24 +20,9 @@ package com.github.jinahya.database.metadata.bind;
  * #L%
  */
 
-import java.lang.annotation.Documented;
-import java.lang.annotation.ElementType;
-import java.lang.annotation.Repeatable;
-import java.lang.annotation.Retention;
-import java.lang.annotation.RetentionPolicy;
-import java.lang.annotation.Target;
+class IndexInfoTypeTest extends IntFieldEnumTest<IndexInfo.Type> {
 
-/**
- * A marker annotation for columns may be {@code null}.
- *
- * @author Jin Kwon &lt;onacit_at_gmail.com&gt;
- */
-@Nullable
-@Repeatable(NullableByVendors.class)
-@Documented
-@Retention(RetentionPolicy.RUNTIME)
-@Target({ElementType.FIELD})
-@interface NullableByVendor {
-
-    String value();
+    IndexInfoTypeTest() {
+        super(IndexInfo.Type.class);
+    }
 }

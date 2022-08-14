@@ -20,6 +20,7 @@ package com.github.jinahya.database.metadata.bind;
  * #L%
  */
 
+import javax.xml.bind.annotation.XmlEnum;
 import java.sql.ResultSet;
 
 /**
@@ -27,17 +28,18 @@ import java.sql.ResultSet;
  *
  * @author Jin Kwon &lt;onacit_at_gmail.com&gt;
  */
-enum ResultSetConcurrency implements IntFieldEnum<ResultSetConcurrency>, MetadataType {
+@XmlEnum
+public enum ResultSetConcurrency implements IntFieldEnum<ResultSetConcurrency> {
 
     /**
      * Constant for {@link ResultSet#CONCUR_READ_ONLY}({@value java.sql.ResultSet#CONCUR_READ_ONLY}).
      */
-    CONCUR_READ_ONLY(ResultSet.CONCUR_READ_ONLY),
+    CONCUR_READ_ONLY(ResultSet.CONCUR_READ_ONLY), // 1007
 
     /**
      * Constant for {@link ResultSet#CONCUR_UPDATABLE}({@value java.sql.ResultSet#CONCUR_UPDATABLE}).
      */
-    CONCUR_UPDATABLE(ResultSet.CONCUR_UPDATABLE);
+    CONCUR_UPDATABLE(ResultSet.CONCUR_UPDATABLE); // 1008
 
     /**
      * Returns the value whose {@code rawValue} matches to specified value.
@@ -54,7 +56,7 @@ enum ResultSetConcurrency implements IntFieldEnum<ResultSetConcurrency>, Metadat
     }
 
     @Override
-    public int getRawValue() {
+    public int rawValue() {
         return rawValue;
     }
 

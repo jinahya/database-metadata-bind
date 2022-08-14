@@ -20,16 +20,20 @@ package com.github.jinahya.database.metadata.bind;
  * #L%
  */
 
+import lombok.AccessLevel;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+import lombok.experimental.SuperBuilder;
+
 import javax.xml.bind.annotation.XmlAttribute;
 import javax.xml.bind.annotation.XmlRootElement;
+import javax.xml.bind.annotation.XmlTransient;
 import javax.xml.bind.annotation.XmlValue;
 import java.sql.DatabaseMetaData;
 import java.sql.JDBCType;
 import java.sql.SQLException;
 import java.util.Collection;
 import java.util.Objects;
-
-import static java.util.Objects.requireNonNull;
 
 /**
  * A class for binding results of {@link DatabaseMetaData#supportsConvert(int, int)} method.
@@ -38,8 +42,13 @@ import static java.util.Objects.requireNonNull;
  * @see Context#supportsConvert(int, int)
  */
 @XmlRootElement
+@Data
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
+@SuperBuilder(toBuilder = true)
 public class SupportsConvert
         implements MetadataType {
+
+    private static final long serialVersionUID = 9044839986850181341L;
 
     /**
      * Invokes {@link Context#supportsConvert(int, int)} method for all combinations of all types defined in
@@ -47,14 +56,15 @@ public class SupportsConvert
      *
      * @param context    a context.
      * @param collection the collection to which bound values are added.
-     * @param <C>        the type of {@code collection}
+     * @param <C>        the type of elements in the {@code collection}
      * @return given {@code collection}.
      * @throws SQLException if a database access error occurs.
      */
-    public static <C extends Collection<? super SupportsConvert>> C getAllInstances(final Context context,
-                                                                                    final C collection)
+    public static <C extends Collection<? super SupportsConvert>> C getAllInstances(
+            final Context context, final C collection)
             throws SQLException {
-        requireNonNull(context, "context is null");
+        Objects.requireNonNull(context, "context is null");
+        Objects.requireNonNull(collection, "collection is null");
         for (final JDBCType fromType : JDBCType.values()) {
             for (final JDBCType toType : JDBCType.values()) {
                 if (false && toType == fromType) {
@@ -66,57 +76,29 @@ public class SupportsConvert
         return collection;
     }
 
-    /**
-     * Creates a new instance.
-     */
-    public SupportsConvert() {
-        super();
-    }
-
     @Override
-    public String toString() {
-        return super.toString() + '{'
-               + "fromType=" + fromType
-               + ",toType=" + toType
-               + ",value=" + value
-               + '}';
+    public void retrieveChildren(Context context) throws SQLException {
+        // no children.
     }
 
-    @Override
-    public boolean equals(final Object obj) {
-        if (this == obj) return true;
-        if (obj == null || getClass() != obj.getClass()) return false;
-        final SupportsConvert that = (SupportsConvert) obj;
-        return fromType == that.fromType && toType == that.toType && Objects.equals(value, that.value);
+    @XmlTransient
+    public JDBCType getFromTypeAsEnum() {
+        return JDBCType.valueOf(getFromType());
     }
 
-    @Override
-    public int hashCode() {
-        return Objects.hash(fromType, toType, value);
+    @XmlAttribute(required = false)
+    public String getFromTypeName() {
+        return getFromTypeAsEnum().getName();
     }
 
-    public int getFromType() {
-        return fromType;
+    @XmlTransient
+    public JDBCType getToTypeAsEnum() {
+        return JDBCType.valueOf(getToType());
     }
 
-    public void setFromType(final int fromType) {
-        this.fromType = fromType;
-    }
-
-    public int getToType() {
-        return toType;
-    }
-
-    public void setToType(final int toType) {
-        this.toType = toType;
-    }
-
-    public Boolean getValue() {
-        return value;
-    }
-
-    public void setValue(final Boolean value) {
-        this.value = value;
+    @XmlAttribute(required = false)
+    public String getToTypeName() {
+        return getToTypeAsEnum().getName();
     }
 
     @XmlAttribute(required = true)

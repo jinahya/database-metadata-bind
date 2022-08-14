@@ -105,10 +105,9 @@ abstract class MetadataTypeTest<T extends MetadataType> {
         for (final Field field : getFieldsWithLabel().keySet()) {
             final Class<?> declaringClass = field.getDeclaringClass();
             final BeanInfo beanInfo = Introspector.getBeanInfo(declaringClass);
-            final Optional<PropertyDescriptor> propertyDescriptor
-                    = Arrays.stream(beanInfo.getPropertyDescriptors())
-                    .filter(d -> d.getName().equals(field.getName()))
-                    .findAny();
+            final Optional<PropertyDescriptor> propertyDescriptor =
+                    Arrays.stream(beanInfo.getPropertyDescriptors()).filter(d -> d.getName().equals(field.getName()))
+                            .findAny();
             assertThat(propertyDescriptor).isNotEmpty().hasValueSatisfying(d -> {
                 final Method readMethod = d.getReadMethod();
                 assertThat(readMethod).isNotNull();
@@ -145,7 +144,7 @@ abstract class MetadataTypeTest<T extends MetadataType> {
     @Test
     void fieldsWithUnused_ShouldBeAnnotatedWithXmlElementWithNillableTrue() {
         for (final Field field : getFieldsWithUnused().keySet()) {
-            assertThat(field.getAnnotation(Unused.class)).isNotNull();
+            assertThat(field.getAnnotation(NotUsedBySpecification.class)).isNotNull();
             assertThat(field.getAnnotation(XmlElement.class)).isNotNull().satisfies(a -> {
                 assertThat(a.nillable()).isTrue();
             });
@@ -156,39 +155,46 @@ abstract class MetadataTypeTest<T extends MetadataType> {
     @Test
     void fieldsWithUnused_TypeShouldNotBePrimitive() {
         for (final Field field : getFieldsWithUnused().keySet()) {
-            assertThat(field.getAnnotation(Unused.class)).isNotNull();
+            assertThat(field.getAnnotation(NotUsedBySpecification.class)).isNotNull();
             assertThat(field.getType().isPrimitive()).isFalse();
         }
     }
 
-    @DisplayName("fields with @MayBeNull should also be with @XmlElement(nillable = true)")
+    @DisplayName("@NullableBySpecification -> @XmlElement(nillable = true)")
     @Test
-    void fieldsWithMayBeNull_ShouldBeAnnotatedWithXmlElementWithNillableTrue() {
-        for (final Field field : getFieldsWithMayBeNull().keySet()) {
+    void fields_XmlElementNillableTrue_NullableBySpecification() {
+        for (final Field field : getFieldsWithNullableBySpecification().keySet()) {
             assertThat(field.getAnnotation(NullableBySpecification.class)).isNotNull();
-            assertThat(field.getAnnotation(XmlElement.class)).isNotNull().satisfies(a -> {
-                assertThat(a.nillable()).isTrue();
-            });
+            assertThat(field.getAnnotation(XmlElement.class))
+                    .isNotNull()
+                    .satisfies(a -> {
+                        assertThat(a.nillable()).as("XmlElement#nillable on %s", field).isTrue();
+                    });
         }
     }
 
-    @DisplayName("fields with @MayBeNull should not be a primitive type")
+    @DisplayName("@NullableBySpecification -> !primitive")
     @Test
-    void fieldsWithMayBeNull_TypeShouldNotBePrimitive() {
-        for (final Field field : getFieldsWithMayBeNull().keySet()) {
+    void fields_NotPrimitive_NullableBySpecification() {
+        for (final Field field : getFieldsWithNullableBySpecification().keySet()) {
             assertThat(field.getAnnotation(NullableBySpecification.class)).isNotNull();
-            assertThat(field.getType().isPrimitive()).isFalse();
+            assertThat(field.getType().isPrimitive())
+                    .as("@NullableBySpecification on primitive field: %s", field)
+                    .isFalse();
         }
     }
 
-    @DisplayName("fields with @MayBeNullByVendor should also be with @XmlElement(nillable = true)")
+    @DisplayName("@MayBeNullByVendor -> @XmlElement(nillable = true)")
     @Test
-    void fieldsWithMayBeNullByVendor_ShouldBeAnnotatedWithXmlElementWithNillableTrue() {
+    void fields_XmlElementNillableTrue_NullableByVendor() {
         for (final Field field : getFieldsWithMayBeNullByVendor().keySet()) {
             assertThat(field.getAnnotation(NullableByVendor.class)).isNotNull();
-            assertThat(field.getAnnotation(XmlElement.class)).isNotNull().satisfies(a -> {
-                assertThat(a.nillable()).isTrue();
-            });
+            assertThat(field.getAnnotation(XmlElement.class))
+                    .isNotNull()
+                    .satisfies(a -> {
+                        assertThat(a.nillable())
+                                .isTrue();
+                    });
         }
     }
 
@@ -219,16 +225,18 @@ abstract class MetadataTypeTest<T extends MetadataType> {
                 .collect(Collectors.toMap(Map.Entry::getKey, e -> e.getKey().getAnnotation(NullableByVendor.class)));
     }
 
-    Map<Field, NullableBySpecification> getFieldsWithMayBeNull() {
+    Map<Field, NullableBySpecification> getFieldsWithNullableBySpecification() {
         return getFieldsWithLabel().entrySet().stream()
-                .filter(e -> e.getKey().getAnnotation(NullableBySpecification.class) != null)
-                .collect(Collectors.toMap(Map.Entry::getKey, e -> e.getKey().getAnnotation(NullableBySpecification.class)));
+                .filter(e -> e.getKey().getAnnotation(NullableBySpecification.class) != null).collect(
+                        Collectors.toMap(Map.Entry::getKey,
+                                         e -> e.getKey().getAnnotation(NullableBySpecification.class)));
     }
 
-    Map<Field, Unused> getFieldsWithUnused() {
+    Map<Field, NotUsedBySpecification> getFieldsWithUnused() {
         return getFieldsWithLabel().entrySet().stream()
-                .filter(e -> e.getKey().getAnnotation(Unused.class) != null)
-                .collect(Collectors.toMap(Map.Entry::getKey, e -> e.getKey().getAnnotation(Unused.class)));
+                .filter(e -> e.getKey().getAnnotation(NotUsedBySpecification.class) != null).collect(
+                        Collectors.toMap(Map.Entry::getKey,
+                                         e -> e.getKey().getAnnotation(NotUsedBySpecification.class)));
     }
 
     Map<Field, Label> getFieldsWithLabel() {

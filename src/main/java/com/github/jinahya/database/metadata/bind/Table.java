@@ -21,19 +21,32 @@ package com.github.jinahya.database.metadata.bind;
  */
 
 import lombok.AccessLevel;
+import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
+import lombok.experimental.SuperBuilder;
 
 import javax.validation.Valid;
+import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
+import javax.xml.bind.annotation.XmlAttribute;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlElementRef;
 import javax.xml.bind.annotation.XmlRootElement;
+import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collection;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
+import java.util.Objects;
+import java.util.Set;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 /**
  * A class for binding results of
@@ -44,7 +57,6 @@ import java.util.List;
  * @see Context#getTables(String, String, String, String[], Collection)
  */
 @XmlRootElement
-@ChildOf(Schema.class)
 @ParentOf(BestRowIdentifier.class)
 @ParentOf(Column.class)
 @ParentOf(ColumnPrivilege.class)
@@ -56,10 +68,20 @@ import java.util.List;
 @ParentOf(SuperTable.class)
 @ParentOf(TablePrivilege.class)
 @ParentOf(VersionColumn.class)
+@Data
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
+@SuperBuilder(toBuilder = true)
 public class Table
-        implements MetadataType {
+        implements MetadataType,
+                   ChildOf<Schema> {
 
     private static final long serialVersionUID = 6590036695540141125L;
+
+    public static final Comparator<Table> COMPARATOR =
+            Comparator.comparing(Table::getTableType)
+                    .thenComparing(Table::getTableCat, Comparator.nullsFirst(Comparator.naturalOrder()))
+                    .thenComparing(Table::getTableSchem, Comparator.nullsFirst(Comparator.naturalOrder()))
+                    .thenComparing(Table::getTableName);
 
     // -------------------------------------------------------------------------------------------- TABLE_CAT / tableCat
     public static final String COLUMN_LABEL_TABLE_CAT = "TABLE_CAT";
@@ -76,127 +98,296 @@ public class Table
 
     public static final String ATTRIBUTE_NAME_TABLE_NAME = "tableName";
 
-    /**
-     * Creates a new instance.
-     */
-    public Table() {
-        super();
+    @XmlRootElement
+    @Getter
+    @EqualsAndHashCode
+    @ToString
+    public static class BestRowIdentifierCategory {
+
+        private static final Set<BestRowIdentifierCategory> VALUES = Collections.unmodifiableSet(
+                Arrays.stream(BestRowIdentifier.Scope.values())
+                        .map(IntFieldEnum::rawValue)
+                        .flatMap(rv -> Stream.of(new BestRowIdentifierCategory(rv, false),
+                                                 new BestRowIdentifierCategory(rv, true)))
+                        .collect(Collectors.toSet())
+        );
+
+        public static BestRowIdentifierCategory valueOf(final int scope, final boolean nullable) {
+            return VALUES.stream()
+                    .filter(v -> v.getScope() == scope && v.isNullable() == nullable)
+                    .findFirst()
+                    .orElseThrow(() -> new IllegalArgumentException(
+                            "no value matches; scope: " + scope + ", nullable: " + nullable));
+        }
+
+        public BestRowIdentifierCategory(final int scope, final boolean nullable) {
+            super();
+            this.scope = scope;
+            this.nullable = nullable;
+        }
+
+        private BestRowIdentifierCategory() {
+            this(0, false);
+        }
+
+        @XmlAttribute(required = true)
+        private final int scope;
+
+        @XmlAttribute(required = true)
+        private final boolean nullable;
+    }
+
+    @XmlRootElement
+    public static class CategorizedBestRowIdentifiers {
+
+        public CategorizedBestRowIdentifiers(@NotNull final BestRowIdentifierCategory bestRowIdentifierCategory) {
+            super();
+            this.bestRowIdentifierCategory =
+                    Objects.requireNonNull(bestRowIdentifierCategory, "bestRowIdentifierCategory is null");
+        }
+
+        private CategorizedBestRowIdentifiers() {
+            super();
+            this.bestRowIdentifierCategory = null;
+        }
+
+        @NotNull
+        public List<BestRowIdentifier> getBestRowIdentifiers() {
+            if (bestRowIdentifiers == null) {
+                bestRowIdentifiers = new ArrayList<>();
+            }
+            return bestRowIdentifiers;
+        }
+
+        @XmlElement(nillable = false, required = true)
+        @Valid
+        @NotNull
+        @Setter(AccessLevel.NONE)
+        @Getter
+        private final BestRowIdentifierCategory bestRowIdentifierCategory;
+
+        @XmlElementRef
+        @Setter(AccessLevel.NONE)
+        @Getter(AccessLevel.NONE)
+        private List<@Valid @NotNull BestRowIdentifier> bestRowIdentifiers;
+    }
+
+    @XmlRootElement
+    @Getter
+    @EqualsAndHashCode
+    @ToString
+    public static class IndexInfoCategory {
+
+        private static final Set<IndexInfoCategory> VALUES = Collections.unmodifiableSet(
+                Stream.of(true, false)
+                        .flatMap(u -> Stream.of(new IndexInfoCategory(u, false),
+                                                new IndexInfoCategory(u, true)))
+                        .collect(Collectors.toSet())
+        );
+
+        public static IndexInfoCategory valueOf(final boolean unique, final boolean approximate) {
+            return VALUES.stream()
+                    .filter(v -> v.unique == unique && v.approximate == approximate)
+                    .findFirst()
+                    .orElseThrow(() -> new IllegalArgumentException(
+                            "no value matches; unique: " + unique + ", approximate: " + approximate));
+        }
+
+        private IndexInfoCategory() {
+            this(false, false);
+        }
+
+        private IndexInfoCategory(final boolean unique, final boolean approximate) {
+            super();
+            this.unique = unique;
+            this.approximate = approximate;
+        }
+
+        private final boolean unique;
+
+        private final boolean approximate;
+    }
+
+    @XmlRootElement
+    public static class CategorizedIndexInfo {
+
+        public CategorizedIndexInfo(@NotNull final IndexInfoCategory indexInfoCategory) {
+            super();
+            this.indexInfoCategory =
+                    Objects.requireNonNull(indexInfoCategory, "indexInfoCategory is null");
+        }
+
+        private CategorizedIndexInfo() {
+            super();
+            indexInfoCategory = null;
+        }
+
+        @NotNull
+        public List<IndexInfo> getIndexInfo() {
+            if (indexInfo == null) {
+                indexInfo = new ArrayList<>();
+            }
+            return indexInfo;
+        }
+
+        @XmlElement(nillable = false, required = true)
+        @Valid
+        @NotNull
+        @Setter(AccessLevel.NONE)
+        @Getter
+        private final IndexInfoCategory indexInfoCategory;
+
+        @XmlElementRef
+        @Setter(AccessLevel.NONE)
+        @Getter(AccessLevel.NONE)
+        private List<@Valid @NotNull IndexInfo> indexInfo;
     }
 
     @Override
-    public String toString() {
-        return super.toString() + '{'
-               + "tableCat=" + tableCat
-               + ",tableSchem=" + tableSchem
-               + ",tableName=" + tableName
-               + ",tableType=" + tableType
-               + ",remarks=" + remarks
-               + ",typeCat=" + typeCat
-               + ",typeSchem=" + typeSchem
-               + ",typeName=" + typeName
-               + ",selfReferencingColName=" + selfReferencingColName
-               + ",refGeneration=" + refGeneration
-               + ",bestRowIdentifiers=" + bestRowIdentifiers
-               + ",columns=" + columns
-               + ",columnPrivileges=" + columnPrivileges
-               + ",indexInfo=" + indexInfo
-               + ",primaryKeys=" + primaryKeys
-               + ",pseudoColumns=" + pseudoColumns
-               + ",superTables=" + superTables
-               + ",tablePrivileges=" + tablePrivileges
-               + ",versionColumns=" + versionColumns
-               + '}';
-    }
-
-    public String getTableCat() {
-        return tableCat;
-    }
-
-    public void setTableCat(final String tableCat) {
-        this.tableCat = tableCat;
-    }
-
-    public String getTableSchem() {
-        return tableSchem;
-    }
-
-    public void setTableSchem(final String tableSchem) {
-        this.tableSchem = tableSchem;
-    }
-
-    public String getTableName() {
-        return tableName;
-    }
-
-    public void setTableName(final String tableName) {
-        this.tableName = tableName;
-    }
-
-    public String getTableType() {
-        return tableType;
-    }
-
-    public void setTableType(final String tableType) {
-        this.tableType = tableType;
-    }
-
-    public String getRemarks() {
-        return remarks;
-    }
-
-    public void setRemarks(final String remarks) {
-        this.remarks = remarks;
-    }
-
-    public String getTypeCat() {
-        return typeCat;
-    }
-
-    public void setTypeCat(final String typeCat) {
-        this.typeCat = typeCat;
-    }
-
-    public String getTypeSchem() {
-        return typeSchem;
-    }
-
-    public void setTypeSchem(final String typeSchem) {
-        this.typeSchem = typeSchem;
-    }
-
-    public String getTypeName() {
-        return typeName;
-    }
-
-    public void setTypeName(final String typeName) {
-        this.typeName = typeName;
-    }
-
-    public String getSelfReferencingColName() {
-        return selfReferencingColName;
-    }
-
-    public void setSelfReferencingColName(final String selfReferencingColName) {
-        this.selfReferencingColName = selfReferencingColName;
-    }
-
-    public String getRefGeneration() {
-        return refGeneration;
-    }
-
-    public void setRefGeneration(final String refGeneration) {
-        this.refGeneration = refGeneration;
-    }
-
-    // ---------------------------------------------------------------------------------------------- bestRowIdentifiers
-    public List<BestRowIdentifier> getBestRowIdentifiers() {
-        if (bestRowIdentifiers == null) {
-            bestRowIdentifiers = new ArrayList<>();
+    public void retrieveChildren(final Context context) throws SQLException {
+        {
+            for (final BestRowIdentifierCategory category : BestRowIdentifierCategory.VALUES) {
+                final CategorizedBestRowIdentifiers categorized = new CategorizedBestRowIdentifiers(category);
+                context.getBestRowIdentifier(
+                        getTypeCat(),
+                        getTableSchem(),
+                        getTableName(),
+                        category.getScope(),
+                        category.isNullable(),
+                        categorized.getBestRowIdentifiers()
+                );
+                for (final BestRowIdentifier identifier : categorized.getBestRowIdentifiers()) {
+                    identifier.retrieveChildren(context);
+                }
+                getCategorizedBestRowIdentifiers().add(categorized);
+            }
         }
-        return bestRowIdentifiers;
+        {
+            context.getColumns(
+                    getTableCat(),
+                    getTableSchem(),
+                    getTableName(),
+                    "%",
+                    getColumns());
+            for (final Column column : getColumns()) {
+                column.retrieveChildren(context);
+            }
+        }
+        {
+            context.getColumnPrivileges(
+                    getTableCat(),
+                    getTableSchem(),
+                    getTableName(),
+                    "%",
+                    getColumnPrivileges()
+            );
+            for (final ColumnPrivilege columnPrivilege : getColumnPrivileges()) {
+                columnPrivilege.retrieveChildren(context);
+            }
+        }
+        {
+            context.getExportedKeys(
+                    getTableCat(),
+                    getTableSchem(),
+                    getTableName(),
+                    getExportedKeys()
+            );
+            for (final ExportedKey exportedKey : getExportedKeys()) {
+                exportedKey.retrieveChildren(context);
+            }
+        }
+        {
+            context.getImportedKeys(
+                    getTableCat(),
+                    getTableSchem(),
+                    getTableName(),
+                    getImportedKeys()
+            );
+            for (final ImportedKey importedKey : getImportedKeys()) {
+                importedKey.retrieveChildren(context);
+            }
+        }
+        {
+            for (final IndexInfoCategory category : IndexInfoCategory.VALUES) {
+                final CategorizedIndexInfo categorized = new CategorizedIndexInfo(category);
+                context.getIndexInfo(
+                        getTypeCat(),
+                        getTableSchem(),
+                        getTableName(),
+                        category.isUnique(),
+                        category.isApproximate(),
+                        categorized.getIndexInfo()
+                );
+                for (final IndexInfo indexInfo : categorized.getIndexInfo()) {
+                    indexInfo.retrieveChildren(context);
+                }
+                getCategorizedIndexInfo().add(categorized);
+            }
+        }
+        {
+            context.getPrimaryKeys(
+                    getTableCat(),
+                    getTableSchem(),
+                    getTableName(),
+                    getPrimaryKeys()
+            );
+            for (final PrimaryKey primaryKey : getPrimaryKeys()) {
+                primaryKey.retrieveChildren(context);
+            }
+        }
+        {
+            context.getPseudoColumns(
+                    getTableCat(),
+                    getTableSchem(),
+                    getTableName(),
+                    "%",
+                    getPseudoColumns()
+            );
+            for (final PseudoColumn pseudoColumn : getPseudoColumns()) {
+                pseudoColumn.retrieveChildren(context);
+            }
+        }
+        {
+            context.getTablePrivileges(
+                    getTableCat(),
+                    getTableSchem(),
+                    getTableName(),
+                    getTablePrivileges()
+            );
+            for (final TablePrivilege tablePrivilege : getTablePrivileges()) {
+                tablePrivilege.retrieveChildren(context);
+            }
+        }
+        {
+            context.getVersionColumns(
+                    getTableCat(),
+                    getTableSchem(),
+                    getTableName(),
+                    getVersionColumns()
+            );
+            for (final VersionColumn versionColumn : getVersionColumns()) {
+                versionColumn.table = this;
+                versionColumn.retrieveChildren(context);
+            }
+        }
     }
 
-    // --------------------------------------------------------------------------------------------------------- columns
+    @Override
+    public Schema extractParent() {
+        return Schema.builder()
+                .tableCatalog(getTableCat())
+                .tableSchem(getTableSchem())
+                .build();
+    }
+
+    // -----------------------------------------------------------------------------------------------------------------
+    public List<CategorizedBestRowIdentifiers> getCategorizedBestRowIdentifiers() {
+        if (categorizedBestRowIdentifiers == null) {
+            categorizedBestRowIdentifiers = new ArrayList<>();
+        }
+        return categorizedBestRowIdentifiers;
+    }
+
     public List<Column> getColumns() {
         if (columns == null) {
             columns = new ArrayList<>();
@@ -204,7 +395,6 @@ public class Table
         return columns;
     }
 
-    // ------------------------------------------------------------------------------------------------ columnPrivileges
     public List<ColumnPrivilege> getColumnPrivileges() {
         if (columnPrivileges == null) {
             columnPrivileges = new ArrayList<>();
@@ -212,7 +402,6 @@ public class Table
         return columnPrivileges;
     }
 
-    // ---------------------------------------------------------------------------------------------------- exportedKeys
     public List<ExportedKey> getExportedKeys() {
         if (exportedKeys == null) {
             exportedKeys = new ArrayList<>();
@@ -220,7 +409,6 @@ public class Table
         return exportedKeys;
     }
 
-    // ---------------------------------------------------------------------------------------------------- importedKeys
     public List<ImportedKey> getImportedKeys() {
         if (importedKeys == null) {
             importedKeys = new ArrayList<>();
@@ -228,15 +416,13 @@ public class Table
         return importedKeys;
     }
 
-    // ------------------------------------------------------------------------------------------------------- indexInfo
-    public List<IndexInfo> getIndexInfo() {
-        if (indexInfo == null) {
-            indexInfo = new ArrayList<>();
+    public List<CategorizedIndexInfo> getCategorizedIndexInfo() {
+        if (categorizedIndexInfo == null) {
+            categorizedIndexInfo = new ArrayList<>();
         }
-        return indexInfo;
+        return categorizedIndexInfo;
     }
 
-    // ----------------------------------------------------------------------------------------------------- primaryKeys
     public List<PrimaryKey> getPrimaryKeys() {
         if (primaryKeys == null) {
             primaryKeys = new ArrayList<>();
@@ -244,7 +430,6 @@ public class Table
         return primaryKeys;
     }
 
-    // --------------------------------------------------------------------------------------------------- pseudoColumns
     public List<PseudoColumn> getPseudoColumns() {
         if (pseudoColumns == null) {
             pseudoColumns = new ArrayList<>();
@@ -252,15 +437,6 @@ public class Table
         return pseudoColumns;
     }
 
-    // ----------------------------------------------------------------------------------------------------- superTables
-    public List<SuperTable> getSuperTables() {
-        if (superTables == null) {
-            superTables = new ArrayList<>();
-        }
-        return superTables;
-    }
-
-    // ------------------------------------------------------------------------------------------------- tablePrivileges
     public List<TablePrivilege> getTablePrivileges() {
         if (tablePrivileges == null) {
             tablePrivileges = new ArrayList<>();
@@ -268,7 +444,6 @@ public class Table
         return tablePrivileges;
     }
 
-    // -------------------------------------------------------------------------------------------------- versionColumns
     public List<VersionColumn> getVersionColumns() {
         if (versionColumns == null) {
             versionColumns = new ArrayList<>();
@@ -276,74 +451,79 @@ public class Table
         return versionColumns;
     }
 
-    @XmlElement(required = true, nillable = true)
+    // -----------------------------------------------------------------------------------------------------------------
+    @XmlElement(nillable = true, required = true)
     @NullableBySpecification
     @Label(COLUMN_LABEL_TABLE_CAT)
     private String tableCat;
 
-    @XmlElement(required = true, nillable = true)
+    @XmlElement(nillable = true, required = true)
     @NullableBySpecification
     @Label(COLUMN_LABEL_TABLE_SCHEM)
     private String tableSchem;
 
-    @XmlElement(required = true)
+    @XmlElement(nillable = false, required = true)
+    @NotBlank
     @Label(COLUMN_LABEL_TABLE_NAME)
     private String tableName;
 
-    @XmlElement(required = true)
+    // -----------------------------------------------------------------------------------------------------------------
+    @XmlElement(nillable = false, required = true)
+    @NotBlank
     @Label("TABLE_TYPE")
     private String tableType;
 
-    @XmlElement(required = true, nillable = true)
+    @XmlElement(nillable = true, required = true)
     @NullableBySpecification
     @Label("REMARKS")
     private String remarks;
 
-    @XmlElement(required = true, nillable = true)
+    @XmlElement(nillable = true, required = true)
     @NullableBySpecification
     @Label("TYPE_CAT")
     private String typeCat;
 
-    @XmlElement(required = true, nillable = true)
+    @XmlElement(nillable = true, required = true)
     @NullableBySpecification
     @Label("TYPE_SCHEM")
     private String typeSchem;
 
-    @XmlElement(required = true, nillable = true)
+    @XmlElement(nillable = true, required = true)
     @NullableBySpecification
     @Label("TYPE_NAME")
     private String typeName;
 
-    @XmlElement(required = true, nillable = true)
+    @XmlElement(nillable = true, required = true)
     @NullableBySpecification
     @Label("SELF_REFERENCING_COL_NAME")
     private String selfReferencingColName;
 
-    @XmlElement(required = true, nillable = true)
+    @XmlElement(nillable = true, required = true)
     @NullableBySpecification
     @Label("REF_GENERATION")
     private String refGeneration;
 
+    // -----------------------------------------------------------------------------------------------------------------
     @XmlElementRef
     @Setter(AccessLevel.NONE)
     @Getter(AccessLevel.NONE)
     @EqualsAndHashCode.Exclude
     @ToString.Exclude
-    private List<BestRowIdentifier> bestRowIdentifiers;
+    private List<@Valid @NotNull CategorizedBestRowIdentifiers> categorizedBestRowIdentifiers;
 
     @XmlElementRef
     @Setter(AccessLevel.NONE)
     @Getter(AccessLevel.NONE)
     @EqualsAndHashCode.Exclude
     @ToString.Exclude
-    private List<Column> columns;
+    private List<@Valid @NotNull Column> columns;
 
     @XmlElementRef
     @Setter(AccessLevel.NONE)
     @Getter(AccessLevel.NONE)
     @EqualsAndHashCode.Exclude
     @ToString.Exclude
-    private List<ColumnPrivilege> columnPrivileges;
+    private List<@Valid @NotNull ColumnPrivilege> columnPrivileges;
 
     @XmlElementRef
     @Setter(AccessLevel.NONE)
@@ -364,7 +544,7 @@ public class Table
     @Getter(AccessLevel.NONE)
     @EqualsAndHashCode.Exclude
     @ToString.Exclude
-    private List<@Valid @NotNull IndexInfo> indexInfo;
+    private List<@Valid @NotNull CategorizedIndexInfo> categorizedIndexInfo;
 
     @XmlElementRef
     @Setter(AccessLevel.NONE)
@@ -379,13 +559,6 @@ public class Table
     @EqualsAndHashCode.Exclude
     @ToString.Exclude
     private List<@Valid @NotNull PseudoColumn> pseudoColumns;
-
-    @XmlElementRef
-    @Setter(AccessLevel.NONE)
-    @Getter(AccessLevel.NONE)
-    @EqualsAndHashCode.Exclude
-    @ToString.Exclude
-    private List<@Valid @NotNull SuperTable> superTables;
 
     @XmlElementRef
     @Setter(AccessLevel.NONE)

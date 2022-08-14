@@ -21,6 +21,7 @@ package com.github.jinahya.database.metadata.bind;
  */
 
 import lombok.extern.slf4j.Slf4j;
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
@@ -34,7 +35,6 @@ import java.util.stream.IntStream;
 
 import static java.util.Objects.requireNonNull;
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 
 /**
  * An abstract class for testing enum classes implement {@link IntFieldEnum} interface.
@@ -64,7 +64,7 @@ abstract class IntFieldEnumTest<E extends Enum<E> & IntFieldEnum<E>> {
     protected @NotNull IntStream rawValueStream() {
         // https://bugs.openjdk.java.net/browse/JDK-8142476
         // return Arrays.stream(enumClass.getEnumConstants()).mapToInt(IntFieldEnum::getRawValue);
-        return Arrays.stream(enumClass.getEnumConstants()).mapToInt(c -> c.getRawValue());
+        return Arrays.stream(enumClass.getEnumConstants()).mapToInt(c -> c.rawValue());
     }
 
     /**
@@ -78,7 +78,7 @@ abstract class IntFieldEnumTest<E extends Enum<E> & IntFieldEnum<E>> {
 
     /**
      * Asserts {@code valueOfRawValue(int)} method, defined in specified enum class, invoked with each enum constant's
-     * {@link IntFieldEnum#getRawValue() rawValue} returns the same enum constant.
+     * {@link IntFieldEnum#rawValue() rawValue} returns the same enum constant.
      */
     @DisplayName("valueOfRawValue(c.getRawValue()) returns c")
     @Test
@@ -86,7 +86,7 @@ abstract class IntFieldEnumTest<E extends Enum<E> & IntFieldEnum<E>> {
         final Method method = enumClass.getMethod("valueOfRawValue", int.class);
         for (final E enumConstant : enumClass.getEnumConstants()) {
             @SuppressWarnings({"unchecked"})
-            final E value = (E) method.invoke(null, enumConstant.getRawValue());
+            final E value = (E) method.invoke(null, enumConstant.rawValue());
             assertThat(value).isNotNull().isSameAs(enumConstant);
         }
     }
@@ -94,13 +94,12 @@ abstract class IntFieldEnumTest<E extends Enum<E> & IntFieldEnum<E>> {
     @DisplayName("values.rawValue() are sorted")
     @Test
     void getRawValue_Sorted_ForAll() {
-        assertThat(rawValueStream())
-                .isSorted();
+        assertThat(rawValueStream()).isSorted();
     }
 
     @DisplayName("all raw values are unique to each other")
     @Test
-    void getRawValue_NoDuplicates_ForAll() {
+    void rawValue_NoDuplicates_ForAll() {
         // id this the best you got?
         assertThat(rawValueStream().distinct().boxed().collect(Collectors.toList()))
                 .hasSameElementsAs(rawValueList());
@@ -108,14 +107,14 @@ abstract class IntFieldEnumTest<E extends Enum<E> & IntFieldEnum<E>> {
 
     @DisplayName("getRawValue() does not throw any exception")
     @Test
-    void getRawValue_DoesNotThrow_() {
+    void rawValue_DoesNotThrow_() {
         for (final E enumConstant : enumClass.getEnumConstants()) {
             // still occurs with 1.8.0_281
             // https://stackoverflow.com/a/35584758/330457
             // https://bugs.java.com/bugdatabase/view_bug.do?bug_id=8141508
             // https://bugs.java.com/bugdatabase/view_bug.do?bug_id=8142476
             // final int rawValue = assertDoesNotThrow(enumConstant::getRawValue);
-            final int rawValue = assertDoesNotThrow(() -> enumConstant.getRawValue());
+            final int rawValue = Assertions.assertDoesNotThrow(enumConstant::rawValue);
         }
     }
 

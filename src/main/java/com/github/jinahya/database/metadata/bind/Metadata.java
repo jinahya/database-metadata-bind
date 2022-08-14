@@ -21,186 +21,154 @@ package com.github.jinahya.database.metadata.bind;
  */
 
 import lombok.AccessLevel;
-import lombok.Getter;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
+import lombok.experimental.SuperBuilder;
+import lombok.extern.java.Log;
 
+import javax.validation.Valid;
+import javax.validation.constraints.NotNull;
 import javax.xml.bind.annotation.XmlElementRef;
 import javax.xml.bind.annotation.XmlRootElement;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
-
-import static java.util.Objects.requireNonNull;
+import java.util.Objects;
 
 @XmlRootElement
+@Data
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
+@SuperBuilder(toBuilder = true)
+@Log
 public class Metadata {
 
     public static Metadata newInstance(final Context context) throws SQLException {
-        requireNonNull(context, "context is null");
+        Objects.requireNonNull(context, "context is null");
         final Metadata instance = new Metadata();
         // -------------------------------------------------------------------------------------------------------------
-        instance.deletesAreDetecteds = DeletesAreDetected.getAllInstances(context, new ArrayList<>());
-        instance.insertsAreDetecteds = InsertsAreDetected.getAllInstances(context, new ArrayList<>());
-        instance.updatesAreDetecteds = UpdatesAreDetected.getAllInstances(context, new ArrayList<>());
+        instance.deletesAreDetected = DeletesAreDetected.getAllInstances(context, new ArrayList<>());
+        instance.insertsAreDetected = InsertsAreDetected.getAllInstances(context, new ArrayList<>());
+        instance.updatesAreDetected = UpdatesAreDetected.getAllInstances(context, new ArrayList<>());
         // -------------------------------------------------------------------------------------------------------------
-        instance.othersDeletesAreVisibles = OthersDeletesAreVisible.getAllInstances(context, new ArrayList<>());
-        instance.othersInsertsAreVisibles = OthersInsertsAreVisible.getAllInstances(context, new ArrayList<>());
-        instance.othersUpdatesAreVisibles = OthersUpdatesAreVisible.getAllInstances(context, new ArrayList<>());
-        instance.ownDeletesAreVisibles = OwnDeletesAreVisible.getAllInstances(context, new ArrayList<>());
-        instance.ownInsertsAreVisibles = OwnInsertsAreVisible.getAllInstances(context, new ArrayList<>());
-        instance.ownUpdatesAreVisibles = OwnUpdatesAreVisible.getAllInstances(context, new ArrayList<>());
+        instance.othersDeletesAreVisible = OthersDeletesAreVisible.getAllInstances(context, new ArrayList<>());
+        instance.othersInsertsAreVisible = OthersInsertsAreVisible.getAllInstances(context, new ArrayList<>());
+        instance.othersUpdatesAreVisible = OthersUpdatesAreVisible.getAllInstances(context, new ArrayList<>());
+        instance.ownDeletesAreVisible = OwnDeletesAreVisible.getAllInstances(context, new ArrayList<>());
+        instance.ownInsertsAreVisible = OwnInsertsAreVisible.getAllInstances(context, new ArrayList<>());
+        instance.ownUpdatesAreVisible = OwnUpdatesAreVisible.getAllInstances(context, new ArrayList<>());
         // -------------------------------------------------------------------------------------------------------------
-        instance.catalogs = context.getCatalogs(new ArrayList<>());
-        if (instance.catalogs.isEmpty()) {
-            instance.catalogs.add(Catalog.newVirtualInstance()); // ""
-        }
-        for (final Catalog catalog : instance.catalogs) {
-            context.getSchemas(catalog, null, catalog.getSchemas());
-            if (catalog.getSchemas().isEmpty()) {
-                catalog.getSchemas().add(Schema.newVirtualInstance(catalog)); // ""
+        {
+            instance.catalogs = context.getCatalogs(new ArrayList<>());
+            if (instance.catalogs.isEmpty()) {
+                instance.catalogs.add(Catalog.newVirtualInstance());
             }
-            for (final Schema schema : catalog.getSchemas()) {
-                context.getFunctions(schema, "%", schema.getFunctions());
-                for (final Function function : schema.getFunctions()) {
-                    context.getFunctionColumns(function, "%", function.getFunctionColumns());
-                }
-                context.getProcedures(schema, "%", schema.getProcedures());
-                for (final Procedure procedure : schema.getProcedures()) {
-                    context.getProcedureColumns(procedure, "%", procedure.getProcedureColumns());
-                }
-                context.getTables(schema, "%", null, schema.getTables());
-                for (final Table table : schema.getTables()) {
-                    for (final BestRowIdentifier.Scope value : BestRowIdentifier.Scope.values()) {
-                        context.getBestRowIdentifier(table, value.getRawValue(), true, table.getBestRowIdentifiers());
-                    }
-                    context.getColumns(table, "%", table.getColumns());
-                    context.getColumnPrivileges(table, "%", table.getColumnPrivileges());
-                    context.getExportedKeys(table, table.getExportedKeys());
-                    context.getImportedKeys(table, table.getImportedKeys());
-                    context.getIndexInfo(table, false, true, table.getIndexInfo());
-                    context.getPrimaryKeys(table, table.getPrimaryKeys());
-                    context.getPseudoColumns(table, "%", table.getPseudoColumns());
-                    context.getSuperTables(table, table.getSuperTables());
-                    context.getTablePrivileges(table, table.getTablePrivileges());
-                    context.getVersionColumns(table, table.getVersionColumns());
-                }
-                context.getUDTs(schema, "%", null, schema.getUDTs());
-                for (final UDT udt : schema.getUDTs()) {
-                    context.getAttributes(udt, "%", udt.getAttributes());
-                    context.getSuperTypes(udt, udt.getSuperTypes());
-                }
+            for (final Catalog catalog : instance.catalogs) {
+                catalog.retrieveChildren(context);
             }
         }
-        instance.clientInfoProperties = context.getClientInfoProperties(new ArrayList<>());
-        // -------------------------------------------------------------------------------------------------------------
-        instance.crossReferences = CrossReference.getAllInstance(context, new ArrayList<>());
+        {
+            instance.clientInfoProperties = context.getClientInfoProperties(new ArrayList<>());
+            for (final ClientInfoProperty each : instance.clientInfoProperties) {
+                each.retrieveChildren(context);
+            }
+        }
+        {
+            instance.crossReferences = CrossReference.getAllInstance(context, new ArrayList<>());
+            for (final CrossReference each : instance.crossReferences) {
+                each.retrieveChildren(context);
+            }
+        }
         // -------------------------------------------------------------------------------------------------------------
         instance.supportsConverts = SupportsConvert.getAllInstances(context, new ArrayList<>());
-        instance.supportsResultSetConcurrencies
+        instance.supportsResultSetConcurrency
                 = SupportsResultSetConcurrency.getAllInstances(context, new ArrayList<>());
-        instance.supportsResultSetHoldabilities
+        instance.supportsResultSetHoldability
                 = SupportsResultSetHoldability.getAllInstances(context, new ArrayList<>());
         instance.supportsResultSetTypes = SupportsResultSetType.getAllInstances(context, new ArrayList<>());
         instance.supportsTransactionIsolationLevels
                 = SupportsTransactionIsolationLevel.getAllInstances(context, new ArrayList<>());
         // -------------------------------------------------------------------------------------------------------------
-        instance.tableTypes = context.getTableTypes(new ArrayList<>());
+        {
+            instance.tableTypes = context.getTableTypes(new ArrayList<>());
+            for (final TableType each : instance.tableTypes) {
+                each.retrieveChildren(context);
+            }
+        }
         // -------------------------------------------------------------------------------------------------------------
         return instance;
     }
 
-    Metadata() {
-        super();
-    }
-
-    // --------------------------------------------------------------------------------------------------------------- \
+    // -----------------------------------------------------------------------------------------------------------------
     @XmlElementRef
     @Setter(AccessLevel.NONE)
-    @Getter(AccessLevel.NONE)
-    private List<DeletesAreDetected> deletesAreDetecteds;
+    private List<@Valid @NotNull DeletesAreDetected> deletesAreDetected;
 
     @XmlElementRef
     @Setter(AccessLevel.NONE)
-    @Getter(AccessLevel.NONE)
-    private List<InsertsAreDetected> insertsAreDetecteds;
+    private List<InsertsAreDetected> insertsAreDetected;
 
     @XmlElementRef
     @Setter(AccessLevel.NONE)
-    @Getter(AccessLevel.NONE)
-    private List<UpdatesAreDetected> updatesAreDetecteds;
+    private List<UpdatesAreDetected> updatesAreDetected;
 
     @XmlElementRef
     @Setter(AccessLevel.NONE)
-    @Getter(AccessLevel.NONE)
-    private List<OthersDeletesAreVisible> othersDeletesAreVisibles;
+    private List<OthersDeletesAreVisible> othersDeletesAreVisible;
 
     @XmlElementRef
     @Setter(AccessLevel.NONE)
-    @Getter(AccessLevel.NONE)
-    private List<OthersInsertsAreVisible> othersInsertsAreVisibles;
+    private List<@Valid @NotNull OthersInsertsAreVisible> othersInsertsAreVisible;
 
     @XmlElementRef
     @Setter(AccessLevel.NONE)
-    @Getter(AccessLevel.NONE)
-    private List<OthersUpdatesAreVisible> othersUpdatesAreVisibles;
+    private List<@Valid @NotNull OthersUpdatesAreVisible> othersUpdatesAreVisible;
 
     @XmlElementRef
     @Setter(AccessLevel.NONE)
-    @Getter(AccessLevel.NONE)
-    private List<OwnDeletesAreVisible> ownDeletesAreVisibles;
+    private List<OwnDeletesAreVisible> ownDeletesAreVisible;
 
     @XmlElementRef
     @Setter(AccessLevel.NONE)
-    @Getter(AccessLevel.NONE)
-    private List<OwnInsertsAreVisible> ownInsertsAreVisibles;
+    private List<@Valid @NotNull OwnInsertsAreVisible> ownInsertsAreVisible;
 
     @XmlElementRef
     @Setter(AccessLevel.NONE)
-    @Getter(AccessLevel.NONE)
-    private List<OwnUpdatesAreVisible> ownUpdatesAreVisibles;
+    private List<@Valid @NotNull OwnUpdatesAreVisible> ownUpdatesAreVisible;
 
     @XmlElementRef
     @Setter(AccessLevel.NONE)
-    @Getter(AccessLevel.NONE)
     private List<Catalog> catalogs;
 
     @XmlElementRef
     @Setter(AccessLevel.NONE)
-    @Getter(AccessLevel.NONE)
     private List<ClientInfoProperty> clientInfoProperties;
 
     @XmlElementRef
     @Setter(AccessLevel.NONE)
-    @Getter(AccessLevel.NONE)
     private List<CrossReference> crossReferences;
 
     @XmlElementRef
     @Setter(AccessLevel.NONE)
-    @Getter(AccessLevel.NONE)
     private List<SupportsConvert> supportsConverts;
 
     @XmlElementRef
     @Setter(AccessLevel.NONE)
-    @Getter(AccessLevel.NONE)
-    private List<SupportsResultSetConcurrency> supportsResultSetConcurrencies;
+    private List<SupportsResultSetConcurrency> supportsResultSetConcurrency;
 
     @XmlElementRef
     @Setter(AccessLevel.NONE)
-    @Getter(AccessLevel.NONE)
-    private List<SupportsResultSetHoldability> supportsResultSetHoldabilities;
+    private List<SupportsResultSetHoldability> supportsResultSetHoldability;
 
     @XmlElementRef
     @Setter(AccessLevel.NONE)
-    @Getter(AccessLevel.NONE)
     private List<SupportsResultSetType> supportsResultSetTypes;
 
     @XmlElementRef
     @Setter(AccessLevel.NONE)
-    @Getter(AccessLevel.NONE)
     private List<SupportsTransactionIsolationLevel> supportsTransactionIsolationLevels;
 
     @XmlElementRef
     @Setter(AccessLevel.NONE)
-    @Getter(AccessLevel.NONE)
     private List<TableType> tableTypes;
 }

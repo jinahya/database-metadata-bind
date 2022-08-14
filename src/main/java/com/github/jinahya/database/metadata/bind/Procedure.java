@@ -24,8 +24,10 @@ import lombok.AccessLevel;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
+import lombok.experimental.SuperBuilder;
 
 import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
@@ -33,8 +35,10 @@ import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlElementRef;
 import javax.xml.bind.annotation.XmlRootElement;
 import java.sql.DatabaseMetaData;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Comparator;
 import java.util.List;
 
 /**
@@ -45,13 +49,45 @@ import java.util.List;
  * @see Context#getProcedures(String, String, String, Collection)
  */
 @XmlRootElement
-@ChildOf(Schema.class)
 @ParentOf(ProcedureColumn.class)
 @Data
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
+@SuperBuilder(toBuilder = true)
 public class Procedure
-        implements MetadataType {
+        implements MetadataType,
+                   ChildOf<Schema> {
 
     private static final long serialVersionUID = -6262056388403934829L;
+
+    public static final Comparator<Procedure> COMPARATOR =
+            Comparator.comparing(Procedure::getProcedureCat, Comparator.nullsFirst(Comparator.naturalOrder()))
+                    .thenComparing(Procedure::getProcedureSchem, Comparator.nullsFirst(Comparator.naturalOrder()))
+                    .thenComparing(Procedure::getProcedureName)
+                    .thenComparing(Procedure::getSpecificName);
+
+    @Override
+    public void retrieveChildren(final Context context) throws SQLException {
+        {
+            context.getProcedureColumns(
+                    getProcedureCat(),
+                    getProcedureSchem(),
+                    getProcedureName(),
+                    "%",
+                    getProcedureColumns()
+            );
+            for (final ProcedureColumn procedureColumn : getProcedureColumns()) {
+                procedureColumn.retrieveChildren(context);
+            }
+        }
+    }
+
+    @Override
+    public Schema extractParent() {
+        return Schema.builder()
+                .tableCatalog(getProcedureCat())
+                .tableSchem(getProcedureSchem())
+                .build();
+    }
 
     public List<ProcedureColumn> getProcedureColumns() {
         if (procedureColumns == null) {
@@ -60,33 +96,34 @@ public class Procedure
         return procedureColumns;
     }
 
-    @XmlElement(required = true, nillable = true)
+    @XmlElement(nillable = true, required = true)
     @NullableBySpecification
     @Label("PROCEDURE_CAT")
     private String procedureCat;
 
-    @XmlElement(required = true, nillable = true)
+    @XmlElement(nillable = true, required = true)
     @NullableBySpecification
     @Label("PROCEDURE_SCHEM")
     private String procedureSchem;
 
-    @XmlElement(required = true)
+    @XmlElement(nillable = false, required = true)
     @Label("PROCEDURE_NAME")
     private String procedureName;
 
-    @XmlElement(required = true, nillable = true)
+    @XmlElement(nillable = true, required = true)
     @NullableByVendor("HSQL")
     @Label("REMARKS")
     private String remarks;
 
-    @XmlElement(required = true)
+    @XmlElement(nillable = false, required = true)
     @Label("PROCEDURE_TYPE")
     private short procedureType;
 
-    @XmlElement(required = true)
+    @XmlElement(nillable = false, required = true)
     @Label("SPECIFIC_NAME")
     private String specificName;
 
+    // -----------------------------------------------------------------------------------------------------------------
     @XmlElementRef
     @Setter(AccessLevel.NONE)
     @Getter(AccessLevel.NONE)

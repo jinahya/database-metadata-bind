@@ -20,14 +20,15 @@ package com.github.jinahya.database.metadata.bind;
  * #L%
  */
 
-import lombok.NoArgsConstructor;
+import lombok.Data;
+import lombok.EqualsAndHashCode;
+import lombok.ToString;
 
 import javax.xml.bind.annotation.XmlRootElement;
 import java.sql.DatabaseMetaData;
 import java.sql.SQLException;
 import java.util.Collection;
-
-import static java.util.Objects.requireNonNull;
+import java.util.Objects;
 
 /**
  * A class for binding result of {@link DatabaseMetaData#insertsAreDetected(int)} method.
@@ -36,7 +37,9 @@ import static java.util.Objects.requireNonNull;
  * @see Context#deletesAreDetected(int)
  */
 @XmlRootElement
-@NoArgsConstructor
+@Data
+@EqualsAndHashCode(callSuper = true)
+@ToString(callSuper = true)
 public class DeletesAreDetected
         extends AreDetected {
 
@@ -57,9 +60,10 @@ public class DeletesAreDetected
     static <C extends Collection<? super DeletesAreDetected>> C getAllInstances(final Context context,
                                                                                 final C collection)
             throws SQLException {
-        requireNonNull(context, "context is null");
+        Objects.requireNonNull(context, "context is null");
+        Objects.requireNonNull(collection, "collection is null");
         for (final ResultSetType type : ResultSetType.values()) {
-            collection.add(context.deletesAreDetected(type.getRawValue()));
+            collection.add(context.deletesAreDetected(type.rawValue()));
         }
         return collection;
     }

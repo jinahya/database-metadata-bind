@@ -40,25 +40,32 @@
   <properties>
     <maven.compiler.source>1.8</maven.compiler.source>
     <maven.compiler.target>${maven.compiler.source}</maven.compiler.target>
-    <!--    <maven.compiler.release>${maven.compiler.target}</maven.compiler.release>-->
     <maven.compiler.testSource>18</maven.compiler.testSource>
     <maven.compiler.testTarget>${maven.compiler.testSource}</maven.compiler.testTarget>
     <maven.compiler.testRelease>${maven.compiler.testTarget}</maven.compiler.testRelease>
+    <doclint>none</doclint>
     <version.animal-sniffer>1.21</version.animal-sniffer>
-    <version.com.sun.xml.bind>${version.jakarta.xml.bind-api}</version.com.sun.xml.bind>
+    <!--    <version.com.sun.xml.bind>${version.jakarta.xml.bind-api}</version.com.sun.xml.bind>-->
+    <version.com.sun.xml.bind>2.3.6</version.com.sun.xml.bind>
+    <version.jakarta.json.bind-api>2.0.0</version.jakarta.json.bind-api>
+    <!--    <version.jakarta.validation-api>3.0.2</version.jakarta.validation-api>-->
     <version.jakarta.validation-api>2.0.2</version.jakarta.validation-api>
+    <!--    <version.jakarta.xml.bind-api>4.0.0</version.jakarta.xml.bind-api>-->
     <version.jakarta.xml.bind-api>2.3.3</version.jakarta.xml.bind-api>
+    <version.lombok>1.18.24</version.lombok>
     <version.mariadb-java-client>2.7.2</version.mariadb-java-client>
     <version.maven-failsafe>${version.maven-surefire}</version.maven-failsafe>
-    <version.maven-surefire>3.0.0-M5</version.maven-surefire>
+    <version.maven-surefire>3.0.0-M7</version.maven-surefire>
     <version.mysql-connector-java>8.0.23</version.mysql-connector-java>
     <version.mssql-jdbc>9.2.1.jre15</version.mssql-jdbc>
     <version.ojdbc6>11.2.0.4</version.ojdbc6>
     <version.ojdbc8>21.5.0.0</version.ojdbc8>
     <version.ojdbc10>19.14.0.0</version.ojdbc10>
     <version.ojdbc11>21.5.0.0</version.ojdbc11>
-    <version.org.hibernate.validator>6.2.0.Final</version.org.hibernate.validator>
-    <version.org.testcontainers>1.17.1</version.org.testcontainers>
+    <version.org.eclipse.transformer>0.5.0</version.org.eclipse.transformer>
+    <!--    <version.org.hibernate.validator>6.2.0.Final</version.org.hibernate.validator>-->
+    <version.org.hibernate.validator>6.2.4.Final</version.org.hibernate.validator>
+    <version.org.testcontainers>1.17.3</version.org.testcontainers>
     <version.postgresql>42.2.19.jre7</version.postgresql>
     <version.presto-jdbc>350</version.presto-jdbc>
   </properties>
@@ -135,15 +142,15 @@
     <dependency>
       <groupId>com.h2database</groupId>
       <artifactId>h2</artifactId>
-      <version>1.4.200</version>
+      <version>2.1.214</version>
       <scope>test</scope>
     </dependency>
-    <dependency>
-      <groupId>com.launchableinc</groupId>
-      <artifactId>cyyoung</artifactId>
-      <version>2.0</version>
-      <scope>test</scope>
-    </dependency>
+    <!--    <dependency>-->
+    <!--      <groupId>com.launchableinc</groupId>-->
+    <!--      <artifactId>cyyoung</artifactId>-->
+    <!--      <version>2.0</version>-->
+    <!--      <scope>test</scope>-->
+    <!--    </dependency>-->
     <!--    <dependency>-->
     <!--      <groupId>com.sun.xml.bind</groupId>-->
     <!--      <artifactId>jaxb-core</artifactId>-->
@@ -157,9 +164,15 @@
       <scope>test</scope>
     </dependency>
     <dependency>
+      <groupId>jakarta.json.bind</groupId>
+      <artifactId>jakarta.json.bind-api</artifactId>
+      <version>${version.jakarta.json.bind-api}</version>
+      <scope>provided</scope>
+    </dependency>
+    <dependency>
       <groupId>jakarta.xml.bind</groupId>
       <artifactId>jakarta.xml.bind-api</artifactId>
-      <version>2.3.3</version>
+      <version>${version.jakarta.xml.bind-api}</version>
       <scope>provided</scope>
     </dependency>
     <dependency>
@@ -178,7 +191,7 @@
     <dependency>
       <groupId>org.assertj</groupId>
       <artifactId>assertj-core</artifactId>
-      <version>3.22.0</version>
+      <version>3.23.1</version>
       <scope>test</scope>
     </dependency>
     <dependency>
@@ -186,6 +199,12 @@
       <artifactId>animal-sniffer-annotations</artifactId>
       <version>${version.animal-sniffer}</version>
       <scope>provided</scope>
+    </dependency>
+    <dependency>
+      <groupId>org.eclipse</groupId>
+      <artifactId>yasson</artifactId>
+      <version>2.0.4</version>
+      <scope>test</scope>
     </dependency>
     <dependency>
       <groupId>org.glassfish</groupId>
@@ -203,19 +222,25 @@
     <dependency>
       <groupId>org.hsqldb</groupId>
       <artifactId>hsqldb</artifactId>
-      <version>2.6.1</version>
+      <version>2.7.0</version>
+      <scope>test</scope>
+    </dependency>
+    <dependency>
+      <groupId>org.jboss.weld</groupId>
+      <artifactId>weld-junit5</artifactId>
+      <version>4.0.0.Final</version>
       <scope>test</scope>
     </dependency>
     <dependency>
       <groupId>org.junit.jupiter</groupId>
       <artifactId>junit-jupiter</artifactId>
-      <version>5.8.2</version>
+      <version>5.9.0</version>
       <scope>test</scope>
     </dependency>
     <dependency>
       <groupId>org.projectlombok</groupId>
       <artifactId>lombok</artifactId>
-      <version>1.18.24</version>
+      <version>${version.lombok}</version>
       <scope>provided</scope>
     </dependency>
     <!--    <dependency>-->
@@ -227,7 +252,7 @@
     <dependency>
       <groupId>org.xerial</groupId>
       <artifactId>sqlite-jdbc</artifactId>
-      <version>3.36.0.3</version>
+      <version>3.39.2.0</version>
       <scope>test</scope>
     </dependency>
   </dependencies>
@@ -238,13 +263,21 @@
         <plugin>
           <groupId>org.apache.maven.plugins</groupId>
           <artifactId>maven-compiler-plugin</artifactId>
-          <version>3.10.0</version>
+          <version>3.10.1</version>
         </plugin>
         <plugin>
           <groupId>org.apache.maven.plugins</groupId>
           <artifactId>maven-javadoc-plugin</artifactId>
           <version>3.4.0</version>
           <configuration>
+            <additionalOptions>
+              <additionalOption>-Xdoclint:${doclint}</additionalOption>
+            </additionalOptions>
+            <links>
+              <link>https://javadoc.io/doc/jakarta.persistence/jakarta.persistence-api/latest</link>
+              <link>https://javadoc.io/doc/jakarta.xml.bind/jakarta.xml.bind-api/latest</link>
+              <link>https://javadoc.io/doc/jakarta.validation/jakarta.validation-api/latest</link>
+            </links>
             <tags>
               <tag>
                 <name>apiNote</name>
@@ -287,12 +320,12 @@
         <plugin>
           <groupId>org.apache.maven.plugins</groupId>
           <artifactId>maven-project-info-reports-plugin</artifactId>
-          <version>3.1.2</version>
+          <version>3.4.0</version>
         </plugin>
         <plugin>
           <groupId>org.apache.maven.plugins</groupId>
           <artifactId>maven-site-plugin</artifactId>
-          <version>3.10.0</version>
+          <version>4.0.0-M3</version>
         </plugin>
         <plugin>
           <groupId>org.codehaus.mojo</groupId>
@@ -302,12 +335,17 @@
         <plugin>
           <groupId>org.codehaus.mojo</groupId>
           <artifactId>versions-maven-plugin</artifactId>
-          <version>2.10.0</version>
+          <version>2.11.0</version>
         </plugin>
         <plugin>
           <groupId>org.codehaus.mojo</groupId>
           <artifactId>sonar-maven-plugin</artifactId>
           <version>3.9.1.2184</version>
+        </plugin>
+        <plugin>
+          <groupId>org.eclipse.transformer</groupId>
+          <artifactId>transformer-maven-plugin</artifactId>
+          <version>${version.org.eclipse.transformer}</version>
         </plugin>
         <plugin>
           <groupId>org.jacoco</groupId>
@@ -321,18 +359,79 @@
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-compiler-plugin</artifactId>
         <configuration>
+          <annotationProcessorPaths>
+            <path>
+              <groupId>org.projectlombok</groupId>
+              <artifactId>lombok</artifactId>
+              <version>${version.lombok}</version>
+            </path>
+          </annotationProcessorPaths>
           <compilerArgs>
             <arg>-Xlint</arg>
           </compilerArgs>
         </configuration>
+        <executions>
+          <execution>
+            <id>release-11</id>
+            <phase>prepare-package</phase>
+            <goals>
+              <goal>compile</goal>
+            </goals>
+            <configuration>
+              <target>11</target>
+              <release>11</release>
+              <fork>true</fork>
+              <outputDirectory>${project.build.outputDirectory}-release-11</outputDirectory>
+            </configuration>
+          </execution>
+          <execution>
+            <id>release-11-jakarta</id>
+            <phase>prepare-package</phase>
+            <goals>
+              <goal>compile</goal>
+            </goals>
+            <configuration>
+              <target>11</target>
+              <release>11</release>
+              <fork>true</fork>
+              <outputDirectory>${project.build.outputDirectory}-release-11-jakarta</outputDirectory>
+            </configuration>
+          </execution>
+          <execution>
+            <id>release-17</id>
+            <phase>prepare-package</phase>
+            <goals>
+              <goal>compile</goal>
+            </goals>
+            <configuration>
+              <target>17</target>
+              <release>17</release>
+              <fork>true</fork>
+              <outputDirectory>${project.build.outputDirectory}-release-17</outputDirectory>
+            </configuration>
+          </execution>
+          <execution>
+            <id>release-17-jakarta</id>
+            <phase>prepare-package</phase>
+            <goals>
+              <goal>compile</goal>
+            </goals>
+            <configuration>
+              <target>17</target>
+              <release>17</release>
+              <fork>true</fork>
+              <outputDirectory>${project.build.outputDirectory}-release-17-jakarta</outputDirectory>
+            </configuration>
+          </execution>
+        </executions>
       </plugin>
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-enforcer-plugin</artifactId>
-        <version>3.0.0</version>
+        <version>3.1.0</version>
         <executions>
           <execution>
-            <id>enforce</id>
+            <id>enforce-dependency-convergence</id>
             <configuration>
               <skip>true</skip>
               <rules>
@@ -344,15 +443,14 @@
             </goals>
           </execution>
           <execution>
-            <id>enforce-require-java-version-to-[1.8.0,)</id>
+            <id>enforce-require-java-version</id>
             <goals>
               <goal>enforce</goal>
             </goals>
             <configuration>
-              <skip>false</skip>
               <rules>
                 <requireJavaVersion>
-                  <version>[1.8.0,)</version>
+                  <version>[17.0.0,)</version>
                 </requireJavaVersion>
               </rules>
             </configuration>
@@ -440,7 +538,7 @@
       <plugin>
         <groupId>com.github.spotbugs</groupId>
         <artifactId>spotbugs-maven-plugin</artifactId>
-        <version>4.5.3.0</version>
+        <version>4.7.1.1</version>
       </plugin>
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
@@ -459,7 +557,7 @@
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-pmd-plugin</artifactId>
-        <version>3.16.0</version>
+        <version>3.17.0</version>
       </plugin>
       <plugin>
         <groupId>org.jacoco</groupId>
@@ -710,6 +808,104 @@
           <scope>test</scope>
         </dependency>
       </dependencies>
+    </profile>
+    <profile>
+      <id>jakarta</id>
+      <activation>
+        <activeByDefault>true</activeByDefault>
+      </activation>
+      <build>
+        <plugins>
+          <plugin>
+            <groupId>org.apache.maven.plugins</groupId>
+            <artifactId>maven-jar-plugin</artifactId>
+            <configuration>
+              <archive>
+                <manifestEntries>
+                  <Automatic-Module-Name>com.github.jinahya.database.metadata.bind</Automatic-Module-Name>
+                </manifestEntries>
+              </archive>
+            </configuration>
+            <executions>
+              <execution>
+                <id>jar-release-11</id>
+                <phase>package</phase>
+                <goals>
+                  <goal>jar</goal>
+                </goals>
+                <configuration>
+                  <classesDirectory>${project.build.outputDirectory}-release-11</classesDirectory>
+                  <classifier>release-11</classifier>
+                </configuration>
+              </execution>
+              <execution>
+                <id>jar-release-11-jakarta</id>
+                <phase>package</phase>
+                <goals>
+                  <goal>jar</goal>
+                </goals>
+                <configuration>
+                  <classesDirectory>${project.build.outputDirectory}-release-11-jakarta</classesDirectory>
+                  <classifier>release-11-jakarta</classifier>
+                </configuration>
+              </execution>
+              <execution>
+                <id>jar-release-17</id>
+                <phase>package</phase>
+                <goals>
+                  <goal>jar</goal>
+                </goals>
+                <configuration>
+                  <classesDirectory>${project.build.outputDirectory}-release-17</classesDirectory>
+                  <classifier>release-17</classifier>
+                </configuration>
+              </execution>
+              <execution>
+                <id>jar-release-17-jakarta</id>
+                <phase>package</phase>
+                <goals>
+                  <goal>jar</goal>
+                </goals>
+                <configuration>
+                  <classesDirectory>${project.build.outputDirectory}-release-17-jakarta</classesDirectory>
+                  <classifier>release-17-jakarta</classifier>
+                </configuration>
+              </execution>
+            </executions>
+          </plugin>
+          <plugin>
+            <groupId>org.eclipse.transformer</groupId>
+            <artifactId>transformer-maven-plugin</artifactId>
+            <configuration>
+              <rules>
+                <jakartaDefaults>true</jakartaDefaults>
+              </rules>
+            </configuration>
+            <executions>
+              <execution>
+                <id>transform-release-11-jakarta</id>
+                <phase>prepare-package</phase>
+                <goals>
+                  <goal>transform</goal>
+                </goals>
+                <configuration>
+                  <transformDirectory>${project.build.outputDirectory}-release-11-jakarta</transformDirectory>
+                </configuration>
+              </execution>
+              <execution>
+                <id>transform-release-17-jakarta</id>
+                <phase>prepare-package</phase>
+                <goals>
+                  <goal>transform</goal>
+                </goals>
+                <configuration>
+                  <transformDirectory>${project.build.outputDirectory}-release-17-jakarta</transformDirectory>
+                </configuration>
+              </execution>
+            </executions>
+          </plugin>
+        </plugins>
+      </build>
     </profile>
   </profiles>
 </project>

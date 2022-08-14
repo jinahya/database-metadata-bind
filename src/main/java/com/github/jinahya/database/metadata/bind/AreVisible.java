@@ -21,17 +21,21 @@ package com.github.jinahya.database.metadata.bind;
  */
 
 import lombok.AccessLevel;
+import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
+import lombok.experimental.SuperBuilder;
 
 import javax.xml.bind.annotation.XmlAttribute;
-import javax.xml.bind.annotation.XmlTransient;
+import javax.xml.bind.annotation.XmlSeeAlso;
 import javax.xml.bind.annotation.XmlValue;
+import java.io.Serializable;
+import java.sql.SQLException;
 
 /**
- * An abstract class for binding results of  {@code DatabaseMetaData#...DeletesAreVisible(int)} method.
+ * An abstract class for binding the result of {@code DatabaseMetaData#...DeletesAreVisible(int)} method.
  *
  * @see OthersDeletesAreVisible
  * @see OthersInsertsAreVisible
@@ -40,15 +44,35 @@ import javax.xml.bind.annotation.XmlValue;
  * @see OwnInsertsAreVisible
  * @see OwnUpdatesAreVisible
  */
-@XmlTransient
+@XmlSeeAlso({
+        OthersDeletesAreVisible.class,
+        OthersInsertsAreVisible.class,
+        OthersUpdatesAreVisible.class,
+        OwnDeletesAreVisible.class,
+        OwnInsertsAreVisible.class,
+        OwnUpdatesAreVisible.class
+})
 @Setter
 @Getter
+@EqualsAndHashCode
 @ToString(callSuper = true)
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-abstract class AreVisible
-        implements MetadataType {
+@SuperBuilder(toBuilder = true)
+public abstract class AreVisible
+        implements Serializable,
+                   MetadataType {
 
-    private static final long serialVersionUID = 8635936632512182596L;
+    private static final long serialVersionUID = -4539635096087360299L;
+
+    @Override
+    public void retrieveChildren(Context context) throws SQLException {
+        // no children.
+    }
+
+    @XmlAttribute(required = false)
+    public ResultSetType getTypeAsEnum() {
+        return ResultSetType.valueOfRawValue(getType());
+    }
 
     @XmlAttribute(required = true)
     private int type;

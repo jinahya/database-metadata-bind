@@ -20,13 +20,18 @@ package com.github.jinahya.database.metadata.bind;
  * #L%
  */
 
+import lombok.AccessLevel;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+import lombok.experimental.SuperBuilder;
+
+import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
 import java.sql.DatabaseMetaData;
+import java.sql.SQLException;
 import java.util.Objects;
-
-import static java.util.Objects.requireNonNull;
 
 /**
  * An entity class for binding the result of {@link java.sql.DatabaseMetaData#getTypeInfo() getTypeInfo()}.
@@ -34,7 +39,11 @@ import static java.util.Objects.requireNonNull;
  * @author Jin Kwon &lt;jinahya_at_gmail.com&gt;
  */
 @XmlRootElement
-public class TypeInfo implements MetadataType {
+@Data
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
+@SuperBuilder(toBuilder = true)
+public class TypeInfo
+        implements MetadataType {
 
     private static final long serialVersionUID = -3964147654019495313L;
 
@@ -98,7 +107,7 @@ public class TypeInfo implements MetadataType {
          * @return the raw value of this constant.
          */
         @Override
-        public int getRawValue() {
+        public int rawValue() {
             return rawValue;
         }
 
@@ -162,7 +171,7 @@ public class TypeInfo implements MetadataType {
          * @return the raw value of this constant.
          */
         @Override
-        public int getRawValue() {
+        public int rawValue() {
             return rawValue;
         }
 
@@ -172,347 +181,108 @@ public class TypeInfo implements MetadataType {
         private final int rawValue;
     }
 
-    /**
-     * Creates a new instance.
-     */
-    public TypeInfo() {
-        super();
-    }
-
     @Override
-    public String toString() {
-        return super.toString() + '{'
-               + "typeName=" + typeName
-               + ",dataType=" + dataType
-               + ",precision=" + precision
-               + ",literalPrefix=" + literalPrefix
-               + ",literalSuffix=" + literalSuffix
-               + ",createParams=" + createParams
-               + ",nullable=" + nullable
-               + ",caseSensitive=" + caseSensitive
-               + ",searchable=" + searchable
-               + ",unsignedAttribute=" + unsignedAttribute
-               + ",fixedPrecScale=" + fixedPrecScale
-               + ",autoIncrement=" + autoIncrement
-               + ",localTypeName=" + localTypeName
-               + ",minimumScale=" + minimumScale
-               + ",maximumScale=" + maximumScale
-               + ",sqlDataType=" + sqlDataType
-               + ",sqlDatetimeSub=" + sqlDatetimeSub
-               + ",numPrecRadix=" + numPrecRadix
-               + '}';
+    public void retrieveChildren(final Context context) throws SQLException {
     }
 
-    @Override
-    public boolean equals(final Object obj) {
-        if (this == obj) return true;
-        if (obj == null || getClass() != obj.getClass()) return false;
-        final TypeInfo that = (TypeInfo) obj;
-        return dataType == that.dataType
-               && precision == that.precision
-               && nullable == that.nullable
-               && caseSensitive == that.caseSensitive
-               && searchable == that.searchable
-               && unsignedAttribute == that.unsignedAttribute
-               && fixedPrecScale == that.fixedPrecScale
-               && autoIncrement == that.autoIncrement
-               && minimumScale == that.minimumScale
-               && maximumScale == that.maximumScale
-               && numPrecRadix == that.numPrecRadix
-               && Objects.equals(typeName, that.typeName)
-               && Objects.equals(literalPrefix, that.literalPrefix)
-               && Objects.equals(literalSuffix, that.literalSuffix)
-               && Objects.equals(createParams, that.createParams)
-               && Objects.equals(localTypeName, that.localTypeName)
-               && Objects.equals(sqlDataType, that.sqlDataType)
-               && Objects.equals(sqlDatetimeSub, that.sqlDatetimeSub);
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(typeName,
-                            dataType,
-                            precision,
-                            literalPrefix,
-                            literalSuffix,
-                            createParams,
-                            nullable,
-                            caseSensitive,
-                            searchable,
-                            unsignedAttribute,
-                            fixedPrecScale,
-                            autoIncrement,
-                            localTypeName,
-                            minimumScale,
-                            maximumScale,
-                            sqlDataType,
-                            sqlDatetimeSub,
-                            numPrecRadix);
-    }
-
-    // -------------------------------------------------------------------------------------------------------- typeName
-    public String getTypeName() {
-        return typeName;
-    }
-
-    public void setTypeName(final String typeName) {
-        this.typeName = typeName;
-    }
-
-    // ----------------------------------------------------------------------------------------------------- getDataType
-    public int getDataType() {
-        return dataType;
-    }
-
-    public void setDataType(final int dataType) {
-        this.dataType = dataType;
-    }
-
-    // ------------------------------------------------------------------------------------------------------- precesion
-    public int getPrecision() {
-        return precision;
-    }
-
-    public void setPrecision(final int precision) {
-        this.precision = precision;
-    }
-
-    // --------------------------------------------------------------------------------------------------- literalPrefix
-    public String getLiteralPrefix() {
-        return literalPrefix;
-    }
-
-    public void setLiteralPrefix(final String literalPrefix) {
-        this.literalPrefix = literalPrefix;
-    }
-
-    // --------------------------------------------------------------------------------------------------- literalSuffix
-    public String getLiteralSuffix() {
-        return literalSuffix;
-    }
-
-    public void setLiteralSuffix(final String literalSuffix) {
-        this.literalSuffix = literalSuffix;
-    }
-
-    // ---------------------------------------------------------------------------------------------------- createParams
-    public String getCreateParams() {
-        return createParams;
-    }
-
-    public void setCreateParams(final String createParams) {
-        this.createParams = createParams;
-    }
-
-    // -------------------------------------------------------------------------------------------------------- nullable
-    public short getNullable() {
-        return nullable;
-    }
-
-    public void setNullable(final short nullable) {
-        this.nullable = nullable;
-    }
-
-    public void setNullableAsInt(final int nullableAsInt) {
-        setNullable((short) nullableAsInt);
-    }
-
-    public @NotNull Nullable getNullableAsEnum() {
+    @NotNull
+    public Nullable getNullableAsEnum() {
         return Nullable.valueOfRawValue(getNullable());
     }
 
-    public void setNullableAsEnum(final @NotNull Nullable nullableAsEnum) {
-        requireNonNull(nullableAsEnum, "nullableAsEnum is null");
-        setNullableAsInt(nullableAsEnum.getRawValue());
+    public void setNullableAsEnum(@NotNull final Nullable nullableAsEnum) {
+        Objects.requireNonNull(nullableAsEnum, "nullableAsEnum is null");
+        setNullable(nullableAsEnum.rawValue());
     }
 
-    // --------------------------------------------------------------------------------------------------- caseSensitive
-    public boolean getCaseSensitive() {
-        return caseSensitive;
-    }
-
-    public void setCaseSensitive(final boolean caseSensitive) {
-        this.caseSensitive = caseSensitive;
-    }
-
-    // ------------------------------------------------------------------------------------------------------ searchable
-    public short getSearchable() {
-        return searchable;
-    }
-
-    public void setSearchable(final short searchable) {
-        this.searchable = searchable;
-    }
-
-    public void setSearchableAsInt(final int searchableAsInt) {
-        setSearchable((short) searchableAsInt);
-    }
-
-    public @NotNull Searchable getSearchableAsEnum() {
+    @NotNull
+    public Searchable getSearchableAsEnum() {
         return Searchable.valueOfRawValue(getSearchable());
     }
 
-    public void setSearchableAsEnum(final @NotNull Searchable searchableAsEnum) {
-        requireNonNull(searchableAsEnum, "searchableAsEnum is null");
-        setSearchableAsInt(searchableAsEnum.getRawValue());
+    public void setSearchableAsEnum(@NotNull final Searchable searchableAsEnum) {
+        Objects.requireNonNull(searchableAsEnum, "searchableAsEnum is null");
+        setSearchable(searchableAsEnum.rawValue());
     }
 
-    // ----------------------------------------------------------------------------------------------- unsignedAttribute
-    public boolean getUnsignedAttribute() {
-        return unsignedAttribute;
-    }
-
-    public void setUnsignedAttribute(final boolean unsignedAttribute) {
-        this.unsignedAttribute = unsignedAttribute;
-    }
-
-    // -------------------------------------------------------------------------------------------------- fixedPrecScale
-    public boolean getFixedPrecScale() {
-        return fixedPrecScale;
-    }
-
-    public void setFixedPrecScale(final boolean fixedPrecScale) {
-        this.fixedPrecScale = fixedPrecScale;
-    }
-
-    // --------------------------------------------------------------------------------------------------- autoIncrement
-    public boolean getAutoIncrement() {
-        return autoIncrement;
-    }
-
-    public void setAutoIncrement(final boolean autoIncrement) {
-        this.autoIncrement = autoIncrement;
-    }
-
-    // --------------------------------------------------------------------------------------------------- localTypeName
-    public String getLocalTypeName() {
-        return localTypeName;
-    }
-
-    public void setLocalTypeName(final String localTypeName) {
-        this.localTypeName = localTypeName;
-    }
-
-    // ---------------------------------------------------------------------------------------------------- minimumScale
-    public short getMinimumScale() {
-        return minimumScale;
-    }
-
-    public void setMinimumScale(final short minimumScale) {
-        this.minimumScale = minimumScale;
-    }
-
-    // ---------------------------------------------------------------------------------------------------- maximumScale
-    public short getMaximumScale() {
-        return maximumScale;
-    }
-
-    public void setMaximumScale(final short maximumScale) {
-        this.maximumScale = maximumScale;
-    }
-
-    // ----------------------------------------------------------------------------------------------------- sqlDataType
-    public Integer getSqlDataType() {
-        return sqlDataType;
-    }
-
-    public void setSqlDataType(final Integer sqlDataType) {
-        this.sqlDataType = sqlDataType;
-    }
-
-    // -------------------------------------------------------------------------------------------------- sqlDatetimeSub
-    public Integer getSqlDatetimeSub() {
-        return sqlDatetimeSub;
-    }
-
-    public void setSqlDatetimeSub(final Integer sqlDatetimeSub) {
-        this.sqlDatetimeSub = sqlDatetimeSub;
-    }
-
-    // ---------------------------------------------------------------------------------------------------- numPrecRadix
-    public int getNumPrecRadix() {
-        return numPrecRadix;
-    }
-
-    public void setNumPrecRadix(final int numPrecRadix) {
-        this.numPrecRadix = numPrecRadix;
-    }
-
-    @XmlElement(required = true)
+    @XmlElement(nillable = false, required = true)
+    @NotBlank
     @Label("TYPE_NAME")
     private String typeName;
 
-    @XmlElement(required = true)
+    @XmlElement(nillable = false, required = true)
     @Label("DATA_TYPE")
     private int dataType;
 
-    @XmlElement(required = true)
+    @XmlElement(nillable = true, required = true)
+    @NullableBySpecification // > Null is returned for data types where the column size is not applicable.
     @Label("PRECISION")
-    private int precision;
+    private Integer precision;
 
-    @XmlElement(required = true, nillable = true)
+    @XmlElement(nillable = true, required = true)
     @NullableBySpecification
     @Label("LITERAL_PREFIX")
     private String literalPrefix;
 
-    @XmlElement(required = true, nillable = true)
+    @XmlElement(nillable = true, required = true)
     @NullableBySpecification
     @Label("LITERAL_SUFFIX")
     private String literalSuffix;
 
-    @XmlElement(required = true, nillable = true)
+    @XmlElement(nillable = true, required = true)
     @NullableBySpecification
     @Label("CREATE_PARAMS")
     private String createParams;
 
-    @XmlElement(required = true)
+    @XmlElement(nillable = false, required = true)
     @Label("NULLABLE")
-    private short nullable;
+    private int nullable;
 
-    @XmlElement(required = true)
+    @XmlElement(nillable = false, required = true)
     @Label("CASE_SENSITIVE")
     private boolean caseSensitive;
 
-    @XmlElement(required = true)
+    @XmlElement(nillable = false, required = true)
     @Label("SEARCHABLE")
-    private short searchable;
+    private int searchable;
 
-    @XmlElement(required = true)
+    @XmlElement(nillable = true, required = true)
+    @NotUsedBySpecification
     @Label("UNSIGNED_ATTRIBUTE")
-    private boolean unsignedAttribute;
+    private Boolean unsignedAttribute;
 
-    @XmlElement(required = true)
+    @XmlElement(nillable = false, required = true)
     @Label("FIXED_PREC_SCALE")
     private boolean fixedPrecScale;
 
-    @XmlElement(required = true)
+    @XmlElement(nillable = false, required = true)
     @Label("AUTO_INCREMENT")
     private boolean autoIncrement;
 
-    @XmlElement(required = true, nillable = true)
+    @XmlElement(nillable = true, required = true)
     @NullableBySpecification
     @Label("LOCAL_TYPE_NAME")
     private String localTypeName;
 
     @XmlElement(required = true)
     @Label("MINIMUM_SCALE")
-    private short minimumScale;
+    private int minimumScale;
 
     @XmlElement(required = true)
     @Label("MAXIMUM_SCALE")
-    private short maximumScale;
+    private int maximumScale;
 
-    @XmlElement(required = true, nillable = true)
-    @Unused
+    @XmlElement(nillable = true, required = true)
+    @NotUsedBySpecification
     @Label("SQL_DATA_TYPE")
     private Integer sqlDataType;
 
-    @XmlElement(required = true, nillable = true)
-    @Unused
+    @XmlElement(nillable = true, required = true)
+    @NotUsedBySpecification
     @Label("SQL_DATETIME_SUB")
     private Integer sqlDatetimeSub;
 
-    @XmlElement(required = true)
+    @XmlElement(nillable = false, required = true)
     @Label("NUM_PREC_RADIX")
     private int numPrecRadix;
 }
