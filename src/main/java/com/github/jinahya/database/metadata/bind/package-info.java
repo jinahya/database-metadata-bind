@@ -1,3 +1,4 @@
+@JsonbNillable
 @XmlSchema(
         attributeFormDefault = XmlNsForm.UNQUALIFIED,
         elementFormDefault = XmlNsForm.QUALIFIED,
@@ -32,6 +33,8 @@ package com.github.jinahya.database.metadata.bind;
  * limitations under the License.
  * #L%
  */
+
+import jakarta.json.bind.annotation.JsonbNillable;
 
 import javax.xml.XMLConstants;
 import javax.xml.bind.annotation.XmlAccessType;

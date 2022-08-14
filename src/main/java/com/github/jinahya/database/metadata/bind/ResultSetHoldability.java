@@ -20,6 +20,7 @@ package com.github.jinahya.database.metadata.bind;
  * #L%
  */
 
+import javax.xml.bind.annotation.XmlEnum;
 import java.sql.ResultSet;
 
 /**
@@ -27,7 +28,8 @@ import java.sql.ResultSet;
  *
  * @author Jin Kwon &lt;onacit_at_gmail.com&gt;
  */
-enum ResultSetHoldability implements IntFieldEnum<ResultSetHoldability> {
+@XmlEnum
+public enum ResultSetHoldability implements IntFieldEnum<ResultSetHoldability> {
 
     /**
      * Constants for {@link ResultSet#HOLD_CURSORS_OVER_COMMIT}({@value java.sql.ResultSet#HOLD_CURSORS_OVER_COMMIT}).

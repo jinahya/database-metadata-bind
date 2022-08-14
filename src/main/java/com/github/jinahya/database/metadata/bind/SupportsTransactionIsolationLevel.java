@@ -57,14 +57,14 @@ public class SupportsTransactionIsolationLevel
      * @param <C>        the type of {@code collection}
      * @return given {@code collection}.
      * @throws SQLException if a database access error occurs.
-     * @see ConnectionTransactionIsolationLevel
+     * @see TransactionIsolationLevel
      */
     public static <C extends Collection<? super SupportsTransactionIsolationLevel>> C getAllInstances(
             final Context context, final C collection)
             throws SQLException {
         Objects.requireNonNull(context, "context is null");
         Objects.requireNonNull(collection, "collection is null");
-        for (final ConnectionTransactionIsolationLevel value : ConnectionTransactionIsolationLevel.values()) {
+        for (final TransactionIsolationLevel value : TransactionIsolationLevel.values()) {
             collection.add(context.supportsTransactionIsolationLevel(value.rawValue()));
         }
         return collection;
@@ -76,8 +76,8 @@ public class SupportsTransactionIsolationLevel
     }
 
     @XmlAttribute(required = false)
-    public ConnectionTransactionIsolationLevel getLevelAsEnum() {
-        return ConnectionTransactionIsolationLevel.valueOfRawValue(getLevel());
+    public TransactionIsolationLevel getLevelAsEnum() {
+        return TransactionIsolationLevel.valueOfRawValue(getLevel());
     }
 
     @XmlAttribute(required = true)

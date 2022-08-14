@@ -20,6 +20,7 @@ package com.github.jinahya.database.metadata.bind;
  * #L%
  */
 
+import jakarta.json.bind.annotation.JsonbProperty;
 import lombok.AccessLevel;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
@@ -62,10 +63,16 @@ public abstract class AreDetected
         // no children.
     }
 
+    @JsonbProperty
     @XmlAttribute(required = false)
-    public String getTypeName() {
-        return ResultSetType.valueOfRawValue(getType()).name();
+    public ResultSetType getTypeAsEnum() {
+        return ResultSetType.valueOfRawValue(getType());
     }
+
+//    @XmlAttribute(required = false)
+//    public String getTypeName() {
+//        return ResultSetType.valueOfRawValue(getType()).name();
+//    }
 
     @XmlAttribute(required = true)
     private int type;

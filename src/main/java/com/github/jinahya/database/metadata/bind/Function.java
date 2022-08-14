@@ -20,6 +20,8 @@ package com.github.jinahya.database.metadata.bind;
  * #L%
  */
 
+import jakarta.json.bind.annotation.JsonbNillable;
+import jakarta.json.bind.annotation.JsonbProperty;
 import lombok.AccessLevel;
 import lombok.Data;
 import lombok.EqualsAndHashCode;

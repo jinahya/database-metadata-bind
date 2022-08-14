@@ -22,12 +22,13 @@ package com.github.jinahya.database.metadata.bind;
 
 import lombok.AccessLevel;
 import lombok.Data;
-import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.experimental.SuperBuilder;
 import lombok.extern.java.Log;
 
+import javax.validation.Valid;
+import javax.validation.constraints.NotNull;
 import javax.xml.bind.annotation.XmlElementRef;
 import javax.xml.bind.annotation.XmlRootElement;
 import java.sql.SQLException;
@@ -46,21 +47,21 @@ public class Metadata {
         Objects.requireNonNull(context, "context is null");
         final Metadata instance = new Metadata();
         // -------------------------------------------------------------------------------------------------------------
-        instance.deletesAreDetectedList = DeletesAreDetected.getAllInstances(context, new ArrayList<>());
-        instance.insertsAreDetectedList = InsertsAreDetected.getAllInstances(context, new ArrayList<>());
-        instance.updatesAreDetectedList = UpdatesAreDetected.getAllInstances(context, new ArrayList<>());
+        instance.deletesAreDetected = DeletesAreDetected.getAllInstances(context, new ArrayList<>());
+        instance.insertsAreDetected = InsertsAreDetected.getAllInstances(context, new ArrayList<>());
+        instance.updatesAreDetected = UpdatesAreDetected.getAllInstances(context, new ArrayList<>());
         // -------------------------------------------------------------------------------------------------------------
-        instance.othersDeletesAreVisibleList = OthersDeletesAreVisible.getAllInstances(context, new ArrayList<>());
-        instance.othersInsertsAreVisibles = OthersInsertsAreVisible.getAllInstances(context, new ArrayList<>());
-        instance.othersUpdatesAreVisibles = OthersUpdatesAreVisible.getAllInstances(context, new ArrayList<>());
-        instance.ownDeletesAreVisibles = OwnDeletesAreVisible.getAllInstances(context, new ArrayList<>());
-        instance.ownInsertsAreVisibles = OwnInsertsAreVisible.getAllInstances(context, new ArrayList<>());
-        instance.ownUpdatesAreVisibles = OwnUpdatesAreVisible.getAllInstances(context, new ArrayList<>());
+        instance.othersDeletesAreVisible = OthersDeletesAreVisible.getAllInstances(context, new ArrayList<>());
+        instance.othersInsertsAreVisible = OthersInsertsAreVisible.getAllInstances(context, new ArrayList<>());
+        instance.othersUpdatesAreVisible = OthersUpdatesAreVisible.getAllInstances(context, new ArrayList<>());
+        instance.ownDeletesAreVisible = OwnDeletesAreVisible.getAllInstances(context, new ArrayList<>());
+        instance.ownInsertsAreVisible = OwnInsertsAreVisible.getAllInstances(context, new ArrayList<>());
+        instance.ownUpdatesAreVisible = OwnUpdatesAreVisible.getAllInstances(context, new ArrayList<>());
         // -------------------------------------------------------------------------------------------------------------
         {
             instance.catalogs = context.getCatalogs(new ArrayList<>());
             if (instance.catalogs.isEmpty()) {
-                instance.catalogs.add(Catalog.newVirtualInstance()); // ""
+                instance.catalogs.add(Catalog.newVirtualInstance());
             }
             for (final Catalog catalog : instance.catalogs) {
                 catalog.retrieveChildren(context);
@@ -80,9 +81,9 @@ public class Metadata {
         }
         // -------------------------------------------------------------------------------------------------------------
         instance.supportsConverts = SupportsConvert.getAllInstances(context, new ArrayList<>());
-        instance.supportsResultSetConcurrencies
+        instance.supportsResultSetConcurrency
                 = SupportsResultSetConcurrency.getAllInstances(context, new ArrayList<>());
-        instance.supportsResultSetHoldabilities
+        instance.supportsResultSetHoldability
                 = SupportsResultSetHoldability.getAllInstances(context, new ArrayList<>());
         instance.supportsResultSetTypes = SupportsResultSetType.getAllInstances(context, new ArrayList<>());
         instance.supportsTransactionIsolationLevels
@@ -98,94 +99,76 @@ public class Metadata {
         return instance;
     }
 
-    // --------------------------------------------------------------------------------------------------------------- \
-    @XmlElementRef(name = "deletesAreDetected")
+    // -----------------------------------------------------------------------------------------------------------------
+    @XmlElementRef
     @Setter(AccessLevel.NONE)
-    @Getter(AccessLevel.NONE)
-    private List<DeletesAreDetected> deletesAreDetectedList;
-
-    @XmlElementRef(name = "insertsAreDetected")
-    @Setter(AccessLevel.NONE)
-    @Getter(AccessLevel.NONE)
-    private List<InsertsAreDetected> insertsAreDetectedList;
-
-    @XmlElementRef(name = "updatesAreDetected")
-    @Setter(AccessLevel.NONE)
-    @Getter(AccessLevel.NONE)
-    private List<UpdatesAreDetected> updatesAreDetectedList;
-
-    @XmlElementRef(name = "othersDeletesAreVisible")
-    @Setter(AccessLevel.NONE)
-    @Getter(AccessLevel.NONE)
-    private List<OthersDeletesAreVisible> othersDeletesAreVisibleList;
+    private List<@Valid @NotNull DeletesAreDetected> deletesAreDetected;
 
     @XmlElementRef
     @Setter(AccessLevel.NONE)
-    @Getter(AccessLevel.NONE)
-    private List<OthersInsertsAreVisible> othersInsertsAreVisibles;
+    private List<InsertsAreDetected> insertsAreDetected;
 
     @XmlElementRef
     @Setter(AccessLevel.NONE)
-    @Getter(AccessLevel.NONE)
-    private List<OthersUpdatesAreVisible> othersUpdatesAreVisibles;
+    private List<UpdatesAreDetected> updatesAreDetected;
 
     @XmlElementRef
     @Setter(AccessLevel.NONE)
-    @Getter(AccessLevel.NONE)
-    private List<OwnDeletesAreVisible> ownDeletesAreVisibles;
+    private List<OthersDeletesAreVisible> othersDeletesAreVisible;
 
     @XmlElementRef
     @Setter(AccessLevel.NONE)
-    @Getter(AccessLevel.NONE)
-    private List<OwnInsertsAreVisible> ownInsertsAreVisibles;
+    private List<@Valid @NotNull OthersInsertsAreVisible> othersInsertsAreVisible;
 
     @XmlElementRef
     @Setter(AccessLevel.NONE)
-    @Getter(AccessLevel.NONE)
-    private List<OwnUpdatesAreVisible> ownUpdatesAreVisibles;
+    private List<@Valid @NotNull OthersUpdatesAreVisible> othersUpdatesAreVisible;
 
     @XmlElementRef
     @Setter(AccessLevel.NONE)
-    @Getter(AccessLevel.NONE)
+    private List<OwnDeletesAreVisible> ownDeletesAreVisible;
+
+    @XmlElementRef
+    @Setter(AccessLevel.NONE)
+    private List<@Valid @NotNull OwnInsertsAreVisible> ownInsertsAreVisible;
+
+    @XmlElementRef
+    @Setter(AccessLevel.NONE)
+    private List<@Valid @NotNull OwnUpdatesAreVisible> ownUpdatesAreVisible;
+
+    @XmlElementRef
+    @Setter(AccessLevel.NONE)
     private List<Catalog> catalogs;
 
     @XmlElementRef
     @Setter(AccessLevel.NONE)
-    @Getter(AccessLevel.NONE)
     private List<ClientInfoProperty> clientInfoProperties;
 
     @XmlElementRef
     @Setter(AccessLevel.NONE)
-    @Getter(AccessLevel.NONE)
     private List<CrossReference> crossReferences;
 
     @XmlElementRef
     @Setter(AccessLevel.NONE)
-    @Getter(AccessLevel.NONE)
     private List<SupportsConvert> supportsConverts;
 
     @XmlElementRef
     @Setter(AccessLevel.NONE)
-    @Getter(AccessLevel.NONE)
-    private List<SupportsResultSetConcurrency> supportsResultSetConcurrencies;
+    private List<SupportsResultSetConcurrency> supportsResultSetConcurrency;
 
     @XmlElementRef
     @Setter(AccessLevel.NONE)
-    @Getter(AccessLevel.NONE)
-    private List<SupportsResultSetHoldability> supportsResultSetHoldabilities;
+    private List<SupportsResultSetHoldability> supportsResultSetHoldability;
 
     @XmlElementRef
     @Setter(AccessLevel.NONE)
-    @Getter(AccessLevel.NONE)
     private List<SupportsResultSetType> supportsResultSetTypes;
 
     @XmlElementRef
     @Setter(AccessLevel.NONE)
-    @Getter(AccessLevel.NONE)
     private List<SupportsTransactionIsolationLevel> supportsTransactionIsolationLevels;
 
     @XmlElementRef
     @Setter(AccessLevel.NONE)
-    @Getter(AccessLevel.NONE)
     private List<TableType> tableTypes;
 }

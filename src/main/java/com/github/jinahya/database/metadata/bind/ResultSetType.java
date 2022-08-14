@@ -20,6 +20,7 @@ package com.github.jinahya.database.metadata.bind;
  * #L%
  */
 
+import javax.xml.bind.annotation.XmlEnum;
 import java.sql.ResultSet;
 
 /**
@@ -27,6 +28,7 @@ import java.sql.ResultSet;
  *
  * @author Jin Kwon &lt;onacit_at_gmail.com&gt;
  */
+@XmlEnum
 public enum ResultSetType
         implements IntFieldEnum<ResultSetType> {
 

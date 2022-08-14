@@ -1305,7 +1305,7 @@ public class Context {
      * @throws SQLException if a database access error occurs.
      * @see DatabaseMetaData#supportsTransactionIsolationLevel(int)
      * @see SupportsTransactionIsolationLevel#getAllInstances(Context, Collection)
-     * @see ConnectionTransactionIsolationLevel
+     * @see TransactionIsolationLevel
      */
     public SupportsTransactionIsolationLevel supportsTransactionIsolationLevel(final int level) throws SQLException {
         final SupportsTransactionIsolationLevel value = new SupportsTransactionIsolationLevel();

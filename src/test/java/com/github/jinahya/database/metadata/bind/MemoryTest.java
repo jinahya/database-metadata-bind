@@ -30,7 +30,6 @@ import java.nio.file.Paths;
 import java.sql.Connection;
 import java.sql.SQLException;
 import java.util.ArrayList;
-import java.util.List;
 
 import static java.util.Objects.requireNonNull;
 import static org.assertj.core.api.Assertions.assertThat;
@@ -90,19 +89,20 @@ abstract class MemoryTest {
     }
 
     @Test
-    void writeMetadata() throws SQLException, JAXBException {
+    void writeMetadata() throws Exception {
         try (var connection = connect()) {
             final var context = context(connection);
-            final Metadata metadata = Metadata.newInstance(context);
-            final String name = TestUtils.getFilenamePrefix(context) + " - metadata";
+            final var metadata = Metadata.newInstance(context);
+            final var name = TestUtils.getFilenamePrefix(context) + " - metadata";
             JaxbTests.writeToFile(Metadata.class, metadata, name);
+            JsonbTests.writeToFile(metadata, name);
         }
     }
 
     // -----------------------------------------------------------------------------------------------------------------
 
     @Test
-    void getCatalogs__() throws SQLException, JAXBException {
+    void getCatalogs__() throws Exception {
         try (var connection = connect()) {
             final var context = context(connection);
             final var catalogs = context.getCatalogs(new ArrayList<>());
@@ -117,17 +117,19 @@ abstract class MemoryTest {
             for (final var catalog : catalogs) {
                 catalog.retrieveChildren(context);
             }
-            final var pathname = TestUtils.getFilenamePrefix(context) + " - catalogs.xml";
+            final var name = TestUtils.getFilenamePrefix(context) + " - catalogs";
+            final var pathname = name + ".xml";
             final var target = Paths.get("target", pathname).toFile();
             Wrapper.marshalFormatted(Catalog.class, catalogs, target);
+            JsonbTests.writeToFile(catalogs, name);
         }
     }
 
     @Test
-    void getFunctions__() throws SQLException, JAXBException {
-        try (Connection connection = connect()) {
+    void getFunctions__() throws Exception {
+        try (var connection = connect()) {
             final var context = Context.newInstance(connection);
-            final List<Function> functions = context.getFunctions(null, null, "%", new ArrayList<>());
+            final var functions = context.getFunctions(null, null, "%", new ArrayList<>());
             assertThat(functions)
                     .doesNotContainNull()
                     .satisfies(TestUtils::testEquals)
@@ -135,12 +137,14 @@ abstract class MemoryTest {
                         final var string = assertDoesNotThrow(v::toString);
                         final var hashCode = assertDoesNotThrow(v::hashCode);
                     });
-            for (final Function function : functions) {
+            for (final var function : functions) {
                 function.retrieveChildren(context);
             }
-            final var pathname = TestUtils.getFilenamePrefix(context) + " - functions.xml";
+            final var name = TestUtils.getFilenamePrefix(context) + " - functions";
+            final var pathname = name + ".xml";
             final var target = Paths.get("target", pathname).toFile();
             Wrapper.marshalFormatted(Function.class, functions, target);
+            JsonbTests.writeToFile(functions, name);
         }
     }
 
