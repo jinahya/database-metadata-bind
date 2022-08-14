@@ -56,7 +56,7 @@
     <version.mariadb-java-client>2.7.2</version.mariadb-java-client>
     <version.maven-failsafe>${version.maven-surefire}</version.maven-failsafe>
     <version.maven-surefire>3.0.0-M7</version.maven-surefire>
-    <version.mysql-connector-java>8.0.23</version.mysql-connector-java>
+    <version.mysql-connector-java>8.0.28</version.mysql-connector-java>
     <version.mssql-jdbc>9.2.1.jre15</version.mssql-jdbc>
     <version.ojdbc6>11.2.0.4</version.ojdbc6>
     <version.ojdbc8>21.5.0.0</version.ojdbc8>
