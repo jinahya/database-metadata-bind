@@ -271,10 +271,12 @@
         <plugin>
           <groupId>org.apache.maven.plugins</groupId>
           <artifactId>maven-javadoc-plugin</artifactId>
-          <version>3.4.0</version>
+          <version>3.4.1</version>
           <configuration>
             <additionalOptions>
               <additionalOption>-Xdoclint:${doclint}</additionalOption>
+<!--              <sourcepath>${project.build.directory}/generated-sources/delombok</sourcepath>-->
+              <sourcepath>${project.build.directory}/generated-sources/delombok</sourcepath>
             </additionalOptions>
             <links>
               <link>https://javadoc.io/doc/jakarta.persistence/jakarta.persistence-api/latest</link>
@@ -323,7 +325,7 @@
         <plugin>
           <groupId>org.apache.maven.plugins</groupId>
           <artifactId>maven-project-info-reports-plugin</artifactId>
-          <version>3.4.0</version>
+          <version>3.4.1</version>
         </plugin>
         <plugin>
           <groupId>org.apache.maven.plugins</groupId>
@@ -465,7 +467,7 @@
             <configuration>
               <rules>
                 <requireJavaVersion>
-                  <version>[17.0.0,)</version>
+                  <version>[1.8.0,)</version>
                 </requireJavaVersion>
               </rules>
             </configuration>
@@ -541,6 +543,23 @@
             <id>default-report</id>
             <goals>
               <goal>report</goal>
+            </goals>
+          </execution>
+        </executions>
+      </plugin>
+      <plugin>
+        <groupId>org.projectlombok</groupId>
+        <artifactId>lombok-maven-plugin</artifactId>
+        <version>1.18.20.0</version>
+        <executions>
+          <execution>
+            <configuration>
+              <sourceDirectory>${project.basedir}/src/main/java</sourceDirectory>
+              <addOutputDirectory>false</addOutputDirectory>
+            </configuration>
+            <phase>generate-sources</phase>
+            <goals>
+              <goal>delombok</goal>
             </goals>
           </execution>
         </executions>
