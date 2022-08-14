@@ -66,6 +66,7 @@ public class OwnInsertsAreVisible
                                                                                          final C collection)
             throws SQLException {
         Objects.requireNonNull(context, "context is null");
+        Objects.requireNonNull(collection, "collection is null");
         for (final ResultSetType type : ResultSetType.values()) {
             collection.add(context.ownInsertsAreVisible(type.rawValueAsInt()));
         }

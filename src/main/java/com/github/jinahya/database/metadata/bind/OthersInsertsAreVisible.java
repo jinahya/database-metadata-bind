@@ -63,7 +63,7 @@ public class OthersInsertsAreVisible
     public static <C extends Collection<? super OthersInsertsAreVisible>> C getAllInstances(
             final Context context, final C collection)
             throws SQLException {
-        Objects.requireNonNull(context, "databaseMetaData is null");
+        Objects.requireNonNull(context, "context is null");
         Objects.requireNonNull(collection, "collection is null");
         for (final ResultSetType type : ResultSetType.values()) {
             collection.add(context.othersInsertsAreVisible(type.rawValueAsInt()));
