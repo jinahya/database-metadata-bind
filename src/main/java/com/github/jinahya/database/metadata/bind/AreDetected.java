@@ -49,7 +49,7 @@ import java.sql.SQLException;
 @Data
 @EqualsAndHashCode
 @ToString(callSuper = true)
-@NoArgsConstructor(access = AccessLevel.PACKAGE)
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 @SuperBuilder(toBuilder = true)
 public abstract class AreDetected
         implements Serializable,
@@ -63,8 +63,8 @@ public abstract class AreDetected
     }
 
     @XmlAttribute(required = false)
-    public ResultSetType getTypeAsEnum() {
-        return ResultSetType.valueOfRawValue(getType());
+    public String getTypeName() {
+        return ResultSetType.valueOfRawValue(getType()).name();
     }
 
     @XmlAttribute(required = true)
