@@ -32,12 +32,12 @@ enum ResultSetHoldability implements IntFieldEnum<ResultSetHoldability> {
     /**
      * Constants for {@link ResultSet#HOLD_CURSORS_OVER_COMMIT}({@value java.sql.ResultSet#HOLD_CURSORS_OVER_COMMIT}).
      */
-    HOLD_CURSORS_OVER_COMMIT(ResultSet.HOLD_CURSORS_OVER_COMMIT),
+    HOLD_CURSORS_OVER_COMMIT(ResultSet.HOLD_CURSORS_OVER_COMMIT), // 1
 
     /**
      * Constants for {@link ResultSet#CLOSE_CURSORS_AT_COMMIT}({@value java.sql.ResultSet#CLOSE_CURSORS_AT_COMMIT}).
      */
-    CLOSE_CURSORS_AT_COMMIT(ResultSet.CLOSE_CURSORS_AT_COMMIT);
+    CLOSE_CURSORS_AT_COMMIT(ResultSet.CLOSE_CURSORS_AT_COMMIT); // 2
 
     /**
      * Returns the value whose {@code rawValue} matches to specified value.
@@ -54,7 +54,7 @@ enum ResultSetHoldability implements IntFieldEnum<ResultSetHoldability> {
     }
 
     @Override
-    public int rawValueAsInt() {
+    public int rawValue() {
         return rawValue;
     }
 

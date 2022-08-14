@@ -89,7 +89,7 @@ public class CrossReference
     }
 
     public void setUpdateRuleAsEnum(UpdateRule updateRuleAsEnum) {
-        setUpdateRule(Objects.requireNonNull(updateRuleAsEnum, "updateRuleAsEnum is null").rawValueAsInt());
+        setUpdateRule(Objects.requireNonNull(updateRuleAsEnum, "updateRuleAsEnum is null").rawValue());
     }
 
     public ImportedKeyRule getDeleteRuleAsEnum() {
@@ -97,7 +97,7 @@ public class CrossReference
     }
 
     public void setDeleteRuleAsEnum(final ImportedKeyRule deleteRuleAsEnum) {
-        setDeleteRule(Objects.requireNonNull(deleteRuleAsEnum, "deleteRuleAsEnum is null").rawValueAsInt());
+        setDeleteRule(Objects.requireNonNull(deleteRuleAsEnum, "deleteRuleAsEnum is null").rawValue());
     }
 
     public ImportedKeyDeferrability getDeferrabilityAsEnum() {
@@ -105,7 +105,7 @@ public class CrossReference
     }
 
     public void setDeferrabilityAsEnum(final ImportedKeyDeferrability deferrabilityAsEnum) {
-        setDeferrability(Objects.requireNonNull(deferrabilityAsEnum, "deferrabilityAsEnum is null").rawValueAsInt());
+        setDeferrability(Objects.requireNonNull(deferrabilityAsEnum, "deferrabilityAsEnum is null").rawValue());
     }
 
     // -----------------------------------------------------------------------------------------------------------------

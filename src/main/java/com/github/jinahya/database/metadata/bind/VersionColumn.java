@@ -96,7 +96,7 @@ public class VersionColumn
         }
 
         @Override
-        public int rawValueAsInt() {
+        public int rawValue() {
             return rawValue;
         }
 

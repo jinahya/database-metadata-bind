@@ -107,7 +107,7 @@ public class TypeInfo
          * @return the raw value of this constant.
          */
         @Override
-        public int rawValueAsInt() {
+        public int rawValue() {
             return rawValue;
         }
 
@@ -171,7 +171,7 @@ public class TypeInfo
          * @return the raw value of this constant.
          */
         @Override
-        public int rawValueAsInt() {
+        public int rawValue() {
             return rawValue;
         }
 
@@ -192,7 +192,7 @@ public class TypeInfo
 
     public void setNullableAsEnum(@NotNull final Nullable nullableAsEnum) {
         Objects.requireNonNull(nullableAsEnum, "nullableAsEnum is null");
-        setNullable(nullableAsEnum.rawValueAsInt());
+        setNullable(nullableAsEnum.rawValue());
     }
 
     @NotNull
@@ -202,7 +202,7 @@ public class TypeInfo
 
     public void setSearchableAsEnum(@NotNull final Searchable searchableAsEnum) {
         Objects.requireNonNull(searchableAsEnum, "searchableAsEnum is null");
-        setSearchable(searchableAsEnum.rawValueAsInt());
+        setSearchable(searchableAsEnum.rawValue());
     }
 
     @XmlElement(nillable = false, required = true)

@@ -53,20 +53,18 @@ public class Attribute
     /**
      * Constants for nullabilities of attributes.
      */
-    @XmlEnum(Integer.class)
+    @XmlEnum
     public enum Nullable implements IntFieldEnum<Nullable> {
 
         /**
          * Constant for {@link DatabaseMetaData#attributeNoNulls}({@value java.sql.DatabaseMetaData#attributeNoNulls}).
          */
-        @XmlEnumValue("0")
         ATTRIBUTE_NO_NULLS(DatabaseMetaData.attributeNoNulls), // 0
 
         /**
          * Constant for
          * {@link DatabaseMetaData#attributeNullable}({@value java.sql.DatabaseMetaData#attributeNullable}).
          */
-        @XmlEnumValue("1")
         ATTRIBUTE_NULLABLE(DatabaseMetaData.attributeNullable), // 1
 
         /**
@@ -74,11 +72,10 @@ public class Attribute
          * {@link DatabaseMetaData#attributeNullableUnknown}({@value
          * java.sql.DatabaseMetaData#attributeNullableUnknown}).
          */
-        @XmlEnumValue("2")
         ATTRIBUTE_NULLABLE_UNKNOWN(DatabaseMetaData.attributeNullableUnknown); // 2
 
         /**
-         * Returns the value whose {@link #rawValueAsInt() rawValue} matches to specified value.
+         * Returns the value whose {@link #rawValue() rawValue} matches to specified value.
          *
          * @param rawValue the {@code rawValue} to match.
          * @return a matched value.
@@ -92,7 +89,7 @@ public class Attribute
         }
 
         @Override
-        public int rawValueAsInt() {
+        public int rawValue() {
             return rawValue;
         }
 
@@ -160,7 +157,7 @@ public class Attribute
     public void setNullableAsEnum(final Nullable nullableAsEnum) {
         setNullable(
                 Objects.requireNonNull(nullableAsEnum, "nullableAsEnum is null")
-                        .rawValueAsInt()
+                        .rawValue()
         );
     }
 

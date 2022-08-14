@@ -67,7 +67,7 @@ public class OthersUpdatesAreVisible
         Objects.requireNonNull(context, "context is null");
         Objects.requireNonNull(collection, "collection is null");
         for (final ResultSetType type : ResultSetType.values()) {
-            collection.add(context.othersUpdatesAreVisible(type.rawValueAsInt()));
+            collection.add(context.othersUpdatesAreVisible(type.rawValue()));
         }
         return collection;
     }

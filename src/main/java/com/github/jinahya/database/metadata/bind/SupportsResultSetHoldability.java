@@ -63,7 +63,7 @@ public class SupportsResultSetHoldability
             throws SQLException {
         Objects.requireNonNull(context, "context is null");
         for (final ResultSetHoldability value : ResultSetHoldability.values()) {
-            collection.add(context.supportsResultSetHoldability(value.rawValueAsInt()));
+            collection.add(context.supportsResultSetHoldability(value.rawValue()));
         }
         return collection;
     }

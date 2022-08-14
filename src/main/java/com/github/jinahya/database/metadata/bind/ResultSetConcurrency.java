@@ -32,12 +32,12 @@ enum ResultSetConcurrency implements IntFieldEnum<ResultSetConcurrency> {
     /**
      * Constant for {@link ResultSet#CONCUR_READ_ONLY}({@value java.sql.ResultSet#CONCUR_READ_ONLY}).
      */
-    CONCUR_READ_ONLY(ResultSet.CONCUR_READ_ONLY),
+    CONCUR_READ_ONLY(ResultSet.CONCUR_READ_ONLY), // 1007
 
     /**
      * Constant for {@link ResultSet#CONCUR_UPDATABLE}({@value java.sql.ResultSet#CONCUR_UPDATABLE}).
      */
-    CONCUR_UPDATABLE(ResultSet.CONCUR_UPDATABLE);
+    CONCUR_UPDATABLE(ResultSet.CONCUR_UPDATABLE); // 1008
 
     /**
      * Returns the value whose {@code rawValue} matches to specified value.
@@ -54,7 +54,7 @@ enum ResultSetConcurrency implements IntFieldEnum<ResultSetConcurrency> {
     }
 
     @Override
-    public int rawValueAsInt() {
+    public int rawValue() {
         return rawValue;
     }
 

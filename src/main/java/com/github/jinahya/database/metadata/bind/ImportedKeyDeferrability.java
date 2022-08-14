@@ -54,7 +54,7 @@ public enum ImportedKeyDeferrability
     }
 
     @Override
-    public int rawValueAsInt() {
+    public int rawValue() {
         return rawValue;
     }
 

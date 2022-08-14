@@ -112,7 +112,7 @@ public class IndexInfo
         }
 
         @Override
-        public int rawValueAsInt() {
+        public int rawValue() {
             return rawValue;
         }
 
@@ -187,7 +187,7 @@ public class IndexInfo
     }
 
     public void setTypeAsIndex(final Type typeAsIndex) {
-        setType(Objects.requireNonNull(typeAsIndex, "typeAsIndex is null").rawValueAsInt());
+        setType(Objects.requireNonNull(typeAsIndex, "typeAsIndex is null").rawValue());
     }
 
     @XmlElement(nillable = true, required = true)

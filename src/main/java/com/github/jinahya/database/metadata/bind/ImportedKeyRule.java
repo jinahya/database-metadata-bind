@@ -61,7 +61,7 @@ public enum ImportedKeyRule
     }
 
     @Override
-    public int rawValueAsInt() {
+    public int rawValue() {
         return rawValue;
     }
 

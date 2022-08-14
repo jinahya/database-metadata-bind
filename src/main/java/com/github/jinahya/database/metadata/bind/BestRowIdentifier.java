@@ -30,7 +30,6 @@ import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlEnum;
-import javax.xml.bind.annotation.XmlEnumValue;
 import javax.xml.bind.annotation.XmlRootElement;
 import java.sql.DatabaseMetaData;
 import java.sql.SQLException;
@@ -58,27 +57,24 @@ public class BestRowIdentifier
      * Constants for {@code SCOPE} column values of the result of
      * {@link DatabaseMetaData#getBestRowIdentifier(String, String, String, int, boolean)} method.
      */
-    @XmlEnum(Integer.class)
+    @XmlEnum
     public enum Scope
             implements IntFieldEnum<Scope> {
 
         /**
          * Constant for {@link DatabaseMetaData#bestRowTemporary}({@value java.sql.DatabaseMetaData#bestRowTemporary}).
          */
-        @XmlEnumValue("0")
         BEST_ROW_TEMPORARY(DatabaseMetaData.bestRowTemporary), // 0
 
         /**
          * Constant for
          * {@link DatabaseMetaData#bestRowTransaction}({@value java.sql.DatabaseMetaData#bestRowTransaction}).
          */
-        @XmlEnumValue("1")
         BEST_ROW_TRANSACTION(DatabaseMetaData.bestRowTransaction), // 1
 
         /**
          * Constant for {@link DatabaseMetaData#bestRowSession}({@value java.sql.DatabaseMetaData#bestRowSession}).
          */
-        @XmlEnumValue("2")
         BEST_ROW_SESSION(DatabaseMetaData.bestRowSession); // 2
 
         /**
@@ -96,7 +92,7 @@ public class BestRowIdentifier
         }
 
         @Override
-        public int rawValueAsInt() {
+        public int rawValue() {
             return rawValue;
         }
 
@@ -107,26 +103,23 @@ public class BestRowIdentifier
      * Constants for {@code PSEUDO_COLUMN} column values of a result of
      * {@link DatabaseMetaData#getBestRowIdentifier(String, String, String, int, boolean)} method.
      */
-    @XmlEnum(Integer.class)
+    @XmlEnum
     public enum PseudoColumn
             implements IntFieldEnum<PseudoColumn> {
 
         /**
          * Constant for {@link DatabaseMetaData#bestRowUnknown}({@value java.sql.DatabaseMetaData#bestRowUnknown}).
          */
-        @XmlEnumValue("0")
         BEST_ROW_UNKNOWN(DatabaseMetaData.bestRowUnknown), // 0
 
         /**
          * Constant for {@link DatabaseMetaData#bestRowNotPseudo}({@value java.sql.DatabaseMetaData#bestRowNotPseudo}).
          */
-        @XmlEnumValue("1")
         BEST_ROW_NOT_PSEUDO(DatabaseMetaData.bestRowNotPseudo), // 1
 
         /**
          * Constant for {@link DatabaseMetaData#bestRowPseudo}({@value java.sql.DatabaseMetaData#bestRowPseudo}).
          */
-        @XmlEnumValue("2")
         BEST_ROW_PSEUDO(DatabaseMetaData.bestRowPseudo); // 2
 
         /**
@@ -144,7 +137,7 @@ public class BestRowIdentifier
         }
 
         @Override
-        public int rawValueAsInt() {
+        public int rawValue() {
             return rawValue;
         }
 
@@ -162,7 +155,7 @@ public class BestRowIdentifier
 
     public void setScopeAsEnum(@NotNull final Scope scopeAsEnum) {
         Objects.requireNonNull(scopeAsEnum, "scopeAsEnum is null");
-        setScope(scopeAsEnum.rawValueAsInt());
+        setScope(scopeAsEnum.rawValue());
     }
 
     @NotNull
@@ -172,7 +165,7 @@ public class BestRowIdentifier
 
     public void setPseudoColumnAsEnum(@NotNull final PseudoColumn pseudoColumnAsEnum) {
         Objects.requireNonNull(pseudoColumnAsEnum, "pseudoColumnAsEnum is null");
-        setPseudoColumn(pseudoColumnAsEnum.rawValueAsInt());
+        setPseudoColumn(pseudoColumnAsEnum.rawValue());
     }
 
     @XmlElement(nillable = false, required = true)

@@ -27,27 +27,27 @@ public enum UpdateRule implements IntFieldEnum<UpdateRule> {
     /**
      * A constant for {@link DatabaseMetaData#importedKeyCascade}({@value DatabaseMetaData#importedKeyCascade}).
      */
-    IMPORTED_KEY_CASCADE(DatabaseMetaData.importedKeyCascade),
+    IMPORTED_KEY_CASCADE(DatabaseMetaData.importedKeyCascade), // 0
 
     /**
      * A constant for {@link DatabaseMetaData#importedKeyRestrict}({@value DatabaseMetaData#importedKeyRestrict}).
      */
-    IMPORTED_KEY_RESTRICT(DatabaseMetaData.importedKeyRestrict),
+    IMPORTED_KEY_RESTRICT(DatabaseMetaData.importedKeyRestrict), // 1
 
     /**
      * A constant for {@link DatabaseMetaData#importedKeySetNull}({@value DatabaseMetaData#importedKeySetNull}).
      */
-    IMPORTED_KEY_SET_NULL(DatabaseMetaData.importedKeySetNull),
+    IMPORTED_KEY_SET_NULL(DatabaseMetaData.importedKeySetNull), // 2
 
     /**
      * A constant for {@link DatabaseMetaData#importedKeyNoAction}({@value DatabaseMetaData#importedKeyNoAction}).
      */
-    IMPORTED_KEY_NO_ACTION(DatabaseMetaData.importedKeyNoAction),
+    IMPORTED_KEY_NO_ACTION(DatabaseMetaData.importedKeyNoAction), // 3
 
     /**
      * A constant for {@link DatabaseMetaData#importedKeySetDefault}({@value DatabaseMetaData#importedKeySetDefault}).
      */
-    IMPORTED_KEY_SET_DEFAULT(DatabaseMetaData.importedKeySetDefault);
+    IMPORTED_KEY_SET_DEFAULT(DatabaseMetaData.importedKeySetDefault); // 4
 
     public static UpdateRule valueOfRawValue(final int rawValue) {
         return IntFieldEnums.valueOfRawValue(UpdateRule.class, rawValue);
@@ -58,7 +58,7 @@ public enum UpdateRule implements IntFieldEnum<UpdateRule> {
     }
 
     @Override
-    public int rawValueAsInt() {
+    public int rawValue() {
         return rawValue;
     }
 

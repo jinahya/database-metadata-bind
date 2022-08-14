@@ -34,5 +34,5 @@ interface IntFieldEnum<E extends Enum<E> & IntFieldEnum<E>> {
      *
      * @return the raw value of this constant.
      */
-    int rawValueAsInt();
+    int rawValue();
 }

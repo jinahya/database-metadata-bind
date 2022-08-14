@@ -106,7 +106,7 @@ public class Table
 
         private static final Set<BestRowIdentifierCategory> VALUES = Collections.unmodifiableSet(
                 Arrays.stream(BestRowIdentifier.Scope.values())
-                        .map(IntFieldEnum::rawValueAsInt)
+                        .map(IntFieldEnum::rawValue)
                         .flatMap(rv -> Stream.of(new BestRowIdentifierCategory(rv, false),
                                                  new BestRowIdentifierCategory(rv, true)))
                         .collect(Collectors.toSet())

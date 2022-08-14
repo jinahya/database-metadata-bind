@@ -62,25 +62,25 @@ public class Column
         /**
          * Constant for {@link DatabaseMetaData#columnNoNulls}({@value java.sql.DatabaseMetaData#columnNoNulls}).
          */
-        COLUMN_NO_NULLS(DatabaseMetaData.columnNoNulls),
+        COLUMN_NO_NULLS(DatabaseMetaData.columnNoNulls), // 0
 
         /**
          * Constant for {@link DatabaseMetaData#columnNullable}({@value java.sql.DatabaseMetaData#columnNullable}).
          */
-        COLUMN_NULLABLE(DatabaseMetaData.columnNullable),
+        COLUMN_NULLABLE(DatabaseMetaData.columnNullable), // 1
 
         /**
          * Constant for
          * {@link DatabaseMetaData#columnNullableUnknown}({@value java.sql.DatabaseMetaData#columnNullableUnknown}).
          */
-        COLUMN_NULLABLE_UNKNOWN(DatabaseMetaData.columnNullableUnknown);
+        COLUMN_NULLABLE_UNKNOWN(DatabaseMetaData.columnNullableUnknown); // 2
 
         /**
-         * Returns the constant whose raw value equals to given. An {@link IllegalArgumentException} will be thrown if
-         * no constants matches.
+         * Returns the constant whose raw value equals to specified value. An {@link IllegalArgumentException} will be
+         * thrown if no constants matches.
          *
-         * @param rawValue the value value
-         * @return the constant whose raw value equals to given.
+         * @param rawValue the raw value.
+         * @return the constant whose raw value equals to the {@code rawValue}.
          */
         public static Nullable valueOfRawValue(final int rawValue) {
             return IntFieldEnums.valueOfRawValue(Nullable.class, rawValue);
@@ -91,7 +91,7 @@ public class Column
         }
 
         @Override
-        public int rawValueAsInt() {
+        public int rawValue() {
             return rawValue;
         }
 
@@ -122,7 +122,7 @@ public class Column
     }
 
     public void setNullableAsEnum(final Nullable nullableAsEnum) {
-        setNullable(Objects.requireNonNull(nullableAsEnum, "nullableAsEnum is null").rawValueAsInt());
+        setNullable(Objects.requireNonNull(nullableAsEnum, "nullableAsEnum is null").rawValue());
     }
 
     // -----------------------------------------------------------------------------------------------------------------

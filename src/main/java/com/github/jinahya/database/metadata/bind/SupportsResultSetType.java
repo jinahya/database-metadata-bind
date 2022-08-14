@@ -64,7 +64,7 @@ public class SupportsResultSetType
         Objects.requireNonNull(context, "context is null");
         Objects.requireNonNull(collection, "collection is null");
         for (final ResultSetType value : ResultSetType.values()) {
-            collection.add(context.supportsResultSetType(value.rawValueAsInt()));
+            collection.add(context.supportsResultSetType(value.rawValue()));
         }
         return collection;
     }

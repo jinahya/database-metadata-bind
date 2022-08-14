@@ -126,7 +126,7 @@ public class ProcedureColumn
          * @return the raw value of this constant.
          */
         @Override
-        public int rawValueAsInt() {
+        public int rawValue() {
             return rawValue;
         }
 

@@ -92,7 +92,7 @@ public abstract class TableKey
 
     public void setUpdateRuleAsEnum(final ImportedKeyRule updateRuleAsEnum) {
         Objects.requireNonNull(updateRuleAsEnum, "updateRuleAsEnum is null");
-        setUpdateRule(updateRuleAsEnum.rawValueAsInt());
+        setUpdateRule(updateRuleAsEnum.rawValue());
     }
 
     public ImportedKeyRule getDeleteRuleAsEnum() {
@@ -101,7 +101,7 @@ public abstract class TableKey
 
     public void setDeleteRuleAsEnum(final ImportedKeyRule deleteRuleAsEnum) {
         Objects.requireNonNull(deleteRuleAsEnum, "deleteRuleAsEnum is null");
-        setDeleteRule(deleteRuleAsEnum.rawValueAsInt());
+        setDeleteRule(deleteRuleAsEnum.rawValue());
     }
 
     public ImportedKeyDeferrability getDeferrabilityAsEnum() {
@@ -109,7 +109,7 @@ public abstract class TableKey
     }
 
     public void setDeferrabilityAsEnum(final ImportedKeyDeferrability deferrabilityAsEnum) {
-        setDeferrability(deferrabilityAsEnum.rawValueAsInt());
+        setDeferrability(deferrabilityAsEnum.rawValue());
     }
 
     // -----------------------------------------------------------------------------------------------------------------

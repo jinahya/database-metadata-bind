@@ -59,7 +59,7 @@ public enum ConnectionTransactionIsolationLevel
     TRANSACTION_SERIALIZABLE(Connection.TRANSACTION_SERIALIZABLE); // 8
 
     /**
-     * Returns the value whose {@link #rawValueAsInt() rawVaue} matches to specified value.
+     * Returns the value whose {@link #rawValue() rawVaue} matches to specified value.
      *
      * @param rawValue the {@code rawValue} to match.
      * @return the value of {@code rawValue}.
@@ -83,7 +83,7 @@ public enum ConnectionTransactionIsolationLevel
      * @return {@inheritDoc}
      */
     @Override
-    public int rawValueAsInt() {
+    public int rawValue() {
         return rawValue;
     }
 

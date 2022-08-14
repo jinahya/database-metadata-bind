@@ -134,7 +134,7 @@ public class FunctionColumn
         }
 
         @Override
-        public int rawValueAsInt() {
+        public int rawValue() {
             return rawValue;
         }
 
@@ -153,19 +153,19 @@ public class FunctionColumn
         /**
          * Constant for {@link DatabaseMetaData#functionNoNulls}({@value java.sql.DatabaseMetaData#functionNoNulls}).
          */
-        FUNCTION_NO_NULLS(DatabaseMetaData.functionNoNulls),
+        FUNCTION_NO_NULLS(DatabaseMetaData.functionNoNulls), // 0
 
         /**
          * Constant for {@link DatabaseMetaData#functionNullable}({@value java.sql.DatabaseMetaData#functionNullable}).
          */
-        FUNCTION_NULLABLE(DatabaseMetaData.functionNullable),
+        FUNCTION_NULLABLE(DatabaseMetaData.functionNullable), // 1
 
         /**
          * Constant for
          * {@link DatabaseMetaData#functionNullableUnknown}({@value
          * java.sql.DatabaseMetaData#functionNullableUnknown}).
          */
-        FUNCTION_NULLABLE_UNKNOWN(DatabaseMetaData.functionNullableUnknown);
+        FUNCTION_NULLABLE_UNKNOWN(DatabaseMetaData.functionNullableUnknown); // 2
 
         /**
          * Returns the constant whose raw value equals to given. An instance of {@link IllegalArgumentException} will be
@@ -188,7 +188,7 @@ public class FunctionColumn
          * @return the raw value of this constant.
          */
         @Override
-        public int rawValueAsInt() {
+        public int rawValue() {
             return rawValue;
         }
 
@@ -214,7 +214,7 @@ public class FunctionColumn
     }
 
     public void setColumnTypeAsEnum(final ColumnType columnTypeAsEnum) {
-        setColumnType(Objects.requireNonNull(columnTypeAsEnum, "columnTypeAsEnum is null").rawValueAsInt());
+        setColumnType(Objects.requireNonNull(columnTypeAsEnum, "columnTypeAsEnum is null").rawValue());
     }
 
     @XmlElement(nillable = true, required = true)

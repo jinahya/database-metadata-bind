@@ -64,7 +64,7 @@ abstract class IntFieldEnumTest<E extends Enum<E> & IntFieldEnum<E>> {
     protected @NotNull IntStream rawValueStream() {
         // https://bugs.openjdk.java.net/browse/JDK-8142476
         // return Arrays.stream(enumClass.getEnumConstants()).mapToInt(IntFieldEnum::getRawValue);
-        return Arrays.stream(enumClass.getEnumConstants()).mapToInt(c -> c.rawValueAsInt());
+        return Arrays.stream(enumClass.getEnumConstants()).mapToInt(c -> c.rawValue());
     }
 
     /**
@@ -78,7 +78,7 @@ abstract class IntFieldEnumTest<E extends Enum<E> & IntFieldEnum<E>> {
 
     /**
      * Asserts {@code valueOfRawValue(int)} method, defined in specified enum class, invoked with each enum constant's
-     * {@link IntFieldEnum#rawValueAsInt() rawValue} returns the same enum constant.
+     * {@link IntFieldEnum#rawValue() rawValue} returns the same enum constant.
      */
     @DisplayName("valueOfRawValue(c.getRawValue()) returns c")
     @Test
@@ -86,7 +86,7 @@ abstract class IntFieldEnumTest<E extends Enum<E> & IntFieldEnum<E>> {
         final Method method = enumClass.getMethod("valueOfRawValue", int.class);
         for (final E enumConstant : enumClass.getEnumConstants()) {
             @SuppressWarnings({"unchecked"})
-            final E value = (E) method.invoke(null, enumConstant.rawValueAsInt());
+            final E value = (E) method.invoke(null, enumConstant.rawValue());
             assertThat(value).isNotNull().isSameAs(enumConstant);
         }
     }
@@ -114,7 +114,7 @@ abstract class IntFieldEnumTest<E extends Enum<E> & IntFieldEnum<E>> {
             // https://bugs.java.com/bugdatabase/view_bug.do?bug_id=8141508
             // https://bugs.java.com/bugdatabase/view_bug.do?bug_id=8142476
             // final int rawValue = assertDoesNotThrow(enumConstant::getRawValue);
-            final int rawValue = Assertions.assertDoesNotThrow(enumConstant::rawValueAsInt);
+            final int rawValue = Assertions.assertDoesNotThrow(enumConstant::rawValue);
         }
     }
 
