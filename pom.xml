@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
   <modelVersion>4.0.0</modelVersion>
 
   <parent>
@@ -261,11 +262,6 @@
       <plugins>
         <plugin>
           <groupId>org.apache.maven.plugins</groupId>
-          <artifactId>maven-compiler-plugin</artifactId>
-          <version>3.10.1</version>
-        </plugin>
-        <plugin>
-          <groupId>org.apache.maven.plugins</groupId>
           <artifactId>maven-javadoc-plugin</artifactId>
           <version>3.4.0</version>
           <configuration>
@@ -357,6 +353,7 @@
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-compiler-plugin</artifactId>
+        <version>3.10.1</version>
         <configuration>
           <annotationProcessorPaths>
             <path>
@@ -370,6 +367,17 @@
           </compilerArgs>
         </configuration>
         <executions>
+          <execution>
+            <id>jakarta</id>
+            <phase>prepare-package</phase>
+            <goals>
+              <goal>compile</goal>
+            </goals>
+            <configuration>
+              <fork>true</fork>
+              <outputDirectory>${project.build.outputDirectory}-jakarta</outputDirectory>
+            </configuration>
+          </execution>
           <execution>
             <id>release-11</id>
             <phase>prepare-package</phase>
@@ -434,7 +442,7 @@
             <configuration>
               <skip>true</skip>
               <rules>
-                <dependencyConvergence />
+                <dependencyConvergence/>
               </rules>
             </configuration>
             <goals>
@@ -827,6 +835,17 @@
             </configuration>
             <executions>
               <execution>
+                <id>jar-jakarta</id>
+                <phase>package</phase>
+                <goals>
+                  <goal>jar</goal>
+                </goals>
+                <configuration>
+                  <classesDirectory>${project.build.outputDirectory}-jakarta</classesDirectory>
+                  <classifier>jakarta</classifier>
+                </configuration>
+              </execution>
+              <execution>
                 <id>jar-release-11</id>
                 <phase>package</phase>
                 <goals>
@@ -881,6 +900,16 @@
               </rules>
             </configuration>
             <executions>
+              <execution>
+                <id>transform-jakarta</id>
+                <phase>prepare-package</phase>
+                <goals>
+                  <goal>transform</goal>
+                </goals>
+                <configuration>
+                  <transformDirectory>${project.build.outputDirectory}-jakarta</transformDirectory>
+                </configuration>
+              </execution>
               <execution>
                 <id>transform-release-11-jakarta</id>
                 <phase>prepare-package</phase>

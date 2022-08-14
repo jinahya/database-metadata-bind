@@ -80,7 +80,7 @@ public class CrossReference
 
     @Override
     public void retrieveChildren(final Context context) throws SQLException {
-        // no chidren.
+        // no children.
     }
 
     // -----------------------------------------------------------------------------------------------------------------

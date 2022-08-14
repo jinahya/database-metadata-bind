@@ -49,7 +49,7 @@ public class ColumnPrivilege
 
     @Override
     public void retrieveChildren(final Context context) throws SQLException {
-        // no child
+        // no children.
     }
 
     @Override

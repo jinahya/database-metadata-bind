@@ -43,6 +43,7 @@ public class ClientInfoProperty
 
     @Override
     public void retrieveChildren(final Context context) throws SQLException {
+        // no children.
     }
 
     @XmlElement(required = true)
