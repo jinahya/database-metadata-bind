@@ -30,7 +30,7 @@ public interface MetadataType
         extends Serializable {
 
     /**
-     * Retrieves child values using specified context.
+     * Retrieves elements of child types using specified context.
      *
      * @param context the context.
      * @throws SQLException if a database error occurs.
