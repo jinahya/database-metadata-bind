@@ -25,6 +25,8 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.experimental.SuperBuilder;
 
+import javax.validation.constraints.Positive;
+import javax.xml.bind.annotation.XmlAttribute;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlEnum;
 import javax.xml.bind.annotation.XmlEnumValue;
@@ -32,6 +34,7 @@ import javax.xml.bind.annotation.XmlRootElement;
 import java.sql.DatabaseMetaData;
 import java.sql.SQLException;
 import java.util.Collection;
+import java.util.Comparator;
 import java.util.Objects;
 
 /**
@@ -50,11 +53,18 @@ public class Attribute
 
     private static final long serialVersionUID = 1913681105410440186L;
 
+    public static final Comparator<Attribute> COMPARATOR
+            = Comparator.comparing(Attribute::getTypeCat, Comparator.nullsFirst(Comparator.naturalOrder()))
+            .thenComparing(Attribute::getTypeSchem, Comparator.nullsFirst(Comparator.naturalOrder()))
+            .thenComparing(Attribute::getTypeName)
+            .thenComparing(Attribute::getOrdinalPosition);
+
     /**
      * Constants for nullabilities of attributes.
      */
     @XmlEnum
-    public enum Nullable implements IntFieldEnum<Nullable> {
+    public enum Nullable
+            implements IntFieldEnum<Nullable> {
 
         /**
          * Constant for {@link DatabaseMetaData#attributeNoNulls}({@value java.sql.DatabaseMetaData#attributeNoNulls}).
@@ -103,7 +113,8 @@ public class Attribute
     public static final String VALUE_IS_NULLABLE_EMPTY = "";
 
     @XmlEnum
-    public enum IsNullable implements FieldEnum<IsNullable, String> {
+    public enum IsNullable
+            implements FieldEnum<IsNullable, String> {
 
         @XmlEnumValue(VALUE_IS_NULLABLE_YES)
         YES(VALUE_IS_NULLABLE_YES),
@@ -150,28 +161,187 @@ public class Attribute
                 .build();
     }
 
+    // -----------------------------------------------------------------------------------------------------------------
+
+    public String getTypeCat() {
+        return typeCat;
+    }
+
+    public void setTypeCat(String typeCat) {
+        this.typeCat = typeCat;
+    }
+
+    public String getTypeSchem() {
+        return typeSchem;
+    }
+
+    public void setTypeSchem(String typeSchem) {
+        this.typeSchem = typeSchem;
+    }
+
+    public String getTypeName() {
+        return typeName;
+    }
+
+    public void setTypeName(String typeName) {
+        this.typeName = typeName;
+    }
+
+    public String getAttrName() {
+        return attrName;
+    }
+
+    public void setAttrName(String attrName) {
+        this.attrName = attrName;
+    }
+
+    public int getDataType() {
+        return dataType;
+    }
+
+    public void setDataType(int dataType) {
+        this.dataType = dataType;
+    }
+
+    public String getAttrTypeName() {
+        return attrTypeName;
+    }
+
+    public void setAttrTypeName(String attrTypeName) {
+        this.attrTypeName = attrTypeName;
+    }
+
+    public int getAttrSize() {
+        return attrSize;
+    }
+
+    public void setAttrSize(int attrSize) {
+        this.attrSize = attrSize;
+    }
+
+    public Integer getDecimalDigits() {
+        return decimalDigits;
+    }
+
+    public void setDecimalDigits(Integer decimalDigits) {
+        this.decimalDigits = decimalDigits;
+    }
+
+    public int getNumPrecRadix() {
+        return numPrecRadix;
+    }
+
+    public void setNumPrecRadix(int numPrecRadix) {
+        this.numPrecRadix = numPrecRadix;
+    }
+
+    public int getNullable() {
+        return nullable;
+    }
+
+    public void setNullable(int nullable) {
+        this.nullable = nullable;
+    }
+
+    @XmlAttribute(required = false)
     public Nullable getNullableAsEnum() {
         return Nullable.valueOfRawValue(getNullable());
     }
 
-    public void setNullableAsEnum(final Nullable nullableAsEnum) {
-        setNullable(
-                Objects.requireNonNull(nullableAsEnum, "nullableAsEnum is null")
-                        .rawValue()
-        );
+    public String getRemarks() {
+        return remarks;
     }
 
+    public void setRemarks(String remarks) {
+        this.remarks = remarks;
+    }
+
+    public String getAttrDef() {
+        return attrDef;
+    }
+
+    public void setAttrDef(String attrDef) {
+        this.attrDef = attrDef;
+    }
+
+    public Integer getSqlDataType() {
+        return sqlDataType;
+    }
+
+    public void setSqlDataType(Integer sqlDataType) {
+        this.sqlDataType = sqlDataType;
+    }
+
+    public Integer getSqlDatetimeSub() {
+        return sqlDatetimeSub;
+    }
+
+    public void setSqlDatetimeSub(Integer sqlDatetimeSub) {
+        this.sqlDatetimeSub = sqlDatetimeSub;
+    }
+
+    public int getCharOctetLength() {
+        return charOctetLength;
+    }
+
+    public void setCharOctetLength(int charOctetLength) {
+        this.charOctetLength = charOctetLength;
+    }
+
+    public int getOrdinalPosition() {
+        return ordinalPosition;
+    }
+
+    public void setOrdinalPosition(int ordinalPosition) {
+        this.ordinalPosition = ordinalPosition;
+    }
+
+    public String getIsNullable() {
+        return isNullable;
+    }
+
+    public void setIsNullable(String isNullable) {
+        this.isNullable = isNullable;
+    }
+
+    @XmlAttribute(required = false)
     public IsNullable getIsNullableAsEnum() {
         return IsNullable.valueOfRawValue(getIsNullable());
     }
 
-    public void setIsNullableAsEnum(final IsNullable isNullableAsEnum) {
-        setIsNullable(
-                Objects.requireNonNull(isNullableAsEnum, "isNullableAsEnum is null")
-                        .rawValue()
-        );
+    public String getScopeCatalog() {
+        return scopeCatalog;
     }
 
+    public void setScopeCatalog(String scopeCatalog) {
+        this.scopeCatalog = scopeCatalog;
+    }
+
+    public String getScopeSchema() {
+        return scopeSchema;
+    }
+
+    public void setScopeSchema(String scopeSchema) {
+        this.scopeSchema = scopeSchema;
+    }
+
+    public String getScopeTable() {
+        return scopeTable;
+    }
+
+    public void setScopeTable(String scopeTable) {
+        this.scopeTable = scopeTable;
+    }
+
+    public Integer getSourceDataType() {
+        return sourceDataType;
+    }
+
+    public void setSourceDataType(Integer sourceDataType) {
+        this.sourceDataType = sourceDataType;
+    }
+
+    // -----------------------------------------------------------------------------------------------------------------
     @XmlElement(nillable = true, required = true)
     @NullableBySpecification
     @Label("TYPE_CAT")
@@ -190,6 +360,7 @@ public class Attribute
     @Label("ATTR_NAME")
     private String attrName;
 
+    // -----------------------------------------------------------------------------------------------------------------
     @XmlElement(nillable = false, required = true)
     @Label("DATA_TYPE")
     private int dataType;
@@ -240,6 +411,7 @@ public class Attribute
     private int charOctetLength;
 
     @XmlElement(nillable = false, required = true)
+    @Positive // > starting at 1
     @Label("ORDINAL_POSITION")
     private int ordinalPosition;
 

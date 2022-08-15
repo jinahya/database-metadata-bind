@@ -31,7 +31,7 @@ import java.util.Collection;
 import java.util.Objects;
 
 /**
- * A class for binding result of {@link DatabaseMetaData#insertsAreDetected(int)} method.
+ * A class for binding result of {@link DatabaseMetaData#deletesAreDetected(int)} method.
  *
  * @author Jin Kwon &lt;onacit_at_gmail.com&gt;
  * @see Context#deletesAreDetected(int)

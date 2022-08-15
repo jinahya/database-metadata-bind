@@ -26,7 +26,7 @@ import java.io.Serializable;
 import java.sql.SQLException;
 
 @XmlTransient
-interface MetadataType
+public interface MetadataType
         extends Serializable {
 
     /**

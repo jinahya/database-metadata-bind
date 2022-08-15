@@ -83,21 +83,41 @@ public class Table
                     .thenComparing(Table::getTableSchem, Comparator.nullsFirst(Comparator.naturalOrder()))
                     .thenComparing(Table::getTableName);
 
-    // -------------------------------------------------------------------------------------------- TABLE_CAT / tableCat
+    /**
+     * The label of the column to which {@link #ATTRIBUTE_NAME_TABLE_CAT} attribute is bound. The value is {@value}.
+     */
     public static final String COLUMN_LABEL_TABLE_CAT = "TABLE_CAT";
 
+    /**
+     * The name of the attribute from which {@link #COLUMN_LABEL_TABLE_CAT} column is bound. The value is {@value}.
+     */
     public static final String ATTRIBUTE_NAME_TABLE_CAT = "tableCat";
 
-    // ---------------------------------------------------------------------------------------- TABLE_SCHEM / tableSchem
+    /**
+     * The label of the column to which {@link #ATTRIBUTE_NAME_TABLE_SCHEM} attribute is bound. The value is {@value}.
+     */
     public static final String COLUMN_LABEL_TABLE_SCHEM = "TABLE_SCHEM";
 
+    /**
+     * The name of the attribute from which {@link #COLUMN_LABEL_TABLE_SCHEM} column is bound. The value is {@value}.
+     */
     public static final String ATTRIBUTE_NAME_TABLE_SCHEM = "tableSchem";
 
-    // ------------------------------------------------------------------------------------------ TABLE_NAME / tableName
+    /**
+     * The label of the column to which {@link #ATTRIBUTE_NAME_TABLE_NAME} attribute is bound. The value is {@value}.
+     */
     public static final String COLUMN_LABEL_TABLE_NAME = "TABLE_NAME";
 
+    /**
+     * The name of the attribute from which {@link #COLUMN_LABEL_TABLE_NAME} column is bound. The value is {@value}.
+     */
     public static final String ATTRIBUTE_NAME_TABLE_NAME = "tableName";
 
+    /**
+     * A key class for categorizing best row identifiers by their {@code scope} and {@code nullable}.
+     *
+     * @author Jin Kwon &lt;onacit_at_gmail.com&gt;
+     */
     @XmlRootElement
     @Getter
     @EqualsAndHashCode
@@ -120,7 +140,7 @@ public class Table
                             "no value matches; scope: " + scope + ", nullable: " + nullable));
         }
 
-        public BestRowIdentifierCategory(final int scope, final boolean nullable) {
+        private BestRowIdentifierCategory(final int scope, final boolean nullable) {
             super();
             this.scope = scope;
             this.nullable = nullable;
@@ -130,6 +150,24 @@ public class Table
             this(0, false);
         }
 
+        /**
+         * Returns the value of {@code scope} attribute.
+         *
+         * @return the value of {@code scope} attribute.
+         */
+        public int getScope() {
+            return scope;
+        }
+
+        /**
+         * Returns the value of {@code nullable} attribute.
+         *
+         * @return the value of {@code nullable} attribute.
+         */
+        public boolean isNullable() {
+            return nullable;
+        }
+
         @XmlAttribute(required = true)
         private final int scope;
 
@@ -137,6 +175,11 @@ public class Table
         private final boolean nullable;
     }
 
+    /**
+     * A class for wrapping categorized instances of {@link BestRowIdentifier}.
+     *
+     * @author Jin Kwon &lt;onacit_at_gmail.com&gt;
+     */
     @XmlRootElement
     public static class CategorizedBestRowIdentifiers {
 
@@ -573,4 +616,116 @@ public class Table
     @EqualsAndHashCode.Exclude
     @ToString.Exclude
     private List<@Valid @NotNull VersionColumn> versionColumns;
+
+    // -----------------------------------------------------------------------------------------------------------------
+
+    /**
+     * Returns the value of {@value #ATTRIBUTE_NAME_TABLE_CAT} attribute.
+     *
+     * @return the value of {@value #ATTRIBUTE_NAME_TABLE_CAT} attribute.
+     */
+    public String getTableCat() {
+        return tableCat;
+    }
+
+    /**
+     * Replaces the value of {@value #ATTRIBUTE_NAME_TABLE_CAT} attribute with specified value.
+     *
+     * @param tableCat new value of {@value #ATTRIBUTE_NAME_TABLE_CAT} attribute.
+     */
+    public void setTableCat(final String tableCat) {
+        this.tableCat = tableCat;
+    }
+
+    /**
+     * Returns the value of {@value #ATTRIBUTE_NAME_TABLE_SCHEM} attribute.
+     *
+     * @return the value of {@value #ATTRIBUTE_NAME_TABLE_SCHEM} attribute.
+     */
+    public String getTableSchem() {
+        return tableSchem;
+    }
+
+    /**
+     * Replaces the value of {@value #ATTRIBUTE_NAME_TABLE_SCHEM} attribute with specified value.
+     *
+     * @param tableSchem new value for {@value #ATTRIBUTE_NAME_TABLE_SCHEM} attribute.
+     */
+    public void setTableSchem(final String tableSchem) {
+        this.tableSchem = tableSchem;
+    }
+
+    /**
+     * Returns the value of {@value #ATTRIBUTE_NAME_TABLE_NAME} attribute.
+     *
+     * @return the value of {@value #ATTRIBUTE_NAME_TABLE_NAME} attribute.
+     */
+    public String getTableName() {
+        return tableName;
+    }
+
+    /**
+     * Replaces the value of {@value #ATTRIBUTE_NAME_TABLE_NAME} attribute with specified value.
+     *
+     * @param tableName new value for {@value #ATTRIBUTE_NAME_TABLE_NAME} attribute.
+     */
+    public void setTableName(final String tableName) {
+        this.tableName = tableName;
+    }
+
+    public String getTableType() {
+        return tableType;
+    }
+
+    public void setTableType(String tableType) {
+        this.tableType = tableType;
+    }
+
+    public String getRemarks() {
+        return remarks;
+    }
+
+    public void setRemarks(String remarks) {
+        this.remarks = remarks;
+    }
+
+    public String getTypeCat() {
+        return typeCat;
+    }
+
+    public void setTypeCat(String typeCat) {
+        this.typeCat = typeCat;
+    }
+
+    public String getTypeSchem() {
+        return typeSchem;
+    }
+
+    public void setTypeSchem(String typeSchem) {
+        this.typeSchem = typeSchem;
+    }
+
+    public String getTypeName() {
+        return typeName;
+    }
+
+    public void setTypeName(String typeName) {
+        this.typeName = typeName;
+    }
+
+    public String getSelfReferencingColName() {
+        return selfReferencingColName;
+    }
+
+    public void setSelfReferencingColName(final String selfReferencingColName) {
+        this.selfReferencingColName = selfReferencingColName;
+    }
+
+    public String getRefGeneration() {
+        return refGeneration;
+    }
+
+    public void setRefGeneration(final String refGeneration) {
+        this.refGeneration = refGeneration;
+    }
 }

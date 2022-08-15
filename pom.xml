@@ -64,6 +64,7 @@
     <version.ojdbc8>21.6.0.0.1</version.ojdbc8>
     <version.ojdbc10>19.15.0.0.1</version.ojdbc10>
     <version.ojdbc11>21.6.0.0.1</version.ojdbc11>
+    <version.org.aspectj>1.9.9.1</version.org.aspectj>
     <version.org.eclipse.transformer>0.5.0</version.org.eclipse.transformer>
     <!--    <version.org.hibernate.validator>6.2.0.Final</version.org.hibernate.validator>-->
     <version.org.hibernate.validator>6.2.4.Final</version.org.hibernate.validator>
@@ -180,6 +181,12 @@
       <scope>test</scope>
     </dependency>
     <dependency>
+      <groupId>org.aspectj</groupId>
+      <artifactId>aspectjrt</artifactId>
+      <version>${version.org.aspectj}</version>
+      <scope>test</scope>
+    </dependency>
+    <dependency>
       <groupId>org.assertj</groupId>
       <artifactId>assertj-core</artifactId>
       <version>3.23.1</version>
@@ -253,17 +260,12 @@
         <plugin>
           <groupId>org.apache.maven.plugins</groupId>
           <artifactId>maven-javadoc-plugin</artifactId>
-<!--          <version>3.4.1</version>-->
-<!--          <version>3.4.0</version>-->
-<!--          <version>3.3.2</version>-->
-<!--          <version>3.3.1</version>-->
-<!--          <version>3.3.0</version>-->
-          <version>3.2.0</version>
+          <version>3.4.1</version>
           <configuration>
             <additionalOptions>
               <additionalOption>-Xdoclint:${doclint}</additionalOption>
               <!-- https://issues.apache.org/jira/browse/MJAVADOC-720 -->
-<!--              <sourcepath>${project.build.directory}/generated-sources/delombok</sourcepath>-->
+              <!--              <sourcepath>${project.build.directory}/generated-sources/delombok</sourcepath>-->
             </additionalOptions>
             <links>
               <link>https://javadoc.io/doc/jakarta.persistence/jakarta.persistence-api/latest</link>
@@ -505,6 +507,34 @@
                 <version>1.0</version>
               </signature>
             </configuration>
+          </execution>
+        </executions>
+      </plugin>
+      <plugin>
+        <groupId>org.codehaus.mojo</groupId>
+        <artifactId>aspectj-maven-plugin</artifactId>
+        <version>1.14.0</version>
+        <dependencies>
+          <dependency>
+            <groupId>org.aspectj</groupId>
+            <artifactId>aspectjtools</artifactId>
+            <version>${version.org.aspectj}</version>
+          </dependency>
+        </dependencies>
+        <configuration>
+          <complianceLevel>${maven.compiler.testTarget}</complianceLevel>
+          <!--          <source>1.8</source>-->
+          <!--          <target>1.8</target>-->
+          <showWeaveInfo>true</showWeaveInfo>
+          <verbose>true</verbose>
+          <Xlint>ignore</Xlint>
+        </configuration>
+        <executions>
+          <execution>
+            <goals>
+              <!--              <goal>compile</goal>-->
+              <goal>test-compile</goal>
+            </goals>
           </execution>
         </executions>
       </plugin>

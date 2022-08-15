@@ -20,7 +20,25 @@ package com.github.jinahya.database.metadata.bind;
  * #L%
  */
 
-class AttributeTest extends MetadataTypeTest<Attribute> {
+import java.sql.SQLException;
+import java.util.Collection;
+
+import static org.assertj.core.api.Assertions.assertThat;
+
+class AttributeTest
+        extends MetadataTypeTest<Attribute> {
+
+    static <C extends Collection<Attribute>> C get(final Context context, final C collection)
+            throws SQLException {
+        context.getAttributes(null, null, "%", "%", collection);
+        for (final var each : collection) {
+            assertThat(each)
+                    .isNotNull()
+                    .usingComparator(Attribute.COMPARATOR)
+                    .isEqualTo(each);
+        }
+        return collection;
+    }
 
     AttributeTest() {
         super(Attribute.class);

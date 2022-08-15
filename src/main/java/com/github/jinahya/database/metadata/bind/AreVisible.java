@@ -35,7 +35,7 @@ import java.io.Serializable;
 import java.sql.SQLException;
 
 /**
- * An abstract class for binding the result of {@code DatabaseMetaData#...DeletesAreVisible(int)} method.
+ * An abstract class for binding the result of {@code DatabaseMetaData#...sAreVisible(int)} method.
  *
  * @see OthersDeletesAreVisible
  * @see OthersInsertsAreVisible
@@ -69,9 +69,50 @@ public abstract class AreVisible
         // no children.
     }
 
+    /**
+     * Returns the ResultSet type of this result.
+     *
+     * @return the ResultSet type of this result
+     */
+    public int getType() {
+        return type;
+    }
+
+    /**
+     * Replaces the ResultSet type of this result with specified value.
+     *
+     * @param type new ResultSet type.
+     */
+    public void setType(int type) {
+        this.type = type;
+    }
+
+    /**
+     * Returns the value of {@link #getType()} as an enum constant.
+     *
+     * @return the value of {@link #getType()} as an enum constant.
+     */
     @XmlAttribute(required = false)
     public ResultSetType getTypeAsEnum() {
         return ResultSetType.valueOfRawValue(getType());
+    }
+
+    /**
+     * Returns the value of this result.
+     *
+     * @return the value of this result
+     */
+    public Boolean getValue() {
+        return value;
+    }
+
+    /**
+     * Replaces the value of this result.
+     *
+     * @param value the new value.
+     */
+    public void setValue(Boolean value) {
+        this.value = value;
     }
 
     @XmlAttribute(required = true)

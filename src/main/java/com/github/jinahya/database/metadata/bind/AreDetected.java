@@ -20,7 +20,6 @@ package com.github.jinahya.database.metadata.bind;
  * #L%
  */
 
-import jakarta.json.bind.annotation.JsonbProperty;
 import lombok.AccessLevel;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
@@ -35,7 +34,7 @@ import java.io.Serializable;
 import java.sql.SQLException;
 
 /**
- * An abstract class for binding results of {@code DatabaseMetaData#...AreDetected(int)} method.
+ * An abstract class for binding the result of {@code DatabaseMetaData#(delete|insert|update)sAreDetected(int)} method.
  *
  * @author Jin Kwon &lt;onacit_at_gmail.com&gt;
  * @see DeletesAreDetected
@@ -58,21 +57,63 @@ public abstract class AreDetected
 
     private static final long serialVersionUID = 7505598364855010122L;
 
+    /**
+     * {@inheritDoc}
+     *
+     * @param context {@inheritDoc}
+     * @throws SQLException {@inheritDoc}
+     * @apiNote This class does not have any child types.
+     */
     @Override
     public void retrieveChildren(Context context) throws SQLException {
         // no children.
     }
 
-    @JsonbProperty
+    /**
+     * Returns the ResultSet type of this result.
+     *
+     * @return the ResultSet type of this result
+     */
+    public int getType() {
+        return type;
+    }
+
+    /**
+     * Replaces the ResultSet type of this result with specified value.
+     *
+     * @param type new ResultSet type.
+     */
+    public void setType(int type) {
+        this.type = type;
+    }
+
+    /**
+     * Returns the value of {@link #getType()} as an enum constant.
+     *
+     * @return the value of {@link #getType()} as an enum constant.
+     */
     @XmlAttribute(required = false)
     public ResultSetType getTypeAsEnum() {
         return ResultSetType.valueOfRawValue(getType());
     }
 
-//    @XmlAttribute(required = false)
-//    public String getTypeName() {
-//        return ResultSetType.valueOfRawValue(getType()).name();
-//    }
+    /**
+     * Returns the value of this result.
+     *
+     * @return the value of this result
+     */
+    public Boolean getValue() {
+        return value;
+    }
+
+    /**
+     * Replaces the value of this result.
+     *
+     * @param value the new value.
+     */
+    public void setValue(Boolean value) {
+        this.value = value;
+    }
 
     @XmlAttribute(required = true)
     private int type;
