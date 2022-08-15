@@ -28,10 +28,10 @@ import lombok.experimental.SuperBuilder;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Positive;
 import javax.validation.constraints.PositiveOrZero;
+import javax.xml.bind.annotation.XmlAttribute;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlSeeAlso;
 import java.sql.SQLException;
-import java.util.Objects;
 
 /**
  * An abstract class for binding results of {@link java.sql.DatabaseMetaData#getExportedKeys(String, String, String)}
@@ -86,30 +86,19 @@ public abstract class TableKey
 
     // -----------------------------------------------------------------------------------------------------------------
 
+    @XmlAttribute(required = false)
     public ImportedKeyRule getUpdateRuleAsEnum() {
         return ImportedKeyRule.valueOfRawValue(getUpdateRule());
     }
 
-    public void setUpdateRuleAsEnum(final ImportedKeyRule updateRuleAsEnum) {
-        Objects.requireNonNull(updateRuleAsEnum, "updateRuleAsEnum is null");
-        setUpdateRule(updateRuleAsEnum.rawValue());
-    }
-
+    @XmlAttribute(required = false)
     public ImportedKeyRule getDeleteRuleAsEnum() {
         return ImportedKeyRule.valueOfRawValue(getDeleteRule());
     }
 
-    public void setDeleteRuleAsEnum(final ImportedKeyRule deleteRuleAsEnum) {
-        Objects.requireNonNull(deleteRuleAsEnum, "deleteRuleAsEnum is null");
-        setDeleteRule(deleteRuleAsEnum.rawValue());
-    }
-
+    @XmlAttribute(required = false)
     public ImportedKeyDeferrability getDeferrabilityAsEnum() {
         return ImportedKeyDeferrability.valueOfRawValue(getDeferrability());
-    }
-
-    public void setDeferrabilityAsEnum(final ImportedKeyDeferrability deferrabilityAsEnum) {
-        setDeferrability(deferrabilityAsEnum.rawValue());
     }
 
     // -----------------------------------------------------------------------------------------------------------------
@@ -185,4 +174,118 @@ public abstract class TableKey
     @XmlElement(nillable = false, required = true)
     @Label("DEFERRABILITY")
     private int deferrability;
+
+    // -----------------------------------------------------------------------------------------------------------------
+
+    public String getPktableCat() {
+        return pktableCat;
+    }
+
+    public void setPktableCat(String pktableCat) {
+        this.pktableCat = pktableCat;
+    }
+
+    public String getPktableSchem() {
+        return pktableSchem;
+    }
+
+    public void setPktableSchem(String pktableSchem) {
+        this.pktableSchem = pktableSchem;
+    }
+
+    public String getPktableName() {
+        return pktableName;
+    }
+
+    public void setPktableName(String pktableName) {
+        this.pktableName = pktableName;
+    }
+
+    public String getPkcolumnName() {
+        return pkcolumnName;
+    }
+
+    public void setPkcolumnName(String pkcolumnName) {
+        this.pkcolumnName = pkcolumnName;
+    }
+
+    public String getFktableCat() {
+        return fktableCat;
+    }
+
+    public void setFktableCat(String fktableCat) {
+        this.fktableCat = fktableCat;
+    }
+
+    public String getFktableSchem() {
+        return fktableSchem;
+    }
+
+    public void setFktableSchem(String fktableSchem) {
+        this.fktableSchem = fktableSchem;
+    }
+
+    public String getFktableName() {
+        return fktableName;
+    }
+
+    public void setFktableName(String fktableName) {
+        this.fktableName = fktableName;
+    }
+
+    public String getFkcolumnName() {
+        return fkcolumnName;
+    }
+
+    public void setFkcolumnName(String fkcolumnName) {
+        this.fkcolumnName = fkcolumnName;
+    }
+
+    public int getKeySeq() {
+        return keySeq;
+    }
+
+    public void setKeySeq(int keySeq) {
+        this.keySeq = keySeq;
+    }
+
+    public int getUpdateRule() {
+        return updateRule;
+    }
+
+    public void setUpdateRule(int updateRule) {
+        this.updateRule = updateRule;
+    }
+
+    public int getDeleteRule() {
+        return deleteRule;
+    }
+
+    public void setDeleteRule(int deleteRule) {
+        this.deleteRule = deleteRule;
+    }
+
+    public String getFkName() {
+        return fkName;
+    }
+
+    public void setFkName(String fkName) {
+        this.fkName = fkName;
+    }
+
+    public String getPkName() {
+        return pkName;
+    }
+
+    public void setPkName(String pkName) {
+        this.pkName = pkName;
+    }
+
+    public int getDeferrability() {
+        return deferrability;
+    }
+
+    public void setDeferrability(final int deferrability) {
+        this.deferrability = deferrability;
+    }
 }
