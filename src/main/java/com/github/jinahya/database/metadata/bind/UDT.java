@@ -125,4 +125,62 @@ public class UDT
     @EqualsAndHashCode.Exclude
     @ToString.Exclude
     private List<@Valid @NotNull Attribute> attributes;
+
+    // -----------------------------------------------------------------------------------------------------------------
+
+    public String getTypeCat() {
+        return typeCat;
+    }
+
+    public void setTypeCat(String typeCat) {
+        this.typeCat = typeCat;
+    }
+
+    public String getTypeSchem() {
+        return typeSchem;
+    }
+
+    public void setTypeSchem(String typeSchem) {
+        this.typeSchem = typeSchem;
+    }
+
+    public String getTypeName() {
+        return typeName;
+    }
+
+    public void setTypeName(String typeName) {
+        this.typeName = typeName;
+    }
+
+    public String getClassName() {
+        return className;
+    }
+
+    public void setClassName(String className) {
+        this.className = className;
+    }
+
+    public int getDataType() {
+        return dataType;
+    }
+
+    public void setDataType(int dataType) {
+        this.dataType = dataType;
+    }
+
+    public String getRemarks() {
+        return remarks;
+    }
+
+    public void setRemarks(String remarks) {
+        this.remarks = remarks;
+    }
+
+    public Integer getBaseType() {
+        return baseType;
+    }
+
+    public void setBaseType(Integer baseType) {
+        this.baseType = baseType;
+    }
 }
