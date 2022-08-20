@@ -175,7 +175,7 @@ abstract class MemoryTest {
             final var pathname = name + ".xml";
             final var target = Paths.get("target", pathname).toFile();
             Wrapper.marshalFormatted(Column.class, columns, target);
-            JsonbTests.writeToFile(columns, name);
+            JsonbTests.writeToFile(context, "columns", columns);
             JsonbTests.serializeAndDeserialize(
                     Column.class,
                     columns,
@@ -206,7 +206,7 @@ abstract class MemoryTest {
             final var pathname = name + ".xml";
             final var target = Paths.get("target", pathname).toFile();
             Wrapper.marshalFormatted(Function.class, functions, target);
-            JsonbTests.writeToFile(functions, name);
+            JsonbTests.writeToFile(context, "functions", functions);
         }
     }
 
