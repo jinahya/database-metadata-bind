@@ -29,7 +29,7 @@ import java.sql.SQLException;
 import java.util.Collection;
 
 /**
- * A class for binding the result of {@link DatabaseMetaData#getClientInfoProperties()} method.
+ * A class for binding results of the {@link DatabaseMetaData#getClientInfoProperties()} method.
  *
  * @author Jin Kwon &lt;jinahya_at_gmail.com&gt;
  * @see Context#getClientInfoProperties(Collection)
@@ -47,18 +47,52 @@ public class ClientInfoProperty
     }
 
     @XmlElement(required = true)
-    @Label("NAME")
+    @ColumnLabel("NAME")
     private String name;
 
     @XmlElement(required = true)
-    @Label("MAX_LEN")
+    @ColumnLabel("MAX_LEN")
     private int maxLen;
 
     @XmlElement(required = true)
-    @Label("DEFAULT_VALUE")
+    @ColumnLabel("DEFAULT_VALUE")
     private String defaultValue;
 
     @XmlElement(required = true)
-    @Label("DESCRIPTION")
+    @ColumnLabel("DESCRIPTION")
     private String description;
+
+    // -----------------------------------------------------------------------------------------------------------------
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public int getMaxLen() {
+        return maxLen;
+    }
+
+    public void setMaxLen(int maxLen) {
+        this.maxLen = maxLen;
+    }
+
+    public String getDefaultValue() {
+        return defaultValue;
+    }
+
+    public void setDefaultValue(String defaultValue) {
+        this.defaultValue = defaultValue;
+    }
+
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
+    }
 }

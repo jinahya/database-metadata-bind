@@ -63,37 +63,37 @@ public class ColumnPrivilege
 
     @XmlElement(nillable = true, required = true)
     @NullableBySpecification
-    @Label("TABLE_CAT")
+    @ColumnLabel("TABLE_CAT")
     private String tableCat;
 
     @XmlElement(nillable = true, required = true)
     @NullableBySpecification
-    @Label("TABLE_SCHEM")
+    @ColumnLabel("TABLE_SCHEM")
     private String tableSchem;
 
     @XmlElement(nillable = false, required = true)
-    @Label("TABLE_NAME")
+    @ColumnLabel("TABLE_NAME")
     private String tableName;
 
     @XmlElement(nillable = false, required = true)
-    @Label("COLUMN_NAME")
+    @ColumnLabel("COLUMN_NAME")
     private String columnName;
 
     @XmlElement(nillable = true, required = true)
     @NullableBySpecification
-    @Label("GRANTOR")
+    @ColumnLabel("GRANTOR")
     private String grantor;
 
     @XmlElement(nillable = false, required = true)
-    @Label("GRANTEE")
+    @ColumnLabel("GRANTEE")
     private String grantee;
 
     @XmlElement(nillable = false, required = true)
-    @Label("PRIVILEGE")
+    @ColumnLabel("PRIVILEGE")
     private String privilege;
 
     @XmlElement(nillable = true, required = true)
     @NullableBySpecification
-    @Label("IS_GRANTABLE")
+    @ColumnLabel("IS_GRANTABLE")
     private String isGrantable;
 }

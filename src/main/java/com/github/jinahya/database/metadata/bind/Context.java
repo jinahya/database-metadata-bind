@@ -87,9 +87,9 @@ public class Context {
     private <T extends MetadataType> T bind(final ResultSet results, final Class<T> type, final T instance)
             throws SQLException {
         final Set<String> resultSetLabels = Utils.getLabels(results);
-        for (final Entry<Field, Label> labeledField : getLabeledFields(type).entrySet()) {
+        for (final Entry<Field, ColumnLabel> labeledField : getLabeledFields(type).entrySet()) {
             final Field field = labeledField.getKey();
-            final Label label = labeledField.getValue();
+            final ColumnLabel label = labeledField.getValue();
             if (!resultSetLabels.remove(label.value())) {
                 log.warning(() -> String.format("unknown label; %1$s on %2$s", label, field));
                 continue;
@@ -693,7 +693,7 @@ public class Context {
                                       tableNamePattern, columnNamePattern));
         } catch (final SQLFeatureNotSupportedException sqlfnse) {
             log.log(Level.WARNING,
-                    String.format("no supported; getPseudoColumns(%1$s, %2$s, %3$s, %4$s)", catalog, schemaPattern,
+                    String.format("not supported; getPseudoColumns(%1$s, %2$s, %3$s, %4$s)", catalog, schemaPattern,
                                   tableNamePattern, columnNamePattern),
                     sqlfnse);
         }
@@ -1321,12 +1321,12 @@ public class Context {
         return value;
     }
 
-    private @NotNull Map<@NotNull Field, @NotNull Label> getLabeledFields(final @NotNull Class<?> clazz) {
+    private @NotNull Map<@NotNull Field, @NotNull ColumnLabel> getLabeledFields(final @NotNull Class<?> clazz) {
         Objects.requireNonNull(clazz, "clazz is null");
-        return classesAndLabeledFields.computeIfAbsent(clazz, c -> Utils.getFieldsAnnotatedWith(c, Label.class));
+        return classesAndLabeledFields.computeIfAbsent(clazz, c -> Utils.getFieldsAnnotatedWith(c, ColumnLabel.class));
     }
 
     final DatabaseMetaData databaseMetaData;
 
-    private final Map<Class<?>, Map<Field, Label>> classesAndLabeledFields = new HashMap<>();
+    private final Map<Class<?>, Map<Field, ColumnLabel>> classesAndLabeledFields = new HashMap<>();
 }

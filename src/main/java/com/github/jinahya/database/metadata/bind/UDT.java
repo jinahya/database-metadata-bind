@@ -88,34 +88,34 @@ public class UDT
     // -----------------------------------------------------------------------------------------------------------------
     @XmlElement(nillable = true, required = true)
     @NullableBySpecification
-    @Label("TYPE_CAT")
+    @ColumnLabel("TYPE_CAT")
     private String typeCat;
 
     @XmlElement(nillable = true, required = true)
     @NullableBySpecification
-    @Label("TYPE_SCHEM")
+    @ColumnLabel("TYPE_SCHEM")
     private String typeSchem;
 
     @XmlElement(nillable = false, required = true)
     @NotBlank
-    @Label("TYPE_NAME")
+    @ColumnLabel("TYPE_NAME")
     private String typeName;
 
     @XmlElement(nillable = false, required = true)
-    @Label("CLASS_NAME")
+    @ColumnLabel("CLASS_NAME")
     private String className;
 
     @XmlElement(nillable = false, required = true)
-    @Label("DATA_TYPE")
+    @ColumnLabel("DATA_TYPE")
     private int dataType;
 
     @XmlElement(nillable = false, required = true)
-    @Label("REMARKS")
+    @ColumnLabel("REMARKS")
     private String remarks;
 
     @XmlElement(nillable = true, required = true)
     @NullableBySpecification
-    @Label("BASE_TYPE")
+    @ColumnLabel("BASE_TYPE")
     private Integer baseType;
 
     // -----------------------------------------------------------------------------------------------------------------
@@ -132,7 +132,7 @@ public class UDT
         return typeCat;
     }
 
-    public void setTypeCat(String typeCat) {
+    public void setTypeCat(final String typeCat) {
         this.typeCat = typeCat;
     }
 
@@ -140,7 +140,7 @@ public class UDT
         return typeSchem;
     }
 
-    public void setTypeSchem(String typeSchem) {
+    public void setTypeSchem(final String typeSchem) {
         this.typeSchem = typeSchem;
     }
 
@@ -148,7 +148,7 @@ public class UDT
         return typeName;
     }
 
-    public void setTypeName(String typeName) {
+    public void setTypeName(final String typeName) {
         this.typeName = typeName;
     }
 
@@ -156,7 +156,7 @@ public class UDT
         return className;
     }
 
-    public void setClassName(String className) {
+    public void setClassName(final String className) {
         this.className = className;
     }
 
@@ -164,7 +164,7 @@ public class UDT
         return dataType;
     }
 
-    public void setDataType(int dataType) {
+    public void setDataType(final int dataType) {
         this.dataType = dataType;
     }
 
@@ -172,7 +172,7 @@ public class UDT
         return remarks;
     }
 
-    public void setRemarks(String remarks) {
+    public void setRemarks(final String remarks) {
         this.remarks = remarks;
     }
 
@@ -180,7 +180,7 @@ public class UDT
         return baseType;
     }
 
-    public void setBaseType(Integer baseType) {
+    public void setBaseType(final Integer baseType) {
         this.baseType = baseType;
     }
 }

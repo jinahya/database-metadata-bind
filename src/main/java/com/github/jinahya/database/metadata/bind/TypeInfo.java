@@ -208,82 +208,82 @@ public class TypeInfo
 
     @XmlElement(nillable = false, required = true)
     @NotBlank
-    @Label("TYPE_NAME")
+    @ColumnLabel("TYPE_NAME")
     private String typeName;
 
     @XmlElement(nillable = false, required = true)
-    @Label("DATA_TYPE")
+    @ColumnLabel("DATA_TYPE")
     private int dataType;
 
     @XmlElement(nillable = true, required = true)
     @NullableBySpecification // > Null is returned for data types where the column size is not applicable.
-    @Label("PRECISION")
+    @ColumnLabel("PRECISION")
     private Integer precision;
 
     @XmlElement(nillable = true, required = true)
     @NullableBySpecification
-    @Label("LITERAL_PREFIX")
+    @ColumnLabel("LITERAL_PREFIX")
     private String literalPrefix;
 
     @XmlElement(nillable = true, required = true)
     @NullableBySpecification
-    @Label("LITERAL_SUFFIX")
+    @ColumnLabel("LITERAL_SUFFIX")
     private String literalSuffix;
 
     @XmlElement(nillable = true, required = true)
     @NullableBySpecification
-    @Label("CREATE_PARAMS")
+    @ColumnLabel("CREATE_PARAMS")
     private String createParams;
 
     @XmlElement(nillable = false, required = true)
-    @Label("NULLABLE")
+    @ColumnLabel("NULLABLE")
     private int nullable;
 
     @XmlElement(nillable = false, required = true)
-    @Label("CASE_SENSITIVE")
+    @ColumnLabel("CASE_SENSITIVE")
     private boolean caseSensitive;
 
     @XmlElement(nillable = false, required = true)
-    @Label("SEARCHABLE")
+    @ColumnLabel("SEARCHABLE")
     private int searchable;
 
     @XmlElement(nillable = true, required = true)
     @NotUsedBySpecification
-    @Label("UNSIGNED_ATTRIBUTE")
+    @ColumnLabel("UNSIGNED_ATTRIBUTE")
     private Boolean unsignedAttribute;
 
     @XmlElement(nillable = false, required = true)
-    @Label("FIXED_PREC_SCALE")
+    @ColumnLabel("FIXED_PREC_SCALE")
     private boolean fixedPrecScale;
 
     @XmlElement(nillable = false, required = true)
-    @Label("AUTO_INCREMENT")
+    @ColumnLabel("AUTO_INCREMENT")
     private boolean autoIncrement;
 
     @XmlElement(nillable = true, required = true)
     @NullableBySpecification
-    @Label("LOCAL_TYPE_NAME")
+    @ColumnLabel("LOCAL_TYPE_NAME")
     private String localTypeName;
 
     @XmlElement(required = true)
-    @Label("MINIMUM_SCALE")
+    @ColumnLabel("MINIMUM_SCALE")
     private int minimumScale;
 
     @XmlElement(required = true)
-    @Label("MAXIMUM_SCALE")
+    @ColumnLabel("MAXIMUM_SCALE")
     private int maximumScale;
 
     @XmlElement(nillable = true, required = true)
     @NotUsedBySpecification
-    @Label("SQL_DATA_TYPE")
+    @ColumnLabel("SQL_DATA_TYPE")
     private Integer sqlDataType;
 
     @XmlElement(nillable = true, required = true)
     @NotUsedBySpecification
-    @Label("SQL_DATETIME_SUB")
+    @ColumnLabel("SQL_DATETIME_SUB")
     private Integer sqlDatetimeSub;
 
     @XmlElement(nillable = false, required = true)
-    @Label("NUM_PREC_RADIX")
+    @ColumnLabel("NUM_PREC_RADIX")
     private int numPrecRadix;
 }

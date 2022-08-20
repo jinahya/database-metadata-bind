@@ -56,6 +56,6 @@ public class TableType
 
     @XmlElement(nillable = false, required = true)
     @NotBlank
-    @Label("TABLE_TYPE")
+    @ColumnLabel("TABLE_TYPE")
     private String tableType;
 }

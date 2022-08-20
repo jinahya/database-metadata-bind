@@ -93,7 +93,6 @@ abstract class MemoryTest {
     }
 
     // -----------------------------------------------------------------------------------------------------------------
-
     @Test
     void getCatalogs__() throws Exception {
         try (var connection = connect()) {
@@ -103,9 +102,9 @@ abstract class MemoryTest {
                 catalogs.add(Catalog.newVirtualInstance());
             }
             assertThat(catalogs)
-                    .allSatisfy(v -> {
-                        final var string = assertDoesNotThrow(v::toString);
-                        final var hashCode = assertDoesNotThrow(v::hashCode);
+                    .allSatisfy(c -> {
+                        final var string = assertDoesNotThrow(c::toString);
+                        final var hashCode = assertDoesNotThrow(c::hashCode);
                     });
             for (final var catalog : catalogs) {
                 catalog.retrieveChildren(context);
@@ -114,7 +113,77 @@ abstract class MemoryTest {
             final var pathname = name + ".xml";
             final var target = Paths.get("target", pathname).toFile();
             Wrapper.marshalFormatted(Catalog.class, catalogs, target);
-            JsonbTests.writeToFile(catalogs, name);
+            JsonbTests.writeToFile(context, "catalogs", catalogs);
+            JsonbTests.serializeAndDeserialize(
+                    Catalog.class,
+                    catalogs,
+                    (e, a) -> {
+//                        assertThat(a)
+//                                .usingRecursiveComparison()
+//                                .isEqualTo(e);
+                        assertThat(a.getSchemas())
+                                .hasSameSizeAs(e.getSchemas())
+                                .allSatisfy(s -> {
+                                });
+                    });
+        }
+    }
+
+    @Test
+    void getClientInfoProperties__() throws Exception {
+        try (var connection = connect()) {
+            final var context = context(connection);
+            final var clientInfoProperties = context.getClientInfoProperties(new ArrayList<>());
+            assertThat(clientInfoProperties)
+                    .allSatisfy(c -> {
+                        final var string = assertDoesNotThrow(c::toString);
+                        final var hashCode = assertDoesNotThrow(c::hashCode);
+                    });
+            for (final var clientInfoProperty : clientInfoProperties) {
+                clientInfoProperty.retrieveChildren(context);
+            }
+            final var name = TestUtils.getFilenamePrefix(context) + " - clientInfoProperties";
+            final var pathname = name + ".xml";
+            final var target = Paths.get("target", pathname).toFile();
+            Wrapper.marshalFormatted(ClientInfoProperty.class, clientInfoProperties, target);
+            JsonbTests.writeToFile(context, "clientInfoProperties", clientInfoProperties);
+            JsonbTests.serializeAndDeserialize(
+                    ClientInfoProperty.class,
+                    clientInfoProperties,
+                    (e, a) -> {
+                        assertThat(a)
+                                .usingRecursiveComparison()
+                                .isEqualTo(e);
+                    });
+        }
+    }
+
+    @Test
+    void getColumns__() throws Exception {
+        try (var connection = connect()) {
+            final var context = context(connection);
+            final var columns = context.getColumns(null, null, "%", "%", new ArrayList<>());
+            assertThat(columns)
+                    .allSatisfy(c -> {
+                        final var string = assertDoesNotThrow(c::toString);
+                        final var hashCode = assertDoesNotThrow(c::hashCode);
+                    });
+            for (final var column : columns) {
+                column.retrieveChildren(context);
+            }
+            final var name = TestUtils.getFilenamePrefix(context) + " - columns";
+            final var pathname = name + ".xml";
+            final var target = Paths.get("target", pathname).toFile();
+            Wrapper.marshalFormatted(Column.class, columns, target);
+            JsonbTests.writeToFile(columns, name);
+            JsonbTests.serializeAndDeserialize(
+                    Column.class,
+                    columns,
+                    (e, a) -> {
+                        assertThat(a)
+                                .usingRecursiveComparison()
+                                .isEqualTo(e);
+                    });
         }
     }
 
@@ -340,7 +409,7 @@ abstract class MemoryTest {
     }
 
     @Test
-    void getProcedures__() throws SQLException, JAXBException {
+    void getProcedures__() throws Exception {
         try (var connection = connect()) {
             final var context = Context.newInstance(connection);
             final var procedures = context.getProcedures(null, null, "%", new ArrayList<>());
@@ -349,14 +418,16 @@ abstract class MemoryTest {
                 final var hashCode = assertDoesNotThrow(procedure::hashCode);
                 procedure.retrieveChildren(context);
             }
-            final var pathname = TestUtils.getFilenamePrefix(context) + " - procedures.xml";
+            final var prefix = TestUtils.getFilenamePrefix(context);
+            final var pathname = prefix + " - procedures.xml";
             final var target = Paths.get("target", pathname).toFile();
             Wrapper.marshalFormatted(Procedure.class, procedures, target);
+            JsonbTests.writeToFile(context, "procedures", procedures);
         }
     }
 
     @Test
-    void getPseudoColumns__() throws SQLException, JAXBException {
+    void getPseudoColumns__() throws Exception {
         try (var connection = connect()) {
             final var context = Context.newInstance(connection);
             final var pseudoColumns = context.getPseudoColumns(null, null, "%", "%", new ArrayList<>());
@@ -368,11 +439,12 @@ abstract class MemoryTest {
             final var pathname = TestUtils.getFilenamePrefix(context) + " - pseudoColumns.xml";
             final var target = Paths.get("target", pathname).toFile();
             Wrapper.marshalFormatted(PseudoColumn.class, pseudoColumns, target);
+            JsonbTests.writeToFile(context, "pseudoColumns", pseudoColumns);
         }
     }
 
     @Test
-    void getSchemas__() throws SQLException, JAXBException {
+    void getSchemas__() throws Exception {
         try (var connection = connect()) {
             final var context = Context.newInstance(connection);
             final var schemas = context.getSchemas(null, null, new ArrayList<>());
@@ -388,11 +460,12 @@ abstract class MemoryTest {
             final var pathname = TestUtils.getFilenamePrefix(context) + " - schemas.xml";
             final var target = Paths.get("target", pathname).toFile();
             Wrapper.marshalFormatted(Schema.class, schemas, target);
+            JsonbTests.writeToFile(context, "schemas", schemas);
         }
     }
 
     @Test
-    void getSuperTables__() throws SQLException, JAXBException {
+    void getSuperTables__() throws Exception {
         try (var connection = connect()) {
             final var context = Context.newInstance(connection);
             final var superTables = context.getSuperTables(null, "%", "%", new ArrayList<>());
@@ -403,6 +476,7 @@ abstract class MemoryTest {
             final var pathname = TestUtils.getFilenamePrefix(context) + " - superTables.xml";
             final var target = Paths.get("target", pathname).toFile();
             Wrapper.marshalFormatted(SuperTable.class, superTables, target);
+            JsonbTests.writeToFile(context, "superTables", superTables);
         }
     }
 
@@ -569,7 +643,7 @@ abstract class MemoryTest {
     }
 
     @Test
-    void getUDTs__() throws SQLException, JAXBException {
+    void getUDTs__() throws Exception {
         try (var connection = connect()) {
             final var context = Context.newInstance(connection);
             final var UDTs = context.getUDTs(null, null, "%", null, new ArrayList<>());
@@ -582,6 +656,12 @@ abstract class MemoryTest {
             final String pathname = TestUtils.getFilenamePrefix(context) + " - UDTs.xml";
             final File target = Paths.get("target", pathname).toFile();
             Wrapper.marshalFormatted(UDT.class, UDTs, target);
+            JsonbTests.serializeAndDeserialize(UDT.class, UDTs, (e, a) -> {
+                assertThat(a.getAttributes())
+                        .hasSameSizeAs(e.getAttributes())
+                        .allSatisfy(attr -> {
+                        });
+            });
         }
     }
 

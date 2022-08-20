@@ -98,29 +98,29 @@ public class Procedure
 
     @XmlElement(nillable = true, required = true)
     @NullableBySpecification
-    @Label("PROCEDURE_CAT")
+    @ColumnLabel("PROCEDURE_CAT")
     private String procedureCat;
 
     @XmlElement(nillable = true, required = true)
     @NullableBySpecification
-    @Label("PROCEDURE_SCHEM")
+    @ColumnLabel("PROCEDURE_SCHEM")
     private String procedureSchem;
 
     @XmlElement(nillable = false, required = true)
-    @Label("PROCEDURE_NAME")
+    @ColumnLabel("PROCEDURE_NAME")
     private String procedureName;
 
     @XmlElement(nillable = true, required = true)
     @NullableByVendor("HSQL")
-    @Label("REMARKS")
+    @ColumnLabel("REMARKS")
     private String remarks;
 
     @XmlElement(nillable = false, required = true)
-    @Label("PROCEDURE_TYPE")
+    @ColumnLabel("PROCEDURE_TYPE")
     private short procedureType;
 
     @XmlElement(nillable = false, required = true)
-    @Label("SPECIFIC_NAME")
+    @ColumnLabel("SPECIFIC_NAME")
     private String specificName;
 
     // -----------------------------------------------------------------------------------------------------------------

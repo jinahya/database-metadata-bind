@@ -20,6 +20,7 @@ package com.github.jinahya.database.metadata.bind;
  * #L%
  */
 
+import javax.json.bind.annotation.JsonbTransient;
 import lombok.AccessLevel;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
@@ -39,7 +40,6 @@ import javax.xml.bind.annotation.XmlTransient;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.Comparator;
 import java.util.List;
 
 /**
@@ -58,20 +58,24 @@ public class Catalog
 
     private static final long serialVersionUID = 6239185259128825953L;
 
-    public static final Comparator<Catalog> COMPARATOR = Comparator.comparing(Catalog::getTableCat);
+    public static final String COLUMN_LABEL_TABLE_CAT = "TABLE_CAT";
 
-    public static final String LABEL_TABLE_CAT = "TABLE_CAT";
-
-    public static final String VALUE_TABLE_CAT_EMPTY = "";
+    public static final String ATTRIBUTE_NAME_TABLE_CAT = "tableCat";
 
     /**
-     * Creates a new <em>virtual</em> instance whose {@code tableCat} property is {@value #VALUE_TABLE_CAT_EMPTY}.
+     * A value for {@value #ATTRIBUTE_NAME_TABLE_CAT} attribute for a virtual instances. The value is {@value}.
+     */
+    public static final String COLUMN_VALUE_TABLE_CAT_EMPTY = "";
+
+    /**
+     * Creates a new <em>virtual</em> instance whose {@value #ATTRIBUTE_NAME_TABLE_CAT} attribute is
+     * {@value #COLUMN_VALUE_TABLE_CAT_EMPTY}.
      *
      * @return a new <em>virtual</em> instance.
      */
     public static Catalog newVirtualInstance() {
         return builder()
-                .tableCat(VALUE_TABLE_CAT_EMPTY)
+                .tableCat(COLUMN_VALUE_TABLE_CAT_EMPTY)
                 .virtual(Boolean.TRUE)
                 .build();
     }
@@ -90,16 +94,6 @@ public class Catalog
     }
 
     /**
-     * Indicates whether this catalog is a <em>virtual</em> instance.
-     *
-     * @return {@code true} if this catalog is a <em>virtual</em> instance; {@code false} otherwise.
-     */
-    @XmlTransient
-    public boolean isVirtual() {
-        return virtual != null && virtual;
-    }
-
-    /**
      * Returns a list of schemas of this catalog.
      *
      * @return a list of schemas of this catalog; never {@code null}.
@@ -112,14 +106,24 @@ public class Catalog
         return schemas;
     }
 
+    /**
+     * Replaces current schemas of this catalog with specified value.
+     *
+     * @param schemas new value for {@code schemas} attribute.
+     * @deprecated Use {@link #getSchemas()} whenever applicable.
+     */
+    @Deprecated
+    // https://github.com/eclipse-ee4j/jsonb-api/issues/334
+    public void setSchemas(final List<Schema> schemas) {
+        this.schemas = schemas;
+    }
+
     @XmlAttribute(required = false)
-    @Setter(AccessLevel.NONE)
-    @Getter(AccessLevel.NONE)
     private Boolean virtual;
 
     @XmlElement(nillable = false, required = true)
     @NotNull
-    @Label(LABEL_TABLE_CAT)
+    @ColumnLabel(COLUMN_LABEL_TABLE_CAT)
     private String tableCat;
 
     @XmlElementRef
@@ -128,4 +132,54 @@ public class Catalog
     @EqualsAndHashCode.Exclude
     @ToString.Exclude
     private List<@Valid @NotNull Schema> schemas;
+
+    // -----------------------------------------------------------------------------------------------------------------
+
+    /**
+     * Indicates whether this is catalog is a {@link #newVirtualInstance() virtual} instance or not.
+     *
+     * @return {@code true} if this catalog is a virtual instance; {@code false} otherwise.
+     */
+    @JsonbTransient
+    @XmlTransient
+    public boolean isVirtual() {
+        final Boolean virtual = getVirtual();
+        return virtual != null && virtual;
+    }
+
+    /**
+     * Returns current value of {@code virtual} attribute.
+     *
+     * @return current value of {@code virtual} attribute.
+     */
+    public Boolean getVirtual() {
+        return virtual;
+    }
+
+    /**
+     * Replaces current value of {@code virtual} attribute with specified value.
+     *
+     * @param virtual new value for {@code virtual} attribute.
+     */
+    public void setVirtual(final Boolean virtual) {
+        this.virtual = virtual;
+    }
+
+    /**
+     * Returns the value of {@value #ATTRIBUTE_NAME_TABLE_CAT} attribute.
+     *
+     * @return the value of {@value #ATTRIBUTE_NAME_TABLE_CAT} attribute.
+     */
+    public String getTableCat() {
+        return tableCat;
+    }
+
+    /**
+     * Replaces current value of {@value #ATTRIBUTE_NAME_TABLE_CAT} attribute with specified value.
+     *
+     * @param tableCat new value for {@value #ATTRIBUTE_NAME_TABLE_CAT} attribute.
+     */
+    public void setTableCat(final String tableCat) {
+        this.tableCat = tableCat;
+    }
 }

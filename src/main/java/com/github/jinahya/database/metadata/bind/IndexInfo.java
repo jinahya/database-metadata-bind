@@ -22,20 +22,34 @@ package com.github.jinahya.database.metadata.bind;
 
 import lombok.AccessLevel;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
+import lombok.ToString;
 import lombok.experimental.SuperBuilder;
 
+import javax.validation.Valid;
 import javax.validation.constraints.AssertTrue;
 import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
 import javax.validation.constraints.PositiveOrZero;
 import javax.xml.bind.annotation.XmlElement;
+import javax.xml.bind.annotation.XmlElementRef;
 import javax.xml.bind.annotation.XmlEnum;
 import javax.xml.bind.annotation.XmlRootElement;
+import java.io.Serializable;
 import java.sql.DatabaseMetaData;
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.Comparator;
+import java.util.List;
 import java.util.Objects;
+import java.util.Set;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 /**
  * A class for binding results of {@link DatabaseMetaData#getIndexInfo(String, String, String, boolean, boolean)}
@@ -59,6 +73,106 @@ public class IndexInfo
             .thenComparing(IndexInfo::getType)
             .thenComparing(IndexInfo::getIndexName)
             .thenComparing(IndexInfo::getOrdinalPosition);
+
+    @XmlRootElement
+    @Getter
+    @EqualsAndHashCode
+    @ToString
+    @NoArgsConstructor
+    @SuperBuilder(toBuilder = true)
+    public static class IndexInfoCategory
+            implements Serializable {
+
+        private static final long serialVersionUID = 8326654078451632859L;
+
+        static IndexInfoCategory of(final boolean unique, final boolean approximate) {
+            return builder()
+                    .unique(unique)
+                    .approximate(approximate)
+                    .build();
+        }
+
+        static final Set<IndexInfoCategory> _VALUES = Collections.unmodifiableSet(
+                Stream.of(true, false)
+                        .flatMap(u -> Stream.of(IndexInfoCategory.of(u, false),
+                                                IndexInfoCategory.of(u, true)))
+                        .collect(Collectors.toSet())
+        );
+
+        public boolean isUnique() {
+            return unique;
+        }
+
+        public void setUnique(boolean unique) {
+            this.unique = unique;
+        }
+
+        public boolean isApproximate() {
+            return approximate;
+        }
+
+        public void setApproximate(boolean approximate) {
+            this.approximate = approximate;
+        }
+
+        @XmlElement(nillable = false, required = true)
+        private boolean unique;
+
+        @XmlElement(nillable = false, required = true)
+        private boolean approximate;
+    }
+
+    @XmlRootElement
+    @Setter
+    @Getter
+    @EqualsAndHashCode
+    @ToString
+    @NoArgsConstructor
+    @SuperBuilder(toBuilder = true)
+    public static class CategorizedIndexInfo
+            implements Serializable {
+
+        private static final long serialVersionUID = 3971564160837471251L;
+
+        static CategorizedIndexInfo of(final IndexInfoCategory indexInfoCategory) {
+            return builder()
+                    .indexInfoCategory(indexInfoCategory)
+                    .build();
+        }
+
+        public IndexInfoCategory getIndexInfoCategory() {
+            return indexInfoCategory;
+        }
+
+        public void setIndexInfoCategory(final IndexInfoCategory indexInfoCategory) {
+            this.indexInfoCategory = indexInfoCategory;
+        }
+
+        @NotNull
+        public List<IndexInfo> getIndexInfo() {
+            if (indexInfo == null) {
+                indexInfo = new ArrayList<>();
+            }
+            return indexInfo;
+        }
+
+        @Deprecated
+        public void setIndexInfo(final List<IndexInfo> indexInfo) {
+            this.indexInfo = indexInfo;
+        }
+
+        @XmlElement(nillable = false, required = true)
+        @Valid
+        @NotNull
+        @Setter(AccessLevel.NONE)
+        @Getter(AccessLevel.NONE)
+        private IndexInfoCategory indexInfoCategory;
+
+        @XmlElementRef
+        @Setter(AccessLevel.NONE)
+        @Getter(AccessLevel.NONE)
+        private List<@Valid @NotNull IndexInfo> indexInfo;
+    }
 
     public static final String COLUMN_NAME_TYPE = "TYPE";
 
@@ -186,62 +300,62 @@ public class IndexInfo
 
     @XmlElement(nillable = true, required = true)
     @NullableBySpecification
-    @Label("TABLE_CAT")
+    @ColumnLabel("TABLE_CAT")
     private String tableCat;
 
     @XmlElement(nillable = true, required = true)
     @NullableBySpecification
-    @Label("TABLE_SCHEM")
+    @ColumnLabel("TABLE_SCHEM")
     private String tableSchem;
 
     @XmlElement(nillable = false, required = true)
     @NotBlank
-    @Label("TABLE_NAME")
+    @ColumnLabel("TABLE_NAME")
     private String tableName;
 
     @XmlElement(nillable = false, required = true)
-    @Label("NON_UNIQUE")
+    @ColumnLabel("NON_UNIQUE")
     private boolean nonUnique;
 
     @XmlElement(nillable = true, required = true)
     @NullableBySpecification
-    @Label("INDEX_QUALIFIER")
+    @ColumnLabel("INDEX_QUALIFIER")
     private String indexQualifier;
 
     @XmlElement(nillable = true, required = true)
     @NullableBySpecification
-    @Label("INDEX_NAME")
+    @ColumnLabel("INDEX_NAME")
     private String indexName;
 
     @XmlElement(nillable = false, required = true)
-    @Label(COLUMN_NAME_TYPE)
+    @ColumnLabel(COLUMN_NAME_TYPE)
     private int type;
 
     @XmlElement(nillable = false, required = true)
     @PositiveOrZero
-    @Label("ORDINAL_POSITION")
+    @ColumnLabel("ORDINAL_POSITION")
     private int ordinalPosition;
 
     @XmlElement(nillable = true, required = true)
     @NullableBySpecification
-    @Label("COLUMN_NAME")
+    @ColumnLabel("COLUMN_NAME")
     private String columnName;
 
     @XmlElement(nillable = true, required = true)
     @NullableBySpecification
-    @Label("ASC_OR_DESC")
+    @ColumnLabel("ASC_OR_DESC")
     private String ascOrDesc;
 
     @XmlElement(nillable = false, required = true)
-    @Label("CARDINALITY")
+    @ColumnLabel("CARDINALITY")
     private long cardinality;
 
     @XmlElement(nillable = false, required = true)
-    @Label("PAGES")
+    @ColumnLabel("PAGES")
     private long pages;
 
     @XmlElement(nillable = true, required = true)
     @NullableBySpecification
-    @Label("FILTER_CONDITION")
+    @ColumnLabel("FILTER_CONDITION")
     private String filterCondition;
 }

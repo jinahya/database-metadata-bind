@@ -153,95 +153,95 @@ public class ProcedureColumn
     // -----------------------------------------------------------------------------------------------------------------
     @XmlElement(required = true, nillable = true)
     @NullableBySpecification
-    @Label("PROCEDURE_CAT")
+    @ColumnLabel("PROCEDURE_CAT")
     private String procedureCat;
 
     @XmlElement(required = true, nillable = true)
     @NullableBySpecification
-    @Label("PROCEDURE_SCHEM")
+    @ColumnLabel("PROCEDURE_SCHEM")
     private String procedureSchem;
 
     @XmlElement(required = true)
-    @Label("PROCEDURE_NAME")
+    @ColumnLabel("PROCEDURE_NAME")
     private String procedureName;
 
     // -----------------------------------------------------------------------------------------------------------------
     @XmlElement(nillable = false, required = true)
-    @Label("COLUMN_NAME")
+    @ColumnLabel("COLUMN_NAME")
     private String columnName;
 
     @XmlElement(nillable = false, required = true)
-    @Label("COLUMN_TYPE")
+    @ColumnLabel("COLUMN_TYPE")
     private int columnType;
 
     @XmlElement(required = true)
-    @Label("DATA_TYPE")
+    @ColumnLabel("DATA_TYPE")
     private int dataType;
 
     @XmlElement(required = true)
-    @Label("TYPE_NAME")
+    @ColumnLabel("TYPE_NAME")
     private String typeName;
 
     @XmlElement(nillable = true, required = true)
     @NullableBySpecification
-    @Label("PRECISION")
+    @ColumnLabel("PRECISION")
     private Integer precision;
 
     @XmlElement(nillable = false, required = true)
-    @Label("LENGTH")
+    @ColumnLabel("LENGTH")
     private int length;
 
     // https://issues.apache.org/jira/browse/DERBY-7103
     @XmlElement(nillable = true, required = true)
     @NullableBySpecification
-    @Label("SCALE")
+    @ColumnLabel("SCALE")
     private Integer scale;
 
     @XmlElement(nillable = false, required = true)
-    @Label("RADIX")
+    @ColumnLabel("RADIX")
     private int radix;
 
     @XmlElement(nillable = false, required = true)
-    @Label("NULLABLE")
+    @ColumnLabel("NULLABLE")
     private int nullable;
 
     @XmlElement(required = true, nillable = true)
     @NullableByVendor("derby") // https://issues.apache.org/jira/browse/DERBY-7101
-    @Label("REMARKS")
+    @ColumnLabel("REMARKS")
     private String remarks;
 
     @XmlElement(nillable = true, required = true)
     @NullableBySpecification
-    @Label("COLUMN_DEF")
+    @ColumnLabel("COLUMN_DEF")
     private String columnDef;
 
     @XmlElement(required = true, nillable = true)
     @Reserved
-    @Label("SQL_DATA_TYPE")
+    @ColumnLabel("SQL_DATA_TYPE")
     private Integer sqlDataType;
 
     @XmlElement(required = true, nillable = true)
     @Reserved
-    @Label("SQL_DATETIME_SUB")
+    @ColumnLabel("SQL_DATETIME_SUB")
     private Integer sqlDatetimeSub;
 
     @XmlElement(nillable = true, required = true)
     @NullableBySpecification
-    @Label("CHAR_OCTET_LENGTH")
+    @ColumnLabel("CHAR_OCTET_LENGTH")
     private Integer charOctetLength;
 
     @XmlElement(required = true)
     @Positive // > A value of 0 is returned if this row describes the procedure's return value.
-    @Label("ORDINAL_POSITION")
+    @ColumnLabel("ORDINAL_POSITION")
     private int ordinalPosition;
 
     @XmlElement(nillable = false, required = true)
     @NotNull
-    @Label("IS_NULLABLE")
+    @ColumnLabel("IS_NULLABLE")
     private String isNullable;
 
     @XmlElement(nillable = false, required = true)
     @NotNull
-    @Label("SPECIFIC_NAME")
+    @ColumnLabel("SPECIFIC_NAME")
     private String specificName;
 }

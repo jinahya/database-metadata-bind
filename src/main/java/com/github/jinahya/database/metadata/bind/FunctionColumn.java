@@ -213,82 +213,82 @@ public class FunctionColumn
 
     @XmlElement(nillable = true, required = true)
     @NullableBySpecification
-    @Label("FUNCTION_CAT")
+    @ColumnLabel("FUNCTION_CAT")
     private String functionCat;
 
     @XmlElement(nillable = true, required = true)
     @NullableBySpecification
-    @Label("FUNCTION_SCHEM")
+    @ColumnLabel("FUNCTION_SCHEM")
     private String functionSchem;
 
     @XmlElement(nillable = false, required = true)
     @NotBlank
-    @Label("FUNCTION_NAME")
+    @ColumnLabel("FUNCTION_NAME")
     private String functionName;
 
     @XmlElement(nillable = false, required = true)
     @NotBlank
-    @Label("COLUMN_NAME")
+    @ColumnLabel("COLUMN_NAME")
     private String columnName;
 
     @XmlElement(nillable = false, required = true)
-    @Label("COLUMN_TYPE")
+    @ColumnLabel("COLUMN_TYPE")
     private int columnType;
 
     @XmlElement(nillable = false, required = true)
-    @Label("DATA_TYPE")
+    @ColumnLabel("DATA_TYPE")
     private int dataType;
 
     @XmlElement(nillable = false, required = true)
     @NotNull
-    @Label("TYPE_NAME")
+    @ColumnLabel("TYPE_NAME")
     private String typeName;
 
     @XmlElement(nillable = true, required = true)
     @NullableBySpecification // > Null is returned for data types where the column size is not applicable.
-    @Label("PRECISION")
+    @ColumnLabel("PRECISION")
     private Integer precision;
 
     @XmlElement(nillable = false, required = true)
-    @Label("LENGTH")
+    @ColumnLabel("LENGTH")
     private int length;
 
     // https://issues.apache.org/jira/browse/DERBY-7102
     @XmlElement(nillable = true, required = true)
     @NullableBySpecification
-    @Label("SCALE")
+    @ColumnLabel("SCALE")
     private Integer scale;
 
     @XmlElement(nillable = false, required = true)
-    @Label("RADIX")
+    @ColumnLabel("RADIX")
     private int radix;
 
     @XmlElement(nillable = false, required = true)
-    @Label("NULLABLE")
+    @ColumnLabel("NULLABLE")
     private int nullable;
 
     @XmlElement(nillable = true, required = true)
     @NullableByVendor("derby") // https://issues.apache.org/jira/browse/DERBY-7100
-    @Label("REMARKS")
+    @ColumnLabel("REMARKS")
     private String remarks;
 
     @XmlElement(nillable = true, required = true)
     @NullableBySpecification
-    @Label("CHAR_OCTET_LENGTH")
+    @ColumnLabel("CHAR_OCTET_LENGTH")
     private Integer charOctetLength;
 
     @XmlElement(nillable = false, required = true)
     @Positive
-    @Label("ORDINAL_POSITION")
+    @ColumnLabel("ORDINAL_POSITION")
     private int ordinalPosition;
 
     @XmlElement(required = true)
     @NotNull
-    @Label("IS_NULLABLE")
+    @ColumnLabel("IS_NULLABLE")
     private String isNullable;
 
     @XmlElement(nillable = true, required = true)
     @NotNull
-    @Label("SPECIFIC_NAME")
+    @ColumnLabel("SPECIFIC_NAME")
     private String specificName;
 }

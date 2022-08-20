@@ -61,21 +61,21 @@ public class SuperTable
 
     @XmlElement(nillable = true, required = true)
     @NullableBySpecification
-    @Label("TABLE_CAT")
+    @ColumnLabel("TABLE_CAT")
     private String tableCat;
 
     @XmlElement(nillable = true, required = true)
     @NullableBySpecification
-    @Label("TABLE_SCHEM")
+    @ColumnLabel("TABLE_SCHEM")
     private String tableSchem;
 
     @XmlElement(nillable = false, required = true)
     @NotBlank
-    @Label("TABLE_NAME")
+    @ColumnLabel("TABLE_NAME")
     private String tableName;
 
     @XmlElement(nillable = false, required = true)
     @NotBlank
-    @Label("SUPERTABLE_NAME")
+    @ColumnLabel("SUPERTABLE_NAME")
     private String supertableName;
 }

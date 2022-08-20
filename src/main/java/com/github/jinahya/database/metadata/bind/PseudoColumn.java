@@ -72,56 +72,56 @@ public class PseudoColumn
     // -----------------------------------------------------------------------------------------------------------------
     @XmlElement(nillable = true, required = true)
     @NullableBySpecification
-    @Label("TABLE_CAT")
+    @ColumnLabel("TABLE_CAT")
     private String tableCat;
 
     @XmlElement(nillable = true, required = true)
     @NullableBySpecification
-    @Label("TABLE_SCHEM")
+    @ColumnLabel("TABLE_SCHEM")
     private String tableSchem;
 
     @XmlElement(nillable = false, required = true)
     @NotNull
-    @Label("TABLE_NAME")
+    @ColumnLabel("TABLE_NAME")
     private String tableName;
 
     @XmlElement(nillable = false, required = true)
     @NotNull
-    @Label("COLUMN_NAME")
+    @ColumnLabel("COLUMN_NAME")
     private String columnName;
 
     // -----------------------------------------------------------------------------------------------------------------
     @XmlElement(nillable = false, required = true)
-    @Label("DATA_TYPE")
+    @ColumnLabel("DATA_TYPE")
     private int dataType;
 
     @XmlElement(nillable = true, required = true)
-    @Label("COLUMN_SIZE")
+    @ColumnLabel("COLUMN_SIZE")
     private Integer columnSize;
 
     @XmlElement(nillable = true, required = true)
     @NullableBySpecification
-    @Label("DECIMAL_DIGITS")
+    @ColumnLabel("DECIMAL_DIGITS")
     private Integer decimalDigits;
 
     @XmlElement(nillable = false, required = true)
-    @Label("NUM_PREC_RADIX")
+    @ColumnLabel("NUM_PREC_RADIX")
     private int numPrecRadix;
 
     @XmlElement(nillable = false, required = true)
-    @Label("COLUMN_USAGE")
+    @ColumnLabel("COLUMN_USAGE")
     private String columnUsage;
 
     @XmlElement(nillable = true, required = true)
     @NullableBySpecification
-    @Label("REMARKS")
+    @ColumnLabel("REMARKS")
     private String remarks;
 
     @XmlElement(nillable = false, required = true)
-    @Label("CHAR_OCTET_LENGTH")
+    @ColumnLabel("CHAR_OCTET_LENGTH")
     private int charOctetLength;
 
     @XmlElement(nillable = false, required = true)
-    @Label("IS_NULLABLE")
+    @ColumnLabel("IS_NULLABLE")
     private String isNullable;
 }

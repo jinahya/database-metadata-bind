@@ -38,7 +38,6 @@ import javax.xml.bind.annotation.XmlRootElement;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.Comparator;
 import java.util.List;
 import java.util.Objects;
 
@@ -64,15 +63,11 @@ public class Schema
 
     private static final long serialVersionUID = 7457236468401244963L;
 
-    public static final Comparator<Schema> COMPARATOR =
-            Comparator.comparing(Schema::extractParent, Comparator.nullsFirst(Catalog.COMPARATOR))
-                    .thenComparing(Schema::getTableSchem);
+    public static final String COLUMN_LABEL_TABLE_CATALOG = "TABLE_CATALOG";
 
-    public static final String LABEL_TABLE_CATALOG = "TABLE_CATALOG";
+    public static final String COLUMN_LABEL_TABLE_SCHEM = "TABLE_SCHEM";
 
-    public static final String LABEL_TABLE_SCHEM = "TABLE_SCHEM";
-
-    public static final String VALUE_TABLE_SCHEM_EMPTY = "";
+    public static final String COLUMN_VALUE_TABLE_SCHEM_EMPTY = "";
 
     /**
      * Creates a new <em>virtual</em> instance with specified {@code tableCat} property value.
@@ -85,18 +80,19 @@ public class Schema
         return builder()
                 .virtual(Boolean.TRUE)
                 .tableCatalog(tableCatalog)
-                .tableSchem(VALUE_TABLE_SCHEM_EMPTY)
+                .tableSchem(COLUMN_VALUE_TABLE_SCHEM_EMPTY)
                 .build();
     }
 
     /**
-     * Creates a new <em>virtual</em> instance whose {@code tableCat} property is {@value Catalog#VALUE_TABLE_CAT_EMPTY}
-     * and {@code tableSchem} property is {@value #VALUE_TABLE_SCHEM_EMPTY}.
+     * Creates a new <em>virtual</em> instance whose {@code tableCat} property is
+     * {@value Catalog#COLUMN_VALUE_TABLE_CAT_EMPTY} and {@code tableSchem} property is
+     * {@value #COLUMN_VALUE_TABLE_SCHEM_EMPTY}.
      *
      * @return a new <em>virtual</em> instance.
      */
     public static Schema newVirtualInstance() {
-        return newVirtualInstance(Catalog.VALUE_TABLE_CAT_EMPTY);
+        return newVirtualInstance(Catalog.COLUMN_VALUE_TABLE_CAT_EMPTY);
     }
 
     @Override
@@ -146,10 +142,6 @@ public class Schema
                 .build();
     }
 
-    public boolean isVirtual() {
-        return virtual != null && virtual;
-    }
-
     public List<Function> getFunctions() {
         if (functions == null) {
             functions = new ArrayList<>();
@@ -192,23 +184,19 @@ public class Schema
         return UDTs;
     }
 
-    // -----------------------------------------------------------------------------------------------------------------
     @XmlAttribute(required = false)
-    @Setter(AccessLevel.NONE)
-    @Getter(AccessLevel.NONE)
     private Boolean virtual;
 
     @XmlElement(nillable = true, required = true)
     @NullableBySpecification
-    @Label(LABEL_TABLE_CATALOG)
+    @ColumnLabel(COLUMN_LABEL_TABLE_CATALOG)
     private String tableCatalog;
 
     @XmlElement(nillable = false, required = true)
     @NotNull
-    @Label(LABEL_TABLE_SCHEM)
+    @ColumnLabel(COLUMN_LABEL_TABLE_SCHEM)
     private String tableSchem;
 
-    // -----------------------------------------------------------------------------------------------------------------
     @XmlElementRef
     @Setter(AccessLevel.NONE)
     @Getter(AccessLevel.NONE)
@@ -250,4 +238,30 @@ public class Schema
     @EqualsAndHashCode.Exclude
     @ToString.Exclude
     private List<@Valid @NotNull UDT> UDTs;
+
+    // -----------------------------------------------------------------------------------------------------------------
+
+    public Boolean getVirtual() {
+        return virtual;
+    }
+
+    public void setVirtual(Boolean virtual) {
+        this.virtual = virtual;
+    }
+
+    public String getTableCatalog() {
+        return tableCatalog;
+    }
+
+    public void setTableCatalog(String tableCatalog) {
+        this.tableCatalog = tableCatalog;
+    }
+
+    public String getTableSchem() {
+        return tableSchem;
+    }
+
+    public void setTableSchem(String tableSchem) {
+        this.tableSchem = tableSchem;
+    }
 }

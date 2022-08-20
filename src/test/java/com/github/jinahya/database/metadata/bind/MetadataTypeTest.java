@@ -133,7 +133,7 @@ abstract class MetadataTypeTest<T extends MetadataType> {
     @Test
     void fieldsWithLabel_ShouldBeAnnotatedWithXmlElementWithRequiredTrue() {
         for (final Field field : getFieldsWithLabel().keySet()) {
-            assertThat(field.getAnnotation(Label.class)).isNotNull();
+            assertThat(field.getAnnotation(ColumnLabel.class)).isNotNull();
             final XmlElement xmlElement = field.getAnnotation(XmlElement.class);
             assertThat(xmlElement).isNotNull();
             assertThat(xmlElement.required()).isTrue();
@@ -239,14 +239,14 @@ abstract class MetadataTypeTest<T extends MetadataType> {
                                          e -> e.getKey().getAnnotation(NotUsedBySpecification.class)));
     }
 
-    Map<Field, Label> getFieldsWithLabel() {
+    Map<Field, ColumnLabel> getFieldsWithLabel() {
         if (fieldsWithLabel == null) {
-            fieldsWithLabel = Collections.unmodifiableMap(Utils.getFieldsAnnotatedWith(typeClass, Label.class));
+            fieldsWithLabel = Collections.unmodifiableMap(Utils.getFieldsAnnotatedWith(typeClass, ColumnLabel.class));
         }
         return fieldsWithLabel;
     }
 
     final Class<T> typeClass;
 
-    private Map<Field, Label> fieldsWithLabel;
+    private Map<Field, ColumnLabel> fieldsWithLabel;
 }

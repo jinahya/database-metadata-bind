@@ -104,75 +104,75 @@ public abstract class TableKey
     // -----------------------------------------------------------------------------------------------------------------
     @XmlElement(nillable = true, required = true)
     @NullableBySpecification
-    @Label("PKTABLE_CAT")
+    @ColumnLabel("PKTABLE_CAT")
     private String pktableCat;
 
     @XmlElement(nillable = true, required = true)
     @NullableBySpecification
-    @Label("PKTABLE_SCHEM")
+    @ColumnLabel("PKTABLE_SCHEM")
     private String pktableSchem;
 
     @XmlElement(required = true)
     @NotBlank
-    @Label("PKTABLE_NAME")
+    @ColumnLabel("PKTABLE_NAME")
     private String pktableName;
 
     @XmlElement(required = true)
     @NotBlank
-    @Label("PKCOLUMN_NAME")
+    @ColumnLabel("PKCOLUMN_NAME")
     private String pkcolumnName;
 
     // -----------------------------------------------------------------------------------------------------------------
     @XmlElement(nillable = true, required = true)
     @NullableBySpecification
-    @Label("FKTABLE_CAT")
+    @ColumnLabel("FKTABLE_CAT")
     private String fktableCat;
 
     @XmlElement(nillable = true, required = true)
     @NullableBySpecification
-    @Label("FKTABLE_NAME")
+    @ColumnLabel("FKTABLE_NAME")
     private String fktableSchem;
 
     @XmlElement(nillable = false, required = true)
     @NotBlank
-    @Label("FKTABLE_NAME")
+    @ColumnLabel("FKTABLE_NAME")
     private String fktableName;
 
     @XmlElement(nillable = false, required = true)
     @NotBlank
-    @Label("FKCOLUMN_NAME")
+    @ColumnLabel("FKCOLUMN_NAME")
     private String fkcolumnName;
 
     // -----------------------------------------------------------------------------------------------------------------
     @XmlElement(nillable = false, required = true)
     @Positive
-    @Label("FKCOLUMN_NAME")
+    @ColumnLabel("FKCOLUMN_NAME")
     private int keySeq;
 
     @XmlElement(nillable = false, required = true)
     @PositiveOrZero
-    @Label("UPDATE_RULE")
+    @ColumnLabel("UPDATE_RULE")
     private int updateRule;
 
     @XmlElement(nillable = false, required = true)
     @PositiveOrZero
-    @Label("DELETE_RULE")
+    @ColumnLabel("DELETE_RULE")
     private int deleteRule;
 
     // -----------------------------------------------------------------------------------------------------------------
     @XmlElement(nillable = true, required = true)
     @NullableBySpecification
-    @Label("FK_NAME")
+    @ColumnLabel("FK_NAME")
     private String fkName;
 
     @XmlElement(nillable = true, required = true)
     @NullableBySpecification
-    @Label("PK_NAME")
+    @ColumnLabel("PK_NAME")
     private String pkName;
 
     // -----------------------------------------------------------------------------------------------------------------
     @XmlElement(nillable = false, required = true)
-    @Label("DEFERRABILITY")
+    @ColumnLabel("DEFERRABILITY")
     private int deferrability;
 
     // -----------------------------------------------------------------------------------------------------------------

@@ -47,7 +47,10 @@
     <version.animal-sniffer>1.21</version.animal-sniffer>
     <!--    <version.com.sun.xml.bind>${version.jakarta.xml.bind-api}</version.com.sun.xml.bind>-->
     <version.com.sun.xml.bind>2.3.6</version.com.sun.xml.bind>
-    <version.jakarta.json.bind-api>2.0.0</version.jakarta.json.bind-api>
+    <version.jakarta.json-api>1.1.6</version.jakarta.json-api>
+    <version.javax.json-api>1.1.4</version.javax.json-api>
+<!--    <version.jakarta.json.bind-api>2.0.0</version.jakarta.json.bind-api>-->
+    <version.jakarta.json.bind-api>1.0.2</version.jakarta.json.bind-api>
     <!--    <version.jakarta.validation-api>3.0.2</version.jakarta.validation-api>-->
     <version.jakarta.validation-api>2.0.2</version.jakarta.validation-api>
     <!--    <version.jakarta.xml.bind-api>4.0.0</version.jakarta.xml.bind-api>-->
@@ -64,13 +67,12 @@
     <version.ojdbc8>21.6.0.0.1</version.ojdbc8>
     <version.ojdbc10>19.15.0.0.1</version.ojdbc10>
     <version.ojdbc11>21.6.0.0.1</version.ojdbc11>
-    <version.org.aspectj>1.9.9.1</version.org.aspectj>
     <version.org.eclipse.transformer>0.5.0</version.org.eclipse.transformer>
     <!--    <version.org.hibernate.validator>6.2.0.Final</version.org.hibernate.validator>-->
     <version.org.hibernate.validator>6.2.4.Final</version.org.hibernate.validator>
     <version.org.testcontainers>1.17.3</version.org.testcontainers>
     <!--    <version.postgresql>42.2.19.jre7</version.postgresql>-->
-    <version.postgresql>42.4.1</version.postgresql>
+    <version.postgresql>42.4.2</version.postgresql>
     <version.presto-jdbc>350</version.presto-jdbc>
   </properties>
 
@@ -155,6 +157,18 @@
       <version>${version.com.sun.xml.bind}</version>
       <scope>test</scope>
     </dependency>
+<!--    <dependency>-->
+<!--      <groupId>jakarta.json</groupId>-->
+<!--      <artifactId>jakarta.json-api</artifactId>-->
+<!--      <version>${version.jakarta.json-api}</version>-->
+<!--      <scope>provided</scope>-->
+<!--    </dependency>-->
+<!--    <dependency>-->
+<!--      <groupId>javax.json</groupId>-->
+<!--      <artifactId>javax.json-api</artifactId>-->
+<!--      <version>1.1.4</version>-->
+<!--      <type>bundle</type>-->
+<!--    </dependency>-->
     <dependency>
       <groupId>jakarta.json.bind</groupId>
       <artifactId>jakarta.json.bind-api</artifactId>
@@ -181,12 +195,6 @@
       <scope>test</scope>
     </dependency>
     <dependency>
-      <groupId>org.aspectj</groupId>
-      <artifactId>aspectjrt</artifactId>
-      <version>${version.org.aspectj}</version>
-      <scope>test</scope>
-    </dependency>
-    <dependency>
       <groupId>org.assertj</groupId>
       <artifactId>assertj-core</artifactId>
       <version>3.23.1</version>
@@ -201,7 +209,7 @@
     <dependency>
       <groupId>org.eclipse</groupId>
       <artifactId>yasson</artifactId>
-      <version>2.0.4</version>
+      <version>1.0.11</version>
       <scope>test</scope>
     </dependency>
     <dependency>
@@ -265,7 +273,7 @@
             <additionalOptions>
               <additionalOption>-Xdoclint:${doclint}</additionalOption>
               <!-- https://issues.apache.org/jira/browse/MJAVADOC-720 -->
-              <!--              <sourcepath>${project.build.directory}/generated-sources/delombok</sourcepath>-->
+              <!--              <sourcepath>${project.build.directory}/generated-sources-noduplicate/delombok</sourcepath>-->
             </additionalOptions>
             <links>
               <link>https://javadoc.io/doc/jakarta.persistence/jakarta.persistence-api/latest</link>
@@ -512,34 +520,6 @@
       </plugin>
       <plugin>
         <groupId>org.codehaus.mojo</groupId>
-        <artifactId>aspectj-maven-plugin</artifactId>
-        <version>1.14.0</version>
-        <dependencies>
-          <dependency>
-            <groupId>org.aspectj</groupId>
-            <artifactId>aspectjtools</artifactId>
-            <version>${version.org.aspectj}</version>
-          </dependency>
-        </dependencies>
-        <configuration>
-          <complianceLevel>${maven.compiler.testTarget}</complianceLevel>
-          <!--          <source>1.8</source>-->
-          <!--          <target>1.8</target>-->
-          <showWeaveInfo>true</showWeaveInfo>
-          <verbose>true</verbose>
-          <Xlint>ignore</Xlint>
-        </configuration>
-        <executions>
-          <execution>
-            <goals>
-              <!--              <goal>compile</goal>-->
-              <goal>test-compile</goal>
-            </goals>
-          </execution>
-        </executions>
-      </plugin>
-      <plugin>
-        <groupId>org.codehaus.mojo</groupId>
         <artifactId>license-maven-plugin</artifactId>
         <version>2.0.0</version>
         <configuration>
@@ -571,8 +551,12 @@
         <executions>
           <execution>
             <configuration>
-              <sourceDirectory>${project.basedir}/src/main/java</sourceDirectory>
               <addOutputDirectory>false</addOutputDirectory>
+              <!-- https://stackoverflow.com/a/45382576/330457 -->
+              <!-- IntelliJ 에서 중복된 코드라고 나오는 문제가 있어서... -->
+              <outputDirectory>${project.build.directory}/generated-sources-noduplicate/delombok</outputDirectory>
+              <skip>true</skip>
+              <sourceDirectory>${project.basedir}/src/main/java</sourceDirectory>
             </configuration>
             <phase>generate-sources</phase>
             <goals>

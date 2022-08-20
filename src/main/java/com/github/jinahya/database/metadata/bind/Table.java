@@ -20,6 +20,10 @@ package com.github.jinahya.database.metadata.bind;
  * #L%
  */
 
+import com.github.jinahya.database.metadata.bind.BestRowIdentifier.BestRowIdentifierCategory;
+import com.github.jinahya.database.metadata.bind.BestRowIdentifier.CategorizedBestRowIdentifiers;
+import com.github.jinahya.database.metadata.bind.IndexInfo.CategorizedIndexInfo;
+import com.github.jinahya.database.metadata.bind.IndexInfo.IndexInfoCategory;
 import lombok.AccessLevel;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
@@ -32,21 +36,16 @@ import lombok.experimental.SuperBuilder;
 import javax.validation.Valid;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
-import javax.xml.bind.annotation.XmlAttribute;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlElementRef;
 import javax.xml.bind.annotation.XmlRootElement;
 import java.sql.SQLException;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collection;
-import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Objects;
-import java.util.Set;
-import java.util.stream.Collectors;
-import java.util.stream.Stream;
+import java.util.Optional;
 
 /**
  * A class for binding results of
@@ -113,184 +112,11 @@ public class Table
      */
     public static final String ATTRIBUTE_NAME_TABLE_NAME = "tableName";
 
-    /**
-     * A key class for categorizing best row identifiers by their {@code scope} and {@code nullable}.
-     *
-     * @author Jin Kwon &lt;onacit_at_gmail.com&gt;
-     */
-    @XmlRootElement
-    @Getter
-    @EqualsAndHashCode
-    @ToString
-    public static class BestRowIdentifierCategory {
-
-        private static final Set<BestRowIdentifierCategory> VALUES = Collections.unmodifiableSet(
-                Arrays.stream(BestRowIdentifier.Scope.values())
-                        .map(IntFieldEnum::rawValue)
-                        .flatMap(rv -> Stream.of(new BestRowIdentifierCategory(rv, false),
-                                                 new BestRowIdentifierCategory(rv, true)))
-                        .collect(Collectors.toSet())
-        );
-
-        public static BestRowIdentifierCategory valueOf(final int scope, final boolean nullable) {
-            return VALUES.stream()
-                    .filter(v -> v.getScope() == scope && v.isNullable() == nullable)
-                    .findFirst()
-                    .orElseThrow(() -> new IllegalArgumentException(
-                            "no value matches; scope: " + scope + ", nullable: " + nullable));
-        }
-
-        private BestRowIdentifierCategory(final int scope, final boolean nullable) {
-            super();
-            this.scope = scope;
-            this.nullable = nullable;
-        }
-
-        private BestRowIdentifierCategory() {
-            this(0, false);
-        }
-
-        /**
-         * Returns the value of {@code scope} attribute.
-         *
-         * @return the value of {@code scope} attribute.
-         */
-        public int getScope() {
-            return scope;
-        }
-
-        /**
-         * Returns the value of {@code nullable} attribute.
-         *
-         * @return the value of {@code nullable} attribute.
-         */
-        public boolean isNullable() {
-            return nullable;
-        }
-
-        @XmlAttribute(required = true)
-        private final int scope;
-
-        @XmlAttribute(required = true)
-        private final boolean nullable;
-    }
-
-    /**
-     * A class for wrapping categorized instances of {@link BestRowIdentifier}.
-     *
-     * @author Jin Kwon &lt;onacit_at_gmail.com&gt;
-     */
-    @XmlRootElement
-    public static class CategorizedBestRowIdentifiers {
-
-        public CategorizedBestRowIdentifiers(@NotNull final BestRowIdentifierCategory bestRowIdentifierCategory) {
-            super();
-            this.bestRowIdentifierCategory =
-                    Objects.requireNonNull(bestRowIdentifierCategory, "bestRowIdentifierCategory is null");
-        }
-
-        private CategorizedBestRowIdentifiers() {
-            super();
-            this.bestRowIdentifierCategory = null;
-        }
-
-        @NotNull
-        public List<BestRowIdentifier> getBestRowIdentifiers() {
-            if (bestRowIdentifiers == null) {
-                bestRowIdentifiers = new ArrayList<>();
-            }
-            return bestRowIdentifiers;
-        }
-
-        @XmlElement(nillable = false, required = true)
-        @Valid
-        @NotNull
-        @Setter(AccessLevel.NONE)
-        @Getter
-        private final BestRowIdentifierCategory bestRowIdentifierCategory;
-
-        @XmlElementRef
-        @Setter(AccessLevel.NONE)
-        @Getter(AccessLevel.NONE)
-        private List<@Valid @NotNull BestRowIdentifier> bestRowIdentifiers;
-    }
-
-    @XmlRootElement
-    @Getter
-    @EqualsAndHashCode
-    @ToString
-    public static class IndexInfoCategory {
-
-        private static final Set<IndexInfoCategory> VALUES = Collections.unmodifiableSet(
-                Stream.of(true, false)
-                        .flatMap(u -> Stream.of(new IndexInfoCategory(u, false),
-                                                new IndexInfoCategory(u, true)))
-                        .collect(Collectors.toSet())
-        );
-
-        public static IndexInfoCategory valueOf(final boolean unique, final boolean approximate) {
-            return VALUES.stream()
-                    .filter(v -> v.unique == unique && v.approximate == approximate)
-                    .findFirst()
-                    .orElseThrow(() -> new IllegalArgumentException(
-                            "no value matches; unique: " + unique + ", approximate: " + approximate));
-        }
-
-        private IndexInfoCategory() {
-            this(false, false);
-        }
-
-        private IndexInfoCategory(final boolean unique, final boolean approximate) {
-            super();
-            this.unique = unique;
-            this.approximate = approximate;
-        }
-
-        private final boolean unique;
-
-        private final boolean approximate;
-    }
-
-    @XmlRootElement
-    public static class CategorizedIndexInfo {
-
-        public CategorizedIndexInfo(@NotNull final IndexInfoCategory indexInfoCategory) {
-            super();
-            this.indexInfoCategory =
-                    Objects.requireNonNull(indexInfoCategory, "indexInfoCategory is null");
-        }
-
-        private CategorizedIndexInfo() {
-            super();
-            indexInfoCategory = null;
-        }
-
-        @NotNull
-        public List<IndexInfo> getIndexInfo() {
-            if (indexInfo == null) {
-                indexInfo = new ArrayList<>();
-            }
-            return indexInfo;
-        }
-
-        @XmlElement(nillable = false, required = true)
-        @Valid
-        @NotNull
-        @Setter(AccessLevel.NONE)
-        @Getter
-        private final IndexInfoCategory indexInfoCategory;
-
-        @XmlElementRef
-        @Setter(AccessLevel.NONE)
-        @Getter(AccessLevel.NONE)
-        private List<@Valid @NotNull IndexInfo> indexInfo;
-    }
-
     @Override
     public void retrieveChildren(final Context context) throws SQLException {
         {
-            for (final BestRowIdentifierCategory category : BestRowIdentifierCategory.VALUES) {
-                final CategorizedBestRowIdentifiers categorized = new CategorizedBestRowIdentifiers(category);
+            for (final BestRowIdentifierCategory category : BestRowIdentifierCategory._VALUES) {
+                final CategorizedBestRowIdentifiers categorized = CategorizedBestRowIdentifiers.of(category);
                 context.getBestRowIdentifier(
                         getTypeCat(),
                         getTableSchem(),
@@ -351,8 +177,8 @@ public class Table
             }
         }
         {
-            for (final IndexInfoCategory category : IndexInfoCategory.VALUES) {
-                final CategorizedIndexInfo categorized = new CategorizedIndexInfo(category);
+            for (final IndexInfoCategory category : IndexInfoCategory._VALUES) {
+                final CategorizedIndexInfo categorized = CategorizedIndexInfo.of(category);
                 context.getIndexInfo(
                         getTypeCat(),
                         getTableSchem(),
@@ -431,11 +257,35 @@ public class Table
         return categorizedBestRowIdentifiers;
     }
 
+    @Deprecated
+    public void setCategorizedBestRowIdentifiers(
+            final List<CategorizedBestRowIdentifiers> categorizedBestRowIdentifiers) {
+        this.categorizedBestRowIdentifiers = categorizedBestRowIdentifiers;
+    }
+
+    public Optional<CategorizedBestRowIdentifiers> getCategorizedBestRowIdentifier(
+            final BestRowIdentifierCategory category) {
+        Objects.requireNonNull(category, "category is null");
+        return getCategorizedBestRowIdentifiers().stream()
+                .filter(i -> Objects.equals(i.getCategory(), category))
+                .findFirst();
+    }
+
+    public Optional<CategorizedBestRowIdentifiers> getCategorizedBestRowIdentifier(
+            final int scope, final boolean nullable) {
+        return getCategorizedBestRowIdentifier(BestRowIdentifierCategory.of(scope, nullable));
+    }
+
     public List<Column> getColumns() {
         if (columns == null) {
             columns = new ArrayList<>();
         }
         return columns;
+    }
+
+    @Deprecated
+    public void setColumns(final List<Column> columns) {
+        this.columns = columns;
     }
 
     public List<ColumnPrivilege> getColumnPrivileges() {
@@ -445,11 +295,21 @@ public class Table
         return columnPrivileges;
     }
 
+    @Deprecated
+    public void setColumnPrivileges(final List<ColumnPrivilege> columnPrivileges) {
+        this.columnPrivileges = columnPrivileges;
+    }
+
     public List<ExportedKey> getExportedKeys() {
         if (exportedKeys == null) {
             exportedKeys = new ArrayList<>();
         }
         return exportedKeys;
+    }
+
+    @Deprecated
+    public void setExportedKeys(final List<ExportedKey> exportedKeys) {
+        this.exportedKeys = exportedKeys;
     }
 
     public List<ImportedKey> getImportedKeys() {
@@ -459,11 +319,32 @@ public class Table
         return importedKeys;
     }
 
+    @Deprecated
+    public void setImportedKeys(final List<ImportedKey> importedKeys) {
+        this.importedKeys = importedKeys;
+    }
+
     public List<CategorizedIndexInfo> getCategorizedIndexInfo() {
         if (categorizedIndexInfo == null) {
             categorizedIndexInfo = new ArrayList<>();
         }
         return categorizedIndexInfo;
+    }
+
+    @Deprecated
+    public void setCategorizedIndexInfo(final List<CategorizedIndexInfo> categorizedIndexInfo) {
+        this.categorizedIndexInfo = categorizedIndexInfo;
+    }
+
+    public Optional<CategorizedIndexInfo> getCategorizedIndexInfo(final IndexInfoCategory category) {
+        return getCategorizedIndexInfo()
+                .stream()
+                .filter(i -> Objects.equals(i.getIndexInfoCategory(), category))
+                .findFirst();
+    }
+
+    public Optional<CategorizedIndexInfo> getCategorizedIndexInfo(final boolean unique, final boolean approximate) {
+        return getCategorizedIndexInfo(IndexInfoCategory.of(unique, approximate));
     }
 
     public List<PrimaryKey> getPrimaryKeys() {
@@ -473,11 +354,21 @@ public class Table
         return primaryKeys;
     }
 
+    @Deprecated
+    public void setPrimaryKeys(final List<PrimaryKey> primaryKeys) {
+        this.primaryKeys = primaryKeys;
+    }
+
     public List<PseudoColumn> getPseudoColumns() {
         if (pseudoColumns == null) {
             pseudoColumns = new ArrayList<>();
         }
         return pseudoColumns;
+    }
+
+    @Deprecated
+    public void setPseudoColumns(final List<PseudoColumn> pseudoColumns) {
+        this.pseudoColumns = pseudoColumns;
     }
 
     public List<TablePrivilege> getTablePrivileges() {
@@ -487,6 +378,11 @@ public class Table
         return tablePrivileges;
     }
 
+    @Deprecated
+    public void setTablePrivileges(final List<TablePrivilege> tablePrivileges) {
+        this.tablePrivileges = tablePrivileges;
+    }
+
     public List<VersionColumn> getVersionColumns() {
         if (versionColumns == null) {
             versionColumns = new ArrayList<>();
@@ -494,59 +390,61 @@ public class Table
         return versionColumns;
     }
 
-    // -----------------------------------------------------------------------------------------------------------------
+    @Deprecated
+    public void setVersionColumns(final List<VersionColumn> versionColumns) {
+        this.versionColumns = versionColumns;
+    }
+
     @XmlElement(nillable = true, required = true)
     @NullableBySpecification
-    @Label(COLUMN_LABEL_TABLE_CAT)
+    @ColumnLabel(COLUMN_LABEL_TABLE_CAT)
     private String tableCat;
 
     @XmlElement(nillable = true, required = true)
     @NullableBySpecification
-    @Label(COLUMN_LABEL_TABLE_SCHEM)
+    @ColumnLabel(COLUMN_LABEL_TABLE_SCHEM)
     private String tableSchem;
 
     @XmlElement(nillable = false, required = true)
     @NotBlank
-    @Label(COLUMN_LABEL_TABLE_NAME)
+    @ColumnLabel(COLUMN_LABEL_TABLE_NAME)
     private String tableName;
 
-    // -----------------------------------------------------------------------------------------------------------------
     @XmlElement(nillable = false, required = true)
     @NotBlank
-    @Label("TABLE_TYPE")
+    @ColumnLabel("TABLE_TYPE")
     private String tableType;
 
     @XmlElement(nillable = true, required = true)
     @NullableBySpecification
-    @Label("REMARKS")
+    @ColumnLabel("REMARKS")
     private String remarks;
 
     @XmlElement(nillable = true, required = true)
     @NullableBySpecification
-    @Label("TYPE_CAT")
+    @ColumnLabel("TYPE_CAT")
     private String typeCat;
 
     @XmlElement(nillable = true, required = true)
     @NullableBySpecification
-    @Label("TYPE_SCHEM")
+    @ColumnLabel("TYPE_SCHEM")
     private String typeSchem;
 
     @XmlElement(nillable = true, required = true)
     @NullableBySpecification
-    @Label("TYPE_NAME")
+    @ColumnLabel("TYPE_NAME")
     private String typeName;
 
     @XmlElement(nillable = true, required = true)
     @NullableBySpecification
-    @Label("SELF_REFERENCING_COL_NAME")
+    @ColumnLabel("SELF_REFERENCING_COL_NAME")
     private String selfReferencingColName;
 
     @XmlElement(nillable = true, required = true)
     @NullableBySpecification
-    @Label("REF_GENERATION")
+    @ColumnLabel("REF_GENERATION")
     private String refGeneration;
 
-    // -----------------------------------------------------------------------------------------------------------------
     @XmlElementRef
     @Setter(AccessLevel.NONE)
     @Getter(AccessLevel.NONE)

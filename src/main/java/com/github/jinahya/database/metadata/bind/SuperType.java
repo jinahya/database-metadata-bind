@@ -79,29 +79,29 @@ public class SuperType
 
     @XmlElement(nillable = true, required = true)
     @NullableBySpecification
-    @Label("TYPE_CAT")
+    @ColumnLabel("TYPE_CAT")
     private String typeCat;
 
     @XmlElement(nillable = true, required = true)
     @NullableBySpecification
-    @Label("TYPE_SCHEM")
+    @ColumnLabel("TYPE_SCHEM")
     private String typeSchem;
 
     @XmlElement(nillable = false, required = true)
-    @Label("TYPE_NAME")
+    @ColumnLabel("TYPE_NAME")
     private String typeName;
 
     @XmlElement(nillable = true, required = true)
     @NullableBySpecification
-    @Label("SUPERTYPE_CAT")
+    @ColumnLabel("SUPERTYPE_CAT")
     private String supertypeCat;
 
     @XmlElement(nillable = true, required = true)
     @NullableBySpecification
-    @Label("SUPERTYPE_SCHEM")
+    @ColumnLabel("SUPERTYPE_SCHEM")
     private String supertypeSchem;
 
     @XmlElement(nillable = false, required = true)
-    @Label("SUPERTYPE_NAME")
+    @ColumnLabel("SUPERTYPE_NAME")
     private String supertypeName;
 }

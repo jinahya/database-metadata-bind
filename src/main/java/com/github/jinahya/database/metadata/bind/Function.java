@@ -155,31 +155,31 @@ public class Function
 
     @XmlElement(nillable = true, required = true)
     @NullableBySpecification
-    @Label(COLUMN_NAME_FUNCTION_CAT)
+    @ColumnLabel(COLUMN_NAME_FUNCTION_CAT)
     private String functionCat;
 
     @XmlElement(nillable = true, required = true)
     @NullableBySpecification
-    @Label(COLUMN_NAME_FUNCTION_SCHEM)
+    @ColumnLabel(COLUMN_NAME_FUNCTION_SCHEM)
     private String functionSchem;
 
     @XmlElement(nillable = false, required = true)
     @NotBlank
-    @Label("FUNCTION_NAME")
+    @ColumnLabel("FUNCTION_NAME")
     @EqualsAndHashCode.Exclude
     private String functionName;
 
     @XmlElement(nillable = false, required = true)
     @NotNull
-    @Label("REMARKS")
+    @ColumnLabel("REMARKS")
     private String remarks;
 
     @XmlElement(required = true)
-    @Label("FUNCTION_TYPE")
+    @ColumnLabel("FUNCTION_TYPE")
     private short functionType;
 
     @XmlElement(required = true)
-    @Label("SPECIFIC_NAME")
+    @ColumnLabel("SPECIFIC_NAME")
     private String specificName;
 
     @XmlElementRef

@@ -66,28 +66,28 @@ public class PrimaryKey
 
     @XmlElement(nillable = true, required = true)
     @NullableBySpecification
-    @Label("TABLE_CAT")
+    @ColumnLabel("TABLE_CAT")
     private String tableCat;
 
     @XmlElement(nillable = true, required = true)
     @NullableBySpecification
-    @Label("TABLE_SCHEM")
+    @ColumnLabel("TABLE_SCHEM")
     private String tableSchem;
 
     @XmlElement(required = true)
-    @Label("TABLE_NAME")
+    @ColumnLabel("TABLE_NAME")
     private String tableName;
 
     @XmlElement(required = true)
-    @Label("COLUMN_NAME")
+    @ColumnLabel("COLUMN_NAME")
     private String columnName;
 
     @XmlElement(required = true)
-    @Label("KEY_SEQ")
+    @ColumnLabel("KEY_SEQ")
     private short keySeq;
 
     @XmlElement(nillable = true, required = true)
     @NullableBySpecification
-    @Label("PK_NAME")
+    @ColumnLabel("PK_NAME")
     private String pkName;
 }

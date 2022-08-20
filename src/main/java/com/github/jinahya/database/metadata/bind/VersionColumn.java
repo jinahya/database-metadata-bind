@@ -115,38 +115,38 @@ public class VersionColumn
 
     @XmlElement(nillable = true, required = true)
     @NotUsedBySpecification
-    @Label("SCOPE")
+    @ColumnLabel("SCOPE")
     private Integer scope;
 
     @XmlElement(nillable = false, required = true)
     @NotBlank
-    @Label("COLUMN_NAME")
+    @ColumnLabel("COLUMN_NAME")
     private String columnName;
 
     @XmlElement(nillable = false, required = true)
-    @Label("DATA_TYPE")
+    @ColumnLabel("DATA_TYPE")
     private int dataType;
 
     @XmlElement(nillable = false, required = true)
-    @Label("TYPE_NAME")
+    @ColumnLabel("TYPE_NAME")
     private String typeName;
 
     @XmlElement(nillable = true, required = true)
     @NullableBySpecification
-    @Label("COLUMN_SIZE")
+    @ColumnLabel("COLUMN_SIZE")
     private Integer columnSize;
 
     @XmlElement(nillable = false, required = true)
-    @Label("BUFFER_LENGTH")
+    @ColumnLabel("BUFFER_LENGTH")
     private int bufferLength;
 
     @XmlElement(nillable = true, required = true)
     @NullableBySpecification
-    @Label("DECIMAL_DIGITS")
+    @ColumnLabel("DECIMAL_DIGITS")
     private Integer decimalDigits;
 
     @XmlElement(nillable = false, required = true)
-    @Label("PSEUDO_COLUMN")
+    @ColumnLabel("PSEUDO_COLUMN")
     private int pseudoColumn;
 
     // -----------------------------------------------------------------------------------------------------------------

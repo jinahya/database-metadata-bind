@@ -36,11 +36,11 @@ class CatalogTest extends MetadataTypeTest<Catalog> {
         assertThat(actual)
                 .isNotNull()
                 .satisfies(v -> {
-                    assertThat(v.isVirtual())
+                    assertThat(v.getVirtual())
                             .as("a new virtual instance's value of isVirtual()")
                             .isTrue();
                     assertThat(v.getTableCat())
-                            .isEqualTo(Catalog.VALUE_TABLE_CAT_EMPTY);
+                            .isEqualTo(Catalog.COLUMN_VALUE_TABLE_CAT_EMPTY);
                 })
         ;
     }

@@ -344,98 +344,98 @@ public class Attribute
     // -----------------------------------------------------------------------------------------------------------------
     @XmlElement(nillable = true, required = true)
     @NullableBySpecification
-    @Label("TYPE_CAT")
+    @ColumnLabel("TYPE_CAT")
     private String typeCat;
 
     @XmlElement(nillable = true, required = true)
     @NullableBySpecification
-    @Label("TYPE_SCHEM")
+    @ColumnLabel("TYPE_SCHEM")
     private String typeSchem;
 
     @XmlElement(nillable = false, required = true)
-    @Label("TYPE_NAME")
+    @ColumnLabel("TYPE_NAME")
     private String typeName;
 
     @XmlElement(nillable = false, required = true)
-    @Label("ATTR_NAME")
+    @ColumnLabel("ATTR_NAME")
     private String attrName;
 
     // -----------------------------------------------------------------------------------------------------------------
     @XmlElement(nillable = false, required = true)
-    @Label("DATA_TYPE")
+    @ColumnLabel("DATA_TYPE")
     private int dataType;
 
     @XmlElement(nillable = false, required = true)
-    @Label("ATTR_TYPE_NAME")
+    @ColumnLabel("ATTR_TYPE_NAME")
     private String attrTypeName;
 
     @XmlElement(nillable = false, required = true)
-    @Label("ATTR_SIZE")
+    @ColumnLabel("ATTR_SIZE")
     private int attrSize;
 
     @XmlElement(nillable = true, required = true)
     @NullableBySpecification
-    @Label("DECIMAL_DIGITS")
+    @ColumnLabel("DECIMAL_DIGITS")
     private Integer decimalDigits;
 
     @XmlElement(nillable = false, required = true)
-    @Label("NUM_PREC_RADIX")
+    @ColumnLabel("NUM_PREC_RADIX")
     private int numPrecRadix;
 
     @XmlElement(required = true)
-    @Label("NULLABLE")
+    @ColumnLabel("NULLABLE")
     private int nullable;
 
     @XmlElement(nillable = true, required = true)
     @NullableBySpecification
-    @Label("REMARKS")
+    @ColumnLabel("REMARKS")
     private String remarks;
 
     @XmlElement(nillable = true, required = true)
     @NullableBySpecification
-    @Label("ATTR_DEF")
+    @ColumnLabel("ATTR_DEF")
     private String attrDef;
 
     @XmlElement(nillable = true, required = true)
     @NotUsedBySpecification
-    @Label("SQL_DATA_TYPE")
+    @ColumnLabel("SQL_DATA_TYPE")
     private Integer sqlDataType;
 
     @XmlElement(nillable = true, required = true)
     @NotUsedBySpecification
-    @Label("SQL_DATETIME_SUB")
+    @ColumnLabel("SQL_DATETIME_SUB")
     private Integer sqlDatetimeSub;
 
     @XmlElement(nillable = false, required = true)
-    @Label("CHAR_OCTET_LENGTH")
+    @ColumnLabel("CHAR_OCTET_LENGTH")
     private int charOctetLength;
 
     @XmlElement(nillable = false, required = true)
     @Positive // > starting at 1
-    @Label("ORDINAL_POSITION")
+    @ColumnLabel("ORDINAL_POSITION")
     private int ordinalPosition;
 
     @XmlElement(nillable = false, required = true)
-    @Label("IS_NULLABLE")
+    @ColumnLabel("IS_NULLABLE")
     private String isNullable;
 
     @XmlElement(nillable = true, required = true)
     @NullableBySpecification
-    @Label("SCOPE_CATALOG")
+    @ColumnLabel("SCOPE_CATALOG")
     private String scopeCatalog;
 
     @XmlElement(nillable = true, required = true)
     @NullableBySpecification
-    @Label("SCOPE_SCHEMA")
+    @ColumnLabel("SCOPE_SCHEMA")
     private String scopeSchema;
 
     @XmlElement(nillable = true, required = true)
     @NullableBySpecification
-    @Label("SCOPE_TABLE")
+    @ColumnLabel("SCOPE_TABLE")
     private String scopeTable;
 
     @XmlElement(nillable = true, required = true)
     @NullableBySpecification
-    @Label("SOURCE_DATA_TYPE")
+    @ColumnLabel("SOURCE_DATA_TYPE")
     private Integer sourceDataType;
 }

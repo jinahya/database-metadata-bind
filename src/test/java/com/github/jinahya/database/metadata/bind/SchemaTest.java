@@ -36,13 +36,13 @@ class SchemaTest extends MetadataTypeTest<Schema> {
         assertThat(actual)
                 .isNotNull()
                 .satisfies(v -> {
-                    assertThat(v.isVirtual())
+                    assertThat(v.getVirtual())
                             .as("a new virtual instance's value of isVirtual()")
                             .isTrue();
                     assertThat(v.getTableCatalog())
-                            .isEqualTo(Catalog.VALUE_TABLE_CAT_EMPTY);
+                            .isEqualTo(Catalog.COLUMN_VALUE_TABLE_CAT_EMPTY);
                     assertThat(v.getTableSchem())
-                            .isEqualTo(Schema.VALUE_TABLE_SCHEM_EMPTY);
+                            .isEqualTo(Schema.COLUMN_VALUE_TABLE_SCHEM_EMPTY);
                 })
         ;
     }
