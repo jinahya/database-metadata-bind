@@ -74,7 +74,7 @@ public class Metadata {
             }
         }
         {
-            instance.crossReferences = CrossReference.getAllInstance(context, new ArrayList<>());
+            instance.crossReferences = CrossReference.getAllInstances(context, new ArrayList<>());
             for (final CrossReference each : instance.crossReferences) {
                 each.retrieveChildren(context);
             }

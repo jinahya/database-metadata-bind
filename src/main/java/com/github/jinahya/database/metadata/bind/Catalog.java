@@ -20,7 +20,6 @@ package com.github.jinahya.database.metadata.bind;
  * #L%
  */
 
-import javax.json.bind.annotation.JsonbTransient;
 import lombok.AccessLevel;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
@@ -30,6 +29,7 @@ import lombok.Setter;
 import lombok.ToString;
 import lombok.experimental.SuperBuilder;
 
+import javax.json.bind.annotation.JsonbTransient;
 import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
 import javax.xml.bind.annotation.XmlAttribute;
@@ -63,7 +63,7 @@ public class Catalog
     public static final String ATTRIBUTE_NAME_TABLE_CAT = "tableCat";
 
     /**
-     * A value for {@value #ATTRIBUTE_NAME_TABLE_CAT} attribute for a virtual instances. The value is {@value}.
+     * A value for {@value #ATTRIBUTE_NAME_TABLE_CAT} attribute for virtual instances. The value is {@value}.
      */
     public static final String COLUMN_VALUE_TABLE_CAT_EMPTY = "";
 
@@ -118,14 +118,17 @@ public class Catalog
         this.schemas = schemas;
     }
 
+    // -----------------------------------------------------------------------------------------------------------------
     @XmlAttribute(required = false)
     private Boolean virtual;
 
+    // -----------------------------------------------------------------------------------------------------------------
     @XmlElement(nillable = false, required = true)
     @NotNull
     @ColumnLabel(COLUMN_LABEL_TABLE_CAT)
     private String tableCat;
 
+    // -----------------------------------------------------------------------------------------------------------------
     @XmlElementRef
     @Setter(AccessLevel.NONE)
     @Getter(AccessLevel.NONE)

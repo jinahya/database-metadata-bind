@@ -27,6 +27,7 @@ import lombok.experimental.SuperBuilder;
 
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Positive;
+import javax.xml.bind.annotation.XmlAttribute;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlTransient;
@@ -125,20 +126,25 @@ public class Column
         setNullable(Objects.requireNonNull(nullableAsEnum, "nullableAsEnum is null").rawValue());
     }
 
-    @XmlElement(nillable = true, required = true)
+    // -----------------------------------------------------------------------------------------------------------------
+//    @XmlElement(nillable = true, required = true)
+    @XmlAttribute
     @NullableBySpecification
     @ColumnLabel("TABLE_CAT")
     private String tableCat;
 
-    @XmlElement(nillable = true, required = true)
+    //    @XmlElement(nillable = true, required = true)
+    @XmlAttribute
     @NullableBySpecification
     @ColumnLabel("TABLE_SCHEM")
     private String tableSchem;
 
-    @XmlElement(nillable = false, required = true)
+    //    @XmlElement(nillable = false, required = true)
+    @XmlAttribute
     @ColumnLabel("TABLE_NAME")
     private String tableName;
 
+    // -----------------------------------------------------------------------------------------------------------------
     @XmlElement(nillable = false, required = true)
     @ColumnLabel("COLUMN_NAME")
     private String columnName;

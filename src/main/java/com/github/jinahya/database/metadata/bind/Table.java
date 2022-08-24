@@ -339,7 +339,7 @@ public class Table
     public Optional<CategorizedIndexInfo> getCategorizedIndexInfo(final IndexInfoCategory category) {
         return getCategorizedIndexInfo()
                 .stream()
-                .filter(i -> Objects.equals(i.getIndexInfoCategory(), category))
+                .filter(i -> Objects.equals(i.getCategory(), category))
                 .findFirst();
     }
 

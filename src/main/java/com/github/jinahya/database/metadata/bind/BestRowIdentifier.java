@@ -30,13 +30,17 @@ import lombok.ToString;
 import lombok.experimental.SuperBuilder;
 import lombok.extern.java.Log;
 
+import javax.json.bind.annotation.JsonbProperty;
+import javax.json.bind.annotation.JsonbTransient;
 import javax.validation.Valid;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
+import javax.xml.bind.annotation.XmlAttribute;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlElementRef;
 import javax.xml.bind.annotation.XmlEnum;
 import javax.xml.bind.annotation.XmlRootElement;
+import javax.xml.bind.annotation.XmlTransient;
 import java.io.Serializable;
 import java.sql.DatabaseMetaData;
 import java.sql.SQLException;
@@ -46,6 +50,7 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
+import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
@@ -72,14 +77,13 @@ public class BestRowIdentifier
      *
      * @author Jin Kwon &lt;onacit_at_gmail.com&gt;
      */
-    @XmlRootElement
-    @Setter
-    @Getter
+    @Setter(AccessLevel.PACKAGE)
+    @Getter(AccessLevel.PACKAGE)
     @EqualsAndHashCode
     @ToString
     @NoArgsConstructor
     @SuperBuilder(toBuilder = true)
-    public static class BestRowIdentifierCategory
+    static class BestRowIdentifierCategory
             implements Serializable {
 
         private static final long serialVersionUID = 4793328436607858329L;
@@ -99,36 +103,8 @@ public class BestRowIdentifier
                         .collect(Collectors.toSet())
         );
 
-        /**
-         * Returns the value of {@code scope} attribute.
-         *
-         * @return the value of {@code scope} attribute.
-         */
-        public int getScope() {
-            return scope;
-        }
-
-        public void setScope(final int scope) {
-            this.scope = scope;
-        }
-
-        /**
-         * Returns the value of {@code nullable} attribute.
-         *
-         * @return the value of {@code nullable} attribute.
-         */
-        public boolean isNullable() {
-            return nullable;
-        }
-
-        public void setNullable(final boolean nullable) {
-            this.nullable = nullable;
-        }
-
-        @XmlElement(nillable = false, required = true)
         private int scope;
 
-        @XmlElement(nillable = false, required = true)
         private boolean nullable;
     }
 
@@ -154,12 +130,28 @@ public class BestRowIdentifier
                     .build();
         }
 
-        public BestRowIdentifierCategory getCategory() {
-            return category;
+        @JsonbProperty
+        @XmlAttribute
+        public int getScope() {
+            return Objects.requireNonNull(category, "category is null").getScope();
         }
 
-        public void setCategory(final BestRowIdentifierCategory category) {
-            this.category = category;
+        public void setScope(final int scope) {
+            Optional.ofNullable(category)
+                    .orElseGet(() -> (category = new BestRowIdentifierCategory()))
+                    .setScope(scope);
+        }
+
+        @JsonbProperty
+        @XmlAttribute
+        public boolean isNullable() {
+            return Objects.requireNonNull(category, "category is null").isNullable();
+        }
+
+        public void setNullable(final boolean nullable) {
+            Optional.ofNullable(category)
+                    .orElseGet(() -> (category = new BestRowIdentifierCategory()))
+                    .setNullable(nullable);
         }
 
         @NotNull
@@ -175,11 +167,12 @@ public class BestRowIdentifier
             this.bestRowIdentifiers = bestRowIdentifiers;
         }
 
-        @XmlElement(nillable = false, required = true)
+        @JsonbTransient
+        @XmlTransient
         @Valid
         @NotNull
-        @Setter(AccessLevel.NONE)
-        @Getter(AccessLevel.NONE)
+        @Setter(AccessLevel.PACKAGE)
+        @Getter(AccessLevel.PACKAGE)
         private BestRowIdentifierCategory category;
 
         @XmlElementRef

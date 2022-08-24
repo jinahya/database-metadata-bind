@@ -29,24 +29,28 @@ import lombok.Setter;
 import lombok.ToString;
 import lombok.experimental.SuperBuilder;
 
+import javax.json.bind.annotation.JsonbProperty;
+import javax.json.bind.annotation.JsonbTransient;
 import javax.validation.Valid;
 import javax.validation.constraints.AssertTrue;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.PositiveOrZero;
+import javax.xml.bind.annotation.XmlAttribute;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlElementRef;
 import javax.xml.bind.annotation.XmlEnum;
 import javax.xml.bind.annotation.XmlRootElement;
+import javax.xml.bind.annotation.XmlTransient;
 import java.io.Serializable;
 import java.sql.DatabaseMetaData;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
-import java.util.Comparator;
 import java.util.List;
 import java.util.Objects;
+import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
@@ -68,19 +72,13 @@ public class IndexInfo
 
     private static final long serialVersionUID = -768486884376018474L;
 
-    public static final Comparator<IndexInfo> COMPARATOR
-            = Comparator.comparing(IndexInfo::isNonUnique)
-            .thenComparing(IndexInfo::getType)
-            .thenComparing(IndexInfo::getIndexName)
-            .thenComparing(IndexInfo::getOrdinalPosition);
-
-    @XmlRootElement
-    @Getter
+    @Setter(AccessLevel.PACKAGE)
+    @Getter(AccessLevel.PACKAGE)
     @EqualsAndHashCode
     @ToString
-    @NoArgsConstructor
+    @NoArgsConstructor(access = AccessLevel.PACKAGE)
     @SuperBuilder(toBuilder = true)
-    public static class IndexInfoCategory
+    static class IndexInfoCategory
             implements Serializable {
 
         private static final long serialVersionUID = 8326654078451632859L;
@@ -99,26 +97,8 @@ public class IndexInfo
                         .collect(Collectors.toSet())
         );
 
-        public boolean isUnique() {
-            return unique;
-        }
-
-        public void setUnique(boolean unique) {
-            this.unique = unique;
-        }
-
-        public boolean isApproximate() {
-            return approximate;
-        }
-
-        public void setApproximate(boolean approximate) {
-            this.approximate = approximate;
-        }
-
-        @XmlElement(nillable = false, required = true)
         private boolean unique;
 
-        @XmlElement(nillable = false, required = true)
         private boolean approximate;
     }
 
@@ -136,16 +116,32 @@ public class IndexInfo
 
         static CategorizedIndexInfo of(final IndexInfoCategory indexInfoCategory) {
             return builder()
-                    .indexInfoCategory(indexInfoCategory)
+                    .category(indexInfoCategory)
                     .build();
         }
 
-        public IndexInfoCategory getIndexInfoCategory() {
-            return indexInfoCategory;
+        @JsonbProperty
+        @XmlAttribute
+        public boolean isUnique() {
+            return Objects.requireNonNull(category, "category is null").isUnique();
         }
 
-        public void setIndexInfoCategory(final IndexInfoCategory indexInfoCategory) {
-            this.indexInfoCategory = indexInfoCategory;
+        public void setUnique(final boolean unique) {
+            Optional.ofNullable(category)
+                    .orElseGet(() -> (category = new IndexInfoCategory()))
+                    .setUnique(unique);
+        }
+
+        @JsonbProperty
+        @XmlAttribute
+        public boolean isApproximate() {
+            return Objects.requireNonNull(category, "category is null").isApproximate();
+        }
+
+        public void setApproximate(final boolean approximate) {
+            Optional.ofNullable(category)
+                    .orElseGet(() -> (category = new IndexInfoCategory()))
+                    .setApproximate(approximate);
         }
 
         @NotNull
@@ -161,12 +157,13 @@ public class IndexInfo
             this.indexInfo = indexInfo;
         }
 
-        @XmlElement(nillable = false, required = true)
+        @JsonbTransient
+        @XmlTransient
         @Valid
         @NotNull
-        @Setter(AccessLevel.NONE)
-        @Getter(AccessLevel.NONE)
-        private IndexInfoCategory indexInfoCategory;
+        @Setter(AccessLevel.PACKAGE)
+        @Getter(AccessLevel.PACKAGE)
+        private IndexInfoCategory category;
 
         @XmlElementRef
         @Setter(AccessLevel.NONE)

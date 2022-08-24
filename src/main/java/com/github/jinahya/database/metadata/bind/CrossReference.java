@@ -52,29 +52,88 @@ public class CrossReference
 
     private static final long serialVersionUID = -5343386346721125961L;
 
-    public static <C extends Collection<? super CrossReference>> C getAllInstance(final Context context,
-                                                                                  final C collection)
+    /**
+     * Retrieves cross-references for specified tables.
+     *
+     * @param context      a context.
+     * @param parentTable  the parent table.
+     * @param foreignTable the foreign table.
+     * @param collection   the collection to the results are added.
+     * @throws SQLException if a database error occurs.
+     */
+    public static void get(final Context context, final Table parentTable, final Table foreignTable,
+                           final Collection<? super CrossReference> collection)
             throws SQLException {
         Objects.requireNonNull(context, "context is null");
-        Objects.requireNonNull(collection, "collection is null");
-        final List<Table> tables = context.getTables(null, null, "%", null, new ArrayList<>());
+        Objects.requireNonNull(parentTable, "parentTable is null");
+        Objects.requireNonNull(foreignTable, "foreignTable is null");
+        context.getCrossReference(
+                parentTable.getTableCat(),
+                parentTable.getTableSchem(),
+                parentTable.getTableName(),
+                foreignTable.getTableCat(),
+                foreignTable.getTableSchem(),
+                foreignTable.getTableName(),
+                collection
+        );
+    }
+
+    /**
+     * Retrieves cross-references between tables retrieved with specified arguments.
+     *
+     * @param context          a context
+     * @param catalog          a value for {@code catalog} parameter of
+     *                         {@link Context#getTables(String, String, String, String[], Collection) getTables}
+     *                         method.
+     * @param schemaPattern    a value for {@code schemaPattern} parameter of
+     *                         {@link Context#getTables(String, String, String, String[], Collection) getTables}
+     *                         method.
+     * @param tableNamePattern a value for {@code tableNamePattern} parameter of
+     *                         {@link Context#getTables(String, String, String, String[], Collection) getTables}
+     *                         method.
+     * @param types            a value for {@code types} parameter of
+     *                         {@link Context#getTables(String, String, String, String[], Collection) getTables}
+     *                         method.
+     * @param collection       a collection to which results are added.
+     * @param <C>              collection type parameter
+     * @return given {@code collection}.
+     * @throws SQLException if a database error occurs.
+     * @see Context#getTables(String, String, String, String[], Collection)
+     */
+    public static <C extends Collection<? super CrossReference>> C getInstances(
+            final Context context, final String catalog, final String schemaPattern, final String tableNamePattern,
+            final String[] types, final C collection)
+            throws SQLException {
+        Objects.requireNonNull(context, "context is null");
+        final List<Table> tables = context.getTables(
+                catalog, schemaPattern, tableNamePattern, types, new ArrayList<>());
         for (final Table parentTable : tables) {
             for (final Table foreignTable : tables) {
-                context.getCrossReference(
-                        parentTable.getTableCat(),
-                        parentTable.getTableSchem(),
-                        parentTable.getTableName(),
-                        foreignTable.getTableCat(),
-                        foreignTable.getTableSchem(),
-                        foreignTable.getTableName(),
-                        collection
-                );
+                get(context, parentTable, foreignTable, collection);
             }
         }
         return collection;
     }
 
-    public static final String COLUMN_NAME_UPDATE_RULE = "UPDATE_RULE";
+    /**
+     * Retrieves all cross-references for all tables.
+     *
+     * @param context    a context.
+     * @param collection a collection to which results are added.
+     * @param <C>        collection type parameter
+     * @return given {@code collection}.
+     * @throws SQLException if a database error occurs.
+     * @implNote This method invokes
+     * {@link #getInstances(Context, String, String, String, String[], Collection) getInstances(context, null, null,
+     * "%", null, collection)} and returns the result.
+     */
+    public static <C extends Collection<? super CrossReference>> C getAllInstances(final Context context,
+                                                                                   final C collection)
+            throws SQLException {
+        return getInstances(context, null, null, "%", null, collection);
+    }
+
+    public static final String COLUMN_LABEL_UPDATE_RULE = "UPDATE_RULE";
 
     public static final String ATTRIBUTE_NAME_UPDATE_RULE = "updateRule";
 
@@ -97,7 +156,8 @@ public class CrossReference
     }
 
     public void setDeleteRuleAsEnum(final ImportedKeyRule deleteRuleAsEnum) {
-        setDeleteRule(Objects.requireNonNull(deleteRuleAsEnum, "deleteRuleAsEnum is null").rawValue());
+        Objects.requireNonNull(deleteRuleAsEnum, "deleteRuleAsEnum is null");
+        setDeleteRule(deleteRuleAsEnum.rawValue());
     }
 
     public ImportedKeyDeferrability getDeferrabilityAsEnum() {
@@ -105,7 +165,8 @@ public class CrossReference
     }
 
     public void setDeferrabilityAsEnum(final ImportedKeyDeferrability deferrabilityAsEnum) {
-        setDeferrability(Objects.requireNonNull(deferrabilityAsEnum, "deferrabilityAsEnum is null").rawValue());
+        Objects.requireNonNull(deferrabilityAsEnum, "deferrabilityAsEnum is null");
+        setDeferrability(deferrabilityAsEnum.rawValue());
     }
 
     // -----------------------------------------------------------------------------------------------------------------

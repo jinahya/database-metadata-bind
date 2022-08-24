@@ -188,6 +188,35 @@ abstract class MemoryTest {
     }
 
     @Test
+    void getCrossReferences__() throws Exception {
+        try (var connection = connect()) {
+            final var context = context(connection);
+            final var crossReferences = CrossReference.getAllInstances(context, new ArrayList<>());
+            assertThat(crossReferences)
+                    .allSatisfy(c -> {
+                        final var string = assertDoesNotThrow(c::toString);
+                        final var hashCode = assertDoesNotThrow(c::hashCode);
+                    });
+            for (final var crossReference : crossReferences) {
+                crossReference.retrieveChildren(context);
+            }
+            final var name = TestUtils.getFilenamePrefix(context) + " - crossReferences";
+            final var pathname = name + ".xml";
+            final var target = Paths.get("target", pathname).toFile();
+            Wrapper.marshalFormatted(CrossReference.class, crossReferences, target);
+            JsonbTests.writeToFile(context, "crossReferences", crossReferences);
+            JsonbTests.serializeAndDeserialize(
+                    CrossReference.class,
+                    crossReferences,
+                    (e, a) -> {
+                        assertThat(a)
+                                .usingRecursiveComparison()
+                                .isEqualTo(e);
+                    });
+        }
+    }
+
+    @Test
     void getFunctions__() throws Exception {
         try (var connection = connect()) {
             final var context = Context.newInstance(connection);
@@ -592,7 +621,7 @@ abstract class MemoryTest {
     }
 
     @Test
-    void getTables__() throws SQLException, JAXBException {
+    void getTables__() throws Exception {
         try (var connection = connect()) {
             final var context = Context.newInstance(connection);
             final var tables = context.getTables(null, null, "%", null, new ArrayList<>());
@@ -605,6 +634,17 @@ abstract class MemoryTest {
             final var pathname = TestUtils.getFilenamePrefix(context) + " - tables.xml";
             final var target = Paths.get("target", pathname).toFile();
             Wrapper.marshalFormatted(Table.class, tables, target);
+            {
+                JsonbTests.writeToFile(context, "tables", tables);
+                JsonbTests.serializeAndDeserialize(
+                        Table.class,
+                        tables,
+                        (e, a) -> {
+                            assertThat(a)
+                                    .usingRecursiveComparison()
+                                    .isEqualTo(e);
+                        });
+            }
         }
     }
 
