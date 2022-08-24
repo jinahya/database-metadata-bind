@@ -25,11 +25,13 @@ import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
+import javax.xml.bind.annotation.XmlAttribute;
 import javax.xml.bind.annotation.XmlElement;
 import java.beans.BeanInfo;
 import java.beans.IntrospectionException;
 import java.beans.Introspector;
 import java.beans.PropertyDescriptor;
+import java.lang.annotation.Annotation;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
@@ -39,6 +41,7 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 import static java.util.Objects.requireNonNull;
 import static org.assertj.core.api.Assertions.assertThat;
@@ -102,7 +105,7 @@ abstract class MetadataTypeTest<T extends MetadataType> {
 
     @Test
     void fieldsWithLabel_Exist_Accessors() throws IntrospectionException {
-        for (final Field field : getFieldsWithLabel().keySet()) {
+        for (final Field field : getFieldsWithColumnLabel().keySet()) {
             final Class<?> declaringClass = field.getDeclaringClass();
             final BeanInfo beanInfo = Introspector.getBeanInfo(declaringClass);
             final Optional<PropertyDescriptor> propertyDescriptor =
@@ -129,14 +132,17 @@ abstract class MetadataTypeTest<T extends MetadataType> {
         }
     }
 
-    @DisplayName("fields with @Label should also be with @XmlElement(required = true)")
+    @DisplayName("@ColumnLabel -> @XmlAttribute|@XmlElement")
     @Test
     void fieldsWithLabel_ShouldBeAnnotatedWithXmlElementWithRequiredTrue() {
-        for (final Field field : getFieldsWithLabel().keySet()) {
-            assertThat(field.getAnnotation(ColumnLabel.class)).isNotNull();
-            final XmlElement xmlElement = field.getAnnotation(XmlElement.class);
-            assertThat(xmlElement).isNotNull();
-            assertThat(xmlElement.required()).isTrue();
+        for (final Field field : getFieldsWithColumnLabel().keySet()) {
+            final var classes = Stream.of(field.getAnnotations())
+                    .map(Annotation::getClass)
+                    .filter(c -> XmlAttribute.class.isAssignableFrom(c) || XmlElement.class.isAssignableFrom(c))
+                    .collect(Collectors.toList());
+            assertThat(classes)
+                    .as("annotation classes on %s", field)
+                    .isNotEmpty();
         }
     }
 
@@ -165,11 +171,19 @@ abstract class MetadataTypeTest<T extends MetadataType> {
     void fields_XmlElementNillableTrue_NullableBySpecification() {
         for (final Field field : getFieldsWithNullableBySpecification().keySet()) {
             assertThat(field.getAnnotation(NullableBySpecification.class)).isNotNull();
-            assertThat(field.getAnnotation(XmlElement.class))
-                    .isNotNull()
-                    .satisfies(a -> {
-                        assertThat(a.nillable()).as("XmlElement#nillable on %s", field).isTrue();
-                    });
+            final var xmlElement = field.getAnnotation(XmlElement.class);
+            if (xmlElement == null) {
+
+            } else {
+                assertThat(xmlElement)
+                        .as("@XmlElement on %s", field)
+                        .isNotNull()
+                        .satisfies(a -> {
+                            assertThat(a.nillable())
+                                    .as("XmlElement#nillable on %s", field)
+                                    .isTrue();
+                        });
+            }
         }
     }
 
@@ -220,26 +234,26 @@ abstract class MetadataTypeTest<T extends MetadataType> {
     }
 
     Map<Field, NullableByVendor> getFieldsWithMayBeNullByVendor() {
-        return getFieldsWithLabel().entrySet().stream()
+        return getFieldsWithColumnLabel().entrySet().stream()
                 .filter(e -> e.getKey().getAnnotation(NullableByVendor.class) != null)
                 .collect(Collectors.toMap(Map.Entry::getKey, e -> e.getKey().getAnnotation(NullableByVendor.class)));
     }
 
     Map<Field, NullableBySpecification> getFieldsWithNullableBySpecification() {
-        return getFieldsWithLabel().entrySet().stream()
+        return getFieldsWithColumnLabel().entrySet().stream()
                 .filter(e -> e.getKey().getAnnotation(NullableBySpecification.class) != null).collect(
                         Collectors.toMap(Map.Entry::getKey,
                                          e -> e.getKey().getAnnotation(NullableBySpecification.class)));
     }
 
     Map<Field, NotUsedBySpecification> getFieldsWithUnused() {
-        return getFieldsWithLabel().entrySet().stream()
+        return getFieldsWithColumnLabel().entrySet().stream()
                 .filter(e -> e.getKey().getAnnotation(NotUsedBySpecification.class) != null).collect(
                         Collectors.toMap(Map.Entry::getKey,
                                          e -> e.getKey().getAnnotation(NotUsedBySpecification.class)));
     }
 
-    Map<Field, ColumnLabel> getFieldsWithLabel() {
+    Map<Field, ColumnLabel> getFieldsWithColumnLabel() {
         if (fieldsWithLabel == null) {
             fieldsWithLabel = Collections.unmodifiableMap(Utils.getFieldsAnnotatedWith(typeClass, ColumnLabel.class));
         }
