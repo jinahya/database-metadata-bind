@@ -130,7 +130,7 @@ public abstract class TableKey
 
     @XmlElement(nillable = true, required = true)
     @NullableBySpecification
-    @ColumnLabel("FKTABLE_NAME")
+    @ColumnLabel("FKTABLE_SCHEM")
     private String fktableSchem;
 
     @XmlElement(nillable = false, required = true)
@@ -146,7 +146,7 @@ public abstract class TableKey
     // -----------------------------------------------------------------------------------------------------------------
     @XmlElement(nillable = false, required = true)
     @Positive
-    @ColumnLabel("FKCOLUMN_NAME")
+    @ColumnLabel("KEY_SEQ")
     private int keySeq;
 
     @XmlElement(nillable = false, required = true)

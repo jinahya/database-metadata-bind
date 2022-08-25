@@ -64,10 +64,33 @@ public final class Wrapper<T> {
     }
 
     /**
+     * Unmarshalls a list of specified type from specified source.
+     * <blockquote><pre>{@code
+     * List<Category> categories = unmarshal(Category.class, new StreamSource(new File("categories.xml"));
+     * }</pre></blockquote>
+     *
+     * @param type   the element type.
+     * @param source the source from which elements are unmarshalled.
+     * @param <T>    element type parameter
+     * @return a list of unmarshalled instances of {@code type}.
+     * @throws JAXBException if failed to unmarshal.
+     */
+    @SuppressWarnings({"unchecked"})
+    public static <T> List<T> unmarshal(final Class<T> type, final Object source) throws JAXBException {
+        Objects.requireNonNull(type, "type is null");
+        Objects.requireNonNull(source, "source is null");
+        final JAXBContext context = JAXBContext.newInstance(Wrapper.class, type);
+        final Unmarshaller unmarshaller = context.createUnmarshaller();
+        return null;
+//        final Wrapper<T> wrapper = unmarshaller.unmarshal(source, Wrapper.class).getValue();
+//        return wrapper.elements;
+    }
+
+    /**
      * Marshals given elements of specified type to specified target.
      * <blockquote><pre>{@code
      * List<Category> categories = getCategories();
-     * marshal(Category.class, categories, "categories", new File("categories.xml");
+     * marshal(Category.class, categories, "categories", new File("categories.xml"), m -> m);
      * }</pre></blockquote>
      *
      * @param type     the element type.
@@ -108,7 +131,7 @@ public final class Wrapper<T> {
             if (roe instanceof InvocationTargetException && cause instanceof JAXBException) {
                 throw (JAXBException) cause;
             }
-            throw new RuntimeException("failed to marshal from " + target, roe);
+            throw new RuntimeException("failed to marshal to " + target, roe);
         }
     }
 
@@ -151,7 +174,7 @@ public final class Wrapper<T> {
             try {
                 m.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, Boolean.TRUE);
             } catch (final PropertyException pe) {
-//                log.warn("failed to set {}", Marshaller.JAXB_FORMATTED_OUTPUT, pe);
+                throw new RuntimeException(pe);
             }
             return m;
         });

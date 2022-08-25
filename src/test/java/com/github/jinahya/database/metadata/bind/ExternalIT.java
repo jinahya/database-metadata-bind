@@ -36,14 +36,20 @@ import static java.sql.DriverManager.getConnection;
 @Slf4j
 class ExternalIT {
 
-    @EnabledIfSystemProperty(named = "password", matches = ".+")
-    @EnabledIfSystemProperty(named = "user", matches = ".+")
-    @EnabledIfSystemProperty(named = "url", matches = ".+")
+    private static final String PROPERTY_NAME_URL = "url";
+
+    private static final String PROPERTY_NAME_USER = "user";
+
+    private static final String PROPERTY_NAME_PASSWORD = "password";
+
+    @EnabledIfSystemProperty(named = PROPERTY_NAME_PASSWORD, matches = ".+")
+    @EnabledIfSystemProperty(named = PROPERTY_NAME_USER, matches = ".+")
+    @EnabledIfSystemProperty(named = PROPERTY_NAME_PASSWORD, matches = ".+")
     @Test
     void writeToFiles() throws Exception {
-        final String url = System.getProperty("url");
-        final String user = System.getProperty("user");
-        final String password = System.getProperty("password");
+        final String url = System.getProperty(PROPERTY_NAME_URL);
+        final String user = System.getProperty(PROPERTY_NAME_USER);
+        final String password = System.getProperty(PROPERTY_NAME_PASSWORD);
         log.info("connecting...");
         try (Connection connection = getConnection(url, user, password)) {
             log.info("connected: {}", connection);
