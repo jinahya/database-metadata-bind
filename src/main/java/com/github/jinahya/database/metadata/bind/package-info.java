@@ -35,7 +35,6 @@ package com.github.jinahya.database.metadata.bind;
  */
 
 import javax.json.bind.annotation.JsonbNillable;
-
 import javax.xml.XMLConstants;
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
