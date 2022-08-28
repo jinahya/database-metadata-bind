@@ -71,14 +71,15 @@ public final class Wrapper<T> {
         Objects.requireNonNull(type, "type is null");
         Objects.requireNonNull(target, "target is null");
         final JAXBContext context = JAXBContext.newInstance(Wrapper.class, type);
-        final JAXBElement<Wrapper<T>> wrapped = new JAXBElement<>(
-                new QName(XmlConstants.NS_URI_DATABASE_METADATA_BIND,
-                          Introspector.decapitalize(Wrapper.class.getSimpleName())),
-                (Class<Wrapper<T>>) (Class<?>) Wrapper.class, Wrapper.of(elements));
+//        final JAXBElement<Wrapper<T>> wrapped = new JAXBElement<>(
+//                new QName(XmlConstants.NS_URI_DATABASE_METADATA_BIND,
+//                          Introspector.decapitalize(Wrapper.class.getSimpleName())),
+//                (Class<Wrapper<T>>) (Class<?>) Wrapper.class, Wrapper.of(elements));
+        final Wrapper<T> wrapper = Wrapper.of(elements);
         final Marshaller marshaller = operator.apply(context.createMarshaller());
         final Method method = _XmlBindingUtils.marshalMethod(target);
         try {
-            method.invoke(marshaller, wrapped, target);
+            method.invoke(marshaller, wrapper, target);
         } catch (final ReflectiveOperationException roe) {
             final Throwable cause = roe.getCause();
             if (roe instanceof InvocationTargetException && cause instanceof JAXBException) {
