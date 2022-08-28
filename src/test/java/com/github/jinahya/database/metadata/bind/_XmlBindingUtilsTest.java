@@ -24,7 +24,6 @@ import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.MethodSource;
 import org.mockito.Mockito;
-import org.testcontainers.shaded.org.apache.commons.io.input.XmlStreamReader;
 import org.w3c.dom.Node;
 import org.xml.sax.ContentHandler;
 import org.xml.sax.InputSource;
@@ -33,6 +32,7 @@ import javax.xml.bind.Marshaller;
 import javax.xml.bind.Unmarshaller;
 import javax.xml.stream.XMLEventReader;
 import javax.xml.stream.XMLEventWriter;
+import javax.xml.stream.XMLStreamReader;
 import javax.xml.stream.XMLStreamWriter;
 import javax.xml.transform.Result;
 import javax.xml.transform.Source;
@@ -86,7 +86,7 @@ class _XmlBindingUtilsTest {
                 Source.class,
                 URL.class,
                 XMLEventReader.class,
-                XmlStreamReader.class
+                XMLStreamReader.class
         );
     }
 

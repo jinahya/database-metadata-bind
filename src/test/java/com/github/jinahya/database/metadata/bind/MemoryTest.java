@@ -87,14 +87,14 @@ abstract class MemoryTest {
             final var context = context(connection);
             final var metadata = Metadata.newInstance(context);
             final var name = TestUtils.getFilenamePrefix(context) + " - metadata";
-            JaxbTests.writeToFile(Metadata.class, metadata, name);
-            JsonbTests.writeToFile(metadata, name);
+            _XmlBindingTestUtils.writeToFile(Metadata.class, metadata, name);
+            _JsonBindingTestUtils.writeToFile(metadata, name);
         }
     }
 
     // -----------------------------------------------------------------------------------------------------------------
     @Test
-    void getCatalogs__() throws Exception {
+    void catalogs__() throws Exception {
         try (var connection = connect()) {
             final var context = context(connection);
             final var catalogs = context.collectCatalogs(new ArrayList<>());
@@ -107,25 +107,11 @@ abstract class MemoryTest {
                         final var hashCode = assertDoesNotThrow(c::hashCode);
                     });
             for (final var catalog : catalogs) {
-                catalog.retrieveChildren(context);
+//                catalog.retrieveChildren(context);
             }
-            final var name = TestUtils.getFilenamePrefix(context) + " - catalogs";
-            final var pathname = name + ".xml";
-            final var target = Paths.get("target", pathname).toFile();
-            Wrapper.marshalFormatted(Catalog.class, catalogs, target);
-            JsonbTests.writeToFile(context, "catalogs", catalogs);
-            JsonbTests.serializeAndDeserialize(
-                    Catalog.class,
-                    catalogs,
-                    (e, a) -> {
-//                        assertThat(a)
-//                                .usingRecursiveComparison()
-//                                .isEqualTo(e);
-                        assertThat(a.getSchemas())
-                                .hasSameSizeAs(e.getSchemas())
-                                .allSatisfy(s -> {
-                                });
-                    });
+            final var name = "catalogs";
+            _XmlBindingTestUtils.test(context, name, Catalog.class, catalogs);
+            _JsonBindingTestUtils.test(context, name, Catalog.class, catalogs);
         }
     }
 
@@ -146,8 +132,8 @@ abstract class MemoryTest {
             final var pathname = name + ".xml";
             final var target = Paths.get("target", pathname).toFile();
             Wrapper.marshalFormatted(ClientInfoProperty.class, clientInfoProperties, target);
-            JsonbTests.writeToFile(context, "clientInfoProperties", clientInfoProperties);
-            JsonbTests.serializeAndDeserialize(
+            _JsonBindingTestUtils.writeToFile(context, "clientInfoProperties", clientInfoProperties);
+            _JsonBindingTestUtils.serializeAndDeserialize(
                     ClientInfoProperty.class,
                     clientInfoProperties,
                     (e, a) -> {
@@ -175,8 +161,8 @@ abstract class MemoryTest {
             final var pathname = name + ".xml";
             final var target = Paths.get("target", pathname).toFile();
             Wrapper.marshalFormatted(Column.class, columns, target);
-            JsonbTests.writeToFile(context, "columns", columns);
-            JsonbTests.serializeAndDeserialize(
+            _JsonBindingTestUtils.writeToFile(context, "columns", columns);
+            _JsonBindingTestUtils.serializeAndDeserialize(
                     Column.class,
                     columns,
                     (e, a) -> {
@@ -204,8 +190,8 @@ abstract class MemoryTest {
             final var pathname = name + ".xml";
             final var target = Paths.get("target", pathname).toFile();
             Wrapper.marshalFormatted(CrossReference.class, crossReferences, target);
-            JsonbTests.writeToFile(context, "crossReferences", crossReferences);
-            JsonbTests.serializeAndDeserialize(
+            _JsonBindingTestUtils.writeToFile(context, "crossReferences", crossReferences);
+            _JsonBindingTestUtils.serializeAndDeserialize(
                     CrossReference.class,
                     crossReferences,
                     (e, a) -> {
@@ -235,7 +221,7 @@ abstract class MemoryTest {
             final var pathname = name + ".xml";
             final var target = Paths.get("target", pathname).toFile();
             Wrapper.marshalFormatted(Function.class, functions, target);
-            JsonbTests.writeToFile(context, "functions", functions);
+            _JsonBindingTestUtils.writeToFile(context, "functions", functions);
         }
     }
 
@@ -451,7 +437,7 @@ abstract class MemoryTest {
             final var pathname = prefix + " - procedures.xml";
             final var target = Paths.get("target", pathname).toFile();
             Wrapper.marshalFormatted(Procedure.class, procedures, target);
-            JsonbTests.writeToFile(context, "procedures", procedures);
+            _JsonBindingTestUtils.writeToFile(context, "procedures", procedures);
         }
     }
 
@@ -468,7 +454,7 @@ abstract class MemoryTest {
             final var pathname = TestUtils.getFilenamePrefix(context) + " - pseudoColumns.xml";
             final var target = Paths.get("target", pathname).toFile();
             Wrapper.marshalFormatted(PseudoColumn.class, pseudoColumns, target);
-            JsonbTests.writeToFile(context, "pseudoColumns", pseudoColumns);
+            _JsonBindingTestUtils.writeToFile(context, "pseudoColumns", pseudoColumns);
         }
     }
 
@@ -489,7 +475,7 @@ abstract class MemoryTest {
             final var pathname = TestUtils.getFilenamePrefix(context) + " - schemas.xml";
             final var target = Paths.get("target", pathname).toFile();
             Wrapper.marshalFormatted(Schema.class, schemas, target);
-            JsonbTests.writeToFile(context, "schemas", schemas);
+            _JsonBindingTestUtils.writeToFile(context, "schemas", schemas);
         }
     }
 
@@ -505,7 +491,7 @@ abstract class MemoryTest {
             final var pathname = TestUtils.getFilenamePrefix(context) + " - superTables.xml";
             final var target = Paths.get("target", pathname).toFile();
             Wrapper.marshalFormatted(SuperTable.class, superTables, target);
-            JsonbTests.writeToFile(context, "superTables", superTables);
+            _JsonBindingTestUtils.writeToFile(context, "superTables", superTables);
         }
     }
 
@@ -635,8 +621,8 @@ abstract class MemoryTest {
             final var target = Paths.get("target", pathname).toFile();
             Wrapper.marshalFormatted(Table.class, tables, target);
             {
-                JsonbTests.writeToFile(context, "tables", tables);
-                JsonbTests.serializeAndDeserialize(
+                _JsonBindingTestUtils.writeToFile(context, "tables", tables);
+                _JsonBindingTestUtils.serializeAndDeserialize(
                         Table.class,
                         tables,
                         (e, a) -> {
@@ -696,7 +682,7 @@ abstract class MemoryTest {
             final String pathname = TestUtils.getFilenamePrefix(context) + " - UDTs.xml";
             final File target = Paths.get("target", pathname).toFile();
             Wrapper.marshalFormatted(UDT.class, UDTs, target);
-            JsonbTests.serializeAndDeserialize(UDT.class, UDTs, (e, a) -> {
+            _JsonBindingTestUtils.serializeAndDeserialize(UDT.class, UDTs, (e, a) -> {
                 assertThat(a.getAttributes())
                         .hasSameSizeAs(e.getAttributes())
                         .allSatisfy(attr -> {

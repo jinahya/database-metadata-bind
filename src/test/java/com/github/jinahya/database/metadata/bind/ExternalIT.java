@@ -24,6 +24,8 @@ import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.condition.EnabledIfSystemProperty;
 
+import java.util.ArrayList;
+
 import static java.sql.DriverManager.getConnection;
 
 /**
@@ -40,7 +42,7 @@ class ExternalIT {
 
     private static final String PROPERTY_NAME_PASSWORD = "password";
 
-    @EnabledIfSystemProperty(named = PROPERTY_NAME_PASSWORD, matches = ".+")
+    @EnabledIfSystemProperty(named = PROPERTY_NAME_URL, matches = ".+")
     @EnabledIfSystemProperty(named = PROPERTY_NAME_USER, matches = ".+")
     @EnabledIfSystemProperty(named = PROPERTY_NAME_PASSWORD, matches = ".+")
     @Test
@@ -52,7 +54,13 @@ class ExternalIT {
         try (var connection = getConnection(url, user, password)) {
             log.info("connected: {}", connection);
             final var context = Context.newInstance(connection);
-            ContextTestUtils.writeFiles(context);
+            {
+                final var catalogs = context.collectCatalogs(new ArrayList<>());
+                final var name = "catalogs";
+                _XmlBindingTestUtils.test(context, name, Catalog.class, catalogs);
+                _JsonBindingTestUtils.test(Catalog.class, catalogs);
+            }
+//            ContextTestUtils.writeFiles(context);
         }
     }
 }

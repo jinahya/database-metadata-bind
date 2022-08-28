@@ -20,17 +20,69 @@ package com.github.jinahya.database.metadata.bind;
  * #L%
  */
 
+import lombok.extern.slf4j.Slf4j;
+
 import javax.json.bind.JsonbBuilder;
 import javax.json.bind.JsonbConfig;
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.FileOutputStream;
+import java.io.InputStream;
+import java.io.OutputStream;
+import java.io.Serial;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.ArrayList;
 import java.util.Collection;
+import java.util.List;
 import java.util.Objects;
 import java.util.function.BiConsumer;
 
-final class JsonbTests {
+import static org.assertj.core.api.Assertions.assertThat;
+
+@Slf4j
+final class _JsonBindingTestUtils {
+
+    static <T> void test(final Class<T> type, final List<? extends T> expected) throws Exception {
+        Objects.requireNonNull(type, "type is null");
+        Objects.requireNonNull(expected, "expected is null");
+        try (var jsonb = JsonbBuilder.create()) {
+            final var json = jsonb.toJson(expected);
+            final List<T> actual = jsonb.fromJson(json, new ArrayList<T>() {
+            }.getClass().getGenericSuperclass());
+            assertThat(actual)
+                    .hasSameSizeAs(expected)
+                    .usingRecursiveComparison()
+                    .isEqualTo(expected);
+        }
+    }
+
+    static <T> void test(final Context context, final String name, Class<T> type, final List<? extends T> expected)
+            throws Exception {
+        Objects.requireNonNull(context, "context is null");
+        Objects.requireNonNull(name, "name is null");
+        Objects.requireNonNull(type, "type is null");
+        Objects.requireNonNull(expected, "expected is null");
+        try (var jsonb = JsonbBuilder.create(new JsonbConfig().withFormatting(Boolean.TRUE))) {
+            final var path = Paths.get("target", TestUtils.getFilenamePrefix(context) + " - " + name + ".json");
+            try (OutputStream stream = new FileOutputStream(path.toFile())) {
+                jsonb.toJson(expected, stream);
+                stream.flush();
+            }
+            try (InputStream stream = new FileInputStream(path.toFile())) {
+                final List<T> actual = jsonb.fromJson(stream, new ArrayList<T>() {
+                    @Serial
+                    private static final long serialVersionUID = -2131648764287495589L;
+                }.getClass().getGenericSuperclass());
+                for (T t : actual) {
+                    log.debug("a: {}", t);
+                }
+                assertThat(actual)
+                        .hasSameSizeAs(expected)
+                        .isEqualTo(expected);
+            }
+        }
+    }
 
     static <T> void serializeAndDeserialize(final Class<T> type, final T expected,
                                             final BiConsumer<? super T, ? super T> consumer)
@@ -109,7 +161,7 @@ final class JsonbTests {
         }
     }
 
-    private JsonbTests() {
+    private _JsonBindingTestUtils() {
         throw new AssertionError("instantiation is not allowed");
     }
 }

@@ -67,11 +67,11 @@
     <version.ojdbc8>21.6.0.0.1</version.ojdbc8>
     <version.ojdbc10>19.15.0.0.1</version.ojdbc10>
     <version.ojdbc11>21.6.0.0.1</version.ojdbc11>
+    <version.org.apache.jonzon>1.2.19</version.org.apache.jonzon>
     <version.org.eclipse.transformer>0.5.0</version.org.eclipse.transformer>
     <!--    <version.org.hibernate.validator>6.2.0.Final</version.org.hibernate.validator>-->
     <version.org.hibernate.validator>6.2.4.Final</version.org.hibernate.validator>
     <version.org.mockito>4.7.0</version.org.mockito>
-    <version.org.testcontainers>1.17.3</version.org.testcontainers>
     <!--    <version.postgresql>42.2.19.jre7</version.postgresql>-->
     <version.postgresql>42.4.2</version.postgresql>
     <version.presto-jdbc>350</version.presto-jdbc>
@@ -115,6 +115,16 @@
         <version>${version.mysql-connector-java}</version>
       </dependency>
       <dependency>
+        <groupId>org.apache.johnzon</groupId>
+        <artifactId>johnzon-jsonb</artifactId>
+        <version>${version.org.apache.jonzon}</version>
+      </dependency>
+      <dependency>
+        <groupId>org.eclipse</groupId>
+        <artifactId>yasson</artifactId>
+        <version>1.0.11</version>
+      </dependency>
+      <dependency>
         <groupId>org.mariadb.jdbc</groupId>
         <artifactId>mariadb-java-client</artifactId>
         <version>${version.mariadb-java-client}</version>
@@ -123,13 +133,6 @@
         <groupId>org.postgresql</groupId>
         <artifactId>postgresql</artifactId>
         <version>${version.postgresql}</version>
-      </dependency>
-      <dependency>
-        <groupId>org.testcontainers</groupId>
-        <artifactId>testcontainers-bom</artifactId>
-        <version>${version.org.testcontainers}</version>
-        <type>pom</type>
-        <scope>import</scope>
       </dependency>
     </dependencies>
   </dependencyManagement>
@@ -196,6 +199,12 @@
       <scope>test</scope>
     </dependency>
     <dependency>
+      <groupId>org.apache.johnzon</groupId>
+      <artifactId>johnzon-jsonb</artifactId>
+      <version>${version.org.apache.jonzon}</version>
+      <scope>test</scope>
+    </dependency>
+    <dependency>
       <groupId>org.assertj</groupId>
       <artifactId>assertj-core</artifactId>
       <version>3.23.1</version>
@@ -206,12 +215,6 @@
       <artifactId>animal-sniffer-annotations</artifactId>
       <version>${version.animal-sniffer}</version>
       <scope>provided</scope>
-    </dependency>
-    <dependency>
-      <groupId>org.eclipse</groupId>
-      <artifactId>yasson</artifactId>
-      <version>1.0.11</version>
-      <scope>test</scope>
     </dependency>
     <dependency>
       <groupId>org.glassfish</groupId>
@@ -241,7 +244,7 @@
     <dependency>
       <groupId>org.junit.jupiter</groupId>
       <artifactId>junit-jupiter</artifactId>
-<!--      <version>5.9.0</version>-->
+      <!--      <version>5.9.0</version>-->
       <version>5.8.2</version> <!-- mockito-junit-jupiter -->
       <scope>test</scope>
     </dependency>
@@ -262,11 +265,6 @@
       <artifactId>lombok</artifactId>
       <version>${version.lombok}</version>
       <scope>provided</scope>
-    </dependency>
-    <dependency>
-      <groupId>org.testcontainers</groupId>
-      <artifactId>junit-jupiter</artifactId>
-      <scope>test</scope>
     </dependency>
     <dependency>
       <groupId>org.xerial</groupId>
@@ -754,105 +752,24 @@
       </dependencies>
     </profile>
     <profile>
-      <id>testcontainers-only</id>
-      <properties>
-        <!--        <skipTests>true</skipTests>-->
-        <it.test>ContainerIT</it.test>
-      </properties>
-      <dependencies>
-        <!--        <dependency>-->
-        <!--          <groupId>org.testcontainers</groupId>-->
-        <!--          <artifactId>testcontainers</artifactId>-->
-        <!--          <scope>test</scope>-->
-        <!--        </dependency>-->
-      </dependencies>
-    </profile>
-    <profile>
-      <id>testcontainers-mariadb</id>
+      <id>jakarta-json-binding-yasson</id>
+      <activation>
+        <activeByDefault>true</activeByDefault>
+      </activation>
       <dependencies>
         <dependency>
-          <groupId>org.mariadb.jdbc</groupId>
-          <artifactId>mariadb-java-client</artifactId>
-          <scope>test</scope>
-        </dependency>
-        <dependency>
-          <groupId>org.testcontainers</groupId>
-          <artifactId>mariadb</artifactId>
-          <scope>test</scope>
-        </dependency>
-        <!--        <dependency>-->
-        <!--          <groupId>org.testcontainers</groupId>-->
-        <!--          <artifactId>testcontainers</artifactId>-->
-        <!--          <scope>test</scope>-->
-        <!--        </dependency>-->
-      </dependencies>
-    </profile>
-    <profile>
-      <id>testcontainers-mssqlserver</id>
-      <dependencies>
-        <dependency>
-          <groupId>com.microsoft.sqlserver</groupId>
-          <artifactId>mssql-jdbc</artifactId>
-          <scope>test</scope>
-        </dependency>
-        <dependency>
-          <groupId>org.testcontainers</groupId>
-          <artifactId>mssqlserver</artifactId>
-          <scope>test</scope>
-        </dependency>
-        <dependency>
-          <groupId>org.testcontainers</groupId>
-          <artifactId>testcontainers</artifactId>
+          <groupId>org.eclipse</groupId>
+          <artifactId>yasson</artifactId>
           <scope>test</scope>
         </dependency>
       </dependencies>
     </profile>
     <profile>
-      <id>testcontainers-mysql</id>
+      <id>jakarta-json-binding-jonzon</id>
       <dependencies>
         <dependency>
-          <groupId>mysql</groupId>
-          <artifactId>mysql-connector-java</artifactId>
-          <scope>test</scope>
-        </dependency>
-        <dependency>
-          <groupId>org.testcontainers</groupId>
-          <artifactId>mysql</artifactId>
-          <scope>test</scope>
-        </dependency>
-        <dependency>
-          <groupId>org.testcontainers</groupId>
-          <artifactId>testcontainers</artifactId>
-          <scope>test</scope>
-        </dependency>
-      </dependencies>
-    </profile>
-    <profile>
-      <id>testcontainers-postgresql</id>
-      <dependencies>
-        <dependency>
-          <groupId>org.postgresql</groupId>
-          <artifactId>postgresql</artifactId>
-          <scope>test</scope>
-        </dependency>
-        <dependency>
-          <groupId>org.testcontainers</groupId>
-          <artifactId>postgresql</artifactId>
-          <scope>test</scope>
-        </dependency>
-      </dependencies>
-    </profile>
-    <profile>
-      <id>testcontainers-presto</id>
-      <dependencies>
-        <dependency>
-          <groupId>io.prestosql</groupId>
-          <artifactId>presto-jdbc</artifactId>
-          <scope>test</scope>
-        </dependency>
-        <dependency>
-          <groupId>org.testcontainers</groupId>
-          <artifactId>presto</artifactId>
+          <groupId>org.apache.johnzon</groupId>
+          <artifactId>johnzon-jsonb</artifactId>
           <scope>test</scope>
         </dependency>
       </dependencies>

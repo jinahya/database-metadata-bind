@@ -41,8 +41,10 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.nio.file.Paths;
 import java.util.Collection;
+import java.util.List;
+import java.util.Objects;
 
-import static java.util.Objects.requireNonNull;
+import static org.assertj.core.api.Assertions.assertThat;
 
 /**
  * Test utilities for JAXB functionalities.
@@ -50,7 +52,7 @@ import static java.util.Objects.requireNonNull;
  * @author Jin Kwon &lt;onacit at gmail.com&gt;
  */
 @Slf4j
-final class JaxbTests {
+final class _XmlBindingTestUtils {
 
     static QName qName(final String localPart) {
         return new QName(XmlConstants.NS_URI_DATABASE_METADATA_BIND, localPart);
@@ -71,7 +73,7 @@ final class JaxbTests {
     }
 
     static void printSchema(final JAXBContext context) throws IOException {
-        requireNonNull(context, "context is null");
+        Objects.requireNonNull(context, "context is null");
         final ByteArrayOutputStream baos = new ByteArrayOutputStream();
         context.generateSchema(new SchemaOutputResolver() {
             @Override
@@ -97,7 +99,7 @@ final class JaxbTests {
     }
 
     static <T> Node marshal(final Class<T> type, final T value) throws JAXBException {
-        final JAXBContext context = JAXBContext.newInstance(requireNonNull(type, "type is null"));
+        final JAXBContext context = JAXBContext.newInstance(Objects.requireNonNull(type, "type is null"));
         final Marshaller marshaller = context.createMarshaller();
         final DOMResult result = new DOMResult();
         marshaller.marshal(value, result);
@@ -105,7 +107,7 @@ final class JaxbTests {
     }
 
     static <T> T unmarshal(final Class<T> type, final Node node) throws JAXBException {
-        final JAXBContext context = JAXBContext.newInstance(requireNonNull(type, "type is null"));
+        final JAXBContext context = JAXBContext.newInstance(Objects.requireNonNull(type, "type is null"));
         final Unmarshaller unmarshaller = context.createUnmarshaller();
         return unmarshaller.unmarshal(node, type).getValue();
     }
@@ -121,7 +123,26 @@ final class JaxbTests {
         }
     }
 
-    private JaxbTests() {
+    static <T> void test(final Context context, final String name, final Class<T> type, final List<T> expected)
+            throws Exception {
+        Objects.requireNonNull(context, "context is null");
+        Objects.requireNonNull(name, "name is null");
+        Objects.requireNonNull(type, "type is null");
+        Objects.requireNonNull(expected, "expected is null");
+        final var path = Paths.get("target", TestUtils.getFilenamePrefix(context) + " - " + name + ".xml");
+        Wrapper.marshal(type, expected, path.toFile());
+        final List<T> actual = Wrapper.unmarshal(type, path.toFile());
+        assertThat(actual)
+                .isNotNull()
+                .hasSameSizeAs(expected);
+        for (int i = 0; i < actual.size(); i++) {
+            assertThat(actual.get(i))
+                    .usingRecursiveComparison()
+                    .isEqualTo(expected.get(i));
+        }
+    }
+
+    private _XmlBindingTestUtils() {
         throw new AssertionError("instantiation is not allowed");
     }
 }

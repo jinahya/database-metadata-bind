@@ -36,7 +36,7 @@ class Catalog_Xml_Test {
     @Test
     void printSchema() throws JAXBException, IOException {
         final JAXBContext context = JAXBContext.newInstance(Catalog.class);
-        JaxbTests.printSchema(context);
+        _XmlBindingTestUtils.printSchema(context);
     }
 
     @Disabled
@@ -44,15 +44,15 @@ class Catalog_Xml_Test {
     void printDocument() throws JAXBException {
         final Catalog value = new Catalog();
         value.setTableCat("tableCat");
-        JaxbTests.printInstance(Catalog.class, value);
+        _XmlBindingTestUtils.printInstance(Catalog.class, value);
     }
 
     @Test
     void marshalUnmarshalAndCompare() throws JAXBException {
         final Catalog expected = new Catalog();
         expected.setTableCat("tableCat");
-        final Node marshalled = JaxbTests.marshal(Catalog.class, expected);
-        final Catalog actual = JaxbTests.unmarshal(Catalog.class, marshalled);
+        final Node marshalled = _XmlBindingTestUtils.marshal(Catalog.class, expected);
+        final Catalog actual = _XmlBindingTestUtils.unmarshal(Catalog.class, marshalled);
         assertThat(actual.getTableCat()).isEqualTo(expected.getTableCat());
     }
 }
