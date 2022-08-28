@@ -146,10 +146,10 @@ abstract class MetadataTypeTest<T extends MetadataType> {
         }
     }
 
-    @DisplayName("fields with @Unused should also be with @XmlElement(nillable = true)")
+    @DisplayName("@Unused? -> @XmlElement? -> (nillable = true)")
     @Test
     void fieldsWithUnused_ShouldBeAnnotatedWithXmlElementWithNillableTrue() {
-        for (final Field field : getFieldsWithUnused().keySet()) {
+        for (final Field field : fieldsWithUnusedBySpecification().keySet()) {
             assertThat(field.getAnnotation(NotUsedBySpecification.class)).isNotNull();
             assertThat(field.getAnnotation(XmlElement.class)).isNotNull().satisfies(a -> {
                 assertThat(a.nillable()).isTrue();
@@ -160,7 +160,7 @@ abstract class MetadataTypeTest<T extends MetadataType> {
     @DisplayName("fields with @Unused should not be a primitive type")
     @Test
     void fieldsWithUnused_TypeShouldNotBePrimitive() {
-        for (final Field field : getFieldsWithUnused().keySet()) {
+        for (final Field field : fieldsWithUnusedBySpecification().keySet()) {
             assertThat(field.getAnnotation(NotUsedBySpecification.class)).isNotNull();
             assertThat(field.getType().isPrimitive()).isFalse();
         }
@@ -246,7 +246,7 @@ abstract class MetadataTypeTest<T extends MetadataType> {
                                          e -> e.getKey().getAnnotation(NullableBySpecification.class)));
     }
 
-    Map<Field, NotUsedBySpecification> getFieldsWithUnused() {
+    Map<Field, NotUsedBySpecification> fieldsWithUnusedBySpecification() {
         return getFieldsWithColumnLabel().entrySet().stream()
                 .filter(e -> e.getKey().getAnnotation(NotUsedBySpecification.class) != null).collect(
                         Collectors.toMap(Map.Entry::getKey,

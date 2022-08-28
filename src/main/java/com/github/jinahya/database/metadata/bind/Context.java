@@ -39,6 +39,7 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Objects;
 import java.util.Set;
+import java.util.function.Consumer;
 import java.util.logging.Level;
 
 /**
@@ -113,6 +114,41 @@ public class Context {
             }
         }
         return instance;
+    }
+
+    /**
+     * Binds all records as given type and adds them to specified consumer.
+     *
+     * @param results  the records to bind.
+     * @param type     the type of instances.
+     * @param consumer the consumer to which bound instances are added
+     * @param <T>      binding type parameter
+     * @throws SQLException if a database error occurs.
+     */
+    private <T extends MetadataType> void bind(final ResultSet results, final Class<T> type,
+                                               final Consumer<? super T> consumer)
+            throws SQLException {
+        Objects.requireNonNull(results, "results is null");
+        Objects.requireNonNull(type, "type is null");
+        Objects.requireNonNull(consumer, "consumer is null");
+        final Constructor<T> constructor;
+        try {
+            constructor = type.getDeclaredConstructor();
+        } catch (final ReflectiveOperationException roe) {
+            throw new RuntimeException("failed to get the default constructor; type: " + type, roe);
+        }
+        if (!constructor.isAccessible()) {
+            constructor.setAccessible(true);
+        }
+        while (results.next()) {
+            final T value;
+            try {
+                value = constructor.newInstance();
+            } catch (final ReflectiveOperationException roe) {
+                throw new RuntimeException("failed to instantiate; type: " + type, roe);
+            }
+            consumer.accept(bind(results, type, value));
+        }
     }
 
     /**
@@ -222,6 +258,25 @@ public class Context {
                                   table, scope, nullable), sqlfnse);
         }
         return collection;
+    }
+
+    /**
+     * Invokes {@link DatabaseMetaData#getCatalogs()} method and accepts each bound value to specified consumer.
+     *
+     * @param consumer the consumer to which each bound value is accepted.
+     * @throws SQLException if a database error occurs.
+     */
+    public void getCatalogs(@NotNull final Consumer<? super Catalog> consumer) throws SQLException {
+        try (ResultSet results = databaseMetaData.getCatalogs()) {
+            if (results != null) {
+                bind(results, Catalog.class, consumer);
+                return;
+            }
+            log.warning("null returned; getCatalogs()");
+        } catch (final SQLFeatureNotSupportedException sqlfnse) {
+            log.log(Level.WARNING, "not supported; getCatalogs()", sqlfnse);
+        }
+        return consumer;
     }
 
     /**

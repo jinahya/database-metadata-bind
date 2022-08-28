@@ -42,7 +42,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 final class ContextTestUtils {
 
     static void writeCatalogs(final Context context) throws SQLException, JAXBException {
-        final List<Catalog> catalogs = context.getCatalogs(new ArrayList<>());
+        final var catalogs = context.getCatalogs(new ArrayList<>());
         final String pathname = TestUtils.getFilenamePrefix(context) + " - catalogs.xml";
         final File target = Paths.get("target", pathname).toFile();
         Wrapper.marshalFormatted(Catalog.class, catalogs, target);
