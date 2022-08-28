@@ -46,7 +46,7 @@ import java.util.List;
  * A class for binding results of {@link java.sql.DatabaseMetaData#getCatalogs()} method.
  *
  * @author Jin Kwon &lt;jinahya_at_gmail.com&gt;
- * @see Context#getCatalogs(Collection)
+ * @see Context#collectCatalogs(Collection)
  */
 @XmlRootElement
 @ParentOf(Schema.class)

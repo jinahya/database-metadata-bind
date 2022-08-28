@@ -59,7 +59,7 @@ public class Metadata {
         instance.ownUpdatesAreVisible = OwnUpdatesAreVisible.getAllInstances(context, new ArrayList<>());
         // -------------------------------------------------------------------------------------------------------------
         {
-            instance.catalogs = context.getCatalogs(new ArrayList<>());
+            instance.catalogs = context.collectCatalogs(new ArrayList<>());
             if (instance.catalogs.isEmpty()) {
                 instance.catalogs.add(Catalog.newVirtualInstance());
             }

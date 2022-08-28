@@ -70,6 +70,7 @@
     <version.org.eclipse.transformer>0.5.0</version.org.eclipse.transformer>
     <!--    <version.org.hibernate.validator>6.2.0.Final</version.org.hibernate.validator>-->
     <version.org.hibernate.validator>6.2.4.Final</version.org.hibernate.validator>
+    <version.org.mockito>4.7.0</version.org.mockito>
     <version.org.testcontainers>1.17.3</version.org.testcontainers>
     <!--    <version.postgresql>42.2.19.jre7</version.postgresql>-->
     <version.postgresql>42.4.2</version.postgresql>
@@ -240,7 +241,20 @@
     <dependency>
       <groupId>org.junit.jupiter</groupId>
       <artifactId>junit-jupiter</artifactId>
-      <version>5.9.0</version>
+<!--      <version>5.9.0</version>-->
+      <version>5.8.2</version> <!-- mockito-junit-jupiter -->
+      <scope>test</scope>
+    </dependency>
+    <dependency>
+      <groupId>org.mockito</groupId>
+      <artifactId>mockito-inline</artifactId>
+      <version>${version.org.mockito}</version>
+      <scope>test</scope>
+    </dependency>
+    <dependency>
+      <groupId>org.mockito</groupId>
+      <artifactId>mockito-junit-jupiter</artifactId>
+      <version>${version.org.mockito}</version>
       <scope>test</scope>
     </dependency>
     <dependency>

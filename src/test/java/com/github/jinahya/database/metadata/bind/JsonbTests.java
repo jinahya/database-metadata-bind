@@ -102,8 +102,7 @@ final class JsonbTests {
             throws Exception {
         final var path = Paths.get("target", TestUtils.getFilenamePrefix(context) + " - " + postfix + ".json");
         try (var jsonb = JsonbBuilder.create(new JsonbConfig().withFormatting(true))) {
-            final File file = path.toFile();
-            try (var output = new FileOutputStream(file)) {
+            try (var output = new FileOutputStream(path.toFile())) {
                 jsonb.toJson(value, output);
                 output.flush();
             }

@@ -97,7 +97,7 @@ abstract class MemoryTest {
     void getCatalogs__() throws Exception {
         try (var connection = connect()) {
             final var context = context(connection);
-            final var catalogs = context.getCatalogs(new ArrayList<>());
+            final var catalogs = context.collectCatalogs(new ArrayList<>());
             if (catalogs.isEmpty()) {
                 catalogs.add(Catalog.newVirtualInstance());
             }

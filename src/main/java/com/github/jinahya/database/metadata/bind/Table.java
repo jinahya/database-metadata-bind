@@ -142,7 +142,7 @@ public class Table
                 column.retrieveChildren(context);
             }
         }
-        {
+        if (false) {
             context.getColumnPrivileges(
                     getTableCat(),
                     getTableSchem(),
@@ -216,7 +216,7 @@ public class Table
                 pseudoColumn.retrieveChildren(context);
             }
         }
-        {
+        if (false) {
             context.getTablePrivileges(
                     getTableCat(),
                     getTableSchem(),

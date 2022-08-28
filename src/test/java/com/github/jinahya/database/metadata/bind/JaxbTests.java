@@ -23,6 +23,8 @@ package com.github.jinahya.database.metadata.bind;
 import lombok.extern.slf4j.Slf4j;
 import org.w3c.dom.Node;
 
+import javax.json.bind.JsonbBuilder;
+import javax.json.bind.JsonbConfig;
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBElement;
 import javax.xml.bind.JAXBException;
@@ -35,8 +37,10 @@ import javax.xml.transform.dom.DOMResult;
 import javax.xml.transform.stream.StreamResult;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.nio.file.Paths;
+import java.util.Collection;
 
 import static java.util.Objects.requireNonNull;
 
@@ -104,6 +108,17 @@ final class JaxbTests {
         final JAXBContext context = JAXBContext.newInstance(requireNonNull(type, "type is null"));
         final Unmarshaller unmarshaller = context.createUnmarshaller();
         return unmarshaller.unmarshal(node, type).getValue();
+    }
+
+    static <T> void writeToFile(final Context context, final String postfix, final Collection<? extends T> value)
+            throws Exception {
+        final var path = Paths.get("target", TestUtils.getFilenamePrefix(context) + " - " + postfix + ".json");
+        try (var jsonb = JsonbBuilder.create(new JsonbConfig().withFormatting(true))) {
+            try (var output = new FileOutputStream(path.toFile())) {
+                jsonb.toJson(value, output);
+                output.flush();
+            }
+        }
     }
 
     private JaxbTests() {

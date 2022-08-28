@@ -32,6 +32,7 @@ import java.sql.DatabaseMetaData;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.SQLFeatureNotSupportedException;
+import java.sql.SQLSyntaxErrorException;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.HashMap;
@@ -214,11 +215,12 @@ public class Context {
             }
             log.warning(String.format("null returned; getAttributes(%1$s, %2$s, %3$s, %4$s)", catalog, schemaPattern,
                                       typeNamePattern, attributeNamePattern));
-        } catch (final SQLFeatureNotSupportedException sqlfnse) {
+        } catch (SQLFeatureNotSupportedException | SQLSyntaxErrorException sqle) {
             log.log(Level.WARNING,
-                    String.format("not supported; getAttributes(%1$s, %2$s, %3$s, %4$s)", catalog, schemaPattern,
+                    String.format("failed to getAttributes(%1$s, %2$s, %3$s, %4$s)", catalog, schemaPattern,
                                   typeNamePattern, attributeNamePattern),
-                    sqlfnse);
+                    sqle);
+            acceptSQLException(sqle);
         }
         return collection;
     }
@@ -252,10 +254,12 @@ public class Context {
             }
             log.warning(String.format("null returned; getBestRowIdentifier(%1$s, %2$s, %3$s, %4$d, %5$s)", catalog,
                                       schema, table, scope, nullable));
-        } catch (final SQLFeatureNotSupportedException sqlfnse) {
+        } catch (SQLFeatureNotSupportedException | SQLSyntaxErrorException sqle) {
             log.log(Level.WARNING,
-                    String.format("not supported; getBestRowIdentifier(%1$s, %2$s, %3$s, %4$d, %5$s)", catalog, schema,
-                                  table, scope, nullable), sqlfnse);
+                    String.format("failed to getBestRowIdentifier(%1$s, %2$s, %3$s, %4$d, %5$s)", catalog, schema,
+                                  table, scope, nullable),
+                    sqle);
+            acceptSQLException(sqle);
         }
         return collection;
     }
@@ -265,39 +269,34 @@ public class Context {
      *
      * @param consumer the consumer to which each bound value is accepted.
      * @throws SQLException if a database error occurs.
+     * @see #collectCatalogs(Collection)
      */
-    public void getCatalogs(@NotNull final Consumer<? super Catalog> consumer) throws SQLException {
+    public void acceptCatalogs(@NotNull final Consumer<? super Catalog> consumer) throws SQLException {
+        Objects.requireNonNull(consumer, "consumer is null");
         try (ResultSet results = databaseMetaData.getCatalogs()) {
             if (results != null) {
                 bind(results, Catalog.class, consumer);
                 return;
             }
-            log.warning("null returned; getCatalogs()");
-        } catch (final SQLFeatureNotSupportedException sqlfnse) {
-            log.log(Level.WARNING, "not supported; getCatalogs()", sqlfnse);
+            log.severe("null returned; getCatalogs()");
+        } catch (SQLFeatureNotSupportedException | SQLSyntaxErrorException sqle) {
+            log.log(Level.SEVERE, "failed to getCatalogs()", sqle);
         }
-        return consumer;
     }
 
     /**
      * Invokes {@link DatabaseMetaData#getCatalogs()} method and adds all bound values to specified collection.
      *
      * @param collection the collection to which bound values are added.
-     * @param <C>        the type of {@code collection}
+     * @param <C>        the type of the {@code collection}
      * @return given {@code collection}.
      * @throws SQLException if a database error occurs.
+     * @see #acceptCatalogs(Consumer)
      */
     @NotNull
-    public <C extends Collection<? super Catalog>> C getCatalogs(@NotNull final C collection) throws SQLException {
-//        Objects.requireNonNull(collection, "collection is null");
-        try (ResultSet results = databaseMetaData.getCatalogs()) {
-            if (results != null) {
-                return bind(results, Catalog.class, collection);
-            }
-            log.warning("null returned; getCatalogs()");
-        } catch (final SQLFeatureNotSupportedException sqlfnse) {
-            log.log(Level.WARNING, "not supported; getCatalogs()", sqlfnse);
-        }
+    public <C extends Collection<? super Catalog>> C collectCatalogs(@NotNull final C collection) throws SQLException {
+        Objects.requireNonNull(collection, "collection is null");
+        acceptCatalogs(collection::add);
         return collection;
     }
 
@@ -318,7 +317,7 @@ public class Context {
                 return bind(results, ClientInfoProperty.class, collection);
             }
             log.warning("null returned; getClientInfoProperties()");
-        } catch (final SQLFeatureNotSupportedException sqlfnse) {
+        } catch (SQLFeatureNotSupportedException | SQLSyntaxErrorException sqlfnse) {
             log.log(Level.WARNING, "not supported; getClientInfoProperties()", sqlfnse);
         }
         return collection;
@@ -352,7 +351,7 @@ public class Context {
             }
             log.warning(String.format("null returned; getColumnPrivileges(%1$s, %2$s, %3$s, %4$s)", catalog, schema,
                                       table, columnNamePattern));
-        } catch (final SQLFeatureNotSupportedException sqlfnse) {
+        } catch (SQLFeatureNotSupportedException | SQLSyntaxErrorException sqlfnse) {
             log.log(Level.WARNING,
                     String.format("not supported; getColumnPrivileges(%1$s, %2$s, %3$s, %4$s)", catalog, schema, table,
                                   columnNamePattern),
@@ -389,7 +388,7 @@ public class Context {
             }
             log.warning(String.format("null returned; getColumns(%1$s, %2$s, %3$s, %4$s)", catalog, schemaPattern,
                                       tableNamePattern, columnNamePattern));
-        } catch (final SQLFeatureNotSupportedException sqlfnse) {
+        } catch (SQLFeatureNotSupportedException | SQLSyntaxErrorException sqlfnse) {
             log.log(Level.WARNING,
                     String.format("not supported; getColumns(%1$s, %2$s, %3$s, %4$s)", catalog, schemaPattern,
                                   tableNamePattern, columnNamePattern),
@@ -430,7 +429,7 @@ public class Context {
             log.warning(String.format("null returned; getCrossReference(%1$s, %2$s, %3$s, %4$s, %5$s, %6$s)",
                                       parentCatalog, parentSchema, parentTable, foreignCatalog, foreignSchema,
                                       foreignTable));
-        } catch (final SQLFeatureNotSupportedException sqlfnse) {
+        } catch (SQLFeatureNotSupportedException | SQLSyntaxErrorException sqlfnse) {
             log.log(Level.WARNING,
                     String.format("not supported; getCrossReference(%1$s, %2$s, %3$s, %4$s, %5$s, %6$s)", parentCatalog,
                                   parentSchema, parentTable, foreignCatalog, foreignSchema, foreignTable),
@@ -463,7 +462,7 @@ public class Context {
                 return bind(results, ExportedKey.class, collection);
             }
             log.warning(String.format("null returned; getExportedKeys(%1$s, %2$s, %3$s)", catalog, schema, table));
-        } catch (final SQLFeatureNotSupportedException sqlfnse) {
+        } catch (SQLFeatureNotSupportedException | SQLSyntaxErrorException sqlfnse) {
             log.log(Level.WARNING,
                     String.format("not supported; getExportedKeys(%1$s, %2$s, %3$s)", catalog, schema, table),
                     sqlfnse);
@@ -497,7 +496,7 @@ public class Context {
             }
             log.warning(String.format("null returned; getFunctions(%1$s, %2$s, %3$s)", catalog, schemaPattern,
                                       functionNamePattern));
-        } catch (final SQLFeatureNotSupportedException sqlfnse) {
+        } catch (SQLFeatureNotSupportedException | SQLSyntaxErrorException sqlfnse) {
             log.log(Level.WARNING,
                     String.format("not supported; getFunctions(%1$s, %2$s, %3$s)", catalog, schemaPattern,
                                   functionNamePattern),
@@ -534,7 +533,7 @@ public class Context {
             }
             log.warning(String.format("null returned; getFunctionColumns(%1$s, %2$s, %3$s, %4$s)", catalog,
                                       schemaPattern, functionNamePattern, columnNamePattern));
-        } catch (final SQLFeatureNotSupportedException sqlfnse) {
+        } catch (SQLFeatureNotSupportedException | SQLSyntaxErrorException sqlfnse) {
             log.log(Level.WARNING,
                     String.format("not supported; getFunctionColumns(%1$s, %2$s, %3$s, %4$s)", catalog, schemaPattern,
                                   functionNamePattern, columnNamePattern),
@@ -566,7 +565,7 @@ public class Context {
                 return bind(results, ImportedKey.class, collection);
             }
             log.warning(String.format("null returned; getImportedKeys(%1$s, %2$s, %3$s)", catalog, schema, table));
-        } catch (final SQLFeatureNotSupportedException sqlfnse) {
+        } catch (SQLFeatureNotSupportedException | SQLSyntaxErrorException sqlfnse) {
             log.log(Level.WARNING,
                     String.format("not supported; getImportedKeys(%1$s, %2$s, %3$s)", catalog, schema, table),
                     sqlfnse);
@@ -602,7 +601,7 @@ public class Context {
             }
             log.warning(String.format("null returned; getIndexInfo(%1$s, %2$s, %3$s, %4$b, %5$b)", catalog, schema,
                                       table, unique, approximate));
-        } catch (final SQLFeatureNotSupportedException sqlfnse) {
+        } catch (SQLFeatureNotSupportedException | SQLSyntaxErrorException sqlfnse) {
             log.log(Level.WARNING,
                     String.format("not supported; getIndexInfo(%1$s, %2$s, %3$s, %4$b, %5$b)", catalog, schema, table,
                                   unique, approximate),
@@ -635,7 +634,7 @@ public class Context {
                 return bind(results, PrimaryKey.class, collection);
             }
             log.warning(String.format("null results; getPrimaryKeys(%1$s, %2$s, %3$s)", catalog, schema, table));
-        } catch (final SQLFeatureNotSupportedException sqlfnse) {
+        } catch (SQLFeatureNotSupportedException | SQLSyntaxErrorException sqlfnse) {
             log.log(Level.WARNING,
                     String.format("null results; getPrimaryKeys(%1$s, %2$s, %3$s)", catalog, schema, table),
                     sqlfnse);
@@ -672,7 +671,7 @@ public class Context {
             }
             log.warning(String.format("null returned; getProcedureColumns(%1$s, %2$s, %3$s, %4$s)", catalog,
                                       schemaPattern, procedureNamePattern, columnNamePattern));
-        } catch (final SQLFeatureNotSupportedException sqlfnse) {
+        } catch (SQLFeatureNotSupportedException | SQLSyntaxErrorException sqlfnse) {
             log.log(Level.WARNING,
                     String.format("not supported; getProcedureColumns(%1$s, %2$s, %3$s, %4$s)", catalog, schemaPattern,
                                   procedureNamePattern, columnNamePattern),
@@ -707,7 +706,7 @@ public class Context {
             }
             log.warning(String.format("null returned; getProcedures(%1$s, %2$s, %3$s)", catalog, schemaPattern,
                                       procedureNamePattern));
-        } catch (final SQLFeatureNotSupportedException sqlfnse) {
+        } catch (SQLFeatureNotSupportedException | SQLSyntaxErrorException sqlfnse) {
             log.log(Level.WARNING,
                     String.format("not supported; getProcedures(%1$s, %2$s, %3$s)", catalog, schemaPattern,
                                   procedureNamePattern),
@@ -746,7 +745,7 @@ public class Context {
             }
             log.warning(String.format("null returned; getPseudoColumns(%1$s, %2$s, %3$s, %4$s)", catalog, schemaPattern,
                                       tableNamePattern, columnNamePattern));
-        } catch (final SQLFeatureNotSupportedException sqlfnse) {
+        } catch (SQLFeatureNotSupportedException | SQLSyntaxErrorException sqlfnse) {
             log.log(Level.WARNING,
                     String.format("not supported; getPseudoColumns(%1$s, %2$s, %3$s, %4$s)", catalog, schemaPattern,
                                   tableNamePattern, columnNamePattern),
@@ -774,7 +773,7 @@ public class Context {
                 return bind(results, Schema.class, collection);
             }
             log.warning("null returned; getSchemas()");
-        } catch (final SQLFeatureNotSupportedException sqlfnse) {
+        } catch (SQLFeatureNotSupportedException | SQLSyntaxErrorException sqlfnse) {
             log.log(Level.WARNING, "not supported; getSchemas()", sqlfnse);
         }
         return collection;
@@ -802,7 +801,7 @@ public class Context {
                 return bind(results, Schema.class, collection);
             }
             log.warning(String.format("null returned; getSchemas(%1$s, %2$s)", catalog, schemaPattern));
-        } catch (final SQLFeatureNotSupportedException sqlfnse) {
+        } catch (SQLFeatureNotSupportedException | SQLSyntaxErrorException sqlfnse) {
             log.log(Level.WARNING,
                     String.format("not supported; getSchemas(%1$s, %2$s)", catalog, schemaPattern),
                     sqlfnse);
@@ -835,7 +834,7 @@ public class Context {
             }
             log.warning(String.format("null returned; getSuperTables(%1$s, %2$s, %3$s)", catalog, schemaPattern,
                                       tableNamePattern));
-        } catch (final SQLFeatureNotSupportedException sqlfnse) {
+        } catch (SQLFeatureNotSupportedException | SQLSyntaxErrorException sqlfnse) {
             log.log(Level.WARNING,
                     String.format("not supported; getSuperTables(%1$s, %2$s, %3$s)", catalog, schemaPattern,
                                   tableNamePattern),
@@ -869,7 +868,7 @@ public class Context {
                 return bind(results, SuperType.class, collection);
             }
             log.warning(String.format("getSuperTypes(%1$s, %2$s, %3$S)", catalog, schemaPattern, typeNamePattern));
-        } catch (final SQLFeatureNotSupportedException sqlfnse) {
+        } catch (SQLFeatureNotSupportedException | SQLSyntaxErrorException sqlfnse) {
             log.log(Level.WARNING,
                     String.format("getSuperTypes(%1$s, %2$s, %3$S)", catalog, schemaPattern, typeNamePattern),
                     sqlfnse);
@@ -902,7 +901,7 @@ public class Context {
             }
             log.warning(String.format("null returned; getTablePrivileges(%1$s, %2$s, %3$s)", catalog, schemaPattern,
                                       tableNamePattern));
-        } catch (final SQLFeatureNotSupportedException sqlfnse) {
+        } catch (SQLFeatureNotSupportedException | SQLSyntaxErrorException sqlfnse) {
             log.log(Level.WARNING,
                     String.format("not supported; getTablePrivileges(%1$s, %2$s, %3$s)", catalog, schemaPattern,
                                   tableNamePattern),
@@ -928,7 +927,7 @@ public class Context {
                 return bind(results, TableType.class, collection);
             }
             log.warning("null returned; getTableTypes()");
-        } catch (final SQLFeatureNotSupportedException sqlfnse) {
+        } catch (SQLFeatureNotSupportedException | SQLSyntaxErrorException sqlfnse) {
             log.log(Level.WARNING, "not supported; getTableTypes()", sqlfnse);
         }
         return collection;
@@ -962,7 +961,7 @@ public class Context {
             }
             log.warning(String.format("null returned; getTables(%1$s, %2$s, %3$s, %4$s)", catalog, schemaPattern,
                                       tableNamePattern, Arrays.toString(types)));
-        } catch (final SQLFeatureNotSupportedException sqlfnse) {
+        } catch (SQLFeatureNotSupportedException | SQLSyntaxErrorException sqlfnse) {
             log.log(Level.WARNING,
                     String.format("not supported; getTables(%1$s, %2$s, %3$s, %4$s)", catalog, schemaPattern,
                                   tableNamePattern, Arrays.toString(types)),
@@ -987,7 +986,7 @@ public class Context {
                 return bind(results, TypeInfo.class, collection);
             }
             log.warning("null returned; getTypeInfo()");
-        } catch (final SQLFeatureNotSupportedException sqlfnse) {
+        } catch (SQLFeatureNotSupportedException | SQLSyntaxErrorException sqlfnse) {
             log.log(Level.WARNING, "not supported; getTypeInfo()", sqlfnse);
         }
         return collection;
@@ -1020,7 +1019,7 @@ public class Context {
             }
             log.warning(String.format("null returned; getUDTs(%1$s, %2$s, %3$s, %4$s)", catalog, schemaPattern,
                                       typeNamePattern, Arrays.toString(types)));
-        } catch (final SQLFeatureNotSupportedException sqlfnse) {
+        } catch (SQLFeatureNotSupportedException | SQLSyntaxErrorException sqlfnse) {
             log.log(Level.WARNING,
                     String.format("not supported; getUDTs(%1$s, %2$s, %3$s, %4$s)", catalog, schemaPattern,
                                   typeNamePattern, Arrays.toString(types)),
@@ -1053,7 +1052,7 @@ public class Context {
                 return bind(results, VersionColumn.class, collection);
             }
             log.warning(String.format("null returned; getVersionColumns(%1$s, %2$s, %3$s)", catalog, schema, table));
-        } catch (final SQLFeatureNotSupportedException sqlfnse) {
+        } catch (SQLFeatureNotSupportedException | SQLSyntaxErrorException sqlfnse) {
             log.log(Level.WARNING,
                     String.format("not supported; getVersionColumns(%1$s, %2$s, %3$s)", catalog, schema, table),
                     sqlfnse);
@@ -1077,7 +1076,7 @@ public class Context {
         value.setType(type);
         try {
             value.setValue(databaseMetaData.deletesAreDetected(value.getType()));
-        } catch (final SQLFeatureNotSupportedException sqlfnse) {
+        } catch (SQLFeatureNotSupportedException | SQLSyntaxErrorException sqlfnse) {
             log.warning(String.format("not supported; deletesAreDetected(%1$d)", type));
         }
         return value;
@@ -1099,7 +1098,7 @@ public class Context {
         value.setType(type);
         try {
             value.setValue(databaseMetaData.insertsAreDetected(value.getType()));
-        } catch (final SQLFeatureNotSupportedException sqlfnse) {
+        } catch (SQLFeatureNotSupportedException | SQLSyntaxErrorException sqlfnse) {
             log.warning(String.format("not supported; insertsAreDetected(%1$d)", type));
         }
         return value;
@@ -1121,7 +1120,7 @@ public class Context {
         value.setType(type);
         try {
             value.setValue(databaseMetaData.updatesAreDetected(value.getType()));
-        } catch (final SQLFeatureNotSupportedException sqlfnse) {
+        } catch (SQLFeatureNotSupportedException | SQLSyntaxErrorException sqlfnse) {
             log.warning(String.format("not supported; updatesAreDetected(%1$d)", type));
         }
         return value;
@@ -1143,7 +1142,7 @@ public class Context {
         result.setType(type);
         try {
             result.setValue(databaseMetaData.othersDeletesAreVisible(result.getType()));
-        } catch (final SQLFeatureNotSupportedException sqlfnse) {
+        } catch (SQLFeatureNotSupportedException | SQLSyntaxErrorException sqlfnse) {
             log.warning(String.format("not supported; othersDeletesAreVisible(%1$d)", type));
         }
         return result;
@@ -1165,7 +1164,7 @@ public class Context {
         result.setType(type);
         try {
             result.setValue(databaseMetaData.othersInsertsAreVisible(result.getType()));
-        } catch (final SQLFeatureNotSupportedException sqlfnse) {
+        } catch (SQLFeatureNotSupportedException | SQLSyntaxErrorException sqlfnse) {
             log.warning(String.format("not supported; othersInsertsAreVisible(%1$d)", type));
         }
         return result;
@@ -1187,7 +1186,7 @@ public class Context {
         result.setType(type);
         try {
             result.setValue(databaseMetaData.othersUpdatesAreVisible(result.getType()));
-        } catch (final SQLFeatureNotSupportedException sqlfnse) {
+        } catch (SQLFeatureNotSupportedException | SQLSyntaxErrorException sqlfnse) {
             log.warning(String.format("not supported; othersUpdatesAreVisible(%1$d)", type));
         }
         return result;
@@ -1209,7 +1208,7 @@ public class Context {
         value.setType(type);
         try {
             value.setValue(databaseMetaData.ownDeletesAreVisible(value.getType()));
-        } catch (final SQLFeatureNotSupportedException sqlfnse) {
+        } catch (SQLFeatureNotSupportedException | SQLSyntaxErrorException sqlfnse) {
             log.warning(String.format("not supported; ownDeletesAreVisible(%1$d)", type));
         }
         return value;
@@ -1231,7 +1230,7 @@ public class Context {
         value.setType(type);
         try {
             value.setValue(databaseMetaData.ownInsertsAreVisible(value.getType()));
-        } catch (final SQLFeatureNotSupportedException sqlfnse) {
+        } catch (SQLFeatureNotSupportedException | SQLSyntaxErrorException sqlfnse) {
             log.warning(String.format("not supported; ownInsertsAreVisible(%1$d)", type));
         }
         return value;
@@ -1253,7 +1252,7 @@ public class Context {
         value.setType(type);
         try {
             value.setValue(databaseMetaData.ownUpdatesAreVisible(value.getType()));
-        } catch (final SQLFeatureNotSupportedException sqlfnse) {
+        } catch (SQLFeatureNotSupportedException | SQLSyntaxErrorException sqlfnse) {
             log.warning(String.format("not supported; ownUpdatesAreVisible(%1$d)", type));
         }
         return value;
@@ -1277,7 +1276,7 @@ public class Context {
         value.setToType(toType);
         try {
             value.setValue(databaseMetaData.supportsConvert(value.getFromType(), value.getToType()));
-        } catch (final SQLFeatureNotSupportedException sqlfnse) {
+        } catch (SQLFeatureNotSupportedException | SQLSyntaxErrorException sqlfnse) {
             log.warning(String.format("not supported; supportsConvert(%1$d, %2$d)", fromType, toType));
         }
         return value;
@@ -1303,7 +1302,7 @@ public class Context {
         value.setConcurrency(concurrency);
         try {
             value.setValue(databaseMetaData.supportsResultSetConcurrency(value.getType(), value.getConcurrency()));
-        } catch (final SQLFeatureNotSupportedException sqlfnse) {
+        } catch (SQLFeatureNotSupportedException | SQLSyntaxErrorException sqlfnse) {
             log.warning(String.format("not supported; supportsResultSetConcurrency(%1$d, %2$d)", type, concurrency));
         }
         return value;
@@ -1325,7 +1324,7 @@ public class Context {
         value.setHoldability(holdability);
         try {
             value.setValue(databaseMetaData.supportsResultSetHoldability(value.getHoldability()));
-        } catch (final SQLFeatureNotSupportedException sqlfnse) {
+        } catch (SQLFeatureNotSupportedException | SQLSyntaxErrorException sqlfnse) {
             log.warning(String.format("not supported; supportsResultSetHoldability(%1$d)", holdability));
         }
         return value;
@@ -1348,7 +1347,7 @@ public class Context {
         value.setType(type);
         try {
             value.setValue(databaseMetaData.supportsResultSetType(value.getType()));
-        } catch (final SQLFeatureNotSupportedException sqlfnse) {
+        } catch (SQLFeatureNotSupportedException | SQLSyntaxErrorException sqlfnse) {
             log.warning(String.format("not supported; supportsResultSetType(%1$d)", type));
         }
         return value;
@@ -1370,7 +1369,7 @@ public class Context {
         value.setLevel(level);
         try {
             value.setValue(databaseMetaData.supportsTransactionIsolationLevel(level));
-        } catch (final SQLFeatureNotSupportedException sqlfnse) {
+        } catch (SQLFeatureNotSupportedException | SQLSyntaxErrorException sqlfnse) {
             log.warning(String.format("not supported; supportsTransactionIsolationLevel(%1$d)", level));
         }
         return value;
@@ -1384,4 +1383,13 @@ public class Context {
     final DatabaseMetaData databaseMetaData;
 
     private final Map<Class<?>, Map<Field, ColumnLabel>> classesAndLabeledFields = new HashMap<>();
+
+    private void acceptSQLException(final SQLException sqle) {
+        if (suppressedSQLExceptionConsumer == null) {
+            return;
+        }
+        suppressedSQLExceptionConsumer.accept(sqle);
+    }
+
+    private Consumer<? super SQLException> suppressedSQLExceptionConsumer;
 }
