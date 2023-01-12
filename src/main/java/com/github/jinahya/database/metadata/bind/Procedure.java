@@ -73,7 +73,7 @@ public class Procedure
                     getProcedureSchem(),
                     getProcedureName(),
                     "%",
-                    getProcedureColumns()
+                    getProcedureColumns()::add
             );
             for (final ProcedureColumn procedureColumn : getProcedureColumns()) {
                 procedureColumn.retrieveChildren(context);

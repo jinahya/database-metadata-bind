@@ -83,7 +83,7 @@ public class Catalog
     @Override
     public void retrieveChildren(final Context context) throws SQLException {
         {
-            context.getSchemas(getTableCat(), "%", getSchemas());
+            context.getSchemas(getTableCat(), "%", getSchemas()::add);
             if (getSchemas().isEmpty()) {
                 getSchemas().add(Schema.newVirtualInstance(getTableCat()));
             }

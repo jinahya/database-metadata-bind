@@ -98,37 +98,37 @@ public class Schema
     @Override
     public void retrieveChildren(final Context context) throws SQLException {
         {
-            context.getFunctions(getTableCatalog(), getTableSchem(), "%", getFunctions());
+            context.getFunctions(getTableCatalog(), getTableSchem(), "%", getFunctions()::add);
             for (final Function function : getFunctions()) {
                 function.retrieveChildren(context);
             }
         }
         {
-            context.getProcedures(getTableCatalog(), getTableSchem(), "%", getProcedures());
+            context.getProcedures(getTableCatalog(), getTableSchem(), "%", getProcedures()::add);
             for (final Procedure procedure : getProcedures()) {
                 procedure.retrieveChildren(context);
             }
         }
         {
-            context.getSuperTables(getTableCatalog(), getTableSchem(), "%", getSuperTables());
+            context.getSuperTables(getTableCatalog(), getTableSchem(), "%", getSuperTables()::add);
             for (final SuperTable superTable : getSuperTables()) {
                 superTable.retrieveChildren(context);
             }
         }
         {
-            context.getSuperTypes(getTableCatalog(), getTableSchem(), "%", getSuperTypes());
+            context.getSuperTypes(getTableCatalog(), getTableSchem(), "%", getSuperTypes()::add);
             for (final SuperType superType : getSuperTypes()) {
                 superType.retrieveChildren(context);
             }
         }
         {
-            context.getTables(getTableCatalog(), getTableSchem(), "%", null, getTables());
+            context.getTables(getTableCatalog(), getTableSchem(), "%", null, getTables()::add);
             for (final Table table : getTables()) {
                 table.retrieveChildren(context);
             }
         }
         {
-            context.getUDTs(getTableCatalog(), getTableSchem(), "%", null, getUDTs());
+            context.getUDTs(getTableCatalog(), getTableSchem(), "%", null, getUDTs()::add);
             for (final UDT udt : getUDTs()) {
                 udt.retrieveChildren(context);
             }

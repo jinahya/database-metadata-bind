@@ -62,10 +62,10 @@ public class UDT
     @Override
     public void retrieveChildren(final Context context) throws SQLException {
         {
-            context.getAttributes(getTypeCat(), getTypeSchem(), getTypeName(), "%", getAttributes());
-            for (final Attribute attribute : getAttributes()) {
-                attribute.retrieveChildren(context);
-            }
+//            context.getAttributes(getTypeCat(), getTypeSchem(), getTypeName(), "%", this::getAttributes::add);
+//            for (final Attribute attribute : getAttributes()) {
+//                attribute.retrieveChildren(context);
+//            }
         }
     }
 

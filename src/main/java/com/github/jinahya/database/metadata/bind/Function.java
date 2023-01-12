@@ -125,7 +125,7 @@ public class Function
                     getFunctionSchem(),
                     getFunctionName(),
                     "%",
-                    getFunctionColumns()
+                    getFunctionColumns()::add
             );
             for (final FunctionColumn functionColumn : getFunctionColumns()) {
                 functionColumn.retrieveChildren(context);

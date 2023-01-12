@@ -21,6 +21,7 @@ package com.github.jinahya.database.metadata.bind;
  */
 
 import lombok.extern.slf4j.Slf4j;
+import org.junit.jupiter.api.Disabled;
 
 import java.sql.Connection;
 import java.sql.SQLException;
@@ -57,5 +58,23 @@ class MemoryHsqlTest extends MemoryTest {
     Context context(Connection connection) throws SQLException {
         return super.context(connection)
                 ;
+    }
+
+    @Disabled("feature not supported")
+    @Override
+    void getSchemas__() throws Exception {
+        super.getSchemas__();
+    }
+
+    @Disabled("feature not supported")
+    @Override
+    void getTables__() throws Exception {
+        super.getTables__();
+    }
+
+    @Disabled("feature not supported")
+    @Override
+    void getPseudoColumns__() throws Exception {
+        super.getPseudoColumns__();
     }
 }

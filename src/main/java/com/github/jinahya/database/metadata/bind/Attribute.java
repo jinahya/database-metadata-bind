@@ -34,7 +34,6 @@ import javax.xml.bind.annotation.XmlRootElement;
 import java.sql.DatabaseMetaData;
 import java.sql.SQLException;
 import java.util.Collection;
-import java.util.Comparator;
 import java.util.Objects;
 
 /**
@@ -52,12 +51,6 @@ public class Attribute
                    ChildOf<UDT> {
 
     private static final long serialVersionUID = 1913681105410440186L;
-
-    public static final Comparator<Attribute> COMPARATOR
-            = Comparator.comparing(Attribute::getTypeCat, Comparator.nullsFirst(Comparator.naturalOrder()))
-            .thenComparing(Attribute::getTypeSchem, Comparator.nullsFirst(Comparator.naturalOrder()))
-            .thenComparing(Attribute::getTypeName)
-            .thenComparing(Attribute::getOrdinalPosition);
 
     /**
      * Constants for nullabilities of attributes.

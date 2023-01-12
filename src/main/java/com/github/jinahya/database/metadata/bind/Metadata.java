@@ -59,7 +59,8 @@ public class Metadata {
         instance.ownUpdatesAreVisible = OwnUpdatesAreVisible.getAllInstances(context, new ArrayList<>());
         // -------------------------------------------------------------------------------------------------------------
         {
-            instance.catalogs = context.collectCatalogs(new ArrayList<>());
+            instance.catalogs = new ArrayList<>();
+            context.getCatalogs(instance.catalogs::add);
             if (instance.catalogs.isEmpty()) {
                 instance.catalogs.add(Catalog.newVirtualInstance());
             }
@@ -68,7 +69,8 @@ public class Metadata {
             }
         }
         {
-            instance.clientInfoProperties = context.getClientInfoProperties(new ArrayList<>());
+            instance.clientInfoProperties = new ArrayList<>();
+            context.getClientInfoProperties(instance.clientInfoProperties::add);
             for (final ClientInfoProperty each : instance.clientInfoProperties) {
                 each.retrieveChildren(context);
             }
@@ -90,7 +92,7 @@ public class Metadata {
                 = SupportsTransactionIsolationLevel.getAllInstances(context, new ArrayList<>());
         // -------------------------------------------------------------------------------------------------------------
         {
-            instance.tableTypes = context.getTableTypes(new ArrayList<>());
+            instance.tableTypes = context.getTableTypes();
             for (final TableType each : instance.tableTypes) {
                 each.retrieveChildren(context);
             }

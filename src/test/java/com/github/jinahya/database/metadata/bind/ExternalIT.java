@@ -25,6 +25,7 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.condition.EnabledIfSystemProperty;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import static java.sql.DriverManager.getConnection;
 
@@ -55,7 +56,8 @@ class ExternalIT {
             log.info("connected: {}", connection);
             final var context = Context.newInstance(connection);
             {
-                final var catalogs = context.collectCatalogs(new ArrayList<>());
+                final List<Catalog> catalogs = new ArrayList<>();
+                context.getCatalogs(catalogs::add);
                 final var name = "catalogs";
                 _XmlBindingTestUtils.test(context, name, Catalog.class, catalogs);
                 _JsonBindingTestUtils.test(Catalog.class, catalogs);

@@ -42,10 +42,11 @@ import static org.assertj.core.api.Assertions.assertThat;
 final class ContextTestUtils {
 
     static void writeCatalogs(final Context context) throws SQLException, JAXBException {
-        final var catalogs = context.collectCatalogs(new ArrayList<>());
+        final var catalogs = new ArrayList<>();
+        context.getCatalogs(catalogs::add);
         final String pathname = TestUtils.getFilenamePrefix(context) + " - catalogs.xml";
         final File target = Paths.get("target", pathname).toFile();
-        Wrapper.marshalFormatted(Catalog.class, catalogs, target);
+//        Wrapper.marshalFormatted(Catalog.class, catalogs, target);
     }
 
     static void writeDeletesAreDetected(final Context context) throws SQLException, JAXBException {
@@ -63,7 +64,8 @@ final class ContextTestUtils {
         assert context != null;
         final List<Function> functions;
         try {
-            functions = context.getFunctions(null, null, "%", new ArrayList<>());
+            functions = new ArrayList<>();
+            context.getFunctions(null, null, "%", functions::add);
         } catch (final SQLFeatureNotSupportedException sqlfnse) {
             log.error("not supported; getFunctions", sqlfnse);
             return;
@@ -82,7 +84,8 @@ final class ContextTestUtils {
         }
         final List<FunctionColumn> functionColumns;
         try {
-            functionColumns = context.getFunctionColumns(null, null, "%", "%", new ArrayList<>());
+            functionColumns = new ArrayList<>();
+            context.getFunctionColumns(null, null, "%", "%", functionColumns::add);
         } catch (final SQLFeatureNotSupportedException sqlfnse) {
             log.error("not supported; getFunctionColumns", sqlfnse);
             return;
@@ -165,7 +168,8 @@ final class ContextTestUtils {
     static void writeProcedures(final Context context) throws SQLException, JAXBException {
         final List<Procedure> procedures;
         try {
-            procedures = context.getProcedures(null, null, "%", new ArrayList<>());
+            procedures = new ArrayList<>();
+            context.getProcedures(null, null, "%", procedures::add);
         } catch (final SQLFeatureNotSupportedException slqfnse) {
             log.error("not supported; getProcedures", slqfnse);
             return;
@@ -179,7 +183,7 @@ final class ContextTestUtils {
                     procedure.getProcedureSchem(),
                     procedure.getProcedureName(),
                     "%",
-                    procedure.getProcedureColumns()
+                    procedure.getProcedureColumns()::add
             );
             for (final var procedureColumn : procedure.getProcedureColumns()) {
 //                assertThat(procedureColumn)
@@ -194,7 +198,7 @@ final class ContextTestUtils {
     }
 
     static void writeSchemas(final Context context) throws SQLException, JAXBException {
-        final List<Schema> schemas = context.getSchemas((String) null, null, new ArrayList<>());
+        final List<Schema> schemas = context.getSchemas((String) null, null);
         final String pathname = TestUtils.getFilenamePrefix(context) + " - schemas.xml";
         final File target = Paths.get("target", pathname).toFile();
         Wrapper.marshalFormatted(Schema.class, schemas, target);
@@ -211,7 +215,7 @@ final class ContextTestUtils {
     }
 
     static void writeTables(final Context context) throws SQLException, JAXBException {
-        final List<Table> tables = context.getTables(null, null, "%", null, new ArrayList<>());
+        final List<Table> tables = context.getTables(null, null, "%", null);
         for (final var table : tables) {
             table.retrieveChildren(context);
         }
@@ -221,7 +225,7 @@ final class ContextTestUtils {
     }
 
     static void writeTypeInfo(final Context context) throws SQLException, JAXBException {
-        final List<TypeInfo> typeInfo = context.getTypeInfo(new ArrayList<>());
+        final List<TypeInfo> typeInfo = context.getTypeInfo();
         final String pathname = TestUtils.getFilenamePrefix(context) + " - typeInfo.xml";
         final File target = Paths.get("target", pathname).toFile();
         Wrapper.marshalFormatted(TypeInfo.class, typeInfo, target);

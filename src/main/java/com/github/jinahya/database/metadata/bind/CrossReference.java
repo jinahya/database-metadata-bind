@@ -74,7 +74,7 @@ public class CrossReference
                 foreignTable.getTableCat(),
                 foreignTable.getTableSchem(),
                 foreignTable.getTableName(),
-                collection
+                collection::add
         );
     }
 
@@ -106,7 +106,7 @@ public class CrossReference
             throws SQLException {
         Objects.requireNonNull(context, "context is null");
         final List<Table> tables = context.getTables(
-                catalog, schemaPattern, tableNamePattern, types, new ArrayList<>());
+                catalog, schemaPattern, tableNamePattern, types);
         for (final Table parentTable : tables) {
             for (final Table foreignTable : tables) {
                 get(context, parentTable, foreignTable, collection);

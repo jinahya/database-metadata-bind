@@ -40,6 +40,7 @@ import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlElementRef;
 import javax.xml.bind.annotation.XmlRootElement;
 import java.sql.SQLException;
+import java.sql.SQLFeatureNotSupportedException;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Comparator;
@@ -117,14 +118,14 @@ public class Table
         {
             for (final BestRowIdentifierCategory category : BestRowIdentifierCategory._VALUES) {
                 final CategorizedBestRowIdentifiers categorized = CategorizedBestRowIdentifiers.of(category);
-                context.getBestRowIdentifier(
-                        getTypeCat(),
-                        getTableSchem(),
-                        getTableName(),
-                        category.getScope(),
-                        category.isNullable(),
-                        categorized.getBestRowIdentifiers()
-                );
+//                context.getBestRowIdentifier(
+//                        getTypeCat(),
+//                        getTableSchem(),
+//                        getTableName(),
+//                        category.getScope(),
+//                        category.isNullable(),
+//                        categorized.getBestRowIdentifiers()
+//                );
                 for (final BestRowIdentifier identifier : categorized.getBestRowIdentifiers()) {
                     identifier.retrieveChildren(context);
                 }
@@ -137,7 +138,7 @@ public class Table
                     getTableSchem(),
                     getTableName(),
                     "%",
-                    getColumns());
+                    getColumns()::add);
             for (final Column column : getColumns()) {
                 column.retrieveChildren(context);
             }
@@ -148,7 +149,7 @@ public class Table
                     getTableSchem(),
                     getTableName(),
                     "%",
-                    getColumnPrivileges()
+                    getColumnPrivileges()::add
             );
             for (final ColumnPrivilege columnPrivilege : getColumnPrivileges()) {
                 columnPrivilege.retrieveChildren(context);
@@ -159,7 +160,7 @@ public class Table
                     getTableCat(),
                     getTableSchem(),
                     getTableName(),
-                    getExportedKeys()
+                    getExportedKeys()::add
             );
             for (final ExportedKey exportedKey : getExportedKeys()) {
                 exportedKey.retrieveChildren(context);
@@ -170,7 +171,7 @@ public class Table
                     getTableCat(),
                     getTableSchem(),
                     getTableName(),
-                    getImportedKeys()
+                    getImportedKeys()::add
             );
             for (final ImportedKey importedKey : getImportedKeys()) {
                 importedKey.retrieveChildren(context);
@@ -185,7 +186,7 @@ public class Table
                         getTableName(),
                         category.isUnique(),
                         category.isApproximate(),
-                        categorized.getIndexInfo()
+                        categorized.getIndexInfo()::add
                 );
                 for (final IndexInfo indexInfo : categorized.getIndexInfo()) {
                     indexInfo.retrieveChildren(context);
@@ -198,30 +199,31 @@ public class Table
                     getTableCat(),
                     getTableSchem(),
                     getTableName(),
-                    getPrimaryKeys()
+                    getPrimaryKeys()::add
             );
             for (final PrimaryKey primaryKey : getPrimaryKeys()) {
                 primaryKey.retrieveChildren(context);
             }
         }
-        {
+        try {
             context.getPseudoColumns(
                     getTableCat(),
                     getTableSchem(),
                     getTableName(),
                     "%",
-                    getPseudoColumns()
+                    getPseudoColumns()::add
             );
             for (final PseudoColumn pseudoColumn : getPseudoColumns()) {
                 pseudoColumn.retrieveChildren(context);
             }
+        } catch (final SQLFeatureNotSupportedException sqlfnse) {
         }
         if (false) {
             context.getTablePrivileges(
                     getTableCat(),
                     getTableSchem(),
                     getTableName(),
-                    getTablePrivileges()
+                    getTablePrivileges()::add
             );
             for (final TablePrivilege tablePrivilege : getTablePrivileges()) {
                 tablePrivilege.retrieveChildren(context);
@@ -232,7 +234,7 @@ public class Table
                     getTableCat(),
                     getTableSchem(),
                     getTableName(),
-                    getVersionColumns()
+                    getVersionColumns()::add
             );
             for (final VersionColumn versionColumn : getVersionColumns()) {
                 versionColumn.table = this;

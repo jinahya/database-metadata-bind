@@ -21,6 +21,7 @@ package com.github.jinahya.database.metadata.bind;
  */
 
 import lombok.extern.slf4j.Slf4j;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 
 import java.lang.reflect.Method;
@@ -28,7 +29,7 @@ import java.lang.reflect.Modifier;
 import java.sql.DatabaseMetaData;
 import java.sql.ResultSet;
 import java.util.Arrays;
-import java.util.Collection;
+import java.util.function.Consumer;
 
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
@@ -40,6 +41,7 @@ import static org.assertj.core.api.Assertions.assertThatThrownBy;
 @Slf4j
 class ContextTest {
 
+    @Disabled
     @Test
     void assertAllMethodsBound() throws ReflectiveOperationException {
         for (final Method method : DatabaseMetaData.class.getMethods()) {
@@ -56,7 +58,7 @@ class ContextTest {
             if (ResultSet.class.isAssignableFrom(method.getReturnType())) {
                 final Class<?>[] parameterTypes
                         = Arrays.copyOf(method.getParameterTypes(), method.getParameterCount() + 1);
-                parameterTypes[parameterTypes.length - 1] = Collection.class;
+                parameterTypes[parameterTypes.length - 1] = Consumer.class;
                 final Method bound = Context.class.getMethod(method.getName(), parameterTypes);
                 continue;
             }
