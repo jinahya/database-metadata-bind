@@ -24,9 +24,6 @@ import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.condition.EnabledIfSystemProperty;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import static java.sql.DriverManager.getConnection;
 
 /**
@@ -55,12 +52,7 @@ class ExternalIT {
         try (var connection = getConnection(url, user, password)) {
             log.info("connected: {}", connection);
             final var context = Context.newInstance(connection);
-            {
-                final List<Catalog> catalogs = new ArrayList<>();
-                context.getCatalogs(catalogs::add);
-                final var name = "catalogs";
-            }
-//            ContextTestUtils.writeFiles(context);
+            final var catalogs = context.getCatalogs();
         }
     }
 }
