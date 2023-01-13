@@ -27,18 +27,14 @@ import lombok.NoArgsConstructor;
 import lombok.ToString;
 import lombok.experimental.SuperBuilder;
 
-import javax.xml.bind.annotation.XmlRootElement;
 import java.sql.DatabaseMetaData;
-import java.util.Collection;
 
 /**
  * An abstract class for binding the result of {@link DatabaseMetaData#getExportedKeys(String, String, String)} method.
  *
  * @author Jin Kwon &lt;jinahya_at_gmail.com&gt;
- * @see Context#getExportedKeys(String, String, String, Collection)
  * @see ImportedKey
  */
-@XmlRootElement
 @Data
 @EqualsAndHashCode(callSuper = true)
 @ToString(callSuper = true)

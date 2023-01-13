@@ -25,13 +25,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.experimental.SuperBuilder;
 
-import javax.xml.bind.annotation.XmlAttribute;
-import javax.xml.bind.annotation.XmlRootElement;
-import javax.xml.bind.annotation.XmlValue;
 import java.sql.DatabaseMetaData;
-import java.sql.SQLException;
-import java.util.Collection;
-import java.util.Objects;
 
 /**
  * A class for binding results of {@link DatabaseMetaData#supportsResultSetHoldability(int)} method.
@@ -39,7 +33,6 @@ import java.util.Objects;
  * @author Jin Kwon &lt;onacit_at_gmail.com&gt;
  * @see Context#supportsResultSetHoldability(int)
  */
-@XmlRootElement
 @Data
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @SuperBuilder(toBuilder = true)
@@ -48,39 +41,7 @@ public class SupportsResultSetHoldability
 
     private static final long serialVersionUID = -4927096350529087348L;
 
-    /**
-     * Invokes {@link Context#supportsResultSetHoldability(int)} method for all holdabilities and adds bound values to
-     * specified collection.
-     *
-     * @param context    a context.
-     * @param collection the collection to which bound values are added.
-     * @param <C>        the type of {@code collection}
-     * @return given {@code collection}.
-     * @throws SQLException if a database error occurs.
-     */
-    public static <C extends Collection<? super SupportsResultSetHoldability>> C getAllInstances(
-            final Context context, final C collection)
-            throws SQLException {
-        Objects.requireNonNull(context, "context is null");
-        for (final ResultSetHoldability value : ResultSetHoldability.values()) {
-            collection.add(context.supportsResultSetHoldability(value.rawValue()));
-        }
-        return collection;
-    }
-
-    @Override
-    public void retrieveChildren(Context context) throws SQLException {
-        // no children
-    }
-
-    @XmlAttribute(required = false)
-    public ResultSetHoldability getHoldabilityAsEnum() {
-        return ResultSetHoldability.valueOfRawValue(getHoldability());
-    }
-
-    @XmlAttribute(required = true)
     private int holdability;
 
-    @XmlValue
     private Boolean value;
 }

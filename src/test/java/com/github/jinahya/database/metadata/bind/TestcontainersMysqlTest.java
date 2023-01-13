@@ -4,7 +4,7 @@ package com.github.jinahya.database.metadata.bind;
  * #%L
  * database-metadata-bind
  * %%
- * Copyright (C) 2011 - 2021 Jinahya, Inc.
+ * Copyright (C) 2011 - 2019 Jinahya, Inc.
  * %%
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -20,9 +20,15 @@ package com.github.jinahya.database.metadata.bind;
  * #L%
  */
 
-class BestRowIdentifier_PseudoColumnTest extends IntFieldEnumTest<BestRowIdentifier.PseudoColumn> {
+import lombok.extern.slf4j.Slf4j;
 
-    BestRowIdentifier_PseudoColumnTest() {
-        super(BestRowIdentifier.PseudoColumn.class);
-    }
+@Slf4j
+class TestcontainersMysqlTest
+        extends TestcontainersTest {
+
+    private static final String URL = "jdbc:tc:mysql:5.7.39:///ignorant?TC_DAEMON=true";
+
+    private static final String USER = "root";
+
+    private static final String PASSWORD = "test";
 }

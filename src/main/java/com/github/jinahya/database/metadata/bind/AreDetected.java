@@ -20,7 +20,6 @@ package com.github.jinahya.database.metadata.bind;
  * #L%
  */
 
-import jakarta.json.bind.annotation.JsonbProperty;
 import lombok.AccessLevel;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
@@ -28,25 +27,16 @@ import lombok.NoArgsConstructor;
 import lombok.ToString;
 import lombok.experimental.SuperBuilder;
 
-import javax.xml.bind.annotation.XmlAttribute;
-import javax.xml.bind.annotation.XmlSeeAlso;
-import javax.xml.bind.annotation.XmlValue;
 import java.io.Serializable;
-import java.sql.SQLException;
 
 /**
- * An abstract class for binding results of {@code DatabaseMetaData#...AreDetected(int)} method.
+ * An abstract class for binding the result of {@code DatabaseMetaData#(delete|insert|update)sAreDetected(int)} method.
  *
  * @author Jin Kwon &lt;onacit_at_gmail.com&gt;
  * @see DeletesAreDetected
  * @see InsertsAreDetected
  * @see UpdatesAreDetected
  */
-@XmlSeeAlso({
-        DeletesAreDetected.class,
-        InsertsAreDetected.class,
-        UpdatesAreDetected.class
-})
 @Data
 @EqualsAndHashCode
 @ToString(callSuper = true)
@@ -58,25 +48,7 @@ public abstract class AreDetected
 
     private static final long serialVersionUID = 7505598364855010122L;
 
-    @Override
-    public void retrieveChildren(Context context) throws SQLException {
-        // no children.
-    }
-
-    @JsonbProperty
-    @XmlAttribute(required = false)
-    public ResultSetType getTypeAsEnum() {
-        return ResultSetType.valueOfRawValue(getType());
-    }
-
-//    @XmlAttribute(required = false)
-//    public String getTypeName() {
-//        return ResultSetType.valueOfRawValue(getType()).name();
-//    }
-
-    @XmlAttribute(required = true)
     private int type;
 
-    @XmlValue
     private Boolean value;
 }

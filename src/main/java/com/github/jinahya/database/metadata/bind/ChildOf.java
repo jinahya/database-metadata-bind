@@ -20,9 +20,6 @@ package com.github.jinahya.database.metadata.bind;
  * #L%
  */
 
-import javax.validation.constraints.NotNull;
-
 public interface ChildOf<T extends MetadataType> {
 
-    @NotNull T extractParent();
 }

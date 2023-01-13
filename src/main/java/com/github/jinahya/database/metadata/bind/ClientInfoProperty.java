@@ -22,43 +22,28 @@ package com.github.jinahya.database.metadata.bind;
 
 import lombok.Data;
 
-import javax.xml.bind.annotation.XmlElement;
-import javax.xml.bind.annotation.XmlRootElement;
 import java.sql.DatabaseMetaData;
-import java.sql.SQLException;
-import java.util.Collection;
 
 /**
- * A class for binding the result of {@link DatabaseMetaData#getClientInfoProperties()} method.
+ * A class for binding results of the {@link DatabaseMetaData#getClientInfoProperties()} method.
  *
  * @author Jin Kwon &lt;jinahya_at_gmail.com&gt;
- * @see Context#getClientInfoProperties(Collection)
  */
-@XmlRootElement
 @Data
 public class ClientInfoProperty
         implements MetadataType {
 
     private static final long serialVersionUID = -2913230435651853254L;
 
-    @Override
-    public void retrieveChildren(final Context context) throws SQLException {
-        // no children.
-    }
-
-    @XmlElement(required = true)
-    @Label("NAME")
+    @ColumnLabel("NAME")
     private String name;
 
-    @XmlElement(required = true)
-    @Label("MAX_LEN")
+    @ColumnLabel("MAX_LEN")
     private int maxLen;
 
-    @XmlElement(required = true)
-    @Label("DEFAULT_VALUE")
+    @ColumnLabel("DEFAULT_VALUE")
     private String defaultValue;
 
-    @XmlElement(required = true)
-    @Label("DESCRIPTION")
+    @ColumnLabel("DESCRIPTION")
     private String description;
 }

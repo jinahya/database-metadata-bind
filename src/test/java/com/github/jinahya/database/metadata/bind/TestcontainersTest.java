@@ -20,19 +20,15 @@ package com.github.jinahya.database.metadata.bind;
  * #L%
  */
 
-/**
- * An interface for enums of field constants.
- *
- * @author Jin Kwon &lt;onacit at wemakeprice.com&gt;
- * @see FieldEnums
- * @see IntFieldEnum
- */
-interface FieldEnum<E extends Enum<E> & FieldEnum<E, T>, T> {
+import lombok.extern.slf4j.Slf4j;
 
-    /**
-     * Returns the raw value of this constant
-     *
-     * @return the raw value of this constant.
-     */
-    T rawValue();
+/**
+ * An abstract test class for testing with {@code testcontainers}.
+ *
+ * @author Jin Kwon &lt;onacit at gmail.com&gt;
+ * @see <a href="https://www.testcontainers.org/modules/databases/jdbc/">JDBC support</a>
+ */
+@Slf4j
+abstract class TestcontainersTest {
+
 }

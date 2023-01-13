@@ -25,15 +25,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.experimental.SuperBuilder;
 
-import javax.xml.bind.annotation.XmlAttribute;
-import javax.xml.bind.annotation.XmlRootElement;
-import javax.xml.bind.annotation.XmlTransient;
-import javax.xml.bind.annotation.XmlValue;
 import java.sql.DatabaseMetaData;
-import java.sql.JDBCType;
-import java.sql.SQLException;
-import java.util.Collection;
-import java.util.Objects;
 
 /**
  * A class for binding results of {@link DatabaseMetaData#supportsConvert(int, int)} method.
@@ -41,7 +33,6 @@ import java.util.Objects;
  * @author Jin Kwon &lt;onacit_at_gmail.com&gt;
  * @see Context#supportsConvert(int, int)
  */
-@XmlRootElement
 @Data
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @SuperBuilder(toBuilder = true)
@@ -50,63 +41,9 @@ public class SupportsConvert
 
     private static final long serialVersionUID = 9044839986850181341L;
 
-    /**
-     * Invokes {@link Context#supportsConvert(int, int)} method for all combinations of all types defined in
-     * {@link JDBCType} and adds bounds values to specified collection.
-     *
-     * @param context    a context.
-     * @param collection the collection to which bound values are added.
-     * @param <C>        the type of elements in the {@code collection}
-     * @return given {@code collection}.
-     * @throws SQLException if a database access error occurs.
-     */
-    public static <C extends Collection<? super SupportsConvert>> C getAllInstances(
-            final Context context, final C collection)
-            throws SQLException {
-        Objects.requireNonNull(context, "context is null");
-        Objects.requireNonNull(collection, "collection is null");
-        for (final JDBCType fromType : JDBCType.values()) {
-            for (final JDBCType toType : JDBCType.values()) {
-                if (false && toType == fromType) {
-                    continue;
-                }
-                collection.add(context.supportsConvert(fromType.getVendorTypeNumber(), toType.getVendorTypeNumber()));
-            }
-        }
-        return collection;
-    }
-
-    @Override
-    public void retrieveChildren(Context context) throws SQLException {
-        // no children.
-    }
-
-    @XmlTransient
-    public JDBCType getFromTypeAsEnum() {
-        return JDBCType.valueOf(getFromType());
-    }
-
-    @XmlAttribute(required = false)
-    public String getFromTypeName() {
-        return getFromTypeAsEnum().getName();
-    }
-
-    @XmlTransient
-    public JDBCType getToTypeAsEnum() {
-        return JDBCType.valueOf(getToType());
-    }
-
-    @XmlAttribute(required = false)
-    public String getToTypeName() {
-        return getToTypeAsEnum().getName();
-    }
-
-    @XmlAttribute(required = true)
     private int fromType;
 
-    @XmlAttribute(required = true)
     private int toType;
 
-    @XmlValue
     private Boolean value;
 }

@@ -1,17 +1,3 @@
-@JsonbNillable
-@XmlSchema(
-        attributeFormDefault = XmlNsForm.UNQUALIFIED,
-        elementFormDefault = XmlNsForm.QUALIFIED,
-        namespace = XmlConstants.NS_URI_DATABASE_METADATA_BIND,
-        xmlns = {
-                @XmlNs(prefix = XMLConstants.DEFAULT_NS_PREFIX,
-                       namespaceURI = XmlConstants.NS_URI_DATABASE_METADATA_BIND),
-//                @XmlNs(prefix = XmlConstants.NS_PREFIX_DATABASE_MEATDATA_BIND,
-//                       namespaceURI = XmlConstants.NS_URI_DATABASE_METADATA_BIND),
-                @XmlNs(prefix = "xsi", namespaceURI = XMLConstants.W3C_XML_SCHEMA_INSTANCE_NS_URI)
-        }
-)
-@XmlAccessorType(XmlAccessType.NONE)
 package com.github.jinahya.database.metadata.bind;
 
 /*-
@@ -33,12 +19,3 @@ package com.github.jinahya.database.metadata.bind;
  * limitations under the License.
  * #L%
  */
-
-import jakarta.json.bind.annotation.JsonbNillable;
-
-import javax.xml.XMLConstants;
-import javax.xml.bind.annotation.XmlAccessType;
-import javax.xml.bind.annotation.XmlAccessorType;
-import javax.xml.bind.annotation.XmlNs;
-import javax.xml.bind.annotation.XmlNsForm;
-import javax.xml.bind.annotation.XmlSchema;

@@ -25,20 +25,13 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.experimental.SuperBuilder;
 
-import javax.validation.constraints.NotBlank;
-import javax.xml.bind.annotation.XmlElement;
-import javax.xml.bind.annotation.XmlRootElement;
-import java.sql.SQLException;
-import java.util.Collection;
 import java.util.Comparator;
 
 /**
  * An entity class for binding the result of {@link java.sql.DatabaseMetaData#getTableTypes()}.
  *
  * @author Jin Kwon &lt;jinahya_at_gmail.com&gt;
- * @see Context#getTableTypes(Collection)
  */
-@XmlRootElement
 @Data
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @SuperBuilder(toBuilder = true)
@@ -49,13 +42,6 @@ public class TableType
 
     public static final Comparator<TableType> COMPARATOR = Comparator.comparing(TableType::getTableType);
 
-    @Override
-    public void retrieveChildren(final Context context) throws SQLException {
-        // no children.
-    }
-
-    @XmlElement(nillable = false, required = true)
-    @NotBlank
-    @Label("TABLE_TYPE")
+    @ColumnLabel("TABLE_TYPE")
     private String tableType;
 }

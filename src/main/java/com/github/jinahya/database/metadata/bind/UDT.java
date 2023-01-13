@@ -22,32 +22,16 @@ package com.github.jinahya.database.metadata.bind;
 
 import lombok.AccessLevel;
 import lombok.Data;
-import lombok.EqualsAndHashCode;
-import lombok.Getter;
 import lombok.NoArgsConstructor;
-import lombok.Setter;
-import lombok.ToString;
 import lombok.experimental.SuperBuilder;
 
-import javax.validation.Valid;
-import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.NotNull;
-import javax.xml.bind.annotation.XmlElement;
-import javax.xml.bind.annotation.XmlElementRef;
-import javax.xml.bind.annotation.XmlRootElement;
 import java.sql.DatabaseMetaData;
-import java.sql.SQLException;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.List;
 
 /**
  * A class for binding results of {@link DatabaseMetaData#getUDTs(String, String, String, int[])} method.
  *
  * @author Jin Kwon &lt;jinahya_at_gmail.com&gt;
- * @see Context#getUDTs(String, String, String, int[], Collection)
  */
-@XmlRootElement
 @ParentOf(Attribute.class)
 @Data
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
@@ -58,71 +42,27 @@ public class UDT
 
     private static final long serialVersionUID = 8665246093405057553L;
 
-    // -----------------------------------------------------------------------------------------------------------------
-    @Override
-    public void retrieveChildren(final Context context) throws SQLException {
-        {
-            context.getAttributes(getTypeCat(), getTypeSchem(), getTypeName(), "%", getAttributes());
-            for (final Attribute attribute : getAttributes()) {
-                attribute.retrieveChildren(context);
-            }
-        }
-    }
-
-    @Override
-    public Schema extractParent() {
-        return Schema.builder()
-                .tableCatalog(getTypeCat())
-                .tableSchem(getTypeSchem())
-                .build();
-    }
-
-    // -----------------------------------------------------------------------------------------------------------------
-    public List<Attribute> getAttributes() {
-        if (attributes == null) {
-            attributes = new ArrayList<>();
-        }
-        return attributes;
-    }
-
-    // -----------------------------------------------------------------------------------------------------------------
-    @XmlElement(nillable = true, required = true)
     @NullableBySpecification
-    @Label("TYPE_CAT")
+    @ColumnLabel("TYPE_CAT")
     private String typeCat;
 
-    @XmlElement(nillable = true, required = true)
     @NullableBySpecification
-    @Label("TYPE_SCHEM")
+    @ColumnLabel("TYPE_SCHEM")
     private String typeSchem;
 
-    @XmlElement(nillable = false, required = true)
-    @NotBlank
-    @Label("TYPE_NAME")
+    @ColumnLabel("TYPE_NAME")
     private String typeName;
 
-    @XmlElement(nillable = false, required = true)
-    @Label("CLASS_NAME")
+    @ColumnLabel("CLASS_NAME")
     private String className;
 
-    @XmlElement(nillable = false, required = true)
-    @Label("DATA_TYPE")
+    @ColumnLabel("DATA_TYPE")
     private int dataType;
 
-    @XmlElement(nillable = false, required = true)
-    @Label("REMARKS")
+    @ColumnLabel("REMARKS")
     private String remarks;
 
-    @XmlElement(nillable = true, required = true)
     @NullableBySpecification
-    @Label("BASE_TYPE")
+    @ColumnLabel("BASE_TYPE")
     private Integer baseType;
-
-    // -----------------------------------------------------------------------------------------------------------------
-    @XmlElementRef
-    @Setter(AccessLevel.NONE)
-    @Getter(AccessLevel.NONE)
-    @EqualsAndHashCode.Exclude
-    @ToString.Exclude
-    private List<@Valid @NotNull Attribute> attributes;
 }

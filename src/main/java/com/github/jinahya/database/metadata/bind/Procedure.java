@@ -22,33 +22,17 @@ package com.github.jinahya.database.metadata.bind;
 
 import lombok.AccessLevel;
 import lombok.Data;
-import lombok.EqualsAndHashCode;
-import lombok.Getter;
 import lombok.NoArgsConstructor;
-import lombok.Setter;
-import lombok.ToString;
 import lombok.experimental.SuperBuilder;
 
-import javax.validation.Valid;
-import javax.validation.constraints.NotNull;
-import javax.xml.bind.annotation.XmlElement;
-import javax.xml.bind.annotation.XmlElementRef;
-import javax.xml.bind.annotation.XmlRootElement;
 import java.sql.DatabaseMetaData;
-import java.sql.SQLException;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Comparator;
-import java.util.List;
 
 /**
  * A class for binding results of
  * {@link DatabaseMetaData#getProcedures(java.lang.String, java.lang.String, java.lang.String)}.
  *
  * @author Jin Kwon &lt;jinahya_at_gmail.com&gt;
- * @see Context#getProcedures(String, String, String, Collection)
  */
-@XmlRootElement
 @ParentOf(ProcedureColumn.class)
 @Data
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
@@ -59,75 +43,24 @@ public class Procedure
 
     private static final long serialVersionUID = -6262056388403934829L;
 
-    public static final Comparator<Procedure> COMPARATOR =
-            Comparator.comparing(Procedure::getProcedureCat, Comparator.nullsFirst(Comparator.naturalOrder()))
-                    .thenComparing(Procedure::getProcedureSchem, Comparator.nullsFirst(Comparator.naturalOrder()))
-                    .thenComparing(Procedure::getProcedureName)
-                    .thenComparing(Procedure::getSpecificName);
-
-    @Override
-    public void retrieveChildren(final Context context) throws SQLException {
-        {
-            context.getProcedureColumns(
-                    getProcedureCat(),
-                    getProcedureSchem(),
-                    getProcedureName(),
-                    "%",
-                    getProcedureColumns()
-            );
-            for (final ProcedureColumn procedureColumn : getProcedureColumns()) {
-                procedureColumn.retrieveChildren(context);
-            }
-        }
-    }
-
-    @Override
-    public Schema extractParent() {
-        return Schema.builder()
-                .tableCatalog(getProcedureCat())
-                .tableSchem(getProcedureSchem())
-                .build();
-    }
-
-    public List<ProcedureColumn> getProcedureColumns() {
-        if (procedureColumns == null) {
-            procedureColumns = new ArrayList<>();
-        }
-        return procedureColumns;
-    }
-
-    @XmlElement(nillable = true, required = true)
     @NullableBySpecification
-    @Label("PROCEDURE_CAT")
+    @ColumnLabel("PROCEDURE_CAT")
     private String procedureCat;
 
-    @XmlElement(nillable = true, required = true)
     @NullableBySpecification
-    @Label("PROCEDURE_SCHEM")
+    @ColumnLabel("PROCEDURE_SCHEM")
     private String procedureSchem;
 
-    @XmlElement(nillable = false, required = true)
-    @Label("PROCEDURE_NAME")
+    @ColumnLabel("PROCEDURE_NAME")
     private String procedureName;
 
-    @XmlElement(nillable = true, required = true)
     @NullableByVendor("HSQL")
-    @Label("REMARKS")
+    @ColumnLabel("REMARKS")
     private String remarks;
 
-    @XmlElement(nillable = false, required = true)
-    @Label("PROCEDURE_TYPE")
+    @ColumnLabel("PROCEDURE_TYPE")
     private short procedureType;
 
-    @XmlElement(nillable = false, required = true)
-    @Label("SPECIFIC_NAME")
+    @ColumnLabel("SPECIFIC_NAME")
     private String specificName;
-
-    // -----------------------------------------------------------------------------------------------------------------
-    @XmlElementRef
-    @Setter(AccessLevel.NONE)
-    @Getter(AccessLevel.NONE)
-    @EqualsAndHashCode.Exclude
-    @ToString.Exclude
-    private List<@Valid @NotNull ProcedureColumn> procedureColumns;
 }

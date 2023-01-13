@@ -28,14 +28,10 @@ import lombok.Setter;
 import lombok.ToString;
 import lombok.experimental.SuperBuilder;
 
-import javax.xml.bind.annotation.XmlAttribute;
-import javax.xml.bind.annotation.XmlSeeAlso;
-import javax.xml.bind.annotation.XmlValue;
 import java.io.Serializable;
-import java.sql.SQLException;
 
 /**
- * An abstract class for binding the result of {@code DatabaseMetaData#...DeletesAreVisible(int)} method.
+ * An abstract class for binding the result of {@code DatabaseMetaData#...sAreVisible(int)} method.
  *
  * @see OthersDeletesAreVisible
  * @see OthersInsertsAreVisible
@@ -44,14 +40,6 @@ import java.sql.SQLException;
  * @see OwnInsertsAreVisible
  * @see OwnUpdatesAreVisible
  */
-@XmlSeeAlso({
-        OthersDeletesAreVisible.class,
-        OthersInsertsAreVisible.class,
-        OthersUpdatesAreVisible.class,
-        OwnDeletesAreVisible.class,
-        OwnInsertsAreVisible.class,
-        OwnUpdatesAreVisible.class
-})
 @Setter
 @Getter
 @EqualsAndHashCode
@@ -64,19 +52,7 @@ public abstract class AreVisible
 
     private static final long serialVersionUID = -4539635096087360299L;
 
-    @Override
-    public void retrieveChildren(Context context) throws SQLException {
-        // no children.
-    }
-
-    @XmlAttribute(required = false)
-    public ResultSetType getTypeAsEnum() {
-        return ResultSetType.valueOfRawValue(getType());
-    }
-
-    @XmlAttribute(required = true)
     private int type;
 
-    @XmlValue
     private Boolean value;
 }

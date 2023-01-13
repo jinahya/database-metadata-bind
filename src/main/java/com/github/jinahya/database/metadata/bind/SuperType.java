@@ -25,20 +25,14 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.experimental.SuperBuilder;
 
-import javax.xml.bind.annotation.XmlElement;
-import javax.xml.bind.annotation.XmlRootElement;
 import java.sql.DatabaseMetaData;
-import java.sql.SQLException;
-import java.util.Collection;
 
 /**
  * A class for binding results of
  * {@link DatabaseMetaData#getSuperTypes(java.lang.String, java.lang.String, java.lang.String)} method.
  *
  * @author Jin Kwon &lt;jinahya_at_gmail.com&gt;
- * @see Context#getSuperTypes(String, String, String, Collection)
  */
-@XmlRootElement
 @Data
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @SuperBuilder(toBuilder = true)
@@ -48,60 +42,25 @@ public class SuperType
 
     private static final long serialVersionUID = 4603878785941565029L;
 
-    @Override
-    public void retrieveChildren(final Context context) throws SQLException {
-        // no children.
-    }
-
-    @Override
-    public Schema extractParent() {
-        return Schema.builder()
-                .tableCatalog(getTypeCat())
-                .tableSchem(getTypeSchem())
-                .build();
-    }
-
-    public UDT extractType() {
-        return UDT.builder()
-                .typeCat(getTypeCat())
-                .typeSchem(getTypeSchem())
-                .typeName(getTypeName())
-                .build();
-    }
-
-    public UDT extractSuperType() {
-        return UDT.builder()
-                .typeCat(getSupertypeCat())
-                .typeSchem(getSupertypeSchem())
-                .typeName(getSupertypeName())
-                .build();
-    }
-
-    @XmlElement(nillable = true, required = true)
     @NullableBySpecification
-    @Label("TYPE_CAT")
+    @ColumnLabel("TYPE_CAT")
     private String typeCat;
 
-    @XmlElement(nillable = true, required = true)
     @NullableBySpecification
-    @Label("TYPE_SCHEM")
+    @ColumnLabel("TYPE_SCHEM")
     private String typeSchem;
 
-    @XmlElement(nillable = false, required = true)
-    @Label("TYPE_NAME")
+    @ColumnLabel("TYPE_NAME")
     private String typeName;
 
-    @XmlElement(nillable = true, required = true)
     @NullableBySpecification
-    @Label("SUPERTYPE_CAT")
+    @ColumnLabel("SUPERTYPE_CAT")
     private String supertypeCat;
 
-    @XmlElement(nillable = true, required = true)
     @NullableBySpecification
-    @Label("SUPERTYPE_SCHEM")
+    @ColumnLabel("SUPERTYPE_SCHEM")
     private String supertypeSchem;
 
-    @XmlElement(nillable = false, required = true)
-    @Label("SUPERTYPE_NAME")
+    @ColumnLabel("SUPERTYPE_NAME")
     private String supertypeName;
 }

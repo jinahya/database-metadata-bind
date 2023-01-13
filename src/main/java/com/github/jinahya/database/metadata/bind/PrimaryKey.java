@@ -22,29 +22,16 @@ package com.github.jinahya.database.metadata.bind;
 
 import lombok.AccessLevel;
 import lombok.Data;
-import lombok.EqualsAndHashCode;
-import lombok.Getter;
 import lombok.NoArgsConstructor;
-import lombok.Setter;
-import lombok.ToString;
 import lombok.experimental.SuperBuilder;
 
-import javax.validation.Valid;
-import javax.xml.bind.annotation.XmlElement;
-import javax.xml.bind.annotation.XmlRootElement;
-import javax.xml.bind.annotation.XmlTransient;
 import java.sql.DatabaseMetaData;
-import java.sql.SQLException;
-import java.util.Collection;
-import java.util.Comparator;
 
 /**
  * A class for binding results of {@link DatabaseMetaData#getPrimaryKeys(String, String, String)} method.
  *
  * @author Jin Kwon &lt;jinahya_at_gmail.com&gt;
- * @see Context#getPrimaryKeys(String, String, String, Collection)
  */
-@XmlRootElement
 @Data
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @SuperBuilder
@@ -54,55 +41,24 @@ public class PrimaryKey
 
     private static final long serialVersionUID = 3159826510060898330L;
 
-    public static final Comparator<PrimaryKey> COMPARATOR = Comparator.comparing(PrimaryKey::getColumnName);
-
-    @Override
-    public void retrieveChildren(final Context context) throws SQLException {
-        // no children.
-    }
-
-    @Override
-    public Table extractParent() {
-        return Table.builder()
-                .tableCat(getTableCat())
-                .tableSchem(getTableSchem())
-                .tableName(getTableName())
-                .build();
-    }
-
-    @XmlElement(nillable = true, required = true)
     @NullableBySpecification
-    @Label("TABLE_CAT")
+    @ColumnLabel("TABLE_CAT")
     private String tableCat;
 
-    @XmlElement(nillable = true, required = true)
     @NullableBySpecification
-    @Label("TABLE_SCHEM")
+    @ColumnLabel("TABLE_SCHEM")
     private String tableSchem;
 
-    @XmlElement(required = true)
-    @Label("TABLE_NAME")
+    @ColumnLabel("TABLE_NAME")
     private String tableName;
 
-    @XmlElement(required = true)
-    @Label("COLUMN_NAME")
+    @ColumnLabel("COLUMN_NAME")
     private String columnName;
 
-    @XmlElement(required = true)
-    @Label("KEY_SEQ")
+    @ColumnLabel("KEY_SEQ")
     private short keySeq;
 
-    @XmlElement(nillable = true, required = true)
     @NullableBySpecification
-    @Label("PK_NAME")
+    @ColumnLabel("PK_NAME")
     private String pkName;
-
-    // -----------------------------------------------------------------------------------------------------------------
-    @XmlTransient
-    @Valid
-    @Setter(AccessLevel.NONE)
-    @Getter(AccessLevel.NONE)
-    @EqualsAndHashCode.Exclude
-    @ToString.Exclude
-    private Table table;
 }

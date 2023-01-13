@@ -4,7 +4,7 @@ package com.github.jinahya.database.metadata.bind;
  * #%L
  * database-metadata-bind
  * %%
- * Copyright (C) 2011 - 2019 Jinahya, Inc.
+ * Copyright (C) 2011 - 2022 Jinahya, Inc.
  * %%
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -20,19 +20,9 @@ package com.github.jinahya.database.metadata.bind;
  * #L%
  */
 
-/**
- * An interface for enum of int raw values.
- *
- * @author Jin Kwon &lt;onacit at wemakeprice.com&gt;
- * @see IntFieldEnums
- * @see FieldEnum
- */
-interface IntFieldEnum<E extends Enum<E> & IntFieldEnum<E>> {
+import lombok.extern.slf4j.Slf4j;
 
-    /**
-     * Returns the raw value of this constant
-     *
-     * @return the raw value of this constant.
-     */
-    int rawValue();
+@Slf4j
+class CategorizedIndexInfoTest {
+
 }

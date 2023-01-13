@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
   <modelVersion>4.0.0</modelVersion>
 
   <parent>
@@ -39,33 +40,28 @@
   <properties>
     <maven.compiler.source>1.8</maven.compiler.source>
     <maven.compiler.target>${maven.compiler.source}</maven.compiler.target>
-    <maven.compiler.testSource>18</maven.compiler.testSource>
+    <maven.compiler.testSource>17</maven.compiler.testSource>
     <maven.compiler.testTarget>${maven.compiler.testSource}</maven.compiler.testTarget>
     <maven.compiler.testRelease>${maven.compiler.testTarget}</maven.compiler.testRelease>
     <doclint>none</doclint>
-    <version.animal-sniffer>1.21</version.animal-sniffer>
-    <!--    <version.com.sun.xml.bind>${version.jakarta.xml.bind-api}</version.com.sun.xml.bind>-->
-    <version.com.sun.xml.bind>2.3.6</version.com.sun.xml.bind>
-    <version.jakarta.json.bind-api>2.0.0</version.jakarta.json.bind-api>
-    <!--    <version.jakarta.validation-api>3.0.2</version.jakarta.validation-api>-->
-    <version.jakarta.validation-api>2.0.2</version.jakarta.validation-api>
-    <!--    <version.jakarta.xml.bind-api>4.0.0</version.jakarta.xml.bind-api>-->
-    <version.jakarta.xml.bind-api>2.3.3</version.jakarta.xml.bind-api>
+    <version.animal-sniffer>1.22</version.animal-sniffer>
     <version.lombok>1.18.24</version.lombok>
-    <version.mariadb-java-client>2.7.2</version.mariadb-java-client>
+    <version.mariadb-java-client>3.0.7</version.mariadb-java-client>
     <version.maven-failsafe>${version.maven-surefire}</version.maven-failsafe>
     <version.maven-surefire>3.0.0-M7</version.maven-surefire>
-    <version.mysql-connector-java>8.0.23</version.mysql-connector-java>
-    <version.mssql-jdbc>9.2.1.jre15</version.mssql-jdbc>
+    <version.mysql-connector-java>8.0.30</version.mysql-connector-java>
+    <version.mssql-jdbc>11.2.0.jre8</version.mssql-jdbc>
     <version.ojdbc6>11.2.0.4</version.ojdbc6>
-    <version.ojdbc8>21.5.0.0</version.ojdbc8>
-    <version.ojdbc10>19.14.0.0</version.ojdbc10>
-    <version.ojdbc11>21.5.0.0</version.ojdbc11>
+    <version.ojdbc8>21.6.0.0.1</version.ojdbc8>
+    <version.ojdbc10>19.15.0.0.1</version.ojdbc10>
+    <version.ojdbc11>21.6.0.0.1</version.ojdbc11>
+    <version.org.apache.jonzon>1.2.19</version.org.apache.jonzon>
     <version.org.eclipse.transformer>0.5.0</version.org.eclipse.transformer>
     <!--    <version.org.hibernate.validator>6.2.0.Final</version.org.hibernate.validator>-->
     <version.org.hibernate.validator>6.2.4.Final</version.org.hibernate.validator>
-    <version.org.testcontainers>1.17.3</version.org.testcontainers>
-    <version.postgresql>42.2.19.jre7</version.postgresql>
+    <version.org.mockito>4.11.0</version.org.mockito>
+    <!--    <version.postgresql>42.2.19.jre7</version.postgresql>-->
+    <version.postgresql>42.5.1</version.postgresql>
     <version.presto-jdbc>350</version.presto-jdbc>
   </properties>
 
@@ -116,13 +112,6 @@
         <artifactId>postgresql</artifactId>
         <version>${version.postgresql}</version>
       </dependency>
-      <dependency>
-        <groupId>org.testcontainers</groupId>
-        <artifactId>testcontainers-bom</artifactId>
-        <version>${version.org.testcontainers}</version>
-        <type>pom</type>
-        <scope>import</scope>
-      </dependency>
     </dependencies>
   </dependencyManagement>
   <dependencies>
@@ -144,42 +133,6 @@
       <version>2.1.214</version>
       <scope>test</scope>
     </dependency>
-    <!--    <dependency>-->
-    <!--      <groupId>com.launchableinc</groupId>-->
-    <!--      <artifactId>cyyoung</artifactId>-->
-    <!--      <version>2.0</version>-->
-    <!--      <scope>test</scope>-->
-    <!--    </dependency>-->
-    <!--    <dependency>-->
-    <!--      <groupId>com.sun.xml.bind</groupId>-->
-    <!--      <artifactId>jaxb-core</artifactId>-->
-    <!--      <version>${version.com.sun.xml.bind}</version>-->
-    <!--      <scope>test</scope>-->
-    <!--    </dependency>-->
-    <dependency>
-      <groupId>com.sun.xml.bind</groupId>
-      <artifactId>jaxb-impl</artifactId>
-      <version>${version.com.sun.xml.bind}</version>
-      <scope>test</scope>
-    </dependency>
-    <dependency>
-      <groupId>jakarta.json.bind</groupId>
-      <artifactId>jakarta.json.bind-api</artifactId>
-      <version>${version.jakarta.json.bind-api}</version>
-      <scope>provided</scope>
-    </dependency>
-    <dependency>
-      <groupId>jakarta.xml.bind</groupId>
-      <artifactId>jakarta.xml.bind-api</artifactId>
-      <version>${version.jakarta.xml.bind-api}</version>
-      <scope>provided</scope>
-    </dependency>
-    <dependency>
-      <groupId>jakarta.validation</groupId>
-      <artifactId>jakarta.validation-api</artifactId>
-      <version>${version.jakarta.validation-api}</version>
-      <scope>provided</scope>
-    </dependency>
     <dependency>
       <groupId>org.apache.derby</groupId>
       <artifactId>derby</artifactId>
@@ -198,12 +151,6 @@
       <artifactId>animal-sniffer-annotations</artifactId>
       <version>${version.animal-sniffer}</version>
       <scope>provided</scope>
-    </dependency>
-    <dependency>
-      <groupId>org.eclipse</groupId>
-      <artifactId>yasson</artifactId>
-      <version>2.0.4</version>
-      <scope>test</scope>
     </dependency>
     <dependency>
       <groupId>org.glassfish</groupId>
@@ -233,7 +180,19 @@
     <dependency>
       <groupId>org.junit.jupiter</groupId>
       <artifactId>junit-jupiter</artifactId>
-      <version>5.9.0</version>
+      <version>5.8.2</version>
+      <scope>test</scope>
+    </dependency>
+    <dependency>
+      <groupId>org.mockito</groupId>
+      <artifactId>mockito-inline</artifactId>
+      <version>${version.org.mockito}</version>
+      <scope>test</scope>
+    </dependency>
+    <dependency>
+      <groupId>org.mockito</groupId>
+      <artifactId>mockito-junit-jupiter</artifactId>
+      <version>${version.org.mockito}</version>
       <scope>test</scope>
     </dependency>
     <dependency>
@@ -242,16 +201,10 @@
       <version>${version.lombok}</version>
       <scope>provided</scope>
     </dependency>
-    <!--    <dependency>-->
-    <!--      <groupId>org.slf4j</groupId>-->
-    <!--      <artifactId>slf4j-api</artifactId>-->
-    <!--      <version>1.7.25</version>-->
-    <!--      <scope>compile</scope>-->
-    <!--    </dependency>-->
     <dependency>
       <groupId>org.xerial</groupId>
       <artifactId>sqlite-jdbc</artifactId>
-      <version>3.39.2.0</version>
+      <version>3.40.0.0</version>
       <scope>test</scope>
     </dependency>
   </dependencies>
@@ -262,16 +215,13 @@
         <plugin>
           <groupId>org.apache.maven.plugins</groupId>
           <artifactId>maven-javadoc-plugin</artifactId>
-          <version>3.4.0</version>
+          <version>3.4.1</version>
           <configuration>
             <additionalOptions>
               <additionalOption>-Xdoclint:${doclint}</additionalOption>
+              <!-- https://issues.apache.org/jira/browse/MJAVADOC-720 -->
+              <!--              <sourcepath>${project.build.directory}/generated-sources-noduplicate/delombok</sourcepath>-->
             </additionalOptions>
-            <links>
-              <link>https://javadoc.io/doc/jakarta.persistence/jakarta.persistence-api/latest</link>
-              <link>https://javadoc.io/doc/jakarta.xml.bind/jakarta.xml.bind-api/latest</link>
-              <link>https://javadoc.io/doc/jakarta.validation/jakarta.validation-api/latest</link>
-            </links>
             <tags>
               <tag>
                 <name>apiNote</name>
@@ -314,7 +264,7 @@
         <plugin>
           <groupId>org.apache.maven.plugins</groupId>
           <artifactId>maven-project-info-reports-plugin</artifactId>
-          <version>3.4.0</version>
+          <version>3.4.1</version>
         </plugin>
         <plugin>
           <groupId>org.apache.maven.plugins</groupId>
@@ -441,7 +391,7 @@
             <configuration>
               <skip>true</skip>
               <rules>
-                <dependencyConvergence />
+                <dependencyConvergence/>
               </rules>
             </configuration>
             <goals>
@@ -456,7 +406,7 @@
             <configuration>
               <rules>
                 <requireJavaVersion>
-                  <version>[17.0.0,)</version>
+                  <version>[1.8.0,)</version>
                 </requireJavaVersion>
               </rules>
             </configuration>
@@ -536,6 +486,27 @@
           </execution>
         </executions>
       </plugin>
+      <plugin>
+        <groupId>org.projectlombok</groupId>
+        <artifactId>lombok-maven-plugin</artifactId>
+        <version>1.18.20.0</version>
+        <executions>
+          <execution>
+            <configuration>
+              <addOutputDirectory>false</addOutputDirectory>
+              <!-- https://stackoverflow.com/a/45382576/330457 -->
+              <!-- IntelliJ 에서 중복된 코드라고 나오는 문제가 있어서... -->
+              <outputDirectory>${project.build.directory}/generated-sources-noduplicate/delombok</outputDirectory>
+              <skip>true</skip>
+              <sourceDirectory>${project.basedir}/src/main/java</sourceDirectory>
+            </configuration>
+            <phase>generate-sources</phase>
+            <goals>
+              <goal>delombok</goal>
+            </goals>
+          </execution>
+        </executions>
+      </plugin>
     </plugins>
   </build>
 
@@ -610,13 +581,6 @@
         <plugins>
           <plugin>
             <groupId>org.apache.maven.plugins</groupId>
-            <artifactId>maven-surefire-plugin</artifactId>
-            <configuration>
-              <!--              <skipTests>true</skipTests>-->
-            </configuration>
-          </plugin>
-          <plugin>
-            <groupId>org.apache.maven.plugins</groupId>
             <artifactId>maven-failsafe-plugin</artifactId>
             <version>${version.maven-failsafe}</version>
             <executions>
@@ -630,6 +594,12 @@
           </plugin>
         </plugins>
       </build>
+    </profile>
+    <profile>
+      <id>external</id>
+      <properties>
+        <it.test>ExternalIT</it.test>
+      </properties>
     </profile>
     <profile>
       <id>external-mariadb</id>
@@ -707,110 +677,6 @@
         <dependency>
           <groupId>com.microsoft.sqlserver</groupId>
           <artifactId>mssql-jdbc</artifactId>
-          <scope>test</scope>
-        </dependency>
-      </dependencies>
-    </profile>
-    <profile>
-      <id>testcontainers-only</id>
-      <properties>
-        <!--        <skipTests>true</skipTests>-->
-        <it.test>ContainerIT</it.test>
-      </properties>
-      <dependencies>
-        <!--        <dependency>-->
-        <!--          <groupId>org.testcontainers</groupId>-->
-        <!--          <artifactId>testcontainers</artifactId>-->
-        <!--          <scope>test</scope>-->
-        <!--        </dependency>-->
-      </dependencies>
-    </profile>
-    <profile>
-      <id>testcontainers-mariadb</id>
-      <dependencies>
-        <dependency>
-          <groupId>org.mariadb.jdbc</groupId>
-          <artifactId>mariadb-java-client</artifactId>
-          <scope>test</scope>
-        </dependency>
-        <dependency>
-          <groupId>org.testcontainers</groupId>
-          <artifactId>mariadb</artifactId>
-          <scope>test</scope>
-        </dependency>
-        <!--        <dependency>-->
-        <!--          <groupId>org.testcontainers</groupId>-->
-        <!--          <artifactId>testcontainers</artifactId>-->
-        <!--          <scope>test</scope>-->
-        <!--        </dependency>-->
-      </dependencies>
-    </profile>
-    <profile>
-      <id>testcontainers-mssqlserver</id>
-      <dependencies>
-        <dependency>
-          <groupId>com.microsoft.sqlserver</groupId>
-          <artifactId>mssql-jdbc</artifactId>
-          <scope>test</scope>
-        </dependency>
-        <dependency>
-          <groupId>org.testcontainers</groupId>
-          <artifactId>mssqlserver</artifactId>
-          <scope>test</scope>
-        </dependency>
-        <dependency>
-          <groupId>org.testcontainers</groupId>
-          <artifactId>testcontainers</artifactId>
-          <scope>test</scope>
-        </dependency>
-      </dependencies>
-    </profile>
-    <profile>
-      <id>testcontainers-mysql</id>
-      <dependencies>
-        <dependency>
-          <groupId>mysql</groupId>
-          <artifactId>mysql-connector-java</artifactId>
-          <scope>test</scope>
-        </dependency>
-        <dependency>
-          <groupId>org.testcontainers</groupId>
-          <artifactId>mysql</artifactId>
-          <scope>test</scope>
-        </dependency>
-        <dependency>
-          <groupId>org.testcontainers</groupId>
-          <artifactId>testcontainers</artifactId>
-          <scope>test</scope>
-        </dependency>
-      </dependencies>
-    </profile>
-    <profile>
-      <id>testcontainers-postgresql</id>
-      <dependencies>
-        <dependency>
-          <groupId>org.postgresql</groupId>
-          <artifactId>postgresql</artifactId>
-          <scope>test</scope>
-        </dependency>
-        <dependency>
-          <groupId>org.testcontainers</groupId>
-          <artifactId>postgresql</artifactId>
-          <scope>test</scope>
-        </dependency>
-      </dependencies>
-    </profile>
-    <profile>
-      <id>testcontainers-presto</id>
-      <dependencies>
-        <dependency>
-          <groupId>io.prestosql</groupId>
-          <artifactId>presto-jdbc</artifactId>
-          <scope>test</scope>
-        </dependency>
-        <dependency>
-          <groupId>org.testcontainers</groupId>
-          <artifactId>presto</artifactId>
           <scope>test</scope>
         </dependency>
       </dependencies>

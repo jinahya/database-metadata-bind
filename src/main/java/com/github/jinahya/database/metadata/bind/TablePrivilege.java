@@ -25,18 +25,12 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.experimental.SuperBuilder;
 
-import javax.validation.constraints.NotBlank;
-import javax.xml.bind.annotation.XmlElement;
-import javax.xml.bind.annotation.XmlRootElement;
-import java.sql.SQLException;
-
 /**
  * An entity class for binding the result of
  * {@link java.sql.DatabaseMetaData#getTablePrivileges(java.lang.String, java.lang.String, java.lang.String)}.
  *
  * @author Jin Kwon &lt;jinahya_at_gmail.com&gt;
  */
-@XmlRootElement
 @Data
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @SuperBuilder(toBuilder = true)
@@ -46,51 +40,28 @@ public class TablePrivilege
 
     private static final long serialVersionUID = -1799954363648972203L;
 
-    @Override
-    public void retrieveChildren(final Context context) throws SQLException {
-        // no children.
-    }
-
-    @Override
-    public Table extractParent() {
-        return Table.builder()
-                .tableCat(getTableCat())
-                .tableSchem(getTableSchem())
-                .tableName(getTableName())
-                .build();
-    }
-
-    @XmlElement(nillable = true, required = true)
     @NullableBySpecification
-    @Label("TABLE_CAT")
+    @ColumnLabel("TABLE_CAT")
     private String tableCat;
 
-    @XmlElement(nillable = true, required = true)
     @NullableBySpecification
-    @Label("TABLE_SCHEM")
+    @ColumnLabel("TABLE_SCHEM")
     private String tableSchem;
 
-    @XmlElement(nillable = false, required = true)
-    @NotBlank
-    @Label("TABLE_NAME")
+    @ColumnLabel("TABLE_NAME")
     private String tableName;
 
-    @XmlElement(nillable = true, required = true)
     @NullableBySpecification
-    @Label("GRANTOR")
+    @ColumnLabel("GRANTOR")
     private String grantor;
 
-    @XmlElement(nillable = true, required = true)
-    @Label("GRANTEE")
+    @ColumnLabel("GRANTEE")
     private String grantee;
 
-    @NotBlank
-    @XmlElement(nillable = false, required = true)
-    @Label("PRIVILEGE")
+    @ColumnLabel("PRIVILEGE")
     private String privilege;
 
-    @XmlElement(nillable = true, required = true)
     @NullableBySpecification
-    @Label("IS_GRANTABLE")
+    @ColumnLabel("IS_GRANTABLE")
     private String isGrantable;
 }

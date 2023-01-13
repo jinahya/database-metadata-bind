@@ -27,11 +27,7 @@ import lombok.NoArgsConstructor;
 import lombok.ToString;
 import lombok.experimental.SuperBuilder;
 
-import javax.xml.bind.annotation.XmlRootElement;
 import java.sql.DatabaseMetaData;
-import java.sql.SQLException;
-import java.util.Collection;
-import java.util.Objects;
 
 /**
  * A class for binding result of {@link DatabaseMetaData#ownInsertsAreVisible(int)} method.
@@ -39,7 +35,6 @@ import java.util.Objects;
  * @author Jin Kwon &lt;onacit_at_gmail.com&gt;
  * @see Context#ownInsertsAreVisible(int)
  */
-@XmlRootElement
 @Data
 @EqualsAndHashCode(callSuper = true)
 @ToString(callSuper = true)
@@ -49,27 +44,4 @@ public class OwnInsertsAreVisible
         extends AreVisible {
 
     private static final long serialVersionUID = -2185655212494659817L;
-
-    /**
-     * Invokes {@link Context#ownInsertsAreVisible(int)} method for all types defined in {@link java.sql.ResultSet} and
-     * adds bound values to specified collection.
-     *
-     * @param context    a context.
-     * @param collection the collection to which bound values are added.
-     * @param <C>        the type of {@code collection}
-     * @return given {@code collection}.
-     * @throws SQLException if a database access error occurs.
-     * @see Context#ownInsertsAreVisible(int)
-     * @see ResultSetType
-     */
-    public static <C extends Collection<? super OwnInsertsAreVisible>> C getAllInstances(final Context context,
-                                                                                         final C collection)
-            throws SQLException {
-        Objects.requireNonNull(context, "context is null");
-        Objects.requireNonNull(collection, "collection is null");
-        for (final ResultSetType type : ResultSetType.values()) {
-            collection.add(context.ownInsertsAreVisible(type.rawValue()));
-        }
-        return collection;
-    }
 }

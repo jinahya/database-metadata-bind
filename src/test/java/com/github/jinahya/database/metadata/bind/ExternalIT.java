@@ -24,31 +24,43 @@ import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.condition.EnabledIfSystemProperty;
 
-import java.sql.Connection;
+import java.util.ArrayList;
+import java.util.List;
 
 import static java.sql.DriverManager.getConnection;
 
 /**
- * Test class for remote databases.
+ * A test class for binding a remote database.
  *
  * @author Jin Kwon &lt;onacit at gmail.com&gt;
  */
 @Slf4j
 class ExternalIT {
 
-    @EnabledIfSystemProperty(named = "password", matches = ".+")
-    @EnabledIfSystemProperty(named = "user", matches = ".+")
-    @EnabledIfSystemProperty(named = "url", matches = ".+")
+    private static final String PROPERTY_NAME_URL = "url";
+
+    private static final String PROPERTY_NAME_USER = "user";
+
+    private static final String PROPERTY_NAME_PASSWORD = "password";
+
+    @EnabledIfSystemProperty(named = PROPERTY_NAME_URL, matches = ".+")
+    @EnabledIfSystemProperty(named = PROPERTY_NAME_USER, matches = ".+")
+    @EnabledIfSystemProperty(named = PROPERTY_NAME_PASSWORD, matches = ".+")
     @Test
     void writeToFiles() throws Exception {
         final String url = System.getProperty("url");
         final String user = System.getProperty("user");
         final String password = System.getProperty("password");
-        log.info("connecting...");
-        try (Connection connection = getConnection(url, user, password)) {
+        log.info("connecting to {}", url);
+        try (var connection = getConnection(url, user, password)) {
             log.info("connected: {}", connection);
             final var context = Context.newInstance(connection);
-            ContextTestUtils.writeFiles(context);
+            {
+                final List<Catalog> catalogs = new ArrayList<>();
+                context.getCatalogs(catalogs::add);
+                final var name = "catalogs";
+            }
+//            ContextTestUtils.writeFiles(context);
         }
     }
 }

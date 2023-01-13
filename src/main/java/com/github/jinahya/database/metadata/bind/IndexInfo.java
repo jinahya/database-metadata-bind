@@ -22,35 +22,17 @@ package com.github.jinahya.database.metadata.bind;
 
 import lombok.AccessLevel;
 import lombok.Data;
-import lombok.EqualsAndHashCode;
-import lombok.Getter;
 import lombok.NoArgsConstructor;
-import lombok.Setter;
-import lombok.ToString;
 import lombok.experimental.SuperBuilder;
 
-import javax.validation.Valid;
-import javax.validation.constraints.AssertTrue;
-import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.PositiveOrZero;
-import javax.xml.bind.annotation.XmlElement;
-import javax.xml.bind.annotation.XmlEnum;
-import javax.xml.bind.annotation.XmlRootElement;
-import javax.xml.bind.annotation.XmlTransient;
 import java.sql.DatabaseMetaData;
-import java.sql.SQLException;
-import java.util.Collection;
-import java.util.Comparator;
-import java.util.Objects;
 
 /**
  * A class for binding results of {@link DatabaseMetaData#getIndexInfo(String, String, String, boolean, boolean)}
  * method.
  *
  * @author Jin Kwon &lt;jinahya_at_gmail.com&gt;
- * @see Context#getIndexInfo(String, String, String, boolean, boolean, Collection)
  */
-@XmlRootElement
 @Data
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @SuperBuilder(toBuilder = true)
@@ -60,203 +42,51 @@ public class IndexInfo
 
     private static final long serialVersionUID = -768486884376018474L;
 
-    public static final Comparator<IndexInfo> COMPARATOR
-            = Comparator.comparing(IndexInfo::isNonUnique)
-            .thenComparing(IndexInfo::getType)
-            .thenComparing(IndexInfo::getIndexName)
-            .thenComparing(IndexInfo::getOrdinalPosition);
-
     public static final String COLUMN_NAME_TYPE = "TYPE";
 
-    /**
-     * Constants for {@value #COLUMN_NAME_TYPE} column values.
-     */
-    @XmlEnum
-    public enum Type implements IntFieldEnum<Type> {
-
-        /**
-         * Constant for
-         * {@link DatabaseMetaData#tableIndexStatistic}({@value java.sql.DatabaseMetaData#tableIndexStatistic}).
-         */
-        TABLE_INDEX_STATISTICS(DatabaseMetaData.tableIndexStatistic), // 0
-
-        /**
-         * Constant for
-         * {@link DatabaseMetaData#tableIndexClustered}({@value java.sql.DatabaseMetaData#tableIndexClustered}).
-         */
-        TABLE_INDEX_CLUSTERED(DatabaseMetaData.tableIndexClustered), // 1
-
-        /**
-         * Constant for {@link DatabaseMetaData#tableIndexHashed}({@value java.sql.DatabaseMetaData#tableIndexHashed}).
-         */
-        TABLE_INDEX_HASHED(DatabaseMetaData.tableIndexHashed), // 2
-
-        /**
-         * Constant for {@link DatabaseMetaData#tableIndexOther}({@value java.sql.DatabaseMetaData#tableIndexOther}).
-         */
-        TABLE_INDEX_OTHER(DatabaseMetaData.tableIndexOther); // 3
-
-        /**
-         * Returns the constant whose raw value matches to specified value.
-         *
-         * @param rawValue the raw value.
-         * @return the constant whose raw value matches to {@code rawValue}.
-         * @throws IllegalArgumentException when no constant found for the {@code rawValue}.
-         */
-        public static Type valueOfRawValue(final int rawValue) {
-            return IntFieldEnums.valueOfRawValue(Type.class, rawValue);
-        }
-
-        Type(final int rawValue) {
-            this.rawValue = rawValue;
-        }
-
-        @Override
-        public int rawValue() {
-            return rawValue;
-        }
-
-        private final int rawValue;
-    }
-
-    @AssertTrue
-    private boolean isNonUniqueFalseWhenTypeIsTableIndexStatistics() {
-        if (getType() != DatabaseMetaData.tableIndexStatistic) {
-            return true;
-        }
-        return !isNonUnique();
-    }
-
-    @AssertTrue
-    private boolean isIndexQualifierNullWhenTypeIsTableIndexStatistics() {
-        if (getType() != DatabaseMetaData.tableIndexStatistic) {
-            return true;
-        }
-        return getIndexQualifier() == null;
-    }
-
-    @AssertTrue
-    private boolean isIndexNameNullWhenTypeIsTableIndexStatistics() {
-        if (getType() != DatabaseMetaData.tableIndexStatistic) {
-            return true;
-        }
-        return getIndexName() == null;
-    }
-
-    @AssertTrue
-    private boolean isOrdinalPositionZeroWhenTypeIsTableIndexStatistics() {
-        if (getType() != DatabaseMetaData.tableIndexStatistic) {
-            return true;
-        }
-        return getOrdinalPosition() == 0;
-    }
-
-    @AssertTrue
-    private boolean isColumnNameNullWhenTypeIsTableIndexStatistics() {
-        if (getType() != DatabaseMetaData.tableIndexStatistic) {
-            return true;
-        }
-        return getColumnName() == null;
-    }
-
-    @AssertTrue
-    private boolean isAscOrDescNullWhenTypeIsTableIndexStatistics() {
-        if (getType() != DatabaseMetaData.tableIndexStatistic) {
-            return true;
-        }
-        return getAscOrDesc() == null;
-    }
-
-    @Override
-    public void retrieveChildren(final Context context) throws SQLException {
-        // no children.
-    }
-
-    @Override
-    public Table extractParent() {
-        return Table.builder()
-                .tableCat(getTableCat())
-                .tableSchem(getTableSchem())
-                .tableName(getTableName())
-                .build();
-    }
-
-    @XmlElement(required = true)
-    public Type getTypeAsEnum() {
-        return Type.valueOfRawValue(getType());
-    }
-
-    public void setTypeAsIndex(final Type typeAsIndex) {
-        setType(Objects.requireNonNull(typeAsIndex, "typeAsIndex is null").rawValue());
-    }
-
-    @XmlElement(nillable = true, required = true)
     @NullableBySpecification
-    @Label("TABLE_CAT")
+    @ColumnLabel("TABLE_CAT")
     private String tableCat;
 
-    @XmlElement(nillable = true, required = true)
     @NullableBySpecification
-    @Label("TABLE_SCHEM")
+    @ColumnLabel("TABLE_SCHEM")
     private String tableSchem;
 
-    @XmlElement(nillable = false, required = true)
-    @NotBlank
-    @Label("TABLE_NAME")
+    @ColumnLabel("TABLE_NAME")
     private String tableName;
 
-    @XmlElement(nillable = false, required = true)
-    @Label("NON_UNIQUE")
+    @ColumnLabel("NON_UNIQUE")
     private boolean nonUnique;
 
-    @XmlElement(nillable = true, required = true)
     @NullableBySpecification
-    @Label("INDEX_QUALIFIER")
+    @ColumnLabel("INDEX_QUALIFIER")
     private String indexQualifier;
 
-    @XmlElement(nillable = true, required = true)
     @NullableBySpecification
-    @Label("INDEX_NAME")
+    @ColumnLabel("INDEX_NAME")
     private String indexName;
 
-    @XmlElement(nillable = false, required = true)
-    @Label(COLUMN_NAME_TYPE)
+    @ColumnLabel(COLUMN_NAME_TYPE)
     private int type;
 
-    @XmlElement(nillable = false, required = true)
-    @PositiveOrZero
-    @Label("ORDINAL_POSITION")
+    @ColumnLabel("ORDINAL_POSITION")
     private int ordinalPosition;
 
-    @XmlElement(nillable = true, required = true)
     @NullableBySpecification
-    @Label("COLUMN_NAME")
+    @ColumnLabel("COLUMN_NAME")
     private String columnName;
 
-    @XmlElement(nillable = true, required = true)
     @NullableBySpecification
-    @Label("ASC_OR_DESC")
+    @ColumnLabel("ASC_OR_DESC")
     private String ascOrDesc;
 
-    @XmlElement(nillable = false, required = true)
-    @Label("CARDINALITY")
+    @ColumnLabel("CARDINALITY")
     private long cardinality;
 
-    @XmlElement(nillable = false, required = true)
-    @Label("PAGES")
+    @ColumnLabel("PAGES")
     private long pages;
 
-    @XmlElement(nillable = true, required = true)
     @NullableBySpecification
-    @Label("FILTER_CONDITION")
+    @ColumnLabel("FILTER_CONDITION")
     private String filterCondition;
-
-    // -----------------------------------------------------------------------------------------------------------------
-    @XmlTransient
-    @Valid
-    @Setter(AccessLevel.NONE)
-    @Getter(AccessLevel.NONE)
-    @EqualsAndHashCode.Exclude
-    @ToString.Exclude
-    private Table table;
 }
