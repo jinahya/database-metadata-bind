@@ -26,10 +26,6 @@ import lombok.NoArgsConstructor;
 import lombok.experimental.SuperBuilder;
 
 import java.sql.DatabaseMetaData;
-import java.sql.SQLException;
-import java.util.Collection;
-import java.util.List;
-import java.util.Objects;
 
 /**
  * A class for binding the result of
@@ -45,106 +41,10 @@ public class CrossReference
 
     private static final long serialVersionUID = -5343386346721125961L;
 
-    /**
-     * Retrieves cross-references for specified tables.
-     *
-     * @param context      a context.
-     * @param parentTable  the parent table.
-     * @param foreignTable the foreign table.
-     * @param collection   the collection to the results are added.
-     * @throws SQLException if a database error occurs.
-     */
-    public static void get(final Context context, final Table parentTable, final Table foreignTable,
-                           final Collection<? super CrossReference> collection)
-            throws SQLException {
-        Objects.requireNonNull(context, "context is null");
-        Objects.requireNonNull(parentTable, "parentTable is null");
-        Objects.requireNonNull(foreignTable, "foreignTable is null");
-        context.getCrossReference(
-                parentTable.getTableCat(),
-                parentTable.getTableSchem(),
-                parentTable.getTableName(),
-                foreignTable.getTableCat(),
-                foreignTable.getTableSchem(),
-                foreignTable.getTableName(),
-                collection::add
-        );
-    }
-
-    /**
-     * Retrieves cross-references between tables retrieved with specified arguments.
-     *
-     * @param context          a context
-     * @param catalog          a value for {@code catalog} parameter.
-     * @param schemaPattern    a value for {@code schemaPattern} parameter.
-     * @param tableNamePattern a value for {@code tableNamePattern} parameter.
-     * @param types            a value for {@code types} parameter.
-     * @param collection       a collection to which results are added.
-     * @param <C>              collection type parameter
-     * @return given {@code collection}.
-     * @throws SQLException if a database error occurs.
-     */
-    public static <C extends Collection<? super CrossReference>> C getInstances(
-            final Context context, final String catalog, final String schemaPattern, final String tableNamePattern,
-            final String[] types, final C collection)
-            throws SQLException {
-        Objects.requireNonNull(context, "context is null");
-        final List<Table> tables = context.getTables(
-                catalog, schemaPattern, tableNamePattern, types);
-        for (final Table parentTable : tables) {
-            for (final Table foreignTable : tables) {
-                get(context, parentTable, foreignTable, collection);
-            }
-        }
-        return collection;
-    }
-
-    /**
-     * Retrieves all cross-references for all tables.
-     *
-     * @param context    a context.
-     * @param collection a collection to which results are added.
-     * @param <C>        collection type parameter
-     * @return given {@code collection}.
-     * @throws SQLException if a database error occurs.
-     * @implNote This method invokes
-     * {@link #getInstances(Context, String, String, String, String[], Collection) getInstances(context, null, null,
-     * "%", null, collection)} and returns the result.
-     */
-    public static <C extends Collection<? super CrossReference>> C getAllInstances(final Context context,
-                                                                                   final C collection)
-            throws SQLException {
-        return getInstances(context, null, null, "%", null, collection);
-    }
-
     public static final String COLUMN_LABEL_UPDATE_RULE = "UPDATE_RULE";
 
     public static final String ATTRIBUTE_NAME_UPDATE_RULE = "updateRule";
 
-    @Override
-    public void retrieveChildren(final Context context) throws SQLException {
-        // no children.
-    }
-
-    public Column extractPkColumn() {
-        return Column.builder()
-                .tableCat(getPktableCat())
-                .tableSchem(getPktableSchem())
-                .tableName(getPktableName())
-                .columnName(getPkcolumnName())
-                .build();
-    }
-
-    public Column extractFkColumn() {
-        return Column.builder()
-                .tableCat(getFktableCat())
-                .tableSchem(getFktableSchem())
-                .tableName(getFktableName())
-                .columnName(getFkcolumnName())
-                .build();
-    }
-
-    // -----------------------------------------------------------------------------------------------------------------
     @NullableBySpecification
     @ColumnLabel("PKTABLE_CAT")
     private String pktableCat;
@@ -159,7 +59,6 @@ public class CrossReference
     @ColumnLabel("PKCOLUMN_NAME")
     private String pkcolumnName;
 
-    // -----------------------------------------------------------------------------------------------------------------
     @NullableBySpecification
     @ColumnLabel("FKTABLE_CAT")
     private String fktableCat;
@@ -174,7 +73,6 @@ public class CrossReference
     @ColumnLabel("FKCOLUMN_NAME")
     private String fkcolumnName;
 
-    // -----------------------------------------------------------------------------------------------------------------
     @ColumnLabel("FKCOLUMN_NAME")
     private int keySeq;
 

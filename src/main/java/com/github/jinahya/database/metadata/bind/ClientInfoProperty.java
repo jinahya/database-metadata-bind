@@ -23,7 +23,6 @@ package com.github.jinahya.database.metadata.bind;
 import lombok.Data;
 
 import java.sql.DatabaseMetaData;
-import java.sql.SQLException;
 
 /**
  * A class for binding results of the {@link DatabaseMetaData#getClientInfoProperties()} method.
@@ -36,11 +35,6 @@ public class ClientInfoProperty
 
     private static final long serialVersionUID = -2913230435651853254L;
 
-    @Override
-    public void retrieveChildren(final Context context) throws SQLException {
-        // no children.
-    }
-
     @ColumnLabel("NAME")
     private String name;
 
@@ -52,38 +46,4 @@ public class ClientInfoProperty
 
     @ColumnLabel("DESCRIPTION")
     private String description;
-
-    // -----------------------------------------------------------------------------------------------------------------
-
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public int getMaxLen() {
-        return maxLen;
-    }
-
-    public void setMaxLen(int maxLen) {
-        this.maxLen = maxLen;
-    }
-
-    public String getDefaultValue() {
-        return defaultValue;
-    }
-
-    public void setDefaultValue(String defaultValue) {
-        this.defaultValue = defaultValue;
-    }
-
-    public String getDescription() {
-        return description;
-    }
-
-    public void setDescription(String description) {
-        this.description = description;
-    }
 }

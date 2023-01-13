@@ -25,8 +25,6 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.experimental.SuperBuilder;
 
-import java.sql.SQLException;
-
 /**
  * An entity class for binding the result of {@link java.sql.DatabaseMetaData#getTypeInfo() getTypeInfo()}.
  *
@@ -40,20 +38,9 @@ public class TypeInfo
 
     private static final long serialVersionUID = -3964147654019495313L;
 
-    // --------------------------------------------------------------------------------------------- NULLABLE / nullable
     public static final String COLUMN_NAME_NULLABLE = "nullable";
 
-    public static final String ATTRIBUTE_NAME_NULLABLE = "nullable";
-
-    // ----------------------------------------------------------------------------------------- SEARCHABLE / searchable
     public static final String COLUMN_NAME_SEARCHABLE = "searchable";
-
-    public static final String ATTRIBUTE_NAME_SEARCHABLE = "searchable";
-
-    @Override
-    public void retrieveChildren(final Context context) throws SQLException {
-        // no children.
-    }
 
     @ColumnLabel("TYPE_NAME")
     private String typeName;

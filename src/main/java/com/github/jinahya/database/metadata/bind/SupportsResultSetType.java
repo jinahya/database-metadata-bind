@@ -26,7 +26,6 @@ import lombok.NoArgsConstructor;
 import lombok.experimental.SuperBuilder;
 
 import java.sql.DatabaseMetaData;
-import java.sql.SQLException;
 
 /**
  * A class for binding results of {@link DatabaseMetaData#supportsResultSetType(int)} method.
@@ -41,32 +40,6 @@ public class SupportsResultSetType
         implements MetadataType {
 
     private static final long serialVersionUID = -7966340530205147556L;
-
-//    /**
-//     * Invokes {@link Context#supportsResultSetType(int)} method for all types defined in {@link java.sql.ResultSet} and
-//     * adds bound values to specified collection.
-//     *
-//     * @param context    a context.
-//     * @param collection the collection to which bound values are added.
-//     * @param <C>        the type of {@code collection}
-//     * @return given {@code collection}.
-//     * @throws SQLException if a database access error occurs.
-//     */
-//    public static <C extends Collection<? super SupportsResultSetType>> C getAllInstances(
-//            final Context context, final C collection)
-//            throws SQLException {
-//        Objects.requireNonNull(context, "context is null");
-//        Objects.requireNonNull(collection, "collection is null");
-//        for (final ResultSetType value : ResultSetType.values()) {
-//            collection.add(context.supportsResultSetType(value.rawValue()));
-//        }
-//        return collection;
-//    }
-
-    @Override
-    public void retrieveChildren(Context context) throws SQLException {
-        // no children.
-    }
 
     private int type;
 

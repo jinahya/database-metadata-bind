@@ -26,7 +26,6 @@ import lombok.NoArgsConstructor;
 import lombok.experimental.SuperBuilder;
 
 import java.sql.DatabaseMetaData;
-import java.sql.SQLException;
 
 /**
  * A class for binding results of {@link DatabaseMetaData#getColumnPrivileges(String, String, String, String)} method.
@@ -41,20 +40,6 @@ public class ColumnPrivilege
                    ChildOf<Table> {
 
     private static final long serialVersionUID = 4384654744147773380L;
-
-    @Override
-    public void retrieveChildren(final Context context) throws SQLException {
-        // no children.
-    }
-
-    @Override
-    public Table extractParent() {
-        return Table.builder()
-                .tableCat(getTableCat())
-                .tableSchem(getTableSchem())
-                .tableName(getTableName())
-                .build();
-    }
 
     @NullableBySpecification
     @ColumnLabel("TABLE_CAT")
@@ -83,70 +68,4 @@ public class ColumnPrivilege
     @NullableBySpecification
     @ColumnLabel("IS_GRANTABLE")
     private String isGrantable;
-
-    // -----------------------------------------------------------------------------------------------------------------
-
-    public String getTableCat() {
-        return tableCat;
-    }
-
-    public void setTableCat(String tableCat) {
-        this.tableCat = tableCat;
-    }
-
-    public String getTableSchem() {
-        return tableSchem;
-    }
-
-    public void setTableSchem(String tableSchem) {
-        this.tableSchem = tableSchem;
-    }
-
-    public String getTableName() {
-        return tableName;
-    }
-
-    public void setTableName(String tableName) {
-        this.tableName = tableName;
-    }
-
-    public String getColumnName() {
-        return columnName;
-    }
-
-    public void setColumnName(String columnName) {
-        this.columnName = columnName;
-    }
-
-    public String getGrantor() {
-        return grantor;
-    }
-
-    public void setGrantor(String grantor) {
-        this.grantor = grantor;
-    }
-
-    public String getGrantee() {
-        return grantee;
-    }
-
-    public void setGrantee(String grantee) {
-        this.grantee = grantee;
-    }
-
-    public String getPrivilege() {
-        return privilege;
-    }
-
-    public void setPrivilege(String privilege) {
-        this.privilege = privilege;
-    }
-
-    public String getIsGrantable() {
-        return isGrantable;
-    }
-
-    public void setIsGrantable(String isGrantable) {
-        this.isGrantable = isGrantable;
-    }
 }

@@ -26,7 +26,6 @@ import lombok.NoArgsConstructor;
 import lombok.experimental.SuperBuilder;
 
 import java.sql.DatabaseMetaData;
-import java.sql.SQLException;
 
 /**
  * A class for binding results of {@link DatabaseMetaData#supportsResultSetHoldability(int)} method.
@@ -41,31 +40,6 @@ public class SupportsResultSetHoldability
         implements MetadataType {
 
     private static final long serialVersionUID = -4927096350529087348L;
-
-//    /**
-//     * Invokes {@link Context#supportsResultSetHoldability(int)} method for all holdabilities and adds bound values to
-//     * specified collection.
-//     *
-//     * @param context    a context.
-//     * @param collection the collection to which bound values are added.
-//     * @param <C>        the type of {@code collection}
-//     * @return given {@code collection}.
-//     * @throws SQLException if a database error occurs.
-//     */
-//    public static <C extends Collection<? super SupportsResultSetHoldability>> C getAllInstances(
-//            final Context context, final C collection)
-//            throws SQLException {
-//        Objects.requireNonNull(context, "context is null");
-//        for (final ResultSetHoldability value : ResultSetHoldability.values()) {
-//            collection.add(context.supportsResultSetHoldability(value.rawValue()));
-//        }
-//        return collection;
-//    }
-
-    @Override
-    public void retrieveChildren(Context context) throws SQLException {
-        // no children
-    }
 
     private int holdability;
 

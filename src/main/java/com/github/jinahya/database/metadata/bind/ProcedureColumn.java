@@ -26,8 +26,6 @@ import lombok.NoArgsConstructor;
 import lombok.experimental.SuperBuilder;
 
 import java.sql.DatabaseMetaData;
-import java.sql.SQLException;
-import java.util.Comparator;
 
 /**
  * A class for binding results of
@@ -45,23 +43,6 @@ public class ProcedureColumn
 
     private static final long serialVersionUID = 3894753719381358829L;
 
-    public static final Comparator<ProcedureColumn> COMPARATOR =
-            Comparator.comparing(ProcedureColumn::extractParent, Procedure.COMPARATOR);
-
-    @Override
-    public void retrieveChildren(final Context context) throws SQLException {
-        // no children.
-    }
-
-    @Override
-    public Procedure extractParent() {
-        return Procedure.builder()
-                .procedureCat(getProcedureCat())
-                .procedureSchem(getProcedureSchem())
-                .procedureName(getProcedureName())
-                .build();
-    }
-
     @NullableBySpecification
     @ColumnLabel("PROCEDURE_CAT")
     private String procedureCat;
@@ -73,7 +54,6 @@ public class ProcedureColumn
     @ColumnLabel("PROCEDURE_NAME")
     private String procedureName;
 
-    // -----------------------------------------------------------------------------------------------------------------
     @ColumnLabel("COLUMN_NAME")
     private String columnName;
 

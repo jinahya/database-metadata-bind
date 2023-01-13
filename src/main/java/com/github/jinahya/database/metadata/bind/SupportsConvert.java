@@ -26,10 +26,6 @@ import lombok.NoArgsConstructor;
 import lombok.experimental.SuperBuilder;
 
 import java.sql.DatabaseMetaData;
-import java.sql.JDBCType;
-import java.sql.SQLException;
-import java.util.Collection;
-import java.util.Objects;
 
 /**
  * A class for binding results of {@link DatabaseMetaData#supportsConvert(int, int)} method.
@@ -44,53 +40,6 @@ public class SupportsConvert
         implements MetadataType {
 
     private static final long serialVersionUID = 9044839986850181341L;
-
-    /**
-     * Invokes {@link Context#supportsConvert(int, int)} method for all combinations of all types defined in
-     * {@link JDBCType} and adds bounds values to specified collection.
-     *
-     * @param context    a context.
-     * @param collection the collection to which bound values are added.
-     * @param <C>        the type of elements in the {@code collection}
-     * @return given {@code collection}.
-     * @throws SQLException if a database access error occurs.
-     */
-    public static <C extends Collection<? super SupportsConvert>> C getAllInstances(
-            final Context context, final C collection)
-            throws SQLException {
-        Objects.requireNonNull(context, "context is null");
-        Objects.requireNonNull(collection, "collection is null");
-        for (final JDBCType fromType : JDBCType.values()) {
-            for (final JDBCType toType : JDBCType.values()) {
-                if (false && toType == fromType) {
-                    continue;
-                }
-                collection.add(context.supportsConvert(fromType.getVendorTypeNumber(), toType.getVendorTypeNumber()));
-            }
-        }
-        return collection;
-    }
-
-    @Override
-    public void retrieveChildren(Context context) throws SQLException {
-        // no children.
-    }
-
-    public JDBCType getFromTypeAsEnum() {
-        return JDBCType.valueOf(getFromType());
-    }
-
-    public String getFromTypeName() {
-        return getFromTypeAsEnum().getName();
-    }
-
-    public JDBCType getToTypeAsEnum() {
-        return JDBCType.valueOf(getToType());
-    }
-
-    public String getToTypeName() {
-        return getToTypeAsEnum().getName();
-    }
 
     private int fromType;
 

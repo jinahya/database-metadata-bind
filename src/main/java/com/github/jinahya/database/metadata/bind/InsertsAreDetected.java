@@ -39,27 +39,4 @@ public class InsertsAreDetected
         extends AreDetected {
 
     private static final long serialVersionUID = 8464348704439999572L;
-
-//    /**
-//     * Invokes {@link Context#insertsAreDetected(int)} method for all types defined in {@link java.sql.ResultSet} and
-//     * adds bounds values to specified collection.
-//     *
-//     * @param context    a context.
-//     * @param collection the collection to which bound values are added.
-//     * @param <C>        the type of {@code collection}
-//     * @return given {@code collection}.
-//     * @throws SQLException if a database error occurs.
-//     * @see Context#insertsAreDetected(int)
-//     * @see ResultSetType
-//     */
-//    public static <C extends Collection<? super InsertsAreDetected>> C getAllInstances(final Context context,
-//                                                                                       final C collection)
-//            throws SQLException {
-//        Objects.requireNonNull(context, "context is null");
-//        Objects.requireNonNull(collection, "collection is null");
-//        for (final ResultSetType type : ResultSetType.values()) {
-//            collection.add(context.insertsAreDetected(type.rawValue()));
-//        }
-//        return collection;
-//    }
 }

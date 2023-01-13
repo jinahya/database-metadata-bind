@@ -26,8 +26,6 @@ import lombok.NoArgsConstructor;
 import lombok.experimental.SuperBuilder;
 
 import java.sql.DatabaseMetaData;
-import java.sql.SQLException;
-import java.util.Comparator;
 
 /**
  * A class for binding results of {@link DatabaseMetaData#getPseudoColumns(String, String, String, String)} method.
@@ -43,27 +41,6 @@ public class PseudoColumn
 
     private static final long serialVersionUID = -5612575879670895510L;
 
-    public static final Comparator<PseudoColumn> COMPARATOR =
-            Comparator.comparing(PseudoColumn::getTableCat, Comparator.nullsFirst(Comparator.naturalOrder()))
-                    .thenComparing(PseudoColumn::getTableSchem, Comparator.nullsFirst(Comparator.naturalOrder()))
-                    .thenComparing(PseudoColumn::getTableName)
-                    .thenComparing(PseudoColumn::getColumnName);
-
-    @Override
-    public void retrieveChildren(final Context context) throws SQLException {
-        // no children.
-    }
-
-    @Override
-    public Table extractParent() {
-        return Table.builder()
-                .tableCat(getTableCat())
-                .tableSchem(getTableSchem())
-                .tableName(getTableName())
-                .build();
-    }
-
-    // -----------------------------------------------------------------------------------------------------------------
     @NullableBySpecification
     @ColumnLabel("TABLE_CAT")
     private String tableCat;

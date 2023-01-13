@@ -22,16 +22,9 @@ package com.github.jinahya.database.metadata.bind;
 
 import lombok.AccessLevel;
 import lombok.Data;
-import lombok.EqualsAndHashCode;
-import lombok.Getter;
 import lombok.NoArgsConstructor;
-import lombok.Setter;
-import lombok.ToString;
 import lombok.experimental.SuperBuilder;
 
-import java.sql.SQLException;
-import java.util.ArrayList;
-import java.util.List;
 import java.util.function.Consumer;
 
 /**
@@ -58,115 +51,6 @@ public class Catalog
      */
     public static final String COLUMN_VALUE_TABLE_CAT_EMPTY = "";
 
-    /**
-     * Creates a new <em>virtual</em> instance whose {@value #ATTRIBUTE_NAME_TABLE_CAT} attribute is
-     * {@value #COLUMN_VALUE_TABLE_CAT_EMPTY}.
-     *
-     * @return a new <em>virtual</em> instance.
-     */
-    public static Catalog newVirtualInstance() {
-        return builder()
-                .tableCat(COLUMN_VALUE_TABLE_CAT_EMPTY)
-                .virtual(Boolean.TRUE)
-                .build();
-    }
-
-    @Override
-    public void retrieveChildren(final Context context) throws SQLException {
-        {
-            context.getSchemas(getTableCat(), "%", getSchemas()::add);
-            if (getSchemas().isEmpty()) {
-                getSchemas().add(Schema.newVirtualInstance(getTableCat()));
-            }
-            for (final Schema schema : getSchemas()) {
-                schema.retrieveChildren(context);
-            }
-        }
-    }
-
-    /**
-     * Returns a list of schemas of this catalog.
-     *
-     * @return a list of schemas of this catalog; never {@code null}.
-     */
-    public List<Schema> getSchemas() {
-        if (schemas == null) {
-            schemas = new ArrayList<>();
-        }
-        return schemas;
-    }
-
-    /**
-     * Replaces current schemas of this catalog with specified value.
-     *
-     * @param schemas new value for {@code schemas} attribute.
-     * @deprecated Use {@link #getSchemas()} whenever applicable.
-     */
-    @Deprecated
-    // https://github.com/eclipse-ee4j/jsonb-api/issues/334
-    public void setSchemas(final List<Schema> schemas) {
-        this.schemas = schemas;
-    }
-
-    // -----------------------------------------------------------------------------------------------------------------
-    private Boolean virtual;
-
-    // -----------------------------------------------------------------------------------------------------------------
     @ColumnLabel(COLUMN_LABEL_TABLE_CAT)
     private String tableCat;
-
-    // -----------------------------------------------------------------------------------------------------------------
-    @Setter(AccessLevel.NONE)
-    @Getter(AccessLevel.NONE)
-    @EqualsAndHashCode.Exclude
-    @ToString.Exclude
-    private List<Schema> schemas;
-
-    // -----------------------------------------------------------------------------------------------------------------
-
-    /**
-     * Indicates whether this is catalog is a {@link #newVirtualInstance() virtual} instance or not.
-     *
-     * @return {@code true} if this catalog is a virtual instance; {@code false} otherwise.
-     */
-    public boolean isVirtual() {
-        final Boolean virtual = getVirtual();
-        return virtual != null && virtual;
-    }
-
-    /**
-     * Returns current value of {@code virtual} attribute.
-     *
-     * @return current value of {@code virtual} attribute.
-     */
-    public Boolean getVirtual() {
-        return virtual;
-    }
-
-    /**
-     * Replaces current value of {@code virtual} attribute with specified value.
-     *
-     * @param virtual new value for {@code virtual} attribute.
-     */
-    public void setVirtual(final Boolean virtual) {
-        this.virtual = virtual;
-    }
-
-    /**
-     * Returns the value of {@value #ATTRIBUTE_NAME_TABLE_CAT} attribute.
-     *
-     * @return the value of {@value #ATTRIBUTE_NAME_TABLE_CAT} attribute.
-     */
-    public String getTableCat() {
-        return tableCat;
-    }
-
-    /**
-     * Replaces current value of {@value #ATTRIBUTE_NAME_TABLE_CAT} attribute with specified value.
-     *
-     * @param tableCat new value for {@value #ATTRIBUTE_NAME_TABLE_CAT} attribute.
-     */
-    public void setTableCat(final String tableCat) {
-        this.tableCat = tableCat;
-    }
 }

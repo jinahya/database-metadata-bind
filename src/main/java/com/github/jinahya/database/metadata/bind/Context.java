@@ -250,12 +250,10 @@ public class Context {
      * @param consumer the consumer to which bound values are accepted.
      * @throws SQLException if a database error occurs.
      * @see DatabaseMetaData#getBestRowIdentifier(String, String, String, int, boolean)
-     * @see BestRowIdentifier.Scope
      */
 
     public void getBestRowIdentifier(final String catalog, final String schema, final String table, final int scope,
-                                     final boolean nullable,
-                                     final Consumer<? super BestRowIdentifier> consumer)
+                                     final boolean nullable, final Consumer<? super BestRowIdentifier> consumer)
             throws SQLException {
         Objects.requireNonNull(consumer, "consumer is null");
         try (ResultSet results = databaseMetaData.getBestRowIdentifier(catalog, schema, table, scope, nullable)) {
@@ -334,6 +332,19 @@ public class Context {
     }
 
     /**
+     * Invokes {@link DatabaseMetaData#getClientInfoProperties()} method, and returns a list of bound values.
+     *
+     * @return a list of bound values.
+     * @throws SQLException if a database error occurs.
+     * @see #getClientInfoProperties(Consumer)
+     */
+    public List<ClientInfoProperty> getClientInfoProperties() throws SQLException {
+        final List<ClientInfoProperty> list = new ArrayList<>();
+        getClientInfoProperties(list::add);
+        return list;
+    }
+
+    /**
      * Invokes
      * {@link DatabaseMetaData#getColumnPrivileges(java.lang.String, java.lang.String, java.lang.String,
      * java.lang.String)} method with given arguments, and accepts each bound value to specified consumer.
@@ -358,6 +369,27 @@ public class Context {
     }
 
     /**
+     * Invokes
+     * {@link DatabaseMetaData#getColumnPrivileges(java.lang.String, java.lang.String, java.lang.String,
+     * java.lang.String)} method with given arguments, and returns a list of bound values.
+     *
+     * @param catalog           a value for {@code catalog} parameter.
+     * @param schema            a value for {@code schema} parameter.
+     * @param table             a value for {@code table} parameter.
+     * @param columnNamePattern a value for {@code columnNamePattern} parameter.
+     * @return a list of bound values.
+     * @throws SQLException if a database error occurs.
+     * @see DatabaseMetaData#getColumnPrivileges(String, String, String, String)
+     */
+    public List<ColumnPrivilege> getColumnPrivileges(final String catalog, final String schema, final String table,
+                                                     final String columnNamePattern)
+            throws SQLException {
+        final List<ColumnPrivilege> list = new ArrayList<>();
+        getColumnPrivileges(catalog, schema, table, columnNamePattern, list::add);
+        return list;
+    }
+
+    /**
      * Invokes {@link DatabaseMetaData#getColumns(String, String, String, String)} method with given arguments, and
      * accepts each bound value to specified consumer.
      *
@@ -378,6 +410,26 @@ public class Context {
             assert results != null;
             bind(results, Column.class, consumer);
         }
+    }
+
+    /**
+     * Invokes {@link DatabaseMetaData#getColumns(String, String, String, String)} method with given arguments, and
+     * returns a list of bound values.
+     *
+     * @param catalog           a value for {@code catalog} parameter.
+     * @param schemaPattern     a value for {@code schemaPattern} parameter.
+     * @param tableNamePattern  a value for {@code tableNameSchema} parameter.
+     * @param columnNamePattern a value for {@code columnNamePattern} parameter.
+     * @return a list of bound values.
+     * @throws SQLException if a database error occurs.
+     * @see DatabaseMetaData#getColumns(String, String, String, String)
+     */
+    public List<Column> getColumns(final String catalog, final String schemaPattern, final String tableNamePattern,
+                                   final String columnNamePattern)
+            throws SQLException {
+        final List<Column> list = new ArrayList<>();
+        getColumns(catalog, schemaPattern, tableNamePattern, columnNamePattern, list::add);
+        return list;
     }
 
     /**
@@ -408,6 +460,30 @@ public class Context {
     }
 
     /**
+     * Invokes
+     * {@link DatabaseMetaData#getCrossReference(java.lang.String, java.lang.String, java.lang.String, java.lang.String,
+     * java.lang.String, java.lang.String)} method with given arguments, and returns a list of bound values.
+     *
+     * @param parentCatalog  a value for {@code parentCatalog} parameter
+     * @param parentSchema   a value for {@code parentSchema} parameter
+     * @param parentTable    a value for {@code parentTable} parameter
+     * @param foreignCatalog a value for {@code foreignCatalog} parameter
+     * @param foreignSchema  av value for {@code foreignSchema} parameter
+     * @param foreignTable   a value for {@code foreignTable} parameter
+     * @return a list of bound values.
+     * @throws SQLException if a database error occurs.
+     */
+    public List<CrossReference> getCrossReference(final String parentCatalog, final String parentSchema,
+                                                  final String parentTable, final String foreignCatalog,
+                                                  final String foreignSchema, final String foreignTable)
+            throws SQLException {
+        final List<CrossReference> list = new ArrayList<>();
+        getCrossReference(parentCatalog, parentSchema, parentTable, foreignCatalog, foreignSchema, foreignTable,
+                          list::add);
+        return list;
+    }
+
+    /**
      * Invokes {@link DatabaseMetaData#getExportedKeys(java.lang.String, java.lang.String, java.lang.String)} method
      * with given arguments, and accepts each bound value to specified consumer.
      *
@@ -429,7 +505,25 @@ public class Context {
     }
 
     /**
-     * Invokes {@link DatabaseMetaData#getFunctions(String, String, String)} method with given arguments, and acceptes
+     * Invokes {@link DatabaseMetaData#getExportedKeys(java.lang.String, java.lang.String, java.lang.String)} method
+     * with given arguments, and returns a list of bound values.
+     *
+     * @param catalog a value for {@code catalog} parameter.
+     * @param schema  a value for {@code schema} parameter.
+     * @param table   a value for {@code table} parameter.
+     * @return a list of bound values.
+     * @throws SQLException if a database error occurs.
+     * @see #getExportedKeys(String, String, String, Consumer)
+     */
+    public List<ExportedKey> getExportedKeys(final String catalog, final String schema, final String table)
+            throws SQLException {
+        final List<ExportedKey> list = new ArrayList<>();
+        getExportedKeys(catalog, schema, table, list::add);
+        return list;
+    }
+
+    /**
+     * Invokes {@link DatabaseMetaData#getFunctions(String, String, String)} method with given arguments, and accepts
      * each bound value to specified consumer.
      *
      * @param catalog             a value for {@code catalog} parameter.
@@ -447,6 +541,25 @@ public class Context {
             assert results != null;
             bind(results, Function.class, consumer);
         }
+    }
+
+    /**
+     * Invokes {@link DatabaseMetaData#getFunctions(String, String, String)} method with given arguments, and returns a
+     * list of bound values.
+     *
+     * @param catalog             a value for {@code catalog} parameter.
+     * @param schemaPattern       a value for {@code schemaPattern} parameter.
+     * @param functionNamePattern a value for {@code functionNamePattern} parameter.
+     * @return a list of bound values.
+     * @throws SQLException if a database error occurs.
+     * @see DatabaseMetaData#getFunctions(String, String, String)
+     */
+    public List<Function> getFunctions(final String catalog, final String schemaPattern,
+                                       final String functionNamePattern)
+            throws SQLException {
+        final List<Function> list = new ArrayList<>();
+        getFunctions(catalog, schemaPattern, functionNamePattern, list::add);
+        return list;
     }
 
     /**
@@ -473,6 +586,25 @@ public class Context {
     }
 
     /**
+     * Invokes {@link DatabaseMetaData#getFunctionColumns(String, String, String, String)} method with specified
+     * arguments, and returns a list of bound values.
+     *
+     * @param catalog             a value for {@code catalog} parameter.
+     * @param schemaPattern       a value for {@code schemaPattern} parameter.
+     * @param functionNamePattern a value for {@code functionNamePattern} parameter.
+     * @param columnNamePattern   a value for {@code columnNamePattern} parameter.
+     * @return a list of bound values.
+     * @throws SQLException if a database error occurs.
+     */
+    public List<FunctionColumn> getFunctionColumns(final String catalog, final String schemaPattern,
+                                                   final String functionNamePattern, final String columnNamePattern)
+            throws SQLException {
+        final List<FunctionColumn> list = new ArrayList<>();
+        getFunctionColumns(catalog, schemaPattern, functionNamePattern, columnNamePattern, list::add);
+        return list;
+    }
+
+    /**
      * Invokes {@link DatabaseMetaData#getImportedKeys(String, String, String)} method with given arguments, and accepts
      * each bound value to specified consumer.
      *
@@ -491,6 +623,24 @@ public class Context {
             assert results != null;
             bind(results, ImportedKey.class, consumer);
         }
+    }
+
+    /**
+     * Invokes {@link DatabaseMetaData#getImportedKeys(String, String, String)} method with given arguments, and returns
+     * a list of bound values.
+     *
+     * @param catalog a value for {@code catalog} parameter.
+     * @param schema  a value for {@code schema} parameter.
+     * @param table   a value for {@code table} parameter.
+     * @return a list of bound values.
+     * @throws SQLException if a database error occurs.
+     * @see DatabaseMetaData#getImportedKeys(String, String, String)
+     */
+    public List<ImportedKey> getImportedKeys(final String catalog, final String schema, final String table)
+            throws SQLException {
+        final List<ImportedKey> list = new ArrayList<>();
+        getImportedKeys(catalog, schema, table, list::add);
+        return list;
     }
 
     /**
@@ -517,6 +667,27 @@ public class Context {
     }
 
     /**
+     * Invokes {@link DatabaseMetaData#getIndexInfo(String, String, String, boolean, boolean)} method with specified
+     * arguments, and returns a list of bound values.
+     *
+     * @param catalog     a value for {@code catalog} parameter.
+     * @param schema      a value for {@code schema} parameter.
+     * @param table       a value for {@code table} parameter.
+     * @param unique      a value for {@code unique} parameter.
+     * @param approximate a value for {@code approximate} parameter.
+     * @return a list of bound values.
+     * @throws SQLException if a database error occurs.
+     * @see #getIndexInfo(String, String, String, boolean, boolean, Consumer)
+     */
+    public List<IndexInfo> getIndexInfo(final String catalog, final String schema, final String table,
+                                        final boolean unique, final boolean approximate)
+            throws SQLException {
+        final List<IndexInfo> list = new ArrayList<>();
+        getIndexInfo(catalog, schema, table, unique, approximate, list::add);
+        return list;
+    }
+
+    /**
      * Invokes {@link DatabaseMetaData#getPrimaryKeys(String, String, String)} method with given arguments, and accepts
      * each bound value to specified consumer.
      *
@@ -535,6 +706,24 @@ public class Context {
             assert results != null;
             bind(results, PrimaryKey.class, consumer);
         }
+    }
+
+    /**
+     * Invokes {@link DatabaseMetaData#getPrimaryKeys(String, String, String)} method with given arguments, and returns
+     * a list of bound values.
+     *
+     * @param catalog a value for {@code catalog} parameter.
+     * @param schema  a value for {@code schema} parameter.
+     * @param table   a value for {@code table} parameter.
+     * @return a list of bound values.
+     * @throws SQLException if a database error occurs.
+     * @see #getPrimaryKeys(String, String, String, Consumer)
+     */
+    public List<PrimaryKey> getPrimaryKeys(final String catalog, final String schema, final String table)
+            throws SQLException {
+        final List<PrimaryKey> list = new ArrayList<>();
+        getPrimaryKeys(catalog, schema, table, list::add);
+        return list;
     }
 
     /**
@@ -562,6 +751,27 @@ public class Context {
     }
 
     /**
+     * Invokes {@link DatabaseMetaData#getProcedureColumns(String, String, String, String)} method with given arguments
+     * , and returns a list of bound values.
+     *
+     * @param catalog              a value for {@code catalog} parameter.
+     * @param schemaPattern        a value for {@code schemaPattern} parameter.
+     * @param procedureNamePattern a value for {@code procedureNamePattern} parameter.
+     * @param columnNamePattern    a value for {@code columnNamePattern} parameter.
+     * @return a list of bound values.
+     * @throws SQLException if a database error occurs.
+     * @see DatabaseMetaData#getProcedureColumns(String, String, String, String)
+     */
+    public List<ProcedureColumn> getProcedureColumns(final String catalog, final String schemaPattern,
+                                                     final String procedureNamePattern,
+                                                     final String columnNamePattern)
+            throws SQLException {
+        final List<ProcedureColumn> list = new ArrayList<>();
+        getProcedureColumns(catalog, schemaPattern, procedureNamePattern, columnNamePattern, list::add);
+        return list;
+    }
+
+    /**
      * Invokes {@link DatabaseMetaData#getProcedures(java.lang.String, java.lang.String, java.lang.String)} method with
      * given arguments, and accepts each bounds value to specified consumer.
      *
@@ -580,6 +790,25 @@ public class Context {
             assert results != null;
             bind(results, Procedure.class, consumer);
         }
+    }
+
+    /**
+     * Invokes {@link DatabaseMetaData#getProcedures(java.lang.String, java.lang.String, java.lang.String)} method with
+     * given arguments, and returns a lsit of bound values.
+     *
+     * @param catalog              a value for {@code catalog} parameter.
+     * @param schemaPattern        a value for {@code schemaPattern} parameter.
+     * @param procedureNamePattern a value for {@code procedureNamePattern} parameter.
+     * @return a list of bound values.
+     * @throws SQLException if a database error occurs.
+     * @see DatabaseMetaData#getProcedures(String, String, String)
+     */
+    public List<Procedure> getProcedures(final String catalog, final String schemaPattern,
+                                         final String procedureNamePattern)
+            throws SQLException {
+        final List<Procedure> list = new ArrayList<>();
+        getProcedures(catalog, schemaPattern, procedureNamePattern, list::add);
+        return list;
     }
 
     /**
@@ -607,13 +836,34 @@ public class Context {
     }
 
     /**
+     * Invokes
+     * {@link DatabaseMetaData#getPseudoColumns(java.lang.String, java.lang.String, java.lang.String, java.lang.String)}
+     * method with given arguments, and returns a list of bound values.
+     *
+     * @param catalog           a value for {@code catalog} parameter.
+     * @param schemaPattern     a value for {@code schemaPattern} parameter.
+     * @param tableNamePattern  a value for {@code tableNamePattern} parameter.
+     * @param columnNamePattern a value for {@code columnNamePattern} parameter.
+     * @return a list of bound values.
+     * @throws SQLException if a database error occurs.
+     * @see DatabaseMetaData#getPseudoColumns(String, String, String, String)
+     */
+    public List<PseudoColumn> getPseudoColumns(final String catalog, final String schemaPattern,
+                                               final String tableNamePattern, final String columnNamePattern)
+            throws SQLException {
+        final List<PseudoColumn> list = new ArrayList<>();
+        getPseudoColumns(catalog, schemaPattern, tableNamePattern, columnNamePattern, list::add);
+        return list;
+    }
+
+    /**
      * Invokes {@link DatabaseMetaData#getSchemas()} method, and accepts each bound value to specified consumer.
      *
      * @param consumer the consumer to which bound values are accepted.
      * @throws SQLException if a database error occurs.
      * @see DatabaseMetaData#getSchemas()
      */
-    public void acceptSchemas(final Consumer<? super Schema> consumer) throws SQLException {
+    public void getSchemas(final Consumer<? super Schema> consumer) throws SQLException {
         Objects.requireNonNull(consumer, "consumer is null");
         try (ResultSet results = databaseMetaData.getSchemas()) {
             assert results != null;
@@ -626,12 +876,12 @@ public class Context {
      *
      * @return a list of bound values.
      * @throws SQLException if a database error occurs.
-     * @see #acceptSchemas(Consumer)
+     * @see #getSchemas(Consumer)
      */
 
-    public List<Schema> listSchemas() throws SQLException {
+    public List<Schema> getSchemas() throws SQLException {
         final List<Schema> list = new ArrayList<>();
-        acceptSchemas(list::add);
+        getSchemas(list::add);
         return list;
     }
 
@@ -645,8 +895,7 @@ public class Context {
      * @throws SQLException if a database error occurs.
      * @see DatabaseMetaData#getSchemas(String, String)
      */
-    public void getSchemas(final String catalog, final String schemaPattern,
-                           final Consumer<? super Schema> consumer)
+    public void getSchemas(final String catalog, final String schemaPattern, final Consumer<? super Schema> consumer)
             throws SQLException {
         Objects.requireNonNull(consumer, "consumer is null");
         try (ResultSet results = databaseMetaData.getSchemas(catalog, schemaPattern)) {
@@ -976,8 +1225,6 @@ public class Context {
      * @return given {@code collection}.
      * @throws SQLException if a database access error occurs.
      * @see DatabaseMetaData#deletesAreDetected(int)
-     * @see DeletesAreDetected#getAllInstances(Context, Collection)
-     * @see ResultSetType
      */
     public DeletesAreDetected deletesAreDetected(final int type) throws SQLException {
         final DeletesAreDetected value = new DeletesAreDetected();
@@ -994,8 +1241,6 @@ public class Context {
      * @return given {@code collection}.
      * @throws SQLException if a database access error occurs.
      * @see DatabaseMetaData#insertsAreDetected(int)
-     * @see InsertsAreDetected#getAllInstances(Context, Collection)
-     * @see ResultSetType
      */
     public InsertsAreDetected insertsAreDetected(final int type) throws SQLException {
         final InsertsAreDetected value = new InsertsAreDetected();
@@ -1012,8 +1257,6 @@ public class Context {
      * @return a bound value.
      * @throws SQLException if a database access error occurs.
      * @see DatabaseMetaData#updatesAreDetected(int)
-     * @see UpdatesAreDetected#getAllInstances(Context, Collection)
-     * @see ResultSetType
      */
     public UpdatesAreDetected updatesAreDetected(final int type) throws SQLException {
         final UpdatesAreDetected value = new UpdatesAreDetected();
@@ -1030,8 +1273,6 @@ public class Context {
      * @return a bound value whose {@code value} property may be {@code null} when the {@link SQLException} suppressed.
      * @throws SQLException if a database access error occurs.
      * @see DatabaseMetaData#othersDeletesAreVisible(int)
-     * @see OthersDeletesAreVisible#getAllInstances(Context, Collection)
-     * @see ResultSetType
      */
     public OthersDeletesAreVisible othersDeletesAreVisible(final int type) throws SQLException {
         final OthersDeletesAreVisible value = new OthersDeletesAreVisible();
@@ -1048,8 +1289,6 @@ public class Context {
      * @return a bound value whose {@code value} property may be {@code null} when the {@link SQLException} suppressed.
      * @throws SQLException if a database access error occurs.
      * @see DatabaseMetaData#othersInsertsAreVisible(int)
-     * @see OthersInsertsAreVisible#getAllInstances(Context, Collection)
-     * @see ResultSetType
      */
     public OthersInsertsAreVisible othersInsertsAreVisible(final int type) throws SQLException {
         final OthersInsertsAreVisible value = new OthersInsertsAreVisible();
@@ -1066,8 +1305,6 @@ public class Context {
      * @return a bound value whose {@code value} property may be {@code null} when the {@link SQLException} suppressed.
      * @throws SQLException if a database access error occurs.
      * @see DatabaseMetaData#othersUpdatesAreVisible(int)
-     * @see OthersUpdatesAreVisible#getAllInstances(Context, Collection)
-     * @see ResultSetType
      */
     public OthersUpdatesAreVisible othersUpdatesAreVisible(final int type) throws SQLException {
         final OthersUpdatesAreVisible value = new OthersUpdatesAreVisible();
@@ -1084,8 +1321,6 @@ public class Context {
      * @return a bound value whose {@code value} property may be {@code null} when the {@link SQLException} suppressed.
      * @throws SQLException if a database access error occurs.
      * @see DatabaseMetaData#ownDeletesAreVisible(int)
-     * @see OwnDeletesAreVisible#getAllInstances(Context, Collection)
-     * @see ResultSetType
      */
     public OwnDeletesAreVisible ownDeletesAreVisible(final int type) throws SQLException {
         final OwnDeletesAreVisible value = new OwnDeletesAreVisible();
@@ -1102,8 +1337,6 @@ public class Context {
      * @return a bound value whose {@code value} property may be {@code null} when the {@link SQLException} suppressed.
      * @throws SQLException if a database access error occurs.
      * @see DatabaseMetaData#ownInsertsAreVisible(int)
-     * @see OwnInsertsAreVisible#getAllInstances(Context, Collection)
-     * @see ResultSetType
      */
     public OwnInsertsAreVisible ownInsertsAreVisible(final int type) throws SQLException {
         final OwnInsertsAreVisible value = new OwnInsertsAreVisible();
@@ -1120,8 +1353,6 @@ public class Context {
      * @return a bound value whose {@code value} property may be {@code null} when the {@link SQLException} suppressed.
      * @throws SQLException if a database access error occurs.
      * @see DatabaseMetaData#ownUpdatesAreVisible(int)
-     * @see OwnUpdatesAreVisible#getAllInstances(Context, Collection)
-     * @see ResultSetType
      */
     public OwnUpdatesAreVisible ownUpdatesAreVisible(final int type) throws SQLException {
         final OwnUpdatesAreVisible value = new OwnUpdatesAreVisible();
@@ -1139,8 +1370,6 @@ public class Context {
      * @return a bound value.
      * @throws SQLException if a database access error occurs.
      * @see DatabaseMetaData#supportsConvert(int, int)
-     * @see SupportsConvert#getAllInstances(Context, Collection)
-     * @see java.sql.JDBCType
      */
     public SupportsConvert supportsConvert(final int fromType, final int toType) throws SQLException {
         final SupportsConvert value = new SupportsConvert();
@@ -1159,9 +1388,6 @@ public class Context {
      * @return a bound value.
      * @throws SQLException if a database access error occurs.
      * @see DatabaseMetaData#supportsResultSetConcurrency(int, int)
-     * @see SupportsResultSetConcurrency#getAllInstances(Context, Collection)
-     * @see java.sql.JDBCType
-     * @see ResultSetConcurrency
      */
     public SupportsResultSetConcurrency supportsResultSetConcurrency(final int type, final int concurrency)
             throws SQLException {
@@ -1180,8 +1406,6 @@ public class Context {
      * @return a bound value.
      * @throws SQLException if a database access error occurs.
      * @see DatabaseMetaData#supportsResultSetHoldability(int)
-     * @see SupportsResultSetHoldability#getAllInstances(Context, Collection)
-     * @see ResultSetHoldability
      */
     public SupportsResultSetHoldability supportsResultSetHoldability(final int holdability) throws SQLException {
         final SupportsResultSetHoldability value = new SupportsResultSetHoldability();
@@ -1198,8 +1422,6 @@ public class Context {
      * @return a bound value.
      * @throws SQLException if a database access error occurs.
      * @see DatabaseMetaData#supportsResultSetType(int)
-     * @see SupportsResultSetType#getAllInstances(Context, Collection)
-     * @see ResultSetType
      */
     public SupportsResultSetType supportsResultSetType(final int type) throws SQLException {
         final SupportsResultSetType value = new SupportsResultSetType();
@@ -1216,8 +1438,6 @@ public class Context {
      * @return a bound value.
      * @throws SQLException if a database access error occurs.
      * @see DatabaseMetaData#supportsTransactionIsolationLevel(int)
-     * @see SupportsTransactionIsolationLevel#getAllInstances(Context, Collection)
-     * @see TransactionIsolationLevel
      */
     public SupportsTransactionIsolationLevel supportsTransactionIsolationLevel(final int level) throws SQLException {
         final SupportsTransactionIsolationLevel value = new SupportsTransactionIsolationLevel();

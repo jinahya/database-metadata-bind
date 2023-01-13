@@ -42,27 +42,4 @@ public class OthersDeletesAreVisible
         extends AreVisible {
 
     private static final long serialVersionUID = 2430566341274616215L;
-
-//    /**
-//     * Invokes {@link Context#othersDeletesAreVisible(int)} method for all types defined in {@link java.sql.ResultSet}
-//     * and returns bound values.
-//     *
-//     * @param context    a context.
-//     * @param collection the collection to which bound values are added.
-//     * @param <C>        the type of {@code collection}
-//     * @return given {@code collection}.
-//     * @throws SQLException if a database access error occurs.
-//     * @see Context#othersDeletesAreVisible(int)
-//     * @see ResultSetType
-//     */
-//    public static <C extends Collection<? super OthersDeletesAreVisible>> C getAllInstances(
-//            final Context context, final C collection)
-//            throws SQLException {
-//        Objects.requireNonNull(context, "context is null");
-//        Objects.requireNonNull(collection, "collection is null");
-//        for (final ResultSetType type : ResultSetType.values()) {
-//            collection.add(context.othersDeletesAreVisible(type.rawValue()));
-//        }
-//        return collection;
-//    }
 }

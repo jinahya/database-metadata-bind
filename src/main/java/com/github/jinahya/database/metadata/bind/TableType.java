@@ -25,7 +25,6 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.experimental.SuperBuilder;
 
-import java.sql.SQLException;
 import java.util.Comparator;
 
 /**
@@ -42,11 +41,6 @@ public class TableType
     private static final long serialVersionUID = -7630634982776331078L;
 
     public static final Comparator<TableType> COMPARATOR = Comparator.comparing(TableType::getTableType);
-
-    @Override
-    public void retrieveChildren(final Context context) throws SQLException {
-        // no children.
-    }
 
     @ColumnLabel("TABLE_TYPE")
     private String tableType;

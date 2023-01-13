@@ -23,16 +23,10 @@ package com.github.jinahya.database.metadata.bind;
 import lombok.AccessLevel;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
-import lombok.Getter;
 import lombok.NoArgsConstructor;
-import lombok.Setter;
-import lombok.ToString;
 import lombok.experimental.SuperBuilder;
 
 import java.sql.DatabaseMetaData;
-import java.sql.SQLException;
-import java.util.ArrayList;
-import java.util.List;
 
 /**
  * A class for binding the result of
@@ -61,42 +55,6 @@ public class Function
 
     public static final String COLUMN_NAME_FUNCTION_TYPE = "FUNCTION_TYPE";
 
-    @Override
-    public void retrieveChildren(final Context context) throws SQLException {
-        {
-            context.getFunctionColumns(
-                    getFunctionCat(),
-                    getFunctionSchem(),
-                    getFunctionName(),
-                    "%",
-                    getFunctionColumns()::add
-            );
-            for (final FunctionColumn functionColumn : getFunctionColumns()) {
-                functionColumn.retrieveChildren(context);
-            }
-        }
-    }
-
-    @Override
-    public Schema extractParent() {
-        return Schema.builder()
-                .tableSchem(getFunctionCat())
-                .tableSchem(getFunctionSchem())
-                .build();
-    }
-
-    /**
-     * Returns function columns of this function.
-     *
-     * @return a list of function columns of this function.
-     */
-    public List<FunctionColumn> getFunctionColumns() {
-        if (functionColumns == null) {
-            functionColumns = new ArrayList<>();
-        }
-        return functionColumns;
-    }
-
     @NullableBySpecification
     @ColumnLabel(COLUMN_NAME_FUNCTION_CAT)
     private String functionCat;
@@ -117,10 +75,4 @@ public class Function
 
     @ColumnLabel("SPECIFIC_NAME")
     private String specificName;
-
-    @Setter(AccessLevel.NONE)
-    @Getter(AccessLevel.NONE)
-    @EqualsAndHashCode.Exclude
-    @ToString.Exclude
-    private List<FunctionColumn> functionColumns;
 }

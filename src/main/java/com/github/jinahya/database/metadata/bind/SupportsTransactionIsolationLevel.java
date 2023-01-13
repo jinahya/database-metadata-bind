@@ -26,7 +26,6 @@ import lombok.NoArgsConstructor;
 import lombok.experimental.SuperBuilder;
 
 import java.sql.DatabaseMetaData;
-import java.sql.SQLException;
 
 /**
  * A class for binding results of {@link DatabaseMetaData#supportsTransactionIsolationLevel(int)} method.
@@ -41,33 +40,6 @@ public class SupportsTransactionIsolationLevel
         implements MetadataType {
 
     private static final long serialVersionUID = -2241618224708597472L;
-
-//    /**
-//     * Invokes {@link Context#supportsTransactionIsolationLevel(int)} method for all transaction isolation levels
-//     * defined in {@link java.sql.Connection} and adds bound values to specified collection.
-//     *
-//     * @param context    a context.
-//     * @param collection the collection to which bound values are added.
-//     * @param <C>        the type of {@code collection}
-//     * @return given {@code collection}.
-//     * @throws SQLException if a database access error occurs.
-//     * @see TransactionIsolationLevel
-//     */
-//    public static <C extends Collection<? super SupportsTransactionIsolationLevel>> C getAllInstances(
-//            final Context context, final C collection)
-//            throws SQLException {
-//        Objects.requireNonNull(context, "context is null");
-//        Objects.requireNonNull(collection, "collection is null");
-//        for (final TransactionIsolationLevel value : TransactionIsolationLevel.values()) {
-//            collection.add(context.supportsTransactionIsolationLevel(value.rawValue()));
-//        }
-//        return collection;
-//    }
-
-    @Override
-    public void retrieveChildren(Context context) throws SQLException {
-        // no children
-    }
 
     private int level;
 

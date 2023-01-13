@@ -22,18 +22,10 @@ package com.github.jinahya.database.metadata.bind;
 
 import lombok.AccessLevel;
 import lombok.Data;
-import lombok.EqualsAndHashCode;
-import lombok.Getter;
 import lombok.NoArgsConstructor;
-import lombok.Setter;
-import lombok.ToString;
 import lombok.experimental.SuperBuilder;
 
 import java.sql.DatabaseMetaData;
-import java.sql.SQLException;
-import java.util.ArrayList;
-import java.util.Comparator;
-import java.util.List;
 
 /**
  * A class for binding results of
@@ -50,43 +42,6 @@ public class Procedure
                    ChildOf<Schema> {
 
     private static final long serialVersionUID = -6262056388403934829L;
-
-    public static final Comparator<Procedure> COMPARATOR =
-            Comparator.comparing(Procedure::getProcedureCat, Comparator.nullsFirst(Comparator.naturalOrder()))
-                    .thenComparing(Procedure::getProcedureSchem, Comparator.nullsFirst(Comparator.naturalOrder()))
-                    .thenComparing(Procedure::getProcedureName)
-                    .thenComparing(Procedure::getSpecificName);
-
-    @Override
-    public void retrieveChildren(final Context context) throws SQLException {
-        {
-            context.getProcedureColumns(
-                    getProcedureCat(),
-                    getProcedureSchem(),
-                    getProcedureName(),
-                    "%",
-                    getProcedureColumns()::add
-            );
-            for (final ProcedureColumn procedureColumn : getProcedureColumns()) {
-                procedureColumn.retrieveChildren(context);
-            }
-        }
-    }
-
-    @Override
-    public Schema extractParent() {
-        return Schema.builder()
-                .tableCatalog(getProcedureCat())
-                .tableSchem(getProcedureSchem())
-                .build();
-    }
-
-    public List<ProcedureColumn> getProcedureColumns() {
-        if (procedureColumns == null) {
-            procedureColumns = new ArrayList<>();
-        }
-        return procedureColumns;
-    }
 
     @NullableBySpecification
     @ColumnLabel("PROCEDURE_CAT")
@@ -108,11 +63,4 @@ public class Procedure
 
     @ColumnLabel("SPECIFIC_NAME")
     private String specificName;
-
-    // -----------------------------------------------------------------------------------------------------------------
-    @Setter(AccessLevel.NONE)
-    @Getter(AccessLevel.NONE)
-    @EqualsAndHashCode.Exclude
-    @ToString.Exclude
-    private List<ProcedureColumn> procedureColumns;
 }

@@ -39,26 +39,4 @@ public class UpdatesAreDetected
         extends AreDetected {
 
     private static final long serialVersionUID = -7538643762491010895L;
-
-//    /**
-//     * Invokes {@link Context#updatesAreDetected(int)} on specified context for each value of {@link ResultSetType} and
-//     * adds bound values to specified collection.
-//     *
-//     * @param context    the context.
-//     * @param collection the collection to which bound values are added.
-//     * @param <C>        the type of elements in the {@code collection}
-//     * @return given {@code collection}.
-//     * @throws SQLException if a database access error occurs.
-//     * @see Context#updatesAreDetected(int)
-//     */
-//    public static <C extends Collection<? super UpdatesAreDetected>> C getAllInstances(final Context context,
-//                                                                                       final C collection)
-//            throws SQLException {
-//        Objects.requireNonNull(context, "context is null");
-//        Objects.requireNonNull(collection, "collection is null");
-//        for (final ResultSetType type : ResultSetType.values()) {
-//            collection.add(context.updatesAreDetected(type.rawValue()));
-//        }
-//        return collection;
-//    }
 }

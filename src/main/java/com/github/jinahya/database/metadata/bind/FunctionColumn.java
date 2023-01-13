@@ -26,7 +26,6 @@ import lombok.NoArgsConstructor;
 import lombok.experimental.SuperBuilder;
 
 import java.sql.DatabaseMetaData;
-import java.sql.SQLException;
 
 /**
  * A class for binding results of {@link DatabaseMetaData#getFunctionColumns(String, String, String, String)} method.
@@ -42,34 +41,11 @@ public class FunctionColumn
 
     private static final long serialVersionUID = -7445156446214062680L;
 
-    // ---------------------------------------------------------------------------------------- COLUMN_TYPE / columnType
     public static final String COLUMN_NAME_COLUMN_TYPE = "COLUMN_TYPE";
 
-    public static final String ATTRIBUTE_NAME_COLUMN_TYPE = "columnType";
-
-    // --------------------------------------------------------------------------------------------- NULLABLE / nullable
     public static final String COLUMN_NAME_NULLABLE = "NULLABLE";
 
-    public static final String ATTRIBUTE_NAME_NULLABLE = "nullable";
-
-    // ---------------------------------------------------------------------------------------- IS_NULLABLE / isNullable
     public static final String COLUMN_NAME_IS_NULLABLE = "IS_NULLABLE";
-
-    public static final String ATTRIBUTE_NAME_IS_NULLABLE = "isNullable";
-
-    @Override
-    public void retrieveChildren(final Context context) throws SQLException {
-        // no children.
-    }
-
-    @Override
-    public Function extractParent() {
-        return Function.builder()
-                .functionCat(getFunctionCat())
-                .functionSchem(getFunctionSchem())
-                .functionName(getFunctionName())
-                .build();
-    }
 
     @NullableBySpecification
     @ColumnLabel("FUNCTION_CAT")

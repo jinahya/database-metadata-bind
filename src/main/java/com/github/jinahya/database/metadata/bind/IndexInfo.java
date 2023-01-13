@@ -22,24 +22,10 @@ package com.github.jinahya.database.metadata.bind;
 
 import lombok.AccessLevel;
 import lombok.Data;
-import lombok.EqualsAndHashCode;
-import lombok.Getter;
 import lombok.NoArgsConstructor;
-import lombok.Setter;
-import lombok.ToString;
 import lombok.experimental.SuperBuilder;
 
-import java.io.Serializable;
 import java.sql.DatabaseMetaData;
-import java.sql.SQLException;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-import java.util.Objects;
-import java.util.Optional;
-import java.util.Set;
-import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 /**
  * A class for binding results of {@link DatabaseMetaData#getIndexInfo(String, String, String, boolean, boolean)}
@@ -56,151 +42,7 @@ public class IndexInfo
 
     private static final long serialVersionUID = -768486884376018474L;
 
-    @Setter(AccessLevel.PACKAGE)
-    @Getter(AccessLevel.PACKAGE)
-    @EqualsAndHashCode
-    @ToString
-    @NoArgsConstructor(access = AccessLevel.PACKAGE)
-    @SuperBuilder(toBuilder = true)
-    static class IndexInfoCategory
-            implements Serializable {
-
-        private static final long serialVersionUID = 8326654078451632859L;
-
-        static IndexInfoCategory of(final boolean unique, final boolean approximate) {
-            return builder()
-                    .unique(unique)
-                    .approximate(approximate)
-                    .build();
-        }
-
-        static final Set<IndexInfoCategory> _VALUES = Collections.unmodifiableSet(
-                Stream.of(true, false)
-                        .flatMap(u -> Stream.of(IndexInfoCategory.of(u, false),
-                                                IndexInfoCategory.of(u, true)))
-                        .collect(Collectors.toSet())
-        );
-
-        private boolean unique;
-
-        private boolean approximate;
-    }
-
-    @Setter
-    @Getter
-    @EqualsAndHashCode
-    @ToString
-    @NoArgsConstructor
-    @SuperBuilder(toBuilder = true)
-    public static class CategorizedIndexInfo
-            implements Serializable {
-
-        private static final long serialVersionUID = 3971564160837471251L;
-
-        static CategorizedIndexInfo of(final IndexInfoCategory indexInfoCategory) {
-            return builder()
-                    .category(indexInfoCategory)
-                    .build();
-        }
-
-        public boolean isUnique() {
-            return Objects.requireNonNull(category, "category is null").isUnique();
-        }
-
-        public void setUnique(final boolean unique) {
-            Optional.ofNullable(category)
-                    .orElseGet(() -> (category = new IndexInfoCategory()))
-                    .setUnique(unique);
-        }
-
-        public boolean isApproximate() {
-            return Objects.requireNonNull(category, "category is null").isApproximate();
-        }
-
-        public void setApproximate(final boolean approximate) {
-            Optional.ofNullable(category)
-                    .orElseGet(() -> (category = new IndexInfoCategory()))
-                    .setApproximate(approximate);
-        }
-
-        public List<IndexInfo> getIndexInfo() {
-            if (indexInfo == null) {
-                indexInfo = new ArrayList<>();
-            }
-            return indexInfo;
-        }
-
-        @Deprecated
-        public void setIndexInfo(final List<IndexInfo> indexInfo) {
-            this.indexInfo = indexInfo;
-        }
-
-        @Setter(AccessLevel.PACKAGE)
-        @Getter(AccessLevel.PACKAGE)
-        private IndexInfoCategory category;
-
-        @Setter(AccessLevel.NONE)
-        @Getter(AccessLevel.NONE)
-        private List<IndexInfo> indexInfo;
-    }
-
     public static final String COLUMN_NAME_TYPE = "TYPE";
-
-    private boolean isNonUniqueFalseWhenTypeIsTableIndexStatistics() {
-        if (getType() != DatabaseMetaData.tableIndexStatistic) {
-            return true;
-        }
-        return !isNonUnique();
-    }
-
-    private boolean isIndexQualifierNullWhenTypeIsTableIndexStatistics() {
-        if (getType() != DatabaseMetaData.tableIndexStatistic) {
-            return true;
-        }
-        return getIndexQualifier() == null;
-    }
-
-    private boolean isIndexNameNullWhenTypeIsTableIndexStatistics() {
-        if (getType() != DatabaseMetaData.tableIndexStatistic) {
-            return true;
-        }
-        return getIndexName() == null;
-    }
-
-    private boolean isOrdinalPositionZeroWhenTypeIsTableIndexStatistics() {
-        if (getType() != DatabaseMetaData.tableIndexStatistic) {
-            return true;
-        }
-        return getOrdinalPosition() == 0;
-    }
-
-    private boolean isColumnNameNullWhenTypeIsTableIndexStatistics() {
-        if (getType() != DatabaseMetaData.tableIndexStatistic) {
-            return true;
-        }
-        return getColumnName() == null;
-    }
-
-    private boolean isAscOrDescNullWhenTypeIsTableIndexStatistics() {
-        if (getType() != DatabaseMetaData.tableIndexStatistic) {
-            return true;
-        }
-        return getAscOrDesc() == null;
-    }
-
-    @Override
-    public void retrieveChildren(final Context context) throws SQLException {
-        // no children.
-    }
-
-    @Override
-    public Table extractParent() {
-        return Table.builder()
-                .tableCat(getTableCat())
-                .tableSchem(getTableSchem())
-                .tableName(getTableName())
-                .build();
-    }
 
     @NullableBySpecification
     @ColumnLabel("TABLE_CAT")

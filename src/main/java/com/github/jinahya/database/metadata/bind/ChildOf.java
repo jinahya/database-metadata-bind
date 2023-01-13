@@ -22,5 +22,4 @@ package com.github.jinahya.database.metadata.bind;
 
 public interface ChildOf<T extends MetadataType> {
 
-    T extractParent();
 }

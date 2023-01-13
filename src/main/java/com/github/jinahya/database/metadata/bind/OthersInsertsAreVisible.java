@@ -42,26 +42,4 @@ public class OthersInsertsAreVisible
         extends AreVisible {
 
     private static final long serialVersionUID = 1507862473680389478L;
-
-//    /**
-//     * Invokes {@link Context#othersInsertsAreVisible(int)} method for all types defined in {@link java.sql.ResultSet}
-//     * and adds bound values to specified collection.
-//     *
-//     * @param context    a context.
-//     * @param collection the collection to which bound values are added.
-//     * @param <C>        the type of {@code collection}
-//     * @return given {@code collection}.
-//     * @throws SQLException if a database access error occurs.
-//     * @see ResultSetType
-//     */
-//    public static <C extends Collection<? super OthersInsertsAreVisible>> C getAllInstances(
-//            final Context context, final C collection)
-//            throws SQLException {
-//        Objects.requireNonNull(context, "context is null");
-//        Objects.requireNonNull(collection, "collection is null");
-//        for (final ResultSetType type : ResultSetType.values()) {
-//            collection.add(context.othersInsertsAreVisible(type.rawValue()));
-//        }
-//        return collection;
-//    }
 }

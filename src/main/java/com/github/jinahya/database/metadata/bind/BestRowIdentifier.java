@@ -22,21 +22,13 @@ package com.github.jinahya.database.metadata.bind;
 
 import lombok.AccessLevel;
 import lombok.Data;
-import lombok.EqualsAndHashCode;
-import lombok.Getter;
 import lombok.NoArgsConstructor;
-import lombok.Setter;
-import lombok.ToString;
 import lombok.experimental.SuperBuilder;
 import lombok.extern.java.Log;
 
-import java.io.Serializable;
 import java.sql.DatabaseMetaData;
-import java.sql.SQLException;
-import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
-import java.util.Objects;
-import java.util.Optional;
 
 /**
  * A class for binding results of {@link DatabaseMetaData#getBestRowIdentifier(String, String, String, int, boolean)}
@@ -53,99 +45,12 @@ public class BestRowIdentifier
 
     private static final long serialVersionUID = -1512051574198028399L;
 
-    /**
-     * A key class for categorizing best row identifiers by their {@code scope} and {@code nullable}.
-     *
-     * @author Jin Kwon &lt;onacit_at_gmail.com&gt;
-     */
-    @Setter(AccessLevel.PACKAGE)
-    @Getter(AccessLevel.PACKAGE)
-    @EqualsAndHashCode
-    @ToString
-    @NoArgsConstructor
-    @SuperBuilder(toBuilder = true)
-    static class BestRowIdentifierCategory
-            implements Serializable {
-
-        private static final long serialVersionUID = 4793328436607858329L;
-
-        static BestRowIdentifierCategory of(final int scope, final boolean nullable) {
-            return builder()
-                    .scope(scope)
-                    .nullable(nullable)
-                    .build();
-        }
-
-        private int scope;
-
-        private boolean nullable;
-    }
-
-    /**
-     * A class for wrapping categorized instances of {@link BestRowIdentifier}.
-     *
-     * @author Jin Kwon &lt;onacit_at_gmail.com&gt;
-     */
-    @Setter
-    @Getter
-    @ToString
-    @NoArgsConstructor
-    @SuperBuilder(toBuilder = true)
-    public static class CategorizedBestRowIdentifiers
-            implements Serializable {
-
-        private static final long serialVersionUID = -3993338410915583081L;
-
-        static CategorizedBestRowIdentifiers of(BestRowIdentifierCategory category) {
-            return builder()
-                    .category(category)
-                    .build();
-        }
-
-        public int getScope() {
-            return Objects.requireNonNull(category, "category is null").getScope();
-        }
-
-        public void setScope(final int scope) {
-            Optional.ofNullable(category)
-                    .orElseGet(() -> (category = new BestRowIdentifierCategory()))
-                    .setScope(scope);
-        }
-
-        public boolean isNullable() {
-            return Objects.requireNonNull(category, "category is null").isNullable();
-        }
-
-        public void setNullable(final boolean nullable) {
-            Optional.ofNullable(category)
-                    .orElseGet(() -> (category = new BestRowIdentifierCategory()))
-                    .setNullable(nullable);
-        }
-
-        public List<BestRowIdentifier> getBestRowIdentifiers() {
-            if (bestRowIdentifiers == null) {
-                bestRowIdentifiers = new ArrayList<>();
-            }
-            return bestRowIdentifiers;
-        }
-
-        @Deprecated
-        public void setBestRowIdentifiers(final List<BestRowIdentifier> bestRowIdentifiers) {
-            this.bestRowIdentifiers = bestRowIdentifiers;
-        }
-
-        @Setter(AccessLevel.PACKAGE)
-        @Getter(AccessLevel.PACKAGE)
-        private BestRowIdentifierCategory category;
-
-        @Setter(AccessLevel.NONE)
-        @Getter(AccessLevel.NONE)
-        private List<BestRowIdentifier> bestRowIdentifiers;
-    }
-
-    @Override
-    public void retrieveChildren(final Context context) throws SQLException {
-        // no children.
+    public static List<Integer> scopes() {
+        return Arrays.asList(
+                DatabaseMetaData.bestRowTemporary,
+                DatabaseMetaData.bestRowTransaction,
+                DatabaseMetaData.bestRowSession
+        );
     }
 
     @ColumnLabel("SCOPE")

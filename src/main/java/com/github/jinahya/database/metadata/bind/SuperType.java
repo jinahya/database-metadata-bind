@@ -26,7 +26,6 @@ import lombok.NoArgsConstructor;
 import lombok.experimental.SuperBuilder;
 
 import java.sql.DatabaseMetaData;
-import java.sql.SQLException;
 
 /**
  * A class for binding results of
@@ -42,35 +41,6 @@ public class SuperType
                    ChildOf<Schema> {
 
     private static final long serialVersionUID = 4603878785941565029L;
-
-    @Override
-    public void retrieveChildren(final Context context) throws SQLException {
-        // no children.
-    }
-
-    @Override
-    public Schema extractParent() {
-        return Schema.builder()
-                .tableCatalog(getTypeCat())
-                .tableSchem(getTypeSchem())
-                .build();
-    }
-
-    public UDT extractType() {
-        return UDT.builder()
-                .typeCat(getTypeCat())
-                .typeSchem(getTypeSchem())
-                .typeName(getTypeName())
-                .build();
-    }
-
-    public UDT extractSuperType() {
-        return UDT.builder()
-                .typeCat(getSupertypeCat())
-                .typeSchem(getSupertypeSchem())
-                .typeName(getSupertypeName())
-                .build();
-    }
 
     @NullableBySpecification
     @ColumnLabel("TYPE_CAT")

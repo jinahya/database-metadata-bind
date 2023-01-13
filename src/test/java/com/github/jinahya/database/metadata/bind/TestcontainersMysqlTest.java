@@ -21,10 +21,6 @@ package com.github.jinahya.database.metadata.bind;
  */
 
 import lombok.extern.slf4j.Slf4j;
-import org.junit.jupiter.api.Disabled;
-import org.junit.jupiter.api.Test;
-
-import java.sql.DriverManager;
 
 @Slf4j
 class TestcontainersMysqlTest
@@ -35,24 +31,4 @@ class TestcontainersMysqlTest
     private static final String USER = "root";
 
     private static final String PASSWORD = "test";
-
-    @Disabled
-    @Test
-    void test() throws Exception {
-//        final String jdbcUrl = container.getJdbcUrl();
-//        final String username = container.getUsername();
-//        final String password = container.getPassword();
-        try (var connection = DriverManager.getConnection(URL, USER, PASSWORD)) {
-//        try (var connection = DriverManager.getConnection(jdbcUrl, username, password)) {
-            final var context = Context.newInstance(connection);
-            final var metadata = Metadata.newInstance(context);
-        }
-    }
-
-//    @Container
-//    public MySQLContainer<?> container
-//            = new MySQLContainer<>(DockerImageName.parse("mysql:5.7"))
-//            .withExposedPorts(3306)
-//            .waitingFor(new WaitAllStrategy(WaitAllStrategy.Mode.WITH_INDIVIDUAL_TIMEOUTS_ONLY))
-//            ;
 }

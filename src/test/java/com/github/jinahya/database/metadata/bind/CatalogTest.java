@@ -20,28 +20,9 @@ package com.github.jinahya.database.metadata.bind;
  * #L%
  */
 
-import org.junit.jupiter.api.Test;
-
-import static org.assertj.core.api.Assertions.assertThat;
-
 class CatalogTest extends MetadataTypeTest<Catalog> {
 
     CatalogTest() {
         super(Catalog.class);
-    }
-
-    @Test
-    void newVirtualInstance_() {
-        final var actual = Catalog.newVirtualInstance();
-        assertThat(actual)
-                .isNotNull()
-                .satisfies(v -> {
-                    assertThat(v.getVirtual())
-                            .as("a new virtual instance's value of isVirtual()")
-                            .isTrue();
-                    assertThat(v.getTableCat())
-                            .isEqualTo(Catalog.COLUMN_VALUE_TABLE_CAT_EMPTY);
-                })
-        ;
     }
 }

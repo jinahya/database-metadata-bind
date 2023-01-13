@@ -24,10 +24,6 @@ import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.condition.EnabledIfSystemProperty;
 
-import java.sql.Connection;
-
-import static java.sql.DriverManager.getConnection;
-
 /**
  * Test class for remote databases.
  *
@@ -40,15 +36,7 @@ class ContainerIT {
     @Test
     void writeMetadataToFiles() throws Exception {
         final String url = System.getProperty("url");
-//        final String user = System.getProperty("user");
 //        final String password = System.getProperty("password");
         log.info("connecting...");
-//        try (Connection connection = getConnection(url, user, password)) {
-        try (Connection connection = getConnection(url)) {
-            log.info("connected: {}", connection);
-            final Context context = Context.newInstance(connection);
-            final Metadata metadata = Metadata.newInstance(context);
-            //JaxbTests.writeToFile(Metadata.class, metadata, "testcontainers");
-        }
     }
 }

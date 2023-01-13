@@ -25,8 +25,6 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.experimental.SuperBuilder;
 
-import java.sql.SQLException;
-
 /**
  * A entity class for binding the result of
  * {@link java.sql.DatabaseMetaData#getSuperTables(java.lang.String, java.lang.String, java.lang.String)}
@@ -41,19 +39,6 @@ public class SuperTable
                    ChildOf<Schema> {
 
     private static final long serialVersionUID = -302335602056528563L;
-
-    @Override
-    public void retrieveChildren(final Context context) throws SQLException {
-        // no children.
-    }
-
-    @Override
-    public Schema extractParent() {
-        return Schema.builder()
-                .tableCatalog(getTableCat())
-                .tableSchem(getTableSchem())
-                .build();
-    }
 
     @NullableBySpecification
     @ColumnLabel("TABLE_CAT")

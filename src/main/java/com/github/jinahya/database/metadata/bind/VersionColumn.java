@@ -22,16 +22,10 @@ package com.github.jinahya.database.metadata.bind;
 
 import lombok.AccessLevel;
 import lombok.Data;
-import lombok.EqualsAndHashCode;
-import lombok.Getter;
 import lombok.NoArgsConstructor;
-import lombok.Setter;
-import lombok.ToString;
 import lombok.experimental.SuperBuilder;
 
 import java.sql.DatabaseMetaData;
-import java.sql.SQLException;
-import java.util.Objects;
 
 /**
  * A class for binding results of {@link DatabaseMetaData#getVersionColumns(String, String, String)} method.
@@ -46,16 +40,6 @@ public class VersionColumn
                    ChildOf<Table> {
 
     private static final long serialVersionUID = 3587959398829593292L;
-
-    @Override
-    public void retrieveChildren(final Context context) throws SQLException {
-        // no children.
-    }
-
-    @Override
-    public Table extractParent() {
-        return Objects.requireNonNull(table, "table is null");
-    }
 
     @NotUsedBySpecification
     @ColumnLabel("SCOPE")
@@ -83,11 +67,4 @@ public class VersionColumn
 
     @ColumnLabel("PSEUDO_COLUMN")
     private int pseudoColumn;
-
-    // -----------------------------------------------------------------------------------------------------------------
-    @Setter(AccessLevel.NONE)
-    @Getter(AccessLevel.NONE)
-    @EqualsAndHashCode.Exclude
-    @ToString.Exclude
-    Table table;
 }

@@ -21,17 +21,8 @@ package com.github.jinahya.database.metadata.bind;
  */
 
 import java.io.Serializable;
-import java.sql.SQLException;
 
 public interface MetadataType
         extends Serializable {
 
-    /**
-     * Retrieves child elements of this object using specified context.
-     *
-     * @param context the context.
-     * @throws SQLException if a database error occurs.
-     */
-    @Deprecated
-    void retrieveChildren(Context context) throws SQLException;
 }

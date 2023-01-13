@@ -26,8 +26,6 @@ import lombok.NoArgsConstructor;
 import lombok.experimental.SuperBuilder;
 
 import java.sql.DatabaseMetaData;
-import java.sql.SQLException;
-import java.util.Comparator;
 
 /**
  * A class for binding results of {@link DatabaseMetaData#getPrimaryKeys(String, String, String)} method.
@@ -42,22 +40,6 @@ public class PrimaryKey
                    ChildOf<Table> {
 
     private static final long serialVersionUID = 3159826510060898330L;
-
-    public static final Comparator<PrimaryKey> COMPARATOR = Comparator.comparing(PrimaryKey::getColumnName);
-
-    @Override
-    public void retrieveChildren(final Context context) throws SQLException {
-        // no children.
-    }
-
-    @Override
-    public Table extractParent() {
-        return Table.builder()
-                .tableCat(getTableCat())
-                .tableSchem(getTableSchem())
-                .tableName(getTableName())
-                .build();
-    }
 
     @NullableBySpecification
     @ColumnLabel("TABLE_CAT")
