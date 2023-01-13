@@ -29,15 +29,8 @@ import lombok.Setter;
 import lombok.ToString;
 import lombok.experimental.SuperBuilder;
 
-import javax.validation.Valid;
-import javax.validation.constraints.NotNull;
-import javax.xml.bind.annotation.XmlAttribute;
-import javax.xml.bind.annotation.XmlElement;
-import javax.xml.bind.annotation.XmlElementRef;
-import javax.xml.bind.annotation.XmlRootElement;
 import java.sql.SQLException;
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.List;
 import java.util.Objects;
 
@@ -46,10 +39,7 @@ import java.util.Objects;
  * method.
  *
  * @author Jin Kwon &lt;jinahya_at_gmail.com&gt;
- * @see Context#getSchemas(Collection)
- * @see Context#getSchemas(String, String, Collection)
  */
-@XmlRootElement
 @ParentOf(UDT.class)
 @ParentOf(Table.class)
 @ParentOf(Procedure.class)
@@ -184,60 +174,50 @@ public class Schema
         return UDTs;
     }
 
-    @XmlAttribute(required = false)
     private Boolean virtual;
 
-    @XmlElement(nillable = true, required = true)
     @NullableBySpecification
     @ColumnLabel(COLUMN_LABEL_TABLE_CATALOG)
     private String tableCatalog;
 
-    @XmlElement(nillable = false, required = true)
-    @NotNull
     @ColumnLabel(COLUMN_LABEL_TABLE_SCHEM)
     private String tableSchem;
 
-    @XmlElementRef
     @Setter(AccessLevel.NONE)
     @Getter(AccessLevel.NONE)
     @EqualsAndHashCode.Exclude
     @ToString.Exclude
-    private List<@Valid @NotNull Function> functions;
+    private List<Function> functions;
 
-    @XmlElementRef
     @Setter(AccessLevel.NONE)
     @Getter(AccessLevel.NONE)
     @EqualsAndHashCode.Exclude
     @ToString.Exclude
-    private List<@Valid @NotNull Procedure> procedures;
+    private List<Procedure> procedures;
 
-    @XmlElementRef
     @Setter(AccessLevel.NONE)
     @Getter(AccessLevel.NONE)
     @EqualsAndHashCode.Exclude
     @ToString.Exclude
-    private List<@Valid @NotNull SuperTable> superTables;
+    private List<SuperTable> superTables;
 
-    @XmlElementRef
     @Setter(AccessLevel.NONE)
     @Getter(AccessLevel.NONE)
     @EqualsAndHashCode.Exclude
     @ToString.Exclude
-    private List<@Valid @NotNull SuperType> superTypes;
+    private List<SuperType> superTypes;
 
-    @XmlElementRef
     @Setter(AccessLevel.NONE)
     @Getter(AccessLevel.NONE)
     @EqualsAndHashCode.Exclude
     @ToString.Exclude
-    private List<@Valid @NotNull Table> tables;
+    private List<Table> tables;
 
-    @XmlElementRef
     @Setter(AccessLevel.NONE)
     @Getter(AccessLevel.NONE)
     @EqualsAndHashCode.Exclude
     @ToString.Exclude
-    private List<@Valid @NotNull UDT> UDTs;
+    private List<UDT> UDTs;
 
     // -----------------------------------------------------------------------------------------------------------------
 

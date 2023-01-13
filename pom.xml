@@ -45,22 +45,10 @@
     <maven.compiler.testRelease>${maven.compiler.testTarget}</maven.compiler.testRelease>
     <doclint>none</doclint>
     <version.animal-sniffer>1.22</version.animal-sniffer>
-    <!--    <version.com.sun.xml.bind>${version.jakarta.xml.bind-api}</version.com.sun.xml.bind>-->
-    <version.com.sun.xml.bind>2.3.6</version.com.sun.xml.bind>
-    <version.jakarta.json-api>1.1.6</version.jakarta.json-api>
-    <version.javax.json-api>1.1.4</version.javax.json-api>
-    <!--    <version.jakarta.json.bind-api>2.0.0</version.jakarta.json.bind-api>-->
-    <version.jakarta.json.bind-api>1.0.2</version.jakarta.json.bind-api>
-    <!--    <version.jakarta.validation-api>3.0.2</version.jakarta.validation-api>-->
-    <version.jakarta.validation-api>2.0.2</version.jakarta.validation-api>
-    <!--    <version.jakarta.xml.bind-api>4.0.0</version.jakarta.xml.bind-api>-->
-    <version.jakarta.xml.bind-api>2.3.3</version.jakarta.xml.bind-api>
     <version.lombok>1.18.24</version.lombok>
-    <!--    <version.mariadb-java-client>2.7.2</version.mariadb-java-client>-->
     <version.mariadb-java-client>3.0.7</version.mariadb-java-client>
     <version.maven-failsafe>${version.maven-surefire}</version.maven-failsafe>
     <version.maven-surefire>3.0.0-M7</version.maven-surefire>
-    <!--    <version.mysql-connector-java>8.0.23</version.mysql-connector-java>-->
     <version.mysql-connector-java>8.0.30</version.mysql-connector-java>
     <version.mssql-jdbc>11.2.0.jre8</version.mssql-jdbc>
     <version.ojdbc6>11.2.0.4</version.ojdbc6>
@@ -115,16 +103,6 @@
         <version>${version.mysql-connector-java}</version>
       </dependency>
       <dependency>
-        <groupId>org.apache.johnzon</groupId>
-        <artifactId>johnzon-jsonb</artifactId>
-        <version>${version.org.apache.jonzon}</version>
-      </dependency>
-      <dependency>
-        <groupId>org.eclipse</groupId>
-        <artifactId>yasson</artifactId>
-        <version>1.0.11</version>
-      </dependency>
-      <dependency>
         <groupId>org.mariadb.jdbc</groupId>
         <artifactId>mariadb-java-client</artifactId>
         <version>${version.mariadb-java-client}</version>
@@ -156,52 +134,10 @@
       <scope>test</scope>
     </dependency>
     <dependency>
-      <groupId>com.sun.xml.bind</groupId>
-      <artifactId>jaxb-impl</artifactId>
-      <version>${version.com.sun.xml.bind}</version>
-      <scope>test</scope>
-    </dependency>
-    <!--    <dependency>-->
-    <!--      <groupId>jakarta.json</groupId>-->
-    <!--      <artifactId>jakarta.json-api</artifactId>-->
-    <!--      <version>${version.jakarta.json-api}</version>-->
-    <!--      <scope>provided</scope>-->
-    <!--    </dependency>-->
-    <!--    <dependency>-->
-    <!--      <groupId>javax.json</groupId>-->
-    <!--      <artifactId>javax.json-api</artifactId>-->
-    <!--      <version>1.1.4</version>-->
-    <!--      <type>bundle</type>-->
-    <!--    </dependency>-->
-    <dependency>
-      <groupId>jakarta.json.bind</groupId>
-      <artifactId>jakarta.json.bind-api</artifactId>
-      <version>${version.jakarta.json.bind-api}</version>
-      <scope>provided</scope>
-    </dependency>
-    <dependency>
-      <groupId>jakarta.xml.bind</groupId>
-      <artifactId>jakarta.xml.bind-api</artifactId>
-      <version>${version.jakarta.xml.bind-api}</version>
-      <scope>provided</scope>
-    </dependency>
-    <dependency>
-      <groupId>jakarta.validation</groupId>
-      <artifactId>jakarta.validation-api</artifactId>
-      <version>${version.jakarta.validation-api}</version>
-      <scope>provided</scope>
-    </dependency>
-    <dependency>
       <groupId>org.apache.derby</groupId>
       <artifactId>derby</artifactId>
       <version>10.14.2.0</version>
       <!-- https://db.apache.org/derby/derby_downloads.html#For+Java+8+and+Higher -->
-      <scope>test</scope>
-    </dependency>
-    <dependency>
-      <groupId>org.apache.johnzon</groupId>
-      <artifactId>johnzon-jsonb</artifactId>
-      <version>${version.org.apache.jonzon}</version>
       <scope>test</scope>
     </dependency>
     <dependency>
@@ -286,11 +222,6 @@
               <!-- https://issues.apache.org/jira/browse/MJAVADOC-720 -->
               <!--              <sourcepath>${project.build.directory}/generated-sources-noduplicate/delombok</sourcepath>-->
             </additionalOptions>
-            <links>
-              <link>https://javadoc.io/doc/jakarta.persistence/jakarta.persistence-api/latest</link>
-              <link>https://javadoc.io/doc/jakarta.xml.bind/jakarta.xml.bind-api/latest</link>
-              <link>https://javadoc.io/doc/jakarta.validation/jakarta.validation-api/latest</link>
-            </links>
             <tags>
               <tag>
                 <name>apiNote</name>
@@ -746,29 +677,6 @@
         <dependency>
           <groupId>com.microsoft.sqlserver</groupId>
           <artifactId>mssql-jdbc</artifactId>
-          <scope>test</scope>
-        </dependency>
-      </dependencies>
-    </profile>
-    <profile>
-      <id>jakarta-json-binding-yasson</id>
-      <activation>
-        <activeByDefault>true</activeByDefault>
-      </activation>
-      <dependencies>
-        <dependency>
-          <groupId>org.eclipse</groupId>
-          <artifactId>yasson</artifactId>
-          <scope>test</scope>
-        </dependency>
-      </dependencies>
-    </profile>
-    <profile>
-      <id>jakarta-json-binding-jonzon</id>
-      <dependencies>
-        <dependency>
-          <groupId>org.apache.johnzon</groupId>
-          <artifactId>johnzon-jsonb</artifactId>
           <scope>test</scope>
         </dependency>
       </dependencies>

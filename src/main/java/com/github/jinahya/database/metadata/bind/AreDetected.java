@@ -27,9 +27,6 @@ import lombok.NoArgsConstructor;
 import lombok.ToString;
 import lombok.experimental.SuperBuilder;
 
-import javax.xml.bind.annotation.XmlAttribute;
-import javax.xml.bind.annotation.XmlSeeAlso;
-import javax.xml.bind.annotation.XmlValue;
 import java.io.Serializable;
 import java.sql.SQLException;
 
@@ -41,11 +38,6 @@ import java.sql.SQLException;
  * @see InsertsAreDetected
  * @see UpdatesAreDetected
  */
-@XmlSeeAlso({
-        DeletesAreDetected.class,
-        InsertsAreDetected.class,
-        UpdatesAreDetected.class
-})
 @Data
 @EqualsAndHashCode
 @ToString(callSuper = true)
@@ -88,16 +80,6 @@ public abstract class AreDetected
     }
 
     /**
-     * Returns the value of {@link #getType()} as an enum constant.
-     *
-     * @return the value of {@link #getType()} as an enum constant.
-     */
-    @XmlAttribute(required = false)
-    public ResultSetType getTypeAsEnum() {
-        return ResultSetType.valueOfRawValue(getType());
-    }
-
-    /**
      * Returns the value of this result.
      *
      * @return the value of this result
@@ -115,9 +97,7 @@ public abstract class AreDetected
         this.value = value;
     }
 
-    @XmlAttribute(required = true)
     private int type;
 
-    @XmlValue
     private Boolean value;
 }

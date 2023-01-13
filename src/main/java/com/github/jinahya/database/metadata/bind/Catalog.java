@@ -29,26 +29,17 @@ import lombok.Setter;
 import lombok.ToString;
 import lombok.experimental.SuperBuilder;
 
-import javax.json.bind.annotation.JsonbTransient;
-import javax.validation.Valid;
-import javax.validation.constraints.NotNull;
-import javax.xml.bind.annotation.XmlAttribute;
-import javax.xml.bind.annotation.XmlElement;
-import javax.xml.bind.annotation.XmlElementRef;
-import javax.xml.bind.annotation.XmlRootElement;
-import javax.xml.bind.annotation.XmlTransient;
 import java.sql.SQLException;
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.List;
+import java.util.function.Consumer;
 
 /**
  * A class for binding results of {@link java.sql.DatabaseMetaData#getCatalogs()} method.
  *
  * @author Jin Kwon &lt;jinahya_at_gmail.com&gt;
- * @see Context#collectCatalogs(Collection)
+ * @see Context#getCatalogs(Consumer)
  */
-@XmlRootElement
 @ParentOf(Schema.class)
 @Data
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
@@ -98,7 +89,6 @@ public class Catalog
      *
      * @return a list of schemas of this catalog; never {@code null}.
      */
-    @NotNull
     public List<Schema> getSchemas() {
         if (schemas == null) {
             schemas = new ArrayList<>();
@@ -119,22 +109,18 @@ public class Catalog
     }
 
     // -----------------------------------------------------------------------------------------------------------------
-    @XmlAttribute(required = false)
     private Boolean virtual;
 
     // -----------------------------------------------------------------------------------------------------------------
-    @XmlElement(nillable = false, required = true)
-    @NotNull
     @ColumnLabel(COLUMN_LABEL_TABLE_CAT)
     private String tableCat;
 
     // -----------------------------------------------------------------------------------------------------------------
-    @XmlElementRef
     @Setter(AccessLevel.NONE)
     @Getter(AccessLevel.NONE)
     @EqualsAndHashCode.Exclude
     @ToString.Exclude
-    private List<@Valid @NotNull Schema> schemas;
+    private List<Schema> schemas;
 
     // -----------------------------------------------------------------------------------------------------------------
 
@@ -143,8 +129,6 @@ public class Catalog
      *
      * @return {@code true} if this catalog is a virtual instance; {@code false} otherwise.
      */
-    @JsonbTransient
-    @XmlTransient
     public boolean isVirtual() {
         final Boolean virtual = getVirtual();
         return virtual != null && virtual;

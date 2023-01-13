@@ -29,24 +29,10 @@ import lombok.Setter;
 import lombok.ToString;
 import lombok.experimental.SuperBuilder;
 
-import javax.json.bind.annotation.JsonbProperty;
-import javax.json.bind.annotation.JsonbTransient;
-import javax.validation.Valid;
-import javax.validation.constraints.AssertTrue;
-import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.NotNull;
-import javax.validation.constraints.PositiveOrZero;
-import javax.xml.bind.annotation.XmlAttribute;
-import javax.xml.bind.annotation.XmlElement;
-import javax.xml.bind.annotation.XmlElementRef;
-import javax.xml.bind.annotation.XmlEnum;
-import javax.xml.bind.annotation.XmlRootElement;
-import javax.xml.bind.annotation.XmlTransient;
 import java.io.Serializable;
 import java.sql.DatabaseMetaData;
 import java.sql.SQLException;
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
@@ -60,9 +46,7 @@ import java.util.stream.Stream;
  * method.
  *
  * @author Jin Kwon &lt;jinahya_at_gmail.com&gt;
- * @see Context#getIndexInfo(String, String, String, boolean, boolean, Collection)
  */
-@XmlRootElement
 @Data
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @SuperBuilder(toBuilder = true)
@@ -102,7 +86,6 @@ public class IndexInfo
         private boolean approximate;
     }
 
-    @XmlRootElement
     @Setter
     @Getter
     @EqualsAndHashCode
@@ -120,8 +103,6 @@ public class IndexInfo
                     .build();
         }
 
-        @JsonbProperty
-        @XmlAttribute
         public boolean isUnique() {
             return Objects.requireNonNull(category, "category is null").isUnique();
         }
@@ -132,8 +113,6 @@ public class IndexInfo
                     .setUnique(unique);
         }
 
-        @JsonbProperty
-        @XmlAttribute
         public boolean isApproximate() {
             return Objects.requireNonNull(category, "category is null").isApproximate();
         }
@@ -144,7 +123,6 @@ public class IndexInfo
                     .setApproximate(approximate);
         }
 
-        @NotNull
         public List<IndexInfo> getIndexInfo() {
             if (indexInfo == null) {
                 indexInfo = new ArrayList<>();
@@ -157,74 +135,17 @@ public class IndexInfo
             this.indexInfo = indexInfo;
         }
 
-        @JsonbTransient
-        @XmlTransient
-        @Valid
-        @NotNull
         @Setter(AccessLevel.PACKAGE)
         @Getter(AccessLevel.PACKAGE)
         private IndexInfoCategory category;
 
-        @XmlElementRef
         @Setter(AccessLevel.NONE)
         @Getter(AccessLevel.NONE)
-        private List<@Valid @NotNull IndexInfo> indexInfo;
+        private List<IndexInfo> indexInfo;
     }
 
     public static final String COLUMN_NAME_TYPE = "TYPE";
 
-    /**
-     * Constants for {@value #COLUMN_NAME_TYPE} column values.
-     */
-    @XmlEnum
-    public enum Type implements IntFieldEnum<Type> {
-
-        /**
-         * Constant for
-         * {@link DatabaseMetaData#tableIndexStatistic}({@value java.sql.DatabaseMetaData#tableIndexStatistic}).
-         */
-        TABLE_INDEX_STATISTICS(DatabaseMetaData.tableIndexStatistic), // 0
-
-        /**
-         * Constant for
-         * {@link DatabaseMetaData#tableIndexClustered}({@value java.sql.DatabaseMetaData#tableIndexClustered}).
-         */
-        TABLE_INDEX_CLUSTERED(DatabaseMetaData.tableIndexClustered), // 1
-
-        /**
-         * Constant for {@link DatabaseMetaData#tableIndexHashed}({@value java.sql.DatabaseMetaData#tableIndexHashed}).
-         */
-        TABLE_INDEX_HASHED(DatabaseMetaData.tableIndexHashed), // 2
-
-        /**
-         * Constant for {@link DatabaseMetaData#tableIndexOther}({@value java.sql.DatabaseMetaData#tableIndexOther}).
-         */
-        TABLE_INDEX_OTHER(DatabaseMetaData.tableIndexOther); // 3
-
-        /**
-         * Returns the constant whose raw value matches to specified value.
-         *
-         * @param rawValue the raw value.
-         * @return the constant whose raw value matches to {@code rawValue}.
-         * @throws IllegalArgumentException when no constant found for the {@code rawValue}.
-         */
-        public static Type valueOfRawValue(final int rawValue) {
-            return IntFieldEnums.valueOfRawValue(Type.class, rawValue);
-        }
-
-        Type(final int rawValue) {
-            this.rawValue = rawValue;
-        }
-
-        @Override
-        public int rawValue() {
-            return rawValue;
-        }
-
-        private final int rawValue;
-    }
-
-    @AssertTrue
     private boolean isNonUniqueFalseWhenTypeIsTableIndexStatistics() {
         if (getType() != DatabaseMetaData.tableIndexStatistic) {
             return true;
@@ -232,7 +153,6 @@ public class IndexInfo
         return !isNonUnique();
     }
 
-    @AssertTrue
     private boolean isIndexQualifierNullWhenTypeIsTableIndexStatistics() {
         if (getType() != DatabaseMetaData.tableIndexStatistic) {
             return true;
@@ -240,7 +160,6 @@ public class IndexInfo
         return getIndexQualifier() == null;
     }
 
-    @AssertTrue
     private boolean isIndexNameNullWhenTypeIsTableIndexStatistics() {
         if (getType() != DatabaseMetaData.tableIndexStatistic) {
             return true;
@@ -248,7 +167,6 @@ public class IndexInfo
         return getIndexName() == null;
     }
 
-    @AssertTrue
     private boolean isOrdinalPositionZeroWhenTypeIsTableIndexStatistics() {
         if (getType() != DatabaseMetaData.tableIndexStatistic) {
             return true;
@@ -256,7 +174,6 @@ public class IndexInfo
         return getOrdinalPosition() == 0;
     }
 
-    @AssertTrue
     private boolean isColumnNameNullWhenTypeIsTableIndexStatistics() {
         if (getType() != DatabaseMetaData.tableIndexStatistic) {
             return true;
@@ -264,7 +181,6 @@ public class IndexInfo
         return getColumnName() == null;
     }
 
-    @AssertTrue
     private boolean isAscOrDescNullWhenTypeIsTableIndexStatistics() {
         if (getType() != DatabaseMetaData.tableIndexStatistic) {
             return true;
@@ -286,72 +202,48 @@ public class IndexInfo
                 .build();
     }
 
-    @XmlElement(required = true)
-    public Type getTypeAsEnum() {
-        return Type.valueOfRawValue(getType());
-    }
-
-    public void setTypeAsIndex(final Type typeAsIndex) {
-        setType(Objects.requireNonNull(typeAsIndex, "typeAsIndex is null").rawValue());
-    }
-
-    @XmlElement(nillable = true, required = true)
     @NullableBySpecification
     @ColumnLabel("TABLE_CAT")
     private String tableCat;
 
-    @XmlElement(nillable = true, required = true)
     @NullableBySpecification
     @ColumnLabel("TABLE_SCHEM")
     private String tableSchem;
 
-    @XmlElement(nillable = false, required = true)
-    @NotBlank
     @ColumnLabel("TABLE_NAME")
     private String tableName;
 
-    @XmlElement(nillable = false, required = true)
     @ColumnLabel("NON_UNIQUE")
     private boolean nonUnique;
 
-    @XmlElement(nillable = true, required = true)
     @NullableBySpecification
     @ColumnLabel("INDEX_QUALIFIER")
     private String indexQualifier;
 
-    @XmlElement(nillable = true, required = true)
     @NullableBySpecification
     @ColumnLabel("INDEX_NAME")
     private String indexName;
 
-    @XmlElement(nillable = false, required = true)
     @ColumnLabel(COLUMN_NAME_TYPE)
     private int type;
 
-    @XmlElement(nillable = false, required = true)
-    @PositiveOrZero
     @ColumnLabel("ORDINAL_POSITION")
     private int ordinalPosition;
 
-    @XmlElement(nillable = true, required = true)
     @NullableBySpecification
     @ColumnLabel("COLUMN_NAME")
     private String columnName;
 
-    @XmlElement(nillable = true, required = true)
     @NullableBySpecification
     @ColumnLabel("ASC_OR_DESC")
     private String ascOrDesc;
 
-    @XmlElement(nillable = false, required = true)
     @ColumnLabel("CARDINALITY")
     private long cardinality;
 
-    @XmlElement(nillable = false, required = true)
     @ColumnLabel("PAGES")
     private long pages;
 
-    @XmlElement(nillable = true, required = true)
     @NullableBySpecification
     @ColumnLabel("FILTER_CONDITION")
     private String filterCondition;

@@ -25,10 +25,6 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.experimental.SuperBuilder;
 
-import javax.xml.bind.annotation.XmlAttribute;
-import javax.xml.bind.annotation.XmlRootElement;
-import javax.xml.bind.annotation.XmlTransient;
-import javax.xml.bind.annotation.XmlValue;
 import java.sql.DatabaseMetaData;
 import java.sql.JDBCType;
 import java.sql.SQLException;
@@ -41,7 +37,6 @@ import java.util.Objects;
  * @author Jin Kwon &lt;onacit_at_gmail.com&gt;
  * @see Context#supportsConvert(int, int)
  */
-@XmlRootElement
 @Data
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @SuperBuilder(toBuilder = true)
@@ -81,32 +76,25 @@ public class SupportsConvert
         // no children.
     }
 
-    @XmlTransient
     public JDBCType getFromTypeAsEnum() {
         return JDBCType.valueOf(getFromType());
     }
 
-    @XmlAttribute(required = false)
     public String getFromTypeName() {
         return getFromTypeAsEnum().getName();
     }
 
-    @XmlTransient
     public JDBCType getToTypeAsEnum() {
         return JDBCType.valueOf(getToType());
     }
 
-    @XmlAttribute(required = false)
     public String getToTypeName() {
         return getToTypeAsEnum().getName();
     }
 
-    @XmlAttribute(required = true)
     private int fromType;
 
-    @XmlAttribute(required = true)
     private int toType;
 
-    @XmlValue
     private Boolean value;
 }

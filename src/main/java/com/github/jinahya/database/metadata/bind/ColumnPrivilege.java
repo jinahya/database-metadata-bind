@@ -25,19 +25,14 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.experimental.SuperBuilder;
 
-import javax.xml.bind.annotation.XmlElement;
-import javax.xml.bind.annotation.XmlRootElement;
 import java.sql.DatabaseMetaData;
 import java.sql.SQLException;
-import java.util.Collection;
 
 /**
  * A class for binding results of {@link DatabaseMetaData#getColumnPrivileges(String, String, String, String)} method.
  *
  * @author Jin Kwon &lt;jinahya_at_gmail.com&gt;
- * @see Context#getColumnPrivileges(String, String, String, String, Collection)
  */
-@XmlRootElement
 @Data
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @SuperBuilder(toBuilder = true)
@@ -61,38 +56,30 @@ public class ColumnPrivilege
                 .build();
     }
 
-    @XmlElement(nillable = true, required = true)
     @NullableBySpecification
     @ColumnLabel("TABLE_CAT")
     private String tableCat;
 
-    @XmlElement(nillable = true, required = true)
     @NullableBySpecification
     @ColumnLabel("TABLE_SCHEM")
     private String tableSchem;
 
-    @XmlElement(nillable = false, required = true)
     @ColumnLabel("TABLE_NAME")
     private String tableName;
 
-    @XmlElement(nillable = false, required = true)
     @ColumnLabel("COLUMN_NAME")
     private String columnName;
 
-    @XmlElement(nillable = true, required = true)
     @NullableBySpecification
     @ColumnLabel("GRANTOR")
     private String grantor;
 
-    @XmlElement(nillable = false, required = true)
     @ColumnLabel("GRANTEE")
     private String grantee;
 
-    @XmlElement(nillable = false, required = true)
     @ColumnLabel("PRIVILEGE")
     private String privilege;
 
-    @XmlElement(nillable = true, required = true)
     @NullableBySpecification
     @ColumnLabel("IS_GRANTABLE")
     private String isGrantable;

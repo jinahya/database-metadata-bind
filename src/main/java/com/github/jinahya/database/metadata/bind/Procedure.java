@@ -29,15 +29,9 @@ import lombok.Setter;
 import lombok.ToString;
 import lombok.experimental.SuperBuilder;
 
-import javax.validation.Valid;
-import javax.validation.constraints.NotNull;
-import javax.xml.bind.annotation.XmlElement;
-import javax.xml.bind.annotation.XmlElementRef;
-import javax.xml.bind.annotation.XmlRootElement;
 import java.sql.DatabaseMetaData;
 import java.sql.SQLException;
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.Comparator;
 import java.util.List;
 
@@ -46,9 +40,7 @@ import java.util.List;
  * {@link DatabaseMetaData#getProcedures(java.lang.String, java.lang.String, java.lang.String)}.
  *
  * @author Jin Kwon &lt;jinahya_at_gmail.com&gt;
- * @see Context#getProcedures(String, String, String, Collection)
  */
-@XmlRootElement
 @ParentOf(ProcedureColumn.class)
 @Data
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
@@ -96,38 +88,31 @@ public class Procedure
         return procedureColumns;
     }
 
-    @XmlElement(nillable = true, required = true)
     @NullableBySpecification
     @ColumnLabel("PROCEDURE_CAT")
     private String procedureCat;
 
-    @XmlElement(nillable = true, required = true)
     @NullableBySpecification
     @ColumnLabel("PROCEDURE_SCHEM")
     private String procedureSchem;
 
-    @XmlElement(nillable = false, required = true)
     @ColumnLabel("PROCEDURE_NAME")
     private String procedureName;
 
-    @XmlElement(nillable = true, required = true)
     @NullableByVendor("HSQL")
     @ColumnLabel("REMARKS")
     private String remarks;
 
-    @XmlElement(nillable = false, required = true)
     @ColumnLabel("PROCEDURE_TYPE")
     private short procedureType;
 
-    @XmlElement(nillable = false, required = true)
     @ColumnLabel("SPECIFIC_NAME")
     private String specificName;
 
     // -----------------------------------------------------------------------------------------------------------------
-    @XmlElementRef
     @Setter(AccessLevel.NONE)
     @Getter(AccessLevel.NONE)
     @EqualsAndHashCode.Exclude
     @ToString.Exclude
-    private List<@Valid @NotNull ProcedureColumn> procedureColumns;
+    private List<ProcedureColumn> procedureColumns;
 }

@@ -25,12 +25,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.experimental.SuperBuilder;
 
-import javax.xml.bind.annotation.XmlAttribute;
-import javax.xml.bind.annotation.XmlRootElement;
-import javax.xml.bind.annotation.XmlValue;
 import java.sql.SQLException;
-import java.util.Collection;
-import java.util.Objects;
 
 /**
  * A class for binding result of {@link java.sql.DatabaseMetaData#supportsResultSetConcurrency(int, int)} method.
@@ -38,7 +33,6 @@ import java.util.Objects;
  * @author Jin Kwon &lt;onacit_at_gmail.com&gt;
  * @see Context#supportsResultSetConcurrency(int, int)
  */
-@XmlRootElement
 @Data
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @SuperBuilder(toBuilder = true)
@@ -47,45 +41,37 @@ public class SupportsResultSetConcurrency
 
     private static final long serialVersionUID = -4192322973387966785L;
 
-    /**
-     * Invokes {@link Context#supportsResultSetConcurrency(int, int)} method for all combinations of types and
-     * concurrencies and adds bound values to specified collection.
-     *
-     * @param context    a context.
-     * @param collection the collection to which bound values are added.
-     * @param <C>        the type of {@code collection}
-     * @return given {@code collection}.
-     * @throws SQLException if a database access error occurs.
-     */
-    public static <C extends Collection<? super SupportsResultSetConcurrency>> C getAllInstances(final Context context,
-                                                                                                 final C collection)
-            throws SQLException {
-        Objects.requireNonNull(context, "context is null");
-        Objects.requireNonNull(collection, "collection is null");
-        for (final ResultSetType type : ResultSetType.values()) {
-            for (final ResultSetConcurrency concurrency : ResultSetConcurrency.values()) {
-                collection.add(context.supportsResultSetConcurrency(type.rawValue(), concurrency.rawValue()));
-            }
-        }
-        return collection;
-    }
+//    /**
+//     * Invokes {@link Context#supportsResultSetConcurrency(int, int)} method for all combinations of types and
+//     * concurrencies and adds bound values to specified collection.
+//     *
+//     * @param context    a context.
+//     * @param collection the collection to which bound values are added.
+//     * @param <C>        the type of {@code collection}
+//     * @return given {@code collection}.
+//     * @throws SQLException if a database access error occurs.
+//     */
+//    public static <C extends Collection<? super SupportsResultSetConcurrency>> C getAllInstances(final Context context,
+//                                                                                                 final C collection)
+//            throws SQLException {
+//        Objects.requireNonNull(context, "context is null");
+//        Objects.requireNonNull(collection, "collection is null");
+//        for (final ResultSetType type : ResultSetType.values()) {
+//            for (final ResultSetConcurrency concurrency : ResultSetConcurrency.values()) {
+//                collection.add(context.supportsResultSetConcurrency(type.rawValue(), concurrency.rawValue()));
+//            }
+//        }
+//        return collection;
+//    }
 
     @Override
     public void retrieveChildren(final Context context) throws SQLException {
         // no children.
     }
 
-    @XmlAttribute(required = false)
-    public ResultSetConcurrency getTypeAsEnum() {
-        return ResultSetConcurrency.valueOfRawValue(getConcurrency());
-    }
-
-    @XmlAttribute(required = true)
     private int type;
 
-    @XmlAttribute(required = true)
     private int concurrency;
 
-    @XmlValue
     private Boolean value;
 }

@@ -59,8 +59,6 @@ class ExternalIT {
                 final List<Catalog> catalogs = new ArrayList<>();
                 context.getCatalogs(catalogs::add);
                 final var name = "catalogs";
-                _XmlBindingTestUtils.test(context, name, Catalog.class, catalogs);
-                _JsonBindingTestUtils.test(Catalog.class, catalogs);
             }
 //            ContextTestUtils.writeFiles(context);
         }

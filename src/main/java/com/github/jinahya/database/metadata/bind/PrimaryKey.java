@@ -25,20 +25,15 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.experimental.SuperBuilder;
 
-import javax.xml.bind.annotation.XmlElement;
-import javax.xml.bind.annotation.XmlRootElement;
 import java.sql.DatabaseMetaData;
 import java.sql.SQLException;
-import java.util.Collection;
 import java.util.Comparator;
 
 /**
  * A class for binding results of {@link DatabaseMetaData#getPrimaryKeys(String, String, String)} method.
  *
  * @author Jin Kwon &lt;jinahya_at_gmail.com&gt;
- * @see Context#getPrimaryKeys(String, String, String, Collection)
  */
-@XmlRootElement
 @Data
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @SuperBuilder
@@ -64,29 +59,23 @@ public class PrimaryKey
                 .build();
     }
 
-    @XmlElement(nillable = true, required = true)
     @NullableBySpecification
     @ColumnLabel("TABLE_CAT")
     private String tableCat;
 
-    @XmlElement(nillable = true, required = true)
     @NullableBySpecification
     @ColumnLabel("TABLE_SCHEM")
     private String tableSchem;
 
-    @XmlElement(required = true)
     @ColumnLabel("TABLE_NAME")
     private String tableName;
 
-    @XmlElement(required = true)
     @ColumnLabel("COLUMN_NAME")
     private String columnName;
 
-    @XmlElement(required = true)
     @ColumnLabel("KEY_SEQ")
     private short keySeq;
 
-    @XmlElement(nillable = true, required = true)
     @NullableBySpecification
     @ColumnLabel("PK_NAME")
     private String pkName;

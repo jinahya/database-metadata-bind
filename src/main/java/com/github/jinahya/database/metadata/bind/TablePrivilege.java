@@ -25,9 +25,6 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.experimental.SuperBuilder;
 
-import javax.validation.constraints.NotBlank;
-import javax.xml.bind.annotation.XmlElement;
-import javax.xml.bind.annotation.XmlRootElement;
 import java.sql.SQLException;
 
 /**
@@ -36,7 +33,6 @@ import java.sql.SQLException;
  *
  * @author Jin Kwon &lt;jinahya_at_gmail.com&gt;
  */
-@XmlRootElement
 @Data
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @SuperBuilder(toBuilder = true)
@@ -60,36 +56,27 @@ public class TablePrivilege
                 .build();
     }
 
-    @XmlElement(nillable = true, required = true)
     @NullableBySpecification
     @ColumnLabel("TABLE_CAT")
     private String tableCat;
 
-    @XmlElement(nillable = true, required = true)
     @NullableBySpecification
     @ColumnLabel("TABLE_SCHEM")
     private String tableSchem;
 
-    @XmlElement(nillable = false, required = true)
-    @NotBlank
     @ColumnLabel("TABLE_NAME")
     private String tableName;
 
-    @XmlElement(nillable = true, required = true)
     @NullableBySpecification
     @ColumnLabel("GRANTOR")
     private String grantor;
 
-    @XmlElement(nillable = true, required = true)
     @ColumnLabel("GRANTEE")
     private String grantee;
 
-    @NotBlank
-    @XmlElement(nillable = false, required = true)
     @ColumnLabel("PRIVILEGE")
     private String privilege;
 
-    @XmlElement(nillable = true, required = true)
     @NullableBySpecification
     @ColumnLabel("IS_GRANTABLE")
     private String isGrantable;

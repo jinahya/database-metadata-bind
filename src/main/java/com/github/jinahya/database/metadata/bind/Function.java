@@ -29,17 +29,9 @@ import lombok.Setter;
 import lombok.ToString;
 import lombok.experimental.SuperBuilder;
 
-import javax.validation.Valid;
-import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.NotNull;
-import javax.xml.bind.annotation.XmlElement;
-import javax.xml.bind.annotation.XmlElementRef;
-import javax.xml.bind.annotation.XmlEnum;
-import javax.xml.bind.annotation.XmlRootElement;
 import java.sql.DatabaseMetaData;
 import java.sql.SQLException;
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.List;
 
 /**
@@ -47,10 +39,8 @@ import java.util.List;
  * {@link DatabaseMetaData#getFunctions(java.lang.String, java.lang.String, java.lang.String)} method.
  *
  * @author Jin Kwon &lt;jinahya_at_gmail.com&gt;
- * @see Context#getFunctions(String, String, String, Collection)
  * @see FunctionColumn
  */
-@XmlRootElement
 @ParentOf(FunctionColumn.class)
 @Data
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
@@ -70,52 +60,6 @@ public class Function
     public static final String ATTRIBUTE_NAME_FUNCTION_SCHEM = "functionSchem";
 
     public static final String COLUMN_NAME_FUNCTION_TYPE = "FUNCTION_TYPE";
-
-    /**
-     * Constants for {@value #COLUMN_NAME_FUNCTION_TYPE} column values.
-     */
-    @XmlEnum
-    public enum FunctionType implements IntFieldEnum<FunctionType> {
-
-        /**
-         * Constant for
-         * {@link DatabaseMetaData#functionResultUnknown}({@value java.sql.DatabaseMetaData#functionResultUnknown}).
-         */
-        FUNCTION_RESULTS_UNKNOWN(DatabaseMetaData.functionResultUnknown), // 0
-
-        /**
-         * Constant for {@link DatabaseMetaData#functionNoTable}({@value java.sql.DatabaseMetaData#functionNoTable}).
-         */
-        FUNCTION_NO_TABLE(DatabaseMetaData.functionNoTable), // 1
-
-        /**
-         * Constant for
-         * {@link DatabaseMetaData#functionReturnsTable}({@value java.sql.DatabaseMetaData#functionReturnsTable}).
-         */
-        FUNCTION_RETURNS_UNKNOWN(DatabaseMetaData.functionReturnsTable); // 2
-
-        /**
-         * Returns the constant whose raw value matches to specified value.
-         *
-         * @param rawValue the raw value.
-         * @return the constant whose raw value matches to {@code rawValue}.
-         * @throws IllegalArgumentException when no constant found for the {@code rawValue}.
-         */
-        public static FunctionType valueOfRawValue(final int rawValue) {
-            return IntFieldEnums.valueOfRawValue(FunctionType.class, rawValue);
-        }
-
-        FunctionType(final int rawValue) {
-            this.rawValue = rawValue;
-        }
-
-        @Override
-        public int rawValue() {
-            return rawValue;
-        }
-
-        private final int rawValue;
-    }
 
     @Override
     public void retrieveChildren(final Context context) throws SQLException {
@@ -153,39 +97,30 @@ public class Function
         return functionColumns;
     }
 
-    @XmlElement(nillable = true, required = true)
     @NullableBySpecification
     @ColumnLabel(COLUMN_NAME_FUNCTION_CAT)
     private String functionCat;
 
-    @XmlElement(nillable = true, required = true)
     @NullableBySpecification
     @ColumnLabel(COLUMN_NAME_FUNCTION_SCHEM)
     private String functionSchem;
 
-    @XmlElement(nillable = false, required = true)
-    @NotBlank
     @ColumnLabel("FUNCTION_NAME")
     @EqualsAndHashCode.Exclude
     private String functionName;
 
-    @XmlElement(nillable = false, required = true)
-    @NotNull
     @ColumnLabel("REMARKS")
     private String remarks;
 
-    @XmlElement(required = true)
     @ColumnLabel("FUNCTION_TYPE")
     private short functionType;
 
-    @XmlElement(required = true)
     @ColumnLabel("SPECIFIC_NAME")
     private String specificName;
 
-    @XmlElementRef
     @Setter(AccessLevel.NONE)
     @Getter(AccessLevel.NONE)
     @EqualsAndHashCode.Exclude
     @ToString.Exclude
-    private List<@Valid @NotNull FunctionColumn> functionColumns;
+    private List<FunctionColumn> functionColumns;
 }

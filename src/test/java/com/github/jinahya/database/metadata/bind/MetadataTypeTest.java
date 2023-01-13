@@ -25,13 +25,10 @@ import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
-import javax.xml.bind.annotation.XmlAttribute;
-import javax.xml.bind.annotation.XmlElement;
 import java.beans.BeanInfo;
 import java.beans.IntrospectionException;
 import java.beans.Introspector;
 import java.beans.PropertyDescriptor;
-import java.lang.annotation.Annotation;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
@@ -41,7 +38,6 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 import static java.util.Objects.requireNonNull;
 import static org.assertj.core.api.Assertions.assertThat;
@@ -132,58 +128,12 @@ abstract class MetadataTypeTest<T extends MetadataType> {
         }
     }
 
-    @DisplayName("@ColumnLabel -> @XmlAttribute|@XmlElement")
-    @Test
-    void fieldsWithLabel_ShouldBeAnnotatedWithXmlElementWithRequiredTrue() {
-        for (final Field field : getFieldsWithColumnLabel().keySet()) {
-            final var classes = Stream.of(field.getAnnotations())
-                    .map(Annotation::getClass)
-                    .filter(c -> XmlAttribute.class.isAssignableFrom(c) || XmlElement.class.isAssignableFrom(c))
-                    .collect(Collectors.toList());
-            assertThat(classes)
-                    .as("annotation classes on %s", field)
-                    .isNotEmpty();
-        }
-    }
-
-    @DisplayName("@Unused? -> @XmlElement? -> (nillable = true)")
-    @Test
-    void fieldsWithUnused_ShouldBeAnnotatedWithXmlElementWithNillableTrue() {
-        for (final Field field : fieldsWithUnusedBySpecification().keySet()) {
-            assertThat(field.getAnnotation(NotUsedBySpecification.class)).isNotNull();
-            assertThat(field.getAnnotation(XmlElement.class)).isNotNull().satisfies(a -> {
-                assertThat(a.nillable()).isTrue();
-            });
-        }
-    }
-
     @DisplayName("fields with @Unused should not be a primitive type")
     @Test
     void fieldsWithUnused_TypeShouldNotBePrimitive() {
         for (final Field field : fieldsWithUnusedBySpecification().keySet()) {
             assertThat(field.getAnnotation(NotUsedBySpecification.class)).isNotNull();
             assertThat(field.getType().isPrimitive()).isFalse();
-        }
-    }
-
-    @DisplayName("@NullableBySpecification -> @XmlElement(nillable = true)")
-    @Test
-    void fields_XmlElementNillableTrue_NullableBySpecification() {
-        for (final Field field : getFieldsWithNullableBySpecification().keySet()) {
-            assertThat(field.getAnnotation(NullableBySpecification.class)).isNotNull();
-            final var xmlElement = field.getAnnotation(XmlElement.class);
-            if (xmlElement == null) {
-
-            } else {
-                assertThat(xmlElement)
-                        .as("@XmlElement on %s", field)
-                        .isNotNull()
-                        .satisfies(a -> {
-                            assertThat(a.nillable())
-                                    .as("XmlElement#nillable on %s", field)
-                                    .isTrue();
-                        });
-            }
         }
     }
 
@@ -195,20 +145,6 @@ abstract class MetadataTypeTest<T extends MetadataType> {
             assertThat(field.getType().isPrimitive())
                     .as("@NullableBySpecification on primitive field: %s", field)
                     .isFalse();
-        }
-    }
-
-    @DisplayName("@MayBeNullByVendor -> @XmlElement(nillable = true)")
-    @Test
-    void fields_XmlElementNillableTrue_NullableByVendor() {
-        for (final Field field : getFieldsWithMayBeNullByVendor().keySet()) {
-            assertThat(field.getAnnotation(NullableByVendor.class)).isNotNull();
-            assertThat(field.getAnnotation(XmlElement.class))
-                    .isNotNull()
-                    .satisfies(a -> {
-                        assertThat(a.nillable())
-                                .isTrue();
-                    });
         }
     }
 

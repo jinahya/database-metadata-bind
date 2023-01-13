@@ -25,12 +25,6 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.experimental.SuperBuilder;
 
-import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.Positive;
-import javax.validation.constraints.PositiveOrZero;
-import javax.xml.bind.annotation.XmlAttribute;
-import javax.xml.bind.annotation.XmlElement;
-import javax.xml.bind.annotation.XmlSeeAlso;
 import java.sql.SQLException;
 
 /**
@@ -40,7 +34,6 @@ import java.sql.SQLException;
  * @see ExportedKey
  * @see ImportedKey
  */
-@XmlSeeAlso({ExportedKey.class, ImportedKey.class})
 @Data
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @SuperBuilder(toBuilder = true)
@@ -84,94 +77,55 @@ public abstract class TableKey
                 .build();
     }
 
-    // -----------------------------------------------------------------------------------------------------------------
-
-    @XmlAttribute(required = false)
-    public ImportedKeyRule getUpdateRuleAsEnum() {
-        return ImportedKeyRule.valueOfRawValue(getUpdateRule());
-    }
-
-    @XmlAttribute(required = false)
-    public ImportedKeyRule getDeleteRuleAsEnum() {
-        return ImportedKeyRule.valueOfRawValue(getDeleteRule());
-    }
-
-    @XmlAttribute(required = false)
-    public ImportedKeyDeferrability getDeferrabilityAsEnum() {
-        return ImportedKeyDeferrability.valueOfRawValue(getDeferrability());
-    }
-
-    // -----------------------------------------------------------------------------------------------------------------
-    @XmlElement(nillable = true, required = true)
     @NullableBySpecification
     @ColumnLabel("PKTABLE_CAT")
     private String pktableCat;
 
-    @XmlElement(nillable = true, required = true)
     @NullableBySpecification
     @ColumnLabel("PKTABLE_SCHEM")
     private String pktableSchem;
 
-    @XmlElement(required = true)
-    @NotBlank
     @ColumnLabel("PKTABLE_NAME")
     private String pktableName;
 
-    @XmlElement(required = true)
-    @NotBlank
     @ColumnLabel("PKCOLUMN_NAME")
     private String pkcolumnName;
 
     // -----------------------------------------------------------------------------------------------------------------
-    @XmlElement(nillable = true, required = true)
     @NullableBySpecification
     @ColumnLabel("FKTABLE_CAT")
     private String fktableCat;
 
-    @XmlElement(nillable = true, required = true)
     @NullableBySpecification
     @ColumnLabel("FKTABLE_SCHEM")
     private String fktableSchem;
 
-    @XmlElement(nillable = false, required = true)
-    @NotBlank
     @ColumnLabel("FKTABLE_NAME")
     private String fktableName;
 
-    @XmlElement(nillable = false, required = true)
-    @NotBlank
     @ColumnLabel("FKCOLUMN_NAME")
     private String fkcolumnName;
 
     // -----------------------------------------------------------------------------------------------------------------
-    @XmlElement(nillable = false, required = true)
-    @Positive
     @ColumnLabel("KEY_SEQ")
     private int keySeq;
 
-    @XmlElement(nillable = false, required = true)
-    @PositiveOrZero
     @ColumnLabel("UPDATE_RULE")
     private int updateRule;
 
-    @XmlElement(nillable = false, required = true)
-    @PositiveOrZero
     @ColumnLabel("DELETE_RULE")
     private int deleteRule;
 
     // -----------------------------------------------------------------------------------------------------------------
-    @XmlElement(nillable = true, required = true)
     @NullableBySpecification
     @ColumnLabel("FK_NAME")
     private String fkName;
 
-    @XmlElement(nillable = true, required = true)
     @NullableBySpecification
     @ColumnLabel("PK_NAME")
     private String pkName;
 
     // -----------------------------------------------------------------------------------------------------------------
-    @XmlElement(nillable = false, required = true)
     @ColumnLabel("DEFERRABILITY")
     private int deferrability;
 

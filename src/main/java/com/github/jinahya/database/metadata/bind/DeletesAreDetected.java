@@ -24,11 +24,7 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.ToString;
 
-import javax.xml.bind.annotation.XmlRootElement;
 import java.sql.DatabaseMetaData;
-import java.sql.SQLException;
-import java.util.Collection;
-import java.util.Objects;
 
 /**
  * A class for binding result of {@link DatabaseMetaData#deletesAreDetected(int)} method.
@@ -36,7 +32,6 @@ import java.util.Objects;
  * @author Jin Kwon &lt;onacit_at_gmail.com&gt;
  * @see Context#deletesAreDetected(int)
  */
-@XmlRootElement
 @Data
 @EqualsAndHashCode(callSuper = true)
 @ToString(callSuper = true)
@@ -45,26 +40,26 @@ public class DeletesAreDetected
 
     private static final long serialVersionUID = -7476108814185270988L;
 
-    /**
-     * Retrieves values for all constants defined in {@link ResultSetType} and adds bound values to specified
-     * collection.
-     *
-     * @param context    a context.
-     * @param collection the collection to which bound values are added.
-     * @param <C>        the type of {@code collection}
-     * @return given {@code collection}.
-     * @throws SQLException if a database access error occurs.
-     * @see ResultSetType
-     * @see Context#insertsAreDetected(int)
-     */
-    static <C extends Collection<? super DeletesAreDetected>> C getAllInstances(final Context context,
-                                                                                final C collection)
-            throws SQLException {
-        Objects.requireNonNull(context, "context is null");
-        Objects.requireNonNull(collection, "collection is null");
-        for (final ResultSetType type : ResultSetType.values()) {
-            collection.add(context.deletesAreDetected(type.rawValue()));
-        }
-        return collection;
-    }
+//    /**
+//     * Retrieves values for all constants defined in {@link ResultSetType} and adds bound values to specified
+//     * collection.
+//     *
+//     * @param context    a context.
+//     * @param collection the collection to which bound values are added.
+//     * @param <C>        the type of {@code collection}
+//     * @return given {@code collection}.
+//     * @throws SQLException if a database access error occurs.
+//     * @see ResultSetType
+//     * @see Context#insertsAreDetected(int)
+//     */
+//    static <C extends Collection<? super DeletesAreDetected>> C getAllInstances(final Context context,
+//                                                                                final C collection)
+//            throws SQLException {
+//        Objects.requireNonNull(context, "context is null");
+//        Objects.requireNonNull(collection, "collection is null");
+//        for (final ResultSetType type : ResultSetType.values()) {
+//            collection.add(context.deletesAreDetected(type.rawValue()));
+//        }
+//        return collection;
+//    }
 }

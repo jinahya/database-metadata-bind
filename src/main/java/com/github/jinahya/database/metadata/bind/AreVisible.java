@@ -28,9 +28,6 @@ import lombok.Setter;
 import lombok.ToString;
 import lombok.experimental.SuperBuilder;
 
-import javax.xml.bind.annotation.XmlAttribute;
-import javax.xml.bind.annotation.XmlSeeAlso;
-import javax.xml.bind.annotation.XmlValue;
 import java.io.Serializable;
 import java.sql.SQLException;
 
@@ -44,14 +41,6 @@ import java.sql.SQLException;
  * @see OwnInsertsAreVisible
  * @see OwnUpdatesAreVisible
  */
-@XmlSeeAlso({
-        OthersDeletesAreVisible.class,
-        OthersInsertsAreVisible.class,
-        OthersUpdatesAreVisible.class,
-        OwnDeletesAreVisible.class,
-        OwnInsertsAreVisible.class,
-        OwnUpdatesAreVisible.class
-})
 @Setter
 @Getter
 @EqualsAndHashCode
@@ -88,16 +77,6 @@ public abstract class AreVisible
     }
 
     /**
-     * Returns the value of {@link #getType()} as an enum constant.
-     *
-     * @return the value of {@link #getType()} as an enum constant.
-     */
-    @XmlAttribute(required = false)
-    public ResultSetType getTypeAsEnum() {
-        return ResultSetType.valueOfRawValue(getType());
-    }
-
-    /**
      * Returns the value of this result.
      *
      * @return the value of this result
@@ -115,9 +94,7 @@ public abstract class AreVisible
         this.value = value;
     }
 
-    @XmlAttribute(required = true)
     private int type;
 
-    @XmlValue
     private Boolean value;
 }

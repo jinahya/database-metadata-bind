@@ -33,16 +33,9 @@ import lombok.Setter;
 import lombok.ToString;
 import lombok.experimental.SuperBuilder;
 
-import javax.validation.Valid;
-import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.NotNull;
-import javax.xml.bind.annotation.XmlElement;
-import javax.xml.bind.annotation.XmlElementRef;
-import javax.xml.bind.annotation.XmlRootElement;
 import java.sql.SQLException;
 import java.sql.SQLFeatureNotSupportedException;
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Objects;
@@ -54,9 +47,7 @@ import java.util.Optional;
  * method.
  *
  * @author Jin Kwon &lt;jinahya_at_gmail.com&gt;
- * @see Context#getTables(String, String, String, String[], Collection)
  */
-@XmlRootElement
 @ParentOf(BestRowIdentifier.class)
 @ParentOf(Column.class)
 @ParentOf(ColumnPrivilege.class)
@@ -115,23 +106,23 @@ public class Table
 
     @Override
     public void retrieveChildren(final Context context) throws SQLException {
-        {
-            for (final BestRowIdentifierCategory category : BestRowIdentifierCategory._VALUES) {
-                final CategorizedBestRowIdentifiers categorized = CategorizedBestRowIdentifiers.of(category);
-//                context.getBestRowIdentifier(
-//                        getTypeCat(),
-//                        getTableSchem(),
-//                        getTableName(),
-//                        category.getScope(),
-//                        category.isNullable(),
-//                        categorized.getBestRowIdentifiers()
-//                );
-                for (final BestRowIdentifier identifier : categorized.getBestRowIdentifiers()) {
-                    identifier.retrieveChildren(context);
-                }
-                getCategorizedBestRowIdentifiers().add(categorized);
-            }
-        }
+//        {
+//            for (final BestRowIdentifierCategory category : BestRowIdentifierCategory._VALUES) {
+//                final CategorizedBestRowIdentifiers categorized = CategorizedBestRowIdentifiers.of(category);
+////                context.getBestRowIdentifier(
+////                        getTypeCat(),
+////                        getTableSchem(),
+////                        getTableName(),
+////                        category.getScope(),
+////                        category.isNullable(),
+////                        categorized.getBestRowIdentifiers()
+////                );
+//                for (final BestRowIdentifier identifier : categorized.getBestRowIdentifiers()) {
+//                    identifier.retrieveChildren(context);
+//                }
+//                getCategorizedBestRowIdentifiers().add(categorized);
+//            }
+//        }
         {
             context.getColumns(
                     getTableCat(),
@@ -397,125 +388,103 @@ public class Table
         this.versionColumns = versionColumns;
     }
 
-    @XmlElement(nillable = true, required = true)
     @NullableBySpecification
     @ColumnLabel(COLUMN_LABEL_TABLE_CAT)
     private String tableCat;
 
-    @XmlElement(nillable = true, required = true)
     @NullableBySpecification
     @ColumnLabel(COLUMN_LABEL_TABLE_SCHEM)
     private String tableSchem;
 
-    @XmlElement(nillable = false, required = true)
-    @NotBlank
     @ColumnLabel(COLUMN_LABEL_TABLE_NAME)
     private String tableName;
 
-    @XmlElement(nillable = false, required = true)
-    @NotBlank
     @ColumnLabel("TABLE_TYPE")
     private String tableType;
 
-    @XmlElement(nillable = true, required = true)
     @NullableBySpecification
     @ColumnLabel("REMARKS")
     private String remarks;
 
-    @XmlElement(nillable = true, required = true)
     @NullableBySpecification
     @ColumnLabel("TYPE_CAT")
     private String typeCat;
 
-    @XmlElement(nillable = true, required = true)
     @NullableBySpecification
     @ColumnLabel("TYPE_SCHEM")
     private String typeSchem;
 
-    @XmlElement(nillable = true, required = true)
     @NullableBySpecification
     @ColumnLabel("TYPE_NAME")
     private String typeName;
 
-    @XmlElement(nillable = true, required = true)
     @NullableBySpecification
     @ColumnLabel("SELF_REFERENCING_COL_NAME")
     private String selfReferencingColName;
 
-    @XmlElement(nillable = true, required = true)
     @NullableBySpecification
     @ColumnLabel("REF_GENERATION")
     private String refGeneration;
 
-    @XmlElementRef
     @Setter(AccessLevel.NONE)
     @Getter(AccessLevel.NONE)
     @EqualsAndHashCode.Exclude
     @ToString.Exclude
-    private List<@Valid @NotNull CategorizedBestRowIdentifiers> categorizedBestRowIdentifiers;
+    private List<CategorizedBestRowIdentifiers> categorizedBestRowIdentifiers;
 
-    @XmlElementRef
     @Setter(AccessLevel.NONE)
     @Getter(AccessLevel.NONE)
     @EqualsAndHashCode.Exclude
     @ToString.Exclude
-    private List<@Valid @NotNull Column> columns;
+    private List<Column> columns;
 
-    @XmlElementRef
     @Setter(AccessLevel.NONE)
     @Getter(AccessLevel.NONE)
     @EqualsAndHashCode.Exclude
     @ToString.Exclude
-    private List<@Valid @NotNull ColumnPrivilege> columnPrivileges;
+    private List<ColumnPrivilege> columnPrivileges;
 
-    @XmlElementRef
     @Setter(AccessLevel.NONE)
     @Getter(AccessLevel.NONE)
     @EqualsAndHashCode.Exclude
     @ToString.Exclude
-    private List<@Valid @NotNull ExportedKey> exportedKeys;
+    private List<ExportedKey> exportedKeys;
 
-    @XmlElementRef
     @Setter(AccessLevel.NONE)
     @Getter(AccessLevel.NONE)
     @EqualsAndHashCode.Exclude
     @ToString.Exclude
-    private List<@Valid @NotNull ImportedKey> importedKeys;
+    private List<ImportedKey> importedKeys;
 
-    @XmlElementRef
     @Setter(AccessLevel.NONE)
     @Getter(AccessLevel.NONE)
     @EqualsAndHashCode.Exclude
     @ToString.Exclude
-    private List<@Valid @NotNull CategorizedIndexInfo> categorizedIndexInfo;
+    private List<CategorizedIndexInfo> categorizedIndexInfo;
 
-    @XmlElementRef
     @Setter(AccessLevel.NONE)
     @Getter(AccessLevel.NONE)
     @EqualsAndHashCode.Exclude
     @ToString.Exclude
-    private List<@Valid @NotNull PrimaryKey> primaryKeys;
+    private List<PrimaryKey> primaryKeys;
 
-    @XmlElementRef
     @Setter(AccessLevel.NONE)
     @Getter(AccessLevel.NONE)
     @EqualsAndHashCode.Exclude
     @ToString.Exclude
-    private List<@Valid @NotNull PseudoColumn> pseudoColumns;
+    private List<PseudoColumn> pseudoColumns;
 
-    @XmlElementRef
     @Setter(AccessLevel.NONE)
     @Getter(AccessLevel.NONE)
     @EqualsAndHashCode.Exclude
     @ToString.Exclude
-    private List<@Valid @NotNull TablePrivilege> tablePrivileges;
+    private List<TablePrivilege> tablePrivileges;
 
-    @XmlElementRef
     @Setter(AccessLevel.NONE)
     @Getter(AccessLevel.NONE)
     @EqualsAndHashCode.Exclude
     @ToString.Exclude
-    private List<@Valid @NotNull VersionColumn> versionColumns;
+    private List<VersionColumn> versionColumns;
 
     // -----------------------------------------------------------------------------------------------------------------
 

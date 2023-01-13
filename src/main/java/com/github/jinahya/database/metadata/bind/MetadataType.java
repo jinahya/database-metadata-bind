@@ -20,12 +20,9 @@ package com.github.jinahya.database.metadata.bind;
  * #L%
  */
 
-import javax.validation.constraints.NotNull;
-import javax.xml.bind.annotation.XmlTransient;
 import java.io.Serializable;
 import java.sql.SQLException;
 
-@XmlTransient
 public interface MetadataType
         extends Serializable {
 
@@ -35,5 +32,6 @@ public interface MetadataType
      * @param context the context.
      * @throws SQLException if a database error occurs.
      */
-    void retrieveChildren(@NotNull Context context) throws SQLException;
+    @Deprecated
+    void retrieveChildren(Context context) throws SQLException;
 }

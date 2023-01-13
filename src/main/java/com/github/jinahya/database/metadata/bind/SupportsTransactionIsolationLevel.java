@@ -25,13 +25,8 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.experimental.SuperBuilder;
 
-import javax.xml.bind.annotation.XmlAttribute;
-import javax.xml.bind.annotation.XmlRootElement;
-import javax.xml.bind.annotation.XmlValue;
 import java.sql.DatabaseMetaData;
 import java.sql.SQLException;
-import java.util.Collection;
-import java.util.Objects;
 
 /**
  * A class for binding results of {@link DatabaseMetaData#supportsTransactionIsolationLevel(int)} method.
@@ -39,7 +34,6 @@ import java.util.Objects;
  * @author Jin Kwon &lt;onacit_at_gmail.com&gt;
  * @see Context#supportsTransactionIsolationLevel(int)
  */
-@XmlRootElement
 @Data
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @SuperBuilder(toBuilder = true)
@@ -48,41 +42,34 @@ public class SupportsTransactionIsolationLevel
 
     private static final long serialVersionUID = -2241618224708597472L;
 
-    /**
-     * Invokes {@link Context#supportsTransactionIsolationLevel(int)} method for all transaction isolation levels
-     * defined in {@link java.sql.Connection} and adds bound values to specified collection.
-     *
-     * @param context    a context.
-     * @param collection the collection to which bound values are added.
-     * @param <C>        the type of {@code collection}
-     * @return given {@code collection}.
-     * @throws SQLException if a database access error occurs.
-     * @see TransactionIsolationLevel
-     */
-    public static <C extends Collection<? super SupportsTransactionIsolationLevel>> C getAllInstances(
-            final Context context, final C collection)
-            throws SQLException {
-        Objects.requireNonNull(context, "context is null");
-        Objects.requireNonNull(collection, "collection is null");
-        for (final TransactionIsolationLevel value : TransactionIsolationLevel.values()) {
-            collection.add(context.supportsTransactionIsolationLevel(value.rawValue()));
-        }
-        return collection;
-    }
+//    /**
+//     * Invokes {@link Context#supportsTransactionIsolationLevel(int)} method for all transaction isolation levels
+//     * defined in {@link java.sql.Connection} and adds bound values to specified collection.
+//     *
+//     * @param context    a context.
+//     * @param collection the collection to which bound values are added.
+//     * @param <C>        the type of {@code collection}
+//     * @return given {@code collection}.
+//     * @throws SQLException if a database access error occurs.
+//     * @see TransactionIsolationLevel
+//     */
+//    public static <C extends Collection<? super SupportsTransactionIsolationLevel>> C getAllInstances(
+//            final Context context, final C collection)
+//            throws SQLException {
+//        Objects.requireNonNull(context, "context is null");
+//        Objects.requireNonNull(collection, "collection is null");
+//        for (final TransactionIsolationLevel value : TransactionIsolationLevel.values()) {
+//            collection.add(context.supportsTransactionIsolationLevel(value.rawValue()));
+//        }
+//        return collection;
+//    }
 
     @Override
     public void retrieveChildren(Context context) throws SQLException {
         // no children
     }
 
-    @XmlAttribute(required = false)
-    public TransactionIsolationLevel getLevelAsEnum() {
-        return TransactionIsolationLevel.valueOfRawValue(getLevel());
-    }
-
-    @XmlAttribute(required = true)
     private int level;
 
-    @XmlValue
     private Boolean value;
 }

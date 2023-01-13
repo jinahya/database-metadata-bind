@@ -22,19 +22,14 @@ package com.github.jinahya.database.metadata.bind;
 
 import lombok.Data;
 
-import javax.xml.bind.annotation.XmlElement;
-import javax.xml.bind.annotation.XmlRootElement;
 import java.sql.DatabaseMetaData;
 import java.sql.SQLException;
-import java.util.Collection;
 
 /**
  * A class for binding results of the {@link DatabaseMetaData#getClientInfoProperties()} method.
  *
  * @author Jin Kwon &lt;jinahya_at_gmail.com&gt;
- * @see Context#getClientInfoProperties(Collection)
  */
-@XmlRootElement
 @Data
 public class ClientInfoProperty
         implements MetadataType {
@@ -46,19 +41,15 @@ public class ClientInfoProperty
         // no children.
     }
 
-    @XmlElement(required = true)
     @ColumnLabel("NAME")
     private String name;
 
-    @XmlElement(required = true)
     @ColumnLabel("MAX_LEN")
     private int maxLen;
 
-    @XmlElement(required = true)
     @ColumnLabel("DEFAULT_VALUE")
     private String defaultValue;
 
-    @XmlElement(required = true)
     @ColumnLabel("DESCRIPTION")
     private String description;
 

@@ -30,39 +30,20 @@ import lombok.ToString;
 import lombok.experimental.SuperBuilder;
 import lombok.extern.java.Log;
 
-import javax.json.bind.annotation.JsonbProperty;
-import javax.json.bind.annotation.JsonbTransient;
-import javax.validation.Valid;
-import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.NotNull;
-import javax.xml.bind.annotation.XmlAttribute;
-import javax.xml.bind.annotation.XmlElement;
-import javax.xml.bind.annotation.XmlElementRef;
-import javax.xml.bind.annotation.XmlEnum;
-import javax.xml.bind.annotation.XmlRootElement;
-import javax.xml.bind.annotation.XmlTransient;
 import java.io.Serializable;
 import java.sql.DatabaseMetaData;
 import java.sql.SQLException;
 import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
-import java.util.Set;
-import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 /**
  * A class for binding results of {@link DatabaseMetaData#getBestRowIdentifier(String, String, String, int, boolean)}
  * method.
  *
  * @author Jin Kwon &lt;jinahya_at_gmail.com&gt;
- * @see Context#getBestRowIdentifier(String, String, String, int, boolean, Collection)
  */
-@XmlRootElement
 @Data
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @SuperBuilder(toBuilder = true)
@@ -95,14 +76,6 @@ public class BestRowIdentifier
                     .build();
         }
 
-        static final Set<BestRowIdentifierCategory> _VALUES = Collections.unmodifiableSet(
-                Arrays.stream(BestRowIdentifier.Scope.values())
-                        .map(IntFieldEnum::rawValue)
-                        .flatMap(s -> Stream.of(BestRowIdentifierCategory.of(s, false),
-                                                BestRowIdentifierCategory.of(s, true)))
-                        .collect(Collectors.toSet())
-        );
-
         private int scope;
 
         private boolean nullable;
@@ -113,7 +86,6 @@ public class BestRowIdentifier
      *
      * @author Jin Kwon &lt;onacit_at_gmail.com&gt;
      */
-    @XmlRootElement
     @Setter
     @Getter
     @ToString
@@ -130,8 +102,6 @@ public class BestRowIdentifier
                     .build();
         }
 
-        @JsonbProperty
-        @XmlAttribute
         public int getScope() {
             return Objects.requireNonNull(category, "category is null").getScope();
         }
@@ -142,8 +112,6 @@ public class BestRowIdentifier
                     .setScope(scope);
         }
 
-        @JsonbProperty
-        @XmlAttribute
         public boolean isNullable() {
             return Objects.requireNonNull(category, "category is null").isNullable();
         }
@@ -154,7 +122,6 @@ public class BestRowIdentifier
                     .setNullable(nullable);
         }
 
-        @NotNull
         public List<BestRowIdentifier> getBestRowIdentifiers() {
             if (bestRowIdentifiers == null) {
                 bestRowIdentifiers = new ArrayList<>();
@@ -167,109 +134,13 @@ public class BestRowIdentifier
             this.bestRowIdentifiers = bestRowIdentifiers;
         }
 
-        @JsonbTransient
-        @XmlTransient
-        @Valid
-        @NotNull
         @Setter(AccessLevel.PACKAGE)
         @Getter(AccessLevel.PACKAGE)
         private BestRowIdentifierCategory category;
 
-        @XmlElementRef
         @Setter(AccessLevel.NONE)
         @Getter(AccessLevel.NONE)
-        private List<@Valid @NotNull BestRowIdentifier> bestRowIdentifiers;
-    }
-
-    /**
-     * Constants for {@code SCOPE} column values of the result of
-     * {@link DatabaseMetaData#getBestRowIdentifier(String, String, String, int, boolean)} method.
-     */
-    @XmlEnum
-    public enum Scope
-            implements IntFieldEnum<Scope> {
-
-        /**
-         * Constant for {@link DatabaseMetaData#bestRowTemporary}({@value java.sql.DatabaseMetaData#bestRowTemporary}).
-         */
-        BEST_ROW_TEMPORARY(DatabaseMetaData.bestRowTemporary), // 0
-
-        /**
-         * Constant for
-         * {@link DatabaseMetaData#bestRowTransaction}({@value java.sql.DatabaseMetaData#bestRowTransaction}).
-         */
-        BEST_ROW_TRANSACTION(DatabaseMetaData.bestRowTransaction), // 1
-
-        /**
-         * Constant for {@link DatabaseMetaData#bestRowSession}({@value java.sql.DatabaseMetaData#bestRowSession}).
-         */
-        BEST_ROW_SESSION(DatabaseMetaData.bestRowSession); // 2
-
-        /**
-         * Returns the constant whose raw value equals to given.
-         *
-         * @param rawValue the raw value to compare
-         * @return the constant whose raw value equals to given.
-         */
-        public static Scope valueOfRawValue(final int rawValue) {
-            return IntFieldEnums.valueOfRawValue(Scope.class, rawValue);
-        }
-
-        Scope(final int value) {
-            this.rawValue = value;
-        }
-
-        @Override
-        public int rawValue() {
-            return rawValue;
-        }
-
-        private final int rawValue;
-    }
-
-    /**
-     * Constants for {@code PSEUDO_COLUMN} column values of a result of
-     * {@link DatabaseMetaData#getBestRowIdentifier(String, String, String, int, boolean)} method.
-     */
-    @XmlEnum
-    public enum PseudoColumn
-            implements IntFieldEnum<PseudoColumn> {
-
-        /**
-         * Constant for {@link DatabaseMetaData#bestRowUnknown}({@value java.sql.DatabaseMetaData#bestRowUnknown}).
-         */
-        BEST_ROW_UNKNOWN(DatabaseMetaData.bestRowUnknown), // 0
-
-        /**
-         * Constant for {@link DatabaseMetaData#bestRowNotPseudo}({@value java.sql.DatabaseMetaData#bestRowNotPseudo}).
-         */
-        BEST_ROW_NOT_PSEUDO(DatabaseMetaData.bestRowNotPseudo), // 1
-
-        /**
-         * Constant for {@link DatabaseMetaData#bestRowPseudo}({@value java.sql.DatabaseMetaData#bestRowPseudo}).
-         */
-        BEST_ROW_PSEUDO(DatabaseMetaData.bestRowPseudo); // 2
-
-        /**
-         * Returns the constant whose raw value equals to specified value.
-         *
-         * @param rawValue the raw value.
-         * @return the constant whose raw value equals to the {@code rawValue}.
-         */
-        public static PseudoColumn valueOfRawValue(final int rawValue) {
-            return IntFieldEnums.valueOfRawValue(PseudoColumn.class, rawValue);
-        }
-
-        PseudoColumn(final int rawValue) {
-            this.rawValue = rawValue;
-        }
-
-        @Override
-        public int rawValue() {
-            return rawValue;
-        }
-
-        private final int rawValue;
+        private List<BestRowIdentifier> bestRowIdentifiers;
     }
 
     @Override
@@ -277,59 +148,30 @@ public class BestRowIdentifier
         // no children.
     }
 
-    @NotNull
-    public Scope getScopeAsEnum() {
-        return Scope.valueOfRawValue(getScope());
-    }
-
-    protected void setScopeAsEnum(@NotNull final Scope scopeAsEnum) {
-        Objects.requireNonNull(scopeAsEnum, "scopeAsEnum is null");
-        setScope(scopeAsEnum.rawValue());
-    }
-
-    @NotNull
-    public PseudoColumn getPseudoColumnAsEnum() {
-        return PseudoColumn.valueOfRawValue(getPseudoColumn());
-    }
-
-    protected void setPseudoColumnAsEnum(@NotNull final PseudoColumn pseudoColumnAsEnum) {
-        Objects.requireNonNull(pseudoColumnAsEnum, "pseudoColumnAsEnum is null");
-        setPseudoColumn(pseudoColumnAsEnum.rawValue());
-    }
-
-    @XmlElement(nillable = false, required = true)
     @ColumnLabel("SCOPE")
     private int scope;
 
-    @NotBlank
-    @XmlElement(nillable = false, required = true)
     @ColumnLabel("COLUMN_NAME")
     private String columnName;
 
-    @XmlElement(nillable = false, required = true)
     @ColumnLabel("DATA_TYPE")
     private int dataType;
 
-    @XmlElement(nillable = false, required = true)
     @ColumnLabel("TYPE_NAME")
     private String typeName;
 
-    @XmlElement(nillable = true, required = true)
     @NullableBySpecification // > Null is returned for data types where the column size is not applicable.
     @ColumnLabel("COLUMN_SIZE")
     private Integer columnSize;
 
-    @XmlElement(nillable = true, required = true)
     @NotUsedBySpecification
     @ColumnLabel("BUFFER_LENGTH")
     private Integer bufferLength;
 
-    @XmlElement(nillable = true, required = true)
     @NullableBySpecification
     @ColumnLabel("DECIMAL_DIGITS")
     private Integer decimalDigits;
 
-    @XmlElement(nillable = false, required = true)
     @ColumnLabel("PSEUDO_COLUMN")
     private int pseudoColumn;
 

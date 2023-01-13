@@ -25,13 +25,8 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.experimental.SuperBuilder;
 
-import javax.validation.constraints.NotNull;
-import javax.validation.constraints.Positive;
-import javax.xml.bind.annotation.XmlElement;
-import javax.xml.bind.annotation.XmlRootElement;
 import java.sql.DatabaseMetaData;
 import java.sql.SQLException;
-import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 import java.util.Objects;
@@ -41,9 +36,7 @@ import java.util.Objects;
  * {@link DatabaseMetaData#getCrossReference(String, String, String, String, String, String)} method.
  *
  * @author Jin Kwon &lt;jinahya_at_gmail.com&gt;
- * @see Context#getCrossReference(String, String, String, String, String, String, Collection)
  */
-@XmlRootElement
 @Data
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @SuperBuilder(toBuilder = true)
@@ -82,23 +75,14 @@ public class CrossReference
      * Retrieves cross-references between tables retrieved with specified arguments.
      *
      * @param context          a context
-     * @param catalog          a value for {@code catalog} parameter of
-     *                         {@link Context#getTables(String, String, String, String[], Collection) getTables}
-     *                         method.
-     * @param schemaPattern    a value for {@code schemaPattern} parameter of
-     *                         {@link Context#getTables(String, String, String, String[], Collection) getTables}
-     *                         method.
-     * @param tableNamePattern a value for {@code tableNamePattern} parameter of
-     *                         {@link Context#getTables(String, String, String, String[], Collection) getTables}
-     *                         method.
-     * @param types            a value for {@code types} parameter of
-     *                         {@link Context#getTables(String, String, String, String[], Collection) getTables}
-     *                         method.
+     * @param catalog          a value for {@code catalog} parameter.
+     * @param schemaPattern    a value for {@code schemaPattern} parameter.
+     * @param tableNamePattern a value for {@code tableNamePattern} parameter.
+     * @param types            a value for {@code types} parameter.
      * @param collection       a collection to which results are added.
      * @param <C>              collection type parameter
      * @return given {@code collection}.
      * @throws SQLException if a database error occurs.
-     * @see Context#getTables(String, String, String, String[], Collection)
      */
     public static <C extends Collection<? super CrossReference>> C getInstances(
             final Context context, final String catalog, final String schemaPattern, final String tableNamePattern,
@@ -142,34 +126,6 @@ public class CrossReference
         // no children.
     }
 
-    // -----------------------------------------------------------------------------------------------------------------
-    public UpdateRule getUpdateRuleAsEnum() {
-        return UpdateRule.valueOfRawValue(getUpdateRule());
-    }
-
-    public void setUpdateRuleAsEnum(UpdateRule updateRuleAsEnum) {
-        setUpdateRule(Objects.requireNonNull(updateRuleAsEnum, "updateRuleAsEnum is null").rawValue());
-    }
-
-    public ImportedKeyRule getDeleteRuleAsEnum() {
-        return ImportedKeyRule.valueOfRawValue(getDeleteRule());
-    }
-
-    public void setDeleteRuleAsEnum(final ImportedKeyRule deleteRuleAsEnum) {
-        Objects.requireNonNull(deleteRuleAsEnum, "deleteRuleAsEnum is null");
-        setDeleteRule(deleteRuleAsEnum.rawValue());
-    }
-
-    public ImportedKeyDeferrability getDeferrabilityAsEnum() {
-        return ImportedKeyDeferrability.valueOfRawValue(getDeferrability());
-    }
-
-    public void setDeferrabilityAsEnum(final ImportedKeyDeferrability deferrabilityAsEnum) {
-        Objects.requireNonNull(deferrabilityAsEnum, "deferrabilityAsEnum is null");
-        setDeferrability(deferrabilityAsEnum.rawValue());
-    }
-
-    // -----------------------------------------------------------------------------------------------------------------
     public Column extractPkColumn() {
         return Column.builder()
                 .tableCat(getPktableCat())
@@ -189,74 +145,53 @@ public class CrossReference
     }
 
     // -----------------------------------------------------------------------------------------------------------------
-    @XmlElement(nillable = true, required = true)
     @NullableBySpecification
     @ColumnLabel("PKTABLE_CAT")
     private String pktableCat;
 
-    @XmlElement(nillable = true, required = true)
     @NullableBySpecification
     @ColumnLabel("PKTABLE_SCHEM")
     private String pktableSchem;
 
-    @XmlElement(nillable = false, required = true)
-    @NotNull
     @ColumnLabel("PKTABLE_NAME")
     private String pktableName;
 
-    @XmlElement(nillable = false, required = true)
-    @NotNull
     @ColumnLabel("PKCOLUMN_NAME")
     private String pkcolumnName;
 
     // -----------------------------------------------------------------------------------------------------------------
-    @XmlElement(nillable = true, required = true)
     @NullableBySpecification
     @ColumnLabel("FKTABLE_CAT")
     private String fktableCat;
 
-    @XmlElement(nillable = true, required = true)
     @NullableBySpecification
     @ColumnLabel("FKTABLE_NAME")
     private String fktableSchem;
 
-    @XmlElement(nillable = false, required = true)
-    @NotNull
     @ColumnLabel("FKTABLE_NAME")
     private String fktableName;
 
-    @XmlElement(nillable = false, required = true)
-    @NotNull
     @ColumnLabel("FKCOLUMN_NAME")
     private String fkcolumnName;
 
     // -----------------------------------------------------------------------------------------------------------------
-    @Positive
-    @XmlElement(nillable = false, required = true)
-    @Positive
     @ColumnLabel("FKCOLUMN_NAME")
     private int keySeq;
 
-    @XmlElement(nillable = false, required = true)
     @ColumnLabel("UPDATE_RULE")
     private int updateRule;
 
-    @XmlElement(nillable = false, required = true)
     @ColumnLabel("DELETE_RULE")
     private int deleteRule;
 
-    @XmlElement(nillable = true, required = true)
     @NullableBySpecification
     @ColumnLabel("FK_NAME")
     private String fkName;
 
-    @XmlElement(nillable = true, required = true)
     @NullableBySpecification
     @ColumnLabel("PK_NAME")
     private String pkName;
 
-    @XmlElement(nillable = false, required = true)
-    @Positive
     @ColumnLabel("DEFERRABILITY")
     private int deferrability;
 }
