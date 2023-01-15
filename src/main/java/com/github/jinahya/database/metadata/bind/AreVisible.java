@@ -21,11 +21,8 @@ package com.github.jinahya.database.metadata.bind;
  */
 
 import lombok.AccessLevel;
-import lombok.EqualsAndHashCode;
-import lombok.Getter;
+import lombok.Data;
 import lombok.NoArgsConstructor;
-import lombok.Setter;
-import lombok.ToString;
 import lombok.experimental.SuperBuilder;
 
 import java.io.Serializable;
@@ -40,17 +37,14 @@ import java.io.Serializable;
  * @see OwnInsertsAreVisible
  * @see OwnUpdatesAreVisible
  */
-@Setter
-@Getter
-@EqualsAndHashCode
-@ToString(callSuper = true)
+@Data
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @SuperBuilder(toBuilder = true)
 public abstract class AreVisible
         implements Serializable,
                    MetadataType {
 
-    private static final long serialVersionUID = -4539635096087360299L;
+    private static final long serialVersionUID = -307562669971148329L;
 
     private int type;
 

@@ -22,9 +22,17 @@ package com.github.jinahya.database.metadata.bind;
 
 import lombok.Data;
 import lombok.EqualsAndHashCode;
+import lombok.NoArgsConstructor;
 import lombok.ToString;
+import lombok.experimental.SuperBuilder;
 
 import java.sql.DatabaseMetaData;
+import java.sql.SQLException;
+import java.util.Map;
+import java.util.Objects;
+import java.util.function.Function;
+
+import static java.util.stream.Collectors.toMap;
 
 /**
  * A class for binding result of {@link DatabaseMetaData#deletesAreDetected(int)} method.
@@ -35,8 +43,23 @@ import java.sql.DatabaseMetaData;
 @Data
 @EqualsAndHashCode(callSuper = true)
 @ToString(callSuper = true)
+@NoArgsConstructor
+@SuperBuilder(toBuilder = true)
 public class DeletesAreDetected
         extends AreDetected {
 
-    private static final long serialVersionUID = -7476108814185270988L;
+    private static final long serialVersionUID = -2202410650688778511L;
+
+    public static Map<Integer, DeletesAreDetected> getAllValues(final Context context) {
+        Objects.requireNonNull(context, "context is null");
+        return typeStream()
+                .mapToObj(t -> {
+                    try {
+                        return context.deletesAreDetected(t);
+                    } catch (final SQLException sqle) {
+                        throw new RuntimeException("failed to get deletesAreDetected(" + t + ") on " + context, sqle);
+                    }
+                })
+                .collect(toMap(AreDetected::getType, Function.identity()));
+    }
 }

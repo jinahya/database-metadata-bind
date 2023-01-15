@@ -324,4 +324,37 @@ abstract class MemoryTest {
             final File target = Paths.get("target", pathname).toFile();
         }
     }
+
+    @Test
+    void deletesAreDetected__() throws SQLException {
+        try (var connection = connect()) {
+            final var context = Context.newInstance(connection);
+            final var values = DeletesAreDetected.getAllValues(context);
+            for (final var entry : values.entrySet()) {
+                log.debug("deletesAreDetected({}): {}", entry.getKey(), entry.getValue());
+            }
+        }
+    }
+
+    @Test
+    void insertsAreDetected__() throws SQLException {
+        try (var connection = connect()) {
+            final var context = Context.newInstance(connection);
+            final var values = InsertsAreDetected.getAllValues(context);
+            for (final var entry : values.entrySet()) {
+                log.debug("insertsAreDetected({}): {}", entry.getKey(), entry.getValue());
+            }
+        }
+    }
+
+    @Test
+    void updatesAreDetected__() throws SQLException {
+        try (var connection = connect()) {
+            final var context = Context.newInstance(connection);
+            final var values = UpdatesAreDetected.getAllValues(context);
+            for (final var entry : values.entrySet()) {
+                log.debug("updatesAreDetected({}): {}", entry.getKey(), entry.getValue());
+            }
+        }
+    }
 }

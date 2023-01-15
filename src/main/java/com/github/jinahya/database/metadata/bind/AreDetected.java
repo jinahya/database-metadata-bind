@@ -22,12 +22,12 @@ package com.github.jinahya.database.metadata.bind;
 
 import lombok.AccessLevel;
 import lombok.Data;
-import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
-import lombok.ToString;
 import lombok.experimental.SuperBuilder;
 
 import java.io.Serializable;
+import java.sql.ResultSet;
+import java.util.stream.IntStream;
 
 /**
  * An abstract class for binding the result of {@code DatabaseMetaData#(delete|insert|update)sAreDetected(int)} method.
@@ -36,17 +36,26 @@ import java.io.Serializable;
  * @see DeletesAreDetected
  * @see InsertsAreDetected
  * @see UpdatesAreDetected
+ * @see ResultSet#TYPE_FORWARD_ONLY
+ * @see ResultSet#TYPE_SCROLL_INSENSITIVE
+ * @see ResultSet#TYPE_SCROLL_SENSITIVE
  */
 @Data
-@EqualsAndHashCode
-@ToString(callSuper = true)
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @SuperBuilder(toBuilder = true)
 public abstract class AreDetected
         implements Serializable,
                    MetadataType {
 
-    private static final long serialVersionUID = 7505598364855010122L;
+    private static final long serialVersionUID = 4697920698877514355L;
+
+    static IntStream typeStream() {
+        return IntStream.of(
+                ResultSet.TYPE_FORWARD_ONLY,
+                ResultSet.TYPE_SCROLL_INSENSITIVE,
+                ResultSet.TYPE_SCROLL_SENSITIVE
+        );
+    }
 
     private int type;
 
