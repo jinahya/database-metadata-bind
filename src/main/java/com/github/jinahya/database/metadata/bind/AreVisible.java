@@ -26,6 +26,7 @@ import lombok.NoArgsConstructor;
 import lombok.experimental.SuperBuilder;
 
 import java.io.Serializable;
+import java.util.stream.IntStream;
 
 /**
  * An abstract class for binding the result of {@code DatabaseMetaData#...sAreVisible(int)} method.
@@ -44,9 +45,13 @@ public abstract class AreVisible
         implements Serializable,
                    MetadataType {
 
-    private static final long serialVersionUID = -307562669971148329L;
+    private static final long serialVersionUID = -3826484747016356087L;
+
+    static IntStream typeStream() {
+        return AreDetected.typeStream();
+    }
 
     private int type;
 
-    private Boolean value;
+    private boolean value;
 }

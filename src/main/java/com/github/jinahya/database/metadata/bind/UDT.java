@@ -26,21 +26,32 @@ import lombok.NoArgsConstructor;
 import lombok.experimental.SuperBuilder;
 
 import java.sql.DatabaseMetaData;
+import java.sql.SQLException;
+import java.util.Objects;
+import java.util.function.Consumer;
 
 /**
  * A class for binding results of {@link DatabaseMetaData#getUDTs(String, String, String, int[])} method.
  *
  * @author Jin Kwon &lt;jinahya_at_gmail.com&gt;
  */
+@ChildOf_(Schema.class)
 @ParentOf(Attribute.class)
 @Data
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @SuperBuilder(toBuilder = true)
 public class UDT
-        implements MetadataType,
-                   ChildOf<Schema> {
+        implements MetadataType {
 
     private static final long serialVersionUID = 8665246093405057553L;
+
+    public void getAttributes(final Context context, final String attributeNamePattern,
+                              final Consumer<? super Attribute> consumer)
+            throws SQLException {
+        Objects.requireNonNull(consumer, "consumer is null");
+        Objects.requireNonNull(consumer, "consumer is null");
+        context.getAttributes(getTypeCat(), getTypeSchem(), getTypeName(), attributeNamePattern, consumer);
+    }
 
     @NullableBySpecification
     @ColumnLabel("TYPE_CAT")

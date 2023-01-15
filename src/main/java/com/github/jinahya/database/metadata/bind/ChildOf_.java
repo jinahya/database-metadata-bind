@@ -4,7 +4,7 @@ package com.github.jinahya.database.metadata.bind;
  * #%L
  * database-metadata-bind
  * %%
- * Copyright (C) 2011 - 2023 Jinahya, Inc.
+ * Copyright (C) 2011 - 2021 Jinahya, Inc.
  * %%
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -20,15 +20,27 @@ package com.github.jinahya.database.metadata.bind;
  * #L%
  */
 
-import org.junit.jupiter.api.Test;
+import java.lang.annotation.Documented;
+import java.lang.annotation.ElementType;
+import java.lang.annotation.Retention;
+import java.lang.annotation.RetentionPolicy;
+import java.lang.annotation.Target;
 
-class DeletesAreDetectedTest extends AreDetectedTest<DeletesAreDetected> {
+/**
+ * A marker interface for relating binding types to their parent types.
+ *
+ * @author Jin Kwon &lt;onacit_at_gmail.com&gt;
+ * @see ParentOf
+ */
+@Documented
+@Retention(RetentionPolicy.RUNTIME)
+@Target({ElementType.TYPE})
+public @interface ChildOf_ {
 
-    DeletesAreDetectedTest() {
-        super(DeletesAreDetected.class);
-    }
-
-    @Test
-    void getAllInstances__() {
-    }
+    /**
+     * Returns the parent class.
+     *
+     * @return the parent class.
+     */
+    Class<? extends MetadataType> value();
 }

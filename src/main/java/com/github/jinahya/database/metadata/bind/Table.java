@@ -25,7 +25,9 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.experimental.SuperBuilder;
 
-import java.util.Comparator;
+import java.sql.SQLException;
+import java.util.List;
+import java.util.Objects;
 
 /**
  * A class for binding results of
@@ -34,6 +36,7 @@ import java.util.Comparator;
  *
  * @author Jin Kwon &lt;jinahya_at_gmail.com&gt;
  */
+@ChildOf_(Schema.class)
 @ParentOf(BestRowIdentifier.class)
 @ParentOf(Column.class)
 @ParentOf(ColumnPrivilege.class)
@@ -49,16 +52,9 @@ import java.util.Comparator;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @SuperBuilder(toBuilder = true)
 public class Table
-        implements MetadataType,
-                   ChildOf<Schema> {
+        implements MetadataType {
 
     private static final long serialVersionUID = 6590036695540141125L;
-
-    public static final Comparator<Table> COMPARATOR =
-            Comparator.comparing(Table::getTableType)
-                    .thenComparing(Table::getTableCat, Comparator.nullsFirst(Comparator.naturalOrder()))
-                    .thenComparing(Table::getTableSchem, Comparator.nullsFirst(Comparator.naturalOrder()))
-                    .thenComparing(Table::getTableName);
 
     /**
      * The label of the column to which {@link #ATTRIBUTE_NAME_TABLE_CAT} attribute is bound. The value is {@value}.
@@ -89,6 +85,11 @@ public class Table
      * The name of the attribute from which {@link #COLUMN_LABEL_TABLE_NAME} column is bound. The value is {@value}.
      */
     public static final String ATTRIBUTE_NAME_TABLE_NAME = "tableName";
+
+    public List<Column> getColumns(final Context context, final String columnNamePattern) throws SQLException {
+        Objects.requireNonNull(context, "context is null");
+        return context.getColumns(getTableCat(), getTableSchem(), getTableName(), columnNamePattern);
+    }
 
     @NullableBySpecification
     @ColumnLabel(COLUMN_LABEL_TABLE_CAT)

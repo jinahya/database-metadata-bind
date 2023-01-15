@@ -28,11 +28,9 @@ import lombok.experimental.SuperBuilder;
 
 import java.sql.DatabaseMetaData;
 import java.sql.SQLException;
-import java.util.Map;
+import java.util.List;
 import java.util.Objects;
-import java.util.function.Function;
-
-import static java.util.stream.Collectors.toMap;
+import java.util.stream.Collectors;
 
 /**
  * A class for binding results of {@link DatabaseMetaData#insertsAreDetected(int)} method.
@@ -50,7 +48,7 @@ public class InsertsAreDetected
 
     private static final long serialVersionUID = -6828058597394063166L;
 
-    public static Map<Integer, InsertsAreDetected> getAllValues(final Context context) {
+    public static List<InsertsAreDetected> getAllValues(final Context context) {
         Objects.requireNonNull(context, "context is null");
         return typeStream()
                 .mapToObj(t -> {
@@ -60,6 +58,6 @@ public class InsertsAreDetected
                         throw new RuntimeException("failed to get insertsAreDetected(" + t + ") on " + context, sqle);
                     }
                 })
-                .collect(toMap(AreDetected::getType, Function.identity()));
+                .collect(Collectors.toList());
     }
 }

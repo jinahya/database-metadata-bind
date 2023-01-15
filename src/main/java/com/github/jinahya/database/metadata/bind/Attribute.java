@@ -32,12 +32,12 @@ import java.sql.DatabaseMetaData;
  *
  * @author Jin Kwon &lt;jinahya_at_gmail.com&gt;
  */
+@ChildOf_(UDT.class)
 @Data
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @SuperBuilder(toBuilder = true)
 public class Attribute
-        implements MetadataType,
-                   ChildOf<UDT> {
+        implements MetadataType {
 
     private static final long serialVersionUID = 1913681105410440186L;
 

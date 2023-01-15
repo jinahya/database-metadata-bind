@@ -32,12 +32,13 @@ import java.sql.DatabaseMetaData;
  *
  * @author Jin Kwon &lt;jinahya_at_gmail.com&gt;
  */
+@ParentOf(ColumnPrivilege.class)
+@ChildOf_(Table.class)
 @Data
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @SuperBuilder(toBuilder = true)
 public class Column
-        implements MetadataType,
-                   ChildOf<Table> {
+        implements MetadataType {
 
     private static final long serialVersionUID = -409653682729081530L;
 

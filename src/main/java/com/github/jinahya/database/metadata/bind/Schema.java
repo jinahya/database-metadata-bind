@@ -25,12 +25,17 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.experimental.SuperBuilder;
 
+import java.sql.SQLException;
+import java.util.List;
+import java.util.Objects;
+
 /**
  * A class for binding a result of {@link java.sql.DatabaseMetaData#getSchemas(java.lang.String, java.lang.String)}
  * method.
  *
  * @author Jin Kwon &lt;jinahya_at_gmail.com&gt;
  */
+@ChildOf_(Catalog.class)
 @ParentOf(UDT.class)
 @ParentOf(Table.class)
 @ParentOf(Procedure.class)
@@ -39,8 +44,7 @@ import lombok.experimental.SuperBuilder;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @SuperBuilder(toBuilder = true)
 public class Schema
-        implements MetadataType,
-                   ChildOf<Catalog> {
+        implements MetadataType {
 
     private static final long serialVersionUID = 7457236468401244963L;
 
@@ -49,6 +53,12 @@ public class Schema
     public static final String COLUMN_LABEL_TABLE_SCHEM = "TABLE_SCHEM";
 
     public static final String COLUMN_VALUE_TABLE_SCHEM_EMPTY = "";
+
+    public List<Table> getTables(final Context context, final String tableNamePattern, final String[] types)
+            throws SQLException {
+        Objects.requireNonNull(context, "context is null");
+        return context.getTables(getTableCatalog(), getTableSchem(), tableNamePattern, types);
+    }
 
     @NullableBySpecification
     @ColumnLabel(COLUMN_LABEL_TABLE_CATALOG)

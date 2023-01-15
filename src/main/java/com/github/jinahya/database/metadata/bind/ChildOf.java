@@ -20,6 +20,7 @@ package com.github.jinahya.database.metadata.bind;
  * #L%
  */
 
+@Deprecated
 public interface ChildOf<T extends MetadataType> {
 
 }

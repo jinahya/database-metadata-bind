@@ -34,7 +34,7 @@ import java.util.function.Consumer;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 /**
- * A class for testing {@link Metadata} class.
+ * A class for testing {@link Context} class.
  *
  * @author Jin Kwon &lt;jinahya_at_gmail.com&gt;
  */

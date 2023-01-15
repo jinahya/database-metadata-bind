@@ -47,8 +47,14 @@ public abstract class AreDetected
         implements Serializable,
                    MetadataType {
 
-    private static final long serialVersionUID = 4697920698877514355L;
+    private static final long serialVersionUID = -5726735588783597670L;
 
+    /**
+     * Returns a stream of {@link ResultSet#TYPE_FORWARD_ONLY}, {@link ResultSet#TYPE_SCROLL_INSENSITIVE}, and
+     * {@link ResultSet#TYPE_SCROLL_SENSITIVE}.
+     *
+     * @return a stream of valid values for {@code type} proprty.
+     */
     static IntStream typeStream() {
         return IntStream.of(
                 ResultSet.TYPE_FORWARD_ONLY,
@@ -59,5 +65,5 @@ public abstract class AreDetected
 
     private int type;
 
-    private Boolean value;
+    private boolean value;
 }

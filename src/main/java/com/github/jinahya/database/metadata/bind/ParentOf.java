@@ -51,5 +51,5 @@ public @interface ParentOf {
      *
      * @return the parent class.
      */
-    Class<?> value();
+    Class<? extends MetadataType> value();
 }

@@ -25,6 +25,9 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.experimental.SuperBuilder;
 
+import java.sql.SQLException;
+import java.util.List;
+import java.util.Objects;
 import java.util.function.Consumer;
 
 /**
@@ -50,6 +53,12 @@ public class Catalog
      * A value for {@value #ATTRIBUTE_NAME_TABLE_CAT} attribute for virtual instances. The value is {@value}.
      */
     public static final String COLUMN_VALUE_TABLE_CAT_EMPTY = "";
+
+    public List<Schema> getSchemas(final Context context, final String schemaNamePattern)
+            throws SQLException {
+        Objects.requireNonNull(context, "context is null");
+        return context.getSchemas(getTableCat(), schemaNamePattern);
+    }
 
     @ColumnLabel(COLUMN_LABEL_TABLE_CAT)
     private String tableCat;

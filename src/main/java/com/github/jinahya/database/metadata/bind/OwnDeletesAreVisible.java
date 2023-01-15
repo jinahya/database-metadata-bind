@@ -27,6 +27,11 @@ import lombok.NoArgsConstructor;
 import lombok.ToString;
 import lombok.experimental.SuperBuilder;
 
+import java.sql.SQLException;
+import java.util.List;
+import java.util.Objects;
+import java.util.stream.Collectors;
+
 /**
  * A class for binding result of {@link java.sql.DatabaseMetaData#ownDeletesAreVisible(int)} method.
  *
@@ -41,5 +46,18 @@ import lombok.experimental.SuperBuilder;
 public class OwnDeletesAreVisible
         extends AreVisible {
 
-    private static final long serialVersionUID = -8947169068054773215L;
+    private static final long serialVersionUID = -5880338354530493079L;
+
+    public static List<OwnDeletesAreVisible> getAllValues(final Context context) {
+        Objects.requireNonNull(context, "context is null");
+        return typeStream()
+                .mapToObj(t -> {
+                    try {
+                        return context.ownDeletesAreVisible(t);
+                    } catch (final SQLException sqle) {
+                        throw new RuntimeException("failed to get ownDeletesAreVisible(" + t + ")", sqle);
+                    }
+                })
+                .collect(Collectors.toList());
+    }
 }
