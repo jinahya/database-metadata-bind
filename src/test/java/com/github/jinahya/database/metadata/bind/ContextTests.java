@@ -39,10 +39,13 @@ import static org.assertj.core.api.Assertions.assertThat;
 @Slf4j
 final class ContextTests {
 
-    private static void common(final Object value) {
+    private static void common(final AbstractMetadataType value) {
         Objects.requireNonNull(value, "value is null");
         final var string = value.toString();
         final var hashCode = value.hashCode();
+        if (!value.getUnmappedValues().isEmpty()) {
+            log.info("has unmapped values: {}", value);
+        }
         ReflectionUtils.findMethod(value.getClass(), "toBuilder")
                 .map(m -> {
                     try {

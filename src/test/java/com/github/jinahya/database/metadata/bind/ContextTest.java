@@ -21,7 +21,6 @@ package com.github.jinahya.database.metadata.bind;
  */
 
 import lombok.extern.slf4j.Slf4j;
-import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 
 import java.lang.reflect.Method;
@@ -41,7 +40,6 @@ import static org.assertj.core.api.Assertions.assertThatThrownBy;
 @Slf4j
 class ContextTest {
 
-    @Disabled
     @Test
     void assertAllMethodsBound() throws ReflectiveOperationException {
         for (final Method method : DatabaseMetaData.class.getMethods()) {
