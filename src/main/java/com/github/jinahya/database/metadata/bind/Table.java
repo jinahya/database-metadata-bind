@@ -159,6 +159,11 @@ public class Table
         return context.getTablePrivileges(getTableCat(), getTableSchem(), getTableName());
     }
 
+    public List<VersionColumn> getVersionColumns(final Context context) throws SQLException {
+        Objects.requireNonNull(context, "context is null");
+        return context.getVersionColumns(getTableCat(), getTableSchem(), getTableName());
+    }
+
     @NullableBySpecification
     @ColumnLabel(COLUMN_LABEL_TABLE_CAT)
     private String tableCat;

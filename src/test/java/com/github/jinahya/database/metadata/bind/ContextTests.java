@@ -29,6 +29,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
+import static org.assertj.core.api.Assertions.assertThat;
+
 /**
  * An abstract test class for in-memory databases.
  *
@@ -57,9 +59,6 @@ final class ContextTests {
                                 throw new RuntimeException(row);
                             }
                         }))
-                .ifPresent(r -> {
-                    log.debug("rebuilt: {}", r);
-                })
         ;
     }
 
@@ -170,29 +169,49 @@ final class ContextTests {
         } catch (final SQLFeatureNotSupportedException sqlfnse) {
             log.error("not supported; getTypeInfos", sqlfnse);
         }
+        try {
+            log.debug("supportsTransactions: {}", context.databaseMetaData.supportsTransactions());
+        } catch (final SQLFeatureNotSupportedException sqlfnse) {
+            log.error("not supported; supportsTransactions", sqlfnse);
+        }
+        try {
+            log.debug("supportsUnion: {}", context.databaseMetaData.supportsUnion());
+        } catch (final SQLFeatureNotSupportedException sqlfnse) {
+            log.error("not supported; supportsUnion", sqlfnse);
+        }
+        try {
+            log.debug("supportsUnionAll: {}", context.databaseMetaData.supportsUnionAll());
+        } catch (final SQLFeatureNotSupportedException sqlfnse) {
+            log.error("not supported; supportsUnionAll", sqlfnse);
+        }
+        try {
+            log.debug("usesLocalFilePerTable: {}", context.databaseMetaData.usesLocalFilePerTable());
+        } catch (final SQLFeatureNotSupportedException sqlfnse) {
+            log.error("not supported; usesLocalFilePerTable", sqlfnse);
+        }
+        try {
+            log.debug("usesLocalFiles: {}", context.databaseMetaData.usesLocalFiles());
+        } catch (final SQLFeatureNotSupportedException sqlfnse) {
+            log.error("not supported; usesLocalFiles", sqlfnse);
+        }
     }
 
     static void attribute(final Context context, final Attribute attribute) throws SQLException {
         Objects.requireNonNull(context, "context is null");
         Objects.requireNonNull(attribute, "attribute is null");
-        log.debug("attribute: {}", attribute);
         common(attribute);
-        final var rebuilt = attribute.toBuilder().build();
     }
 
     static void bestRowIdentifier(final Context context, final BestRowIdentifier bestRowIdentifier)
             throws SQLException {
         Objects.requireNonNull(context, "context is null");
         Objects.requireNonNull(bestRowIdentifier, "bestRowIdentifier is null");
-        log.debug("bestRowIdentifier: {}", bestRowIdentifier);
         common(bestRowIdentifier);
-        final var rebuilt = bestRowIdentifier.toBuilder().build();
     }
 
     static void catalog(final Context context, final Catalog catalog) throws SQLException {
         Objects.requireNonNull(context, "context is null");
         Objects.requireNonNull(catalog, "catalog is null");
-        log.debug("catalog: {}", catalog);
         common(catalog);
         try {
             final var attributes = catalog.getAttributes(context, null, "%", "%");
@@ -240,7 +259,7 @@ final class ContextTests {
                 procedure(context, procedure);
             }
         } catch (final SQLFeatureNotSupportedException sqlfnse) {
-            log.error("not supported; getSchema", sqlfnse);
+            log.error("not supported; getProcedures", sqlfnse);
         }
         try {
             final var pseudoColumns = catalog.getPseudoColumns(context, null, "%", "%");
@@ -248,10 +267,29 @@ final class ContextTests {
                 pseudoColumn(context, pseudoColumn);
             }
         } catch (final SQLFeatureNotSupportedException sqlfnse) {
-            log.error("not supported; getSchema", sqlfnse);
+            log.error("not supported; getPseudoColumns", sqlfnse);
+        }
+        try {
+            final var procedureColumns = catalog.getProcedureColumns(context, null, "%", "%");
+            for (final var procedureColumn : procedureColumns) {
+                procedureColumn(context, procedureColumn);
+            }
+        } catch (final SQLFeatureNotSupportedException sqlfnse) {
+            log.error("not supported; getProcedureColumns", sqlfnse);
+        }
+        try {
+            final var procedures = catalog.getProcedures(context, null, "%");
+            for (final var procedure : procedures) {
+                procedure(context, procedure);
+            }
+        } catch (final SQLFeatureNotSupportedException sqlfnse) {
+            log.error("not supported; getProcedures", sqlfnse);
         }
         try {
             final var schemas = catalog.getSchemas(context, null);
+            assertThat(schemas).allSatisfy(s -> {
+//                assertThat(s.getTableCatalog()).isEqualTo(catalog.getTableCat()); // derby
+            });
             if (schemas.isEmpty()) {
                 schemas.add(
                         Schema.builder()
@@ -272,7 +310,15 @@ final class ContextTests {
                 superTable(context, superTable);
             }
         } catch (final SQLFeatureNotSupportedException sqlfnse) {
-            log.error("not supported", sqlfnse);
+            log.error("not supported; getSuperTables", sqlfnse);
+        }
+        try {
+            final var superTypes = catalog.getSuperTypes(context, "%", "%");
+            for (final var superType : superTypes) {
+                superType(context, superType);
+            }
+        } catch (final SQLFeatureNotSupportedException sqlfnse) {
+            log.error("not supported; getSuperTables", sqlfnse);
         }
         try {
             final var tablePrivileges = catalog.getTablePrivileges(context, null, "%");
@@ -280,7 +326,7 @@ final class ContextTests {
                 tablePrivilege(context, tablePrivilege);
             }
         } catch (final SQLFeatureNotSupportedException sqlfnse) {
-            log.error("not supported", sqlfnse);
+            log.error("not supported; getTablePrivileges", sqlfnse);
         }
         try {
             final var tables = catalog.getTables(context, null, "%", null);
@@ -288,7 +334,15 @@ final class ContextTests {
                 table(context, table);
             }
         } catch (final SQLFeatureNotSupportedException sqlfnse) {
-            log.error("not supported", sqlfnse);
+            log.error("not supported; getTables", sqlfnse);
+        }
+        try {
+            final var udts = catalog.getUDTs(context, null, "%", null);
+            for (final var udt : udts) {
+                udt(context, udt);
+            }
+        } catch (final SQLFeatureNotSupportedException sqlfnse) {
+            log.error("not supported; getUDTs", sqlfnse);
         }
     }
 
@@ -296,96 +350,76 @@ final class ContextTests {
             throws SQLException {
         Objects.requireNonNull(context, "context is null");
         Objects.requireNonNull(deletesAreDetected, "deletesAreDetected is null");
-        log.debug("deletesAreDetected: {}", deletesAreDetected);
         common(deletesAreDetected);
-        final var rebuilt = deletesAreDetected.toBuilder().build();
     }
 
     static void insertsAreDetected(final Context context, final InsertsAreDetected insertsAreDetected)
             throws SQLException {
         Objects.requireNonNull(context, "context is null");
         Objects.requireNonNull(insertsAreDetected, "insertsAreDetected is null");
-        log.debug("insertsAreDetected: {}", insertsAreDetected);
         common(insertsAreDetected);
-        final var rebuilt = insertsAreDetected.toBuilder().build();
     }
 
     static void othersDeletesAreVisible(final Context context, final OthersDeletesAreVisible othersDeletesAreVisible)
             throws SQLException {
         Objects.requireNonNull(context, "context is null");
         Objects.requireNonNull(othersDeletesAreVisible, "othersDeletesAreVisible is null");
-        log.debug("othersDeletesAreVisible: {}", othersDeletesAreVisible);
         common(othersDeletesAreVisible);
-        final var rebuilt = othersDeletesAreVisible.toBuilder().build();
     }
 
     static void othersInsertsAreVisible(final Context context, final OthersInsertsAreVisible othersInsertsAreVisible)
             throws SQLException {
         Objects.requireNonNull(context, "context is null");
         Objects.requireNonNull(othersInsertsAreVisible, "othersInsertsAreVisible is null");
-        log.debug("othersInsertsAreVisible: {}", othersInsertsAreVisible);
         common(othersInsertsAreVisible);
-        final var rebuilt = othersInsertsAreVisible.toBuilder().build();
     }
 
     static void othersUpdatesAreVisible(final Context context, final OthersUpdatesAreVisible othersUpdatesAreVisible)
             throws SQLException {
         Objects.requireNonNull(context, "context is null");
         Objects.requireNonNull(othersUpdatesAreVisible, "othersUpdatesAreVisible is null");
-        log.debug("othersUpdatesAreVisible: {}", othersUpdatesAreVisible);
         common(othersUpdatesAreVisible);
-        final var rebuilt = othersUpdatesAreVisible.toBuilder().build();
     }
 
     static void ownDeletesAreVisible(final Context context, final OwnDeletesAreVisible ownDeletesAreVisible)
             throws SQLException {
         Objects.requireNonNull(context, "context is null");
         Objects.requireNonNull(ownDeletesAreVisible, "ownDeletesAreVisible is null");
-        log.debug("ownDeletesAreVisible: {}", ownDeletesAreVisible);
         common(ownDeletesAreVisible);
-        final var rebuilt = ownDeletesAreVisible.toBuilder().build();
     }
 
     static void ownInsertsAreVisible(final Context context, final OwnInsertsAreVisible ownInsertsAreVisible)
             throws SQLException {
         Objects.requireNonNull(context, "context is null");
         Objects.requireNonNull(ownInsertsAreVisible, "ownInsertsAreVisible is null");
-        log.debug("ownInsertsAreVisible: {}", ownInsertsAreVisible);
         common(ownInsertsAreVisible);
-        final var rebuilt = ownInsertsAreVisible.toBuilder().build();
     }
 
     static void ownUpdatesAreVisible(final Context context, final OwnUpdatesAreVisible ownUpdatesAreVisible)
             throws SQLException {
         Objects.requireNonNull(context, "context is null");
         Objects.requireNonNull(ownUpdatesAreVisible, "ownUpdatesAreVisible is null");
-        log.debug("ownUpdatesAreVisible: {}", ownUpdatesAreVisible);
         common(ownUpdatesAreVisible);
-        final var rebuilt = ownUpdatesAreVisible.toBuilder().build();
     }
 
     static void updatesAreDetected(final Context context, final UpdatesAreDetected updatesAreDetected)
             throws SQLException {
         Objects.requireNonNull(context, "context is null");
         Objects.requireNonNull(updatesAreDetected, "updatesAreDetected is null");
-        log.debug("updatesAreDetected: {}", updatesAreDetected);
         common(updatesAreDetected);
-        final var rebuilt = updatesAreDetected.toBuilder().build();
     }
 
     static void schema(final Context context, final Schema schema) throws SQLException {
         Objects.requireNonNull(context, "context is null");
         Objects.requireNonNull(schema, "schema is null");
-        log.debug("schema: {}", schema);
         common(schema);
-        final var rebuilt = schema.toBuilder().build();
         try {
             final var attributes = schema.getAttributes(context, "%", "%");
             for (final var attribute : attributes) {
                 attribute(context, attribute);
             }
         } catch (final SQLFeatureNotSupportedException sqlfnse) {
-            log.error("not supported; getSchema", sqlfnse);
+            log.error("not supported; getAttributes", sqlfnse);
         }
         try {
             final var columns = schema.getColumns(context, "%", "%");
@@ -393,7 +427,7 @@ final class ContextTests {
                 column(context, column);
             }
         } catch (final SQLFeatureNotSupportedException sqlfnse) {
-            log.error("not supported; getSchema", sqlfnse);
+            log.error("not supported; getColumns", sqlfnse);
         }
         try {
             final var functionColumns = schema.getFunctionColumns(context, "%", "%");
@@ -401,7 +435,7 @@ final class ContextTests {
                 functionColumn(context, functionColumn);
             }
         } catch (final SQLFeatureNotSupportedException sqlfnse) {
-            log.error("not supported; getSchema", sqlfnse);
+            log.error("not supported; getFunctionColumns", sqlfnse);
         }
         try {
             final var functions = schema.getFunctions(context, "%");
@@ -409,16 +443,7 @@ final class ContextTests {
                 function(context, function);
             }
         } catch (final SQLFeatureNotSupportedException sqlfnse) {
-            log.error("not supported; getSchema", sqlfnse);
-        }
-        try {
-            final var functions = context.getFunctions(schema.getTableCatalog(), schema.getTableSchem(), "%");
-            for (final var function : functions) {
-                log.debug("function: {}", function);
-                function(context, function);
-            }
-        } catch (final SQLFeatureNotSupportedException sqlfnse) {
-            log.error("not supported", sqlfnse);
+            log.error("not supported; getFunctions", sqlfnse);
         }
         try {
             final var procedureColumns = schema.getProcedureColumns(context, "%", "%");
@@ -426,7 +451,7 @@ final class ContextTests {
                 procedureColumn(context, procedureColumn);
             }
         } catch (final SQLFeatureNotSupportedException sqlfnse) {
-            log.error("not supported; getSchema", sqlfnse);
+            log.error("not supported; getProcedureColumns", sqlfnse);
         }
         try {
             final var procedures = schema.getProcedures(context, "%");
@@ -434,7 +459,7 @@ final class ContextTests {
                 procedure(context, procedure);
             }
         } catch (final SQLFeatureNotSupportedException sqlfnse) {
-            log.error("not supported", sqlfnse);
+            log.error("not supported; getProcedures", sqlfnse);
         }
         try {
             final var pseudoColumns = schema.getPseudoColumns(context, "%", "%");
@@ -442,7 +467,7 @@ final class ContextTests {
                 pseudoColumn(context, pseudoColumn);
             }
         } catch (final SQLFeatureNotSupportedException sqlfnse) {
-            log.error("not supported; getSchema", sqlfnse);
+            log.error("not supported; getPseudoColumns", sqlfnse);
         }
         try {
             final var superTables = schema.getSuperTables(context, "%");
@@ -450,7 +475,7 @@ final class ContextTests {
                 superTable(context, superTable);
             }
         } catch (final SQLFeatureNotSupportedException sqlfnse) {
-            log.error("not supported", sqlfnse);
+            log.error("not supported; getSuperTables", sqlfnse);
         }
         try {
             final var superTypes = schema.getSuperTypes(context, "%");
@@ -458,7 +483,7 @@ final class ContextTests {
                 superType(context, superType);
             }
         } catch (final SQLFeatureNotSupportedException sqlfnse) {
-            log.error("not supported", sqlfnse);
+            log.error("not supported; getSuperTypes", sqlfnse);
         }
         try {
             final var tablePrivileges = schema.getTablePrivileges(context, "%");
@@ -466,7 +491,7 @@ final class ContextTests {
                 tablePrivilege(context, tablePrivilege);
             }
         } catch (final SQLFeatureNotSupportedException sqlfnse) {
-            log.error("not supported", sqlfnse);
+            log.error("not supported; getTablePrivileges", sqlfnse);
         }
         try {
             final var tables = schema.getTables(context, "%", null);
@@ -474,23 +499,21 @@ final class ContextTests {
                 table(context, table);
             }
         } catch (final SQLFeatureNotSupportedException sqlfnse) {
-            log.error("not supported", sqlfnse);
+            log.error("not supported; getTables", sqlfnse);
         }
         try {
-            final var udts = context.getUDTs(schema.getTableCatalog(), schema.getTableSchem(), "%", null);
+            final var udts = schema.getUDTs(context, "%", null);
             for (final var udt : udts) {
-                log.debug("udt: {}", udt);
                 udt(context, udt);
             }
         } catch (final SQLFeatureNotSupportedException sqlfnse) {
-            log.error("not supported", sqlfnse);
+            log.error("not supported; getUDTs", sqlfnse);
         }
     }
 
     static void function(final Context context, final Function function) throws SQLException {
         Objects.requireNonNull(context, "context is null");
         Objects.requireNonNull(function, "function is null");
-        log.debug("function: {}", function);
         common(function);
         final var functionColumns = function.getFunctionColumns(context, "%");
         for (final var functionColumn : functionColumns) {
@@ -501,16 +524,19 @@ final class ContextTests {
     static void functionColumn(final Context context, final FunctionColumn functionColumn) throws SQLException {
         Objects.requireNonNull(context, "context is null");
         Objects.requireNonNull(functionColumn, "functionColumn is null");
-        log.debug("functionColumn: {}", functionColumn);
         common(functionColumn);
     }
 
     static void procedure(final Context context, final Procedure procedure) throws SQLException {
         Objects.requireNonNull(context, "context is null");
         Objects.requireNonNull(procedure, "procedure is null");
-        log.debug("procedure: {}", procedure);
         common(procedure);
         final var procedureColumns = procedure.getProcedureColumns(context, "%");
+        assertThat(procedureColumns).allSatisfy(pc -> {
+//            assertThat(pc.getProcedureCat()).isEqualTo(procedure.getProcedureCat()); // derby
+            assertThat(pc.getProcedureSchem()).isEqualTo(procedure.getProcedureSchem());
+            assertThat(pc.getProcedureName()).isEqualTo(procedure.getProcedureName());
+        });
         for (final var procedureColumn : procedureColumns) {
             procedureColumn(context, procedureColumn);
         }
@@ -519,21 +545,18 @@ final class ContextTests {
     static void superType(final Context context, final SuperType superType) throws SQLException {
         Objects.requireNonNull(context, "context is null");
         Objects.requireNonNull(superType, "superType is null");
-        log.debug("superType: {}", superType);
         common(superType);
     }
 
     static void procedureColumn(final Context context, final ProcedureColumn procedureColumn) throws SQLException {
         Objects.requireNonNull(context, "context is null");
         Objects.requireNonNull(procedureColumn, "procedureColumn is null");
-        log.debug("procedureColumn: {}", procedureColumn);
         common(procedureColumn);
     }
 
     static void table(final Context context, final Table table) throws SQLException {
         Objects.requireNonNull(context, "context is null");
         Objects.requireNonNull(table, "table is null");
-        log.debug("table: {}", table);
         common(table);
         try {
             for (final var scope : BestRowIdentifier.scopes()) {
@@ -543,7 +566,7 @@ final class ContextTests {
                 }
             }
         } catch (final SQLFeatureNotSupportedException sqlfnse) {
-            log.error("not supported", sqlfnse);
+            log.error("not supported; getBestRowIdentifier", sqlfnse);
         }
         try {
             final var columnPrivileges = table.getColumnPrivileges(context, "%");
@@ -551,16 +574,15 @@ final class ContextTests {
                 columnPrivilege(context, columnPrivilege);
             }
         } catch (SQLFeatureNotSupportedException sqlfnse) {
-            log.error("not supported", sqlfnse);
+            log.error("not supported; getColumnPrivileges", sqlfnse);
         }
         try {
             final var columns = table.getColumns(context, "%");
             for (final var column : columns) {
-                log.debug("column: {}", column);
                 column(context, column);
             }
         } catch (final SQLFeatureNotSupportedException sqlfnse) {
-            log.error("not supported", sqlfnse);
+            log.error("not supported; getColumns", sqlfnse);
         }
         try {
             final var exportedKeys = table.getExportedKeys(context);
@@ -568,7 +590,7 @@ final class ContextTests {
                 exportedKey(context, exportedKey);
             }
         } catch (final SQLFeatureNotSupportedException sqlfnse) {
-            log.error("not supported", sqlfnse);
+            log.error("not supported; getExportedKeys", sqlfnse);
         } catch (final SQLException sqle) {
             // https://github.com/xerial/sqlite-jdbc/issues/831
         }
@@ -578,7 +600,7 @@ final class ContextTests {
                 importedKey(context, importedKey);
             }
         } catch (final SQLFeatureNotSupportedException sqlfnse) {
-            log.error("not supported", sqlfnse);
+            log.error("not supported; getImportedKeys", sqlfnse);
         }
         try {
             for (final boolean unique : new boolean[] {true, false}) {
@@ -598,17 +620,21 @@ final class ContextTests {
                 primaryKey(context, primaryKey);
             }
         } catch (final SQLFeatureNotSupportedException sqlfnse) {
-            log.error("not supported", sqlfnse);
+            log.error("not supported; getPrimaryKeys", sqlfnse);
         } catch (final SQLException sqle) {
             // https://github.com/xerial/sqlite-jdbc/issues/831
         }
         try {
             final var pseudoColumns = table.getPseudoColumns(context, "%");
+            assertThat(pseudoColumns).allSatisfy(pc -> {
+                assertThat(pc.getTableCat()).isEqualTo(table.getTableCat());
+                assertThat(pc.getTableSchem()).isEqualTo(table.getTableSchem());
+            });
             for (final var pseudoColumn : pseudoColumns) {
                 pseudoColumn(context, pseudoColumn);
             }
         } catch (final SQLFeatureNotSupportedException sqlfnse) {
-            log.error("not supported", sqlfnse);
+            log.error("not supported; getPseudoColumns", sqlfnse);
         }
         try {
             final var tablePrivileges = table.getTablePrivileges(context);
@@ -616,30 +642,29 @@ final class ContextTests {
                 tablePrivilege(context, tablePrivilege);
             }
         } catch (final SQLFeatureNotSupportedException sqlfnse) {
-            log.error("not supported", sqlfnse);
+            log.error("not supported; getTablePrivileges", sqlfnse);
         }
         try {
-            final var versionColumns = context.getVersionColumns(
-                    table.getTableCat(), table.getTableSchem(), table.getTableName());
+            final var versionColumns = table.getVersionColumns(context);
+            assertThat(versionColumns).allSatisfy(vc -> {
+            });
             for (final var versionColumn : versionColumns) {
                 versionColumn(context, versionColumn);
             }
         } catch (final SQLFeatureNotSupportedException sqlfnse) {
-            log.error("not supported", sqlfnse);
+            log.error("not supported; getVersionColumns", sqlfnse);
         }
     }
 
     static void tableType(final Context context, final TableType tableType) throws SQLException {
         Objects.requireNonNull(context, "context is null");
         Objects.requireNonNull(tableType, "tableType is null");
-        log.debug("tableType: {}", tableType);
         common(tableType);
     }
 
     static void typeInfo(final Context context, final TypeInfo typeInfo) throws SQLException {
         Objects.requireNonNull(context, "context is null");
         Objects.requireNonNull(typeInfo, "typeInfo is null");
-        log.debug("typeInfo: {}", typeInfo);
         common(typeInfo);
     }
 
@@ -649,7 +674,6 @@ final class ContextTests {
         try {
             final var columnPrivileges = column.getColumnPrivileges(context);
             for (final var columnPrivilege : columnPrivileges) {
-                log.debug("columnPrivilege: {}", columnPrivilege);
                 columnPrivilege(context, columnPrivilege);
             }
         } catch (SQLFeatureNotSupportedException sqlfnse) {
@@ -660,46 +684,37 @@ final class ContextTests {
     static void columnPrivilege(final Context context, final ColumnPrivilege columnPrivilege) throws SQLException {
         Objects.requireNonNull(context, "context is null");
         Objects.requireNonNull(columnPrivilege, "columnPrivilege is null");
-        log.debug("columnPrivilege: {}", columnPrivilege);
         common(columnPrivilege);
-        final var rebuilt = columnPrivilege.toBuilder().build();
     }
 
     static void exportedKey(final Context context, final ExportedKey exportedKey) throws SQLException {
         Objects.requireNonNull(context, "context is null");
         Objects.requireNonNull(exportedKey, "exportedKey is null");
-        log.debug("exportedKey: {}", exportedKey);
         common(exportedKey);
-        final var rebuilt = exportedKey.toBuilder().build();
     }
 
     static void importedKey(final Context context, final ImportedKey importedKey) throws SQLException {
         Objects.requireNonNull(context, "context is null");
         Objects.requireNonNull(importedKey, "importedKey is null");
-        log.debug("importedKey: {}", importedKey);
         common(importedKey);
     }
 
     static void indexInfo(final Context context, final IndexInfo indexInfo) throws SQLException {
         Objects.requireNonNull(context, "context is null");
         Objects.requireNonNull(indexInfo, "indexInfo is null");
-        log.debug("indexInfo: {}", indexInfo);
         common(indexInfo);
     }
 
     static void primaryKey(final Context context, final PrimaryKey primaryKey) throws SQLException {
         Objects.requireNonNull(context, "context is null");
         Objects.requireNonNull(primaryKey, "primaryKey is null");
-        log.debug("primaryKey: {}", primaryKey);
         common(primaryKey);
     }
 
     static void pseudoColumn(final Context context, final PseudoColumn pseudoColumn) throws SQLException {
         Objects.requireNonNull(context, "context is null");
         Objects.requireNonNull(pseudoColumn, "pseudoColumn is null");
-        log.debug("pseudoColumn: {}", pseudoColumn);
         common(pseudoColumn);
-        final var rebuilt = pseudoColumn.toBuilder().build();
     }
 
     static void superTable(final Context context, final SuperTable superTable) throws SQLException {
@@ -712,14 +727,12 @@ final class ContextTests {
     static void tablePrivilege(final Context context, final TablePrivilege tablePrivilege) throws SQLException {
         Objects.requireNonNull(context, "context is null");
         Objects.requireNonNull(tablePrivilege, "tablePrivilege is null");
-        log.debug("tablePrivilege: {}", tablePrivilege);
         common(tablePrivilege);
     }
 
     static void versionColumn(final Context context, final VersionColumn versionColumn) throws SQLException {
         Objects.requireNonNull(context, "context is null");
         Objects.requireNonNull(versionColumn, "versionColumn is null");
-        log.debug("versionColumn: {}", versionColumn);
         common(versionColumn);
         final var rebuild = versionColumn.toBuilder().build();
     }
@@ -727,6 +740,7 @@ final class ContextTests {
     static void udt(final Context context, final UDT udt) throws SQLException {
         Objects.requireNonNull(context, "context is null");
         Objects.requireNonNull(udt, "udt is null");
+        common(udt);
         final var attributes = udt.getAttributes(context, "%");
         for (final var attribute : attributes) {
             attribute(context, attribute);
