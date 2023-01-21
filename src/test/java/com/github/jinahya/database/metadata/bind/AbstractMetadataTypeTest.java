@@ -20,27 +20,13 @@ package com.github.jinahya.database.metadata.bind;
  * #L%
  */
 
-import java.lang.annotation.Documented;
-import java.lang.annotation.ElementType;
-import java.lang.annotation.Retention;
-import java.lang.annotation.RetentionPolicy;
-import java.lang.annotation.Target;
+import lombok.extern.slf4j.Slf4j;
 
-/**
- * A marker interface for relating binding types to their parent types.
- *
- * @author Jin Kwon &lt;onacit_at_gmail.com&gt;
- * @see ParentOf
- */
-@Documented
-@Retention(RetentionPolicy.RUNTIME)
-@Target({ElementType.TYPE})
-public @interface ChildOf_ {
+@Slf4j
+abstract class AbstractMetadataTypeTest<T extends AbstractMetadataType>
+        extends MetadataTypeTest<T> {
 
-    /**
-     * Returns the parent class.
-     *
-     * @return the parent class.
-     */
-    Class<? extends MetadataType> value();
+    AbstractMetadataTypeTest(final Class<T> typeClass) {
+        super(typeClass);
+    }
 }

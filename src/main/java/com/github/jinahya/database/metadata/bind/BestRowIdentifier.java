@@ -22,9 +22,10 @@ package com.github.jinahya.database.metadata.bind;
 
 import lombok.AccessLevel;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
+import lombok.ToString;
 import lombok.experimental.SuperBuilder;
-import lombok.extern.java.Log;
 
 import java.sql.DatabaseMetaData;
 import java.util.Arrays;
@@ -36,12 +37,14 @@ import java.util.List;
  *
  * @author Jin Kwon &lt;jinahya_at_gmail.com&gt;
  */
+@ChildOf(Table.class)
+@EqualsAndHashCode(callSuper = true)
+@ToString(callSuper = true)
 @Data
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @SuperBuilder(toBuilder = true)
-@Log
 public class BestRowIdentifier
-        implements MetadataType {
+        extends AbstractMetadataType {
 
     private static final long serialVersionUID = -1512051574198028399L;
 

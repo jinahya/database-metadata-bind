@@ -20,7 +20,27 @@ package com.github.jinahya.database.metadata.bind;
  * #L%
  */
 
-@Deprecated
-public interface ChildOf<T extends MetadataType> {
+import java.lang.annotation.Documented;
+import java.lang.annotation.ElementType;
+import java.lang.annotation.Retention;
+import java.lang.annotation.RetentionPolicy;
+import java.lang.annotation.Target;
 
+/**
+ * A marker interface for relating binding types to their parent types.
+ *
+ * @author Jin Kwon &lt;onacit_at_gmail.com&gt;
+ * @see ParentOf
+ */
+@Documented
+@Retention(RetentionPolicy.RUNTIME)
+@Target({ElementType.TYPE})
+public @interface ChildOf {
+
+    /**
+     * Returns the parent class.
+     *
+     * @return the parent class.
+     */
+    Class<? extends MetadataType> value();
 }

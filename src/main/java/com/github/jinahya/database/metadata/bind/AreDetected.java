@@ -22,10 +22,11 @@ package com.github.jinahya.database.metadata.bind;
 
 import lombok.AccessLevel;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
+import lombok.ToString;
 import lombok.experimental.SuperBuilder;
 
-import java.io.Serializable;
 import java.sql.ResultSet;
 import java.util.stream.IntStream;
 
@@ -40,12 +41,13 @@ import java.util.stream.IntStream;
  * @see ResultSet#TYPE_SCROLL_INSENSITIVE
  * @see ResultSet#TYPE_SCROLL_SENSITIVE
  */
+@EqualsAndHashCode(callSuper = true)
+@ToString(callSuper = true)
 @Data
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @SuperBuilder(toBuilder = true)
 public abstract class AreDetected
-        implements Serializable,
-                   MetadataType {
+        extends AbstractMetadataType {
 
     private static final long serialVersionUID = -5726735588783597670L;
 

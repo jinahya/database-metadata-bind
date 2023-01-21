@@ -20,7 +20,7 @@ package com.github.jinahya.database.metadata.bind;
  * #L%
  */
 
-class ProcedureTest extends MetadataTypeTest<Procedure> {
+class ProcedureTest extends AbstractMetadataTypeTest<Procedure> {
 
     ProcedureTest() {
         super(Procedure.class);

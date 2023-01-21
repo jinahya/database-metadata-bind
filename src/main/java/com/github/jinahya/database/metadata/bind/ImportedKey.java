@@ -33,6 +33,7 @@ import java.sql.DatabaseMetaData;
  * A class for binding results of {@link DatabaseMetaData#getImportedKeys(String, String, String)} method.
  *
  * @author Jin Kwon &lt;jinahya_at_gmail.com&gt;
+ * @see Context#getImportedKeys(String, String, String)
  * @see ExportedKey
  */
 @Data

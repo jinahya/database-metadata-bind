@@ -32,33 +32,41 @@ import java.sql.DatabaseMetaData;
  *
  * @author Jin Kwon &lt;jinahya_at_gmail.com&gt;
  */
+@ChildOf(Function.class)
 @Data
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @SuperBuilder(toBuilder = true)
 public class FunctionColumn
-        implements MetadataType,
-                   ChildOf<Function> {
+        extends AbstractMetadataType {
 
     private static final long serialVersionUID = -7445156446214062680L;
 
-    public static final String COLUMN_NAME_COLUMN_TYPE = "COLUMN_TYPE";
+    public static final String COLUMN_LABEL_FUNCTION_CAT = "FUNCTION_CAT";
 
-    public static final String COLUMN_NAME_NULLABLE = "NULLABLE";
+    public static final String COLUMN_LABEL_FUNCTION_SCHEM = "FUNCTION_SCHEM";
 
-    public static final String COLUMN_NAME_IS_NULLABLE = "IS_NULLABLE";
+    public static final String COLUMN_LABEL_FUNCTION_NAME = "FUNCTION_NAME";
+
+    public static final String COLUMN_LABEL_COLUMN_NAME = "COLUMN_NAME";
+
+    public static final String COLUMN_LABEL_COLUMN_TYPE = "COLUMN_TYPE";
+
+    public static final String COLUMN_LABEL_NULLABLE = "NULLABLE";
+
+    public static final String COLUMN_LABEL_IS_NULLABLE = "IS_NULLABLE";
 
     @NullableBySpecification
-    @ColumnLabel("FUNCTION_CAT")
+    @ColumnLabel(COLUMN_LABEL_FUNCTION_CAT)
     private String functionCat;
 
     @NullableBySpecification
-    @ColumnLabel("FUNCTION_SCHEM")
+    @ColumnLabel(COLUMN_LABEL_FUNCTION_SCHEM)
     private String functionSchem;
 
-    @ColumnLabel("FUNCTION_NAME")
+    @ColumnLabel(COLUMN_LABEL_FUNCTION_NAME)
     private String functionName;
 
-    @ColumnLabel("COLUMN_NAME")
+    @ColumnLabel(COLUMN_LABEL_COLUMN_NAME)
     private String columnName;
 
     @ColumnLabel("COLUMN_TYPE")

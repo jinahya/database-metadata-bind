@@ -33,11 +33,12 @@ import java.sql.DatabaseMetaData;
  * An abstract class for binding the result of {@link DatabaseMetaData#getExportedKeys(String, String, String)} method.
  *
  * @author Jin Kwon &lt;jinahya_at_gmail.com&gt;
+ * @see Context#getExportedKeys(String, String, String)
  * @see ImportedKey
  */
-@Data
 @EqualsAndHashCode(callSuper = true)
 @ToString(callSuper = true)
+@Data
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @SuperBuilder(toBuilder = true)
 public class ExportedKey

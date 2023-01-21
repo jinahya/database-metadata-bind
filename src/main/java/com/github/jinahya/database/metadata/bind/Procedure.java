@@ -22,10 +22,15 @@ package com.github.jinahya.database.metadata.bind;
 
 import lombok.AccessLevel;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
+import lombok.ToString;
 import lombok.experimental.SuperBuilder;
 
 import java.sql.DatabaseMetaData;
+import java.sql.SQLException;
+import java.util.List;
+import java.util.Objects;
 
 /**
  * A class for binding results of
@@ -34,14 +39,23 @@ import java.sql.DatabaseMetaData;
  * @author Jin Kwon &lt;jinahya_at_gmail.com&gt;
  */
 @ParentOf(ProcedureColumn.class)
+@ChildOf(Schema.class)
+@EqualsAndHashCode(callSuper = true)
+@ToString(callSuper = true)
 @Data
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @SuperBuilder(toBuilder = true)
 public class Procedure
-        implements MetadataType,
-                   ChildOf<Schema> {
+        extends AbstractMetadataType {
 
     private static final long serialVersionUID = -6262056388403934829L;
+
+    public List<ProcedureColumn> getProcedureColumns(final Context context, final String columnNamePattern)
+            throws SQLException {
+        Objects.requireNonNull(context, "context is null");
+        return context.getProcedureColumns(getProcedureCat(), getProcedureSchem(), getProcedureName(),
+                                           columnNamePattern);
+    }
 
     @NullableBySpecification
     @ColumnLabel("PROCEDURE_CAT")

@@ -22,7 +22,9 @@ package com.github.jinahya.database.metadata.bind;
 
 import lombok.AccessLevel;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
+import lombok.ToString;
 import lombok.experimental.SuperBuilder;
 
 import java.sql.DatabaseMetaData;
@@ -32,17 +34,20 @@ import java.sql.DatabaseMetaData;
  *
  * @author Jin Kwon &lt;jinahya_at_gmail.com&gt;
  */
+@EqualsAndHashCode(callSuper = true)
+@ToString(callSuper = true)
 @Data
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @SuperBuilder
 public class PrimaryKey
-        implements MetadataType,
-                   ChildOf<Table> {
+        extends AbstractMetadataType {
 
     private static final long serialVersionUID = 3159826510060898330L;
 
+    public static final String COLUMN_LABEL_TABLE_CAT = "TABLE_CAT";
+
     @NullableBySpecification
-    @ColumnLabel("TABLE_CAT")
+    @ColumnLabel(COLUMN_LABEL_TABLE_CAT)
     private String tableCat;
 
     @NullableBySpecification

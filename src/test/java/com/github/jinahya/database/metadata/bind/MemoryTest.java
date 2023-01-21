@@ -28,7 +28,6 @@ import java.io.File;
 import java.nio.file.Paths;
 import java.sql.Connection;
 import java.sql.SQLException;
-import java.sql.SQLFeatureNotSupportedException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
@@ -54,6 +53,14 @@ abstract class MemoryTest {
 
     Context context(final Connection connection) throws SQLException {
         return Context.newInstance(connection);
+    }
+
+    @Test
+    void test() throws SQLException {
+        try (var connection = connect()) {
+            final var context = context(connection);
+            ContextTests.test(context);
+        }
     }
 
     @Test
@@ -170,6 +177,24 @@ abstract class MemoryTest {
         }
     }
 
+    void getFunctions__(final Schema schema) throws Exception {
+        try (var connection = connect()) {
+            final var context = Context.newInstance(connection);
+            final List<Function> functions = new ArrayList<>();
+            context.getFunctions(null, null, "%", functions::add);
+            assertThat(functions)
+                    .doesNotContainNull()
+                    .satisfies(TestUtils::testEquals)
+                    .allSatisfy(v -> {
+                        final var string = assertDoesNotThrow(v::toString);
+                        final var hashCode = assertDoesNotThrow(v::hashCode);
+                    });
+            final var name = TestUtils.getFilenamePrefix(context) + " - functions";
+            final var pathname = name + ".xml";
+            final var target = Paths.get("target", pathname).toFile();
+        }
+    }
+
     @Test
     void getFunctions__() throws Exception {
         try (var connection = connect()) {
@@ -221,17 +246,6 @@ abstract class MemoryTest {
     }
 
     private void getSchemas__(final Context context, final Catalog catalog) throws SQLException {
-        try {
-            final var schemas = catalog.getSchemas(context, "%");
-            for (final var schema : schemas) {
-                log.debug("schema: {}", schema);
-                final var string = schema.toString();
-                final var hashCode = schema.hashCode();
-                getTables__(context, schema);
-            }
-        } catch (final SQLFeatureNotSupportedException sqlfnse) {
-            sqlfnse.fillInStackTrace();
-        }
     }
 
     @Test
@@ -269,16 +283,6 @@ abstract class MemoryTest {
             final var superTypes = context.getSuperTypes(null, null, "%");
             final var pathname = TestUtils.getFilenamePrefix(context) + " - superTypes.xml";
             final var target = Paths.get("target", pathname).toFile();
-        }
-    }
-
-    private void getTables__(final Context context, final Schema schema) throws SQLException {
-        final var tables = schema.getTables(context, "%", null);
-        for (final var table : tables) {
-            log.debug("table: {}", table);
-            final var string = table.toString();
-            final var hashCode = table.hashCode();
-            getColumns__(context, table);
         }
     }
 

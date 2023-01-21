@@ -22,7 +22,9 @@ package com.github.jinahya.database.metadata.bind;
 
 import lombok.AccessLevel;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
+import lombok.ToString;
 import lombok.experimental.SuperBuilder;
 
 /**
@@ -30,13 +32,16 @@ import lombok.experimental.SuperBuilder;
  * {@link java.sql.DatabaseMetaData#getTablePrivileges(java.lang.String, java.lang.String, java.lang.String)}.
  *
  * @author Jin Kwon &lt;jinahya_at_gmail.com&gt;
+ * @see Context#getTablePrivileges(String, String, String)
  */
+@ChildOf(Schema.class)
+@EqualsAndHashCode(callSuper = true)
+@ToString(callSuper = true)
 @Data
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @SuperBuilder(toBuilder = true)
 public class TablePrivilege
-        implements MetadataType,
-                   ChildOf<Table> {
+        extends AbstractMetadataType {
 
     private static final long serialVersionUID = -1799954363648972203L;
 
