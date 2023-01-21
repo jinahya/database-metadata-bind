@@ -27,19 +27,37 @@ import lombok.NoArgsConstructor;
 import lombok.ToString;
 import lombok.experimental.SuperBuilder;
 
+import java.sql.SQLException;
+import java.util.List;
+import java.util.Objects;
+import java.util.stream.Collectors;
+
 /**
  * A class for binding result of {@link java.sql.DatabaseMetaData#othersDeletesAreVisible(int)} method.
  *
  * @author Jin Kwon &lt;onacit_at_gmail.com&gt;
  * @see Context#othersDeletesAreVisible(int)
  */
-@Data
 @EqualsAndHashCode(callSuper = true)
 @ToString(callSuper = true)
+@Data
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @SuperBuilder(toBuilder = true)
 public class OthersDeletesAreVisible
         extends AreVisible {
 
-    private static final long serialVersionUID = 2430566341274616215L;
+    private static final long serialVersionUID = -758432214659840058L;
+
+    public static List<OthersDeletesAreVisible> getAllValues(final Context context) {
+        Objects.requireNonNull(context, "context is null");
+        return typeStream()
+                .mapToObj(t -> {
+                    try {
+                        return context.othersDeletesAreVisible(t);
+                    } catch (final SQLException sqle) {
+                        throw new RuntimeException("failed to get othersDeletesAreVisible(" + t + ")", sqle);
+                    }
+                })
+                .collect(Collectors.toList());
+    }
 }

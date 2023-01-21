@@ -20,23 +20,45 @@ package com.github.jinahya.database.metadata.bind;
  * #L%
  */
 
+import lombok.AccessLevel;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
+import lombok.NoArgsConstructor;
 import lombok.ToString;
+import lombok.experimental.SuperBuilder;
 
 import java.sql.DatabaseMetaData;
+import java.sql.SQLException;
+import java.util.List;
+import java.util.Objects;
+import java.util.stream.Collectors;
 
 /**
  * A class for binding results of {@link DatabaseMetaData#insertsAreDetected(int)} method.
  *
  * @author Jin Kwon &lt;onacit_at_gmail.com&gt;
- * @see DatabaseMetaData#insertsAreDetected(int)
+ * @see Context#insertsAreDetected(int)
  */
-@Data
 @EqualsAndHashCode(callSuper = true)
 @ToString(callSuper = true)
+@Data
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
+@SuperBuilder(toBuilder = true)
 public class InsertsAreDetected
         extends AreDetected {
 
-    private static final long serialVersionUID = 8464348704439999572L;
+    private static final long serialVersionUID = -6828058597394063166L;
+
+    public static List<InsertsAreDetected> getAllValues(final Context context) {
+        Objects.requireNonNull(context, "context is null");
+        return typeStream()
+                .mapToObj(t -> {
+                    try {
+                        return context.insertsAreDetected(t);
+                    } catch (final SQLException sqle) {
+                        throw new RuntimeException("failed to get insertsAreDetected(" + t + ") on " + context, sqle);
+                    }
+                })
+                .collect(Collectors.toList());
+    }
 }

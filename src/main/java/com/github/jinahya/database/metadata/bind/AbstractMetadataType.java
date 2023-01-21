@@ -23,37 +23,32 @@ package com.github.jinahya.database.metadata.bind;
 import lombok.AccessLevel;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
-import lombok.ToString;
+import lombok.Setter;
 import lombok.experimental.SuperBuilder;
 
-import java.util.stream.IntStream;
+import java.util.HashMap;
+import java.util.Map;
 
-/**
- * An abstract class for binding the result of {@code DatabaseMetaData#...sAreVisible(int)} method.
- *
- * @see OthersDeletesAreVisible
- * @see OthersInsertsAreVisible
- * @see OthersUpdatesAreVisible
- * @see OwnDeletesAreVisible
- * @see OwnInsertsAreVisible
- * @see OwnUpdatesAreVisible
- */
-@EqualsAndHashCode(callSuper = true)
-@ToString(callSuper = true)
 @Data
-@NoArgsConstructor(access = AccessLevel.PROTECTED)
+@NoArgsConstructor(access = AccessLevel.PACKAGE)
 @SuperBuilder(toBuilder = true)
-public abstract class AreVisible
-        extends AbstractMetadataType {
+abstract class AbstractMetadataType
+        implements MetadataType {
 
-    private static final long serialVersionUID = -3826484747016356087L;
+    private static final long serialVersionUID = -1163637277006451816L;
 
-    static IntStream typeStream() {
-        return AreDetected.typeStream();
+    @Override
+    public Map<String, Object> getUnmappedValues() {
+        if (unmappedValues == null) {
+            unmappedValues = new HashMap<>();
+        }
+        return unmappedValues;
     }
 
-    private int type;
-
-    private boolean value;
+    @EqualsAndHashCode.Exclude
+    @Setter(AccessLevel.NONE)
+    @Getter(AccessLevel.NONE)
+    private Map<String, Object> unmappedValues;
 }

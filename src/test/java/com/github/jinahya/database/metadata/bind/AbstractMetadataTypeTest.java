@@ -20,9 +20,13 @@ package com.github.jinahya.database.metadata.bind;
  * #L%
  */
 
-class TableTest extends AbstractMetadataTypeTest<Table> {
+import lombok.extern.slf4j.Slf4j;
 
-    TableTest() {
-        super(Table.class);
+@Slf4j
+abstract class AbstractMetadataTypeTest<T extends AbstractMetadataType>
+        extends MetadataTypeTest<T> {
+
+    AbstractMetadataTypeTest(final Class<T> typeClass) {
+        super(typeClass);
     }
 }

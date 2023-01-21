@@ -104,11 +104,9 @@ public class Context {
                 log.log(Level.SEVERE, String.format("failed to set %1$s", field), roe);
             }
         }
-        if (log.isLoggable(Level.FINE)) {
-            for (final String l : resultSetLabels) {
-                final Object v = results.getObject(l);
-                log.fine(() -> String.format("remained result; type: %1$s; label: %2$s, value: %3$s", type, l, v));
-            }
+        for (final String label : resultSetLabels) {
+            final Object value = results.getObject(label);
+            instance.getUnmappedValues().put(label, value);
         }
         return instance;
     }
@@ -552,7 +550,7 @@ public class Context {
      * @param functionNamePattern a value for {@code functionNamePattern} parameter.
      * @return a list of bound values.
      * @throws SQLException if a database error occurs.
-     * @see DatabaseMetaData#getFunctions(String, String, String)
+     * @see #getFunctions(String, String, String, Consumer)
      */
     public List<Function> getFunctions(final String catalog, final String schemaPattern,
                                        final String functionNamePattern)
@@ -878,7 +876,6 @@ public class Context {
      * @throws SQLException if a database error occurs.
      * @see #getSchemas(Consumer)
      */
-
     public List<Schema> getSchemas() throws SQLException {
         final List<Schema> list = new ArrayList<>();
         getSchemas(list::add);
@@ -1213,7 +1210,7 @@ public class Context {
                                                  final String table)
             throws SQLException {
         final List<VersionColumn> list = new ArrayList<>();
-        getVersionColumns(catalog, schema, table);
+        getVersionColumns(catalog, schema, table, list::add);
         return list;
     }
 

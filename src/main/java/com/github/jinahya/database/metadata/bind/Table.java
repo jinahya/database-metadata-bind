@@ -22,10 +22,14 @@ package com.github.jinahya.database.metadata.bind;
 
 import lombok.AccessLevel;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
+import lombok.ToString;
 import lombok.experimental.SuperBuilder;
 
-import java.util.Comparator;
+import java.sql.SQLException;
+import java.util.List;
+import java.util.Objects;
 
 /**
  * A class for binding results of
@@ -34,31 +38,25 @@ import java.util.Comparator;
  *
  * @author Jin Kwon &lt;jinahya_at_gmail.com&gt;
  */
-@ParentOf(BestRowIdentifier.class)
-@ParentOf(Column.class)
-@ParentOf(ColumnPrivilege.class)
-@ParentOf(ExportedKey.class)
-@ParentOf(ImportedKey.class)
-@ParentOf(IndexInfo.class)
-@ParentOf(PrimaryKey.class)
-@ParentOf(PseudoColumn.class)
-@ParentOf(SuperTable.class)
-@ParentOf(TablePrivilege.class)
 @ParentOf(VersionColumn.class)
+@ParentOf(SuperTable.class)
+@ParentOf(PseudoColumn.class)
+@ParentOf(PrimaryKey.class)
+@ParentOf(IndexInfo.class)
+@ParentOf(ImportedKey.class)
+@ParentOf(ExportedKey.class)
+@ParentOf(Column.class)
+@ParentOf(BestRowIdentifier.class)
+@ChildOf(Schema.class)
+@EqualsAndHashCode(callSuper = true)
+@ToString(callSuper = true)
 @Data
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @SuperBuilder(toBuilder = true)
 public class Table
-        implements MetadataType,
-                   ChildOf<Schema> {
+        extends AbstractMetadataType {
 
     private static final long serialVersionUID = 6590036695540141125L;
-
-    public static final Comparator<Table> COMPARATOR =
-            Comparator.comparing(Table::getTableType)
-                    .thenComparing(Table::getTableCat, Comparator.nullsFirst(Comparator.naturalOrder()))
-                    .thenComparing(Table::getTableSchem, Comparator.nullsFirst(Comparator.naturalOrder()))
-                    .thenComparing(Table::getTableName);
 
     /**
      * The label of the column to which {@link #ATTRIBUTE_NAME_TABLE_CAT} attribute is bound. The value is {@value}.
@@ -89,6 +87,82 @@ public class Table
      * The name of the attribute from which {@link #COLUMN_LABEL_TABLE_NAME} column is bound. The value is {@value}.
      */
     public static final String ATTRIBUTE_NAME_TABLE_NAME = "tableName";
+
+    public List<BestRowIdentifier> getBestRowIdentifier(final Context context, final int scope, final boolean nullable)
+            throws SQLException {
+        Objects.requireNonNull(context, "context is null");
+        return context.getBestRowIdentifier(getTableCat(), getTableSchem(), getTableName(), scope, nullable);
+    }
+
+    public List<ColumnPrivilege> getColumnPrivileges(final Context context, final String columnNamePattern)
+            throws SQLException {
+        Objects.requireNonNull(context, "context is null");
+        return context.getColumnPrivileges(getTableCat(), getTableSchem(), getTableName(), columnNamePattern);
+    }
+
+    /**
+     * Retrieves columns of this table.
+     *
+     * @param context           a context.
+     * @param columnNamePattern a column name pattern; must match the column name as it is stored in the database
+     * @return a list of bound values.
+     * @throws SQLException if a database access error occurs.
+     */
+    public List<Column> getColumns(final Context context, final String columnNamePattern) throws SQLException {
+        Objects.requireNonNull(context, "context is null");
+        return context.getColumns(getTableCat(), getTableSchem(), getTableName(), columnNamePattern);
+    }
+
+    public List<CrossReference> getCrossReference(final Context context, String foreignCatalog, String foreignSchema,
+                                                  String foreignTable)
+            throws SQLException {
+        Objects.requireNonNull(context, "context is null");
+        return context.getCrossReference(getTableCat(), getTableSchem(), getTableName(), foreignCatalog, foreignSchema,
+                                         foreignTable);
+    }
+
+    public List<CrossReference> getCrossReference(final Context context, final Table foreignTable) throws SQLException {
+        Objects.requireNonNull(foreignTable, "foreignTable is null");
+        return getCrossReference(context, foreignTable.getTableCat(), foreignTable.getTableSchem(),
+                                 foreignTable.getTableName());
+    }
+
+    public List<ExportedKey> getExportedKeys(final Context context) throws SQLException {
+        Objects.requireNonNull(context, "context is null");
+        return context.getExportedKeys(getTableCat(), getTableSchem(), getTableName());
+    }
+
+    public List<ImportedKey> getImportedKeys(final Context context) throws SQLException {
+        Objects.requireNonNull(context, "context is null");
+        return context.getImportedKeys(getTableCat(), getTableSchem(), getTableName());
+    }
+
+    public List<IndexInfo> getIndexInfos(final Context context, final boolean unique, final boolean approximate)
+            throws SQLException {
+        Objects.requireNonNull(context, "context is null");
+        return context.getIndexInfo(getTableCat(), getTableSchem(), getTableName(), unique, approximate);
+    }
+
+    public List<PrimaryKey> getPrimaryKeys(final Context context) throws SQLException {
+        Objects.requireNonNull(context, "context is null");
+        return context.getPrimaryKeys(getTableCat(), getTableSchem(), getTableName());
+    }
+
+    public List<PseudoColumn> getPseudoColumns(final Context context, final String columnNamePattern)
+            throws SQLException {
+        Objects.requireNonNull(context, "context is null");
+        return context.getPseudoColumns(getTableCat(), getTableSchem(), getTableName(), columnNamePattern);
+    }
+
+    public List<TablePrivilege> getTablePrivileges(final Context context) throws SQLException {
+        Objects.requireNonNull(context, "context is null");
+        return context.getTablePrivileges(getTableCat(), getTableSchem(), getTableName());
+    }
+
+    public List<VersionColumn> getVersionColumns(final Context context) throws SQLException {
+        Objects.requireNonNull(context, "context is null");
+        return context.getVersionColumns(getTableCat(), getTableSchem(), getTableName());
+    }
 
     @NullableBySpecification
     @ColumnLabel(COLUMN_LABEL_TABLE_CAT)

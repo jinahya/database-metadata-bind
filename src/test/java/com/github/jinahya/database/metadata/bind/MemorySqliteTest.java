@@ -22,8 +22,11 @@ package com.github.jinahya.database.metadata.bind;
 
 import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.Disabled;
+import org.junit.jupiter.api.Test;
 
 import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.ResultSet;
 import java.sql.SQLException;
 
 import static java.sql.DriverManager.getConnection;
@@ -66,5 +69,39 @@ class MemorySqliteTest extends MemoryTest {
     @Override
     void getClientInfoProperties__() throws Exception {
         super.getClientInfoProperties__();
+    }
+
+    @Disabled("https://github.com/xerial/sqlite-jdbc/issues/831")
+    @Test
+    void __() throws SQLException {
+        try (var connection = DriverManager.getConnection("jdbc:sqlite::memory:")) {
+            final var meta = connection.getMetaData();
+            log.debug("driverName: {}", meta.getDriverName());
+            log.debug("driverVersion: {}", meta.getDriverVersion());
+            log.debug("databaseProductVersion: {}", meta.getDatabaseProductVersion());
+            log.debug("databaseProductName: {}", meta.getDatabaseProductName());
+            log.debug("databaseMajorVersion: {}", meta.getDatabaseMajorVersion());
+            log.debug("databaseMinorVersion: {}", meta.getDatabaseMinorVersion());
+            try (ResultSet tables = meta.getTables(null, null, "%", null)) {
+                while (tables.next()) {
+                    final var tableCat = tables.getString("TABLE_CAT");
+                    final var tableSchem = tables.getString("TABLE_SCHEM");
+                    final var tableName = tables.getString("TABLE_NAME");
+                    log.debug("{}/{}/{}", tableCat, tableSchem, tableName);
+                    try (ResultSet importedKeys = meta.getImportedKeys(tableCat, tableSchem, tableName)) {
+                        while (importedKeys.next()) {
+                            final var pktableCat = importedKeys.getString("PKTABLE_CAT");
+                            final var pktableSchem = importedKeys.getString("PKTABLE_SCHEM");
+                            final var pktableName = importedKeys.getString("PKTABLE_NAME");
+                            log.debug("importedKey.pktable: {}/{}/{}", pktableCat, pktableSchem, pktableName);
+                        }
+                    }
+                    try (ResultSet exportedKeys = meta.getExportedKeys(tableCat, tableSchem, tableName)) {
+                        while (exportedKeys.next()) {
+                        }
+                    }
+                }
+            }
+        }
     }
 }

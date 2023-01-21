@@ -21,8 +21,12 @@ package com.github.jinahya.database.metadata.bind;
  */
 
 import java.io.Serializable;
+import java.util.Map;
 
 public interface MetadataType
         extends Serializable {
 
+    default Map<String, Object> getUnmappedValues() {
+        throw new UnsupportedOperationException("not implemented"); // TODO: un-default!
+    }
 }

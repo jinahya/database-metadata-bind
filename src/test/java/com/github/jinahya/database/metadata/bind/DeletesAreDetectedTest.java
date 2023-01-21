@@ -4,7 +4,7 @@ package com.github.jinahya.database.metadata.bind;
  * #%L
  * database-metadata-bind
  * %%
- * Copyright (C) 2011 - 2021 Jinahya, Inc.
+ * Copyright (C) 2011 - 2023 Jinahya, Inc.
  * %%
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -20,9 +20,15 @@ package com.github.jinahya.database.metadata.bind;
  * #L%
  */
 
-class TableTest extends AbstractMetadataTypeTest<Table> {
+import org.junit.jupiter.api.Test;
 
-    TableTest() {
-        super(Table.class);
+class DeletesAreDetectedTest extends AreDetectedTest<DeletesAreDetected> {
+
+    DeletesAreDetectedTest() {
+        super(DeletesAreDetected.class);
+    }
+
+    @Test
+    void getAllInstances__() {
     }
 }

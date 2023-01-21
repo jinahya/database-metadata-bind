@@ -22,7 +22,9 @@ package com.github.jinahya.database.metadata.bind;
 
 import lombok.AccessLevel;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
+import lombok.ToString;
 import lombok.experimental.SuperBuilder;
 
 import java.sql.DatabaseMetaData;
@@ -33,19 +35,23 @@ import java.sql.DatabaseMetaData;
  *
  * @author Jin Kwon &lt;jinahya_at_gmail.com&gt;
  */
+@ChildOf(Table.class)
+@EqualsAndHashCode(callSuper = true)
+@ToString(callSuper = true)
 @Data
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @SuperBuilder(toBuilder = true)
 public class IndexInfo
-        implements MetadataType,
-                   ChildOf<Table> {
+        extends AbstractMetadataType {
 
     private static final long serialVersionUID = -768486884376018474L;
 
-    public static final String COLUMN_NAME_TYPE = "TYPE";
+    public static final String COLUMN_LABEL_TABLE_CAT = "TABLE_CAT";
+
+    public static final String COLUMN_LABEL_TYPE = "TYPE";
 
     @NullableBySpecification
-    @ColumnLabel("TABLE_CAT")
+    @ColumnLabel(COLUMN_LABEL_TABLE_CAT)
     private String tableCat;
 
     @NullableBySpecification
@@ -66,7 +72,7 @@ public class IndexInfo
     @ColumnLabel("INDEX_NAME")
     private String indexName;
 
-    @ColumnLabel(COLUMN_NAME_TYPE)
+    @ColumnLabel(COLUMN_LABEL_TYPE)
     private int type;
 
     @ColumnLabel("ORDINAL_POSITION")

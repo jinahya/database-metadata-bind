@@ -1,12 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
   <modelVersion>4.0.0</modelVersion>
 
   <parent>
     <groupId>com.github.jinahya</groupId>
     <artifactId>jinahya-parent</artifactId>
-    <version>0.8.8</version>
+    <version>0.8.9</version>
   </parent>
 
   <artifactId>database-metadata-bind</artifactId>
@@ -46,20 +45,17 @@
     <doclint>none</doclint>
     <version.animal-sniffer>1.22</version.animal-sniffer>
     <version.lombok>1.18.24</version.lombok>
-    <version.mariadb-java-client>3.0.7</version.mariadb-java-client>
+    <version.mariadb-java-client>3.1.1</version.mariadb-java-client>
     <version.maven-failsafe>${version.maven-surefire}</version.maven-failsafe>
     <version.maven-surefire>3.0.0-M7</version.maven-surefire>
-    <version.mysql-connector-java>8.0.30</version.mysql-connector-java>
+    <version.mysql-connector-java>8.0.31</version.mysql-connector-java>
     <version.mssql-jdbc>11.2.0.jre8</version.mssql-jdbc>
     <version.ojdbc6>11.2.0.4</version.ojdbc6>
-    <version.ojdbc8>21.6.0.0.1</version.ojdbc8>
-    <version.ojdbc10>19.15.0.0.1</version.ojdbc10>
-    <version.ojdbc11>21.6.0.0.1</version.ojdbc11>
+    <version.ojdbc8>21.8.0.0</version.ojdbc8>
+    <version.ojdbc10>19.17.0.0</version.ojdbc10>
+    <version.ojdbc11>21.8.0.0</version.ojdbc11>
     <version.org.apache.jonzon>1.2.19</version.org.apache.jonzon>
-    <version.org.eclipse.transformer>0.5.0</version.org.eclipse.transformer>
-    <!--    <version.org.hibernate.validator>6.2.0.Final</version.org.hibernate.validator>-->
-    <version.org.hibernate.validator>6.2.4.Final</version.org.hibernate.validator>
-    <version.org.mockito>4.11.0</version.org.mockito>
+    <version.org.mockito>5.0.0</version.org.mockito>
     <!--    <version.postgresql>42.2.19.jre7</version.postgresql>-->
     <version.postgresql>42.5.1</version.postgresql>
     <version.presto-jdbc>350</version.presto-jdbc>
@@ -118,7 +114,7 @@
     <dependency>
       <groupId>ch.qos.logback</groupId>
       <artifactId>logback-classic</artifactId>
-      <version>1.2.9</version>
+      <version>1.4.5</version>
       <scope>test</scope>
     </dependency>
     <dependency>
@@ -143,7 +139,7 @@
     <dependency>
       <groupId>org.assertj</groupId>
       <artifactId>assertj-core</artifactId>
-      <version>3.23.1</version>
+      <version>3.24.2</version>
       <scope>test</scope>
     </dependency>
     <dependency>
@@ -153,34 +149,15 @@
       <scope>provided</scope>
     </dependency>
     <dependency>
-      <groupId>org.glassfish</groupId>
-      <artifactId>jakarta.el</artifactId>
-      <version>3.0.3</version>
-      <scope>test</scope>
-    </dependency>
-    <dependency>
-      <groupId>org.hibernate.validator</groupId>
-      <artifactId>hibernate-validator</artifactId>
-      <!--      <version>6.1.7.Final</version>-->
-      <version>${version.org.hibernate.validator}</version>
-      <scope>test</scope>
-    </dependency>
-    <dependency>
       <groupId>org.hsqldb</groupId>
       <artifactId>hsqldb</artifactId>
-      <version>2.7.0</version>
-      <scope>test</scope>
-    </dependency>
-    <dependency>
-      <groupId>org.jboss.weld</groupId>
-      <artifactId>weld-junit5</artifactId>
-      <version>4.0.0.Final</version>
+      <version>2.7.1</version>
       <scope>test</scope>
     </dependency>
     <dependency>
       <groupId>org.junit.jupiter</groupId>
       <artifactId>junit-jupiter</artifactId>
-      <version>5.8.2</version>
+      <version>5.9.2</version>
       <scope>test</scope>
     </dependency>
     <dependency>
@@ -287,11 +264,6 @@
           <version>3.9.1.2184</version>
         </plugin>
         <plugin>
-          <groupId>org.eclipse.transformer</groupId>
-          <artifactId>transformer-maven-plugin</artifactId>
-          <version>${version.org.eclipse.transformer}</version>
-        </plugin>
-        <plugin>
           <groupId>org.jacoco</groupId>
           <artifactId>jacoco-maven-plugin</artifactId>
           <version>0.8.8</version>
@@ -389,7 +361,7 @@
           <execution>
             <id>enforce-dependency-convergence</id>
             <configuration>
-              <skip>true</skip>
+              <!--              <skip>true</skip>-->
               <rules>
                 <dependencyConvergence/>
               </rules>
@@ -589,211 +561,6 @@
                   <goal>integration-test</goal>
                   <goal>verify</goal>
                 </goals>
-              </execution>
-            </executions>
-          </plugin>
-        </plugins>
-      </build>
-    </profile>
-    <profile>
-      <id>external</id>
-      <properties>
-        <it.test>ExternalIT</it.test>
-      </properties>
-    </profile>
-    <profile>
-      <id>external-mariadb</id>
-      <dependencies>
-        <dependency>
-          <groupId>org.mariadb.jdbc</groupId>
-          <artifactId>mariadb-java-client</artifactId>
-          <scope>test</scope>
-        </dependency>
-      </dependencies>
-    </profile>
-    <profile>
-      <id>external-mysql</id>
-      <dependencies>
-        <dependency>
-          <groupId>mysql</groupId>
-          <artifactId>mysql-connector-java</artifactId>
-          <scope>test</scope>
-        </dependency>
-      </dependencies>
-    </profile>
-    <profile>
-      <id>external-oracle-ojdbc6</id>
-      <dependencies>
-        <dependency>
-          <groupId>com.oracle.databse.jdbc</groupId>
-          <artifactId>ojdbc6</artifactId>
-          <scope>test</scope>
-        </dependency>
-      </dependencies>
-    </profile>
-    <profile>
-      <id>external-oracle-ojdbc8</id>
-      <dependencies>
-        <dependency>
-          <groupId>com.oracle.database.jdbc</groupId>
-          <artifactId>ojdbc8</artifactId>
-          <scope>test</scope>
-        </dependency>
-      </dependencies>
-    </profile>
-    <profile>
-      <id>external-oracle-ojdbc10</id>
-      <dependencies>
-        <dependency>
-          <groupId>com.oracle.database.jdbc</groupId>
-          <artifactId>ojdbc8</artifactId>
-          <scope>test</scope>
-        </dependency>
-      </dependencies>
-    </profile>
-    <profile>
-      <id>external-oracle-ojdbc11</id>
-      <dependencies>
-        <dependency>
-          <groupId>com.oracle.database.jdbc</groupId>
-          <artifactId>ojdbc11</artifactId>
-          <scope>test</scope>
-        </dependency>
-      </dependencies>
-    </profile>
-    <profile>
-      <id>external-postgresql</id>
-      <dependencies>
-        <dependency>
-          <groupId>org.postgresql</groupId>
-          <artifactId>postgresql</artifactId>
-          <scope>test</scope>
-        </dependency>
-      </dependencies>
-    </profile>
-    <profile>
-      <id>external-sqlserver</id>
-      <dependencies>
-        <dependency>
-          <groupId>com.microsoft.sqlserver</groupId>
-          <artifactId>mssql-jdbc</artifactId>
-          <scope>test</scope>
-        </dependency>
-      </dependencies>
-    </profile>
-    <profile>
-      <id>jakarta</id>
-      <activation>
-        <activeByDefault>true</activeByDefault>
-      </activation>
-      <build>
-        <plugins>
-          <plugin>
-            <groupId>org.apache.maven.plugins</groupId>
-            <artifactId>maven-jar-plugin</artifactId>
-            <configuration>
-              <archive>
-                <manifestEntries>
-                  <Automatic-Module-Name>com.github.jinahya.database.metadata.bind</Automatic-Module-Name>
-                </manifestEntries>
-              </archive>
-            </configuration>
-            <executions>
-              <execution>
-                <id>jar-jakarta</id>
-                <phase>package</phase>
-                <goals>
-                  <goal>jar</goal>
-                </goals>
-                <configuration>
-                  <classesDirectory>${project.build.outputDirectory}-jakarta</classesDirectory>
-                  <classifier>jakarta</classifier>
-                </configuration>
-              </execution>
-              <execution>
-                <id>jar-release-11</id>
-                <phase>package</phase>
-                <goals>
-                  <goal>jar</goal>
-                </goals>
-                <configuration>
-                  <classesDirectory>${project.build.outputDirectory}-release-11</classesDirectory>
-                  <classifier>release-11</classifier>
-                </configuration>
-              </execution>
-              <execution>
-                <id>jar-release-11-jakarta</id>
-                <phase>package</phase>
-                <goals>
-                  <goal>jar</goal>
-                </goals>
-                <configuration>
-                  <classesDirectory>${project.build.outputDirectory}-release-11-jakarta</classesDirectory>
-                  <classifier>release-11-jakarta</classifier>
-                </configuration>
-              </execution>
-              <execution>
-                <id>jar-release-17</id>
-                <phase>package</phase>
-                <goals>
-                  <goal>jar</goal>
-                </goals>
-                <configuration>
-                  <classesDirectory>${project.build.outputDirectory}-release-17</classesDirectory>
-                  <classifier>release-17</classifier>
-                </configuration>
-              </execution>
-              <execution>
-                <id>jar-release-17-jakarta</id>
-                <phase>package</phase>
-                <goals>
-                  <goal>jar</goal>
-                </goals>
-                <configuration>
-                  <classesDirectory>${project.build.outputDirectory}-release-17-jakarta</classesDirectory>
-                  <classifier>release-17-jakarta</classifier>
-                </configuration>
-              </execution>
-            </executions>
-          </plugin>
-          <plugin>
-            <groupId>org.eclipse.transformer</groupId>
-            <artifactId>transformer-maven-plugin</artifactId>
-            <configuration>
-              <rules>
-                <jakartaDefaults>true</jakartaDefaults>
-              </rules>
-            </configuration>
-            <executions>
-              <execution>
-                <id>transform-jakarta</id>
-                <phase>prepare-package</phase>
-                <goals>
-                  <goal>transform</goal>
-                </goals>
-                <configuration>
-                  <transformDirectory>${project.build.outputDirectory}-jakarta</transformDirectory>
-                </configuration>
-              </execution>
-              <execution>
-                <id>transform-release-11-jakarta</id>
-                <phase>prepare-package</phase>
-                <goals>
-                  <goal>transform</goal>
-                </goals>
-                <configuration>
-                  <transformDirectory>${project.build.outputDirectory}-release-11-jakarta</transformDirectory>
-                </configuration>
-              </execution>
-              <execution>
-                <id>transform-release-17-jakarta</id>
-                <phase>prepare-package</phase>
-                <goals>
-                  <goal>transform</goal>
-                </goals>
-                <configuration>
-                  <transformDirectory>${project.build.outputDirectory}-release-17-jakarta</transformDirectory>
-                </configuration>
               </execution>
             </executions>
           </plugin>

@@ -22,7 +22,9 @@ package com.github.jinahya.database.metadata.bind;
 
 import lombok.AccessLevel;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
+import lombok.ToString;
 import lombok.experimental.SuperBuilder;
 
 /**
@@ -32,12 +34,13 @@ import lombok.experimental.SuperBuilder;
  * @see ExportedKey
  * @see ImportedKey
  */
+@EqualsAndHashCode(callSuper = true)
+@ToString(callSuper = true)
 @Data
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @SuperBuilder(toBuilder = true)
 public abstract class TableKey
-        implements MetadataType,
-                   ChildOf<Table> {
+        extends AbstractMetadataType {
 
     private static final long serialVersionUID = 6713872409315471232L;
 

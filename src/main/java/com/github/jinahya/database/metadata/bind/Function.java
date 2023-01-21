@@ -27,21 +27,25 @@ import lombok.NoArgsConstructor;
 import lombok.experimental.SuperBuilder;
 
 import java.sql.DatabaseMetaData;
+import java.sql.SQLException;
+import java.util.List;
+import java.util.Objects;
+import java.util.function.Consumer;
 
 /**
  * A class for binding the result of
  * {@link DatabaseMetaData#getFunctions(java.lang.String, java.lang.String, java.lang.String)} method.
  *
  * @author Jin Kwon &lt;jinahya_at_gmail.com&gt;
- * @see FunctionColumn
+ * @see Context#getFunctions(String, String, String, Consumer)
  */
+@ChildOf(Schema.class)
 @ParentOf(FunctionColumn.class)
 @Data
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @SuperBuilder(toBuilder = true)
 public class Function
-        implements MetadataType,
-                   ChildOf<Schema> {
+        extends AbstractMetadataType {
 
     private static final long serialVersionUID = -3318947900237453301L;
 
@@ -54,6 +58,12 @@ public class Function
     public static final String ATTRIBUTE_NAME_FUNCTION_SCHEM = "functionSchem";
 
     public static final String COLUMN_NAME_FUNCTION_TYPE = "FUNCTION_TYPE";
+
+    public List<FunctionColumn> getFunctionColumns(final Context context, final String columnNamePattern)
+            throws SQLException {
+        Objects.requireNonNull(context, "context is null");
+        return context.getFunctionColumns(getFunctionCat(), getFunctionSchem(), getFunctionName(), columnNamePattern);
+    }
 
     @NullableBySpecification
     @ColumnLabel(COLUMN_NAME_FUNCTION_CAT)

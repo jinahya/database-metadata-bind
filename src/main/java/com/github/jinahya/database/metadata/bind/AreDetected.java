@@ -27,7 +27,8 @@ import lombok.NoArgsConstructor;
 import lombok.ToString;
 import lombok.experimental.SuperBuilder;
 
-import java.io.Serializable;
+import java.sql.ResultSet;
+import java.util.stream.IntStream;
 
 /**
  * An abstract class for binding the result of {@code DatabaseMetaData#(delete|insert|update)sAreDetected(int)} method.
@@ -36,19 +37,35 @@ import java.io.Serializable;
  * @see DeletesAreDetected
  * @see InsertsAreDetected
  * @see UpdatesAreDetected
+ * @see ResultSet#TYPE_FORWARD_ONLY
+ * @see ResultSet#TYPE_SCROLL_INSENSITIVE
+ * @see ResultSet#TYPE_SCROLL_SENSITIVE
  */
-@Data
-@EqualsAndHashCode
+@EqualsAndHashCode(callSuper = true)
 @ToString(callSuper = true)
+@Data
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @SuperBuilder(toBuilder = true)
 public abstract class AreDetected
-        implements Serializable,
-                   MetadataType {
+        extends AbstractMetadataType {
 
-    private static final long serialVersionUID = 7505598364855010122L;
+    private static final long serialVersionUID = -5726735588783597670L;
+
+    /**
+     * Returns a stream of {@link ResultSet#TYPE_FORWARD_ONLY}, {@link ResultSet#TYPE_SCROLL_INSENSITIVE}, and
+     * {@link ResultSet#TYPE_SCROLL_SENSITIVE}.
+     *
+     * @return a stream of valid values for {@code type} proprty.
+     */
+    static IntStream typeStream() {
+        return IntStream.of(
+                ResultSet.TYPE_FORWARD_ONLY,
+                ResultSet.TYPE_SCROLL_INSENSITIVE,
+                ResultSet.TYPE_SCROLL_SENSITIVE
+        );
+    }
 
     private int type;
 
-    private Boolean value;
+    private boolean value;
 }

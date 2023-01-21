@@ -20,11 +20,18 @@ package com.github.jinahya.database.metadata.bind;
  * #L%
  */
 
+import lombok.AccessLevel;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
+import lombok.NoArgsConstructor;
 import lombok.ToString;
+import lombok.experimental.SuperBuilder;
 
 import java.sql.DatabaseMetaData;
+import java.sql.SQLException;
+import java.util.List;
+import java.util.Objects;
+import java.util.stream.Collectors;
 
 /**
  * A class for binding result of {@link DatabaseMetaData#updatesAreDetected(int)} method.
@@ -32,11 +39,26 @@ import java.sql.DatabaseMetaData;
  * @author Jin Kwon &lt;onacit_at_gmail.com&gt;
  * @see Context#updatesAreDetected(int)
  */
-@Data
 @EqualsAndHashCode(callSuper = true)
 @ToString(callSuper = true)
+@Data
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
+@SuperBuilder(toBuilder = true)
 public class UpdatesAreDetected
         extends AreDetected {
 
-    private static final long serialVersionUID = -7538643762491010895L;
+    private static final long serialVersionUID = -6429502243184570486L;
+
+    public static List<UpdatesAreDetected> getAllValues(final Context context) {
+        Objects.requireNonNull(context, "context is null");
+        return typeStream()
+                .mapToObj(t -> {
+                    try {
+                        return context.updatesAreDetected(t);
+                    } catch (final SQLException sqle) {
+                        throw new RuntimeException("failed to get updatesAreDetected(" + t + ") on " + context, sqle);
+                    }
+                })
+                .collect(Collectors.toList());
+    }
 }

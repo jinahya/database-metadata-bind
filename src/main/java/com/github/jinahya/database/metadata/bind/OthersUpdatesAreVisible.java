@@ -27,6 +27,11 @@ import lombok.NoArgsConstructor;
 import lombok.ToString;
 import lombok.experimental.SuperBuilder;
 
+import java.sql.SQLException;
+import java.util.List;
+import java.util.Objects;
+import java.util.stream.Collectors;
+
 /**
  * A class for binding result of {@link java.sql.DatabaseMetaData#othersUpdatesAreVisible(int)} method.
  *
@@ -41,5 +46,18 @@ import lombok.experimental.SuperBuilder;
 public class OthersUpdatesAreVisible
         extends AreVisible {
 
-    private static final long serialVersionUID = 1642723778082421974L;
+    private static final long serialVersionUID = -4792424998513269283L;
+
+    public static List<OthersUpdatesAreVisible> getAllValues(final Context context) {
+        Objects.requireNonNull(context, "context is null");
+        return typeStream()
+                .mapToObj(t -> {
+                    try {
+                        return context.othersUpdatesAreVisible(t);
+                    } catch (final SQLException sqle) {
+                        throw new RuntimeException("failed to get othersUpdatesAreVisible(" + t + ")", sqle);
+                    }
+                })
+                .collect(Collectors.toList());
+    }
 }

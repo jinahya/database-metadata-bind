@@ -28,6 +28,10 @@ import lombok.ToString;
 import lombok.experimental.SuperBuilder;
 
 import java.sql.DatabaseMetaData;
+import java.sql.SQLException;
+import java.util.List;
+import java.util.Objects;
+import java.util.stream.Collectors;
 
 /**
  * A class for binding result of {@link DatabaseMetaData#ownInsertsAreVisible(int)} method.
@@ -44,4 +48,17 @@ public class OwnInsertsAreVisible
         extends AreVisible {
 
     private static final long serialVersionUID = -2185655212494659817L;
+
+    public static List<OwnInsertsAreVisible> getAllValues(final Context context) {
+        Objects.requireNonNull(context, "context is null");
+        return typeStream()
+                .mapToObj(t -> {
+                    try {
+                        return context.ownInsertsAreVisible(t);
+                    } catch (final SQLException sqle) {
+                        throw new RuntimeException("failed to get ownInsertsAreVisible(" + t + ")", sqle);
+                    }
+                })
+                .collect(Collectors.toList());
+    }
 }

@@ -30,6 +30,7 @@ import java.sql.Connection;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
@@ -55,19 +56,10 @@ abstract class MemoryTest {
     }
 
     @Test
-    void catalogs__() throws Exception {
+    void test() throws SQLException {
         try (var connection = connect()) {
             final var context = context(connection);
-            final var catalogs = context.getCatalogs();
-            assertThat(catalogs)
-                    .allSatisfy(c -> {
-                        final var string = assertDoesNotThrow(c::toString);
-                        final var hashCode = assertDoesNotThrow(c::hashCode);
-                    });
-            for (final var catalog : catalogs) {
-//                catalog.retrieveChildren(context);
-            }
-            final var name = "catalogs";
+            ContextTests.test(context);
         }
     }
 
@@ -99,6 +91,25 @@ abstract class MemoryTest {
     }
 
     @Test
+    void getCatalogs__() throws Exception {
+        try (var connection = connect()) {
+            final var context = context(connection);
+            final var catalogs = context.getCatalogs();
+            if (catalogs.isEmpty()) {
+                catalogs.add(Catalog.builder().build());
+            }
+            catalogs.forEach(c -> {
+                log.debug("catalog: {}", c);
+                final var string = assertDoesNotThrow(c::toString);
+                final var hashCode = assertDoesNotThrow(c::hashCode);
+            });
+            for (final var catalog : catalogs) {
+                getSchemas__(context, catalog);
+            }
+        }
+    }
+
+    @Test
     void getClientInfoProperties__() throws Exception {
         try (var connection = connect()) {
             final var context = context(connection);
@@ -108,6 +119,17 @@ abstract class MemoryTest {
                 final var string = cip.toString();
                 final var hashCode = cip.hashCode();
             });
+        }
+    }
+
+    private void getColumns__(final Context context, final Table table) throws SQLException {
+        Objects.requireNonNull(context, "context is null");
+        Objects.requireNonNull(table, "table is null");
+        final var columns = table.getColumns(context, "%");
+        for (final var column : columns) {
+            log.debug("column: {}", column);
+            final var string = column.toString();
+            final var hashCode = column.hashCode();
         }
     }
 
@@ -139,11 +161,37 @@ abstract class MemoryTest {
         }
     }
 
+    @Test
+    void getColumnPrivileges__() throws Exception {
+        try (var connection = connect()) {
+            final var context = context(connection);
+            final var columnPrivileges = context.getColumnPrivileges(null, null, "%", "%");
+        }
+    }
+
     @Disabled
     @Test
     void getCrossReferences__() throws Exception {
         try (var connection = connect()) {
             final var context = context(connection);
+        }
+    }
+
+    void getFunctions__(final Schema schema) throws Exception {
+        try (var connection = connect()) {
+            final var context = Context.newInstance(connection);
+            final List<Function> functions = new ArrayList<>();
+            context.getFunctions(null, null, "%", functions::add);
+            assertThat(functions)
+                    .doesNotContainNull()
+                    .satisfies(TestUtils::testEquals)
+                    .allSatisfy(v -> {
+                        final var string = assertDoesNotThrow(v::toString);
+                        final var hashCode = assertDoesNotThrow(v::hashCode);
+                    });
+            final var name = TestUtils.getFilenamePrefix(context) + " - functions";
+            final var pathname = name + ".xml";
+            final var target = Paths.get("target", pathname).toFile();
         }
     }
 
@@ -195,6 +243,9 @@ abstract class MemoryTest {
             final var pathname = TestUtils.getFilenamePrefix(context) + " - pseudoColumns.xml";
             final var target = Paths.get("target", pathname).toFile();
         }
+    }
+
+    private void getSchemas__(final Context context, final Catalog catalog) throws SQLException {
     }
 
     @Test
@@ -322,6 +373,114 @@ abstract class MemoryTest {
             }
             final String pathname = TestUtils.getFilenamePrefix(context) + " - UDTs.xml";
             final File target = Paths.get("target", pathname).toFile();
+        }
+    }
+
+    @Test
+    void deletesAreDetected__() throws SQLException {
+        try (var connection = connect()) {
+            final var context = Context.newInstance(connection);
+            for (final DeletesAreDetected value : DeletesAreDetected.getAllValues(context)) {
+                final var string = value.toString();
+                final var hashCode = value.hashCode();
+                log.debug("deletesAreDetected({}): {}", value.getType(), value);
+            }
+        }
+    }
+
+    @Test
+    void insertsAreDetected__() throws SQLException {
+        try (var connection = connect()) {
+            final var context = Context.newInstance(connection);
+            for (final var value : InsertsAreDetected.getAllValues(context)) {
+                final var string = value.toString();
+                final var hashCode = value.hashCode();
+                log.debug("insertsAreDetected({}): {}", value.getType(), value);
+            }
+        }
+    }
+
+    @Test
+    void updatesAreDetected__() throws SQLException {
+        try (var connection = connect()) {
+            final var context = Context.newInstance(connection);
+            for (final var value : UpdatesAreDetected.getAllValues(context)) {
+                final var string = value.toString();
+                final var hashCode = value.hashCode();
+                log.debug("updatesAreDetected({}): {}", value.getType(), value);
+            }
+        }
+    }
+
+    @Test
+    void othersDeletesAreVisible() throws SQLException {
+        try (var connection = connect()) {
+            final var context = Context.newInstance(connection);
+            for (final var value : OthersDeletesAreVisible.getAllValues(context)) {
+                final var string = value.toString();
+                final var hashCode = value.hashCode();
+                log.debug("othersDeletesAreVisible({}): {}", value.getType(), value);
+            }
+        }
+    }
+
+    @Test
+    void othersInsertsAreVisible() throws SQLException {
+        try (var connection = connect()) {
+            final var context = Context.newInstance(connection);
+            for (final var value : OthersInsertsAreVisible.getAllValues(context)) {
+                final var string = value.toString();
+                final var hashCode = value.hashCode();
+                log.debug("othersInsertsAreVisible({}): {}", value.getType(), value);
+            }
+        }
+    }
+
+    @Test
+    void othersUpdatesAreVisible() throws SQLException {
+        try (var connection = connect()) {
+            final var context = Context.newInstance(connection);
+            for (final var value : OthersUpdatesAreVisible.getAllValues(context)) {
+                final var string = value.toString();
+                final var hashCode = value.hashCode();
+                log.debug("othersUpdatesAreVisible({}): {}", value.getType(), value);
+            }
+        }
+    }
+
+    @Test
+    void ownDeletesAreVisible() throws SQLException {
+        try (var connection = connect()) {
+            final var context = Context.newInstance(connection);
+            for (final var value : OwnDeletesAreVisible.getAllValues(context)) {
+                final var string = value.toString();
+                final var hashCode = value.hashCode();
+                log.debug("ownDeletesAreVisible({}): {}", value.getType(), value);
+            }
+        }
+    }
+
+    @Test
+    void ownInsertsAreVisible() throws SQLException {
+        try (var connection = connect()) {
+            final var context = Context.newInstance(connection);
+            for (final var value : OwnInsertsAreVisible.getAllValues(context)) {
+                final var string = value.toString();
+                final var hashCode = value.hashCode();
+                log.debug("ownInsertsAreVisible({}): {}", value.getType(), value);
+            }
+        }
+    }
+
+    @Test
+    void ownUpdatesAreVisible() throws SQLException {
+        try (var connection = connect()) {
+            final var context = Context.newInstance(connection);
+            for (final var value : OwnUpdatesAreVisible.getAllValues(context)) {
+                final var string = value.toString();
+                final var hashCode = value.hashCode();
+                log.debug("ownUpdatesAreVisible({}): {}", value.getType(), value);
+            }
         }
     }
 }

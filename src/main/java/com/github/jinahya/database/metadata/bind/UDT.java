@@ -22,10 +22,15 @@ package com.github.jinahya.database.metadata.bind;
 
 import lombok.AccessLevel;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
+import lombok.ToString;
 import lombok.experimental.SuperBuilder;
 
 import java.sql.DatabaseMetaData;
+import java.sql.SQLException;
+import java.util.List;
+import java.util.Objects;
 
 /**
  * A class for binding results of {@link DatabaseMetaData#getUDTs(String, String, String, int[])} method.
@@ -33,30 +38,48 @@ import java.sql.DatabaseMetaData;
  * @author Jin Kwon &lt;jinahya_at_gmail.com&gt;
  */
 @ParentOf(Attribute.class)
+@ChildOf(Schema.class)
+@EqualsAndHashCode(callSuper = true)
+@ToString(callSuper = true)
 @Data
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @SuperBuilder(toBuilder = true)
 public class UDT
-        implements MetadataType,
-                   ChildOf<Schema> {
+        extends AbstractMetadataType {
 
     private static final long serialVersionUID = 8665246093405057553L;
 
+    public static final String COLUMN_LABEL_TYPE_CAT = "TYPE_CAT";
+
+    public static final String COLUMN_LABEL_TYPE_SCHEM = "TYPE_SCHEM";
+
+    public static final String COLUMN_LABEL_TYPE_NAME = "TYPE_NAME";
+
+    public static final String COLUMN_LABEL_CLASS_NAME = "CLASS_NAME";
+
+    public static final String COLUMN_LABEL_DATA_TYPE = "DATA_TYPE";
+
+    public List<Attribute> getAttributes(final Context context, final String attributeNamePattern)
+            throws SQLException {
+        Objects.requireNonNull(context, "context is null");
+        return context.getAttributes(getTypeCat(), getTypeSchem(), getTypeName(), attributeNamePattern);
+    }
+
     @NullableBySpecification
-    @ColumnLabel("TYPE_CAT")
+    @ColumnLabel(COLUMN_LABEL_TYPE_CAT)
     private String typeCat;
 
     @NullableBySpecification
-    @ColumnLabel("TYPE_SCHEM")
+    @ColumnLabel(COLUMN_LABEL_TYPE_SCHEM)
     private String typeSchem;
 
-    @ColumnLabel("TYPE_NAME")
+    @ColumnLabel(COLUMN_LABEL_TYPE_NAME)
     private String typeName;
 
-    @ColumnLabel("CLASS_NAME")
+    @ColumnLabel(COLUMN_LABEL_CLASS_NAME)
     private String className;
 
-    @ColumnLabel("DATA_TYPE")
+    @ColumnLabel(COLUMN_LABEL_DATA_TYPE)
     private int dataType;
 
     @ColumnLabel("REMARKS")
