@@ -24,7 +24,6 @@ import lombok.extern.slf4j.Slf4j;
 import org.junit.platform.commons.util.ReflectionUtils;
 
 import java.sql.SQLException;
-import java.sql.SQLFeatureNotSupportedException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
@@ -71,8 +70,8 @@ final class ContextTests {
         {
             try {
                 catalogs = context.getCatalogs();
-            } catch (final SQLFeatureNotSupportedException sqlfnse) {
-                log.error("not supported; getCatalogs", sqlfnse);
+            } catch (final SQLException sqle) {
+                log.error("failed; getCatalogs", sqle);
             }
             if (catalogs == null) {
                 catalogs = new ArrayList<>();
@@ -89,113 +88,113 @@ final class ContextTests {
             for (final var tableType : tableTypes) {
                 tableType(context, tableType);
             }
-        } catch (final SQLFeatureNotSupportedException sqlfnse) {
-            log.error("not supported; getTableTypes", sqlfnse);
+        } catch (final SQLException sqle) {
+            log.error("failed; getTableTypes", sqle);
         }
         try {
             final var typeInfos = context.getTypeInfo();
             for (final var typeInfo_ : typeInfos) {
                 typeInfo(context, typeInfo_);
             }
-        } catch (final SQLFeatureNotSupportedException sqlfnse) {
-            log.error("not supported; getTypeInfos", sqlfnse);
+        } catch (final SQLException sqle) {
+            log.error("failed; getTypeInfos", sqle);
         }
         try {
             final var deletesAreDetected = DeletesAreDetected.getAllValues(context);
             for (final var deletesAreDetected_ : deletesAreDetected) {
                 deletesAreDetected(context, deletesAreDetected_);
             }
-        } catch (final SQLFeatureNotSupportedException sqlfnse) {
-            log.error("not supported; getTypeInfos", sqlfnse);
+        } catch (final SQLException sqle) {
+            log.error("failed; getTypeInfos", sqle);
         }
         try {
             final var insertsAreDetected = InsertsAreDetected.getAllValues(context);
             for (final var insertsAreDetected_ : insertsAreDetected) {
                 insertsAreDetected(context, insertsAreDetected_);
             }
-        } catch (final SQLFeatureNotSupportedException sqlfnse) {
-            log.error("not supported; getTypeInfos", sqlfnse);
+        } catch (final SQLException sqle) {
+            log.error("failed; getTypeInfos", sqle);
         }
         try {
             final var updatesAreDetected = UpdatesAreDetected.getAllValues(context);
             for (final var updatesAreDetected_ : updatesAreDetected) {
                 updatesAreDetected(context, updatesAreDetected_);
             }
-        } catch (final SQLFeatureNotSupportedException sqlfnse) {
-            log.error("not supported; getTypeInfos", sqlfnse);
+        } catch (final SQLException sqle) {
+            log.error("failed; getTypeInfos", sqle);
         }
         try {
             final var othersDeletesAreVisible = OthersDeletesAreVisible.getAllValues(context);
             for (final var othersDeletesAreVisible_ : othersDeletesAreVisible) {
                 othersDeletesAreVisible(context, othersDeletesAreVisible_);
             }
-        } catch (final SQLFeatureNotSupportedException sqlfnse) {
-            log.error("not supported; getTypeInfos", sqlfnse);
+        } catch (final SQLException sqle) {
+            log.error("failed; getTypeInfos", sqle);
         }
         try {
             final var othersInsertsAreVisible = OthersInsertsAreVisible.getAllValues(context);
             for (final var othersInsertsAreVisible_ : othersInsertsAreVisible) {
                 othersInsertsAreVisible(context, othersInsertsAreVisible_);
             }
-        } catch (final SQLFeatureNotSupportedException sqlfnse) {
-            log.error("not supported; getTypeInfos", sqlfnse);
+        } catch (final SQLException sqle) {
+            log.error("failed; getTypeInfos", sqle);
         }
         try {
             final var othersUpdatesAreVisible = OthersUpdatesAreVisible.getAllValues(context);
             for (final var othersUpdatesAreVisible_ : othersUpdatesAreVisible) {
                 othersUpdatesAreVisible(context, othersUpdatesAreVisible_);
             }
-        } catch (final SQLFeatureNotSupportedException sqlfnse) {
-            log.error("not supported; getTypeInfos", sqlfnse);
+        } catch (final SQLException sqle) {
+            log.error("failed; getTypeInfos", sqle);
         }
         try {
             final var ownDeletesAreVisible = OwnDeletesAreVisible.getAllValues(context);
             for (final var ownDeletesAreVisible_ : ownDeletesAreVisible) {
                 ownDeletesAreVisible(context, ownDeletesAreVisible_);
             }
-        } catch (final SQLFeatureNotSupportedException sqlfnse) {
-            log.error("not supported; getTypeInfos", sqlfnse);
+        } catch (final SQLException sqle) {
+            log.error("failed; getTypeInfos", sqle);
         }
         try {
             final var ownInsertsAreVisible = OwnInsertsAreVisible.getAllValues(context);
             for (final var ownInsertsAreVisible_ : ownInsertsAreVisible) {
                 ownInsertsAreVisible(context, ownInsertsAreVisible_);
             }
-        } catch (final SQLFeatureNotSupportedException sqlfnse) {
-            log.error("not supported; getTypeInfos", sqlfnse);
+        } catch (final SQLException sqle) {
+            log.error("failed; getTypeInfos", sqle);
         }
         try {
             final var ownUpdatesAreVisible = OwnUpdatesAreVisible.getAllValues(context);
             for (final var ownUpdatesAreVisible_ : ownUpdatesAreVisible) {
                 ownUpdatesAreVisible(context, ownUpdatesAreVisible_);
             }
-        } catch (final SQLFeatureNotSupportedException sqlfnse) {
-            log.error("not supported; getTypeInfos", sqlfnse);
+        } catch (final SQLException sqle) {
+            log.error("failed; getTypeInfos", sqle);
         }
         try {
             log.debug("supportsTransactions: {}", context.databaseMetaData.supportsTransactions());
-        } catch (final SQLFeatureNotSupportedException sqlfnse) {
-            log.error("not supported; supportsTransactions", sqlfnse);
+        } catch (final SQLException sqle) {
+            log.error("failed; supportsTransactions", sqle);
         }
         try {
             log.debug("supportsUnion: {}", context.databaseMetaData.supportsUnion());
-        } catch (final SQLFeatureNotSupportedException sqlfnse) {
-            log.error("not supported; supportsUnion", sqlfnse);
+        } catch (final SQLException sqle) {
+            log.error("failed; supportsUnion", sqle);
         }
         try {
             log.debug("supportsUnionAll: {}", context.databaseMetaData.supportsUnionAll());
-        } catch (final SQLFeatureNotSupportedException sqlfnse) {
-            log.error("not supported; supportsUnionAll", sqlfnse);
+        } catch (final SQLException sqle) {
+            log.error("failed; supportsUnionAll", sqle);
         }
         try {
             log.debug("usesLocalFilePerTable: {}", context.databaseMetaData.usesLocalFilePerTable());
-        } catch (final SQLFeatureNotSupportedException sqlfnse) {
-            log.error("not supported; usesLocalFilePerTable", sqlfnse);
+        } catch (final SQLException sqle) {
+            log.error("failed; usesLocalFilePerTable", sqle);
         }
         try {
             log.debug("usesLocalFiles: {}", context.databaseMetaData.usesLocalFiles());
-        } catch (final SQLFeatureNotSupportedException sqlfnse) {
-            log.error("not supported; usesLocalFiles", sqlfnse);
+        } catch (final SQLException sqle) {
+            log.error("failed; usesLocalFiles", sqle);
         }
     }
 
@@ -221,72 +220,72 @@ final class ContextTests {
             for (final var attribute : attributes) {
                 attribute(context, attribute);
             }
-        } catch (final SQLFeatureNotSupportedException sqlfnse) {
-            log.error("not supported; getSchema", sqlfnse);
+        } catch (final SQLException sqle) {
+            log.error("failed; getSchema", sqle);
         }
         try {
             final var columns = catalog.getColumns(context, null, "%", "%");
             for (final var column : columns) {
                 column(context, column);
             }
-        } catch (final SQLFeatureNotSupportedException sqlfnse) {
-            log.error("not supported; getSchema", sqlfnse);
+        } catch (final SQLException sqle) {
+            log.error("failed; getSchema", sqle);
         }
         try {
             final var functionColumns = catalog.getFunctionColumns(context, null, "%", "%");
             for (final var functionColumn : functionColumns) {
                 functionColumn(context, functionColumn);
             }
-        } catch (final SQLFeatureNotSupportedException sqlfnse) {
-            log.error("not supported; getSchema", sqlfnse);
+        } catch (final SQLException sqle) {
+            log.error("failed; getSchema", sqle);
         }
         try {
             final var functions = catalog.getFunctions(context, null, "%");
             for (final var function : functions) {
                 function(context, function);
             }
-        } catch (final SQLFeatureNotSupportedException sqlfnse) {
-            log.error("not supported; getSchema", sqlfnse);
+        } catch (final SQLException sqle) {
+            log.error("failed; getSchema", sqle);
         }
         try {
             final var procedureColumns = catalog.getProcedureColumns(context, null, "%", "%");
             for (final var procedureColumn : procedureColumns) {
                 procedureColumn(context, procedureColumn);
             }
-        } catch (final SQLFeatureNotSupportedException sqlfnse) {
-            log.error("not supported; getSchema", sqlfnse);
+        } catch (final SQLException sqle) {
+            log.error("failed; getSchema", sqle);
         }
         try {
             final var procedures = catalog.getProcedures(context, null, "%");
             for (final var procedure : procedures) {
                 procedure(context, procedure);
             }
-        } catch (final SQLFeatureNotSupportedException sqlfnse) {
-            log.error("not supported; getProcedures", sqlfnse);
+        } catch (final SQLException sqle) {
+            log.error("failed; getProcedures", sqle);
         }
         try {
             final var pseudoColumns = catalog.getPseudoColumns(context, null, "%", "%");
             for (final var pseudoColumn : pseudoColumns) {
                 pseudoColumn(context, pseudoColumn);
             }
-        } catch (final SQLFeatureNotSupportedException sqlfnse) {
-            log.error("not supported; getPseudoColumns", sqlfnse);
+        } catch (final SQLException sqle) {
+            log.error("failed; getPseudoColumns", sqle);
         }
         try {
             final var procedureColumns = catalog.getProcedureColumns(context, null, "%", "%");
             for (final var procedureColumn : procedureColumns) {
                 procedureColumn(context, procedureColumn);
             }
-        } catch (final SQLFeatureNotSupportedException sqlfnse) {
-            log.error("not supported; getProcedureColumns", sqlfnse);
+        } catch (final SQLException sqle) {
+            log.error("failed; getProcedureColumns", sqle);
         }
         try {
             final var procedures = catalog.getProcedures(context, null, "%");
             for (final var procedure : procedures) {
                 procedure(context, procedure);
             }
-        } catch (final SQLFeatureNotSupportedException sqlfnse) {
-            log.error("not supported; getProcedures", sqlfnse);
+        } catch (final SQLException sqle) {
+            log.error("failed; getProcedures", sqle);
         }
         try {
             final var schemas = catalog.getSchemas(context, null);
@@ -304,48 +303,48 @@ final class ContextTests {
             for (final var schema : schemas) {
                 schema(context, schema);
             }
-        } catch (final SQLFeatureNotSupportedException sqlfnse) {
-            log.error("not supported; getSchema", sqlfnse);
+        } catch (final SQLException sqle) {
+            log.error("failed; getSchema", sqle);
         }
         try {
             final var superTables = catalog.getSuperTables(context, "%", "%");
             for (final var superTable : superTables) {
                 superTable(context, superTable);
             }
-        } catch (final SQLFeatureNotSupportedException sqlfnse) {
-            log.error("not supported; getSuperTables", sqlfnse);
+        } catch (final SQLException sqle) {
+            log.error("failed; getSuperTables", sqle);
         }
         try {
             final var superTypes = catalog.getSuperTypes(context, "%", "%");
             for (final var superType : superTypes) {
                 superType(context, superType);
             }
-        } catch (final SQLFeatureNotSupportedException sqlfnse) {
-            log.error("not supported; getSuperTables", sqlfnse);
+        } catch (final SQLException sqle) {
+            log.error("failed; getSuperTables", sqle);
         }
         try {
             final var tablePrivileges = catalog.getTablePrivileges(context, null, "%");
             for (final var tablePrivilege : tablePrivileges) {
                 tablePrivilege(context, tablePrivilege);
             }
-        } catch (final SQLFeatureNotSupportedException sqlfnse) {
-            log.error("not supported; getTablePrivileges", sqlfnse);
+        } catch (final SQLException sqle) {
+            log.error("failed; getTablePrivileges", sqle);
         }
         try {
             final var tables = catalog.getTables(context, null, "%", null);
             for (final var table : tables) {
                 table(context, table);
             }
-        } catch (final SQLFeatureNotSupportedException sqlfnse) {
-            log.error("not supported; getTables", sqlfnse);
+        } catch (final SQLException sqle) {
+            log.error("failed; getTables", sqle);
         }
         try {
             final var udts = catalog.getUDTs(context, null, "%", null);
             for (final var udt : udts) {
                 udt(context, udt);
             }
-        } catch (final SQLFeatureNotSupportedException sqlfnse) {
-            log.error("not supported; getUDTs", sqlfnse);
+        } catch (final SQLException sqle) {
+            log.error("failed; getUDTs", sqle);
         }
     }
 
@@ -421,96 +420,96 @@ final class ContextTests {
             for (final var attribute : attributes) {
                 attribute(context, attribute);
             }
-        } catch (final SQLFeatureNotSupportedException sqlfnse) {
-            log.error("not supported; getAttributes", sqlfnse);
+        } catch (final SQLException sqle) {
+            log.error("failed; getAttributes", sqle);
         }
         try {
             final var columns = schema.getColumns(context, "%", "%");
             for (final var column : columns) {
                 column(context, column);
             }
-        } catch (final SQLFeatureNotSupportedException sqlfnse) {
-            log.error("not supported; getColumns", sqlfnse);
+        } catch (final SQLException sqle) {
+            log.error("failed; getColumns", sqle);
         }
         try {
             final var functionColumns = schema.getFunctionColumns(context, "%", "%");
             for (final var functionColumn : functionColumns) {
                 functionColumn(context, functionColumn);
             }
-        } catch (final SQLFeatureNotSupportedException sqlfnse) {
-            log.error("not supported; getFunctionColumns", sqlfnse);
+        } catch (final SQLException sqle) {
+            log.error("failed; getFunctionColumns", sqle);
         }
         try {
             final var functions = schema.getFunctions(context, "%");
             for (final var function : functions) {
                 function(context, function);
             }
-        } catch (final SQLFeatureNotSupportedException sqlfnse) {
-            log.error("not supported; getFunctions", sqlfnse);
+        } catch (final SQLException sqle) {
+            log.error("failed; getFunctions", sqle);
         }
         try {
             final var procedureColumns = schema.getProcedureColumns(context, "%", "%");
             for (final var procedureColumn : procedureColumns) {
                 procedureColumn(context, procedureColumn);
             }
-        } catch (final SQLFeatureNotSupportedException sqlfnse) {
-            log.error("not supported; getProcedureColumns", sqlfnse);
+        } catch (final SQLException sqle) {
+            log.error("failed; getProcedureColumns", sqle);
         }
         try {
             final var procedures = schema.getProcedures(context, "%");
             for (final var procedure : procedures) {
                 procedure(context, procedure);
             }
-        } catch (final SQLFeatureNotSupportedException sqlfnse) {
-            log.error("not supported; getProcedures", sqlfnse);
+        } catch (final SQLException sqle) {
+            log.error("failed; getProcedures", sqle);
         }
         try {
             final var pseudoColumns = schema.getPseudoColumns(context, "%", "%");
             for (final var pseudoColumn : pseudoColumns) {
                 pseudoColumn(context, pseudoColumn);
             }
-        } catch (final SQLFeatureNotSupportedException sqlfnse) {
-            log.error("not supported; getPseudoColumns", sqlfnse);
+        } catch (final SQLException sqle) {
+            log.error("failed; getPseudoColumns", sqle);
         }
         try {
             final var superTables = schema.getSuperTables(context, "%");
             for (final var superTable : superTables) {
                 superTable(context, superTable);
             }
-        } catch (final SQLFeatureNotSupportedException sqlfnse) {
-            log.error("not supported; getSuperTables", sqlfnse);
+        } catch (final SQLException sqle) {
+            log.error("failed; getSuperTables", sqle);
         }
         try {
             final var superTypes = schema.getSuperTypes(context, "%");
             for (final var superType : superTypes) {
                 superType(context, superType);
             }
-        } catch (final SQLFeatureNotSupportedException sqlfnse) {
-            log.error("not supported; getSuperTypes", sqlfnse);
+        } catch (final SQLException sqle) {
+            log.error("failed; getSuperTypes", sqle);
         }
         try {
             final var tablePrivileges = schema.getTablePrivileges(context, "%");
             for (final var tablePrivilege : tablePrivileges) {
                 tablePrivilege(context, tablePrivilege);
             }
-        } catch (final SQLFeatureNotSupportedException sqlfnse) {
-            log.error("not supported; getTablePrivileges", sqlfnse);
+        } catch (final SQLException sqle) {
+            log.error("failed; getTablePrivileges", sqle);
         }
         try {
             final var tables = schema.getTables(context, "%", null);
             for (final var table : tables) {
                 table(context, table);
             }
-        } catch (final SQLFeatureNotSupportedException sqlfnse) {
-            log.error("not supported; getTables", sqlfnse);
+        } catch (final SQLException sqle) {
+            log.error("failed; getTables", sqle);
         }
         try {
             final var udts = schema.getUDTs(context, "%", null);
             for (final var udt : udts) {
                 udt(context, udt);
             }
-        } catch (final SQLFeatureNotSupportedException sqlfnse) {
-            log.error("not supported; getUDTs", sqlfnse);
+        } catch (final SQLException sqle) {
+            log.error("failed; getUDTs", sqle);
         }
     }
 
@@ -568,42 +567,41 @@ final class ContextTests {
                     bestRowIdentifier(context, bestRowIdentifier_);
                 }
             }
-        } catch (final SQLFeatureNotSupportedException sqlfnse) {
-            log.error("not supported; getBestRowIdentifier", sqlfnse);
+        } catch (final SQLException sqle) {
+            log.error("failed; getBestRowIdentifier", sqle);
         }
         try {
             final var columnPrivileges = table.getColumnPrivileges(context, "%");
             for (final var columnPrivilege : columnPrivileges) {
                 columnPrivilege(context, columnPrivilege);
             }
-        } catch (SQLFeatureNotSupportedException sqlfnse) {
-            log.error("not supported; getColumnPrivileges", sqlfnse);
+        } catch (final SQLException sqle) {
+            log.error("failed; getColumnPrivileges", sqle);
         }
         try {
             final var columns = table.getColumns(context, "%");
             for (final var column : columns) {
                 column(context, column);
             }
-        } catch (final SQLFeatureNotSupportedException sqlfnse) {
-            log.error("not supported; getColumns", sqlfnse);
+        } catch (final SQLException sqle) {
+            log.error("failed; getColumns", sqle);
         }
         try {
             final var exportedKeys = table.getExportedKeys(context);
             for (final var exportedKey : exportedKeys) {
                 exportedKey(context, exportedKey);
             }
-        } catch (final SQLFeatureNotSupportedException sqlfnse) {
-            log.error("not supported; getExportedKeys", sqlfnse);
         } catch (final SQLException sqle) {
             // https://github.com/xerial/sqlite-jdbc/issues/831
+            log.error("failed; getExportedKeys", sqle);
         }
         try {
             final var importedKeys = table.getImportedKeys(context);
             for (final var importedKey : importedKeys) {
                 importedKey(context, importedKey);
             }
-        } catch (final SQLFeatureNotSupportedException sqlfnse) {
-            log.error("not supported; getImportedKeys", sqlfnse);
+        } catch (final SQLException sqle) {
+            log.error("failed; getImportedKeys", sqle);
         }
         try {
             for (final boolean unique : new boolean[] {true, false}) {
@@ -614,18 +612,17 @@ final class ContextTests {
                     }
                 }
             }
-        } catch (final SQLFeatureNotSupportedException sqlfnse) {
-            log.error("not supported", sqlfnse);
+        } catch (final SQLException sqle) {
+            log.error("not supported", sqle);
         }
         try {
             final var primaryKeys = table.getPrimaryKeys(context);
             for (final var primaryKey : primaryKeys) {
                 primaryKey(context, primaryKey);
             }
-        } catch (final SQLFeatureNotSupportedException sqlfnse) {
-            log.error("not supported; getPrimaryKeys", sqlfnse);
         } catch (final SQLException sqle) {
             // https://github.com/xerial/sqlite-jdbc/issues/831
+            log.error("failed; getPrimaryKeys", sqle);
         }
         try {
             final var pseudoColumns = table.getPseudoColumns(context, "%");
@@ -636,16 +633,16 @@ final class ContextTests {
             for (final var pseudoColumn : pseudoColumns) {
                 pseudoColumn(context, pseudoColumn);
             }
-        } catch (final SQLFeatureNotSupportedException sqlfnse) {
-            log.error("not supported; getPseudoColumns", sqlfnse);
+        } catch (final SQLException sqle) {
+            log.error("failed; getPseudoColumns", sqle);
         }
         try {
             final var tablePrivileges = table.getTablePrivileges(context);
             for (final var tablePrivilege : tablePrivileges) {
                 tablePrivilege(context, tablePrivilege);
             }
-        } catch (final SQLFeatureNotSupportedException sqlfnse) {
-            log.error("not supported; getTablePrivileges", sqlfnse);
+        } catch (final SQLException sqle) {
+            log.error("failed; getTablePrivileges", sqle);
         }
         try {
             final var versionColumns = table.getVersionColumns(context);
@@ -654,8 +651,8 @@ final class ContextTests {
             for (final var versionColumn : versionColumns) {
                 versionColumn(context, versionColumn);
             }
-        } catch (final SQLFeatureNotSupportedException sqlfnse) {
-            log.error("not supported; getVersionColumns", sqlfnse);
+        } catch (final SQLException sqle) {
+            log.error("failed; getVersionColumns", sqle);
         }
     }
 
@@ -679,8 +676,8 @@ final class ContextTests {
             for (final var columnPrivilege : columnPrivileges) {
                 columnPrivilege(context, columnPrivilege);
             }
-        } catch (SQLFeatureNotSupportedException sqlfnse) {
-            log.error("not supported", sqlfnse);
+        } catch (SQLException sqle) {
+            log.error("failed; getColumnPrivileges", sqle);
         }
     }
 

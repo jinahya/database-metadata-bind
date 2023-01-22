@@ -20,7 +20,7 @@ package com.github.jinahya.database.metadata.bind;
  * #L%
  */
 
-class SchemaTest extends MetadataTypeTest<Schema> {
+class SchemaTest extends AbstractMetadataTypeTest<Schema> {
 
     SchemaTest() {
         super(Schema.class);

@@ -20,7 +20,7 @@ package com.github.jinahya.database.metadata.bind;
  * #L%
  */
 
-class PrimaryKeyTest extends MetadataTypeTest<PrimaryKey> {
+class PrimaryKeyTest extends AbstractMetadataTypeTest<PrimaryKey> {
 
     PrimaryKeyTest() {
         super(PrimaryKey.class);

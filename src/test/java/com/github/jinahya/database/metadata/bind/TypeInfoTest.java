@@ -20,7 +20,7 @@ package com.github.jinahya.database.metadata.bind;
  * #L%
  */
 
-class TypeInfoTest extends MetadataTypeTest<TypeInfo> {
+class TypeInfoTest extends AbstractMetadataTypeTest<TypeInfo> {
 
     TypeInfoTest() {
         super(TypeInfo.class);

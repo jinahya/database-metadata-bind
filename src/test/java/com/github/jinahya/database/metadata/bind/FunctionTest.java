@@ -20,7 +20,7 @@ package com.github.jinahya.database.metadata.bind;
  * #L%
  */
 
-class FunctionTest extends MetadataTypeTest<Function> {
+class FunctionTest extends AbstractMetadataTypeTest<Function> {
 
     FunctionTest() {
         super(Function.class);

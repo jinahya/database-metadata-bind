@@ -18,6 +18,7 @@
   #L%
   -->
 <configuration>
+
   <appender name="console" class="ch.qos.logback.core.ConsoleAppender">
     <encoder>
       <pattern>%-4relative [%thread] %-5level %logger - %msg%n</pattern>
@@ -27,4 +28,9 @@
   <root level="trace">
     <appender-ref ref="console"/>
   </root>
+
+  <logger name="org.testcontainers" level="INFO"/>
+  <logger name="com.github.dockerjava" level="WARN"/>
+  <logger name="com.github.dockerjava.zerodep.shaded.org.apache.hc.client5.http.wire" level="OFF"/>
+
 </configuration>

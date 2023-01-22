@@ -20,7 +20,7 @@ package com.github.jinahya.database.metadata.bind;
  * #L%
  */
 
-class BestRowIdentifierTest extends MetadataTypeTest<BestRowIdentifier> {
+class BestRowIdentifierTest extends AbstractMetadataTypeTest<BestRowIdentifier> {
 
     BestRowIdentifierTest() {
         super(BestRowIdentifier.class);
