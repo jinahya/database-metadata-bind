@@ -44,7 +44,7 @@ import java.sql.DatabaseMetaData;
 public class IndexInfo
         extends AbstractMetadataType {
 
-    private static final long serialVersionUID = -768486884376018474L;
+    private static final long serialVersionUID = 924040226611181424L;
 
     public static final String COLUMN_LABEL_TABLE_CAT = "TABLE_CAT";
 

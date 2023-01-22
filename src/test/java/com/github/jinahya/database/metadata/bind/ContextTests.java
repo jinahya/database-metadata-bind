@@ -171,6 +171,7 @@ final class ContextTests {
         } catch (final SQLException sqle) {
             log.error("failed; getTypeInfos", sqle);
         }
+        log.debug("supportsTransactions: {}", context.databaseMetaData.supportsTransactions());
         try {
             log.debug("supportsTransactions: {}", context.databaseMetaData.supportsTransactions());
         } catch (final SQLException sqle) {

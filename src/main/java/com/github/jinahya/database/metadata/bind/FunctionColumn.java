@@ -33,6 +33,7 @@ import java.sql.DatabaseMetaData;
  * A class for binding results of {@link DatabaseMetaData#getFunctionColumns(String, String, String, String)} method.
  *
  * @author Jin Kwon &lt;jinahya_at_gmail.com&gt;
+ * @see Context#getFunctionColumns(String, String, String, String)
  */
 @ChildOf(Function.class)
 @EqualsAndHashCode(callSuper = true)

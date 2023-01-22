@@ -47,7 +47,7 @@ import java.util.stream.Collectors;
 public class InsertsAreDetected
         extends AreDetected {
 
-    private static final long serialVersionUID = -6828058597394063166L;
+    private static final long serialVersionUID = -6806750003789815723L;
 
     public static List<InsertsAreDetected> getAllValues(final Context context) {
         Objects.requireNonNull(context, "context is null");

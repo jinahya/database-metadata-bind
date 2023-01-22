@@ -31,14 +31,13 @@ import java.sql.DatabaseMetaData;
 import java.sql.SQLException;
 import java.util.List;
 import java.util.Objects;
-import java.util.function.Consumer;
 
 /**
  * A class for binding the result of
  * {@link DatabaseMetaData#getFunctions(java.lang.String, java.lang.String, java.lang.String)} method.
  *
  * @author Jin Kwon &lt;jinahya_at_gmail.com&gt;
- * @see Context#getFunctions(String, String, String, Consumer)
+ * @see Context#getFunctions(String, String, String)
  */
 @ChildOf(Schema.class)
 @ParentOf(FunctionColumn.class)

@@ -26,7 +26,5 @@ import java.util.Map;
 public interface MetadataType
         extends Serializable {
 
-    default Map<String, Object> getUnmappedValues() {
-        throw new UnsupportedOperationException("not implemented"); // TODO: un-default!
-    }
+    Map<String, Object> getUnmappedValues();
 }

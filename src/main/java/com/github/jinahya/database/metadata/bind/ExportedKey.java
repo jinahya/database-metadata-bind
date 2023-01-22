@@ -44,5 +44,5 @@ import java.sql.DatabaseMetaData;
 public class ExportedKey
         extends TableKey {
 
-    private static final long serialVersionUID = 277210154172135556L;
+    private static final long serialVersionUID = -6561660015694928357L;
 }
