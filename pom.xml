@@ -255,21 +255,6 @@
         </plugin>
         <plugin>
           <groupId>org.apache.maven.plugins</groupId>
-          <artifactId>maven-failsafe-plugin</artifactId>
-          <version>${version.maven-failsafe}</version>
-        </plugin>
-        <plugin>
-          <groupId>org.apache.maven.plugins</groupId>
-          <artifactId>maven-surefire-plugin</artifactId>
-          <version>${version.maven-surefire}</version>
-          <configuration>
-            <systemPropertyVariables>
-              <org.jboss.logging.provider>jdk</org.jboss.logging.provider>
-            </systemPropertyVariables>
-          </configuration>
-        </plugin>
-        <plugin>
-          <groupId>org.apache.maven.plugins</groupId>
           <artifactId>maven-jar-plugin</artifactId>
           <version>3.2.2</version>
         </plugin>
@@ -325,7 +310,7 @@
         <executions>
           <execution>
             <id>jakarta</id>
-            <phase>prepare-package</phase>
+<!--            <phase>prepare-package</phase>-->
             <goals>
               <goal>compile</goal>
             </goals>
@@ -336,7 +321,7 @@
           </execution>
           <execution>
             <id>release-11</id>
-            <phase>prepare-package</phase>
+<!--            <phase>prepare-package</phase>-->
             <goals>
               <goal>compile</goal>
             </goals>
@@ -349,7 +334,7 @@
           </execution>
           <execution>
             <id>release-11-jakarta</id>
-            <phase>prepare-package</phase>
+<!--            <phase>prepare-package</phase>-->
             <goals>
               <goal>compile</goal>
             </goals>
@@ -362,7 +347,7 @@
           </execution>
           <execution>
             <id>release-17</id>
-            <phase>prepare-package</phase>
+<!--            <phase>prepare-package</phase>-->
             <goals>
               <goal>compile</goal>
             </goals>
@@ -375,7 +360,7 @@
           </execution>
           <execution>
             <id>release-17-jakarta</id>
-            <phase>prepare-package</phase>
+<!--            <phase>prepare-package</phase>-->
             <goals>
               <goal>compile</goal>
             </goals>
@@ -408,7 +393,7 @@
             <id>enforce-dependency-convergence</id>
             <configuration>
               <rules>
-                <dependencyConvergence />
+                <dependencyConvergence/>
               </rules>
             </configuration>
             <goals>
@@ -446,7 +431,11 @@
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-surefire-plugin</artifactId>
+        <version>${version.maven-surefire}</version>
         <configuration>
+          <excludes>
+            <exclude>**/*IT.java</exclude> <!-- 이게 왜 필요한지 확인 필요 -->
+          </excludes>
           <systemProperties>
             <property>
               <name>derby.stream.error.file</name>
