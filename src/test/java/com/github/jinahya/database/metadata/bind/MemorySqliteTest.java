@@ -47,30 +47,6 @@ class MemorySqliteTest extends MemoryTest {
         return getConnection(CONNECTION_URL);
     }
 
-    @Disabled("not supported")
-    @Override
-    void getSchemas__() throws Exception {
-        super.getSchemas__();
-    }
-
-    @Disabled("not supported")
-    @Override
-    void getPseudoColumns__() throws Exception {
-        super.getPseudoColumns__();
-    }
-
-    @Disabled("not supported")
-    @Override
-    void getFunctions__() throws Exception {
-        super.getFunctions__();
-    }
-
-    @Disabled("not supported")
-    @Override
-    void getClientInfoProperties__() throws Exception {
-        super.getClientInfoProperties__();
-    }
-
     @Disabled("https://github.com/xerial/sqlite-jdbc/issues/831")
     @Test
     void __() throws SQLException {

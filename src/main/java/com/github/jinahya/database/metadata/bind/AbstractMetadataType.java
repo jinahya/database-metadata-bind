@@ -37,7 +37,7 @@ import java.util.Map;
 abstract class AbstractMetadataType
         implements MetadataType {
 
-    private static final long serialVersionUID = -1163637277006451816L;
+    private static final long serialVersionUID = -3285362930174073345L;
 
     @Override
     public Map<String, Object> getUnmappedValues() {
@@ -50,5 +50,5 @@ abstract class AbstractMetadataType
     @EqualsAndHashCode.Exclude
     @Setter(AccessLevel.NONE)
     @Getter(AccessLevel.NONE)
-    private Map<String, Object> unmappedValues;
+    private transient Map<String, Object> unmappedValues;
 }

@@ -20,7 +20,7 @@ package com.github.jinahya.database.metadata.bind;
  * #L%
  */
 
-class CatalogTest extends MetadataTypeTest<Catalog> {
+class CatalogTest extends AbstractMetadataTypeTest<Catalog> {
 
     CatalogTest() {
         super(Catalog.class);

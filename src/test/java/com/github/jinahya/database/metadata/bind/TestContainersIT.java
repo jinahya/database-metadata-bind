@@ -23,12 +23,6 @@ package com.github.jinahya.database.metadata.bind;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
-class TestcontainersMysqlTest
-        extends TestcontainersTest {
+abstract class TestContainersIT {
 
-    private static final String URL = "jdbc:tc:mysql:5.7.39:///ignorant?TC_DAEMON=true";
-
-    private static final String USER = "root";
-
-    private static final String PASSWORD = "test";
 }

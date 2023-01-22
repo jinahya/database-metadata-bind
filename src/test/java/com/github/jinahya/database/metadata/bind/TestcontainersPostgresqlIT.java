@@ -22,34 +22,35 @@ package com.github.jinahya.database.metadata.bind;
 
 import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.Test;
+import org.testcontainers.containers.PostgreSQLContainer;
+import org.testcontainers.junit.jupiter.Container;
+import org.testcontainers.junit.jupiter.Testcontainers;
+import org.testcontainers.utility.DockerImageName;
 
 import java.sql.Connection;
+import java.sql.DriverManager;
 import java.sql.SQLException;
 
-/**
- * An abstract test class for in-memory databases.
- *
- * @author Jin Kwon &lt;onacit at gmail.com&gt;
- */
+@Testcontainers
 @Slf4j
-abstract class MemoryTest {
+class TestcontainersPostgresqlIT
+        extends TestContainersIT {
 
-    /**
-     * Returns a connection
-     *
-     * @return a connection.
-     * @throws SQLException if a database error occurs.
-     */
-    protected abstract Connection connect() throws SQLException;
+    @Container
+    private static final PostgreSQLContainer<?> CONTAINER;
 
-    Context context(final Connection connection) throws SQLException {
-        return Context.newInstance(connection);
+    static {
+        final DockerImageName NAME = DockerImageName.parse("postgres:latest");
+        CONTAINER = new PostgreSQLContainer<>(NAME);
     }
 
     @Test
     void test() throws SQLException {
-        try (var connection = connect()) {
-            final var context = context(connection);
+        final var url = CONTAINER.getJdbcUrl();
+        final var user = CONTAINER.getUsername();
+        final var password = CONTAINER.getPassword();
+        try (Connection connection = DriverManager.getConnection(url, user, password)) {
+            final Context context = Context.newInstance(connection);
             ContextTests.test(context);
         }
     }
