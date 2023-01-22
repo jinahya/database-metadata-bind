@@ -22,7 +22,9 @@ package com.github.jinahya.database.metadata.bind;
 
 import lombok.AccessLevel;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
+import lombok.ToString;
 import lombok.experimental.SuperBuilder;
 
 import java.sql.DatabaseMetaData;
@@ -33,11 +35,13 @@ import java.sql.DatabaseMetaData;
  * @author Jin Kwon &lt;onacit_at_gmail.com&gt;
  * @see Context#supportsTransactionIsolationLevel(int)
  */
+@EqualsAndHashCode(callSuper = true)
+@ToString(callSuper = true)
 @Data
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @SuperBuilder(toBuilder = true)
 public class SupportsTransactionIsolationLevel
-        implements MetadataType {
+        extends AbstractMetadataType {
 
     private static final long serialVersionUID = -2241618224708597472L;
 

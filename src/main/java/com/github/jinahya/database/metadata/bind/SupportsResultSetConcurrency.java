@@ -22,7 +22,9 @@ package com.github.jinahya.database.metadata.bind;
 
 import lombok.AccessLevel;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
+import lombok.ToString;
 import lombok.experimental.SuperBuilder;
 
 /**
@@ -31,11 +33,13 @@ import lombok.experimental.SuperBuilder;
  * @author Jin Kwon &lt;onacit_at_gmail.com&gt;
  * @see Context#supportsResultSetConcurrency(int, int)
  */
+@EqualsAndHashCode(callSuper = true)
+@ToString(callSuper = true)
 @Data
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @SuperBuilder(toBuilder = true)
 public class SupportsResultSetConcurrency
-        implements MetadataType {
+        extends AbstractMetadataType {
 
     private static final long serialVersionUID = -4192322973387966785L;
 

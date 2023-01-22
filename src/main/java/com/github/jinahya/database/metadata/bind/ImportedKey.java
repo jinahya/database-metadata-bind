@@ -36,9 +36,9 @@ import java.sql.DatabaseMetaData;
  * @see Context#getImportedKeys(String, String, String)
  * @see ExportedKey
  */
-@Data
 @EqualsAndHashCode(callSuper = true)
 @ToString(callSuper = true)
+@Data
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @SuperBuilder(toBuilder = true)
 public class ImportedKey

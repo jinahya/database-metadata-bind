@@ -39,9 +39,9 @@ import java.util.stream.Collectors;
  * @author Jin Kwon &lt;onacit_at_gmail.com&gt;
  * @see Context#ownUpdatesAreVisible(int)
  */
-@Data
 @EqualsAndHashCode(callSuper = true)
 @ToString(callSuper = true)
+@Data
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @SuperBuilder(toBuilder = true)
 public class OwnUpdatesAreVisible

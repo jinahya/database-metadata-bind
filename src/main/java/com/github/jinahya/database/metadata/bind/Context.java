@@ -420,7 +420,7 @@ public class Context {
      * @param columnNamePattern a value for {@code columnNamePattern} parameter.
      * @return a list of bound values.
      * @throws SQLException if a database error occurs.
-     * @see DatabaseMetaData#getColumns(String, String, String, String)
+     * @see #getColumns(String, String, String, String, Consumer)
      */
     public List<Column> getColumns(final String catalog, final String schemaPattern, final String tableNamePattern,
                                    final String columnNamePattern)
