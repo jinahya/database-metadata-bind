@@ -52,7 +52,7 @@ class ExternalIT {
         try (var connection = getConnection(url, user, password)) {
             log.info("connected: {}", connection);
             final var context = Context.newInstance(connection);
-            final var catalogs = context.getCatalogs();
+            ContextTests.test(context);
         }
     }
 }
