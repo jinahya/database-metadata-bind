@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
   <modelVersion>4.0.0</modelVersion>
 
   <parent>
@@ -47,6 +48,7 @@
     <version.lombok>1.18.24</version.lombok>
     <version.maven-failsafe>${version.maven-surefire}</version.maven-failsafe>
     <version.maven-surefire>3.0.0-M7</version.maven-surefire>
+    <version.mysql-connector-j>8.0.32</version.mysql-connector-j>
     <version.ojdbc6>11.2.0.4</version.ojdbc6>
     <version.ojdbc8>21.8.0.0</version.ojdbc8>
     <version.ojdbc10>19.17.0.0</version.ojdbc10>
@@ -113,7 +115,7 @@
     <dependency>
       <groupId>com.mysql</groupId>
       <artifactId>mysql-connector-j</artifactId>
-      <version>8.0.32</version>
+      <version>${version.mysql-connector-j}</version>
       <scope>test</scope>
     </dependency>
     <dependency>
@@ -310,7 +312,7 @@
         <executions>
           <execution>
             <id>jakarta</id>
-<!--            <phase>prepare-package</phase>-->
+            <!--            <phase>prepare-package</phase>-->
             <goals>
               <goal>compile</goal>
             </goals>
@@ -321,7 +323,7 @@
           </execution>
           <execution>
             <id>release-11</id>
-<!--            <phase>prepare-package</phase>-->
+            <!--            <phase>prepare-package</phase>-->
             <goals>
               <goal>compile</goal>
             </goals>
@@ -334,7 +336,7 @@
           </execution>
           <execution>
             <id>release-11-jakarta</id>
-<!--            <phase>prepare-package</phase>-->
+            <!--            <phase>prepare-package</phase>-->
             <goals>
               <goal>compile</goal>
             </goals>
@@ -347,7 +349,7 @@
           </execution>
           <execution>
             <id>release-17</id>
-<!--            <phase>prepare-package</phase>-->
+            <!--            <phase>prepare-package</phase>-->
             <goals>
               <goal>compile</goal>
             </goals>
@@ -360,7 +362,7 @@
           </execution>
           <execution>
             <id>release-17-jakarta</id>
-<!--            <phase>prepare-package</phase>-->
+            <!--            <phase>prepare-package</phase>-->
             <goals>
               <goal>compile</goal>
             </goals>
