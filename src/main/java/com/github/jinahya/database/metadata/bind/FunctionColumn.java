@@ -50,8 +50,8 @@ public class FunctionColumn
     public static final Comparator<FunctionColumn> COMPARING_FUNCTION_CAT_FUNCTION_SCHEM_FUNCTION_NAME_SPECIFIC_NAME
             = Comparator.comparing(FunctionColumn::getFunctionCat, Comparator.nullsFirst(Comparator.naturalOrder()))
             .thenComparing(FunctionColumn::getFunctionSchem, Comparator.nullsFirst(Comparator.naturalOrder()))
-            .thenComparing(FunctionColumn::getFunctionName, Comparator.nullsFirst(Comparator.naturalOrder()))
-            .thenComparing(FunctionColumn::getSpecificName, Comparator.nullsFirst(Comparator.naturalOrder()));
+            .thenComparing(FunctionColumn::getFunctionName)
+            .thenComparing(FunctionColumn::getSpecificName);
 
     public static final String COLUMN_LABEL_FUNCTION_CAT = "FUNCTION_CAT";
 

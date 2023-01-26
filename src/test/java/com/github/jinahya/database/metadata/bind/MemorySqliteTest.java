@@ -65,20 +65,30 @@ class MemorySqliteTest extends MemoryTest {
                     final var tableSchem = tables.getString("TABLE_SCHEM");
                     final var tableName = tables.getString("TABLE_NAME");
                     log.debug("{}/{}/{}", tableCat, tableSchem, tableName);
-                    if ("sqlite_schema".equals(tableName)) {
+                    if (false && "sqlite_schema".equals(tableName)) {
                         // https://github.com/xerial/sqlite-jdbc/issues/831
                         continue;
                     }
-                    try (ResultSet importedKeys = meta.getImportedKeys(tableCat, tableSchem, tableName)) {
-                        while (importedKeys.next()) {
-                            final var pktableCat = importedKeys.getString("PKTABLE_CAT");
-                            final var pktableSchem = importedKeys.getString("PKTABLE_SCHEM");
-                            final var pktableName = importedKeys.getString("PKTABLE_NAME");
-                            log.debug("importedKey.pktable: {}/{}/{}", pktableCat, pktableSchem, pktableName);
+                    if (false) {
+                        try (ResultSet importedKeys = meta.getImportedKeys(tableCat, tableSchem, tableName)) {
+                            while (importedKeys.next()) {
+                                final var pktableCat = importedKeys.getString("PKTABLE_CAT");
+                                final var pktableSchem = importedKeys.getString("PKTABLE_SCHEM");
+                                final var pktableName = importedKeys.getString("PKTABLE_NAME");
+                                log.debug("importedKey.pktable: {}/{}/{}", pktableCat, pktableSchem, pktableName);
+                            }
                         }
                     }
-                    try (ResultSet exportedKeys = meta.getExportedKeys(tableCat, tableSchem, tableName)) {
-                        while (exportedKeys.next()) {
+                    if (false) {
+                        try (ResultSet exportedKeys = meta.getExportedKeys(tableCat, tableSchem, tableName)) {
+                            while (exportedKeys.next()) {
+                            }
+                        }
+                    }
+                    if (true) {
+                        try (ResultSet exportedKeys = meta.getPrimaryKeys(tableCat, tableSchem, tableName)) {
+                            while (exportedKeys.next()) {
+                            }
                         }
                     }
                 }
