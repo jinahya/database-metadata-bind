@@ -28,6 +28,7 @@ import lombok.ToString;
 import lombok.experimental.SuperBuilder;
 
 import java.sql.DatabaseMetaData;
+import java.util.Comparator;
 
 /**
  * A class for binding results of {@link DatabaseMetaData#getAttributes(String, String, String, String)} method.
@@ -44,6 +45,11 @@ public class Attribute
         extends AbstractMetadataType {
 
     private static final long serialVersionUID = 1913681105410440186L;
+
+    public static final Comparator<Attribute> COMPARING_TYPE_CAT_TYPE_SCHEM_TYPE_NAME =
+            Comparator.comparing(Attribute::getTypeCat, Comparator.nullsFirst(Comparator.naturalOrder()))
+                    .thenComparing(Attribute::getTypeSchem, Comparator.nullsFirst(Comparator.naturalOrder()))
+                    .thenComparing(Attribute::getAttrTypeName, Comparator.nullsFirst(Comparator.naturalOrder()));
 
     public static final String VALUE_IS_NULLABLE_YES = "YES";
 

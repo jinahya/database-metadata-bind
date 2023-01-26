@@ -39,6 +39,8 @@ import static java.sql.DriverManager.getConnection;
 @Slf4j
 class MemorySqliteTest extends MemoryTest {
 
+    static final String DATABASE_PRODUCT_NAME = "SQLite";
+
     private static final String CONNECTION_URL = "jdbc:sqlite::memory:";
 
     @Override
@@ -63,6 +65,10 @@ class MemorySqliteTest extends MemoryTest {
                     final var tableSchem = tables.getString("TABLE_SCHEM");
                     final var tableName = tables.getString("TABLE_NAME");
                     log.debug("{}/{}/{}", tableCat, tableSchem, tableName);
+                    if ("sqlite_schema".equals(tableName)) {
+                        // https://github.com/xerial/sqlite-jdbc/issues/831
+                        continue;
+                    }
                     try (ResultSet importedKeys = meta.getImportedKeys(tableCat, tableSchem, tableName)) {
                         while (importedKeys.next()) {
                             final var pktableCat = importedKeys.getString("PKTABLE_CAT");
@@ -75,6 +81,27 @@ class MemorySqliteTest extends MemoryTest {
                         while (exportedKeys.next()) {
                         }
                     }
+                }
+            }
+        }
+    }
+
+    @Disabled("https://github.com/xerial/sqlite-jdbc/issues/832") // seems fixed.
+    @Test
+    void getTypeInfo__() throws SQLException {
+        try (var connection = DriverManager.getConnection("jdbc:sqlite::memory:")) {
+            final var meta = connection.getMetaData();
+            log.debug("driverName: {}", meta.getDriverName());
+            log.debug("driverVersion: {}", meta.getDriverVersion());
+            log.debug("databaseProductVersion: {}", meta.getDatabaseProductVersion());
+            log.debug("databaseProductName: {}", meta.getDatabaseProductName());
+            log.debug("databaseMajorVersion: {}", meta.getDatabaseMajorVersion());
+            log.debug("databaseMinorVersion: {}", meta.getDatabaseMinorVersion());
+            try (ResultSet typeInfo = meta.getTypeInfo()) {
+                while (typeInfo.next()) {
+                    final var typeName = typeInfo.getString("TYPE_NAME");
+                    final var dataType = typeInfo.getString("DATA_TYPE");
+                    log.debug("TYPE_NAME: {}, DATA_TYPE: {}", typeName, dataType);
                 }
             }
         }

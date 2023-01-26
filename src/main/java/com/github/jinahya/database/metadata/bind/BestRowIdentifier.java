@@ -29,6 +29,7 @@ import lombok.experimental.SuperBuilder;
 
 import java.sql.DatabaseMetaData;
 import java.util.Arrays;
+import java.util.Comparator;
 import java.util.List;
 
 /**
@@ -47,6 +48,12 @@ public class BestRowIdentifier
         extends AbstractMetadataType {
 
     private static final long serialVersionUID = -1512051574198028399L;
+
+    /**
+     * A comparator compares objects with their value of {@link #getScope()}.
+     */
+    public static final Comparator<BestRowIdentifier> COMPARING_SCOPE =
+            Comparator.comparingInt(BestRowIdentifier::getScope);
 
     public static List<Integer> scopes() {
         return Arrays.asList(

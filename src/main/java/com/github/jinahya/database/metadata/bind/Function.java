@@ -29,6 +29,7 @@ import lombok.experimental.SuperBuilder;
 
 import java.sql.DatabaseMetaData;
 import java.sql.SQLException;
+import java.util.Comparator;
 import java.util.List;
 import java.util.Objects;
 
@@ -50,6 +51,12 @@ public class Function
         extends AbstractMetadataType {
 
     private static final long serialVersionUID = -3318947900237453301L;
+
+    public static final Comparator<Function> COMPARING_FUNCTION_CAT_FUNCTION_SCHEM_FUNCTION_NAME_SPECIFIC_NAME
+            = Comparator.comparing(Function::getFunctionCat, Comparator.nullsFirst(Comparator.naturalOrder()))
+            .thenComparing(Function::getFunctionSchem, Comparator.nullsFirst(Comparator.naturalOrder()))
+            .thenComparing(Function::getFunctionName, Comparator.nullsFirst(Comparator.naturalOrder()))
+            .thenComparing(Function::getSpecificName, Comparator.nullsFirst(Comparator.naturalOrder()));
 
     public static final String COLUMN_NAME_FUNCTION_CAT = "FUNCTION_CAT";
 

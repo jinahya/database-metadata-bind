@@ -28,6 +28,7 @@ import lombok.ToString;
 import lombok.experimental.SuperBuilder;
 
 import java.sql.DatabaseMetaData;
+import java.util.Comparator;
 
 /**
  * A class for binding results of {@link DatabaseMetaData#getPrimaryKeys(String, String, String)} method.
@@ -43,6 +44,8 @@ public class PrimaryKey
         extends AbstractMetadataType {
 
     private static final long serialVersionUID = 3159826510060898330L;
+
+    public static final Comparator<PrimaryKey> COMPARING_COLUMN_NAME = Comparator.comparing(PrimaryKey::getColumnName);
 
     public static final String COLUMN_LABEL_TABLE_CAT = "TABLE_CAT";
 

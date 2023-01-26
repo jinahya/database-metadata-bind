@@ -28,6 +28,7 @@ import lombok.ToString;
 import lombok.experimental.SuperBuilder;
 
 import java.sql.SQLException;
+import java.util.Comparator;
 import java.util.List;
 import java.util.Objects;
 
@@ -37,6 +38,7 @@ import java.util.Objects;
  * method.
  *
  * @author Jin Kwon &lt;jinahya_at_gmail.com&gt;
+ * @see Context#getTables(String, String, String, String[])
  */
 @ParentOf(VersionColumn.class)
 @ParentOf(SuperTable.class)
@@ -57,6 +59,12 @@ public class Table
         extends AbstractMetadataType {
 
     private static final long serialVersionUID = 6590036695540141125L;
+
+    public static final Comparator<Table> COMPARING_TABLE_TYPE_TABLE_CAT_TABLE_SCHEM_TABLE_NAME =
+            Comparator.comparing(Table::getTableType, Comparator.nullsFirst(Comparator.naturalOrder()))
+                    .thenComparing(Table::getTableCat, Comparator.nullsFirst(Comparator.naturalOrder()))
+                    .thenComparing(Table::getTableSchem, Comparator.nullsFirst(Comparator.naturalOrder()))
+                    .thenComparing(Table::getTableName, Comparator.nullsFirst(Comparator.naturalOrder()));
 
     /**
      * The label of the column to which {@link #ATTRIBUTE_NAME_TABLE_CAT} attribute is bound. The value is {@value}.
@@ -88,6 +96,27 @@ public class Table
      */
     public static final String ATTRIBUTE_NAME_TABLE_NAME = "tableName";
 
+    /**
+     * The label of the column to which {@link #ATTRIBUTE_NAME_TABLE_TYPE} attribute is bound. The value is {@value}.
+     */
+    public static final String COLUMN_LABEL_TABLE_TYPE = "TABLE_TYPE";
+
+    /**
+     * The name of the attribute from which {@link #COLUMN_LABEL_TABLE_TYPE} column is bound. The value is {@value}.
+     */
+    public static final String ATTRIBUTE_NAME_TABLE_TYPE = "tableName";
+
+    /**
+     * Retrieves a description of this table's optimal set of columns that uniquely identifies a row.
+     *
+     * @param context  a context.
+     * @param scope    a value for the {@code scope} parameter.
+     * @param nullable a value for the {@code nullable} parameter.
+     * @return a list of bound values.
+     * @throws SQLException if a database error occurs.
+     * @see java.sql.DatabaseMetaData#getBestRowIdentifier(String, String, String, int, boolean)
+     * @see Context#getBestRowIdentifier(String, String, String, int, boolean)
+     */
     public List<BestRowIdentifier> getBestRowIdentifier(final Context context, final int scope, final boolean nullable)
             throws SQLException {
         Objects.requireNonNull(context, "context is null");
@@ -175,7 +204,7 @@ public class Table
     @ColumnLabel(COLUMN_LABEL_TABLE_NAME)
     private String tableName;
 
-    @ColumnLabel("TABLE_TYPE")
+    @ColumnLabel(COLUMN_LABEL_TABLE_TYPE)
     private String tableType;
 
     @NullableBySpecification

@@ -29,6 +29,7 @@ import lombok.experimental.SuperBuilder;
 
 import java.sql.DatabaseMetaData;
 import java.sql.SQLException;
+import java.util.Comparator;
 import java.util.List;
 import java.util.Objects;
 
@@ -49,6 +50,12 @@ public class Column
         extends AbstractMetadataType {
 
     private static final long serialVersionUID = -409653682729081530L;
+
+    public static final Comparator<Column> COMPARING_TABLE_CAT_TABLE_SCHEM_TABLE_NAME_ORDINAL_POSITION =
+            Comparator.comparing(Column::getTableCat, Comparator.nullsFirst(Comparator.naturalOrder()))
+                    .thenComparing(Column::getTableSchem, Comparator.nullsFirst(Comparator.naturalOrder()))
+                    .thenComparing(Column::getTableName, Comparator.nullsFirst(Comparator.naturalOrder()))
+                    .thenComparingInt(Column::getOrdinalPosition);
 
     public static final String COLUMN_NAME_IS_AUTOINCREMENT = "IS_AUTOINCREMENT";
 

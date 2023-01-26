@@ -27,6 +27,8 @@ import lombok.NoArgsConstructor;
 import lombok.ToString;
 import lombok.experimental.SuperBuilder;
 
+import java.util.Comparator;
+
 /**
  * An entity class for binding the result of {@link java.sql.DatabaseMetaData#getTypeInfo() getTypeInfo()}.
  *
@@ -42,6 +44,8 @@ public class TypeInfo
         extends AbstractMetadataType {
 
     private static final long serialVersionUID = -3964147654019495313L;
+
+    public static final Comparator<TypeInfo> COMPARING_DATA_TYPE = Comparator.comparingInt(TypeInfo::getDataType);
 
     public static final String COLUMN_NAME_NULLABLE = "nullable";
 

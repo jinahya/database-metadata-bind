@@ -35,6 +35,8 @@ class MemoryHsqlTest extends MemoryTest {
 
     private static final String DRIVER_NAME = "org.hsqldb.jdbc.JDBCDriver";
 
+    static final String DATABASE_PRODUCT_NAME = "HSQL Database Engine";
+
     private static final Class<?> DRIVER_CLASS;
 
     static {

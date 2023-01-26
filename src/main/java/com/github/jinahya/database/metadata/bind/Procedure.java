@@ -29,6 +29,7 @@ import lombok.experimental.SuperBuilder;
 
 import java.sql.DatabaseMetaData;
 import java.sql.SQLException;
+import java.util.Comparator;
 import java.util.List;
 import java.util.Objects;
 
@@ -49,10 +50,17 @@ public class Procedure
         extends AbstractMetadataType {
 
     private static final long serialVersionUID = -6262056388403934829L;
+    
+    public static final Comparator<Procedure> COMPARING_PROCEDURE_CAT_PROCEDURE_SCHEM_PROCEDURE_NAME_SPECIFIC_NAME
+            = Comparator.comparing(Procedure::getProcedureCat, Comparator.nullsFirst(Comparator.naturalOrder()))
+            .thenComparing(Procedure::getProcedureSchem, Comparator.nullsFirst(Comparator.naturalOrder()))
+            .thenComparing(Procedure::getProcedureName)
+            .thenComparing(Procedure::getSpecificName);
 
     public List<ProcedureColumn> getProcedureColumns(final Context context, final String columnNamePattern)
             throws SQLException {
         Objects.requireNonNull(context, "context is null");
+        Objects.requireNonNull(columnNamePattern, "columnNamePattern is null");
         return context.getProcedureColumns(getProcedureCat(), getProcedureSchem(), getProcedureName(),
                                            columnNamePattern);
     }

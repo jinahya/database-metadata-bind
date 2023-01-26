@@ -28,6 +28,7 @@ import lombok.ToString;
 import lombok.experimental.SuperBuilder;
 
 import java.sql.SQLException;
+import java.util.Comparator;
 import java.util.List;
 import java.util.Objects;
 
@@ -54,6 +55,10 @@ public class Schema
         extends AbstractMetadataType {
 
     private static final long serialVersionUID = 7457236468401244963L;
+
+    public static final Comparator<Schema> COMPARING_TABLE_CATALOG_TABLE_SCHEM =
+            Comparator.comparing(Schema::getTableCatalog, Comparator.nullsFirst(Comparator.naturalOrder()))
+                    .thenComparing(Schema::getTableSchem, Comparator.nullsFirst(Comparator.naturalOrder()));
 
     public static final String COLUMN_LABEL_TABLE_CATALOG = "TABLE_CATALOG";
 

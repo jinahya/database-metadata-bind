@@ -28,6 +28,7 @@ import lombok.ToString;
 import lombok.experimental.SuperBuilder;
 
 import java.sql.DatabaseMetaData;
+import java.util.Comparator;
 
 /**
  * A class for binding the result of
@@ -44,6 +45,12 @@ public class CrossReference
         extends AbstractMetadataType {
 
     private static final long serialVersionUID = -5343386346721125961L;
+
+    public static final Comparator<CrossReference> COMPARING_FKTABLE_CAT_FKTABLE_SCHEM_FKTABLE_NAME_KEY_SEQ =
+            Comparator.comparing(CrossReference::getFktableCat, Comparator.nullsFirst(Comparator.naturalOrder()))
+                    .thenComparing(CrossReference::getFktableSchem, Comparator.nullsFirst(Comparator.naturalOrder()))
+                    .thenComparing(CrossReference::getFktableName, Comparator.nullsFirst(Comparator.naturalOrder()))
+                    .thenComparingInt(CrossReference::getKeySeq);
 
     public static final String COLUMN_LABEL_UPDATE_RULE = "UPDATE_RULE";
 

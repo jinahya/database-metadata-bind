@@ -30,7 +30,9 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
@@ -84,30 +86,32 @@ public class Context {
      */
     private <T extends MetadataType> T bind(final ResultSet results, final Class<T> type, final T instance)
             throws SQLException {
-        final Set<String> resultSetLabels = Utils.getLabels(results);
-        for (final Entry<Field, ColumnLabel> labeledField : getLabeledFields(type).entrySet()) {
-            final Field field = labeledField.getKey();
-            final ColumnLabel label = labeledField.getValue();
-            if (!resultSetLabels.remove(label.value())) {
-                log.warning(() -> String.format("unknown label; %1$s on %2$s", label, field));
+        final Set<String> resultLabels = Utils.getLabels(results);
+        final Map<Field, ColumnLabel> fieldLabels = new HashMap<>(getLabeledFields(type));
+        for (final Iterator<Entry<Field, ColumnLabel>> i = fieldLabels.entrySet().iterator(); i.hasNext(); ) {
+            final Entry<Field, ColumnLabel> entry = i.next();
+            final Field field = entry.getKey();
+            final ColumnLabel fieldLabel = entry.getValue();
+            if (!resultLabels.remove(fieldLabel.value())) {
+                log.warning(() -> String.format("unknown fieldLabel; %1$s on %2$s", fieldLabel, field));
                 continue;
             }
-            if (field.isAnnotationPresent(NotUsedBySpecification.class)) {
-                continue;
-            }
-            if (field.isAnnotationPresent(Reserved.class)) {
+            if (field.isAnnotationPresent(NotUsedBySpecification.class) || field.isAnnotationPresent(Reserved.class)) {
+                i.remove();
                 continue;
             }
             try {
-                Utils.setFieldValue(field, instance, results, label.value());
+                Utils.setFieldValue(field, instance, results, fieldLabel.value());
             } catch (final ReflectiveOperationException roe) {
                 log.log(Level.SEVERE, String.format("failed to set %1$s", field), roe);
             }
+            i.remove();
         }
-        for (final String label : resultSetLabels) {
-            final Object value = results.getObject(label);
-            instance.getUnmappedValues().put(label, value);
+        for (final String resultLabel : resultLabels) {
+            final Object object = results.getObject(resultLabel);
+            instance.getUnmappedValues().put(resultLabel, object);
         }
+        assert fieldLabels.isEmpty();
         return instance;
     }
 
@@ -1371,7 +1375,9 @@ public class Context {
 
     private Map<Field, ColumnLabel> getLabeledFields(final Class<?> clazz) {
         Objects.requireNonNull(clazz, "clazz is null");
-        return classesAndLabeledFields.computeIfAbsent(clazz, c -> Utils.getFieldsAnnotatedWith(c, ColumnLabel.class));
+        return Collections.unmodifiableMap(
+                classesAndLabeledFields.computeIfAbsent(clazz, c -> Utils.getFieldsAnnotatedWith(c, ColumnLabel.class))
+        );
     }
 
     final DatabaseMetaData databaseMetaData;

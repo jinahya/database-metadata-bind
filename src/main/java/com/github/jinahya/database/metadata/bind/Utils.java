@@ -108,6 +108,9 @@ final class Utils {
         return labelsAndIndices;
     }
 
+    @SuppressWarnings({
+            "java:S1874" // isAccessible
+    })
     static void setFieldValue(final Field field, final Object obj, final ResultSet results, final String label)
             throws SQLException, ReflectiveOperationException {
         Objects.requireNonNull(field, "field is null");

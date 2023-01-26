@@ -28,6 +28,7 @@ import lombok.ToString;
 import lombok.experimental.SuperBuilder;
 
 import java.sql.DatabaseMetaData;
+import java.util.Comparator;
 
 /**
  * A class for binding results of {@link DatabaseMetaData#getFunctionColumns(String, String, String, String)} method.
@@ -45,6 +46,12 @@ public class FunctionColumn
         extends AbstractMetadataType {
 
     private static final long serialVersionUID = -7445156446214062680L;
+    
+    public static final Comparator<FunctionColumn> COMPARING_FUNCTION_CAT_FUNCTION_SCHEM_FUNCTION_NAME_SPECIFIC_NAME
+            = Comparator.comparing(FunctionColumn::getFunctionCat, Comparator.nullsFirst(Comparator.naturalOrder()))
+            .thenComparing(FunctionColumn::getFunctionSchem, Comparator.nullsFirst(Comparator.naturalOrder()))
+            .thenComparing(FunctionColumn::getFunctionName, Comparator.nullsFirst(Comparator.naturalOrder()))
+            .thenComparing(FunctionColumn::getSpecificName, Comparator.nullsFirst(Comparator.naturalOrder()));
 
     public static final String COLUMN_LABEL_FUNCTION_CAT = "FUNCTION_CAT";
 
