@@ -22,19 +22,28 @@ package com.github.jinahya.database.metadata.bind;
 
 import lombok.AccessLevel;
 import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.RequiredArgsConstructor;
 import lombok.experimental.SuperBuilder;
 
-import java.io.Serializable;
-
 @Data
-@NoArgsConstructor(access = AccessLevel.PROTECTED)
+@RequiredArgsConstructor(access = AccessLevel.PRIVATE)
 @SuperBuilder(toBuilder = true)
-public class TypeId implements Serializable {
+public final class TypeId implements MetadataTypeId {
 
-    private static final long serialVersionUID = -3439638919662288674L;
+    private static final long serialVersionUID = 5548844214174261338L;
 
-    private SchemaId schemaId;
+    public static TypeId of(final SchemaId schemaId, final String typeName) {
+        return builder()
+                .schemaId(schemaId)
+                .typeName(typeName)
+                .build();
+    }
 
-    private String name;
+    public static TypeId of(final String typeCat, final String typeSchem, final String typeName) {
+        return of(SchemaId.of(typeCat, typeSchem), typeName);
+    }
+
+    private final SchemaId schemaId;
+
+    private final String typeName;
 }

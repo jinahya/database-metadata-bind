@@ -50,14 +50,14 @@ public class SuperType
     public TypeId getTypeId() {
         return TypeId.builder()
                 .schemaId(SchemaId.of(getTypeCat(), getSupertypeSchem()))
-                .name(getTypeName())
+                .typeName(getTypeName())
                 .build();
     }
 
     public TypeId getSupertypeId() {
         return TypeId.builder()
                 .schemaId(SchemaId.of(getSupertypeCat(), getSupertypeSchem()))
-                .name(getSupertypeName())
+                .typeName(getSupertypeName())
                 .build();
     }
 

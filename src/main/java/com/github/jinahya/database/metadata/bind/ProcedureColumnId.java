@@ -22,17 +22,17 @@ package com.github.jinahya.database.metadata.bind;
 
 import lombok.AccessLevel;
 import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.RequiredArgsConstructor;
 import lombok.experimental.SuperBuilder;
 
 @Data
-@NoArgsConstructor(access = AccessLevel.PROTECTED)
+@RequiredArgsConstructor(access = AccessLevel.PRIVATE)
 @SuperBuilder(toBuilder = true)
-public class ProcedureColumnId implements MetadataTypeId {
+public final class ProcedureColumnId implements MetadataTypeId {
 
-    private static final long serialVersionUID = -2980427224003927222L;
+    private static final long serialVersionUID = 6257269625612307524L;
 
-    private ProcedureId procedureId;
+    private final ProcedureId procedureId;
 
-    private String columnName;
+    private final String columnName;
 }

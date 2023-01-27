@@ -22,15 +22,15 @@ package com.github.jinahya.database.metadata.bind;
 
 import lombok.AccessLevel;
 import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.RequiredArgsConstructor;
 import lombok.experimental.SuperBuilder;
 
 @Data
-@NoArgsConstructor(access = AccessLevel.PROTECTED)
+@RequiredArgsConstructor(access = AccessLevel.PRIVATE)
 @SuperBuilder(toBuilder = true)
-public class CatalogId implements MetadataTypeId {
+public final class CatalogId implements MetadataTypeId {
 
-    private static final long serialVersionUID = 5105478797272469262L;
+    private static final long serialVersionUID = 2793098695036855151L;
 
     static CatalogId of(final String tableCat) {
         return builder()
@@ -38,5 +38,5 @@ public class CatalogId implements MetadataTypeId {
                 .build();
     }
 
-    private String tableCat;
+    private final String tableCat;
 }

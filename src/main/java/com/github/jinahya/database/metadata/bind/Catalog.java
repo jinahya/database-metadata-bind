@@ -28,6 +28,7 @@ import lombok.ToString;
 import lombok.experimental.SuperBuilder;
 
 import java.util.Comparator;
+import java.util.Optional;
 import java.util.function.Consumer;
 
 /**
@@ -66,6 +67,10 @@ public class Catalog
         return CatalogId.builder()
                 .tableCat(getTableCat())
                 .build();
+    }
+
+    String getTableCatNonNull() {
+        return Optional.ofNullable(getTableCat()).orElse(Catalog.COLUMN_VALUE_TABLE_CAT_EMPTY);
     }
 
     @ColumnLabel(COLUMN_LABEL_TABLE_CAT)

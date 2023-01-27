@@ -22,17 +22,17 @@ package com.github.jinahya.database.metadata.bind;
 
 import lombok.AccessLevel;
 import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.RequiredArgsConstructor;
 import lombok.experimental.SuperBuilder;
 
 @Data
-@NoArgsConstructor(access = AccessLevel.PROTECTED)
+@RequiredArgsConstructor(access = AccessLevel.PRIVATE)
 @SuperBuilder(toBuilder = true)
-public class FunctionColumnId implements MetadataTypeId {
+public final class FunctionColumnId implements MetadataTypeId {
 
-    private static final long serialVersionUID = 6462992518255145268L;
+    private static final long serialVersionUID = 7221973324274278465L;
 
-    private FunctionId functionId;
+    private final FunctionId functionId;
 
-    private String columnName;
+    private final String columnName;
 }

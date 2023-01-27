@@ -73,10 +73,7 @@ public class UDT
     }
 
     public TypeId getTypeId() {
-        return TypeId.builder()
-                .schemaId(SchemaId.of(getTypeCat(), getTypeSchem()))
-                .name(getTypeName())
-                .build();
+        return TypeId.of(getTypeCat(), getTypeSchem(), getTypeName());
     }
 
     @NullableBySpecification
