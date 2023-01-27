@@ -46,18 +46,10 @@ public abstract class TableKey
 
     private static final long serialVersionUID = 6713872409315471232L;
 
-//    static <T extends TableKey> Comparator<T> comparingFktableCatFktableSchemFktableNameKeySeq() {
-//        return Comparator.<T, String>comparing(TableKey::getFktableCat,
-//                                               Comparator.nullsFirst(Comparator.naturalOrder()))
-//                .thenComparing(TableKey::getFktableSchem, Comparator.nullsFirst(Comparator.naturalOrder()))
-//                .thenComparing(TableKey::getFktableName, Comparator.nullsFirst(Comparator.naturalOrder()))
-//                .thenComparingInt(TableKey::getKeySeq);
-//    }
-
     public static final Comparator<TableKey> COMPARING_FKTABLE_CAT_FKTABLE_SCHEM_FKTABLE_NAME_KEY_SEQ =
             Comparator.comparing(TableKey::getFktableCat, Comparator.nullsFirst(Comparator.naturalOrder()))
                     .thenComparing(TableKey::getFktableSchem, Comparator.nullsFirst(Comparator.naturalOrder()))
-                    .thenComparing(TableKey::getFktableName, Comparator.nullsFirst(Comparator.naturalOrder()))
+                    .thenComparing(TableKey::getFktableName)
                     .thenComparingInt(TableKey::getKeySeq);
 
     @NullableBySpecification
