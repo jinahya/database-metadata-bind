@@ -23,17 +23,11 @@ package com.github.jinahya.database.metadata.bind;
 import lombok.AccessLevel;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
-import lombok.Getter;
 import lombok.NoArgsConstructor;
-import lombok.Setter;
 import lombok.ToString;
 import lombok.experimental.SuperBuilder;
 
-import java.sql.SQLException;
 import java.util.Comparator;
-import java.util.List;
-import java.util.Objects;
-import java.util.Optional;
 
 /**
  * A class for binding a result of {@link java.sql.DatabaseMetaData#getSchemas(java.lang.String, java.lang.String)}
@@ -72,92 +66,6 @@ public class Schema
     public SchemaId getSchemaId() {
         return SchemaId.of(getTableCatalog(), getTableSchem());
     }
-
-    @Deprecated
-    List<Attribute> getAttributes(final Context context, final String typeNamePattern,
-                                  final String attributeNamePattern)
-            throws SQLException {
-        Objects.requireNonNull(context, "context is null");
-        return context.getAttributes(
-                getTableCatalogNonNull(),
-                getTableSchem(),
-                typeNamePattern,
-                attributeNamePattern
-        );
-    }
-
-    public List<Function> getFunctions(final Context context, final String functionNamePattern)
-            throws SQLException {
-        return catalog_().getFunctions(context, getTableSchem(), functionNamePattern);
-    }
-
-    public List<Procedure> getProcedures(final Context context, final String procedureNamePattern)
-            throws SQLException {
-        Objects.requireNonNull(context, "context is null");
-        return catalog_().getProcedures(context, getTableSchem(), procedureNamePattern);
-    }
-
-    public List<SuperTable> getSuperTables(final Context context, final String tableNamePattern) throws SQLException {
-        return catalog_().getSuperTables(context, getTableSchem(), tableNamePattern);
-    }
-
-    public List<SuperType> getSuperTypes(final Context context, final String typeNamePattern)
-            throws SQLException {
-        return catalog_().getSuperTypes(context, getTableSchem(), typeNamePattern);
-    }
-
-    public List<TablePrivilege> getTablePrivileges(final Context context, final String tableNamePattern)
-            throws SQLException {
-        Objects.requireNonNull(context, "context is null");
-        return context.getTablePrivileges(
-                getTableCatalogNonNull(),
-                getTableSchem(),
-                tableNamePattern
-        );
-    }
-
-    public List<Table> getTables(final Context context, final String tableNamePattern, final String[] types)
-            throws SQLException {
-        Objects.requireNonNull(context, "context is null");
-        return context.getTables(
-                getTableCatalogNonNull(),
-                getTableSchem(),
-                tableNamePattern, types
-        );
-    }
-
-    public List<UDT> getUDTs(final Context context, final String typeNamePattern, final int[] types)
-            throws SQLException {
-        return catalog_().getUDTs(context, getTableSchem(), typeNamePattern, types);
-    }
-
-    private Catalog catalog_() {
-        if (catalog_ == null) {
-            catalog_ = Catalog.builder()
-                    .tableCat(getTableCatalogNonNull())
-                    .build();
-        }
-        return catalog_;
-    }
-
-    public String getTableCatalog() {
-        return tableCatalog;
-    }
-
-    public void setTableCatalog(final String tableCatalog) {
-        this.tableCatalog = tableCatalog;
-        catalog_ = null;
-    }
-
-    String getTableCatalogNonNull() {
-        return Optional.ofNullable(getTableCatalog()).orElse(Catalog.COLUMN_VALUE_TABLE_CAT_EMPTY);
-    }
-
-    @Setter(AccessLevel.NONE)
-    @Getter(AccessLevel.NONE)
-    @EqualsAndHashCode.Exclude
-    @ToString.Exclude
-    private transient Catalog catalog_;
 
     @NullableBySpecification
     @ColumnLabel(COLUMN_LABEL_TABLE_CATALOG)
