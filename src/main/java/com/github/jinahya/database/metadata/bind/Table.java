@@ -27,7 +27,10 @@ import lombok.NoArgsConstructor;
 import lombok.ToString;
 import lombok.experimental.SuperBuilder;
 
+import java.sql.SQLException;
 import java.util.Comparator;
+import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
 
 /**
@@ -106,6 +109,29 @@ public class Table
 
     public TableId getTableId() {
         return TableId.of(getTableCat(), getTableSchem(), getTableName());
+    }
+
+    public List<BestRowIdentifier> getBestRowIdentifier(final Context context, final int scope, final boolean nullable)
+            throws SQLException {
+        Objects.requireNonNull(context, "context is null");
+        return context.getBestRowIdentifier(
+                getTableCatNonNull(),
+                getTableSchemNonNull(),
+                getTableName(),
+                scope,
+                nullable
+        );
+    }
+
+    public List<ColumnPrivilege> getColumnPrivileges(final Context context, final String columnNamePattern)
+            throws SQLException {
+        Objects.requireNonNull(context, "context is null");
+        return context.getColumnPrivileges(
+                getTableCatNonNull(),
+                getTableSchemNonNull(),
+                getTableName(),
+                columnNamePattern
+        );
     }
 
     String getTableCatNonNull() {

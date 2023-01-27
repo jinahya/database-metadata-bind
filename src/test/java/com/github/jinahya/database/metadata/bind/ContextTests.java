@@ -706,6 +706,22 @@ final class ContextTests {
         Objects.requireNonNull(context, "context is null");
         Objects.requireNonNull(table, "table is null");
         common(table);
+        try {
+            for (final var scope : BestRowIdentifier.scopes()) {
+                for (final boolean nullable : new boolean[] {true, false}) {
+                    final var bestRowIdentifier = table.getBestRowIdentifier(context, scope, nullable);
+                    bestRowIdentifier(context, bestRowIdentifier);
+                }
+            }
+        } catch (final SQLException sqle) {
+            thrown("failed; getBestRowIdentifier", sqle);
+        }
+        try {
+            final var columnPrivileges = table.getColumnPrivileges(context, "%");
+            columnPrivileges(context, columnPrivileges);
+        } catch (final SQLException sqle) {
+            thrown("failed; getColumnPrivileges", sqle);
+        }
         final var columns = context.getColumns(
                 table.getTableCatNonNull(),
                 table.getTableSchemNonNull(),
