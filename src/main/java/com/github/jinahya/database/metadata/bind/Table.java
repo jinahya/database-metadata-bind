@@ -134,6 +134,24 @@ public class Table
         );
     }
 
+    public List<ExportedKey> getExportedKeys(final Context context) throws SQLException {
+        Objects.requireNonNull(context, "context is null");
+        return context.getExportedKeys(
+                getTableCatNonNull(),
+                getTableSchemNonNull(),
+                getTableName()
+        );
+    }
+
+    public List<ImportedKey> getImportedKeys(final Context context) throws SQLException {
+        Objects.requireNonNull(context, "context is null");
+        return context.getImportedKeys(
+                getTableCatNonNull(),
+                getTableSchemNonNull(),
+                getTableName()
+        );
+    }
+
     String getTableCatNonNull() {
         return Optional.ofNullable(getTableCat()).orElse(Catalog.COLUMN_VALUE_TABLE_CAT_EMPTY);
     }
