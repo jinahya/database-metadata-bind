@@ -54,6 +54,19 @@ public class ProcedureColumn
             .thenComparing(ProcedureColumn::getProcedureName)
             .thenComparing(ProcedureColumn::getSpecificName);
 
+    public ProcedureColumnId getProcedureColumnId() {
+        return ProcedureColumnId.builder()
+                .procedureId(
+                        ProcedureId.builder()
+                                .schemaId(
+                                        SchemaId.builder()
+                                                .catalogId(CatalogId.builder().tableCat(getProcedureCat()).build())
+                                                .tableSchem(getProcedureSchem()).build())
+                                .specificName(getSpecificName()).build())
+                .columnName(getColumnName())
+                .build();
+    }
+
     @NullableBySpecification
     @ColumnLabel("PROCEDURE_CAT")
     private String procedureCat;

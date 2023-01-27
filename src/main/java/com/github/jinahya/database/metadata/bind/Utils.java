@@ -154,7 +154,8 @@ final class Utils {
         final Object value = results.getObject(label);
         assert value != null ||
                (field.isAnnotationPresent(NullableBySpecification.class) ||
-                field.isAnnotationPresent(NullableByVendor.class));
+                field.isAnnotationPresent(NullableByVendor.class))
+                : String.format("null value; label: %1$s, field: %2$s", label, field);
         try {
             field.set(obj, value);
             return;

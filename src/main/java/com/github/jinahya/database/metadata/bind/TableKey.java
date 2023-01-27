@@ -52,6 +52,14 @@ public abstract class TableKey
                     .thenComparing(TableKey::getFktableName)
                     .thenComparingInt(TableKey::getKeySeq);
 
+    public TableId getPktableId() {
+        return TableId.of(getPktableCat(), getPktableSchem(), getPktableName());
+    }
+
+    public TableId getFktableId() {
+        return TableId.of(getFktableCat(), getFktableSchem(), getFktableName());
+    }
+
     @NullableBySpecification
     @ColumnLabel("PKTABLE_CAT")
     private String pktableCat;

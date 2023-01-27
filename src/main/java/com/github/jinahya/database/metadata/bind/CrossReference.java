@@ -56,6 +56,14 @@ public class CrossReference
 
     public static final String ATTRIBUTE_NAME_UPDATE_RULE = "updateRule";
 
+    public ColumnId getPkcolumnId() {
+        return ColumnId.of(getPktableCat(), getPktableSchem(), getPktableName(), getPkcolumnName());
+    }
+
+    public ColumnId getFkcolumnId() {
+        return ColumnId.of(getFktableCat(), getFktableSchem(), getFktableName(), getFkcolumnName());
+    }
+
     @NullableBySpecification
     @ColumnLabel("PKTABLE_CAT")
     private String pktableCat;

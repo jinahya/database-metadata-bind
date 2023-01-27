@@ -22,10 +22,11 @@ package com.github.jinahya.database.metadata.bind;
 
 import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.Disabled;
+import org.testcontainers.containers.Db2Container;
 import org.testcontainers.containers.JdbcDatabaseContainer;
-import org.testcontainers.containers.OracleContainer;
 import org.testcontainers.junit.jupiter.Container;
 import org.testcontainers.junit.jupiter.Testcontainers;
+import org.testcontainers.utility.DockerImageName;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
@@ -34,18 +35,18 @@ import java.sql.SQLException;
 @Disabled
 @Testcontainers
 @Slf4j
-class TestcontainersOracleXeIT
+class TestcontainersDb2IT
         extends TestContainersIT {
 
     @Container
-    private static final JdbcDatabaseContainer<OracleContainer> CONTAINER;
+    private static final JdbcDatabaseContainer<?> CONTAINER;
 
     static {
-        // https://www.testcontainers.org/modules/databases/oraclexe/
-        CONTAINER = new OracleContainer("gvenzl/oracle-xe:latest-faststart")
-                .withDatabaseName("testDB")
-                .withUsername("testUser")
-                .withPassword("testPassword");
+        // https://www.testcontainers.org/modules/databases/db2/
+        final var NAME = DockerImageName.parse("ibmcom/db2:latest");
+        CONTAINER = new Db2Container(NAME)
+                .acceptLicense();
+        ;
     }
 
     @Override

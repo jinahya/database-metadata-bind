@@ -23,7 +23,9 @@ package com.github.jinahya.database.metadata.bind;
 import lombok.AccessLevel;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 import lombok.ToString;
 import lombok.experimental.SuperBuilder;
 
@@ -31,6 +33,7 @@ import java.sql.SQLException;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Objects;
+import java.util.Optional;
 
 /**
  * A class for binding results of
@@ -106,6 +109,10 @@ public class Table
      */
     public static final String ATTRIBUTE_NAME_TABLE_TYPE = "tableName";
 
+    public TableId getTableId() {
+        return TableId.of(getTableCat(), getTableSchem(), getTableName());
+    }
+
     /**
      * Retrieves a description of this table's optimal set of columns that uniquely identifies a row.
      *
@@ -114,19 +121,18 @@ public class Table
      * @param nullable a value for the {@code nullable} parameter.
      * @return a list of bound values.
      * @throws SQLException if a database error occurs.
-     * @see java.sql.DatabaseMetaData#getBestRowIdentifier(String, String, String, int, boolean)
      * @see Context#getBestRowIdentifier(String, String, String, int, boolean)
      */
     public List<BestRowIdentifier> getBestRowIdentifier(final Context context, final int scope, final boolean nullable)
             throws SQLException {
         Objects.requireNonNull(context, "context is null");
-        return context.getBestRowIdentifier(getTableCat(), getTableSchem(), getTableName(), scope, nullable);
-    }
-
-    public List<ColumnPrivilege> getColumnPrivileges(final Context context, final String columnNamePattern)
-            throws SQLException {
-        Objects.requireNonNull(context, "context is null");
-        return context.getColumnPrivileges(getTableCat(), getTableSchem(), getTableName(), columnNamePattern);
+        return context.getBestRowIdentifier(
+                getTableCatNonNull(),
+                getTableSchemNonNull(),
+                getTableName(),
+                scope,
+                nullable
+        );
     }
 
     /**
@@ -139,59 +145,142 @@ public class Table
      */
     public List<Column> getColumns(final Context context, final String columnNamePattern) throws SQLException {
         Objects.requireNonNull(context, "context is null");
-        return context.getColumns(getTableCat(), getTableSchem(), getTableName(), columnNamePattern);
+        return context.getColumns(
+                getTableCatNonNull(),
+                getTableSchemNonNull(),
+                getTableName(),
+                columnNamePattern
+        );
     }
 
-    public List<CrossReference> getCrossReference(final Context context, String foreignCatalog, String foreignSchema,
-                                                  String foreignTable)
-            throws SQLException {
-        Objects.requireNonNull(context, "context is null");
-        return context.getCrossReference(getTableCat(), getTableSchem(), getTableName(), foreignCatalog, foreignSchema,
-                                         foreignTable);
-    }
-
-    public List<CrossReference> getCrossReference(final Context context, final Table foreignTable) throws SQLException {
-        Objects.requireNonNull(foreignTable, "foreignTable is null");
-        return getCrossReference(context, foreignTable.getTableCat(), foreignTable.getTableSchem(),
-                                 foreignTable.getTableName());
-    }
+//    public List<CrossReference> getCrossReference(final Context context, String foreignCatalog, String foreignSchema,
+//                                                  String foreignTable)
+//            throws SQLException {
+//        Objects.requireNonNull(context, "context is null");
+//        return context.getCrossReference(
+//                getTableCatNonNull(),
+//                getTableSchemNonNull(),
+//                getTableName(),
+//                foreignCatalog,
+//                foreignSchema,
+//                foreignTable);
+//    }
+//
+//    public List<CrossReference> getCrossReference(final Context context, final Table foreignTable) throws SQLException {
+//        Objects.requireNonNull(foreignTable, "foreignTable is null");
+//        return getCrossReference(context, foreignTable.getTableCat(), foreignTable.getTableSchem(),
+//                                 foreignTable.getTableName());
+//    }
 
     public List<ExportedKey> getExportedKeys(final Context context) throws SQLException {
         Objects.requireNonNull(context, "context is null");
-        return context.getExportedKeys(getTableCat(), getTableSchem(), getTableName());
+        return context.getExportedKeys(
+                getTableCatNonNull(),
+                getTableSchemNonNull(),
+                getTableName()
+        );
     }
 
     public List<ImportedKey> getImportedKeys(final Context context) throws SQLException {
         Objects.requireNonNull(context, "context is null");
-        return context.getImportedKeys(getTableCat(), getTableSchem(), getTableName());
+        return context.getImportedKeys(
+                getTableCatNonNull(),
+                getTableSchemNonNull(),
+                getTableName()
+        );
     }
 
-    public List<IndexInfo> getIndexInfos(final Context context, final boolean unique, final boolean approximate)
+    public List<IndexInfo> getIndexInfo(final Context context, final boolean unique, final boolean approximate)
             throws SQLException {
         Objects.requireNonNull(context, "context is null");
-        return context.getIndexInfo(getTableCat(), getTableSchem(), getTableName(), unique, approximate);
+        return context.getIndexInfo(
+                getTableCatNonNull(),
+                getTableSchemNonNull(),
+                getTableName(),
+                unique,
+                approximate
+        );
     }
 
     public List<PrimaryKey> getPrimaryKeys(final Context context) throws SQLException {
         Objects.requireNonNull(context, "context is null");
-        return context.getPrimaryKeys(getTableCat(), getTableSchem(), getTableName());
+        return context.getPrimaryKeys(
+                getTableCatNonNull(),
+                getTableSchemNonNull(),
+                getTableName()
+        );
     }
 
     public List<PseudoColumn> getPseudoColumns(final Context context, final String columnNamePattern)
             throws SQLException {
         Objects.requireNonNull(context, "context is null");
-        return context.getPseudoColumns(getTableCat(), getTableSchem(), getTableName(), columnNamePattern);
+        return context.getPseudoColumns(
+                getTableCatNonNull(),
+                getTableSchemNonNull(),
+                getTableName(),
+                columnNamePattern
+        );
     }
+
+//    public List<SuperTable> getSuperTables(final Context context) throws SQLException {
+//        return schema_().getSuperTables(context, getTableName());
+//    }
 
     public List<TablePrivilege> getTablePrivileges(final Context context) throws SQLException {
         Objects.requireNonNull(context, "context is null");
-        return context.getTablePrivileges(getTableCat(), getTableSchem(), getTableName());
+        return schema_().getTablePrivileges(context, getTableName());
     }
 
     public List<VersionColumn> getVersionColumns(final Context context) throws SQLException {
         Objects.requireNonNull(context, "context is null");
-        return context.getVersionColumns(getTableCat(), getTableSchem(), getTableName());
+        return context.getVersionColumns(
+                getTableCatNonNull(),
+                getTableSchemNonNull(),
+                getTableName()
+        );
     }
+
+    private Schema schema_() {
+        if (schema_ == null) {
+            schema_ = Schema.builder()
+                    .tableCatalog(getTableCatNonNull())
+                    .tableSchem(getTableSchemNonNull())
+                    .build();
+        }
+        return schema_;
+    }
+
+    public String getTableCat() {
+        return tableCat;
+    }
+
+    String getTableCatNonNull() {
+        return Optional.ofNullable(getTableCat()).orElse(Catalog.COLUMN_VALUE_TABLE_CAT_EMPTY);
+    }
+
+    public void setTableCat(final String tableCat) {
+        this.tableCat = tableCat;
+        schema_ = null;
+    }
+
+    public String getTableSchem() {
+        return tableSchem;
+    }
+
+    String getTableSchemNonNull() {
+        return Optional.ofNullable(getTableSchem()).orElse(Schema.COLUMN_VALUE_TABLE_SCHEM_EMPTY);
+    }
+
+    public void setTableSchem(final String tableSchem) {
+        this.tableSchem = tableSchem;
+        schema_ = null;
+    }
+
+    @Setter(AccessLevel.NONE)
+    @Getter(AccessLevel.NONE)
+    @EqualsAndHashCode.Exclude
+    @ToString.Exclude
+    private transient Schema schema_;
 
     @NullableBySpecification
     @ColumnLabel(COLUMN_LABEL_TABLE_CAT)
@@ -204,6 +293,7 @@ public class Table
     @ColumnLabel(COLUMN_LABEL_TABLE_NAME)
     private String tableName;
 
+    @NullableByVendor("MariaDB")
     @ColumnLabel(COLUMN_LABEL_TABLE_TYPE)
     private String tableType;
 

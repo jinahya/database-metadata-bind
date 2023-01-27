@@ -57,6 +57,13 @@ public class Procedure
             .thenComparing(Procedure::getProcedureName)
             .thenComparing(Procedure::getSpecificName);
 
+    public ProcedureId getProcedureId() {
+        return ProcedureId.builder()
+                .schemaId(SchemaId.of(getProcedureCat(), getProcedureSchem()))
+                .specificName(getSpecificName())
+                .build();
+    }
+
     public List<ProcedureColumn> getProcedureColumns(final Context context, final String columnNamePattern)
             throws SQLException {
         Objects.requireNonNull(context, "context is null");

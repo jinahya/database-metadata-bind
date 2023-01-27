@@ -34,6 +34,7 @@ import java.sql.DatabaseMetaData;
  * {@link DatabaseMetaData#getSuperTypes(java.lang.String, java.lang.String, java.lang.String)} method.
  *
  * @author Jin Kwon &lt;jinahya_at_gmail.com&gt;
+ * @see Context#getSuperTypes(String, String, String)
  */
 @ChildOf(Schema.class)
 @EqualsAndHashCode(callSuper = true)
@@ -45,6 +46,20 @@ public class SuperType
         extends AbstractMetadataType {
 
     private static final long serialVersionUID = 4603878785941565029L;
+
+    public TypeId getTypeId() {
+        return TypeId.builder()
+                .schemaId(SchemaId.of(getTypeCat(), getSupertypeSchem()))
+                .name(getTypeName())
+                .build();
+    }
+
+    public TypeId getSupertypeId() {
+        return TypeId.builder()
+                .schemaId(SchemaId.of(getSupertypeCat(), getSupertypeSchem()))
+                .name(getSupertypeName())
+                .build();
+    }
 
     @NullableBySpecification
     @ColumnLabel("TYPE_CAT")

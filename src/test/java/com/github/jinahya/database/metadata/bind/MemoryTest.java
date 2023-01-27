@@ -25,6 +25,7 @@ import org.junit.jupiter.api.Test;
 
 import java.sql.Connection;
 import java.sql.SQLException;
+import java.util.Optional;
 
 /**
  * An abstract test class for in-memory databases.
@@ -51,6 +52,21 @@ abstract class MemoryTest {
         try (var connection = connect()) {
             final var context = context(connection);
             ContextTests.test(context);
+        }
+    }
+
+    @Test
+    void tables() throws SQLException {
+        try (var connection = connect()) {
+            final var context = context(connection);
+            ContextTests.info(context);
+            final var tables = context.getTables(null, null, "%", null);
+            tables.stream().map(Table::getTableCat).distinct().forEach(
+                    tc -> log.debug("tableCat: {}", Optional.ofNullable(tc).map(v -> '\'' + v + '\'').orElse(null))
+            );
+            tables.stream().map(Table::getTableSchem).distinct().forEach(
+                    ts -> log.debug("tableSchem: {}", Optional.ofNullable(ts).map(v -> '\'' + v + '\'').orElse(null))
+            );
         }
     }
 }

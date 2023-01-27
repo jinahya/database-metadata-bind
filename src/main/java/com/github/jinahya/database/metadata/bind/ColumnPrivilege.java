@@ -28,13 +28,14 @@ import lombok.ToString;
 import lombok.experimental.SuperBuilder;
 
 import java.sql.DatabaseMetaData;
+import java.util.Comparator;
 
 /**
  * A class for binding results of {@link DatabaseMetaData#getColumnPrivileges(String, String, String, String)} method.
  *
  * @author Jin Kwon &lt;jinahya_at_gmail.com&gt;
  */
-@ChildOf(Column.class)
+@ChildOf(Table.class)
 @EqualsAndHashCode(callSuper = true)
 @ToString(callSuper = true)
 @Data
@@ -44,6 +45,9 @@ public class ColumnPrivilege
         extends AbstractMetadataType {
 
     private static final long serialVersionUID = 4384654744147773380L;
+
+    public static Comparator<ColumnPrivilege> COMPARING_COLUMN_NAME_PRIVILEGE
+            = Comparator.comparing(ColumnPrivilege::getColumnName).thenComparing(ColumnPrivilege::getPrivilege);
 
     @NullableBySpecification
     @ColumnLabel("TABLE_CAT")

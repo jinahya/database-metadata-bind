@@ -20,25 +20,21 @@ package com.github.jinahya.database.metadata.bind;
  * #L%
  */
 
-import lombok.extern.slf4j.Slf4j;
-import org.junit.jupiter.api.Disabled;
-import org.junit.jupiter.api.Test;
+import lombok.AccessLevel;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+import lombok.experimental.SuperBuilder;
 
-import java.lang.reflect.Field;
+import java.io.Serializable;
 
-/**
- * Test for {@code Utils}.
- *
- * @author Jin Kwon &lt;onacit at gmail.com&gt;
- */
-@Slf4j
-class UtilsTest {
+@Data
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
+@SuperBuilder(toBuilder = true)
+public class TypeId implements Serializable {
 
-    @Disabled
-    @Test
-    void printSqlTypes() throws ReflectiveOperationException {
-        final Field field = Utils.class.getDeclaredField("SQL_TYPES");
-        field.setAccessible(true);
-        log.debug("SQL_TYPES: {}", field.get(null));
-    }
+    private static final long serialVersionUID = -3439638919662288674L;
+
+    private SchemaId schemaId;
+
+    private String name;
 }

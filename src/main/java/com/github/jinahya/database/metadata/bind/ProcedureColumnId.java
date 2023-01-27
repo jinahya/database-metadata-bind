@@ -4,7 +4,7 @@ package com.github.jinahya.database.metadata.bind;
  * #%L
  * database-metadata-bind
  * %%
- * Copyright (C) 2011 - 2021 Jinahya, Inc.
+ * Copyright (C) 2011 - 2019 Jinahya, Inc.
  * %%
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -20,16 +20,19 @@ package com.github.jinahya.database.metadata.bind;
  * #L%
  */
 
-import org.junit.jupiter.api.Test;
+import lombok.AccessLevel;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+import lombok.experimental.SuperBuilder;
 
-import static org.assertj.core.api.Assertions.assertThat;
+@Data
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
+@SuperBuilder(toBuilder = true)
+public class ProcedureColumnId implements MetadataTypeId {
 
-class LangTest {
+    private static final long serialVersionUID = -2980427224003927222L;
 
-    @Test
-    void primitiveBoolean() {
-        final Object value = true;
-        assertThat(value).isInstanceOf(Boolean.class);
-        assertThat(Boolean.class.isInstance(value)).isTrue();
-    }
+    private ProcedureId procedureId;
+
+    private String columnName;
 }
