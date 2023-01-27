@@ -50,7 +50,7 @@ public class Procedure
         extends AbstractMetadataType {
 
     private static final long serialVersionUID = -6262056388403934829L;
-    
+
     public static final Comparator<Procedure> COMPARING_PROCEDURE_CAT_PROCEDURE_SCHEM_PROCEDURE_NAME_SPECIFIC_NAME
             = Comparator.comparing(Procedure::getProcedureCat, Comparator.nullsFirst(Comparator.naturalOrder()))
             .thenComparing(Procedure::getProcedureSchem, Comparator.nullsFirst(Comparator.naturalOrder()))
@@ -81,7 +81,7 @@ public class Procedure
     private String remarks;
 
     @ColumnLabel("PROCEDURE_TYPE")
-    private short procedureType;
+    private int procedureType;
 
     @ColumnLabel("SPECIFIC_NAME")
     private String specificName;

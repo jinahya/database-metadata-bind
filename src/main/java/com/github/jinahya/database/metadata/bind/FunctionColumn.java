@@ -46,7 +46,7 @@ public class FunctionColumn
         extends AbstractMetadataType {
 
     private static final long serialVersionUID = -7445156446214062680L;
-    
+
     public static final Comparator<FunctionColumn> COMPARING_FUNCTION_CAT_FUNCTION_SCHEM_FUNCTION_NAME_SPECIFIC_NAME
             = Comparator.comparing(FunctionColumn::getFunctionCat, Comparator.nullsFirst(Comparator.naturalOrder()))
             .thenComparing(FunctionColumn::getFunctionSchem, Comparator.nullsFirst(Comparator.naturalOrder()))

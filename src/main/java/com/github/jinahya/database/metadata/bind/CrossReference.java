@@ -75,7 +75,7 @@ public class CrossReference
     private String fktableCat;
 
     @NullableBySpecification
-    @ColumnLabel("FKTABLE_NAME")
+    @ColumnLabel("FKTABLE_SCHEM")
     private String fktableSchem;
 
     @ColumnLabel("FKTABLE_NAME")
@@ -84,7 +84,7 @@ public class CrossReference
     @ColumnLabel("FKCOLUMN_NAME")
     private String fkcolumnName;
 
-    @ColumnLabel("FKCOLUMN_NAME")
+    @ColumnLabel("KEY_SEQ")
     private int keySeq;
 
     @ColumnLabel("UPDATE_RULE")

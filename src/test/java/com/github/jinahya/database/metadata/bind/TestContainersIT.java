@@ -21,8 +21,22 @@ package com.github.jinahya.database.metadata.bind;
  */
 
 import lombok.extern.slf4j.Slf4j;
+import org.junit.jupiter.api.BeforeAll;
+
+import java.io.IOException;
+
+import static org.junit.jupiter.api.Assumptions.assumeTrue;
 
 @Slf4j
 abstract class TestContainersIT {
 
+    @BeforeAll
+    static void checkDocker() throws IOException, InterruptedException {
+        final var process = new ProcessBuilder()
+                .command("docker", "images")
+                .start();
+        final int exitValue = process.waitFor();
+        log.debug("exitValue: {}", exitValue);
+        assumeTrue(exitValue == 0);
+    }
 }

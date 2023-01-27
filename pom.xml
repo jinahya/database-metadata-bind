@@ -45,6 +45,7 @@
     <maven.compiler.testRelease>${maven.compiler.testTarget}</maven.compiler.testRelease>
     <doclint>none</doclint>
     <version.animal-sniffer>1.22</version.animal-sniffer>
+    <version.com.oracle.ojdbc>19.3.0.0</version.com.oracle.ojdbc>
     <version.lombok>1.18.24</version.lombok>
     <version.maven-failsafe>${version.maven-surefire}</version.maven-failsafe>
     <version.maven-surefire>3.0.0-M7</version.maven-surefire>
@@ -61,28 +62,10 @@
     <dependencies>
       <dependency>
         <groupId>com.oracle.database.jdbc</groupId>
-        <artifactId>ojdbc6</artifactId>
-        <version>${version.ojdbc6}</version>
-      </dependency>
-      <dependency>
-        <groupId>com.oracle.database.jdbc</groupId>
-        <artifactId>ojdbc8</artifactId>
-        <version>${version.ojdbc8}</version>
-      </dependency>
-      <dependency>
-        <groupId>com.oracle.database.jdbc</groupId>
-        <artifactId>ojdbc10</artifactId>
-        <version>${version.ojdbc10}</version>
-      </dependency>
-      <dependency>
-        <groupId>com.oracle.database.jdbc</groupId>
-        <artifactId>ojdbc11</artifactId>
-        <version>${version.ojdbc11}</version>
-      </dependency>
-      <dependency>
-        <groupId>org.postgresql</groupId>
-        <artifactId>postgresql</artifactId>
-        <version>42.5.1</version>
+        <artifactId>ojdbc-bom</artifactId>
+        <version>21.8.0.0</version>
+        <type>pom</type>
+        <scope>import</scope>
       </dependency>
       <dependency>
         <groupId>org.testcontainers</groupId>
@@ -113,9 +96,32 @@
       <scope>test</scope>
     </dependency>
     <dependency>
+      <groupId>com.microsoft.sqlserver</groupId>
+      <artifactId>mssql-jdbc</artifactId>
+      <version>11.2.3.jre17</version>
+      <scope>test</scope>
+    </dependency>
+    <dependency>
       <groupId>com.mysql</groupId>
       <artifactId>mysql-connector-j</artifactId>
       <version>${version.mysql-connector-j}</version>
+      <scope>test</scope>
+    </dependency>
+    <dependency>
+      <groupId>com.oracle.database.jdbc</groupId>
+      <artifactId>ojdbc11</artifactId>
+      <scope>test</scope>
+    </dependency>
+    <dependency>
+      <groupId>org.apache.commons</groupId>
+      <artifactId>commons-lang3</artifactId>
+      <version>3.12.0</version>
+      <scope>test</scope>
+    </dependency>
+    <dependency>
+      <groupId>org.apache.commons</groupId>
+      <artifactId>commons-text</artifactId>
+      <version>1.10.0</version>
       <scope>test</scope>
     </dependency>
     <dependency>
@@ -197,7 +203,17 @@
     </dependency>
     <dependency>
       <groupId>org.testcontainers</groupId>
+      <artifactId>mssqlserver</artifactId>
+      <scope>test</scope>
+    </dependency>
+    <dependency>
+      <groupId>org.testcontainers</groupId>
       <artifactId>mysql</artifactId>
+      <scope>test</scope>
+    </dependency>
+    <dependency>
+      <groupId>org.testcontainers</groupId>
+      <artifactId>oracle-xe</artifactId>
       <scope>test</scope>
     </dependency>
     <dependency>

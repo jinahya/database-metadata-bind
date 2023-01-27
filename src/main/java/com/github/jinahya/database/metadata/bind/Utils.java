@@ -32,6 +32,7 @@ import java.util.HashSet;
 import java.util.Map;
 import java.util.Objects;
 import java.util.Set;
+import java.util.logging.Level;
 
 @Log
 final class Utils {
@@ -109,7 +110,9 @@ final class Utils {
     }
 
     @SuppressWarnings({
-            "java:S1874" // isAccessible
+            "deprecation", // isAccessible
+            "java:S1874", // isAccessible
+            "java:S3011" // accessibility bypass
     })
     static void setFieldValue(final Field field, final Object obj, final ResultSet results, final String label)
             throws SQLException, ReflectiveOperationException {
@@ -120,20 +123,22 @@ final class Utils {
         assert field.isAccessible();
         final Class<?> fieldType = field.getType();
         if (fieldType.isPrimitive()) {
+            assert !field.isAnnotationPresent(NullableBySpecification.class);
+            assert !field.isAnnotationPresent(NullableByVendor.class);
             if (fieldType == boolean.class) {
                 field.setBoolean(obj, results.getBoolean(label));
                 return;
             } else if (fieldType == byte.class) {
-//                log.error("byte field found, fix me: {}", field);
+                assert false;
                 return;
             } else if (fieldType == char.class) {
-//                log.error("char field found, fix me: {}", field);
+                assert false;
                 return;
             } else if (fieldType == double.class) {
-//                log.error("double field found, fix me: {}", field);
+                assert false;
                 return;
             } else if (fieldType == float.class) {
-//                log.error("float field found, fix me: {}", field);
+                assert false;
                 return;
             } else if (fieldType == int.class) {
                 field.setInt(obj, results.getInt(label));
@@ -142,43 +147,27 @@ final class Utils {
                 field.setLong(obj, results.getLong(label));
                 return;
             } else if (fieldType == short.class) {
-                field.setShort(obj, results.getShort(label));
+                assert false;
                 return;
             }
         }
-        assert !fieldType.isPrimitive();
         final Object value = results.getObject(label);
-        if (value == null) {
-            if (fieldType.isPrimitive()) {
-//                log.warn("null value for a primitive field: {}", field);
-            }
-            if (field.getAnnotation(NullableBySpecification.class) == null) {
-                if (field.getAnnotation(NullableByVendor.class) == null) {
-//                    log.warn("null value for a non-null field: {}", field);
-                }
-            }
-            return;
-        }
-        assert value != null;
+        assert value != null ||
+               (field.isAnnotationPresent(NullableBySpecification.class) ||
+                field.isAnnotationPresent(NullableByVendor.class));
         try {
             field.set(obj, value);
             return;
         } catch (final IllegalArgumentException iae) {
-//            if (log.isDebugEnabled()) {
-//                log.debug("unable to set {} with {}({}) labeled as {}", field, value, value.getClass(), label, iae);
-//            }
         }
         if (value instanceof Number) {
             if (fieldType == Boolean.class) {
-//                log.error("Boolean field found, fix me: {}", field);
                 return;
             }
             if (fieldType == Byte.class) {
-//                log.error("Byte field found, fix me: {}", field);
                 return;
             }
             if (fieldType == Short.class) {
-                field.set(obj, ((Number) value).shortValue());
                 return;
             }
             if (fieldType == Integer.class) {
@@ -186,23 +175,21 @@ final class Utils {
                 return;
             }
             if (fieldType == Long.class) {
-//                log.error("Long field found, fix me: {}", field);
+                field.set(obj, ((Number) value).longValue());
                 return;
             }
             if (fieldType == Character.class) {
-//                log.error("Character field found, fix me: {}", field);
                 return;
             }
             if (fieldType == Float.class) {
-//                log.error("Float field found, fix me: {}", field);
                 return;
             }
             if (fieldType == Double.class) {
-//                log.error("Double field found, fix me: %1$s", field);
                 return;
             }
         }
-//        log.error("failed to set value; label: {}, value: {}, field: {}", label, value, field);
+        log.log(Level.SEVERE,
+                () -> String.format("failed to set; label: %1$s, value: %2$s, field: %3$s", label, value, field));
     }
 
     private Utils() {

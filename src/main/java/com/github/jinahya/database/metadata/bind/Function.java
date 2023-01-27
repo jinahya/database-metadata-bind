@@ -90,7 +90,7 @@ public class Function
     private String remarks;
 
     @ColumnLabel("FUNCTION_TYPE")
-    private short functionType;
+    private int functionType;
 
     @ColumnLabel("SPECIFIC_NAME")
     private String specificName;

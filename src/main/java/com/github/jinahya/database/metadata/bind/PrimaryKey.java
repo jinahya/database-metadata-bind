@@ -49,24 +49,34 @@ public class PrimaryKey
 
     public static final String COLUMN_LABEL_TABLE_CAT = "TABLE_CAT";
 
+    public static final String COLUMN_LABEL_TABLE_SCHEM = "TABLE_SCHEM";
+
+    public static final String COLUMN_LABEL_TABLE_NAME = "TABLE_NAME";
+
+    public static final String COLUMN_LABEL_COLUMN_NAME = "COLUMN_NAME";
+
+    public static final String COLUMN_LABEL_KEY_SEQ = "KEY_SEQ";
+
+    public static final String COLUMN_LABEL_PK_NAME = "PK_NAME";
+
     @NullableBySpecification
     @ColumnLabel(COLUMN_LABEL_TABLE_CAT)
     private String tableCat;
 
     @NullableBySpecification
-    @ColumnLabel("TABLE_SCHEM")
+    @ColumnLabel(COLUMN_LABEL_TABLE_SCHEM)
     private String tableSchem;
 
-    @ColumnLabel("TABLE_NAME")
+    @ColumnLabel(COLUMN_LABEL_TABLE_NAME)
     private String tableName;
 
-    @ColumnLabel("COLUMN_NAME")
+    @ColumnLabel(COLUMN_LABEL_COLUMN_NAME)
     private String columnName;
 
-    @ColumnLabel("KEY_SEQ")
-    private short keySeq;
+    @ColumnLabel(COLUMN_LABEL_KEY_SEQ)
+    private int keySeq;
 
     @NullableBySpecification
-    @ColumnLabel("PK_NAME")
+    @ColumnLabel(COLUMN_LABEL_PK_NAME)
     private String pkName;
 }
