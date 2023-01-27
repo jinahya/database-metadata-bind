@@ -27,6 +27,8 @@ import lombok.NoArgsConstructor;
 import lombok.ToString;
 import lombok.experimental.SuperBuilder;
 
+import java.util.Comparator;
+
 /**
  * An entity class for binding the result of
  * {@link java.sql.DatabaseMetaData#getTablePrivileges(java.lang.String, java.lang.String, java.lang.String)}.
@@ -44,6 +46,11 @@ public class TablePrivilege
         extends AbstractMetadataType {
 
     private static final long serialVersionUID = -1799954363648972203L;
+
+    public static final Comparator<TablePrivilege> COMPARING_TABLE_CAT_TABLE_SCHEM_PRIVILEGE =
+            Comparator.comparing(TablePrivilege::getTableCat, Comparator.nullsFirst(Comparator.naturalOrder()))
+                    .thenComparing(TablePrivilege::getTableSchem, Comparator.nullsFirst(Comparator.naturalOrder()))
+                    .thenComparing(TablePrivilege::getPrivilege);
 
     @NullableBySpecification
     @ColumnLabel("TABLE_CAT")

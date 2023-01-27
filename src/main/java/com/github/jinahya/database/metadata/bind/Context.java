@@ -30,7 +30,9 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
@@ -84,30 +86,32 @@ public class Context {
      */
     private <T extends MetadataType> T bind(final ResultSet results, final Class<T> type, final T instance)
             throws SQLException {
-        final Set<String> resultSetLabels = Utils.getLabels(results);
-        for (final Entry<Field, ColumnLabel> labeledField : getLabeledFields(type).entrySet()) {
-            final Field field = labeledField.getKey();
-            final ColumnLabel label = labeledField.getValue();
-            if (!resultSetLabels.remove(label.value())) {
-                log.warning(() -> String.format("unknown label; %1$s on %2$s", label, field));
+        final Set<String> resultLabels = Utils.getLabels(results);
+        final Map<Field, ColumnLabel> fieldLabels = new HashMap<>(getLabeledFields(type));
+        for (final Iterator<Entry<Field, ColumnLabel>> i = fieldLabels.entrySet().iterator(); i.hasNext(); ) {
+            final Entry<Field, ColumnLabel> entry = i.next();
+            final Field field = entry.getKey();
+            final ColumnLabel fieldLabel = entry.getValue();
+            if (!resultLabels.remove(fieldLabel.value())) {
+                log.warning(() -> String.format("unknown fieldLabel; %1$s on %2$s", fieldLabel, field));
                 continue;
             }
-            if (field.isAnnotationPresent(NotUsedBySpecification.class)) {
-                continue;
-            }
-            if (field.isAnnotationPresent(Reserved.class)) {
+            if (field.isAnnotationPresent(NotUsedBySpecification.class) || field.isAnnotationPresent(Reserved.class)) {
+                i.remove();
                 continue;
             }
             try {
-                Utils.setFieldValue(field, instance, results, label.value());
+                Utils.setFieldValue(field, instance, results, fieldLabel.value());
             } catch (final ReflectiveOperationException roe) {
                 log.log(Level.SEVERE, String.format("failed to set %1$s", field), roe);
             }
+            i.remove();
         }
-        for (final String label : resultSetLabels) {
-            final Object value = results.getObject(label);
-            instance.getUnmappedValues().put(label, value);
+        for (final String resultLabel : resultLabels) {
+            final Object object = results.getObject(resultLabel);
+            instance.getUnmappedValues().put(resultLabel, object);
         }
+        assert fieldLabels.isEmpty();
         return instance;
     }
 
@@ -420,7 +424,7 @@ public class Context {
      * @param columnNamePattern a value for {@code columnNamePattern} parameter.
      * @return a list of bound values.
      * @throws SQLException if a database error occurs.
-     * @see DatabaseMetaData#getColumns(String, String, String, String)
+     * @see #getColumns(String, String, String, String, Consumer)
      */
     public List<Column> getColumns(final String catalog, final String schemaPattern, final String tableNamePattern,
                                    final String columnNamePattern)
@@ -570,6 +574,7 @@ public class Context {
      * @param columnNamePattern   a value for {@code columnNamePattern} parameter.
      * @param consumer            the consumer to which bound values are accepted.
      * @throws SQLException if a database error occurs.
+     * @see DatabaseMetaData#getFunctionColumns(String, String, String, String)
      */
     public void getFunctionColumns(final String catalog, final String schemaPattern, final String functionNamePattern,
                                    final String columnNamePattern,
@@ -593,6 +598,7 @@ public class Context {
      * @param columnNamePattern   a value for {@code columnNamePattern} parameter.
      * @return a list of bound values.
      * @throws SQLException if a database error occurs.
+     * @see #getFunctionColumns(String, String, String, String, Consumer)
      */
     public List<FunctionColumn> getFunctionColumns(final String catalog, final String schemaPattern,
                                                    final String functionNamePattern, final String columnNamePattern)
@@ -632,7 +638,7 @@ public class Context {
      * @param table   a value for {@code table} parameter.
      * @return a list of bound values.
      * @throws SQLException if a database error occurs.
-     * @see DatabaseMetaData#getImportedKeys(String, String, String)
+     * @see #getImportedKeys(String, String, String, Consumer)
      */
     public List<ImportedKey> getImportedKeys(final String catalog, final String schema, final String table)
             throws SQLException {
@@ -758,7 +764,7 @@ public class Context {
      * @param columnNamePattern    a value for {@code columnNamePattern} parameter.
      * @return a list of bound values.
      * @throws SQLException if a database error occurs.
-     * @see DatabaseMetaData#getProcedureColumns(String, String, String, String)
+     * @see #getProcedureColumns(String, String, String, String, Consumer)
      */
     public List<ProcedureColumn> getProcedureColumns(final String catalog, final String schemaPattern,
                                                      final String procedureNamePattern,
@@ -799,7 +805,7 @@ public class Context {
      * @param procedureNamePattern a value for {@code procedureNamePattern} parameter.
      * @return a list of bound values.
      * @throws SQLException if a database error occurs.
-     * @see DatabaseMetaData#getProcedures(String, String, String)
+     * @see #getProcedures(String, String, String, Consumer)
      */
     public List<Procedure> getProcedures(final String catalog, final String schemaPattern,
                                          final String procedureNamePattern)
@@ -844,7 +850,7 @@ public class Context {
      * @param columnNamePattern a value for {@code columnNamePattern} parameter.
      * @return a list of bound values.
      * @throws SQLException if a database error occurs.
-     * @see DatabaseMetaData#getPseudoColumns(String, String, String, String)
+     * @see #getPseudoColumns(String, String, String, String, Consumer)
      */
     public List<PseudoColumn> getPseudoColumns(final String catalog, final String schemaPattern,
                                                final String tableNamePattern, final String columnNamePattern)
@@ -926,6 +932,7 @@ public class Context {
      * @param tableNamePattern a value for {@code tableNamePattern} parameter.
      * @param consumer         the consumer to which bound values are accepted.
      * @throws SQLException if a database error occurs.
+     * @see DatabaseMetaData#getSuperTables(String, String, String)
      */
     public void getSuperTables(final String catalog, final String schemaPattern, final String tableNamePattern,
                                final Consumer<? super SuperTable> consumer)
@@ -946,6 +953,7 @@ public class Context {
      * @param tableNamePattern a value for {@code tableNamePattern} parameter.
      * @return a list of bound values.
      * @throws SQLException if a database error occurs.
+     * @see #getSuperTables(String, String, String, Consumer)
      */
     public List<SuperTable> getSuperTables(final String catalog, final String schemaPattern,
                                            final String tableNamePattern)
@@ -964,6 +972,7 @@ public class Context {
      * @param typeNamePattern a value for {@code typeNamePattern} parameter.
      * @param consumer        the consumer to which bound values are accepted.
      * @throws SQLException if a database error occurs.
+     * @see DatabaseMetaData#getSuperTypes(String, String, String)
      */
     public void getSuperTypes(final String catalog, final String schemaPattern, final String typeNamePattern,
                               final Consumer<? super SuperType> consumer)
@@ -984,6 +993,7 @@ public class Context {
      * @param typeNamePattern a value for {@code typeNamePattern} parameter.
      * @return a list of bound values.
      * @throws SQLException if a database error occurs.
+     * @see #getSuperTypes(String, String, String, Consumer)
      */
     public List<SuperType> getSuperTypes(final String catalog, final String schemaPattern, final String typeNamePattern)
             throws SQLException {
@@ -1001,6 +1011,7 @@ public class Context {
      * @param tableNamePattern a value for {@code tableNamePattern} parameter.
      * @param consumer         the consumer to which bound values are accepted.
      * @throws SQLException if a database error occurs.
+     * @see DatabaseMetaData#getTablePrivileges(String, String, String)
      */
     public void getTablePrivileges(final String catalog, final String schemaPattern, final String tableNamePattern,
                                    final Consumer<? super TablePrivilege> consumer)
@@ -1037,6 +1048,7 @@ public class Context {
      *
      * @param consumer the consumer to which bound values are accepted.
      * @throws SQLException if a database error occurs.
+     * @see DatabaseMetaData#getTableTypes()
      */
     public void getTableTypes(final Consumer<? super TableType> consumer) throws SQLException {
         Objects.requireNonNull(consumer, "consumer is null");
@@ -1051,6 +1063,7 @@ public class Context {
      *
      * @return a list of bound values.
      * @throws SQLException if a database error occurs.
+     * @see #getTableTypes(Consumer)
      */
 
     public List<TableType> getTableTypes() throws SQLException {
@@ -1093,7 +1106,7 @@ public class Context {
      * @param types            a value for {@code types} parameter.
      * @return a list of bound values.
      * @throws SQLException if a database error occurs.
-     * @see DatabaseMetaData#getTables(String, String, String, String[])
+     * @see #getTables(String, String, String, String[], Consumer)
      */
 
     public List<Table> getTables(final String catalog, final String schemaPattern,
@@ -1109,6 +1122,7 @@ public class Context {
      *
      * @param consumer the consumer to which bound values are added.
      * @throws SQLException if a database error occurs.
+     * @see DatabaseMetaData#getTypeInfo()
      */
     public void getTypeInfo(final Consumer<? super TypeInfo> consumer) throws SQLException {
         Objects.requireNonNull(consumer, "consumer is null");
@@ -1123,6 +1137,7 @@ public class Context {
      *
      * @return a list of bound values.
      * @throws SQLException if a database error occurs.
+     * @see #getTypeInfo(Consumer)
      */
     public List<TypeInfo> getTypeInfo() throws SQLException {
         final List<TypeInfo> list = new ArrayList<>();
@@ -1162,7 +1177,7 @@ public class Context {
      * @param types           a value for {@code type} parameter
      * @return a list of bound values.
      * @throws SQLException if a database error occurs.
-     * @see DatabaseMetaData#getUDTs(String, String, String, int[])
+     * @see #getUDTs(String, String, String, int[], Consumer)
      */
 
     public List<UDT> getUDTs(final String catalog, final String schemaPattern,
@@ -1203,7 +1218,7 @@ public class Context {
      * @param table   a value for {@code table} parameter.
      * @return a list of bound values.
      * @throws SQLException if a database access error occurs.
-     * @see DatabaseMetaData#getVersionColumns(String, String, String)
+     * @see #getVersionColumns(String, String, String, Consumer)
      */
 
     public List<VersionColumn> getVersionColumns(final String catalog, final String schema,
@@ -1214,238 +1229,11 @@ public class Context {
         return list;
     }
 
-    /**
-     * Invokes {@link DatabaseMetaData#deletesAreDetected(int)} method with specified argument and returns a bound
-     * value.
-     *
-     * @param type a value for {@code type} parameter.
-     * @return given {@code collection}.
-     * @throws SQLException if a database access error occurs.
-     * @see DatabaseMetaData#deletesAreDetected(int)
-     */
-    public DeletesAreDetected deletesAreDetected(final int type) throws SQLException {
-        final DeletesAreDetected value = new DeletesAreDetected();
-        value.setType(type);
-        value.setValue(databaseMetaData.deletesAreDetected(value.getType()));
-        return value;
-    }
-
-    /**
-     * Invokes {@link DatabaseMetaData#insertsAreDetected(int)} method with specified argument and returns a bound
-     * value.
-     *
-     * @param type a value for {@code type} parameter.
-     * @return given {@code collection}.
-     * @throws SQLException if a database access error occurs.
-     * @see DatabaseMetaData#insertsAreDetected(int)
-     */
-    public InsertsAreDetected insertsAreDetected(final int type) throws SQLException {
-        final InsertsAreDetected value = new InsertsAreDetected();
-        value.setType(type);
-        value.setValue(databaseMetaData.insertsAreDetected(value.getType()));
-        return value;
-    }
-
-    /**
-     * Invokes {@link DatabaseMetaData#updatesAreDetected(int)} method with specified argument and returns a bound
-     * value.
-     *
-     * @param type a value for {@code type} parameter.
-     * @return a bound value.
-     * @throws SQLException if a database access error occurs.
-     * @see DatabaseMetaData#updatesAreDetected(int)
-     */
-    public UpdatesAreDetected updatesAreDetected(final int type) throws SQLException {
-        final UpdatesAreDetected value = new UpdatesAreDetected();
-        value.setType(type);
-        value.setValue(databaseMetaData.updatesAreDetected(value.getType()));
-        return value;
-    }
-
-    /**
-     * Invokes {@link DatabaseMetaData#othersDeletesAreVisible(int)} method with specified argument and returns a bound
-     * value.
-     *
-     * @param type a value for {@code type} parameter.
-     * @return a bound value whose {@code value} property may be {@code null} when the {@link SQLException} suppressed.
-     * @throws SQLException if a database access error occurs.
-     * @see DatabaseMetaData#othersDeletesAreVisible(int)
-     */
-    public OthersDeletesAreVisible othersDeletesAreVisible(final int type) throws SQLException {
-        final OthersDeletesAreVisible value = new OthersDeletesAreVisible();
-        value.setType(type);
-        value.setValue(databaseMetaData.othersDeletesAreVisible(value.getType()));
-        return value;
-    }
-
-    /**
-     * Invokes {@link DatabaseMetaData#othersInsertsAreVisible(int)} method with specified argument and returns a bound
-     * value.
-     *
-     * @param type a value for {@code type} parameter.
-     * @return a bound value whose {@code value} property may be {@code null} when the {@link SQLException} suppressed.
-     * @throws SQLException if a database access error occurs.
-     * @see DatabaseMetaData#othersInsertsAreVisible(int)
-     */
-    public OthersInsertsAreVisible othersInsertsAreVisible(final int type) throws SQLException {
-        final OthersInsertsAreVisible value = new OthersInsertsAreVisible();
-        value.setType(type);
-        value.setValue(databaseMetaData.othersInsertsAreVisible(value.getType()));
-        return value;
-    }
-
-    /**
-     * Invokes {@link DatabaseMetaData#othersUpdatesAreVisible(int)} method with specified argument and returns a bound
-     * value.
-     *
-     * @param type a value for {@code type} parameter.
-     * @return a bound value whose {@code value} property may be {@code null} when the {@link SQLException} suppressed.
-     * @throws SQLException if a database access error occurs.
-     * @see DatabaseMetaData#othersUpdatesAreVisible(int)
-     */
-    public OthersUpdatesAreVisible othersUpdatesAreVisible(final int type) throws SQLException {
-        final OthersUpdatesAreVisible value = new OthersUpdatesAreVisible();
-        value.setType(type);
-        value.setValue(databaseMetaData.othersUpdatesAreVisible(value.getType()));
-        return value;
-    }
-
-    /**
-     * Invokes {@link DatabaseMetaData#ownDeletesAreVisible(int)} method with specified value and returns a bound
-     * value.
-     *
-     * @param type a value for {@code type} parameter.
-     * @return a bound value whose {@code value} property may be {@code null} when the {@link SQLException} suppressed.
-     * @throws SQLException if a database access error occurs.
-     * @see DatabaseMetaData#ownDeletesAreVisible(int)
-     */
-    public OwnDeletesAreVisible ownDeletesAreVisible(final int type) throws SQLException {
-        final OwnDeletesAreVisible value = new OwnDeletesAreVisible();
-        value.setType(type);
-        value.setValue(databaseMetaData.ownDeletesAreVisible(value.getType()));
-        return value;
-    }
-
-    /**
-     * Invokes {@link DatabaseMetaData#ownInsertsAreVisible(int)} method with specified value and returns a bound
-     * value.
-     *
-     * @param type a value for {@code type} parameter.
-     * @return a bound value whose {@code value} property may be {@code null} when the {@link SQLException} suppressed.
-     * @throws SQLException if a database access error occurs.
-     * @see DatabaseMetaData#ownInsertsAreVisible(int)
-     */
-    public OwnInsertsAreVisible ownInsertsAreVisible(final int type) throws SQLException {
-        final OwnInsertsAreVisible value = new OwnInsertsAreVisible();
-        value.setType(type);
-        value.setValue(databaseMetaData.ownInsertsAreVisible(value.getType()));
-        return value;
-    }
-
-    /**
-     * Invokes {@link DatabaseMetaData#ownUpdatesAreVisible(int)} method with  specified type and returns a bound
-     * value.
-     *
-     * @param type a value for {@code type} parameter.
-     * @return a bound value whose {@code value} property may be {@code null} when the {@link SQLException} suppressed.
-     * @throws SQLException if a database access error occurs.
-     * @see DatabaseMetaData#ownUpdatesAreVisible(int)
-     */
-    public OwnUpdatesAreVisible ownUpdatesAreVisible(final int type) throws SQLException {
-        final OwnUpdatesAreVisible value = new OwnUpdatesAreVisible();
-        value.setType(type);
-        value.setValue(databaseMetaData.ownUpdatesAreVisible(value.getType()));
-        return value;
-    }
-
-    /**
-     * Invokes {@link DatabaseMetaData#supportsConvert(int, int)} method with given arguments and returns a bound
-     * value.
-     *
-     * @param fromType a value for {@code fromType} parameter.
-     * @param toType   a value for {@code toType} parameter.
-     * @return a bound value.
-     * @throws SQLException if a database access error occurs.
-     * @see DatabaseMetaData#supportsConvert(int, int)
-     */
-    public SupportsConvert supportsConvert(final int fromType, final int toType) throws SQLException {
-        final SupportsConvert value = new SupportsConvert();
-        value.setFromType(fromType);
-        value.setToType(toType);
-        value.setValue(databaseMetaData.supportsConvert(value.getFromType(), value.getToType()));
-        return value;
-    }
-
-    /**
-     * Invokes {@link DatabaseMetaData#supportsResultSetConcurrency(int, int)} method with given arguments and returns a
-     * bound value.
-     *
-     * @param type        a value for {@code type} parameter.
-     * @param concurrency a value for {@code concurrency} parameter.
-     * @return a bound value.
-     * @throws SQLException if a database access error occurs.
-     * @see DatabaseMetaData#supportsResultSetConcurrency(int, int)
-     */
-    public SupportsResultSetConcurrency supportsResultSetConcurrency(final int type, final int concurrency)
-            throws SQLException {
-        final SupportsResultSetConcurrency value = new SupportsResultSetConcurrency();
-        value.setType(type);
-        value.setConcurrency(concurrency);
-        value.setValue(databaseMetaData.supportsResultSetConcurrency(value.getType(), value.getConcurrency()));
-        return value;
-    }
-
-    /**
-     * Invokes {@link DatabaseMetaData#supportsResultSetHoldability(int)} method with given argument and returns a bound
-     * value.
-     *
-     * @param holdability a value for {@code holdability} parameter.
-     * @return a bound value.
-     * @throws SQLException if a database access error occurs.
-     * @see DatabaseMetaData#supportsResultSetHoldability(int)
-     */
-    public SupportsResultSetHoldability supportsResultSetHoldability(final int holdability) throws SQLException {
-        final SupportsResultSetHoldability value = new SupportsResultSetHoldability();
-        value.setHoldability(holdability);
-        value.setValue(databaseMetaData.supportsResultSetHoldability(value.getHoldability()));
-        return value;
-    }
-
-    /**
-     * Invokes {@link DatabaseMetaData#supportsResultSetType(int)} method with given argumentm and returns a bound
-     * value.
-     *
-     * @param type a value for {@code type} parameter.
-     * @return a bound value.
-     * @throws SQLException if a database access error occurs.
-     * @see DatabaseMetaData#supportsResultSetType(int)
-     */
-    public SupportsResultSetType supportsResultSetType(final int type) throws SQLException {
-        final SupportsResultSetType value = new SupportsResultSetType();
-        value.setType(type);
-        value.setValue(databaseMetaData.supportsResultSetType(value.getType()));
-        return value;
-    }
-
-    /**
-     * Invokes {@link DatabaseMetaData#supportsTransactionIsolationLevel(int)} method with given argument and returns a
-     * bound value.
-     *
-     * @param level a value for {@code level} parameter.
-     * @return a bound value.
-     * @throws SQLException if a database access error occurs.
-     * @see DatabaseMetaData#supportsTransactionIsolationLevel(int)
-     */
-    public SupportsTransactionIsolationLevel supportsTransactionIsolationLevel(final int level) throws SQLException {
-        final SupportsTransactionIsolationLevel value = new SupportsTransactionIsolationLevel();
-        value.setLevel(level);
-        value.setValue(databaseMetaData.supportsTransactionIsolationLevel(level));
-        return value;
-    }
-
     private Map<Field, ColumnLabel> getLabeledFields(final Class<?> clazz) {
         Objects.requireNonNull(clazz, "clazz is null");
-        return classesAndLabeledFields.computeIfAbsent(clazz, c -> Utils.getFieldsAnnotatedWith(c, ColumnLabel.class));
+        return Collections.unmodifiableMap(
+                classesAndLabeledFields.computeIfAbsent(clazz, c -> Utils.getFieldsAnnotatedWith(c, ColumnLabel.class))
+        );
     }
 
     final DatabaseMetaData databaseMetaData;

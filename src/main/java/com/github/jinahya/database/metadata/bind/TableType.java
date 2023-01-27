@@ -44,7 +44,7 @@ public class TableType
 
     private static final long serialVersionUID = -7630634982776331078L;
 
-    public static final Comparator<TableType> COMPARATOR = Comparator.comparing(TableType::getTableType);
+    public static final Comparator<TableType> COMPARING_TABLE_TYPE = Comparator.comparing(TableType::getTableType);
 
     @ColumnLabel("TABLE_TYPE")
     private String tableType;

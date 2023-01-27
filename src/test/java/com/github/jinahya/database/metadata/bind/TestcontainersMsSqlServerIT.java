@@ -21,27 +21,33 @@ package com.github.jinahya.database.metadata.bind;
  */
 
 import lombok.extern.slf4j.Slf4j;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
-import org.testcontainers.containers.PostgreSQLContainer;
+import org.testcontainers.containers.JdbcDatabaseContainer;
+import org.testcontainers.containers.MSSQLServerContainer;
 import org.testcontainers.junit.jupiter.Container;
 import org.testcontainers.junit.jupiter.Testcontainers;
 import org.testcontainers.utility.DockerImageName;
 
-import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
 
+@Disabled
 @Testcontainers
 @Slf4j
-class TestcontainersPostgresqlIT
+class TestcontainersMsSqlServerIT
         extends TestContainersIT {
 
     @Container
-    private static final PostgreSQLContainer<?> CONTAINER;
+    private static final JdbcDatabaseContainer<?> CONTAINER;
 
     static {
-        final DockerImageName NAME = DockerImageName.parse("postgres:latest");
-        CONTAINER = new PostgreSQLContainer<>(NAME);
+        // https://www.testcontainers.org/modules/databases/oraclexe/
+        final DockerImageName NAME = DockerImageName.parse("mcr.microsoft.com/mssql/server:2022-latest");
+        CONTAINER = new MSSQLServerContainer<>(NAME)
+                .acceptLicense()
+                .withEnv("MSSQL_PID", "Developer")
+        ;
     }
 
     @Test
@@ -49,8 +55,8 @@ class TestcontainersPostgresqlIT
         final var url = CONTAINER.getJdbcUrl();
         final var user = CONTAINER.getUsername();
         final var password = CONTAINER.getPassword();
-        try (Connection connection = DriverManager.getConnection(url, user, password)) {
-            final Context context = Context.newInstance(connection);
+        try (var connection = DriverManager.getConnection(url, user, password)) {
+            final var context = Context.newInstance(connection);
             ContextTests.test(context);
         }
     }

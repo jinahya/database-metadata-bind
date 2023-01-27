@@ -20,8 +20,10 @@ See [Maven Central](https://search.maven.org/artifact/com.github.jinahya/databas
 
 ## Usage
 
+All methods, defined in the `DatabaseMetaData`, return `ResultSet` is prepared.
+
 ```java
-try(var connection = connect()){
+try (var connection = connect()) {
     var context = Context.newInstance(connection);
     var catalogs = context.getCatalogs();
     var tables = context.getTables(null, null, "%", null);

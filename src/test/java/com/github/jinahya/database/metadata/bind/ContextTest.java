@@ -58,9 +58,7 @@ class ContextTest {
                         = Arrays.copyOf(method.getParameterTypes(), method.getParameterCount() + 1);
                 parameterTypes[parameterTypes.length - 1] = Consumer.class;
                 final Method bound = Context.class.getMethod(method.getName(), parameterTypes);
-                continue;
             }
-            final Method bound = Context.class.getMethod(method.getName(), method.getParameterTypes());
         }
     }
 

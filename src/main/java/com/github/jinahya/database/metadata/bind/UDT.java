@@ -29,6 +29,7 @@ import lombok.experimental.SuperBuilder;
 
 import java.sql.DatabaseMetaData;
 import java.sql.SQLException;
+import java.util.Comparator;
 import java.util.List;
 import java.util.Objects;
 
@@ -48,6 +49,12 @@ public class UDT
         extends AbstractMetadataType {
 
     private static final long serialVersionUID = 8665246093405057553L;
+
+    public static final Comparator<UDT> COMPARING_DATA_TYPE_TYPE_CAT_TYPE_SCHEM_TYPE_NAME =
+            Comparator.comparingInt(UDT::getDataType)
+                    .thenComparing(UDT::getTypeCat, Comparator.nullsFirst(Comparator.naturalOrder()))
+                    .thenComparing(UDT::getTypeSchem, Comparator.nullsFirst(Comparator.naturalOrder()))
+                    .thenComparing(UDT::getTypeName);
 
     public static final String COLUMN_LABEL_TYPE_CAT = "TYPE_CAT";
 

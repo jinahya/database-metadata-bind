@@ -28,6 +28,7 @@ import lombok.ToString;
 import lombok.experimental.SuperBuilder;
 
 import java.sql.DatabaseMetaData;
+import java.util.Comparator;
 
 /**
  * A class for binding results of
@@ -46,6 +47,12 @@ public class ProcedureColumn
         extends AbstractMetadataType {
 
     private static final long serialVersionUID = 3894753719381358829L;
+
+    public static final Comparator<ProcedureColumn> COMPARING_PROCEDURE_CAT_PROCEDURE_SCHEM_PROCEDURE_NAME_SPECIFIC_NAME
+            = Comparator.comparing(ProcedureColumn::getProcedureCat, Comparator.nullsFirst(Comparator.naturalOrder()))
+            .thenComparing(ProcedureColumn::getProcedureSchem, Comparator.nullsFirst(Comparator.naturalOrder()))
+            .thenComparing(ProcedureColumn::getProcedureName)
+            .thenComparing(ProcedureColumn::getSpecificName);
 
     @NullableBySpecification
     @ColumnLabel("PROCEDURE_CAT")

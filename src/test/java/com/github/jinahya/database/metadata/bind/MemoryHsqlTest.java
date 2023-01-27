@@ -30,11 +30,12 @@ import static java.sql.DriverManager.getConnection;
 /**
  * @author Jin Kwon &lt;onacit_at_gmail.com&gt;
  */
-@org.junit.jupiter.api.condition.EnabledIfSystemProperty(named = "memory", matches = "true")
 @Slf4j
 class MemoryHsqlTest extends MemoryTest {
 
     private static final String DRIVER_NAME = "org.hsqldb.jdbc.JDBCDriver";
+
+    static final String DATABASE_PRODUCT_NAME = "HSQL Database Engine";
 
     private static final Class<?> DRIVER_CLASS;
 

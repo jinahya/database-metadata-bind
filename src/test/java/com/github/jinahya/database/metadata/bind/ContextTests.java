@@ -27,6 +27,7 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
+import java.util.Set;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -64,137 +65,64 @@ final class ContextTests {
         ;
     }
 
+    private static void thrown(final String message, final Throwable throwable) {
+        log.error("{}", message, throwable);
+    }
+
+    private static String databaseProductName;
+
     static void test(final Context context) throws SQLException {
         Objects.requireNonNull(context, "context is null");
-        List<Catalog> catalogs = null;
+        {
+            databaseProductName = context.databaseMetaData.getDatabaseProductName();
+            log.debug("databaseProductName: {}", databaseProductName);
+            log.debug("databaseProductVersion: {}", context.databaseMetaData.getDatabaseProductVersion());
+            log.debug("databaseMajorVersion: {}", context.databaseMetaData.getDatabaseMajorVersion());
+            log.debug("databaseMinorVersion: {}", context.databaseMetaData.getDatabaseMinorVersion());
+            log.debug("driverName: {}", context.databaseMetaData.getDriverName());
+            log.debug("driverVersion: {}", context.databaseMetaData.getDriverVersion());
+            log.debug("driverMajorVersion: {}", context.databaseMetaData.getDriverMajorVersion());
+            log.debug("driverMinorVersion: {}", context.databaseMetaData.getDriverMinorVersion());
+        }
+        final List<Catalog> catalogs = new ArrayList<>();
         {
             try {
-                catalogs = context.getCatalogs();
+                context.getCatalogs(catalogs::add);
             } catch (final SQLException sqle) {
-                log.error("failed; getCatalogs", sqle);
+                thrown("failed; getCatalogs", sqle);
             }
-            if (catalogs == null) {
-                catalogs = new ArrayList<>();
-            }
+            assertThat(catalogs).isSortedAccordingTo(Catalog.COMPARING_TABLE_CAT);
             if (catalogs.isEmpty()) {
                 catalogs.add(Catalog.builder().tableCat(Catalog.COLUMN_VALUE_TABLE_CAT_EMPTY).build());
             }
-            for (final var catalog : catalogs) {
-                catalog(context, catalog);
-            }
+            catalogs(context, catalogs);
+        }
+        try {
+            final var clientInfoProperties = context.getClientInfoProperties();
+            clientInfoProperties(context, clientInfoProperties);
+        } catch (final SQLException sqle) {
+            thrown("failed; getClientInfoProperties", sqle);
         }
         try {
             final var tableTypes = context.getTableTypes();
-            for (final var tableType : tableTypes) {
-                tableType(context, tableType);
-            }
+            tableTypes(context, tableTypes);
         } catch (final SQLException sqle) {
-            log.error("failed; getTableTypes", sqle);
+            thrown("failed; getTableTypes", sqle);
         }
         try {
-            final var typeInfos = context.getTypeInfo();
-            for (final var typeInfo_ : typeInfos) {
-                typeInfo(context, typeInfo_);
-            }
+            final var typeInfo = context.getTypeInfo();
+            typeInfo(context, typeInfo);
         } catch (final SQLException sqle) {
-            log.error("failed; getTypeInfos", sqle);
+            thrown("failed; getTypeInfo", sqle);
         }
-        try {
-            final var deletesAreDetected = DeletesAreDetected.getAllValues(context);
-            for (final var deletesAreDetected_ : deletesAreDetected) {
-                deletesAreDetected(context, deletesAreDetected_);
-            }
-        } catch (final SQLException sqle) {
-            log.error("failed; getTypeInfos", sqle);
-        }
-        try {
-            final var insertsAreDetected = InsertsAreDetected.getAllValues(context);
-            for (final var insertsAreDetected_ : insertsAreDetected) {
-                insertsAreDetected(context, insertsAreDetected_);
-            }
-        } catch (final SQLException sqle) {
-            log.error("failed; getTypeInfos", sqle);
-        }
-        try {
-            final var updatesAreDetected = UpdatesAreDetected.getAllValues(context);
-            for (final var updatesAreDetected_ : updatesAreDetected) {
-                updatesAreDetected(context, updatesAreDetected_);
-            }
-        } catch (final SQLException sqle) {
-            log.error("failed; getTypeInfos", sqle);
-        }
-        try {
-            final var othersDeletesAreVisible = OthersDeletesAreVisible.getAllValues(context);
-            for (final var othersDeletesAreVisible_ : othersDeletesAreVisible) {
-                othersDeletesAreVisible(context, othersDeletesAreVisible_);
-            }
-        } catch (final SQLException sqle) {
-            log.error("failed; getTypeInfos", sqle);
-        }
-        try {
-            final var othersInsertsAreVisible = OthersInsertsAreVisible.getAllValues(context);
-            for (final var othersInsertsAreVisible_ : othersInsertsAreVisible) {
-                othersInsertsAreVisible(context, othersInsertsAreVisible_);
-            }
-        } catch (final SQLException sqle) {
-            log.error("failed; getTypeInfos", sqle);
-        }
-        try {
-            final var othersUpdatesAreVisible = OthersUpdatesAreVisible.getAllValues(context);
-            for (final var othersUpdatesAreVisible_ : othersUpdatesAreVisible) {
-                othersUpdatesAreVisible(context, othersUpdatesAreVisible_);
-            }
-        } catch (final SQLException sqle) {
-            log.error("failed; getTypeInfos", sqle);
-        }
-        try {
-            final var ownDeletesAreVisible = OwnDeletesAreVisible.getAllValues(context);
-            for (final var ownDeletesAreVisible_ : ownDeletesAreVisible) {
-                ownDeletesAreVisible(context, ownDeletesAreVisible_);
-            }
-        } catch (final SQLException sqle) {
-            log.error("failed; getTypeInfos", sqle);
-        }
-        try {
-            final var ownInsertsAreVisible = OwnInsertsAreVisible.getAllValues(context);
-            for (final var ownInsertsAreVisible_ : ownInsertsAreVisible) {
-                ownInsertsAreVisible(context, ownInsertsAreVisible_);
-            }
-        } catch (final SQLException sqle) {
-            log.error("failed; getTypeInfos", sqle);
-        }
-        try {
-            final var ownUpdatesAreVisible = OwnUpdatesAreVisible.getAllValues(context);
-            for (final var ownUpdatesAreVisible_ : ownUpdatesAreVisible) {
-                ownUpdatesAreVisible(context, ownUpdatesAreVisible_);
-            }
-        } catch (final SQLException sqle) {
-            log.error("failed; getTypeInfos", sqle);
-        }
-        try {
-            log.debug("supportsTransactions: {}", context.databaseMetaData.supportsTransactions());
-        } catch (final SQLException sqle) {
-            log.error("failed; supportsTransactions", sqle);
-        }
-        try {
-            log.debug("supportsUnion: {}", context.databaseMetaData.supportsUnion());
-        } catch (final SQLException sqle) {
-            log.error("failed; supportsUnion", sqle);
-        }
-        try {
-            log.debug("supportsUnionAll: {}", context.databaseMetaData.supportsUnionAll());
-        } catch (final SQLException sqle) {
-            log.error("failed; supportsUnionAll", sqle);
-        }
-        try {
-            log.debug("usesLocalFilePerTable: {}", context.databaseMetaData.usesLocalFilePerTable());
-        } catch (final SQLException sqle) {
-            log.error("failed; usesLocalFilePerTable", sqle);
-        }
-        try {
-            log.debug("usesLocalFiles: {}", context.databaseMetaData.usesLocalFiles());
-        } catch (final SQLException sqle) {
-            log.error("failed; usesLocalFiles", sqle);
+    }
+
+    static void attributes(final Context context, final List<? extends Attribute> attributes) throws SQLException {
+        Objects.requireNonNull(context, "context is null");
+        Objects.requireNonNull(attributes, "attributes is null");
+        assertThat(attributes).isSortedAccordingTo(Attribute.COMPARING_TYPE_CAT_TYPE_SCHEM_TYPE_NAME);
+        for (final var attribute : attributes) {
+            attribute(context, attribute);
         }
     }
 
@@ -204,11 +132,30 @@ final class ContextTests {
         common(attribute);
     }
 
+    static void bestRowIdentifier(final Context context, final List<? extends BestRowIdentifier> bestRowIdentifier)
+            throws SQLException {
+        Objects.requireNonNull(context, "context is null");
+        Objects.requireNonNull(bestRowIdentifier, "bestRowIdentifier is null");
+        assertThat(bestRowIdentifier).isSortedAccordingTo(BestRowIdentifier.COMPARING_SCOPE);
+        for (final var bestRowIdentifier_ : bestRowIdentifier) {
+            bestRowIdentifier(context, bestRowIdentifier_);
+        }
+    }
+
     static void bestRowIdentifier(final Context context, final BestRowIdentifier bestRowIdentifier)
             throws SQLException {
         Objects.requireNonNull(context, "context is null");
         Objects.requireNonNull(bestRowIdentifier, "bestRowIdentifier is null");
         common(bestRowIdentifier);
+    }
+
+    static void catalogs(final Context context, final List<? extends Catalog> catalogs) throws SQLException {
+        Objects.requireNonNull(context, "context is null");
+        Objects.requireNonNull(catalogs, "catalogs is null");
+        assertThat(catalogs).isSortedAccordingTo(Catalog.COMPARING_TABLE_CAT);
+        for (final var catalog : catalogs) {
+            catalog(context, catalog);
+        }
     }
 
     static void catalog(final Context context, final Catalog catalog) throws SQLException {
@@ -217,81 +164,48 @@ final class ContextTests {
         common(catalog);
         try {
             final var attributes = catalog.getAttributes(context, null, "%", "%");
-            for (final var attribute : attributes) {
-                attribute(context, attribute);
-            }
+            attributes(context, attributes);
         } catch (final SQLException sqle) {
-            log.error("failed; getSchema", sqle);
+            thrown("failed; getAttributes", sqle);
         }
         try {
             final var columns = catalog.getColumns(context, null, "%", "%");
-            for (final var column : columns) {
-                column(context, column);
-            }
+            columns(context, columns);
         } catch (final SQLException sqle) {
-            log.error("failed; getSchema", sqle);
+            thrown("failed; getColumns", sqle);
         }
         try {
             final var functionColumns = catalog.getFunctionColumns(context, null, "%", "%");
-            for (final var functionColumn : functionColumns) {
-                functionColumn(context, functionColumn);
-            }
+            functionColumns(context, functionColumns);
         } catch (final SQLException sqle) {
-            log.error("failed; getSchema", sqle);
+            thrown("failed; getFunctionColumns", sqle);
         }
         try {
             final var functions = catalog.getFunctions(context, null, "%");
-            for (final var function : functions) {
-                function(context, function);
-            }
+            functions(context, functions);
         } catch (final SQLException sqle) {
-            log.error("failed; getSchema", sqle);
-        }
-        try {
-            final var procedureColumns = catalog.getProcedureColumns(context, null, "%", "%");
-            for (final var procedureColumn : procedureColumns) {
-                procedureColumn(context, procedureColumn);
-            }
-        } catch (final SQLException sqle) {
-            log.error("failed; getSchema", sqle);
-        }
-        try {
-            final var procedures = catalog.getProcedures(context, null, "%");
-            for (final var procedure : procedures) {
-                procedure(context, procedure);
-            }
-        } catch (final SQLException sqle) {
-            log.error("failed; getProcedures", sqle);
+            thrown("failed; getFunctions", sqle);
         }
         try {
             final var pseudoColumns = catalog.getPseudoColumns(context, null, "%", "%");
-            for (final var pseudoColumn : pseudoColumns) {
-                pseudoColumn(context, pseudoColumn);
-            }
+            pseudoColumns(context, pseudoColumns);
         } catch (final SQLException sqle) {
-            log.error("failed; getPseudoColumns", sqle);
+            thrown("failed; getPseudoColumns", sqle);
         }
         try {
             final var procedureColumns = catalog.getProcedureColumns(context, null, "%", "%");
-            for (final var procedureColumn : procedureColumns) {
-                procedureColumn(context, procedureColumn);
-            }
+            procedureColumns(context, procedureColumns);
         } catch (final SQLException sqle) {
-            log.error("failed; getProcedureColumns", sqle);
+            thrown("failed; getProcedureColumns", sqle);
         }
         try {
             final var procedures = catalog.getProcedures(context, null, "%");
-            for (final var procedure : procedures) {
-                procedure(context, procedure);
-            }
+            procedures(context, procedures);
         } catch (final SQLException sqle) {
-            log.error("failed; getProcedures", sqle);
+            thrown("failed; getProcedures", sqle);
         }
         try {
             final var schemas = catalog.getSchemas(context, null);
-            assertThat(schemas).allSatisfy(s -> {
-//                assertThat(s.getTableCatalog()).isEqualTo(catalog.getTableCat()); // derby
-            });
             if (schemas.isEmpty()) {
                 schemas.add(
                         Schema.builder()
@@ -300,115 +214,85 @@ final class ContextTests {
                                 .build()
                 );
             }
-            for (final var schema : schemas) {
-                schema(context, schema);
-            }
+            schemas(context, schemas);
         } catch (final SQLException sqle) {
-            log.error("failed; getSchema", sqle);
+            thrown("failed; getSchemas", sqle);
         }
         try {
             final var superTables = catalog.getSuperTables(context, "%", "%");
-            for (final var superTable : superTables) {
-                superTable(context, superTable);
-            }
+            superTables(context, superTables);
         } catch (final SQLException sqle) {
-            log.error("failed; getSuperTables", sqle);
+            thrown("failed; getSuperTables", sqle);
         }
         try {
             final var superTypes = catalog.getSuperTypes(context, "%", "%");
-            for (final var superType : superTypes) {
-                superType(context, superType);
-            }
+            superTypes(context, superTypes);
         } catch (final SQLException sqle) {
-            log.error("failed; getSuperTables", sqle);
+            thrown("failed; getSuperTables", sqle);
         }
         try {
             final var tablePrivileges = catalog.getTablePrivileges(context, null, "%");
-            for (final var tablePrivilege : tablePrivileges) {
-                tablePrivilege(context, tablePrivilege);
-            }
+            tablePrivileges(context, tablePrivileges);
         } catch (final SQLException sqle) {
-            log.error("failed; getTablePrivileges", sqle);
+            thrown("failed; getTablePrivileges", sqle);
         }
         try {
             final var tables = catalog.getTables(context, null, "%", null);
-            for (final var table : tables) {
-                table(context, table);
-            }
+            tables(context, tables);
         } catch (final SQLException sqle) {
-            log.error("failed; getTables", sqle);
+            thrown("failed; getTables", sqle);
         }
         try {
             final var udts = catalog.getUDTs(context, null, "%", null);
-            for (final var udt : udts) {
-                udt(context, udt);
-            }
+            udts(context, udts);
         } catch (final SQLException sqle) {
-            log.error("failed; getUDTs", sqle);
+            thrown("failed; getUDTs", sqle);
         }
     }
 
-    static void deletesAreDetected(final Context context, final DeletesAreDetected deletesAreDetected)
+    static void clientInfoProperties(final Context context,
+                                     final List<? extends ClientInfoProperty> clientInfoProperties)
             throws SQLException {
         Objects.requireNonNull(context, "context is null");
-        Objects.requireNonNull(deletesAreDetected, "deletesAreDetected is null");
-        common(deletesAreDetected);
+        Objects.requireNonNull(clientInfoProperties, "clientInfoProperties is null");
+        for (final var clientInfoProperty : clientInfoProperties) {
+            clientInfoProperty(context, clientInfoProperty);
+        }
     }
 
-    static void insertsAreDetected(final Context context, final InsertsAreDetected insertsAreDetected)
+    static void clientInfoProperty(final Context context, final ClientInfoProperty clientInfoProperty)
             throws SQLException {
         Objects.requireNonNull(context, "context is null");
-        Objects.requireNonNull(insertsAreDetected, "insertsAreDetected is null");
-        common(insertsAreDetected);
+        Objects.requireNonNull(clientInfoProperty, "clientInfoProperty is null");
+        common(clientInfoProperty);
     }
 
-    static void othersDeletesAreVisible(final Context context, final OthersDeletesAreVisible othersDeletesAreVisible)
+    static void crossReference(final Context context, List<? extends CrossReference> crossReference)
             throws SQLException {
         Objects.requireNonNull(context, "context is null");
-        Objects.requireNonNull(othersDeletesAreVisible, "othersDeletesAreVisible is null");
-        common(othersDeletesAreVisible);
+        Objects.requireNonNull(crossReference, "crossReference is null");
+        assertThat(crossReference).isSortedAccordingTo(
+                CrossReference.COMPARING_FKTABLE_CAT_FKTABLE_SCHEM_FKTABLE_NAME_KEY_SEQ);
+        for (final var crossReference_ : crossReference) {
+            crossReference(context, crossReference_);
+        }
     }
 
-    static void othersInsertsAreVisible(final Context context, final OthersInsertsAreVisible othersInsertsAreVisible)
-            throws SQLException {
+    static void crossReference(final Context context, CrossReference crossReference) throws SQLException {
         Objects.requireNonNull(context, "context is null");
-        Objects.requireNonNull(othersInsertsAreVisible, "othersInsertsAreVisible is null");
-        common(othersInsertsAreVisible);
+        Objects.requireNonNull(crossReference, "crossReference is null");
+        log.debug("crossReference: {}", crossReference);
+        common(crossReference);
     }
 
-    static void othersUpdatesAreVisible(final Context context, final OthersUpdatesAreVisible othersUpdatesAreVisible)
-            throws SQLException {
+    static void schemas(final Context context, final List<? extends Schema> schemas) throws SQLException {
         Objects.requireNonNull(context, "context is null");
-        Objects.requireNonNull(othersUpdatesAreVisible, "othersUpdatesAreVisible is null");
-        common(othersUpdatesAreVisible);
-    }
-
-    static void ownDeletesAreVisible(final Context context, final OwnDeletesAreVisible ownDeletesAreVisible)
-            throws SQLException {
-        Objects.requireNonNull(context, "context is null");
-        Objects.requireNonNull(ownDeletesAreVisible, "ownDeletesAreVisible is null");
-        common(ownDeletesAreVisible);
-    }
-
-    static void ownInsertsAreVisible(final Context context, final OwnInsertsAreVisible ownInsertsAreVisible)
-            throws SQLException {
-        Objects.requireNonNull(context, "context is null");
-        Objects.requireNonNull(ownInsertsAreVisible, "ownInsertsAreVisible is null");
-        common(ownInsertsAreVisible);
-    }
-
-    static void ownUpdatesAreVisible(final Context context, final OwnUpdatesAreVisible ownUpdatesAreVisible)
-            throws SQLException {
-        Objects.requireNonNull(context, "context is null");
-        Objects.requireNonNull(ownUpdatesAreVisible, "ownUpdatesAreVisible is null");
-        common(ownUpdatesAreVisible);
-    }
-
-    static void updatesAreDetected(final Context context, final UpdatesAreDetected updatesAreDetected)
-            throws SQLException {
-        Objects.requireNonNull(context, "context is null");
-        Objects.requireNonNull(updatesAreDetected, "updatesAreDetected is null");
-        common(updatesAreDetected);
+        Objects.requireNonNull(schemas, "schemas is null");
+        // https://sourceforge.net/p/hsqldb/bugs/1671/
+//            assertThat(schemas).isSortedAccordingTo(Schema.COMPARING_TABLE_CATALOG_TABLE_SCHEM);
+        for (final var schema : schemas) {
+            schema(context, schema);
+        }
     }
 
     static void schema(final Context context, final Schema schema) throws SQLException {
@@ -417,99 +301,85 @@ final class ContextTests {
         common(schema);
         try {
             final var attributes = schema.getAttributes(context, "%", "%");
-            for (final var attribute : attributes) {
-                attribute(context, attribute);
-            }
+            attributes(context, attributes);
         } catch (final SQLException sqle) {
-            log.error("failed; getAttributes", sqle);
+            thrown("failed; getAttributes", sqle);
         }
         try {
             final var columns = schema.getColumns(context, "%", "%");
-            for (final var column : columns) {
-                column(context, column);
-            }
+            columns(context, columns);
         } catch (final SQLException sqle) {
-            log.error("failed; getColumns", sqle);
+            thrown("failed; getColumns", sqle);
         }
         try {
             final var functionColumns = schema.getFunctionColumns(context, "%", "%");
-            for (final var functionColumn : functionColumns) {
-                functionColumn(context, functionColumn);
-            }
+            functionColumns(context, functionColumns);
         } catch (final SQLException sqle) {
-            log.error("failed; getFunctionColumns", sqle);
+            thrown("failed; getFunctionColumns", sqle);
         }
         try {
             final var functions = schema.getFunctions(context, "%");
-            for (final var function : functions) {
-                function(context, function);
-            }
+            functions(context, functions);
         } catch (final SQLException sqle) {
-            log.error("failed; getFunctions", sqle);
+            thrown("failed; getFunctions", sqle);
         }
         try {
             final var procedureColumns = schema.getProcedureColumns(context, "%", "%");
-            for (final var procedureColumn : procedureColumns) {
-                procedureColumn(context, procedureColumn);
-            }
+            procedureColumns(context, procedureColumns);
         } catch (final SQLException sqle) {
-            log.error("failed; getProcedureColumns", sqle);
+            thrown("failed; getProcedureColumns", sqle);
         }
         try {
             final var procedures = schema.getProcedures(context, "%");
-            for (final var procedure : procedures) {
-                procedure(context, procedure);
-            }
+            procedures(context, procedures);
         } catch (final SQLException sqle) {
-            log.error("failed; getProcedures", sqle);
+            thrown("failed; getProcedures", sqle);
         }
         try {
             final var pseudoColumns = schema.getPseudoColumns(context, "%", "%");
-            for (final var pseudoColumn : pseudoColumns) {
-                pseudoColumn(context, pseudoColumn);
-            }
+            pseudoColumns(context, pseudoColumns);
         } catch (final SQLException sqle) {
-            log.error("failed; getPseudoColumns", sqle);
+            thrown("failed; getPseudoColumns", sqle);
         }
         try {
             final var superTables = schema.getSuperTables(context, "%");
-            for (final var superTable : superTables) {
-                superTable(context, superTable);
-            }
+            superTables(context, superTables);
         } catch (final SQLException sqle) {
-            log.error("failed; getSuperTables", sqle);
+            thrown("failed; getSuperTables", sqle);
         }
         try {
             final var superTypes = schema.getSuperTypes(context, "%");
-            for (final var superType : superTypes) {
-                superType(context, superType);
-            }
+            superTypes(context, superTypes);
         } catch (final SQLException sqle) {
-            log.error("failed; getSuperTypes", sqle);
+            thrown("failed; getSuperTypes", sqle);
         }
         try {
             final var tablePrivileges = schema.getTablePrivileges(context, "%");
-            for (final var tablePrivilege : tablePrivileges) {
-                tablePrivilege(context, tablePrivilege);
-            }
+            tablePrivileges(context, tablePrivileges);
         } catch (final SQLException sqle) {
-            log.error("failed; getTablePrivileges", sqle);
+            thrown("failed; getTablePrivileges", sqle);
         }
         try {
             final var tables = schema.getTables(context, "%", null);
-            for (final var table : tables) {
-                table(context, table);
-            }
+            tables(context, tables);
         } catch (final SQLException sqle) {
-            log.error("failed; getTables", sqle);
+            thrown("failed; getTables", sqle);
         }
         try {
             final var udts = schema.getUDTs(context, "%", null);
-            for (final var udt : udts) {
-                udt(context, udt);
-            }
+            udts(context, udts);
         } catch (final SQLException sqle) {
-            log.error("failed; getUDTs", sqle);
+            thrown("failed; getUDTs", sqle);
+        }
+    }
+
+    static void functions(final Context context, final List<? extends Function> functions) throws SQLException {
+        Objects.requireNonNull(context, "context is null");
+        Objects.requireNonNull(functions, "functions is null");
+        assertThat(functions).isSortedAccordingTo(
+                Function.COMPARING_FUNCTION_CAT_FUNCTION_SCHEM_FUNCTION_NAME_SPECIFIC_NAME);
+        for (final var function : functions) {
+            function(context, function);
         }
     }
 
@@ -518,6 +388,15 @@ final class ContextTests {
         Objects.requireNonNull(function, "function is null");
         common(function);
         final var functionColumns = function.getFunctionColumns(context, "%");
+        functionColumns(context, functionColumns);
+    }
+
+    static void functionColumns(final Context context, final List<? extends FunctionColumn> functionColumns)
+            throws SQLException {
+        Objects.requireNonNull(context, "context is null");
+        Objects.requireNonNull(functionColumns, "functionColumns is null");
+        assertThat(functionColumns).isSortedAccordingTo(
+                FunctionColumn.COMPARING_FUNCTION_CAT_FUNCTION_SCHEM_FUNCTION_NAME_SPECIFIC_NAME);
         for (final var functionColumn : functionColumns) {
             functionColumn(context, functionColumn);
         }
@@ -527,6 +406,16 @@ final class ContextTests {
         Objects.requireNonNull(context, "context is null");
         Objects.requireNonNull(functionColumn, "functionColumn is null");
         common(functionColumn);
+    }
+
+    static void procedures(final Context context, final List<? extends Procedure> procedures) throws SQLException {
+        Objects.requireNonNull(context, "context is null");
+        Objects.requireNonNull(procedures, "procedures is null");
+        assertThat(procedures).isSortedAccordingTo(
+                Procedure.COMPARING_PROCEDURE_CAT_PROCEDURE_SCHEM_PROCEDURE_NAME_SPECIFIC_NAME);
+        for (final var procedure : procedures) {
+            procedure(context, procedure);
+        }
     }
 
     static void procedure(final Context context, final Procedure procedure) throws SQLException {
@@ -539,8 +428,31 @@ final class ContextTests {
             assertThat(pc.getProcedureSchem()).isEqualTo(procedure.getProcedureSchem());
             assertThat(pc.getProcedureName()).isEqualTo(procedure.getProcedureName());
         });
+        procedureColumns(context, procedureColumns);
+    }
+
+    static void procedureColumns(final Context context, final List<? extends ProcedureColumn> procedureColumns)
+            throws SQLException {
+        Objects.requireNonNull(context, "context is null");
+        Objects.requireNonNull(procedureColumns, "procedureColumns is null");
+        assertThat(procedureColumns).isSortedAccordingTo(
+                ProcedureColumn.COMPARING_PROCEDURE_CAT_PROCEDURE_SCHEM_PROCEDURE_NAME_SPECIFIC_NAME);
         for (final var procedureColumn : procedureColumns) {
             procedureColumn(context, procedureColumn);
+        }
+    }
+
+    static void procedureColumn(final Context context, final ProcedureColumn procedureColumn) throws SQLException {
+        Objects.requireNonNull(context, "context is null");
+        Objects.requireNonNull(procedureColumn, "procedureColumn is null");
+        common(procedureColumn);
+    }
+
+    static void superTypes(final Context context, final List<? extends SuperType> superTypes) throws SQLException {
+        Objects.requireNonNull(context, "context is null");
+        Objects.requireNonNull(superTypes, "superTypes is null");
+        for (final var superType : superTypes) {
+            superType(context, superType);
         }
     }
 
@@ -550,10 +462,28 @@ final class ContextTests {
         common(superType);
     }
 
-    static void procedureColumn(final Context context, final ProcedureColumn procedureColumn) throws SQLException {
+    static void tables(final Context context, final List<? extends Table> tables) throws SQLException {
         Objects.requireNonNull(context, "context is null");
-        Objects.requireNonNull(procedureColumn, "procedureColumn is null");
-        common(procedureColumn);
+        Objects.requireNonNull(tables, "tables is null");
+        final var databaseProductNames = Set.of(
+                MemoryHsqlTest.DATABASE_PRODUCT_NAME,
+                "MariaDB"
+        );
+        if (!databaseProductNames.contains(databaseProductName)) {
+            // https://sourceforge.net/p/hsqldb/bugs/1672/
+            assertThat(tables).isSortedAccordingTo(Table.COMPARING_TABLE_TYPE_TABLE_CAT_TABLE_SCHEM_TABLE_NAME);
+        }
+        for (final var table : tables) {
+            table(context, table);
+        }
+        for (final var parent : tables) {
+            for (final var fktable : tables) {
+                final var crossReference = context.getCrossReference(
+                        parent.getTableCat(), parent.getTableSchem(), parent.getTableName(),
+                        fktable.getTableCat(), fktable.getTableSchem(), fktable.getTableName());
+                crossReference(context, crossReference);
+            }
+        }
     }
 
     static void table(final Context context, final Table table) throws SQLException {
@@ -563,12 +493,11 @@ final class ContextTests {
         try {
             for (final var scope : BestRowIdentifier.scopes()) {
                 final var bestRowIdentifier = table.getBestRowIdentifier(context, scope, true);
-                for (final var bestRowIdentifier_ : bestRowIdentifier) {
-                    bestRowIdentifier(context, bestRowIdentifier_);
-                }
+                assertThat(bestRowIdentifier).isSortedAccordingTo(BestRowIdentifier.COMPARING_SCOPE);
+                bestRowIdentifier(context, bestRowIdentifier);
             }
         } catch (final SQLException sqle) {
-            log.error("failed; getBestRowIdentifier", sqle);
+            thrown("failed; getBestRowIdentifier", sqle);
         }
         try {
             final var columnPrivileges = table.getColumnPrivileges(context, "%");
@@ -576,83 +505,75 @@ final class ContextTests {
                 columnPrivilege(context, columnPrivilege);
             }
         } catch (final SQLException sqle) {
-            log.error("failed; getColumnPrivileges", sqle);
+            thrown("failed; getColumnPrivileges", sqle);
         }
         try {
             final var columns = table.getColumns(context, "%");
-            for (final var column : columns) {
-                column(context, column);
-            }
+            columns(context, columns);
         } catch (final SQLException sqle) {
-            log.error("failed; getColumns", sqle);
+            thrown("failed; getColumns", sqle);
         }
         try {
             final var exportedKeys = table.getExportedKeys(context);
-            for (final var exportedKey : exportedKeys) {
-                exportedKey(context, exportedKey);
-            }
+            exportedKeys(context, exportedKeys);
         } catch (final SQLException sqle) {
             // https://github.com/xerial/sqlite-jdbc/issues/831
-            log.error("failed; getExportedKeys", sqle);
+            thrown("failed; getExportedKeys", sqle);
         }
         try {
             final var importedKeys = table.getImportedKeys(context);
-            for (final var importedKey : importedKeys) {
-                importedKey(context, importedKey);
-            }
+            importedKeys(context, importedKeys);
         } catch (final SQLException sqle) {
-            log.error("failed; getImportedKeys", sqle);
+            thrown("failed; getImportedKeys", sqle);
         }
         try {
             for (final boolean unique : new boolean[] {true, false}) {
                 for (final boolean approximate : new boolean[] {true, false}) {
                     final var indexInfo = table.getIndexInfos(context, unique, approximate);
-                    for (final var indexInfo_ : indexInfo) {
-                        indexInfo(context, indexInfo_);
-                    }
+                    indexInfo(context, indexInfo);
                 }
             }
         } catch (final SQLException sqle) {
-            log.error("not supported", sqle);
+            thrown("not supported", sqle);
         }
         try {
             final var primaryKeys = table.getPrimaryKeys(context);
-            for (final var primaryKey : primaryKeys) {
-                primaryKey(context, primaryKey);
-            }
+            primaryKeys(context, primaryKeys);
         } catch (final SQLException sqle) {
             // https://github.com/xerial/sqlite-jdbc/issues/831
-            log.error("failed; getPrimaryKeys", sqle);
+            thrown("failed; getPrimaryKeys", sqle);
         }
         try {
             final var pseudoColumns = table.getPseudoColumns(context, "%");
-            assertThat(pseudoColumns).allSatisfy(pc -> {
-                assertThat(pc.getTableCat()).isEqualTo(table.getTableCat());
-                assertThat(pc.getTableSchem()).isEqualTo(table.getTableSchem());
-            });
-            for (final var pseudoColumn : pseudoColumns) {
-                pseudoColumn(context, pseudoColumn);
-            }
+            pseudoColumns(context, pseudoColumns);
         } catch (final SQLException sqle) {
-            log.error("failed; getPseudoColumns", sqle);
+            thrown("failed; getPseudoColumns", sqle);
         }
         try {
             final var tablePrivileges = table.getTablePrivileges(context);
-            for (final var tablePrivilege : tablePrivileges) {
-                tablePrivilege(context, tablePrivilege);
-            }
+            tablePrivileges(context, tablePrivileges);
         } catch (final SQLException sqle) {
-            log.error("failed; getTablePrivileges", sqle);
+            thrown("failed; getTablePrivileges", sqle);
         }
         try {
             final var versionColumns = table.getVersionColumns(context);
-            assertThat(versionColumns).allSatisfy(vc -> {
-            });
-            for (final var versionColumn : versionColumns) {
-                versionColumn(context, versionColumn);
-            }
+            versionColumns(context, versionColumns);
         } catch (final SQLException sqle) {
-            log.error("failed; getVersionColumns", sqle);
+            thrown("failed; getVersionColumns", sqle);
+        }
+    }
+
+    static void tableTypes(final Context context, final List<? extends TableType> tableTypes) throws SQLException {
+        Objects.requireNonNull(context, "context is null");
+        Objects.requireNonNull(tableTypes, "tableTypes is null");
+        final var databaseProductNames = Set.of(
+                "MariaDB"
+        );
+        if (!databaseProductNames.contains(databaseProductName)) {
+            assertThat(tableTypes).isSortedAccordingTo(TableType.COMPARING_TABLE_TYPE);
+        }
+        for (final var tableType : tableTypes) {
+            tableType(context, tableType);
         }
     }
 
@@ -662,22 +583,58 @@ final class ContextTests {
         common(tableType);
     }
 
+    static void typeInfo(final Context context, final List<? extends TypeInfo> typeInfo) throws SQLException {
+        Objects.requireNonNull(context, "context is null");
+        Objects.requireNonNull(typeInfo, "typeInfo is null");
+        if (!databaseProductName.equals(MemorySqliteTest.DATABASE_PRODUCT_NAME)
+            && !databaseProductName.equals("MySQL")) {
+            // https://github.com/xerial/sqlite-jdbc/issues/832 fixed! awaiting a new version...
+            // https://bugs.mysql.com/bug.php?id=109807
+            assertThat(typeInfo).isSortedAccordingTo(TypeInfo.COMPARING_DATA_TYPE);
+        }
+        for (final var typeInfo_ : typeInfo) {
+            typeInfo(context, typeInfo_);
+        }
+    }
+
     static void typeInfo(final Context context, final TypeInfo typeInfo) throws SQLException {
         Objects.requireNonNull(context, "context is null");
         Objects.requireNonNull(typeInfo, "typeInfo is null");
         common(typeInfo);
     }
 
+    static void columns(final Context context, final List<? extends Column> columns) throws SQLException {
+        Objects.requireNonNull(context, "context is null");
+        Objects.requireNonNull(columns, "columns is null");
+        final var databaseProductNames = Set.of(
+                "MariaDB"
+        );
+        if (!databaseProductNames.contains(databaseProductName)) {
+            assertThat(columns).isSortedAccordingTo(Column.COMPARING_TABLE_CAT_TABLE_SCHEM_TABLE_NAME_ORDINAL_POSITION);
+        }
+        for (final var column : columns) {
+            column(context, column);
+        }
+    }
+
     static void column(final Context context, final Column column) throws SQLException {
         Objects.requireNonNull(context, "context is null");
         Objects.requireNonNull(column, "column is null");
+        common(column);
         try {
             final var columnPrivileges = column.getColumnPrivileges(context);
-            for (final var columnPrivilege : columnPrivileges) {
-                columnPrivilege(context, columnPrivilege);
-            }
+            columnPrivileges(context, columnPrivileges);
         } catch (SQLException sqle) {
-            log.error("failed; getColumnPrivileges", sqle);
+            thrown("failed; getColumnPrivileges", sqle);
+        }
+    }
+
+    static void columnPrivileges(final Context context, final List<? extends ColumnPrivilege> columnPrivileges)
+            throws SQLException {
+        Objects.requireNonNull(context, "context is null");
+        Objects.requireNonNull(columnPrivileges, "columnPrivileges is null");
+        for (final var columnPrivilege : columnPrivileges) {
+            columnPrivilege(context, columnPrivilege);
         }
     }
 
@@ -687,10 +644,30 @@ final class ContextTests {
         common(columnPrivilege);
     }
 
+    static void exportedKeys(final Context context, final List<? extends ExportedKey> exportedKeys)
+            throws SQLException {
+        Objects.requireNonNull(context, "context is null");
+        Objects.requireNonNull(exportedKeys, "exportedKeys is null");
+        assertThat(exportedKeys).isSortedAccordingTo(TableKey.COMPARING_FKTABLE_CAT_FKTABLE_SCHEM_FKTABLE_NAME_KEY_SEQ);
+        for (final var exportedKey : exportedKeys) {
+            exportedKey(context, exportedKey);
+        }
+    }
+
     static void exportedKey(final Context context, final ExportedKey exportedKey) throws SQLException {
         Objects.requireNonNull(context, "context is null");
         Objects.requireNonNull(exportedKey, "exportedKey is null");
         common(exportedKey);
+    }
+
+    static void importedKeys(final Context context, final List<? extends ImportedKey> importedKeys)
+            throws SQLException {
+        Objects.requireNonNull(context, "context is null");
+        Objects.requireNonNull(importedKeys, "importedKeys is null");
+        assertThat(importedKeys).isSortedAccordingTo(TableKey.COMPARING_FKTABLE_CAT_FKTABLE_SCHEM_FKTABLE_NAME_KEY_SEQ);
+        for (final var importedKey : importedKeys) {
+            importedKey(context, importedKey);
+        }
     }
 
     static void importedKey(final Context context, final ImportedKey importedKey) throws SQLException {
@@ -699,10 +676,40 @@ final class ContextTests {
         common(importedKey);
     }
 
+    static void indexInfo(final Context context, final List<? extends IndexInfo> indexInfo) throws SQLException {
+        Objects.requireNonNull(context, "context is null");
+        Objects.requireNonNull(indexInfo, "indexInfo is null");
+        if (!databaseProductName.equals("MySQL")) {
+            // https://bugs.mysql.com/bug.php?id=109803
+            assertThat(indexInfo).isSortedAccordingTo(IndexInfo.COMPARING_NON_UNIQUE_TYPE_INDEX_NAME_ORDINAL_POSITION);
+        }
+        for (final var indexInfo_ : indexInfo) {
+            indexInfo(context, indexInfo_);
+        }
+    }
+
     static void indexInfo(final Context context, final IndexInfo indexInfo) throws SQLException {
         Objects.requireNonNull(context, "context is null");
         Objects.requireNonNull(indexInfo, "indexInfo is null");
         common(indexInfo);
+    }
+
+    static void primaryKeys(final Context context, final List<? extends PrimaryKey> primaryKeys) throws SQLException {
+        Objects.requireNonNull(context, "context is null");
+        Objects.requireNonNull(primaryKeys, "primaryKeys is null");
+        final var databaseProductNames = Set.of(
+                MemoryHsqlTest.DATABASE_PRODUCT_NAME,
+                "PostgreSQL",
+                "MySQL"
+        );
+        if (!databaseProductNames.contains(databaseProductName)) {
+            // https://sourceforge.net/p/hsqldb/bugs/1673/
+            // https://bugs.mysql.com/bug.php?id=109808
+            assertThat(primaryKeys).isSortedAccordingTo(PrimaryKey.COMPARING_COLUMN_NAME);
+        }
+        for (final var primaryKey : primaryKeys) {
+            primaryKey(context, primaryKey);
+        }
     }
 
     static void primaryKey(final Context context, final PrimaryKey primaryKey) throws SQLException {
@@ -711,17 +718,50 @@ final class ContextTests {
         common(primaryKey);
     }
 
+    static void pseudoColumns(final Context context, final List<? extends PseudoColumn> pseudoColumns)
+            throws SQLException {
+        Objects.requireNonNull(context, "context is null");
+        Objects.requireNonNull(pseudoColumns, "pseudoColumns is null");
+        assertThat(pseudoColumns).isSortedAccordingTo(
+                PseudoColumn.COMPARING_TABLE_CAT_TABLE_SCHEM_TABLE_NAME_COLUMN_NAME);
+        for (final var pseudoColumn : pseudoColumns) {
+            pseudoColumn(context, pseudoColumn);
+        }
+    }
+
     static void pseudoColumn(final Context context, final PseudoColumn pseudoColumn) throws SQLException {
         Objects.requireNonNull(context, "context is null");
         Objects.requireNonNull(pseudoColumn, "pseudoColumn is null");
         common(pseudoColumn);
     }
 
+    static void superTables(final Context context, final List<? extends SuperTable> superTables) throws SQLException {
+        Objects.requireNonNull(context, "context is null");
+        Objects.requireNonNull(superTables, "superTables is null");
+        for (final var superTable : superTables) {
+            superTable(context, superTable);
+        }
+    }
+
     static void superTable(final Context context, final SuperTable superTable) throws SQLException {
         Objects.requireNonNull(context, "context is null");
         Objects.requireNonNull(superTable, "superTable is null");
         common(superTable);
-        final var rebuild = superTable.toBuilder().build();
+    }
+
+    static void tablePrivileges(final Context context, final List<? extends TablePrivilege> tablePrivileges)
+            throws SQLException {
+        Objects.requireNonNull(context, "context is null");
+        Objects.requireNonNull(tablePrivileges, "tablePrivileges is null");
+        final var databaseProductNames = Set.of(
+                "PostgreSQL"
+        );
+        if (!databaseProductNames.contains(databaseProductName)) {
+            assertThat(tablePrivileges).isSortedAccordingTo(TablePrivilege.COMPARING_TABLE_CAT_TABLE_SCHEM_PRIVILEGE);
+        }
+        for (final var tablePrivilege : tablePrivileges) {
+            tablePrivilege(context, tablePrivilege);
+        }
     }
 
     static void tablePrivilege(final Context context, final TablePrivilege tablePrivilege) throws SQLException {
@@ -730,11 +770,13 @@ final class ContextTests {
         common(tablePrivilege);
     }
 
-    static void versionColumn(final Context context, final VersionColumn versionColumn) throws SQLException {
+    static void udts(final Context context, final List<? extends UDT> udts) throws SQLException {
         Objects.requireNonNull(context, "context is null");
-        Objects.requireNonNull(versionColumn, "versionColumn is null");
-        common(versionColumn);
-        final var rebuild = versionColumn.toBuilder().build();
+        Objects.requireNonNull(udts, "udts is null");
+        assertThat(udts).isSortedAccordingTo(UDT.COMPARING_DATA_TYPE_TYPE_CAT_TYPE_SCHEM_TYPE_NAME);
+        for (final var udt : udts) {
+            udt(context, udt);
+        }
     }
 
     static void udt(final Context context, final UDT udt) throws SQLException {
@@ -742,9 +784,22 @@ final class ContextTests {
         Objects.requireNonNull(udt, "udt is null");
         common(udt);
         final var attributes = udt.getAttributes(context, "%");
-        for (final var attribute : attributes) {
-            attribute(context, attribute);
+        attributes(context, attributes);
+    }
+
+    static void versionColumns(final Context context, final List<? extends VersionColumn> versionColumns)
+            throws SQLException {
+        Objects.requireNonNull(context, "context is null");
+        Objects.requireNonNull(versionColumns, "versionColumns is null");
+        for (final var versionColumn : versionColumns) {
+            versionColumn(context, versionColumn);
         }
+    }
+
+    static void versionColumn(final Context context, final VersionColumn versionColumn) throws SQLException {
+        Objects.requireNonNull(context, "context is null");
+        Objects.requireNonNull(versionColumn, "versionColumn is null");
+        common(versionColumn);
     }
 
     private ContextTests() {

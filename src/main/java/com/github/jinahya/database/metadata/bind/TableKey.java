@@ -27,6 +27,8 @@ import lombok.NoArgsConstructor;
 import lombok.ToString;
 import lombok.experimental.SuperBuilder;
 
+import java.util.Comparator;
+
 /**
  * An abstract class for binding results of {@link java.sql.DatabaseMetaData#getExportedKeys(String, String, String)}
  * method or {@link java.sql.DatabaseMetaData#getImportedKeys(String, String, String)} method.
@@ -43,6 +45,20 @@ public abstract class TableKey
         extends AbstractMetadataType {
 
     private static final long serialVersionUID = 6713872409315471232L;
+
+//    static <T extends TableKey> Comparator<T> comparingFktableCatFktableSchemFktableNameKeySeq() {
+//        return Comparator.<T, String>comparing(TableKey::getFktableCat,
+//                                               Comparator.nullsFirst(Comparator.naturalOrder()))
+//                .thenComparing(TableKey::getFktableSchem, Comparator.nullsFirst(Comparator.naturalOrder()))
+//                .thenComparing(TableKey::getFktableName, Comparator.nullsFirst(Comparator.naturalOrder()))
+//                .thenComparingInt(TableKey::getKeySeq);
+//    }
+
+    public static final Comparator<TableKey> COMPARING_FKTABLE_CAT_FKTABLE_SCHEM_FKTABLE_NAME_KEY_SEQ =
+            Comparator.comparing(TableKey::getFktableCat, Comparator.nullsFirst(Comparator.naturalOrder()))
+                    .thenComparing(TableKey::getFktableSchem, Comparator.nullsFirst(Comparator.naturalOrder()))
+                    .thenComparing(TableKey::getFktableName, Comparator.nullsFirst(Comparator.naturalOrder()))
+                    .thenComparingInt(TableKey::getKeySeq);
 
     @NullableBySpecification
     @ColumnLabel("PKTABLE_CAT")

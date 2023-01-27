@@ -36,13 +36,13 @@ import java.sql.DatabaseMetaData;
  * @see Context#getImportedKeys(String, String, String)
  * @see ExportedKey
  */
-@Data
 @EqualsAndHashCode(callSuper = true)
 @ToString(callSuper = true)
+@Data
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @SuperBuilder(toBuilder = true)
 public class ImportedKey
         extends TableKey {
 
-    private static final long serialVersionUID = 1478290412906203629L;
+    private static final long serialVersionUID = -1900794151555506751L;
 }

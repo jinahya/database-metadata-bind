@@ -36,9 +36,10 @@ import static java.sql.DriverManager.getConnection;
  *
  * @author Jin Kwon &lt;jinahya_at_gmail.com&gt;
  */
-@org.junit.jupiter.api.condition.EnabledIfSystemProperty(named = "memory", matches = "true")
 @Slf4j
 class MemorySqliteTest extends MemoryTest {
+
+    static final String DATABASE_PRODUCT_NAME = "SQLite";
 
     private static final String CONNECTION_URL = "jdbc:sqlite::memory:";
 
@@ -64,18 +65,53 @@ class MemorySqliteTest extends MemoryTest {
                     final var tableSchem = tables.getString("TABLE_SCHEM");
                     final var tableName = tables.getString("TABLE_NAME");
                     log.debug("{}/{}/{}", tableCat, tableSchem, tableName);
-                    try (ResultSet importedKeys = meta.getImportedKeys(tableCat, tableSchem, tableName)) {
-                        while (importedKeys.next()) {
-                            final var pktableCat = importedKeys.getString("PKTABLE_CAT");
-                            final var pktableSchem = importedKeys.getString("PKTABLE_SCHEM");
-                            final var pktableName = importedKeys.getString("PKTABLE_NAME");
-                            log.debug("importedKey.pktable: {}/{}/{}", pktableCat, pktableSchem, pktableName);
+                    if (false && "sqlite_schema".equals(tableName)) {
+                        // https://github.com/xerial/sqlite-jdbc/issues/831
+                        continue;
+                    }
+                    if (false) {
+                        try (ResultSet importedKeys = meta.getImportedKeys(tableCat, tableSchem, tableName)) {
+                            while (importedKeys.next()) {
+                                final var pktableCat = importedKeys.getString("PKTABLE_CAT");
+                                final var pktableSchem = importedKeys.getString("PKTABLE_SCHEM");
+                                final var pktableName = importedKeys.getString("PKTABLE_NAME");
+                                log.debug("importedKey.pktable: {}/{}/{}", pktableCat, pktableSchem, pktableName);
+                            }
                         }
                     }
-                    try (ResultSet exportedKeys = meta.getExportedKeys(tableCat, tableSchem, tableName)) {
-                        while (exportedKeys.next()) {
+                    if (false) {
+                        try (ResultSet exportedKeys = meta.getExportedKeys(tableCat, tableSchem, tableName)) {
+                            while (exportedKeys.next()) {
+                            }
                         }
                     }
+                    if (true) {
+                        try (ResultSet exportedKeys = meta.getPrimaryKeys(tableCat, tableSchem, tableName)) {
+                            while (exportedKeys.next()) {
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    @Disabled("https://github.com/xerial/sqlite-jdbc/issues/832") // seems fixed.
+    @Test
+    void getTypeInfo__() throws SQLException {
+        try (var connection = DriverManager.getConnection("jdbc:sqlite::memory:")) {
+            final var meta = connection.getMetaData();
+            log.debug("driverName: {}", meta.getDriverName());
+            log.debug("driverVersion: {}", meta.getDriverVersion());
+            log.debug("databaseProductVersion: {}", meta.getDatabaseProductVersion());
+            log.debug("databaseProductName: {}", meta.getDatabaseProductName());
+            log.debug("databaseMajorVersion: {}", meta.getDatabaseMajorVersion());
+            log.debug("databaseMinorVersion: {}", meta.getDatabaseMinorVersion());
+            try (ResultSet typeInfo = meta.getTypeInfo()) {
+                while (typeInfo.next()) {
+                    final var typeName = typeInfo.getString("TYPE_NAME");
+                    final var dataType = typeInfo.getString("DATA_TYPE");
+                    log.debug("TYPE_NAME: {}, DATA_TYPE: {}", typeName, dataType);
                 }
             }
         }

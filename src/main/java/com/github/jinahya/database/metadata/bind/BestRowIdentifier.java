@@ -29,6 +29,7 @@ import lombok.experimental.SuperBuilder;
 
 import java.sql.DatabaseMetaData;
 import java.util.Arrays;
+import java.util.Comparator;
 import java.util.List;
 
 /**
@@ -47,6 +48,12 @@ public class BestRowIdentifier
         extends AbstractMetadataType {
 
     private static final long serialVersionUID = -1512051574198028399L;
+
+    /**
+     * A comparator compares objects with their value of {@link #getScope()}.
+     */
+    public static final Comparator<BestRowIdentifier> COMPARING_SCOPE =
+            Comparator.comparingInt(BestRowIdentifier::getScope);
 
     public static List<Integer> scopes() {
         return Arrays.asList(
@@ -82,70 +89,4 @@ public class BestRowIdentifier
 
     @ColumnLabel("PSEUDO_COLUMN")
     private int pseudoColumn;
-
-    // -----------------------------------------------------------------------------------------------------------------
-
-    public int getScope() {
-        return scope;
-    }
-
-    public void setScope(int scope) {
-        this.scope = scope;
-    }
-
-    public String getColumnName() {
-        return columnName;
-    }
-
-    public void setColumnName(String columnName) {
-        this.columnName = columnName;
-    }
-
-    public int getDataType() {
-        return dataType;
-    }
-
-    public void setDataType(int dataType) {
-        this.dataType = dataType;
-    }
-
-    public String getTypeName() {
-        return typeName;
-    }
-
-    public void setTypeName(String typeName) {
-        this.typeName = typeName;
-    }
-
-    public Integer getColumnSize() {
-        return columnSize;
-    }
-
-    public void setColumnSize(Integer columnSize) {
-        this.columnSize = columnSize;
-    }
-
-    public Integer getBufferLength() {
-        return bufferLength;
-    }
-
-    public void setBufferLength(Integer bufferLength) {
-        this.bufferLength = bufferLength;
-    }
-
-    public Integer getDecimalDigits() {
-        return decimalDigits;
-    }
-
-    public void setDecimalDigits(Integer decimalDigits) {
-        this.decimalDigits = decimalDigits;
-    }
-
-    public int getPseudoColumn() {
-        return pseudoColumn;
-    }
-
-    public void setPseudoColumn(int pseudoColumn) {
-        this.pseudoColumn = pseudoColumn;
-    }
 }

@@ -28,6 +28,7 @@ import lombok.ToString;
 import lombok.experimental.SuperBuilder;
 
 import java.sql.SQLException;
+import java.util.Comparator;
 import java.util.List;
 import java.util.Objects;
 import java.util.function.Consumer;
@@ -48,6 +49,12 @@ public class Catalog
         extends AbstractMetadataType {
 
     private static final long serialVersionUID = 6239185259128825953L;
+
+    /**
+     * A comparator compares objects with their {@link #getTableCat()} values.
+     */
+    public static final Comparator<Catalog> COMPARING_TABLE_CAT =
+            Comparator.comparing(Catalog::getTableCat, Comparator.nullsFirst(Comparator.naturalOrder()));
 
     public static final String COLUMN_LABEL_TABLE_CAT = "TABLE_CAT";
 

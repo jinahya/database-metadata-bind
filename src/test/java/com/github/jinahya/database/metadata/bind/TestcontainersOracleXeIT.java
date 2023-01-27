@@ -23,27 +23,29 @@ package com.github.jinahya.database.metadata.bind;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
-import org.testcontainers.containers.MySQLContainer;
+import org.testcontainers.containers.JdbcDatabaseContainer;
+import org.testcontainers.containers.OracleContainer;
 import org.testcontainers.junit.jupiter.Container;
 import org.testcontainers.junit.jupiter.Testcontainers;
-import org.testcontainers.utility.DockerImageName;
 
-import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
 
 @Disabled
 @Testcontainers
 @Slf4j
-class TestcontainersMysqlIT
+class TestcontainersOracleXeIT
         extends TestContainersIT {
 
     @Container
-    private static final MySQLContainer<?> CONTAINER;
+    private static final JdbcDatabaseContainer<OracleContainer> CONTAINER;
 
     static {
-        final DockerImageName NAME = DockerImageName.parse("mysql:latest");
-        CONTAINER = new MySQLContainer<>(NAME);
+        // https://www.testcontainers.org/modules/databases/oraclexe/
+        CONTAINER = new OracleContainer("gvenzl/oracle-xe:latest-faststart")
+                .withDatabaseName("testDB")
+                .withUsername("testUser")
+                .withPassword("testPassword");
     }
 
     @Test
@@ -51,8 +53,8 @@ class TestcontainersMysqlIT
         final var url = CONTAINER.getJdbcUrl();
         final var user = CONTAINER.getUsername();
         final var password = CONTAINER.getPassword();
-        try (Connection connection = DriverManager.getConnection(url, user, password)) {
-            final Context context = Context.newInstance(connection);
+        try (var connection = DriverManager.getConnection(url, user, password)) {
+            final var context = Context.newInstance(connection);
             ContextTests.test(context);
         }
     }

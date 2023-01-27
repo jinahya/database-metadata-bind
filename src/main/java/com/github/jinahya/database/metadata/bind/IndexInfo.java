@@ -28,6 +28,7 @@ import lombok.ToString;
 import lombok.experimental.SuperBuilder;
 
 import java.sql.DatabaseMetaData;
+import java.util.Comparator;
 
 /**
  * A class for binding results of {@link DatabaseMetaData#getIndexInfo(String, String, String, boolean, boolean)}
@@ -44,7 +45,13 @@ import java.sql.DatabaseMetaData;
 public class IndexInfo
         extends AbstractMetadataType {
 
-    private static final long serialVersionUID = -768486884376018474L;
+    private static final long serialVersionUID = 924040226611181424L;
+
+    public static final Comparator<IndexInfo> COMPARING_NON_UNIQUE_TYPE_INDEX_NAME_ORDINAL_POSITION
+            = Comparator.comparing(IndexInfo::isNonUnique)
+            .thenComparingInt(IndexInfo::getType)
+            .thenComparing(IndexInfo::getIndexName, Comparator.nullsFirst(Comparator.naturalOrder()))
+            .thenComparingInt(IndexInfo::getOrdinalPosition);
 
     public static final String COLUMN_LABEL_TABLE_CAT = "TABLE_CAT";
 

@@ -21,6 +21,7 @@ package com.github.jinahya.database.metadata.bind;
  */
 
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.text.CaseUtils;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -132,8 +133,10 @@ abstract class MetadataTypeTest<T extends MetadataType> {
     @Test
     void fieldsWithUnused_TypeShouldNotBePrimitive() {
         for (final Field field : fieldsWithUnusedBySpecification().keySet()) {
-            assertThat(field.getAnnotation(NotUsedBySpecification.class)).isNotNull();
-            assertThat(field.getType().isPrimitive()).isFalse();
+            assert field.isAnnotationPresent(NotUsedBySpecification.class);
+            assertThat(field.getType().isPrimitive())
+                    .as("@NotUsedBySpecification on primitive field: %s", field)
+                    .isFalse();
         }
     }
 
@@ -141,7 +144,7 @@ abstract class MetadataTypeTest<T extends MetadataType> {
     @Test
     void fields_NotPrimitive_NullableBySpecification() {
         for (final Field field : getFieldsWithNullableBySpecification().keySet()) {
-            assertThat(field.getAnnotation(NullableBySpecification.class)).isNotNull();
+            assert field.isAnnotationPresent(NullableBySpecification.class);
             assertThat(field.getType().isPrimitive())
                     .as("@NullableBySpecification on primitive field: %s", field)
                     .isFalse();
@@ -155,6 +158,17 @@ abstract class MetadataTypeTest<T extends MetadataType> {
             assertThat(field.getAnnotation(NullableByVendor.class)).isNotNull();
             assertThat(field.getType().isPrimitive()).isFalse();
         }
+    }
+
+    @DisplayName("COLUMN_LABEL <> fieldName")
+    @Test
+    void columnLabelWithFieldName() {
+        getFieldsWithColumnLabel().forEach((f, l) -> {
+            final var camelCase = CaseUtils.toCamelCase(l.value(), false, '_');
+            assertThat(f.getName())
+                    .as("expected name of %1$s", f)
+                    .isEqualTo(camelCase);
+        });
     }
 
     T typeInstance() {

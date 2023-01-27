@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
   <modelVersion>4.0.0</modelVersion>
 
   <parent>
@@ -44,9 +45,11 @@
     <maven.compiler.testRelease>${maven.compiler.testTarget}</maven.compiler.testRelease>
     <doclint>none</doclint>
     <version.animal-sniffer>1.22</version.animal-sniffer>
+    <version.com.oracle.ojdbc>19.3.0.0</version.com.oracle.ojdbc>
     <version.lombok>1.18.24</version.lombok>
     <version.maven-failsafe>${version.maven-surefire}</version.maven-failsafe>
     <version.maven-surefire>3.0.0-M7</version.maven-surefire>
+    <version.mysql-connector-j>8.0.32</version.mysql-connector-j>
     <version.ojdbc6>11.2.0.4</version.ojdbc6>
     <version.ojdbc8>21.8.0.0</version.ojdbc8>
     <version.ojdbc10>19.17.0.0</version.ojdbc10>
@@ -59,28 +62,10 @@
     <dependencies>
       <dependency>
         <groupId>com.oracle.database.jdbc</groupId>
-        <artifactId>ojdbc6</artifactId>
-        <version>${version.ojdbc6}</version>
-      </dependency>
-      <dependency>
-        <groupId>com.oracle.database.jdbc</groupId>
-        <artifactId>ojdbc8</artifactId>
-        <version>${version.ojdbc8}</version>
-      </dependency>
-      <dependency>
-        <groupId>com.oracle.database.jdbc</groupId>
-        <artifactId>ojdbc10</artifactId>
-        <version>${version.ojdbc10}</version>
-      </dependency>
-      <dependency>
-        <groupId>com.oracle.database.jdbc</groupId>
-        <artifactId>ojdbc11</artifactId>
-        <version>${version.ojdbc11}</version>
-      </dependency>
-      <dependency>
-        <groupId>org.postgresql</groupId>
-        <artifactId>postgresql</artifactId>
-        <version>42.5.1</version>
+        <artifactId>ojdbc-bom</artifactId>
+        <version>21.8.0.0</version>
+        <type>pom</type>
+        <scope>import</scope>
       </dependency>
       <dependency>
         <groupId>org.testcontainers</groupId>
@@ -111,9 +96,32 @@
       <scope>test</scope>
     </dependency>
     <dependency>
+      <groupId>com.microsoft.sqlserver</groupId>
+      <artifactId>mssql-jdbc</artifactId>
+      <version>11.2.3.jre17</version>
+      <scope>test</scope>
+    </dependency>
+    <dependency>
       <groupId>com.mysql</groupId>
       <artifactId>mysql-connector-j</artifactId>
-      <version>8.0.32</version>
+      <version>${version.mysql-connector-j}</version>
+      <scope>test</scope>
+    </dependency>
+    <dependency>
+      <groupId>com.oracle.database.jdbc</groupId>
+      <artifactId>ojdbc11</artifactId>
+      <scope>test</scope>
+    </dependency>
+    <dependency>
+      <groupId>org.apache.commons</groupId>
+      <artifactId>commons-lang3</artifactId>
+      <version>3.12.0</version>
+      <scope>test</scope>
+    </dependency>
+    <dependency>
+      <groupId>org.apache.commons</groupId>
+      <artifactId>commons-text</artifactId>
+      <version>1.10.0</version>
       <scope>test</scope>
     </dependency>
     <dependency>
@@ -195,7 +203,17 @@
     </dependency>
     <dependency>
       <groupId>org.testcontainers</groupId>
+      <artifactId>mssqlserver</artifactId>
+      <scope>test</scope>
+    </dependency>
+    <dependency>
+      <groupId>org.testcontainers</groupId>
       <artifactId>mysql</artifactId>
+      <scope>test</scope>
+    </dependency>
+    <dependency>
+      <groupId>org.testcontainers</groupId>
+      <artifactId>oracle-xe</artifactId>
       <scope>test</scope>
     </dependency>
     <dependency>
@@ -255,21 +273,6 @@
         </plugin>
         <plugin>
           <groupId>org.apache.maven.plugins</groupId>
-          <artifactId>maven-failsafe-plugin</artifactId>
-          <version>${version.maven-failsafe}</version>
-        </plugin>
-        <plugin>
-          <groupId>org.apache.maven.plugins</groupId>
-          <artifactId>maven-surefire-plugin</artifactId>
-          <version>${version.maven-surefire}</version>
-          <configuration>
-            <systemPropertyVariables>
-              <org.jboss.logging.provider>jdk</org.jboss.logging.provider>
-            </systemPropertyVariables>
-          </configuration>
-        </plugin>
-        <plugin>
-          <groupId>org.apache.maven.plugins</groupId>
           <artifactId>maven-jar-plugin</artifactId>
           <version>3.2.2</version>
         </plugin>
@@ -325,7 +328,7 @@
         <executions>
           <execution>
             <id>jakarta</id>
-            <phase>prepare-package</phase>
+            <!--            <phase>prepare-package</phase>-->
             <goals>
               <goal>compile</goal>
             </goals>
@@ -336,7 +339,7 @@
           </execution>
           <execution>
             <id>release-11</id>
-            <phase>prepare-package</phase>
+            <!--            <phase>prepare-package</phase>-->
             <goals>
               <goal>compile</goal>
             </goals>
@@ -349,7 +352,7 @@
           </execution>
           <execution>
             <id>release-11-jakarta</id>
-            <phase>prepare-package</phase>
+            <!--            <phase>prepare-package</phase>-->
             <goals>
               <goal>compile</goal>
             </goals>
@@ -362,7 +365,7 @@
           </execution>
           <execution>
             <id>release-17</id>
-            <phase>prepare-package</phase>
+            <!--            <phase>prepare-package</phase>-->
             <goals>
               <goal>compile</goal>
             </goals>
@@ -375,7 +378,7 @@
           </execution>
           <execution>
             <id>release-17-jakarta</id>
-            <phase>prepare-package</phase>
+            <!--            <phase>prepare-package</phase>-->
             <goals>
               <goal>compile</goal>
             </goals>
@@ -408,7 +411,7 @@
             <id>enforce-dependency-convergence</id>
             <configuration>
               <rules>
-                <dependencyConvergence />
+                <dependencyConvergence/>
               </rules>
             </configuration>
             <goals>
@@ -446,7 +449,11 @@
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-surefire-plugin</artifactId>
+        <version>${version.maven-surefire}</version>
         <configuration>
+          <excludes>
+            <exclude>**/*IT.java</exclude> <!-- 이게 왜 필요한지 확인 필요 -->
+          </excludes>
           <systemProperties>
             <property>
               <name>derby.stream.error.file</name>

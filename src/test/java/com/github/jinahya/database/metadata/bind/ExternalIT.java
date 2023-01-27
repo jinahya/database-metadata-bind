@@ -24,7 +24,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.condition.EnabledIfSystemProperty;
 
-import static java.sql.DriverManager.getConnection;
+import java.sql.DriverManager;
 
 /**
  * A test class for binding a remote database.
@@ -44,15 +44,15 @@ class ExternalIT {
     @EnabledIfSystemProperty(named = PROPERTY_NAME_USER, matches = ".+")
     @EnabledIfSystemProperty(named = PROPERTY_NAME_PASSWORD, matches = ".+")
     @Test
-    void writeToFiles() throws Exception {
+    void test() throws Exception {
         final String url = System.getProperty("url");
         final String user = System.getProperty("user");
         final String password = System.getProperty("password");
         log.info("connecting to {}", url);
-        try (var connection = getConnection(url, user, password)) {
+        try (var connection = DriverManager.getConnection(url, user, password)) {
             log.info("connected: {}", connection);
             final var context = Context.newInstance(connection);
-            final var catalogs = context.getCatalogs();
+            ContextTests.test(context);
         }
     }
 }
