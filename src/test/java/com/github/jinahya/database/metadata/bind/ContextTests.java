@@ -307,6 +307,12 @@ final class ContextTests {
             thrown("failed; getProcedureColumns", sqle);
         }
         try {
+            final var schemas = context.getSchemas();
+            schemas(context, schemas);
+        } catch (final SQLException sqle) {
+            thrown("failed; getSchemas", sqle);
+        }
+        try {
             final var schemas = context.getSchemas(null, null);
             schemas(context, schemas);
         } catch (final SQLException sqle) {
