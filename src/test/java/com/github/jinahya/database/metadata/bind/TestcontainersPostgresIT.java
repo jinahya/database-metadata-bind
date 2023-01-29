@@ -22,7 +22,6 @@ package com.github.jinahya.database.metadata.bind;
 
 import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.Disabled;
-import org.junit.jupiter.api.Test;
 import org.testcontainers.containers.PostgreSQLContainer;
 import org.testcontainers.junit.jupiter.Container;
 import org.testcontainers.junit.jupiter.Testcontainers;
@@ -38,6 +37,8 @@ import java.sql.SQLException;
 class TestcontainersPostgresIT
         extends TestContainersIT {
 
+    static final String DATABASE_PRODUCT_NAME = "PostgreSQL";
+
     @Container
     private static final PostgreSQLContainer<?> CONTAINER;
 
@@ -46,14 +47,11 @@ class TestcontainersPostgresIT
         CONTAINER = new PostgreSQLContainer<>(NAME);
     }
 
-    @Test
-    void test() throws SQLException {
+    @Override
+    Connection connect() throws SQLException {
         final var url = CONTAINER.getJdbcUrl();
         final var user = CONTAINER.getUsername();
         final var password = CONTAINER.getPassword();
-        try (Connection connection = DriverManager.getConnection(url, user, password)) {
-            final Context context = Context.newInstance(connection);
-            ContextTests.test(context);
-        }
+        return DriverManager.getConnection(url, user, password);
     }
 }

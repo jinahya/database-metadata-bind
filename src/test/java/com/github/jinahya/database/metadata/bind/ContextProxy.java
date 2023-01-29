@@ -4,7 +4,7 @@ package com.github.jinahya.database.metadata.bind;
  * #%L
  * database-metadata-bind
  * %%
- * Copyright (C) 2011 - 2021 Jinahya, Inc.
+ * Copyright (C) 2011 - 2023 Jinahya, Inc.
  * %%
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -20,16 +20,9 @@ package com.github.jinahya.database.metadata.bind;
  * #L%
  */
 
-import org.junit.jupiter.api.Test;
+class ContextProxy {
 
-import static org.assertj.core.api.Assertions.assertThat;
-
-class LangTest {
-
-    @Test
-    void primitiveBoolean() {
-        final Object value = true;
-        assertThat(value).isInstanceOf(Boolean.class);
-        assertThat(Boolean.class.isInstance(value)).isTrue();
+    private ContextProxy() {
+        throw new AssertionError("instantiation is not allowed");
     }
 }

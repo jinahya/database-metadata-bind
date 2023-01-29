@@ -22,13 +22,13 @@ package com.github.jinahya.database.metadata.bind;
 
 import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.Disabled;
-import org.junit.jupiter.api.Test;
 import org.testcontainers.containers.JdbcDatabaseContainer;
 import org.testcontainers.containers.MSSQLServerContainer;
 import org.testcontainers.junit.jupiter.Container;
 import org.testcontainers.junit.jupiter.Testcontainers;
 import org.testcontainers.utility.DockerImageName;
 
+import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
 
@@ -50,14 +50,11 @@ class TestcontainersMsSqlServerIT
         ;
     }
 
-    @Test
-    void test() throws SQLException {
+    @Override
+    Connection connect() throws SQLException {
         final var url = CONTAINER.getJdbcUrl();
         final var user = CONTAINER.getUsername();
         final var password = CONTAINER.getPassword();
-        try (var connection = DriverManager.getConnection(url, user, password)) {
-            final var context = Context.newInstance(connection);
-            ContextTests.test(context);
-        }
+        return DriverManager.getConnection(url, user, password);
     }
 }

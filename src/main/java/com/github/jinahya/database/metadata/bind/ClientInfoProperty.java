@@ -44,15 +44,23 @@ public class ClientInfoProperty
 
     private static final long serialVersionUID = -2913230435651853254L;
 
-    @ColumnLabel("NAME")
+    public static final String COLUMN_LABEL_NAME = "NAME";
+
+    public static final String COLUMN_LABEL_MAX_LEN = "MAX_LEN";
+
+    public static final String COLUMN_LABEL_DEFAULT_VALUE = "DEFAULT_VALUE";
+
+    public static final String COLUMN_LABEL_DESCRIPTION = "DESCRIPTION";
+
+    @ColumnLabel(COLUMN_LABEL_NAME)
     private String name;
 
-    @ColumnLabel("MAX_LEN")
+    @ColumnLabel(COLUMN_LABEL_MAX_LEN)
     private int maxLen;
 
-    @ColumnLabel("DEFAULT_VALUE")
+    @ColumnLabel(COLUMN_LABEL_DEFAULT_VALUE)
     private String defaultValue;
 
-    @ColumnLabel("DESCRIPTION")
+    @ColumnLabel(COLUMN_LABEL_DESCRIPTION)
     private String description;
 }

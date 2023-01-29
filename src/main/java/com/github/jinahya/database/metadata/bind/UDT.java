@@ -72,6 +72,10 @@ public class UDT
         return context.getAttributes(getTypeCat(), getTypeSchem(), getTypeName(), attributeNamePattern);
     }
 
+    public TypeId getTypeId() {
+        return TypeId.of(getTypeCat(), getTypeSchem(), getTypeName());
+    }
+
     @NullableBySpecification
     @ColumnLabel(COLUMN_LABEL_TYPE_CAT)
     private String typeCat;
@@ -83,12 +87,14 @@ public class UDT
     @ColumnLabel(COLUMN_LABEL_TYPE_NAME)
     private String typeName;
 
+    @NullableByVendor("PostgreSQL")
     @ColumnLabel(COLUMN_LABEL_CLASS_NAME)
     private String className;
 
     @ColumnLabel(COLUMN_LABEL_DATA_TYPE)
     private int dataType;
 
+    @NullableByVendor("PostgreSQL")
     @ColumnLabel("REMARKS")
     private String remarks;
 

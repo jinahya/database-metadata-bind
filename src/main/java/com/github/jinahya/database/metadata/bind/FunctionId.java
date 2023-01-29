@@ -22,28 +22,26 @@ package com.github.jinahya.database.metadata.bind;
 
 import lombok.AccessLevel;
 import lombok.Data;
-import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
-import lombok.ToString;
 import lombok.experimental.SuperBuilder;
 
-import java.sql.DatabaseMetaData;
+import java.io.Serializable;
 
-/**
- * A class for binding results of {@link DatabaseMetaData#getImportedKeys(String, String, String)} method.
- *
- * @author Jin Kwon &lt;jinahya_at_gmail.com&gt;
- * @see Context#getImportedKeys(String, String, String)
- * @see ExportedKey
- */
-@ChildOf(Table.class)
-@EqualsAndHashCode(callSuper = true)
-@ToString(callSuper = true)
 @Data
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @SuperBuilder(toBuilder = true)
-public class ImportedKey
-        extends TableKey {
+public class FunctionId implements Serializable {
 
-    private static final long serialVersionUID = -1900794151555506751L;
+    private static final long serialVersionUID = 8614281252146063072L;
+
+    public static FunctionId of(final String tableCat, final String tableSchem, final String specificName) {
+        return FunctionId.builder()
+                .schemaId(SchemaId.of(tableCat, tableSchem))
+                .specificName(specificName)
+                .build();
+    }
+
+    private SchemaId schemaId;
+
+    private String specificName;
 }

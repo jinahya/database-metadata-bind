@@ -47,20 +47,27 @@ public class TablePrivilege
 
     private static final long serialVersionUID = -1799954363648972203L;
 
-    public static final Comparator<TablePrivilege> COMPARING_TABLE_CAT_TABLE_SCHEM_PRIVILEGE =
+    public static final String COLUMN_LABEL_TABLE_CAT = "TABLE_CAT";
+
+    public static final String COLUMN_LABEL_TABLE_SCHEM = "TABLE_SCHEM";
+
+    public static final String COLUMN_LABEL_TABLE_NAME = "TABLE_NAME";
+
+    public static final Comparator<TablePrivilege> COMPARING_TABLE_CAT_TABLE_SCHEM_TABLE_NAME_PRIVILEGE =
             Comparator.comparing(TablePrivilege::getTableCat, Comparator.nullsFirst(Comparator.naturalOrder()))
                     .thenComparing(TablePrivilege::getTableSchem, Comparator.nullsFirst(Comparator.naturalOrder()))
+                    .thenComparing(TablePrivilege::getTableName)
                     .thenComparing(TablePrivilege::getPrivilege);
 
     @NullableBySpecification
-    @ColumnLabel("TABLE_CAT")
+    @ColumnLabel(COLUMN_LABEL_TABLE_CAT)
     private String tableCat;
 
     @NullableBySpecification
-    @ColumnLabel("TABLE_SCHEM")
+    @ColumnLabel(COLUMN_LABEL_TABLE_SCHEM)
     private String tableSchem;
 
-    @ColumnLabel("TABLE_NAME")
+    @ColumnLabel(COLUMN_LABEL_TABLE_NAME)
     private String tableName;
 
     @NullableBySpecification

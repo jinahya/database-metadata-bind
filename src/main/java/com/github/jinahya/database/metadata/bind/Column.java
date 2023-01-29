@@ -32,6 +32,7 @@ import java.sql.SQLException;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Objects;
+import java.util.Optional;
 
 /**
  * A class for binding results of {@link DatabaseMetaData#getColumns(String, String, String, String)} method.
@@ -54,30 +55,63 @@ public class Column
     public static final Comparator<Column> COMPARING_TABLE_CAT_TABLE_SCHEM_TABLE_NAME_ORDINAL_POSITION =
             Comparator.comparing(Column::getTableCat, Comparator.nullsFirst(Comparator.naturalOrder()))
                     .thenComparing(Column::getTableSchem, Comparator.nullsFirst(Comparator.naturalOrder()))
-                    .thenComparing(Column::getTableName, Comparator.nullsFirst(Comparator.naturalOrder()))
+                    .thenComparing(Column::getTableName)
                     .thenComparingInt(Column::getOrdinalPosition);
 
-    public static final String COLUMN_NAME_IS_AUTOINCREMENT = "IS_AUTOINCREMENT";
+    public static final String COLUMN_LABEL_TABLE_CAT = "TABLE_CAT";
 
-    public static final String COLUMN_NAME_IS_GENERATEDCOLUMN = "IS_GENERATEDCOLUMN";
+    public static final String COLUMN_LABEL_TABLE_SCHEM = "TABLE_SCHEM";
 
+    public static final String COLUMN_LABEL_TABLE_NAME = "TABLE_NAME";
+
+    public static final String COLUMN_LABEL_COLUMN_NAME = "COLUMN_NAME";
+
+    public static final String COLUMN_LABEL_IS_AUTOINCREMENT = "IS_AUTOINCREMENT";
+
+    public static final String COLUMN_LABEL_IS_GENERATEDCOLUMN = "IS_GENERATEDCOLUMN";
+
+    public ColumnId getColumnId() {
+        return ColumnId.of(getTableCat(), getTableSchem(), getTableName(), getColumnName());
+    }
+
+    /**
+     * Retrieves a description of the access rights for this column.
+     *
+     * @param context a context.
+     * @return a list of bound values.
+     * @throws SQLException if a database error occurs.
+     * @see Context#getColumnPrivileges(String, String, String, String)
+     */
     public List<ColumnPrivilege> getColumnPrivileges(final Context context) throws SQLException {
         Objects.requireNonNull(context, "context is null");
-        return context.getColumnPrivileges(getTableCat(), getTableSchem(), getTableName(), getColumnName());
+        return context.getColumnPrivileges(
+                getTableCatNonNull(),
+                getTableSchemNonNull(),
+                getTableName(),
+                getColumnName()
+        );
+    }
+
+    String getTableCatNonNull() {
+        return Optional.ofNullable(getTableCat()).orElse(Catalog.COLUMN_VALUE_TABLE_CAT_EMPTY);
+    }
+
+    String getTableSchemNonNull() {
+        return Optional.ofNullable(getTableSchem()).orElse(Schema.COLUMN_VALUE_TABLE_SCHEM_EMPTY);
     }
 
     @NullableBySpecification
-    @ColumnLabel("TABLE_CAT")
+    @ColumnLabel(COLUMN_LABEL_TABLE_CAT)
     private String tableCat;
 
     @NullableBySpecification
-    @ColumnLabel("TABLE_SCHEM")
+    @ColumnLabel(COLUMN_LABEL_TABLE_SCHEM)
     private String tableSchem;
 
-    @ColumnLabel("TABLE_NAME")
+    @ColumnLabel(COLUMN_LABEL_TABLE_NAME)
     private String tableName;
 
-    @ColumnLabel("COLUMN_NAME")
+    @ColumnLabel(COLUMN_LABEL_COLUMN_NAME)
     private String columnName;
 
     @ColumnLabel("DATA_TYPE")
@@ -145,9 +179,9 @@ public class Column
     @ColumnLabel("SOURCE_DATA_TYPE")
     private Integer sourceDataType;
 
-    @ColumnLabel(COLUMN_NAME_IS_AUTOINCREMENT)
+    @ColumnLabel(COLUMN_LABEL_IS_AUTOINCREMENT)
     private String isAutoincrement;
 
-    @ColumnLabel(COLUMN_NAME_IS_GENERATEDCOLUMN)
+    @ColumnLabel(COLUMN_LABEL_IS_GENERATEDCOLUMN)
     private String isGeneratedcolumn;
 }

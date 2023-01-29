@@ -68,6 +68,16 @@ public class Function
 
     public static final String COLUMN_NAME_FUNCTION_TYPE = "FUNCTION_TYPE";
 
+    public FunctionId getFunctionId() {
+        return FunctionId.builder()
+                .schemaId(
+                        SchemaId.builder().catalogId(CatalogId.builder()
+                                                             .tableCat(getFunctionCat()).build())
+                                .tableSchem(getFunctionSchem()).build())
+                .specificName(getSpecificName())
+                .build();
+    }
+
     public List<FunctionColumn> getFunctionColumns(final Context context, final String columnNamePattern)
             throws SQLException {
         Objects.requireNonNull(context, "context is null");
@@ -86,6 +96,7 @@ public class Function
     @EqualsAndHashCode.Exclude
     private String functionName;
 
+    @NullableByVendor("PostgreSQL")
     @ColumnLabel("REMARKS")
     private String remarks;
 

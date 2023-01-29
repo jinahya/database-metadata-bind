@@ -55,6 +55,10 @@ public class IndexInfo
 
     public static final String COLUMN_LABEL_TABLE_CAT = "TABLE_CAT";
 
+    public static final String COLUMN_LABEL_TABLE_SCHEM = "TABLE_SCHEM";
+
+    public static final String COLUMN_LABEL_TABLE_NAME = "TABLE_NAME";
+
     public static final String COLUMN_LABEL_TYPE = "TYPE";
 
     @NullableBySpecification
@@ -62,10 +66,10 @@ public class IndexInfo
     private String tableCat;
 
     @NullableBySpecification
-    @ColumnLabel("TABLE_SCHEM")
+    @ColumnLabel(COLUMN_LABEL_TABLE_SCHEM)
     private String tableSchem;
 
-    @ColumnLabel("TABLE_NAME")
+    @ColumnLabel(COLUMN_LABEL_TABLE_NAME)
     private String tableName;
 
     @ColumnLabel("NON_UNIQUE")

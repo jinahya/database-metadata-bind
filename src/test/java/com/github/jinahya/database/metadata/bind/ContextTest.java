@@ -28,8 +28,10 @@ import java.lang.reflect.Modifier;
 import java.sql.DatabaseMetaData;
 import java.sql.ResultSet;
 import java.util.Arrays;
+import java.util.List;
 import java.util.function.Consumer;
 
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 /**
@@ -43,8 +45,8 @@ class ContextTest {
     @Test
     void assertAllMethodsBound() throws ReflectiveOperationException {
         for (final Method method : DatabaseMetaData.class.getMethods()) {
-            final int modifier = method.getModifiers();
-            if (Modifier.isStatic(modifier)) {
+            final int modifiers = method.getModifiers();
+            if (Modifier.isStatic(modifiers)) {
                 continue;
             }
             if (method.getDeclaringClass() != DatabaseMetaData.class) {
@@ -53,11 +55,20 @@ class ContextTest {
             if (method.getParameterCount() == 0) {
                 continue;
             }
-            if (ResultSet.class.isAssignableFrom(method.getReturnType())) {
+            if (!ResultSet.class.isAssignableFrom(method.getReturnType())) {
+                continue;
+            }
+            final var methodName = method.getName();
+            {
                 final Class<?>[] parameterTypes
                         = Arrays.copyOf(method.getParameterTypes(), method.getParameterCount() + 1);
                 parameterTypes[parameterTypes.length - 1] = Consumer.class;
-                final Method bound = Context.class.getMethod(method.getName(), parameterTypes);
+                final Method bound = Context.class.getMethod(methodName, parameterTypes);
+                assertThat(bound.getReturnType()).isEqualTo(void.class);
+            }
+            {
+                final Method bound = Context.class.getMethod(methodName, method.getParameterTypes());
+                assertThat(bound.getReturnType()).isEqualTo(List.class);
             }
         }
     }

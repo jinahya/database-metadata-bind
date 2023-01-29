@@ -36,6 +36,7 @@ import java.sql.DatabaseMetaData;
  * @see Context#getExportedKeys(String, String, String)
  * @see ImportedKey
  */
+@ChildOf(Table.class)
 @EqualsAndHashCode(callSuper = true)
 @ToString(callSuper = true)
 @Data

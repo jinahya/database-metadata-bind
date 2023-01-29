@@ -27,10 +27,8 @@ import lombok.NoArgsConstructor;
 import lombok.ToString;
 import lombok.experimental.SuperBuilder;
 
-import java.sql.SQLException;
 import java.util.Comparator;
-import java.util.List;
-import java.util.Objects;
+import java.util.Optional;
 
 /**
  * A class for binding a result of {@link java.sql.DatabaseMetaData#getSchemas(java.lang.String, java.lang.String)}
@@ -66,79 +64,16 @@ public class Schema
 
     public static final String COLUMN_VALUE_TABLE_SCHEM_EMPTY = "";
 
-    public List<Attribute> getAttributes(final Context context, final String typeNamePattern,
-                                         final String attributeNamePattern)
-            throws SQLException {
-        Objects.requireNonNull(context, "context is null");
-        return context.getAttributes(getTableCatalog(), getTableSchem(), typeNamePattern, attributeNamePattern);
+    public SchemaId getSchemaId() {
+        return SchemaId.of(getTableCatalog(), getTableSchem());
     }
 
-    public List<Column> getColumns(final Context context, final String tableNamePattern, final String columnNamePattern)
-            throws SQLException {
-        Objects.requireNonNull(context, "context is null");
-        return context.getColumns(getTableCatalog(), getTableSchem(), tableNamePattern, columnNamePattern);
+    String getTableCatalogNonNull() {
+        return Optional.ofNullable(getTableCatalog()).orElse(Catalog.COLUMN_VALUE_TABLE_CAT_EMPTY);
     }
 
-    public List<FunctionColumn> getFunctionColumns(final Context context, final String functionNamePattern,
-                                                   final String columnNamePattern)
-            throws SQLException {
-        Objects.requireNonNull(context, "context is null");
-        return context.getFunctionColumns(getTableCatalog(), getTableSchem(), functionNamePattern, columnNamePattern);
-    }
-
-    public List<Function> getFunctions(final Context context, final String functionNamePattern)
-            throws SQLException {
-        Objects.requireNonNull(context, "context is null");
-        return context.getFunctions(getTableCatalog(), getTableSchem(), functionNamePattern);
-    }
-
-    public List<ProcedureColumn> getProcedureColumns(final Context context, final String procedureNamePattern,
-                                                     final String columnNamePattern)
-            throws SQLException {
-        Objects.requireNonNull(context, "context is null");
-        return context.getProcedureColumns(getTableCatalog(), getTableSchem(), procedureNamePattern, columnNamePattern);
-    }
-
-    public List<Procedure> getProcedures(final Context context, final String procedureNamePattern)
-            throws SQLException {
-        Objects.requireNonNull(context, "context is null");
-        return context.getProcedures(getTableCatalog(), getTableSchem(), procedureNamePattern);
-    }
-
-    public List<PseudoColumn> getPseudoColumns(final Context context, final String tableNamePattern,
-                                               final String columnNamePattern)
-            throws SQLException {
-        Objects.requireNonNull(context, "context is null");
-        return context.getPseudoColumns(getTableCatalog(), getTableSchem(), tableNamePattern, columnNamePattern);
-    }
-
-    public List<SuperTable> getSuperTables(final Context context, final String tableNamePattern) throws SQLException {
-        Objects.requireNonNull(context, "context is null");
-        return context.getSuperTables(getTableCatalog(), getTableSchem(), tableNamePattern);
-    }
-
-    public List<SuperType> getSuperTypes(final Context context, final String tableNamePattern)
-            throws SQLException {
-        Objects.requireNonNull(context, "context is null");
-        return context.getSuperTypes(getTableCatalog(), getTableSchem(), tableNamePattern);
-    }
-
-    public List<TablePrivilege> getTablePrivileges(final Context context, final String tableNamePattern)
-            throws SQLException {
-        Objects.requireNonNull(context, "context is null");
-        return context.getTablePrivileges(getTableCatalog(), getTableSchem(), tableNamePattern);
-    }
-
-    public List<Table> getTables(final Context context, final String tableNamePattern, final String[] types)
-            throws SQLException {
-        Objects.requireNonNull(context, "context is null");
-        return context.getTables(getTableCatalog(), getTableSchem(), tableNamePattern, types);
-    }
-
-    public List<UDT> getUDTs(final Context context, final String typeNamePattern, final int[] types)
-            throws SQLException {
-        Objects.requireNonNull(context, "context is null");
-        return context.getUDTs(getTableCatalog(), getTableSchem(), typeNamePattern, types);
+    String getTableSchemNonNull() {
+        return Optional.ofNullable(getTableSchem()).orElse(Schema.COLUMN_VALUE_TABLE_SCHEM_EMPTY);
     }
 
     @NullableBySpecification
