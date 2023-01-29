@@ -36,7 +36,7 @@ import java.util.Comparator;
  * @author Jin Kwon &lt;jinahya_at_gmail.com&gt;
  * @see Context#getTablePrivileges(String, String, String)
  */
-@ChildOf(Schema.class)
+@ChildOf(Catalog.class)
 @EqualsAndHashCode(callSuper = true)
 @ToString(callSuper = true)
 @Data

@@ -20,21 +20,16 @@ package com.github.jinahya.database.metadata.bind;
  * #L%
  */
 
-import lombok.AccessLevel;
 import lombok.Data;
-import lombok.NoArgsConstructor;
 import lombok.experimental.SuperBuilder;
 
-import java.io.Serializable;
-
 @Data
-@NoArgsConstructor(access = AccessLevel.PROTECTED)
 @SuperBuilder(toBuilder = true)
-public class ProcedureId implements Serializable {
+public final class ProcedureId implements MetadataTypeId {
 
     private static final long serialVersionUID = 227742014479297143L;
 
-    private SchemaId schemaId;
+    private final SchemaId schemaId;
 
-    private String specificName;
+    private final String specificName;
 }

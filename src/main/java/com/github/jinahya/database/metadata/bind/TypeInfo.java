@@ -47,14 +47,18 @@ public class TypeInfo
 
     public static final Comparator<TypeInfo> COMPARING_DATA_TYPE = Comparator.comparingInt(TypeInfo::getDataType);
 
-    public static final String COLUMN_NAME_NULLABLE = "nullable";
+    public static final String COLUMN_LABEL_TYPE_NAME = "TYPE_NAME";
 
-    public static final String COLUMN_NAME_SEARCHABLE = "searchable";
+    public static final String COLUMN_LABEL_DATA_TYPE = "DATA_TYPE";
 
-    @ColumnLabel("TYPE_NAME")
+    public static final String COLUMN_LABEL_NULLABLE = "NULLABLE";
+
+    public static final String COLUMN_LABEL_SEARCHABLE = "SEARCHABLE";
+
+    @ColumnLabel(COLUMN_LABEL_TYPE_NAME)
     private String typeName;
 
-    @ColumnLabel("DATA_TYPE")
+    @ColumnLabel(COLUMN_LABEL_DATA_TYPE)
     private int dataType;
 
     @NullableBySpecification // > Null is returned for data types where the column size is not applicable.
@@ -73,13 +77,13 @@ public class TypeInfo
     @ColumnLabel("CREATE_PARAMS")
     private String createParams;
 
-    @ColumnLabel("NULLABLE")
+    @ColumnLabel(COLUMN_LABEL_NULLABLE)
     private int nullable;
 
     @ColumnLabel("CASE_SENSITIVE")
     private boolean caseSensitive;
 
-    @ColumnLabel("SEARCHABLE")
+    @ColumnLabel(COLUMN_LABEL_SEARCHABLE)
     private int searchable;
 
     @NotUsedBySpecification

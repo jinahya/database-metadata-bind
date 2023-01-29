@@ -32,6 +32,7 @@ import java.sql.SQLException;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Objects;
+import java.util.Optional;
 
 /**
  * A class for binding results of
@@ -39,8 +40,8 @@ import java.util.Objects;
  *
  * @author Jin Kwon &lt;jinahya_at_gmail.com&gt;
  */
-@ParentOf(ProcedureColumn.class)
-@ChildOf(Schema.class)
+//@ParentOf(ProcedureColumn.class)
+//@ChildOf(Schema.class)
 @EqualsAndHashCode(callSuper = true)
 @ToString(callSuper = true)
 @Data
@@ -59,7 +60,7 @@ public class Procedure
 
     public ProcedureId getProcedureId() {
         return ProcedureId.builder()
-                .schemaId(SchemaId.of(getProcedureCat(), getProcedureSchem()))
+                .schemaId(SchemaId.of(getProcedureCatNonNull(), getProcedureSchemNonNull()))
                 .specificName(getSpecificName())
                 .build();
     }
@@ -68,8 +69,20 @@ public class Procedure
             throws SQLException {
         Objects.requireNonNull(context, "context is null");
         Objects.requireNonNull(columnNamePattern, "columnNamePattern is null");
-        return context.getProcedureColumns(getProcedureCat(), getProcedureSchem(), getProcedureName(),
-                                           columnNamePattern);
+        return context.getProcedureColumns(
+                getProcedureCatNonNull(),
+                getProcedureSchemNonNull(),
+                getProcedureName(),
+                columnNamePattern
+        );
+    }
+
+    String getProcedureCatNonNull() {
+        return Optional.ofNullable(getProcedureCat()).orElse(Catalog.COLUMN_VALUE_TABLE_CAT_EMPTY);
+    }
+
+    String getProcedureSchemNonNull() {
+        return Optional.ofNullable(getProcedureSchem()).orElse(Schema.COLUMN_VALUE_TABLE_SCHEM_EMPTY);
     }
 
     @NullableBySpecification

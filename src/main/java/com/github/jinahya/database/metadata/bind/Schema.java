@@ -65,15 +65,11 @@ public class Schema
     public static final String COLUMN_VALUE_TABLE_SCHEM_EMPTY = "";
 
     public SchemaId getSchemaId() {
-        return SchemaId.of(getTableCatalog(), getTableSchem());
+        return SchemaId.of(getTableCatalogNonNull(), getTableSchem());
     }
 
     String getTableCatalogNonNull() {
         return Optional.ofNullable(getTableCatalog()).orElse(Catalog.COLUMN_VALUE_TABLE_CAT_EMPTY);
-    }
-
-    String getTableSchemNonNull() {
-        return Optional.ofNullable(getTableSchem()).orElse(Schema.COLUMN_VALUE_TABLE_SCHEM_EMPTY);
     }
 
     @NullableBySpecification

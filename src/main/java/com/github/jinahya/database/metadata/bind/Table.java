@@ -152,6 +152,15 @@ public class Table
         );
     }
 
+    public List<VersionColumn> getVersionColumns(final Context context) throws SQLException {
+        Objects.requireNonNull(context, "context is null");
+        return context.getVersionColumns(
+                getTableCatNonNull(),
+                getTableSchemNonNull(),
+                getTableName()
+        );
+    }
+
     String getTableCatNonNull() {
         return Optional.ofNullable(getTableCat()).orElse(Catalog.COLUMN_VALUE_TABLE_CAT_EMPTY);
     }

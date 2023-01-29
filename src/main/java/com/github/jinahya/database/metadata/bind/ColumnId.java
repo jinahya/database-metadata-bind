@@ -20,17 +20,12 @@ package com.github.jinahya.database.metadata.bind;
  * #L%
  */
 
-import lombok.AccessLevel;
 import lombok.Data;
-import lombok.NoArgsConstructor;
 import lombok.experimental.SuperBuilder;
 
-import java.io.Serializable;
-
 @Data
-@NoArgsConstructor(access = AccessLevel.PROTECTED)
 @SuperBuilder(toBuilder = true)
-public class ColumnId implements Serializable {
+public final class ColumnId implements MetadataTypeId {
 
     private static final long serialVersionUID = -4452694121211962289L;
 
@@ -46,7 +41,7 @@ public class ColumnId implements Serializable {
         return of(TableId.of(tableCat, tableSchem, tableName), columnName);
     }
 
-    private TableId tableId;
+    private final TableId tableId;
 
-    private String columnName;
+    private final String columnName;
 }

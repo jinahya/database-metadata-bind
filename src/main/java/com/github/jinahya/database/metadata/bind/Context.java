@@ -1034,7 +1034,6 @@ public class Context {
      * @throws SQLException if a database error occurs.
      * @see #getTablePrivileges(String, String, String, Consumer)
      */
-
     public List<TablePrivilege> getTablePrivileges(final String catalog, final String schemaPattern,
                                                    final String tableNamePattern)
             throws SQLException {

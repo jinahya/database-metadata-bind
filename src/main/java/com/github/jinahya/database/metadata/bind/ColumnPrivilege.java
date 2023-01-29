@@ -34,6 +34,7 @@ import java.util.Comparator;
  * A class for binding results of {@link DatabaseMetaData#getColumnPrivileges(String, String, String, String)} method.
  *
  * @author Jin Kwon &lt;jinahya_at_gmail.com&gt;
+ * @see Context#getColumnPrivileges(String, String, String, String)
  */
 @ChildOf(Table.class)
 @EqualsAndHashCode(callSuper = true)
@@ -46,7 +47,7 @@ public class ColumnPrivilege
 
     private static final long serialVersionUID = 4384654744147773380L;
 
-    public static Comparator<ColumnPrivilege> COMPARING_COLUMN_NAME_PRIVILEGE
+    public static final Comparator<ColumnPrivilege> COMPARING_COLUMN_NAME_PRIVILEGE
             = Comparator.comparing(ColumnPrivilege::getColumnName).thenComparing(ColumnPrivilege::getPrivilege);
 
     @NullableBySpecification

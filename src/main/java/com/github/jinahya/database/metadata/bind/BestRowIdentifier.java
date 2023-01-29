@@ -37,6 +37,7 @@ import java.util.List;
  * method.
  *
  * @author Jin Kwon &lt;jinahya_at_gmail.com&gt;
+ * @see Context#getBestRowIdentifier(String, String, String, int, boolean)
  */
 @ChildOf(Table.class)
 @EqualsAndHashCode(callSuper = true)

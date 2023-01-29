@@ -57,12 +57,15 @@ final class ContextTests {
         log.debug("schemaTerm: {}", context.databaseMetaData.getSchemaTerm());
     }
 
-    private static void common(final AbstractMetadataType value) {
+    private static void common(final Object value) {
         Objects.requireNonNull(value, "value is null");
         final var string = value.toString();
         final var hashCode = value.hashCode();
-        if (!value.getUnmappedValues().isEmpty()) {
-            log.info("has unmapped values: {}", value);
+        if (value instanceof MetadataType) {
+            final var unmappedValues = ((MetadataType) value).getUnmappedValues();
+            if (!unmappedValues.isEmpty()) {
+                log.warn("has unmapped values: {}", value);
+            }
         }
         ReflectionUtils.findMethod(value.getClass(), "toBuilder")
                 .map(m -> {
@@ -286,10 +289,22 @@ final class ContextTests {
             thrown("failed; getFunctions", sqle);
         }
         try {
+            final var functionColumns = context.getFunctionColumns(null, null, "%", "%");
+            functionColumns(context, functionColumns);
+        } catch (final SQLException sqle) {
+            thrown("failed; getFunctionColumns", sqle);
+        }
+        try {
             final var procedures = context.getProcedures(null, null, "%");
             procedures(context, procedures);
         } catch (final SQLException sqle) {
             thrown("failed; getProcedures", sqle);
+        }
+        try {
+            final var procedureColumns = context.getProcedureColumns(null, null, "%", "%");
+            procedureColumns(context, procedureColumns);
+        } catch (final SQLException sqle) {
+            thrown("failed; getProcedureColumns", sqle);
         }
         try {
             final var schemas = context.getSchemas(null, null);
@@ -362,6 +377,7 @@ final class ContextTests {
         assertThat(catalogs)
                 .extracting(Catalog::getCatalogId)
                 .doesNotHaveDuplicates();
+        catalogs.stream().map(Catalog::getCatalogId).forEach(ContextTests::common);
         for (final var catalog : catalogs) {
             catalog(context, catalog);
         }
@@ -372,15 +388,27 @@ final class ContextTests {
         Objects.requireNonNull(catalog, "catalog is null");
         common(catalog);
         try {
+            final var columns = catalog.getColumns(context, null, "%", "%");
+            columns(context, columns);
+        } catch (final SQLException sqle) {
+            thrown("failed: getColumns", sqle);
+        }
+        try {
             final var schemas = context.getSchemas(catalog.getTableCatNonNull(), "%");
             schemas(context, schemas);
         } catch (final SQLException sqle) {
             thrown("failed: getSchemas", sqle);
         }
+        try {
+            final var tablePrivileges = catalog.getTablePrivileges(context, null, "%");
+            tablePrivileges(context, tablePrivileges);
+        } catch (final SQLException sqle) {
+            thrown("failed; getTablePrivileges", sqle);
+        }
     }
 
-    static void clientInfoProperties(final Context context,
-                                     final List<? extends ClientInfoProperty> clientInfoProperties)
+    private static void clientInfoProperties(final Context context,
+                                             final List<? extends ClientInfoProperty> clientInfoProperties)
             throws SQLException {
         Objects.requireNonNull(context, "context is null");
         Objects.requireNonNull(clientInfoProperties, "clientInfoProperties is null");
@@ -389,7 +417,7 @@ final class ContextTests {
         }
     }
 
-    static void clientInfoProperty(final Context context, final ClientInfoProperty clientInfoProperty)
+    private static void clientInfoProperty(final Context context, final ClientInfoProperty clientInfoProperty)
             throws SQLException {
         Objects.requireNonNull(context, "context is null");
         Objects.requireNonNull(clientInfoProperty, "clientInfoProperty is null");
@@ -399,11 +427,14 @@ final class ContextTests {
     static void columns(final Context context, final List<? extends Column> columns) throws SQLException {
         Objects.requireNonNull(context, "context is null");
         Objects.requireNonNull(columns, "columns is null");
-        final var databaseProductNames = Set.of(
-                "MariaDB"
-        );
-        if (!databaseProductNames.contains(databaseProductName)) {
-            assertThat(columns).isSortedAccordingTo(Column.COMPARING_TABLE_CAT_TABLE_SCHEM_TABLE_NAME_ORDINAL_POSITION);
+        {
+            final var databaseProductNames = Set.of(
+                    TestcontainersMariadbIT.DATABASE_PRODUCT_NAME
+            );
+            if (!databaseProductNames.contains(databaseProductName)) {
+                assertThat(columns).isSortedAccordingTo(
+                        Column.COMPARING_TABLE_CAT_TABLE_SCHEM_TABLE_NAME_ORDINAL_POSITION);
+            }
         }
         assertThat(columns)
                 .extracting(Column::getColumnId)
@@ -417,14 +448,6 @@ final class ContextTests {
         Objects.requireNonNull(context, "context is null");
         Objects.requireNonNull(column, "column is null");
         common(column);
-        final var columnPrivileges = column.getColumnPrivileges(context);
-//        assertThat(columnPrivileges)
-//                .extracting(ColumnPrivilege::getTableCat)
-//                .allMatch(column.getTableCatNonNull()::equals);
-//        assertThat(columnPrivileges)
-//                .extracting(ColumnPrivilege::getTableSchem)
-//                .allMatch(column.getTableSchemNonNull()::equals);
-        columnPrivileges(context, columnPrivileges);
     }
 
     static void columnPrivileges(final Context context, final List<? extends ColumnPrivilege> columnPrivileges)
@@ -483,10 +506,12 @@ final class ContextTests {
         }
     }
 
-    static void exportedKey(final Context context, final ExportedKey exportedKey) throws SQLException {
+    private static void exportedKey(final Context context, final ExportedKey exportedKey) throws SQLException {
         Objects.requireNonNull(context, "context is null");
         Objects.requireNonNull(exportedKey, "exportedKey is null");
         common(exportedKey);
+        common(exportedKey.getPktableId());
+        common(exportedKey.getFktableId());
     }
 
     private static void functions(final Context context, final List<? extends Function> functions) throws SQLException {
@@ -512,6 +537,7 @@ final class ContextTests {
         Objects.requireNonNull(context, "context is null");
         Objects.requireNonNull(function, "function is null");
         common(function);
+        common(function.getFunctionId());
         try {
             final var functionColumns = function.getFunctionColumns(context, "%");
             functionColumns(context, functionColumns);
@@ -535,6 +561,7 @@ final class ContextTests {
         Objects.requireNonNull(context, "context is null");
         Objects.requireNonNull(functionColumn, "functionColumn is null");
         common(functionColumn);
+        common(functionColumn.getFunctionColumnId());
     }
 
     static void importedKeys(final Context context, final List<? extends ImportedKey> importedKeys)
@@ -557,6 +584,8 @@ final class ContextTests {
         Objects.requireNonNull(context, "context is null");
         Objects.requireNonNull(importedKey, "importedKey is null");
         common(importedKey);
+        common(importedKey.getPktableId());
+        common(importedKey.getFktableId());
     }
 
     static void indexInfo(final Context context, final List<? extends IndexInfo> indexInfo) throws SQLException {
@@ -577,7 +606,8 @@ final class ContextTests {
         common(indexInfo);
     }
 
-    static void procedures(final Context context, final List<? extends Procedure> procedures) throws SQLException {
+    private static void procedures(final Context context, final List<? extends Procedure> procedures)
+            throws SQLException {
         Objects.requireNonNull(context, "context is null");
         Objects.requireNonNull(procedures, "procedures is null");
         {
@@ -592,15 +622,17 @@ final class ContextTests {
         assertThat(procedures)
                 .extracting(Procedure::getProcedureId)
                 .doesNotHaveDuplicates();
+        procedures.stream().map(Procedure::getProcedureId).forEach(ContextTests::common);
         for (final var procedure : procedures) {
             procedure(context, procedure);
         }
     }
 
-    static void procedure(final Context context, final Procedure procedure) throws SQLException {
+    private static void procedure(final Context context, final Procedure procedure) throws SQLException {
         Objects.requireNonNull(context, "context is null");
         Objects.requireNonNull(procedure, "procedure is null");
         common(procedure);
+        common(procedure.getProcedureId());
         try {
             final var procedureColumns = procedure.getProcedureColumns(context, "%");
             procedureColumns(context, procedureColumns);
@@ -609,7 +641,7 @@ final class ContextTests {
         }
     }
 
-    static void procedureColumns(final Context context, final List<? extends ProcedureColumn> procedureColumns)
+    private static void procedureColumns(final Context context, final List<? extends ProcedureColumn> procedureColumns)
             throws SQLException {
         Objects.requireNonNull(context, "context is null");
         Objects.requireNonNull(procedureColumns, "procedureColumns is null");
@@ -620,10 +652,12 @@ final class ContextTests {
         }
     }
 
-    static void procedureColumn(final Context context, final ProcedureColumn procedureColumn) throws SQLException {
+    private static void procedureColumn(final Context context, final ProcedureColumn procedureColumn)
+            throws SQLException {
         Objects.requireNonNull(context, "context is null");
         Objects.requireNonNull(procedureColumn, "procedureColumn is null");
         common(procedureColumn);
+        common(procedureColumn.getProcedureColumnId());
     }
 
     static void schemas(final Context context, final List<? extends Schema> schemas) throws SQLException {
@@ -649,13 +683,7 @@ final class ContextTests {
         Objects.requireNonNull(context, "context is null");
         Objects.requireNonNull(schema, "schema is null");
         common(schema);
-        final var tables = context.getTables(
-                schema.getTableCatalogNonNull(),
-                schema.getTableSchemNonNull(),
-                "%",
-                null
-        );
-        tables(context, tables);
+        common(schema.getSchemaId());
     }
 
     static void superTypes(final Context context, final List<? extends SuperType> superTypes) throws SQLException {
@@ -673,22 +701,27 @@ final class ContextTests {
         Objects.requireNonNull(context, "context is null");
         Objects.requireNonNull(superType, "superType is null");
         common(superType);
+        common(superType.getTypeId());
+        common(superType.getSupertypeId());
     }
 
     static void tables(final Context context, final List<? extends Table> tables) throws SQLException {
         Objects.requireNonNull(context, "context is null");
         Objects.requireNonNull(tables, "tables is null");
-        final var databaseProductNames = Set.of(
-                MemoryHsqlTest.DATABASE_PRODUCT_NAME,
-                "MariaDB"
-        );
-        if (!databaseProductNames.contains(databaseProductName)) {
-            // https://sourceforge.net/p/hsqldb/bugs/1672/
-            assertThat(tables).isSortedAccordingTo(Table.COMPARING_TABLE_TYPE_TABLE_CAT_TABLE_SCHEM_TABLE_NAME);
+        {
+            final var databaseProductNames = Set.of(
+                    // https://sourceforge.net/p/hsqldb/bugs/1672/
+                    MemoryHsqlTest.DATABASE_PRODUCT_NAME,
+                    TestcontainersMariadbIT.DATABASE_PRODUCT_NAME
+            );
+            if (!databaseProductNames.contains(databaseProductName)) {
+                assertThat(tables).isSortedAccordingTo(Table.COMPARING_TABLE_TYPE_TABLE_CAT_TABLE_SCHEM_TABLE_NAME);
+            }
         }
         assertThat(tables)
                 .extracting(Table::getTableId)
                 .doesNotHaveDuplicates();
+        tables.stream().map(Table::getTableId).forEach(ContextTests::common);
         for (final var table : tables) {
             table(context, table);
         }
@@ -722,29 +755,23 @@ final class ContextTests {
         } catch (final SQLException sqle) {
             thrown("failed; getColumnPrivileges", sqle);
         }
-        final var columns = context.getColumns(
-                table.getTableCatNonNull(),
-                table.getTableSchemNonNull(),
-                table.getTableName(),
-                "%"
-        );
-        columns(context, columns);
-        try {
-            final var exportedKeys = context.getExportedKeys(
+        {
+            final var columns = context.getColumns(
                     table.getTableCatNonNull(),
                     table.getTableSchemNonNull(),
-                    table.getTableName()
+                    table.getTableName(),
+                    "%"
             );
+            columns(context, columns);
+        }
+        try {
+            final var exportedKeys = table.getExportedKeys(context);
             exportedKeys(context, exportedKeys);
         } catch (final SQLException sqle) {
             thrown("failed; getExportedKeys", sqle);
         }
         try {
-            final var importedKeys = context.getImportedKeys(
-                    table.getTableCatNonNull(),
-                    table.getTableSchemNonNull(),
-                    table.getTableName()
-            );
+            final var importedKeys = table.getImportedKeys(context);
             importedKeys(context, importedKeys);
         } catch (final SQLException sqle) {
             thrown("failed; getImportedKeys", sqle);
@@ -766,14 +793,10 @@ final class ContextTests {
             thrown("failed; getIndexInfo", sqle);
         }
         try {
-            final var tablePrivileges = context.getTablePrivileges(
-                    table.getTableCatNonNull(),
-                    table.getTableSchemNonNull(),
-                    table.getTableName()
-            );
-            tablePrivileges(context, tablePrivileges);
+            final var versionColumns = table.getVersionColumns(context);
+            versionColumns(context, versionColumns);
         } catch (final SQLException sqle) {
-            thrown("failed; getTablePrivileges", sqle);
+            thrown("failed; getVersionColumns", sqle);
         }
     }
 
@@ -801,11 +824,16 @@ final class ContextTests {
     static void typeInfo(final Context context, final List<? extends TypeInfo> typeInfo) throws SQLException {
         Objects.requireNonNull(context, "context is null");
         Objects.requireNonNull(typeInfo, "typeInfo is null");
-        if (!databaseProductName.equals(MemorySqliteTest.DATABASE_PRODUCT_NAME)
-            && !databaseProductName.equals("MySQL")) {
-            // https://github.com/xerial/sqlite-jdbc/issues/832 fixed! awaiting a new version...
-            // https://bugs.mysql.com/bug.php?id=109807
-            assertThat(typeInfo).isSortedAccordingTo(TypeInfo.COMPARING_DATA_TYPE);
+        {
+            final var databaseProductNames = Set.of(
+                    // https://github.com/xerial/sqlite-jdbc/issues/832 fixed! awaiting a new version...
+                    MemorySqliteTest.DATABASE_PRODUCT_NAME,
+                    // https://bugs.mysql.com/bug.php?id=109807
+                    TestcontainersMysqlIT.DATABASE_PRODUCT_NAME
+            );
+            if (!databaseProductNames.contains(databaseProductName)) {
+                assertThat(typeInfo).isSortedAccordingTo(TypeInfo.COMPARING_DATA_TYPE);
+            }
         }
         for (final var typeInfo_ : typeInfo) {
             typeInfo(context, typeInfo_);
@@ -877,11 +905,14 @@ final class ContextTests {
             throws SQLException {
         Objects.requireNonNull(context, "context is null");
         Objects.requireNonNull(tablePrivileges, "tablePrivileges is null");
-        final var databaseProductNames = Set.of(
-        );
-        if (!databaseProductNames.contains(databaseProductName)) {
-            assertThat(tablePrivileges).isSortedAccordingTo(
-                    TablePrivilege.COMPARING_TABLE_CAT_TABLE_SCHEM_TABLE_NAME_PRIVILEGE);
+        {
+            final var databaseProductNames = Set.of(
+                    MemoryHsqlTest.DATABASE_PRODUCT_NAME
+            );
+            if (!databaseProductNames.contains(databaseProductName)) {
+                assertThat(tablePrivileges).isSortedAccordingTo(
+                        TablePrivilege.COMPARING_TABLE_CAT_TABLE_SCHEM_TABLE_NAME_PRIVILEGE);
+            }
         }
         for (final var tablePrivilege : tablePrivileges) {
             tablePrivilege(context, tablePrivilege);
@@ -910,8 +941,12 @@ final class ContextTests {
         Objects.requireNonNull(context, "context is null");
         Objects.requireNonNull(udt, "udt is null");
         common(udt);
-        final var attributes = udt.getAttributes(context, "%");
-        attributes(context, attributes);
+        try {
+            final var attributes = udt.getAttributes(context, "%");
+            attributes(context, attributes);
+        } catch (final SQLException sqle) {
+            thrown("failed; getAttributes", sqle);
+        }
     }
 
     static void versionColumns(final Context context, final List<? extends VersionColumn> versionColumns)
