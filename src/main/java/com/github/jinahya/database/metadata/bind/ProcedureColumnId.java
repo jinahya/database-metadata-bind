@@ -30,9 +30,16 @@ import lombok.experimental.SuperBuilder;
 @SuperBuilder(toBuilder = true)
 public final class ProcedureColumnId implements MetadataTypeId<ProcedureColumn> {
 
-    private static final long serialVersionUID = 6257269625612307524L;
+    private static final long serialVersionUID = 7459854669925402253L;
+
+    public static ProcedureColumnId of(final ProcedureId procedureId, final String specificName) {
+        return builder()
+                .procedureId(procedureId)
+                .specificName(specificName)
+                .build();
+    }
 
     private final ProcedureId procedureId;
 
-    private final String columnName;
+    private final String specificName;
 }

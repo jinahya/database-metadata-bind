@@ -59,10 +59,7 @@ public class Procedure
             .thenComparing(Procedure::getSpecificName);
 
     public ProcedureId getProcedureId() {
-        return ProcedureId.builder()
-                .schemaId(SchemaId.of(getProcedureCatNonNull(), getProcedureSchemNonNull()))
-                .specificName(getSpecificName())
-                .build();
+        return ProcedureId.of(getProcedureCatNonNull(), getProcedureSchemNonNull(), getSpecificName());
     }
 
     public List<ProcedureColumn> getProcedureColumns(final Context context, final String columnNamePattern)

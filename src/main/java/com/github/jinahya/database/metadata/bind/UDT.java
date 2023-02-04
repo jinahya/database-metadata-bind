@@ -32,11 +32,13 @@ import java.sql.SQLException;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Objects;
+import java.util.Optional;
 
 /**
  * A class for binding results of {@link DatabaseMetaData#getUDTs(String, String, String, int[])} method.
  *
  * @author Jin Kwon &lt;jinahya_at_gmail.com&gt;
+ * @see Context#getUDTs(String, String, String, int[])
  */
 @ParentOf(Attribute.class)
 @ChildOf(Schema.class)
@@ -45,8 +47,7 @@ import java.util.Objects;
 @Data
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @SuperBuilder(toBuilder = true)
-public class UDT
-        extends AbstractMetadataType {
+public class UDT extends AbstractMetadataType {
 
     private static final long serialVersionUID = 8665246093405057553L;
 
@@ -66,14 +67,31 @@ public class UDT
 
     public static final String COLUMN_LABEL_DATA_TYPE = "DATA_TYPE";
 
-    public List<Attribute> getAttributes(final Context context, final String attributeNamePattern)
-            throws SQLException {
+    /**
+     * Retrieves a description of the attributes of this type.
+     *
+     * @param context              a context.
+     * @param attributeNamePattern an attribute name pattern; must match the attribute name as it is declared in the
+     *                             database.
+     * @return a list of bound values.
+     * @throws SQLException if a database error occurs.
+     * @see Context#getAttributes(String, String, String, String)
+     */
+    public List<Attribute> getAttributes(final Context context, final String attributeNamePattern) throws SQLException {
         Objects.requireNonNull(context, "context is null");
         return context.getAttributes(getTypeCat(), getTypeSchem(), getTypeName(), attributeNamePattern);
     }
 
     public UDTId getUDTId() {
-        return UDTId.of(getTypeCat(), getTypeSchem(), getTypeName());
+        return UDTId.of(getTypeCatNonNull(), getTypeSchemNonNull(), getTypeName());
+    }
+
+    String getTypeCatNonNull() {
+        return Optional.ofNullable(getTypeCat()).orElse(Catalog.COLUMN_VALUE_TABLE_CAT_EMPTY);
+    }
+
+    String getTypeSchemNonNull() {
+        return Optional.ofNullable(getTypeSchem()).orElse(Schema.COLUMN_VALUE_TABLE_SCHEM_EMPTY);
     }
 
     @NullableBySpecification

@@ -163,13 +163,6 @@ final class ContextTests {
     private static void uniqueFunctionColumnIds(final Context context) throws SQLException {
         try {
             final var functionColumns = context.getFunctionColumns(null, null, "%", "%");
-            final var groups =
-                    functionColumns.stream().collect(Collectors.groupingBy(FunctionColumn::getFunctionColumnId));
-//            assertThat(groups.entrySet().stream().filter(e -> e.getValue().size() > 1))
-//                    .isEmpty();
-//            assertThat(functionColumns)
-//                    .extracting(FunctionColumn::getFunctionColumnId)
-//                    .doesNotHaveDuplicates();
         } catch (final SQLException sqle) {
         }
     }
@@ -212,13 +205,6 @@ final class ContextTests {
 
     private static void uniqueProcedureColumnIds(final Context context) throws SQLException {
         final var procedureColumns = context.getProcedureColumns(null, null, "%", "%");
-        final var groups =
-                procedureColumns.stream().collect(Collectors.groupingBy(ProcedureColumn::getProcedureColumnId));
-//        assertThat(groups.entrySet().stream().filter(e -> e.getValue().size() > 1))
-//                .isEmpty();
-//        assertThat(procedureColumns)
-//                .extracting(ProcedureColumn::getProcedureColumnId)
-//                .doesNotHaveDuplicates();
     }
 
     private static void uniqueTableIds(final Context context) throws SQLException {
@@ -289,22 +275,10 @@ final class ContextTests {
             thrown("failed; getFunctions", sqle);
         }
         try {
-            final var functionColumns = context.getFunctionColumns(null, null, "%", "%");
-            functionColumns(context, functionColumns);
-        } catch (final SQLException sqle) {
-            thrown("failed; getFunctionColumns", sqle);
-        }
-        try {
             final var procedures = context.getProcedures(null, null, "%");
             procedures(context, procedures);
         } catch (final SQLException sqle) {
             thrown("failed; getProcedures", sqle);
-        }
-        try {
-            final var procedureColumns = context.getProcedureColumns(null, null, "%", "%");
-            procedureColumns(context, procedureColumns);
-        } catch (final SQLException sqle) {
-            thrown("failed; getProcedureColumns", sqle);
         }
         try {
             final var schemas = context.getSchemas();
@@ -347,7 +321,7 @@ final class ContextTests {
     static void attributes(final Context context, final List<? extends Attribute> attributes) throws SQLException {
         Objects.requireNonNull(context, "context is null");
         Objects.requireNonNull(attributes, "attributes is null");
-        assertThat(attributes).isSortedAccordingTo(Attribute.COMPARING_TYPE_CAT_TYPE_SCHEM_TYPE_NAME);
+        assertThat(attributes).isSortedAccordingTo(Attribute.COMPARING_TYPE_CAT_TYPE_SCHEM_TYPE_NAME_ORDINAL_POSITION);
         for (final var attribute : attributes) {
             attribute(context, attribute);
         }
@@ -454,6 +428,7 @@ final class ContextTests {
         Objects.requireNonNull(context, "context is null");
         Objects.requireNonNull(column, "column is null");
         common(column);
+        assertThat(column.getColumnId()).isNotNull();
     }
 
     static void columnPrivileges(final Context context, final List<? extends ColumnPrivilege> columnPrivileges)
@@ -546,28 +521,33 @@ final class ContextTests {
         common(function.getFunctionId());
         try {
             final var functionColumns = function.getFunctionColumns(context, "%");
-            functionColumns(context, functionColumns);
+            functionColumns(context, function, functionColumns);
         } catch (final SQLException sqle) {
             thrown("failed; getFunctionColumns", sqle);
         }
     }
 
-    private static void functionColumns(final Context context, final List<? extends FunctionColumn> functionColumns)
+    private static void functionColumns(final Context context, final Function function,
+                                        final List<? extends FunctionColumn> functionColumns)
             throws SQLException {
         Objects.requireNonNull(context, "context is null");
+        Objects.requireNonNull(function, "function is null");
         Objects.requireNonNull(functionColumns, "functionColumns is null");
         assertThat(functionColumns).isSortedAccordingTo(
                 FunctionColumn.COMPARING_FUNCTION_CAT_FUNCTION_SCHEM_FUNCTION_NAME_SPECIFIC_NAME);
         for (final var functionColumn : functionColumns) {
-            functionColumn(context, functionColumn);
+            functionColumn(context, function, functionColumn);
         }
     }
 
-    private static void functionColumn(final Context context, final FunctionColumn functionColumn) throws SQLException {
+    private static void functionColumn(final Context context, final Function function,
+                                       final FunctionColumn functionColumn)
+            throws SQLException {
         Objects.requireNonNull(context, "context is null");
+        Objects.requireNonNull(function, "function is null");
         Objects.requireNonNull(functionColumn, "functionColumn is null");
         common(functionColumn);
-        common(functionColumn.getFunctionColumnId());
+        common(functionColumn.getFunctionColumnId(function.getFunctionId()));
     }
 
     static void importedKeys(final Context context, final List<? extends ImportedKey> importedKeys)
@@ -647,13 +627,14 @@ final class ContextTests {
         common(procedure.getProcedureId());
         try {
             final var procedureColumns = procedure.getProcedureColumns(context, "%");
-            procedureColumns(context, procedureColumns);
+            procedureColumns(context, procedure, procedureColumns);
         } catch (final SQLException sqle) {
             thrown("failed; getProcedureColumns", sqle);
         }
     }
 
-    private static void procedureColumns(final Context context, final List<? extends ProcedureColumn> procedureColumns)
+    private static void procedureColumns(final Context context, final Procedure procedure,
+                                         final List<? extends ProcedureColumn> procedureColumns)
             throws SQLException {
         Objects.requireNonNull(context, "context is null");
         Objects.requireNonNull(procedureColumns, "procedureColumns is null");
@@ -661,6 +642,7 @@ final class ContextTests {
                 ProcedureColumn.COMPARING_PROCEDURE_CAT_PROCEDURE_SCHEM_PROCEDURE_NAME_SPECIFIC_NAME);
         for (final var procedureColumn : procedureColumns) {
             procedureColumn(context, procedureColumn);
+            common(procedureColumn.getProcedureColumnId(procedure.getProcedureId()));
         }
     }
 
@@ -669,7 +651,6 @@ final class ContextTests {
         Objects.requireNonNull(context, "context is null");
         Objects.requireNonNull(procedureColumn, "procedureColumn is null");
         common(procedureColumn);
-        common(procedureColumn.getProcedureColumnId());
     }
 
     static void schemas(final Context context, final List<? extends Schema> schemas) throws SQLException {

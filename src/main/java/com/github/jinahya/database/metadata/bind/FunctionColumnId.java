@@ -34,5 +34,5 @@ public final class FunctionColumnId implements MetadataTypeId<FunctionColumn> {
 
     private final FunctionId functionId;
 
-    private final String columnName;
+    private final String specificName;
 }

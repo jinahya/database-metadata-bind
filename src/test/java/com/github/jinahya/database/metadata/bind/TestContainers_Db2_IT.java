@@ -35,8 +35,7 @@ import java.sql.SQLException;
 @Disabled
 @Testcontainers
 @Slf4j
-class TestContainers_Db2_IT
-        extends TestContainers_$_IT {
+class TestContainers_Db2_IT extends TestContainers_$_IT {
 
     @Container
     private static final JdbcDatabaseContainer<?> CONTAINER;
