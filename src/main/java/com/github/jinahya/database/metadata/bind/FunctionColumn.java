@@ -36,7 +36,7 @@ import java.util.Comparator;
  * @author Jin Kwon &lt;jinahya_at_gmail.com&gt;
  * @see Context#getFunctionColumns(String, String, String, String)
  */
-@ChildOf(Function.class)
+//@ChildOf(Function.class)
 @EqualsAndHashCode(callSuper = true)
 @ToString(callSuper = true)
 @Data

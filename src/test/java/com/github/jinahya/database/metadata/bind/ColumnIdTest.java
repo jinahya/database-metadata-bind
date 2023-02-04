@@ -4,7 +4,7 @@ package com.github.jinahya.database.metadata.bind;
  * #%L
  * database-metadata-bind
  * %%
- * Copyright (C) 2011 - 2022 Jinahya, Inc.
+ * Copyright (C) 2011 - 2021 Jinahya, Inc.
  * %%
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -20,9 +20,9 @@ package com.github.jinahya.database.metadata.bind;
  * #L%
  */
 
-import lombok.extern.slf4j.Slf4j;
+class ColumnIdTest extends MetadataTypeIdTest<ColumnId, Column> {
 
-@Slf4j
-class CategorizedBestRowIdentifiersTest {
-
+    ColumnIdTest() {
+        super(ColumnId.class, Column.class);
+    }
 }

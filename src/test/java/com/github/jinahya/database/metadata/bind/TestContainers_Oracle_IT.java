@@ -22,10 +22,10 @@ package com.github.jinahya.database.metadata.bind;
 
 import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.Disabled;
-import org.testcontainers.containers.MariaDBContainer;
+import org.testcontainers.containers.JdbcDatabaseContainer;
+import org.testcontainers.containers.OracleContainer;
 import org.testcontainers.junit.jupiter.Container;
 import org.testcontainers.junit.jupiter.Testcontainers;
-import org.testcontainers.utility.DockerImageName;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
@@ -34,17 +34,18 @@ import java.sql.SQLException;
 @Disabled
 @Testcontainers
 @Slf4j
-class TestcontainersMariadbIT
-        extends TestContainersIT {
-
-    static final String DATABASE_PRODUCT_NAME = "MariaDB";
+class TestContainers_Oracle_IT
+        extends TestContainers_$_IT {
 
     @Container
-    private static final MariaDBContainer<?> CONTAINER;
+    private static final JdbcDatabaseContainer<OracleContainer> CONTAINER;
 
     static {
-        final DockerImageName NAME = DockerImageName.parse("mariadb:latest");
-        CONTAINER = new MariaDBContainer<>(NAME);
+        // https://www.testcontainers.org/modules/databases/oraclexe/
+        CONTAINER = new OracleContainer("gvenzl/oracle-xe:latest-faststart")
+                .withDatabaseName("testDB")
+                .withUsername("testUser")
+                .withPassword("testPassword");
     }
 
     @Override

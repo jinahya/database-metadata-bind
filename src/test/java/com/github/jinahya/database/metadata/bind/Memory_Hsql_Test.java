@@ -31,7 +31,7 @@ import static java.sql.DriverManager.getConnection;
  * @author Jin Kwon &lt;onacit_at_gmail.com&gt;
  */
 @Slf4j
-class MemoryHsqlTest extends MemoryTest {
+class Memory_Hsql_Test extends Memory_$_Test {
 
     private static final String DRIVER_NAME = "org.hsqldb.jdbc.JDBCDriver";
 

@@ -28,7 +28,7 @@ import lombok.experimental.SuperBuilder;
 @Data
 @RequiredArgsConstructor(access = AccessLevel.PRIVATE)
 @SuperBuilder(toBuilder = true)
-public final class SchemaId implements MetadataTypeId {
+public final class SchemaId implements MetadataTypeId<Schema> {
 
     private static final long serialVersionUID = 5404216668144630146L;
 
@@ -40,8 +40,8 @@ public final class SchemaId implements MetadataTypeId {
                 .build();
     }
 
-    public static SchemaId of(final String tableCat, final String tableSchem) {
-        return of(CatalogId.of(tableCat), tableSchem);
+    public static SchemaId of(final String tableCatalog, final String tableSchem) {
+        return of(CatalogId.of(tableCatalog), tableSchem);
     }
 
     private final CatalogId catalogId;

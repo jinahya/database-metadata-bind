@@ -32,6 +32,7 @@ import java.sql.SQLException;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Objects;
+import java.util.Optional;
 
 /**
  * A class for binding the result of
@@ -40,8 +41,8 @@ import java.util.Objects;
  * @author Jin Kwon &lt;jinahya_at_gmail.com&gt;
  * @see Context#getFunctions(String, String, String)
  */
-@ChildOf(Schema.class)
-@ParentOf(FunctionColumn.class)
+//@ChildOf(Schema.class)
+//@ParentOf(FunctionColumn.class)
 @EqualsAndHashCode(callSuper = true)
 @ToString(callSuper = true)
 @Data
@@ -70,10 +71,7 @@ public class Function
 
     public FunctionId getFunctionId() {
         return FunctionId.builder()
-                .schemaId(
-                        SchemaId.builder().catalogId(CatalogId.builder()
-                                                             .tableCat(getFunctionCat()).build())
-                                .tableSchem(getFunctionSchem()).build())
+                .schemaId(SchemaId.of(getFunctionCatNonNull(), getFunctionSchemNonNull()))
                 .specificName(getSpecificName())
                 .build();
     }
@@ -81,7 +79,20 @@ public class Function
     public List<FunctionColumn> getFunctionColumns(final Context context, final String columnNamePattern)
             throws SQLException {
         Objects.requireNonNull(context, "context is null");
-        return context.getFunctionColumns(getFunctionCat(), getFunctionSchem(), getFunctionName(), columnNamePattern);
+        return context.getFunctionColumns(
+                getFunctionCatNonNull(),
+                getFunctionSchemNonNull(),
+                getFunctionName(),
+                columnNamePattern
+        );
+    }
+
+    String getFunctionCatNonNull() {
+        return Optional.ofNullable(getFunctionCat()).orElse(Catalog.COLUMN_VALUE_TABLE_CAT_EMPTY);
+    }
+
+    String getFunctionSchemNonNull() {
+        return Optional.ofNullable(getFunctionSchem()).orElse(Schema.COLUMN_VALUE_TABLE_SCHEM_EMPTY);
     }
 
     @NullableBySpecification

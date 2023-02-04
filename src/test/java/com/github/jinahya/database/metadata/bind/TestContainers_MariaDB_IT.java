@@ -21,8 +21,7 @@ package com.github.jinahya.database.metadata.bind;
  */
 
 import lombok.extern.slf4j.Slf4j;
-import org.junit.jupiter.api.Disabled;
-import org.testcontainers.containers.MySQLContainer;
+import org.testcontainers.containers.MariaDBContainer;
 import org.testcontainers.junit.jupiter.Container;
 import org.testcontainers.junit.jupiter.Testcontainers;
 import org.testcontainers.utility.DockerImageName;
@@ -31,20 +30,20 @@ import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
 
-@Disabled
+//@Disabled
 @Testcontainers
 @Slf4j
-class TestcontainersMysqlIT
-        extends TestContainersIT {
+class TestContainers_MariaDB_IT
+        extends TestContainers_$_IT {
 
-    static final String DATABASE_PRODUCT_NAME = "MySQL";
+    static final String DATABASE_PRODUCT_NAME = "MariaDB";
 
     @Container
-    private static final MySQLContainer<?> CONTAINER;
+    private static final MariaDBContainer<?> CONTAINER;
 
     static {
-        final DockerImageName NAME = DockerImageName.parse("mysql:latest");
-        CONTAINER = new MySQLContainer<>(NAME);
+        final DockerImageName NAME = DockerImageName.parse("mariadb:latest");
+        CONTAINER = new MariaDBContainer<>(NAME);
     }
 
     @Override

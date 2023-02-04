@@ -23,29 +23,33 @@ package com.github.jinahya.database.metadata.bind;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.Disabled;
 import org.testcontainers.containers.JdbcDatabaseContainer;
-import org.testcontainers.containers.OracleContainer;
+import org.testcontainers.containers.MSSQLServerContainer;
 import org.testcontainers.junit.jupiter.Container;
 import org.testcontainers.junit.jupiter.Testcontainers;
+import org.testcontainers.utility.DockerImageName;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
 
-@Disabled
+// https://github.com/microsoft/mssql-docker/issues/668
+@Disabled // 안 돎
 @Testcontainers
 @Slf4j
-class TestcontainersOracleXeIT
-        extends TestContainersIT {
+class TestContainers_MSSQLServer_IT
+        extends TestContainers_$_IT {
 
     @Container
-    private static final JdbcDatabaseContainer<OracleContainer> CONTAINER;
+    private static final JdbcDatabaseContainer<?> CONTAINER;
 
     static {
         // https://www.testcontainers.org/modules/databases/oraclexe/
-        CONTAINER = new OracleContainer("gvenzl/oracle-xe:latest-faststart")
-                .withDatabaseName("testDB")
-                .withUsername("testUser")
-                .withPassword("testPassword");
+        final DockerImageName NAME = DockerImageName.parse("mcr.microsoft.com/mssql/server:2022-latest");
+        CONTAINER = new MSSQLServerContainer<>(NAME)
+                .acceptLicense()
+                .withEnv("MSSQL_PID", "Developer")
+                .withUrlParam("encrypt", "false")
+        ;
     }
 
     @Override

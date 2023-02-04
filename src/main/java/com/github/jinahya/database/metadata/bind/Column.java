@@ -28,10 +28,7 @@ import lombok.ToString;
 import lombok.experimental.SuperBuilder;
 
 import java.sql.DatabaseMetaData;
-import java.sql.SQLException;
 import java.util.Comparator;
-import java.util.List;
-import java.util.Objects;
 import java.util.Optional;
 
 /**
@@ -40,8 +37,8 @@ import java.util.Optional;
  * @author Jin Kwon &lt;jinahya_at_gmail.com&gt;
  * @see Context#getColumns(String, String, String, String)
  */
-@ParentOf(ColumnPrivilege.class)
-@ChildOf(Table.class)
+//@ParentOf(ColumnPrivilege.class)
+//@ChildOf(Table.class)
 @EqualsAndHashCode(callSuper = true)
 @ToString(callSuper = true)
 @Data
@@ -72,24 +69,6 @@ public class Column
 
     public ColumnId getColumnId() {
         return ColumnId.of(getTableCat(), getTableSchem(), getTableName(), getColumnName());
-    }
-
-    /**
-     * Retrieves a description of the access rights for this column.
-     *
-     * @param context a context.
-     * @return a list of bound values.
-     * @throws SQLException if a database error occurs.
-     * @see Context#getColumnPrivileges(String, String, String, String)
-     */
-    public List<ColumnPrivilege> getColumnPrivileges(final Context context) throws SQLException {
-        Objects.requireNonNull(context, "context is null");
-        return context.getColumnPrivileges(
-                getTableCatNonNull(),
-                getTableSchemNonNull(),
-                getTableName(),
-                getColumnName()
-        );
     }
 
     String getTableCatNonNull() {

@@ -22,8 +22,7 @@ package com.github.jinahya.database.metadata.bind;
 
 import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.Disabled;
-import org.testcontainers.containers.JdbcDatabaseContainer;
-import org.testcontainers.containers.MSSQLServerContainer;
+import org.testcontainers.containers.MySQLContainer;
 import org.testcontainers.junit.jupiter.Container;
 import org.testcontainers.junit.jupiter.Testcontainers;
 import org.testcontainers.utility.DockerImageName;
@@ -35,19 +34,17 @@ import java.sql.SQLException;
 @Disabled
 @Testcontainers
 @Slf4j
-class TestcontainersMsSqlServerIT
-        extends TestContainersIT {
+class TestContainers_MySQL_IT
+        extends TestContainers_$_IT {
+
+    static final String DATABASE_PRODUCT_NAME = "MySQL";
 
     @Container
-    private static final JdbcDatabaseContainer<?> CONTAINER;
+    private static final MySQLContainer<?> CONTAINER;
 
     static {
-        // https://www.testcontainers.org/modules/databases/oraclexe/
-        final DockerImageName NAME = DockerImageName.parse("mcr.microsoft.com/mssql/server:2022-latest");
-        CONTAINER = new MSSQLServerContainer<>(NAME)
-                .acceptLicense()
-                .withEnv("MSSQL_PID", "Developer")
-        ;
+        final DockerImageName NAME = DockerImageName.parse("mysql:latest");
+        CONTAINER = new MySQLContainer<>(NAME);
     }
 
     @Override

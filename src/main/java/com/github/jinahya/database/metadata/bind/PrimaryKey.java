@@ -35,6 +35,7 @@ import java.util.Comparator;
  *
  * @author Jin Kwon &lt;jinahya_at_gmail.com&gt;
  */
+@ChildOf(Table.class)
 @EqualsAndHashCode(callSuper = true)
 @ToString(callSuper = true)
 @Data

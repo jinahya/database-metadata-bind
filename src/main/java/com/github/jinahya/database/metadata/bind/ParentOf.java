@@ -36,7 +36,7 @@ import java.lang.annotation.Target;
 @Documented
 @Retention(RetentionPolicy.RUNTIME)
 @Target({ElementType.TYPE})
-public @interface ParentOf {
+@interface ParentOf {
 
     @Documented
     @Retention(RetentionPolicy.RUNTIME)

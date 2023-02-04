@@ -34,8 +34,8 @@ import java.sql.SQLException;
 @Disabled
 @Testcontainers
 @Slf4j
-class TestcontainersPostgresIT
-        extends TestContainersIT {
+class TestContainers_PostgreSQL_IT
+        extends TestContainers_$_IT {
 
     static final String DATABASE_PRODUCT_NAME = "PostgreSQL";
 

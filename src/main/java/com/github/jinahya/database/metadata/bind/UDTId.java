@@ -28,18 +28,18 @@ import lombok.experimental.SuperBuilder;
 @Data
 @RequiredArgsConstructor(access = AccessLevel.PRIVATE)
 @SuperBuilder(toBuilder = true)
-public final class TypeId implements MetadataTypeId {
+public final class UDTId implements MetadataTypeId<UDT> {
 
     private static final long serialVersionUID = 5548844214174261338L;
 
-    public static TypeId of(final SchemaId schemaId, final String typeName) {
+    public static UDTId of(final SchemaId schemaId, final String typeName) {
         return builder()
                 .schemaId(schemaId)
                 .typeName(typeName)
                 .build();
     }
 
-    public static TypeId of(final String typeCat, final String typeSchem, final String typeName) {
+    public static UDTId of(final String typeCat, final String typeSchem, final String typeName) {
         return of(SchemaId.of(typeCat, typeSchem), typeName);
     }
 

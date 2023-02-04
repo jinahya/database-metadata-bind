@@ -27,7 +27,10 @@ import lombok.NoArgsConstructor;
 import lombok.ToString;
 import lombok.experimental.SuperBuilder;
 
+import java.sql.SQLException;
 import java.util.Comparator;
+import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
 import java.util.function.Consumer;
 
@@ -67,6 +70,28 @@ public class Catalog
         return CatalogId.builder()
                 .tableCat(getTableCat())
                 .build();
+    }
+
+    public List<Column> getColumns(final Context context, final String schemaPattern, final String tableNamePattern,
+                                   final String columnNamePattern)
+            throws SQLException {
+        Objects.requireNonNull(context, "context is null");
+        return context.getColumns(getTableCatNonNull(), schemaPattern, tableNamePattern, columnNamePattern);
+    }
+
+    /**
+     * Retrieves a description of the access rights for each table available in this catalog.
+     *
+     * @param schemaPattern    a value for {@code schemaPattern} parameter.
+     * @param tableNamePattern a value for {@code tableNamePattern} parameter.
+     * @return a list of bound values.
+     * @throws SQLException if a database error occurs.
+     */
+    public List<TablePrivilege> getTablePrivileges(final Context context, final String schemaPattern,
+                                                   final String tableNamePattern)
+            throws SQLException {
+        Objects.requireNonNull(context, "context is null");
+        return context.getTablePrivileges(getTableCatNonNull(), schemaPattern, tableNamePattern);
     }
 
     String getTableCatNonNull() {
