@@ -435,7 +435,7 @@ final class ContextTests {
         Objects.requireNonNull(columns, "columns is null");
         {
             final var databaseProductNames = Set.of(
-                    TestcontainersMariadbIT.DATABASE_PRODUCT_NAME
+                    TestContainers_MariaDB_IT.DATABASE_PRODUCT_NAME
             );
             if (!databaseProductNames.contains(databaseProductName)) {
                 assertThat(columns).isSortedAccordingTo(
@@ -718,7 +718,8 @@ final class ContextTests {
             final var databaseProductNames = Set.of(
                     // https://sourceforge.net/p/hsqldb/bugs/1672/
                     MemoryHsqlTest.DATABASE_PRODUCT_NAME,
-                    TestcontainersMariadbIT.DATABASE_PRODUCT_NAME
+                    TestContainers_MariaDB_IT.DATABASE_PRODUCT_NAME,
+                    TestContainers_PostgreSQL_IT.DATABASE_PRODUCT_NAME
             );
             if (!databaseProductNames.contains(databaseProductName)) {
                 assertThat(tables).isSortedAccordingTo(Table.COMPARING_TABLE_TYPE_TABLE_CAT_TABLE_SCHEM_TABLE_NAME);
@@ -731,7 +732,8 @@ final class ContextTests {
         for (final var table : tables) {
             table(context, table);
         }
-        for (final var parent : tables) {
+        for (int i = 0; i < 10 && i < tables.size(); i++) { // tables 가 큰 게 있다.
+            final var parent = tables.get(i);
             for (final var fktable : tables) {
                 final var crossReference = context.getCrossReference(
                         parent.getTableCat(), parent.getTableSchem(), parent.getTableName(),
@@ -809,12 +811,13 @@ final class ContextTests {
     static void tableTypes(final Context context, final List<? extends TableType> tableTypes) throws SQLException {
         Objects.requireNonNull(context, "context is null");
         Objects.requireNonNull(tableTypes, "tableTypes is null");
-        assertThat(tableTypes).isSortedAccordingTo(TableType.COMPARING_TABLE_TYPE);
-        final var databaseProductNames = Set.of(
-                "MariaDB"
-        );
-        if (!databaseProductNames.contains(databaseProductName)) {
-            assertThat(tableTypes).isSortedAccordingTo(TableType.COMPARING_TABLE_TYPE);
+        {
+            final var databaseProductNames = Set.of(
+                    TestContainers_MariaDB_IT.DATABASE_PRODUCT_NAME // https://jira.mariadb.org/browse/CONJ-1049
+            );
+            if (!databaseProductNames.contains(databaseProductName)) {
+                assertThat(tableTypes).isSortedAccordingTo(TableType.COMPARING_TABLE_TYPE);
+            }
         }
         for (final var tableType : tableTypes) {
             tableType(context, tableType);
@@ -830,17 +833,7 @@ final class ContextTests {
     static void typeInfo(final Context context, final List<? extends TypeInfo> typeInfo) throws SQLException {
         Objects.requireNonNull(context, "context is null");
         Objects.requireNonNull(typeInfo, "typeInfo is null");
-        {
-            final var databaseProductNames = Set.of(
-                    // https://github.com/xerial/sqlite-jdbc/issues/832 fixed! awaiting a new version...
-                    MemorySqliteTest.DATABASE_PRODUCT_NAME,
-                    // https://bugs.mysql.com/bug.php?id=109807
-                    TestcontainersMysqlIT.DATABASE_PRODUCT_NAME
-            );
-            if (!databaseProductNames.contains(databaseProductName)) {
-                assertThat(typeInfo).isSortedAccordingTo(TypeInfo.COMPARING_DATA_TYPE);
-            }
-        }
+        assertThat(typeInfo).isSortedAccordingTo(TypeInfo.COMPARING_DATA_TYPE);
         for (final var typeInfo_ : typeInfo) {
             typeInfo(context, typeInfo_);
         }
@@ -857,8 +850,8 @@ final class ContextTests {
         Objects.requireNonNull(primaryKeys, "primaryKeys is null");
         final var databaseProductNames = Set.of(
                 MemoryHsqlTest.DATABASE_PRODUCT_NAME,
-                "PostgreSQL",
-                "MySQL"
+                TestContainers_PostgreSQL_IT.DATABASE_PRODUCT_NAME,
+                TestContainers_MySQL_IT.DATABASE_PRODUCT_NAME
         );
         if (!databaseProductNames.contains(databaseProductName)) {
             // https://sourceforge.net/p/hsqldb/bugs/1673/

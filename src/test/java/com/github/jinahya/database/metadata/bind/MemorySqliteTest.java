@@ -28,6 +28,7 @@ import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.HashSet;
 
 import static java.sql.DriverManager.getConnection;
 
@@ -113,6 +114,32 @@ class MemorySqliteTest extends MemoryTest {
                     final var dataType = typeInfo.getString("DATA_TYPE");
                     log.debug("TYPE_NAME: {}, DATA_TYPE: {}", typeName, dataType);
                 }
+            }
+        }
+    }
+
+    @Disabled("https://github.com/xerial/sqlite-jdbc/issues/837")
+    @Test
+    void getColumns_CATLOG_CATALOG() throws SQLException {
+        try (var connection = DriverManager.getConnection("jdbc:sqlite::memory:")) {
+            final var meta = connection.getMetaData();
+            log.debug("driverName: {}", meta.getDriverName());
+            log.debug("driverVersion: {}", meta.getDriverVersion());
+            log.debug("driverMajorVersion: {}", meta.getDriverMajorVersion());
+            log.debug("driverMinorVersion: {}", meta.getDriverMinorVersion());
+            log.debug("databaseProductName: {}", meta.getDatabaseProductName());
+            log.debug("databaseProductVersion: {}", meta.getDatabaseProductVersion());
+            log.debug("databaseMajorVersion: {}", meta.getDatabaseMajorVersion());
+            log.debug("databaseMinorVersion: {}", meta.getDatabaseMinorVersion());
+            try (ResultSet results = meta.getColumns("", "", "%", "%")) {
+                final var labels = new HashSet<>();
+                final var rsmd = results.getMetaData();
+                for (int i = 1; i <= rsmd.getColumnCount(); i++) {
+                    labels.add(rsmd.getColumnLabel(i));
+                }
+                labels.forEach(l -> {
+                    log.debug("label: {}", l);
+                });
             }
         }
     }

@@ -21,9 +21,7 @@ package com.github.jinahya.database.metadata.bind;
  */
 
 import lombok.extern.slf4j.Slf4j;
-import org.junit.jupiter.api.Disabled;
-import org.testcontainers.containers.JdbcDatabaseContainer;
-import org.testcontainers.containers.MSSQLServerContainer;
+import org.testcontainers.containers.MariaDBContainer;
 import org.testcontainers.junit.jupiter.Container;
 import org.testcontainers.junit.jupiter.Testcontainers;
 import org.testcontainers.utility.DockerImageName;
@@ -32,22 +30,20 @@ import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
 
-@Disabled
+//@Disabled
 @Testcontainers
 @Slf4j
-class TestcontainersMsSqlServerIT
+class TestContainers_MariaDB_IT
         extends TestContainersIT {
 
+    static final String DATABASE_PRODUCT_NAME = "MariaDB";
+
     @Container
-    private static final JdbcDatabaseContainer<?> CONTAINER;
+    private static final MariaDBContainer<?> CONTAINER;
 
     static {
-        // https://www.testcontainers.org/modules/databases/oraclexe/
-        final DockerImageName NAME = DockerImageName.parse("mcr.microsoft.com/mssql/server:2022-latest");
-        CONTAINER = new MSSQLServerContainer<>(NAME)
-                .acceptLicense()
-                .withEnv("MSSQL_PID", "Developer")
-        ;
+        final DockerImageName NAME = DockerImageName.parse("mariadb:latest");
+        CONTAINER = new MariaDBContainer<>(NAME);
     }
 
     @Override

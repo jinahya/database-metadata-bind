@@ -22,7 +22,7 @@ package com.github.jinahya.database.metadata.bind;
 
 import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.Disabled;
-import org.testcontainers.containers.PostgreSQLContainer;
+import org.testcontainers.containers.MySQLContainer;
 import org.testcontainers.junit.jupiter.Container;
 import org.testcontainers.junit.jupiter.Testcontainers;
 import org.testcontainers.utility.DockerImageName;
@@ -34,17 +34,17 @@ import java.sql.SQLException;
 @Disabled
 @Testcontainers
 @Slf4j
-class TestcontainersPostgresIT
+class TestContainers_MySQL_IT
         extends TestContainersIT {
 
-    static final String DATABASE_PRODUCT_NAME = "PostgreSQL";
+    static final String DATABASE_PRODUCT_NAME = "MySQL";
 
     @Container
-    private static final PostgreSQLContainer<?> CONTAINER;
+    private static final MySQLContainer<?> CONTAINER;
 
     static {
-        final DockerImageName NAME = DockerImageName.parse("postgres:latest");
-        CONTAINER = new PostgreSQLContainer<>(NAME);
+        final DockerImageName NAME = DockerImageName.parse("mysql:latest");
+        CONTAINER = new MySQLContainer<>(NAME);
     }
 
     @Override

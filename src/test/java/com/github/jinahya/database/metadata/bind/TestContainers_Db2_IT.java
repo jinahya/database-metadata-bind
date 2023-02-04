@@ -22,7 +22,8 @@ package com.github.jinahya.database.metadata.bind;
 
 import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.Disabled;
-import org.testcontainers.containers.MariaDBContainer;
+import org.testcontainers.containers.Db2Container;
+import org.testcontainers.containers.JdbcDatabaseContainer;
 import org.testcontainers.junit.jupiter.Container;
 import org.testcontainers.junit.jupiter.Testcontainers;
 import org.testcontainers.utility.DockerImageName;
@@ -34,17 +35,18 @@ import java.sql.SQLException;
 @Disabled
 @Testcontainers
 @Slf4j
-class TestcontainersMariadbIT
+class TestContainers_Db2_IT
         extends TestContainersIT {
 
-    static final String DATABASE_PRODUCT_NAME = "MariaDB";
-
     @Container
-    private static final MariaDBContainer<?> CONTAINER;
+    private static final JdbcDatabaseContainer<?> CONTAINER;
 
     static {
-        final DockerImageName NAME = DockerImageName.parse("mariadb:latest");
-        CONTAINER = new MariaDBContainer<>(NAME);
+        // https://www.testcontainers.org/modules/databases/db2/
+        final var NAME = DockerImageName.parse("ibmcom/db2:latest");
+        CONTAINER = new Db2Container(NAME)
+                .acceptLicense();
+        ;
     }
 
     @Override

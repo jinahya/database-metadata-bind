@@ -49,6 +49,7 @@ abstract class TestContainersIT {
     @Test
     void test() throws SQLException {
         try (var connection = connect()) {
+            log.debug("connected: {}", connection);
             final var context = Context.newInstance(connection);
             ContextTests.test(context);
         }

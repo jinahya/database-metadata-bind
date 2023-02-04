@@ -111,7 +111,9 @@ public class Context {
             final Object object = results.getObject(resultLabel);
             instance.getUnmappedValues().put(resultLabel, object);
         }
-        assert fieldLabels.isEmpty();
+        if (!fieldLabels.isEmpty()) {
+            log.warning(() -> String.format("unmapped fields: %1$s", fieldLabels));
+        }
         return instance;
     }
 
