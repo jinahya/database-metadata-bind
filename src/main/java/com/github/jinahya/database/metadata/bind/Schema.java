@@ -27,7 +27,10 @@ import lombok.NoArgsConstructor;
 import lombok.ToString;
 import lombok.experimental.SuperBuilder;
 
+import java.sql.SQLException;
 import java.util.Comparator;
+import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
 
 /**
@@ -64,12 +67,23 @@ public class Schema
 
     public static final String COLUMN_VALUE_TABLE_SCHEM_EMPTY = "";
 
+    public List<SuperTable> getSuperTables(final Context context, final String tableNamePattern) throws SQLException {
+        Objects.requireNonNull(context, "context is null");
+        return context.getSuperTables(getTableCatalogNonNull(), getTableSchem(), tableNamePattern);
+    }
+
+    public List<SuperType> getSuperTypes(final Context context, final String typeNamePattern) throws SQLException {
+        Objects.requireNonNull(context, "context is null");
+        return context.getSuperTypes(getTableCatalogNonNull(), getTableSchem(), typeNamePattern);
+    }
+
     public SchemaId getSchemaId() {
         return SchemaId.of(getTableCatalogNonNull(), getTableSchem());
     }
 
     String getTableCatalogNonNull() {
-        return Optional.ofNullable(getTableCatalog()).orElse(Catalog.COLUMN_VALUE_TABLE_CAT_EMPTY);
+        return Optional.ofNullable(getTableCatalog())
+                .orElse(Catalog.COLUMN_VALUE_TABLE_CAT_EMPTY);
     }
 
     @NullableBySpecification

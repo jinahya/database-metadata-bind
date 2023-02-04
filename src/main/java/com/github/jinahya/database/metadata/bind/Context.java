@@ -1066,7 +1066,6 @@ public class Context {
      * @throws SQLException if a database error occurs.
      * @see #getTableTypes(Consumer)
      */
-
     public List<TableType> getTableTypes() throws SQLException {
         final List<TableType> list = new ArrayList<>();
         getTableTypes(list::add);
@@ -1221,9 +1220,7 @@ public class Context {
      * @throws SQLException if a database access error occurs.
      * @see #getVersionColumns(String, String, String, Consumer)
      */
-
-    public List<VersionColumn> getVersionColumns(final String catalog, final String schema,
-                                                 final String table)
+    public List<VersionColumn> getVersionColumns(final String catalog, final String schema, final String table)
             throws SQLException {
         final List<VersionColumn> list = new ArrayList<>();
         getVersionColumns(catalog, schema, table, list::add);

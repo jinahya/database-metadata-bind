@@ -22,6 +22,6 @@ package com.github.jinahya.database.metadata.bind;
 
 import java.io.Serializable;
 
-public interface MetadataTypeId extends Serializable {
+public interface MetadataTypeId<T extends MetadataType> extends Serializable {
 
 }

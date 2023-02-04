@@ -72,8 +72,8 @@ public class UDT
         return context.getAttributes(getTypeCat(), getTypeSchem(), getTypeName(), attributeNamePattern);
     }
 
-    public TypeId getTypeId() {
-        return TypeId.of(getTypeCat(), getTypeSchem(), getTypeName());
+    public UDTId getUDTId() {
+        return UDTId.of(getTypeCat(), getTypeSchem(), getTypeName());
     }
 
     @NullableBySpecification

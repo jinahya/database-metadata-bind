@@ -22,57 +22,50 @@ package com.github.jinahya.database.metadata.bind;
 
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.text.CaseUtils;
-import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
-import java.beans.BeanInfo;
 import java.beans.IntrospectionException;
 import java.beans.Introspector;
-import java.beans.PropertyDescriptor;
-import java.lang.reflect.Constructor;
-import java.lang.reflect.Field;
 import java.lang.reflect.Method;
-import java.util.Arrays;
-import java.util.Collections;
 import java.util.Map;
-import java.util.Optional;
 import java.util.concurrent.ConcurrentHashMap;
-import java.util.stream.Collectors;
 
-import static java.util.Objects.requireNonNull;
+import static java.util.Arrays.stream;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
+import static org.junit.jupiter.api.Assertions.fail;
 
 @Slf4j
-abstract class MetadataTypeTest<T extends MetadataType> {
+abstract class MetadataTypeTest<T extends MetadataType> extends MetadataTypeTest0<T> {
 
     private static final Map<Long, Class<?>> SERIAL_VERSION_UIDS = new ConcurrentHashMap<>();
 
     MetadataTypeTest(final Class<T> typeClass) {
-        this.typeClass = requireNonNull(typeClass, "typeClass is null");
+        super(typeClass);
     }
 
+    @DisplayName("Each serialVersionUID should be unique")
     @Test
     void serialVersionUID_Unique_() throws ReflectiveOperationException {
         for (Class<?> c = typeClass; MetadataType.class.isAssignableFrom(c); c = c.getSuperclass()) {
             if (SERIAL_VERSION_UIDS.containsValue(c)) {
                 continue;
             }
-            final Field field = c.getDeclaredField("serialVersionUID");
+            final var field = c.getDeclaredField("serialVersionUID");
             if (field.getDeclaringClass() != c) {
                 log.error("{} is not declaring serialVersionUID", c);
-                Assertions.fail();
+                fail();
                 return;
             }
-            if (!field.isAccessible()) {
+            if (!field.canAccess(null)) {
                 field.setAccessible(true);
             }
-            final long serialVersionUID = field.getLong(null);
-            final Class<?> previous = SERIAL_VERSION_UIDS.put(serialVersionUID, c);
+            final var serialVersionUID = field.getLong(null);
+            final var previous = SERIAL_VERSION_UIDS.put(serialVersionUID, c);
             if (previous != null) {
                 log.debug("{}#serialVersionUID({}) conflicts with {}", c, serialVersionUID, previous);
-                Assertions.fail();
+                fail();
                 return;
             }
         }
@@ -85,7 +78,7 @@ abstract class MetadataTypeTest<T extends MetadataType> {
 
     @Test
     void equals_Equal_Self() throws ReflectiveOperationException {
-        final Method method = typeClass.getMethod("equals", Object.class);
+        final var method = typeClass.getMethod("equals", Object.class);
         if (method.getDeclaringClass() == Object.class) {
             return;
         }
@@ -102,21 +95,21 @@ abstract class MetadataTypeTest<T extends MetadataType> {
 
     @Test
     void fieldsWithLabel_Exist_Accessors() throws IntrospectionException {
-        for (final Field field : getFieldsWithColumnLabel().keySet()) {
-            final Class<?> declaringClass = field.getDeclaringClass();
-            final BeanInfo beanInfo = Introspector.getBeanInfo(declaringClass);
-            final Optional<PropertyDescriptor> propertyDescriptor =
-                    Arrays.stream(beanInfo.getPropertyDescriptors()).filter(d -> d.getName().equals(field.getName()))
+        for (final var field : getFieldsWithColumnLabel().keySet()) {
+            final var declaringClass = field.getDeclaringClass();
+            final var beanInfo = Introspector.getBeanInfo(declaringClass);
+            final var propertyDescriptor =
+                    stream(beanInfo.getPropertyDescriptors()).filter(d -> d.getName().equals(field.getName()))
                             .findAny();
             assertThat(propertyDescriptor).isNotEmpty().hasValueSatisfying(d -> {
-                final Method readMethod = d.getReadMethod();
+                final var readMethod = d.getReadMethod();
                 assertThat(readMethod).isNotNull();
                 try {
                     readMethod.invoke(typeInstance());
                 } catch (final ReflectiveOperationException roe) {
                     throw new RuntimeException(roe);
                 }
-                final Method writeMethod = d.getWriteMethod();
+                final var writeMethod = d.getWriteMethod();
                 assertThat(writeMethod).isNotNull();
                 if (!field.getType().isPrimitive()) {
                     try {
@@ -132,7 +125,7 @@ abstract class MetadataTypeTest<T extends MetadataType> {
     @DisplayName("fields with @Unused should not be a primitive type")
     @Test
     void fieldsWithUnused_TypeShouldNotBePrimitive() {
-        for (final Field field : fieldsWithUnusedBySpecification().keySet()) {
+        for (final var field : fieldsWithUnusedBySpecification().keySet()) {
             assert field.isAnnotationPresent(NotUsedBySpecification.class);
             assertThat(field.getType().isPrimitive())
                     .as("@NotUsedBySpecification on primitive field: %s", field)
@@ -143,7 +136,7 @@ abstract class MetadataTypeTest<T extends MetadataType> {
     @DisplayName("@NullableBySpecification -> !primitive")
     @Test
     void fields_NotPrimitive_NullableBySpecification() {
-        for (final Field field : getFieldsWithNullableBySpecification().keySet()) {
+        for (final var field : getFieldsWithNullableBySpecification().keySet()) {
             assert field.isAnnotationPresent(NullableBySpecification.class);
             assertThat(field.getType().isPrimitive())
                     .as("@NullableBySpecification on primitive field: %s", field)
@@ -154,7 +147,7 @@ abstract class MetadataTypeTest<T extends MetadataType> {
     @DisplayName("fields with @MayBeNullByVendor should also be with @XmlElement(nillable = true)")
     @Test
     void fieldsWithMayBeNullByVendor_ShouldBePrimitive_Type() {
-        for (final Field field : getFieldsWithMayBeNullByVendor().keySet()) {
+        for (final var field : getFieldsWithMayBeNullByVendor().keySet()) {
             assertThat(field.getAnnotation(NullableByVendor.class)).isNotNull();
             assertThat(field.getType().isPrimitive()).isFalse();
         }
@@ -170,47 +163,4 @@ abstract class MetadataTypeTest<T extends MetadataType> {
                     .isEqualTo(camelCase);
         });
     }
-
-    T typeInstance() {
-        try {
-            final Constructor<T> constructor = typeClass.getDeclaredConstructor();
-            if (!constructor.isAccessible()) {
-                constructor.setAccessible(true);
-            }
-            return constructor.newInstance();
-        } catch (final ReflectiveOperationException roe) {
-            throw new RuntimeException(roe);
-        }
-    }
-
-    Map<Field, NullableByVendor> getFieldsWithMayBeNullByVendor() {
-        return getFieldsWithColumnLabel().entrySet().stream()
-                .filter(e -> e.getKey().getAnnotation(NullableByVendor.class) != null)
-                .collect(Collectors.toMap(Map.Entry::getKey, e -> e.getKey().getAnnotation(NullableByVendor.class)));
-    }
-
-    Map<Field, NullableBySpecification> getFieldsWithNullableBySpecification() {
-        return getFieldsWithColumnLabel().entrySet().stream()
-                .filter(e -> e.getKey().getAnnotation(NullableBySpecification.class) != null).collect(
-                        Collectors.toMap(Map.Entry::getKey,
-                                         e -> e.getKey().getAnnotation(NullableBySpecification.class)));
-    }
-
-    Map<Field, NotUsedBySpecification> fieldsWithUnusedBySpecification() {
-        return getFieldsWithColumnLabel().entrySet().stream()
-                .filter(e -> e.getKey().getAnnotation(NotUsedBySpecification.class) != null).collect(
-                        Collectors.toMap(Map.Entry::getKey,
-                                         e -> e.getKey().getAnnotation(NotUsedBySpecification.class)));
-    }
-
-    Map<Field, ColumnLabel> getFieldsWithColumnLabel() {
-        if (fieldsWithLabel == null) {
-            fieldsWithLabel = Collections.unmodifiableMap(Utils.getFieldsAnnotatedWith(typeClass, ColumnLabel.class));
-        }
-        return fieldsWithLabel;
-    }
-
-    final Class<T> typeClass;
-
-    private Map<Field, ColumnLabel> fieldsWithLabel;
 }

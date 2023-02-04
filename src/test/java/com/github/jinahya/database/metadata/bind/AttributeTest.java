@@ -20,8 +20,7 @@ package com.github.jinahya.database.metadata.bind;
  * #L%
  */
 
-class AttributeTest
-        extends AbstractMetadataTypeTest<Attribute> {
+class AttributeTest extends AbstractMetadataTypeTest<Attribute> {
 
     AttributeTest() {
         super(Attribute.class);

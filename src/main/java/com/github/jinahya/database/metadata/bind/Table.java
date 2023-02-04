@@ -42,7 +42,6 @@ import java.util.Optional;
  * @see Context#getTables(String, String, String, String[])
  */
 @ParentOf(VersionColumn.class)
-@ParentOf(SuperTable.class)
 @ParentOf(PseudoColumn.class)
 @ParentOf(PrimaryKey.class)
 @ParentOf(IndexInfo.class)
@@ -56,13 +55,12 @@ import java.util.Optional;
 @Data
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @SuperBuilder(toBuilder = true)
-public class Table
-        extends AbstractMetadataType {
+public class Table extends AbstractMetadataType {
 
     private static final long serialVersionUID = 6590036695540141125L;
 
     public static final Comparator<Table> COMPARING_TABLE_TYPE_TABLE_CAT_TABLE_SCHEM_TABLE_NAME =
-            Comparator.comparing(Table::getTableType, Comparator.nullsFirst(Comparator.naturalOrder()))
+            Comparator.comparing(Table::getTableType)
                     .thenComparing(Table::getTableCat, Comparator.nullsFirst(Comparator.naturalOrder()))
                     .thenComparing(Table::getTableSchem, Comparator.nullsFirst(Comparator.naturalOrder()))
                     .thenComparing(Table::getTableName);
@@ -152,6 +150,35 @@ public class Table
         );
     }
 
+    public List<PrimaryKey> getPrimaryKeys(final Context context) throws SQLException {
+        Objects.requireNonNull(context, "context is null");
+        return context.getPrimaryKeys(
+                getTableCatNonNull(),
+                getTableSchemNonNull(),
+                getTableName()
+        );
+    }
+
+    public List<PseudoColumn> getPseudoColumns(final Context context, final String columnNamePattern)
+            throws SQLException {
+        Objects.requireNonNull(context, "context is null");
+        return context.getPseudoColumns(
+                getTableCatNonNull(),
+                getTableSchemNonNull(),
+                getTableName(),
+                columnNamePattern
+        );
+    }
+
+    /**
+     * Retrieves a description of this table's columns that are automatically updated when any value in a row is
+     * updated.
+     *
+     * @param context a context.
+     * @return a list of bound values.
+     * @throws SQLException if a database error occurs.
+     * @see Context#getVersionColumns(String, String, String)
+     */
     public List<VersionColumn> getVersionColumns(final Context context) throws SQLException {
         Objects.requireNonNull(context, "context is null");
         return context.getVersionColumns(

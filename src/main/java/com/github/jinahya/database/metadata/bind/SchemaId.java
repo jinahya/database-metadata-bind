@@ -28,7 +28,7 @@ import lombok.experimental.SuperBuilder;
 @Data
 @RequiredArgsConstructor(access = AccessLevel.PRIVATE)
 @SuperBuilder(toBuilder = true)
-public final class SchemaId implements MetadataTypeId {
+public final class SchemaId implements MetadataTypeId<Schema> {
 
     private static final long serialVersionUID = 5404216668144630146L;
 

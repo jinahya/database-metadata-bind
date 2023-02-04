@@ -25,7 +25,7 @@ import lombok.experimental.SuperBuilder;
 
 @Data
 @SuperBuilder(toBuilder = true)
-public final class ProcedureColumnId implements MetadataTypeId {
+public final class ProcedureColumnId implements MetadataTypeId<ProcedureColumn> {
 
     private static final long serialVersionUID = 6257269625612307524L;
 

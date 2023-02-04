@@ -47,15 +47,15 @@ public class SuperType
 
     private static final long serialVersionUID = 4603878785941565029L;
 
-    public TypeId getTypeId() {
-        return TypeId.builder()
+    public UDTId getTypeId() {
+        return UDTId.builder()
                 .schemaId(SchemaId.of(getTypeCat(), getSupertypeSchem()))
                 .typeName(getTypeName())
                 .build();
     }
 
-    public TypeId getSupertypeId() {
-        return TypeId.builder()
+    public UDTId getSupertypeId() {
+        return UDTId.builder()
                 .schemaId(SchemaId.of(getSupertypeCat(), getSupertypeSchem()))
                 .typeName(getSupertypeName())
                 .build();

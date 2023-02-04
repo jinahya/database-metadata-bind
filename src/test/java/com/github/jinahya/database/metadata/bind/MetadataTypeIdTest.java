@@ -23,38 +23,23 @@ package com.github.jinahya.database.metadata.bind;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.Test;
 
-import java.lang.reflect.Constructor;
 import java.lang.reflect.Modifier;
 
-import static java.util.Objects.requireNonNull;
 import static org.assertj.core.api.Assertions.assertThat;
 
 @Slf4j
-abstract class MetadataTypeIdTest<T extends MetadataTypeId> {
+abstract class MetadataTypeIdTest<T extends MetadataTypeId<U>, U extends MetadataType>
+        extends MetadataTypeIdTest0<T, U> {
 
-    MetadataTypeIdTest(final Class<T> typeClass) {
-        this.typeClass = requireNonNull(typeClass, "typeClass is null");
+    MetadataTypeIdTest(final Class<T> typeIdClass, final Class<U> typeClass) {
+        super(typeIdClass, typeClass);
     }
 
     @Test
     void shouldBeFinal() {
-        final int modifiers = typeClass.getModifiers();
+        final int modifiers = typeIdClass.getModifiers();
         assertThat(Modifier.isFinal(modifiers))
-                .as("final modifier of (%1$s)", typeClass)
+                .as("final modifier of (%1$s)", typeIdClass)
                 .isTrue();
     }
-
-    T typeInstance() {
-        try {
-            final Constructor<T> constructor = typeClass.getDeclaredConstructor();
-            if (!constructor.canAccess(this)) {
-                constructor.setAccessible(true);
-            }
-            return constructor.newInstance();
-        } catch (final ReflectiveOperationException roe) {
-            throw new RuntimeException(roe);
-        }
-    }
-
-    final Class<T> typeClass;
 }

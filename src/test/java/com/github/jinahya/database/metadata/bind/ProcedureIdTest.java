@@ -1,8 +1,8 @@
 package com.github.jinahya.database.metadata.bind;
 
-class ProcedureIdTest extends MetadataTypeIdTest<ProcedureId> {
+class ProcedureIdTest extends MetadataTypeIdTest<ProcedureId, Procedure> {
 
     ProcedureIdTest() {
-        super(ProcedureId.class);
+        super(ProcedureId.class, Procedure.class);
     }
 }

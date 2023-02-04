@@ -21,36 +21,36 @@ package com.github.jinahya.database.metadata.bind;
  */
 
 import lombok.extern.slf4j.Slf4j;
+import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 
+import java.io.IOException;
 import java.sql.Connection;
 import java.sql.SQLException;
 import java.util.Optional;
 
-/**
- * An abstract test class for in-memory databases.
- *
- * @author Jin Kwon &lt;onacit at gmail.com&gt;
- */
+import static org.junit.jupiter.api.Assumptions.assumeTrue;
+
 @Slf4j
-abstract class MemoryTest {
+abstract class TestContainers_$_IT {
 
-    /**
-     * Returns a connection
-     *
-     * @return a connection.
-     * @throws SQLException if a database error occurs.
-     */
-    protected abstract Connection connect() throws SQLException;
-
-    Context context(final Connection connection) throws SQLException {
-        return Context.newInstance(connection);
+    @BeforeAll
+    static void checkDocker() throws IOException, InterruptedException {
+        final var process = new ProcessBuilder()
+                .command("docker", "images")
+                .start();
+        final int exitValue = process.waitFor();
+        log.debug("exitValue: {}", exitValue);
+        assumeTrue(exitValue == 0);
     }
+
+    abstract Connection connect() throws SQLException;
 
     @Test
     void test() throws SQLException {
         try (var connection = connect()) {
-            final var context = context(connection);
+            log.debug("connected: {}", connection);
+            final var context = Context.newInstance(connection);
             ContextTests.test(context);
         }
     }
@@ -58,7 +58,7 @@ abstract class MemoryTest {
     @Test
     void tables() throws SQLException {
         try (var connection = connect()) {
-            final var context = context(connection);
+            final var context = Context.newInstance(connection);
             ContextTests.info(context);
             final var tables = context.getTables(null, null, "%", null);
             tables.stream().map(Table::getTableCat).distinct().forEach(

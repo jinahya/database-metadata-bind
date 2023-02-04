@@ -34,7 +34,7 @@ import java.sql.SQLException;
 @Testcontainers
 @Slf4j
 class TestContainers_MariaDB_IT
-        extends TestContainersIT {
+        extends TestContainers_$_IT {
 
     static final String DATABASE_PRODUCT_NAME = "MariaDB";
 

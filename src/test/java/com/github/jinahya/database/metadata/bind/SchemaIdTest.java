@@ -1,8 +1,8 @@
 package com.github.jinahya.database.metadata.bind;
 
-class SchemaIdTest extends MetadataTypeIdTest<SchemaId> {
+class SchemaIdTest extends MetadataTypeIdTest<SchemaId, Schema> {
 
     SchemaIdTest() {
-        super(SchemaId.class);
+        super(SchemaId.class, Schema.class);
     }
 }

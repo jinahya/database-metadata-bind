@@ -37,7 +37,7 @@ import static org.junit.jupiter.api.Assertions.fail;
  * @author Jin Kwon &lt;jinahya_at_gmail.com&gt;
  */
 @Slf4j
-class MemoryDerbyTest extends MemoryTest {
+class Memory_Derby_Test extends Memory_$_Test {
 
     static final String DATABASE_PRODUCT_NAME = "Apache Derby";
 

@@ -20,9 +20,9 @@ package com.github.jinahya.database.metadata.bind;
  * #L%
  */
 
-class ColumnIdTest extends MetadataTypeIdTest<ColumnId> {
+class ColumnIdTest extends MetadataTypeIdTest<ColumnId, Column> {
 
     ColumnIdTest() {
-        super(ColumnId.class);
+        super(ColumnId.class, Column.class);
     }
 }

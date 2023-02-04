@@ -32,6 +32,7 @@ import lombok.experimental.SuperBuilder;
  * {@link java.sql.DatabaseMetaData#getSuperTables(java.lang.String, java.lang.String, java.lang.String)}
  *
  * @author Jin Kwon &lt;jinahya_at_gmail.com&gt;
+ * @see Context#getSuperTables(String, String, String)
  */
 @ChildOf(Schema.class)
 @EqualsAndHashCode(callSuper = true)
@@ -39,22 +40,29 @@ import lombok.experimental.SuperBuilder;
 @Data
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @SuperBuilder(toBuilder = true)
-public class SuperTable
-        extends AbstractMetadataType {
+public class SuperTable extends AbstractMetadataType {
 
     private static final long serialVersionUID = -302335602056528563L;
 
+    public static final String COLUMN_NAME_TABLE_CAT = "TABLE_CAT";
+
+    public static final String COLUMN_NAME_TABLE_SCHEM = "TABLE_SCHEM";
+
+    public static final String COLUMN_NAME_TABLE_NAME = "TABLE_NAME";
+
+    public static final String COLUMN_NAME_SUPERTABLE_NAME = "SUPERTABLE_NAME";
+
     @NullableBySpecification
-    @ColumnLabel("TABLE_CAT")
+    @ColumnLabel(COLUMN_NAME_TABLE_CAT)
     private String tableCat;
 
     @NullableBySpecification
-    @ColumnLabel("TABLE_SCHEM")
+    @ColumnLabel(COLUMN_NAME_TABLE_SCHEM)
     private String tableSchem;
 
-    @ColumnLabel("TABLE_NAME")
+    @ColumnLabel(COLUMN_NAME_TABLE_NAME)
     private String tableName;
 
-    @ColumnLabel("SUPERTABLE_NAME")
+    @ColumnLabel(COLUMN_NAME_SUPERTABLE_NAME)
     private String supertableName;
 }

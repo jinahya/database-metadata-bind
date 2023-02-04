@@ -30,7 +30,7 @@ import lombok.experimental.SuperBuilder;
 import java.util.Comparator;
 
 /**
- * An entity class for binding the result of {@link java.sql.DatabaseMetaData#getTypeInfo() getTypeInfo()}.
+ * An entity class for binding results of {@link java.sql.DatabaseMetaData#getTypeInfo() getTypeInfo()}.
  *
  * @author Jin Kwon &lt;jinahya_at_gmail.com&gt;
  * @see Context#getTypeInfo()
@@ -40,8 +40,7 @@ import java.util.Comparator;
 @Data
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @SuperBuilder(toBuilder = true)
-public class TypeInfo
-        extends AbstractMetadataType {
+public class TypeInfo extends AbstractMetadataType {
 
     private static final long serialVersionUID = -3964147654019495313L;
 
@@ -51,7 +50,17 @@ public class TypeInfo
 
     public static final String COLUMN_LABEL_DATA_TYPE = "DATA_TYPE";
 
+    public static final String COLUMN_LABEL_PRECISION = "PRECISION";
+
+    public static final String COLUMN_LABEL_LITERAL_PREFIX = "LITERAL_PREFIX";
+
+    public static final String COLUMN_LABEL_LITERAL_SUFFIX = "LITERAL_SUFFIX";
+
+    public static final String COLUMN_LABEL_CREATE_PARAMS = "CREATE_PARAMS";
+
     public static final String COLUMN_LABEL_NULLABLE = "NULLABLE";
+
+    public static final String COLUMN_LABEL_CASE_SENSITIVE = "CASE_SENSITIVE";
 
     public static final String COLUMN_LABEL_SEARCHABLE = "SEARCHABLE";
 
@@ -61,26 +70,26 @@ public class TypeInfo
     @ColumnLabel(COLUMN_LABEL_DATA_TYPE)
     private int dataType;
 
-    @NullableBySpecification // > Null is returned for data types where the column size is not applicable.
-    @ColumnLabel("PRECISION")
+    @NullableBySpecification
+    @ColumnLabel(COLUMN_LABEL_PRECISION)
     private Integer precision;
 
     @NullableBySpecification
-    @ColumnLabel("LITERAL_PREFIX")
+    @ColumnLabel(COLUMN_LABEL_LITERAL_PREFIX)
     private String literalPrefix;
 
     @NullableBySpecification
-    @ColumnLabel("LITERAL_SUFFIX")
+    @ColumnLabel(COLUMN_LABEL_LITERAL_SUFFIX)
     private String literalSuffix;
 
     @NullableBySpecification
-    @ColumnLabel("CREATE_PARAMS")
+    @ColumnLabel(COLUMN_LABEL_CREATE_PARAMS)
     private String createParams;
 
     @ColumnLabel(COLUMN_LABEL_NULLABLE)
     private int nullable;
 
-    @ColumnLabel("CASE_SENSITIVE")
+    @ColumnLabel(COLUMN_LABEL_CASE_SENSITIVE)
     private boolean caseSensitive;
 
     @ColumnLabel(COLUMN_LABEL_SEARCHABLE)

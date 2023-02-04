@@ -618,7 +618,7 @@ final class ContextTests {
         Objects.requireNonNull(procedures, "procedures is null");
         {
             final var databaseProductNames = Set.of(
-                    MemoryHsqlTest.DATABASE_PRODUCT_NAME
+                    Memory_Hsql_Test.DATABASE_PRODUCT_NAME
             );
             if (!databaseProductNames.contains(databaseProductName)) {
                 assertThat(procedures).isSortedAccordingTo(
@@ -671,7 +671,7 @@ final class ContextTests {
         Objects.requireNonNull(schemas, "schemas is null");
         {
             final var databaseProductNames = Set.of(
-                    MemoryHsqlTest.DATABASE_PRODUCT_NAME // https://sourceforge.net/p/hsqldb/bugs/1671/
+                    Memory_Hsql_Test.DATABASE_PRODUCT_NAME // https://sourceforge.net/p/hsqldb/bugs/1671/
             );
             if (!databaseProductNames.contains(databaseProductName)) {
                 assertThat(schemas).isSortedAccordingTo(Schema.COMPARING_TABLE_CATALOG_TABLE_SCHEM);
@@ -690,6 +690,10 @@ final class ContextTests {
         Objects.requireNonNull(schema, "schema is null");
         common(schema);
         common(schema.getSchemaId());
+        final var superTables = schema.getSuperTables(context, "%");
+        superTables(context, superTables);
+        final var superTypes = schema.getSuperTypes(context, "%");
+        superTypes(context, superTypes);
     }
 
     static void superTypes(final Context context, final List<? extends SuperType> superTypes) throws SQLException {
@@ -717,7 +721,7 @@ final class ContextTests {
         {
             final var databaseProductNames = Set.of(
                     // https://sourceforge.net/p/hsqldb/bugs/1672/
-                    MemoryHsqlTest.DATABASE_PRODUCT_NAME,
+                    Memory_Hsql_Test.DATABASE_PRODUCT_NAME,
                     TestContainers_MariaDB_IT.DATABASE_PRODUCT_NAME,
                     TestContainers_PostgreSQL_IT.DATABASE_PRODUCT_NAME
             );
@@ -801,6 +805,18 @@ final class ContextTests {
             thrown("failed; getIndexInfo", sqle);
         }
         try {
+            final var primaryKeys = table.getPrimaryKeys(context);
+            primaryKeys(context, primaryKeys);
+        } catch (final SQLException sqle) {
+            thrown("failed; getPrimaryKeys", sqle);
+        }
+        try {
+            final var pseudoColumns = table.getPseudoColumns(context, "%");
+            pseudoColumns(context, pseudoColumns);
+        } catch (final SQLException sqle) {
+            thrown("failed; getPseudoColumns", sqle);
+        }
+        try {
             final var versionColumns = table.getVersionColumns(context);
             versionColumns(context, versionColumns);
         } catch (final SQLException sqle) {
@@ -808,48 +824,11 @@ final class ContextTests {
         }
     }
 
-    static void tableTypes(final Context context, final List<? extends TableType> tableTypes) throws SQLException {
-        Objects.requireNonNull(context, "context is null");
-        Objects.requireNonNull(tableTypes, "tableTypes is null");
-        {
-            final var databaseProductNames = Set.of(
-                    TestContainers_MariaDB_IT.DATABASE_PRODUCT_NAME // https://jira.mariadb.org/browse/CONJ-1049
-            );
-            if (!databaseProductNames.contains(databaseProductName)) {
-                assertThat(tableTypes).isSortedAccordingTo(TableType.COMPARING_TABLE_TYPE);
-            }
-        }
-        for (final var tableType : tableTypes) {
-            tableType(context, tableType);
-        }
-    }
-
-    static void tableType(final Context context, final TableType tableType) throws SQLException {
-        Objects.requireNonNull(context, "context is null");
-        Objects.requireNonNull(tableType, "tableType is null");
-        common(tableType);
-    }
-
-    static void typeInfo(final Context context, final List<? extends TypeInfo> typeInfo) throws SQLException {
-        Objects.requireNonNull(context, "context is null");
-        Objects.requireNonNull(typeInfo, "typeInfo is null");
-        assertThat(typeInfo).isSortedAccordingTo(TypeInfo.COMPARING_DATA_TYPE);
-        for (final var typeInfo_ : typeInfo) {
-            typeInfo(context, typeInfo_);
-        }
-    }
-
-    static void typeInfo(final Context context, final TypeInfo typeInfo) throws SQLException {
-        Objects.requireNonNull(context, "context is null");
-        Objects.requireNonNull(typeInfo, "typeInfo is null");
-        common(typeInfo);
-    }
-
     static void primaryKeys(final Context context, final List<? extends PrimaryKey> primaryKeys) throws SQLException {
         Objects.requireNonNull(context, "context is null");
         Objects.requireNonNull(primaryKeys, "primaryKeys is null");
         final var databaseProductNames = Set.of(
-                MemoryHsqlTest.DATABASE_PRODUCT_NAME,
+                Memory_Hsql_Test.DATABASE_PRODUCT_NAME,
                 TestContainers_PostgreSQL_IT.DATABASE_PRODUCT_NAME,
                 TestContainers_MySQL_IT.DATABASE_PRODUCT_NAME
         );
@@ -863,7 +842,7 @@ final class ContextTests {
         }
     }
 
-    static void primaryKey(final Context context, final PrimaryKey primaryKey) throws SQLException {
+    private static void primaryKey(final Context context, final PrimaryKey primaryKey) throws SQLException {
         Objects.requireNonNull(context, "context is null");
         Objects.requireNonNull(primaryKey, "primaryKey is null");
         common(primaryKey);
@@ -906,7 +885,7 @@ final class ContextTests {
         Objects.requireNonNull(tablePrivileges, "tablePrivileges is null");
         {
             final var databaseProductNames = Set.of(
-                    MemoryHsqlTest.DATABASE_PRODUCT_NAME
+                    Memory_Hsql_Test.DATABASE_PRODUCT_NAME
             );
             if (!databaseProductNames.contains(databaseProductName)) {
                 assertThat(tablePrivileges).isSortedAccordingTo(
@@ -924,12 +903,49 @@ final class ContextTests {
         common(tablePrivilege);
     }
 
+    static void tableTypes(final Context context, final List<? extends TableType> tableTypes) throws SQLException {
+        Objects.requireNonNull(context, "context is null");
+        Objects.requireNonNull(tableTypes, "tableTypes is null");
+        {
+            final var databaseProductNames = Set.of(
+                    TestContainers_MariaDB_IT.DATABASE_PRODUCT_NAME // https://jira.mariadb.org/browse/CONJ-1049
+            );
+            if (!databaseProductNames.contains(databaseProductName)) {
+                assertThat(tableTypes).isSortedAccordingTo(TableType.COMPARING_TABLE_TYPE);
+            }
+        }
+        for (final var tableType : tableTypes) {
+            tableType(context, tableType);
+        }
+    }
+
+    static void tableType(final Context context, final TableType tableType) throws SQLException {
+        Objects.requireNonNull(context, "context is null");
+        Objects.requireNonNull(tableType, "tableType is null");
+        common(tableType);
+    }
+
+    static void typeInfo(final Context context, final List<? extends TypeInfo> typeInfo) throws SQLException {
+        Objects.requireNonNull(context, "context is null");
+        Objects.requireNonNull(typeInfo, "typeInfo is null");
+        assertThat(typeInfo).isSortedAccordingTo(TypeInfo.COMPARING_DATA_TYPE);
+        for (final var typeInfo_ : typeInfo) {
+            typeInfo(context, typeInfo_);
+        }
+    }
+
+    static void typeInfo(final Context context, final TypeInfo typeInfo) throws SQLException {
+        Objects.requireNonNull(context, "context is null");
+        Objects.requireNonNull(typeInfo, "typeInfo is null");
+        common(typeInfo);
+    }
+
     static void udts(final Context context, final List<? extends UDT> udts) throws SQLException {
         Objects.requireNonNull(context, "context is null");
         Objects.requireNonNull(udts, "udts is null");
         assertThat(udts).isSortedAccordingTo(UDT.COMPARING_DATA_TYPE_TYPE_CAT_TYPE_SCHEM_TYPE_NAME);
         assertThat(udts)
-                .extracting(UDT::getTypeId)
+                .extracting(UDT::getUDTId)
                 .doesNotHaveDuplicates();
         for (final var udt : udts) {
             udt(context, udt);

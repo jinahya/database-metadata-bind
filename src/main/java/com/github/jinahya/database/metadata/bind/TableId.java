@@ -25,7 +25,7 @@ import lombok.experimental.SuperBuilder;
 
 @Data
 @SuperBuilder(toBuilder = true)
-public final class TableId implements MetadataTypeId {
+public final class TableId implements MetadataTypeId<Table> {
 
     private static final long serialVersionUID = -7614201161734063836L;
 
