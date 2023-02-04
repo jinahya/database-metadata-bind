@@ -22,8 +22,6 @@ package com.github.jinahya.database.metadata.bind;
 
 import lombok.extern.slf4j.Slf4j;
 
-import java.lang.reflect.Constructor;
-
 import static java.util.Objects.requireNonNull;
 
 @Slf4j
@@ -35,15 +33,13 @@ abstract class MetadataTypeIdTest0<T extends MetadataTypeId<U>, U extends Metada
         this.typeIdClass = requireNonNull(typeIdClass, "typeIdClass is null");
     }
 
-    T typeIdInstance() {
+    @SuppressWarnings({"unchecked"})
+    T typeIdInstanceBuiltEmpty() {
         try {
-            final Constructor<T> constructor = typeIdClass.getDeclaredConstructor();
-            if (!constructor.canAccess(this)) {
-                constructor.setAccessible(true);
-            }
-            return constructor.newInstance();
+            final var builder = typeIdClass.getMethod("builder").invoke(null);
+            return (T) builder.getClass().getMethod("build").invoke(builder);
         } catch (final ReflectiveOperationException roe) {
-            throw new RuntimeException(roe);
+            throw new RuntimeException("failed to build an empty instance of " + typeIdClass, roe);
         }
     }
 
