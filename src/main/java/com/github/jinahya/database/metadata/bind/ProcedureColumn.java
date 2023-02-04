@@ -22,6 +22,7 @@ package com.github.jinahya.database.metadata.bind;
 
 import lombok.AccessLevel;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
 import lombok.experimental.SuperBuilder;
@@ -36,8 +37,8 @@ import java.util.Comparator;
  *
  * @author Jin Kwon &lt;jinahya_at_gmail.com&gt;
  */
-//@ChildOf(Procedure.class)
-//@EqualsAndHashCode(callSuper = true)
+@ChildOf(Procedure.class)
+@EqualsAndHashCode(callSuper = true)
 @ToString(callSuper = true)
 @Data
 @NoArgsConstructor(access = AccessLevel.PROTECTED)

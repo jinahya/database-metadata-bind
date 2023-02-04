@@ -340,7 +340,7 @@ final class ContextTests {
             final var udts = context.getUDTs(null, null, "%", null);
             udts(context, udts);
         } catch (final SQLException sqle) {
-            thrown("failed; getTypeInfo", sqle);
+            thrown("failed; getUDTs", sqle);
         }
     }
 
@@ -597,9 +597,15 @@ final class ContextTests {
     static void indexInfo(final Context context, final List<? extends IndexInfo> indexInfo) throws SQLException {
         Objects.requireNonNull(context, "context is null");
         Objects.requireNonNull(indexInfo, "indexInfo is null");
-        if (!databaseProductName.equals("MySQL")) {
-            // https://bugs.mysql.com/bug.php?id=109803
-            assertThat(indexInfo).isSortedAccordingTo(IndexInfo.COMPARING_NON_UNIQUE_TYPE_INDEX_NAME_ORDINAL_POSITION);
+        {
+            final var databaseProductNames = Set.of(
+                    // https://bugs.mysql.com/bug.php?id=109803
+                    TestContainers_MySQL_IT.DATABASE_PRODUCT_NAME
+            );
+            if (!databaseProductNames.contains(databaseProductName)) {
+                assertThat(indexInfo).isSortedAccordingTo(
+                        IndexInfo.COMPARING_NON_UNIQUE_TYPE_INDEX_NAME_ORDINAL_POSITION);
+            }
         }
         for (final var indexInfo_ : indexInfo) {
             indexInfo(context, indexInfo_);
@@ -928,7 +934,14 @@ final class ContextTests {
     static void typeInfo(final Context context, final List<? extends TypeInfo> typeInfo) throws SQLException {
         Objects.requireNonNull(context, "context is null");
         Objects.requireNonNull(typeInfo, "typeInfo is null");
-        assertThat(typeInfo).isSortedAccordingTo(TypeInfo.COMPARING_DATA_TYPE);
+        {
+            final var databaseProductNames = Set.of(
+                    TestContainers_MySQL_IT.DATABASE_PRODUCT_NAME // https://bugs.mysql.com/bug.php?id=109931
+            );
+            if (!databaseProductNames.contains(databaseProductName)) {
+                assertThat(typeInfo).isSortedAccordingTo(TypeInfo.COMPARING_DATA_TYPE);
+            }
+        }
         for (final var typeInfo_ : typeInfo) {
             typeInfo(context, typeInfo_);
         }

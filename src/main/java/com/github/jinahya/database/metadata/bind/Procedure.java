@@ -40,8 +40,8 @@ import java.util.Optional;
  *
  * @author Jin Kwon &lt;jinahya_at_gmail.com&gt;
  */
-//@ParentOf(ProcedureColumn.class)
-//@ChildOf(Schema.class)
+@ParentOf(ProcedureColumn.class)
+@ChildOf(Schema.class)
 @EqualsAndHashCode(callSuper = true)
 @ToString(callSuper = true)
 @Data
