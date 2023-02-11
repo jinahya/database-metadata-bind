@@ -440,7 +440,6 @@ final class ContextTests {
             throws SQLException {
         Objects.requireNonNull(context, "context is null");
         Objects.requireNonNull(columnPrivileges, "columnPrivileges is null");
-        assertThat(columnPrivileges).isSortedAccordingTo(ColumnPrivilege.COMPARING_COLUMN_NAME_PRIVILEGE);
         for (final var columnPrivilege : columnPrivileges) {
             columnPrivilege(context, columnPrivilege);
         }
@@ -771,6 +770,8 @@ final class ContextTests {
         }
         try {
             final var columnPrivileges = table.getColumnPrivileges(context, "%");
+            assertThat(columnPrivileges)
+                    .isSortedAccordingTo(ColumnPrivilege.COMPARING_AS_SPECIFIED);
             columnPrivileges(context, columnPrivileges);
         } catch (final SQLException sqle) {
             thrown("failed; getColumnPrivileges", sqle);

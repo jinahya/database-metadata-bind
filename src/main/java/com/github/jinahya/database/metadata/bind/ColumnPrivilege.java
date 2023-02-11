@@ -46,7 +46,7 @@ public class ColumnPrivilege extends AbstractMetadataType {
 
     private static final long serialVersionUID = 4384654744147773380L;
 
-    public static final Comparator<ColumnPrivilege> COMPARING_COLUMN_NAME_PRIVILEGE =
+    public static final Comparator<ColumnPrivilege> COMPARING_AS_SPECIFIED =
             Comparator.comparing(ColumnPrivilege::getColumnName)
                     .thenComparing(ColumnPrivilege::getPrivilege);
 
