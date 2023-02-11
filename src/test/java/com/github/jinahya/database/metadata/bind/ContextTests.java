@@ -410,20 +410,6 @@ final class ContextTests {
     static void columns(final Context context, final List<? extends Column> columns) throws SQLException {
         Objects.requireNonNull(context, "context is null");
         Objects.requireNonNull(columns, "columns is null");
-        {
-            final var databaseProductNames = Set.of(
-                    TestContainers_MariaDB_IT.DATABASE_PRODUCT_NAME
-            );
-            if (!databaseProductNames.contains(databaseProductName)) {
-                assertThat(columns).isSortedAccordingTo(Column.COMPARING_AS_SPECIFIED);
-                assertThat(columns)
-                        .extracting(Column::getColumnId)
-                        .isSorted();
-            }
-        }
-        assertThat(columns)
-                .extracting(Column::getColumnId)
-                .doesNotHaveDuplicates();
         for (final var column : columns) {
             column(context, column);
         }
@@ -783,6 +769,20 @@ final class ContextTests {
                     table.getTableName(),
                     "%"
             );
+            {
+                final var databaseProductNames = Set.of(
+                        TestContainers_MariaDB_IT.DATABASE_PRODUCT_NAME
+                );
+                if (!databaseProductNames.contains(databaseProductName)) {
+                    assertThat(columns).isSortedAccordingTo(Column.COMPARING_AS_SPECIFIED);
+                    assertThat(columns)
+                            .extracting(Column::getColumnId)
+                            .isSorted();
+                }
+            }
+            assertThat(columns)
+                    .extracting(Column::getColumnId)
+                    .doesNotHaveDuplicates();
             columns(context, columns);
         }
         try {
