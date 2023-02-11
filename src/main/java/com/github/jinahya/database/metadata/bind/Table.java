@@ -24,12 +24,15 @@ import lombok.AccessLevel;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 import lombok.ToString;
 import lombok.experimental.SuperBuilder;
 
 import java.sql.SQLException;
 import java.util.Comparator;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Objects;
 import java.util.Optional;
 
@@ -123,6 +126,21 @@ public class Table extends AbstractMetadataType {
         );
     }
 
+    public List<Column> getColumns(final Context context, final String columnNamePattern) throws SQLException {
+        Objects.requireNonNull(context, "context is null");
+        final List<Column> columns = context.getColumns(
+                getTableCatNonNull(),
+                getTableSchemNonNull(),
+                getTableName(),
+                columnNamePattern
+        );
+        columns.forEach(c -> {
+            c.setTable(this);
+            getColumns().put(c.getColumnId(), c);
+        });
+        return columns;
+    }
+
     public List<ColumnPrivilege> getColumnPrivileges(final Context context, final String columnNamePattern)
             throws SQLException {
         Objects.requireNonNull(context, "context is null");
@@ -136,20 +154,30 @@ public class Table extends AbstractMetadataType {
 
     public List<ExportedKey> getExportedKeys(final Context context) throws SQLException {
         Objects.requireNonNull(context, "context is null");
-        return context.getExportedKeys(
+        final List<ExportedKey> exportedKeys = context.getExportedKeys(
                 getTableCatNonNull(),
                 getTableSchemNonNull(),
                 getTableName()
         );
+        exportedKeys.forEach(ek -> {
+            ek.setTable(this);
+            getExportedKeys().put(ek.getFkcolumnId(), ek);
+        });
+        return exportedKeys;
     }
 
     public List<ImportedKey> getImportedKeys(final Context context) throws SQLException {
         Objects.requireNonNull(context, "context is null");
-        return context.getImportedKeys(
+        final List<ImportedKey> importedKeys = context.getImportedKeys(
                 getTableCatNonNull(),
                 getTableSchemNonNull(),
                 getTableName()
         );
+        importedKeys.forEach(ik -> {
+            ik.setTable(this);
+            getImportedKeys().put(ik.getPkcolumnId(), ik);
+        });
+        return importedKeys;
     }
 
     public List<PrimaryKey> getPrimaryKeys(final Context context) throws SQLException {
@@ -236,4 +264,33 @@ public class Table extends AbstractMetadataType {
     @NullableBySpecification
     @ColumnLabel("REF_GENERATION")
     private String refGeneration;
+
+    Map<ColumnId, Column> getColumns() {
+        if (columns == null) {
+            columns = new HashMap<>();
+        }
+        return columns;
+    }
+
+    Map<ColumnId, ExportedKey> getExportedKeys() {
+        if (exportedKeys == null) {
+            exportedKeys = new HashMap<>();
+        }
+        return exportedKeys;
+    }
+
+    @Setter(AccessLevel.PACKAGE)
+    @EqualsAndHashCode.Exclude
+    @ToString.Exclude
+    private transient Map<ColumnId, Column> columns;
+
+    @Setter(AccessLevel.PACKAGE)
+    @EqualsAndHashCode.Exclude
+    @ToString.Exclude
+    private transient Map<ColumnId, ExportedKey> exportedKeys;
+
+    @Setter(AccessLevel.PACKAGE)
+    @EqualsAndHashCode.Exclude
+    @ToString.Exclude
+    private transient Map<ColumnId, ImportedKey> importedKeys;
 }

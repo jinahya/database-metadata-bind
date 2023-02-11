@@ -513,6 +513,15 @@ final class ContextTests {
         common(function.getFunctionId());
         try {
             final var functionColumns = function.getFunctionColumns(context, "%");
+            assertThat(functionColumns).allSatisfy(fc -> {
+                assertThat(fc.getFunction()).isEqualTo(function);
+            });
+            assertThat(functionColumns)
+                    .isSortedAccordingTo(FunctionColumn.COMPARING_AS_SPECIFIED);
+            assertThat(functionColumns)
+                    .extracting(FunctionColumn::getFunctionColumnId)
+                    .doesNotHaveDuplicates()
+                    .isSorted();
             functionColumns(context, function, functionColumns);
         } catch (final SQLException sqle) {
             thrown("failed; getFunctionColumns", sqle);
@@ -525,11 +534,6 @@ final class ContextTests {
         Objects.requireNonNull(context, "context is null");
         Objects.requireNonNull(function, "function is null");
         Objects.requireNonNull(functionColumns, "functionColumns is null");
-        assertThat(functionColumns).isSortedAccordingTo(
-                FunctionColumn.COMPARING_FUNCTION_CAT_FUNCTION_SCHEM_FUNCTION_NAME_SPECIFIC_NAME);
-        assertThat(functionColumns)
-                .extracting(FunctionColumn::getFunctionColumnId)
-                .isSorted();
         for (final var functionColumn : functionColumns) {
             functionColumn(context, function, functionColumn);
         }
@@ -744,6 +748,7 @@ final class ContextTests {
         Objects.requireNonNull(context, "context is null");
         Objects.requireNonNull(table, "table is null");
         common(table);
+        final var tableId = table.getTableId();
         try {
             for (final var scope : BestRowIdentifier.scopes()) {
                 for (final boolean nullable : new boolean[] {true, false}) {
@@ -755,20 +760,10 @@ final class ContextTests {
             thrown("failed; getBestRowIdentifier", sqle);
         }
         try {
-            final var columnPrivileges = table.getColumnPrivileges(context, "%");
-            assertThat(columnPrivileges)
-                    .isSortedAccordingTo(ColumnPrivilege.COMPARING_AS_SPECIFIED);
-            columnPrivileges(context, columnPrivileges);
-        } catch (final SQLException sqle) {
-            thrown("failed; getColumnPrivileges", sqle);
-        }
-        {
-            final var columns = context.getColumns(
-                    table.getTableCatNonNull(),
-                    table.getTableSchemNonNull(),
-                    table.getTableName(),
-                    "%"
-            );
+            final var columns = table.getColumns(context, "%");
+            assertThat(columns).allSatisfy(c -> {
+                assertThat(c.getColumnId().getTableId()).isEqualTo(tableId);
+            });
             {
                 final var databaseProductNames = Set.of(
                         TestContainers_MariaDB_IT.DATABASE_PRODUCT_NAME
@@ -778,21 +773,44 @@ final class ContextTests {
                     assertThat(columns)
                             .extracting(Column::getColumnId)
                             .isSorted();
+                    assertThat(columns)
+                            .extracting(Column::getColumnId)
+                            .isSorted();
                 }
             }
             assertThat(columns)
                     .extracting(Column::getColumnId)
                     .doesNotHaveDuplicates();
             columns(context, columns);
+        } catch (final SQLException sqle) {
+            thrown("failed; getColumns", sqle);
+        }
+        try {
+            final var columnPrivileges = table.getColumnPrivileges(context, "%");
+            assertThat(columnPrivileges)
+                    .isSortedAccordingTo(ColumnPrivilege.COMPARING_AS_SPECIFIED);
+            columnPrivileges(context, columnPrivileges);
+        } catch (final SQLException sqle) {
+            thrown("failed; getColumnPrivileges", sqle);
         }
         try {
             final var exportedKeys = table.getExportedKeys(context);
+            assertThat(exportedKeys)
+                    .extracting(TableKey::getPktableId)
+                    .doesNotHaveDuplicates()
+                    .isSorted()
+                    .allMatch(tableId::equals);
             exportedKeys(context, exportedKeys);
         } catch (final SQLException sqle) {
             thrown("failed; getExportedKeys", sqle);
         }
         try {
             final var importedKeys = table.getImportedKeys(context);
+            assertThat(importedKeys)
+                    .extracting(TableKey::getFktableId)
+                    .doesNotHaveDuplicates()
+                    .isSorted()
+                    .allMatch(tableId::equals);
             importedKeys(context, importedKeys);
         } catch (final SQLException sqle) {
             thrown("failed; getImportedKeys", sqle);

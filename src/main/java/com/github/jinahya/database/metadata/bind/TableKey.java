@@ -23,7 +23,9 @@ package com.github.jinahya.database.metadata.bind;
 import lombok.AccessLevel;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 import lombok.ToString;
 import lombok.experimental.SuperBuilder;
 
@@ -57,12 +59,20 @@ public abstract class TableKey
                 .thenComparingInt(TableKey::getKeySeq);
     }
 
+    public ColumnId getPkcolumnId() {
+        return ColumnId.of(getPktableCatNonNull(), getPktableSchemNonNull(), getPktableName(), getPkcolumnName(), 0);
+    }
+
     public TableId getPktableId() {
-        return TableId.of(getPktableCatNonNull(), getPktableSchemNonNull(), getPktableName());
+        return getPkcolumnId().getTableId();
+    }
+
+    public ColumnId getFkcolumnId() {
+        return ColumnId.of(getFktableCatNonNull(), getFktableSchemNonNull(), getFktableName(), getFkcolumnName(), 0);
     }
 
     public TableId getFktableId() {
-        return TableId.of(getFktableCatNonNull(), getFktableSchemNonNull(), getFktableName());
+        return getFkcolumnId().getTableId();
     }
 
     String getPktableCatNonNull() {
@@ -128,4 +138,10 @@ public abstract class TableKey
 
     @ColumnLabel("DEFERRABILITY")
     private int deferrability;
+
+    @Setter(AccessLevel.PACKAGE)
+    @Getter(AccessLevel.PACKAGE)
+    @EqualsAndHashCode.Exclude
+    @ToString.Exclude
+    private transient Table table;
 }

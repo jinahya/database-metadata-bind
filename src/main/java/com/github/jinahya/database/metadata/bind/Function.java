@@ -23,14 +23,18 @@ package com.github.jinahya.database.metadata.bind;
 import lombok.AccessLevel;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 import lombok.ToString;
 import lombok.experimental.SuperBuilder;
 
 import java.sql.DatabaseMetaData;
 import java.sql.SQLException;
 import java.util.Comparator;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Objects;
 import java.util.Optional;
 
@@ -42,7 +46,7 @@ import java.util.Optional;
  * @see Context#getFunctions(String, String, String)
  */
 //@ChildOf(Schema.class)
-//@ParentOf(FunctionColumn.class)
+@ParentOf(FunctionColumn.class)
 @EqualsAndHashCode(callSuper = true)
 @ToString(callSuper = true)
 @Data
@@ -54,10 +58,6 @@ public class Function
     private static final long serialVersionUID = -3318947900237453301L;
 
     public static final Comparator<Function> COMPARING_FUNCTION_CAT_FUNCTION_SCHEM_FUNCTION_NAME_SPECIFIC_NAME =
-//             Comparator.comparing(Function::getFunctionCat, Comparator.nullsFirst(Comparator.naturalOrder()))
-//            .thenComparing(Function::getFunctionSchem, Comparator.nullsFirst(Comparator.naturalOrder()))
-//            .thenComparing(Function::getFunctionName, Comparator.nullsFirst(Comparator.naturalOrder()))
-//            .thenComparing(Function::getSpecificName, Comparator.nullsFirst(Comparator.naturalOrder()));
             Comparator.comparing(Function::getSchemaId)
                     .thenComparing(Function::getFunctionName, Comparator.nullsFirst(String.CASE_INSENSITIVE_ORDER))
                     .thenComparing(Function::getSpecificName, Comparator.nullsFirst(String.CASE_INSENSITIVE_ORDER));
@@ -83,12 +83,17 @@ public class Function
     public List<FunctionColumn> getFunctionColumns(final Context context, final String columnNamePattern)
             throws SQLException {
         Objects.requireNonNull(context, "context is null");
-        return context.getFunctionColumns(
+        final List<FunctionColumn> functionColumns = context.getFunctionColumns(
                 getFunctionCatNonNull(),
                 getFunctionSchemNonNull(),
                 getFunctionName(),
                 columnNamePattern
         );
+        functionColumns.forEach(fc -> {
+            fc.setFunction(this);
+            getFunctionColumns().put(fc.getFunctionColumnId(), fc);
+        });
+        return functionColumns;
     }
 
     String getFunctionCatNonNull() {
@@ -120,4 +125,16 @@ public class Function
 
     @ColumnLabel("SPECIFIC_NAME")
     private String specificName;
+
+    Map<FunctionColumnId, FunctionColumn> getFunctionColumns() {
+        if (functionColumns == null) {
+            functionColumns = new HashMap<>();
+        }
+        return functionColumns;
+    }
+
+    @Setter(AccessLevel.PACKAGE)
+    @EqualsAndHashCode.Exclude
+    @ToString.Exclude
+    private transient Map<FunctionColumnId, FunctionColumn> functionColumns;
 }

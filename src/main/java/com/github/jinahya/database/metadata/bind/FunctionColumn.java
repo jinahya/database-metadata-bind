@@ -23,7 +23,9 @@ package com.github.jinahya.database.metadata.bind;
 import lombok.AccessLevel;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 import lombok.ToString;
 import lombok.experimental.SuperBuilder;
 
@@ -37,7 +39,7 @@ import java.util.Optional;
  * @author Jin Kwon &lt;jinahya_at_gmail.com&gt;
  * @see Context#getFunctionColumns(String, String, String, String)
  */
-//@ChildOf(Function.class)
+@ChildOf(Function.class)
 @EqualsAndHashCode(callSuper = true)
 @ToString(callSuper = true)
 @Data
@@ -48,12 +50,7 @@ public class FunctionColumn
 
     private static final long serialVersionUID = -7445156446214062680L;
 
-    public static final Comparator<FunctionColumn> COMPARING_FUNCTION_CAT_FUNCTION_SCHEM_FUNCTION_NAME_SPECIFIC_NAME =
-//            Comparator.comparing(FunctionColumn::getFunctionCat, Comparator.nullsFirst(String.CASE_INSENSITIVE_ORDER))
-//                    .thenComparing(FunctionColumn::getFunctionSchem,
-//                                   Comparator.nullsFirst(String.CASE_INSENSITIVE_ORDER))
-//                    .thenComparing(FunctionColumn::getFunctionName)
-//                    .thenComparing(FunctionColumn::getSpecificName);
+    public static final Comparator<FunctionColumn> COMPARING_AS_SPECIFIED =
             Comparator.comparing(FunctionColumn::getSchemaId)
                     .thenComparing(FunctionColumn::getFunctionName)
                     .thenComparing(FunctionColumn::getSpecificName);
@@ -155,4 +152,10 @@ public class FunctionColumn
 
     @ColumnLabel("SPECIFIC_NAME")
     private String specificName;
+
+    @EqualsAndHashCode.Exclude
+    @ToString.Exclude
+    @Setter(AccessLevel.PACKAGE)
+    @Getter(AccessLevel.PACKAGE)
+    private transient Function function;
 }
