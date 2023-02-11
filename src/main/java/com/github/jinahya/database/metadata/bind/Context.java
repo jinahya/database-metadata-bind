@@ -58,16 +58,13 @@ public class Context {
      */
     public static Context newInstance(final Connection connection) throws SQLException {
         Objects.requireNonNull(connection, "connection is null");
-        if (connection.isClosed()) {
-            throw new IllegalArgumentException("connection is closed");
-        }
         return new Context(connection.getMetaData());
     }
 
     /**
-     * Creates a new instance with specified database meta date.
+     * Creates a new instance with specified DatabaseMetaData.
      *
-     * @param databaseMetaData the database databaseMetaData to hold.
+     * @param databaseMetaData the DatabaseMetaData to hold.
      */
     Context(final DatabaseMetaData databaseMetaData) {
         super();
@@ -394,8 +391,10 @@ public class Context {
     }
 
     /**
-     * Invokes {@link DatabaseMetaData#getColumns(String, String, String, String)} method with given arguments, and
-     * accepts each bound value to specified consumer.
+     * Invokes
+     * {@link DatabaseMetaData#getColumns(String, String, String, String) getColumns(catalog, schemaPattern, *
+     * tableNamePattern, columnNamePattern)} method with given arguments, and accepts each bound value to specified
+     * consumer.
      *
      * @param catalog           a value for {@code catalog} parameter.
      * @param schemaPattern     a value for {@code schemaPattern} parameter.
@@ -417,8 +416,33 @@ public class Context {
     }
 
     /**
-     * Invokes {@link DatabaseMetaData#getColumns(String, String, String, String)} method with given arguments, and
-     * returns a list of bound values.
+     * Invokes
+     * {@link DatabaseMetaData#getColumns(String, String, String, String) getColumns(catalog, schemaPattern,
+     * tableNamePattern, columnNamePattern)} method with given arguments, and adds each bound value to specified
+     * collection.
+     *
+     * @param catalog           a value for {@code catalog} parameter.
+     * @param schemaPattern     a value for {@code schemaPattern} parameter.
+     * @param tableNamePattern  a value for {@code tableNameSchema} parameter.
+     * @param columnNamePattern a value for {@code columnNamePattern} parameter.
+     * @param collection        the collection to which bound values are added.
+     * @return given {@code collection}.
+     * @throws SQLException if a database error occurs.
+     * @see #getColumns(String, String, String, String, Consumer)
+     */
+    public <C extends Collection<? super Column>> C getColumns(final String catalog, final String schemaPattern,
+                                                               final String tableNamePattern,
+                                                               final String columnNamePattern, final C collection)
+            throws SQLException {
+        getColumns(catalog, schemaPattern, tableNamePattern, columnNamePattern,
+                   (Consumer<? super Column>) collection::add);
+        return collection;
+    }
+
+    /**
+     * Invokes
+     * {@link DatabaseMetaData#getColumns(String, String, String, String) getColumns(catalog, schemaPattern, *
+     * tableNamePattern, columnNamePattern)} method with given arguments, and returns a list of bound values.
      *
      * @param catalog           a value for {@code catalog} parameter.
      * @param schemaPattern     a value for {@code schemaPattern} parameter.
@@ -426,14 +450,12 @@ public class Context {
      * @param columnNamePattern a value for {@code columnNamePattern} parameter.
      * @return a list of bound values.
      * @throws SQLException if a database error occurs.
-     * @see #getColumns(String, String, String, String, Consumer)
+     * @see #getColumns(String, String, String, String, Collection)
      */
     public List<Column> getColumns(final String catalog, final String schemaPattern, final String tableNamePattern,
                                    final String columnNamePattern)
             throws SQLException {
-        final List<Column> list = new ArrayList<>();
-        getColumns(catalog, schemaPattern, tableNamePattern, columnNamePattern, list::add);
-        return list;
+        return getColumns(catalog, schemaPattern, tableNamePattern, columnNamePattern, new ArrayList<>());
     }
 
     /**
@@ -1074,8 +1096,9 @@ public class Context {
 
     /**
      * Invokes
-     * {@link DatabaseMetaData#getTables(java.lang.String, java.lang.String, java.lang.String, java.lang.String[])}
-     * method with given arguments, and accepts each bound value to specified consumer.
+     * {@link DatabaseMetaData#getTables(java.lang.String, java.lang.String, java.lang.String, java.lang.String[])
+     * getTables(catalog, schemaPattern, tableNamePattern, types)} method with given arguments, and accepts each bound
+     * value to specified consumer.
      *
      * @param catalog          a value for {@code catalog} parameter.
      * @param schemaPattern    a value for {@code schemaPattern} parameter.
@@ -1097,8 +1120,34 @@ public class Context {
 
     /**
      * Invokes
-     * {@link DatabaseMetaData#getTables(java.lang.String, java.lang.String, java.lang.String, java.lang.String[])}
-     * method with given arguments, and returns a list of bound values.
+     * {@link DatabaseMetaData#getTables(java.lang.String, java.lang.String, java.lang.String, java.lang.String[])
+     * getTables(catalog, schemaPattern, tableNamePattern, types)} method with given arguments, and adds each bound
+     * values to specified collection.
+     *
+     * @param catalog          a value for {@code catalog} parameter.
+     * @param schemaPattern    a value for {@code schemaPattern} parameter.
+     * @param tableNamePattern a value for {@code tableNamePattern} parameter.
+     * @param types            a value for {@code types} parameter.
+     * @param collection       the collection to which bound values are added.
+     * @return given {@code collection}.
+     * @throws SQLException if a database error occurs.
+     * @see #getTables(String, String, String, String[], Consumer)
+     */
+
+    public <C extends Collection<? super Table>> C getTables(final String catalog, final String schemaPattern,
+                                                             final String tableNamePattern, final String[] types,
+                                                             final C collection)
+            throws SQLException {
+        Objects.requireNonNull(collection, "collection is null");
+        getTables(catalog, schemaPattern, tableNamePattern, types, (Consumer<? super Table>) collection::add);
+        return collection;
+    }
+
+    /**
+     * Invokes
+     * {@link DatabaseMetaData#getTables(java.lang.String, java.lang.String, java.lang.String, java.lang.String[])
+     * getTables(catalog, schemaPattern, tableNamePattern, types)} method with given arguments, and returns a list of
+     * bound values.
      *
      * @param catalog          a value for {@code catalog} parameter.
      * @param schemaPattern    a value for {@code schemaPattern} parameter.
@@ -1106,15 +1155,16 @@ public class Context {
      * @param types            a value for {@code types} parameter.
      * @return a list of bound values.
      * @throws SQLException if a database error occurs.
-     * @see #getTables(String, String, String, String[], Consumer)
+     * @see #getTables(String, String, String, String[], Collection)
      */
 
-    public List<Table> getTables(final String catalog, final String schemaPattern,
-                                 final String tableNamePattern, final String[] types)
+    public List<Table> getTables(final String catalog, final String schemaPattern, final String tableNamePattern,
+                                 final String[] types)
             throws SQLException {
-        final List<Table> list = new ArrayList<>();
-        getTables(catalog, schemaPattern, tableNamePattern, types, list::add);
-        return list;
+//        final List<Table> list = new ArrayList<>();
+//        getTables(catalog, schemaPattern, tableNamePattern, types, (Consumer<? super Table>) list::add);
+//        return list;
+        return getTables(catalog, schemaPattern, tableNamePattern, types, new ArrayList<>());
     }
 
     /**

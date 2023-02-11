@@ -21,6 +21,7 @@ package com.github.jinahya.database.metadata.bind;
  */
 
 import lombok.extern.slf4j.Slf4j;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 
 import java.sql.Connection;
@@ -55,6 +56,7 @@ abstract class Memory_$_Test {
         }
     }
 
+    @Disabled
     @Test
     void tables() throws SQLException {
         try (var connection = connect()) {

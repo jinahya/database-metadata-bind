@@ -50,7 +50,7 @@ public class IndexInfo
     public static final Comparator<IndexInfo> COMPARING_NON_UNIQUE_TYPE_INDEX_NAME_ORDINAL_POSITION
             = Comparator.comparing(IndexInfo::isNonUnique)
             .thenComparingInt(IndexInfo::getType)
-            .thenComparing(IndexInfo::getIndexName, Comparator.nullsFirst(Comparator.naturalOrder()))
+            .thenComparing(IndexInfo::getIndexName, Comparator.nullsFirst(String.CASE_INSENSITIVE_ORDER))
             .thenComparingInt(IndexInfo::getOrdinalPosition);
 
     public static final String COLUMN_LABEL_TABLE_CAT = "TABLE_CAT";

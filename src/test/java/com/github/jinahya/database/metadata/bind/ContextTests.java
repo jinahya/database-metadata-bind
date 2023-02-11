@@ -580,7 +580,7 @@ final class ContextTests {
         {
             final var databaseProductNames = Set.of(
                     // https://bugs.mysql.com/bug.php?id=109803
-                    TestContainers_MySQL_IT.DATABASE_PRODUCT_NAME
+//                    TestContainers_MySQL_IT.DATABASE_PRODUCT_NAME
             );
             if (!databaseProductNames.contains(databaseProductName)) {
                 assertThat(indexInfo).isSortedAccordingTo(
@@ -814,15 +814,17 @@ final class ContextTests {
     static void primaryKeys(final Context context, final List<? extends PrimaryKey> primaryKeys) throws SQLException {
         Objects.requireNonNull(context, "context is null");
         Objects.requireNonNull(primaryKeys, "primaryKeys is null");
-        final var databaseProductNames = Set.of(
-                Memory_Hsql_Test.DATABASE_PRODUCT_NAME,
-                TestContainers_PostgreSQL_IT.DATABASE_PRODUCT_NAME,
-                TestContainers_MySQL_IT.DATABASE_PRODUCT_NAME
-        );
-        if (!databaseProductNames.contains(databaseProductName)) {
-            // https://sourceforge.net/p/hsqldb/bugs/1673/
-            // https://bugs.mysql.com/bug.php?id=109808
-            assertThat(primaryKeys).isSortedAccordingTo(PrimaryKey.COMPARING_COLUMN_NAME);
+        {
+            final var databaseProductNames = Set.of(
+                    // https://sourceforge.net/p/hsqldb/bugs/1673/
+                    Memory_Hsql_Test.DATABASE_PRODUCT_NAME,
+                    TestContainers_PostgreSQL_IT.DATABASE_PRODUCT_NAME,
+                    // https://bugs.mysql.com/bug.php?id=109808
+                    TestContainers_MySQL_IT.DATABASE_PRODUCT_NAME
+            );
+            if (!databaseProductNames.contains(databaseProductName)) {
+                assertThat(primaryKeys).isSortedAccordingTo(PrimaryKey.COMPARING_COLUMN_NAME);
+            }
         }
         for (final var primaryKey : primaryKeys) {
             primaryKey(context, primaryKey);
