@@ -67,10 +67,10 @@ public class FunctionColumn
 
     public static final String COLUMN_LABEL_IS_NULLABLE = "IS_NULLABLE";
 
-    public FunctionColumnId getFunctionColumnId() {
+    public FunctionColumnId getFunctionColumnId(final FunctionId functionId) {
         return FunctionColumnId.builder()
-                .functionId(FunctionId.of(getFunctionCat(), getFunctionSchem(), getSpecificName()))
-                .columnName(getColumnName())
+                .functionId(functionId)
+                .specificName(getSpecificName())
                 .build();
     }
 

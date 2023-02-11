@@ -38,14 +38,13 @@ import java.util.Optional;
  * @see Context#getColumns(String, String, String, String)
  */
 //@ParentOf(ColumnPrivilege.class)
-//@ChildOf(Table.class)
+@ChildOf(Table.class)
 @EqualsAndHashCode(callSuper = true)
 @ToString(callSuper = true)
 @Data
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @SuperBuilder(toBuilder = true)
-public class Column
-        extends AbstractMetadataType {
+public class Column extends AbstractMetadataType {
 
     private static final long serialVersionUID = -409653682729081530L;
 
@@ -68,7 +67,12 @@ public class Column
     public static final String COLUMN_LABEL_IS_GENERATEDCOLUMN = "IS_GENERATEDCOLUMN";
 
     public ColumnId getColumnId() {
-        return ColumnId.of(getTableCat(), getTableSchem(), getTableName(), getColumnName());
+        return ColumnId.of(
+                getTableCatNonNull(),
+                getTableSchemNonNull(),
+                getTableName(),
+                getColumnName()
+        );
     }
 
     String getTableCatNonNull() {

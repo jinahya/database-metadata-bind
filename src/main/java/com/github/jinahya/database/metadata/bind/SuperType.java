@@ -42,8 +42,7 @@ import java.sql.DatabaseMetaData;
 @Data
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @SuperBuilder(toBuilder = true)
-public class SuperType
-        extends AbstractMetadataType {
+public class SuperType extends AbstractMetadataType {
 
     private static final long serialVersionUID = 4603878785941565029L;
 

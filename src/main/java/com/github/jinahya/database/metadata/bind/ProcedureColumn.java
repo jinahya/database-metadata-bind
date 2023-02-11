@@ -28,6 +28,7 @@ import lombok.experimental.SuperBuilder;
 
 import java.sql.DatabaseMetaData;
 import java.util.Comparator;
+import java.util.Optional;
 
 /**
  * A class for binding results of
@@ -53,17 +54,16 @@ public class ProcedureColumn
             .thenComparing(ProcedureColumn::getProcedureName)
             .thenComparing(ProcedureColumn::getSpecificName);
 
-    public ProcedureColumnId getProcedureColumnId() {
-        return ProcedureColumnId.builder()
-                .procedureId(
-                        ProcedureId.builder()
-                                .schemaId(
-                                        SchemaId.builder()
-                                                .catalogId(CatalogId.builder().tableCat(getProcedureCat()).build())
-                                                .tableSchem(getProcedureSchem()).build())
-                                .specificName(getSpecificName()).build())
-                .columnName(getColumnName())
-                .build();
+    public ProcedureColumnId getProcedureColumnId(final ProcedureId procedureId) {
+        return ProcedureColumnId.of(procedureId, getSpecificName());
+    }
+
+    String getProcedureCatNonNull() {
+        return Optional.ofNullable(getProcedureCat()).orElse(Catalog.COLUMN_VALUE_TABLE_CAT_EMPTY);
+    }
+
+    String getProcedureSchemNonNull() {
+        return Optional.ofNullable(getProcedureSchem()).orElse(Schema.COLUMN_VALUE_TABLE_SCHEM_EMPTY);
     }
 
     @NullableBySpecification

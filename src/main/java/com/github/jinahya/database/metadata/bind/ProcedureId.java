@@ -20,14 +20,28 @@ package com.github.jinahya.database.metadata.bind;
  * #L%
  */
 
+import lombok.AccessLevel;
 import lombok.Data;
+import lombok.RequiredArgsConstructor;
 import lombok.experimental.SuperBuilder;
 
 @Data
+@RequiredArgsConstructor(access = AccessLevel.PACKAGE)
 @SuperBuilder(toBuilder = true)
 public final class ProcedureId implements MetadataTypeId<Procedure> {
 
     private static final long serialVersionUID = 227742014479297143L;
+
+    public static ProcedureId of(final SchemaId schemaId, final String specificName) {
+        return builder()
+                .schemaId(schemaId)
+                .specificName(specificName)
+                .build();
+    }
+
+    public static ProcedureId of(final String procedureCat, final String procedureSchem, final String specificName) {
+        return of(SchemaId.of(procedureCat, procedureSchem), specificName);
+    }
 
     private final SchemaId schemaId;
 

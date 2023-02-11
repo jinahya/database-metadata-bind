@@ -41,8 +41,7 @@ import java.util.Comparator;
 @Data
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @SuperBuilder(toBuilder = true)
-public class PseudoColumn
-        extends AbstractMetadataType {
+public class PseudoColumn extends AbstractMetadataType {
 
     private static final long serialVersionUID = -5612575879670895510L;
 
@@ -66,7 +65,6 @@ public class PseudoColumn
     @ColumnLabel("COLUMN_NAME")
     private String columnName;
 
-    // -----------------------------------------------------------------------------------------------------------------
     @ColumnLabel("DATA_TYPE")
     private int dataType;
 

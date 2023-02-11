@@ -76,7 +76,7 @@ public class BestRowIdentifier
     @ColumnLabel("TYPE_NAME")
     private String typeName;
 
-    @NullableBySpecification // > Null is returned for data types where the column size is not applicable.
+    @NullableBySpecification
     @ColumnLabel("COLUMN_SIZE")
     private Integer columnSize;
 
