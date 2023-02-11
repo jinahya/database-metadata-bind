@@ -36,7 +36,7 @@ import java.util.Comparator;
  * @author Jin Kwon &lt;jinahya_at_gmail.com&gt;
  * @see Context#getAttributes(String, String, String, String)
  */
-@ChildOf(UDT.class)
+//@ChildOf(UDT.class)
 @EqualsAndHashCode(callSuper = true)
 @ToString(callSuper = true)
 @Data
