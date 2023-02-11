@@ -42,8 +42,7 @@ import java.util.Comparator;
 @Data
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @SuperBuilder(toBuilder = true)
-public class Attribute
-        extends AbstractMetadataType {
+public class Attribute extends AbstractMetadataType {
 
     private static final long serialVersionUID = 1913681105410440186L;
 

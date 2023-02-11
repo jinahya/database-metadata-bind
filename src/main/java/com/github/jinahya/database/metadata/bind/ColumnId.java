@@ -22,8 +22,12 @@ package com.github.jinahya.database.metadata.bind;
 
 import lombok.AccessLevel;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.SuperBuilder;
+
+import java.util.Comparator;
+import java.util.Objects;
 
 /**
  * An identifier for identifying a {@link Column} within a {@link Table}.
@@ -33,23 +37,36 @@ import lombok.experimental.SuperBuilder;
 @Data
 @RequiredArgsConstructor(access = AccessLevel.PACKAGE)
 @SuperBuilder(toBuilder = true)
-public final class ColumnId implements MetadataTypeId<Column> {
+public final class ColumnId implements MetadataTypeId<ColumnId, Column> {
 
     private static final long serialVersionUID = -4452694121211962289L;
 
-    public static ColumnId of(final TableId tableId, final String columnName) {
+    private static final Comparator<ColumnId> COMPARATOR =
+            Comparator.comparing(ColumnId::getTableId)
+                    .thenComparingInt(ColumnId::getOrdinalPosition);
+
+    public static ColumnId of(final TableId tableId, final String columnName, final int ordinalPosition) {
         return builder()
                 .tableId(tableId)
                 .columnName(columnName)
+                .ordinalPosition(ordinalPosition)
                 .build();
     }
 
     public static ColumnId of(final String tableCat, final String tableSchem, final String tableName,
-                              final String columnName) {
-        return of(TableId.of(tableCat, tableSchem, tableName), columnName);
+                              final String columnName, final int ordinalPosition) {
+        return of(TableId.of(tableCat, tableSchem, tableName), columnName, ordinalPosition);
+    }
+
+    @Override
+    public int compareTo(final ColumnId o) {
+        return COMPARATOR.compare(this, Objects.requireNonNull(o, "o is null"));
     }
 
     private final TableId tableId;
 
     private final String columnName;
+
+    @EqualsAndHashCode.Exclude
+    private final int ordinalPosition;
 }

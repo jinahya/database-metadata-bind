@@ -28,11 +28,13 @@ import lombok.ToString;
 import lombok.experimental.SuperBuilder;
 
 import java.sql.DatabaseMetaData;
+import java.util.Objects;
 
 /**
  * A class for binding results of {@link DatabaseMetaData#getVersionColumns(String, String, String)} method.
  *
  * @author Jin Kwon &lt;jinahya_at_gmail.com&gt;
+ * @see Context#getVersionColumns(String, String, String)
  */
 @ChildOf(Table.class)
 @EqualsAndHashCode(callSuper = true)
@@ -40,10 +42,20 @@ import java.sql.DatabaseMetaData;
 @Data
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @SuperBuilder(toBuilder = true)
-public class VersionColumn
-        extends AbstractMetadataType {
+public class VersionColumn extends AbstractMetadataType {
 
     private static final long serialVersionUID = 3587959398829593292L;
+
+    public static final String COLUMN_LABEL_PSEUDO_COLUMN = "PSEUDO_COLUMN";
+
+    public VersionColumnPseudoColumn getPseudoColumnAsEnum() {
+        return VersionColumnPseudoColumn.valueOfPseudoColumn(getPseudoColumn());
+    }
+
+    public void setPseudoColumnAsEnum(final VersionColumnPseudoColumn pseudoColumnAsEnum) {
+        Objects.requireNonNull(pseudoColumnAsEnum, "pseudoColumnAsEnum is null");
+        setPseudoColumn(pseudoColumnAsEnum.fieldValueAsInt());
+    }
 
     @NotUsedBySpecification
     @ColumnLabel("SCOPE")
@@ -69,6 +81,6 @@ public class VersionColumn
     @ColumnLabel("DECIMAL_DIGITS")
     private Integer decimalDigits;
 
-    @ColumnLabel("PSEUDO_COLUMN")
+    @ColumnLabel(COLUMN_LABEL_PSEUDO_COLUMN)
     private int pseudoColumn;
 }

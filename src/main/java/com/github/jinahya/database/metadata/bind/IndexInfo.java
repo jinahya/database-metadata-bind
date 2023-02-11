@@ -42,8 +42,7 @@ import java.util.Comparator;
 @Data
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @SuperBuilder(toBuilder = true)
-public class IndexInfo
-        extends AbstractMetadataType {
+public class IndexInfo extends AbstractMetadataType {
 
     private static final long serialVersionUID = 924040226611181424L;
 

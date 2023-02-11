@@ -42,26 +42,34 @@ import java.util.Comparator;
 @Data
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @SuperBuilder(toBuilder = true)
-public class ColumnPrivilege
-        extends AbstractMetadataType {
+public class ColumnPrivilege extends AbstractMetadataType {
 
     private static final long serialVersionUID = 4384654744147773380L;
 
-    public static final Comparator<ColumnPrivilege> COMPARING_COLUMN_NAME_PRIVILEGE
-            = Comparator.comparing(ColumnPrivilege::getColumnName).thenComparing(ColumnPrivilege::getPrivilege);
+    public static final Comparator<ColumnPrivilege> COMPARING_COLUMN_NAME_PRIVILEGE =
+            Comparator.comparing(ColumnPrivilege::getColumnName)
+                    .thenComparing(ColumnPrivilege::getPrivilege);
+
+    public static final String COLUMN_LABEL_TABLE_CAT = "TABLE_CAT";
+
+    public static final String COLUMN_LABEL_TABLE_SCHEM = "TABLE_SCHEM";
+
+    public static final String COLUMN_LABEL_TABLE_NAME = "TABLE_NAME";
+
+    public static final String COLUMN_LABEL_COLUMN_NAME = "COLUMN_NAME";
 
     @NullableBySpecification
-    @ColumnLabel("TABLE_CAT")
+    @ColumnLabel(COLUMN_LABEL_TABLE_CAT)
     private String tableCat;
 
     @NullableBySpecification
-    @ColumnLabel("TABLE_SCHEM")
+    @ColumnLabel(COLUMN_LABEL_TABLE_SCHEM)
     private String tableSchem;
 
-    @ColumnLabel("TABLE_NAME")
+    @ColumnLabel(COLUMN_LABEL_TABLE_NAME)
     private String tableName;
 
-    @ColumnLabel("COLUMN_NAME")
+    @ColumnLabel(COLUMN_LABEL_COLUMN_NAME)
     private String columnName;
 
     @NullableBySpecification

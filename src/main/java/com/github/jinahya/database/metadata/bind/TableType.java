@@ -39,12 +39,11 @@ import java.util.Comparator;
 @Data
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @SuperBuilder(toBuilder = true)
-public class TableType
-        extends AbstractMetadataType {
+public class TableType extends AbstractMetadataType {
 
     private static final long serialVersionUID = -7630634982776331078L;
 
-    public static final Comparator<TableType> COMPARING_TABLE_TYPE = Comparator.comparing(TableType::getTableType);
+    public static final Comparator<TableType> COMPARING_AS_SPECIFIED = Comparator.comparing(TableType::getTableType);
 
     @ColumnLabel("TABLE_TYPE")
     private String tableType;

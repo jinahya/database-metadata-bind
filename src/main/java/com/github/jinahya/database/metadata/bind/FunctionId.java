@@ -22,24 +22,49 @@ package com.github.jinahya.database.metadata.bind;
 
 import lombok.AccessLevel;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.SuperBuilder;
+
+import java.util.Comparator;
+import java.util.Objects;
 
 @Data
 @RequiredArgsConstructor(access = AccessLevel.PACKAGE)
 @SuperBuilder(toBuilder = true)
-public final class FunctionId implements MetadataTypeId<Function> {
+public final class FunctionId implements MetadataTypeId<FunctionId, Function> {
 
     private static final long serialVersionUID = 8614281252146063072L;
 
-    public static FunctionId of(final String functionCat, final String functionSchem, final String specificName) {
+    private static final Comparator<FunctionId> COMPARATOR =
+            Comparator.comparing(FunctionId::getSchemaId)
+                    .thenComparing(FunctionId::getFunctionName)
+                    .thenComparing(FunctionId::getSpecificName);
+
+    public static FunctionId of(final SchemaId schemaId, final String functionName, final String specificName) {
+        Objects.requireNonNull(schemaId, "schemaId is null");
+        Objects.requireNonNull(specificName, "specificName is null");
         return FunctionId.builder()
-                .schemaId(SchemaId.of(functionCat, functionSchem))
+                .schemaId(schemaId)
+                .functionName(functionName)
                 .specificName(specificName)
                 .build();
     }
 
+    public static FunctionId of(final String functionCat, final String functionSchem, final String functionName,
+                                final String specificName) {
+        return of(SchemaId.of(functionCat, functionSchem), functionName, specificName);
+    }
+
+    @Override
+    public int compareTo(final FunctionId o) {
+        return COMPARATOR.compare(this, Objects.requireNonNull(o, "o is null"));
+    }
+
     private final SchemaId schemaId;
+
+    @EqualsAndHashCode.Exclude
+    private final String functionName;
 
     private final String specificName;
 }

@@ -28,6 +28,7 @@ import lombok.ToString;
 import lombok.experimental.SuperBuilder;
 
 import java.util.Comparator;
+import java.util.Optional;
 
 /**
  * An abstract class for binding results of {@link java.sql.DatabaseMetaData#getExportedKeys(String, String, String)}
@@ -46,18 +47,38 @@ public abstract class TableKey
 
     private static final long serialVersionUID = 6713872409315471232L;
 
-    public static final Comparator<TableKey> COMPARING_FKTABLE_CAT_FKTABLE_SCHEM_FKTABLE_NAME_KEY_SEQ =
-            Comparator.comparing(TableKey::getFktableCat, Comparator.nullsFirst(Comparator.naturalOrder()))
-                    .thenComparing(TableKey::getFktableSchem, Comparator.nullsFirst(Comparator.naturalOrder()))
-                    .thenComparing(TableKey::getFktableName)
-                    .thenComparingInt(TableKey::getKeySeq);
+    static <T extends TableKey> Comparator<T> comparingPktableKeySeq() {
+        return Comparator.<T, TableId>comparing(TableKey::getPktableId)
+                .thenComparingInt(TableKey::getKeySeq);
+    }
+
+    static <T extends TableKey> Comparator<T> comparingFktableKeySeq() {
+        return Comparator.<T, TableId>comparing(TableKey::getFktableId)
+                .thenComparingInt(TableKey::getKeySeq);
+    }
 
     public TableId getPktableId() {
-        return TableId.of(getPktableCat(), getPktableSchem(), getPktableName());
+        return TableId.of(getPktableCatNonNull(), getPktableSchemNonNull(), getPktableName());
     }
 
     public TableId getFktableId() {
-        return TableId.of(getFktableCat(), getFktableSchem(), getFktableName());
+        return TableId.of(getFktableCatNonNull(), getFktableSchemNonNull(), getFktableName());
+    }
+
+    String getPktableCatNonNull() {
+        return Optional.ofNullable(getPktableCat()).orElse(Catalog.COLUMN_VALUE_TABLE_CAT_EMPTY);
+    }
+
+    public String getPktableSchemNonNull() {
+        return Optional.ofNullable(getPktableSchem()).orElse(Schema.COLUMN_VALUE_TABLE_SCHEM_EMPTY);
+    }
+
+    String getFktableCatNonNull() {
+        return Optional.ofNullable(getFktableCat()).orElse(Catalog.COLUMN_VALUE_TABLE_CAT_EMPTY);
+    }
+
+    public String getFktableSchemNonNull() {
+        return Optional.ofNullable(getFktableSchem()).orElse(Schema.COLUMN_VALUE_TABLE_SCHEM_EMPTY);
     }
 
     @NullableBySpecification

@@ -42,8 +42,7 @@ import java.util.Comparator;
 @Data
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @SuperBuilder(toBuilder = true)
-public class TablePrivilege
-        extends AbstractMetadataType {
+public class TablePrivilege extends AbstractMetadataType {
 
     private static final long serialVersionUID = -1799954363648972203L;
 

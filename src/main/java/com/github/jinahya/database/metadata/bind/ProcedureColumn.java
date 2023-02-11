@@ -48,22 +48,31 @@ public class ProcedureColumn
 
     private static final long serialVersionUID = 3894753719381358829L;
 
-    public static final Comparator<ProcedureColumn> COMPARING_PROCEDURE_CAT_PROCEDURE_SCHEM_PROCEDURE_NAME_SPECIFIC_NAME
-            = Comparator.comparing(ProcedureColumn::getProcedureCat, Comparator.nullsFirst(Comparator.naturalOrder()))
-            .thenComparing(ProcedureColumn::getProcedureSchem, Comparator.nullsFirst(Comparator.naturalOrder()))
-            .thenComparing(ProcedureColumn::getProcedureName)
-            .thenComparing(ProcedureColumn::getSpecificName);
+    public static final Comparator<ProcedureColumn> NATURAL =
+            Comparator.comparing(ProcedureColumn::getProcedureId);
 
-    public ProcedureColumnId getProcedureColumnId(final ProcedureId procedureId) {
-        return ProcedureColumnId.of(procedureId, getSpecificName());
+    public ProcedureColumnId getProcedureColumnId() {
+        return ProcedureColumnId.of(
+                getProcedureCatNonNull(),
+                getProcedureSchemNonNull(),
+                getProcedureName(),
+                getSpecificName(),
+                getColumnName()
+        );
+    }
+
+    ProcedureId getProcedureId() {
+        return getProcedureColumnId().getProcedureId();
     }
 
     String getProcedureCatNonNull() {
-        return Optional.ofNullable(getProcedureCat()).orElse(Catalog.COLUMN_VALUE_TABLE_CAT_EMPTY);
+        return Optional.ofNullable(getProcedureCat())
+                .orElse(Catalog.COLUMN_VALUE_TABLE_CAT_EMPTY);
     }
 
     String getProcedureSchemNonNull() {
-        return Optional.ofNullable(getProcedureSchem()).orElse(Schema.COLUMN_VALUE_TABLE_SCHEM_EMPTY);
+        return Optional.ofNullable(getProcedureSchem())
+                .orElse(Schema.COLUMN_VALUE_TABLE_SCHEM_EMPTY);
     }
 
     @NullableBySpecification

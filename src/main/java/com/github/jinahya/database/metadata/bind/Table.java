@@ -59,11 +59,9 @@ public class Table extends AbstractMetadataType {
 
     private static final long serialVersionUID = 6590036695540141125L;
 
-    public static final Comparator<Table> COMPARING_TABLE_TYPE_TABLE_CAT_TABLE_SCHEM_TABLE_NAME =
+    public static final Comparator<Table> COMPARING_AS_SPECIFIED =
             Comparator.comparing(Table::getTableType)
-                    .thenComparing(Table::getTableCat, Comparator.nullsFirst(Comparator.naturalOrder()))
-                    .thenComparing(Table::getTableSchem, Comparator.nullsFirst(Comparator.naturalOrder()))
-                    .thenComparing(Table::getTableName);
+                    .thenComparing(Table::getTableId);
 
     /**
      * The label of the column to which {@link #ATTRIBUTE_NAME_TABLE_CAT} attribute is bound. The value is {@value}.
@@ -106,7 +104,11 @@ public class Table extends AbstractMetadataType {
     public static final String ATTRIBUTE_NAME_TABLE_TYPE = "tableName";
 
     public TableId getTableId() {
-        return TableId.of(getTableCat(), getTableSchem(), getTableName());
+        return TableId.of(
+                getTableCatNonNull(),
+                getTableSchemNonNull(),
+                getTableName()
+        );
     }
 
     public List<BestRowIdentifier> getBestRowIdentifier(final Context context, final int scope, final boolean nullable)

@@ -52,14 +52,14 @@ import java.util.Optional;
 @Data
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @SuperBuilder(toBuilder = true)
-public class Schema
-        extends AbstractMetadataType {
+public class Schema extends AbstractMetadataType {
 
     private static final long serialVersionUID = 7457236468401244963L;
 
     public static final Comparator<Schema> COMPARING_TABLE_CATALOG_TABLE_SCHEM =
-            Comparator.comparing(Schema::getTableCatalog, Comparator.nullsFirst(Comparator.naturalOrder()))
-                    .thenComparing(Schema::getTableSchem, Comparator.nullsFirst(Comparator.naturalOrder()));
+//            Comparator.comparing(Schema::getTableCatalog, Comparator.nullsFirst(Comparator.naturalOrder()))
+//                    .thenComparing(Schema::getTableSchem, Comparator.nullsFirst(Comparator.naturalOrder()));
+            Comparator.comparing(Schema::getSchemaId);
 
     public static final String COLUMN_LABEL_TABLE_CATALOG = "TABLE_CATALOG";
 

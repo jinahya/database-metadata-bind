@@ -25,12 +25,19 @@ import lombok.Data;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.SuperBuilder;
 
+import java.util.Comparator;
+import java.util.Objects;
+
 @Data
 @RequiredArgsConstructor(access = AccessLevel.PRIVATE)
 @SuperBuilder(toBuilder = true)
-public final class UDTId implements MetadataTypeId<UDT> {
+public final class UDTId implements MetadataTypeId<UDTId, UDT> {
 
     private static final long serialVersionUID = 5548844214174261338L;
+
+    private static final Comparator<UDTId> COMPARATOR =
+            Comparator.comparing(UDTId::getSchemaId)
+                    .thenComparing(UDTId::getTypeName, Comparator.nullsFirst(String.CASE_INSENSITIVE_ORDER));
 
     public static UDTId of(final SchemaId schemaId, final String typeName) {
         return builder()
@@ -41,6 +48,11 @@ public final class UDTId implements MetadataTypeId<UDT> {
 
     public static UDTId of(final String typeCat, final String typeSchem, final String typeName) {
         return of(SchemaId.of(typeCat, typeSchem), typeName);
+    }
+
+    @Override
+    public int compareTo(final UDTId o) {
+        return COMPARATOR.compare(this, Objects.requireNonNull(o, "o is null"));
     }
 
     private final SchemaId schemaId;

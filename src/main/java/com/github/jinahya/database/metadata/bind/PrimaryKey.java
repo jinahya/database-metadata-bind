@@ -29,6 +29,7 @@ import lombok.experimental.SuperBuilder;
 
 import java.sql.DatabaseMetaData;
 import java.util.Comparator;
+import java.util.Optional;
 
 /**
  * A class for binding results of {@link DatabaseMetaData#getPrimaryKeys(String, String, String)} method.
@@ -41,11 +42,14 @@ import java.util.Comparator;
 @Data
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @SuperBuilder
-public class PrimaryKey extends AbstractMetadataType {
+public class PrimaryKey
+        extends AbstractMetadataType {
 
     private static final long serialVersionUID = 3159826510060898330L;
 
-    public static final Comparator<PrimaryKey> COMPARING_COLUMN_NAME = Comparator.comparing(PrimaryKey::getColumnName);
+    public static final Comparator<PrimaryKey> COMPARING_AS_SPECIFIED = Comparator.comparing(PrimaryKey::getColumnName);
+
+    public static final Comparator<PrimaryKey> COMPARING_KEY_SEQ = Comparator.comparingInt(PrimaryKey::getKeySeq);
 
     public static final String COLUMN_LABEL_TABLE_CAT = "TABLE_CAT";
 
@@ -58,6 +62,24 @@ public class PrimaryKey extends AbstractMetadataType {
     public static final String COLUMN_LABEL_KEY_SEQ = "KEY_SEQ";
 
     public static final String COLUMN_LABEL_PK_NAME = "PK_NAME";
+
+    public PrimaryKeyId getPrimaryKeyId() {
+        return PrimaryKeyId.of(
+                getTableCatNonNull(),
+                getTableSchemNonNull(),
+                getTableName(),
+                getColumnName(),
+                getKeySeq()
+        );
+    }
+
+    String getTableCatNonNull() {
+        return Optional.ofNullable(getTableCat()).orElse(Catalog.COLUMN_VALUE_TABLE_CAT_EMPTY);
+    }
+
+    String getTableSchemNonNull() {
+        return Optional.ofNullable(getTableSchem()).orElse(Schema.COLUMN_VALUE_TABLE_SCHEM_EMPTY);
+    }
 
     @NullableBySpecification
     @ColumnLabel(COLUMN_LABEL_TABLE_CAT)

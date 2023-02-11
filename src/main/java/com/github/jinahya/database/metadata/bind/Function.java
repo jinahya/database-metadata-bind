@@ -53,11 +53,14 @@ public class Function
 
     private static final long serialVersionUID = -3318947900237453301L;
 
-    public static final Comparator<Function> COMPARING_FUNCTION_CAT_FUNCTION_SCHEM_FUNCTION_NAME_SPECIFIC_NAME
-            = Comparator.comparing(Function::getFunctionCat, Comparator.nullsFirst(Comparator.naturalOrder()))
-            .thenComparing(Function::getFunctionSchem, Comparator.nullsFirst(Comparator.naturalOrder()))
-            .thenComparing(Function::getFunctionName, Comparator.nullsFirst(Comparator.naturalOrder()))
-            .thenComparing(Function::getSpecificName, Comparator.nullsFirst(Comparator.naturalOrder()));
+    public static final Comparator<Function> COMPARING_FUNCTION_CAT_FUNCTION_SCHEM_FUNCTION_NAME_SPECIFIC_NAME =
+//             Comparator.comparing(Function::getFunctionCat, Comparator.nullsFirst(Comparator.naturalOrder()))
+//            .thenComparing(Function::getFunctionSchem, Comparator.nullsFirst(Comparator.naturalOrder()))
+//            .thenComparing(Function::getFunctionName, Comparator.nullsFirst(Comparator.naturalOrder()))
+//            .thenComparing(Function::getSpecificName, Comparator.nullsFirst(Comparator.naturalOrder()));
+            Comparator.comparing(Function::getSchemaId)
+                    .thenComparing(Function::getFunctionName, Comparator.nullsFirst(String.CASE_INSENSITIVE_ORDER))
+                    .thenComparing(Function::getSpecificName, Comparator.nullsFirst(String.CASE_INSENSITIVE_ORDER));
 
     public static final String COLUMN_NAME_FUNCTION_CAT = "FUNCTION_CAT";
 
@@ -70,10 +73,11 @@ public class Function
     public static final String COLUMN_NAME_FUNCTION_TYPE = "FUNCTION_TYPE";
 
     public FunctionId getFunctionId() {
-        return FunctionId.builder()
-                .schemaId(SchemaId.of(getFunctionCatNonNull(), getFunctionSchemNonNull()))
-                .specificName(getSpecificName())
-                .build();
+        return FunctionId.of(getFunctionCatNonNull(), getFunctionSchemNonNull(), getFunctionName(), getSpecificName());
+    }
+
+    SchemaId getSchemaId() {
+        return getFunctionId().getSchemaId();
     }
 
     public List<FunctionColumn> getFunctionColumns(final Context context, final String columnNamePattern)

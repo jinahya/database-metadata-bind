@@ -47,8 +47,7 @@ import java.util.Optional;
 @Data
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @SuperBuilder(toBuilder = true)
-public class Procedure
-        extends AbstractMetadataType {
+public class Procedure extends AbstractMetadataType {
 
     private static final long serialVersionUID = -6262056388403934829L;
 
@@ -59,7 +58,12 @@ public class Procedure
             .thenComparing(Procedure::getSpecificName);
 
     public ProcedureId getProcedureId() {
-        return ProcedureId.of(getProcedureCatNonNull(), getProcedureSchemNonNull(), getSpecificName());
+        return ProcedureId.of(
+                getProcedureCatNonNull(),
+                getProcedureSchemNonNull(),
+                getProcedureName(),
+                getSpecificName()
+        );
     }
 
     public List<ProcedureColumn> getProcedureColumns(final Context context, final String columnNamePattern)

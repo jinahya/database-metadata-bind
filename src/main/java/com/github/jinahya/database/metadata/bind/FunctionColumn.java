@@ -29,6 +29,7 @@ import lombok.experimental.SuperBuilder;
 
 import java.sql.DatabaseMetaData;
 import java.util.Comparator;
+import java.util.Optional;
 
 /**
  * A class for binding results of {@link DatabaseMetaData#getFunctionColumns(String, String, String, String)} method.
@@ -47,11 +48,15 @@ public class FunctionColumn
 
     private static final long serialVersionUID = -7445156446214062680L;
 
-    public static final Comparator<FunctionColumn> COMPARING_FUNCTION_CAT_FUNCTION_SCHEM_FUNCTION_NAME_SPECIFIC_NAME
-            = Comparator.comparing(FunctionColumn::getFunctionCat, Comparator.nullsFirst(Comparator.naturalOrder()))
-            .thenComparing(FunctionColumn::getFunctionSchem, Comparator.nullsFirst(Comparator.naturalOrder()))
-            .thenComparing(FunctionColumn::getFunctionName)
-            .thenComparing(FunctionColumn::getSpecificName);
+    public static final Comparator<FunctionColumn> COMPARING_FUNCTION_CAT_FUNCTION_SCHEM_FUNCTION_NAME_SPECIFIC_NAME =
+//            Comparator.comparing(FunctionColumn::getFunctionCat, Comparator.nullsFirst(String.CASE_INSENSITIVE_ORDER))
+//                    .thenComparing(FunctionColumn::getFunctionSchem,
+//                                   Comparator.nullsFirst(String.CASE_INSENSITIVE_ORDER))
+//                    .thenComparing(FunctionColumn::getFunctionName)
+//                    .thenComparing(FunctionColumn::getSpecificName);
+            Comparator.comparing(FunctionColumn::getSchemaId)
+                    .thenComparing(FunctionColumn::getFunctionName)
+                    .thenComparing(FunctionColumn::getSpecificName);
 
     public static final String COLUMN_LABEL_FUNCTION_CAT = "FUNCTION_CAT";
 
@@ -67,11 +72,30 @@ public class FunctionColumn
 
     public static final String COLUMN_LABEL_IS_NULLABLE = "IS_NULLABLE";
 
-    public FunctionColumnId getFunctionColumnId(final FunctionId functionId) {
-        return FunctionColumnId.builder()
-                .functionId(functionId)
-                .specificName(getSpecificName())
-                .build();
+    public FunctionColumnId getFunctionColumnId() {
+        return FunctionColumnId.of(
+                getFunctionCatNonNull(),
+                getFunctionSchemNonNull(),
+                getFunctionName(),
+                getSpecificName(),
+                getColumnName()
+        );
+    }
+
+    FunctionId getFunctionId() {
+        return getFunctionColumnId().getFunctionId();
+    }
+
+    SchemaId getSchemaId() {
+        return getFunctionId().getSchemaId();
+    }
+
+    String getFunctionCatNonNull() {
+        return Optional.ofNullable(getFunctionCat()).orElse(Catalog.COLUMN_VALUE_TABLE_CAT_EMPTY);
+    }
+
+    String getFunctionSchemNonNull() {
+        return Optional.ofNullable(getFunctionSchem()).orElse(Schema.COLUMN_VALUE_TABLE_SCHEM_EMPTY);
     }
 
     @NullableBySpecification

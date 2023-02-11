@@ -46,8 +46,7 @@ import java.util.function.Consumer;
 @Data
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @SuperBuilder(toBuilder = true)
-public class Catalog
-        extends AbstractMetadataType {
+public class Catalog extends AbstractMetadataType {
 
     private static final long serialVersionUID = 6239185259128825953L;
 
@@ -55,7 +54,8 @@ public class Catalog
      * A comparator compares objects with their {@link #getTableCat()} values.
      */
     public static final Comparator<Catalog> COMPARING_TABLE_CAT =
-            Comparator.comparing(Catalog::getTableCat, Comparator.nullsFirst(Comparator.naturalOrder()));
+//            Comparator.comparing(Catalog::getTableCat, Comparator.nullsFirst(Comparator.naturalOrder()));
+            Comparator.comparing(Catalog::getCatalogId);
 
     public static final String COLUMN_LABEL_TABLE_CAT = "TABLE_CAT";
 

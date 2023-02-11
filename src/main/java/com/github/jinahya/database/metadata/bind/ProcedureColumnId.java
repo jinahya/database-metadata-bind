@@ -25,21 +25,40 @@ import lombok.Data;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.SuperBuilder;
 
+import java.util.Comparator;
+import java.util.Objects;
+
 @Data
 @RequiredArgsConstructor(access = AccessLevel.PACKAGE)
 @SuperBuilder(toBuilder = true)
-public final class ProcedureColumnId implements MetadataTypeId<ProcedureColumn> {
+public final class ProcedureColumnId implements MetadataTypeId<ProcedureColumnId, ProcedureColumn> {
 
     private static final long serialVersionUID = 7459854669925402253L;
 
-    public static ProcedureColumnId of(final ProcedureId procedureId, final String specificName) {
+    private static final Comparator<ProcedureColumnId> COMPARATOR =
+            Comparator.comparing(ProcedureColumnId::getProcedureId)
+                    .thenComparing(ProcedureColumnId::getColumnName,
+                                   Comparator.nullsFirst(String.CASE_INSENSITIVE_ORDER));
+
+    public static ProcedureColumnId of(final ProcedureId procedureId, final String columnName) {
         return builder()
                 .procedureId(procedureId)
-                .specificName(specificName)
+                .columnName(Objects.requireNonNull(columnName, "columnName is null"))
                 .build();
+    }
+
+    public static ProcedureColumnId of(final String procedureCat, final String procedureSchem,
+                                       final String procedureName, final String specifiedName,
+                                       final String columnName) {
+        return of(ProcedureId.of(procedureCat, procedureSchem, procedureName, specifiedName), columnName);
+    }
+
+    @Override
+    public int compareTo(final ProcedureColumnId o) {
+        return COMPARATOR.compare(this, Objects.requireNonNull(o, "o is null"));
     }
 
     private final ProcedureId procedureId;
 
-    private final String specificName;
+    private final String columnName;
 }

@@ -25,15 +25,24 @@ import lombok.Data;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.SuperBuilder;
 
+import java.util.Comparator;
+import java.util.Objects;
+
 @Data
 @RequiredArgsConstructor(access = AccessLevel.PACKAGE)
 @SuperBuilder(toBuilder = true)
-public final class TableId implements MetadataTypeId<Table> {
+public final class TableId implements MetadataTypeId<TableId, Table> {
 
     private static final long serialVersionUID = -7614201161734063836L;
 
+    private static final Comparator<TableId> COMPARATOR =
+            Comparator.comparing(TableId::getSchemaId)
+                    .thenComparing(TableId::getTableName, Comparator.nullsFirst(Comparator.naturalOrder()));
+
     public static TableId of(final SchemaId schemaId, final String tableName) {
-        return TableId.builder()
+        Objects.requireNonNull(schemaId, "schemaId is null");
+        Objects.requireNonNull(tableName, "tableName is null");
+        return builder()
                 .schemaId(schemaId)
                 .tableName(tableName)
                 .build();
@@ -41,6 +50,11 @@ public final class TableId implements MetadataTypeId<Table> {
 
     public static TableId of(final String tableCat, final String tableSchem, final String tableName) {
         return of(SchemaId.of(tableCat, tableSchem), tableName);
+    }
+
+    @Override
+    public int compareTo(final TableId o) {
+        return COMPARATOR.compare(this, Objects.requireNonNull(o, "o is null"));
     }
 
     private final SchemaId schemaId;

@@ -36,7 +36,7 @@ import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 import static org.junit.jupiter.api.Assertions.fail;
 
 @Slf4j
-abstract class MetadataTypeTest<T extends MetadataType> extends MetadataTypeTest0<T> {
+abstract class MetadataTypeTest<T extends MetadataType> extends _MetadataTypeTest<T> {
 
     private static final Map<Long, Class<?>> SERIAL_VERSION_UIDS = new ConcurrentHashMap<>();
 
@@ -44,7 +44,7 @@ abstract class MetadataTypeTest<T extends MetadataType> extends MetadataTypeTest
         super(typeClass);
     }
 
-    @DisplayName("Each serialVersionUID should be unique")
+    @DisplayName("each serialVersionUID should be unique")
     @Test
     void serialVersionUID_Unique_() throws ReflectiveOperationException {
         for (Class<?> c = typeClass; MetadataType.class.isAssignableFrom(c); c = c.getSuperclass()) {
@@ -92,8 +92,9 @@ abstract class MetadataTypeTest<T extends MetadataType> extends MetadataTypeTest
         assertDoesNotThrow(() -> typeInstance().hashCode());
     }
 
+    @DisplayName("@ColumnLabel -> has accessors")
     @Test
-    void fieldsWithLabel_Exist_Accessors() throws IntrospectionException {
+    void field_HasAccessors_AnnotatedWithColumnLabel() throws IntrospectionException {
         for (final var field : getFieldsWithColumnLabel().keySet()) {
             final var declaringClass = field.getDeclaringClass();
             final var beanInfo = Introspector.getBeanInfo(declaringClass);
@@ -121,9 +122,9 @@ abstract class MetadataTypeTest<T extends MetadataType> extends MetadataTypeTest
         }
     }
 
-    @DisplayName("fields with @Unused should not be a primitive type")
+    @DisplayName("@Unused -> !primitive")
     @Test
-    void fieldsWithUnused_TypeShouldNotBePrimitive() {
+    void field_NotPrimitive_Unused() {
         for (final var field : fieldsWithUnusedBySpecification().keySet()) {
             assert field.isAnnotationPresent(NotUsedBySpecification.class);
             assertThat(field.getType().isPrimitive())
@@ -134,7 +135,7 @@ abstract class MetadataTypeTest<T extends MetadataType> extends MetadataTypeTest
 
     @DisplayName("@NullableBySpecification -> !primitive")
     @Test
-    void fields_NotPrimitive_NullableBySpecification() {
+    void field_NotPrimitive_NullableBySpecification() {
         for (final var field : getFieldsWithNullableBySpecification().keySet()) {
             assert field.isAnnotationPresent(NullableBySpecification.class);
             assertThat(field.getType().isPrimitive())
@@ -143,23 +144,23 @@ abstract class MetadataTypeTest<T extends MetadataType> extends MetadataTypeTest
         }
     }
 
-    @DisplayName("fields with @MayBeNullByVendor should also be with @XmlElement(nillable = true)")
+    @DisplayName("@MayBeNullByVendor -> !primitive")
     @Test
-    void fieldsWithMayBeNullByVendor_ShouldBePrimitive_Type() {
+    void field_NotPrimitive_NullableByVendor() {
         for (final var field : getFieldsWithMayBeNullByVendor().keySet()) {
             assertThat(field.getAnnotation(NullableByVendor.class)).isNotNull();
             assertThat(field.getType().isPrimitive()).isFalse();
         }
     }
 
-    @DisplayName("COLUMN_LABEL <> fieldName")
+    @DisplayName("fieldName = toCamelCase(@ColumnLabel#value)")
     @Test
-    void columnLabelWithFieldName() {
+    void field_Expected_CamelCasedColumnLabel() {
         getFieldsWithColumnLabel().forEach((f, l) -> {
-            final var camelCase = CaseUtils.toCamelCase(l.value(), false, '_');
+            final var expected = CaseUtils.toCamelCase(l.value(), false, '_');
             assertThat(f.getName())
                     .as("expected name of %1$s", f)
-                    .isEqualTo(camelCase);
+                    .isEqualTo(expected);
         });
     }
 }

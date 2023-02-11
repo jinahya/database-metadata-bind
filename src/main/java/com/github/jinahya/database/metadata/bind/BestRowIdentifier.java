@@ -31,6 +31,7 @@ import java.sql.DatabaseMetaData;
 import java.util.Arrays;
 import java.util.Comparator;
 import java.util.List;
+import java.util.Objects;
 
 /**
  * A class for binding results of {@link DatabaseMetaData#getBestRowIdentifier(String, String, String, int, boolean)}
@@ -45,8 +46,7 @@ import java.util.List;
 @Data
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @SuperBuilder(toBuilder = true)
-public class BestRowIdentifier
-        extends AbstractMetadataType {
+public class BestRowIdentifier extends AbstractMetadataType {
 
     private static final long serialVersionUID = -1512051574198028399L;
 
@@ -56,6 +56,8 @@ public class BestRowIdentifier
     public static final Comparator<BestRowIdentifier> COMPARING_SCOPE =
             Comparator.comparingInt(BestRowIdentifier::getScope);
 
+    public static final String COLUMN_LABEL_SCOPE = "SCOPE";
+
     public static List<Integer> scopes() {
         return Arrays.asList(
                 DatabaseMetaData.bestRowTemporary,
@@ -64,7 +66,16 @@ public class BestRowIdentifier
         );
     }
 
-    @ColumnLabel("SCOPE")
+    public BestRowIdentifierScope getScopeAsEnum() {
+        return BestRowIdentifierScope.valueOfScope(getScope());
+    }
+
+    public void setScopeAsEnum(final BestRowIdentifierScope scopeAsEnum) {
+        Objects.requireNonNull(scopeAsEnum, "scopeAsEnum is null");
+        setScope(scopeAsEnum.fieldValueAsInt());
+    }
+
+    @ColumnLabel(COLUMN_LABEL_SCOPE)
     private int scope;
 
     @ColumnLabel("COLUMN_NAME")

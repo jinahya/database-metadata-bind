@@ -29,6 +29,7 @@ import lombok.experimental.SuperBuilder;
 
 import java.sql.DatabaseMetaData;
 import java.util.Comparator;
+import java.util.Optional;
 
 /**
  * A class for binding results of {@link DatabaseMetaData#getPseudoColumns(String, String, String, String)} method.
@@ -45,11 +46,25 @@ public class PseudoColumn extends AbstractMetadataType {
 
     private static final long serialVersionUID = -5612575879670895510L;
 
-    public static final Comparator<PseudoColumn> COMPARING_TABLE_CAT_TABLE_SCHEM_TABLE_NAME_COLUMN_NAME =
-            Comparator.comparing(PseudoColumn::getTableCat, Comparator.nullsFirst(Comparator.naturalOrder()))
-                    .thenComparing(PseudoColumn::getTableSchem, Comparator.nullsFirst(Comparator.naturalOrder()))
-                    .thenComparing(PseudoColumn::getTableName)
-                    .thenComparing(PseudoColumn::getColumnName);
+    public static final Comparator<PseudoColumn> COMPARING_AS_SPECIFIED =
+            Comparator.comparing(PseudoColumn::getPseudoColumnId);
+
+    public PseudoColumnId getPseudoColumnId() {
+        return PseudoColumnId.of(
+                getTableCatNonNull(),
+                getTableSchemNonNull(),
+                getTableName(),
+                getColumnName()
+        );
+    }
+
+    String getTableCatNonNull() {
+        return Optional.ofNullable(getTableCat()).orElse(Catalog.COLUMN_VALUE_TABLE_CAT_EMPTY);
+    }
+
+    String getTableSchemNonNull() {
+        return Optional.ofNullable(getTableSchem()).orElse(Schema.COLUMN_VALUE_TABLE_SCHEM_EMPTY);
+    }
 
     @NullableBySpecification
     @ColumnLabel("TABLE_CAT")

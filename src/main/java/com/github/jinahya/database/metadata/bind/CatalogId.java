@@ -22,21 +22,32 @@ package com.github.jinahya.database.metadata.bind;
 
 import lombok.AccessLevel;
 import lombok.Data;
-import lombok.NoArgsConstructor;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.SuperBuilder;
+
+import java.util.Comparator;
+import java.util.Objects;
 
 @Data
 @RequiredArgsConstructor(access = AccessLevel.PACKAGE)
 @SuperBuilder(toBuilder = true)
-public final class CatalogId implements MetadataTypeId<Catalog> {
+public final class CatalogId implements MetadataTypeId<CatalogId, Catalog> {
 
     private static final long serialVersionUID = 2793098695036855151L;
 
+    private static final Comparator<CatalogId> COMPARING_AS_SPECIFIED =
+            Comparator.comparing(CatalogId::getTableCat, Comparator.nullsFirst(String.CASE_INSENSITIVE_ORDER));
+
     static CatalogId of(final String tableCat) {
+        Objects.requireNonNull(tableCat, "tableCat is null");
         return builder()
                 .tableCat(tableCat)
                 .build();
+    }
+
+    @Override
+    public int compareTo(final CatalogId o) {
+        return COMPARING_AS_SPECIFIED.compare(this, Objects.requireNonNull(o, "o is null"));
     }
 
     private final String tableCat;

@@ -23,8 +23,7 @@ package com.github.jinahya.database.metadata.bind;
 import java.io.Serializable;
 import java.util.Map;
 
-public interface MetadataType
-        extends Serializable {
+public interface MetadataType extends Serializable {
 
     Map<String, Object> getUnmappedValues();
 }

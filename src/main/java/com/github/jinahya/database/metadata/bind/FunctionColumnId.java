@@ -25,14 +25,39 @@ import lombok.Data;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.SuperBuilder;
 
+import java.util.Comparator;
+import java.util.Objects;
+
 @Data
 @RequiredArgsConstructor(access = AccessLevel.PACKAGE)
 @SuperBuilder(toBuilder = true)
-public final class FunctionColumnId implements MetadataTypeId<FunctionColumn> {
+public final class FunctionColumnId implements MetadataTypeId<FunctionColumnId, FunctionColumn> {
 
     private static final long serialVersionUID = 7221973324274278465L;
 
+    private static final Comparator<FunctionColumnId> COMPARATOR =
+            Comparator.comparing(FunctionColumnId::getFunctionId);
+
+    public static FunctionColumnId of(final FunctionId functionId, final String columnName) {
+        Objects.requireNonNull(functionId, "functionId is null");
+        Objects.requireNonNull(columnName, "columnName is null");
+        return builder()
+                .functionId(functionId)
+                .columnName(columnName)
+                .build();
+    }
+
+    public static FunctionColumnId of(final String functionCat, final String functionSchem, final String functionName,
+                                      final String specificName, final String columnName) {
+        return of(FunctionId.of(functionCat, functionSchem, functionName, specificName), columnName);
+    }
+
+    @Override
+    public int compareTo(final FunctionColumnId o) {
+        return COMPARATOR.compare(this, Objects.requireNonNull(o, "o is null"));
+    }
+
     private final FunctionId functionId;
 
-    private final String specificName;
+    private final String columnName;
 }

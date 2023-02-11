@@ -29,6 +29,7 @@ import lombok.experimental.SuperBuilder;
 
 import java.sql.DatabaseMetaData;
 import java.util.Comparator;
+import java.util.Objects;
 import java.util.Optional;
 
 /**
@@ -48,11 +49,12 @@ public class Column extends AbstractMetadataType {
 
     private static final long serialVersionUID = -409653682729081530L;
 
-    public static final Comparator<Column> COMPARING_TABLE_CAT_TABLE_SCHEM_TABLE_NAME_ORDINAL_POSITION =
-            Comparator.comparing(Column::getTableCat, Comparator.nullsFirst(Comparator.naturalOrder()))
-                    .thenComparing(Column::getTableSchem, Comparator.nullsFirst(Comparator.naturalOrder()))
-                    .thenComparing(Column::getTableName)
-                    .thenComparingInt(Column::getOrdinalPosition);
+    public static final Comparator<Column> COMPARING_AS_SPECIFIED =
+//            Comparator.comparing(Column::getTableCat, Comparator.nullsFirst(Comparator.naturalOrder()))
+//                    .thenComparing(Column::getTableSchem, Comparator.nullsFirst(Comparator.naturalOrder()))
+//                    .thenComparing(Column::getTableName)
+//                    .thenComparingInt(Column::getOrdinalPosition);
+            Comparator.comparing(Column::getColumnId);
 
     public static final String COLUMN_LABEL_TABLE_CAT = "TABLE_CAT";
 
@@ -61,6 +63,8 @@ public class Column extends AbstractMetadataType {
     public static final String COLUMN_LABEL_TABLE_NAME = "TABLE_NAME";
 
     public static final String COLUMN_LABEL_COLUMN_NAME = "COLUMN_NAME";
+
+    public static final String COLUMN_LABEL_NULLABLE = "NULLABLE";
 
     public static final String COLUMN_LABEL_IS_AUTOINCREMENT = "IS_AUTOINCREMENT";
 
@@ -71,7 +75,8 @@ public class Column extends AbstractMetadataType {
                 getTableCatNonNull(),
                 getTableSchemNonNull(),
                 getTableName(),
-                getColumnName()
+                getColumnName(),
+                getOrdinalPosition()
         );
     }
 
@@ -81,6 +86,15 @@ public class Column extends AbstractMetadataType {
 
     String getTableSchemNonNull() {
         return Optional.ofNullable(getTableSchem()).orElse(Schema.COLUMN_VALUE_TABLE_SCHEM_EMPTY);
+    }
+
+    public ColumnNullable getNullableAsEnum() {
+        return ColumnNullable.valueOfNullable(getNullable());
+    }
+
+    public void setNullableAsEnum(final ColumnNullable nullableAsEnum) {
+        Objects.requireNonNull(nullableAsEnum, "nullableAsEnum is null");
+        setNullable(nullableAsEnum.fieldValueAsInt());
     }
 
     @NullableBySpecification
@@ -118,7 +132,7 @@ public class Column extends AbstractMetadataType {
     @ColumnLabel("NUM_PREC_RADIX")
     private int numPrecRadix;
 
-    @ColumnLabel("NULLABLE")
+    @ColumnLabel(COLUMN_LABEL_NULLABLE)
     private int nullable;
 
     @NullableBySpecification
