@@ -29,7 +29,7 @@ import java.util.Comparator;
 import java.util.Objects;
 
 @Data
-@RequiredArgsConstructor(access = AccessLevel.PACKAGE)
+@RequiredArgsConstructor(access = AccessLevel.PRIVATE)
 @SuperBuilder(toBuilder = true)
 public final class ProcedureColumnId implements MetadataTypeId<ProcedureColumnId, ProcedureColumn> {
 

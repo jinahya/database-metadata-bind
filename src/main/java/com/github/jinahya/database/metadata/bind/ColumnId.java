@@ -35,17 +35,22 @@ import java.util.Objects;
  * @author Jin Kwon &lt;onacit_at_gmail.com&gt;
  */
 @Data
-@RequiredArgsConstructor(access = AccessLevel.PACKAGE)
+@RequiredArgsConstructor(access = AccessLevel.PRIVATE)
 @SuperBuilder(toBuilder = true)
 public final class ColumnId implements MetadataTypeId<ColumnId, Column> {
 
     private static final long serialVersionUID = -4452694121211962289L;
 
-    private static final Comparator<ColumnId> COMPARATOR =
+    private static final Comparator<ColumnId> COMPARING_AS_SPECIFIED =
             Comparator.comparing(ColumnId::getTableId)
                     .thenComparingInt(ColumnId::getOrdinalPosition);
 
-    public static ColumnId of(final TableId tableId, final String columnName, final int ordinalPosition) {
+    static ColumnId of(final TableId tableId, final String columnName, final int ordinalPosition) {
+        Objects.requireNonNull(tableId, "tableId is null");
+        Objects.requireNonNull(columnName, "columnName is null");
+        if (ordinalPosition <= 0) {
+            throw new IllegalArgumentException("non-positive ordinal position: " + ordinalPosition);
+        }
         return builder()
                 .tableId(tableId)
                 .columnName(columnName)
@@ -53,14 +58,23 @@ public final class ColumnId implements MetadataTypeId<ColumnId, Column> {
                 .build();
     }
 
-    public static ColumnId of(final String tableCat, final String tableSchem, final String tableName,
-                              final String columnName, final int ordinalPosition) {
+    static ColumnId of(final String tableCat, final String tableSchem, final String tableName,
+                       final String columnName, final int ordinalPosition) {
         return of(TableId.of(tableCat, tableSchem, tableName), columnName, ordinalPosition);
+    }
+
+    public static ColumnId of(final TableId tableId, final String columnName) {
+        return of(tableId, columnName, 1);
+    }
+
+    public static ColumnId of(final String tableCat, final String tableSchem, final String tableName,
+                              final String columnName) {
+        return of(tableCat, tableSchem, tableName, columnName, 1);
     }
 
     @Override
     public int compareTo(final ColumnId o) {
-        return COMPARATOR.compare(this, Objects.requireNonNull(o, "o is null"));
+        return COMPARING_AS_SPECIFIED.compare(this, Objects.requireNonNull(o, "o is null"));
     }
 
     private final TableId tableId;

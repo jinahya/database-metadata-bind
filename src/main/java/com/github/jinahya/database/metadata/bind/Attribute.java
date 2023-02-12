@@ -23,12 +23,16 @@ package com.github.jinahya.database.metadata.bind;
 import lombok.AccessLevel;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 import lombok.ToString;
+import lombok.experimental.Accessors;
 import lombok.experimental.SuperBuilder;
 
 import java.sql.DatabaseMetaData;
 import java.util.Comparator;
+import java.util.Optional;
 
 /**
  * A class for binding results of {@link DatabaseMetaData#getAttributes(String, String, String, String)} method.
@@ -46,7 +50,7 @@ public class Attribute extends AbstractMetadataType {
 
     private static final long serialVersionUID = 1913681105410440186L;
 
-    public static final Comparator<Attribute> COMPARING_TYPE_CAT_TYPE_SCHEM_TYPE_NAME_ORDINAL_POSITION =
+    public static final Comparator<Attribute> COMPARING_AS_SPECIFIED =
             Comparator.comparing(Attribute::getTypeCat, Comparator.nullsFirst(Comparator.naturalOrder()))
                     .thenComparing(Attribute::getTypeSchem, Comparator.nullsFirst(Comparator.naturalOrder()))
                     .thenComparing(Attribute::getTypeName)
@@ -57,6 +61,24 @@ public class Attribute extends AbstractMetadataType {
     public static final String VALUE_IS_NULLABLE_NO = "NO";
 
     public static final String VALUE_IS_NULLABLE_EMPTY = "";
+
+    public AttributeId getAttributeId() {
+        return AttributeId.of(
+                getTypeCatNonNull(),
+                getTypeSchemNonNull(),
+                getTypeName(),
+                getAttrName(),
+                getOrdinalPosition()
+        );
+    }
+
+    String getTypeCatNonNull() {
+        return Optional.ofNullable(getTypeCat()).orElse(Catalog.COLUMN_VALUE_TABLE_CAT_EMPTY);
+    }
+
+    String getTypeSchemNonNull() {
+        return Optional.ofNullable(getTypeSchem()).orElse(Schema.COLUMN_VALUE_TABLE_SCHEM_EMPTY);
+    }
 
     @NullableBySpecification
     @ColumnLabel("TYPE_CAT")
@@ -131,4 +153,11 @@ public class Attribute extends AbstractMetadataType {
     @NullableBySpecification
     @ColumnLabel("SOURCE_DATA_TYPE")
     private Integer sourceDataType;
+
+    @Accessors(fluent = true)
+    @Setter(AccessLevel.PACKAGE)
+    @Getter(AccessLevel.PACKAGE)
+    @EqualsAndHashCode.Exclude
+    @ToString.Exclude
+    private transient UDT udt;
 }

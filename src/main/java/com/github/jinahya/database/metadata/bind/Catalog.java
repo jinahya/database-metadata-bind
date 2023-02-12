@@ -27,11 +27,7 @@ import lombok.NoArgsConstructor;
 import lombok.ToString;
 import lombok.experimental.SuperBuilder;
 
-import java.sql.SQLException;
 import java.util.Comparator;
-import java.util.List;
-import java.util.Objects;
-import java.util.Optional;
 import java.util.function.Consumer;
 
 /**
@@ -53,9 +49,7 @@ public class Catalog extends AbstractMetadataType {
     /**
      * A comparator compares objects with their {@link #getTableCat()} values.
      */
-    public static final Comparator<Catalog> COMPARING_TABLE_CAT =
-//            Comparator.comparing(Catalog::getTableCat, Comparator.nullsFirst(Comparator.naturalOrder()));
-            Comparator.comparing(Catalog::getCatalogId);
+    public static final Comparator<Catalog> COMPARING_TABLE_CAT = Comparator.comparing(Catalog::getCatalogId);
 
     public static final String COLUMN_LABEL_TABLE_CAT = "TABLE_CAT";
 
@@ -67,35 +61,7 @@ public class Catalog extends AbstractMetadataType {
     public static final String COLUMN_VALUE_TABLE_CAT_EMPTY = "";
 
     public CatalogId getCatalogId() {
-        return CatalogId.builder()
-                .tableCat(getTableCat())
-                .build();
-    }
-
-    public List<Column> getColumns(final Context context, final String schemaPattern, final String tableNamePattern,
-                                   final String columnNamePattern)
-            throws SQLException {
-        Objects.requireNonNull(context, "context is null");
-        return context.getColumns(getTableCatNonNull(), schemaPattern, tableNamePattern, columnNamePattern);
-    }
-
-    /**
-     * Retrieves a description of the access rights for each table available in this catalog.
-     *
-     * @param schemaPattern    a value for {@code schemaPattern} parameter.
-     * @param tableNamePattern a value for {@code tableNamePattern} parameter.
-     * @return a list of bound values.
-     * @throws SQLException if a database error occurs.
-     */
-    public List<TablePrivilege> getTablePrivileges(final Context context, final String schemaPattern,
-                                                   final String tableNamePattern)
-            throws SQLException {
-        Objects.requireNonNull(context, "context is null");
-        return context.getTablePrivileges(getTableCatNonNull(), schemaPattern, tableNamePattern);
-    }
-
-    String getTableCatNonNull() {
-        return Optional.ofNullable(getTableCat()).orElse(Catalog.COLUMN_VALUE_TABLE_CAT_EMPTY);
+        return CatalogId.of(getTableCat());
     }
 
     @ColumnLabel(COLUMN_LABEL_TABLE_CAT)

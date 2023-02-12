@@ -23,8 +23,11 @@ package com.github.jinahya.database.metadata.bind;
 import lombok.AccessLevel;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 import lombok.ToString;
+import lombok.experimental.Accessors;
 import lombok.experimental.SuperBuilder;
 
 import java.sql.DatabaseMetaData;
@@ -49,8 +52,17 @@ public class PseudoColumn extends AbstractMetadataType {
     public static final Comparator<PseudoColumn> COMPARING_AS_SPECIFIED =
             Comparator.comparing(PseudoColumn::getPseudoColumnId);
 
-    public PseudoColumnId getPseudoColumnId() {
+    private PseudoColumnId getPseudoColumnId() {
         return PseudoColumnId.of(
+                getTableCatNonNull(),
+                getTableSchemNonNull(),
+                getTableName(),
+                getColumnName()
+        );
+    }
+
+    public ColumnId getColumnId() {
+        return ColumnId.of(
                 getTableCatNonNull(),
                 getTableSchemNonNull(),
                 getTableName(),
@@ -105,4 +117,11 @@ public class PseudoColumn extends AbstractMetadataType {
 
     @ColumnLabel("IS_NULLABLE")
     private String isNullable;
+
+    @Accessors(fluent = true)
+    @Setter(AccessLevel.PACKAGE)
+    @Getter(AccessLevel.PACKAGE)
+    @EqualsAndHashCode.Exclude
+    @ToString.Exclude
+    private transient Table table;
 }

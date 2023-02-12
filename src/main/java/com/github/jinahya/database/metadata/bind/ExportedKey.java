@@ -43,7 +43,7 @@ import java.util.Comparator;
 @Data
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @SuperBuilder(toBuilder = true)
-public class ExportedKey extends TableKey {
+public class ExportedKey extends TableKey<ExportedKey> {
 
     private static final long serialVersionUID = -6561660015694928357L;
 

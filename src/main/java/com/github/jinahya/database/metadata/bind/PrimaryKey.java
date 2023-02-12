@@ -23,8 +23,11 @@ package com.github.jinahya.database.metadata.bind;
 import lombok.AccessLevel;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 import lombok.ToString;
+import lombok.experimental.Accessors;
 import lombok.experimental.SuperBuilder;
 
 import java.sql.DatabaseMetaData;
@@ -42,8 +45,7 @@ import java.util.Optional;
 @Data
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @SuperBuilder
-public class PrimaryKey
-        extends AbstractMetadataType {
+public class PrimaryKey extends AbstractMetadataType {
 
     private static final long serialVersionUID = 3159826510060898330L;
 
@@ -101,4 +103,11 @@ public class PrimaryKey
     @NullableBySpecification
     @ColumnLabel(COLUMN_LABEL_PK_NAME)
     private String pkName;
+
+    @Accessors(fluent = true)
+    @Setter(AccessLevel.PACKAGE)
+    @Getter(AccessLevel.PACKAGE)
+    @EqualsAndHashCode.Exclude
+    @ToString.Exclude
+    private transient Table table;
 }

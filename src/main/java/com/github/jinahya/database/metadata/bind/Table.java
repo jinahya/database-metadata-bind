@@ -23,17 +23,13 @@ package com.github.jinahya.database.metadata.bind;
 import lombok.AccessLevel;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
-import lombok.Setter;
 import lombok.ToString;
+import lombok.experimental.Accessors;
 import lombok.experimental.SuperBuilder;
 
-import java.sql.SQLException;
 import java.util.Comparator;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Objects;
 import java.util.Optional;
 
 /**
@@ -114,110 +110,6 @@ public class Table extends AbstractMetadataType {
         );
     }
 
-    public List<BestRowIdentifier> getBestRowIdentifier(final Context context, final int scope, final boolean nullable)
-            throws SQLException {
-        Objects.requireNonNull(context, "context is null");
-        return context.getBestRowIdentifier(
-                getTableCatNonNull(),
-                getTableSchemNonNull(),
-                getTableName(),
-                scope,
-                nullable
-        );
-    }
-
-    public List<Column> getColumns(final Context context, final String columnNamePattern) throws SQLException {
-        Objects.requireNonNull(context, "context is null");
-        final List<Column> columns = context.getColumns(
-                getTableCatNonNull(),
-                getTableSchemNonNull(),
-                getTableName(),
-                columnNamePattern
-        );
-        columns.forEach(c -> {
-            c.setTable(this);
-            getColumns().put(c.getColumnId(), c);
-        });
-        return columns;
-    }
-
-    public List<ColumnPrivilege> getColumnPrivileges(final Context context, final String columnNamePattern)
-            throws SQLException {
-        Objects.requireNonNull(context, "context is null");
-        return context.getColumnPrivileges(
-                getTableCatNonNull(),
-                getTableSchemNonNull(),
-                getTableName(),
-                columnNamePattern
-        );
-    }
-
-    public List<ExportedKey> getExportedKeys(final Context context) throws SQLException {
-        Objects.requireNonNull(context, "context is null");
-        final List<ExportedKey> exportedKeys = context.getExportedKeys(
-                getTableCatNonNull(),
-                getTableSchemNonNull(),
-                getTableName()
-        );
-        exportedKeys.forEach(ek -> {
-            ek.setTable(this);
-            getExportedKeys().put(ek.getFkcolumnId(), ek);
-        });
-        return exportedKeys;
-    }
-
-    public List<ImportedKey> getImportedKeys(final Context context) throws SQLException {
-        Objects.requireNonNull(context, "context is null");
-        final List<ImportedKey> importedKeys = context.getImportedKeys(
-                getTableCatNonNull(),
-                getTableSchemNonNull(),
-                getTableName()
-        );
-        importedKeys.forEach(ik -> {
-            ik.setTable(this);
-            getImportedKeys().put(ik.getPkcolumnId(), ik);
-        });
-        return importedKeys;
-    }
-
-    public List<PrimaryKey> getPrimaryKeys(final Context context) throws SQLException {
-        Objects.requireNonNull(context, "context is null");
-        return context.getPrimaryKeys(
-                getTableCatNonNull(),
-                getTableSchemNonNull(),
-                getTableName()
-        );
-    }
-
-    public List<PseudoColumn> getPseudoColumns(final Context context, final String columnNamePattern)
-            throws SQLException {
-        Objects.requireNonNull(context, "context is null");
-        return context.getPseudoColumns(
-                getTableCatNonNull(),
-                getTableSchemNonNull(),
-                getTableName(),
-                columnNamePattern
-        );
-    }
-
-    /**
-     * Retrieves a description of this table's columns that are automatically updated when any value in a row is
-     * updated.
-     *
-     * @param context a context.
-     * @return a list of bound values.
-     * @throws SQLException if a database error occurs.
-     * @see Context#getVersionColumns(String, String, String)
-     */
-    public List<VersionColumn> getVersionColumns(final Context context) throws SQLException {
-        Objects.requireNonNull(context, "context is null");
-        return context.getVersionColumns(
-                getTableCatNonNull(),
-                getTableSchemNonNull(),
-                getTableName()
-        );
-    }
-
     String getTableCatNonNull() {
         return Optional.ofNullable(getTableCat()).orElse(Catalog.COLUMN_VALUE_TABLE_CAT_EMPTY);
     }
@@ -265,32 +157,29 @@ public class Table extends AbstractMetadataType {
     @ColumnLabel("REF_GENERATION")
     private String refGeneration;
 
-    Map<ColumnId, Column> getColumns() {
-        if (columns == null) {
-            columns = new HashMap<>();
-        }
-        return columns;
+    Table catalog(final Catalog catalog) {
+        this.catalog = catalog;
+        this.schema = null;
+        return this;
     }
 
-    Map<ColumnId, ExportedKey> getExportedKeys() {
-        if (exportedKeys == null) {
-            exportedKeys = new HashMap<>();
-        }
-        return exportedKeys;
+    Table schema(final Schema schema) {
+        this.schema = schema;
+        catalog = Optional.ofNullable(this.schema).map(Schema::catalog).orElse(null);
+        return this;
     }
 
-    @Setter(AccessLevel.PACKAGE)
+    @Accessors(fluent = true)
+//    @Setter(AccessLevel.PACKAGE) // manually implemented
+    @Getter(AccessLevel.PACKAGE)
     @EqualsAndHashCode.Exclude
     @ToString.Exclude
-    private transient Map<ColumnId, Column> columns;
+    private transient Catalog catalog;
 
-    @Setter(AccessLevel.PACKAGE)
+    @Accessors(fluent = true)
+//    @Setter(AccessLevel.PACKAGE) // manually implemented
+    @Getter(AccessLevel.PACKAGE)
     @EqualsAndHashCode.Exclude
     @ToString.Exclude
-    private transient Map<ColumnId, ExportedKey> exportedKeys;
-
-    @Setter(AccessLevel.PACKAGE)
-    @EqualsAndHashCode.Exclude
-    @ToString.Exclude
-    private transient Map<ColumnId, ImportedKey> importedKeys;
+    private transient Schema schema;
 }

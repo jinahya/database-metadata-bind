@@ -30,7 +30,7 @@ import java.util.Comparator;
 import java.util.Objects;
 
 @Data
-@RequiredArgsConstructor(access = AccessLevel.PACKAGE)
+@RequiredArgsConstructor(access = AccessLevel.PRIVATE)
 @SuperBuilder(toBuilder = true)
 public final class ProcedureId implements MetadataTypeId<ProcedureId, Procedure> {
 
@@ -41,7 +41,7 @@ public final class ProcedureId implements MetadataTypeId<ProcedureId, Procedure>
                     .thenComparing(ProcedureId::getProcedureName, Comparator.nullsFirst(String.CASE_INSENSITIVE_ORDER))
                     .thenComparing(ProcedureId::getSpecificName, Comparator.nullsFirst(String.CASE_INSENSITIVE_ORDER));
 
-    public static ProcedureId of(final SchemaId schemaId, final String procedureName, final String specificName) {
+    static ProcedureId of(final SchemaId schemaId, final String procedureName, final String specificName) {
         Objects.requireNonNull(schemaId, "schemaId is null");
         Objects.requireNonNull(procedureName, "procedureName is null");
         Objects.requireNonNull(specificName, "specificName is null");
@@ -52,9 +52,17 @@ public final class ProcedureId implements MetadataTypeId<ProcedureId, Procedure>
                 .build();
     }
 
-    public static ProcedureId of(final String procedureCat, final String procedureSchem, final String procedureName,
-                                 final String specificName) {
+    static ProcedureId of(final String procedureCat, final String procedureSchem, final String procedureName,
+                          final String specificName) {
         return of(SchemaId.of(procedureCat, procedureSchem), procedureName, specificName);
+    }
+
+    public static ProcedureId of(final SchemaId schemaId, final String specificName) {
+        return of(schemaId, "", specificName);
+    }
+
+    public static ProcedureId of(final String procedureCat, final String procedureSchem, final String specificName) {
+        return of(procedureCat, procedureSchem, "", specificName);
     }
 
     @Override

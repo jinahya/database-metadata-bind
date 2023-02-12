@@ -23,14 +23,14 @@ package com.github.jinahya.database.metadata.bind;
 import lombok.AccessLevel;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 import lombok.ToString;
+import lombok.experimental.Accessors;
 import lombok.experimental.SuperBuilder;
 
-import java.sql.SQLException;
 import java.util.Comparator;
-import java.util.List;
-import java.util.Objects;
 import java.util.Optional;
 
 /**
@@ -56,7 +56,7 @@ public class Schema extends AbstractMetadataType {
 
     private static final long serialVersionUID = 7457236468401244963L;
 
-    public static final Comparator<Schema> COMPARING_TABLE_CATALOG_TABLE_SCHEM =
+    public static final Comparator<Schema> COMPARING_AS_SPECIFIED =
 //            Comparator.comparing(Schema::getTableCatalog, Comparator.nullsFirst(Comparator.naturalOrder()))
 //                    .thenComparing(Schema::getTableSchem, Comparator.nullsFirst(Comparator.naturalOrder()));
             Comparator.comparing(Schema::getSchemaId);
@@ -66,16 +66,6 @@ public class Schema extends AbstractMetadataType {
     public static final String COLUMN_LABEL_TABLE_SCHEM = "TABLE_SCHEM";
 
     public static final String COLUMN_VALUE_TABLE_SCHEM_EMPTY = "";
-
-    public List<SuperTable> getSuperTables(final Context context, final String tableNamePattern) throws SQLException {
-        Objects.requireNonNull(context, "context is null");
-        return context.getSuperTables(getTableCatalogNonNull(), getTableSchem(), tableNamePattern);
-    }
-
-    public List<SuperType> getSuperTypes(final Context context, final String typeNamePattern) throws SQLException {
-        Objects.requireNonNull(context, "context is null");
-        return context.getSuperTypes(getTableCatalogNonNull(), getTableSchem(), typeNamePattern);
-    }
 
     public SchemaId getSchemaId() {
         return SchemaId.of(getTableCatalogNonNull(), getTableSchem());
@@ -92,4 +82,11 @@ public class Schema extends AbstractMetadataType {
 
     @ColumnLabel(COLUMN_LABEL_TABLE_SCHEM)
     private String tableSchem;
+
+    @Accessors(fluent = true)
+    @Setter(AccessLevel.PACKAGE)
+    @Getter(AccessLevel.PACKAGE)
+    @EqualsAndHashCode.Exclude
+    @ToString.Exclude
+    private transient Catalog catalog;
 }

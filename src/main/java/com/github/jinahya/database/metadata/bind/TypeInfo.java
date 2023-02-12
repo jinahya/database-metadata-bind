@@ -28,6 +28,7 @@ import lombok.ToString;
 import lombok.experimental.SuperBuilder;
 
 import java.util.Comparator;
+import java.util.Objects;
 
 /**
  * An entity class for binding results of {@link java.sql.DatabaseMetaData#getTypeInfo() getTypeInfo()}.
@@ -35,16 +36,18 @@ import java.util.Comparator;
  * @author Jin Kwon &lt;jinahya_at_gmail.com&gt;
  * @see Context#getTypeInfo()
  */
-@EqualsAndHashCode(callSuper = true)
+//@EqualsAndHashCode(callSuper = true)
 @ToString(callSuper = true)
 @Data
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @SuperBuilder(toBuilder = true)
-public class TypeInfo extends AbstractMetadataType {
+public class TypeInfo
+        extends AbstractMetadataType
+        implements Comparable<TypeInfo> {
 
     private static final long serialVersionUID = -3964147654019495313L;
 
-    public static final Comparator<TypeInfo> COMPARING_DATA_TYPE = Comparator.comparingInt(TypeInfo::getDataType);
+    public static final Comparator<TypeInfo> COMPARING_AS_SPECIFIED = Comparator.comparingInt(TypeInfo::getDataType);
 
     public static final String COLUMN_LABEL_TYPE_NAME = "TYPE_NAME";
 
@@ -63,6 +66,25 @@ public class TypeInfo extends AbstractMetadataType {
     public static final String COLUMN_LABEL_CASE_SENSITIVE = "CASE_SENSITIVE";
 
     public static final String COLUMN_LABEL_SEARCHABLE = "SEARCHABLE";
+
+    @Override
+    public boolean equals(final Object obj) {
+        if (this == obj) return true;
+        if (!(obj instanceof TypeInfo)) return false;
+        if (!super.equals(obj)) return false;
+        final TypeInfo typeInfo = (TypeInfo) obj;
+        return dataType == typeInfo.dataType;
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(super.hashCode(), dataType);
+    }
+
+    @Override
+    public int compareTo(final TypeInfo o) {
+        return COMPARING_AS_SPECIFIED.compare(this, Objects.requireNonNull(o, "o is null"));
+    }
 
     @ColumnLabel(COLUMN_LABEL_TYPE_NAME)
     private String typeName;

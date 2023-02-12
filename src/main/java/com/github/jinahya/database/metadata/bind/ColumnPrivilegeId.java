@@ -31,33 +31,34 @@ import java.util.Objects;
 @Data
 @RequiredArgsConstructor(access = AccessLevel.PRIVATE)
 @SuperBuilder(toBuilder = true)
-public final class SchemaId implements MetadataTypeId<SchemaId, Schema> {
+public final class ColumnPrivilegeId implements MetadataTypeId<ColumnPrivilegeId, Column> {
 
-    private static final long serialVersionUID = -9112917204279422378L;
+    private static final long serialVersionUID = 7221973324274278465L;
 
-    private static final Comparator<SchemaId> COMPARATOR =
-            Comparator.comparing(SchemaId::getCatalogId)
-                    .thenComparing(SchemaId::getTableSchem, Comparator.nullsFirst(String.CASE_INSENSITIVE_ORDER));
+    private static final Comparator<ColumnPrivilegeId> COMPARATOR =
+            Comparator.comparing(ColumnPrivilegeId::getColumnId)
+                    .thenComparing(ColumnPrivilegeId::getPrivilege, String.CASE_INSENSITIVE_ORDER);
 
-    public static SchemaId of(final CatalogId catalogId, final String tableSchem) {
-        Objects.requireNonNull(catalogId, "catalogId is null");
-        Objects.requireNonNull(tableSchem, "tableSchem is null");
+    public static ColumnPrivilegeId of(final ColumnId columnId, final String privilege) {
+        Objects.requireNonNull(columnId, "columnId is null");
+        Objects.requireNonNull(privilege, "privilege is null");
         return builder()
-                .catalogId(catalogId)
-                .tableSchem(tableSchem)
+                .columnId(columnId)
+                .privilege(privilege)
                 .build();
     }
 
-    public static SchemaId of(final String tableCatalog, final String tableSchem) {
-        return of(CatalogId.of(tableCatalog), tableSchem);
+    public static ColumnPrivilegeId of(final String tableCat, final String tableSchem, final String tableName,
+                                       final String columnName, final String privilege) {
+        return of(ColumnId.of(tableCat, tableSchem, tableName, columnName), privilege);
     }
 
     @Override
-    public int compareTo(final SchemaId o) {
+    public int compareTo(final ColumnPrivilegeId o) {
         return COMPARATOR.compare(this, Objects.requireNonNull(o, "o is null"));
     }
 
-    private final CatalogId catalogId;
+    private final ColumnId columnId;
 
-    private final String tableSchem;
+    private final String privilege;
 }

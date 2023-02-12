@@ -30,7 +30,7 @@ import java.util.Comparator;
 import java.util.Objects;
 
 @Data
-@RequiredArgsConstructor(access = AccessLevel.PACKAGE)
+@RequiredArgsConstructor(access = AccessLevel.PRIVATE)
 @SuperBuilder(toBuilder = true)
 public final class PrimaryKeyId implements MetadataTypeId<PrimaryKeyId, PrimaryKey> {
 
@@ -44,7 +44,12 @@ public final class PrimaryKeyId implements MetadataTypeId<PrimaryKeyId, PrimaryK
             Comparator.comparing(PrimaryKeyId::getTableId)
                     .thenComparingInt(PrimaryKeyId::getKeySeq);
 
-    public static PrimaryKeyId of(final TableId tableId, final String columName, final int keySeq) {
+    static PrimaryKeyId of(final TableId tableId, final String columName, final int keySeq) {
+        Objects.requireNonNull(tableId, "tableId is null");
+        Objects.requireNonNull(columName, "columName is null");
+        if (keySeq <= 0) {
+            throw new IllegalArgumentException("non-positive keySeq: " + keySeq);
+        }
         return builder()
                 .tableId(tableId)
                 .columnName(columName)
@@ -52,9 +57,18 @@ public final class PrimaryKeyId implements MetadataTypeId<PrimaryKeyId, PrimaryK
                 .build();
     }
 
-    public static PrimaryKeyId of(final String tableCat, final String tableSchem, final String tableName,
-                                  final String columnName, final int keySeq) {
+    static PrimaryKeyId of(final String tableCat, final String tableSchem, final String tableName,
+                           final String columnName, final int keySeq) {
         return of(TableId.of(tableCat, tableSchem, tableName), columnName, keySeq);
+    }
+
+    public static PrimaryKeyId of(final TableId tableId, final String columName) {
+        return of(tableId, columName, 1);
+    }
+
+    public static PrimaryKeyId of(final String tableCat, final String tableSchem, final String tableName,
+                                  final String columnName) {
+        return of(tableCat, tableSchem, tableName, columnName, 1);
     }
 
     @Override

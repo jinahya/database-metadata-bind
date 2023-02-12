@@ -27,6 +27,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
+import lombok.experimental.Accessors;
 import lombok.experimental.SuperBuilder;
 
 import java.sql.DatabaseMetaData;
@@ -52,10 +53,6 @@ public class Column extends AbstractMetadataType {
     private static final long serialVersionUID = -409653682729081530L;
 
     public static final Comparator<Column> COMPARING_AS_SPECIFIED =
-//            Comparator.comparing(Column::getTableCat, Comparator.nullsFirst(Comparator.naturalOrder()))
-//                    .thenComparing(Column::getTableSchem, Comparator.nullsFirst(Comparator.naturalOrder()))
-//                    .thenComparing(Column::getTableName)
-//                    .thenComparingInt(Column::getOrdinalPosition);
             Comparator.comparing(Column::getColumnId);
 
     public static final String COLUMN_LABEL_TABLE_CAT = "TABLE_CAT";
@@ -184,6 +181,7 @@ public class Column extends AbstractMetadataType {
     @ColumnLabel(COLUMN_LABEL_IS_GENERATEDCOLUMN)
     private String isGeneratedcolumn;
 
+    @Accessors(fluent = true)
     @Setter(AccessLevel.PACKAGE)
     @Getter(AccessLevel.PACKAGE)
     @EqualsAndHashCode.Exclude

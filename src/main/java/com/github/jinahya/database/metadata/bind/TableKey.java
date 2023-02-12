@@ -25,8 +25,8 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import lombok.Setter;
 import lombok.ToString;
+import lombok.experimental.Accessors;
 import lombok.experimental.SuperBuilder;
 
 import java.util.Comparator;
@@ -44,8 +44,7 @@ import java.util.Optional;
 @Data
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @SuperBuilder(toBuilder = true)
-public abstract class TableKey
-        extends AbstractMetadataType {
+public abstract class TableKey<T extends TableKey<T>> extends AbstractMetadataType {
 
     private static final long serialVersionUID = 6713872409315471232L;
 
@@ -139,7 +138,13 @@ public abstract class TableKey
     @ColumnLabel("DEFERRABILITY")
     private int deferrability;
 
-    @Setter(AccessLevel.PACKAGE)
+    @SuppressWarnings({"unchecked"})
+    T table(final Table table) {
+        this.table = table;
+        return (T) this;
+    }
+
+    @Accessors(fluent = true)
     @Getter(AccessLevel.PACKAGE)
     @EqualsAndHashCode.Exclude
     @ToString.Exclude

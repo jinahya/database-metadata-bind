@@ -23,8 +23,11 @@ package com.github.jinahya.database.metadata.bind;
 import lombok.AccessLevel;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 import lombok.ToString;
+import lombok.experimental.Accessors;
 import lombok.experimental.SuperBuilder;
 
 import java.sql.DatabaseMetaData;
@@ -47,6 +50,14 @@ public class VersionColumn extends AbstractMetadataType {
     private static final long serialVersionUID = 3587959398829593292L;
 
     public static final String COLUMN_LABEL_PSEUDO_COLUMN = "PSEUDO_COLUMN";
+
+    public ColumnId getColumnId(final Table table) {
+        Objects.requireNonNull(table, "table is null");
+        return ColumnId.of(
+                table.getTableId(),
+                getColumnName()
+        );
+    }
 
     public VersionColumnPseudoColumn getPseudoColumnAsEnum() {
         return VersionColumnPseudoColumn.valueOfPseudoColumn(getPseudoColumn());
@@ -83,4 +94,11 @@ public class VersionColumn extends AbstractMetadataType {
 
     @ColumnLabel(COLUMN_LABEL_PSEUDO_COLUMN)
     private int pseudoColumn;
+
+    @Accessors(fluent = true)
+    @Setter(AccessLevel.PACKAGE)
+    @Getter(AccessLevel.PACKAGE)
+    @EqualsAndHashCode.Exclude
+    @ToString.Exclude
+    private transient Table table;
 }
