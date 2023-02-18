@@ -53,10 +53,10 @@ public class Column extends AbstractMetadataType {
     private static final long serialVersionUID = -409653682729081530L;
 
     public static final Comparator<Column> COMPARING_CASE_INSENSITIVE =
-            Comparator.comparing(Column::getColumnId, ColumnId.COMPARING_CASE_INSENSITIVE);
+            Comparator.comparing(Column::getColumnId, ColumnId.CASE_INSENSITIVE_ORDER);
 
     public static final Comparator<Column> COMPARING_NATURAL =
-            Comparator.comparing(Column::getColumnId, ColumnId.COMPARING_NATURAL);
+            Comparator.comparing(Column::getColumnId, ColumnId.NATURAL_ORDER);
 
     public static final String COLUMN_LABEL_TABLE_CAT = "TABLE_CAT";
 

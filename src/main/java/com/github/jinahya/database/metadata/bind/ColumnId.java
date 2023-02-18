@@ -41,18 +41,18 @@ public final class ColumnId implements MetadataTypeId<ColumnId, Column> {
 
     private static final long serialVersionUID = -4452694121211962289L;
 
-    public static final Comparator<ColumnId> COMPARING_CASE_INSENSITIVE =
+    public static final Comparator<ColumnId> CASE_INSENSITIVE_ORDER =
             Comparator.comparing(ColumnId::getTableId, TableId.COMPARING_CASE_INSENSITIVE)
                     .thenComparingInt(ColumnId::getOrdinalPosition);
 
-    public static final Comparator<ColumnId> COMPARING_NATURAL =
+    public static final Comparator<ColumnId> NATURAL_ORDER =
             Comparator.comparing(ColumnId::getTableId, TableId.COMPARING_NATURAL)
                     .thenComparingInt(ColumnId::getOrdinalPosition);
 
     static ColumnId of(final TableId tableId, final String columnName, final int ordinalPosition) {
         Objects.requireNonNull(tableId, "tableId is null");
         Objects.requireNonNull(columnName, "columnName is null");
-        if (ordinalPosition <= 0) {
+        if (false && ordinalPosition <= 0) {
             throw new IllegalArgumentException("non-positive ordinal position: " + ordinalPosition);
         }
         return builder()

@@ -51,4 +51,5 @@ $ mvn -Pfailsafe \
   -Durl='<your-jdbc-url>' \
   -Duser='<your-own-user>' \
   -Dpassword='<your-own-password>'
+  clean failsafe:integration-test
 ```

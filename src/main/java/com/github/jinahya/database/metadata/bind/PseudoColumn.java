@@ -55,7 +55,7 @@ public class PseudoColumn extends AbstractMetadataType {
     public static final Comparator<PseudoColumn> NATURAL_ORDER =
             Comparator.comparing(PseudoColumn::getPseudoColumnId, PseudoColumnId.NATURAL_ORDER);
 
-    private PseudoColumnId getPseudoColumnId() {
+    public PseudoColumnId getPseudoColumnId() {
         return PseudoColumnId.of(
                 getTableCatNonNull(),
                 getTableSchemNonNull(),

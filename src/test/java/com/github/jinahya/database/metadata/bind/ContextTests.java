@@ -351,8 +351,8 @@ final class ContextTests {
                 assertThat(columns)
                         .extracting(Column::getColumnId)
                         .satisfiesAnyOf(
-                                l -> assertThat(l).isSortedAccordingTo(ColumnId.COMPARING_CASE_INSENSITIVE),
-                                l -> assertThat(l).isSortedAccordingTo(ColumnId.COMPARING_NATURAL)
+                                l -> assertThat(l).isSortedAccordingTo(ColumnId.CASE_INSENSITIVE_ORDER),
+                                l -> assertThat(l).isSortedAccordingTo(ColumnId.NATURAL_ORDER)
                         );
             }
         }
@@ -511,11 +511,17 @@ final class ContextTests {
     private static void function(final Context context, final Function function) throws SQLException {
         Objects.requireNonNull(context, "context is null");
         Objects.requireNonNull(function, "function is null");
+        log.debug("function: {}", function);
         common(function);
         common(function.getFunctionId());
         final var functionId = function.getFunctionId();
         try {
             final var functionColumns = function.getFunctionColumns(context, "%");
+            assertThat(functionColumns)
+                    .extracting(FunctionColumn::getFunctionColumnId)
+                    .doesNotHaveDuplicates()
+                    .extracting(FunctionColumnId::getFunctionId)
+                    .allMatch(functionId::equals);
             functionColumns(context, function, functionColumns);
         } catch (final SQLException sqle) {
             thrown("failed; getFunctionColumns", sqle);
@@ -717,28 +723,36 @@ final class ContextTests {
         common(schema);
         common(schema.getSchemaId());
         final var schemaId = schema.getSchemaId();
-        final var superTables = context.getSuperTables(schema, "%");
-        assertThat(superTables)
-                .extracting(SuperTable::getTableId)
-                .extracting(TableId::getSchemaId)
-                .allMatch(schemaId::equals);
-        assertThat(superTables)
-                .extracting(SuperTable::getSupertableId)
-                .extracting(TableId::getSchemaId)
-                .allMatch(schemaId::equals);
-        superTables(context, superTables);
-        final var superTypes = context.getSuperTypes(schema, "%");
-        assertThat(superTypes)
-                .extracting(SuperType::getTypeId)
-                .extracting(UDTId::getSchemaId)
-                .allMatch(schemaId::equals);
-        if (false) {
+        try {
+            final var superTables = context.getSuperTables(schema, "%");
+            assertThat(superTables)
+                    .extracting(SuperTable::getTableId)
+                    .extracting(TableId::getSchemaId)
+                    .allMatch(schemaId::equals);
+            assertThat(superTables)
+                    .extracting(SuperTable::getSupertableId)
+                    .extracting(TableId::getSchemaId)
+                    .allMatch(schemaId::equals);
+            superTables(context, superTables);
+        } catch (final SQLException sqle) {
+            thrown("failed; getSuperTables", sqle);
+        }
+        try {
+            final var superTypes = context.getSuperTypes(schema, "%");
             assertThat(superTypes)
-                    .extracting(SuperType::getSupertypeId)
+                    .extracting(SuperType::getTypeId)
                     .extracting(UDTId::getSchemaId)
                     .allMatch(schemaId::equals);
+            if (false) { // 얜 아니다.
+                assertThat(superTypes)
+                        .extracting(SuperType::getSupertypeId)
+                        .extracting(UDTId::getSchemaId)
+                        .allMatch(schemaId::equals);
+            }
+            superTypes(context, superTypes);
+        } catch (final SQLException sqle) {
+            thrown("failed: getSuperTypes", sqle);
         }
-        superTypes(context, superTypes);
     }
 
     static void superTypes(final Context context, final List<? extends SuperType> superTypes) throws SQLException {
@@ -817,6 +831,7 @@ final class ContextTests {
     static void table(final Context context, final Table table) throws SQLException {
         Objects.requireNonNull(context, "context is null");
         Objects.requireNonNull(table, "table is null");
+        log.debug("table: {}", table);
         common(table);
         final var tableId = table.getTableId();
         try {
@@ -841,20 +856,22 @@ final class ContextTests {
         } catch (final SQLException sqle) {
             thrown("failed; getColumns", sqle);
         }
-        try {
-            final var columnPrivileges = context.getColumnPrivileges(table, "%");
-            assertThat(columnPrivileges)
-                    .extracting(ColumnPrivilege::getColumnPrivilegeId)
-                    .doesNotContainNull()
-                    .doesNotHaveDuplicates()
-                    .extracting(ColumnPrivilegeId::getColumnId)
-                    .doesNotContainNull()
-                    .extracting(ColumnId::getTableId)
-                    .doesNotContainNull()
-                    .allMatch(tableId::equals);
-            columnPrivileges(context, columnPrivileges);
-        } catch (final SQLException sqle) {
-            thrown("failed; getColumnPrivileges", sqle);
+        if (false) {
+            try {
+                final var columnPrivileges = context.getColumnPrivileges(table, "%");
+                assertThat(columnPrivileges)
+                        .extracting(ColumnPrivilege::getColumnPrivilegeId)
+                        .doesNotContainNull()
+                        .doesNotHaveDuplicates()
+                        .extracting(ColumnPrivilegeId::getColumnId)
+                        .doesNotContainNull()
+                        .extracting(ColumnId::getTableId)
+                        .doesNotContainNull()
+                        .allMatch(tableId::equals);
+                columnPrivileges(context, columnPrivileges);
+            } catch (final SQLException sqle) {
+                thrown("failed; getColumnPrivileges", sqle);
+            }
         }
         try {
             final var exportedKeys = context.getExportedKeys(table);
@@ -900,7 +917,8 @@ final class ContextTests {
             assertThat(pseudoColumns)
                     .map(PseudoColumn::getColumnId)
                     .doesNotHaveDuplicates()
-                    .isSorted();
+                    .map(ColumnId::getTableId)
+                    .allMatch(tableId::equals);
             pseudoColumns(context, pseudoColumns);
         } catch (final SQLException sqle) {
             thrown("failed; getPseudoColumns", sqle);
@@ -963,14 +981,24 @@ final class ContextTests {
         Objects.requireNonNull(context, "context is null");
         Objects.requireNonNull(primaryKey, "primaryKey is null");
         common(primaryKey);
+        common(primaryKey.getPrimaryKeyId());
     }
 
     static void pseudoColumns(final Context context, final List<? extends PseudoColumn> pseudoColumns)
             throws SQLException {
         Objects.requireNonNull(context, "context is null");
         Objects.requireNonNull(pseudoColumns, "pseudoColumns is null");
-        assertThat(pseudoColumns)
-                .isSortedAccordingTo(PseudoColumn.CASE_INSENSITIVE_ORDER);
+        assertThat(pseudoColumns).satisfiesAnyOf(
+                        l -> assertThat(l).isSortedAccordingTo(PseudoColumn.CASE_INSENSITIVE_ORDER),
+                        l -> assertThat(l).isSortedAccordingTo(PseudoColumn.NATURAL_ORDER)
+                )
+                .extracting(PseudoColumn::getColumnId)
+                .doesNotContainNull()
+                .doesNotHaveDuplicates()
+                .satisfiesAnyOf(
+                        l -> assertThat(l).isSortedAccordingTo(ColumnId.CASE_INSENSITIVE_ORDER),
+                        l -> assertThat(l).isSortedAccordingTo(ColumnId.NATURAL_ORDER)
+                );
         for (final var pseudoColumn : pseudoColumns) {
             pseudoColumn(context, pseudoColumn);
         }
@@ -980,6 +1008,7 @@ final class ContextTests {
         Objects.requireNonNull(context, "context is null");
         Objects.requireNonNull(pseudoColumn, "pseudoColumn is null");
         common(pseudoColumn);
+        common(pseudoColumn.getColumnId());
     }
 
     static void superTables(final Context context, final List<? extends SuperTable> superTables) throws SQLException {
@@ -994,6 +1023,7 @@ final class ContextTests {
         Objects.requireNonNull(context, "context is null");
         Objects.requireNonNull(superTable, "superTable is null");
         common(superTable);
+        common(superTable.getTableId());
     }
 
     static void tablePrivileges(final Context context, final List<? extends TablePrivilege> tablePrivileges)

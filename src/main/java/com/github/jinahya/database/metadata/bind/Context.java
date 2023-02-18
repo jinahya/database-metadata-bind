@@ -841,7 +841,7 @@ public class Context {
     public List<PrimaryKey> getPrimaryKeys(final Table table) throws SQLException {
         Objects.requireNonNull(table, "table is null");
         return getPrimaryKeys(
-                table.getTableSchemNonNull(),
+                table.getTableCatNonNull(),
                 table.getTableSchemNonNull(),
                 Objects.requireNonNull(table.getTableName(), "table.tableName is null")
         );

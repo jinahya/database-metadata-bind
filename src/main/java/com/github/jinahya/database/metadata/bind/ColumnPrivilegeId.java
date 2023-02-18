@@ -36,11 +36,11 @@ public final class ColumnPrivilegeId implements MetadataTypeId<ColumnPrivilegeId
     private static final long serialVersionUID = 7221973324274278465L;
 
     public static final Comparator<ColumnPrivilegeId> COMPARING_CASE_INSENSITIVE =
-            Comparator.comparing(ColumnPrivilegeId::getColumnId, ColumnId.COMPARING_CASE_INSENSITIVE)
+            Comparator.comparing(ColumnPrivilegeId::getColumnId, ColumnId.CASE_INSENSITIVE_ORDER)
                     .thenComparing(ColumnPrivilegeId::getPrivilege, String.CASE_INSENSITIVE_ORDER);
 
     public static final Comparator<ColumnPrivilegeId> COMPARING_NATURAL =
-            Comparator.comparing(ColumnPrivilegeId::getColumnId, ColumnId.COMPARING_NATURAL)
+            Comparator.comparing(ColumnPrivilegeId::getColumnId, ColumnId.NATURAL_ORDER)
                     .thenComparing(ColumnPrivilegeId::getPrivilege);
 
     public static ColumnPrivilegeId of(final ColumnId columnId, final String privilege) {

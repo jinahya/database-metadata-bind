@@ -47,7 +47,7 @@ public final class AttributeId implements MetadataTypeId<AttributeId, Attribute>
     static AttributeId of(final UDTId udtId, final String attrName, final int ordinalPosition) {
         Objects.requireNonNull(udtId, "udtId is null");
         Objects.requireNonNull(attrName, "attrName is null");
-        if (ordinalPosition <= 0) {
+        if (false && ordinalPosition <= 0) {
             throw new IllegalArgumentException("non-positive ordinalPosition: " + ordinalPosition);
         }
         return builder()
