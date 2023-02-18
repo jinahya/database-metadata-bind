@@ -35,11 +35,11 @@ public final class PseudoColumnId implements MetadataTypeId<PseudoColumnId, Pseu
 
     private static final long serialVersionUID = 7459854669925402253L;
 
-    public static final Comparator<PseudoColumnId> COMPARING_IN_CASE_INSENSITIVE_ORDER =
+    public static final Comparator<PseudoColumnId> CASE_INSENSITIVE_ORDER =
             Comparator.comparing(PseudoColumnId::getTableId, TableId.COMPARING_CASE_INSENSITIVE)
                     .thenComparing(PseudoColumnId::getColumnName, String.CASE_INSENSITIVE_ORDER);
 
-    public static final Comparator<PseudoColumnId> COMPARING_IN_NATURAL_ORDER =
+    public static final Comparator<PseudoColumnId> NATURAL_ORDER =
             Comparator.comparing(PseudoColumnId::getTableId, TableId.COMPARING_NATURAL)
                     .thenComparing(PseudoColumnId::getColumnName);
 

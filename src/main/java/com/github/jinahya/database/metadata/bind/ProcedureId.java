@@ -40,12 +40,12 @@ public final class ProcedureId implements MetadataTypeId<ProcedureId, Procedure>
     private static final long serialVersionUID = 227742014479297143L;
 
     public static final Comparator<ProcedureId> COMPARING_IN_CASE_INSENSITIVE =
-            Comparator.comparing(ProcedureId::getSchemaId, SchemaId.COMPARING_IN_CASE_INSENSITIVE_ORDER)
+            Comparator.comparing(ProcedureId::getSchemaId, SchemaId.CASE_INSENSITIVE_ORDER)
                     .thenComparing(ProcedureId::getProcedureName, CASE_INSENSITIVE_ORDER)
                     .thenComparing(ProcedureId::getSpecificName, CASE_INSENSITIVE_ORDER);
 
     public static final Comparator<ProcedureId> COMPARING_IN_NATURAL =
-            Comparator.comparing(ProcedureId::getSchemaId, SchemaId.COMPARING_IN_CASE_INSENSITIVE_ORDER)
+            Comparator.comparing(ProcedureId::getSchemaId, SchemaId.CASE_INSENSITIVE_ORDER)
                     .thenComparing(ProcedureId::getProcedureName, naturalOrder())
                     .thenComparing(ProcedureId::getSpecificName, naturalOrder());
 

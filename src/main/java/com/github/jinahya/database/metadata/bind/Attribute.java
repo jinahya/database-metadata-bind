@@ -39,8 +39,9 @@ import java.util.Optional;
  *
  * @author Jin Kwon &lt;jinahya_at_gmail.com&gt;
  * @see Context#getAttributes(String, String, String, String)
+ * @see NullableEnum
  */
-//@ChildOf(UDT.class)
+@ChildOf(UDT.class)
 @EqualsAndHashCode(callSuper = true)
 @ToString(callSuper = true)
 @Data
@@ -50,11 +51,55 @@ public class Attribute extends AbstractMetadataType {
 
     private static final long serialVersionUID = 1913681105410440186L;
 
-    public static final Comparator<Attribute> COMPARING_CASE_INSENSITIVE =
-            Comparator.comparing(Attribute::getAttributeId, AttributeId.COMPARING_CASE_INSENSITIVE);
+    public static final Comparator<Attribute> CASE_INSENSITIVE_ORDER =
+            Comparator.comparing(Attribute::getAttributeId, AttributeId.CASE_INSENSITIVE_ORDER);
 
-    public static final Comparator<Attribute> COMPARING_NATURAL =
+    public static final Comparator<Attribute> NATURAL_ORDER =
             Comparator.comparing(Attribute::getAttributeId, AttributeId.COMPARING_NATURAL);
+
+    public static final String COLUMN_LABEL_NULLABLE = "NULLABLE";
+
+    public enum NullableEnum implements _IntFieldEnum<NullableEnum> {
+
+        /**
+         * A value for {@link DatabaseMetaData#attributeNoNulls}({@value DatabaseMetaData#attributeNoNulls}).
+         */
+        ATTRIBUTE_NO_NULLS(DatabaseMetaData.attributeNoNulls),// 0
+
+        /**
+         * A value for {@link DatabaseMetaData#attributeNullable}({@value DatabaseMetaData#attributeNullable}).
+         */
+        ATTRIBUTE_NULLABLE(DatabaseMetaData.attributeNullable), // 1
+
+        /**
+         * A value for
+         * {@link DatabaseMetaData#attributeNullableUnknown}({@value DatabaseMetaData#attributeNullableUnknown}).
+         */
+        PSEUDO(DatabaseMetaData.attributeNullableUnknown) // 2
+        ;
+
+        /**
+         * Finds the value for specified {@link Attribute#COLUMN_LABEL_NULLABLE} attribute value.
+         *
+         * @param nullable the value of {@link Attribute#COLUMN_LABEL_NULLABLE} attribute to match.
+         * @return the value matched.
+         * @throws IllegalStateException when no value matched.
+         */
+        public static NullableEnum valueOfNullable(final int nullable) {
+            return _IntFieldEnum.valueOfFieldValue(NullableEnum.class, nullable);
+        }
+
+        NullableEnum(final int fieldValue) {
+            this.fieldValue = fieldValue;
+        }
+
+        @Override
+        public int fieldValueAsInt() {
+            return fieldValue;
+        }
+
+        private final int fieldValue;
+    }
 
     public static final String VALUE_IS_NULLABLE_YES = "YES";
 
@@ -110,7 +155,7 @@ public class Attribute extends AbstractMetadataType {
     @ColumnLabel("NUM_PREC_RADIX")
     private int numPrecRadix;
 
-    @ColumnLabel("NULLABLE")
+    @ColumnLabel(COLUMN_LABEL_NULLABLE)
     private int nullable;
 
     @NullableBySpecification

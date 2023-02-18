@@ -36,11 +36,11 @@ public final class TableId implements MetadataTypeId<TableId, Table> {
     private static final long serialVersionUID = -7614201161734063836L;
 
     public static final Comparator<TableId> COMPARING_CASE_INSENSITIVE =
-            Comparator.comparing(TableId::getSchemaId, SchemaId.COMPARING_IN_CASE_INSENSITIVE_ORDER)
+            Comparator.comparing(TableId::getSchemaId, SchemaId.CASE_INSENSITIVE_ORDER)
                     .thenComparing(TableId::getTableName, String.CASE_INSENSITIVE_ORDER);
 
     public static final Comparator<TableId> COMPARING_NATURAL =
-            Comparator.comparing(TableId::getSchemaId, SchemaId.COMPARING_IN_NATURAL_ORDER)
+            Comparator.comparing(TableId::getSchemaId, SchemaId.NATURAL_ORDER)
                     .thenComparing(TableId::getTableName);
 
     public static TableId of(final SchemaId schemaId, final String tableName) {

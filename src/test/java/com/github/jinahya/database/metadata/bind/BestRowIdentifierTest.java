@@ -20,9 +20,30 @@ package com.github.jinahya.database.metadata.bind;
  * #L%
  */
 
-class FunctionColumn_Test extends AbstractMetadataTypeTest<FunctionColumn> {
+import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Nested;
 
-    FunctionColumn_Test() {
-        super(FunctionColumn.class);
+class BestRowIdentifierTest extends AbstractMetadataTypeTest<BestRowIdentifier> {
+
+    BestRowIdentifierTest() {
+        super(BestRowIdentifier.class);
+    }
+
+    @DisplayName("PseudoColumnEnum")
+    @Nested
+    class PseudoColumnEnumTest extends _IntFieldEnumTest<BestRowIdentifier.PseudoColumnEnum> {
+
+        PseudoColumnEnumTest() {
+            super(BestRowIdentifier.PseudoColumnEnum.class);
+        }
+    }
+
+    @DisplayName("ScopeColumnEnum")
+    @Nested
+    class ScopeEnumTest extends _IntFieldEnumTest<BestRowIdentifier.ScopeEnum> {
+
+        ScopeEnumTest() {
+            super(BestRowIdentifier.ScopeEnum.class);
+        }
     }
 }

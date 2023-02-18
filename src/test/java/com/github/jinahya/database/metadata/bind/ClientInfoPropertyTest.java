@@ -20,9 +20,9 @@ package com.github.jinahya.database.metadata.bind;
  * #L%
  */
 
-class BestRowIdentifier_Test extends AbstractMetadataTypeTest<BestRowIdentifier> {
+class ClientInfoPropertyTest extends AbstractMetadataTypeTest<ClientInfoProperty> {
 
-    BestRowIdentifier_Test() {
-        super(BestRowIdentifier.class);
+    ClientInfoPropertyTest() {
+        super(ClientInfoProperty.class);
     }
 }

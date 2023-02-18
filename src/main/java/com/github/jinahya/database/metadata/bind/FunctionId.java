@@ -40,12 +40,12 @@ public final class FunctionId implements MetadataTypeId<FunctionId, Function> {
     private static final long serialVersionUID = 8614281252146063072L;
 
     public static final Comparator<FunctionId> COMPARING_CASE_INSENSITIVE =
-            Comparator.comparing(FunctionId::getSchemaId, SchemaId.COMPARING_IN_CASE_INSENSITIVE_ORDER)
+            Comparator.comparing(FunctionId::getSchemaId, SchemaId.CASE_INSENSITIVE_ORDER)
                     .thenComparing(FunctionId::getFunctionName, nullsFirst(String.CASE_INSENSITIVE_ORDER))
                     .thenComparing(FunctionId::getSpecificName, nullsFirst(String.CASE_INSENSITIVE_ORDER));
 
     public static final Comparator<FunctionId> COMPARING_NATURAL =
-            Comparator.comparing(FunctionId::getSchemaId, SchemaId.COMPARING_IN_NATURAL_ORDER)
+            Comparator.comparing(FunctionId::getSchemaId, SchemaId.NATURAL_ORDER)
                     .thenComparing(FunctionId::getFunctionName, nullsFirst(naturalOrder()))
                     .thenComparing(FunctionId::getSpecificName, nullsFirst(naturalOrder()));
 

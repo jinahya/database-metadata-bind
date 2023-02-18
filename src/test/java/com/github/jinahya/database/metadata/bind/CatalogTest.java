@@ -20,21 +20,9 @@ package com.github.jinahya.database.metadata.bind;
  * #L%
  */
 
-import org.junit.jupiter.api.DisplayName;
-import org.junit.jupiter.api.Nested;
+class CatalogTest extends AbstractMetadataTypeTest<Catalog> {
 
-class VersionColumn_Test extends AbstractMetadataTypeTest<VersionColumn> {
-
-    VersionColumn_Test() {
-        super(VersionColumn.class);
-    }
-
-    @DisplayName("PseudoColumnEnum")
-    @Nested
-    class PseudoColumnTest extends _IntFieldEnumTest<VersionColumn.PseudoColumnEnum> {
-
-        PseudoColumnTest() {
-            super(VersionColumn.PseudoColumnEnum.class);
-        }
+    CatalogTest() {
+        super(Catalog.class);
     }
 }

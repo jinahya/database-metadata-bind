@@ -169,16 +169,6 @@ final class ContextTests {
         }
         try {
             final var typeInfo = context.getTypeInfo();
-            {
-                final var databaseProductNames = Set.of(
-                        TestContainers_MySQL_IT.DATABASE_PRODUCT_NAME // https://bugs.mysql.com/bug.php?id=109931
-                );
-                if (!databaseProductNames.contains(databaseProductName)) {
-                    assertThat(typeInfo)
-                            .isSortedAccordingTo(TypeInfo.COMPARING_AS_SPECIFIED)
-                            .isSorted();
-                }
-            }
             typeInfo(context, typeInfo);
         } catch (final SQLException sqle) {
             thrown("failed; getTypeInfo", sqle);
@@ -202,8 +192,8 @@ final class ContextTests {
                 assertThat(attributes)
                         .doesNotContainNull()
                         .satisfiesAnyOf(
-                                l -> assertThat(l).isSortedAccordingTo(Attribute.COMPARING_CASE_INSENSITIVE),
-                                l -> assertThat(l).isSortedAccordingTo(Attribute.COMPARING_NATURAL)
+                                l -> assertThat(l).isSortedAccordingTo(Attribute.CASE_INSENSITIVE_ORDER),
+                                l -> assertThat(l).isSortedAccordingTo(Attribute.NATURAL_ORDER)
                         );
             }
         }
@@ -214,10 +204,8 @@ final class ContextTests {
             if (!databaseProductNames.contains(databaseProductName)) {
                 assertThat(attributes)
                         .extracting(Attribute::getAttributeId)
-                        .doesNotContainNull()
-                        .doesNotHaveDuplicates()
                         .satisfiesAnyOf(
-                                l -> assertThat(l).isSortedAccordingTo(AttributeId.COMPARING_CASE_INSENSITIVE),
+                                l -> assertThat(l).isSortedAccordingTo(AttributeId.CASE_INSENSITIVE_ORDER),
                                 l -> assertThat(l).isSortedAccordingTo(AttributeId.COMPARING_NATURAL)
                         );
             }
@@ -248,6 +236,13 @@ final class ContextTests {
         Objects.requireNonNull(context, "context is null");
         Objects.requireNonNull(bestRowIdentifier, "bestRowIdentifier is null");
         common(bestRowIdentifier);
+        {
+            final var value = BestRowIdentifier.ScopeEnum.valueOfScope(bestRowIdentifier.getScope());
+        }
+        {
+            final var value =
+                    BestRowIdentifier.PseudoColumnEnum.valueOfPseudoColumn(bestRowIdentifier.getPseudoColumn());
+        }
     }
 
     static void catalogs(final Context context, final List<? extends Catalog> catalogs) throws SQLException {
@@ -289,8 +284,8 @@ final class ContextTests {
                             .extracting(Schema::getSchemaId)
                             .satisfiesAnyOf(
                                     l -> assertThat(l)
-                                            .isSortedAccordingTo(SchemaId.COMPARING_IN_CASE_INSENSITIVE_ORDER),
-                                    l -> assertThat(l).isSortedAccordingTo(SchemaId.COMPARING_IN_NATURAL_ORDER)
+                                            .isSortedAccordingTo(SchemaId.CASE_INSENSITIVE_ORDER),
+                                    l -> assertThat(l).isSortedAccordingTo(SchemaId.NATURAL_ORDER)
                             )
                             .extracting(SchemaId::getCatalogId)
                             .satisfiesAnyOf(
@@ -371,6 +366,7 @@ final class ContextTests {
         Objects.requireNonNull(column, "column is null");
         common(column);
         assertThat(column.getColumnId()).isNotNull();
+        final var value = Column.NullableEnum.valueOfNullable(column.getNullable());
     }
 
     static void columnPrivileges(final Context context, final List<? extends ColumnPrivilege> columnPrivileges)
@@ -570,6 +566,7 @@ final class ContextTests {
         Objects.requireNonNull(functionColumn, "functionColumn is null");
         common(functionColumn);
         common(functionColumn.getFunctionColumnId());
+        final var columnType = FunctionColumn.ColumnTypeEnum.valueOfColumnType(functionColumn.getColumnType());
     }
 
     static void importedKeys(final Context context, final List<? extends ImportedKey> importedKeys)
@@ -909,10 +906,11 @@ final class ContextTests {
             thrown("failed; getPseudoColumns", sqle);
         }
         try {
-            final List<VersionColumn> versionColumns = context.getVersionColumns(table);
+            final var versionColumns = context.getVersionColumns(table);
             assertThat(versionColumns)
                     .extracting(v -> v.getColumnId(table))
                     .doesNotHaveDuplicates();
+            versionColumns.stream().map(vc -> vc.getColumnId(table)).forEach(ContextTests::common);
             versionColumns(context, versionColumns);
         } catch (final SQLException sqle) {
             thrown("failed; getVersionColumns", sqle);
@@ -972,7 +970,7 @@ final class ContextTests {
         Objects.requireNonNull(context, "context is null");
         Objects.requireNonNull(pseudoColumns, "pseudoColumns is null");
         assertThat(pseudoColumns)
-                .isSortedAccordingTo(PseudoColumn.COMPARING_IN_CASE_INSENSITIVE_ORDER);
+                .isSortedAccordingTo(PseudoColumn.CASE_INSENSITIVE_ORDER);
         for (final var pseudoColumn : pseudoColumns) {
             pseudoColumn(context, pseudoColumn);
         }
@@ -1047,6 +1045,16 @@ final class ContextTests {
     static void typeInfo(final Context context, final List<? extends TypeInfo> typeInfo) throws SQLException {
         Objects.requireNonNull(context, "context is null");
         Objects.requireNonNull(typeInfo, "typeInfo is null");
+        {
+            final var databaseProductNames = Set.of(
+                    TestContainers_MySQL_IT.DATABASE_PRODUCT_NAME // https://bugs.mysql.com/bug.php?id=109931
+            );
+            if (!databaseProductNames.contains(databaseProductName)) {
+                assertThat(typeInfo)
+                        .isSortedAccordingTo(TypeInfo.COMPARING_AS_SPECIFIED)
+                ;
+            }
+        }
         for (final var typeInfo_ : typeInfo) {
             typeInfo(context, typeInfo_);
         }
@@ -1056,6 +1064,12 @@ final class ContextTests {
         Objects.requireNonNull(context, "context is null");
         Objects.requireNonNull(typeInfo, "typeInfo is null");
         common(typeInfo);
+        {
+            final var value = TypeInfo.NullableEnum.valueOfNullable(typeInfo.getNullable());
+        }
+        {
+            final var value = TypeInfo.SearchableEnum.valueOfSearchable(typeInfo.getSearchable());
+        }
     }
 
     static void udts(final Context context, final List<? extends UDT> udts) throws SQLException {
@@ -1084,8 +1098,8 @@ final class ContextTests {
                         .doesNotContainNull()
                         .doesNotHaveDuplicates()
                         .satisfiesAnyOf(
-                                l -> assertThat(l).isSortedAccordingTo(UDTId.COMPARING_IN_CASE_INSENSITIVE_ORDER),
-                                l -> assertThat(l).isSortedAccordingTo(UDTId.COMPARING_IN_NATURAL_ORDER)
+                                l -> assertThat(l).isSortedAccordingTo(UDTId.CASE_INSENSITIVE_ORDER),
+                                l -> assertThat(l).isSortedAccordingTo(UDTId.NATURAL_ORDER)
                         );
             }
         }
@@ -1103,6 +1117,8 @@ final class ContextTests {
             final var attributes = context.getAttributes(udt, "%");
             assertThat(attributes)
                     .extracting(Attribute::getAttributeId)
+                    .doesNotContainNull()
+                    .doesNotHaveDuplicates()
                     .extracting(AttributeId::getUdtId)
                     .allMatch(udtId::equals);
             attributes(context, attributes);
@@ -1124,7 +1140,9 @@ final class ContextTests {
         Objects.requireNonNull(context, "context is null");
         Objects.requireNonNull(versionColumn, "versionColumn is null");
         common(versionColumn);
-        versionColumn.setPseudoColumnAsEnum(versionColumn.getPseudoColumnAsEnum());
+        {
+            final var value = VersionColumn.PseudoColumnEnum.valueOfPseudoColumn(versionColumn.getPseudoColumn());
+        }
     }
 
     private ContextTests() {

@@ -70,10 +70,10 @@ public class Schema extends AbstractMetadataType {
     }
 
     public static final Comparator<Schema> COMPARING_AS_SPECIFIED_CASE_INSENSITIVE =
-            Comparator.comparing(Schema::getSchemaId, SchemaId.COMPARING_IN_CASE_INSENSITIVE_ORDER);
+            Comparator.comparing(Schema::getSchemaId, SchemaId.CASE_INSENSITIVE_ORDER);
 
     public static final Comparator<Schema> COMPARING_AS_SPECIFIED_NATURAL =
-            Comparator.comparing(Schema::getSchemaId, SchemaId.COMPARING_IN_NATURAL_ORDER);
+            Comparator.comparing(Schema::getSchemaId, SchemaId.NATURAL_ORDER);
 
     public static final String COLUMN_LABEL_TABLE_CATALOG = "TABLE_CATALOG";
 

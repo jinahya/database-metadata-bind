@@ -61,12 +61,12 @@ public class Function
     private static final long serialVersionUID = -3318947900237453301L;
 
     public static final Comparator<Function> COMPARING_CASE_INSENSITIVE =
-            Comparator.comparing(Function::getSchemaId, SchemaId.COMPARING_IN_CASE_INSENSITIVE_ORDER)
+            Comparator.comparing(Function::getSchemaId, SchemaId.CASE_INSENSITIVE_ORDER)
                     .thenComparing(Function::getFunctionName, nullsFirst(CASE_INSENSITIVE_ORDER))
                     .thenComparing(Function::getSpecificName, nullsFirst(CASE_INSENSITIVE_ORDER));
 
     public static final Comparator<Function> COMPARING_NATURAL =
-            Comparator.comparing(Function::getSchemaId, SchemaId.COMPARING_IN_NATURAL_ORDER)
+            Comparator.comparing(Function::getSchemaId, SchemaId.NATURAL_ORDER)
                     .thenComparing(Function::getFunctionName, nullsFirst(naturalOrder()))
                     .thenComparing(Function::getSpecificName, nullsFirst(naturalOrder()));
 

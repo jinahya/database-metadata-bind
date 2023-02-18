@@ -31,7 +31,6 @@ import java.sql.DatabaseMetaData;
 import java.util.Arrays;
 import java.util.Comparator;
 import java.util.List;
-import java.util.Objects;
 
 /**
  * A class for binding results of {@link DatabaseMetaData#getBestRowIdentifier(String, String, String, int, boolean)}
@@ -39,6 +38,8 @@ import java.util.Objects;
  *
  * @author Jin Kwon &lt;jinahya_at_gmail.com&gt;
  * @see Context#getBestRowIdentifier(String, String, String, int, boolean)
+ * @see PseudoColumnEnum
+ * @see ScopeEnum
  */
 @ChildOf(Table.class)
 @EqualsAndHashCode(callSuper = true)
@@ -58,21 +59,106 @@ public class BestRowIdentifier extends AbstractMetadataType {
 
     public static final String COLUMN_LABEL_SCOPE = "SCOPE";
 
+    /**
+     * Constants for {@link #COLUMN_LABEL_SCOPE} column values.
+     *
+     * @author Jin Kwon &lt;onacit_at_gmail.com&gt;
+     */
+    public enum ScopeEnum implements _IntFieldEnum<ScopeEnum> {
+
+        /**
+         * A value for {@link DatabaseMetaData#bestRowTemporary}({@value DatabaseMetaData#bestRowTemporary}).
+         */
+        BEST_ROW_TEMPORARY(DatabaseMetaData.bestRowTemporary),// 0
+
+        /**
+         * A value for {@link DatabaseMetaData#bestRowTransaction}({@value DatabaseMetaData#bestRowTransaction}).
+         */
+        BEST_ROW_TRANSACTION(DatabaseMetaData.bestRowTransaction), // 1
+
+        /**
+         * A value for {@link DatabaseMetaData#bestRowSession}({@value DatabaseMetaData#bestRowSession}).
+         */
+        BEST_ROW_SESSION(DatabaseMetaData.bestRowSession) // 2
+        ;
+
+        /**
+         * Finds the value for specified {@link BestRowIdentifier#COLUMN_LABEL_SCOPE} column value.
+         *
+         * @param scope the value of {@link BestRowIdentifier#COLUMN_LABEL_SCOPE} column to match.
+         * @return the value matched.
+         * @throws IllegalStateException when no value matched.
+         */
+        public static ScopeEnum valueOfScope(final int scope) {
+            return _IntFieldEnum.valueOfFieldValue(ScopeEnum.class, scope);
+        }
+
+        ScopeEnum(final int fieldValue) {
+            this.fieldValue = fieldValue;
+        }
+
+        @Override
+        public int fieldValueAsInt() {
+            return fieldValue;
+        }
+
+        private final int fieldValue;
+    }
+
+    public static final String COLUMN_LABEL_PSEUDO_COLUMN = "PSEUDO_COLUMN";
+
+    /**
+     * Constants for {@link #COLUMN_LABEL_PSEUDO_COLUMN} column values.
+     *
+     * @author Jin Kwon &lt;onacit_at_gmail.com&gt;
+     */
+    public enum PseudoColumnEnum implements _IntFieldEnum<PseudoColumnEnum> {
+
+        /**
+         * A value for {@link DatabaseMetaData#bestRowUnknown}({@value DatabaseMetaData#bestRowUnknown}).
+         */
+        BEST_ROW_UNKNOWN(DatabaseMetaData.bestRowUnknown),// 0
+
+        /**
+         * A value for {@link DatabaseMetaData#bestRowNotPseudo}({@value DatabaseMetaData#bestRowNotPseudo}).
+         */
+        BEST_ROW_NOT_PSEUDO(DatabaseMetaData.bestRowNotPseudo), // 1
+
+        /**
+         * A value for {@link DatabaseMetaData#bestRowPseudo}({@value DatabaseMetaData#bestRowPseudo}).
+         */
+        BEST_ROW_PSEUDO(DatabaseMetaData.bestRowPseudo) // 2
+        ;
+
+        /**
+         * Finds the value for specified {@link BestRowIdentifier#COLUMN_LABEL_PSEUDO_COLUMN} column value.
+         *
+         * @param pseudoColumn the {@link BestRowIdentifier#COLUMN_LABEL_PSEUDO_COLUMN} column value to match.
+         * @return the value matched.
+         * @throws IllegalStateException when no value matched.
+         */
+        public static PseudoColumnEnum valueOfPseudoColumn(final int pseudoColumn) {
+            return _IntFieldEnum.valueOfFieldValue(PseudoColumnEnum.class, pseudoColumn);
+        }
+
+        PseudoColumnEnum(final int fieldValue) {
+            this.fieldValue = fieldValue;
+        }
+
+        @Override
+        public int fieldValueAsInt() {
+            return fieldValue;
+        }
+
+        private final int fieldValue;
+    }
+
     public static List<Integer> scopes() {
         return Arrays.asList(
                 DatabaseMetaData.bestRowTemporary,
                 DatabaseMetaData.bestRowTransaction,
                 DatabaseMetaData.bestRowSession
         );
-    }
-
-    public BestRowIdentifierScope getScopeAsEnum() {
-        return BestRowIdentifierScope.valueOfScope(getScope());
-    }
-
-    public void setScopeAsEnum(final BestRowIdentifierScope scopeAsEnum) {
-        Objects.requireNonNull(scopeAsEnum, "scopeAsEnum is null");
-        setScope(scopeAsEnum.fieldValueAsInt());
     }
 
     @ColumnLabel(COLUMN_LABEL_SCOPE)
@@ -99,6 +185,6 @@ public class BestRowIdentifier extends AbstractMetadataType {
     @ColumnLabel("DECIMAL_DIGITS")
     private Integer decimalDigits;
 
-    @ColumnLabel("PSEUDO_COLUMN")
+    @ColumnLabel(COLUMN_LABEL_PSEUDO_COLUMN)
     private int pseudoColumn;
 }

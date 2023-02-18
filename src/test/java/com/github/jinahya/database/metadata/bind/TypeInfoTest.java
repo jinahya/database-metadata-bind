@@ -20,9 +20,30 @@ package com.github.jinahya.database.metadata.bind;
  * #L%
  */
 
+import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Nested;
+
 class TypeInfoTest extends AbstractMetadataTypeTest<TypeInfo> {
 
     TypeInfoTest() {
         super(TypeInfo.class);
+    }
+
+    @DisplayName("NullableEnum")
+    @Nested
+    class NullableEnumTest extends _IntFieldEnumTest<TypeInfo.NullableEnum> {
+
+        NullableEnumTest() {
+            super(TypeInfo.NullableEnum.class);
+        }
+    }
+
+    @DisplayName("SearchableEnum")
+    @Nested
+    class SearchableEnumTest extends _IntFieldEnumTest<TypeInfo.SearchableEnum> {
+
+        SearchableEnumTest() {
+            super(TypeInfo.SearchableEnum.class);
+        }
     }
 }

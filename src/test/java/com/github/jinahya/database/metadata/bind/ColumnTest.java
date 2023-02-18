@@ -20,9 +20,21 @@ package com.github.jinahya.database.metadata.bind;
  * #L%
  */
 
-class ClientInfoProperty_Test extends AbstractMetadataTypeTest<ClientInfoProperty> {
+import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Nested;
 
-    ClientInfoProperty_Test() {
-        super(ClientInfoProperty.class);
+class ColumnTest extends AbstractMetadataTypeTest<Column> {
+
+    ColumnTest() {
+        super(Column.class);
+    }
+
+    @DisplayName("NullableEnum")
+    @Nested
+    class NullableEnumTest extends _IntFieldEnumTest<Column.NullableEnum> {
+
+        NullableEnumTest() {
+            super(Column.NullableEnum.class);
+        }
     }
 }

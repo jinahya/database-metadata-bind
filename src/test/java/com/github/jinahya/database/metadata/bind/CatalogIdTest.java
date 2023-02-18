@@ -1,8 +1,8 @@
 package com.github.jinahya.database.metadata.bind;
 
-class CatalogId_Test extends MetadataTypeIdTest<CatalogId, Catalog> {
+class CatalogIdTest extends MetadataTypeIdTest<CatalogId, Catalog> {
 
-    CatalogId_Test() {
+    CatalogIdTest() {
         super(CatalogId.class, Catalog.class);
     }
 }

@@ -51,21 +51,64 @@ public class VersionColumn extends AbstractMetadataType {
 
     public static final String COLUMN_LABEL_PSEUDO_COLUMN = "PSEUDO_COLUMN";
 
-    public ColumnId getColumnId(final Table table) {
-        Objects.requireNonNull(table, "table is null");
+    /**
+     * Constants for {@link #COLUMN_LABEL_PSEUDO_COLUMN} column values.
+     *
+     * @author Jin Kwon &lt;onacit_at_gmail.com&gt;
+     */
+    public enum PseudoColumnEnum implements _IntFieldEnum<PseudoColumnEnum> {
+
+        /**
+         * A value for {@link DatabaseMetaData#versionColumnUnknown}({@value DatabaseMetaData#versionColumnUnknown}).
+         */
+        VERSION_COLUMN_UNKNOWN(DatabaseMetaData.versionColumnUnknown),// 0
+
+        /**
+         * A value for
+         * {@link DatabaseMetaData#versionColumnNotPseudo}({@value DatabaseMetaData#versionColumnNotPseudo}).
+         */
+        VERSION_COLUMN_NOT_PSEUDO(DatabaseMetaData.versionColumnNotPseudo), // 1
+
+        /**
+         * A value for {@link DatabaseMetaData#versionColumnPseudo}({@value DatabaseMetaData#versionColumnPseudo}).
+         */
+        VERSION_COLUMN_PSEUDO(DatabaseMetaData.versionColumnPseudo) // 2
+        ;
+
+        /**
+         * Finds the value for specified {@link VersionColumn#COLUMN_LABEL_PSEUDO_COLUMN} column value.
+         *
+         * @param pseudoColumn the value of {@link VersionColumn#COLUMN_LABEL_PSEUDO_COLUMN} column to match.
+         * @return the value matched.
+         * @throws IllegalStateException when no value matched.
+         */
+        public static PseudoColumnEnum valueOfPseudoColumn(final int pseudoColumn) {
+            return _IntFieldEnum.valueOfFieldValue(PseudoColumnEnum.class, pseudoColumn);
+        }
+
+        PseudoColumnEnum(final int fieldValue) {
+            this.fieldValue = fieldValue;
+        }
+
+        @Override
+        public int fieldValueAsInt() {
+            return fieldValue;
+        }
+
+        private final int fieldValue;
+    }
+
+    public ColumnId getColumnId(final TableId tableId) {
+        Objects.requireNonNull(tableId, "tableId is null");
         return ColumnId.of(
-                table.getTableId(),
+                tableId,
                 getColumnName()
         );
     }
 
-    public VersionColumnPseudoColumn getPseudoColumnAsEnum() {
-        return VersionColumnPseudoColumn.valueOfPseudoColumn(getPseudoColumn());
-    }
-
-    public void setPseudoColumnAsEnum(final VersionColumnPseudoColumn pseudoColumnAsEnum) {
-        Objects.requireNonNull(pseudoColumnAsEnum, "pseudoColumnAsEnum is null");
-        setPseudoColumn(pseudoColumnAsEnum.fieldValueAsInt());
+    public ColumnId getColumnId(final Table table) {
+        Objects.requireNonNull(table, "table is null");
+        return getColumnId(table.getTableId());
     }
 
     @NotUsedBySpecification

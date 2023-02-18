@@ -36,12 +36,12 @@ public final class AttributeId implements MetadataTypeId<AttributeId, Attribute>
 
     private static final long serialVersionUID = 7221973324274278465L;
 
-    public static final Comparator<AttributeId> COMPARING_CASE_INSENSITIVE =
-            Comparator.comparing(AttributeId::getUdtId, UDTId.COMPARING_IN_CASE_INSENSITIVE_ORDER)
+    public static final Comparator<AttributeId> CASE_INSENSITIVE_ORDER =
+            Comparator.comparing(AttributeId::getUdtId, UDTId.CASE_INSENSITIVE_ORDER)
                     .thenComparingInt(AttributeId::getOrdinalPosition);
 
     public static final Comparator<AttributeId> COMPARING_NATURAL =
-            Comparator.comparing(AttributeId::getUdtId, UDTId.COMPARING_IN_NATURAL_ORDER)
+            Comparator.comparing(AttributeId::getUdtId, UDTId.NATURAL_ORDER)
                     .thenComparingInt(AttributeId::getOrdinalPosition);
 
     static AttributeId of(final UDTId udtId, final String attrName, final int ordinalPosition) {

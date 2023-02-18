@@ -32,7 +32,6 @@ import lombok.experimental.SuperBuilder;
 
 import java.sql.DatabaseMetaData;
 import java.util.Comparator;
-import java.util.Objects;
 import java.util.Optional;
 
 /**
@@ -40,6 +39,7 @@ import java.util.Optional;
  *
  * @author Jin Kwon &lt;jinahya_at_gmail.com&gt;
  * @see Context#getColumns(String, String, String, String)
+ * @see NullableEnum
  */
 //@ParentOf(ColumnPrivilege.class)
 @ChildOf(Table.class)
@@ -68,6 +68,52 @@ public class Column extends AbstractMetadataType {
 
     public static final String COLUMN_LABEL_NULLABLE = "NULLABLE";
 
+    /**
+     * Constants for {@link #COLUMN_LABEL_NULLABLE} column values.
+     *
+     * @author Jin Kwon &lt;onacit_at_gmail.com&gt;
+     */
+    public enum NullableEnum implements _IntFieldEnum<NullableEnum> {
+
+        /**
+         * A value for {@link DatabaseMetaData#columnNoNulls}({@value DatabaseMetaData#columnNoNulls}).
+         */
+        COLUMN_NO_NULLS(DatabaseMetaData.columnNoNulls),// 0
+
+        /**
+         * A value for {@link DatabaseMetaData#columnNullable}({@value DatabaseMetaData#columnNullable}).
+         */
+        COLUMN_NULLABLE(DatabaseMetaData.columnNullable), // 1
+
+        /**
+         * A value for {@link DatabaseMetaData#columnNullableUnknown}({@value DatabaseMetaData#columnNullableUnknown}).
+         */
+        PSEUDO(DatabaseMetaData.columnNullableUnknown) // 2
+        ;
+
+        /**
+         * Finds the value for specified {@link Column#COLUMN_LABEL_NULLABLE} column value.
+         *
+         * @param nullable the value of {@link Column#COLUMN_LABEL_NULLABLE} column to match.
+         * @return the value matched.
+         * @throws IllegalStateException when no value matched.
+         */
+        public static NullableEnum valueOfNullable(final int nullable) {
+            return _IntFieldEnum.valueOfFieldValue(NullableEnum.class, nullable);
+        }
+
+        NullableEnum(final int fieldValue) {
+            this.fieldValue = fieldValue;
+        }
+
+        @Override
+        public int fieldValueAsInt() {
+            return fieldValue;
+        }
+
+        private final int fieldValue;
+    }
+
     public static final String COLUMN_LABEL_IS_AUTOINCREMENT = "IS_AUTOINCREMENT";
 
     public static final String COLUMN_LABEL_IS_GENERATEDCOLUMN = "IS_GENERATEDCOLUMN";
@@ -88,15 +134,6 @@ public class Column extends AbstractMetadataType {
 
     String getTableSchemNonNull() {
         return Optional.ofNullable(getTableSchem()).orElse(Schema.COLUMN_VALUE_TABLE_SCHEM_EMPTY);
-    }
-
-    public ColumnNullable getNullableAsEnum() {
-        return ColumnNullable.valueOfNullable(getNullable());
-    }
-
-    public void setNullableAsEnum(final ColumnNullable nullableAsEnum) {
-        Objects.requireNonNull(nullableAsEnum, "nullableAsEnum is null");
-        setNullable(nullableAsEnum.fieldValueAsInt());
     }
 
     @NullableBySpecification
