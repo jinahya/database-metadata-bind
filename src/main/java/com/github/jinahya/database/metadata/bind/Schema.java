@@ -56,10 +56,24 @@ public class Schema extends AbstractMetadataType {
 
     private static final long serialVersionUID = 7457236468401244963L;
 
-    public static final Comparator<Schema> COMPARING_AS_SPECIFIED =
-//            Comparator.comparing(Schema::getTableCatalog, Comparator.nullsFirst(Comparator.naturalOrder()))
-//                    .thenComparing(Schema::getTableSchem, Comparator.nullsFirst(Comparator.naturalOrder()));
-            Comparator.comparing(Schema::getSchemaId);
+    /**
+     * Returns a new instance whose {@code tableCatalog} is {@value Catalog#COLUMN_VALUE_TABLE_CAT_EMPTY} and whose
+     * {@code tableSchem} is {@value #COLUMN_VALUE_TABLE_SCHEM_EMPTY}.
+     *
+     * @return a new virtual instance.
+     */
+    public static Schema newVirtualInstance() {
+        return builder()
+                .tableCatalog(Catalog.COLUMN_VALUE_TABLE_CAT_EMPTY)
+                .tableSchem(Schema.COLUMN_VALUE_TABLE_SCHEM_EMPTY)
+                .build();
+    }
+
+    public static final Comparator<Schema> COMPARING_AS_SPECIFIED_CASE_INSENSITIVE =
+            Comparator.comparing(Schema::getSchemaId, SchemaId.COMPARING_IN_CASE_INSENSITIVE_ORDER);
+
+    public static final Comparator<Schema> COMPARING_AS_SPECIFIED_NATURAL =
+            Comparator.comparing(Schema::getSchemaId, SchemaId.COMPARING_IN_NATURAL_ORDER);
 
     public static final String COLUMN_LABEL_TABLE_CATALOG = "TABLE_CATALOG";
 
@@ -69,6 +83,10 @@ public class Schema extends AbstractMetadataType {
 
     public SchemaId getSchemaId() {
         return SchemaId.of(getTableCatalogNonNull(), getTableSchem());
+    }
+
+    public CatalogId getCatalogId() {
+        return getSchemaId().getCatalogId();
     }
 
     String getTableCatalogNonNull() {

@@ -36,8 +36,12 @@ public final class AttributeId implements MetadataTypeId<AttributeId, Attribute>
 
     private static final long serialVersionUID = 7221973324274278465L;
 
-    private static final Comparator<AttributeId> COMPARATOR =
-            Comparator.comparing(AttributeId::getUdtId)
+    public static final Comparator<AttributeId> COMPARING_CASE_INSENSITIVE =
+            Comparator.comparing(AttributeId::getUdtId, UDTId.COMPARING_IN_CASE_INSENSITIVE_ORDER)
+                    .thenComparingInt(AttributeId::getOrdinalPosition);
+
+    public static final Comparator<AttributeId> COMPARING_NATURAL =
+            Comparator.comparing(AttributeId::getUdtId, UDTId.COMPARING_IN_NATURAL_ORDER)
                     .thenComparingInt(AttributeId::getOrdinalPosition);
 
     static AttributeId of(final UDTId udtId, final String attrName, final int ordinalPosition) {
@@ -65,11 +69,6 @@ public final class AttributeId implements MetadataTypeId<AttributeId, Attribute>
     public static AttributeId of(final String typeCat, final String typeSchem, final String typeName,
                                  final String attrName) {
         return of(typeCat, typeSchem, typeName, attrName, 1);
-    }
-
-    @Override
-    public int compareTo(final AttributeId o) {
-        return COMPARATOR.compare(this, Objects.requireNonNull(o, "o is null"));
     }
 
     private final UDTId udtId;

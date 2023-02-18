@@ -31,33 +31,34 @@ import java.util.Objects;
 @Data
 @RequiredArgsConstructor(access = AccessLevel.PRIVATE)
 @SuperBuilder(toBuilder = true)
-public final class FunctionColumnId implements MetadataTypeId<FunctionColumnId, FunctionColumn> {
+final class FunctionColumnId implements MetadataTypeId<FunctionColumnId, FunctionColumn> {
 
     private static final long serialVersionUID = 7221973324274278465L;
 
-    private static final Comparator<FunctionColumnId> COMPARATOR =
-            Comparator.comparing(FunctionColumnId::getFunctionId);
+    public static final Comparator<FunctionColumnId> COMPARING_CASE_INSENSITIVE =
+            Comparator.comparing(FunctionColumnId::getFunctionId, FunctionId.COMPARING_CASE_INSENSITIVE);
 
-    public static FunctionColumnId of(final FunctionId functionId, final String columnName) {
+    public static final Comparator<FunctionColumnId> COMPARING_NATURAL =
+            Comparator.comparing(FunctionColumnId::getFunctionId, FunctionId.COMPARING_NATURAL);
+
+    public static FunctionColumnId of(final FunctionId functionId, final String columnName, final int columnType) {
         Objects.requireNonNull(functionId, "functionId is null");
         Objects.requireNonNull(columnName, "columnName is null");
         return builder()
                 .functionId(functionId)
                 .columnName(columnName)
+                .columnType(columnType)
                 .build();
     }
 
     public static FunctionColumnId of(final String functionCat, final String functionSchem, final String functionName,
-                                      final String specificName, final String columnName) {
-        return of(FunctionId.of(functionCat, functionSchem, functionName, specificName), columnName);
-    }
-
-    @Override
-    public int compareTo(final FunctionColumnId o) {
-        return COMPARATOR.compare(this, Objects.requireNonNull(o, "o is null"));
+                                      final String specificName, final String columnName, final int columnType) {
+        return of(FunctionId.of(functionCat, functionSchem, functionName, specificName), columnName, columnType);
     }
 
     private final FunctionId functionId;
 
     private final String columnName;
+
+    private final int columnType;
 }

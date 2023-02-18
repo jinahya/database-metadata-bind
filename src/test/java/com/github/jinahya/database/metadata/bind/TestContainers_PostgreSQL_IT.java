@@ -22,6 +22,7 @@ package com.github.jinahya.database.metadata.bind;
 
 import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.Disabled;
+import org.junit.jupiter.api.Test;
 import org.testcontainers.containers.PostgreSQLContainer;
 import org.testcontainers.junit.jupiter.Container;
 import org.testcontainers.junit.jupiter.Testcontainers;
@@ -52,5 +53,17 @@ class TestContainers_PostgreSQL_IT extends TestContainers_$_IT {
         final var user = CONTAINER.getUsername();
         final var password = CONTAINER.getPassword();
         return DriverManager.getConnection(url, user, password);
+    }
+
+    @Test
+    void functionColumnId() throws SQLException {
+        try (var connection = connect()) {
+            final var context = Context.newInstance(connection);
+            final var functionColumns =
+                    context.getFunctionColumns(null, "pg_catalog", "pg_create_logical_replication_slot", "%");
+            functionColumns.forEach(fc -> {
+                log.debug("functionColumn: {}", fc);
+            });
+        }
     }
 }

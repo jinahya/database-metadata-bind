@@ -49,8 +49,11 @@ public class PseudoColumn extends AbstractMetadataType {
 
     private static final long serialVersionUID = -5612575879670895510L;
 
-    public static final Comparator<PseudoColumn> COMPARING_AS_SPECIFIED =
-            Comparator.comparing(PseudoColumn::getPseudoColumnId);
+    public static final Comparator<PseudoColumn> COMPARING_IN_CASE_INSENSITIVE_ORDER =
+            Comparator.comparing(PseudoColumn::getPseudoColumnId, PseudoColumnId.COMPARING_IN_CASE_INSENSITIVE_ORDER);
+
+    public static final Comparator<PseudoColumn> COMPARING_IN_NATURAL_ORDER =
+            Comparator.comparing(PseudoColumn::getPseudoColumnId, PseudoColumnId.COMPARING_IN_NATURAL_ORDER);
 
     private PseudoColumnId getPseudoColumnId() {
         return PseudoColumnId.of(

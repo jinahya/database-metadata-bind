@@ -33,6 +33,10 @@ import java.sql.DatabaseMetaData;
 import java.util.Comparator;
 import java.util.Optional;
 
+import static java.lang.String.CASE_INSENSITIVE_ORDER;
+import static java.util.Comparator.naturalOrder;
+import static java.util.Comparator.nullsFirst;
+
 /**
  * A class for binding results of {@link DatabaseMetaData#getFunctionColumns(String, String, String, String)} method.
  *
@@ -50,10 +54,15 @@ public class FunctionColumn
 
     private static final long serialVersionUID = -7445156446214062680L;
 
-    public static final Comparator<FunctionColumn> COMPARING_AS_SPECIFIED =
-            Comparator.comparing(FunctionColumn::getSchemaId)
-                    .thenComparing(FunctionColumn::getFunctionName)
-                    .thenComparing(FunctionColumn::getSpecificName);
+    public static final Comparator<FunctionColumn> COMPARING_CASE_INSENSITIVE =
+            Comparator.comparing(FunctionColumn::getSchemaId, SchemaId.COMPARING_IN_CASE_INSENSITIVE_ORDER)
+                    .thenComparing(FunctionColumn::getFunctionName, nullsFirst(CASE_INSENSITIVE_ORDER))
+                    .thenComparing(FunctionColumn::getSpecificName, nullsFirst(CASE_INSENSITIVE_ORDER));
+
+    public static final Comparator<FunctionColumn> COMPARING_NATURAL =
+            Comparator.comparing(FunctionColumn::getSchemaId, SchemaId.COMPARING_IN_NATURAL_ORDER)
+                    .thenComparing(FunctionColumn::getFunctionName, nullsFirst(naturalOrder()))
+                    .thenComparing(FunctionColumn::getSpecificName, nullsFirst(naturalOrder()));
 
     public static final String COLUMN_LABEL_FUNCTION_CAT = "FUNCTION_CAT";
 
@@ -75,7 +84,8 @@ public class FunctionColumn
                 getFunctionSchemNonNull(),
                 getFunctionName(),
                 getSpecificName(),
-                getColumnName()
+                getColumnName(),
+                getColumnType()
         );
     }
 

@@ -35,6 +35,8 @@ import static java.sql.DriverManager.getConnection;
 @Slf4j
 class Memory_H2_Test extends Memory_$_Test {
 
+    static final String DATABASE_PRODUCT_NAME = "H2";
+
     private static final String DRIVER_NAME = "org.h2.Driver";
 
     private static final Class<?> DRIVER_CLASS;

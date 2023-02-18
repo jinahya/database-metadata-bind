@@ -35,9 +35,13 @@ public final class SchemaId implements MetadataTypeId<SchemaId, Schema> {
 
     private static final long serialVersionUID = -9112917204279422378L;
 
-    private static final Comparator<SchemaId> COMPARATOR =
-            Comparator.comparing(SchemaId::getCatalogId)
-                    .thenComparing(SchemaId::getTableSchem, Comparator.nullsFirst(String.CASE_INSENSITIVE_ORDER));
+    public static final Comparator<SchemaId> COMPARING_IN_CASE_INSENSITIVE_ORDER =
+            Comparator.comparing(SchemaId::getCatalogId, CatalogId.COMPARING_IN_CASE_INSENSITIVE_ORDER)
+                    .thenComparing(SchemaId::getTableSchem, String.CASE_INSENSITIVE_ORDER);
+
+    public static final Comparator<SchemaId> COMPARING_IN_NATURAL_ORDER =
+            Comparator.comparing(SchemaId::getCatalogId, CatalogId.COMPARING_IN_NATURAL_ORDER)
+                    .thenComparing(SchemaId::getTableSchem, Comparator.naturalOrder());
 
     public static SchemaId of(final CatalogId catalogId, final String tableSchem) {
         Objects.requireNonNull(catalogId, "catalogId is null");
@@ -50,11 +54,6 @@ public final class SchemaId implements MetadataTypeId<SchemaId, Schema> {
 
     public static SchemaId of(final String tableCatalog, final String tableSchem) {
         return of(CatalogId.of(tableCatalog), tableSchem);
-    }
-
-    @Override
-    public int compareTo(final SchemaId o) {
-        return COMPARATOR.compare(this, Objects.requireNonNull(o, "o is null"));
     }
 
     private final CatalogId catalogId;

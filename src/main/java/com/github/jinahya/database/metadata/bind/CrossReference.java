@@ -46,8 +46,12 @@ public class CrossReference
 
     private static final long serialVersionUID = -5343386346721125961L;
 
-    public static final Comparator<CrossReference> COMPARING_AS_SPECIFIED =
-            Comparator.comparing(CrossReference::getFktableId)
+    public static final Comparator<CrossReference> COMPARING_CASE_INSENSITIVE =
+            Comparator.comparing(CrossReference::getFktableId, TableId.COMPARING_CASE_INSENSITIVE)
+                    .thenComparingInt(CrossReference::getKeySeq);
+
+    public static final Comparator<CrossReference> COMPARING_NATURAL =
+            Comparator.comparing(CrossReference::getFktableId, TableId.COMPARING_NATURAL)
                     .thenComparingInt(CrossReference::getKeySeq);
 
     public static final String COLUMN_LABEL_UPDATE_RULE = "UPDATE_RULE";

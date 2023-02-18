@@ -35,10 +35,13 @@ public final class ProcedureColumnId implements MetadataTypeId<ProcedureColumnId
 
     private static final long serialVersionUID = 7459854669925402253L;
 
-    private static final Comparator<ProcedureColumnId> COMPARATOR =
-            Comparator.comparing(ProcedureColumnId::getProcedureId)
-                    .thenComparing(ProcedureColumnId::getColumnName,
-                                   Comparator.nullsFirst(String.CASE_INSENSITIVE_ORDER));
+    public static final Comparator<ProcedureColumnId> COMPARING_IN_CASE_INSENSITIVE_ORDER =
+            Comparator.comparing(ProcedureColumnId::getProcedureId, ProcedureId.COMPARING_IN_CASE_INSENSITIVE)
+                    .thenComparing(ProcedureColumnId::getColumnName, String.CASE_INSENSITIVE_ORDER);
+
+    public static final Comparator<ProcedureColumnId> COMPARING_IN_NATURAL_ORDER =
+            Comparator.comparing(ProcedureColumnId::getProcedureId, ProcedureId.COMPARING_IN_NATURAL)
+                    .thenComparing(ProcedureColumnId::getColumnName);
 
     public static ProcedureColumnId of(final ProcedureId procedureId, final String columnName) {
         return builder()
@@ -51,11 +54,6 @@ public final class ProcedureColumnId implements MetadataTypeId<ProcedureColumnId
                                        final String procedureName, final String specifiedName,
                                        final String columnName) {
         return of(ProcedureId.of(procedureCat, procedureSchem, procedureName, specifiedName), columnName);
-    }
-
-    @Override
-    public int compareTo(final ProcedureColumnId o) {
-        return COMPARATOR.compare(this, Objects.requireNonNull(o, "o is null"));
     }
 
     private final ProcedureId procedureId;

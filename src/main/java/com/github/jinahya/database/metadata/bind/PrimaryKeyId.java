@@ -36,13 +36,13 @@ public final class PrimaryKeyId implements MetadataTypeId<PrimaryKeyId, PrimaryK
 
     private static final long serialVersionUID = -111977405695306679L;
 
-    private static final Comparator<PrimaryKeyId> COMPARING_AS_SPECIFIED =
-            Comparator.comparing(PrimaryKeyId::getTableId)
-                    .thenComparing(PrimaryKeyId::getColumnName, Comparator.nullsFirst(String.CASE_INSENSITIVE_ORDER));
+    public static final Comparator<PrimaryKeyId> COMPARING_CASE_INSENSITIVE =
+            Comparator.comparing(PrimaryKeyId::getTableId, TableId.COMPARING_CASE_INSENSITIVE)
+                    .thenComparing(PrimaryKeyId::getColumnName, String.CASE_INSENSITIVE_ORDER);
 
-    private static final Comparator<PrimaryKeyId> COMPARING_KEY_SEQ =
-            Comparator.comparing(PrimaryKeyId::getTableId)
-                    .thenComparingInt(PrimaryKeyId::getKeySeq);
+    public static final Comparator<PrimaryKeyId> COMPARING_NATURAL =
+            Comparator.comparing(PrimaryKeyId::getTableId, TableId.COMPARING_NATURAL)
+                    .thenComparing(PrimaryKeyId::getColumnName);
 
     static PrimaryKeyId of(final TableId tableId, final String columName, final int keySeq) {
         Objects.requireNonNull(tableId, "tableId is null");
@@ -69,11 +69,6 @@ public final class PrimaryKeyId implements MetadataTypeId<PrimaryKeyId, PrimaryK
     public static PrimaryKeyId of(final String tableCat, final String tableSchem, final String tableName,
                                   final String columnName) {
         return of(tableCat, tableSchem, tableName, columnName, 1);
-    }
-
-    @Override
-    public int compareTo(final PrimaryKeyId o) {
-        return COMPARING_AS_SPECIFIED.compare(this, Objects.requireNonNull(o, "o is null"));
     }
 
     private final TableId tableId;

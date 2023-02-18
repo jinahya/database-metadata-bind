@@ -35,11 +35,17 @@ public final class UDTId implements MetadataTypeId<UDTId, UDT> {
 
     private static final long serialVersionUID = 5548844214174261338L;
 
-    private static final Comparator<UDTId> COMPARATOR =
-            Comparator.comparing(UDTId::getSchemaId)
-                    .thenComparing(UDTId::getTypeName, Comparator.nullsFirst(String.CASE_INSENSITIVE_ORDER));
+    public static final Comparator<UDTId> COMPARING_IN_CASE_INSENSITIVE_ORDER =
+            Comparator.comparing(UDTId::getSchemaId, SchemaId.COMPARING_IN_CASE_INSENSITIVE_ORDER)
+                    .thenComparing(UDTId::getTypeName, String.CASE_INSENSITIVE_ORDER);
+
+    public static final Comparator<UDTId> COMPARING_IN_NATURAL_ORDER =
+            Comparator.comparing(UDTId::getSchemaId, SchemaId.COMPARING_IN_NATURAL_ORDER)
+                    .thenComparing(UDTId::getTypeName);
 
     public static UDTId of(final SchemaId schemaId, final String typeName) {
+        Objects.requireNonNull(schemaId, "schemaId is null");
+        Objects.requireNonNull(typeName, "typeName is null");
         return builder()
                 .schemaId(schemaId)
                 .typeName(typeName)
@@ -47,12 +53,8 @@ public final class UDTId implements MetadataTypeId<UDTId, UDT> {
     }
 
     public static UDTId of(final String typeCat, final String typeSchem, final String typeName) {
+        Objects.requireNonNull(typeName, "typeName is null");
         return of(SchemaId.of(typeCat, typeSchem), typeName);
-    }
-
-    @Override
-    public int compareTo(final UDTId o) {
-        return COMPARATOR.compare(this, Objects.requireNonNull(o, "o is null"));
     }
 
     private final SchemaId schemaId;

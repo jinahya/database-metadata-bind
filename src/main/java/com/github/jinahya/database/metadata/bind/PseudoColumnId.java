@@ -35,10 +35,13 @@ public final class PseudoColumnId implements MetadataTypeId<PseudoColumnId, Pseu
 
     private static final long serialVersionUID = 7459854669925402253L;
 
-    private static final Comparator<PseudoColumnId> COMPARATOR =
-            Comparator.comparing(PseudoColumnId::getTableId)
-                    .thenComparing(PseudoColumnId::getColumnName,
-                                   Comparator.nullsFirst(String.CASE_INSENSITIVE_ORDER));
+    public static final Comparator<PseudoColumnId> COMPARING_IN_CASE_INSENSITIVE_ORDER =
+            Comparator.comparing(PseudoColumnId::getTableId, TableId.COMPARING_CASE_INSENSITIVE)
+                    .thenComparing(PseudoColumnId::getColumnName, String.CASE_INSENSITIVE_ORDER);
+
+    public static final Comparator<PseudoColumnId> COMPARING_IN_NATURAL_ORDER =
+            Comparator.comparing(PseudoColumnId::getTableId, TableId.COMPARING_NATURAL)
+                    .thenComparing(PseudoColumnId::getColumnName);
 
     public static PseudoColumnId of(final TableId tableId, final String columnName) {
         Objects.requireNonNull(tableId, "tableId is null");
@@ -52,11 +55,6 @@ public final class PseudoColumnId implements MetadataTypeId<PseudoColumnId, Pseu
     public static PseudoColumnId of(final String tableCat, final String tableSchem, final String tableName,
                                     final String columnName) {
         return of(TableId.of(tableCat, tableSchem, tableName), columnName);
-    }
-
-    @Override
-    public int compareTo(final PseudoColumnId o) {
-        return COMPARATOR.compare(this, Objects.requireNonNull(o, "o is null"));
     }
 
     private final TableId tableId;

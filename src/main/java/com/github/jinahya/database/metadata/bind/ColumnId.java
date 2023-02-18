@@ -41,8 +41,12 @@ public final class ColumnId implements MetadataTypeId<ColumnId, Column> {
 
     private static final long serialVersionUID = -4452694121211962289L;
 
-    private static final Comparator<ColumnId> COMPARING_AS_SPECIFIED =
-            Comparator.comparing(ColumnId::getTableId)
+    public static final Comparator<ColumnId> COMPARING_CASE_INSENSITIVE =
+            Comparator.comparing(ColumnId::getTableId, TableId.COMPARING_CASE_INSENSITIVE)
+                    .thenComparingInt(ColumnId::getOrdinalPosition);
+
+    public static final Comparator<ColumnId> COMPARING_NATURAL =
+            Comparator.comparing(ColumnId::getTableId, TableId.COMPARING_NATURAL)
                     .thenComparingInt(ColumnId::getOrdinalPosition);
 
     static ColumnId of(final TableId tableId, final String columnName, final int ordinalPosition) {
@@ -70,11 +74,6 @@ public final class ColumnId implements MetadataTypeId<ColumnId, Column> {
     public static ColumnId of(final String tableCat, final String tableSchem, final String tableName,
                               final String columnName) {
         return of(tableCat, tableSchem, tableName, columnName, 1);
-    }
-
-    @Override
-    public int compareTo(final ColumnId o) {
-        return COMPARING_AS_SPECIFIED.compare(this, Objects.requireNonNull(o, "o is null"));
     }
 
     private final TableId tableId;

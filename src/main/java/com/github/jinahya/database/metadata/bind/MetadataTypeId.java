@@ -23,6 +23,6 @@ package com.github.jinahya.database.metadata.bind;
 import java.io.Serializable;
 
 public interface MetadataTypeId<T extends MetadataTypeId<T, U>, U extends MetadataType>
-        extends Serializable, Comparable<T> {
+        extends Serializable {
 
 }

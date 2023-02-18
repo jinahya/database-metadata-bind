@@ -50,11 +50,11 @@ public class Attribute extends AbstractMetadataType {
 
     private static final long serialVersionUID = 1913681105410440186L;
 
-    public static final Comparator<Attribute> COMPARING_AS_SPECIFIED =
-            Comparator.comparing(Attribute::getTypeCat, Comparator.nullsFirst(Comparator.naturalOrder()))
-                    .thenComparing(Attribute::getTypeSchem, Comparator.nullsFirst(Comparator.naturalOrder()))
-                    .thenComparing(Attribute::getTypeName)
-                    .thenComparingInt(Attribute::getOrdinalPosition);
+    public static final Comparator<Attribute> COMPARING_CASE_INSENSITIVE =
+            Comparator.comparing(Attribute::getAttributeId, AttributeId.COMPARING_CASE_INSENSITIVE);
+
+    public static final Comparator<Attribute> COMPARING_NATURAL =
+            Comparator.comparing(Attribute::getAttributeId, AttributeId.COMPARING_NATURAL);
 
     public static final String VALUE_IS_NULLABLE_YES = "YES";
 

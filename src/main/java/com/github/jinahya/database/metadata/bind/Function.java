@@ -37,6 +37,10 @@ import java.util.Map;
 import java.util.Objects;
 import java.util.Optional;
 
+import static java.lang.String.CASE_INSENSITIVE_ORDER;
+import static java.util.Comparator.naturalOrder;
+import static java.util.Comparator.nullsFirst;
+
 /**
  * A class for binding the result of
  * {@link DatabaseMetaData#getFunctions(java.lang.String, java.lang.String, java.lang.String)} method.
@@ -56,10 +60,15 @@ public class Function
 
     private static final long serialVersionUID = -3318947900237453301L;
 
-    public static final Comparator<Function> COMPARING_FUNCTION_CAT_FUNCTION_SCHEM_FUNCTION_NAME_SPECIFIC_NAME =
-            Comparator.comparing(Function::getSchemaId)
-                    .thenComparing(Function::getFunctionName, Comparator.nullsFirst(String.CASE_INSENSITIVE_ORDER))
-                    .thenComparing(Function::getSpecificName, Comparator.nullsFirst(String.CASE_INSENSITIVE_ORDER));
+    public static final Comparator<Function> COMPARING_CASE_INSENSITIVE =
+            Comparator.comparing(Function::getSchemaId, SchemaId.COMPARING_IN_CASE_INSENSITIVE_ORDER)
+                    .thenComparing(Function::getFunctionName, nullsFirst(CASE_INSENSITIVE_ORDER))
+                    .thenComparing(Function::getSpecificName, nullsFirst(CASE_INSENSITIVE_ORDER));
+
+    public static final Comparator<Function> COMPARING_NATURAL =
+            Comparator.comparing(Function::getSchemaId, SchemaId.COMPARING_IN_NATURAL_ORDER)
+                    .thenComparing(Function::getFunctionName, nullsFirst(naturalOrder()))
+                    .thenComparing(Function::getSpecificName, nullsFirst(naturalOrder()));
 
     public static final String COLUMN_NAME_FUNCTION_CAT = "FUNCTION_CAT";
 

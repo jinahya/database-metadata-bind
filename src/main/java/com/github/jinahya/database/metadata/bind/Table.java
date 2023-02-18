@@ -32,6 +32,9 @@ import lombok.experimental.SuperBuilder;
 import java.util.Comparator;
 import java.util.Optional;
 
+import static java.util.Comparator.naturalOrder;
+import static java.util.Comparator.nullsFirst;
+
 /**
  * A class for binding results of
  * {@link java.sql.DatabaseMetaData#getTables(java.lang.String, java.lang.String, java.lang.String, java.lang.String[])}
@@ -58,9 +61,13 @@ public class Table extends AbstractMetadataType {
 
     private static final long serialVersionUID = 6590036695540141125L;
 
-    public static final Comparator<Table> COMPARING_AS_SPECIFIED =
-            Comparator.comparing(Table::getTableType)
-                    .thenComparing(Table::getTableId);
+    public static final Comparator<Table> COMPARING_IN_CASE_INSENSITIVE_ORDER =
+            Comparator.comparing(Table::getTableType, nullsFirst(String.CASE_INSENSITIVE_ORDER))
+                    .thenComparing(Table::getTableId, TableId.COMPARING_CASE_INSENSITIVE);
+
+    public static final Comparator<Table> COMPARING_IN_NATURAL_ORDER =
+            Comparator.comparing(Table::getTableType, nullsFirst(naturalOrder()))
+                    .thenComparing(Table::getTableId, TableId.COMPARING_NATURAL);
 
     /**
      * The label of the column to which {@link #ATTRIBUTE_NAME_TABLE_CAT} attribute is bound. The value is {@value}.

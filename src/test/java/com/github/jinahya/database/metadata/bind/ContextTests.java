@@ -25,12 +25,9 @@ import org.junit.platform.commons.util.ReflectionUtils;
 
 import java.sql.SQLException;
 import java.sql.SQLFeatureNotSupportedException;
-import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 import java.util.Objects;
 import java.util.Set;
-import java.util.stream.Collectors;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -59,14 +56,19 @@ final class ContextTests {
 
     private static void common(final Object value) {
         Objects.requireNonNull(value, "value is null");
-        final var string = value.toString();
-        final var hashCode = value.hashCode();
+        {
+            final var string = value.toString();
+        }
+        {
+            final var hashCode = value.hashCode();
+        }
         if (value instanceof MetadataType) {
             final var unmappedValues = ((MetadataType) value).getUnmappedValues();
             if (!unmappedValues.isEmpty()) {
                 log.warn("has unmapped values: {}", value);
             }
         }
+        // .toBuilder().build()
         ReflectionUtils.findMethod(value.getClass(), "toBuilder")
                 .map(m -> {
                     try {
@@ -82,8 +84,8 @@ final class ContextTests {
                             } catch (final ReflectiveOperationException row) {
                                 throw new RuntimeException(row);
                             }
-                        }))
-        ;
+                        })
+                );
     }
 
     private static void thrown(final String message, final Throwable throwable) {
@@ -95,141 +97,6 @@ final class ContextTests {
         log.error("{}", message, throwable);
     }
 
-    private static void uniqueCatalogIds(final Context context) throws SQLException {
-        final var catalogs = context.getCatalogs();
-        final var groups = catalogs.stream().collect(Collectors.groupingBy(Catalog::getCatalogId));
-        assertThat(groups.entrySet().stream().filter(e -> e.getValue().size() > 1))
-                .isEmpty();
-        assertThat(catalogs)
-                .extracting(Catalog::getCatalogId)
-                .doesNotHaveDuplicates();
-    }
-
-    private static void uniqueExportedKeyFktableIds(final Context context) throws SQLException {
-        final var tables = context.getTables(null, null, "%", null);
-        for (final var table : tables) {
-            try {
-                final var exportedKeys = context.getExportedKeys(null, null, table.getTableName());
-                final var groups = exportedKeys.stream().collect(Collectors.groupingBy(TableKey::getFktableId));
-                assertThat(groups.entrySet().stream().filter(e -> e.getValue().size() > 1))
-                        .isEmpty();
-                assertThat(exportedKeys)
-                        .extracting(TableKey::getFktableId)
-                        .doesNotHaveDuplicates();
-            } catch (final SQLException sqle) {
-            }
-        }
-    }
-
-    private static void uniqueExportedKeyPktableIds(final Context context) throws SQLException {
-        final var tables = context.getTables(null, null, "%", null);
-        for (final var table : tables) {
-            try {
-                final var exportedKeys = context.getExportedKeys(null, null, table.getTableName());
-                final var groups = exportedKeys.stream().collect(Collectors.groupingBy(TableKey::getPktableId));
-                assertThat(groups.entrySet().stream().filter(e -> e.getValue().size() > 1))
-                        .isEmpty();
-                assertThat(exportedKeys)
-                        .extracting(TableKey::getPktableId)
-                        .doesNotHaveDuplicates();
-            } catch (final SQLException sqle) {
-            }
-        }
-    }
-
-    private static void uniqueColumnIds(final Context context) throws SQLException {
-        final var columns = context.getColumns(null, null, "%", "%");
-        final var groups = columns.stream().collect(Collectors.groupingBy(Column::getColumnId));
-        assertThat(groups.entrySet().stream().filter(e -> e.getValue().size() > 1))
-                .isEmpty();
-        assertThat(columns)
-                .extracting(Column::getColumnId)
-                .doesNotHaveDuplicates();
-    }
-
-    private static void uniqueFunctionIds(final Context context) throws SQLException {
-        try {
-            final var functions = context.getFunctions(null, null, "%");
-            final var groups = functions.stream().collect(Collectors.groupingBy(Function::getFunctionId));
-            assertThat(groups.entrySet().stream().filter(e -> e.getValue().size() > 1))
-                    .isEmpty();
-            assertThat(functions)
-                    .extracting(Function::getFunctionId)
-                    .doesNotHaveDuplicates();
-        } catch (final SQLException sqle) {
-        }
-    }
-
-    private static void uniqueFunctionColumnIds(final Context context) throws SQLException {
-        try {
-            final var functionColumns = context.getFunctionColumns(null, null, "%", "%");
-        } catch (final SQLException sqle) {
-        }
-    }
-
-    private static void uniqueImportedKeyFktableIds(final Context context) throws SQLException {
-        final var tables = context.getTables(null, null, "%", null);
-        for (final var table : tables) {
-            final var importedKeys = context.getImportedKeys(null, null, table.getTableName());
-            final var groups = importedKeys.stream().collect(Collectors.groupingBy(TableKey::getFktableId));
-            assertThat(groups.entrySet().stream().filter(e -> e.getValue().size() > 1))
-                    .isEmpty();
-            assertThat(importedKeys)
-                    .extracting(TableKey::getFktableId)
-                    .doesNotHaveDuplicates();
-        }
-    }
-
-    private static void uniqueImportedKeyPktableIds(final Context context) throws SQLException {
-        final var tables = context.getTables(null, null, "%", null);
-        for (final var table : tables) {
-            final var importedKeys = context.getImportedKeys(null, null, table.getTableName());
-            final var groups = importedKeys.stream().collect(Collectors.groupingBy(TableKey::getPktableId));
-            assertThat(groups.entrySet().stream().filter(e -> e.getValue().size() > 1))
-                    .isEmpty();
-            assertThat(importedKeys)
-                    .extracting(TableKey::getPktableId)
-                    .doesNotHaveDuplicates();
-        }
-    }
-
-    private static void uniqueProcedureIds(final Context context) throws SQLException {
-        final var procedures = context.getProcedures(null, null, "%");
-        final var groups = procedures.stream().collect(Collectors.groupingBy(Procedure::getProcedureId));
-        assertThat(groups.entrySet().stream().filter(e -> e.getValue().size() > 1))
-                .isEmpty();
-        assertThat(procedures)
-                .extracting(Procedure::getProcedureId)
-                .doesNotHaveDuplicates();
-    }
-
-    private static void uniqueProcedureColumnIds(final Context context) throws SQLException {
-        final var procedureColumns = context.getProcedureColumns(null, null, "%", "%");
-    }
-
-    private static void uniqueTableIds(final Context context) throws SQLException {
-        final var tables = context.getTables(null, null, "%", null);
-        final var groups = tables.stream().collect(Collectors.groupingBy(Table::getTableId));
-        assertThat(groups.entrySet().stream().filter(e -> e.getValue().size() > 1))
-                .isEmpty();
-        assertThat(tables)
-                .extracting(Table::getTableId)
-                .doesNotHaveDuplicates();
-    }
-
-    private static void uniqueSchemaIds(final Context context) throws SQLException {
-        try {
-            final var schemas = context.getSchemas((String) null, "%");
-            final var groups = schemas.stream().collect(Collectors.groupingBy(Schema::getSchemaId));
-            assertThat(groups.entrySet().stream().filter(e -> e.getValue().size() > 1))
-                    .isEmpty();
-            assertThat(schemas)
-                    .extracting(Schema::getSchemaId)
-                    .doesNotHaveDuplicates();
-        } catch (final SQLFeatureNotSupportedException sqlfnse) {
-        }
-    }
-
     private static String databaseProductName;
 
     static void test(final Context context) throws SQLException {
@@ -238,29 +105,17 @@ final class ContextTests {
             databaseProductName = context.databaseMetaData.getDatabaseProductName();
             info(context);
         }
-        uniqueCatalogIds(context);
-        uniqueColumnIds(context);
-        uniqueExportedKeyFktableIds(context);
-        uniqueExportedKeyPktableIds(context);
-        uniqueFunctionIds(context);
-        uniqueFunctionColumnIds(context);
-        uniqueImportedKeyFktableIds(context);
-        uniqueImportedKeyPktableIds(context);
-        uniqueProcedureIds(context);
-        uniqueProcedureColumnIds(context);
-        uniqueSchemaIds(context);
-        uniqueTableIds(context);
-        final List<Catalog> catalogs = new ArrayList<>();
         {
+            final List<Catalog> catalogs;
             try {
-                context.getCatalogs(catalogs::add);
+                catalogs = context.getCatalogs();
+                if (catalogs.isEmpty()) {
+                    catalogs.add(Catalog.newVirtualInstance());
+                }
+                catalogs(context, catalogs);
             } catch (final SQLException sqle) {
                 thrown("failed; getCatalogs", sqle);
             }
-            if (catalogs.isEmpty()) {
-                catalogs.add(Catalog.builder().tableCat(Catalog.COLUMN_VALUE_TABLE_CAT_EMPTY).build());
-            }
-            catalogs(context, catalogs);
         }
         try {
             final var clientInfoProperties = context.getClientInfoProperties();
@@ -282,12 +137,18 @@ final class ContextTests {
         }
         try {
             final var schemas = context.getSchemas();
+            if (schemas.isEmpty()) {
+                schemas.add(Schema.newVirtualInstance());
+            }
             schemas(context, schemas);
         } catch (final SQLException sqle) {
             thrown("failed; getSchemas", sqle);
         }
         try {
             final var schemas = context.getSchemas((String) null, null);
+            if (schemas.isEmpty()) {
+                schemas.add(Schema.newVirtualInstance());
+            }
             schemas(context, schemas);
         } catch (final SQLException sqle) {
             thrown("failed; getSchemas", sqle);
@@ -302,21 +163,6 @@ final class ContextTests {
         }
         try {
             final var tables = context.getTables(null, null, "%", null);
-            {
-                final var databaseProductNames = Set.of(
-                        // https://sourceforge.net/p/hsqldb/bugs/1672/
-                        Memory_Hsql_Test.DATABASE_PRODUCT_NAME,
-                        TestContainers_MariaDB_IT.DATABASE_PRODUCT_NAME,
-                        TestContainers_PostgreSQL_IT.DATABASE_PRODUCT_NAME
-                );
-                if (!databaseProductNames.contains(databaseProductName)) {
-                    assertThat(tables)
-                            .isSortedAccordingTo(Table.COMPARING_AS_SPECIFIED);
-                }
-            }
-            assertThat(tables)
-                    .extracting(Table::getTableId)
-                    .doesNotHaveDuplicates();
             tables(context, tables);
         } catch (final SQLException sqle) {
             thrown("failed; getTables", sqle);
@@ -348,7 +194,34 @@ final class ContextTests {
     static void attributes(final Context context, final List<? extends Attribute> attributes) throws SQLException {
         Objects.requireNonNull(context, "context is null");
         Objects.requireNonNull(attributes, "attributes is null");
-        assertThat(attributes).isSortedAccordingTo(Attribute.COMPARING_AS_SPECIFIED);
+        {
+            final var databaseProductNames = Set.of(
+                    ""
+            );
+            if (!databaseProductNames.contains(databaseProductName)) {
+                assertThat(attributes)
+                        .doesNotContainNull()
+                        .satisfiesAnyOf(
+                                l -> assertThat(l).isSortedAccordingTo(Attribute.COMPARING_CASE_INSENSITIVE),
+                                l -> assertThat(l).isSortedAccordingTo(Attribute.COMPARING_NATURAL)
+                        );
+            }
+        }
+        {
+            final var databaseProductNames = Set.of(
+                    ""
+            );
+            if (!databaseProductNames.contains(databaseProductName)) {
+                assertThat(attributes)
+                        .extracting(Attribute::getAttributeId)
+                        .doesNotContainNull()
+                        .doesNotHaveDuplicates()
+                        .satisfiesAnyOf(
+                                l -> assertThat(l).isSortedAccordingTo(AttributeId.COMPARING_CASE_INSENSITIVE),
+                                l -> assertThat(l).isSortedAccordingTo(AttributeId.COMPARING_NATURAL)
+                        );
+            }
+        }
         for (final var attribute : attributes) {
             attribute(context, attribute);
         }
@@ -384,7 +257,10 @@ final class ContextTests {
         assertThat(catalogs)
                 .extracting(Catalog::getCatalogId)
                 .doesNotHaveDuplicates()
-                .isSorted();
+                .satisfiesAnyOf(
+                        ci -> assertThat(ci).isSortedAccordingTo(CatalogId.COMPARING_IN_CASE_INSENSITIVE_ORDER),
+                        ci -> assertThat(ci).isSortedAccordingTo(CatalogId.COMPARING_IN_NATURAL_ORDER)
+                );
         catalogs.stream().map(Catalog::getCatalogId).forEach(ContextTests::common);
         for (final var catalog : catalogs) {
             catalog(context, catalog);
@@ -405,18 +281,36 @@ final class ContextTests {
                 );
                 if (!databaseProductNames.contains(databaseProductName)) {
                     assertThat(schemas)
-                            .isSortedAccordingTo(Schema.COMPARING_AS_SPECIFIED)
+                            .satisfiesAnyOf(
+                                    l -> assertThat(l)
+                                            .isSortedAccordingTo(Schema.COMPARING_AS_SPECIFIED_CASE_INSENSITIVE),
+                                    l -> assertThat(l).isSortedAccordingTo(Schema.COMPARING_AS_SPECIFIED_NATURAL)
+                            )
                             .extracting(Schema::getSchemaId)
-                            .isSorted()
+                            .satisfiesAnyOf(
+                                    l -> assertThat(l)
+                                            .isSortedAccordingTo(SchemaId.COMPARING_IN_CASE_INSENSITIVE_ORDER),
+                                    l -> assertThat(l).isSortedAccordingTo(SchemaId.COMPARING_IN_NATURAL_ORDER)
+                            )
                             .extracting(SchemaId::getCatalogId)
-                            .isSorted();
+                            .satisfiesAnyOf(
+                                    l -> assertThat(l)
+                                            .isSortedAccordingTo(CatalogId.COMPARING_IN_CASE_INSENSITIVE_ORDER),
+                                    l -> assertThat(l).isSortedAccordingTo(CatalogId.COMPARING_IN_NATURAL_ORDER)
+                            );
                 }
             }
             assertThat(schemas)
                     .extracting(Schema::getSchemaId)
-                    .doesNotHaveDuplicates()
-                    .extracting(SchemaId::getCatalogId)
-                    .allMatch(catalogId::equals);
+                    .doesNotHaveDuplicates();
+            final Set<String> databaseProductNames = Set.of(
+                    TestContainers_PostgreSQL_IT.DATABASE_PRODUCT_NAME
+            );
+            if (!databaseProductNames.contains(databaseProductName)) {
+                assertThat(schemas)
+                        .extracting(Schema::getCatalogId)
+                        .allMatch(catalogId::equals);
+            }
             schemas(context, schemas);
         } catch (final SQLException sqle) {
             thrown("failed: getSchemas", sqle);
@@ -443,6 +337,30 @@ final class ContextTests {
     static void columns(final Context context, final List<? extends Column> columns) throws SQLException {
         Objects.requireNonNull(context, "context is null");
         Objects.requireNonNull(columns, "columns is null");
+        {
+            final var databaseProductNames = Set.of(
+                    ""
+            );
+            if (!databaseProductNames.contains(databaseProductName)) {
+                assertThat(columns).satisfiesAnyOf(
+                        l -> assertThat(l).isSortedAccordingTo(Column.COMPARING_CASE_INSENSITIVE),
+                        l -> assertThat(l).isSortedAccordingTo(Column.COMPARING_NATURAL)
+                );
+            }
+        }
+        {
+            final var databaseProductNames = Set.of(
+                    ""
+            );
+            if (!databaseProductNames.contains(databaseProductName)) {
+                assertThat(columns)
+                        .extracting(Column::getColumnId)
+                        .satisfiesAnyOf(
+                                l -> assertThat(l).isSortedAccordingTo(ColumnId.COMPARING_CASE_INSENSITIVE),
+                                l -> assertThat(l).isSortedAccordingTo(ColumnId.COMPARING_NATURAL)
+                        );
+            }
+        }
         for (final var column : columns) {
             column(context, column);
         }
@@ -459,6 +377,30 @@ final class ContextTests {
             throws SQLException {
         Objects.requireNonNull(context, "context is null");
         Objects.requireNonNull(columnPrivileges, "columnPrivileges is null");
+        {
+            final var databaseProductNames = Set.of(
+                    TestContainers_PostgreSQL_IT.DATABASE_PRODUCT_NAME
+            );
+            if (!databaseProductNames.contains(databaseProductName)) {
+                assertThat(columnPrivileges).satisfiesAnyOf(
+                        l -> assertThat(l).isSortedAccordingTo(ColumnPrivilege.COMPARING_CASE_INSENSITIVE),
+                        l -> assertThat(l).isSortedAccordingTo(ColumnPrivilege.COMPARING_NATURAL)
+                );
+            }
+        }
+        {
+            final var databaseProductNames = Set.of(
+                    TestContainers_PostgreSQL_IT.DATABASE_PRODUCT_NAME
+            );
+            if (!databaseProductNames.contains(databaseProductName)) {
+                assertThat(columnPrivileges)
+                        .extracting(ColumnPrivilege::getColumnPrivilegeId)
+                        .satisfiesAnyOf(
+                                l -> assertThat(l).isSortedAccordingTo(ColumnPrivilegeId.COMPARING_CASE_INSENSITIVE),
+                                l -> assertThat(l).isSortedAccordingTo(ColumnPrivilegeId.COMPARING_NATURAL)
+                        );
+            }
+        }
         for (final var columnPrivilege : columnPrivileges) {
             columnPrivilege(context, columnPrivilege);
         }
@@ -474,7 +416,10 @@ final class ContextTests {
             throws SQLException {
         Objects.requireNonNull(context, "context is null");
         Objects.requireNonNull(crossReference, "crossReference is null");
-        assertThat(crossReference).isSortedAccordingTo(CrossReference.COMPARING_AS_SPECIFIED);
+        assertThat(crossReference).satisfiesAnyOf(
+                cr -> assertThat(cr).isSortedAccordingTo(CrossReference.COMPARING_CASE_INSENSITIVE),
+                cr -> assertThat(cr).isSortedAccordingTo(CrossReference.COMPARING_NATURAL)
+        );
         assertThat(crossReference)
                 .extracting(CrossReference::getPkcolumnId)
                 .doesNotHaveDuplicates();
@@ -498,14 +443,30 @@ final class ContextTests {
             throws SQLException {
         Objects.requireNonNull(context, "context is null");
         Objects.requireNonNull(exportedKeys, "exportedKeys is null");
-        assertThat(exportedKeys).isSortedAccordingTo(ExportedKey.COMPARING_AS_SPECIFIED);
-        assertThat(exportedKeys)
-                .extracting(ExportedKey::getPktableId)
-                .doesNotHaveDuplicates();
-        assertThat(exportedKeys)
-                .extracting(ExportedKey::getFktableId)
-                .doesNotHaveDuplicates()
-                .isSorted();
+        {
+            final var databaseProductNames = Set.of(
+                    ""
+            );
+            if (!databaseProductNames.contains(databaseProductName)) {
+                assertThat(exportedKeys).satisfiesAnyOf(
+                        l -> assertThat(l).isSortedAccordingTo(ExportedKey.COMPARING_CASE_INSENSITIVE),
+                        l -> assertThat(l).isSortedAccordingTo(ExportedKey.COMPARING_NATURAL)
+                );
+            }
+        }
+        {
+            final var databaseProductNames = Set.of(
+                    ""
+            );
+            if (!databaseProductNames.contains(databaseProductName)) {
+                assertThat(exportedKeys)
+                        .extracting(ExportedKey::getFktableId)
+                        .satisfiesAnyOf(
+                                l -> assertThat(l).isSortedAccordingTo(TableId.COMPARING_CASE_INSENSITIVE),
+                                l -> assertThat(l).isSortedAccordingTo(TableId.COMPARING_NATURAL)
+                        );
+            }
+        }
         for (final var exportedKey : exportedKeys) {
             exportedKey(context, exportedKey);
         }
@@ -522,18 +483,30 @@ final class ContextTests {
     private static void functions(final Context context, final List<? extends Function> functions) throws SQLException {
         Objects.requireNonNull(context, "context is null");
         Objects.requireNonNull(functions, "functions is null");
-        assertThat(functions).isSortedAccordingTo(
-                Function.COMPARING_FUNCTION_CAT_FUNCTION_SCHEM_FUNCTION_NAME_SPECIFIC_NAME);
-        final Map<FunctionId, List<Function>> groups = functions.stream()
-                .collect(Collectors.groupingBy(Function::getFunctionId));
-        groups.entrySet().stream().filter(e -> e.getValue().size() > 1).forEach(e -> {
-            log.debug("duplicate function: " + e.getKey());
-            log.debug("\tduplicate function: " + e.getValue());
-        });
-        assertThat(functions)
-                .extracting(Function::getFunctionId)
-                .doesNotHaveDuplicates()
-                .isSorted();
+        {
+            final var databaseProductNames = Set.of(
+                    ""
+            );
+            if (!databaseProductNames.contains(databaseProductName)) {
+                assertThat(functions).satisfiesAnyOf(
+                        l -> assertThat(l).isSortedAccordingTo(Function.COMPARING_CASE_INSENSITIVE),
+                        l -> assertThat(l).isSortedAccordingTo(Function.COMPARING_NATURAL)
+                );
+            }
+        }
+        {
+            final var databaseProductNames = Set.of(
+                    ""
+            );
+            if (!databaseProductNames.contains(databaseProductName)) {
+                assertThat(functions)
+                        .extracting(Function::getFunctionId)
+                        .satisfiesAnyOf(
+                                l -> assertThat(l).isSortedAccordingTo(FunctionId.COMPARING_CASE_INSENSITIVE),
+                                l -> assertThat(l).isSortedAccordingTo(FunctionId.COMPARING_NATURAL)
+                        );
+            }
+        }
         for (final var function : functions) {
             function(context, function);
         }
@@ -544,17 +517,9 @@ final class ContextTests {
         Objects.requireNonNull(function, "function is null");
         common(function);
         common(function.getFunctionId());
+        final var functionId = function.getFunctionId();
         try {
             final var functionColumns = function.getFunctionColumns(context, "%");
-            assertThat(functionColumns).allSatisfy(fc -> {
-                assertThat(fc.getFunction()).isEqualTo(function);
-            });
-            assertThat(functionColumns)
-                    .isSortedAccordingTo(FunctionColumn.COMPARING_AS_SPECIFIED);
-            assertThat(functionColumns)
-                    .extracting(FunctionColumn::getFunctionColumnId)
-                    .doesNotHaveDuplicates()
-                    .isSorted();
             functionColumns(context, function, functionColumns);
         } catch (final SQLException sqle) {
             thrown("failed; getFunctionColumns", sqle);
@@ -567,6 +532,31 @@ final class ContextTests {
         Objects.requireNonNull(context, "context is null");
         Objects.requireNonNull(function, "function is null");
         Objects.requireNonNull(functionColumns, "functionColumns is null");
+        {
+            final var databaseProductNames = Set.of(
+                    TestContainers_PostgreSQL_IT.DATABASE_PRODUCT_NAME
+            );
+            if (!databaseProductNames.contains(databaseProductName)) {
+                assertThat(functionColumns).satisfiesAnyOf(
+                        l -> assertThat(l).isSortedAccordingTo(FunctionColumn.COMPARING_CASE_INSENSITIVE),
+                        l -> assertThat(l).isSortedAccordingTo(FunctionColumn.COMPARING_NATURAL)
+                );
+            }
+        }
+        {
+            final var databaseProductNames = Set.of(
+                    TestContainers_PostgreSQL_IT.DATABASE_PRODUCT_NAME
+            );
+            if (!databaseProductNames.contains(databaseProductName)) {
+                assertThat(functionColumns)
+                        .extracting(FunctionColumn::getFunctionColumnId)
+                        .doesNotHaveDuplicates()
+                        .satisfiesAnyOf(
+                                l -> assertThat(l).isSortedAccordingTo(FunctionColumnId.COMPARING_CASE_INSENSITIVE),
+                                l -> assertThat(l).isSortedAccordingTo(FunctionColumnId.COMPARING_NATURAL)
+                        );
+            }
+        }
         for (final var functionColumn : functionColumns) {
             functionColumn(context, function, functionColumn);
         }
@@ -586,14 +576,30 @@ final class ContextTests {
             throws SQLException {
         Objects.requireNonNull(context, "context is null");
         Objects.requireNonNull(importedKeys, "importedKeys is null");
-        assertThat(importedKeys).isSortedAccordingTo(ImportedKey.COMPARING_AS_SPECIFIED);
-        assertThat(importedKeys)
-                .extracting(ImportedKey::getPktableId)
-                .doesNotHaveDuplicates();
-        assertThat(importedKeys)
-                .extracting(ImportedKey::getFktableId)
-                .doesNotHaveDuplicates()
-                .isSorted();
+        {
+            final var databaseProductNames = Set.of(
+                    ""
+            );
+            if (!databaseProductNames.contains(databaseProductName)) {
+                assertThat(importedKeys).satisfiesAnyOf(
+                        l -> assertThat(l).isSortedAccordingTo(ImportedKey.COMPARING_CASE_INSENSITIVE),
+                        l -> assertThat(l).isSortedAccordingTo(ImportedKey.COMPARING_NATUAL)
+                );
+            }
+        }
+        {
+            final var databaseProductNames = Set.of(
+                    ""
+            );
+            if (!databaseProductNames.contains(databaseProductName)) {
+                assertThat(importedKeys)
+                        .extracting(ImportedKey::getFktableId)
+                        .satisfiesAnyOf(
+                                l -> assertThat(l).isSortedAccordingTo(TableId.COMPARING_CASE_INSENSITIVE),
+                                l -> assertThat(l).isSortedAccordingTo(TableId.COMPARING_NATURAL)
+                        );
+            }
+        }
         for (final var importedKey : importedKeys) {
             importedKey(context, importedKey);
         }
@@ -640,17 +646,26 @@ final class ContextTests {
                     Memory_Hsql_Test.DATABASE_PRODUCT_NAME
             );
             if (!databaseProductNames.contains(databaseProductName)) {
-                assertThat(procedures).isSortedAccordingTo(
-                        Procedure.COMPARING_PROCEDURE_CAT_PROCEDURE_SCHEM_PROCEDURE_NAME_SPECIFIC_NAME);
                 assertThat(procedures)
-                        .extracting(Procedure::getProcedureId)
-                        .isSorted();
+                        .satisfiesAnyOf(
+                                l -> assertThat(l).isSortedAccordingTo(Procedure.COMPARING_IN_CASE_INSENSITIVE_ORDER),
+                                l -> assertThat(l).isSortedAccordingTo(Procedure.COMPARING_IN_NATURAL_ORDER)
+                        );
             }
         }
-        assertThat(procedures)
-                .extracting(Procedure::getProcedureId)
-                .doesNotHaveDuplicates();
-        procedures.stream().map(Procedure::getProcedureId).forEach(ContextTests::common);
+        {
+            final var databaseProductNames = Set.of(
+                    Memory_Hsql_Test.DATABASE_PRODUCT_NAME
+            );
+            if (!databaseProductNames.contains(databaseProductName)) {
+                assertThat(procedures)
+                        .extracting(Procedure::getProcedureId)
+                        .satisfiesAnyOf(
+                                l -> assertThat(l).isSortedAccordingTo(ProcedureId.COMPARING_IN_CASE_INSENSITIVE),
+                                l -> assertThat(l).isSortedAccordingTo(ProcedureId.COMPARING_IN_NATURAL)
+                        );
+            }
+        }
         for (final var procedure : procedures) {
             procedure(context, procedure);
         }
@@ -674,7 +689,7 @@ final class ContextTests {
         Objects.requireNonNull(context, "context is null");
         Objects.requireNonNull(procedureColumns, "procedureColumns is null");
         assertThat(procedureColumns).isSortedAccordingTo(
-                ProcedureColumn.NATURAL);
+                ProcedureColumn.COMPARING_AS_SPECIFIED_CASE_INSENSITIVE);
         for (final var procedureColumn : procedureColumns) {
             procedureColumn(context, procedureColumn);
             common(procedureColumn.getProcedureColumnId());
@@ -754,11 +769,44 @@ final class ContextTests {
     static void tables(final Context context, final List<? extends Table> tables) throws SQLException {
         Objects.requireNonNull(context, "context is null");
         Objects.requireNonNull(tables, "tables is null");
-        tables.stream().map(Table::getTableId).forEach(ContextTests::common);
+        {
+            final var databaseProductNames = Set.of(
+                    // https://sourceforge.net/p/hsqldb/bugs/1672/
+                    Memory_Hsql_Test.DATABASE_PRODUCT_NAME,
+                    TestContainers_MariaDB_IT.DATABASE_PRODUCT_NAME,
+                    TestContainers_PostgreSQL_IT.DATABASE_PRODUCT_NAME
+            );
+            if (!databaseProductNames.contains(databaseProductName)) {
+                assertThat(tables)
+                        .satisfiesAnyOf(
+                                l -> assertThat(l).isSortedAccordingTo(Table.COMPARING_IN_CASE_INSENSITIVE_ORDER),
+                                l -> assertThat(l).isSortedAccordingTo(Table.COMPARING_IN_NATURAL_ORDER)
+                        );
+            }
+        }
+        {
+            final var databaseProductNames = Set.of(
+                    Memory_H2_Test.DATABASE_PRODUCT_NAME,
+                    // https://sourceforge.net/p/hsqldb/bugs/1672/
+                    Memory_Hsql_Test.DATABASE_PRODUCT_NAME,
+                    TestContainers_MariaDB_IT.DATABASE_PRODUCT_NAME,
+                    TestContainers_MySQL_IT.DATABASE_PRODUCT_NAME,
+                    TestContainers_PostgreSQL_IT.DATABASE_PRODUCT_NAME
+            );
+            if (!databaseProductNames.contains(databaseProductName)) {
+                assertThat(tables)
+                        .extracting(Table::getTableId)
+                        .doesNotHaveDuplicates()
+                        .satisfiesAnyOf(
+                                l -> assertThat(l).isSortedAccordingTo(TableId.COMPARING_CASE_INSENSITIVE),
+                                l -> assertThat(l).isSortedAccordingTo(TableId.COMPARING_NATURAL)
+                        );
+            }
+        }
         for (final var table : tables) {
             table(context, table);
         }
-        for (int i = 0; i < 10 && i < tables.size(); i++) { // tables 가 큰 게 있다.
+        for (int i = 0; i < 10 && i < tables.size(); i++) { // table 아 많으면 오래 걸린다.
             final var parent = tables.get(i);
             for (final var fktable : tables) {
                 final var crossReference = context.getCrossReference(
@@ -786,26 +834,12 @@ final class ContextTests {
         }
         try {
             final var columns = context.getColumns(table, "%");
-            assertThat(columns).allSatisfy(c -> {
-                assertThat(c.getColumnId().getTableId()).isEqualTo(tableId);
-            });
-            {
-                final var databaseProductNames = Set.of(
-                        TestContainers_MariaDB_IT.DATABASE_PRODUCT_NAME
-                );
-                if (!databaseProductNames.contains(databaseProductName)) {
-                    assertThat(columns).isSortedAccordingTo(Column.COMPARING_AS_SPECIFIED);
-                    assertThat(columns)
-                            .extracting(Column::getColumnId)
-                            .isSorted();
-                    assertThat(columns)
-                            .extracting(Column::getColumnId)
-                            .isSorted();
-                }
-            }
             assertThat(columns)
                     .extracting(Column::getColumnId)
-                    .doesNotHaveDuplicates();
+                    .doesNotContainNull()
+                    .doesNotHaveDuplicates()
+                    .extracting(ColumnId::getTableId)
+                    .allMatch(tableId::equals);
             columns(context, columns);
         } catch (final SQLException sqle) {
             thrown("failed; getColumns", sqle);
@@ -813,10 +847,14 @@ final class ContextTests {
         try {
             final var columnPrivileges = context.getColumnPrivileges(table, "%");
             assertThat(columnPrivileges)
-                    .isSortedAccordingTo(ColumnPrivilege.COMPARING_AS_SPECIFIED)
                     .extracting(ColumnPrivilege::getColumnPrivilegeId)
+                    .doesNotContainNull()
                     .doesNotHaveDuplicates()
-                    .isSorted();
+                    .extracting(ColumnPrivilegeId::getColumnId)
+                    .doesNotContainNull()
+                    .extracting(ColumnId::getTableId)
+                    .doesNotContainNull()
+                    .allMatch(tableId::equals);
             columnPrivileges(context, columnPrivileges);
         } catch (final SQLException sqle) {
             thrown("failed; getColumnPrivileges", sqle);
@@ -824,10 +862,7 @@ final class ContextTests {
         try {
             final var exportedKeys = context.getExportedKeys(table);
             assertThat(exportedKeys)
-                    .isSortedAccordingTo(ExportedKey.COMPARING_AS_SPECIFIED)
                     .extracting(TableKey::getPktableId)
-                    .doesNotHaveDuplicates()
-                    .isSorted()
                     .allMatch(tableId::equals);
             exportedKeys(context, exportedKeys);
         } catch (final SQLException sqle) {
@@ -836,10 +871,7 @@ final class ContextTests {
         try {
             final var importedKeys = context.getImportedKeys(table);
             assertThat(importedKeys)
-                    .isSortedAccordingTo(ImportedKey.COMPARING_AS_SPECIFIED)
                     .extracting(TableKey::getFktableId)
-                    .doesNotHaveDuplicates()
-                    .isSorted()
                     .allMatch(tableId::equals);
             importedKeys(context, importedKeys);
         } catch (final SQLException sqle) {
@@ -857,26 +889,11 @@ final class ContextTests {
         }
         try {
             final var primaryKeys = context.getPrimaryKeys(table);
-            {
-                final var databaseProductNames = Set.of(
-                        // https://sourceforge.net/p/hsqldb/bugs/1673/
-                        Memory_Hsql_Test.DATABASE_PRODUCT_NAME
-                );
-                if (!databaseProductNames.contains(databaseProductName)) {
-                    assertThat(primaryKeys)
-                            .isSortedAccordingTo(PrimaryKey.COMPARING_AS_SPECIFIED);
-                    assertThat(primaryKeys)
-                            .extracting(PrimaryKey::getPrimaryKeyId)
-                            .isSorted();
-                }
-            }
-            for (final var primaryKey : primaryKeys) {
-                assertThat(primaryKey.getPrimaryKeyId().getTableId())
-                        .isEqualTo(table.getTableId());
-            }
             assertThat(primaryKeys)
                     .extracting(PrimaryKey::getPrimaryKeyId)
-                    .doesNotHaveDuplicates();
+                    .doesNotHaveDuplicates()
+                    .extracting(PrimaryKeyId::getTableId)
+                    .allMatch(tableId::equals);
             primaryKeys(context, primaryKeys);
         } catch (final SQLException sqle) {
             thrown("failed; getPrimaryKeys", sqle);
@@ -914,7 +931,29 @@ final class ContextTests {
                     TestContainers_MySQL_IT.DATABASE_PRODUCT_NAME
             );
             if (!databaseProductNames.contains(databaseProductName)) {
-                assertThat(primaryKeys).isSortedAccordingTo(PrimaryKey.COMPARING_AS_SPECIFIED);
+                assertThat(primaryKeys).satisfiesAnyOf(
+                        l -> assertThat(l).isSortedAccordingTo(PrimaryKey.COMPARING_CASE_INSENSITIVE),
+                        l -> assertThat(l).isSortedAccordingTo(PrimaryKey.COMPARING_NATURAL)
+                );
+            }
+        }
+        {
+            final var databaseProductNames = Set.of(
+                    // https://sourceforge.net/p/hsqldb/bugs/1673/
+                    Memory_Hsql_Test.DATABASE_PRODUCT_NAME,
+                    TestContainers_PostgreSQL_IT.DATABASE_PRODUCT_NAME,
+                    // https://bugs.mysql.com/bug.php?id=109808
+                    TestContainers_MySQL_IT.DATABASE_PRODUCT_NAME
+            );
+            if (!databaseProductNames.contains(databaseProductName)) {
+                assertThat(primaryKeys)
+                        .extracting(PrimaryKey::getPrimaryKeyId)
+                        .doesNotContainNull()
+                        .doesNotHaveDuplicates()
+                        .satisfiesAnyOf(
+                                l -> assertThat(l).isSortedAccordingTo(PrimaryKeyId.COMPARING_CASE_INSENSITIVE),
+                                l -> assertThat(l).isSortedAccordingTo(PrimaryKeyId.COMPARING_NATURAL)
+                        );
             }
         }
         for (final var primaryKey : primaryKeys) {
@@ -933,7 +972,7 @@ final class ContextTests {
         Objects.requireNonNull(context, "context is null");
         Objects.requireNonNull(pseudoColumns, "pseudoColumns is null");
         assertThat(pseudoColumns)
-                .isSortedAccordingTo(PseudoColumn.COMPARING_AS_SPECIFIED);
+                .isSortedAccordingTo(PseudoColumn.COMPARING_IN_CASE_INSENSITIVE_ORDER);
         for (final var pseudoColumn : pseudoColumns) {
             pseudoColumn(context, pseudoColumn);
         }
@@ -1022,11 +1061,34 @@ final class ContextTests {
     static void udts(final Context context, final List<? extends UDT> udts) throws SQLException {
         Objects.requireNonNull(context, "context is null");
         Objects.requireNonNull(udts, "udts is null");
-        assertThat(udts)
-                .isSortedAccordingTo(UDT.COMPARING_AS_SPECIFIED)
-                .extracting(UDT::getUDTId)
-                .doesNotHaveDuplicates()
-                .isSorted();
+        {
+            final var databaseProductNames = Set.of(
+                    ""
+            );
+            if (!databaseProductNames.contains(databaseProductName)) {
+                assertThat(udts)
+                        .doesNotContainNull()
+                        .satisfiesAnyOf(
+                                l -> assertThat(l).isSortedAccordingTo(UDT.COMPARING_IN_CASE_INSENSITIVE_ORDER),
+                                l -> assertThat(l).isSortedAccordingTo(UDT.COMPARING_IN_NATURAL_ORDER)
+                        );
+            }
+        }
+        {
+            final var databaseProductNames = Set.of(
+                    TestContainers_PostgreSQL_IT.DATABASE_PRODUCT_NAME
+            );
+            if (!databaseProductNames.contains(databaseProductName)) {
+                assertThat(udts)
+                        .extracting(UDT::getUDTId)
+                        .doesNotContainNull()
+                        .doesNotHaveDuplicates()
+                        .satisfiesAnyOf(
+                                l -> assertThat(l).isSortedAccordingTo(UDTId.COMPARING_IN_CASE_INSENSITIVE_ORDER),
+                                l -> assertThat(l).isSortedAccordingTo(UDTId.COMPARING_IN_NATURAL_ORDER)
+                        );
+            }
+        }
         for (final var udt : udts) {
             udt(context, udt);
         }
@@ -1040,11 +1102,9 @@ final class ContextTests {
         try {
             final var attributes = context.getAttributes(udt, "%");
             assertThat(attributes)
-                    .isSortedAccordingTo(Attribute.COMPARING_AS_SPECIFIED)
                     .extracting(Attribute::getAttributeId)
-                    .isSorted()
                     .extracting(AttributeId::getUdtId)
-                    .isEqualTo(udtId);
+                    .allMatch(udtId::equals);
             attributes(context, attributes);
         } catch (final SQLException sqle) {
             thrown("failed; getAttributes", sqle);

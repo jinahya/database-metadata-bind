@@ -29,6 +29,9 @@ import lombok.experimental.SuperBuilder;
 import java.util.Comparator;
 import java.util.Objects;
 
+import static java.lang.String.CASE_INSENSITIVE_ORDER;
+import static java.util.Comparator.naturalOrder;
+
 @Data
 @RequiredArgsConstructor(access = AccessLevel.PRIVATE)
 @SuperBuilder(toBuilder = true)
@@ -36,10 +39,15 @@ public final class ProcedureId implements MetadataTypeId<ProcedureId, Procedure>
 
     private static final long serialVersionUID = 227742014479297143L;
 
-    private static final Comparator<ProcedureId> COMPARATOR =
-            Comparator.comparing(ProcedureId::getSchemaId)
-                    .thenComparing(ProcedureId::getProcedureName, Comparator.nullsFirst(String.CASE_INSENSITIVE_ORDER))
-                    .thenComparing(ProcedureId::getSpecificName, Comparator.nullsFirst(String.CASE_INSENSITIVE_ORDER));
+    public static final Comparator<ProcedureId> COMPARING_IN_CASE_INSENSITIVE =
+            Comparator.comparing(ProcedureId::getSchemaId, SchemaId.COMPARING_IN_CASE_INSENSITIVE_ORDER)
+                    .thenComparing(ProcedureId::getProcedureName, CASE_INSENSITIVE_ORDER)
+                    .thenComparing(ProcedureId::getSpecificName, CASE_INSENSITIVE_ORDER);
+
+    public static final Comparator<ProcedureId> COMPARING_IN_NATURAL =
+            Comparator.comparing(ProcedureId::getSchemaId, SchemaId.COMPARING_IN_CASE_INSENSITIVE_ORDER)
+                    .thenComparing(ProcedureId::getProcedureName, naturalOrder())
+                    .thenComparing(ProcedureId::getSpecificName, naturalOrder());
 
     static ProcedureId of(final SchemaId schemaId, final String procedureName, final String specificName) {
         Objects.requireNonNull(schemaId, "schemaId is null");
@@ -63,11 +71,6 @@ public final class ProcedureId implements MetadataTypeId<ProcedureId, Procedure>
 
     public static ProcedureId of(final String procedureCat, final String procedureSchem, final String specificName) {
         return of(procedureCat, procedureSchem, "", specificName);
-    }
-
-    @Override
-    public int compareTo(final ProcedureId o) {
-        return COMPARATOR.compare(this, Objects.requireNonNull(o, "o is null"));
     }
 
     private final SchemaId schemaId;

@@ -29,6 +29,9 @@ import lombok.experimental.SuperBuilder;
 import java.util.Comparator;
 import java.util.Objects;
 
+import static java.util.Comparator.naturalOrder;
+import static java.util.Comparator.nullsFirst;
+
 @Data
 @RequiredArgsConstructor(access = AccessLevel.PRIVATE)
 @SuperBuilder(toBuilder = true)
@@ -36,10 +39,15 @@ public final class FunctionId implements MetadataTypeId<FunctionId, Function> {
 
     private static final long serialVersionUID = 8614281252146063072L;
 
-    private static final Comparator<FunctionId> COMPARATOR =
-            Comparator.comparing(FunctionId::getSchemaId)
-                    .thenComparing(FunctionId::getFunctionName)
-                    .thenComparing(FunctionId::getSpecificName);
+    public static final Comparator<FunctionId> COMPARING_CASE_INSENSITIVE =
+            Comparator.comparing(FunctionId::getSchemaId, SchemaId.COMPARING_IN_CASE_INSENSITIVE_ORDER)
+                    .thenComparing(FunctionId::getFunctionName, nullsFirst(String.CASE_INSENSITIVE_ORDER))
+                    .thenComparing(FunctionId::getSpecificName, nullsFirst(String.CASE_INSENSITIVE_ORDER));
+
+    public static final Comparator<FunctionId> COMPARING_NATURAL =
+            Comparator.comparing(FunctionId::getSchemaId, SchemaId.COMPARING_IN_NATURAL_ORDER)
+                    .thenComparing(FunctionId::getFunctionName, nullsFirst(naturalOrder()))
+                    .thenComparing(FunctionId::getSpecificName, nullsFirst(naturalOrder()));
 
     static FunctionId of(final SchemaId schemaId, final String functionName, final String specificName) {
         Objects.requireNonNull(schemaId, "schemaId is null");
@@ -63,11 +71,6 @@ public final class FunctionId implements MetadataTypeId<FunctionId, Function> {
 
     public static FunctionId of(final String functionCat, final String functionSchem, final String specificName) {
         return of(functionCat, functionSchem, "", specificName);
-    }
-
-    @Override
-    public int compareTo(final FunctionId o) {
-        return COMPARATOR.compare(this, Objects.requireNonNull(o, "o is null"));
     }
 
     private final SchemaId schemaId;

@@ -35,9 +35,13 @@ public final class ColumnPrivilegeId implements MetadataTypeId<ColumnPrivilegeId
 
     private static final long serialVersionUID = 7221973324274278465L;
 
-    private static final Comparator<ColumnPrivilegeId> COMPARATOR =
-            Comparator.comparing(ColumnPrivilegeId::getColumnId)
+    public static final Comparator<ColumnPrivilegeId> COMPARING_CASE_INSENSITIVE =
+            Comparator.comparing(ColumnPrivilegeId::getColumnId, ColumnId.COMPARING_CASE_INSENSITIVE)
                     .thenComparing(ColumnPrivilegeId::getPrivilege, String.CASE_INSENSITIVE_ORDER);
+
+    public static final Comparator<ColumnPrivilegeId> COMPARING_NATURAL =
+            Comparator.comparing(ColumnPrivilegeId::getColumnId, ColumnId.COMPARING_NATURAL)
+                    .thenComparing(ColumnPrivilegeId::getPrivilege);
 
     public static ColumnPrivilegeId of(final ColumnId columnId, final String privilege) {
         Objects.requireNonNull(columnId, "columnId is null");
@@ -51,11 +55,6 @@ public final class ColumnPrivilegeId implements MetadataTypeId<ColumnPrivilegeId
     public static ColumnPrivilegeId of(final String tableCat, final String tableSchem, final String tableName,
                                        final String columnName, final String privilege) {
         return of(ColumnId.of(tableCat, tableSchem, tableName, columnName), privilege);
-    }
-
-    @Override
-    public int compareTo(final ColumnPrivilegeId o) {
-        return COMPARATOR.compare(this, Objects.requireNonNull(o, "o is null"));
     }
 
     private final ColumnId columnId;

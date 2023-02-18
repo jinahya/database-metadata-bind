@@ -48,13 +48,23 @@ public abstract class TableKey<T extends TableKey<T>> extends AbstractMetadataTy
 
     private static final long serialVersionUID = 6713872409315471232L;
 
-    static <T extends TableKey> Comparator<T> comparingPktableKeySeq() {
-        return Comparator.<T, TableId>comparing(TableKey::getPktableId)
+    public static <T extends TableKey<T>> Comparator<T> comparingPktableKeySeqCaseInsensitive() {
+        return Comparator.<T, TableId>comparing(TableKey::getPktableId, TableId.COMPARING_CASE_INSENSITIVE)
                 .thenComparingInt(TableKey::getKeySeq);
     }
 
-    static <T extends TableKey> Comparator<T> comparingFktableKeySeq() {
-        return Comparator.<T, TableId>comparing(TableKey::getFktableId)
+    public static <T extends TableKey<T>> Comparator<T> comparingPktableKeySeqNatual() {
+        return Comparator.<T, TableId>comparing(TableKey::getPktableId, TableId.COMPARING_NATURAL)
+                .thenComparingInt(TableKey::getKeySeq);
+    }
+
+    public static <T extends TableKey<T>> Comparator<T> comparingFktableKeySeqCaseInsensitive() {
+        return Comparator.<T, TableId>comparing(TableKey::getFktableId, TableId.COMPARING_CASE_INSENSITIVE)
+                .thenComparingInt(TableKey::getKeySeq);
+    }
+
+    public static <T extends TableKey<T>> Comparator<T> comparingFktableKeySeqNatural() {
+        return Comparator.<T, TableId>comparing(TableKey::getFktableId, TableId.COMPARING_NATURAL)
                 .thenComparingInt(TableKey::getKeySeq);
     }
 

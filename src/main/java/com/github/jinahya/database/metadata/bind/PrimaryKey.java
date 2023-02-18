@@ -49,9 +49,11 @@ public class PrimaryKey extends AbstractMetadataType {
 
     private static final long serialVersionUID = 3159826510060898330L;
 
-    public static final Comparator<PrimaryKey> COMPARING_AS_SPECIFIED = Comparator.comparing(PrimaryKey::getColumnName);
+    public static final Comparator<PrimaryKey> COMPARING_CASE_INSENSITIVE
+            = Comparator.comparing(PrimaryKey::getColumnName, String.CASE_INSENSITIVE_ORDER);
 
-    public static final Comparator<PrimaryKey> COMPARING_KEY_SEQ = Comparator.comparingInt(PrimaryKey::getKeySeq);
+    public static final Comparator<PrimaryKey> COMPARING_NATURAL
+            = Comparator.comparing(PrimaryKey::getColumnName);
 
     public static final String COLUMN_LABEL_TABLE_CAT = "TABLE_CAT";
 
