@@ -25,21 +25,38 @@ import lombok.Data;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.SuperBuilder;
 
+import java.util.Comparator;
+import java.util.Objects;
+
 @Data
-@RequiredArgsConstructor(access = AccessLevel.PACKAGE)
+@RequiredArgsConstructor(access = AccessLevel.PRIVATE)
 @SuperBuilder(toBuilder = true)
-public final class ProcedureColumnId implements MetadataTypeId<ProcedureColumn> {
+public final class ProcedureColumnId implements MetadataTypeId<ProcedureColumnId, ProcedureColumn> {
 
     private static final long serialVersionUID = 7459854669925402253L;
 
-    public static ProcedureColumnId of(final ProcedureId procedureId, final String specificName) {
+    public static final Comparator<ProcedureColumnId> COMPARING_IN_CASE_INSENSITIVE_ORDER =
+            Comparator.comparing(ProcedureColumnId::getProcedureId, ProcedureId.COMPARING_IN_CASE_INSENSITIVE)
+                    .thenComparing(ProcedureColumnId::getColumnName, String.CASE_INSENSITIVE_ORDER);
+
+    public static final Comparator<ProcedureColumnId> COMPARING_IN_NATURAL_ORDER =
+            Comparator.comparing(ProcedureColumnId::getProcedureId, ProcedureId.COMPARING_IN_NATURAL)
+                    .thenComparing(ProcedureColumnId::getColumnName);
+
+    public static ProcedureColumnId of(final ProcedureId procedureId, final String columnName) {
         return builder()
                 .procedureId(procedureId)
-                .specificName(specificName)
+                .columnName(Objects.requireNonNull(columnName, "columnName is null"))
                 .build();
+    }
+
+    public static ProcedureColumnId of(final String procedureCat, final String procedureSchem,
+                                       final String procedureName, final String specifiedName,
+                                       final String columnName) {
+        return of(ProcedureId.of(procedureCat, procedureSchem, procedureName, specifiedName), columnName);
     }
 
     private final ProcedureId procedureId;
 
-    private final String specificName;
+    private final String columnName;
 }

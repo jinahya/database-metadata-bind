@@ -28,11 +28,13 @@ import lombok.ToString;
 import lombok.experimental.SuperBuilder;
 
 import java.util.Comparator;
+import java.util.Objects;
 
 /**
  * An entity class for binding the result of {@link java.sql.DatabaseMetaData#getTableTypes()}.
  *
  * @author Jin Kwon &lt;jinahya_at_gmail.com&gt;
+ * @see Context#getTableTypes()
  */
 @EqualsAndHashCode(callSuper = true)
 @ToString(callSuper = true)
@@ -40,12 +42,20 @@ import java.util.Comparator;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @SuperBuilder(toBuilder = true)
 public class TableType
-        extends AbstractMetadataType {
+        extends AbstractMetadataType
+        implements Comparable<TableType> {
 
     private static final long serialVersionUID = -7630634982776331078L;
 
-    public static final Comparator<TableType> COMPARING_TABLE_TYPE = Comparator.comparing(TableType::getTableType);
+    public static final Comparator<TableType> COMPARING_AS_SPECIFIED = Comparator.comparing(TableType::getTableType);
 
-    @ColumnLabel("TABLE_TYPE")
+    public static final String COLUMN_LABEL_TABLE_TYPE = "TABLE_TYPE";
+
+    @Override
+    public int compareTo(final TableType o) {
+        return COMPARING_AS_SPECIFIED.compare(this, Objects.requireNonNull(o, "o is null"));
+    }
+
+    @ColumnLabel(COLUMN_LABEL_TABLE_TYPE)
     private String tableType;
 }

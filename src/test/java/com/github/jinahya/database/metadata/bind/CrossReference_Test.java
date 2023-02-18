@@ -20,9 +20,9 @@ package com.github.jinahya.database.metadata.bind;
  * #L%
  */
 
-class ImportedKeyTest extends TableKeyTest<ImportedKey> {
+class CrossReference_Test extends AbstractMetadataTypeTest<CrossReference> {
 
-    ImportedKeyTest() {
-        super(ImportedKey.class);
+    CrossReference_Test() {
+        super(CrossReference.class);
     }
 }

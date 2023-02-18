@@ -20,9 +20,9 @@ package com.github.jinahya.database.metadata.bind;
  * #L%
  */
 
-class TablePrivilegeTest extends AbstractMetadataTypeTest<TablePrivilege> {
+class Table_Test extends AbstractMetadataTypeTest<Table> {
 
-    TablePrivilegeTest() {
-        super(TablePrivilege.class);
+    Table_Test() {
+        super(Table.class);
     }
 }

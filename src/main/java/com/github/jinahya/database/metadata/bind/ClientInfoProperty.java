@@ -39,8 +39,7 @@ import java.sql.DatabaseMetaData;
 @Data
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @SuperBuilder(toBuilder = true)
-public class ClientInfoProperty
-        extends AbstractMetadataType {
+public class ClientInfoProperty extends AbstractMetadataType {
 
     private static final long serialVersionUID = -2913230435651853254L;
 

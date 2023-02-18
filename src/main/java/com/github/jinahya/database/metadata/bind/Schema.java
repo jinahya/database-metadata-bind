@@ -23,14 +23,14 @@ package com.github.jinahya.database.metadata.bind;
 import lombok.AccessLevel;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 import lombok.ToString;
+import lombok.experimental.Accessors;
 import lombok.experimental.SuperBuilder;
 
-import java.sql.SQLException;
 import java.util.Comparator;
-import java.util.List;
-import java.util.Objects;
 import java.util.Optional;
 
 /**
@@ -52,14 +52,28 @@ import java.util.Optional;
 @Data
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @SuperBuilder(toBuilder = true)
-public class Schema
-        extends AbstractMetadataType {
+public class Schema extends AbstractMetadataType {
 
     private static final long serialVersionUID = 7457236468401244963L;
 
-    public static final Comparator<Schema> COMPARING_TABLE_CATALOG_TABLE_SCHEM =
-            Comparator.comparing(Schema::getTableCatalog, Comparator.nullsFirst(Comparator.naturalOrder()))
-                    .thenComparing(Schema::getTableSchem, Comparator.nullsFirst(Comparator.naturalOrder()));
+    /**
+     * Returns a new instance whose {@code tableCatalog} is {@value Catalog#COLUMN_VALUE_TABLE_CAT_EMPTY} and whose
+     * {@code tableSchem} is {@value #COLUMN_VALUE_TABLE_SCHEM_EMPTY}.
+     *
+     * @return a new virtual instance.
+     */
+    public static Schema newVirtualInstance() {
+        return builder()
+                .tableCatalog(Catalog.COLUMN_VALUE_TABLE_CAT_EMPTY)
+                .tableSchem(Schema.COLUMN_VALUE_TABLE_SCHEM_EMPTY)
+                .build();
+    }
+
+    public static final Comparator<Schema> COMPARING_AS_SPECIFIED_CASE_INSENSITIVE =
+            Comparator.comparing(Schema::getSchemaId, SchemaId.CASE_INSENSITIVE_ORDER);
+
+    public static final Comparator<Schema> COMPARING_AS_SPECIFIED_NATURAL =
+            Comparator.comparing(Schema::getSchemaId, SchemaId.NATURAL_ORDER);
 
     public static final String COLUMN_LABEL_TABLE_CATALOG = "TABLE_CATALOG";
 
@@ -67,18 +81,12 @@ public class Schema
 
     public static final String COLUMN_VALUE_TABLE_SCHEM_EMPTY = "";
 
-    public List<SuperTable> getSuperTables(final Context context, final String tableNamePattern) throws SQLException {
-        Objects.requireNonNull(context, "context is null");
-        return context.getSuperTables(getTableCatalogNonNull(), getTableSchem(), tableNamePattern);
-    }
-
-    public List<SuperType> getSuperTypes(final Context context, final String typeNamePattern) throws SQLException {
-        Objects.requireNonNull(context, "context is null");
-        return context.getSuperTypes(getTableCatalogNonNull(), getTableSchem(), typeNamePattern);
-    }
-
     public SchemaId getSchemaId() {
         return SchemaId.of(getTableCatalogNonNull(), getTableSchem());
+    }
+
+    public CatalogId getCatalogId() {
+        return getSchemaId().getCatalogId();
     }
 
     String getTableCatalogNonNull() {
@@ -92,4 +100,11 @@ public class Schema
 
     @ColumnLabel(COLUMN_LABEL_TABLE_SCHEM)
     private String tableSchem;
+
+    @Accessors(fluent = true)
+    @Setter(AccessLevel.PACKAGE)
+    @Getter(AccessLevel.PACKAGE)
+    @EqualsAndHashCode.Exclude
+    @ToString.Exclude
+    private transient Catalog catalog;
 }

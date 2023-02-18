@@ -23,41 +23,107 @@ package com.github.jinahya.database.metadata.bind;
 import lombok.AccessLevel;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 import lombok.ToString;
+import lombok.experimental.Accessors;
 import lombok.experimental.SuperBuilder;
 
 import java.sql.DatabaseMetaData;
 import java.util.Comparator;
+import java.util.Optional;
 
 /**
  * A class for binding results of {@link DatabaseMetaData#getAttributes(String, String, String, String)} method.
  *
  * @author Jin Kwon &lt;jinahya_at_gmail.com&gt;
  * @see Context#getAttributes(String, String, String, String)
+ * @see NullableEnum
  */
-//@ChildOf(UDT.class)
+@ChildOf(UDT.class)
 @EqualsAndHashCode(callSuper = true)
 @ToString(callSuper = true)
 @Data
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @SuperBuilder(toBuilder = true)
-public class Attribute
-        extends AbstractMetadataType {
+public class Attribute extends AbstractMetadataType {
 
     private static final long serialVersionUID = 1913681105410440186L;
 
-    public static final Comparator<Attribute> COMPARING_TYPE_CAT_TYPE_SCHEM_TYPE_NAME_ORDINAL_POSITION =
-            Comparator.comparing(Attribute::getTypeCat, Comparator.nullsFirst(Comparator.naturalOrder()))
-                    .thenComparing(Attribute::getTypeSchem, Comparator.nullsFirst(Comparator.naturalOrder()))
-                    .thenComparing(Attribute::getTypeName)
-                    .thenComparingInt(Attribute::getOrdinalPosition);
+    public static final Comparator<Attribute> CASE_INSENSITIVE_ORDER =
+            Comparator.comparing(Attribute::getAttributeId, AttributeId.CASE_INSENSITIVE_ORDER);
+
+    public static final Comparator<Attribute> NATURAL_ORDER =
+            Comparator.comparing(Attribute::getAttributeId, AttributeId.COMPARING_NATURAL);
+
+    public static final String COLUMN_LABEL_NULLABLE = "NULLABLE";
+
+    public enum NullableEnum implements _IntFieldEnum<NullableEnum> {
+
+        /**
+         * A value for {@link DatabaseMetaData#attributeNoNulls}({@value DatabaseMetaData#attributeNoNulls}).
+         */
+        ATTRIBUTE_NO_NULLS(DatabaseMetaData.attributeNoNulls),// 0
+
+        /**
+         * A value for {@link DatabaseMetaData#attributeNullable}({@value DatabaseMetaData#attributeNullable}).
+         */
+        ATTRIBUTE_NULLABLE(DatabaseMetaData.attributeNullable), // 1
+
+        /**
+         * A value for
+         * {@link DatabaseMetaData#attributeNullableUnknown}({@value DatabaseMetaData#attributeNullableUnknown}).
+         */
+        PSEUDO(DatabaseMetaData.attributeNullableUnknown) // 2
+        ;
+
+        /**
+         * Finds the value for specified {@link Attribute#COLUMN_LABEL_NULLABLE} attribute value.
+         *
+         * @param nullable the value of {@link Attribute#COLUMN_LABEL_NULLABLE} attribute to match.
+         * @return the value matched.
+         * @throws IllegalStateException when no value matched.
+         */
+        public static NullableEnum valueOfNullable(final int nullable) {
+            return _IntFieldEnum.valueOfFieldValue(NullableEnum.class, nullable);
+        }
+
+        NullableEnum(final int fieldValue) {
+            this.fieldValue = fieldValue;
+        }
+
+        @Override
+        public int fieldValueAsInt() {
+            return fieldValue;
+        }
+
+        private final int fieldValue;
+    }
 
     public static final String VALUE_IS_NULLABLE_YES = "YES";
 
     public static final String VALUE_IS_NULLABLE_NO = "NO";
 
     public static final String VALUE_IS_NULLABLE_EMPTY = "";
+
+    public AttributeId getAttributeId() {
+        return AttributeId.of(
+                getTypeCatNonNull(),
+                getTypeSchemNonNull(),
+                getTypeName(),
+                getAttrName(),
+                getOrdinalPosition()
+        );
+    }
+
+    String getTypeCatNonNull() {
+        return Optional.ofNullable(getTypeCat()).orElse(Catalog.COLUMN_VALUE_TABLE_CAT_EMPTY);
+    }
+
+    String getTypeSchemNonNull() {
+        return Optional.ofNullable(getTypeSchem()).orElse(Schema.COLUMN_VALUE_TABLE_SCHEM_EMPTY);
+    }
 
     @NullableBySpecification
     @ColumnLabel("TYPE_CAT")
@@ -89,7 +155,7 @@ public class Attribute
     @ColumnLabel("NUM_PREC_RADIX")
     private int numPrecRadix;
 
-    @ColumnLabel("NULLABLE")
+    @ColumnLabel(COLUMN_LABEL_NULLABLE)
     private int nullable;
 
     @NullableBySpecification
@@ -132,4 +198,11 @@ public class Attribute
     @NullableBySpecification
     @ColumnLabel("SOURCE_DATA_TYPE")
     private Integer sourceDataType;
+
+    @Accessors(fluent = true)
+    @Setter(AccessLevel.PACKAGE)
+    @Getter(AccessLevel.PACKAGE)
+    @EqualsAndHashCode.Exclude
+    @ToString.Exclude
+    private transient UDT udt;
 }

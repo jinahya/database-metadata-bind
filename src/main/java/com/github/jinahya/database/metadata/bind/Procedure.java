@@ -47,19 +47,23 @@ import java.util.Optional;
 @Data
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @SuperBuilder(toBuilder = true)
-public class Procedure
-        extends AbstractMetadataType {
+public class Procedure extends AbstractMetadataType {
 
     private static final long serialVersionUID = -6262056388403934829L;
 
-    public static final Comparator<Procedure> COMPARING_PROCEDURE_CAT_PROCEDURE_SCHEM_PROCEDURE_NAME_SPECIFIC_NAME
-            = Comparator.comparing(Procedure::getProcedureCat, Comparator.nullsFirst(Comparator.naturalOrder()))
-            .thenComparing(Procedure::getProcedureSchem, Comparator.nullsFirst(Comparator.naturalOrder()))
-            .thenComparing(Procedure::getProcedureName)
-            .thenComparing(Procedure::getSpecificName);
+    public static final Comparator<Procedure> COMPARING_IN_CASE_INSENSITIVE_ORDER
+            = Comparator.comparing(Procedure::getProcedureId, ProcedureId.COMPARING_IN_CASE_INSENSITIVE);
+
+    public static final Comparator<Procedure> COMPARING_IN_NATURAL_ORDER
+            = Comparator.comparing(Procedure::getProcedureId, ProcedureId.COMPARING_IN_NATURAL);
 
     public ProcedureId getProcedureId() {
-        return ProcedureId.of(getProcedureCatNonNull(), getProcedureSchemNonNull(), getSpecificName());
+        return ProcedureId.of(
+                getProcedureCatNonNull(),
+                getProcedureSchemNonNull(),
+                getProcedureName(),
+                getSpecificName()
+        );
     }
 
     public List<ProcedureColumn> getProcedureColumns(final Context context, final String columnNamePattern)

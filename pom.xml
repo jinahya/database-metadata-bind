@@ -367,7 +367,7 @@
             <id>enforce-dependency-convergence</id>
             <configuration>
               <rules>
-                <dependencyConvergence />
+                <dependencyConvergence/>
               </rules>
             </configuration>
             <goals>

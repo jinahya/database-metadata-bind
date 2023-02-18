@@ -22,28 +22,61 @@ package com.github.jinahya.database.metadata.bind;
 
 import lombok.AccessLevel;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.SuperBuilder;
 
+import java.util.Comparator;
+import java.util.Objects;
+
+import static java.lang.String.CASE_INSENSITIVE_ORDER;
+import static java.util.Comparator.naturalOrder;
+
 @Data
-@RequiredArgsConstructor(access = AccessLevel.PACKAGE)
+@RequiredArgsConstructor(access = AccessLevel.PRIVATE)
 @SuperBuilder(toBuilder = true)
-public final class ProcedureId implements MetadataTypeId<Procedure> {
+public final class ProcedureId implements MetadataTypeId<ProcedureId, Procedure> {
 
     private static final long serialVersionUID = 227742014479297143L;
 
-    public static ProcedureId of(final SchemaId schemaId, final String specificName) {
+    public static final Comparator<ProcedureId> COMPARING_IN_CASE_INSENSITIVE =
+            Comparator.comparing(ProcedureId::getSchemaId, SchemaId.CASE_INSENSITIVE_ORDER)
+                    .thenComparing(ProcedureId::getProcedureName, CASE_INSENSITIVE_ORDER)
+                    .thenComparing(ProcedureId::getSpecificName, CASE_INSENSITIVE_ORDER);
+
+    public static final Comparator<ProcedureId> COMPARING_IN_NATURAL =
+            Comparator.comparing(ProcedureId::getSchemaId, SchemaId.CASE_INSENSITIVE_ORDER)
+                    .thenComparing(ProcedureId::getProcedureName, naturalOrder())
+                    .thenComparing(ProcedureId::getSpecificName, naturalOrder());
+
+    static ProcedureId of(final SchemaId schemaId, final String procedureName, final String specificName) {
+        Objects.requireNonNull(schemaId, "schemaId is null");
+        Objects.requireNonNull(procedureName, "procedureName is null");
+        Objects.requireNonNull(specificName, "specificName is null");
         return builder()
                 .schemaId(schemaId)
+                .procedureName(procedureName)
                 .specificName(specificName)
                 .build();
     }
 
+    static ProcedureId of(final String procedureCat, final String procedureSchem, final String procedureName,
+                          final String specificName) {
+        return of(SchemaId.of(procedureCat, procedureSchem), procedureName, specificName);
+    }
+
+    public static ProcedureId of(final SchemaId schemaId, final String specificName) {
+        return of(schemaId, "", specificName);
+    }
+
     public static ProcedureId of(final String procedureCat, final String procedureSchem, final String specificName) {
-        return of(SchemaId.of(procedureCat, procedureSchem), specificName);
+        return of(procedureCat, procedureSchem, "", specificName);
     }
 
     private final SchemaId schemaId;
+
+    @EqualsAndHashCode.Exclude
+    private final String procedureName;
 
     private final String specificName;
 }

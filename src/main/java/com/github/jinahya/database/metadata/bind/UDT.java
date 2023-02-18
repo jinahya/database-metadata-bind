@@ -28,10 +28,7 @@ import lombok.ToString;
 import lombok.experimental.SuperBuilder;
 
 import java.sql.DatabaseMetaData;
-import java.sql.SQLException;
 import java.util.Comparator;
-import java.util.List;
-import java.util.Objects;
 import java.util.Optional;
 
 /**
@@ -51,11 +48,13 @@ public class UDT extends AbstractMetadataType {
 
     private static final long serialVersionUID = 8665246093405057553L;
 
-    public static final Comparator<UDT> COMPARING_DATA_TYPE_TYPE_CAT_TYPE_SCHEM_TYPE_NAME =
+    public static final Comparator<UDT> COMPARING_IN_CASE_INSENSITIVE_ORDER =
             Comparator.comparingInt(UDT::getDataType)
-                    .thenComparing(UDT::getTypeCat, Comparator.nullsFirst(Comparator.naturalOrder()))
-                    .thenComparing(UDT::getTypeSchem, Comparator.nullsFirst(Comparator.naturalOrder()))
-                    .thenComparing(UDT::getTypeName);
+                    .thenComparing(UDT::getUDTId, UDTId.CASE_INSENSITIVE_ORDER);
+
+    public static final Comparator<UDT> COMPARING_IN_NATURAL_ORDER =
+            Comparator.comparingInt(UDT::getDataType)
+                    .thenComparing(UDT::getUDTId, UDTId.NATURAL_ORDER);
 
     public static final String COLUMN_LABEL_TYPE_CAT = "TYPE_CAT";
 
@@ -66,21 +65,6 @@ public class UDT extends AbstractMetadataType {
     public static final String COLUMN_LABEL_CLASS_NAME = "CLASS_NAME";
 
     public static final String COLUMN_LABEL_DATA_TYPE = "DATA_TYPE";
-
-    /**
-     * Retrieves a description of the attributes of this type.
-     *
-     * @param context              a context.
-     * @param attributeNamePattern an attribute name pattern; must match the attribute name as it is declared in the
-     *                             database.
-     * @return a list of bound values.
-     * @throws SQLException if a database error occurs.
-     * @see Context#getAttributes(String, String, String, String)
-     */
-    public List<Attribute> getAttributes(final Context context, final String attributeNamePattern) throws SQLException {
-        Objects.requireNonNull(context, "context is null");
-        return context.getAttributes(getTypeCat(), getTypeSchem(), getTypeName(), attributeNamePattern);
-    }
 
     public UDTId getUDTId() {
         return UDTId.of(getTypeCatNonNull(), getTypeSchemNonNull(), getTypeName());

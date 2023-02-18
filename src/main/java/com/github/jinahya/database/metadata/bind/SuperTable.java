@@ -27,6 +27,8 @@ import lombok.NoArgsConstructor;
 import lombok.ToString;
 import lombok.experimental.SuperBuilder;
 
+import java.util.Optional;
+
 /**
  * A entity class for binding the result of
  * {@link java.sql.DatabaseMetaData#getSuperTables(java.lang.String, java.lang.String, java.lang.String)}
@@ -42,7 +44,7 @@ import lombok.experimental.SuperBuilder;
 @SuperBuilder(toBuilder = true)
 public class SuperTable extends AbstractMetadataType {
 
-    private static final long serialVersionUID = -302335602056528563L;
+    private static final long serialVersionUID = 3579710773784268831L;
 
     public static final String COLUMN_NAME_TABLE_CAT = "TABLE_CAT";
 
@@ -51,6 +53,22 @@ public class SuperTable extends AbstractMetadataType {
     public static final String COLUMN_NAME_TABLE_NAME = "TABLE_NAME";
 
     public static final String COLUMN_NAME_SUPERTABLE_NAME = "SUPERTABLE_NAME";
+
+    public TableId getTableId() {
+        return TableId.of(getTableCatNonNull(), getTableSchemNonNull(), getTableName());
+    }
+
+    public TableId getSupertableId() {
+        return TableId.of(getTableCatNonNull(), getTableSchemNonNull(), getSupertableName());
+    }
+
+    String getTableCatNonNull() {
+        return Optional.ofNullable(getTableCat()).orElse(Catalog.COLUMN_VALUE_TABLE_CAT_EMPTY);
+    }
+
+    String getTableSchemNonNull() {
+        return Optional.ofNullable(getTableSchem()).orElse(Schema.COLUMN_VALUE_TABLE_SCHEM_EMPTY);
+    }
 
     @NullableBySpecification
     @ColumnLabel(COLUMN_NAME_TABLE_CAT)

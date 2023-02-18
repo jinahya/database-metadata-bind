@@ -25,15 +25,28 @@ import lombok.Data;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.SuperBuilder;
 
+import java.util.Comparator;
+import java.util.Objects;
+
 @Data
-@RequiredArgsConstructor(access = AccessLevel.PACKAGE)
+@RequiredArgsConstructor(access = AccessLevel.PRIVATE)
 @SuperBuilder(toBuilder = true)
-public final class TableId implements MetadataTypeId<Table> {
+public final class TableId implements MetadataTypeId<TableId, Table> {
 
     private static final long serialVersionUID = -7614201161734063836L;
 
+    public static final Comparator<TableId> COMPARING_CASE_INSENSITIVE =
+            Comparator.comparing(TableId::getSchemaId, SchemaId.CASE_INSENSITIVE_ORDER)
+                    .thenComparing(TableId::getTableName, String.CASE_INSENSITIVE_ORDER);
+
+    public static final Comparator<TableId> COMPARING_NATURAL =
+            Comparator.comparing(TableId::getSchemaId, SchemaId.NATURAL_ORDER)
+                    .thenComparing(TableId::getTableName);
+
     public static TableId of(final SchemaId schemaId, final String tableName) {
-        return TableId.builder()
+        Objects.requireNonNull(schemaId, "schemaId is null");
+        Objects.requireNonNull(tableName, "tableName is null");
+        return builder()
                 .schemaId(schemaId)
                 .tableName(tableName)
                 .build();

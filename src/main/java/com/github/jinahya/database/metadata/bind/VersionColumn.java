@@ -23,16 +23,21 @@ package com.github.jinahya.database.metadata.bind;
 import lombok.AccessLevel;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 import lombok.ToString;
+import lombok.experimental.Accessors;
 import lombok.experimental.SuperBuilder;
 
 import java.sql.DatabaseMetaData;
+import java.util.Objects;
 
 /**
  * A class for binding results of {@link DatabaseMetaData#getVersionColumns(String, String, String)} method.
  *
  * @author Jin Kwon &lt;jinahya_at_gmail.com&gt;
+ * @see Context#getVersionColumns(String, String, String)
  */
 @ChildOf(Table.class)
 @EqualsAndHashCode(callSuper = true)
@@ -40,10 +45,71 @@ import java.sql.DatabaseMetaData;
 @Data
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @SuperBuilder(toBuilder = true)
-public class VersionColumn
-        extends AbstractMetadataType {
+public class VersionColumn extends AbstractMetadataType {
 
     private static final long serialVersionUID = 3587959398829593292L;
+
+    public static final String COLUMN_LABEL_PSEUDO_COLUMN = "PSEUDO_COLUMN";
+
+    /**
+     * Constants for {@link #COLUMN_LABEL_PSEUDO_COLUMN} column values.
+     *
+     * @author Jin Kwon &lt;onacit_at_gmail.com&gt;
+     */
+    public enum PseudoColumnEnum implements _IntFieldEnum<PseudoColumnEnum> {
+
+        /**
+         * A value for {@link DatabaseMetaData#versionColumnUnknown}({@value DatabaseMetaData#versionColumnUnknown}).
+         */
+        VERSION_COLUMN_UNKNOWN(DatabaseMetaData.versionColumnUnknown),// 0
+
+        /**
+         * A value for
+         * {@link DatabaseMetaData#versionColumnNotPseudo}({@value DatabaseMetaData#versionColumnNotPseudo}).
+         */
+        VERSION_COLUMN_NOT_PSEUDO(DatabaseMetaData.versionColumnNotPseudo), // 1
+
+        /**
+         * A value for {@link DatabaseMetaData#versionColumnPseudo}({@value DatabaseMetaData#versionColumnPseudo}).
+         */
+        VERSION_COLUMN_PSEUDO(DatabaseMetaData.versionColumnPseudo) // 2
+        ;
+
+        /**
+         * Finds the value for specified {@link VersionColumn#COLUMN_LABEL_PSEUDO_COLUMN} column value.
+         *
+         * @param pseudoColumn the value of {@link VersionColumn#COLUMN_LABEL_PSEUDO_COLUMN} column to match.
+         * @return the value matched.
+         * @throws IllegalStateException when no value matched.
+         */
+        public static PseudoColumnEnum valueOfPseudoColumn(final int pseudoColumn) {
+            return _IntFieldEnum.valueOfFieldValue(PseudoColumnEnum.class, pseudoColumn);
+        }
+
+        PseudoColumnEnum(final int fieldValue) {
+            this.fieldValue = fieldValue;
+        }
+
+        @Override
+        public int fieldValueAsInt() {
+            return fieldValue;
+        }
+
+        private final int fieldValue;
+    }
+
+    public ColumnId getColumnId(final TableId tableId) {
+        Objects.requireNonNull(tableId, "tableId is null");
+        return ColumnId.of(
+                tableId,
+                getColumnName()
+        );
+    }
+
+    public ColumnId getColumnId(final Table table) {
+        Objects.requireNonNull(table, "table is null");
+        return getColumnId(table.getTableId());
+    }
 
     @NotUsedBySpecification
     @ColumnLabel("SCOPE")
@@ -69,6 +135,13 @@ public class VersionColumn
     @ColumnLabel("DECIMAL_DIGITS")
     private Integer decimalDigits;
 
-    @ColumnLabel("PSEUDO_COLUMN")
+    @ColumnLabel(COLUMN_LABEL_PSEUDO_COLUMN)
     private int pseudoColumn;
+
+    @Accessors(fluent = true)
+    @Setter(AccessLevel.PACKAGE)
+    @Getter(AccessLevel.PACKAGE)
+    @EqualsAndHashCode.Exclude
+    @ToString.Exclude
+    private transient Table table;
 }

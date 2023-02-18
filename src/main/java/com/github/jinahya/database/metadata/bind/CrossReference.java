@@ -46,10 +46,12 @@ public class CrossReference
 
     private static final long serialVersionUID = -5343386346721125961L;
 
-    public static final Comparator<CrossReference> COMPARING_FKTABLE_CAT_FKTABLE_SCHEM_FKTABLE_NAME_KEY_SEQ =
-            Comparator.comparing(CrossReference::getFktableCat, Comparator.nullsFirst(Comparator.naturalOrder()))
-                    .thenComparing(CrossReference::getFktableSchem, Comparator.nullsFirst(Comparator.naturalOrder()))
-                    .thenComparing(CrossReference::getFktableName, Comparator.nullsFirst(Comparator.naturalOrder()))
+    public static final Comparator<CrossReference> COMPARING_CASE_INSENSITIVE =
+            Comparator.comparing(CrossReference::getFktableId, TableId.COMPARING_CASE_INSENSITIVE)
+                    .thenComparingInt(CrossReference::getKeySeq);
+
+    public static final Comparator<CrossReference> COMPARING_NATURAL =
+            Comparator.comparing(CrossReference::getFktableId, TableId.COMPARING_NATURAL)
                     .thenComparingInt(CrossReference::getKeySeq);
 
     public static final String COLUMN_LABEL_UPDATE_RULE = "UPDATE_RULE";
@@ -57,11 +59,15 @@ public class CrossReference
     public static final String ATTRIBUTE_NAME_UPDATE_RULE = "updateRule";
 
     public ColumnId getPkcolumnId() {
-        return ColumnId.of(getPktableCat(), getPktableSchem(), getPktableName(), getPkcolumnName());
+        return ColumnId.of(getPktableCat(), getPktableSchem(), getPktableName(), getPkcolumnName(), 0);
     }
 
     public ColumnId getFkcolumnId() {
-        return ColumnId.of(getFktableCat(), getFktableSchem(), getFktableName(), getFkcolumnName());
+        return ColumnId.of(getFktableCat(), getFktableSchem(), getFktableName(), getFkcolumnName(), 0);
+    }
+
+    TableId getFktableId() {
+        return getFkcolumnId().getTableId();
     }
 
     @NullableBySpecification

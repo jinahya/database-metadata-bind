@@ -24,15 +24,22 @@ import lombok.AccessLevel;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 import lombok.ToString;
 import lombok.experimental.SuperBuilder;
 
 import java.sql.DatabaseMetaData;
 import java.sql.SQLException;
 import java.util.Comparator;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Objects;
 import java.util.Optional;
+
+import static java.lang.String.CASE_INSENSITIVE_ORDER;
+import static java.util.Comparator.naturalOrder;
+import static java.util.Comparator.nullsFirst;
 
 /**
  * A class for binding the result of
@@ -42,7 +49,7 @@ import java.util.Optional;
  * @see Context#getFunctions(String, String, String)
  */
 //@ChildOf(Schema.class)
-//@ParentOf(FunctionColumn.class)
+@ParentOf(FunctionColumn.class)
 @EqualsAndHashCode(callSuper = true)
 @ToString(callSuper = true)
 @Data
@@ -53,11 +60,15 @@ public class Function
 
     private static final long serialVersionUID = -3318947900237453301L;
 
-    public static final Comparator<Function> COMPARING_FUNCTION_CAT_FUNCTION_SCHEM_FUNCTION_NAME_SPECIFIC_NAME
-            = Comparator.comparing(Function::getFunctionCat, Comparator.nullsFirst(Comparator.naturalOrder()))
-            .thenComparing(Function::getFunctionSchem, Comparator.nullsFirst(Comparator.naturalOrder()))
-            .thenComparing(Function::getFunctionName, Comparator.nullsFirst(Comparator.naturalOrder()))
-            .thenComparing(Function::getSpecificName, Comparator.nullsFirst(Comparator.naturalOrder()));
+    public static final Comparator<Function> COMPARING_CASE_INSENSITIVE =
+            Comparator.comparing(Function::getSchemaId, SchemaId.CASE_INSENSITIVE_ORDER)
+                    .thenComparing(Function::getFunctionName, nullsFirst(CASE_INSENSITIVE_ORDER))
+                    .thenComparing(Function::getSpecificName, nullsFirst(CASE_INSENSITIVE_ORDER));
+
+    public static final Comparator<Function> COMPARING_NATURAL =
+            Comparator.comparing(Function::getSchemaId, SchemaId.NATURAL_ORDER)
+                    .thenComparing(Function::getFunctionName, nullsFirst(naturalOrder()))
+                    .thenComparing(Function::getSpecificName, nullsFirst(naturalOrder()));
 
     public static final String COLUMN_NAME_FUNCTION_CAT = "FUNCTION_CAT";
 
@@ -70,21 +81,27 @@ public class Function
     public static final String COLUMN_NAME_FUNCTION_TYPE = "FUNCTION_TYPE";
 
     public FunctionId getFunctionId() {
-        return FunctionId.builder()
-                .schemaId(SchemaId.of(getFunctionCatNonNull(), getFunctionSchemNonNull()))
-                .specificName(getSpecificName())
-                .build();
+        return FunctionId.of(getFunctionCatNonNull(), getFunctionSchemNonNull(), getFunctionName(), getSpecificName());
+    }
+
+    SchemaId getSchemaId() {
+        return getFunctionId().getSchemaId();
     }
 
     public List<FunctionColumn> getFunctionColumns(final Context context, final String columnNamePattern)
             throws SQLException {
         Objects.requireNonNull(context, "context is null");
-        return context.getFunctionColumns(
+        final List<FunctionColumn> functionColumns = context.getFunctionColumns(
                 getFunctionCatNonNull(),
                 getFunctionSchemNonNull(),
                 getFunctionName(),
                 columnNamePattern
         );
+        functionColumns.forEach(fc -> {
+            fc.setFunction(this);
+            getFunctionColumns().put(fc.getFunctionColumnId(), fc);
+        });
+        return functionColumns;
     }
 
     String getFunctionCatNonNull() {
@@ -116,4 +133,16 @@ public class Function
 
     @ColumnLabel("SPECIFIC_NAME")
     private String specificName;
+
+    Map<FunctionColumnId, FunctionColumn> getFunctionColumns() {
+        if (functionColumns == null) {
+            functionColumns = new HashMap<>();
+        }
+        return functionColumns;
+    }
+
+    @Setter(AccessLevel.PACKAGE)
+    @EqualsAndHashCode.Exclude
+    @ToString.Exclude
+    private transient Map<FunctionColumnId, FunctionColumn> functionColumns;
 }

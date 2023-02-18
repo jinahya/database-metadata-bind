@@ -23,12 +23,16 @@ package com.github.jinahya.database.metadata.bind;
 import lombok.AccessLevel;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 import lombok.ToString;
+import lombok.experimental.Accessors;
 import lombok.experimental.SuperBuilder;
 
 import java.sql.DatabaseMetaData;
 import java.util.Comparator;
+import java.util.Optional;
 
 /**
  * A class for binding results of {@link DatabaseMetaData#getPrimaryKeys(String, String, String)} method.
@@ -45,7 +49,11 @@ public class PrimaryKey extends AbstractMetadataType {
 
     private static final long serialVersionUID = 3159826510060898330L;
 
-    public static final Comparator<PrimaryKey> COMPARING_COLUMN_NAME = Comparator.comparing(PrimaryKey::getColumnName);
+    public static final Comparator<PrimaryKey> COMPARING_CASE_INSENSITIVE
+            = Comparator.comparing(PrimaryKey::getColumnName, String.CASE_INSENSITIVE_ORDER);
+
+    public static final Comparator<PrimaryKey> COMPARING_NATURAL
+            = Comparator.comparing(PrimaryKey::getColumnName);
 
     public static final String COLUMN_LABEL_TABLE_CAT = "TABLE_CAT";
 
@@ -58,6 +66,24 @@ public class PrimaryKey extends AbstractMetadataType {
     public static final String COLUMN_LABEL_KEY_SEQ = "KEY_SEQ";
 
     public static final String COLUMN_LABEL_PK_NAME = "PK_NAME";
+
+    public PrimaryKeyId getPrimaryKeyId() {
+        return PrimaryKeyId.of(
+                getTableCatNonNull(),
+                getTableSchemNonNull(),
+                getTableName(),
+                getColumnName(),
+                getKeySeq()
+        );
+    }
+
+    String getTableCatNonNull() {
+        return Optional.ofNullable(getTableCat()).orElse(Catalog.COLUMN_VALUE_TABLE_CAT_EMPTY);
+    }
+
+    String getTableSchemNonNull() {
+        return Optional.ofNullable(getTableSchem()).orElse(Schema.COLUMN_VALUE_TABLE_SCHEM_EMPTY);
+    }
 
     @NullableBySpecification
     @ColumnLabel(COLUMN_LABEL_TABLE_CAT)
@@ -79,4 +105,11 @@ public class PrimaryKey extends AbstractMetadataType {
     @NullableBySpecification
     @ColumnLabel(COLUMN_LABEL_PK_NAME)
     private String pkName;
+
+    @Accessors(fluent = true)
+    @Setter(AccessLevel.PACKAGE)
+    @Getter(AccessLevel.PACKAGE)
+    @EqualsAndHashCode.Exclude
+    @ToString.Exclude
+    private transient Table table;
 }

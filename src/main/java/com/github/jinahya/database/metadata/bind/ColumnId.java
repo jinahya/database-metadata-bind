@@ -22,8 +22,12 @@ package com.github.jinahya.database.metadata.bind;
 
 import lombok.AccessLevel;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.SuperBuilder;
+
+import java.util.Comparator;
+import java.util.Objects;
 
 /**
  * An identifier for identifying a {@link Column} within a {@link Table}.
@@ -31,25 +35,51 @@ import lombok.experimental.SuperBuilder;
  * @author Jin Kwon &lt;onacit_at_gmail.com&gt;
  */
 @Data
-@RequiredArgsConstructor(access = AccessLevel.PACKAGE)
+@RequiredArgsConstructor(access = AccessLevel.PRIVATE)
 @SuperBuilder(toBuilder = true)
-public final class ColumnId implements MetadataTypeId<Column> {
+public final class ColumnId implements MetadataTypeId<ColumnId, Column> {
 
     private static final long serialVersionUID = -4452694121211962289L;
 
-    public static ColumnId of(final TableId tableId, final String columnName) {
+    public static final Comparator<ColumnId> COMPARING_CASE_INSENSITIVE =
+            Comparator.comparing(ColumnId::getTableId, TableId.COMPARING_CASE_INSENSITIVE)
+                    .thenComparingInt(ColumnId::getOrdinalPosition);
+
+    public static final Comparator<ColumnId> COMPARING_NATURAL =
+            Comparator.comparing(ColumnId::getTableId, TableId.COMPARING_NATURAL)
+                    .thenComparingInt(ColumnId::getOrdinalPosition);
+
+    static ColumnId of(final TableId tableId, final String columnName, final int ordinalPosition) {
+        Objects.requireNonNull(tableId, "tableId is null");
+        Objects.requireNonNull(columnName, "columnName is null");
+        if (ordinalPosition <= 0) {
+            throw new IllegalArgumentException("non-positive ordinal position: " + ordinalPosition);
+        }
         return builder()
                 .tableId(tableId)
                 .columnName(columnName)
+                .ordinalPosition(ordinalPosition)
                 .build();
+    }
+
+    static ColumnId of(final String tableCat, final String tableSchem, final String tableName,
+                       final String columnName, final int ordinalPosition) {
+        return of(TableId.of(tableCat, tableSchem, tableName), columnName, ordinalPosition);
+    }
+
+    public static ColumnId of(final TableId tableId, final String columnName) {
+        return of(tableId, columnName, 1);
     }
 
     public static ColumnId of(final String tableCat, final String tableSchem, final String tableName,
                               final String columnName) {
-        return of(TableId.of(tableCat, tableSchem, tableName), columnName);
+        return of(tableCat, tableSchem, tableName, columnName, 1);
     }
 
     private final TableId tableId;
 
     private final String columnName;
+
+    @EqualsAndHashCode.Exclude
+    private final int ordinalPosition;
 }

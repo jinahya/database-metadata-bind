@@ -20,9 +20,9 @@ package com.github.jinahya.database.metadata.bind;
  * #L%
  */
 
-class ColumnPrivilegeTest extends AbstractMetadataTypeTest<ColumnPrivilege> {
+class Schema_Test extends AbstractMetadataTypeTest<Schema> {
 
-    ColumnPrivilegeTest() {
-        super(ColumnPrivilege.class);
+    Schema_Test() {
+        super(Schema.class);
     }
 }

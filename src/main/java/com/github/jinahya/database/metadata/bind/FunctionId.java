@@ -22,24 +22,61 @@ package com.github.jinahya.database.metadata.bind;
 
 import lombok.AccessLevel;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.SuperBuilder;
 
+import java.util.Comparator;
+import java.util.Objects;
+
+import static java.util.Comparator.naturalOrder;
+import static java.util.Comparator.nullsFirst;
+
 @Data
-@RequiredArgsConstructor(access = AccessLevel.PACKAGE)
+@RequiredArgsConstructor(access = AccessLevel.PRIVATE)
 @SuperBuilder(toBuilder = true)
-public final class FunctionId implements MetadataTypeId<Function> {
+public final class FunctionId implements MetadataTypeId<FunctionId, Function> {
 
     private static final long serialVersionUID = 8614281252146063072L;
 
-    public static FunctionId of(final String functionCat, final String functionSchem, final String specificName) {
+    public static final Comparator<FunctionId> COMPARING_CASE_INSENSITIVE =
+            Comparator.comparing(FunctionId::getSchemaId, SchemaId.CASE_INSENSITIVE_ORDER)
+                    .thenComparing(FunctionId::getFunctionName, nullsFirst(String.CASE_INSENSITIVE_ORDER))
+                    .thenComparing(FunctionId::getSpecificName, nullsFirst(String.CASE_INSENSITIVE_ORDER));
+
+    public static final Comparator<FunctionId> COMPARING_NATURAL =
+            Comparator.comparing(FunctionId::getSchemaId, SchemaId.NATURAL_ORDER)
+                    .thenComparing(FunctionId::getFunctionName, nullsFirst(naturalOrder()))
+                    .thenComparing(FunctionId::getSpecificName, nullsFirst(naturalOrder()));
+
+    static FunctionId of(final SchemaId schemaId, final String functionName, final String specificName) {
+        Objects.requireNonNull(schemaId, "schemaId is null");
+        Objects.requireNonNull(functionName, "functionName is null");
+        Objects.requireNonNull(specificName, "specificName is null");
         return FunctionId.builder()
-                .schemaId(SchemaId.of(functionCat, functionSchem))
+                .schemaId(schemaId)
+                .functionName(functionName)
                 .specificName(specificName)
                 .build();
     }
 
+    static FunctionId of(final String functionCat, final String functionSchem, final String functionName,
+                         final String specificName) {
+        return of(SchemaId.of(functionCat, functionSchem), functionName, specificName);
+    }
+
+    public static FunctionId of(final SchemaId schemaId, final String specificName) {
+        return of(schemaId, "", specificName);
+    }
+
+    public static FunctionId of(final String functionCat, final String functionSchem, final String specificName) {
+        return of(functionCat, functionSchem, "", specificName);
+    }
+
     private final SchemaId schemaId;
+
+    @EqualsAndHashCode.Exclude
+    private final String functionName;
 
     private final String specificName;
 }

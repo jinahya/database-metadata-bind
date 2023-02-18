@@ -22,6 +22,7 @@ package com.github.jinahya.database.metadata.bind;
 
 import lombok.AccessLevel;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
 import lombok.experimental.SuperBuilder;
@@ -39,6 +40,7 @@ import java.util.Optional;
  */
 //@ChildOf(Procedure.class)
 //@EqualsAndHashCode(callSuper = true)
+@EqualsAndHashCode(callSuper = true)
 @ToString(callSuper = true)
 @Data
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
@@ -48,22 +50,34 @@ public class ProcedureColumn
 
     private static final long serialVersionUID = 3894753719381358829L;
 
-    public static final Comparator<ProcedureColumn> COMPARING_PROCEDURE_CAT_PROCEDURE_SCHEM_PROCEDURE_NAME_SPECIFIC_NAME
-            = Comparator.comparing(ProcedureColumn::getProcedureCat, Comparator.nullsFirst(Comparator.naturalOrder()))
-            .thenComparing(ProcedureColumn::getProcedureSchem, Comparator.nullsFirst(Comparator.naturalOrder()))
-            .thenComparing(ProcedureColumn::getProcedureName)
-            .thenComparing(ProcedureColumn::getSpecificName);
+    public static final Comparator<ProcedureColumn> COMPARING_AS_SPECIFIED_CASE_INSENSITIVE =
+            Comparator.comparing(ProcedureColumn::getProcedureId, ProcedureId.COMPARING_IN_CASE_INSENSITIVE);
 
-    public ProcedureColumnId getProcedureColumnId(final ProcedureId procedureId) {
-        return ProcedureColumnId.of(procedureId, getSpecificName());
+    public static final Comparator<ProcedureColumn> COMPARING_AS_SPECIFIED_NATURAL =
+            Comparator.comparing(ProcedureColumn::getProcedureId, ProcedureId.COMPARING_IN_NATURAL);
+
+    public ProcedureColumnId getProcedureColumnId() {
+        return ProcedureColumnId.of(
+                getProcedureCatNonNull(),
+                getProcedureSchemNonNull(),
+                getProcedureName(),
+                getSpecificName(),
+                getColumnName()
+        );
+    }
+
+    ProcedureId getProcedureId() {
+        return getProcedureColumnId().getProcedureId();
     }
 
     String getProcedureCatNonNull() {
-        return Optional.ofNullable(getProcedureCat()).orElse(Catalog.COLUMN_VALUE_TABLE_CAT_EMPTY);
+        return Optional.ofNullable(getProcedureCat())
+                .orElse(Catalog.COLUMN_VALUE_TABLE_CAT_EMPTY);
     }
 
     String getProcedureSchemNonNull() {
-        return Optional.ofNullable(getProcedureSchem()).orElse(Schema.COLUMN_VALUE_TABLE_SCHEM_EMPTY);
+        return Optional.ofNullable(getProcedureSchem())
+                .orElse(Schema.COLUMN_VALUE_TABLE_SCHEM_EMPTY);
     }
 
     @NullableBySpecification

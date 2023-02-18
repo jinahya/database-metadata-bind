@@ -23,11 +23,14 @@ package com.github.jinahya.database.metadata.bind;
 import lombok.AccessLevel;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
+import lombok.experimental.Accessors;
 import lombok.experimental.SuperBuilder;
 
 import java.util.Comparator;
+import java.util.Optional;
 
 /**
  * An abstract class for binding results of {@link java.sql.DatabaseMetaData#getExportedKeys(String, String, String)}
@@ -41,23 +44,60 @@ import java.util.Comparator;
 @Data
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @SuperBuilder(toBuilder = true)
-public abstract class TableKey
-        extends AbstractMetadataType {
+public abstract class TableKey<T extends TableKey<T>> extends AbstractMetadataType {
 
     private static final long serialVersionUID = 6713872409315471232L;
 
-    public static final Comparator<TableKey> COMPARING_FKTABLE_CAT_FKTABLE_SCHEM_FKTABLE_NAME_KEY_SEQ =
-            Comparator.comparing(TableKey::getFktableCat, Comparator.nullsFirst(Comparator.naturalOrder()))
-                    .thenComparing(TableKey::getFktableSchem, Comparator.nullsFirst(Comparator.naturalOrder()))
-                    .thenComparing(TableKey::getFktableName)
-                    .thenComparingInt(TableKey::getKeySeq);
+    public static <T extends TableKey<T>> Comparator<T> comparingPktableKeySeqCaseInsensitive() {
+        return Comparator.<T, TableId>comparing(TableKey::getPktableId, TableId.COMPARING_CASE_INSENSITIVE)
+                .thenComparingInt(TableKey::getKeySeq);
+    }
+
+    public static <T extends TableKey<T>> Comparator<T> comparingPktableKeySeqNatual() {
+        return Comparator.<T, TableId>comparing(TableKey::getPktableId, TableId.COMPARING_NATURAL)
+                .thenComparingInt(TableKey::getKeySeq);
+    }
+
+    public static <T extends TableKey<T>> Comparator<T> comparingFktableKeySeqCaseInsensitive() {
+        return Comparator.<T, TableId>comparing(TableKey::getFktableId, TableId.COMPARING_CASE_INSENSITIVE)
+                .thenComparingInt(TableKey::getKeySeq);
+    }
+
+    public static <T extends TableKey<T>> Comparator<T> comparingFktableKeySeqNatural() {
+        return Comparator.<T, TableId>comparing(TableKey::getFktableId, TableId.COMPARING_NATURAL)
+                .thenComparingInt(TableKey::getKeySeq);
+    }
+
+    public ColumnId getPkcolumnId() {
+        return ColumnId.of(getPktableCatNonNull(), getPktableSchemNonNull(), getPktableName(), getPkcolumnName(), 0);
+    }
 
     public TableId getPktableId() {
-        return TableId.of(getPktableCat(), getPktableSchem(), getPktableName());
+        return getPkcolumnId().getTableId();
+    }
+
+    public ColumnId getFkcolumnId() {
+        return ColumnId.of(getFktableCatNonNull(), getFktableSchemNonNull(), getFktableName(), getFkcolumnName(), 0);
     }
 
     public TableId getFktableId() {
-        return TableId.of(getFktableCat(), getFktableSchem(), getFktableName());
+        return getFkcolumnId().getTableId();
+    }
+
+    String getPktableCatNonNull() {
+        return Optional.ofNullable(getPktableCat()).orElse(Catalog.COLUMN_VALUE_TABLE_CAT_EMPTY);
+    }
+
+    public String getPktableSchemNonNull() {
+        return Optional.ofNullable(getPktableSchem()).orElse(Schema.COLUMN_VALUE_TABLE_SCHEM_EMPTY);
+    }
+
+    String getFktableCatNonNull() {
+        return Optional.ofNullable(getFktableCat()).orElse(Catalog.COLUMN_VALUE_TABLE_CAT_EMPTY);
+    }
+
+    public String getFktableSchemNonNull() {
+        return Optional.ofNullable(getFktableSchem()).orElse(Schema.COLUMN_VALUE_TABLE_SCHEM_EMPTY);
     }
 
     @NullableBySpecification
@@ -107,4 +147,16 @@ public abstract class TableKey
 
     @ColumnLabel("DEFERRABILITY")
     private int deferrability;
+
+    @SuppressWarnings({"unchecked"})
+    T table(final Table table) {
+        this.table = table;
+        return (T) this;
+    }
+
+    @Accessors(fluent = true)
+    @Getter(AccessLevel.PACKAGE)
+    @EqualsAndHashCode.Exclude
+    @ToString.Exclude
+    private transient Table table;
 }

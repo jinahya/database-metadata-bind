@@ -23,15 +23,17 @@ package com.github.jinahya.database.metadata.bind;
 import lombok.AccessLevel;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
+import lombok.experimental.Accessors;
 import lombok.experimental.SuperBuilder;
 
-import java.sql.SQLException;
 import java.util.Comparator;
-import java.util.List;
-import java.util.Objects;
 import java.util.Optional;
+
+import static java.util.Comparator.naturalOrder;
+import static java.util.Comparator.nullsFirst;
 
 /**
  * A class for binding results of
@@ -59,11 +61,13 @@ public class Table extends AbstractMetadataType {
 
     private static final long serialVersionUID = 6590036695540141125L;
 
-    public static final Comparator<Table> COMPARING_TABLE_TYPE_TABLE_CAT_TABLE_SCHEM_TABLE_NAME =
-            Comparator.comparing(Table::getTableType)
-                    .thenComparing(Table::getTableCat, Comparator.nullsFirst(Comparator.naturalOrder()))
-                    .thenComparing(Table::getTableSchem, Comparator.nullsFirst(Comparator.naturalOrder()))
-                    .thenComparing(Table::getTableName);
+    public static final Comparator<Table> COMPARING_IN_CASE_INSENSITIVE_ORDER =
+            Comparator.comparing(Table::getTableType, nullsFirst(String.CASE_INSENSITIVE_ORDER))
+                    .thenComparing(Table::getTableId, TableId.COMPARING_CASE_INSENSITIVE);
+
+    public static final Comparator<Table> COMPARING_IN_NATURAL_ORDER =
+            Comparator.comparing(Table::getTableType, nullsFirst(naturalOrder()))
+                    .thenComparing(Table::getTableId, TableId.COMPARING_NATURAL);
 
     /**
      * The label of the column to which {@link #ATTRIBUTE_NAME_TABLE_CAT} attribute is bound. The value is {@value}.
@@ -106,82 +110,7 @@ public class Table extends AbstractMetadataType {
     public static final String ATTRIBUTE_NAME_TABLE_TYPE = "tableName";
 
     public TableId getTableId() {
-        return TableId.of(getTableCat(), getTableSchem(), getTableName());
-    }
-
-    public List<BestRowIdentifier> getBestRowIdentifier(final Context context, final int scope, final boolean nullable)
-            throws SQLException {
-        Objects.requireNonNull(context, "context is null");
-        return context.getBestRowIdentifier(
-                getTableCatNonNull(),
-                getTableSchemNonNull(),
-                getTableName(),
-                scope,
-                nullable
-        );
-    }
-
-    public List<ColumnPrivilege> getColumnPrivileges(final Context context, final String columnNamePattern)
-            throws SQLException {
-        Objects.requireNonNull(context, "context is null");
-        return context.getColumnPrivileges(
-                getTableCatNonNull(),
-                getTableSchemNonNull(),
-                getTableName(),
-                columnNamePattern
-        );
-    }
-
-    public List<ExportedKey> getExportedKeys(final Context context) throws SQLException {
-        Objects.requireNonNull(context, "context is null");
-        return context.getExportedKeys(
-                getTableCatNonNull(),
-                getTableSchemNonNull(),
-                getTableName()
-        );
-    }
-
-    public List<ImportedKey> getImportedKeys(final Context context) throws SQLException {
-        Objects.requireNonNull(context, "context is null");
-        return context.getImportedKeys(
-                getTableCatNonNull(),
-                getTableSchemNonNull(),
-                getTableName()
-        );
-    }
-
-    public List<PrimaryKey> getPrimaryKeys(final Context context) throws SQLException {
-        Objects.requireNonNull(context, "context is null");
-        return context.getPrimaryKeys(
-                getTableCatNonNull(),
-                getTableSchemNonNull(),
-                getTableName()
-        );
-    }
-
-    public List<PseudoColumn> getPseudoColumns(final Context context, final String columnNamePattern)
-            throws SQLException {
-        Objects.requireNonNull(context, "context is null");
-        return context.getPseudoColumns(
-                getTableCatNonNull(),
-                getTableSchemNonNull(),
-                getTableName(),
-                columnNamePattern
-        );
-    }
-
-    /**
-     * Retrieves a description of this table's columns that are automatically updated when any value in a row is
-     * updated.
-     *
-     * @param context a context.
-     * @return a list of bound values.
-     * @throws SQLException if a database error occurs.
-     * @see Context#getVersionColumns(String, String, String)
-     */
-    public List<VersionColumn> getVersionColumns(final Context context) throws SQLException {
-        Objects.requireNonNull(context, "context is null");
-        return context.getVersionColumns(
+        return TableId.of(
                 getTableCatNonNull(),
                 getTableSchemNonNull(),
                 getTableName()
@@ -234,4 +163,30 @@ public class Table extends AbstractMetadataType {
     @NullableBySpecification
     @ColumnLabel("REF_GENERATION")
     private String refGeneration;
+
+    Table catalog(final Catalog catalog) {
+        this.catalog = catalog;
+        this.schema = null;
+        return this;
+    }
+
+    Table schema(final Schema schema) {
+        this.schema = schema;
+        catalog = Optional.ofNullable(this.schema).map(Schema::catalog).orElse(null);
+        return this;
+    }
+
+    @Accessors(fluent = true)
+//    @Setter(AccessLevel.PACKAGE) // manually implemented
+    @Getter(AccessLevel.PACKAGE)
+    @EqualsAndHashCode.Exclude
+    @ToString.Exclude
+    private transient Catalog catalog;
+
+    @Accessors(fluent = true)
+//    @Setter(AccessLevel.PACKAGE) // manually implemented
+    @Getter(AccessLevel.PACKAGE)
+    @EqualsAndHashCode.Exclude
+    @ToString.Exclude
+    private transient Schema schema;
 }

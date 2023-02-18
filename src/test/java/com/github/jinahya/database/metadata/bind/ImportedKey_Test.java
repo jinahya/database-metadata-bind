@@ -20,9 +20,9 @@ package com.github.jinahya.database.metadata.bind;
  * #L%
  */
 
-final class MetadataTypeUtils {
+class ImportedKey_Test extends TableKey_Test<ImportedKey> {
 
-    private MetadataTypeUtils() {
-        throw new AssertionError("instantiation is not allowed");
+    ImportedKey_Test() {
+        super(ImportedKey.class);
     }
 }

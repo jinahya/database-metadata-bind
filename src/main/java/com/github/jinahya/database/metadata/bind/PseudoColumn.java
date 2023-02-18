@@ -23,12 +23,16 @@ package com.github.jinahya.database.metadata.bind;
 import lombok.AccessLevel;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 import lombok.ToString;
+import lombok.experimental.Accessors;
 import lombok.experimental.SuperBuilder;
 
 import java.sql.DatabaseMetaData;
 import java.util.Comparator;
+import java.util.Optional;
 
 /**
  * A class for binding results of {@link DatabaseMetaData#getPseudoColumns(String, String, String, String)} method.
@@ -45,11 +49,37 @@ public class PseudoColumn extends AbstractMetadataType {
 
     private static final long serialVersionUID = -5612575879670895510L;
 
-    public static final Comparator<PseudoColumn> COMPARING_TABLE_CAT_TABLE_SCHEM_TABLE_NAME_COLUMN_NAME =
-            Comparator.comparing(PseudoColumn::getTableCat, Comparator.nullsFirst(Comparator.naturalOrder()))
-                    .thenComparing(PseudoColumn::getTableSchem, Comparator.nullsFirst(Comparator.naturalOrder()))
-                    .thenComparing(PseudoColumn::getTableName)
-                    .thenComparing(PseudoColumn::getColumnName);
+    public static final Comparator<PseudoColumn> CASE_INSENSITIVE_ORDER =
+            Comparator.comparing(PseudoColumn::getPseudoColumnId, PseudoColumnId.CASE_INSENSITIVE_ORDER);
+
+    public static final Comparator<PseudoColumn> NATURAL_ORDER =
+            Comparator.comparing(PseudoColumn::getPseudoColumnId, PseudoColumnId.NATURAL_ORDER);
+
+    private PseudoColumnId getPseudoColumnId() {
+        return PseudoColumnId.of(
+                getTableCatNonNull(),
+                getTableSchemNonNull(),
+                getTableName(),
+                getColumnName()
+        );
+    }
+
+    public ColumnId getColumnId() {
+        return ColumnId.of(
+                getTableCatNonNull(),
+                getTableSchemNonNull(),
+                getTableName(),
+                getColumnName()
+        );
+    }
+
+    String getTableCatNonNull() {
+        return Optional.ofNullable(getTableCat()).orElse(Catalog.COLUMN_VALUE_TABLE_CAT_EMPTY);
+    }
+
+    String getTableSchemNonNull() {
+        return Optional.ofNullable(getTableSchem()).orElse(Schema.COLUMN_VALUE_TABLE_SCHEM_EMPTY);
+    }
 
     @NullableBySpecification
     @ColumnLabel("TABLE_CAT")
@@ -90,4 +120,11 @@ public class PseudoColumn extends AbstractMetadataType {
 
     @ColumnLabel("IS_NULLABLE")
     private String isNullable;
+
+    @Accessors(fluent = true)
+    @Setter(AccessLevel.PACKAGE)
+    @Getter(AccessLevel.PACKAGE)
+    @EqualsAndHashCode.Exclude
+    @ToString.Exclude
+    private transient Table table;
 }

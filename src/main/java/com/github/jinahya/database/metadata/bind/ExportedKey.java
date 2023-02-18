@@ -28,6 +28,7 @@ import lombok.ToString;
 import lombok.experimental.SuperBuilder;
 
 import java.sql.DatabaseMetaData;
+import java.util.Comparator;
 
 /**
  * An abstract class for binding the result of {@link DatabaseMetaData#getExportedKeys(String, String, String)} method.
@@ -42,8 +43,13 @@ import java.sql.DatabaseMetaData;
 @Data
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @SuperBuilder(toBuilder = true)
-public class ExportedKey
-        extends TableKey {
+public class ExportedKey extends TableKey<ExportedKey> {
 
     private static final long serialVersionUID = -6561660015694928357L;
+
+    public static final Comparator<ExportedKey> COMPARING_CASE_INSENSITIVE =
+            TableKey.comparingFktableKeySeqCaseInsensitive();
+
+    public static final Comparator<ExportedKey> COMPARING_NATURAL =
+            TableKey.comparingFktableKeySeqNatural();
 }

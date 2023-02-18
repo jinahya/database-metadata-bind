@@ -20,9 +20,21 @@ package com.github.jinahya.database.metadata.bind;
  * #L%
  */
 
+import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Nested;
+
 class ColumnTest extends AbstractMetadataTypeTest<Column> {
 
     ColumnTest() {
         super(Column.class);
+    }
+
+    @DisplayName("NullableEnum")
+    @Nested
+    class NullableEnumTest extends _IntFieldEnumTest<Column.NullableEnum> {
+
+        NullableEnumTest() {
+            super(Column.NullableEnum.class);
+        }
     }
 }

@@ -22,6 +22,7 @@ package com.github.jinahya.database.metadata.bind;
 
 import lombok.extern.slf4j.Slf4j;
 import nl.jqno.equalsverifier.EqualsVerifier;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 
@@ -30,8 +31,8 @@ import java.lang.reflect.Modifier;
 import static org.assertj.core.api.Assertions.assertThat;
 
 @Slf4j
-abstract class MetadataTypeIdTest<T extends MetadataTypeId<U>, U extends MetadataType>
-        extends MetadataTypeIdTest0<T, U> {
+abstract class MetadataTypeIdTest<T extends MetadataTypeId<T, U>, U extends MetadataType>
+        extends _MetadataTypeIdTest<T, U> {
 
     MetadataTypeIdTest(final Class<T> typeIdClass, final Class<U> typeClass) {
         super(typeIdClass, typeClass);
@@ -41,16 +42,18 @@ abstract class MetadataTypeIdTest<T extends MetadataTypeId<U>, U extends Metadat
     void shouldBeFinal() {
         final int modifiers = typeIdClass.getModifiers();
         assertThat(Modifier.isFinal(modifiers))
-                .as("final modifier of (%1$s)", typeIdClass)
+                .as("Modifiers.isFinal(%1$s.modifies)", typeIdClass)
                 .isTrue();
     }
 
     @Nested
     class EqualsTest {
 
+        @Disabled // EqualsAndHashCode.Exclude
         @Test
         void verifyEquals() {
-            EqualsVerifier.forClass(typeIdClass).verify();
+            EqualsVerifier.forClass(typeIdClass)
+                    .verify();
         }
     }
 

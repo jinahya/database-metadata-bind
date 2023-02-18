@@ -23,8 +23,11 @@ package com.github.jinahya.database.metadata.bind;
 import lombok.AccessLevel;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 import lombok.ToString;
+import lombok.experimental.Accessors;
 import lombok.experimental.SuperBuilder;
 
 import java.sql.DatabaseMetaData;
@@ -36,6 +39,7 @@ import java.util.Optional;
  *
  * @author Jin Kwon &lt;jinahya_at_gmail.com&gt;
  * @see Context#getColumns(String, String, String, String)
+ * @see NullableEnum
  */
 //@ParentOf(ColumnPrivilege.class)
 @ChildOf(Table.class)
@@ -48,11 +52,11 @@ public class Column extends AbstractMetadataType {
 
     private static final long serialVersionUID = -409653682729081530L;
 
-    public static final Comparator<Column> COMPARING_TABLE_CAT_TABLE_SCHEM_TABLE_NAME_ORDINAL_POSITION =
-            Comparator.comparing(Column::getTableCat, Comparator.nullsFirst(Comparator.naturalOrder()))
-                    .thenComparing(Column::getTableSchem, Comparator.nullsFirst(Comparator.naturalOrder()))
-                    .thenComparing(Column::getTableName)
-                    .thenComparingInt(Column::getOrdinalPosition);
+    public static final Comparator<Column> COMPARING_CASE_INSENSITIVE =
+            Comparator.comparing(Column::getColumnId, ColumnId.COMPARING_CASE_INSENSITIVE);
+
+    public static final Comparator<Column> COMPARING_NATURAL =
+            Comparator.comparing(Column::getColumnId, ColumnId.COMPARING_NATURAL);
 
     public static final String COLUMN_LABEL_TABLE_CAT = "TABLE_CAT";
 
@@ -61,6 +65,54 @@ public class Column extends AbstractMetadataType {
     public static final String COLUMN_LABEL_TABLE_NAME = "TABLE_NAME";
 
     public static final String COLUMN_LABEL_COLUMN_NAME = "COLUMN_NAME";
+
+    public static final String COLUMN_LABEL_NULLABLE = "NULLABLE";
+
+    /**
+     * Constants for {@link #COLUMN_LABEL_NULLABLE} column values.
+     *
+     * @author Jin Kwon &lt;onacit_at_gmail.com&gt;
+     */
+    public enum NullableEnum implements _IntFieldEnum<NullableEnum> {
+
+        /**
+         * A value for {@link DatabaseMetaData#columnNoNulls}({@value DatabaseMetaData#columnNoNulls}).
+         */
+        COLUMN_NO_NULLS(DatabaseMetaData.columnNoNulls),// 0
+
+        /**
+         * A value for {@link DatabaseMetaData#columnNullable}({@value DatabaseMetaData#columnNullable}).
+         */
+        COLUMN_NULLABLE(DatabaseMetaData.columnNullable), // 1
+
+        /**
+         * A value for {@link DatabaseMetaData#columnNullableUnknown}({@value DatabaseMetaData#columnNullableUnknown}).
+         */
+        PSEUDO(DatabaseMetaData.columnNullableUnknown) // 2
+        ;
+
+        /**
+         * Finds the value for specified {@link Column#COLUMN_LABEL_NULLABLE} column value.
+         *
+         * @param nullable the value of {@link Column#COLUMN_LABEL_NULLABLE} column to match.
+         * @return the value matched.
+         * @throws IllegalStateException when no value matched.
+         */
+        public static NullableEnum valueOfNullable(final int nullable) {
+            return _IntFieldEnum.valueOfFieldValue(NullableEnum.class, nullable);
+        }
+
+        NullableEnum(final int fieldValue) {
+            this.fieldValue = fieldValue;
+        }
+
+        @Override
+        public int fieldValueAsInt() {
+            return fieldValue;
+        }
+
+        private final int fieldValue;
+    }
 
     public static final String COLUMN_LABEL_IS_AUTOINCREMENT = "IS_AUTOINCREMENT";
 
@@ -71,7 +123,8 @@ public class Column extends AbstractMetadataType {
                 getTableCatNonNull(),
                 getTableSchemNonNull(),
                 getTableName(),
-                getColumnName()
+                getColumnName(),
+                getOrdinalPosition()
         );
     }
 
@@ -118,7 +171,7 @@ public class Column extends AbstractMetadataType {
     @ColumnLabel("NUM_PREC_RADIX")
     private int numPrecRadix;
 
-    @ColumnLabel("NULLABLE")
+    @ColumnLabel(COLUMN_LABEL_NULLABLE)
     private int nullable;
 
     @NullableBySpecification
@@ -167,4 +220,11 @@ public class Column extends AbstractMetadataType {
 
     @ColumnLabel(COLUMN_LABEL_IS_GENERATEDCOLUMN)
     private String isGeneratedcolumn;
+
+    @Accessors(fluent = true)
+    @Setter(AccessLevel.PACKAGE)
+    @Getter(AccessLevel.PACKAGE)
+    @EqualsAndHashCode.Exclude
+    @ToString.Exclude
+    private transient Table table;
 }

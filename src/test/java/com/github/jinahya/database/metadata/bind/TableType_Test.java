@@ -20,9 +20,9 @@ package com.github.jinahya.database.metadata.bind;
  * #L%
  */
 
-class FunctionTest extends AbstractMetadataTypeTest<Function> {
+class TableType_Test extends AbstractMetadataTypeTest<TableType> {
 
-    FunctionTest() {
-        super(Function.class);
+    TableType_Test() {
+        super(TableType.class);
     }
 }

@@ -34,8 +34,7 @@ import java.util.Map;
 @Data
 @NoArgsConstructor(access = AccessLevel.PACKAGE)
 @SuperBuilder(toBuilder = true)
-abstract class AbstractMetadataType
-        implements MetadataType {
+abstract class AbstractMetadataType implements MetadataType {
 
     private static final long serialVersionUID = -3285362930174073345L;
 

@@ -27,11 +27,7 @@ import lombok.NoArgsConstructor;
 import lombok.ToString;
 import lombok.experimental.SuperBuilder;
 
-import java.sql.SQLException;
 import java.util.Comparator;
-import java.util.List;
-import java.util.Objects;
-import java.util.Optional;
 import java.util.function.Consumer;
 
 /**
@@ -46,56 +42,49 @@ import java.util.function.Consumer;
 @Data
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @SuperBuilder(toBuilder = true)
-public class Catalog
-        extends AbstractMetadataType {
+public class Catalog extends AbstractMetadataType {
 
     private static final long serialVersionUID = 6239185259128825953L;
 
     /**
-     * A comparator compares objects with their {@link #getTableCat()} values.
+     * Returns a new instance whose {@code tableCat} is {@value #COLUMN_VALUE_TABLE_CAT_EMPTY}.
+     *
+     * @return a new virtual instance.
      */
-    public static final Comparator<Catalog> COMPARING_TABLE_CAT =
-            Comparator.comparing(Catalog::getTableCat, Comparator.nullsFirst(Comparator.naturalOrder()));
-
-    public static final String COLUMN_LABEL_TABLE_CAT = "TABLE_CAT";
-
-    public static final String ATTRIBUTE_NAME_TABLE_CAT = "tableCat";
-
-    /**
-     * A value for {@value #ATTRIBUTE_NAME_TABLE_CAT} attribute for virtual instances. The value is {@value}.
-     */
-    public static final String COLUMN_VALUE_TABLE_CAT_EMPTY = "";
-
-    public CatalogId getCatalogId() {
-        return CatalogId.builder()
-                .tableCat(getTableCat())
+    public static Catalog newVirtualInstance() {
+        return builder()
+                .tableCat(COLUMN_VALUE_TABLE_CAT_EMPTY)
                 .build();
     }
 
-    public List<Column> getColumns(final Context context, final String schemaPattern, final String tableNamePattern,
-                                   final String columnNamePattern)
-            throws SQLException {
-        Objects.requireNonNull(context, "context is null");
-        return context.getColumns(getTableCatNonNull(), schemaPattern, tableNamePattern, columnNamePattern);
-    }
+    /**
+     * A comparator compares catalogs with their {@link #getTableCat()} values with a case-insensitive manner.
+     */
+    public static final Comparator<Catalog> COMPARING_TABLE_CAT
+            = Comparator.comparing(Catalog::getTableCat, String.CASE_INSENSITIVE_ORDER);
 
     /**
-     * Retrieves a description of the access rights for each table available in this catalog.
-     *
-     * @param schemaPattern    a value for {@code schemaPattern} parameter.
-     * @param tableNamePattern a value for {@code tableNamePattern} parameter.
-     * @return a list of bound values.
-     * @throws SQLException if a database error occurs.
+     * The column label from which the {@value #ATTRIBUTE_NAME_TABLE_CAT} property is bound. The value is {@value}.
      */
-    public List<TablePrivilege> getTablePrivileges(final Context context, final String schemaPattern,
-                                                   final String tableNamePattern)
-            throws SQLException {
-        Objects.requireNonNull(context, "context is null");
-        return context.getTablePrivileges(getTableCatNonNull(), schemaPattern, tableNamePattern);
-    }
+    public static final String COLUMN_LABEL_TABLE_CAT = "TABLE_CAT";
 
-    String getTableCatNonNull() {
-        return Optional.ofNullable(getTableCat()).orElse(Catalog.COLUMN_VALUE_TABLE_CAT_EMPTY);
+    /**
+     * The property name to which the {@value #COLUMN_LABEL_TABLE_CAT} label is bound. The value is {@value}.
+     */
+    public static final String ATTRIBUTE_NAME_TABLE_CAT = "tableCat";
+
+    /**
+     * A {@value #ATTRIBUTE_NAME_TABLE_CAT} attribute value for virtual instances. The value is {@value}.
+     */
+    public static final String COLUMN_VALUE_TABLE_CAT_EMPTY = "";
+
+    /**
+     * Returns a value for identifying this catalog.
+     *
+     * @return an id of this catalog.
+     */
+    public CatalogId getCatalogId() {
+        return CatalogId.of(getTableCat());
     }
 
     @ColumnLabel(COLUMN_LABEL_TABLE_CAT)

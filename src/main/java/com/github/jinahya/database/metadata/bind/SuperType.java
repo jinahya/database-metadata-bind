@@ -28,6 +28,7 @@ import lombok.ToString;
 import lombok.experimental.SuperBuilder;
 
 import java.sql.DatabaseMetaData;
+import java.util.Optional;
 
 /**
  * A class for binding results of
@@ -47,17 +48,27 @@ public class SuperType extends AbstractMetadataType {
     private static final long serialVersionUID = 4603878785941565029L;
 
     public UDTId getTypeId() {
-        return UDTId.builder()
-                .schemaId(SchemaId.of(getTypeCat(), getSupertypeSchem()))
-                .typeName(getTypeName())
-                .build();
+        return UDTId.of(getTypeCatNonNull(), getTypeSchemNonNull(), getTypeName());
     }
 
     public UDTId getSupertypeId() {
-        return UDTId.builder()
-                .schemaId(SchemaId.of(getSupertypeCat(), getSupertypeSchem()))
-                .typeName(getSupertypeName())
-                .build();
+        return UDTId.of(getSupertypeCatNonNull(), getSupertypeSchemNonNull(), getSupertypeName());
+    }
+
+    String getTypeCatNonNull() {
+        return Optional.ofNullable(getTypeCat()).orElse(Catalog.COLUMN_VALUE_TABLE_CAT_EMPTY);
+    }
+
+    String getTypeSchemNonNull() {
+        return Optional.ofNullable(getTypeSchem()).orElse(Schema.COLUMN_VALUE_TABLE_SCHEM_EMPTY);
+    }
+
+    String getSupertypeCatNonNull() {
+        return Optional.ofNullable(getSupertypeCat()).orElse(Catalog.COLUMN_VALUE_TABLE_CAT_EMPTY);
+    }
+
+    String getSupertypeSchemNonNull() {
+        return Optional.ofNullable(getSupertypeSchem()).orElse(Schema.COLUMN_VALUE_TABLE_SCHEM_EMPTY);
     }
 
     @NullableBySpecification

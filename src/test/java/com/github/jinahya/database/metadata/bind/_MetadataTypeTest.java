@@ -21,6 +21,7 @@ package com.github.jinahya.database.metadata.bind;
  */
 
 import lombok.extern.slf4j.Slf4j;
+import org.mockito.Mockito;
 
 import java.lang.reflect.Field;
 import java.util.Map;
@@ -30,10 +31,14 @@ import static java.util.Collections.unmodifiableMap;
 import static java.util.Objects.requireNonNull;
 
 @Slf4j
-abstract class MetadataTypeTest0<T extends MetadataType> {
+abstract class _MetadataTypeTest<T extends MetadataType> {
 
-    MetadataTypeTest0(final Class<T> typeClass) {
+    _MetadataTypeTest(final Class<T> typeClass) {
         this.typeClass = requireNonNull(typeClass, "typeClass is null");
+    }
+
+    T typeSpy() {
+        return Mockito.spy(typeInstance());
     }
 
     T typeInstance() {

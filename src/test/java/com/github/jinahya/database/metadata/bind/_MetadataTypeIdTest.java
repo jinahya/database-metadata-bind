@@ -25,10 +25,10 @@ import lombok.extern.slf4j.Slf4j;
 import static java.util.Objects.requireNonNull;
 
 @Slf4j
-abstract class MetadataTypeIdTest0<T extends MetadataTypeId<U>, U extends MetadataType>
-        extends MetadataTypeTest0<U> {
+abstract class _MetadataTypeIdTest<T extends MetadataTypeId<T, U>, U extends MetadataType>
+        extends _MetadataTypeTest<U> {
 
-    MetadataTypeIdTest0(final Class<T> typeIdClass, final Class<U> typeClass) {
+    _MetadataTypeIdTest(final Class<T> typeIdClass, final Class<U> typeClass) {
         super(typeClass);
         this.typeIdClass = requireNonNull(typeIdClass, "typeIdClass is null");
     }
