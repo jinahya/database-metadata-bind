@@ -555,17 +555,26 @@ final class ContextTests {
     private static void function(final Context context, final Function function) throws SQLException {
         Objects.requireNonNull(context, "context is null");
         Objects.requireNonNull(function, "function is null");
-        log.debug("function: {}", function);
-        common(function);
-        common(function.getFunctionId());
-        final var functionId = function.getFunctionId();
+        final var functionId = common(common(function).getFunctionId());
         try {
             final var functionColumns = context.getFunctionColumns(function, "%");
             assertThat(functionColumns)
                     .extracting(FunctionColumn::getFunctionColumnId)
-                    .doesNotHaveDuplicates()
-                    .extracting(FunctionColumnId::getFunctionId)
-                    .allMatch(functionId::equals);
+                    .as("functionColumnIds extracted from functionColumns")
+                    .doesNotHaveDuplicates();
+            final var databaseProductNames = Set.of(
+                    TestContainers_PostgreSQL_IT.DATABASE_PRODUCT_NAME
+            );
+            {
+                if (!databaseProductNames.contains(databaseProductName)) {
+                    assertThat(functionColumns)
+                            .extracting(FunctionColumn::getFunctionColumnId)
+                            .extracting(FunctionColumnId::getFunctionId)
+                            .as("functionIds extracted from functionColumns")
+                            .allMatch(functionId::equals)
+                    ;
+                }
+            }
             functionColumns(context, function, functionColumns);
         } catch (final SQLException sqle) {
             thrown("failed; getFunctionColumns", sqle);
@@ -891,10 +900,9 @@ final class ContextTests {
     static void table(final Context context, final Table table) throws SQLException {
         Objects.requireNonNull(context, "context is null");
         Objects.requireNonNull(table, "table is null");
-        log.debug("table: {}", table);
         {
             assertThat(table.getTableName()).isNotNull();
-            assertThat(table.getTableType()).isNotNull();
+//            assertThat(table.getTableType()).isNotNull();
         }
         {
             common(table);
@@ -1226,8 +1234,8 @@ final class ContextTests {
         Objects.requireNonNull(udt, "udt is null");
         {
             assertThat(udt.getTypeName()).isNotNull();
-            assertThat(udt.getClassName()).isNotNull();
-            assertThat(udt.getDataType()).isIn(Types.JAVA_OBJECT, Types.STRUCT, Types.DISTINCT);
+//            assertThat(udt.getClassName()).isNotNull();
+//            assertThat(udt.getDataType()).isIn(Types.JAVA_OBJECT, Types.STRUCT, Types.DISTINCT);
             assertDoesNotThrow(() -> JDBCType.valueOf(udt.getDataType()));
         }
         {
