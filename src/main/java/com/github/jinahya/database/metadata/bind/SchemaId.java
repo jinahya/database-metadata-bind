@@ -66,7 +66,7 @@ public final class SchemaId implements MetadataTypeId<SchemaId, Schema> {
      * @param tableSchem   a value of {@value Schema#COLUMN_LABEL_TABLE_SCHEM} column.
      * @return a new instance.
      */
-    public static SchemaId of(final String tableCatalog, final String tableSchem) {
+    static SchemaId of(final String tableCatalog, final String tableSchem) {
         return of(CatalogId.of(tableCatalog), tableSchem);
     }
 

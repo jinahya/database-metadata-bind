@@ -67,7 +67,11 @@ public class UDT extends AbstractMetadataType {
     public static final String COLUMN_LABEL_DATA_TYPE = "DATA_TYPE";
 
     public UDTId getUDTId() {
-        return UDTId.of(getTypeCatNonNull(), getTypeSchemNonNull(), getTypeName());
+        return UDTId.of(
+                getTypeCatNonNull(),
+                getTypeSchemNonNull(),
+                getTypeName()
+        );
     }
 
     String getTypeCatNonNull() {

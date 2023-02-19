@@ -937,6 +937,18 @@ public class Context {
         return list;
     }
 
+    public List<ProcedureColumn> getProcedureColumns(final Procedure procedure, final String columnNamePattern)
+            throws SQLException {
+        Objects.requireNonNull(procedure, "procedure is null");
+        Objects.requireNonNull(columnNamePattern, "columnNamePattern is null");
+        return getProcedureColumns(
+                procedure.getProcedureCatNonNull(),
+                procedure.getProcedureSchemNonNull(),
+                procedure.getProcedureName(),
+                columnNamePattern
+        );
+    }
+
     /**
      * Invokes {@link DatabaseMetaData#getProcedures(java.lang.String, java.lang.String, java.lang.String)} method with
      * given arguments, and accepts each bounds value to specified consumer.

@@ -55,7 +55,7 @@ public class PseudoColumn extends AbstractMetadataType {
     public static final Comparator<PseudoColumn> LEXICOGRAPHIC_ORDER =
             Comparator.comparing(PseudoColumn::getPseudoColumnId, PseudoColumnId.LEXICOGRAPHIC_ORDER);
 
-    public PseudoColumnId getPseudoColumnId() {
+    PseudoColumnId getPseudoColumnId() {
         return PseudoColumnId.of(
                 getTableCatNonNull(),
                 getTableSchemNonNull(),

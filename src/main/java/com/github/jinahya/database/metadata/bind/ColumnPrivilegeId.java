@@ -21,14 +21,14 @@ package com.github.jinahya.database.metadata.bind;
  */
 
 import lombok.AccessLevel;
-import lombok.Data;
+import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.SuperBuilder;
 
 import java.util.Comparator;
 import java.util.Objects;
 
-@Data
+@Getter
 @RequiredArgsConstructor(access = AccessLevel.PRIVATE)
 @SuperBuilder(toBuilder = true)
 public final class ColumnPrivilegeId implements MetadataTypeId<ColumnPrivilegeId, Column> {
@@ -52,9 +52,31 @@ public final class ColumnPrivilegeId implements MetadataTypeId<ColumnPrivilegeId
                 .build();
     }
 
-    public static ColumnPrivilegeId of(final String tableCat, final String tableSchem, final String tableName,
-                                       final String columnName, final String privilege) {
+    static ColumnPrivilegeId of(final String tableCat, final String tableSchem, final String tableName,
+                                final String columnName, final String privilege) {
         return of(ColumnId.of(tableCat, tableSchem, tableName, columnName), privilege);
+    }
+
+    @Override
+    public String toString() {
+        return super.toString() + '{' +
+               "columnId=" + columnId +
+               ",privilege='" + privilege + '\'' +
+               '}';
+    }
+
+    @Override
+    public boolean equals(final Object obj) {
+        if (this == obj) return true;
+        if (!(obj instanceof ColumnPrivilegeId)) return false;
+        final ColumnPrivilegeId that = (ColumnPrivilegeId) obj;
+        return columnId.equals(that.columnId)
+               && privilege.equals(that.privilege);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(columnId, privilege);
     }
 
     private final ColumnId columnId;

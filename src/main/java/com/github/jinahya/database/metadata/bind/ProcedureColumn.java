@@ -51,10 +51,10 @@ public class ProcedureColumn
     private static final long serialVersionUID = 3894753719381358829L;
 
     public static final Comparator<ProcedureColumn> COMPARING_AS_SPECIFIED_CASE_INSENSITIVE =
-            Comparator.comparing(ProcedureColumn::getProcedureId, ProcedureId.COMPARING_IN_CASE_INSENSITIVE);
+            Comparator.comparing(ProcedureColumn::getProcedureId, ProcedureId.CASE_INSENSITIVE_ORDER);
 
     public static final Comparator<ProcedureColumn> COMPARING_AS_SPECIFIED_NATURAL =
-            Comparator.comparing(ProcedureColumn::getProcedureId, ProcedureId.COMPARING_IN_NATURAL);
+            Comparator.comparing(ProcedureColumn::getProcedureId, ProcedureId.LEXICOGRAPHIC_ORDER);
 
     public ProcedureColumnId getProcedureColumnId() {
         return ProcedureColumnId.of(

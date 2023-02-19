@@ -34,6 +34,9 @@ import java.sql.DatabaseMetaData;
 import java.util.Comparator;
 import java.util.Optional;
 
+import static java.util.Comparator.naturalOrder;
+import static java.util.Comparator.nullsFirst;
+
 /**
  * A class for binding results of {@link DatabaseMetaData#getPrimaryKeys(String, String, String)} method.
  *
@@ -42,9 +45,9 @@ import java.util.Optional;
 @ChildOf(Table.class)
 @EqualsAndHashCode(callSuper = true)
 @ToString(callSuper = true)
-@Data
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-@SuperBuilder
+@Data
+@SuperBuilder(toBuilder = true)
 public class PrimaryKey extends AbstractMetadataType {
 
     private static final long serialVersionUID = 3159826510060898330L;
@@ -53,7 +56,7 @@ public class PrimaryKey extends AbstractMetadataType {
             = Comparator.comparing(PrimaryKey::getColumnName, String.CASE_INSENSITIVE_ORDER);
 
     public static final Comparator<PrimaryKey> LEXICOGRAPHIC_ORDER
-            = Comparator.comparing(PrimaryKey::getColumnName);
+            = Comparator.comparing(PrimaryKey::getColumnName, nullsFirst(naturalOrder()));
 
     public static final String COLUMN_LABEL_TABLE_CAT = "TABLE_CAT";
 

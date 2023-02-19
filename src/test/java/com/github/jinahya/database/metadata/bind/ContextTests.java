@@ -696,8 +696,8 @@ final class ContextTests {
             if (!databaseProductNames.contains(databaseProductName)) {
                 assertThat(procedures)
                         .satisfiesAnyOf(
-                                l -> assertThat(l).isSortedAccordingTo(Procedure.COMPARING_IN_CASE_INSENSITIVE_ORDER),
-                                l -> assertThat(l).isSortedAccordingTo(Procedure.COMPARING_IN_LEXICOGRAPHIC_ORDER)
+                                l -> assertThat(l).isSortedAccordingTo(Procedure.CASE_INSENSITIVE_ORDER),
+                                l -> assertThat(l).isSortedAccordingTo(Procedure.LEXICOGRAPHIC_ORDER)
                         );
             }
         }
@@ -709,8 +709,8 @@ final class ContextTests {
                 assertThat(procedures)
                         .extracting(Procedure::getProcedureId)
                         .satisfiesAnyOf(
-                                l -> assertThat(l).isSortedAccordingTo(ProcedureId.COMPARING_IN_CASE_INSENSITIVE),
-                                l -> assertThat(l).isSortedAccordingTo(ProcedureId.COMPARING_IN_NATURAL)
+                                l -> assertThat(l).isSortedAccordingTo(ProcedureId.CASE_INSENSITIVE_ORDER),
+                                l -> assertThat(l).isSortedAccordingTo(ProcedureId.LEXICOGRAPHIC_ORDER)
                         );
             }
         }
@@ -722,10 +722,15 @@ final class ContextTests {
     private static void procedure(final Context context, final Procedure procedure) throws SQLException {
         Objects.requireNonNull(context, "context is null");
         Objects.requireNonNull(procedure, "procedure is null");
-        common(procedure);
-        common(procedure.getProcedureId());
+        final var procedureId = common(common(procedure).getProcedureId());
         try {
-            final var procedureColumns = procedure.getProcedureColumns(context, "%");
+            final var procedureColumns = context.getProcedureColumns(procedure, "%");
+            assertThat(procedureColumns)
+                    .extracting(ProcedureColumn::getProcedureColumnId)
+                    .doesNotContainNull()
+                    .doesNotHaveDuplicates()
+                    .extracting(ProcedureColumnId::getProcedureId)
+                    .allMatch(procedureId::equals);
             procedureColumns(context, procedureColumns);
         } catch (final SQLException sqle) {
             thrown("failed; getProcedureColumns", sqle);

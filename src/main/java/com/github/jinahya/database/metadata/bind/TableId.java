@@ -86,8 +86,7 @@ public final class TableId implements MetadataTypeId<TableId, Table> {
         if (this == obj) return true;
         if (!(obj instanceof TableId)) return false;
         final TableId that = (TableId) obj;
-        return schemaId.equals(that.schemaId)
-               && tableName.equals(that.tableName);
+        return schemaId.equals(that.schemaId) && tableName.equals(that.tableName);
     }
 
     @Override

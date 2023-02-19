@@ -62,12 +62,12 @@ public final class PrimaryKeyId implements MetadataTypeId<PrimaryKeyId, PrimaryK
         return of(TableId.of(tableCat, tableSchem, tableName), columnName, keySeq);
     }
 
-    public static PrimaryKeyId of(final TableId tableId, final String columName) {
+    static PrimaryKeyId of(final TableId tableId, final String columName) {
         return of(tableId, columName, 1);
     }
 
-    public static PrimaryKeyId of(final String tableCat, final String tableSchem, final String tableName,
-                                  final String columnName) {
+    static PrimaryKeyId of(final String tableCat, final String tableSchem, final String tableName,
+                           final String columnName) {
         return of(tableCat, tableSchem, tableName, columnName, 1);
     }
 
@@ -85,8 +85,7 @@ public final class PrimaryKeyId implements MetadataTypeId<PrimaryKeyId, PrimaryK
         if (this == obj) return true;
         if (!(obj instanceof PrimaryKeyId)) return false;
         final PrimaryKeyId that = (PrimaryKeyId) obj;
-        return tableId.equals(that.tableId)
-               && columnName.equals(that.columnName);
+        return tableId.equals(that.tableId) && columnName.equals(that.columnName);
     }
 
     @Override

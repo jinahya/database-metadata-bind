@@ -69,8 +69,8 @@ final class FunctionColumnId implements MetadataTypeId<FunctionColumnId, Functio
         if (!(obj instanceof FunctionColumnId)) return false;
         final FunctionColumnId that = (FunctionColumnId) obj;
         return columnType == that.columnType
-               && functionId.equals(that.functionId) &&
-               columnName.equals(that.columnName);
+               && functionId.equals(that.functionId)
+               && columnName.equals(that.columnName);
     }
 
     @Override

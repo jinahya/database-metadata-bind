@@ -28,10 +28,7 @@ import lombok.ToString;
 import lombok.experimental.SuperBuilder;
 
 import java.sql.DatabaseMetaData;
-import java.sql.SQLException;
 import java.util.Comparator;
-import java.util.List;
-import java.util.Objects;
 import java.util.Optional;
 
 /**
@@ -44,18 +41,18 @@ import java.util.Optional;
 @ChildOf(Schema.class)
 @EqualsAndHashCode(callSuper = true)
 @ToString(callSuper = true)
-@Data
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
+@Data
 @SuperBuilder(toBuilder = true)
 public class Procedure extends AbstractMetadataType {
 
     private static final long serialVersionUID = -6262056388403934829L;
 
-    public static final Comparator<Procedure> COMPARING_IN_CASE_INSENSITIVE_ORDER
-            = Comparator.comparing(Procedure::getProcedureId, ProcedureId.COMPARING_IN_CASE_INSENSITIVE);
+    public static final Comparator<Procedure> CASE_INSENSITIVE_ORDER
+            = Comparator.comparing(Procedure::getProcedureId, ProcedureId.CASE_INSENSITIVE_ORDER);
 
-    public static final Comparator<Procedure> COMPARING_IN_LEXICOGRAPHIC_ORDER
-            = Comparator.comparing(Procedure::getProcedureId, ProcedureId.COMPARING_IN_NATURAL);
+    public static final Comparator<Procedure> LEXICOGRAPHIC_ORDER
+            = Comparator.comparing(Procedure::getProcedureId, ProcedureId.LEXICOGRAPHIC_ORDER);
 
     public ProcedureId getProcedureId() {
         return ProcedureId.of(
@@ -63,18 +60,6 @@ public class Procedure extends AbstractMetadataType {
                 getProcedureSchemNonNull(),
                 getProcedureName(),
                 getSpecificName()
-        );
-    }
-
-    public List<ProcedureColumn> getProcedureColumns(final Context context, final String columnNamePattern)
-            throws SQLException {
-        Objects.requireNonNull(context, "context is null");
-        Objects.requireNonNull(columnNamePattern, "columnNamePattern is null");
-        return context.getProcedureColumns(
-                getProcedureCatNonNull(),
-                getProcedureSchemNonNull(),
-                getProcedureName(),
-                columnNamePattern
         );
     }
 

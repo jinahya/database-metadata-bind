@@ -52,8 +52,7 @@ public final class UDTId implements MetadataTypeId<UDTId, UDT> {
                 .build();
     }
 
-    public static UDTId of(final String typeCat, final String typeSchem, final String typeName) {
-        Objects.requireNonNull(typeName, "typeName is null");
+    static UDTId of(final String typeCat, final String typeSchem, final String typeName) {
         return of(SchemaId.of(typeCat, typeSchem), typeName);
     }
 
