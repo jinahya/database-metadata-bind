@@ -46,17 +46,17 @@ final class ContextTests {
 
     static void info(final Context context) throws SQLException {
         Objects.requireNonNull(context, "context is null");
-        log.debug("databaseProductName: {}", context.databaseMetaData.getDatabaseProductName());
-        log.debug("databaseProductVersion: {}", context.databaseMetaData.getDatabaseProductVersion());
-        log.debug("databaseMajorVersion: {}", context.databaseMetaData.getDatabaseMajorVersion());
-        log.debug("databaseMinorVersion: {}", context.databaseMetaData.getDatabaseMinorVersion());
-        log.debug("driverName: {}", context.databaseMetaData.getDriverName());
-        log.debug("driverVersion: {}", context.databaseMetaData.getDriverVersion());
-        log.debug("driverMajorVersion: {}", context.databaseMetaData.getDriverMajorVersion());
-        log.debug("driverMinorVersion: {}", context.databaseMetaData.getDriverMinorVersion());
-        log.debug("catalogSeparator: {}", context.databaseMetaData.getCatalogSeparator());
-        log.debug("catalogTerm: {}", context.databaseMetaData.getCatalogTerm());
-        log.debug("schemaTerm: {}", context.databaseMetaData.getSchemaTerm());
+        log.info("databaseProductName: {}", context.databaseMetaData.getDatabaseProductName());
+        log.info("databaseProductVersion: {}", context.databaseMetaData.getDatabaseProductVersion());
+        log.info("databaseMajorVersion: {}", context.databaseMetaData.getDatabaseMajorVersion());
+        log.info("databaseMinorVersion: {}", context.databaseMetaData.getDatabaseMinorVersion());
+        log.info("driverName: {}", context.databaseMetaData.getDriverName());
+        log.info("driverVersion: {}", context.databaseMetaData.getDriverVersion());
+        log.info("driverMajorVersion: {}", context.databaseMetaData.getDriverMajorVersion());
+        log.info("driverMinorVersion: {}", context.databaseMetaData.getDriverMinorVersion());
+        log.info("catalogSeparator: {}", context.databaseMetaData.getCatalogSeparator());
+        log.info("catalogTerm: {}", context.databaseMetaData.getCatalogTerm());
+        log.info("schemaTerm: {}", context.databaseMetaData.getSchemaTerm());
     }
 
     private static <T> T common(final T value) {
@@ -64,7 +64,6 @@ final class ContextTests {
         {
             final var string = value.toString();
         }
-
         {
             final var hashCode = value.hashCode();
         }
@@ -294,11 +293,7 @@ final class ContextTests {
         {
             assertThat(catalog.getTableCat()).isNotNull();
         }
-        {
-            common(catalog);
-            common(catalog.getCatalogId());
-        }
-        final var catalogId = catalog.getCatalogId();
+        final var catalogId = common(common(catalog).getCatalogId());
         try {
             final var schemas = context.getSchemas(catalog, "%");
             {
@@ -395,10 +390,6 @@ final class ContextTests {
         Objects.requireNonNull(context, "context is null");
         Objects.requireNonNull(column, "column is null");
         {
-            common(column);
-            common(column.getColumnId());
-        }
-        {
             assertThat(column.getTableName()).isNotNull();
             assertThat(column.getColumnName()).isNotNull();
             assertDoesNotThrow(() -> JDBCType.valueOf(column.getDataType()));
@@ -407,6 +398,7 @@ final class ContextTests {
             assertThat(column.getIsAutoincrement()).isNotNull();
             assertThat(column.getIsGeneratedcolumn()).isNotNull();
         }
+        final var columnId = common(common(column).getColumnId());
         {
             final var value = Column.NullableEnum.valueOfNullable(column.getNullable());
         }
@@ -474,7 +466,6 @@ final class ContextTests {
     static void crossReference(final Context context, final CrossReference crossReference) throws SQLException {
         Objects.requireNonNull(context, "context is null");
         Objects.requireNonNull(crossReference, "crossReference is null");
-        log.debug("crossReference: {}", crossReference);
         common(crossReference);
     }
 
@@ -904,11 +895,7 @@ final class ContextTests {
             assertThat(table.getTableName()).isNotNull();
 //            assertThat(table.getTableType()).isNotNull();
         }
-        {
-            common(table);
-            common(table.getTableId());
-        }
-        final var tableId = table.getTableId();
+        final var tableId = common(common(table).getTableId());
         try {
             for (final var scope : BestRowIdentifier.scopes()) {
                 for (final boolean nullable : new boolean[] {true, false}) {
@@ -1238,11 +1225,7 @@ final class ContextTests {
 //            assertThat(udt.getDataType()).isIn(Types.JAVA_OBJECT, Types.STRUCT, Types.DISTINCT);
             assertDoesNotThrow(() -> JDBCType.valueOf(udt.getDataType()));
         }
-        {
-            common(udt);
-            common(udt.getUDTId());
-        }
-        final var udtId = udt.getUDTId();
+        final var udtId = common(common(udt).getUDTId());
         try {
             final var attributes = context.getAttributes(udt, "%");
             assertThat(attributes)
