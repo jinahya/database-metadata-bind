@@ -69,11 +69,11 @@ public class Schema extends AbstractMetadataType {
                 .build();
     }
 
-    public static final Comparator<Schema> COMPARING_AS_SPECIFIED_CASE_INSENSITIVE =
+    public static final Comparator<Schema> CASE_INSENSITIVE_ORDER =
             Comparator.comparing(Schema::getSchemaId, SchemaId.CASE_INSENSITIVE_ORDER);
 
-    public static final Comparator<Schema> COMPARING_AS_SPECIFIED_NATURAL =
-            Comparator.comparing(Schema::getSchemaId, SchemaId.NATURAL_ORDER);
+    public static final Comparator<Schema> LEXICOGRAPHIC_ORDER =
+            Comparator.comparing(Schema::getSchemaId, SchemaId.LEXICOGRAPHIC_ORDER);
 
     public static final String COLUMN_LABEL_TABLE_CATALOG = "TABLE_CATALOG";
 
@@ -82,7 +82,10 @@ public class Schema extends AbstractMetadataType {
     public static final String COLUMN_VALUE_TABLE_SCHEM_EMPTY = "";
 
     public SchemaId getSchemaId() {
-        return SchemaId.of(getTableCatalogNonNull(), getTableSchem());
+        return SchemaId.of(
+                getTableCatalogNonNull(),
+                getTableSchem()
+        );
     }
 
     public CatalogId getCatalogId() {

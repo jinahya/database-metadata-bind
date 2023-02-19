@@ -47,7 +47,7 @@ public class ImportedKey extends TableKey<ImportedKey> {
 
     private static final long serialVersionUID = -1900794151555506751L;
 
-    public static final Comparator<ImportedKey> COMPARING_CASE_INSENSITIVE =
+    public static final Comparator<ImportedKey> CASE_INSENSITIVE_ORDER =
             comparingPktableKeySeqCaseInsensitive();
 
     public static final Comparator<ImportedKey> COMPARING_NATUAL = comparingPktableKeySeqNatual();

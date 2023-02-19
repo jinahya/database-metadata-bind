@@ -48,7 +48,7 @@ public class TypeInfo
 
     private static final long serialVersionUID = -3964147654019495313L;
 
-    public static final Comparator<TypeInfo> COMPARING_AS_SPECIFIED = Comparator.comparingInt(TypeInfo::getDataType);
+    public static final Comparator<TypeInfo> COMPARING_DATA_TYPE = Comparator.comparingInt(TypeInfo::getDataType);
 
     public static final String COLUMN_LABEL_TYPE_NAME = "TYPE_NAME";
 

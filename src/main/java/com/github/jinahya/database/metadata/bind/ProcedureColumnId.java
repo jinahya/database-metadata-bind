@@ -39,7 +39,7 @@ public final class ProcedureColumnId implements MetadataTypeId<ProcedureColumnId
             Comparator.comparing(ProcedureColumnId::getProcedureId, ProcedureId.COMPARING_IN_CASE_INSENSITIVE)
                     .thenComparing(ProcedureColumnId::getColumnName, String.CASE_INSENSITIVE_ORDER);
 
-    public static final Comparator<ProcedureColumnId> COMPARING_IN_NATURAL_ORDER =
+    public static final Comparator<ProcedureColumnId> COMPARING_IN_LEXICOGRAPHIC_ORDER =
             Comparator.comparing(ProcedureColumnId::getProcedureId, ProcedureId.COMPARING_IN_NATURAL)
                     .thenComparing(ProcedureColumnId::getColumnName);
 

@@ -22,6 +22,14 @@ package com.github.jinahya.database.metadata.bind;
 
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.EnumSource;
+
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
 
 class FunctionColumnTest extends AbstractMetadataTypeTest<FunctionColumn> {
 
@@ -35,6 +43,35 @@ class FunctionColumnTest extends AbstractMetadataTypeTest<FunctionColumn> {
 
         ColumnTypeEnumTest() {
             super(FunctionColumn.ColumnTypeEnum.class);
+        }
+    }
+
+    @DisplayName("ColumnTypeAsEnum")
+    @Nested
+    class ColumnTypeEnumAsEnumTest {
+
+        @Test
+        void getColumnTypeAsEnum__() {
+            final var spy = typeSpy();
+            final var actual = spy.getColumnTypeAsEnum();
+            verify(spy, times(1)).getColumnType();
+            assertThat(actual)
+                    .isSameAs(FunctionColumn.ColumnTypeEnum.valueOfColumnType(spy.getColumnType()));
+        }
+
+        @Test
+        void setColumnTypeAsEnum_NullPointerException_Null() {
+            final var spy = typeSpy();
+            assertThatThrownBy(() -> spy.setColumnTypeAsEnum(null))
+                    .isInstanceOf(NullPointerException.class);
+        }
+
+        @EnumSource(FunctionColumn.ColumnTypeEnum.class)
+        @ParameterizedTest
+        void setColumnTypeAsEnum__(final FunctionColumn.ColumnTypeEnum columnTypeAsEnum) {
+            final var spy = typeSpy();
+            spy.setColumnTypeAsEnum(columnTypeAsEnum);
+            verify(spy, times(1)).setColumnType(columnTypeAsEnum.fieldValueAsInt());
         }
     }
 }

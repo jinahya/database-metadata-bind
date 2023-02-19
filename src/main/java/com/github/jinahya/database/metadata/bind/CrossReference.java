@@ -29,6 +29,7 @@ import lombok.experimental.SuperBuilder;
 
 import java.sql.DatabaseMetaData;
 import java.util.Comparator;
+import java.util.Optional;
 
 /**
  * A class for binding the result of
@@ -46,28 +47,58 @@ public class CrossReference
 
     private static final long serialVersionUID = -5343386346721125961L;
 
-    public static final Comparator<CrossReference> COMPARING_CASE_INSENSITIVE =
-            Comparator.comparing(CrossReference::getFktableId, TableId.COMPARING_CASE_INSENSITIVE)
+    public static final Comparator<CrossReference> CASE_INSENSITIVE_ORDER =
+            Comparator.comparing(CrossReference::getFktableId, TableId.CASE_INSENSITIVE_ORDER)
                     .thenComparingInt(CrossReference::getKeySeq);
 
-    public static final Comparator<CrossReference> COMPARING_NATURAL =
-            Comparator.comparing(CrossReference::getFktableId, TableId.COMPARING_NATURAL)
+    public static final Comparator<CrossReference> LEXICOGRAPHIC_ORDER =
+            Comparator.comparing(CrossReference::getFktableId, TableId.LEXICOGRAPHIC_ORDER)
                     .thenComparingInt(CrossReference::getKeySeq);
 
     public static final String COLUMN_LABEL_UPDATE_RULE = "UPDATE_RULE";
 
-    public static final String ATTRIBUTE_NAME_UPDATE_RULE = "updateRule";
+    public static final String PROPERTY_NAME_UPDATE_RULE = "updateRule";
 
     public ColumnId getPkcolumnId() {
-        return ColumnId.of(getPktableCat(), getPktableSchem(), getPktableName(), getPkcolumnName(), 0);
+        return ColumnId.of(
+                getPktableCatNonNull(),
+                getPktableSchemNonNull(),
+                getPktableName(),
+                getPkcolumnName()
+        );
     }
 
     public ColumnId getFkcolumnId() {
-        return ColumnId.of(getFktableCat(), getFktableSchem(), getFktableName(), getFkcolumnName(), 0);
+        return ColumnId.of(
+                getFktableCatNonNull(),
+                getFktableSchemNonNull(),
+                getFktableName(),
+                getFkcolumnName()
+        );
+    }
+
+    TableId getPktableId() {
+        return getPkcolumnId().getTableId();
     }
 
     TableId getFktableId() {
         return getFkcolumnId().getTableId();
+    }
+
+    String getPktableCatNonNull() {
+        return Optional.ofNullable(getPktableCat()).orElse(Catalog.COLUMN_VALUE_TABLE_CAT_EMPTY);
+    }
+
+    String getPktableSchemNonNull() {
+        return Optional.ofNullable(getPktableSchem()).orElse(Schema.COLUMN_VALUE_TABLE_SCHEM_EMPTY);
+    }
+
+    String getFktableCatNonNull() {
+        return Optional.ofNullable(getFktableCat()).orElse(Catalog.COLUMN_VALUE_TABLE_CAT_EMPTY);
+    }
+
+    String getFktableSchemNonNull() {
+        return Optional.ofNullable(getFktableSchem()).orElse(Schema.COLUMN_VALUE_TABLE_SCHEM_EMPTY);
     }
 
     @NullableBySpecification

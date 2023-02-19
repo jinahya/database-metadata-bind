@@ -52,8 +52,8 @@ public class PseudoColumn extends AbstractMetadataType {
     public static final Comparator<PseudoColumn> CASE_INSENSITIVE_ORDER =
             Comparator.comparing(PseudoColumn::getPseudoColumnId, PseudoColumnId.CASE_INSENSITIVE_ORDER);
 
-    public static final Comparator<PseudoColumn> NATURAL_ORDER =
-            Comparator.comparing(PseudoColumn::getPseudoColumnId, PseudoColumnId.NATURAL_ORDER);
+    public static final Comparator<PseudoColumn> LEXICOGRAPHIC_ORDER =
+            Comparator.comparing(PseudoColumn::getPseudoColumnId, PseudoColumnId.LEXICOGRAPHIC_ORDER);
 
     public PseudoColumnId getPseudoColumnId() {
         return PseudoColumnId.of(

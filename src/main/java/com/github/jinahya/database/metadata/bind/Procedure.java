@@ -54,7 +54,7 @@ public class Procedure extends AbstractMetadataType {
     public static final Comparator<Procedure> COMPARING_IN_CASE_INSENSITIVE_ORDER
             = Comparator.comparing(Procedure::getProcedureId, ProcedureId.COMPARING_IN_CASE_INSENSITIVE);
 
-    public static final Comparator<Procedure> COMPARING_IN_NATURAL_ORDER
+    public static final Comparator<Procedure> COMPARING_IN_LEXICOGRAPHIC_ORDER
             = Comparator.comparing(Procedure::getProcedureId, ProcedureId.COMPARING_IN_NATURAL);
 
     public ProcedureId getProcedureId() {

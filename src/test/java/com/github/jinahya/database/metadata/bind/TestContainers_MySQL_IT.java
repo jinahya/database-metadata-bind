@@ -22,6 +22,7 @@ package com.github.jinahya.database.metadata.bind;
 
 import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.Disabled;
+import org.junit.jupiter.api.Test;
 import org.testcontainers.containers.MySQLContainer;
 import org.testcontainers.junit.jupiter.Container;
 import org.testcontainers.junit.jupiter.Testcontainers;
@@ -52,5 +53,17 @@ class TestContainers_MySQL_IT extends TestContainers_$_IT {
         final var user = CONTAINER.getUsername();
         final var password = CONTAINER.getPassword();
         return DriverManager.getConnection(url, user, password);
+    }
+
+    @Test
+    void __columns() throws SQLException {
+        try (var connection = connect()) {
+            final var metadata = connection.getMetaData();
+            try (var columns = metadata.getColumns(null, null, "%", "%")) {
+                while (columns.next()) {
+                    final var ordinal_position = columns.getInt("ORDINAL_POSITION");
+                }
+            }
+        }
     }
 }

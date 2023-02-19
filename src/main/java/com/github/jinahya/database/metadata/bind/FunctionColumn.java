@@ -31,9 +31,9 @@ import lombok.experimental.SuperBuilder;
 
 import java.sql.DatabaseMetaData;
 import java.util.Comparator;
+import java.util.Objects;
 import java.util.Optional;
 
-import static java.lang.String.CASE_INSENSITIVE_ORDER;
 import static java.util.Comparator.naturalOrder;
 import static java.util.Comparator.nullsFirst;
 
@@ -54,13 +54,13 @@ public class FunctionColumn
 
     private static final long serialVersionUID = -7445156446214062680L;
 
-    public static final Comparator<FunctionColumn> COMPARING_CASE_INSENSITIVE =
+    public static final Comparator<FunctionColumn> CASE_INSENSITIVE_ORDER =
             Comparator.comparing(FunctionColumn::getSchemaId, SchemaId.CASE_INSENSITIVE_ORDER)
-                    .thenComparing(FunctionColumn::getFunctionName, nullsFirst(CASE_INSENSITIVE_ORDER))
-                    .thenComparing(FunctionColumn::getSpecificName, nullsFirst(CASE_INSENSITIVE_ORDER));
+                    .thenComparing(FunctionColumn::getFunctionName, nullsFirst(String.CASE_INSENSITIVE_ORDER))
+                    .thenComparing(FunctionColumn::getSpecificName, nullsFirst(String.CASE_INSENSITIVE_ORDER));
 
-    public static final Comparator<FunctionColumn> COMPARING_NATURAL =
-            Comparator.comparing(FunctionColumn::getSchemaId, SchemaId.NATURAL_ORDER)
+    public static final Comparator<FunctionColumn> LEXICOGRAPHIC_ORDER =
+            Comparator.comparing(FunctionColumn::getSchemaId, SchemaId.LEXICOGRAPHIC_ORDER)
                     .thenComparing(FunctionColumn::getFunctionName, nullsFirst(naturalOrder()))
                     .thenComparing(FunctionColumn::getSpecificName, nullsFirst(naturalOrder()));
 
@@ -141,10 +141,16 @@ public class FunctionColumn
 
     public FunctionColumnId getFunctionColumnId() {
         return FunctionColumnId.of(
-                getFunctionCatNonNull(),
-                getFunctionSchemNonNull(),
-                getFunctionName(),
-                getSpecificName(),
+                FunctionId.of(
+                        SchemaId.of(
+                                CatalogId.of(
+                                        getFunctionCatNonNull()
+                                ),
+                                getFunctionSchemNonNull()
+                        ),
+                        getFunctionName(),
+                        getSpecificName()
+                ),
                 getColumnName(),
                 getColumnType()
         );
@@ -164,6 +170,15 @@ public class FunctionColumn
 
     String getFunctionSchemNonNull() {
         return Optional.ofNullable(getFunctionSchem()).orElse(Schema.COLUMN_VALUE_TABLE_SCHEM_EMPTY);
+    }
+
+    ColumnTypeEnum getColumnTypeAsEnum() {
+        return ColumnTypeEnum.valueOfColumnType(getColumnType());
+    }
+
+    void setColumnTypeAsEnum(final ColumnTypeEnum columnTypeAsEnum) {
+        Objects.requireNonNull(columnTypeAsEnum, "columnTypeAsEnum is null");
+        setColumnType(columnTypeAsEnum.fieldValueAsInt());
     }
 
     @NullableBySpecification
@@ -189,7 +204,7 @@ public class FunctionColumn
     @ColumnLabel("TYPE_NAME")
     private String typeName;
 
-    @NullableBySpecification // > Null is returned for data types where the column size is not applicable.
+    @NullableBySpecification
     @ColumnLabel("PRECISION")
     private Integer precision;
 

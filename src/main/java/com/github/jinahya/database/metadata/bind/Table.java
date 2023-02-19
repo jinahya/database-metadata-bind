@@ -61,53 +61,53 @@ public class Table extends AbstractMetadataType {
 
     private static final long serialVersionUID = 6590036695540141125L;
 
-    public static final Comparator<Table> COMPARING_IN_CASE_INSENSITIVE_ORDER =
+    public static final Comparator<Table> CASE_INSENSITIVE_ORDER =
             Comparator.comparing(Table::getTableType, nullsFirst(String.CASE_INSENSITIVE_ORDER))
-                    .thenComparing(Table::getTableId, TableId.COMPARING_CASE_INSENSITIVE);
+                    .thenComparing(Table::getTableId, TableId.CASE_INSENSITIVE_ORDER);
 
-    public static final Comparator<Table> COMPARING_IN_NATURAL_ORDER =
+    public static final Comparator<Table> LEXICOGRAPHIC_ORDER =
             Comparator.comparing(Table::getTableType, nullsFirst(naturalOrder()))
-                    .thenComparing(Table::getTableId, TableId.COMPARING_NATURAL);
+                    .thenComparing(Table::getTableId, TableId.LEXICOGRAPHIC_ORDER);
 
     /**
-     * The label of the column to which {@link #ATTRIBUTE_NAME_TABLE_CAT} attribute is bound. The value is {@value}.
+     * The label of the column to which {@link #PROPERTY_NAME_TABLE_CAT} attribute is bound. The value is {@value}.
      */
     public static final String COLUMN_LABEL_TABLE_CAT = "TABLE_CAT";
 
     /**
      * The name of the attribute from which {@link #COLUMN_LABEL_TABLE_CAT} column is bound. The value is {@value}.
      */
-    public static final String ATTRIBUTE_NAME_TABLE_CAT = "tableCat";
+    public static final String PROPERTY_NAME_TABLE_CAT = "tableCat";
 
     /**
-     * The label of the column to which {@link #ATTRIBUTE_NAME_TABLE_SCHEM} attribute is bound. The value is {@value}.
+     * The label of the column to which {@link #PROPERTY_NAME_TABLE_SCHEM} attribute is bound. The value is {@value}.
      */
     public static final String COLUMN_LABEL_TABLE_SCHEM = "TABLE_SCHEM";
 
     /**
      * The name of the attribute from which {@link #COLUMN_LABEL_TABLE_SCHEM} column is bound. The value is {@value}.
      */
-    public static final String ATTRIBUTE_NAME_TABLE_SCHEM = "tableSchem";
+    public static final String PROPERTY_NAME_TABLE_SCHEM = "tableSchem";
 
     /**
-     * The label of the column to which {@link #ATTRIBUTE_NAME_TABLE_NAME} attribute is bound. The value is {@value}.
+     * The label of the column to which {@link #PROPERTY_NAME_TABLE_NAME} attribute is bound. The value is {@value}.
      */
     public static final String COLUMN_LABEL_TABLE_NAME = "TABLE_NAME";
 
     /**
      * The name of the attribute from which {@link #COLUMN_LABEL_TABLE_NAME} column is bound. The value is {@value}.
      */
-    public static final String ATTRIBUTE_NAME_TABLE_NAME = "tableName";
+    public static final String PROPERTY_NAME_TABLE_NAME = "tableName";
 
     /**
-     * The label of the column to which {@link #ATTRIBUTE_NAME_TABLE_TYPE} attribute is bound. The value is {@value}.
+     * The label of the column to which {@link #PROPERTY_NAME_TABLE_TYPE} attribute is bound. The value is {@value}.
      */
     public static final String COLUMN_LABEL_TABLE_TYPE = "TABLE_TYPE";
 
     /**
      * The name of the attribute from which {@link #COLUMN_LABEL_TABLE_TYPE} column is bound. The value is {@value}.
      */
-    public static final String ATTRIBUTE_NAME_TABLE_TYPE = "tableName";
+    public static final String PROPERTY_NAME_TABLE_TYPE = "tableName";
 
     public TableId getTableId() {
         return TableId.of(

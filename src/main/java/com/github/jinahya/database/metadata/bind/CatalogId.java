@@ -29,18 +29,24 @@ import java.util.Comparator;
 import java.util.Objects;
 
 @Getter
-@RequiredArgsConstructor(access = AccessLevel.PACKAGE)
+@RequiredArgsConstructor(access = AccessLevel.PRIVATE)
 @SuperBuilder(toBuilder = true)
 public final class CatalogId implements MetadataTypeId<CatalogId, Catalog> {
 
     private static final long serialVersionUID = 2793098695036855151L;
 
-    public static final Comparator<CatalogId> COMPARING_IN_CASE_INSENSITIVE_ORDER =
+    public static final Comparator<CatalogId> CASE_INSENSITIVE_ORDER =
             Comparator.comparing(CatalogId::getTableCat, String.CASE_INSENSITIVE_ORDER);
 
-    public static final Comparator<CatalogId> COMPARING_IN_NATURAL_ORDER =
+    public static final Comparator<CatalogId> LEXICOGRAPHIC_ORDER =
             Comparator.comparing(CatalogId::getTableCat, Comparator.naturalOrder());
 
+    /**
+     * Creates a new instance with specified arguments.
+     *
+     * @param tableCat a value of {@value Catalog#COLUMN_LABEL_TABLE_CAT} column.
+     * @return a new instance.
+     */
     static CatalogId of(final String tableCat) {
         Objects.requireNonNull(tableCat, "tableCat is null");
         return builder()
@@ -51,7 +57,7 @@ public final class CatalogId implements MetadataTypeId<CatalogId, Catalog> {
     @Override
     public String toString() {
         return super.toString() + '{' +
-               "tableCat=" + tableCat +
+               "tableCat='" + tableCat + '\'' +
                '}';
     }
 

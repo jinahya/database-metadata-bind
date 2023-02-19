@@ -49,27 +49,32 @@ public abstract class TableKey<T extends TableKey<T>> extends AbstractMetadataTy
     private static final long serialVersionUID = 6713872409315471232L;
 
     public static <T extends TableKey<T>> Comparator<T> comparingPktableKeySeqCaseInsensitive() {
-        return Comparator.<T, TableId>comparing(TableKey::getPktableId, TableId.COMPARING_CASE_INSENSITIVE)
+        return Comparator.<T, TableId>comparing(TableKey::getPktableId, TableId.CASE_INSENSITIVE_ORDER)
                 .thenComparingInt(TableKey::getKeySeq);
     }
 
     public static <T extends TableKey<T>> Comparator<T> comparingPktableKeySeqNatual() {
-        return Comparator.<T, TableId>comparing(TableKey::getPktableId, TableId.COMPARING_NATURAL)
+        return Comparator.<T, TableId>comparing(TableKey::getPktableId, TableId.LEXICOGRAPHIC_ORDER)
                 .thenComparingInt(TableKey::getKeySeq);
     }
 
     public static <T extends TableKey<T>> Comparator<T> comparingFktableKeySeqCaseInsensitive() {
-        return Comparator.<T, TableId>comparing(TableKey::getFktableId, TableId.COMPARING_CASE_INSENSITIVE)
+        return Comparator.<T, TableId>comparing(TableKey::getFktableId, TableId.CASE_INSENSITIVE_ORDER)
                 .thenComparingInt(TableKey::getKeySeq);
     }
 
     public static <T extends TableKey<T>> Comparator<T> comparingFktableKeySeqNatural() {
-        return Comparator.<T, TableId>comparing(TableKey::getFktableId, TableId.COMPARING_NATURAL)
+        return Comparator.<T, TableId>comparing(TableKey::getFktableId, TableId.LEXICOGRAPHIC_ORDER)
                 .thenComparingInt(TableKey::getKeySeq);
     }
 
     public ColumnId getPkcolumnId() {
-        return ColumnId.of(getPktableCatNonNull(), getPktableSchemNonNull(), getPktableName(), getPkcolumnName(), 0);
+        return ColumnId.of(
+                getPktableCatNonNull(),
+                getPktableSchemNonNull(),
+                getPktableName(),
+                getPkcolumnName()
+        );
     }
 
     public TableId getPktableId() {
@@ -77,7 +82,12 @@ public abstract class TableKey<T extends TableKey<T>> extends AbstractMetadataTy
     }
 
     public ColumnId getFkcolumnId() {
-        return ColumnId.of(getFktableCatNonNull(), getFktableSchemNonNull(), getFktableName(), getFkcolumnName(), 0);
+        return ColumnId.of(
+                getFktableCatNonNull(),
+                getFktableSchemNonNull(),
+                getFktableName(),
+                getFkcolumnName()
+        );
     }
 
     public TableId getFktableId() {

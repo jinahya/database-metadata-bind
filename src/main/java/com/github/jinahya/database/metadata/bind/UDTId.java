@@ -39,8 +39,8 @@ public final class UDTId implements MetadataTypeId<UDTId, UDT> {
             Comparator.comparing(UDTId::getSchemaId, SchemaId.CASE_INSENSITIVE_ORDER)
                     .thenComparing(UDTId::getTypeName, String.CASE_INSENSITIVE_ORDER);
 
-    public static final Comparator<UDTId> NATURAL_ORDER =
-            Comparator.comparing(UDTId::getSchemaId, SchemaId.NATURAL_ORDER)
+    public static final Comparator<UDTId> LEXICOGRAPHIC_ORDER =
+            Comparator.comparing(UDTId::getSchemaId, SchemaId.LEXICOGRAPHIC_ORDER)
                     .thenComparing(UDTId::getTypeName);
 
     public static UDTId of(final SchemaId schemaId, final String typeName) {

@@ -21,8 +21,8 @@ package com.github.jinahya.database.metadata.bind;
  */
 
 import lombok.AccessLevel;
-import lombok.Data;
 import lombok.EqualsAndHashCode;
+import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.SuperBuilder;
 
@@ -34,7 +34,7 @@ import java.util.Objects;
  *
  * @author Jin Kwon &lt;onacit_at_gmail.com&gt;
  */
-@Data
+@Getter
 @RequiredArgsConstructor(access = AccessLevel.PRIVATE)
 @SuperBuilder(toBuilder = true)
 public final class ColumnId implements MetadataTypeId<ColumnId, Column> {
@@ -42,17 +42,17 @@ public final class ColumnId implements MetadataTypeId<ColumnId, Column> {
     private static final long serialVersionUID = -4452694121211962289L;
 
     public static final Comparator<ColumnId> CASE_INSENSITIVE_ORDER =
-            Comparator.comparing(ColumnId::getTableId, TableId.COMPARING_CASE_INSENSITIVE)
+            Comparator.comparing(ColumnId::getTableId, TableId.CASE_INSENSITIVE_ORDER)
                     .thenComparingInt(ColumnId::getOrdinalPosition);
 
-    public static final Comparator<ColumnId> NATURAL_ORDER =
-            Comparator.comparing(ColumnId::getTableId, TableId.COMPARING_NATURAL)
+    public static final Comparator<ColumnId> LEXICOGRAPHIC_ORDER =
+            Comparator.comparing(ColumnId::getTableId, TableId.LEXICOGRAPHIC_ORDER)
                     .thenComparingInt(ColumnId::getOrdinalPosition);
 
     static ColumnId of(final TableId tableId, final String columnName, final int ordinalPosition) {
         Objects.requireNonNull(tableId, "tableId is null");
         Objects.requireNonNull(columnName, "columnName is null");
-        if (false && ordinalPosition <= 0) {
+        if (ordinalPosition <= 0) {
             throw new IllegalArgumentException("non-positive ordinal position: " + ordinalPosition);
         }
         return builder()
@@ -71,9 +71,32 @@ public final class ColumnId implements MetadataTypeId<ColumnId, Column> {
         return of(tableId, columnName, 1);
     }
 
-    public static ColumnId of(final String tableCat, final String tableSchem, final String tableName,
-                              final String columnName) {
+    static ColumnId of(final String tableCat, final String tableSchem, final String tableName,
+                       final String columnName) {
         return of(tableCat, tableSchem, tableName, columnName, 1);
+    }
+
+    @Override
+    public String toString() {
+        return super.toString() + '{' +
+               "tableId=" + tableId +
+               ",columnName='" + columnName + '\'' +
+               ",ordinalPosition=" + ordinalPosition +
+               '}';
+    }
+
+    @Override
+    public boolean equals(final Object obj) {
+        if (this == obj) return true;
+        if (!(obj instanceof ColumnId)) return false;
+        final ColumnId that = (ColumnId) obj;
+        return tableId.equals(that.tableId)
+               && columnName.equals(that.columnName);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(tableId, columnName);
     }
 
     private final TableId tableId;
@@ -81,5 +104,6 @@ public final class ColumnId implements MetadataTypeId<ColumnId, Column> {
     private final String columnName;
 
     @EqualsAndHashCode.Exclude
+    // excluded in equals/hashCode, included in toString
     private final int ordinalPosition;
 }

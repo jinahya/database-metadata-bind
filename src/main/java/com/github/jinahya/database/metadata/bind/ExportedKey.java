@@ -47,9 +47,9 @@ public class ExportedKey extends TableKey<ExportedKey> {
 
     private static final long serialVersionUID = -6561660015694928357L;
 
-    public static final Comparator<ExportedKey> COMPARING_CASE_INSENSITIVE =
+    public static final Comparator<ExportedKey> CASE_INSENSITIVE_ORDER =
             TableKey.comparingFktableKeySeqCaseInsensitive();
 
-    public static final Comparator<ExportedKey> COMPARING_NATURAL =
+    public static final Comparator<ExportedKey> LEXICOGRAPHIC_ORDER =
             TableKey.comparingFktableKeySeqNatural();
 }

@@ -29,15 +29,11 @@ import lombok.ToString;
 import lombok.experimental.SuperBuilder;
 
 import java.sql.DatabaseMetaData;
-import java.sql.SQLException;
 import java.util.Comparator;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
-import java.util.Objects;
 import java.util.Optional;
 
-import static java.lang.String.CASE_INSENSITIVE_ORDER;
 import static java.util.Comparator.naturalOrder;
 import static java.util.Comparator.nullsFirst;
 
@@ -60,48 +56,41 @@ public class Function
 
     private static final long serialVersionUID = -3318947900237453301L;
 
-    public static final Comparator<Function> COMPARING_CASE_INSENSITIVE =
+    public static final Comparator<Function> CASE_INSENSITIVE_ORDER =
             Comparator.comparing(Function::getSchemaId, SchemaId.CASE_INSENSITIVE_ORDER)
-                    .thenComparing(Function::getFunctionName, nullsFirst(CASE_INSENSITIVE_ORDER))
-                    .thenComparing(Function::getSpecificName, nullsFirst(CASE_INSENSITIVE_ORDER));
+                    .thenComparing(Function::getFunctionName, nullsFirst(String.CASE_INSENSITIVE_ORDER))
+                    .thenComparing(Function::getSpecificName, nullsFirst(String.CASE_INSENSITIVE_ORDER));
 
-    public static final Comparator<Function> COMPARING_NATURAL =
-            Comparator.comparing(Function::getSchemaId, SchemaId.NATURAL_ORDER)
+    public static final Comparator<Function> LEXICOGRAPHIC_ORDER =
+            Comparator.comparing(Function::getSchemaId, SchemaId.LEXICOGRAPHIC_ORDER)
                     .thenComparing(Function::getFunctionName, nullsFirst(naturalOrder()))
                     .thenComparing(Function::getSpecificName, nullsFirst(naturalOrder()));
 
     public static final String COLUMN_NAME_FUNCTION_CAT = "FUNCTION_CAT";
 
-    public static final String ATTRIBUTE_NAME_FUNCTION_CAT = "functionCat";
+    public static final String PROPERTY_NAME_FUNCTION_CAT = "functionCat";
 
     public static final String COLUMN_NAME_FUNCTION_SCHEM = "FUNCTION_SCHEM";
 
-    public static final String ATTRIBUTE_NAME_FUNCTION_SCHEM = "functionSchem";
+    public static final String PROPERTY_NAME_FUNCTION_SCHEM = "functionSchem";
 
     public static final String COLUMN_NAME_FUNCTION_TYPE = "FUNCTION_TYPE";
 
+    public static final String PROPERTY_NAME_FUNCTION_TYPE = "functionType";
+
     public FunctionId getFunctionId() {
-        return FunctionId.of(getFunctionCatNonNull(), getFunctionSchemNonNull(), getFunctionName(), getSpecificName());
+        return FunctionId.of(
+                SchemaId.of(
+                        getFunctionCatNonNull(),
+                        getFunctionSchemNonNull()
+                ),
+                getFunctionName(),
+                getSpecificName()
+        );
     }
 
     SchemaId getSchemaId() {
         return getFunctionId().getSchemaId();
-    }
-
-    public List<FunctionColumn> getFunctionColumns(final Context context, final String columnNamePattern)
-            throws SQLException {
-        Objects.requireNonNull(context, "context is null");
-        final List<FunctionColumn> functionColumns = context.getFunctionColumns(
-                getFunctionCatNonNull(),
-                getFunctionSchemNonNull(),
-                getFunctionName(),
-                columnNamePattern
-        );
-        functionColumns.forEach(fc -> {
-            fc.setFunction(this);
-            getFunctionColumns().put(fc.getFunctionColumnId(), fc);
-        });
-        return functionColumns;
     }
 
     String getFunctionCatNonNull() {

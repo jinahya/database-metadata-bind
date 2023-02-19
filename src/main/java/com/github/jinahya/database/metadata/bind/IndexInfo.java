@@ -30,6 +30,9 @@ import lombok.experimental.SuperBuilder;
 import java.sql.DatabaseMetaData;
 import java.util.Comparator;
 
+import static java.util.Comparator.naturalOrder;
+import static java.util.Comparator.nullsFirst;
+
 /**
  * A class for binding results of {@link DatabaseMetaData#getIndexInfo(String, String, String, boolean, boolean)}
  * method.
@@ -46,11 +49,17 @@ public class IndexInfo extends AbstractMetadataType {
 
     private static final long serialVersionUID = 924040226611181424L;
 
-    public static final Comparator<IndexInfo> COMPARING_NON_UNIQUE_TYPE_INDEX_NAME_ORDINAL_POSITION
-            = Comparator.comparing(IndexInfo::isNonUnique)
-            .thenComparingInt(IndexInfo::getType)
-            .thenComparing(IndexInfo::getIndexName, Comparator.nullsFirst(String.CASE_INSENSITIVE_ORDER))
-            .thenComparingInt(IndexInfo::getOrdinalPosition);
+    public static final Comparator<IndexInfo> CASE_INSENSITIVE_ORDER =
+            Comparator.comparing(IndexInfo::isNonUnique)
+                    .thenComparingInt(IndexInfo::getType)
+                    .thenComparing(IndexInfo::getIndexName, nullsFirst(String.CASE_INSENSITIVE_ORDER))
+                    .thenComparingInt(IndexInfo::getOrdinalPosition);
+
+    public static final Comparator<IndexInfo> LEXICOGRAPHIC_ORDER =
+            Comparator.comparing(IndexInfo::isNonUnique)
+                    .thenComparingInt(IndexInfo::getType)
+                    .thenComparing(IndexInfo::getIndexName, nullsFirst(naturalOrder()))
+                    .thenComparingInt(IndexInfo::getOrdinalPosition);
 
     public static final String COLUMN_LABEL_TABLE_CAT = "TABLE_CAT";
 

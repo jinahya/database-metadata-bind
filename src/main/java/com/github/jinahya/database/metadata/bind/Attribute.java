@@ -31,7 +31,9 @@ import lombok.experimental.Accessors;
 import lombok.experimental.SuperBuilder;
 
 import java.sql.DatabaseMetaData;
+import java.sql.Types;
 import java.util.Comparator;
+import java.util.Objects;
 import java.util.Optional;
 
 /**
@@ -54,8 +56,8 @@ public class Attribute extends AbstractMetadataType {
     public static final Comparator<Attribute> CASE_INSENSITIVE_ORDER =
             Comparator.comparing(Attribute::getAttributeId, AttributeId.CASE_INSENSITIVE_ORDER);
 
-    public static final Comparator<Attribute> NATURAL_ORDER =
-            Comparator.comparing(Attribute::getAttributeId, AttributeId.COMPARING_NATURAL);
+    public static final Comparator<Attribute> LEXICOGRAPHIC_ORDER =
+            Comparator.comparing(Attribute::getAttributeId, AttributeId.LEXICOGRAPHIC_ORDER);
 
     public static final String COLUMN_LABEL_NULLABLE = "NULLABLE";
 
@@ -123,6 +125,17 @@ public class Attribute extends AbstractMetadataType {
 
     String getTypeSchemNonNull() {
         return Optional.ofNullable(getTypeSchem()).orElse(Schema.COLUMN_VALUE_TABLE_SCHEM_EMPTY);
+    }
+
+    TableId getScopeTableId() {
+        if (dataType != Types.REF) {
+            throw new IllegalStateException("dataType != Types.REF(" + Types.REF + ")");
+        }
+        return TableId.of(
+                Objects.requireNonNull(getScopeCatalog(), "scopeCatalog is null"),
+                Objects.requireNonNull(getScopeSchema(), "scopeSchema is null"),
+                Objects.requireNonNull(getScopeTable(), "scopeTable is null")
+        );
     }
 
     @NullableBySpecification

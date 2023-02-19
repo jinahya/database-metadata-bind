@@ -696,6 +696,27 @@ public class Context {
     }
 
     /**
+     * Invokes {@link DatabaseMetaData#getFunctionColumns(String, String, String, String)} method with specified
+     * arguments, and returns a list of bound values.
+     *
+     * @param function          the function whose columns are retrieved.
+     * @param columnNamePattern a value for {@code columnNamePattern} parameter.
+     * @return a list of bound values.
+     * @throws SQLException if a database error occurs.
+     * @see #getFunctionColumns(String, String, String, String)
+     */
+    public List<FunctionColumn> getFunctionColumns(final Function function, final String columnNamePattern)
+            throws SQLException {
+        Objects.requireNonNull(function, "function is null");
+        return getFunctionColumns(
+                function.getFunctionCatNonNull(),
+                function.getFunctionSchemNonNull(),
+                Objects.requireNonNull(function.getFunctionName(), "function.functionName is null"),
+                columnNamePattern
+        );
+    }
+
+    /**
      * Invokes {@link DatabaseMetaData#getImportedKeys(String, String, String)} method with given arguments, and accepts
      * each bound value to specified consumer.
      *

@@ -49,10 +49,10 @@ public class PrimaryKey extends AbstractMetadataType {
 
     private static final long serialVersionUID = 3159826510060898330L;
 
-    public static final Comparator<PrimaryKey> COMPARING_CASE_INSENSITIVE
+    public static final Comparator<PrimaryKey> CASE_INSENSITIVE_ORDER
             = Comparator.comparing(PrimaryKey::getColumnName, String.CASE_INSENSITIVE_ORDER);
 
-    public static final Comparator<PrimaryKey> COMPARING_NATURAL
+    public static final Comparator<PrimaryKey> LEXICOGRAPHIC_ORDER
             = Comparator.comparing(PrimaryKey::getColumnName);
 
     public static final String COLUMN_LABEL_TABLE_CAT = "TABLE_CAT";

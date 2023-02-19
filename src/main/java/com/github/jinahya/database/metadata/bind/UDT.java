@@ -52,9 +52,9 @@ public class UDT extends AbstractMetadataType {
             Comparator.comparingInt(UDT::getDataType)
                     .thenComparing(UDT::getUDTId, UDTId.CASE_INSENSITIVE_ORDER);
 
-    public static final Comparator<UDT> COMPARING_IN_NATURAL_ORDER =
+    public static final Comparator<UDT> COMPARING_IN_LEXICOGRAPHIC_ORDER =
             Comparator.comparingInt(UDT::getDataType)
-                    .thenComparing(UDT::getUDTId, UDTId.NATURAL_ORDER);
+                    .thenComparing(UDT::getUDTId, UDTId.LEXICOGRAPHIC_ORDER);
 
     public static final String COLUMN_LABEL_TYPE_CAT = "TYPE_CAT";
 

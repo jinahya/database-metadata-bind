@@ -40,14 +40,14 @@ public final class AttributeId implements MetadataTypeId<AttributeId, Attribute>
             Comparator.comparing(AttributeId::getUdtId, UDTId.CASE_INSENSITIVE_ORDER)
                     .thenComparingInt(AttributeId::getOrdinalPosition);
 
-    public static final Comparator<AttributeId> COMPARING_NATURAL =
-            Comparator.comparing(AttributeId::getUdtId, UDTId.NATURAL_ORDER)
+    public static final Comparator<AttributeId> LEXICOGRAPHIC_ORDER =
+            Comparator.comparing(AttributeId::getUdtId, UDTId.LEXICOGRAPHIC_ORDER)
                     .thenComparingInt(AttributeId::getOrdinalPosition);
 
     static AttributeId of(final UDTId udtId, final String attrName, final int ordinalPosition) {
         Objects.requireNonNull(udtId, "udtId is null");
         Objects.requireNonNull(attrName, "attrName is null");
-        if (false && ordinalPosition <= 0) {
+        if (ordinalPosition <= 0) {
             throw new IllegalArgumentException("non-positive ordinalPosition: " + ordinalPosition);
         }
         return builder()
