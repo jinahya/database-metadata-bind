@@ -21,30 +21,35 @@ package com.github.jinahya.database.metadata.bind;
  */
 
 import lombok.AccessLevel;
-import lombok.Data;
 import lombok.EqualsAndHashCode;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 import lombok.ToString;
 import lombok.experimental.SuperBuilder;
 
 import java.util.Comparator;
+import java.util.Optional;
+
+import static java.util.Comparator.naturalOrder;
+import static java.util.Comparator.nullsFirst;
 
 /**
- * An entity class for binding the result of
- * {@link java.sql.DatabaseMetaData#getTablePrivileges(java.lang.String, java.lang.String, java.lang.String)}.
+ * An class for binding results of
+ * {@link java.sql.DatabaseMetaData#getTablePrivileges(java.lang.String, java.lang.String, java.lang.String)} method.
  *
  * @author Jin Kwon &lt;jinahya_at_gmail.com&gt;
  * @see Context#getTablePrivileges(String, String, String)
  */
-@ChildOf(Catalog.class)
+@Setter
+@Getter
 @EqualsAndHashCode(callSuper = true)
 @ToString(callSuper = true)
-@Data
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @SuperBuilder(toBuilder = true)
 public class TablePrivilege extends AbstractMetadataType {
 
-    private static final long serialVersionUID = -1799954363648972203L;
+    private static final long serialVersionUID = -2142097373603478881L;
 
     public static final String COLUMN_LABEL_TABLE_CAT = "TABLE_CAT";
 
@@ -52,12 +57,29 @@ public class TablePrivilege extends AbstractMetadataType {
 
     public static final String COLUMN_LABEL_TABLE_NAME = "TABLE_NAME";
 
-    public static final Comparator<TablePrivilege> COMPARING_TABLE_CAT_TABLE_SCHEM_TABLE_NAME_PRIVILEGE =
-            Comparator.comparing(TablePrivilege::getTableCat, Comparator.nullsFirst(Comparator.naturalOrder()))
-                    .thenComparing(TablePrivilege::getTableSchem, Comparator.nullsFirst(Comparator.naturalOrder()))
-                    .thenComparing(TablePrivilege::getTableName)
-                    .thenComparing(TablePrivilege::getPrivilege);
+    public static final Comparator<TablePrivilege> CASE_INSENSITIVE_ORDER =
+            Comparator.comparing(TablePrivilege::getTableCatNonNull, String.CASE_INSENSITIVE_ORDER)
+                    .thenComparing(TablePrivilege::getTableSchemNonNull, String.CASE_INSENSITIVE_ORDER)
+                    .thenComparing(TablePrivilege::getTableName, nullsFirst(String.CASE_INSENSITIVE_ORDER))
+                    .thenComparing(TablePrivilege::getPrivilege, nullsFirst(String.CASE_INSENSITIVE_ORDER));
 
+    public static final Comparator<TablePrivilege> LEXICOGRAPHIC_ORDER =
+            Comparator.comparing(TablePrivilege::getTableCatNonNull)
+                    .thenComparing(TablePrivilege::getTableSchemNonNull)
+                    .thenComparing(TablePrivilege::getTableName, nullsFirst(naturalOrder()))
+                    .thenComparing(TablePrivilege::getPrivilege, nullsFirst(naturalOrder()));
+
+    // -------------------------------------------------------------------------------------------------------- tableCat
+    String getTableCatNonNull() {
+        return Optional.ofNullable(getTableCat()).orElse(Catalog.COLUMN_VALUE_TABLE_CAT_EMPTY);
+    }
+
+    // ------------------------------------------------------------------------------------------------------ tableSchem
+    String getTableSchemNonNull() {
+        return Optional.ofNullable(getTableSchem()).orElse(Schema.COLUMN_VALUE_TABLE_SCHEM_EMPTY);
+    }
+
+    // -----------------------------------------------------------------------------------------------------------------
     @NullableBySpecification
     @ColumnLabel(COLUMN_LABEL_TABLE_CAT)
     private String tableCat;

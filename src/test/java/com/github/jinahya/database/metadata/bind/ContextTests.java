@@ -30,6 +30,7 @@ import java.sql.SQLFeatureNotSupportedException;
 import java.sql.Types;
 import java.util.List;
 import java.util.Objects;
+import java.util.Optional;
 import java.util.Set;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -335,6 +336,16 @@ final class ContextTests {
         } catch (final SQLException sqle) {
             thrown("failed: getSchemas", sqle);
         }
+        try {
+            final var tablePrivileges = context.getTablePrivileges(
+                    Optional.ofNullable(catalog.getTableCat()).orElse(Catalog.COLUMN_VALUE_TABLE_CAT_EMPTY),
+                    "%",
+                    "%"
+            );
+            tablePrivileges(context, tablePrivileges);
+        } catch (final SQLException sqle) {
+            thrown("failed; getTablePrivileges", sqle);
+        }
     }
 
     private static void clientInfoProperties(final Context context,
@@ -490,10 +501,10 @@ final class ContextTests {
             );
             if (!databaseProductNames.contains(databaseProductName)) {
                 assertThat(exportedKeys)
-                        .extracting(ExportedKey::getFktableId)
+                        .extracting(ExportedKey::getFkcolumnId)
                         .satisfiesAnyOf(
-                                l -> assertThat(l).isSortedAccordingTo(TableId.CASE_INSENSITIVE_ORDER),
-                                l -> assertThat(l).isSortedAccordingTo(TableId.LEXICOGRAPHIC_ORDER)
+                                l -> assertThat(l).isSortedAccordingTo(ColumnId.CASE_INSENSITIVE_ORDER),
+                                l -> assertThat(l).isSortedAccordingTo(ColumnId.LEXICOGRAPHIC_ORDER)
                         );
             }
         }
@@ -506,8 +517,8 @@ final class ContextTests {
         Objects.requireNonNull(context, "context is null");
         Objects.requireNonNull(exportedKey, "exportedKey is null");
         common(exportedKey);
-        common(exportedKey.getPktableId());
-        common(exportedKey.getFktableId());
+        common(exportedKey.getPkcolumnId());
+        common(exportedKey.getFkcolumnId());
     }
 
     private static void functions(final Context context, final List<? extends Function> functions) throws SQLException {
@@ -641,10 +652,10 @@ final class ContextTests {
             );
             if (!databaseProductNames.contains(databaseProductName)) {
                 assertThat(importedKeys)
-                        .extracting(ImportedKey::getFktableId)
+                        .extracting(ImportedKey::getFkcolumnId)
                         .satisfiesAnyOf(
-                                l -> assertThat(l).isSortedAccordingTo(TableId.CASE_INSENSITIVE_ORDER),
-                                l -> assertThat(l).isSortedAccordingTo(TableId.LEXICOGRAPHIC_ORDER)
+                                l -> assertThat(l).isSortedAccordingTo(ColumnId.CASE_INSENSITIVE_ORDER),
+                                l -> assertThat(l).isSortedAccordingTo(ColumnId.LEXICOGRAPHIC_ORDER)
                         );
             }
         }
@@ -657,8 +668,8 @@ final class ContextTests {
         Objects.requireNonNull(context, "context is null");
         Objects.requireNonNull(importedKey, "importedKey is null");
         common(importedKey);
-        common(importedKey.getPktableId());
-        common(importedKey.getFktableId());
+        common(importedKey.getPkcolumnId());
+        common(importedKey.getFkcolumnId());
     }
 
     static void indexInfo(final Context context, final List<? extends IndexInfo> indexInfo) throws SQLException {
@@ -823,6 +834,12 @@ final class ContextTests {
         } catch (final SQLException sqle) {
             thrown("failed: getSuperTypes", sqle);
         }
+        try {
+            final var tablePrivileges = context.getTablePrivileges(schema, "%");
+            tablePrivileges(context, tablePrivileges);
+        } catch (final SQLException sqle) {
+            thrown("failed; getTablePrivileges", sqle);
+        }
     }
 
     static void superTypes(final Context context, final List<? extends SuperType> superTypes) throws SQLException {
@@ -918,27 +935,26 @@ final class ContextTests {
         } catch (final SQLException sqle) {
             thrown("failed; getColumns", sqle);
         }
-        if (false) {
-            try {
-                final var columnPrivileges = context.getColumnPrivileges(table, "%");
-                assertThat(columnPrivileges)
-                        .extracting(ColumnPrivilege::getColumnPrivilegeId)
-                        .doesNotContainNull()
-                        .doesNotHaveDuplicates()
-                        .extracting(ColumnPrivilegeId::getColumnId)
-                        .doesNotContainNull()
-                        .extracting(ColumnId::getTableId)
-                        .doesNotContainNull()
-                        .allMatch(tableId::equals);
-                columnPrivileges(context, columnPrivileges);
-            } catch (final SQLException sqle) {
-                thrown("failed; getColumnPrivileges", sqle);
-            }
+        try {
+            final var columnPrivileges = context.getColumnPrivileges(table, "%");
+            assertThat(columnPrivileges)
+                    .extracting(ColumnPrivilege::getColumnPrivilegeId)
+                    .doesNotContainNull()
+                    .doesNotHaveDuplicates()
+                    .extracting(ColumnPrivilegeId::getColumnId)
+                    .doesNotContainNull()
+                    .extracting(ColumnId::getTableId)
+                    .doesNotContainNull()
+                    .allMatch(tableId::equals);
+            columnPrivileges(context, columnPrivileges);
+        } catch (final SQLException sqle) {
+            thrown("failed; getColumnPrivileges", sqle);
         }
         try {
             final var exportedKeys = context.getExportedKeys(table);
             assertThat(exportedKeys)
-                    .extracting(TableKey::getPktableId)
+                    .extracting(TableKey::getPkcolumnId)
+                    .extracting(ColumnId::getTableId)
                     .allMatch(tableId::equals);
             exportedKeys(context, exportedKeys);
         } catch (final SQLException sqle) {
@@ -947,7 +963,8 @@ final class ContextTests {
         try {
             final var importedKeys = context.getImportedKeys(table);
             assertThat(importedKeys)
-                    .extracting(TableKey::getFktableId)
+                    .extracting(TableKey::getFkcolumnId)
+                    .extracting(ColumnId::getTableId)
                     .allMatch(tableId::equals);
             importedKeys(context, importedKeys);
         } catch (final SQLException sqle) {
@@ -984,6 +1001,12 @@ final class ContextTests {
             pseudoColumns(context, pseudoColumns);
         } catch (final SQLException sqle) {
             thrown("failed; getPseudoColumns", sqle);
+        }
+        try {
+            final var tablePrivileges = context.getTablePrivileges(table);
+            tablePrivileges(context, tablePrivileges);
+        } catch (final SQLException sqle) {
+            thrown("failed; getTablePrivileges", sqle);
         }
         try {
             final var versionColumns = context.getVersionColumns(table);
@@ -1084,21 +1107,25 @@ final class ContextTests {
     static void superTable(final Context context, final SuperTable superTable) throws SQLException {
         Objects.requireNonNull(context, "context is null");
         Objects.requireNonNull(superTable, "superTable is null");
-        common(superTable);
-        common(superTable.getTableId());
+        final var tableId = common(common(superTable).getTableId());
     }
 
     static void tablePrivileges(final Context context, final List<? extends TablePrivilege> tablePrivileges)
             throws SQLException {
         Objects.requireNonNull(context, "context is null");
         Objects.requireNonNull(tablePrivileges, "tablePrivileges is null");
+        if (!tablePrivileges.isEmpty()) {
+//            log.debug("tablePrivileges: {}", tablePrivileges);
+        }
         {
             final var databaseProductNames = Set.of(
                     Memory_Hsql_Test.DATABASE_PRODUCT_NAME
             );
             if (!databaseProductNames.contains(databaseProductName)) {
-                assertThat(tablePrivileges).isSortedAccordingTo(
-                        TablePrivilege.COMPARING_TABLE_CAT_TABLE_SCHEM_TABLE_NAME_PRIVILEGE);
+                assertThat(tablePrivileges).satisfiesAnyOf(
+                        l -> assertThat(l).isSortedAccordingTo(TablePrivilege.CASE_INSENSITIVE_ORDER),
+                        l -> assertThat(l).isSortedAccordingTo(TablePrivilege.CASE_INSENSITIVE_ORDER)
+                );
             }
         }
         for (final var tablePrivilege : tablePrivileges) {
@@ -1150,9 +1177,7 @@ final class ContextTests {
                     TestContainers_MySQL_IT.DATABASE_PRODUCT_NAME // https://bugs.mysql.com/bug.php?id=109931
             );
             if (!databaseProductNames.contains(databaseProductName)) {
-                assertThat(typeInfo)
-                        .isSortedAccordingTo(TypeInfo.COMPARING_DATA_TYPE)
-                ;
+                assertThat(typeInfo).isSortedAccordingTo(TypeInfo.COMPARING_DATA_TYPE);
             }
         }
         for (final var typeInfo_ : typeInfo) {
@@ -1188,12 +1213,10 @@ final class ContextTests {
                     ""
             );
             if (!databaseProductNames.contains(databaseProductName)) {
-                assertThat(udts)
-                        .doesNotContainNull()
-                        .satisfiesAnyOf(
-                                l -> assertThat(l).isSortedAccordingTo(UDT.COMPARING_IN_CASE_INSENSITIVE_ORDER),
-                                l -> assertThat(l).isSortedAccordingTo(UDT.COMPARING_IN_LEXICOGRAPHIC_ORDER)
-                        );
+                assertThat(udts).doesNotContainNull().satisfiesAnyOf(
+                        l -> assertThat(l).isSortedAccordingTo(UDT.COMPARING_IN_CASE_INSENSITIVE_ORDER),
+                        l -> assertThat(l).isSortedAccordingTo(UDT.COMPARING_IN_LEXICOGRAPHIC_ORDER)
+                );
             }
         }
         {

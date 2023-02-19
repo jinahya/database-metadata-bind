@@ -612,15 +612,11 @@ public class Context {
      */
     public List<ExportedKey> getExportedKeys(final Table table) throws SQLException {
         Objects.requireNonNull(table, "table is null");
-        final List<ExportedKey> exportedKeys = getExportedKeys(
+        return getExportedKeys(
                 table.getTableCatNonNull(),
                 table.getTableSchemNonNull(),
                 Objects.requireNonNull(table.getTableName(), "table.tableName is null")
         );
-        exportedKeys.forEach(ek -> {
-            ek.table(table);
-        });
-        return exportedKeys;
     }
 
     /**
@@ -777,15 +773,11 @@ public class Context {
      */
     public List<ImportedKey> getImportedKeys(final Table table) throws SQLException {
         Objects.requireNonNull(table, "table is null");
-        final List<ImportedKey> importedKeys = getImportedKeys(
+        return getImportedKeys(
                 table.getTableCatNonNull(),
                 table.getTableSchemNonNull(),
                 Objects.requireNonNull(table.getTableName(), "table.tableName is null")
         );
-        importedKeys.forEach(ik -> {
-            ik.table(table);
-        });
-        return importedKeys;
     }
 
     /**
@@ -1253,6 +1245,25 @@ public class Context {
         return list;
     }
 
+    public List<TablePrivilege> getTablePrivileges(final Schema schema, final String tableNamePattern)
+            throws SQLException {
+        Objects.requireNonNull(schema, "schema is null");
+        return getTablePrivileges(
+                schema.getTableCatalogNonNull(),
+                Objects.requireNonNull(schema.getTableSchem(), "schema.tableSchem is null"),
+                tableNamePattern
+        );
+    }
+
+    public List<TablePrivilege> getTablePrivileges(final Table table) throws SQLException {
+        Objects.requireNonNull(table, "table is null");
+        return getTablePrivileges(
+                table.getTableCatNonNull(),
+                table.getTableSchemNonNull(),
+                Objects.requireNonNull(table.getTableName(), "table.tableName is null")
+        );
+    }
+
     /**
      * Invokes {@link DatabaseMetaData#getTableTypes()} method, and accepts each bound value to specified consumer.
      *
@@ -1483,7 +1494,8 @@ public class Context {
     private Map<Field, ColumnLabel> getLabeledFields(final Class<?> clazz) {
         Objects.requireNonNull(clazz, "clazz is null");
         return Collections.unmodifiableMap(
-                classesAndLabeledFields.computeIfAbsent(clazz, c -> Utils.getFieldsAnnotatedWith(c, ColumnLabel.class))
+                classesAndLabeledFields.computeIfAbsent(clazz,
+                                                        c -> Utils.getFieldsAnnotatedWith(c, ColumnLabel.class))
         );
     }
 

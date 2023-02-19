@@ -29,9 +29,9 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 
-class ColumnPrivilege_Test extends AbstractMetadataTypeTest<ColumnPrivilege> {
+class ColumnPrivilegeTest extends AbstractMetadataTypeTest<ColumnPrivilege> {
 
-    ColumnPrivilege_Test() {
+    ColumnPrivilegeTest() {
         super(ColumnPrivilege.class);
     }
 

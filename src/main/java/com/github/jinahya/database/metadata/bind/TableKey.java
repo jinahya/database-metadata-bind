@@ -21,15 +21,15 @@ package com.github.jinahya.database.metadata.bind;
  */
 
 import lombok.AccessLevel;
-import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 import lombok.ToString;
-import lombok.experimental.Accessors;
 import lombok.experimental.SuperBuilder;
 
 import java.util.Comparator;
+import java.util.Objects;
 import java.util.Optional;
 
 /**
@@ -39,9 +39,10 @@ import java.util.Optional;
  * @see ExportedKey
  * @see ImportedKey
  */
-@EqualsAndHashCode(callSuper = true)
+@ChildOf(Table.class)
+@Setter
+@Getter
 @ToString(callSuper = true)
-@Data
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @SuperBuilder(toBuilder = true)
 public abstract class TableKey<T extends TableKey<T>> extends AbstractMetadataType {
@@ -68,48 +69,123 @@ public abstract class TableKey<T extends TableKey<T>> extends AbstractMetadataTy
                 .thenComparingInt(TableKey::getKeySeq);
     }
 
-    public ColumnId getPkcolumnId() {
-        return ColumnId.of(
-                getPktableCatNonNull(),
-                getPktableSchemNonNull(),
-                getPktableName(),
-                getPkcolumnName()
-        );
+    // -----------------------------------------------------------------------------------------------------------------
+    @Override
+    public boolean equals(final Object obj) {
+        if (this == obj) return true;
+        if (!(obj instanceof TableKey)) return false;
+        return equals((TableKey<?>) obj);
     }
 
-    public TableId getPktableId() {
-        return getPkcolumnId().getTableId();
+    boolean equals(final TableKey<?> that) {
+        return Objects.equals(getPkcolumnId(), that.getPkcolumnId()) &&
+               Objects.equals(getFkcolumnId(), that.getFkcolumnId());
     }
 
-    public ColumnId getFkcolumnId() {
-        return ColumnId.of(
-                getFktableCatNonNull(),
-                getFktableSchemNonNull(),
-                getFktableName(),
-                getFkcolumnName()
-        );
+    @Override
+    public int hashCode() {
+        return Objects.hash(getPkcolumnId(), getFkcolumnId());
     }
 
-    public TableId getFktableId() {
-        return getFkcolumnId().getTableId();
-    }
-
+    // ------------------------------------------------------------------------------------------------------ pktableCat
     String getPktableCatNonNull() {
         return Optional.ofNullable(getPktableCat()).orElse(Catalog.COLUMN_VALUE_TABLE_CAT_EMPTY);
     }
 
+    public void setPktableCat(final String pktableCat) {
+        this.pktableCat = pktableCat;
+        pkcolumnid = null;
+    }
+
+    // ---------------------------------------------------------------------------------------------------- pktableSchem
     public String getPktableSchemNonNull() {
         return Optional.ofNullable(getPktableSchem()).orElse(Schema.COLUMN_VALUE_TABLE_SCHEM_EMPTY);
     }
 
+    public void setPktableSchem(final String pktableSchem) {
+        this.pktableSchem = pktableSchem;
+        pkcolumnid = null;
+    }
+
+    // ----------------------------------------------------------------------------------------------------- pktableName
+    public void setPktableName(final String pktableName) {
+        this.pktableName = pktableName;
+        pkcolumnid = null;
+    }
+
+    // ---------------------------------------------------------------------------------------------------- pkcolumnName
+    public void setPkcolumnName(final String pkcolumnName) {
+        this.pkcolumnName = pkcolumnName;
+        pkcolumnid = null;
+    }
+
+    // ------------------------------------------------------------------------------------------------------ fktableCat
     String getFktableCatNonNull() {
         return Optional.ofNullable(getFktableCat()).orElse(Catalog.COLUMN_VALUE_TABLE_CAT_EMPTY);
     }
 
+    public void setFktableCat(final String fktableCat) {
+        this.fktableCat = fktableCat;
+        fkcolumnId = null;
+    }
+
+    // ---------------------------------------------------------------------------------------------------- fktableSchem
     public String getFktableSchemNonNull() {
         return Optional.ofNullable(getFktableSchem()).orElse(Schema.COLUMN_VALUE_TABLE_SCHEM_EMPTY);
     }
 
+    public void setFktableSchem(final String fktableSchem) {
+        this.fktableSchem = fktableSchem;
+        fkcolumnId = null;
+    }
+
+    // ----------------------------------------------------------------------------------------------------- fktableName
+    public void setFktableName(final String fktableName) {
+        this.fktableName = fktableName;
+        fkcolumnId = null;
+    }
+
+    // ---------------------------------------------------------------------------------------------------- fkcolumnName
+    public void setFkcolumnName(final String fkcolumnName) {
+        this.fkcolumnName = fkcolumnName;
+        fkcolumnId = null;
+    }
+
+    // ------------------------------------------------------------------------------------------------------ pkcolumnId
+    public ColumnId getPkcolumnId() {
+        if (pkcolumnid == null) {
+            pkcolumnid = ColumnId.of(
+                    getPktableCatNonNull(),
+                    getPktableSchemNonNull(),
+                    getPktableName(),
+                    getPkcolumnName()
+            );
+        }
+        return pkcolumnid;
+    }
+
+    private TableId getPktableId() {
+        return getPkcolumnId().getTableId();
+    }
+
+    // ------------------------------------------------------------------------------------------------------ fkcolumnId
+    public ColumnId getFkcolumnId() {
+        if (fkcolumnId == null) {
+            fkcolumnId = ColumnId.of(
+                    getFktableCatNonNull(),
+                    getFktableSchemNonNull(),
+                    getFktableName(),
+                    getFkcolumnName()
+            );
+        }
+        return fkcolumnId;
+    }
+
+    private TableId getFktableId() {
+        return getFkcolumnId().getTableId();
+    }
+
+    // -----------------------------------------------------------------------------------------------------------------
     @NullableBySpecification
     @ColumnLabel("PKTABLE_CAT")
     private String pktableCat;
@@ -158,15 +234,12 @@ public abstract class TableKey<T extends TableKey<T>> extends AbstractMetadataTy
     @ColumnLabel("DEFERRABILITY")
     private int deferrability;
 
-    @SuppressWarnings({"unchecked"})
-    T table(final Table table) {
-        this.table = table;
-        return (T) this;
-    }
-
-    @Accessors(fluent = true)
-    @Getter(AccessLevel.PACKAGE)
+    // -----------------------------------------------------------------------------------------------------------------
     @EqualsAndHashCode.Exclude
     @ToString.Exclude
-    private transient Table table;
+    private transient ColumnId pkcolumnid;
+
+    @EqualsAndHashCode.Exclude
+    @ToString.Exclude
+    private transient ColumnId fkcolumnId;
 }

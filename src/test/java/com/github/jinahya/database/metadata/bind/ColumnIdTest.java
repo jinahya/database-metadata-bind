@@ -20,9 +20,21 @@ package com.github.jinahya.database.metadata.bind;
  * #L%
  */
 
-class ImportedKey_Test extends TableKey_Test<ImportedKey> {
+import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Nested;
 
-    ImportedKey_Test() {
-        super(ImportedKey.class);
+class ColumnIdTest extends MetadataTypeIdTest<ColumnId, Column> {
+
+    ColumnIdTest() {
+        super(ColumnId.class, Column.class);
+    }
+
+    @DisplayName("NullableEnum")
+    @Nested
+    class NullableEnum_Test extends _IntFieldEnumTest<Column.NullableEnum> {
+
+        NullableEnum_Test() {
+            super(Column.NullableEnum.class);
+        }
     }
 }

@@ -20,9 +20,9 @@ package com.github.jinahya.database.metadata.bind;
  * #L%
  */
 
-abstract class TableKey_Test<T extends TableKey> extends AbstractMetadataTypeTest<T> {
+class IndexInfoTest extends AbstractMetadataTypeTest<IndexInfo> {
 
-    TableKey_Test(final Class<T> typeClass) {
-        super(typeClass);
+    IndexInfoTest() {
+        super(IndexInfo.class);
     }
 }
