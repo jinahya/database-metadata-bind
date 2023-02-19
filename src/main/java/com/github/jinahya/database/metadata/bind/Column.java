@@ -23,15 +23,13 @@ package com.github.jinahya.database.metadata.bind;
 import lombok.AccessLevel;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
-import lombok.Getter;
 import lombok.NoArgsConstructor;
-import lombok.Setter;
 import lombok.ToString;
-import lombok.experimental.Accessors;
 import lombok.experimental.SuperBuilder;
 
 import java.sql.DatabaseMetaData;
 import java.util.Comparator;
+import java.util.Objects;
 import java.util.Optional;
 
 /**
@@ -53,10 +51,12 @@ public class Column extends AbstractMetadataType {
     private static final long serialVersionUID = -409653682729081530L;
 
     public static final Comparator<Column> CASE_INSENSITIVE_ORDER =
-            Comparator.comparing(Column::getColumnId, ColumnId.CASE_INSENSITIVE_ORDER);
+            Comparator.comparing(Column::getColumnId, ColumnId.CASE_INSENSITIVE_ORDER)
+                    .thenComparingInt(Column::getOrdinalPosition);
 
     public static final Comparator<Column> LEXICOGRAPHIC_ORDER =
-            Comparator.comparing(Column::getColumnId, ColumnId.LEXICOGRAPHIC_ORDER);
+            Comparator.comparing(Column::getColumnId, ColumnId.LEXICOGRAPHIC_ORDER)
+                    .thenComparingInt(Column::getOrdinalPosition);
 
     public static final String COLUMN_LABEL_TABLE_CAT = "TABLE_CAT";
 
@@ -118,29 +118,72 @@ public class Column extends AbstractMetadataType {
 
     public static final String COLUMN_LABEL_IS_GENERATEDCOLUMN = "IS_GENERATEDCOLUMN";
 
+    @Override
+    public boolean equals(final Object obj) {
+        if (this == obj) return true;
+        if (!(obj instanceof Column)) return false;
+        if (!super.equals(obj)) return false;
+        final Column that = (Column) obj;
+        return Objects.equals(getColumnId(), that.getColumnId());
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(getColumnId());
+    }
+
+    // -------------------------------------------------------------------------------------------------------- tableCat
+    String getTableCatNonNull() {
+        return Optional.ofNullable(getTableCat()).orElse(Catalog.COLUMN_VALUE_TABLE_CAT_EMPTY);
+    }
+
+    public void setTableCat(final String tableCat) {
+        this.tableCat = tableCat;
+        columnId = null;
+    }
+
+    // ------------------------------------------------------------------------------------------------------ tableSchem
+    String getTableSchemNonNull() {
+        return Optional.ofNullable(getTableSchem()).orElse(Schema.COLUMN_VALUE_TABLE_SCHEM_EMPTY);
+    }
+
+    public void setTableSchem(final String tableSchem) {
+        this.tableSchem = tableSchem;
+        columnId = null;
+    }
+
+    // ------------------------------------------------------------------------------------------------------- tableName
+    public void setTableName(final String tableName) {
+        this.tableName = tableName;
+        columnId = null;
+    }
+
+    // ------------------------------------------------------------------------------------------------------ columnName
+    public void setColumnName(final String columnName) {
+        this.columnName = columnName;
+        columnId = null;
+    }
+
+    // -------------------------------------------------------------------------------------------------------- columnId
+
     /**
      * Returns a value for identifying this column.
      *
      * @return an identifier of this column.
      */
     public ColumnId getColumnId() {
-        return ColumnId.of(
-                getTableCatNonNull(),
-                getTableSchemNonNull(),
-                getTableName(),
-                getColumnName(),
-                getOrdinalPosition()
-        );
+        if (columnId == null) {
+            columnId = ColumnId.of(
+                    getTableCatNonNull(),
+                    getTableSchemNonNull(),
+                    getTableName(),
+                    getColumnName()
+            );
+        }
+        return columnId;
     }
 
-    String getTableCatNonNull() {
-        return Optional.ofNullable(getTableCat()).orElse(Catalog.COLUMN_VALUE_TABLE_CAT_EMPTY);
-    }
-
-    String getTableSchemNonNull() {
-        return Optional.ofNullable(getTableSchem()).orElse(Schema.COLUMN_VALUE_TABLE_SCHEM_EMPTY);
-    }
-
+    // -----------------------------------------------------------------------------------------------------------------
     @NullableBySpecification
     @ColumnLabel(COLUMN_LABEL_TABLE_CAT)
     private String tableCat;
@@ -226,10 +269,8 @@ public class Column extends AbstractMetadataType {
     @ColumnLabel(COLUMN_LABEL_IS_GENERATEDCOLUMN)
     private String isGeneratedcolumn;
 
-    @Accessors(fluent = true)
-    @Setter(AccessLevel.PACKAGE)
-    @Getter(AccessLevel.PACKAGE)
+    // -----------------------------------------------------------------------------------------------------------------
     @EqualsAndHashCode.Exclude
     @ToString.Exclude
-    private transient Table table;
+    private transient ColumnId columnId;
 }

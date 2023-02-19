@@ -21,7 +21,6 @@ package com.github.jinahya.database.metadata.bind;
  */
 
 import lombok.extern.slf4j.Slf4j;
-import org.mockito.Mockito;
 
 import java.lang.reflect.Field;
 import java.util.Map;
@@ -29,6 +28,7 @@ import java.util.stream.Collectors;
 
 import static java.util.Collections.unmodifiableMap;
 import static java.util.Objects.requireNonNull;
+import static org.mockito.Mockito.spy;
 
 @Slf4j
 abstract class _MetadataTypeTest<T extends MetadataType> {
@@ -38,7 +38,7 @@ abstract class _MetadataTypeTest<T extends MetadataType> {
     }
 
     T typeSpy() {
-        return Mockito.spy(typeInstance());
+        return spy(typeInstance());
     }
 
     T typeInstance() {

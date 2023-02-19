@@ -21,7 +21,6 @@ package com.github.jinahya.database.metadata.bind;
  */
 
 import lombok.AccessLevel;
-import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -44,13 +43,12 @@ import static java.util.Comparator.nullsFirst;
  * @see Context#getFunctionColumns(String, String, String, String)
  */
 @ChildOf(Function.class)
-@EqualsAndHashCode(callSuper = true)
+@Setter
+@Getter
 @ToString(callSuper = true)
-@Data
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @SuperBuilder(toBuilder = true)
-public class FunctionColumn
-        extends AbstractMetadataType {
+public class FunctionColumn extends AbstractMetadataType {
 
     private static final long serialVersionUID = -7445156446214062680L;
 
@@ -139,37 +137,56 @@ public class FunctionColumn
 
     public static final String COLUMN_LABEL_IS_NULLABLE = "IS_NULLABLE";
 
-    public FunctionColumnId getFunctionColumnId() {
-        return FunctionColumnId.of(
-                FunctionId.of(
-                        SchemaId.of(
-                                CatalogId.of(
-                                        getFunctionCatNonNull()
-                                ),
-                                getFunctionSchemNonNull()
-                        ),
-                        getFunctionName(),
-                        getSpecificName()
-                ),
-                getColumnName(),
-                getColumnType()
-        );
+    @Override
+    public boolean equals(final Object obj) {
+        if (this == obj) return true;
+        if (!(obj instanceof FunctionColumn)) return false;
+        if (!super.equals(obj)) return false;
+        final FunctionColumn that = (FunctionColumn) obj;
+        return Objects.equals(getFunctionColumnId(), that.getFunctionColumnId());
     }
 
-    FunctionId getFunctionId() {
-        return getFunctionColumnId().getFunctionId();
+    @Override
+    public int hashCode() {
+        return Objects.hash(getFunctionColumnId());
     }
 
-    SchemaId getSchemaId() {
-        return getFunctionId().getSchemaId();
-    }
-
+    // ----------------------------------------------------------------------------------------------------- functionCat
     String getFunctionCatNonNull() {
         return Optional.ofNullable(getFunctionCat()).orElse(Catalog.COLUMN_VALUE_TABLE_CAT_EMPTY);
     }
 
+    public void setFunctionCat(final String functionCat) {
+        this.functionCat = functionCat;
+        functionColumnId = null;
+    }
+
+    // --------------------------------------------------------------------------------------------------- functionSchem
     String getFunctionSchemNonNull() {
         return Optional.ofNullable(getFunctionSchem()).orElse(Schema.COLUMN_VALUE_TABLE_SCHEM_EMPTY);
+    }
+
+    public void setFunctionSchem(final String functionSchem) {
+        this.functionSchem = functionSchem;
+        functionColumnId = null;
+    }
+
+    // ---------------------------------------------------------------------------------------------------- functionName
+    public void setFunctionName(final String functionName) {
+        this.functionName = functionName;
+        functionColumnId = null;
+    }
+
+    // ------------------------------------------------------------------------------------------------------ columnName
+    public void setColumnName(final String columnName) {
+        this.columnName = columnName;
+        functionColumnId = null;
+    }
+
+    // ------------------------------------------------------------------------------------------------------ columnType
+    public void setColumnType(final int columnType) {
+        this.columnType = columnType;
+        functionColumnId = null;
     }
 
     ColumnTypeEnum getColumnTypeAsEnum() {
@@ -181,6 +198,41 @@ public class FunctionColumn
         setColumnType(columnTypeAsEnum.fieldValueAsInt());
     }
 
+    // ---------------------------------------------------------------------------------------------------- specificName
+    public void setSpecificName(final String specificName) {
+        this.specificName = specificName;
+        functionColumnId = null;
+    }
+
+    // ------------------------------------------------------------------------------------------------ functionColumnId
+    public FunctionColumnId getFunctionColumnId() {
+        if (functionColumnId == null) {
+            return FunctionColumnId.of(
+                    FunctionId.of(
+                            getFunctionCatNonNull(),
+                            getFunctionSchemNonNull(),
+                            getSpecificName()
+                    ),
+                    getColumnName(),
+                    getColumnType()
+            );
+        }
+        return functionColumnId;
+    }
+
+    private FunctionId getFunctionId() {
+        return getFunctionColumnId().getFunctionId();
+    }
+
+    private SchemaId getSchemaId() {
+        return getFunctionId().getSchemaId();
+    }
+
+    private CatalogId getCatalogId() {
+        return getSchemaId().getCatalogId();
+    }
+
+    // -----------------------------------------------------------------------------------------------------------------
     @NullableBySpecification
     @ColumnLabel(COLUMN_LABEL_FUNCTION_CAT)
     private String functionCat;
@@ -239,9 +291,8 @@ public class FunctionColumn
     @ColumnLabel("SPECIFIC_NAME")
     private String specificName;
 
+    // -----------------------------------------------------------------------------------------------------------------
     @EqualsAndHashCode.Exclude
     @ToString.Exclude
-    @Setter(AccessLevel.PACKAGE)
-    @Getter(AccessLevel.PACKAGE)
-    private transient Function function;
+    private transient FunctionColumnId functionColumnId;
 }

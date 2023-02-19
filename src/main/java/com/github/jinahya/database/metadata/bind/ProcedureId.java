@@ -21,7 +21,6 @@ package com.github.jinahya.database.metadata.bind;
  */
 
 import lombok.AccessLevel;
-import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.SuperBuilder;
@@ -36,45 +35,31 @@ public final class ProcedureId implements MetadataTypeId<ProcedureId, Procedure>
 
     private static final long serialVersionUID = 227742014479297143L;
 
-    public static final Comparator<ProcedureId> CASE_INSENSITIVE_ORDER =
-            Comparator.comparing(ProcedureId::getSchemaId, SchemaId.CASE_INSENSITIVE_ORDER)
-                    .thenComparing(ProcedureId::getProcedureName, String.CASE_INSENSITIVE_ORDER)
-                    .thenComparing(ProcedureId::getSpecificName, String.CASE_INSENSITIVE_ORDER);
+//    public static final Comparator<ProcedureId> CASE_INSENSITIVE_ORDER =
+//            Comparator.comparing(ProcedureId::getSchemaId, SchemaId.CASE_INSENSITIVE_ORDER)
+//                    .thenComparing(ProcedureId::getSpecificName, String.CASE_INSENSITIVE_ORDER);
+//
+//    public static final Comparator<ProcedureId> LEXICOGRAPHIC_ORDER =
+//            Comparator.comparing(ProcedureId::getSchemaId, SchemaId.LEXICOGRAPHIC_ORDER)
+//                    .thenComparing(ProcedureId::getSpecificName);
 
-    public static final Comparator<ProcedureId> LEXICOGRAPHIC_ORDER =
-            Comparator.comparing(ProcedureId::getSchemaId, SchemaId.LEXICOGRAPHIC_ORDER)
-                    .thenComparing(ProcedureId::getProcedureName)
-                    .thenComparing(ProcedureId::getSpecificName);
-
-    static ProcedureId of(final SchemaId schemaId, final String procedureName, final String specificName) {
+    static ProcedureId of(final SchemaId schemaId, final String specificName) {
         Objects.requireNonNull(schemaId, "schemaId is null");
-        Objects.requireNonNull(procedureName, "procedureName is null");
         Objects.requireNonNull(specificName, "specificName is null");
         return builder()
                 .schemaId(schemaId)
-                .procedureName(procedureName)
                 .specificName(specificName)
                 .build();
     }
 
-    static ProcedureId of(final String procedureCat, final String procedureSchem, final String procedureName,
-                          final String specificName) {
-        return of(SchemaId.of(procedureCat, procedureSchem), procedureName, specificName);
-    }
-
-    public static ProcedureId of(final SchemaId schemaId, final String specificName) {
-        return of(schemaId, "", specificName);
-    }
-
     static ProcedureId of(final String procedureCat, final String procedureSchem, final String specificName) {
-        return of(procedureCat, procedureSchem, "", specificName);
+        return of(SchemaId.of(procedureCat, procedureSchem), specificName);
     }
 
     @Override
     public String toString() {
         return super.toString() + '{' +
                "schemaId=" + schemaId +
-               ",procedureName='" + procedureName + '\'' +
                ",specificName='" + specificName + '\'' +
                '}';
     }
@@ -93,10 +78,6 @@ public final class ProcedureId implements MetadataTypeId<ProcedureId, Procedure>
     }
 
     private final SchemaId schemaId;
-
-    @EqualsAndHashCode.Exclude
-    // excluded in equals/hashCode, included in toString
-    private final String procedureName;
 
     private final String specificName;
 }

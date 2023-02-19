@@ -20,9 +20,17 @@ package com.github.jinahya.database.metadata.bind;
  * #L%
  */
 
-class Schema_Test extends AbstractMetadataTypeTest<Schema> {
+class FunctionTest extends AbstractMetadataTypeTest<Function> {
 
-    Schema_Test() {
-        super(Schema.class);
+    FunctionTest() {
+        super(Function.class);
+    }
+
+    @Override
+    Function typeInstance() {
+        final Function instance = super.typeInstance();
+        instance.setFunctionName("");
+        instance.setSpecificName("");
+        return instance;
     }
 }

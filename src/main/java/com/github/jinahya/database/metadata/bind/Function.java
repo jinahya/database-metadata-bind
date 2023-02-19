@@ -24,14 +24,11 @@ import lombok.AccessLevel;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
-import lombok.Setter;
 import lombok.ToString;
 import lombok.experimental.SuperBuilder;
 
 import java.sql.DatabaseMetaData;
 import java.util.Comparator;
-import java.util.HashMap;
-import java.util.Map;
 import java.util.Optional;
 
 import static java.util.Comparator.naturalOrder;
@@ -51,8 +48,7 @@ import static java.util.Comparator.nullsFirst;
 @Data
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @SuperBuilder(toBuilder = true)
-public class Function
-        extends AbstractMetadataType {
+public class Function extends AbstractMetadataType {
 
     private static final long serialVersionUID = -3318947900237453301L;
 
@@ -78,29 +74,49 @@ public class Function
 
     public static final String PROPERTY_NAME_FUNCTION_TYPE = "functionType";
 
-    public FunctionId getFunctionId() {
-        return FunctionId.of(
-                SchemaId.of(
-                        getFunctionCatNonNull(),
-                        getFunctionSchemNonNull()
-                ),
-                getFunctionName(),
-                getSpecificName()
-        );
-    }
-
-    SchemaId getSchemaId() {
-        return getFunctionId().getSchemaId();
-    }
-
+    // ----------------------------------------------------------------------------------------------------- functionCat
     String getFunctionCatNonNull() {
         return Optional.ofNullable(getFunctionCat()).orElse(Catalog.COLUMN_VALUE_TABLE_CAT_EMPTY);
     }
 
+    public void setFunctionCat(final String functionCat) {
+        this.functionCat = functionCat;
+        functionId = null;
+    }
+
+    // --------------------------------------------------------------------------------------------------- functionSchem
     String getFunctionSchemNonNull() {
         return Optional.ofNullable(getFunctionSchem()).orElse(Schema.COLUMN_VALUE_TABLE_SCHEM_EMPTY);
     }
 
+    public void setFunctionSchem(final String functionSchem) {
+        this.functionSchem = functionSchem;
+        functionId = null;
+    }
+
+    // ---------------------------------------------------------------------------------------------------- specificName
+    public void setSpecificName(final String specificName) {
+        this.specificName = specificName;
+        functionId = null;
+    }
+
+    // ------------------------------------------------------------------------------------------------------ functionId
+    public FunctionId getFunctionId() {
+        if (functionId == null) {
+            functionId = FunctionId.of(
+                    getFunctionCatNonNull(),
+                    getFunctionSchemNonNull(),
+                    getSpecificName()
+            );
+        }
+        return functionId;
+    }
+
+    private SchemaId getSchemaId() {
+        return getFunctionId().getSchemaId();
+    }
+
+    // -----------------------------------------------------------------------------------------------------------------
     @NullableBySpecification
     @ColumnLabel(COLUMN_NAME_FUNCTION_CAT)
     private String functionCat;
@@ -123,15 +139,8 @@ public class Function
     @ColumnLabel("SPECIFIC_NAME")
     private String specificName;
 
-    Map<FunctionColumnId, FunctionColumn> getFunctionColumns() {
-        if (functionColumns == null) {
-            functionColumns = new HashMap<>();
-        }
-        return functionColumns;
-    }
-
-    @Setter(AccessLevel.PACKAGE)
+    // -----------------------------------------------------------------------------------------------------------------
     @EqualsAndHashCode.Exclude
     @ToString.Exclude
-    private transient Map<FunctionColumnId, FunctionColumn> functionColumns;
+    private transient FunctionId functionId;
 }

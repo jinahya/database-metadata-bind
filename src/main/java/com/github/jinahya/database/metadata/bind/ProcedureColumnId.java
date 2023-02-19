@@ -25,7 +25,6 @@ import lombok.Data;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.SuperBuilder;
 
-import java.util.Comparator;
 import java.util.Objects;
 
 @Data
@@ -35,26 +34,29 @@ public final class ProcedureColumnId implements MetadataTypeId<ProcedureColumnId
 
     private static final long serialVersionUID = 7459854669925402253L;
 
-    public static final Comparator<ProcedureColumnId> COMPARING_IN_CASE_INSENSITIVE_ORDER =
-            Comparator.comparing(ProcedureColumnId::getProcedureId, ProcedureId.CASE_INSENSITIVE_ORDER)
-                    .thenComparing(ProcedureColumnId::getColumnName, String.CASE_INSENSITIVE_ORDER);
+//    public static final Comparator<ProcedureColumnId> COMPARING_IN_CASE_INSENSITIVE_ORDER =
+//            Comparator.<ProcedureColumnId, SchemaId>comparing(pci -> pci.getProcedureId().getSchemaId(),
+//                                                              SchemaId.CASE_INSENSITIVE_ORDER)
+//                    .thenComparing(ProcedureColumnId::getColumnName, String.CASE_INSENSITIVE_ORDER);
+//
+//    public static final Comparator<ProcedureColumnId> COMPARING_IN_LEXICOGRAPHIC_ORDER =
+//            Comparator.<ProcedureColumnId, SchemaId>comparing(pci -> pci.getProcedureId().getSchemaId(),
+//                                                              SchemaId.LEXICOGRAPHIC_ORDER)
+//                    .thenComparing(ProcedureColumnId::getColumnName);
 
-    public static final Comparator<ProcedureColumnId> COMPARING_IN_LEXICOGRAPHIC_ORDER =
-            Comparator.comparing(ProcedureColumnId::getProcedureId, ProcedureId.LEXICOGRAPHIC_ORDER)
-                    .thenComparing(ProcedureColumnId::getColumnName);
-
-    public static ProcedureColumnId of(final ProcedureId procedureId, final String columnName) {
+    public static ProcedureColumnId of(final ProcedureId procedureId, final String columnName, final int columnType) {
         Objects.requireNonNull(procedureId, "procedureId is null");
         Objects.requireNonNull(columnName, "columnName is null");
         return builder()
                 .procedureId(procedureId)
                 .columnName(columnName)
+                .columnType(columnType)
                 .build();
     }
 
-    static ProcedureColumnId of(final String procedureCat, final String procedureSchem, final String procedureName,
-                                final String specifiedName, final String columnName) {
-        return of(ProcedureId.of(procedureCat, procedureSchem, procedureName, specifiedName), columnName);
+    static ProcedureColumnId of(final String procedureCat, final String procedureSchem, final String specificName,
+                                final String columnName, final int columnType) {
+        return of(ProcedureId.of(procedureCat, procedureSchem, specificName), columnName, columnType);
     }
 
     @Override
@@ -62,6 +64,7 @@ public final class ProcedureColumnId implements MetadataTypeId<ProcedureColumnId
         return super.toString() + '{' +
                "procedureId=" + procedureId +
                ",columnName='" + columnName + '\'' +
+               ",columnType=" + columnType +
                '}';
     }
 
@@ -70,15 +73,19 @@ public final class ProcedureColumnId implements MetadataTypeId<ProcedureColumnId
         if (this == obj) return true;
         if (!(obj instanceof ProcedureColumnId)) return false;
         final ProcedureColumnId that = (ProcedureColumnId) obj;
-        return procedureId.equals(that.procedureId) && columnName.equals(that.columnName);
+        return columnType == that.columnType &&
+               procedureId.equals(that.procedureId) &&
+               columnName.equals(that.columnName);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(procedureId, columnName);
+        return Objects.hash(procedureId, columnName, columnType);
     }
 
     private final ProcedureId procedureId;
 
     private final String columnName;
+
+    private final int columnType;
 }

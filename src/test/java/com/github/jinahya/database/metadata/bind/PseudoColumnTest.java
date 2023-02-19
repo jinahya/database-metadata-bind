@@ -56,29 +56,4 @@ class PseudoColumnTest extends AbstractMetadataTypeTest<PseudoColumn> {
         assertThat(columnId.getColumnName())
                 .isEqualTo(columnName);
     }
-
-    @Test
-    void getColumnId__() {
-        // GIVEN
-        final var spy = super.typeSpy();
-        // WHEN
-        final var tableCat = current().nextBoolean() ? "" : null;
-        when(spy.getTableCat()).thenReturn(tableCat);
-        final var tableSchem = current().nextBoolean() ? "" : null;
-        when(spy.getTableSchem()).thenReturn(tableSchem);
-        final var tableName = "";
-        when(spy.getTableName()).thenReturn(tableName);
-        final var columnName = "";
-        when(spy.getColumnName()).thenReturn(columnName);
-        // THEN
-        final var columnId = spy.getColumnId();
-        assertThat(columnId.getTableId().getSchemaId().getCatalogId().getTableCat())
-                .isEqualTo(spy.getTableCatNonNull());
-        assertThat(columnId.getTableId().getSchemaId().getTableSchem())
-                .isEqualTo(spy.getTableSchemNonNull());
-        assertThat(columnId.getTableId().getTableName())
-                .isEqualTo(tableName);
-        assertThat(columnId.getColumnName())
-                .isEqualTo(columnName);
-    }
 }

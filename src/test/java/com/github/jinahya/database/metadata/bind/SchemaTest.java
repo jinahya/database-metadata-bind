@@ -20,9 +20,16 @@ package com.github.jinahya.database.metadata.bind;
  * #L%
  */
 
-class Table_Test extends AbstractMetadataTypeTest<Table> {
+class SchemaTest extends AbstractMetadataTypeTest<Schema> {
 
-    Table_Test() {
-        super(Table.class);
+    SchemaTest() {
+        super(Schema.class);
+    }
+
+    @Override
+    Schema typeInstance() {
+        final Schema instance = super.typeInstance();
+        instance.setTableSchem(Schema.COLUMN_VALUE_TABLE_SCHEM_EMPTY);
+        return instance;
     }
 }

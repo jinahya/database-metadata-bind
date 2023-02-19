@@ -21,7 +21,6 @@ package com.github.jinahya.database.metadata.bind;
  */
 
 import lombok.AccessLevel;
-import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.SuperBuilder;
@@ -44,31 +43,13 @@ public final class PrimaryKeyId implements MetadataTypeId<PrimaryKeyId, PrimaryK
             Comparator.comparing(PrimaryKeyId::getTableId, TableId.LEXICOGRAPHIC_ORDER)
                     .thenComparing(PrimaryKeyId::getColumnName);
 
-    public static PrimaryKeyId of(final TableId tableId, final String columName, final int keySeq) {
+    public static PrimaryKeyId of(final TableId tableId, final String columName) {
         Objects.requireNonNull(tableId, "tableId is null");
         Objects.requireNonNull(columName, "columName is null");
-        if (keySeq <= 0) {
-            throw new IllegalArgumentException("non-positive keySeq: " + keySeq);
-        }
         return builder()
                 .tableId(tableId)
                 .columnName(columName)
-                .keySeq(keySeq)
                 .build();
-    }
-
-    static PrimaryKeyId of(final String tableCat, final String tableSchem, final String tableName,
-                           final String columnName, final int keySeq) {
-        return of(TableId.of(tableCat, tableSchem, tableName), columnName, keySeq);
-    }
-
-    static PrimaryKeyId of(final TableId tableId, final String columName) {
-        return of(tableId, columName, 1);
-    }
-
-    static PrimaryKeyId of(final String tableCat, final String tableSchem, final String tableName,
-                           final String columnName) {
-        return of(tableCat, tableSchem, tableName, columnName, 1);
     }
 
     @Override
@@ -76,7 +57,6 @@ public final class PrimaryKeyId implements MetadataTypeId<PrimaryKeyId, PrimaryK
         return super.toString() + '{' +
                "tableId=" + tableId +
                ",columnName='" + columnName + '\'' +
-               ",keySeq=" + keySeq +
                '}';
     }
 
@@ -96,8 +76,4 @@ public final class PrimaryKeyId implements MetadataTypeId<PrimaryKeyId, PrimaryK
     private final TableId tableId;
 
     private final String columnName;
-
-    @EqualsAndHashCode.Exclude
-    // excluded in equals/hashCode, included in toString
-    private final int keySeq;
 }

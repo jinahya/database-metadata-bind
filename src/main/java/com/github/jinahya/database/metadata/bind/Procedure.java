@@ -21,15 +21,20 @@ package com.github.jinahya.database.metadata.bind;
  */
 
 import lombok.AccessLevel;
-import lombok.Data;
 import lombok.EqualsAndHashCode;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 import lombok.ToString;
 import lombok.experimental.SuperBuilder;
 
 import java.sql.DatabaseMetaData;
 import java.util.Comparator;
+import java.util.Objects;
 import java.util.Optional;
+
+import static java.util.Comparator.naturalOrder;
+import static java.util.Comparator.nullsFirst;
 
 /**
  * A class for binding results of
@@ -39,38 +44,83 @@ import java.util.Optional;
  */
 @ParentOf(ProcedureColumn.class)
 @ChildOf(Schema.class)
-@EqualsAndHashCode(callSuper = true)
+@Setter
+@Getter
+//@EqualsAndHashCode(callSuper = true)
 @ToString(callSuper = true)
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-@Data
 @SuperBuilder(toBuilder = true)
 public class Procedure extends AbstractMetadataType {
 
     private static final long serialVersionUID = -6262056388403934829L;
 
-    public static final Comparator<Procedure> CASE_INSENSITIVE_ORDER
-            = Comparator.comparing(Procedure::getProcedureId, ProcedureId.CASE_INSENSITIVE_ORDER);
+    public static final Comparator<Procedure> CASE_INSENSITIVE_ORDER =
+            Comparator.comparing(Procedure::getProcedureCatNonNull, String.CASE_INSENSITIVE_ORDER)
+                    .thenComparing(Procedure::getProcedureSchemNonNull, String.CASE_INSENSITIVE_ORDER)
+                    .thenComparing(Procedure::getProcedureName, nullsFirst(String.CASE_INSENSITIVE_ORDER))
+                    .thenComparing(Procedure::getSpecificName, nullsFirst(String.CASE_INSENSITIVE_ORDER));
 
-    public static final Comparator<Procedure> LEXICOGRAPHIC_ORDER
-            = Comparator.comparing(Procedure::getProcedureId, ProcedureId.LEXICOGRAPHIC_ORDER);
+    public static final Comparator<Procedure> LEXICOGRAPHIC_ORDER =
+            Comparator.comparing(Procedure::getProcedureCatNonNull)
+                    .thenComparing(Procedure::getProcedureSchemNonNull)
+                    .thenComparing(Procedure::getProcedureName, nullsFirst(naturalOrder()))
+                    .thenComparing(Procedure::getSpecificName, nullsFirst(naturalOrder()));
 
-    public ProcedureId getProcedureId() {
-        return ProcedureId.of(
-                getProcedureCatNonNull(),
-                getProcedureSchemNonNull(),
-                getProcedureName(),
-                getSpecificName()
-        );
+    // -----------------------------------------------------------------------------------------------------------------
+
+    @Override
+    public boolean equals(final Object obj) {
+        if (this == obj) return true;
+        if (!(obj instanceof Procedure)) return false;
+        if (!super.equals(obj)) return false;
+        final Procedure that = (Procedure) obj;
+        return Objects.equals(getProcedureId(), that.getProcedureId());
     }
 
+    @Override
+    public int hashCode() {
+        return Objects.hash(getProcedureId());
+    }
+
+    // ---------------------------------------------------------------------------------------------------- procedureCat
     String getProcedureCatNonNull() {
         return Optional.ofNullable(getProcedureCat()).orElse(Catalog.COLUMN_VALUE_TABLE_CAT_EMPTY);
     }
 
+    public void setProcedureCat(final String procedureCat) {
+        this.procedureCat = procedureCat;
+        procedureId = null;
+    }
+
+    // -------------------------------------------------------------------------------------------------- procedureSchem
     String getProcedureSchemNonNull() {
         return Optional.ofNullable(getProcedureSchem()).orElse(Schema.COLUMN_VALUE_TABLE_SCHEM_EMPTY);
     }
 
+    public void setProcedureSchem(final String procedureSchem) {
+        this.procedureSchem = procedureSchem;
+        procedureId = null;
+    }
+
+    // ---------------------------------------------------------------------------------------------------- specificName
+    public void setSpecificName(final String specificName) {
+        this.specificName = specificName;
+        procedureId = null;
+    }
+
+    // ----------------------------------------------------------------------------------------------------- procedureId
+    public ProcedureId getProcedureId() {
+        if (procedureId == null) {
+            procedureId = ProcedureId.of(
+                    getProcedureCatNonNull(),
+                    getProcedureSchemNonNull(),
+                    getSpecificName()
+            );
+        }
+        return procedureId;
+    }
+
+    // -----------------------------------------------------------------------------------------------------------------
     @NullableBySpecification
     @ColumnLabel("PROCEDURE_CAT")
     private String procedureCat;
@@ -91,4 +141,9 @@ public class Procedure extends AbstractMetadataType {
 
     @ColumnLabel("SPECIFIC_NAME")
     private String specificName;
+
+    // -----------------------------------------------------------------------------------------------------------------
+    @EqualsAndHashCode.Exclude
+    @ToString.Exclude
+    private transient ProcedureId procedureId;
 }

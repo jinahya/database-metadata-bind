@@ -25,4 +25,12 @@ class ProcedureTest extends AbstractMetadataTypeTest<Procedure> {
     ProcedureTest() {
         super(Procedure.class);
     }
+
+    @Override
+    Procedure typeInstance() {
+        final Procedure instance = super.typeInstance();
+        instance.setProcedureName("");
+        instance.setSpecificName("");
+        return instance;
+    }
 }

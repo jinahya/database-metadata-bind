@@ -55,7 +55,10 @@ public class SuperTable extends AbstractMetadataType {
     public static final String COLUMN_NAME_SUPERTABLE_NAME = "SUPERTABLE_NAME";
 
     public TableId getTableId() {
-        return TableId.of(getTableCatNonNull(), getTableSchemNonNull(), getTableName());
+        return TableId.of(
+                getTableCatNonNull(), getTableSchemNonNull(),
+                getTableName()
+        );
     }
 
     public TableId getSupertableId() {

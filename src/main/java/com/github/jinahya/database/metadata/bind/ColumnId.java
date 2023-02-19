@@ -21,7 +21,6 @@ package com.github.jinahya.database.metadata.bind;
  */
 
 import lombok.AccessLevel;
-import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.SuperBuilder;
@@ -42,38 +41,23 @@ public final class ColumnId implements MetadataTypeId<ColumnId, Column> {
     private static final long serialVersionUID = -4452694121211962289L;
 
     public static final Comparator<ColumnId> CASE_INSENSITIVE_ORDER =
-            Comparator.comparing(ColumnId::getTableId, TableId.CASE_INSENSITIVE_ORDER)
-                    .thenComparingInt(ColumnId::getOrdinalPosition);
+            Comparator.comparing(ColumnId::getTableId, TableId.CASE_INSENSITIVE_ORDER);
 
     public static final Comparator<ColumnId> LEXICOGRAPHIC_ORDER =
-            Comparator.comparing(ColumnId::getTableId, TableId.LEXICOGRAPHIC_ORDER)
-                    .thenComparingInt(ColumnId::getOrdinalPosition);
+            Comparator.comparing(ColumnId::getTableId, TableId.LEXICOGRAPHIC_ORDER);
 
-    static ColumnId of(final TableId tableId, final String columnName, final int ordinalPosition) {
+    static ColumnId of(final TableId tableId, final String columnName) {
         Objects.requireNonNull(tableId, "tableId is null");
         Objects.requireNonNull(columnName, "columnName is null");
-        if (ordinalPosition <= 0) {
-            throw new IllegalArgumentException("non-positive ordinal position: " + ordinalPosition);
-        }
         return builder()
                 .tableId(tableId)
                 .columnName(columnName)
-                .ordinalPosition(ordinalPosition)
                 .build();
     }
 
     static ColumnId of(final String tableCat, final String tableSchem, final String tableName,
-                       final String columnName, final int ordinalPosition) {
-        return of(TableId.of(tableCat, tableSchem, tableName), columnName, ordinalPosition);
-    }
-
-    public static ColumnId of(final TableId tableId, final String columnName) {
-        return of(tableId, columnName, 1);
-    }
-
-    static ColumnId of(final String tableCat, final String tableSchem, final String tableName,
                        final String columnName) {
-        return of(tableCat, tableSchem, tableName, columnName, 1);
+        return of(TableId.of(tableCat, tableSchem, tableName), columnName);
     }
 
     @Override
@@ -81,7 +65,6 @@ public final class ColumnId implements MetadataTypeId<ColumnId, Column> {
         return super.toString() + '{' +
                "tableId=" + tableId +
                ",columnName='" + columnName + '\'' +
-               ",ordinalPosition=" + ordinalPosition +
                '}';
     }
 
@@ -102,8 +85,4 @@ public final class ColumnId implements MetadataTypeId<ColumnId, Column> {
     private final TableId tableId;
 
     private final String columnName;
-
-    @EqualsAndHashCode.Exclude
-    // excluded in equals/hashCode, included in toString
-    private final int ordinalPosition;
 }

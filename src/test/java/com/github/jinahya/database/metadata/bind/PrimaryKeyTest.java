@@ -25,4 +25,12 @@ class PrimaryKeyTest extends AbstractMetadataTypeTest<PrimaryKey> {
     PrimaryKeyTest() {
         super(PrimaryKey.class);
     }
+
+    @Override
+    PrimaryKey typeInstance() {
+        final var instance = super.typeInstance();
+        instance.setTableName("");
+        instance.setColumnName("");
+        return instance;
+    }
 }

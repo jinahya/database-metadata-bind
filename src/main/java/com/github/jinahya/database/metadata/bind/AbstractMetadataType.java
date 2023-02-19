@@ -21,7 +21,6 @@ package com.github.jinahya.database.metadata.bind;
  */
 
 import lombok.AccessLevel;
-import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -31,12 +30,29 @@ import lombok.experimental.SuperBuilder;
 import java.util.HashMap;
 import java.util.Map;
 
-@Data
 @NoArgsConstructor(access = AccessLevel.PACKAGE)
 @SuperBuilder(toBuilder = true)
 abstract class AbstractMetadataType implements MetadataType {
 
     private static final long serialVersionUID = -3285362930174073345L;
+
+    @Override
+    public String toString() {
+        return super.toString() + '{' +
+               "unmappedValues=" + unmappedValues +
+               '}';
+    }
+
+    @Override
+    public boolean equals(final Object obj) {
+        if (this == obj) return true;
+        return obj instanceof AbstractMetadataType;
+    }
+
+    @Override
+    public int hashCode() {
+        return getClass().hashCode();
+    }
 
     @Override
     public Map<String, Object> getUnmappedValues() {

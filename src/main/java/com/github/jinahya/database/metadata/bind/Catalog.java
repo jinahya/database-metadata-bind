@@ -22,12 +22,11 @@ package com.github.jinahya.database.metadata.bind;
 
 import lombok.AccessLevel;
 import lombok.Data;
-import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
-import lombok.ToString;
 import lombok.experimental.SuperBuilder;
 
 import java.util.Comparator;
+import java.util.Objects;
 import java.util.function.Consumer;
 
 /**
@@ -37,8 +36,8 @@ import java.util.function.Consumer;
  * @see Context#getCatalogs(Consumer)
  */
 @ParentOf(Schema.class)
-@EqualsAndHashCode(callSuper = true)
-@ToString(callSuper = true)
+//@EqualsAndHashCode(callSuper = true)
+//@ToString(callSuper = true)
 @Data
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @SuperBuilder(toBuilder = true)
@@ -80,6 +79,27 @@ public class Catalog extends AbstractMetadataType {
      * A {@value #PROPERTY_NAME_TABLE_CAT} attribute value for virtual instances. The value is {@value}.
      */
     public static final String COLUMN_VALUE_TABLE_CAT_EMPTY = "";
+
+    @Override
+    public String toString() {
+        return super.toString() + '{' +
+               "tableCat='" + tableCat + '\'' +
+               '}';
+    }
+
+    @Override
+    public boolean equals(final Object obj) {
+        if (this == obj) return true;
+        if (!(obj instanceof Catalog)) return false;
+        if (!super.equals(obj)) return false;
+        final Catalog that = (Catalog) obj;
+        return Objects.equals(tableCat, that.tableCat);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(tableCat);
+    }
 
     /**
      * Returns a value for identifying this catalog.

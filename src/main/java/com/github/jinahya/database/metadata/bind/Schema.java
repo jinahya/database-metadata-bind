@@ -21,16 +21,15 @@ package com.github.jinahya.database.metadata.bind;
  */
 
 import lombok.AccessLevel;
-import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
-import lombok.experimental.Accessors;
 import lombok.experimental.SuperBuilder;
 
 import java.util.Comparator;
+import java.util.Objects;
 import java.util.Optional;
 
 /**
@@ -47,9 +46,10 @@ import java.util.Optional;
 @ParentOf(Procedure.class)
 @ParentOf(Function.class)
 @ChildOf(Catalog.class)
-@EqualsAndHashCode(callSuper = true)
-@ToString(callSuper = true)
-@Data
+//@EqualsAndHashCode(callSuper = true)
+//@ToString(callSuper = true)
+@Setter
+@Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @SuperBuilder(toBuilder = true)
 public class Schema extends AbstractMetadataType {
@@ -81,20 +81,51 @@ public class Schema extends AbstractMetadataType {
 
     public static final String COLUMN_VALUE_TABLE_SCHEM_EMPTY = "";
 
-    public SchemaId getSchemaId() {
-        return SchemaId.of(
-                getTableCatalogNonNull(),
-                getTableSchem()
-        );
+    @Override
+    public String toString() {
+        return super.toString() + '{' +
+               "tableCatalog='" + tableCatalog + '\'' +
+               ",tableSchem='" + tableSchem + '\'' +
+               '}';
     }
 
-    public CatalogId getCatalogId() {
-        return getSchemaId().getCatalogId();
+    @Override
+    public boolean equals(final Object obj) {
+        if (this == obj) return true;
+        if (!(obj instanceof Schema)) return false;
+        if (!super.equals(obj)) return false;
+        final Schema that = (Schema) obj;
+        return Objects.equals(getSchemaId(), that.getSchemaId());
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(getSchemaId());
     }
 
     String getTableCatalogNonNull() {
         return Optional.ofNullable(getTableCatalog())
                 .orElse(Catalog.COLUMN_VALUE_TABLE_CAT_EMPTY);
+    }
+
+    public void setTableCatalog(final String tableCatalog) {
+        this.tableCatalog = tableCatalog;
+        schemaId = null;
+    }
+
+    public void setTableSchem(final String tableSchem) {
+        this.tableSchem = tableSchem;
+        schemaId = null;
+    }
+
+    public SchemaId getSchemaId() {
+        if (schemaId == null) {
+            schemaId = SchemaId.of(
+                    getTableCatalogNonNull(),
+                    getTableSchem()
+            );
+        }
+        return schemaId;
     }
 
     @NullableBySpecification
@@ -104,10 +135,8 @@ public class Schema extends AbstractMetadataType {
     @ColumnLabel(COLUMN_LABEL_TABLE_SCHEM)
     private String tableSchem;
 
-    @Accessors(fluent = true)
-    @Setter(AccessLevel.PACKAGE)
-    @Getter(AccessLevel.PACKAGE)
+    @Setter(AccessLevel.NONE)
     @EqualsAndHashCode.Exclude
     @ToString.Exclude
-    private transient Catalog catalog;
+    private transient SchemaId schemaId;
 }

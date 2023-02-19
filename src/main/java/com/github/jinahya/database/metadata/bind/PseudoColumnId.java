@@ -52,11 +52,6 @@ public final class PseudoColumnId implements MetadataTypeId<PseudoColumnId, Pseu
                 .build();
     }
 
-    static PseudoColumnId of(final String tableCat, final String tableSchem, final String tableName,
-                             final String columnName) {
-        return of(TableId.of(tableCat, tableSchem, tableName), columnName);
-    }
-
     @Override
     public String toString() {
         return super.toString() + '{' +

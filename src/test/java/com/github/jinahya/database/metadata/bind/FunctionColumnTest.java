@@ -28,6 +28,7 @@ import org.junit.jupiter.params.provider.EnumSource;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
+import static org.assertj.core.api.Assertions.in;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 
@@ -73,5 +74,14 @@ class FunctionColumnTest extends AbstractMetadataTypeTest<FunctionColumn> {
             spy.setColumnTypeAsEnum(columnTypeAsEnum);
             verify(spy, times(1)).setColumnType(columnTypeAsEnum.fieldValueAsInt());
         }
+    }
+
+    @Override
+    FunctionColumn typeInstance() {
+        final FunctionColumn instance = super.typeInstance();
+        instance.setFunctionName("");
+        instance.setColumnName("");
+        instance.setSpecificName("");
+        return instance;
     }
 }

@@ -23,11 +23,8 @@ package com.github.jinahya.database.metadata.bind;
 import lombok.AccessLevel;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
-import lombok.Getter;
 import lombok.NoArgsConstructor;
-import lombok.Setter;
 import lombok.ToString;
-import lombok.experimental.Accessors;
 import lombok.experimental.SuperBuilder;
 
 import java.sql.DatabaseMetaData;
@@ -55,32 +52,54 @@ public class PseudoColumn extends AbstractMetadataType {
     public static final Comparator<PseudoColumn> LEXICOGRAPHIC_ORDER =
             Comparator.comparing(PseudoColumn::getPseudoColumnId, PseudoColumnId.LEXICOGRAPHIC_ORDER);
 
-    PseudoColumnId getPseudoColumnId() {
-        return PseudoColumnId.of(
-                getTableCatNonNull(),
-                getTableSchemNonNull(),
-                getTableName(),
-                getColumnName()
-        );
-    }
-
-    public ColumnId getColumnId() {
-        return ColumnId.of(
-                getTableCatNonNull(),
-                getTableSchemNonNull(),
-                getTableName(),
-                getColumnName()
-        );
-    }
-
+    // -------------------------------------------------------------------------------------------------------- tableCat
     String getTableCatNonNull() {
         return Optional.ofNullable(getTableCat()).orElse(Catalog.COLUMN_VALUE_TABLE_CAT_EMPTY);
     }
 
+    public void setTableCat(final String tableCat) {
+        this.tableCat = tableCat;
+        pseudoColumnId = null;
+    }
+
+    // ------------------------------------------------------------------------------------------------------- tableShem
     String getTableSchemNonNull() {
         return Optional.ofNullable(getTableSchem()).orElse(Schema.COLUMN_VALUE_TABLE_SCHEM_EMPTY);
     }
 
+    public void setTableSchem(final String tableSchem) {
+        this.tableSchem = tableSchem;
+        pseudoColumnId = null;
+    }
+
+    // ------------------------------------------------------------------------------------------------------- tableName
+    public void setTableName(final String tableName) {
+        this.tableName = tableName;
+        pseudoColumnId = null;
+    }
+
+    // ------------------------------------------------------------------------------------------------------ columnName
+    public void setColumnName(final String columnName) {
+        this.columnName = columnName;
+        pseudoColumnId = null;
+    }
+
+    // -------------------------------------------------------------------------------------------------------- columnId
+    public PseudoColumnId getPseudoColumnId() {
+        if (pseudoColumnId == null) {
+            pseudoColumnId = PseudoColumnId.of(
+                    TableId.of(
+                            getTableCatNonNull(),
+                            getTableSchemNonNull(),
+                            getTableName()
+                    ),
+                    getColumnName()
+            );
+        }
+        return pseudoColumnId;
+    }
+
+    // -----------------------------------------------------------------------------------------------------------------
     @NullableBySpecification
     @ColumnLabel("TABLE_CAT")
     private String tableCat;
@@ -121,10 +140,8 @@ public class PseudoColumn extends AbstractMetadataType {
     @ColumnLabel("IS_NULLABLE")
     private String isNullable;
 
-    @Accessors(fluent = true)
-    @Setter(AccessLevel.PACKAGE)
-    @Getter(AccessLevel.PACKAGE)
+    // -----------------------------------------------------------------------------------------------------------------
     @EqualsAndHashCode.Exclude
     @ToString.Exclude
-    private transient Table table;
+    private transient PseudoColumnId pseudoColumnId;
 }

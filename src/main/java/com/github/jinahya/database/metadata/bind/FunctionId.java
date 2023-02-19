@@ -21,7 +21,6 @@ package com.github.jinahya.database.metadata.bind;
  */
 
 import lombok.AccessLevel;
-import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.SuperBuilder;
@@ -39,36 +38,33 @@ public final class FunctionId implements MetadataTypeId<FunctionId, Function> {
 
     private static final long serialVersionUID = 8614281252146063072L;
 
-    public static final Comparator<FunctionId> CASE_INSENSITIVE_ORDER =
-            Comparator.comparing(FunctionId::getSchemaId, SchemaId.CASE_INSENSITIVE_ORDER)
-                    .thenComparing(FunctionId::getFunctionName, nullsFirst(String.CASE_INSENSITIVE_ORDER))
-                    .thenComparing(FunctionId::getSpecificName, nullsFirst(String.CASE_INSENSITIVE_ORDER));
+//    public static final Comparator<FunctionId> CASE_INSENSITIVE_ORDER =
+//            Comparator.comparing(FunctionId::getSchemaId, SchemaId.CASE_INSENSITIVE_ORDER)
+//                    .thenComparing(FunctionId::getFunctionName, nullsFirst(String.CASE_INSENSITIVE_ORDER))
+//                    .thenComparing(FunctionId::getSpecificName, nullsFirst(String.CASE_INSENSITIVE_ORDER));
+//
+//    public static final Comparator<FunctionId> LEXICOGRAPHIC_ORDER =
+//            Comparator.comparing(FunctionId::getSchemaId, SchemaId.LEXICOGRAPHIC_ORDER)
+//                    .thenComparing(FunctionId::getFunctionName, nullsFirst(naturalOrder()))
+//                    .thenComparing(FunctionId::getSpecificName, nullsFirst(naturalOrder()));
 
-    public static final Comparator<FunctionId> LEXICOGRAPHIC_ORDER =
-            Comparator.comparing(FunctionId::getSchemaId, SchemaId.LEXICOGRAPHIC_ORDER)
-                    .thenComparing(FunctionId::getFunctionName, nullsFirst(naturalOrder()))
-                    .thenComparing(FunctionId::getSpecificName, nullsFirst(naturalOrder()));
-
-    static FunctionId of(final SchemaId schemaId, final String functionName, final String specificName) {
+    static FunctionId of(final SchemaId schemaId, final String specificName) {
         Objects.requireNonNull(schemaId, "schemaId is null");
-        Objects.requireNonNull(functionName, "functionName is null");
         Objects.requireNonNull(specificName, "specificName is null");
         return FunctionId.builder()
                 .schemaId(schemaId)
-                .functionName(functionName)
                 .specificName(specificName)
                 .build();
     }
 
-    public static FunctionId of(final SchemaId schemaId, final String specificName) {
-        return of(schemaId, "", specificName);
+    public static FunctionId of(final String functionCat, final String functionSchem, final String specificName) {
+        return of(SchemaId.of(functionCat, functionSchem), specificName);
     }
 
     @Override
     public String toString() {
         return super.toString() + '{' +
                "schemaId=" + schemaId +
-               ",functionName='" + functionName + '\'' +
                ",specificName='" + specificName + '\'' +
                '}';
     }
@@ -88,10 +84,6 @@ public final class FunctionId implements MetadataTypeId<FunctionId, Function> {
     }
 
     private final SchemaId schemaId;
-
-    @EqualsAndHashCode.Exclude
-    // excluded in equals/hashCode, included in toString
-    private final String functionName;
 
     private final String specificName;
 }

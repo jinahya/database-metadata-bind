@@ -23,13 +23,12 @@ package com.github.jinahya.database.metadata.bind;
 import lombok.AccessLevel;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
-import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
-import lombok.experimental.Accessors;
 import lombok.experimental.SuperBuilder;
 
 import java.util.Comparator;
+import java.util.Objects;
 import java.util.Optional;
 
 import static java.util.Comparator.naturalOrder;
@@ -52,7 +51,7 @@ import static java.util.Comparator.nullsFirst;
 @ParentOf(Column.class)
 @ParentOf(BestRowIdentifier.class)
 @ChildOf(Schema.class)
-@EqualsAndHashCode(callSuper = true)
+//@EqualsAndHashCode(callSuper = true)
 @ToString(callSuper = true)
 @Data
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
@@ -109,20 +108,52 @@ public class Table extends AbstractMetadataType {
      */
     public static final String PROPERTY_NAME_TABLE_TYPE = "tableName";
 
-    public TableId getTableId() {
-        return TableId.of(
-                getTableCatNonNull(),
-                getTableSchemNonNull(),
-                getTableName()
-        );
+    @Override
+    public boolean equals(final Object obj) {
+        if (this == obj) return true;
+        if (!(obj instanceof Table)) return false;
+        if (!super.equals(obj)) return false;
+        final Table that = (Table) obj;
+        return Objects.equals(getTableId(), that.getTableId());
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(getTableId());
     }
 
     String getTableCatNonNull() {
         return Optional.ofNullable(getTableCat()).orElse(Catalog.COLUMN_VALUE_TABLE_CAT_EMPTY);
     }
 
+    public void setTableCat(final String tableCat) {
+        this.tableCat = tableCat;
+        tableId = null;
+    }
+
     String getTableSchemNonNull() {
         return Optional.ofNullable(getTableSchem()).orElse(Schema.COLUMN_VALUE_TABLE_SCHEM_EMPTY);
+    }
+
+    public void setTableSchem(final String tableSchem) {
+        this.tableSchem = tableSchem;
+        tableId = null;
+    }
+
+    public void setTableName(final String tableName) {
+        this.tableName = tableName;
+        tableId = null;
+    }
+
+    public TableId getTableId() {
+        if (tableId == null) {
+            tableId = TableId.of(
+                    getTableCatNonNull(),
+                    getTableSchemNonNull(),
+                    getTableName()
+            );
+        }
+        return tableId;
     }
 
     @NullableBySpecification
@@ -135,6 +166,10 @@ public class Table extends AbstractMetadataType {
 
     @ColumnLabel(COLUMN_LABEL_TABLE_NAME)
     private String tableName;
+
+    @EqualsAndHashCode.Exclude
+    @ToString.Exclude
+    private transient TableId tableId;
 
     @NullableByVendor("MariaDB")
     @ColumnLabel(COLUMN_LABEL_TABLE_TYPE)
@@ -163,30 +198,4 @@ public class Table extends AbstractMetadataType {
     @NullableBySpecification
     @ColumnLabel("REF_GENERATION")
     private String refGeneration;
-
-    Table catalog(final Catalog catalog) {
-        this.catalog = catalog;
-        this.schema = null;
-        return this;
-    }
-
-    Table schema(final Schema schema) {
-        this.schema = schema;
-        catalog = Optional.ofNullable(this.schema).map(Schema::catalog).orElse(null);
-        return this;
-    }
-
-    @Accessors(fluent = true)
-//    @Setter(AccessLevel.PACKAGE) // manually implemented
-    @Getter(AccessLevel.PACKAGE)
-    @EqualsAndHashCode.Exclude
-    @ToString.Exclude
-    private transient Catalog catalog;
-
-    @Accessors(fluent = true)
-//    @Setter(AccessLevel.PACKAGE) // manually implemented
-    @Getter(AccessLevel.PACKAGE)
-    @EqualsAndHashCode.Exclude
-    @ToString.Exclude
-    private transient Schema schema;
 }

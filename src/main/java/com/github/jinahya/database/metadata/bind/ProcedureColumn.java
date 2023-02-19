@@ -21,15 +21,20 @@ package com.github.jinahya.database.metadata.bind;
  */
 
 import lombok.AccessLevel;
-import lombok.Data;
 import lombok.EqualsAndHashCode;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 import lombok.ToString;
 import lombok.experimental.SuperBuilder;
 
 import java.sql.DatabaseMetaData;
 import java.util.Comparator;
+import java.util.Objects;
 import java.util.Optional;
+
+import static java.util.Comparator.naturalOrder;
+import static java.util.Comparator.nullsFirst;
 
 /**
  * A class for binding results of
@@ -38,48 +43,105 @@ import java.util.Optional;
  *
  * @author Jin Kwon &lt;jinahya_at_gmail.com&gt;
  */
-//@ChildOf(Procedure.class)
+@ChildOf(Procedure.class)
+@Setter
+@Getter
 //@EqualsAndHashCode(callSuper = true)
-@EqualsAndHashCode(callSuper = true)
 @ToString(callSuper = true)
-@Data
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @SuperBuilder(toBuilder = true)
-public class ProcedureColumn
-        extends AbstractMetadataType {
+public class ProcedureColumn extends AbstractMetadataType {
 
     private static final long serialVersionUID = 3894753719381358829L;
 
-    public static final Comparator<ProcedureColumn> COMPARING_AS_SPECIFIED_CASE_INSENSITIVE =
-            Comparator.comparing(ProcedureColumn::getProcedureId, ProcedureId.CASE_INSENSITIVE_ORDER);
+    public static final Comparator<ProcedureColumn> CASE_INSENSITIVE_ORDER =
+            Comparator.comparing(ProcedureColumn::getSchemaId, SchemaId.CASE_INSENSITIVE_ORDER)
+                    .thenComparing(ProcedureColumn::getProcedureName, nullsFirst(String.CASE_INSENSITIVE_ORDER))
+                    .thenComparing(ProcedureColumn::getSpecificName, nullsFirst(String.CASE_INSENSITIVE_ORDER));
 
-    public static final Comparator<ProcedureColumn> COMPARING_AS_SPECIFIED_NATURAL =
-            Comparator.comparing(ProcedureColumn::getProcedureId, ProcedureId.LEXICOGRAPHIC_ORDER);
+    public static final Comparator<ProcedureColumn> LEXICOGRAPHIC_ORDER =
+            Comparator.comparing(ProcedureColumn::getSchemaId, SchemaId.LEXICOGRAPHIC_ORDER)
+                    .thenComparing(ProcedureColumn::getProcedureName, nullsFirst(naturalOrder()))
+                    .thenComparing(ProcedureColumn::getSpecificName, nullsFirst(naturalOrder()));
 
-    public ProcedureColumnId getProcedureColumnId() {
-        return ProcedureColumnId.of(
-                getProcedureCatNonNull(),
-                getProcedureSchemNonNull(),
-                getProcedureName(),
-                getSpecificName(),
-                getColumnName()
-        );
+    // -----------------------------------------------------------------------------------------------------------------
+    @Override
+    public boolean equals(final Object obj) {
+        if (this == obj) return true;
+        if (!(obj instanceof ProcedureColumn)) return false;
+        if (!super.equals(obj)) return false;
+        final ProcedureColumn that = (ProcedureColumn) obj;
+        return Objects.equals(getProcedureColumnId(), that.getProcedureColumnId());
     }
 
-    ProcedureId getProcedureId() {
-        return getProcedureColumnId().getProcedureId();
+    @Override
+    public int hashCode() {
+        return Objects.hash(getProcedureColumnId());
     }
 
+    // ---------------------------------------------------------------------------------------------------- procedureCat
     String getProcedureCatNonNull() {
         return Optional.ofNullable(getProcedureCat())
                 .orElse(Catalog.COLUMN_VALUE_TABLE_CAT_EMPTY);
     }
 
+    public void setProcedureCat(final String procedureCat) {
+        this.procedureCat = procedureCat;
+        procedureColumnId = null;
+    }
+
+    // -------------------------------------------------------------------------------------------------- procedureSchem
     String getProcedureSchemNonNull() {
         return Optional.ofNullable(getProcedureSchem())
                 .orElse(Schema.COLUMN_VALUE_TABLE_SCHEM_EMPTY);
     }
 
+    public void setProcedureSchem(final String procedureSchem) {
+        this.procedureSchem = procedureSchem;
+        procedureColumnId = null;
+    }
+
+    // ------------------------------------------------------------------------------------------------------ columnName
+    public void setColumnName(String columnName) {
+        this.columnName = columnName;
+        procedureColumnId = null;
+    }
+
+    // ------------------------------------------------------------------------------------------------------ columnType
+    public void setColumnType(int columnType) {
+        this.columnType = columnType;
+        procedureColumnId = null;
+    }
+
+    // ---------------------------------------------------------------------------------------------------- specificName
+    public void setSpecificName(final String specificName) {
+        this.specificName = specificName;
+        procedureColumnId = null;
+    }
+
+    // ----------------------------------------------------------------------------------------------- procedureColumnId
+    public ProcedureColumnId getProcedureColumnId() {
+        if (procedureColumnId == null) {
+            procedureColumnId = ProcedureColumnId.of(
+                    getProcedureCatNonNull(),
+                    getProcedureSchemNonNull(),
+                    getSpecificName(),
+                    getColumnName(),
+                    getColumnType()
+            );
+        }
+        return procedureColumnId;
+    }
+
+    private ProcedureId getProcedureId() {
+        return getProcedureColumnId().getProcedureId();
+    }
+
+    private SchemaId getSchemaId() {
+        return getProcedureId().getSchemaId();
+    }
+
+    // -----------------------------------------------------------------------------------------------------------------
     @NullableBySpecification
     @ColumnLabel("PROCEDURE_CAT")
     private String procedureCat;
@@ -149,4 +211,9 @@ public class ProcedureColumn
 
     @ColumnLabel("SPECIFIC_NAME")
     private String specificName;
+
+    // -----------------------------------------------------------------------------------------------------------------
+    @EqualsAndHashCode.Exclude
+    @ToString.Exclude
+    private transient ProcedureColumnId procedureColumnId;
 }
