@@ -59,11 +59,12 @@ final class ContextTests {
         log.debug("schemaTerm: {}", context.databaseMetaData.getSchemaTerm());
     }
 
-    private static void common(final Object value) {
+    private static <T> T common(final T value) {
         Objects.requireNonNull(value, "value is null");
         {
             final var string = value.toString();
         }
+
         {
             final var hashCode = value.hashCode();
         }
@@ -91,6 +92,7 @@ final class ContextTests {
                             }
                         })
                 );
+        return value;
     }
 
     private static void thrown(final String message, final Throwable throwable) {
@@ -780,13 +782,9 @@ final class ContextTests {
         Objects.requireNonNull(context, "context is null");
         Objects.requireNonNull(schema, "schema is null");
         {
-            common(schema);
-            common(schema.getSchemaId());
-        }
-        {
             assertThat(schema.getTableSchem()).isNotNull();
         }
-        final var schemaId = schema.getSchemaId();
+        final var schemaId = common(common(schema).getSchemaId());
         try {
             final var superTables = context.getSuperTables(schema, "%");
             assertThat(superTables)
@@ -822,12 +820,6 @@ final class ContextTests {
     static void superTypes(final Context context, final List<? extends SuperType> superTypes) throws SQLException {
         Objects.requireNonNull(context, "context is null");
         Objects.requireNonNull(superTypes, "superTypes is null");
-//        assertThat(superTypes)
-//                .extracting(SuperType::getTypeId)
-//                .doesNotHaveDuplicates();
-//        assertThat(superTypes)
-//                .extracting(SuperType::getSupertypeId)
-//                .doesNotHaveDuplicates();
         for (final var superType : superTypes) {
             superType(context, superType);
         }
