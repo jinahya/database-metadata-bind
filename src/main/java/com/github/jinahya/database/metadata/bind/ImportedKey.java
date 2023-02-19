@@ -50,5 +50,5 @@ public class ImportedKey extends TableKey<ImportedKey> {
     public static final Comparator<ImportedKey> CASE_INSENSITIVE_ORDER =
             comparingPktableKeySeqCaseInsensitive();
 
-    public static final Comparator<ImportedKey> COMPARING_NATUAL = comparingPktableKeySeqNatual();
+    public static final Comparator<ImportedKey> COMPARING_NATUAL = comparingPktableKeySeqLexicographic();
 }

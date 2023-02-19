@@ -48,22 +48,22 @@ public abstract class TableKey<T extends TableKey<T>> extends AbstractMetadataTy
 
     private static final long serialVersionUID = 6713872409315471232L;
 
-    public static <T extends TableKey<T>> Comparator<T> comparingPktableKeySeqCaseInsensitive() {
+    static <T extends TableKey<T>> Comparator<T> comparingPktableKeySeqCaseInsensitive() {
         return Comparator.<T, TableId>comparing(TableKey::getPktableId, TableId.CASE_INSENSITIVE_ORDER)
                 .thenComparingInt(TableKey::getKeySeq);
     }
 
-    public static <T extends TableKey<T>> Comparator<T> comparingPktableKeySeqNatual() {
+    static <T extends TableKey<T>> Comparator<T> comparingPktableKeySeqLexicographic() {
         return Comparator.<T, TableId>comparing(TableKey::getPktableId, TableId.LEXICOGRAPHIC_ORDER)
                 .thenComparingInt(TableKey::getKeySeq);
     }
 
-    public static <T extends TableKey<T>> Comparator<T> comparingFktableKeySeqCaseInsensitive() {
+    static <T extends TableKey<T>> Comparator<T> comparingFktableKeySeqCaseInsensitive() {
         return Comparator.<T, TableId>comparing(TableKey::getFktableId, TableId.CASE_INSENSITIVE_ORDER)
                 .thenComparingInt(TableKey::getKeySeq);
     }
 
-    public static <T extends TableKey<T>> Comparator<T> comparingFktableKeySeqNatural() {
+    static <T extends TableKey<T>> Comparator<T> comparingFktableKeySeqLexicographic() {
         return Comparator.<T, TableId>comparing(TableKey::getFktableId, TableId.LEXICOGRAPHIC_ORDER)
                 .thenComparingInt(TableKey::getKeySeq);
     }

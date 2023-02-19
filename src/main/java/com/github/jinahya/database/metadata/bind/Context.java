@@ -602,13 +602,25 @@ public class Context {
         return list;
     }
 
+    /**
+     * Retrieves exported keys of specified table.
+     *
+     * @param table the table whose exported keys are retrieved.
+     * @return a list of exported keys of the {@code table}.
+     * @throws SQLException if a database error occurs.
+     * @see #getExportedKeys(String, String, String)
+     */
     public List<ExportedKey> getExportedKeys(final Table table) throws SQLException {
         Objects.requireNonNull(table, "table is null");
-        return getExportedKeys(
+        final List<ExportedKey> exportedKeys = getExportedKeys(
                 table.getTableCatNonNull(),
                 table.getTableSchemNonNull(),
                 Objects.requireNonNull(table.getTableName(), "table.tableName is null")
         );
+        exportedKeys.forEach(ek -> {
+            ek.table(table);
+        });
+        return exportedKeys;
     }
 
     /**
@@ -755,13 +767,25 @@ public class Context {
         return list;
     }
 
+    /**
+     * Retrieves imported keys of specified table.
+     *
+     * @param table the table whose imported keys are retrieved.
+     * @return a list of imported keys of the {@code table}.
+     * @throws SQLException if a database error occurs.
+     * @see #getImportedKeys(String, String, String)
+     */
     public List<ImportedKey> getImportedKeys(final Table table) throws SQLException {
         Objects.requireNonNull(table, "table is null");
-        return getImportedKeys(
+        final List<ImportedKey> importedKeys = getImportedKeys(
                 table.getTableCatNonNull(),
                 table.getTableSchemNonNull(),
                 Objects.requireNonNull(table.getTableName(), "table.tableName is null")
         );
+        importedKeys.forEach(ik -> {
+            ik.table(table);
+        });
+        return importedKeys;
     }
 
     /**
