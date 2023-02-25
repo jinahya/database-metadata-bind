@@ -76,7 +76,6 @@ public class PrimaryKey extends AbstractMetadataType {
     public boolean equals(final Object obj) {
         if (this == obj) return true;
         if (!(obj instanceof PrimaryKey)) return false;
-        if (!super.equals(obj)) return false;
         final PrimaryKey that = (PrimaryKey) obj;
         return Objects.equals(getPrimaryKeyId(), that.getPrimaryKeyId());
     }

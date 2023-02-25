@@ -63,7 +63,7 @@ public final class ProcedureColumnId implements MetadataTypeId<ProcedureColumnId
     public String toString() {
         return super.toString() + '{' +
                "procedureId=" + procedureId +
-               ",columnName='" + columnName + '\'' +
+               ",columnName=" + columnName +
                ",columnType=" + columnType +
                '}';
     }

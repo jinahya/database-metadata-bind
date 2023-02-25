@@ -21,36 +21,70 @@ package com.github.jinahya.database.metadata.bind;
  */
 
 import lombok.extern.slf4j.Slf4j;
+import nl.jqno.equalsverifier.EqualsVerifier;
+import org.junit.jupiter.api.Disabled;
+import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
+
+import java.lang.reflect.Modifier;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
 @Slf4j
-abstract class AbstractMetadataTypeTest<T extends AbstractMetadataType> extends MetadataTypeTest<T> {
+abstract class AbstractMetadataTypeIdTest<T extends AbstractMetadataTypeId<T, U>, U extends MetadataType>
+        extends MetadataTypeIdTest<T, U> {
 
-    AbstractMetadataTypeTest(final Class<T> typeClass) {
-        super(typeClass);
+    AbstractMetadataTypeIdTest(final Class<T> typeIdClass, final Class<U> typeClass) {
+        super(typeIdClass, typeClass);
+    }
+
+    @Test
+    void shouldBeFinal() {
+        final var modifiers = typeIdClass.getModifiers();
+        assertThat(Modifier.isFinal(modifiers))
+                .as("Modifiers.isFinal(%1$s.modifies)", typeIdClass)
+                .isTrue();
+    }
+
+    @Nested
+    class EqualsTest {
+
+        @Disabled // EqualsAndHashCode.Exclude
+        @Test
+        void verifyEquals() {
+            EqualsVerifier.forClass(typeIdClass)
+                    .verify();
+        }
+    }
+
+    @Nested
+    class HashcodeTest {
+
+        @Test
+        void __() {
+            final var hashCode = typeIdInstanceBuiltEmpty().hashCode();
+        }
     }
 
     @Test
     void shouldHaveEqualsOverridden__() throws ReflectiveOperationException {
         {
-            final var method = typeClass.getMethod("equals", Object.class);
+            final var method = typeIdClass.getMethod("equals", Object.class);
             final var declaringClass = method.getDeclaringClass();
             assertThat(declaringClass)
                     .as("declaring class of the %1$s", method)
-                    .isSameAs(typeClass);
+                    .isSameAs(typeIdClass);
         }
     }
 
     @Test
     void shouldHaveHashcodeOverridden__() throws ReflectiveOperationException {
         {
-            final var method = typeClass.getMethod("hashCode");
+            final var method = typeIdClass.getMethod("hashCode");
             final var declaringClass = method.getDeclaringClass();
             assertThat(declaringClass)
                     .as("declaring class of the %1$s", method)
-                    .isSameAs(typeClass);
+                    .isSameAs(typeIdClass);
         }
     }
 }

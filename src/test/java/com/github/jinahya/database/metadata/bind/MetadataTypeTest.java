@@ -38,7 +38,7 @@ import static org.junit.jupiter.api.Assertions.fail;
 @Slf4j
 abstract class MetadataTypeTest<T extends MetadataType> extends _MetadataTypeTest<T> {
 
-    private static final Map<Long, Class<?>> SERIAL_VERSION_UIDS = new ConcurrentHashMap<>();
+    private static final Map<Long, Class<?>> CLASSES_AND_SERIAL_VERSION_UIDS = new ConcurrentHashMap<>();
 
     MetadataTypeTest(final Class<T> typeClass) {
         super(typeClass);
@@ -48,7 +48,7 @@ abstract class MetadataTypeTest<T extends MetadataType> extends _MetadataTypeTes
     @Test
     void serialVersionUID_Unique_() throws ReflectiveOperationException {
         for (Class<?> c = typeClass; MetadataType.class.isAssignableFrom(c); c = c.getSuperclass()) {
-            if (SERIAL_VERSION_UIDS.containsValue(c)) {
+            if (CLASSES_AND_SERIAL_VERSION_UIDS.containsValue(c)) {
                 continue;
             }
             final var field = c.getDeclaredField("serialVersionUID");
@@ -61,7 +61,7 @@ abstract class MetadataTypeTest<T extends MetadataType> extends _MetadataTypeTes
                 field.setAccessible(true);
             }
             final var serialVersionUID = field.getLong(null);
-            final var previous = SERIAL_VERSION_UIDS.put(serialVersionUID, c);
+            final var previous = CLASSES_AND_SERIAL_VERSION_UIDS.put(serialVersionUID, c);
             if (previous != null) {
                 log.debug("{}#serialVersionUID({}) conflicts with {}", c, serialVersionUID, previous);
                 fail();

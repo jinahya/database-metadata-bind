@@ -33,7 +33,7 @@ import java.util.Objects;
 import java.util.Optional;
 
 /**
- * A class for binding a result of {@link java.sql.DatabaseMetaData#getSchemas(java.lang.String, java.lang.String)}
+ * A class for binding a results of {@link java.sql.DatabaseMetaData#getSchemas(java.lang.String, java.lang.String)}
  * method.
  *
  * @author Jin Kwon &lt;jinahya_at_gmail.com&gt;
@@ -84,8 +84,8 @@ public class Schema extends AbstractMetadataType {
     @Override
     public String toString() {
         return super.toString() + '{' +
-               "tableCatalog='" + tableCatalog + '\'' +
-               ",tableSchem='" + tableSchem + '\'' +
+               "tableCatalog=" + tableCatalog +
+               ",tableSchem=" + tableSchem +
                '}';
     }
 
@@ -93,7 +93,6 @@ public class Schema extends AbstractMetadataType {
     public boolean equals(final Object obj) {
         if (this == obj) return true;
         if (!(obj instanceof Schema)) return false;
-        if (!super.equals(obj)) return false;
         final Schema that = (Schema) obj;
         return Objects.equals(getSchemaId(), that.getSchemaId());
     }

@@ -157,7 +157,6 @@ public class TypeInfo
     public boolean equals(final Object obj) {
         if (this == obj) return true;
         if (!(obj instanceof TypeInfo)) return false;
-        if (!super.equals(obj)) return false;
         final TypeInfo that = (TypeInfo) obj;
         return dataType == that.dataType;
     }

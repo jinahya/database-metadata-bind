@@ -61,7 +61,7 @@ public final class ColumnPrivilegeId implements MetadataTypeId<ColumnPrivilegeId
     public String toString() {
         return super.toString() + '{' +
                "columnId=" + columnId +
-               ",privilege='" + privilege + '\'' +
+               ",privilege=" + privilege +
                '}';
     }
 

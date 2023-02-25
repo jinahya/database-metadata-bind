@@ -25,7 +25,6 @@ import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.SuperBuilder;
 
-import java.util.Comparator;
 import java.util.Objects;
 
 @Getter
@@ -60,7 +59,7 @@ public final class ProcedureId implements MetadataTypeId<ProcedureId, Procedure>
     public String toString() {
         return super.toString() + '{' +
                "schemaId=" + schemaId +
-               ",specificName='" + specificName + '\'' +
+               ",specificName=" + specificName +
                '}';
     }
 

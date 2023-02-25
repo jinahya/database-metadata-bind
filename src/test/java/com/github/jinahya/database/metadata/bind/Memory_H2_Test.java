@@ -55,9 +55,4 @@ class Memory_H2_Test extends Memory_$_Test {
     protected Connection connect() throws SQLException {
         return getConnection(CONNECTION_URL);
     }
-
-    Context context(Connection connection) throws SQLException {
-        return super.context(connection)
-                ;
-    }
 }

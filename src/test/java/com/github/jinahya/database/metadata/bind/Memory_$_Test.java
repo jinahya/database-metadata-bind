@@ -21,12 +21,11 @@ package com.github.jinahya.database.metadata.bind;
  */
 
 import lombok.extern.slf4j.Slf4j;
-import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 
 import java.sql.Connection;
 import java.sql.SQLException;
-import java.util.Optional;
+import java.util.Objects;
 
 /**
  * An abstract test class for in-memory databases.
@@ -42,33 +41,37 @@ abstract class Memory_$_Test {
      * @return a connection.
      * @throws SQLException if a database error occurs.
      */
-    protected abstract Connection connect() throws SQLException;
+    abstract Connection connect() throws SQLException;
 
-    Context context(final Connection connection) throws SQLException {
-        return Context.newInstance(connection);
+    <R> R applyConnection(final java.util.function.Function<? super Connection, ? extends R> function) {
+        Objects.requireNonNull(function, "function is null");
+        try (var connection = connect()) {
+            return function.apply(connection);
+        } catch (final SQLException sqle) {
+            throw new RuntimeException(sqle);
+        }
+    }
+
+    <R> R applyContext(final java.util.function.Function<? super Context, ? extends R> function) {
+        Objects.requireNonNull(function, "function is null");
+        return applyConnection(c -> {
+            try {
+                return function.apply(Context.newInstance(c));
+            } catch (final SQLException sqle) {
+                throw new RuntimeException(sqle);
+            }
+        });
     }
 
     @Test
     void test() throws SQLException {
-        try (var connection = connect()) {
-            final var context = context(connection);
-            ContextTests.test(context);
-        }
-    }
-
-    @Disabled
-    @Test
-    void tables() throws SQLException {
-        try (var connection = connect()) {
-            final var context = context(connection);
-            ContextTests.info(context);
-            final var tables = context.getTables(null, null, "%", null);
-            tables.stream().map(Table::getTableCat).distinct().forEach(
-                    tc -> log.debug("tableCat: {}", Optional.ofNullable(tc).map(v -> '\'' + v + '\'').orElse(null))
-            );
-            tables.stream().map(Table::getTableSchem).distinct().forEach(
-                    ts -> log.debug("tableSchem: {}", Optional.ofNullable(ts).map(v -> '\'' + v + '\'').orElse(null))
-            );
-        }
+        applyContext(c -> {
+            try {
+                ContextTests.test(c);
+                return null;
+            } catch (final SQLException sqle) {
+                throw new RuntimeException(sqle);
+            }
+        });
     }
 }

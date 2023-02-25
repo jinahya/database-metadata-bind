@@ -21,18 +21,18 @@ package com.github.jinahya.database.metadata.bind;
  */
 
 import lombok.AccessLevel;
-import lombok.Data;
 import lombok.EqualsAndHashCode;
+import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.SuperBuilder;
 
 import java.util.Comparator;
 import java.util.Objects;
 
-@Data
+@Getter
 @RequiredArgsConstructor(access = AccessLevel.PRIVATE)
 @SuperBuilder(toBuilder = true)
-public final class AttributeId implements MetadataTypeId<AttributeId, Attribute> {
+public final class AttributeId extends AbstractMetadataTypeId<AttributeId, Attribute> {
 
     private static final long serialVersionUID = 7221973324274278465L;
 
@@ -57,18 +57,31 @@ public final class AttributeId implements MetadataTypeId<AttributeId, Attribute>
                 .build();
     }
 
-    static AttributeId of(final String typeCat, final String typeSchem, final String typeName,
-                          final String attrName, final int ordinalPosition) {
-        return of(UDTId.of(typeCat, typeSchem, typeName), attrName, ordinalPosition);
-    }
-
     public static AttributeId of(final UDTId udtId, final String attrName) {
         return of(udtId, attrName, 1);
     }
 
-    public static AttributeId of(final String typeCat, final String typeSchem, final String typeName,
-                                 final String attrName) {
-        return of(typeCat, typeSchem, typeName, attrName, 1);
+    @Override
+    public String toString() {
+        return super.toString() + '{' +
+               "udtId=" + udtId +
+               ",attrName=" + attrName +
+               ",ordinalPosition=" + ordinalPosition +
+               '}';
+    }
+
+    @Override
+    public boolean equals(final Object obj) {
+        if (this == obj) return true;
+        if (!(obj instanceof AttributeId)) return false;
+        final AttributeId that = (AttributeId) obj;
+        return Objects.equals(udtId, that.udtId) &&
+               Objects.equals(attrName, that.attrName);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(udtId, attrName);
     }
 
     private final UDTId udtId;

@@ -112,7 +112,6 @@ public class Table extends AbstractMetadataType {
     public boolean equals(final Object obj) {
         if (this == obj) return true;
         if (!(obj instanceof Table)) return false;
-        if (!super.equals(obj)) return false;
         final Table that = (Table) obj;
         return Objects.equals(getTableId(), that.getTableId());
     }

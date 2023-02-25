@@ -57,7 +57,7 @@ public final class CatalogId implements MetadataTypeId<CatalogId, Catalog> {
     @Override
     public String toString() {
         return super.toString() + '{' +
-               "tableCat='" + tableCat + '\'' +
+               "tableCat=" + tableCat +
                '}';
     }
 

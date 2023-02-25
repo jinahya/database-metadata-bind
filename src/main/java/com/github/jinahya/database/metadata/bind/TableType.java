@@ -30,7 +30,7 @@ import java.util.Comparator;
 import java.util.Objects;
 
 /**
- * An entity class for binding the result of {@link java.sql.DatabaseMetaData#getTableTypes()}.
+ * An entity class for binding the results of {@link java.sql.DatabaseMetaData#getTableTypes()}.
  *
  * @author Jin Kwon &lt;jinahya_at_gmail.com&gt;
  * @see Context#getTableTypes()
@@ -39,8 +39,7 @@ import java.util.Objects;
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @SuperBuilder(toBuilder = true)
-public class TableType
-        extends AbstractMetadataType {
+public class TableType extends AbstractMetadataType {
 
     private static final long serialVersionUID = -7630634982776331078L;
 
@@ -54,7 +53,7 @@ public class TableType
     @Override
     public String toString() {
         return super.toString() + '{' +
-               "tableType='" + tableType + '\'' +
+               "tableType=" + tableType +
                '}';
     }
 
@@ -62,7 +61,6 @@ public class TableType
     public boolean equals(final Object obj) {
         if (this == obj) return true;
         if (!(obj instanceof TableType)) return false;
-        if (!super.equals(obj)) return false;
         final TableType that = (TableType) obj;
         return Objects.equals(tableType, that.tableType);
     }

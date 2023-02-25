@@ -56,7 +56,7 @@ public final class PseudoColumnId implements MetadataTypeId<PseudoColumnId, Pseu
     public String toString() {
         return super.toString() + '{' +
                "tableId=" + tableId +
-               ",columnName='" + columnName + '\'' +
+               ",columnName=" + columnName +
                '}';
     }
 

@@ -25,11 +25,7 @@ import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.SuperBuilder;
 
-import java.util.Comparator;
 import java.util.Objects;
-
-import static java.util.Comparator.naturalOrder;
-import static java.util.Comparator.nullsFirst;
 
 @Getter
 @RequiredArgsConstructor(access = AccessLevel.PRIVATE)
@@ -37,16 +33,6 @@ import static java.util.Comparator.nullsFirst;
 public final class FunctionId implements MetadataTypeId<FunctionId, Function> {
 
     private static final long serialVersionUID = 8614281252146063072L;
-
-//    public static final Comparator<FunctionId> CASE_INSENSITIVE_ORDER =
-//            Comparator.comparing(FunctionId::getSchemaId, SchemaId.CASE_INSENSITIVE_ORDER)
-//                    .thenComparing(FunctionId::getFunctionName, nullsFirst(String.CASE_INSENSITIVE_ORDER))
-//                    .thenComparing(FunctionId::getSpecificName, nullsFirst(String.CASE_INSENSITIVE_ORDER));
-//
-//    public static final Comparator<FunctionId> LEXICOGRAPHIC_ORDER =
-//            Comparator.comparing(FunctionId::getSchemaId, SchemaId.LEXICOGRAPHIC_ORDER)
-//                    .thenComparing(FunctionId::getFunctionName, nullsFirst(naturalOrder()))
-//                    .thenComparing(FunctionId::getSpecificName, nullsFirst(naturalOrder()));
 
     static FunctionId of(final SchemaId schemaId, final String specificName) {
         Objects.requireNonNull(schemaId, "schemaId is null");
@@ -65,7 +51,7 @@ public final class FunctionId implements MetadataTypeId<FunctionId, Function> {
     public String toString() {
         return super.toString() + '{' +
                "schemaId=" + schemaId +
-               ",specificName='" + specificName + '\'' +
+               ",specificName=" + specificName +
                '}';
     }
 
@@ -74,8 +60,8 @@ public final class FunctionId implements MetadataTypeId<FunctionId, Function> {
         if (this == obj) return true;
         if (!(obj instanceof FunctionId)) return false;
         final FunctionId that = (FunctionId) obj;
-        return schemaId.equals(that.schemaId)
-               && specificName.equals(that.specificName);
+        return schemaId.equals(that.schemaId) &&
+               specificName.equals(that.specificName);
     }
 
     @Override

@@ -69,7 +69,6 @@ public class ProcedureColumn extends AbstractMetadataType {
     public boolean equals(final Object obj) {
         if (this == obj) return true;
         if (!(obj instanceof ProcedureColumn)) return false;
-        if (!super.equals(obj)) return false;
         final ProcedureColumn that = (ProcedureColumn) obj;
         return Objects.equals(getProcedureColumnId(), that.getProcedureColumnId());
     }

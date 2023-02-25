@@ -85,10 +85,10 @@ abstract class TestContainers_$_IT {
             ContextTests.info(context);
             final var tables = context.getTables(null, null, "%", null);
             tables.stream().map(Table::getTableCat).distinct().forEach(
-                    tc -> log.debug("tableCat: {}", Optional.ofNullable(tc).map(v -> '\'' + v + '\'').orElse(null))
+                    tc -> log.debug("tableCat: {}", Optional.ofNullable(tc).map(v -> v + '\'').orElse(null))
             );
             tables.stream().map(Table::getTableSchem).distinct().forEach(
-                    ts -> log.debug("tableSchem: {}", Optional.ofNullable(ts).map(v -> '\'' + v + '\'').orElse(null))
+                    ts -> log.debug("tableSchem: {}", Optional.ofNullable(ts).map(v -> v + '\'').orElse(null))
             );
         }
     }

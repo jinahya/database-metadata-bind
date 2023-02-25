@@ -74,7 +74,7 @@ public final class SchemaId implements MetadataTypeId<SchemaId, Schema> {
     public String toString() {
         return super.toString() + +'{' +
                "catalogId=" + catalogId +
-               ",tableSchem='" + tableSchem + '\'' +
+               ",tableSchem=" + tableSchem +
                '}';
     }
 

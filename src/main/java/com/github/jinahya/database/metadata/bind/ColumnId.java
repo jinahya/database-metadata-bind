@@ -64,7 +64,7 @@ public final class ColumnId implements MetadataTypeId<ColumnId, Column> {
     public String toString() {
         return super.toString() + '{' +
                "tableId=" + tableId +
-               ",columnName='" + columnName + '\'' +
+               ",columnName=" + columnName +
                '}';
     }
 

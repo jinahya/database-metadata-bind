@@ -23,27 +23,18 @@ package com.github.jinahya.database.metadata.bind;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 
-class AttributeTest extends AbstractMetadataTypeTest<Attribute> {
+class VersionColumnTest extends AbstractMetadataTypeTest<VersionColumn> {
 
-    AttributeTest() {
-        super(Attribute.class);
+    VersionColumnTest() {
+        super(VersionColumn.class);
     }
 
-    @Override
-    Attribute typeInstance() {
-        final Attribute instance = super.typeInstance();
-        instance.setAttrName("");
-        instance.setTypeName("");
-        instance.setOrdinalPosition(1);
-        return instance;
-    }
-
-    @DisplayName("NullableEnum")
+    @DisplayName("PseudoColumnEnum")
     @Nested
-    class AttributeNullableTest extends _IntFieldEnumTest<Attribute.NullableEnum> {
+    class PseudoColumnTest extends _IntFieldEnumTest<VersionColumn.PseudoColumnEnum> {
 
-        AttributeNullableTest() {
-            super(Attribute.NullableEnum.class);
+        PseudoColumnTest() {
+            super(VersionColumn.PseudoColumnEnum.class);
         }
     }
 }

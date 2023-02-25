@@ -70,7 +70,6 @@ public class Procedure extends AbstractMetadataType {
     public boolean equals(final Object obj) {
         if (this == obj) return true;
         if (!(obj instanceof Procedure)) return false;
-        if (!super.equals(obj)) return false;
         final Procedure that = (Procedure) obj;
         return Objects.equals(getProcedureId(), that.getProcedureId());
     }

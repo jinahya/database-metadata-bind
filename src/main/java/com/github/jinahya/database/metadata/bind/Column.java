@@ -122,7 +122,6 @@ public class Column extends AbstractMetadataType {
     public boolean equals(final Object obj) {
         if (this == obj) return true;
         if (!(obj instanceof Column)) return false;
-        if (!super.equals(obj)) return false;
         final Column that = (Column) obj;
         return Objects.equals(getColumnId(), that.getColumnId());
     }

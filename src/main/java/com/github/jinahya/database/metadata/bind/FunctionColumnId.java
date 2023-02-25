@@ -25,7 +25,6 @@ import lombok.Data;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.SuperBuilder;
 
-import java.util.Comparator;
 import java.util.Objects;
 
 @Data
@@ -34,12 +33,6 @@ import java.util.Objects;
 final class FunctionColumnId implements MetadataTypeId<FunctionColumnId, FunctionColumn> {
 
     private static final long serialVersionUID = 7221973324274278465L;
-
-//    public static final Comparator<FunctionColumnId> CASE_INSENSITIVE_ORDER =
-//            Comparator.comparing(FunctionColumnId::getFunctionId, FunctionId.CASE_INSENSITIVE_ORDER);
-//
-//    public static final Comparator<FunctionColumnId> LEXICOGRAPHIC_ORDER =
-//            Comparator.comparing(FunctionColumnId::getFunctionId, FunctionId.LEXICOGRAPHIC_ORDER);
 
     public static FunctionColumnId of(final FunctionId functionId, final String columnName, final int columnType) {
         Objects.requireNonNull(functionId, "functionId is null");
@@ -58,7 +51,7 @@ final class FunctionColumnId implements MetadataTypeId<FunctionColumnId, Functio
     public String toString() {
         return super.toString() + '{' +
                "functionId=" + functionId +
-               ",columnName='" + columnName + '\'' +
+               ",columnName=" + columnName +
                ",columnType=" + columnType +
                '}';
     }
@@ -68,9 +61,9 @@ final class FunctionColumnId implements MetadataTypeId<FunctionColumnId, Functio
         if (this == obj) return true;
         if (!(obj instanceof FunctionColumnId)) return false;
         final FunctionColumnId that = (FunctionColumnId) obj;
-        return columnType == that.columnType
-               && functionId.equals(that.functionId)
-               && columnName.equals(that.columnName);
+        return columnType == that.columnType &&
+               functionId.equals(that.functionId) &&
+               columnName.equals(that.columnName);
     }
 
     @Override

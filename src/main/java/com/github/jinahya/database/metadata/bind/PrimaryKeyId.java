@@ -56,7 +56,7 @@ public final class PrimaryKeyId implements MetadataTypeId<PrimaryKeyId, PrimaryK
     public String toString() {
         return super.toString() + '{' +
                "tableId=" + tableId +
-               ",columnName='" + columnName + '\'' +
+               ",columnName=" + columnName +
                '}';
     }
 

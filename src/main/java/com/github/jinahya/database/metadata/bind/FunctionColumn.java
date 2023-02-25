@@ -141,7 +141,6 @@ public class FunctionColumn extends AbstractMetadataType {
     public boolean equals(final Object obj) {
         if (this == obj) return true;
         if (!(obj instanceof FunctionColumn)) return false;
-        if (!super.equals(obj)) return false;
         final FunctionColumn that = (FunctionColumn) obj;
         return Objects.equals(getFunctionColumnId(), that.getFunctionColumnId());
     }
@@ -228,10 +227,6 @@ public class FunctionColumn extends AbstractMetadataType {
         return getFunctionId().getSchemaId();
     }
 
-    private CatalogId getCatalogId() {
-        return getSchemaId().getCatalogId();
-    }
-
     // -----------------------------------------------------------------------------------------------------------------
     @NullableBySpecification
     @ColumnLabel(COLUMN_LABEL_FUNCTION_CAT)
@@ -263,7 +258,6 @@ public class FunctionColumn extends AbstractMetadataType {
     @ColumnLabel("LENGTH")
     private int length;
 
-    // https://issues.apache.org/jira/browse/DERBY-7102
     @NullableBySpecification
     @ColumnLabel("SCALE")
     private Integer scale;

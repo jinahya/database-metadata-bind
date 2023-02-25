@@ -27,7 +27,6 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
-import lombok.experimental.Accessors;
 import lombok.experimental.SuperBuilder;
 
 import java.sql.DatabaseMetaData;
@@ -109,22 +108,35 @@ public class Attribute extends AbstractMetadataType {
 
     public static final String VALUE_IS_NULLABLE_EMPTY = "";
 
+    // -----------------------------------------------------------------------------------------------------------------
+
+    @Override
+    public boolean equals(final Object obj) {
+        if (this == obj) return true;
+        if (!(obj instanceof Attribute)) return false;
+        final Attribute that = (Attribute) obj;
+        return Objects.equals(getAttributeId(), that.getAttributeId());
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(getAttributeId());
+    }
+
+    // -----------------------------------------------------------------------------------------------------------------
     public AttributeId getAttributeId() {
-        return AttributeId.of(
-                getTypeCatNonNull(),
-                getTypeSchemNonNull(),
-                getTypeName(),
-                getAttrName(),
-                getOrdinalPosition()
-        );
-    }
-
-    String getTypeCatNonNull() {
-        return Optional.ofNullable(getTypeCat()).orElse(Catalog.COLUMN_VALUE_TABLE_CAT_EMPTY);
-    }
-
-    String getTypeSchemNonNull() {
-        return Optional.ofNullable(getTypeSchem()).orElse(Schema.COLUMN_VALUE_TABLE_SCHEM_EMPTY);
+        if (attributeId == null) {
+            attributeId = AttributeId.of(
+                    UDTId.of(
+                            getTypeCatNonNull(),
+                            getTypeSchemNonNull(),
+                            getTypeName()
+                    ),
+                    getAttrName(),
+                    getOrdinalPosition()
+            );
+        }
+        return attributeId;
     }
 
     TableId getScopeTableId() {
@@ -138,6 +150,48 @@ public class Attribute extends AbstractMetadataType {
         );
     }
 
+    // -----------------------------------------------------------------------------------------------------------------
+    String getTypeCatNonNull() {
+        return Optional.ofNullable(getTypeCat()).orElse(Catalog.COLUMN_VALUE_TABLE_CAT_EMPTY);
+    }
+
+    public void setTypeCat(final String typeCat) {
+        this.typeCat = typeCat;
+        attributeId = null;
+    }
+
+    String getTypeSchemNonNull() {
+        return Optional.ofNullable(getTypeSchem()).orElse(Schema.COLUMN_VALUE_TABLE_SCHEM_EMPTY);
+    }
+
+    public void setTypeSchem(final String typeSchem) {
+        this.typeSchem = typeSchem;
+        attributeId = null;
+    }
+
+    public void setTypeName(final String typeName) {
+        this.typeName = typeName;
+        attributeId = null;
+    }
+
+    public void setAttrName(final String attrName) {
+        this.attrName = attrName;
+        attributeId = null;
+    }
+
+    public void setOrdinalPosition(final int ordinalPosition) {
+        this.ordinalPosition = ordinalPosition;
+        attributeId = null;
+    }
+
+    // -----------------------------------------------------------------------------------------------------------------
+    @Setter(AccessLevel.NONE)
+    @Getter(AccessLevel.NONE)
+    @EqualsAndHashCode.Exclude
+    @ToString.Exclude
+    private transient AttributeId attributeId;
+
+    // -----------------------------------------------------------------------------------------------------------------
     @NullableBySpecification
     @ColumnLabel("TYPE_CAT")
     private String typeCat;
@@ -211,11 +265,4 @@ public class Attribute extends AbstractMetadataType {
     @NullableBySpecification
     @ColumnLabel("SOURCE_DATA_TYPE")
     private Integer sourceDataType;
-
-    @Accessors(fluent = true)
-    @Setter(AccessLevel.PACKAGE)
-    @Getter(AccessLevel.PACKAGE)
-    @EqualsAndHashCode.Exclude
-    @ToString.Exclude
-    private transient UDT udt;
 }

@@ -23,10 +23,10 @@ package com.github.jinahya.database.metadata.bind;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 
-class AttributeTest extends AbstractMetadataTypeTest<Attribute> {
+class AttributeIdTest extends AbstractMetadataTypeIdTest<AttributeId, Attribute> {
 
-    AttributeTest() {
-        super(Attribute.class);
+    AttributeIdTest() {
+        super(AttributeId.class, Attribute.class);
     }
 
     @Override

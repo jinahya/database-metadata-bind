@@ -32,7 +32,7 @@ import java.util.Comparator;
 import java.util.Optional;
 
 /**
- * A class for binding the result of
+ * A class for binding the results of
  * {@link DatabaseMetaData#getCrossReference(String, String, String, String, String, String)} method.
  *
  * @author Jin Kwon &lt;jinahya_at_gmail.com&gt;

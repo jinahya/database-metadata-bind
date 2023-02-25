@@ -29,7 +29,8 @@ import java.sql.DatabaseMetaData;
 import java.util.Comparator;
 
 /**
- * An abstract class for binding the result of {@link DatabaseMetaData#getExportedKeys(String, String, String)} method.
+ * An abstract class for binding the results of {@link DatabaseMetaData#getExportedKeys(String, String, String)}
+ * method.
  *
  * @author Jin Kwon &lt;jinahya_at_gmail.com&gt;
  * @see Context#getExportedKeys(String, String, String)

@@ -83,7 +83,7 @@ public class Catalog extends AbstractMetadataType {
     @Override
     public String toString() {
         return super.toString() + '{' +
-               "tableCat='" + tableCat + '\'' +
+               "tableCat=" + tableCat +
                '}';
     }
 
@@ -91,7 +91,6 @@ public class Catalog extends AbstractMetadataType {
     public boolean equals(final Object obj) {
         if (this == obj) return true;
         if (!(obj instanceof Catalog)) return false;
-        if (!super.equals(obj)) return false;
         final Catalog that = (Catalog) obj;
         return Objects.equals(tableCat, that.tableCat);
     }

@@ -20,21 +20,24 @@ package com.github.jinahya.database.metadata.bind;
  * #L%
  */
 
-import org.junit.jupiter.api.DisplayName;
-import org.junit.jupiter.api.Nested;
+import lombok.AccessLevel;
+import lombok.NoArgsConstructor;
+import lombok.experimental.SuperBuilder;
 
-class VersionColumn_Test extends AbstractMetadataTypeTest<VersionColumn> {
+@NoArgsConstructor(access = AccessLevel.PACKAGE)
+@SuperBuilder(toBuilder = true)
+abstract class AbstractMetadataTypeId<T extends MetadataTypeId<T, U>, U extends MetadataType>
+        implements MetadataTypeId<T, U> {
 
-    VersionColumn_Test() {
-        super(VersionColumn.class);
+    private static final long serialVersionUID = 3395013574364815430L;
+
+    @Override
+    public int hashCode() {
+        return super.hashCode();
     }
 
-    @DisplayName("PseudoColumnEnum")
-    @Nested
-    class PseudoColumnTest extends _IntFieldEnumTest<VersionColumn.PseudoColumnEnum> {
-
-        PseudoColumnTest() {
-            super(VersionColumn.PseudoColumnEnum.class);
-        }
+    @Override
+    public boolean equals(final Object obj) {
+        return super.equals(obj);
     }
 }

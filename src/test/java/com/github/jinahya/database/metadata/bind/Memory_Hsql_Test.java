@@ -28,7 +28,10 @@ import java.sql.SQLException;
 import static java.sql.DriverManager.getConnection;
 
 /**
+ * Tests for HyperSQL.
+ *
  * @author Jin Kwon &lt;onacit_at_gmail.com&gt;
+ * @see <a href="hsqldb.org>HyperSQL</a>
  */
 @Slf4j
 class Memory_Hsql_Test extends Memory_$_Test {
@@ -52,11 +55,5 @@ class Memory_Hsql_Test extends Memory_$_Test {
     @Override
     protected Connection connect() throws SQLException {
         return getConnection(CONNECTION_URL);
-    }
-
-    @Override
-    Context context(Connection connection) throws SQLException {
-        return super.context(connection)
-                ;
     }
 }
