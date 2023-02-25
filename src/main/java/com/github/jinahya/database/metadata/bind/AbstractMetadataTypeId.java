@@ -30,14 +30,4 @@ abstract class AbstractMetadataTypeId<T extends MetadataTypeId<T, U>, U extends 
         implements MetadataTypeId<T, U> {
 
     private static final long serialVersionUID = 3395013574364815430L;
-
-    @Override
-    public int hashCode() {
-        return super.hashCode();
-    }
-
-    @Override
-    public boolean equals(final Object obj) {
-        return super.equals(obj);
-    }
 }

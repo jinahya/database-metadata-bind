@@ -21,13 +21,11 @@ package com.github.jinahya.database.metadata.bind;
  */
 
 import lombok.AccessLevel;
-import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
-import lombok.experimental.Accessors;
 import lombok.experimental.SuperBuilder;
 
 import java.sql.DatabaseMetaData;
@@ -40,9 +38,10 @@ import java.util.Objects;
  * @see Context#getVersionColumns(String, String, String)
  */
 @ChildOf(Table.class)
+@Setter
+@Getter
 @EqualsAndHashCode(callSuper = true)
 @ToString(callSuper = true)
-@Data
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @SuperBuilder(toBuilder = true)
 public class VersionColumn extends AbstractMetadataType {
@@ -98,19 +97,13 @@ public class VersionColumn extends AbstractMetadataType {
         private final int fieldValue;
     }
 
-    public ColumnId getColumnId(final TableId tableId) {
-        Objects.requireNonNull(tableId, "tableId is null");
-        return ColumnId.of(
-                tableId,
-                getColumnName()
-        );
+    // ------------------------------------------------------------------------------------------------------ columnName
+    public void setColumnName(final String columnName) {
+        this.columnName = columnName;
+        columnId = null;
     }
 
-    public ColumnId getColumnId(final Table table) {
-        Objects.requireNonNull(table, "table is null");
-        return getColumnId(table.getTableId());
-    }
-
+    // -----------------------------------------------------------------------------------------------------------------
     @NotUsedBySpecification
     @ColumnLabel("SCOPE")
     private Integer scope;
@@ -138,10 +131,26 @@ public class VersionColumn extends AbstractMetadataType {
     @ColumnLabel(COLUMN_LABEL_PSEUDO_COLUMN)
     private int pseudoColumn;
 
-    @Accessors(fluent = true)
-    @Setter(AccessLevel.PACKAGE)
-    @Getter(AccessLevel.PACKAGE)
+    // -----------------------------------------------------------------------------------------------------------------
+    ColumnId getColumnId(final TableId tableId) {
+        Objects.requireNonNull(tableId, "tableId is null");
+        if (columnId == null) {
+            columnId = ColumnId.of(
+                    tableId,
+                    columnName
+            );
+        }
+        return columnId;
+    }
+
+    ColumnId getColumnId(final Table table) {
+        Objects.requireNonNull(table, "table is null");
+        return getColumnId(table.getTableId());
+    }
+
+    @Setter(AccessLevel.NONE)
+    @Getter(AccessLevel.NONE)
     @EqualsAndHashCode.Exclude
     @ToString.Exclude
-    private transient Table table;
+    private transient ColumnId columnId;
 }

@@ -31,7 +31,7 @@ import java.util.Objects;
 @Getter
 @RequiredArgsConstructor(access = AccessLevel.PRIVATE)
 @SuperBuilder(toBuilder = true)
-public final class ColumnPrivilegeId implements MetadataTypeId<ColumnPrivilegeId, Column> {
+final class ColumnPrivilegeId implements MetadataTypeId<ColumnPrivilegeId, Column> {
 
     private static final long serialVersionUID = 7221973324274278465L;
 
@@ -43,18 +43,13 @@ public final class ColumnPrivilegeId implements MetadataTypeId<ColumnPrivilegeId
             Comparator.comparing(ColumnPrivilegeId::getColumnId, ColumnId.LEXICOGRAPHIC_ORDER)
                     .thenComparing(ColumnPrivilegeId::getPrivilege);
 
-    public static ColumnPrivilegeId of(final ColumnId columnId, final String privilege) {
+    static ColumnPrivilegeId of(final ColumnId columnId, final String privilege) {
         Objects.requireNonNull(columnId, "columnId is null");
         Objects.requireNonNull(privilege, "privilege is null");
         return builder()
                 .columnId(columnId)
                 .privilege(privilege)
                 .build();
-    }
-
-    static ColumnPrivilegeId of(final String tableCat, final String tableSchem, final String tableName,
-                                final String columnName, final String privilege) {
-        return of(ColumnId.of(tableCat, tableSchem, tableName, columnName), privilege);
     }
 
     @Override
@@ -70,8 +65,8 @@ public final class ColumnPrivilegeId implements MetadataTypeId<ColumnPrivilegeId
         if (this == obj) return true;
         if (!(obj instanceof ColumnPrivilegeId)) return false;
         final ColumnPrivilegeId that = (ColumnPrivilegeId) obj;
-        return columnId.equals(that.columnId)
-               && privilege.equals(that.privilege);
+        return columnId.equals(that.columnId) &&
+               privilege.equals(that.privilege);
     }
 
     @Override

@@ -21,7 +21,6 @@ package com.github.jinahya.database.metadata.bind;
  */
 
 import lombok.AccessLevel;
-import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -43,9 +42,9 @@ import java.util.Optional;
  * @see NullableEnum
  */
 @ChildOf(UDT.class)
-@EqualsAndHashCode(callSuper = true)
+@Setter
+@Getter
 @ToString(callSuper = true)
-@Data
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @SuperBuilder(toBuilder = true)
 public class Attribute extends AbstractMetadataType {
@@ -53,10 +52,12 @@ public class Attribute extends AbstractMetadataType {
     private static final long serialVersionUID = 1913681105410440186L;
 
     public static final Comparator<Attribute> CASE_INSENSITIVE_ORDER =
-            Comparator.comparing(Attribute::getAttributeId, AttributeId.CASE_INSENSITIVE_ORDER);
+            Comparator.comparing(Attribute::getUDTId, UDTId.CASE_INSENSITIVE_ORDER)
+                    .thenComparingInt(Attribute::getOrdinalPosition);
 
     public static final Comparator<Attribute> LEXICOGRAPHIC_ORDER =
-            Comparator.comparing(Attribute::getAttributeId, AttributeId.LEXICOGRAPHIC_ORDER);
+            Comparator.comparing(Attribute::getUDTId, UDTId.LEXICOGRAPHIC_ORDER)
+                    .thenComparingInt(Attribute::getOrdinalPosition);
 
     public static final String COLUMN_LABEL_NULLABLE = "NULLABLE";
 
@@ -108,35 +109,48 @@ public class Attribute extends AbstractMetadataType {
 
     public static final String VALUE_IS_NULLABLE_EMPTY = "";
 
-    // -----------------------------------------------------------------------------------------------------------------
+    // ------------------------------------------------------------------------------------------------- equals/hashCode
 
     @Override
     public boolean equals(final Object obj) {
         if (this == obj) return true;
         if (!(obj instanceof Attribute)) return false;
+//        if (!super.equals(obj)) return false;
         final Attribute that = (Attribute) obj;
-        return Objects.equals(getAttributeId(), that.getAttributeId());
+        return Objects.equals(typeCat, that.typeCat) &&
+               Objects.equals(typeSchem, that.typeSchem) &&
+               Objects.equals(typeName, that.typeName) &&
+               Objects.equals(attrName, that.attrName);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(getAttributeId());
+        return Objects.hash(
+//                super.hashCode(),
+                typeCat,
+                typeSchem,
+                typeName,
+                attrName
+        );
     }
 
     // -----------------------------------------------------------------------------------------------------------------
-    public AttributeId getAttributeId() {
+    AttributeId getAttributeId() {
         if (attributeId == null) {
             attributeId = AttributeId.of(
                     UDTId.of(
                             getTypeCatNonNull(),
                             getTypeSchemNonNull(),
-                            getTypeName()
+                            typeName
                     ),
-                    getAttrName(),
-                    getOrdinalPosition()
+                    attrName
             );
         }
         return attributeId;
+    }
+
+    private UDTId getUDTId() {
+        return getAttributeId().getUdtId();
     }
 
     TableId getScopeTableId() {
@@ -150,7 +164,7 @@ public class Attribute extends AbstractMetadataType {
         );
     }
 
-    // -----------------------------------------------------------------------------------------------------------------
+    // --------------------------------------------------------------------------------------------------------- typeCat
     String getTypeCatNonNull() {
         return Optional.ofNullable(getTypeCat()).orElse(Catalog.COLUMN_VALUE_TABLE_CAT_EMPTY);
     }
@@ -160,6 +174,7 @@ public class Attribute extends AbstractMetadataType {
         attributeId = null;
     }
 
+    // ------------------------------------------------------------------------------------------------------- typeSchem
     String getTypeSchemNonNull() {
         return Optional.ofNullable(getTypeSchem()).orElse(Schema.COLUMN_VALUE_TABLE_SCHEM_EMPTY);
     }
@@ -169,18 +184,15 @@ public class Attribute extends AbstractMetadataType {
         attributeId = null;
     }
 
+    // -------------------------------------------------------------------------------------------------------- typeName
     public void setTypeName(final String typeName) {
         this.typeName = typeName;
         attributeId = null;
     }
 
+    // -------------------------------------------------------------------------------------------------------- attrName
     public void setAttrName(final String attrName) {
         this.attrName = attrName;
-        attributeId = null;
-    }
-
-    public void setOrdinalPosition(final int ordinalPosition) {
-        this.ordinalPosition = ordinalPosition;
         attributeId = null;
     }
 

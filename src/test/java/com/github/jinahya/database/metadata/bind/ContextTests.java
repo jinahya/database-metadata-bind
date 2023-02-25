@@ -917,9 +917,13 @@ final class ContextTests {
         }
         final var tableId = common(common(table).getTableId());
         try {
-            for (final var scope : BestRowIdentifier.scopes()) {
+            for (final var scope : BestRowIdentifier.ScopeEnum.values()) {
                 for (final boolean nullable : new boolean[] {true, false}) {
-                    final var bestRowIdentifier = context.getBestRowIdentifier(table, scope, nullable);
+                    final var bestRowIdentifier =
+                            context.getBestRowIdentifier(table, scope.fieldValueAsInt(), nullable);
+                    assertThat(bestRowIdentifier)
+                            .extracting(bri -> bri.getColumnId(tableId))
+                            .doesNotHaveDuplicates();
                     bestRowIdentifier(context, bestRowIdentifier);
                 }
             }
@@ -930,7 +934,6 @@ final class ContextTests {
             final var columns = context.getColumns(table, "%");
             assertThat(columns)
                     .extracting(Column::getColumnId)
-                    .doesNotContainNull()
                     .doesNotHaveDuplicates()
                     .extracting(ColumnId::getTableId)
                     .allMatch(tableId::equals);
@@ -942,12 +945,9 @@ final class ContextTests {
             final var columnPrivileges = context.getColumnPrivileges(table, "%");
             assertThat(columnPrivileges)
                     .extracting(ColumnPrivilege::getColumnPrivilegeId)
-                    .doesNotContainNull()
                     .doesNotHaveDuplicates()
                     .extracting(ColumnPrivilegeId::getColumnId)
-                    .doesNotContainNull()
                     .extracting(ColumnId::getTableId)
-                    .doesNotContainNull()
                     .allMatch(tableId::equals);
             columnPrivileges(context, columnPrivileges);
         } catch (final SQLException sqle) {
@@ -957,6 +957,7 @@ final class ContextTests {
             final var exportedKeys = context.getExportedKeys(table);
             assertThat(exportedKeys)
                     .extracting(TableKey::getPkcolumnId)
+                    .doesNotHaveDuplicates()
                     .extracting(ColumnId::getTableId)
                     .allMatch(tableId::equals);
             exportedKeys(context, exportedKeys);
@@ -967,6 +968,7 @@ final class ContextTests {
             final var importedKeys = context.getImportedKeys(table);
             assertThat(importedKeys)
                     .extracting(TableKey::getFkcolumnId)
+                    .doesNotHaveDuplicates()
                     .extracting(ColumnId::getTableId)
                     .allMatch(tableId::equals);
             importedKeys(context, importedKeys);

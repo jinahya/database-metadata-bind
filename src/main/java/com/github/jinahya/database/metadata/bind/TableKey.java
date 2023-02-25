@@ -74,10 +74,10 @@ public abstract class TableKey<T extends TableKey<T>> extends AbstractMetadataTy
     public boolean equals(final Object obj) {
         if (this == obj) return true;
         if (!(obj instanceof TableKey)) return false;
-        return equals((TableKey<?>) obj);
+        return equals_((TableKey<?>) obj);
     }
 
-    boolean equals(final TableKey<?> that) {
+    boolean equals_(final TableKey<?> that) {
         return Objects.equals(getPkcolumnId(), that.getPkcolumnId()) &&
                Objects.equals(getFkcolumnId(), that.getFkcolumnId());
     }
@@ -155,9 +155,11 @@ public abstract class TableKey<T extends TableKey<T>> extends AbstractMetadataTy
     public ColumnId getPkcolumnId() {
         if (pkcolumnid == null) {
             pkcolumnid = ColumnId.of(
-                    getPktableCatNonNull(),
-                    getPktableSchemNonNull(),
-                    getPktableName(),
+                    TableId.of(
+                            getPktableCatNonNull(),
+                            getPktableSchemNonNull(),
+                            getPktableName()
+                    ),
                     getPkcolumnName()
             );
         }
@@ -172,9 +174,11 @@ public abstract class TableKey<T extends TableKey<T>> extends AbstractMetadataTy
     public ColumnId getFkcolumnId() {
         if (fkcolumnId == null) {
             fkcolumnId = ColumnId.of(
-                    getFktableCatNonNull(),
-                    getFktableSchemNonNull(),
-                    getFktableName(),
+                    TableId.of(
+                            getFktableCatNonNull(),
+                            getFktableSchemNonNull(),
+                            getFktableName()
+                    ),
                     getFkcolumnName()
             );
         }

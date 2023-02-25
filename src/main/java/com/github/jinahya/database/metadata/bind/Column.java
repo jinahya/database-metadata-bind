@@ -141,9 +141,11 @@ public class Column extends AbstractMetadataType {
     public ColumnId getColumnId() {
         if (columnId == null) {
             columnId = ColumnId.of(
-                    getTableCatNonNull(),
-                    getTableSchemNonNull(),
-                    getTableName(),
+                    TableId.of(
+                            getTableCatNonNull(),
+                            getTableSchemNonNull(),
+                            getTableName()
+                    ),
                     getColumnName()
             );
         }

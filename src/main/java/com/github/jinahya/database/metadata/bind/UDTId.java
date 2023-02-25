@@ -31,7 +31,7 @@ import java.util.Objects;
 @Data
 @RequiredArgsConstructor(access = AccessLevel.PRIVATE)
 @SuperBuilder(toBuilder = true)
-public final class UDTId implements MetadataTypeId<UDTId, UDT> {
+final class UDTId implements MetadataTypeId<UDTId, UDT> {
 
     private static final long serialVersionUID = 5548844214174261338L;
 

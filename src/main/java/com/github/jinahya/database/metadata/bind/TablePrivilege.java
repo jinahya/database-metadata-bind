@@ -51,12 +51,6 @@ public class TablePrivilege extends AbstractMetadataType {
 
     private static final long serialVersionUID = -2142097373603478881L;
 
-    public static final String COLUMN_LABEL_TABLE_CAT = "TABLE_CAT";
-
-    public static final String COLUMN_LABEL_TABLE_SCHEM = "TABLE_SCHEM";
-
-    public static final String COLUMN_LABEL_TABLE_NAME = "TABLE_NAME";
-
     public static final Comparator<TablePrivilege> CASE_INSENSITIVE_ORDER =
             Comparator.comparing(TablePrivilege::getTableCatNonNull, String.CASE_INSENSITIVE_ORDER)
                     .thenComparing(TablePrivilege::getTableSchemNonNull, String.CASE_INSENSITIVE_ORDER)
@@ -68,6 +62,12 @@ public class TablePrivilege extends AbstractMetadataType {
                     .thenComparing(TablePrivilege::getTableSchemNonNull)
                     .thenComparing(TablePrivilege::getTableName, nullsFirst(naturalOrder()))
                     .thenComparing(TablePrivilege::getPrivilege, nullsFirst(naturalOrder()));
+
+    public static final String COLUMN_LABEL_TABLE_CAT = "TABLE_CAT";
+
+    public static final String COLUMN_LABEL_TABLE_SCHEM = "TABLE_SCHEM";
+
+    public static final String COLUMN_LABEL_TABLE_NAME = "TABLE_NAME";
 
     // -------------------------------------------------------------------------------------------------------- tableCat
     String getTableCatNonNull() {

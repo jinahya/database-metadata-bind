@@ -51,7 +51,7 @@ abstract class AbstractMetadataType implements MetadataType {
 
     @Override
     public int hashCode() {
-        return getClass().hashCode();
+        return super.hashCode();
     }
 
     @Override
@@ -62,8 +62,8 @@ abstract class AbstractMetadataType implements MetadataType {
         return unmappedValues;
     }
 
-    @EqualsAndHashCode.Exclude
     @Setter(AccessLevel.NONE)
     @Getter(AccessLevel.NONE)
+    @EqualsAndHashCode.Exclude
     private transient Map<String, Object> unmappedValues;
 }

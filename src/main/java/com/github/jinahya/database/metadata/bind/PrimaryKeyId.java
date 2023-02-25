@@ -31,7 +31,7 @@ import java.util.Objects;
 @Getter
 @RequiredArgsConstructor(access = AccessLevel.PRIVATE)
 @SuperBuilder(toBuilder = true)
-public final class PrimaryKeyId implements MetadataTypeId<PrimaryKeyId, PrimaryKey> {
+final class PrimaryKeyId implements MetadataTypeId<PrimaryKeyId, PrimaryKey> {
 
     private static final long serialVersionUID = -111977405695306679L;
 
@@ -65,12 +65,16 @@ public final class PrimaryKeyId implements MetadataTypeId<PrimaryKeyId, PrimaryK
         if (this == obj) return true;
         if (!(obj instanceof PrimaryKeyId)) return false;
         final PrimaryKeyId that = (PrimaryKeyId) obj;
-        return tableId.equals(that.tableId) && columnName.equals(that.columnName);
+        return tableId.equals(that.tableId) &&
+               columnName.equals(that.columnName);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(tableId, columnName);
+        return Objects.hash(
+                tableId,
+                columnName
+        );
     }
 
     private final TableId tableId;

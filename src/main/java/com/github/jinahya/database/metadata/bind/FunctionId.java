@@ -30,7 +30,7 @@ import java.util.Objects;
 @Getter
 @RequiredArgsConstructor(access = AccessLevel.PRIVATE)
 @SuperBuilder(toBuilder = true)
-public final class FunctionId implements MetadataTypeId<FunctionId, Function> {
+final class FunctionId implements MetadataTypeId<FunctionId, Function> {
 
     private static final long serialVersionUID = 8614281252146063072L;
 

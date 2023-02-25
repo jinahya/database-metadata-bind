@@ -30,7 +30,7 @@ import java.util.Objects;
 @Getter
 @RequiredArgsConstructor(access = AccessLevel.PRIVATE)
 @SuperBuilder(toBuilder = true)
-public final class ProcedureId implements MetadataTypeId<ProcedureId, Procedure> {
+final class ProcedureId implements MetadataTypeId<ProcedureId, Procedure> {
 
     private static final long serialVersionUID = 227742014479297143L;
 

@@ -21,14 +21,16 @@ package com.github.jinahya.database.metadata.bind;
  */
 
 import lombok.AccessLevel;
-import lombok.Data;
 import lombok.EqualsAndHashCode;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 import lombok.ToString;
 import lombok.experimental.SuperBuilder;
 
 import java.sql.DatabaseMetaData;
 import java.util.Comparator;
+import java.util.Objects;
 import java.util.Optional;
 
 /**
@@ -39,9 +41,9 @@ import java.util.Optional;
  */
 @ParentOf(Attribute.class)
 @ChildOf(Schema.class)
-@EqualsAndHashCode(callSuper = true)
+@Setter
+@Getter
 @ToString(callSuper = true)
-@Data
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @SuperBuilder(toBuilder = true)
 public class UDT extends AbstractMetadataType {
@@ -66,22 +68,48 @@ public class UDT extends AbstractMetadataType {
 
     public static final String COLUMN_LABEL_DATA_TYPE = "DATA_TYPE";
 
-    public UDTId getUDTId() {
-        return UDTId.of(
-                getTypeCatNonNull(),
-                getTypeSchemNonNull(),
-                getTypeName()
+    // -----------------------------------------------------------------------------------------------------------------
+
+    @Override
+    public boolean equals(final Object obj) {
+        if (this == obj) return true;
+        if (!(obj instanceof UDT)) return false;
+        final UDT that = (UDT) obj;
+        return dataType == that.dataType &&
+               Objects.equals(typeCat, that.typeCat) &&
+               Objects.equals(typeSchem, that.typeSchem) &&
+               Objects.equals(typeName, that.typeName);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(
+                typeCat,
+                typeSchem,
+                typeName, dataType
         );
     }
 
+    // --------------------------------------------------------------------------------------------------------- typeCat
     String getTypeCatNonNull() {
         return Optional.ofNullable(getTypeCat()).orElse(Catalog.COLUMN_VALUE_TABLE_CAT_EMPTY);
     }
 
+    public void setTypeCat(final String typeCat) {
+        this.typeCat = typeCat;
+        udtId = null;
+    }
+
+    // ------------------------------------------------------------------------------------------------------- typeSchem
     String getTypeSchemNonNull() {
         return Optional.ofNullable(getTypeSchem()).orElse(Schema.COLUMN_VALUE_TABLE_SCHEM_EMPTY);
     }
 
+    public void setTypeSchem(final String typeSchem) {
+        this.typeSchem = typeSchem;
+    }
+
+    // -----------------------------------------------------------------------------------------------------------------
     @NullableBySpecification
     @ColumnLabel(COLUMN_LABEL_TYPE_CAT)
     private String typeCat;
@@ -107,4 +135,22 @@ public class UDT extends AbstractMetadataType {
     @NullableBySpecification
     @ColumnLabel("BASE_TYPE")
     private Integer baseType;
+
+    // -----------------------------------------------------------------------------------------------------------------
+    UDTId getUDTId() {
+        if (udtId == null) {
+            udtId = UDTId.of(
+                    getTypeCatNonNull(),
+                    getTypeSchemNonNull(),
+                    getTypeName()
+            );
+        }
+        return udtId;
+    }
+
+    @Setter(AccessLevel.NONE)
+    @Getter(AccessLevel.NONE)
+    @EqualsAndHashCode.Exclude
+    @ToString.Exclude
+    private transient UDTId udtId;
 }

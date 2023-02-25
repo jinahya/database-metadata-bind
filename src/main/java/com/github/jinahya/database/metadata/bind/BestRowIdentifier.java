@@ -21,16 +21,16 @@ package com.github.jinahya.database.metadata.bind;
  */
 
 import lombok.AccessLevel;
-import lombok.Data;
 import lombok.EqualsAndHashCode;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 import lombok.ToString;
 import lombok.experimental.SuperBuilder;
 
 import java.sql.DatabaseMetaData;
-import java.util.Arrays;
 import java.util.Comparator;
-import java.util.List;
+import java.util.Objects;
 
 /**
  * A class for binding results of {@link DatabaseMetaData#getBestRowIdentifier(String, String, String, int, boolean)}
@@ -42,9 +42,10 @@ import java.util.List;
  * @see ScopeEnum
  */
 @ChildOf(Table.class)
+@Setter
+@Getter
 @EqualsAndHashCode(callSuper = true)
 @ToString(callSuper = true)
-@Data
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @SuperBuilder(toBuilder = true)
 public class BestRowIdentifier extends AbstractMetadataType {
@@ -153,14 +154,7 @@ public class BestRowIdentifier extends AbstractMetadataType {
         private final int fieldValue;
     }
 
-    public static List<Integer> scopes() {
-        return Arrays.asList(
-                DatabaseMetaData.bestRowTemporary,
-                DatabaseMetaData.bestRowTransaction,
-                DatabaseMetaData.bestRowSession
-        );
-    }
-
+    // -----------------------------------------------------------------------------------------------------------------
     @ColumnLabel(COLUMN_LABEL_SCOPE)
     private int scope;
 
@@ -187,4 +181,13 @@ public class BestRowIdentifier extends AbstractMetadataType {
 
     @ColumnLabel(COLUMN_LABEL_PSEUDO_COLUMN)
     private int pseudoColumn;
+
+    // -----------------------------------------------------------------------------------------------------------------
+    ColumnId getColumnId(final TableId tableId) {
+        Objects.requireNonNull(tableId, "tableId is null");
+        return ColumnId.of(
+                tableId,
+                columnName
+        );
+    }
 }

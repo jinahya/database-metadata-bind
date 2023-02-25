@@ -108,19 +108,29 @@ public class Table extends AbstractMetadataType {
      */
     public static final String PROPERTY_NAME_TABLE_TYPE = "tableName";
 
+    // -----------------------------------------------------------------------------------------------------------------
+
     @Override
     public boolean equals(final Object obj) {
         if (this == obj) return true;
         if (!(obj instanceof Table)) return false;
-        final Table that = (Table) obj;
-        return Objects.equals(getTableId(), that.getTableId());
+        final Table table = (Table) obj;
+        return Objects.equals(tableCat, table.tableCat) &&
+               Objects.equals(tableSchem, table.tableSchem) &&
+               Objects.equals(tableName, table.tableName);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(getTableId());
+        return Objects.hash(
+                super.hashCode(),
+                tableCat,
+                tableSchem,
+                tableName
+        );
     }
 
+    // -------------------------------------------------------------------------------------------------------- tableCat
     String getTableCatNonNull() {
         return Optional.ofNullable(getTableCat()).orElse(Catalog.COLUMN_VALUE_TABLE_CAT_EMPTY);
     }
@@ -130,6 +140,7 @@ public class Table extends AbstractMetadataType {
         tableId = null;
     }
 
+    // ------------------------------------------------------------------------------------------------------ tableSchem
     String getTableSchemNonNull() {
         return Optional.ofNullable(getTableSchem()).orElse(Schema.COLUMN_VALUE_TABLE_SCHEM_EMPTY);
     }
@@ -139,22 +150,13 @@ public class Table extends AbstractMetadataType {
         tableId = null;
     }
 
+    // ------------------------------------------------------------------------------------------------------- tableName
     public void setTableName(final String tableName) {
         this.tableName = tableName;
         tableId = null;
     }
 
-    public TableId getTableId() {
-        if (tableId == null) {
-            tableId = TableId.of(
-                    getTableCatNonNull(),
-                    getTableSchemNonNull(),
-                    getTableName()
-            );
-        }
-        return tableId;
-    }
-
+    // -----------------------------------------------------------------------------------------------------------------
     @NullableBySpecification
     @ColumnLabel(COLUMN_LABEL_TABLE_CAT)
     private String tableCat;
@@ -165,10 +167,6 @@ public class Table extends AbstractMetadataType {
 
     @ColumnLabel(COLUMN_LABEL_TABLE_NAME)
     private String tableName;
-
-    @EqualsAndHashCode.Exclude
-    @ToString.Exclude
-    private transient TableId tableId;
 
     @NullableByVendor("MariaDB")
     @ColumnLabel(COLUMN_LABEL_TABLE_TYPE)
@@ -197,4 +195,20 @@ public class Table extends AbstractMetadataType {
     @NullableBySpecification
     @ColumnLabel("REF_GENERATION")
     private String refGeneration;
+
+    // -----------------------------------------------------------------------------------------------------------------
+    public TableId getTableId() {
+        if (tableId == null) {
+            tableId = TableId.of(
+                    getTableCatNonNull(),
+                    getTableSchemNonNull(),
+                    getTableName()
+            );
+        }
+        return tableId;
+    }
+
+    @EqualsAndHashCode.Exclude
+    @ToString.Exclude
+    private transient TableId tableId;
 }

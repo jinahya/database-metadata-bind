@@ -31,7 +31,7 @@ import java.util.Objects;
 @Getter
 @RequiredArgsConstructor(access = AccessLevel.PRIVATE)
 @SuperBuilder(toBuilder = true)
-public final class PseudoColumnId implements MetadataTypeId<PseudoColumnId, PseudoColumn> {
+final class PseudoColumnId implements MetadataTypeId<PseudoColumnId, PseudoColumn> {
 
     private static final long serialVersionUID = 7459854669925402253L;
 
@@ -65,7 +65,8 @@ public final class PseudoColumnId implements MetadataTypeId<PseudoColumnId, Pseu
         if (this == obj) return true;
         if (!(obj instanceof PseudoColumnId)) return false;
         final PseudoColumnId that = (PseudoColumnId) obj;
-        return tableId.equals(that.tableId) && columnName.equals(that.columnName);
+        return tableId.equals(that.tableId) &&
+               columnName.equals(that.columnName);
     }
 
     @Override

@@ -22,7 +22,11 @@ package com.github.jinahya.database.metadata.bind;
 
 import lombok.AccessLevel;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
+import lombok.ToString;
 import lombok.experimental.SuperBuilder;
 
 import java.util.Comparator;
@@ -80,6 +84,7 @@ public class Catalog extends AbstractMetadataType {
      */
     public static final String COLUMN_VALUE_TABLE_CAT_EMPTY = "";
 
+    // -----------------------------------------------------------------------------------------------------------------
     @Override
     public String toString() {
         return super.toString() + '{' +
@@ -100,15 +105,34 @@ public class Catalog extends AbstractMetadataType {
         return Objects.hash(tableCat);
     }
 
+    // -----------------------------------------------------------------------------------------------------------------
+
     /**
      * Returns a value for identifying this catalog.
      *
      * @return an id of this catalog.
      */
-    public CatalogId getCatalogId() {
-        return CatalogId.of(getTableCat());
+    CatalogId getCatalogId() {
+        if (catalogId == null) {
+            catalogId = CatalogId.of(tableCat);
+        }
+        return catalogId;
     }
 
+    // ------------------------------------------------------------------------------------------------------- catalogId
+    public void setTableCat(final String tableCat) {
+        this.tableCat = tableCat;
+        catalogId = null;
+    }
+
+    // -----------------------------------------------------------------------------------------------------------------
+    @Setter(AccessLevel.NONE)
+    @Getter(AccessLevel.NONE)
+    @EqualsAndHashCode.Exclude
+    @ToString.Exclude
+    private transient CatalogId catalogId;
+
+    // -----------------------------------------------------------------------------------------------------------------
     @ColumnLabel(COLUMN_LABEL_TABLE_CAT)
     private String tableCat;
 }

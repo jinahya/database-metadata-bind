@@ -46,7 +46,6 @@ import static java.util.Comparator.nullsFirst;
 @ChildOf(Schema.class)
 @Setter
 @Getter
-//@EqualsAndHashCode(callSuper = true)
 @ToString(callSuper = true)
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @SuperBuilder(toBuilder = true)
@@ -71,12 +70,20 @@ public class Procedure extends AbstractMetadataType {
         if (this == obj) return true;
         if (!(obj instanceof Procedure)) return false;
         final Procedure that = (Procedure) obj;
-        return Objects.equals(getProcedureId(), that.getProcedureId());
+        return Objects.equals(procedureCat, that.procedureCat) &&
+               Objects.equals(procedureSchem, that.procedureSchem) &&
+               Objects.equals(procedureName, that.procedureName) &&
+               Objects.equals(specificName, that.specificName);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(getProcedureId());
+        return Objects.hash(
+                procedureCat,
+                procedureSchem,
+                procedureName,
+                specificName
+        );
     }
 
     // ---------------------------------------------------------------------------------------------------- procedureCat
@@ -105,22 +112,6 @@ public class Procedure extends AbstractMetadataType {
         procedureId = null;
     }
 
-    // ----------------------------------------------------------------------------------------------------- procedureId
-    public ProcedureId getProcedureId() {
-        if (procedureId == null) {
-            procedureId = ProcedureId.of(
-                    getProcedureCatNonNull(),
-                    getProcedureSchemNonNull(),
-                    getSpecificName()
-            );
-        }
-        return procedureId;
-    }
-
-    private SchemaId getSchemaId() {
-        return getProcedureId().getSchemaId();
-    }
-
     // -----------------------------------------------------------------------------------------------------------------
     @NullableBySpecification
     @ColumnLabel("PROCEDURE_CAT")
@@ -144,6 +135,21 @@ public class Procedure extends AbstractMetadataType {
     private String specificName;
 
     // -----------------------------------------------------------------------------------------------------------------
+    public ProcedureId getProcedureId() {
+        if (procedureId == null) {
+            procedureId = ProcedureId.of(
+                    getProcedureCatNonNull(),
+                    getProcedureSchemNonNull(),
+                    getSpecificName()
+            );
+        }
+        return procedureId;
+    }
+
+    private SchemaId getSchemaId() {
+        return getProcedureId().getSchemaId();
+    }
+
     @EqualsAndHashCode.Exclude
     @ToString.Exclude
     private transient ProcedureId procedureId;

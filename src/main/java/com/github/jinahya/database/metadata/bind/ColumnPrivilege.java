@@ -68,10 +68,14 @@ public class ColumnPrivilege extends AbstractMetadataType {
 
     ColumnPrivilegeId getColumnPrivilegeId() {
         return ColumnPrivilegeId.of(
-                getTableCatNonNull(),
-                getTableSchemNonNull(),
-                getTableName(),
-                getColumnName(),
+                ColumnId.of(
+                        TableId.of(
+                                getTableCatNonNull(),
+                                getTableSchemNonNull(),
+                                getTableName()
+                        ),
+                        getColumnName()
+                ),
                 getPrivilege()
         );
     }

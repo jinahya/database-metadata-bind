@@ -21,14 +21,16 @@ package com.github.jinahya.database.metadata.bind;
  */
 
 import lombok.AccessLevel;
-import lombok.Data;
 import lombok.EqualsAndHashCode;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 import lombok.ToString;
 import lombok.experimental.SuperBuilder;
 
 import java.sql.DatabaseMetaData;
 import java.util.Comparator;
+import java.util.Objects;
 import java.util.Optional;
 
 /**
@@ -37,9 +39,9 @@ import java.util.Optional;
  * @author Jin Kwon &lt;jinahya_at_gmail.com&gt;
  */
 @ChildOf(Table.class)
-@EqualsAndHashCode(callSuper = true)
+@Setter
+@Getter
 @ToString(callSuper = true)
-@Data
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @SuperBuilder(toBuilder = true)
 public class PseudoColumn extends AbstractMetadataType {
@@ -51,6 +53,29 @@ public class PseudoColumn extends AbstractMetadataType {
 
     public static final Comparator<PseudoColumn> LEXICOGRAPHIC_ORDER =
             Comparator.comparing(PseudoColumn::getPseudoColumnId, PseudoColumnId.LEXICOGRAPHIC_ORDER);
+
+    // -----------------------------------------------------------------------------------------------------------------
+
+    @Override
+    public boolean equals(final Object obj) {
+        if (this == obj) return true;
+        if (!(obj instanceof PseudoColumn)) return false;
+        final PseudoColumn that = (PseudoColumn) obj;
+        return Objects.equals(tableCat, that.tableCat) &&
+               Objects.equals(tableSchem, that.tableSchem) &&
+               Objects.equals(tableName, that.tableName) &&
+               Objects.equals(columnName, that.columnName);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(
+                tableCat,
+                tableSchem,
+                tableName,
+                columnName
+        );
+    }
 
     // -------------------------------------------------------------------------------------------------------- tableCat
     String getTableCatNonNull() {
@@ -82,21 +107,6 @@ public class PseudoColumn extends AbstractMetadataType {
     public void setColumnName(final String columnName) {
         this.columnName = columnName;
         pseudoColumnId = null;
-    }
-
-    // -------------------------------------------------------------------------------------------------------- columnId
-    public PseudoColumnId getPseudoColumnId() {
-        if (pseudoColumnId == null) {
-            pseudoColumnId = PseudoColumnId.of(
-                    TableId.of(
-                            getTableCatNonNull(),
-                            getTableSchemNonNull(),
-                            getTableName()
-                    ),
-                    getColumnName()
-            );
-        }
-        return pseudoColumnId;
     }
 
     // -----------------------------------------------------------------------------------------------------------------
@@ -141,6 +151,20 @@ public class PseudoColumn extends AbstractMetadataType {
     private String isNullable;
 
     // -----------------------------------------------------------------------------------------------------------------
+    public PseudoColumnId getPseudoColumnId() {
+        if (pseudoColumnId == null) {
+            pseudoColumnId = PseudoColumnId.of(
+                    TableId.of(
+                            getTableCatNonNull(),
+                            getTableSchemNonNull(),
+                            getTableName()
+                    ),
+                    getColumnName()
+            );
+        }
+        return pseudoColumnId;
+    }
+
     @EqualsAndHashCode.Exclude
     @ToString.Exclude
     private transient PseudoColumnId pseudoColumnId;

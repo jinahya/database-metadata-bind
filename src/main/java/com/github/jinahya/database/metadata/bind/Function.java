@@ -21,9 +21,10 @@ package com.github.jinahya.database.metadata.bind;
  */
 
 import lombok.AccessLevel;
-import lombok.Data;
 import lombok.EqualsAndHashCode;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 import lombok.ToString;
 import lombok.experimental.SuperBuilder;
 
@@ -41,11 +42,11 @@ import static java.util.Comparator.nullsFirst;
  * @author Jin Kwon &lt;jinahya_at_gmail.com&gt;
  * @see Context#getFunctions(String, String, String)
  */
-//@ChildOf(Schema.class)
 @ParentOf(FunctionColumn.class)
+@Setter
+@Getter
 @EqualsAndHashCode(callSuper = true)
 @ToString(callSuper = true)
-@Data
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @SuperBuilder(toBuilder = true)
 public class Function extends AbstractMetadataType {
@@ -74,6 +75,22 @@ public class Function extends AbstractMetadataType {
 
     public static final String PROPERTY_NAME_FUNCTION_TYPE = "functionType";
 
+    // ------------------------------------------------------------------------------------------------------ functionId
+    public FunctionId getFunctionId() {
+        if (functionId == null) {
+            functionId = FunctionId.of(
+                    getFunctionCatNonNull(),
+                    getFunctionSchemNonNull(),
+                    getSpecificName()
+            );
+        }
+        return functionId;
+    }
+
+    private SchemaId getSchemaId() {
+        return getFunctionId().getSchemaId();
+    }
+
     // ----------------------------------------------------------------------------------------------------- functionCat
     String getFunctionCatNonNull() {
         return Optional.ofNullable(getFunctionCat()).orElse(Catalog.COLUMN_VALUE_TABLE_CAT_EMPTY);
@@ -100,21 +117,12 @@ public class Function extends AbstractMetadataType {
         functionId = null;
     }
 
-    // ------------------------------------------------------------------------------------------------------ functionId
-    public FunctionId getFunctionId() {
-        if (functionId == null) {
-            functionId = FunctionId.of(
-                    getFunctionCatNonNull(),
-                    getFunctionSchemNonNull(),
-                    getSpecificName()
-            );
-        }
-        return functionId;
-    }
-
-    private SchemaId getSchemaId() {
-        return getFunctionId().getSchemaId();
-    }
+    // -----------------------------------------------------------------------------------------------------------------
+    @Setter(AccessLevel.NONE)
+    @Getter(AccessLevel.NONE)
+    @EqualsAndHashCode.Exclude
+    @ToString.Exclude
+    private transient FunctionId functionId;
 
     // -----------------------------------------------------------------------------------------------------------------
     @NullableBySpecification
@@ -138,9 +146,4 @@ public class Function extends AbstractMetadataType {
 
     @ColumnLabel("SPECIFIC_NAME")
     private String specificName;
-
-    // -----------------------------------------------------------------------------------------------------------------
-    @EqualsAndHashCode.Exclude
-    @ToString.Exclude
-    private transient FunctionId functionId;
 }

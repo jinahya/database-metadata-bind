@@ -21,7 +21,6 @@ package com.github.jinahya.database.metadata.bind;
  */
 
 import lombok.AccessLevel;
-import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.SuperBuilder;
@@ -38,27 +37,19 @@ public final class AttributeId extends AbstractMetadataTypeId<AttributeId, Attri
 
     public static final Comparator<AttributeId> CASE_INSENSITIVE_ORDER =
             Comparator.comparing(AttributeId::getUdtId, UDTId.CASE_INSENSITIVE_ORDER)
-                    .thenComparingInt(AttributeId::getOrdinalPosition);
+                    .thenComparing(AttributeId::getAttrName, String.CASE_INSENSITIVE_ORDER);
 
     public static final Comparator<AttributeId> LEXICOGRAPHIC_ORDER =
             Comparator.comparing(AttributeId::getUdtId, UDTId.LEXICOGRAPHIC_ORDER)
-                    .thenComparingInt(AttributeId::getOrdinalPosition);
+                    .thenComparing(AttributeId::getAttrName);
 
-    static AttributeId of(final UDTId udtId, final String attrName, final int ordinalPosition) {
+    static AttributeId of(final UDTId udtId, final String attrName) {
         Objects.requireNonNull(udtId, "udtId is null");
         Objects.requireNonNull(attrName, "attrName is null");
-        if (ordinalPosition <= 0) {
-            throw new IllegalArgumentException("non-positive ordinalPosition: " + ordinalPosition);
-        }
         return builder()
                 .udtId(udtId)
                 .attrName(attrName)
-                .ordinalPosition(ordinalPosition)
                 .build();
-    }
-
-    public static AttributeId of(final UDTId udtId, final String attrName) {
-        return of(udtId, attrName, 1);
     }
 
     @Override
@@ -66,7 +57,6 @@ public final class AttributeId extends AbstractMetadataTypeId<AttributeId, Attri
         return super.toString() + '{' +
                "udtId=" + udtId +
                ",attrName=" + attrName +
-               ",ordinalPosition=" + ordinalPosition +
                '}';
     }
 
@@ -87,7 +77,4 @@ public final class AttributeId extends AbstractMetadataTypeId<AttributeId, Attri
     private final UDTId udtId;
 
     private final String attrName;
-
-    @EqualsAndHashCode.Exclude
-    private final int ordinalPosition;
 }

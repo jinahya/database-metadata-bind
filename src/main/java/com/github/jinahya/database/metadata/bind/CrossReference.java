@@ -23,7 +23,9 @@ package com.github.jinahya.database.metadata.bind;
 import lombok.AccessLevel;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 import lombok.ToString;
 import lombok.experimental.SuperBuilder;
 
@@ -37,9 +39,10 @@ import java.util.Optional;
  *
  * @author Jin Kwon &lt;jinahya_at_gmail.com&gt;
  */
+@Setter
+@Getter
 @EqualsAndHashCode(callSuper = true)
 @ToString(callSuper = true)
-@Data
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @SuperBuilder(toBuilder = true)
 public class CrossReference
@@ -61,18 +64,22 @@ public class CrossReference
 
     public ColumnId getPkcolumnId() {
         return ColumnId.of(
-                getPktableCatNonNull(),
-                getPktableSchemNonNull(),
-                getPktableName(),
+                TableId.of(
+                        getPktableCatNonNull(),
+                        getPktableSchemNonNull(),
+                        getPktableName()
+                ),
                 getPkcolumnName()
         );
     }
 
     public ColumnId getFkcolumnId() {
         return ColumnId.of(
-                getFktableCatNonNull(),
-                getFktableSchemNonNull(),
-                getFktableName(),
+                TableId.of(
+                        getFktableCatNonNull(),
+                        getFktableSchemNonNull(),
+                        getFktableName()
+                ),
                 getFkcolumnName()
         );
     }

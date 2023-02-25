@@ -31,7 +31,7 @@ import java.util.Objects;
 @Getter
 @RequiredArgsConstructor(access = AccessLevel.PRIVATE)
 @SuperBuilder(toBuilder = true)
-public final class CatalogId implements MetadataTypeId<CatalogId, Catalog> {
+final class CatalogId implements MetadataTypeId<CatalogId, Catalog> {
 
     private static final long serialVersionUID = 2793098695036855151L;
 

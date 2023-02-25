@@ -46,6 +46,7 @@ import static java.util.Comparator.nullsFirst;
 @Setter
 @Getter
 @ToString(callSuper = true)
+@EqualsAndHashCode(callSuper = true)
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @SuperBuilder(toBuilder = true)
 public class FunctionColumn extends AbstractMetadataType {
@@ -137,17 +138,28 @@ public class FunctionColumn extends AbstractMetadataType {
 
     public static final String COLUMN_LABEL_IS_NULLABLE = "IS_NULLABLE";
 
-    @Override
-    public boolean equals(final Object obj) {
-        if (this == obj) return true;
-        if (!(obj instanceof FunctionColumn)) return false;
-        final FunctionColumn that = (FunctionColumn) obj;
-        return Objects.equals(getFunctionColumnId(), that.getFunctionColumnId());
+    // ------------------------------------------------------------------------------------------------ functionColumnId
+    FunctionColumnId getFunctionColumnId() {
+        if (functionColumnId == null) {
+            return FunctionColumnId.of(
+                    FunctionId.of(
+                            getFunctionCatNonNull(),
+                            getFunctionSchemNonNull(),
+                            getSpecificName()
+                    ),
+                    getColumnName(),
+                    getColumnType()
+            );
+        }
+        return functionColumnId;
     }
 
-    @Override
-    public int hashCode() {
-        return Objects.hash(getFunctionColumnId());
+    private FunctionId getFunctionId() {
+        return getFunctionColumnId().getFunctionId();
+    }
+
+    private SchemaId getSchemaId() {
+        return getFunctionId().getSchemaId();
     }
 
     // ----------------------------------------------------------------------------------------------------- functionCat
@@ -203,29 +215,10 @@ public class FunctionColumn extends AbstractMetadataType {
         functionColumnId = null;
     }
 
-    // ------------------------------------------------------------------------------------------------ functionColumnId
-    public FunctionColumnId getFunctionColumnId() {
-        if (functionColumnId == null) {
-            return FunctionColumnId.of(
-                    FunctionId.of(
-                            getFunctionCatNonNull(),
-                            getFunctionSchemNonNull(),
-                            getSpecificName()
-                    ),
-                    getColumnName(),
-                    getColumnType()
-            );
-        }
-        return functionColumnId;
-    }
-
-    private FunctionId getFunctionId() {
-        return getFunctionColumnId().getFunctionId();
-    }
-
-    private SchemaId getSchemaId() {
-        return getFunctionId().getSchemaId();
-    }
+    // -----------------------------------------------------------------------------------------------------------------
+    @EqualsAndHashCode.Exclude
+    @ToString.Exclude
+    private transient FunctionColumnId functionColumnId;
 
     // -----------------------------------------------------------------------------------------------------------------
     @NullableBySpecification
@@ -284,9 +277,4 @@ public class FunctionColumn extends AbstractMetadataType {
 
     @ColumnLabel("SPECIFIC_NAME")
     private String specificName;
-
-    // -----------------------------------------------------------------------------------------------------------------
-    @EqualsAndHashCode.Exclude
-    @ToString.Exclude
-    private transient FunctionColumnId functionColumnId;
 }

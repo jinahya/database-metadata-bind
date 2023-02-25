@@ -31,7 +31,7 @@ import java.util.Objects;
 @Getter
 @RequiredArgsConstructor(access = AccessLevel.PRIVATE)
 @SuperBuilder(toBuilder = true)
-public final class TableId implements MetadataTypeId<TableId, Table> {
+final class TableId implements MetadataTypeId<TableId, Table> {
 
     private static final long serialVersionUID = -7614201161734063836L;
 
@@ -51,7 +51,7 @@ public final class TableId implements MetadataTypeId<TableId, Table> {
      * @return a new instance.
      * @see #of(String, String, String)
      */
-    public static TableId of(final SchemaId schemaId, final String tableName) {
+    static TableId of(final SchemaId schemaId, final String tableName) {
         Objects.requireNonNull(schemaId, "schemaId is null");
         Objects.requireNonNull(tableName, "tableName is null");
         return builder()
@@ -86,12 +86,16 @@ public final class TableId implements MetadataTypeId<TableId, Table> {
         if (this == obj) return true;
         if (!(obj instanceof TableId)) return false;
         final TableId that = (TableId) obj;
-        return schemaId.equals(that.schemaId) && tableName.equals(that.tableName);
+        return schemaId.equals(that.schemaId) &&
+               tableName.equals(that.tableName);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(schemaId, tableName);
+        return Objects.hash(
+                schemaId,
+                tableName
+        );
     }
 
     private final SchemaId schemaId;

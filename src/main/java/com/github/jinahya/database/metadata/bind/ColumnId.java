@@ -36,7 +36,7 @@ import java.util.Objects;
 @Getter
 @RequiredArgsConstructor(access = AccessLevel.PRIVATE)
 @SuperBuilder(toBuilder = true)
-public final class ColumnId implements MetadataTypeId<ColumnId, Column> {
+final class ColumnId implements MetadataTypeId<ColumnId, Column> {
 
     private static final long serialVersionUID = -4452694121211962289L;
 
@@ -55,11 +55,6 @@ public final class ColumnId implements MetadataTypeId<ColumnId, Column> {
                 .build();
     }
 
-    static ColumnId of(final String tableCat, final String tableSchem, final String tableName,
-                       final String columnName) {
-        return of(TableId.of(tableCat, tableSchem, tableName), columnName);
-    }
-
     @Override
     public String toString() {
         return super.toString() + '{' +
@@ -73,8 +68,8 @@ public final class ColumnId implements MetadataTypeId<ColumnId, Column> {
         if (this == obj) return true;
         if (!(obj instanceof ColumnId)) return false;
         final ColumnId that = (ColumnId) obj;
-        return tableId.equals(that.tableId)
-               && columnName.equals(that.columnName);
+        return tableId.equals(that.tableId) &&
+               columnName.equals(that.columnName);
     }
 
     @Override

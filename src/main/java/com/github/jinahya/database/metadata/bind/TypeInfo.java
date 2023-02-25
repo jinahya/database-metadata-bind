@@ -43,8 +43,7 @@ import java.util.Objects;
 @Data
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @SuperBuilder(toBuilder = true)
-public class TypeInfo
-        extends AbstractMetadataType {
+public class TypeInfo extends AbstractMetadataType {
 
     private static final long serialVersionUID = -3964147654019495313L;
 
