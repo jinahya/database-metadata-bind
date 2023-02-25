@@ -41,7 +41,6 @@ import java.util.Optional;
  */
 //@ParentOf(ColumnPrivilege.class)
 @ChildOf(Table.class)
-@EqualsAndHashCode(callSuper = true)
 @ToString(callSuper = true)
 @Data
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
@@ -118,6 +117,7 @@ public class Column extends AbstractMetadataType {
 
     public static final String COLUMN_LABEL_IS_GENERATEDCOLUMN = "IS_GENERATEDCOLUMN";
 
+    // -----------------------------------------------------------------------------------------------------------------
     @Override
     public boolean equals(final Object obj) {
         if (this == obj) return true;
@@ -129,6 +129,25 @@ public class Column extends AbstractMetadataType {
     @Override
     public int hashCode() {
         return Objects.hash(getColumnId());
+    }
+
+    // -------------------------------------------------------------------------------------------------------- columnId
+
+    /**
+     * Returns a value for identifying this column.
+     *
+     * @return an identifier of this column.
+     */
+    public ColumnId getColumnId() {
+        if (columnId == null) {
+            columnId = ColumnId.of(
+                    getTableCatNonNull(),
+                    getTableSchemNonNull(),
+                    getTableName(),
+                    getColumnName()
+            );
+        }
+        return columnId;
     }
 
     // -------------------------------------------------------------------------------------------------------- tableCat
@@ -163,24 +182,10 @@ public class Column extends AbstractMetadataType {
         columnId = null;
     }
 
-    // -------------------------------------------------------------------------------------------------------- columnId
-
-    /**
-     * Returns a value for identifying this column.
-     *
-     * @return an identifier of this column.
-     */
-    public ColumnId getColumnId() {
-        if (columnId == null) {
-            columnId = ColumnId.of(
-                    getTableCatNonNull(),
-                    getTableSchemNonNull(),
-                    getTableName(),
-                    getColumnName()
-            );
-        }
-        return columnId;
-    }
+    // -----------------------------------------------------------------------------------------------------------------
+    @EqualsAndHashCode.Exclude
+    @ToString.Exclude
+    private transient ColumnId columnId;
 
     // -----------------------------------------------------------------------------------------------------------------
     @NullableBySpecification
@@ -267,9 +272,4 @@ public class Column extends AbstractMetadataType {
 
     @ColumnLabel(COLUMN_LABEL_IS_GENERATEDCOLUMN)
     private String isGeneratedcolumn;
-
-    // -----------------------------------------------------------------------------------------------------------------
-    @EqualsAndHashCode.Exclude
-    @ToString.Exclude
-    private transient ColumnId columnId;
 }

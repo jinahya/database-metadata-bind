@@ -353,6 +353,8 @@ final class ContextTests {
             throws SQLException {
         Objects.requireNonNull(context, "context is null");
         Objects.requireNonNull(clientInfoProperties, "clientInfoProperties is null");
+        assertThat(clientInfoProperties)
+                .doesNotHaveDuplicates();
         for (final var clientInfoProperty : clientInfoProperties) {
             clientInfoProperty(context, clientInfoProperty);
         }
@@ -368,6 +370,7 @@ final class ContextTests {
     static void columns(final Context context, final List<? extends Column> columns) throws SQLException {
         Objects.requireNonNull(context, "context is null");
         Objects.requireNonNull(columns, "columns is null");
+        assertThat(columns).doesNotHaveDuplicates();
         {
             final var databaseProductNames = Set.of(
                     ""

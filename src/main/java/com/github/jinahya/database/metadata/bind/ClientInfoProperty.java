@@ -22,19 +22,18 @@ package com.github.jinahya.database.metadata.bind;
 
 import lombok.AccessLevel;
 import lombok.Data;
-import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
 import lombok.experimental.SuperBuilder;
 
 import java.sql.DatabaseMetaData;
+import java.util.Objects;
 
 /**
  * A class for binding results of the {@link DatabaseMetaData#getClientInfoProperties()} method.
  *
  * @author Jin Kwon &lt;jinahya_at_gmail.com&gt;
  */
-@EqualsAndHashCode(callSuper = true)
 @ToString(callSuper = true)
 @Data
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
@@ -50,6 +49,19 @@ public class ClientInfoProperty extends AbstractMetadataType {
     public static final String COLUMN_LABEL_DEFAULT_VALUE = "DEFAULT_VALUE";
 
     public static final String COLUMN_LABEL_DESCRIPTION = "DESCRIPTION";
+
+    @Override
+    public boolean equals(final Object obj) {
+        if (this == obj) return true;
+        if (!(obj instanceof ClientInfoProperty)) return false;
+        final ClientInfoProperty that = (ClientInfoProperty) obj;
+        return Objects.equals(name, that.name);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(super.hashCode(), name);
+    }
 
     @ColumnLabel(COLUMN_LABEL_NAME)
     private String name;
