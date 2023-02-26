@@ -47,22 +47,6 @@ final class ContextTestUtils {
         return catalogIds;
     }
 
-    static List<? extends Catalog> assertCatalogsAreSorted(final List<? extends Catalog> catalogs) {
-        Objects.requireNonNull(catalogs, "catalogs is null");
-        assertThat(catalogs).satisfiesAnyOf(
-                l -> assertThat(l).isSortedAccordingTo(Catalog.CASE_INSENSITIVE_ORDER),
-                l -> assertThat(l).isSortedAccordingTo(Catalog.LEXICOGRAPHIC_ORDER)
-        );
-        return catalogs;
-    }
-
-    static List<? extends Catalog> assertCatalogsAndTheirIdsAreSorted(final List<? extends Catalog> catalogs) {
-        assertCatalogIdsAreSorted(
-                assertCatalogsAreSorted(catalogs).stream().map(Catalog::getCatalogId)
-        );
-        return catalogs;
-    }
-
     static void assertColumnIdsSorted(final List<ColumnId> columnIds) {
         assertThat(Objects.requireNonNull(columnIds, "columnIds is null")).satisfiesAnyOf(
                 l -> assertThat(l).isSortedAccordingTo(ColumnId.CASE_INSENSITIVE_ORDER),

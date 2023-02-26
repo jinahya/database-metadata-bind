@@ -21,7 +21,6 @@ package com.github.jinahya.database.metadata.bind;
  */
 
 import lombok.AccessLevel;
-import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -62,7 +61,7 @@ public class CrossReference
 
     public static final String PROPERTY_NAME_UPDATE_RULE = "updateRule";
 
-    public ColumnId getPkcolumnId() {
+    ColumnId getPkcolumnId() {
         return ColumnId.of(
                 TableId.of(
                         getPktableCatNonNull(),
@@ -73,7 +72,7 @@ public class CrossReference
         );
     }
 
-    public ColumnId getFkcolumnId() {
+    ColumnId getFkcolumnId() {
         return ColumnId.of(
                 TableId.of(
                         getFktableCatNonNull(),
@@ -108,11 +107,11 @@ public class CrossReference
         return Optional.ofNullable(getFktableSchem()).orElse(Schema.COLUMN_VALUE_TABLE_SCHEM_EMPTY);
     }
 
-    @NullableBySpecification
+    @_NullableBySpecification
     @ColumnLabel("PKTABLE_CAT")
     private String pktableCat;
 
-    @NullableBySpecification
+    @_NullableBySpecification
     @ColumnLabel("PKTABLE_SCHEM")
     private String pktableSchem;
 
@@ -122,11 +121,11 @@ public class CrossReference
     @ColumnLabel("PKCOLUMN_NAME")
     private String pkcolumnName;
 
-    @NullableBySpecification
+    @_NullableBySpecification
     @ColumnLabel("FKTABLE_CAT")
     private String fktableCat;
 
-    @NullableBySpecification
+    @_NullableBySpecification
     @ColumnLabel("FKTABLE_SCHEM")
     private String fktableSchem;
 
@@ -145,11 +144,11 @@ public class CrossReference
     @ColumnLabel("DELETE_RULE")
     private int deleteRule;
 
-    @NullableBySpecification
+    @_NullableBySpecification
     @ColumnLabel("FK_NAME")
     private String fkName;
 
-    @NullableBySpecification
+    @_NullableBySpecification
     @ColumnLabel("PK_NAME")
     private String pkName;
 

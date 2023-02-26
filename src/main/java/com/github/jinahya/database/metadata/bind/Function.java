@@ -42,7 +42,7 @@ import static java.util.Comparator.nullsFirst;
  * @author Jin Kwon &lt;jinahya_at_gmail.com&gt;
  * @see Context#getFunctions(String, String, String)
  */
-@ParentOf(FunctionColumn.class)
+@_ParentOf(FunctionColumn.class)
 @Setter
 @Getter
 @EqualsAndHashCode(callSuper = true)
@@ -76,7 +76,7 @@ public class Function extends AbstractMetadataType {
     public static final String PROPERTY_NAME_FUNCTION_TYPE = "functionType";
 
     // ------------------------------------------------------------------------------------------------------ functionId
-    public FunctionId getFunctionId() {
+    FunctionId getFunctionId() {
         if (functionId == null) {
             functionId = FunctionId.of(
                     getFunctionCatNonNull(),
@@ -125,11 +125,11 @@ public class Function extends AbstractMetadataType {
     private transient FunctionId functionId;
 
     // -----------------------------------------------------------------------------------------------------------------
-    @NullableBySpecification
+    @_NullableBySpecification
     @ColumnLabel(COLUMN_NAME_FUNCTION_CAT)
     private String functionCat;
 
-    @NullableBySpecification
+    @_NullableBySpecification
     @ColumnLabel(COLUMN_NAME_FUNCTION_SCHEM)
     private String functionSchem;
 
@@ -137,7 +137,7 @@ public class Function extends AbstractMetadataType {
     @EqualsAndHashCode.Exclude
     private String functionName;
 
-    @NullableByVendor("PostgreSQL")
+    @_NullableByVendor("PostgreSQL")
     @ColumnLabel("REMARKS")
     private String remarks;
 

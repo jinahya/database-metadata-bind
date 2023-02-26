@@ -38,12 +38,14 @@ import static java.util.Comparator.nullsFirst;
 
 /**
  * A class for binding results of
- * {@link DatabaseMetaData#getProcedures(java.lang.String, java.lang.String, java.lang.String)}.
+ * {@link DatabaseMetaData#getProcedures(java.lang.String, java.lang.String, java.lang.String)} method.
  *
  * @author Jin Kwon &lt;jinahya_at_gmail.com&gt;
+ * @see Context#getFunctionColumns(String, String, String, String)
+ * @see ProcedureColumn
  */
-@ParentOf(ProcedureColumn.class)
-@ChildOf(Schema.class)
+@_ParentOf(ProcedureColumn.class)
+@_ChildOf(Schema.class)
 @Setter
 @Getter
 @ToString(callSuper = true)
@@ -113,18 +115,18 @@ public class Procedure extends AbstractMetadataType {
     }
 
     // -----------------------------------------------------------------------------------------------------------------
-    @NullableBySpecification
+    @_NullableBySpecification
     @ColumnLabel("PROCEDURE_CAT")
     private String procedureCat;
 
-    @NullableBySpecification
+    @_NullableBySpecification
     @ColumnLabel("PROCEDURE_SCHEM")
     private String procedureSchem;
 
     @ColumnLabel("PROCEDURE_NAME")
     private String procedureName;
 
-    @NullableByVendor("HSQL")
+    @_NullableByVendor("HSQL")
     @ColumnLabel("REMARKS")
     private String remarks;
 
@@ -135,11 +137,13 @@ public class Procedure extends AbstractMetadataType {
     private String specificName;
 
     // -----------------------------------------------------------------------------------------------------------------
-    public ProcedureId getProcedureId() {
+    ProcedureId getProcedureId() {
         if (procedureId == null) {
             procedureId = ProcedureId.of(
-                    getProcedureCatNonNull(),
-                    getProcedureSchemNonNull(),
+                    SchemaId.of(
+                            getProcedureCatNonNull(),
+                            getProcedureSchemNonNull()
+                    ),
                     getSpecificName()
             );
         }

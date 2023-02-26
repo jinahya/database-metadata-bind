@@ -35,7 +35,7 @@ import java.util.Comparator;
  * @see Context#getImportedKeys(String, String, String)
  * @see ExportedKey
  */
-@ChildOf(Table.class)
+@_ChildOf(Table.class)
 @ToString(callSuper = true)
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @SuperBuilder(toBuilder = true)
@@ -46,7 +46,7 @@ public class ImportedKey extends TableKey<ImportedKey> {
     public static final Comparator<ImportedKey> CASE_INSENSITIVE_ORDER =
             comparingPktableKeySeqCaseInsensitive();
 
-    public static final Comparator<ImportedKey> COMPARING_NATUAL = comparingPktableKeySeqLexicographic();
+    public static final Comparator<ImportedKey> LEXICOGRAPHIC_ORDER = comparingPktableKeySeqLexicographic();
 
     @Override
     public boolean equals(final Object obj) {

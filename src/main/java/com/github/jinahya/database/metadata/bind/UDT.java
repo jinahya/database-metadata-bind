@@ -39,8 +39,8 @@ import java.util.Optional;
  * @author Jin Kwon &lt;jinahya_at_gmail.com&gt;
  * @see Context#getUDTs(String, String, String, int[])
  */
-@ParentOf(Attribute.class)
-@ChildOf(Schema.class)
+@_ParentOf(Attribute.class)
+@_ChildOf(Schema.class)
 @Setter
 @Getter
 @ToString(callSuper = true)
@@ -110,29 +110,29 @@ public class UDT extends AbstractMetadataType {
     }
 
     // -----------------------------------------------------------------------------------------------------------------
-    @NullableBySpecification
+    @_NullableBySpecification
     @ColumnLabel(COLUMN_LABEL_TYPE_CAT)
     private String typeCat;
 
-    @NullableBySpecification
+    @_NullableBySpecification
     @ColumnLabel(COLUMN_LABEL_TYPE_SCHEM)
     private String typeSchem;
 
     @ColumnLabel(COLUMN_LABEL_TYPE_NAME)
     private String typeName;
 
-    @NullableByVendor("PostgreSQL")
+    @_NullableByVendor("PostgreSQL")
     @ColumnLabel(COLUMN_LABEL_CLASS_NAME)
     private String className;
 
     @ColumnLabel(COLUMN_LABEL_DATA_TYPE)
     private int dataType;
 
-    @NullableByVendor("PostgreSQL")
+    @_NullableByVendor("PostgreSQL")
     @ColumnLabel("REMARKS")
     private String remarks;
 
-    @NullableBySpecification
+    @_NullableBySpecification
     @ColumnLabel("BASE_TYPE")
     private Integer baseType;
 

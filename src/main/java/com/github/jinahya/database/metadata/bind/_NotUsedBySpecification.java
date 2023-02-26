@@ -4,7 +4,7 @@ package com.github.jinahya.database.metadata.bind;
  * #%L
  * database-metadata-bind
  * %%
- * Copyright (C) 2011 - 2021 Jinahya, Inc.
+ * Copyright (C) 2011 - 2019 Jinahya, Inc.
  * %%
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -22,34 +22,18 @@ package com.github.jinahya.database.metadata.bind;
 
 import java.lang.annotation.Documented;
 import java.lang.annotation.ElementType;
-import java.lang.annotation.Repeatable;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
 /**
- * A marker interface for relating binding types to their parent types.
+ * A marker annotation for unused columns.
  *
  * @author Jin Kwon &lt;onacit_at_gmail.com&gt;
  */
-@Repeatable(ParentOf.ParentsOf.class)
 @Documented
 @Retention(RetentionPolicy.RUNTIME)
-@Target({ElementType.TYPE})
-@interface ParentOf {
+@Target({ElementType.FIELD})
+@interface _NotUsedBySpecification {
 
-    @Documented
-    @Retention(RetentionPolicy.RUNTIME)
-    @Target({ElementType.TYPE})
-    @interface ParentsOf {
-
-        ParentOf[] value();
-    }
-
-    /**
-     * Returns the parent class.
-     *
-     * @return the parent class.
-     */
-    Class<? extends MetadataType> value();
 }

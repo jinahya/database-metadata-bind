@@ -93,7 +93,8 @@ public class Context {
                 log.warning(() -> String.format("unknown fieldLabel; %1$s on %2$s", fieldLabel, field));
                 continue;
             }
-            if (field.isAnnotationPresent(NotUsedBySpecification.class) || field.isAnnotationPresent(Reserved.class)) {
+            if (field.isAnnotationPresent(_NotUsedBySpecification.class) ||
+                field.isAnnotationPresent(_Reserved.class)) {
                 i.remove();
                 continue;
             }

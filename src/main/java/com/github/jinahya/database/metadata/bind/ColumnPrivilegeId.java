@@ -21,17 +21,17 @@ package com.github.jinahya.database.metadata.bind;
  */
 
 import lombok.AccessLevel;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Getter;
-import lombok.RequiredArgsConstructor;
-import lombok.experimental.SuperBuilder;
 
 import java.util.Comparator;
 import java.util.Objects;
 
 @Getter
-@RequiredArgsConstructor(access = AccessLevel.PRIVATE)
-@SuperBuilder(toBuilder = true)
-final class ColumnPrivilegeId implements MetadataTypeId<ColumnPrivilegeId, Column> {
+@AllArgsConstructor(access = AccessLevel.PRIVATE)
+@Builder(access = AccessLevel.PRIVATE)
+final class ColumnPrivilegeId extends AbstractMetadataTypeId<ColumnPrivilegeId, ColumnPrivilege> {
 
     private static final long serialVersionUID = 7221973324274278465L;
 
@@ -46,12 +46,10 @@ final class ColumnPrivilegeId implements MetadataTypeId<ColumnPrivilegeId, Colum
     static ColumnPrivilegeId of(final ColumnId columnId, final String privilege) {
         Objects.requireNonNull(columnId, "columnId is null");
         Objects.requireNonNull(privilege, "privilege is null");
-        return builder()
-                .columnId(columnId)
-                .privilege(privilege)
-                .build();
+        return new ColumnPrivilegeId(columnId, privilege);
     }
 
+    // -----------------------------------------------------------------------------------------------------------------
     @Override
     public String toString() {
         return super.toString() + '{' +
@@ -74,6 +72,7 @@ final class ColumnPrivilegeId implements MetadataTypeId<ColumnPrivilegeId, Colum
         return Objects.hash(columnId, privilege);
     }
 
+    // -----------------------------------------------------------------------------------------------------------------
     private final ColumnId columnId;
 
     private final String privilege;

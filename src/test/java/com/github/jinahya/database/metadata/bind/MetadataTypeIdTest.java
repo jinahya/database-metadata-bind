@@ -78,6 +78,28 @@ abstract class MetadataTypeIdTest<T extends MetadataTypeId<T, U>, U extends Meta
         }
     }
 
+    @Test
+    void shouldHaveEqualsOverridden__() throws ReflectiveOperationException {
+        {
+            final var method = typeIdClass.getMethod("equals", Object.class);
+            final var declaringClass = method.getDeclaringClass();
+            assertThat(declaringClass)
+                    .as("declaring class of the %1$s", method)
+                    .isSameAs(typeIdClass);
+        }
+    }
+
+    @Test
+    void shouldHaveHashcodeOverridden__() throws ReflectiveOperationException {
+        {
+            final var method = typeIdClass.getMethod("hashCode");
+            final var declaringClass = method.getDeclaringClass();
+            assertThat(declaringClass)
+                    .as("declaring class of the %1$s", method)
+                    .isSameAs(typeIdClass);
+        }
+    }
+
     @Nested
     class EqualsTest {
 
@@ -94,7 +116,7 @@ abstract class MetadataTypeIdTest<T extends MetadataTypeId<T, U>, U extends Meta
 
         @Test
         void __() {
-            final var hashCode = typeIdInstanceBuiltEmpty().hashCode();
+            final var hashCode = typeIdInstance().hashCode();
         }
     }
 }

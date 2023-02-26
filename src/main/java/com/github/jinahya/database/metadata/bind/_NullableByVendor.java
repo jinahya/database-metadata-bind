@@ -32,12 +32,12 @@ import java.lang.annotation.Target;
  *
  * @author Jin Kwon &lt;onacit_at_gmail.com&gt;
  */
-@Nullable
-@Repeatable(NullableByVendors.class)
+@_Nullable
+@Repeatable(_NullableByVendors.class)
 @Documented
 @Retention(RetentionPolicy.RUNTIME)
 @Target({ElementType.FIELD})
-@interface NullableByVendor {
+@interface _NullableByVendor {
 
     String value();
 }

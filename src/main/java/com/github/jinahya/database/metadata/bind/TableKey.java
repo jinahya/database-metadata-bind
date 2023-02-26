@@ -39,13 +39,13 @@ import java.util.Optional;
  * @see ExportedKey
  * @see ImportedKey
  */
-@ChildOf(Table.class)
+@_ChildOf(Table.class)
 @Setter
 @Getter
 @ToString(callSuper = true)
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @SuperBuilder(toBuilder = true)
-public abstract class TableKey<T extends TableKey<T>> extends AbstractMetadataType {
+abstract class TableKey<T extends TableKey<T>> extends AbstractMetadataType {
 
     private static final long serialVersionUID = 6713872409315471232L;
 
@@ -70,6 +70,7 @@ public abstract class TableKey<T extends TableKey<T>> extends AbstractMetadataTy
     }
 
     // -----------------------------------------------------------------------------------------------------------------
+
     @Override
     public boolean equals(final Object obj) {
         if (this == obj) return true;
@@ -78,13 +79,22 @@ public abstract class TableKey<T extends TableKey<T>> extends AbstractMetadataTy
     }
 
     boolean equals_(final TableKey<?> that) {
-        return Objects.equals(getPkcolumnId(), that.getPkcolumnId()) &&
-               Objects.equals(getFkcolumnId(), that.getFkcolumnId());
+        return Objects.equals(pktableCat, that.pktableCat) &&
+               Objects.equals(pktableSchem, that.pktableSchem) &&
+               Objects.equals(pktableName, that.pktableName) &&
+               Objects.equals(pkcolumnName, that.pkcolumnName) &&
+               Objects.equals(fktableCat, that.fktableCat) &&
+               Objects.equals(fktableSchem, that.fktableSchem) &&
+               Objects.equals(fktableName, that.fktableName) &&
+               Objects.equals(fkcolumnName, that.fkcolumnName);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(getPkcolumnId(), getFkcolumnId());
+        return Objects.hash(
+                pktableCat, pktableSchem, pktableName, pkcolumnName,
+                fktableCat, fktableSchem, fktableName, fkcolumnName
+        );
     }
 
     // ------------------------------------------------------------------------------------------------------ pktableCat
@@ -151,50 +161,12 @@ public abstract class TableKey<T extends TableKey<T>> extends AbstractMetadataTy
         fkcolumnId = null;
     }
 
-    // ------------------------------------------------------------------------------------------------------ pkcolumnId
-    public ColumnId getPkcolumnId() {
-        if (pkcolumnid == null) {
-            pkcolumnid = ColumnId.of(
-                    TableId.of(
-                            getPktableCatNonNull(),
-                            getPktableSchemNonNull(),
-                            getPktableName()
-                    ),
-                    getPkcolumnName()
-            );
-        }
-        return pkcolumnid;
-    }
-
-    private TableId getPktableId() {
-        return getPkcolumnId().getTableId();
-    }
-
-    // ------------------------------------------------------------------------------------------------------ fkcolumnId
-    public ColumnId getFkcolumnId() {
-        if (fkcolumnId == null) {
-            fkcolumnId = ColumnId.of(
-                    TableId.of(
-                            getFktableCatNonNull(),
-                            getFktableSchemNonNull(),
-                            getFktableName()
-                    ),
-                    getFkcolumnName()
-            );
-        }
-        return fkcolumnId;
-    }
-
-    private TableId getFktableId() {
-        return getFkcolumnId().getTableId();
-    }
-
     // -----------------------------------------------------------------------------------------------------------------
-    @NullableBySpecification
+    @_NullableBySpecification
     @ColumnLabel("PKTABLE_CAT")
     private String pktableCat;
 
-    @NullableBySpecification
+    @_NullableBySpecification
     @ColumnLabel("PKTABLE_SCHEM")
     private String pktableSchem;
 
@@ -204,11 +176,11 @@ public abstract class TableKey<T extends TableKey<T>> extends AbstractMetadataTy
     @ColumnLabel("PKCOLUMN_NAME")
     private String pkcolumnName;
 
-    @NullableBySpecification
+    @_NullableBySpecification
     @ColumnLabel("FKTABLE_CAT")
     private String fktableCat;
 
-    @NullableBySpecification
+    @_NullableBySpecification
     @ColumnLabel("FKTABLE_SCHEM")
     private String fktableSchem;
 
@@ -227,11 +199,11 @@ public abstract class TableKey<T extends TableKey<T>> extends AbstractMetadataTy
     @ColumnLabel("DELETE_RULE")
     private int deleteRule;
 
-    @NullableBySpecification
+    @_NullableBySpecification
     @ColumnLabel("FK_NAME")
     private String fkName;
 
-    @NullableBySpecification
+    @_NullableBySpecification
     @ColumnLabel("PK_NAME")
     private String pkName;
 
@@ -239,10 +211,50 @@ public abstract class TableKey<T extends TableKey<T>> extends AbstractMetadataTy
     private int deferrability;
 
     // -----------------------------------------------------------------------------------------------------------------
+    ColumnId getPkcolumnId() {
+        if (pkcolumnid == null) {
+            pkcolumnid = ColumnId.of(
+                    TableId.of(
+                            getPktableCatNonNull(),
+                            getPktableSchemNonNull(),
+                            getPktableName()
+                    ),
+                    getPkcolumnName()
+            );
+        }
+        return pkcolumnid;
+    }
+
+    private TableId getPktableId() {
+        return getPkcolumnId().getTableId();
+    }
+
+    ColumnId getFkcolumnId() {
+        if (fkcolumnId == null) {
+            fkcolumnId = ColumnId.of(
+                    TableId.of(
+                            getFktableCatNonNull(),
+                            getFktableSchemNonNull(),
+                            getFktableName()
+                    ),
+                    getFkcolumnName()
+            );
+        }
+        return fkcolumnId;
+    }
+
+    private TableId getFktableId() {
+        return getFkcolumnId().getTableId();
+    }
+
+    @Setter(AccessLevel.NONE)
+    @Getter(AccessLevel.NONE)
     @EqualsAndHashCode.Exclude
     @ToString.Exclude
     private transient ColumnId pkcolumnid;
 
+    @Setter(AccessLevel.NONE)
+    @Getter(AccessLevel.NONE)
     @EqualsAndHashCode.Exclude
     @ToString.Exclude
     private transient ColumnId fkcolumnId;

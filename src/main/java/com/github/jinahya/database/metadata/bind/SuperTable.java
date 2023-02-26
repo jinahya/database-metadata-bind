@@ -36,7 +36,7 @@ import java.util.Optional;
  * @author Jin Kwon &lt;jinahya_at_gmail.com&gt;
  * @see Context#getSuperTables(String, String, String)
  */
-@ChildOf(Schema.class)
+@_ChildOf(Schema.class)
 @EqualsAndHashCode(callSuper = true)
 @ToString(callSuper = true)
 @Data
@@ -54,14 +54,14 @@ public class SuperTable extends AbstractMetadataType {
 
     public static final String COLUMN_NAME_SUPERTABLE_NAME = "SUPERTABLE_NAME";
 
-    public TableId getTableId() {
+    TableId getTableId() {
         return TableId.of(
                 getTableCatNonNull(), getTableSchemNonNull(),
                 getTableName()
         );
     }
 
-    public TableId getSupertableId() {
+    TableId getSupertableId() {
         return TableId.of(getTableCatNonNull(), getTableSchemNonNull(), getSupertableName());
     }
 
@@ -73,11 +73,11 @@ public class SuperTable extends AbstractMetadataType {
         return Optional.ofNullable(getTableSchem()).orElse(Schema.COLUMN_VALUE_TABLE_SCHEM_EMPTY);
     }
 
-    @NullableBySpecification
+    @_NullableBySpecification
     @ColumnLabel(COLUMN_NAME_TABLE_CAT)
     private String tableCat;
 
-    @NullableBySpecification
+    @_NullableBySpecification
     @ColumnLabel(COLUMN_NAME_TABLE_SCHEM)
     private String tableSchem;
 

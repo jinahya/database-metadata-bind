@@ -41,7 +41,7 @@ import java.util.Optional;
  * @see Context#getAttributes(String, String, String, String)
  * @see NullableEnum
  */
-@ChildOf(UDT.class)
+@_ChildOf(UDT.class)
 @Setter
 @Getter
 @ToString(callSuper = true)
@@ -204,11 +204,11 @@ public class Attribute extends AbstractMetadataType {
     private transient AttributeId attributeId;
 
     // -----------------------------------------------------------------------------------------------------------------
-    @NullableBySpecification
+    @_NullableBySpecification
     @ColumnLabel("TYPE_CAT")
     private String typeCat;
 
-    @NullableBySpecification
+    @_NullableBySpecification
     @ColumnLabel("TYPE_SCHEM")
     private String typeSchem;
 
@@ -227,7 +227,7 @@ public class Attribute extends AbstractMetadataType {
     @ColumnLabel("ATTR_SIZE")
     private int attrSize;
 
-    @NullableBySpecification
+    @_NullableBySpecification
     @ColumnLabel("DECIMAL_DIGITS")
     private Integer decimalDigits;
 
@@ -237,19 +237,19 @@ public class Attribute extends AbstractMetadataType {
     @ColumnLabel(COLUMN_LABEL_NULLABLE)
     private int nullable;
 
-    @NullableBySpecification
+    @_NullableBySpecification
     @ColumnLabel("REMARKS")
     private String remarks;
 
-    @NullableBySpecification
+    @_NullableBySpecification
     @ColumnLabel("ATTR_DEF")
     private String attrDef;
 
-    @NotUsedBySpecification
+    @_NotUsedBySpecification
     @ColumnLabel("SQL_DATA_TYPE")
     private Integer sqlDataType;
 
-    @NotUsedBySpecification
+    @_NotUsedBySpecification
     @ColumnLabel("SQL_DATETIME_SUB")
     private Integer sqlDatetimeSub;
 
@@ -262,19 +262,19 @@ public class Attribute extends AbstractMetadataType {
     @ColumnLabel("IS_NULLABLE")
     private String isNullable;
 
-    @NullableBySpecification
+    @_NullableBySpecification
     @ColumnLabel("SCOPE_CATALOG")
     private String scopeCatalog;
 
-    @NullableBySpecification
+    @_NullableBySpecification
     @ColumnLabel("SCOPE_SCHEMA")
     private String scopeSchema;
 
-    @NullableBySpecification
+    @_NullableBySpecification
     @ColumnLabel("SCOPE_TABLE")
     private String scopeTable;
 
-    @NullableBySpecification
+    @_NullableBySpecification
     @ColumnLabel("SOURCE_DATA_TYPE")
     private Integer sourceDataType;
 }

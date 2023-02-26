@@ -21,17 +21,17 @@ package com.github.jinahya.database.metadata.bind;
  */
 
 import lombok.AccessLevel;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Getter;
-import lombok.RequiredArgsConstructor;
-import lombok.experimental.SuperBuilder;
 
 import java.util.Comparator;
 import java.util.Objects;
 
 @Getter
-@RequiredArgsConstructor(access = AccessLevel.PRIVATE)
-@SuperBuilder(toBuilder = true)
-final class CatalogId implements MetadataTypeId<CatalogId, Catalog> {
+@AllArgsConstructor(access = AccessLevel.PRIVATE)
+@Builder(access = AccessLevel.PRIVATE)
+final class CatalogId extends AbstractMetadataTypeId<CatalogId, Catalog> {
 
     private static final long serialVersionUID = 2793098695036855151L;
 
@@ -54,6 +54,7 @@ final class CatalogId implements MetadataTypeId<CatalogId, Catalog> {
                 .build();
     }
 
+    // -----------------------------------------------------------------------------------------------------------------
     @Override
     public String toString() {
         return super.toString() + '{' +
@@ -74,5 +75,6 @@ final class CatalogId implements MetadataTypeId<CatalogId, Catalog> {
         return Objects.hash(tableCat);
     }
 
+    // -----------------------------------------------------------------------------------------------------------------
     private final String tableCat;
 }

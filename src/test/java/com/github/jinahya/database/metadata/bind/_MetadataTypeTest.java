@@ -53,24 +53,24 @@ abstract class _MetadataTypeTest<T extends MetadataType> {
         }
     }
 
-    Map<Field, NullableByVendor> getFieldsWithMayBeNullByVendor() {
+    Map<Field, _NullableByVendor> getFieldsWithMayBeNullByVendor() {
         return getFieldsWithColumnLabel().entrySet().stream()
-                .filter(e -> e.getKey().getAnnotation(NullableByVendor.class) != null)
-                .collect(Collectors.toMap(Map.Entry::getKey, e -> e.getKey().getAnnotation(NullableByVendor.class)));
+                .filter(e -> e.getKey().getAnnotation(_NullableByVendor.class) != null)
+                .collect(Collectors.toMap(Map.Entry::getKey, e -> e.getKey().getAnnotation(_NullableByVendor.class)));
     }
 
-    Map<Field, NullableBySpecification> getFieldsWithNullableBySpecification() {
+    Map<Field, _NullableBySpecification> getFieldsWithNullableBySpecification() {
         return getFieldsWithColumnLabel().entrySet().stream()
-                .filter(e -> e.getKey().getAnnotation(NullableBySpecification.class) != null).collect(
+                .filter(e -> e.getKey().getAnnotation(_NullableBySpecification.class) != null).collect(
                         Collectors.toMap(Map.Entry::getKey,
-                                         e -> e.getKey().getAnnotation(NullableBySpecification.class)));
+                                         e -> e.getKey().getAnnotation(_NullableBySpecification.class)));
     }
 
-    Map<Field, NotUsedBySpecification> fieldsWithUnusedBySpecification() {
+    Map<Field, _NotUsedBySpecification> fieldsWithUnusedBySpecification() {
         return getFieldsWithColumnLabel().entrySet().stream()
-                .filter(e -> e.getKey().getAnnotation(NotUsedBySpecification.class) != null).collect(
+                .filter(e -> e.getKey().getAnnotation(_NotUsedBySpecification.class) != null).collect(
                         Collectors.toMap(Map.Entry::getKey,
-                                         e -> e.getKey().getAnnotation(NotUsedBySpecification.class)));
+                                         e -> e.getKey().getAnnotation(_NotUsedBySpecification.class)));
     }
 
     Map<Field, ColumnLabel> getFieldsWithColumnLabel() {

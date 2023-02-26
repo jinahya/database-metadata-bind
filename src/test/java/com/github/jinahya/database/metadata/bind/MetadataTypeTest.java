@@ -126,7 +126,7 @@ abstract class MetadataTypeTest<T extends MetadataType> extends _MetadataTypeTes
     @Test
     void field_NotPrimitive_Unused() {
         for (final var field : fieldsWithUnusedBySpecification().keySet()) {
-            assert field.isAnnotationPresent(NotUsedBySpecification.class);
+            assert field.isAnnotationPresent(_NotUsedBySpecification.class);
             assertThat(field.getType().isPrimitive())
                     .as("@NotUsedBySpecification on primitive field: %s", field)
                     .isFalse();
@@ -137,7 +137,7 @@ abstract class MetadataTypeTest<T extends MetadataType> extends _MetadataTypeTes
     @Test
     void field_NotPrimitive_NullableBySpecification() {
         for (final var field : getFieldsWithNullableBySpecification().keySet()) {
-            assert field.isAnnotationPresent(NullableBySpecification.class);
+            assert field.isAnnotationPresent(_NullableBySpecification.class);
             assertThat(field.getType().isPrimitive())
                     .as("@NullableBySpecification on primitive field: %s", field)
                     .isFalse();
@@ -148,7 +148,7 @@ abstract class MetadataTypeTest<T extends MetadataType> extends _MetadataTypeTes
     @Test
     void field_NotPrimitive_NullableByVendor() {
         for (final var field : getFieldsWithMayBeNullByVendor().keySet()) {
-            assertThat(field.getAnnotation(NullableByVendor.class)).isNotNull();
+            assertThat(field.getAnnotation(_NullableByVendor.class)).isNotNull();
             assertThat(field.getType().isPrimitive()).isFalse();
         }
     }

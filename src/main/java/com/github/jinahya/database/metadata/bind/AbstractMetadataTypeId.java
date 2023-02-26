@@ -22,10 +22,8 @@ package com.github.jinahya.database.metadata.bind;
 
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
-import lombok.experimental.SuperBuilder;
 
 @NoArgsConstructor(access = AccessLevel.PACKAGE)
-@SuperBuilder(toBuilder = true)
 abstract class AbstractMetadataTypeId<T extends MetadataTypeId<T, U>, U extends MetadataType>
         implements MetadataTypeId<T, U> {
 

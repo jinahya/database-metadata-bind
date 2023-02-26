@@ -21,16 +21,16 @@ package com.github.jinahya.database.metadata.bind;
  */
 
 import lombok.AccessLevel;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Getter;
-import lombok.RequiredArgsConstructor;
-import lombok.experimental.SuperBuilder;
 
 import java.util.Comparator;
 import java.util.Objects;
 
 @Getter
-@RequiredArgsConstructor(access = AccessLevel.PRIVATE)
-@SuperBuilder(toBuilder = true)
+@AllArgsConstructor(access = AccessLevel.PRIVATE)
+@Builder(access = AccessLevel.PRIVATE)
 final class TableId implements MetadataTypeId<TableId, Table> {
 
     private static final long serialVersionUID = -7614201161734063836L;

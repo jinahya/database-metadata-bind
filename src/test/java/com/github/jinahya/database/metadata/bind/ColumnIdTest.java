@@ -23,7 +23,7 @@ package com.github.jinahya.database.metadata.bind;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 
-class ColumnIdTest extends MetadataTypeIdTest<ColumnId, Column> {
+class ColumnIdTest extends AbstractMetadataTypeIdTest<ColumnId, Column> {
 
     ColumnIdTest() {
         super(ColumnId.class, Column.class);

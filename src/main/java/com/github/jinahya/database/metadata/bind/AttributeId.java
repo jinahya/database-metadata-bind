@@ -21,17 +21,17 @@ package com.github.jinahya.database.metadata.bind;
  */
 
 import lombok.AccessLevel;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Getter;
-import lombok.RequiredArgsConstructor;
-import lombok.experimental.SuperBuilder;
 
 import java.util.Comparator;
 import java.util.Objects;
 
 @Getter
-@RequiredArgsConstructor(access = AccessLevel.PRIVATE)
-@SuperBuilder(toBuilder = true)
-public final class AttributeId extends AbstractMetadataTypeId<AttributeId, Attribute> {
+@AllArgsConstructor(access = AccessLevel.PRIVATE)
+@Builder(access = AccessLevel.PRIVATE)
+final class AttributeId extends AbstractMetadataTypeId<AttributeId, Attribute> {
 
     private static final long serialVersionUID = 7221973324274278465L;
 
@@ -52,6 +52,7 @@ public final class AttributeId extends AbstractMetadataTypeId<AttributeId, Attri
                 .build();
     }
 
+    // -----------------------------------------------------------------------------------------------------------------
     @Override
     public String toString() {
         return super.toString() + '{' +
@@ -74,6 +75,7 @@ public final class AttributeId extends AbstractMetadataTypeId<AttributeId, Attri
         return Objects.hash(udtId, attrName);
     }
 
+    // -----------------------------------------------------------------------------------------------------------------
     private final UDTId udtId;
 
     private final String attrName;

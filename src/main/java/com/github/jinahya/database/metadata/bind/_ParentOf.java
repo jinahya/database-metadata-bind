@@ -22,6 +22,7 @@ package com.github.jinahya.database.metadata.bind;
 
 import java.lang.annotation.Documented;
 import java.lang.annotation.ElementType;
+import java.lang.annotation.Repeatable;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
@@ -30,12 +31,21 @@ import java.lang.annotation.Target;
  * A marker interface for relating binding types to their parent types.
  *
  * @author Jin Kwon &lt;onacit_at_gmail.com&gt;
- * @see ParentOf
+ * @see _ChildOf
  */
+@Repeatable(_ParentOf.ParentsOf.class)
 @Documented
 @Retention(RetentionPolicy.RUNTIME)
 @Target({ElementType.TYPE})
-@interface ChildOf {
+@interface _ParentOf {
+
+    @Documented
+    @Retention(RetentionPolicy.RUNTIME)
+    @Target({ElementType.TYPE})
+    @interface ParentsOf {
+
+        _ParentOf[] value();
+    }
 
     /**
      * Returns the parent class.

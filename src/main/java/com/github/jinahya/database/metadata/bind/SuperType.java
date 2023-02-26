@@ -21,9 +21,10 @@ package com.github.jinahya.database.metadata.bind;
  */
 
 import lombok.AccessLevel;
-import lombok.Data;
 import lombok.EqualsAndHashCode;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 import lombok.ToString;
 import lombok.experimental.SuperBuilder;
 
@@ -37,21 +38,22 @@ import java.util.Optional;
  * @author Jin Kwon &lt;jinahya_at_gmail.com&gt;
  * @see Context#getSuperTypes(String, String, String)
  */
-@ChildOf(Schema.class)
+@_ChildOf(Schema.class)
+@Setter
+@Getter
 @EqualsAndHashCode(callSuper = true)
 @ToString(callSuper = true)
-@Data
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @SuperBuilder(toBuilder = true)
 public class SuperType extends AbstractMetadataType {
 
     private static final long serialVersionUID = 4603878785941565029L;
 
-    public UDTId getTypeId() {
+    UDTId getTypeId() {
         return UDTId.of(getTypeCatNonNull(), getTypeSchemNonNull(), getTypeName());
     }
 
-    public UDTId getSupertypeId() {
+    UDTId getSupertypeId() {
         return UDTId.of(getSupertypeCatNonNull(), getSupertypeSchemNonNull(), getSupertypeName());
     }
 
@@ -71,22 +73,22 @@ public class SuperType extends AbstractMetadataType {
         return Optional.ofNullable(getSupertypeSchem()).orElse(Schema.COLUMN_VALUE_TABLE_SCHEM_EMPTY);
     }
 
-    @NullableBySpecification
+    @_NullableBySpecification
     @ColumnLabel("TYPE_CAT")
     private String typeCat;
 
-    @NullableBySpecification
+    @_NullableBySpecification
     @ColumnLabel("TYPE_SCHEM")
     private String typeSchem;
 
     @ColumnLabel("TYPE_NAME")
     private String typeName;
 
-    @NullableBySpecification
+    @_NullableBySpecification
     @ColumnLabel("SUPERTYPE_CAT")
     private String supertypeCat;
 
-    @NullableBySpecification
+    @_NullableBySpecification
     @ColumnLabel("SUPERTYPE_SCHEM")
     private String supertypeSchem;
 

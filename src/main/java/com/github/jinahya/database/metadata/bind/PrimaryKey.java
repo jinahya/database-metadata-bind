@@ -41,7 +41,7 @@ import static java.util.Comparator.nullsFirst;
  *
  * @author Jin Kwon &lt;jinahya_at_gmail.com&gt;
  */
-@ChildOf(Table.class)
+@_ChildOf(Table.class)
 @Setter
 @Getter
 //@EqualsAndHashCode(callSuper = true)
@@ -118,7 +118,7 @@ public class PrimaryKey extends AbstractMetadataType {
     }
 
     // ---------------------------------------------------------------------------------------------------- primaryKeyId
-    public PrimaryKeyId getPrimaryKeyId() {
+    PrimaryKeyId getPrimaryKeyId() {
         if (primaryKeyId == null) {
             primaryKeyId = PrimaryKeyId.of(
                     TableId.of(
@@ -133,11 +133,11 @@ public class PrimaryKey extends AbstractMetadataType {
     }
 
     // -----------------------------------------------------------------------------------------------------------------
-    @NullableBySpecification
+    @_NullableBySpecification
     @ColumnLabel(COLUMN_LABEL_TABLE_CAT)
     private String tableCat;
 
-    @NullableBySpecification
+    @_NullableBySpecification
     @ColumnLabel(COLUMN_LABEL_TABLE_SCHEM)
     private String tableSchem;
 
@@ -150,7 +150,7 @@ public class PrimaryKey extends AbstractMetadataType {
     @ColumnLabel(COLUMN_LABEL_KEY_SEQ)
     private int keySeq;
 
-    @NullableBySpecification
+    @_NullableBySpecification
     @ColumnLabel(COLUMN_LABEL_PK_NAME)
     private String pkName;
 

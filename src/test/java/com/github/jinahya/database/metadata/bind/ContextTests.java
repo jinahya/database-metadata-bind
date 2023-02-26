@@ -281,8 +281,18 @@ final class ContextTests {
     static void catalogs(final Context context, final List<? extends Catalog> catalogs) throws SQLException {
         Objects.requireNonNull(context, "context is null");
         Objects.requireNonNull(catalogs, "catalogs is null");
-        ContextTestUtils.assertCatalogsAreSorted(catalogs);
-        ContextTestUtils.assertCatalogIdsAreSorted(catalogs.stream().map(Catalog::getCatalogId));
+        assertThat(catalogs)
+                .doesNotHaveDuplicates()
+                .satisfiesAnyOf(
+                        l -> assertThat(l).isSortedAccordingTo(Catalog.CASE_INSENSITIVE_ORDER),
+                        l -> assertThat(l).isSortedAccordingTo(Catalog.LEXICOGRAPHIC_ORDER)
+                )
+                .extracting(Catalog::getCatalogId)
+                .doesNotHaveDuplicates()
+                .satisfiesAnyOf(
+                        l -> assertThat(l).isSortedAccordingTo(CatalogId.CASE_INSENSITIVE_ORDER),
+                        l -> assertThat(l).isSortedAccordingTo(CatalogId.LEXICOGRAPHIC_ORDER)
+                );
         for (final var catalog : catalogs) {
             catalog(context, catalog);
         }
@@ -527,31 +537,14 @@ final class ContextTests {
     private static void functions(final Context context, final List<? extends Function> functions) throws SQLException {
         Objects.requireNonNull(context, "context is null");
         Objects.requireNonNull(functions, "functions is null");
-        {
-            final var databaseProductNames = Set.of(
-                    ""
-            );
-            if (!databaseProductNames.contains(databaseProductName)) {
-                assertThat(functions).satisfiesAnyOf(
+        assertThat(functions)
+                .doesNotHaveDuplicates()
+                .satisfiesAnyOf(
                         l -> assertThat(l).isSortedAccordingTo(Function.CASE_INSENSITIVE_ORDER),
                         l -> assertThat(l).isSortedAccordingTo(Function.LEXICOGRAPHIC_ORDER)
-                );
-            }
-        }
-        {
-            final var databaseProductNames = Set.of(
-                    ""
-            );
-            if (!databaseProductNames.contains(databaseProductName)) {
-//                assertThat(functions)
-//                        .extracting(Function::getFunctionId)
-//                        .satisfiesAnyOf(
-//                                l -> assertThat(l).isSortedAccordingTo(FunctionId.CASE_INSENSITIVE_ORDER),
-//                                l -> assertThat(l).isSortedAccordingTo(FunctionId.LEXICOGRAPHIC_ORDER)
-//                        )
-//                ;
-            }
-        }
+                )
+                .extracting(Function::getFunctionId)
+                .doesNotHaveDuplicates();
         for (final var function : functions) {
             function(context, function);
         }
@@ -645,7 +638,7 @@ final class ContextTests {
             if (!databaseProductNames.contains(databaseProductName)) {
                 assertThat(importedKeys).satisfiesAnyOf(
                         l -> assertThat(l).isSortedAccordingTo(ImportedKey.CASE_INSENSITIVE_ORDER),
-                        l -> assertThat(l).isSortedAccordingTo(ImportedKey.COMPARING_NATUAL)
+                        l -> assertThat(l).isSortedAccordingTo(ImportedKey.LEXICOGRAPHIC_ORDER)
                 );
             }
         }
@@ -933,6 +926,7 @@ final class ContextTests {
         try {
             final var columns = context.getColumns(table, "%");
             assertThat(columns)
+                    .doesNotHaveDuplicates()
                     .extracting(Column::getColumnId)
                     .doesNotHaveDuplicates()
                     .extracting(ColumnId::getTableId)
@@ -944,6 +938,7 @@ final class ContextTests {
         try {
             final var columnPrivileges = context.getColumnPrivileges(table, "%");
             assertThat(columnPrivileges)
+                    .doesNotHaveDuplicates()
                     .extracting(ColumnPrivilege::getColumnPrivilegeId)
                     .doesNotHaveDuplicates()
                     .extracting(ColumnPrivilegeId::getColumnId)
@@ -956,6 +951,7 @@ final class ContextTests {
         try {
             final var exportedKeys = context.getExportedKeys(table);
             assertThat(exportedKeys)
+                    .doesNotHaveDuplicates()
                     .extracting(TableKey::getPkcolumnId)
                     .doesNotHaveDuplicates()
                     .extracting(ColumnId::getTableId)
@@ -967,6 +963,7 @@ final class ContextTests {
         try {
             final var importedKeys = context.getImportedKeys(table);
             assertThat(importedKeys)
+                    .doesNotHaveDuplicates()
                     .extracting(TableKey::getFkcolumnId)
                     .doesNotHaveDuplicates()
                     .extracting(ColumnId::getTableId)
@@ -988,6 +985,7 @@ final class ContextTests {
         try {
             final var primaryKeys = context.getPrimaryKeys(table);
             assertThat(primaryKeys)
+                    .doesNotHaveDuplicates()
                     .extracting(PrimaryKey::getPrimaryKeyId)
                     .doesNotHaveDuplicates()
                     .extracting(PrimaryKeyId::getTableId)
@@ -999,6 +997,7 @@ final class ContextTests {
         try {
             final var pseudoColumns = context.getPseudoColumns(table, "%");
             assertThat(pseudoColumns)
+                    .doesNotHaveDuplicates()
                     .map(PseudoColumn::getPseudoColumnId)
                     .doesNotHaveDuplicates()
                     .map(PseudoColumnId::getTableId)
@@ -1016,6 +1015,7 @@ final class ContextTests {
         try {
             final var versionColumns = context.getVersionColumns(table);
             assertThat(versionColumns)
+                    .doesNotHaveDuplicates()
                     .extracting(v -> v.getColumnId(table))
                     .doesNotHaveDuplicates();
             versionColumns.stream().map(vc -> vc.getColumnId(table)).forEach(ContextTests::common);

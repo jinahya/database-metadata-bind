@@ -31,7 +31,7 @@ import java.util.Comparator;
 import java.util.Objects;
 
 /**
- * An entity class for binding results of {@link java.sql.DatabaseMetaData#getTypeInfo() getTypeInfo()}.
+ * A class for binding results of {@link java.sql.DatabaseMetaData#getTypeInfo() getTypeInfo()} method.
  *
  * @author Jin Kwon &lt;jinahya_at_gmail.com&gt;
  * @see Context#getTypeInfo()
@@ -171,19 +171,19 @@ public class TypeInfo extends AbstractMetadataType {
     @ColumnLabel(COLUMN_LABEL_DATA_TYPE)
     private int dataType;
 
-    @NullableBySpecification
+    @_NullableBySpecification
     @ColumnLabel(COLUMN_LABEL_PRECISION)
     private Integer precision;
 
-    @NullableBySpecification
+    @_NullableBySpecification
     @ColumnLabel(COLUMN_LABEL_LITERAL_PREFIX)
     private String literalPrefix;
 
-    @NullableBySpecification
+    @_NullableBySpecification
     @ColumnLabel(COLUMN_LABEL_LITERAL_SUFFIX)
     private String literalSuffix;
 
-    @NullableBySpecification
+    @_NullableBySpecification
     @ColumnLabel(COLUMN_LABEL_CREATE_PARAMS)
     private String createParams;
 
@@ -196,7 +196,7 @@ public class TypeInfo extends AbstractMetadataType {
     @ColumnLabel(COLUMN_LABEL_SEARCHABLE)
     private int searchable;
 
-    @NotUsedBySpecification
+    @_NotUsedBySpecification
     @ColumnLabel("UNSIGNED_ATTRIBUTE")
     private Boolean unsignedAttribute;
 
@@ -206,7 +206,7 @@ public class TypeInfo extends AbstractMetadataType {
     @ColumnLabel("AUTO_INCREMENT")
     private boolean autoIncrement;
 
-    @NullableBySpecification
+    @_NullableBySpecification
     @ColumnLabel("LOCAL_TYPE_NAME")
     private String localTypeName;
 
@@ -216,11 +216,11 @@ public class TypeInfo extends AbstractMetadataType {
     @ColumnLabel("MAXIMUM_SCALE")
     private int maximumScale;
 
-    @NotUsedBySpecification
+    @_NotUsedBySpecification
     @ColumnLabel("SQL_DATA_TYPE")
     private Integer sqlDataType;
 
-    @NotUsedBySpecification
+    @_NotUsedBySpecification
     @ColumnLabel("SQL_DATETIME_SUB")
     private Integer sqlDatetimeSub;
 

@@ -21,8 +21,9 @@ package com.github.jinahya.database.metadata.bind;
  */
 
 import lombok.AccessLevel;
-import lombok.Data;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 import lombok.ToString;
 import lombok.experimental.SuperBuilder;
 
@@ -34,8 +35,9 @@ import java.util.Objects;
  *
  * @author Jin Kwon &lt;jinahya_at_gmail.com&gt;
  */
+@Setter
+@Getter
 @ToString(callSuper = true)
-@Data
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @SuperBuilder(toBuilder = true)
 public class ClientInfoProperty extends AbstractMetadataType {
@@ -60,7 +62,7 @@ public class ClientInfoProperty extends AbstractMetadataType {
 
     @Override
     public int hashCode() {
-        return Objects.hash(super.hashCode(), name);
+        return Objects.hash(name);
     }
 
     @ColumnLabel(COLUMN_LABEL_NAME)

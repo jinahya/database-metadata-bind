@@ -28,7 +28,7 @@ import java.io.Serializable;
  * @param <T> self type parameter
  * @param <U> meta type parameter
  */
-public interface MetadataTypeId<T extends MetadataTypeId<T, U>, U extends MetadataType>
+interface MetadataTypeId<T extends MetadataTypeId<T, U>, U extends MetadataType>
         extends Serializable {
 
 }

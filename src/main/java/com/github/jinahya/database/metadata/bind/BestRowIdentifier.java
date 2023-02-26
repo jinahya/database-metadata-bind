@@ -41,7 +41,7 @@ import java.util.Objects;
  * @see PseudoColumnEnum
  * @see ScopeEnum
  */
-@ChildOf(Table.class)
+@_ChildOf(Table.class)
 @Setter
 @Getter
 @EqualsAndHashCode(callSuper = true)
@@ -167,15 +167,15 @@ public class BestRowIdentifier extends AbstractMetadataType {
     @ColumnLabel("TYPE_NAME")
     private String typeName;
 
-    @NullableBySpecification
+    @_NullableBySpecification
     @ColumnLabel("COLUMN_SIZE")
     private Integer columnSize;
 
-    @NotUsedBySpecification
+    @_NotUsedBySpecification
     @ColumnLabel("BUFFER_LENGTH")
     private Integer bufferLength;
 
-    @NullableBySpecification
+    @_NullableBySpecification
     @ColumnLabel("DECIMAL_DIGITS")
     private Integer decimalDigits;
 

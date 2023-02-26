@@ -80,18 +80,18 @@ public class TablePrivilege extends AbstractMetadataType {
     }
 
     // -----------------------------------------------------------------------------------------------------------------
-    @NullableBySpecification
+    @_NullableBySpecification
     @ColumnLabel(COLUMN_LABEL_TABLE_CAT)
     private String tableCat;
 
-    @NullableBySpecification
+    @_NullableBySpecification
     @ColumnLabel(COLUMN_LABEL_TABLE_SCHEM)
     private String tableSchem;
 
     @ColumnLabel(COLUMN_LABEL_TABLE_NAME)
     private String tableName;
 
-    @NullableBySpecification
+    @_NullableBySpecification
     @ColumnLabel("GRANTOR")
     private String grantor;
 
@@ -101,7 +101,7 @@ public class TablePrivilege extends AbstractMetadataType {
     @ColumnLabel("PRIVILEGE")
     private String privilege;
 
-    @NullableBySpecification
+    @_NullableBySpecification
     @ColumnLabel("IS_GRANTABLE")
     private String isGrantable;
 }

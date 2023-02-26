@@ -23,7 +23,9 @@ package com.github.jinahya.database.metadata.bind;
 import lombok.AccessLevel;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 import lombok.ToString;
 import lombok.experimental.SuperBuilder;
 
@@ -42,16 +44,14 @@ import static java.util.Comparator.nullsFirst;
  * @author Jin Kwon &lt;jinahya_at_gmail.com&gt;
  * @see Context#getTables(String, String, String, String[])
  */
-@ParentOf(VersionColumn.class)
-@ParentOf(PseudoColumn.class)
-@ParentOf(PrimaryKey.class)
-@ParentOf(IndexInfo.class)
-@ParentOf(ImportedKey.class)
-@ParentOf(ExportedKey.class)
-@ParentOf(Column.class)
-@ParentOf(BestRowIdentifier.class)
-@ChildOf(Schema.class)
-//@EqualsAndHashCode(callSuper = true)
+@_ParentOf(VersionColumn.class)
+@_ParentOf(PseudoColumn.class)
+@_ParentOf(PrimaryKey.class)
+@_ParentOf(IndexInfo.class)
+@_ParentOf(ImportedKey.class)
+@_ParentOf(ExportedKey.class)
+@_ParentOf(Column.class)
+@_ParentOf(BestRowIdentifier.class)
 @ToString(callSuper = true)
 @Data
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
@@ -157,47 +157,47 @@ public class Table extends AbstractMetadataType {
     }
 
     // -----------------------------------------------------------------------------------------------------------------
-    @NullableBySpecification
+    @_NullableBySpecification
     @ColumnLabel(COLUMN_LABEL_TABLE_CAT)
     private String tableCat;
 
-    @NullableBySpecification
+    @_NullableBySpecification
     @ColumnLabel(COLUMN_LABEL_TABLE_SCHEM)
     private String tableSchem;
 
     @ColumnLabel(COLUMN_LABEL_TABLE_NAME)
     private String tableName;
 
-    @NullableByVendor("MariaDB")
+    @_NullableByVendor("MariaDB")
     @ColumnLabel(COLUMN_LABEL_TABLE_TYPE)
     private String tableType;
 
-    @NullableBySpecification
+    @_NullableBySpecification
     @ColumnLabel("REMARKS")
     private String remarks;
 
-    @NullableBySpecification
+    @_NullableBySpecification
     @ColumnLabel("TYPE_CAT")
     private String typeCat;
 
-    @NullableBySpecification
+    @_NullableBySpecification
     @ColumnLabel("TYPE_SCHEM")
     private String typeSchem;
 
-    @NullableBySpecification
+    @_NullableBySpecification
     @ColumnLabel("TYPE_NAME")
     private String typeName;
 
-    @NullableBySpecification
+    @_NullableBySpecification
     @ColumnLabel("SELF_REFERENCING_COL_NAME")
     private String selfReferencingColName;
 
-    @NullableBySpecification
+    @_NullableBySpecification
     @ColumnLabel("REF_GENERATION")
     private String refGeneration;
 
     // -----------------------------------------------------------------------------------------------------------------
-    public TableId getTableId() {
+    TableId getTableId() {
         if (tableId == null) {
             tableId = TableId.of(
                     getTableCatNonNull(),
@@ -208,6 +208,8 @@ public class Table extends AbstractMetadataType {
         return tableId;
     }
 
+    @Setter(AccessLevel.NONE)
+    @Getter(AccessLevel.NONE)
     @EqualsAndHashCode.Exclude
     @ToString.Exclude
     private transient TableId tableId;

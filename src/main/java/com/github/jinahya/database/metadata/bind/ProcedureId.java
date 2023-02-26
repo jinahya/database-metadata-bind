@@ -21,16 +21,16 @@ package com.github.jinahya.database.metadata.bind;
  */
 
 import lombok.AccessLevel;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Getter;
-import lombok.RequiredArgsConstructor;
-import lombok.experimental.SuperBuilder;
 
 import java.util.Objects;
 
 @Getter
-@RequiredArgsConstructor(access = AccessLevel.PRIVATE)
-@SuperBuilder(toBuilder = true)
-final class ProcedureId implements MetadataTypeId<ProcedureId, Procedure> {
+@AllArgsConstructor(access = AccessLevel.PRIVATE)
+@Builder(access = AccessLevel.PRIVATE)
+final class ProcedureId extends AbstractMetadataTypeId<ProcedureId, Procedure> {
 
     private static final long serialVersionUID = 227742014479297143L;
 
@@ -51,10 +51,7 @@ final class ProcedureId implements MetadataTypeId<ProcedureId, Procedure> {
                 .build();
     }
 
-    static ProcedureId of(final String procedureCat, final String procedureSchem, final String specificName) {
-        return of(SchemaId.of(procedureCat, procedureSchem), specificName);
-    }
-
+    // -----------------------------------------------------------------------------------------------------------------
     @Override
     public String toString() {
         return super.toString() + '{' +
@@ -76,6 +73,7 @@ final class ProcedureId implements MetadataTypeId<ProcedureId, Procedure> {
         return Objects.hash(schemaId, specificName);
     }
 
+    // -----------------------------------------------------------------------------------------------------------------
     private final SchemaId schemaId;
 
     private final String specificName;

@@ -43,7 +43,7 @@ import static java.util.Comparator.nullsFirst;
  *
  * @author Jin Kwon &lt;jinahya_at_gmail.com&gt;
  */
-@ChildOf(Procedure.class)
+@_ChildOf(Procedure.class)
 @Setter
 @Getter
 @ToString(callSuper = true)
@@ -129,11 +129,11 @@ public class ProcedureColumn extends AbstractMetadataType {
     }
 
     // -----------------------------------------------------------------------------------------------------------------
-    @NullableBySpecification
+    @_NullableBySpecification
     @ColumnLabel("PROCEDURE_CAT")
     private String procedureCat;
 
-    @NullableBySpecification
+    @_NullableBySpecification
     @ColumnLabel("PROCEDURE_SCHEM")
     private String procedureSchem;
 
@@ -152,7 +152,7 @@ public class ProcedureColumn extends AbstractMetadataType {
     @ColumnLabel("TYPE_NAME")
     private String typeName;
 
-    @NullableBySpecification
+    @_NullableBySpecification
     @ColumnLabel("PRECISION")
     private Integer precision;
 
@@ -160,7 +160,7 @@ public class ProcedureColumn extends AbstractMetadataType {
     private int length;
 
     // https://issues.apache.org/jira/browse/DERBY-7103
-    @NullableBySpecification
+    @_NullableBySpecification
     @ColumnLabel("SCALE")
     private Integer scale;
 
@@ -170,23 +170,23 @@ public class ProcedureColumn extends AbstractMetadataType {
     @ColumnLabel("NULLABLE")
     private int nullable;
 
-    @NullableByVendor("derby") // https://issues.apache.org/jira/browse/DERBY-7101
+    @_NullableByVendor("derby") // https://issues.apache.org/jira/browse/DERBY-7101
     @ColumnLabel("REMARKS")
     private String remarks;
 
-    @NullableBySpecification
+    @_NullableBySpecification
     @ColumnLabel("COLUMN_DEF")
     private String columnDef;
 
-    @Reserved
+    @_Reserved
     @ColumnLabel("SQL_DATA_TYPE")
     private Integer sqlDataType;
 
-    @Reserved
+    @_Reserved
     @ColumnLabel("SQL_DATETIME_SUB")
     private Integer sqlDatetimeSub;
 
-    @NullableBySpecification
+    @_NullableBySpecification
     @ColumnLabel("CHAR_OCTET_LENGTH")
     private Integer charOctetLength;
 
@@ -205,8 +205,10 @@ public class ProcedureColumn extends AbstractMetadataType {
         if (procedureColumnId == null) {
             procedureColumnId = ProcedureColumnId.of(
                     ProcedureId.of(
-                            getProcedureCatNonNull(),
-                            getProcedureSchemNonNull(),
+                            SchemaId.of(
+                                    getProcedureCatNonNull(),
+                                    getProcedureSchemNonNull()
+                            ),
                             getSpecificName()
                     ),
                     getColumnName(),

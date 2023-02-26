@@ -36,8 +36,7 @@ import java.util.Comparator;
  * @see Context#getExportedKeys(String, String, String)
  * @see ImportedKey
  */
-@ChildOf(Table.class)
-//@EqualsAndHashCode(callSuper = true)
+@_ChildOf(Table.class)
 @ToString(callSuper = true)
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @SuperBuilder(toBuilder = true)

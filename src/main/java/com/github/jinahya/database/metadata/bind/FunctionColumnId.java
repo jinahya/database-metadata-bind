@@ -21,16 +21,16 @@ package com.github.jinahya.database.metadata.bind;
  */
 
 import lombok.AccessLevel;
-import lombok.Data;
-import lombok.RequiredArgsConstructor;
-import lombok.experimental.SuperBuilder;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Getter;
 
 import java.util.Objects;
 
-@Data
-@RequiredArgsConstructor(access = AccessLevel.PRIVATE)
-@SuperBuilder(toBuilder = true)
-final class FunctionColumnId implements MetadataTypeId<FunctionColumnId, FunctionColumn> {
+@Getter
+@AllArgsConstructor(access = AccessLevel.PRIVATE)
+@Builder(access = AccessLevel.PRIVATE)
+final class FunctionColumnId extends AbstractMetadataTypeId<FunctionColumnId, FunctionColumn> {
 
     private static final long serialVersionUID = 7221973324274278465L;
 
@@ -40,13 +40,10 @@ final class FunctionColumnId implements MetadataTypeId<FunctionColumnId, Functio
         if (columnType < 0) {
             throw new IllegalArgumentException("negative columnType: " + columnType);
         }
-        return builder()
-                .functionId(functionId)
-                .columnName(columnName)
-                .columnType(columnType)
-                .build();
+        return new FunctionColumnId(functionId, columnName, columnType);
     }
 
+    // -----------------------------------------------------------------------------------------------------------------
     @Override
     public String toString() {
         return super.toString() + '{' +
@@ -71,6 +68,7 @@ final class FunctionColumnId implements MetadataTypeId<FunctionColumnId, Functio
         return Objects.hash(functionId, columnName, columnType);
     }
 
+    // -----------------------------------------------------------------------------------------------------------------
     private final FunctionId functionId;
 
     private final String columnName;

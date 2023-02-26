@@ -40,7 +40,7 @@ import java.util.Optional;
  * @author Jin Kwon &lt;jinahya_at_gmail.com&gt;
  * @see Context#getColumnPrivileges(String, String, String, String)
  */
-@ChildOf(Table.class)
+@_ChildOf(Table.class)
 @EqualsAndHashCode(callSuper = true)
 @ToString(callSuper = true)
 @Data
@@ -102,11 +102,11 @@ public class ColumnPrivilege extends AbstractMetadataType {
         );
     }
 
-    @NullableBySpecification
+    @_NullableBySpecification
     @ColumnLabel(COLUMN_LABEL_TABLE_CAT)
     private String tableCat;
 
-    @NullableBySpecification
+    @_NullableBySpecification
     @ColumnLabel(COLUMN_LABEL_TABLE_SCHEM)
     private String tableSchem;
 
@@ -116,7 +116,7 @@ public class ColumnPrivilege extends AbstractMetadataType {
     @ColumnLabel(COLUMN_LABEL_COLUMN_NAME)
     private String columnName;
 
-    @NullableBySpecification
+    @_NullableBySpecification
     @ColumnLabel("GRANTOR")
     private String grantor;
 
@@ -126,7 +126,7 @@ public class ColumnPrivilege extends AbstractMetadataType {
     @ColumnLabel("PRIVILEGE")
     private String privilege;
 
-    @NullableBySpecification
+    @_NullableBySpecification
     @ColumnLabel("IS_GRANTABLE")
     private String isGrantable;
 

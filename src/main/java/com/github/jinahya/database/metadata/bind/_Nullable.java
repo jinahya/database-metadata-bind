@@ -34,6 +34,6 @@ import java.lang.annotation.Target;
 @Documented
 @Retention(RetentionPolicy.RUNTIME)
 @Target({ElementType.ANNOTATION_TYPE})
-@interface Nullable {
+@interface _Nullable {
 
 }

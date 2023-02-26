@@ -21,9 +21,10 @@ package com.github.jinahya.database.metadata.bind;
  */
 
 import lombok.AccessLevel;
-import lombok.Data;
 import lombok.EqualsAndHashCode;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 import lombok.ToString;
 import lombok.experimental.SuperBuilder;
 
@@ -40,9 +41,10 @@ import java.util.Optional;
  * @see NullableEnum
  */
 //@ParentOf(ColumnPrivilege.class)
-@ChildOf(Table.class)
+@_ChildOf(Table.class)
+@Setter
+@Getter
 @ToString(callSuper = true)
-@Data
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @SuperBuilder(toBuilder = true)
 public class Column extends AbstractMetadataType {
@@ -68,7 +70,7 @@ public class Column extends AbstractMetadataType {
     public static final String COLUMN_LABEL_NULLABLE = "NULLABLE";
 
     /**
-     * Constants for {@link #COLUMN_LABEL_NULLABLE} column values.
+     * Constants for {@value #COLUMN_LABEL_NULLABLE} column values.
      *
      * @author Jin Kwon &lt;onacit_at_gmail.com&gt;
      */
@@ -118,38 +120,22 @@ public class Column extends AbstractMetadataType {
     public static final String COLUMN_LABEL_IS_GENERATEDCOLUMN = "IS_GENERATEDCOLUMN";
 
     // -----------------------------------------------------------------------------------------------------------------
+
     @Override
     public boolean equals(final Object obj) {
         if (this == obj) return true;
         if (!(obj instanceof Column)) return false;
+        if (!super.equals(obj)) return false;
         final Column that = (Column) obj;
-        return Objects.equals(getColumnId(), that.getColumnId());
+        return Objects.equals(tableCat, that.tableCat) &&
+               Objects.equals(tableSchem, that.tableSchem) &&
+               Objects.equals(tableName, that.tableName) &&
+               Objects.equals(columnName, that.columnName);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(getColumnId());
-    }
-
-    // -------------------------------------------------------------------------------------------------------- columnId
-
-    /**
-     * Returns a value for identifying this column.
-     *
-     * @return an identifier of this column.
-     */
-    public ColumnId getColumnId() {
-        if (columnId == null) {
-            columnId = ColumnId.of(
-                    TableId.of(
-                            getTableCatNonNull(),
-                            getTableSchemNonNull(),
-                            getTableName()
-                    ),
-                    getColumnName()
-            );
-        }
-        return columnId;
+        return Objects.hash(tableCat, tableSchem, tableName, columnName);
     }
 
     // -------------------------------------------------------------------------------------------------------- tableCat
@@ -185,16 +171,11 @@ public class Column extends AbstractMetadataType {
     }
 
     // -----------------------------------------------------------------------------------------------------------------
-    @EqualsAndHashCode.Exclude
-    @ToString.Exclude
-    private transient ColumnId columnId;
-
-    // -----------------------------------------------------------------------------------------------------------------
-    @NullableBySpecification
+    @_NullableBySpecification
     @ColumnLabel(COLUMN_LABEL_TABLE_CAT)
     private String tableCat;
 
-    @NullableBySpecification
+    @_NullableBySpecification
     @ColumnLabel(COLUMN_LABEL_TABLE_SCHEM)
     private String tableSchem;
 
@@ -210,15 +191,15 @@ public class Column extends AbstractMetadataType {
     @ColumnLabel("TYPE_NAME")
     private String typeName;
 
-    @NullableBySpecification
+    @_NullableBySpecification
     @ColumnLabel("COLUMN_SIZE")
     private Integer columnSize;
 
-    @NotUsedBySpecification
+    @_NotUsedBySpecification
     @ColumnLabel("BUFFER_LENGTH")
     private Integer bufferLength;
 
-    @NullableBySpecification
+    @_NullableBySpecification
     @ColumnLabel("DECIMAL_DIGITS")
     private Integer decimalDigits;
 
@@ -228,19 +209,19 @@ public class Column extends AbstractMetadataType {
     @ColumnLabel(COLUMN_LABEL_NULLABLE)
     private int nullable;
 
-    @NullableBySpecification
+    @_NullableBySpecification
     @ColumnLabel("REMARKS")
     private String remarks;
 
-    @NullableBySpecification
+    @_NullableBySpecification
     @ColumnLabel("COLUMN_DEF")
     private String columnDef;
 
-    @NotUsedBySpecification
+    @_NotUsedBySpecification
     @ColumnLabel("SQL_DATA_TYPE")
     private Integer sqlDataType;
 
-    @NotUsedBySpecification
+    @_NotUsedBySpecification
     @ColumnLabel("SQL_DATETIME_SUB")
     private Integer sqlDatetimeSub;
 
@@ -253,19 +234,19 @@ public class Column extends AbstractMetadataType {
     @ColumnLabel("IS_NULLABLE")
     private String isNullable;
 
-    @NullableBySpecification
+    @_NullableBySpecification
     @ColumnLabel("SCOPE_CATALOG")
     private String scopeCatalog;
 
-    @NullableBySpecification
+    @_NullableBySpecification
     @ColumnLabel("SCOPE_SCHEMA")
     private String scopeSchema;
 
-    @NullableBySpecification
+    @_NullableBySpecification
     @ColumnLabel("SCOPE_TABLE")
     private String scopeTable;
 
-    @NullableBySpecification
+    @_NullableBySpecification
     @ColumnLabel("SOURCE_DATA_TYPE")
     private Integer sourceDataType;
 
@@ -274,4 +255,31 @@ public class Column extends AbstractMetadataType {
 
     @ColumnLabel(COLUMN_LABEL_IS_GENERATEDCOLUMN)
     private String isGeneratedcolumn;
+
+    // -----------------------------------------------------------------------------------------------------------------
+
+    /**
+     * Returns a value for identifying this column.
+     *
+     * @return an identifier of this column.
+     */
+    ColumnId getColumnId() {
+        if (columnId == null) {
+            columnId = ColumnId.of(
+                    TableId.of(
+                            getTableCatNonNull(),
+                            getTableSchemNonNull(),
+                            getTableName()
+                    ),
+                    getColumnName()
+            );
+        }
+        return columnId;
+    }
+
+    @Setter(AccessLevel.NONE)
+    @Getter(AccessLevel.NONE)
+    @EqualsAndHashCode.Exclude
+    @ToString.Exclude
+    private transient ColumnId columnId;
 }

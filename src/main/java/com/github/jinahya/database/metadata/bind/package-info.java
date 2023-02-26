@@ -1,3 +1,9 @@
+/**
+ * Defines classes for binding results of various methods defined in {@link java.sql.DatabaseMetaData}.
+ *
+ * @author Jin Kwon &lt;onacit_at_gmail.com&gt;
+ * @see com.github.jinahya.database.metadata.bind.Context
+ */
 package com.github.jinahya.database.metadata.bind;
 
 /*-

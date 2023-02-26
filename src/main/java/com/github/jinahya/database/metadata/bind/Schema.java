@@ -38,14 +38,14 @@ import java.util.Optional;
  *
  * @author Jin Kwon &lt;jinahya_at_gmail.com&gt;
  */
-@ParentOf(UDT.class)
-@ParentOf(TablePrivilege.class)
-@ParentOf(Table.class)
-@ParentOf(SuperType.class)
-@ParentOf(SuperTable.class)
-@ParentOf(Procedure.class)
-@ParentOf(Function.class)
-@ChildOf(Catalog.class)
+@_ParentOf(UDT.class)
+@_ParentOf(TablePrivilege.class)
+@_ParentOf(Table.class)
+@_ParentOf(SuperType.class)
+@_ParentOf(SuperTable.class)
+@_ParentOf(Procedure.class)
+@_ParentOf(Function.class)
+@_ChildOf(Catalog.class)
 //@EqualsAndHashCode(callSuper = true)
 //@ToString(callSuper = true)
 @Setter
@@ -117,7 +117,7 @@ public class Schema extends AbstractMetadataType {
         schemaId = null;
     }
 
-    public SchemaId getSchemaId() {
+    SchemaId getSchemaId() {
         if (schemaId == null) {
             schemaId = SchemaId.of(
                     getTableCatalogNonNull(),
@@ -127,7 +127,7 @@ public class Schema extends AbstractMetadataType {
         return schemaId;
     }
 
-    @NullableBySpecification
+    @_NullableBySpecification
     @ColumnLabel(COLUMN_LABEL_TABLE_CATALOG)
     private String tableCatalog;
 

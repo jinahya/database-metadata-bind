@@ -42,7 +42,7 @@ import static java.util.Comparator.nullsFirst;
  * @author Jin Kwon &lt;jinahya_at_gmail.com&gt;
  * @see Context#getFunctionColumns(String, String, String, String)
  */
-@ChildOf(Function.class)
+@_ChildOf(Function.class)
 @Setter
 @Getter
 @ToString(callSuper = true)
@@ -74,7 +74,7 @@ public class FunctionColumn extends AbstractMetadataType {
     public static final String COLUMN_LABEL_COLUMN_TYPE = "COLUMN_TYPE";
 
     /**
-     * Constants for {@link #COLUMN_LABEL_COLUMN_TYPE} column values.
+     * Constants for {@value #COLUMN_LABEL_COLUMN_TYPE} column values.
      *
      * @author Jin Kwon &lt;onacit_at_gmail.com&gt;
      */
@@ -221,11 +221,11 @@ public class FunctionColumn extends AbstractMetadataType {
     private transient FunctionColumnId functionColumnId;
 
     // -----------------------------------------------------------------------------------------------------------------
-    @NullableBySpecification
+    @_NullableBySpecification
     @ColumnLabel(COLUMN_LABEL_FUNCTION_CAT)
     private String functionCat;
 
-    @NullableBySpecification
+    @_NullableBySpecification
     @ColumnLabel(COLUMN_LABEL_FUNCTION_SCHEM)
     private String functionSchem;
 
@@ -244,14 +244,14 @@ public class FunctionColumn extends AbstractMetadataType {
     @ColumnLabel("TYPE_NAME")
     private String typeName;
 
-    @NullableBySpecification
+    @_NullableBySpecification
     @ColumnLabel("PRECISION")
     private Integer precision;
 
     @ColumnLabel("LENGTH")
     private int length;
 
-    @NullableBySpecification
+    @_NullableBySpecification
     @ColumnLabel("SCALE")
     private Integer scale;
 
@@ -261,11 +261,11 @@ public class FunctionColumn extends AbstractMetadataType {
     @ColumnLabel("NULLABLE")
     private int nullable;
 
-    @NullableByVendor("derby") // https://issues.apache.org/jira/browse/DERBY-7100
+    @_NullableByVendor("derby") // https://issues.apache.org/jira/browse/DERBY-7100
     @ColumnLabel("REMARKS")
     private String remarks;
 
-    @NullableBySpecification
+    @_NullableBySpecification
     @ColumnLabel("CHAR_OCTET_LENGTH")
     private Integer charOctetLength;
 

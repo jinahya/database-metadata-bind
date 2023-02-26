@@ -37,10 +37,9 @@ import java.util.Objects;
  * @author Jin Kwon &lt;jinahya_at_gmail.com&gt;
  * @see Context#getVersionColumns(String, String, String)
  */
-@ChildOf(Table.class)
+@_ChildOf(Table.class)
 @Setter
 @Getter
-@EqualsAndHashCode(callSuper = true)
 @ToString(callSuper = true)
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @SuperBuilder(toBuilder = true)
@@ -51,7 +50,7 @@ public class VersionColumn extends AbstractMetadataType {
     public static final String COLUMN_LABEL_PSEUDO_COLUMN = "PSEUDO_COLUMN";
 
     /**
-     * Constants for {@link #COLUMN_LABEL_PSEUDO_COLUMN} column values.
+     * Constants for {@value #COLUMN_LABEL_PSEUDO_COLUMN} column values.
      *
      * @author Jin Kwon &lt;onacit_at_gmail.com&gt;
      */
@@ -97,6 +96,21 @@ public class VersionColumn extends AbstractMetadataType {
         private final int fieldValue;
     }
 
+    // -----------------------------------------------------------------------------------------------------------------
+
+    @Override
+    public boolean equals(final Object obj) {
+        if (this == obj) return true;
+        if (!(obj instanceof VersionColumn)) return false;
+        final VersionColumn that = (VersionColumn) obj;
+        return Objects.equals(columnName, that.columnName);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(columnName);
+    }
+
     // ------------------------------------------------------------------------------------------------------ columnName
     public void setColumnName(final String columnName) {
         this.columnName = columnName;
@@ -104,7 +118,7 @@ public class VersionColumn extends AbstractMetadataType {
     }
 
     // -----------------------------------------------------------------------------------------------------------------
-    @NotUsedBySpecification
+    @_NotUsedBySpecification
     @ColumnLabel("SCOPE")
     private Integer scope;
 
@@ -117,14 +131,14 @@ public class VersionColumn extends AbstractMetadataType {
     @ColumnLabel("TYPE_NAME")
     private String typeName;
 
-    @NullableBySpecification
+    @_NullableBySpecification
     @ColumnLabel("COLUMN_SIZE")
     private Integer columnSize;
 
     @ColumnLabel("BUFFER_LENGTH")
     private int bufferLength;
 
-    @NullableBySpecification
+    @_NullableBySpecification
     @ColumnLabel("DECIMAL_DIGITS")
     private Integer decimalDigits;
 

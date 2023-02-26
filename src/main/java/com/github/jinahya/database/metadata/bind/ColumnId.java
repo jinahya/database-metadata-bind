@@ -21,9 +21,9 @@ package com.github.jinahya.database.metadata.bind;
  */
 
 import lombok.AccessLevel;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Getter;
-import lombok.RequiredArgsConstructor;
-import lombok.experimental.SuperBuilder;
 
 import java.util.Comparator;
 import java.util.Objects;
@@ -34,9 +34,9 @@ import java.util.Objects;
  * @author Jin Kwon &lt;onacit_at_gmail.com&gt;
  */
 @Getter
-@RequiredArgsConstructor(access = AccessLevel.PRIVATE)
-@SuperBuilder(toBuilder = true)
-final class ColumnId implements MetadataTypeId<ColumnId, Column> {
+@AllArgsConstructor(access = AccessLevel.PRIVATE)
+@Builder(access = AccessLevel.PRIVATE)
+final class ColumnId extends AbstractMetadataTypeId<ColumnId, Column> {
 
     private static final long serialVersionUID = -4452694121211962289L;
 
@@ -49,12 +49,10 @@ final class ColumnId implements MetadataTypeId<ColumnId, Column> {
     static ColumnId of(final TableId tableId, final String columnName) {
         Objects.requireNonNull(tableId, "tableId is null");
         Objects.requireNonNull(columnName, "columnName is null");
-        return builder()
-                .tableId(tableId)
-                .columnName(columnName)
-                .build();
+        return new ColumnId(tableId, columnName);
     }
 
+    // -----------------------------------------------------------------------------------------------------------------
     @Override
     public String toString() {
         return super.toString() + '{' +
@@ -77,6 +75,7 @@ final class ColumnId implements MetadataTypeId<ColumnId, Column> {
         return Objects.hash(tableId, columnName);
     }
 
+    // -----------------------------------------------------------------------------------------------------------------
     private final TableId tableId;
 
     private final String columnName;

@@ -38,7 +38,7 @@ import java.util.Optional;
  *
  * @author Jin Kwon &lt;jinahya_at_gmail.com&gt;
  */
-@ChildOf(Table.class)
+@_ChildOf(Table.class)
 @Setter
 @Getter
 @ToString(callSuper = true)
@@ -110,11 +110,11 @@ public class PseudoColumn extends AbstractMetadataType {
     }
 
     // -----------------------------------------------------------------------------------------------------------------
-    @NullableBySpecification
+    @_NullableBySpecification
     @ColumnLabel("TABLE_CAT")
     private String tableCat;
 
-    @NullableBySpecification
+    @_NullableBySpecification
     @ColumnLabel("TABLE_SCHEM")
     private String tableSchem;
 
@@ -130,7 +130,7 @@ public class PseudoColumn extends AbstractMetadataType {
     @ColumnLabel("COLUMN_SIZE")
     private Integer columnSize;
 
-    @NullableBySpecification
+    @_NullableBySpecification
     @ColumnLabel("DECIMAL_DIGITS")
     private Integer decimalDigits;
 
@@ -140,7 +140,7 @@ public class PseudoColumn extends AbstractMetadataType {
     @ColumnLabel("COLUMN_USAGE")
     private String columnUsage;
 
-    @NullableBySpecification
+    @_NullableBySpecification
     @ColumnLabel("REMARKS")
     private String remarks;
 
@@ -151,7 +151,7 @@ public class PseudoColumn extends AbstractMetadataType {
     private String isNullable;
 
     // -----------------------------------------------------------------------------------------------------------------
-    public PseudoColumnId getPseudoColumnId() {
+    PseudoColumnId getPseudoColumnId() {
         if (pseudoColumnId == null) {
             pseudoColumnId = PseudoColumnId.of(
                     TableId.of(

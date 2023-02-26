@@ -36,20 +36,6 @@ class ColumnPrivilegeTest extends AbstractMetadataTypeTest<ColumnPrivilege> {
     }
 
     @Nested
-    class ColumnPrivilegeIdTest {
-
-        @Test
-        void __() {
-            final var instance = typeInstance();
-            instance.setTableName("");
-            instance.setColumnName("");
-            instance.setPrivilege("");
-            final var id = instance.getColumnPrivilegeId();
-            assertThat(id).isNotNull();
-        }
-    }
-
-    @Nested
     class IsGrantableAsBooleanTest {
 
         @Test

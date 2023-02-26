@@ -21,15 +21,15 @@ package com.github.jinahya.database.metadata.bind;
  */
 
 import lombok.AccessLevel;
-import lombok.Data;
-import lombok.RequiredArgsConstructor;
-import lombok.experimental.SuperBuilder;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Getter;
 
 import java.util.Objects;
 
-@Data
-@RequiredArgsConstructor(access = AccessLevel.PRIVATE)
-@SuperBuilder(toBuilder = true)
+@Getter
+@AllArgsConstructor(access = AccessLevel.PRIVATE)
+@Builder(access = AccessLevel.PRIVATE)
 final class ProcedureColumnId implements MetadataTypeId<ProcedureColumnId, ProcedureColumn> {
 
     private static final long serialVersionUID = 7459854669925402253L;
@@ -52,11 +52,6 @@ final class ProcedureColumnId implements MetadataTypeId<ProcedureColumnId, Proce
                 .columnName(columnName)
                 .columnType(columnType)
                 .build();
-    }
-
-    static ProcedureColumnId of(final String procedureCat, final String procedureSchem, final String specificName,
-                                final String columnName, final int columnType) {
-        return of(ProcedureId.of(procedureCat, procedureSchem, specificName), columnName, columnType);
     }
 
     @Override

@@ -39,7 +39,7 @@ import static java.util.Comparator.nullsFirst;
  *
  * @author Jin Kwon &lt;jinahya_at_gmail.com&gt;
  */
-@ChildOf(Table.class)
+@_ChildOf(Table.class)
 @EqualsAndHashCode(callSuper = true)
 @ToString(callSuper = true)
 @Data
@@ -69,11 +69,11 @@ public class IndexInfo extends AbstractMetadataType {
 
     public static final String COLUMN_LABEL_TYPE = "TYPE";
 
-    @NullableBySpecification
+    @_NullableBySpecification
     @ColumnLabel(COLUMN_LABEL_TABLE_CAT)
     private String tableCat;
 
-    @NullableBySpecification
+    @_NullableBySpecification
     @ColumnLabel(COLUMN_LABEL_TABLE_SCHEM)
     private String tableSchem;
 
@@ -83,11 +83,11 @@ public class IndexInfo extends AbstractMetadataType {
     @ColumnLabel("NON_UNIQUE")
     private boolean nonUnique;
 
-    @NullableBySpecification
+    @_NullableBySpecification
     @ColumnLabel("INDEX_QUALIFIER")
     private String indexQualifier;
 
-    @NullableBySpecification
+    @_NullableBySpecification
     @ColumnLabel("INDEX_NAME")
     private String indexName;
 
@@ -97,11 +97,11 @@ public class IndexInfo extends AbstractMetadataType {
     @ColumnLabel("ORDINAL_POSITION")
     private int ordinalPosition;
 
-    @NullableBySpecification
+    @_NullableBySpecification
     @ColumnLabel("COLUMN_NAME")
     private String columnName;
 
-    @NullableBySpecification
+    @_NullableBySpecification
     @ColumnLabel("ASC_OR_DESC")
     private String ascOrDesc;
 
@@ -111,7 +111,7 @@ public class IndexInfo extends AbstractMetadataType {
     @ColumnLabel("PAGES")
     private long pages;
 
-    @NullableBySpecification
+    @_NullableBySpecification
     @ColumnLabel("FILTER_CONDITION")
     private String filterCondition;
 }

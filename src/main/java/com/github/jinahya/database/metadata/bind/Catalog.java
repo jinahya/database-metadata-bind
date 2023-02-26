@@ -39,7 +39,7 @@ import java.util.function.Consumer;
  * @author Jin Kwon &lt;jinahya_at_gmail.com&gt;
  * @see Context#getCatalogs(Consumer)
  */
-@ParentOf(Schema.class)
+@_ParentOf(Schema.class)
 //@EqualsAndHashCode(callSuper = true)
 //@ToString(callSuper = true)
 @Data
