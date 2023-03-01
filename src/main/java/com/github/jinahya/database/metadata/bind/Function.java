@@ -23,15 +23,15 @@ package com.github.jinahya.database.metadata.bind;
 import lombok.AccessLevel;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
-import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
-import lombok.experimental.SuperBuilder;
 
 import java.sql.DatabaseMetaData;
 import java.util.Comparator;
+import java.util.Objects;
 import java.util.Optional;
 
+import static java.util.Comparator.comparing;
 import static java.util.Comparator.naturalOrder;
 import static java.util.Comparator.nullsFirst;
 
@@ -43,57 +43,56 @@ import static java.util.Comparator.nullsFirst;
  * @see Context#getFunctions(String, String, String)
  */
 @_ParentOf(FunctionColumn.class)
-@Setter
-@Getter
-@EqualsAndHashCode(callSuper = true)
-@ToString(callSuper = true)
-@NoArgsConstructor(access = AccessLevel.PROTECTED)
-@SuperBuilder(toBuilder = true)
 public class Function extends AbstractMetadataType {
 
     private static final long serialVersionUID = -3318947900237453301L;
 
     static final Comparator<Function> CASE_INSENSITIVE_ORDER =
-            Comparator.comparing(Function::getSchemaId, SchemaId.CASE_INSENSITIVE_ORDER)
+            comparing(Function::getSchemaId, SchemaId.CASE_INSENSITIVE_ORDER)
                     .thenComparing(Function::getFunctionName, nullsFirst(String.CASE_INSENSITIVE_ORDER))
                     .thenComparing(Function::getSpecificName, nullsFirst(String.CASE_INSENSITIVE_ORDER));
 
     static final Comparator<Function> LEXICOGRAPHIC_ORDER =
-            Comparator.comparing(Function::getSchemaId, SchemaId.LEXICOGRAPHIC_ORDER)
+            comparing(Function::getSchemaId, SchemaId.LEXICOGRAPHIC_ORDER)
                     .thenComparing(Function::getFunctionName, nullsFirst(naturalOrder()))
                     .thenComparing(Function::getSpecificName, nullsFirst(naturalOrder()));
 
+    /**
+     * A column label of {@value}.
+     */
     public static final String COLUMN_LABEL_FUNCTION_CAT = "FUNCTION_CAT";
 
-    public static final String PROPERTY_NAME_FUNCTION_CAT = "functionCat";
-
+    /**
+     * A column label of {@value}.
+     */
     public static final String COLUMN_LABEL_FUNCTION_SCHEM = "FUNCTION_SCHEM";
 
-    public static final String PROPERTY_NAME_FUNCTION_SCHEM = "functionSchem";
-
+    /**
+     * A column label of {@value}.
+     */
     public static final String COLUMN_LABEL_FUNCTION_TYPE = "FUNCTION_TYPE";
 
-    public static final String PROPERTY_NAME_FUNCTION_TYPE = "functionType";
-
-    // ------------------------------------------------------------------------------------------------------ functionId
-    FunctionId getFunctionId() {
-        if (functionId == null) {
-            functionId = FunctionId.of(
-                    getFunctionCatNonNull(),
-                    getFunctionSchemNonNull(),
-                    getSpecificName()
-            );
-        }
-        return functionId;
+    @Override
+    public boolean equals(final Object obj) {
+        if (this == obj) return true;
+        if (!(obj instanceof Function)) return false;
+        final Function that = (Function) obj;
+        return Objects.equals(functionCat, that.functionCat) &&
+               Objects.equals(functionSchem, that.functionSchem) &&
+               Objects.equals(specificName, that.specificName);
     }
 
-    private SchemaId getSchemaId() {
-        return getFunctionId().getSchemaId();
+    @Override
+    public int hashCode() {
+        return Objects.hash(
+                functionCat,
+                functionSchem,
+                specificName
+        );
     }
 
-    // ----------------------------------------------------------------------------------------------------- functionCat
-    String getFunctionCatNonNull() {
-        return Optional.ofNullable(getFunctionCat()).orElse(Catalog.COLUMN_VALUE_TABLE_CAT_EMPTY);
+    public String getFunctionCat() {
+        return functionCat;
     }
 
     public void setFunctionCat(final String functionCat) {
@@ -101,9 +100,8 @@ public class Function extends AbstractMetadataType {
         functionId = null;
     }
 
-    // --------------------------------------------------------------------------------------------------- functionSchem
-    String getFunctionSchemNonNull() {
-        return Optional.ofNullable(getFunctionSchem()).orElse(Schema.COLUMN_VALUE_TABLE_SCHEM_EMPTY);
+    public String getFunctionSchem() {
+        return functionSchem;
     }
 
     public void setFunctionSchem(final String functionSchem) {
@@ -111,20 +109,39 @@ public class Function extends AbstractMetadataType {
         functionId = null;
     }
 
-    // ---------------------------------------------------------------------------------------------------- specificName
+    public String getFunctionName() {
+        return functionName;
+    }
+
+    public void setFunctionName(String functionName) {
+        this.functionName = functionName;
+    }
+
+    public String getRemarks() {
+        return remarks;
+    }
+
+    public void setRemarks(String remarks) {
+        this.remarks = remarks;
+    }
+
+    public int getFunctionType() {
+        return functionType;
+    }
+
+    public void setFunctionType(int functionType) {
+        this.functionType = functionType;
+    }
+
+    public String getSpecificName() {
+        return specificName;
+    }
+
     public void setSpecificName(final String specificName) {
         this.specificName = specificName;
         functionId = null;
     }
 
-    // -----------------------------------------------------------------------------------------------------------------
-    @Setter(AccessLevel.NONE)
-    @Getter(AccessLevel.NONE)
-    @EqualsAndHashCode.Exclude
-    @ToString.Exclude
-    private transient FunctionId functionId;
-
-    // -----------------------------------------------------------------------------------------------------------------
     @_NullableBySpecification
     @_ColumnLabel(COLUMN_LABEL_FUNCTION_CAT)
     private String functionCat;
@@ -146,4 +163,33 @@ public class Function extends AbstractMetadataType {
 
     @_ColumnLabel("SPECIFIC_NAME")
     private String specificName;
+
+    String getFunctionCatNonNull() {
+        return Optional.ofNullable(getFunctionCat()).orElse(Catalog.COLUMN_VALUE_TABLE_CAT_EMPTY);
+    }
+
+    String getFunctionSchemNonNull() {
+        return Optional.ofNullable(getFunctionSchem()).orElse(Schema.COLUMN_VALUE_TABLE_SCHEM_EMPTY);
+    }
+
+    FunctionId getFunctionId() {
+        if (functionId == null) {
+            functionId = FunctionId.of(
+                    getFunctionCatNonNull(),
+                    getFunctionSchemNonNull(),
+                    getSpecificName()
+            );
+        }
+        return functionId;
+    }
+
+    private SchemaId getSchemaId() {
+        return getFunctionId().getSchemaId();
+    }
+
+    @Setter(AccessLevel.NONE)
+    @Getter(AccessLevel.NONE)
+    @EqualsAndHashCode.Exclude
+    @ToString.Exclude
+    private transient FunctionId functionId;
 }

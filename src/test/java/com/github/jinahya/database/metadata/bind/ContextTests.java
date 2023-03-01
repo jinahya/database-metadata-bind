@@ -255,6 +255,7 @@ final class ContextTests {
         Objects.requireNonNull(context, "context is null");
         Objects.requireNonNull(bestRowIdentifier, "bestRowIdentifier is null");
         assertThat(bestRowIdentifier).isSortedAccordingTo(BestRowIdentifier.COMPARING_SCOPE);
+        assertThat(bestRowIdentifier).isSorted();
         for (final var bestRowIdentifier_ : bestRowIdentifier) {
             bestRowIdentifier(context, bestRowIdentifier_);
         }
@@ -1319,6 +1320,7 @@ final class ContextTests {
                 for (final boolean nullable : new boolean[] {true, false}) {
                     final var bestRowIdentifier =
                             context.getBestRowIdentifier(null, null, "%", scope.fieldValueAsInt(), nullable);
+                    assertThat(bestRowIdentifier).isSorted();
                     assertThat(bestRowIdentifier)
                             .isSortedAccordingTo(BestRowIdentifier.COMPARING_SCOPE);
                 }
@@ -1389,6 +1391,7 @@ final class ContextTests {
         }
         try {
             final var functions = context.getFunctions(null, null, "%");
+            assertThat(functions).doesNotHaveDuplicates();
             final var databaseProductNames = Set.of(
                     ""
             );

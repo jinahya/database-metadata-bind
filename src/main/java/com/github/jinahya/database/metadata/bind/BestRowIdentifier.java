@@ -43,9 +43,9 @@ import java.util.Objects;
 @Getter
 @EqualsAndHashCode(callSuper = true)
 @ToString(callSuper = true)
-//@NoArgsConstructor(access = AccessLevel.PROTECTED)
-//@SuperBuilder(toBuilder = true)
-public class BestRowIdentifier extends AbstractMetadataType {
+public class BestRowIdentifier
+        extends AbstractMetadataType
+        implements Comparable<BestRowIdentifier> {
 
     private static final long serialVersionUID = -1512051574198028399L;
 
@@ -151,6 +151,14 @@ public class BestRowIdentifier extends AbstractMetadataType {
         private final int fieldValue;
     }
 
+    @Override
+    public int compareTo(final BestRowIdentifier o) {
+        if (o == null) {
+            throw new NullPointerException("o is null");
+        }
+        return COMPARING_SCOPE.compare(this, o);
+    }
+
     // -----------------------------------------------------------------------------------------------------------------
     @_ColumnLabel(COLUMN_LABEL_SCOPE)
     private int scope;
@@ -184,7 +192,7 @@ public class BestRowIdentifier extends AbstractMetadataType {
         Objects.requireNonNull(tableId, "tableId is null");
         return ColumnId.of(
                 tableId,
-                columnName
+                getColumnName()
         );
     }
 }
