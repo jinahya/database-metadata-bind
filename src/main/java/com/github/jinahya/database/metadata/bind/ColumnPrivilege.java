@@ -90,31 +90,31 @@ public class ColumnPrivilege extends AbstractMetadataType {
     }
 
     @_NullableBySpecification
-    @ColumnLabel(COLUMN_LABEL_TABLE_CAT)
+    @_ColumnLabel(COLUMN_LABEL_TABLE_CAT)
     private String tableCat;
 
     @_NullableBySpecification
-    @ColumnLabel(COLUMN_LABEL_TABLE_SCHEM)
+    @_ColumnLabel(COLUMN_LABEL_TABLE_SCHEM)
     private String tableSchem;
 
-    @ColumnLabel(COLUMN_LABEL_TABLE_NAME)
+    @_ColumnLabel(COLUMN_LABEL_TABLE_NAME)
     private String tableName;
 
-    @ColumnLabel(COLUMN_LABEL_COLUMN_NAME)
+    @_ColumnLabel(COLUMN_LABEL_COLUMN_NAME)
     private String columnName;
 
     @_NullableBySpecification
-    @ColumnLabel("GRANTOR")
+    @_ColumnLabel("GRANTOR")
     private String grantor;
 
-    @ColumnLabel("GRANTEE")
+    @_ColumnLabel("GRANTEE")
     private String grantee;
 
-    @ColumnLabel("PRIVILEGE")
+    @_ColumnLabel("PRIVILEGE")
     private String privilege;
 
     @_NullableBySpecification
-    @ColumnLabel("IS_GRANTABLE")
+    @_ColumnLabel("IS_GRANTABLE")
     private String isGrantable;
 
     String getTableCatNonNull() {

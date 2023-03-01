@@ -126,25 +126,25 @@ public class SuperType extends AbstractMetadataType {
     }
 
     @_NullableBySpecification
-    @ColumnLabel("TYPE_CAT")
+    @_ColumnLabel("TYPE_CAT")
     private String typeCat;
 
     @_NullableBySpecification
-    @ColumnLabel("TYPE_SCHEM")
+    @_ColumnLabel("TYPE_SCHEM")
     private String typeSchem;
 
-    @ColumnLabel("TYPE_NAME")
+    @_ColumnLabel("TYPE_NAME")
     private String typeName;
 
     @_NullableBySpecification
-    @ColumnLabel("SUPERTYPE_CAT")
+    @_ColumnLabel("SUPERTYPE_CAT")
     private String supertypeCat;
 
     @_NullableBySpecification
-    @ColumnLabel("SUPERTYPE_SCHEM")
+    @_ColumnLabel("SUPERTYPE_SCHEM")
     private String supertypeSchem;
 
-    @ColumnLabel("SUPERTYPE_NAME")
+    @_ColumnLabel("SUPERTYPE_NAME")
     private String supertypeName;
 
     String getTypeCatNonNull() {

@@ -172,65 +172,65 @@ public class TypeInfo extends AbstractMetadataType {
         return Objects.hash(typeName, dataType);
     }
 
-    @ColumnLabel(COLUMN_LABEL_TYPE_NAME)
+    @_ColumnLabel(COLUMN_LABEL_TYPE_NAME)
     private String typeName;
 
-    @ColumnLabel(COLUMN_LABEL_DATA_TYPE)
+    @_ColumnLabel(COLUMN_LABEL_DATA_TYPE)
     private int dataType;
 
     @_NullableBySpecification
-    @ColumnLabel(COLUMN_LABEL_PRECISION)
+    @_ColumnLabel(COLUMN_LABEL_PRECISION)
     private Integer precision;
 
     @_NullableBySpecification
-    @ColumnLabel(COLUMN_LABEL_LITERAL_PREFIX)
+    @_ColumnLabel(COLUMN_LABEL_LITERAL_PREFIX)
     private String literalPrefix;
 
     @_NullableBySpecification
-    @ColumnLabel(COLUMN_LABEL_LITERAL_SUFFIX)
+    @_ColumnLabel(COLUMN_LABEL_LITERAL_SUFFIX)
     private String literalSuffix;
 
     @_NullableBySpecification
-    @ColumnLabel(COLUMN_LABEL_CREATE_PARAMS)
+    @_ColumnLabel(COLUMN_LABEL_CREATE_PARAMS)
     private String createParams;
 
-    @ColumnLabel(COLUMN_LABEL_NULLABLE)
+    @_ColumnLabel(COLUMN_LABEL_NULLABLE)
     private int nullable;
 
-    @ColumnLabel(COLUMN_LABEL_CASE_SENSITIVE)
+    @_ColumnLabel(COLUMN_LABEL_CASE_SENSITIVE)
     private boolean caseSensitive;
 
-    @ColumnLabel(COLUMN_LABEL_SEARCHABLE)
+    @_ColumnLabel(COLUMN_LABEL_SEARCHABLE)
     private int searchable;
 
     @_NotUsedBySpecification
-    @ColumnLabel("UNSIGNED_ATTRIBUTE")
+    @_ColumnLabel("UNSIGNED_ATTRIBUTE")
     private Boolean unsignedAttribute;
 
-    @ColumnLabel("FIXED_PREC_SCALE")
+    @_ColumnLabel("FIXED_PREC_SCALE")
     private boolean fixedPrecScale;
 
-    @ColumnLabel("AUTO_INCREMENT")
+    @_ColumnLabel("AUTO_INCREMENT")
     private boolean autoIncrement;
 
     @_NullableBySpecification
-    @ColumnLabel("LOCAL_TYPE_NAME")
+    @_ColumnLabel("LOCAL_TYPE_NAME")
     private String localTypeName;
 
-    @ColumnLabel("MINIMUM_SCALE")
+    @_ColumnLabel("MINIMUM_SCALE")
     private int minimumScale;
 
-    @ColumnLabel("MAXIMUM_SCALE")
+    @_ColumnLabel("MAXIMUM_SCALE")
     private int maximumScale;
 
     @_NotUsedBySpecification
-    @ColumnLabel("SQL_DATA_TYPE")
+    @_ColumnLabel("SQL_DATA_TYPE")
     private Integer sqlDataType;
 
     @_NotUsedBySpecification
-    @ColumnLabel("SQL_DATETIME_SUB")
+    @_ColumnLabel("SQL_DATETIME_SUB")
     private Integer sqlDatetimeSub;
 
-    @ColumnLabel("NUM_PREC_RADIX")
+    @_ColumnLabel("NUM_PREC_RADIX")
     private int numPrecRadix;
 }

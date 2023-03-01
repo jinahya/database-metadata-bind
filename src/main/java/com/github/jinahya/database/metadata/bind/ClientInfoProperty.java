@@ -109,15 +109,15 @@ public class ClientInfoProperty extends AbstractMetadataType {
         this.description = description;
     }
 
-    @ColumnLabel(COLUMN_LABEL_NAME)
+    @_ColumnLabel(COLUMN_LABEL_NAME)
     private String name;
 
-    @ColumnLabel(COLUMN_LABEL_MAX_LEN)
+    @_ColumnLabel(COLUMN_LABEL_MAX_LEN)
     private int maxLen;
 
-    @ColumnLabel(COLUMN_LABEL_DEFAULT_VALUE)
+    @_ColumnLabel(COLUMN_LABEL_DEFAULT_VALUE)
     private String defaultValue;
 
-    @ColumnLabel(COLUMN_LABEL_DESCRIPTION)
+    @_ColumnLabel(COLUMN_LABEL_DESCRIPTION)
     private String description;
 }

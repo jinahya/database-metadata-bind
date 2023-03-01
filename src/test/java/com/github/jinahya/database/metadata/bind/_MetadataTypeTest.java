@@ -73,14 +73,14 @@ abstract class _MetadataTypeTest<T extends MetadataType> {
                                          e -> e.getKey().getAnnotation(_NotUsedBySpecification.class)));
     }
 
-    Map<Field, ColumnLabel> getFieldsWithColumnLabel() {
+    Map<Field, _ColumnLabel> getFieldsWithColumnLabel() {
         if (fieldsWithLabel == null) {
-            fieldsWithLabel = unmodifiableMap(Utils.getFieldsAnnotatedWith(typeClass, ColumnLabel.class));
+            fieldsWithLabel = unmodifiableMap(Utils.getFieldsAnnotatedWith(typeClass, _ColumnLabel.class));
         }
         return fieldsWithLabel;
     }
 
     final Class<T> typeClass;
 
-    private Map<Field, ColumnLabel> fieldsWithLabel;
+    private Map<Field, _ColumnLabel> fieldsWithLabel;
 }

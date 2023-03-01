@@ -70,48 +70,48 @@ public class IndexInfo extends AbstractMetadataType {
     public static final String COLUMN_LABEL_TYPE = "TYPE";
 
     @_NullableBySpecification
-    @ColumnLabel(COLUMN_LABEL_TABLE_CAT)
+    @_ColumnLabel(COLUMN_LABEL_TABLE_CAT)
     private String tableCat;
 
     @_NullableBySpecification
-    @ColumnLabel(COLUMN_LABEL_TABLE_SCHEM)
+    @_ColumnLabel(COLUMN_LABEL_TABLE_SCHEM)
     private String tableSchem;
 
-    @ColumnLabel(COLUMN_LABEL_TABLE_NAME)
+    @_ColumnLabel(COLUMN_LABEL_TABLE_NAME)
     private String tableName;
 
-    @ColumnLabel("NON_UNIQUE")
+    @_ColumnLabel("NON_UNIQUE")
     private boolean nonUnique;
 
     @_NullableBySpecification
-    @ColumnLabel("INDEX_QUALIFIER")
+    @_ColumnLabel("INDEX_QUALIFIER")
     private String indexQualifier;
 
     @_NullableBySpecification
-    @ColumnLabel("INDEX_NAME")
+    @_ColumnLabel("INDEX_NAME")
     private String indexName;
 
-    @ColumnLabel(COLUMN_LABEL_TYPE)
+    @_ColumnLabel(COLUMN_LABEL_TYPE)
     private int type;
 
-    @ColumnLabel("ORDINAL_POSITION")
+    @_ColumnLabel("ORDINAL_POSITION")
     private int ordinalPosition;
 
     @_NullableBySpecification
-    @ColumnLabel("COLUMN_NAME")
+    @_ColumnLabel("COLUMN_NAME")
     private String columnName;
 
     @_NullableBySpecification
-    @ColumnLabel("ASC_OR_DESC")
+    @_ColumnLabel("ASC_OR_DESC")
     private String ascOrDesc;
 
-    @ColumnLabel("CARDINALITY")
+    @_ColumnLabel("CARDINALITY")
     private long cardinality;
 
-    @ColumnLabel("PAGES")
+    @_ColumnLabel("PAGES")
     private long pages;
 
     @_NullableBySpecification
-    @ColumnLabel("FILTER_CONDITION")
+    @_ColumnLabel("FILTER_CONDITION")
     private String filterCondition;
 }

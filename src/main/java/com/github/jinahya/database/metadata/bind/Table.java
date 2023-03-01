@@ -153,42 +153,42 @@ public class Table extends AbstractMetadataType {
     }
 
     @_NullableBySpecification
-    @ColumnLabel(COLUMN_LABEL_TABLE_CAT)
+    @_ColumnLabel(COLUMN_LABEL_TABLE_CAT)
     private String tableCat;
 
     @_NullableBySpecification
-    @ColumnLabel(COLUMN_LABEL_TABLE_SCHEM)
+    @_ColumnLabel(COLUMN_LABEL_TABLE_SCHEM)
     private String tableSchem;
 
-    @ColumnLabel(COLUMN_LABEL_TABLE_NAME)
+    @_ColumnLabel(COLUMN_LABEL_TABLE_NAME)
     private String tableName;
 
     @_NullableByVendor("MariaDB")
-    @ColumnLabel(COLUMN_LABEL_TABLE_TYPE)
+    @_ColumnLabel(COLUMN_LABEL_TABLE_TYPE)
     private String tableType;
 
     @_NullableBySpecification
-    @ColumnLabel("REMARKS")
+    @_ColumnLabel("REMARKS")
     private String remarks;
 
     @_NullableBySpecification
-    @ColumnLabel("TYPE_CAT")
+    @_ColumnLabel("TYPE_CAT")
     private String typeCat;
 
     @_NullableBySpecification
-    @ColumnLabel("TYPE_SCHEM")
+    @_ColumnLabel("TYPE_SCHEM")
     private String typeSchem;
 
     @_NullableBySpecification
-    @ColumnLabel("TYPE_NAME")
+    @_ColumnLabel("TYPE_NAME")
     private String typeName;
 
     @_NullableBySpecification
-    @ColumnLabel("SELF_REFERENCING_COL_NAME")
+    @_ColumnLabel("SELF_REFERENCING_COL_NAME")
     private String selfReferencingColName;
 
     @_NullableBySpecification
-    @ColumnLabel("REF_GENERATION")
+    @_ColumnLabel("REF_GENERATION")
     private String refGeneration;
 
     String getTableCatNonNull() {

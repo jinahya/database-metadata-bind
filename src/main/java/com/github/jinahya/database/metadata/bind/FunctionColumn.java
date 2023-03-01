@@ -222,59 +222,59 @@ public class FunctionColumn extends AbstractMetadataType {
 
     // -----------------------------------------------------------------------------------------------------------------
     @_NullableBySpecification
-    @ColumnLabel(COLUMN_LABEL_FUNCTION_CAT)
+    @_ColumnLabel(COLUMN_LABEL_FUNCTION_CAT)
     private String functionCat;
 
     @_NullableBySpecification
-    @ColumnLabel(COLUMN_LABEL_FUNCTION_SCHEM)
+    @_ColumnLabel(COLUMN_LABEL_FUNCTION_SCHEM)
     private String functionSchem;
 
-    @ColumnLabel(COLUMN_LABEL_FUNCTION_NAME)
+    @_ColumnLabel(COLUMN_LABEL_FUNCTION_NAME)
     private String functionName;
 
-    @ColumnLabel(COLUMN_LABEL_COLUMN_NAME)
+    @_ColumnLabel(COLUMN_LABEL_COLUMN_NAME)
     private String columnName;
 
-    @ColumnLabel("COLUMN_TYPE")
+    @_ColumnLabel("COLUMN_TYPE")
     private int columnType;
 
-    @ColumnLabel("DATA_TYPE")
+    @_ColumnLabel("DATA_TYPE")
     private int dataType;
 
-    @ColumnLabel("TYPE_NAME")
+    @_ColumnLabel("TYPE_NAME")
     private String typeName;
 
     @_NullableBySpecification
-    @ColumnLabel("PRECISION")
+    @_ColumnLabel("PRECISION")
     private Integer precision;
 
-    @ColumnLabel("LENGTH")
+    @_ColumnLabel("LENGTH")
     private int length;
 
     @_NullableBySpecification
-    @ColumnLabel("SCALE")
+    @_ColumnLabel("SCALE")
     private Integer scale;
 
-    @ColumnLabel("RADIX")
+    @_ColumnLabel("RADIX")
     private int radix;
 
-    @ColumnLabel("NULLABLE")
+    @_ColumnLabel("NULLABLE")
     private int nullable;
 
     @_NullableByVendor("derby") // https://issues.apache.org/jira/browse/DERBY-7100
-    @ColumnLabel("REMARKS")
+    @_ColumnLabel("REMARKS")
     private String remarks;
 
     @_NullableBySpecification
-    @ColumnLabel("CHAR_OCTET_LENGTH")
+    @_ColumnLabel("CHAR_OCTET_LENGTH")
     private Integer charOctetLength;
 
-    @ColumnLabel("ORDINAL_POSITION")
+    @_ColumnLabel("ORDINAL_POSITION")
     private int ordinalPosition;
 
-    @ColumnLabel("IS_NULLABLE")
+    @_ColumnLabel("IS_NULLABLE")
     private String isNullable;
 
-    @ColumnLabel("SPECIFIC_NAME")
+    @_ColumnLabel("SPECIFIC_NAME")
     private String specificName;
 }

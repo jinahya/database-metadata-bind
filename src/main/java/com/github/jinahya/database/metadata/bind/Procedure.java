@@ -184,24 +184,24 @@ public class Procedure extends AbstractMetadataType {
 
     // -----------------------------------------------------------------------------------------------------------------
     @_NullableBySpecification
-    @ColumnLabel("PROCEDURE_CAT")
+    @_ColumnLabel("PROCEDURE_CAT")
     private String procedureCat;
 
     @_NullableBySpecification
-    @ColumnLabel("PROCEDURE_SCHEM")
+    @_ColumnLabel("PROCEDURE_SCHEM")
     private String procedureSchem;
 
-    @ColumnLabel("PROCEDURE_NAME")
+    @_ColumnLabel("PROCEDURE_NAME")
     private String procedureName;
 
     @_NullableByVendor("HSQL")
-    @ColumnLabel("REMARKS")
+    @_ColumnLabel("REMARKS")
     private String remarks;
 
-    @ColumnLabel("PROCEDURE_TYPE")
+    @_ColumnLabel("PROCEDURE_TYPE")
     private int procedureType;
 
-    @ColumnLabel(COLUMN_LABEL_SPECIFIC_NAME)
+    @_ColumnLabel(COLUMN_LABEL_SPECIFIC_NAME)
     private String specificName;
 
     // -----------------------------------------------------------------------------------------------------------------

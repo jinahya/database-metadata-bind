@@ -112,44 +112,44 @@ public class PseudoColumn extends AbstractMetadataType {
 
     // -----------------------------------------------------------------------------------------------------------------
     @_NullableBySpecification
-    @ColumnLabel(COLUMN_LABEL_TABLE_CAT)
+    @_ColumnLabel(COLUMN_LABEL_TABLE_CAT)
     private String tableCat;
 
     @_NullableBySpecification
-    @ColumnLabel(COLUMN_LABEL_TABLE_SCHEM)
+    @_ColumnLabel(COLUMN_LABEL_TABLE_SCHEM)
     private String tableSchem;
 
-    @ColumnLabel(COLUMN_LABEL_TABLE_NAME)
+    @_ColumnLabel(COLUMN_LABEL_TABLE_NAME)
     private String tableName;
 
-    @ColumnLabel(COLUMN_LABEL_COLUMN_NAME)
+    @_ColumnLabel(COLUMN_LABEL_COLUMN_NAME)
     private String columnName;
 
-    @ColumnLabel("DATA_TYPE")
+    @_ColumnLabel("DATA_TYPE")
     private int dataType;
 
     @_NullableBySpecification
-    @ColumnLabel("COLUMN_SIZE")
+    @_ColumnLabel("COLUMN_SIZE")
     private Integer columnSize;
 
     @_NullableBySpecification
-    @ColumnLabel("DECIMAL_DIGITS")
+    @_ColumnLabel("DECIMAL_DIGITS")
     private Integer decimalDigits;
 
-    @ColumnLabel("NUM_PREC_RADIX")
+    @_ColumnLabel("NUM_PREC_RADIX")
     private int numPrecRadix;
 
-    @ColumnLabel("COLUMN_USAGE")
+    @_ColumnLabel("COLUMN_USAGE")
     private String columnUsage;
 
     @_NullableBySpecification
-    @ColumnLabel("REMARKS")
+    @_ColumnLabel("REMARKS")
     private String remarks;
 
-    @ColumnLabel("CHAR_OCTET_LENGTH")
+    @_ColumnLabel("CHAR_OCTET_LENGTH")
     private int charOctetLength;
 
-    @ColumnLabel("IS_NULLABLE")
+    @_ColumnLabel("IS_NULLABLE")
     private String isNullable;
 
     // -----------------------------------------------------------------------------------------------------------------

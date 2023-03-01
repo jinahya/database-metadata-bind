@@ -104,7 +104,7 @@ public class Catalog extends AbstractMetadataType {
         catalogId = null;
     }
 
-    @ColumnLabel(COLUMN_LABEL_TABLE_CAT)
+    @_ColumnLabel(COLUMN_LABEL_TABLE_CAT)
     private String tableCat;
 
     String getTableCatNonNull() {

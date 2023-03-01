@@ -84,11 +84,11 @@ public class Context {
     private <T extends MetadataType> T bind(final ResultSet results, final Class<T> type, final T instance)
             throws SQLException {
         final Set<String> resultLabels = Utils.getLabels(results);
-        final Map<Field, ColumnLabel> fieldLabels = new HashMap<>(getLabeledFields(type));
-        for (final Iterator<Entry<Field, ColumnLabel>> i = fieldLabels.entrySet().iterator(); i.hasNext(); ) {
-            final Entry<Field, ColumnLabel> entry = i.next();
+        final Map<Field, _ColumnLabel> fieldLabels = new HashMap<>(getLabeledFields(type));
+        for (final Iterator<Entry<Field, _ColumnLabel>> i = fieldLabels.entrySet().iterator(); i.hasNext(); ) {
+            final Entry<Field, _ColumnLabel> entry = i.next();
             final Field field = entry.getKey();
-            final ColumnLabel fieldLabel = entry.getValue();
+            final _ColumnLabel fieldLabel = entry.getValue();
             if (!resultLabels.remove(fieldLabel.value())) {
                 log.warning(() -> String.format("unknown fieldLabel; %1$s on %2$s", fieldLabel, field));
                 continue;
@@ -1491,14 +1491,14 @@ public class Context {
         );
     }
 
-    private Map<Field, ColumnLabel> getLabeledFields(final Class<?> clazz) {
+    private Map<Field, _ColumnLabel> getLabeledFields(final Class<?> clazz) {
         Objects.requireNonNull(clazz, "clazz is null");
         return Collections.unmodifiableMap(
-                classesAndLabeledFields.computeIfAbsent(clazz, c -> Utils.getFieldsAnnotatedWith(c, ColumnLabel.class))
+                classesAndLabeledFields.computeIfAbsent(clazz, c -> Utils.getFieldsAnnotatedWith(c, _ColumnLabel.class))
         );
     }
 
     final DatabaseMetaData databaseMetaData;
 
-    private final Map<Class<?>, Map<Field, ColumnLabel>> classesAndLabeledFields = new HashMap<>();
+    private final Map<Class<?>, Map<Field, _ColumnLabel>> classesAndLabeledFields = new HashMap<>();
 }

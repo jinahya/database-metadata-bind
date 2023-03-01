@@ -172,88 +172,88 @@ public class Column extends AbstractMetadataType {
     }
 
     @_NullableBySpecification
-    @ColumnLabel(COLUMN_LABEL_TABLE_CAT)
+    @_ColumnLabel(COLUMN_LABEL_TABLE_CAT)
     private String tableCat;
 
     @_NullableBySpecification
-    @ColumnLabel(COLUMN_LABEL_TABLE_SCHEM)
+    @_ColumnLabel(COLUMN_LABEL_TABLE_SCHEM)
     private String tableSchem;
 
-    @ColumnLabel(COLUMN_LABEL_TABLE_NAME)
+    @_ColumnLabel(COLUMN_LABEL_TABLE_NAME)
     private String tableName;
 
-    @ColumnLabel(COLUMN_LABEL_COLUMN_NAME)
+    @_ColumnLabel(COLUMN_LABEL_COLUMN_NAME)
     private String columnName;
 
-    @ColumnLabel("DATA_TYPE")
+    @_ColumnLabel("DATA_TYPE")
     private int dataType;
 
-    @ColumnLabel("TYPE_NAME")
+    @_ColumnLabel("TYPE_NAME")
     private String typeName;
 
     @_NullableBySpecification
-    @ColumnLabel("COLUMN_SIZE")
+    @_ColumnLabel("COLUMN_SIZE")
     private Integer columnSize;
 
     @_NotUsedBySpecification
-    @ColumnLabel("BUFFER_LENGTH")
+    @_ColumnLabel("BUFFER_LENGTH")
     private Integer bufferLength;
 
     @_NullableBySpecification
-    @ColumnLabel("DECIMAL_DIGITS")
+    @_ColumnLabel("DECIMAL_DIGITS")
     private Integer decimalDigits;
 
-    @ColumnLabel("NUM_PREC_RADIX")
+    @_ColumnLabel("NUM_PREC_RADIX")
     private int numPrecRadix;
 
-    @ColumnLabel(COLUMN_LABEL_NULLABLE)
+    @_ColumnLabel(COLUMN_LABEL_NULLABLE)
     private int nullable;
 
     @_NullableBySpecification
-    @ColumnLabel("REMARKS")
+    @_ColumnLabel("REMARKS")
     private String remarks;
 
     @_NullableBySpecification
-    @ColumnLabel("COLUMN_DEF")
+    @_ColumnLabel("COLUMN_DEF")
     private String columnDef;
 
     @_NotUsedBySpecification
-    @ColumnLabel("SQL_DATA_TYPE")
+    @_ColumnLabel("SQL_DATA_TYPE")
     private Integer sqlDataType;
 
     @_NotUsedBySpecification
-    @ColumnLabel("SQL_DATETIME_SUB")
+    @_ColumnLabel("SQL_DATETIME_SUB")
     private Integer sqlDatetimeSub;
 
-    @ColumnLabel("CHAR_OCTET_LENGTH")
+    @_ColumnLabel("CHAR_OCTET_LENGTH")
     private int charOctetLength;
 
-    @ColumnLabel("ORDINAL_POSITION")
+    @_ColumnLabel("ORDINAL_POSITION")
     private int ordinalPosition;
 
-    @ColumnLabel("IS_NULLABLE")
+    @_ColumnLabel("IS_NULLABLE")
     private String isNullable;
 
     @_NullableBySpecification
-    @ColumnLabel("SCOPE_CATALOG")
+    @_ColumnLabel("SCOPE_CATALOG")
     private String scopeCatalog;
 
     @_NullableBySpecification
-    @ColumnLabel("SCOPE_SCHEMA")
+    @_ColumnLabel("SCOPE_SCHEMA")
     private String scopeSchema;
 
     @_NullableBySpecification
-    @ColumnLabel("SCOPE_TABLE")
+    @_ColumnLabel("SCOPE_TABLE")
     private String scopeTable;
 
     @_NullableBySpecification
-    @ColumnLabel("SOURCE_DATA_TYPE")
+    @_ColumnLabel("SOURCE_DATA_TYPE")
     private Integer sourceDataType;
 
-    @ColumnLabel(COLUMN_LABEL_IS_AUTOINCREMENT)
+    @_ColumnLabel(COLUMN_LABEL_IS_AUTOINCREMENT)
     private String isAutoincrement;
 
-    @ColumnLabel(COLUMN_LABEL_IS_GENERATEDCOLUMN)
+    @_ColumnLabel(COLUMN_LABEL_IS_GENERATEDCOLUMN)
     private String isGeneratedcolumn;
 
     String getTableCatNonNull() {

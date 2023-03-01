@@ -127,29 +127,29 @@ public class UDT extends AbstractMetadataType {
 
     // -----------------------------------------------------------------------------------------------------------------
     @_NullableBySpecification
-    @ColumnLabel(COLUMN_LABEL_TYPE_CAT)
+    @_ColumnLabel(COLUMN_LABEL_TYPE_CAT)
     private String typeCat;
 
     @_NullableBySpecification
-    @ColumnLabel(COLUMN_LABEL_TYPE_SCHEM)
+    @_ColumnLabel(COLUMN_LABEL_TYPE_SCHEM)
     private String typeSchem;
 
-    @ColumnLabel(COLUMN_LABEL_TYPE_NAME)
+    @_ColumnLabel(COLUMN_LABEL_TYPE_NAME)
     private String typeName;
 
     @_NullableByVendor("PostgreSQL")
-    @ColumnLabel(COLUMN_LABEL_CLASS_NAME)
+    @_ColumnLabel(COLUMN_LABEL_CLASS_NAME)
     private String className;
 
-    @ColumnLabel(COLUMN_LABEL_DATA_TYPE)
+    @_ColumnLabel(COLUMN_LABEL_DATA_TYPE)
     private int dataType;
 
     @_NullableByVendor("PostgreSQL")
-    @ColumnLabel("REMARKS")
+    @_ColumnLabel("REMARKS")
     private String remarks;
 
     @_NullableBySpecification
-    @ColumnLabel("BASE_TYPE")
+    @_ColumnLabel("BASE_TYPE")
     private Integer baseType;
 
     // -----------------------------------------------------------------------------------------------------------------

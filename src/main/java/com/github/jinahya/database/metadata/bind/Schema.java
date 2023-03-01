@@ -124,10 +124,10 @@ public class Schema extends AbstractMetadataType {
     }
 
     @_NullableBySpecification
-    @ColumnLabel(COLUMN_LABEL_TABLE_CATALOG)
+    @_ColumnLabel(COLUMN_LABEL_TABLE_CATALOG)
     private String tableCatalog;
 
-    @ColumnLabel(COLUMN_LABEL_TABLE_SCHEM)
+    @_ColumnLabel(COLUMN_LABEL_TABLE_SCHEM)
     private String tableSchem;
 
     String getTableCatalogNonNull() {

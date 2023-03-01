@@ -164,51 +164,51 @@ abstract class TableKey<T extends TableKey<T>> extends AbstractMetadataType {
 
     // -----------------------------------------------------------------------------------------------------------------
     @_NullableBySpecification
-    @ColumnLabel("PKTABLE_CAT")
+    @_ColumnLabel("PKTABLE_CAT")
     private String pktableCat;
 
     @_NullableBySpecification
-    @ColumnLabel("PKTABLE_SCHEM")
+    @_ColumnLabel("PKTABLE_SCHEM")
     private String pktableSchem;
 
-    @ColumnLabel("PKTABLE_NAME")
+    @_ColumnLabel("PKTABLE_NAME")
     private String pktableName;
 
-    @ColumnLabel("PKCOLUMN_NAME")
+    @_ColumnLabel("PKCOLUMN_NAME")
     private String pkcolumnName;
 
     @_NullableBySpecification
-    @ColumnLabel("FKTABLE_CAT")
+    @_ColumnLabel("FKTABLE_CAT")
     private String fktableCat;
 
     @_NullableBySpecification
-    @ColumnLabel("FKTABLE_SCHEM")
+    @_ColumnLabel("FKTABLE_SCHEM")
     private String fktableSchem;
 
-    @ColumnLabel("FKTABLE_NAME")
+    @_ColumnLabel("FKTABLE_NAME")
     private String fktableName;
 
-    @ColumnLabel("FKCOLUMN_NAME")
+    @_ColumnLabel("FKCOLUMN_NAME")
     private String fkcolumnName;
 
-    @ColumnLabel("KEY_SEQ")
+    @_ColumnLabel("KEY_SEQ")
     private int keySeq;
 
-    @ColumnLabel("UPDATE_RULE")
+    @_ColumnLabel("UPDATE_RULE")
     private int updateRule;
 
-    @ColumnLabel("DELETE_RULE")
+    @_ColumnLabel("DELETE_RULE")
     private int deleteRule;
 
     @_NullableBySpecification
-    @ColumnLabel("FK_NAME")
+    @_ColumnLabel("FK_NAME")
     private String fkName;
 
     @_NullableBySpecification
-    @ColumnLabel("PK_NAME")
+    @_ColumnLabel("PK_NAME")
     private String pkName;
 
-    @ColumnLabel("DEFERRABILITY")
+    @_ColumnLabel("DEFERRABILITY")
     private int deferrability;
 
     // -----------------------------------------------------------------------------------------------------------------

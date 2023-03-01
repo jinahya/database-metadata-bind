@@ -120,73 +120,73 @@ public class ProcedureColumn extends AbstractMetadataType {
 
     // -----------------------------------------------------------------------------------------------------------------
     @_NullableBySpecification
-    @ColumnLabel("PROCEDURE_CAT")
+    @_ColumnLabel("PROCEDURE_CAT")
     private String procedureCat;
 
     @_NullableBySpecification
-    @ColumnLabel("PROCEDURE_SCHEM")
+    @_ColumnLabel("PROCEDURE_SCHEM")
     private String procedureSchem;
 
-    @ColumnLabel("PROCEDURE_NAME")
+    @_ColumnLabel("PROCEDURE_NAME")
     private String procedureName;
 
-    @ColumnLabel("COLUMN_NAME")
+    @_ColumnLabel("COLUMN_NAME")
     private String columnName;
 
-    @ColumnLabel("COLUMN_TYPE")
+    @_ColumnLabel("COLUMN_TYPE")
     private int columnType;
 
-    @ColumnLabel("DATA_TYPE")
+    @_ColumnLabel("DATA_TYPE")
     private int dataType;
 
-    @ColumnLabel("TYPE_NAME")
+    @_ColumnLabel("TYPE_NAME")
     private String typeName;
 
     @_NullableBySpecification
-    @ColumnLabel("PRECISION")
+    @_ColumnLabel("PRECISION")
     private Integer precision;
 
-    @ColumnLabel("LENGTH")
+    @_ColumnLabel("LENGTH")
     private int length;
 
     // https://issues.apache.org/jira/browse/DERBY-7103
     @_NullableBySpecification
-    @ColumnLabel("SCALE")
+    @_ColumnLabel("SCALE")
     private Integer scale;
 
-    @ColumnLabel("RADIX")
+    @_ColumnLabel("RADIX")
     private int radix;
 
-    @ColumnLabel("NULLABLE")
+    @_ColumnLabel("NULLABLE")
     private int nullable;
 
     @_NullableByVendor("derby") // https://issues.apache.org/jira/browse/DERBY-7101
-    @ColumnLabel("REMARKS")
+    @_ColumnLabel("REMARKS")
     private String remarks;
 
     @_NullableBySpecification
-    @ColumnLabel("COLUMN_DEF")
+    @_ColumnLabel("COLUMN_DEF")
     private String columnDef;
 
     @_Reserved
-    @ColumnLabel("SQL_DATA_TYPE")
+    @_ColumnLabel("SQL_DATA_TYPE")
     private Integer sqlDataType;
 
     @_Reserved
-    @ColumnLabel("SQL_DATETIME_SUB")
+    @_ColumnLabel("SQL_DATETIME_SUB")
     private Integer sqlDatetimeSub;
 
     @_NullableBySpecification
-    @ColumnLabel("CHAR_OCTET_LENGTH")
+    @_ColumnLabel("CHAR_OCTET_LENGTH")
     private Integer charOctetLength;
 
-    @ColumnLabel("ORDINAL_POSITION")
+    @_ColumnLabel("ORDINAL_POSITION")
     private int ordinalPosition;
 
-    @ColumnLabel("IS_NULLABLE")
+    @_ColumnLabel("IS_NULLABLE")
     private String isNullable;
 
-    @ColumnLabel("SPECIFIC_NAME")
+    @_ColumnLabel("SPECIFIC_NAME")
     private String specificName;
 
     // -----------------------------------------------------------------------------------------------------------------

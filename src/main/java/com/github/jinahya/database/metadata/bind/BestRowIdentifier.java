@@ -152,31 +152,31 @@ public class BestRowIdentifier extends AbstractMetadataType {
     }
 
     // -----------------------------------------------------------------------------------------------------------------
-    @ColumnLabel(COLUMN_LABEL_SCOPE)
+    @_ColumnLabel(COLUMN_LABEL_SCOPE)
     private int scope;
 
-    @ColumnLabel("COLUMN_NAME")
+    @_ColumnLabel("COLUMN_NAME")
     private String columnName;
 
-    @ColumnLabel("DATA_TYPE")
+    @_ColumnLabel("DATA_TYPE")
     private int dataType;
 
-    @ColumnLabel("TYPE_NAME")
+    @_ColumnLabel("TYPE_NAME")
     private String typeName;
 
     @_NullableBySpecification
-    @ColumnLabel("COLUMN_SIZE")
+    @_ColumnLabel("COLUMN_SIZE")
     private Integer columnSize;
 
     @_NotUsedBySpecification
-    @ColumnLabel("BUFFER_LENGTH")
+    @_ColumnLabel("BUFFER_LENGTH")
     private Integer bufferLength;
 
     @_NullableBySpecification
-    @ColumnLabel("DECIMAL_DIGITS")
+    @_ColumnLabel("DECIMAL_DIGITS")
     private Integer decimalDigits;
 
-    @ColumnLabel(COLUMN_LABEL_PSEUDO_COLUMN)
+    @_ColumnLabel(COLUMN_LABEL_PSEUDO_COLUMN)
     private int pseudoColumn;
 
     // -----------------------------------------------------------------------------------------------------------------

@@ -134,24 +134,24 @@ public class PrimaryKey extends AbstractMetadataType {
 
     // -----------------------------------------------------------------------------------------------------------------
     @_NullableBySpecification
-    @ColumnLabel(COLUMN_LABEL_TABLE_CAT)
+    @_ColumnLabel(COLUMN_LABEL_TABLE_CAT)
     private String tableCat;
 
     @_NullableBySpecification
-    @ColumnLabel(COLUMN_LABEL_TABLE_SCHEM)
+    @_ColumnLabel(COLUMN_LABEL_TABLE_SCHEM)
     private String tableSchem;
 
-    @ColumnLabel(COLUMN_LABEL_TABLE_NAME)
+    @_ColumnLabel(COLUMN_LABEL_TABLE_NAME)
     private String tableName;
 
-    @ColumnLabel(COLUMN_LABEL_COLUMN_NAME)
+    @_ColumnLabel(COLUMN_LABEL_COLUMN_NAME)
     private String columnName;
 
-    @ColumnLabel(COLUMN_LABEL_KEY_SEQ)
+    @_ColumnLabel(COLUMN_LABEL_KEY_SEQ)
     private int keySeq;
 
     @_NullableBySpecification
-    @ColumnLabel(COLUMN_LABEL_PK_NAME)
+    @_ColumnLabel(COLUMN_LABEL_PK_NAME)
     private String pkName;
 
     // -----------------------------------------------------------------------------------------------------------------

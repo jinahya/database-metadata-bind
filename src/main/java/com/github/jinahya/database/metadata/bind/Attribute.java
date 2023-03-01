@@ -171,77 +171,77 @@ public class Attribute extends AbstractMetadataType {
 
     // -----------------------------------------------------------------------------------------------------------------
     @_NullableBySpecification
-    @ColumnLabel("TYPE_CAT")
+    @_ColumnLabel("TYPE_CAT")
     private String typeCat;
 
     @_NullableBySpecification
-    @ColumnLabel("TYPE_SCHEM")
+    @_ColumnLabel("TYPE_SCHEM")
     private String typeSchem;
 
-    @ColumnLabel("TYPE_NAME")
+    @_ColumnLabel("TYPE_NAME")
     private String typeName;
 
-    @ColumnLabel("ATTR_NAME")
+    @_ColumnLabel("ATTR_NAME")
     private String attrName;
 
-    @ColumnLabel("DATA_TYPE")
+    @_ColumnLabel("DATA_TYPE")
     private int dataType;
 
-    @ColumnLabel("ATTR_TYPE_NAME")
+    @_ColumnLabel("ATTR_TYPE_NAME")
     private String attrTypeName;
 
-    @ColumnLabel("ATTR_SIZE")
+    @_ColumnLabel("ATTR_SIZE")
     private int attrSize;
 
     @_NullableBySpecification
-    @ColumnLabel("DECIMAL_DIGITS")
+    @_ColumnLabel("DECIMAL_DIGITS")
     private Integer decimalDigits;
 
-    @ColumnLabel("NUM_PREC_RADIX")
+    @_ColumnLabel("NUM_PREC_RADIX")
     private int numPrecRadix;
 
-    @ColumnLabel(COLUMN_LABEL_NULLABLE)
+    @_ColumnLabel(COLUMN_LABEL_NULLABLE)
     private int nullable;
 
     @_NullableBySpecification
-    @ColumnLabel("REMARKS")
+    @_ColumnLabel("REMARKS")
     private String remarks;
 
     @_NullableBySpecification
-    @ColumnLabel("ATTR_DEF")
+    @_ColumnLabel("ATTR_DEF")
     private String attrDef;
 
     @_NotUsedBySpecification
-    @ColumnLabel("SQL_DATA_TYPE")
+    @_ColumnLabel("SQL_DATA_TYPE")
     private Integer sqlDataType;
 
     @_NotUsedBySpecification
-    @ColumnLabel("SQL_DATETIME_SUB")
+    @_ColumnLabel("SQL_DATETIME_SUB")
     private Integer sqlDatetimeSub;
 
-    @ColumnLabel("CHAR_OCTET_LENGTH")
+    @_ColumnLabel("CHAR_OCTET_LENGTH")
     private int charOctetLength;
 
-    @ColumnLabel("ORDINAL_POSITION")
+    @_ColumnLabel("ORDINAL_POSITION")
     private int ordinalPosition;
 
-    @ColumnLabel("IS_NULLABLE")
+    @_ColumnLabel("IS_NULLABLE")
     private String isNullable;
 
     @_NullableBySpecification
-    @ColumnLabel("SCOPE_CATALOG")
+    @_ColumnLabel("SCOPE_CATALOG")
     private String scopeCatalog;
 
     @_NullableBySpecification
-    @ColumnLabel("SCOPE_SCHEMA")
+    @_ColumnLabel("SCOPE_SCHEMA")
     private String scopeSchema;
 
     @_NullableBySpecification
-    @ColumnLabel("SCOPE_TABLE")
+    @_ColumnLabel("SCOPE_TABLE")
     private String scopeTable;
 
     @_NullableBySpecification
-    @ColumnLabel("SOURCE_DATA_TYPE")
+    @_ColumnLabel("SOURCE_DATA_TYPE")
     private Integer sourceDataType;
 
     // -----------------------------------------------------------------------------------------------------------------

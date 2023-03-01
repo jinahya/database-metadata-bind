@@ -126,24 +126,24 @@ public class Function extends AbstractMetadataType {
 
     // -----------------------------------------------------------------------------------------------------------------
     @_NullableBySpecification
-    @ColumnLabel(COLUMN_LABEL_FUNCTION_CAT)
+    @_ColumnLabel(COLUMN_LABEL_FUNCTION_CAT)
     private String functionCat;
 
     @_NullableBySpecification
-    @ColumnLabel(COLUMN_LABEL_FUNCTION_SCHEM)
+    @_ColumnLabel(COLUMN_LABEL_FUNCTION_SCHEM)
     private String functionSchem;
 
-    @ColumnLabel("FUNCTION_NAME")
+    @_ColumnLabel("FUNCTION_NAME")
     @EqualsAndHashCode.Exclude
     private String functionName;
 
     @_NullableByVendor("PostgreSQL")
-    @ColumnLabel("REMARKS")
+    @_ColumnLabel("REMARKS")
     private String remarks;
 
-    @ColumnLabel("FUNCTION_TYPE")
+    @_ColumnLabel("FUNCTION_TYPE")
     private int functionType;
 
-    @ColumnLabel("SPECIFIC_NAME")
+    @_ColumnLabel("SPECIFIC_NAME")
     private String specificName;
 }

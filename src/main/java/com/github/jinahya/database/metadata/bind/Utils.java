@@ -61,7 +61,7 @@ final class Utils {
         Objects.requireNonNull(clazz, "clazz is null");
         Objects.requireNonNull(label, "label is null");
         for (final Field field : clazz.getDeclaredFields()) {
-            final ColumnLabel annotation = field.getAnnotation(ColumnLabel.class);
+            final _ColumnLabel annotation = field.getAnnotation(_ColumnLabel.class);
             if (annotation == null) {
                 continue;
             }
