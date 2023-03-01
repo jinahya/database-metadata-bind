@@ -1246,8 +1246,7 @@ public class Context {
         return list;
     }
 
-    List<TablePrivilege> getTablePrivileges(final Schema schema, final String tableNamePattern)
-            throws SQLException {
+    List<TablePrivilege> getTablePrivileges(final Schema schema, final String tableNamePattern) throws SQLException {
         Objects.requireNonNull(schema, "schema is null");
         return getTablePrivileges(
                 schema.getTableCatalogNonNull(),
@@ -1495,8 +1494,7 @@ public class Context {
     private Map<Field, ColumnLabel> getLabeledFields(final Class<?> clazz) {
         Objects.requireNonNull(clazz, "clazz is null");
         return Collections.unmodifiableMap(
-                classesAndLabeledFields.computeIfAbsent(clazz,
-                                                        c -> Utils.getFieldsAnnotatedWith(c, ColumnLabel.class))
+                classesAndLabeledFields.computeIfAbsent(clazz, c -> Utils.getFieldsAnnotatedWith(c, ColumnLabel.class))
         );
     }
 
