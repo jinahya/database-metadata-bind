@@ -20,16 +20,16 @@ package com.github.jinahya.database.metadata.bind;
  * #L%
  */
 
-import lombok.AccessLevel;
-import lombok.Data;
 import lombok.EqualsAndHashCode;
-import lombok.NoArgsConstructor;
-import lombok.ToString;
-import lombok.experimental.SuperBuilder;
+import lombok.Getter;
+import lombok.Setter;
 
 import java.sql.DatabaseMetaData;
 import java.util.Comparator;
 import java.util.Optional;
+
+import static java.util.Comparator.naturalOrder;
+import static java.util.Comparator.nullsFirst;
 
 /**
  * A class for binding results of {@link DatabaseMetaData#getColumnPrivileges(String, String, String, String)} method.
@@ -38,22 +38,20 @@ import java.util.Optional;
  * @see Context#getColumnPrivileges(String, String, String, String)
  */
 @_ChildOf(Table.class)
+@Setter
+@Getter
 @EqualsAndHashCode(callSuper = true)
-@ToString(callSuper = true)
-@Data
-@NoArgsConstructor(access = AccessLevel.PROTECTED)
-@SuperBuilder(toBuilder = true)
 public class ColumnPrivilege extends AbstractMetadataType {
 
     private static final long serialVersionUID = 4384654744147773380L;
 
     public static final Comparator<ColumnPrivilege> CASE_INSENSITIVE_ORDER =
-            Comparator.comparing(ColumnPrivilege::getColumnName, String.CASE_INSENSITIVE_ORDER)
-                    .thenComparing(ColumnPrivilege::getPrivilege, String.CASE_INSENSITIVE_ORDER);
+            Comparator.comparing(ColumnPrivilege::getColumnName, nullsFirst(String.CASE_INSENSITIVE_ORDER))
+                    .thenComparing(ColumnPrivilege::getPrivilege, nullsFirst(String.CASE_INSENSITIVE_ORDER));
 
     public static final Comparator<ColumnPrivilege> LEXICOGRAPHIC_ORDER =
-            Comparator.comparing(ColumnPrivilege::getColumnName)
-                    .thenComparing(ColumnPrivilege::getPrivilege);
+            Comparator.comparing(ColumnPrivilege::getColumnName, nullsFirst(naturalOrder()))
+                    .thenComparing(ColumnPrivilege::getPrivilege, nullsFirst(naturalOrder()));
 
     public static final String COLUMN_LABEL_TABLE_CAT = "TABLE_CAT";
 
@@ -63,35 +61,27 @@ public class ColumnPrivilege extends AbstractMetadataType {
 
     public static final String COLUMN_LABEL_COLUMN_NAME = "COLUMN_NAME";
 
-    ColumnPrivilegeId getColumnPrivilegeId() {
-        return ColumnPrivilegeId.of(
-                ColumnId.of(
-                        TableId.of(
-                                getTableCatNonNull(),
-                                getTableSchemNonNull(),
-                                getTableName()
-                        ),
-                        getColumnName()
-                ),
-                getPrivilege()
-        );
+    @Override
+    public String toString() {
+        return super.toString() + '{' +
+               "tableCat=" + tableCat +
+               ",tableSchem=" + tableSchem +
+               ",tableName=" + tableName +
+               ",columnName=" + columnName +
+               ",grantor=" + grantor +
+               ",grantee=" + grantee +
+               ",privilege=" + privilege +
+               ",isGrantable=" + isGrantable +
+               '}';
     }
 
-    String getTableCatNonNull() {
-        return Optional.ofNullable(getTableCat()).orElse(Catalog.COLUMN_VALUE_TABLE_CAT_EMPTY);
-    }
-
-    String getTableSchemNonNull() {
-        return Optional.ofNullable(getTableSchem()).orElse(Schema.COLUMN_VALUE_TABLE_SCHEM_EMPTY);
-    }
-
-    public Boolean getIsGrantableAsBoolean() {
+    Boolean getIsGrantableAsBoolean() {
         return Optional.ofNullable(getIsGrantable())
                 .map("YES"::equals)
                 .orElse(null);
     }
 
-    public void setIsGrantableAsBoolean(final Boolean isGrantableAsBoolean) {
+    void setIsGrantableAsBoolean(final Boolean isGrantableAsBoolean) {
         setIsGrantable(
                 Optional.ofNullable(isGrantableAsBoolean)
                         .map(v -> Boolean.TRUE.equals(v) ? "YES" : "NO")
@@ -126,4 +116,26 @@ public class ColumnPrivilege extends AbstractMetadataType {
     @_NullableBySpecification
     @ColumnLabel("IS_GRANTABLE")
     private String isGrantable;
+
+    String getTableCatNonNull() {
+        return Optional.ofNullable(getTableCat()).orElse(Catalog.COLUMN_VALUE_TABLE_CAT_EMPTY);
+    }
+
+    String getTableSchemNonNull() {
+        return Optional.ofNullable(getTableSchem()).orElse(Schema.COLUMN_VALUE_TABLE_SCHEM_EMPTY);
+    }
+
+    ColumnPrivilegeId getColumnPrivilegeId() {
+        return ColumnPrivilegeId.of(
+                ColumnId.of(
+                        TableId.of(
+                                getTableCatNonNull(),
+                                getTableSchemNonNull(),
+                                getTableName()
+                        ),
+                        getColumnName()
+                ),
+                getPrivilege()
+        );
+    }
 }

@@ -119,13 +119,10 @@ public class Column extends AbstractMetadataType {
 
     public static final String COLUMN_LABEL_IS_GENERATEDCOLUMN = "IS_GENERATEDCOLUMN";
 
-    // -----------------------------------------------------------------------------------------------------------------
-
     @Override
     public boolean equals(final Object obj) {
         if (this == obj) return true;
         if (!(obj instanceof Column)) return false;
-        if (!super.equals(obj)) return false;
         final Column that = (Column) obj;
         return Objects.equals(tableCat, that.tableCat) &&
                Objects.equals(tableSchem, that.tableSchem) &&
@@ -138,9 +135,8 @@ public class Column extends AbstractMetadataType {
         return Objects.hash(tableCat, tableSchem, tableName, columnName);
     }
 
-    // -------------------------------------------------------------------------------------------------------- tableCat
-    String getTableCatNonNull() {
-        return Optional.ofNullable(getTableCat()).orElse(Catalog.COLUMN_VALUE_TABLE_CAT_EMPTY);
+    public String getTableCat() {
+        return tableCat;
     }
 
     public void setTableCat(final String tableCat) {
@@ -148,9 +144,8 @@ public class Column extends AbstractMetadataType {
         columnId = null;
     }
 
-    // ------------------------------------------------------------------------------------------------------ tableSchem
-    String getTableSchemNonNull() {
-        return Optional.ofNullable(getTableSchem()).orElse(Schema.COLUMN_VALUE_TABLE_SCHEM_EMPTY);
+    public String getTableSchem() {
+        return tableSchem;
     }
 
     public void setTableSchem(final String tableSchem) {
@@ -158,19 +153,24 @@ public class Column extends AbstractMetadataType {
         columnId = null;
     }
 
-    // ------------------------------------------------------------------------------------------------------- tableName
+    public String getTableName() {
+        return tableName;
+    }
+
     public void setTableName(final String tableName) {
         this.tableName = tableName;
         columnId = null;
     }
 
-    // ------------------------------------------------------------------------------------------------------ columnName
+    public String getColumnName() {
+        return columnName;
+    }
+
     public void setColumnName(final String columnName) {
         this.columnName = columnName;
         columnId = null;
     }
 
-    // -----------------------------------------------------------------------------------------------------------------
     @_NullableBySpecification
     @ColumnLabel(COLUMN_LABEL_TABLE_CAT)
     private String tableCat;
@@ -256,7 +256,13 @@ public class Column extends AbstractMetadataType {
     @ColumnLabel(COLUMN_LABEL_IS_GENERATEDCOLUMN)
     private String isGeneratedcolumn;
 
-    // -----------------------------------------------------------------------------------------------------------------
+    String getTableCatNonNull() {
+        return Optional.ofNullable(getTableCat()).orElse(Catalog.COLUMN_VALUE_TABLE_CAT_EMPTY);
+    }
+
+    String getTableSchemNonNull() {
+        return Optional.ofNullable(getTableSchem()).orElse(Schema.COLUMN_VALUE_TABLE_SCHEM_EMPTY);
+    }
 
     /**
      * Returns a value for identifying this column.
