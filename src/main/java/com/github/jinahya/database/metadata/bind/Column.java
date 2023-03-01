@@ -51,12 +51,12 @@ public class Column extends AbstractMetadataType {
 
     private static final long serialVersionUID = -409653682729081530L;
 
-    public static final Comparator<Column> CASE_INSENSITIVE_ORDER =
-            Comparator.comparing(Column::getColumnId, ColumnId.CASE_INSENSITIVE_ORDER)
+    static final Comparator<Column> CASE_INSENSITIVE_ORDER =
+            Comparator.comparing(Column::getTableId, TableId.CASE_INSENSITIVE_ORDER)
                     .thenComparingInt(Column::getOrdinalPosition);
 
-    public static final Comparator<Column> LEXICOGRAPHIC_ORDER =
-            Comparator.comparing(Column::getColumnId, ColumnId.LEXICOGRAPHIC_ORDER)
+    static final Comparator<Column> LEXICOGRAPHIC_ORDER =
+            Comparator.comparing(Column::getTableId, TableId.LEXICOGRAPHIC_ORDER)
                     .thenComparingInt(Column::getOrdinalPosition);
 
     public static final String COLUMN_LABEL_TABLE_CAT = "TABLE_CAT";
@@ -281,6 +281,10 @@ public class Column extends AbstractMetadataType {
             );
         }
         return columnId;
+    }
+
+    private TableId getTableId() {
+        return getColumnId().getTableId();
     }
 
     @Setter(AccessLevel.NONE)

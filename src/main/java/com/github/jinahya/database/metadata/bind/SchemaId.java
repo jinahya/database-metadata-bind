@@ -35,11 +35,11 @@ final class SchemaId extends AbstractMetadataTypeId<SchemaId, Schema> {
 
     private static final long serialVersionUID = -9112917204279422378L;
 
-    public static final Comparator<SchemaId> CASE_INSENSITIVE_ORDER =
+    static final Comparator<SchemaId> CASE_INSENSITIVE_ORDER =
             Comparator.comparing(SchemaId::getCatalogId, CatalogId.CASE_INSENSITIVE_ORDER)
                     .thenComparing(SchemaId::getTableSchem, String.CASE_INSENSITIVE_ORDER);
 
-    public static final Comparator<SchemaId> LEXICOGRAPHIC_ORDER =
+    static final Comparator<SchemaId> LEXICOGRAPHIC_ORDER =
             Comparator.comparing(SchemaId::getCatalogId, CatalogId.LEXICOGRAPHIC_ORDER)
                     .thenComparing(SchemaId::getTableSchem);
 

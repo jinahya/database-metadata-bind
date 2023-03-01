@@ -47,10 +47,10 @@ public class PseudoColumn extends AbstractMetadataType {
 
     private static final long serialVersionUID = -5612575879670895510L;
 
-    public static final Comparator<PseudoColumn> CASE_INSENSITIVE_ORDER =
+    static final Comparator<PseudoColumn> CASE_INSENSITIVE_ORDER =
             Comparator.comparing(PseudoColumn::getPseudoColumnId, PseudoColumnId.CASE_INSENSITIVE_ORDER);
 
-    public static final Comparator<PseudoColumn> LEXICOGRAPHIC_ORDER =
+    static final Comparator<PseudoColumn> LEXICOGRAPHIC_ORDER =
             Comparator.comparing(PseudoColumn::getPseudoColumnId, PseudoColumnId.LEXICOGRAPHIC_ORDER);
 
     public static final String COLUMN_LABEL_TABLE_CAT = "TABLE_CAT";

@@ -49,11 +49,11 @@ public class CrossReference
 
     private static final long serialVersionUID = -5343386346721125961L;
 
-    public static final Comparator<CrossReference> CASE_INSENSITIVE_ORDER =
+    static final Comparator<CrossReference> CASE_INSENSITIVE_ORDER =
             Comparator.comparing(CrossReference::getFktableId, TableId.CASE_INSENSITIVE_ORDER)
                     .thenComparingInt(CrossReference::getKeySeq);
 
-    public static final Comparator<CrossReference> LEXICOGRAPHIC_ORDER =
+    static final Comparator<CrossReference> LEXICOGRAPHIC_ORDER =
             Comparator.comparing(CrossReference::getFktableId, TableId.LEXICOGRAPHIC_ORDER)
                     .thenComparingInt(CrossReference::getKeySeq);
 

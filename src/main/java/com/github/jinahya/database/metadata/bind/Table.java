@@ -55,11 +55,11 @@ public class Table extends AbstractMetadataType {
 
     private static final long serialVersionUID = 6590036695540141125L;
 
-    public static final Comparator<Table> CASE_INSENSITIVE_ORDER =
+    static final Comparator<Table> CASE_INSENSITIVE_ORDER =
             Comparator.comparing(Table::getTableType, nullsFirst(String.CASE_INSENSITIVE_ORDER))
                     .thenComparing(Table::getTableId, TableId.CASE_INSENSITIVE_ORDER);
 
-    public static final Comparator<Table> LEXICOGRAPHIC_ORDER =
+    static final Comparator<Table> LEXICOGRAPHIC_ORDER =
             Comparator.comparing(Table::getTableType, nullsFirst(naturalOrder()))
                     .thenComparing(Table::getTableId, TableId.LEXICOGRAPHIC_ORDER);
 

@@ -45,11 +45,11 @@ public class ColumnPrivilege extends AbstractMetadataType {
 
     private static final long serialVersionUID = 4384654744147773380L;
 
-    public static final Comparator<ColumnPrivilege> CASE_INSENSITIVE_ORDER =
+    static final Comparator<ColumnPrivilege> CASE_INSENSITIVE_ORDER =
             Comparator.comparing(ColumnPrivilege::getColumnName, nullsFirst(String.CASE_INSENSITIVE_ORDER))
                     .thenComparing(ColumnPrivilege::getPrivilege, nullsFirst(String.CASE_INSENSITIVE_ORDER));
 
-    public static final Comparator<ColumnPrivilege> LEXICOGRAPHIC_ORDER =
+    static final Comparator<ColumnPrivilege> LEXICOGRAPHIC_ORDER =
             Comparator.comparing(ColumnPrivilege::getColumnName, nullsFirst(naturalOrder()))
                     .thenComparing(ColumnPrivilege::getPrivilege, nullsFirst(naturalOrder()));
 

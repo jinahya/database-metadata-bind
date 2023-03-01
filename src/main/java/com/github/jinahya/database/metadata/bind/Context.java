@@ -239,7 +239,7 @@ public class Context {
         return list;
     }
 
-    public List<Attribute> getAttributes(final UDT udt, final String attributeNamePattern) throws SQLException {
+    List<Attribute> getAttributes(final UDT udt, final String attributeNamePattern) throws SQLException {
         Objects.requireNonNull(udt, "udt is null");
         return getAttributes(
                 udt.getTypeCatNonNull(),
@@ -297,7 +297,7 @@ public class Context {
         return list;
     }
 
-    public List<BestRowIdentifier> getBestRowIdentifier(final Table table, final int scope, final boolean nullable)
+    List<BestRowIdentifier> getBestRowIdentifier(final Table table, final int scope, final boolean nullable)
             throws SQLException {
         Objects.requireNonNull(table, "table is null");
         return getBestRowIdentifier(
@@ -413,7 +413,7 @@ public class Context {
         return list;
     }
 
-    public List<ColumnPrivilege> getColumnPrivileges(final Table table, final String columnNamePattern)
+    List<ColumnPrivilege> getColumnPrivileges(final Table table, final String columnNamePattern)
             throws SQLException {
         Objects.requireNonNull(table, "table is null");
         return getColumnPrivileges(
@@ -503,7 +503,7 @@ public class Context {
      * @throws SQLException if a database error occurs.
      * @see #getColumns(String, String, String, String)
      */
-    public List<Column> getColumns(final Table table, final String columnNamePattern) throws SQLException {
+    List<Column> getColumns(final Table table, final String columnNamePattern) throws SQLException {
         Objects.requireNonNull(table, "table is null");
         return getColumns(
                 table.getTableCatNonNull(),
@@ -611,7 +611,7 @@ public class Context {
      * @throws SQLException if a database error occurs.
      * @see #getExportedKeys(String, String, String)
      */
-    public List<ExportedKey> getExportedKeys(final Table table) throws SQLException {
+    List<ExportedKey> getExportedKeys(final Table table) throws SQLException {
         Objects.requireNonNull(table, "table is null");
         return getExportedKeys(
                 table.getTableCatNonNull(),
@@ -714,7 +714,7 @@ public class Context {
      * @throws SQLException if a database error occurs.
      * @see #getFunctionColumns(String, String, String, String)
      */
-    public List<FunctionColumn> getFunctionColumns(final Function function, final String columnNamePattern)
+    List<FunctionColumn> getFunctionColumns(final Function function, final String columnNamePattern)
             throws SQLException {
         Objects.requireNonNull(function, "function is null");
         return getFunctionColumns(
@@ -772,7 +772,7 @@ public class Context {
      * @throws SQLException if a database error occurs.
      * @see #getImportedKeys(String, String, String)
      */
-    public List<ImportedKey> getImportedKeys(final Table table) throws SQLException {
+    List<ImportedKey> getImportedKeys(final Table table) throws SQLException {
         Objects.requireNonNull(table, "table is null");
         return getImportedKeys(
                 table.getTableCatNonNull(),
@@ -825,7 +825,7 @@ public class Context {
         return list;
     }
 
-    public List<IndexInfo> getIndexInfo(final Table table, final boolean unique, final boolean approximate)
+    List<IndexInfo> getIndexInfo(final Table table, final boolean unique, final boolean approximate)
             throws SQLException {
         Objects.requireNonNull(table, "table is null");
         return getIndexInfo(
@@ -876,7 +876,7 @@ public class Context {
         return list;
     }
 
-    public List<PrimaryKey> getPrimaryKeys(final Table table) throws SQLException {
+    List<PrimaryKey> getPrimaryKeys(final Table table) throws SQLException {
         Objects.requireNonNull(table, "table is null");
         return getPrimaryKeys(
                 table.getTableCatNonNull(),
@@ -930,7 +930,7 @@ public class Context {
         return list;
     }
 
-    public List<ProcedureColumn> getProcedureColumns(final Procedure procedure, final String columnNamePattern)
+    List<ProcedureColumn> getProcedureColumns(final Procedure procedure, final String columnNamePattern)
             throws SQLException {
         Objects.requireNonNull(procedure, "procedure is null");
         Objects.requireNonNull(columnNamePattern, "columnNamePattern is null");
@@ -1027,7 +1027,7 @@ public class Context {
         return list;
     }
 
-    public List<PseudoColumn> getPseudoColumns(final Table table, final String columnNamePattern)
+    List<PseudoColumn> getPseudoColumns(final Table table, final String columnNamePattern)
             throws SQLException {
         Objects.requireNonNull(table, "table is null");
         return getPseudoColumns(
@@ -1101,7 +1101,7 @@ public class Context {
         return list;
     }
 
-    public List<Schema> getSchemas(final Catalog catalog, final String schemaPattern) throws SQLException {
+    List<Schema> getSchemas(final Catalog catalog, final String schemaPattern) throws SQLException {
         Objects.requireNonNull(catalog, "catalog is null");
         return getSchemas(
                 Objects.requireNonNull(catalog.getTableCat(), "catalog.tableCat is null"),
@@ -1149,7 +1149,7 @@ public class Context {
         return list;
     }
 
-    public List<SuperTable> getSuperTables(final Schema schema, final String tableNamePattern) throws SQLException {
+    List<SuperTable> getSuperTables(final Schema schema, final String tableNamePattern) throws SQLException {
         Objects.requireNonNull(schema, "schema is null");
         return getSuperTables(
                 schema.getTableCatalogNonNull(),
@@ -1197,7 +1197,7 @@ public class Context {
         return list;
     }
 
-    public List<SuperType> getSuperTypes(final Schema schema, final String typeNamePattern) throws SQLException {
+    List<SuperType> getSuperTypes(final Schema schema, final String typeNamePattern) throws SQLException {
         Objects.requireNonNull(schema, "schema is null");
         return getSuperTypes(
                 schema.getTableCatalogNonNull(),
@@ -1246,7 +1246,7 @@ public class Context {
         return list;
     }
 
-    public List<TablePrivilege> getTablePrivileges(final Schema schema, final String tableNamePattern)
+    List<TablePrivilege> getTablePrivileges(final Schema schema, final String tableNamePattern)
             throws SQLException {
         Objects.requireNonNull(schema, "schema is null");
         return getTablePrivileges(
@@ -1256,7 +1256,7 @@ public class Context {
         );
     }
 
-    public List<TablePrivilege> getTablePrivileges(final Table table) throws SQLException {
+    List<TablePrivilege> getTablePrivileges(final Table table) throws SQLException {
         Objects.requireNonNull(table, "table is null");
         return getTablePrivileges(
                 table.getTableCatNonNull(),
@@ -1436,8 +1436,8 @@ public class Context {
      * @see #getUDTs(String, String, String, int[], Consumer)
      */
 
-    public List<UDT> getUDTs(final String catalog, final String schemaPattern,
-                             final String typeNamePattern, final int[] types)
+    public List<UDT> getUDTs(final String catalog, final String schemaPattern, final String typeNamePattern,
+                             final int[] types)
             throws SQLException {
         final List<UDT> list = new ArrayList<>();
         getUDTs(catalog, schemaPattern, typeNamePattern, types, list::add);
@@ -1483,7 +1483,7 @@ public class Context {
         return list;
     }
 
-    public List<VersionColumn> getVersionColumns(final Table table) throws SQLException {
+    List<VersionColumn> getVersionColumns(final Table table) throws SQLException {
         Objects.requireNonNull(table, "table is null");
         return getVersionColumns(
                 table.getTableCatNonNull(),

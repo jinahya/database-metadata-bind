@@ -35,11 +35,11 @@ final class PrimaryKeyId extends AbstractMetadataTypeId<PrimaryKeyId, PrimaryKey
 
     private static final long serialVersionUID = -111977405695306679L;
 
-    public static final Comparator<PrimaryKeyId> CASE_INSENSITIVE_ORDER =
+    static final Comparator<PrimaryKeyId> CASE_INSENSITIVE_ORDER =
             Comparator.comparing(PrimaryKeyId::getTableId, TableId.CASE_INSENSITIVE_ORDER)
                     .thenComparing(PrimaryKeyId::getColumnName, String.CASE_INSENSITIVE_ORDER);
 
-    public static final Comparator<PrimaryKeyId> LEXICOGRAPHIC_ORDER =
+    static final Comparator<PrimaryKeyId> LEXICOGRAPHIC_ORDER =
             Comparator.comparing(PrimaryKeyId::getTableId, TableId.LEXICOGRAPHIC_ORDER)
                     .thenComparing(PrimaryKeyId::getColumnName);
 

@@ -47,7 +47,7 @@ public class TypeInfo extends AbstractMetadataType {
 
     private static final long serialVersionUID = -3964147654019495313L;
 
-    public static final Comparator<TypeInfo> COMPARING_DATA_TYPE = Comparator.comparingInt(TypeInfo::getDataType);
+    static final Comparator<TypeInfo> COMPARING_DATA_TYPE = Comparator.comparingInt(TypeInfo::getDataType);
 
     public static final String COLUMN_LABEL_TYPE_NAME = "TYPE_NAME";
 
@@ -163,12 +163,13 @@ public class TypeInfo extends AbstractMetadataType {
         if (this == obj) return true;
         if (!(obj instanceof TypeInfo)) return false;
         final TypeInfo that = (TypeInfo) obj;
-        return dataType == that.dataType;
+        return dataType == that.dataType &&
+               Objects.equals(typeName, that.typeName);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(super.hashCode(), dataType);
+        return Objects.hash(typeName, dataType);
     }
 
     @ColumnLabel(COLUMN_LABEL_TYPE_NAME)

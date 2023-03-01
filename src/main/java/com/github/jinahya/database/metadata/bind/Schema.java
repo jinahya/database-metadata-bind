@@ -48,10 +48,10 @@ public class Schema extends AbstractMetadataType {
 
     private static final long serialVersionUID = 7457236468401244963L;
 
-    public static final Comparator<Schema> CASE_INSENSITIVE_ORDER =
+    static final Comparator<Schema> CASE_INSENSITIVE_ORDER =
             Comparator.comparing(Schema::getSchemaId, SchemaId.CASE_INSENSITIVE_ORDER);
 
-    public static final Comparator<Schema> LEXICOGRAPHIC_ORDER =
+    static final Comparator<Schema> LEXICOGRAPHIC_ORDER =
             Comparator.comparing(Schema::getSchemaId, SchemaId.LEXICOGRAPHIC_ORDER);
 
     /**

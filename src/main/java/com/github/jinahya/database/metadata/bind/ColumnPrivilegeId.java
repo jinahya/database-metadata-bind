@@ -35,11 +35,11 @@ final class ColumnPrivilegeId extends AbstractMetadataTypeId<ColumnPrivilegeId, 
 
     private static final long serialVersionUID = 7221973324274278465L;
 
-    public static final Comparator<ColumnPrivilegeId> CASE_INSENSITIVE_ORDER =
+    static final Comparator<ColumnPrivilegeId> CASE_INSENSITIVE_ORDER =
             Comparator.comparing(ColumnPrivilegeId::getColumnId, ColumnId.CASE_INSENSITIVE_ORDER)
                     .thenComparing(ColumnPrivilegeId::getPrivilege, String.CASE_INSENSITIVE_ORDER);
 
-    public static final Comparator<ColumnPrivilegeId> LEXICOGRAPHIC_ORDER =
+    static final Comparator<ColumnPrivilegeId> LEXICOGRAPHIC_ORDER =
             Comparator.comparing(ColumnPrivilegeId::getColumnId, ColumnId.LEXICOGRAPHIC_ORDER)
                     .thenComparing(ColumnPrivilegeId::getPrivilege);
 

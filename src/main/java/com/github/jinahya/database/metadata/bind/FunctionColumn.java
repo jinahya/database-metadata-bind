@@ -53,12 +53,12 @@ public class FunctionColumn extends AbstractMetadataType {
 
     private static final long serialVersionUID = -7445156446214062680L;
 
-    public static final Comparator<FunctionColumn> CASE_INSENSITIVE_ORDER =
+    static final Comparator<FunctionColumn> CASE_INSENSITIVE_ORDER =
             Comparator.comparing(FunctionColumn::getSchemaId, SchemaId.CASE_INSENSITIVE_ORDER)
                     .thenComparing(FunctionColumn::getFunctionName, nullsFirst(String.CASE_INSENSITIVE_ORDER))
                     .thenComparing(FunctionColumn::getSpecificName, nullsFirst(String.CASE_INSENSITIVE_ORDER));
 
-    public static final Comparator<FunctionColumn> LEXICOGRAPHIC_ORDER =
+    static final Comparator<FunctionColumn> LEXICOGRAPHIC_ORDER =
             Comparator.comparing(FunctionColumn::getSchemaId, SchemaId.LEXICOGRAPHIC_ORDER)
                     .thenComparing(FunctionColumn::getFunctionName, nullsFirst(naturalOrder()))
                     .thenComparing(FunctionColumn::getSpecificName, nullsFirst(naturalOrder()));

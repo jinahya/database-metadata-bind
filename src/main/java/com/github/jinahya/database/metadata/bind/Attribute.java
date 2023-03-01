@@ -49,11 +49,11 @@ public class Attribute extends AbstractMetadataType {
 
     private static final long serialVersionUID = 1913681105410440186L;
 
-    public static final Comparator<Attribute> CASE_INSENSITIVE_ORDER =
+    static final Comparator<Attribute> CASE_INSENSITIVE_ORDER =
             Comparator.comparing(Attribute::getUDTId, UDTId.CASE_INSENSITIVE_ORDER)
                     .thenComparingInt(Attribute::getOrdinalPosition);
 
-    public static final Comparator<Attribute> LEXICOGRAPHIC_ORDER =
+    static final Comparator<Attribute> LEXICOGRAPHIC_ORDER =
             Comparator.comparing(Attribute::getUDTId, UDTId.LEXICOGRAPHIC_ORDER)
                     .thenComparingInt(Attribute::getOrdinalPosition);
 

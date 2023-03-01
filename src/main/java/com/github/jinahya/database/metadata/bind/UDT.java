@@ -50,11 +50,11 @@ public class UDT extends AbstractMetadataType {
 
     private static final long serialVersionUID = 8665246093405057553L;
 
-    public static final Comparator<UDT> CASE_INSENSITIVE_ORDER =
+    static final Comparator<UDT> CASE_INSENSITIVE_ORDER =
             Comparator.comparingInt(UDT::getDataType)
                     .thenComparing(UDT::getUDTId, UDTId.CASE_INSENSITIVE_ORDER);
 
-    public static final Comparator<UDT> LEXICOGRAPHIC_ORDER =
+    static final Comparator<UDT> LEXICOGRAPHIC_ORDER =
             Comparator.comparingInt(UDT::getDataType)
                     .thenComparing(UDT::getUDTId, UDTId.LEXICOGRAPHIC_ORDER);
 

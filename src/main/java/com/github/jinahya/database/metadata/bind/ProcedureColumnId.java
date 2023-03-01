@@ -34,12 +34,12 @@ final class ProcedureColumnId extends AbstractMetadataTypeId<ProcedureColumnId, 
 
     private static final long serialVersionUID = 7459854669925402253L;
 
-//    public static final Comparator<ProcedureColumnId> COMPARING_IN_CASE_INSENSITIVE_ORDER =
+//    static final Comparator<ProcedureColumnId> COMPARING_IN_CASE_INSENSITIVE_ORDER =
 //            Comparator.<ProcedureColumnId, SchemaId>comparing(pci -> pci.getProcedureId().getSchemaId(),
 //                                                              SchemaId.CASE_INSENSITIVE_ORDER)
 //                    .thenComparing(ProcedureColumnId::getColumnName, String.CASE_INSENSITIVE_ORDER);
 //
-//    public static final Comparator<ProcedureColumnId> COMPARING_IN_LEXICOGRAPHIC_ORDER =
+//    static final Comparator<ProcedureColumnId> COMPARING_IN_LEXICOGRAPHIC_ORDER =
 //            Comparator.<ProcedureColumnId, SchemaId>comparing(pci -> pci.getProcedureId().getSchemaId(),
 //                                                              SchemaId.LEXICOGRAPHIC_ORDER)
 //                    .thenComparing(ProcedureColumnId::getColumnName);

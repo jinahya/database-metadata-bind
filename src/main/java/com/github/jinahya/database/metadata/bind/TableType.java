@@ -43,10 +43,10 @@ public class TableType extends AbstractMetadataType {
 
     private static final long serialVersionUID = -7630634982776331078L;
 
-    public static final Comparator<TableType> CASE_INSENSITIVE_ORDER =
+    static final Comparator<TableType> CASE_INSENSITIVE_ORDER =
             Comparator.comparing(TableType::getTableType, String.CASE_INSENSITIVE_ORDER);
 
-    public static final Comparator<TableType> LEXICOGRAPHIC_ORDER = Comparator.comparing(TableType::getTableType);
+    static final Comparator<TableType> LEXICOGRAPHIC_ORDER = Comparator.comparing(TableType::getTableType);
 
     public static final String COLUMN_LABEL_TABLE_TYPE = "TABLE_TYPE";
 

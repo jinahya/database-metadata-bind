@@ -49,13 +49,13 @@ public class IndexInfo extends AbstractMetadataType {
 
     private static final long serialVersionUID = 924040226611181424L;
 
-    public static final Comparator<IndexInfo> CASE_INSENSITIVE_ORDER =
+    static final Comparator<IndexInfo> CASE_INSENSITIVE_ORDER =
             Comparator.comparing(IndexInfo::isNonUnique)
                     .thenComparingInt(IndexInfo::getType)
                     .thenComparing(IndexInfo::getIndexName, nullsFirst(String.CASE_INSENSITIVE_ORDER))
                     .thenComparingInt(IndexInfo::getOrdinalPosition);
 
-    public static final Comparator<IndexInfo> LEXICOGRAPHIC_ORDER =
+    static final Comparator<IndexInfo> LEXICOGRAPHIC_ORDER =
             Comparator.comparing(IndexInfo::isNonUnique)
                     .thenComparingInt(IndexInfo::getType)
                     .thenComparing(IndexInfo::getIndexName, nullsFirst(naturalOrder()))

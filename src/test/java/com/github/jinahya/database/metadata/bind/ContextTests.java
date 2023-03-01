@@ -871,7 +871,11 @@ final class ContextTests {
                     TestContainers_PostgreSQL_IT.DATABASE_PRODUCT_NAME
             );
             if (!databaseProductNames.contains(databaseProductName)) {
-                ContextTestUtils.assertTablesAreSorted(tables);
+                assertThat(tables)
+                        .satisfiesAnyOf(
+                                l -> assertThat(l).isSortedAccordingTo(Table.CASE_INSENSITIVE_ORDER),
+                                l -> assertThat(l).isSortedAccordingTo(Table.LEXICOGRAPHIC_ORDER)
+                        );
             }
         }
         {
@@ -884,7 +888,12 @@ final class ContextTests {
                     TestContainers_PostgreSQL_IT.DATABASE_PRODUCT_NAME
             );
             if (!databaseProductNames.contains(databaseProductName)) {
-                ContextTestUtils.assertTableIdsAreSorted(tables);
+                assertThat(tables)
+                        .extracting(Table::getTableId)
+                        .satisfiesAnyOf(
+                                l -> assertThat(l).isSortedAccordingTo(TableId.CASE_INSENSITIVE_ORDER),
+                                l -> assertThat(l).isSortedAccordingTo(TableId.LEXICOGRAPHIC_ORDER)
+                        );
             }
         }
         for (final var table : tables) {
@@ -1287,6 +1296,302 @@ final class ContextTests {
         }
         {
             common(versionColumn);
+        }
+    }
+
+    static void testOrdering(final Context context) throws SQLException {
+        {
+            databaseProductName = context.databaseMetaData.getDatabaseProductName();
+            info(context);
+        }
+        try {
+            final var attributes = context.getAttributes(null, null, "%", "%");
+            assertThat(attributes)
+                    .satisfiesAnyOf(
+                            l -> assertThat(l).isSortedAccordingTo(Attribute.CASE_INSENSITIVE_ORDER),
+                            l -> assertThat(l).isSortedAccordingTo(Attribute.LEXICOGRAPHIC_ORDER)
+                    );
+        } catch (final SQLException sqle) {
+            thrown("failed; getAttributes", sqle);
+        }
+        try {
+            for (final var scope : BestRowIdentifier.ScopeEnum.values()) {
+                for (final boolean nullable : new boolean[] {true, false}) {
+                    final var bestRowIdentifier =
+                            context.getBestRowIdentifier(null, null, "%", scope.fieldValueAsInt(), nullable);
+                    assertThat(bestRowIdentifier)
+                            .isSortedAccordingTo(BestRowIdentifier.COMPARING_SCOPE);
+                }
+            }
+        } catch (final SQLException sqle) {
+            thrown("failed; getBestRowIdentifier", sqle);
+        }
+        try {
+            final var catalogs = context.getCatalogs();
+            assertThat(catalogs).satisfiesAnyOf(
+                    l -> assertThat(l).isSortedAccordingTo(Catalog.CASE_INSENSITIVE_ORDER),
+                    l -> assertThat(l).isSortedAccordingTo(Catalog.LEXICOGRAPHIC_ORDER)
+            );
+        } catch (final SQLException sqle) {
+            thrown("failed; getCatalogs", sqle);
+        }
+        try {
+            final var catalogs = context.getClientInfoProperties();
+            final var databaseProductNames = Set.of(
+                    TestContainers_MariaDB_IT.DATABASE_PRODUCT_NAME
+            );
+            if (!databaseProductNames.contains(databaseProductName)) {
+                assertThat(catalogs).satisfiesAnyOf(
+                        l -> assertThat(l).isSortedAccordingTo(ClientInfoProperty.CASE_INSENSITIVE_ORDER),
+                        l -> assertThat(l).isSortedAccordingTo(ClientInfoProperty.LEXICOGRAPHIC_ORDER)
+                );
+            }
+        } catch (final SQLException sqle) {
+            thrown("failed; getCatalogs", sqle);
+        }
+        try {
+            final var columnPrivileges = context.getColumnPrivileges(null, null, "%", "%");
+            assertThat(columnPrivileges).satisfiesAnyOf(
+                    l -> assertThat(l).isSortedAccordingTo(ColumnPrivilege.CASE_INSENSITIVE_ORDER),
+                    l -> assertThat(l).isSortedAccordingTo(ColumnPrivilege.LEXICOGRAPHIC_ORDER)
+            );
+        } catch (final SQLException sqle) {
+            thrown("failed; getColumnPrivileges", sqle);
+        }
+        try {
+            final var columns = context.getColumns(null, null, "%", "%");
+            final var databaseProductNames = Set.of(
+                    Memory_Hsql_Test.DATABASE_PRODUCT_NAME,
+                    TestContainers_MariaDB_IT.DATABASE_PRODUCT_NAME
+            );
+            if (!databaseProductNames.contains(databaseProductName)) {
+                assertThat(columns).satisfiesAnyOf(
+                        l -> assertThat(l).isSortedAccordingTo(Column.CASE_INSENSITIVE_ORDER),
+                        l -> assertThat(l).isSortedAccordingTo(Column.LEXICOGRAPHIC_ORDER)
+                );
+            }
+        } catch (final SQLException sqle) {
+            thrown("failed; getColumns", sqle);
+        }
+        try {
+            final var functionColumns = context.getFunctionColumns(null, null, "%", "%");
+            final var databaseProductNames = Set.of(
+                    ""
+            );
+            if (!databaseProductNames.contains(databaseProductName)) {
+                assertThat(functionColumns).satisfiesAnyOf(
+                        l -> assertThat(l).isSortedAccordingTo(FunctionColumn.CASE_INSENSITIVE_ORDER),
+                        l -> assertThat(l).isSortedAccordingTo(FunctionColumn.LEXICOGRAPHIC_ORDER)
+                );
+            }
+        } catch (final SQLException sqle) {
+            thrown("failed; getFunctionColumns", sqle);
+        }
+        try {
+            final var functions = context.getFunctions(null, null, "%");
+            final var databaseProductNames = Set.of(
+                    ""
+            );
+            if (!databaseProductNames.contains(databaseProductName)) {
+                assertThat(functions).satisfiesAnyOf(
+                        l -> assertThat(l).isSortedAccordingTo(Function.CASE_INSENSITIVE_ORDER),
+                        l -> assertThat(l).isSortedAccordingTo(Function.LEXICOGRAPHIC_ORDER)
+                );
+            }
+        } catch (final SQLException sqle) {
+            thrown("failed; getFunctionColumns", sqle);
+        }
+        try {
+            final var procedureColumns = context.getProcedureColumns(null, null, "%", "%");
+            final var databaseProductNames = Set.of(
+                    ""
+            );
+            if (!databaseProductNames.contains(databaseProductName)) {
+                assertThat(procedureColumns).satisfiesAnyOf(
+                        l -> assertThat(l).isSortedAccordingTo(ProcedureColumn.CASE_INSENSITIVE_ORDER),
+                        l -> assertThat(l).isSortedAccordingTo(ProcedureColumn.LEXICOGRAPHIC_ORDER)
+                );
+            }
+        } catch (final SQLException sqle) {
+            thrown("failed; getProcedureColumns", sqle);
+        }
+        try {
+            final var procedures = context.getProcedures(null, null, "%");
+            final var databaseProductNames = Set.of(
+                    Memory_Hsql_Test.DATABASE_PRODUCT_NAME
+            );
+            if (!databaseProductNames.contains(databaseProductName)) {
+                assertThat(procedures).satisfiesAnyOf(
+                        l -> assertThat(l).isSortedAccordingTo(Procedure.CASE_INSENSITIVE_ORDER),
+                        l -> assertThat(l).isSortedAccordingTo(Procedure.LEXICOGRAPHIC_ORDER)
+                );
+            }
+        } catch (final SQLException sqle) {
+            thrown("failed; getProcedureColumns", sqle);
+        }
+        try {
+            final var schemas = context.getSchemas((String) null, "%");
+            final var databaseProductNames = Set.of(
+                    ""
+            );
+            if (!databaseProductNames.contains(databaseProductName)) {
+                assertThat(schemas).satisfiesAnyOf(
+                        l -> assertThat(l).isSortedAccordingTo(Schema.CASE_INSENSITIVE_ORDER),
+                        l -> assertThat(l).isSortedAccordingTo(Schema.LEXICOGRAPHIC_ORDER)
+                );
+            }
+        } catch (final SQLException sqle) {
+            thrown("failed; getSchemas", sqle);
+        }
+        try {
+            final var superTables = context.getSuperTables(null, "%", "%");
+            assertThat(superTables).doesNotHaveDuplicates();
+        } catch (final SQLException sqle) {
+            thrown("failed; getSuperTables", sqle);
+        }
+        try {
+            final var superTypes = context.getSuperTypes(null, "%", "%");
+            assertThat(superTypes).doesNotHaveDuplicates();
+        } catch (final SQLException sqle) {
+            thrown("failed; getSuperTypes", sqle);
+        }
+        try {
+            final var tablePrivileges = context.getTablePrivileges(null, null, "%");
+            assertThat(tablePrivileges).doesNotHaveDuplicates();
+            assertThat(tablePrivileges).satisfiesAnyOf(
+                    l -> assertThat(l).isSortedAccordingTo(TablePrivilege.CASE_INSENSITIVE_ORDER),
+                    l -> assertThat(l).isSortedAccordingTo(TablePrivilege.LEXICOGRAPHIC_ORDER)
+            );
+        } catch (final SQLException sqle) {
+            thrown("failed; getTablePrivileges", sqle);
+        }
+        try {
+            final var tables = context.getTables(null, null, "%", null);
+            assertThat(tables).doesNotHaveDuplicates();
+            {
+                final var databaseProductNames = Set.of(
+                        Memory_Hsql_Test.DATABASE_PRODUCT_NAME,
+                        TestContainers_MariaDB_IT.DATABASE_PRODUCT_NAME,
+                        TestContainers_PostgreSQL_IT.DATABASE_PRODUCT_NAME
+                );
+                if (!databaseProductNames.contains(databaseProductName)) {
+                    assertThat(tables).satisfiesAnyOf(
+                            l -> assertThat(l).isSortedAccordingTo(Table.CASE_INSENSITIVE_ORDER),
+                            l -> assertThat(l).isSortedAccordingTo(Table.LEXICOGRAPHIC_ORDER)
+                    );
+                }
+            }
+            for (final var table : tables) {
+                try {
+                    for (final var scope : BestRowIdentifier.ScopeEnum.values()) {
+                        for (final boolean nullable : new boolean[] {true, false}) {
+                            final var bestRowIdentifier =
+                                    context.getBestRowIdentifier(table, scope.fieldValueAsInt(), nullable);
+                            assertThat(bestRowIdentifier).isSortedAccordingTo(BestRowIdentifier.COMPARING_SCOPE);
+                            if (false && !bestRowIdentifier.isEmpty()) { // 'actual...'
+                                assertThat(bestRowIdentifier)
+                                        .extracting(BestRowIdentifier::getScope)
+                                        .containsOnly(scope.fieldValueAsInt());
+                            }
+                        }
+                    }
+                } catch (final SQLException sqle) {
+                    thrown("failed: getBestRowIdentifier", sqle);
+                }
+                try {
+                    final var columnPrivileges = context.getColumnPrivileges(table, "%");
+                    assertThat(columnPrivileges).satisfiesAnyOf(
+                            l -> assertThat(l).isSortedAccordingTo(ColumnPrivilege.CASE_INSENSITIVE_ORDER),
+                            l -> assertThat(l).isSortedAccordingTo(ColumnPrivilege.LEXICOGRAPHIC_ORDER)
+                    );
+                } catch (final SQLException sqle) {
+                    thrown("failed: getColumnPrivileges", sqle);
+                }
+                try {
+                    final var exportedKeys = context.getExportedKeys(table);
+                    assertThat(exportedKeys).satisfiesAnyOf(
+                            l -> assertThat(l).isSortedAccordingTo(ExportedKey.CASE_INSENSITIVE_ORDER),
+                            l -> assertThat(l).isSortedAccordingTo(ExportedKey.LEXICOGRAPHIC_ORDER)
+                    );
+                } catch (final SQLException sqle) {
+                    thrown("failed: getExportedKeys", sqle);
+                }
+                try {
+                    final var importedKeys = context.getImportedKeys(table);
+                    assertThat(importedKeys).satisfiesAnyOf(
+                            l -> assertThat(l).isSortedAccordingTo(ImportedKey.CASE_INSENSITIVE_ORDER),
+                            l -> assertThat(l).isSortedAccordingTo(ImportedKey.LEXICOGRAPHIC_ORDER)
+                    );
+                } catch (final SQLException sqle) {
+                    thrown("failed: getImportedKeys", sqle);
+                }
+                try {
+                    for (final boolean unique : new boolean[] {false, true}) {
+                        for (final boolean approximate : new boolean[] {false, true}) {
+                            final var indexInfo = context.getIndexInfo(table, unique, approximate);
+                            assertThat(indexInfo).satisfiesAnyOf(
+                                    l -> assertThat(l).isSortedAccordingTo(IndexInfo.CASE_INSENSITIVE_ORDER),
+                                    l -> assertThat(l).isSortedAccordingTo(IndexInfo.LEXICOGRAPHIC_ORDER)
+                            );
+                        }
+                    }
+                } catch (final SQLException sqle) {
+                    thrown("failed: getIndexInfo", sqle);
+                }
+                try {
+                    final var primaryKeys = context.getPrimaryKeys(table);
+                    final var databaseProductNames = Set.of(
+                            Memory_Hsql_Test.DATABASE_PRODUCT_NAME,
+                            TestContainers_MySQL_IT.DATABASE_PRODUCT_NAME,
+                            TestContainers_PostgreSQL_IT.DATABASE_PRODUCT_NAME
+                    );
+                    if (!databaseProductNames.contains(databaseProductName)) {
+                        assertThat(primaryKeys).satisfiesAnyOf(
+                                l -> assertThat(l).isSortedAccordingTo(PrimaryKey.CASE_INSENSITIVE_ORDER),
+                                l -> assertThat(l).isSortedAccordingTo(PrimaryKey.LEXICOGRAPHIC_ORDER)
+                        );
+                    }
+                } catch (final SQLException sqle) {
+                    thrown("failed: getPrimaryKeys", sqle);
+                }
+                try {
+                    final var versionColumns = context.getVersionColumns(table); // unordered
+                } catch (final SQLException sqle) {
+                    thrown("failed: getVersionColumns", sqle);
+                }
+            }
+        } catch (final SQLException sqle) {
+            thrown("failed; getTables", sqle);
+        }
+        try {
+            final var typeInfo = context.getTypeInfo();
+            assertThat(typeInfo).doesNotHaveDuplicates();
+            final var databaseProductNames = Set.of(
+                    Memory_H2_Test.DATABASE_PRODUCT_NAME,
+                    Memory_Hsql_Test.DATABASE_PRODUCT_NAME,
+                    TestContainers_MySQL_IT.DATABASE_PRODUCT_NAME
+            );
+            if (!databaseProductNames.contains(databaseProductName)) {
+                assertThat(typeInfo).isSortedAccordingTo(TypeInfo.COMPARING_DATA_TYPE);
+            }
+        } catch (final SQLException sqle) {
+            thrown("failed; getTypeInfo", sqle);
+        }
+        try {
+            final var udts = context.getUDTs(null, null, "%", null);
+            assertThat(udts).doesNotHaveDuplicates();
+            final var databaseProductNames = Set.of(
+//                    Memory_H2_Test.DATABASE_PRODUCT_NAME,
+//                    Memory_Hsql_Test.DATABASE_PRODUCT_NAME
+            );
+            if (!databaseProductNames.contains(databaseProductName)) {
+                assertThat(udts).satisfiesAnyOf(
+                        l -> assertThat(l).isSortedAccordingTo(UDT.CASE_INSENSITIVE_ORDER),
+                        l -> assertThat(l).isSortedAccordingTo(UDT.LEXICOGRAPHIC_ORDER)
+                );
+            }
+        } catch (final SQLException sqle) {
+            thrown("failed; getTypeInfo", sqle);
         }
     }
 

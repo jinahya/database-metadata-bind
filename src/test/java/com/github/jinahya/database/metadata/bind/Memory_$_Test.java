@@ -74,4 +74,16 @@ abstract class Memory_$_Test {
             }
         });
     }
+
+    @Test
+    void testOrdering() throws SQLException {
+        applyContext(c -> {
+            try {
+                ContextTests.testOrdering(c);
+                return null;
+            } catch (final SQLException sqle) {
+                throw new RuntimeException(sqle);
+            }
+        });
+    }
 }

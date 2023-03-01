@@ -51,12 +51,12 @@ public class ProcedureColumn extends AbstractMetadataType {
 
     private static final long serialVersionUID = 3894753719381358829L;
 
-    public static final Comparator<ProcedureColumn> CASE_INSENSITIVE_ORDER =
+    static final Comparator<ProcedureColumn> CASE_INSENSITIVE_ORDER =
             Comparator.comparing(ProcedureColumn::getSchemaId, SchemaId.CASE_INSENSITIVE_ORDER)
                     .thenComparing(ProcedureColumn::getProcedureName, nullsFirst(String.CASE_INSENSITIVE_ORDER))
                     .thenComparing(ProcedureColumn::getSpecificName, nullsFirst(String.CASE_INSENSITIVE_ORDER));
 
-    public static final Comparator<ProcedureColumn> LEXICOGRAPHIC_ORDER =
+    static final Comparator<ProcedureColumn> LEXICOGRAPHIC_ORDER =
             Comparator.comparing(ProcedureColumn::getSchemaId, SchemaId.LEXICOGRAPHIC_ORDER)
                     .thenComparing(ProcedureColumn::getProcedureName, nullsFirst(naturalOrder()))
                     .thenComparing(ProcedureColumn::getSpecificName, nullsFirst(naturalOrder()));

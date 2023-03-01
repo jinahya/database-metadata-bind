@@ -35,10 +35,10 @@ final class CatalogId extends AbstractMetadataTypeId<CatalogId, Catalog> {
 
     private static final long serialVersionUID = 2793098695036855151L;
 
-    public static final Comparator<CatalogId> CASE_INSENSITIVE_ORDER =
+    static final Comparator<CatalogId> CASE_INSENSITIVE_ORDER =
             Comparator.comparing(CatalogId::getTableCat, String.CASE_INSENSITIVE_ORDER);
 
-    public static final Comparator<CatalogId> LEXICOGRAPHIC_ORDER =
+    static final Comparator<CatalogId> LEXICOGRAPHIC_ORDER =
             Comparator.comparing(CatalogId::getTableCat, Comparator.naturalOrder());
 
     /**

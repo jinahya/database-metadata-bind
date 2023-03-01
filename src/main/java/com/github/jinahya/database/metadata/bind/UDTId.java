@@ -33,11 +33,11 @@ final class UDTId extends AbstractMetadataTypeId<UDTId, UDT> {
 
     private static final long serialVersionUID = 5548844214174261338L;
 
-    public static final Comparator<UDTId> CASE_INSENSITIVE_ORDER =
+    static final Comparator<UDTId> CASE_INSENSITIVE_ORDER =
             Comparator.comparing(UDTId::getSchemaId, SchemaId.CASE_INSENSITIVE_ORDER)
                     .thenComparing(UDTId::getTypeName, String.CASE_INSENSITIVE_ORDER);
 
-    public static final Comparator<UDTId> LEXICOGRAPHIC_ORDER =
+    static final Comparator<UDTId> LEXICOGRAPHIC_ORDER =
             Comparator.comparing(UDTId::getSchemaId, SchemaId.LEXICOGRAPHIC_ORDER)
                     .thenComparing(UDTId::getTypeName);
 
@@ -58,7 +58,7 @@ final class UDTId extends AbstractMetadataTypeId<UDTId, UDT> {
     public String toString() {
         return super.toString() + '{' +
                "schemaId=" + schemaId +
-               ",typeName=" + typeName + 
+               ",typeName=" + typeName +
                '}';
     }
 

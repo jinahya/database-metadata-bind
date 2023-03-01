@@ -53,4 +53,13 @@ abstract class TestContainers_$_IT {
             ContextTests.test(context);
         }
     }
+
+    @Test
+    void testOrdering() throws SQLException {
+        try (var connection = connect()) {
+            log.debug("connected: {}", connection);
+            final var context = Context.newInstance(connection);
+            ContextTests.testOrdering(context);
+        }
+    }
 }

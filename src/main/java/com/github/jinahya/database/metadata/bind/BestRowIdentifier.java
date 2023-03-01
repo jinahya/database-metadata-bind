@@ -20,13 +20,10 @@ package com.github.jinahya.database.metadata.bind;
  * #L%
  */
 
-import lombok.AccessLevel;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
-import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
-import lombok.experimental.SuperBuilder;
 
 import java.sql.DatabaseMetaData;
 import java.util.Comparator;
@@ -55,7 +52,7 @@ public class BestRowIdentifier extends AbstractMetadataType {
     /**
      * A comparator compares objects with their value of {@link #getScope()}.
      */
-    public static final Comparator<BestRowIdentifier> COMPARING_SCOPE =
+    static final Comparator<BestRowIdentifier> COMPARING_SCOPE =
             Comparator.comparingInt(BestRowIdentifier::getScope);
 
     public static final String COLUMN_LABEL_SCOPE = "SCOPE";

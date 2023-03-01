@@ -48,10 +48,10 @@ public class Catalog extends AbstractMetadataType {
     /**
      * A comparator compares catalogs with their {@link #getTableCat()} values in a case-insensitive manner.
      */
-    public static final Comparator<Catalog> CASE_INSENSITIVE_ORDER
+    static final Comparator<Catalog> CASE_INSENSITIVE_ORDER
             = Comparator.comparing(Catalog::getTableCat, nullsFirst(String.CASE_INSENSITIVE_ORDER));
 
-    public static final Comparator<Catalog> LEXICOGRAPHIC_ORDER
+    static final Comparator<Catalog> LEXICOGRAPHIC_ORDER
             = Comparator.comparing(Catalog::getTableCat, nullsFirst(naturalOrder()));
 
     /**

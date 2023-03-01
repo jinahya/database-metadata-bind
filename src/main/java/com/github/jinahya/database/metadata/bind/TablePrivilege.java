@@ -51,13 +51,13 @@ public class TablePrivilege extends AbstractMetadataType {
 
     private static final long serialVersionUID = -2142097373603478881L;
 
-    public static final Comparator<TablePrivilege> CASE_INSENSITIVE_ORDER =
+    static final Comparator<TablePrivilege> CASE_INSENSITIVE_ORDER =
             Comparator.comparing(TablePrivilege::getTableCatNonNull, String.CASE_INSENSITIVE_ORDER)
                     .thenComparing(TablePrivilege::getTableSchemNonNull, String.CASE_INSENSITIVE_ORDER)
                     .thenComparing(TablePrivilege::getTableName, nullsFirst(String.CASE_INSENSITIVE_ORDER))
                     .thenComparing(TablePrivilege::getPrivilege, nullsFirst(String.CASE_INSENSITIVE_ORDER));
 
-    public static final Comparator<TablePrivilege> LEXICOGRAPHIC_ORDER =
+    static final Comparator<TablePrivilege> LEXICOGRAPHIC_ORDER =
             Comparator.comparing(TablePrivilege::getTableCatNonNull)
                     .thenComparing(TablePrivilege::getTableSchemNonNull)
                     .thenComparing(TablePrivilege::getTableName, nullsFirst(naturalOrder()))

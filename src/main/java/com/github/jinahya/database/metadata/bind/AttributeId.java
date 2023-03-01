@@ -35,11 +35,11 @@ final class AttributeId extends AbstractMetadataTypeId<AttributeId, Attribute> {
 
     private static final long serialVersionUID = 7221973324274278465L;
 
-    public static final Comparator<AttributeId> CASE_INSENSITIVE_ORDER =
+    static final Comparator<AttributeId> CASE_INSENSITIVE_ORDER =
             Comparator.comparing(AttributeId::getUdtId, UDTId.CASE_INSENSITIVE_ORDER)
                     .thenComparing(AttributeId::getAttrName, String.CASE_INSENSITIVE_ORDER);
 
-    public static final Comparator<AttributeId> LEXICOGRAPHIC_ORDER =
+    static final Comparator<AttributeId> LEXICOGRAPHIC_ORDER =
             Comparator.comparing(AttributeId::getUdtId, UDTId.LEXICOGRAPHIC_ORDER)
                     .thenComparing(AttributeId::getAttrName);
 

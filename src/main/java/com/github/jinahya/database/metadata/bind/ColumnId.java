@@ -40,10 +40,10 @@ final class ColumnId extends AbstractMetadataTypeId<ColumnId, Column> {
 
     private static final long serialVersionUID = -4452694121211962289L;
 
-    public static final Comparator<ColumnId> CASE_INSENSITIVE_ORDER =
+    static final Comparator<ColumnId> CASE_INSENSITIVE_ORDER =
             Comparator.comparing(ColumnId::getTableId, TableId.CASE_INSENSITIVE_ORDER);
 
-    public static final Comparator<ColumnId> LEXICOGRAPHIC_ORDER =
+    static final Comparator<ColumnId> LEXICOGRAPHIC_ORDER =
             Comparator.comparing(ColumnId::getTableId, TableId.LEXICOGRAPHIC_ORDER);
 
     static ColumnId of(final TableId tableId, final String columnName) {
