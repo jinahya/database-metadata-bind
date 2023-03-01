@@ -59,32 +59,26 @@ class Memory_Derby_Test extends Memory_$_Test {
 
     @BeforeAll
     static void create() throws SQLException {
-        final Properties properties = new Properties();
+        final var properties = new Properties();
         properties.put("create", "true");
-        final Connection connection = getConnection(CONNECTION_URL, properties);
-        try {
+        try (var connection = getConnection(CONNECTION_URL, properties)) {
             log.debug("connection: {}", connection);
-        } finally {
-            connection.close();
         }
     }
 
     @AfterAll
     static void shutdown() {
-        final Properties properties = new Properties();
+        final var properties = new Properties();
         properties.put("shutdown", "true");
         try {
-            final Connection connection = getConnection(CONNECTION_URL, properties);
-            try {
-            } finally {
-                connection.close();
-            }
-            fail("an instance of SQLException should've been thrown");
+            getConnection(CONNECTION_URL, properties).close();
         } catch (final SQLException sqle) {
             // https://builds.apache.org/job/Derby-docs/lastSuccessfulBuild/artifact/trunk/out/ref/rrefattrib16471.html
             // this is expected
             // Shutdown commands always raise SQLExceptions.
+            return;
         }
+        fail("an instance of SQLException should've been thrown");
     }
 
     @Override

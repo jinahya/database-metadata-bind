@@ -25,4 +25,7 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 final class ContextTestUtils {
 
+    private ContextTestUtils() {
+        throw new AssertionError("instantiation is not allowed");
+    }
 }

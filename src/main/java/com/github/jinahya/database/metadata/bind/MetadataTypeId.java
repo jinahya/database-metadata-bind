@@ -22,7 +22,13 @@ package com.github.jinahya.database.metadata.bind;
 
 import java.io.Serializable;
 
-public interface MetadataTypeId<T extends MetadataTypeId<T, U>, U extends MetadataType>
+/**
+ * An interface for classes for identifying instance of {@link MetadataType}.
+ *
+ * @param <T> self type parameter
+ * @param <U> meta type parameter
+ */
+interface MetadataTypeId<T extends MetadataTypeId<T, U>, U extends MetadataType>
         extends Serializable {
 
 }

@@ -21,13 +21,11 @@ package com.github.jinahya.database.metadata.bind;
  */
 
 import lombok.AccessLevel;
-import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
-import lombok.experimental.Accessors;
 import lombok.experimental.SuperBuilder;
 
 import java.sql.DatabaseMetaData;
@@ -39,10 +37,10 @@ import java.util.Objects;
  * @author Jin Kwon &lt;jinahya_at_gmail.com&gt;
  * @see Context#getVersionColumns(String, String, String)
  */
-@ChildOf(Table.class)
-@EqualsAndHashCode(callSuper = true)
+@_ChildOf(Table.class)
+@Setter
+@Getter
 @ToString(callSuper = true)
-@Data
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @SuperBuilder(toBuilder = true)
 public class VersionColumn extends AbstractMetadataType {
@@ -52,7 +50,7 @@ public class VersionColumn extends AbstractMetadataType {
     public static final String COLUMN_LABEL_PSEUDO_COLUMN = "PSEUDO_COLUMN";
 
     /**
-     * Constants for {@link #COLUMN_LABEL_PSEUDO_COLUMN} column values.
+     * Constants for {@value #COLUMN_LABEL_PSEUDO_COLUMN} column values.
      *
      * @author Jin Kwon &lt;onacit_at_gmail.com&gt;
      */
@@ -98,50 +96,75 @@ public class VersionColumn extends AbstractMetadataType {
         private final int fieldValue;
     }
 
-    public ColumnId getColumnId(final TableId tableId) {
-        Objects.requireNonNull(tableId, "tableId is null");
-        return ColumnId.of(
-                tableId,
-                getColumnName()
-        );
+    // -----------------------------------------------------------------------------------------------------------------
+
+    @Override
+    public boolean equals(final Object obj) {
+        if (this == obj) return true;
+        if (!(obj instanceof VersionColumn)) return false;
+        final VersionColumn that = (VersionColumn) obj;
+        return Objects.equals(columnName, that.columnName);
     }
 
-    public ColumnId getColumnId(final Table table) {
+    @Override
+    public int hashCode() {
+        return Objects.hash(columnName);
+    }
+
+    // ------------------------------------------------------------------------------------------------------ columnName
+    public void setColumnName(final String columnName) {
+        this.columnName = columnName;
+        columnId = null;
+    }
+
+    // -----------------------------------------------------------------------------------------------------------------
+    @_NotUsedBySpecification
+    @_ColumnLabel("SCOPE")
+    private Integer scope;
+
+    @_ColumnLabel("COLUMN_NAME")
+    private String columnName;
+
+    @_ColumnLabel("DATA_TYPE")
+    private int dataType;
+
+    @_ColumnLabel("TYPE_NAME")
+    private String typeName;
+
+    @_NullableBySpecification
+    @_ColumnLabel("COLUMN_SIZE")
+    private Integer columnSize;
+
+    @_ColumnLabel("BUFFER_LENGTH")
+    private int bufferLength;
+
+    @_NullableBySpecification
+    @_ColumnLabel("DECIMAL_DIGITS")
+    private Integer decimalDigits;
+
+    @_ColumnLabel(COLUMN_LABEL_PSEUDO_COLUMN)
+    private int pseudoColumn;
+
+    // -----------------------------------------------------------------------------------------------------------------
+    ColumnId getColumnId(final TableId tableId) {
+        Objects.requireNonNull(tableId, "tableId is null");
+        if (columnId == null) {
+            columnId = ColumnId.of(
+                    tableId,
+                    columnName
+            );
+        }
+        return columnId;
+    }
+
+    ColumnId getColumnId(final Table table) {
         Objects.requireNonNull(table, "table is null");
         return getColumnId(table.getTableId());
     }
 
-    @NotUsedBySpecification
-    @ColumnLabel("SCOPE")
-    private Integer scope;
-
-    @ColumnLabel("COLUMN_NAME")
-    private String columnName;
-
-    @ColumnLabel("DATA_TYPE")
-    private int dataType;
-
-    @ColumnLabel("TYPE_NAME")
-    private String typeName;
-
-    @NullableBySpecification
-    @ColumnLabel("COLUMN_SIZE")
-    private Integer columnSize;
-
-    @ColumnLabel("BUFFER_LENGTH")
-    private int bufferLength;
-
-    @NullableBySpecification
-    @ColumnLabel("DECIMAL_DIGITS")
-    private Integer decimalDigits;
-
-    @ColumnLabel(COLUMN_LABEL_PSEUDO_COLUMN)
-    private int pseudoColumn;
-
-    @Accessors(fluent = true)
-    @Setter(AccessLevel.PACKAGE)
-    @Getter(AccessLevel.PACKAGE)
+    @Setter(AccessLevel.NONE)
+    @Getter(AccessLevel.NONE)
     @EqualsAndHashCode.Exclude
     @ToString.Exclude
-    private transient Table table;
+    private transient ColumnId columnId;
 }

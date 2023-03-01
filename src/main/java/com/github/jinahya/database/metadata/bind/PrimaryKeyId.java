@@ -21,60 +21,63 @@ package com.github.jinahya.database.metadata.bind;
  */
 
 import lombok.AccessLevel;
-import lombok.Data;
-import lombok.EqualsAndHashCode;
+import lombok.Builder;
+import lombok.Getter;
 import lombok.RequiredArgsConstructor;
-import lombok.experimental.SuperBuilder;
 
 import java.util.Comparator;
 import java.util.Objects;
 
-@Data
+@Getter
 @RequiredArgsConstructor(access = AccessLevel.PRIVATE)
-@SuperBuilder(toBuilder = true)
-public final class PrimaryKeyId implements MetadataTypeId<PrimaryKeyId, PrimaryKey> {
+@Builder(access = AccessLevel.PRIVATE)
+final class PrimaryKeyId extends AbstractMetadataTypeId<PrimaryKeyId, PrimaryKey> {
 
     private static final long serialVersionUID = -111977405695306679L;
 
-    public static final Comparator<PrimaryKeyId> COMPARING_CASE_INSENSITIVE =
-            Comparator.comparing(PrimaryKeyId::getTableId, TableId.COMPARING_CASE_INSENSITIVE)
+    static final Comparator<PrimaryKeyId> CASE_INSENSITIVE_ORDER =
+            Comparator.comparing(PrimaryKeyId::getTableId, TableId.CASE_INSENSITIVE_ORDER)
                     .thenComparing(PrimaryKeyId::getColumnName, String.CASE_INSENSITIVE_ORDER);
 
-    public static final Comparator<PrimaryKeyId> COMPARING_NATURAL =
-            Comparator.comparing(PrimaryKeyId::getTableId, TableId.COMPARING_NATURAL)
+    static final Comparator<PrimaryKeyId> LEXICOGRAPHIC_ORDER =
+            Comparator.comparing(PrimaryKeyId::getTableId, TableId.LEXICOGRAPHIC_ORDER)
                     .thenComparing(PrimaryKeyId::getColumnName);
 
-    static PrimaryKeyId of(final TableId tableId, final String columName, final int keySeq) {
+    public static PrimaryKeyId of(final TableId tableId, final String columName) {
         Objects.requireNonNull(tableId, "tableId is null");
         Objects.requireNonNull(columName, "columName is null");
-        if (keySeq <= 0) {
-            throw new IllegalArgumentException("non-positive keySeq: " + keySeq);
-        }
         return builder()
                 .tableId(tableId)
                 .columnName(columName)
-                .keySeq(keySeq)
                 .build();
     }
 
-    static PrimaryKeyId of(final String tableCat, final String tableSchem, final String tableName,
-                           final String columnName, final int keySeq) {
-        return of(TableId.of(tableCat, tableSchem, tableName), columnName, keySeq);
+    @Override
+    public String toString() {
+        return super.toString() + '{' +
+               "tableId=" + tableId +
+               ",columnName=" + columnName +
+               '}';
     }
 
-    public static PrimaryKeyId of(final TableId tableId, final String columName) {
-        return of(tableId, columName, 1);
+    @Override
+    public boolean equals(final Object obj) {
+        if (this == obj) return true;
+        if (!(obj instanceof PrimaryKeyId)) return false;
+        final PrimaryKeyId that = (PrimaryKeyId) obj;
+        return tableId.equals(that.tableId) &&
+               columnName.equals(that.columnName);
     }
 
-    public static PrimaryKeyId of(final String tableCat, final String tableSchem, final String tableName,
-                                  final String columnName) {
-        return of(tableCat, tableSchem, tableName, columnName, 1);
+    @Override
+    public int hashCode() {
+        return Objects.hash(
+                tableId,
+                columnName
+        );
     }
 
     private final TableId tableId;
 
     private final String columnName;
-
-    @EqualsAndHashCode.Exclude
-    private final int keySeq;
 }

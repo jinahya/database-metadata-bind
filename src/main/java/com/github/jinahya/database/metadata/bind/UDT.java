@@ -21,14 +21,16 @@ package com.github.jinahya.database.metadata.bind;
  */
 
 import lombok.AccessLevel;
-import lombok.Data;
 import lombok.EqualsAndHashCode;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 import lombok.ToString;
 import lombok.experimental.SuperBuilder;
 
 import java.sql.DatabaseMetaData;
 import java.util.Comparator;
+import java.util.Objects;
 import java.util.Optional;
 
 /**
@@ -37,39 +39,120 @@ import java.util.Optional;
  * @author Jin Kwon &lt;jinahya_at_gmail.com&gt;
  * @see Context#getUDTs(String, String, String, int[])
  */
-@ParentOf(Attribute.class)
-@ChildOf(Schema.class)
-@EqualsAndHashCode(callSuper = true)
+@_ParentOf(Attribute.class)
+@_ChildOf(Schema.class)
+@Setter
+@Getter
 @ToString(callSuper = true)
-@Data
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @SuperBuilder(toBuilder = true)
 public class UDT extends AbstractMetadataType {
 
     private static final long serialVersionUID = 8665246093405057553L;
 
-    public static final Comparator<UDT> COMPARING_IN_CASE_INSENSITIVE_ORDER =
+    static final Comparator<UDT> CASE_INSENSITIVE_ORDER =
             Comparator.comparingInt(UDT::getDataType)
                     .thenComparing(UDT::getUDTId, UDTId.CASE_INSENSITIVE_ORDER);
 
-    public static final Comparator<UDT> COMPARING_IN_NATURAL_ORDER =
+    static final Comparator<UDT> LEXICOGRAPHIC_ORDER =
             Comparator.comparingInt(UDT::getDataType)
-                    .thenComparing(UDT::getUDTId, UDTId.NATURAL_ORDER);
+                    .thenComparing(UDT::getUDTId, UDTId.LEXICOGRAPHIC_ORDER);
 
+    /**
+     * A column label of {@value}.
+     */
     public static final String COLUMN_LABEL_TYPE_CAT = "TYPE_CAT";
 
+    /**
+     * A column label of {@value}.
+     */
     public static final String COLUMN_LABEL_TYPE_SCHEM = "TYPE_SCHEM";
 
+    /**
+     * A column label of {@value}.
+     */
     public static final String COLUMN_LABEL_TYPE_NAME = "TYPE_NAME";
 
+    /**
+     * A column label of {@value}.
+     */
     public static final String COLUMN_LABEL_CLASS_NAME = "CLASS_NAME";
 
     public static final String COLUMN_LABEL_DATA_TYPE = "DATA_TYPE";
 
-    public UDTId getUDTId() {
-        return UDTId.of(getTypeCatNonNull(), getTypeSchemNonNull(), getTypeName());
+    // -----------------------------------------------------------------------------------------------------------------
+
+    @Override
+    public boolean equals(final Object obj) {
+        if (this == obj) return true;
+        if (!(obj instanceof UDT)) return false;
+        final UDT that = (UDT) obj;
+        return dataType == that.dataType &&
+               Objects.equals(typeCat, that.typeCat) &&
+               Objects.equals(typeSchem, that.typeSchem) &&
+               Objects.equals(typeName, that.typeName);
     }
 
+    @Override
+    public int hashCode() {
+        return Objects.hash(
+                typeCat,
+                typeSchem,
+                typeName,
+                dataType
+        );
+    }
+
+    // --------------------------------------------------------------------------------------------------------- typeCat
+    public void setTypeCat(final String typeCat) {
+        this.typeCat = typeCat;
+        udtId = null;
+    }
+
+    // ------------------------------------------------------------------------------------------------------- typeSchem
+    public void setTypeSchem(final String typeSchem) {
+        this.typeSchem = typeSchem;
+        udtId = null;
+    }
+
+    public void setTypeName(final String typeName) {
+        this.typeName = typeName;
+        udtId = null;
+    }
+
+    public void setDataType(final int dataType) {
+        this.dataType = dataType;
+        udtId = null;
+    }
+
+    // -----------------------------------------------------------------------------------------------------------------
+    @_NullableBySpecification
+    @_ColumnLabel(COLUMN_LABEL_TYPE_CAT)
+    private String typeCat;
+
+    @_NullableBySpecification
+    @_ColumnLabel(COLUMN_LABEL_TYPE_SCHEM)
+    private String typeSchem;
+
+    @_ColumnLabel(COLUMN_LABEL_TYPE_NAME)
+    private String typeName;
+
+    @_NullableByVendor("PostgreSQL")
+    @_ColumnLabel(COLUMN_LABEL_CLASS_NAME)
+    private String className;
+
+    @_ColumnLabel(COLUMN_LABEL_DATA_TYPE)
+    private int dataType;
+
+    @_NullableByVendor("PostgreSQL")
+    @_ColumnLabel("REMARKS")
+    private String remarks;
+
+    @_NullableBySpecification
+    @_ColumnLabel("BASE_TYPE")
+    private Integer baseType;
+
+    // -----------------------------------------------------------------------------------------------------------------
     String getTypeCatNonNull() {
         return Optional.ofNullable(getTypeCat()).orElse(Catalog.COLUMN_VALUE_TABLE_CAT_EMPTY);
     }
@@ -78,29 +161,20 @@ public class UDT extends AbstractMetadataType {
         return Optional.ofNullable(getTypeSchem()).orElse(Schema.COLUMN_VALUE_TABLE_SCHEM_EMPTY);
     }
 
-    @NullableBySpecification
-    @ColumnLabel(COLUMN_LABEL_TYPE_CAT)
-    private String typeCat;
+    UDTId getUDTId() {
+        if (udtId == null) {
+            udtId = UDTId.of(
+                    getTypeCatNonNull(),
+                    getTypeSchemNonNull(),
+                    getTypeName()
+            );
+        }
+        return udtId;
+    }
 
-    @NullableBySpecification
-    @ColumnLabel(COLUMN_LABEL_TYPE_SCHEM)
-    private String typeSchem;
-
-    @ColumnLabel(COLUMN_LABEL_TYPE_NAME)
-    private String typeName;
-
-    @NullableByVendor("PostgreSQL")
-    @ColumnLabel(COLUMN_LABEL_CLASS_NAME)
-    private String className;
-
-    @ColumnLabel(COLUMN_LABEL_DATA_TYPE)
-    private int dataType;
-
-    @NullableByVendor("PostgreSQL")
-    @ColumnLabel("REMARKS")
-    private String remarks;
-
-    @NullableBySpecification
-    @ColumnLabel("BASE_TYPE")
-    private Integer baseType;
+    @Setter(AccessLevel.NONE)
+    @Getter(AccessLevel.NONE)
+    @EqualsAndHashCode.Exclude
+    @ToString.Exclude
+    private transient UDTId udtId;
 }

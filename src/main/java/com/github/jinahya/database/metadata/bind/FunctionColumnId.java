@@ -21,41 +21,54 @@ package com.github.jinahya.database.metadata.bind;
  */
 
 import lombok.AccessLevel;
-import lombok.Data;
-import lombok.RequiredArgsConstructor;
-import lombok.experimental.SuperBuilder;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Getter;
 
-import java.util.Comparator;
 import java.util.Objects;
 
-@Data
-@RequiredArgsConstructor(access = AccessLevel.PRIVATE)
-@SuperBuilder(toBuilder = true)
-final class FunctionColumnId implements MetadataTypeId<FunctionColumnId, FunctionColumn> {
+@Getter
+@AllArgsConstructor(access = AccessLevel.PRIVATE)
+@Builder(access = AccessLevel.PRIVATE)
+final class FunctionColumnId extends AbstractMetadataTypeId<FunctionColumnId, FunctionColumn> {
 
     private static final long serialVersionUID = 7221973324274278465L;
-
-    public static final Comparator<FunctionColumnId> COMPARING_CASE_INSENSITIVE =
-            Comparator.comparing(FunctionColumnId::getFunctionId, FunctionId.COMPARING_CASE_INSENSITIVE);
-
-    public static final Comparator<FunctionColumnId> COMPARING_NATURAL =
-            Comparator.comparing(FunctionColumnId::getFunctionId, FunctionId.COMPARING_NATURAL);
 
     public static FunctionColumnId of(final FunctionId functionId, final String columnName, final int columnType) {
         Objects.requireNonNull(functionId, "functionId is null");
         Objects.requireNonNull(columnName, "columnName is null");
-        return builder()
-                .functionId(functionId)
-                .columnName(columnName)
-                .columnType(columnType)
-                .build();
+        if (columnType < 0) {
+            throw new IllegalArgumentException("negative columnType: " + columnType);
+        }
+        return new FunctionColumnId(functionId, columnName, columnType);
     }
 
-    public static FunctionColumnId of(final String functionCat, final String functionSchem, final String functionName,
-                                      final String specificName, final String columnName, final int columnType) {
-        return of(FunctionId.of(functionCat, functionSchem, functionName, specificName), columnName, columnType);
+    // -----------------------------------------------------------------------------------------------------------------
+    @Override
+    public String toString() {
+        return super.toString() + '{' +
+               "functionId=" + functionId +
+               ",columnName=" + columnName +
+               ",columnType=" + columnType +
+               '}';
     }
 
+    @Override
+    public boolean equals(final Object obj) {
+        if (this == obj) return true;
+        if (!(obj instanceof FunctionColumnId)) return false;
+        final FunctionColumnId that = (FunctionColumnId) obj;
+        return columnType == that.columnType &&
+               functionId.equals(that.functionId) &&
+               columnName.equals(that.columnName);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(functionId, columnName, columnType);
+    }
+
+    // -----------------------------------------------------------------------------------------------------------------
     private final FunctionId functionId;
 
     private final String columnName;

@@ -21,8 +21,6 @@ package com.github.jinahya.database.metadata.bind;
  */
 
 import lombok.AccessLevel;
-import lombok.Data;
-import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
 import lombok.experimental.SuperBuilder;
@@ -37,18 +35,27 @@ import java.util.Comparator;
  * @see Context#getImportedKeys(String, String, String)
  * @see ExportedKey
  */
-@ChildOf(Table.class)
-@EqualsAndHashCode(callSuper = true)
+@_ChildOf(Table.class)
 @ToString(callSuper = true)
-@Data
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @SuperBuilder(toBuilder = true)
 public class ImportedKey extends TableKey<ImportedKey> {
 
     private static final long serialVersionUID = -1900794151555506751L;
 
-    public static final Comparator<ImportedKey> COMPARING_CASE_INSENSITIVE =
-            comparingPktableKeySeqCaseInsensitive();
+    static final Comparator<ImportedKey> CASE_INSENSITIVE_ORDER = comparingPktableCaseInsensitive();
 
-    public static final Comparator<ImportedKey> COMPARING_NATUAL = comparingPktableKeySeqNatual();
+    static final Comparator<ImportedKey> LEXICOGRAPHIC_ORDER = comparingPktableLexicographic();
+
+    @Override
+    public boolean equals(final Object obj) {
+        if (this == obj) return true;
+        if (!(obj instanceof ImportedKey)) return false;
+        return super.equals_((ImportedKey) obj);
+    }
+
+    @Override
+    public int hashCode() {
+        return super.hashCode();
+    }
 }

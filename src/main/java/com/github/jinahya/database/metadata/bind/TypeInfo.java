@@ -31,7 +31,7 @@ import java.util.Comparator;
 import java.util.Objects;
 
 /**
- * An entity class for binding results of {@link java.sql.DatabaseMetaData#getTypeInfo() getTypeInfo()}.
+ * A class for binding results of {@link java.sql.DatabaseMetaData#getTypeInfo() getTypeInfo()} method.
  *
  * @author Jin Kwon &lt;jinahya_at_gmail.com&gt;
  * @see Context#getTypeInfo()
@@ -43,12 +43,11 @@ import java.util.Objects;
 @Data
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @SuperBuilder(toBuilder = true)
-public class TypeInfo
-        extends AbstractMetadataType {
+public class TypeInfo extends AbstractMetadataType {
 
     private static final long serialVersionUID = -3964147654019495313L;
 
-    public static final Comparator<TypeInfo> COMPARING_AS_SPECIFIED = Comparator.comparingInt(TypeInfo::getDataType);
+    static final Comparator<TypeInfo> COMPARING_DATA_TYPE = Comparator.comparingInt(TypeInfo::getDataType);
 
     public static final String COLUMN_LABEL_TYPE_NAME = "TYPE_NAME";
 
@@ -64,6 +63,9 @@ public class TypeInfo
 
     public static final String COLUMN_LABEL_NULLABLE = "NULLABLE";
 
+    /**
+     * Constants for the {@value #COLUMN_LABEL_NULLABLE} column value.
+     */
     public enum NullableEnum implements _IntFieldEnum<NullableEnum> {
 
         /**
@@ -108,6 +110,9 @@ public class TypeInfo
 
     public static final String COLUMN_LABEL_SEARCHABLE = "SEARCHABLE";
 
+    /**
+     * Constants for the {@value #COLUMN_LABEL_SEARCHABLE} column value.
+     */
     public enum SearchableEnum implements _IntFieldEnum<SearchableEnum> {
 
         /**
@@ -157,75 +162,75 @@ public class TypeInfo
     public boolean equals(final Object obj) {
         if (this == obj) return true;
         if (!(obj instanceof TypeInfo)) return false;
-        if (!super.equals(obj)) return false;
         final TypeInfo that = (TypeInfo) obj;
-        return dataType == that.dataType;
+        return dataType == that.dataType &&
+               Objects.equals(typeName, that.typeName);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(super.hashCode(), dataType);
+        return Objects.hash(typeName, dataType);
     }
 
-    @ColumnLabel(COLUMN_LABEL_TYPE_NAME)
+    @_ColumnLabel(COLUMN_LABEL_TYPE_NAME)
     private String typeName;
 
-    @ColumnLabel(COLUMN_LABEL_DATA_TYPE)
+    @_ColumnLabel(COLUMN_LABEL_DATA_TYPE)
     private int dataType;
 
-    @NullableBySpecification
-    @ColumnLabel(COLUMN_LABEL_PRECISION)
+    @_NullableBySpecification
+    @_ColumnLabel(COLUMN_LABEL_PRECISION)
     private Integer precision;
 
-    @NullableBySpecification
-    @ColumnLabel(COLUMN_LABEL_LITERAL_PREFIX)
+    @_NullableBySpecification
+    @_ColumnLabel(COLUMN_LABEL_LITERAL_PREFIX)
     private String literalPrefix;
 
-    @NullableBySpecification
-    @ColumnLabel(COLUMN_LABEL_LITERAL_SUFFIX)
+    @_NullableBySpecification
+    @_ColumnLabel(COLUMN_LABEL_LITERAL_SUFFIX)
     private String literalSuffix;
 
-    @NullableBySpecification
-    @ColumnLabel(COLUMN_LABEL_CREATE_PARAMS)
+    @_NullableBySpecification
+    @_ColumnLabel(COLUMN_LABEL_CREATE_PARAMS)
     private String createParams;
 
-    @ColumnLabel(COLUMN_LABEL_NULLABLE)
+    @_ColumnLabel(COLUMN_LABEL_NULLABLE)
     private int nullable;
 
-    @ColumnLabel(COLUMN_LABEL_CASE_SENSITIVE)
+    @_ColumnLabel(COLUMN_LABEL_CASE_SENSITIVE)
     private boolean caseSensitive;
 
-    @ColumnLabel(COLUMN_LABEL_SEARCHABLE)
+    @_ColumnLabel(COLUMN_LABEL_SEARCHABLE)
     private int searchable;
 
-    @NotUsedBySpecification
-    @ColumnLabel("UNSIGNED_ATTRIBUTE")
+    @_NotUsedBySpecification
+    @_ColumnLabel("UNSIGNED_ATTRIBUTE")
     private Boolean unsignedAttribute;
 
-    @ColumnLabel("FIXED_PREC_SCALE")
+    @_ColumnLabel("FIXED_PREC_SCALE")
     private boolean fixedPrecScale;
 
-    @ColumnLabel("AUTO_INCREMENT")
+    @_ColumnLabel("AUTO_INCREMENT")
     private boolean autoIncrement;
 
-    @NullableBySpecification
-    @ColumnLabel("LOCAL_TYPE_NAME")
+    @_NullableBySpecification
+    @_ColumnLabel("LOCAL_TYPE_NAME")
     private String localTypeName;
 
-    @ColumnLabel("MINIMUM_SCALE")
+    @_ColumnLabel("MINIMUM_SCALE")
     private int minimumScale;
 
-    @ColumnLabel("MAXIMUM_SCALE")
+    @_ColumnLabel("MAXIMUM_SCALE")
     private int maximumScale;
 
-    @NotUsedBySpecification
-    @ColumnLabel("SQL_DATA_TYPE")
+    @_NotUsedBySpecification
+    @_ColumnLabel("SQL_DATA_TYPE")
     private Integer sqlDataType;
 
-    @NotUsedBySpecification
-    @ColumnLabel("SQL_DATETIME_SUB")
+    @_NotUsedBySpecification
+    @_ColumnLabel("SQL_DATETIME_SUB")
     private Integer sqlDatetimeSub;
 
-    @ColumnLabel("NUM_PREC_RADIX")
+    @_ColumnLabel("NUM_PREC_RADIX")
     private int numPrecRadix;
 }

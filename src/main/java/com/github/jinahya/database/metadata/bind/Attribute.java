@@ -21,17 +21,15 @@ package com.github.jinahya.database.metadata.bind;
  */
 
 import lombok.AccessLevel;
-import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
-import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
-import lombok.experimental.Accessors;
-import lombok.experimental.SuperBuilder;
 
 import java.sql.DatabaseMetaData;
+import java.sql.Types;
 import java.util.Comparator;
+import java.util.Objects;
 import java.util.Optional;
 
 /**
@@ -41,24 +39,29 @@ import java.util.Optional;
  * @see Context#getAttributes(String, String, String, String)
  * @see NullableEnum
  */
-@ChildOf(UDT.class)
-@EqualsAndHashCode(callSuper = true)
+@_ChildOf(UDT.class)
+@Setter
+@Getter
 @ToString(callSuper = true)
-@Data
-@NoArgsConstructor(access = AccessLevel.PROTECTED)
-@SuperBuilder(toBuilder = true)
+//@NoArgsConstructor(access = AccessLevel.PROTECTED)
+//@SuperBuilder(toBuilder = true)
 public class Attribute extends AbstractMetadataType {
 
     private static final long serialVersionUID = 1913681105410440186L;
 
-    public static final Comparator<Attribute> CASE_INSENSITIVE_ORDER =
-            Comparator.comparing(Attribute::getAttributeId, AttributeId.CASE_INSENSITIVE_ORDER);
+    static final Comparator<Attribute> CASE_INSENSITIVE_ORDER =
+            Comparator.comparing(Attribute::getUDTId, UDTId.CASE_INSENSITIVE_ORDER)
+                    .thenComparingInt(Attribute::getOrdinalPosition);
 
-    public static final Comparator<Attribute> NATURAL_ORDER =
-            Comparator.comparing(Attribute::getAttributeId, AttributeId.COMPARING_NATURAL);
+    static final Comparator<Attribute> LEXICOGRAPHIC_ORDER =
+            Comparator.comparing(Attribute::getUDTId, UDTId.LEXICOGRAPHIC_ORDER)
+                    .thenComparingInt(Attribute::getOrdinalPosition);
 
     public static final String COLUMN_LABEL_NULLABLE = "NULLABLE";
 
+    /**
+     * Constants for {@value #COLUMN_LABEL_NULLABLE} column values.
+     */
     public enum NullableEnum implements _IntFieldEnum<NullableEnum> {
 
         /**
@@ -107,102 +110,173 @@ public class Attribute extends AbstractMetadataType {
 
     public static final String VALUE_IS_NULLABLE_EMPTY = "";
 
-    public AttributeId getAttributeId() {
-        return AttributeId.of(
-                getTypeCatNonNull(),
-                getTypeSchemNonNull(),
-                getTypeName(),
-                getAttrName(),
-                getOrdinalPosition()
+    // ------------------------------------------------------------------------------------------------- equals/hashCode
+
+    @Override
+    public boolean equals(final Object obj) {
+        if (this == obj) return true;
+        if (!(obj instanceof Attribute)) return false;
+//        if (!super.equals(obj)) return false;
+        final Attribute that = (Attribute) obj;
+        return Objects.equals(typeCat, that.typeCat) &&
+               Objects.equals(typeSchem, that.typeSchem) &&
+               Objects.equals(typeName, that.typeName) &&
+               Objects.equals(attrName, that.attrName);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(
+//                super.hashCode(),
+                typeCat,
+                typeSchem,
+                typeName,
+                attrName
         );
     }
 
+    // -----------------------------------------------------------------------------------------------------------------
+
+    // --------------------------------------------------------------------------------------------------------- typeCat
     String getTypeCatNonNull() {
         return Optional.ofNullable(getTypeCat()).orElse(Catalog.COLUMN_VALUE_TABLE_CAT_EMPTY);
     }
 
+    public void setTypeCat(final String typeCat) {
+        this.typeCat = typeCat;
+        attributeId = null;
+    }
+
+    // ------------------------------------------------------------------------------------------------------- typeSchem
     String getTypeSchemNonNull() {
         return Optional.ofNullable(getTypeSchem()).orElse(Schema.COLUMN_VALUE_TABLE_SCHEM_EMPTY);
     }
 
-    @NullableBySpecification
-    @ColumnLabel("TYPE_CAT")
+    public void setTypeSchem(final String typeSchem) {
+        this.typeSchem = typeSchem;
+        attributeId = null;
+    }
+
+    // -------------------------------------------------------------------------------------------------------- typeName
+    public void setTypeName(final String typeName) {
+        this.typeName = typeName;
+        attributeId = null;
+    }
+
+    // -------------------------------------------------------------------------------------------------------- attrName
+    public void setAttrName(final String attrName) {
+        this.attrName = attrName;
+        attributeId = null;
+    }
+
+    // -----------------------------------------------------------------------------------------------------------------
+    @_NullableBySpecification
+    @_ColumnLabel("TYPE_CAT")
     private String typeCat;
 
-    @NullableBySpecification
-    @ColumnLabel("TYPE_SCHEM")
+    @_NullableBySpecification
+    @_ColumnLabel("TYPE_SCHEM")
     private String typeSchem;
 
-    @ColumnLabel("TYPE_NAME")
+    @_ColumnLabel("TYPE_NAME")
     private String typeName;
 
-    @ColumnLabel("ATTR_NAME")
+    @_ColumnLabel("ATTR_NAME")
     private String attrName;
 
-    @ColumnLabel("DATA_TYPE")
+    @_ColumnLabel("DATA_TYPE")
     private int dataType;
 
-    @ColumnLabel("ATTR_TYPE_NAME")
+    @_ColumnLabel("ATTR_TYPE_NAME")
     private String attrTypeName;
 
-    @ColumnLabel("ATTR_SIZE")
+    @_ColumnLabel("ATTR_SIZE")
     private int attrSize;
 
-    @NullableBySpecification
-    @ColumnLabel("DECIMAL_DIGITS")
+    @_NullableBySpecification
+    @_ColumnLabel("DECIMAL_DIGITS")
     private Integer decimalDigits;
 
-    @ColumnLabel("NUM_PREC_RADIX")
+    @_ColumnLabel("NUM_PREC_RADIX")
     private int numPrecRadix;
 
-    @ColumnLabel(COLUMN_LABEL_NULLABLE)
+    @_ColumnLabel(COLUMN_LABEL_NULLABLE)
     private int nullable;
 
-    @NullableBySpecification
-    @ColumnLabel("REMARKS")
+    @_NullableBySpecification
+    @_ColumnLabel("REMARKS")
     private String remarks;
 
-    @NullableBySpecification
-    @ColumnLabel("ATTR_DEF")
+    @_NullableBySpecification
+    @_ColumnLabel("ATTR_DEF")
     private String attrDef;
 
-    @NotUsedBySpecification
-    @ColumnLabel("SQL_DATA_TYPE")
+    @_NotUsedBySpecification
+    @_ColumnLabel("SQL_DATA_TYPE")
     private Integer sqlDataType;
 
-    @NotUsedBySpecification
-    @ColumnLabel("SQL_DATETIME_SUB")
+    @_NotUsedBySpecification
+    @_ColumnLabel("SQL_DATETIME_SUB")
     private Integer sqlDatetimeSub;
 
-    @ColumnLabel("CHAR_OCTET_LENGTH")
+    @_ColumnLabel("CHAR_OCTET_LENGTH")
     private int charOctetLength;
 
-    @ColumnLabel("ORDINAL_POSITION")
+    @_ColumnLabel("ORDINAL_POSITION")
     private int ordinalPosition;
 
-    @ColumnLabel("IS_NULLABLE")
+    @_ColumnLabel("IS_NULLABLE")
     private String isNullable;
 
-    @NullableBySpecification
-    @ColumnLabel("SCOPE_CATALOG")
+    @_NullableBySpecification
+    @_ColumnLabel("SCOPE_CATALOG")
     private String scopeCatalog;
 
-    @NullableBySpecification
-    @ColumnLabel("SCOPE_SCHEMA")
+    @_NullableBySpecification
+    @_ColumnLabel("SCOPE_SCHEMA")
     private String scopeSchema;
 
-    @NullableBySpecification
-    @ColumnLabel("SCOPE_TABLE")
+    @_NullableBySpecification
+    @_ColumnLabel("SCOPE_TABLE")
     private String scopeTable;
 
-    @NullableBySpecification
-    @ColumnLabel("SOURCE_DATA_TYPE")
+    @_NullableBySpecification
+    @_ColumnLabel("SOURCE_DATA_TYPE")
     private Integer sourceDataType;
 
-    @Accessors(fluent = true)
-    @Setter(AccessLevel.PACKAGE)
-    @Getter(AccessLevel.PACKAGE)
+    // -----------------------------------------------------------------------------------------------------------------
+    AttributeId getAttributeId() {
+        if (attributeId == null) {
+            attributeId = AttributeId.of(
+                    UDTId.of(
+                            getTypeCatNonNull(),
+                            getTypeSchemNonNull(),
+                            getTypeName()
+                    ),
+                    getAttrName()
+            );
+        }
+        return attributeId;
+    }
+
+    private UDTId getUDTId() {
+        return getAttributeId().getUdtId();
+    }
+
+    TableId getScopeTableId() {
+        if (dataType != Types.REF) {
+            throw new IllegalStateException("dataType != Types.REF(" + Types.REF + ")");
+        }
+        return TableId.of(
+                Objects.requireNonNull(getScopeCatalog(), "scopeCatalog is null"),
+                Objects.requireNonNull(getScopeSchema(), "scopeSchema is null"),
+                Objects.requireNonNull(getScopeTable(), "scopeTable is null")
+        );
+    }
+
+    @Setter(AccessLevel.NONE)
+    @Getter(AccessLevel.NONE)
     @EqualsAndHashCode.Exclude
     @ToString.Exclude
-    private transient UDT udt;
+    private transient AttributeId attributeId;
 }

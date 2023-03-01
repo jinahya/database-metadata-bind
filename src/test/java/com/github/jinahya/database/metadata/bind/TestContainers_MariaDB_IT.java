@@ -41,8 +41,8 @@ class TestContainers_MariaDB_IT extends TestContainers_$_IT {
     private static final MariaDBContainer<?> CONTAINER;
 
     static {
-        final DockerImageName NAME = DockerImageName.parse("mariadb:latest");
-        CONTAINER = new MariaDBContainer<>(NAME);
+        final var name = DockerImageName.parse("mariadb:latest");
+        CONTAINER = new MariaDBContainer<>(name);
     }
 
     @Override

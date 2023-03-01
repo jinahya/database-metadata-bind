@@ -21,15 +21,13 @@ package com.github.jinahya.database.metadata.bind;
  */
 
 import lombok.AccessLevel;
-import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.Setter;
 import lombok.ToString;
-import lombok.experimental.Accessors;
-import lombok.experimental.SuperBuilder;
 
 import java.util.Comparator;
+import java.util.Objects;
 import java.util.Optional;
 
 import static java.util.Comparator.naturalOrder;
@@ -43,79 +41,155 @@ import static java.util.Comparator.nullsFirst;
  * @author Jin Kwon &lt;jinahya_at_gmail.com&gt;
  * @see Context#getTables(String, String, String, String[])
  */
-@ParentOf(VersionColumn.class)
-@ParentOf(PseudoColumn.class)
-@ParentOf(PrimaryKey.class)
-@ParentOf(IndexInfo.class)
-@ParentOf(ImportedKey.class)
-@ParentOf(ExportedKey.class)
-@ParentOf(Column.class)
-@ParentOf(BestRowIdentifier.class)
-@ChildOf(Schema.class)
-@EqualsAndHashCode(callSuper = true)
-@ToString(callSuper = true)
-@Data
-@NoArgsConstructor(access = AccessLevel.PROTECTED)
-@SuperBuilder(toBuilder = true)
+@_ParentOf(VersionColumn.class)
+@_ParentOf(PseudoColumn.class)
+@_ParentOf(PrimaryKey.class)
+@_ParentOf(IndexInfo.class)
+@_ParentOf(ImportedKey.class)
+@_ParentOf(ExportedKey.class)
+@_ParentOf(Column.class)
+@_ParentOf(BestRowIdentifier.class)
+@Setter
+@Getter
 public class Table extends AbstractMetadataType {
 
     private static final long serialVersionUID = 6590036695540141125L;
 
-    public static final Comparator<Table> COMPARING_IN_CASE_INSENSITIVE_ORDER =
+    static final Comparator<Table> CASE_INSENSITIVE_ORDER =
             Comparator.comparing(Table::getTableType, nullsFirst(String.CASE_INSENSITIVE_ORDER))
-                    .thenComparing(Table::getTableId, TableId.COMPARING_CASE_INSENSITIVE);
+                    .thenComparing(Table::getTableId, TableId.CASE_INSENSITIVE_ORDER);
 
-    public static final Comparator<Table> COMPARING_IN_NATURAL_ORDER =
+    static final Comparator<Table> LEXICOGRAPHIC_ORDER =
             Comparator.comparing(Table::getTableType, nullsFirst(naturalOrder()))
-                    .thenComparing(Table::getTableId, TableId.COMPARING_NATURAL);
+                    .thenComparing(Table::getTableId, TableId.LEXICOGRAPHIC_ORDER);
 
     /**
-     * The label of the column to which {@link #ATTRIBUTE_NAME_TABLE_CAT} attribute is bound. The value is {@value}.
+     * The column label of {@value}.
      */
     public static final String COLUMN_LABEL_TABLE_CAT = "TABLE_CAT";
 
     /**
-     * The name of the attribute from which {@link #COLUMN_LABEL_TABLE_CAT} column is bound. The value is {@value}.
-     */
-    public static final String ATTRIBUTE_NAME_TABLE_CAT = "tableCat";
-
-    /**
-     * The label of the column to which {@link #ATTRIBUTE_NAME_TABLE_SCHEM} attribute is bound. The value is {@value}.
+     * The column label of {@value}.
      */
     public static final String COLUMN_LABEL_TABLE_SCHEM = "TABLE_SCHEM";
 
     /**
-     * The name of the attribute from which {@link #COLUMN_LABEL_TABLE_SCHEM} column is bound. The value is {@value}.
-     */
-    public static final String ATTRIBUTE_NAME_TABLE_SCHEM = "tableSchem";
-
-    /**
-     * The label of the column to which {@link #ATTRIBUTE_NAME_TABLE_NAME} attribute is bound. The value is {@value}.
+     * The column label of {@value}.
      */
     public static final String COLUMN_LABEL_TABLE_NAME = "TABLE_NAME";
 
     /**
-     * The name of the attribute from which {@link #COLUMN_LABEL_TABLE_NAME} column is bound. The value is {@value}.
-     */
-    public static final String ATTRIBUTE_NAME_TABLE_NAME = "tableName";
-
-    /**
-     * The label of the column to which {@link #ATTRIBUTE_NAME_TABLE_TYPE} attribute is bound. The value is {@value}.
+     * The column label of {@value}.
      */
     public static final String COLUMN_LABEL_TABLE_TYPE = "TABLE_TYPE";
 
     /**
-     * The name of the attribute from which {@link #COLUMN_LABEL_TABLE_TYPE} column is bound. The value is {@value}.
+     * Creates a new instance.
      */
-    public static final String ATTRIBUTE_NAME_TABLE_TYPE = "tableName";
+    public Table() {
+        super();
+    }
 
-    public TableId getTableId() {
-        return TableId.of(
-                getTableCatNonNull(),
-                getTableSchemNonNull(),
-                getTableName()
+    @Override
+    public String toString() {
+        return super.toString() + '{' +
+               "tableCat=" + tableCat +
+               ",tableSchem=" + tableSchem +
+               ",tableName=" + tableName +
+               ",tableType=" + tableType +
+               ",remarks=" + remarks +
+               ",typeCat=" + typeCat +
+               ",typeSchem=" + typeSchem +
+               ",typeName=" + typeName +
+               ",selfReferencingColName=" + selfReferencingColName +
+               ",refGeneration=" + refGeneration +
+               '}';
+    }
+
+    @Override
+    public boolean equals(final Object obj) {
+        if (this == obj) return true;
+        if (!(obj instanceof Table)) return false;
+        final Table that = (Table) obj;
+        return Objects.equals(tableCat, that.tableCat) &&
+               Objects.equals(tableSchem, that.tableSchem) &&
+               Objects.equals(tableName, that.tableName);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(
+                tableCat,
+                tableSchem,
+                tableName
         );
     }
+
+    public String getTableCat() {
+        return tableCat;
+    }
+
+    public void setTableCat(final String tableCat) {
+        this.tableCat = tableCat;
+        tableId = null;
+    }
+
+    public String getTableSchem() {
+        return tableSchem;
+    }
+
+    public void setTableSchem(final String tableSchem) {
+        this.tableSchem = tableSchem;
+        tableId = null;
+    }
+
+    public String getTableName() {
+        return tableName;
+    }
+
+    public void setTableName(final String tableName) {
+        this.tableName = tableName;
+        tableId = null;
+    }
+
+    @_NullableBySpecification
+    @_ColumnLabel(COLUMN_LABEL_TABLE_CAT)
+    private String tableCat;
+
+    @_NullableBySpecification
+    @_ColumnLabel(COLUMN_LABEL_TABLE_SCHEM)
+    private String tableSchem;
+
+    @_ColumnLabel(COLUMN_LABEL_TABLE_NAME)
+    private String tableName;
+
+    @_NullableByVendor("MariaDB")
+    @_ColumnLabel(COLUMN_LABEL_TABLE_TYPE)
+    private String tableType;
+
+    @_NullableBySpecification
+    @_ColumnLabel("REMARKS")
+    private String remarks;
+
+    @_NullableBySpecification
+    @_ColumnLabel("TYPE_CAT")
+    private String typeCat;
+
+    @_NullableBySpecification
+    @_ColumnLabel("TYPE_SCHEM")
+    private String typeSchem;
+
+    @_NullableBySpecification
+    @_ColumnLabel("TYPE_NAME")
+    private String typeName;
+
+    @_NullableBySpecification
+    @_ColumnLabel("SELF_REFERENCING_COL_NAME")
+    private String selfReferencingColName;
+
+    @_NullableBySpecification
+    @_ColumnLabel("REF_GENERATION")
+    private String refGeneration;
 
     String getTableCatNonNull() {
         return Optional.ofNullable(getTableCat()).orElse(Catalog.COLUMN_VALUE_TABLE_CAT_EMPTY);
@@ -125,68 +199,20 @@ public class Table extends AbstractMetadataType {
         return Optional.ofNullable(getTableSchem()).orElse(Schema.COLUMN_VALUE_TABLE_SCHEM_EMPTY);
     }
 
-    @NullableBySpecification
-    @ColumnLabel(COLUMN_LABEL_TABLE_CAT)
-    private String tableCat;
-
-    @NullableBySpecification
-    @ColumnLabel(COLUMN_LABEL_TABLE_SCHEM)
-    private String tableSchem;
-
-    @ColumnLabel(COLUMN_LABEL_TABLE_NAME)
-    private String tableName;
-
-    @NullableByVendor("MariaDB")
-    @ColumnLabel(COLUMN_LABEL_TABLE_TYPE)
-    private String tableType;
-
-    @NullableBySpecification
-    @ColumnLabel("REMARKS")
-    private String remarks;
-
-    @NullableBySpecification
-    @ColumnLabel("TYPE_CAT")
-    private String typeCat;
-
-    @NullableBySpecification
-    @ColumnLabel("TYPE_SCHEM")
-    private String typeSchem;
-
-    @NullableBySpecification
-    @ColumnLabel("TYPE_NAME")
-    private String typeName;
-
-    @NullableBySpecification
-    @ColumnLabel("SELF_REFERENCING_COL_NAME")
-    private String selfReferencingColName;
-
-    @NullableBySpecification
-    @ColumnLabel("REF_GENERATION")
-    private String refGeneration;
-
-    Table catalog(final Catalog catalog) {
-        this.catalog = catalog;
-        this.schema = null;
-        return this;
+    TableId getTableId() {
+        if (tableId == null) {
+            tableId = TableId.of(
+                    getTableCatNonNull(),
+                    getTableSchemNonNull(),
+                    getTableName()
+            );
+        }
+        return tableId;
     }
 
-    Table schema(final Schema schema) {
-        this.schema = schema;
-        catalog = Optional.ofNullable(this.schema).map(Schema::catalog).orElse(null);
-        return this;
-    }
-
-    @Accessors(fluent = true)
-//    @Setter(AccessLevel.PACKAGE) // manually implemented
-    @Getter(AccessLevel.PACKAGE)
+    @Setter(AccessLevel.NONE)
+    @Getter(AccessLevel.NONE)
     @EqualsAndHashCode.Exclude
     @ToString.Exclude
-    private transient Catalog catalog;
-
-    @Accessors(fluent = true)
-//    @Setter(AccessLevel.PACKAGE) // manually implemented
-    @Getter(AccessLevel.PACKAGE)
-    @EqualsAndHashCode.Exclude
-    @ToString.Exclude
-    private transient Schema schema;
+    private transient TableId tableId;
 }

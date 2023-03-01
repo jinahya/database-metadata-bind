@@ -21,41 +21,55 @@ package com.github.jinahya.database.metadata.bind;
  */
 
 import lombok.AccessLevel;
-import lombok.Data;
-import lombok.EqualsAndHashCode;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
-import lombok.ToString;
+import lombok.Setter;
 import lombok.experimental.SuperBuilder;
 
 import java.util.Comparator;
 import java.util.Objects;
 
 /**
- * An entity class for binding the result of {@link java.sql.DatabaseMetaData#getTableTypes()}.
+ * A class for binding the results of {@link java.sql.DatabaseMetaData#getTableTypes()}.
  *
  * @author Jin Kwon &lt;jinahya_at_gmail.com&gt;
  * @see Context#getTableTypes()
  */
-@EqualsAndHashCode(callSuper = true)
-@ToString(callSuper = true)
-@Data
+@Setter
+@Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @SuperBuilder(toBuilder = true)
-public class TableType
-        extends AbstractMetadataType
-        implements Comparable<TableType> {
+public class TableType extends AbstractMetadataType {
 
     private static final long serialVersionUID = -7630634982776331078L;
 
-    public static final Comparator<TableType> COMPARING_AS_SPECIFIED = Comparator.comparing(TableType::getTableType);
+    static final Comparator<TableType> CASE_INSENSITIVE_ORDER =
+            Comparator.comparing(TableType::getTableType, String.CASE_INSENSITIVE_ORDER);
+
+    static final Comparator<TableType> LEXICOGRAPHIC_ORDER = Comparator.comparing(TableType::getTableType);
 
     public static final String COLUMN_LABEL_TABLE_TYPE = "TABLE_TYPE";
 
     @Override
-    public int compareTo(final TableType o) {
-        return COMPARING_AS_SPECIFIED.compare(this, Objects.requireNonNull(o, "o is null"));
+    public String toString() {
+        return super.toString() + '{' +
+               "tableType=" + tableType +
+               '}';
     }
 
-    @ColumnLabel(COLUMN_LABEL_TABLE_TYPE)
+    @Override
+    public boolean equals(final Object obj) {
+        if (this == obj) return true;
+        if (!(obj instanceof TableType)) return false;
+        final TableType that = (TableType) obj;
+        return Objects.equals(tableType, that.tableType);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(super.hashCode(), tableType);
+    }
+
+    @_ColumnLabel(COLUMN_LABEL_TABLE_TYPE)
     private String tableType;
 }

@@ -33,13 +33,29 @@ abstract class _MetadataTypeIdTest<T extends MetadataTypeId<T, U>, U extends Met
         this.typeIdClass = requireNonNull(typeIdClass, "typeIdClass is null");
     }
 
+    /**
+     * Returns a newly initialized instance of {@link #typeIdClass}.
+     *
+     * @return a newly initialized instance of {@link #typeIdClass}
+     */
     @SuppressWarnings({"unchecked"})
-    T typeIdInstanceBuiltEmpty() {
+    T typeIdInstance() {
         try {
-            final var builder = typeIdClass.getMethod("builder").invoke(null);
-            return (T) builder.getClass().getMethod("build").invoke(builder);
+            final Object builder;
+            {
+                final var method = typeIdClass.getDeclaredMethod("builder");
+                method.setAccessible(true);
+                builder = method.invoke(null);
+            }
+            final Object built;
+            {
+                final var method = builder.getClass().getDeclaredMethod("build");
+                method.setAccessible(true);
+                built = method.invoke(builder);
+            }
+            return (T) built;
         } catch (final ReflectiveOperationException roe) {
-            throw new RuntimeException("failed to build an empty instance of " + typeIdClass, roe);
+            throw new RuntimeException("failed to initialize an instance of " + typeIdClass, roe);
         }
     }
 

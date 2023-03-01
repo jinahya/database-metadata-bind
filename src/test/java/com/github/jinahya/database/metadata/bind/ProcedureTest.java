@@ -20,9 +20,52 @@ package com.github.jinahya.database.metadata.bind;
  * #L%
  */
 
+import org.junit.jupiter.api.Nested;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.EnumSource;
+
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
+
 class ProcedureTest extends AbstractMetadataTypeTest<Procedure> {
 
     ProcedureTest() {
         super(Procedure.class);
+    }
+
+    @Override
+    Procedure typeInstance() {
+        final Procedure instance = super.typeInstance();
+        instance.setProcedureName("");
+        instance.setSpecificName("");
+        return instance;
+    }
+
+    @Nested
+    class ProcedureTypeAsEnumTest {
+
+        @Test
+        void getProcedureTypeAsEnum__() {
+            // GIVEN
+            final var spy = typeSpy();
+            // WHEN
+            assertThat(spy.getProcedureTypeAsEnum())
+                    .isEqualTo(Procedure.ProcedureTypeEnum.PROCEDURE_RESULT_UNKNOWN);
+            // THEN
+            verify(spy, times(1)).getProcedureType();
+        }
+
+        @EnumSource(Procedure.ProcedureTypeEnum.class)
+        @ParameterizedTest
+        void setProcedureTypeAsEnum__(final Procedure.ProcedureTypeEnum procedureTypeAsEnum) {
+            // GIVEN
+            final var spy = typeSpy();
+            // WHEN
+            spy.setProcedureTypeAsEnum(procedureTypeAsEnum);
+            // THEN
+            verify(spy, times(1)).setProcedureType(procedureTypeAsEnum.fieldValueAsInt());
+        }
     }
 }

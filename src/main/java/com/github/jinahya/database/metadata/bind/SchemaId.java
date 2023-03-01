@@ -21,28 +21,35 @@ package com.github.jinahya.database.metadata.bind;
  */
 
 import lombok.AccessLevel;
-import lombok.Data;
-import lombok.RequiredArgsConstructor;
-import lombok.experimental.SuperBuilder;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Getter;
 
 import java.util.Comparator;
 import java.util.Objects;
 
-@Data
-@RequiredArgsConstructor(access = AccessLevel.PRIVATE)
-@SuperBuilder(toBuilder = true)
-public final class SchemaId implements MetadataTypeId<SchemaId, Schema> {
+@Getter
+@AllArgsConstructor(access = AccessLevel.PRIVATE)
+@Builder(access = AccessLevel.PRIVATE)
+final class SchemaId extends AbstractMetadataTypeId<SchemaId, Schema> {
 
     private static final long serialVersionUID = -9112917204279422378L;
 
-    public static final Comparator<SchemaId> CASE_INSENSITIVE_ORDER =
-            Comparator.comparing(SchemaId::getCatalogId, CatalogId.COMPARING_IN_CASE_INSENSITIVE_ORDER)
+    static final Comparator<SchemaId> CASE_INSENSITIVE_ORDER =
+            Comparator.comparing(SchemaId::getCatalogId, CatalogId.CASE_INSENSITIVE_ORDER)
                     .thenComparing(SchemaId::getTableSchem, String.CASE_INSENSITIVE_ORDER);
 
-    public static final Comparator<SchemaId> NATURAL_ORDER =
-            Comparator.comparing(SchemaId::getCatalogId, CatalogId.COMPARING_IN_NATURAL_ORDER)
-                    .thenComparing(SchemaId::getTableSchem, Comparator.naturalOrder());
+    static final Comparator<SchemaId> LEXICOGRAPHIC_ORDER =
+            Comparator.comparing(SchemaId::getCatalogId, CatalogId.LEXICOGRAPHIC_ORDER)
+                    .thenComparing(SchemaId::getTableSchem);
 
+    /**
+     * Creates a new instance with specified arguments.
+     *
+     * @param catalogId  a catalog identifier.
+     * @param tableSchem a value of {@value Schema#COLUMN_LABEL_TABLE_SCHEM} column.
+     * @return a new instance.
+     */
     public static SchemaId of(final CatalogId catalogId, final String tableSchem) {
         Objects.requireNonNull(catalogId, "catalogId is null");
         Objects.requireNonNull(tableSchem, "tableSchem is null");
@@ -52,8 +59,37 @@ public final class SchemaId implements MetadataTypeId<SchemaId, Schema> {
                 .build();
     }
 
-    public static SchemaId of(final String tableCatalog, final String tableSchem) {
+    /**
+     * Creates a new instance with specified arguments.
+     *
+     * @param tableCatalog a value of {@value Schema#COLUMN_LABEL_TABLE_CATALOG} column.
+     * @param tableSchem   a value of {@value Schema#COLUMN_LABEL_TABLE_SCHEM} column.
+     * @return a new instance.
+     */
+    static SchemaId of(final String tableCatalog, final String tableSchem) {
         return of(CatalogId.of(tableCatalog), tableSchem);
+    }
+
+    @Override
+    public String toString() {
+        return super.toString() + +'{' +
+               "catalogId=" + catalogId +
+               ",tableSchem=" + tableSchem +
+               '}';
+    }
+
+    @Override
+    public boolean equals(final Object obj) {
+        if (this == obj) return true;
+        if (!(obj instanceof SchemaId)) return false;
+        final SchemaId that = (SchemaId) obj;
+        return catalogId.equals(that.catalogId)
+               && tableSchem.equals(that.tableSchem);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(catalogId, tableSchem);
     }
 
     private final CatalogId catalogId;

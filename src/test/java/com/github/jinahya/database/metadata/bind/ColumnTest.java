@@ -29,6 +29,15 @@ class ColumnTest extends AbstractMetadataTypeTest<Column> {
         super(Column.class);
     }
 
+    @Override
+    Column typeInstance() {
+        final var instance = super.typeInstance();
+        instance.setTableName("");
+        instance.setColumnName("");
+        instance.setOrdinalPosition(1);
+        return instance;
+    }
+
     @DisplayName("NullableEnum")
     @Nested
     class NullableEnumTest extends _IntFieldEnumTest<Column.NullableEnum> {

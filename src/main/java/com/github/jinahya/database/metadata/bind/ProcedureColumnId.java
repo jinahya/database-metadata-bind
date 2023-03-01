@@ -21,42 +21,66 @@ package com.github.jinahya.database.metadata.bind;
  */
 
 import lombok.AccessLevel;
-import lombok.Data;
-import lombok.RequiredArgsConstructor;
-import lombok.experimental.SuperBuilder;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Getter;
 
-import java.util.Comparator;
 import java.util.Objects;
 
-@Data
-@RequiredArgsConstructor(access = AccessLevel.PRIVATE)
-@SuperBuilder(toBuilder = true)
-public final class ProcedureColumnId implements MetadataTypeId<ProcedureColumnId, ProcedureColumn> {
+@Getter
+@AllArgsConstructor(access = AccessLevel.PRIVATE)
+@Builder(access = AccessLevel.PRIVATE)
+final class ProcedureColumnId extends AbstractMetadataTypeId<ProcedureColumnId, ProcedureColumn> {
 
     private static final long serialVersionUID = 7459854669925402253L;
 
-    public static final Comparator<ProcedureColumnId> COMPARING_IN_CASE_INSENSITIVE_ORDER =
-            Comparator.comparing(ProcedureColumnId::getProcedureId, ProcedureId.COMPARING_IN_CASE_INSENSITIVE)
-                    .thenComparing(ProcedureColumnId::getColumnName, String.CASE_INSENSITIVE_ORDER);
+//    static final Comparator<ProcedureColumnId> COMPARING_IN_CASE_INSENSITIVE_ORDER =
+//            Comparator.<ProcedureColumnId, SchemaId>comparing(pci -> pci.getProcedureId().getSchemaId(),
+//                                                              SchemaId.CASE_INSENSITIVE_ORDER)
+//                    .thenComparing(ProcedureColumnId::getColumnName, String.CASE_INSENSITIVE_ORDER);
+//
+//    static final Comparator<ProcedureColumnId> COMPARING_IN_LEXICOGRAPHIC_ORDER =
+//            Comparator.<ProcedureColumnId, SchemaId>comparing(pci -> pci.getProcedureId().getSchemaId(),
+//                                                              SchemaId.LEXICOGRAPHIC_ORDER)
+//                    .thenComparing(ProcedureColumnId::getColumnName);
 
-    public static final Comparator<ProcedureColumnId> COMPARING_IN_NATURAL_ORDER =
-            Comparator.comparing(ProcedureColumnId::getProcedureId, ProcedureId.COMPARING_IN_NATURAL)
-                    .thenComparing(ProcedureColumnId::getColumnName);
-
-    public static ProcedureColumnId of(final ProcedureId procedureId, final String columnName) {
+    public static ProcedureColumnId of(final ProcedureId procedureId, final String columnName, final int columnType) {
+        Objects.requireNonNull(procedureId, "procedureId is null");
+        Objects.requireNonNull(columnName, "columnName is null");
         return builder()
                 .procedureId(procedureId)
-                .columnName(Objects.requireNonNull(columnName, "columnName is null"))
+                .columnName(columnName)
+                .columnType(columnType)
                 .build();
     }
 
-    public static ProcedureColumnId of(final String procedureCat, final String procedureSchem,
-                                       final String procedureName, final String specifiedName,
-                                       final String columnName) {
-        return of(ProcedureId.of(procedureCat, procedureSchem, procedureName, specifiedName), columnName);
+    @Override
+    public String toString() {
+        return super.toString() + '{' +
+               "procedureId=" + procedureId +
+               ",columnName=" + columnName +
+               ",columnType=" + columnType +
+               '}';
+    }
+
+    @Override
+    public boolean equals(final Object obj) {
+        if (this == obj) return true;
+        if (!(obj instanceof ProcedureColumnId)) return false;
+        final ProcedureColumnId that = (ProcedureColumnId) obj;
+        return columnType == that.columnType &&
+               procedureId.equals(that.procedureId) &&
+               columnName.equals(that.columnName);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(procedureId, columnName, columnType);
     }
 
     private final ProcedureId procedureId;
 
     private final String columnName;
+
+    private final int columnType;
 }

@@ -30,13 +30,16 @@ import lombok.experimental.SuperBuilder;
 import java.sql.DatabaseMetaData;
 import java.util.Comparator;
 
+import static java.util.Comparator.naturalOrder;
+import static java.util.Comparator.nullsFirst;
+
 /**
  * A class for binding results of {@link DatabaseMetaData#getIndexInfo(String, String, String, boolean, boolean)}
  * method.
  *
  * @author Jin Kwon &lt;jinahya_at_gmail.com&gt;
  */
-@ChildOf(Table.class)
+@_ChildOf(Table.class)
 @EqualsAndHashCode(callSuper = true)
 @ToString(callSuper = true)
 @Data
@@ -46,11 +49,17 @@ public class IndexInfo extends AbstractMetadataType {
 
     private static final long serialVersionUID = 924040226611181424L;
 
-    public static final Comparator<IndexInfo> COMPARING_NON_UNIQUE_TYPE_INDEX_NAME_ORDINAL_POSITION
-            = Comparator.comparing(IndexInfo::isNonUnique)
-            .thenComparingInt(IndexInfo::getType)
-            .thenComparing(IndexInfo::getIndexName, Comparator.nullsFirst(String.CASE_INSENSITIVE_ORDER))
-            .thenComparingInt(IndexInfo::getOrdinalPosition);
+    static final Comparator<IndexInfo> CASE_INSENSITIVE_ORDER =
+            Comparator.comparing(IndexInfo::isNonUnique)
+                    .thenComparingInt(IndexInfo::getType)
+                    .thenComparing(IndexInfo::getIndexName, nullsFirst(String.CASE_INSENSITIVE_ORDER))
+                    .thenComparingInt(IndexInfo::getOrdinalPosition);
+
+    static final Comparator<IndexInfo> LEXICOGRAPHIC_ORDER =
+            Comparator.comparing(IndexInfo::isNonUnique)
+                    .thenComparingInt(IndexInfo::getType)
+                    .thenComparing(IndexInfo::getIndexName, nullsFirst(naturalOrder()))
+                    .thenComparingInt(IndexInfo::getOrdinalPosition);
 
     public static final String COLUMN_LABEL_TABLE_CAT = "TABLE_CAT";
 
@@ -60,49 +69,49 @@ public class IndexInfo extends AbstractMetadataType {
 
     public static final String COLUMN_LABEL_TYPE = "TYPE";
 
-    @NullableBySpecification
-    @ColumnLabel(COLUMN_LABEL_TABLE_CAT)
+    @_NullableBySpecification
+    @_ColumnLabel(COLUMN_LABEL_TABLE_CAT)
     private String tableCat;
 
-    @NullableBySpecification
-    @ColumnLabel(COLUMN_LABEL_TABLE_SCHEM)
+    @_NullableBySpecification
+    @_ColumnLabel(COLUMN_LABEL_TABLE_SCHEM)
     private String tableSchem;
 
-    @ColumnLabel(COLUMN_LABEL_TABLE_NAME)
+    @_ColumnLabel(COLUMN_LABEL_TABLE_NAME)
     private String tableName;
 
-    @ColumnLabel("NON_UNIQUE")
+    @_ColumnLabel("NON_UNIQUE")
     private boolean nonUnique;
 
-    @NullableBySpecification
-    @ColumnLabel("INDEX_QUALIFIER")
+    @_NullableBySpecification
+    @_ColumnLabel("INDEX_QUALIFIER")
     private String indexQualifier;
 
-    @NullableBySpecification
-    @ColumnLabel("INDEX_NAME")
+    @_NullableBySpecification
+    @_ColumnLabel("INDEX_NAME")
     private String indexName;
 
-    @ColumnLabel(COLUMN_LABEL_TYPE)
+    @_ColumnLabel(COLUMN_LABEL_TYPE)
     private int type;
 
-    @ColumnLabel("ORDINAL_POSITION")
+    @_ColumnLabel("ORDINAL_POSITION")
     private int ordinalPosition;
 
-    @NullableBySpecification
-    @ColumnLabel("COLUMN_NAME")
+    @_NullableBySpecification
+    @_ColumnLabel("COLUMN_NAME")
     private String columnName;
 
-    @NullableBySpecification
-    @ColumnLabel("ASC_OR_DESC")
+    @_NullableBySpecification
+    @_ColumnLabel("ASC_OR_DESC")
     private String ascOrDesc;
 
-    @ColumnLabel("CARDINALITY")
+    @_ColumnLabel("CARDINALITY")
     private long cardinality;
 
-    @ColumnLabel("PAGES")
+    @_ColumnLabel("PAGES")
     private long pages;
 
-    @NullableBySpecification
-    @ColumnLabel("FILTER_CONDITION")
+    @_NullableBySpecification
+    @_ColumnLabel("FILTER_CONDITION")
     private String filterCondition;
 }

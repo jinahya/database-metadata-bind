@@ -33,7 +33,7 @@ import java.util.HashSet;
 import static java.sql.DriverManager.getConnection;
 
 /**
- * Test for SQLite.
+ * Tests for SQLite.
  *
  * @author Jin Kwon &lt;jinahya_at_gmail.com&gt;
  */
@@ -49,7 +49,7 @@ class Memory_Sqlite_Test extends Memory_$_Test {
         return getConnection(CONNECTION_URL);
     }
 
-    @Disabled("https://github.com/xerial/sqlite-jdbc/issues/837")
+    @Disabled("https://github.com/xerial/sqlite-jdbc/issues/837 which has been fixed")
     @Test
     void getColumns_CATLOG_CATALOG() throws SQLException {
         try (var connection = DriverManager.getConnection("jdbc:sqlite::memory:")) {

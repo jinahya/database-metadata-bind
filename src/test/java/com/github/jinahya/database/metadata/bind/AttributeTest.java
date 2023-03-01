@@ -29,6 +29,15 @@ class AttributeTest extends AbstractMetadataTypeTest<Attribute> {
         super(Attribute.class);
     }
 
+    @Override
+    Attribute typeInstance() {
+        final Attribute instance = super.typeInstance();
+        instance.setAttrName("");
+        instance.setTypeName("");
+        instance.setOrdinalPosition(1);
+        return instance;
+    }
+
     @DisplayName("NullableEnum")
     @Nested
     class AttributeNullableTest extends _IntFieldEnumTest<Attribute.NullableEnum> {

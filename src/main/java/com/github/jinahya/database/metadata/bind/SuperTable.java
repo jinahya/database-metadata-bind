@@ -23,11 +23,11 @@ package com.github.jinahya.database.metadata.bind;
 import lombok.AccessLevel;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 import lombok.ToString;
 import lombok.experimental.SuperBuilder;
-
-import java.util.Optional;
 
 /**
  * A entity class for binding the result of
@@ -36,7 +36,7 @@ import java.util.Optional;
  * @author Jin Kwon &lt;jinahya_at_gmail.com&gt;
  * @see Context#getSuperTables(String, String, String)
  */
-@ChildOf(Schema.class)
+@_ChildOf(Schema.class)
 @EqualsAndHashCode(callSuper = true)
 @ToString(callSuper = true)
 @Data
@@ -46,41 +46,109 @@ public class SuperTable extends AbstractMetadataType {
 
     private static final long serialVersionUID = 3579710773784268831L;
 
-    public static final String COLUMN_NAME_TABLE_CAT = "TABLE_CAT";
+    public static final String COLUMN_LABEL_TABLE_CAT = "TABLE_CAT";
 
-    public static final String COLUMN_NAME_TABLE_SCHEM = "TABLE_SCHEM";
+    public static final String COLUMN_LABEL_TABLE_SCHEM = "TABLE_SCHEM";
 
-    public static final String COLUMN_NAME_TABLE_NAME = "TABLE_NAME";
+    public static final String COLUMN_LABEL_TABLE_NAME = "TABLE_NAME";
 
-    public static final String COLUMN_NAME_SUPERTABLE_NAME = "SUPERTABLE_NAME";
+    public static final String COLUMN_LABEL_SUPERTABLE_NAME = "SUPERTABLE_NAME";
 
-    public TableId getTableId() {
-        return TableId.of(getTableCatNonNull(), getTableSchemNonNull(), getTableName());
+    // -------------------------------------------------------------------------------------------------------- tableCat
+    public String getTableCat() {
+        return tableCat;
     }
 
-    public TableId getSupertableId() {
-        return TableId.of(getTableCatNonNull(), getTableSchemNonNull(), getSupertableName());
+    public void setTableCat(final String tableCat) {
+        this.tableCat = tableCat;
+        tableId = null;
+        sueprtableId = null;
+    }
+
+    // ------------------------------------------------------------------------------------------------------ tableSchem
+    public void setTableSchem(final String tableSchem) {
+        this.tableSchem = tableSchem;
+        tableId = null;
+        sueprtableId = null;
+    }
+
+    // ------------------------------------------------------------------------------------------------------- tableName
+    public void setTableName(final String tableName) {
+        this.tableName = tableName;
+        tableId = null;
+    }
+
+    // -------------------------------------------------------------------------------------------------- supertableName
+    public void setSupertableName(final String supertableName) {
+        this.supertableName = supertableName;
+        sueprtableId = null;
+    }
+
+    // -----------------------------------------------------------------------------------------------------------------
+    @_NullableBySpecification
+    @_ColumnLabel(COLUMN_LABEL_TABLE_CAT)
+    private String tableCat;
+
+    @_NullableBySpecification
+    @_ColumnLabel(COLUMN_LABEL_TABLE_SCHEM)
+    private String tableSchem;
+
+    @_ColumnLabel(COLUMN_LABEL_TABLE_NAME)
+    private String tableName;
+
+    @_ColumnLabel(COLUMN_LABEL_SUPERTABLE_NAME)
+    private String supertableName;
+
+    // -----------------------------------------------------------------------------------------------------------------
+    String getTableCat(final String def) {
+        if (tableCat == null) {
+            return def;
+        }
+        return tableCat;
     }
 
     String getTableCatNonNull() {
-        return Optional.ofNullable(getTableCat()).orElse(Catalog.COLUMN_VALUE_TABLE_CAT_EMPTY);
+        return getTableCat(Catalog.COLUMN_VALUE_TABLE_CAT_EMPTY);
     }
 
     String getTableSchemNonNull() {
-        return Optional.ofNullable(getTableSchem()).orElse(Schema.COLUMN_VALUE_TABLE_SCHEM_EMPTY);
+        if (tableSchem == null) {
+            return Schema.COLUMN_VALUE_TABLE_SCHEM_EMPTY;
+        }
+        return tableSchem;
     }
 
-    @NullableBySpecification
-    @ColumnLabel(COLUMN_NAME_TABLE_CAT)
-    private String tableCat;
+    TableId getTableId() {
+        if (tableId == null) {
+            tableId = TableId.of(
+                    getTableCatNonNull(),
+                    getTableSchemNonNull(),
+                    getTableName()
+            );
+        }
+        return tableId;
+    }
 
-    @NullableBySpecification
-    @ColumnLabel(COLUMN_NAME_TABLE_SCHEM)
-    private String tableSchem;
+    TableId getSupertableId() {
+        if (sueprtableId == null) {
+            sueprtableId = TableId.of(
+                    getTableCatNonNull(),
+                    getTableSchemNonNull(),
+                    getSupertableName()
+            );
+        }
+        return sueprtableId;
+    }
 
-    @ColumnLabel(COLUMN_NAME_TABLE_NAME)
-    private String tableName;
+    @Setter(AccessLevel.NONE)
+    @Getter(AccessLevel.NONE)
+    @EqualsAndHashCode.Exclude
+    @ToString.Exclude
+    private transient TableId tableId;
 
-    @ColumnLabel(COLUMN_NAME_SUPERTABLE_NAME)
-    private String supertableName;
+    @Setter(AccessLevel.NONE)
+    @Getter(AccessLevel.NONE)
+    @EqualsAndHashCode.Exclude
+    @ToString.Exclude
+    private transient TableId sueprtableId;
 }

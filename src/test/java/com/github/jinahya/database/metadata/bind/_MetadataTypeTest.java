@@ -21,7 +21,6 @@ package com.github.jinahya.database.metadata.bind;
  */
 
 import lombok.extern.slf4j.Slf4j;
-import org.mockito.Mockito;
 
 import java.lang.reflect.Field;
 import java.util.Map;
@@ -29,16 +28,13 @@ import java.util.stream.Collectors;
 
 import static java.util.Collections.unmodifiableMap;
 import static java.util.Objects.requireNonNull;
+import static org.mockito.Mockito.spy;
 
 @Slf4j
 abstract class _MetadataTypeTest<T extends MetadataType> {
 
     _MetadataTypeTest(final Class<T> typeClass) {
         this.typeClass = requireNonNull(typeClass, "typeClass is null");
-    }
-
-    T typeSpy() {
-        return Mockito.spy(typeInstance());
     }
 
     T typeInstance() {
@@ -53,34 +49,38 @@ abstract class _MetadataTypeTest<T extends MetadataType> {
         }
     }
 
-    Map<Field, NullableByVendor> getFieldsWithMayBeNullByVendor() {
-        return getFieldsWithColumnLabel().entrySet().stream()
-                .filter(e -> e.getKey().getAnnotation(NullableByVendor.class) != null)
-                .collect(Collectors.toMap(Map.Entry::getKey, e -> e.getKey().getAnnotation(NullableByVendor.class)));
+    T typeSpy() {
+        return spy(typeInstance());
     }
 
-    Map<Field, NullableBySpecification> getFieldsWithNullableBySpecification() {
+    Map<Field, _NullableByVendor> getFieldsWithMayBeNullByVendor() {
         return getFieldsWithColumnLabel().entrySet().stream()
-                .filter(e -> e.getKey().getAnnotation(NullableBySpecification.class) != null).collect(
+                .filter(e -> e.getKey().getAnnotation(_NullableByVendor.class) != null)
+                .collect(Collectors.toMap(Map.Entry::getKey, e -> e.getKey().getAnnotation(_NullableByVendor.class)));
+    }
+
+    Map<Field, _NullableBySpecification> getFieldsWithNullableBySpecification() {
+        return getFieldsWithColumnLabel().entrySet().stream()
+                .filter(e -> e.getKey().getAnnotation(_NullableBySpecification.class) != null).collect(
                         Collectors.toMap(Map.Entry::getKey,
-                                         e -> e.getKey().getAnnotation(NullableBySpecification.class)));
+                                         e -> e.getKey().getAnnotation(_NullableBySpecification.class)));
     }
 
-    Map<Field, NotUsedBySpecification> fieldsWithUnusedBySpecification() {
+    Map<Field, _NotUsedBySpecification> fieldsWithUnusedBySpecification() {
         return getFieldsWithColumnLabel().entrySet().stream()
-                .filter(e -> e.getKey().getAnnotation(NotUsedBySpecification.class) != null).collect(
+                .filter(e -> e.getKey().getAnnotation(_NotUsedBySpecification.class) != null).collect(
                         Collectors.toMap(Map.Entry::getKey,
-                                         e -> e.getKey().getAnnotation(NotUsedBySpecification.class)));
+                                         e -> e.getKey().getAnnotation(_NotUsedBySpecification.class)));
     }
 
-    Map<Field, ColumnLabel> getFieldsWithColumnLabel() {
+    Map<Field, _ColumnLabel> getFieldsWithColumnLabel() {
         if (fieldsWithLabel == null) {
-            fieldsWithLabel = unmodifiableMap(Utils.getFieldsAnnotatedWith(typeClass, ColumnLabel.class));
+            fieldsWithLabel = unmodifiableMap(Utils.getFieldsAnnotatedWith(typeClass, _ColumnLabel.class));
         }
         return fieldsWithLabel;
     }
 
     final Class<T> typeClass;
 
-    private Map<Field, ColumnLabel> fieldsWithLabel;
+    private Map<Field, _ColumnLabel> fieldsWithLabel;
 }

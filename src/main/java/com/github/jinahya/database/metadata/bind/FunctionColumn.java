@@ -21,7 +21,6 @@ package com.github.jinahya.database.metadata.bind;
  */
 
 import lombok.AccessLevel;
-import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -31,9 +30,9 @@ import lombok.experimental.SuperBuilder;
 
 import java.sql.DatabaseMetaData;
 import java.util.Comparator;
+import java.util.Objects;
 import java.util.Optional;
 
-import static java.lang.String.CASE_INSENSITIVE_ORDER;
 import static java.util.Comparator.naturalOrder;
 import static java.util.Comparator.nullsFirst;
 
@@ -43,24 +42,24 @@ import static java.util.Comparator.nullsFirst;
  * @author Jin Kwon &lt;jinahya_at_gmail.com&gt;
  * @see Context#getFunctionColumns(String, String, String, String)
  */
-@ChildOf(Function.class)
-@EqualsAndHashCode(callSuper = true)
+@_ChildOf(Function.class)
+@Setter
+@Getter
 @ToString(callSuper = true)
-@Data
+@EqualsAndHashCode(callSuper = true)
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @SuperBuilder(toBuilder = true)
-public class FunctionColumn
-        extends AbstractMetadataType {
+public class FunctionColumn extends AbstractMetadataType {
 
     private static final long serialVersionUID = -7445156446214062680L;
 
-    public static final Comparator<FunctionColumn> COMPARING_CASE_INSENSITIVE =
+    static final Comparator<FunctionColumn> CASE_INSENSITIVE_ORDER =
             Comparator.comparing(FunctionColumn::getSchemaId, SchemaId.CASE_INSENSITIVE_ORDER)
-                    .thenComparing(FunctionColumn::getFunctionName, nullsFirst(CASE_INSENSITIVE_ORDER))
-                    .thenComparing(FunctionColumn::getSpecificName, nullsFirst(CASE_INSENSITIVE_ORDER));
+                    .thenComparing(FunctionColumn::getFunctionName, nullsFirst(String.CASE_INSENSITIVE_ORDER))
+                    .thenComparing(FunctionColumn::getSpecificName, nullsFirst(String.CASE_INSENSITIVE_ORDER));
 
-    public static final Comparator<FunctionColumn> COMPARING_NATURAL =
-            Comparator.comparing(FunctionColumn::getSchemaId, SchemaId.NATURAL_ORDER)
+    static final Comparator<FunctionColumn> LEXICOGRAPHIC_ORDER =
+            Comparator.comparing(FunctionColumn::getSchemaId, SchemaId.LEXICOGRAPHIC_ORDER)
                     .thenComparing(FunctionColumn::getFunctionName, nullsFirst(naturalOrder()))
                     .thenComparing(FunctionColumn::getSpecificName, nullsFirst(naturalOrder()));
 
@@ -75,7 +74,7 @@ public class FunctionColumn
     public static final String COLUMN_LABEL_COLUMN_TYPE = "COLUMN_TYPE";
 
     /**
-     * Constants for {@link #COLUMN_LABEL_COLUMN_TYPE} column values.
+     * Constants for {@value #COLUMN_LABEL_COLUMN_TYPE} column values.
      *
      * @author Jin Kwon &lt;onacit_at_gmail.com&gt;
      */
@@ -139,94 +138,143 @@ public class FunctionColumn
 
     public static final String COLUMN_LABEL_IS_NULLABLE = "IS_NULLABLE";
 
-    public FunctionColumnId getFunctionColumnId() {
-        return FunctionColumnId.of(
-                getFunctionCatNonNull(),
-                getFunctionSchemNonNull(),
-                getFunctionName(),
-                getSpecificName(),
-                getColumnName(),
-                getColumnType()
-        );
+    // ------------------------------------------------------------------------------------------------ functionColumnId
+    FunctionColumnId getFunctionColumnId() {
+        if (functionColumnId == null) {
+            return FunctionColumnId.of(
+                    FunctionId.of(
+                            getFunctionCatNonNull(),
+                            getFunctionSchemNonNull(),
+                            getSpecificName()
+                    ),
+                    getColumnName(),
+                    getColumnType()
+            );
+        }
+        return functionColumnId;
     }
 
-    FunctionId getFunctionId() {
+    private FunctionId getFunctionId() {
         return getFunctionColumnId().getFunctionId();
     }
 
-    SchemaId getSchemaId() {
+    private SchemaId getSchemaId() {
         return getFunctionId().getSchemaId();
     }
 
+    // ----------------------------------------------------------------------------------------------------- functionCat
     String getFunctionCatNonNull() {
         return Optional.ofNullable(getFunctionCat()).orElse(Catalog.COLUMN_VALUE_TABLE_CAT_EMPTY);
     }
 
+    public void setFunctionCat(final String functionCat) {
+        this.functionCat = functionCat;
+        functionColumnId = null;
+    }
+
+    // --------------------------------------------------------------------------------------------------- functionSchem
     String getFunctionSchemNonNull() {
         return Optional.ofNullable(getFunctionSchem()).orElse(Schema.COLUMN_VALUE_TABLE_SCHEM_EMPTY);
     }
 
-    @NullableBySpecification
-    @ColumnLabel(COLUMN_LABEL_FUNCTION_CAT)
-    private String functionCat;
+    public void setFunctionSchem(final String functionSchem) {
+        this.functionSchem = functionSchem;
+        functionColumnId = null;
+    }
 
-    @NullableBySpecification
-    @ColumnLabel(COLUMN_LABEL_FUNCTION_SCHEM)
-    private String functionSchem;
+    // ---------------------------------------------------------------------------------------------------- functionName
+    public void setFunctionName(final String functionName) {
+        this.functionName = functionName;
+        functionColumnId = null;
+    }
 
-    @ColumnLabel(COLUMN_LABEL_FUNCTION_NAME)
-    private String functionName;
+    // ------------------------------------------------------------------------------------------------------ columnName
+    public void setColumnName(final String columnName) {
+        this.columnName = columnName;
+        functionColumnId = null;
+    }
 
-    @ColumnLabel(COLUMN_LABEL_COLUMN_NAME)
-    private String columnName;
+    // ------------------------------------------------------------------------------------------------------ columnType
+    public void setColumnType(final int columnType) {
+        this.columnType = columnType;
+        functionColumnId = null;
+    }
 
-    @ColumnLabel("COLUMN_TYPE")
-    private int columnType;
+    ColumnTypeEnum getColumnTypeAsEnum() {
+        return ColumnTypeEnum.valueOfColumnType(getColumnType());
+    }
 
-    @ColumnLabel("DATA_TYPE")
-    private int dataType;
+    void setColumnTypeAsEnum(final ColumnTypeEnum columnTypeAsEnum) {
+        Objects.requireNonNull(columnTypeAsEnum, "columnTypeAsEnum is null");
+        setColumnType(columnTypeAsEnum.fieldValueAsInt());
+    }
 
-    @ColumnLabel("TYPE_NAME")
-    private String typeName;
+    // ---------------------------------------------------------------------------------------------------- specificName
+    public void setSpecificName(final String specificName) {
+        this.specificName = specificName;
+        functionColumnId = null;
+    }
 
-    @NullableBySpecification // > Null is returned for data types where the column size is not applicable.
-    @ColumnLabel("PRECISION")
-    private Integer precision;
-
-    @ColumnLabel("LENGTH")
-    private int length;
-
-    // https://issues.apache.org/jira/browse/DERBY-7102
-    @NullableBySpecification
-    @ColumnLabel("SCALE")
-    private Integer scale;
-
-    @ColumnLabel("RADIX")
-    private int radix;
-
-    @ColumnLabel("NULLABLE")
-    private int nullable;
-
-    @NullableByVendor("derby") // https://issues.apache.org/jira/browse/DERBY-7100
-    @ColumnLabel("REMARKS")
-    private String remarks;
-
-    @NullableBySpecification
-    @ColumnLabel("CHAR_OCTET_LENGTH")
-    private Integer charOctetLength;
-
-    @ColumnLabel("ORDINAL_POSITION")
-    private int ordinalPosition;
-
-    @ColumnLabel("IS_NULLABLE")
-    private String isNullable;
-
-    @ColumnLabel("SPECIFIC_NAME")
-    private String specificName;
-
+    // -----------------------------------------------------------------------------------------------------------------
     @EqualsAndHashCode.Exclude
     @ToString.Exclude
-    @Setter(AccessLevel.PACKAGE)
-    @Getter(AccessLevel.PACKAGE)
-    private transient Function function;
+    private transient FunctionColumnId functionColumnId;
+
+    // -----------------------------------------------------------------------------------------------------------------
+    @_NullableBySpecification
+    @_ColumnLabel(COLUMN_LABEL_FUNCTION_CAT)
+    private String functionCat;
+
+    @_NullableBySpecification
+    @_ColumnLabel(COLUMN_LABEL_FUNCTION_SCHEM)
+    private String functionSchem;
+
+    @_ColumnLabel(COLUMN_LABEL_FUNCTION_NAME)
+    private String functionName;
+
+    @_ColumnLabel(COLUMN_LABEL_COLUMN_NAME)
+    private String columnName;
+
+    @_ColumnLabel("COLUMN_TYPE")
+    private int columnType;
+
+    @_ColumnLabel("DATA_TYPE")
+    private int dataType;
+
+    @_ColumnLabel("TYPE_NAME")
+    private String typeName;
+
+    @_NullableBySpecification
+    @_ColumnLabel("PRECISION")
+    private Integer precision;
+
+    @_ColumnLabel("LENGTH")
+    private int length;
+
+    @_NullableBySpecification
+    @_ColumnLabel("SCALE")
+    private Integer scale;
+
+    @_ColumnLabel("RADIX")
+    private int radix;
+
+    @_ColumnLabel("NULLABLE")
+    private int nullable;
+
+    @_NullableByVendor("derby") // https://issues.apache.org/jira/browse/DERBY-7100
+    @_ColumnLabel("REMARKS")
+    private String remarks;
+
+    @_NullableBySpecification
+    @_ColumnLabel("CHAR_OCTET_LENGTH")
+    private Integer charOctetLength;
+
+    @_ColumnLabel("ORDINAL_POSITION")
+    private int ordinalPosition;
+
+    @_ColumnLabel("IS_NULLABLE")
+    private String isNullable;
+
+    @_ColumnLabel("SPECIFIC_NAME")
+    private String specificName;
 }

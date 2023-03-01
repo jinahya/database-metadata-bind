@@ -23,11 +23,17 @@ See [Maven Central](https://search.maven.org/artifact/com.github.jinahya/databas
 
 All methods, defined in the `DatabaseMetaData`, return `ResultSet` is prepared.
 
-```text
-try (var connection = connect()) {
-    var context = Context.newInstance(connection);
-    var catalogs = context.getCatalogs();
-    var tables = context.getTables(null, null, "%", null);
+```java
+// https://youtrack.jetbrains.com/issue/IDEA-311820
+class Whatever {
+
+    void whatever() {
+        try (var connection = connect()) {
+            var context = Context.newInstance(connection);
+            var catalogs = context.getCatalogs();
+            var tables = context.getTables(null, null, "%", null);
+        }
+    }
 }
 ```
 
@@ -40,6 +46,7 @@ A lot of classes/methods defined in this module need to be tested with various k
 ```xml
 <dependency>
   ...
+  <scope>test</scope>
 </dependency>
 ```
 
@@ -51,4 +58,5 @@ $ mvn -Pfailsafe \
   -Durl='<your-jdbc-url>' \
   -Duser='<your-own-user>' \
   -Dpassword='<your-own-password>'
+  clean failsafe:integration-test
 ```

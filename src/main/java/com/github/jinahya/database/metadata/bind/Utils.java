@@ -61,7 +61,7 @@ final class Utils {
         Objects.requireNonNull(clazz, "clazz is null");
         Objects.requireNonNull(label, "label is null");
         for (final Field field : clazz.getDeclaredFields()) {
-            final ColumnLabel annotation = field.getAnnotation(ColumnLabel.class);
+            final _ColumnLabel annotation = field.getAnnotation(_ColumnLabel.class);
             if (annotation == null) {
                 continue;
             }
@@ -123,8 +123,8 @@ final class Utils {
         assert field.isAccessible();
         final Class<?> fieldType = field.getType();
         if (fieldType.isPrimitive()) {
-            assert !field.isAnnotationPresent(NullableBySpecification.class);
-            assert !field.isAnnotationPresent(NullableByVendor.class);
+            assert !field.isAnnotationPresent(_NullableBySpecification.class);
+            assert !field.isAnnotationPresent(_NullableByVendor.class);
             if (fieldType == boolean.class) {
                 field.setBoolean(obj, results.getBoolean(label));
                 return;
@@ -153,8 +153,8 @@ final class Utils {
         }
         final Object value = results.getObject(label);
         assert value != null ||
-               (field.isAnnotationPresent(NullableBySpecification.class) ||
-                field.isAnnotationPresent(NullableByVendor.class))
+               (field.isAnnotationPresent(_NullableBySpecification.class) ||
+                field.isAnnotationPresent(_NullableByVendor.class))
                 : String.format("null value; label: %1$s, field: %2$s", label, field);
         try {
             field.set(obj, value);

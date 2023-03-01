@@ -21,17 +21,16 @@ package com.github.jinahya.database.metadata.bind;
  */
 
 import lombok.AccessLevel;
-import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
-import lombok.experimental.Accessors;
 import lombok.experimental.SuperBuilder;
 
 import java.sql.DatabaseMetaData;
 import java.util.Comparator;
+import java.util.Objects;
 import java.util.Optional;
 
 /**
@@ -42,21 +41,23 @@ import java.util.Optional;
  * @see NullableEnum
  */
 //@ParentOf(ColumnPrivilege.class)
-@ChildOf(Table.class)
-@EqualsAndHashCode(callSuper = true)
+@_ChildOf(Table.class)
+@Setter
+@Getter
 @ToString(callSuper = true)
-@Data
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @SuperBuilder(toBuilder = true)
 public class Column extends AbstractMetadataType {
 
     private static final long serialVersionUID = -409653682729081530L;
 
-    public static final Comparator<Column> COMPARING_CASE_INSENSITIVE =
-            Comparator.comparing(Column::getColumnId, ColumnId.COMPARING_CASE_INSENSITIVE);
+    static final Comparator<Column> CASE_INSENSITIVE_ORDER =
+            Comparator.comparing(Column::getTableId, TableId.CASE_INSENSITIVE_ORDER)
+                    .thenComparingInt(Column::getOrdinalPosition);
 
-    public static final Comparator<Column> COMPARING_NATURAL =
-            Comparator.comparing(Column::getColumnId, ColumnId.COMPARING_NATURAL);
+    static final Comparator<Column> LEXICOGRAPHIC_ORDER =
+            Comparator.comparing(Column::getTableId, TableId.LEXICOGRAPHIC_ORDER)
+                    .thenComparingInt(Column::getOrdinalPosition);
 
     public static final String COLUMN_LABEL_TABLE_CAT = "TABLE_CAT";
 
@@ -69,7 +70,7 @@ public class Column extends AbstractMetadataType {
     public static final String COLUMN_LABEL_NULLABLE = "NULLABLE";
 
     /**
-     * Constants for {@link #COLUMN_LABEL_NULLABLE} column values.
+     * Constants for {@value #COLUMN_LABEL_NULLABLE} column values.
      *
      * @author Jin Kwon &lt;onacit_at_gmail.com&gt;
      */
@@ -118,15 +119,142 @@ public class Column extends AbstractMetadataType {
 
     public static final String COLUMN_LABEL_IS_GENERATEDCOLUMN = "IS_GENERATEDCOLUMN";
 
-    public ColumnId getColumnId() {
-        return ColumnId.of(
-                getTableCatNonNull(),
-                getTableSchemNonNull(),
-                getTableName(),
-                getColumnName(),
-                getOrdinalPosition()
-        );
+    @Override
+    public boolean equals(final Object obj) {
+        if (this == obj) return true;
+        if (!(obj instanceof Column)) return false;
+        final Column that = (Column) obj;
+        return Objects.equals(tableCat, that.tableCat) &&
+               Objects.equals(tableSchem, that.tableSchem) &&
+               Objects.equals(tableName, that.tableName) &&
+               Objects.equals(columnName, that.columnName);
     }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(tableCat, tableSchem, tableName, columnName);
+    }
+
+    public String getTableCat() {
+        return tableCat;
+    }
+
+    public void setTableCat(final String tableCat) {
+        this.tableCat = tableCat;
+        columnId = null;
+    }
+
+    public String getTableSchem() {
+        return tableSchem;
+    }
+
+    public void setTableSchem(final String tableSchem) {
+        this.tableSchem = tableSchem;
+        columnId = null;
+    }
+
+    public String getTableName() {
+        return tableName;
+    }
+
+    public void setTableName(final String tableName) {
+        this.tableName = tableName;
+        columnId = null;
+    }
+
+    public String getColumnName() {
+        return columnName;
+    }
+
+    public void setColumnName(final String columnName) {
+        this.columnName = columnName;
+        columnId = null;
+    }
+
+    @_NullableBySpecification
+    @_ColumnLabel(COLUMN_LABEL_TABLE_CAT)
+    private String tableCat;
+
+    @_NullableBySpecification
+    @_ColumnLabel(COLUMN_LABEL_TABLE_SCHEM)
+    private String tableSchem;
+
+    @_ColumnLabel(COLUMN_LABEL_TABLE_NAME)
+    private String tableName;
+
+    @_ColumnLabel(COLUMN_LABEL_COLUMN_NAME)
+    private String columnName;
+
+    @_ColumnLabel("DATA_TYPE")
+    private int dataType;
+
+    @_ColumnLabel("TYPE_NAME")
+    private String typeName;
+
+    @_NullableBySpecification
+    @_ColumnLabel("COLUMN_SIZE")
+    private Integer columnSize;
+
+    @_NotUsedBySpecification
+    @_ColumnLabel("BUFFER_LENGTH")
+    private Integer bufferLength;
+
+    @_NullableBySpecification
+    @_ColumnLabel("DECIMAL_DIGITS")
+    private Integer decimalDigits;
+
+    @_ColumnLabel("NUM_PREC_RADIX")
+    private int numPrecRadix;
+
+    @_ColumnLabel(COLUMN_LABEL_NULLABLE)
+    private int nullable;
+
+    @_NullableBySpecification
+    @_ColumnLabel("REMARKS")
+    private String remarks;
+
+    @_NullableBySpecification
+    @_ColumnLabel("COLUMN_DEF")
+    private String columnDef;
+
+    @_NotUsedBySpecification
+    @_ColumnLabel("SQL_DATA_TYPE")
+    private Integer sqlDataType;
+
+    @_NotUsedBySpecification
+    @_ColumnLabel("SQL_DATETIME_SUB")
+    private Integer sqlDatetimeSub;
+
+    @_ColumnLabel("CHAR_OCTET_LENGTH")
+    private int charOctetLength;
+
+    @_ColumnLabel("ORDINAL_POSITION")
+    private int ordinalPosition;
+
+    @_ColumnLabel("IS_NULLABLE")
+    private String isNullable;
+
+    @_NullableBySpecification
+    @_ColumnLabel("SCOPE_CATALOG")
+    private String scopeCatalog;
+
+    @_NullableBySpecification
+    @_ColumnLabel("SCOPE_SCHEMA")
+    private String scopeSchema;
+
+    @_NullableBySpecification
+    @_ColumnLabel("SCOPE_TABLE")
+    private String scopeTable;
+
+    @_NullableBySpecification
+    @_ColumnLabel("SOURCE_DATA_TYPE")
+    private Integer sourceDataType;
+
+    @_ColumnLabel(COLUMN_LABEL_IS_AUTOINCREMENT)
+    private String isAutoincrement;
+
+    @_ColumnLabel(COLUMN_LABEL_IS_GENERATEDCOLUMN)
+    private String isGeneratedcolumn;
 
     String getTableCatNonNull() {
         return Optional.ofNullable(getTableCat()).orElse(Catalog.COLUMN_VALUE_TABLE_CAT_EMPTY);
@@ -136,95 +264,32 @@ public class Column extends AbstractMetadataType {
         return Optional.ofNullable(getTableSchem()).orElse(Schema.COLUMN_VALUE_TABLE_SCHEM_EMPTY);
     }
 
-    @NullableBySpecification
-    @ColumnLabel(COLUMN_LABEL_TABLE_CAT)
-    private String tableCat;
+    /**
+     * Returns a value for identifying this column.
+     *
+     * @return an identifier of this column.
+     */
+    ColumnId getColumnId() {
+        if (columnId == null) {
+            columnId = ColumnId.of(
+                    TableId.of(
+                            getTableCatNonNull(),
+                            getTableSchemNonNull(),
+                            getTableName()
+                    ),
+                    getColumnName()
+            );
+        }
+        return columnId;
+    }
 
-    @NullableBySpecification
-    @ColumnLabel(COLUMN_LABEL_TABLE_SCHEM)
-    private String tableSchem;
+    private TableId getTableId() {
+        return getColumnId().getTableId();
+    }
 
-    @ColumnLabel(COLUMN_LABEL_TABLE_NAME)
-    private String tableName;
-
-    @ColumnLabel(COLUMN_LABEL_COLUMN_NAME)
-    private String columnName;
-
-    @ColumnLabel("DATA_TYPE")
-    private int dataType;
-
-    @ColumnLabel("TYPE_NAME")
-    private String typeName;
-
-    @NullableBySpecification
-    @ColumnLabel("COLUMN_SIZE")
-    private Integer columnSize;
-
-    @NotUsedBySpecification
-    @ColumnLabel("BUFFER_LENGTH")
-    private Integer bufferLength;
-
-    @NullableBySpecification
-    @ColumnLabel("DECIMAL_DIGITS")
-    private Integer decimalDigits;
-
-    @ColumnLabel("NUM_PREC_RADIX")
-    private int numPrecRadix;
-
-    @ColumnLabel(COLUMN_LABEL_NULLABLE)
-    private int nullable;
-
-    @NullableBySpecification
-    @ColumnLabel("REMARKS")
-    private String remarks;
-
-    @NullableBySpecification
-    @ColumnLabel("COLUMN_DEF")
-    private String columnDef;
-
-    @NotUsedBySpecification
-    @ColumnLabel("SQL_DATA_TYPE")
-    private Integer sqlDataType;
-
-    @NotUsedBySpecification
-    @ColumnLabel("SQL_DATETIME_SUB")
-    private Integer sqlDatetimeSub;
-
-    @ColumnLabel("CHAR_OCTET_LENGTH")
-    private int charOctetLength;
-
-    @ColumnLabel("ORDINAL_POSITION")
-    private int ordinalPosition;
-
-    @ColumnLabel("IS_NULLABLE")
-    private String isNullable;
-
-    @NullableBySpecification
-    @ColumnLabel("SCOPE_CATALOG")
-    private String scopeCatalog;
-
-    @NullableBySpecification
-    @ColumnLabel("SCOPE_SCHEMA")
-    private String scopeSchema;
-
-    @NullableBySpecification
-    @ColumnLabel("SCOPE_TABLE")
-    private String scopeTable;
-
-    @NullableBySpecification
-    @ColumnLabel("SOURCE_DATA_TYPE")
-    private Integer sourceDataType;
-
-    @ColumnLabel(COLUMN_LABEL_IS_AUTOINCREMENT)
-    private String isAutoincrement;
-
-    @ColumnLabel(COLUMN_LABEL_IS_GENERATEDCOLUMN)
-    private String isGeneratedcolumn;
-
-    @Accessors(fluent = true)
-    @Setter(AccessLevel.PACKAGE)
-    @Getter(AccessLevel.PACKAGE)
+    @Setter(AccessLevel.NONE)
+    @Getter(AccessLevel.NONE)
     @EqualsAndHashCode.Exclude
     @ToString.Exclude
-    private transient Table table;
+    private transient ColumnId columnId;
 }

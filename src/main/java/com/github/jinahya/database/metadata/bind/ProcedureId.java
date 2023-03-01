@@ -21,62 +21,78 @@ package com.github.jinahya.database.metadata.bind;
  */
 
 import lombok.AccessLevel;
-import lombok.Data;
-import lombok.EqualsAndHashCode;
-import lombok.RequiredArgsConstructor;
-import lombok.experimental.SuperBuilder;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 
-import java.util.Comparator;
 import java.util.Objects;
 
-import static java.lang.String.CASE_INSENSITIVE_ORDER;
-import static java.util.Comparator.naturalOrder;
+@AllArgsConstructor(access = AccessLevel.PRIVATE)
+@Builder(access = AccessLevel.PRIVATE)
+final class ProcedureId extends AbstractMetadataTypeId<ProcedureId, Procedure> {
 
-@Data
-@RequiredArgsConstructor(access = AccessLevel.PRIVATE)
-@SuperBuilder(toBuilder = true)
-public final class ProcedureId implements MetadataTypeId<ProcedureId, Procedure> {
+    private static final long serialVersionUID = 673730280554507464L;
 
-    private static final long serialVersionUID = 227742014479297143L;
-
-    public static final Comparator<ProcedureId> COMPARING_IN_CASE_INSENSITIVE =
-            Comparator.comparing(ProcedureId::getSchemaId, SchemaId.CASE_INSENSITIVE_ORDER)
-                    .thenComparing(ProcedureId::getProcedureName, CASE_INSENSITIVE_ORDER)
-                    .thenComparing(ProcedureId::getSpecificName, CASE_INSENSITIVE_ORDER);
-
-    public static final Comparator<ProcedureId> COMPARING_IN_NATURAL =
-            Comparator.comparing(ProcedureId::getSchemaId, SchemaId.CASE_INSENSITIVE_ORDER)
-                    .thenComparing(ProcedureId::getProcedureName, naturalOrder())
-                    .thenComparing(ProcedureId::getSpecificName, naturalOrder());
-
-    static ProcedureId of(final SchemaId schemaId, final String procedureName, final String specificName) {
+    /**
+     * Creates a new instance with specified arguments.
+     *
+     * @param schemaId     an id of the schema in which the procedure resides.
+     * @param specificName a value of {@value Procedure#COLUMN_LABEL_SPECIFIC_NAME} column.
+     * @return a new instance.
+     */
+    public static ProcedureId of(final SchemaId schemaId, final String specificName) {
         Objects.requireNonNull(schemaId, "schemaId is null");
-        Objects.requireNonNull(procedureName, "procedureName is null");
         Objects.requireNonNull(specificName, "specificName is null");
         return builder()
                 .schemaId(schemaId)
-                .procedureName(procedureName)
                 .specificName(specificName)
                 .build();
     }
 
-    static ProcedureId of(final String procedureCat, final String procedureSchem, final String procedureName,
-                          final String specificName) {
-        return of(SchemaId.of(procedureCat, procedureSchem), procedureName, specificName);
+    // -----------------------------------------------------------------------------------------------------------------
+    @Override
+    public String toString() {
+        return super.toString() + '{' +
+               "schemaId=" + schemaId +
+               ",specificName=" + specificName +
+               '}';
     }
 
-    public static ProcedureId of(final SchemaId schemaId, final String specificName) {
-        return of(schemaId, "", specificName);
+    @Override
+    public boolean equals(final Object obj) {
+        if (this == obj) return true;
+        if (!(obj instanceof ProcedureId)) return false;
+        final ProcedureId that = (ProcedureId) obj;
+        return schemaId.equals(that.schemaId) &&
+               specificName.equals(that.specificName);
     }
 
-    public static ProcedureId of(final String procedureCat, final String procedureSchem, final String specificName) {
-        return of(procedureCat, procedureSchem, "", specificName);
+    @Override
+    public int hashCode() {
+        return Objects.hash(schemaId, specificName);
     }
 
+    // -----------------------------------------------------------------------------------------------------------------
+
+    /**
+     * Returns the {@code schemaId} of this procedure id.
+     *
+     * @return the {@code schemaId} of this procedure id.
+     */
+    public SchemaId getSchemaId() {
+        return schemaId;
+    }
+
+    /**
+     * Returns the {@code specificName} of this procedure id.
+     *
+     * @return the {@code specificName} of this procedure id.
+     */
+    public String getSpecificName() {
+        return specificName;
+    }
+
+    // -----------------------------------------------------------------------------------------------------------------
     private final SchemaId schemaId;
-
-    @EqualsAndHashCode.Exclude
-    private final String procedureName;
 
     private final String specificName;
 }

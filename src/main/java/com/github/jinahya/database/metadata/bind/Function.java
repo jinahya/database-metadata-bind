@@ -21,128 +21,129 @@ package com.github.jinahya.database.metadata.bind;
  */
 
 import lombok.AccessLevel;
-import lombok.Data;
 import lombok.EqualsAndHashCode;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
 import lombok.experimental.SuperBuilder;
 
 import java.sql.DatabaseMetaData;
-import java.sql.SQLException;
 import java.util.Comparator;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Objects;
 import java.util.Optional;
 
-import static java.lang.String.CASE_INSENSITIVE_ORDER;
 import static java.util.Comparator.naturalOrder;
 import static java.util.Comparator.nullsFirst;
 
 /**
- * A class for binding the result of
+ * A class for binding the results of
  * {@link DatabaseMetaData#getFunctions(java.lang.String, java.lang.String, java.lang.String)} method.
  *
  * @author Jin Kwon &lt;jinahya_at_gmail.com&gt;
  * @see Context#getFunctions(String, String, String)
  */
-//@ChildOf(Schema.class)
-@ParentOf(FunctionColumn.class)
+@_ParentOf(FunctionColumn.class)
+@Setter
+@Getter
 @EqualsAndHashCode(callSuper = true)
 @ToString(callSuper = true)
-@Data
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @SuperBuilder(toBuilder = true)
-public class Function
-        extends AbstractMetadataType {
+public class Function extends AbstractMetadataType {
 
     private static final long serialVersionUID = -3318947900237453301L;
 
-    public static final Comparator<Function> COMPARING_CASE_INSENSITIVE =
+    static final Comparator<Function> CASE_INSENSITIVE_ORDER =
             Comparator.comparing(Function::getSchemaId, SchemaId.CASE_INSENSITIVE_ORDER)
-                    .thenComparing(Function::getFunctionName, nullsFirst(CASE_INSENSITIVE_ORDER))
-                    .thenComparing(Function::getSpecificName, nullsFirst(CASE_INSENSITIVE_ORDER));
+                    .thenComparing(Function::getFunctionName, nullsFirst(String.CASE_INSENSITIVE_ORDER))
+                    .thenComparing(Function::getSpecificName, nullsFirst(String.CASE_INSENSITIVE_ORDER));
 
-    public static final Comparator<Function> COMPARING_NATURAL =
-            Comparator.comparing(Function::getSchemaId, SchemaId.NATURAL_ORDER)
+    static final Comparator<Function> LEXICOGRAPHIC_ORDER =
+            Comparator.comparing(Function::getSchemaId, SchemaId.LEXICOGRAPHIC_ORDER)
                     .thenComparing(Function::getFunctionName, nullsFirst(naturalOrder()))
                     .thenComparing(Function::getSpecificName, nullsFirst(naturalOrder()));
 
-    public static final String COLUMN_NAME_FUNCTION_CAT = "FUNCTION_CAT";
+    public static final String COLUMN_LABEL_FUNCTION_CAT = "FUNCTION_CAT";
 
-    public static final String ATTRIBUTE_NAME_FUNCTION_CAT = "functionCat";
+    public static final String PROPERTY_NAME_FUNCTION_CAT = "functionCat";
 
-    public static final String COLUMN_NAME_FUNCTION_SCHEM = "FUNCTION_SCHEM";
+    public static final String COLUMN_LABEL_FUNCTION_SCHEM = "FUNCTION_SCHEM";
 
-    public static final String ATTRIBUTE_NAME_FUNCTION_SCHEM = "functionSchem";
+    public static final String PROPERTY_NAME_FUNCTION_SCHEM = "functionSchem";
 
-    public static final String COLUMN_NAME_FUNCTION_TYPE = "FUNCTION_TYPE";
+    public static final String COLUMN_LABEL_FUNCTION_TYPE = "FUNCTION_TYPE";
 
-    public FunctionId getFunctionId() {
-        return FunctionId.of(getFunctionCatNonNull(), getFunctionSchemNonNull(), getFunctionName(), getSpecificName());
+    public static final String PROPERTY_NAME_FUNCTION_TYPE = "functionType";
+
+    // ------------------------------------------------------------------------------------------------------ functionId
+    FunctionId getFunctionId() {
+        if (functionId == null) {
+            functionId = FunctionId.of(
+                    getFunctionCatNonNull(),
+                    getFunctionSchemNonNull(),
+                    getSpecificName()
+            );
+        }
+        return functionId;
     }
 
-    SchemaId getSchemaId() {
+    private SchemaId getSchemaId() {
         return getFunctionId().getSchemaId();
     }
 
-    public List<FunctionColumn> getFunctionColumns(final Context context, final String columnNamePattern)
-            throws SQLException {
-        Objects.requireNonNull(context, "context is null");
-        final List<FunctionColumn> functionColumns = context.getFunctionColumns(
-                getFunctionCatNonNull(),
-                getFunctionSchemNonNull(),
-                getFunctionName(),
-                columnNamePattern
-        );
-        functionColumns.forEach(fc -> {
-            fc.setFunction(this);
-            getFunctionColumns().put(fc.getFunctionColumnId(), fc);
-        });
-        return functionColumns;
-    }
-
+    // ----------------------------------------------------------------------------------------------------- functionCat
     String getFunctionCatNonNull() {
         return Optional.ofNullable(getFunctionCat()).orElse(Catalog.COLUMN_VALUE_TABLE_CAT_EMPTY);
     }
 
+    public void setFunctionCat(final String functionCat) {
+        this.functionCat = functionCat;
+        functionId = null;
+    }
+
+    // --------------------------------------------------------------------------------------------------- functionSchem
     String getFunctionSchemNonNull() {
         return Optional.ofNullable(getFunctionSchem()).orElse(Schema.COLUMN_VALUE_TABLE_SCHEM_EMPTY);
     }
 
-    @NullableBySpecification
-    @ColumnLabel(COLUMN_NAME_FUNCTION_CAT)
+    public void setFunctionSchem(final String functionSchem) {
+        this.functionSchem = functionSchem;
+        functionId = null;
+    }
+
+    // ---------------------------------------------------------------------------------------------------- specificName
+    public void setSpecificName(final String specificName) {
+        this.specificName = specificName;
+        functionId = null;
+    }
+
+    // -----------------------------------------------------------------------------------------------------------------
+    @Setter(AccessLevel.NONE)
+    @Getter(AccessLevel.NONE)
+    @EqualsAndHashCode.Exclude
+    @ToString.Exclude
+    private transient FunctionId functionId;
+
+    // -----------------------------------------------------------------------------------------------------------------
+    @_NullableBySpecification
+    @_ColumnLabel(COLUMN_LABEL_FUNCTION_CAT)
     private String functionCat;
 
-    @NullableBySpecification
-    @ColumnLabel(COLUMN_NAME_FUNCTION_SCHEM)
+    @_NullableBySpecification
+    @_ColumnLabel(COLUMN_LABEL_FUNCTION_SCHEM)
     private String functionSchem;
 
-    @ColumnLabel("FUNCTION_NAME")
+    @_ColumnLabel("FUNCTION_NAME")
     @EqualsAndHashCode.Exclude
     private String functionName;
 
-    @NullableByVendor("PostgreSQL")
-    @ColumnLabel("REMARKS")
+    @_NullableByVendor("PostgreSQL")
+    @_ColumnLabel("REMARKS")
     private String remarks;
 
-    @ColumnLabel("FUNCTION_TYPE")
+    @_ColumnLabel("FUNCTION_TYPE")
     private int functionType;
 
-    @ColumnLabel("SPECIFIC_NAME")
+    @_ColumnLabel("SPECIFIC_NAME")
     private String specificName;
-
-    Map<FunctionColumnId, FunctionColumn> getFunctionColumns() {
-        if (functionColumns == null) {
-            functionColumns = new HashMap<>();
-        }
-        return functionColumns;
-    }
-
-    @Setter(AccessLevel.PACKAGE)
-    @EqualsAndHashCode.Exclude
-    @ToString.Exclude
-    private transient Map<FunctionColumnId, FunctionColumn> functionColumns;
 }

@@ -21,11 +21,36 @@ package com.github.jinahya.database.metadata.bind;
  */
 
 import lombok.extern.slf4j.Slf4j;
+import org.junit.jupiter.api.Test;
+
+import static org.assertj.core.api.Assertions.assertThat;
 
 @Slf4j
 abstract class AbstractMetadataTypeTest<T extends AbstractMetadataType> extends MetadataTypeTest<T> {
 
     AbstractMetadataTypeTest(final Class<T> typeClass) {
         super(typeClass);
+    }
+
+    @Test
+    void shouldHaveEqualsOverridden__() throws ReflectiveOperationException {
+        {
+            final var method = typeClass.getMethod("equals", Object.class);
+            final var declaringClass = method.getDeclaringClass();
+            assertThat(declaringClass)
+                    .as("declaring class of the %1$s", method)
+                    .isSameAs(typeClass);
+        }
+    }
+
+    @Test
+    void shouldHaveHashcodeOverridden__() throws ReflectiveOperationException {
+        {
+            final var method = typeClass.getMethod("hashCode");
+            final var declaringClass = method.getDeclaringClass();
+            assertThat(declaringClass)
+                    .as("declaring class of the %1$s", method)
+                    .isSameAs(typeClass);
+        }
     }
 }

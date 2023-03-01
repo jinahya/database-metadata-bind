@@ -21,8 +21,6 @@ package com.github.jinahya.database.metadata.bind;
  */
 
 import lombok.AccessLevel;
-import lombok.Data;
-import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
 import lombok.experimental.SuperBuilder;
@@ -31,25 +29,34 @@ import java.sql.DatabaseMetaData;
 import java.util.Comparator;
 
 /**
- * An abstract class for binding the result of {@link DatabaseMetaData#getExportedKeys(String, String, String)} method.
+ * An abstract class for binding the results of {@link DatabaseMetaData#getExportedKeys(String, String, String)}
+ * method.
  *
  * @author Jin Kwon &lt;jinahya_at_gmail.com&gt;
  * @see Context#getExportedKeys(String, String, String)
  * @see ImportedKey
  */
-@ChildOf(Table.class)
-@EqualsAndHashCode(callSuper = true)
+@_ChildOf(Table.class)
 @ToString(callSuper = true)
-@Data
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @SuperBuilder(toBuilder = true)
 public class ExportedKey extends TableKey<ExportedKey> {
 
     private static final long serialVersionUID = -6561660015694928357L;
 
-    public static final Comparator<ExportedKey> COMPARING_CASE_INSENSITIVE =
-            TableKey.comparingFktableKeySeqCaseInsensitive();
+    static final Comparator<ExportedKey> CASE_INSENSITIVE_ORDER = comparingFktableCaseInsensitive();
 
-    public static final Comparator<ExportedKey> COMPARING_NATURAL =
-            TableKey.comparingFktableKeySeqNatural();
+    static final Comparator<ExportedKey> LEXICOGRAPHIC_ORDER = comparingFktableLexicographic();
+
+    @Override
+    public boolean equals(final Object obj) {
+        if (this == obj) return true;
+        if (!(obj instanceof ExportedKey)) return false;
+        return super.equals_((ExportedKey) obj);
+    }
+
+    @Override
+    public int hashCode() {
+        return super.hashCode();
+    }
 }

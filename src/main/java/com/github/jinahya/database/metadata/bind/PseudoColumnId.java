@@ -21,26 +21,26 @@ package com.github.jinahya.database.metadata.bind;
  */
 
 import lombok.AccessLevel;
-import lombok.Data;
-import lombok.RequiredArgsConstructor;
-import lombok.experimental.SuperBuilder;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Getter;
 
 import java.util.Comparator;
 import java.util.Objects;
 
-@Data
-@RequiredArgsConstructor(access = AccessLevel.PRIVATE)
-@SuperBuilder(toBuilder = true)
-public final class PseudoColumnId implements MetadataTypeId<PseudoColumnId, PseudoColumn> {
+@Getter
+@AllArgsConstructor(access = AccessLevel.PRIVATE)
+@Builder(access = AccessLevel.PRIVATE)
+final class PseudoColumnId extends AbstractMetadataTypeId<PseudoColumnId, PseudoColumn> {
 
     private static final long serialVersionUID = 7459854669925402253L;
 
-    public static final Comparator<PseudoColumnId> CASE_INSENSITIVE_ORDER =
-            Comparator.comparing(PseudoColumnId::getTableId, TableId.COMPARING_CASE_INSENSITIVE)
+    static final Comparator<PseudoColumnId> CASE_INSENSITIVE_ORDER =
+            Comparator.comparing(PseudoColumnId::getTableId, TableId.CASE_INSENSITIVE_ORDER)
                     .thenComparing(PseudoColumnId::getColumnName, String.CASE_INSENSITIVE_ORDER);
 
-    public static final Comparator<PseudoColumnId> NATURAL_ORDER =
-            Comparator.comparing(PseudoColumnId::getTableId, TableId.COMPARING_NATURAL)
+    static final Comparator<PseudoColumnId> LEXICOGRAPHIC_ORDER =
+            Comparator.comparing(PseudoColumnId::getTableId, TableId.LEXICOGRAPHIC_ORDER)
                     .thenComparing(PseudoColumnId::getColumnName);
 
     public static PseudoColumnId of(final TableId tableId, final String columnName) {
@@ -52,9 +52,26 @@ public final class PseudoColumnId implements MetadataTypeId<PseudoColumnId, Pseu
                 .build();
     }
 
-    public static PseudoColumnId of(final String tableCat, final String tableSchem, final String tableName,
-                                    final String columnName) {
-        return of(TableId.of(tableCat, tableSchem, tableName), columnName);
+    @Override
+    public String toString() {
+        return super.toString() + '{' +
+               "tableId=" + tableId +
+               ",columnName=" + columnName +
+               '}';
+    }
+
+    @Override
+    public boolean equals(final Object obj) {
+        if (this == obj) return true;
+        if (!(obj instanceof PseudoColumnId)) return false;
+        final PseudoColumnId that = (PseudoColumnId) obj;
+        return tableId.equals(that.tableId) &&
+               columnName.equals(that.columnName);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(tableId, columnName);
     }
 
     private final TableId tableId;

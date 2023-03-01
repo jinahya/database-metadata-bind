@@ -22,14 +22,11 @@ package com.github.jinahya.database.metadata.bind;
 
 import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.BeforeAll;
-import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 
 import java.io.IOException;
 import java.sql.Connection;
-import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.Optional;
 
 import static org.junit.jupiter.api.Assumptions.assumeTrue;
 
@@ -58,38 +55,11 @@ abstract class TestContainers_$_IT {
     }
 
     @Test
-    void schemas() throws SQLException {
+    void testOrdering() throws SQLException {
         try (var connection = connect()) {
-            final var metadata = connection.getMetaData();
-            try (final ResultSet catalogRs = metadata.getCatalogs()) {
-                while (catalogRs.next()) {
-                    final String tableCat = catalogRs.getString(Catalog.COLUMN_LABEL_TABLE_CAT);
-                    log.debug("tableCat: {}", tableCat);
-                    try (final ResultSet schemaRs = metadata.getSchemas(tableCat, "%")) {
-                        while (schemaRs.next()) {
-                            final var tableCatalog = schemaRs.getString(Schema.COLUMN_LABEL_TABLE_CATALOG);
-                            final var tableSchem = schemaRs.getString(Schema.COLUMN_LABEL_TABLE_SCHEM);
-                            log.debug("tableCatalog: {}, tableSchem: {}", tableCatalog, tableSchem);
-                        }
-                    }
-                }
-            }
-        }
-    }
-
-    @Disabled
-    @Test
-    void tables() throws SQLException {
-        try (var connection = connect()) {
+            log.debug("connected: {}", connection);
             final var context = Context.newInstance(connection);
-            ContextTests.info(context);
-            final var tables = context.getTables(null, null, "%", null);
-            tables.stream().map(Table::getTableCat).distinct().forEach(
-                    tc -> log.debug("tableCat: {}", Optional.ofNullable(tc).map(v -> '\'' + v + '\'').orElse(null))
-            );
-            tables.stream().map(Table::getTableSchem).distinct().forEach(
-                    ts -> log.debug("tableSchem: {}", Optional.ofNullable(ts).map(v -> '\'' + v + '\'').orElse(null))
-            );
+            ContextTests.testOrdering(context);
         }
     }
 }

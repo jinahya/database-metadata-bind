@@ -25,4 +25,11 @@ class CatalogTest extends AbstractMetadataTypeTest<Catalog> {
     CatalogTest() {
         super(Catalog.class);
     }
+
+    @Override
+    Catalog typeInstance() {
+        final Catalog instance = super.typeInstance();
+        instance.setTableCat(Catalog.COLUMN_VALUE_TABLE_CAT_EMPTY);
+        return instance;
+    }
 }

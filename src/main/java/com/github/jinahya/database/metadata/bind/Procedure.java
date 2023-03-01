@@ -21,89 +21,222 @@ package com.github.jinahya.database.metadata.bind;
  */
 
 import lombok.AccessLevel;
-import lombok.Data;
 import lombok.EqualsAndHashCode;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 import lombok.ToString;
 import lombok.experimental.SuperBuilder;
 
 import java.sql.DatabaseMetaData;
-import java.sql.SQLException;
 import java.util.Comparator;
-import java.util.List;
 import java.util.Objects;
-import java.util.Optional;
+
+import static java.util.Comparator.naturalOrder;
+import static java.util.Comparator.nullsFirst;
 
 /**
  * A class for binding results of
- * {@link DatabaseMetaData#getProcedures(java.lang.String, java.lang.String, java.lang.String)}.
+ * {@link DatabaseMetaData#getProcedures(java.lang.String, java.lang.String, java.lang.String)} method.
  *
  * @author Jin Kwon &lt;jinahya_at_gmail.com&gt;
+ * @see DatabaseMetaData#getProcedures(String, String, String)
+ * @see Context#getFunctionColumns(String, String, String, String)
+ * @see ProcedureColumn
  */
-@ParentOf(ProcedureColumn.class)
-@ChildOf(Schema.class)
-@EqualsAndHashCode(callSuper = true)
+@_ParentOf(ProcedureColumn.class)
+@_ChildOf(Schema.class)
+@Setter
+@Getter
 @ToString(callSuper = true)
-@Data
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @SuperBuilder(toBuilder = true)
 public class Procedure extends AbstractMetadataType {
 
     private static final long serialVersionUID = -6262056388403934829L;
 
-    public static final Comparator<Procedure> COMPARING_IN_CASE_INSENSITIVE_ORDER
-            = Comparator.comparing(Procedure::getProcedureId, ProcedureId.COMPARING_IN_CASE_INSENSITIVE);
+    static final Comparator<Procedure> CASE_INSENSITIVE_ORDER =
+            Comparator.comparing(Procedure::getSchemaId, SchemaId.CASE_INSENSITIVE_ORDER)
+                    .thenComparing(Procedure::getProcedureName, nullsFirst(String.CASE_INSENSITIVE_ORDER))
+                    .thenComparing(Procedure::getSpecificName, nullsFirst(String.CASE_INSENSITIVE_ORDER));
 
-    public static final Comparator<Procedure> COMPARING_IN_NATURAL_ORDER
-            = Comparator.comparing(Procedure::getProcedureId, ProcedureId.COMPARING_IN_NATURAL);
+    static final Comparator<Procedure> LEXICOGRAPHIC_ORDER =
+            Comparator.comparing(Procedure::getSchemaId, SchemaId.LEXICOGRAPHIC_ORDER)
+                    .thenComparing(Procedure::getProcedureName, nullsFirst(naturalOrder()))
+                    .thenComparing(Procedure::getSpecificName, nullsFirst(naturalOrder()));
 
-    public ProcedureId getProcedureId() {
-        return ProcedureId.of(
-                getProcedureCatNonNull(),
-                getProcedureSchemNonNull(),
-                getProcedureName(),
-                getSpecificName()
+    // -----------------------------------------------------------------------------------------------------------------
+
+    /**
+     * A colum label of {@value}.
+     * <p>
+     * <blockquote
+     * site="https://docs.oracle.com/en/java/javase/17/docs/api/java.sql/java/sql/DatabaseMetaData.html#getProcedures(java.lang.String,java.lang.String,java.lang.String)">
+     * kind of procedure:
+     * <ul>
+     *   <li>{@link DatabaseMetaData#procedureResultUnknown procedureResultUnknown} - Cannot determine if a return value will be returned</li>
+     *   <li>{@link DatabaseMetaData#procedureNoResult procedureNoResult} - Does not return a return value</li>
+     *   <li>{@link DatabaseMetaData#procedureReturnsResult procedureReturnsResult} - Returns a return value</li>
+     * </ul>
+     * </blockquote>
+     */
+    public static final String COLUMN_LABEL_PROCEDURE_TYPE = "PROCEDURE_TYPE";
+
+    /**
+     * Constants for the value of {@value #COLUMN_LABEL_PROCEDURE_TYPE} column.
+     */
+    public enum ProcedureTypeEnum implements _IntFieldEnum<ProcedureTypeEnum> {
+
+        /**
+         * A value for
+         * {@link DatabaseMetaData#procedureResultUnknown}({@value DatabaseMetaData#procedureResultUnknown}).
+         */
+        PROCEDURE_RESULT_UNKNOWN(DatabaseMetaData.procedureResultUnknown), // 0
+
+        /**
+         * A value for {@link DatabaseMetaData#procedureNoResult}({@value DatabaseMetaData#procedureNoResult}).
+         */
+        PROCEDURE_NO_RESULT(DatabaseMetaData.procedureNoResult), // 1
+
+        /**
+         * A value for
+         * {@link DatabaseMetaData#procedureReturnsResult}({@value DatabaseMetaData#procedureReturnsResult}).
+         */
+        PROCEDURE_RETURNS_RESULT(DatabaseMetaData.procedureReturnsResult); // 2
+
+        /**
+         * Returns the value whose {@link #fieldValueAsInt() fieldValue} matches to specified value.
+         *
+         * @param fieldValue the value of {@link #fieldValueAsInt() fieldValue} to match.
+         * @return a matched value.
+         */
+        public static ProcedureTypeEnum valueOfFieldValue(final int fieldValue) {
+            return _IntFieldEnum.valueOfFieldValue(ProcedureTypeEnum.class, fieldValue);
+        }
+
+        private ProcedureTypeEnum(final int fieldValue) {
+            this.fieldValue = fieldValue;
+        }
+
+        @Override
+        public int fieldValueAsInt() {
+            return fieldValue;
+        }
+
+        private int fieldValue;
+    }
+
+    /**
+     * A colum label of {@value}.
+     * <p>
+     * <blockquote
+     * site="https://docs.oracle.com/en/java/javase/17/docs/api/java.sql/java/sql/DatabaseMetaData.html#getProcedures(java.lang.String,java.lang.String,java.lang.String)">The
+     * name which uniquely identifies this procedure within its schema.</blockquote>
+     */
+    public static final String COLUMN_LABEL_SPECIFIC_NAME = "SPECIFIC_NAME";
+
+    // -----------------------------------------------------------------------------------------------------------------
+    @Override
+    public boolean equals(final Object obj) {
+        if (this == obj) return true;
+        if (!(obj instanceof Procedure)) return false;
+        final Procedure that = (Procedure) obj;
+        return Objects.equals(procedureCat, that.procedureCat) &&
+               Objects.equals(procedureSchem, that.procedureSchem) &&
+               Objects.equals(procedureName, that.procedureName) &&
+               Objects.equals(specificName, that.specificName);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(
+                procedureCat,
+                procedureSchem,
+                procedureName,
+                specificName
         );
     }
 
-    public List<ProcedureColumn> getProcedureColumns(final Context context, final String columnNamePattern)
-            throws SQLException {
-        Objects.requireNonNull(context, "context is null");
-        Objects.requireNonNull(columnNamePattern, "columnNamePattern is null");
-        return context.getProcedureColumns(
-                getProcedureCatNonNull(),
-                getProcedureSchemNonNull(),
-                getProcedureName(),
-                columnNamePattern
-        );
+    // -----------------------------------------------------------------------------------------------------------------
+    public void setProcedureCat(final String procedureCat) {
+        this.procedureCat = procedureCat;
+        procedureId = null;
     }
 
+    public void setProcedureSchem(final String procedureSchem) {
+        this.procedureSchem = procedureSchem;
+        procedureId = null;
+    }
+
+    ProcedureTypeEnum getProcedureTypeAsEnum() {
+        return ProcedureTypeEnum.valueOfFieldValue(getProcedureType());
+    }
+
+    void setProcedureTypeAsEnum(final ProcedureTypeEnum procedureTypeAsEnum) {
+        Objects.requireNonNull(procedureTypeAsEnum, "procedureTypeAsEnum is null");
+        setProcedureType(procedureTypeAsEnum.fieldValueAsInt());
+    }
+
+    public void setSpecificName(final String specificName) {
+        this.specificName = specificName;
+        procedureId = null;
+    }
+
+    // -----------------------------------------------------------------------------------------------------------------
+    @_NullableBySpecification
+    @_ColumnLabel("PROCEDURE_CAT")
+    private String procedureCat;
+
+    @_NullableBySpecification
+    @_ColumnLabel("PROCEDURE_SCHEM")
+    private String procedureSchem;
+
+    @_ColumnLabel("PROCEDURE_NAME")
+    private String procedureName;
+
+    @_NullableByVendor("HSQL")
+    @_ColumnLabel("REMARKS")
+    private String remarks;
+
+    @_ColumnLabel("PROCEDURE_TYPE")
+    private int procedureType;
+
+    @_ColumnLabel(COLUMN_LABEL_SPECIFIC_NAME)
+    private String specificName;
+
+    // -----------------------------------------------------------------------------------------------------------------
     String getProcedureCatNonNull() {
-        return Optional.ofNullable(getProcedureCat()).orElse(Catalog.COLUMN_VALUE_TABLE_CAT_EMPTY);
+        if (procedureCat == null) {
+            return Catalog.COLUMN_VALUE_TABLE_CAT_EMPTY;
+        }
+        return procedureCat;
     }
 
     String getProcedureSchemNonNull() {
-        return Optional.ofNullable(getProcedureSchem()).orElse(Schema.COLUMN_VALUE_TABLE_SCHEM_EMPTY);
+        if (procedureSchem == null) {
+            return Schema.COLUMN_VALUE_TABLE_SCHEM_EMPTY;
+        }
+        return procedureSchem;
     }
 
-    @NullableBySpecification
-    @ColumnLabel("PROCEDURE_CAT")
-    private String procedureCat;
+    ProcedureId getProcedureId() {
+        if (procedureId == null) {
+            procedureId = ProcedureId.of(
+                    SchemaId.of(
+                            getProcedureCatNonNull(),
+                            getProcedureSchemNonNull()
+                    ),
+                    getSpecificName()
+            );
+        }
+        return procedureId;
+    }
 
-    @NullableBySpecification
-    @ColumnLabel("PROCEDURE_SCHEM")
-    private String procedureSchem;
+    private SchemaId getSchemaId() {
+        return getProcedureId().getSchemaId();
+    }
 
-    @ColumnLabel("PROCEDURE_NAME")
-    private String procedureName;
-
-    @NullableByVendor("HSQL")
-    @ColumnLabel("REMARKS")
-    private String remarks;
-
-    @ColumnLabel("PROCEDURE_TYPE")
-    private int procedureType;
-
-    @ColumnLabel("SPECIFIC_NAME")
-    private String specificName;
+    @EqualsAndHashCode.Exclude
+    @ToString.Exclude
+    private transient ProcedureId procedureId;
 }
