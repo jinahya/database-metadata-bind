@@ -31,7 +31,6 @@ import lombok.experimental.SuperBuilder;
 import java.sql.DatabaseMetaData;
 import java.util.Comparator;
 import java.util.Objects;
-import java.util.Optional;
 
 import static java.util.Comparator.naturalOrder;
 import static java.util.Comparator.nullsFirst;
@@ -41,6 +40,7 @@ import static java.util.Comparator.nullsFirst;
  * {@link DatabaseMetaData#getProcedures(java.lang.String, java.lang.String, java.lang.String)} method.
  *
  * @author Jin Kwon &lt;jinahya_at_gmail.com&gt;
+ * @see DatabaseMetaData#getProcedures(String, String, String)
  * @see Context#getFunctionColumns(String, String, String, String)
  * @see ProcedureColumn
  */
@@ -67,6 +67,75 @@ public class Procedure extends AbstractMetadataType {
 
     // -----------------------------------------------------------------------------------------------------------------
 
+    /**
+     * A colum label of {@value}.
+     * <p>
+     * <blockquote
+     * site="https://docs.oracle.com/en/java/javase/17/docs/api/java.sql/java/sql/DatabaseMetaData.html#getProcedures(java.lang.String,java.lang.String,java.lang.String)">
+     * kind of procedure:
+     * <ul>
+     *   <li>{@link DatabaseMetaData#procedureResultUnknown procedureResultUnknown} - Cannot determine if a return value will be returned</li>
+     *   <li>{@link DatabaseMetaData#procedureNoResult procedureNoResult} - Does not return a return value</li>
+     *   <li>{@link DatabaseMetaData#procedureReturnsResult procedureReturnsResult} - Returns a return value</li>
+     * </ul>
+     * </blockquote>
+     */
+    public static final String COLUMN_LABEL_PROCEDURE_TYPE = "PROCEDURE_TYPE";
+
+    /**
+     * Constants for the value of {@value #COLUMN_LABEL_PROCEDURE_TYPE} column.
+     */
+    public enum ProcedureTypeEnum implements _IntFieldEnum<ProcedureTypeEnum> {
+
+        /**
+         * A value for
+         * {@link DatabaseMetaData#procedureResultUnknown}({@value DatabaseMetaData#procedureResultUnknown}).
+         */
+        PROCEDURE_RESULT_UNKNOWN(DatabaseMetaData.procedureResultUnknown), // 0
+
+        /**
+         * A value for {@link DatabaseMetaData#procedureNoResult}({@value DatabaseMetaData#procedureNoResult}).
+         */
+        PROCEDURE_NO_RESULT(DatabaseMetaData.procedureNoResult), // 1
+
+        /**
+         * A value for
+         * {@link DatabaseMetaData#procedureReturnsResult}({@value DatabaseMetaData#procedureReturnsResult}).
+         */
+        PROCEDURE_RETURNS_RESULT(DatabaseMetaData.procedureReturnsResult); // 2
+
+        /**
+         * Returns the value whose {@link #fieldValueAsInt() fieldValue} matches to specified value.
+         *
+         * @param fieldValue the value of {@link #fieldValueAsInt() fieldValue} to match.
+         * @return a matched value.
+         */
+        public static ProcedureTypeEnum valueOfFieldValue(final int fieldValue) {
+            return _IntFieldEnum.valueOfFieldValue(ProcedureTypeEnum.class, fieldValue);
+        }
+
+        private ProcedureTypeEnum(final int fieldValue) {
+            this.fieldValue = fieldValue;
+        }
+
+        @Override
+        public int fieldValueAsInt() {
+            return fieldValue;
+        }
+
+        private int fieldValue;
+    }
+
+    /**
+     * A colum label of {@value}.
+     * <p>
+     * <blockquote
+     * site="https://docs.oracle.com/en/java/javase/17/docs/api/java.sql/java/sql/DatabaseMetaData.html#getProcedures(java.lang.String,java.lang.String,java.lang.String)">The
+     * name which uniquely identifies this procedure within its schema.</blockquote>
+     */
+    public static final String COLUMN_LABEL_SPECIFIC_NAME = "SPECIFIC_NAME";
+
+    // -----------------------------------------------------------------------------------------------------------------
     @Override
     public boolean equals(final Object obj) {
         if (this == obj) return true;
@@ -88,19 +157,10 @@ public class Procedure extends AbstractMetadataType {
         );
     }
 
-    // ---------------------------------------------------------------------------------------------------- procedureCat
-    String getProcedureCatNonNull() {
-        return Optional.ofNullable(getProcedureCat()).orElse(Catalog.COLUMN_VALUE_TABLE_CAT_EMPTY);
-    }
-
+    // -----------------------------------------------------------------------------------------------------------------
     public void setProcedureCat(final String procedureCat) {
         this.procedureCat = procedureCat;
         procedureId = null;
-    }
-
-    // -------------------------------------------------------------------------------------------------- procedureSchem
-    String getProcedureSchemNonNull() {
-        return Optional.ofNullable(getProcedureSchem()).orElse(Schema.COLUMN_VALUE_TABLE_SCHEM_EMPTY);
     }
 
     public void setProcedureSchem(final String procedureSchem) {
@@ -108,7 +168,15 @@ public class Procedure extends AbstractMetadataType {
         procedureId = null;
     }
 
-    // ---------------------------------------------------------------------------------------------------- specificName
+    ProcedureTypeEnum getProcedureTypeAsEnum() {
+        return ProcedureTypeEnum.valueOfFieldValue(getProcedureType());
+    }
+
+    void setProcedureTypeAsEnum(final ProcedureTypeEnum procedureTypeAsEnum) {
+        Objects.requireNonNull(procedureTypeAsEnum, "procedureTypeAsEnum is null");
+        setProcedureType(procedureTypeAsEnum.fieldValueAsInt());
+    }
+
     public void setSpecificName(final String specificName) {
         this.specificName = specificName;
         procedureId = null;
@@ -133,10 +201,24 @@ public class Procedure extends AbstractMetadataType {
     @ColumnLabel("PROCEDURE_TYPE")
     private int procedureType;
 
-    @ColumnLabel("SPECIFIC_NAME")
+    @ColumnLabel(COLUMN_LABEL_SPECIFIC_NAME)
     private String specificName;
 
     // -----------------------------------------------------------------------------------------------------------------
+    String getProcedureCatNonNull() {
+        if (procedureCat == null) {
+            return Catalog.COLUMN_VALUE_TABLE_CAT_EMPTY;
+        }
+        return procedureCat;
+    }
+
+    String getProcedureSchemNonNull() {
+        if (procedureSchem == null) {
+            return Schema.COLUMN_VALUE_TABLE_SCHEM_EMPTY;
+        }
+        return procedureSchem;
+    }
+
     ProcedureId getProcedureId() {
         if (procedureId == null) {
             procedureId = ProcedureId.of(

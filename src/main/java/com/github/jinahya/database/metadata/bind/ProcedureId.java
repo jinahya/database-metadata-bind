@@ -23,26 +23,23 @@ package com.github.jinahya.database.metadata.bind;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
-import lombok.Getter;
 
 import java.util.Objects;
 
-@Getter
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
 @Builder(access = AccessLevel.PRIVATE)
 final class ProcedureId extends AbstractMetadataTypeId<ProcedureId, Procedure> {
 
-    private static final long serialVersionUID = 227742014479297143L;
+    private static final long serialVersionUID = 673730280554507464L;
 
-//    public static final Comparator<ProcedureId> CASE_INSENSITIVE_ORDER =
-//            Comparator.comparing(ProcedureId::getSchemaId, SchemaId.CASE_INSENSITIVE_ORDER)
-//                    .thenComparing(ProcedureId::getSpecificName, String.CASE_INSENSITIVE_ORDER);
-//
-//    public static final Comparator<ProcedureId> LEXICOGRAPHIC_ORDER =
-//            Comparator.comparing(ProcedureId::getSchemaId, SchemaId.LEXICOGRAPHIC_ORDER)
-//                    .thenComparing(ProcedureId::getSpecificName);
-
-    static ProcedureId of(final SchemaId schemaId, final String specificName) {
+    /**
+     * Creates a new instance with specified arguments.
+     *
+     * @param schemaId     an id of the schema in which the procedure resides.
+     * @param specificName a value of {@value Procedure#COLUMN_LABEL_SPECIFIC_NAME} column.
+     * @return a new instance.
+     */
+    public static ProcedureId of(final SchemaId schemaId, final String specificName) {
         Objects.requireNonNull(schemaId, "schemaId is null");
         Objects.requireNonNull(specificName, "specificName is null");
         return builder()
@@ -65,12 +62,33 @@ final class ProcedureId extends AbstractMetadataTypeId<ProcedureId, Procedure> {
         if (this == obj) return true;
         if (!(obj instanceof ProcedureId)) return false;
         final ProcedureId that = (ProcedureId) obj;
-        return schemaId.equals(that.schemaId) && specificName.equals(that.specificName);
+        return schemaId.equals(that.schemaId) &&
+               specificName.equals(that.specificName);
     }
 
     @Override
     public int hashCode() {
         return Objects.hash(schemaId, specificName);
+    }
+
+    // -----------------------------------------------------------------------------------------------------------------
+
+    /**
+     * Returns the {@code schemaId} of this procedure id.
+     *
+     * @return the {@code schemaId} of this procedure id.
+     */
+    public SchemaId getSchemaId() {
+        return schemaId;
+    }
+
+    /**
+     * Returns the {@code specificName} of this procedure id.
+     *
+     * @return the {@code specificName} of this procedure id.
+     */
+    public String getSpecificName() {
+        return specificName;
     }
 
     // -----------------------------------------------------------------------------------------------------------------

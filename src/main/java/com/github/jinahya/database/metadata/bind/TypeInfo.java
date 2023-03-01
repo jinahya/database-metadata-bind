@@ -63,6 +63,9 @@ public class TypeInfo extends AbstractMetadataType {
 
     public static final String COLUMN_LABEL_NULLABLE = "NULLABLE";
 
+    /**
+     * Constants for the {@value #COLUMN_LABEL_NULLABLE} column value.
+     */
     public enum NullableEnum implements _IntFieldEnum<NullableEnum> {
 
         /**
@@ -107,6 +110,9 @@ public class TypeInfo extends AbstractMetadataType {
 
     public static final String COLUMN_LABEL_SEARCHABLE = "SEARCHABLE";
 
+    /**
+     * Constants for the {@value #COLUMN_LABEL_SEARCHABLE} column value.
+     */
     public enum SearchableEnum implements _IntFieldEnum<SearchableEnum> {
 
         /**

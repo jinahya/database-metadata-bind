@@ -43,10 +43,9 @@ public class ImportedKey extends TableKey<ImportedKey> {
 
     private static final long serialVersionUID = -1900794151555506751L;
 
-    public static final Comparator<ImportedKey> CASE_INSENSITIVE_ORDER =
-            comparingPktableKeySeqCaseInsensitive();
+    public static final Comparator<ImportedKey> CASE_INSENSITIVE_ORDER = comparingPktableCaseInsensitive();
 
-    public static final Comparator<ImportedKey> LEXICOGRAPHIC_ORDER = comparingPktableKeySeqLexicographic();
+    public static final Comparator<ImportedKey> LEXICOGRAPHIC_ORDER = comparingPktableLexicographic();
 
     @Override
     public boolean equals(final Object obj) {

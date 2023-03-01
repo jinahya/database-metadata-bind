@@ -63,15 +63,15 @@ public class Function extends AbstractMetadataType {
                     .thenComparing(Function::getFunctionName, nullsFirst(naturalOrder()))
                     .thenComparing(Function::getSpecificName, nullsFirst(naturalOrder()));
 
-    public static final String COLUMN_NAME_FUNCTION_CAT = "FUNCTION_CAT";
+    public static final String COLUMN_LABEL_FUNCTION_CAT = "FUNCTION_CAT";
 
     public static final String PROPERTY_NAME_FUNCTION_CAT = "functionCat";
 
-    public static final String COLUMN_NAME_FUNCTION_SCHEM = "FUNCTION_SCHEM";
+    public static final String COLUMN_LABEL_FUNCTION_SCHEM = "FUNCTION_SCHEM";
 
     public static final String PROPERTY_NAME_FUNCTION_SCHEM = "functionSchem";
 
-    public static final String COLUMN_NAME_FUNCTION_TYPE = "FUNCTION_TYPE";
+    public static final String COLUMN_LABEL_FUNCTION_TYPE = "FUNCTION_TYPE";
 
     public static final String PROPERTY_NAME_FUNCTION_TYPE = "functionType";
 
@@ -126,11 +126,11 @@ public class Function extends AbstractMetadataType {
 
     // -----------------------------------------------------------------------------------------------------------------
     @_NullableBySpecification
-    @ColumnLabel(COLUMN_NAME_FUNCTION_CAT)
+    @ColumnLabel(COLUMN_LABEL_FUNCTION_CAT)
     private String functionCat;
 
     @_NullableBySpecification
-    @ColumnLabel(COLUMN_NAME_FUNCTION_SCHEM)
+    @ColumnLabel(COLUMN_LABEL_FUNCTION_SCHEM)
     private String functionSchem;
 
     @ColumnLabel("FUNCTION_NAME")

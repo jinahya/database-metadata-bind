@@ -50,20 +50,32 @@ public class UDT extends AbstractMetadataType {
 
     private static final long serialVersionUID = 8665246093405057553L;
 
-    public static final Comparator<UDT> COMPARING_IN_CASE_INSENSITIVE_ORDER =
+    public static final Comparator<UDT> CASE_INSENSITIVE_ORDER =
             Comparator.comparingInt(UDT::getDataType)
                     .thenComparing(UDT::getUDTId, UDTId.CASE_INSENSITIVE_ORDER);
 
-    public static final Comparator<UDT> COMPARING_IN_LEXICOGRAPHIC_ORDER =
+    public static final Comparator<UDT> LEXICOGRAPHIC_ORDER =
             Comparator.comparingInt(UDT::getDataType)
                     .thenComparing(UDT::getUDTId, UDTId.LEXICOGRAPHIC_ORDER);
 
+    /**
+     * A column label of {@value}.
+     */
     public static final String COLUMN_LABEL_TYPE_CAT = "TYPE_CAT";
 
+    /**
+     * A column label of {@value}.
+     */
     public static final String COLUMN_LABEL_TYPE_SCHEM = "TYPE_SCHEM";
 
+    /**
+     * A column label of {@value}.
+     */
     public static final String COLUMN_LABEL_TYPE_NAME = "TYPE_NAME";
 
+    /**
+     * A column label of {@value}.
+     */
     public static final String COLUMN_LABEL_CLASS_NAME = "CLASS_NAME";
 
     public static final String COLUMN_LABEL_DATA_TYPE = "DATA_TYPE";
@@ -86,27 +98,31 @@ public class UDT extends AbstractMetadataType {
         return Objects.hash(
                 typeCat,
                 typeSchem,
-                typeName, dataType
+                typeName,
+                dataType
         );
     }
 
     // --------------------------------------------------------------------------------------------------------- typeCat
-    String getTypeCatNonNull() {
-        return Optional.ofNullable(getTypeCat()).orElse(Catalog.COLUMN_VALUE_TABLE_CAT_EMPTY);
-    }
-
     public void setTypeCat(final String typeCat) {
         this.typeCat = typeCat;
         udtId = null;
     }
 
     // ------------------------------------------------------------------------------------------------------- typeSchem
-    String getTypeSchemNonNull() {
-        return Optional.ofNullable(getTypeSchem()).orElse(Schema.COLUMN_VALUE_TABLE_SCHEM_EMPTY);
-    }
-
     public void setTypeSchem(final String typeSchem) {
         this.typeSchem = typeSchem;
+        udtId = null;
+    }
+
+    public void setTypeName(final String typeName) {
+        this.typeName = typeName;
+        udtId = null;
+    }
+
+    public void setDataType(final int dataType) {
+        this.dataType = dataType;
+        udtId = null;
     }
 
     // -----------------------------------------------------------------------------------------------------------------
@@ -137,6 +153,14 @@ public class UDT extends AbstractMetadataType {
     private Integer baseType;
 
     // -----------------------------------------------------------------------------------------------------------------
+    String getTypeCatNonNull() {
+        return Optional.ofNullable(getTypeCat()).orElse(Catalog.COLUMN_VALUE_TABLE_CAT_EMPTY);
+    }
+
+    String getTypeSchemNonNull() {
+        return Optional.ofNullable(getTypeSchem()).orElse(Schema.COLUMN_VALUE_TABLE_SCHEM_EMPTY);
+    }
+
     UDTId getUDTId() {
         if (udtId == null) {
             udtId = UDTId.of(

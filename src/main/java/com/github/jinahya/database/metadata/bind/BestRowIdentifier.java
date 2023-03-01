@@ -46,8 +46,8 @@ import java.util.Objects;
 @Getter
 @EqualsAndHashCode(callSuper = true)
 @ToString(callSuper = true)
-@NoArgsConstructor(access = AccessLevel.PROTECTED)
-@SuperBuilder(toBuilder = true)
+//@NoArgsConstructor(access = AccessLevel.PROTECTED)
+//@SuperBuilder(toBuilder = true)
 public class BestRowIdentifier extends AbstractMetadataType {
 
     private static final long serialVersionUID = -1512051574198028399L;

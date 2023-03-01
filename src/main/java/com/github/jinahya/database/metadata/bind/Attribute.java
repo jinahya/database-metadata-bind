@@ -23,10 +23,8 @@ package com.github.jinahya.database.metadata.bind;
 import lombok.AccessLevel;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
-import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
-import lombok.experimental.SuperBuilder;
 
 import java.sql.DatabaseMetaData;
 import java.sql.Types;
@@ -45,8 +43,8 @@ import java.util.Optional;
 @Setter
 @Getter
 @ToString(callSuper = true)
-@NoArgsConstructor(access = AccessLevel.PROTECTED)
-@SuperBuilder(toBuilder = true)
+//@NoArgsConstructor(access = AccessLevel.PROTECTED)
+//@SuperBuilder(toBuilder = true)
 public class Attribute extends AbstractMetadataType {
 
     private static final long serialVersionUID = 1913681105410440186L;
@@ -61,6 +59,9 @@ public class Attribute extends AbstractMetadataType {
 
     public static final String COLUMN_LABEL_NULLABLE = "NULLABLE";
 
+    /**
+     * Constants for {@value #COLUMN_LABEL_NULLABLE} column values.
+     */
     public enum NullableEnum implements _IntFieldEnum<NullableEnum> {
 
         /**
@@ -135,34 +136,6 @@ public class Attribute extends AbstractMetadataType {
     }
 
     // -----------------------------------------------------------------------------------------------------------------
-    AttributeId getAttributeId() {
-        if (attributeId == null) {
-            attributeId = AttributeId.of(
-                    UDTId.of(
-                            getTypeCatNonNull(),
-                            getTypeSchemNonNull(),
-                            typeName
-                    ),
-                    attrName
-            );
-        }
-        return attributeId;
-    }
-
-    private UDTId getUDTId() {
-        return getAttributeId().getUdtId();
-    }
-
-    TableId getScopeTableId() {
-        if (dataType != Types.REF) {
-            throw new IllegalStateException("dataType != Types.REF(" + Types.REF + ")");
-        }
-        return TableId.of(
-                Objects.requireNonNull(getScopeCatalog(), "scopeCatalog is null"),
-                Objects.requireNonNull(getScopeSchema(), "scopeSchema is null"),
-                Objects.requireNonNull(getScopeTable(), "scopeTable is null")
-        );
-    }
 
     // --------------------------------------------------------------------------------------------------------- typeCat
     String getTypeCatNonNull() {
@@ -195,13 +168,6 @@ public class Attribute extends AbstractMetadataType {
         this.attrName = attrName;
         attributeId = null;
     }
-
-    // -----------------------------------------------------------------------------------------------------------------
-    @Setter(AccessLevel.NONE)
-    @Getter(AccessLevel.NONE)
-    @EqualsAndHashCode.Exclude
-    @ToString.Exclude
-    private transient AttributeId attributeId;
 
     // -----------------------------------------------------------------------------------------------------------------
     @_NullableBySpecification
@@ -277,4 +243,40 @@ public class Attribute extends AbstractMetadataType {
     @_NullableBySpecification
     @ColumnLabel("SOURCE_DATA_TYPE")
     private Integer sourceDataType;
+
+    // -----------------------------------------------------------------------------------------------------------------
+    AttributeId getAttributeId() {
+        if (attributeId == null) {
+            attributeId = AttributeId.of(
+                    UDTId.of(
+                            getTypeCatNonNull(),
+                            getTypeSchemNonNull(),
+                            getTypeName()
+                    ),
+                    getAttrName()
+            );
+        }
+        return attributeId;
+    }
+
+    private UDTId getUDTId() {
+        return getAttributeId().getUdtId();
+    }
+
+    TableId getScopeTableId() {
+        if (dataType != Types.REF) {
+            throw new IllegalStateException("dataType != Types.REF(" + Types.REF + ")");
+        }
+        return TableId.of(
+                Objects.requireNonNull(getScopeCatalog(), "scopeCatalog is null"),
+                Objects.requireNonNull(getScopeSchema(), "scopeSchema is null"),
+                Objects.requireNonNull(getScopeTable(), "scopeTable is null")
+        );
+    }
+
+    @Setter(AccessLevel.NONE)
+    @Getter(AccessLevel.NONE)
+    @EqualsAndHashCode.Exclude
+    @ToString.Exclude
+    private transient AttributeId attributeId;
 }

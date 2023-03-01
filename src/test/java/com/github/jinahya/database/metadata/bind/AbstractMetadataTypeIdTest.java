@@ -21,10 +21,6 @@ package com.github.jinahya.database.metadata.bind;
  */
 
 import lombok.extern.slf4j.Slf4j;
-import nl.jqno.equalsverifier.EqualsVerifier;
-import org.junit.jupiter.api.Disabled;
-import org.junit.jupiter.api.Nested;
-import org.junit.jupiter.api.Test;
 
 @Slf4j
 abstract class AbstractMetadataTypeIdTest<T extends AbstractMetadataTypeId<T, U>, U extends MetadataType>
@@ -32,25 +28,5 @@ abstract class AbstractMetadataTypeIdTest<T extends AbstractMetadataTypeId<T, U>
 
     AbstractMetadataTypeIdTest(final Class<T> typeIdClass, final Class<U> typeClass) {
         super(typeIdClass, typeClass);
-    }
-
-    @Nested
-    class EqualsTest {
-
-        @Disabled // EqualsAndHashCode.Exclude
-        @Test
-        void verifyEquals() {
-            EqualsVerifier.forClass(typeIdClass)
-                    .verify();
-        }
-    }
-
-    @Nested
-    class HashcodeTest {
-
-        @Test
-        void __() {
-            final var hashCode = typeIdInstance().hashCode();
-        }
     }
 }

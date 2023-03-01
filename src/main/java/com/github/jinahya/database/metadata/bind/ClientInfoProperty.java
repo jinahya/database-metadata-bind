@@ -21,10 +21,8 @@ package com.github.jinahya.database.metadata.bind;
  */
 
 import lombok.AccessLevel;
-import lombok.Getter;
+import lombok.AllArgsConstructor;
 import lombok.NoArgsConstructor;
-import lombok.Setter;
-import lombok.ToString;
 import lombok.experimental.SuperBuilder;
 
 import java.sql.DatabaseMetaData;
@@ -34,12 +32,11 @@ import java.util.Objects;
  * A class for binding results of the {@link DatabaseMetaData#getClientInfoProperties()} method.
  *
  * @author Jin Kwon &lt;jinahya_at_gmail.com&gt;
+ * @see Context#getClientInfoProperties()
  */
-@Setter
-@Getter
-@ToString(callSuper = true)
-@NoArgsConstructor(access = AccessLevel.PROTECTED)
-@SuperBuilder(toBuilder = true)
+//@NoArgsConstructor(access = AccessLevel.PROTECTED)
+//@AllArgsConstructor(access = AccessLevel.PROTECTED)
+//@SuperBuilder(toBuilder = true)
 public class ClientInfoProperty extends AbstractMetadataType {
 
     private static final long serialVersionUID = -2913230435651853254L;
@@ -53,6 +50,16 @@ public class ClientInfoProperty extends AbstractMetadataType {
     public static final String COLUMN_LABEL_DESCRIPTION = "DESCRIPTION";
 
     @Override
+    public String toString() {
+        return super.toString() + '{' +
+               "name=" + name +
+               ",maxLen=" + maxLen +
+               ",defaultValue=" + defaultValue +
+               ",description=" + description +
+               '}';
+    }
+
+    @Override
     public boolean equals(final Object obj) {
         if (this == obj) return true;
         if (!(obj instanceof ClientInfoProperty)) return false;
@@ -63,6 +70,38 @@ public class ClientInfoProperty extends AbstractMetadataType {
     @Override
     public int hashCode() {
         return Objects.hash(name);
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public int getMaxLen() {
+        return maxLen;
+    }
+
+    public void setMaxLen(int maxLen) {
+        this.maxLen = maxLen;
+    }
+
+    public String getDefaultValue() {
+        return defaultValue;
+    }
+
+    public void setDefaultValue(String defaultValue) {
+        this.defaultValue = defaultValue;
+    }
+
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
     }
 
     @ColumnLabel(COLUMN_LABEL_NAME)

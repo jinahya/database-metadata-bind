@@ -20,13 +20,10 @@ package com.github.jinahya.database.metadata.bind;
  * #L%
  */
 
-import lombok.AccessLevel;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
-import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
-import lombok.experimental.SuperBuilder;
 
 import java.sql.DatabaseMetaData;
 import java.util.Comparator;
@@ -38,17 +35,18 @@ import static java.util.Comparator.nullsFirst;
 
 /**
  * A class for binding results of
- * {@link DatabaseMetaData#getProcedureColumns(java.lang.String, java.lang.String, java.lang.String,
- * java.lang.String)}.
+ * {@link DatabaseMetaData#getProcedureColumns(java.lang.String, java.lang.String, java.lang.String, java.lang.String)}
+ * method.
  *
  * @author Jin Kwon &lt;jinahya_at_gmail.com&gt;
+ * @see Context#getProcedureColumns(String, String, String, String)
  */
 @_ChildOf(Procedure.class)
 @Setter
 @Getter
 @ToString(callSuper = true)
-@NoArgsConstructor(access = AccessLevel.PROTECTED)
-@SuperBuilder(toBuilder = true)
+//@NoArgsConstructor(access = AccessLevel.PROTECTED)
+//@SuperBuilder(toBuilder = true)
 public class ProcedureColumn extends AbstractMetadataType {
 
     private static final long serialVersionUID = 3894753719381358829L;
@@ -89,10 +87,6 @@ public class ProcedureColumn extends AbstractMetadataType {
     }
 
     // ---------------------------------------------------------------------------------------------------- procedureCat
-    String getProcedureCatNonNull() {
-        return Optional.ofNullable(getProcedureCat())
-                .orElse(Catalog.COLUMN_VALUE_TABLE_CAT_EMPTY);
-    }
 
     public void setProcedureCat(final String procedureCat) {
         this.procedureCat = procedureCat;
@@ -100,10 +94,6 @@ public class ProcedureColumn extends AbstractMetadataType {
     }
 
     // -------------------------------------------------------------------------------------------------- procedureSchem
-    String getProcedureSchemNonNull() {
-        return Optional.ofNullable(getProcedureSchem())
-                .orElse(Schema.COLUMN_VALUE_TABLE_SCHEM_EMPTY);
-    }
 
     public void setProcedureSchem(final String procedureSchem) {
         this.procedureSchem = procedureSchem;
@@ -200,6 +190,15 @@ public class ProcedureColumn extends AbstractMetadataType {
     private String specificName;
 
     // -----------------------------------------------------------------------------------------------------------------
+    String getProcedureCatNonNull() {
+        return Optional.ofNullable(getProcedureCat())
+                .orElse(Catalog.COLUMN_VALUE_TABLE_CAT_EMPTY);
+    }
+
+    String getProcedureSchemNonNull() {
+        return Optional.ofNullable(getProcedureSchem())
+                .orElse(Schema.COLUMN_VALUE_TABLE_SCHEM_EMPTY);
+    }
 
     ProcedureColumnId getProcedureColumnId() {
         if (procedureColumnId == null) {

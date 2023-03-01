@@ -1219,8 +1219,8 @@ final class ContextTests {
             );
             if (!databaseProductNames.contains(databaseProductName)) {
                 assertThat(udts).doesNotContainNull().satisfiesAnyOf(
-                        l -> assertThat(l).isSortedAccordingTo(UDT.COMPARING_IN_CASE_INSENSITIVE_ORDER),
-                        l -> assertThat(l).isSortedAccordingTo(UDT.COMPARING_IN_LEXICOGRAPHIC_ORDER)
+                        l -> assertThat(l).isSortedAccordingTo(UDT.CASE_INSENSITIVE_ORDER),
+                        l -> assertThat(l).isSortedAccordingTo(UDT.LEXICOGRAPHIC_ORDER)
                 );
             }
         }
@@ -1250,7 +1250,7 @@ final class ContextTests {
         {
             assertThat(udt.getTypeName()).isNotNull();
 //            assertThat(udt.getClassName()).isNotNull();
-//            assertThat(udt.getDataType()).isIn(Types.JAVA_OBJECT, Types.STRUCT, Types.DISTINCT);
+            assertThat(udt.getDataType()).isIn(Types.JAVA_OBJECT, Types.STRUCT, Types.DISTINCT);
             assertDoesNotThrow(() -> JDBCType.valueOf(udt.getDataType()));
         }
         final var udtId = common(common(udt).getUDTId());

@@ -31,7 +31,7 @@ import java.util.Objects;
 @Getter
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
 @Builder(access = AccessLevel.PRIVATE)
-final class SchemaId implements MetadataTypeId<SchemaId, Schema> {
+final class SchemaId extends AbstractMetadataTypeId<SchemaId, Schema> {
 
     private static final long serialVersionUID = -9112917204279422378L;
 

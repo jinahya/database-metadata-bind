@@ -38,6 +38,7 @@ abstract class _MetadataTypeIdTest<T extends MetadataTypeId<T, U>, U extends Met
      *
      * @return a newly initialized instance of {@link #typeIdClass}
      */
+    @SuppressWarnings({"unchecked"})
     T typeIdInstance() {
         try {
             final Object builder;

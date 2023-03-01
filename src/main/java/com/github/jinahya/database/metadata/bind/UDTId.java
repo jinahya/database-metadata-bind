@@ -21,17 +21,15 @@ package com.github.jinahya.database.metadata.bind;
  */
 
 import lombok.AccessLevel;
-import lombok.Data;
+import lombok.Builder;
 import lombok.RequiredArgsConstructor;
-import lombok.experimental.SuperBuilder;
 
 import java.util.Comparator;
 import java.util.Objects;
 
-@Data
 @RequiredArgsConstructor(access = AccessLevel.PRIVATE)
-@SuperBuilder(toBuilder = true)
-final class UDTId implements MetadataTypeId<UDTId, UDT> {
+@Builder(access = AccessLevel.PRIVATE)
+final class UDTId extends AbstractMetadataTypeId<UDTId, UDT> {
 
     private static final long serialVersionUID = 5548844214174261338L;
 
@@ -54,6 +52,36 @@ final class UDTId implements MetadataTypeId<UDTId, UDT> {
 
     static UDTId of(final String typeCat, final String typeSchem, final String typeName) {
         return of(SchemaId.of(typeCat, typeSchem), typeName);
+    }
+
+    @Override
+    public String toString() {
+        return super.toString() + '{' +
+               "schemaId=" + schemaId +
+               ",typeName='" + typeName + '\'' +
+               '}';
+    }
+
+    @Override
+    public boolean equals(final Object obj) {
+        if (this == obj) return true;
+        if (!(obj instanceof UDTId)) return false;
+        final UDTId that = (UDTId) obj;
+        return schemaId.equals(that.schemaId) &&
+               typeName.equals(that.typeName);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(schemaId, typeName);
+    }
+
+    public SchemaId getSchemaId() {
+        return schemaId;
+    }
+
+    public String getTypeName() {
+        return typeName;
     }
 
     private final SchemaId schemaId;

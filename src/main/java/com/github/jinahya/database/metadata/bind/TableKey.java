@@ -49,22 +49,22 @@ abstract class TableKey<T extends TableKey<T>> extends AbstractMetadataType {
 
     private static final long serialVersionUID = 6713872409315471232L;
 
-    static <T extends TableKey<T>> Comparator<T> comparingPktableKeySeqCaseInsensitive() {
+    static <T extends TableKey<T>> Comparator<T> comparingPktableCaseInsensitive() {
         return Comparator.<T, TableId>comparing(TableKey::getPktableId, TableId.CASE_INSENSITIVE_ORDER)
                 .thenComparingInt(TableKey::getKeySeq);
     }
 
-    static <T extends TableKey<T>> Comparator<T> comparingPktableKeySeqLexicographic() {
+    static <T extends TableKey<T>> Comparator<T> comparingPktableLexicographic() {
         return Comparator.<T, TableId>comparing(TableKey::getPktableId, TableId.LEXICOGRAPHIC_ORDER)
                 .thenComparingInt(TableKey::getKeySeq);
     }
 
-    static <T extends TableKey<T>> Comparator<T> comparingFktableKeySeqCaseInsensitive() {
+    static <T extends TableKey<T>> Comparator<T> comparingFktableCaseInsensitive() {
         return Comparator.<T, TableId>comparing(TableKey::getFktableId, TableId.CASE_INSENSITIVE_ORDER)
                 .thenComparingInt(TableKey::getKeySeq);
     }
 
-    static <T extends TableKey<T>> Comparator<T> comparingFktableKeySeqLexicographic() {
+    static <T extends TableKey<T>> Comparator<T> comparingFktableLexicographic() {
         return Comparator.<T, TableId>comparing(TableKey::getFktableId, TableId.LEXICOGRAPHIC_ORDER)
                 .thenComparingInt(TableKey::getKeySeq);
     }
@@ -79,6 +79,7 @@ abstract class TableKey<T extends TableKey<T>> extends AbstractMetadataType {
     }
 
     boolean equals_(final TableKey<?> that) {
+        assert that != null;
         return Objects.equals(pktableCat, that.pktableCat) &&
                Objects.equals(pktableSchem, that.pktableSchem) &&
                Objects.equals(pktableName, that.pktableName) &&

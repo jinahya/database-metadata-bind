@@ -63,21 +63,20 @@ public class TablePrivilege extends AbstractMetadataType {
                     .thenComparing(TablePrivilege::getTableName, nullsFirst(naturalOrder()))
                     .thenComparing(TablePrivilege::getPrivilege, nullsFirst(naturalOrder()));
 
+    /**
+     * The column label of {@value}.
+     */
     public static final String COLUMN_LABEL_TABLE_CAT = "TABLE_CAT";
 
+    /**
+     * The column label of {@value}.
+     */
     public static final String COLUMN_LABEL_TABLE_SCHEM = "TABLE_SCHEM";
 
+    /**
+     * The column label of {@value}.
+     */
     public static final String COLUMN_LABEL_TABLE_NAME = "TABLE_NAME";
-
-    // -------------------------------------------------------------------------------------------------------- tableCat
-    String getTableCatNonNull() {
-        return Optional.ofNullable(getTableCat()).orElse(Catalog.COLUMN_VALUE_TABLE_CAT_EMPTY);
-    }
-
-    // ------------------------------------------------------------------------------------------------------ tableSchem
-    String getTableSchemNonNull() {
-        return Optional.ofNullable(getTableSchem()).orElse(Schema.COLUMN_VALUE_TABLE_SCHEM_EMPTY);
-    }
 
     // -----------------------------------------------------------------------------------------------------------------
     @_NullableBySpecification
@@ -104,4 +103,13 @@ public class TablePrivilege extends AbstractMetadataType {
     @_NullableBySpecification
     @ColumnLabel("IS_GRANTABLE")
     private String isGrantable;
+
+    // -------------------------------------------------------------------------------------------------------- tableCat
+    String getTableCatNonNull() {
+        return Optional.ofNullable(getTableCat()).orElse(Catalog.COLUMN_VALUE_TABLE_CAT_EMPTY);
+    }
+
+    String getTableSchemNonNull() {
+        return Optional.ofNullable(getTableSchem()).orElse(Schema.COLUMN_VALUE_TABLE_SCHEM_EMPTY);
+    }
 }

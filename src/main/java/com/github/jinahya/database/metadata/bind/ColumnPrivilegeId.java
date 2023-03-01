@@ -43,7 +43,7 @@ final class ColumnPrivilegeId extends AbstractMetadataTypeId<ColumnPrivilegeId, 
             Comparator.comparing(ColumnPrivilegeId::getColumnId, ColumnId.LEXICOGRAPHIC_ORDER)
                     .thenComparing(ColumnPrivilegeId::getPrivilege);
 
-    static ColumnPrivilegeId of(final ColumnId columnId, final String privilege) {
+    public static ColumnPrivilegeId of(final ColumnId columnId, final String privilege) {
         Objects.requireNonNull(columnId, "columnId is null");
         Objects.requireNonNull(privilege, "privilege is null");
         return new ColumnPrivilegeId(columnId, privilege);

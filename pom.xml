@@ -121,7 +121,7 @@
     <dependency>
       <groupId>nl.jqno.equalsverifier</groupId>
       <artifactId>equalsverifier-nodep</artifactId>
-      <version>3.13.2</version>
+      <version>3.14</version>
       <scope>test</scope>
     </dependency>
     <dependency>
@@ -478,7 +478,7 @@
               <!-- https://stackoverflow.com/a/45382576/330457 -->
               <!-- IntelliJ 에서 중복된 코드라고 나오는 문제가 있어서... -->
               <outputDirectory>${project.build.directory}/generated-sources-noduplicate/delombok</outputDirectory>
-              <skip>true</skip>
+<!--              <skip>true</skip>-->
               <sourceDirectory>${project.basedir}/src/main/java</sourceDirectory>
             </configuration>
             <phase>generate-sources</phase>

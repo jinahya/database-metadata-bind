@@ -29,13 +29,13 @@
     <appender-ref ref="console"/>
   </root>
 
-  <logger name="org.mariadb.jdbc.client.socket.impl.PacketReader" level="INFO"/>
-  <logger name="org.mariadb.jdbc.client.socket.impl.PacketWriter" level="INFO"/>
-  <logger name="org.mariadb.jdbc.client.impl.StandardClient" level="INFO"/>
-  <logger name="org.testcontainers" level="INFO"/>
   <logger name="com.github.dockerjava" level="WARN"/>
   <logger name="com.github.dockerjava.zerodep.shaded" level="OFF"/>
   <logger name="com.github.dockerjava.zerodep.shaded.org.apache.hc.client5.http.wire" level="OFF"/>
   <logger name="com.github.dockerjava.zerodep.shaded.org.apache.hc.client5.http.impl" level="OFF"/>
+  <logger name="org.mariadb.jdbc.client.socket.impl.PacketReader" level="INFO"/>
+  <logger name="org.mariadb.jdbc.client.socket.impl.PacketWriter" level="INFO"/>
+  <logger name="org.mariadb.jdbc.client.impl.StandardClient" level="INFO"/>
+  <logger name="org.testcontainers" level="INFO"/>
 
 </configuration>

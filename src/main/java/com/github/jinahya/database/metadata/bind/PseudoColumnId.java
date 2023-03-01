@@ -31,7 +31,7 @@ import java.util.Objects;
 @Getter
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
 @Builder(access = AccessLevel.PRIVATE)
-final class PseudoColumnId implements MetadataTypeId<PseudoColumnId, PseudoColumn> {
+final class PseudoColumnId extends AbstractMetadataTypeId<PseudoColumnId, PseudoColumn> {
 
     private static final long serialVersionUID = 7459854669925402253L;
 

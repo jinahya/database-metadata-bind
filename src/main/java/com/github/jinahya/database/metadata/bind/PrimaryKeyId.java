@@ -21,17 +21,17 @@ package com.github.jinahya.database.metadata.bind;
  */
 
 import lombok.AccessLevel;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
-import lombok.experimental.SuperBuilder;
 
 import java.util.Comparator;
 import java.util.Objects;
 
 @Getter
 @RequiredArgsConstructor(access = AccessLevel.PRIVATE)
-@SuperBuilder(toBuilder = true)
-final class PrimaryKeyId implements MetadataTypeId<PrimaryKeyId, PrimaryKey> {
+@Builder(access = AccessLevel.PRIVATE)
+final class PrimaryKeyId extends AbstractMetadataTypeId<PrimaryKeyId, PrimaryKey> {
 
     private static final long serialVersionUID = -111977405695306679L;
 

@@ -31,7 +31,7 @@ import java.util.Objects;
 @Getter
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
 @Builder(access = AccessLevel.PRIVATE)
-final class TableId implements MetadataTypeId<TableId, Table> {
+final class TableId extends AbstractMetadataTypeId<TableId, Table> {
 
     private static final long serialVersionUID = -7614201161734063836L;
 

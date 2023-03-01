@@ -29,7 +29,6 @@ import lombok.ToString;
 import lombok.experimental.SuperBuilder;
 
 import java.sql.DatabaseMetaData;
-import java.util.Optional;
 
 /**
  * A class for binding results of
@@ -49,30 +48,43 @@ public class SuperType extends AbstractMetadataType {
 
     private static final long serialVersionUID = 4603878785941565029L;
 
-    UDTId getTypeId() {
-        return UDTId.of(getTypeCatNonNull(), getTypeSchemNonNull(), getTypeName());
+    // --------------------------------------------------------------------------------------------------------- typeCat
+    public void setTypeCat(final String typeCat) {
+        this.typeCat = typeCat;
+        typeId = null;
     }
 
-    UDTId getSupertypeId() {
-        return UDTId.of(getSupertypeCatNonNull(), getSupertypeSchemNonNull(), getSupertypeName());
+    // ------------------------------------------------------------------------------------------------------- typeSchem
+    public void setTypeSchem(final String typeSchem) {
+        this.typeSchem = typeSchem;
+        typeId = null;
     }
 
-    String getTypeCatNonNull() {
-        return Optional.ofNullable(getTypeCat()).orElse(Catalog.COLUMN_VALUE_TABLE_CAT_EMPTY);
+    // -------------------------------------------------------------------------------------------------------- typeName
+    public void setTypeName(final String typeName) {
+        this.typeName = typeName;
+        typeId = null;
     }
 
-    String getTypeSchemNonNull() {
-        return Optional.ofNullable(getTypeSchem()).orElse(Schema.COLUMN_VALUE_TABLE_SCHEM_EMPTY);
+    // ---------------------------------------------------------------------------------------------------- supertypeCat
+    public void setSupertypeCat(final String supertypeCat) {
+        this.supertypeCat = supertypeCat;
+        supertypeId = null;
     }
 
-    String getSupertypeCatNonNull() {
-        return Optional.ofNullable(getSupertypeCat()).orElse(Catalog.COLUMN_VALUE_TABLE_CAT_EMPTY);
+    // -------------------------------------------------------------------------------------------------- supertypeSchem
+    public void setSupertypeSchem(final String supertypeSchem) {
+        this.supertypeSchem = supertypeSchem;
+        supertypeId = null;
     }
 
-    String getSupertypeSchemNonNull() {
-        return Optional.ofNullable(getSupertypeSchem()).orElse(Schema.COLUMN_VALUE_TABLE_SCHEM_EMPTY);
+    // --------------------------------------------------------------------------------------------------- supertypeName
+    public void setSupertypeName(final String supertypeName) {
+        this.supertypeName = supertypeName;
+        supertypeId = null;
     }
 
+    // -----------------------------------------------------------------------------------------------------------------
     @_NullableBySpecification
     @ColumnLabel("TYPE_CAT")
     private String typeCat;
@@ -94,4 +106,39 @@ public class SuperType extends AbstractMetadataType {
 
     @ColumnLabel("SUPERTYPE_NAME")
     private String supertypeName;
+
+    // -----------------------------------------------------------------------------------------------------------------
+    UDTId getTypeId() {
+        if (typeId == null) {
+            typeId = UDTId.of(
+                    typeCat == null ? Catalog.COLUMN_VALUE_TABLE_CAT_EMPTY : typeCat,
+                    typeSchem == null ? Schema.COLUMN_VALUE_TABLE_SCHEM_EMPTY : typeSchem,
+                    typeName
+            );
+        }
+        return typeId;
+    }
+
+    UDTId getSupertypeId() {
+        if (supertypeId == null) {
+            supertypeId = UDTId.of(
+                    supertypeCat == null ? Catalog.COLUMN_VALUE_TABLE_CAT_EMPTY : supertypeCat,
+                    supertypeSchem == null ? Schema.COLUMN_VALUE_TABLE_SCHEM_EMPTY : supertypeSchem,
+                    supertypeName
+            );
+        }
+        return supertypeId;
+    }
+
+    @Setter(AccessLevel.NONE)
+    @Getter(AccessLevel.NONE)
+    @EqualsAndHashCode.Exclude
+    @ToString.Exclude
+    private transient UDTId typeId;
+
+    @Setter(AccessLevel.NONE)
+    @Getter(AccessLevel.NONE)
+    @EqualsAndHashCode.Exclude
+    @ToString.Exclude
+    private transient UDTId supertypeId;
 }

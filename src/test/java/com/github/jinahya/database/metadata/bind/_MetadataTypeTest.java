@@ -37,10 +37,6 @@ abstract class _MetadataTypeTest<T extends MetadataType> {
         this.typeClass = requireNonNull(typeClass, "typeClass is null");
     }
 
-    T typeSpy() {
-        return spy(typeInstance());
-    }
-
     T typeInstance() {
         try {
             final var constructor = typeClass.getDeclaredConstructor();
@@ -51,6 +47,10 @@ abstract class _MetadataTypeTest<T extends MetadataType> {
         } catch (final ReflectiveOperationException roe) {
             throw new RuntimeException("failed to find/invoke default constructor", roe);
         }
+    }
+
+    T typeSpy() {
+        return spy(typeInstance());
     }
 
     Map<Field, _NullableByVendor> getFieldsWithMayBeNullByVendor() {

@@ -27,6 +27,7 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 
+import java.beans.Introspector;
 import java.lang.reflect.Modifier;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
@@ -117,6 +118,42 @@ abstract class MetadataTypeIdTest<T extends MetadataTypeId<T, U>, U extends Meta
         @Test
         void __() {
             final var hashCode = typeIdInstance().hashCode();
+        }
+    }
+
+    @Test
+    void toString__() throws Exception {
+        final var instance = typeIdInstance();
+        final var string = instance.toString();
+    }
+
+    @Disabled("builder...")
+    @Test
+    void equals__() throws Exception {
+        final var instance = typeIdInstance();
+        assertThat(instance).isEqualTo(typeIdInstance());
+    }
+
+    @Disabled("builder...")
+    @Test
+    void hashCode__() throws Exception {
+        final var instance = typeIdInstance();
+        assertThat(instance.hashCode()).hasSameHashCodeAs(typeIdInstance());
+    }
+
+    @Test
+    void invokeAccessors() throws Exception {
+        final var instance = typeIdInstance();
+        final var beanInfo = Introspector.getBeanInfo(typeIdClass);
+        for (var descriptor : beanInfo.getPropertyDescriptors()) {
+            final var reader = descriptor.getReadMethod();
+            final var writer = descriptor.getWriteMethod();
+            if (reader != null) {
+                final var value = reader.invoke(instance);
+                if (writer != null) {
+                    writer.invoke(instance, value);
+                }
+            }
         }
     }
 }
