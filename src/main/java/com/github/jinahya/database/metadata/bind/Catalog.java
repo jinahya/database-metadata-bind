@@ -41,8 +41,6 @@ import static java.util.Comparator.nullsFirst;
  * @see Context#getCatalogs(Consumer)
  */
 @_ParentOf(Schema.class)
-//@NoArgsConstructor(access = AccessLevel.PROTECTED)
-//@SuperBuilder(toBuilder = true)
 public class Catalog extends AbstractMetadataType {
 
     private static final long serialVersionUID = 6239185259128825953L;

@@ -58,7 +58,7 @@ final class UDTId extends AbstractMetadataTypeId<UDTId, UDT> {
     public String toString() {
         return super.toString() + '{' +
                "schemaId=" + schemaId +
-               ",typeName='" + typeName + '\'' +
+               ",typeName=" + typeName + 
                '}';
     }
 

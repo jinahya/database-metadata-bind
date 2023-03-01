@@ -21,13 +21,10 @@ package com.github.jinahya.database.metadata.bind;
  */
 
 import lombok.AccessLevel;
-import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
-import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
-import lombok.experimental.SuperBuilder;
 
 import java.util.Comparator;
 import java.util.Objects;
@@ -52,10 +49,8 @@ import static java.util.Comparator.nullsFirst;
 @_ParentOf(ExportedKey.class)
 @_ParentOf(Column.class)
 @_ParentOf(BestRowIdentifier.class)
-@ToString(callSuper = true)
-@Data
-@NoArgsConstructor(access = AccessLevel.PROTECTED)
-@SuperBuilder(toBuilder = true)
+@Setter
+@Getter
 public class Table extends AbstractMetadataType {
 
     private static final long serialVersionUID = 6590036695540141125L;
@@ -69,70 +64,69 @@ public class Table extends AbstractMetadataType {
                     .thenComparing(Table::getTableId, TableId.LEXICOGRAPHIC_ORDER);
 
     /**
-     * The label of the column to which {@link #PROPERTY_NAME_TABLE_CAT} attribute is bound. The value is {@value}.
+     * The column label of {@value}.
      */
     public static final String COLUMN_LABEL_TABLE_CAT = "TABLE_CAT";
 
     /**
-     * The name of the attribute from which {@link #COLUMN_LABEL_TABLE_CAT} column is bound. The value is {@value}.
-     */
-    public static final String PROPERTY_NAME_TABLE_CAT = "tableCat";
-
-    /**
-     * The label of the column to which {@link #PROPERTY_NAME_TABLE_SCHEM} attribute is bound. The value is {@value}.
+     * The column label of {@value}.
      */
     public static final String COLUMN_LABEL_TABLE_SCHEM = "TABLE_SCHEM";
 
     /**
-     * The name of the attribute from which {@link #COLUMN_LABEL_TABLE_SCHEM} column is bound. The value is {@value}.
-     */
-    public static final String PROPERTY_NAME_TABLE_SCHEM = "tableSchem";
-
-    /**
-     * The label of the column to which {@link #PROPERTY_NAME_TABLE_NAME} attribute is bound. The value is {@value}.
+     * The column label of {@value}.
      */
     public static final String COLUMN_LABEL_TABLE_NAME = "TABLE_NAME";
 
     /**
-     * The name of the attribute from which {@link #COLUMN_LABEL_TABLE_NAME} column is bound. The value is {@value}.
-     */
-    public static final String PROPERTY_NAME_TABLE_NAME = "tableName";
-
-    /**
-     * The label of the column to which {@link #PROPERTY_NAME_TABLE_TYPE} attribute is bound. The value is {@value}.
+     * The column label of {@value}.
      */
     public static final String COLUMN_LABEL_TABLE_TYPE = "TABLE_TYPE";
 
     /**
-     * The name of the attribute from which {@link #COLUMN_LABEL_TABLE_TYPE} column is bound. The value is {@value}.
+     * Creates a new instance.
      */
-    public static final String PROPERTY_NAME_TABLE_TYPE = "tableName";
+    public Table() {
+        super();
+    }
 
-    // -----------------------------------------------------------------------------------------------------------------
+    @Override
+    public String toString() {
+        return super.toString() + '{' +
+               "tableCat=" + tableCat +
+               ",tableSchem=" + tableSchem +
+               ",tableName=" + tableName +
+               ",tableType=" + tableType +
+               ",remarks=" + remarks +
+               ",typeCat=" + typeCat +
+               ",typeSchem=" + typeSchem +
+               ",typeName=" + typeName +
+               ",selfReferencingColName=" + selfReferencingColName +
+               ",refGeneration=" + refGeneration +
+               '}';
+    }
 
     @Override
     public boolean equals(final Object obj) {
         if (this == obj) return true;
         if (!(obj instanceof Table)) return false;
-        final Table table = (Table) obj;
-        return Objects.equals(tableCat, table.tableCat) &&
-               Objects.equals(tableSchem, table.tableSchem) &&
-               Objects.equals(tableName, table.tableName);
+        final Table that = (Table) obj;
+        return Objects.equals(tableCat, that.tableCat) &&
+               Objects.equals(tableSchem, that.tableSchem) &&
+               Objects.equals(tableName, that.tableName);
     }
 
     @Override
     public int hashCode() {
         return Objects.hash(
-                super.hashCode(),
                 tableCat,
                 tableSchem,
                 tableName
         );
     }
 
-    // -------------------------------------------------------------------------------------------------------- tableCat
-    String getTableCatNonNull() {
-        return Optional.ofNullable(getTableCat()).orElse(Catalog.COLUMN_VALUE_TABLE_CAT_EMPTY);
+    public String getTableCat() {
+        return tableCat;
     }
 
     public void setTableCat(final String tableCat) {
@@ -140,9 +134,8 @@ public class Table extends AbstractMetadataType {
         tableId = null;
     }
 
-    // ------------------------------------------------------------------------------------------------------ tableSchem
-    String getTableSchemNonNull() {
-        return Optional.ofNullable(getTableSchem()).orElse(Schema.COLUMN_VALUE_TABLE_SCHEM_EMPTY);
+    public String getTableSchem() {
+        return tableSchem;
     }
 
     public void setTableSchem(final String tableSchem) {
@@ -150,13 +143,15 @@ public class Table extends AbstractMetadataType {
         tableId = null;
     }
 
-    // ------------------------------------------------------------------------------------------------------- tableName
+    public String getTableName() {
+        return tableName;
+    }
+
     public void setTableName(final String tableName) {
         this.tableName = tableName;
         tableId = null;
     }
 
-    // -----------------------------------------------------------------------------------------------------------------
     @_NullableBySpecification
     @ColumnLabel(COLUMN_LABEL_TABLE_CAT)
     private String tableCat;
@@ -196,7 +191,14 @@ public class Table extends AbstractMetadataType {
     @ColumnLabel("REF_GENERATION")
     private String refGeneration;
 
-    // -----------------------------------------------------------------------------------------------------------------
+    String getTableCatNonNull() {
+        return Optional.ofNullable(getTableCat()).orElse(Catalog.COLUMN_VALUE_TABLE_CAT_EMPTY);
+    }
+
+    String getTableSchemNonNull() {
+        return Optional.ofNullable(getTableSchem()).orElse(Schema.COLUMN_VALUE_TABLE_SCHEM_EMPTY);
+    }
+
     TableId getTableId() {
         if (tableId == null) {
             tableId = TableId.of(

@@ -23,12 +23,12 @@ package com.github.jinahya.database.metadata.bind;
 import lombok.AccessLevel;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
-import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
-import lombok.experimental.SuperBuilder;
 
 import java.sql.DatabaseMetaData;
+import java.util.Objects;
+import java.util.Optional;
 
 /**
  * A class for binding results of
@@ -40,51 +40,91 @@ import java.sql.DatabaseMetaData;
 @_ChildOf(Schema.class)
 @Setter
 @Getter
-@EqualsAndHashCode(callSuper = true)
-@ToString(callSuper = true)
-@NoArgsConstructor(access = AccessLevel.PROTECTED)
-@SuperBuilder(toBuilder = true)
 public class SuperType extends AbstractMetadataType {
 
     private static final long serialVersionUID = 4603878785941565029L;
 
-    // --------------------------------------------------------------------------------------------------------- typeCat
+    @Override
+    public String toString() {
+        return "SuperType{" +
+               "typeCat=" + typeCat +
+               ",typeSchem=" + typeSchem +
+               ",typeName=" + typeName +
+               ",supertypeCat=" + supertypeCat +
+               ",supertypeSchem=" + supertypeSchem +
+               ",supertypeName=" + supertypeName +
+               '}';
+    }
+
+    @Override
+    public boolean equals(final Object obj) {
+        if (this == obj) return true;
+        if (!(obj instanceof SuperType)) return false;
+        final SuperType that = (SuperType) obj;
+        return Objects.equals(typeCat, that.typeCat) &&
+               Objects.equals(typeSchem, that.typeSchem) &&
+               Objects.equals(typeName, that.typeName);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(typeCat, typeSchem, typeName);
+    }
+
+    public String getTypeCat() {
+        return typeCat;
+    }
+
     public void setTypeCat(final String typeCat) {
         this.typeCat = typeCat;
         typeId = null;
     }
 
-    // ------------------------------------------------------------------------------------------------------- typeSchem
+    public String getTypeSchem() {
+        return typeSchem;
+    }
+
     public void setTypeSchem(final String typeSchem) {
         this.typeSchem = typeSchem;
         typeId = null;
     }
 
-    // -------------------------------------------------------------------------------------------------------- typeName
+    public String getTypeName() {
+        return typeName;
+    }
+
     public void setTypeName(final String typeName) {
         this.typeName = typeName;
         typeId = null;
     }
 
-    // ---------------------------------------------------------------------------------------------------- supertypeCat
+    public String getSupertypeCat() {
+        return supertypeCat;
+    }
+
     public void setSupertypeCat(final String supertypeCat) {
         this.supertypeCat = supertypeCat;
         supertypeId = null;
     }
 
-    // -------------------------------------------------------------------------------------------------- supertypeSchem
+    public String getSupertypeSchem() {
+        return supertypeSchem;
+    }
+
     public void setSupertypeSchem(final String supertypeSchem) {
         this.supertypeSchem = supertypeSchem;
         supertypeId = null;
     }
 
-    // --------------------------------------------------------------------------------------------------- supertypeName
+    public String getSupertypeName() {
+        return supertypeName;
+    }
+
     public void setSupertypeName(final String supertypeName) {
         this.supertypeName = supertypeName;
         supertypeId = null;
     }
 
-    // -----------------------------------------------------------------------------------------------------------------
     @_NullableBySpecification
     @ColumnLabel("TYPE_CAT")
     private String typeCat;
@@ -107,13 +147,28 @@ public class SuperType extends AbstractMetadataType {
     @ColumnLabel("SUPERTYPE_NAME")
     private String supertypeName;
 
-    // -----------------------------------------------------------------------------------------------------------------
+    String getTypeCatNonNull() {
+        return Optional.ofNullable(getTypeCat()).orElse(Catalog.COLUMN_VALUE_TABLE_CAT_EMPTY);
+    }
+
+    String getTypeSchemNonNull() {
+        return Optional.ofNullable(getTypeSchem()).orElse(Schema.COLUMN_VALUE_TABLE_SCHEM_EMPTY);
+    }
+
+    String getSupertypeCatNonNull() {
+        return Optional.ofNullable(getSupertypeCat()).orElse(Catalog.COLUMN_VALUE_TABLE_CAT_EMPTY);
+    }
+
+    String getSupertypeSchemNonNull() {
+        return Optional.ofNullable(getSupertypeSchem()).orElse(Schema.COLUMN_VALUE_TABLE_SCHEM_EMPTY);
+    }
+
     UDTId getTypeId() {
         if (typeId == null) {
             typeId = UDTId.of(
-                    typeCat == null ? Catalog.COLUMN_VALUE_TABLE_CAT_EMPTY : typeCat,
-                    typeSchem == null ? Schema.COLUMN_VALUE_TABLE_SCHEM_EMPTY : typeSchem,
-                    typeName
+                    getTypeCatNonNull(),
+                    getTypeSchemNonNull(),
+                    getTypeName()
             );
         }
         return typeId;
@@ -122,9 +177,9 @@ public class SuperType extends AbstractMetadataType {
     UDTId getSupertypeId() {
         if (supertypeId == null) {
             supertypeId = UDTId.of(
-                    supertypeCat == null ? Catalog.COLUMN_VALUE_TABLE_CAT_EMPTY : supertypeCat,
-                    supertypeSchem == null ? Schema.COLUMN_VALUE_TABLE_SCHEM_EMPTY : supertypeSchem,
-                    supertypeName
+                    getSupertypeCatNonNull(),
+                    getSupertypeSchemNonNull(),
+                    getSupertypeName()
             );
         }
         return supertypeId;
