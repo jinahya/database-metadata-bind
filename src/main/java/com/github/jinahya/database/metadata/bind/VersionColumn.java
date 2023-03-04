@@ -96,8 +96,6 @@ public class VersionColumn extends AbstractMetadataType {
         private final int fieldValue;
     }
 
-    // -----------------------------------------------------------------------------------------------------------------
-
     @Override
     public boolean equals(final Object obj) {
         if (this == obj) return true;
@@ -111,13 +109,11 @@ public class VersionColumn extends AbstractMetadataType {
         return Objects.hash(columnName);
     }
 
-    // ------------------------------------------------------------------------------------------------------ columnName
     public void setColumnName(final String columnName) {
         this.columnName = columnName;
         columnId = null;
     }
 
-    // -----------------------------------------------------------------------------------------------------------------
     @_NotUsedBySpecification
     @_ColumnLabel("SCOPE")
     private Integer scope;
@@ -145,7 +141,6 @@ public class VersionColumn extends AbstractMetadataType {
     @_ColumnLabel(COLUMN_LABEL_PSEUDO_COLUMN)
     private int pseudoColumn;
 
-    // -----------------------------------------------------------------------------------------------------------------
     ColumnId getColumnId(final TableId tableId) {
         Objects.requireNonNull(tableId, "tableId is null");
         if (columnId == null) {

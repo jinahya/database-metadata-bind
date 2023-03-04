@@ -20,13 +20,9 @@ package com.github.jinahya.database.metadata.bind;
  * #L%
  */
 
-import lombok.AccessLevel;
-import lombok.RequiredArgsConstructor;
-
 import java.util.Comparator;
 import java.util.Objects;
 
-@RequiredArgsConstructor(access = AccessLevel.PRIVATE)
 final class PrimaryKeyId extends AbstractMetadataTypeId<PrimaryKeyId, PrimaryKey> {
 
     private static final long serialVersionUID = -111977405695306679L;
@@ -43,6 +39,11 @@ final class PrimaryKeyId extends AbstractMetadataTypeId<PrimaryKeyId, PrimaryKey
         Objects.requireNonNull(tableId, "tableId is null");
         Objects.requireNonNull(columName, "columName is null");
         return new PrimaryKeyId(tableId, columName);
+    }
+
+    public PrimaryKeyId(final TableId tableId, final String columnName) {
+        this.tableId = Objects.requireNonNull(tableId, "tableId is null");
+        this.columnName = Objects.requireNonNull(columnName, "columnName is null");
     }
 
     @Override

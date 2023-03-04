@@ -43,6 +43,7 @@ final class ProcedureColumnId extends AbstractMetadataTypeId<ProcedureColumnId, 
     }
 
     public ProcedureColumnId(final ProcedureId procedureId, final String columnName, final int columnType) {
+        super();
         this.procedureId = Objects.requireNonNull(procedureId, "procedureId is null");
         this.columnName = Objects.requireNonNull(columnName, "columnName is null");
         this.columnType = Objects.requireNonNull(columnType, "columnType is null");
