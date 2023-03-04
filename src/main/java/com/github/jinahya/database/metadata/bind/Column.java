@@ -171,6 +171,15 @@ public class Column extends AbstractMetadataType {
         columnId = null;
     }
 
+    NullableEnum getNullableAsEnum() {
+        return NullableEnum.valueOfNullable(getNullable());
+    }
+
+    void setNullableAsEnum(final NullableEnum nullableAsEnum) {
+        Objects.requireNonNull(nullableAsEnum, "nullableAsEnum is null");
+        setNullable(nullableAsEnum.fieldValueAsInt());
+    }
+
     @_NullableBySpecification
     @_ColumnLabel(COLUMN_LABEL_TABLE_CAT)
     private String tableCat;

@@ -57,7 +57,7 @@ public class BestRowIdentifier
     public static final String COLUMN_LABEL_SCOPE = "SCOPE";
 
     /**
-     * Constants for {@link #COLUMN_LABEL_SCOPE} column values.
+     * Constants for {@value #COLUMN_LABEL_SCOPE} column values.
      *
      * @author Jin Kwon &lt;onacit_at_gmail.com&gt;
      */
@@ -109,7 +109,7 @@ public class BestRowIdentifier
     public static final String COLUMN_LABEL_PSEUDO_COLUMN = "PSEUDO_COLUMN";
 
     /**
-     * Constants for {@link #COLUMN_LABEL_PSEUDO_COLUMN} column values.
+     * Constants for {@value #COLUMN_LABEL_PSEUDO_COLUMN} column values.
      *
      * @author Jin Kwon &lt;onacit_at_gmail.com&gt;
      */
@@ -160,6 +160,24 @@ public class BestRowIdentifier
             throw new NullPointerException("o is null");
         }
         return COMPARING_SCOPE.compare(this, o);
+    }
+
+    ScopeEnum getScopeAsEnum() {
+        return ScopeEnum.valueOfScope(getScope());
+    }
+
+    void setScopeAsEnum(final ScopeEnum scopeAsEnum) {
+        Objects.requireNonNull(scopeAsEnum, "scopeAsEnum is null");
+        setScope(scopeAsEnum.fieldValueAsInt());
+    }
+
+    PseudoColumnEnum getPseudoColumnAsEnum() {
+        return PseudoColumnEnum.valueOfPseudoColumn(getPseudoColumn());
+    }
+
+    void setPseudoColumnAsEnum(final PseudoColumnEnum pseudoColumnAsEnum) {
+        Objects.requireNonNull(pseudoColumnAsEnum, "pseudoColumnAsEnum is null");
+        setPseudoColumn(pseudoColumnAsEnum.fieldValueAsInt());
     }
 
     @_ColumnLabel(COLUMN_LABEL_SCOPE)
