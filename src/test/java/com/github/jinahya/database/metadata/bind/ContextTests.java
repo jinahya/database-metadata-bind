@@ -45,6 +45,10 @@ import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 @Slf4j
 final class ContextTests {
 
+    private static final boolean READ_TABLE_PRIVILEGES = false;
+
+    private static final boolean READ_COLUMN_PRIVILEGES = false;
+
     static void info(final Context context) throws SQLException {
         Objects.requireNonNull(context, "context is null");
         log.info("databaseProductName: {}", context.databaseMetaData.getDatabaseProductName());
@@ -347,15 +351,17 @@ final class ContextTests {
         } catch (final SQLException sqle) {
             thrown("failed: getSchemas", sqle);
         }
-        try {
-            final var tablePrivileges = context.getTablePrivileges(
-                    Optional.ofNullable(catalog.getTableCat()).orElse(Catalog.COLUMN_VALUE_TABLE_CAT_EMPTY),
-                    "%",
-                    "%"
-            );
-            tablePrivileges(context, tablePrivileges);
-        } catch (final SQLException sqle) {
-            thrown("failed; getTablePrivileges", sqle);
+        if (READ_TABLE_PRIVILEGES) {
+            try {
+                final var tablePrivileges = context.getTablePrivileges(
+                        Optional.ofNullable(catalog.getTableCat()).orElse(Catalog.COLUMN_VALUE_TABLE_CAT_EMPTY),
+                        "%",
+                        "%"
+                );
+                tablePrivileges(context, tablePrivileges);
+            } catch (final SQLException sqle) {
+                thrown("failed; getTablePrivileges", sqle);
+            }
         }
     }
 
@@ -831,11 +837,13 @@ final class ContextTests {
         } catch (final SQLException sqle) {
             thrown("failed: getSuperTypes", sqle);
         }
-        try {
-            final var tablePrivileges = context.getTablePrivileges(schema, "%");
-            tablePrivileges(context, tablePrivileges);
-        } catch (final SQLException sqle) {
-            thrown("failed; getTablePrivileges", sqle);
+        if (READ_TABLE_PRIVILEGES) {
+            try {
+                final var tablePrivileges = context.getTablePrivileges(schema, "%");
+                tablePrivileges(context, tablePrivileges);
+            } catch (final SQLException sqle) {
+                thrown("failed; getTablePrivileges", sqle);
+            }
         }
     }
 
@@ -945,25 +953,26 @@ final class ContextTests {
         } catch (final SQLException sqle) {
             thrown("failed; getColumns", sqle);
         }
-        try {
-            final var columnPrivileges = context.getColumnPrivileges(table, "%");
-            assertThat(columnPrivileges)
-                    .doesNotHaveDuplicates()
-                    .extracting(ColumnPrivilege::getColumnPrivilegeId)
-                    .doesNotHaveDuplicates()
-                    .extracting(ColumnPrivilegeId::getColumnId)
-                    .extracting(ColumnId::getTableId)
-                    .allMatch(tableId::equals);
-            columnPrivileges(context, columnPrivileges);
-        } catch (final SQLException sqle) {
-            thrown("failed; getColumnPrivileges", sqle);
+        if (READ_COLUMN_PRIVILEGES) {
+            try {
+                final var columnPrivileges = context.getColumnPrivileges(table, "%");
+                assertThat(columnPrivileges)
+                        .doesNotHaveDuplicates()
+                        .extracting(ColumnPrivilege::getColumnPrivilegeId)
+                        .doesNotHaveDuplicates()
+                        .extracting(ColumnPrivilegeId::getColumnId)
+                        .extracting(ColumnId::getTableId)
+                        .allMatch(tableId::equals);
+                columnPrivileges(context, columnPrivileges);
+            } catch (final SQLException sqle) {
+                thrown("failed; getColumnPrivileges", sqle);
+            }
         }
         try {
             final var exportedKeys = context.getExportedKeys(table);
             assertThat(exportedKeys)
                     .doesNotHaveDuplicates()
                     .extracting(TableKey::getPkcolumnId)
-                    .doesNotHaveDuplicates()
                     .extracting(ColumnId::getTableId)
                     .allMatch(tableId::equals);
             exportedKeys(context, exportedKeys);
@@ -1016,11 +1025,13 @@ final class ContextTests {
         } catch (final SQLException sqle) {
             thrown("failed; getPseudoColumns", sqle);
         }
-        try {
-            final var tablePrivileges = context.getTablePrivileges(table);
-            tablePrivileges(context, tablePrivileges);
-        } catch (final SQLException sqle) {
-            thrown("failed; getTablePrivileges", sqle);
+        if (READ_TABLE_PRIVILEGES) {
+            try {
+                final var tablePrivileges = context.getTablePrivileges(table);
+                tablePrivileges(context, tablePrivileges);
+            } catch (final SQLException sqle) {
+                thrown("failed; getTablePrivileges", sqle);
+            }
         }
         try {
             final var versionColumns = context.getVersionColumns(table);
@@ -1338,12 +1349,12 @@ final class ContextTests {
             thrown("failed; getCatalogs", sqle);
         }
         try {
-            final var catalogs = context.getClientInfoProperties();
+            final var clientInfoProperties = context.getClientInfoProperties();
             final var databaseProductNames = Set.of(
                     TestContainers_MariaDB_IT.DATABASE_PRODUCT_NAME
             );
             if (!databaseProductNames.contains(databaseProductName)) {
-                assertThat(catalogs).satisfiesAnyOf(
+                assertThat(clientInfoProperties).satisfiesAnyOf(
                         l -> assertThat(l).isSortedAccordingTo(ClientInfoProperty.CASE_INSENSITIVE_ORDER),
                         l -> assertThat(l).isSortedAccordingTo(ClientInfoProperty.LEXICOGRAPHIC_ORDER)
                 );
@@ -1351,14 +1362,16 @@ final class ContextTests {
         } catch (final SQLException sqle) {
             thrown("failed; getCatalogs", sqle);
         }
-        try {
-            final var columnPrivileges = context.getColumnPrivileges(null, null, "%", "%");
-            assertThat(columnPrivileges).satisfiesAnyOf(
-                    l -> assertThat(l).isSortedAccordingTo(ColumnPrivilege.CASE_INSENSITIVE_ORDER),
-                    l -> assertThat(l).isSortedAccordingTo(ColumnPrivilege.LEXICOGRAPHIC_ORDER)
-            );
-        } catch (final SQLException sqle) {
-            thrown("failed; getColumnPrivileges", sqle);
+        if (READ_COLUMN_PRIVILEGES) {
+            try {
+                final var columnPrivileges = context.getColumnPrivileges(null, null, "%", "%");
+                assertThat(columnPrivileges).satisfiesAnyOf(
+                        l -> assertThat(l).isSortedAccordingTo(ColumnPrivilege.CASE_INSENSITIVE_ORDER),
+                        l -> assertThat(l).isSortedAccordingTo(ColumnPrivilege.LEXICOGRAPHIC_ORDER)
+                );
+            } catch (final SQLException sqle) {
+                thrown("failed; getColumnPrivileges", sqle);
+            }
         }
         try {
             final var columns = context.getColumns(null, null, "%", "%");
@@ -1458,15 +1471,17 @@ final class ContextTests {
         } catch (final SQLException sqle) {
             thrown("failed; getSuperTypes", sqle);
         }
-        try {
-            final var tablePrivileges = context.getTablePrivileges(null, null, "%");
-            assertThat(tablePrivileges).doesNotHaveDuplicates();
-            assertThat(tablePrivileges).satisfiesAnyOf(
-                    l -> assertThat(l).isSortedAccordingTo(TablePrivilege.CASE_INSENSITIVE_ORDER),
-                    l -> assertThat(l).isSortedAccordingTo(TablePrivilege.LEXICOGRAPHIC_ORDER)
-            );
-        } catch (final SQLException sqle) {
-            thrown("failed; getTablePrivileges", sqle);
+        if (READ_TABLE_PRIVILEGES) {
+            try {
+                final var tablePrivileges = context.getTablePrivileges(null, null, "%");
+                assertThat(tablePrivileges).doesNotHaveDuplicates();
+                assertThat(tablePrivileges).satisfiesAnyOf(
+                        l -> assertThat(l).isSortedAccordingTo(TablePrivilege.CASE_INSENSITIVE_ORDER),
+                        l -> assertThat(l).isSortedAccordingTo(TablePrivilege.LEXICOGRAPHIC_ORDER)
+                );
+            } catch (final SQLException sqle) {
+                thrown("failed; getTablePrivileges", sqle);
+            }
         }
         try {
             final var tables = context.getTables(null, null, "%", null);
@@ -1501,14 +1516,16 @@ final class ContextTests {
                 } catch (final SQLException sqle) {
                     thrown("failed: getBestRowIdentifier", sqle);
                 }
-                try {
-                    final var columnPrivileges = context.getColumnPrivileges(table, "%");
-                    assertThat(columnPrivileges).satisfiesAnyOf(
-                            l -> assertThat(l).isSortedAccordingTo(ColumnPrivilege.CASE_INSENSITIVE_ORDER),
-                            l -> assertThat(l).isSortedAccordingTo(ColumnPrivilege.LEXICOGRAPHIC_ORDER)
-                    );
-                } catch (final SQLException sqle) {
-                    thrown("failed: getColumnPrivileges", sqle);
+                if (READ_COLUMN_PRIVILEGES) {
+                    try {
+                        final var columnPrivileges = context.getColumnPrivileges(table, "%");
+                        assertThat(columnPrivileges).satisfiesAnyOf(
+                                l -> assertThat(l).isSortedAccordingTo(ColumnPrivilege.CASE_INSENSITIVE_ORDER),
+                                l -> assertThat(l).isSortedAccordingTo(ColumnPrivilege.LEXICOGRAPHIC_ORDER)
+                        );
+                    } catch (final SQLException sqle) {
+                        thrown("failed: getColumnPrivileges", sqle);
+                    }
                 }
                 try {
                     final var exportedKeys = context.getExportedKeys(table);

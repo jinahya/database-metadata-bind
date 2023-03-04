@@ -22,12 +22,10 @@ package com.github.jinahya.database.metadata.bind;
 
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
-import lombok.Builder;
 
 import java.util.Objects;
 
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
-@Builder(access = AccessLevel.PRIVATE)
 final class ProcedureId extends AbstractMetadataTypeId<ProcedureId, Procedure> {
 
     private static final long serialVersionUID = 673730280554507464L;
@@ -39,16 +37,12 @@ final class ProcedureId extends AbstractMetadataTypeId<ProcedureId, Procedure> {
      * @param specificName a value of {@value Procedure#COLUMN_LABEL_SPECIFIC_NAME} column.
      * @return a new instance.
      */
-    public static ProcedureId of(final SchemaId schemaId, final String specificName) {
+    static ProcedureId of(final SchemaId schemaId, final String specificName) {
         Objects.requireNonNull(schemaId, "schemaId is null");
         Objects.requireNonNull(specificName, "specificName is null");
-        return builder()
-                .schemaId(schemaId)
-                .specificName(specificName)
-                .build();
+        return new ProcedureId(schemaId, specificName);
     }
 
-    // -----------------------------------------------------------------------------------------------------------------
     @Override
     public String toString() {
         return super.toString() + '{' +
@@ -71,8 +65,6 @@ final class ProcedureId extends AbstractMetadataTypeId<ProcedureId, Procedure> {
         return Objects.hash(schemaId, specificName);
     }
 
-    // -----------------------------------------------------------------------------------------------------------------
-
     /**
      * Returns the {@code schemaId} of this procedure id.
      *
@@ -91,7 +83,6 @@ final class ProcedureId extends AbstractMetadataTypeId<ProcedureId, Procedure> {
         return specificName;
     }
 
-    // -----------------------------------------------------------------------------------------------------------------
     private final SchemaId schemaId;
 
     private final String specificName;

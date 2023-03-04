@@ -22,14 +22,10 @@ package com.github.jinahya.database.metadata.bind;
 
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Getter;
 
 import java.util.Objects;
 
-@Getter
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
-@Builder(access = AccessLevel.PRIVATE)
 final class ProcedureColumnId extends AbstractMetadataTypeId<ProcedureColumnId, ProcedureColumn> {
 
     private static final long serialVersionUID = 7459854669925402253L;
@@ -44,14 +40,10 @@ final class ProcedureColumnId extends AbstractMetadataTypeId<ProcedureColumnId, 
 //                                                              SchemaId.LEXICOGRAPHIC_ORDER)
 //                    .thenComparing(ProcedureColumnId::getColumnName);
 
-    public static ProcedureColumnId of(final ProcedureId procedureId, final String columnName, final int columnType) {
+    static ProcedureColumnId of(final ProcedureId procedureId, final String columnName, final int columnType) {
         Objects.requireNonNull(procedureId, "procedureId is null");
         Objects.requireNonNull(columnName, "columnName is null");
-        return builder()
-                .procedureId(procedureId)
-                .columnName(columnName)
-                .columnType(columnType)
-                .build();
+        return new ProcedureColumnId(procedureId, columnName, columnType);
     }
 
     @Override
@@ -76,6 +68,18 @@ final class ProcedureColumnId extends AbstractMetadataTypeId<ProcedureColumnId, 
     @Override
     public int hashCode() {
         return Objects.hash(procedureId, columnName, columnType);
+    }
+
+    public ProcedureId getProcedureId() {
+        return procedureId;
+    }
+
+    public String getColumnName() {
+        return columnName;
+    }
+
+    public int getColumnType() {
+        return columnType;
     }
 
     private final ProcedureId procedureId;

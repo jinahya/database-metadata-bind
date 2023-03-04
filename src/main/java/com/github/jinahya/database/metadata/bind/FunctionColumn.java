@@ -37,7 +37,8 @@ import static java.util.Comparator.naturalOrder;
 import static java.util.Comparator.nullsFirst;
 
 /**
- * A class for binding results of {@link DatabaseMetaData#getFunctionColumns(String, String, String, String)} method.
+ * A class for binding results of the {@link DatabaseMetaData#getFunctionColumns(String, String, String, String)}
+ * method.
  *
  * @author Jin Kwon &lt;jinahya_at_gmail.com&gt;
  * @see Context#getFunctionColumns(String, String, String, String)

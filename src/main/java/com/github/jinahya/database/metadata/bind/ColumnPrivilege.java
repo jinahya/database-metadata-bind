@@ -32,7 +32,8 @@ import static java.util.Comparator.naturalOrder;
 import static java.util.Comparator.nullsFirst;
 
 /**
- * A class for binding results of {@link DatabaseMetaData#getColumnPrivileges(String, String, String, String)} method.
+ * A class for binding results of the {@link DatabaseMetaData#getColumnPrivileges(String, String, String, String)}
+ * method.
  *
  * @author Jin Kwon &lt;jinahya_at_gmail.com&gt;
  * @see Context#getColumnPrivileges(String, String, String, String)
@@ -126,7 +127,7 @@ public class ColumnPrivilege extends AbstractMetadataType {
     }
 
     ColumnPrivilegeId getColumnPrivilegeId() {
-        return ColumnPrivilegeId.of(
+        return new ColumnPrivilegeId(
                 ColumnId.of(
                         TableId.of(
                                 getTableCatNonNull(),

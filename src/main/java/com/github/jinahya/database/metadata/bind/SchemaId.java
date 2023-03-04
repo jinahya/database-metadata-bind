@@ -22,15 +22,11 @@ package com.github.jinahya.database.metadata.bind;
 
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Getter;
 
 import java.util.Comparator;
 import java.util.Objects;
 
-@Getter
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
-@Builder(access = AccessLevel.PRIVATE)
 final class SchemaId extends AbstractMetadataTypeId<SchemaId, Schema> {
 
     private static final long serialVersionUID = -9112917204279422378L;
@@ -50,13 +46,10 @@ final class SchemaId extends AbstractMetadataTypeId<SchemaId, Schema> {
      * @param tableSchem a value of {@value Schema#COLUMN_LABEL_TABLE_SCHEM} column.
      * @return a new instance.
      */
-    public static SchemaId of(final CatalogId catalogId, final String tableSchem) {
+    static SchemaId of(final CatalogId catalogId, final String tableSchem) {
         Objects.requireNonNull(catalogId, "catalogId is null");
         Objects.requireNonNull(tableSchem, "tableSchem is null");
-        return builder()
-                .catalogId(catalogId)
-                .tableSchem(tableSchem)
-                .build();
+        return new SchemaId(catalogId, tableSchem);
     }
 
     /**
@@ -90,6 +83,14 @@ final class SchemaId extends AbstractMetadataTypeId<SchemaId, Schema> {
     @Override
     public int hashCode() {
         return Objects.hash(catalogId, tableSchem);
+    }
+
+    public CatalogId getCatalogId() {
+        return catalogId;
+    }
+
+    public String getTableSchem() {
+        return tableSchem;
     }
 
     private final CatalogId catalogId;

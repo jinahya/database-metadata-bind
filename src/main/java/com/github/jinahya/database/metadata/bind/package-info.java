@@ -3,6 +3,7 @@
  *
  * @author Jin Kwon &lt;onacit_at_gmail.com&gt;
  * @see com.github.jinahya.database.metadata.bind.Context
+ * @see com.github.jinahya.database.metadata.bind.MetadataType
  */
 package com.github.jinahya.database.metadata.bind;
 

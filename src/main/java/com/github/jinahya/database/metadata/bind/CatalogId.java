@@ -20,17 +20,9 @@ package com.github.jinahya.database.metadata.bind;
  * #L%
  */
 
-import lombok.AccessLevel;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Getter;
-
 import java.util.Comparator;
 import java.util.Objects;
 
-@Getter
-@AllArgsConstructor(access = AccessLevel.PRIVATE)
-@Builder(access = AccessLevel.PRIVATE)
 final class CatalogId extends AbstractMetadataTypeId<CatalogId, Catalog> {
 
     private static final long serialVersionUID = 2793098695036855151L;
@@ -38,8 +30,7 @@ final class CatalogId extends AbstractMetadataTypeId<CatalogId, Catalog> {
     static final Comparator<CatalogId> CASE_INSENSITIVE_ORDER =
             Comparator.comparing(CatalogId::getTableCat, String.CASE_INSENSITIVE_ORDER);
 
-    static final Comparator<CatalogId> LEXICOGRAPHIC_ORDER =
-            Comparator.comparing(CatalogId::getTableCat, Comparator.naturalOrder());
+    static final Comparator<CatalogId> LEXICOGRAPHIC_ORDER = Comparator.comparing(CatalogId::getTableCat);
 
     /**
      * Creates a new instance with specified arguments.
@@ -49,12 +40,14 @@ final class CatalogId extends AbstractMetadataTypeId<CatalogId, Catalog> {
      */
     static CatalogId of(final String tableCat) {
         Objects.requireNonNull(tableCat, "tableCat is null");
-        return builder()
-                .tableCat(tableCat)
-                .build();
+        return new CatalogId(tableCat);
     }
 
-    // -----------------------------------------------------------------------------------------------------------------
+    CatalogId(final String tableCat) {
+        super();
+        this.tableCat = Objects.requireNonNull(tableCat, "tableCat is null");
+    }
+
     @Override
     public String toString() {
         return super.toString() + '{' +
@@ -75,6 +68,9 @@ final class CatalogId extends AbstractMetadataTypeId<CatalogId, Catalog> {
         return Objects.hash(tableCat);
     }
 
-    // -----------------------------------------------------------------------------------------------------------------
+    public String getTableCat() {
+        return tableCat;
+    }
+
     private final String tableCat;
 }

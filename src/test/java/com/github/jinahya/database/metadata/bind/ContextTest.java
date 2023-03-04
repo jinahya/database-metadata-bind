@@ -58,16 +58,15 @@ class ContextTest {
             if (!ResultSet.class.isAssignableFrom(method.getReturnType())) {
                 continue;
             }
-            final var methodName = method.getName();
+            final var name = method.getName();
             {
-                final Class<?>[] parameterTypes
-                        = Arrays.copyOf(method.getParameterTypes(), method.getParameterCount() + 1);
-                parameterTypes[parameterTypes.length - 1] = Consumer.class;
-                final Method bound = Context.class.getMethod(methodName, parameterTypes);
+                final Class<?>[] types = Arrays.copyOf(method.getParameterTypes(), method.getParameterCount() + 1);
+                types[types.length - 1] = Consumer.class;
+                final Method bound = Context.class.getDeclaredMethod(name, types);
                 assertThat(bound.getReturnType()).isEqualTo(void.class);
             }
             {
-                final Method bound = Context.class.getMethod(methodName, method.getParameterTypes());
+                final Method bound = Context.class.getMethod(name, method.getParameterTypes());
                 assertThat(bound.getReturnType()).isEqualTo(List.class);
             }
         }

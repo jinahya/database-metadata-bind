@@ -35,7 +35,7 @@ import static java.util.Comparator.naturalOrder;
 import static java.util.Comparator.nullsFirst;
 
 /**
- * A class for binding results of {@link java.sql.DatabaseMetaData#getCatalogs()} method.
+ * A class for binding results of the {@link java.sql.DatabaseMetaData#getCatalogs()} method.
  *
  * @author Jin Kwon &lt;jinahya_at_gmail.com&gt;
  * @see Context#getCatalogs(Consumer)

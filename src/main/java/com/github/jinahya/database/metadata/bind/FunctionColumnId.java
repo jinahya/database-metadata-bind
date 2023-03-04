@@ -20,21 +20,13 @@ package com.github.jinahya.database.metadata.bind;
  * #L%
  */
 
-import lombok.AccessLevel;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Getter;
-
 import java.util.Objects;
 
-@Getter
-@AllArgsConstructor(access = AccessLevel.PRIVATE)
-@Builder(access = AccessLevel.PRIVATE)
 final class FunctionColumnId extends AbstractMetadataTypeId<FunctionColumnId, FunctionColumn> {
 
     private static final long serialVersionUID = 7221973324274278465L;
 
-    public static FunctionColumnId of(final FunctionId functionId, final String columnName, final int columnType) {
+    static FunctionColumnId of(final FunctionId functionId, final String columnName, final int columnType) {
         Objects.requireNonNull(functionId, "functionId is null");
         Objects.requireNonNull(columnName, "columnName is null");
         if (columnType < 0) {
@@ -43,7 +35,13 @@ final class FunctionColumnId extends AbstractMetadataTypeId<FunctionColumnId, Fu
         return new FunctionColumnId(functionId, columnName, columnType);
     }
 
-    // -----------------------------------------------------------------------------------------------------------------
+    private FunctionColumnId(FunctionId functionId, String columnName, int columnType) {
+        super();
+        this.functionId = Objects.requireNonNull(functionId, "functionId is null");
+        this.columnName = Objects.requireNonNull(columnName, "columnName is null");
+        this.columnType = Objects.requireNonNull(columnType, "columnType is null");
+    }
+
     @Override
     public String toString() {
         return super.toString() + '{' +
@@ -68,7 +66,18 @@ final class FunctionColumnId extends AbstractMetadataTypeId<FunctionColumnId, Fu
         return Objects.hash(functionId, columnName, columnType);
     }
 
-    // -----------------------------------------------------------------------------------------------------------------
+    public FunctionId getFunctionId() {
+        return functionId;
+    }
+
+    public String getColumnName() {
+        return columnName;
+    }
+
+    public int getColumnType() {
+        return columnType;
+    }
+
     private final FunctionId functionId;
 
     private final String columnName;

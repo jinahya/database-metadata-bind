@@ -33,7 +33,7 @@ import java.util.Objects;
 import java.util.Optional;
 
 /**
- * A class for binding results of {@link DatabaseMetaData#getAttributes(String, String, String, String)} method.
+ * A class for binding results of the {@link DatabaseMetaData#getAttributes(String, String, String, String)} method.
  *
  * @author Jin Kwon &lt;jinahya_at_gmail.com&gt;
  * @see Context#getAttributes(String, String, String, String)
@@ -43,8 +43,6 @@ import java.util.Optional;
 @Setter
 @Getter
 @ToString(callSuper = true)
-//@NoArgsConstructor(access = AccessLevel.PROTECTED)
-//@SuperBuilder(toBuilder = true)
 public class Attribute extends AbstractMetadataType {
 
     private static final long serialVersionUID = 1913681105410440186L;
@@ -104,22 +102,19 @@ public class Attribute extends AbstractMetadataType {
         private final int fieldValue;
     }
 
-    public static final String VALUE_IS_NULLABLE_YES = "YES";
+    public static final String COLUMN_VALUE_IS_NULLABLE_YES = "YES";
 
-    public static final String VALUE_IS_NULLABLE_NO = "NO";
+    public static final String COLUMN_VALUE_IS_NULLABLE_NO = "NO";
 
-    public static final String VALUE_IS_NULLABLE_EMPTY = "";
-
-    // ------------------------------------------------------------------------------------------------- equals/hashCode
+    public static final String COLUMN_VALUE_IS_NULLABLE_EMPTY = "";
 
     @Override
     public boolean equals(final Object obj) {
         if (this == obj) return true;
         if (!(obj instanceof Attribute)) return false;
-//        if (!super.equals(obj)) return false;
         final Attribute that = (Attribute) obj;
-        return Objects.equals(typeCat, that.typeCat) &&
-               Objects.equals(typeSchem, that.typeSchem) &&
+        return Objects.equals(getTypeCatNonNull(), that.getTypeCatNonNull()) &&
+               Objects.equals(getTypeSchemNonNull(), that.getTypeSchemNonNull()) &&
                Objects.equals(typeName, that.typeName) &&
                Objects.equals(attrName, that.attrName);
     }
@@ -127,17 +122,13 @@ public class Attribute extends AbstractMetadataType {
     @Override
     public int hashCode() {
         return Objects.hash(
-//                super.hashCode(),
-                typeCat,
-                typeSchem,
+                getTypeCatNonNull(),
+                getTypeSchemNonNull(),
                 typeName,
                 attrName
         );
     }
 
-    // -----------------------------------------------------------------------------------------------------------------
-
-    // --------------------------------------------------------------------------------------------------------- typeCat
     String getTypeCatNonNull() {
         return Optional.ofNullable(getTypeCat()).orElse(Catalog.COLUMN_VALUE_TABLE_CAT_EMPTY);
     }
@@ -147,7 +138,6 @@ public class Attribute extends AbstractMetadataType {
         attributeId = null;
     }
 
-    // ------------------------------------------------------------------------------------------------------- typeSchem
     String getTypeSchemNonNull() {
         return Optional.ofNullable(getTypeSchem()).orElse(Schema.COLUMN_VALUE_TABLE_SCHEM_EMPTY);
     }
@@ -157,19 +147,16 @@ public class Attribute extends AbstractMetadataType {
         attributeId = null;
     }
 
-    // -------------------------------------------------------------------------------------------------------- typeName
     public void setTypeName(final String typeName) {
         this.typeName = typeName;
         attributeId = null;
     }
 
-    // -------------------------------------------------------------------------------------------------------- attrName
     public void setAttrName(final String attrName) {
         this.attrName = attrName;
         attributeId = null;
     }
 
-    // -----------------------------------------------------------------------------------------------------------------
     @_NullableBySpecification
     @_ColumnLabel("TYPE_CAT")
     private String typeCat;
@@ -244,10 +231,9 @@ public class Attribute extends AbstractMetadataType {
     @_ColumnLabel("SOURCE_DATA_TYPE")
     private Integer sourceDataType;
 
-    // -----------------------------------------------------------------------------------------------------------------
     AttributeId getAttributeId() {
         if (attributeId == null) {
-            attributeId = AttributeId.of(
+            attributeId = new AttributeId(
                     UDTId.of(
                             getTypeCatNonNull(),
                             getTypeSchemNonNull(),

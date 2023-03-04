@@ -40,6 +40,8 @@ class ExternalIT {
 
     private static final String PROPERTY_NAME_PASSWORD = "password";
 
+    private static final String PROPERTY_NAME_CATALOG = "catalog";
+
     @EnabledIfSystemProperty(named = PROPERTY_NAME_URL, matches = ".+")
     @EnabledIfSystemProperty(named = PROPERTY_NAME_USER, matches = ".+")
     @EnabledIfSystemProperty(named = PROPERTY_NAME_PASSWORD, matches = ".+")

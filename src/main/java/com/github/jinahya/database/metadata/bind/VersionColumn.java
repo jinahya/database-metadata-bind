@@ -32,7 +32,7 @@ import java.sql.DatabaseMetaData;
 import java.util.Objects;
 
 /**
- * A class for binding results of {@link DatabaseMetaData#getVersionColumns(String, String, String)} method.
+ * A class for binding results of the {@link DatabaseMetaData#getVersionColumns(String, String, String)} method.
  *
  * @author Jin Kwon &lt;jinahya_at_gmail.com&gt;
  * @see Context#getVersionColumns(String, String, String)

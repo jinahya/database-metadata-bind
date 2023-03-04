@@ -20,17 +20,9 @@ package com.github.jinahya.database.metadata.bind;
  * #L%
  */
 
-import lombok.AccessLevel;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Getter;
-
 import java.util.Comparator;
 import java.util.Objects;
 
-@Getter
-@AllArgsConstructor(access = AccessLevel.PRIVATE)
-@Builder(access = AccessLevel.PRIVATE)
 final class ColumnPrivilegeId extends AbstractMetadataTypeId<ColumnPrivilegeId, ColumnPrivilege> {
 
     private static final long serialVersionUID = 7221973324274278465L;
@@ -43,13 +35,12 @@ final class ColumnPrivilegeId extends AbstractMetadataTypeId<ColumnPrivilegeId, 
             Comparator.comparing(ColumnPrivilegeId::getColumnId, ColumnId.LEXICOGRAPHIC_ORDER)
                     .thenComparing(ColumnPrivilegeId::getPrivilege);
 
-    public static ColumnPrivilegeId of(final ColumnId columnId, final String privilege) {
-        Objects.requireNonNull(columnId, "columnId is null");
-        Objects.requireNonNull(privilege, "privilege is null");
-        return new ColumnPrivilegeId(columnId, privilege);
+    public ColumnPrivilegeId(final ColumnId columnId, final String privilege) {
+        super();
+        this.columnId = Objects.requireNonNull(columnId, "columnId is null");
+        this.privilege = Objects.requireNonNull(privilege, "privilege is null");
     }
 
-    // -----------------------------------------------------------------------------------------------------------------
     @Override
     public String toString() {
         return super.toString() + '{' +
@@ -72,7 +63,14 @@ final class ColumnPrivilegeId extends AbstractMetadataTypeId<ColumnPrivilegeId, 
         return Objects.hash(columnId, privilege);
     }
 
-    // -----------------------------------------------------------------------------------------------------------------
+    public ColumnId getColumnId() {
+        return columnId;
+    }
+
+    public String getPrivilege() {
+        return privilege;
+    }
+
     private final ColumnId columnId;
 
     private final String privilege;

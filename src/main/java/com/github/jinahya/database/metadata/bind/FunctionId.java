@@ -21,15 +21,11 @@ package com.github.jinahya.database.metadata.bind;
  */
 
 import lombok.AccessLevel;
-import lombok.Builder;
-import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 
 import java.util.Objects;
 
-@Getter
 @RequiredArgsConstructor(access = AccessLevel.PRIVATE)
-@Builder(access = AccessLevel.PRIVATE)
 final class FunctionId extends AbstractMetadataTypeId<FunctionId, Function> {
 
     private static final long serialVersionUID = 8614281252146063072L;
@@ -37,13 +33,10 @@ final class FunctionId extends AbstractMetadataTypeId<FunctionId, Function> {
     static FunctionId of(final SchemaId schemaId, final String specificName) {
         Objects.requireNonNull(schemaId, "schemaId is null");
         Objects.requireNonNull(specificName, "specificName is null");
-        return FunctionId.builder()
-                .schemaId(schemaId)
-                .specificName(specificName)
-                .build();
+        return new FunctionId(schemaId, specificName);
     }
 
-    public static FunctionId of(final String functionCat, final String functionSchem, final String specificName) {
+    static FunctionId of(final String functionCat, final String functionSchem, final String specificName) {
         return of(SchemaId.of(functionCat, functionSchem), specificName);
     }
 
@@ -67,6 +60,14 @@ final class FunctionId extends AbstractMetadataTypeId<FunctionId, Function> {
     @Override
     public int hashCode() {
         return Objects.hash(schemaId, specificName);
+    }
+
+    public SchemaId getSchemaId() {
+        return schemaId;
+    }
+
+    public String getSpecificName() {
+        return specificName;
     }
 
     private final SchemaId schemaId;

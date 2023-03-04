@@ -21,16 +21,12 @@ package com.github.jinahya.database.metadata.bind;
  */
 
 import lombok.AccessLevel;
-import lombok.Builder;
-import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 
 import java.util.Comparator;
 import java.util.Objects;
 
-@Getter
 @RequiredArgsConstructor(access = AccessLevel.PRIVATE)
-@Builder(access = AccessLevel.PRIVATE)
 final class PrimaryKeyId extends AbstractMetadataTypeId<PrimaryKeyId, PrimaryKey> {
 
     private static final long serialVersionUID = -111977405695306679L;
@@ -43,13 +39,10 @@ final class PrimaryKeyId extends AbstractMetadataTypeId<PrimaryKeyId, PrimaryKey
             Comparator.comparing(PrimaryKeyId::getTableId, TableId.LEXICOGRAPHIC_ORDER)
                     .thenComparing(PrimaryKeyId::getColumnName);
 
-    public static PrimaryKeyId of(final TableId tableId, final String columName) {
+    static PrimaryKeyId of(final TableId tableId, final String columName) {
         Objects.requireNonNull(tableId, "tableId is null");
         Objects.requireNonNull(columName, "columName is null");
-        return builder()
-                .tableId(tableId)
-                .columnName(columName)
-                .build();
+        return new PrimaryKeyId(tableId, columName);
     }
 
     @Override
@@ -75,6 +68,14 @@ final class PrimaryKeyId extends AbstractMetadataTypeId<PrimaryKeyId, PrimaryKey
                 tableId,
                 columnName
         );
+    }
+
+    public TableId getTableId() {
+        return tableId;
+    }
+
+    public String getColumnName() {
+        return columnName;
     }
 
     private final TableId tableId;

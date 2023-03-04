@@ -20,11 +20,6 @@ package com.github.jinahya.database.metadata.bind;
  * #L%
  */
 
-import lombok.AccessLevel;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Getter;
-
 import java.util.Comparator;
 import java.util.Objects;
 
@@ -33,9 +28,6 @@ import java.util.Objects;
  *
  * @author Jin Kwon &lt;onacit_at_gmail.com&gt;
  */
-@Getter
-@AllArgsConstructor(access = AccessLevel.PRIVATE)
-@Builder(access = AccessLevel.PRIVATE)
 final class ColumnId extends AbstractMetadataTypeId<ColumnId, Column> {
 
     private static final long serialVersionUID = -4452694121211962289L;
@@ -52,7 +44,12 @@ final class ColumnId extends AbstractMetadataTypeId<ColumnId, Column> {
         return new ColumnId(tableId, columnName);
     }
 
-    // -----------------------------------------------------------------------------------------------------------------
+    ColumnId(final TableId tableId, final String columnName) {
+        super();
+        this.tableId = Objects.requireNonNull(tableId, "tableId is null");
+        this.columnName = Objects.requireNonNull(columnName, "columnName is null");
+    }
+
     @Override
     public String toString() {
         return super.toString() + '{' +
@@ -75,7 +72,14 @@ final class ColumnId extends AbstractMetadataTypeId<ColumnId, Column> {
         return Objects.hash(tableId, columnName);
     }
 
-    // -----------------------------------------------------------------------------------------------------------------
+    public TableId getTableId() {
+        return tableId;
+    }
+
+    public String getColumnName() {
+        return columnName;
+    }
+
     private final TableId tableId;
 
     private final String columnName;

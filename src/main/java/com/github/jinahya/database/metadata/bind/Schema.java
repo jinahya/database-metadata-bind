@@ -30,7 +30,7 @@ import java.util.Comparator;
 import java.util.Objects;
 
 /**
- * A class for binding a results of the {@link java.sql.DatabaseMetaData#getSchemas(java.lang.String, java.lang.String)}
+ * A class for binding results of the {@link java.sql.DatabaseMetaData#getSchemas(java.lang.String, java.lang.String)}
  * method.
  *
  * @author Jin Kwon &lt;jinahya_at_gmail.com&gt;

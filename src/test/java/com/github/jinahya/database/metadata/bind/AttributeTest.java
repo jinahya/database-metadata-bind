@@ -20,13 +20,20 @@ package com.github.jinahya.database.metadata.bind;
  * #L%
  */
 
-import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 
 class AttributeTest extends AbstractMetadataTypeTest<Attribute> {
 
     AttributeTest() {
         super(Attribute.class);
+    }
+
+    @Nested
+    class NullableEnumTest extends _IntFieldEnumTest<Attribute.NullableEnum> {
+
+        NullableEnumTest() {
+            super(Attribute.NullableEnum.class);
+        }
     }
 
     @Override
@@ -36,14 +43,5 @@ class AttributeTest extends AbstractMetadataTypeTest<Attribute> {
         instance.setTypeName("");
         instance.setOrdinalPosition(1);
         return instance;
-    }
-
-    @DisplayName("NullableEnum")
-    @Nested
-    class AttributeNullableTest extends _IntFieldEnumTest<Attribute.NullableEnum> {
-
-        AttributeNullableTest() {
-            super(Attribute.NullableEnum.class);
-        }
     }
 }

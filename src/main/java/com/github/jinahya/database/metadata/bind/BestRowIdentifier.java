@@ -30,8 +30,8 @@ import java.util.Comparator;
 import java.util.Objects;
 
 /**
- * A class for binding results of {@link DatabaseMetaData#getBestRowIdentifier(String, String, String, int, boolean)}
- * method.
+ * A class for binding results of the
+ * {@link DatabaseMetaData#getBestRowIdentifier(String, String, String, int, boolean)} method.
  *
  * @author Jin Kwon &lt;jinahya_at_gmail.com&gt;
  * @see Context#getBestRowIdentifier(String, String, String, int, boolean)
@@ -52,8 +52,7 @@ public class BestRowIdentifier
     /**
      * A comparator compares objects with their value of {@link #getScope()}.
      */
-    static final Comparator<BestRowIdentifier> COMPARING_SCOPE =
-            Comparator.comparingInt(BestRowIdentifier::getScope);
+    static final Comparator<BestRowIdentifier> COMPARING_SCOPE = Comparator.comparingInt(BestRowIdentifier::getScope);
 
     public static final String COLUMN_LABEL_SCOPE = "SCOPE";
 
@@ -102,6 +101,10 @@ public class BestRowIdentifier
 
         private final int fieldValue;
     }
+
+    public static final String COLUMN_LABEL_COLUMN_NAME = "COLUMN_NAME";
+
+    public static final String COLUMN_LABEL_DATA_TYPE = "DATA_TYPE";
 
     public static final String COLUMN_LABEL_PSEUDO_COLUMN = "PSEUDO_COLUMN";
 
@@ -159,14 +162,13 @@ public class BestRowIdentifier
         return COMPARING_SCOPE.compare(this, o);
     }
 
-    // -----------------------------------------------------------------------------------------------------------------
     @_ColumnLabel(COLUMN_LABEL_SCOPE)
     private int scope;
 
-    @_ColumnLabel("COLUMN_NAME")
+    @_ColumnLabel(COLUMN_LABEL_COLUMN_NAME)
     private String columnName;
 
-    @_ColumnLabel("DATA_TYPE")
+    @_ColumnLabel(COLUMN_LABEL_DATA_TYPE)
     private int dataType;
 
     @_ColumnLabel("TYPE_NAME")
@@ -187,7 +189,6 @@ public class BestRowIdentifier
     @_ColumnLabel(COLUMN_LABEL_PSEUDO_COLUMN)
     private int pseudoColumn;
 
-    // -----------------------------------------------------------------------------------------------------------------
     ColumnId getColumnId(final TableId tableId) {
         Objects.requireNonNull(tableId, "tableId is null");
         return ColumnId.of(

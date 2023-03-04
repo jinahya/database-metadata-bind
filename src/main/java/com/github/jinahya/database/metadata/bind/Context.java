@@ -105,9 +105,9 @@ public class Context {
             }
             i.remove();
         }
-        for (final String resultLabel : resultLabels) {
-            final Object object = results.getObject(resultLabel);
-            instance.getUnmappedValues().put(resultLabel, object);
+        for (final String key : resultLabels) {
+            final Object value = results.getObject(key);
+            instance.getUnmappedValues().put(key, value);
         }
         if (!fieldLabels.isEmpty()) {
             log.warning(() -> String.format("unmapped fields: %1$s", fieldLabels));
@@ -207,8 +207,8 @@ public class Context {
      * @throws SQLException if a database error occurs.
      * @see DatabaseMetaData#getAttributes(String, String, String, String)
      */
-    public void getAttributes(final String catalog, final String schemaPattern, final String typeNamePattern,
-                              final String attributeNamePattern, final Consumer<? super Attribute> consumer)
+    void getAttributes(final String catalog, final String schemaPattern, final String typeNamePattern,
+                       final String attributeNamePattern, final Consumer<? super Attribute> consumer)
             throws SQLException {
         Objects.requireNonNull(consumer, "consumer is null");
         try (ResultSet results = databaseMetaData.getAttributes(
@@ -229,7 +229,6 @@ public class Context {
      * @param attributeNamePattern a value for {@code attributeNamePattern} parameter.
      * @return a list of bound values.
      * @throws SQLException if a database error occurs.
-     * @see #getAttributes(String, String, String, String, Consumer)
      */
     public List<Attribute> getAttributes(final String catalog, final String schemaPattern, final String typeNamePattern,
                                          final String attributeNamePattern)
@@ -264,8 +263,8 @@ public class Context {
      * @see DatabaseMetaData#getBestRowIdentifier(String, String, String, int, boolean)
      */
 
-    public void getBestRowIdentifier(final String catalog, final String schema, final String table, final int scope,
-                                     final boolean nullable, final Consumer<? super BestRowIdentifier> consumer)
+    void getBestRowIdentifier(final String catalog, final String schema, final String table, final int scope,
+                              final boolean nullable, final Consumer<? super BestRowIdentifier> consumer)
             throws SQLException {
         Objects.requireNonNull(consumer, "consumer is null");
         try (ResultSet results = databaseMetaData.getBestRowIdentifier(catalog, schema, table, scope, nullable)) {
@@ -286,9 +285,7 @@ public class Context {
      * @param nullable a value for {@code nullable} parameter.
      * @return a list of bound values.
      * @throws SQLException if a database error occurs.
-     * @see #getBestRowIdentifier(String, String, String, int, boolean, Consumer)
      */
-
     public List<BestRowIdentifier> getBestRowIdentifier(final String catalog, final String schema, final String table,
                                                         final int scope, final boolean nullable)
             throws SQLException {
@@ -316,7 +313,7 @@ public class Context {
      * @throws SQLException if a database error occurs.
      * @see DatabaseMetaData#getCatalogs()
      */
-    public void getCatalogs(final Consumer<? super Catalog> consumer) throws SQLException {
+    void getCatalogs(final Consumer<? super Catalog> consumer) throws SQLException {
         Objects.requireNonNull(consumer, "consumer is null");
         try (ResultSet results = databaseMetaData.getCatalogs()) {
             assert results != null;
@@ -329,9 +326,7 @@ public class Context {
      *
      * @return a list of bound values.
      * @throws SQLException if a database error occurs.
-     * @see DatabaseMetaData#getCatalogs()
      */
-
     public List<Catalog> getCatalogs() throws SQLException {
         final List<Catalog> list = new ArrayList<>();
         getCatalogs(list::add);
@@ -346,8 +341,7 @@ public class Context {
      * @throws SQLException if a database error occurs.
      * @see DatabaseMetaData#getClientInfoProperties()
      */
-    public void getClientInfoProperties(final Consumer<? super ClientInfoProperty> consumer)
-            throws SQLException {
+    void getClientInfoProperties(final Consumer<? super ClientInfoProperty> consumer) throws SQLException {
         Objects.requireNonNull(consumer, "consumer is null");
         try (ResultSet results = databaseMetaData.getClientInfoProperties()) {
             assert results != null;
@@ -360,7 +354,6 @@ public class Context {
      *
      * @return a list of bound values.
      * @throws SQLException if a database error occurs.
-     * @see #getClientInfoProperties(Consumer)
      */
     public List<ClientInfoProperty> getClientInfoProperties() throws SQLException {
         final List<ClientInfoProperty> list = new ArrayList<>();
@@ -381,9 +374,8 @@ public class Context {
      * @throws SQLException if a database error occurs.
      * @see DatabaseMetaData#getColumnPrivileges(String, String, String, String)
      */
-    public void getColumnPrivileges(final String catalog, final String schema, final String table,
-                                    final String columnNamePattern,
-                                    final Consumer<? super ColumnPrivilege> consumer)
+    void getColumnPrivileges(final String catalog, final String schema, final String table,
+                             final String columnNamePattern, final Consumer<? super ColumnPrivilege> consumer)
             throws SQLException {
         Objects.requireNonNull(consumer, "consumer is null");
         try (ResultSet results = databaseMetaData.getColumnPrivileges(catalog, schema, table, columnNamePattern)) {
@@ -403,7 +395,6 @@ public class Context {
      * @param columnNamePattern a value for {@code columnNamePattern} parameter.
      * @return a list of bound values.
      * @throws SQLException if a database error occurs.
-     * @see DatabaseMetaData#getColumnPrivileges(String, String, String, String)
      */
     public List<ColumnPrivilege> getColumnPrivileges(final String catalog, final String schema, final String table,
                                                      final String columnNamePattern)
@@ -438,8 +429,8 @@ public class Context {
      * @throws SQLException if a database error occurs.
      * @see DatabaseMetaData#getColumns(String, String, String, String)
      */
-    public void getColumns(final String catalog, final String schemaPattern, final String tableNamePattern,
-                           final String columnNamePattern, final Consumer<? super Column> consumer)
+    void getColumns(final String catalog, final String schemaPattern, final String tableNamePattern,
+                    final String columnNamePattern, final Consumer<? super Column> consumer)
             throws SQLException {
         Objects.requireNonNull(consumer, "consumer is null");
         try (ResultSet results = databaseMetaData.getColumns(catalog, schemaPattern, tableNamePattern,
@@ -464,9 +455,9 @@ public class Context {
      * @throws SQLException if a database error occurs.
      * @see #getColumns(String, String, String, String, Consumer)
      */
-    public <C extends Collection<? super Column>> C getColumns(final String catalog, final String schemaPattern,
-                                                               final String tableNamePattern,
-                                                               final String columnNamePattern, final C collection)
+    <C extends Collection<? super Column>> C getColumns(final String catalog, final String schemaPattern,
+                                                        final String tableNamePattern, final String columnNamePattern,
+                                                        final C collection)
             throws SQLException {
         getColumns(catalog, schemaPattern, tableNamePattern, columnNamePattern,
                    (Consumer<? super Column>) collection::add);
@@ -484,7 +475,6 @@ public class Context {
      * @param columnNamePattern a value for {@code columnNamePattern} parameter.
      * @return a list of bound values.
      * @throws SQLException if a database error occurs.
-     * @see #getColumns(String, String, String, String, Collection)
      */
     public List<Column> getColumns(final String catalog, final String schemaPattern, final String tableNamePattern,
                                    final String columnNamePattern)
@@ -528,9 +518,9 @@ public class Context {
      * @param consumer       the consumer to which bound values are accepted.
      * @throws SQLException if a database error occurs.
      */
-    public void getCrossReference(final String parentCatalog, final String parentSchema, final String parentTable,
-                                  final String foreignCatalog, final String foreignSchema, final String foreignTable,
-                                  final Consumer<? super CrossReference> consumer)
+    void getCrossReference(final String parentCatalog, final String parentSchema, final String parentTable,
+                           final String foreignCatalog, final String foreignSchema, final String foreignTable,
+                           final Consumer<? super CrossReference> consumer)
             throws SQLException {
         Objects.requireNonNull(consumer, "consumer is null");
         try (ResultSet results = databaseMetaData.getCrossReference(
@@ -575,8 +565,8 @@ public class Context {
      * @throws SQLException if a database error occurs.
      * @see DatabaseMetaData#getExportedKeys(String, String, String)
      */
-    public void getExportedKeys(final String catalog, final String schema, final String table,
-                                final Consumer<? super ExportedKey> consumer)
+    void getExportedKeys(final String catalog, final String schema, final String table,
+                         final Consumer<? super ExportedKey> consumer)
             throws SQLException {
         Objects.requireNonNull(consumer, "consumer is null");
         try (ResultSet results = databaseMetaData.getExportedKeys(catalog, schema, table)) {
@@ -594,7 +584,6 @@ public class Context {
      * @param table   a value for {@code table} parameter.
      * @return a list of bound values.
      * @throws SQLException if a database error occurs.
-     * @see #getExportedKeys(String, String, String, Consumer)
      */
     public List<ExportedKey> getExportedKeys(final String catalog, final String schema, final String table)
             throws SQLException {
@@ -631,8 +620,8 @@ public class Context {
      * @throws SQLException if a database error occurs.
      * @see DatabaseMetaData#getFunctions(String, String, String)
      */
-    public void getFunctions(final String catalog, final String schemaPattern, final String functionNamePattern,
-                             final Consumer<? super Function> consumer)
+    void getFunctions(final String catalog, final String schemaPattern, final String functionNamePattern,
+                      final Consumer<? super Function> consumer)
             throws SQLException {
         Objects.requireNonNull(consumer, "consumer is null");
         try (ResultSet results = databaseMetaData.getFunctions(catalog, schemaPattern, functionNamePattern)) {
@@ -650,7 +639,6 @@ public class Context {
      * @param functionNamePattern a value for {@code functionNamePattern} parameter.
      * @return a list of bound values.
      * @throws SQLException if a database error occurs.
-     * @see #getFunctions(String, String, String, Consumer)
      */
     public List<Function> getFunctions(final String catalog, final String schemaPattern,
                                        final String functionNamePattern)
@@ -672,9 +660,8 @@ public class Context {
      * @throws SQLException if a database error occurs.
      * @see DatabaseMetaData#getFunctionColumns(String, String, String, String)
      */
-    public void getFunctionColumns(final String catalog, final String schemaPattern, final String functionNamePattern,
-                                   final String columnNamePattern,
-                                   final Consumer<? super FunctionColumn> consumer)
+    void getFunctionColumns(final String catalog, final String schemaPattern, final String functionNamePattern,
+                            final String columnNamePattern, final Consumer<? super FunctionColumn> consumer)
             throws SQLException {
         Objects.requireNonNull(consumer, "consumer is null");
         try (ResultSet results = databaseMetaData.getFunctionColumns(
@@ -694,7 +681,6 @@ public class Context {
      * @param columnNamePattern   a value for {@code columnNamePattern} parameter.
      * @return a list of bound values.
      * @throws SQLException if a database error occurs.
-     * @see #getFunctionColumns(String, String, String, String, Consumer)
      */
     public List<FunctionColumn> getFunctionColumns(final String catalog, final String schemaPattern,
                                                    final String functionNamePattern, final String columnNamePattern)
@@ -736,8 +722,8 @@ public class Context {
      * @throws SQLException if a database error occurs.
      * @see DatabaseMetaData#getImportedKeys(String, String, String)
      */
-    public void getImportedKeys(final String catalog, final String schema, final String table,
-                                final Consumer<? super ImportedKey> consumer)
+    void getImportedKeys(final String catalog, final String schema, final String table,
+                         final Consumer<? super ImportedKey> consumer)
             throws SQLException {
         Objects.requireNonNull(consumer, "consumer is null");
         try (ResultSet results = databaseMetaData.getImportedKeys(catalog, schema, table)) {
@@ -755,7 +741,6 @@ public class Context {
      * @param table   a value for {@code table} parameter.
      * @return a list of bound values.
      * @throws SQLException if a database error occurs.
-     * @see #getImportedKeys(String, String, String, Consumer)
      */
     public List<ImportedKey> getImportedKeys(final String catalog, final String schema, final String table)
             throws SQLException {
@@ -794,8 +779,8 @@ public class Context {
      * @throws SQLException if a database error occurs.
      * @see DatabaseMetaData#getIndexInfo(String, String, String, boolean, boolean)
      */
-    public void getIndexInfo(final String catalog, final String schema, final String table, final boolean unique,
-                             final boolean approximate, final Consumer<? super IndexInfo> consumer)
+    void getIndexInfo(final String catalog, final String schema, final String table, final boolean unique,
+                      final boolean approximate, final Consumer<? super IndexInfo> consumer)
             throws SQLException {
         Objects.requireNonNull(consumer, "consumer is null");
         try (ResultSet results = databaseMetaData.getIndexInfo(catalog, schema, table, unique, approximate)) {
@@ -815,7 +800,6 @@ public class Context {
      * @param approximate a value for {@code approximate} parameter.
      * @return a list of bound values.
      * @throws SQLException if a database error occurs.
-     * @see #getIndexInfo(String, String, String, boolean, boolean, Consumer)
      */
     public List<IndexInfo> getIndexInfo(final String catalog, final String schema, final String table,
                                         final boolean unique, final boolean approximate)
@@ -848,8 +832,8 @@ public class Context {
      * @throws SQLException if a database error occurs.
      * @see DatabaseMetaData#getPrimaryKeys(String, String, String)
      */
-    public void getPrimaryKeys(final String catalog, final String schema, final String table,
-                               final Consumer<? super PrimaryKey> consumer)
+    void getPrimaryKeys(final String catalog, final String schema, final String table,
+                        final Consumer<? super PrimaryKey> consumer)
             throws SQLException {
         Objects.requireNonNull(consumer, "consumer is null");
         try (ResultSet results = databaseMetaData.getPrimaryKeys(catalog, schema, table)) {
@@ -867,7 +851,6 @@ public class Context {
      * @param table   a value for {@code table} parameter.
      * @return a list of bound values.
      * @throws SQLException if a database error occurs.
-     * @see #getPrimaryKeys(String, String, String, Consumer)
      */
     public List<PrimaryKey> getPrimaryKeys(final String catalog, final String schema, final String table)
             throws SQLException {
@@ -897,9 +880,8 @@ public class Context {
      * @throws SQLException if a database error occurs.
      * @see DatabaseMetaData#getProcedureColumns(String, String, String, String)
      */
-    public void getProcedureColumns(final String catalog, final String schemaPattern, final String procedureNamePattern,
-                                    final String columnNamePattern,
-                                    final Consumer<? super ProcedureColumn> consumer)
+    void getProcedureColumns(final String catalog, final String schemaPattern, final String procedureNamePattern,
+                             final String columnNamePattern, final Consumer<? super ProcedureColumn> consumer)
             throws SQLException {
         Objects.requireNonNull(consumer, "consumer is null");
         try (ResultSet results = databaseMetaData.getProcedureColumns(
@@ -919,7 +901,6 @@ public class Context {
      * @param columnNamePattern    a value for {@code columnNamePattern} parameter.
      * @return a list of bound values.
      * @throws SQLException if a database error occurs.
-     * @see #getProcedureColumns(String, String, String, String, Consumer)
      */
     public List<ProcedureColumn> getProcedureColumns(final String catalog, final String schemaPattern,
                                                      final String procedureNamePattern,
@@ -953,8 +934,8 @@ public class Context {
      * @throws SQLException if a database error occurs.
      * @see DatabaseMetaData#getProcedures(String, String, String)
      */
-    public void getProcedures(final String catalog, final String schemaPattern, final String procedureNamePattern,
-                              final Consumer<? super Procedure> consumer)
+    void getProcedures(final String catalog, final String schemaPattern, final String procedureNamePattern,
+                       final Consumer<? super Procedure> consumer)
             throws SQLException {
         Objects.requireNonNull(consumer, "consumer is null");
         try (ResultSet results = databaseMetaData.getProcedures(catalog, schemaPattern, procedureNamePattern)) {
@@ -972,7 +953,6 @@ public class Context {
      * @param procedureNamePattern a value for {@code procedureNamePattern} parameter.
      * @return a list of bound values.
      * @throws SQLException if a database error occurs.
-     * @see #getProcedures(String, String, String, Consumer)
      */
     public List<Procedure> getProcedures(final String catalog, final String schemaPattern,
                                          final String procedureNamePattern)
@@ -995,8 +975,8 @@ public class Context {
      * @throws SQLException if a database error occurs.
      * @see DatabaseMetaData#getPseudoColumns(String, String, String, String)
      */
-    public void getPseudoColumns(final String catalog, final String schemaPattern, final String tableNamePattern,
-                                 final String columnNamePattern, final Consumer<? super PseudoColumn> consumer)
+    void getPseudoColumns(final String catalog, final String schemaPattern, final String tableNamePattern,
+                          final String columnNamePattern, final Consumer<? super PseudoColumn> consumer)
             throws SQLException {
         Objects.requireNonNull(consumer, "consumer is null");
         try (ResultSet results = databaseMetaData.getPseudoColumns(
@@ -1017,7 +997,6 @@ public class Context {
      * @param columnNamePattern a value for {@code columnNamePattern} parameter.
      * @return a list of bound values.
      * @throws SQLException if a database error occurs.
-     * @see #getPseudoColumns(String, String, String, String, Consumer)
      */
     public List<PseudoColumn> getPseudoColumns(final String catalog, final String schemaPattern,
                                                final String tableNamePattern, final String columnNamePattern)
@@ -1045,7 +1024,7 @@ public class Context {
      * @throws SQLException if a database error occurs.
      * @see DatabaseMetaData#getSchemas()
      */
-    public void getSchemas(final Consumer<? super Schema> consumer) throws SQLException {
+    void getSchemas(final Consumer<? super Schema> consumer) throws SQLException {
         Objects.requireNonNull(consumer, "consumer is null");
         try (ResultSet results = databaseMetaData.getSchemas()) {
             assert results != null;
@@ -1058,7 +1037,6 @@ public class Context {
      *
      * @return a list of bound values.
      * @throws SQLException if a database error occurs.
-     * @see #getSchemas(Consumer)
      */
     public List<Schema> getSchemas() throws SQLException {
         final List<Schema> list = new ArrayList<>();
@@ -1076,7 +1054,7 @@ public class Context {
      * @throws SQLException if a database error occurs.
      * @see DatabaseMetaData#getSchemas(String, String)
      */
-    public void getSchemas(final String catalog, final String schemaPattern, final Consumer<? super Schema> consumer)
+    void getSchemas(final String catalog, final String schemaPattern, final Consumer<? super Schema> consumer)
             throws SQLException {
         Objects.requireNonNull(consumer, "consumer is null");
         try (ResultSet results = databaseMetaData.getSchemas(catalog, schemaPattern)) {
@@ -1093,7 +1071,6 @@ public class Context {
      * @param schemaPattern a value for {@code schemaPattern} parameter.
      * @return a list of bound values.
      * @throws SQLException if a database error occurs.
-     * @see #getSchemas(String, String, Consumer)
      */
     public List<Schema> getSchemas(final String catalog, final String schemaPattern) throws SQLException {
         final List<Schema> list = new ArrayList<>();
@@ -1120,8 +1097,8 @@ public class Context {
      * @throws SQLException if a database error occurs.
      * @see DatabaseMetaData#getSuperTables(String, String, String)
      */
-    public void getSuperTables(final String catalog, final String schemaPattern, final String tableNamePattern,
-                               final Consumer<? super SuperTable> consumer)
+    void getSuperTables(final String catalog, final String schemaPattern, final String tableNamePattern,
+                        final Consumer<? super SuperTable> consumer)
             throws SQLException {
         Objects.requireNonNull(consumer, "consumer is null");
         try (ResultSet results = databaseMetaData.getSuperTables(catalog, schemaPattern, tableNamePattern)) {
@@ -1139,7 +1116,6 @@ public class Context {
      * @param tableNamePattern a value for {@code tableNamePattern} parameter.
      * @return a list of bound values.
      * @throws SQLException if a database error occurs.
-     * @see #getSuperTables(String, String, String, Consumer)
      */
     public List<SuperTable> getSuperTables(final String catalog, final String schemaPattern,
                                            final String tableNamePattern)
@@ -1169,8 +1145,8 @@ public class Context {
      * @throws SQLException if a database error occurs.
      * @see DatabaseMetaData#getSuperTypes(String, String, String)
      */
-    public void getSuperTypes(final String catalog, final String schemaPattern, final String typeNamePattern,
-                              final Consumer<? super SuperType> consumer)
+    void getSuperTypes(final String catalog, final String schemaPattern, final String typeNamePattern,
+                       final Consumer<? super SuperType> consumer)
             throws SQLException {
         Objects.requireNonNull(consumer, "consumer is null");
         try (ResultSet results = databaseMetaData.getSuperTypes(catalog, schemaPattern, typeNamePattern)) {
@@ -1188,7 +1164,6 @@ public class Context {
      * @param typeNamePattern a value for {@code typeNamePattern} parameter.
      * @return a list of bound values.
      * @throws SQLException if a database error occurs.
-     * @see #getSuperTypes(String, String, String, Consumer)
      */
     public List<SuperType> getSuperTypes(final String catalog, final String schemaPattern, final String typeNamePattern)
             throws SQLException {
@@ -1217,8 +1192,8 @@ public class Context {
      * @throws SQLException if a database error occurs.
      * @see DatabaseMetaData#getTablePrivileges(String, String, String)
      */
-    public void getTablePrivileges(final String catalog, final String schemaPattern, final String tableNamePattern,
-                                   final Consumer<? super TablePrivilege> consumer)
+    void getTablePrivileges(final String catalog, final String schemaPattern, final String tableNamePattern,
+                            final Consumer<? super TablePrivilege> consumer)
             throws SQLException {
         Objects.requireNonNull(consumer, "consumer is null");
         try (ResultSet results = databaseMetaData.getTablePrivileges(catalog, schemaPattern, tableNamePattern)) {
@@ -1236,7 +1211,6 @@ public class Context {
      * @param tableNamePattern a value for {@code tableNamePattern} parameter.
      * @return a list of bound values.
      * @throws SQLException if a database error occurs.
-     * @see #getTablePrivileges(String, String, String, Consumer)
      */
     public List<TablePrivilege> getTablePrivileges(final String catalog, final String schemaPattern,
                                                    final String tableNamePattern)
@@ -1271,7 +1245,7 @@ public class Context {
      * @throws SQLException if a database error occurs.
      * @see DatabaseMetaData#getTableTypes()
      */
-    public void getTableTypes(final Consumer<? super TableType> consumer) throws SQLException {
+    void getTableTypes(final Consumer<? super TableType> consumer) throws SQLException {
         Objects.requireNonNull(consumer, "consumer is null");
         try (ResultSet results = databaseMetaData.getTableTypes()) {
             assert results != null;
@@ -1284,7 +1258,6 @@ public class Context {
      *
      * @return a list of bound values.
      * @throws SQLException if a database error occurs.
-     * @see #getTableTypes(Consumer)
      */
     public List<TableType> getTableTypes() throws SQLException {
         final List<TableType> list = new ArrayList<>();
@@ -1306,8 +1279,8 @@ public class Context {
      * @throws SQLException if a database error occurs.
      * @see DatabaseMetaData#getTables(String, String, String, String[])
      */
-    public void getTables(final String catalog, final String schemaPattern, final String tableNamePattern,
-                          final String[] types, final Consumer<? super Table> consumer)
+    void getTables(final String catalog, final String schemaPattern, final String tableNamePattern,
+                   final String[] types, final Consumer<? super Table> consumer)
             throws SQLException {
         Objects.requireNonNull(consumer, "consumer is null");
         try (ResultSet results = databaseMetaData.getTables(catalog, schemaPattern, tableNamePattern, types)) {
@@ -1353,7 +1326,6 @@ public class Context {
      * @param types            a value for {@code types} parameter.
      * @return a list of bound values.
      * @throws SQLException if a database error occurs.
-     * @see #getTables(String, String, String, String[], Collection)
      */
     public List<Table> getTables(final String catalog, final String schemaPattern, final String tableNamePattern,
                                  final String[] types)
@@ -1361,7 +1333,7 @@ public class Context {
         return getTables(catalog, schemaPattern, tableNamePattern, types, new ArrayList<>());
     }
 
-    public List<Table> getTables(final Schema schema, final String tableNamePattern, final String[] types)
+    List<Table> getTables(final Schema schema, final String tableNamePattern, final String[] types)
             throws SQLException {
         Objects.requireNonNull(schema, "schema is null");
         return getTables(
@@ -1379,7 +1351,7 @@ public class Context {
      * @throws SQLException if a database error occurs.
      * @see DatabaseMetaData#getTypeInfo()
      */
-    public void getTypeInfo(final Consumer<? super TypeInfo> consumer) throws SQLException {
+    void getTypeInfo(final Consumer<? super TypeInfo> consumer) throws SQLException {
         Objects.requireNonNull(consumer, "consumer is null");
         try (ResultSet results = databaseMetaData.getTypeInfo()) {
             assert results != null;
@@ -1392,7 +1364,6 @@ public class Context {
      *
      * @return a list of bound values.
      * @throws SQLException if a database error occurs.
-     * @see #getTypeInfo(Consumer)
      */
     public List<TypeInfo> getTypeInfo() throws SQLException {
         final List<TypeInfo> list = new ArrayList<>();
@@ -1412,8 +1383,8 @@ public class Context {
      * @throws SQLException if a database error occurs.
      * @see DatabaseMetaData#getUDTs(String, String, String, int[])
      */
-    public void getUDTs(final String catalog, final String schemaPattern, final String typeNamePattern,
-                        final int[] types, final Consumer<? super UDT> consumer)
+    void getUDTs(final String catalog, final String schemaPattern, final String typeNamePattern,
+                 final int[] types, final Consumer<? super UDT> consumer)
             throws SQLException {
         Objects.requireNonNull(consumer, "consumer is null");
         try (ResultSet results = databaseMetaData.getUDTs(catalog, schemaPattern, typeNamePattern, types)) {
@@ -1432,7 +1403,6 @@ public class Context {
      * @param types           a value for {@code type} parameter
      * @return a list of bound values.
      * @throws SQLException if a database error occurs.
-     * @see #getUDTs(String, String, String, int[], Consumer)
      */
 
     public List<UDT> getUDTs(final String catalog, final String schemaPattern, final String typeNamePattern,
@@ -1454,8 +1424,8 @@ public class Context {
      * @throws SQLException if a database access error occurs.
      * @see DatabaseMetaData#getVersionColumns(String, String, String)
      */
-    public void getVersionColumns(final String catalog, final String schema, final String table,
-                                  final Consumer<? super VersionColumn> consumer)
+    void getVersionColumns(final String catalog, final String schema, final String table,
+                           final Consumer<? super VersionColumn> consumer)
             throws SQLException {
         Objects.requireNonNull(consumer, "consumer is null");
         try (ResultSet results = databaseMetaData.getVersionColumns(catalog, schema, table)) {
@@ -1473,7 +1443,6 @@ public class Context {
      * @param table   a value for {@code table} parameter.
      * @return a list of bound values.
      * @throws SQLException if a database access error occurs.
-     * @see #getVersionColumns(String, String, String, Consumer)
      */
     public List<VersionColumn> getVersionColumns(final String catalog, final String schema, final String table)
             throws SQLException {

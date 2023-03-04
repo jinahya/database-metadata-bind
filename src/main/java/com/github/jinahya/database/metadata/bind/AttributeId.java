@@ -20,17 +20,9 @@ package com.github.jinahya.database.metadata.bind;
  * #L%
  */
 
-import lombok.AccessLevel;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Getter;
-
 import java.util.Comparator;
 import java.util.Objects;
 
-@Getter
-@AllArgsConstructor(access = AccessLevel.PRIVATE)
-@Builder(access = AccessLevel.PRIVATE)
 final class AttributeId extends AbstractMetadataTypeId<AttributeId, Attribute> {
 
     private static final long serialVersionUID = 7221973324274278465L;
@@ -43,16 +35,12 @@ final class AttributeId extends AbstractMetadataTypeId<AttributeId, Attribute> {
             Comparator.comparing(AttributeId::getUdtId, UDTId.LEXICOGRAPHIC_ORDER)
                     .thenComparing(AttributeId::getAttrName);
 
-    static AttributeId of(final UDTId udtId, final String attrName) {
-        Objects.requireNonNull(udtId, "udtId is null");
-        Objects.requireNonNull(attrName, "attrName is null");
-        return builder()
-                .udtId(udtId)
-                .attrName(attrName)
-                .build();
+    public AttributeId(final UDTId udtId, final String attrName) {
+        super();
+        this.udtId = Objects.requireNonNull(udtId, "udtId is null");
+        this.attrName = Objects.requireNonNull(attrName, "attrName is null");
     }
 
-    // -----------------------------------------------------------------------------------------------------------------
     @Override
     public String toString() {
         return super.toString() + '{' +
@@ -75,7 +63,14 @@ final class AttributeId extends AbstractMetadataTypeId<AttributeId, Attribute> {
         return Objects.hash(udtId, attrName);
     }
 
-    // -----------------------------------------------------------------------------------------------------------------
+    public UDTId getUdtId() {
+        return udtId;
+    }
+
+    public String getAttrName() {
+        return attrName;
+    }
+
     private final UDTId udtId;
 
     private final String attrName;

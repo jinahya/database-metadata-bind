@@ -22,15 +22,11 @@ package com.github.jinahya.database.metadata.bind;
 
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Getter;
 
 import java.util.Comparator;
 import java.util.Objects;
 
-@Getter
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
-@Builder(access = AccessLevel.PRIVATE)
 final class PseudoColumnId extends AbstractMetadataTypeId<PseudoColumnId, PseudoColumn> {
 
     private static final long serialVersionUID = 7459854669925402253L;
@@ -43,13 +39,10 @@ final class PseudoColumnId extends AbstractMetadataTypeId<PseudoColumnId, Pseudo
             Comparator.comparing(PseudoColumnId::getTableId, TableId.LEXICOGRAPHIC_ORDER)
                     .thenComparing(PseudoColumnId::getColumnName);
 
-    public static PseudoColumnId of(final TableId tableId, final String columnName) {
+    static PseudoColumnId of(final TableId tableId, final String columnName) {
         Objects.requireNonNull(tableId, "tableId is null");
         Objects.requireNonNull(columnName, "columnName is null");
-        return builder()
-                .tableId(tableId)
-                .columnName(columnName)
-                .build();
+        return new PseudoColumnId(tableId, columnName);
     }
 
     @Override
@@ -72,6 +65,14 @@ final class PseudoColumnId extends AbstractMetadataTypeId<PseudoColumnId, Pseudo
     @Override
     public int hashCode() {
         return Objects.hash(tableId, columnName);
+    }
+
+    public TableId getTableId() {
+        return tableId;
+    }
+
+    public String getColumnName() {
+        return columnName;
     }
 
     private final TableId tableId;

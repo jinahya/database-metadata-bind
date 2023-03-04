@@ -34,7 +34,7 @@ import java.util.Objects;
 import java.util.Optional;
 
 /**
- * A class for binding results of {@link DatabaseMetaData#getColumns(String, String, String, String)} method.
+ * A class for binding results of the {@link DatabaseMetaData#getColumns(String, String, String, String)} method.
  *
  * @author Jin Kwon &lt;jinahya_at_gmail.com&gt;
  * @see Context#getColumns(String, String, String, String)

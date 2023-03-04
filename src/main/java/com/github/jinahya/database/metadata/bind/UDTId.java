@@ -21,14 +21,12 @@ package com.github.jinahya.database.metadata.bind;
  */
 
 import lombok.AccessLevel;
-import lombok.Builder;
 import lombok.RequiredArgsConstructor;
 
 import java.util.Comparator;
 import java.util.Objects;
 
 @RequiredArgsConstructor(access = AccessLevel.PRIVATE)
-@Builder(access = AccessLevel.PRIVATE)
 final class UDTId extends AbstractMetadataTypeId<UDTId, UDT> {
 
     private static final long serialVersionUID = 5548844214174261338L;
@@ -41,13 +39,10 @@ final class UDTId extends AbstractMetadataTypeId<UDTId, UDT> {
             Comparator.comparing(UDTId::getSchemaId, SchemaId.LEXICOGRAPHIC_ORDER)
                     .thenComparing(UDTId::getTypeName);
 
-    public static UDTId of(final SchemaId schemaId, final String typeName) {
+    static UDTId of(final SchemaId schemaId, final String typeName) {
         Objects.requireNonNull(schemaId, "schemaId is null");
         Objects.requireNonNull(typeName, "typeName is null");
-        return builder()
-                .schemaId(schemaId)
-                .typeName(typeName)
-                .build();
+        return new UDTId(schemaId, typeName);
     }
 
     static UDTId of(final String typeCat, final String typeSchem, final String typeName) {

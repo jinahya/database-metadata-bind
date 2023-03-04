@@ -30,7 +30,7 @@ import java.util.Comparator;
 import java.util.Objects;
 
 /**
- * A class for binding the results of {@link java.sql.DatabaseMetaData#getTableTypes()}.
+ * A class for binding results of the {@link java.sql.DatabaseMetaData#getTableTypes()}.
  *
  * @author Jin Kwon &lt;jinahya_at_gmail.com&gt;
  * @see Context#getTableTypes()

@@ -31,7 +31,7 @@ import java.util.Comparator;
 import java.util.Objects;
 
 /**
- * A class for binding results of {@link java.sql.DatabaseMetaData#getTypeInfo() getTypeInfo()} method.
+ * A class for binding results of the {@link java.sql.DatabaseMetaData#getTypeInfo() getTypeInfo()} method.
  *
  * @author Jin Kwon &lt;jinahya_at_gmail.com&gt;
  * @see Context#getTypeInfo()

@@ -23,7 +23,17 @@ package com.github.jinahya.database.metadata.bind;
 import java.io.Serializable;
 import java.util.Map;
 
+/**
+ * The parent interface for binding database metadata types.
+ *
+ * @author Jin Kwon &lt;onacit_at_gmail.com&gt;
+ */
 public interface MetadataType extends Serializable {
 
+    /**
+     * Returns a map of unmapped values.
+     *
+     * @return a map of unmapped values.
+     */
     Map<String, Object> getUnmappedValues();
 }

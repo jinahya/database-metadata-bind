@@ -34,7 +34,7 @@ import java.util.Objects;
 import java.util.Optional;
 
 /**
- * A class for binding results of {@link DatabaseMetaData#getUDTs(String, String, String, int[])} method.
+ * A class for binding results of the {@link DatabaseMetaData#getUDTs(String, String, String, int[])} method.
  *
  * @author Jin Kwon &lt;jinahya_at_gmail.com&gt;
  * @see Context#getUDTs(String, String, String, int[])
