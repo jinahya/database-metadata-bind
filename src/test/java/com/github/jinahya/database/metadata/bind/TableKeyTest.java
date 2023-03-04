@@ -20,6 +20,15 @@ package com.github.jinahya.database.metadata.bind;
  * #L%
  */
 
+import org.junit.jupiter.api.Nested;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.EnumSource;
+
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
+
 abstract class TableKeyTest<T extends TableKey<T>> extends AbstractMetadataTypeTest<T> {
 
     TableKeyTest(final Class<T> typeClass) {
@@ -34,5 +43,32 @@ abstract class TableKeyTest<T extends TableKey<T>> extends AbstractMetadataTypeT
         instance.setFktableName("");
         instance.setFkcolumnName("");
         return instance;
+    }
+
+    @Nested
+    class DeferrabilityAsEnumTest {
+
+        @Test
+        void getDeferrabilityAsEnum__() {
+            final var spy = typeSpy();
+            assertThatThrownBy(spy::getDeferrabilityAsEnum)
+                    .isInstanceOf(IllegalArgumentException.class);
+            verify(spy, times(1)).getDeferrability();
+        }
+
+        @Test
+        void setDeferrabilityAsEnum_NullPointerException_Null() {
+            final var spy = typeSpy();
+            assertThatThrownBy(() -> spy.setDeferrabilityAsEnum(null))
+                    .isInstanceOf(NullPointerException.class);
+        }
+
+        @EnumSource(TableKeyDeferrability.class)
+        @ParameterizedTest
+        void setDeferrabilityAsEnum__(final TableKeyDeferrability deferrabilityAsEnum) {
+            final var spy = typeSpy();
+            spy.setDeferrabilityAsEnum(deferrabilityAsEnum);
+            verify(spy, times(1)).setDeferrability(deferrabilityAsEnum.fieldValueAsInt());
+        }
     }
 }

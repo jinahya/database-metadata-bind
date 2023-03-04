@@ -51,7 +51,7 @@ public class ImportedKey extends TableKey<ImportedKey> {
     public boolean equals(final Object obj) {
         if (this == obj) return true;
         if (!(obj instanceof ImportedKey)) return false;
-        return super.equals_((ImportedKey) obj);
+        return equals_((ImportedKey) obj);
     }
 
     @Override

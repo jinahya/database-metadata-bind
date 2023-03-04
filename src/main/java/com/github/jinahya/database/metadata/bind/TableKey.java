@@ -33,7 +33,7 @@ import java.util.Objects;
 
 /**
  * An abstract class for binding results of the
- * {@link java.sql.DatabaseMetaData#getExportedKeys(String, String, String)} method or
+ * {@link java.sql.DatabaseMetaData#getExportedKeys(String, String, String)} method or the
  * {@link java.sql.DatabaseMetaData#getImportedKeys(String, String, String)} method.
  *
  * @see ExportedKey
@@ -68,6 +68,76 @@ abstract class TableKey<T extends TableKey<T>> extends AbstractMetadataType {
         return Comparator.<T, TableId>comparing(TableKey::getFktableId, TableId.LEXICOGRAPHIC_ORDER)
                 .thenComparingInt(TableKey::getKeySeq);
     }
+
+    /**
+     * The column label of {@value}.
+     */
+    public static final String COLUMN_NAME_PKTABLE_CAT = "PKTABLE_CAT";
+
+    /**
+     * The column label of {@value}.
+     */
+    public static final String COLUMN_NAME_PKTABLE_SCHEM = "PKTABLE_SCHEM";
+
+    /**
+     * The column label of {@value}.
+     */
+    public static final String COLUMN_NAME_PKTABLE_NAME = "PKTABLE_NAME";
+
+    /**
+     * The column label of {@value}.
+     */
+    public static final String COLUMN_NAME_PKCOLUMN_NAME = "PKCOLUMN_NAME";
+
+    /**
+     * The column label of {@value}.
+     */
+    public static final String COLUMN_NAME_FKTABLE_CAT = "FKTABLE_CAT";
+
+    /**
+     * The column label of {@value}.
+     */
+    public static final String COLUMN_NAME_FKTABLE_SCHEM = "FKTABLE_SCHEM";
+
+    /**
+     * The column label of {@value}.
+     */
+    public static final String COLUMN_NAME_FKTABLE_NAME = "FKTABLE_NAME";
+
+    /**
+     * The column label of {@value}.
+     */
+    public static final String COLUMN_NAME_FKCOLUMN_NAME = "FKCOLUMN_NAME";
+
+    /**
+     * The column label of {@value}.
+     */
+    public static final String COLUMN_NAME_KEY_SEQ = "KEY_SEQ";
+
+    /**
+     * The column label of {@value}.
+     */
+    public static final String COLUMN_NAME_UPDATE_RULE = "UPDATE_RULE";
+
+    /**
+     * The column label of {@value}.
+     */
+    public static final String COLUMN_NAME_DELETE_RULE = "DELETE_RULE";
+
+    /**
+     * The column label of {@value}.
+     */
+    public static final String COLUMN_NAME_FK_NAME = "FK_NAME";
+
+    /**
+     * The column label of {@value}.
+     */
+    public static final String COLUMN_NAME_PK_NAME = "PK_NAME";
+
+    /**
+     * The column label of {@value}.
+     */
+    public static final String COLUMN_NAME_DEFERRABILITY = "DEFERRABILITY";
 
     @Override
     public boolean equals(final Object obj) {
@@ -127,52 +197,79 @@ abstract class TableKey<T extends TableKey<T>> extends AbstractMetadataType {
         fkcolumnId = null;
     }
 
+    /**
+     * Returns current value of {@link #COLUMN_NAME_DEFERRABILITY} column value.
+     *
+     * @return current value of {@link #COLUMN_NAME_DEFERRABILITY} column value.
+     */
+    public int getDeferrability() {
+        return deferrability;
+    }
+
+    /**
+     * Replaces current value of {@link #COLUMN_NAME_DEFERRABILITY} column value with specified value.
+     *
+     * @param deferrability new value for the {@link #COLUMN_NAME_DEFERRABILITY} column value.
+     */
+    public void setDeferrability(int deferrability) {
+        this.deferrability = deferrability;
+    }
+
+    TableKeyDeferrability getDeferrabilityAsEnum() {
+        return TableKeyDeferrability.valueOfDeferrability(getDeferrability());
+    }
+
+    void setDeferrabilityAsEnum(final TableKeyDeferrability deferrabilityAsEnum) {
+        Objects.requireNonNull(deferrabilityAsEnum, "deferrabilityAsEnum is null");
+        setDeferrability(deferrabilityAsEnum.fieldValueAsInt());
+    }
+
     @_NullableBySpecification
-    @_ColumnLabel("PKTABLE_CAT")
+    @_ColumnLabel(COLUMN_NAME_PKTABLE_CAT)
     private String pktableCat;
 
     @_NullableBySpecification
-    @_ColumnLabel("PKTABLE_SCHEM")
+    @_ColumnLabel(COLUMN_NAME_PKTABLE_SCHEM)
     private String pktableSchem;
 
-    @_ColumnLabel("PKTABLE_NAME")
+    @_ColumnLabel(COLUMN_NAME_PKTABLE_NAME)
     private String pktableName;
 
-    @_ColumnLabel("PKCOLUMN_NAME")
+    @_ColumnLabel(COLUMN_NAME_PKCOLUMN_NAME)
     private String pkcolumnName;
 
     @_NullableBySpecification
-    @_ColumnLabel("FKTABLE_CAT")
+    @_ColumnLabel(COLUMN_NAME_FKTABLE_CAT)
     private String fktableCat;
 
     @_NullableBySpecification
-    @_ColumnLabel("FKTABLE_SCHEM")
+    @_ColumnLabel(COLUMN_NAME_FKTABLE_SCHEM)
     private String fktableSchem;
 
-    @_ColumnLabel("FKTABLE_NAME")
+    @_ColumnLabel(COLUMN_NAME_FKTABLE_NAME)
     private String fktableName;
 
-    @_ColumnLabel("FKCOLUMN_NAME")
+    @_ColumnLabel(COLUMN_NAME_FKCOLUMN_NAME)
     private String fkcolumnName;
 
-    @_ColumnLabel("KEY_SEQ")
+    @_ColumnLabel(COLUMN_NAME_KEY_SEQ)
     private int keySeq;
 
-    @_ColumnLabel("UPDATE_RULE")
+    @_ColumnLabel(COLUMN_NAME_UPDATE_RULE)
     private int updateRule;
 
-    @_ColumnLabel("DELETE_RULE")
+    @_ColumnLabel(COLUMN_NAME_DELETE_RULE)
     private int deleteRule;
 
     @_NullableBySpecification
-    @_ColumnLabel("FK_NAME")
+    @_ColumnLabel(COLUMN_NAME_FK_NAME)
     private String fkName;
 
     @_NullableBySpecification
-    @_ColumnLabel("PK_NAME")
+    @_ColumnLabel(COLUMN_NAME_PK_NAME)
     private String pkName;
 
-    @_ColumnLabel("DEFERRABILITY")
+    @_ColumnLabel(COLUMN_NAME_DEFERRABILITY)
     private int deferrability;
 
     String getPktableCatNonNull() {

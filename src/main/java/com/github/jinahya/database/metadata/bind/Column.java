@@ -124,15 +124,20 @@ public class Column extends AbstractMetadataType {
         if (this == obj) return true;
         if (!(obj instanceof Column)) return false;
         final Column that = (Column) obj;
-        return Objects.equals(tableCat, that.tableCat) &&
-               Objects.equals(tableSchem, that.tableSchem) &&
+        return Objects.equals(getTableCatNonNull(), that.getTableCatNonNull()) &&
+               Objects.equals(getTableSchemNonNull(), that.getTableSchemNonNull()) &&
                Objects.equals(tableName, that.tableName) &&
                Objects.equals(columnName, that.columnName);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(tableCat, tableSchem, tableName, columnName);
+        return Objects.hash(
+                getTableCatNonNull(),
+                getTableSchemNonNull(),
+                tableName,
+                columnName
+        );
     }
 
     public String getTableCat() {

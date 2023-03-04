@@ -62,6 +62,12 @@ public class ColumnPrivilege extends AbstractMetadataType {
 
     public static final String COLUMN_LABEL_COLUMN_NAME = "COLUMN_NAME";
 
+    public static final String COLUMN_LABEL_IS_GRANTABLE = "IS_GRANTABLE";
+
+    public static final String COLUMN_VALUE_IS_GRANTABLE_YES = "YES";
+
+    public static final String COLUMN_VALUE_IS_GRANTABLE_NO = "NO";
+
     @Override
     public String toString() {
         return super.toString() + '{' +
@@ -78,14 +84,14 @@ public class ColumnPrivilege extends AbstractMetadataType {
 
     Boolean getIsGrantableAsBoolean() {
         return Optional.ofNullable(getIsGrantable())
-                .map("YES"::equals)
+                .map(COLUMN_VALUE_IS_GRANTABLE_YES::equalsIgnoreCase)
                 .orElse(null);
     }
 
     void setIsGrantableAsBoolean(final Boolean isGrantableAsBoolean) {
         setIsGrantable(
                 Optional.ofNullable(isGrantableAsBoolean)
-                        .map(v -> Boolean.TRUE.equals(v) ? "YES" : "NO")
+                        .map(v -> Boolean.TRUE.equals(v) ? COLUMN_VALUE_IS_GRANTABLE_YES : COLUMN_VALUE_IS_GRANTABLE_NO)
                         .orElse(null)
         );
     }
@@ -115,7 +121,7 @@ public class ColumnPrivilege extends AbstractMetadataType {
     private String privilege;
 
     @_NullableBySpecification
-    @_ColumnLabel("IS_GRANTABLE")
+    @_ColumnLabel(COLUMN_LABEL_IS_GRANTABLE)
     private String isGrantable;
 
     String getTableCatNonNull() {

@@ -33,9 +33,6 @@ import static java.util.Comparator.nullsFirst;
  * @author Jin Kwon &lt;jinahya_at_gmail.com&gt;
  * @see Context#getClientInfoProperties()
  */
-//@NoArgsConstructor(access = AccessLevel.PROTECTED)
-//@AllArgsConstructor(access = AccessLevel.PROTECTED)
-//@SuperBuilder(toBuilder = true)
 public class ClientInfoProperty extends AbstractMetadataType {
 
     private static final long serialVersionUID = -2913230435651853254L;

@@ -50,7 +50,8 @@ class ColumnPrivilegeTest extends AbstractMetadataTypeTest<ColumnPrivilege> {
         void setIsGrantableAsBoolean__Null() {
             final var spy = typeSpy();
             spy.setIsGrantableAsBoolean(null);
-            verify(spy, times(1)).setIsGrantable(null);
+            verify(spy, times(1))
+                    .setIsGrantable(null);
         }
 
         @ValueSource(booleans = {false, true})
@@ -58,7 +59,9 @@ class ColumnPrivilegeTest extends AbstractMetadataTypeTest<ColumnPrivilege> {
         void setIsGrantableAsBoolean__(final boolean grantableAsBoolean) {
             final var spy = typeSpy();
             spy.setIsGrantableAsBoolean(grantableAsBoolean);
-            verify(spy, times(1)).setIsGrantable(grantableAsBoolean ? "YES" : "NO");
+            verify(spy, times(1))
+                    .setIsGrantable(grantableAsBoolean ? ColumnPrivilege.COLUMN_VALUE_IS_GRANTABLE_YES :
+                                    ColumnPrivilege.COLUMN_VALUE_IS_GRANTABLE_NO);
         }
     }
 }

@@ -52,7 +52,7 @@ public class ExportedKey extends TableKey<ExportedKey> {
     public boolean equals(final Object obj) {
         if (this == obj) return true;
         if (!(obj instanceof ExportedKey)) return false;
-        return super.equals_((ExportedKey) obj);
+        return equals_((ExportedKey) obj);
     }
 
     @Override
