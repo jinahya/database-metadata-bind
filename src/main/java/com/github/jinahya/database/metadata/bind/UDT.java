@@ -80,8 +80,6 @@ public class UDT extends AbstractMetadataType {
 
     public static final String COLUMN_LABEL_DATA_TYPE = "DATA_TYPE";
 
-    // -----------------------------------------------------------------------------------------------------------------
-
     @Override
     public boolean equals(final Object obj) {
         if (this == obj) return true;
@@ -103,16 +101,26 @@ public class UDT extends AbstractMetadataType {
         );
     }
 
-    // --------------------------------------------------------------------------------------------------------- typeCat
+    public String getTypeCat() {
+        return typeCat;
+    }
+
     public void setTypeCat(final String typeCat) {
         this.typeCat = typeCat;
         udtId = null;
     }
 
-    // ------------------------------------------------------------------------------------------------------- typeSchem
+    public String getTypeSchem() {
+        return typeSchem;
+    }
+
     public void setTypeSchem(final String typeSchem) {
         this.typeSchem = typeSchem;
         udtId = null;
+    }
+
+    public String getTypeName() {
+        return typeName;
     }
 
     public void setTypeName(final String typeName) {
@@ -120,12 +128,15 @@ public class UDT extends AbstractMetadataType {
         udtId = null;
     }
 
+    public int getDataType() {
+        return dataType;
+    }
+
     public void setDataType(final int dataType) {
         this.dataType = dataType;
         udtId = null;
     }
 
-    // -----------------------------------------------------------------------------------------------------------------
     @_NullableBySpecification
     @_ColumnLabel(COLUMN_LABEL_TYPE_CAT)
     private String typeCat;
@@ -152,7 +163,6 @@ public class UDT extends AbstractMetadataType {
     @_ColumnLabel("BASE_TYPE")
     private Integer baseType;
 
-    // -----------------------------------------------------------------------------------------------------------------
     String getTypeCatNonNull() {
         return Optional.ofNullable(getTypeCat()).orElse(Catalog.COLUMN_VALUE_TABLE_CAT_EMPTY);
     }

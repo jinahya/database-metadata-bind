@@ -35,14 +35,8 @@ final class UDTId extends AbstractMetadataTypeId<UDTId, UDT> {
             Comparator.comparing(UDTId::getSchemaId, SchemaId.LEXICOGRAPHIC_ORDER)
                     .thenComparing(UDTId::getTypeName);
 
-    static UDTId of(final SchemaId schemaId, final String typeName) {
-        Objects.requireNonNull(schemaId, "schemaId is null");
-        Objects.requireNonNull(typeName, "typeName is null");
-        return new UDTId(schemaId, typeName);
-    }
-
     static UDTId of(final String typeCat, final String typeSchem, final String typeName) {
-        return of(SchemaId.of(typeCat, typeSchem), typeName);
+        return new UDTId(SchemaId.of(typeCat, typeSchem), typeName);
     }
 
     public UDTId(final SchemaId schemaId, final String typeName) {
