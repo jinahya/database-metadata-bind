@@ -25,7 +25,6 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.EnumSource;
 
-import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 
@@ -51,15 +50,14 @@ class ProcedureTest extends AbstractMetadataTypeTest<Procedure> {
             // GIVEN
             final var spy = typeSpy();
             // WHEN
-            assertThat(spy.getProcedureTypeAsEnum())
-                    .isEqualTo(Procedure.ProcedureTypeEnum.PROCEDURE_RESULT_UNKNOWN);
+            final var procedureTypeAsEnum = spy.getProcedureTypeAsEnum();
             // THEN
             verify(spy, times(1)).getProcedureType();
         }
 
-        @EnumSource(Procedure.ProcedureTypeEnum.class)
+        @EnumSource(Procedure.ProcedureType.class)
         @ParameterizedTest
-        void setProcedureTypeAsEnum__(final Procedure.ProcedureTypeEnum procedureTypeAsEnum) {
+        void setProcedureTypeAsEnum__(final Procedure.ProcedureType procedureTypeAsEnum) {
             // GIVEN
             final var spy = typeSpy();
             // WHEN

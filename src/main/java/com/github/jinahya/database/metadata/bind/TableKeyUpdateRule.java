@@ -49,7 +49,10 @@ public enum TableKeyUpdateRule implements _IntFieldEnum<TableKeyUpdateRule> {
      */
     IMPORTED_KEY_SET_DEFAULT(DatabaseMetaData.importedKeySetDefault); // 4
 
-    //
+    public static TableKeyUpdateRule valueOfUpdateRule(final int updateRule) {
+        return _IntFieldEnum.valueOfFieldValue(TableKeyUpdateRule.class, updateRule);
+    }
+
     TableKeyUpdateRule(final int fieldValue) {
         this.fieldValue = fieldValue;
     }

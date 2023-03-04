@@ -38,7 +38,7 @@ import java.util.Optional;
  *
  * @author Jin Kwon &lt;jinahya_at_gmail.com&gt;
  * @see Context#getColumns(String, String, String, String)
- * @see NullableEnum
+ * @see Nullable
  */
 //@ParentOf(ColumnPrivilege.class)
 @_ChildOf(Table.class)
@@ -74,7 +74,7 @@ public class Column extends AbstractMetadataType {
      *
      * @author Jin Kwon &lt;onacit_at_gmail.com&gt;
      */
-    public enum NullableEnum implements _IntFieldEnum<NullableEnum> {
+    public enum Nullable implements _IntFieldEnum<Nullable> {
 
         /**
          * A value for {@link DatabaseMetaData#columnNoNulls}({@value DatabaseMetaData#columnNoNulls}).
@@ -99,11 +99,11 @@ public class Column extends AbstractMetadataType {
          * @return the value matched.
          * @throws IllegalStateException when no value matched.
          */
-        public static NullableEnum valueOfNullable(final int nullable) {
-            return _IntFieldEnum.valueOfFieldValue(NullableEnum.class, nullable);
+        public static Nullable valueOfNullable(final int nullable) {
+            return _IntFieldEnum.valueOfFieldValue(Nullable.class, nullable);
         }
 
-        NullableEnum(final int fieldValue) {
+        Nullable(final int fieldValue) {
             this.fieldValue = fieldValue;
         }
 
@@ -176,13 +176,26 @@ public class Column extends AbstractMetadataType {
         columnId = null;
     }
 
-    NullableEnum getNullableAsEnum() {
-        return NullableEnum.valueOfNullable(getNullable());
+    public Integer getNullable() {
+        return nullable;
     }
 
-    void setNullableAsEnum(final NullableEnum nullableAsEnum) {
-        Objects.requireNonNull(nullableAsEnum, "nullableAsEnum is null");
-        setNullable(nullableAsEnum.fieldValueAsInt());
+    public void setNullable(final Integer nullable) {
+        this.nullable = nullable;
+    }
+
+    Nullable getNullableAsEnum() {
+        return Optional.ofNullable(getNullable())
+                .map(Nullable::valueOfNullable)
+                .orElse(null);
+    }
+
+    void setNullableAsEnum(final Nullable nullableAsEnum) {
+        setNullable(
+                Optional.ofNullable(nullableAsEnum)
+                        .map(_IntFieldEnum::fieldValueAsInt)
+                        .orElse(null)
+        );
     }
 
     @_NullableBySpecification
@@ -220,8 +233,9 @@ public class Column extends AbstractMetadataType {
     @_ColumnLabel("NUM_PREC_RADIX")
     private int numPrecRadix;
 
+    @_NotNull
     @_ColumnLabel(COLUMN_LABEL_NULLABLE)
-    private int nullable;
+    private Integer nullable;
 
     @_NullableBySpecification
     @_ColumnLabel("REMARKS")

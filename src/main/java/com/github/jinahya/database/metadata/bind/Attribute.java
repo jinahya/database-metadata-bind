@@ -37,7 +37,7 @@ import java.util.Optional;
  *
  * @author Jin Kwon &lt;jinahya_at_gmail.com&gt;
  * @see Context#getAttributes(String, String, String, String)
- * @see NullableEnum
+ * @see Nullable
  */
 @_ChildOf(UDT.class)
 @Setter
@@ -60,7 +60,7 @@ public class Attribute extends AbstractMetadataType {
     /**
      * Constants for {@value #COLUMN_LABEL_NULLABLE} column values.
      */
-    public enum NullableEnum implements _IntFieldEnum<NullableEnum> {
+    public enum Nullable implements _IntFieldEnum<Nullable> {
 
         /**
          * A value for {@link DatabaseMetaData#attributeNoNulls}({@value DatabaseMetaData#attributeNoNulls}).
@@ -86,11 +86,11 @@ public class Attribute extends AbstractMetadataType {
          * @return the value matched.
          * @throws IllegalStateException when no value matched.
          */
-        public static NullableEnum valueOfNullable(final int nullable) {
-            return _IntFieldEnum.valueOfFieldValue(NullableEnum.class, nullable);
+        public static Nullable valueOfNullable(final int nullable) {
+            return _IntFieldEnum.valueOfFieldValue(Nullable.class, nullable);
         }
 
-        NullableEnum(final int fieldValue) {
+        Nullable(final int fieldValue) {
             this.fieldValue = fieldValue;
         }
 
@@ -187,8 +187,9 @@ public class Attribute extends AbstractMetadataType {
     @_ColumnLabel("NUM_PREC_RADIX")
     private int numPrecRadix;
 
+    @_NotNull
     @_ColumnLabel(COLUMN_LABEL_NULLABLE)
-    private int nullable;
+    private Integer nullable;
 
     @_NullableBySpecification
     @_ColumnLabel("REMARKS")

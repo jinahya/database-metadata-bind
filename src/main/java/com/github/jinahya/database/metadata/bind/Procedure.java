@@ -31,6 +31,7 @@ import lombok.experimental.SuperBuilder;
 import java.sql.DatabaseMetaData;
 import java.util.Comparator;
 import java.util.Objects;
+import java.util.Optional;
 
 import static java.util.Comparator.naturalOrder;
 import static java.util.Comparator.nullsFirst;
@@ -85,7 +86,7 @@ public class Procedure extends AbstractMetadataType {
     /**
      * Constants for the value of {@value #COLUMN_LABEL_PROCEDURE_TYPE} column.
      */
-    public enum ProcedureTypeEnum implements _IntFieldEnum<ProcedureTypeEnum> {
+    public enum ProcedureType implements _IntFieldEnum<ProcedureType> {
 
         /**
          * A value for
@@ -105,16 +106,16 @@ public class Procedure extends AbstractMetadataType {
         PROCEDURE_RETURNS_RESULT(DatabaseMetaData.procedureReturnsResult); // 2
 
         /**
-         * Returns the value whose {@link #fieldValueAsInt() fieldValue} matches to specified value.
+         * Returns the value whose {@link #fieldValueAsInt() procedureType} matches to specified value.
          *
-         * @param fieldValue the value of {@link #fieldValueAsInt() fieldValue} to match.
+         * @param procedureType the value of {@link #fieldValueAsInt() procedureType} to match.
          * @return a matched value.
          */
-        public static ProcedureTypeEnum valueOfFieldValue(final int fieldValue) {
-            return _IntFieldEnum.valueOfFieldValue(ProcedureTypeEnum.class, fieldValue);
+        public static ProcedureType valueOfProcedureType(final int procedureType) {
+            return _IntFieldEnum.valueOfFieldValue(ProcedureType.class, procedureType);
         }
 
-        private ProcedureTypeEnum(final int fieldValue) {
+        private ProcedureType(final int fieldValue) {
             this.fieldValue = fieldValue;
         }
 
@@ -168,13 +169,26 @@ public class Procedure extends AbstractMetadataType {
         procedureId = null;
     }
 
-    ProcedureTypeEnum getProcedureTypeAsEnum() {
-        return ProcedureTypeEnum.valueOfFieldValue(getProcedureType());
+    public Integer getProcedureType() {
+        return procedureType;
     }
 
-    void setProcedureTypeAsEnum(final ProcedureTypeEnum procedureTypeAsEnum) {
-        Objects.requireNonNull(procedureTypeAsEnum, "procedureTypeAsEnum is null");
-        setProcedureType(procedureTypeAsEnum.fieldValueAsInt());
+    public void setProcedureType(final Integer procedureType) {
+        this.procedureType = procedureType;
+    }
+
+    ProcedureType getProcedureTypeAsEnum() {
+        return Optional.ofNullable(getProcedureType())
+                .map(ProcedureType::valueOfProcedureType)
+                .orElse(null);
+    }
+
+    void setProcedureTypeAsEnum(final ProcedureType procedureTypeAsEnum) {
+        setProcedureType(
+                Optional.ofNullable(procedureTypeAsEnum)
+                        .map(_IntFieldEnum::fieldValueAsInt)
+                        .orElse(null)
+        );
     }
 
     public void setSpecificName(final String specificName) {
@@ -198,8 +212,9 @@ public class Procedure extends AbstractMetadataType {
     @_ColumnLabel("REMARKS")
     private String remarks;
 
+    @_NotNull
     @_ColumnLabel("PROCEDURE_TYPE")
-    private int procedureType;
+    private Integer procedureType;
 
     @_ColumnLabel(COLUMN_LABEL_SPECIFIC_NAME)
     private String specificName;

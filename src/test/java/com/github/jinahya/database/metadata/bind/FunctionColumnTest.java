@@ -27,7 +27,6 @@ import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.EnumSource;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 
@@ -39,10 +38,10 @@ class FunctionColumnTest extends AbstractMetadataTypeTest<FunctionColumn> {
 
     @DisplayName("ColumnType")
     @Nested
-    class ColumnTypeEnumTest extends _IntFieldEnumTest<FunctionColumn.ColumnTypeEnum> {
+    class ColumnTypeTest extends _IntFieldEnumTest<FunctionColumn.ColumnType> {
 
-        ColumnTypeEnumTest() {
-            super(FunctionColumn.ColumnTypeEnum.class);
+        ColumnTypeTest() {
+            super(FunctionColumn.ColumnType.class);
         }
     }
 
@@ -53,22 +52,21 @@ class FunctionColumnTest extends AbstractMetadataTypeTest<FunctionColumn> {
         @Test
         void getColumnTypeAsEnum__() {
             final var spy = typeSpy();
-            final var actual = spy.getColumnTypeAsEnum();
+            final var columnTypeAsEnum = spy.getColumnTypeAsEnum();
+            assertThat(columnTypeAsEnum).isNull();
             verify(spy, times(1)).getColumnType();
-            assertThat(actual)
-                    .isSameAs(FunctionColumn.ColumnTypeEnum.valueOfColumnType(spy.getColumnType()));
         }
 
         @Test
-        void setColumnTypeAsEnum_NullPointerException_Null() {
+        void setColumnTypeAsEnum_Null_Null() {
             final var spy = typeSpy();
-            assertThatThrownBy(() -> spy.setColumnTypeAsEnum(null))
-                    .isInstanceOf(NullPointerException.class);
+            spy.setColumnTypeAsEnum(null);
+            verify(spy, times(1)).setColumnType(null);
         }
 
-        @EnumSource(FunctionColumn.ColumnTypeEnum.class)
+        @EnumSource(FunctionColumn.ColumnType.class)
         @ParameterizedTest
-        void setColumnTypeAsEnum__(final FunctionColumn.ColumnTypeEnum columnTypeAsEnum) {
+        void setColumnTypeAsEnum__(final FunctionColumn.ColumnType columnTypeAsEnum) {
             final var spy = typeSpy();
             spy.setColumnTypeAsEnum(columnTypeAsEnum);
             verify(spy, times(1)).setColumnType(columnTypeAsEnum.fieldValueAsInt());

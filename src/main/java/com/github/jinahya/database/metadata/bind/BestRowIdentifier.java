@@ -28,6 +28,7 @@ import lombok.ToString;
 import java.sql.DatabaseMetaData;
 import java.util.Comparator;
 import java.util.Objects;
+import java.util.Optional;
 
 /**
  * A class for binding results of the
@@ -35,8 +36,8 @@ import java.util.Objects;
  *
  * @author Jin Kwon &lt;jinahya_at_gmail.com&gt;
  * @see Context#getBestRowIdentifier(String, String, String, int, boolean)
- * @see PseudoColumnEnum
- * @see ScopeEnum
+ * @see PseudoColumn
+ * @see Scope
  */
 @_ChildOf(Table.class)
 @Setter
@@ -61,7 +62,7 @@ public class BestRowIdentifier
      *
      * @author Jin Kwon &lt;onacit_at_gmail.com&gt;
      */
-    public enum ScopeEnum implements _IntFieldEnum<ScopeEnum> {
+    public enum Scope implements _IntFieldEnum<Scope> {
 
         /**
          * A value for {@link DatabaseMetaData#bestRowTemporary}({@value DatabaseMetaData#bestRowTemporary}).
@@ -86,11 +87,11 @@ public class BestRowIdentifier
          * @return the value matched.
          * @throws IllegalStateException when no value matched.
          */
-        public static ScopeEnum valueOfScope(final int scope) {
-            return _IntFieldEnum.valueOfFieldValue(ScopeEnum.class, scope);
+        public static Scope valueOfScope(final int scope) {
+            return _IntFieldEnum.valueOfFieldValue(Scope.class, scope);
         }
 
-        ScopeEnum(final int fieldValue) {
+        Scope(final int fieldValue) {
             this.fieldValue = fieldValue;
         }
 
@@ -113,7 +114,7 @@ public class BestRowIdentifier
      *
      * @author Jin Kwon &lt;onacit_at_gmail.com&gt;
      */
-    public enum PseudoColumnEnum implements _IntFieldEnum<PseudoColumnEnum> {
+    public enum PseudoColumn implements _IntFieldEnum<PseudoColumn> {
 
         /**
          * A value for {@link DatabaseMetaData#bestRowUnknown}({@value DatabaseMetaData#bestRowUnknown}).
@@ -138,11 +139,11 @@ public class BestRowIdentifier
          * @return the value matched.
          * @throws IllegalStateException when no value matched.
          */
-        public static PseudoColumnEnum valueOfPseudoColumn(final int pseudoColumn) {
-            return _IntFieldEnum.valueOfFieldValue(PseudoColumnEnum.class, pseudoColumn);
+        public static PseudoColumn valueOfPseudoColumn(final int pseudoColumn) {
+            return _IntFieldEnum.valueOfFieldValue(PseudoColumn.class, pseudoColumn);
         }
 
-        PseudoColumnEnum(final int fieldValue) {
+        PseudoColumn(final int fieldValue) {
             this.fieldValue = fieldValue;
         }
 
@@ -162,26 +163,53 @@ public class BestRowIdentifier
         return COMPARING_SCOPE.compare(this, o);
     }
 
-    ScopeEnum getScopeAsEnum() {
-        return ScopeEnum.valueOfScope(getScope());
+    public Integer getScope() {
+        return scope;
     }
 
-    void setScopeAsEnum(final ScopeEnum scopeAsEnum) {
-        Objects.requireNonNull(scopeAsEnum, "scopeAsEnum is null");
-        setScope(scopeAsEnum.fieldValueAsInt());
+    public void setScope(final Integer scope) {
+        this.scope = scope;
     }
 
-    PseudoColumnEnum getPseudoColumnAsEnum() {
-        return PseudoColumnEnum.valueOfPseudoColumn(getPseudoColumn());
+    Scope getScopeAsEnum() {
+        return Optional.ofNullable(getScope())
+                .map(Scope::valueOfScope)
+                .orElse(null);
     }
 
-    void setPseudoColumnAsEnum(final PseudoColumnEnum pseudoColumnAsEnum) {
-        Objects.requireNonNull(pseudoColumnAsEnum, "pseudoColumnAsEnum is null");
-        setPseudoColumn(pseudoColumnAsEnum.fieldValueAsInt());
+    void setScopeAsEnum(final Scope scopeAsEnum) {
+        setScope(
+                Optional.ofNullable(scopeAsEnum)
+                        .map(_IntFieldEnum::fieldValueAsInt)
+                        .orElse(null)
+        );
     }
 
+    public Integer getPseudoColumn() {
+        return pseudoColumn;
+    }
+
+    public void setPseudoColumn(final Integer pseudoColumn) {
+        this.pseudoColumn = pseudoColumn;
+    }
+
+    PseudoColumn getPseudoColumnAsEnum() {
+        return Optional.ofNullable(getPseudoColumn())
+                .map(PseudoColumn::valueOfPseudoColumn)
+                .orElse(null);
+    }
+
+    void setPseudoColumnAsEnum(final PseudoColumn pseudoColumnAsEnum) {
+        setPseudoColumn(
+                Optional.ofNullable(pseudoColumnAsEnum)
+                        .map(_IntFieldEnum::fieldValueAsInt)
+                        .orElse(null)
+        );
+    }
+
+    @_NotNull
     @_ColumnLabel(COLUMN_LABEL_SCOPE)
-    private int scope;
+    private Integer scope;
 
     @_ColumnLabel(COLUMN_LABEL_COLUMN_NAME)
     private String columnName;
@@ -204,8 +232,9 @@ public class BestRowIdentifier
     @_ColumnLabel("DECIMAL_DIGITS")
     private Integer decimalDigits;
 
+    @_NotNull
     @_ColumnLabel(COLUMN_LABEL_PSEUDO_COLUMN)
-    private int pseudoColumn;
+    private Integer pseudoColumn;
 
     ColumnId getColumnId(final TableId tableId) {
         Objects.requireNonNull(tableId, "tableId is null");

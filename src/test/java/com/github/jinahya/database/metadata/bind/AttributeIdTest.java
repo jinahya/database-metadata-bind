@@ -40,10 +40,10 @@ class AttributeIdTest extends AbstractMetadataTypeIdTest<AttributeId, Attribute>
 
     @DisplayName("NullableEnum")
     @Nested
-    class AttributeNullableTest extends _IntFieldEnumTest<Attribute.NullableEnum> {
+    class NullableTest extends _IntFieldEnumTest<Attribute.Nullable> {
 
-        AttributeNullableTest() {
-            super(Attribute.NullableEnum.class);
+        NullableTest() {
+            super(Attribute.Nullable.class);
         }
     }
 }

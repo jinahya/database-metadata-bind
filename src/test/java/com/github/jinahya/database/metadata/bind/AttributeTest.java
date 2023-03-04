@@ -29,10 +29,10 @@ class AttributeTest extends AbstractMetadataTypeTest<Attribute> {
     }
 
     @Nested
-    class NullableEnumTest extends _IntFieldEnumTest<Attribute.NullableEnum> {
+    class NullableTest extends _IntFieldEnumTest<Attribute.Nullable> {
 
-        NullableEnumTest() {
-            super(Attribute.NullableEnum.class);
+        NullableTest() {
+            super(Attribute.Nullable.class);
         }
     }
 

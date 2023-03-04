@@ -54,7 +54,7 @@ public class VersionColumn extends AbstractMetadataType {
      *
      * @author Jin Kwon &lt;onacit_at_gmail.com&gt;
      */
-    public enum PseudoColumnEnum implements _IntFieldEnum<PseudoColumnEnum> {
+    public enum PseudoColumn implements _IntFieldEnum<PseudoColumn> {
 
         /**
          * A value for {@link DatabaseMetaData#versionColumnUnknown}({@value DatabaseMetaData#versionColumnUnknown}).
@@ -80,11 +80,11 @@ public class VersionColumn extends AbstractMetadataType {
          * @return the value matched.
          * @throws IllegalStateException when no value matched.
          */
-        public static PseudoColumnEnum valueOfPseudoColumn(final int pseudoColumn) {
-            return _IntFieldEnum.valueOfFieldValue(PseudoColumnEnum.class, pseudoColumn);
+        public static PseudoColumn valueOfPseudoColumn(final int pseudoColumn) {
+            return _IntFieldEnum.valueOfFieldValue(PseudoColumn.class, pseudoColumn);
         }
 
-        PseudoColumnEnum(final int fieldValue) {
+        PseudoColumn(final int fieldValue) {
             this.fieldValue = fieldValue;
         }
 
@@ -138,8 +138,9 @@ public class VersionColumn extends AbstractMetadataType {
     @_ColumnLabel("DECIMAL_DIGITS")
     private Integer decimalDigits;
 
+    @_NotNull
     @_ColumnLabel(COLUMN_LABEL_PSEUDO_COLUMN)
-    private int pseudoColumn;
+    private Integer pseudoColumn;
 
     ColumnId getColumnId(final TableId tableId) {
         Objects.requireNonNull(tableId, "tableId is null");

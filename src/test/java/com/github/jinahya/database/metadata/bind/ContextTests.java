@@ -20,7 +20,7 @@ package com.github.jinahya.database.metadata.bind;
  * #L%
  */
 
-import com.github.jinahya.database.metadata.bind.VersionColumn.PseudoColumnEnum;
+import com.github.jinahya.database.metadata.bind.VersionColumn.PseudoColumn;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.platform.commons.util.ReflectionUtils;
 
@@ -233,7 +233,7 @@ final class ContextTests {
             final var dataType = attribute.getDataType();
             assertDoesNotThrow(() -> JDBCType.valueOf(dataType));
             assertThat(attribute.getAttrTypeName()).isNotNull();
-            assertDoesNotThrow(() -> Attribute.NullableEnum.valueOfNullable(attribute.getNullable()));
+            assertDoesNotThrow(() -> Attribute.Nullable.valueOfNullable(attribute.getNullable()));
             assertThat(attribute.getIsNullable()).isNotNull();
             if (dataType == Types.REF) {
                 assertThat(attribute.getScopeCatalog()).isNotNull();
@@ -271,12 +271,12 @@ final class ContextTests {
         Objects.requireNonNull(bestRowIdentifier, "bestRowIdentifier is null");
         {
             final var scope = bestRowIdentifier.getScope();
-            assertDoesNotThrow(() -> BestRowIdentifier.ScopeEnum.valueOfScope(scope));
+            assertDoesNotThrow(() -> BestRowIdentifier.Scope.valueOfScope(scope));
             assertThat(bestRowIdentifier.getColumnName()).isNotNull();
             assertDoesNotThrow(() -> JDBCType.valueOf(bestRowIdentifier.getDataType()));
             assertThat(bestRowIdentifier.getTypeName()).isNotNull();
             final int pseudoColumn = bestRowIdentifier.getPseudoColumn();
-            assertDoesNotThrow(() -> BestRowIdentifier.PseudoColumnEnum.valueOfPseudoColumn(pseudoColumn));
+            assertDoesNotThrow(() -> BestRowIdentifier.PseudoColumn.valueOfPseudoColumn(pseudoColumn));
         }
         {
             common(bestRowIdentifier);
@@ -431,7 +431,7 @@ final class ContextTests {
         }
         final var columnId = common(common(column).getColumnId());
         {
-            final var value = Column.NullableEnum.valueOfNullable(column.getNullable());
+            final var value = Column.Nullable.valueOfNullable(column.getNullable());
         }
     }
 
@@ -631,7 +631,7 @@ final class ContextTests {
         Objects.requireNonNull(functionColumn, "functionColumn is null");
         common(functionColumn);
         common(functionColumn.getFunctionColumnId());
-        final var columnType = FunctionColumn.ColumnTypeEnum.valueOfColumnType(functionColumn.getColumnType());
+        final var columnType = FunctionColumn.ColumnType.valueOfColumnType(functionColumn.getColumnType());
     }
 
     static void importedKeys(final Context context, final List<? extends ImportedKey> importedKeys)
@@ -928,7 +928,7 @@ final class ContextTests {
         }
         final var tableId = common(common(table).getTableId());
         try {
-            for (final var scope : BestRowIdentifier.ScopeEnum.values()) {
+            for (final var scope : BestRowIdentifier.Scope.values()) {
                 for (final boolean nullable : new boolean[] {true, false}) {
                     final var bestRowIdentifier =
                             context.getBestRowIdentifier(table, scope.fieldValueAsInt(), nullable);
@@ -1017,7 +1017,7 @@ final class ContextTests {
             final var pseudoColumns = context.getPseudoColumns(table, "%");
             assertThat(pseudoColumns)
                     .doesNotHaveDuplicates()
-                    .map(PseudoColumn::getPseudoColumnId)
+                    .map(com.github.jinahya.database.metadata.bind.PseudoColumn::getPseudoColumnId)
                     .doesNotHaveDuplicates()
                     .map(PseudoColumnId::getTableId)
                     .allMatch(tableId::equals);
@@ -1095,15 +1095,18 @@ final class ContextTests {
         common(primaryKey.getPrimaryKeyId());
     }
 
-    static void pseudoColumns(final Context context, final List<? extends PseudoColumn> pseudoColumns)
+    static void pseudoColumns(final Context context,
+                              final List<? extends com.github.jinahya.database.metadata.bind.PseudoColumn> pseudoColumns)
             throws SQLException {
         Objects.requireNonNull(context, "context is null");
         Objects.requireNonNull(pseudoColumns, "pseudoColumns is null");
         assertThat(pseudoColumns).satisfiesAnyOf(
-                        l -> assertThat(l).isSortedAccordingTo(PseudoColumn.CASE_INSENSITIVE_ORDER),
-                        l -> assertThat(l).isSortedAccordingTo(PseudoColumn.LEXICOGRAPHIC_ORDER)
+                        l -> assertThat(l).isSortedAccordingTo(
+                                com.github.jinahya.database.metadata.bind.PseudoColumn.CASE_INSENSITIVE_ORDER),
+                        l -> assertThat(l).isSortedAccordingTo(
+                                com.github.jinahya.database.metadata.bind.PseudoColumn.LEXICOGRAPHIC_ORDER)
                 )
-                .extracting(PseudoColumn::getPseudoColumnId)
+                .extracting(com.github.jinahya.database.metadata.bind.PseudoColumn::getPseudoColumnId)
                 .doesNotContainNull()
                 .doesNotHaveDuplicates()
                 .satisfiesAnyOf(
@@ -1115,7 +1118,9 @@ final class ContextTests {
         }
     }
 
-    static void pseudoColumn(final Context context, final PseudoColumn pseudoColumn) throws SQLException {
+    static void pseudoColumn(final Context context,
+                             final com.github.jinahya.database.metadata.bind.PseudoColumn pseudoColumn)
+            throws SQLException {
         Objects.requireNonNull(context, "context is null");
         Objects.requireNonNull(pseudoColumn, "pseudoColumn is null");
         common(pseudoColumn);
@@ -1217,17 +1222,17 @@ final class ContextTests {
         {
             assertThat(typeInfo.getTypeName()).isNotNull();
             assertDoesNotThrow(() -> JDBCType.valueOf(typeInfo.getDataType()));
-            assertDoesNotThrow(() -> TypeInfo.NullableEnum.valueOfNullable(typeInfo.getNullable()));
-            assertDoesNotThrow(() -> TypeInfo.SearchableEnum.valueOfSearchable(typeInfo.getSearchable()));
+            assertDoesNotThrow(() -> TypeInfo.Nullable.valueOfNullable(typeInfo.getNullable()));
+            assertDoesNotThrow(() -> TypeInfo.Searchable.valueOfSearchable(typeInfo.getSearchable()));
         }
         {
             common(typeInfo);
         }
         {
-            final var value = TypeInfo.NullableEnum.valueOfNullable(typeInfo.getNullable());
+            final var value = TypeInfo.Nullable.valueOfNullable(typeInfo.getNullable());
         }
         {
-            final var value = TypeInfo.SearchableEnum.valueOfSearchable(typeInfo.getSearchable());
+            final var value = TypeInfo.Searchable.valueOfSearchable(typeInfo.getSearchable());
         }
     }
 
@@ -1304,7 +1309,7 @@ final class ContextTests {
         {
             assertDoesNotThrow(() -> JDBCType.valueOf(versionColumn.getDataType()));
             assertThat(versionColumn.getTypeName()).isNotNull();
-            assertDoesNotThrow(() -> PseudoColumnEnum.valueOfPseudoColumn(versionColumn.getPseudoColumn()));
+            assertDoesNotThrow(() -> PseudoColumn.valueOfPseudoColumn(versionColumn.getPseudoColumn()));
         }
         {
             common(versionColumn);
@@ -1327,7 +1332,7 @@ final class ContextTests {
             thrown("failed; getAttributes", sqle);
         }
         try {
-            for (final var scope : BestRowIdentifier.ScopeEnum.values()) {
+            for (final var scope : BestRowIdentifier.Scope.values()) {
                 for (final boolean nullable : new boolean[] {true, false}) {
                     final var bestRowIdentifier =
                             context.getBestRowIdentifier(null, null, "%", scope.fieldValueAsInt(), nullable);
@@ -1501,7 +1506,7 @@ final class ContextTests {
             }
             for (final var table : tables) {
                 try {
-                    for (final var scope : BestRowIdentifier.ScopeEnum.values()) {
+                    for (final var scope : BestRowIdentifier.Scope.values()) {
                         for (final boolean nullable : new boolean[] {true, false}) {
                             final var bestRowIdentifier =
                                     context.getBestRowIdentifier(table, scope.fieldValueAsInt(), nullable);

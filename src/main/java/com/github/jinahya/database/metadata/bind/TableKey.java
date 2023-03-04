@@ -30,6 +30,7 @@ import lombok.experimental.SuperBuilder;
 
 import java.util.Comparator;
 import java.util.Objects;
+import java.util.Optional;
 
 /**
  * An abstract class for binding results of the
@@ -197,12 +198,56 @@ abstract class TableKey<T extends TableKey<T>> extends AbstractMetadataType {
         fkcolumnId = null;
     }
 
+    public Integer getUpdateRule() {
+        return updateRule;
+    }
+
+    public void setUpdateRule(final Integer updateRule) {
+        this.updateRule = updateRule;
+    }
+
+    TableKeyUpdateRule getUpdateRuleAsEnum() {
+        return Optional.ofNullable(getUpdateRule())
+                .map(TableKeyUpdateRule::valueOfUpdateRule)
+                .orElse(null);
+    }
+
+    void setUpdateRuleAsEnum(final TableKeyUpdateRule updateRuleAsEnum) {
+        setUpdateRule(
+                Optional.ofNullable(updateRuleAsEnum)
+                        .map(_IntFieldEnum::fieldValueAsInt)
+                        .orElse(null)
+        );
+    }
+
+    public Integer getDeleteRule() {
+        return deleteRule;
+    }
+
+    public void setDeleteRule(final Integer deleteRule) {
+        this.deleteRule = deleteRule;
+    }
+
+    TableKeyDeleteRule getDeleteRuleAsEnum() {
+        return Optional.ofNullable(getDeleteRule())
+                .map(TableKeyDeleteRule::valueOfDeleteRule)
+                .orElse(null);
+    }
+
+    void setDeleteRuleAsEnum(final TableKeyDeleteRule deleteRuleAsEnum) {
+        setDeleteRule(
+                Optional.ofNullable(deleteRuleAsEnum)
+                        .map(_IntFieldEnum::fieldValueAsInt)
+                        .orElse(null)
+        );
+    }
+
     /**
      * Returns current value of {@link #COLUMN_NAME_DEFERRABILITY} column value.
      *
      * @return current value of {@link #COLUMN_NAME_DEFERRABILITY} column value.
      */
-    public int getDeferrability() {
+    public Integer getDeferrability() {
         return deferrability;
     }
 
@@ -211,17 +256,22 @@ abstract class TableKey<T extends TableKey<T>> extends AbstractMetadataType {
      *
      * @param deferrability new value for the {@link #COLUMN_NAME_DEFERRABILITY} column value.
      */
-    public void setDeferrability(int deferrability) {
+    public void setDeferrability(final Integer deferrability) {
         this.deferrability = deferrability;
     }
 
     TableKeyDeferrability getDeferrabilityAsEnum() {
-        return TableKeyDeferrability.valueOfDeferrability(getDeferrability());
+        return Optional.ofNullable(getDeferrability())
+                .map(v -> TableKeyDeferrability.valueOfDeferrability(getDeferrability()))
+                .orElse(null);
     }
 
     void setDeferrabilityAsEnum(final TableKeyDeferrability deferrabilityAsEnum) {
-        Objects.requireNonNull(deferrabilityAsEnum, "deferrabilityAsEnum is null");
-        setDeferrability(deferrabilityAsEnum.fieldValueAsInt());
+        setDeferrability(
+                Optional.ofNullable(deferrabilityAsEnum)
+                        .map(v -> v.fieldValueAsInt())
+                        .orElse(null)
+        );
     }
 
     @_NullableBySpecification
@@ -255,11 +305,13 @@ abstract class TableKey<T extends TableKey<T>> extends AbstractMetadataType {
     @_ColumnLabel(COLUMN_NAME_KEY_SEQ)
     private int keySeq;
 
+    @_NotNull
     @_ColumnLabel(COLUMN_NAME_UPDATE_RULE)
-    private int updateRule;
+    private Integer updateRule;
 
+    @_NotNull
     @_ColumnLabel(COLUMN_NAME_DELETE_RULE)
-    private int deleteRule;
+    private Integer deleteRule;
 
     @_NullableBySpecification
     @_ColumnLabel(COLUMN_NAME_FK_NAME)
@@ -269,8 +321,9 @@ abstract class TableKey<T extends TableKey<T>> extends AbstractMetadataType {
     @_ColumnLabel(COLUMN_NAME_PK_NAME)
     private String pkName;
 
+    @_NotNull
     @_ColumnLabel(COLUMN_NAME_DEFERRABILITY)
-    private int deferrability;
+    private Integer deferrability;
 
     String getPktableCatNonNull() {
         final String pktableCat = getPktableCat();

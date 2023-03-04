@@ -4,7 +4,7 @@ package com.github.jinahya.database.metadata.bind;
  * #%L
  * database-metadata-bind
  * %%
- * Copyright (C) 2011 - 2021 Jinahya, Inc.
+ * Copyright (C) 2011 - 2019 Jinahya, Inc.
  * %%
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -20,27 +20,20 @@ package com.github.jinahya.database.metadata.bind;
  * #L%
  */
 
-import org.junit.jupiter.api.Nested;
+import java.lang.annotation.Documented;
+import java.lang.annotation.ElementType;
+import java.lang.annotation.Retention;
+import java.lang.annotation.RetentionPolicy;
+import java.lang.annotation.Target;
 
-class TypeInfoTest extends AbstractMetadataTypeTest<TypeInfo> {
+/**
+ * A marker annotation for columns may not be {@code null}.
+ *
+ * @author Jin Kwon &lt;onacit_at_gmail.com&gt;
+ */
+@Documented
+@Retention(RetentionPolicy.RUNTIME)
+@Target({ElementType.FIELD})
+@interface _NotNull {
 
-    TypeInfoTest() {
-        super(TypeInfo.class);
-    }
-
-    @Nested
-    class NullableTest extends _IntFieldEnumTest<TypeInfo.Nullable> {
-
-        NullableTest() {
-            super(TypeInfo.Nullable.class);
-        }
-    }
-
-    @Nested
-    class SearchableTest extends _IntFieldEnumTest<TypeInfo.Searchable> {
-
-        SearchableTest() {
-            super(TypeInfo.Searchable.class);
-        }
-    }
 }

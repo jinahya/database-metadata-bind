@@ -30,6 +30,7 @@ import lombok.experimental.SuperBuilder;
 import java.sql.DatabaseMetaData;
 import java.util.Comparator;
 import java.util.Objects;
+import java.util.Optional;
 
 /**
  * A class for binding results of the {@link java.sql.DatabaseMetaData#getTypeInfo()} method.
@@ -81,14 +82,14 @@ public class TypeInfo extends AbstractMetadataType {
     /**
      * A column label of {@value}.
      *
-     * @see NullableEnum
+     * @see Nullable
      */
     public static final String COLUMN_LABEL_NULLABLE = "NULLABLE";
 
     /**
      * Constants for the {@value #COLUMN_LABEL_NULLABLE} column value.
      */
-    public enum NullableEnum implements _IntFieldEnum<NullableEnum> {
+    public enum Nullable implements _IntFieldEnum<Nullable> {
 
         /**
          * A value for {@link DatabaseMetaData#typeNoNulls}({@value DatabaseMetaData#typeNoNulls}).
@@ -112,11 +113,11 @@ public class TypeInfo extends AbstractMetadataType {
          * @return the value matched.
          * @throws IllegalStateException when no value matched.
          */
-        public static NullableEnum valueOfNullable(final int nullable) {
-            return _IntFieldEnum.valueOfFieldValue(NullableEnum.class, nullable);
+        public static Nullable valueOfNullable(final int nullable) {
+            return _IntFieldEnum.valueOfFieldValue(Nullable.class, nullable);
         }
 
-        NullableEnum(final int fieldValue) {
+        Nullable(final int fieldValue) {
             this.fieldValue = fieldValue;
         }
 
@@ -136,14 +137,14 @@ public class TypeInfo extends AbstractMetadataType {
     /**
      * A column label of {@value}.
      *
-     * @see SearchableEnum
+     * @see Searchable
      */
     public static final String COLUMN_LABEL_SEARCHABLE = "SEARCHABLE";
 
     /**
      * Constants for the {@value #COLUMN_LABEL_SEARCHABLE} column value.
      */
-    public enum SearchableEnum implements _IntFieldEnum<SearchableEnum> {
+    public enum Searchable implements _IntFieldEnum<Searchable> {
 
         /**
          * A value for {@link DatabaseMetaData#typePredNone}({@value DatabaseMetaData#typePredNone}).
@@ -172,11 +173,11 @@ public class TypeInfo extends AbstractMetadataType {
          * @return the value matched.
          * @throws IllegalStateException when no value matched.
          */
-        public static SearchableEnum valueOfSearchable(final int searchable) {
-            return _IntFieldEnum.valueOfFieldValue(SearchableEnum.class, searchable);
+        public static Searchable valueOfSearchable(final int searchable) {
+            return _IntFieldEnum.valueOfFieldValue(Searchable.class, searchable);
         }
 
-        SearchableEnum(final int fieldValue) {
+        Searchable(final int fieldValue) {
             this.fieldValue = fieldValue;
         }
 
@@ -202,6 +203,28 @@ public class TypeInfo extends AbstractMetadataType {
         return Objects.hash(typeName, dataType);
     }
 
+    public Integer getSearchable() {
+        return searchable;
+    }
+
+    public void setSearchable(final Integer searchable) {
+        this.searchable = searchable;
+    }
+
+    Searchable getSearchableAsEnum() {
+        return Optional.ofNullable(getSearchable())
+                .map(Searchable::valueOfSearchable)
+                .orElse(null);
+    }
+
+    void setSearchableAsEnum(final Searchable searchableAsEnum) {
+        setSearchable(
+                Optional.ofNullable(searchableAsEnum)
+                        .map(_IntFieldEnum::fieldValueAsInt)
+                        .orElse(null)
+        );
+    }
+
     @_ColumnLabel(COLUMN_LABEL_TYPE_NAME)
     private String typeName;
 
@@ -224,14 +247,16 @@ public class TypeInfo extends AbstractMetadataType {
     @_ColumnLabel(COLUMN_LABEL_CREATE_PARAMS)
     private String createParams;
 
+    @_NotNull
     @_ColumnLabel(COLUMN_LABEL_NULLABLE)
-    private int nullable;
+    private Integer nullable;
 
     @_ColumnLabel(COLUMN_LABEL_CASE_SENSITIVE)
     private boolean caseSensitive;
 
+    @_NotNull
     @_ColumnLabel(COLUMN_LABEL_SEARCHABLE)
-    private int searchable;
+    private Integer searchable;
 
     @_NotUsedBySpecification
     @_ColumnLabel("UNSIGNED_ATTRIBUTE")

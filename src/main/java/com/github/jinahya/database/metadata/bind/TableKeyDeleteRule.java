@@ -49,7 +49,10 @@ public enum TableKeyDeleteRule implements _IntFieldEnum<TableKeyDeleteRule> {
      */
     IMPORTED_KEY_SET_DEFAULT(DatabaseMetaData.importedKeySetDefault); // 4
 
-    //
+    public static TableKeyDeleteRule valueOfDeleteRule(final int deleteRule) {
+        return _IntFieldEnum.valueOfFieldValue(TableKeyDeleteRule.class, deleteRule);
+    }
+
     TableKeyDeleteRule(final int fieldValue) {
         this.fieldValue = fieldValue;
     }

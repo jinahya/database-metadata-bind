@@ -27,7 +27,6 @@ import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.EnumSource;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 
@@ -44,19 +43,19 @@ class BestRowIdentifierTest extends AbstractMetadataTypeTest<BestRowIdentifier> 
 
     @DisplayName("PseudoColumnEnum")
     @Nested
-    class PseudoColumnEnumTest extends _IntFieldEnumTest<BestRowIdentifier.PseudoColumnEnum> {
+    class PseudoColumnTest extends _IntFieldEnumTest<BestRowIdentifier.PseudoColumn> {
 
-        PseudoColumnEnumTest() {
-            super(BestRowIdentifier.PseudoColumnEnum.class);
+        PseudoColumnTest() {
+            super(BestRowIdentifier.PseudoColumn.class);
         }
     }
 
     @DisplayName("ScopeEnum")
     @Nested
-    class ScopeEnumTest extends _IntFieldEnumTest<BestRowIdentifier.ScopeEnum> {
+    class ScopeTest extends _IntFieldEnumTest<BestRowIdentifier.Scope> {
 
-        ScopeEnumTest() {
-            super(BestRowIdentifier.ScopeEnum.class);
+        ScopeTest() {
+            super(BestRowIdentifier.Scope.class);
         }
     }
 
@@ -70,22 +69,20 @@ class BestRowIdentifierTest extends AbstractMetadataTypeTest<BestRowIdentifier> 
             final var spy = typeSpy();
             final var pseudoColumnAsEnum = spy.getPseudoColumnAsEnum();
             verify(spy, times(1)).getPseudoColumn();
-            assertThat(pseudoColumnAsEnum)
-                    .isSameAs(BestRowIdentifier.PseudoColumnEnum.valueOfPseudoColumn(spy.getPseudoColumn()));
         }
 
         @DisplayName("setPseudoColumnAsEnum(null)")
         @Test
-        void setPseudoColumnAsEnum_NullPointerException_Null() {
-            final var instance = typeInstance();
-            assertThatThrownBy(() -> instance.setPseudoColumnAsEnum(null))
-                    .isInstanceOf(NullPointerException.class);
+        void setPseudoColumnAsEnum_Null_Null() {
+            final var spy = typeSpy();
+            spy.setPseudoColumnAsEnum(null);
+            verify(spy, times(1)).setPseudoColumn(null);
         }
 
         @DisplayName("setPseudoColumnAsEnum(non-null)")
-        @EnumSource(BestRowIdentifier.PseudoColumnEnum.class)
+        @EnumSource(BestRowIdentifier.PseudoColumn.class)
         @ParameterizedTest
-        void setPseudoColumnAsEnum__(final BestRowIdentifier.PseudoColumnEnum pseudoColumnAsEnum) {
+        void setPseudoColumnAsEnum__(final BestRowIdentifier.PseudoColumn pseudoColumnAsEnum) {
             final var spy = typeSpy();
             spy.setPseudoColumnAsEnum(pseudoColumnAsEnum);
             verify(spy, times(1)).setPseudoColumn(pseudoColumnAsEnum.fieldValueAsInt());
@@ -101,23 +98,22 @@ class BestRowIdentifierTest extends AbstractMetadataTypeTest<BestRowIdentifier> 
         void getScopeAsEnum__() {
             final var spy = typeSpy();
             final var scopeAsEnum = spy.getScopeAsEnum();
+            assertThat(scopeAsEnum).isNull();
             verify(spy, times(1)).getScope();
-            assertThat(scopeAsEnum)
-                    .isSameAs(BestRowIdentifier.ScopeEnum.valueOfScope(spy.getScope()));
         }
 
         @DisplayName("setScopeAsEnum(null)")
         @Test
-        void setScopeAsEnum_NullPointerException_Null() {
-            final var instance = typeInstance();
-            assertThatThrownBy(() -> instance.setScopeAsEnum(null))
-                    .isInstanceOf(NullPointerException.class);
+        void setScopeAsEnum_Null_Null() {
+            final var spy = typeSpy();
+            spy.setScopeAsEnum(null);
+            verify(spy, times(1)).setScope(null);
         }
 
         @DisplayName("setScopeAsEnum(non-null)")
-        @EnumSource(BestRowIdentifier.ScopeEnum.class)
+        @EnumSource(BestRowIdentifier.Scope.class)
         @ParameterizedTest
-        void setScopeAsEnum__(final BestRowIdentifier.ScopeEnum scopeAsEnum) {
+        void setScopeAsEnum__(final BestRowIdentifier.Scope scopeAsEnum) {
             final var spy = typeSpy();
             spy.setScopeAsEnum(scopeAsEnum);
             verify(spy, times(1)).setScope(scopeAsEnum.fieldValueAsInt());

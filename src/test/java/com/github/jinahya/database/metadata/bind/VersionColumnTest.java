@@ -31,10 +31,10 @@ class VersionColumnTest extends AbstractMetadataTypeTest<VersionColumn> {
 
     @DisplayName("PseudoColumnEnum")
     @Nested
-    class PseudoColumnTest extends _IntFieldEnumTest<VersionColumn.PseudoColumnEnum> {
+    class PseudoColumnTest extends _IntFieldEnumTest<VersionColumn.PseudoColumn> {
 
         PseudoColumnTest() {
-            super(VersionColumn.PseudoColumnEnum.class);
+            super(VersionColumn.PseudoColumn.class);
         }
     }
 }

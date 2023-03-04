@@ -31,10 +31,10 @@ class ColumnIdTest extends AbstractMetadataTypeIdTest<ColumnId, Column> {
 
     @DisplayName("NullableEnum")
     @Nested
-    class NullableEnum_Test extends _IntFieldEnumTest<Column.NullableEnum> {
+    class NullableTest extends _IntFieldEnumTest<Column.Nullable> {
 
-        NullableEnum_Test() {
-            super(Column.NullableEnum.class);
+        NullableTest() {
+            super(Column.Nullable.class);
         }
     }
 }

@@ -30,7 +30,6 @@ import lombok.experimental.SuperBuilder;
 
 import java.sql.DatabaseMetaData;
 import java.util.Comparator;
-import java.util.Objects;
 import java.util.Optional;
 
 import static java.util.Comparator.naturalOrder;
@@ -79,7 +78,7 @@ public class FunctionColumn extends AbstractMetadataType {
      *
      * @author Jin Kwon &lt;onacit_at_gmail.com&gt;
      */
-    public enum ColumnTypeEnum implements _IntFieldEnum<ColumnTypeEnum> {
+    public enum ColumnType implements _IntFieldEnum<ColumnType> {
 
         /**
          * A value for {@link DatabaseMetaData#functionColumnUnknown}({@value DatabaseMetaData#functionColumnUnknown}).
@@ -119,11 +118,11 @@ public class FunctionColumn extends AbstractMetadataType {
          * @return the value matched.
          * @throws IllegalStateException when no value matched.
          */
-        public static ColumnTypeEnum valueOfColumnType(final int columnType) {
-            return _IntFieldEnum.valueOfFieldValue(ColumnTypeEnum.class, columnType);
+        public static ColumnType valueOfColumnType(final int columnType) {
+            return _IntFieldEnum.valueOfFieldValue(ColumnType.class, columnType);
         }
 
-        ColumnTypeEnum(final int fieldValue) {
+        ColumnType(final int fieldValue) {
             this.fieldValue = fieldValue;
         }
 
@@ -196,18 +195,28 @@ public class FunctionColumn extends AbstractMetadataType {
     }
 
     // ------------------------------------------------------------------------------------------------------ columnType
-    public void setColumnType(final int columnType) {
+
+    public Integer getColumnType() {
+        return columnType;
+    }
+
+    public void setColumnType(final Integer columnType) {
         this.columnType = columnType;
         functionColumnId = null;
     }
 
-    ColumnTypeEnum getColumnTypeAsEnum() {
-        return ColumnTypeEnum.valueOfColumnType(getColumnType());
+    ColumnType getColumnTypeAsEnum() {
+        return Optional.ofNullable(getColumnType())
+                .map(ColumnType::valueOfColumnType)
+                .orElse(null);
     }
 
-    void setColumnTypeAsEnum(final ColumnTypeEnum columnTypeAsEnum) {
-        Objects.requireNonNull(columnTypeAsEnum, "columnTypeAsEnum is null");
-        setColumnType(columnTypeAsEnum.fieldValueAsInt());
+    void setColumnTypeAsEnum(final ColumnType columnTypeAsEnum) {
+        setColumnType(
+                Optional.ofNullable(columnTypeAsEnum)
+                        .map(_IntFieldEnum::fieldValueAsInt)
+                        .orElse(null)
+        );
     }
 
     // ---------------------------------------------------------------------------------------------------- specificName
@@ -236,8 +245,9 @@ public class FunctionColumn extends AbstractMetadataType {
     @_ColumnLabel(COLUMN_LABEL_COLUMN_NAME)
     private String columnName;
 
+    @_NotNull
     @_ColumnLabel("COLUMN_TYPE")
-    private int columnType;
+    private Integer columnType;
 
     @_ColumnLabel("DATA_TYPE")
     private int dataType;

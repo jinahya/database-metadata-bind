@@ -26,8 +26,6 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.EnumSource;
 
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 
@@ -39,10 +37,10 @@ class ColumnTest extends AbstractMetadataTypeTest<Column> {
 
     @DisplayName("NullableEnum")
     @Nested
-    class NullableEnumTest extends _IntFieldEnumTest<Column.NullableEnum> {
+    class NullableTest extends _IntFieldEnumTest<Column.Nullable> {
 
-        NullableEnumTest() {
-            super(Column.NullableEnum.class);
+        NullableTest() {
+            super(Column.Nullable.class);
         }
     }
 
@@ -64,20 +62,18 @@ class ColumnTest extends AbstractMetadataTypeTest<Column> {
             final var spy = typeSpy();
             final var nullableAsEnum = spy.getNullableAsEnum();
             verify(spy, times(1)).getNullable();
-            assertThat(nullableAsEnum)
-                    .isSameAs(Column.NullableEnum.valueOfNullable(spy.getNullable()));
         }
 
         @Test
-        void setNullableAsEnum_NullPointerException_Null() {
-            final var instance = typeInstance();
-            assertThatThrownBy(() -> instance.setNullableAsEnum(null))
-                    .isInstanceOf(NullPointerException.class);
+        void setNullableAsEnum_Null_Null() {
+            final var spy = typeSpy();
+            spy.setNullableAsEnum(null);
+            verify(spy, times(1)).setNullable(null);
         }
 
-        @EnumSource(Column.NullableEnum.class)
+        @EnumSource(Column.Nullable.class)
         @ParameterizedTest
-        void setNullableAsEnum__(final Column.NullableEnum nullableAsEnum) {
+        void setNullableAsEnum__(final Column.Nullable nullableAsEnum) {
             final var spy = typeSpy();
             spy.setNullableAsEnum(nullableAsEnum);
             verify(spy, times(1))

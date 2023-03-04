@@ -25,7 +25,7 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.EnumSource;
 
-import static org.assertj.core.api.Assertions.assertThatThrownBy;
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 
@@ -46,21 +46,72 @@ abstract class TableKeyTest<T extends TableKey<T>> extends AbstractMetadataTypeT
     }
 
     @Nested
+    class UpdateRuleAsEnumTest {
+
+        @Test
+        void getUpdateRuleAsEnum__() {
+            final var spy = typeSpy();
+            assertThat(spy.getUpdateRuleAsEnum()).isNull();
+            verify(spy, times(1)).getUpdateRule();
+        }
+
+        @Test
+        void setUpdateRuleAsEnum_Null_Null() {
+            final var spy = typeSpy();
+            spy.setUpdateRuleAsEnum(null);
+            verify(spy, times(1)).setUpdateRule(null);
+        }
+
+        @EnumSource(TableKeyUpdateRule.class)
+        @ParameterizedTest
+        void setUpdateRuleAsEnum__(final TableKeyUpdateRule updateRuleAsEnum) {
+            final var spy = typeSpy();
+            spy.setUpdateRuleAsEnum(updateRuleAsEnum);
+            verify(spy, times(1)).setUpdateRule(updateRuleAsEnum.fieldValueAsInt());
+        }
+    }
+
+    @Nested
+    class DeleteRuleAsEnumTest {
+
+        @Test
+        void getDeleteRuleAsEnum__() {
+            final var spy = typeSpy();
+            assertThat(spy.getDeleteRuleAsEnum()).isNull();
+            verify(spy, times(1)).getDeleteRule();
+        }
+
+        @Test
+        void setDeleteRuleAsEnum_Null_Null() {
+            final var spy = typeSpy();
+            spy.setDeleteRuleAsEnum(null);
+            verify(spy, times(1)).setDeleteRule(null);
+        }
+
+        @EnumSource(TableKeyDeleteRule.class)
+        @ParameterizedTest
+        void setDeleteRuleAsEnum__(final TableKeyDeleteRule deleteRuleAsEnum) {
+            final var spy = typeSpy();
+            spy.setDeleteRuleAsEnum(deleteRuleAsEnum);
+            verify(spy, times(1)).setDeleteRule(deleteRuleAsEnum.fieldValueAsInt());
+        }
+    }
+
+    @Nested
     class DeferrabilityAsEnumTest {
 
         @Test
         void getDeferrabilityAsEnum__() {
             final var spy = typeSpy();
-            assertThatThrownBy(spy::getDeferrabilityAsEnum)
-                    .isInstanceOf(IllegalArgumentException.class);
+            assertThat(spy.getDeferrabilityAsEnum()).isNull();
             verify(spy, times(1)).getDeferrability();
         }
 
         @Test
-        void setDeferrabilityAsEnum_NullPointerException_Null() {
+        void setDeferrabilityAsEnum_Null_Null() {
             final var spy = typeSpy();
-            assertThatThrownBy(() -> spy.setDeferrabilityAsEnum(null))
-                    .isInstanceOf(NullPointerException.class);
+            spy.setDeferrabilityAsEnum(null);
+            verify(spy, times(1)).setDeferrability(null);
         }
 
         @EnumSource(TableKeyDeferrability.class)
