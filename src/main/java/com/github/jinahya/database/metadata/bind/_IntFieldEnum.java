@@ -31,5 +31,10 @@ interface _IntFieldEnum<E extends Enum<E> & _IntFieldEnum<E>> {
         throw new IllegalArgumentException("no enum constant for " + fieldValue);
     }
 
+    /**
+     * Returns the field value of this constant.
+     *
+     * @return the field value of this constant.
+     */
     int fieldValueAsInt();
 }

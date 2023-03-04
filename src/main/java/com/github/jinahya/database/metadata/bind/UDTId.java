@@ -20,13 +20,9 @@ package com.github.jinahya.database.metadata.bind;
  * #L%
  */
 
-import lombok.AccessLevel;
-import lombok.RequiredArgsConstructor;
-
 import java.util.Comparator;
 import java.util.Objects;
 
-@RequiredArgsConstructor(access = AccessLevel.PRIVATE)
 final class UDTId extends AbstractMetadataTypeId<UDTId, UDT> {
 
     private static final long serialVersionUID = 5548844214174261338L;
@@ -47,6 +43,12 @@ final class UDTId extends AbstractMetadataTypeId<UDTId, UDT> {
 
     static UDTId of(final String typeCat, final String typeSchem, final String typeName) {
         return of(SchemaId.of(typeCat, typeSchem), typeName);
+    }
+
+    public UDTId(final SchemaId schemaId, final String typeName) {
+        super();
+        this.schemaId = Objects.requireNonNull(schemaId, "schemaId is null");
+        this.typeName = Objects.requireNonNull(typeName, "typeName is null");
     }
 
     @Override

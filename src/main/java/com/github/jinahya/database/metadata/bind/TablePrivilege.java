@@ -35,7 +35,7 @@ import static java.util.Comparator.naturalOrder;
 import static java.util.Comparator.nullsFirst;
 
 /**
- * An class for binding results of
+ * An class for binding results of the
  * {@link java.sql.DatabaseMetaData#getTablePrivileges(java.lang.String, java.lang.String, java.lang.String)} method.
  *
  * @author Jin Kwon &lt;jinahya_at_gmail.com&gt;

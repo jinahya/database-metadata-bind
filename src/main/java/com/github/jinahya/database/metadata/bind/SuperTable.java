@@ -30,7 +30,7 @@ import lombok.ToString;
 import lombok.experimental.SuperBuilder;
 
 /**
- * A entity class for binding the result of
+ * A entity class for binding results of the
  * {@link java.sql.DatabaseMetaData#getSuperTables(java.lang.String, java.lang.String, java.lang.String)}
  *
  * @author Jin Kwon &lt;jinahya_at_gmail.com&gt;

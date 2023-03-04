@@ -20,12 +20,8 @@ package com.github.jinahya.database.metadata.bind;
  * #L%
  */
 
-import lombok.AccessLevel;
-import lombok.AllArgsConstructor;
-
 import java.util.Objects;
 
-@AllArgsConstructor(access = AccessLevel.PRIVATE)
 final class ProcedureId extends AbstractMetadataTypeId<ProcedureId, Procedure> {
 
     private static final long serialVersionUID = 673730280554507464L;
@@ -41,6 +37,12 @@ final class ProcedureId extends AbstractMetadataTypeId<ProcedureId, Procedure> {
         Objects.requireNonNull(schemaId, "schemaId is null");
         Objects.requireNonNull(specificName, "specificName is null");
         return new ProcedureId(schemaId, specificName);
+    }
+
+    public ProcedureId(final SchemaId schemaId, final String specificName) {
+        super();
+        this.schemaId = Objects.requireNonNull(schemaId, "schemaId is null");
+        this.specificName = Objects.requireNonNull(specificName, "specificName is null");
     }
 
     @Override

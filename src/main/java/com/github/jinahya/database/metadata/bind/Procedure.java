@@ -36,7 +36,7 @@ import static java.util.Comparator.naturalOrder;
 import static java.util.Comparator.nullsFirst;
 
 /**
- * A class for binding results of
+ * A class for binding results of the
  * {@link DatabaseMetaData#getProcedures(java.lang.String, java.lang.String, java.lang.String)} method.
  *
  * @author Jin Kwon &lt;jinahya_at_gmail.com&gt;

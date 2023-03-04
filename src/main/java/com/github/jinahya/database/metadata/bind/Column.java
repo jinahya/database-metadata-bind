@@ -89,7 +89,7 @@ public class Column extends AbstractMetadataType {
         /**
          * A value for {@link DatabaseMetaData#columnNullableUnknown}({@value DatabaseMetaData#columnNullableUnknown}).
          */
-        PSEUDO(DatabaseMetaData.columnNullableUnknown) // 2
+        COLUMN_NULLABLE_UNKNOWN(DatabaseMetaData.columnNullableUnknown) // 2
         ;
 
         /**

@@ -21,8 +21,9 @@ package com.github.jinahya.database.metadata.bind;
  */
 
 import lombok.AccessLevel;
-import lombok.Data;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 import lombok.ToString;
 import lombok.experimental.SuperBuilder;
 
@@ -31,16 +32,14 @@ import java.util.Comparator;
 import java.util.Objects;
 
 /**
- * A class for binding results of the {@link java.sql.DatabaseMetaData#getTypeInfo() getTypeInfo()} method.
+ * A class for binding results of the {@link java.sql.DatabaseMetaData#getTypeInfo()} method.
  *
  * @author Jin Kwon &lt;jinahya_at_gmail.com&gt;
  * @see Context#getTypeInfo()
- * @see NullableEnum
- * @see SearchableEnum
  */
-//@EqualsAndHashCode(callSuper = true)
+@Setter
+@Getter
 @ToString(callSuper = true)
-@Data
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @SuperBuilder(toBuilder = true)
 public class TypeInfo extends AbstractMetadataType {
@@ -49,18 +48,41 @@ public class TypeInfo extends AbstractMetadataType {
 
     static final Comparator<TypeInfo> COMPARING_DATA_TYPE = Comparator.comparingInt(TypeInfo::getDataType);
 
+    /**
+     * A column label of {@value}.
+     */
     public static final String COLUMN_LABEL_TYPE_NAME = "TYPE_NAME";
 
+    /**
+     * A column label of {@value}.
+     */
     public static final String COLUMN_LABEL_DATA_TYPE = "DATA_TYPE";
 
+    /**
+     * A column label of {@value}.
+     */
     public static final String COLUMN_LABEL_PRECISION = "PRECISION";
 
+    /**
+     * A column label of {@value}.
+     */
     public static final String COLUMN_LABEL_LITERAL_PREFIX = "LITERAL_PREFIX";
 
+    /**
+     * A column label of {@value}.
+     */
     public static final String COLUMN_LABEL_LITERAL_SUFFIX = "LITERAL_SUFFIX";
 
+    /**
+     * A column label of {@value}.
+     */
     public static final String COLUMN_LABEL_CREATE_PARAMS = "CREATE_PARAMS";
 
+    /**
+     * A column label of {@value}.
+     *
+     * @see NullableEnum
+     */
     public static final String COLUMN_LABEL_NULLABLE = "NULLABLE";
 
     /**
@@ -106,8 +128,16 @@ public class TypeInfo extends AbstractMetadataType {
         private final int fieldValue;
     }
 
+    /**
+     * A column label of {@value}.
+     */
     public static final String COLUMN_LABEL_CASE_SENSITIVE = "CASE_SENSITIVE";
 
+    /**
+     * A column label of {@value}.
+     *
+     * @see SearchableEnum
+     */
     public static final String COLUMN_LABEL_SEARCHABLE = "SEARCHABLE";
 
     /**
