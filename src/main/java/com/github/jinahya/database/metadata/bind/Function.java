@@ -20,11 +20,7 @@ package com.github.jinahya.database.metadata.bind;
  * #L%
  */
 
-import lombok.AccessLevel;
 import lombok.EqualsAndHashCode;
-import lombok.Getter;
-import lombok.Setter;
-import lombok.ToString;
 
 import java.sql.DatabaseMetaData;
 import java.util.Comparator;
@@ -48,12 +44,14 @@ public class Function extends AbstractMetadataType {
     private static final long serialVersionUID = -3318947900237453301L;
 
     static final Comparator<Function> CASE_INSENSITIVE_ORDER =
-            comparing(Function::getSchemaId, SchemaId.CASE_INSENSITIVE_ORDER)
+            comparing(Function::getFunctionCat, nullsFirst(String.CASE_INSENSITIVE_ORDER))
+                    .thenComparing(Function::getFunctionSchem, nullsFirst(String.CASE_INSENSITIVE_ORDER))
                     .thenComparing(Function::getFunctionName, nullsFirst(String.CASE_INSENSITIVE_ORDER))
                     .thenComparing(Function::getSpecificName, nullsFirst(String.CASE_INSENSITIVE_ORDER));
 
     static final Comparator<Function> LEXICOGRAPHIC_ORDER =
-            comparing(Function::getSchemaId, SchemaId.LEXICOGRAPHIC_ORDER)
+            comparing(Function::getFunctionCat, nullsFirst(naturalOrder()))
+                    .thenComparing(Function::getFunctionSchem, nullsFirst(naturalOrder()))
                     .thenComparing(Function::getFunctionName, nullsFirst(naturalOrder()))
                     .thenComparing(Function::getSpecificName, nullsFirst(naturalOrder()));
 
@@ -77,16 +75,16 @@ public class Function extends AbstractMetadataType {
         if (this == obj) return true;
         if (!(obj instanceof Function)) return false;
         final Function that = (Function) obj;
-        return Objects.equals(functionCat, that.functionCat) &&
-               Objects.equals(functionSchem, that.functionSchem) &&
+        return Objects.equals(functionCatNonNull(), that.functionCatNonNull()) &&
+               Objects.equals(functionSchemNonNull(), that.functionSchemNonNull()) &&
                Objects.equals(specificName, that.specificName);
     }
 
     @Override
     public int hashCode() {
         return Objects.hash(
-                functionCat,
-                functionSchem,
+                functionCatNonNull(),
+                functionSchemNonNull(),
                 specificName
         );
     }
@@ -97,7 +95,6 @@ public class Function extends AbstractMetadataType {
 
     public void setFunctionCat(final String functionCat) {
         this.functionCat = functionCat;
-        functionId = null;
     }
 
     public String getFunctionSchem() {
@@ -106,7 +103,6 @@ public class Function extends AbstractMetadataType {
 
     public void setFunctionSchem(final String functionSchem) {
         this.functionSchem = functionSchem;
-        functionId = null;
     }
 
     public String getFunctionName() {
@@ -140,7 +136,6 @@ public class Function extends AbstractMetadataType {
 
     public void setSpecificName(final String specificName) {
         this.specificName = specificName;
-        functionId = null;
     }
 
     @_NullableBySpecification
@@ -166,32 +161,11 @@ public class Function extends AbstractMetadataType {
     @_ColumnLabel("SPECIFIC_NAME")
     private String specificName;
 
-    String getFunctionCatNonNull() {
+    String functionCatNonNull() {
         return Optional.ofNullable(getFunctionCat()).orElse(Catalog.COLUMN_VALUE_TABLE_CAT_EMPTY);
     }
 
-    String getFunctionSchemNonNull() {
+    String functionSchemNonNull() {
         return Optional.ofNullable(getFunctionSchem()).orElse(Schema.COLUMN_VALUE_TABLE_SCHEM_EMPTY);
     }
-
-    FunctionId getFunctionId() {
-        if (functionId == null) {
-            functionId = FunctionId.of(
-                    getFunctionCatNonNull(),
-                    getFunctionSchemNonNull(),
-                    getSpecificName()
-            );
-        }
-        return functionId;
-    }
-
-    private SchemaId getSchemaId() {
-        return getFunctionId().getSchemaId();
-    }
-
-    @Setter(AccessLevel.NONE)
-    @Getter(AccessLevel.NONE)
-    @EqualsAndHashCode.Exclude
-    @ToString.Exclude
-    private transient FunctionId functionId;
 }

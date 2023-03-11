@@ -241,8 +241,8 @@ public class Context {
     List<Attribute> getAttributes(final UDT udt, final String attributeNamePattern) throws SQLException {
         Objects.requireNonNull(udt, "udt is null");
         return getAttributes(
-                udt.getTypeCatNonNull(),
-                udt.getTypeSchemNonNull(),
+                udt.typeCatNonNull(),
+                udt.typeSchemNonNull(),
                 Objects.requireNonNull(udt.getTypeName(), "udt.typeName is null"),
                 attributeNamePattern
         );
@@ -298,8 +298,8 @@ public class Context {
             throws SQLException {
         Objects.requireNonNull(table, "table is null");
         return getBestRowIdentifier(
-                table.getTableCatNonNull(),
-                table.getTableSchemNonNull(),
+                table.tableCatNonNull(),
+                table.tableSchemNonNull(),
                 Objects.requireNonNull(table.getTableName(), "table.tableName is null"),
                 scope,
                 nullable
@@ -408,8 +408,8 @@ public class Context {
             throws SQLException {
         Objects.requireNonNull(table, "table is null");
         return getColumnPrivileges(
-                table.getTableCatNonNull(),
-                table.getTableSchemNonNull(),
+                table.tableCatNonNull(),
+                table.tableSchemNonNull(),
                 Objects.requireNonNull(table.getTableName(), "table.tableName is null"),
                 columnNamePattern
         );
@@ -496,8 +496,8 @@ public class Context {
     List<Column> getColumns(final Table table, final String columnNamePattern) throws SQLException {
         Objects.requireNonNull(table, "table is null");
         return getColumns(
-                table.getTableCatNonNull(),
-                table.getTableSchemNonNull(),
+                table.tableCatNonNull(),
+                table.tableSchemNonNull(),
                 Objects.requireNonNull(table.getTableName(), "table.tableName is null"),
                 columnNamePattern
         );
@@ -603,8 +603,8 @@ public class Context {
     List<ExportedKey> getExportedKeys(final Table table) throws SQLException {
         Objects.requireNonNull(table, "table is null");
         return getExportedKeys(
-                table.getTableCatNonNull(),
-                table.getTableSchemNonNull(),
+                table.tableCatNonNull(),
+                table.tableSchemNonNull(),
                 Objects.requireNonNull(table.getTableName(), "table.tableName is null")
         );
     }
@@ -704,8 +704,8 @@ public class Context {
             throws SQLException {
         Objects.requireNonNull(function, "function is null");
         return getFunctionColumns(
-                function.getFunctionCatNonNull(),
-                function.getFunctionSchemNonNull(),
+                function.functionCatNonNull(),
+                function.functionSchemNonNull(),
                 Objects.requireNonNull(function.getFunctionName(), "function.functionName is null"),
                 columnNamePattern
         );
@@ -760,8 +760,8 @@ public class Context {
     List<ImportedKey> getImportedKeys(final Table table) throws SQLException {
         Objects.requireNonNull(table, "table is null");
         return getImportedKeys(
-                table.getTableCatNonNull(),
-                table.getTableSchemNonNull(),
+                table.tableCatNonNull(),
+                table.tableSchemNonNull(),
                 Objects.requireNonNull(table.getTableName(), "table.tableName is null")
         );
     }
@@ -813,8 +813,8 @@ public class Context {
             throws SQLException {
         Objects.requireNonNull(table, "table is null");
         return getIndexInfo(
-                table.getTableCatNonNull(),
-                table.getTableSchemNonNull(),
+                table.tableCatNonNull(),
+                table.tableSchemNonNull(),
                 Objects.requireNonNull(table.getTableName(), "table.tableName is null"),
                 unique,
                 approximate
@@ -862,8 +862,8 @@ public class Context {
     List<PrimaryKey> getPrimaryKeys(final Table table) throws SQLException {
         Objects.requireNonNull(table, "table is null");
         return getPrimaryKeys(
-                table.getTableCatNonNull(),
-                table.getTableSchemNonNull(),
+                table.tableCatNonNull(),
+                table.tableSchemNonNull(),
                 Objects.requireNonNull(table.getTableName(), "table.tableName is null")
         );
     }
@@ -916,8 +916,8 @@ public class Context {
         Objects.requireNonNull(procedure, "procedure is null");
         Objects.requireNonNull(columnNamePattern, "columnNamePattern is null");
         return getProcedureColumns(
-                procedure.getProcedureCatNonNull(),
-                procedure.getProcedureSchemNonNull(),
+                procedure.procedureCatNonNull(),
+                procedure.procedureSchemNonNull(),
                 procedure.getProcedureName(),
                 columnNamePattern
         );
@@ -1010,8 +1010,8 @@ public class Context {
             throws SQLException {
         Objects.requireNonNull(table, "table is null");
         return getPseudoColumns(
-                table.getTableCatNonNull(),
-                table.getTableSchemNonNull(),
+                table.tableCatNonNull(),
+                table.tableSchemNonNull(),
                 Objects.requireNonNull(table.getTableName(), "table.tableName is null"),
                 columnNamePattern
         );
@@ -1128,7 +1128,7 @@ public class Context {
     List<SuperTable> getSuperTables(final Schema schema, final String tableNamePattern) throws SQLException {
         Objects.requireNonNull(schema, "schema is null");
         return getSuperTables(
-                schema.getTableCatalogNonNull(),
+                schema.tableCatalogNonNull(),
                 Objects.requireNonNull(schema.getTableSchem(), "schema.tableSchem is null"),
                 tableNamePattern
         );
@@ -1175,7 +1175,7 @@ public class Context {
     List<SuperType> getSuperTypes(final Schema schema, final String typeNamePattern) throws SQLException {
         Objects.requireNonNull(schema, "schema is null");
         return getSuperTypes(
-                schema.getTableCatalogNonNull(),
+                schema.tableCatalogNonNull(),
                 Objects.requireNonNull(schema.getTableSchem(), "schema.tableSchem is null"),
                 typeNamePattern
         );
@@ -1223,7 +1223,7 @@ public class Context {
     List<TablePrivilege> getTablePrivileges(final Schema schema, final String tableNamePattern) throws SQLException {
         Objects.requireNonNull(schema, "schema is null");
         return getTablePrivileges(
-                schema.getTableCatalogNonNull(),
+                schema.tableCatalogNonNull(),
                 Objects.requireNonNull(schema.getTableSchem(), "schema.tableSchem is null"),
                 tableNamePattern
         );
@@ -1232,8 +1232,8 @@ public class Context {
     List<TablePrivilege> getTablePrivileges(final Table table) throws SQLException {
         Objects.requireNonNull(table, "table is null");
         return getTablePrivileges(
-                table.getTableCatNonNull(),
-                table.getTableSchemNonNull(),
+                table.tableCatNonNull(),
+                table.tableSchemNonNull(),
                 Objects.requireNonNull(table.getTableName(), "table.tableName is null")
         );
     }
@@ -1337,7 +1337,7 @@ public class Context {
             throws SQLException {
         Objects.requireNonNull(schema, "schema is null");
         return getTables(
-                schema.getTableCatalogNonNull(),
+                schema.tableCatalogNonNull(),
                 Objects.requireNonNull(schema.getTableSchem(), "schema.tableSchem is null"),
                 tableNamePattern,
                 types
@@ -1454,8 +1454,8 @@ public class Context {
     List<VersionColumn> getVersionColumns(final Table table) throws SQLException {
         Objects.requireNonNull(table, "table is null");
         return getVersionColumns(
-                table.getTableCatNonNull(),
-                table.getTableSchemNonNull(),
+                table.tableCatNonNull(),
+                table.tableSchemNonNull(),
                 Objects.requireNonNull(table.getTableName(), "table.tableName is null")
         );
     }

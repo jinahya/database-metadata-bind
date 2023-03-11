@@ -20,14 +20,11 @@ package com.github.jinahya.database.metadata.bind;
  * #L%
  */
 
-import lombok.AccessLevel;
-import lombok.EqualsAndHashCode;
-import lombok.Getter;
-import lombok.Setter;
-import lombok.ToString;
-
 import java.util.Comparator;
 import java.util.Objects;
+
+import static java.util.Comparator.naturalOrder;
+import static java.util.Comparator.nullsFirst;
 
 /**
  * A class for binding results of the {@link java.sql.DatabaseMetaData#getSchemas(java.lang.String, java.lang.String)}
@@ -49,10 +46,12 @@ public class Schema extends AbstractMetadataType {
     private static final long serialVersionUID = 7457236468401244963L;
 
     static final Comparator<Schema> CASE_INSENSITIVE_ORDER =
-            Comparator.comparing(Schema::getSchemaId, SchemaId.CASE_INSENSITIVE_ORDER);
+            Comparator.comparing(Schema::getTableCatalog, nullsFirst(String.CASE_INSENSITIVE_ORDER))
+                    .thenComparing(Schema::getTableSchem, nullsFirst(String.CASE_INSENSITIVE_ORDER));
 
     static final Comparator<Schema> LEXICOGRAPHIC_ORDER =
-            Comparator.comparing(Schema::getSchemaId, SchemaId.LEXICOGRAPHIC_ORDER);
+            Comparator.comparing(Schema::getTableCatalog, nullsFirst(naturalOrder()))
+                    .thenComparing(Schema::getTableSchem, nullsFirst(naturalOrder()));
 
     /**
      * Returns a new instance whose {@code tableCatalog} is {@value Catalog#COLUMN_VALUE_TABLE_CAT_EMPTY} and whose
@@ -82,7 +81,6 @@ public class Schema extends AbstractMetadataType {
      */
     public static final String COLUMN_VALUE_TABLE_SCHEM_EMPTY = "";
 
-    // -----------------------------------------------------------------------------------------------------------------
     @Override
     public String toString() {
         return super.toString() + '{' +
@@ -96,13 +94,16 @@ public class Schema extends AbstractMetadataType {
         if (this == obj) return true;
         if (!(obj instanceof Schema)) return false;
         final Schema that = (Schema) obj;
-        return Objects.equals(tableCatalog, that.tableCatalog) &&
+        return Objects.equals(tableCatalogNonNull(), that.tableCatalogNonNull()) &&
                Objects.equals(tableSchem, that.tableSchem);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(tableCatalog, tableSchem);
+        return Objects.hash(
+                tableCatalogNonNull(),
+                tableSchem
+        );
     }
 
     public String getTableCatalog() {
@@ -111,7 +112,6 @@ public class Schema extends AbstractMetadataType {
 
     public void setTableCatalog(final String tableCatalog) {
         this.tableCatalog = tableCatalog;
-        schemaId = null;
     }
 
     public String getTableSchem() {
@@ -120,7 +120,6 @@ public class Schema extends AbstractMetadataType {
 
     public void setTableSchem(final String tableSchem) {
         this.tableSchem = tableSchem;
-        schemaId = null;
     }
 
     @_NullableBySpecification
@@ -130,26 +129,11 @@ public class Schema extends AbstractMetadataType {
     @_ColumnLabel(COLUMN_LABEL_TABLE_SCHEM)
     private String tableSchem;
 
-    String getTableCatalogNonNull() {
-        if (tableCatalog == null) {
-            return Catalog.COLUMN_VALUE_TABLE_CAT_EMPTY;
+    String tableCatalogNonNull() {
+        final String tableCatalog_ = getTableCatalog();
+        if (tableCatalog_ != null) {
+            return tableCatalog_;
         }
-        return tableCatalog;
+        return Catalog.COLUMN_VALUE_TABLE_CAT_EMPTY;
     }
-
-    SchemaId getSchemaId() {
-        if (schemaId == null) {
-            schemaId = SchemaId.of(
-                    getTableCatalogNonNull(),
-                    getTableSchem()
-            );
-        }
-        return schemaId;
-    }
-
-    @Setter(AccessLevel.NONE)
-    @Getter(AccessLevel.NONE)
-    @EqualsAndHashCode.Exclude
-    @ToString.Exclude
-    private transient SchemaId schemaId;
 }

@@ -21,7 +21,6 @@ package com.github.jinahya.database.metadata.bind;
  */
 
 import lombok.AccessLevel;
-import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -31,7 +30,6 @@ import lombok.experimental.SuperBuilder;
 import java.sql.DatabaseMetaData;
 import java.util.Comparator;
 import java.util.Objects;
-import java.util.Optional;
 
 import static java.util.Comparator.naturalOrder;
 import static java.util.Comparator.nullsFirst;
@@ -52,7 +50,7 @@ public class PrimaryKey extends AbstractMetadataType {
     private static final long serialVersionUID = 3159826510060898330L;
 
     static final Comparator<PrimaryKey> CASE_INSENSITIVE_ORDER
-            = Comparator.comparing(PrimaryKey::getColumnName, String.CASE_INSENSITIVE_ORDER);
+            = Comparator.comparing(PrimaryKey::getColumnName, nullsFirst(String.CASE_INSENSITIVE_ORDER));
 
     static final Comparator<PrimaryKey> LEXICOGRAPHIC_ORDER
             = Comparator.comparing(PrimaryKey::getColumnName, nullsFirst(naturalOrder()));
@@ -74,54 +72,68 @@ public class PrimaryKey extends AbstractMetadataType {
         if (this == obj) return true;
         if (!(obj instanceof PrimaryKey)) return false;
         final PrimaryKey that = (PrimaryKey) obj;
-        return Objects.equals(getPrimaryKeyId(), that.getPrimaryKeyId());
+        return Objects.equals(tableCatNonNull(), that.tableCatNonNull()) &&
+               Objects.equals(tableSchemNonNull(), that.tableSchemNonNull()) &&
+               Objects.equals(tableName, that.tableName) &&
+               Objects.equals(columnName, that.columnName);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(getPrimaryKeyId());
+        return Objects.hash(
+                tableCatNonNull(),
+                tableSchemNonNull(),
+                tableName,
+                columnName
+        );
     }
 
-    String getTableCatNonNull() {
-        return Optional.ofNullable(getTableCat()).orElse(Catalog.COLUMN_VALUE_TABLE_CAT_EMPTY);
+    public String getTableCat() {
+        return tableCat;
     }
 
     public void setTableCat(final String tableCat) {
         this.tableCat = tableCat;
-        primaryKeyId = null;
     }
 
-    String getTableSchemNonNull() {
-        return Optional.ofNullable(getTableSchem()).orElse(Schema.COLUMN_VALUE_TABLE_SCHEM_EMPTY);
+    public String getTableSchem() {
+        return tableSchem;
     }
 
     public void setTableSchem(final String tableSchem) {
         this.tableSchem = tableSchem;
-        primaryKeyId = null;
     }
 
-    public void setTableName(String tableName) {
+    public String getTableName() {
+        return tableName;
+    }
+
+    public void setTableName(final String tableName) {
         this.tableName = tableName;
-        primaryKeyId = null;
+    }
+
+    public String getColumnName() {
+        return columnName;
     }
 
     public void setColumnName(final String columnName) {
         this.columnName = columnName;
-        primaryKeyId = null;
     }
 
-    PrimaryKeyId getPrimaryKeyId() {
-        if (primaryKeyId == null) {
-            primaryKeyId = PrimaryKeyId.of(
-                    TableId.of(
-                            getTableCatNonNull(),
-                            getTableSchemNonNull(),
-                            getTableName()
-                    ),
-                    getColumnName()
-            );
-        }
-        return primaryKeyId;
+    public Integer getKeySeq() {
+        return keySeq;
+    }
+
+    public void setKeySeq(final Integer keySeq) {
+        this.keySeq = keySeq;
+    }
+
+    public String getPkName() {
+        return pkName;
+    }
+
+    public void setPkName(final String pkName) {
+        this.pkName = pkName;
     }
 
     @_NullableBySpecification
@@ -146,7 +158,19 @@ public class PrimaryKey extends AbstractMetadataType {
     @_ColumnLabel(COLUMN_LABEL_PK_NAME)
     private String pkName;
 
-    @EqualsAndHashCode.Exclude
-    @ToString.Exclude
-    private transient PrimaryKeyId primaryKeyId;
+    String tableCatNonNull() {
+        final String tableCat_ = getTableCat();
+        if (tableCat_ != null) {
+            return tableCat_;
+        }
+        return Catalog.COLUMN_VALUE_TABLE_CAT_EMPTY;
+    }
+
+    String tableSchemNonNull() {
+        final String tableSchem_ = getTableSchem();
+        if (tableSchem_ != null) {
+            return tableSchem_;
+        }
+        return Schema.COLUMN_VALUE_TABLE_SCHEM_EMPTY;
+    }
 }

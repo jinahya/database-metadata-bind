@@ -29,7 +29,6 @@ import lombok.ToString;
 import lombok.experimental.SuperBuilder;
 
 import java.util.Comparator;
-import java.util.Optional;
 
 import static java.util.Comparator.naturalOrder;
 import static java.util.Comparator.nullsFirst;
@@ -52,14 +51,14 @@ public class TablePrivilege extends AbstractMetadataType {
     private static final long serialVersionUID = -2142097373603478881L;
 
     static final Comparator<TablePrivilege> CASE_INSENSITIVE_ORDER =
-            Comparator.comparing(TablePrivilege::getTableCatNonNull, String.CASE_INSENSITIVE_ORDER)
-                    .thenComparing(TablePrivilege::getTableSchemNonNull, String.CASE_INSENSITIVE_ORDER)
+            Comparator.comparing(TablePrivilege::getTableCat, nullsFirst(String.CASE_INSENSITIVE_ORDER))
+                    .thenComparing(TablePrivilege::getTableSchem, nullsFirst(String.CASE_INSENSITIVE_ORDER))
                     .thenComparing(TablePrivilege::getTableName, nullsFirst(String.CASE_INSENSITIVE_ORDER))
                     .thenComparing(TablePrivilege::getPrivilege, nullsFirst(String.CASE_INSENSITIVE_ORDER));
 
     static final Comparator<TablePrivilege> LEXICOGRAPHIC_ORDER =
-            Comparator.comparing(TablePrivilege::getTableCatNonNull)
-                    .thenComparing(TablePrivilege::getTableSchemNonNull)
+            Comparator.comparing(TablePrivilege::getTableCat, nullsFirst(naturalOrder()))
+                    .thenComparing(TablePrivilege::getTableSchem, nullsFirst(naturalOrder()))
                     .thenComparing(TablePrivilege::getTableName, nullsFirst(naturalOrder()))
                     .thenComparing(TablePrivilege::getPrivilege, nullsFirst(naturalOrder()));
 
@@ -103,11 +102,19 @@ public class TablePrivilege extends AbstractMetadataType {
     @_ColumnLabel("IS_GRANTABLE")
     private String isGrantable;
 
-    String getTableCatNonNull() {
-        return Optional.ofNullable(getTableCat()).orElse(Catalog.COLUMN_VALUE_TABLE_CAT_EMPTY);
+    String tableCatNonNull() {
+        final String tableCat_ = getTableCat();
+        if (tableCat_ != null) {
+            return tableCat_;
+        }
+        return Catalog.COLUMN_VALUE_TABLE_CAT_EMPTY;
     }
 
-    String getTableSchemNonNull() {
-        return Optional.ofNullable(getTableSchem()).orElse(Schema.COLUMN_VALUE_TABLE_SCHEM_EMPTY);
+    String tableSchemNonNull() {
+        final String tableSchem_ = getTableSchem();
+        if (tableSchem_ != null) {
+            return tableSchem_;
+        }
+        return Schema.COLUMN_VALUE_TABLE_SCHEM_EMPTY;
     }
 }

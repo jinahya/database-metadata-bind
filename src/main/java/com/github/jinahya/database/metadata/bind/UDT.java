@@ -21,17 +21,17 @@ package com.github.jinahya.database.metadata.bind;
  */
 
 import lombok.AccessLevel;
-import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import lombok.ToString;
 import lombok.experimental.SuperBuilder;
 
 import java.sql.DatabaseMetaData;
 import java.util.Comparator;
 import java.util.Objects;
-import java.util.Optional;
+
+import static java.util.Comparator.naturalOrder;
+import static java.util.Comparator.nullsFirst;
 
 /**
  * A class for binding results of the {@link DatabaseMetaData#getUDTs(String, String, String, int[])} method.
@@ -43,7 +43,6 @@ import java.util.Optional;
 @_ChildOf(Schema.class)
 @Setter
 @Getter
-@ToString(callSuper = true)
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @SuperBuilder(toBuilder = true)
 public class UDT extends AbstractMetadataType {
@@ -52,11 +51,15 @@ public class UDT extends AbstractMetadataType {
 
     static final Comparator<UDT> CASE_INSENSITIVE_ORDER =
             Comparator.comparingInt(UDT::getDataType)
-                    .thenComparing(UDT::getUDTId, UDTId.CASE_INSENSITIVE_ORDER);
+                    .thenComparing(UDT::typeCatNonNull, String.CASE_INSENSITIVE_ORDER)
+                    .thenComparing(UDT::typeSchemNonNull, String.CASE_INSENSITIVE_ORDER)
+                    .thenComparing(UDT::getTypeName, nullsFirst(String.CASE_INSENSITIVE_ORDER));
 
     static final Comparator<UDT> LEXICOGRAPHIC_ORDER =
             Comparator.comparingInt(UDT::getDataType)
-                    .thenComparing(UDT::getUDTId, UDTId.LEXICOGRAPHIC_ORDER);
+                    .thenComparing(UDT::typeCatNonNull, naturalOrder())
+                    .thenComparing(UDT::typeSchemNonNull, naturalOrder())
+                    .thenComparing(UDT::getTypeName, nullsFirst(naturalOrder()));
 
     /**
      * A column label of {@value}.
@@ -78,24 +81,40 @@ public class UDT extends AbstractMetadataType {
      */
     public static final String COLUMN_LABEL_CLASS_NAME = "CLASS_NAME";
 
+    /**
+     * A column label of {@value}.
+     */
     public static final String COLUMN_LABEL_DATA_TYPE = "DATA_TYPE";
+
+    @Override
+    public String toString() {
+        return super.toString() + '{' +
+               "typeCat=" + typeCat +
+               ",typeSchem=" + typeSchem +
+               ",typeName=" + typeName +
+               ",className=" + className +
+               ",dataType=" + dataType +
+               ",remarks=" + remarks +
+               ",baseType=" + baseType +
+               '}';
+    }
 
     @Override
     public boolean equals(final Object obj) {
         if (this == obj) return true;
         if (!(obj instanceof UDT)) return false;
         final UDT that = (UDT) obj;
-        return dataType == that.dataType &&
-               Objects.equals(typeCat, that.typeCat) &&
-               Objects.equals(typeSchem, that.typeSchem) &&
+        return Objects.equals(dataType, that.dataType) &&
+               Objects.equals(typeCatNonNull(), that.typeCatNonNull()) &&
+               Objects.equals(typeSchemNonNull(), that.typeSchemNonNull()) &&
                Objects.equals(typeName, that.typeName);
     }
 
     @Override
     public int hashCode() {
         return Objects.hash(
-                typeCat,
-                typeSchem,
+                typeCatNonNull(),
+                typeSchemNonNull(),
                 typeName,
                 dataType
         );
@@ -107,7 +126,6 @@ public class UDT extends AbstractMetadataType {
 
     public void setTypeCat(final String typeCat) {
         this.typeCat = typeCat;
-        udtId = null;
     }
 
     public String getTypeSchem() {
@@ -116,7 +134,6 @@ public class UDT extends AbstractMetadataType {
 
     public void setTypeSchem(final String typeSchem) {
         this.typeSchem = typeSchem;
-        udtId = null;
     }
 
     public String getTypeName() {
@@ -125,7 +142,6 @@ public class UDT extends AbstractMetadataType {
 
     public void setTypeName(final String typeName) {
         this.typeName = typeName;
-        udtId = null;
     }
 
     @_NotNull
@@ -135,7 +151,6 @@ public class UDT extends AbstractMetadataType {
 
     public void setDataType(@_NotNull final Integer dataType) {
         this.dataType = dataType;
-        udtId = null;
     }
 
     @_NullableBySpecification
@@ -165,28 +180,19 @@ public class UDT extends AbstractMetadataType {
     @_ColumnLabel("BASE_TYPE")
     private Integer baseType;
 
-    String getTypeCatNonNull() {
-        return Optional.ofNullable(getTypeCat()).orElse(Catalog.COLUMN_VALUE_TABLE_CAT_EMPTY);
-    }
-
-    String getTypeSchemNonNull() {
-        return Optional.ofNullable(getTypeSchem()).orElse(Schema.COLUMN_VALUE_TABLE_SCHEM_EMPTY);
-    }
-
-    UDTId getUDTId() {
-        if (udtId == null) {
-            udtId = UDTId.of(
-                    getTypeCatNonNull(),
-                    getTypeSchemNonNull(),
-                    getTypeName()
-            );
+    String typeCatNonNull() {
+        final String typeCat_ = getTypeCat();
+        if (typeCat_ != null) {
+            return typeCat_;
         }
-        return udtId;
+        return Catalog.COLUMN_VALUE_TABLE_CAT_EMPTY;
     }
 
-    @Setter(AccessLevel.NONE)
-    @Getter(AccessLevel.NONE)
-    @EqualsAndHashCode.Exclude
-    @ToString.Exclude
-    private transient UDTId udtId;
+    String typeSchemNonNull() {
+        final String typeSchem_ = getTypeSchem();
+        if (typeSchem_ != null) {
+            return typeSchem_;
+        }
+        return Schema.COLUMN_VALUE_TABLE_SCHEM_EMPTY;
+    }
 }

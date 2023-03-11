@@ -20,11 +20,8 @@ package com.github.jinahya.database.metadata.bind;
  * #L%
  */
 
-import lombok.AccessLevel;
-import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.Setter;
-import lombok.ToString;
 
 import java.sql.DatabaseMetaData;
 import java.util.Objects;
@@ -46,7 +43,7 @@ public class SuperType extends AbstractMetadataType {
 
     @Override
     public String toString() {
-        return "SuperType{" +
+        return super.toString() + '{' +
                "typeCat=" + typeCat +
                ",typeSchem=" + typeSchem +
                ",typeName=" + typeName +
@@ -61,14 +58,18 @@ public class SuperType extends AbstractMetadataType {
         if (this == obj) return true;
         if (!(obj instanceof SuperType)) return false;
         final SuperType that = (SuperType) obj;
-        return Objects.equals(typeCat, that.typeCat) &&
-               Objects.equals(typeSchem, that.typeSchem) &&
+        return Objects.equals(typeCatNonNull(), that.typeCatNonNull()) &&
+               Objects.equals(typeSchemNonNull(), that.typeSchemNonNull()) &&
                Objects.equals(typeName, that.typeName);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(typeCat, typeSchem, typeName);
+        return Objects.hash(
+                typeCatNonNull(),
+                typeSchemNonNull(),
+                typeName
+        );
     }
 
     public String getTypeCat() {
@@ -77,7 +78,6 @@ public class SuperType extends AbstractMetadataType {
 
     public void setTypeCat(final String typeCat) {
         this.typeCat = typeCat;
-        typeId = null;
     }
 
     public String getTypeSchem() {
@@ -86,7 +86,6 @@ public class SuperType extends AbstractMetadataType {
 
     public void setTypeSchem(final String typeSchem) {
         this.typeSchem = typeSchem;
-        typeId = null;
     }
 
     public String getTypeName() {
@@ -95,7 +94,6 @@ public class SuperType extends AbstractMetadataType {
 
     public void setTypeName(final String typeName) {
         this.typeName = typeName;
-        typeId = null;
     }
 
     public String getSupertypeCat() {
@@ -104,7 +102,6 @@ public class SuperType extends AbstractMetadataType {
 
     public void setSupertypeCat(final String supertypeCat) {
         this.supertypeCat = supertypeCat;
-        supertypeId = null;
     }
 
     public String getSupertypeSchem() {
@@ -113,7 +110,6 @@ public class SuperType extends AbstractMetadataType {
 
     public void setSupertypeSchem(final String supertypeSchem) {
         this.supertypeSchem = supertypeSchem;
-        supertypeId = null;
     }
 
     public String getSupertypeName() {
@@ -122,7 +118,6 @@ public class SuperType extends AbstractMetadataType {
 
     public void setSupertypeName(final String supertypeName) {
         this.supertypeName = supertypeName;
-        supertypeId = null;
     }
 
     @_NullableBySpecification
@@ -147,53 +142,19 @@ public class SuperType extends AbstractMetadataType {
     @_ColumnLabel("SUPERTYPE_NAME")
     private String supertypeName;
 
-    String getTypeCatNonNull() {
+    String typeCatNonNull() {
         return Optional.ofNullable(getTypeCat()).orElse(Catalog.COLUMN_VALUE_TABLE_CAT_EMPTY);
     }
 
-    String getTypeSchemNonNull() {
+    String typeSchemNonNull() {
         return Optional.ofNullable(getTypeSchem()).orElse(Schema.COLUMN_VALUE_TABLE_SCHEM_EMPTY);
     }
 
-    String getSupertypeCatNonNull() {
+    String supertypeCatNonNull() {
         return Optional.ofNullable(getSupertypeCat()).orElse(Catalog.COLUMN_VALUE_TABLE_CAT_EMPTY);
     }
 
-    String getSupertypeSchemNonNull() {
+    String supertypeSchemNonNull() {
         return Optional.ofNullable(getSupertypeSchem()).orElse(Schema.COLUMN_VALUE_TABLE_SCHEM_EMPTY);
     }
-
-    UDTId getTypeId() {
-        if (typeId == null) {
-            typeId = UDTId.of(
-                    getTypeCatNonNull(),
-                    getTypeSchemNonNull(),
-                    getTypeName()
-            );
-        }
-        return typeId;
-    }
-
-    UDTId getSupertypeId() {
-        if (supertypeId == null) {
-            supertypeId = UDTId.of(
-                    getSupertypeCatNonNull(),
-                    getSupertypeSchemNonNull(),
-                    getSupertypeName()
-            );
-        }
-        return supertypeId;
-    }
-
-    @Setter(AccessLevel.NONE)
-    @Getter(AccessLevel.NONE)
-    @EqualsAndHashCode.Exclude
-    @ToString.Exclude
-    private transient UDTId typeId;
-
-    @Setter(AccessLevel.NONE)
-    @Getter(AccessLevel.NONE)
-    @EqualsAndHashCode.Exclude
-    @ToString.Exclude
-    private transient UDTId supertypeId;
 }

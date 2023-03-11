@@ -21,7 +21,6 @@ package com.github.jinahya.database.metadata.bind;
  */
 
 import lombok.AccessLevel;
-import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -109,11 +108,6 @@ public class VersionColumn extends AbstractMetadataType {
         return Objects.hash(columnName);
     }
 
-    public void setColumnName(final String columnName) {
-        this.columnName = columnName;
-        columnId = null;
-    }
-
     @_NotUsedBySpecification
     @_ColumnLabel("SCOPE")
     private Integer scope;
@@ -143,26 +137,4 @@ public class VersionColumn extends AbstractMetadataType {
     @_NotNull
     @_ColumnLabel(COLUMN_LABEL_PSEUDO_COLUMN)
     private Integer pseudoColumn;
-
-    ColumnId getColumnId(final TableId tableId) {
-        Objects.requireNonNull(tableId, "tableId is null");
-        if (columnId == null) {
-            columnId = ColumnId.of(
-                    tableId,
-                    columnName
-            );
-        }
-        return columnId;
-    }
-
-    ColumnId getColumnId(final Table table) {
-        Objects.requireNonNull(table, "table is null");
-        return getColumnId(table.getTableId());
-    }
-
-    @Setter(AccessLevel.NONE)
-    @Getter(AccessLevel.NONE)
-    @EqualsAndHashCode.Exclude
-    @ToString.Exclude
-    private transient ColumnId columnId;
 }

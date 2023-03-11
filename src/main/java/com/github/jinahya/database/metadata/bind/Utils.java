@@ -57,22 +57,6 @@ final class Utils {
         return getFieldsAnnotatedWith(c, a, new HashMap<>());
     }
 
-    static Field getLabeledField(final Class<?> clazz, final String label) {
-        Objects.requireNonNull(clazz, "clazz is null");
-        Objects.requireNonNull(label, "label is null");
-        for (final Field field : clazz.getDeclaredFields()) {
-            final _ColumnLabel annotation = field.getAnnotation(_ColumnLabel.class);
-            if (annotation == null) {
-                continue;
-            }
-            if (label.equalsIgnoreCase(annotation.value())) {
-                return field;
-            }
-        }
-        final Class<?> superclass = clazz.getSuperclass();
-        return superclass == null ? null : getLabeledField(superclass, label);
-    }
-
     /**
      * Returns a set of column labels of given result set.
      *
@@ -89,24 +73,6 @@ final class Utils {
             labels.add(metadata.getColumnLabel(i).toUpperCase());
         }
         return labels;
-    }
-
-    /**
-     * Returns a map of column labels and column indices of given result set.
-     *
-     * @param results the result set from which column labels and indices are read.
-     * @return a map of column labels and column indices.
-     * @throws SQLException if a database error occurs.
-     * @see ResultSet#getMetaData()
-     */
-    static Map<String, Integer> getLabelsAndIndices(final ResultSet results) throws SQLException {
-        final ResultSetMetaData metadata = results.getMetaData();
-        final int count = metadata.getColumnCount();
-        final Map<String, Integer> labelsAndIndices = new HashMap<>(count);
-        for (int i = 1; i <= count; i++) {
-            labelsAndIndices.put(metadata.getColumnLabel(i), i);
-        }
-        return labelsAndIndices;
     }
 
     @SuppressWarnings({

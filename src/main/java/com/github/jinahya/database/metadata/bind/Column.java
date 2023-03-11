@@ -21,7 +21,6 @@ package com.github.jinahya.database.metadata.bind;
  */
 
 import lombok.AccessLevel;
-import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -32,6 +31,9 @@ import java.sql.DatabaseMetaData;
 import java.util.Comparator;
 import java.util.Objects;
 import java.util.Optional;
+
+import static java.util.Comparator.naturalOrder;
+import static java.util.Comparator.nullsFirst;
 
 /**
  * A class for binding results of the {@link DatabaseMetaData#getColumns(String, String, String, String)} method.
@@ -52,11 +54,15 @@ public class Column extends AbstractMetadataType {
     private static final long serialVersionUID = -409653682729081530L;
 
     static final Comparator<Column> CASE_INSENSITIVE_ORDER =
-            Comparator.comparing(Column::getTableId, TableId.CASE_INSENSITIVE_ORDER)
+            Comparator.comparing(Column::getTableCat, nullsFirst(String.CASE_INSENSITIVE_ORDER))
+                    .thenComparing(Column::getTableSchem, nullsFirst(String.CASE_INSENSITIVE_ORDER))
+                    .thenComparing(Column::getTableName, nullsFirst(String.CASE_INSENSITIVE_ORDER))
                     .thenComparingInt(Column::getOrdinalPosition);
 
     static final Comparator<Column> LEXICOGRAPHIC_ORDER =
-            Comparator.comparing(Column::getTableId, TableId.LEXICOGRAPHIC_ORDER)
+            Comparator.comparing(Column::getTableCat, nullsFirst(naturalOrder()))
+                    .thenComparing(Column::getTableSchem, nullsFirst(naturalOrder()))
+                    .thenComparing(Column::getTableName, nullsFirst(naturalOrder()))
                     .thenComparingInt(Column::getOrdinalPosition);
 
     public static final String COLUMN_LABEL_TABLE_CAT = "TABLE_CAT";
@@ -124,8 +130,8 @@ public class Column extends AbstractMetadataType {
         if (this == obj) return true;
         if (!(obj instanceof Column)) return false;
         final Column that = (Column) obj;
-        return Objects.equals(getTableCatNonNull(), that.getTableCatNonNull()) &&
-               Objects.equals(getTableSchemNonNull(), that.getTableSchemNonNull()) &&
+        return Objects.equals(tableCatNonNull(), that.tableCatNonNull()) &&
+               Objects.equals(tableSchemNonNull(), that.tableSchemNonNull()) &&
                Objects.equals(tableName, that.tableName) &&
                Objects.equals(columnName, that.columnName);
     }
@@ -133,8 +139,8 @@ public class Column extends AbstractMetadataType {
     @Override
     public int hashCode() {
         return Objects.hash(
-                getTableCatNonNull(),
-                getTableSchemNonNull(),
+                tableCatNonNull(),
+                tableSchemNonNull(),
                 tableName,
                 columnName
         );
@@ -146,7 +152,6 @@ public class Column extends AbstractMetadataType {
 
     public void setTableCat(final String tableCat) {
         this.tableCat = tableCat;
-        columnId = null;
     }
 
     public String getTableSchem() {
@@ -155,7 +160,6 @@ public class Column extends AbstractMetadataType {
 
     public void setTableSchem(final String tableSchem) {
         this.tableSchem = tableSchem;
-        columnId = null;
     }
 
     public String getTableName() {
@@ -164,7 +168,6 @@ public class Column extends AbstractMetadataType {
 
     public void setTableName(final String tableName) {
         this.tableName = tableName;
-        columnId = null;
     }
 
     public String getColumnName() {
@@ -173,7 +176,6 @@ public class Column extends AbstractMetadataType {
 
     public void setColumnName(final String columnName) {
         this.columnName = columnName;
-        columnId = null;
     }
 
     public Integer getNullable() {
@@ -182,20 +184,6 @@ public class Column extends AbstractMetadataType {
 
     public void setNullable(final Integer nullable) {
         this.nullable = nullable;
-    }
-
-    Nullable getNullableAsEnum() {
-        return Optional.ofNullable(getNullable())
-                .map(Nullable::valueOfNullable)
-                .orElse(null);
-    }
-
-    void setNullableAsEnum(final Nullable nullableAsEnum) {
-        setNullable(
-                Optional.ofNullable(nullableAsEnum)
-                        .map(_IntFieldEnum::fieldValueAsInt)
-                        .orElse(null)
-        );
     }
 
     @_NullableBySpecification
@@ -288,40 +276,25 @@ public class Column extends AbstractMetadataType {
     @_ColumnLabel(COLUMN_LABEL_IS_GENERATEDCOLUMN)
     private String isGeneratedcolumn;
 
-    String getTableCatNonNull() {
+    String tableCatNonNull() {
         return Optional.ofNullable(getTableCat()).orElse(Catalog.COLUMN_VALUE_TABLE_CAT_EMPTY);
     }
 
-    String getTableSchemNonNull() {
+    String tableSchemNonNull() {
         return Optional.ofNullable(getTableSchem()).orElse(Schema.COLUMN_VALUE_TABLE_SCHEM_EMPTY);
     }
 
-    /**
-     * Returns a value for identifying this column.
-     *
-     * @return an identifier of this column.
-     */
-    ColumnId getColumnId() {
-        if (columnId == null) {
-            columnId = ColumnId.of(
-                    TableId.of(
-                            getTableCatNonNull(),
-                            getTableSchemNonNull(),
-                            getTableName()
-                    ),
-                    getColumnName()
-            );
-        }
-        return columnId;
+    Nullable getNullableAsEnum() {
+        return Optional.ofNullable(getNullable())
+                .map(Nullable::valueOfNullable)
+                .orElse(null);
     }
 
-    private TableId getTableId() {
-        return getColumnId().getTableId();
+    void setNullableAsEnum(final Nullable nullableAsEnum) {
+        setNullable(
+                Optional.ofNullable(nullableAsEnum)
+                        .map(_IntFieldEnum::fieldValueAsInt)
+                        .orElse(null)
+        );
     }
-
-    @Setter(AccessLevel.NONE)
-    @Getter(AccessLevel.NONE)
-    @EqualsAndHashCode.Exclude
-    @ToString.Exclude
-    private transient ColumnId columnId;
 }

@@ -21,7 +21,6 @@ package com.github.jinahya.database.metadata.bind;
  */
 
 import lombok.AccessLevel;
-import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -57,16 +56,16 @@ public class Procedure extends AbstractMetadataType {
     private static final long serialVersionUID = -6262056388403934829L;
 
     static final Comparator<Procedure> CASE_INSENSITIVE_ORDER =
-            Comparator.comparing(Procedure::getSchemaId, SchemaId.CASE_INSENSITIVE_ORDER)
+            Comparator.comparing(Procedure::getProcedureCat, nullsFirst(String.CASE_INSENSITIVE_ORDER))
+                    .thenComparing(Procedure::getProcedureSchem, nullsFirst(String.CASE_INSENSITIVE_ORDER))
                     .thenComparing(Procedure::getProcedureName, nullsFirst(String.CASE_INSENSITIVE_ORDER))
                     .thenComparing(Procedure::getSpecificName, nullsFirst(String.CASE_INSENSITIVE_ORDER));
 
     static final Comparator<Procedure> LEXICOGRAPHIC_ORDER =
-            Comparator.comparing(Procedure::getSchemaId, SchemaId.LEXICOGRAPHIC_ORDER)
+            Comparator.comparing(Procedure::getProcedureCat, nullsFirst(naturalOrder()))
+                    .thenComparing(Procedure::getProcedureSchem, nullsFirst(naturalOrder()))
                     .thenComparing(Procedure::getProcedureName, nullsFirst(naturalOrder()))
                     .thenComparing(Procedure::getSpecificName, nullsFirst(naturalOrder()));
-
-    // -----------------------------------------------------------------------------------------------------------------
 
     /**
      * A colum label of {@value}.
@@ -136,14 +135,13 @@ public class Procedure extends AbstractMetadataType {
      */
     public static final String COLUMN_LABEL_SPECIFIC_NAME = "SPECIFIC_NAME";
 
-    // -----------------------------------------------------------------------------------------------------------------
     @Override
     public boolean equals(final Object obj) {
         if (this == obj) return true;
         if (!(obj instanceof Procedure)) return false;
         final Procedure that = (Procedure) obj;
-        return Objects.equals(procedureCat, that.procedureCat) &&
-               Objects.equals(procedureSchem, that.procedureSchem) &&
+        return Objects.equals(procedureCatNonNull(), that.procedureCatNonNull()) &&
+               Objects.equals(procedureSchemNonNull(), that.procedureSchemNonNull()) &&
                Objects.equals(procedureName, that.procedureName) &&
                Objects.equals(specificName, that.specificName);
     }
@@ -151,22 +149,19 @@ public class Procedure extends AbstractMetadataType {
     @Override
     public int hashCode() {
         return Objects.hash(
-                procedureCat,
-                procedureSchem,
+                procedureCatNonNull(),
+                procedureSchemNonNull(),
                 procedureName,
                 specificName
         );
     }
 
-    // -----------------------------------------------------------------------------------------------------------------
     public void setProcedureCat(final String procedureCat) {
         this.procedureCat = procedureCat;
-        procedureId = null;
     }
 
     public void setProcedureSchem(final String procedureSchem) {
         this.procedureSchem = procedureSchem;
-        procedureId = null;
     }
 
     public Integer getProcedureType() {
@@ -177,23 +172,8 @@ public class Procedure extends AbstractMetadataType {
         this.procedureType = procedureType;
     }
 
-    ProcedureType getProcedureTypeAsEnum() {
-        return Optional.ofNullable(getProcedureType())
-                .map(ProcedureType::valueOfProcedureType)
-                .orElse(null);
-    }
-
-    void setProcedureTypeAsEnum(final ProcedureType procedureTypeAsEnum) {
-        setProcedureType(
-                Optional.ofNullable(procedureTypeAsEnum)
-                        .map(_IntFieldEnum::fieldValueAsInt)
-                        .orElse(null)
-        );
-    }
-
     public void setSpecificName(final String specificName) {
         this.specificName = specificName;
-        procedureId = null;
     }
 
     @_NullableBySpecification
@@ -218,39 +198,33 @@ public class Procedure extends AbstractMetadataType {
     @_ColumnLabel(COLUMN_LABEL_SPECIFIC_NAME)
     private String specificName;
 
-    // -----------------------------------------------------------------------------------------------------------------
-    String getProcedureCatNonNull() {
-        if (procedureCat == null) {
-            return Catalog.COLUMN_VALUE_TABLE_CAT_EMPTY;
+    String procedureCatNonNull() {
+        final String procedureCat_ = getProcedureCat();
+        if (procedureCat_ != null) {
+            return procedureCat_;
         }
-        return procedureCat;
+        return Catalog.COLUMN_VALUE_TABLE_CAT_EMPTY;
     }
 
-    String getProcedureSchemNonNull() {
-        if (procedureSchem == null) {
-            return Schema.COLUMN_VALUE_TABLE_SCHEM_EMPTY;
+    String procedureSchemNonNull() {
+        final String procedureSchem_ = getProcedureSchem();
+        if (procedureSchem_ != null) {
+            return procedureSchem_;
         }
-        return procedureSchem;
+        return Schema.COLUMN_VALUE_TABLE_SCHEM_EMPTY;
     }
 
-    ProcedureId getProcedureId() {
-        if (procedureId == null) {
-            procedureId = ProcedureId.of(
-                    SchemaId.of(
-                            getProcedureCatNonNull(),
-                            getProcedureSchemNonNull()
-                    ),
-                    getSpecificName()
-            );
-        }
-        return procedureId;
+    ProcedureType getProcedureTypeAsEnum() {
+        return Optional.ofNullable(getProcedureType())
+                .map(ProcedureType::valueOfProcedureType)
+                .orElse(null);
     }
 
-    private SchemaId getSchemaId() {
-        return getProcedureId().getSchemaId();
+    void setProcedureTypeAsEnum(final ProcedureType procedureTypeAsEnum) {
+        setProcedureType(
+                Optional.ofNullable(procedureTypeAsEnum)
+                        .map(_IntFieldEnum::fieldValueAsInt)
+                        .orElse(null)
+        );
     }
-
-    @EqualsAndHashCode.Exclude
-    @ToString.Exclude
-    private transient ProcedureId procedureId;
 }

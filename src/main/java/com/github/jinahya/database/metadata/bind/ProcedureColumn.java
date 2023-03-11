@@ -20,7 +20,6 @@ package com.github.jinahya.database.metadata.bind;
  * #L%
  */
 
-import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
@@ -28,7 +27,6 @@ import lombok.ToString;
 import java.sql.DatabaseMetaData;
 import java.util.Comparator;
 import java.util.Objects;
-import java.util.Optional;
 
 import static java.util.Comparator.naturalOrder;
 import static java.util.Comparator.nullsFirst;
@@ -52,25 +50,25 @@ public class ProcedureColumn extends AbstractMetadataType {
     private static final long serialVersionUID = 3894753719381358829L;
 
     static final Comparator<ProcedureColumn> CASE_INSENSITIVE_ORDER =
-            Comparator.comparing(ProcedureColumn::getSchemaId, SchemaId.CASE_INSENSITIVE_ORDER)
+            Comparator.comparing(ProcedureColumn::getProcedureCat, nullsFirst(String.CASE_INSENSITIVE_ORDER))
+                    .thenComparing(ProcedureColumn::getProcedureSchem, nullsFirst(String.CASE_INSENSITIVE_ORDER))
                     .thenComparing(ProcedureColumn::getProcedureName, nullsFirst(String.CASE_INSENSITIVE_ORDER))
                     .thenComparing(ProcedureColumn::getSpecificName, nullsFirst(String.CASE_INSENSITIVE_ORDER));
 
     static final Comparator<ProcedureColumn> LEXICOGRAPHIC_ORDER =
-            Comparator.comparing(ProcedureColumn::getSchemaId, SchemaId.LEXICOGRAPHIC_ORDER)
+            Comparator.comparing(ProcedureColumn::getProcedureCat, nullsFirst(naturalOrder()))
+                    .thenComparing(ProcedureColumn::getProcedureSchem, nullsFirst(naturalOrder()))
                     .thenComparing(ProcedureColumn::getProcedureName, nullsFirst(naturalOrder()))
                     .thenComparing(ProcedureColumn::getSpecificName, nullsFirst(naturalOrder()));
-
-    // -----------------------------------------------------------------------------------------------------------------
 
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
         if (!(o instanceof ProcedureColumn)) return false;
         final ProcedureColumn that = (ProcedureColumn) o;
-        return columnType == that.columnType &&
-               Objects.equals(procedureCat, that.procedureCat) &&
-               Objects.equals(procedureSchem, that.procedureSchem) &&
+        return Objects.equals(columnType, that.columnType) &&
+               Objects.equals(procedureCatNonNull(), that.procedureCatNonNull()) &&
+               Objects.equals(procedureSchemNonNull(), that.procedureSchemNonNull()) &&
                Objects.equals(columnName, that.columnName) &&
                Objects.equals(specificName, that.specificName);
     }
@@ -78,50 +76,12 @@ public class ProcedureColumn extends AbstractMetadataType {
     @Override
     public int hashCode() {
         return Objects.hash(
-                procedureCat,
-                procedureSchem,
+                procedureCatNonNull(),
+                procedureSchemNonNull(),
                 columnName,
                 columnType,
                 specificName
         );
-    }
-
-    // ---------------------------------------------------------------------------------------------------- procedureCat
-
-    public void setProcedureCat(final String procedureCat) {
-        this.procedureCat = procedureCat;
-        procedureColumnId = null;
-    }
-
-    // -------------------------------------------------------------------------------------------------- procedureSchem
-
-    public void setProcedureSchem(final String procedureSchem) {
-        this.procedureSchem = procedureSchem;
-        procedureColumnId = null;
-    }
-
-    public String getColumnName() {
-        return columnName;
-    }
-
-    public void setColumnName(final String columnName) {
-        this.columnName = columnName;
-        procedureColumnId = null;
-    }
-
-    @_NotNull
-    public Integer getColumnType() {
-        return columnType;
-    }
-
-    public void setColumnType(@_NotNull final Integer columnType) {
-        this.columnType = columnType;
-        procedureColumnId = null;
-    }
-
-    public void setSpecificName(final String specificName) {
-        this.specificName = specificName;
-        procedureColumnId = null;
     }
 
     @_NullableBySpecification
@@ -200,43 +160,19 @@ public class ProcedureColumn extends AbstractMetadataType {
     @_ColumnLabel("SPECIFIC_NAME")
     private String specificName;
 
-    // -----------------------------------------------------------------------------------------------------------------
-    String getProcedureCatNonNull() {
-        return Optional.ofNullable(getProcedureCat())
-                .orElse(Catalog.COLUMN_VALUE_TABLE_CAT_EMPTY);
-    }
-
-    String getProcedureSchemNonNull() {
-        return Optional.ofNullable(getProcedureSchem())
-                .orElse(Schema.COLUMN_VALUE_TABLE_SCHEM_EMPTY);
-    }
-
-    ProcedureColumnId getProcedureColumnId() {
-        if (procedureColumnId == null) {
-            procedureColumnId = ProcedureColumnId.of(
-                    ProcedureId.of(
-                            SchemaId.of(
-                                    getProcedureCatNonNull(),
-                                    getProcedureSchemNonNull()
-                            ),
-                            getSpecificName()
-                    ),
-                    getColumnName(),
-                    getColumnType()
-            );
+    String procedureCatNonNull() {
+        final String procedureCat_ = getProcedureCat();
+        if (procedureCat_ != null) {
+            return procedureCat_;
         }
-        return procedureColumnId;
+        return Catalog.COLUMN_VALUE_TABLE_CAT_EMPTY;
     }
 
-    private ProcedureId getProcedureId() {
-        return getProcedureColumnId().getProcedureId();
+    String procedureSchemNonNull() {
+        final String procedureSchem_ = getProcedureSchem();
+        if (procedureSchem_ != null) {
+            return procedureSchem_;
+        }
+        return Schema.COLUMN_VALUE_TABLE_SCHEM_EMPTY;
     }
-
-    private SchemaId getSchemaId() {
-        return getProcedureId().getSchemaId();
-    }
-
-    @EqualsAndHashCode.Exclude
-    @ToString.Exclude
-    private transient ProcedureColumnId procedureColumnId;
 }

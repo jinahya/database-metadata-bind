@@ -20,11 +20,8 @@ package com.github.jinahya.database.metadata.bind;
  * #L%
  */
 
-import lombok.AccessLevel;
-import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.Setter;
-import lombok.ToString;
 
 import java.util.Comparator;
 import java.util.Objects;
@@ -56,11 +53,15 @@ public class Table extends AbstractMetadataType {
 
     static final Comparator<Table> CASE_INSENSITIVE_ORDER =
             Comparator.comparing(Table::getTableType, nullsFirst(String.CASE_INSENSITIVE_ORDER))
-                    .thenComparing(Table::getTableId, TableId.CASE_INSENSITIVE_ORDER);
+                    .thenComparing(Table::getTableCat, nullsFirst(String.CASE_INSENSITIVE_ORDER))
+                    .thenComparing(Table::getTableSchem, nullsFirst(String.CASE_INSENSITIVE_ORDER))
+                    .thenComparing(Table::getTableName, nullsFirst(String.CASE_INSENSITIVE_ORDER));
 
     static final Comparator<Table> LEXICOGRAPHIC_ORDER =
             Comparator.comparing(Table::getTableType, nullsFirst(naturalOrder()))
-                    .thenComparing(Table::getTableId, TableId.LEXICOGRAPHIC_ORDER);
+                    .thenComparing(Table::getTableCat, nullsFirst(naturalOrder()))
+                    .thenComparing(Table::getTableSchem, nullsFirst(naturalOrder()))
+                    .thenComparing(Table::getTableName, nullsFirst(naturalOrder()));
 
     /**
      * The column label of {@value}.
@@ -110,16 +111,16 @@ public class Table extends AbstractMetadataType {
         if (this == obj) return true;
         if (!(obj instanceof Table)) return false;
         final Table that = (Table) obj;
-        return Objects.equals(getTableCatNonNull(), that.getTableName()) &&
-               Objects.equals(getTableSchemNonNull(), that.getTableSchemNonNull()) &&
+        return Objects.equals(tableCatNonNull(), that.getTableName()) &&
+               Objects.equals(tableSchemNonNull(), that.tableSchemNonNull()) &&
                Objects.equals(tableName, that.tableName);
     }
 
     @Override
     public int hashCode() {
         return Objects.hash(
-                getTableCatNonNull(),
-                getTableSchemNonNull(),
+                tableCatNonNull(),
+                tableSchemNonNull(),
                 tableName
         );
     }
@@ -130,7 +131,6 @@ public class Table extends AbstractMetadataType {
 
     public void setTableCat(final String tableCat) {
         this.tableCat = tableCat;
-        tableId = null;
     }
 
     public String getTableSchem() {
@@ -139,7 +139,6 @@ public class Table extends AbstractMetadataType {
 
     public void setTableSchem(final String tableSchem) {
         this.tableSchem = tableSchem;
-        tableId = null;
     }
 
     public String getTableName() {
@@ -148,7 +147,6 @@ public class Table extends AbstractMetadataType {
 
     public void setTableName(final String tableName) {
         this.tableName = tableName;
-        tableId = null;
     }
 
     @_NullableBySpecification
@@ -190,7 +188,7 @@ public class Table extends AbstractMetadataType {
     @_ColumnLabel("REF_GENERATION")
     private String refGeneration;
 
-    String getTableCatNonNull() {
+    String tableCatNonNull() {
         final String tableCat_ = getTableCat();
         if (tableCat_ != null) {
             return tableCat_;
@@ -198,28 +196,11 @@ public class Table extends AbstractMetadataType {
         return Catalog.COLUMN_VALUE_TABLE_CAT_EMPTY;
     }
 
-    String getTableSchemNonNull() {
+    String tableSchemNonNull() {
         final String tableSchem_ = getTableSchem();
         if (tableSchem_ != null) {
             return tableSchem_;
         }
         return Schema.COLUMN_VALUE_TABLE_SCHEM_EMPTY;
     }
-
-    TableId getTableId() {
-        if (tableId == null) {
-            tableId = TableId.of(
-                    getTableCatNonNull(),
-                    getTableSchemNonNull(),
-                    getTableName()
-            );
-        }
-        return tableId;
-    }
-
-    @Setter(AccessLevel.NONE)
-    @Getter(AccessLevel.NONE)
-    @EqualsAndHashCode.Exclude
-    @ToString.Exclude
-    private transient TableId tableId;
 }

@@ -82,20 +82,6 @@ public class ColumnPrivilege extends AbstractMetadataType {
                '}';
     }
 
-    Boolean getIsGrantableAsBoolean() {
-        return Optional.ofNullable(getIsGrantable())
-                .map(COLUMN_VALUE_IS_GRANTABLE_YES::equalsIgnoreCase)
-                .orElse(null);
-    }
-
-    void setIsGrantableAsBoolean(final Boolean isGrantableAsBoolean) {
-        setIsGrantable(
-                Optional.ofNullable(isGrantableAsBoolean)
-                        .map(v -> Boolean.TRUE.equals(v) ? COLUMN_VALUE_IS_GRANTABLE_YES : COLUMN_VALUE_IS_GRANTABLE_NO)
-                        .orElse(null)
-        );
-    }
-
     @_NullableBySpecification
     @_ColumnLabel(COLUMN_LABEL_TABLE_CAT)
     private String tableCat;
@@ -124,25 +110,25 @@ public class ColumnPrivilege extends AbstractMetadataType {
     @_ColumnLabel(COLUMN_LABEL_IS_GRANTABLE)
     private String isGrantable;
 
-    String getTableCatNonNull() {
+    String tableCatNonNull() {
         return Optional.ofNullable(getTableCat()).orElse(Catalog.COLUMN_VALUE_TABLE_CAT_EMPTY);
     }
 
-    String getTableSchemNonNull() {
+    String tableSchemNonNull() {
         return Optional.ofNullable(getTableSchem()).orElse(Schema.COLUMN_VALUE_TABLE_SCHEM_EMPTY);
     }
 
-    ColumnPrivilegeId getColumnPrivilegeId() {
-        return new ColumnPrivilegeId(
-                ColumnId.of(
-                        TableId.of(
-                                getTableCatNonNull(),
-                                getTableSchemNonNull(),
-                                getTableName()
-                        ),
-                        getColumnName()
-                ),
-                getPrivilege()
+    Boolean getIsGrantableAsBoolean() {
+        return Optional.ofNullable(getIsGrantable())
+                .map(COLUMN_VALUE_IS_GRANTABLE_YES::equalsIgnoreCase)
+                .orElse(null);
+    }
+
+    void setIsGrantableAsBoolean(final Boolean isGrantableAsBoolean) {
+        setIsGrantable(
+                Optional.ofNullable(isGrantableAsBoolean)
+                        .map(v -> Boolean.TRUE.equals(v) ? COLUMN_VALUE_IS_GRANTABLE_YES : COLUMN_VALUE_IS_GRANTABLE_NO)
+                        .orElse(null)
         );
     }
 }

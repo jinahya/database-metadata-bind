@@ -20,15 +20,8 @@ package com.github.jinahya.database.metadata.bind;
  * #L%
  */
 
-import lombok.AccessLevel;
-import lombok.EqualsAndHashCode;
-import lombok.Getter;
-import lombok.Setter;
-import lombok.ToString;
-
 import java.util.Comparator;
 import java.util.Objects;
-import java.util.Optional;
 import java.util.function.Consumer;
 
 import static java.util.Comparator.naturalOrder;
@@ -87,12 +80,12 @@ public class Catalog extends AbstractMetadataType {
         if (this == obj) return true;
         if (!(obj instanceof Catalog)) return false;
         final Catalog that = (Catalog) obj;
-        return Objects.equals(tableCat, that.tableCat);
+        return Objects.equals(tableCatNonNull(), that.tableCatNonNull());
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(tableCat);
+        return Objects.hash(tableCatNonNull());
     }
 
     public String getTableCat() {
@@ -101,26 +94,16 @@ public class Catalog extends AbstractMetadataType {
 
     public void setTableCat(final String tableCat) {
         this.tableCat = tableCat;
-        catalogId = null;
     }
 
     @_ColumnLabel(COLUMN_LABEL_TABLE_CAT)
     private String tableCat;
 
-    String getTableCatNonNull() {
-        return Optional.ofNullable(getTableCat()).orElse(COLUMN_VALUE_TABLE_CAT_EMPTY);
-    }
-
-    CatalogId getCatalogId() {
-        if (catalogId == null) {
-            catalogId = CatalogId.of(getTableCatNonNull());
+    String tableCatNonNull() {
+        final String tableCat_ = getTableCat();
+        if (tableCat_ != null) {
+            return tableCat_;
         }
-        return catalogId;
+        return Catalog.COLUMN_VALUE_TABLE_CAT_EMPTY;
     }
-
-    @Setter(AccessLevel.NONE)
-    @Getter(AccessLevel.NONE)
-    @EqualsAndHashCode.Exclude
-    @ToString.Exclude
-    private transient CatalogId catalogId;
 }

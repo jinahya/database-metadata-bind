@@ -21,7 +21,6 @@ package com.github.jinahya.database.metadata.bind;
  */
 
 import lombok.AccessLevel;
-import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -31,6 +30,9 @@ import lombok.experimental.SuperBuilder;
 import java.sql.DatabaseMetaData;
 import java.util.Comparator;
 import java.util.Objects;
+
+import static java.util.Comparator.naturalOrder;
+import static java.util.Comparator.nullsFirst;
 
 /**
  * A class for binding results of the {@link DatabaseMetaData#getPseudoColumns(String, String, String, String)} method.
@@ -48,10 +50,16 @@ public class PseudoColumn extends AbstractMetadataType {
     private static final long serialVersionUID = -5612575879670895510L;
 
     static final Comparator<PseudoColumn> CASE_INSENSITIVE_ORDER =
-            Comparator.comparing(PseudoColumn::getPseudoColumnId, PseudoColumnId.CASE_INSENSITIVE_ORDER);
+            Comparator.comparing(PseudoColumn::tableCatNonNull, nullsFirst(String.CASE_INSENSITIVE_ORDER))
+                    .thenComparing(PseudoColumn::tableSchemNonNull, nullsFirst(String.CASE_INSENSITIVE_ORDER))
+                    .thenComparing(PseudoColumn::getTableName, nullsFirst(String.CASE_INSENSITIVE_ORDER))
+                    .thenComparing(PseudoColumn::getColumnName, nullsFirst(String.CASE_INSENSITIVE_ORDER));
 
     static final Comparator<PseudoColumn> LEXICOGRAPHIC_ORDER =
-            Comparator.comparing(PseudoColumn::getPseudoColumnId, PseudoColumnId.LEXICOGRAPHIC_ORDER);
+            Comparator.comparing(PseudoColumn::tableCatNonNull, nullsFirst(naturalOrder()))
+                    .thenComparing(PseudoColumn::tableSchemNonNull, nullsFirst(naturalOrder()))
+                    .thenComparing(PseudoColumn::getTableName, nullsFirst(naturalOrder()))
+                    .thenComparing(PseudoColumn::getColumnName, nullsFirst(naturalOrder()));
 
     public static final String COLUMN_LABEL_TABLE_CAT = "TABLE_CAT";
 
@@ -61,15 +69,13 @@ public class PseudoColumn extends AbstractMetadataType {
 
     public static final String COLUMN_LABEL_COLUMN_NAME = "COLUMN_NAME";
 
-    // -----------------------------------------------------------------------------------------------------------------
-
     @Override
     public boolean equals(final Object obj) {
         if (this == obj) return true;
         if (!(obj instanceof PseudoColumn)) return false;
         final PseudoColumn that = (PseudoColumn) obj;
-        return Objects.equals(tableCat, that.tableCat) &&
-               Objects.equals(tableSchem, that.tableSchem) &&
+        return Objects.equals(tableCatNonNull(), that.tableCatNonNull()) &&
+               Objects.equals(tableSchemNonNull(), that.tableSchemNonNull()) &&
                Objects.equals(tableName, that.tableName) &&
                Objects.equals(columnName, that.columnName);
     }
@@ -84,33 +90,22 @@ public class PseudoColumn extends AbstractMetadataType {
         );
     }
 
-    // -------------------------------------------------------------------------------------------------------- tableCat
-
     public void setTableCat(final String tableCat) {
         this.tableCat = tableCat;
-        pseudoColumnId = null;
     }
-
-    // ------------------------------------------------------------------------------------------------------- tableShem
 
     public void setTableSchem(final String tableSchem) {
         this.tableSchem = tableSchem;
-        pseudoColumnId = null;
     }
 
-    // ------------------------------------------------------------------------------------------------------- tableName
     public void setTableName(final String tableName) {
         this.tableName = tableName;
-        pseudoColumnId = null;
     }
 
-    // ------------------------------------------------------------------------------------------------------ columnName
     public void setColumnName(final String columnName) {
         this.columnName = columnName;
-        pseudoColumnId = null;
     }
 
-    // -----------------------------------------------------------------------------------------------------------------
     @_NullableBySpecification
     @_ColumnLabel(COLUMN_LABEL_TABLE_CAT)
     private String tableCat;
@@ -155,38 +150,19 @@ public class PseudoColumn extends AbstractMetadataType {
     @_ColumnLabel("IS_NULLABLE")
     private String isNullable;
 
-    // -----------------------------------------------------------------------------------------------------------------
-    String getTableCatNonNull() {
-        if (tableCat == null) {
+    String tableCatNonNull() {
+        final String tableCat_ = getTableCat();
+        if (tableCat_ == null) {
             return Catalog.COLUMN_VALUE_TABLE_CAT_EMPTY;
         }
-        return tableCat;
+        return tableCat_;
     }
 
-    String getTableSchemNonNull() {
-        if (tableSchem == null) {
+    String tableSchemNonNull() {
+        final String tableSchem_ = getTableSchem();
+        if (tableSchem_ == null) {
             return Schema.COLUMN_VALUE_TABLE_SCHEM_EMPTY;
         }
-        return tableSchem;
+        return tableSchem_;
     }
-
-    PseudoColumnId getPseudoColumnId() {
-        if (pseudoColumnId == null) {
-            pseudoColumnId = PseudoColumnId.of(
-                    TableId.of(
-                            getTableCatNonNull(),
-                            getTableSchemNonNull(),
-                            getTableName()
-                    ),
-                    getColumnName()
-            );
-        }
-        return pseudoColumnId;
-    }
-
-    @Setter(AccessLevel.NONE)
-    @Getter(AccessLevel.NONE)
-    @EqualsAndHashCode.Exclude
-    @ToString.Exclude
-    private transient PseudoColumnId pseudoColumnId;
 }

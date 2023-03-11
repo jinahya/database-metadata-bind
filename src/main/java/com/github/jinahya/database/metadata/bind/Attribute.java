@@ -20,17 +20,17 @@ package com.github.jinahya.database.metadata.bind;
  * #L%
  */
 
-import lombok.AccessLevel;
-import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
 
 import java.sql.DatabaseMetaData;
-import java.sql.Types;
 import java.util.Comparator;
 import java.util.Objects;
 import java.util.Optional;
+
+import static java.util.Comparator.naturalOrder;
+import static java.util.Comparator.nullsFirst;
 
 /**
  * A class for binding results of the {@link DatabaseMetaData#getAttributes(String, String, String, String)} method.
@@ -48,11 +48,15 @@ public class Attribute extends AbstractMetadataType {
     private static final long serialVersionUID = 1913681105410440186L;
 
     static final Comparator<Attribute> CASE_INSENSITIVE_ORDER =
-            Comparator.comparing(Attribute::getUDTId, UDTId.CASE_INSENSITIVE_ORDER)
+            Comparator.comparing(Attribute::getTypeCat, nullsFirst(String.CASE_INSENSITIVE_ORDER))
+                    .thenComparing(Attribute::getTypeSchem, nullsFirst(String.CASE_INSENSITIVE_ORDER))
+                    .thenComparing(Attribute::getTypeName, nullsFirst(String.CASE_INSENSITIVE_ORDER))
                     .thenComparingInt(Attribute::getOrdinalPosition);
 
     static final Comparator<Attribute> LEXICOGRAPHIC_ORDER =
-            Comparator.comparing(Attribute::getUDTId, UDTId.LEXICOGRAPHIC_ORDER)
+            Comparator.comparing(Attribute::getTypeCat, nullsFirst(naturalOrder()))
+                    .thenComparing(Attribute::getTypeSchem, nullsFirst(naturalOrder()))
+                    .thenComparing(Attribute::getTypeName, nullsFirst(naturalOrder()))
                     .thenComparingInt(Attribute::getOrdinalPosition);
 
     public static final String COLUMN_LABEL_NULLABLE = "NULLABLE";
@@ -113,8 +117,8 @@ public class Attribute extends AbstractMetadataType {
         if (this == obj) return true;
         if (!(obj instanceof Attribute)) return false;
         final Attribute that = (Attribute) obj;
-        return Objects.equals(getTypeCatNonNull(), that.getTypeCatNonNull()) &&
-               Objects.equals(getTypeSchemNonNull(), that.getTypeSchemNonNull()) &&
+        return Objects.equals(typeCatNonNull(), that.typeCatNonNull()) &&
+               Objects.equals(typeSchemNonNull(), that.typeSchemNonNull()) &&
                Objects.equals(typeName, that.typeName) &&
                Objects.equals(attrName, that.attrName);
     }
@@ -122,39 +126,27 @@ public class Attribute extends AbstractMetadataType {
     @Override
     public int hashCode() {
         return Objects.hash(
-                getTypeCatNonNull(),
-                getTypeSchemNonNull(),
+                typeCatNonNull(),
+                typeSchemNonNull(),
                 typeName,
                 attrName
         );
     }
 
-    String getTypeCatNonNull() {
-        return Optional.ofNullable(getTypeCat()).orElse(Catalog.COLUMN_VALUE_TABLE_CAT_EMPTY);
-    }
-
     public void setTypeCat(final String typeCat) {
         this.typeCat = typeCat;
-        attributeId = null;
-    }
-
-    String getTypeSchemNonNull() {
-        return Optional.ofNullable(getTypeSchem()).orElse(Schema.COLUMN_VALUE_TABLE_SCHEM_EMPTY);
     }
 
     public void setTypeSchem(final String typeSchem) {
         this.typeSchem = typeSchem;
-        attributeId = null;
     }
 
     public void setTypeName(final String typeName) {
         this.typeName = typeName;
-        attributeId = null;
     }
 
     public void setAttrName(final String attrName) {
         this.attrName = attrName;
-        attributeId = null;
     }
 
     @_NullableBySpecification
@@ -237,38 +229,11 @@ public class Attribute extends AbstractMetadataType {
     @_ColumnLabel("SOURCE_DATA_TYPE")
     private Integer sourceDataType;
 
-    AttributeId getAttributeId() {
-        if (attributeId == null) {
-            attributeId = new AttributeId(
-                    UDTId.of(
-                            getTypeCatNonNull(),
-                            getTypeSchemNonNull(),
-                            getTypeName()
-                    ),
-                    getAttrName()
-            );
-        }
-        return attributeId;
+    String typeCatNonNull() {
+        return Optional.ofNullable(getTypeCat()).orElse(Catalog.COLUMN_VALUE_TABLE_CAT_EMPTY);
     }
 
-    private UDTId getUDTId() {
-        return getAttributeId().getUdtId();
+    String typeSchemNonNull() {
+        return Optional.ofNullable(getTypeSchem()).orElse(Schema.COLUMN_VALUE_TABLE_SCHEM_EMPTY);
     }
-
-    TableId getScopeTableId() {
-        if (dataType != Types.REF) {
-            throw new IllegalStateException("dataType != Types.REF(" + Types.REF + ")");
-        }
-        return TableId.of(
-                Objects.requireNonNull(getScopeCatalog(), "scopeCatalog is null"),
-                Objects.requireNonNull(getScopeSchema(), "scopeSchema is null"),
-                Objects.requireNonNull(getScopeTable(), "scopeTable is null")
-        );
-    }
-
-    @Setter(AccessLevel.NONE)
-    @Getter(AccessLevel.NONE)
-    @EqualsAndHashCode.Exclude
-    @ToString.Exclude
-    private transient AttributeId attributeId;
 }

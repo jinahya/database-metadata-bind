@@ -20,16 +20,15 @@ package com.github.jinahya.database.metadata.bind;
  * #L%
  */
 
-import lombok.AccessLevel;
-import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.Setter;
-import lombok.ToString;
 
 import java.sql.DatabaseMetaData;
 import java.util.Comparator;
 import java.util.Objects;
-import java.util.Optional;
+
+import static java.util.Comparator.naturalOrder;
+import static java.util.Comparator.nullsFirst;
 
 /**
  * A class for binding results of the
@@ -44,11 +43,15 @@ public class CrossReference extends AbstractMetadataType {
     private static final long serialVersionUID = -5343386346721125961L;
 
     static final Comparator<CrossReference> CASE_INSENSITIVE_ORDER =
-            Comparator.comparing(CrossReference::getFktableId, TableId.CASE_INSENSITIVE_ORDER)
+            Comparator.comparing(CrossReference::fktableCatNonNull, String.CASE_INSENSITIVE_ORDER)
+                    .thenComparing(CrossReference::fktableSchemNonNull, String.CASE_INSENSITIVE_ORDER)
+                    .thenComparing(CrossReference::getFktableName, nullsFirst(String.CASE_INSENSITIVE_ORDER))
                     .thenComparingInt(CrossReference::getKeySeq);
 
     static final Comparator<CrossReference> LEXICOGRAPHIC_ORDER =
-            Comparator.comparing(CrossReference::getFktableId, TableId.LEXICOGRAPHIC_ORDER)
+            Comparator.comparing(CrossReference::fktableCatNonNull, naturalOrder())
+                    .thenComparing(CrossReference::fktableSchemNonNull, naturalOrder())
+                    .thenComparing(CrossReference::getFktableName, nullsFirst(naturalOrder()))
                     .thenComparingInt(CrossReference::getKeySeq);
 
     /**
@@ -77,16 +80,16 @@ public class CrossReference extends AbstractMetadataType {
     }
 
     @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (!(o instanceof CrossReference)) return false;
-        final CrossReference that = (CrossReference) o;
-        return Objects.equals(pktableCat, that.pktableCat) &&
-               Objects.equals(pktableSchem, that.pktableSchem) &&
+    public boolean equals(final Object obj) {
+        if (this == obj) return true;
+        if (!(obj instanceof CrossReference)) return false;
+        final CrossReference that = (CrossReference) obj;
+        return Objects.equals(pktableCatNonNull(), that.pktableCatNonNull()) &&
+               Objects.equals(pktableSchemNonNull(), that.pktableSchemNonNull()) &&
                Objects.equals(pktableName, that.pktableName) &&
                Objects.equals(pkcolumnName, that.pkcolumnName) &&
-               Objects.equals(fktableCat, that.fktableCat) &&
-               Objects.equals(fktableSchem, that.fktableSchem) &&
+               Objects.equals(fktableCatNonNull(), that.fktableCatNonNull()) &&
+               Objects.equals(fktableSchemNonNull(), that.fktableSchemNonNull()) &&
                Objects.equals(fktableName, that.fktableName) &&
                Objects.equals(fkcolumnName, that.fkcolumnName);
     }
@@ -94,8 +97,8 @@ public class CrossReference extends AbstractMetadataType {
     @Override
     public int hashCode() {
         return Objects.hash(
-                pktableCat, pktableSchem, pktableName, pkcolumnName,
-                fktableCat, fktableSchem, fktableName, fkcolumnName
+                pktableCatNonNull(), pktableSchemNonNull(), pktableName, pkcolumnName,
+                fktableCatNonNull(), fktableSchemNonNull(), fktableName, fkcolumnName
         );
     }
 
@@ -105,7 +108,6 @@ public class CrossReference extends AbstractMetadataType {
 
     public void setPktableCat(final String pktableCat) {
         this.pktableCat = pktableCat;
-        pkcolumnId = null;
     }
 
     public String getPktableSchem() {
@@ -114,7 +116,6 @@ public class CrossReference extends AbstractMetadataType {
 
     public void setPktableSchem(final String pktableSchem) {
         this.pktableSchem = pktableSchem;
-        pkcolumnId = null;
     }
 
     public String getPktableName() {
@@ -123,7 +124,6 @@ public class CrossReference extends AbstractMetadataType {
 
     public void setPktableName(final String pktableName) {
         this.pktableName = pktableName;
-        pkcolumnId = null;
     }
 
     public String getPkcolumnName() {
@@ -132,7 +132,6 @@ public class CrossReference extends AbstractMetadataType {
 
     public void setPkcolumnName(final String pkcolumnName) {
         this.pkcolumnName = pkcolumnName;
-        pkcolumnId = null;
     }
 
     public String getFktableCat() {
@@ -141,34 +140,30 @@ public class CrossReference extends AbstractMetadataType {
 
     public void setFktableCat(final String fktableCat) {
         this.fktableCat = fktableCat;
-        fkcolumnId = null;
     }
 
     public String getFktableSchem() {
         return fktableSchem;
     }
 
-    public void setFktableSchem(String fktableSchem) {
+    public void setFktableSchem(final String fktableSchem) {
         this.fktableSchem = fktableSchem;
-        fkcolumnId = null;
     }
 
     public String getFktableName() {
         return fktableName;
     }
 
-    public void setFktableName(String fktableName) {
+    public void setFktableName(final String fktableName) {
         this.fktableName = fktableName;
-        fkcolumnId = null;
     }
 
     public String getFkcolumnName() {
         return fkcolumnName;
     }
 
-    public void setFkcolumnName(String fkcolumnName) {
+    public void setFkcolumnName(final String fkcolumnName) {
         this.fkcolumnName = fkcolumnName;
-        fkcolumnId = null;
     }
 
     @_NullableBySpecification
@@ -223,67 +218,35 @@ public class CrossReference extends AbstractMetadataType {
     @_ColumnLabel("DEFERRABILITY")
     private Integer deferrability;
 
-    String getPktableCatNonNull() {
-        return Optional.ofNullable(getPktableCat()).orElse(Catalog.COLUMN_VALUE_TABLE_CAT_EMPTY);
-    }
-
-    String getPktableSchemNonNull() {
-        return Optional.ofNullable(getPktableSchem()).orElse(Schema.COLUMN_VALUE_TABLE_SCHEM_EMPTY);
-    }
-
-    ColumnId getPkcolumnId() {
-        if (pkcolumnId == null) {
-            pkcolumnId = ColumnId.of(
-                    TableId.of(
-                            getPktableCatNonNull(),
-                            getPktableSchemNonNull(),
-                            getPktableName()
-                    ),
-                    getPkcolumnName()
-            );
+    String pktableCatNonNull() {
+        final String pktableCat_ = getPktableCat();
+        if (pktableCat_ != null) {
+            return pktableCat_;
         }
-        return pkcolumnId;
+        return Catalog.COLUMN_VALUE_TABLE_CAT_EMPTY;
     }
 
-    TableId getPktableId() {
-        return getPkcolumnId().getTableId();
-    }
-
-    @Setter(AccessLevel.NONE)
-    @Getter(AccessLevel.NONE)
-    @EqualsAndHashCode.Exclude
-    @ToString.Exclude
-    private transient ColumnId pkcolumnId;
-
-    String getFktableCatNonNull() {
-        return Optional.ofNullable(getFktableCat()).orElse(Catalog.COLUMN_VALUE_TABLE_CAT_EMPTY);
-    }
-
-    String getFktableSchemNonNull() {
-        return Optional.ofNullable(getFktableSchem()).orElse(Schema.COLUMN_VALUE_TABLE_SCHEM_EMPTY);
-    }
-
-    ColumnId getFkcolumnId() {
-        if (fkcolumnId == null) {
-            fkcolumnId = ColumnId.of(
-                    TableId.of(
-                            getFktableCatNonNull(),
-                            getFktableSchemNonNull(),
-                            getFktableName()
-                    ),
-                    getFkcolumnName()
-            );
+    String pktableSchemNonNull() {
+        final String pktableSchem_ = getPktableSchem();
+        if (pktableSchem_ != null) {
+            return pktableSchem_;
         }
-        return fkcolumnId;
+        return Schema.COLUMN_VALUE_TABLE_SCHEM_EMPTY;
     }
 
-    TableId getFktableId() {
-        return getFkcolumnId().getTableId();
+    String fktableCatNonNull() {
+        final String fktableCat_ = getFktableCat();
+        if (fktableCat_ != null) {
+            return fktableCat_;
+        }
+        return Catalog.COLUMN_VALUE_TABLE_CAT_EMPTY;
     }
 
-    @Setter(AccessLevel.NONE)
-    @Getter(AccessLevel.NONE)
-    @EqualsAndHashCode.Exclude
-    @ToString.Exclude
-    private transient ColumnId fkcolumnId;
+    String fktableSchemNonNull() {
+        final String fktableSchem_ = getFktableSchem();
+        if (fktableSchem_ != null) {
+            return fktableSchem_;
+        }
+        return Schema.COLUMN_VALUE_TABLE_SCHEM_EMPTY;
+    }
 }

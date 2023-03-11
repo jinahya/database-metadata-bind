@@ -27,7 +27,6 @@ import lombok.ToString;
 
 import java.sql.DatabaseMetaData;
 import java.util.Comparator;
-import java.util.Objects;
 import java.util.Optional;
 
 /**
@@ -171,40 +170,12 @@ public class BestRowIdentifier
         this.scope = scope;
     }
 
-    Scope getScopeAsEnum() {
-        return Optional.ofNullable(getScope())
-                .map(Scope::valueOfScope)
-                .orElse(null);
-    }
-
-    void setScopeAsEnum(final Scope scopeAsEnum) {
-        setScope(
-                Optional.ofNullable(scopeAsEnum)
-                        .map(_IntFieldEnum::fieldValueAsInt)
-                        .orElse(null)
-        );
-    }
-
     public Integer getPseudoColumn() {
         return pseudoColumn;
     }
 
     public void setPseudoColumn(final Integer pseudoColumn) {
         this.pseudoColumn = pseudoColumn;
-    }
-
-    PseudoColumn getPseudoColumnAsEnum() {
-        return Optional.ofNullable(getPseudoColumn())
-                .map(PseudoColumn::valueOfPseudoColumn)
-                .orElse(null);
-    }
-
-    void setPseudoColumnAsEnum(final PseudoColumn pseudoColumnAsEnum) {
-        setPseudoColumn(
-                Optional.ofNullable(pseudoColumnAsEnum)
-                        .map(_IntFieldEnum::fieldValueAsInt)
-                        .orElse(null)
-        );
     }
 
     @_NotNull
@@ -237,11 +208,31 @@ public class BestRowIdentifier
     @_ColumnLabel(COLUMN_LABEL_PSEUDO_COLUMN)
     private Integer pseudoColumn;
 
-    ColumnId getColumnId(final TableId tableId) {
-        Objects.requireNonNull(tableId, "tableId is null");
-        return ColumnId.of(
-                tableId,
-                getColumnName()
+    Scope getScopeAsEnum() {
+        return Optional.ofNullable(getScope())
+                .map(Scope::valueOfScope)
+                .orElse(null);
+    }
+
+    void setScopeAsEnum(final Scope scopeAsEnum) {
+        setScope(
+                Optional.ofNullable(scopeAsEnum)
+                        .map(_IntFieldEnum::fieldValueAsInt)
+                        .orElse(null)
+        );
+    }
+
+    PseudoColumn getPseudoColumnAsEnum() {
+        return Optional.ofNullable(getPseudoColumn())
+                .map(PseudoColumn::valueOfPseudoColumn)
+                .orElse(null);
+    }
+
+    void setPseudoColumnAsEnum(final PseudoColumn pseudoColumnAsEnum) {
+        setPseudoColumn(
+                Optional.ofNullable(pseudoColumnAsEnum)
+                        .map(_IntFieldEnum::fieldValueAsInt)
+                        .orElse(null)
         );
     }
 }

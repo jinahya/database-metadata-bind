@@ -21,7 +21,6 @@ package com.github.jinahya.database.metadata.bind;
  */
 
 import lombok.AccessLevel;
-import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -31,6 +30,9 @@ import lombok.experimental.SuperBuilder;
 import java.util.Comparator;
 import java.util.Objects;
 import java.util.Optional;
+
+import static java.util.Comparator.naturalOrder;
+import static java.util.Comparator.nullsFirst;
 
 /**
  * An abstract class for binding results of the
@@ -51,22 +53,30 @@ abstract class TableKey<T extends TableKey<T>> extends AbstractMetadataType {
     private static final long serialVersionUID = 6713872409315471232L;
 
     static <T extends TableKey<T>> Comparator<T> comparingPktableCaseInsensitive() {
-        return Comparator.<T, TableId>comparing(TableKey::getPktableId, TableId.CASE_INSENSITIVE_ORDER)
+        return Comparator.<T, String>comparing(TableKey::getPktableCat, nullsFirst(String.CASE_INSENSITIVE_ORDER))
+                .thenComparing(TableKey::getPktableSchem, nullsFirst(String.CASE_INSENSITIVE_ORDER))
+                .thenComparing(TableKey::getPktableName, nullsFirst(String.CASE_INSENSITIVE_ORDER))
                 .thenComparingInt(TableKey::getKeySeq);
     }
 
     static <T extends TableKey<T>> Comparator<T> comparingPktableLexicographic() {
-        return Comparator.<T, TableId>comparing(TableKey::getPktableId, TableId.LEXICOGRAPHIC_ORDER)
+        return Comparator.<T, String>comparing(TableKey::getPktableCat, nullsFirst(naturalOrder()))
+                .thenComparing(TableKey::getPktableSchem, nullsFirst(naturalOrder()))
+                .thenComparing(TableKey::getPktableName, nullsFirst(naturalOrder()))
                 .thenComparingInt(TableKey::getKeySeq);
     }
 
     static <T extends TableKey<T>> Comparator<T> comparingFktableCaseInsensitive() {
-        return Comparator.<T, TableId>comparing(TableKey::getFktableId, TableId.CASE_INSENSITIVE_ORDER)
+        return Comparator.<T, String>comparing(TableKey::getFktableCat, nullsFirst(String.CASE_INSENSITIVE_ORDER))
+                .thenComparing(TableKey::getFktableSchem, nullsFirst(String.CASE_INSENSITIVE_ORDER))
+                .thenComparing(TableKey::getFktableName, nullsFirst(String.CASE_INSENSITIVE_ORDER))
                 .thenComparingInt(TableKey::getKeySeq);
     }
 
     static <T extends TableKey<T>> Comparator<T> comparingFktableLexicographic() {
-        return Comparator.<T, TableId>comparing(TableKey::getFktableId, TableId.LEXICOGRAPHIC_ORDER)
+        return Comparator.<T, String>comparing(TableKey::getFktableCat, nullsFirst(naturalOrder()))
+                .thenComparing(TableKey::getFktableSchem, nullsFirst(naturalOrder()))
+                .thenComparing(TableKey::getFktableName, nullsFirst(naturalOrder()))
                 .thenComparingInt(TableKey::getKeySeq);
     }
 
@@ -144,79 +154,33 @@ abstract class TableKey<T extends TableKey<T>> extends AbstractMetadataType {
     public boolean equals(final Object obj) {
         if (this == obj) return true;
         if (!(obj instanceof TableKey)) return false;
-        return equals_((TableKey<?>) obj);
+        final TableKey<?> that = (TableKey<?>) obj;
+        return Objects.equals(pktableCatNonNull(), that.pktableCatNonNull()) &&
+               Objects.equals(pktableSchemNonNull(), that.pktableSchemNonNull()) &&
+               Objects.equals(pktableName, that.pktableName) &&
+               Objects.equals(pkcolumnName, that.pkcolumnName) &&
+               Objects.equals(fktableCatNonNull(), that.fktableCatNonNull()) &&
+               Objects.equals(fktableSchemNonNull(), that.fktableSchemNonNull()) &&
+               Objects.equals(fktableName, that.fktableName) &&
+               Objects.equals(fkcolumnName, that.fkcolumnName);
     }
 
     boolean equals_(final TableKey<?> that) {
-        assert that != null;
-        return Objects.equals(getPkcolumnId(), that.getPkcolumnId()) &&
-               Objects.equals(getFkcolumnId(), that.getFkcolumnId());
+        return Objects.equals(pktableCatNonNull(), that.pktableCatNonNull()) &&
+               Objects.equals(pktableSchemNonNull(), that.pktableSchemNonNull()) &&
+               Objects.equals(pktableName, that.pktableName) &&
+               Objects.equals(pkcolumnName, that.pkcolumnName) &&
+               Objects.equals(fktableCatNonNull(), that.fktableCatNonNull()) &&
+               Objects.equals(fktableSchemNonNull(), that.fktableSchemNonNull()) &&
+               Objects.equals(fktableName, that.fktableName) &&
+               Objects.equals(fkcolumnName, that.fkcolumnName);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(getPkcolumnId(), getFkcolumnId());
-    }
-
-    public void setPktableCat(final String pktableCat) {
-        this.pktableCat = pktableCat;
-        pkcolumnid = null;
-    }
-
-    public void setPktableSchem(final String pktableSchem) {
-        this.pktableSchem = pktableSchem;
-        pkcolumnid = null;
-    }
-
-    public void setPktableName(final String pktableName) {
-        this.pktableName = pktableName;
-        pkcolumnid = null;
-    }
-
-    public void setPkcolumnName(final String pkcolumnName) {
-        this.pkcolumnName = pkcolumnName;
-        pkcolumnid = null;
-    }
-
-    public void setFktableCat(final String fktableCat) {
-        this.fktableCat = fktableCat;
-        fkcolumnId = null;
-    }
-
-    public void setFktableSchem(final String fktableSchem) {
-        this.fktableSchem = fktableSchem;
-        fkcolumnId = null;
-    }
-
-    public void setFktableName(final String fktableName) {
-        this.fktableName = fktableName;
-        fkcolumnId = null;
-    }
-
-    public void setFkcolumnName(final String fkcolumnName) {
-        this.fkcolumnName = fkcolumnName;
-        fkcolumnId = null;
-    }
-
-    public Integer getUpdateRule() {
-        return updateRule;
-    }
-
-    public void setUpdateRule(final Integer updateRule) {
-        this.updateRule = updateRule;
-    }
-
-    TableKeyUpdateRule getUpdateRuleAsEnum() {
-        return Optional.ofNullable(getUpdateRule())
-                .map(TableKeyUpdateRule::valueOfUpdateRule)
-                .orElse(null);
-    }
-
-    void setUpdateRuleAsEnum(final TableKeyUpdateRule updateRuleAsEnum) {
-        setUpdateRule(
-                Optional.ofNullable(updateRuleAsEnum)
-                        .map(_IntFieldEnum::fieldValueAsInt)
-                        .orElse(null)
+        return Objects.hash(
+                pktableCatNonNull(), pktableSchemNonNull(), pktableName, pkcolumnName,
+                fktableCatNonNull(), fktableSchemNonNull(), fktableName, fkcolumnName
         );
     }
 
@@ -226,20 +190,6 @@ abstract class TableKey<T extends TableKey<T>> extends AbstractMetadataType {
 
     public void setDeleteRule(final Integer deleteRule) {
         this.deleteRule = deleteRule;
-    }
-
-    TableKeyDeleteRule getDeleteRuleAsEnum() {
-        return Optional.ofNullable(getDeleteRule())
-                .map(TableKeyDeleteRule::valueOfDeleteRule)
-                .orElse(null);
-    }
-
-    void setDeleteRuleAsEnum(final TableKeyDeleteRule deleteRuleAsEnum) {
-        setDeleteRule(
-                Optional.ofNullable(deleteRuleAsEnum)
-                        .map(_IntFieldEnum::fieldValueAsInt)
-                        .orElse(null)
-        );
     }
 
     /**
@@ -258,20 +208,6 @@ abstract class TableKey<T extends TableKey<T>> extends AbstractMetadataType {
      */
     public void setDeferrability(final Integer deferrability) {
         this.deferrability = deferrability;
-    }
-
-    TableKeyDeferrability getDeferrabilityAsEnum() {
-        return Optional.ofNullable(getDeferrability())
-                .map(v -> TableKeyDeferrability.valueOfDeferrability(getDeferrability()))
-                .orElse(null);
-    }
-
-    void setDeferrabilityAsEnum(final TableKeyDeferrability deferrabilityAsEnum) {
-        setDeferrability(
-                Optional.ofNullable(deferrabilityAsEnum)
-                        .map(v -> v.fieldValueAsInt())
-                        .orElse(null)
-        );
     }
 
     @_NullableBySpecification
@@ -326,71 +262,65 @@ abstract class TableKey<T extends TableKey<T>> extends AbstractMetadataType {
     @_ColumnLabel(COLUMN_NAME_DEFERRABILITY)
     private Integer deferrability;
 
-    String getPktableCatNonNull() {
+    String pktableCatNonNull() {
         final String pktableCat = getPktableCat();
         return pktableCat == null ? Catalog.COLUMN_VALUE_TABLE_CAT_EMPTY : pktableCat;
     }
 
-    String getPktableSchemNonNull() {
+    String pktableSchemNonNull() {
         final String pktableSchem = getPktableSchem();
         return pktableSchem == null ? Schema.COLUMN_VALUE_TABLE_SCHEM_EMPTY : pktableSchem;
     }
 
-    ColumnId getPkcolumnId() {
-        if (pkcolumnid == null) {
-            pkcolumnid = ColumnId.of(
-                    TableId.of(
-                            getPktableCatNonNull(),
-                            getPktableSchemNonNull(),
-                            getPktableName()
-                    ),
-                    getPkcolumnName()
-            );
-        }
-        return pkcolumnid;
+    String fktableCatNonNull() {
+        final String fktableCat_ = getFktableCat();
+        return fktableCat_ == null ? Catalog.COLUMN_VALUE_TABLE_CAT_EMPTY : fktableCat_;
     }
 
-    private TableId getPktableId() {
-        return getPkcolumnId().getTableId();
+    String fktableSchemNonNull() {
+        final String fktableSchem_ = getFktableSchem();
+        return fktableSchem_ == null ? Schema.COLUMN_VALUE_TABLE_SCHEM_EMPTY : fktableSchem_;
     }
 
-    @Setter(AccessLevel.NONE)
-    @Getter(AccessLevel.NONE)
-    @EqualsAndHashCode.Exclude
-    @ToString.Exclude
-    private transient ColumnId pkcolumnid;
-
-    String getFktableCatNonNull() {
-        final String fktableCat = getFktableCat();
-        return fktableCat == null ? Catalog.COLUMN_VALUE_TABLE_CAT_EMPTY : fktableCat;
+    TableKeyUpdateRule getUpdateRuleAsEnum() {
+        return Optional.ofNullable(getUpdateRule())
+                .map(TableKeyUpdateRule::valueOfUpdateRule)
+                .orElse(null);
     }
 
-    String getFktableSchemNonNull() {
-        final String fktableSchem = getFktableSchem();
-        return fktableSchem == null ? Schema.COLUMN_VALUE_TABLE_SCHEM_EMPTY : fktableSchem;
+    void setUpdateRuleAsEnum(final TableKeyUpdateRule updateRuleAsEnum) {
+        setUpdateRule(
+                Optional.ofNullable(updateRuleAsEnum)
+                        .map(_IntFieldEnum::fieldValueAsInt)
+                        .orElse(null)
+        );
     }
 
-    ColumnId getFkcolumnId() {
-        if (fkcolumnId == null) {
-            fkcolumnId = ColumnId.of(
-                    TableId.of(
-                            getFktableCatNonNull(),
-                            getFktableSchemNonNull(),
-                            getFktableName()
-                    ),
-                    getFkcolumnName()
-            );
-        }
-        return fkcolumnId;
+    TableKeyDeleteRule getDeleteRuleAsEnum() {
+        return Optional.ofNullable(getDeleteRule())
+                .map(TableKeyDeleteRule::valueOfDeleteRule)
+                .orElse(null);
     }
 
-    private TableId getFktableId() {
-        return getFkcolumnId().getTableId();
+    void setDeleteRuleAsEnum(final TableKeyDeleteRule deleteRuleAsEnum) {
+        setDeleteRule(
+                Optional.ofNullable(deleteRuleAsEnum)
+                        .map(_IntFieldEnum::fieldValueAsInt)
+                        .orElse(null)
+        );
     }
 
-    @Setter(AccessLevel.NONE)
-    @Getter(AccessLevel.NONE)
-    @EqualsAndHashCode.Exclude
-    @ToString.Exclude
-    private transient ColumnId fkcolumnId;
+    TableKeyDeferrability getDeferrabilityAsEnum() {
+        return Optional.ofNullable(getDeferrability())
+                .map(v -> TableKeyDeferrability.valueOfDeferrability(getDeferrability()))
+                .orElse(null);
+    }
+
+    void setDeferrabilityAsEnum(final TableKeyDeferrability deferrabilityAsEnum) {
+        setDeferrability(
+                Optional.ofNullable(deferrabilityAsEnum)
+                        .map(TableKeyDeferrability::fieldValueAsInt)
+                        .orElse(null)
+        );
+    }
 }
