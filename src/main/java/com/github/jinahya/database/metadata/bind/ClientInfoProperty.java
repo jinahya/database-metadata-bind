@@ -43,12 +43,24 @@ public class ClientInfoProperty extends AbstractMetadataType {
     static final Comparator<ClientInfoProperty> LEXICOGRAPHIC_ORDER =
             Comparator.comparing(ClientInfoProperty::getName, nullsFirst(naturalOrder()));
 
+    /**
+     * The column label of {@value}.
+     */
     public static final String COLUMN_LABEL_NAME = "NAME";
 
+    /**
+     * The column label of {@value}.
+     */
     public static final String COLUMN_LABEL_MAX_LEN = "MAX_LEN";
 
+    /**
+     * The column label of {@value}.
+     */
     public static final String COLUMN_LABEL_DEFAULT_VALUE = "DEFAULT_VALUE";
 
+    /**
+     * The column label of {@value}.
+     */
     public static final String COLUMN_LABEL_DESCRIPTION = "DESCRIPTION";
 
     @Override
