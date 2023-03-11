@@ -43,9 +43,7 @@ class TestContainers_Db2_IT extends TestContainers_$_IT {
     static {
         // https://www.testcontainers.org/modules/databases/db2/
         final var NAME = DockerImageName.parse("ibmcom/db2:latest");
-        CONTAINER = new Db2Container(NAME)
-                .acceptLicense();
-        ;
+        CONTAINER = new Db2Container(NAME).acceptLicense();
     }
 
     @Override

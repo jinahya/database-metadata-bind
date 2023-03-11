@@ -70,6 +70,9 @@ public class TableType extends AbstractMetadataType {
         return Objects.hash(super.hashCode(), tableType);
     }
 
+    @SuppressWarnings({
+            "java:S1700"
+    })
     @_ColumnLabel(COLUMN_LABEL_TABLE_TYPE)
     private String tableType;
 }

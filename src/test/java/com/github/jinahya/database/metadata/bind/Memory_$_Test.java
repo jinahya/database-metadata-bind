@@ -20,6 +20,8 @@ package com.github.jinahya.database.metadata.bind;
  * #L%
  */
 
+import io.vavr.CheckedFunction1;
+import io.vavr.Function1;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.Test;
 
@@ -63,6 +65,22 @@ abstract class Memory_$_Test {
         });
     }
 
+    <R> R applyContextUnchecked(final Function1<? super Context, ? extends R> function) {
+        Objects.requireNonNull(function, "function is null");
+        return applyContext(c -> {
+            try {
+                return function.apply(c);
+            } catch (final Throwable t) {
+                throw new RuntimeException(t);
+            }
+        });
+    }
+
+    <R> R applyContextChecked(final CheckedFunction1<? super Context, ? extends R> function) {
+        Objects.requireNonNull(function, "function is null");
+        return applyContextUnchecked(function.unchecked());
+    }
+
     @Test
     void test() throws SQLException {
         applyContext(c -> {
@@ -84,6 +102,22 @@ abstract class Memory_$_Test {
             } catch (final SQLException sqle) {
                 throw new RuntimeException(sqle);
             }
+        });
+    }
+
+    @Test
+    void getColumns__() {
+        applyContextChecked(c -> {
+            ContextTests.getColumns__(c, null, null, "%", "%");
+            return null;
+        });
+    }
+
+    @Test
+    void getTables__() {
+        applyContextChecked(c -> {
+            ContextTests.getTables__(c, null, null, "%", null);
+            return null;
         });
     }
 }

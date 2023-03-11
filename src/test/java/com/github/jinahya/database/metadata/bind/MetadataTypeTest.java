@@ -97,28 +97,50 @@ abstract class MetadataTypeTest<T extends MetadataType> extends _MetadataTypeTes
     void field_HasAccessors_AnnotatedWithColumnLabel() throws IntrospectionException {
         for (final var field : getFieldsWithColumnLabel().keySet()) {
             final var declaringClass = field.getDeclaringClass();
-            final var beanInfo = Introspector.getBeanInfo(declaringClass);
-            final var propertyDescriptor =
-                    stream(beanInfo.getPropertyDescriptors()).filter(d -> d.getName().equals(field.getName()))
+            final var info = Introspector.getBeanInfo(declaringClass);
+            final var descriptor =
+                    stream(info.getPropertyDescriptors())
+                            .filter(d -> d.getName().equals(field.getName()))
                             .findAny();
-            assertThat(propertyDescriptor).isNotEmpty().hasValueSatisfying(d -> {
-                final var readMethod = d.getReadMethod();
-                assertThat(readMethod).isNotNull();
+            assertThat(descriptor).isNotEmpty().hasValueSatisfying(d -> {
+                final var reader = d.getReadMethod();
+                assertThat(reader).isNotNull();
                 try {
-                    readMethod.invoke(typeInstance());
+                    reader.invoke(typeInstance());
                 } catch (final ReflectiveOperationException roe) {
                     throw new RuntimeException(roe);
                 }
-                final var writeMethod = d.getWriteMethod();
-                assertThat(writeMethod).isNotNull();
+                final var writer = d.getWriteMethod();
+                assertThat(writer)
+                        .as("write method of %1$s", descriptor)
+                        .isNotNull();
                 if (!field.getType().isPrimitive()) {
                     try {
-                        writeMethod.invoke(typeInstance(), new Object[] {null});
+                        writer.invoke(typeInstance(), new Object[] {null});
                     } catch (final ReflectiveOperationException roe) {
                         throw new RuntimeException(roe);
                     }
                 }
             });
+        }
+    }
+
+    @Test
+    void accessors() throws Exception {
+        final var instance = typeInstance();
+        final var beanInfo = Introspector.getBeanInfo(typeClass);
+        for (final var descriptor : beanInfo.getPropertyDescriptors()) {
+            final var reader = descriptor.getReadMethod();
+            final var writer = descriptor.getWriteMethod();
+            if (reader != null) {
+                final var value = reader.invoke(instance);
+                if (writer != null) {
+                    writer.invoke(instance, value);
+                }
+            }
+            if (writer != null) {
+                writer.invoke(instance, (Object) null);
+            }
         }
     }
 

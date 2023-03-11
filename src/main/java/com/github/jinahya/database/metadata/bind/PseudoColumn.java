@@ -125,8 +125,9 @@ public class PseudoColumn extends AbstractMetadataType {
     @_ColumnLabel(COLUMN_LABEL_COLUMN_NAME)
     private String columnName;
 
+    @_NotNull
     @_ColumnLabel("DATA_TYPE")
-    private int dataType;
+    private Integer dataType;
 
     @_NullableBySpecification
     @_ColumnLabel("COLUMN_SIZE")
@@ -136,8 +137,9 @@ public class PseudoColumn extends AbstractMetadataType {
     @_ColumnLabel("DECIMAL_DIGITS")
     private Integer decimalDigits;
 
+    @_NotNull
     @_ColumnLabel("NUM_PREC_RADIX")
-    private int numPrecRadix;
+    private Integer numPrecRadix;
 
     @_ColumnLabel("COLUMN_USAGE")
     private String columnUsage;
@@ -146,8 +148,9 @@ public class PseudoColumn extends AbstractMetadataType {
     @_ColumnLabel("REMARKS")
     private String remarks;
 
+    @_NotNull
     @_ColumnLabel("CHAR_OCTET_LENGTH")
-    private int charOctetLength;
+    private Integer charOctetLength;
 
     @_ColumnLabel("IS_NULLABLE")
     private String isNullable;

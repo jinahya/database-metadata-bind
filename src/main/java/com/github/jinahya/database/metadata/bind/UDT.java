@@ -128,11 +128,12 @@ public class UDT extends AbstractMetadataType {
         udtId = null;
     }
 
-    public int getDataType() {
+    @_NotNull
+    public Integer getDataType() {
         return dataType;
     }
 
-    public void setDataType(final int dataType) {
+    public void setDataType(@_NotNull final Integer dataType) {
         this.dataType = dataType;
         udtId = null;
     }
@@ -152,8 +153,9 @@ public class UDT extends AbstractMetadataType {
     @_ColumnLabel(COLUMN_LABEL_CLASS_NAME)
     private String className;
 
+    @_NotNull
     @_ColumnLabel(COLUMN_LABEL_DATA_TYPE)
-    private int dataType;
+    private Integer dataType;
 
     @_NullableByVendor("PostgreSQL")
     @_ColumnLabel("REMARKS")

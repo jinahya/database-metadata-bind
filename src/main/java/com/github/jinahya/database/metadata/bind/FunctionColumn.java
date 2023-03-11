@@ -249,8 +249,9 @@ public class FunctionColumn extends AbstractMetadataType {
     @_ColumnLabel("COLUMN_TYPE")
     private Integer columnType;
 
+    @_NotNull
     @_ColumnLabel("DATA_TYPE")
-    private int dataType;
+    private Integer dataType;
 
     @_ColumnLabel("TYPE_NAME")
     private String typeName;
@@ -259,18 +260,21 @@ public class FunctionColumn extends AbstractMetadataType {
     @_ColumnLabel("PRECISION")
     private Integer precision;
 
+    @_NotNull
     @_ColumnLabel("LENGTH")
-    private int length;
+    private Integer length;
 
     @_NullableBySpecification
     @_ColumnLabel("SCALE")
     private Integer scale;
 
+    @_NotNull
     @_ColumnLabel("RADIX")
-    private int radix;
+    private Integer radix;
 
+    @_NotNull
     @_ColumnLabel("NULLABLE")
-    private int nullable;
+    private Integer nullable;
 
     @_NullableByVendor("derby") // https://issues.apache.org/jira/browse/DERBY-7100
     @_ColumnLabel("REMARKS")
@@ -280,8 +284,9 @@ public class FunctionColumn extends AbstractMetadataType {
     @_ColumnLabel("CHAR_OCTET_LENGTH")
     private Integer charOctetLength;
 
+    @_NotNull
     @_ColumnLabel("ORDINAL_POSITION")
-    private int ordinalPosition;
+    private Integer ordinalPosition;
 
     @_ColumnLabel("IS_NULLABLE")
     private String isNullable;

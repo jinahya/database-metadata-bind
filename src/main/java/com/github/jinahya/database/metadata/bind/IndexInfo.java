@@ -50,14 +50,14 @@ public class IndexInfo extends AbstractMetadataType {
     private static final long serialVersionUID = 924040226611181424L;
 
     static final Comparator<IndexInfo> CASE_INSENSITIVE_ORDER =
-            Comparator.comparing(IndexInfo::isNonUnique)
-                    .thenComparingInt(IndexInfo::getType)
+            Comparator.comparing(IndexInfo::getNonUnique, nullsFirst(naturalOrder()))
+                    .thenComparing(IndexInfo::getType, nullsFirst(naturalOrder()))
                     .thenComparing(IndexInfo::getIndexName, nullsFirst(String.CASE_INSENSITIVE_ORDER))
                     .thenComparingInt(IndexInfo::getOrdinalPosition);
 
     static final Comparator<IndexInfo> LEXICOGRAPHIC_ORDER =
-            Comparator.comparing(IndexInfo::isNonUnique)
-                    .thenComparingInt(IndexInfo::getType)
+            Comparator.comparing(IndexInfo::getNonUnique, nullsFirst(naturalOrder()))
+                    .thenComparing(IndexInfo::getType, nullsFirst(naturalOrder()))
                     .thenComparing(IndexInfo::getIndexName, nullsFirst(naturalOrder()))
                     .thenComparingInt(IndexInfo::getOrdinalPosition);
 
@@ -80,8 +80,9 @@ public class IndexInfo extends AbstractMetadataType {
     @_ColumnLabel(COLUMN_LABEL_TABLE_NAME)
     private String tableName;
 
+    @_NotNull
     @_ColumnLabel("NON_UNIQUE")
-    private boolean nonUnique;
+    private Boolean nonUnique;
 
     @_NullableBySpecification
     @_ColumnLabel("INDEX_QUALIFIER")
@@ -91,11 +92,13 @@ public class IndexInfo extends AbstractMetadataType {
     @_ColumnLabel("INDEX_NAME")
     private String indexName;
 
+    @_NotNull
     @_ColumnLabel(COLUMN_LABEL_TYPE)
-    private int type;
+    private Integer type;
 
+    @_NotNull
     @_ColumnLabel("ORDINAL_POSITION")
-    private int ordinalPosition;
+    private Integer ordinalPosition;
 
     @_NullableBySpecification
     @_ColumnLabel("COLUMN_NAME")
@@ -105,11 +108,13 @@ public class IndexInfo extends AbstractMetadataType {
     @_ColumnLabel("ASC_OR_DESC")
     private String ascOrDesc;
 
+    @_NotNull
     @_ColumnLabel("CARDINALITY")
-    private long cardinality;
+    private Long cardinality;
 
+    @_NotNull
     @_ColumnLabel("PAGES")
-    private long pages;
+    private Long pages;
 
     @_NullableBySpecification
     @_ColumnLabel("FILTER_CONDITION")

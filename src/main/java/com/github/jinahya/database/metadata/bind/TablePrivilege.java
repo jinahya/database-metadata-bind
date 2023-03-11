@@ -78,7 +78,6 @@ public class TablePrivilege extends AbstractMetadataType {
      */
     public static final String COLUMN_LABEL_TABLE_NAME = "TABLE_NAME";
 
-    // -----------------------------------------------------------------------------------------------------------------
     @_NullableBySpecification
     @_ColumnLabel(COLUMN_LABEL_TABLE_CAT)
     private String tableCat;
@@ -104,7 +103,6 @@ public class TablePrivilege extends AbstractMetadataType {
     @_ColumnLabel("IS_GRANTABLE")
     private String isGrantable;
 
-    // -------------------------------------------------------------------------------------------------------- tableCat
     String getTableCatNonNull() {
         return Optional.ofNullable(getTableCat()).orElse(Catalog.COLUMN_VALUE_TABLE_CAT_EMPTY);
     }

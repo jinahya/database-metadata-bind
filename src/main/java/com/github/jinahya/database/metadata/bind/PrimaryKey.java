@@ -44,7 +44,6 @@ import static java.util.Comparator.nullsFirst;
 @_ChildOf(Table.class)
 @Setter
 @Getter
-//@EqualsAndHashCode(callSuper = true)
 @ToString(callSuper = true)
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @SuperBuilder(toBuilder = true)
@@ -70,8 +69,6 @@ public class PrimaryKey extends AbstractMetadataType {
 
     public static final String COLUMN_LABEL_PK_NAME = "PK_NAME";
 
-    // -----------------------------------------------------------------------------------------------------------------
-
     @Override
     public boolean equals(final Object obj) {
         if (this == obj) return true;
@@ -85,7 +82,6 @@ public class PrimaryKey extends AbstractMetadataType {
         return Objects.hash(getPrimaryKeyId());
     }
 
-    // -------------------------------------------------------------------------------------------------------- tableCat
     String getTableCatNonNull() {
         return Optional.ofNullable(getTableCat()).orElse(Catalog.COLUMN_VALUE_TABLE_CAT_EMPTY);
     }
@@ -95,7 +91,6 @@ public class PrimaryKey extends AbstractMetadataType {
         primaryKeyId = null;
     }
 
-    // ------------------------------------------------------------------------------------------------------ tableSchem
     String getTableSchemNonNull() {
         return Optional.ofNullable(getTableSchem()).orElse(Schema.COLUMN_VALUE_TABLE_SCHEM_EMPTY);
     }
@@ -105,19 +100,16 @@ public class PrimaryKey extends AbstractMetadataType {
         primaryKeyId = null;
     }
 
-    // ------------------------------------------------------------------------------------------------------- tableName
     public void setTableName(String tableName) {
         this.tableName = tableName;
         primaryKeyId = null;
     }
 
-    // ------------------------------------------------------------------------------------------------------ columnName
     public void setColumnName(final String columnName) {
         this.columnName = columnName;
         primaryKeyId = null;
     }
 
-    // ---------------------------------------------------------------------------------------------------- primaryKeyId
     PrimaryKeyId getPrimaryKeyId() {
         if (primaryKeyId == null) {
             primaryKeyId = PrimaryKeyId.of(
@@ -132,7 +124,6 @@ public class PrimaryKey extends AbstractMetadataType {
         return primaryKeyId;
     }
 
-    // -----------------------------------------------------------------------------------------------------------------
     @_NullableBySpecification
     @_ColumnLabel(COLUMN_LABEL_TABLE_CAT)
     private String tableCat;
@@ -147,14 +138,14 @@ public class PrimaryKey extends AbstractMetadataType {
     @_ColumnLabel(COLUMN_LABEL_COLUMN_NAME)
     private String columnName;
 
+    @_NotNull
     @_ColumnLabel(COLUMN_LABEL_KEY_SEQ)
-    private int keySeq;
+    private Integer keySeq;
 
     @_NullableBySpecification
     @_ColumnLabel(COLUMN_LABEL_PK_NAME)
     private String pkName;
 
-    // -----------------------------------------------------------------------------------------------------------------
     @EqualsAndHashCode.Exclude
     @ToString.Exclude
     private transient PrimaryKeyId primaryKeyId;

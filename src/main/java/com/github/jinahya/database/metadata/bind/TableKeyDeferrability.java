@@ -55,5 +55,5 @@ public enum TableKeyDeferrability implements _IntFieldEnum<TableKeyDeferrability
         return fieldValue;
     }
 
-    private int fieldValue;
+    private final int fieldValue;
 }

@@ -121,8 +121,9 @@ public class VersionColumn extends AbstractMetadataType {
     @_ColumnLabel("COLUMN_NAME")
     private String columnName;
 
+    @_NotNull
     @_ColumnLabel("DATA_TYPE")
-    private int dataType;
+    private Integer dataType;
 
     @_ColumnLabel("TYPE_NAME")
     private String typeName;
@@ -131,8 +132,9 @@ public class VersionColumn extends AbstractMetadataType {
     @_ColumnLabel("COLUMN_SIZE")
     private Integer columnSize;
 
+    @_NotNull
     @_ColumnLabel("BUFFER_LENGTH")
-    private int bufferLength;
+    private Integer bufferLength;
 
     @_NullableBySpecification
     @_ColumnLabel("DECIMAL_DIGITS")

@@ -62,5 +62,5 @@ public enum TableKeyDeleteRule implements _IntFieldEnum<TableKeyDeleteRule> {
         return fieldValue;
     }
 
-    private int fieldValue;
+    private final int fieldValue;
 }

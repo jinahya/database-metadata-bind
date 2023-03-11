@@ -62,5 +62,5 @@ public enum TableKeyUpdateRule implements _IntFieldEnum<TableKeyUpdateRule> {
         return fieldValue;
     }
 
-    private int fieldValue;
+    private final int fieldValue;
 }

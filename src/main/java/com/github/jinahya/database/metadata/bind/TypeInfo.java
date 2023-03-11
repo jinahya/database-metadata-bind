@@ -194,7 +194,7 @@ public class TypeInfo extends AbstractMetadataType {
         if (this == obj) return true;
         if (!(obj instanceof TypeInfo)) return false;
         final TypeInfo that = (TypeInfo) obj;
-        return dataType == that.dataType &&
+        return Objects.equals(dataType, that.dataType) &&
                Objects.equals(typeName, that.typeName);
     }
 
@@ -211,25 +211,12 @@ public class TypeInfo extends AbstractMetadataType {
         this.searchable = searchable;
     }
 
-    Searchable getSearchableAsEnum() {
-        return Optional.ofNullable(getSearchable())
-                .map(Searchable::valueOfSearchable)
-                .orElse(null);
-    }
-
-    void setSearchableAsEnum(final Searchable searchableAsEnum) {
-        setSearchable(
-                Optional.ofNullable(searchableAsEnum)
-                        .map(_IntFieldEnum::fieldValueAsInt)
-                        .orElse(null)
-        );
-    }
-
     @_ColumnLabel(COLUMN_LABEL_TYPE_NAME)
     private String typeName;
 
+    @_NotNull
     @_ColumnLabel(COLUMN_LABEL_DATA_TYPE)
-    private int dataType;
+    private Integer dataType;
 
     @_NullableBySpecification
     @_ColumnLabel(COLUMN_LABEL_PRECISION)
@@ -251,8 +238,9 @@ public class TypeInfo extends AbstractMetadataType {
     @_ColumnLabel(COLUMN_LABEL_NULLABLE)
     private Integer nullable;
 
+    @_NotNull
     @_ColumnLabel(COLUMN_LABEL_CASE_SENSITIVE)
-    private boolean caseSensitive;
+    private Boolean caseSensitive;
 
     @_NotNull
     @_ColumnLabel(COLUMN_LABEL_SEARCHABLE)
@@ -262,21 +250,25 @@ public class TypeInfo extends AbstractMetadataType {
     @_ColumnLabel("UNSIGNED_ATTRIBUTE")
     private Boolean unsignedAttribute;
 
+    @_NotNull
     @_ColumnLabel("FIXED_PREC_SCALE")
-    private boolean fixedPrecScale;
+    private Boolean fixedPrecScale;
 
+    @_NotNull
     @_ColumnLabel("AUTO_INCREMENT")
-    private boolean autoIncrement;
+    private Boolean autoIncrement;
 
     @_NullableBySpecification
     @_ColumnLabel("LOCAL_TYPE_NAME")
     private String localTypeName;
 
+    @_NotNull
     @_ColumnLabel("MINIMUM_SCALE")
-    private int minimumScale;
+    private Integer minimumScale;
 
+    @_NotNull
     @_ColumnLabel("MAXIMUM_SCALE")
-    private int maximumScale;
+    private Integer maximumScale;
 
     @_NotUsedBySpecification
     @_ColumnLabel("SQL_DATA_TYPE")
@@ -286,6 +278,21 @@ public class TypeInfo extends AbstractMetadataType {
     @_ColumnLabel("SQL_DATETIME_SUB")
     private Integer sqlDatetimeSub;
 
+    @_NotNull
     @_ColumnLabel("NUM_PREC_RADIX")
-    private int numPrecRadix;
+    private Integer numPrecRadix;
+
+    Searchable getSearchableAsEnum() {
+        return Optional.ofNullable(getSearchable())
+                .map(Searchable::valueOfSearchable)
+                .orElse(null);
+    }
+
+    void setSearchableAsEnum(final Searchable searchableAsEnum) {
+        setSearchable(
+                Optional.ofNullable(searchableAsEnum)
+                        .map(_IntFieldEnum::fieldValueAsInt)
+                        .orElse(null)
+        );
+    }
 }

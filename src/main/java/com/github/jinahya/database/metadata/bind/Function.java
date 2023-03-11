@@ -125,11 +125,12 @@ public class Function extends AbstractMetadataType {
         this.remarks = remarks;
     }
 
-    public int getFunctionType() {
+    @_NotNull
+    public Integer getFunctionType() {
         return functionType;
     }
 
-    public void setFunctionType(int functionType) {
+    public void setFunctionType(@_NotNull final Integer functionType) {
         this.functionType = functionType;
     }
 
@@ -158,8 +159,9 @@ public class Function extends AbstractMetadataType {
     @_ColumnLabel("REMARKS")
     private String remarks;
 
+    @_NotNull
     @_ColumnLabel("FUNCTION_TYPE")
-    private int functionType;
+    private Integer functionType;
 
     @_ColumnLabel("SPECIFIC_NAME")
     private String specificName;

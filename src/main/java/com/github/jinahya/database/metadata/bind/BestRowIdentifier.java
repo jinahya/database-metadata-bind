@@ -214,8 +214,9 @@ public class BestRowIdentifier
     @_ColumnLabel(COLUMN_LABEL_COLUMN_NAME)
     private String columnName;
 
+    @_NotNull
     @_ColumnLabel(COLUMN_LABEL_DATA_TYPE)
-    private int dataType;
+    private Integer dataType;
 
     @_ColumnLabel("TYPE_NAME")
     private String typeName;

@@ -199,14 +199,17 @@ public class CrossReference extends AbstractMetadataType {
     @_ColumnLabel("FKCOLUMN_NAME")
     private String fkcolumnName;
 
+    @_NotNull
     @_ColumnLabel("KEY_SEQ")
-    private int keySeq;
+    private Integer keySeq;
 
+    @_NotNull
     @_ColumnLabel("UPDATE_RULE")
-    private int updateRule;
+    private Integer updateRule;
 
+    @_NotNull
     @_ColumnLabel("DELETE_RULE")
-    private int deleteRule;
+    private Integer deleteRule;
 
     @_NullableBySpecification
     @_ColumnLabel("FK_NAME")
@@ -216,8 +219,9 @@ public class CrossReference extends AbstractMetadataType {
     @_ColumnLabel("PK_NAME")
     private String pkName;
 
+    @_NotNull
     @_ColumnLabel("DEFERRABILITY")
-    private int deferrability;
+    private Integer deferrability;
 
     String getPktableCatNonNull() {
         return Optional.ofNullable(getPktableCat()).orElse(Catalog.COLUMN_VALUE_TABLE_CAT_EMPTY);

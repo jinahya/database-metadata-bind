@@ -115,7 +115,7 @@ public class Procedure extends AbstractMetadataType {
             return _IntFieldEnum.valueOfFieldValue(ProcedureType.class, procedureType);
         }
 
-        private ProcedureType(final int fieldValue) {
+        ProcedureType(final int fieldValue) {
             this.fieldValue = fieldValue;
         }
 
@@ -124,7 +124,7 @@ public class Procedure extends AbstractMetadataType {
             return fieldValue;
         }
 
-        private int fieldValue;
+        private final int fieldValue;
     }
 
     /**
@@ -196,7 +196,6 @@ public class Procedure extends AbstractMetadataType {
         procedureId = null;
     }
 
-    // -----------------------------------------------------------------------------------------------------------------
     @_NullableBySpecification
     @_ColumnLabel("PROCEDURE_CAT")
     private String procedureCat;

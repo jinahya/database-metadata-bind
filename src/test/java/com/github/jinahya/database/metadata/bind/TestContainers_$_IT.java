@@ -20,6 +20,8 @@ package com.github.jinahya.database.metadata.bind;
  * #L%
  */
 
+import io.vavr.CheckedFunction1;
+import io.vavr.Function1;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
@@ -27,6 +29,7 @@ import org.junit.jupiter.api.Test;
 import java.io.IOException;
 import java.sql.Connection;
 import java.sql.SQLException;
+import java.util.Objects;
 
 import static org.junit.jupiter.api.Assumptions.assumeTrue;
 
@@ -45,21 +48,70 @@ abstract class TestContainers_$_IT {
 
     abstract Connection connect() throws SQLException;
 
-    @Test
-    void test() throws SQLException {
+    <R> R applyConnection(final java.util.function.Function<? super Connection, ? extends R> function) {
+        Objects.requireNonNull(function, "function is null");
         try (var connection = connect()) {
-            log.debug("connected: {}", connection);
-            final var context = Context.newInstance(connection);
-            ContextTests.test(context);
+            return function.apply(connection);
+        } catch (final SQLException sqle) {
+            throw new RuntimeException(sqle);
         }
     }
 
+    <R> R applyContext(final java.util.function.Function<? super Context, ? extends R> function) {
+        Objects.requireNonNull(function, "function is null");
+        return applyConnection(c -> {
+            try {
+                return function.apply(Context.newInstance(c));
+            } catch (final SQLException sqle) {
+                throw new RuntimeException(sqle);
+            }
+        });
+    }
+
+    <R> R applyContextUnchecked(final Function1<? super Context, ? extends R> function) {
+        Objects.requireNonNull(function, "function is null");
+        return applyContext(c -> {
+            try {
+                return function.apply(c);
+            } catch (final Throwable t) {
+                throw new RuntimeException(t);
+            }
+        });
+    }
+
+    <R> R applyContextChecked(final CheckedFunction1<? super Context, ? extends R> function) {
+        Objects.requireNonNull(function, "function is null");
+        return applyContextUnchecked(function.unchecked());
+    }
+
     @Test
-    void testOrdering() throws SQLException {
-        try (var connection = connect()) {
-            log.debug("connected: {}", connection);
-            final var context = Context.newInstance(connection);
-            ContextTests.testOrdering(context);
-        }
+    void test() throws SQLException {
+        applyContextChecked(c -> {
+            ContextTests.test(c);
+            return null;
+        });
+    }
+
+    //    @Test
+//    void testOrdering() throws SQLException {
+//        applyContextChecked(c -> {
+//            ContextTests.testOrdering(c);
+//            return null;
+//        });
+//    }
+    @Test
+    void getColumns__() {
+        applyContextChecked(c -> {
+            ContextTests.getColumns__(c, null, null, "%", "%");
+            return null;
+        });
+    }
+
+    @Test
+    void getTables__() {
+        applyContextChecked(c -> {
+            ContextTests.getTables__(c, null, null, "%", null);
+            return null;
+        });
     }
 }

@@ -82,11 +82,11 @@ public class ClientInfoProperty extends AbstractMetadataType {
         this.name = name;
     }
 
-    public int getMaxLen() {
+    public Integer getMaxLen() {
         return maxLen;
     }
 
-    public void setMaxLen(int maxLen) {
+    public void setMaxLen(final Integer maxLen) {
         this.maxLen = maxLen;
     }
 
@@ -94,7 +94,7 @@ public class ClientInfoProperty extends AbstractMetadataType {
         return defaultValue;
     }
 
-    public void setDefaultValue(String defaultValue) {
+    public void setDefaultValue(final String defaultValue) {
         this.defaultValue = defaultValue;
     }
 
@@ -102,15 +102,16 @@ public class ClientInfoProperty extends AbstractMetadataType {
         return description;
     }
 
-    public void setDescription(String description) {
+    public void setDescription(final String description) {
         this.description = description;
     }
 
     @_ColumnLabel(COLUMN_LABEL_NAME)
     private String name;
 
+    @_NotNull
     @_ColumnLabel(COLUMN_LABEL_MAX_LEN)
-    private int maxLen;
+    private Integer maxLen;
 
     @_ColumnLabel(COLUMN_LABEL_DEFAULT_VALUE)
     private String defaultValue;

@@ -28,7 +28,6 @@ import lombok.ToString;
 
 import java.util.Comparator;
 import java.util.Objects;
-import java.util.Optional;
 
 import static java.util.Comparator.naturalOrder;
 import static java.util.Comparator.nullsFirst;
@@ -111,16 +110,16 @@ public class Table extends AbstractMetadataType {
         if (this == obj) return true;
         if (!(obj instanceof Table)) return false;
         final Table that = (Table) obj;
-        return Objects.equals(tableCat, that.tableCat) &&
-               Objects.equals(tableSchem, that.tableSchem) &&
+        return Objects.equals(getTableCatNonNull(), that.getTableName()) &&
+               Objects.equals(getTableSchemNonNull(), that.getTableSchemNonNull()) &&
                Objects.equals(tableName, that.tableName);
     }
 
     @Override
     public int hashCode() {
         return Objects.hash(
-                tableCat,
-                tableSchem,
+                getTableCatNonNull(),
+                getTableSchemNonNull(),
                 tableName
         );
     }
@@ -192,11 +191,19 @@ public class Table extends AbstractMetadataType {
     private String refGeneration;
 
     String getTableCatNonNull() {
-        return Optional.ofNullable(getTableCat()).orElse(Catalog.COLUMN_VALUE_TABLE_CAT_EMPTY);
+        final String tableCat_ = getTableCat();
+        if (tableCat_ != null) {
+            return tableCat_;
+        }
+        return Catalog.COLUMN_VALUE_TABLE_CAT_EMPTY;
     }
 
     String getTableSchemNonNull() {
-        return Optional.ofNullable(getTableSchem()).orElse(Schema.COLUMN_VALUE_TABLE_SCHEM_EMPTY);
+        final String tableSchem_ = getTableSchem();
+        if (tableSchem_ != null) {
+            return tableSchem_;
+        }
+        return Schema.COLUMN_VALUE_TABLE_SCHEM_EMPTY;
     }
 
     TableId getTableId() {

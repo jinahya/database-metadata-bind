@@ -212,8 +212,9 @@ public class Column extends AbstractMetadataType {
     @_ColumnLabel(COLUMN_LABEL_COLUMN_NAME)
     private String columnName;
 
+    @_NotNull
     @_ColumnLabel("DATA_TYPE")
-    private int dataType;
+    private Integer dataType;
 
     @_ColumnLabel("TYPE_NAME")
     private String typeName;
@@ -230,8 +231,9 @@ public class Column extends AbstractMetadataType {
     @_ColumnLabel("DECIMAL_DIGITS")
     private Integer decimalDigits;
 
+    @_NotNull
     @_ColumnLabel("NUM_PREC_RADIX")
-    private int numPrecRadix;
+    private Integer numPrecRadix;
 
     @_NotNull
     @_ColumnLabel(COLUMN_LABEL_NULLABLE)
@@ -253,11 +255,13 @@ public class Column extends AbstractMetadataType {
     @_ColumnLabel("SQL_DATETIME_SUB")
     private Integer sqlDatetimeSub;
 
+    @_NotNull
     @_ColumnLabel("CHAR_OCTET_LENGTH")
-    private int charOctetLength;
+    private Integer charOctetLength;
 
+    @_NotNull
     @_ColumnLabel("ORDINAL_POSITION")
-    private int ordinalPosition;
+    private Integer ordinalPosition;
 
     @_ColumnLabel("IS_NULLABLE")
     private String isNullable;

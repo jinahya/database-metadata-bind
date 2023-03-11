@@ -100,25 +100,30 @@ public class ProcedureColumn extends AbstractMetadataType {
         procedureColumnId = null;
     }
 
-    // ------------------------------------------------------------------------------------------------------ columnName
-    public void setColumnName(String columnName) {
+    public String getColumnName() {
+        return columnName;
+    }
+
+    public void setColumnName(final String columnName) {
         this.columnName = columnName;
         procedureColumnId = null;
     }
 
-    // ------------------------------------------------------------------------------------------------------ columnType
-    public void setColumnType(int columnType) {
+    @_NotNull
+    public Integer getColumnType() {
+        return columnType;
+    }
+
+    public void setColumnType(@_NotNull final Integer columnType) {
         this.columnType = columnType;
         procedureColumnId = null;
     }
 
-    // ---------------------------------------------------------------------------------------------------- specificName
     public void setSpecificName(final String specificName) {
         this.specificName = specificName;
         procedureColumnId = null;
     }
 
-    // -----------------------------------------------------------------------------------------------------------------
     @_NullableBySpecification
     @_ColumnLabel("PROCEDURE_CAT")
     private String procedureCat;
@@ -133,11 +138,13 @@ public class ProcedureColumn extends AbstractMetadataType {
     @_ColumnLabel("COLUMN_NAME")
     private String columnName;
 
+    @_NotNull
     @_ColumnLabel("COLUMN_TYPE")
-    private int columnType;
+    private Integer columnType;
 
+    @_NotNull
     @_ColumnLabel("DATA_TYPE")
-    private int dataType;
+    private Integer dataType;
 
     @_ColumnLabel("TYPE_NAME")
     private String typeName;
@@ -146,19 +153,22 @@ public class ProcedureColumn extends AbstractMetadataType {
     @_ColumnLabel("PRECISION")
     private Integer precision;
 
+    @_NotNull
     @_ColumnLabel("LENGTH")
-    private int length;
+    private Integer length;
 
     // https://issues.apache.org/jira/browse/DERBY-7103
     @_NullableBySpecification
     @_ColumnLabel("SCALE")
     private Integer scale;
 
+    @_NotNull
     @_ColumnLabel("RADIX")
-    private int radix;
+    private Integer radix;
 
+    @_NotNull
     @_ColumnLabel("NULLABLE")
-    private int nullable;
+    private Integer nullable;
 
     @_NullableByVendor("derby") // https://issues.apache.org/jira/browse/DERBY-7101
     @_ColumnLabel("REMARKS")
@@ -180,8 +190,9 @@ public class ProcedureColumn extends AbstractMetadataType {
     @_ColumnLabel("CHAR_OCTET_LENGTH")
     private Integer charOctetLength;
 
+    @_NotNull
     @_ColumnLabel("ORDINAL_POSITION")
-    private int ordinalPosition;
+    private Integer ordinalPosition;
 
     @_ColumnLabel("IS_NULLABLE")
     private String isNullable;

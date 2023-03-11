@@ -302,8 +302,9 @@ abstract class TableKey<T extends TableKey<T>> extends AbstractMetadataType {
     @_ColumnLabel(COLUMN_NAME_FKCOLUMN_NAME)
     private String fkcolumnName;
 
+    @_NotNull
     @_ColumnLabel(COLUMN_NAME_KEY_SEQ)
-    private int keySeq;
+    private Integer keySeq;
 
     @_NotNull
     @_ColumnLabel(COLUMN_NAME_UPDATE_RULE)

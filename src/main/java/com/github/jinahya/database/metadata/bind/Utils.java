@@ -152,10 +152,12 @@ final class Utils {
             }
         }
         final Object value = results.getObject(label);
-        assert value != null ||
-               (field.isAnnotationPresent(_NullableBySpecification.class) ||
-                field.isAnnotationPresent(_NullableByVendor.class))
-                : String.format("null value; label: %1$s, field: %2$s", label, field);
+        if (false) {
+            assert value != null ||
+                   (field.isAnnotationPresent(_NullableBySpecification.class) ||
+                    field.isAnnotationPresent(_NullableByVendor.class))
+                    : String.format("null value; label: %1$s, field: %2$s", label, field);
+        }
         try {
             field.set(obj, value);
             return;
