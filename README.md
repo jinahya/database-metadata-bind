@@ -20,10 +20,9 @@ See [Maven Central](https://search.maven.org/artifact/com.github.jinahya/databas
 
 ## Usage
 
-All methods, defined in the `DatabaseMetaData`, return `ResultSet` is prepared.
+All methods, defined in the `DatabaseMetaData`, which each returns a `ResultSet`, are prepared.
 
 ```java
-// https://youtrack.jetbrains.com/issue/IDEA-311820
 class C {
     void m() {
         try (var connection = connect()) {
