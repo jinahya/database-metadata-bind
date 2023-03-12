@@ -43,6 +43,8 @@
     <maven.compiler.testTarget>${maven.compiler.testSource}</maven.compiler.testTarget>
     <maven.compiler.testRelease>${maven.compiler.testTarget}</maven.compiler.testRelease>
     <doclint>none</doclint>
+    <sonar.organization>jinahya-github</sonar.organization>
+    <sonar.host.url>https://sonarcloud.io</sonar.host.url>
     <version.animal-sniffer>1.22</version.animal-sniffer>
     <version.com.oracle.ojdbc>19.3.0.0</version.com.oracle.ojdbc>
     <version.lombok>1.18.26</version.lombok>
