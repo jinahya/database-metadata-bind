@@ -20,10 +20,6 @@ package com.github.jinahya.database.metadata.bind;
  * #L%
  */
 
-import lombok.AccessLevel;
-import lombok.NoArgsConstructor;
-import lombok.experimental.SuperBuilder;
-
 import java.sql.DatabaseMetaData;
 import java.util.Comparator;
 
@@ -36,8 +32,6 @@ import java.util.Comparator;
  * @see ImportedKey
  */
 @_ChildOf(Table.class)
-@NoArgsConstructor(access = AccessLevel.PROTECTED)
-@SuperBuilder(toBuilder = true)
 public class ExportedKey extends TableKey<ExportedKey> {
 
     private static final long serialVersionUID = -6561660015694928357L;

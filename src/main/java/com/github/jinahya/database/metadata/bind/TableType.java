@@ -20,11 +20,8 @@ package com.github.jinahya.database.metadata.bind;
  * #L%
  */
 
-import lombok.AccessLevel;
 import lombok.Getter;
-import lombok.NoArgsConstructor;
 import lombok.Setter;
-import lombok.experimental.SuperBuilder;
 
 import java.util.Comparator;
 import java.util.Objects;
@@ -37,8 +34,6 @@ import java.util.Objects;
  */
 @Setter
 @Getter
-@NoArgsConstructor(access = AccessLevel.PROTECTED)
-@SuperBuilder(toBuilder = true)
 public class TableType extends AbstractMetadataType {
 
     private static final long serialVersionUID = -7630634982776331078L;

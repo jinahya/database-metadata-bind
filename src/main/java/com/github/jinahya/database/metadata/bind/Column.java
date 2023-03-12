@@ -20,12 +20,9 @@ package com.github.jinahya.database.metadata.bind;
  * #L%
  */
 
-import lombok.AccessLevel;
 import lombok.Getter;
-import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
-import lombok.experimental.SuperBuilder;
 
 import java.sql.DatabaseMetaData;
 import java.util.Comparator;
@@ -47,8 +44,6 @@ import static java.util.Comparator.nullsFirst;
 @Setter
 @Getter
 @ToString(callSuper = true)
-@NoArgsConstructor(access = AccessLevel.PROTECTED)
-@SuperBuilder(toBuilder = true)
 public class Column extends AbstractMetadataType {
 
     private static final long serialVersionUID = -409653682729081530L;
@@ -219,6 +214,7 @@ public class Column extends AbstractMetadataType {
     @_ColumnLabel("DECIMAL_DIGITS")
     private Integer decimalDigits;
 
+    @_NullableByVendor("Apache Derby")
     @_NotNull
     @_ColumnLabel("NUM_PREC_RADIX")
     private Integer numPrecRadix;
@@ -243,6 +239,7 @@ public class Column extends AbstractMetadataType {
     @_ColumnLabel("SQL_DATETIME_SUB")
     private Integer sqlDatetimeSub;
 
+    @_NullableByVendor("Apache Derby")
     @_NotNull
     @_ColumnLabel("CHAR_OCTET_LENGTH")
     private Integer charOctetLength;

@@ -43,8 +43,6 @@ import static java.util.Comparator.nullsFirst;
 @Setter
 @Getter
 @ToString(callSuper = true)
-//@NoArgsConstructor(access = AccessLevel.PROTECTED)
-//@SuperBuilder(toBuilder = true)
 public class ProcedureColumn extends AbstractMetadataType {
 
     private static final long serialVersionUID = 3894753719381358829L;
@@ -113,6 +111,7 @@ public class ProcedureColumn extends AbstractMetadataType {
     @_ColumnLabel("PRECISION")
     private Integer precision;
 
+    @_NullableByVendor("HSQL Database Engine")
     @_NotNull
     @_ColumnLabel("LENGTH")
     private Integer length;
@@ -122,6 +121,7 @@ public class ProcedureColumn extends AbstractMetadataType {
     @_ColumnLabel("SCALE")
     private Integer scale;
 
+    @_NullableByVendor("Apache Derby")
     @_NotNull
     @_ColumnLabel("RADIX")
     private Integer radix;

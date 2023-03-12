@@ -110,7 +110,7 @@ public class Context {
             instance.getUnmappedValues().put(key, value);
         }
         if (!fieldLabels.isEmpty()) {
-            log.warning(() -> String.format("unmapped fields: %1$s", fieldLabels));
+            log.severe(() -> String.format("unmapped fields: %1$s", fieldLabels));
         }
         return instance;
     }

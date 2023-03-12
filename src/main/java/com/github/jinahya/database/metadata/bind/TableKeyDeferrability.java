@@ -22,6 +22,13 @@ package com.github.jinahya.database.metadata.bind;
 
 import java.sql.DatabaseMetaData;
 
+/**
+ * Constants for values of {@value TableKey#COLUMN_NAME_DEFERRABILITY} column.
+ *
+ * @author Jin Kwon &lt;onacit_at_gmail.com&gt;
+ * @see ExportedKey
+ * @see ImportedKey
+ */
 public enum TableKeyDeferrability implements _IntFieldEnum<TableKeyDeferrability> {
 
     /**

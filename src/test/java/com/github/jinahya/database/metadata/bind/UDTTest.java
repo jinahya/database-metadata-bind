@@ -20,21 +20,9 @@ package com.github.jinahya.database.metadata.bind;
  * #L%
  */
 
-import org.junit.jupiter.api.Test;
-
 class UDTTest extends AbstractMetadataTypeTest<UDT> {
 
     UDTTest() {
         super(UDT.class);
-    }
-
-    @Test
-    void build__() {
-        UDT.builder().build();
-    }
-
-    @Test
-    void toBuilder__() {
-        UDT.builder().build().toBuilder().build();
     }
 }

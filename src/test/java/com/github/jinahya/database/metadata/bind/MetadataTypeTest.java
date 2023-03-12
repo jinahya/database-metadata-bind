@@ -36,7 +36,8 @@ import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 import static org.junit.jupiter.api.Assertions.fail;
 
 @Slf4j
-abstract class MetadataTypeTest<T extends MetadataType> extends _MetadataTypeTest<T> {
+abstract class MetadataTypeTest<T extends MetadataType>
+        extends _MetadataTypeTest<T> {
 
     private static final Map<Long, Class<?>> CLASSES_AND_SERIAL_VERSION_UIDS = new ConcurrentHashMap<>();
 

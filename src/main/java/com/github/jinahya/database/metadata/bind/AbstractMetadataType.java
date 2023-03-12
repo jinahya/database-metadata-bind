@@ -23,15 +23,11 @@ package com.github.jinahya.database.metadata.bind;
 import lombok.AccessLevel;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
-import lombok.NoArgsConstructor;
 import lombok.Setter;
-import lombok.experimental.SuperBuilder;
 
 import java.util.HashMap;
 import java.util.Map;
 
-@NoArgsConstructor(access = AccessLevel.PACKAGE)
-@SuperBuilder(toBuilder = true)
 abstract class AbstractMetadataType implements MetadataType {
 
     private static final long serialVersionUID = -3285362930174073345L;

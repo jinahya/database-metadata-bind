@@ -22,6 +22,13 @@ package com.github.jinahya.database.metadata.bind;
 
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.EnumSource;
+
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
 
 class VersionColumnTest extends AbstractMetadataTypeTest<VersionColumn> {
 
@@ -35,6 +42,45 @@ class VersionColumnTest extends AbstractMetadataTypeTest<VersionColumn> {
 
         PseudoColumnTest() {
             super(VersionColumn.PseudoColumn.class);
+        }
+
+        @EnumSource(VersionColumn.PseudoColumn.class)
+        @ParameterizedTest
+        void valueOfPseudoColumn__(final VersionColumn.PseudoColumn pseudoColumn) {
+            assertThat(VersionColumn.PseudoColumn.valueOfPseudoColumn(pseudoColumn.fieldValueAsInt()))
+                    .isSameAs(pseudoColumn);
+        }
+    }
+
+    @Nested
+    class PseudoColumnAsEnumTest {
+
+        @Test
+        void getPseudoColumnAsEnum__() {
+            final var instance = typeSpy();
+            // WHEN
+            final var pseudoColumnAsEnum = instance.getPseudoColumnAsEnum();
+            // THEN
+            verify(instance, times(1)).getPseudoColumn();
+        }
+
+        @Test
+        void setPseudoColumnAsEnum__Null() {
+            final var instance = typeSpy();
+            // WHEN
+            instance.setPseudoColumnAsEnum(null);
+            // THEN
+            verify(instance, times(1)).setPseudoColumn(null);
+        }
+
+        @EnumSource(VersionColumn.PseudoColumn.class)
+        @ParameterizedTest
+        void setPseudoColumnAsEnum__(final VersionColumn.PseudoColumn pseudoColumn) {
+            final var instance = typeSpy();
+            // WHEN
+            instance.setPseudoColumnAsEnum(pseudoColumn);
+            // THEN
+            verify(instance, times(1)).setPseudoColumn(pseudoColumn.fieldValueAsInt());
         }
     }
 }

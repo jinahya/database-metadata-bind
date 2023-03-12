@@ -12,7 +12,6 @@ in [DatabaseMetaData](http://docs.oracle.com/javase/8/docs/api/java/sql/Database
 See [Maven Central](https://search.maven.org/artifact/com.github.jinahya/database-metadata-bind) for available versions.
 
 ```xml
-
 <dependency>
   <groupId>com.github.jinahya</groupId>
   <artifactId>database-metadata-bind</artifactId>
@@ -25,9 +24,8 @@ All methods, defined in the `DatabaseMetaData`, return `ResultSet` is prepared.
 
 ```java
 // https://youtrack.jetbrains.com/issue/IDEA-311820
-class Whatever {
-
-    void whatever() {
+class C {
+    void m() {
         try (var connection = connect()) {
             var context = Context.newInstance(connection);
             var catalogs = context.getCatalogs();
@@ -44,7 +42,6 @@ A lot of classes/methods defined in this module need to be tested with various k
 ### Add your JDBC driver as a test-scoped dependency.
 
 ```xml
-
 <dependency>
   ...
   <scope>test</scope>

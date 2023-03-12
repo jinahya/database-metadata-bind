@@ -111,11 +111,13 @@ public class ColumnPrivilege extends AbstractMetadataType {
     private String isGrantable;
 
     String tableCatNonNull() {
-        return Optional.ofNullable(getTableCat()).orElse(Catalog.COLUMN_VALUE_TABLE_CAT_EMPTY);
+        final String tableCat_ = getTableCat();
+        return tableCat_ != null ? tableCat_ : Catalog.COLUMN_VALUE_TABLE_CAT_EMPTY;
     }
 
     String tableSchemNonNull() {
-        return Optional.ofNullable(getTableSchem()).orElse(Schema.COLUMN_VALUE_TABLE_SCHEM_EMPTY);
+        final String tableSchem_ = getTableSchem();
+        return tableSchem_ != null ? tableSchem_ : Schema.COLUMN_VALUE_TABLE_SCHEM_EMPTY;
     }
 
     Boolean getIsGrantableAsBoolean() {

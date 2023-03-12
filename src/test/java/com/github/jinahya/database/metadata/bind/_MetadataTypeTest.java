@@ -38,6 +38,12 @@ abstract class _MetadataTypeTest<T extends MetadataType> {
     }
 
     T typeInstance() {
+//        try { // just for the coverage
+//            final var builder = typeClass.getMethod("builder").invoke(null);
+//            final var built = builder.getClass().getMethod("build").invoke(builder);
+//        } catch (final ReflectiveOperationException roe) {
+//            throw new RuntimeException(roe);
+//        }
         try {
             final var constructor = typeClass.getDeclaredConstructor();
             if (!constructor.canAccess(null)) {

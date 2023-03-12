@@ -20,12 +20,9 @@ package com.github.jinahya.database.metadata.bind;
  * #L%
  */
 
-import lombok.AccessLevel;
 import lombok.Getter;
-import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
-import lombok.experimental.SuperBuilder;
 
 import java.util.Comparator;
 import java.util.Objects;
@@ -46,9 +43,7 @@ import static java.util.Comparator.nullsFirst;
 @Setter
 @Getter
 @ToString(callSuper = true)
-@NoArgsConstructor(access = AccessLevel.PROTECTED)
-@SuperBuilder(toBuilder = true)
-abstract class TableKey<T extends TableKey<T>> extends AbstractMetadataType {
+public abstract class TableKey<T extends TableKey<T>> extends AbstractMetadataType {
 
     private static final long serialVersionUID = 6713872409315471232L;
 
@@ -165,6 +160,7 @@ abstract class TableKey<T extends TableKey<T>> extends AbstractMetadataType {
                Objects.equals(fkcolumnName, that.fkcolumnName);
     }
 
+    @SuppressWarnings({"java:S100"})
     boolean equals_(final TableKey<?> that) {
         return Objects.equals(pktableCatNonNull(), that.pktableCatNonNull()) &&
                Objects.equals(pktableSchemNonNull(), that.pktableSchemNonNull()) &&
@@ -263,13 +259,13 @@ abstract class TableKey<T extends TableKey<T>> extends AbstractMetadataType {
     private Integer deferrability;
 
     String pktableCatNonNull() {
-        final String pktableCat = getPktableCat();
-        return pktableCat == null ? Catalog.COLUMN_VALUE_TABLE_CAT_EMPTY : pktableCat;
+        final String pktableCat_ = getPktableCat();
+        return pktableCat_ == null ? Catalog.COLUMN_VALUE_TABLE_CAT_EMPTY : pktableCat_;
     }
 
     String pktableSchemNonNull() {
-        final String pktableSchem = getPktableSchem();
-        return pktableSchem == null ? Schema.COLUMN_VALUE_TABLE_SCHEM_EMPTY : pktableSchem;
+        final String pktableSchem_ = getPktableSchem();
+        return pktableSchem_ == null ? Schema.COLUMN_VALUE_TABLE_SCHEM_EMPTY : pktableSchem_;
     }
 
     String fktableCatNonNull() {

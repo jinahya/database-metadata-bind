@@ -20,15 +20,12 @@ package com.github.jinahya.database.metadata.bind;
  * #L%
  */
 
-import lombok.AccessLevel;
 import lombok.Getter;
-import lombok.NoArgsConstructor;
 import lombok.Setter;
-import lombok.ToString;
-import lombok.experimental.SuperBuilder;
 
 import java.sql.DatabaseMetaData;
 import java.util.Objects;
+import java.util.Optional;
 
 /**
  * A class for binding results of the {@link DatabaseMetaData#getVersionColumns(String, String, String)} method.
@@ -39,9 +36,6 @@ import java.util.Objects;
 @_ChildOf(Table.class)
 @Setter
 @Getter
-@ToString(callSuper = true)
-@NoArgsConstructor(access = AccessLevel.PROTECTED)
-@SuperBuilder(toBuilder = true)
 public class VersionColumn extends AbstractMetadataType {
 
     private static final long serialVersionUID = 3587959398829593292L;
@@ -96,6 +90,20 @@ public class VersionColumn extends AbstractMetadataType {
     }
 
     @Override
+    public String toString() {
+        return super.toString() + '{' +
+               "scope=" + scope +
+               ",columnName=" + columnName +
+               ",dataType=" + dataType +
+               ",typeName=" + typeName +
+               ",columnSize=" + columnSize +
+               ",bufferLength=" + bufferLength +
+               ",decimalDigits=" + decimalDigits +
+               ",pseudoColumn=" + pseudoColumn +
+               '}';
+    }
+
+    @Override
     public boolean equals(final Object obj) {
         if (this == obj) return true;
         if (!(obj instanceof VersionColumn)) return false;
@@ -137,4 +145,18 @@ public class VersionColumn extends AbstractMetadataType {
     @_NotNull
     @_ColumnLabel(COLUMN_LABEL_PSEUDO_COLUMN)
     private Integer pseudoColumn;
+
+    PseudoColumn getPseudoColumnAsEnum() {
+        return Optional.ofNullable(getPseudoColumn())
+                .map(PseudoColumn::valueOfPseudoColumn)
+                .orElse(null);
+    }
+
+    void setPseudoColumnAsEnum(final PseudoColumn pseudoColumnAsEnum) {
+        setPseudoColumn(
+                Optional.ofNullable(pseudoColumnAsEnum)
+                        .map(PseudoColumn::fieldValueAsInt)
+                        .orElse(null)
+        );
+    }
 }

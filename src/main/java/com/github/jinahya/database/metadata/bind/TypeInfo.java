@@ -20,12 +20,9 @@ package com.github.jinahya.database.metadata.bind;
  * #L%
  */
 
-import lombok.AccessLevel;
 import lombok.Getter;
-import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
-import lombok.experimental.SuperBuilder;
 
 import java.sql.DatabaseMetaData;
 import java.util.Comparator;
@@ -41,8 +38,6 @@ import java.util.Optional;
 @Setter
 @Getter
 @ToString(callSuper = true)
-@NoArgsConstructor(access = AccessLevel.PROTECTED)
-@SuperBuilder(toBuilder = true)
 public class TypeInfo extends AbstractMetadataType {
 
     private static final long serialVersionUID = -3964147654019495313L;
@@ -254,6 +249,7 @@ public class TypeInfo extends AbstractMetadataType {
     @_ColumnLabel("FIXED_PREC_SCALE")
     private Boolean fixedPrecScale;
 
+    @_NullableByVendor("Apache Derby")
     @_NotNull
     @_ColumnLabel("AUTO_INCREMENT")
     private Boolean autoIncrement;
@@ -262,10 +258,12 @@ public class TypeInfo extends AbstractMetadataType {
     @_ColumnLabel("LOCAL_TYPE_NAME")
     private String localTypeName;
 
+    @_NullableByVendor("Apache Derby")
     @_NotNull
     @_ColumnLabel("MINIMUM_SCALE")
     private Integer minimumScale;
 
+    @_NullableByVendor("Apache Derby")
     @_NotNull
     @_ColumnLabel("MAXIMUM_SCALE")
     private Integer maximumScale;
@@ -278,6 +276,7 @@ public class TypeInfo extends AbstractMetadataType {
     @_ColumnLabel("SQL_DATETIME_SUB")
     private Integer sqlDatetimeSub;
 
+    @_NullableByVendor("Apache Derby")
     @_NotNull
     @_ColumnLabel("NUM_PREC_RADIX")
     private Integer numPrecRadix;

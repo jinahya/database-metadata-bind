@@ -20,13 +20,10 @@ package com.github.jinahya.database.metadata.bind;
  * #L%
  */
 
-import lombok.AccessLevel;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
-import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
-import lombok.experimental.SuperBuilder;
 
 import java.sql.DatabaseMetaData;
 import java.util.Comparator;
@@ -45,8 +42,6 @@ import static java.util.Comparator.nullsFirst;
 @Getter
 @EqualsAndHashCode(callSuper = true)
 @ToString(callSuper = true)
-@NoArgsConstructor(access = AccessLevel.PROTECTED)
-@SuperBuilder(toBuilder = true)
 public class IndexInfo extends AbstractMetadataType {
 
     private static final long serialVersionUID = 924040226611181424L;
@@ -110,10 +105,12 @@ public class IndexInfo extends AbstractMetadataType {
     @_ColumnLabel("ASC_OR_DESC")
     private String ascOrDesc;
 
+    @_NullableByVendor("Apache Derby")
     @_NotNull
     @_ColumnLabel("CARDINALITY")
     private Long cardinality;
 
+    @_NullableByVendor("Apache Derby")
     @_NotNull
     @_ColumnLabel("PAGES")
     private Long pages;

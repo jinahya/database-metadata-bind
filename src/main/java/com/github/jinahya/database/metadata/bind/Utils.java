@@ -88,73 +88,62 @@ final class Utils {
         Objects.requireNonNull(label, "label is null");
         assert field.isAccessible();
         final Class<?> fieldType = field.getType();
-        if (fieldType.isPrimitive()) {
-            assert !field.isAnnotationPresent(_NullableBySpecification.class);
-            assert !field.isAnnotationPresent(_NullableByVendor.class);
-            if (fieldType == boolean.class) {
-                field.setBoolean(obj, results.getBoolean(label));
-                return;
-            } else if (fieldType == byte.class) {
-                assert false;
-                return;
-            } else if (fieldType == char.class) {
-                assert false;
-                return;
-            } else if (fieldType == double.class) {
-                assert false;
-                return;
-            } else if (fieldType == float.class) {
-                assert false;
-                return;
-            } else if (fieldType == int.class) {
-                field.setInt(obj, results.getInt(label));
-                return;
-            } else if (fieldType == long.class) {
-                field.setLong(obj, results.getLong(label));
-                return;
-            } else if (fieldType == short.class) {
-                assert false;
-                return;
-            }
-        }
+        assert !fieldType.isPrimitive();
         final Object value = results.getObject(label);
-        if (false) {
-            assert value != null ||
-                   (field.isAnnotationPresent(_NullableBySpecification.class) ||
-                    field.isAnnotationPresent(_NullableByVendor.class))
-                    : String.format("null value; label: %1$s, field: %2$s", label, field);
-        }
+        assert value != null ||
+               (field.isAnnotationPresent(_NullableBySpecification.class) ||
+                field.isAnnotationPresent(_NullableByVendor.class))
+                : String.format("null value; label: %1$s, field: %2$s", label, field);
         try {
             field.set(obj, value);
             return;
         } catch (final IllegalArgumentException iae) {
         }
-        if (value instanceof Number) {
-            if (fieldType == Boolean.class) {
+        if (value == null) {
+            return;
+        }
+        if (fieldType == Boolean.class) {
+            if (true) {
+                field.set(obj, results.getBoolean(label));
                 return;
             }
-            if (fieldType == Byte.class) {
+            if (value instanceof String) {
+                field.set(obj, Boolean.valueOf((String) value));
                 return;
             }
-            if (fieldType == Short.class) {
+            if (value instanceof Number) {
+                field.set(obj, ((Number) value).intValue() != 0);
                 return;
             }
-            if (fieldType == Integer.class) {
+        }
+        if (fieldType == Integer.class) {
+            if (true) {
+                field.set(obj, results.getInt(label));
+                return;
+            }
+            try {
                 field.set(obj, ((Number) value).intValue());
                 return;
+            } catch (final ClassCastException cce) {
+                if (value instanceof String) {
+                    field.set(obj, Integer.valueOf((String) value));
+                    return;
+                }
             }
-            if (fieldType == Long.class) {
+        }
+        if (fieldType == Long.class) {
+            if (true) {
+                field.set(obj, results.getLong(label));
+                return;
+            }
+            try {
                 field.set(obj, ((Number) value).longValue());
                 return;
-            }
-            if (fieldType == Character.class) {
-                return;
-            }
-            if (fieldType == Float.class) {
-                return;
-            }
-            if (fieldType == Double.class) {
-                return;
+            } catch (final ClassCastException cce) {
+                if (value instanceof String) {
+                    field.set(obj, Long.valueOf((String) value));
+                    return;
+                }
             }
         }
         log.log(Level.SEVERE,

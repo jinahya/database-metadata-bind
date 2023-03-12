@@ -26,7 +26,8 @@ import org.junit.jupiter.api.Test;
 import static org.assertj.core.api.Assertions.assertThat;
 
 @Slf4j
-abstract class AbstractMetadataTypeTest<T extends AbstractMetadataType> extends MetadataTypeTest<T> {
+abstract class AbstractMetadataTypeTest<T extends AbstractMetadataType>
+        extends MetadataTypeTest<T> {
 
     AbstractMetadataTypeTest(final Class<T> typeClass) {
         super(typeClass);

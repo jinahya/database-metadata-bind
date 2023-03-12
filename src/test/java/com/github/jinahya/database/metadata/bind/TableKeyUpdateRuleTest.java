@@ -1,5 +1,6 @@
 package com.github.jinahya.database.metadata.bind;
 
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.EnumSource;
 
@@ -11,10 +12,11 @@ class TableKeyUpdateRuleTest extends _IntFieldEnumTest<TableKeyUpdateRule> {
         super(TableKeyUpdateRule.class);
     }
 
+    @DisplayName("valueOfUpdateRule")
     @EnumSource(TableKeyUpdateRule.class)
     @ParameterizedTest
-    void valueOfUpdateRule__(final TableKeyUpdateRule tableKeyUpdateRule) {
-        assertThat(TableKeyUpdateRule.valueOfUpdateRule(tableKeyUpdateRule.fieldValueAsInt()))
-                .isSameAs(tableKeyUpdateRule);
+    void valueOfUpdateRule__(final TableKeyUpdateRule updateRule) {
+        assertThat(TableKeyUpdateRule.valueOfUpdateRule(updateRule.fieldValueAsInt()))
+                .isSameAs(updateRule);
     }
 }

@@ -20,13 +20,10 @@ package com.github.jinahya.database.metadata.bind;
  * #L%
  */
 
-import lombok.AccessLevel;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
-import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
-import lombok.experimental.SuperBuilder;
 
 import java.sql.DatabaseMetaData;
 import java.util.Comparator;
@@ -47,8 +44,6 @@ import static java.util.Comparator.nullsFirst;
 @Getter
 @ToString(callSuper = true)
 @EqualsAndHashCode(callSuper = true)
-@NoArgsConstructor(access = AccessLevel.PROTECTED)
-@SuperBuilder(toBuilder = true)
 public class FunctionColumn extends AbstractMetadataType {
 
     private static final long serialVersionUID = -7445156446214062680L;
@@ -205,6 +200,7 @@ public class FunctionColumn extends AbstractMetadataType {
     @_ColumnLabel("SCALE")
     private Integer scale;
 
+    @_NullableByVendor("Apache Derby")
     @_NotNull
     @_ColumnLabel("RADIX")
     private Integer radix;

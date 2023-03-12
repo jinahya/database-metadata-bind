@@ -20,6 +20,7 @@ package com.github.jinahya.database.metadata.bind;
  * #L%
  */
 
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
 import java.util.Objects;
@@ -33,6 +34,16 @@ abstract class _IntFieldEnumTest<E extends Enum<E> & _IntFieldEnum<E>> {
         this.enumClass = Objects.requireNonNull(enumClass, "enumClass is null");
     }
 
+    @DisplayName("valueOfFieldValue")
+    @Test
+    void valueOfFieldValue__() {
+        for (final var enumConstant : enumClass.getEnumConstants()) {
+            assertThat(_IntFieldEnum.valueOfFieldValue(enumClass, enumConstant.fieldValueAsInt()))
+                    .isSameAs(enumConstant);
+        }
+    }
+
+    @DisplayName("fieldValueAsInt")
     @Test
     void fieldValueAsInt_Distinct_() {
         assertThat(enumClass.getEnumConstants())

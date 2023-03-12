@@ -20,10 +20,6 @@ package com.github.jinahya.database.metadata.bind;
  * #L%
  */
 
-import lombok.AccessLevel;
-import lombok.NoArgsConstructor;
-import lombok.experimental.SuperBuilder;
-
 import java.util.Objects;
 
 /**
@@ -34,8 +30,6 @@ import java.util.Objects;
  * @see Context#getSuperTables(String, String, String)
  */
 @_ChildOf(Schema.class)
-@NoArgsConstructor(access = AccessLevel.PROTECTED)
-@SuperBuilder(toBuilder = true)
 public class SuperTable extends AbstractMetadataType {
 
     private static final long serialVersionUID = 3579710773784268831L;

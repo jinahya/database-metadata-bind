@@ -16,8 +16,8 @@ class TableKeyDeferrabilityTest extends _IntFieldEnumTest<TableKeyDeferrability>
     @DisplayName("valueOfDeferrability(deferrability)")
     @EnumSource(TableKeyDeferrability.class)
     @ParameterizedTest
-    void valueOfDeferrability__(final TableKeyDeferrability tableKeyDeferrability) {
-        assertThat(valueOfDeferrability(tableKeyDeferrability.fieldValueAsInt()))
-                .isSameAs(tableKeyDeferrability);
+    void valueOfDeferrability__(final TableKeyDeferrability deferrability) {
+        assertThat(valueOfDeferrability(deferrability.fieldValueAsInt()))
+                .isSameAs(deferrability);
     }
 }
