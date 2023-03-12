@@ -192,6 +192,7 @@ public class FunctionColumn extends AbstractMetadataType {
     @_ColumnLabel("PRECISION")
     private Integer precision;
 
+    @_NullableByVendor("PostgreSQL")
     @_NotNull
     @_ColumnLabel("LENGTH")
     private Integer length;

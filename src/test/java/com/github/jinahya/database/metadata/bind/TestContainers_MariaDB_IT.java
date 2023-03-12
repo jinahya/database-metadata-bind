@@ -30,7 +30,6 @@ import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
 
-//@Disabled
 @Testcontainers
 @Slf4j
 class TestContainers_MariaDB_IT extends TestContainers_$_IT {

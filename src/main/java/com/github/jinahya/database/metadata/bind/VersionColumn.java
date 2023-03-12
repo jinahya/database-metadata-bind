@@ -134,6 +134,7 @@ public class VersionColumn extends AbstractMetadataType {
     @_ColumnLabel("COLUMN_SIZE")
     private Integer columnSize;
 
+    @_NullableByVendor("PostgreSQL")
     @_NotNull
     @_ColumnLabel("BUFFER_LENGTH")
     private Integer bufferLength;

@@ -21,7 +21,6 @@ package com.github.jinahya.database.metadata.bind;
  */
 
 import lombok.extern.slf4j.Slf4j;
-import org.junit.jupiter.api.Disabled;
 import org.testcontainers.containers.PostgreSQLContainer;
 import org.testcontainers.junit.jupiter.Container;
 import org.testcontainers.junit.jupiter.Testcontainers;
@@ -31,7 +30,6 @@ import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
 
-@Disabled
 @Testcontainers
 @Slf4j
 class TestContainers_PostgreSQL_IT extends TestContainers_$_IT {
