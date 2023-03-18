@@ -38,11 +38,12 @@ abstract class TestContainers_$_IT {
 
     @BeforeAll
     static void checkDocker() throws IOException, InterruptedException {
+        log.info("checking docker...");
         final var process = new ProcessBuilder()
                 .command("docker", "images")
                 .start();
         final int exitValue = process.waitFor();
-        log.debug("exitValue: {}", exitValue);
+        log.info("exitValue: {}", exitValue);
         assumeTrue(exitValue == 0);
     }
 
@@ -92,13 +93,6 @@ abstract class TestContainers_$_IT {
         });
     }
 
-    //    @Test
-//    void testOrdering() throws SQLException {
-//        applyContextChecked(c -> {
-//            ContextTests.testOrdering(c);
-//            return null;
-//        });
-//    }
     @Test
     void getColumns__() {
         applyContextChecked(c -> {
