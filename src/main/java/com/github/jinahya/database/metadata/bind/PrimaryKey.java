@@ -20,10 +20,6 @@ package com.github.jinahya.database.metadata.bind;
  * #L%
  */
 
-import lombok.Getter;
-import lombok.Setter;
-import lombok.ToString;
-
 import java.sql.DatabaseMetaData;
 import java.util.Comparator;
 import java.util.Objects;
@@ -37,9 +33,6 @@ import static java.util.Comparator.nullsFirst;
  * @author Jin Kwon &lt;jinahya_at_gmail.com&gt;
  */
 @_ChildOf(Table.class)
-@Setter
-@Getter
-@ToString(callSuper = true)
 public class PrimaryKey extends AbstractMetadataType {
 
     private static final long serialVersionUID = 3159826510060898330L;
@@ -50,17 +43,47 @@ public class PrimaryKey extends AbstractMetadataType {
     static final Comparator<PrimaryKey> LEXICOGRAPHIC_ORDER
             = Comparator.comparing(PrimaryKey::getColumnName, nullsFirst(naturalOrder()));
 
+    /**
+     * The column label of {@value}.
+     */
     public static final String COLUMN_LABEL_TABLE_CAT = "TABLE_CAT";
 
+    /**
+     * The column label of {@value}.
+     */
     public static final String COLUMN_LABEL_TABLE_SCHEM = "TABLE_SCHEM";
 
+    /**
+     * The column label of {@value}.
+     */
     public static final String COLUMN_LABEL_TABLE_NAME = "TABLE_NAME";
 
+    /**
+     * The column label of {@value}.
+     */
     public static final String COLUMN_LABEL_COLUMN_NAME = "COLUMN_NAME";
 
+    /**
+     * The column label of {@value}.
+     */
     public static final String COLUMN_LABEL_KEY_SEQ = "KEY_SEQ";
 
+    /**
+     * The column label of {@value}.
+     */
     public static final String COLUMN_LABEL_PK_NAME = "PK_NAME";
+
+    @Override
+    public String toString() {
+        return super.toString() + '{' +
+               "tableCat=" + tableCat +
+               ",tableSchem=" + tableSchem +
+               ",tableName=" + tableName +
+               ",columnName=" + columnName +
+               ",keySeq=" + keySeq +
+               ",pkName=" + pkName +
+               '}';
+    }
 
     @Override
     public boolean equals(final Object obj) {
