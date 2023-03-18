@@ -109,9 +109,10 @@ public class Context {
             final Object value = results.getObject(key);
             instance.getUnmappedValues().put(key, value);
         }
-        if (!fieldLabels.isEmpty()) {
-            log.severe(() -> String.format("unmapped fields: %1$s", fieldLabels));
-        }
+        assert fieldLabels.isEmpty() : "remaining fields " + fieldLabels;
+//        if (!fieldLabels.isEmpty()) {
+//            log.severe(() -> String.format("unmapped fields: %1$s", fieldLabels));
+//        }
         return instance;
     }
 

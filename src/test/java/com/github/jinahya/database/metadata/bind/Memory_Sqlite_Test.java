@@ -26,8 +26,10 @@ import org.junit.jupiter.api.Test;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
+import java.sql.JDBCType;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Types;
 import java.util.HashSet;
 
 import static java.sql.DriverManager.getConnection;
@@ -39,8 +41,6 @@ import static java.sql.DriverManager.getConnection;
  */
 @Slf4j
 class Memory_Sqlite_Test extends Memory_$_Test {
-
-    static final String DATABASE_PRODUCT_NAME = "SQLite";
 
     private static final String CONNECTION_URL = "jdbc:sqlite::memory:";
 
@@ -71,6 +71,25 @@ class Memory_Sqlite_Test extends Memory_$_Test {
                 labels.forEach(l -> {
                     log.debug("label: {}", l);
                 });
+            }
+        }
+    }
+
+    @Test
+    void getColumns__1() throws SQLException {
+        try (var connection = connect()) {
+            final var cmd = connection.getMetaData();
+            try (var results = cmd.getColumns(null, null, "%", "%")) {
+                final var rsmd = results.getMetaData();
+                for (int i = 1; i <= rsmd.getColumnCount(); i++) {
+                    final var label = rsmd.getColumnLabel(i);
+                    if (!"DATA_TYPE".equals(label)) {
+                        continue;
+                    }
+                    final var type = rsmd.getColumnType(i);
+                    log.debug("type: {}, {}", type, JDBCType.valueOf(type));
+                    log.debug("{}, {}", JDBCType.valueOf(Types.INTEGER), Types.INTEGER);
+                }
             }
         }
     }

@@ -75,7 +75,7 @@ final class ContextTests {
         if (value instanceof MetadataType) {
             final var unmappedValues = ((MetadataType) value).getUnmappedValues();
             if (!unmappedValues.isEmpty()) {
-                log.warn("has unmapped values: {}", value);
+                log.warn("unmapped values of {}: {}", value.getClass().getSimpleName(), unmappedValues);
             }
         }
         // .toBuilder().build()
@@ -281,7 +281,7 @@ final class ContextTests {
             {
                 final var databaseProductNames = Set.of(
                         // https://sourceforge.net/p/hsqldb/bugs/1671/
-                        Memory_Hsql_Test.DATABASE_PRODUCT_NAME
+                        DatabaseProductNames.HSQL_DATABASE_ENGINE
                 );
                 if (!databaseProductNames.contains(databaseProductName)) {
                     assertThat(schemas).satisfiesAnyOf(
@@ -370,7 +370,7 @@ final class ContextTests {
         Objects.requireNonNull(columnPrivileges, "columnPrivileges is null");
         {
             final var databaseProductNames = Set.of(
-                    TestContainers_PostgreSQL_IT.DATABASE_PRODUCT_NAME
+                    DatabaseProductNames.POSTGRE_SQL
             );
             if (!databaseProductNames.contains(databaseProductName)) {
                 assertThat(columnPrivileges).satisfiesAnyOf(
@@ -467,7 +467,7 @@ final class ContextTests {
         Objects.requireNonNull(functionColumns, "functionColumns is null");
         {
             final var databaseProductNames = Set.of(
-                    TestContainers_PostgreSQL_IT.DATABASE_PRODUCT_NAME
+                    DatabaseProductNames.POSTGRE_SQL
             );
             if (!databaseProductNames.contains(databaseProductName)) {
                 assertThat(functionColumns).satisfiesAnyOf(
@@ -524,7 +524,7 @@ final class ContextTests {
             final var databaseProductNames = Set.of(
                     ""
                     // https://bugs.mysql.com/bug.php?id=109803
-//                    TestContainers_MySQL_IT.DATABASE_PRODUCT_NAME
+//                    DatabaseProductNames.MY_SQL
             );
             if (!databaseProductNames.contains(databaseProductName)) {
                 assertThat(indexInfo).satisfiesAnyOf(
@@ -550,7 +550,7 @@ final class ContextTests {
         Objects.requireNonNull(procedures, "procedures is null");
         {
             final var databaseProductNames = Set.of(
-                    Memory_Hsql_Test.DATABASE_PRODUCT_NAME
+                    DatabaseProductNames.HSQL_DATABASE_ENGINE
             );
             if (!databaseProductNames.contains(databaseProductName)) {
                 assertThat(procedures)
@@ -562,7 +562,7 @@ final class ContextTests {
         }
         {
             final var databaseProductNames = Set.of(
-                    Memory_Hsql_Test.DATABASE_PRODUCT_NAME
+                    DatabaseProductNames.HSQL_DATABASE_ENGINE
             );
             if (!databaseProductNames.contains(databaseProductName)) {
 //                assertThat(procedures)
@@ -672,9 +672,9 @@ final class ContextTests {
         {
             final var databaseProductNames = Set.of(
                     // https://sourceforge.net/p/hsqldb/bugs/1672/
-                    Memory_Hsql_Test.DATABASE_PRODUCT_NAME,
-                    TestContainers_MariaDB_IT.DATABASE_PRODUCT_NAME,
-                    TestContainers_PostgreSQL_IT.DATABASE_PRODUCT_NAME
+                    DatabaseProductNames.HSQL_DATABASE_ENGINE,
+                    DatabaseProductNames.MARIA_DB,
+                    DatabaseProductNames.POSTGRE_SQL
             );
             if (!databaseProductNames.contains(databaseProductName)) {
                 assertThat(tables).satisfiesAnyOf(
@@ -791,11 +791,9 @@ final class ContextTests {
         Objects.requireNonNull(primaryKeys, "primaryKeys is null");
         {
             final var databaseProductNames = Set.of(
-                    // https://sourceforge.net/p/hsqldb/bugs/1673/
-                    Memory_Hsql_Test.DATABASE_PRODUCT_NAME,
-                    TestContainers_PostgreSQL_IT.DATABASE_PRODUCT_NAME,
-                    // https://bugs.mysql.com/bug.php?id=109808
-                    TestContainers_MySQL_IT.DATABASE_PRODUCT_NAME
+                    DatabaseProductNames.HSQL_DATABASE_ENGINE // https://sourceforge.net/p/hsqldb/bugs/1673/
+                    , DatabaseProductNames.POSTGRE_SQL
+                    , DatabaseProductNames.MY_SQL // https://bugs.mysql.com/bug.php?id=109808
             );
             if (!databaseProductNames.contains(databaseProductName)) {
                 assertThat(primaryKeys).satisfiesAnyOf(
@@ -861,7 +859,7 @@ final class ContextTests {
         }
         {
             final var databaseProductNames = Set.of(
-                    Memory_Hsql_Test.DATABASE_PRODUCT_NAME
+                    DatabaseProductNames.HSQL_DATABASE_ENGINE
             );
             if (!databaseProductNames.contains(databaseProductName)) {
                 assertThat(tablePrivileges).satisfiesAnyOf(
@@ -886,7 +884,7 @@ final class ContextTests {
         Objects.requireNonNull(tableTypes, "tableTypes is null");
         {
             final var databaseProductNames = Set.of(
-                    TestContainers_MariaDB_IT.DATABASE_PRODUCT_NAME // https://jira.mariadb.org/browse/CONJ-1049
+                    DatabaseProductNames.MARIA_DB // https://jira.mariadb.org/browse/CONJ-1049
             );
             if (!databaseProductNames.contains(databaseProductName)) {
                 assertThat(tableTypes).satisfiesAnyOf(
@@ -916,7 +914,7 @@ final class ContextTests {
         Objects.requireNonNull(typeInfo, "typeInfo is null");
         {
             final var databaseProductNames = Set.of(
-                    TestContainers_MySQL_IT.DATABASE_PRODUCT_NAME // https://bugs.mysql.com/bug.php?id=109931
+                    DatabaseProductNames.MY_SQL // https://bugs.mysql.com/bug.php?id=109931
             );
             if (!databaseProductNames.contains(databaseProductName)) {
                 assertThat(typeInfo).isSortedAccordingTo(TypeInfo.COMPARING_DATA_TYPE);
@@ -1045,7 +1043,7 @@ final class ContextTests {
         try {
             final var clientInfoProperties = context.getClientInfoProperties();
             final var databaseProductNames = Set.of(
-                    TestContainers_MariaDB_IT.DATABASE_PRODUCT_NAME
+                    DatabaseProductNames.MARIA_DB
             );
             if (!databaseProductNames.contains(databaseProductName)) {
                 assertThat(clientInfoProperties).satisfiesAnyOf(
@@ -1070,8 +1068,8 @@ final class ContextTests {
         try {
             final var columns = context.getColumns(null, null, "%", "%");
             final var databaseProductNames = Set.of(
-                    Memory_Hsql_Test.DATABASE_PRODUCT_NAME,
-                    TestContainers_MariaDB_IT.DATABASE_PRODUCT_NAME
+                    DatabaseProductNames.HSQL_DATABASE_ENGINE,
+                    DatabaseProductNames.MARIA_DB
             );
             if (!databaseProductNames.contains(databaseProductName)) {
                 assertThat(columns).satisfiesAnyOf(
@@ -1128,7 +1126,7 @@ final class ContextTests {
         try {
             final var procedures = context.getProcedures(null, null, "%");
             final var databaseProductNames = Set.of(
-                    Memory_Hsql_Test.DATABASE_PRODUCT_NAME
+                    DatabaseProductNames.HSQL_DATABASE_ENGINE
             );
             if (!databaseProductNames.contains(databaseProductName)) {
                 assertThat(procedures).satisfiesAnyOf(
@@ -1182,9 +1180,9 @@ final class ContextTests {
             assertThat(tables).doesNotHaveDuplicates();
             {
                 final var databaseProductNames = Set.of(
-                        Memory_Hsql_Test.DATABASE_PRODUCT_NAME,
-                        TestContainers_MariaDB_IT.DATABASE_PRODUCT_NAME,
-                        TestContainers_PostgreSQL_IT.DATABASE_PRODUCT_NAME
+                        DatabaseProductNames.HSQL_DATABASE_ENGINE
+                        , DatabaseProductNames.MARIA_DB
+                        , DatabaseProductNames.POSTGRE_SQL
                 );
                 if (!databaseProductNames.contains(databaseProductName)) {
                     assertThat(tables).satisfiesAnyOf(
@@ -1255,9 +1253,9 @@ final class ContextTests {
                 try {
                     final var primaryKeys = context.getPrimaryKeys(table);
                     final var databaseProductNames = Set.of(
-                            Memory_Hsql_Test.DATABASE_PRODUCT_NAME,
-                            TestContainers_MySQL_IT.DATABASE_PRODUCT_NAME,
-                            TestContainers_PostgreSQL_IT.DATABASE_PRODUCT_NAME
+                            DatabaseProductNames.HSQL_DATABASE_ENGINE
+                            , DatabaseProductNames.MY_SQL
+                            , DatabaseProductNames.POSTGRE_SQL
                     );
                     if (!databaseProductNames.contains(databaseProductName)) {
                         assertThat(primaryKeys).satisfiesAnyOf(
@@ -1281,9 +1279,9 @@ final class ContextTests {
             final var typeInfo = context.getTypeInfo();
             assertThat(typeInfo).doesNotHaveDuplicates();
             final var databaseProductNames = Set.of(
-                    Memory_H2_Test.DATABASE_PRODUCT_NAME,
-                    Memory_Hsql_Test.DATABASE_PRODUCT_NAME,
-                    TestContainers_MySQL_IT.DATABASE_PRODUCT_NAME
+                    DatabaseProductNames.H2
+                    , DatabaseProductNames.HSQL_DATABASE_ENGINE
+                    , DatabaseProductNames.MY_SQL
             );
             if (!databaseProductNames.contains(databaseProductName)) {
                 assertThat(typeInfo).isSortedAccordingTo(TypeInfo.COMPARING_DATA_TYPE);
@@ -1295,8 +1293,8 @@ final class ContextTests {
             final var udts = context.getUDTs(null, null, "%", null);
             assertThat(udts).doesNotHaveDuplicates();
             final var databaseProductNames = Set.of(
-//                    Memory_H2_Test.DATABASE_PRODUCT_NAME,
-//                    Memory_Hsql_Test.DATABASE_PRODUCT_NAME
+//                    DatabaseProductNames.H2,
+//                    DatabaseProductNames.HSQL_DATABASE_ENGINE
             );
             if (!databaseProductNames.contains(databaseProductName)) {
                 assertThat(udts).satisfiesAnyOf(
@@ -1320,9 +1318,9 @@ final class ContextTests {
         {
             final var databaseProductNames = Set.of(
                     // https://sourceforge.net/p/hsqldb/bugs/1672/
-                    Memory_Hsql_Test.DATABASE_PRODUCT_NAME,
-                    TestContainers_MariaDB_IT.DATABASE_PRODUCT_NAME,
-                    TestContainers_PostgreSQL_IT.DATABASE_PRODUCT_NAME
+                    DatabaseProductNames.HSQL_DATABASE_ENGINE
+                    , DatabaseProductNames.MARIA_DB
+                    , DatabaseProductNames.POSTGRE_SQL
             );
             if (!databaseProductNames.contains(databaseProductName)) {
                 assertThat(tables).satisfiesAnyOf(
@@ -1347,8 +1345,8 @@ final class ContextTests {
         assertThat(columns).doesNotHaveDuplicates();
         {
             final var databaseProductNames = Set.of(
-                    Memory_Hsql_Test.DATABASE_PRODUCT_NAME,
-                    TestContainers_MariaDB_IT.DATABASE_PRODUCT_NAME
+                    DatabaseProductNames.HSQL_DATABASE_ENGINE,
+                    DatabaseProductNames.MARIA_DB
             );
             if (!databaseProductNames.contains(databaseProductName)) {
                 assertThat(columns).satisfiesAnyOf(
