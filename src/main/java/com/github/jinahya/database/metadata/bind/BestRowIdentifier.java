@@ -20,13 +20,9 @@ package com.github.jinahya.database.metadata.bind;
  * #L%
  */
 
-import lombok.EqualsAndHashCode;
-import lombok.Getter;
-import lombok.Setter;
-import lombok.ToString;
-
 import java.sql.DatabaseMetaData;
 import java.util.Comparator;
+import java.util.Objects;
 import java.util.Optional;
 
 /**
@@ -39,10 +35,6 @@ import java.util.Optional;
  * @see Scope
  */
 @_ChildOf(Table.class)
-@Setter
-@Getter
-@EqualsAndHashCode(callSuper = true)
-@ToString(callSuper = true)
 public class BestRowIdentifier
         extends AbstractMetadataType
         implements Comparable<BestRowIdentifier> {
@@ -155,6 +147,34 @@ public class BestRowIdentifier
     }
 
     @Override
+    public String toString() {
+        return super.toString() + '{' +
+               "scope=" + scope +
+               ",columnName=" + columnName +
+               ",dataType=" + dataType +
+               ",typeName=" + typeName +
+               ",columnSize=" + columnSize +
+               ",bufferLength=" + bufferLength +
+               ",decimalDigits=" + decimalDigits +
+               ",pseudoColumn=" + pseudoColumn +
+               '}';
+    }
+
+    @Override
+    public boolean equals(final Object obj) {
+        if (this == obj) return true;
+        if (!(obj instanceof BestRowIdentifier)) return false;
+        final BestRowIdentifier that = (BestRowIdentifier) obj;
+        return Objects.equals(scope, that.scope) &&
+               Objects.equals(columnName, that.columnName);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(scope, columnName);
+    }
+
+    @Override
     public int compareTo(final BestRowIdentifier o) {
         if (o == null) {
             throw new NullPointerException("o is null");
@@ -176,6 +196,54 @@ public class BestRowIdentifier
 
     public void setPseudoColumn(final Integer pseudoColumn) {
         this.pseudoColumn = pseudoColumn;
+    }
+
+    public String getColumnName() {
+        return columnName;
+    }
+
+    public void setColumnName(final String columnName) {
+        this.columnName = columnName;
+    }
+
+    public Integer getDataType() {
+        return dataType;
+    }
+
+    public void setDataType(final Integer dataType) {
+        this.dataType = dataType;
+    }
+
+    public String getTypeName() {
+        return typeName;
+    }
+
+    public void setTypeName(final String typeName) {
+        this.typeName = typeName;
+    }
+
+    public Integer getColumnSize() {
+        return columnSize;
+    }
+
+    public void setColumnSize(final Integer columnSize) {
+        this.columnSize = columnSize;
+    }
+
+    public Integer getBufferLength() {
+        return bufferLength;
+    }
+
+    public void setBufferLength(final Integer bufferLength) {
+        this.bufferLength = bufferLength;
+    }
+
+    public Integer getDecimalDigits() {
+        return decimalDigits;
+    }
+
+    public void setDecimalDigits(final Integer decimalDigits) {
+        this.decimalDigits = decimalDigits;
     }
 
     @_NotNull

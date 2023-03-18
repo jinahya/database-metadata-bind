@@ -78,8 +78,8 @@ public class PseudoColumn extends AbstractMetadataType {
     @Override
     public int hashCode() {
         return Objects.hash(
-                tableCat,
-                tableSchem,
+                tableCatNonNull(),
+                tableSchemNonNull(),
                 tableName,
                 columnName
         );
