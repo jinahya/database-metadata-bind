@@ -20,10 +20,6 @@ package com.github.jinahya.database.metadata.bind;
  * #L%
  */
 
-import lombok.Getter;
-import lombok.Setter;
-import lombok.ToString;
-
 import java.sql.DatabaseMetaData;
 import java.util.Comparator;
 import java.util.Objects;
@@ -43,9 +39,6 @@ import static java.util.Comparator.nullsFirst;
  */
 @_ParentOf(ProcedureColumn.class)
 @_ChildOf(Schema.class)
-@Setter
-@Getter
-@ToString(callSuper = true)
 public class Procedure extends AbstractMetadataType {
 
     private static final long serialVersionUID = -6262056388403934829L;
@@ -131,6 +124,18 @@ public class Procedure extends AbstractMetadataType {
     public static final String COLUMN_LABEL_SPECIFIC_NAME = "SPECIFIC_NAME";
 
     @Override
+    public String toString() {
+        return "Procedure{" +
+               "procedureCat=" + procedureCat +
+               ",procedureSchem=" + procedureSchem +
+               ",procedureName=" + procedureName +
+               ",remarks=" + remarks +
+               ",procedureType=" + procedureType +
+               ",specificName=" + specificName +
+               '}';
+    }
+
+    @Override
     public boolean equals(final Object obj) {
         if (this == obj) return true;
         if (!(obj instanceof Procedure)) return false;
@@ -151,8 +156,16 @@ public class Procedure extends AbstractMetadataType {
         );
     }
 
+    public String getProcedureCat() {
+        return procedureCat;
+    }
+
     public void setProcedureCat(final String procedureCat) {
         this.procedureCat = procedureCat;
+    }
+
+    public String getProcedureSchem() {
+        return procedureSchem;
     }
 
     public void setProcedureSchem(final String procedureSchem) {
@@ -165,6 +178,26 @@ public class Procedure extends AbstractMetadataType {
 
     public void setProcedureType(final Integer procedureType) {
         this.procedureType = procedureType;
+    }
+
+    public String getProcedureName() {
+        return procedureName;
+    }
+
+    public void setProcedureName(final String procedureName) {
+        this.procedureName = procedureName;
+    }
+
+    public String getRemarks() {
+        return remarks;
+    }
+
+    public void setRemarks(final String remarks) {
+        this.remarks = remarks;
+    }
+
+    public String getSpecificName() {
+        return specificName;
     }
 
     public void setSpecificName(final String specificName) {
