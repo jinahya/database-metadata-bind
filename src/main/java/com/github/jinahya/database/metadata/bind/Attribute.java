@@ -133,16 +133,32 @@ public class Attribute extends AbstractMetadataType {
         );
     }
 
+    public String getTypeCat() {
+        return typeCat;
+    }
+
     public void setTypeCat(final String typeCat) {
         this.typeCat = typeCat;
+    }
+
+    public String getTypeSchem() {
+        return typeSchem;
     }
 
     public void setTypeSchem(final String typeSchem) {
         this.typeSchem = typeSchem;
     }
 
+    public String getTypeName() {
+        return typeName;
+    }
+
     public void setTypeName(final String typeName) {
         this.typeName = typeName;
+    }
+
+    public String getAttrName() {
+        return attrName;
     }
 
     public void setAttrName(final String attrName) {
