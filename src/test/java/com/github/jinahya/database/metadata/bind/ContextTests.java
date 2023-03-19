@@ -188,6 +188,36 @@ final class ContextTests {
         } catch (final SQLException sqle) {
             thrown("failed; getUDTs", sqle);
         }
+        try {
+            final Set<String> NumericFunctions = context.getNumericFunctions();
+            log.debug("numeric functions: {}", NumericFunctions);
+        } catch (final SQLException sqle) {
+            thrown("failed; getNumericFunctions", sqle);
+        }
+        try {
+            final Set<String> SQLKeywords = context.getSQLKeywords();
+            log.debug("sql keywords: {}", SQLKeywords);
+        } catch (final SQLException sqle) {
+            thrown("failed; getSQLKeywords", sqle);
+        }
+        try {
+            final Set<String> results = context.getStringFunctions();
+            log.debug("string functions: {}", results);
+        } catch (final SQLException sqle) {
+            thrown("failed; getStringFunctions", sqle);
+        }
+        try {
+            final Set<String> results = context.getSystemFunctions();
+            log.debug("system functions: {}", results);
+        } catch (final SQLException sqle) {
+            thrown("failed; getSystemFunctions", sqle);
+        }
+        try {
+            final Set<String> results = context.getTimeDateFunctions();
+            log.debug("time date functions: {}", results);
+        } catch (final SQLException sqle) {
+            thrown("failed; getTimeDateFunctions", sqle);
+        }
     }
 
     static void attributes(final Context context, final List<? extends Attribute> attributes) throws SQLException {

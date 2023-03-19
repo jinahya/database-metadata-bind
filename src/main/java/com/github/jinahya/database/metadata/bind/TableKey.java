@@ -42,7 +42,6 @@ import static java.util.Comparator.nullsFirst;
 @_ChildOf(Table.class)
 @Setter
 @Getter
-@ToString(callSuper = true)
 public abstract class TableKey<T extends TableKey<T>> extends AbstractMetadataType {
 
     private static final long serialVersionUID = 6713872409315471232L;
@@ -144,6 +143,26 @@ public abstract class TableKey<T extends TableKey<T>> extends AbstractMetadataTy
      * The column label of {@value}.
      */
     public static final String COLUMN_NAME_DEFERRABILITY = "DEFERRABILITY";
+
+    @Override
+    public String toString() {
+        return super.toString() + '{' +
+               "pktableCat=" + pktableCat  +
+               ",pktableSchem=" + pktableSchem  +
+               ",pktableName=" + pktableName  +
+               ",pkcolumnName=" + pkcolumnName  +
+               ",fktableCat=" + fktableCat  +
+               ",fktableSchem=" + fktableSchem  +
+               ",fktableName=" + fktableName  +
+               ",fkcolumnName=" + fkcolumnName  +
+               ",keySeq=" + keySeq +
+               ",updateRule=" + updateRule +
+               ",deleteRule=" + deleteRule +
+               ",fkName=" + fkName  +
+               ",pkName=" + pkName  +
+               ",deferrability=" + deferrability +
+               '}';
+    }
 
     @Override
     public boolean equals(final Object obj) {

@@ -22,7 +22,6 @@ package com.github.jinahya.database.metadata.bind;
 
 import lombok.Getter;
 import lombok.Setter;
-import lombok.ToString;
 
 import java.sql.DatabaseMetaData;
 import java.util.Comparator;
@@ -43,7 +42,6 @@ import static java.util.Comparator.nullsFirst;
 @_ChildOf(Table.class)
 @Setter
 @Getter
-@ToString(callSuper = true)
 public class Column extends AbstractMetadataType {
 
     private static final long serialVersionUID = -409653682729081530L;
@@ -60,14 +58,29 @@ public class Column extends AbstractMetadataType {
                     .thenComparing(Column::getTableName, nullsFirst(naturalOrder()))
                     .thenComparingInt(Column::getOrdinalPosition);
 
+    /**
+     * The column label of {@value}.
+     */
     public static final String COLUMN_LABEL_TABLE_CAT = "TABLE_CAT";
 
+    /**
+     * The column label of {@value}.
+     */
     public static final String COLUMN_LABEL_TABLE_SCHEM = "TABLE_SCHEM";
 
+    /**
+     * The column label of {@value}.
+     */
     public static final String COLUMN_LABEL_TABLE_NAME = "TABLE_NAME";
 
+    /**
+     * The column label of {@value}.
+     */
     public static final String COLUMN_LABEL_COLUMN_NAME = "COLUMN_NAME";
 
+    /**
+     * The column label of {@value}.
+     */
     public static final String COLUMN_LABEL_NULLABLE = "NULLABLE";
 
     /**
@@ -121,6 +134,36 @@ public class Column extends AbstractMetadataType {
     public static final String COLUMN_LABEL_IS_GENERATEDCOLUMN = "IS_GENERATEDCOLUMN";
 
     @Override
+    public String toString() {
+        return super.toString() + '{' +
+               "tableCat=" + tableCat +
+               ",tableSchem=" + tableSchem +
+               ",tableName=" + tableName +
+               ",columnName=" + columnName +
+               ",dataType=" + dataType +
+               ",typeName=" + typeName +
+               ",columnSize=" + columnSize +
+               ",bufferLength=" + bufferLength +
+               ",decimalDigits=" + decimalDigits +
+               ",numPrecRadix=" + numPrecRadix +
+               ",nullable=" + nullable +
+               ",remarks=" + remarks +
+               ",columnDef=" + columnDef +
+               ",sqlDataType=" + sqlDataType +
+               ",sqlDatetimeSub=" + sqlDatetimeSub +
+               ",charOctetLength=" + charOctetLength +
+               ",ordinalPosition=" + ordinalPosition +
+               ",isNullable=" + isNullable +
+               ",scopeCatalog=" + scopeCatalog +
+               ",scopeSchema=" + scopeSchema +
+               ",scopeTable=" + scopeTable +
+               ",sourceDataType=" + sourceDataType +
+               ",isAutoincrement=" + isAutoincrement +
+               ",isGeneratedcolumn=" + isGeneratedcolumn +
+               '}';
+    }
+
+    @Override
     public boolean equals(final Object obj) {
         if (this == obj) return true;
         if (!(obj instanceof Column)) return false;
@@ -141,10 +184,20 @@ public class Column extends AbstractMetadataType {
         );
     }
 
+    /**
+     * Returns current value of {@code tableCat} field.
+     *
+     * @return current value of {@code tableCat} field.
+     */
     public String getTableCat() {
         return tableCat;
     }
 
+    /**
+     * Replaces current value of {@code tableCat} field with specified value.
+     *
+     * @param tableCat new value for {@code tableCat} field.
+     */
     public void setTableCat(final String tableCat) {
         this.tableCat = tableCat;
     }

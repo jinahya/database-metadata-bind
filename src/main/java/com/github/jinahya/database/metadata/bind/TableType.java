@@ -20,9 +20,6 @@ package com.github.jinahya.database.metadata.bind;
  * #L%
  */
 
-import lombok.Getter;
-import lombok.Setter;
-
 import java.util.Comparator;
 import java.util.Objects;
 
@@ -32,8 +29,6 @@ import java.util.Objects;
  * @author Jin Kwon &lt;jinahya_at_gmail.com&gt;
  * @see Context#getTableTypes()
  */
-@Setter
-@Getter
 public class TableType extends AbstractMetadataType {
 
     private static final long serialVersionUID = -7630634982776331078L;
@@ -63,6 +58,14 @@ public class TableType extends AbstractMetadataType {
     @Override
     public int hashCode() {
         return Objects.hash(super.hashCode(), tableType);
+    }
+
+    public String getTableType() {
+        return tableType;
+    }
+
+    public void setTableType(final String tableType) {
+        this.tableType = tableType;
     }
 
     @SuppressWarnings({

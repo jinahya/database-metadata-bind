@@ -25,7 +25,6 @@ import java.util.Comparator;
 import java.util.Objects;
 
 import static java.util.Comparator.naturalOrder;
-import static java.util.Comparator.nullsFirst;
 
 /**
  * A class for binding results of the {@link DatabaseMetaData#getClientInfoProperties()} method.
@@ -38,10 +37,10 @@ public class ClientInfoProperty extends AbstractMetadataType {
     private static final long serialVersionUID = -2913230435651853254L;
 
     static final Comparator<ClientInfoProperty> CASE_INSENSITIVE_ORDER =
-            Comparator.comparing(ClientInfoProperty::getName, nullsFirst(String.CASE_INSENSITIVE_ORDER));
+            Comparator.comparing(ClientInfoProperty::getName, String.CASE_INSENSITIVE_ORDER);
 
     static final Comparator<ClientInfoProperty> LEXICOGRAPHIC_ORDER =
-            Comparator.comparing(ClientInfoProperty::getName, nullsFirst(naturalOrder()));
+            Comparator.comparing(ClientInfoProperty::getName, naturalOrder());
 
     /**
      * The column label of {@value}.

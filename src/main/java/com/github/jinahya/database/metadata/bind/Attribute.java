@@ -41,7 +41,6 @@ import static java.util.Comparator.nullsFirst;
 @_ChildOf(UDT.class)
 @Setter
 @Getter
-@ToString(callSuper = true)
 public class Attribute extends AbstractMetadataType {
 
     private static final long serialVersionUID = 1913681105410440186L;
@@ -110,6 +109,33 @@ public class Attribute extends AbstractMetadataType {
     public static final String COLUMN_VALUE_IS_NULLABLE_NO = "NO";
 
     public static final String COLUMN_VALUE_IS_NULLABLE_EMPTY = "";
+
+    @Override
+    public String toString() {
+        return super.toString() + '{' +
+               "typeCat=" + typeCat  +
+               ",typeSchem=" + typeSchem  +
+               ",typeName=" + typeName  +
+               ",attrName=" + attrName  +
+               ",dataType=" + dataType +
+               ",attrTypeName=" + attrTypeName  +
+               ",attrSize=" + attrSize +
+               ",decimalDigits=" + decimalDigits +
+               ",numPrecRadix=" + numPrecRadix +
+               ",nullable=" + nullable +
+               ",remarks=" + remarks  +
+               ",attrDef=" + attrDef  +
+               ",sqlDataType=" + sqlDataType +
+               ",sqlDatetimeSub=" + sqlDatetimeSub +
+               ",charOctetLength=" + charOctetLength +
+               ",ordinalPosition=" + ordinalPosition +
+               ",isNullable=" + isNullable  +
+               ",scopeCatalog=" + scopeCatalog  +
+               ",scopeSchema=" + scopeSchema  +
+               ",scopeTable=" + scopeTable  +
+               ",sourceDataType=" + sourceDataType +
+               '}';
+    }
 
     @Override
     public boolean equals(final Object obj) {

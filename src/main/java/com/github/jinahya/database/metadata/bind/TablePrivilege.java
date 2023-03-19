@@ -40,7 +40,6 @@ import static java.util.Comparator.nullsFirst;
 @Setter
 @Getter
 @EqualsAndHashCode(callSuper = true)
-@ToString(callSuper = true)
 public class TablePrivilege extends AbstractMetadataType {
 
     private static final long serialVersionUID = -2142097373603478881L;
@@ -71,6 +70,19 @@ public class TablePrivilege extends AbstractMetadataType {
      * The column label of {@value}.
      */
     public static final String COLUMN_LABEL_TABLE_NAME = "TABLE_NAME";
+
+    @Override
+    public String toString() {
+        return super.toString() + '{' +
+               "tableCat=" + tableCat +
+               ",tableSchem=" + tableSchem +
+               ",tableName=" + tableName +
+               ",grantor=" + grantor +
+               ",grantee=" + grantee +
+               ",privilege=" + privilege +
+               ",isGrantable=" + isGrantable +
+               '}';
+    }
 
     @_NullableBySpecification
     @_ColumnLabel(COLUMN_LABEL_TABLE_CAT)
