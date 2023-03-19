@@ -37,6 +37,9 @@ import java.util.logging.Level;
 @Log
 final class Utils {
 
+    @SuppressWarnings({
+            "java:S3011" // setAccessible
+    })
     private static <T extends Annotation> Map<Field, T> getFieldsAnnotatedWith(
             final Class<?> c, final Class<T> a, final Map<Field, T> m) {
         for (final Field field : c.getDeclaredFields()) {
