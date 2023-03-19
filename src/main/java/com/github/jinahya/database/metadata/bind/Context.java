@@ -33,8 +33,8 @@ import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Iterator;
-import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
@@ -42,7 +42,6 @@ import java.util.Objects;
 import java.util.Set;
 import java.util.function.Consumer;
 import java.util.logging.Level;
-import java.util.stream.Collectors;
 
 /**
  * A class for retrieving information from an instance of {@link java.sql.DatabaseMetaData}.
@@ -1505,9 +1504,7 @@ public class Context {
      * @throws SQLException if a database error occurs.
      */
     public Set<String> getNumericFunctions() throws SQLException {
-        return Arrays.stream(databaseMetaData.getNumericFunctions().split(","))
-                .map(String::trim)
-                .collect(Collectors.toSet());
+        return new HashSet<>(Arrays.asList(databaseMetaData.getNumericFunctions().split(",")));
     }
 
     /**
@@ -1517,9 +1514,7 @@ public class Context {
      * @throws SQLException if a database error occurs.
      */
     public Set<String> getSQLKeywords() throws SQLException {
-        return Arrays.stream(databaseMetaData.getSQLKeywords().split(","))
-                .map(String::trim)
-                .collect(Collectors.toSet());
+        return new HashSet<>(Arrays.asList(databaseMetaData.getSQLKeywords().split(",")));
     }
 
     /**
@@ -1529,9 +1524,7 @@ public class Context {
      * @throws SQLException if a database error occurs.
      */
     public Set<String> getStringFunctions() throws SQLException {
-        return Arrays.stream(databaseMetaData.getStringFunctions().split(","))
-                .map(String::trim)
-                .collect(Collectors.toSet());
+        return new HashSet<>(Arrays.asList(databaseMetaData.getStringFunctions().split(",")));
     }
 
     /**
@@ -1541,9 +1534,7 @@ public class Context {
      * @throws SQLException if a database error occurs.
      */
     public Set<String> getSystemFunctions() throws SQLException {
-        return Arrays.stream(databaseMetaData.getSystemFunctions().split(","))
-                .map(String::trim)
-                .collect(Collectors.toSet());
+        return new HashSet<>(Arrays.asList(databaseMetaData.getSystemFunctions().split(",")));
     }
 
     /**
@@ -1553,8 +1544,6 @@ public class Context {
      * @throws SQLException if a database error occurs.
      */
     public Set<String> getTimeDateFunctions() throws SQLException {
-        return Arrays.stream(databaseMetaData.getTimeDateFunctions().split(","))
-                .map(String::trim)
-                .collect(Collectors.toSet());
+        return new HashSet<>(Arrays.asList(databaseMetaData.getTimeDateFunctions().split(",")));
     }
 }
