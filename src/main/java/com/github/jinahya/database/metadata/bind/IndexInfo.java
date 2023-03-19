@@ -137,14 +137,33 @@ public class IndexInfo extends AbstractMetadataType {
     @_ColumnLabel("FILTER_CONDITION")
     private String filterCondition;
 
+    /**
+     * Constants for the {@code type} attribute binds {@value #COLUMN_LABEL_TYPE} column.
+     *
+     * @author Jin Kwon &lt;onacit_at_gmail.com&gt;
+     */
     enum Type implements _IntFieldEnum<Type> {
 
+        /**
+         * The constant for the
+         * {@link DatabaseMetaData#tableIndexStatistic}({@value DatabaseMetaData#tableIndexStatistic}).
+         */
         TABLE_INDEX_STATISTIC(DatabaseMetaData.tableIndexStatistic), // 0
 
+        /**
+         * The constant for the
+         * {@link DatabaseMetaData#tableIndexClustered}({@value DatabaseMetaData#tableIndexClustered}).
+         */
         TABLE_INDEX_CLUSTERED(DatabaseMetaData.tableIndexClustered), // 1
 
+        /**
+         * The constant for the {@link DatabaseMetaData#tableIndexHashed}({@value DatabaseMetaData#tableIndexHashed}).
+         */
         TABLE_INDEX_HASHED(DatabaseMetaData.tableIndexHashed), // 2
 
+        /**
+         * The constant for the {@link DatabaseMetaData#tableIndexOther}({@value DatabaseMetaData#tableIndexOther}).
+         */
         TABLE_INDEX_OTHER(DatabaseMetaData.tableIndexOther); // 3
 
         public static Type valueOfFieldValue(final int fieldValue) {
