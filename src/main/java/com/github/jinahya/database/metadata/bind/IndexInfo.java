@@ -23,10 +23,10 @@ package com.github.jinahya.database.metadata.bind;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.Setter;
-import lombok.ToString;
 
 import java.sql.DatabaseMetaData;
 import java.util.Comparator;
+import java.util.Optional;
 
 import static java.util.Comparator.naturalOrder;
 import static java.util.Comparator.nullsFirst;
@@ -41,7 +41,6 @@ import static java.util.Comparator.nullsFirst;
 @Setter
 @Getter
 @EqualsAndHashCode(callSuper = true)
-@ToString(callSuper = true)
 public class IndexInfo extends AbstractMetadataType {
 
     private static final long serialVersionUID = 924040226611181424L;
@@ -65,6 +64,25 @@ public class IndexInfo extends AbstractMetadataType {
     public static final String COLUMN_LABEL_TABLE_NAME = "TABLE_NAME";
 
     public static final String COLUMN_LABEL_TYPE = "TYPE";
+
+    @Override
+    public String toString() {
+        return super.toString() + '{' +
+               "tableCat=" + tableCat +
+               ",tableSchem=" + tableSchem +
+               ",tableName=" + tableName +
+               ",nonUnique=" + nonUnique +
+               ",indexQualifier=" + indexQualifier +
+               ",indexName=" + indexName +
+               ",type=" + type +
+               ",ordinalPosition=" + ordinalPosition +
+               ",columnName=" + columnName +
+               ",ascOrDesc=" + ascOrDesc +
+               ",cardinality=" + cardinality +
+               ",pages=" + pages +
+               ",filterCondition=" + filterCondition +
+               '}';
+    }
 
     @_NullableBySpecification
     @_ColumnLabel(COLUMN_LABEL_TABLE_CAT)
@@ -118,4 +136,44 @@ public class IndexInfo extends AbstractMetadataType {
     @_NullableBySpecification
     @_ColumnLabel("FILTER_CONDITION")
     private String filterCondition;
+
+    enum Type implements _IntFieldEnum<Type> {
+
+        TABLE_INDEX_STATISTIC(DatabaseMetaData.tableIndexStatistic), // 0
+
+        TABLE_INDEX_CLUSTERED(DatabaseMetaData.tableIndexClustered), // 1
+
+        TABLE_INDEX_HASHED(DatabaseMetaData.tableIndexHashed), // 2
+
+        TABLE_INDEX_OTHER(DatabaseMetaData.tableIndexOther); // 3
+
+        public static Type valueOfFieldValue(final int fieldValue) {
+            return _IntFieldEnum.valueOfFieldValue(Type.class, fieldValue);
+        }
+
+        Type(final short fieldValue) {
+            this.fieldValue = fieldValue;
+        }
+
+        @Override
+        public int fieldValueAsInt() {
+            return fieldValue;
+        }
+
+        private final int fieldValue;
+    }
+
+    Type getTypeAsEnum() {
+        return Optional.ofNullable(getType())
+                .map(Type::valueOfFieldValue)
+                .orElse(null);
+    }
+
+    void setTypeAsEnum(Type typeAsEnum) {
+        setType(
+                Optional.ofNullable(typeAsEnum)
+                        .map(_IntFieldEnum::fieldValueAsInt)
+                        .orElse(null)
+        );
+    }
 }

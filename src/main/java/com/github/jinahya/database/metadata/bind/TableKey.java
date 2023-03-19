@@ -169,18 +169,12 @@ public abstract class TableKey<T extends TableKey<T>> extends AbstractMetadataTy
         if (this == obj) return true;
         if (!(obj instanceof TableKey)) return false;
         final TableKey<?> that = (TableKey<?>) obj;
-        return Objects.equals(pktableCatNonNull(), that.pktableCatNonNull()) &&
-               Objects.equals(pktableSchemNonNull(), that.pktableSchemNonNull()) &&
-               Objects.equals(pktableName, that.pktableName) &&
-               Objects.equals(pkcolumnName, that.pkcolumnName) &&
-               Objects.equals(fktableCatNonNull(), that.fktableCatNonNull()) &&
-               Objects.equals(fktableSchemNonNull(), that.fktableSchemNonNull()) &&
-               Objects.equals(fktableName, that.fktableName) &&
-               Objects.equals(fkcolumnName, that.fkcolumnName);
+        return equals_(that);
     }
 
     @SuppressWarnings({"java:S100"})
     boolean equals_(final TableKey<?> that) {
+        assert that != null;
         return Objects.equals(pktableCatNonNull(), that.pktableCatNonNull()) &&
                Objects.equals(pktableSchemNonNull(), that.pktableSchemNonNull()) &&
                Objects.equals(pktableName, that.pktableName) &&
