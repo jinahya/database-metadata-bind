@@ -45,30 +45,30 @@ public abstract class TableKey<T extends TableKey<T>> extends AbstractMetadataTy
     private static final long serialVersionUID = 6713872409315471232L;
 
     static <T extends TableKey<T>> Comparator<T> comparingPktableCaseInsensitive() {
-        return Comparator.<T, String>comparing(TableKey::getPktableCat, nullsFirst(String.CASE_INSENSITIVE_ORDER))
-                .thenComparing(TableKey::getPktableSchem, nullsFirst(String.CASE_INSENSITIVE_ORDER))
-                .thenComparing(TableKey::getPktableName, nullsFirst(String.CASE_INSENSITIVE_ORDER))
+        return Comparator.<T, String>comparing(TableKey::pktableCatNonNull, String.CASE_INSENSITIVE_ORDER)
+                .thenComparing(TableKey::pktableSchemNonNull, String.CASE_INSENSITIVE_ORDER)
+                .thenComparing(TableKey::getPktableName, String.CASE_INSENSITIVE_ORDER)
                 .thenComparingInt(TableKey::getKeySeq);
     }
 
     static <T extends TableKey<T>> Comparator<T> comparingPktableLexicographic() {
-        return Comparator.<T, String>comparing(TableKey::getPktableCat, nullsFirst(naturalOrder()))
-                .thenComparing(TableKey::getPktableSchem, nullsFirst(naturalOrder()))
-                .thenComparing(TableKey::getPktableName, nullsFirst(naturalOrder()))
+        return Comparator.<T, String>comparing(TableKey::pktableCatNonNull)
+                .thenComparing(TableKey::pktableSchemNonNull)
+                .thenComparing(TableKey::getPktableName)
                 .thenComparingInt(TableKey::getKeySeq);
     }
 
     static <T extends TableKey<T>> Comparator<T> comparingFktableCaseInsensitive() {
-        return Comparator.<T, String>comparing(TableKey::getFktableCat, nullsFirst(String.CASE_INSENSITIVE_ORDER))
-                .thenComparing(TableKey::getFktableSchem, nullsFirst(String.CASE_INSENSITIVE_ORDER))
-                .thenComparing(TableKey::getFktableName, nullsFirst(String.CASE_INSENSITIVE_ORDER))
+        return Comparator.<T, String>comparing(TableKey::fktableCatNonNull, String.CASE_INSENSITIVE_ORDER)
+                .thenComparing(TableKey::fktableSchemNonNull, String.CASE_INSENSITIVE_ORDER)
+                .thenComparing(TableKey::getFktableName, String.CASE_INSENSITIVE_ORDER)
                 .thenComparingInt(TableKey::getKeySeq);
     }
 
     static <T extends TableKey<T>> Comparator<T> comparingFktableLexicographic() {
-        return Comparator.<T, String>comparing(TableKey::getFktableCat, nullsFirst(naturalOrder()))
-                .thenComparing(TableKey::getFktableSchem, nullsFirst(naturalOrder()))
-                .thenComparing(TableKey::getFktableName, nullsFirst(naturalOrder()))
+        return Comparator.<T, String>comparing(TableKey::fktableCatNonNull)
+                .thenComparing(TableKey::fktableSchemNonNull)
+                .thenComparing(TableKey::getFktableName)
                 .thenComparingInt(TableKey::getKeySeq);
     }
 
