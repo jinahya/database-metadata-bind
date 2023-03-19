@@ -47,13 +47,13 @@ public class Table extends AbstractMetadataType {
             Comparator.comparing(Table::getTableType, nullsFirst(String.CASE_INSENSITIVE_ORDER))
                     .thenComparing(Table::getTableCat, nullsFirst(String.CASE_INSENSITIVE_ORDER))
                     .thenComparing(Table::getTableSchem, nullsFirst(String.CASE_INSENSITIVE_ORDER))
-                    .thenComparing(Table::getTableName, nullsFirst(String.CASE_INSENSITIVE_ORDER));
+                    .thenComparing(Table::getTableName, String.CASE_INSENSITIVE_ORDER);
 
     static final Comparator<Table> LEXICOGRAPHIC_ORDER =
             Comparator.comparing(Table::getTableType, nullsFirst(naturalOrder()))
                     .thenComparing(Table::getTableCat, nullsFirst(naturalOrder()))
                     .thenComparing(Table::getTableSchem, nullsFirst(naturalOrder()))
-                    .thenComparing(Table::getTableName, nullsFirst(naturalOrder()));
+                    .thenComparing(Table::getTableName, naturalOrder());
 
     /**
      * The column label of {@value}.
