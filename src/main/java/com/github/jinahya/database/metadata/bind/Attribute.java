@@ -22,7 +22,6 @@ package com.github.jinahya.database.metadata.bind;
 
 import lombok.Getter;
 import lombok.Setter;
-import lombok.ToString;
 
 import java.sql.DatabaseMetaData;
 import java.util.Comparator;
@@ -38,7 +37,6 @@ import static java.util.Comparator.nullsFirst;
  * @see Context#getAttributes(String, String, String, String)
  * @see Nullable
  */
-@_ChildOf(UDT.class)
 @Setter
 @Getter
 public class Attribute extends AbstractMetadataType {
@@ -113,26 +111,26 @@ public class Attribute extends AbstractMetadataType {
     @Override
     public String toString() {
         return super.toString() + '{' +
-               "typeCat=" + typeCat  +
-               ",typeSchem=" + typeSchem  +
-               ",typeName=" + typeName  +
-               ",attrName=" + attrName  +
+               "typeCat=" + typeCat +
+               ",typeSchem=" + typeSchem +
+               ",typeName=" + typeName +
+               ",attrName=" + attrName +
                ",dataType=" + dataType +
-               ",attrTypeName=" + attrTypeName  +
+               ",attrTypeName=" + attrTypeName +
                ",attrSize=" + attrSize +
                ",decimalDigits=" + decimalDigits +
                ",numPrecRadix=" + numPrecRadix +
                ",nullable=" + nullable +
-               ",remarks=" + remarks  +
-               ",attrDef=" + attrDef  +
+               ",remarks=" + remarks +
+               ",attrDef=" + attrDef +
                ",sqlDataType=" + sqlDataType +
                ",sqlDatetimeSub=" + sqlDatetimeSub +
                ",charOctetLength=" + charOctetLength +
                ",ordinalPosition=" + ordinalPosition +
-               ",isNullable=" + isNullable  +
-               ",scopeCatalog=" + scopeCatalog  +
-               ",scopeSchema=" + scopeSchema  +
-               ",scopeTable=" + scopeTable  +
+               ",isNullable=" + isNullable +
+               ",scopeCatalog=" + scopeCatalog +
+               ",scopeSchema=" + scopeSchema +
+               ",scopeTable=" + scopeTable +
                ",sourceDataType=" + sourceDataType +
                '}';
     }

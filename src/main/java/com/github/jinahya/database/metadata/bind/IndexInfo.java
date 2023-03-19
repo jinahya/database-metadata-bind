@@ -38,7 +38,6 @@ import static java.util.Comparator.nullsFirst;
  * @author Jin Kwon &lt;jinahya_at_gmail.com&gt;
  * @see Context#getIndexInfo(String, String, String, boolean, boolean)
  */
-@_ChildOf(Table.class)
 @Setter
 @Getter
 @EqualsAndHashCode(callSuper = true)
@@ -167,8 +166,8 @@ public class IndexInfo extends AbstractMetadataType {
          */
         TABLE_INDEX_OTHER(DatabaseMetaData.tableIndexOther); // 3
 
-        public static Type valueOfFieldValue(final int fieldValue) {
-            return _IntFieldEnum.valueOfFieldValue(Type.class, fieldValue);
+        public static Type valueOfType(final int type) {
+            return _IntFieldEnum.valueOfFieldValue(Type.class, type);
         }
 
         Type(final short fieldValue) {
@@ -185,7 +184,7 @@ public class IndexInfo extends AbstractMetadataType {
 
     Type getTypeAsEnum() {
         return Optional.ofNullable(getType())
-                .map(Type::valueOfFieldValue)
+                .map(Type::valueOfType)
                 .orElse(null);
     }
 

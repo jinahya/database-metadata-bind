@@ -39,7 +39,6 @@ import static java.util.Comparator.nullsFirst;
  * @author Jin Kwon &lt;jinahya_at_gmail.com&gt;
  * @see Context#getFunctionColumns(String, String, String, String)
  */
-@_ChildOf(Function.class)
 @Setter
 @Getter
 @ToString(callSuper = true)

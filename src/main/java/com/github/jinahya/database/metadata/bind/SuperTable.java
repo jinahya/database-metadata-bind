@@ -29,7 +29,6 @@ import java.util.Objects;
  * @author Jin Kwon &lt;jinahya_at_gmail.com&gt;
  * @see Context#getSuperTables(String, String, String)
  */
-@_ChildOf(Schema.class)
 public class SuperTable extends AbstractMetadataType {
 
     private static final long serialVersionUID = 3579710773784268831L;

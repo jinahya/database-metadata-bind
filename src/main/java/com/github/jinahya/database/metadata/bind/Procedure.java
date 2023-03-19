@@ -36,8 +36,6 @@ import static java.util.Comparator.nullsFirst;
  * @see Context#getFunctionColumns(String, String, String, String)
  * @see ProcedureColumn
  */
-@_ParentOf(ProcedureColumn.class)
-@_ChildOf(Schema.class)
 public class Procedure extends AbstractMetadataType {
 
     private static final long serialVersionUID = -6262056388403934829L;

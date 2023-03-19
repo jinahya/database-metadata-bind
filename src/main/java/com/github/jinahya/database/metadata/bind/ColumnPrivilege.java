@@ -38,7 +38,6 @@ import static java.util.Comparator.nullsFirst;
  * @author Jin Kwon &lt;jinahya_at_gmail.com&gt;
  * @see Context#getColumnPrivileges(String, String, String, String)
  */
-@_ChildOf(Table.class)
 @Setter
 @Getter
 @EqualsAndHashCode(callSuper = true)

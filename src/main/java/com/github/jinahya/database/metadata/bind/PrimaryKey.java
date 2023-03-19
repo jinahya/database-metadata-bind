@@ -32,7 +32,6 @@ import static java.util.Comparator.naturalOrder;
  * @author Jin Kwon &lt;jinahya_at_gmail.com&gt;
  * @see Context#getPrimaryKeys(String, String, String)
  */
-@_ChildOf(Table.class)
 public class PrimaryKey extends AbstractMetadataType {
 
     private static final long serialVersionUID = 3159826510060898330L;

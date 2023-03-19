@@ -37,14 +37,6 @@ import static java.util.Comparator.nullsFirst;
  * @author Jin Kwon &lt;jinahya_at_gmail.com&gt;
  * @see Context#getTables(String, String, String, String[])
  */
-@_ParentOf(VersionColumn.class)
-@_ParentOf(PseudoColumn.class)
-@_ParentOf(PrimaryKey.class)
-@_ParentOf(IndexInfo.class)
-@_ParentOf(ImportedKey.class)
-@_ParentOf(ExportedKey.class)
-@_ParentOf(Column.class)
-@_ParentOf(BestRowIdentifier.class)
 @Setter
 @Getter
 public class Table extends AbstractMetadataType {

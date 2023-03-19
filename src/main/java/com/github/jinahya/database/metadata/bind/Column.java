@@ -39,7 +39,6 @@ import static java.util.Comparator.nullsFirst;
  * @see Nullable
  */
 //@ParentOf(ColumnPrivilege.class)
-@_ChildOf(Table.class)
 @Setter
 @Getter
 public class Column extends AbstractMetadataType {

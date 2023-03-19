@@ -37,7 +37,6 @@ import static java.util.Comparator.nullsFirst;
  * @author Jin Kwon &lt;jinahya_at_gmail.com&gt;
  * @see Context#getFunctions(String, String, String)
  */
-@_ParentOf(FunctionColumn.class)
 public class Function extends AbstractMetadataType {
 
     private static final long serialVersionUID = -3318947900237453301L;

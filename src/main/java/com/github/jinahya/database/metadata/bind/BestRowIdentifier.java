@@ -34,7 +34,6 @@ import java.util.Optional;
  * @see PseudoColumn
  * @see Scope
  */
-@_ChildOf(Table.class)
 public class BestRowIdentifier
         extends AbstractMetadataType
         implements Comparable<BestRowIdentifier> {

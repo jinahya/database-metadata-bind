@@ -36,7 +36,6 @@ import static java.util.Comparator.nullsFirst;
  *
  * @author Jin Kwon &lt;jinahya_at_gmail.com&gt;
  */
-@_ChildOf(Table.class)
 @Setter
 @Getter
 @ToString(callSuper = true)

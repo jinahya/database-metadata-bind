@@ -22,7 +22,6 @@ package com.github.jinahya.database.metadata.bind;
 
 import lombok.Getter;
 import lombok.Setter;
-import lombok.ToString;
 
 import java.util.Comparator;
 import java.util.Objects;
@@ -39,7 +38,6 @@ import static java.util.Comparator.nullsFirst;
  * @see ExportedKey
  * @see ImportedKey
  */
-@_ChildOf(Table.class)
 @Setter
 @Getter
 public abstract class TableKey<T extends TableKey<T>> extends AbstractMetadataType {
@@ -147,19 +145,19 @@ public abstract class TableKey<T extends TableKey<T>> extends AbstractMetadataTy
     @Override
     public String toString() {
         return super.toString() + '{' +
-               "pktableCat=" + pktableCat  +
-               ",pktableSchem=" + pktableSchem  +
-               ",pktableName=" + pktableName  +
-               ",pkcolumnName=" + pkcolumnName  +
-               ",fktableCat=" + fktableCat  +
-               ",fktableSchem=" + fktableSchem  +
-               ",fktableName=" + fktableName  +
-               ",fkcolumnName=" + fkcolumnName  +
+               "pktableCat=" + pktableCat +
+               ",pktableSchem=" + pktableSchem +
+               ",pktableName=" + pktableName +
+               ",pkcolumnName=" + pkcolumnName +
+               ",fktableCat=" + fktableCat +
+               ",fktableSchem=" + fktableSchem +
+               ",fktableName=" + fktableName +
+               ",fkcolumnName=" + fkcolumnName +
                ",keySeq=" + keySeq +
                ",updateRule=" + updateRule +
                ",deleteRule=" + deleteRule +
-               ",fkName=" + fkName  +
-               ",pkName=" + pkName  +
+               ",fkName=" + fkName +
+               ",pkName=" + pkName +
                ",deferrability=" + deferrability +
                '}';
     }

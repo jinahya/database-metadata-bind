@@ -31,7 +31,6 @@ import java.util.Comparator;
  * @see Context#getExportedKeys(String, String, String)
  * @see ImportedKey
  */
-@_ChildOf(Table.class)
 public class ExportedKey extends TableKey<ExportedKey> {
 
     private static final long serialVersionUID = -6561660015694928357L;

@@ -33,7 +33,6 @@ import java.util.Objects;
  * @author Jin Kwon &lt;jinahya_at_gmail.com&gt;
  * @see Context#getSuperTypes(String, String, String)
  */
-@_ChildOf(Schema.class)
 @Setter
 @Getter
 public class SuperType extends AbstractMetadataType {

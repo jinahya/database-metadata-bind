@@ -33,7 +33,6 @@ import static java.util.Comparator.nullsFirst;
  * @author Jin Kwon &lt;jinahya_at_gmail.com&gt;
  * @see Context#getCatalogs(Consumer)
  */
-@_ParentOf(Schema.class)
 public class Catalog extends AbstractMetadataType {
 
     private static final long serialVersionUID = 6239185259128825953L;

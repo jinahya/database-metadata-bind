@@ -36,8 +36,6 @@ import static java.util.Comparator.nullsFirst;
  * @author Jin Kwon &lt;jinahya_at_gmail.com&gt;
  * @see Context#getUDTs(String, String, String, int[])
  */
-@_ParentOf(Attribute.class)
-@_ChildOf(Schema.class)
 @Setter
 @Getter
 public class UDT extends AbstractMetadataType {

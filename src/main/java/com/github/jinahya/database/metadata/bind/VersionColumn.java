@@ -33,7 +33,6 @@ import java.util.Optional;
  * @author Jin Kwon &lt;jinahya_at_gmail.com&gt;
  * @see Context#getVersionColumns(String, String, String)
  */
-@_ChildOf(Table.class)
 @Setter
 @Getter
 public class VersionColumn extends AbstractMetadataType {

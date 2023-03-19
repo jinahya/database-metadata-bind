@@ -33,14 +33,6 @@ import static java.util.Comparator.nullsFirst;
  * @author Jin Kwon &lt;jinahya_at_gmail.com&gt;
  * @see Context#getSchemas(String, String)
  */
-@_ParentOf(UDT.class)
-@_ParentOf(TablePrivilege.class)
-@_ParentOf(Table.class)
-@_ParentOf(SuperType.class)
-@_ParentOf(SuperTable.class)
-@_ParentOf(Procedure.class)
-@_ParentOf(Function.class)
-@_ChildOf(Catalog.class)
 public class Schema extends AbstractMetadataType {
 
     private static final long serialVersionUID = 7457236468401244963L;
