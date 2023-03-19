@@ -33,7 +33,6 @@ import static java.util.Comparator.nullsFirst;
  * {@link DatabaseMetaData#getProcedures(java.lang.String, java.lang.String, java.lang.String)} method.
  *
  * @author Jin Kwon &lt;jinahya_at_gmail.com&gt;
- * @see DatabaseMetaData#getProcedures(String, String, String)
  * @see Context#getFunctionColumns(String, String, String, String)
  * @see ProcedureColumn
  */

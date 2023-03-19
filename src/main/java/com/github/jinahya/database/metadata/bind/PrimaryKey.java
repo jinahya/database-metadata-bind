@@ -25,7 +25,6 @@ import java.util.Comparator;
 import java.util.Objects;
 
 import static java.util.Comparator.naturalOrder;
-import static java.util.Comparator.nullsFirst;
 
 /**
  * A class for binding results of the {@link DatabaseMetaData#getPrimaryKeys(String, String, String)} method.
@@ -39,10 +38,10 @@ public class PrimaryKey extends AbstractMetadataType {
     private static final long serialVersionUID = 3159826510060898330L;
 
     static final Comparator<PrimaryKey> CASE_INSENSITIVE_ORDER
-            = Comparator.comparing(PrimaryKey::getColumnName, nullsFirst(String.CASE_INSENSITIVE_ORDER));
+            = Comparator.comparing(PrimaryKey::getColumnName, String.CASE_INSENSITIVE_ORDER);
 
     static final Comparator<PrimaryKey> LEXICOGRAPHIC_ORDER
-            = Comparator.comparing(PrimaryKey::getColumnName, nullsFirst(naturalOrder()));
+            = Comparator.comparing(PrimaryKey::getColumnName, naturalOrder());
 
     /**
      * The column label of {@value}.
