@@ -27,7 +27,6 @@ import lombok.ToString;
 import java.sql.DatabaseMetaData;
 import java.util.Comparator;
 import java.util.Objects;
-import java.util.Optional;
 
 import static java.util.Comparator.naturalOrder;
 import static java.util.Comparator.nullsFirst;
@@ -246,10 +245,18 @@ public class Attribute extends AbstractMetadataType {
     private Integer sourceDataType;
 
     String typeCatNonNull() {
-        return Optional.ofNullable(getTypeCat()).orElse(Catalog.COLUMN_VALUE_TABLE_CAT_EMPTY);
+        final String typeCat_ = getTypeCat();
+        if (typeCat_ != null) {
+            return typeCat_;
+        }
+        return Catalog.COLUMN_VALUE_TABLE_CAT_EMPTY;
     }
 
     String typeSchemNonNull() {
-        return Optional.ofNullable(getTypeSchem()).orElse(Schema.COLUMN_VALUE_TABLE_SCHEM_EMPTY);
+        final String typeSchem_ = getTypeSchem();
+        if (typeSchem_ != null) {
+            return typeSchem_;
+        }
+        return Schema.COLUMN_VALUE_TABLE_SCHEM_EMPTY;
     }
 }

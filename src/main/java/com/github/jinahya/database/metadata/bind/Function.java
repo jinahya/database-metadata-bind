@@ -25,7 +25,6 @@ import lombok.EqualsAndHashCode;
 import java.sql.DatabaseMetaData;
 import java.util.Comparator;
 import java.util.Objects;
-import java.util.Optional;
 
 import static java.util.Comparator.comparing;
 import static java.util.Comparator.naturalOrder;
@@ -162,10 +161,18 @@ public class Function extends AbstractMetadataType {
     private String specificName;
 
     String functionCatNonNull() {
-        return Optional.ofNullable(getFunctionCat()).orElse(Catalog.COLUMN_VALUE_TABLE_CAT_EMPTY);
+        final String functionCat_ = getFunctionCat();
+        if (functionCat_ != null) {
+            return functionCat_;
+        }
+        return Catalog.COLUMN_VALUE_TABLE_CAT_EMPTY;
     }
 
     String functionSchemNonNull() {
-        return Optional.ofNullable(getFunctionSchem()).orElse(Schema.COLUMN_VALUE_TABLE_SCHEM_EMPTY);
+        final String functionSchem_ = getFunctionSchem();
+        if (functionSchem_ != null) {
+            return functionSchem_;
+        }
+        return Schema.COLUMN_VALUE_TABLE_SCHEM_EMPTY;
     }
 }

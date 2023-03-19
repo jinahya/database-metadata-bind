@@ -25,14 +25,15 @@ import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 
 import java.sql.Connection;
+import java.sql.DatabaseMetaData;
 import java.sql.DriverManager;
-import java.sql.JDBCType;
 import java.sql.ResultSet;
+import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
 import java.sql.Types;
 import java.util.HashSet;
 
-import static java.sql.DriverManager.getConnection;
+import static org.assertj.core.api.Assertions.assertThat;
 
 /**
  * Tests for SQLite.
@@ -46,7 +47,7 @@ class Memory_Sqlite_Test extends Memory_$_Test {
 
     @Override
     protected Connection connect() throws SQLException {
-        return getConnection(CONNECTION_URL);
+        return DriverManager.getConnection(CONNECTION_URL);
     }
 
     @Disabled("https://github.com/xerial/sqlite-jdbc/issues/837 which has been fixed")
@@ -75,11 +76,12 @@ class Memory_Sqlite_Test extends Memory_$_Test {
         }
     }
 
+    @Disabled // https://github.com/xerial/sqlite-jdbc/issues/859
     @Test
-    void getColumns__1() throws SQLException {
+    void getColumns__INTEGER_DATA_TYPE() throws SQLException {
         try (var connection = connect()) {
-            final var cmd = connection.getMetaData();
-            try (var results = cmd.getColumns(null, null, "%", "%")) {
+            final var md = connection.getMetaData();
+            try (var results = md.getColumns(null, null, "%", "%")) {
                 final var rsmd = results.getMetaData();
                 for (int i = 1; i <= rsmd.getColumnCount(); i++) {
                     final var label = rsmd.getColumnLabel(i);
@@ -87,8 +89,26 @@ class Memory_Sqlite_Test extends Memory_$_Test {
                         continue;
                     }
                     final var type = rsmd.getColumnType(i);
-                    log.debug("type: {}, {}", type, JDBCType.valueOf(type));
-                    log.debug("{}, {}", JDBCType.valueOf(Types.INTEGER), Types.INTEGER);
+                    assertThat(type).isEqualTo(Types.INTEGER);
+                    assertThat(results.getObject(i)).isInstanceOf(Integer.class);
+                }
+            }
+        }
+    }
+
+    public static void main(final String[] args) throws SQLException {
+        try (Connection connection = DriverManager.getConnection("jdbc:sqlite::memory:")) {
+            final DatabaseMetaData dmd = connection.getMetaData();
+            try (ResultSet results = dmd.getColumns(null, null, "%", "%")) {
+                final ResultSetMetaData rsmd = results.getMetaData();
+                for (int i = 1; i <= rsmd.getColumnCount(); i++) {
+                    final String label = rsmd.getColumnLabel(i);
+                    if (!"DATA_TYPE".equals(label)) {
+                        continue;
+                    }
+                    final int type = rsmd.getColumnType(i);
+                    assert type == Types.INTEGER;
+                    assert results.getObject(i) instanceof Integer;
                 }
             }
         }

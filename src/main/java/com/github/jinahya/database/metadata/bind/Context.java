@@ -1286,30 +1286,30 @@ public class Context {
         Objects.requireNonNull(consumer, "consumer is null");
         try (ResultSet results = databaseMetaData.getTables(catalog, schemaPattern, tableNamePattern, types)) {
             assert results != null;
-//            bind(results, Table.class, consumer);
-            bind(results, Table.class, (Consumer<? super Table>) t -> {
-                consumer.accept(t);
-                for (final BestRowIdentifier.Scope scope : BestRowIdentifier.Scope.values()) {
-                    for (final boolean nullable : new boolean[] {true, false}) {
-                        try {
-                            getBestRowIdentifier(
-                                    t.tableCatNonNull(),
-                                    t.tableSchemNonNull(),
-                                    t.getTableName(),
-                                    scope.fieldValueAsInt(),
-                                    nullable,
-                                    bri -> {
-                                        t.getBestRowIdentifierMap().computeIfAbsent(scope, s -> new HashMap<>())
-                                                .computeIfAbsent(nullable, n -> new ArrayList<>())
-                                                .add(bri);
-                                    }
-                            );
-                        } catch (final SQLException sqle) {
-                            throw new RuntimeException("unable to get best row identifiers for " + t, sqle);
-                        }
-                    }
-                }
-            });
+            bind(results, Table.class, consumer);
+//            bind(results, Table.class, (Consumer<? super Table>) t -> {
+//                consumer.accept(t);
+//                for (final BestRowIdentifier.Scope scope : BestRowIdentifier.Scope.values()) {
+//                    for (final boolean nullable : new boolean[] {true, false}) {
+//                        try {
+//                            getBestRowIdentifier(
+//                                    t.tableCatNonNull(),
+//                                    t.tableSchemNonNull(),
+//                                    t.getTableName(),
+//                                    scope.fieldValueAsInt(),
+//                                    nullable,
+//                                    bri -> {
+//                                        t.getBestRowIdentifierMap().computeIfAbsent(scope, s -> new HashMap<>())
+//                                                .computeIfAbsent(nullable, n -> new ArrayList<>())
+//                                                .add(bri);
+//                                    }
+//                            );
+//                        } catch (final SQLException sqle) {
+//                            throw new RuntimeException("unable to get best row identifiers for " + t, sqle);
+//                        }
+//                    }
+//                }
+//            });
         }
     }
 

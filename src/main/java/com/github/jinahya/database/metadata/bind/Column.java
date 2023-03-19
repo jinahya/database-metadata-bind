@@ -274,11 +274,19 @@ public class Column extends AbstractMetadataType {
     private String isGeneratedcolumn;
 
     String tableCatNonNull() {
-        return Optional.ofNullable(getTableCat()).orElse(Catalog.COLUMN_VALUE_TABLE_CAT_EMPTY);
+        final String tableCat_ = getTableCat();
+        if (tableCat_ != null) {
+            return tableCat_;
+        }
+        return Catalog.COLUMN_VALUE_TABLE_CAT_EMPTY;
     }
 
     String tableSchemNonNull() {
-        return Optional.ofNullable(getTableSchem()).orElse(Schema.COLUMN_VALUE_TABLE_SCHEM_EMPTY);
+        final String tableSchem_ = getTableSchem();
+        if (tableSchem_ != null) {
+            return tableSchem_;
+        }
+        return Schema.COLUMN_VALUE_TABLE_SCHEM_EMPTY;
     }
 
     Nullable getNullableAsEnum() {

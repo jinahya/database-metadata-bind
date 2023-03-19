@@ -25,7 +25,6 @@ import lombok.Setter;
 
 import java.sql.DatabaseMetaData;
 import java.util.Objects;
-import java.util.Optional;
 
 /**
  * A class for binding results of the
@@ -143,18 +142,34 @@ public class SuperType extends AbstractMetadataType {
     private String supertypeName;
 
     String typeCatNonNull() {
-        return Optional.ofNullable(getTypeCat()).orElse(Catalog.COLUMN_VALUE_TABLE_CAT_EMPTY);
+        final String typeCat_ = getTypeCat();
+        if (typeCat_ != null) {
+            return typeCat_;
+        }
+        return Catalog.COLUMN_VALUE_TABLE_CAT_EMPTY;
     }
 
     String typeSchemNonNull() {
-        return Optional.ofNullable(getTypeSchem()).orElse(Schema.COLUMN_VALUE_TABLE_SCHEM_EMPTY);
+        final String typeSchem_ = getTypeSchem();
+        if (typeSchem_ != null) {
+            return typeSchem_;
+        }
+        return Schema.COLUMN_VALUE_TABLE_SCHEM_EMPTY;
     }
 
     String supertypeCatNonNull() {
-        return Optional.ofNullable(getSupertypeCat()).orElse(Catalog.COLUMN_VALUE_TABLE_CAT_EMPTY);
+        final String supertypeCat_ = getSupertypeCat();
+        if (supertypeCat_ != null) {
+            return supertypeCat_;
+        }
+        return Catalog.COLUMN_VALUE_TABLE_CAT_EMPTY;
     }
 
     String supertypeSchemNonNull() {
-        return Optional.ofNullable(getSupertypeSchem()).orElse(Schema.COLUMN_VALUE_TABLE_SCHEM_EMPTY);
+        final String supertypeSchem_ = getSupertypeSchem();
+        if (supertypeSchem_ != null) {
+            return supertypeSchem_;
+        }
+        return Schema.COLUMN_VALUE_TABLE_SCHEM_EMPTY;
     }
 }
