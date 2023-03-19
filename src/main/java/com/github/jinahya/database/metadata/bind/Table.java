@@ -20,16 +20,10 @@ package com.github.jinahya.database.metadata.bind;
  * #L%
  */
 
-import lombok.AccessLevel;
-import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.Setter;
-import lombok.ToString;
 
 import java.util.Comparator;
-import java.util.EnumMap;
-import java.util.List;
-import java.util.Map;
 import java.util.Objects;
 
 import static java.util.Comparator.naturalOrder;
@@ -209,17 +203,4 @@ public class Table extends AbstractMetadataType {
         }
         return Schema.COLUMN_VALUE_TABLE_SCHEM_EMPTY;
     }
-
-    Map<BestRowIdentifier.Scope, Map<Boolean, List<BestRowIdentifier>>> getBestRowIdentifierMap() {
-        if (bestRowIdentifierMap == null) {
-            bestRowIdentifierMap = new EnumMap<>(BestRowIdentifier.Scope.class);
-        }
-        return bestRowIdentifierMap;
-    }
-
-    @Setter(AccessLevel.NONE)
-    @Getter(AccessLevel.NONE)
-    @EqualsAndHashCode.Exclude
-    @ToString.Exclude
-    private Map<BestRowIdentifier.Scope, Map<Boolean, List<BestRowIdentifier>>> bestRowIdentifierMap;
 }
