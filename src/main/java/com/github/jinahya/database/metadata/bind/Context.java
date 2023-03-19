@@ -111,7 +111,7 @@ public class Context {
             final Object value = results.getObject(key);
             instance.getUnmappedValues().put(key, value);
         }
-        assert fieldLabels.isEmpty() : "remaining fields " + fieldLabels;
+        assert fieldLabels.isEmpty() : "remaining fields: " + fieldLabels;
         return instance;
     }
 
