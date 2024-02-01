@@ -22,6 +22,7 @@ package com.github.jinahya.database.metadata.bind;
 
 import lombok.Getter;
 import lombok.Setter;
+import lombok.ToString;
 
 import java.sql.DatabaseMetaData;
 import java.util.Comparator;
@@ -39,6 +40,7 @@ import static java.util.Comparator.nullsFirst;
  */
 @Setter
 @Getter
+@ToString(callSuper = true)
 public class Attribute extends AbstractMetadataType {
 
     private static final long serialVersionUID = 1913681105410440186L;
@@ -55,6 +57,13 @@ public class Attribute extends AbstractMetadataType {
                     .thenComparing(Attribute::getTypeName, nullsFirst(naturalOrder()))
                     .thenComparingInt(Attribute::getOrdinalPosition);
 
+    // -------------------------------------------------------------------------------------------------------- TYPE_CAT
+    public static final String COLUMN_LABEL_TYPE_CAT = "TYPE_CAT";
+
+    // ------------------------------------------------------------------------------------------------------ TYPE_SCHEM
+    public static final String COLUMN_LABEL_TYPE_SCHEM = "TYPE_SCHEM";
+
+    // -------------------------------------------------------------------------------------------------------- NULLABLE
     public static final String COLUMN_LABEL_NULLABLE = "NULLABLE";
 
     /**
@@ -102,39 +111,16 @@ public class Attribute extends AbstractMetadataType {
         private final int fieldValue;
     }
 
+    // -----------------------------------------------------------------------------------------------------------------
+    public static final String COLUMN_LABEL_IS_NULLABLE = "IS_NULLABLE";
+
     public static final String COLUMN_VALUE_IS_NULLABLE_YES = "YES";
 
     public static final String COLUMN_VALUE_IS_NULLABLE_NO = "NO";
 
     public static final String COLUMN_VALUE_IS_NULLABLE_EMPTY = "";
 
-    @Override
-    public String toString() {
-        return super.toString() + '{' +
-               "typeCat=" + typeCat +
-               ",typeSchem=" + typeSchem +
-               ",typeName=" + typeName +
-               ",attrName=" + attrName +
-               ",dataType=" + dataType +
-               ",attrTypeName=" + attrTypeName +
-               ",attrSize=" + attrSize +
-               ",decimalDigits=" + decimalDigits +
-               ",numPrecRadix=" + numPrecRadix +
-               ",nullable=" + nullable +
-               ",remarks=" + remarks +
-               ",attrDef=" + attrDef +
-               ",sqlDataType=" + sqlDataType +
-               ",sqlDatetimeSub=" + sqlDatetimeSub +
-               ",charOctetLength=" + charOctetLength +
-               ",ordinalPosition=" + ordinalPosition +
-               ",isNullable=" + isNullable +
-               ",scopeCatalog=" + scopeCatalog +
-               ",scopeSchema=" + scopeSchema +
-               ",scopeTable=" + scopeTable +
-               ",sourceDataType=" + sourceDataType +
-               '}';
-    }
-
+    // -----------------------------------------------------------------------------------------------------------------
     @Override
     public boolean equals(final Object obj) {
         if (this == obj) return true;
@@ -156,44 +142,31 @@ public class Attribute extends AbstractMetadataType {
         );
     }
 
-    public String getTypeCat() {
-        return typeCat;
+    // -------------------------------------------------------------------------------------------------------- tableCat
+    String typeCatNonNull() {
+        final String typeCat_ = getTypeCat();
+        if (typeCat_ != null) {
+            return typeCat_;
+        }
+        return Catalog.COLUMN_VALUE_TABLE_CAT_EMPTY;
     }
 
-    public void setTypeCat(final String typeCat) {
-        this.typeCat = typeCat;
+    // ------------------------------------------------------------------------------------------------------ tableSchem
+    String typeSchemNonNull() {
+        final String typeSchem_ = getTypeSchem();
+        if (typeSchem_ != null) {
+            return typeSchem_;
+        }
+        return Schema.COLUMN_VALUE_TABLE_SCHEM_EMPTY;
     }
 
-    public String getTypeSchem() {
-        return typeSchem;
-    }
-
-    public void setTypeSchem(final String typeSchem) {
-        this.typeSchem = typeSchem;
-    }
-
-    public String getTypeName() {
-        return typeName;
-    }
-
-    public void setTypeName(final String typeName) {
-        this.typeName = typeName;
-    }
-
-    public String getAttrName() {
-        return attrName;
-    }
-
-    public void setAttrName(final String attrName) {
-        this.attrName = attrName;
-    }
-
+    // -----------------------------------------------------------------------------------------------------------------
     @_NullableBySpecification
-    @_ColumnLabel("TYPE_CAT")
+    @_ColumnLabel(COLUMN_LABEL_TYPE_CAT)
     private String typeCat;
 
     @_NullableBySpecification
-    @_ColumnLabel("TYPE_SCHEM")
+    @_ColumnLabel(COLUMN_LABEL_TYPE_SCHEM)
     private String typeSchem;
 
     @_ColumnLabel("TYPE_NAME")
@@ -202,6 +175,7 @@ public class Attribute extends AbstractMetadataType {
     @_ColumnLabel("ATTR_NAME")
     private String attrName;
 
+    // -----------------------------------------------------------------------------------------------------------------
     @_NotNull
     @_ColumnLabel("DATA_TYPE")
     private Integer dataType;
@@ -249,7 +223,7 @@ public class Attribute extends AbstractMetadataType {
     @_ColumnLabel("ORDINAL_POSITION")
     private Integer ordinalPosition;
 
-    @_ColumnLabel("IS_NULLABLE")
+    @_ColumnLabel(COLUMN_LABEL_IS_NULLABLE)
     private String isNullable;
 
     @_NullableBySpecification
@@ -267,20 +241,4 @@ public class Attribute extends AbstractMetadataType {
     @_NullableBySpecification
     @_ColumnLabel("SOURCE_DATA_TYPE")
     private Integer sourceDataType;
-
-    String typeCatNonNull() {
-        final String typeCat_ = getTypeCat();
-        if (typeCat_ != null) {
-            return typeCat_;
-        }
-        return Catalog.COLUMN_VALUE_TABLE_CAT_EMPTY;
-    }
-
-    String typeSchemNonNull() {
-        final String typeSchem_ = getTypeSchem();
-        if (typeSchem_ != null) {
-            return typeSchem_;
-        }
-        return Schema.COLUMN_VALUE_TABLE_SCHEM_EMPTY;
-    }
 }

@@ -85,7 +85,7 @@ abstract class Memory_$_Test {
     void test() throws SQLException {
         applyContext(c -> {
             try {
-                ContextTests.test(c);
+                ContextTestUtils.test(c);
                 return null;
             } catch (final SQLException sqle) {
                 throw new RuntimeException(sqle);
@@ -97,7 +97,7 @@ abstract class Memory_$_Test {
     void testOrdering() throws SQLException {
         applyContext(c -> {
             try {
-                ContextTests.testOrdering(c);
+                ContextTestUtils.testOrdering(c);
                 return null;
             } catch (final SQLException sqle) {
                 throw new RuntimeException(sqle);
@@ -108,7 +108,7 @@ abstract class Memory_$_Test {
     @Test
     void getColumns__() {
         applyContextChecked(c -> {
-            ContextTests.getColumns__(c, null, null, "%", "%");
+            ContextTestUtils.getColumns__(c, null, null, "%", "%");
             return null;
         });
     }
@@ -116,7 +116,7 @@ abstract class Memory_$_Test {
     @Test
     void getTables__() {
         applyContextChecked(c -> {
-            ContextTests.getTables__(c, null, null, "%", null);
+            ContextTestUtils.getTables__(c, null, null, "%", null);
             return null;
         });
     }

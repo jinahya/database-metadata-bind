@@ -20,9 +20,13 @@ package com.github.jinahya.database.metadata.bind;
  * #L%
  */
 
+import lombok.EqualsAndHashCode;
+import lombok.Getter;
+import lombok.Setter;
+import lombok.ToString;
+
 import java.sql.DatabaseMetaData;
 import java.util.Comparator;
-import java.util.Objects;
 import java.util.Optional;
 
 /**
@@ -34,6 +38,10 @@ import java.util.Optional;
  * @see PseudoColumn
  * @see Scope
  */
+@Setter
+@Getter
+@ToString(callSuper = true)
+@EqualsAndHashCode(callSuper = true, onlyExplicitlyIncluded = true)
 public class BestRowIdentifier
         extends AbstractMetadataType
         implements Comparable<BestRowIdentifier> {
@@ -45,6 +53,7 @@ public class BestRowIdentifier
      */
     static final Comparator<BestRowIdentifier> COMPARING_SCOPE = Comparator.comparingInt(BestRowIdentifier::getScope);
 
+    // ----------------------------------------------------------------------------------------------------------- SCOPE
     public static final String COLUMN_LABEL_SCOPE = "SCOPE";
 
     /**
@@ -93,10 +102,13 @@ public class BestRowIdentifier
         private final int fieldValue;
     }
 
+    // ----------------------------------------------------------------------------------------------------- COLUMN_NAME
     public static final String COLUMN_LABEL_COLUMN_NAME = "COLUMN_NAME";
 
+    // ------------------------------------------------------------------------------------------------------- DATA_TYPE
     public static final String COLUMN_LABEL_DATA_TYPE = "DATA_TYPE";
 
+    // --------------------------------------------------------------------------------------------------- PSEUDO_COLUMN
     public static final String COLUMN_LABEL_PSEUDO_COLUMN = "PSEUDO_COLUMN";
 
     /**
@@ -145,34 +157,7 @@ public class BestRowIdentifier
         private final int fieldValue;
     }
 
-    @Override
-    public String toString() {
-        return super.toString() + '{' +
-               "scope=" + scope +
-               ",columnName=" + columnName +
-               ",dataType=" + dataType +
-               ",typeName=" + typeName +
-               ",columnSize=" + columnSize +
-               ",bufferLength=" + bufferLength +
-               ",decimalDigits=" + decimalDigits +
-               ",pseudoColumn=" + pseudoColumn +
-               '}';
-    }
-
-    @Override
-    public boolean equals(final Object obj) {
-        if (this == obj) return true;
-        if (!(obj instanceof BestRowIdentifier)) return false;
-        final BestRowIdentifier that = (BestRowIdentifier) obj;
-        return Objects.equals(scope, that.scope) &&
-               Objects.equals(columnName, that.columnName);
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(scope, columnName);
-    }
-
+    // -----------------------------------------------------------------------------------------------------------------
     @Override
     public int compareTo(final BestRowIdentifier o) {
         if (o == null) {
@@ -181,75 +166,44 @@ public class BestRowIdentifier
         return COMPARING_SCOPE.compare(this, o);
     }
 
-    public Integer getScope() {
-        return scope;
+    // ----------------------------------------------------------------------------------------------------------- scope
+    Scope getScopeAsEnum() {
+        return Optional.ofNullable(getScope())
+                .map(Scope::valueOfScope)
+                .orElse(null);
     }
 
-    public void setScope(final Integer scope) {
-        this.scope = scope;
+    void setScopeAsEnum(final Scope scopeAsEnum) {
+        setScope(
+                Optional.ofNullable(scopeAsEnum)
+                        .map(_IntFieldEnum::fieldValueAsInt)
+                        .orElse(null)
+        );
     }
 
-    public Integer getPseudoColumn() {
-        return pseudoColumn;
+    // ---------------------------------------------------------------------------------------------------- pseudoColumn
+    PseudoColumn getPseudoColumnAsEnum() {
+        return Optional.ofNullable(getPseudoColumn())
+                .map(PseudoColumn::valueOfPseudoColumn)
+                .orElse(null);
     }
 
-    public void setPseudoColumn(final Integer pseudoColumn) {
-        this.pseudoColumn = pseudoColumn;
+    void setPseudoColumnAsEnum(final PseudoColumn pseudoColumnAsEnum) {
+        setPseudoColumn(
+                Optional.ofNullable(pseudoColumnAsEnum)
+                        .map(_IntFieldEnum::fieldValueAsInt)
+                        .orElse(null)
+        );
     }
 
-    public String getColumnName() {
-        return columnName;
-    }
-
-    public void setColumnName(final String columnName) {
-        this.columnName = columnName;
-    }
-
-    public Integer getDataType() {
-        return dataType;
-    }
-
-    public void setDataType(final Integer dataType) {
-        this.dataType = dataType;
-    }
-
-    public String getTypeName() {
-        return typeName;
-    }
-
-    public void setTypeName(final String typeName) {
-        this.typeName = typeName;
-    }
-
-    public Integer getColumnSize() {
-        return columnSize;
-    }
-
-    public void setColumnSize(final Integer columnSize) {
-        this.columnSize = columnSize;
-    }
-
-    public Integer getBufferLength() {
-        return bufferLength;
-    }
-
-    public void setBufferLength(final Integer bufferLength) {
-        this.bufferLength = bufferLength;
-    }
-
-    public Integer getDecimalDigits() {
-        return decimalDigits;
-    }
-
-    public void setDecimalDigits(final Integer decimalDigits) {
-        this.decimalDigits = decimalDigits;
-    }
-
+    // -----------------------------------------------------------------------------------------------------------------
     @_NotNull
     @_ColumnLabel(COLUMN_LABEL_SCOPE)
+    @EqualsAndHashCode.Include
     private Integer scope;
 
     @_ColumnLabel(COLUMN_LABEL_COLUMN_NAME)
+    @EqualsAndHashCode.Include
     private String columnName;
 
     @_NotNull
@@ -274,32 +228,4 @@ public class BestRowIdentifier
     @_NotNull
     @_ColumnLabel(COLUMN_LABEL_PSEUDO_COLUMN)
     private Integer pseudoColumn;
-
-    Scope getScopeAsEnum() {
-        return Optional.ofNullable(getScope())
-                .map(Scope::valueOfScope)
-                .orElse(null);
-    }
-
-    void setScopeAsEnum(final Scope scopeAsEnum) {
-        setScope(
-                Optional.ofNullable(scopeAsEnum)
-                        .map(_IntFieldEnum::fieldValueAsInt)
-                        .orElse(null)
-        );
-    }
-
-    PseudoColumn getPseudoColumnAsEnum() {
-        return Optional.ofNullable(getPseudoColumn())
-                .map(PseudoColumn::valueOfPseudoColumn)
-                .orElse(null);
-    }
-
-    void setPseudoColumnAsEnum(final PseudoColumn pseudoColumnAsEnum) {
-        setPseudoColumn(
-                Optional.ofNullable(pseudoColumnAsEnum)
-                        .map(_IntFieldEnum::fieldValueAsInt)
-                        .orElse(null)
-        );
-    }
 }

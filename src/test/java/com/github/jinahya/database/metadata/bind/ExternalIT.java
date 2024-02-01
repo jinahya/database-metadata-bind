@@ -54,7 +54,7 @@ class ExternalIT {
         try (var connection = DriverManager.getConnection(url, user, password)) {
             log.info("connected: {}", connection);
             final var context = Context.newInstance(connection);
-            ContextTests.test(context);
+            ContextTestUtils.test(context);
         }
     }
 }

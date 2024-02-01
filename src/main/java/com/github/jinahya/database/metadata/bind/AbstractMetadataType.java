@@ -32,6 +32,7 @@ abstract class AbstractMetadataType implements MetadataType {
 
     private static final long serialVersionUID = -3285362930174073345L;
 
+    // -----------------------------------------------------------------------------------------------------------------
     @Override
     public String toString() {
         return super.toString() + '{' +
@@ -50,6 +51,7 @@ abstract class AbstractMetadataType implements MetadataType {
         return super.hashCode();
     }
 
+    // -------------------------------------------------------------------------------------------------- unmappedValues
     @Override
     public Map<String, Object> getUnmappedValues() {
         if (unmappedValues == null) {
@@ -58,6 +60,7 @@ abstract class AbstractMetadataType implements MetadataType {
         return unmappedValues;
     }
 
+    // -----------------------------------------------------------------------------------------------------------------
     @Setter(AccessLevel.NONE)
     @Getter(AccessLevel.NONE)
     @EqualsAndHashCode.Exclude

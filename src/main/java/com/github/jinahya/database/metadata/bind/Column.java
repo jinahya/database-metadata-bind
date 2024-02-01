@@ -132,6 +132,7 @@ public class Column extends AbstractMetadataType {
 
     public static final String COLUMN_LABEL_IS_GENERATEDCOLUMN = "IS_GENERATEDCOLUMN";
 
+    // -----------------------------------------------------------------------------------------------------------------
     @Override
     public String toString() {
         return super.toString() + '{' +
@@ -183,56 +184,40 @@ public class Column extends AbstractMetadataType {
         );
     }
 
-    /**
-     * Returns current value of {@code tableCat} field.
-     *
-     * @return current value of {@code tableCat} field.
-     */
-    public String getTableCat() {
-        return tableCat;
+    // -------------------------------------------------------------------------------------------------------- tableCat
+    String tableCatNonNull() {
+        final String tableCat_ = getTableCat();
+        if (tableCat_ != null) {
+            return tableCat_;
+        }
+        return Catalog.COLUMN_VALUE_TABLE_CAT_EMPTY;
     }
 
-    /**
-     * Replaces current value of {@code tableCat} field with specified value.
-     *
-     * @param tableCat new value for {@code tableCat} field.
-     */
-    public void setTableCat(final String tableCat) {
-        this.tableCat = tableCat;
+    // ------------------------------------------------------------------------------------------------------ tableSchem
+    String tableSchemNonNull() {
+        final String tableSchem_ = getTableSchem();
+        if (tableSchem_ != null) {
+            return tableSchem_;
+        }
+        return Schema.COLUMN_VALUE_TABLE_SCHEM_EMPTY;
     }
 
-    public String getTableSchem() {
-        return tableSchem;
+    // -------------------------------------------------------------------------------------------------------- nullable
+    Nullable getNullableAsEnum() {
+        return Optional.ofNullable(getNullable())
+                .map(Nullable::valueOfNullable)
+                .orElse(null);
     }
 
-    public void setTableSchem(final String tableSchem) {
-        this.tableSchem = tableSchem;
+    void setNullableAsEnum(final Nullable nullableAsEnum) {
+        setNullable(
+                Optional.ofNullable(nullableAsEnum)
+                        .map(_IntFieldEnum::fieldValueAsInt)
+                        .orElse(null)
+        );
     }
 
-    public String getTableName() {
-        return tableName;
-    }
-
-    public void setTableName(final String tableName) {
-        this.tableName = tableName;
-    }
-
-    public String getColumnName() {
-        return columnName;
-    }
-
-    public void setColumnName(final String columnName) {
-        this.columnName = columnName;
-    }
-
-    public Integer getNullable() {
-        return nullable;
-    }
-
-    public void setNullable(final Integer nullable) {
-        this.nullable = nullable;
-    }
-
+    // -----------------------------------------------------------------------------------------------------------------
     @_NullableBySpecification
     @_ColumnLabel(COLUMN_LABEL_TABLE_CAT)
     private String tableCat;
@@ -324,34 +309,4 @@ public class Column extends AbstractMetadataType {
 
     @_ColumnLabel(COLUMN_LABEL_IS_GENERATEDCOLUMN)
     private String isGeneratedcolumn;
-
-    String tableCatNonNull() {
-        final String tableCat_ = getTableCat();
-        if (tableCat_ != null) {
-            return tableCat_;
-        }
-        return Catalog.COLUMN_VALUE_TABLE_CAT_EMPTY;
-    }
-
-    String tableSchemNonNull() {
-        final String tableSchem_ = getTableSchem();
-        if (tableSchem_ != null) {
-            return tableSchem_;
-        }
-        return Schema.COLUMN_VALUE_TABLE_SCHEM_EMPTY;
-    }
-
-    Nullable getNullableAsEnum() {
-        return Optional.ofNullable(getNullable())
-                .map(Nullable::valueOfNullable)
-                .orElse(null);
-    }
-
-    void setNullableAsEnum(final Nullable nullableAsEnum) {
-        setNullable(
-                Optional.ofNullable(nullableAsEnum)
-                        .map(_IntFieldEnum::fieldValueAsInt)
-                        .orElse(null)
-        );
-    }
 }

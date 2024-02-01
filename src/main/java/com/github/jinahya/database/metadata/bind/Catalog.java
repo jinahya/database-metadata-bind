@@ -20,6 +20,10 @@ package com.github.jinahya.database.metadata.bind;
  * #L%
  */
 
+import lombok.Getter;
+import lombok.Setter;
+import lombok.ToString;
+
 import java.util.Comparator;
 import java.util.Objects;
 import java.util.function.Consumer;
@@ -33,6 +37,9 @@ import static java.util.Comparator.nullsFirst;
  * @author Jin Kwon &lt;jinahya_at_gmail.com&gt;
  * @see Context#getCatalogs(Consumer)
  */
+@Setter
+@Getter
+@ToString(callSuper = true)
 public class Catalog extends AbstractMetadataType {
 
     private static final long serialVersionUID = 6239185259128825953L;
@@ -46,16 +53,7 @@ public class Catalog extends AbstractMetadataType {
     static final Comparator<Catalog> LEXICOGRAPHIC_ORDER
             = Comparator.comparing(Catalog::getTableCat, nullsFirst(naturalOrder()));
 
-    /**
-     * Returns a new instance whose {@code tableCat} is {@value #COLUMN_VALUE_TABLE_CAT_EMPTY}.
-     *
-     * @return a new virtual instance.
-     */
-    public static Catalog newVirtualInstance() {
-        final Catalog instance = new Catalog();
-        instance.setTableCat(COLUMN_VALUE_TABLE_CAT_EMPTY);
-        return instance;
-    }
+    // -----------------------------------------------------------------------------------------------------------------
 
     /**
      * A column label of {@value}.
@@ -67,37 +65,36 @@ public class Catalog extends AbstractMetadataType {
      */
     public static final String COLUMN_VALUE_TABLE_CAT_EMPTY = "";
 
-    @Override
-    public String toString() {
-        return super.toString() + '{' +
-               "tableCat=" + tableCat +
-               '}';
+    // -----------------------------------------------------------------------------------------------------------------
+
+    /**
+     * Returns a new instance whose {@code tableCat} is {@value #COLUMN_VALUE_TABLE_CAT_EMPTY}.
+     *
+     * @return a new virtual instance.
+     */
+    public static Catalog newVirtualInstance() {
+        final Catalog instance = new Catalog();
+        instance.setTableCat(COLUMN_VALUE_TABLE_CAT_EMPTY);
+        return instance;
     }
 
+    // -----------------------------------------------------------------------------------------------------------------
+
     @Override
-    public boolean equals(final Object obj) {
-        if (this == obj) return true;
-        if (!(obj instanceof Catalog)) return false;
-        final Catalog that = (Catalog) obj;
-        return Objects.equals(tableCatNonNull(), that.tableCatNonNull());
+    public boolean equals(Object object) {
+        if (this == object) return true;
+        if (!(object instanceof Catalog)) return false;
+        if (!super.equals(object)) return false;
+        Catalog catalog = (Catalog) object;
+        return Objects.equals(tableCatNonNull(), catalog.tableCatNonNull());
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(tableCatNonNull());
+        return Objects.hash(super.hashCode(), tableCatNonNull());
     }
 
-    public String getTableCat() {
-        return tableCat;
-    }
-
-    public void setTableCat(final String tableCat) {
-        this.tableCat = tableCat;
-    }
-
-    @_ColumnLabel(COLUMN_LABEL_TABLE_CAT)
-    private String tableCat;
-
+    // -------------------------------------------------------------------------------------------------------- tableCat
     String tableCatNonNull() {
         final String tableCat_ = getTableCat();
         if (tableCat_ != null) {
@@ -105,4 +102,8 @@ public class Catalog extends AbstractMetadataType {
         }
         return Catalog.COLUMN_VALUE_TABLE_CAT_EMPTY;
     }
+
+    // -----------------------------------------------------------------------------------------------------------------
+    @_ColumnLabel(COLUMN_LABEL_TABLE_CAT)
+    private String tableCat;
 }
