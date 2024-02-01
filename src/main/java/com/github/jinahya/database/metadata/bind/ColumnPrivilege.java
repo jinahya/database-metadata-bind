@@ -20,6 +20,7 @@ package com.github.jinahya.database.metadata.bind;
  * #L%
  */
 
+import jakarta.annotation.Nullable;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.Setter;
@@ -81,10 +82,12 @@ public class ColumnPrivilege extends AbstractMetadataType {
                '}';
     }
 
+    @Nullable
     @_NullableBySpecification
     @_ColumnLabel(COLUMN_LABEL_TABLE_CAT)
     private String tableCat;
 
+    @Nullable
     @_NullableBySpecification
     @_ColumnLabel(COLUMN_LABEL_TABLE_SCHEM)
     private String tableSchem;
@@ -95,6 +98,7 @@ public class ColumnPrivilege extends AbstractMetadataType {
     @_ColumnLabel(COLUMN_LABEL_COLUMN_NAME)
     private String columnName;
 
+    @Nullable
     @_NullableBySpecification
     @_ColumnLabel("GRANTOR")
     private String grantor;
@@ -105,6 +109,7 @@ public class ColumnPrivilege extends AbstractMetadataType {
     @_ColumnLabel("PRIVILEGE")
     private String privilege;
 
+    @Nullable
     @_NullableBySpecification
     @_ColumnLabel(COLUMN_LABEL_IS_GRANTABLE)
     private String isGrantable;

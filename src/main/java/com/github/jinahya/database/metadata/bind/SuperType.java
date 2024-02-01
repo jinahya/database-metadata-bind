@@ -20,6 +20,7 @@ package com.github.jinahya.database.metadata.bind;
  * #L%
  */
 
+import jakarta.annotation.Nullable;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -118,10 +119,12 @@ public class SuperType extends AbstractMetadataType {
         this.supertypeName = supertypeName;
     }
 
+    @Nullable
     @_NullableBySpecification
     @_ColumnLabel("TYPE_CAT")
     private String typeCat;
 
+    @Nullable
     @_NullableBySpecification
     @_ColumnLabel("TYPE_SCHEM")
     private String typeSchem;
@@ -129,10 +132,12 @@ public class SuperType extends AbstractMetadataType {
     @_ColumnLabel("TYPE_NAME")
     private String typeName;
 
+    @Nullable
     @_NullableBySpecification
     @_ColumnLabel("SUPERTYPE_CAT")
     private String supertypeCat;
 
+    @Nullable
     @_NullableBySpecification
     @_ColumnLabel("SUPERTYPE_SCHEM")
     private String supertypeSchem;

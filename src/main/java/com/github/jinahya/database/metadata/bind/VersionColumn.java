@@ -20,6 +20,8 @@ package com.github.jinahya.database.metadata.bind;
  * #L%
  */
 
+import jakarta.annotation.Nullable;
+import jakarta.validation.constraints.NotNull;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -122,27 +124,32 @@ public class VersionColumn extends AbstractMetadataType {
     @_ColumnLabel("COLUMN_NAME")
     private String columnName;
 
-    @_NotNull
+    @NotNull
+    @_NonNullBySpecification
     @_ColumnLabel("DATA_TYPE")
     private Integer dataType;
 
     @_ColumnLabel("TYPE_NAME")
     private String typeName;
 
+    @Nullable
     @_NullableBySpecification
     @_ColumnLabel("COLUMN_SIZE")
     private Integer columnSize;
 
+    @NotNull
     @_NullableByVendor("PostgreSQL")
-    @_NotNull
+    @_NonNullBySpecification
     @_ColumnLabel("BUFFER_LENGTH")
     private Integer bufferLength;
 
+    @Nullable
     @_NullableBySpecification
     @_ColumnLabel("DECIMAL_DIGITS")
     private Integer decimalDigits;
 
-    @_NotNull
+    @NotNull
+    @_NonNullBySpecification
     @_ColumnLabel(COLUMN_LABEL_PSEUDO_COLUMN)
     private Integer pseudoColumn;
 

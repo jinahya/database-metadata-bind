@@ -32,8 +32,9 @@ import java.lang.annotation.Target;
  * @author Jin Kwon &lt;onacit_at_gmail.com&gt;
  */
 @Documented
+@_NonNull
 @Retention(RetentionPolicy.RUNTIME)
 @Target({ElementType.FIELD, ElementType.METHOD, ElementType.PARAMETER})
-@interface _NotNull {
+@interface _NonNullBySpecification {
 
 }

@@ -20,6 +20,8 @@ package com.github.jinahya.database.metadata.bind;
  * #L%
  */
 
+import jakarta.annotation.Nullable;
+import jakarta.validation.constraints.NotNull;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
@@ -81,10 +83,12 @@ public class ProcedureColumn extends AbstractMetadataType {
         );
     }
 
+    @Nullable
     @_NullableBySpecification
     @_ColumnLabel("PROCEDURE_CAT")
     private String procedureCat;
 
+    @Nullable
     @_NullableBySpecification
     @_ColumnLabel("PROCEDURE_SCHEM")
     private String procedureSchem;
@@ -95,37 +99,42 @@ public class ProcedureColumn extends AbstractMetadataType {
     @_ColumnLabel("COLUMN_NAME")
     private String columnName;
 
-    @_NotNull
+    @NotNull
+    @_NonNullBySpecification
     @_ColumnLabel("COLUMN_TYPE")
     private Integer columnType;
 
-    @_NotNull
+    @NotNull
+    @_NonNullBySpecification
     @_ColumnLabel("DATA_TYPE")
     private Integer dataType;
 
     @_ColumnLabel("TYPE_NAME")
     private String typeName;
 
+    @Nullable
     @_NullableBySpecification
     @_ColumnLabel("PRECISION")
     private Integer precision;
 
     @_NullableByVendor("HSQL Database Engine")
-    @_NotNull
+    @_NonNullBySpecification
     @_ColumnLabel("LENGTH")
     private Integer length;
 
     // https://issues.apache.org/jira/browse/DERBY-7103
+    @Nullable
     @_NullableBySpecification
     @_ColumnLabel("SCALE")
     private Integer scale;
 
     @_NullableByVendor("Apache Derby")
-    @_NotNull
+    @_NonNullBySpecification
     @_ColumnLabel("RADIX")
     private Integer radix;
 
-    @_NotNull
+    @NotNull
+    @_NonNullBySpecification
     @_ColumnLabel("NULLABLE")
     private Integer nullable;
 
@@ -133,6 +142,7 @@ public class ProcedureColumn extends AbstractMetadataType {
     @_ColumnLabel("REMARKS")
     private String remarks;
 
+    @Nullable
     @_NullableBySpecification
     @_ColumnLabel("COLUMN_DEF")
     private String columnDef;
@@ -145,11 +155,13 @@ public class ProcedureColumn extends AbstractMetadataType {
     @_ColumnLabel("SQL_DATETIME_SUB")
     private Integer sqlDatetimeSub;
 
+    @Nullable
     @_NullableBySpecification
     @_ColumnLabel("CHAR_OCTET_LENGTH")
     private Integer charOctetLength;
 
-    @_NotNull
+    @NotNull
+    @_NonNullBySpecification
     @_ColumnLabel("ORDINAL_POSITION")
     private Integer ordinalPosition;
 

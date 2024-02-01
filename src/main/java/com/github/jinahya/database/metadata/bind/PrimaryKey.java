@@ -20,6 +20,9 @@ package com.github.jinahya.database.metadata.bind;
  * #L%
  */
 
+import jakarta.annotation.Nullable;
+import jakarta.validation.constraints.NotNull;
+
 import java.sql.DatabaseMetaData;
 import java.util.Comparator;
 import java.util.Objects;
@@ -153,10 +156,12 @@ public class PrimaryKey extends AbstractMetadataType {
         this.pkName = pkName;
     }
 
+    @Nullable
     @_NullableBySpecification
     @_ColumnLabel(COLUMN_LABEL_TABLE_CAT)
     private String tableCat;
 
+    @Nullable
     @_NullableBySpecification
     @_ColumnLabel(COLUMN_LABEL_TABLE_SCHEM)
     private String tableSchem;
@@ -167,10 +172,12 @@ public class PrimaryKey extends AbstractMetadataType {
     @_ColumnLabel(COLUMN_LABEL_COLUMN_NAME)
     private String columnName;
 
-    @_NotNull
+    @NotNull
+    @_NonNullBySpecification
     @_ColumnLabel(COLUMN_LABEL_KEY_SEQ)
     private Integer keySeq;
 
+    @Nullable
     @_NullableBySpecification
     @_ColumnLabel(COLUMN_LABEL_PK_NAME)
     private String pkName;

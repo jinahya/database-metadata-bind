@@ -20,6 +20,8 @@ package com.github.jinahya.database.metadata.bind;
  * #L%
  */
 
+import jakarta.annotation.Nullable;
+
 import java.util.Comparator;
 import java.util.Objects;
 
@@ -114,6 +116,7 @@ public class Schema extends AbstractMetadataType {
         this.tableSchem = tableSchem;
     }
 
+    @Nullable
     @_NullableBySpecification
     @_ColumnLabel(COLUMN_LABEL_TABLE_CATALOG)
     private String tableCatalog;

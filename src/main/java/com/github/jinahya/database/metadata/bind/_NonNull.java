@@ -27,14 +27,13 @@ import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
 /**
- * A marker annotation for columns may be {@code null}.
+ * A marker annotation for columns whose value may be not {@code null}.
  *
  * @author Jin Kwon &lt;onacit_at_gmail.com&gt;
  */
 @Documented
-@_Nullable
 @Retention(RetentionPolicy.RUNTIME)
-@Target({ElementType.FIELD})
-@interface _NullableBySpecification {
+@Target({ElementType.ANNOTATION_TYPE})
+@interface _NonNull {
 
 }

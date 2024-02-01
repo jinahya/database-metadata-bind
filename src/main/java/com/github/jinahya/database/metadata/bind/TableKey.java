@@ -20,15 +20,14 @@ package com.github.jinahya.database.metadata.bind;
  * #L%
  */
 
+import jakarta.annotation.Nullable;
+import jakarta.validation.constraints.NotNull;
 import lombok.Getter;
 import lombok.Setter;
 
 import java.util.Comparator;
 import java.util.Objects;
 import java.util.Optional;
-
-import static java.util.Comparator.naturalOrder;
-import static java.util.Comparator.nullsFirst;
 
 /**
  * An abstract class for binding results of the
@@ -217,10 +216,12 @@ public abstract class TableKey<T extends TableKey<T>> extends AbstractMetadataTy
         this.deferrability = deferrability;
     }
 
+    @Nullable
     @_NullableBySpecification
     @_ColumnLabel(COLUMN_NAME_PKTABLE_CAT)
     private String pktableCat;
 
+    @Nullable
     @_NullableBySpecification
     @_ColumnLabel(COLUMN_NAME_PKTABLE_SCHEM)
     private String pktableSchem;
@@ -231,10 +232,12 @@ public abstract class TableKey<T extends TableKey<T>> extends AbstractMetadataTy
     @_ColumnLabel(COLUMN_NAME_PKCOLUMN_NAME)
     private String pkcolumnName;
 
+    @Nullable
     @_NullableBySpecification
     @_ColumnLabel(COLUMN_NAME_FKTABLE_CAT)
     private String fktableCat;
 
+    @Nullable
     @_NullableBySpecification
     @_ColumnLabel(COLUMN_NAME_FKTABLE_SCHEM)
     private String fktableSchem;
@@ -245,27 +248,33 @@ public abstract class TableKey<T extends TableKey<T>> extends AbstractMetadataTy
     @_ColumnLabel(COLUMN_NAME_FKCOLUMN_NAME)
     private String fkcolumnName;
 
-    @_NotNull
+    @NotNull
+    @_NonNullBySpecification
     @_ColumnLabel(COLUMN_NAME_KEY_SEQ)
     private Integer keySeq;
 
-    @_NotNull
+    @NotNull
+    @_NonNullBySpecification
     @_ColumnLabel(COLUMN_NAME_UPDATE_RULE)
     private Integer updateRule;
 
-    @_NotNull
+    @NotNull
+    @_NonNullBySpecification
     @_ColumnLabel(COLUMN_NAME_DELETE_RULE)
     private Integer deleteRule;
 
+    @Nullable
     @_NullableBySpecification
     @_ColumnLabel(COLUMN_NAME_FK_NAME)
     private String fkName;
 
+    @Nullable
     @_NullableBySpecification
     @_ColumnLabel(COLUMN_NAME_PK_NAME)
     private String pkName;
 
-    @_NotNull
+    @NotNull
+    @_NonNullBySpecification
     @_ColumnLabel(COLUMN_NAME_DEFERRABILITY)
     private Integer deferrability;
 

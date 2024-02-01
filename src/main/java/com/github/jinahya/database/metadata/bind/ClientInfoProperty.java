@@ -20,6 +20,7 @@ package com.github.jinahya.database.metadata.bind;
  * #L%
  */
 
+import jakarta.validation.constraints.NotNull;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -103,7 +104,8 @@ public class ClientInfoProperty extends AbstractMetadataType {
     @_ColumnLabel(COLUMN_LABEL_NAME)
     private String name;
 
-    @_NotNull
+    @NotNull
+    @_NonNullBySpecification
     @_ColumnLabel(COLUMN_LABEL_MAX_LEN)
     private Integer maxLen;
 

@@ -20,6 +20,7 @@ package com.github.jinahya.database.metadata.bind;
  * #L%
  */
 
+import jakarta.annotation.Nullable;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -141,10 +142,12 @@ public class Table extends AbstractMetadataType {
         this.tableName = tableName;
     }
 
+    @Nullable
     @_NullableBySpecification
     @_ColumnLabel(COLUMN_LABEL_TABLE_CAT)
     private String tableCat;
 
+    @Nullable
     @_NullableBySpecification
     @_ColumnLabel(COLUMN_LABEL_TABLE_SCHEM)
     private String tableSchem;
@@ -156,26 +159,32 @@ public class Table extends AbstractMetadataType {
     @_ColumnLabel(COLUMN_LABEL_TABLE_TYPE)
     private String tableType;
 
+    @Nullable
     @_NullableBySpecification
     @_ColumnLabel("REMARKS")
     private String remarks;
 
+    @Nullable
     @_NullableBySpecification
     @_ColumnLabel("TYPE_CAT")
     private String typeCat;
 
+    @Nullable
     @_NullableBySpecification
     @_ColumnLabel("TYPE_SCHEM")
     private String typeSchem;
 
+    @Nullable
     @_NullableBySpecification
     @_ColumnLabel("TYPE_NAME")
     private String typeName;
 
+    @Nullable
     @_NullableBySpecification
     @_ColumnLabel("SELF_REFERENCING_COL_NAME")
     private String selfReferencingColName;
 
+    @Nullable
     @_NullableBySpecification
     @_ColumnLabel("REF_GENERATION")
     private String refGeneration;

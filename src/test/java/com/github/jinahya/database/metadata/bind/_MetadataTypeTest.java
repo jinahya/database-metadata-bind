@@ -72,6 +72,13 @@ abstract class _MetadataTypeTest<T extends MetadataType> {
                                          e -> e.getKey().getAnnotation(_NullableBySpecification.class)));
     }
 
+    Map<Field, _NullableByVendor> getFieldsWithNullableByVendor() {
+        return getFieldsWithColumnLabel().entrySet().stream()
+                .filter(e -> e.getKey().getAnnotation(_NullableByVendor.class) != null).collect(
+                        Collectors.toMap(Map.Entry::getKey,
+                                         e -> e.getKey().getAnnotation(_NullableByVendor.class)));
+    }
+
     Map<Field, _NotUsedBySpecification> fieldsWithUnusedBySpecification() {
         return getFieldsWithColumnLabel().entrySet().stream()
                 .filter(e -> e.getKey().getAnnotation(_NotUsedBySpecification.class) != null).collect(

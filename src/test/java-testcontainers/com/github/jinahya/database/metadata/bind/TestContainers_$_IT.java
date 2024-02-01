@@ -88,7 +88,7 @@ abstract class TestContainers_$_IT {
     @Test
     void test() throws SQLException {
         applyContextChecked(c -> {
-            ContextTests.test(c);
+            ContextTestUtils.test(c);
             return null;
         });
     }
@@ -96,7 +96,7 @@ abstract class TestContainers_$_IT {
     @Test
     void getColumns__() {
         applyContextChecked(c -> {
-            ContextTests.getColumns__(c, null, null, "%", "%");
+            ContextTestUtils.getColumns__(c, null, null, "%", "%");
             return null;
         });
     }
@@ -104,7 +104,7 @@ abstract class TestContainers_$_IT {
     @Test
     void getTables__() {
         applyContextChecked(c -> {
-            ContextTests.getTables__(c, null, null, "%", null);
+            ContextTestUtils.getTables__(c, null, null, "%", null);
             return null;
         });
     }

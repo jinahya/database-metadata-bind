@@ -20,6 +20,8 @@ package com.github.jinahya.database.metadata.bind;
  * #L%
  */
 
+import jakarta.annotation.Nullable;
+import jakarta.validation.constraints.NotNull;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.Setter;
@@ -84,10 +86,12 @@ public class IndexInfo extends AbstractMetadataType {
                '}';
     }
 
+    @Nullable
     @_NullableBySpecification
     @_ColumnLabel(COLUMN_LABEL_TABLE_CAT)
     private String tableCat;
 
+    @Nullable
     @_NullableBySpecification
     @_ColumnLabel(COLUMN_LABEL_TABLE_SCHEM)
     private String tableSchem;
@@ -95,44 +99,52 @@ public class IndexInfo extends AbstractMetadataType {
     @_ColumnLabel(COLUMN_LABEL_TABLE_NAME)
     private String tableName;
 
-    @_NotNull
+    @NotNull
+    @_NonNullBySpecification
     @_ColumnLabel("NON_UNIQUE")
     private Boolean nonUnique;
 
+    @Nullable
     @_NullableBySpecification
     @_ColumnLabel("INDEX_QUALIFIER")
     private String indexQualifier;
 
+    @Nullable
     @_NullableBySpecification
     @_ColumnLabel("INDEX_NAME")
     private String indexName;
 
-    @_NotNull
+    @NotNull
+    @_NonNullBySpecification
     @_ColumnLabel(COLUMN_LABEL_TYPE)
     private Integer type;
 
-    @_NotNull
+    @NotNull
+    @_NonNullBySpecification
     @_ColumnLabel("ORDINAL_POSITION")
     private Integer ordinalPosition;
 
+    @Nullable
     @_NullableBySpecification
     @_ColumnLabel("COLUMN_NAME")
     private String columnName;
 
+    @Nullable
     @_NullableBySpecification
     @_ColumnLabel("ASC_OR_DESC")
     private String ascOrDesc;
 
     @_NullableByVendor("Apache Derby")
-    @_NotNull
+    @_NonNullBySpecification
     @_ColumnLabel("CARDINALITY")
     private Long cardinality;
 
     @_NullableByVendor("Apache Derby")
-    @_NotNull
+    @_NonNullBySpecification
     @_ColumnLabel("PAGES")
     private Long pages;
 
+    @Nullable
     @_NullableBySpecification
     @_ColumnLabel("FILTER_CONDITION")
     private String filterCondition;

@@ -20,6 +20,8 @@ package com.github.jinahya.database.metadata.bind;
  * #L%
  */
 
+import jakarta.annotation.Nullable;
+import jakarta.validation.constraints.NotNull;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -137,19 +139,21 @@ public class UDT extends AbstractMetadataType {
         this.typeName = typeName;
     }
 
-    @_NotNull
+    @_NonNullBySpecification
     public Integer getDataType() {
         return dataType;
     }
 
-    public void setDataType(@_NotNull final Integer dataType) {
+    public void setDataType(@_NonNullBySpecification final Integer dataType) {
         this.dataType = dataType;
     }
 
+    @Nullable
     @_NullableBySpecification
     @_ColumnLabel(COLUMN_LABEL_TYPE_CAT)
     private String typeCat;
 
+    @Nullable
     @_NullableBySpecification
     @_ColumnLabel(COLUMN_LABEL_TYPE_SCHEM)
     private String typeSchem;
@@ -161,7 +165,8 @@ public class UDT extends AbstractMetadataType {
     @_ColumnLabel(COLUMN_LABEL_CLASS_NAME)
     private String className;
 
-    @_NotNull
+    @NotNull
+    @_NonNullBySpecification
     @_ColumnLabel(COLUMN_LABEL_DATA_TYPE)
     private Integer dataType;
 
@@ -169,6 +174,7 @@ public class UDT extends AbstractMetadataType {
     @_ColumnLabel("REMARKS")
     private String remarks;
 
+    @Nullable
     @_NullableBySpecification
     @_ColumnLabel("BASE_TYPE")
     private Integer baseType;

@@ -20,6 +20,8 @@ package com.github.jinahya.database.metadata.bind;
  * #L%
  */
 
+import jakarta.annotation.Nullable;
+import jakarta.validation.constraints.NotNull;
 import lombok.EqualsAndHashCode;
 
 import java.sql.DatabaseMetaData;
@@ -119,12 +121,12 @@ public class Function extends AbstractMetadataType {
         this.remarks = remarks;
     }
 
-    @_NotNull
+    @_NonNullBySpecification
     public Integer getFunctionType() {
         return functionType;
     }
 
-    public void setFunctionType(@_NotNull final Integer functionType) {
+    public void setFunctionType(@_NonNullBySpecification final Integer functionType) {
         this.functionType = functionType;
     }
 
@@ -136,10 +138,12 @@ public class Function extends AbstractMetadataType {
         this.specificName = specificName;
     }
 
+    @Nullable
     @_NullableBySpecification
     @_ColumnLabel(COLUMN_LABEL_FUNCTION_CAT)
     private String functionCat;
 
+    @Nullable
     @_NullableBySpecification
     @_ColumnLabel(COLUMN_LABEL_FUNCTION_SCHEM)
     private String functionSchem;
@@ -152,7 +156,8 @@ public class Function extends AbstractMetadataType {
     @_ColumnLabel("REMARKS")
     private String remarks;
 
-    @_NotNull
+    @NotNull
+    @_NonNullBySpecification
     @_ColumnLabel("FUNCTION_TYPE")
     private Integer functionType;
 

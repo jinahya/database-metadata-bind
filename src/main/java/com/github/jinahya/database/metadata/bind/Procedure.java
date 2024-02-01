@@ -20,6 +20,9 @@ package com.github.jinahya.database.metadata.bind;
  * #L%
  */
 
+import jakarta.annotation.Nullable;
+import jakarta.validation.constraints.NotNull;
+
 import java.sql.DatabaseMetaData;
 import java.util.Comparator;
 import java.util.Objects;
@@ -201,10 +204,12 @@ public class Procedure extends AbstractMetadataType {
         this.specificName = specificName;
     }
 
+    @Nullable
     @_NullableBySpecification
     @_ColumnLabel("PROCEDURE_CAT")
     private String procedureCat;
 
+    @Nullable
     @_NullableBySpecification
     @_ColumnLabel("PROCEDURE_SCHEM")
     private String procedureSchem;
@@ -216,7 +221,8 @@ public class Procedure extends AbstractMetadataType {
     @_ColumnLabel("REMARKS")
     private String remarks;
 
-    @_NotNull
+    @NotNull
+    @_NonNullBySpecification
     @_ColumnLabel("PROCEDURE_TYPE")
     private Integer procedureType;
 

@@ -20,9 +20,12 @@ package com.github.jinahya.database.metadata.bind;
  * #L%
  */
 
+import jakarta.annotation.Nullable;
+import jakarta.validation.constraints.NotNull;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.text.CaseUtils;
 import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 
 import java.beans.IntrospectionException;
@@ -73,7 +76,7 @@ abstract class MetadataTypeTest<T extends MetadataType>
 
     @DisplayName("toString()!blank")
     @Test
-    void toString_NonBlank_() {
+    void toString_NotBlank_() {
         // ------------------------------------------------------------------------------------------------------- given
         final var instance = typeInstance();
         // -------------------------------------------------------------------------------------------------------- when
@@ -105,39 +108,123 @@ abstract class MetadataTypeTest<T extends MetadataType>
         }).doesNotThrowAnyException();
     }
 
-    @DisplayName("@ColumnLabel -> has accessors")
-    @Test
-    void field_HasAccessors_AnnotatedWithColumnLabel() throws IntrospectionException {
-        for (final var field : getFieldsWithColumnLabel().keySet()) {
-            final var declaringClass = field.getDeclaringClass();
-            final var info = Introspector.getBeanInfo(declaringClass);
-            final var descriptor =
-                    stream(info.getPropertyDescriptors())
-                            .filter(d -> d.getName().equals(field.getName()))
-                            .findAny();
-            assertThat(descriptor).isNotEmpty().hasValueSatisfying(d -> {
-                final var reader = d.getReadMethod();
-                assertThat(reader).isNotNull();
-                try {
-                    reader.invoke(typeInstance());
-                } catch (final ReflectiveOperationException roe) {
-                    throw new RuntimeException(roe);
-                }
-                final var writer = d.getWriteMethod();
-                assertThat(writer)
-                        .as("write method of %1$s", descriptor)
-                        .isNotNull();
-                if (!field.getType().isPrimitive()) {
+    @Nested
+    class FieldTest {
+
+        @DisplayName("@ColumnLabel -> has accessors")
+        @Test
+        void _ShouldHaveAccessors_AnnotatedWithColumnLabel() throws IntrospectionException {
+            for (final var field : getFieldsWithColumnLabel().keySet()) {
+                final var declaringClass = field.getDeclaringClass();
+                final var info = Introspector.getBeanInfo(declaringClass);
+                final var descriptor =
+                        stream(info.getPropertyDescriptors())
+                                .filter(d -> d.getName().equals(field.getName()))
+                                .findAny();
+                assertThat(descriptor).isNotEmpty().hasValueSatisfying(d -> {
+                    final var reader = d.getReadMethod();
+                    assertThat(reader).isNotNull();
                     try {
-                        writer.invoke(typeInstance(), new Object[] {null});
+                        reader.invoke(typeInstance());
                     } catch (final ReflectiveOperationException roe) {
                         throw new RuntimeException(roe);
                     }
+                    final var writer = d.getWriteMethod();
+                    assertThat(writer)
+                            .as("write method of %1$s", descriptor)
+                            .isNotNull();
+                    if (!field.getType().isPrimitive()) {
+                        try {
+                            writer.invoke(typeInstance(), new Object[] {null});
+                        } catch (final ReflectiveOperationException roe) {
+                            throw new RuntimeException(roe);
+                        }
+                    }
+                });
+            }
+        }
+
+        @DisplayName("@javax.validation.NotNull")
+        @Test
+        void __NotNull() {
+            for (final var field : getFieldsWithColumnLabel().keySet()) {
+                if (!field.isAnnotationPresent(_NonNullBySpecification.class)) {
+                    continue;
                 }
+                if (field.isAnnotationPresent(_NullableByVendor.class)) {
+                    continue;
+                }
+                assertThat(field.isAnnotationPresent(NotNull.class))
+                        .as("%s.%s expected to be annotated with %s", typeClass.getSimpleName(), field.getName(),
+                            NotNull.class)
+                        .isTrue();
+            }
+        }
+
+        @DisplayName("@Unused -> !primitive")
+        @Test
+        void _ShouldBeNotPrimitive_AnnotatedWithUnused() {
+            for (final var field : fieldsWithUnusedBySpecification().keySet()) {
+                assert field.isAnnotationPresent(_NotUsedBySpecification.class);
+                assertThat(field.getType().isPrimitive())
+                        .as("@NotUsedBySpecification on primitive field: %s", field)
+                        .isFalse();
+            }
+        }
+
+        @DisplayName("@NullableBySpecification -> !primitive")
+        @Test
+        void _NotPrimitive_NullableBySpecification() {
+            for (final var field : getFieldsWithNullableBySpecification().keySet()) {
+                assert field.isAnnotationPresent(_NullableBySpecification.class);
+                assertThat(field.getType().isPrimitive())
+                        .as("@NullableBySpecification on primitive field: %s", field)
+                        .isFalse();
+            }
+        }
+
+        @DisplayName("@NullableBySpecification -> @jakarta.annotation.Nullable")
+        @Test
+        void _ShouldBeAnnotatedWithNullable_AnnotatedWithNullableBySpecification() {
+            for (final var field : getFieldsWithNullableBySpecification().keySet()) {
+                assertThat(field.getAnnotation(Nullable.class))
+                        .as("%1$s on %2$s", Nullable.class, field)
+                        .isNotNull();
+            }
+        }
+
+        @DisplayName("@NullableByVendor -> !@jakarta.annotation.Nullable")
+        @Test
+        void _ShouldBeNotAnnotatedWithNullable_AnnotatedWithNullableByVendor() {
+            for (final var field : getFieldsWithNullableByVendor().keySet()) {
+                assertThat(field.getAnnotation(Nullable.class))
+                        .as("%1$s on %2$s", Nullable.class, field)
+                        .isNull();
+            }
+        }
+
+        @DisplayName("@MayBeNullByVendor -> !primitive")
+        @Test
+        void field_NotPrimitive_NullableByVendor() {
+            for (final var field : getFieldsWithMayBeNullByVendor().keySet()) {
+                assertThat(field.getAnnotation(_NullableByVendor.class)).isNotNull();
+                assertThat(field.getType().isPrimitive()).isFalse();
+            }
+        }
+
+        @DisplayName("fieldName = toCamelCase(@ColumnLabel#value)")
+        @Test
+        void field_Expected_CamelCasedColumnLabel() {
+            getFieldsWithColumnLabel().forEach((f, l) -> {
+                final var expected = CaseUtils.toCamelCase(l.value(), false, '_');
+                assertThat(f.getName())
+                        .as("expected name of %1$s", f)
+                        .isEqualTo(expected);
             });
         }
     }
 
+    @DisplayName("setXxx(getXxx())")
     @Test
     void accessors() throws Exception {
         final var instance = typeInstance();
@@ -155,47 +242,5 @@ abstract class MetadataTypeTest<T extends MetadataType>
                 writer.invoke(instance, (Object) null);
             }
         }
-    }
-
-    @DisplayName("@Unused -> !primitive")
-    @Test
-    void field_NotPrimitive_Unused() {
-        for (final var field : fieldsWithUnusedBySpecification().keySet()) {
-            assert field.isAnnotationPresent(_NotUsedBySpecification.class);
-            assertThat(field.getType().isPrimitive())
-                    .as("@NotUsedBySpecification on primitive field: %s", field)
-                    .isFalse();
-        }
-    }
-
-    @DisplayName("@NullableBySpecification -> !primitive")
-    @Test
-    void field_NotPrimitive_NullableBySpecification() {
-        for (final var field : getFieldsWithNullableBySpecification().keySet()) {
-            assert field.isAnnotationPresent(_NullableBySpecification.class);
-            assertThat(field.getType().isPrimitive())
-                    .as("@NullableBySpecification on primitive field: %s", field)
-                    .isFalse();
-        }
-    }
-
-    @DisplayName("@MayBeNullByVendor -> !primitive")
-    @Test
-    void field_NotPrimitive_NullableByVendor() {
-        for (final var field : getFieldsWithMayBeNullByVendor().keySet()) {
-            assertThat(field.getAnnotation(_NullableByVendor.class)).isNotNull();
-            assertThat(field.getType().isPrimitive()).isFalse();
-        }
-    }
-
-    @DisplayName("fieldName = toCamelCase(@ColumnLabel#value)")
-    @Test
-    void field_Expected_CamelCasedColumnLabel() {
-        getFieldsWithColumnLabel().forEach((f, l) -> {
-            final var expected = CaseUtils.toCamelCase(l.value(), false, '_');
-            assertThat(f.getName())
-                    .as("expected name of %1$s", f)
-                    .isEqualTo(expected);
-        });
     }
 }

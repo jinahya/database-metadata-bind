@@ -20,6 +20,7 @@ package com.github.jinahya.database.metadata.bind;
  * #L%
  */
 
+import jakarta.validation.constraints.NotNull;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
@@ -206,38 +207,47 @@ public class TypeInfo extends AbstractMetadataType {
         this.searchable = searchable;
     }
 
+    // -----------------------------------------------------------------------------------------------------------------
     @_ColumnLabel(COLUMN_LABEL_TYPE_NAME)
     private String typeName;
 
-    @_NotNull
+    @NotNull
+    @_NonNullBySpecification
     @_ColumnLabel(COLUMN_LABEL_DATA_TYPE)
     private Integer dataType;
 
+    @jakarta.annotation.Nullable
     @_NullableBySpecification
     @_ColumnLabel(COLUMN_LABEL_PRECISION)
     private Integer precision;
 
+    @jakarta.annotation.Nullable
     @_NullableBySpecification
     @_ColumnLabel(COLUMN_LABEL_LITERAL_PREFIX)
     private String literalPrefix;
 
+    @jakarta.annotation.Nullable
     @_NullableBySpecification
     @_ColumnLabel(COLUMN_LABEL_LITERAL_SUFFIX)
     private String literalSuffix;
 
+    @jakarta.annotation.Nullable
     @_NullableBySpecification
     @_ColumnLabel(COLUMN_LABEL_CREATE_PARAMS)
     private String createParams;
 
-    @_NotNull
+    @NotNull
+    @_NonNullBySpecification
     @_ColumnLabel(COLUMN_LABEL_NULLABLE)
     private Integer nullable;
 
-    @_NotNull
+    @NotNull
+    @_NonNullBySpecification
     @_ColumnLabel(COLUMN_LABEL_CASE_SENSITIVE)
     private Boolean caseSensitive;
 
-    @_NotNull
+    @NotNull
+    @_NonNullBySpecification
     @_ColumnLabel(COLUMN_LABEL_SEARCHABLE)
     private Integer searchable;
 
@@ -245,26 +255,28 @@ public class TypeInfo extends AbstractMetadataType {
     @_ColumnLabel("UNSIGNED_ATTRIBUTE")
     private Boolean unsignedAttribute;
 
-    @_NotNull
+    @NotNull
+    @_NonNullBySpecification
     @_ColumnLabel("FIXED_PREC_SCALE")
     private Boolean fixedPrecScale;
 
     @_NullableByVendor("Apache Derby")
-    @_NotNull
+    @_NonNullBySpecification
     @_ColumnLabel("AUTO_INCREMENT")
     private Boolean autoIncrement;
 
+    @jakarta.annotation.Nullable
     @_NullableBySpecification
     @_ColumnLabel("LOCAL_TYPE_NAME")
     private String localTypeName;
 
     @_NullableByVendor("Apache Derby")
-    @_NotNull
+    @_NonNullBySpecification
     @_ColumnLabel("MINIMUM_SCALE")
     private Integer minimumScale;
 
     @_NullableByVendor("Apache Derby")
-    @_NotNull
+    @_NonNullBySpecification
     @_ColumnLabel("MAXIMUM_SCALE")
     private Integer maximumScale;
 
@@ -277,7 +289,7 @@ public class TypeInfo extends AbstractMetadataType {
     private Integer sqlDatetimeSub;
 
     @_NullableByVendor("Apache Derby")
-    @_NotNull
+    @_NonNullBySpecification
     @_ColumnLabel("NUM_PREC_RADIX")
     private Integer numPrecRadix;
 
