@@ -20,9 +20,7 @@ package com.github.jinahya.database.metadata.bind;
  * #L%
  */
 
-import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
-import jakarta.validation.constraints.NotNull;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
@@ -188,13 +186,13 @@ public class CrossReference extends AbstractMetadataType {
     @_ColumnLabel("KEY_SEQ")
     private Integer keySeq;
 
-//    @NotNull
+    //    @NotNull
 //    @Nonnull
 //    @_NotNull
     @_ColumnLabel("UPDATE_RULE")
     private Integer updateRule;
 
-//    @NotNull
+    //    @NotNull
 //    @Nonnull
 //    @_NotNull
     @_ColumnLabel("DELETE_RULE")
