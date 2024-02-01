@@ -32,7 +32,7 @@ import java.util.concurrent.ConcurrentHashMap;
 
 import static java.util.Arrays.stream;
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
+import static org.assertj.core.api.Assertions.assertThatCode;
 import static org.junit.jupiter.api.Assertions.fail;
 
 @Slf4j
@@ -71,9 +71,15 @@ abstract class MetadataTypeTest<T extends MetadataType>
         }
     }
 
+    @DisplayName("toString()!blank")
     @Test
     void toString_NonBlank_() {
-        assertThat(typeInstance().toString()).isNotBlank();
+        // ------------------------------------------------------------------------------------------------------- given
+        final var instance = typeInstance();
+        // -------------------------------------------------------------------------------------------------------- when
+        final var string = instance.toString();
+        // -------------------------------------------------------------------------------------------------------- then
+        assertThat(string).isNotBlank();
     }
 
     @Test
@@ -88,9 +94,15 @@ abstract class MetadataTypeTest<T extends MetadataType>
         assertThat(obj2).isEqualTo(obj1);
     }
 
+    @DisplayName("hashCode()I")
     @Test
     void hashCode__() {
-        assertDoesNotThrow(() -> typeInstance().hashCode());
+        // ------------------------------------------------------------------------------------------------------- given
+        final var instance = typeInstance();
+        // --------------------------------------------------------------------------------------------------- when/then
+        assertThatCode(() -> {
+            final var hashCode = instance.hashCode();
+        }).doesNotThrowAnyException();
     }
 
     @DisplayName("@ColumnLabel -> has accessors")
