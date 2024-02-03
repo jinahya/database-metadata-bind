@@ -21,13 +21,13 @@ package com.github.jinahya.database.metadata.bind;
  */
 
 import jakarta.validation.constraints.NotNull;
+import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
 
 import java.sql.DatabaseMetaData;
 import java.util.Comparator;
-import java.util.Objects;
 import java.util.Optional;
 
 /**
@@ -38,12 +38,16 @@ import java.util.Optional;
  */
 @Setter
 @Getter
+@EqualsAndHashCode(callSuper = true)
 @ToString(callSuper = true)
 public class TypeInfo extends AbstractMetadataType {
 
     private static final long serialVersionUID = -3964147654019495313L;
 
+    // -----------------------------------------------------------------------------------------------------------------
     static final Comparator<TypeInfo> COMPARING_DATA_TYPE = Comparator.comparingInt(TypeInfo::getDataType);
+
+    // -----------------------------------------------------------------------------------------------------------------
 
     /**
      * A column label of {@value}.
@@ -74,6 +78,8 @@ public class TypeInfo extends AbstractMetadataType {
      * A column label of {@value}.
      */
     public static final String COLUMN_LABEL_CREATE_PARAMS = "CREATE_PARAMS";
+
+    // -----------------------------------------------------------------------------------------------------------------
 
     /**
      * A column label of {@value}.
@@ -125,10 +131,14 @@ public class TypeInfo extends AbstractMetadataType {
         private final int fieldValue;
     }
 
+    // -----------------------------------------------------------------------------------------------------------------
+
     /**
      * A column label of {@value}.
      */
     public static final String COLUMN_LABEL_CASE_SENSITIVE = "CASE_SENSITIVE";
+
+    // -----------------------------------------------------------------------------------------------------------------
 
     /**
      * A column label of {@value}.
@@ -185,32 +195,27 @@ public class TypeInfo extends AbstractMetadataType {
         private final int fieldValue;
     }
 
-    @Override
-    public boolean equals(final Object obj) {
-        if (this == obj) return true;
-        if (!(obj instanceof TypeInfo)) return false;
-        final TypeInfo that = (TypeInfo) obj;
-        return Objects.equals(dataType, that.dataType) &&
-               Objects.equals(typeName, that.typeName);
+    // ------------------------------------------------------------------------------------------------------ searchable
+    Searchable getSearchableAsEnum() {
+        return Optional.ofNullable(getSearchable())
+                .map(Searchable::valueOfSearchable)
+                .orElse(null);
     }
 
-    @Override
-    public int hashCode() {
-        return Objects.hash(typeName, dataType);
-    }
-
-    public Integer getSearchable() {
-        return searchable;
-    }
-
-    public void setSearchable(final Integer searchable) {
-        this.searchable = searchable;
+    void setSearchableAsEnum(final Searchable searchableAsEnum) {
+        setSearchable(
+                Optional.ofNullable(searchableAsEnum)
+                        .map(_IntFieldEnum::fieldValueAsInt)
+                        .orElse(null)
+        );
     }
 
     // -----------------------------------------------------------------------------------------------------------------
     @_ColumnLabel(COLUMN_LABEL_TYPE_NAME)
+    @EqualsAndHashCode.Include
     private String typeName;
 
+    // -----------------------------------------------------------------------------------------------------------------
     @NotNull
     @_NonNullBySpecification
     @_ColumnLabel(COLUMN_LABEL_DATA_TYPE)
@@ -292,18 +297,4 @@ public class TypeInfo extends AbstractMetadataType {
     @_NonNullBySpecification
     @_ColumnLabel("NUM_PREC_RADIX")
     private Integer numPrecRadix;
-
-    Searchable getSearchableAsEnum() {
-        return Optional.ofNullable(getSearchable())
-                .map(Searchable::valueOfSearchable)
-                .orElse(null);
-    }
-
-    void setSearchableAsEnum(final Searchable searchableAsEnum) {
-        setSearchable(
-                Optional.ofNullable(searchableAsEnum)
-                        .map(_IntFieldEnum::fieldValueAsInt)
-                        .orElse(null)
-        );
-    }
 }

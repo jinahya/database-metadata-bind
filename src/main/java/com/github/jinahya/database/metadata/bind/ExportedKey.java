@@ -20,6 +20,9 @@ package com.github.jinahya.database.metadata.bind;
  * #L%
  */
 
+import lombok.EqualsAndHashCode;
+import lombok.ToString;
+
 import java.sql.DatabaseMetaData;
 import java.util.Comparator;
 
@@ -31,6 +34,8 @@ import java.util.Comparator;
  * @see Context#getExportedKeys(String, String, String)
  * @see ImportedKey
  */
+@ToString(callSuper = true)
+@EqualsAndHashCode(callSuper = true, onlyExplicitlyIncluded = true)
 public class ExportedKey extends TableKey<ExportedKey> {
 
     private static final long serialVersionUID = -6561660015694928357L;
@@ -38,22 +43,4 @@ public class ExportedKey extends TableKey<ExportedKey> {
     static final Comparator<ExportedKey> CASE_INSENSITIVE_ORDER = comparingFktableCaseInsensitive();
 
     static final Comparator<ExportedKey> LEXICOGRAPHIC_ORDER = comparingFktableLexicographic();
-
-    @Override
-    public String toString() {
-        return super.toString() + '{' +
-               '}';
-    }
-
-    @Override
-    public boolean equals(final Object obj) {
-        if (this == obj) return true;
-        if (!(obj instanceof ExportedKey)) return false;
-        return equals_((ExportedKey) obj);
-    }
-
-    @Override
-    public int hashCode() {
-        return super.hashCode();
-    }
 }

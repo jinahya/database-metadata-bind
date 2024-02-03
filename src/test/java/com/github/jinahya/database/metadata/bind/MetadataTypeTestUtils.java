@@ -30,7 +30,7 @@ import java.util.Objects;
 @Slf4j
 final class MetadataTypeTestUtils {
 
-    static <T extends MetadataType> void accessors(final Class<T> cls, final MetadataType obj) {
+    static <T extends MetadataType> void verifyAccessors(final Class<T> cls, final MetadataType obj) {
         Objects.requireNonNull(cls, "cls is null");
         Objects.requireNonNull(obj, "obj is null");
         final BeanInfo info;
@@ -69,14 +69,19 @@ final class MetadataTypeTestUtils {
         }
     }
 
-    private static <T extends MetadataType> void accessorsHelper(final Class<T> cls, final Object obj) {
+    private static <T extends MetadataType> void verifyAccessorsHelper(final Class<T> cls, final Object obj) {
         Objects.requireNonNull(cls, "cls is null");
-        accessors(cls, cls.cast(obj));
+        verifyAccessors(cls, cls.cast(obj));
     }
 
-    static void accessors(final MetadataType obj) {
+    static void verifyAccessors(final MetadataType obj) {
         Objects.requireNonNull(obj, "obj is null");
-        accessorsHelper(obj.getClass(), obj);
+        verifyAccessorsHelper(obj.getClass(), obj);
+    }
+
+    static void verify(final MetadataType obj) {
+        verifyAccessors(obj);
+        ValidationTestUtils.requireValid(obj);
     }
 
     private MetadataTypeTestUtils() {

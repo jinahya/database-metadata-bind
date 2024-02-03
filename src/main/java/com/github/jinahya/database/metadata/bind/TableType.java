@@ -20,8 +20,12 @@ package com.github.jinahya.database.metadata.bind;
  * #L%
  */
 
+import lombok.EqualsAndHashCode;
+import lombok.Getter;
+import lombok.Setter;
+import lombok.ToString;
+
 import java.util.Comparator;
-import java.util.Objects;
 
 /**
  * A class for binding results of the {@link java.sql.DatabaseMetaData#getTableTypes()}.
@@ -29,45 +33,24 @@ import java.util.Objects;
  * @author Jin Kwon &lt;jinahya_at_gmail.com&gt;
  * @see Context#getTableTypes()
  */
+@Setter
+@Getter
+@EqualsAndHashCode(callSuper = true)
+@ToString(callSuper = true)
 public class TableType extends AbstractMetadataType {
 
     private static final long serialVersionUID = -7630634982776331078L;
 
+    // -----------------------------------------------------------------------------------------------------------------
     static final Comparator<TableType> CASE_INSENSITIVE_ORDER =
             Comparator.comparing(TableType::getTableType, String.CASE_INSENSITIVE_ORDER);
 
     static final Comparator<TableType> LEXICOGRAPHIC_ORDER = Comparator.comparing(TableType::getTableType);
 
+    // -----------------------------------------------------------------------------------------------------------------
     public static final String COLUMN_LABEL_TABLE_TYPE = "TABLE_TYPE";
 
-    @Override
-    public String toString() {
-        return super.toString() + '{' +
-               "tableType=" + tableType +
-               '}';
-    }
-
-    @Override
-    public boolean equals(final Object obj) {
-        if (this == obj) return true;
-        if (!(obj instanceof TableType)) return false;
-        final TableType that = (TableType) obj;
-        return Objects.equals(tableType, that.tableType);
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(super.hashCode(), tableType);
-    }
-
-    public String getTableType() {
-        return tableType;
-    }
-
-    public void setTableType(final String tableType) {
-        this.tableType = tableType;
-    }
-
+    // -----------------------------------------------------------------------------------------------------------------
     @SuppressWarnings({
             "java:S1700"
     })

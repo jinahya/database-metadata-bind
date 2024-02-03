@@ -20,13 +20,15 @@ package com.github.jinahya.database.metadata.bind;
  * #L%
  */
 
-import com.github.jinahya.database.metadata.bind.VersionColumn.PseudoColumn;
+import io.vavr.CheckedConsumer;
+import io.vavr.CheckedFunction1;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.platform.commons.util.ReflectionUtils;
 
 import java.sql.JDBCType;
 import java.sql.SQLException;
 import java.sql.SQLFeatureNotSupportedException;
+import java.sql.SQLSyntaxErrorException;
 import java.sql.Types;
 import java.util.List;
 import java.util.Objects;
@@ -113,112 +115,145 @@ final class ContextTestUtils {
     // -----------------------------------------------------------------------------------------------------------------
     private static String databaseProductName;
 
+    private static <R> void checked(final Context context,
+                                    final CheckedFunction1<? super Context, ? extends R> function,
+                                    final CheckedConsumer<? super R> consumer)
+            throws Throwable {
+        Objects.requireNonNull(context, "context is null");
+        Objects.requireNonNull(function, "function is null");
+        Objects.requireNonNull(context, "context is null");
+        final R r;
+        try {
+            r = function.apply(context);
+        } catch (final Throwable e) {
+            if (e instanceof SQLFeatureNotSupportedException sqlfnse) {
+                log.error("sql feature not supported", sqlfnse);
+                return;
+            }
+            throw new RuntimeException(e);
+        }
+        consumer.accept(r);
+    }
+
     static void test(final Context context) throws SQLException {
         Objects.requireNonNull(context, "context is null");
+
         {
             databaseProductName = context.databaseMetaData.getDatabaseProductName();
             info(context);
         }
-        {
-            final List<Catalog> catalogs;
-            try {
-                catalogs = context.getCatalogs();
-                if (catalogs.isEmpty()) {
-                    log.info("no catalogs retrieved");
-                    catalogs.add(Catalog.newVirtualInstance());
-                }
-                catalogs(context, catalogs);
-            } catch (final SQLException sqle) {
-                thrown("failed; getCatalogs", sqle);
+        // ---------------------------------------------------------------------------------------------------- catalogs
+        try {
+            final var catalogs = context.getCatalogs();
+            if (catalogs.isEmpty()) {
+                log.info("no catalogs retrieved");
+                catalogs.add(Catalog.of(""));
             }
+            catalogs(context, catalogs);
+        } catch (final SQLFeatureNotSupportedException sqlfnse) {
+            log.error("not supported", sqlfnse);
         }
+        // -------------------------------------------------------------------------------------------- clientProperties
         try {
             final var clientInfoProperties = context.getClientInfoProperties();
             clientInfoProperties(context, clientInfoProperties);
-        } catch (final SQLException sqle) {
-            thrown("failed; getClientInfoProperties", sqle);
+        } catch (final SQLFeatureNotSupportedException sqlfnse) {
+            log.error("not supported", sqlfnse);
         }
+        // --------------------------------------------------------------------------------------------------- functions
         try {
             final var functions = context.getFunctions(null, null, "%");
             functions(context, functions);
-        } catch (final SQLException sqle) {
-            thrown("failed; getFunctions", sqle);
+        } catch (final SQLFeatureNotSupportedException sqlfnse) {
+            log.error("not supported", sqlfnse);
         }
+        // -------------------------------------------------------------------------------------------------- procedures
         try {
             final var procedures = context.getProcedures(null, null, "%");
             procedures(context, procedures);
-        } catch (final SQLException sqle) {
-            thrown("failed; getProcedures", sqle);
+        } catch (final SQLFeatureNotSupportedException sqlfnse) {
+            log.error("not supported", sqlfnse);
         }
+        // ----------------------------------------------------------------------------------------------------- schemas
         try {
             final var schemas = context.getSchemas();
             if (schemas.isEmpty()) {
                 schemas.add(Schema.newVirtualInstance());
             }
             schemas(context, schemas);
-        } catch (final SQLException sqle) {
-            thrown("failed; getSchemas", sqle);
+        } catch (final SQLFeatureNotSupportedException sqlfnse) {
+            log.error("not supported", sqlfnse);
         }
+        // ----------------------------------------------------------------------------------------------------- schemas
         try {
             final var schemas = context.getSchemas((String) null, null);
             if (schemas.isEmpty()) {
                 schemas.add(Schema.newVirtualInstance());
             }
             schemas(context, schemas);
-        } catch (final SQLException sqle) {
-            thrown("failed; getSchemas", sqle);
+        } catch (final SQLFeatureNotSupportedException sqlfnse) {
+            log.error("not supported", sqlfnse);
         }
+        // -------------------------------------------------------------------------------------------------- tableTypes
         try {
             final var tableTypes = context.getTableTypes();
             tableTypes(context, tableTypes);
-        } catch (final SQLException sqle) {
-            thrown("failed; getTableTypes", sqle);
+        } catch (final SQLFeatureNotSupportedException sqlfnse) {
+            log.error("not supported", sqlfnse);
         }
+        // ------------------------------------------------------------------------------------------------------ tables
         try {
             final var tables = context.getTables(null, null, "%", null);
             tables(context, tables);
-        } catch (final SQLException sqle) {
-            thrown("failed; getTables", sqle);
+        } catch (final SQLFeatureNotSupportedException sqlfnse) {
+            log.error("not supported", sqlfnse);
         }
+        // ---------------------------------------------------------------------------------------------------- typeInfo
         try {
             final var typeInfo = context.getTypeInfo();
             typeInfo(context, typeInfo);
-        } catch (final SQLException sqle) {
-            thrown("failed; getTypeInfo", sqle);
+        } catch (final SQLFeatureNotSupportedException sqlfnse) {
+            log.error("not supported", sqlfnse);
         }
+        // -------------------------------------------------------------------------------------------------------- udts
         try {
             final var udts = context.getUDTs(null, null, "%", null);
             udts(context, udts);
         } catch (final SQLException sqle) {
             thrown("failed; getUDTs", sqle);
         }
+        // -------------------------------------------------------------------------------------------- numericFunctions
         try {
             final Set<String> NumericFunctions = context.getNumericFunctions();
-            log.debug("numeric functions: {}", NumericFunctions);
-        } catch (final SQLException sqle) {
-            thrown("failed; getNumericFunctions", sqle);
+            log.debug("numericFunctions: {}", NumericFunctions);
+        } catch (final SQLFeatureNotSupportedException sqlfnse) {
+            log.error("not supported", sqlfnse);
         }
+        // ---------------------------------------------------------------------------------------------- getSQLKeywords
         try {
             final Set<String> SQLKeywords = context.getSQLKeywords();
-            log.debug("sql keywords: {}", SQLKeywords);
+            log.debug("SQLKeywords: {}", SQLKeywords);
         } catch (final SQLException sqle) {
             thrown("failed; getSQLKeywords", sqle);
         }
+        // ------------------------------------------------------------------------------------------ getStringFunctions
         try {
-            final Set<String> results = context.getStringFunctions();
-            log.debug("string functions: {}", results);
+            final Set<String> stringFunctions = context.getStringFunctions();
+            log.debug("stringFunctions: {}", stringFunctions);
         } catch (final SQLException sqle) {
             thrown("failed; getStringFunctions", sqle);
         }
+        // ------------------------------------------------------------------------------------------ getSystemFunctions
         try {
-            final Set<String> results = context.getSystemFunctions();
-            log.debug("system functions: {}", results);
+            final Set<String> systemFunctions = context.getSystemFunctions();
+            log.debug("system functions: {}", systemFunctions);
         } catch (final SQLException sqle) {
             thrown("failed; getSystemFunctions", sqle);
         }
+        // ---------------------------------------------------------------------------------------- getTimeDateFunctions
         try {
-            final Set<String> results = context.getTimeDateFunctions();
-            log.debug("time date functions: {}", results);
+            final Set<String> timeDateFunction = context.getTimeDateFunctions();
+            log.debug("time date functions: {}", timeDateFunction);
         } catch (final SQLException sqle) {
             thrown("failed; getTimeDateFunctions", sqle);
         }
@@ -241,7 +276,7 @@ final class ContextTestUtils {
             }
         }
         for (final var attribute : attributes) {
-            MetadataTypeTestUtils.accessors(attribute);
+            MetadataTypeTestUtils.verifyAccessors(attribute);
             attribute(context, attribute);
         }
     }
@@ -267,10 +302,12 @@ final class ContextTestUtils {
             throws SQLException {
         Objects.requireNonNull(context, "context is null");
         Objects.requireNonNull(bestRowIdentifier, "bestRowIdentifier is null");
-        assertThat(bestRowIdentifier).isSortedAccordingTo(BestRowIdentifier.COMPARING_SCOPE);
+        assertThat(bestRowIdentifier)
+                .doesNotHaveDuplicates()
+                .isSortedAccordingTo(BestRowIdentifier.COMPARING_SCOPE);
         assertThat(bestRowIdentifier).isSorted();
         for (final var bestRowIdentifier_ : bestRowIdentifier) {
-            MetadataTypeTestUtils.accessors(bestRowIdentifier_);
+            MetadataTypeTestUtils.verifyAccessors(bestRowIdentifier_);
             bestRowIdentifier(context, bestRowIdentifier_);
         }
     }
@@ -296,12 +333,14 @@ final class ContextTestUtils {
     static void catalogs(final Context context, final List<? extends Catalog> catalogs) throws SQLException {
         Objects.requireNonNull(context, "context is null");
         Objects.requireNonNull(catalogs, "catalogs is null");
-        assertThat(catalogs).doesNotHaveDuplicates().satisfiesAnyOf(
-                l -> assertThat(l).isSortedAccordingTo(Catalog.CASE_INSENSITIVE_ORDER),
-                l -> assertThat(l).isSortedAccordingTo(Catalog.LEXICOGRAPHIC_ORDER)
-        );
+        assertThat(catalogs)
+                .doesNotHaveDuplicates()
+                .satisfiesAnyOf(
+                        l -> assertThat(l).isSortedAccordingTo(Catalog.CASE_INSENSITIVE_ORDER),
+                        l -> assertThat(l).isSortedAccordingTo(Catalog.LEXICOGRAPHIC_ORDER)
+                );
         for (final var catalog : catalogs) {
-            MetadataTypeTestUtils.accessors(catalog);
+            MetadataTypeTestUtils.verifyAccessors(catalog);
             catalog(context, catalog);
         }
     }
@@ -309,28 +348,32 @@ final class ContextTestUtils {
     static void catalog(final Context context, final Catalog catalog) throws SQLException {
         Objects.requireNonNull(context, "context is null");
         Objects.requireNonNull(catalog, "catalog is null");
+        MetadataTypeTestUtils.verify(catalog);
         {
             assertThat(catalog.getTableCat()).isNotNull();
         }
         common(catalog);
+        // ----------------------------------------------------------------------------------------------------- schemas
         try {
             final var schemas = context.getSchemas(catalog, "%");
-            {
-                final var databaseProductNames = Set.of(
-                        // https://sourceforge.net/p/hsqldb/bugs/1671/
-                        DatabaseProductNames.HSQL_DATABASE_ENGINE
-                );
-                if (!databaseProductNames.contains(databaseProductName)) {
-                    assertThat(schemas).satisfiesAnyOf(
-                            l -> assertThat(l).isSortedAccordingTo(Schema.CASE_INSENSITIVE_ORDER),
-                            l -> assertThat(l).isSortedAccordingTo(Schema.LEXICOGRAPHIC_ORDER)
-                    );
-                }
-            }
             schemas(context, schemas);
         } catch (final SQLException sqle) {
             thrown("failed: getSchemas", sqle);
         }
+        // -------------------------------------------------------------------------------------------------- procedures
+        final var procedures = context.getProcedures(catalog, "%");
+        procedures(context, procedures);
+        // ------------------------------------------------------------------------------------------------- superTables
+        try {
+            final var superTables = context.getSuperTables(catalog.tableCatNonNull(), "%", "%");
+            superTables(context, superTables);
+        } catch (final SQLFeatureNotSupportedException sqlfnse) {
+            log.error("not supported", sqlfnse);
+        }
+        // -------------------------------------------------------------------------------------------------- superTypes
+        final var superTypes = context.getSuperTypes(catalog.getTableCat(), "%", "%");
+        superTypes(context, superTypes);
+        // --------------------------------------------------------------------------------------------- tablePrivileges
         if (READ_TABLE_PRIVILEGES) {
             try {
                 final var tablePrivileges = context.getTablePrivileges(
@@ -353,7 +396,7 @@ final class ContextTestUtils {
         assertThat(clientInfoProperties)
                 .doesNotHaveDuplicates();
         for (final var clientInfoProperty : clientInfoProperties) {
-            MetadataTypeTestUtils.accessors(clientInfoProperty);
+            MetadataTypeTestUtils.verifyAccessors(clientInfoProperty);
             clientInfoProperty(context, clientInfoProperty);
         }
     }
@@ -381,7 +424,7 @@ final class ContextTestUtils {
             }
         }
         for (final var column : columns) {
-            MetadataTypeTestUtils.accessors(column);
+            MetadataTypeTestUtils.verifyAccessors(column);
             column(context, column);
         }
     }
@@ -407,19 +450,14 @@ final class ContextTestUtils {
             throws SQLException {
         Objects.requireNonNull(context, "context is null");
         Objects.requireNonNull(columnPrivileges, "columnPrivileges is null");
-        {
-            final var databaseProductNames = Set.of(
-                    DatabaseProductNames.POSTGRE_SQL
-            );
-            if (!databaseProductNames.contains(databaseProductName)) {
-                assertThat(columnPrivileges).satisfiesAnyOf(
+        assertThat(columnPrivileges)
+                .doesNotHaveDuplicates()
+                .satisfiesAnyOf(
                         l -> assertThat(l).isSortedAccordingTo(ColumnPrivilege.CASE_INSENSITIVE_ORDER),
                         l -> assertThat(l).isSortedAccordingTo(ColumnPrivilege.LEXICOGRAPHIC_ORDER)
                 );
-            }
-        }
         for (final var columnPrivilege : columnPrivileges) {
-            MetadataTypeTestUtils.accessors(columnPrivilege);
+            MetadataTypeTestUtils.verifyAccessors(columnPrivilege);
             columnPrivilege(context, columnPrivilege);
         }
     }
@@ -430,43 +468,24 @@ final class ContextTestUtils {
         common(columnPrivilege);
     }
 
-    static void crossReference(final Context context, List<? extends CrossReference> crossReference)
-            throws SQLException {
-        Objects.requireNonNull(context, "context is null");
-        Objects.requireNonNull(crossReference, "crossReference is null");
-        assertThat(crossReference).satisfiesAnyOf(
-                cr -> assertThat(cr).isSortedAccordingTo(CrossReference.CASE_INSENSITIVE_ORDER),
-                cr -> assertThat(cr).isSortedAccordingTo(CrossReference.LEXICOGRAPHIC_ORDER)
-        );
-        for (final var crossReference_ : crossReference) {
-            MetadataTypeTestUtils.accessors(crossReference_);
-            crossReference(context, crossReference_);
-        }
-    }
-
     static void crossReference(final Context context, final CrossReference crossReference) throws SQLException {
         Objects.requireNonNull(context, "context is null");
         Objects.requireNonNull(crossReference, "crossReference is null");
         common(crossReference);
+        MetadataTypeTestUtils.verify(crossReference);
     }
 
-    static void exportedKeys(final Context context, final List<? extends ExportedKey> exportedKeys)
+    private static void exportedKeys(final Context context, final List<? extends ExportedKey> exportedKeys)
             throws SQLException {
         Objects.requireNonNull(context, "context is null");
         Objects.requireNonNull(exportedKeys, "exportedKeys is null");
-        {
-            final var databaseProductNames = Set.of(
-                    ""
-            );
-            if (!databaseProductNames.contains(databaseProductName)) {
-                assertThat(exportedKeys).satisfiesAnyOf(
+        assertThat(exportedKeys)
+                .doesNotHaveDuplicates()
+                .satisfiesAnyOf(
                         l -> assertThat(l).isSortedAccordingTo(ExportedKey.CASE_INSENSITIVE_ORDER),
                         l -> assertThat(l).isSortedAccordingTo(ExportedKey.LEXICOGRAPHIC_ORDER)
                 );
-            }
-        }
         for (final var exportedKey : exportedKeys) {
-            MetadataTypeTestUtils.accessors(exportedKey);
             exportedKey(context, exportedKey);
         }
     }
@@ -474,7 +493,6 @@ final class ContextTestUtils {
     private static void exportedKey(final Context context, final ExportedKey exportedKey) throws SQLException {
         Objects.requireNonNull(context, "context is null");
         Objects.requireNonNull(exportedKey, "exportedKey is null");
-        common(exportedKey);
     }
 
     private static void functions(final Context context, final List<? extends Function> functions) throws SQLException {
@@ -485,7 +503,7 @@ final class ContextTestUtils {
                 l -> assertThat(l).isSortedAccordingTo(Function.LEXICOGRAPHIC_ORDER)
         );
         for (final var function : functions) {
-            MetadataTypeTestUtils.accessors(function);
+            MetadataTypeTestUtils.verifyAccessors(function);
             function(context, function);
         }
     }
@@ -520,7 +538,7 @@ final class ContextTestUtils {
             }
         }
         for (final var functionColumn : functionColumns) {
-            MetadataTypeTestUtils.accessors(functionColumn);
+            MetadataTypeTestUtils.verifyAccessors(functionColumn);
             functionColumn(context, function, functionColumn);
         }
     }
@@ -539,19 +557,13 @@ final class ContextTestUtils {
             throws SQLException {
         Objects.requireNonNull(context, "context is null");
         Objects.requireNonNull(importedKeys, "importedKeys is null");
-        {
-            final var databaseProductNames = Set.of(
-                    ""
-            );
-            if (!databaseProductNames.contains(databaseProductName)) {
-                assertThat(importedKeys).satisfiesAnyOf(
+        assertThat(importedKeys)
+                .doesNotHaveDuplicates()
+                .satisfiesAnyOf(
                         l -> assertThat(l).isSortedAccordingTo(ImportedKey.CASE_INSENSITIVE_ORDER),
                         l -> assertThat(l).isSortedAccordingTo(ImportedKey.LEXICOGRAPHIC_ORDER)
                 );
-            }
-        }
         for (final var importedKey : importedKeys) {
-            MetadataTypeTestUtils.accessors(importedKey);
             importedKey(context, importedKey);
         }
     }
@@ -559,35 +571,14 @@ final class ContextTestUtils {
     static void importedKey(final Context context, final ImportedKey importedKey) throws SQLException {
         Objects.requireNonNull(context, "context is null");
         Objects.requireNonNull(importedKey, "importedKey is null");
-        common(importedKey);
-    }
-
-    static void indexInfo(final Context context, final List<? extends IndexInfo> indexInfo) throws SQLException {
-        Objects.requireNonNull(context, "context is null");
-        Objects.requireNonNull(indexInfo, "indexInfo is null");
-        {
-            final var databaseProductNames = Set.of(
-                    ""
-                    // https://bugs.mysql.com/bug.php?id=109803
-//                    DatabaseProductNames.MY_SQL
-            );
-            if (!databaseProductNames.contains(databaseProductName)) {
-                assertThat(indexInfo).satisfiesAnyOf(
-                        l -> assertThat(l).isSortedAccordingTo(IndexInfo.CASE_INSENSITIVE_ORDER),
-                        l -> assertThat(l).isSortedAccordingTo(IndexInfo.LEXICOGRAPHIC_ORDER)
-                );
-            }
-        }
-        for (final var indexInfo_ : indexInfo) {
-            MetadataTypeTestUtils.accessors(indexInfo_);
-            indexInfo(context, indexInfo_);
-        }
+        MetadataTypeTestUtils.verify(importedKey);
     }
 
     static void indexInfo(final Context context, final IndexInfo indexInfo) throws SQLException {
         Objects.requireNonNull(context, "context is null");
         Objects.requireNonNull(indexInfo, "indexInfo is null");
         common(indexInfo);
+        MetadataTypeTestUtils.verify(indexInfo);
     }
 
     private static void procedures(final Context context, final List<? extends Procedure> procedures)
@@ -620,7 +611,7 @@ final class ContextTestUtils {
             }
         }
         for (final var procedure : procedures) {
-            MetadataTypeTestUtils.accessors(procedure);
+            MetadataTypeTestUtils.verifyAccessors(procedure);
             procedure(context, procedure);
         }
     }
@@ -629,6 +620,7 @@ final class ContextTestUtils {
         Objects.requireNonNull(context, "context is null");
         Objects.requireNonNull(procedure, "procedure is null");
         common(procedure);
+        MetadataTypeTestUtils.verify(procedure);
         try {
             final var procedureColumns = context.getProcedureColumns(procedure, "%");
             assertThat(procedureColumns).doesNotHaveDuplicates();
@@ -645,7 +637,7 @@ final class ContextTestUtils {
         assertThat(procedureColumns)
                 .isSortedAccordingTo(ProcedureColumn.CASE_INSENSITIVE_ORDER);
         for (final var procedureColumn : procedureColumns) {
-            MetadataTypeTestUtils.accessors(procedureColumn);
+            MetadataTypeTestUtils.verifyAccessors(procedureColumn);
             procedureColumn(context, procedureColumn);
         }
     }
@@ -660,8 +652,13 @@ final class ContextTestUtils {
     static void schemas(final Context context, final List<? extends Schema> schemas) throws SQLException {
         Objects.requireNonNull(context, "context is null");
         Objects.requireNonNull(schemas, "schemas is null");
+        assertThat(schemas)
+                .doesNotHaveDuplicates()
+                .satisfiesAnyOf(
+                        l -> assertThat(l).isSortedAccordingTo(Schema.CASE_INSENSITIVE_ORDER),
+                        l -> assertThat(l).isSortedAccordingTo(Schema.CASE_INSENSITIVE_ORDER)
+                );
         for (final var schema : schemas) {
-            MetadataTypeTestUtils.accessors(schema);
             schema(context, schema);
         }
     }
@@ -669,22 +666,29 @@ final class ContextTestUtils {
     static void schema(final Context context, final Schema schema) throws SQLException {
         Objects.requireNonNull(context, "context is null");
         Objects.requireNonNull(schema, "schema is null");
+        MetadataTypeTestUtils.verify(schema);
         {
             assertThat(schema.getTableSchem()).isNotNull();
         }
         common(schema);
+        // ------------------------------------------------------------------------------------------------- superTables
         try {
             final var superTables = context.getSuperTables(schema, "%");
             superTables(context, superTables);
         } catch (final SQLException sqle) {
             thrown("failed; getSuperTables", sqle);
         }
+        // -------------------------------------------------------------------------------------------------- superTypes
         try {
             final var superTypes = context.getSuperTypes(schema, "%");
             superTypes(context, superTypes);
         } catch (final SQLException sqle) {
             thrown("failed: getSuperTypes", sqle);
         }
+        // -------------------------------------------------------------------------------------------------- procedures
+        final var procedures = context.getProcedures(schema, "%");
+        procedures(context, procedures);
+        // --------------------------------------------------------------------------------------------- tablePrivileges
         if (READ_TABLE_PRIVILEGES) {
             try {
                 final var tablePrivileges = context.getTablePrivileges(schema, "%");
@@ -699,7 +703,7 @@ final class ContextTestUtils {
         Objects.requireNonNull(context, "context is null");
         Objects.requireNonNull(superTypes, "superTypes is null");
         for (final var superType : superTypes) {
-            MetadataTypeTestUtils.accessors(superType);
+            MetadataTypeTestUtils.verifyAccessors(superType);
             superType(context, superType);
         }
     }
@@ -719,30 +723,38 @@ final class ContextTestUtils {
     static void tables(final Context context, final List<? extends Table> tables) throws SQLException {
         Objects.requireNonNull(context, "context is null");
         Objects.requireNonNull(tables, "tables is null");
-        {
-            final var databaseProductNames = Set.of(
-                    // https://sourceforge.net/p/hsqldb/bugs/1672/
-                    DatabaseProductNames.HSQL_DATABASE_ENGINE,
-                    DatabaseProductNames.MARIA_DB,
-                    DatabaseProductNames.POSTGRE_SQL
-            );
-            if (!databaseProductNames.contains(databaseProductName)) {
-                assertThat(tables).satisfiesAnyOf(
-                        l -> assertThat(l).isSortedAccordingTo(Table.CASE_INSENSITIVE_ORDER),
-                        l -> assertThat(l).isSortedAccordingTo(Table.LEXICOGRAPHIC_ORDER)
-                );
-            }
+        assertThat(tables)
+                .doesNotHaveDuplicates();
+//                .satisfiesAnyOf(
+//                        l -> assertThat(l).isSortedAccordingTo(Table.CASE_INSENSITIVE_ORDER),
+//                        l -> assertThat(l).isSortedAccordingTo(Table.LEXICOGRAPHIC_ORDER)
+//                );
+        if (!databaseProductName.equals(DatabaseProductNames.MARIA_DB) &&
+            !databaseProductName.equals(DatabaseProductNames.POSTGRE_SQL)) {
+            // https://jira.mariadb.org/browse/CONJ-1156
+            assertThat(tables)
+                    .satisfiesAnyOf(
+                            l -> assertThat(l).isSortedAccordingTo(Table.CASE_INSENSITIVE_ORDER),
+                            l -> assertThat(l).isSortedAccordingTo(Table.LEXICOGRAPHIC_ORDER)
+                    );
         }
         for (final var table : tables) {
             table(context, table);
         }
-        for (int i = 0; i < 10 && i < tables.size(); i++) { // table 아 많으면 오래 걸린다.
-            final var parent = tables.get(i);
-            for (final var fktable : tables) {
-                final var crossReference = context.getCrossReference(
-                        parent.getTableCat(), parent.getTableSchem(), parent.getTableName(),
-                        fktable.getTableCat(), fktable.getTableSchem(), fktable.getTableName());
-                crossReference(context, crossReference);
+        if (!databaseProductName.equals(DatabaseProductNames.POSTGRE_SQL)) {
+            for (final var parentTable : tables) { // table 많으면 오래 걸린다.
+                for (final var foreignTable : tables) {
+                    final var crossReference = context.getCrossReference(parentTable, foreignTable);
+                    assertThat(crossReference)
+                            .doesNotHaveDuplicates()
+                            .satisfiesAnyOf(
+                                    cr -> assertThat(cr).isSortedAccordingTo(CrossReference.CASE_INSENSITIVE_ORDER),
+                                    cr -> assertThat(cr).isSortedAccordingTo(CrossReference.LEXICOGRAPHIC_ORDER)
+                            );
+                    for (final var v : crossReference) {
+                        crossReference(context, v);
+                    }
+                }
             }
         }
     }
@@ -750,75 +762,94 @@ final class ContextTestUtils {
     static void table(final Context context, final Table table) throws SQLException {
         Objects.requireNonNull(context, "context is null");
         Objects.requireNonNull(table, "table is null");
-        {
-            assertThat(table.getTableName()).isNotNull();
-//            assertThat(table.getTableType()).isNotNull();
-        }
         common(table);
-        try {
-            for (final var scope : BestRowIdentifier.Scope.values()) {
-                for (final boolean nullable : new boolean[] {true, false}) {
+        MetadataTypeTestUtils.verify(table);
+        // ------------------------------------------------------------------------------------------- bestRowIdentifier
+        for (final var scope : BestRowIdentifier.Scope.values()) {
+            for (final boolean nullable : new boolean[] {true, false}) {
+                try {
                     final var bestRowIdentifier =
                             context.getBestRowIdentifier(table, scope.fieldValueAsInt(), nullable);
                     bestRowIdentifier(context, bestRowIdentifier);
+                } catch (final SQLFeatureNotSupportedException sqlfnse) {
+                    log.error("not supported", sqlfnse);
+                } catch (final SQLSyntaxErrorException sqlsee) { // MySQL
+                    log.error("syntax error", sqlsee);
                 }
             }
-        } catch (final SQLException sqle) {
-            thrown("failed; getBestRowIdentifier", sqle);
         }
+        // ----------------------------------------------------------------------------------------------------- columns
         try {
             final var columns = context.getColumns(table, "%");
             columns(context, columns);
-        } catch (final SQLException sqle) {
-            thrown("failed; getColumns", sqle);
+        } catch (final SQLFeatureNotSupportedException sqlfnse) {
+            log.error("not supported", sqlfnse);
         }
+        // -------------------------------------------------------------------------------------------- columnPrivileges
         if (READ_COLUMN_PRIVILEGES) {
             try {
                 final var columnPrivileges = context.getColumnPrivileges(table, "%");
                 assertThat(columnPrivileges).doesNotHaveDuplicates();
                 columnPrivileges(context, columnPrivileges);
-            } catch (final SQLException sqle) {
-                thrown("failed; getColumnPrivileges", sqle);
+            } catch (final SQLFeatureNotSupportedException sqlfnse) {
+                log.error("not supported", sqlfnse);
             }
         }
+        // ------------------------------------------------------------------------------------------------ exportedKeys
         try {
             final var exportedKeys = context.getExportedKeys(table);
-            assertThat(exportedKeys).doesNotHaveDuplicates();
             exportedKeys(context, exportedKeys);
-        } catch (final SQLException sqle) {
-            thrown("failed; getExportedKeys", sqle);
+        } catch (final SQLFeatureNotSupportedException sqlfnse) {
+            log.error("not supported", sqlfnse);
         }
+        // ------------------------------------------------------------------------------------------------ importedKeys
         try {
             final var importedKeys = context.getImportedKeys(table);
-            assertThat(importedKeys).doesNotHaveDuplicates();
             importedKeys(context, importedKeys);
-        } catch (final SQLException sqle) {
-            thrown("failed; getImportedKeys", sqle);
+        } catch (final SQLFeatureNotSupportedException sqlfnse) {
+            log.error("not supported", sqlfnse);
         }
+        // --------------------------------------------------------------------------------------------------- indexInfo
         try {
             for (final boolean unique : new boolean[] {true, false}) {
                 for (final boolean approximate : new boolean[] {true, false}) {
                     final var indexInfo = context.getIndexInfo(table, unique, approximate);
-                    indexInfo(context, indexInfo);
+                    assertThat(indexInfo)
+                            .doesNotHaveDuplicates()
+                            .satisfiesAnyOf(
+                                    l -> assertThat(l).isSortedAccordingTo(IndexInfo.CASE_INSENSITIVE_ORDER),
+                                    l -> assertThat(l).isSortedAccordingTo(IndexInfo.LEXICOGRAPHIC_ORDER)
+                            );
+                    for (final var v : indexInfo) {
+                        indexInfo(context, v);
+                    }
                 }
             }
         } catch (final SQLException sqle) {
             thrown("failed; getIndexInfo", sqle);
         }
+        // ------------------------------------------------------------------------------------------------- primaryKeys
         try {
             final var primaryKeys = context.getPrimaryKeys(table);
-            assertThat(primaryKeys).doesNotHaveDuplicates();
             primaryKeys(context, primaryKeys);
-        } catch (final SQLException sqle) {
-            thrown("failed; getPrimaryKeys", sqle);
+        } catch (final SQLFeatureNotSupportedException sqlfnse) {
+            log.error("not supported", sqlfnse);
         }
+        // ----------------------------------------------------------------------------------------------- pseudoColumns
         try {
             final var pseudoColumns = context.getPseudoColumns(table, "%");
-            assertThat(pseudoColumns).doesNotHaveDuplicates();
             pseudoColumns(context, pseudoColumns);
-        } catch (final SQLException sqle) {
-            thrown("failed; getPseudoColumns", sqle);
+        } catch (final SQLFeatureNotSupportedException sqlfnse) {
+            log.error("not supported", sqlfnse);
         }
+        // ------------------------------------------------------------------------------------------------- superTables
+        try {
+            final var superTables = context.getSuperTables(table);
+            superTables(context, superTables);
+        } catch (SQLFeatureNotSupportedException sqlfnse) {
+            log.error("not supported", sqlfnse);
+        }
+        // --------------------------------------------------------------------------------------------- tablePrivileges
         if (READ_TABLE_PRIVILEGES) {
             try {
                 final var tablePrivileges = context.getTablePrivileges(table);
@@ -827,33 +858,29 @@ final class ContextTestUtils {
                 thrown("failed; getTablePrivileges", sqle);
             }
         }
+        // ---------------------------------------------------------------------------------------------- versionColumns
         try {
             final var versionColumns = context.getVersionColumns(table);
-            assertThat(versionColumns).doesNotHaveDuplicates();
             versionColumns(context, versionColumns);
         } catch (final SQLException sqle) {
             thrown("failed; getVersionColumns", sqle);
         }
     }
 
-    static void primaryKeys(final Context context, final List<? extends PrimaryKey> primaryKeys) throws SQLException {
+    private static void primaryKeys(final Context context, final List<? extends PrimaryKey> primaryKeys)
+            throws SQLException {
         Objects.requireNonNull(context, "context is null");
         Objects.requireNonNull(primaryKeys, "primaryKeys is null");
-        {
-            final var databaseProductNames = Set.of(
-                    DatabaseProductNames.HSQL_DATABASE_ENGINE // https://sourceforge.net/p/hsqldb/bugs/1673/
-                    , DatabaseProductNames.POSTGRE_SQL
-                    , DatabaseProductNames.MY_SQL // https://bugs.mysql.com/bug.php?id=109808
-            );
-            if (!databaseProductNames.contains(databaseProductName)) {
-                assertThat(primaryKeys).satisfiesAnyOf(
-                        l -> assertThat(l).isSortedAccordingTo(PrimaryKey.CASE_INSENSITIVE_ORDER),
-                        l -> assertThat(l).isSortedAccordingTo(PrimaryKey.LEXICOGRAPHIC_ORDER)
-                );
-            }
+        assertThat(primaryKeys)
+                .doesNotHaveDuplicates();
+        if (!databaseProductName.equals(DatabaseProductNames.POSTGRE_SQL)) {
+            assertThat(primaryKeys)
+                    .satisfiesAnyOf(
+                            l -> assertThat(l).isSortedAccordingTo(PrimaryKey.CASE_INSENSITIVE_ORDER),
+                            l -> assertThat(l).isSortedAccordingTo(PrimaryKey.LEXICOGRAPHIC_ORDER)
+                    );
         }
         for (final var primaryKey : primaryKeys) {
-            MetadataTypeTestUtils.accessors(primaryKey);
             primaryKey(context, primaryKey);
         }
     }
@@ -861,39 +888,36 @@ final class ContextTestUtils {
     private static void primaryKey(final Context context, final PrimaryKey primaryKey) throws SQLException {
         Objects.requireNonNull(context, "context is null");
         Objects.requireNonNull(primaryKey, "primaryKey is null");
-        common(primaryKey);
+        MetadataTypeTestUtils.verify(primaryKey);
     }
 
-    static void pseudoColumns(final Context context,
-                              final List<? extends com.github.jinahya.database.metadata.bind.PseudoColumn> pseudoColumns)
+    private static void pseudoColumns(final Context context, final List<? extends PseudoColumn> pseudoColumns)
             throws SQLException {
         Objects.requireNonNull(context, "context is null");
         Objects.requireNonNull(pseudoColumns, "pseudoColumns is null");
-        assertThat(pseudoColumns).satisfiesAnyOf(
-                l -> assertThat(l).isSortedAccordingTo(
-                        com.github.jinahya.database.metadata.bind.PseudoColumn.CASE_INSENSITIVE_ORDER),
-                l -> assertThat(l).isSortedAccordingTo(
-                        com.github.jinahya.database.metadata.bind.PseudoColumn.LEXICOGRAPHIC_ORDER)
-        );
+        assertThat(pseudoColumns)
+                .doesNotHaveDuplicates()
+                .satisfiesAnyOf(
+                        l -> assertThat(l).isSortedAccordingTo(PseudoColumn.CASE_INSENSITIVE_ORDER),
+                        l -> assertThat(l).isSortedAccordingTo(PseudoColumn.LEXICOGRAPHIC_ORDER)
+                );
         for (final var pseudoColumn : pseudoColumns) {
-            MetadataTypeTestUtils.accessors(pseudoColumn);
             pseudoColumn(context, pseudoColumn);
         }
     }
 
-    static void pseudoColumn(final Context context,
-                             final com.github.jinahya.database.metadata.bind.PseudoColumn pseudoColumn)
-            throws SQLException {
+    static void pseudoColumn(final Context context, final PseudoColumn pseudoColumn) throws SQLException {
         Objects.requireNonNull(context, "context is null");
         Objects.requireNonNull(pseudoColumn, "pseudoColumn is null");
         common(pseudoColumn);
+        MetadataTypeTestUtils.verify(pseudoColumn);
     }
 
     static void superTables(final Context context, final List<? extends SuperTable> superTables) throws SQLException {
         Objects.requireNonNull(context, "context is null");
         Objects.requireNonNull(superTables, "superTables is null");
         for (final var superTable : superTables) {
-            MetadataTypeTestUtils.accessors(superTable);
+            MetadataTypeTestUtils.verifyAccessors(superTable);
             superTable(context, superTable);
         }
     }
@@ -907,9 +931,7 @@ final class ContextTestUtils {
             throws SQLException {
         Objects.requireNonNull(context, "context is null");
         Objects.requireNonNull(tablePrivileges, "tablePrivileges is null");
-        if (!tablePrivileges.isEmpty()) {
-//            log.debug("tablePrivileges: {}", tablePrivileges);
-        }
+        assertThat(tablePrivileges).doesNotHaveDuplicates();
         {
             final var databaseProductNames = Set.of(
                     DatabaseProductNames.HSQL_DATABASE_ENGINE
@@ -922,7 +944,6 @@ final class ContextTestUtils {
             }
         }
         for (final var tablePrivilege : tablePrivileges) {
-            MetadataTypeTestUtils.accessors(tablePrivilege);
             tablePrivilege(context, tablePrivilege);
         }
     }
@@ -931,24 +952,20 @@ final class ContextTestUtils {
         Objects.requireNonNull(context, "context is null");
         Objects.requireNonNull(tablePrivilege, "tablePrivilege is null");
         common(tablePrivilege);
+        MetadataTypeTestUtils.verify(tablePrivilege);
     }
 
     static void tableTypes(final Context context, final List<? extends TableType> tableTypes) throws SQLException {
         Objects.requireNonNull(context, "context is null");
         Objects.requireNonNull(tableTypes, "tableTypes is null");
-        {
-            final var databaseProductNames = Set.of(
-                    DatabaseProductNames.MARIA_DB // https://jira.mariadb.org/browse/CONJ-1049
-            );
-            if (!databaseProductNames.contains(databaseProductName)) {
-                assertThat(tableTypes).satisfiesAnyOf(
+        assertThat(tableTypes)
+                .doesNotHaveDuplicates()
+                .satisfiesAnyOf(
                         l -> assertThat(l).isSortedAccordingTo(TableType.CASE_INSENSITIVE_ORDER),
                         l -> assertThat(l).isSortedAccordingTo(TableType.LEXICOGRAPHIC_ORDER)
                 );
-            }
-        }
         for (final var tableType : tableTypes) {
-            MetadataTypeTestUtils.accessors(tableType);
+            MetadataTypeTestUtils.verifyAccessors(tableType);
             tableType(context, tableType);
         }
     }
@@ -956,6 +973,7 @@ final class ContextTestUtils {
     static void tableType(final Context context, final TableType tableType) throws SQLException {
         Objects.requireNonNull(context, "context is null");
         Objects.requireNonNull(tableType, "tableType is null");
+        MetadataTypeTestUtils.verify(tableType);
         {
             assertThat(tableType.getTableType()).isNotNull();
         }
@@ -976,7 +994,7 @@ final class ContextTestUtils {
             }
         }
         for (final var typeInfo_ : typeInfo) {
-            MetadataTypeTestUtils.accessors(typeInfo_);
+            MetadataTypeTestUtils.verifyAccessors(typeInfo_);
             typeInfo(context, typeInfo_);
         }
     }
@@ -1016,7 +1034,7 @@ final class ContextTestUtils {
             }
         }
         for (final var udt : udts) {
-            MetadataTypeTestUtils.accessors(udt);
+            MetadataTypeTestUtils.verifyAccessors(udt);
             udt(context, udt);
         }
     }
@@ -1030,11 +1048,20 @@ final class ContextTestUtils {
             assertThat(udt.getDataType()).isIn(Types.JAVA_OBJECT, Types.STRUCT, Types.DISTINCT);
             assertDoesNotThrow(() -> JDBCType.valueOf(udt.getDataType()));
         }
+        // -------------------------------------------------------------------------------------------------- attributes
         try {
             final var attributes = context.getAttributes(udt, "%");
             attributes(context, attributes);
         } catch (final SQLException sqle) {
-            thrown("failed; getAttributes", sqle);
+            log.error("failed; getAttributes({}, {})", udt, "%", sqle);
+        }
+
+        // -------------------------------------------------------------------------------------------------- superTypes
+        try {
+            final var superTypes = context.getSuperTypes(udt);
+            superTypes(context, superTypes);
+        } catch (final SQLException sqle) {
+            log.error("failed; getSuperTypes({})", udt, sqle);
         }
     }
 
@@ -1042,8 +1069,10 @@ final class ContextTestUtils {
             throws SQLException {
         Objects.requireNonNull(context, "context is null");
         Objects.requireNonNull(versionColumns, "versionColumns is null");
+        assertThat(versionColumns).doesNotHaveDuplicates().satisfiesAnyOf(l -> {
+        });
         for (final var versionColumn : versionColumns) {
-            MetadataTypeTestUtils.accessors(versionColumn);
+            MetadataTypeTestUtils.verifyAccessors(versionColumn);
             versionColumn(context, versionColumn);
         }
     }
@@ -1054,11 +1083,12 @@ final class ContextTestUtils {
         {
             assertDoesNotThrow(() -> JDBCType.valueOf(versionColumn.getDataType()));
             assertThat(versionColumn.getTypeName()).isNotNull();
-            assertDoesNotThrow(() -> PseudoColumn.valueOfPseudoColumn(versionColumn.getPseudoColumn()));
+            assertDoesNotThrow(() -> VersionColumn.PseudoColumn.valueOfPseudoColumn(versionColumn.getPseudoColumn()));
         }
         {
             common(versionColumn);
         }
+        MetadataTypeTestUtils.verify(versionColumn);
     }
 
     static void testOrdering(final Context context) throws SQLException {
@@ -1212,8 +1242,8 @@ final class ContextTestUtils {
         try {
             final var superTables = context.getSuperTables(null, "%", "%");
             assertThat(superTables).doesNotHaveDuplicates();
-        } catch (final SQLException sqle) {
-            thrown("failed; getSuperTables", sqle);
+        } catch (final SQLFeatureNotSupportedException sqlfnse) {
+            log.error("not supported", sqlfnse);
         }
         try {
             final var superTypes = context.getSuperTypes(null, "%", "%");

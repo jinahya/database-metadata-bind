@@ -58,3 +58,8 @@ $ mvn -Pfailsafe \
   -Dpassword='<your-own-password>'
   clean failsafe:integration-test
 ```
+----
+## Links
+
+### MariaDB
+* [getTables should be ordered as expected](https://jira.mariadb.org/browse/CONJ-1156)

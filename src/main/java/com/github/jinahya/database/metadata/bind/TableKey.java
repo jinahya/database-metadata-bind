@@ -22,11 +22,14 @@ package com.github.jinahya.database.metadata.bind;
 
 import jakarta.annotation.Nullable;
 import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Positive;
+import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.Setter;
+import lombok.ToString;
 
+import java.sql.DatabaseMetaData;
 import java.util.Comparator;
-import java.util.Objects;
 import java.util.Optional;
 
 /**
@@ -39,10 +42,13 @@ import java.util.Optional;
  */
 @Setter
 @Getter
+@EqualsAndHashCode(callSuper = true, onlyExplicitlyIncluded = true)
+@ToString(callSuper = true)
 public abstract class TableKey<T extends TableKey<T>> extends AbstractMetadataType {
 
     private static final long serialVersionUID = 6713872409315471232L;
 
+    // -----------------------------------------------------------------------------------------------------------------
     static <T extends TableKey<T>> Comparator<T> comparingPktableCaseInsensitive() {
         return Comparator.<T, String>comparing(TableKey::pktableCatNonNull, String.CASE_INSENSITIVE_ORDER)
                 .thenComparing(TableKey::pktableSchemNonNull, String.CASE_INSENSITIVE_ORDER)
@@ -71,50 +77,70 @@ public abstract class TableKey<T extends TableKey<T>> extends AbstractMetadataTy
                 .thenComparingInt(TableKey::getKeySeq);
     }
 
+    // -----------------------------------------------------------------------------------------------------------------
+
     /**
      * The column label of {@value}.
      */
     public static final String COLUMN_NAME_PKTABLE_CAT = "PKTABLE_CAT";
+
+    // -----------------------------------------------------------------------------------------------------------------
 
     /**
      * The column label of {@value}.
      */
     public static final String COLUMN_NAME_PKTABLE_SCHEM = "PKTABLE_SCHEM";
 
+    // -----------------------------------------------------------------------------------------------------------------
+
     /**
      * The column label of {@value}.
      */
     public static final String COLUMN_NAME_PKTABLE_NAME = "PKTABLE_NAME";
+
+    // -----------------------------------------------------------------------------------------------------------------
 
     /**
      * The column label of {@value}.
      */
     public static final String COLUMN_NAME_PKCOLUMN_NAME = "PKCOLUMN_NAME";
 
+    // -----------------------------------------------------------------------------------------------------------------
+
     /**
      * The column label of {@value}.
      */
     public static final String COLUMN_NAME_FKTABLE_CAT = "FKTABLE_CAT";
+
+    // -----------------------------------------------------------------------------------------------------------------
 
     /**
      * The column label of {@value}.
      */
     public static final String COLUMN_NAME_FKTABLE_SCHEM = "FKTABLE_SCHEM";
 
+    // -----------------------------------------------------------------------------------------------------------------
+
     /**
      * The column label of {@value}.
      */
     public static final String COLUMN_NAME_FKTABLE_NAME = "FKTABLE_NAME";
+
+    // -----------------------------------------------------------------------------------------------------------------
 
     /**
      * The column label of {@value}.
      */
     public static final String COLUMN_NAME_FKCOLUMN_NAME = "FKCOLUMN_NAME";
 
+    // -----------------------------------------------------------------------------------------------------------------
+
     /**
      * The column label of {@value}.
      */
     public static final String COLUMN_NAME_KEY_SEQ = "KEY_SEQ";
+
+    // -----------------------------------------------------------------------------------------------------------------
 
     /**
      * The column label of {@value}.
@@ -122,9 +148,114 @@ public abstract class TableKey<T extends TableKey<T>> extends AbstractMetadataTy
     public static final String COLUMN_NAME_UPDATE_RULE = "UPDATE_RULE";
 
     /**
+     * Constants for values of {@value TableKey#COLUMN_NAME_UPDATE_RULE} column.
+     *
+     * @author Jin Kwon &lt;onacit_at_gmail.com&gt;
+     * @see ExportedKey
+     * @see ImportedKey
+     */
+    public enum TableKeyUpdateRule implements _IntFieldEnum<TableKeyUpdateRule> {
+
+        /**
+         * Constants for {@link DatabaseMetaData#importedKeyCascade}({@value DatabaseMetaData#importedKeyCascade}).
+         */
+        IMPORTED_KEY_CASCADE(DatabaseMetaData.importedKeyCascade), // 0
+
+        /**
+         * Constants for {@link DatabaseMetaData#importedKeyRestrict}({@value DatabaseMetaData#importedKeyRestrict}).
+         */
+        IMPORTED_KEY_RESTRICT(DatabaseMetaData.importedKeyRestrict), // 1
+
+        /**
+         * Constants for {@link DatabaseMetaData#importedKeySetNull}({@value DatabaseMetaData#importedKeySetNull}).
+         */
+        IMPORTED_KEY_SET_NULL(DatabaseMetaData.importedKeySetNull), // 2
+
+        /**
+         * Constants for {@link DatabaseMetaData#importedKeyNoAction}({@value DatabaseMetaData#importedKeyNoAction}).
+         */
+        IMPORTED_KEY_NO_ACTION(DatabaseMetaData.importedKeyNoAction), // 3
+
+        /**
+         * Constants for
+         * {@link DatabaseMetaData#importedKeySetDefault}({@value DatabaseMetaData#importedKeySetDefault}).
+         */
+        IMPORTED_KEY_SET_DEFAULT(DatabaseMetaData.importedKeySetDefault); // 4
+
+        public static TableKeyUpdateRule valueOfUpdateRule(final int updateRule) {
+            return _IntFieldEnum.valueOfFieldValue(TableKeyUpdateRule.class, updateRule);
+        }
+
+        TableKeyUpdateRule(final int fieldValue) {
+            this.fieldValue = fieldValue;
+        }
+
+        @Override
+        public int fieldValueAsInt() {
+            return fieldValue;
+        }
+
+        private final int fieldValue;
+    }
+    // -----------------------------------------------------------------------------------------------------------------
+
+    /**
      * The column label of {@value}.
      */
     public static final String COLUMN_NAME_DELETE_RULE = "DELETE_RULE";
+
+    /**
+     * Constants for values of {@value TableKey#COLUMN_NAME_DELETE_RULE} column.
+     *
+     * @author Jin Kwon &lt;onacit_at_gmail.com&gt;
+     * @see ExportedKey
+     * @see ImportedKey
+     */
+    public enum TableKeyDeleteRule implements _IntFieldEnum<TableKeyDeleteRule> {
+
+        /**
+         * Constants for {@link DatabaseMetaData#importedKeyCascade}({@value DatabaseMetaData#importedKeyCascade}).
+         */
+        IMPORTED_KEY_CASCADE(DatabaseMetaData.importedKeyCascade), // 0
+
+        /**
+         * Constants for {@link DatabaseMetaData#importedKeyRestrict}({@value DatabaseMetaData#importedKeyRestrict}).
+         */
+        IMPORTED_KEY_RESTRICT(DatabaseMetaData.importedKeyRestrict), // 1
+
+        /**
+         * Constants for {@link DatabaseMetaData#importedKeySetNull}({@value DatabaseMetaData#importedKeySetNull}).
+         */
+        IMPORTED_KEY_SET_NULL(DatabaseMetaData.importedKeySetNull), // 2
+
+        /**
+         * Constants for {@link DatabaseMetaData#importedKeyNoAction}({@value DatabaseMetaData#importedKeyNoAction}).
+         */
+        IMPORTED_KEY_NO_ACTION(DatabaseMetaData.importedKeyNoAction), // 3
+
+        /**
+         * Constants for
+         * {@link DatabaseMetaData#importedKeySetDefault}({@value DatabaseMetaData#importedKeySetDefault}).
+         */
+        IMPORTED_KEY_SET_DEFAULT(DatabaseMetaData.importedKeySetDefault); // 4
+
+        public static TableKeyDeleteRule valueOfDeleteRule(final int deleteRule) {
+            return _IntFieldEnum.valueOfFieldValue(TableKeyDeleteRule.class, deleteRule);
+        }
+
+        TableKeyDeleteRule(final int fieldValue) {
+            this.fieldValue = fieldValue;
+        }
+
+        @Override
+        public int fieldValueAsInt() {
+            return fieldValue;
+        }
+
+        private final int fieldValue;
+    }
+
+    // -----------------------------------------------------------------------------------------------------------------
 
     /**
      * The column label of {@value}.
@@ -136,86 +267,140 @@ public abstract class TableKey<T extends TableKey<T>> extends AbstractMetadataTy
      */
     public static final String COLUMN_NAME_PK_NAME = "PK_NAME";
 
+    // -----------------------------------------------------------------------------------------------------------------
+
     /**
      * The column label of {@value}.
      */
     public static final String COLUMN_NAME_DEFERRABILITY = "DEFERRABILITY";
 
-    @Override
-    public String toString() {
-        return super.toString() + '{' +
-               "pktableCat=" + pktableCat +
-               ",pktableSchem=" + pktableSchem +
-               ",pktableName=" + pktableName +
-               ",pkcolumnName=" + pkcolumnName +
-               ",fktableCat=" + fktableCat +
-               ",fktableSchem=" + fktableSchem +
-               ",fktableName=" + fktableName +
-               ",fkcolumnName=" + fkcolumnName +
-               ",keySeq=" + keySeq +
-               ",updateRule=" + updateRule +
-               ",deleteRule=" + deleteRule +
-               ",fkName=" + fkName +
-               ",pkName=" + pkName +
-               ",deferrability=" + deferrability +
-               '}';
+    /**
+     * Constants for values of {@value TableKey#COLUMN_NAME_DEFERRABILITY} column.
+     *
+     * @author Jin Kwon &lt;onacit_at_gmail.com&gt;
+     * @see ExportedKey
+     * @see ImportedKey
+     */
+    public enum TableKeyDeferrability implements _IntFieldEnum<TableKeyDeferrability> {
+
+        /**
+         * Constants for
+         * {@link DatabaseMetaData#importedKeyInitiallyDeferred}({@value
+         * DatabaseMetaData#importedKeyInitiallyDeferred}).
+         */
+        IMPORTED_KEY_INITIALLY_DEFERRED(DatabaseMetaData.importedKeyInitiallyDeferred), // 5
+
+        /**
+         * Constants for
+         * {@link DatabaseMetaData#importedKeyInitiallyImmediate}({@value
+         * DatabaseMetaData#importedKeyInitiallyImmediate}).
+         */
+        IMPORTED_KEY_INITIALLY_IMMEDIATE(DatabaseMetaData.importedKeyInitiallyImmediate), // 6
+
+        /**
+         * Constants for
+         * {@link DatabaseMetaData#importedKeyNotDeferrable}({@value DatabaseMetaData#importedKeyNotDeferrable}).
+         */
+        IMPORTED_KEY_SET_NOT_DEFERRABLE(DatabaseMetaData.importedKeyNotDeferrable); // 7
+
+        public static TableKeyDeferrability valueOfDeferrability(final int deferrability) {
+            return _IntFieldEnum.valueOfFieldValue(TableKeyDeferrability.class, deferrability);
+        }
+
+        TableKeyDeferrability(final int fieldValue) {
+            this.fieldValue = fieldValue;
+        }
+
+        @Override
+        public int fieldValueAsInt() {
+            return fieldValue;
+        }
+
+        private final int fieldValue;
     }
 
-    @Override
-    public boolean equals(final Object obj) {
-        if (this == obj) return true;
-        if (!(obj instanceof TableKey)) return false;
-        final TableKey<?> that = (TableKey<?>) obj;
-        return equals_(that);
+    // ------------------------------------------------------------------------------------------------------ pktableCat
+    @EqualsAndHashCode.Include
+    String pktableCatNonNull() {
+        if (pktableCat == null) {
+            return Catalog.COLUMN_VALUE_TABLE_CAT_EMPTY;
+        }
+        return pktableCat;
     }
 
-    @SuppressWarnings({"java:S100"})
-    boolean equals_(final TableKey<?> that) {
-        assert that != null;
-        return Objects.equals(pktableCatNonNull(), that.pktableCatNonNull()) &&
-               Objects.equals(pktableSchemNonNull(), that.pktableSchemNonNull()) &&
-               Objects.equals(pktableName, that.pktableName) &&
-               Objects.equals(pkcolumnName, that.pkcolumnName) &&
-               Objects.equals(fktableCatNonNull(), that.fktableCatNonNull()) &&
-               Objects.equals(fktableSchemNonNull(), that.fktableSchemNonNull()) &&
-               Objects.equals(fktableName, that.fktableName) &&
-               Objects.equals(fkcolumnName, that.fkcolumnName);
+    // ---------------------------------------------------------------------------------------------------- pktableSchem
+    @EqualsAndHashCode.Include
+    String pktableSchemNonNull() {
+        if (pktableSchem == null) {
+            return Schema.COLUMN_VALUE_TABLE_SCHEM_EMPTY;
+        }
+        return pktableSchem;
     }
 
-    @Override
-    public int hashCode() {
-        return Objects.hash(
-                pktableCatNonNull(), pktableSchemNonNull(), pktableName, pkcolumnName,
-                fktableCatNonNull(), fktableSchemNonNull(), fktableName, fkcolumnName
+    // ------------------------------------------------------------------------------------------------------ fktableCat
+    @EqualsAndHashCode.Include
+    String fktableCatNonNull() {
+        if (fktableCat == null) {
+            return Catalog.COLUMN_VALUE_TABLE_CAT_EMPTY;
+        }
+        return fktableCat;
+    }
+
+    // ---------------------------------------------------------------------------------------------------- fktableSchem
+    @EqualsAndHashCode.Include
+    String fktableSchemNonNull() {
+        if (fktableSchem == null) {
+            return Schema.COLUMN_VALUE_TABLE_SCHEM_EMPTY;
+        }
+        return fktableSchem;
+    }
+
+    // ------------------------------------------------------------------------------------------------------ updateRule
+    TableKeyUpdateRule getUpdateRuleAsEnum() {
+        return Optional.ofNullable(getUpdateRule())
+                .map(TableKeyUpdateRule::valueOfUpdateRule)
+                .orElse(null);
+    }
+
+    void setUpdateRuleAsEnum(final TableKeyUpdateRule updateRuleAsEnum) {
+        setUpdateRule(
+                Optional.ofNullable(updateRuleAsEnum)
+                        .map(_IntFieldEnum::fieldValueAsInt)
+                        .orElse(null)
         );
     }
 
-    public Integer getDeleteRule() {
-        return deleteRule;
+    // ------------------------------------------------------------------------------------------------------ deleteRule
+    TableKeyDeleteRule getDeleteRuleAsEnum() {
+        return Optional.ofNullable(getDeleteRule())
+                .map(TableKeyDeleteRule::valueOfDeleteRule)
+                .orElse(null);
     }
 
-    public void setDeleteRule(final Integer deleteRule) {
-        this.deleteRule = deleteRule;
+    void setDeleteRuleAsEnum(final TableKeyDeleteRule deleteRuleAsEnum) {
+        setDeleteRule(
+                Optional.ofNullable(deleteRuleAsEnum)
+                        .map(_IntFieldEnum::fieldValueAsInt)
+                        .orElse(null)
+        );
     }
 
-    /**
-     * Returns current value of {@link #COLUMN_NAME_DEFERRABILITY} column value.
-     *
-     * @return current value of {@link #COLUMN_NAME_DEFERRABILITY} column value.
-     */
-    public Integer getDeferrability() {
-        return deferrability;
+    // --------------------------------------------------------------------------------------------------- deferrability
+    TableKeyDeferrability getDeferrabilityAsEnum() {
+        return Optional.ofNullable(getDeferrability())
+                .map(v -> TableKeyDeferrability.valueOfDeferrability(getDeferrability()))
+                .orElse(null);
     }
 
-    /**
-     * Replaces current value of {@link #COLUMN_NAME_DEFERRABILITY} column value with specified value.
-     *
-     * @param deferrability new value for the {@link #COLUMN_NAME_DEFERRABILITY} column value.
-     */
-    public void setDeferrability(final Integer deferrability) {
-        this.deferrability = deferrability;
+    void setDeferrabilityAsEnum(final TableKeyDeferrability deferrabilityAsEnum) {
+        setDeferrability(
+                Optional.ofNullable(deferrabilityAsEnum)
+                        .map(TableKeyDeferrability::fieldValueAsInt)
+                        .orElse(null)
+        );
     }
 
+    // -----------------------------------------------------------------------------------------------------------------
     @Nullable
     @_NullableBySpecification
     @_ColumnLabel(COLUMN_NAME_PKTABLE_CAT)
@@ -227,11 +412,14 @@ public abstract class TableKey<T extends TableKey<T>> extends AbstractMetadataTy
     private String pktableSchem;
 
     @_ColumnLabel(COLUMN_NAME_PKTABLE_NAME)
+    @EqualsAndHashCode.Include
     private String pktableName;
 
     @_ColumnLabel(COLUMN_NAME_PKCOLUMN_NAME)
+    @EqualsAndHashCode.Include
     private String pkcolumnName;
 
+    // -----------------------------------------------------------------------------------------------------------------
     @Nullable
     @_NullableBySpecification
     @_ColumnLabel(COLUMN_NAME_FKTABLE_CAT)
@@ -243,11 +431,15 @@ public abstract class TableKey<T extends TableKey<T>> extends AbstractMetadataTy
     private String fktableSchem;
 
     @_ColumnLabel(COLUMN_NAME_FKTABLE_NAME)
+    @EqualsAndHashCode.Include
     private String fktableName;
 
     @_ColumnLabel(COLUMN_NAME_FKCOLUMN_NAME)
+    @EqualsAndHashCode.Include
     private String fkcolumnName;
 
+    // -----------------------------------------------------------------------------------------------------------------
+    @Positive
     @NotNull
     @_NonNullBySpecification
     @_ColumnLabel(COLUMN_NAME_KEY_SEQ)
@@ -277,66 +469,4 @@ public abstract class TableKey<T extends TableKey<T>> extends AbstractMetadataTy
     @_NonNullBySpecification
     @_ColumnLabel(COLUMN_NAME_DEFERRABILITY)
     private Integer deferrability;
-
-    String pktableCatNonNull() {
-        final String pktableCat_ = getPktableCat();
-        return pktableCat_ == null ? Catalog.COLUMN_VALUE_TABLE_CAT_EMPTY : pktableCat_;
-    }
-
-    String pktableSchemNonNull() {
-        final String pktableSchem_ = getPktableSchem();
-        return pktableSchem_ == null ? Schema.COLUMN_VALUE_TABLE_SCHEM_EMPTY : pktableSchem_;
-    }
-
-    String fktableCatNonNull() {
-        final String fktableCat_ = getFktableCat();
-        return fktableCat_ == null ? Catalog.COLUMN_VALUE_TABLE_CAT_EMPTY : fktableCat_;
-    }
-
-    String fktableSchemNonNull() {
-        final String fktableSchem_ = getFktableSchem();
-        return fktableSchem_ == null ? Schema.COLUMN_VALUE_TABLE_SCHEM_EMPTY : fktableSchem_;
-    }
-
-    TableKeyUpdateRule getUpdateRuleAsEnum() {
-        return Optional.ofNullable(getUpdateRule())
-                .map(TableKeyUpdateRule::valueOfUpdateRule)
-                .orElse(null);
-    }
-
-    void setUpdateRuleAsEnum(final TableKeyUpdateRule updateRuleAsEnum) {
-        setUpdateRule(
-                Optional.ofNullable(updateRuleAsEnum)
-                        .map(_IntFieldEnum::fieldValueAsInt)
-                        .orElse(null)
-        );
-    }
-
-    TableKeyDeleteRule getDeleteRuleAsEnum() {
-        return Optional.ofNullable(getDeleteRule())
-                .map(TableKeyDeleteRule::valueOfDeleteRule)
-                .orElse(null);
-    }
-
-    void setDeleteRuleAsEnum(final TableKeyDeleteRule deleteRuleAsEnum) {
-        setDeleteRule(
-                Optional.ofNullable(deleteRuleAsEnum)
-                        .map(_IntFieldEnum::fieldValueAsInt)
-                        .orElse(null)
-        );
-    }
-
-    TableKeyDeferrability getDeferrabilityAsEnum() {
-        return Optional.ofNullable(getDeferrability())
-                .map(v -> TableKeyDeferrability.valueOfDeferrability(getDeferrability()))
-                .orElse(null);
-    }
-
-    void setDeferrabilityAsEnum(final TableKeyDeferrability deferrabilityAsEnum) {
-        setDeferrability(
-                Optional.ofNullable(deferrabilityAsEnum)
-                        .map(TableKeyDeferrability::fieldValueAsInt)
-                        .orElse(null)
-        );
-    }
 }

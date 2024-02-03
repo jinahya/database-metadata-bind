@@ -21,27 +21,46 @@ package com.github.jinahya.database.metadata.bind;
  */
 
 import lombok.extern.slf4j.Slf4j;
+import org.junit.jupiter.api.AfterAll;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.BeforeAll;
 import org.testcontainers.containers.MySQLContainer;
-import org.testcontainers.junit.jupiter.Container;
-import org.testcontainers.junit.jupiter.Testcontainers;
+import org.testcontainers.shaded.org.awaitility.Awaitility;
 import org.testcontainers.utility.DockerImageName;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
+import java.time.Duration;
 
-@Testcontainers
+//@Testcontainers
 @Slf4j
 class TestContainers_MySQL_IT extends TestContainers_$_IT {
 
-    @Container
-    private static final MySQLContainer<?> CONTAINER;
+    //    @Container
+    private static MySQLContainer<?> CONTAINER;
 
-    static {
+    @BeforeAll
+    static void start() {
         final DockerImageName NAME = DockerImageName.parse("mysql:latest");
         CONTAINER = new MySQLContainer<>(NAME);
+        CONTAINER.start();
+        final var timeout = Duration.ofSeconds(10L);
+        log.debug("awaiting for {}", timeout);
+        Awaitility.await()
+                .atMost(timeout)
+                .pollDelay(Duration.ofSeconds(1L))
+                .untilAsserted(() -> {
+                    Assertions.assertTrue(CONTAINER.isRunning());
+                });
     }
 
+    @AfterAll
+    static void stop() {
+        CONTAINER.stop();
+    }
+
+    // -----------------------------------------------------------------------------------------------------------------
     @Override
     Connection connect() throws SQLException {
         final var url = CONTAINER.getJdbcUrl();

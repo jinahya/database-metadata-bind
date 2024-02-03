@@ -22,11 +22,12 @@ package com.github.jinahya.database.metadata.bind;
 
 import jakarta.annotation.Nullable;
 import jakarta.validation.constraints.NotNull;
+import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.Setter;
+import lombok.ToString;
 
 import java.sql.DatabaseMetaData;
-import java.util.Objects;
 import java.util.Optional;
 
 /**
@@ -37,10 +38,13 @@ import java.util.Optional;
  */
 @Setter
 @Getter
+@EqualsAndHashCode(callSuper = true, onlyExplicitlyIncluded = true)
+@ToString(callSuper = true)
 public class VersionColumn extends AbstractMetadataType {
 
     private static final long serialVersionUID = 3587959398829593292L;
 
+    // -----------------------------------------------------------------------------------------------------------------
     public static final String COLUMN_LABEL_PSEUDO_COLUMN = "PSEUDO_COLUMN";
 
     /**
@@ -90,38 +94,32 @@ public class VersionColumn extends AbstractMetadataType {
         private final int fieldValue;
     }
 
-    @Override
-    public String toString() {
-        return super.toString() + '{' +
-               "scope=" + scope +
-               ",columnName=" + columnName +
-               ",dataType=" + dataType +
-               ",typeName=" + typeName +
-               ",columnSize=" + columnSize +
-               ",bufferLength=" + bufferLength +
-               ",decimalDigits=" + decimalDigits +
-               ",pseudoColumn=" + pseudoColumn +
-               '}';
+    // -----------------------------------------------------------------------------------------------------------------
+    PseudoColumn getPseudoColumnAsEnum() {
+        return Optional.ofNullable(getPseudoColumn())
+                .map(PseudoColumn::valueOfPseudoColumn)
+                .orElse(null);
     }
 
-    @Override
-    public boolean equals(final Object obj) {
-        if (this == obj) return true;
-        if (!(obj instanceof VersionColumn)) return false;
-        final VersionColumn that = (VersionColumn) obj;
-        return Objects.equals(columnName, that.columnName);
+    void setPseudoColumnAsEnum(final PseudoColumn pseudoColumnAsEnum) {
+        setPseudoColumn(
+                Optional.ofNullable(pseudoColumnAsEnum)
+                        .map(PseudoColumn::fieldValueAsInt)
+                        .orElse(null)
+        );
     }
 
-    @Override
-    public int hashCode() {
-        return Objects.hash(columnName);
-    }
+    // -----------------------------------------------------------------------------------------------------------------
+    @EqualsAndHashCode.Include
+    private Table parent;
 
+    // -----------------------------------------------------------------------------------------------------------------
     @_NotUsedBySpecification
     @_ColumnLabel("SCOPE")
     private Integer scope;
 
     @_ColumnLabel("COLUMN_NAME")
+    @EqualsAndHashCode.Include
     private String columnName;
 
     @NotNull
@@ -137,9 +135,6 @@ public class VersionColumn extends AbstractMetadataType {
     @_ColumnLabel("COLUMN_SIZE")
     private Integer columnSize;
 
-    @NotNull
-    @_NullableByVendor("PostgreSQL")
-    @_NonNullBySpecification
     @_ColumnLabel("BUFFER_LENGTH")
     private Integer bufferLength;
 
@@ -148,22 +143,6 @@ public class VersionColumn extends AbstractMetadataType {
     @_ColumnLabel("DECIMAL_DIGITS")
     private Integer decimalDigits;
 
-    @NotNull
-    @_NonNullBySpecification
     @_ColumnLabel(COLUMN_LABEL_PSEUDO_COLUMN)
     private Integer pseudoColumn;
-
-    PseudoColumn getPseudoColumnAsEnum() {
-        return Optional.ofNullable(getPseudoColumn())
-                .map(PseudoColumn::valueOfPseudoColumn)
-                .orElse(null);
-    }
-
-    void setPseudoColumnAsEnum(final PseudoColumn pseudoColumnAsEnum) {
-        setPseudoColumn(
-                Optional.ofNullable(pseudoColumnAsEnum)
-                        .map(PseudoColumn::fieldValueAsInt)
-                        .orElse(null)
-        );
-    }
 }

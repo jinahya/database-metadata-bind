@@ -21,11 +21,12 @@ package com.github.jinahya.database.metadata.bind;
  */
 
 import jakarta.annotation.Nullable;
+import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.Setter;
+import lombok.ToString;
 
 import java.sql.DatabaseMetaData;
-import java.util.Objects;
 
 /**
  * A class for binding results of the
@@ -36,89 +37,49 @@ import java.util.Objects;
  */
 @Setter
 @Getter
+@EqualsAndHashCode(callSuper = true)
+@ToString(callSuper = true)
 public class SuperType extends AbstractMetadataType {
 
     private static final long serialVersionUID = 4603878785941565029L;
 
-    @Override
-    public String toString() {
-        return super.toString() + '{' +
-               "typeCat=" + typeCat +
-               ",typeSchem=" + typeSchem +
-               ",typeName=" + typeName +
-               ",supertypeCat=" + supertypeCat +
-               ",supertypeSchem=" + supertypeSchem +
-               ",supertypeName=" + supertypeName +
-               '}';
-    }
-
-    @Override
-    public boolean equals(final Object obj) {
-        if (this == obj) return true;
-        if (!(obj instanceof SuperType)) return false;
-        final SuperType that = (SuperType) obj;
-        return Objects.equals(typeCatNonNull(), that.typeCatNonNull()) &&
-               Objects.equals(typeSchemNonNull(), that.typeSchemNonNull()) &&
-               Objects.equals(typeName, that.typeName);
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(
-                typeCatNonNull(),
-                typeSchemNonNull(),
-                typeName
-        );
-    }
-
-    public String getTypeCat() {
+    // --------------------------------------------------------------------------------------------------------- typeCat
+    @EqualsAndHashCode.Include
+    String typeCatNonNull() {
+        if (typeCat == null) {
+            return Catalog.COLUMN_VALUE_TABLE_CAT_EMPTY;
+        }
         return typeCat;
     }
 
-    public void setTypeCat(final String typeCat) {
-        this.typeCat = typeCat;
-    }
-
-    public String getTypeSchem() {
+    // ------------------------------------------------------------------------------------------------------- typeSchem
+    @EqualsAndHashCode.Include
+    String typeSchemNonNull() {
+        if (typeSchem == null) {
+            return Schema.COLUMN_VALUE_TABLE_SCHEM_EMPTY;
+        }
         return typeSchem;
     }
 
-    public void setTypeSchem(final String typeSchem) {
-        this.typeSchem = typeSchem;
-    }
-
-    public String getTypeName() {
-        return typeName;
-    }
-
-    public void setTypeName(final String typeName) {
-        this.typeName = typeName;
-    }
-
-    public String getSupertypeCat() {
+    // ---------------------------------------------------------------------------------------------------- superTypeCat
+    @EqualsAndHashCode.Include
+    String supertypeCatNonNull() {
+        if (supertypeCat == null) {
+            return Catalog.COLUMN_VALUE_TABLE_CAT_EMPTY;
+        }
         return supertypeCat;
     }
 
-    public void setSupertypeCat(final String supertypeCat) {
-        this.supertypeCat = supertypeCat;
-    }
-
-    public String getSupertypeSchem() {
+    // -------------------------------------------------------------------------------------------------- superTypeSchem
+    @EqualsAndHashCode.Include
+    String supertypeSchemNonNull() {
+        if (supertypeSchem == null) {
+            return Schema.COLUMN_VALUE_TABLE_SCHEM_EMPTY;
+        }
         return supertypeSchem;
     }
 
-    public void setSupertypeSchem(final String supertypeSchem) {
-        this.supertypeSchem = supertypeSchem;
-    }
-
-    public String getSupertypeName() {
-        return supertypeName;
-    }
-
-    public void setSupertypeName(final String supertypeName) {
-        this.supertypeName = supertypeName;
-    }
-
+    // -----------------------------------------------------------------------------------------------------------------
     @Nullable
     @_NullableBySpecification
     @_ColumnLabel("TYPE_CAT")
@@ -130,8 +91,10 @@ public class SuperType extends AbstractMetadataType {
     private String typeSchem;
 
     @_ColumnLabel("TYPE_NAME")
+    @EqualsAndHashCode.Include
     private String typeName;
 
+    // -----------------------------------------------------------------------------------------------------------------
     @Nullable
     @_NullableBySpecification
     @_ColumnLabel("SUPERTYPE_CAT")
@@ -143,37 +106,6 @@ public class SuperType extends AbstractMetadataType {
     private String supertypeSchem;
 
     @_ColumnLabel("SUPERTYPE_NAME")
+    @EqualsAndHashCode.Include
     private String supertypeName;
-
-    String typeCatNonNull() {
-        final String typeCat_ = getTypeCat();
-        if (typeCat_ != null) {
-            return typeCat_;
-        }
-        return Catalog.COLUMN_VALUE_TABLE_CAT_EMPTY;
-    }
-
-    String typeSchemNonNull() {
-        final String typeSchem_ = getTypeSchem();
-        if (typeSchem_ != null) {
-            return typeSchem_;
-        }
-        return Schema.COLUMN_VALUE_TABLE_SCHEM_EMPTY;
-    }
-
-    String supertypeCatNonNull() {
-        final String supertypeCat_ = getSupertypeCat();
-        if (supertypeCat_ != null) {
-            return supertypeCat_;
-        }
-        return Catalog.COLUMN_VALUE_TABLE_CAT_EMPTY;
-    }
-
-    String supertypeSchemNonNull() {
-        final String supertypeSchem_ = getSupertypeSchem();
-        if (supertypeSchem_ != null) {
-            return supertypeSchem_;
-        }
-        return Schema.COLUMN_VALUE_TABLE_SCHEM_EMPTY;
-    }
 }

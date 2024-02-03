@@ -522,7 +522,7 @@ public class Context {
      * @param parentSchema   a value for {@code parentSchema} parameter
      * @param parentTable    a value for {@code parentTable} parameter
      * @param foreignCatalog a value for {@code foreignCatalog} parameter
-     * @param foreignSchema  av value for {@code foreignSchema} parameter
+     * @param foreignSchema  a value for {@code foreignSchema} parameter
      * @param foreignTable   a value for {@code foreignTable} parameter
      * @param consumer       the consumer to which bound values are accepted.
      * @throws SQLException if a database error occurs.
@@ -562,7 +562,7 @@ public class Context {
      * @param parentSchema   a value for {@code parentSchema} parameter
      * @param parentTable    a value for {@code parentTable} parameter
      * @param foreignCatalog a value for {@code foreignCatalog} parameter
-     * @param foreignSchema  av value for {@code foreignSchema} parameter
+     * @param foreignSchema  a value for {@code foreignSchema} parameter
      * @param foreignTable   a value for {@code foreignTable} parameter
      * @return a list of bound values.
      * @throws SQLException if a database error occurs.
@@ -571,10 +571,21 @@ public class Context {
                                                   final String parentTable, final String foreignCatalog,
                                                   final String foreignSchema, final String foreignTable)
             throws SQLException {
-        final List<CrossReference> list = new ArrayList<>();
-        acceptCrossReference(parentCatalog, parentSchema, parentTable, foreignCatalog, foreignSchema, foreignTable,
-                             list::add);
-        return list;
+        return addCrossReference(parentCatalog, parentSchema, parentTable, foreignCatalog, foreignSchema, foreignTable,
+                                 new ArrayList<>());
+    }
+
+    List<CrossReference> getCrossReference(final Table parentTable, final Table foreighTable) throws SQLException {
+        Objects.requireNonNull(parentTable, "parentTable is null");
+        Objects.requireNonNull(foreighTable, "foreignTable is null");
+        return getCrossReference(
+                parentTable.tableCatNonNull(),
+                parentTable.tableSchemNonNull(),
+                parentTable.getTableName(),
+                foreighTable.tableCatNonNull(),
+                foreighTable.tableSchemNonNull(),
+                foreighTable.getTableName()
+        );
     }
 
     // ------------------------------------------------------------------------- getExportedKeys(catalog, schema, table)
@@ -864,9 +875,8 @@ public class Context {
     }
 
     /**
-     * Invokes
-     * {@link DatabaseMetaData#getIndexInfo(String, String, String, boolean, boolean) getIndexInfo(catalog, schema,
-     * table, unique, approximate)} method with specified arguments, and returns a list of bound values.
+     * Invokes {@link DatabaseMetaData#getIndexInfo(String, String, String, boolean, boolean)} method with specified
+     * arguments, and returns a list of bound values.
      *
      * @param catalog     a value for {@code catalog} parameter.
      * @param schema      a value for {@code schema} parameter.
@@ -875,6 +885,7 @@ public class Context {
      * @param approximate a value for {@code approximate} parameter.
      * @return a list of bound values.
      * @throws SQLException if a database error occurs.
+     * @see DatabaseMetaData#getIndexInfo(String, String, String, boolean, boolean)
      */
     public List<IndexInfo> getIndexInfo(final String catalog, final String schema, final String table,
                                         final boolean unique, final boolean approximate)
@@ -886,8 +897,8 @@ public class Context {
             throws SQLException {
         Objects.requireNonNull(table, "table is null");
         return getIndexInfo(
-                table.tableCatNonNull(),
-                table.tableSchemNonNull(),
+                table.getTableCat(),
+                table.getTableSchem(),
                 table.getTableName(),
                 unique,
                 approximate
@@ -1004,10 +1015,9 @@ public class Context {
     List<ProcedureColumn> getProcedureColumns(final Procedure procedure, final String columnNamePattern)
             throws SQLException {
         Objects.requireNonNull(procedure, "procedure is null");
-        Objects.requireNonNull(columnNamePattern, "columnNamePattern is null");
         return getProcedureColumns(
-                procedure.procedureCatNonNull(),
-                procedure.procedureSchemNonNull(),
+                procedure.getProcedureCat(),
+                procedure.getProcedureSchem(),
                 procedure.getProcedureName(),
                 columnNamePattern
         );
@@ -1063,11 +1073,24 @@ public class Context {
         return addProcedures(catalog, schemaPattern, procedureNamePattern, new ArrayList<>());
     }
 
+    List<Procedure> getProcedures(final Catalog catalog, final String procedureNamePattern)
+            throws SQLException {
+        Objects.requireNonNull(catalog, "catalog is null");
+        return getProcedures(catalog.tableCatNonNull(), null, procedureNamePattern);
+    }
+
+    List<Procedure> getProcedures(final Schema schema, final String procedureNamePattern)
+            throws SQLException {
+        Objects.requireNonNull(schema, "schema is null");
+        return getProcedures(schema.tableCatalogNonNull(), schema.tableCatalogNonNull(), procedureNamePattern);
+    }
+
+    // ----------------------------- getPseudoColumns(catalog, schemaPattern, procedureNamePattern, columnNamePattern)
+
     /**
      * Invokes
-     * {@link DatabaseMetaData#getPseudoColumns(java.lang.String, java.lang.String, java.lang.String, java.lang.String)
-     * getProcedureColumns(catalog, schemaPattern, tableNamePattern, columnNamePattern)} method with given arguments,
-     * and accepts each bound value to specified consumer.
+     * {@link DatabaseMetaData#getPseudoColumns(java.lang.String, java.lang.String, java.lang.String, java.lang.String)}
+     * method with given arguments, and accepts each bound value to specified consumer.
      *
      * @param catalog           a value for {@code catalog} parameter.
      * @param schemaPattern     a value for {@code schemaPattern} parameter.
@@ -1108,6 +1131,7 @@ public class Context {
      * @param columnNamePattern a value for {@code columnNamePattern} parameter.
      * @return a list of bound values.
      * @throws SQLException if a database error occurs.
+     * @see DatabaseMetaData#getPseudoColumns(String, String, String, String)
      */
     public List<PseudoColumn> getPseudoColumns(final String catalog, final String schemaPattern,
                                                final String tableNamePattern, final String columnNamePattern)
@@ -1150,6 +1174,7 @@ public class Context {
      * @throws SQLException if a database error occurs.
      */
     <T extends Collection<? super Schema>> T addSchemas(final T collection) throws SQLException {
+        Objects.requireNonNull(collection, "collection is null");
         acceptSchemas(collection::add);
         return collection;
     }
@@ -1209,7 +1234,7 @@ public class Context {
     List<Schema> getSchemas(final Catalog catalog, final String schemaPattern) throws SQLException {
         Objects.requireNonNull(catalog, "catalog is null");
         return getSchemas(
-                catalog.getTableCat(),
+                catalog.tableCatNonNull(),
                 schemaPattern
         );
     }
@@ -1271,6 +1296,14 @@ public class Context {
         );
     }
 
+    List<SuperTable> getSuperTables(final Table table) throws SQLException {
+        Objects.requireNonNull(table, "table is null");
+        return getSuperTables(
+                Schema.of(table.getTableCat(), table.getTableSchem()),
+                table.getTableName()
+        );
+    }
+
     // ----------------------------------------------------------- getSuperType(catalog, schemaPattern, typeNamePattern)
 
     /**
@@ -1325,6 +1358,15 @@ public class Context {
                 schema.tableCatalogNonNull(),
                 schema.getTableSchem(),
                 typeNamePattern
+        );
+    }
+
+    List<SuperType> getSuperTypes(final UDT udt) throws SQLException {
+        Objects.requireNonNull(udt, "udt is null");
+        return getSuperTypes(
+                udt.typeCatNonNull(),
+                udt.typeSchemNonNull(),
+                udt.getTypeName()
         );
     }
 

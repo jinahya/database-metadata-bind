@@ -22,13 +22,13 @@ package com.github.jinahya.database.metadata.bind;
 
 import jakarta.annotation.Nullable;
 import jakarta.validation.constraints.NotNull;
+import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
 
 import java.sql.DatabaseMetaData;
 import java.util.Comparator;
-import java.util.Objects;
 
 import static java.util.Comparator.naturalOrder;
 import static java.util.Comparator.nullsFirst;
@@ -43,11 +43,13 @@ import static java.util.Comparator.nullsFirst;
  */
 @Setter
 @Getter
+@EqualsAndHashCode(callSuper = true, onlyExplicitlyIncluded = true)
 @ToString(callSuper = true)
 public class ProcedureColumn extends AbstractMetadataType {
 
     private static final long serialVersionUID = 3894753719381358829L;
 
+    // -----------------------------------------------------------------------------------------------------------------
     static final Comparator<ProcedureColumn> CASE_INSENSITIVE_ORDER =
             Comparator.comparing(ProcedureColumn::getProcedureCat, nullsFirst(String.CASE_INSENSITIVE_ORDER))
                     .thenComparing(ProcedureColumn::getProcedureSchem, nullsFirst(String.CASE_INSENSITIVE_ORDER))
@@ -60,29 +62,26 @@ public class ProcedureColumn extends AbstractMetadataType {
                     .thenComparing(ProcedureColumn::getProcedureName, nullsFirst(naturalOrder()))
                     .thenComparing(ProcedureColumn::getSpecificName, nullsFirst(naturalOrder()));
 
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (!(o instanceof ProcedureColumn)) return false;
-        final ProcedureColumn that = (ProcedureColumn) o;
-        return Objects.equals(columnType, that.columnType) &&
-               Objects.equals(procedureCatNonNull(), that.procedureCatNonNull()) &&
-               Objects.equals(procedureSchemNonNull(), that.procedureSchemNonNull()) &&
-               Objects.equals(columnName, that.columnName) &&
-               Objects.equals(specificName, that.specificName);
+    // ---------------------------------------------------------------------------------------------------- procedureCat
+    @EqualsAndHashCode.Include
+    String procedureCatNonNull() {
+        if (procedureCat == null) {
+            return Catalog.COLUMN_VALUE_TABLE_CAT_EMPTY;
+        }
+        return procedureCat;
     }
 
-    @Override
-    public int hashCode() {
-        return Objects.hash(
-                procedureCatNonNull(),
-                procedureSchemNonNull(),
-                columnName,
-                columnType,
-                specificName
-        );
+    // -------------------------------------------------------------------------------------------------- procedureSchem
+    @EqualsAndHashCode.Include
+    String procedureSchemNonNull() {
+        final String procedureSchem_ = getProcedureSchem();
+        if (procedureSchem_ != null) {
+            return procedureSchem_;
+        }
+        return Schema.COLUMN_VALUE_TABLE_SCHEM_EMPTY;
     }
 
+    // -----------------------------------------------------------------------------------------------------------------
     @Nullable
     @_NullableBySpecification
     @_ColumnLabel("PROCEDURE_CAT")
@@ -97,6 +96,7 @@ public class ProcedureColumn extends AbstractMetadataType {
     private String procedureName;
 
     @_ColumnLabel("COLUMN_NAME")
+    @EqualsAndHashCode.Include
     private String columnName;
 
     @NotNull
@@ -169,21 +169,6 @@ public class ProcedureColumn extends AbstractMetadataType {
     private String isNullable;
 
     @_ColumnLabel("SPECIFIC_NAME")
+    @EqualsAndHashCode.Include
     private String specificName;
-
-    String procedureCatNonNull() {
-        final String procedureCat_ = getProcedureCat();
-        if (procedureCat_ != null) {
-            return procedureCat_;
-        }
-        return Catalog.COLUMN_VALUE_TABLE_CAT_EMPTY;
-    }
-
-    String procedureSchemNonNull() {
-        final String procedureSchem_ = getProcedureSchem();
-        if (procedureSchem_ != null) {
-            return procedureSchem_;
-        }
-        return Schema.COLUMN_VALUE_TABLE_SCHEM_EMPTY;
-    }
 }

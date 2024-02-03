@@ -20,23 +20,25 @@ package com.github.jinahya.database.metadata.bind;
  * #L%
  */
 
-import org.junit.jupiter.api.DisplayName;
-import org.junit.jupiter.params.ParameterizedTest;
-import org.junit.jupiter.params.provider.EnumSource;
+import jakarta.validation.Validation;
+
+import java.util.Objects;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-class TableKeyUpdateRuleTest extends _IntFieldEnumTest<TableKey.TableKeyUpdateRule> {
+final class ValidationTestUtils {
 
-    TableKeyUpdateRuleTest() {
-        super(TableKey.TableKeyUpdateRule.class);
+    static void requireValid(final Object obj) {
+        Objects.requireNonNull(obj, "obj is null");
+        try (final var factory = Validation.buildDefaultValidatorFactory()) {
+            final var violations = factory.getValidator().validate(obj);
+            assertThat(violations)
+                    .as("violations of %s: %s", obj, violations)
+                    .isEmpty();
+        }
     }
 
-    @DisplayName("valueOfUpdateRule")
-    @EnumSource(TableKey.TableKeyUpdateRule.class)
-    @ParameterizedTest
-    void valueOfUpdateRule__(final TableKey.TableKeyUpdateRule updateRule) {
-        assertThat(TableKey.TableKeyUpdateRule.valueOfUpdateRule(updateRule.fieldValueAsInt()))
-                .isSameAs(updateRule);
+    private ValidationTestUtils() {
+        throw new AssertionError("instantiation is not allowed");
     }
 }

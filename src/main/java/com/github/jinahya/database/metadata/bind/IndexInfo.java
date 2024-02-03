@@ -25,6 +25,7 @@ import jakarta.validation.constraints.NotNull;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.Setter;
+import lombok.ToString;
 
 import java.sql.DatabaseMetaData;
 import java.util.Comparator;
@@ -42,7 +43,8 @@ import static java.util.Comparator.nullsFirst;
  */
 @Setter
 @Getter
-@EqualsAndHashCode(callSuper = true)
+@EqualsAndHashCode(callSuper = true, onlyExplicitlyIncluded = true)
+@ToString(callSuper = true)
 public class IndexInfo extends AbstractMetadataType {
 
     private static final long serialVersionUID = 924040226611181424L;
@@ -51,110 +53,32 @@ public class IndexInfo extends AbstractMetadataType {
             Comparator.comparing(IndexInfo::getNonUnique, nullsFirst(naturalOrder()))
                     .thenComparing(IndexInfo::getType, nullsFirst(naturalOrder()))
                     .thenComparing(IndexInfo::getIndexName, nullsFirst(String.CASE_INSENSITIVE_ORDER))
-                    .thenComparingInt(IndexInfo::getOrdinalPosition);
+                    .thenComparing(IndexInfo::getOrdinalPosition, nullsFirst(naturalOrder()));
 
     static final Comparator<IndexInfo> LEXICOGRAPHIC_ORDER =
             Comparator.comparing(IndexInfo::getNonUnique, nullsFirst(naturalOrder()))
                     .thenComparing(IndexInfo::getType, nullsFirst(naturalOrder()))
                     .thenComparing(IndexInfo::getIndexName, nullsFirst(naturalOrder()))
-                    .thenComparingInt(IndexInfo::getOrdinalPosition);
+                    .thenComparing(IndexInfo::getOrdinalPosition, nullsFirst(naturalOrder()));
 
+    // ------------------------------------------------------------------------------------------------------- TABLE_CAT
     public static final String COLUMN_LABEL_TABLE_CAT = "TABLE_CAT";
 
+    // ----------------------------------------------------------------------------------------------------- TABLE_SCHEM
     public static final String COLUMN_LABEL_TABLE_SCHEM = "TABLE_SCHEM";
 
+    // ------------------------------------------------------------------------------------------------------ TABLE_NAME
     public static final String COLUMN_LABEL_TABLE_NAME = "TABLE_NAME";
 
+    // ------------------------------------------------------------------------------------------------------------ TYPE
     public static final String COLUMN_LABEL_TYPE = "TYPE";
-
-    @Override
-    public String toString() {
-        return super.toString() + '{' +
-               "tableCat=" + tableCat +
-               ",tableSchem=" + tableSchem +
-               ",tableName=" + tableName +
-               ",nonUnique=" + nonUnique +
-               ",indexQualifier=" + indexQualifier +
-               ",indexName=" + indexName +
-               ",type=" + type +
-               ",ordinalPosition=" + ordinalPosition +
-               ",columnName=" + columnName +
-               ",ascOrDesc=" + ascOrDesc +
-               ",cardinality=" + cardinality +
-               ",pages=" + pages +
-               ",filterCondition=" + filterCondition +
-               '}';
-    }
-
-    @Nullable
-    @_NullableBySpecification
-    @_ColumnLabel(COLUMN_LABEL_TABLE_CAT)
-    private String tableCat;
-
-    @Nullable
-    @_NullableBySpecification
-    @_ColumnLabel(COLUMN_LABEL_TABLE_SCHEM)
-    private String tableSchem;
-
-    @_ColumnLabel(COLUMN_LABEL_TABLE_NAME)
-    private String tableName;
-
-    @NotNull
-    @_NonNullBySpecification
-    @_ColumnLabel("NON_UNIQUE")
-    private Boolean nonUnique;
-
-    @Nullable
-    @_NullableBySpecification
-    @_ColumnLabel("INDEX_QUALIFIER")
-    private String indexQualifier;
-
-    @Nullable
-    @_NullableBySpecification
-    @_ColumnLabel("INDEX_NAME")
-    private String indexName;
-
-    @NotNull
-    @_NonNullBySpecification
-    @_ColumnLabel(COLUMN_LABEL_TYPE)
-    private Integer type;
-
-    @NotNull
-    @_NonNullBySpecification
-    @_ColumnLabel("ORDINAL_POSITION")
-    private Integer ordinalPosition;
-
-    @Nullable
-    @_NullableBySpecification
-    @_ColumnLabel("COLUMN_NAME")
-    private String columnName;
-
-    @Nullable
-    @_NullableBySpecification
-    @_ColumnLabel("ASC_OR_DESC")
-    private String ascOrDesc;
-
-    @_NullableByVendor("Apache Derby")
-    @_NonNullBySpecification
-    @_ColumnLabel("CARDINALITY")
-    private Long cardinality;
-
-    @_NullableByVendor("Apache Derby")
-    @_NonNullBySpecification
-    @_ColumnLabel("PAGES")
-    private Long pages;
-
-    @Nullable
-    @_NullableBySpecification
-    @_ColumnLabel("FILTER_CONDITION")
-    private String filterCondition;
 
     /**
      * Constants for the {@code type} attribute binds {@value #COLUMN_LABEL_TYPE} column.
      *
      * @author Jin Kwon &lt;onacit_at_gmail.com&gt;
      */
-    enum Type implements _IntFieldEnum<Type> {
+    public enum Type implements _IntFieldEnum<Type> {
 
         /**
          * The constant for the
@@ -194,17 +118,106 @@ public class IndexInfo extends AbstractMetadataType {
         private final int fieldValue;
     }
 
+    // -------------------------------------------------------------------------------------------------------- tableCat
+    @EqualsAndHashCode.Include
+    String tableCatNonNull() {
+        if (tableCat == null) {
+            return Catalog.COLUMN_VALUE_TABLE_CAT_EMPTY;
+        }
+        return tableCat;
+    }
+
+    // ------------------------------------------------------------------------------------------------------ tableSchem
+    @EqualsAndHashCode.Include
+    String tableSchemNonNull() {
+        if (tableSchem == null) {
+            return Catalog.COLUMN_VALUE_TABLE_CAT_EMPTY;
+        }
+        return tableSchem;
+    }
+
+    // ------------------------------------------------------------------------------------------------------------ type
     Type getTypeAsEnum() {
         return Optional.ofNullable(getType())
                 .map(Type::valueOfType)
                 .orElse(null);
     }
 
-    void setTypeAsEnum(Type typeAsEnum) {
+    void setTypeAsEnum(final Type typeAsEnum) {
         setType(
                 Optional.ofNullable(typeAsEnum)
                         .map(_IntFieldEnum::fieldValueAsInt)
                         .orElse(null)
         );
     }
+
+    // -----------------------------------------------------------------------------------------------------------------
+    @Nullable
+    @_NullableBySpecification
+    @_ColumnLabel(COLUMN_LABEL_TABLE_CAT)
+    private String tableCat;
+
+    @Nullable
+    @_NullableBySpecification
+    @_ColumnLabel(COLUMN_LABEL_TABLE_SCHEM)
+    private String tableSchem;
+
+    @_ColumnLabel(COLUMN_LABEL_TABLE_NAME)
+    @EqualsAndHashCode.Include
+    private String tableName;
+
+    @NotNull
+    @_NonNullBySpecification
+    @_ColumnLabel("NON_UNIQUE")
+    @EqualsAndHashCode.Include
+    private Boolean nonUnique;
+
+    @Nullable
+    @_NullableBySpecification
+    @_ColumnLabel("INDEX_QUALIFIER")
+    private String indexQualifier;
+
+    @Nullable
+    @_NullableBySpecification
+    @_ColumnLabel("INDEX_NAME")
+    @EqualsAndHashCode.Include
+    private String indexName;
+
+    @NotNull
+    @_NonNullBySpecification
+    @_ColumnLabel(COLUMN_LABEL_TYPE)
+    @EqualsAndHashCode.Include
+    private Integer type;
+
+    @NotNull
+    @_NonNullBySpecification
+    @_ColumnLabel("ORDINAL_POSITION")
+    @EqualsAndHashCode.Include
+    private Integer ordinalPosition;
+
+    @Nullable
+    @_NullableBySpecification
+    @_ColumnLabel("COLUMN_NAME")
+    private String columnName;
+
+    @Nullable
+    @_NullableBySpecification
+    @_ColumnLabel("ASC_OR_DESC")
+    private String ascOrDesc;
+
+    @_NullableByVendor("Apache Derby")
+    @_NonNullBySpecification
+    @_ColumnLabel("CARDINALITY")
+    @EqualsAndHashCode.Include
+    private Long cardinality;
+
+    @_NullableByVendor("Apache Derby")
+    @_NonNullBySpecification
+    @_ColumnLabel("PAGES")
+    private Long pages;
+
+    @Nullable
+    @_NullableBySpecification
+    @_ColumnLabel("FILTER_CONDITION")
+    private String filterCondition;
 }

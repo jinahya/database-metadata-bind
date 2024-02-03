@@ -21,8 +21,10 @@ package com.github.jinahya.database.metadata.bind;
  */
 
 import jakarta.annotation.Nullable;
-
-import java.util.Objects;
+import lombok.EqualsAndHashCode;
+import lombok.Getter;
+import lombok.Setter;
+import lombok.ToString;
 
 /**
  * A entity class for binding results of the
@@ -31,10 +33,15 @@ import java.util.Objects;
  * @author Jin Kwon &lt;jinahya_at_gmail.com&gt;
  * @see Context#getSuperTables(String, String, String)
  */
+@Setter
+@Getter
+@EqualsAndHashCode(callSuper = true)
+@ToString(callSuper = true)
 public class SuperTable extends AbstractMetadataType {
 
     private static final long serialVersionUID = 3579710773784268831L;
 
+    // -----------------------------------------------------------------------------------------------------------------
     public static final String COLUMN_LABEL_TABLE_CAT = "TABLE_CAT";
 
     public static final String COLUMN_LABEL_TABLE_SCHEM = "TABLE_SCHEM";
@@ -43,69 +50,25 @@ public class SuperTable extends AbstractMetadataType {
 
     public static final String COLUMN_LABEL_SUPERTABLE_NAME = "SUPERTABLE_NAME";
 
-    @Override
-    public String toString() {
-        return super.toString() + '{' +
-               "tableCat=" + tableCat +
-               ",tableSchem" + tableSchem +
-               ",tableName=" + tableName +
-               ",supertableName='" + supertableName +
-               '}';
-    }
-
-    @Override
-    public boolean equals(final Object obj) {
-        if (this == obj) return true;
-        if (!(obj instanceof SuperTable)) return false;
-        SuperTable that = (SuperTable) obj;
-        return Objects.equals(tableCatNonNull(), that.tableCatNonNull()) &&
-               Objects.equals(tableSchemNonNull(), that.tableSchemNonNull()) &&
-               Objects.equals(tableName, that.tableName) &&
-               Objects.equals(supertableName, that.supertableName);
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(
-                tableCatNonNull(),
-                tableSchemNonNull(),
-                tableName,
-                supertableName
-        );
-    }
-
-    public String getTableCat() {
+    // -------------------------------------------------------------------------------------------------------- tableCat
+    @EqualsAndHashCode.Include
+    String tableCatNonNull() {
+        if (tableCat == null) {
+            return Catalog.COLUMN_VALUE_TABLE_CAT_EMPTY;
+        }
         return tableCat;
     }
 
-    public void setTableCat(final String tableCat) {
-        this.tableCat = tableCat;
-    }
-
-    public String getTableSchem() {
+    // ------------------------------------------------------------------------------------------------------ tableSchem
+    @EqualsAndHashCode.Include
+    String tableSchemNonNull() {
+        if (tableSchem == null) {
+            return Schema.COLUMN_VALUE_TABLE_SCHEM_EMPTY;
+        }
         return tableSchem;
     }
 
-    public void setTableSchem(final String tableSchem) {
-        this.tableSchem = tableSchem;
-    }
-
-    public String getTableName() {
-        return tableName;
-    }
-
-    public void setTableName(final String tableName) {
-        this.tableName = tableName;
-    }
-
-    public String getSupertableName() {
-        return supertableName;
-    }
-
-    public void setSupertableName(final String supertableName) {
-        this.supertableName = supertableName;
-    }
-
+    // -----------------------------------------------------------------------------------------------------------------
     @Nullable
     @_NullableBySpecification
     @_ColumnLabel(COLUMN_LABEL_TABLE_CAT)
@@ -117,24 +80,10 @@ public class SuperTable extends AbstractMetadataType {
     private String tableSchem;
 
     @_ColumnLabel(COLUMN_LABEL_TABLE_NAME)
+    @EqualsAndHashCode.Include
     private String tableName;
 
     @_ColumnLabel(COLUMN_LABEL_SUPERTABLE_NAME)
+    @EqualsAndHashCode.Include
     private String supertableName;
-
-    String tableCatNonNull() {
-        final String tableCat_ = getTableCat();
-        if (tableCat_ != null) {
-            return tableCat_;
-        }
-        return Catalog.COLUMN_VALUE_TABLE_CAT_EMPTY;
-    }
-
-    String tableSchemNonNull() {
-        final String tableSchem_ = getTableSchem();
-        if (tableSchem_ != null) {
-            return tableSchem_;
-        }
-        return Schema.COLUMN_VALUE_TABLE_SCHEM_EMPTY;
-    }
 }

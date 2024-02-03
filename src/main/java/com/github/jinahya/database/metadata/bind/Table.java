@@ -28,7 +28,6 @@ import lombok.Setter;
 import lombok.ToString;
 
 import java.util.Comparator;
-import java.util.Objects;
 
 import static java.util.Comparator.naturalOrder;
 import static java.util.Comparator.nullsFirst;
@@ -50,16 +49,17 @@ public class Table extends AbstractMetadataType {
 
     private static final long serialVersionUID = 6590036695540141125L;
 
+    // -----------------------------------------------------------------------------------------------------------------
     static final Comparator<Table> CASE_INSENSITIVE_ORDER =
             Comparator.comparing(Table::getTableType, nullsFirst(String.CASE_INSENSITIVE_ORDER))
-                    .thenComparing(Table::tableCatNonNull, String.CASE_INSENSITIVE_ORDER)
-                    .thenComparing(Table::tableSchemNonNull, String.CASE_INSENSITIVE_ORDER)
+                    .thenComparing(Table::tableCatNonNull, nullsFirst(String.CASE_INSENSITIVE_ORDER))
+                    .thenComparing(Table::tableSchemNonNull, nullsFirst(String.CASE_INSENSITIVE_ORDER))
                     .thenComparing(Table::getTableName, String.CASE_INSENSITIVE_ORDER);
 
     static final Comparator<Table> LEXICOGRAPHIC_ORDER =
             Comparator.comparing(Table::getTableType, nullsFirst(naturalOrder()))
-                    .thenComparing(Table::tableCatNonNull)
-                    .thenComparing(Table::tableSchemNonNull)
+                    .thenComparing(Table::tableCatNonNull, nullsFirst(naturalOrder()))
+                    .thenComparing(Table::tableSchemNonNull, nullsFirst(naturalOrder()))
                     .thenComparing(Table::getTableName);
 
     // -----------------------------------------------------------------------------------------------------------------

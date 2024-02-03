@@ -55,6 +55,13 @@ public class Catalog extends AbstractMetadataType {
             = Comparator.comparing(Catalog::getTableCat, nullsFirst(naturalOrder()));
 
     // -----------------------------------------------------------------------------------------------------------------
+    static Catalog of(final String tableCat) {
+        final Catalog instance = new Catalog();
+        instance.setTableCat(tableCat);
+        return instance;
+    }
+
+    // -----------------------------------------------------------------------------------------------------------------
 
     /**
      * A column label of {@value}.
@@ -64,7 +71,7 @@ public class Catalog extends AbstractMetadataType {
     /**
      * An empty value for {@value #COLUMN_LABEL_TABLE_CAT} column.
      */
-    public static final String COLUMN_VALUE_TABLE_CAT_EMPTY = "";
+    static final String COLUMN_VALUE_TABLE_CAT_EMPTY = "";
 
     // -----------------------------------------------------------------------------------------------------------------
 
@@ -73,7 +80,7 @@ public class Catalog extends AbstractMetadataType {
      *
      * @return a new virtual instance.
      */
-    public static Catalog newVirtualInstance() {
+    static Catalog newVirtualInstance() {
         final Catalog instance = new Catalog();
         instance.setTableCat(COLUMN_VALUE_TABLE_CAT_EMPTY);
         return instance;

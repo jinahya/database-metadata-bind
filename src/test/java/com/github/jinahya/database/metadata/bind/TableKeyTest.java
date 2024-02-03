@@ -63,9 +63,9 @@ abstract class TableKeyTest<T extends TableKey<T>> extends AbstractMetadataTypeT
             verify(spy, times(1)).setUpdateRule(null);
         }
 
-        @EnumSource(TableKeyUpdateRule.class)
+        @EnumSource(TableKey.TableKeyUpdateRule.class)
         @ParameterizedTest
-        void setUpdateRuleAsEnum__(final TableKeyUpdateRule updateRuleAsEnum) {
+        void setUpdateRuleAsEnum__(final TableKey.TableKeyUpdateRule updateRuleAsEnum) {
             final var spy = Mockito.spy(newTypeInstance());
             spy.setUpdateRuleAsEnum(updateRuleAsEnum);
             verify(spy, times(1)).setUpdateRule(updateRuleAsEnum.fieldValueAsInt());
@@ -89,9 +89,9 @@ abstract class TableKeyTest<T extends TableKey<T>> extends AbstractMetadataTypeT
             verify(spy, times(1)).setDeleteRule(null);
         }
 
-        @EnumSource(TableKeyDeleteRule.class)
+        @EnumSource(TableKey.TableKeyDeleteRule.class)
         @ParameterizedTest
-        void setDeleteRuleAsEnum__(final TableKeyDeleteRule deleteRuleAsEnum) {
+        void setDeleteRuleAsEnum__(final TableKey.TableKeyDeleteRule deleteRuleAsEnum) {
             final var spy = newTypeSpy();
             spy.setDeleteRuleAsEnum(deleteRuleAsEnum);
             verify(spy, times(1)).setDeleteRule(deleteRuleAsEnum.fieldValueAsInt());
@@ -115,9 +115,9 @@ abstract class TableKeyTest<T extends TableKey<T>> extends AbstractMetadataTypeT
             verify(spy, times(1)).setDeferrability(null);
         }
 
-        @EnumSource(TableKeyDeferrability.class)
+        @EnumSource(TableKey.TableKeyDeferrability.class)
         @ParameterizedTest
-        void setDeferrabilityAsEnum__(final TableKeyDeferrability deferrabilityAsEnum) {
+        void setDeferrabilityAsEnum__(final TableKey.TableKeyDeferrability deferrabilityAsEnum) {
             final var spy = newTypeSpy();
             spy.setDeferrabilityAsEnum(deferrabilityAsEnum);
             verify(spy, times(1)).setDeferrability(deferrabilityAsEnum.fieldValueAsInt());
