@@ -51,7 +51,7 @@ class FunctionColumnTest extends AbstractMetadataTypeTest<FunctionColumn> {
 
         @Test
         void getColumnTypeAsEnum__() {
-            final var spy = typeSpy();
+            final var spy = newTypeSpy();
             final var columnTypeAsEnum = spy.getColumnTypeAsEnum();
             assertThat(columnTypeAsEnum).isNull();
             verify(spy, times(1)).getColumnType();
@@ -59,7 +59,7 @@ class FunctionColumnTest extends AbstractMetadataTypeTest<FunctionColumn> {
 
         @Test
         void setColumnTypeAsEnum_Null_Null() {
-            final var spy = typeSpy();
+            final var spy = newTypeSpy();
             spy.setColumnTypeAsEnum(null);
             verify(spy, times(1)).setColumnType(null);
         }
@@ -67,15 +67,15 @@ class FunctionColumnTest extends AbstractMetadataTypeTest<FunctionColumn> {
         @EnumSource(FunctionColumn.ColumnType.class)
         @ParameterizedTest
         void setColumnTypeAsEnum__(final FunctionColumn.ColumnType columnTypeAsEnum) {
-            final var spy = typeSpy();
+            final var spy = newTypeSpy();
             spy.setColumnTypeAsEnum(columnTypeAsEnum);
             verify(spy, times(1)).setColumnType(columnTypeAsEnum.fieldValueAsInt());
         }
     }
 
     @Override
-    FunctionColumn typeInstance() {
-        final FunctionColumn instance = super.typeInstance();
+    FunctionColumn newTypeInstance() {
+        final FunctionColumn instance = super.newTypeInstance();
         instance.setFunctionName("");
         instance.setColumnName("");
         instance.setSpecificName("");

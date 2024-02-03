@@ -21,12 +21,13 @@ package com.github.jinahya.database.metadata.bind;
  */
 
 import jakarta.validation.constraints.NotNull;
+import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.Setter;
+import lombok.ToString;
 
 import java.sql.DatabaseMetaData;
 import java.util.Comparator;
-import java.util.Objects;
 
 import static java.util.Comparator.naturalOrder;
 
@@ -38,6 +39,8 @@ import static java.util.Comparator.naturalOrder;
  */
 @Setter
 @Getter
+@EqualsAndHashCode(callSuper = true, onlyExplicitlyIncluded = true)
+@ToString(callSuper = true)
 public class ClientInfoProperty extends AbstractMetadataType {
 
     private static final long serialVersionUID = -2913230435651853254L;
@@ -77,33 +80,11 @@ public class ClientInfoProperty extends AbstractMetadataType {
     public static final String COLUMN_LABEL_DESCRIPTION = "DESCRIPTION";
 
     // -----------------------------------------------------------------------------------------------------------------
-    @Override
-    public String toString() {
-        return super.toString() + '{' +
-               "name=" + name +
-               ",maxLen=" + maxLen +
-               ",defaultValue=" + defaultValue +
-               ",description=" + description +
-               '}';
-    }
-
-    @Override
-    public boolean equals(final Object obj) {
-        if (this == obj) return true;
-        if (!(obj instanceof ClientInfoProperty)) return false;
-        final ClientInfoProperty that = (ClientInfoProperty) obj;
-        return Objects.equals(name, that.name);
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(name);
-    }
-
-    // -----------------------------------------------------------------------------------------------------------------
     @_ColumnLabel(COLUMN_LABEL_NAME)
+    @EqualsAndHashCode.Include
     private String name;
 
+    // -----------------------------------------------------------------------------------------------------------------
     @NotNull
     @_NonNullBySpecification
     @_ColumnLabel(COLUMN_LABEL_MAX_LEN)

@@ -27,8 +27,8 @@ class SchemaTest extends AbstractMetadataTypeTest<Schema> {
     }
 
     @Override
-    Schema typeInstance() {
-        final Schema instance = super.typeInstance();
+    Schema newTypeInstance() {
+        final Schema instance = super.newTypeInstance();
         instance.setTableSchem(Schema.COLUMN_VALUE_TABLE_SCHEM_EMPTY);
         return instance;
     }

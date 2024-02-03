@@ -57,7 +57,7 @@ class VersionColumnTest extends AbstractMetadataTypeTest<VersionColumn> {
 
         @Test
         void getPseudoColumnAsEnum__() {
-            final var instance = typeSpy();
+            final var instance = newTypeSpy();
             // WHEN
             final var pseudoColumnAsEnum = instance.getPseudoColumnAsEnum();
             // THEN
@@ -66,7 +66,7 @@ class VersionColumnTest extends AbstractMetadataTypeTest<VersionColumn> {
 
         @Test
         void setPseudoColumnAsEnum__Null() {
-            final var instance = typeSpy();
+            final var instance = newTypeSpy();
             // WHEN
             instance.setPseudoColumnAsEnum(null);
             // THEN
@@ -76,7 +76,7 @@ class VersionColumnTest extends AbstractMetadataTypeTest<VersionColumn> {
         @EnumSource(VersionColumn.PseudoColumn.class)
         @ParameterizedTest
         void setPseudoColumnAsEnum__(final VersionColumn.PseudoColumn pseudoColumn) {
-            final var instance = typeSpy();
+            final var instance = newTypeSpy();
             // WHEN
             instance.setPseudoColumnAsEnum(pseudoColumn);
             // THEN

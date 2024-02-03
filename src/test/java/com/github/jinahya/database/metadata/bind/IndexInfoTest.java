@@ -48,7 +48,7 @@ class IndexInfoTest extends AbstractMetadataTypeTest<IndexInfo> {
         @Test
         void getTypeAsEnum__() {
             // GIVEN
-            final var instance = typeSpy();
+            final var instance = newTypeSpy();
             // WHEN
             final var typeAsEnum = instance.getTypeAsEnum();
             // THEN
@@ -58,7 +58,7 @@ class IndexInfoTest extends AbstractMetadataTypeTest<IndexInfo> {
         @Test
         void setTypeAsEnum__Null() {
             // GIVEN
-            final var instance = typeSpy();
+            final var instance = newTypeSpy();
             // WHEN
             instance.setTypeAsEnum(null);
             // THEN
@@ -69,7 +69,7 @@ class IndexInfoTest extends AbstractMetadataTypeTest<IndexInfo> {
         @ParameterizedTest
         void setTypeAsEnum__Nonnull(final IndexInfo.Type typeAsEnum) {
             // GIVEN
-            final var instance = typeSpy();
+            final var instance = newTypeSpy();
             // WHEN
             instance.setTypeAsEnum(typeAsEnum);
             // THEN

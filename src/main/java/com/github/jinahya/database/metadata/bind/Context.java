@@ -129,8 +129,8 @@ public class Context {
             "java:S1874", // isAccessible
             "java:S3011" // setAccessible
     })
-    private <T extends MetadataType> void bind(final ResultSet results, final Class<T> type,
-                                               final Consumer<? super T> consumer)
+    private <T extends MetadataType> void acceptBound(final ResultSet results, final Class<T> type,
+                                                      final Consumer<? super T> consumer)
             throws SQLException {
         Objects.requireNonNull(results, "results is null");
         Objects.requireNonNull(type, "type is null");
@@ -201,7 +201,7 @@ public class Context {
         try (ResultSet results = databaseMetaData.getAttributes(
                 catalog, schemaPattern, typeNamePattern, attributeNamePattern)) {
             assert results != null;
-            bind(results, Attribute.class, consumer);
+            acceptBound(results, Attribute.class, consumer);
         }
     }
 
@@ -255,22 +255,26 @@ public class Context {
     }
 
     // -----------------------------------------------------------------------------------------------------------------
-    void getBestRowIdentifier(final String catalog, final String schema, final String table, final int scope,
-                              final boolean nullable, final Consumer<? super BestRowIdentifier> consumer)
+    void acceptBestRowIdentifier(final String catalog, final String schema, final String table, final int scope,
+                                 final boolean nullable, final Consumer<? super BestRowIdentifier> consumer)
             throws SQLException {
         Objects.requireNonNull(consumer, "consumer is null");
+        final Table parent = Table.of(catalog, schema, table);
         try (ResultSet results = databaseMetaData.getBestRowIdentifier(catalog, schema, table, scope, nullable)) {
             assert results != null;
-            bind(results, BestRowIdentifier.class, consumer);
+            acceptBound(results, BestRowIdentifier.class, v -> {
+                v.setParent(parent);
+                consumer.accept(v);
+            });
         }
     }
 
-    <T extends Collection<? super BestRowIdentifier>> T getBestRowIdentifierAndAddEachTo(
+    <T extends Collection<? super BestRowIdentifier>> T addBestRowIdentifier(
             final String catalog, final String schema, final String table, final int scope, final boolean nullable,
             final T collection)
             throws SQLException {
         Objects.requireNonNull(collection, "collection is null");
-        getBestRowIdentifier(catalog, schema, table, scope, nullable, collection::add);
+        acceptBestRowIdentifier(catalog, schema, table, scope, nullable, collection::add);
         return collection;
     }
 
@@ -286,19 +290,20 @@ public class Context {
      * @param nullable a value for {@code nullable} parameter.
      * @return a list of bound values.
      * @throws SQLException if a database error occurs.
+     * @see DatabaseMetaData#getBestRowIdentifier(String, String, String, int, boolean)
      */
     public List<BestRowIdentifier> getBestRowIdentifier(final String catalog, final String schema, final String table,
                                                         final int scope, final boolean nullable)
             throws SQLException {
-        return getBestRowIdentifierAndAddEachTo(catalog, schema, table, scope, nullable, new ArrayList<>());
+        return addBestRowIdentifier(catalog, schema, table, scope, nullable, new ArrayList<>());
     }
 
     List<BestRowIdentifier> getBestRowIdentifier(final Table table, final int scope, final boolean nullable)
             throws SQLException {
         Objects.requireNonNull(table, "table is null");
         return getBestRowIdentifier(
-                table.tableCatNonNull(),
-                table.tableSchemNonNull(),
+                table.getTableCat(),
+                table.getTableSchem(),
                 table.getTableName(),
                 scope,
                 nullable
@@ -310,7 +315,7 @@ public class Context {
         Objects.requireNonNull(consumer, "consumer is null");
         try (ResultSet results = databaseMetaData.getCatalogs()) {
             assert results != null;
-            bind(results, Catalog.class, consumer);
+            acceptBound(results, Catalog.class, consumer);
         }
     }
 
@@ -344,7 +349,7 @@ public class Context {
         Objects.requireNonNull(consumer, "consumer is null");
         try (ResultSet results = databaseMetaData.getClientInfoProperties()) {
             assert results != null;
-            bind(results, ClientInfoProperty.class, consumer);
+            acceptBound(results, ClientInfoProperty.class, consumer);
         }
     }
 
@@ -367,7 +372,7 @@ public class Context {
         Objects.requireNonNull(consumer, "consumer is null");
         try (ResultSet results = databaseMetaData.getColumnPrivileges(catalog, schema, table, columnNamePattern)) {
             assert results != null;
-            bind(results, ColumnPrivilege.class, consumer);
+            acceptBound(results, ColumnPrivilege.class, consumer);
         }
     }
 
@@ -408,8 +413,8 @@ public class Context {
             throws SQLException {
         Objects.requireNonNull(table, "table is null");
         return getColumnPrivileges(
-                table.tableCatNonNull(),
-                table.tableSchemNonNull(),
+                table.getTableCat(),
+                table.getTableSchem(),
                 table.getTableName(),
                 columnNamePattern
         );
@@ -438,7 +443,7 @@ public class Context {
         try (ResultSet results = databaseMetaData.getColumns(
                 catalog, schemaPattern, tableNamePattern, columnNamePattern)) {
             assert results != null;
-            bind(results, Column.class, consumer);
+            acceptBound(results, Column.class, consumer);
         }
     }
 
@@ -485,9 +490,9 @@ public class Context {
     }
 
     /**
-     * Invokes
-     * {@link DatabaseMetaData#getColumns(String, String, String, String) getColumns(catalog, schemaPattern, *
-     * tableNamePattern, columnNamePattern)} method with given table's properties, and returns a list of bound values.
+     * Invokes {@link #getColumns(String, String, String, String)} method with specified table's
+     * {@link Table#getTableCat() tableCat}, {@link Table#getTableSchem() tableSchem},
+     * {@link Table#getTableName() tableName}, and specified column name pattern.
      *
      * @param table             the table.
      * @param columnNamePattern a value for {@code columnNamePattern} parameter.
@@ -498,8 +503,8 @@ public class Context {
     List<Column> getColumns(final Table table, final String columnNamePattern) throws SQLException {
         Objects.requireNonNull(table, "table is null");
         return getColumns(
-                table.tableCatNonNull(),
-                table.tableSchemNonNull(),
+                table.getTableCat(),
+                table.getTableSchem(),
                 table.getTableName(),
                 columnNamePattern
         );
@@ -530,7 +535,7 @@ public class Context {
         try (ResultSet results = databaseMetaData.getCrossReference(
                 parentCatalog, parentSchema, parentTable, foreignCatalog, foreignSchema, foreignTable)) {
             assert results != null;
-            bind(results, CrossReference.class, consumer);
+            acceptBound(results, CrossReference.class, consumer);
         }
     }
 
@@ -591,7 +596,7 @@ public class Context {
         Objects.requireNonNull(consumer, "consumer is null");
         try (ResultSet results = databaseMetaData.getExportedKeys(catalog, schema, table)) {
             assert results != null;
-            bind(results, ExportedKey.class, consumer);
+            acceptBound(results, ExportedKey.class, consumer);
         }
     }
 
@@ -655,7 +660,7 @@ public class Context {
         Objects.requireNonNull(consumer, "consumer is null");
         try (ResultSet results = databaseMetaData.getFunctions(catalog, schemaPattern, functionNamePattern)) {
             assert results != null;
-            bind(results, Function.class, consumer);
+            acceptBound(results, Function.class, consumer);
         }
     }
 
@@ -706,7 +711,7 @@ public class Context {
         try (ResultSet results = databaseMetaData.getFunctionColumns(
                 catalog, schemaPattern, functionNamePattern, columnNamePattern)) {
             assert results != null;
-            bind(results, FunctionColumn.class, consumer);
+            acceptBound(results, FunctionColumn.class, consumer);
         }
     }
 
@@ -779,7 +784,7 @@ public class Context {
         Objects.requireNonNull(consumer, "consumer is null");
         try (ResultSet results = databaseMetaData.getImportedKeys(catalog, schema, table)) {
             assert results != null;
-            bind(results, ImportedKey.class, consumer);
+            acceptBound(results, ImportedKey.class, consumer);
         }
     }
 
@@ -845,7 +850,7 @@ public class Context {
         Objects.requireNonNull(consumer, "consumer is null");
         try (ResultSet results = databaseMetaData.getIndexInfo(catalog, schema, table, unique, approximate)) {
             assert results != null;
-            bind(results, IndexInfo.class, consumer);
+            acceptBound(results, IndexInfo.class, consumer);
         }
     }
 
@@ -908,7 +913,7 @@ public class Context {
         Objects.requireNonNull(consumer, "consumer is null");
         try (ResultSet results = databaseMetaData.getPrimaryKeys(catalog, schema, table)) {
             assert results != null;
-            bind(results, PrimaryKey.class, consumer);
+            acceptBound(results, PrimaryKey.class, consumer);
         }
     }
 
@@ -965,7 +970,7 @@ public class Context {
         try (ResultSet results = databaseMetaData.getProcedureColumns(
                 catalog, schemaPattern, procedureNamePattern, columnNamePattern)) {
             assert results != null;
-            bind(results, ProcedureColumn.class, consumer);
+            acceptBound(results, ProcedureColumn.class, consumer);
         }
     }
 
@@ -1027,7 +1032,7 @@ public class Context {
         Objects.requireNonNull(consumer, "consumer is null");
         try (ResultSet results = databaseMetaData.getProcedures(catalog, schemaPattern, procedureNamePattern)) {
             assert results != null;
-            bind(results, Procedure.class, consumer);
+            acceptBound(results, Procedure.class, consumer);
         }
     }
 
@@ -1079,7 +1084,7 @@ public class Context {
         try (ResultSet results = databaseMetaData.getPseudoColumns(
                 catalog, schemaPattern, tableNamePattern, columnNamePattern)) {
             assert results != null;
-            bind(results, PseudoColumn.class, consumer);
+            acceptBound(results, PseudoColumn.class, consumer);
         }
     }
 
@@ -1134,7 +1139,7 @@ public class Context {
         Objects.requireNonNull(consumer, "consumer is null");
         try (ResultSet results = databaseMetaData.getSchemas()) {
             assert results != null;
-            bind(results, Schema.class, consumer);
+            acceptBound(results, Schema.class, consumer);
         }
     }
 
@@ -1176,7 +1181,7 @@ public class Context {
         Objects.requireNonNull(consumer, "consumer is null");
         try (ResultSet results = databaseMetaData.getSchemas(catalog, schemaPattern)) {
             assert results != null;
-            bind(results, Schema.class, consumer);
+            acceptBound(results, Schema.class, consumer);
         }
     }
 
@@ -1228,7 +1233,7 @@ public class Context {
         Objects.requireNonNull(consumer, "consumer is null");
         try (ResultSet results = databaseMetaData.getSuperTables(catalog, schemaPattern, tableNamePattern)) {
             assert results != null;
-            bind(results, SuperTable.class, consumer);
+            acceptBound(results, SuperTable.class, consumer);
         }
     }
 
@@ -1285,7 +1290,7 @@ public class Context {
         Objects.requireNonNull(consumer, "consumer is null");
         try (ResultSet results = databaseMetaData.getSuperTypes(catalog, schemaPattern, typeNamePattern)) {
             assert results != null;
-            bind(results, SuperType.class, consumer);
+            acceptBound(results, SuperType.class, consumer);
         }
     }
 
@@ -1342,7 +1347,7 @@ public class Context {
         Objects.requireNonNull(consumer, "consumer is null");
         try (ResultSet results = databaseMetaData.getTablePrivileges(catalog, schemaPattern, tableNamePattern)) {
             assert results != null;
-            bind(results, TablePrivilege.class, consumer);
+            acceptBound(results, TablePrivilege.class, consumer);
         }
     }
 
@@ -1406,7 +1411,7 @@ public class Context {
         Objects.requireNonNull(consumer, "consumer is null");
         try (ResultSet results = databaseMetaData.getTableTypes()) {
             assert results != null;
-            bind(results, TableType.class, consumer);
+            acceptBound(results, TableType.class, consumer);
         }
     }
 
@@ -1448,7 +1453,7 @@ public class Context {
         Objects.requireNonNull(consumer, "consumer is null");
         try (ResultSet results = databaseMetaData.getTables(catalog, schemaPattern, tableNamePattern, types)) {
             assert results != null;
-            bind(results, Table.class, consumer);
+            acceptBound(results, Table.class, consumer);
         }
     }
 
@@ -1520,7 +1525,7 @@ public class Context {
         Objects.requireNonNull(consumer, "consumer is null");
         try (ResultSet results = databaseMetaData.getTypeInfo()) {
             assert results != null;
-            bind(results, TypeInfo.class, consumer);
+            acceptBound(results, TypeInfo.class, consumer);
         }
     }
 
@@ -1560,7 +1565,7 @@ public class Context {
         Objects.requireNonNull(consumer, "consumer is null");
         try (ResultSet results = databaseMetaData.getUDTs(catalog, schemaPattern, typeNamePattern, types)) {
             assert results != null;
-            bind(results, UDT.class, consumer);
+            acceptBound(results, UDT.class, consumer);
         }
     }
 
@@ -1609,7 +1614,7 @@ public class Context {
         Objects.requireNonNull(consumer, "consumer is null");
         try (ResultSet results = databaseMetaData.getVersionColumns(catalog, schema, table)) {
             assert results != null;
-            bind(results, VersionColumn.class, consumer);
+            acceptBound(results, VersionColumn.class, consumer);
         }
     }
 

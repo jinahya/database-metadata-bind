@@ -23,62 +23,39 @@ package com.github.jinahya.database.metadata.bind;
 import jakarta.annotation.Nullable;
 import jakarta.validation.constraints.NotNull;
 import lombok.extern.slf4j.Slf4j;
+import nl.jqno.equalsverifier.EqualsVerifier;
+import nl.jqno.equalsverifier.Warning;
 import org.apache.commons.text.CaseUtils;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
+import org.mockito.Mockito;
 
 import java.beans.IntrospectionException;
 import java.beans.Introspector;
-import java.util.Map;
-import java.util.concurrent.ConcurrentHashMap;
+import java.lang.reflect.Field;
+import java.lang.reflect.Modifier;
+import java.util.List;
+import java.util.Objects;
+import java.util.stream.Stream;
 
 import static java.util.Arrays.stream;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatCode;
-import static org.junit.jupiter.api.Assertions.fail;
 
 @Slf4j
-abstract class MetadataTypeTest<T extends MetadataType>
-        extends _MetadataTypeTest<T> {
-
-    private static final Map<Long, Class<?>> CLASSES_AND_SERIAL_VERSION_UIDS = new ConcurrentHashMap<>();
+abstract class MetadataTypeTest<T extends MetadataType> {
 
     MetadataTypeTest(final Class<T> typeClass) {
-        super(typeClass);
-    }
-
-    @DisplayName("each serialVersionUID should be unique")
-    @Test
-    void serialVersionUID_Unique_() throws ReflectiveOperationException {
-        for (Class<?> c = typeClass; MetadataType.class.isAssignableFrom(c); c = c.getSuperclass()) {
-            if (CLASSES_AND_SERIAL_VERSION_UIDS.containsValue(c)) {
-                continue;
-            }
-            final var field = c.getDeclaredField("serialVersionUID");
-            if (field.getDeclaringClass() != c) {
-                log.error("{} is not declaring serialVersionUID", c);
-                fail();
-                return;
-            }
-            if (!field.canAccess(null)) {
-                field.setAccessible(true);
-            }
-            final var serialVersionUID = field.getLong(null);
-            final var previous = CLASSES_AND_SERIAL_VERSION_UIDS.put(serialVersionUID, c);
-            if (previous != null) {
-                log.debug("{}#serialVersionUID({}) conflicts with {}", c, serialVersionUID, previous);
-                fail();
-                return;
-            }
-        }
+        super();
+        this.typeClass = Objects.requireNonNull(typeClass, "typeClass is null");
     }
 
     @DisplayName("toString()!blank")
     @Test
     void toString_NotBlank_() {
         // ------------------------------------------------------------------------------------------------------- given
-        final var instance = typeInstance();
+        final var instance = newTypeInstance();
         // -------------------------------------------------------------------------------------------------------- when
         final var string = instance.toString();
         // -------------------------------------------------------------------------------------------------------- then
@@ -86,22 +63,19 @@ abstract class MetadataTypeTest<T extends MetadataType>
     }
 
     @Test
-    void equals_Equal_Self() throws ReflectiveOperationException {
-        final var method = typeClass.getMethod("equals", Object.class);
-        if (method.getDeclaringClass() == Object.class) {
-            return;
-        }
-        final T obj1 = typeInstance();
-        final T obj2 = typeInstance();
-        assertThat(obj1).isEqualTo(obj2);
-        assertThat(obj2).isEqualTo(obj1);
+    void equals__() {
+        EqualsVerifier
+                .simple()
+                .forClass(typeClass)
+                .suppress(Warning.ALL_FIELDS_SHOULD_BE_USED)
+                .verify();
     }
 
     @DisplayName("hashCode()I")
     @Test
     void hashCode__() {
         // ------------------------------------------------------------------------------------------------------- given
-        final var instance = typeInstance();
+        final var instance = newTypeInstance();
         // --------------------------------------------------------------------------------------------------- when/then
         assertThatCode(() -> {
             final var hashCode = instance.hashCode();
@@ -114,7 +88,7 @@ abstract class MetadataTypeTest<T extends MetadataType>
         @DisplayName("@ColumnLabel -> has accessors")
         @Test
         void _ShouldHaveAccessors_AnnotatedWithColumnLabel() throws IntrospectionException {
-            for (final var field : getFieldsWithColumnLabel().keySet()) {
+            for (final var field : fieldsAnnotatedWithColumnLabel()) {
                 final var declaringClass = field.getDeclaringClass();
                 final var info = Introspector.getBeanInfo(declaringClass);
                 final var descriptor =
@@ -125,7 +99,7 @@ abstract class MetadataTypeTest<T extends MetadataType>
                     final var reader = d.getReadMethod();
                     assertThat(reader).isNotNull();
                     try {
-                        reader.invoke(typeInstance());
+                        reader.invoke(newTypeInstance());
                     } catch (final ReflectiveOperationException roe) {
                         throw new RuntimeException(roe);
                     }
@@ -135,7 +109,7 @@ abstract class MetadataTypeTest<T extends MetadataType>
                             .isNotNull();
                     if (!field.getType().isPrimitive()) {
                         try {
-                            writer.invoke(typeInstance(), new Object[] {null});
+                            writer.invoke(newTypeInstance(), new Object[] {null});
                         } catch (final ReflectiveOperationException roe) {
                             throw new RuntimeException(roe);
                         }
@@ -144,10 +118,20 @@ abstract class MetadataTypeTest<T extends MetadataType>
             }
         }
 
+        @DisplayName("@_ColumnLabel")
+        @Test
+        void _TypeIsNotPrimitive_AnnotatedWithColumnLabel() {
+            for (final var field : fieldsAnnotatedWithColumnLabel()) {
+                assertThat(field.getType())
+                        .as("type of %s.%s", typeClass.getSimpleName(), field.getName())
+                        .isNotPrimitive();
+            }
+        }
+
         @DisplayName("@javax.validation.NotNull")
         @Test
         void __NotNull() {
-            for (final var field : getFieldsWithColumnLabel().keySet()) {
+            for (final var field : fieldsAnnotatedWithColumnLabel()) {
                 if (!field.isAnnotationPresent(_NonNullBySpecification.class)) {
                     continue;
                 }
@@ -161,73 +145,47 @@ abstract class MetadataTypeTest<T extends MetadataType>
             }
         }
 
-        @DisplayName("@Unused -> !primitive")
-        @Test
-        void _ShouldBeNotPrimitive_AnnotatedWithUnused() {
-            for (final var field : fieldsWithUnusedBySpecification().keySet()) {
-                assert field.isAnnotationPresent(_NotUsedBySpecification.class);
-                assertThat(field.getType().isPrimitive())
-                        .as("@NotUsedBySpecification on primitive field: %s", field)
-                        .isFalse();
-            }
-        }
-
-        @DisplayName("@NullableBySpecification -> !primitive")
-        @Test
-        void _NotPrimitive_NullableBySpecification() {
-            for (final var field : getFieldsWithNullableBySpecification().keySet()) {
-                assert field.isAnnotationPresent(_NullableBySpecification.class);
-                assertThat(field.getType().isPrimitive())
-                        .as("@NullableBySpecification on primitive field: %s", field)
-                        .isFalse();
-            }
-        }
-
-        @DisplayName("@NullableBySpecification -> @jakarta.annotation.Nullable")
+        @DisplayName("@_NullableBySpecification -> @jakarta.annotation.Nullable")
         @Test
         void _ShouldBeAnnotatedWithNullable_AnnotatedWithNullableBySpecification() {
-            for (final var field : getFieldsWithNullableBySpecification().keySet()) {
+            for (final var field : fieldsAnnotatedWithColumnLabel()) {
+                if (!field.isAnnotationPresent(_NullableBySpecification.class)) {
+                    continue;
+                }
                 assertThat(field.getAnnotation(Nullable.class))
-                        .as("%1$s on %2$s", Nullable.class, field)
+                        .as("@%1$s on %2$s.%3$s", Nullable.class, typeClass.getSimpleName(), field.getName())
                         .isNotNull();
             }
         }
 
-        @DisplayName("@NullableByVendor -> !@jakarta.annotation.Nullable")
+        @DisplayName("@_NullableByVendor -> !@jakarta.annotation.Nullable")
         @Test
         void _ShouldBeNotAnnotatedWithNullable_AnnotatedWithNullableByVendor() {
-            for (final var field : getFieldsWithNullableByVendor().keySet()) {
+            for (final var field : fieldsAnnotatedWithColumnLabel()) {
+                if (!field.isAnnotationPresent(_NullableByVendor.class)) {
+                    continue;
+                }
                 assertThat(field.getAnnotation(Nullable.class))
-                        .as("%1$s on %2$s", Nullable.class, field)
+                        .as("@%1$s on %2$s.%3$s", Nullable.class, typeClass.getSimpleName(), field)
                         .isNull();
-            }
-        }
-
-        @DisplayName("@MayBeNullByVendor -> !primitive")
-        @Test
-        void field_NotPrimitive_NullableByVendor() {
-            for (final var field : getFieldsWithMayBeNullByVendor().keySet()) {
-                assertThat(field.getAnnotation(_NullableByVendor.class)).isNotNull();
-                assertThat(field.getType().isPrimitive()).isFalse();
             }
         }
 
         @DisplayName("fieldName = toCamelCase(@ColumnLabel#value)")
         @Test
-        void field_Expected_CamelCasedColumnLabel() {
-            getFieldsWithColumnLabel().forEach((f, l) -> {
-                final var expected = CaseUtils.toCamelCase(l.value(), false, '_');
-                assertThat(f.getName())
-                        .as("expected name of %1$s", f)
-                        .isEqualTo(expected);
-            });
+        void _CamelCasedColumnLabel_() {
+            for (final var field : fieldsAnnotatedWithColumnLabel()) {
+                final var columnLabel = field.getAnnotation(_ColumnLabel.class);
+                assertThat(field.getName())
+                        .isEqualTo(CaseUtils.toCamelCase(columnLabel.value(), false, '_'));
+            }
         }
     }
 
     @DisplayName("setXxx(getXxx())")
     @Test
     void accessors() throws Exception {
-        final var instance = typeInstance();
+        final var instance = newTypeInstance();
         final var beanInfo = Introspector.getBeanInfo(typeClass);
         for (final var descriptor : beanInfo.getPropertyDescriptors()) {
             final var reader = descriptor.getReadMethod();
@@ -243,4 +201,35 @@ abstract class MetadataTypeTest<T extends MetadataType>
             }
         }
     }
+
+    // ------------------------------------------------------------------------------------------------------- typeClass
+
+    T newTypeInstance() {
+        try {
+            final var constructor = typeClass.getConstructor();
+            return constructor.newInstance();
+        } catch (final ReflectiveOperationException roe) {
+            throw new RuntimeException("failed to instantiate " + typeClass, roe);
+        }
+    }
+
+    T newTypeSpy() {
+        return Mockito.spy(newTypeInstance());
+    }
+
+    List<Field> fieldsAnnotatedWithColumnLabel() {
+        return Stream.of(typeClass.getDeclaredFields()).filter(f -> {
+            final var modifier = f.getModifiers();
+            if (Modifier.isStatic(modifier)) {
+                return false;
+            }
+            if (!f.isAnnotationPresent(_ColumnLabel.class)) {
+                return false;
+            }
+            return true;
+        }).toList();
+    }
+
+    // -----------------------------------------------------------------------------------------------------------------
+    final Class<T> typeClass;
 }

@@ -22,6 +22,7 @@ package com.github.jinahya.database.metadata.bind;
 
 import jakarta.annotation.Nullable;
 import jakarta.validation.constraints.NotNull;
+import lombok.AccessLevel;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.Setter;
@@ -49,6 +50,8 @@ public class BestRowIdentifier
         implements Comparable<BestRowIdentifier> {
 
     private static final long serialVersionUID = -1512051574198028399L;
+
+    // -----------------------------------------------------------------------------------------------------------------
 
     /**
      * A comparator compares objects with their value of {@link #getScope()}.
@@ -199,6 +202,12 @@ public class BestRowIdentifier
     }
 
     // -----------------------------------------------------------------------------------------------------------------
+    @Setter(AccessLevel.PACKAGE)
+    @EqualsAndHashCode.Include
+    @ToString.Exclude
+    private Table parent;
+
+    // -----------------------------------------------------------------------------------------------------------------
     @NotNull
     @_NonNullBySpecification
     @_ColumnLabel(COLUMN_LABEL_SCOPE)
@@ -209,6 +218,7 @@ public class BestRowIdentifier
     @EqualsAndHashCode.Include
     private String columnName;
 
+    // -----------------------------------------------------------------------------------------------------------------
     @NotNull
     @_NonNullBySpecification
     @_ColumnLabel(COLUMN_LABEL_DATA_TYPE)

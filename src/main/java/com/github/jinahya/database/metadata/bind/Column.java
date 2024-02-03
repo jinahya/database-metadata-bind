@@ -21,12 +21,13 @@ package com.github.jinahya.database.metadata.bind;
  */
 
 import jakarta.validation.constraints.NotNull;
+import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.Setter;
+import lombok.ToString;
 
 import java.sql.DatabaseMetaData;
 import java.util.Comparator;
-import java.util.Objects;
 import java.util.Optional;
 
 import static java.util.Comparator.naturalOrder;
@@ -42,6 +43,8 @@ import static java.util.Comparator.nullsFirst;
 //@ParentOf(ColumnPrivilege.class)
 @Setter
 @Getter
+@EqualsAndHashCode(callSuper = true, onlyExplicitlyIncluded = true)
+@ToString(callSuper = true)
 public class Column extends AbstractMetadataType {
 
     private static final long serialVersionUID = -409653682729081530L;
@@ -58,25 +61,35 @@ public class Column extends AbstractMetadataType {
                     .thenComparing(Column::getTableName, nullsFirst(naturalOrder()))
                     .thenComparingInt(Column::getOrdinalPosition);
 
+    // -----------------------------------------------------------------------------------------------------------------
+
     /**
      * The column label of {@value}.
      */
     public static final String COLUMN_LABEL_TABLE_CAT = "TABLE_CAT";
+
+    // -----------------------------------------------------------------------------------------------------------------
 
     /**
      * The column label of {@value}.
      */
     public static final String COLUMN_LABEL_TABLE_SCHEM = "TABLE_SCHEM";
 
+    // -----------------------------------------------------------------------------------------------------------------
+
     /**
      * The column label of {@value}.
      */
     public static final String COLUMN_LABEL_TABLE_NAME = "TABLE_NAME";
 
+    // -----------------------------------------------------------------------------------------------------------------
+
     /**
      * The column label of {@value}.
      */
     public static final String COLUMN_LABEL_COLUMN_NAME = "COLUMN_NAME";
+
+    // -----------------------------------------------------------------------------------------------------------------
 
     /**
      * The column label of {@value}.
@@ -129,78 +142,26 @@ public class Column extends AbstractMetadataType {
         private final int fieldValue;
     }
 
+    // -----------------------------------------------------------------------------------------------------------------
     public static final String COLUMN_LABEL_IS_AUTOINCREMENT = "IS_AUTOINCREMENT";
 
-    public static final String COLUMN_LABEL_IS_GENERATEDCOLUMN = "IS_GENERATEDCOLUMN";
-
     // -----------------------------------------------------------------------------------------------------------------
-    @Override
-    public String toString() {
-        return super.toString() + '{' +
-               "tableCat=" + tableCat +
-               ",tableSchem=" + tableSchem +
-               ",tableName=" + tableName +
-               ",columnName=" + columnName +
-               ",dataType=" + dataType +
-               ",typeName=" + typeName +
-               ",columnSize=" + columnSize +
-               ",bufferLength=" + bufferLength +
-               ",decimalDigits=" + decimalDigits +
-               ",numPrecRadix=" + numPrecRadix +
-               ",nullable=" + nullable +
-               ",remarks=" + remarks +
-               ",columnDef=" + columnDef +
-               ",sqlDataType=" + sqlDataType +
-               ",sqlDatetimeSub=" + sqlDatetimeSub +
-               ",charOctetLength=" + charOctetLength +
-               ",ordinalPosition=" + ordinalPosition +
-               ",isNullable=" + isNullable +
-               ",scopeCatalog=" + scopeCatalog +
-               ",scopeSchema=" + scopeSchema +
-               ",scopeTable=" + scopeTable +
-               ",sourceDataType=" + sourceDataType +
-               ",isAutoincrement=" + isAutoincrement +
-               ",isGeneratedcolumn=" + isGeneratedcolumn +
-               '}';
-    }
-
-    @Override
-    public boolean equals(final Object obj) {
-        if (this == obj) return true;
-        if (!(obj instanceof Column)) return false;
-        final Column that = (Column) obj;
-        return Objects.equals(tableCatNonNull(), that.tableCatNonNull()) &&
-               Objects.equals(tableSchemNonNull(), that.tableSchemNonNull()) &&
-               Objects.equals(tableName, that.tableName) &&
-               Objects.equals(columnName, that.columnName);
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(
-                tableCatNonNull(),
-                tableSchemNonNull(),
-                tableName,
-                columnName
-        );
-    }
+    public static final String COLUMN_LABEL_IS_GENERATEDCOLUMN = "IS_GENERATEDCOLUMN";
 
     // -------------------------------------------------------------------------------------------------------- tableCat
     String tableCatNonNull() {
-        final String tableCat_ = getTableCat();
-        if (tableCat_ != null) {
-            return tableCat_;
+        if (tableCat != null) {
+            return Catalog.COLUMN_VALUE_TABLE_CAT_EMPTY;
         }
-        return Catalog.COLUMN_VALUE_TABLE_CAT_EMPTY;
+        return tableCat;
     }
 
     // ------------------------------------------------------------------------------------------------------ tableSchem
     String tableSchemNonNull() {
-        final String tableSchem_ = getTableSchem();
-        if (tableSchem_ != null) {
-            return tableSchem_;
+        if (tableSchem != null) {
+            return Schema.COLUMN_VALUE_TABLE_SCHEM_EMPTY;
         }
-        return Schema.COLUMN_VALUE_TABLE_SCHEM_EMPTY;
+        return tableSchem;
     }
 
     // -------------------------------------------------------------------------------------------------------- nullable
@@ -222,19 +183,24 @@ public class Column extends AbstractMetadataType {
     @jakarta.annotation.Nullable
     @_NullableBySpecification
     @_ColumnLabel(COLUMN_LABEL_TABLE_CAT)
+    @EqualsAndHashCode.Exclude
     private String tableCat;
 
     @jakarta.annotation.Nullable
     @_NullableBySpecification
     @_ColumnLabel(COLUMN_LABEL_TABLE_SCHEM)
+    @EqualsAndHashCode.Exclude
     private String tableSchem;
 
     @_ColumnLabel(COLUMN_LABEL_TABLE_NAME)
+    @EqualsAndHashCode.Include
     private String tableName;
 
     @_ColumnLabel(COLUMN_LABEL_COLUMN_NAME)
+    @EqualsAndHashCode.Include
     private String columnName;
 
+    // -----------------------------------------------------------------------------------------------------------------
     @NotNull
     @_NonNullBySpecification
     @_ColumnLabel("DATA_TYPE")

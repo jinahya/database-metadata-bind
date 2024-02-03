@@ -1255,7 +1255,9 @@ final class ContextTestUtils {
                         for (final boolean nullable : new boolean[] {true, false}) {
                             final var bestRowIdentifier =
                                     context.getBestRowIdentifier(table, scope.fieldValueAsInt(), nullable);
-                            assertThat(bestRowIdentifier).isSortedAccordingTo(BestRowIdentifier.COMPARING_SCOPE);
+                            assertThat(bestRowIdentifier)
+                                    .doesNotHaveDuplicates()
+                                    .isSortedAccordingTo(BestRowIdentifier.COMPARING_SCOPE);
                             if (false && !bestRowIdentifier.isEmpty()) { // 'actual...'
                                 assertThat(bestRowIdentifier)
                                         .extracting(BestRowIdentifier::getScope)
@@ -1269,29 +1271,35 @@ final class ContextTestUtils {
                 if (READ_COLUMN_PRIVILEGES) {
                     try {
                         final var columnPrivileges = context.getColumnPrivileges(table, "%");
-                        assertThat(columnPrivileges).satisfiesAnyOf(
-                                l -> assertThat(l).isSortedAccordingTo(ColumnPrivilege.CASE_INSENSITIVE_ORDER),
-                                l -> assertThat(l).isSortedAccordingTo(ColumnPrivilege.LEXICOGRAPHIC_ORDER)
-                        );
+                        assertThat(columnPrivileges)
+                                .doesNotHaveDuplicates()
+                                .satisfiesAnyOf(
+                                        l -> assertThat(l).isSortedAccordingTo(ColumnPrivilege.CASE_INSENSITIVE_ORDER),
+                                        l -> assertThat(l).isSortedAccordingTo(ColumnPrivilege.LEXICOGRAPHIC_ORDER)
+                                );
                     } catch (final SQLException sqle) {
                         thrown("failed: getColumnPrivileges", sqle);
                     }
                 }
                 try {
                     final var exportedKeys = context.getExportedKeys(table);
-                    assertThat(exportedKeys).satisfiesAnyOf(
-                            l -> assertThat(l).isSortedAccordingTo(ExportedKey.CASE_INSENSITIVE_ORDER),
-                            l -> assertThat(l).isSortedAccordingTo(ExportedKey.LEXICOGRAPHIC_ORDER)
-                    );
+                    assertThat(exportedKeys)
+                            .doesNotHaveDuplicates()
+                            .satisfiesAnyOf(
+                                    l -> assertThat(l).isSortedAccordingTo(ExportedKey.CASE_INSENSITIVE_ORDER),
+                                    l -> assertThat(l).isSortedAccordingTo(ExportedKey.LEXICOGRAPHIC_ORDER)
+                            );
                 } catch (final SQLException sqle) {
                     thrown("failed: getExportedKeys", sqle);
                 }
                 try {
                     final var importedKeys = context.getImportedKeys(table);
-                    assertThat(importedKeys).satisfiesAnyOf(
-                            l -> assertThat(l).isSortedAccordingTo(ImportedKey.CASE_INSENSITIVE_ORDER),
-                            l -> assertThat(l).isSortedAccordingTo(ImportedKey.LEXICOGRAPHIC_ORDER)
-                    );
+                    assertThat(importedKeys)
+                            .doesNotHaveDuplicates()
+                            .satisfiesAnyOf(
+                                    l -> assertThat(l).isSortedAccordingTo(ImportedKey.CASE_INSENSITIVE_ORDER),
+                                    l -> assertThat(l).isSortedAccordingTo(ImportedKey.LEXICOGRAPHIC_ORDER)
+                            );
                 } catch (final SQLException sqle) {
                     thrown("failed: getImportedKeys", sqle);
                 }
@@ -1299,10 +1307,12 @@ final class ContextTestUtils {
                     for (final boolean unique : new boolean[] {false, true}) {
                         for (final boolean approximate : new boolean[] {false, true}) {
                             final var indexInfo = context.getIndexInfo(table, unique, approximate);
-                            assertThat(indexInfo).satisfiesAnyOf(
-                                    l -> assertThat(l).isSortedAccordingTo(IndexInfo.CASE_INSENSITIVE_ORDER),
-                                    l -> assertThat(l).isSortedAccordingTo(IndexInfo.LEXICOGRAPHIC_ORDER)
-                            );
+                            assertThat(indexInfo)
+                                    .doesNotHaveDuplicates()
+                                    .satisfiesAnyOf(
+                                            l -> assertThat(l).isSortedAccordingTo(IndexInfo.CASE_INSENSITIVE_ORDER),
+                                            l -> assertThat(l).isSortedAccordingTo(IndexInfo.LEXICOGRAPHIC_ORDER)
+                                    );
                         }
                     }
                 } catch (final SQLException sqle) {
@@ -1316,10 +1326,12 @@ final class ContextTestUtils {
                             , DatabaseProductNames.POSTGRE_SQL
                     );
                     if (!databaseProductNames.contains(databaseProductName)) {
-                        assertThat(primaryKeys).satisfiesAnyOf(
-                                l -> assertThat(l).isSortedAccordingTo(PrimaryKey.CASE_INSENSITIVE_ORDER),
-                                l -> assertThat(l).isSortedAccordingTo(PrimaryKey.LEXICOGRAPHIC_ORDER)
-                        );
+                        assertThat(primaryKeys)
+                                .doesNotHaveDuplicates()
+                                .satisfiesAnyOf(
+                                        l -> assertThat(l).isSortedAccordingTo(PrimaryKey.CASE_INSENSITIVE_ORDER),
+                                        l -> assertThat(l).isSortedAccordingTo(PrimaryKey.LEXICOGRAPHIC_ORDER)
+                                );
                     }
                 } catch (final SQLException sqle) {
                     thrown("failed: getPrimaryKeys", sqle);

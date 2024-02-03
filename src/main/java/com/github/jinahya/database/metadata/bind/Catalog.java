@@ -20,12 +20,12 @@ package com.github.jinahya.database.metadata.bind;
  * #L%
  */
 
+import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
 
 import java.util.Comparator;
-import java.util.Objects;
 import java.util.function.Consumer;
 
 import static java.util.Comparator.naturalOrder;
@@ -40,6 +40,7 @@ import static java.util.Comparator.nullsFirst;
 @Setter
 @Getter
 @ToString(callSuper = true)
+@EqualsAndHashCode(callSuper = true, onlyExplicitlyIncluded = true)
 public class Catalog extends AbstractMetadataType {
 
     private static final long serialVersionUID = 6239185259128825953L;
@@ -78,32 +79,17 @@ public class Catalog extends AbstractMetadataType {
         return instance;
     }
 
-    // -----------------------------------------------------------------------------------------------------------------
-
-    @Override
-    public boolean equals(Object object) {
-        if (this == object) return true;
-        if (!(object instanceof Catalog)) return false;
-        if (!super.equals(object)) return false;
-        Catalog catalog = (Catalog) object;
-        return Objects.equals(tableCatNonNull(), catalog.tableCatNonNull());
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(super.hashCode(), tableCatNonNull());
-    }
-
     // -------------------------------------------------------------------------------------------------------- tableCat
+    @EqualsAndHashCode.Include
     String tableCatNonNull() {
-        final String tableCat_ = getTableCat();
-        if (tableCat_ != null) {
-            return tableCat_;
+        if (tableCat == null) {
+            return Catalog.COLUMN_VALUE_TABLE_CAT_EMPTY;
         }
-        return Catalog.COLUMN_VALUE_TABLE_CAT_EMPTY;
+        return tableCat;
     }
 
     // -----------------------------------------------------------------------------------------------------------------
     @_ColumnLabel(COLUMN_LABEL_TABLE_CAT)
+    @EqualsAndHashCode.Exclude
     private String tableCat;
 }

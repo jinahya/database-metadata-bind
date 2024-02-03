@@ -45,8 +45,8 @@ class ColumnTest extends AbstractMetadataTypeTest<Column> {
     }
 
     @Override
-    Column typeInstance() {
-        final var instance = super.typeInstance();
+    Column newTypeInstance() {
+        final var instance = super.newTypeInstance();
         instance.setTableName("");
         instance.setColumnName("");
         instance.setOrdinalPosition(1);
@@ -59,14 +59,14 @@ class ColumnTest extends AbstractMetadataTypeTest<Column> {
 
         @Test
         void getNullableAsEnum__() {
-            final var spy = typeSpy();
+            final var spy = newTypeSpy();
             final var nullableAsEnum = spy.getNullableAsEnum();
             verify(spy, times(1)).getNullable();
         }
 
         @Test
         void setNullableAsEnum_Null_Null() {
-            final var spy = typeSpy();
+            final var spy = newTypeSpy();
             spy.setNullableAsEnum(null);
             verify(spy, times(1)).setNullable(null);
         }
@@ -74,7 +74,7 @@ class ColumnTest extends AbstractMetadataTypeTest<Column> {
         @EnumSource(Column.Nullable.class)
         @ParameterizedTest
         void setNullableAsEnum__(final Column.Nullable nullableAsEnum) {
-            final var spy = typeSpy();
+            final var spy = newTypeSpy();
             spy.setNullableAsEnum(nullableAsEnum);
             verify(spy, times(1))
                     .setNullable(nullableAsEnum.fieldValueAsInt());

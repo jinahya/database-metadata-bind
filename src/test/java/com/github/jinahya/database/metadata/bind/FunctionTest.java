@@ -27,8 +27,8 @@ class FunctionTest extends AbstractMetadataTypeTest<Function> {
     }
 
     @Override
-    Function typeInstance() {
-        final Function instance = super.typeInstance();
+    Function newTypeInstance() {
+        final Function instance = super.newTypeInstance();
         instance.setFunctionName("");
         instance.setSpecificName("");
         return instance;

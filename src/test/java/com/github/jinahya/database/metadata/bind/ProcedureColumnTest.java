@@ -27,8 +27,8 @@ class ProcedureColumnTest extends AbstractMetadataTypeTest<ProcedureColumn> {
     }
 
     @Override
-    ProcedureColumn typeInstance() {
-        final ProcedureColumn instance = super.typeInstance();
+    ProcedureColumn newTypeInstance() {
+        final ProcedureColumn instance = super.newTypeInstance();
         instance.setProcedureName("");
         instance.setColumnName("");
         instance.setSpecificName("");

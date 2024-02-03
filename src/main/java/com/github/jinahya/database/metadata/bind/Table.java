@@ -21,8 +21,11 @@ package com.github.jinahya.database.metadata.bind;
  */
 
 import jakarta.annotation.Nullable;
+import lombok.EqualsAndHashCode;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
+import lombok.ToString;
 
 import java.util.Comparator;
 import java.util.Objects;
@@ -40,6 +43,9 @@ import static java.util.Comparator.nullsFirst;
  */
 @Setter
 @Getter
+@NoArgsConstructor
+@ToString(callSuper = true)
+@EqualsAndHashCode(callSuper = true, onlyExplicitlyIncluded = true)
 public class Table extends AbstractMetadataType {
 
     private static final long serialVersionUID = 6590036695540141125L;
@@ -56,15 +62,21 @@ public class Table extends AbstractMetadataType {
                     .thenComparing(Table::tableSchemNonNull)
                     .thenComparing(Table::getTableName);
 
+    // -----------------------------------------------------------------------------------------------------------------
+
     /**
      * The column label of {@value}.
      */
     public static final String COLUMN_LABEL_TABLE_CAT = "TABLE_CAT";
 
+    // -----------------------------------------------------------------------------------------------------------------
+
     /**
      * The column label of {@value}.
      */
     public static final String COLUMN_LABEL_TABLE_SCHEM = "TABLE_SCHEM";
+
+    // -----------------------------------------------------------------------------------------------------------------
 
     /**
      * The column label of {@value}.
@@ -76,85 +88,71 @@ public class Table extends AbstractMetadataType {
      */
     public static final String COLUMN_LABEL_TABLE_TYPE = "TABLE_TYPE";
 
-    /**
-     * Creates a new instance.
-     */
-    public Table() {
-        super();
+    // -----------------------------------------------------------------------------------------------------------------
+    static Table of(final String tableCat, final String tableSchem, final String tableName) {
+        final Table instance = new Table();
+        instance.setTableCat(tableCat);
+        instance.setTableSchem(tableSchem);
+        instance.setTableName(tableName);
+        return instance;
     }
 
-    @Override
-    public String toString() {
-        return super.toString() + '{' +
-               "tableCat=" + tableCat +
-               ",tableSchem=" + tableSchem +
-               ",tableName=" + tableName +
-               ",tableType=" + tableType +
-               ",remarks=" + remarks +
-               ",typeCat=" + typeCat +
-               ",typeSchem=" + typeSchem +
-               ",typeName=" + typeName +
-               ",selfReferencingColName=" + selfReferencingColName +
-               ",refGeneration=" + refGeneration +
-               '}';
-    }
+    // -----------------------------------------------------------------------------------------------------------------
+//    @Override
+//    public boolean equals(final Object obj) {
+//        if (this == obj) return true;
+//        if (!(obj instanceof Table)) return false;
+//        final Table that = (Table) obj;
+//        return Objects.equals(tableCatNonNull(), that.getTableName()) &&
+//               Objects.equals(tableSchemNonNull(), that.tableSchemNonNull()) &&
+//               Objects.equals(tableName, that.tableName);
+//    }
+//
+//    @Override
+//    public int hashCode() {
+//        return Objects.hash(
+//                tableCatNonNull(),
+//                tableSchemNonNull(),
+//                tableName
+//        );
+//    }
 
-    @Override
-    public boolean equals(final Object obj) {
-        if (this == obj) return true;
-        if (!(obj instanceof Table)) return false;
-        final Table that = (Table) obj;
-        return Objects.equals(tableCatNonNull(), that.getTableName()) &&
-               Objects.equals(tableSchemNonNull(), that.tableSchemNonNull()) &&
-               Objects.equals(tableName, that.tableName);
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(
-                tableCatNonNull(),
-                tableSchemNonNull(),
-                tableName
-        );
-    }
-
-    public String getTableCat() {
+    // -------------------------------------------------------------------------------------------------------- tableCat
+    @EqualsAndHashCode.Include
+    String tableCatNonNull() {
+        if (tableCat == null) {
+            return Catalog.COLUMN_VALUE_TABLE_CAT_EMPTY;
+        }
         return tableCat;
     }
 
-    public void setTableCat(final String tableCat) {
-        this.tableCat = tableCat;
-    }
-
-    public String getTableSchem() {
+    // ------------------------------------------------------------------------------------------------------- tableShem
+    @EqualsAndHashCode.Include
+    String tableSchemNonNull() {
+        if (tableSchem == null) {
+            return Schema.COLUMN_VALUE_TABLE_SCHEM_EMPTY;
+        }
         return tableSchem;
     }
 
-    public void setTableSchem(final String tableSchem) {
-        this.tableSchem = tableSchem;
-    }
-
-    public String getTableName() {
-        return tableName;
-    }
-
-    public void setTableName(final String tableName) {
-        this.tableName = tableName;
-    }
-
+    // -----------------------------------------------------------------------------------------------------------------
     @Nullable
     @_NullableBySpecification
     @_ColumnLabel(COLUMN_LABEL_TABLE_CAT)
+    @EqualsAndHashCode.Include
     private String tableCat;
 
     @Nullable
     @_NullableBySpecification
     @_ColumnLabel(COLUMN_LABEL_TABLE_SCHEM)
+    @EqualsAndHashCode.Exclude
     private String tableSchem;
 
     @_ColumnLabel(COLUMN_LABEL_TABLE_NAME)
+    @EqualsAndHashCode.Include
     private String tableName;
 
+    // -----------------------------------------------------------------------------------------------------------------
     @_NullableByVendor("MariaDB")
     @_ColumnLabel(COLUMN_LABEL_TABLE_TYPE)
     private String tableType;
@@ -188,20 +186,4 @@ public class Table extends AbstractMetadataType {
     @_NullableBySpecification
     @_ColumnLabel("REF_GENERATION")
     private String refGeneration;
-
-    String tableCatNonNull() {
-        final String tableCat_ = getTableCat();
-        if (tableCat_ != null) {
-            return tableCat_;
-        }
-        return Catalog.COLUMN_VALUE_TABLE_CAT_EMPTY;
-    }
-
-    String tableSchemNonNull() {
-        final String tableSchem_ = getTableSchem();
-        if (tableSchem_ != null) {
-            return tableSchem_;
-        }
-        return Schema.COLUMN_VALUE_TABLE_SCHEM_EMPTY;
-    }
 }
