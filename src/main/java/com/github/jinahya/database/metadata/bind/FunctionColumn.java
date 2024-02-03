@@ -20,6 +20,8 @@ package com.github.jinahya.database.metadata.bind;
  * #L%
  */
 
+import jakarta.annotation.Nullable;
+import jakarta.validation.constraints.NotNull;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.Setter;
@@ -162,10 +164,12 @@ public class FunctionColumn extends AbstractMetadataType {
         this.specificName = specificName;
     }
 
+    @Nullable
     @_NullableBySpecification
     @_ColumnLabel(COLUMN_LABEL_FUNCTION_CAT)
     private String functionCat;
 
+    @Nullable
     @_NullableBySpecification
     @_ColumnLabel(COLUMN_LABEL_FUNCTION_SCHEM)
     private String functionSchem;
@@ -176,36 +180,41 @@ public class FunctionColumn extends AbstractMetadataType {
     @_ColumnLabel(COLUMN_LABEL_COLUMN_NAME)
     private String columnName;
 
-    @_NotNull
+    @NotNull
+    @_NonNullBySpecification
     @_ColumnLabel("COLUMN_TYPE")
     private Integer columnType;
 
-    @_NotNull
+    @NotNull
+    @_NonNullBySpecification
     @_ColumnLabel("DATA_TYPE")
     private Integer dataType;
 
     @_ColumnLabel("TYPE_NAME")
     private String typeName;
 
+    @Nullable
     @_NullableBySpecification
     @_ColumnLabel("PRECISION")
     private Integer precision;
 
     @_NullableByVendor("PostgreSQL")
-    @_NotNull
+    @_NonNullBySpecification
     @_ColumnLabel("LENGTH")
     private Integer length;
 
+    @Nullable
     @_NullableBySpecification
     @_ColumnLabel("SCALE")
     private Integer scale;
 
     @_NullableByVendor("Apache Derby")
-    @_NotNull
+    @_NonNullBySpecification
     @_ColumnLabel("RADIX")
     private Integer radix;
 
-    @_NotNull
+    @NotNull
+    @_NonNullBySpecification
     @_ColumnLabel("NULLABLE")
     private Integer nullable;
 
@@ -213,11 +222,13 @@ public class FunctionColumn extends AbstractMetadataType {
     @_ColumnLabel("REMARKS")
     private String remarks;
 
+    @Nullable
     @_NullableBySpecification
     @_ColumnLabel("CHAR_OCTET_LENGTH")
     private Integer charOctetLength;
 
-    @_NotNull
+    @NotNull
+    @_NonNullBySpecification
     @_ColumnLabel("ORDINAL_POSITION")
     private Integer ordinalPosition;
 

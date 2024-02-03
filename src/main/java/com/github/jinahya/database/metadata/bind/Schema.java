@@ -20,8 +20,13 @@ package com.github.jinahya.database.metadata.bind;
  * #L%
  */
 
+import jakarta.annotation.Nullable;
+import lombok.EqualsAndHashCode;
+import lombok.Getter;
+import lombok.Setter;
+import lombok.ToString;
+
 import java.util.Comparator;
-import java.util.Objects;
 
 import static java.util.Comparator.naturalOrder;
 import static java.util.Comparator.nullsFirst;
@@ -33,10 +38,15 @@ import static java.util.Comparator.nullsFirst;
  * @author Jin Kwon &lt;jinahya_at_gmail.com&gt;
  * @see Context#getSchemas(String, String)
  */
+@Setter
+@Getter
+@EqualsAndHashCode(callSuper = true, onlyExplicitlyIncluded = true)
+@ToString(callSuper = true)
 public class Schema extends AbstractMetadataType {
 
     private static final long serialVersionUID = 7457236468401244963L;
 
+    // -----------------------------------------------------------------------------------------------------------------
     static final Comparator<Schema> CASE_INSENSITIVE_ORDER =
             Comparator.comparing(Schema::getTableCatalog, nullsFirst(String.CASE_INSENSITIVE_ORDER))
                     .thenComparing(Schema::getTableSchem, nullsFirst(String.CASE_INSENSITIVE_ORDER));
@@ -45,23 +55,29 @@ public class Schema extends AbstractMetadataType {
             Comparator.comparing(Schema::getTableCatalog, nullsFirst(naturalOrder()))
                     .thenComparing(Schema::getTableSchem, nullsFirst(naturalOrder()));
 
+    // -----------------------------------------------------------------------------------------------------------------
+
     /**
      * Returns a new instance whose {@code tableCatalog} is {@value Catalog#COLUMN_VALUE_TABLE_CAT_EMPTY} and whose
      * {@code tableSchem} is {@value #COLUMN_VALUE_TABLE_SCHEM_EMPTY}.
      *
      * @return a new virtual instance.
      */
-    public static Schema newVirtualInstance() {
+    static Schema newVirtualInstance() {
         final Schema instance = new Schema();
         instance.setTableCatalog(Catalog.COLUMN_VALUE_TABLE_CAT_EMPTY);
         instance.setTableSchem(Schema.COLUMN_VALUE_TABLE_SCHEM_EMPTY);
         return instance;
     }
 
+    // -----------------------------------------------------------------------------------------------------------------
+
     /**
      * A column label of {@value}.
      */
     public static final String COLUMN_LABEL_TABLE_CATALOG = "TABLE_CATALOG";
+
+    // -----------------------------------------------------------------------------------------------------------------
 
     /**
      * A column label of {@value}.
@@ -71,56 +87,18 @@ public class Schema extends AbstractMetadataType {
     /**
      * A column value of {@value} for {@value #COLUMN_LABEL_TABLE_SCHEM}.
      */
-    public static final String COLUMN_VALUE_TABLE_SCHEM_EMPTY = "";
+    static final String COLUMN_VALUE_TABLE_SCHEM_EMPTY = "";
 
-    @Override
-    public String toString() {
-        return super.toString() + '{' +
-               "tableCatalog=" + tableCatalog +
-               ",tableSchem=" + tableSchem +
-               '}';
+    // -----------------------------------------------------------------------------------------------------------------
+    static Schema of(final String tableCatalog, final String tableSchem) {
+        final Schema instance = new Schema();
+        instance.setTableCatalog(tableCatalog);
+        instance.setTableSchem(tableSchem);
+        return instance;
     }
 
-    @Override
-    public boolean equals(final Object obj) {
-        if (this == obj) return true;
-        if (!(obj instanceof Schema)) return false;
-        final Schema that = (Schema) obj;
-        return Objects.equals(tableCatalogNonNull(), that.tableCatalogNonNull()) &&
-               Objects.equals(tableSchem, that.tableSchem);
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(
-                tableCatalogNonNull(),
-                tableSchem
-        );
-    }
-
-    public String getTableCatalog() {
-        return tableCatalog;
-    }
-
-    public void setTableCatalog(final String tableCatalog) {
-        this.tableCatalog = tableCatalog;
-    }
-
-    public String getTableSchem() {
-        return tableSchem;
-    }
-
-    public void setTableSchem(final String tableSchem) {
-        this.tableSchem = tableSchem;
-    }
-
-    @_NullableBySpecification
-    @_ColumnLabel(COLUMN_LABEL_TABLE_CATALOG)
-    private String tableCatalog;
-
-    @_ColumnLabel(COLUMN_LABEL_TABLE_SCHEM)
-    private String tableSchem;
-
+    // ---------------------------------------------------------------------------------------------------- tableCatalog
+    @EqualsAndHashCode.Include
     String tableCatalogNonNull() {
         final String tableCatalog_ = getTableCatalog();
         if (tableCatalog_ != null) {
@@ -128,4 +106,16 @@ public class Schema extends AbstractMetadataType {
         }
         return Catalog.COLUMN_VALUE_TABLE_CAT_EMPTY;
     }
+
+    // ------------------------------------------------------------------------------------------------------ tableSchem
+
+    // -----------------------------------------------------------------------------------------------------------------
+    @Nullable
+    @_NullableBySpecification
+    @_ColumnLabel(COLUMN_LABEL_TABLE_CATALOG)
+    private String tableCatalog;
+
+    @_ColumnLabel(COLUMN_LABEL_TABLE_SCHEM)
+    @EqualsAndHashCode.Include
+    private String tableSchem;
 }

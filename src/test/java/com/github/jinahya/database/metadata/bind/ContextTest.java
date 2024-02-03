@@ -21,15 +21,14 @@ package com.github.jinahya.database.metadata.bind;
  */
 
 import lombok.extern.slf4j.Slf4j;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
 import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
 import java.sql.DatabaseMetaData;
 import java.sql.ResultSet;
-import java.util.Arrays;
 import java.util.List;
-import java.util.function.Consumer;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
@@ -42,6 +41,7 @@ import static org.assertj.core.api.Assertions.assertThatThrownBy;
 @Slf4j
 class ContextTest {
 
+    @DisplayName("...(...)ResultSet")
     @Test
     void assertAllMethodsBound() throws ReflectiveOperationException {
         for (final Method method : DatabaseMetaData.class.getMethods()) {
@@ -58,16 +58,15 @@ class ContextTest {
             if (!ResultSet.class.isAssignableFrom(method.getReturnType())) {
                 continue;
             }
+            log.debug("method: {}", method);
             final var name = method.getName();
             {
-                final Class<?>[] types = Arrays.copyOf(method.getParameterTypes(), method.getParameterCount() + 1);
-                types[types.length - 1] = Consumer.class;
-                final Method bound = Context.class.getDeclaredMethod(name, types);
-                assertThat(bound.getReturnType()).isEqualTo(void.class);
-            }
-            {
-                final Method bound = Context.class.getMethod(name, method.getParameterTypes());
-                assertThat(bound.getReturnType()).isEqualTo(List.class);
+                final Method found = Context.class.getMethod(name, method.getParameterTypes());
+                assertThat(found.getModifiers()).satisfies(m -> {
+                    assertThat(Modifier.isStatic(m)).isFalse();
+                    assertThat(Modifier.isPublic(m)).isTrue();
+                });
+                assertThat(found.getReturnType()).isEqualTo(List.class);
             }
         }
     }

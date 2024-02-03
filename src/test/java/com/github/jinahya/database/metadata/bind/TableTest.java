@@ -27,8 +27,8 @@ class TableTest extends AbstractMetadataTypeTest<Table> {
     }
 
     @Override
-    Table typeInstance() {
-        final Table instance = super.typeInstance();
+    Table newTypeInstance() {
+        final Table instance = super.newTypeInstance();
         instance.setTableName("");
         return instance;
     }

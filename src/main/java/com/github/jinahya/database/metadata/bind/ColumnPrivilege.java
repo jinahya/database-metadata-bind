@@ -20,9 +20,11 @@ package com.github.jinahya.database.metadata.bind;
  * #L%
  */
 
+import jakarta.annotation.Nullable;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.Setter;
+import lombok.ToString;
 
 import java.sql.DatabaseMetaData;
 import java.util.Comparator;
@@ -41,6 +43,7 @@ import static java.util.Comparator.nullsFirst;
 @Setter
 @Getter
 @EqualsAndHashCode(callSuper = true)
+@ToString(callSuper = true)
 public class ColumnPrivilege extends AbstractMetadataType {
 
     private static final long serialVersionUID = 4384654744147773380L;
@@ -53,83 +56,130 @@ public class ColumnPrivilege extends AbstractMetadataType {
             Comparator.comparing(ColumnPrivilege::getColumnName, nullsFirst(naturalOrder()))
                     .thenComparing(ColumnPrivilege::getPrivilege, nullsFirst(naturalOrder()));
 
+    // -----------------------------------------------------------------------------------------------------------------
     public static final String COLUMN_LABEL_TABLE_CAT = "TABLE_CAT";
 
+    // -----------------------------------------------------------------------------------------------------------------
     public static final String COLUMN_LABEL_TABLE_SCHEM = "TABLE_SCHEM";
 
+    // -----------------------------------------------------------------------------------------------------------------
     public static final String COLUMN_LABEL_TABLE_NAME = "TABLE_NAME";
 
+    // -----------------------------------------------------------------------------------------------------------------
     public static final String COLUMN_LABEL_COLUMN_NAME = "COLUMN_NAME";
 
+    // -----------------------------------------------------------------------------------------------------------------
     public static final String COLUMN_LABEL_IS_GRANTABLE = "IS_GRANTABLE";
 
     public static final String COLUMN_VALUE_IS_GRANTABLE_YES = "YES";
 
     public static final String COLUMN_VALUE_IS_GRANTABLE_NO = "NO";
 
-    @Override
-    public String toString() {
-        return super.toString() + '{' +
-               "tableCat=" + tableCat +
-               ",tableSchem=" + tableSchem +
-               ",tableName=" + tableName +
-               ",columnName=" + columnName +
-               ",grantor=" + grantor +
-               ",grantee=" + grantee +
-               ",privilege=" + privilege +
-               ",isGrantable=" + isGrantable +
-               '}';
+    public enum IsGrantable implements _FieldEnum<IsGrantable, String> {
+
+        /**
+         * A value for {@link #COLUMN_VALUE_IS_GRANTABLE_YES}.
+         */
+        YES(COLUMN_VALUE_IS_GRANTABLE_YES),
+
+        /**
+         * A value for {@link #COLUMN_VALUE_IS_GRANTABLE_NO}.
+         */
+        NO(COLUMN_VALUE_IS_GRANTABLE_NO);
+
+        public static IsGrantable valueOfFieldValue(final String fieldValue) {
+            return _FieldEnum.valueOfFieldValue(IsGrantable.class, fieldValue);
+        }
+
+        IsGrantable(final String fieldValue) {
+            this.fieldValue = fieldValue;
+        }
+
+        @Override
+        public String fieldValue() {
+            return fieldValue;
+        }
+
+        private final String fieldValue;
     }
 
-    @_NullableBySpecification
-    @_ColumnLabel(COLUMN_LABEL_TABLE_CAT)
-    private String tableCat;
-
-    @_NullableBySpecification
-    @_ColumnLabel(COLUMN_LABEL_TABLE_SCHEM)
-    private String tableSchem;
-
-    @_ColumnLabel(COLUMN_LABEL_TABLE_NAME)
-    private String tableName;
-
-    @_ColumnLabel(COLUMN_LABEL_COLUMN_NAME)
-    private String columnName;
-
-    @_NullableBySpecification
-    @_ColumnLabel("GRANTOR")
-    private String grantor;
-
-    @_ColumnLabel("GRANTEE")
-    private String grantee;
-
-    @_ColumnLabel("PRIVILEGE")
-    private String privilege;
-
-    @_NullableBySpecification
-    @_ColumnLabel(COLUMN_LABEL_IS_GRANTABLE)
-    private String isGrantable;
-
+    // -------------------------------------------------------------------------------------------------------- tableCat
+    @EqualsAndHashCode.Include
     String tableCatNonNull() {
-        final String tableCat_ = getTableCat();
-        return tableCat_ != null ? tableCat_ : Catalog.COLUMN_VALUE_TABLE_CAT_EMPTY;
+        if (tableCat == null) {
+            return Catalog.COLUMN_VALUE_TABLE_CAT_EMPTY;
+        }
+        return tableCat;
     }
 
+    // ------------------------------------------------------------------------------------------------------ tableSchem
+    @EqualsAndHashCode.Include
     String tableSchemNonNull() {
-        final String tableSchem_ = getTableSchem();
-        return tableSchem_ != null ? tableSchem_ : Schema.COLUMN_VALUE_TABLE_SCHEM_EMPTY;
+        if (tableSchem == null) {
+            return Schema.COLUMN_VALUE_TABLE_SCHEM_EMPTY;
+        }
+        return tableSchem;
     }
 
-    Boolean getIsGrantableAsBoolean() {
+    // ------------------------------------------------------------------------------------------------------- tableName
+
+    // ------------------------------------------------------------------------------------------------------ columnName
+
+    // ----------------------------------------------------------------------------------------------------- isGrantable
+
+    @Nullable
+    IsGrantable getIsGrantableAsEnum() {
         return Optional.ofNullable(getIsGrantable())
-                .map(COLUMN_VALUE_IS_GRANTABLE_YES::equalsIgnoreCase)
+                .map(IsGrantable::valueOfFieldValue)
                 .orElse(null);
     }
 
-    void setIsGrantableAsBoolean(final Boolean isGrantableAsBoolean) {
+    void setIsGrantableAsEnum(@Nullable final IsGrantable isGrantableAsEnum) {
         setIsGrantable(
-                Optional.ofNullable(isGrantableAsBoolean)
-                        .map(v -> Boolean.TRUE.equals(v) ? COLUMN_VALUE_IS_GRANTABLE_YES : COLUMN_VALUE_IS_GRANTABLE_NO)
+                Optional.ofNullable(isGrantableAsEnum)
+                        .map(_FieldEnum::fieldValue)
                         .orElse(null)
         );
     }
+
+    // -----------------------------------------------------------------------------------------------------------------
+    @Nullable
+    @_NullableBySpecification
+    @_ColumnLabel(COLUMN_LABEL_TABLE_CAT)
+    @EqualsAndHashCode.Exclude
+    private String tableCat;
+
+    @Nullable
+    @_NullableBySpecification
+    @_ColumnLabel(COLUMN_LABEL_TABLE_SCHEM)
+    @EqualsAndHashCode.Exclude
+    private String tableSchem;
+
+    @_ColumnLabel(COLUMN_LABEL_TABLE_NAME)
+    @EqualsAndHashCode.Include
+    private String tableName;
+
+    @_ColumnLabel(COLUMN_LABEL_COLUMN_NAME)
+    @EqualsAndHashCode.Include
+    private String columnName;
+
+    // -----------------------------------------------------------------------------------------------------------------
+    @Nullable
+    @_NullableBySpecification
+    @_ColumnLabel("GRANTOR")
+    @EqualsAndHashCode.Include
+    private String grantor;
+
+    @_ColumnLabel("GRANTEE")
+    @EqualsAndHashCode.Include
+    private String grantee;
+
+    @_ColumnLabel("PRIVILEGE")
+    @EqualsAndHashCode.Include
+    private String privilege;
+
+    @Nullable
+    @_NullableBySpecification
+    @_ColumnLabel(COLUMN_LABEL_IS_GRANTABLE)
+    private String isGrantable;
 }

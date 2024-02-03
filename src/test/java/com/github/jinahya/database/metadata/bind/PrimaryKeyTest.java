@@ -27,8 +27,8 @@ class PrimaryKeyTest extends AbstractMetadataTypeTest<PrimaryKey> {
     }
 
     @Override
-    PrimaryKey typeInstance() {
-        final var instance = super.typeInstance();
+    PrimaryKey newTypeInstance() {
+        final var instance = super.newTypeInstance();
         instance.setTableName("");
         instance.setColumnName("");
         return instance;

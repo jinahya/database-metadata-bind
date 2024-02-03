@@ -24,32 +24,31 @@ import lombok.AccessLevel;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.Setter;
+import lombok.ToString;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Objects;
 
+@ToString(callSuper = true)
 abstract class AbstractMetadataType implements MetadataType {
 
     private static final long serialVersionUID = -3285362930174073345L;
 
-    @Override
-    public String toString() {
-        return super.toString() + '{' +
-               "unmappedValues=" + unmappedValues +
-               '}';
-    }
-
+    // -----------------------------------------------------------------------------------------------------------------
     @Override
     public boolean equals(final Object obj) {
         if (this == obj) return true;
-        return obj instanceof AbstractMetadataType;
+        if (obj == null || getClass() != obj.getClass()) return false;
+        return true;
     }
 
     @Override
     public int hashCode() {
-        return super.hashCode();
+        return Objects.hash(getClass());
     }
 
+    // -------------------------------------------------------------------------------------------------- unmappedValues
     @Override
     public Map<String, Object> getUnmappedValues() {
         if (unmappedValues == null) {
@@ -58,6 +57,7 @@ abstract class AbstractMetadataType implements MetadataType {
         return unmappedValues;
     }
 
+    // -----------------------------------------------------------------------------------------------------------------
     @Setter(AccessLevel.NONE)
     @Getter(AccessLevel.NONE)
     @EqualsAndHashCode.Exclude

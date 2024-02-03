@@ -20,9 +20,11 @@ package com.github.jinahya.database.metadata.bind;
  * #L%
  */
 
+import jakarta.annotation.Nullable;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.Setter;
+import lombok.ToString;
 
 import java.util.Comparator;
 
@@ -38,11 +40,13 @@ import static java.util.Comparator.nullsFirst;
  */
 @Setter
 @Getter
-@EqualsAndHashCode(callSuper = true)
+@EqualsAndHashCode(callSuper = true, onlyExplicitlyIncluded = true)
+@ToString(callSuper = true)
 public class TablePrivilege extends AbstractMetadataType {
 
     private static final long serialVersionUID = -2142097373603478881L;
 
+    // -----------------------------------------------------------------------------------------------------------------
     static final Comparator<TablePrivilege> CASE_INSENSITIVE_ORDER =
             Comparator.comparing(TablePrivilege::getTableCat, nullsFirst(String.CASE_INSENSITIVE_ORDER))
                     .thenComparing(TablePrivilege::getTableSchem, nullsFirst(String.CASE_INSENSITIVE_ORDER))
@@ -54,6 +58,8 @@ public class TablePrivilege extends AbstractMetadataType {
                     .thenComparing(TablePrivilege::getTableSchem, nullsFirst(naturalOrder()))
                     .thenComparing(TablePrivilege::getTableName, nullsFirst(naturalOrder()))
                     .thenComparing(TablePrivilege::getPrivilege, nullsFirst(naturalOrder()));
+
+    // -----------------------------------------------------------------------------------------------------------------
 
     /**
      * The column label of {@value}.
@@ -70,30 +76,41 @@ public class TablePrivilege extends AbstractMetadataType {
      */
     public static final String COLUMN_LABEL_TABLE_NAME = "TABLE_NAME";
 
-    @Override
-    public String toString() {
-        return super.toString() + '{' +
-               "tableCat=" + tableCat +
-               ",tableSchem=" + tableSchem +
-               ",tableName=" + tableName +
-               ",grantor=" + grantor +
-               ",grantee=" + grantee +
-               ",privilege=" + privilege +
-               ",isGrantable=" + isGrantable +
-               '}';
+    // -------------------------------------------------------------------------------------------------------- tableCat
+    @EqualsAndHashCode.Include
+    String tableCatNonNull() {
+        if (tableCat == null) {
+            return Catalog.COLUMN_VALUE_TABLE_CAT_EMPTY;
+        }
+        return tableCat;
     }
 
+    // ------------------------------------------------------------------------------------------------------ tableSchem
+    @EqualsAndHashCode.Include
+    String tableSchemNonNull() {
+        if (tableSchem == null) {
+            return Schema.COLUMN_VALUE_TABLE_SCHEM_EMPTY;
+        }
+        return tableSchem;
+    }
+
+    // -----------------------------------------------------------------------------------------------------------------
+    @Nullable
     @_NullableBySpecification
     @_ColumnLabel(COLUMN_LABEL_TABLE_CAT)
     private String tableCat;
 
+    @Nullable
     @_NullableBySpecification
     @_ColumnLabel(COLUMN_LABEL_TABLE_SCHEM)
     private String tableSchem;
 
     @_ColumnLabel(COLUMN_LABEL_TABLE_NAME)
+    @EqualsAndHashCode.Include
     private String tableName;
 
+    // -----------------------------------------------------------------------------------------------------------------
+    @Nullable
     @_NullableBySpecification
     @_ColumnLabel("GRANTOR")
     private String grantor;
@@ -102,25 +119,11 @@ public class TablePrivilege extends AbstractMetadataType {
     private String grantee;
 
     @_ColumnLabel("PRIVILEGE")
+    @EqualsAndHashCode.Include
     private String privilege;
 
+    @Nullable
     @_NullableBySpecification
     @_ColumnLabel("IS_GRANTABLE")
     private String isGrantable;
-
-    String tableCatNonNull() {
-        final String tableCat_ = getTableCat();
-        if (tableCat_ != null) {
-            return tableCat_;
-        }
-        return Catalog.COLUMN_VALUE_TABLE_CAT_EMPTY;
-    }
-
-    String tableSchemNonNull() {
-        final String tableSchem_ = getTableSchem();
-        if (tableSchem_ != null) {
-            return tableSchem_;
-        }
-        return Schema.COLUMN_VALUE_TABLE_SCHEM_EMPTY;
-    }
 }

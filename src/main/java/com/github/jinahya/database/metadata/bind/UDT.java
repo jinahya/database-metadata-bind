@@ -20,12 +20,15 @@ package com.github.jinahya.database.metadata.bind;
  * #L%
  */
 
+import jakarta.annotation.Nullable;
+import jakarta.validation.constraints.NotNull;
+import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.Setter;
+import lombok.ToString;
 
 import java.sql.DatabaseMetaData;
 import java.util.Comparator;
-import java.util.Objects;
 
 import static java.util.Comparator.naturalOrder;
 import static java.util.Comparator.nullsFirst;
@@ -38,10 +41,13 @@ import static java.util.Comparator.nullsFirst;
  */
 @Setter
 @Getter
+@EqualsAndHashCode(callSuper = true, onlyExplicitlyIncluded = true)
+@ToString(callSuper = true)
 public class UDT extends AbstractMetadataType {
 
     private static final long serialVersionUID = 8665246093405057553L;
 
+    // -----------------------------------------------------------------------------------------------------------------
     static final Comparator<UDT> CASE_INSENSITIVE_ORDER =
             Comparator.comparingInt(UDT::getDataType)
                     .thenComparing(UDT::typeCatNonNull, String.CASE_INSENSITIVE_ORDER)
@@ -54,125 +60,43 @@ public class UDT extends AbstractMetadataType {
                     .thenComparing(UDT::typeSchemNonNull, naturalOrder())
                     .thenComparing(UDT::getTypeName, nullsFirst(naturalOrder()));
 
+    // -----------------------------------------------------------------------------------------------------------------
+
     /**
      * A column label of {@value}.
      */
     public static final String COLUMN_LABEL_TYPE_CAT = "TYPE_CAT";
+
+    // -----------------------------------------------------------------------------------------------------------------
 
     /**
      * A column label of {@value}.
      */
     public static final String COLUMN_LABEL_TYPE_SCHEM = "TYPE_SCHEM";
 
+    // -----------------------------------------------------------------------------------------------------------------
+
     /**
      * A column label of {@value}.
      */
     public static final String COLUMN_LABEL_TYPE_NAME = "TYPE_NAME";
+
+    // -----------------------------------------------------------------------------------------------------------------
 
     /**
      * A column label of {@value}.
      */
     public static final String COLUMN_LABEL_CLASS_NAME = "CLASS_NAME";
 
+    // -----------------------------------------------------------------------------------------------------------------
+
     /**
      * A column label of {@value}.
      */
     public static final String COLUMN_LABEL_DATA_TYPE = "DATA_TYPE";
 
-    @Override
-    public String toString() {
-        return super.toString() + '{' +
-               "typeCat=" + typeCat +
-               ",typeSchem=" + typeSchem +
-               ",typeName=" + typeName +
-               ",className=" + className +
-               ",dataType=" + dataType +
-               ",remarks=" + remarks +
-               ",baseType=" + baseType +
-               '}';
-    }
-
-    @Override
-    public boolean equals(final Object obj) {
-        if (this == obj) return true;
-        if (!(obj instanceof UDT)) return false;
-        final UDT that = (UDT) obj;
-        return Objects.equals(dataType, that.dataType) &&
-               Objects.equals(typeCatNonNull(), that.typeCatNonNull()) &&
-               Objects.equals(typeSchemNonNull(), that.typeSchemNonNull()) &&
-               Objects.equals(typeName, that.typeName);
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(
-                typeCatNonNull(),
-                typeSchemNonNull(),
-                typeName,
-                dataType
-        );
-    }
-
-    public String getTypeCat() {
-        return typeCat;
-    }
-
-    public void setTypeCat(final String typeCat) {
-        this.typeCat = typeCat;
-    }
-
-    public String getTypeSchem() {
-        return typeSchem;
-    }
-
-    public void setTypeSchem(final String typeSchem) {
-        this.typeSchem = typeSchem;
-    }
-
-    public String getTypeName() {
-        return typeName;
-    }
-
-    public void setTypeName(final String typeName) {
-        this.typeName = typeName;
-    }
-
-    @_NotNull
-    public Integer getDataType() {
-        return dataType;
-    }
-
-    public void setDataType(@_NotNull final Integer dataType) {
-        this.dataType = dataType;
-    }
-
-    @_NullableBySpecification
-    @_ColumnLabel(COLUMN_LABEL_TYPE_CAT)
-    private String typeCat;
-
-    @_NullableBySpecification
-    @_ColumnLabel(COLUMN_LABEL_TYPE_SCHEM)
-    private String typeSchem;
-
-    @_ColumnLabel(COLUMN_LABEL_TYPE_NAME)
-    private String typeName;
-
-    @_NullableByVendor("PostgreSQL")
-    @_ColumnLabel(COLUMN_LABEL_CLASS_NAME)
-    private String className;
-
-    @_NotNull
-    @_ColumnLabel(COLUMN_LABEL_DATA_TYPE)
-    private Integer dataType;
-
-    @_NullableByVendor("PostgreSQL")
-    @_ColumnLabel("REMARKS")
-    private String remarks;
-
-    @_NullableBySpecification
-    @_ColumnLabel("BASE_TYPE")
-    private Integer baseType;
-
+    // --------------------------------------------------------------------------------------------------------- typeCat
+    @EqualsAndHashCode.Include
     String typeCatNonNull() {
         final String typeCat_ = getTypeCat();
         if (typeCat_ != null) {
@@ -181,6 +105,8 @@ public class UDT extends AbstractMetadataType {
         return Catalog.COLUMN_VALUE_TABLE_CAT_EMPTY;
     }
 
+    // ------------------------------------------------------------------------------------------------------- typeSchem
+    @EqualsAndHashCode.Include
     String typeSchemNonNull() {
         final String typeSchem_ = getTypeSchem();
         if (typeSchem_ != null) {
@@ -188,4 +114,38 @@ public class UDT extends AbstractMetadataType {
         }
         return Schema.COLUMN_VALUE_TABLE_SCHEM_EMPTY;
     }
+
+    // -----------------------------------------------------------------------------------------------------------------
+    @Nullable
+    @_NullableBySpecification
+    @_ColumnLabel(COLUMN_LABEL_TYPE_CAT)
+    private String typeCat;
+
+    @Nullable
+    @_NullableBySpecification
+    @_ColumnLabel(COLUMN_LABEL_TYPE_SCHEM)
+    private String typeSchem;
+
+    @_ColumnLabel(COLUMN_LABEL_TYPE_NAME)
+    @EqualsAndHashCode.Include
+    private String typeName;
+
+    // -----------------------------------------------------------------------------------------------------------------
+    @_NullableByVendor("PostgreSQL")
+    @_ColumnLabel(COLUMN_LABEL_CLASS_NAME)
+    private String className;
+
+    @NotNull
+    @_NonNullBySpecification
+    @_ColumnLabel(COLUMN_LABEL_DATA_TYPE)
+    private Integer dataType;
+
+    @_NullableByVendor("PostgreSQL")
+    @_ColumnLabel("REMARKS")
+    private String remarks;
+
+    @Nullable
+    @_NullableBySpecification
+    @_ColumnLabel("BASE_TYPE")
+    private Integer baseType;
 }

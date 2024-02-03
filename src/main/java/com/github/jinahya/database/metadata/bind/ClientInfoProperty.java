@@ -20,9 +20,14 @@ package com.github.jinahya.database.metadata.bind;
  * #L%
  */
 
+import jakarta.validation.constraints.NotNull;
+import lombok.EqualsAndHashCode;
+import lombok.Getter;
+import lombok.Setter;
+import lombok.ToString;
+
 import java.sql.DatabaseMetaData;
 import java.util.Comparator;
-import java.util.Objects;
 
 import static java.util.Comparator.naturalOrder;
 
@@ -32,6 +37,10 @@ import static java.util.Comparator.naturalOrder;
  * @author Jin Kwon &lt;jinahya_at_gmail.com&gt;
  * @see Context#getClientInfoProperties()
  */
+@Setter
+@Getter
+@EqualsAndHashCode(callSuper = true, onlyExplicitlyIncluded = true)
+@ToString(callSuper = true)
 public class ClientInfoProperty extends AbstractMetadataType {
 
     private static final long serialVersionUID = -2913230435651853254L;
@@ -42,85 +51,42 @@ public class ClientInfoProperty extends AbstractMetadataType {
     static final Comparator<ClientInfoProperty> LEXICOGRAPHIC_ORDER =
             Comparator.comparing(ClientInfoProperty::getName, naturalOrder());
 
+    // ------------------------------------------------------------------------------------------------------------ NAME
+
     /**
      * The column label of {@value}.
      */
     public static final String COLUMN_LABEL_NAME = "NAME";
+
+    // --------------------------------------------------------------------------------------------------------- MAX_LEN
 
     /**
      * The column label of {@value}.
      */
     public static final String COLUMN_LABEL_MAX_LEN = "MAX_LEN";
 
+    // --------------------------------------------------------------------------------------------------- DEFAULT_VALUE
+
     /**
      * The column label of {@value}.
      */
     public static final String COLUMN_LABEL_DEFAULT_VALUE = "DEFAULT_VALUE";
+
+    // ----------------------------------------------------------------------------------------------------- DESCRIPTION
 
     /**
      * The column label of {@value}.
      */
     public static final String COLUMN_LABEL_DESCRIPTION = "DESCRIPTION";
 
-    @Override
-    public String toString() {
-        return super.toString() + '{' +
-               "name=" + name +
-               ",maxLen=" + maxLen +
-               ",defaultValue=" + defaultValue +
-               ",description=" + description +
-               '}';
-    }
-
-    @Override
-    public boolean equals(final Object obj) {
-        if (this == obj) return true;
-        if (!(obj instanceof ClientInfoProperty)) return false;
-        final ClientInfoProperty that = (ClientInfoProperty) obj;
-        return Objects.equals(name, that.name);
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(name);
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public Integer getMaxLen() {
-        return maxLen;
-    }
-
-    public void setMaxLen(final Integer maxLen) {
-        this.maxLen = maxLen;
-    }
-
-    public String getDefaultValue() {
-        return defaultValue;
-    }
-
-    public void setDefaultValue(final String defaultValue) {
-        this.defaultValue = defaultValue;
-    }
-
-    public String getDescription() {
-        return description;
-    }
-
-    public void setDescription(final String description) {
-        this.description = description;
-    }
-
+    // -----------------------------------------------------------------------------------------------------------------
     @_ColumnLabel(COLUMN_LABEL_NAME)
+    @EqualsAndHashCode.Include
     private String name;
 
-    @_NotNull
+    // -----------------------------------------------------------------------------------------------------------------
+    @NotNull
+    @_NonNullBySpecification
     @_ColumnLabel(COLUMN_LABEL_MAX_LEN)
     private Integer maxLen;
 

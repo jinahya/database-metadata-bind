@@ -24,6 +24,7 @@ import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.EnumSource;
+import org.mockito.Mockito;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.times;
@@ -36,8 +37,8 @@ abstract class TableKeyTest<T extends TableKey<T>> extends AbstractMetadataTypeT
     }
 
     @Override
-    T typeInstance() {
-        final T instance = super.typeInstance();
+    T newTypeInstance() {
+        final T instance = super.newTypeInstance();
         instance.setPktableName("");
         instance.setPkcolumnName("");
         instance.setFktableName("");
@@ -50,22 +51,22 @@ abstract class TableKeyTest<T extends TableKey<T>> extends AbstractMetadataTypeT
 
         @Test
         void getUpdateRuleAsEnum__() {
-            final var spy = typeSpy();
+            final var spy = Mockito.spy(newTypeInstance());
             assertThat(spy.getUpdateRuleAsEnum()).isNull();
             verify(spy, times(1)).getUpdateRule();
         }
 
         @Test
         void setUpdateRuleAsEnum_Null_Null() {
-            final var spy = typeSpy();
+            final var spy = Mockito.spy(newTypeInstance());
             spy.setUpdateRuleAsEnum(null);
             verify(spy, times(1)).setUpdateRule(null);
         }
 
-        @EnumSource(TableKeyUpdateRule.class)
+        @EnumSource(TableKey.TableKeyUpdateRule.class)
         @ParameterizedTest
-        void setUpdateRuleAsEnum__(final TableKeyUpdateRule updateRuleAsEnum) {
-            final var spy = typeSpy();
+        void setUpdateRuleAsEnum__(final TableKey.TableKeyUpdateRule updateRuleAsEnum) {
+            final var spy = Mockito.spy(newTypeInstance());
             spy.setUpdateRuleAsEnum(updateRuleAsEnum);
             verify(spy, times(1)).setUpdateRule(updateRuleAsEnum.fieldValueAsInt());
         }
@@ -76,22 +77,22 @@ abstract class TableKeyTest<T extends TableKey<T>> extends AbstractMetadataTypeT
 
         @Test
         void getDeleteRuleAsEnum__() {
-            final var spy = typeSpy();
+            final var spy = newTypeSpy();
             assertThat(spy.getDeleteRuleAsEnum()).isNull();
             verify(spy, times(1)).getDeleteRule();
         }
 
         @Test
         void setDeleteRuleAsEnum_Null_Null() {
-            final var spy = typeSpy();
+            final var spy = newTypeSpy();
             spy.setDeleteRuleAsEnum(null);
             verify(spy, times(1)).setDeleteRule(null);
         }
 
-        @EnumSource(TableKeyDeleteRule.class)
+        @EnumSource(TableKey.TableKeyDeleteRule.class)
         @ParameterizedTest
-        void setDeleteRuleAsEnum__(final TableKeyDeleteRule deleteRuleAsEnum) {
-            final var spy = typeSpy();
+        void setDeleteRuleAsEnum__(final TableKey.TableKeyDeleteRule deleteRuleAsEnum) {
+            final var spy = newTypeSpy();
             spy.setDeleteRuleAsEnum(deleteRuleAsEnum);
             verify(spy, times(1)).setDeleteRule(deleteRuleAsEnum.fieldValueAsInt());
         }
@@ -102,22 +103,22 @@ abstract class TableKeyTest<T extends TableKey<T>> extends AbstractMetadataTypeT
 
         @Test
         void getDeferrabilityAsEnum__() {
-            final var spy = typeSpy();
+            final var spy = newTypeSpy();
             assertThat(spy.getDeferrabilityAsEnum()).isNull();
             verify(spy, times(1)).getDeferrability();
         }
 
         @Test
         void setDeferrabilityAsEnum_Null_Null() {
-            final var spy = typeSpy();
+            final var spy = newTypeSpy();
             spy.setDeferrabilityAsEnum(null);
             verify(spy, times(1)).setDeferrability(null);
         }
 
-        @EnumSource(TableKeyDeferrability.class)
+        @EnumSource(TableKey.TableKeyDeferrability.class)
         @ParameterizedTest
-        void setDeferrabilityAsEnum__(final TableKeyDeferrability deferrabilityAsEnum) {
-            final var spy = typeSpy();
+        void setDeferrabilityAsEnum__(final TableKey.TableKeyDeferrability deferrabilityAsEnum) {
+            final var spy = newTypeSpy();
             spy.setDeferrabilityAsEnum(deferrabilityAsEnum);
             verify(spy, times(1)).setDeferrability(deferrabilityAsEnum.fieldValueAsInt());
         }

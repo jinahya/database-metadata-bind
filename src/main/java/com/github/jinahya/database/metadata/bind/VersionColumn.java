@@ -20,11 +20,14 @@ package com.github.jinahya.database.metadata.bind;
  * #L%
  */
 
+import jakarta.annotation.Nullable;
+import jakarta.validation.constraints.NotNull;
+import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.Setter;
+import lombok.ToString;
 
 import java.sql.DatabaseMetaData;
-import java.util.Objects;
 import java.util.Optional;
 
 /**
@@ -35,10 +38,13 @@ import java.util.Optional;
  */
 @Setter
 @Getter
+@EqualsAndHashCode(callSuper = true, onlyExplicitlyIncluded = true)
+@ToString(callSuper = true)
 public class VersionColumn extends AbstractMetadataType {
 
     private static final long serialVersionUID = 3587959398829593292L;
 
+    // -----------------------------------------------------------------------------------------------------------------
     public static final String COLUMN_LABEL_PSEUDO_COLUMN = "PSEUDO_COLUMN";
 
     /**
@@ -88,64 +94,7 @@ public class VersionColumn extends AbstractMetadataType {
         private final int fieldValue;
     }
 
-    @Override
-    public String toString() {
-        return super.toString() + '{' +
-               "scope=" + scope +
-               ",columnName=" + columnName +
-               ",dataType=" + dataType +
-               ",typeName=" + typeName +
-               ",columnSize=" + columnSize +
-               ",bufferLength=" + bufferLength +
-               ",decimalDigits=" + decimalDigits +
-               ",pseudoColumn=" + pseudoColumn +
-               '}';
-    }
-
-    @Override
-    public boolean equals(final Object obj) {
-        if (this == obj) return true;
-        if (!(obj instanceof VersionColumn)) return false;
-        final VersionColumn that = (VersionColumn) obj;
-        return Objects.equals(columnName, that.columnName);
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(columnName);
-    }
-
-    @_NotUsedBySpecification
-    @_ColumnLabel("SCOPE")
-    private Integer scope;
-
-    @_ColumnLabel("COLUMN_NAME")
-    private String columnName;
-
-    @_NotNull
-    @_ColumnLabel("DATA_TYPE")
-    private Integer dataType;
-
-    @_ColumnLabel("TYPE_NAME")
-    private String typeName;
-
-    @_NullableBySpecification
-    @_ColumnLabel("COLUMN_SIZE")
-    private Integer columnSize;
-
-    @_NullableByVendor("PostgreSQL")
-    @_NotNull
-    @_ColumnLabel("BUFFER_LENGTH")
-    private Integer bufferLength;
-
-    @_NullableBySpecification
-    @_ColumnLabel("DECIMAL_DIGITS")
-    private Integer decimalDigits;
-
-    @_NotNull
-    @_ColumnLabel(COLUMN_LABEL_PSEUDO_COLUMN)
-    private Integer pseudoColumn;
-
+    // -----------------------------------------------------------------------------------------------------------------
     PseudoColumn getPseudoColumnAsEnum() {
         return Optional.ofNullable(getPseudoColumn())
                 .map(PseudoColumn::valueOfPseudoColumn)
@@ -159,4 +108,41 @@ public class VersionColumn extends AbstractMetadataType {
                         .orElse(null)
         );
     }
+
+    // -----------------------------------------------------------------------------------------------------------------
+    @EqualsAndHashCode.Include
+    private Table parent;
+
+    // -----------------------------------------------------------------------------------------------------------------
+    @_NotUsedBySpecification
+    @_ColumnLabel("SCOPE")
+    private Integer scope;
+
+    @_ColumnLabel("COLUMN_NAME")
+    @EqualsAndHashCode.Include
+    private String columnName;
+
+    @NotNull
+    @_NonNullBySpecification
+    @_ColumnLabel("DATA_TYPE")
+    private Integer dataType;
+
+    @_ColumnLabel("TYPE_NAME")
+    private String typeName;
+
+    @Nullable
+    @_NullableBySpecification
+    @_ColumnLabel("COLUMN_SIZE")
+    private Integer columnSize;
+
+    @_ColumnLabel("BUFFER_LENGTH")
+    private Integer bufferLength;
+
+    @Nullable
+    @_NullableBySpecification
+    @_ColumnLabel("DECIMAL_DIGITS")
+    private Integer decimalDigits;
+
+    @_ColumnLabel(COLUMN_LABEL_PSEUDO_COLUMN)
+    private Integer pseudoColumn;
 }

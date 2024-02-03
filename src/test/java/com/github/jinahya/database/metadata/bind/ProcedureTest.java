@@ -24,6 +24,7 @@ import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.EnumSource;
+import org.mockito.Mockito;
 
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
@@ -35,8 +36,8 @@ class ProcedureTest extends AbstractMetadataTypeTest<Procedure> {
     }
 
     @Override
-    Procedure typeInstance() {
-        final Procedure instance = super.typeInstance();
+    Procedure newTypeInstance() {
+        final Procedure instance = super.newTypeInstance();
         instance.setProcedureName("");
         instance.setSpecificName("");
         return instance;
@@ -48,7 +49,7 @@ class ProcedureTest extends AbstractMetadataTypeTest<Procedure> {
         @Test
         void getProcedureTypeAsEnum__() {
             // GIVEN
-            final var spy = typeSpy();
+            final var spy = Mockito.spy(newTypeInstance());
             // WHEN
             final var procedureTypeAsEnum = spy.getProcedureTypeAsEnum();
             // THEN
@@ -59,7 +60,7 @@ class ProcedureTest extends AbstractMetadataTypeTest<Procedure> {
         @ParameterizedTest
         void setProcedureTypeAsEnum__(final Procedure.ProcedureType procedureTypeAsEnum) {
             // GIVEN
-            final var spy = typeSpy();
+            final var spy = Mockito.spy(newTypeInstance());
             // WHEN
             spy.setProcedureTypeAsEnum(procedureTypeAsEnum);
             // THEN

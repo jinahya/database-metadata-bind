@@ -20,48 +20,9 @@ package com.github.jinahya.database.metadata.bind;
  * #L%
  */
 
-import org.junit.jupiter.api.Nested;
-import org.junit.jupiter.api.Test;
-import org.junit.jupiter.params.ParameterizedTest;
-import org.junit.jupiter.params.provider.ValueSource;
-
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.mockito.Mockito.times;
-import static org.mockito.Mockito.verify;
-
 class ColumnPrivilegeTest extends AbstractMetadataTypeTest<ColumnPrivilege> {
 
     ColumnPrivilegeTest() {
         super(ColumnPrivilege.class);
-    }
-
-    @Nested
-    class IsGrantableAsBooleanTest {
-
-        @Test
-        void getIsGrantableAsBoolean__() {
-            final var spy = typeSpy();
-            final var isGrantableAsBoolean = spy.getIsGrantableAsBoolean();
-            assertThat(isGrantableAsBoolean).isNull();
-            verify(spy, times(1)).getIsGrantable();
-        }
-
-        @Test
-        void setIsGrantableAsBoolean__Null() {
-            final var spy = typeSpy();
-            spy.setIsGrantableAsBoolean(null);
-            verify(spy, times(1))
-                    .setIsGrantable(null);
-        }
-
-        @ValueSource(booleans = {false, true})
-        @ParameterizedTest
-        void setIsGrantableAsBoolean__(final boolean grantableAsBoolean) {
-            final var spy = typeSpy();
-            spy.setIsGrantableAsBoolean(grantableAsBoolean);
-            verify(spy, times(1))
-                    .setIsGrantable(grantableAsBoolean ? ColumnPrivilege.COLUMN_VALUE_IS_GRANTABLE_YES :
-                                    ColumnPrivilege.COLUMN_VALUE_IS_GRANTABLE_NO);
-        }
     }
 }

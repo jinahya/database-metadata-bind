@@ -37,8 +37,8 @@ class AttributeTest extends AbstractMetadataTypeTest<Attribute> {
     }
 
     @Override
-    Attribute typeInstance() {
-        final Attribute instance = super.typeInstance();
+    Attribute newTypeInstance() {
+        final Attribute instance = super.newTypeInstance();
         instance.setAttrName("");
         instance.setTypeName("");
         instance.setOrdinalPosition(1);

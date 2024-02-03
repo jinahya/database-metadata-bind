@@ -66,7 +66,7 @@ class BestRowIdentifierTest extends AbstractMetadataTypeTest<BestRowIdentifier> 
         @DisplayName("getPseudoColumnAsEnum()")
         @Test
         void getPseudoColumnAsEnum__() {
-            final var spy = typeSpy();
+            final var spy = newTypeSpy();
             final var pseudoColumnAsEnum = spy.getPseudoColumnAsEnum();
             verify(spy, times(1)).getPseudoColumn();
         }
@@ -74,7 +74,7 @@ class BestRowIdentifierTest extends AbstractMetadataTypeTest<BestRowIdentifier> 
         @DisplayName("setPseudoColumnAsEnum(null)")
         @Test
         void setPseudoColumnAsEnum_Null_Null() {
-            final var spy = typeSpy();
+            final var spy = newTypeSpy();
             spy.setPseudoColumnAsEnum(null);
             verify(spy, times(1)).setPseudoColumn(null);
         }
@@ -83,7 +83,7 @@ class BestRowIdentifierTest extends AbstractMetadataTypeTest<BestRowIdentifier> 
         @EnumSource(BestRowIdentifier.PseudoColumn.class)
         @ParameterizedTest
         void setPseudoColumnAsEnum__(final BestRowIdentifier.PseudoColumn pseudoColumnAsEnum) {
-            final var spy = typeSpy();
+            final var spy = newTypeSpy();
             spy.setPseudoColumnAsEnum(pseudoColumnAsEnum);
             verify(spy, times(1)).setPseudoColumn(pseudoColumnAsEnum.fieldValueAsInt());
         }
@@ -96,7 +96,7 @@ class BestRowIdentifierTest extends AbstractMetadataTypeTest<BestRowIdentifier> 
         @DisplayName("getScopeAsEnum()")
         @Test
         void getScopeAsEnum__() {
-            final var spy = typeSpy();
+            final var spy = newTypeSpy();
             final var scopeAsEnum = spy.getScopeAsEnum();
             assertThat(scopeAsEnum).isNull();
             verify(spy, times(1)).getScope();
@@ -105,7 +105,7 @@ class BestRowIdentifierTest extends AbstractMetadataTypeTest<BestRowIdentifier> 
         @DisplayName("setScopeAsEnum(null)")
         @Test
         void setScopeAsEnum_Null_Null() {
-            final var spy = typeSpy();
+            final var spy = newTypeSpy();
             spy.setScopeAsEnum(null);
             verify(spy, times(1)).setScope(null);
         }
@@ -114,7 +114,7 @@ class BestRowIdentifierTest extends AbstractMetadataTypeTest<BestRowIdentifier> 
         @EnumSource(BestRowIdentifier.Scope.class)
         @ParameterizedTest
         void setScopeAsEnum__(final BestRowIdentifier.Scope scopeAsEnum) {
-            final var spy = typeSpy();
+            final var spy = newTypeSpy();
             spy.setScopeAsEnum(scopeAsEnum);
             verify(spy, times(1)).setScope(scopeAsEnum.fieldValueAsInt());
         }

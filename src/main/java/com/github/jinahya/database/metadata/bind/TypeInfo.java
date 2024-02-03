@@ -20,13 +20,14 @@ package com.github.jinahya.database.metadata.bind;
  * #L%
  */
 
+import jakarta.validation.constraints.NotNull;
+import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
 
 import java.sql.DatabaseMetaData;
 import java.util.Comparator;
-import java.util.Objects;
 import java.util.Optional;
 
 /**
@@ -37,12 +38,16 @@ import java.util.Optional;
  */
 @Setter
 @Getter
+@EqualsAndHashCode(callSuper = true)
 @ToString(callSuper = true)
 public class TypeInfo extends AbstractMetadataType {
 
     private static final long serialVersionUID = -3964147654019495313L;
 
+    // -----------------------------------------------------------------------------------------------------------------
     static final Comparator<TypeInfo> COMPARING_DATA_TYPE = Comparator.comparingInt(TypeInfo::getDataType);
+
+    // -----------------------------------------------------------------------------------------------------------------
 
     /**
      * A column label of {@value}.
@@ -73,6 +78,8 @@ public class TypeInfo extends AbstractMetadataType {
      * A column label of {@value}.
      */
     public static final String COLUMN_LABEL_CREATE_PARAMS = "CREATE_PARAMS";
+
+    // -----------------------------------------------------------------------------------------------------------------
 
     /**
      * A column label of {@value}.
@@ -124,10 +131,14 @@ public class TypeInfo extends AbstractMetadataType {
         private final int fieldValue;
     }
 
+    // -----------------------------------------------------------------------------------------------------------------
+
     /**
      * A column label of {@value}.
      */
     public static final String COLUMN_LABEL_CASE_SENSITIVE = "CASE_SENSITIVE";
+
+    // -----------------------------------------------------------------------------------------------------------------
 
     /**
      * A column label of {@value}.
@@ -184,103 +195,7 @@ public class TypeInfo extends AbstractMetadataType {
         private final int fieldValue;
     }
 
-    @Override
-    public boolean equals(final Object obj) {
-        if (this == obj) return true;
-        if (!(obj instanceof TypeInfo)) return false;
-        final TypeInfo that = (TypeInfo) obj;
-        return Objects.equals(dataType, that.dataType) &&
-               Objects.equals(typeName, that.typeName);
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(typeName, dataType);
-    }
-
-    public Integer getSearchable() {
-        return searchable;
-    }
-
-    public void setSearchable(final Integer searchable) {
-        this.searchable = searchable;
-    }
-
-    @_ColumnLabel(COLUMN_LABEL_TYPE_NAME)
-    private String typeName;
-
-    @_NotNull
-    @_ColumnLabel(COLUMN_LABEL_DATA_TYPE)
-    private Integer dataType;
-
-    @_NullableBySpecification
-    @_ColumnLabel(COLUMN_LABEL_PRECISION)
-    private Integer precision;
-
-    @_NullableBySpecification
-    @_ColumnLabel(COLUMN_LABEL_LITERAL_PREFIX)
-    private String literalPrefix;
-
-    @_NullableBySpecification
-    @_ColumnLabel(COLUMN_LABEL_LITERAL_SUFFIX)
-    private String literalSuffix;
-
-    @_NullableBySpecification
-    @_ColumnLabel(COLUMN_LABEL_CREATE_PARAMS)
-    private String createParams;
-
-    @_NotNull
-    @_ColumnLabel(COLUMN_LABEL_NULLABLE)
-    private Integer nullable;
-
-    @_NotNull
-    @_ColumnLabel(COLUMN_LABEL_CASE_SENSITIVE)
-    private Boolean caseSensitive;
-
-    @_NotNull
-    @_ColumnLabel(COLUMN_LABEL_SEARCHABLE)
-    private Integer searchable;
-
-    @_NotUsedBySpecification
-    @_ColumnLabel("UNSIGNED_ATTRIBUTE")
-    private Boolean unsignedAttribute;
-
-    @_NotNull
-    @_ColumnLabel("FIXED_PREC_SCALE")
-    private Boolean fixedPrecScale;
-
-    @_NullableByVendor("Apache Derby")
-    @_NotNull
-    @_ColumnLabel("AUTO_INCREMENT")
-    private Boolean autoIncrement;
-
-    @_NullableBySpecification
-    @_ColumnLabel("LOCAL_TYPE_NAME")
-    private String localTypeName;
-
-    @_NullableByVendor("Apache Derby")
-    @_NotNull
-    @_ColumnLabel("MINIMUM_SCALE")
-    private Integer minimumScale;
-
-    @_NullableByVendor("Apache Derby")
-    @_NotNull
-    @_ColumnLabel("MAXIMUM_SCALE")
-    private Integer maximumScale;
-
-    @_NotUsedBySpecification
-    @_ColumnLabel("SQL_DATA_TYPE")
-    private Integer sqlDataType;
-
-    @_NotUsedBySpecification
-    @_ColumnLabel("SQL_DATETIME_SUB")
-    private Integer sqlDatetimeSub;
-
-    @_NullableByVendor("Apache Derby")
-    @_NotNull
-    @_ColumnLabel("NUM_PREC_RADIX")
-    private Integer numPrecRadix;
-
+    // ------------------------------------------------------------------------------------------------------ searchable
     Searchable getSearchableAsEnum() {
         return Optional.ofNullable(getSearchable())
                 .map(Searchable::valueOfSearchable)
@@ -294,4 +209,92 @@ public class TypeInfo extends AbstractMetadataType {
                         .orElse(null)
         );
     }
+
+    // -----------------------------------------------------------------------------------------------------------------
+    @_ColumnLabel(COLUMN_LABEL_TYPE_NAME)
+    @EqualsAndHashCode.Include
+    private String typeName;
+
+    // -----------------------------------------------------------------------------------------------------------------
+    @NotNull
+    @_NonNullBySpecification
+    @_ColumnLabel(COLUMN_LABEL_DATA_TYPE)
+    private Integer dataType;
+
+    @jakarta.annotation.Nullable
+    @_NullableBySpecification
+    @_ColumnLabel(COLUMN_LABEL_PRECISION)
+    private Integer precision;
+
+    @jakarta.annotation.Nullable
+    @_NullableBySpecification
+    @_ColumnLabel(COLUMN_LABEL_LITERAL_PREFIX)
+    private String literalPrefix;
+
+    @jakarta.annotation.Nullable
+    @_NullableBySpecification
+    @_ColumnLabel(COLUMN_LABEL_LITERAL_SUFFIX)
+    private String literalSuffix;
+
+    @jakarta.annotation.Nullable
+    @_NullableBySpecification
+    @_ColumnLabel(COLUMN_LABEL_CREATE_PARAMS)
+    private String createParams;
+
+    @NotNull
+    @_NonNullBySpecification
+    @_ColumnLabel(COLUMN_LABEL_NULLABLE)
+    private Integer nullable;
+
+    @NotNull
+    @_NonNullBySpecification
+    @_ColumnLabel(COLUMN_LABEL_CASE_SENSITIVE)
+    private Boolean caseSensitive;
+
+    @NotNull
+    @_NonNullBySpecification
+    @_ColumnLabel(COLUMN_LABEL_SEARCHABLE)
+    private Integer searchable;
+
+    @_NotUsedBySpecification
+    @_ColumnLabel("UNSIGNED_ATTRIBUTE")
+    private Boolean unsignedAttribute;
+
+    @NotNull
+    @_NonNullBySpecification
+    @_ColumnLabel("FIXED_PREC_SCALE")
+    private Boolean fixedPrecScale;
+
+    @_NullableByVendor("Apache Derby")
+    @_NonNullBySpecification
+    @_ColumnLabel("AUTO_INCREMENT")
+    private Boolean autoIncrement;
+
+    @jakarta.annotation.Nullable
+    @_NullableBySpecification
+    @_ColumnLabel("LOCAL_TYPE_NAME")
+    private String localTypeName;
+
+    @_NullableByVendor("Apache Derby")
+    @_NonNullBySpecification
+    @_ColumnLabel("MINIMUM_SCALE")
+    private Integer minimumScale;
+
+    @_NullableByVendor("Apache Derby")
+    @_NonNullBySpecification
+    @_ColumnLabel("MAXIMUM_SCALE")
+    private Integer maximumScale;
+
+    @_NotUsedBySpecification
+    @_ColumnLabel("SQL_DATA_TYPE")
+    private Integer sqlDataType;
+
+    @_NotUsedBySpecification
+    @_ColumnLabel("SQL_DATETIME_SUB")
+    private Integer sqlDatetimeSub;
+
+    @_NullableByVendor("Apache Derby")
+    @_NonNullBySpecification
+    @_ColumnLabel("NUM_PREC_RADIX")
+    private Integer numPrecRadix;
 }
