@@ -20,28 +20,16 @@ package com.github.jinahya.database.metadata.bind;
  * #L%
  */
 
-import lombok.extern.slf4j.Slf4j;
+import java.lang.annotation.Documented;
+import java.lang.annotation.ElementType;
+import java.lang.annotation.Retention;
+import java.lang.annotation.RetentionPolicy;
+import java.lang.annotation.Target;
 
-@Slf4j
-final class DatabaseProductNames {
+@Documented
+@Retention(RetentionPolicy.RUNTIME)
+@Target({ElementType.FIELD})
+@interface _MissingByVendors {
 
-    static final String APACHE_DERBY = "Apache Derby";
-
-    static final String H2 = "H2";
-
-    static final String HSQL_DATABASE_ENGINE = "HSQL Database Engine";
-
-    static final String MARIA_DB = "MariaDB";
-
-    static final String MICROSOFT_SQL_SERVER = "Microsoft SQL Server";
-
-    static final String MY_SQL = "MySQL";
-
-    static final String POSTGRE_SQL = "PostgreSQL";
-
-    static final String SQ_LITE = "SQLite";
-
-    private DatabaseProductNames() {
-        throw new AssertionError("instantiation is not allowed");
-    }
+    _MissingByVendor[] value();
 }

@@ -24,6 +24,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.Disabled;
 import org.testcontainers.containers.Db2Container;
 import org.testcontainers.shaded.org.awaitility.Awaitility;
 import org.testcontainers.utility.DockerImageName;
@@ -34,7 +35,7 @@ import java.sql.SQLException;
 import java.time.Duration;
 
 // https://java.testcontainers.org/modules/databases/db2/
-//@Disabled
+@Disabled("doesn't start; no arm")
 //@Testcontainers
 @Slf4j
 class TestContainers_Db2_IT extends TestContainers_$_IT {

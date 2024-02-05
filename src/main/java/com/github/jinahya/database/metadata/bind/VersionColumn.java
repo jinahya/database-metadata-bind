@@ -21,7 +21,6 @@ package com.github.jinahya.database.metadata.bind;
  */
 
 import jakarta.annotation.Nullable;
-import jakarta.validation.constraints.NotNull;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.Setter;
@@ -122,8 +121,6 @@ public class VersionColumn extends AbstractMetadataType {
     @EqualsAndHashCode.Include
     private String columnName;
 
-    @NotNull
-    @_NonNullBySpecification
     @_ColumnLabel("DATA_TYPE")
     private Integer dataType;
 

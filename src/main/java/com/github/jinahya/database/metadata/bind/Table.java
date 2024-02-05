@@ -136,12 +136,14 @@ public class Table extends AbstractMetadataType {
     }
 
     // -----------------------------------------------------------------------------------------------------------------
+    @_MissingByVendor("Microsoft SQL Server") // https://github.com/microsoft/mssql-jdbc/issues/406
     @Nullable
     @_NullableBySpecification
     @_ColumnLabel(COLUMN_LABEL_TABLE_CAT)
     @EqualsAndHashCode.Include
     private String tableCat;
 
+    @_MissingByVendor("Microsoft SQL Server") // https://github.com/microsoft/mssql-jdbc/issues/406
     @Nullable
     @_NullableBySpecification
     @_ColumnLabel(COLUMN_LABEL_TABLE_SCHEM)
@@ -153,7 +155,6 @@ public class Table extends AbstractMetadataType {
     private String tableName;
 
     // -----------------------------------------------------------------------------------------------------------------
-    @_NullableByVendor("MariaDB")
     @_ColumnLabel(COLUMN_LABEL_TABLE_TYPE)
     private String tableType;
 
@@ -162,26 +163,31 @@ public class Table extends AbstractMetadataType {
     @_ColumnLabel("REMARKS")
     private String remarks;
 
+    @_MissingByVendor("Microsoft SQL Server") // https://github.com/microsoft/mssql-jdbc/issues/406
     @Nullable
     @_NullableBySpecification
     @_ColumnLabel("TYPE_CAT")
     private String typeCat;
 
+    @_MissingByVendor("Microsoft SQL Server") // https://github.com/microsoft/mssql-jdbc/issues/406
     @Nullable
     @_NullableBySpecification
     @_ColumnLabel("TYPE_SCHEM")
     private String typeSchem;
 
+    @_MissingByVendor("Microsoft SQL Server") // https://github.com/microsoft/mssql-jdbc/issues/406
     @Nullable
     @_NullableBySpecification
     @_ColumnLabel("TYPE_NAME")
     private String typeName;
 
+    @_MissingByVendor("Microsoft SQL Server") // https://github.com/microsoft/mssql-jdbc/issues/406
     @Nullable
     @_NullableBySpecification
     @_ColumnLabel("SELF_REFERENCING_COL_NAME")
     private String selfReferencingColName;
 
+    @_MissingByVendor("Microsoft SQL Server") // https://github.com/microsoft/mssql-jdbc/issues/406
     @Nullable
     @_NullableBySpecification
     @_ColumnLabel("REF_GENERATION")

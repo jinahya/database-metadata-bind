@@ -21,7 +21,6 @@ package com.github.jinahya.database.metadata.bind;
  */
 
 import jakarta.annotation.Nullable;
-import jakarta.validation.constraints.NotNull;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.Setter;
@@ -99,13 +98,9 @@ public class ProcedureColumn extends AbstractMetadataType {
     @EqualsAndHashCode.Include
     private String columnName;
 
-    @NotNull
-    @_NonNullBySpecification
     @_ColumnLabel("COLUMN_TYPE")
     private Integer columnType;
 
-    @NotNull
-    @_NonNullBySpecification
     @_ColumnLabel("DATA_TYPE")
     private Integer dataType;
 
@@ -117,8 +112,6 @@ public class ProcedureColumn extends AbstractMetadataType {
     @_ColumnLabel("PRECISION")
     private Integer precision;
 
-    @_NullableByVendor("HSQL Database Engine")
-    @_NonNullBySpecification
     @_ColumnLabel("LENGTH")
     private Integer length;
 
@@ -128,17 +121,12 @@ public class ProcedureColumn extends AbstractMetadataType {
     @_ColumnLabel("SCALE")
     private Integer scale;
 
-    @_NullableByVendor("Apache Derby")
-    @_NonNullBySpecification
     @_ColumnLabel("RADIX")
     private Integer radix;
 
-    @NotNull
-    @_NonNullBySpecification
     @_ColumnLabel("NULLABLE")
     private Integer nullable;
 
-    @_NullableByVendor("derby") // https://issues.apache.org/jira/browse/DERBY-7101
     @_ColumnLabel("REMARKS")
     private String remarks;
 
@@ -160,14 +148,13 @@ public class ProcedureColumn extends AbstractMetadataType {
     @_ColumnLabel("CHAR_OCTET_LENGTH")
     private Integer charOctetLength;
 
-    @NotNull
-    @_NonNullBySpecification
     @_ColumnLabel("ORDINAL_POSITION")
     private Integer ordinalPosition;
 
     @_ColumnLabel("IS_NULLABLE")
     private String isNullable;
 
+    @_MissingByVendor("Microsoft SQL Server") // https://github.com/microsoft/mssql-jdbc/issues/2320
     @_ColumnLabel("SPECIFIC_NAME")
     @EqualsAndHashCode.Include
     private String specificName;

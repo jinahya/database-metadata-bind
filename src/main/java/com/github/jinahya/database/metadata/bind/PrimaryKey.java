@@ -21,7 +21,6 @@ package com.github.jinahya.database.metadata.bind;
  */
 
 import jakarta.annotation.Nullable;
-import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Positive;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
@@ -141,8 +140,6 @@ public class PrimaryKey extends AbstractMetadataType {
 
     // -----------------------------------------------------------------------------------------------------------------
     @Positive
-    @NotNull
-    @_NonNullBySpecification
     @_ColumnLabel(COLUMN_LABEL_KEY_SEQ)
     private Integer keySeq;
 

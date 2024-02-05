@@ -47,7 +47,7 @@
     <sonar.organization>jinahya-github</sonar.organization>
     <sonar.host.url>https://sonarcloud.io</sonar.host.url>
     <version.animal-sniffer>1.23</version.animal-sniffer>
-    <version.com.oracle.ojdbc>19.3.0.0</version.com.oracle.ojdbc>
+    <version.com.oracle.ojdbc>23.3.0.23.09</version.com.oracle.ojdbc>
     <version.lombok>1.18.30</version.lombok>
     <version.maven-failsafe>${version.maven-surefire}</version.maven-failsafe>
     <version.maven-surefire>3.2.5</version.maven-surefire>
@@ -56,9 +56,10 @@
     <version.ojdbc8>21.8.0.0</version.ojdbc8>
     <version.ojdbc10>19.17.0.0</version.ojdbc10>
     <version.ojdbc11>21.8.0.0</version.ojdbc11>
-    <version.org.apache.derby>10.16.1.1</version.org.apache.derby>
+<!--    <version.org.apache.derby>10.16.1.1</version.org.apache.derby>-->
+    <version.org.apache.derby>10.17.1.0</version.org.apache.derby>
     <version.org.hibernate.validator>8.0.1.Final</version.org.hibernate.validator>
-    <version.org.junit.jupiter>5.10.1</version.org.junit.jupiter>
+    <version.org.junit.jupiter>5.10.2</version.org.junit.jupiter>
     <version.org.mockito>5.10.0</version.org.mockito>
   </properties>
 
@@ -154,7 +155,7 @@
     <dependency>
       <groupId>org.assertj</groupId>
       <artifactId>assertj-core</artifactId>
-      <version>3.25.2</version>
+      <version>3.25.3</version>
       <scope>test</scope>
     </dependency>
     <dependency>
@@ -518,7 +519,8 @@
           <dependency>
             <groupId>com.oracle.database.jdbc</groupId>
             <artifactId>ojdbc-bom</artifactId>
-            <version>23.2.0.0</version>
+<!--            <version>23.2.0.0</version>-->
+            <version>23.3.0.23.09</version>
             <type>pom</type>
             <scope>import</scope>
           </dependency>
@@ -539,9 +541,11 @@
           <scope>test</scope>
         </dependency>
         <dependency>
+          <!-- https://search.maven.org/search?q=a:mssql-jdbc -->
           <groupId>com.microsoft.sqlserver</groupId>
           <artifactId>mssql-jdbc</artifactId>
-          <version>11.2.3.jre17</version>
+<!--          <version>11.2.3.jre17</version>-->
+          <version>12.6.0.jre11</version>
           <scope>test</scope>
         </dependency>
         <dependency>

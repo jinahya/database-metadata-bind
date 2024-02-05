@@ -22,7 +22,6 @@ package com.github.jinahya.database.metadata.bind;
 
 import jakarta.annotation.Nullable;
 import jakarta.validation.constraints.AssertTrue;
-import jakarta.validation.constraints.NotNull;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.Setter;
@@ -143,16 +142,12 @@ public class UDT extends AbstractMetadataType {
     private String typeName;
 
     // -----------------------------------------------------------------------------------------------------------------
-    @_NullableByVendor("PostgreSQL")
     @_ColumnLabel(COLUMN_LABEL_CLASS_NAME)
     private String className;
 
-    @NotNull
-    @_NonNullBySpecification
     @_ColumnLabel(COLUMN_LABEL_DATA_TYPE)
     private Integer dataType;
 
-    @_NullableByVendor("PostgreSQL")
     @_ColumnLabel("REMARKS")
     private String remarks;
 

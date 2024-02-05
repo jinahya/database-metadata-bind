@@ -21,32 +21,42 @@ package com.github.jinahya.database.metadata.bind;
  */
 
 import lombok.extern.slf4j.Slf4j;
+import org.junit.jupiter.api.AfterAll;
+import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Disabled;
-import org.testcontainers.containers.JdbcDatabaseContainer;
 import org.testcontainers.containers.OracleContainer;
-import org.testcontainers.junit.jupiter.Container;
-import org.testcontainers.junit.jupiter.Testcontainers;
+import org.testcontainers.utility.DockerImageName;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
 
-@Disabled
-@Testcontainers
+// https://java.testcontainers.org/modules/databases/oraclefree/
+@Disabled("does not start; no-arm")
 @Slf4j
 class TestContainers_Oracle_IT extends TestContainers_$_IT {
 
-    @Container
-    private static final JdbcDatabaseContainer<OracleContainer> CONTAINER;
+    private static final String FULL_IMAGE_NAME = "gvenzl/oracle-free:slim-faststart";
 
-    static {
-        // https://www.testcontainers.org/modules/databases/oraclexe/
-        CONTAINER = new OracleContainer("gvenzl/oracle-xe:latest-faststart")
+    private static OracleContainer CONTAINER;
+
+    @BeforeAll
+    static void start() {
+        final DockerImageName name = DockerImageName.parse(FULL_IMAGE_NAME)
+                .asCompatibleSubstituteFor("gvenzl/oracle-xe");
+        CONTAINER = new OracleContainer(name)
                 .withDatabaseName("testDB")
                 .withUsername("testUser")
                 .withPassword("testPassword");
+        CONTAINER.start();
     }
 
+    @AfterAll
+    static void stop() {
+        CONTAINER.stop();
+    }
+
+    // -----------------------------------------------------------------------------------------------------------------
     @Override
     Connection connect() throws SQLException {
         final var url = CONTAINER.getJdbcUrl();

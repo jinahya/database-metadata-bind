@@ -32,40 +32,22 @@ import java.sql.SQLException;
 
 // https://java.testcontainers.org/modules/databases/mssqlserver/
 // https://github.com/microsoft/mssql-docker/issues/668
-//@Disabled // 안 돎
-//@Testcontainers
+// https://github.com/microsoft/mssql-jdbc/issues/2320
+// https://github.com/microsoft/mssql-jdbc/issues/849
 @Slf4j
-class TestContainers_MsSQLServer_IT extends TestContainers_$_IT {
+class TestContainers_SQLServer_IT extends TestContainers_$_IT {
 
-        private static final String FULL_IMAGE_NAME = "mcr.microsoft.com/mssql/server:2022-latest";
+    private static final String FULL_IMAGE_NAME = "mcr.microsoft.com/mssql/server:2022-latest";
 //    private static final String FULL_IMAGE_NAME = "mcr.microsoft.com/azure-sql-edge:latest";
 //    private static final String FULL_IMAGE_NAME = "azure-sql-edge:latest";
 
-    //    @Container
     private static MSSQLServerContainer<?> CONTAINER;
-
-//    static {
-//        // https://www.testcontainers.org/modules/databases/oraclexe/
-//        final DockerImageName NAME = DockerImageName.parse("mcr.microsoft.com/mssql/server:2022-latest");
-//        CONTAINER = new MSSQLServerContainer<>(NAME)
-//                .acceptLicense()
-//                .withEnv("MSSQL_PID", "Developer")
-//                .withUrlParam("encrypt", "false")
-//    }
 
     @BeforeAll
     static void start() {
         final DockerImageName name = DockerImageName.parse(FULL_IMAGE_NAME);
         CONTAINER = new MSSQLServerContainer<>(name).acceptLicense();
         CONTAINER.start();
-//        final var timeout = Duration.ofSeconds(10L);
-//        log.debug("awaiting for {}", timeout);
-//        Awaitility.await()
-//                .atMost(timeout)
-//                .pollDelay(Duration.ofSeconds(1L))
-//                .untilAsserted(() -> {
-//                    Assertions.assertTrue(CONTAINER.isRunning());
-//                });
     }
 
     @AfterAll

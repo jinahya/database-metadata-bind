@@ -21,27 +21,41 @@ package com.github.jinahya.database.metadata.bind;
  */
 
 import lombok.extern.slf4j.Slf4j;
+import org.junit.jupiter.api.AfterAll;
+import org.junit.jupiter.api.BeforeAll;
 import org.testcontainers.containers.MariaDBContainer;
-import org.testcontainers.junit.jupiter.Container;
-import org.testcontainers.junit.jupiter.Testcontainers;
 import org.testcontainers.utility.DockerImageName;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
 
-@Testcontainers
+// https://java.testcontainers.org/modules/databases/mariadb/
 @Slf4j
 class TestContainers_MariaDB_IT extends TestContainers_$_IT {
 
-    static final String DATABASE_PRODUCT_NAME = "MariaDB";
+    private static final String FULL_IMAGE_NAME = "mariadb:latest";
 
-    @Container
-    private static final MariaDBContainer<?> CONTAINER;
+    private static MariaDBContainer<?> CONTAINER;
 
-    static {
-        final var name = DockerImageName.parse("mariadb:latest");
+    @BeforeAll
+    static void start() {
+        final DockerImageName name = DockerImageName.parse(FULL_IMAGE_NAME);
         CONTAINER = new MariaDBContainer<>(name);
+        CONTAINER.start();
+//        final var timeout = Duration.ofSeconds(10L);
+//        log.debug("awaiting for {}", timeout);
+//        Awaitility.await()
+//                .atMost(timeout)
+//                .pollDelay(Duration.ofSeconds(1L))
+//                .untilAsserted(() -> {
+//                    Assertions.assertTrue(CONTAINER.isRunning());
+//                });
+    }
+
+    @AfterAll
+    static void stop() {
+        CONTAINER.stop();
     }
 
     @Override

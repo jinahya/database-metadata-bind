@@ -21,7 +21,6 @@ package com.github.jinahya.database.metadata.bind;
  */
 
 import jakarta.annotation.Nullable;
-import jakarta.validation.constraints.NotNull;
 import lombok.AccessLevel;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
@@ -208,8 +207,6 @@ public class BestRowIdentifier
     private Table parent;
 
     // -----------------------------------------------------------------------------------------------------------------
-    @NotNull
-    @_NonNullBySpecification
     @_ColumnLabel(COLUMN_LABEL_SCOPE)
     @EqualsAndHashCode.Include
     private Integer scope;
@@ -219,8 +216,6 @@ public class BestRowIdentifier
     private String columnName;
 
     // -----------------------------------------------------------------------------------------------------------------
-    @NotNull
-    @_NonNullBySpecification
     @_ColumnLabel(COLUMN_LABEL_DATA_TYPE)
     private Integer dataType;
 
@@ -236,13 +231,9 @@ public class BestRowIdentifier
     @_ColumnLabel("BUFFER_LENGTH")
     private Integer bufferLength;
 
-    @Nullable
-    @_NullableBySpecification
     @_ColumnLabel("DECIMAL_DIGITS")
     private Integer decimalDigits;
 
-    @NotNull
-    @_NonNullBySpecification
     @_ColumnLabel(COLUMN_LABEL_PSEUDO_COLUMN)
     private Integer pseudoColumn;
 }

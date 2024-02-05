@@ -21,7 +21,6 @@ package com.github.jinahya.database.metadata.bind;
  */
 
 import jakarta.annotation.Nullable;
-import jakarta.validation.constraints.NotNull;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.Setter;
@@ -166,8 +165,6 @@ public class IndexInfo extends AbstractMetadataType {
     @EqualsAndHashCode.Include
     private String tableName;
 
-    @NotNull
-    @_NonNullBySpecification
     @_ColumnLabel("NON_UNIQUE")
     @EqualsAndHashCode.Include
     private Boolean nonUnique;
@@ -183,14 +180,10 @@ public class IndexInfo extends AbstractMetadataType {
     @EqualsAndHashCode.Include
     private String indexName;
 
-    @NotNull
-    @_NonNullBySpecification
     @_ColumnLabel(COLUMN_LABEL_TYPE)
     @EqualsAndHashCode.Include
     private Integer type;
 
-    @NotNull
-    @_NonNullBySpecification
     @_ColumnLabel("ORDINAL_POSITION")
     @EqualsAndHashCode.Include
     private Integer ordinalPosition;
@@ -205,14 +198,10 @@ public class IndexInfo extends AbstractMetadataType {
     @_ColumnLabel("ASC_OR_DESC")
     private String ascOrDesc;
 
-    @_NullableByVendor("Apache Derby")
-    @_NonNullBySpecification
     @_ColumnLabel("CARDINALITY")
     @EqualsAndHashCode.Include
     private Long cardinality;
 
-    @_NullableByVendor("Apache Derby")
-    @_NonNullBySpecification
     @_ColumnLabel("PAGES")
     private Long pages;
 

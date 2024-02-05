@@ -111,6 +111,9 @@ public class Context {
             final Object value = results.getObject(key);
             instance.getUnmappedValues().put(key, value);
         }
+        fieldLabels.keySet().removeIf(f -> {
+            return f.isAnnotationPresent(_MissingByVendor.class);
+        });
         assert fieldLabels.isEmpty() : "remaining fields: " + fieldLabels;
         return instance;
     }
@@ -769,8 +772,8 @@ public class Context {
             throws SQLException {
         Objects.requireNonNull(function, "function is null");
         return getFunctionColumns(
-                function.functionCatNonNull(),
-                function.functionSchemNonNull(),
+                function.getFunctionCat(),
+                function.getFunctionSchem(),
                 function.getFunctionName(),
                 columnNamePattern
         );

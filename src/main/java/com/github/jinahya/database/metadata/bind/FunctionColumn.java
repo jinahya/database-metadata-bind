@@ -21,7 +21,6 @@ package com.github.jinahya.database.metadata.bind;
  */
 
 import jakarta.annotation.Nullable;
-import jakarta.validation.constraints.NotNull;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.Setter;
@@ -180,13 +179,9 @@ public class FunctionColumn extends AbstractMetadataType {
     @_ColumnLabel(COLUMN_LABEL_COLUMN_NAME)
     private String columnName;
 
-    @NotNull
-    @_NonNullBySpecification
     @_ColumnLabel("COLUMN_TYPE")
     private Integer columnType;
 
-    @NotNull
-    @_NonNullBySpecification
     @_ColumnLabel("DATA_TYPE")
     private Integer dataType;
 
@@ -198,8 +193,6 @@ public class FunctionColumn extends AbstractMetadataType {
     @_ColumnLabel("PRECISION")
     private Integer precision;
 
-    @_NullableByVendor("PostgreSQL")
-    @_NonNullBySpecification
     @_ColumnLabel("LENGTH")
     private Integer length;
 
@@ -208,17 +201,12 @@ public class FunctionColumn extends AbstractMetadataType {
     @_ColumnLabel("SCALE")
     private Integer scale;
 
-    @_NullableByVendor("Apache Derby")
-    @_NonNullBySpecification
     @_ColumnLabel("RADIX")
     private Integer radix;
 
-    @NotNull
-    @_NonNullBySpecification
     @_ColumnLabel("NULLABLE")
     private Integer nullable;
 
-    @_NullableByVendor("derby") // https://issues.apache.org/jira/browse/DERBY-7100
     @_ColumnLabel("REMARKS")
     private String remarks;
 
@@ -227,14 +215,13 @@ public class FunctionColumn extends AbstractMetadataType {
     @_ColumnLabel("CHAR_OCTET_LENGTH")
     private Integer charOctetLength;
 
-    @NotNull
-    @_NonNullBySpecification
     @_ColumnLabel("ORDINAL_POSITION")
     private Integer ordinalPosition;
 
     @_ColumnLabel("IS_NULLABLE")
     private String isNullable;
 
+    @_MissingByVendor("Microsoft SQL Server") // https://github.com/microsoft/mssql-jdbc/issues/849
     @_ColumnLabel("SPECIFIC_NAME")
     private String specificName;
 

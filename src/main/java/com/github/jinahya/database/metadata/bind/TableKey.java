@@ -21,7 +21,6 @@ package com.github.jinahya.database.metadata.bind;
  */
 
 import jakarta.annotation.Nullable;
-import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Positive;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
@@ -440,18 +439,12 @@ public abstract class TableKey<T extends TableKey<T>> extends AbstractMetadataTy
 
     // -----------------------------------------------------------------------------------------------------------------
     @Positive
-    @NotNull
-    @_NonNullBySpecification
     @_ColumnLabel(COLUMN_NAME_KEY_SEQ)
     private Integer keySeq;
 
-    @NotNull
-    @_NonNullBySpecification
     @_ColumnLabel(COLUMN_NAME_UPDATE_RULE)
     private Integer updateRule;
 
-    @NotNull
-    @_NonNullBySpecification
     @_ColumnLabel(COLUMN_NAME_DELETE_RULE)
     private Integer deleteRule;
 
@@ -465,8 +458,6 @@ public abstract class TableKey<T extends TableKey<T>> extends AbstractMetadataTy
     @_ColumnLabel(COLUMN_NAME_PK_NAME)
     private String pkName;
 
-    @NotNull
-    @_NonNullBySpecification
     @_ColumnLabel(COLUMN_NAME_DEFERRABILITY)
     private Integer deferrability;
 }

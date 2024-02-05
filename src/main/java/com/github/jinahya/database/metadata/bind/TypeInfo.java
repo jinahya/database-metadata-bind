@@ -20,7 +20,6 @@ package com.github.jinahya.database.metadata.bind;
  * #L%
  */
 
-import jakarta.validation.constraints.NotNull;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.Setter;
@@ -216,8 +215,6 @@ public class TypeInfo extends AbstractMetadataType {
     private String typeName;
 
     // -----------------------------------------------------------------------------------------------------------------
-    @NotNull
-    @_NonNullBySpecification
     @_ColumnLabel(COLUMN_LABEL_DATA_TYPE)
     private Integer dataType;
 
@@ -241,18 +238,12 @@ public class TypeInfo extends AbstractMetadataType {
     @_ColumnLabel(COLUMN_LABEL_CREATE_PARAMS)
     private String createParams;
 
-    @NotNull
-    @_NonNullBySpecification
     @_ColumnLabel(COLUMN_LABEL_NULLABLE)
     private Integer nullable;
 
-    @NotNull
-    @_NonNullBySpecification
     @_ColumnLabel(COLUMN_LABEL_CASE_SENSITIVE)
     private Boolean caseSensitive;
 
-    @NotNull
-    @_NonNullBySpecification
     @_ColumnLabel(COLUMN_LABEL_SEARCHABLE)
     private Integer searchable;
 
@@ -260,13 +251,9 @@ public class TypeInfo extends AbstractMetadataType {
     @_ColumnLabel("UNSIGNED_ATTRIBUTE")
     private Boolean unsignedAttribute;
 
-    @NotNull
-    @_NonNullBySpecification
     @_ColumnLabel("FIXED_PREC_SCALE")
     private Boolean fixedPrecScale;
 
-    @_NullableByVendor("Apache Derby")
-    @_NonNullBySpecification
     @_ColumnLabel("AUTO_INCREMENT")
     private Boolean autoIncrement;
 
@@ -275,13 +262,9 @@ public class TypeInfo extends AbstractMetadataType {
     @_ColumnLabel("LOCAL_TYPE_NAME")
     private String localTypeName;
 
-    @_NullableByVendor("Apache Derby")
-    @_NonNullBySpecification
     @_ColumnLabel("MINIMUM_SCALE")
     private Integer minimumScale;
 
-    @_NullableByVendor("Apache Derby")
-    @_NonNullBySpecification
     @_ColumnLabel("MAXIMUM_SCALE")
     private Integer maximumScale;
 
@@ -293,8 +276,6 @@ public class TypeInfo extends AbstractMetadataType {
     @_ColumnLabel("SQL_DATETIME_SUB")
     private Integer sqlDatetimeSub;
 
-    @_NullableByVendor("Apache Derby")
-    @_NonNullBySpecification
     @_ColumnLabel("NUM_PREC_RADIX")
     private Integer numPrecRadix;
 }

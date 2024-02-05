@@ -21,7 +21,6 @@ package com.github.jinahya.database.metadata.bind;
  */
 
 import jakarta.annotation.Nullable;
-import jakarta.validation.constraints.NotNull;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.Setter;
@@ -117,8 +116,6 @@ public class PseudoColumn extends AbstractMetadataType {
     private String columnName;
 
     // -----------------------------------------------------------------------------------------------------------------
-    @NotNull
-    @_NonNullBySpecification
     @_ColumnLabel("DATA_TYPE")
     private Integer dataType;
 
@@ -132,8 +129,6 @@ public class PseudoColumn extends AbstractMetadataType {
     @_ColumnLabel("DECIMAL_DIGITS")
     private Integer decimalDigits;
 
-    @NotNull
-    @_NonNullBySpecification
     @_ColumnLabel("NUM_PREC_RADIX")
     private Integer numPrecRadix;
 
@@ -145,8 +140,6 @@ public class PseudoColumn extends AbstractMetadataType {
     @_ColumnLabel("REMARKS")
     private String remarks;
 
-    @NotNull
-    @_NonNullBySpecification
     @_ColumnLabel("CHAR_OCTET_LENGTH")
     private Integer charOctetLength;
 

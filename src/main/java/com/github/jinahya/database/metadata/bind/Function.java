@@ -21,12 +21,13 @@ package com.github.jinahya.database.metadata.bind;
  */
 
 import jakarta.annotation.Nullable;
-import jakarta.validation.constraints.NotNull;
 import lombok.EqualsAndHashCode;
+import lombok.Getter;
+import lombok.Setter;
+import lombok.ToString;
 
 import java.sql.DatabaseMetaData;
 import java.util.Comparator;
-import java.util.Objects;
 
 import static java.util.Comparator.comparing;
 import static java.util.Comparator.naturalOrder;
@@ -39,6 +40,10 @@ import static java.util.Comparator.nullsFirst;
  * @author Jin Kwon &lt;jinahya_at_gmail.com&gt;
  * @see Context#getFunctions(String, String, String)
  */
+@Setter
+@Getter
+@ToString(callSuper = true)
+@EqualsAndHashCode(callSuper = true, onlyExplicitlyIncluded = true)
 public class Function extends AbstractMetadataType {
 
     private static final long serialVersionUID = -3318947900237453301L;
@@ -70,113 +75,31 @@ public class Function extends AbstractMetadataType {
      */
     public static final String COLUMN_LABEL_FUNCTION_TYPE = "FUNCTION_TYPE";
 
-    @Override
-    public boolean equals(final Object obj) {
-        if (this == obj) return true;
-        if (!(obj instanceof Function)) return false;
-        final Function that = (Function) obj;
-        return Objects.equals(functionCatNonNull(), that.functionCatNonNull()) &&
-               Objects.equals(functionSchemNonNull(), that.functionSchemNonNull()) &&
-               Objects.equals(specificName, that.specificName);
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(
-                functionCatNonNull(),
-                functionSchemNonNull(),
-                specificName
-        );
-    }
-
-    public String getFunctionCat() {
-        return functionCat;
-    }
-
-    public void setFunctionCat(final String functionCat) {
-        this.functionCat = functionCat;
-    }
-
-    public String getFunctionSchem() {
-        return functionSchem;
-    }
-
-    public void setFunctionSchem(final String functionSchem) {
-        this.functionSchem = functionSchem;
-    }
-
-    public String getFunctionName() {
-        return functionName;
-    }
-
-    public void setFunctionName(String functionName) {
-        this.functionName = functionName;
-    }
-
-    public String getRemarks() {
-        return remarks;
-    }
-
-    public void setRemarks(String remarks) {
-        this.remarks = remarks;
-    }
-
-    @_NonNullBySpecification
-    public Integer getFunctionType() {
-        return functionType;
-    }
-
-    public void setFunctionType(@_NonNullBySpecification final Integer functionType) {
-        this.functionType = functionType;
-    }
-
-    public String getSpecificName() {
-        return specificName;
-    }
-
-    public void setSpecificName(final String specificName) {
-        this.specificName = specificName;
-    }
-
+    // -----------------------------------------------------------------------------------------------------------------
     @Nullable
     @_NullableBySpecification
     @_ColumnLabel(COLUMN_LABEL_FUNCTION_CAT)
+    @EqualsAndHashCode.Include
     private String functionCat;
 
     @Nullable
     @_NullableBySpecification
     @_ColumnLabel(COLUMN_LABEL_FUNCTION_SCHEM)
+    @EqualsAndHashCode.Include
     private String functionSchem;
 
     @_ColumnLabel("FUNCTION_NAME")
-    @EqualsAndHashCode.Exclude
+    @EqualsAndHashCode.Include
     private String functionName;
 
-    @_NullableByVendor("PostgreSQL")
     @_ColumnLabel("REMARKS")
     private String remarks;
 
-    @NotNull
-    @_NonNullBySpecification
     @_ColumnLabel("FUNCTION_TYPE")
     private Integer functionType;
 
+    @_MissingByVendor("Microsoft SQL Server") // https://github.com/microsoft/mssql-jdbc/issues/849
     @_ColumnLabel("SPECIFIC_NAME")
+    @EqualsAndHashCode.Include
     private String specificName;
-
-    String functionCatNonNull() {
-        final String functionCat_ = getFunctionCat();
-        if (functionCat_ != null) {
-            return functionCat_;
-        }
-        return Catalog.COLUMN_VALUE_TABLE_CAT_EMPTY;
-    }
-
-    String functionSchemNonNull() {
-        final String functionSchem_ = getFunctionSchem();
-        if (functionSchem_ != null) {
-            return functionSchem_;
-        }
-        return Schema.COLUMN_VALUE_TABLE_SCHEM_EMPTY;
-    }
 }

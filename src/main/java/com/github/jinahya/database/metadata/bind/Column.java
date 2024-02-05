@@ -20,7 +20,6 @@ package com.github.jinahya.database.metadata.bind;
  * #L%
  */
 
-import jakarta.validation.constraints.NotNull;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.Setter;
@@ -201,8 +200,6 @@ public class Column extends AbstractMetadataType {
     private String columnName;
 
     // -----------------------------------------------------------------------------------------------------------------
-    @NotNull
-    @_NonNullBySpecification
     @_ColumnLabel("DATA_TYPE")
     private Integer dataType;
 
@@ -223,13 +220,9 @@ public class Column extends AbstractMetadataType {
     @_ColumnLabel("DECIMAL_DIGITS")
     private Integer decimalDigits;
 
-    @_NullableByVendor("Apache Derby")
-    @_NonNullBySpecification
     @_ColumnLabel("NUM_PREC_RADIX")
     private Integer numPrecRadix;
 
-    @NotNull
-    @_NonNullBySpecification
     @_ColumnLabel(COLUMN_LABEL_NULLABLE)
     private Integer nullable;
 
@@ -251,13 +244,9 @@ public class Column extends AbstractMetadataType {
     @_ColumnLabel("SQL_DATETIME_SUB")
     private Integer sqlDatetimeSub;
 
-    @_NullableByVendor("Apache Derby")
-    @_NonNullBySpecification
     @_ColumnLabel("CHAR_OCTET_LENGTH")
     private Integer charOctetLength;
 
-    @NotNull
-    @_NonNullBySpecification
     @_ColumnLabel("ORDINAL_POSITION")
     private Integer ordinalPosition;
 

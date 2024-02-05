@@ -170,15 +170,13 @@ public class Procedure extends AbstractMetadataType {
     @_ColumnLabel("PROCEDURE_NAME")
     private String procedureName;
 
-    @_NullableByVendor("HSQL")
     @_ColumnLabel("REMARKS")
     private String remarks;
 
-    @NotNull
-    @_NonNullBySpecification
     @_ColumnLabel("PROCEDURE_TYPE")
     private Integer procedureType;
 
+    @_MissingByVendor("Microsoft SQL Server") // https://github.com/microsoft/mssql-jdbc/issues/2320
     @_ColumnLabel(COLUMN_LABEL_SPECIFIC_NAME)
     @EqualsAndHashCode.Include
     private String specificName;

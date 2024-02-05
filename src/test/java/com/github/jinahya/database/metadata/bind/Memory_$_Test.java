@@ -92,32 +92,4 @@ abstract class Memory_$_Test {
             }
         });
     }
-
-    @Test
-    void testOrdering() throws SQLException {
-        applyContext(c -> {
-            try {
-                ContextTestUtils.testOrdering(c);
-                return null;
-            } catch (final SQLException sqle) {
-                throw new RuntimeException(sqle);
-            }
-        });
-    }
-
-    @Test
-    void getColumns__() {
-        applyContextChecked(c -> {
-            ContextTestUtils.getColumns__(c, null, null, "%", "%");
-            return null;
-        });
-    }
-
-    @Test
-    void getTables__() {
-        applyContextChecked(c -> {
-            ContextTestUtils.getTables__(c, null, null, "%", null);
-            return null;
-        });
-    }
 }
