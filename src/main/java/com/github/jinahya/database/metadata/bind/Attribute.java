@@ -21,13 +21,13 @@ package com.github.jinahya.database.metadata.bind;
  */
 
 import jakarta.validation.constraints.NotNull;
+import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
 
 import java.sql.DatabaseMetaData;
 import java.util.Comparator;
-import java.util.Objects;
 
 import static java.util.Comparator.naturalOrder;
 import static java.util.Comparator.nullsFirst;
@@ -41,6 +41,7 @@ import static java.util.Comparator.nullsFirst;
  */
 @Setter
 @Getter
+@EqualsAndHashCode(callSuper = true, onlyExplicitlyIncluded = true)
 @ToString(callSuper = true)
 public class Attribute extends AbstractMetadataType {
 
@@ -50,13 +51,13 @@ public class Attribute extends AbstractMetadataType {
             Comparator.comparing(Attribute::getTypeCat, nullsFirst(String.CASE_INSENSITIVE_ORDER))
                     .thenComparing(Attribute::getTypeSchem, nullsFirst(String.CASE_INSENSITIVE_ORDER))
                     .thenComparing(Attribute::getTypeName, nullsFirst(String.CASE_INSENSITIVE_ORDER))
-                    .thenComparingInt(Attribute::getOrdinalPosition);
+                    .thenComparing(Attribute::getOrdinalPosition, nullsFirst(naturalOrder()));
 
     static final Comparator<Attribute> LEXICOGRAPHIC_ORDER =
             Comparator.comparing(Attribute::getTypeCat, nullsFirst(naturalOrder()))
                     .thenComparing(Attribute::getTypeSchem, nullsFirst(naturalOrder()))
                     .thenComparing(Attribute::getTypeName, nullsFirst(naturalOrder()))
-                    .thenComparingInt(Attribute::getOrdinalPosition);
+                    .thenComparing(Attribute::getOrdinalPosition, nullsFirst(naturalOrder()));
 
     // -------------------------------------------------------------------------------------------------------- TYPE_CAT
     public static final String COLUMN_LABEL_TYPE_CAT = "TYPE_CAT";
@@ -121,61 +122,29 @@ public class Attribute extends AbstractMetadataType {
 
     public static final String COLUMN_VALUE_IS_NULLABLE_EMPTY = "";
 
-    // -----------------------------------------------------------------------------------------------------------------
-    @Override
-    public boolean equals(final Object obj) {
-        if (this == obj) return true;
-        if (!(obj instanceof Attribute)) return false;
-        final Attribute that = (Attribute) obj;
-        return Objects.equals(typeCatNonNull(), that.typeCatNonNull()) &&
-               Objects.equals(typeSchemNonNull(), that.typeSchemNonNull()) &&
-               Objects.equals(typeName, that.typeName) &&
-               Objects.equals(attrName, that.attrName);
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(
-                typeCatNonNull(),
-                typeSchemNonNull(),
-                typeName,
-                attrName
-        );
-    }
-
     // -------------------------------------------------------------------------------------------------------- tableCat
-    String typeCatNonNull() {
-        final String typeCat_ = getTypeCat();
-        if (typeCat_ != null) {
-            return typeCat_;
-        }
-        return Catalog.COLUMN_VALUE_TABLE_CAT_EMPTY;
-    }
 
     // ------------------------------------------------------------------------------------------------------ tableSchem
-    String typeSchemNonNull() {
-        final String typeSchem_ = getTypeSchem();
-        if (typeSchem_ != null) {
-            return typeSchem_;
-        }
-        return Schema.COLUMN_VALUE_TABLE_SCHEM_EMPTY;
-    }
 
     // -----------------------------------------------------------------------------------------------------------------
     @jakarta.annotation.Nullable
     @_NullableBySpecification
     @_ColumnLabel(COLUMN_LABEL_TYPE_CAT)
+    @EqualsAndHashCode.Include
     private String typeCat;
 
     @jakarta.annotation.Nullable
     @_NullableBySpecification
     @_ColumnLabel(COLUMN_LABEL_TYPE_SCHEM)
+    @EqualsAndHashCode.Include
     private String typeSchem;
 
     @_ColumnLabel("TYPE_NAME")
+    @EqualsAndHashCode.Include
     private String typeName;
 
     @_ColumnLabel("ATTR_NAME")
+    @EqualsAndHashCode.Include
     private String attrName;
 
     // -----------------------------------------------------------------------------------------------------------------

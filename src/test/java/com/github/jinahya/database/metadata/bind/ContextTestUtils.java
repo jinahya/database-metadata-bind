@@ -20,10 +20,7 @@ package com.github.jinahya.database.metadata.bind;
  * #L%
  */
 
-import io.vavr.CheckedConsumer;
-import io.vavr.CheckedFunction1;
 import lombok.extern.slf4j.Slf4j;
-import org.junit.platform.commons.util.ReflectionUtils;
 
 import java.sql.JDBCType;
 import java.sql.SQLException;
@@ -80,24 +77,6 @@ final class ContextTestUtils {
                 log.warn("unmapped values of {}: {}", value.getClass().getSimpleName(), unmappedValues);
             }
         }
-        // .toBuilder().build()
-        ReflectionUtils.findMethod(value.getClass(), "toBuilder")
-                .map(m -> {
-                    try {
-                        return m.invoke(value);
-                    } catch (final ReflectiveOperationException roe) {
-                        throw new RuntimeException(roe);
-                    }
-                })
-                .flatMap(b -> ReflectionUtils.findMethod(b.getClass(), "build")
-                        .map(m -> {
-                            try {
-                                return m.invoke(b);
-                            } catch (final ReflectiveOperationException row) {
-                                throw new RuntimeException(row);
-                            }
-                        })
-                );
         return value;
     }
 
@@ -114,26 +93,6 @@ final class ContextTestUtils {
 
     // -----------------------------------------------------------------------------------------------------------------
     private static String databaseProductName;
-
-    private static <R> void checked(final Context context,
-                                    final CheckedFunction1<? super Context, ? extends R> function,
-                                    final CheckedConsumer<? super R> consumer)
-            throws Throwable {
-        Objects.requireNonNull(context, "context is null");
-        Objects.requireNonNull(function, "function is null");
-        Objects.requireNonNull(context, "context is null");
-        final R r;
-        try {
-            r = function.apply(context);
-        } catch (final Throwable e) {
-            if (e instanceof SQLFeatureNotSupportedException sqlfnse) {
-                log.error("sql feature not supported", sqlfnse);
-                return;
-            }
-            throw new RuntimeException(e);
-        }
-        consumer.accept(r);
-    }
 
     static void test(final Context context) throws SQLException {
         Objects.requireNonNull(context, "context is null");
@@ -468,6 +427,19 @@ final class ContextTestUtils {
         common(columnPrivilege);
     }
 
+    static void crossReference(final Context context, final List<CrossReference> crossReference) throws SQLException {
+        Objects.requireNonNull(context, "context is null");
+        Objects.requireNonNull(crossReference, "crossReference is null");
+        assertThat(crossReference).doesNotHaveDuplicates()
+                .satisfiesAnyOf(
+                        l -> assertThat(l).isSortedAccordingTo(CrossReference.CASE_INSENSITIVE_ORDER),
+                        l -> assertThat(l).isSortedAccordingTo(CrossReference.LEXICOGRAPHIC_ORDER)
+                );
+        for (final var v : crossReference) {
+            crossReference(context, v);
+        }
+    }
+
     static void crossReference(final Context context, final CrossReference crossReference) throws SQLException {
         Objects.requireNonNull(context, "context is null");
         Objects.requireNonNull(crossReference, "crossReference is null");
@@ -745,15 +717,7 @@ final class ContextTestUtils {
             for (final var parentTable : tables) { // table 많으면 오래 걸린다.
                 for (final var foreignTable : tables) {
                     final var crossReference = context.getCrossReference(parentTable, foreignTable);
-                    assertThat(crossReference)
-                            .doesNotHaveDuplicates()
-                            .satisfiesAnyOf(
-                                    cr -> assertThat(cr).isSortedAccordingTo(CrossReference.CASE_INSENSITIVE_ORDER),
-                                    cr -> assertThat(cr).isSortedAccordingTo(CrossReference.LEXICOGRAPHIC_ORDER)
-                            );
-                    for (final var v : crossReference) {
-                        crossReference(context, v);
-                    }
+                    crossReference(context, crossReference);
                 }
             }
         }
@@ -1042,6 +1006,7 @@ final class ContextTestUtils {
     static void udt(final Context context, final UDT udt) throws SQLException {
         Objects.requireNonNull(context, "context is null");
         Objects.requireNonNull(udt, "udt is null");
+        MetadataTypeTestUtils.verify(udt);
         {
             assertThat(udt.getTypeName()).isNotNull();
 //            assertThat(udt.getClassName()).isNotNull();
@@ -1052,16 +1017,16 @@ final class ContextTestUtils {
         try {
             final var attributes = context.getAttributes(udt, "%");
             attributes(context, attributes);
-        } catch (final SQLException sqle) {
-            log.error("failed; getAttributes({}, {})", udt, "%", sqle);
+        } catch (final SQLFeatureNotSupportedException sqlfnse) {
+            log.error("not supported", sqlfnse);
         }
 
         // -------------------------------------------------------------------------------------------------- superTypes
         try {
             final var superTypes = context.getSuperTypes(udt);
             superTypes(context, superTypes);
-        } catch (final SQLException sqle) {
-            log.error("failed; getSuperTypes({})", udt, sqle);
+        } catch (final SQLFeatureNotSupportedException sqlfnse) {
+            log.error("not supported", sqlfnse);
         }
     }
 

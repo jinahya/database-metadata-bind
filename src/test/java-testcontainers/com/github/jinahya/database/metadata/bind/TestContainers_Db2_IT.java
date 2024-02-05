@@ -21,31 +21,50 @@ package com.github.jinahya.database.metadata.bind;
  */
 
 import lombok.extern.slf4j.Slf4j;
-import org.junit.jupiter.api.Disabled;
+import org.junit.jupiter.api.AfterAll;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.BeforeAll;
 import org.testcontainers.containers.Db2Container;
-import org.testcontainers.containers.JdbcDatabaseContainer;
-import org.testcontainers.junit.jupiter.Container;
-import org.testcontainers.junit.jupiter.Testcontainers;
+import org.testcontainers.shaded.org.awaitility.Awaitility;
 import org.testcontainers.utility.DockerImageName;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
+import java.time.Duration;
 
-@Disabled
-@Testcontainers
+// https://java.testcontainers.org/modules/databases/db2/
+//@Disabled
+//@Testcontainers
 @Slf4j
 class TestContainers_Db2_IT extends TestContainers_$_IT {
 
-    @Container
-    private static final JdbcDatabaseContainer<?> CONTAINER;
+    private static final String FULL_IMAGE_NAME = "ibmcom/db2:latest";
 
-    static {
-        // https://www.testcontainers.org/modules/databases/db2/
-        final var NAME = DockerImageName.parse("ibmcom/db2:latest");
-        CONTAINER = new Db2Container(NAME).acceptLicense();
+    //    @Container
+    private static Db2Container CONTAINER;
+
+    @BeforeAll
+    static void start() {
+        final DockerImageName name = DockerImageName.parse(FULL_IMAGE_NAME);
+        CONTAINER = new Db2Container(name).acceptLicense();
+        CONTAINER.start();
+//        final var timeout = Duration.ofSeconds(10L);
+//        log.debug("awaiting for {}", timeout);
+//        Awaitility.await()
+//                .atMost(timeout)
+//                .pollDelay(Duration.ofSeconds(1L))
+//                .untilAsserted(() -> {
+//                    Assertions.assertTrue(CONTAINER.isRunning());
+//                });
     }
 
+    @AfterAll
+    static void stop() {
+        CONTAINER.stop();
+    }
+
+    // -----------------------------------------------------------------------------------------------------------------
     @Override
     Connection connect() throws SQLException {
         final var url = CONTAINER.getJdbcUrl();

@@ -21,6 +21,7 @@ package com.github.jinahya.database.metadata.bind;
  */
 
 import jakarta.annotation.Nullable;
+import jakarta.validation.constraints.AssertTrue;
 import jakarta.validation.constraints.NotNull;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
@@ -28,7 +29,11 @@ import lombok.Setter;
 import lombok.ToString;
 
 import java.sql.DatabaseMetaData;
+import java.sql.Types;
+import java.util.Arrays;
 import java.util.Comparator;
+import java.util.HashSet;
+import java.util.Set;
 
 import static java.util.Comparator.naturalOrder;
 import static java.util.Comparator.nullsFirst;
@@ -50,14 +55,14 @@ public class UDT extends AbstractMetadataType {
     // -----------------------------------------------------------------------------------------------------------------
     static final Comparator<UDT> CASE_INSENSITIVE_ORDER =
             Comparator.comparingInt(UDT::getDataType)
-                    .thenComparing(UDT::typeCatNonNull, String.CASE_INSENSITIVE_ORDER)
-                    .thenComparing(UDT::typeSchemNonNull, String.CASE_INSENSITIVE_ORDER)
+                    .thenComparing(UDT::getTypeCat, nullsFirst(String.CASE_INSENSITIVE_ORDER))
+                    .thenComparing(UDT::getTypeSchem, nullsFirst(String.CASE_INSENSITIVE_ORDER))
                     .thenComparing(UDT::getTypeName, nullsFirst(String.CASE_INSENSITIVE_ORDER));
 
     static final Comparator<UDT> LEXICOGRAPHIC_ORDER =
             Comparator.comparingInt(UDT::getDataType)
-                    .thenComparing(UDT::typeCatNonNull, naturalOrder())
-                    .thenComparing(UDT::typeSchemNonNull, naturalOrder())
+                    .thenComparing(UDT::getTypeCat, nullsFirst(naturalOrder()))
+                    .thenComparing(UDT::getTypeSchem, nullsFirst(naturalOrder()))
                     .thenComparing(UDT::getTypeName, nullsFirst(naturalOrder()));
 
     // -----------------------------------------------------------------------------------------------------------------
@@ -95,35 +100,42 @@ public class UDT extends AbstractMetadataType {
      */
     public static final String COLUMN_LABEL_DATA_TYPE = "DATA_TYPE";
 
+    public static final int COLUMN_VALUES_DATA_TYPE_JAVA_OBJECT = Types.JAVA_OBJECT;
+
+    public static final int COLUMN_VALUES_DATA_TYPE_STRUCT = Types.STRUCT;
+
+    public static final int COLUMN_VALUES_DATA_TYPE_DISTINCT = Types.DISTINCT;
+
+    public static final Set<Integer> COLUMN_VALUES_DATA_TYPE = new HashSet<>(Arrays.asList(
+            COLUMN_VALUES_DATA_TYPE_JAVA_OBJECT,
+            COLUMN_VALUES_DATA_TYPE_STRUCT,
+            COLUMN_VALUES_DATA_TYPE_DISTINCT
+    ));
+
     // --------------------------------------------------------------------------------------------------------- typeCat
-    @EqualsAndHashCode.Include
-    String typeCatNonNull() {
-        final String typeCat_ = getTypeCat();
-        if (typeCat_ != null) {
-            return typeCat_;
-        }
-        return Catalog.COLUMN_VALUE_TABLE_CAT_EMPTY;
-    }
 
     // ------------------------------------------------------------------------------------------------------- typeSchem
-    @EqualsAndHashCode.Include
-    String typeSchemNonNull() {
-        final String typeSchem_ = getTypeSchem();
-        if (typeSchem_ != null) {
-            return typeSchem_;
+
+    // -------------------------------------------------------------------------------------------------------- dataType
+    @AssertTrue
+    private boolean isDataTypeValid() {
+        if (dataType == null) {
+            return true;
         }
-        return Schema.COLUMN_VALUE_TABLE_SCHEM_EMPTY;
+        return COLUMN_VALUES_DATA_TYPE.contains(dataType);
     }
 
     // -----------------------------------------------------------------------------------------------------------------
     @Nullable
     @_NullableBySpecification
     @_ColumnLabel(COLUMN_LABEL_TYPE_CAT)
+    @EqualsAndHashCode.Include
     private String typeCat;
 
     @Nullable
     @_NullableBySpecification
     @_ColumnLabel(COLUMN_LABEL_TYPE_SCHEM)
+    @EqualsAndHashCode.Include
     private String typeSchem;
 
     @_ColumnLabel(COLUMN_LABEL_TYPE_NAME)

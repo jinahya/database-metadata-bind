@@ -33,26 +33,29 @@ import java.sql.DriverManager;
 import java.sql.SQLException;
 import java.time.Duration;
 
+// https://java.testcontainers.org/modules/databases/mysql/
 //@Testcontainers
 @Slf4j
 class TestContainers_MySQL_IT extends TestContainers_$_IT {
+
+    private static final String FULL_IMAGE_NAME ="mysql:latest";
 
     //    @Container
     private static MySQLContainer<?> CONTAINER;
 
     @BeforeAll
     static void start() {
-        final DockerImageName NAME = DockerImageName.parse("mysql:latest");
-        CONTAINER = new MySQLContainer<>(NAME);
+        final DockerImageName name = DockerImageName.parse(FULL_IMAGE_NAME);
+        CONTAINER = new MySQLContainer<>(name);
         CONTAINER.start();
-        final var timeout = Duration.ofSeconds(10L);
-        log.debug("awaiting for {}", timeout);
-        Awaitility.await()
-                .atMost(timeout)
-                .pollDelay(Duration.ofSeconds(1L))
-                .untilAsserted(() -> {
-                    Assertions.assertTrue(CONTAINER.isRunning());
-                });
+//        final var timeout = Duration.ofSeconds(10L);
+//        log.debug("awaiting for {}", timeout);
+//        Awaitility.await()
+//                .atMost(timeout)
+//                .pollDelay(Duration.ofSeconds(1L))
+//                .untilAsserted(() -> {
+//                    Assertions.assertTrue(CONTAINER.isRunning());
+//                });
     }
 
     @AfterAll

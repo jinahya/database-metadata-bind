@@ -523,6 +523,7 @@
             <scope>import</scope>
           </dependency>
           <dependency>
+            <!-- https://search.maven.org/search?q=g:org.testcontainers -->
             <groupId>org.testcontainers</groupId>
             <artifactId>testcontainers-bom</artifactId>
             <version>1.19.4</version>

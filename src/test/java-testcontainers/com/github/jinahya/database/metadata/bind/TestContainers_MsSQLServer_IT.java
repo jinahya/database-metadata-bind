@@ -21,34 +21,56 @@ package com.github.jinahya.database.metadata.bind;
  */
 
 import lombok.extern.slf4j.Slf4j;
-import org.junit.jupiter.api.Disabled;
-import org.testcontainers.containers.JdbcDatabaseContainer;
+import org.junit.jupiter.api.AfterAll;
+import org.junit.jupiter.api.BeforeAll;
 import org.testcontainers.containers.MSSQLServerContainer;
-import org.testcontainers.junit.jupiter.Container;
-import org.testcontainers.junit.jupiter.Testcontainers;
 import org.testcontainers.utility.DockerImageName;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
 
+// https://java.testcontainers.org/modules/databases/mssqlserver/
 // https://github.com/microsoft/mssql-docker/issues/668
-@Disabled // 안 돎
-@Testcontainers
+//@Disabled // 안 돎
+//@Testcontainers
 @Slf4j
 class TestContainers_MsSQLServer_IT extends TestContainers_$_IT {
 
-    @Container
-    private static final JdbcDatabaseContainer<?> CONTAINER;
+        private static final String FULL_IMAGE_NAME = "mcr.microsoft.com/mssql/server:2022-latest";
+//    private static final String FULL_IMAGE_NAME = "mcr.microsoft.com/azure-sql-edge:latest";
+//    private static final String FULL_IMAGE_NAME = "azure-sql-edge:latest";
 
-    static {
-        // https://www.testcontainers.org/modules/databases/oraclexe/
-        final DockerImageName NAME = DockerImageName.parse("mcr.microsoft.com/mssql/server:2022-latest");
-        CONTAINER = new MSSQLServerContainer<>(NAME)
-                .acceptLicense()
-                .withEnv("MSSQL_PID", "Developer")
-                .withUrlParam("encrypt", "false")
-        ;
+    //    @Container
+    private static MSSQLServerContainer<?> CONTAINER;
+
+//    static {
+//        // https://www.testcontainers.org/modules/databases/oraclexe/
+//        final DockerImageName NAME = DockerImageName.parse("mcr.microsoft.com/mssql/server:2022-latest");
+//        CONTAINER = new MSSQLServerContainer<>(NAME)
+//                .acceptLicense()
+//                .withEnv("MSSQL_PID", "Developer")
+//                .withUrlParam("encrypt", "false")
+//    }
+
+    @BeforeAll
+    static void start() {
+        final DockerImageName name = DockerImageName.parse(FULL_IMAGE_NAME);
+        CONTAINER = new MSSQLServerContainer<>(name).acceptLicense();
+        CONTAINER.start();
+//        final var timeout = Duration.ofSeconds(10L);
+//        log.debug("awaiting for {}", timeout);
+//        Awaitility.await()
+//                .atMost(timeout)
+//                .pollDelay(Duration.ofSeconds(1L))
+//                .untilAsserted(() -> {
+//                    Assertions.assertTrue(CONTAINER.isRunning());
+//                });
+    }
+
+    @AfterAll
+    static void stop() {
+        CONTAINER.stop();
     }
 
     @Override

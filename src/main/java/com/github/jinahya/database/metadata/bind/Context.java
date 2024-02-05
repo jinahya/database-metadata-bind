@@ -247,8 +247,8 @@ public class Context {
     List<Attribute> getAttributes(final UDT udt, final String attributeNamePattern) throws SQLException {
         Objects.requireNonNull(udt, "udt is null");
         return getAttributes(
-                udt.typeCatNonNull(),
-                udt.typeSchemNonNull(),
+                udt.getTypeCat(),
+                udt.getTypeSchem(),
                 udt.getTypeName(),
                 attributeNamePattern
         );
@@ -1364,8 +1364,8 @@ public class Context {
     List<SuperType> getSuperTypes(final UDT udt) throws SQLException {
         Objects.requireNonNull(udt, "udt is null");
         return getSuperTypes(
-                udt.typeCatNonNull(),
-                udt.typeSchemNonNull(),
+                udt.getTypeCat(),
+                udt.getTypeSchem(),
                 udt.getTypeName()
         );
     }
