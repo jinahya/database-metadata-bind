@@ -40,7 +40,7 @@ import static java.util.Comparator.nullsFirst;
 @Setter
 @Getter
 @ToString(callSuper = true)
-@EqualsAndHashCode(callSuper = true, onlyExplicitlyIncluded = true)
+@EqualsAndHashCode(callSuper = true)
 public class Catalog extends AbstractMetadataType {
 
     private static final long serialVersionUID = 6239185259128825953L;
@@ -87,16 +87,9 @@ public class Catalog extends AbstractMetadataType {
     }
 
     // -------------------------------------------------------------------------------------------------------- tableCat
-    @EqualsAndHashCode.Include
-    String tableCatNonNull() {
-        if (tableCat == null) {
-            return Catalog.COLUMN_VALUE_TABLE_CAT_EMPTY;
-        }
-        return tableCat;
-    }
 
     // -----------------------------------------------------------------------------------------------------------------
     @_ColumnLabel(COLUMN_LABEL_TABLE_CAT)
-    @EqualsAndHashCode.Exclude
+    @EqualsAndHashCode.Include
     private String tableCat;
 }

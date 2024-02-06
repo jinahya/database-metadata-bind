@@ -118,22 +118,8 @@ public class IndexInfo extends AbstractMetadataType {
     }
 
     // -------------------------------------------------------------------------------------------------------- tableCat
-    @EqualsAndHashCode.Include
-    String tableCatNonNull() {
-        if (tableCat == null) {
-            return Catalog.COLUMN_VALUE_TABLE_CAT_EMPTY;
-        }
-        return tableCat;
-    }
 
     // ------------------------------------------------------------------------------------------------------ tableSchem
-    @EqualsAndHashCode.Include
-    String tableSchemNonNull() {
-        if (tableSchem == null) {
-            return Catalog.COLUMN_VALUE_TABLE_CAT_EMPTY;
-        }
-        return tableSchem;
-    }
 
     // ------------------------------------------------------------------------------------------------------------ type
     Type getTypeAsEnum() {
@@ -154,11 +140,13 @@ public class IndexInfo extends AbstractMetadataType {
     @Nullable
     @_NullableBySpecification
     @_ColumnLabel(COLUMN_LABEL_TABLE_CAT)
+    @EqualsAndHashCode.Include
     private String tableCat;
 
     @Nullable
     @_NullableBySpecification
     @_ColumnLabel(COLUMN_LABEL_TABLE_SCHEM)
+    @EqualsAndHashCode.Include
     private String tableSchem;
 
     @_ColumnLabel(COLUMN_LABEL_TABLE_NAME)

@@ -44,40 +44,12 @@ public class SuperType extends AbstractMetadataType {
     private static final long serialVersionUID = 4603878785941565029L;
 
     // --------------------------------------------------------------------------------------------------------- typeCat
-    @EqualsAndHashCode.Include
-    String typeCatNonNull() {
-        if (typeCat == null) {
-            return Catalog.COLUMN_VALUE_TABLE_CAT_EMPTY;
-        }
-        return typeCat;
-    }
 
     // ------------------------------------------------------------------------------------------------------- typeSchem
-    @EqualsAndHashCode.Include
-    String typeSchemNonNull() {
-        if (typeSchem == null) {
-            return Schema.COLUMN_VALUE_TABLE_SCHEM_EMPTY;
-        }
-        return typeSchem;
-    }
 
     // ---------------------------------------------------------------------------------------------------- superTypeCat
-    @EqualsAndHashCode.Include
-    String supertypeCatNonNull() {
-        if (supertypeCat == null) {
-            return Catalog.COLUMN_VALUE_TABLE_CAT_EMPTY;
-        }
-        return supertypeCat;
-    }
 
     // -------------------------------------------------------------------------------------------------- superTypeSchem
-    @EqualsAndHashCode.Include
-    String supertypeSchemNonNull() {
-        if (supertypeSchem == null) {
-            return Schema.COLUMN_VALUE_TABLE_SCHEM_EMPTY;
-        }
-        return supertypeSchem;
-    }
 
     // -----------------------------------------------------------------------------------------------------------------
     @Nullable
@@ -91,7 +63,6 @@ public class SuperType extends AbstractMetadataType {
     private String typeSchem;
 
     @_ColumnLabel("TYPE_NAME")
-    @EqualsAndHashCode.Include
     private String typeName;
 
     // -----------------------------------------------------------------------------------------------------------------
@@ -106,6 +77,5 @@ public class SuperType extends AbstractMetadataType {
     private String supertypeSchem;
 
     @_ColumnLabel("SUPERTYPE_NAME")
-    @EqualsAndHashCode.Include
     private String supertypeName;
 }

@@ -48,6 +48,7 @@ public class ColumnPrivilege extends AbstractMetadataType {
 
     private static final long serialVersionUID = 4384654744147773380L;
 
+    // -----------------------------------------------------------------------------------------------------------------
     static final Comparator<ColumnPrivilege> CASE_INSENSITIVE_ORDER =
             Comparator.comparing(ColumnPrivilege::getColumnName, nullsFirst(String.CASE_INSENSITIVE_ORDER))
                     .thenComparing(ColumnPrivilege::getPrivilege, nullsFirst(String.CASE_INSENSITIVE_ORDER));

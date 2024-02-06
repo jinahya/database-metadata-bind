@@ -31,6 +31,7 @@ import java.sql.DatabaseMetaData;
 import java.util.Comparator;
 
 import static java.util.Comparator.naturalOrder;
+import static java.util.Comparator.nullsFirst;
 
 /**
  * A class for binding results of the {@link DatabaseMetaData#getPrimaryKeys(String, String, String)} method.
@@ -48,18 +49,16 @@ public class PrimaryKey extends AbstractMetadataType {
 
     // -----------------------------------------------------------------------------------------------------------------
     static final Comparator<PrimaryKey> CASE_INSENSITIVE_ORDER =
-//            Comparator.comparing(PrimaryKey::getTableCat, nullsFirst(String.CASE_INSENSITIVE_ORDER))
-//                    .thenComparing(PrimaryKey::getTableSchem, nullsFirst(String.CASE_INSENSITIVE_ORDER))
-//                    .thenComparing(PrimaryKey::getTableName, String.CASE_INSENSITIVE_ORDER)
-//                    .thenComparing(PrimaryKey::getColumnName, String.CASE_INSENSITIVE_ORDER);
-            Comparator.comparing(PrimaryKey::getColumnName, String.CASE_INSENSITIVE_ORDER);
+            Comparator.comparing(PrimaryKey::getTableCat, nullsFirst(String.CASE_INSENSITIVE_ORDER))
+                    .thenComparing(PrimaryKey::getTableSchem, nullsFirst(String.CASE_INSENSITIVE_ORDER))
+                    .thenComparing(PrimaryKey::getTableName, String.CASE_INSENSITIVE_ORDER)
+                    .thenComparing(PrimaryKey::getColumnName, String.CASE_INSENSITIVE_ORDER);
 
     static final Comparator<PrimaryKey> LEXICOGRAPHIC_ORDER =
-//            Comparator.comparing(PrimaryKey::getColumnName, nullsFirst(naturalOrder()))
-//                    .thenComparing(PrimaryKey::getColumnName, nullsFirst(naturalOrder()))
-//                    .thenComparing(PrimaryKey::getColumnName, naturalOrder())
-//                    .thenComparing(PrimaryKey::getColumnName, naturalOrder());
-            Comparator.comparing(PrimaryKey::getColumnName, naturalOrder());
+            Comparator.comparing(PrimaryKey::getColumnName, nullsFirst(naturalOrder()))
+                    .thenComparing(PrimaryKey::getColumnName, nullsFirst(naturalOrder()))
+                    .thenComparing(PrimaryKey::getColumnName, naturalOrder())
+                    .thenComparing(PrimaryKey::getColumnName, naturalOrder());
 
     // ------------------------------------------------------------------------------------------------------- TABLE_CAT
 
@@ -104,20 +103,8 @@ public class PrimaryKey extends AbstractMetadataType {
     public static final String COLUMN_LABEL_PK_NAME = "PK_NAME";
 
     // -------------------------------------------------------------------------------------------------------- tableCat
-    String tableCatNonNull() {
-        if (tableCat == null) {
-            return Catalog.COLUMN_VALUE_TABLE_CAT_EMPTY;
-        }
-        return tableCat;
-    }
 
     // ------------------------------------------------------------------------------------------------------ tableSchem
-    String tableSchemNonNull() {
-        if (tableSchem == null) {
-            return Schema.COLUMN_VALUE_TABLE_SCHEM_EMPTY;
-        }
-        return tableSchem;
-    }
 
     // -----------------------------------------------------------------------------------------------------------------
     @Nullable

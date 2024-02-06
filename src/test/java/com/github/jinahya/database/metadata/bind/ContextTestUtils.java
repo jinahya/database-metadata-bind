@@ -324,7 +324,7 @@ final class ContextTestUtils {
         procedures(context, procedures);
         // ------------------------------------------------------------------------------------------------- superTables
         try {
-            final var superTables = context.getSuperTables(catalog.tableCatNonNull(), "%", "%");
+            final var superTables = context.getSuperTables(catalog.getTableCat(), "%", "%");
             superTables(context, superTables);
         } catch (final SQLFeatureNotSupportedException sqlfnse) {
             log.error("not supported", sqlfnse);
@@ -491,6 +491,9 @@ final class ContextTestUtils {
         try {
             final var functionColumns = context.getFunctionColumns(function, "%");
             functionColumns(context, function, functionColumns);
+            for (final var functionColumn : functionColumns) {
+                log.debug("functionColumn: {}", functionColumn);
+            }
         } catch (final SQLException sqle) {
             thrown("failed; getFunctionColumns", sqle);
         }

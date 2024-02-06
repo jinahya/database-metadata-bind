@@ -148,20 +148,8 @@ public class Column extends AbstractMetadataType {
     public static final String COLUMN_LABEL_IS_GENERATEDCOLUMN = "IS_GENERATEDCOLUMN";
 
     // -------------------------------------------------------------------------------------------------------- tableCat
-    String tableCatNonNull() {
-        if (tableCat != null) {
-            return Catalog.COLUMN_VALUE_TABLE_CAT_EMPTY;
-        }
-        return tableCat;
-    }
 
     // ------------------------------------------------------------------------------------------------------ tableSchem
-    String tableSchemNonNull() {
-        if (tableSchem != null) {
-            return Schema.COLUMN_VALUE_TABLE_SCHEM_EMPTY;
-        }
-        return tableSchem;
-    }
 
     // -------------------------------------------------------------------------------------------------------- nullable
     Nullable getNullableAsEnum() {

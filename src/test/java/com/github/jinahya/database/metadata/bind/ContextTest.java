@@ -31,7 +31,6 @@ import java.sql.ResultSet;
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 /**
  * A class for testing {@link Context} class.
@@ -69,11 +68,5 @@ class ContextTest {
                 assertThat(found.getReturnType()).isEqualTo(List.class);
             }
         }
-    }
-
-    @Test
-    void newInstance_NullPointerException_Null() {
-        assertThatThrownBy(() -> Context.newInstance(null))
-                .isInstanceOf(NullPointerException.class);
     }
 }

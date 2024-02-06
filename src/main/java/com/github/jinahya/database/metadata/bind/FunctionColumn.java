@@ -21,6 +21,8 @@ package com.github.jinahya.database.metadata.bind;
  */
 
 import jakarta.annotation.Nullable;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.PositiveOrZero;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.Setter;
@@ -49,17 +51,18 @@ public class FunctionColumn extends AbstractMetadataType {
     private static final long serialVersionUID = -7445156446214062680L;
 
     static final Comparator<FunctionColumn> CASE_INSENSITIVE_ORDER =
-            Comparator.comparing(FunctionColumn::functionCatNonNull, String.CASE_INSENSITIVE_ORDER)
-                    .thenComparing(FunctionColumn::functionSchemNonNull, String.CASE_INSENSITIVE_ORDER)
-                    .thenComparing(FunctionColumn::getFunctionName, nullsFirst(String.CASE_INSENSITIVE_ORDER))
+            Comparator.comparing(FunctionColumn::getFunctionCat, nullsFirst(String.CASE_INSENSITIVE_ORDER))
+                    .thenComparing(FunctionColumn::getFunctionSchem, nullsFirst(String.CASE_INSENSITIVE_ORDER))
+                    .thenComparing(FunctionColumn::getFunctionName, String.CASE_INSENSITIVE_ORDER)
                     .thenComparing(FunctionColumn::getSpecificName, nullsFirst(String.CASE_INSENSITIVE_ORDER));
 
     static final Comparator<FunctionColumn> LEXICOGRAPHIC_ORDER =
-            Comparator.comparing(FunctionColumn::functionCatNonNull)
-                    .thenComparing(FunctionColumn::functionSchemNonNull)
-                    .thenComparing(FunctionColumn::getFunctionName, nullsFirst(naturalOrder()))
+            Comparator.comparing(FunctionColumn::getFunctionCat, nullsFirst(naturalOrder()))
+                    .thenComparing(FunctionColumn::getFunctionSchem, nullsFirst((naturalOrder())))
+                    .thenComparing(FunctionColumn::getFunctionName, naturalOrder())
                     .thenComparing(FunctionColumn::getSpecificName, nullsFirst(naturalOrder()));
 
+    // -----------------------------------------------------------------------------------------------------------------
     public static final String COLUMN_LABEL_FUNCTION_CAT = "FUNCTION_CAT";
 
     public static final String COLUMN_LABEL_FUNCTION_SCHEM = "FUNCTION_SCHEM";
@@ -68,6 +71,7 @@ public class FunctionColumn extends AbstractMetadataType {
 
     public static final String COLUMN_LABEL_COLUMN_NAME = "COLUMN_NAME";
 
+    // -----------------------------------------------------------------------------------------------------------------
     public static final String COLUMN_LABEL_COLUMN_TYPE = "COLUMN_TYPE";
 
     /**
@@ -98,15 +102,15 @@ public class FunctionColumn extends AbstractMetadataType {
         FUNCTION_COLUMN_OUT(DatabaseMetaData.functionColumnOut), // 3
 
         /**
-         * A value for {@code 4}.
+         * A value for {@link DatabaseMetaData#functionReturn}({@value DatabaseMetaData#functionReturn}).
          */
-        FUNCTION_COLUMN_RETURN(4),
+//        FUNCTION_COLUMN_RETURN(4),
+        FUNCTION_COLUMN_RETURN(DatabaseMetaData.functionReturn),
 
         /**
          * A value for {@link DatabaseMetaData#functionColumnResult}({@value DatabaseMetaData#functionColumnResult}).
          */
-        FUNCTION_COLUMN_RESULT(DatabaseMetaData.functionColumnResult) // 5
-        ;
+        FUNCTION_COLUMN_RESULT(DatabaseMetaData.functionColumnResult); // 5
 
         /**
          * Finds the value for specified {@link FunctionColumn#COLUMN_LABEL_COLUMN_TYPE} column value.
@@ -131,54 +135,59 @@ public class FunctionColumn extends AbstractMetadataType {
         private final int fieldValue;
     }
 
+    // -----------------------------------------------------------------------------------------------------------------
     public static final String COLUMN_LABEL_NULLABLE = "NULLABLE";
 
     public static final String COLUMN_LABEL_IS_NULLABLE = "IS_NULLABLE";
 
-    public void setFunctionCat(final String functionCat) {
-        this.functionCat = functionCat;
+    // -----------------------------------------------------------------------------------------------------------------
+
+    // ------------------------------------------------------------------------------------------------------ columnType
+    ColumnType getColumnTypeAsEnum() {
+        return Optional.ofNullable(getColumnType())
+                .map(ColumnType::valueOfColumnType)
+                .orElse(null);
     }
 
-    public void setFunctionSchem(final String functionSchem) {
-        this.functionSchem = functionSchem;
+    void setColumnTypeAsEnum(final ColumnType columnTypeAsEnum) {
+        setColumnType(
+                Optional.ofNullable(columnTypeAsEnum)
+                        .map(_IntFieldEnum::fieldValueAsInt)
+                        .orElse(null)
+        );
     }
 
-    public void setFunctionName(final String functionName) {
-        this.functionName = functionName;
+    // ------------------------------------------------------------------------------------------------------ columnType
+    Boolean isFunctionTypeParameter() {
+        return columnType == DatabaseMetaData.functionColumnIn ||
+               columnType == DatabaseMetaData.functionColumnInOut ||
+               columnType == DatabaseMetaData.functionColumnOut;
     }
 
-    public void setColumnName(final String columnName) {
-        this.columnName = columnName;
-    }
-
-    public Integer getColumnType() {
-        return columnType;
-    }
-
-    public void setColumnType(final Integer columnType) {
-        this.columnType = columnType;
-    }
-
-    public void setSpecificName(final String specificName) {
-        this.specificName = specificName;
-    }
-
+    // -----------------------------------------------------------------------------------------------------------------
     @Nullable
     @_NullableBySpecification
     @_ColumnLabel(COLUMN_LABEL_FUNCTION_CAT)
+    @EqualsAndHashCode.Include
     private String functionCat;
 
     @Nullable
     @_NullableBySpecification
     @_ColumnLabel(COLUMN_LABEL_FUNCTION_SCHEM)
+    @EqualsAndHashCode.Include
     private String functionSchem;
 
+    @NotBlank
     @_ColumnLabel(COLUMN_LABEL_FUNCTION_NAME)
+    @EqualsAndHashCode.Include
     private String functionName;
 
+    @NotBlank
     @_ColumnLabel(COLUMN_LABEL_COLUMN_NAME)
+    @EqualsAndHashCode.Include
     private String columnName;
 
+    // -----------------------------------------------------------------------------------------------------------------
     @_ColumnLabel("COLUMN_TYPE")
     private Integer columnType;
 
@@ -215,6 +224,7 @@ public class FunctionColumn extends AbstractMetadataType {
     @_ColumnLabel("CHAR_OCTET_LENGTH")
     private Integer charOctetLength;
 
+    @PositiveOrZero
     @_ColumnLabel("ORDINAL_POSITION")
     private Integer ordinalPosition;
 
@@ -223,35 +233,6 @@ public class FunctionColumn extends AbstractMetadataType {
 
     @_MissingByVendor("Microsoft SQL Server") // https://github.com/microsoft/mssql-jdbc/issues/849
     @_ColumnLabel("SPECIFIC_NAME")
+    @EqualsAndHashCode.Include
     private String specificName;
-
-    String functionCatNonNull() {
-        final String functionCat_ = getFunctionCat();
-        if (functionCat_ != null) {
-            return functionCat_;
-        }
-        return Catalog.COLUMN_VALUE_TABLE_CAT_EMPTY;
-    }
-
-    String functionSchemNonNull() {
-        final String functionSchem_ = getFunctionSchem();
-        if (functionSchem_ != null) {
-            return functionSchem_;
-        }
-        return Schema.COLUMN_VALUE_TABLE_SCHEM_EMPTY;
-    }
-
-    ColumnType getColumnTypeAsEnum() {
-        return Optional.ofNullable(getColumnType())
-                .map(ColumnType::valueOfColumnType)
-                .orElse(null);
-    }
-
-    void setColumnTypeAsEnum(final ColumnType columnTypeAsEnum) {
-        setColumnType(
-                Optional.ofNullable(columnTypeAsEnum)
-                        .map(_IntFieldEnum::fieldValueAsInt)
-                        .orElse(null)
-        );
-    }
 }

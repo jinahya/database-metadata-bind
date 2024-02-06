@@ -77,32 +77,20 @@ public class TablePrivilege extends AbstractMetadataType {
     public static final String COLUMN_LABEL_TABLE_NAME = "TABLE_NAME";
 
     // -------------------------------------------------------------------------------------------------------- tableCat
-    @EqualsAndHashCode.Include
-    String tableCatNonNull() {
-        if (tableCat == null) {
-            return Catalog.COLUMN_VALUE_TABLE_CAT_EMPTY;
-        }
-        return tableCat;
-    }
 
     // ------------------------------------------------------------------------------------------------------ tableSchem
-    @EqualsAndHashCode.Include
-    String tableSchemNonNull() {
-        if (tableSchem == null) {
-            return Schema.COLUMN_VALUE_TABLE_SCHEM_EMPTY;
-        }
-        return tableSchem;
-    }
 
     // -----------------------------------------------------------------------------------------------------------------
     @Nullable
     @_NullableBySpecification
     @_ColumnLabel(COLUMN_LABEL_TABLE_CAT)
+    @EqualsAndHashCode.Include
     private String tableCat;
 
     @Nullable
     @_NullableBySpecification
     @_ColumnLabel(COLUMN_LABEL_TABLE_SCHEM)
+    @EqualsAndHashCode.Include
     private String tableSchem;
 
     @_ColumnLabel(COLUMN_LABEL_TABLE_NAME)

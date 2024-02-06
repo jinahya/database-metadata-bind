@@ -51,15 +51,17 @@ public class Table extends AbstractMetadataType {
 
     // -----------------------------------------------------------------------------------------------------------------
     static final Comparator<Table> CASE_INSENSITIVE_ORDER =
-            Comparator.comparing(Table::getTableType, nullsFirst(String.CASE_INSENSITIVE_ORDER))
-                    .thenComparing(Table::tableCatNonNull, nullsFirst(String.CASE_INSENSITIVE_ORDER))
-                    .thenComparing(Table::tableSchemNonNull, nullsFirst(String.CASE_INSENSITIVE_ORDER))
+//            Comparator.comparing(Table::getTableType, nullsFirst(String.CASE_INSENSITIVE_ORDER))
+            Comparator.comparing(Table::getTableType, String.CASE_INSENSITIVE_ORDER)
+                    .thenComparing(Table::getTableCat, nullsFirst(String.CASE_INSENSITIVE_ORDER))
+                    .thenComparing(Table::getTableSchem, nullsFirst(String.CASE_INSENSITIVE_ORDER))
                     .thenComparing(Table::getTableName, String.CASE_INSENSITIVE_ORDER);
 
     static final Comparator<Table> LEXICOGRAPHIC_ORDER =
-            Comparator.comparing(Table::getTableType, nullsFirst(naturalOrder()))
-                    .thenComparing(Table::tableCatNonNull, nullsFirst(naturalOrder()))
-                    .thenComparing(Table::tableSchemNonNull, nullsFirst(naturalOrder()))
+//            Comparator.comparing(Table::getTableType, nullsFirst(naturalOrder()))
+            Comparator.comparing(Table::getTableType, naturalOrder())
+                    .thenComparing(Table::getTableCat, nullsFirst(naturalOrder()))
+                    .thenComparing(Table::getTableSchem, nullsFirst(naturalOrder()))
                     .thenComparing(Table::getTableName);
 
     // -----------------------------------------------------------------------------------------------------------------
@@ -118,22 +120,8 @@ public class Table extends AbstractMetadataType {
 //    }
 
     // -------------------------------------------------------------------------------------------------------- tableCat
-    @EqualsAndHashCode.Include
-    String tableCatNonNull() {
-        if (tableCat == null) {
-            return Catalog.COLUMN_VALUE_TABLE_CAT_EMPTY;
-        }
-        return tableCat;
-    }
 
     // ------------------------------------------------------------------------------------------------------- tableShem
-    @EqualsAndHashCode.Include
-    String tableSchemNonNull() {
-        if (tableSchem == null) {
-            return Schema.COLUMN_VALUE_TABLE_SCHEM_EMPTY;
-        }
-        return tableSchem;
-    }
 
     // -----------------------------------------------------------------------------------------------------------------
     @_MissingByVendor("Microsoft SQL Server") // https://github.com/microsoft/mssql-jdbc/issues/406
@@ -147,7 +135,7 @@ public class Table extends AbstractMetadataType {
     @Nullable
     @_NullableBySpecification
     @_ColumnLabel(COLUMN_LABEL_TABLE_SCHEM)
-    @EqualsAndHashCode.Exclude
+    @EqualsAndHashCode.Include
     private String tableSchem;
 
     @_ColumnLabel(COLUMN_LABEL_TABLE_NAME)

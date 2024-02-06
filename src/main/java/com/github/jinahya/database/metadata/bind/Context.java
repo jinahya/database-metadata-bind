@@ -582,11 +582,11 @@ public class Context {
         Objects.requireNonNull(parentTable, "parentTable is null");
         Objects.requireNonNull(foreighTable, "foreignTable is null");
         return getCrossReference(
-                parentTable.tableCatNonNull(),
-                parentTable.tableSchemNonNull(),
+                parentTable.getTableCat(),
+                parentTable.getTableSchem(),
                 parentTable.getTableName(),
-                foreighTable.tableCatNonNull(),
-                foreighTable.tableSchemNonNull(),
+                foreighTable.getTableCat(),
+                foreighTable.getTableSchem(),
                 foreighTable.getTableName()
         );
     }
@@ -649,8 +649,8 @@ public class Context {
     List<ExportedKey> getExportedKeys(final Table table) throws SQLException {
         Objects.requireNonNull(table, "table is null");
         return getExportedKeys(
-                table.tableCatNonNull(),
-                table.tableSchemNonNull(),
+                table.getTableCat(),
+                table.getTableSchem(),
                 table.getTableName()
         );
     }
@@ -837,8 +837,8 @@ public class Context {
     List<ImportedKey> getImportedKeys(final Table table) throws SQLException {
         Objects.requireNonNull(table, "table is null");
         return getImportedKeys(
-                table.tableCatNonNull(),
-                table.tableSchemNonNull(),
+                table.getTableCat(),
+                table.getTableSchem(),
                 table.getTableName()
         );
     }
@@ -957,8 +957,8 @@ public class Context {
     List<PrimaryKey> getPrimaryKeys(final Table table) throws SQLException {
         Objects.requireNonNull(table, "table is null");
         return getPrimaryKeys(
-                table.tableCatNonNull(),
-                table.tableSchemNonNull(),
+                table.getTableCat(),
+                table.getTableSchem(),
                 table.getTableName()
         );
     }
@@ -1079,7 +1079,7 @@ public class Context {
     List<Procedure> getProcedures(final Catalog catalog, final String procedureNamePattern)
             throws SQLException {
         Objects.requireNonNull(catalog, "catalog is null");
-        return getProcedures(catalog.tableCatNonNull(), null, procedureNamePattern);
+        return getProcedures(catalog.getTableCat(), null, procedureNamePattern);
     }
 
     List<Procedure> getProcedures(final Schema schema, final String procedureNamePattern)
@@ -1146,8 +1146,8 @@ public class Context {
             throws SQLException {
         Objects.requireNonNull(table, "table is null");
         return getPseudoColumns(
-                table.tableCatNonNull(),
-                table.tableSchemNonNull(),
+                table.getTableCat(),
+                table.getTableSchem(),
                 table.getTableName(),
                 columnNamePattern
         );
@@ -1237,7 +1237,7 @@ public class Context {
     List<Schema> getSchemas(final Catalog catalog, final String schemaPattern) throws SQLException {
         Objects.requireNonNull(catalog, "catalog is null");
         return getSchemas(
-                catalog.tableCatNonNull(),
+                catalog.getTableCat(),
                 schemaPattern
         );
     }
@@ -1437,8 +1437,8 @@ public class Context {
     List<TablePrivilege> getTablePrivileges(final Table table) throws SQLException {
         Objects.requireNonNull(table, "table is null");
         return getTablePrivileges(
-                table.tableCatNonNull(),
-                table.tableSchemNonNull(),
+                table.getTableCat(),
+                table.getTableSchem(),
                 table.getTableName()
         );
     }
@@ -1690,8 +1690,8 @@ public class Context {
     List<VersionColumn> getVersionColumns(final Table table) throws SQLException {
         Objects.requireNonNull(table, "table is null");
         return getVersionColumns(
-                table.tableCatNonNull(),
-                table.tableSchemNonNull(),
+                table.getTableCat(),
+                table.getTableSchem(),
                 table.getTableName()
         );
     }

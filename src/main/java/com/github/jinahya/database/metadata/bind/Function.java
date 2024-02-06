@@ -28,6 +28,7 @@ import lombok.ToString;
 
 import java.sql.DatabaseMetaData;
 import java.util.Comparator;
+import java.util.Optional;
 
 import static java.util.Comparator.comparing;
 import static java.util.Comparator.naturalOrder;
@@ -48,32 +49,100 @@ public class Function extends AbstractMetadataType {
 
     private static final long serialVersionUID = -3318947900237453301L;
 
+    // -----------------------------------------------------------------------------------------------------------------
     static final Comparator<Function> CASE_INSENSITIVE_ORDER =
             comparing(Function::getFunctionCat, nullsFirst(String.CASE_INSENSITIVE_ORDER))
                     .thenComparing(Function::getFunctionSchem, nullsFirst(String.CASE_INSENSITIVE_ORDER))
-                    .thenComparing(Function::getFunctionName, nullsFirst(String.CASE_INSENSITIVE_ORDER))
+                    .thenComparing(Function::getFunctionName, String.CASE_INSENSITIVE_ORDER)
                     .thenComparing(Function::getSpecificName, nullsFirst(String.CASE_INSENSITIVE_ORDER));
 
     static final Comparator<Function> LEXICOGRAPHIC_ORDER =
             comparing(Function::getFunctionCat, nullsFirst(naturalOrder()))
                     .thenComparing(Function::getFunctionSchem, nullsFirst(naturalOrder()))
-                    .thenComparing(Function::getFunctionName, nullsFirst(naturalOrder()))
+                    .thenComparing(Function::getFunctionName)
                     .thenComparing(Function::getSpecificName, nullsFirst(naturalOrder()));
+
+    // -----------------------------------------------------------------------------------------------------------------
 
     /**
      * A column label of {@value}.
      */
     public static final String COLUMN_LABEL_FUNCTION_CAT = "FUNCTION_CAT";
 
+    // -----------------------------------------------------------------------------------------------------------------
+
     /**
      * A column label of {@value}.
      */
     public static final String COLUMN_LABEL_FUNCTION_SCHEM = "FUNCTION_SCHEM";
 
+    // -----------------------------------------------------------------------------------------------------------------
+
     /**
      * A column label of {@value}.
      */
     public static final String COLUMN_LABEL_FUNCTION_TYPE = "FUNCTION_TYPE";
+
+    /**
+     * Constants for {@value #COLUMN_LABEL_FUNCTION_TYPE} column values.
+     *
+     * @author Jin Kwon &lt;onacit_at_gmail.com&gt;
+     */
+    public enum FunctionType implements _IntFieldEnum<FunctionType> {
+
+        /**
+         * A value for {@link DatabaseMetaData#functionResultUnknown}({@value DatabaseMetaData#functionResultUnknown}).
+         */
+        FUNCTION_RESULT_UNKNOWN(DatabaseMetaData.functionResultUnknown),// 0
+
+        /**
+         * A value for {@link DatabaseMetaData#functionNoTable}({@value DatabaseMetaData#functionNoTable}).
+         */
+        FUNCTION_NO_TABLE(DatabaseMetaData.functionNoTable), // 1
+
+        /**
+         * A value for {@link DatabaseMetaData#functionReturnsTable}({@value DatabaseMetaData#functionReturnsTable}).
+         */
+        FUNCTION_RETURNS_TABLE(DatabaseMetaData.functionReturnsTable); // 2
+
+        /**
+         * Finds the value for specified {@link Function#COLUMN_LABEL_FUNCTION_TYPE} column value.
+         *
+         * @param functionType the {@link Function#COLUMN_LABEL_FUNCTION_TYPE} column value to match.
+         * @return the value matched.
+         * @throws IllegalStateException when no value matched.
+         */
+        public static FunctionType valueOfColumnType(final int functionType) {
+            return _IntFieldEnum.valueOfFieldValue(FunctionType.class, functionType);
+        }
+
+        FunctionType(final int fieldValue) {
+            this.fieldValue = fieldValue;
+        }
+
+        @Override
+        public int fieldValueAsInt() {
+            return fieldValue;
+        }
+
+        private final int fieldValue;
+    }
+
+    // ---------------------------------------------------------------------------------------------------- functionType
+
+    public FunctionType getFunctionTypeAsEnum() {
+        return Optional.ofNullable(getFunctionType())
+                .map(FunctionType::valueOfColumnType)
+                .orElse(null);
+    }
+
+    public void setFunctionTypeAsEnum(final FunctionType functionTypeAsEnum) {
+        setFunctionType(
+                Optional.ofNullable(functionTypeAsEnum)
+                        .map(_IntFieldEnum::fieldValueAsInt)
+                        .orElse(null)
+        );
+    }
 
     // -----------------------------------------------------------------------------------------------------------------
     @Nullable
@@ -92,6 +161,7 @@ public class Function extends AbstractMetadataType {
     @EqualsAndHashCode.Include
     private String functionName;
 
+    // -----------------------------------------------------------------------------------------------------------------
     @_ColumnLabel("REMARKS")
     private String remarks;
 
