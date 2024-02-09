@@ -121,12 +121,12 @@ public class Column extends AbstractMetadataType {
         /**
          * Finds the value for specified {@link Column#COLUMN_LABEL_NULLABLE} column value.
          *
-         * @param nullable the value of {@link Column#COLUMN_LABEL_NULLABLE} column to match.
+         * @param fieldValue the value of {@link Column#COLUMN_LABEL_NULLABLE} column to match.
          * @return the value matched.
          * @throws IllegalStateException when no value matched.
          */
-        public static Nullable valueOfNullable(final int nullable) {
-            return _IntFieldEnum.valueOfFieldValue(Nullable.class, nullable);
+        public static Nullable valueOfFieldValue(final int fieldValue) {
+            return _IntFieldEnum.valueOfFieldValue(Nullable.class, fieldValue);
         }
 
         Nullable(final int fieldValue) {
@@ -154,7 +154,7 @@ public class Column extends AbstractMetadataType {
     // -------------------------------------------------------------------------------------------------------- nullable
     Nullable getNullableAsEnum() {
         return Optional.ofNullable(getNullable())
-                .map(Nullable::valueOfNullable)
+                .map(Nullable::valueOfFieldValue)
                 .orElse(null);
     }
 
@@ -170,13 +170,13 @@ public class Column extends AbstractMetadataType {
     @jakarta.annotation.Nullable
     @_NullableBySpecification
     @_ColumnLabel(COLUMN_LABEL_TABLE_CAT)
-    @EqualsAndHashCode.Exclude
+    @EqualsAndHashCode.Include
     private String tableCat;
 
     @jakarta.annotation.Nullable
     @_NullableBySpecification
     @_ColumnLabel(COLUMN_LABEL_TABLE_SCHEM)
-    @EqualsAndHashCode.Exclude
+    @EqualsAndHashCode.Include
     private String tableSchem;
 
     @_ColumnLabel(COLUMN_LABEL_TABLE_NAME)

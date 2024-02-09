@@ -57,19 +57,6 @@ public class Schema extends AbstractMetadataType {
 
     // -----------------------------------------------------------------------------------------------------------------
 
-    /**
-     * Returns a new instance whose {@code tableCatalog} is {@value Catalog#COLUMN_VALUE_TABLE_CAT_EMPTY} and whose
-     * {@code tableSchem} is {@value #COLUMN_VALUE_TABLE_SCHEM_EMPTY}.
-     *
-     * @return a new virtual instance.
-     */
-    static Schema newVirtualInstance() {
-        final Schema instance = new Schema();
-        instance.setTableCatalog(Catalog.COLUMN_VALUE_TABLE_CAT_EMPTY);
-        instance.setTableSchem(Schema.COLUMN_VALUE_TABLE_SCHEM_EMPTY);
-        return instance;
-    }
-
     // -----------------------------------------------------------------------------------------------------------------
 
     /**
@@ -84,11 +71,6 @@ public class Schema extends AbstractMetadataType {
      */
     public static final String COLUMN_LABEL_TABLE_SCHEM = "TABLE_SCHEM";
 
-    /**
-     * A column value of {@value} for {@value #COLUMN_LABEL_TABLE_SCHEM}.
-     */
-    static final String COLUMN_VALUE_TABLE_SCHEM_EMPTY = "";
-
     // -----------------------------------------------------------------------------------------------------------------
     static Schema of(final String tableCatalog, final String tableSchem) {
         final Schema instance = new Schema();
@@ -98,14 +80,6 @@ public class Schema extends AbstractMetadataType {
     }
 
     // ---------------------------------------------------------------------------------------------------- tableCatalog
-    @EqualsAndHashCode.Include
-    String tableCatalogNonNull() {
-        final String tableCatalog_ = getTableCatalog();
-        if (tableCatalog_ != null) {
-            return tableCatalog_;
-        }
-        return Catalog.COLUMN_VALUE_TABLE_CAT_EMPTY;
-    }
 
     // ------------------------------------------------------------------------------------------------------ tableSchem
 
@@ -113,6 +87,7 @@ public class Schema extends AbstractMetadataType {
     @Nullable
     @_NullableBySpecification
     @_ColumnLabel(COLUMN_LABEL_TABLE_CATALOG)
+    @EqualsAndHashCode.Include
     private String tableCatalog;
 
     @_ColumnLabel(COLUMN_LABEL_TABLE_SCHEM)

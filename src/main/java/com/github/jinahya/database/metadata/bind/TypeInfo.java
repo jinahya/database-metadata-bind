@@ -110,12 +110,12 @@ public class TypeInfo extends AbstractMetadataType {
         /**
          * Finds the value for specified {@link TypeInfo#COLUMN_LABEL_SEARCHABLE} column value.
          *
-         * @param nullable the {@link TypeInfo#COLUMN_LABEL_SEARCHABLE} column value to match.
+         * @param fieldValue the {@link TypeInfo#COLUMN_LABEL_SEARCHABLE} column value to match.
          * @return the value matched.
          * @throws IllegalStateException when no value matched.
          */
-        public static Nullable valueOfNullable(final int nullable) {
-            return _IntFieldEnum.valueOfFieldValue(Nullable.class, nullable);
+        public static Nullable valueOfFieldValue(final int fieldValue) {
+            return _IntFieldEnum.valueOfFieldValue(Nullable.class, fieldValue);
         }
 
         Nullable(final int fieldValue) {
@@ -174,12 +174,12 @@ public class TypeInfo extends AbstractMetadataType {
         /**
          * Finds the value for specified {@link TypeInfo#COLUMN_LABEL_SEARCHABLE} column value.
          *
-         * @param searchable the {@link TypeInfo#COLUMN_LABEL_SEARCHABLE} column value to match.
+         * @param fieldValue the {@link TypeInfo#COLUMN_LABEL_SEARCHABLE} column value to match.
          * @return the value matched.
          * @throws IllegalStateException when no value matched.
          */
-        public static Searchable valueOfSearchable(final int searchable) {
-            return _IntFieldEnum.valueOfFieldValue(Searchable.class, searchable);
+        public static Searchable valueOfFieldValue(final int fieldValue) {
+            return _IntFieldEnum.valueOfFieldValue(Searchable.class, fieldValue);
         }
 
         Searchable(final int fieldValue) {
@@ -197,7 +197,7 @@ public class TypeInfo extends AbstractMetadataType {
     // ------------------------------------------------------------------------------------------------------ searchable
     Searchable getSearchableAsEnum() {
         return Optional.ofNullable(getSearchable())
-                .map(Searchable::valueOfSearchable)
+                .map(Searchable::valueOfFieldValue)
                 .orElse(null);
     }
 

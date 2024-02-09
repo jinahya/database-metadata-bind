@@ -30,6 +30,7 @@ import lombok.ToString;
 import java.sql.DatabaseMetaData;
 import java.sql.Types;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashSet;
 import java.util.Set;
@@ -92,7 +93,7 @@ public class UDT extends AbstractMetadataType {
      */
     public static final String COLUMN_LABEL_CLASS_NAME = "CLASS_NAME";
 
-    // -----------------------------------------------------------------------------------------------------------------
+    // ------------------------------------------------------------------------------------------------------- DATA_TYPE
 
     /**
      * A column label of {@value}.
@@ -105,11 +106,11 @@ public class UDT extends AbstractMetadataType {
 
     public static final int COLUMN_VALUES_DATA_TYPE_DISTINCT = Types.DISTINCT;
 
-    public static final Set<Integer> COLUMN_VALUES_DATA_TYPE = new HashSet<>(Arrays.asList(
+    public static final Set<Integer> COLUMN_VALUES_DATA_TYPE = Collections.unmodifiableSet(new HashSet<>(Arrays.asList(
             COLUMN_VALUES_DATA_TYPE_JAVA_OBJECT,
             COLUMN_VALUES_DATA_TYPE_STRUCT,
             COLUMN_VALUES_DATA_TYPE_DISTINCT
-    ));
+    )));
 
     // --------------------------------------------------------------------------------------------------------- typeCat
 

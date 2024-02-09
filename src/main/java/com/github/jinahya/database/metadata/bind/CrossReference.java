@@ -48,15 +48,16 @@ public class CrossReference extends AbstractMetadataType {
 
     private static final long serialVersionUID = -5343386346721125961L;
 
+    // -----------------------------------------------------------------------------------------------------------------
     static final Comparator<CrossReference> CASE_INSENSITIVE_ORDER =
-            Comparator.comparing(CrossReference::fktableCatNonNull, String.CASE_INSENSITIVE_ORDER)
-                    .thenComparing(CrossReference::fktableSchemNonNull, String.CASE_INSENSITIVE_ORDER)
+            Comparator.comparing(CrossReference::getFktableCat, nullsFirst(String.CASE_INSENSITIVE_ORDER))
+                    .thenComparing(CrossReference::getFktableSchem, nullsFirst(String.CASE_INSENSITIVE_ORDER))
                     .thenComparing(CrossReference::getFktableName, nullsFirst(String.CASE_INSENSITIVE_ORDER))
                     .thenComparingInt(CrossReference::getKeySeq);
 
     static final Comparator<CrossReference> LEXICOGRAPHIC_ORDER =
-            Comparator.comparing(CrossReference::fktableCatNonNull, naturalOrder())
-                    .thenComparing(CrossReference::fktableSchemNonNull, naturalOrder())
+            Comparator.comparing(CrossReference::getFktableCat, nullsFirst(naturalOrder()))
+                    .thenComparing(CrossReference::getFktableSchem, nullsFirst(naturalOrder()))
                     .thenComparing(CrossReference::getFktableName, nullsFirst(naturalOrder()))
                     .thenComparingInt(CrossReference::getKeySeq);
 
@@ -68,45 +69,17 @@ public class CrossReference extends AbstractMetadataType {
     public static final String COLUMN_LABEL_UPDATE_RULE = "UPDATE_RULE";
 
     // ------------------------------------------------------------------------------------------------------ pkTableCat
-    @EqualsAndHashCode.Include
-    String pktableCatNonNull() {
-        if (pktableCat == null) {
-            return Catalog.COLUMN_VALUE_TABLE_CAT_EMPTY;
-        }
-        return pktableCat;
-    }
 
     // ---------------------------------------------------------------------------------------------------- pkTableSchem
-    @EqualsAndHashCode.Include
-    String pktableSchemNonNull() {
-        if (pktableSchem == null) {
-            return Schema.COLUMN_VALUE_TABLE_SCHEM_EMPTY;
-        }
-        return pktableSchem;
-    }
 
     // ------------------------------------------------------------------------------------------------------ fktableCat
-    @EqualsAndHashCode.Include
-    String fktableCatNonNull() {
-        if (fktableCat == null) {
-            return Catalog.COLUMN_VALUE_TABLE_CAT_EMPTY;
-        }
-        return fktableCat;
-    }
 
     // ---------------------------------------------------------------------------------------------------- fktableSchem
-    @EqualsAndHashCode.Include
-    String fktableSchemNonNull() {
-        if (fktableSchem == null) {
-            return Schema.COLUMN_VALUE_TABLE_SCHEM_EMPTY;
-        }
-        return fktableSchem;
-    }
 
     // ------------------------------------------------------------------------------------------------------ updateRule
     TableKey.TableKeyUpdateRule getUpdateRuleAsEnum() {
         return Optional.ofNullable(getUpdateRule())
-                .map(TableKey.TableKeyUpdateRule::valueOfUpdateRule)
+                .map(TableKey.TableKeyUpdateRule::valueOfFieldValue)
                 .orElse(null);
     }
 

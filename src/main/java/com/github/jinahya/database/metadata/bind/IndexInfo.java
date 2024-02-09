@@ -101,8 +101,8 @@ public class IndexInfo extends AbstractMetadataType {
          */
         TABLE_INDEX_OTHER(DatabaseMetaData.tableIndexOther); // 3
 
-        public static Type valueOfType(final int type) {
-            return _IntFieldEnum.valueOfFieldValue(Type.class, type);
+        public static Type valueOfFieldValue(final int fieldValue) {
+            return _IntFieldEnum.valueOfFieldValue(Type.class, fieldValue);
         }
 
         Type(final short fieldValue) {
@@ -124,7 +124,7 @@ public class IndexInfo extends AbstractMetadataType {
     // ------------------------------------------------------------------------------------------------------------ type
     Type getTypeAsEnum() {
         return Optional.ofNullable(getType())
-                .map(Type::valueOfType)
+                .map(Type::valueOfFieldValue)
                 .orElse(null);
     }
 

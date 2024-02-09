@@ -82,6 +82,18 @@ abstract class Memory_$_Test {
     }
 
     @Test
+    void info() throws SQLException {
+        applyContext(c -> {
+            try {
+                ContextTestUtils.info(c);
+                return null;
+            } catch (final SQLException sqle) {
+                throw new RuntimeException(sqle);
+            }
+        });
+    }
+
+    @Test
     void test() throws SQLException {
         applyContext(c -> {
             try {
@@ -90,6 +102,14 @@ abstract class Memory_$_Test {
             } catch (final SQLException sqle) {
                 throw new RuntimeException(sqle);
             }
+        });
+    }
+
+    @Test
+    void metadata() throws SQLException {
+        applyContext(c -> {
+            final var metadata = Metadata.newInstance(c);
+            return null;
         });
     }
 }

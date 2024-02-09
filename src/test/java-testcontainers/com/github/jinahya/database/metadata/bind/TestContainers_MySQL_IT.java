@@ -22,10 +22,9 @@ package com.github.jinahya.database.metadata.bind;
 
 import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.AfterAll;
-import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeAll;
 import org.testcontainers.containers.MySQLContainer;
-import org.testcontainers.shaded.org.awaitility.Awaitility;
+import org.testcontainers.images.PullPolicy;
 import org.testcontainers.utility.DockerImageName;
 
 import java.sql.Connection;
@@ -38,7 +37,7 @@ import java.time.Duration;
 @Slf4j
 class TestContainers_MySQL_IT extends TestContainers_$_IT {
 
-    private static final String FULL_IMAGE_NAME ="mysql:latest";
+    private static final String FULL_IMAGE_NAME = "mysql:latest";
 
     //    @Container
     private static MySQLContainer<?> CONTAINER;
@@ -46,16 +45,9 @@ class TestContainers_MySQL_IT extends TestContainers_$_IT {
     @BeforeAll
     static void start() {
         final DockerImageName name = DockerImageName.parse(FULL_IMAGE_NAME);
-        CONTAINER = new MySQLContainer<>(name);
+        CONTAINER = new MySQLContainer<>(name)
+                .withImagePullPolicy(PullPolicy.ageBased(Duration.ofDays(180L)));
         CONTAINER.start();
-//        final var timeout = Duration.ofSeconds(10L);
-//        log.debug("awaiting for {}", timeout);
-//        Awaitility.await()
-//                .atMost(timeout)
-//                .pollDelay(Duration.ofSeconds(1L))
-//                .untilAsserted(() -> {
-//                    Assertions.assertTrue(CONTAINER.isRunning());
-//                });
     }
 
     @AfterAll

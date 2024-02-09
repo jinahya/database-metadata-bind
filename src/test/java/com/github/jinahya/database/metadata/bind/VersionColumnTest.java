@@ -47,7 +47,7 @@ class VersionColumnTest extends AbstractMetadataTypeTest<VersionColumn> {
         @EnumSource(VersionColumn.PseudoColumn.class)
         @ParameterizedTest
         void valueOfPseudoColumn__(final VersionColumn.PseudoColumn pseudoColumn) {
-            assertThat(VersionColumn.PseudoColumn.valueOfPseudoColumn(pseudoColumn.fieldValueAsInt()))
+            assertThat(VersionColumn.PseudoColumn.valueOfFieldValue(pseudoColumn.fieldValueAsInt()))
                     .isSameAs(pseudoColumn);
         }
     }

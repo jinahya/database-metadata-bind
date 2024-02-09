@@ -34,12 +34,13 @@ import java.util.Comparator;
  * @see Context#getExportedKeys(String, String, String)
  * @see ImportedKey
  */
+@EqualsAndHashCode(callSuper = true)
 @ToString(callSuper = true)
-@EqualsAndHashCode(callSuper = true, onlyExplicitlyIncluded = true)
 public class ExportedKey extends TableKey<ExportedKey> {
 
     private static final long serialVersionUID = -6561660015694928357L;
 
+    // -----------------------------------------------------------------------------------------------------------------
     static final Comparator<ExportedKey> CASE_INSENSITIVE_ORDER = comparingFktableCaseInsensitive();
 
     static final Comparator<ExportedKey> LEXICOGRAPHIC_ORDER = comparingFktableLexicographic();

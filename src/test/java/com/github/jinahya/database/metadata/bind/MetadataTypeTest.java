@@ -41,7 +41,6 @@ import java.util.stream.Stream;
 
 import static java.util.Arrays.stream;
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.assertj.core.api.Assertions.assertThatCode;
 
 @Slf4j
 abstract class MetadataTypeTest<T extends MetadataType> {
@@ -62,6 +61,7 @@ abstract class MetadataTypeTest<T extends MetadataType> {
         assertThat(string).isNotBlank();
     }
 
+    @DisplayName("equals/hashCode")
     @Test
     void equals__() {
         EqualsVerifier
@@ -69,17 +69,6 @@ abstract class MetadataTypeTest<T extends MetadataType> {
                 .forClass(typeClass)
                 .suppress(Warning.ALL_FIELDS_SHOULD_BE_USED)
                 .verify();
-    }
-
-    @DisplayName("hashCode()I")
-    @Test
-    void hashCode__() {
-        // ------------------------------------------------------------------------------------------------------- given
-        final var instance = newTypeInstance();
-        // --------------------------------------------------------------------------------------------------- when/then
-        assertThatCode(() -> {
-            final var hashCode = instance.hashCode();
-        }).doesNotThrowAnyException();
     }
 
     @Nested

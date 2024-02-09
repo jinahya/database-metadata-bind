@@ -24,11 +24,13 @@ import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;
 import org.testcontainers.containers.MSSQLServerContainer;
+import org.testcontainers.images.PullPolicy;
 import org.testcontainers.utility.DockerImageName;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
+import java.time.Duration;
 
 // https://java.testcontainers.org/modules/databases/mssqlserver/
 // https://github.com/microsoft/mssql-docker/issues/668
@@ -46,7 +48,9 @@ class TestContainers_SQLServer_IT extends TestContainers_$_IT {
     @BeforeAll
     static void start() {
         final DockerImageName name = DockerImageName.parse(FULL_IMAGE_NAME);
-        CONTAINER = new MSSQLServerContainer<>(name).acceptLicense();
+        CONTAINER = new MSSQLServerContainer<>(name)
+                .withImagePullPolicy(PullPolicy.ageBased(Duration.ofDays(180L)))
+                .acceptLicense();
         CONTAINER.start();
     }
 

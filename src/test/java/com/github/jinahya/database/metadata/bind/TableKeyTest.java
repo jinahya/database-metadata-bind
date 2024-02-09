@@ -39,8 +39,8 @@ abstract class TableKeyTest<T extends TableKey<T>> extends AbstractMetadataTypeT
     @Override
     T newTypeInstance() {
         final T instance = super.newTypeInstance();
-        instance.setPktableName("");
-        instance.setPkcolumnName("");
+        instance.setPktableName(null);
+        instance.setPkcolumnName(null);
         instance.setFktableName("");
         instance.setFkcolumnName("");
         return instance;

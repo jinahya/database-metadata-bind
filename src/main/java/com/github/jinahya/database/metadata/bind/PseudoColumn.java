@@ -47,14 +47,14 @@ public class PseudoColumn extends AbstractMetadataType {
 
     // -----------------------------------------------------------------------------------------------------------------
     static final Comparator<PseudoColumn> CASE_INSENSITIVE_ORDER =
-            Comparator.comparing(PseudoColumn::tableCatNonNull, nullsFirst(String.CASE_INSENSITIVE_ORDER))
-                    .thenComparing(PseudoColumn::tableSchemNonNull, nullsFirst(String.CASE_INSENSITIVE_ORDER))
+            Comparator.comparing(PseudoColumn::getTableCat, nullsFirst(String.CASE_INSENSITIVE_ORDER))
+                    .thenComparing(PseudoColumn::getTableSchem, nullsFirst(String.CASE_INSENSITIVE_ORDER))
                     .thenComparing(PseudoColumn::getTableName, nullsFirst(String.CASE_INSENSITIVE_ORDER))
                     .thenComparing(PseudoColumn::getColumnName, nullsFirst(String.CASE_INSENSITIVE_ORDER));
 
     static final Comparator<PseudoColumn> LEXICOGRAPHIC_ORDER =
-            Comparator.comparing(PseudoColumn::tableCatNonNull, nullsFirst(naturalOrder()))
-                    .thenComparing(PseudoColumn::tableSchemNonNull, nullsFirst(naturalOrder()))
+            Comparator.comparing(PseudoColumn::getTableCat, nullsFirst(naturalOrder()))
+                    .thenComparing(PseudoColumn::getTableSchem, nullsFirst(naturalOrder()))
                     .thenComparing(PseudoColumn::getTableName, nullsFirst(naturalOrder()))
                     .thenComparing(PseudoColumn::getColumnName, nullsFirst(naturalOrder()));
 
@@ -77,34 +77,20 @@ public class PseudoColumn extends AbstractMetadataType {
     public static final String COLUMN_VALUE_COLUMN_IS_NULLABLE_EMPTY = "";
 
     // -------------------------------------------------------------------------------------------------------- tableCat
-    @EqualsAndHashCode.Include
-    String tableCatNonNull() {
-        final String tableCat_ = getTableCat();
-        if (tableCat_ == null) {
-            return Catalog.COLUMN_VALUE_TABLE_CAT_EMPTY;
-        }
-        return tableCat_;
-    }
 
     // ------------------------------------------------------------------------------------------------------ tableSchem
-    @EqualsAndHashCode.Include
-    String tableSchemNonNull() {
-        final String tableSchem_ = getTableSchem();
-        if (tableSchem_ == null) {
-            return Schema.COLUMN_VALUE_TABLE_SCHEM_EMPTY;
-        }
-        return tableSchem_;
-    }
 
     // -----------------------------------------------------------------------------------------------------------------
     @Nullable
     @_NullableBySpecification
     @_ColumnLabel(COLUMN_LABEL_TABLE_CAT)
+    @EqualsAndHashCode.Include
     private String tableCat;
 
     @Nullable
     @_NullableBySpecification
     @_ColumnLabel(COLUMN_LABEL_TABLE_SCHEM)
+    @EqualsAndHashCode.Include
     private String tableSchem;
 
     @_ColumnLabel(COLUMN_LABEL_TABLE_NAME)

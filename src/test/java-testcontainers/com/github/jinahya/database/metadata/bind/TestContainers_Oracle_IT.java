@@ -23,16 +23,18 @@ package com.github.jinahya.database.metadata.bind;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;
-import org.junit.jupiter.api.Disabled;
 import org.testcontainers.containers.OracleContainer;
+import org.testcontainers.images.PullPolicy;
 import org.testcontainers.utility.DockerImageName;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
+import java.time.Duration;
 
+// https://blog.jdriven.com/2022/07/running-oracle-xe-with-testcontainers-on-apple-silicon/
 // https://java.testcontainers.org/modules/databases/oraclefree/
-@Disabled("does not start; no-arm")
+//@Disabled("does not start; no-arm")
 @Slf4j
 class TestContainers_Oracle_IT extends TestContainers_$_IT {
 
@@ -45,6 +47,7 @@ class TestContainers_Oracle_IT extends TestContainers_$_IT {
         final DockerImageName name = DockerImageName.parse(FULL_IMAGE_NAME)
                 .asCompatibleSubstituteFor("gvenzl/oracle-xe");
         CONTAINER = new OracleContainer(name)
+                .withImagePullPolicy(PullPolicy.ageBased(Duration.ofDays(180L)))
                 .withDatabaseName("testDB")
                 .withUsername("testUser")
                 .withPassword("testPassword");

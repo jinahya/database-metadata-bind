@@ -36,7 +36,7 @@ class TableKeyDeleteRuleTest extends _IntFieldEnumTest<TableKey.TableKeyDeleteRu
     @EnumSource(TableKey.TableKeyDeleteRule.class)
     @ParameterizedTest
     void valueOfDeleteRule__(final TableKey.TableKeyDeleteRule deleteRule) {
-        assertThat(TableKey.TableKeyDeleteRule.valueOfDeleteRule(deleteRule.fieldValueAsInt()))
+        assertThat(TableKey.TableKeyDeleteRule.valueOfFieldValue(deleteRule.fieldValueAsInt()))
                 .isSameAs(deleteRule);
     }
 }

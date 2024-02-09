@@ -50,6 +50,7 @@ public class FunctionColumn extends AbstractMetadataType {
 
     private static final long serialVersionUID = -7445156446214062680L;
 
+    // -----------------------------------------------------------------------------------------------------------------
     static final Comparator<FunctionColumn> CASE_INSENSITIVE_ORDER =
             Comparator.comparing(FunctionColumn::getFunctionCat, nullsFirst(String.CASE_INSENSITIVE_ORDER))
                     .thenComparing(FunctionColumn::getFunctionSchem, nullsFirst(String.CASE_INSENSITIVE_ORDER))
@@ -65,10 +66,13 @@ public class FunctionColumn extends AbstractMetadataType {
     // -----------------------------------------------------------------------------------------------------------------
     public static final String COLUMN_LABEL_FUNCTION_CAT = "FUNCTION_CAT";
 
+    // -----------------------------------------------------------------------------------------------------------------
     public static final String COLUMN_LABEL_FUNCTION_SCHEM = "FUNCTION_SCHEM";
 
+    // -----------------------------------------------------------------------------------------------------------------
     public static final String COLUMN_LABEL_FUNCTION_NAME = "FUNCTION_NAME";
 
+    // -----------------------------------------------------------------------------------------------------------------
     public static final String COLUMN_LABEL_COLUMN_NAME = "COLUMN_NAME";
 
     // -----------------------------------------------------------------------------------------------------------------
@@ -115,12 +119,12 @@ public class FunctionColumn extends AbstractMetadataType {
         /**
          * Finds the value for specified {@link FunctionColumn#COLUMN_LABEL_COLUMN_TYPE} column value.
          *
-         * @param columnType the {@link FunctionColumn#COLUMN_LABEL_COLUMN_TYPE} column value to match.
+         * @param fieldValue the {@link FunctionColumn#COLUMN_LABEL_COLUMN_TYPE} column value to match.
          * @return the value matched.
          * @throws IllegalStateException when no value matched.
          */
-        public static ColumnType valueOfColumnType(final int columnType) {
-            return _IntFieldEnum.valueOfFieldValue(ColumnType.class, columnType);
+        public static ColumnType valueOfFieldValue(final int fieldValue) {
+            return _IntFieldEnum.valueOfFieldValue(ColumnType.class, fieldValue);
         }
 
         ColumnType(final int fieldValue) {
@@ -138,6 +142,7 @@ public class FunctionColumn extends AbstractMetadataType {
     // -----------------------------------------------------------------------------------------------------------------
     public static final String COLUMN_LABEL_NULLABLE = "NULLABLE";
 
+    // -----------------------------------------------------------------------------------------------------------------
     public static final String COLUMN_LABEL_IS_NULLABLE = "IS_NULLABLE";
 
     // -----------------------------------------------------------------------------------------------------------------
@@ -145,7 +150,7 @@ public class FunctionColumn extends AbstractMetadataType {
     // ------------------------------------------------------------------------------------------------------ columnType
     ColumnType getColumnTypeAsEnum() {
         return Optional.ofNullable(getColumnType())
-                .map(ColumnType::valueOfColumnType)
+                .map(ColumnType::valueOfFieldValue)
                 .orElse(null);
     }
 
@@ -182,7 +187,6 @@ public class FunctionColumn extends AbstractMetadataType {
     @EqualsAndHashCode.Include
     private String functionName;
 
-    @NotBlank
     @_ColumnLabel(COLUMN_LABEL_COLUMN_NAME)
     @EqualsAndHashCode.Include
     private String columnName;

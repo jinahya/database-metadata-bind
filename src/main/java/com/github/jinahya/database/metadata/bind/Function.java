@@ -108,12 +108,12 @@ public class Function extends AbstractMetadataType {
         /**
          * Finds the value for specified {@link Function#COLUMN_LABEL_FUNCTION_TYPE} column value.
          *
-         * @param functionType the {@link Function#COLUMN_LABEL_FUNCTION_TYPE} column value to match.
+         * @param fieldValue the {@link Function#COLUMN_LABEL_FUNCTION_TYPE} column value to match.
          * @return the value matched.
          * @throws IllegalStateException when no value matched.
          */
-        public static FunctionType valueOfColumnType(final int functionType) {
-            return _IntFieldEnum.valueOfFieldValue(FunctionType.class, functionType);
+        public static FunctionType valueOfFieldValue(final int fieldValue) {
+            return _IntFieldEnum.valueOfFieldValue(FunctionType.class, fieldValue);
         }
 
         FunctionType(final int fieldValue) {
@@ -132,7 +132,7 @@ public class Function extends AbstractMetadataType {
 
     public FunctionType getFunctionTypeAsEnum() {
         return Optional.ofNullable(getFunctionType())
-                .map(FunctionType::valueOfColumnType)
+                .map(FunctionType::valueOfFieldValue)
                 .orElse(null);
     }
 

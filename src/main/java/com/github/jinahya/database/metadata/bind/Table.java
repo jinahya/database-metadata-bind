@@ -51,14 +51,12 @@ public class Table extends AbstractMetadataType {
 
     // -----------------------------------------------------------------------------------------------------------------
     static final Comparator<Table> CASE_INSENSITIVE_ORDER =
-//            Comparator.comparing(Table::getTableType, nullsFirst(String.CASE_INSENSITIVE_ORDER))
             Comparator.comparing(Table::getTableType, String.CASE_INSENSITIVE_ORDER)
                     .thenComparing(Table::getTableCat, nullsFirst(String.CASE_INSENSITIVE_ORDER))
                     .thenComparing(Table::getTableSchem, nullsFirst(String.CASE_INSENSITIVE_ORDER))
                     .thenComparing(Table::getTableName, String.CASE_INSENSITIVE_ORDER);
 
     static final Comparator<Table> LEXICOGRAPHIC_ORDER =
-//            Comparator.comparing(Table::getTableType, nullsFirst(naturalOrder()))
             Comparator.comparing(Table::getTableType, naturalOrder())
                     .thenComparing(Table::getTableCat, nullsFirst(naturalOrder()))
                     .thenComparing(Table::getTableSchem, nullsFirst(naturalOrder()))
@@ -98,26 +96,6 @@ public class Table extends AbstractMetadataType {
         instance.setTableName(tableName);
         return instance;
     }
-
-    // -----------------------------------------------------------------------------------------------------------------
-//    @Override
-//    public boolean equals(final Object obj) {
-//        if (this == obj) return true;
-//        if (!(obj instanceof Table)) return false;
-//        final Table that = (Table) obj;
-//        return Objects.equals(tableCatNonNull(), that.getTableName()) &&
-//               Objects.equals(tableSchemNonNull(), that.tableSchemNonNull()) &&
-//               Objects.equals(tableName, that.tableName);
-//    }
-//
-//    @Override
-//    public int hashCode() {
-//        return Objects.hash(
-//                tableCatNonNull(),
-//                tableSchemNonNull(),
-//                tableName
-//        );
-//    }
 
     // -------------------------------------------------------------------------------------------------------- tableCat
 

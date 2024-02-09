@@ -21,10 +21,10 @@ package com.github.jinahya.database.metadata.bind;
  */
 
 import lombok.extern.slf4j.Slf4j;
-import org.testcontainers.containers.PostgreSQLContainer;
+import org.junit.jupiter.api.AfterAll;
+import org.junit.jupiter.api.BeforeAll;
+import org.testcontainers.containers.OracleContainer;
 import org.testcontainers.images.PullPolicy;
-import org.testcontainers.junit.jupiter.Container;
-import org.testcontainers.junit.jupiter.Testcontainers;
 import org.testcontainers.utility.DockerImageName;
 
 import java.sql.Connection;
@@ -32,19 +32,34 @@ import java.sql.DriverManager;
 import java.sql.SQLException;
 import java.time.Duration;
 
-@Testcontainers
+// https://hub.docker.com/r/gvenzl/oracle-xe
+// https://blog.jdriven.com/2022/07/running-oracle-xe-with-testcontainers-on-apple-silicon/
+// https://java.testcontainers.org/modules/databases/oraclefree/
+//@Disabled("does not start; no-arm")
 @Slf4j
-class TestContainers_PostgreSQL_IT extends TestContainers_$_IT {
+class TestContainers_OracleXE_IT extends TestContainers_$_IT {
 
-    @Container
-    private static final PostgreSQLContainer<?> CONTAINER;
+    private static final String FULL_IMAGE_NAME = "gvenzl/oracle-xe:latest-faststart";
 
-    static {
-        final DockerImageName NAME = DockerImageName.parse("postgres:latest");
-        CONTAINER = new PostgreSQLContainer<>(NAME)
-                .withImagePullPolicy(PullPolicy.ageBased(Duration.ofDays(180L)));
+    private static OracleContainer CONTAINER;
+
+    @BeforeAll
+    static void start() {
+        final DockerImageName name = DockerImageName.parse(FULL_IMAGE_NAME);
+        CONTAINER = new OracleContainer(name)
+                .withImagePullPolicy(PullPolicy.ageBased(Duration.ofDays(180L)))
+                .withDatabaseName("testDB")
+                .withUsername("testUser")
+                .withPassword("testPassword");
+        CONTAINER.start();
     }
 
+    @AfterAll
+    static void stop() {
+        CONTAINER.stop();
+    }
+
+    // -----------------------------------------------------------------------------------------------------------------
     @Override
     Connection connect() throws SQLException {
         final var url = CONTAINER.getJdbcUrl();

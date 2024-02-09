@@ -20,12 +20,15 @@ package com.github.jinahya.database.metadata.bind;
  * #L%
  */
 
+import lombok.AccessLevel;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
 
 import java.util.Comparator;
+import java.util.Set;
+import java.util.TreeSet;
 import java.util.function.Consumer;
 
 import static java.util.Comparator.naturalOrder;
@@ -35,7 +38,7 @@ import static java.util.Comparator.nullsFirst;
  * A class for binding results of the {@link java.sql.DatabaseMetaData#getCatalogs()} method.
  *
  * @author Jin Kwon &lt;jinahya_at_gmail.com&gt;
- * @see Context#getCatalogs(Consumer)
+ * @see Context#acceptCatalogs(Consumer)
  */
 @Setter
 @Getter
@@ -44,6 +47,8 @@ import static java.util.Comparator.nullsFirst;
 public class Catalog extends AbstractMetadataType {
 
     private static final long serialVersionUID = 6239185259128825953L;
+
+    // -----------------------------------------------------------------------------------------------------------------
 
     /**
      * A comparator compares catalogs with their {@link #getTableCat()} values in a case-insensitive manner.
@@ -55,34 +60,16 @@ public class Catalog extends AbstractMetadataType {
             = Comparator.comparing(Catalog::getTableCat, nullsFirst(naturalOrder()));
 
     // -----------------------------------------------------------------------------------------------------------------
-    static Catalog of(final String tableCat) {
-        final Catalog instance = new Catalog();
-        instance.setTableCat(tableCat);
-        return instance;
-    }
-
-    // -----------------------------------------------------------------------------------------------------------------
 
     /**
      * A column label of {@value}.
      */
     public static final String COLUMN_LABEL_TABLE_CAT = "TABLE_CAT";
 
-    /**
-     * An empty value for {@value #COLUMN_LABEL_TABLE_CAT} column.
-     */
-    static final String COLUMN_VALUE_TABLE_CAT_EMPTY = "";
-
     // -----------------------------------------------------------------------------------------------------------------
-
-    /**
-     * Returns a new instance whose {@code tableCat} is {@value #COLUMN_VALUE_TABLE_CAT_EMPTY}.
-     *
-     * @return a new virtual instance.
-     */
-    static Catalog newVirtualInstance() {
+    static Catalog of(final String tableCat) {
         final Catalog instance = new Catalog();
-        instance.setTableCat(COLUMN_VALUE_TABLE_CAT_EMPTY);
+        instance.setTableCat(tableCat);
         return instance;
     }
 
@@ -92,4 +79,10 @@ public class Catalog extends AbstractMetadataType {
     @_ColumnLabel(COLUMN_LABEL_TABLE_CAT)
     @EqualsAndHashCode.Include
     private String tableCat;
+
+    // -----------------------------------------------------------------------------------------------------------------
+    @Getter(AccessLevel.PACKAGE)
+    @EqualsAndHashCode.Exclude
+    @ToString.Exclude
+    private final Set<Schema> schemas = new TreeSet<>();
 }

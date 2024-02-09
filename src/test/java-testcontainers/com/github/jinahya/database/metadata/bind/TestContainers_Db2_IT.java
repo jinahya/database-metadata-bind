@@ -22,11 +22,10 @@ package com.github.jinahya.database.metadata.bind;
 
 import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.AfterAll;
-import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Disabled;
 import org.testcontainers.containers.Db2Container;
-import org.testcontainers.shaded.org.awaitility.Awaitility;
+import org.testcontainers.images.PullPolicy;
 import org.testcontainers.utility.DockerImageName;
 
 import java.sql.Connection;
@@ -48,16 +47,9 @@ class TestContainers_Db2_IT extends TestContainers_$_IT {
     @BeforeAll
     static void start() {
         final DockerImageName name = DockerImageName.parse(FULL_IMAGE_NAME);
-        CONTAINER = new Db2Container(name).acceptLicense();
+        CONTAINER = new Db2Container(name).acceptLicense()
+                .withImagePullPolicy(PullPolicy.ageBased(Duration.ofDays(180L)));
         CONTAINER.start();
-//        final var timeout = Duration.ofSeconds(10L);
-//        log.debug("awaiting for {}", timeout);
-//        Awaitility.await()
-//                .atMost(timeout)
-//                .pollDelay(Duration.ofSeconds(1L))
-//                .untilAsserted(() -> {
-//                    Assertions.assertTrue(CONTAINER.isRunning());
-//                });
     }
 
     @AfterAll

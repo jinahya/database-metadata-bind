@@ -36,7 +36,7 @@ class TableKeyUpdateRuleTest extends _IntFieldEnumTest<TableKey.TableKeyUpdateRu
     @EnumSource(TableKey.TableKeyUpdateRule.class)
     @ParameterizedTest
     void valueOfUpdateRule__(final TableKey.TableKeyUpdateRule updateRule) {
-        assertThat(TableKey.TableKeyUpdateRule.valueOfUpdateRule(updateRule.fieldValueAsInt()))
+        assertThat(TableKey.TableKeyUpdateRule.valueOfFieldValue(updateRule.fieldValueAsInt()))
                 .isSameAs(updateRule);
     }
 }

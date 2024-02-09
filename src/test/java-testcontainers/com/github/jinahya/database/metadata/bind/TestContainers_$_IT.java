@@ -33,6 +33,7 @@ import java.util.Objects;
 
 import static org.junit.jupiter.api.Assumptions.assumeTrue;
 
+// https://java.testcontainers.org/modules/databases/jdbc/
 @Slf4j
 abstract class TestContainers_$_IT {
 
@@ -86,25 +87,17 @@ abstract class TestContainers_$_IT {
     }
 
     @Test
+    void info() throws SQLException {
+        applyContextChecked(c -> {
+            ContextTestUtils.info(c);
+            return null;
+        });
+    }
+
+    @Test
     void test() throws SQLException {
         applyContextChecked(c -> {
             ContextTestUtils.test(c);
-            return null;
-        });
-    }
-
-    @Test
-    void getColumns__() {
-        applyContextChecked(c -> {
-            ContextTestUtils.getColumns__(c, null, null, "%", "%");
-            return null;
-        });
-    }
-
-    @Test
-    void getTables__() {
-        applyContextChecked(c -> {
-            ContextTestUtils.getTables__(c, null, null, "%", null);
             return null;
         });
     }

@@ -73,12 +73,12 @@ public class VersionColumn extends AbstractMetadataType {
         /**
          * Finds the value for specified {@link VersionColumn#COLUMN_LABEL_PSEUDO_COLUMN} column value.
          *
-         * @param pseudoColumn the value of {@link VersionColumn#COLUMN_LABEL_PSEUDO_COLUMN} column to match.
+         * @param fieldValue the value of {@link VersionColumn#COLUMN_LABEL_PSEUDO_COLUMN} column to match.
          * @return the value matched.
          * @throws IllegalStateException when no value matched.
          */
-        public static PseudoColumn valueOfPseudoColumn(final int pseudoColumn) {
-            return _IntFieldEnum.valueOfFieldValue(PseudoColumn.class, pseudoColumn);
+        public static PseudoColumn valueOfFieldValue(final int fieldValue) {
+            return _IntFieldEnum.valueOfFieldValue(PseudoColumn.class, fieldValue);
         }
 
         PseudoColumn(final int fieldValue) {
@@ -96,7 +96,7 @@ public class VersionColumn extends AbstractMetadataType {
     // -----------------------------------------------------------------------------------------------------------------
     PseudoColumn getPseudoColumnAsEnum() {
         return Optional.ofNullable(getPseudoColumn())
-                .map(PseudoColumn::valueOfPseudoColumn)
+                .map(PseudoColumn::valueOfFieldValue)
                 .orElse(null);
     }
 

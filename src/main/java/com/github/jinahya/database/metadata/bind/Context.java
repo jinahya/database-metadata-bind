@@ -92,7 +92,7 @@ public class Context {
             final Field field = entry.getKey();
             final _ColumnLabel fieldLabel = entry.getValue();
             if (!resultLabels.remove(fieldLabel.value())) {
-                log.warning(() -> String.format("unknown fieldLabel; %1$s on %2$s", fieldLabel, field));
+                log.warning(() -> String.format("unmapped field; label: %1$s; field: %2$s", fieldLabel, field));
                 continue;
             }
             if (field.isAnnotationPresent(_NotUsedBySpecification.class) ||
@@ -197,8 +197,8 @@ public class Context {
     }
 
     // ------------------------------------- getAttributes(catalog, schemaPatter, typeNamePattern, attributeNamePattern)
-    void getAttributes(final String catalog, final String schemaPattern, final String typeNamePattern,
-                       final String attributeNamePattern, final Consumer<? super Attribute> consumer)
+    void acceptAttributes(final String catalog, final String schemaPattern, final String typeNamePattern,
+                          final String attributeNamePattern, final Consumer<? super Attribute> consumer)
             throws SQLException {
         Objects.requireNonNull(consumer, "consumer is null");
         try (ResultSet results = databaseMetaData.getAttributes(
@@ -208,12 +208,12 @@ public class Context {
         }
     }
 
-    <T extends Collection<? super Attribute>> T getAttributesAndAddEach(
+    <T extends Collection<? super Attribute>> T addAttributes(
             final String catalog, final String schemaPattern, final String typeNamePattern,
             final String attributeNamePattern, final T collection)
             throws SQLException {
         Objects.requireNonNull(collection, "collection is null");
-        getAttributes(
+        acceptAttributes(
                 catalog,
                 schemaPattern,
                 typeNamePattern,
@@ -238,7 +238,7 @@ public class Context {
     public List<Attribute> getAttributes(final String catalog, final String schemaPattern, final String typeNamePattern,
                                          final String attributeNamePattern)
             throws SQLException {
-        return getAttributesAndAddEach(
+        return addAttributes(
                 catalog,
                 schemaPattern,
                 typeNamePattern,
@@ -314,7 +314,7 @@ public class Context {
     }
 
     // --------------------------------------------------------------------------------------------------- getCatalogs()
-    void getCatalogs(final Consumer<? super Catalog> consumer) throws SQLException {
+    void acceptCatalogs(final Consumer<? super Catalog> consumer) throws SQLException {
         Objects.requireNonNull(consumer, "consumer is null");
         try (ResultSet results = databaseMetaData.getCatalogs()) {
             assert results != null;
@@ -322,9 +322,9 @@ public class Context {
         }
     }
 
-    <T extends Collection<? super Catalog>> T getCatalogsAndAddEachTo(final T collection) throws SQLException {
+    <T extends Collection<? super Catalog>> T addCatalogs(final T collection) throws SQLException {
         Objects.requireNonNull(collection, "collection is null");
-        getCatalogs(collection::add);
+        acceptCatalogs(collection::add);
         return collection;
     }
 
@@ -335,7 +335,7 @@ public class Context {
      * @throws SQLException if a database error occurs.
      */
     public List<Catalog> getCatalogs() throws SQLException {
-        return getCatalogsAndAddEachTo(new ArrayList<>());
+        return addCatalogs(new ArrayList<>());
     }
 
     // --------------------------------------------------------------------------------------- getClientInfoProperties()
@@ -348,12 +348,18 @@ public class Context {
      * @throws SQLException if a database error occurs.
      * @see DatabaseMetaData#getClientInfoProperties()
      */
-    void getClientInfoProperties(final Consumer<? super ClientInfoProperty> consumer) throws SQLException {
+    void acceptClientInfoProperties(final Consumer<? super ClientInfoProperty> consumer) throws SQLException {
         Objects.requireNonNull(consumer, "consumer is null");
         try (ResultSet results = databaseMetaData.getClientInfoProperties()) {
             assert results != null;
             acceptBound(results, ClientInfoProperty.class, consumer);
         }
+    }
+
+    <C extends Collection<ClientInfoProperty>> C addClientInfoProperties(final C collection) throws SQLException {
+        Objects.requireNonNull(collection, "collection is null");
+        acceptClientInfoProperties(collection::add);
+        return collection;
     }
 
     /**
@@ -363,9 +369,7 @@ public class Context {
      * @throws SQLException if a database error occurs.
      */
     public List<ClientInfoProperty> getClientInfoProperties() throws SQLException {
-        final List<ClientInfoProperty> list = new ArrayList<>();
-        getClientInfoProperties(list::add);
-        return list;
+        return addClientInfoProperties(new ArrayList<>());
     }
 
     // -------------------------------------------------- getColumnPrivileges(catalog, schema, table, columnNamePattern)
@@ -701,7 +705,12 @@ public class Context {
     public List<Function> getFunctions(final String catalog, final String schemaPattern,
                                        final String functionNamePattern)
             throws SQLException {
-        return addFunctions(catalog, schemaPattern, functionNamePattern, new ArrayList<>());
+        return addFunctions(
+                catalog,
+                schemaPattern,
+                functionNamePattern,
+                new ArrayList<>()
+        );
     }
 
     // ------------------------------ getFunctionColumns(catalog, schemaPattern, functionNamePattern, columnNamePattern)
@@ -1085,7 +1094,11 @@ public class Context {
     List<Procedure> getProcedures(final Schema schema, final String procedureNamePattern)
             throws SQLException {
         Objects.requireNonNull(schema, "schema is null");
-        return getProcedures(schema.tableCatalogNonNull(), schema.tableCatalogNonNull(), procedureNamePattern);
+        return getProcedures(
+                schema.getTableCatalog(),
+                schema.getTableSchem(),
+                procedureNamePattern
+        );
     }
 
     // ----------------------------- getPseudoColumns(catalog, schemaPattern, procedureNamePattern, columnNamePattern)
@@ -1119,7 +1132,13 @@ public class Context {
                                                                     final String columnNamePattern, final T collection)
             throws SQLException {
         Objects.requireNonNull(collection, "collection is null");
-        acceptPseudoColumns(catalog, schemaPattern, tableNamePattern, columnNamePattern, collection::add);
+        acceptPseudoColumns(
+                catalog,
+                schemaPattern,
+                tableNamePattern,
+                columnNamePattern,
+                collection::add
+        );
         return collection;
     }
 
@@ -1139,7 +1158,13 @@ public class Context {
     public List<PseudoColumn> getPseudoColumns(final String catalog, final String schemaPattern,
                                                final String tableNamePattern, final String columnNamePattern)
             throws SQLException {
-        return addPseudoColumns(catalog, schemaPattern, tableNamePattern, columnNamePattern, new ArrayList<>());
+        return addPseudoColumns(
+                catalog,
+                schemaPattern,
+                tableNamePattern,
+                columnNamePattern,
+                new ArrayList<>()
+        );
     }
 
     List<PseudoColumn> getPseudoColumns(final Table table, final String columnNamePattern)
@@ -1293,7 +1318,7 @@ public class Context {
     List<SuperTable> getSuperTables(final Schema schema, final String tableNamePattern) throws SQLException {
         Objects.requireNonNull(schema, "schema is null");
         return getSuperTables(
-                schema.tableCatalogNonNull(),
+                schema.getTableCatalog(),
                 schema.getTableSchem(),
                 tableNamePattern
         );
@@ -1358,7 +1383,7 @@ public class Context {
     List<SuperType> getSuperTypes(final Schema schema, final String typeNamePattern) throws SQLException {
         Objects.requireNonNull(schema, "schema is null");
         return getSuperTypes(
-                schema.tableCatalogNonNull(),
+                schema.getTableCatalog(),
                 schema.getTableSchem(),
                 typeNamePattern
         );
@@ -1425,10 +1450,19 @@ public class Context {
         return addTablePrivileges(catalog, schemaPattern, tableNamePattern, new ArrayList<>());
     }
 
+    List<TablePrivilege> getTablePrivileges(final Catalog catalog, final String tableNamePattern) throws SQLException {
+        Objects.requireNonNull(catalog, "catalog is null");
+        return getTablePrivileges(
+                catalog.getTableCat(),
+                null,
+                tableNamePattern
+        );
+    }
+
     List<TablePrivilege> getTablePrivileges(final Schema schema, final String tableNamePattern) throws SQLException {
         Objects.requireNonNull(schema, "schema is null");
         return getTablePrivileges(
-                schema.tableCatalogNonNull(),
+                schema.getTableCatalog(),
                 schema.getTableSchem(),
                 tableNamePattern
         );
@@ -1550,7 +1584,7 @@ public class Context {
             throws SQLException {
         Objects.requireNonNull(schema, "schema is null");
         return getTables(
-                schema.tableCatalogNonNull(),
+                schema.getTableCatalog(),
                 schema.getTableSchem(),
                 tableNamePattern,
                 types

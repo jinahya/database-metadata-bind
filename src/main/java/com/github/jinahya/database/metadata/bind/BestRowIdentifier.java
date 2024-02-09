@@ -86,12 +86,12 @@ public class BestRowIdentifier
         /**
          * Finds the value for specified {@link BestRowIdentifier#COLUMN_LABEL_SCOPE} column value.
          *
-         * @param scope the value of {@link BestRowIdentifier#COLUMN_LABEL_SCOPE} column to match.
+         * @param fieldValue the value of {@link BestRowIdentifier#COLUMN_LABEL_SCOPE} column to match.
          * @return the value matched.
          * @throws IllegalStateException when no value matched.
          */
-        public static Scope valueOfScope(final int scope) {
-            return _IntFieldEnum.valueOfFieldValue(Scope.class, scope);
+        public static Scope valueOfFieldValue(final int fieldValue) {
+            return _IntFieldEnum.valueOfFieldValue(Scope.class, fieldValue);
         }
 
         Scope(final int fieldValue) {
@@ -141,12 +141,12 @@ public class BestRowIdentifier
         /**
          * Finds the value for specified {@link BestRowIdentifier#COLUMN_LABEL_PSEUDO_COLUMN} column value.
          *
-         * @param pseudoColumn the {@link BestRowIdentifier#COLUMN_LABEL_PSEUDO_COLUMN} column value to match.
+         * @param fieldValue the {@link BestRowIdentifier#COLUMN_LABEL_PSEUDO_COLUMN} column value to match.
          * @return the value matched.
          * @throws IllegalStateException when no value matched.
          */
-        public static PseudoColumn valueOfPseudoColumn(final int pseudoColumn) {
-            return _IntFieldEnum.valueOfFieldValue(PseudoColumn.class, pseudoColumn);
+        public static PseudoColumn valueOfFieldValue(final int fieldValue) {
+            return _IntFieldEnum.valueOfFieldValue(PseudoColumn.class, fieldValue);
         }
 
         PseudoColumn(final int fieldValue) {
@@ -173,7 +173,7 @@ public class BestRowIdentifier
     // ----------------------------------------------------------------------------------------------------------- scope
     Scope getScopeAsEnum() {
         return Optional.ofNullable(getScope())
-                .map(Scope::valueOfScope)
+                .map(Scope::valueOfFieldValue)
                 .orElse(null);
     }
 
@@ -188,7 +188,7 @@ public class BestRowIdentifier
     // ---------------------------------------------------------------------------------------------------- pseudoColumn
     PseudoColumn getPseudoColumnAsEnum() {
         return Optional.ofNullable(getPseudoColumn())
-                .map(PseudoColumn::valueOfPseudoColumn)
+                .map(PseudoColumn::valueOfFieldValue)
                 .orElse(null);
     }
 

@@ -46,6 +46,7 @@ public class Attribute extends AbstractMetadataType {
 
     private static final long serialVersionUID = 1913681105410440186L;
 
+    // -----------------------------------------------------------------------------------------------------------------
     static final Comparator<Attribute> CASE_INSENSITIVE_ORDER =
             Comparator.comparing(Attribute::getTypeCat, nullsFirst(String.CASE_INSENSITIVE_ORDER))
                     .thenComparing(Attribute::getTypeSchem, nullsFirst(String.CASE_INSENSITIVE_ORDER))
@@ -92,12 +93,12 @@ public class Attribute extends AbstractMetadataType {
         /**
          * Finds the value for specified {@link Attribute#COLUMN_LABEL_NULLABLE} attribute value.
          *
-         * @param nullable the value of {@link Attribute#COLUMN_LABEL_NULLABLE} attribute to match.
+         * @param fieldValue the value of {@link Attribute#COLUMN_LABEL_NULLABLE} attribute to match.
          * @return the value matched.
          * @throws IllegalStateException when no value matched.
          */
-        public static Nullable valueOfNullable(final int nullable) {
-            return _IntFieldEnum.valueOfFieldValue(Nullable.class, nullable);
+        public static Nullable valueOfFieldValue(final int fieldValue) {
+            return _IntFieldEnum.valueOfFieldValue(Nullable.class, fieldValue);
         }
 
         Nullable(final int fieldValue) {

@@ -50,14 +50,14 @@ public class TablePrivilege extends AbstractMetadataType {
     static final Comparator<TablePrivilege> CASE_INSENSITIVE_ORDER =
             Comparator.comparing(TablePrivilege::getTableCat, nullsFirst(String.CASE_INSENSITIVE_ORDER))
                     .thenComparing(TablePrivilege::getTableSchem, nullsFirst(String.CASE_INSENSITIVE_ORDER))
-                    .thenComparing(TablePrivilege::getTableName, nullsFirst(String.CASE_INSENSITIVE_ORDER))
-                    .thenComparing(TablePrivilege::getPrivilege, nullsFirst(String.CASE_INSENSITIVE_ORDER));
+                    .thenComparing(TablePrivilege::getTableName, String.CASE_INSENSITIVE_ORDER)
+                    .thenComparing(TablePrivilege::getPrivilege, String.CASE_INSENSITIVE_ORDER);
 
     static final Comparator<TablePrivilege> LEXICOGRAPHIC_ORDER =
             Comparator.comparing(TablePrivilege::getTableCat, nullsFirst(naturalOrder()))
                     .thenComparing(TablePrivilege::getTableSchem, nullsFirst(naturalOrder()))
-                    .thenComparing(TablePrivilege::getTableName, nullsFirst(naturalOrder()))
-                    .thenComparing(TablePrivilege::getPrivilege, nullsFirst(naturalOrder()));
+                    .thenComparing(TablePrivilege::getTableName)
+                    .thenComparing(TablePrivilege::getPrivilege);
 
     // -----------------------------------------------------------------------------------------------------------------
 

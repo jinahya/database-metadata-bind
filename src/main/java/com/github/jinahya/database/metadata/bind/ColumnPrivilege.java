@@ -105,22 +105,8 @@ public class ColumnPrivilege extends AbstractMetadataType {
     }
 
     // -------------------------------------------------------------------------------------------------------- tableCat
-    @EqualsAndHashCode.Include
-    String tableCatNonNull() {
-        if (tableCat == null) {
-            return Catalog.COLUMN_VALUE_TABLE_CAT_EMPTY;
-        }
-        return tableCat;
-    }
 
     // ------------------------------------------------------------------------------------------------------ tableSchem
-    @EqualsAndHashCode.Include
-    String tableSchemNonNull() {
-        if (tableSchem == null) {
-            return Schema.COLUMN_VALUE_TABLE_SCHEM_EMPTY;
-        }
-        return tableSchem;
-    }
 
     // ------------------------------------------------------------------------------------------------------- tableName
 
@@ -147,13 +133,13 @@ public class ColumnPrivilege extends AbstractMetadataType {
     @Nullable
     @_NullableBySpecification
     @_ColumnLabel(COLUMN_LABEL_TABLE_CAT)
-    @EqualsAndHashCode.Exclude
+    @EqualsAndHashCode.Include
     private String tableCat;
 
     @Nullable
     @_NullableBySpecification
     @_ColumnLabel(COLUMN_LABEL_TABLE_SCHEM)
-    @EqualsAndHashCode.Exclude
+    @EqualsAndHashCode.Include
     private String tableSchem;
 
     @_ColumnLabel(COLUMN_LABEL_TABLE_NAME)

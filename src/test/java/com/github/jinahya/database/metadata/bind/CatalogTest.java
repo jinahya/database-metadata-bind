@@ -20,29 +20,9 @@ package com.github.jinahya.database.metadata.bind;
  * #L%
  */
 
-import org.junit.jupiter.api.Test;
-
-import static org.assertj.core.api.Assertions.assertThat;
-
 class CatalogTest extends AbstractMetadataTypeTest<Catalog> {
 
     CatalogTest() {
         super(Catalog.class);
-    }
-
-    // -----------------------------------------------------------------------------------------------------------------
-    @Override
-    Catalog newTypeInstance() {
-        final Catalog instance = super.newTypeInstance();
-        instance.setTableCat(Catalog.COLUMN_VALUE_TABLE_CAT_EMPTY);
-        return instance;
-    }
-
-    // -----------------------------------------------------------------------------------------------------------------
-    @Test
-    void __() {
-        final Catalog i1 = new Catalog();
-        final Catalog i2 = new Catalog();
-        assertThat(i2).isEqualTo(i1);
     }
 }

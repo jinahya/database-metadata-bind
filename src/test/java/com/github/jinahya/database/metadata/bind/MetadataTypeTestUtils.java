@@ -74,13 +74,8 @@ final class MetadataTypeTestUtils {
         verifyAccessors(cls, cls.cast(obj));
     }
 
-    static void verifyAccessors(final MetadataType obj) {
-        Objects.requireNonNull(obj, "obj is null");
-        verifyAccessorsHelper(obj.getClass(), obj);
-    }
-
     static void verify(final MetadataType obj) {
-        verifyAccessors(obj);
+        verifyAccessorsHelper(obj.getClass().asSubclass(MetadataType.class), obj);
         ValidationTestUtils.requireValid(obj);
     }
 

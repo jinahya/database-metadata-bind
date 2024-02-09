@@ -94,11 +94,11 @@ public class Procedure extends AbstractMetadataType {
         /**
          * Returns the value whose {@link #fieldValueAsInt() procedureType} matches to specified value.
          *
-         * @param procedureType the value of {@link #fieldValueAsInt() procedureType} to match.
+         * @param fieldValue the value of {@link #fieldValueAsInt() procedureType} to match.
          * @return a matched value.
          */
-        public static ProcedureType valueOfProcedureType(final int procedureType) {
-            return _IntFieldEnum.valueOfFieldValue(ProcedureType.class, procedureType);
+        public static ProcedureType valueOfFieldValue(final int fieldValue) {
+            return _IntFieldEnum.valueOfFieldValue(ProcedureType.class, fieldValue);
         }
 
         ProcedureType(final int fieldValue) {
@@ -121,27 +121,13 @@ public class Procedure extends AbstractMetadataType {
     public static final String COLUMN_LABEL_SPECIFIC_NAME = "SPECIFIC_NAME";
 
     // ---------------------------------------------------------------------------------------------------- procedureCat
-    String procedureCatNonNull() {
-        final String procedureCat_ = getProcedureCat();
-        if (procedureCat_ != null) {
-            return procedureCat_;
-        }
-        return Catalog.COLUMN_VALUE_TABLE_CAT_EMPTY;
-    }
 
     // -------------------------------------------------------------------------------------------------- procedureSchem
-    String procedureSchemNonNull() {
-        final String procedureSchem_ = getProcedureSchem();
-        if (procedureSchem_ != null) {
-            return procedureSchem_;
-        }
-        return Schema.COLUMN_VALUE_TABLE_SCHEM_EMPTY;
-    }
 
     // --------------------------------------------------------------------------------------------------- procedureType
     ProcedureType getProcedureTypeAsEnum() {
         return Optional.ofNullable(getProcedureType())
-                .map(ProcedureType::valueOfProcedureType)
+                .map(ProcedureType::valueOfFieldValue)
                 .orElse(null);
     }
 

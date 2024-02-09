@@ -44,6 +44,7 @@ public class ClientInfoProperty extends AbstractMetadataType {
 
     private static final long serialVersionUID = -2913230435651853254L;
 
+    // -----------------------------------------------------------------------------------------------------------------
     static final Comparator<ClientInfoProperty> CASE_INSENSITIVE_ORDER =
             Comparator.comparing(ClientInfoProperty::getName, String.CASE_INSENSITIVE_ORDER);
 

@@ -62,23 +62,8 @@ public class ProcedureColumn extends AbstractMetadataType {
                     .thenComparing(ProcedureColumn::getSpecificName, nullsFirst(naturalOrder()));
 
     // ---------------------------------------------------------------------------------------------------- procedureCat
-    @EqualsAndHashCode.Include
-    String procedureCatNonNull() {
-        if (procedureCat == null) {
-            return Catalog.COLUMN_VALUE_TABLE_CAT_EMPTY;
-        }
-        return procedureCat;
-    }
 
     // -------------------------------------------------------------------------------------------------- procedureSchem
-    @EqualsAndHashCode.Include
-    String procedureSchemNonNull() {
-        final String procedureSchem_ = getProcedureSchem();
-        if (procedureSchem_ != null) {
-            return procedureSchem_;
-        }
-        return Schema.COLUMN_VALUE_TABLE_SCHEM_EMPTY;
-    }
 
     // -----------------------------------------------------------------------------------------------------------------
     @Nullable
@@ -98,6 +83,7 @@ public class ProcedureColumn extends AbstractMetadataType {
     @EqualsAndHashCode.Include
     private String columnName;
 
+    // -----------------------------------------------------------------------------------------------------------------
     @_ColumnLabel("COLUMN_TYPE")
     private Integer columnType;
 
