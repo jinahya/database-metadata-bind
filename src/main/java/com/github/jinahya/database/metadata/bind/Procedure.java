@@ -21,6 +21,9 @@ package com.github.jinahya.database.metadata.bind;
  */
 
 import jakarta.annotation.Nullable;
+import jakarta.xml.bind.annotation.XmlElement;
+import jakarta.xml.bind.annotation.XmlRootElement;
+import jakarta.xml.bind.annotation.XmlType;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.Setter;
@@ -28,7 +31,9 @@ import lombok.ToString;
 
 import java.sql.DatabaseMetaData;
 import java.util.Comparator;
+import java.util.Objects;
 import java.util.Optional;
+import java.util.function.BiPredicate;
 
 import static java.util.Comparator.naturalOrder;
 import static java.util.Comparator.nullsFirst;
@@ -41,6 +46,8 @@ import static java.util.Comparator.nullsFirst;
  * @see Context#getFunctionColumns(String, String, String, String)
  * @see ProcedureColumn
  */
+//@XmlRootElement(name = "xxx")
+//@XmlType(name = "xxx")
 @Setter
 @Getter
 @EqualsAndHashCode(callSuper = true, onlyExplicitlyIncluded = true)
@@ -120,6 +127,16 @@ public class Procedure extends AbstractMetadataType {
      */
     public static final String COLUMN_LABEL_SPECIFIC_NAME = "SPECIFIC_NAME";
 
+    // -----------------------------------------------------------------------------------------------------------------
+    public static final BiPredicate<Procedure, Catalog> IS_OF_CATALOG = (p, c) -> {
+        return Objects.equals(p.procedureCat, c.getTableCat());
+    };
+
+    public static final BiPredicate<Procedure, Schema> IS_OF_SCHEMA = (p, s) -> {
+        return Objects.equals(p.procedureCat, s.getTableCatalog()) &&
+               Objects.equals(p.procedureSchem, s.getTableSchem());
+    };
+
     // ---------------------------------------------------------------------------------------------------- procedureCat
 
     // -------------------------------------------------------------------------------------------------- procedureSchem
@@ -140,12 +157,14 @@ public class Procedure extends AbstractMetadataType {
     }
 
     // -----------------------------------------------------------------------------------------------------------------
+    @XmlElement(nillable = true)
     @Nullable
     @_NullableBySpecification
     @_ColumnLabel("PROCEDURE_CAT")
     @EqualsAndHashCode.Include
     private String procedureCat;
 
+    @XmlElement(nillable = true)
     @Nullable
     @_NullableBySpecification
     @_ColumnLabel("PROCEDURE_SCHEM")

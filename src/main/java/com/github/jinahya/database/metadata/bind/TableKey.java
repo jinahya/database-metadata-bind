@@ -29,7 +29,9 @@ import lombok.ToString;
 
 import java.sql.DatabaseMetaData;
 import java.util.Comparator;
+import java.util.Objects;
 import java.util.Optional;
+import java.util.function.BiPredicate;
 
 import static java.util.Comparator.naturalOrder;
 import static java.util.Comparator.nullsFirst;
@@ -320,6 +322,19 @@ public abstract class TableKey<T extends TableKey<T>> extends AbstractMetadataTy
 
         private final int fieldValue;
     }
+
+    // -----------------------------------------------------------------------------------------------------------------
+    public static final BiPredicate<TableKey<?>, Table> IS_OF_PKTABLE = (k, t) -> {
+        return Objects.equals(k.pktableCat, t.getTableCat()) &&
+               Objects.equals(k.pktableSchem, t.getTableSchem()) &&
+               Objects.equals(k.pktableName, t.getTableName());
+    };
+
+    public static final BiPredicate<TableKey<?>, Table> IS_OF_FKTABLE = (k, t) -> {
+        return Objects.equals(k.fktableCat, t.getTableCat()) &&
+               Objects.equals(k.fktableSchem, t.getTableSchem()) &&
+               Objects.equals(k.fktableName, t.getTableName());
+    };
 
     // ------------------------------------------------------------------------------------------------------ pktableCat
 

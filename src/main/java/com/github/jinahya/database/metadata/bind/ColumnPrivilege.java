@@ -28,6 +28,7 @@ import lombok.ToString;
 
 import java.sql.DatabaseMetaData;
 import java.util.Comparator;
+import java.util.Objects;
 import java.util.Optional;
 
 import static java.util.Comparator.naturalOrder;
@@ -102,6 +103,14 @@ public class ColumnPrivilege extends AbstractMetadataType {
         }
 
         private final String fieldValue;
+    }
+
+    // -----------------------------------------------------------------------------------------------------------------
+    boolean isOf(final Column column) {
+        return Objects.equals(tableCat, column.getTableCat()) &&
+               Objects.equals(tableSchem, column.getTableSchem()) &&
+               Objects.equals(tableName, column.getTableName()) &&
+               Objects.equals(columnName, column.getColumnName());
     }
 
     // -------------------------------------------------------------------------------------------------------- tableCat

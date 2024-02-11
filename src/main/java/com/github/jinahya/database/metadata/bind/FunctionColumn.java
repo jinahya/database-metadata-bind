@@ -30,7 +30,9 @@ import lombok.ToString;
 
 import java.sql.DatabaseMetaData;
 import java.util.Comparator;
+import java.util.Objects;
 import java.util.Optional;
+import java.util.function.BiPredicate;
 
 import static java.util.Comparator.naturalOrder;
 import static java.util.Comparator.nullsFirst;
@@ -45,7 +47,7 @@ import static java.util.Comparator.nullsFirst;
 @Setter
 @Getter
 @ToString(callSuper = true)
-@EqualsAndHashCode(callSuper = true)
+@EqualsAndHashCode(callSuper = true, onlyExplicitlyIncluded = true)
 public class FunctionColumn extends AbstractMetadataType {
 
     private static final long serialVersionUID = -7445156446214062680L;
@@ -62,6 +64,14 @@ public class FunctionColumn extends AbstractMetadataType {
                     .thenComparing(FunctionColumn::getFunctionSchem, nullsFirst((naturalOrder())))
                     .thenComparing(FunctionColumn::getFunctionName, naturalOrder())
                     .thenComparing(FunctionColumn::getSpecificName, nullsFirst(naturalOrder()));
+
+    // -----------------------------------------------------------------------------------------------------------------
+    public static final BiPredicate<FunctionColumn, Function> IS_OF = (c, f) -> {
+        return Objects.equals(c.functionCat, f.getFunctionCat()) &&
+               Objects.equals(c.functionSchem, f.getFunctionSchem()) &&
+               Objects.equals(c.functionName, f.getFunctionName()) &&
+               Objects.equals(c.specificName, f.getSpecificName());
+    };
 
     // -----------------------------------------------------------------------------------------------------------------
     public static final String COLUMN_LABEL_FUNCTION_CAT = "FUNCTION_CAT";
@@ -144,8 +154,6 @@ public class FunctionColumn extends AbstractMetadataType {
 
     // -----------------------------------------------------------------------------------------------------------------
     public static final String COLUMN_LABEL_IS_NULLABLE = "IS_NULLABLE";
-
-    // -----------------------------------------------------------------------------------------------------------------
 
     // ------------------------------------------------------------------------------------------------------ columnType
     ColumnType getColumnTypeAsEnum() {

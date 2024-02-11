@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
   <modelVersion>4.0.0</modelVersion>
 
   <parent>
@@ -48,6 +49,7 @@
     <sonar.host.url>https://sonarcloud.io</sonar.host.url>
     <version.animal-sniffer>1.23</version.animal-sniffer>
     <version.com.oracle.ojdbc>23.3.0.23.09</version.com.oracle.ojdbc>
+    <version.com.sun.xml.bind>4.0.4</version.com.sun.xml.bind>
     <version.lombok>1.18.30</version.lombok>
     <version.maven-failsafe>${version.maven-surefire}</version.maven-failsafe>
     <version.maven-surefire>3.2.5</version.maven-surefire>
@@ -56,7 +58,7 @@
     <version.ojdbc8>21.8.0.0</version.ojdbc8>
     <version.ojdbc10>19.17.0.0</version.ojdbc10>
     <version.ojdbc11>21.8.0.0</version.ojdbc11>
-<!--    <version.org.apache.derby>10.16.1.1</version.org.apache.derby>-->
+    <!--    <version.org.apache.derby>10.16.1.1</version.org.apache.derby>-->
     <version.org.apache.derby>10.17.1.0</version.org.apache.derby>
     <version.org.hibernate.validator>8.0.1.Final</version.org.hibernate.validator>
     <version.org.junit.jupiter>5.10.2</version.org.junit.jupiter>
@@ -121,6 +123,17 @@
       <groupId>jakarta.validation</groupId>
       <artifactId>jakarta.validation-api</artifactId>
       <scope>provided</scope>
+    </dependency>
+    <dependency>
+      <groupId>jakarta.xml.bind</groupId>
+      <artifactId>jakarta.xml.bind-api</artifactId>
+      <scope>provided</scope>
+    </dependency>
+    <dependency>
+      <groupId>com.sun.xml.bind</groupId>
+      <artifactId>jaxb-impl</artifactId>
+      <version>${version.com.sun.xml.bind}</version>
+      <scope>test</scope>
     </dependency>
     <dependency>
       <groupId>nl.jqno.equalsverifier</groupId>
@@ -327,7 +340,7 @@
             <id>enforce-dependency-convergence</id>
             <configuration>
               <rules>
-                <dependencyConvergence />
+                <dependencyConvergence/>
               </rules>
             </configuration>
             <goals>
@@ -519,7 +532,7 @@
           <dependency>
             <groupId>com.oracle.database.jdbc</groupId>
             <artifactId>ojdbc-bom</artifactId>
-<!--            <version>23.2.0.0</version>-->
+            <!--            <version>23.2.0.0</version>-->
             <version>23.3.0.23.09</version>
             <type>pom</type>
             <scope>import</scope>
@@ -544,7 +557,7 @@
           <!-- https://search.maven.org/search?q=a:mssql-jdbc -->
           <groupId>com.microsoft.sqlserver</groupId>
           <artifactId>mssql-jdbc</artifactId>
-<!--          <version>11.2.3.jre17</version>-->
+          <!--          <version>11.2.3.jre17</version>-->
           <version>12.6.0.jre11</version>
           <scope>test</scope>
         </dependency>
@@ -568,7 +581,7 @@
         <dependency>
           <groupId>org.postgresql</groupId>
           <artifactId>postgresql</artifactId>
-<!--          <version>42.6.0</version>-->
+          <!--          <version>42.6.0</version>-->
           <version>42.7.1</version>
           <scope>test</scope>
         </dependency>

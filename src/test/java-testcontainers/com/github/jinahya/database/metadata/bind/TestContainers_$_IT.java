@@ -101,4 +101,10 @@ abstract class TestContainers_$_IT {
             return null;
         });
     }
+
+    @Test
+    void metadata() throws SQLException {
+        final var metadata = applyContextChecked(Metadata::newInstance);
+        MetadataTestUtils.verify(metadata);
+    }
 }

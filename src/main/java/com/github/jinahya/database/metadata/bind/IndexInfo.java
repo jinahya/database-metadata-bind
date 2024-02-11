@@ -21,6 +21,8 @@ package com.github.jinahya.database.metadata.bind;
  */
 
 import jakarta.annotation.Nullable;
+import jakarta.xml.bind.annotation.XmlAttribute;
+import lombok.AccessLevel;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.Setter;
@@ -28,7 +30,9 @@ import lombok.ToString;
 
 import java.sql.DatabaseMetaData;
 import java.util.Comparator;
+import java.util.Objects;
 import java.util.Optional;
+import java.util.function.BiPredicate;
 
 import static java.util.Comparator.naturalOrder;
 import static java.util.Comparator.nullsFirst;
@@ -117,6 +121,13 @@ public class IndexInfo extends AbstractMetadataType {
         private final int fieldValue;
     }
 
+    // -----------------------------------------------------------------------------------------------------------------
+    public static final BiPredicate<IndexInfo, Table> IS_OF = (i, t) -> {
+        return Objects.equals(i.tableCat, t.getTableCat()) &&
+               Objects.equals(i.tableSchem, t.getTableSchem()) &&
+               Objects.equals(i.tableName, t.getTableName());
+    };
+
     // -------------------------------------------------------------------------------------------------------- tableCat
 
     // ------------------------------------------------------------------------------------------------------ tableSchem
@@ -135,6 +146,19 @@ public class IndexInfo extends AbstractMetadataType {
                         .orElse(null)
         );
     }
+
+    // -----------------------------------------------------------------------------------------------------------------
+//    @XmlAttribute
+//    @Setter(AccessLevel.NONE)
+//    @EqualsAndHashCode.Exclude
+//    @ToString.Exclude
+//    transient boolean unique_;
+//
+//    @XmlAttribute
+//    @Setter(AccessLevel.NONE)
+//    @EqualsAndHashCode.Exclude
+//    @ToString.Exclude
+//    transient boolean approximate_;
 
     // -----------------------------------------------------------------------------------------------------------------
     @Nullable

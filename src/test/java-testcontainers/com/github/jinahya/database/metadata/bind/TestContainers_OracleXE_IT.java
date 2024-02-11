@@ -48,6 +48,7 @@ class TestContainers_OracleXE_IT extends TestContainers_$_IT {
         final DockerImageName name = DockerImageName.parse(FULL_IMAGE_NAME);
         CONTAINER = new OracleContainer(name)
                 .withImagePullPolicy(PullPolicy.ageBased(Duration.ofDays(180L)))
+                .withStartupTimeout(Duration.ofMinutes(8L))
                 .withDatabaseName("testDB")
                 .withUsername("testUser")
                 .withPassword("testPassword");

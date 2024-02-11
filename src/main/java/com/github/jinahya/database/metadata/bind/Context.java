@@ -33,7 +33,6 @@ import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
@@ -42,6 +41,7 @@ import java.util.Objects;
 import java.util.Set;
 import java.util.function.Consumer;
 import java.util.logging.Level;
+import java.util.stream.Collectors;
 
 /**
  * A class for retrieving information from an instance of {@link java.sql.DatabaseMetaData}.
@@ -854,26 +854,17 @@ public class Context {
 
     // ------------------------------------------------------- getIndexInfo(catalog, schema, table, unique, approximate)
 
-    /**
-     * Invokes {@link DatabaseMetaData#getIndexInfo(String, String, String, boolean, boolean)} method with specified
-     * arguments, and accepts bound value to specified consumer.
-     *
-     * @param catalog     a value for {@code catalog} parameter.
-     * @param schema      a value for {@code schema} parameter.
-     * @param table       a value for {@code table} parameter.
-     * @param unique      a value for {@code unique} parameter.
-     * @param approximate a value for {@code approximate} parameter.
-     * @param consumer    the consumer to which bound values are accepted.
-     * @throws SQLException if a database error occurs.
-     * @see DatabaseMetaData#getIndexInfo(String, String, String, boolean, boolean)
-     */
     void acceptIndexInfo(final String catalog, final String schema, final String table, final boolean unique,
                          final boolean approximate, final Consumer<? super IndexInfo> consumer)
             throws SQLException {
         Objects.requireNonNull(consumer, "consumer is null");
         try (ResultSet results = databaseMetaData.getIndexInfo(catalog, schema, table, unique, approximate)) {
             assert results != null;
-            acceptBound(results, IndexInfo.class, consumer);
+            acceptBound(
+                    results,
+                    IndexInfo.class,
+                    consumer
+            );
         }
     }
 
@@ -1167,8 +1158,7 @@ public class Context {
         );
     }
 
-    List<PseudoColumn> getPseudoColumns(final Table table, final String columnNamePattern)
-            throws SQLException {
+    List<PseudoColumn> getPseudoColumns(final Table table, final String columnNamePattern) throws SQLException {
         Objects.requireNonNull(table, "table is null");
         return getPseudoColumns(
                 table.getTableCat(),
@@ -1427,7 +1417,12 @@ public class Context {
                                                                         final T collection)
             throws SQLException {
         Objects.requireNonNull(collection, "collection is null");
-        acceptTablePrivileges(catalog, schemaPattern, tableNamePattern, collection::add);
+        acceptTablePrivileges(
+                catalog,
+                schemaPattern,
+                tableNamePattern,
+                collection::add
+        );
         return collection;
     }
 
@@ -1447,7 +1442,12 @@ public class Context {
     public List<TablePrivilege> getTablePrivileges(final String catalog, final String schemaPattern,
                                                    final String tableNamePattern)
             throws SQLException {
-        return addTablePrivileges(catalog, schemaPattern, tableNamePattern, new ArrayList<>());
+        return addTablePrivileges(
+                catalog,
+                schemaPattern,
+                tableNamePattern,
+                new ArrayList<>()
+        );
     }
 
     List<TablePrivilege> getTablePrivileges(final Catalog catalog, final String tableNamePattern) throws SQLException {
@@ -1490,7 +1490,11 @@ public class Context {
         Objects.requireNonNull(consumer, "consumer is null");
         try (ResultSet results = databaseMetaData.getTableTypes()) {
             assert results != null;
-            acceptBound(results, TableType.class, consumer);
+            acceptBound(
+                    results,
+                    TableType.class,
+                    consumer
+            );
         }
     }
 
@@ -1556,7 +1560,13 @@ public class Context {
                                                       final T collection)
             throws SQLException {
         Objects.requireNonNull(collection, "collection is null");
-        acceptTables(catalog, schemaPattern, tableNamePattern, types, collection::add);
+        acceptTables(
+                catalog,
+                schemaPattern,
+                tableNamePattern,
+                types,
+                collection::add
+        );
         return collection;
     }
 
@@ -1744,53 +1754,65 @@ public class Context {
     // -----------------------------------------------------------------------------------------------------------------
     private final Map<Class<?>, Map<Field, _ColumnLabel>> classesAndLabeledFields = new HashMap<>();
 
+    // -----------------------------------------------------------------------------------------------------------------
+
     /**
-     * Invokes {@link DatabaseMetaData#getNumericFunctions()} and returns the result as a set of comma-split elements.
+     * Invokes {@link DatabaseMetaData#getNumericFunctions()}, and returns the result as a list of comma-split
+     * elements.
      *
-     * @return a set of SQL keywords.
+     * @return a list of numeric functions.
      * @throws SQLException if a database error occurs.
      */
-    public Set<String> getNumericFunctions() throws SQLException {
-        return new HashSet<>(Arrays.asList(databaseMetaData.getNumericFunctions().split(",")));
+    public List<String> getNumericFunctions() throws SQLException {
+        return Arrays.stream(databaseMetaData.getNumericFunctions().split(","))
+                .filter(v -> !v.isEmpty())
+                .collect(Collectors.toList());
     }
 
     /**
-     * Invokes {@link DatabaseMetaData#getSQLKeywords()} and returns the result as a set of comma-split elements.
+     * Invokes {@link DatabaseMetaData#getSQLKeywords()}, and returns the result as a list of comma-split elements.
      *
-     * @return a set of SQL keywords.
+     * @return a list of SQL keywords.
      * @throws SQLException if a database error occurs.
      */
-    public Set<String> getSQLKeywords() throws SQLException {
-        return new HashSet<>(Arrays.asList(databaseMetaData.getSQLKeywords().split(",")));
+    public List<String> getSQLKeywords() throws SQLException {
+        return Arrays.stream(databaseMetaData.getSQLKeywords().split(","))
+                .filter(v -> !v.isEmpty())
+                .collect(Collectors.toList());
     }
 
     /**
-     * Invokes {@link DatabaseMetaData#getStringFunctions()} and returns the result as a set of comma-split elements.
+     * Invokes {@link DatabaseMetaData#getStringFunctions()}, and returns the result as a list of comma-split elements.
      *
-     * @return a set of SQL keywords.
+     * @return a list of string functions.
      * @throws SQLException if a database error occurs.
      */
-    public Set<String> getStringFunctions() throws SQLException {
-        return new HashSet<>(Arrays.asList(databaseMetaData.getStringFunctions().split(",")));
+    public List<String> getStringFunctions() throws SQLException {
+        return Arrays.stream(databaseMetaData.getStringFunctions().split(","))
+                .filter(v -> !v.isEmpty())
+                .collect(Collectors.toList());
     }
 
     /**
-     * Invokes {@link DatabaseMetaData#getSystemFunctions()} and returns the result as a set of comma-split elements.
+     * Invokes {@link DatabaseMetaData#getSystemFunctions()}, and returns the result as a list of comma-split elements.
      *
-     * @return a set of SQL keywords.
+     * @return a list of system functions.
      * @throws SQLException if a database error occurs.
      */
-    public Set<String> getSystemFunctions() throws SQLException {
-        return new HashSet<>(Arrays.asList(databaseMetaData.getSystemFunctions().split(",")));
+    public List<String> getSystemFunctions() throws SQLException {
+        return Arrays.stream(databaseMetaData.getSystemFunctions().split(","))
+                .filter(v -> !v.isEmpty())
+                .collect(Collectors.toList());
     }
 
     /**
-     * Invokes {@link DatabaseMetaData#getTimeDateFunctions()} and returns the result as a set of comma-split elements.
+     * Invokes {@link DatabaseMetaData#getTimeDateFunctions()}, and returns the result as a list of comma-split
+     * elements.
      *
-     * @return a set of SQL keywords.
+     * @return a list of time and date functions.
      * @throws SQLException if a database error occurs.
      */
-    public Set<String> getTimeDateFunctions() throws SQLException {
-        return new HashSet<>(Arrays.asList(databaseMetaData.getTimeDateFunctions().split(",")));
+    public List<String> getTimeDateFunctions() throws SQLException {
+        return Arrays.asList(databaseMetaData.getTimeDateFunctions().split(","));
     }
 }

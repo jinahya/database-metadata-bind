@@ -84,6 +84,20 @@ final class ContextTestUtils {
         } catch (final SQLException sqle) {
             log.error("failed", sqle);
         }
+        // ---------------------------------------------------------------------------------------------- crossReference
+        try {
+            final var crossReference = context.getCrossReference(
+                    null,
+                    null,
+                    "%",
+                    null,
+                    null,
+                    "%"
+            );
+            crossReference(context, crossReference);
+        } catch (final SQLException sqle) {
+            log.error("failed to get crossReference", sqle);
+        }
         // --------------------------------------------------------------------------------------------------- functions
         try {
             final var functions = context.getFunctions(null, null, "%");
@@ -148,41 +162,42 @@ final class ContextTestUtils {
         }
         // -------------------------------------------------------------------------------------------- numericFunctions
         try {
-            final Set<String> numericFunctions = context.getNumericFunctions();
+            final var numericFunctions = context.getNumericFunctions();
             numericFunctions(context, numericFunctions);
         } catch (final SQLException sqle) {
             log.error("failed", sqle);
         }
         // ---------------------------------------------------------------------------------------------- getSQLKeywords
         try {
-            final Set<String> SQLKeywords = context.getSQLKeywords();
+            final var SQLKeywords = context.getSQLKeywords();
             log.debug("SQLKeywords: {}", SQLKeywords);
         } catch (final SQLException sqle) {
             log.error("failed", sqle);
         }
         // ------------------------------------------------------------------------------------------ getStringFunctions
         try {
-            final Set<String> stringFunctions = context.getStringFunctions();
+            final var stringFunctions = context.getStringFunctions();
             log.debug("stringFunctions: {}", stringFunctions);
         } catch (final SQLException sqle) {
             log.error("failed", sqle);
         }
         // ------------------------------------------------------------------------------------------ getSystemFunctions
         try {
-            final Set<String> systemFunctions = context.getSystemFunctions();
+            final var systemFunctions = context.getSystemFunctions();
             log.debug("system functions: {}", systemFunctions);
         } catch (final SQLException sqle) {
             log.error("failed", sqle);
         }
         // ---------------------------------------------------------------------------------------- getTimeDateFunctions
         try {
-            final Set<String> timeDateFunction = context.getTimeDateFunctions();
+            final var timeDateFunction = context.getTimeDateFunctions();
             log.debug("time date functions: {}", timeDateFunction);
         } catch (final SQLException sqle) {
             log.error("failed", sqle);
         }
     }
 
+    // ------------------------------------------------------------------------------------------------------ attributes
     static void attributes(final Context context, final List<? extends Attribute> attributes) throws SQLException {
         Objects.requireNonNull(context, "context is null");
         Objects.requireNonNull(attributes, "attributes is null");
@@ -219,6 +234,7 @@ final class ContextTestUtils {
         }
     }
 
+    // ----------------------------------------------------------------------------------------------- bestRowIdentifier
     static void bestRowIdentifier(final Context context, final List<? extends BestRowIdentifier> bestRowIdentifier)
             throws SQLException {
         Objects.requireNonNull(context, "context is null");
@@ -248,6 +264,7 @@ final class ContextTestUtils {
         }
     }
 
+    // -------------------------------------------------------------------------------------------------------- catalogs
     static void catalogs(final Context context, final List<? extends Catalog> catalogs) throws SQLException {
         Objects.requireNonNull(context, "context is null");
         Objects.requireNonNull(catalogs, "catalogs is null");
@@ -312,6 +329,7 @@ final class ContextTestUtils {
         }
     }
 
+    // -------------------------------------------------------------------------------------------- clientInfoProperties
     private static void clientInfoProperties(final Context context,
                                              final List<? extends ClientInfoProperty> clientInfoProperties)
             throws SQLException {
@@ -330,6 +348,7 @@ final class ContextTestUtils {
         MetadataTypeTestUtils.verify(clientInfoProperty);
     }
 
+    // --------------------------------------------------------------------------------------------------------- columns
     static void columns(final Context context, final List<? extends Column> columns) throws SQLException {
         Objects.requireNonNull(context, "context is null");
         Objects.requireNonNull(columns, "columns is null");
@@ -368,6 +387,7 @@ final class ContextTestUtils {
         }
     }
 
+    // ------------------------------------------------------------------------------------------------ columnPrivileges
     static void columnPrivileges(final Context context, final List<? extends ColumnPrivilege> columnPrivileges)
             throws SQLException {
         Objects.requireNonNull(context, "context is null");
@@ -389,6 +409,7 @@ final class ContextTestUtils {
         MetadataTypeTestUtils.verify(columnPrivilege);
     }
 
+    // -------------------------------------------------------------------------------------------------- crossReference
     static void crossReference(final Context context, final List<CrossReference> crossReference) throws SQLException {
         Objects.requireNonNull(context, "context is null");
         Objects.requireNonNull(crossReference, "crossReference is null");
@@ -408,6 +429,7 @@ final class ContextTestUtils {
         MetadataTypeTestUtils.verify(crossReference);
     }
 
+    // ---------------------------------------------------------------------------------------------------- exportedKeys
     private static void exportedKeys(final Context context, final List<? extends ExportedKey> exportedKeys)
             throws SQLException {
         Objects.requireNonNull(context, "context is null");
@@ -429,6 +451,7 @@ final class ContextTestUtils {
         MetadataTypeTestUtils.verify(exportedKey);
     }
 
+    // ------------------------------------------------------------------------------------------------------- functions
     private static void functions(final Context context, final List<? extends Function> functions) throws SQLException {
         Objects.requireNonNull(context, "context is null");
         Objects.requireNonNull(functions, "functions is null");
@@ -458,6 +481,7 @@ final class ContextTestUtils {
         }
     }
 
+    // ------------------------------------------------------------------------------------------------- functionColumns
     private static void functionColumns(final Context context, final Function function,
                                         final List<? extends FunctionColumn> functionColumns)
             throws SQLException {
@@ -490,6 +514,7 @@ final class ContextTestUtils {
         final var columnType = FunctionColumn.ColumnType.valueOfFieldValue(functionColumn.getColumnType());
     }
 
+    // ---------------------------------------------------------------------------------------------------- importedKeys
     static void importedKeys(final Context context, final List<? extends ImportedKey> importedKeys)
             throws SQLException {
         Objects.requireNonNull(context, "context is null");
@@ -511,6 +536,7 @@ final class ContextTestUtils {
         MetadataTypeTestUtils.verify(importedKey);
     }
 
+    // ------------------------------------------------------------------------------------------------------- indexInfo
     static void indexInfo(final Context context, final List<IndexInfo> indexInfo) throws SQLException {
         Objects.requireNonNull(context, "context is null");
         Objects.requireNonNull(indexInfo, "indexInfo is null");
@@ -531,10 +557,12 @@ final class ContextTestUtils {
         MetadataTypeTestUtils.verify(indexInfo);
     }
 
+    // ------------------------------------------------------------------------------------------------- numberFunctions
     private static void numericFunctions(final Context context, final Collection<String> numericFunctions)
             throws SQLException {
     }
 
+    // ------------------------------------------------------------------------------------------------------ procedures
     private static void procedures(final Context context, final List<? extends Procedure> procedures)
             throws SQLException {
         Objects.requireNonNull(context, "context is null");
@@ -584,6 +612,7 @@ final class ContextTestUtils {
         }
     }
 
+    // ------------------------------------------------------------------------------------------------ procedureColumns
     private static void procedureColumns(final Context context, final List<? extends ProcedureColumn> procedureColumns)
             throws SQLException {
         Objects.requireNonNull(context, "context is null");
@@ -602,6 +631,7 @@ final class ContextTestUtils {
         MetadataTypeTestUtils.verify(procedureColumn);
     }
 
+    // --------------------------------------------------------------------------------------------------------- schemas
     static void schemas(final Context context, final List<? extends Schema> schemas) throws SQLException {
         Objects.requireNonNull(context, "context is null");
         Objects.requireNonNull(schemas, "schemas is null");
@@ -652,6 +682,7 @@ final class ContextTestUtils {
         }
     }
 
+    // ------------------------------------------------------------------------------------------------------ superTypes
     static void superTypes(final Context context, final List<? extends SuperType> superTypes) throws SQLException {
         Objects.requireNonNull(context, "context is null");
         Objects.requireNonNull(superTypes, "superTypes is null");
@@ -670,6 +701,7 @@ final class ContextTestUtils {
         }
     }
 
+    // ---------------------------------------------------------------------------------------------------------- tables
     static void tables(final Context context, final List<? extends Table> tables) throws SQLException {
         Objects.requireNonNull(context, "context is null");
         Objects.requireNonNull(tables, "tables is null");
@@ -690,16 +722,6 @@ final class ContextTestUtils {
         }
         for (final var table : tables) {
             table(context, table);
-        }
-        // --------------------------------------------------------------------------------------------- crossReferences
-        if (!databaseProductName.equals(DatabaseProductNames.POSTGRE_SQL)
-            && !databaseProductName.equals(DatabaseProductNames.MICROSOFT_SQL_SERVER)) {
-            for (final var parentTable : tables) { // table 많으면 오래 걸린다.
-                for (final var foreignTable : tables) {
-                    final var crossReference = context.getCrossReference(parentTable, foreignTable);
-                    crossReference(context, crossReference);
-                }
-            }
         }
     }
 
@@ -800,6 +822,7 @@ final class ContextTestUtils {
         }
     }
 
+    // ----------------------------------------------------------------------------------------------------- primaryKeys
     private static void primaryKeys(final Context context, final List<? extends PrimaryKey> primaryKeys)
             throws SQLException {
         Objects.requireNonNull(context, "context is null");
@@ -824,6 +847,7 @@ final class ContextTestUtils {
         MetadataTypeTestUtils.verify(primaryKey);
     }
 
+    // --------------------------------------------------------------------------------------------------- pseudoColumns
     private static void pseudoColumns(final Context context, final List<? extends PseudoColumn> pseudoColumns)
             throws SQLException {
         Objects.requireNonNull(context, "context is null");
@@ -845,6 +869,7 @@ final class ContextTestUtils {
         MetadataTypeTestUtils.verify(pseudoColumn);
     }
 
+    // ----------------------------------------------------------------------------------------------------- superTables
     static void superTables(final Context context, final List<? extends SuperTable> superTables) throws SQLException {
         Objects.requireNonNull(context, "context is null");
         Objects.requireNonNull(superTables, "superTables is null");
@@ -859,6 +884,7 @@ final class ContextTestUtils {
         MetadataTypeTestUtils.verify(superTable);
     }
 
+    // ------------------------------------------------------------------------------------------------- tablePrivileges
     static void tablePrivileges(final Context context, final List<? extends TablePrivilege> tablePrivileges)
             throws SQLException {
         Objects.requireNonNull(context, "context is null");
@@ -886,6 +912,7 @@ final class ContextTestUtils {
         MetadataTypeTestUtils.verify(tablePrivilege);
     }
 
+    // ------------------------------------------------------------------------------------------------------ tableTypes
     static void tableTypes(final Context context, final List<? extends TableType> tableTypes) throws SQLException {
         Objects.requireNonNull(context, "context is null");
         Objects.requireNonNull(tableTypes, "tableTypes is null");
@@ -909,6 +936,7 @@ final class ContextTestUtils {
         }
     }
 
+    // -------------------------------------------------------------------------------------------------------- typeInfo
     static void typeInfo(final Context context, final List<? extends TypeInfo> typeInfo) throws SQLException {
         Objects.requireNonNull(context, "context is null");
         Objects.requireNonNull(typeInfo, "typeInfo is null");
@@ -944,6 +972,7 @@ final class ContextTestUtils {
         }
     }
 
+    // ------------------------------------------------------------------------------------------------------------ UDTs
     static void udts(final Context context, final List<? extends UDT> udts) throws SQLException {
         Objects.requireNonNull(context, "context is null");
         Objects.requireNonNull(udts, "udts is null");
@@ -990,6 +1019,7 @@ final class ContextTestUtils {
         }
     }
 
+    // -------------------------------------------------------------------------------------------------- versionColumns
     static void versionColumns(final Context context, final List<? extends VersionColumn> versionColumns)
             throws SQLException {
         Objects.requireNonNull(context, "context is null");
@@ -1012,6 +1042,7 @@ final class ContextTestUtils {
         MetadataTypeTestUtils.verify(versionColumn);
     }
 
+    // -----------------------------------------------------------------------------------------------------------------
     private ContextTestUtils() {
         throw new AssertionError("instantiation is not allowed");
     }

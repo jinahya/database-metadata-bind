@@ -26,6 +26,9 @@ import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
 
+import java.util.Objects;
+import java.util.function.BiPredicate;
+
 /**
  * A entity class for binding results of the
  * {@link java.sql.DatabaseMetaData#getSuperTables(java.lang.String, java.lang.String, java.lang.String)}
@@ -49,6 +52,13 @@ public class SuperTable extends AbstractMetadataType {
     public static final String COLUMN_LABEL_TABLE_NAME = "TABLE_NAME";
 
     public static final String COLUMN_LABEL_SUPERTABLE_NAME = "SUPERTABLE_NAME";
+
+    // -----------------------------------------------------------------------------------------------------------------
+    static final BiPredicate<SuperTable, Table> IS_OF = (s, t) -> {
+        return Objects.equals(s.getTableCat(), t.getTableCat()) &&
+               Objects.equals(s.getTableSchem(), t.getTableSchem()) &&
+               Objects.equals(s.getTableName(), t.getTableName());
+    };
 
     // -------------------------------------------------------------------------------------------------------- tableCat
 

@@ -29,6 +29,7 @@ import lombok.ToString;
 
 import java.sql.DatabaseMetaData;
 import java.util.Comparator;
+import java.util.Objects;
 import java.util.Optional;
 
 import static java.util.Comparator.naturalOrder;
@@ -67,6 +68,19 @@ public class CrossReference extends AbstractMetadataType {
      * A column label of {@value}.
      */
     public static final String COLUMN_LABEL_UPDATE_RULE = "UPDATE_RULE";
+
+    // -----------------------------------------------------------------------------------------------------------------
+    boolean isOfPktable(final Table pktable) {
+        return Objects.equals(pktableCat, pktable.getTableCat()) &&
+               Objects.equals(pktableSchem, pktable.getTableSchem()) &&
+               Objects.equals(pktableName, pktable.getTableName());
+    }
+
+    boolean isOfFktable(final Table fktable) {
+        return Objects.equals(fktableCat, fktable.getTableCat()) &&
+               Objects.equals(fktableSchem, fktable.getTableSchem()) &&
+               Objects.equals(fktableName, fktable.getTableName());
+    }
 
     // ------------------------------------------------------------------------------------------------------ pkTableCat
 

@@ -20,10 +20,17 @@ package com.github.jinahya.database.metadata.bind;
  * #L%
  */
 
-import lombok.EqualsAndHashCode;
+import jakarta.validation.Valid;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
+import jakarta.xml.bind.annotation.XmlElement;
+import jakarta.xml.bind.annotation.XmlElementWrapper;
+import jakarta.xml.bind.annotation.XmlRootElement;
+import jakarta.xml.bind.annotation.XmlTransient;
+import jakarta.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
 import lombok.Getter;
-import lombok.Setter;
 
+import java.io.Serializable;
 import java.lang.invoke.MethodHandles;
 import java.sql.DatabaseMetaData;
 import java.sql.SQLException;
@@ -31,22 +38,27 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import java.util.stream.Stream;
 
-@Setter
+@XmlRootElement
 @Getter
-@EqualsAndHashCode
-public final class Metadata {
+public final class Metadata implements Serializable {
 
+    private static final long serialVersionUID = -1427536135902153234L;
+
+    // -----------------------------------------------------------------------------------------------------------------
     private static final Logger logger = Logger.getLogger(MethodHandles.lookup().lookupClass().getName());
 
+    // -----------------------------------------------------------------------------------------------------------------
     public static Metadata newInstance(final Context context) {
         final Metadata instance = new Metadata();
         try {
             context.addAttributes(null, null, "%", "%", instance.attributes);
         } catch (final SQLException sqle) {
-            logger.log(Level.SEVERE, sqle, () -> "failed to get columns");
+            logger.log(Level.SEVERE, sqle, () -> "failed to get attributes");
         }
         for (final int scope : new int[] {DatabaseMetaData.bestRowTemporary, DatabaseMetaData.bestRowTransaction,
                                           DatabaseMetaData.bestRowSession}) {
@@ -80,12 +92,12 @@ public final class Metadata {
         try {
             context.addColumnPrivileges(null, null, "%", "%", instance.columnPrivileges);
         } catch (final SQLException sqle) {
-            logger.log(Level.SEVERE, sqle, () -> "failed to get columns");
+            logger.log(Level.SEVERE, sqle, () -> "failed to get columnsPrivileges");
         }
         try {
-            context.addCrossReference(null, null, "%", null, null, "%", instance.crossReferences);
+            context.addCrossReference(null, null, "%", null, null, "%", instance.crossReference_);
         } catch (final SQLException sqle) {
-            logger.log(Level.SEVERE, sqle, () -> "failed to get columns");
+            logger.log(Level.SEVERE, sqle, () -> "failed to get crossReference");
         }
         try {
             context.addFunctions(null, null, "%", instance.functions);
@@ -111,7 +123,7 @@ public final class Metadata {
                             context.addIndexInfo(null, null, "%", unique, approximate, new ArrayList<>())
                     );
                 } catch (final SQLException sqle) {
-                    logger.log(Level.SEVERE, sqle, () -> "failed to get indexInfo");
+                    logger.log(Level.SEVERE, sqle, () -> "failed to getIndexInfo");
                 }
             }
         }
@@ -166,7 +178,7 @@ public final class Metadata {
             logger.log(Level.SEVERE, sqle, () -> "failed to get tablePrivileges");
         }
         try {
-            context.addTypeInfo(instance.typeInfo);
+            context.addTypeInfo(instance.typeInfo_);
         } catch (final SQLException sqle) {
             logger.log(Level.SEVERE, sqle, () -> "failed to get typeInfo");
         }
@@ -180,6 +192,33 @@ public final class Metadata {
         } catch (final SQLException sqle) {
             logger.log(Level.SEVERE, sqle, () -> "failed to get versionColumns");
         }
+        // -------------------------------------------------------------------------------------------------------------
+        try {
+            instance.numericFunctions.addAll(context.getNumericFunctions());
+        } catch (final SQLException sqle) {
+            logger.log(Level.SEVERE, sqle, () -> "failed to getNumericFunctions");
+        }
+        try {
+            instance.SQLKeywords.addAll(context.getSQLKeywords());
+        } catch (final SQLException sqle) {
+            logger.log(Level.SEVERE, sqle, () -> "failed to getSQLKeywords");
+        }
+        try {
+            instance.stringFunctions.addAll(context.getStringFunctions());
+        } catch (final SQLException sqle) {
+            logger.log(Level.SEVERE, sqle, () -> "failed to getStringFunctions");
+        }
+        try {
+            instance.systemFunctions.addAll(context.getSystemFunctions());
+        } catch (final SQLException sqle) {
+            logger.log(Level.SEVERE, sqle, () -> "failed to getSystemFunctions");
+        }
+        try {
+            instance.timeDateFunctions.addAll(context.getTimeDateFunctions());
+        } catch (final SQLException sqle) {
+            logger.log(Level.SEVERE, sqle, () -> "failed to getTimeDateFunctions");
+        }
+        // -------------------------------------------------------------------------------------------------------------
         return instance;
     }
 
@@ -189,55 +228,402 @@ public final class Metadata {
     }
 
     // ------------------------------------------------------------------------------------------------------ attributes
+    public Stream<Attribute> getAttributesOf(final UDT udt) {
+        Objects.requireNonNull(udt, "udt is null");
+        return getAttributes()
+                .stream()
+                .filter(v -> Attribute.IS_OF.test(v, udt));
+    }
+
+    // ---------------------------------------------------------------------------------------------- bestRowIdentifiers
+    public Stream<BestRowIdentifier> getBestRowIdentifiersOf(final int scope, final boolean nullable, final Table table,
+                                                             final Table... otherTables) {
+        Objects.requireNonNull(table, "table is null");
+        Objects.requireNonNull(otherTables, "otherTables is null");
+        return getBestRowIdentifiers()
+                .computeIfAbsent(scope, k -> new HashMap<>())
+                .computeIfAbsent(nullable, k -> new ArrayList<>())
+                .stream()
+                .filter(v -> {
+                    if (v.isOf(table)) {
+                        return true;
+                    }
+                    for (final Table otherTable : otherTables) {
+                        if (v.isOf(otherTable)) {
+                            return true;
+                        }
+                    }
+                    return false;
+                });
+    }
+
+    // -------------------------------------------------------------------------------------------------------- catalogs
+    List<Catalog> getCatalogs_() {
+        final List<Catalog> catalogs = getCatalogs();
+        if (catalogs.isEmpty()) {
+            catalogs.add(Catalog.of(null));
+        }
+        return catalogs;
+    }
+
+    // -------------------------------------------------------------------------------------------- clientInfoProperties
+    public Stream<Column> getColumnsOf(final Table table, final Table... otherTables) {
+        Objects.requireNonNull(table, "table is null");
+        Objects.requireNonNull(otherTables, "otherTables is null");
+        return getColumns()
+                .stream()
+                .filter(v -> {
+                    if (v.isOf(table)) {
+                        return true;
+                    }
+                    for (final Table otherTable : otherTables) {
+                        if (v.isOf(otherTable)) {
+                            return true;
+                        }
+                    }
+                    return false;
+                });
+    }
+    // --------------------------------------------------------------------------------------------------------- columns
+
+    // ------------------------------------------------------------------------------------------------ columnPrivileges
+    public Stream<ColumnPrivilege> getColumnPrivilegesOf(final Column column, final Column... otherColumns) {
+        return getColumnPrivileges().stream().filter(v -> {
+            if (v.isOf(column)) {
+                return true;
+            }
+            for (final Column otherColumn : otherColumns) {
+                if (v.isOf(otherColumn)) {
+                    return true;
+                }
+            }
+            return false;
+        });
+    }
+
+    // -------------------------------------------------------------------------------------------------- crossReference
+    public Stream<CrossReference> getCrossReferenceOfPktable(final Table pktable,
+                                                             final Table... otherPktables) {
+        Objects.requireNonNull(pktable, "pktable is null");
+        Objects.requireNonNull(otherPktables, "otherPktables is null");
+        return getCrossReference_().stream()
+                .filter(v -> {
+                    if (v.isOfPktable(pktable)) {
+                        return true;
+                    }
+                    for (final Table otherPktable : otherPktables) {
+                        if (v.isOfPktable(otherPktable)) {
+                            return true;
+                        }
+                    }
+                    return false;
+                });
+    }
+
+    public Stream<CrossReference> getCrossReferenceOfFktable(final Table fktable,
+                                                             final Table... otherFktables) {
+        Objects.requireNonNull(fktable, "fktable is null");
+        Objects.requireNonNull(otherFktables, "otherFktables is null");
+        return getCrossReference_().stream()
+                .filter(v -> {
+                    if (v.isOfFktable(fktable)) {
+                        return true;
+                    }
+                    for (final Table otherFktable : otherFktables) {
+                        if (v.isOfFktable(otherFktable)) {
+                            return true;
+                        }
+                    }
+                    return false;
+                });
+    }
+
+    // ----------------------------------------------------------------------------------------------------- exportedKey
+    public Stream<ExportedKey> getExportedKeysOfPktable(final Table pktable) {
+        Objects.requireNonNull(pktable, "pktable is null");
+        return getExportedKeys().stream().filter(v -> TableKey.IS_OF_PKTABLE.test(v, pktable));
+    }
+
+    public Stream<ExportedKey> getExportedKeysOfFktable(final Table fktable) {
+        Objects.requireNonNull(fktable, "fktable is null");
+        return getExportedKeys().stream().filter(v -> TableKey.IS_OF_FKTABLE.test(v, fktable));
+    }
+
+    // ------------------------------------------------------------------------------------------------------- functions
+    public Stream<Function> getFunctionsOf(final Catalog catalog) {
+        Objects.requireNonNull(catalog, "catalog is null");
+        return getFunctions().stream().filter(v -> v.isOf(catalog));
+    }
+
+    public Stream<Function> getFunctionsOf(final Schema schema) {
+        Objects.requireNonNull(schema, "schema is null");
+        return getFunctions().stream().filter(v -> v.isOf(schema));
+    }
+
+    // ------------------------------------------------------------------------------------------------- functionColumns
+    public Stream<FunctionColumn> getFunctionColumnsOf(final Function function) {
+        Objects.requireNonNull(function, "function is null");
+        return getFunctionColumns().stream().filter(v -> FunctionColumn.IS_OF.test(v, function));
+    }
+
+    // ----------------------------------------------------------------------------------------------------- importedKey
+    public Stream<ImportedKey> getImportedKeysOfPktable(final Table pktable) {
+        Objects.requireNonNull(pktable, "pktable is null");
+        return getImportedKeys().stream().filter(v -> TableKey.IS_OF_PKTABLE.test(v, pktable));
+    }
+
+    public Stream<ImportedKey> getImportedKeysOfFktable(final Table fktable) {
+        Objects.requireNonNull(fktable, "fktable is null");
+        return getImportedKeys().stream().filter(v -> TableKey.IS_OF_FKTABLE.test(v, fktable));
+    }
+
+    // ------------------------------------------------------------------------------------------------------- indexInfo
+    public Stream<IndexInfo> getIndexInfoOf(final boolean unique, final boolean approximate, final Table table) {
+        Objects.requireNonNull(table, "table is null");
+        return getIndexInfo()
+                .get(unique)
+                .get(approximate)
+                .stream()
+                .filter(v -> IndexInfo.IS_OF.test(v, table));
+    }
+
+    // ----------------------------------------------------------------------------------------------------- primaryKeys
+    public Stream<PrimaryKey> getPrimaryKeysOf(final Table table) {
+        Objects.requireNonNull(table, "table is null");
+        return getPrimaryKeys().stream().filter(v -> PrimaryKey.IS_OF.test(v, table));
+    }
+
+    // ------------------------------------------------------------------------------------------------------ procedures
+    public Stream<Procedure> getProceduresOf(final Catalog catalog) {
+        Objects.requireNonNull(catalog, "catalog is null");
+        return getProcedures().stream().filter(v -> Procedure.IS_OF_CATALOG.test(v, catalog));
+    }
+
+    public Stream<Procedure> getProceduresOf(final Schema schema) {
+        Objects.requireNonNull(schema, "schema is null");
+        return getProcedures()
+                .stream()
+                .filter(v -> Procedure.IS_OF_SCHEMA.test(v, schema));
+    }
+
+    // ------------------------------------------------------------------------------------------------ procedureColumns
+    public Stream<ProcedureColumn> getProcedureColumnsOf(final Procedure procedure) {
+        Objects.requireNonNull(procedure, "procedure is null");
+        return getProcedureColumns()
+                .stream()
+                .filter(v -> ProcedureColumn.IS_OF.test(v, procedure));
+    }
+
+    // ---------------------------------------------------------------------------------------------------- pseudoColumn
+    public Stream<PseudoColumn> getPseudoColumnsOf(final Table table) {
+        Objects.requireNonNull(table, "table is null");
+        return getPseudoColumns()
+                .stream()
+                .filter(v -> PseudoColumn.IS_OF.test(v, table));
+    }
+
+    // --------------------------------------------------------------------------------------------------------- schemas
+    List<Schema> getSchemas_() {
+        final List<Schema> schemas = getSchemas();
+        if (schemas.isEmpty()) {
+            schemas.add(Schema.of(null, null));
+        }
+        return schemas;
+    }
+
+    public Stream<Schema> getSchemasOf(final Catalog catalog) {
+        Objects.requireNonNull(catalog, "catalog is null");
+        return getSchemas().stream().filter(s -> Schema.IS_OF.test(s, catalog));
+    }
+
+    // ----------------------------------------------------------------------------------------------------- superTables
+    public Stream<SuperTable> getSuperTablesOf(final Table table) {
+        Objects.requireNonNull(table, "table is null");
+        return getSuperTables()
+                .stream()
+                .filter(v -> SuperTable.IS_OF.test(v, table));
+    }
+
+    // ------------------------------------------------------------------------------------------------------ superTypes
+    public Stream<SuperType> getSuperTypesOf(final UDT udt) {
+        Objects.requireNonNull(udt, "udt is null");
+        return getSuperTypes()
+                .stream()
+                .filter(v -> SuperType.IS_OF.test(v, udt));
+    }
+
+    // ---------------------------------------------------------------------------------------------------------- tables
+    public Stream<Table> getTablesOf(final Catalog catalog) {
+        Objects.requireNonNull(catalog, "catalog is null");
+        return getTables().stream().filter(v -> Table.IS_OF_CATALOG.test(v, catalog));
+    }
+
+    public Stream<Table> getTablesOf(final Schema schema) {
+        Objects.requireNonNull(schema, "schema is null");
+        return getTables().stream().filter(v -> Table.IS_OF_SCHEMA.test(v, schema));
+    }
+
+    // ------------------------------------------------------------------------------------------------- tablePrivileges
+    public Stream<TablePrivilege> getTablePrivilegesOf(final Table table) {
+        Objects.requireNonNull(table, "table is null");
+        return getTablePrivileges()
+                .stream()
+                .filter(v -> TablePrivilege.IS_OF.test(v, table));
+    }
+
+    // ------------------------------------------------------------------------------------------------------------ UDTs
+    public Stream<UDT> getUDTsOf(final Catalog catalog) {
+        Objects.requireNonNull(catalog, "catalog is null");
+        return getUDTs()
+                .stream()
+                .filter(v -> UDT.IS_OF_CATALOG.test(v, catalog));
+    }
+
+    public Stream<UDT> getUDTsOf(final Schema schema) {
+        Objects.requireNonNull(schema, "schema is null");
+        return getUDTs()
+                .stream()
+                .filter(v -> UDT.IS_OF_SCHEMA.test(v, schema));
+    }
+
+    // -------------------------------------------------------------------------------------------------- versionColumns
+    public Stream<VersionColumn> getVersionColumnsOf(final Table table) {
+        Objects.requireNonNull(table, "table is null");
+        return getVersionColumns()
+                .stream()
+                .filter(v -> VersionColumn.IS_OF.test(v, table));
+    }
 
     // -----------------------------------------------------------------------------------------------------------------
-    private final List<Attribute> attributes = new ArrayList<>();
+    @XmlElementWrapper
+    @XmlElement(name = "attribute")
+    private final List<@Valid @NotNull Attribute> attributes = new ArrayList<>();
 
-    private final Map<Integer, Map<Boolean, List<BestRowIdentifier>>> bestRowIdentifiers = new HashMap<>();
+    @XmlTransient
+    private final Map<
+            @NotNull Integer,
+            @NotNull Map<
+                    @NotNull Boolean,
+                    @NotNull List<@Valid @NotNull BestRowIdentifier>
+                    >
+            > bestRowIdentifiers = new HashMap<>();
 
-    private final List<Catalog> catalogs = new ArrayList<>();
+    @XmlElement
+    private final List<@Valid @NotNull Catalog> catalogs = new ArrayList<>();
 
-    private final List<ClientInfoProperty> clientInfoProperties = new ArrayList<>();
+    @XmlElementWrapper
+    @XmlElement(name = "clientInfoProperty")
+    private final List<@Valid @NotNull ClientInfoProperty> clientInfoProperties = new ArrayList<>();
 
-    private final List<Column> columns = new ArrayList<>();
+    @XmlElementWrapper
+    @XmlElement(name = "column")
+    private final List<@Valid @NotNull Column> columns = new ArrayList<>();
 
-    private final List<ColumnPrivilege> columnPrivileges = new ArrayList<>();
+    @XmlElementWrapper
+    @XmlElement(name = "columnPrivilege")
+    private final List<@Valid @NotNull ColumnPrivilege> columnPrivileges = new ArrayList<>();
 
-    private final List<CrossReference> crossReferences = new ArrayList<>();
+    @XmlElementWrapper
+    @XmlElement(name = "crossReference")
+    private final List<@Valid @NotNull CrossReference> crossReference_ = new ArrayList<>();
 
-    private final List<ExportedKey> exportedKeys = new ArrayList<>();
+    @XmlElementWrapper
+    @XmlElement(name = "exportedKey")
+    private final List<@Valid @NotNull ExportedKey> exportedKeys = new ArrayList<>();
 
-    private final List<Function> functions = new ArrayList<>();
+    @XmlElementWrapper
+    @XmlElement(name = "function")
+    private final List<@Valid @NotNull Function> functions = new ArrayList<>();
 
-    private final List<FunctionColumn> functionColumns = new ArrayList<>();
+    @XmlElementWrapper
+    @XmlElement(name = "functionColumn")
+    private final List<@Valid @NotNull FunctionColumn> functionColumns = new ArrayList<>();
 
-    private final List<ImportedKey> importedKeys = new ArrayList<>();
+    @XmlElementWrapper
+    @XmlElement(name = "importedKey")
+    private final List<@Valid @NotNull ImportedKey> importedKeys = new ArrayList<>();
 
-    private final Map<Boolean, Map<Boolean, List<IndexInfo>>> indexInfo = new HashMap<>();
+//    @XmlElementWrapper
+    @XmlElement(name = "indexInfoWrapper")
+    @XmlJavaTypeAdapter(IndexInfoAdapter.class)
+    private final Map<
+            @NotNull Boolean,
+            @NotNull Map<
+                    @NotNull Boolean,
+                    @NotNull List<@Valid @NotNull IndexInfo>
+                    >
+            > indexInfo = new HashMap<>();
 
-    private final List<PrimaryKey> primaryKeys = new ArrayList<>();
+    @XmlElementWrapper
+    @XmlElement(name = "primaryKey")
+    private final List<@Valid @NotNull PrimaryKey> primaryKeys = new ArrayList<>();
 
-    private final List<Procedure> procedures = new ArrayList<>();
+    @XmlElementWrapper
+    @XmlElement(name = "procedure")
+    private final List<@Valid @NotNull Procedure> procedures = new ArrayList<>();
 
-    private final List<ProcedureColumn> procedureColumns = new ArrayList<>();
+    @XmlElementWrapper
+    @XmlElement(name = "procedureColumn")
+    private final List<@Valid @NotNull ProcedureColumn> procedureColumns = new ArrayList<>();
 
-    private final List<PseudoColumn> pseudoColumns = new ArrayList<>();
+    @XmlElementWrapper
+    @XmlElement(name = "pseudoColumn")
+    private final List<@Valid @NotNull PseudoColumn> pseudoColumns = new ArrayList<>();
 
-    private final List<Schema> schemas = new ArrayList<>();
+    @XmlElementWrapper
+    @XmlElement(name = "schema")
+    private final List<@Valid @NotNull Schema> schemas = new ArrayList<>();
 
-    private final List<SuperTable> superTables = new ArrayList<>();
+    @XmlElementWrapper
+    @XmlElement(name = "superTable")
+    private final List<@Valid @NotNull SuperTable> superTables = new ArrayList<>();
 
-    private final List<SuperType> superTypes = new ArrayList<>();
+    @XmlElementWrapper
+    @XmlElement(name = "superType")
+    private final List<@Valid @NotNull SuperType> superTypes = new ArrayList<>();
 
-    private final List<Table> tables = new ArrayList<>();
+    @XmlElementWrapper
+    @XmlElement(name = "table")
+    private final List<@Valid @NotNull Table> tables = new ArrayList<>();
 
-    private final List<TablePrivilege> tablePrivileges = new ArrayList<>();
+    @XmlElementWrapper
+    @XmlElement(name = "tablePrivilege")
+    private final List<@Valid @NotNull TablePrivilege> tablePrivileges = new ArrayList<>();
 
-    private final List<TableType> tableTypes = new ArrayList<>();
+    @XmlElementWrapper
+    @XmlElement(name = "tableType")
+    private final List<@Valid @NotNull TableType> tableTypes = new ArrayList<>();
 
-    private final List<TypeInfo> typeInfo = new ArrayList<>();
+    @XmlElementWrapper
+    @XmlElement(name = "typeInfo")
+    private final List<@Valid @NotNull TypeInfo> typeInfo_ = new ArrayList<>();
 
-    private final List<UDT> UDTs = new ArrayList<>();
+    @XmlElementWrapper
+    @XmlElement(name = "UDT")
+    private final List<@Valid @NotNull UDT> UDTs = new ArrayList<>();
 
-    private final List<VersionColumn> versionColumns = new ArrayList<>();
+    @XmlElementWrapper
+    @XmlElement(name = "versionColumn")
+    private final List<@Valid @NotNull VersionColumn> versionColumns = new ArrayList<>();
+
+    // -----------------------------------------------------------------------------------------------------------------
+    @XmlElementWrapper
+    @XmlElement(name = "numericFunction")
+    private final List<@NotBlank String> numericFunctions = new ArrayList<>();
+
+    @XmlElementWrapper
+    @XmlElement(name = "SQLKeyword")
+    private final List<@NotBlank String> SQLKeywords = new ArrayList<>();
+
+    @XmlElementWrapper
+    @XmlElement(name = "stringFunction")
+    private final List<@NotBlank String> stringFunctions = new ArrayList<>();
+
+    @XmlElementWrapper
+    @XmlElement(name = "systemFunction")
+    private final List<@NotBlank String> systemFunctions = new ArrayList<>();
+
+    @XmlElementWrapper
+    @XmlElement(name = "timeDateFunction")
+    private final List<@NotBlank String> timeDateFunctions = new ArrayList<>();
 }

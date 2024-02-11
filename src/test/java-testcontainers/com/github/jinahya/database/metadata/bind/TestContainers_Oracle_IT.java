@@ -48,6 +48,7 @@ class TestContainers_Oracle_IT extends TestContainers_$_IT {
                 .asCompatibleSubstituteFor("gvenzl/oracle-xe");
         CONTAINER = new OracleContainer(name)
                 .withImagePullPolicy(PullPolicy.ageBased(Duration.ofDays(180L)))
+                .withStartupTimeout(Duration.ofMinutes(8L))
                 .withDatabaseName("testDB")
                 .withUsername("testUser")
                 .withPassword("testPassword");

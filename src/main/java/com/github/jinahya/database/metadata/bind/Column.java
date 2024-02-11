@@ -27,7 +27,9 @@ import lombok.ToString;
 
 import java.sql.DatabaseMetaData;
 import java.util.Comparator;
+import java.util.Objects;
 import java.util.Optional;
+import java.util.function.BiPredicate;
 
 import static java.util.Comparator.naturalOrder;
 import static java.util.Comparator.nullsFirst;
@@ -146,6 +148,20 @@ public class Column extends AbstractMetadataType {
 
     // -----------------------------------------------------------------------------------------------------------------
     public static final String COLUMN_LABEL_IS_GENERATEDCOLUMN = "IS_GENERATEDCOLUMN";
+
+    // -----------------------------------------------------------------------------------------------------------------
+    static final BiPredicate<Column, Table> IS_OF = (c, t) -> {
+        return Objects.equals(c.tableCat, t.getTableCat()) &&
+               Objects.equals(c.tableSchem, t.getTableSchem()) &&
+               Objects.equals(c.tableName, t.getTableName());
+    };
+
+    // -----------------------------------------------------------------------------------------------------------------
+    boolean isOf(final Table table) {
+        return Objects.equals(tableCat, table.getTableCat()) &&
+               Objects.equals(tableSchem, table.getTableSchem()) &&
+               Objects.equals(tableName, table.getTableName());
+    }
 
     // -------------------------------------------------------------------------------------------------------- tableCat
 

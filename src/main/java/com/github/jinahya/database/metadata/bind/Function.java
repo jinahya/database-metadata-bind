@@ -28,7 +28,9 @@ import lombok.ToString;
 
 import java.sql.DatabaseMetaData;
 import java.util.Comparator;
+import java.util.Objects;
 import java.util.Optional;
+import java.util.function.BiPredicate;
 
 import static java.util.Comparator.comparing;
 import static java.util.Comparator.naturalOrder;
@@ -126,6 +128,16 @@ public class Function extends AbstractMetadataType {
         }
 
         private final int fieldValue;
+    }
+
+    // -----------------------------------------------------------------------------------------------------------------
+    boolean isOf(final Catalog catalog) {
+        return Objects.equals(functionCat, catalog.getTableCat());
+    }
+
+    boolean isOf(final Schema schema) {
+        return Objects.equals(functionCat, schema.getTableCatalog()) &&
+               Objects.equals(functionSchem, schema.getTableSchem());
     }
 
     // ---------------------------------------------------------------------------------------------------- functionType

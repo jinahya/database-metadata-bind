@@ -27,7 +27,9 @@ import lombok.Setter;
 import lombok.ToString;
 
 import java.sql.DatabaseMetaData;
+import java.util.Objects;
 import java.util.Optional;
+import java.util.function.BiPredicate;
 
 /**
  * A class for binding results of the {@link DatabaseMetaData#getVersionColumns(String, String, String)} method.
@@ -92,6 +94,11 @@ public class VersionColumn extends AbstractMetadataType {
 
         private final int fieldValue;
     }
+
+    // -----------------------------------------------------------------------------------------------------------------
+    static final BiPredicate<VersionColumn, Table> IS_OF = (c, t) -> {
+        return Objects.equals(c.parent, t);
+    };
 
     // -----------------------------------------------------------------------------------------------------------------
     PseudoColumn getPseudoColumnAsEnum() {

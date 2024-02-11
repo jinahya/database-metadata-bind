@@ -106,10 +106,12 @@ abstract class Memory_$_Test {
     }
 
     @Test
-    void metadata() throws SQLException {
-        applyContext(c -> {
-            final var metadata = Metadata.newInstance(c);
-            return null;
-        });
+    void metadata() throws Exception {
+        final var metadata = applyContext(Metadata::newInstance);
+        MetadataTestUtils.verify(metadata);
+        metadata(metadata);
+    }
+
+    void metadata(final Metadata metadata) throws Exception {
     }
 }

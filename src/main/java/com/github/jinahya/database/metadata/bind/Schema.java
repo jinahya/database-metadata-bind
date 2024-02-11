@@ -27,6 +27,8 @@ import lombok.Setter;
 import lombok.ToString;
 
 import java.util.Comparator;
+import java.util.Objects;
+import java.util.function.BiPredicate;
 
 import static java.util.Comparator.naturalOrder;
 import static java.util.Comparator.nullsFirst;
@@ -70,6 +72,11 @@ public class Schema extends AbstractMetadataType {
      * A column label of {@value}.
      */
     public static final String COLUMN_LABEL_TABLE_SCHEM = "TABLE_SCHEM";
+
+    // -----------------------------------------------------------------------------------------------------------------
+    static final BiPredicate<Schema, Catalog> IS_OF = (s, c) -> {
+        return Objects.equals(s.tableCatalog, c.getTableCat());
+    };
 
     // -----------------------------------------------------------------------------------------------------------------
     static Schema of(final String tableCatalog, final String tableSchem) {

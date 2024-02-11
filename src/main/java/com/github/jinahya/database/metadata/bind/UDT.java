@@ -33,7 +33,9 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashSet;
+import java.util.Objects;
 import java.util.Set;
+import java.util.function.BiPredicate;
 
 import static java.util.Comparator.naturalOrder;
 import static java.util.Comparator.nullsFirst;
@@ -112,9 +114,26 @@ public class UDT extends AbstractMetadataType {
             COLUMN_VALUES_DATA_TYPE_DISTINCT
     )));
 
+    // -----------------------------------------------------------------------------------------------------------------
+    static final BiPredicate<UDT, Catalog> IS_OF_CATALOG = (t, c) -> {
+        return Objects.equals(t.typeCat, c.getTableCat());
+    };
+
+    static final BiPredicate<UDT, Schema> IS_OF_SCHEMA = (t, s) -> {
+        return Objects.equals(t.typeCat, s.getTableCatalog()) &&
+               Objects.equals(t.typeSchem, s.getTableSchem());
+    };
+
     // --------------------------------------------------------------------------------------------------------- typeCat
+    boolean isOf(final Catalog catalog) {
+        return Objects.equals(typeCat, catalog.getTableCat());
+    }
 
     // ------------------------------------------------------------------------------------------------------- typeSchem
+    boolean isOf(final Schema schema) {
+        return Objects.equals(typeCat, schema.getTableCatalog()) &&
+               Objects.equals(typeSchem, schema.getTableSchem());
+    }
 
     // -------------------------------------------------------------------------------------------------------- dataType
     @AssertTrue

@@ -29,6 +29,7 @@ import lombok.ToString;
 
 import java.sql.DatabaseMetaData;
 import java.util.Comparator;
+import java.util.Objects;
 import java.util.Optional;
 
 /**
@@ -168,6 +169,11 @@ public class BestRowIdentifier
             throw new NullPointerException("o is null");
         }
         return COMPARING_SCOPE.compare(this, o);
+    }
+
+    // -----------------------------------------------------------------------------------------------------------------
+    boolean isOf(final Table table) {
+        return Objects.equals(parent, table);
     }
 
     // ----------------------------------------------------------------------------------------------------------- scope

@@ -21,6 +21,7 @@ package com.github.jinahya.database.metadata.bind;
  */
 
 import jakarta.annotation.Nullable;
+import jakarta.xml.bind.annotation.XmlElement;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -28,6 +29,8 @@ import lombok.Setter;
 import lombok.ToString;
 
 import java.util.Comparator;
+import java.util.Objects;
+import java.util.function.BiPredicate;
 
 import static java.util.Comparator.naturalOrder;
 import static java.util.Comparator.nullsFirst;
@@ -89,6 +92,16 @@ public class Table extends AbstractMetadataType {
     public static final String COLUMN_LABEL_TABLE_TYPE = "TABLE_TYPE";
 
     // -----------------------------------------------------------------------------------------------------------------
+    static final BiPredicate<Table, Catalog> IS_OF_CATALOG = (t, c) -> {
+        return Objects.equals(t.tableCat, c.getTableCat());
+    };
+
+    static final BiPredicate<Table, Schema> IS_OF_SCHEMA = (t, s) -> {
+        return Objects.equals(t.tableCat, s.getTableCatalog()) &&
+               Objects.equals(t.tableSchem, s.getTableSchem());
+    };
+
+    // -----------------------------------------------------------------------------------------------------------------
     static Table of(final String tableCat, final String tableSchem, final String tableName) {
         final Table instance = new Table();
         instance.setTableCat(tableCat);
@@ -102,6 +115,7 @@ public class Table extends AbstractMetadataType {
     // ------------------------------------------------------------------------------------------------------- tableShem
 
     // -----------------------------------------------------------------------------------------------------------------
+    @XmlElement(nillable = true)
     @_MissingByVendor("Microsoft SQL Server") // https://github.com/microsoft/mssql-jdbc/issues/406
     @Nullable
     @_NullableBySpecification
@@ -109,6 +123,7 @@ public class Table extends AbstractMetadataType {
     @EqualsAndHashCode.Include
     private String tableCat;
 
+    @XmlElement(nillable = true)
     @_MissingByVendor("Microsoft SQL Server") // https://github.com/microsoft/mssql-jdbc/issues/406
     @Nullable
     @_NullableBySpecification

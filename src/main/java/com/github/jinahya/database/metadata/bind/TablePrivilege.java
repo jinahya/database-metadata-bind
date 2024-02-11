@@ -27,6 +27,8 @@ import lombok.Setter;
 import lombok.ToString;
 
 import java.util.Comparator;
+import java.util.Objects;
+import java.util.function.BiPredicate;
 
 import static java.util.Comparator.naturalOrder;
 import static java.util.Comparator.nullsFirst;
@@ -75,6 +77,13 @@ public class TablePrivilege extends AbstractMetadataType {
      * The column label of {@value}.
      */
     public static final String COLUMN_LABEL_TABLE_NAME = "TABLE_NAME";
+
+    // -----------------------------------------------------------------------------------------------------------------
+    static final BiPredicate<TablePrivilege, Table> IS_OF = (p, t) -> {
+        return Objects.equals(p.tableCat, t.getTableCat()) &&
+               Objects.equals(p.tableSchem, t.getTableSchem()) &&
+               Objects.equals(p.tableName, t.getTableName());
+    };
 
     // -------------------------------------------------------------------------------------------------------- tableCat
 

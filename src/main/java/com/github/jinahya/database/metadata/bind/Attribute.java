@@ -27,6 +27,8 @@ import lombok.ToString;
 
 import java.sql.DatabaseMetaData;
 import java.util.Comparator;
+import java.util.Objects;
+import java.util.function.BiPredicate;
 
 import static java.util.Comparator.naturalOrder;
 import static java.util.Comparator.nullsFirst;
@@ -121,6 +123,13 @@ public class Attribute extends AbstractMetadataType {
     public static final String COLUMN_VALUE_IS_NULLABLE_NO = "NO";
 
     public static final String COLUMN_VALUE_IS_NULLABLE_EMPTY = "";
+
+    // -----------------------------------------------------------------------------------------------------------------
+    static final BiPredicate<Attribute, UDT> IS_OF = (a, t) -> {
+        return Objects.equals(a.typeCat, t.getTypeCat()) &&
+               Objects.equals(a.typeSchem, t.getTypeSchem()) &&
+               Objects.equals(a.typeName, t.getTypeName());
+    };
 
     // -------------------------------------------------------------------------------------------------------- tableCat
 

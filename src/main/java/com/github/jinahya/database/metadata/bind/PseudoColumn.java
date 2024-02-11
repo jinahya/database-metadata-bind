@@ -28,6 +28,8 @@ import lombok.ToString;
 
 import java.sql.DatabaseMetaData;
 import java.util.Comparator;
+import java.util.Objects;
+import java.util.function.BiPredicate;
 
 import static java.util.Comparator.naturalOrder;
 import static java.util.Comparator.nullsFirst;
@@ -75,6 +77,13 @@ public class PseudoColumn extends AbstractMetadataType {
     public static final String COLUMN_VALUE_COLUMN_IS_NULLABLE_NO = "NO";
 
     public static final String COLUMN_VALUE_COLUMN_IS_NULLABLE_EMPTY = "";
+
+    // -----------------------------------------------------------------------------------------------------------------
+    static final BiPredicate<PseudoColumn, Table> IS_OF = (c, t) -> {
+        return Objects.equals(c.tableCat, t.getTableCat()) &&
+               Objects.equals(c.tableSchem, t.getTableSchem()) &&
+               Objects.equals(c.tableName, t.getTableName());
+    };
 
     // -------------------------------------------------------------------------------------------------------- tableCat
 

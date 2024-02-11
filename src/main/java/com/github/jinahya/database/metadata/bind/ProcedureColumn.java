@@ -28,6 +28,8 @@ import lombok.ToString;
 
 import java.sql.DatabaseMetaData;
 import java.util.Comparator;
+import java.util.Objects;
+import java.util.function.BiPredicate;
 
 import static java.util.Comparator.naturalOrder;
 import static java.util.Comparator.nullsFirst;
@@ -60,6 +62,13 @@ public class ProcedureColumn extends AbstractMetadataType {
                     .thenComparing(ProcedureColumn::getProcedureSchem, nullsFirst(naturalOrder()))
                     .thenComparing(ProcedureColumn::getProcedureName, nullsFirst(naturalOrder()))
                     .thenComparing(ProcedureColumn::getSpecificName, nullsFirst(naturalOrder()));
+
+    // -----------------------------------------------------------------------------------------------------------------
+    static final BiPredicate<ProcedureColumn, Procedure> IS_OF = (c, p) -> {
+        return Objects.equals(c.procedureCat, p.getProcedureCat()) &&
+               Objects.equals(c.procedureSchem, p.getProcedureSchem()) &&
+               Objects.equals(c.procedureName, p.getProcedureName());
+    };
 
     // ---------------------------------------------------------------------------------------------------- procedureCat
 
