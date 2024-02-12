@@ -61,6 +61,18 @@ final class ContextTestUtils {
         log.info("schemaTerm: {}", context.databaseMetaData.getSchemaTerm());
     }
 
+    static String name(final Context context) throws SQLException {
+        Objects.requireNonNull(context, "context is null");
+        return context.databaseMetaData.getDatabaseProductName() + '_' +
+               context.databaseMetaData.getDatabaseProductVersion() + '_' +
+               context.databaseMetaData.getDatabaseMajorVersion() + '_' +
+               context.databaseMetaData.getDatabaseMinorVersion() + '_' +
+               context.databaseMetaData.getDriverName() + '_' +
+               context.databaseMetaData.getDriverVersion() + '_' +
+               context.databaseMetaData.getDriverMajorVersion() + '_' +
+               context.databaseMetaData.getDriverMinorVersion();
+    }
+
     // -----------------------------------------------------------------------------------------------------------------
     private static String databaseProductName;
 
@@ -456,7 +468,8 @@ final class ContextTestUtils {
         Objects.requireNonNull(context, "context is null");
         Objects.requireNonNull(functions, "functions is null");
         assertThat(functions).doesNotHaveDuplicates();
-        if (!databaseProductName.equals(DatabaseProductNames.MICROSOFT_SQL_SERVER)) {
+        if (!databaseProductName.equals(DatabaseProductNames.MARIA_DB) &&
+            !databaseProductName.equals(DatabaseProductNames.MICROSOFT_SQL_SERVER)) {
             // https://github.com/microsoft/mssql-jdbc/issues/2321
             assertThat(functions).satisfiesAnyOf(
                     l -> assertThat(l).isSortedAccordingTo(Function.CASE_INSENSITIVE_ORDER),
@@ -570,6 +583,7 @@ final class ContextTestUtils {
         {
             final var databaseProductNames = Set.of(
                     DatabaseProductNames.HSQL_DATABASE_ENGINE,
+                    DatabaseProductNames.MARIA_DB,
                     // https://github.com/microsoft/mssql-jdbc/issues/2321
                     DatabaseProductNames.MICROSOFT_SQL_SERVER
             );

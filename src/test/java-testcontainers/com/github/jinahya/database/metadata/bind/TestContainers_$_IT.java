@@ -103,8 +103,18 @@ abstract class TestContainers_$_IT {
     }
 
     @Test
-    void metadata() throws SQLException {
+    void metadata() throws Exception {
         final var metadata = applyContextChecked(Metadata::newInstance);
         MetadataTestUtils.verify(metadata);
+        // -------------------------------------------------------------------------------------------------------------
+        final var name = applyContext(c -> {
+            try {
+                return ContextTestUtils.name(c);
+            } catch (final SQLException sqle) {
+                throw new RuntimeException(sqle);
+            }
+        });
+        JakartaXmlBindingTestUtils.marshal(name, metadata);
+        JakartaJsonBindingTestUtils.toJson(name, metadata);
     }
 }

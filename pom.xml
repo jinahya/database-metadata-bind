@@ -108,6 +108,12 @@
       <version>2.2.224</version>
       <scope>test</scope>
     </dependency>
+    <dependency> <!-- jakarta.xml.bind-api -->
+      <groupId>com.sun.xml.bind</groupId>
+      <artifactId>jaxb-impl</artifactId>
+      <version>${version.com.sun.xml.bind}</version>
+      <scope>test</scope>
+    </dependency>
     <dependency>
       <groupId>io.vavr</groupId>
       <artifactId>vavr</artifactId>
@@ -120,6 +126,11 @@
       <scope>provided</scope>
     </dependency>
     <dependency>
+      <groupId>jakarta.json.bind</groupId>
+      <artifactId>jakarta.json.bind-api</artifactId>
+      <scope>provided</scope>
+    </dependency>
+    <dependency>
       <groupId>jakarta.validation</groupId>
       <artifactId>jakarta.validation-api</artifactId>
       <scope>provided</scope>
@@ -128,12 +139,6 @@
       <groupId>jakarta.xml.bind</groupId>
       <artifactId>jakarta.xml.bind-api</artifactId>
       <scope>provided</scope>
-    </dependency>
-    <dependency>
-      <groupId>com.sun.xml.bind</groupId>
-      <artifactId>jaxb-impl</artifactId>
-      <version>${version.com.sun.xml.bind}</version>
-      <scope>test</scope>
     </dependency>
     <dependency>
       <groupId>nl.jqno.equalsverifier</groupId>
@@ -176,6 +181,11 @@
       <artifactId>animal-sniffer-annotations</artifactId>
       <version>${version.animal-sniffer}</version>
       <scope>provided</scope>
+    </dependency>
+    <dependency> <!-- jakarta.json.bind-api -->
+      <groupId>org.eclipse</groupId>
+      <artifactId>yasson</artifactId>
+      <version>3.0.3</version>
     </dependency>
     <dependency>
       <groupId>org.glassfish.expressly</groupId>

@@ -21,6 +21,8 @@ package com.github.jinahya.database.metadata.bind;
  */
 
 import jakarta.annotation.Nullable;
+import jakarta.xml.bind.annotation.XmlElement;
+import jakarta.xml.bind.annotation.XmlRootElement;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.Setter;
@@ -41,6 +43,7 @@ import static java.util.Comparator.nullsFirst;
  * @author Jin Kwon &lt;jinahya_at_gmail.com&gt;
  * @see Context#getColumnPrivileges(String, String, String, String)
  */
+@XmlRootElement
 @Setter
 @Getter
 @EqualsAndHashCode(callSuper = true)
@@ -139,12 +142,14 @@ public class ColumnPrivilege extends AbstractMetadataType {
     }
 
     // -----------------------------------------------------------------------------------------------------------------
+    @XmlElement(nillable = true)
     @Nullable
     @_NullableBySpecification
     @_ColumnLabel(COLUMN_LABEL_TABLE_CAT)
     @EqualsAndHashCode.Include
     private String tableCat;
 
+    @XmlElement(nillable = true)
     @Nullable
     @_NullableBySpecification
     @_ColumnLabel(COLUMN_LABEL_TABLE_SCHEM)
@@ -160,6 +165,7 @@ public class ColumnPrivilege extends AbstractMetadataType {
     private String columnName;
 
     // -----------------------------------------------------------------------------------------------------------------
+    @XmlElement(nillable = true)
     @Nullable
     @_NullableBySpecification
     @_ColumnLabel("GRANTOR")
@@ -174,6 +180,7 @@ public class ColumnPrivilege extends AbstractMetadataType {
     @EqualsAndHashCode.Include
     private String privilege;
 
+    @XmlElement(nillable = true)
     @Nullable
     @_NullableBySpecification
     @_ColumnLabel(COLUMN_LABEL_IS_GRANTABLE)

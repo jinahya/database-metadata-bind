@@ -61,5 +61,8 @@ $ mvn -Pfailsafe \
 ----
 ## Links
 
+### Docker
+* [Running Oracle XE with TestContainers on Apple Silicon](https://blog.jdriven.com/2022/07/running-oracle-xe-with-testcontainers-on-apple-silicon/)
+
 ### MariaDB
 * [getTables should be ordered as expected](https://jira.mariadb.org/browse/CONJ-1156)

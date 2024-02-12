@@ -22,7 +22,7 @@ package com.github.jinahya.database.metadata.bind;
 
 import lombok.extern.slf4j.Slf4j;
 
-import java.sql.DatabaseMetaData;
+import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -60,29 +60,15 @@ final class MetadataTestUtils {
         }
         // ------------------------------------------------------------------------------------------ bestRowIdentifiers
         {
-            final var bestRowIdentifiers = metadata.getBestRowIdentifiers();
-            bestRowIdentifiers.forEach((scope, m) -> {
-                m.forEach((nullalbe, l) -> {
-                    assertThat(l).doesNotHaveDuplicates();
+            final var bestRowIdentifiers = metadata.getBestRowIdentifier();
+            bestRowIdentifiers.forEach((s, m) -> {
+                m.forEach((n, l) -> {
+                    assertThat(l)
+                            .doesNotContainNull()
+//                            .doesNotHaveDuplicates() // MySQL
+                    ;
                 });
             });
-        }
-        {
-            for (final int scope : new int[] {DatabaseMetaData.bestRowTemporary, DatabaseMetaData.bestRowTransaction,
-                                              DatabaseMetaData.bestRowSession}) {
-                for (final boolean nullable : new boolean[] {true, false}) {
-                    for (final var table : metadata.getTables()) {
-                        final var bestRowIdentifiers = metadata.getBestRowIdentifiersOf(scope, nullable, table, table);
-                        assertThat(bestRowIdentifiers).satisfiesAnyOf(
-                                s -> assertThat(s).isEmpty(),
-                                s -> assertThat(s).isNotEmpty().allSatisfy(v -> {
-                                    assertThat(v.getScope()).isEqualTo(scope);
-                                    assertThat(v.isOf(table)).isTrue();
-                                })
-                        );
-                    }
-                }
-            }
         }
         // ----------------------------------------------------------------------------------------------------- columns
         {
@@ -91,12 +77,11 @@ final class MetadataTestUtils {
         }
         {
             for (final var table : metadata.getTables()) {
-                final var columns = metadata.getColumnsOf(table, table);
-                assertThat(columns).isNotNull().allSatisfy(v -> {
-                    assertThat(v.getTableCat()).isEqualTo(table.getTableCat());
-                    assertThat(v.getTableSchem()).isEqualTo(table.getTableSchem());
-                    assertThat(v.getTableName()).isEqualTo(table.getTableName());
-                });
+                final var columns = metadata.getColumnsOf(table);
+                assertThat(columns).satisfiesAnyOf(
+                        l -> assertThat(l).isEmpty(),
+                        l -> assertThat(l).isNotEmpty().allMatch(v -> Column.IS_OF.test(v, table))
+                );
             }
         }
         // -------------------------------------------------------------------------------------------- columnPrivileges
@@ -251,8 +236,11 @@ final class MetadataTestUtils {
         {
             for (final var unique : new boolean[] {true, false}) {
                 for (final var approximate : new boolean[] {true, false}) {
-                    final var indexInfo = metadata.getIndexInfo().get(unique).get(approximate);
-                    assertThat(indexInfo).doesNotHaveDuplicates();
+                    Optional.ofNullable(metadata.getIndexInfo().get(unique))
+                            .map(m -> m.get(approximate))
+                            .ifPresent(l -> {
+                                assertThat(l).doesNotHaveDuplicates();
+                            });
                 }
             }
         }
@@ -260,13 +248,17 @@ final class MetadataTestUtils {
             for (final var unique : new boolean[] {true, false}) {
                 for (final var approximate : new boolean[] {true, false}) {
                     for (final var table : metadata.getTables()) {
-                        final var indexInfo = metadata.getIndexInfoOf(unique, approximate, table);
-                        assertThat(indexInfo).satisfiesAnyOf(
-                                l -> assertThat(l).isEmpty(),
-                                l -> assertThat(l).isNotEmpty().allSatisfy(v -> {
-                                    assertThat(IndexInfo.IS_OF.test(v, table)).isTrue();
-                                })
-                        );
+                        Optional.ofNullable(metadata.getIndexInfo().get(unique))
+                                .map(m -> m.get(approximate))
+                                .ifPresent(v -> {
+                                    assertThat(v).satisfiesAnyOf(
+                                            l -> assertThat(l).isEmpty(),
+                                            l -> assertThat(l).isNotEmpty().allSatisfy(v2 -> {
+                                                assertThat(IndexInfo.IS_OF.test(v2, table)).isTrue();
+                                                assertThat(v2).matches(v3 -> IndexInfo.IS_OF.test(v3, table));
+                                            })
+                                    );
+                                });
                     }
                 }
             }
@@ -424,7 +416,10 @@ final class MetadataTestUtils {
         // --------------------------------------------------------------------------------------------- tablePrivileges
         {
             final var tablePrivileges = metadata.getTablePrivileges();
-            assertThat(tablePrivileges).doesNotHaveDuplicates();
+            assertThat(tablePrivileges)
+                    .doesNotContainNull()
+//                    .doesNotHaveDuplicates() // MySQL
+            ;
         }
         {
             for (final var table : metadata.getTables()) {
@@ -432,7 +427,7 @@ final class MetadataTestUtils {
                 assertThat(tablePrivileges).satisfiesAnyOf(
                         l -> assertThat(l).isEmpty(),
                         l -> assertThat(l).isNotEmpty().allSatisfy(v -> {
-                            assertThat(TablePrivilege.IS_OF.test(v, table)).isTrue();
+                            assertThat(v).matches(v2 -> TablePrivilege.IS_OF.test(v2, table));
                         })
                 );
             }

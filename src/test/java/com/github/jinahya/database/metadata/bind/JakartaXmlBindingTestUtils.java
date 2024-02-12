@@ -9,13 +9,13 @@ import java.nio.charset.StandardCharsets;
 
 final class JakartaXmlBindingTestUtils {
 
-    static <T> void marshal(final String jdbcUrl, final Class<T> classToBeBound, final T jaxbElement) throws Exception {
-        final var jaxbContext = JAXBContext.newInstance(classToBeBound);
+    static <T> void marshal(final String name, final Object value) throws Exception {
+        final var jaxbContext = JAXBContext.newInstance("com.github.jinahya.database.metadata.bind");
         final var marshaller = jaxbContext.createMarshaller();
         marshaller.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, Boolean.TRUE);
-        final var encoded = URLEncoder.encode(jdbcUrl, StandardCharsets.US_ASCII);
+        final var encoded = URLEncoder.encode(name, StandardCharsets.US_ASCII);
         final var output = new File(new File(".", "target"), encoded + ".xml");
-        marshaller.marshal(jaxbElement, output);
+        marshaller.marshal(value, output);
     }
 
     private JakartaXmlBindingTestUtils() {

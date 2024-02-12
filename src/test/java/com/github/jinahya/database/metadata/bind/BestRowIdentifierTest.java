@@ -20,6 +20,7 @@ package com.github.jinahya.database.metadata.bind;
  * #L%
  */
 
+import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
@@ -35,6 +36,7 @@ import static org.mockito.Mockito.verify;
  *
  * @author Jin Kwon &lt;onacit_at_gmail.com&gt;
  */
+@Slf4j
 class BestRowIdentifierTest extends AbstractMetadataTypeTest<BestRowIdentifier> {
 
     BestRowIdentifierTest() {
@@ -117,6 +119,47 @@ class BestRowIdentifierTest extends AbstractMetadataTypeTest<BestRowIdentifier> 
             final var spy = newTypeSpy();
             spy.setScopeAsEnum(scopeAsEnum);
             verify(spy, times(1)).setScope(scopeAsEnum.fieldValueAsInt());
+        }
+    }
+
+
+    @Nested
+    class EqualsTest {
+
+        @Test
+        void __() {
+            /**
+             * BestRowIdentifier(super=AbstractMetadataType(super=com.github.jinahya.database.metadata.bind.BestRowIdentifier@f5b2bd66, unmappedValues={}),
+             *     parent=Table(super=AbstractMetadataType(super=com.github.jinahya.database.metadata.bind.Table@c34c60c9, unmappedValues={}),
+             *         tableCat=null,829
+             *         tableSchem=null,
+             *         tableName=replication_asynchronous_connection_failover,
+             *         tableType=null, remarks=null, typeCat=null, typeSchem=null, typeName=null, selfReferencingColName=null, refGeneration=null),
+             *     scope=2,
+             *     columnName=Channel_name,
+             *     dataType=1, typeName=char, columnSize=64, bufferLength=null, decimalDigits=0, pseudoColumn=1),
+             *
+             * BestRowIdentifier(super=AbstractMetadataType(super=com.github.jinahya.database.metadata.bind.BestRowIdentifier@f0e272c7, unmappedValues={}),
+             *     parent=Table(super=AbstractMetadataType(super=com.github.jinahya.database.metadata.bind.Table@c34c60c9, unmappedValues={}), tableCat=null, tableSchem=null,
+             *         tableName=replication_asynchronous_connection_failover,
+             *         tableType=null, remarks=null, typeCat=null, typeSchem=null, typeName=null, selfReferencingColName=null, refGeneration=null),
+             *     scope=2,
+             *     columnName=Host,
+             *     dataType=1, typeName=char, columnSize=255, bufferLength=null, decimalDigits=0, pseudoColumn=1),
+             */
+            final var v1 = new BestRowIdentifier();
+            v1.setParent(Table.of(null, null, "replication_asynchronous_connection_failover"));
+            v1.setScope(2);
+            v1.setColumnName("Channel_name");
+            log.debug("v1.hashCode: {}", v1.hashCode());
+
+            final var v2 = new BestRowIdentifier();
+            v2.setParent(Table.of(null, null, "replication_asynchronous_connection_failover"));
+            v2.setScope(2);
+            v2.setColumnName("Host");
+            log.debug("v2.hashCode: {}", v2.hashCode());
+
+            assertThat(v1).isNotEqualTo(v2);
         }
     }
 }

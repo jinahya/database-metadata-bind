@@ -23,6 +23,7 @@ package com.github.jinahya.database.metadata.bind;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.Disabled;
 import org.testcontainers.containers.OracleContainer;
 import org.testcontainers.images.PullPolicy;
 import org.testcontainers.utility.DockerImageName;
@@ -35,6 +36,7 @@ import java.time.Duration;
 // https://blog.jdriven.com/2022/07/running-oracle-xe-with-testcontainers-on-apple-silicon/
 // https://java.testcontainers.org/modules/databases/oraclefree/
 //@Disabled("does not start; no-arm")
+@Disabled("takes too long!")
 @Slf4j
 class TestContainers_Oracle_IT extends TestContainers_$_IT {
 

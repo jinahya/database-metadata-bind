@@ -20,15 +20,16 @@ package com.github.jinahya.database.metadata.bind;
  * #L%
  */
 
+import jakarta.xml.bind.annotation.XmlRootElement;
 import lombok.AccessLevel;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
 
+import java.util.ArrayList;
 import java.util.Comparator;
-import java.util.Set;
-import java.util.TreeSet;
+import java.util.List;
 import java.util.function.Consumer;
 
 import static java.util.Comparator.naturalOrder;
@@ -40,6 +41,7 @@ import static java.util.Comparator.nullsFirst;
  * @author Jin Kwon &lt;jinahya_at_gmail.com&gt;
  * @see Context#acceptCatalogs(Consumer)
  */
+@XmlRootElement
 @Setter
 @Getter
 @ToString(callSuper = true)
@@ -84,5 +86,5 @@ public class Catalog extends AbstractMetadataType {
     @Getter(AccessLevel.PACKAGE)
     @EqualsAndHashCode.Exclude
     @ToString.Exclude
-    private final Set<Schema> schemas = new TreeSet<>();
+    private final List<Schema> schemas = new ArrayList<>();
 }

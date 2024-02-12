@@ -22,6 +22,7 @@ package com.github.jinahya.database.metadata.bind;
 
 import jakarta.annotation.Nullable;
 import jakarta.validation.constraints.Positive;
+import jakarta.xml.bind.annotation.XmlRootElement;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.Setter;
@@ -41,6 +42,7 @@ import static java.util.Comparator.nullsFirst;
  *
  * @author Jin Kwon &lt;jinahya_at_gmail.com&gt;
  */
+@XmlRootElement
 @Setter
 @Getter
 @ToString(callSuper = true)

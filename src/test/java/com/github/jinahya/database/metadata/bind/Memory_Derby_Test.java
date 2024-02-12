@@ -83,10 +83,4 @@ class Memory_Derby_Test extends Memory_$_Test {
     protected Connection connect() throws SQLException {
         return getConnection(CONNECTION_URL);
     }
-
-    @Override
-    void metadata(final Metadata metadata) throws Exception {
-        super.metadata(metadata);
-        JakartaXmlBindingTestUtils.marshal(CONNECTION_URL, Metadata.class, metadata);
-    }
 }

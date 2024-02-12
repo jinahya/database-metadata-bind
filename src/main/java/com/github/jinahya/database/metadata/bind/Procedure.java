@@ -23,7 +23,6 @@ package com.github.jinahya.database.metadata.bind;
 import jakarta.annotation.Nullable;
 import jakarta.xml.bind.annotation.XmlElement;
 import jakarta.xml.bind.annotation.XmlRootElement;
-import jakarta.xml.bind.annotation.XmlType;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.Setter;
@@ -46,7 +45,7 @@ import static java.util.Comparator.nullsFirst;
  * @see Context#getFunctionColumns(String, String, String, String)
  * @see ProcedureColumn
  */
-//@XmlRootElement(name = "xxx")
+@XmlRootElement
 //@XmlType(name = "xxx")
 @Setter
 @Getter

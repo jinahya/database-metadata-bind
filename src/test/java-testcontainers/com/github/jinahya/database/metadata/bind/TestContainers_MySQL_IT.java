@@ -61,6 +61,7 @@ class TestContainers_MySQL_IT extends TestContainers_$_IT {
         final var url = CONTAINER.getJdbcUrl();
         final var user = CONTAINER.getUsername();
         final var password = CONTAINER.getPassword();
-        return DriverManager.getConnection(url, user, password);
+//        return DriverManager.getConnection(url, user, password);
+        return DriverManager.getConnection(url, "root", "test");
     }
 }

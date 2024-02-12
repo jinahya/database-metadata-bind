@@ -20,29 +20,34 @@ package com.github.jinahya.database.metadata.bind;
  * #L%
  */
 
+import jakarta.json.bind.annotation.JsonbTypeAdapter;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import jakarta.xml.bind.annotation.XmlElement;
+import jakarta.xml.bind.annotation.XmlElementRef;
 import jakarta.xml.bind.annotation.XmlElementWrapper;
 import jakarta.xml.bind.annotation.XmlRootElement;
-import jakarta.xml.bind.annotation.XmlTransient;
 import jakarta.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
 import lombok.Getter;
 
 import java.io.Serializable;
 import java.lang.invoke.MethodHandles;
-import java.sql.DatabaseMetaData;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
+import java.util.Optional;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.stream.Stream;
 
+//@XmlSeeAlso({
+//        Catalog.class
+//})
 @XmlRootElement
 @Getter
 public final class Metadata implements Serializable {
@@ -55,73 +60,87 @@ public final class Metadata implements Serializable {
     // -----------------------------------------------------------------------------------------------------------------
     public static Metadata newInstance(final Context context) {
         final Metadata instance = new Metadata();
+        // -------------------------------------------------------------------------------------------------- attributes
         try {
             context.addAttributes(null, null, "%", "%", instance.attributes);
         } catch (final SQLException sqle) {
             logger.log(Level.SEVERE, sqle, () -> "failed to get attributes");
         }
-        for (final int scope : new int[] {DatabaseMetaData.bestRowTemporary, DatabaseMetaData.bestRowTransaction,
-                                          DatabaseMetaData.bestRowSession}) {
-            instance.bestRowIdentifiers.put(scope, new HashMap<>());
+        // ------------------------------------------------------------------------------------------- bestRowIdentifier
+        for (final BestRowIdentifier.Scope scope : BestRowIdentifier.Scope.values()) {
             for (final boolean nullable : new boolean[] {true, false}) {
                 try {
-                    instance.getBestRowIdentifiers().get(scope).put(
-                            nullable,
-                            context.addBestRowIdentifier(null, null, "%", scope, nullable, new ArrayList<>())
-                    );
+                    final List<BestRowIdentifier> bestRowIdentifier =
+                            context.getBestRowIdentifier(null, null, "%", scope.fieldValueAsInt(), nullable);
+                    instance.getBestRowIdentifier()
+                            .computeIfAbsent(scope.fieldValueAsInt(), k -> new HashMap<>())
+                            .computeIfAbsent(nullable, k -> new ArrayList<>())
+                            .addAll(bestRowIdentifier);
                 } catch (final SQLException sqle) {
-                    logger.log(Level.SEVERE, sqle, () -> "failed to get bestRowIdentifiers");
+                    logger.log(Level.SEVERE, sqle, () -> String.format(
+                            "failed to getBestRowIdentifier(null, null, \"%%\", %1$d, %2$b", scope.fieldValueAsInt(),
+                            nullable));
                 }
             }
         }
+
+        // ---------------------------------------------------------------------------------------------------- catalogs
         try {
             context.addCatalogs(instance.catalogs);
         } catch (final SQLException sqle) {
             logger.log(Level.SEVERE, sqle, () -> "failed to get catalogs");
         }
+        // ---------------------------------------------------------------------------------------- clientInfoProperties
         try {
             context.addClientInfoProperties(instance.clientInfoProperties);
         } catch (final SQLException sqle) {
             logger.log(Level.SEVERE, sqle, () -> "failed to get clientInfoProperties");
         }
+        // ----------------------------------------------------------------------------------------------------- columns
         try {
             context.addColumns(null, null, "%", "%", instance.columns);
         } catch (final SQLException sqle) {
             logger.log(Level.SEVERE, sqle, () -> "failed to get columns");
         }
+        // -------------------------------------------------------------------------------------------- columnPrivileges
         try {
             context.addColumnPrivileges(null, null, "%", "%", instance.columnPrivileges);
         } catch (final SQLException sqle) {
             logger.log(Level.SEVERE, sqle, () -> "failed to get columnsPrivileges");
         }
+        // ---------------------------------------------------------------------------------------------- crossReference
         try {
             context.addCrossReference(null, null, "%", null, null, "%", instance.crossReference_);
         } catch (final SQLException sqle) {
             logger.log(Level.SEVERE, sqle, () -> "failed to get crossReference");
         }
+        // --------------------------------------------------------------------------------------------------- functions
         try {
             context.addFunctions(null, null, "%", instance.functions);
         } catch (final SQLException sqle) {
             logger.log(Level.SEVERE, sqle, () -> "failed to get exportedKeys");
         }
+        // --------------------------------------------------------------------------------------------- functionColumns
         try {
             context.addFunctionColumns(null, null, "%", "%", instance.functionColumns);
         } catch (final SQLException sqle) {
             logger.log(Level.SEVERE, sqle, () -> "failed to get functionColumns");
         }
+        // ------------------------------------------------------------------------------------------------ importedKeys
         try {
             context.addImportedKeys(null, null, "%", instance.importedKeys);
         } catch (final SQLException sqle) {
             logger.log(Level.SEVERE, sqle, () -> "failed to get importedKeys");
         }
+        // --------------------------------------------------------------------------------------------------- indexInfo
         for (final boolean unique : new boolean[] {true, false}) {
-            instance.indexInfo.put(unique, new HashMap<>());
             for (final boolean approximate : new boolean[] {true, false}) {
                 try {
-                    instance.indexInfo.get(unique).put(
-                            approximate,
-                            context.addIndexInfo(null, null, "%", unique, approximate, new ArrayList<>())
-                    );
+                    final List<IndexInfo> indexInfo = context.getIndexInfo(null, null, "%", unique, approximate);
+                    instance.indexInfo
+                            .computeIfAbsent(unique, k -> new HashMap<>())
+                            .computeIfAbsent(approximate, k -> new ArrayList<>())
+                            .addAll(indexInfo);
                 } catch (final SQLException sqle) {
                     logger.log(Level.SEVERE, sqle, () -> "failed to getIndexInfo");
                 }
@@ -162,11 +181,13 @@ public final class Metadata implements Serializable {
         } catch (final SQLException sqle) {
             logger.log(Level.SEVERE, sqle, () -> "failed to get superTypes");
         }
+        // ------------------------------------------------------------------------------------------------------ tables
         try {
             context.addTables(null, null, "%", null, instance.tables);
         } catch (final SQLException sqle) {
             logger.log(Level.SEVERE, sqle, () -> "failed to get tables");
         }
+        // --------------------------------------------------------------------------------------------- tablePrivileges
         try {
             context.addTablePrivileges(null, null, "%", instance.tablePrivileges);
         } catch (final SQLException sqle) {
@@ -235,26 +256,15 @@ public final class Metadata implements Serializable {
                 .filter(v -> Attribute.IS_OF.test(v, udt));
     }
 
-    // ---------------------------------------------------------------------------------------------- bestRowIdentifiers
-    public Stream<BestRowIdentifier> getBestRowIdentifiersOf(final int scope, final boolean nullable, final Table table,
-                                                             final Table... otherTables) {
+    // ----------------------------------------------------------------------------------------------- bestRowIdentifier
+    public Stream<BestRowIdentifier> getBestRowIdentifierOf(final int scope, final boolean nullable,
+                                                            final Table table) {
         Objects.requireNonNull(table, "table is null");
-        Objects.requireNonNull(otherTables, "otherTables is null");
-        return getBestRowIdentifiers()
-                .computeIfAbsent(scope, k -> new HashMap<>())
-                .computeIfAbsent(nullable, k -> new ArrayList<>())
+        return Optional.ofNullable(getBestRowIdentifier().get(scope))
+                .map(m -> m.get(nullable))
+                .orElseGet(Collections::emptyList)
                 .stream()
-                .filter(v -> {
-                    if (v.isOf(table)) {
-                        return true;
-                    }
-                    for (final Table otherTable : otherTables) {
-                        if (v.isOf(otherTable)) {
-                            return true;
-                        }
-                    }
-                    return false;
-                });
+                .filter(v -> BestRowIdentifier.IS_OF.test(v, table));
     }
 
     // -------------------------------------------------------------------------------------------------------- catalogs
@@ -267,22 +277,11 @@ public final class Metadata implements Serializable {
     }
 
     // -------------------------------------------------------------------------------------------- clientInfoProperties
-    public Stream<Column> getColumnsOf(final Table table, final Table... otherTables) {
+    public Stream<Column> getColumnsOf(final Table table) {
         Objects.requireNonNull(table, "table is null");
-        Objects.requireNonNull(otherTables, "otherTables is null");
         return getColumns()
                 .stream()
-                .filter(v -> {
-                    if (v.isOf(table)) {
-                        return true;
-                    }
-                    for (final Table otherTable : otherTables) {
-                        if (v.isOf(otherTable)) {
-                            return true;
-                        }
-                    }
-                    return false;
-                });
+                .filter(v -> Column.IS_OF.test(v, table));
     }
     // --------------------------------------------------------------------------------------------------------- columns
 
@@ -380,9 +379,8 @@ public final class Metadata implements Serializable {
     // ------------------------------------------------------------------------------------------------------- indexInfo
     public Stream<IndexInfo> getIndexInfoOf(final boolean unique, final boolean approximate, final Table table) {
         Objects.requireNonNull(table, "table is null");
-        return getIndexInfo()
-                .get(unique)
-                .get(approximate)
+        return Optional.ofNullable(getIndexInfo().get(unique)).map(m -> m.get(approximate))
+                .orElseGet(Collections::emptyList)
                 .stream()
                 .filter(v -> IndexInfo.IS_OF.test(v, table));
     }
@@ -496,54 +494,57 @@ public final class Metadata implements Serializable {
 
     // -----------------------------------------------------------------------------------------------------------------
     @XmlElementWrapper
-    @XmlElement(name = "attribute")
+    @XmlElementRef
     private final List<@Valid @NotNull Attribute> attributes = new ArrayList<>();
 
-    @XmlTransient
+    @JsonbTypeAdapter(BestRowIdentifierJsonAdapter.class)
+    @XmlJavaTypeAdapter(BestRowIdentifierXmlAdapter.class)
+    @XmlElement(name = "bestRowIdentifierWrapperList")
     private final Map<
             @NotNull Integer,
             @NotNull Map<
                     @NotNull Boolean,
                     @NotNull List<@Valid @NotNull BestRowIdentifier>
                     >
-            > bestRowIdentifiers = new HashMap<>();
+            > bestRowIdentifier = new HashMap<>();
 
-    @XmlElement
+    @XmlElementWrapper
+    @XmlElementRef
     private final List<@Valid @NotNull Catalog> catalogs = new ArrayList<>();
 
     @XmlElementWrapper
-    @XmlElement(name = "clientInfoProperty")
+    @XmlElementRef
     private final List<@Valid @NotNull ClientInfoProperty> clientInfoProperties = new ArrayList<>();
 
     @XmlElementWrapper
-    @XmlElement(name = "column")
+    @XmlElementRef
     private final List<@Valid @NotNull Column> columns = new ArrayList<>();
 
     @XmlElementWrapper
-    @XmlElement(name = "columnPrivilege")
+    @XmlElementRef
     private final List<@Valid @NotNull ColumnPrivilege> columnPrivileges = new ArrayList<>();
 
     @XmlElementWrapper
-    @XmlElement(name = "crossReference")
+    @XmlElementRef
     private final List<@Valid @NotNull CrossReference> crossReference_ = new ArrayList<>();
 
     @XmlElementWrapper
-    @XmlElement(name = "exportedKey")
+    @XmlElementRef
     private final List<@Valid @NotNull ExportedKey> exportedKeys = new ArrayList<>();
 
     @XmlElementWrapper
-    @XmlElement(name = "function")
+    @XmlElementRef
     private final List<@Valid @NotNull Function> functions = new ArrayList<>();
 
     @XmlElementWrapper
-    @XmlElement(name = "functionColumn")
+    @XmlElementRef
     private final List<@Valid @NotNull FunctionColumn> functionColumns = new ArrayList<>();
 
     @XmlElementWrapper
-    @XmlElement(name = "importedKey")
+    @XmlElementRef
     private final List<@Valid @NotNull ImportedKey> importedKeys = new ArrayList<>();
 
-//    @XmlElementWrapper
+    //    @XmlElementWrapper
     @XmlElement(name = "indexInfoWrapper")
     @XmlJavaTypeAdapter(IndexInfoAdapter.class)
     private final Map<
@@ -555,55 +556,55 @@ public final class Metadata implements Serializable {
             > indexInfo = new HashMap<>();
 
     @XmlElementWrapper
-    @XmlElement(name = "primaryKey")
+    @XmlElementRef
     private final List<@Valid @NotNull PrimaryKey> primaryKeys = new ArrayList<>();
 
     @XmlElementWrapper
-    @XmlElement(name = "procedure")
+    @XmlElementRef
     private final List<@Valid @NotNull Procedure> procedures = new ArrayList<>();
 
     @XmlElementWrapper
-    @XmlElement(name = "procedureColumn")
+    @XmlElementRef
     private final List<@Valid @NotNull ProcedureColumn> procedureColumns = new ArrayList<>();
 
     @XmlElementWrapper
-    @XmlElement(name = "pseudoColumn")
+    @XmlElementRef
     private final List<@Valid @NotNull PseudoColumn> pseudoColumns = new ArrayList<>();
 
     @XmlElementWrapper
-    @XmlElement(name = "schema")
+    @XmlElementRef
     private final List<@Valid @NotNull Schema> schemas = new ArrayList<>();
 
     @XmlElementWrapper
-    @XmlElement(name = "superTable")
+    @XmlElementRef
     private final List<@Valid @NotNull SuperTable> superTables = new ArrayList<>();
 
     @XmlElementWrapper
-    @XmlElement(name = "superType")
+    @XmlElementRef
     private final List<@Valid @NotNull SuperType> superTypes = new ArrayList<>();
 
     @XmlElementWrapper
-    @XmlElement(name = "table")
+    @XmlElementRef
     private final List<@Valid @NotNull Table> tables = new ArrayList<>();
 
     @XmlElementWrapper
-    @XmlElement(name = "tablePrivilege")
+    @XmlElementRef
     private final List<@Valid @NotNull TablePrivilege> tablePrivileges = new ArrayList<>();
 
     @XmlElementWrapper
-    @XmlElement(name = "tableType")
+    @XmlElementRef
     private final List<@Valid @NotNull TableType> tableTypes = new ArrayList<>();
 
     @XmlElementWrapper
-    @XmlElement(name = "typeInfo")
+    @XmlElementRef
     private final List<@Valid @NotNull TypeInfo> typeInfo_ = new ArrayList<>();
 
     @XmlElementWrapper
-    @XmlElement(name = "UDT")
+    @XmlElementRef
     private final List<@Valid @NotNull UDT> UDTs = new ArrayList<>();
 
     @XmlElementWrapper
-    @XmlElement(name = "versionColumn")
+    @XmlElementRef
     private final List<@Valid @NotNull VersionColumn> versionColumns = new ArrayList<>();
 
     // -----------------------------------------------------------------------------------------------------------------

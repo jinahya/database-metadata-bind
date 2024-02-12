@@ -1181,7 +1181,11 @@ public class Context {
         Objects.requireNonNull(consumer, "consumer is null");
         try (ResultSet results = databaseMetaData.getSchemas()) {
             assert results != null;
-            acceptBound(results, Schema.class, consumer);
+            acceptBound(results, Schema.class, v -> {
+                assert v.getTableSchem() != null;
+                assert !v.getTableSchem().isEmpty();
+                consumer.accept(v);
+            });
         }
     }
 
@@ -1536,7 +1540,38 @@ public class Context {
         Objects.requireNonNull(consumer, "consumer is null");
         try (ResultSet results = databaseMetaData.getTables(catalog, schemaPattern, tableNamePattern, types)) {
             assert results != null;
-            acceptBound(results, Table.class, consumer);
+            acceptBound(results, Table.class, v -> {
+                assert v.getTableName() != null;
+                assert !v.getTableName().isEmpty();
+                consumer.accept(v);
+//                // ----------------------------------------------------------------------------------- bestRowIdentifier
+//                for (final BestRowIdentifier.Scope scope : BestRowIdentifier.Scope.values()) {
+//                    for (final boolean nullable : new boolean[] {true, false}) {
+//                        try {
+//                            final List<BestRowIdentifier> bestRowIdentifier = getBestRowIdentifier(
+//                                    v.getTableCat(), v.getTypeSchem(), v.getTableName(), scope.fieldValueAsInt(),
+//                                    nullable);
+//                            v.getBestRowIdentifier()
+//                                    .computeIfAbsent(scope.fieldValueAsInt(), k -> new HashMap<>())
+//                                    .computeIfAbsent(nullable, k -> new ArrayList<>())
+//                                    .addAll(bestRowIdentifier);
+//                        } catch (final SQLException sqle) {
+//                            log.log(Level.WARNING, sqle, () -> String.format(
+//                                    "failed to getBestRowIdentifier(%1$s, %2$s, %3$s, \"%%\", %4$d, %5$b",
+//                                    v.getTableCat(), v.getTableSchem(), v.getTableName(), scope, nullable));
+//                        }
+//                    }
+//                    // -------------------------------------------------------------------------------- columnPrivileges
+//                    try {
+//                        addColumnPrivileges(v.getTableCat(), v.getTypeSchem(), v.getTableName(), "%",
+//                                            v.getColumnPrivileges());
+//                    } catch (final SQLException sqle) {
+//                        log.log(Level.WARNING, sqle, () -> String.format(
+//                                "failed to getColumnPrivileges(%1$s, %2$s, %3$s, \"%%\"", v.getTableCat(),
+//                                v.getTableSchem(), v.getTableName()));
+//                    }
+//                }
+            });
         }
     }
 

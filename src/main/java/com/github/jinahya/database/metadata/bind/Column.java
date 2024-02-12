@@ -20,6 +20,8 @@ package com.github.jinahya.database.metadata.bind;
  * #L%
  */
 
+import jakarta.xml.bind.annotation.XmlElement;
+import jakarta.xml.bind.annotation.XmlRootElement;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.Setter;
@@ -42,6 +44,7 @@ import static java.util.Comparator.nullsFirst;
  * @see Nullable
  */
 //@ParentOf(ColumnPrivilege.class)
+@XmlRootElement
 @Setter
 @Getter
 @EqualsAndHashCode(callSuper = true, onlyExplicitlyIncluded = true)
@@ -50,6 +53,7 @@ public class Column extends AbstractMetadataType {
 
     private static final long serialVersionUID = -409653682729081530L;
 
+    // -----------------------------------------------------------------------------------------------------------------
     static final Comparator<Column> CASE_INSENSITIVE_ORDER =
             Comparator.comparing(Column::getTableCat, nullsFirst(String.CASE_INSENSITIVE_ORDER))
                     .thenComparing(Column::getTableSchem, nullsFirst(String.CASE_INSENSITIVE_ORDER))
@@ -183,12 +187,14 @@ public class Column extends AbstractMetadataType {
     }
 
     // -----------------------------------------------------------------------------------------------------------------
+    @XmlElement(nillable = true)
     @jakarta.annotation.Nullable
     @_NullableBySpecification
     @_ColumnLabel(COLUMN_LABEL_TABLE_CAT)
     @EqualsAndHashCode.Include
     private String tableCat;
 
+    @XmlElement(nillable = true)
     @jakarta.annotation.Nullable
     @_NullableBySpecification
     @_ColumnLabel(COLUMN_LABEL_TABLE_SCHEM)
@@ -219,6 +225,7 @@ public class Column extends AbstractMetadataType {
     @_ColumnLabel("BUFFER_LENGTH")
     private Integer bufferLength;
 
+    @XmlElement(nillable = true)
     @jakarta.annotation.Nullable
     @_NullableBySpecification
     @_ColumnLabel("DECIMAL_DIGITS")
@@ -230,11 +237,13 @@ public class Column extends AbstractMetadataType {
     @_ColumnLabel(COLUMN_LABEL_NULLABLE)
     private Integer nullable;
 
+    @XmlElement(nillable = true)
     @jakarta.annotation.Nullable
     @_NullableBySpecification
     @_ColumnLabel("REMARKS")
     private String remarks;
 
+    @XmlElement(nillable = true)
     @jakarta.annotation.Nullable
     @_NullableBySpecification
     @_ColumnLabel("COLUMN_DEF")
@@ -262,16 +271,19 @@ public class Column extends AbstractMetadataType {
     @_ColumnLabel("SCOPE_CATALOG")
     private String scopeCatalog;
 
+    @XmlElement(nillable = true)
     @jakarta.annotation.Nullable
     @_NullableBySpecification
     @_ColumnLabel("SCOPE_SCHEMA")
     private String scopeSchema;
 
+    @XmlElement(nillable = true)
     @jakarta.annotation.Nullable
     @_NullableBySpecification
     @_ColumnLabel("SCOPE_TABLE")
     private String scopeTable;
 
+    @XmlElement(nillable = true)
     @jakarta.annotation.Nullable
     @_NullableBySpecification
     @_ColumnLabel("SOURCE_DATA_TYPE")
