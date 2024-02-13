@@ -21,7 +21,6 @@ package com.github.jinahya.database.metadata.bind;
  */
 
 import jakarta.annotation.Nullable;
-import jakarta.xml.bind.annotation.XmlElement;
 import jakarta.xml.bind.annotation.XmlRootElement;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
@@ -43,6 +42,7 @@ import static java.util.Comparator.nullsFirst;
  * @see Context#getSchemas(String, String)
  */
 @XmlRootElement
+@_ChildOf(Catalog.class)
 @Setter
 @Getter
 @EqualsAndHashCode(callSuper = true, onlyExplicitlyIncluded = true)
@@ -94,7 +94,7 @@ public class Schema extends AbstractMetadataType {
     // ------------------------------------------------------------------------------------------------------ tableSchem
 
     // -----------------------------------------------------------------------------------------------------------------
-    @XmlElement(nillable = true)
+
     @Nullable
     @_NullableBySpecification
     @_ColumnLabel(COLUMN_LABEL_TABLE_CATALOG)

@@ -66,3 +66,6 @@ $ mvn -Pfailsafe \
 
 ### MariaDB
 * [getTables should be ordered as expected](https://jira.mariadb.org/browse/CONJ-1156)
+
+### MySQL
+* [DatabaseMetaData#getTables produces duplicates](https://bugs.mysql.com/bug.php?id=113970&thanks=4)

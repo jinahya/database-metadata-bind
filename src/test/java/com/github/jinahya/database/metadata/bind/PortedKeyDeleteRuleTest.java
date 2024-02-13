@@ -26,17 +26,17 @@ import org.junit.jupiter.params.provider.EnumSource;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-class TableKeyUpdateRuleTest extends _IntFieldEnumTest<TableKey.TableKeyUpdateRule> {
+class PortedKeyDeleteRuleTest extends _IntFieldEnumTest<PortedKey.TableKeyDeleteRule> {
 
-    TableKeyUpdateRuleTest() {
-        super(TableKey.TableKeyUpdateRule.class);
+    PortedKeyDeleteRuleTest() {
+        super(PortedKey.TableKeyDeleteRule.class);
     }
 
-    @DisplayName("valueOfUpdateRule")
-    @EnumSource(TableKey.TableKeyUpdateRule.class)
+    @DisplayName("valueOfDeleteRule")
+    @EnumSource(PortedKey.TableKeyDeleteRule.class)
     @ParameterizedTest
-    void valueOfUpdateRule__(final TableKey.TableKeyUpdateRule updateRule) {
-        assertThat(TableKey.TableKeyUpdateRule.valueOfFieldValue(updateRule.fieldValueAsInt()))
-                .isSameAs(updateRule);
+    void valueOfDeleteRule__(final PortedKey.TableKeyDeleteRule deleteRule) {
+        assertThat(PortedKey.TableKeyDeleteRule.valueOfFieldValue(deleteRule.fieldValueAsInt()))
+                .isSameAs(deleteRule);
     }
 }

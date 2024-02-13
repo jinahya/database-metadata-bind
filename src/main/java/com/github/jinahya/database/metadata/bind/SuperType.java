@@ -39,6 +39,7 @@ import java.util.function.BiPredicate;
  * @see Context#getSuperTypes(String, String, String)
  */
 @XmlRootElement
+@_ChildOf(UDT.class)
 @Setter
 @Getter
 @EqualsAndHashCode(callSuper = true)
@@ -63,6 +64,7 @@ public class SuperType extends AbstractMetadataType {
     // -------------------------------------------------------------------------------------------------- superTypeSchem
 
     // -----------------------------------------------------------------------------------------------------------------
+
     @Nullable
     @_NullableBySpecification
     @_ColumnLabel("TYPE_CAT")
@@ -77,6 +79,7 @@ public class SuperType extends AbstractMetadataType {
     private String typeName;
 
     // -----------------------------------------------------------------------------------------------------------------
+
     @Nullable
     @_NullableBySpecification
     @_ColumnLabel("SUPERTYPE_CAT")

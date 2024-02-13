@@ -5,14 +5,6 @@
  * @see com.github.jinahya.database.metadata.bind.Context
  * @see com.github.jinahya.database.metadata.bind.MetadataType
  */
-@XmlAccessorType(XmlAccessType.FIELD)
-@XmlSchema(
-        namespace = "com.github.jinahya.database.metadata.bind",
-        xmlns = {
-                @XmlNs(prefix = "", namespaceURI = "com.github.jinahya.database.metadata.bind"),
-                @XmlNs(prefix = "xs", namespaceURI = "http://www.w3.org/2001/XMLSchema")
-        },
-        elementFormDefault = jakarta.xml.bind.annotation.XmlNsForm.QUALIFIED)
 package com.github.jinahya.database.metadata.bind;
 
 /*-
@@ -35,7 +27,3 @@ package com.github.jinahya.database.metadata.bind;
  * #L%
  */
 
-import jakarta.xml.bind.annotation.XmlAccessType;
-import jakarta.xml.bind.annotation.XmlAccessorType;
-import jakarta.xml.bind.annotation.XmlNs;
-import jakarta.xml.bind.annotation.XmlSchema;

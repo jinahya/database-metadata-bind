@@ -87,7 +87,7 @@ abstract class TestContainers_$_IT {
     }
 
     @Test
-    void info() throws SQLException {
+    void info() {
         applyContextChecked(c -> {
             ContextTestUtils.info(c);
             return null;
@@ -97,24 +97,15 @@ abstract class TestContainers_$_IT {
     @Test
     void test() throws SQLException {
         applyContextChecked(c -> {
+            c.connectionSupplier = () -> {
+                try {
+                    return connect();
+                } catch (final SQLException sqle) {
+                    throw new RuntimeException("failed to connect", sqle);
+                }
+            };
             ContextTestUtils.test(c);
             return null;
         });
-    }
-
-    @Test
-    void metadata() throws Exception {
-        final var metadata = applyContextChecked(Metadata::newInstance);
-        MetadataTestUtils.verify(metadata);
-        // -------------------------------------------------------------------------------------------------------------
-        final var name = applyContext(c -> {
-            try {
-                return ContextTestUtils.name(c);
-            } catch (final SQLException sqle) {
-                throw new RuntimeException(sqle);
-            }
-        });
-        JakartaXmlBindingTestUtils.marshal(name, metadata);
-        JakartaJsonBindingTestUtils.toJson(name, metadata);
     }
 }

@@ -21,23 +21,14 @@ package com.github.jinahya.database.metadata.bind;
  */
 
 import jakarta.annotation.Nullable;
-import jakarta.json.bind.annotation.JsonbTypeAdapter;
-import jakarta.xml.bind.annotation.XmlElement;
-import jakarta.xml.bind.annotation.XmlElementRef;
-import jakarta.xml.bind.annotation.XmlElementWrapper;
 import jakarta.xml.bind.annotation.XmlRootElement;
-import jakarta.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
 
-import java.util.ArrayList;
 import java.util.Comparator;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
 import java.util.Objects;
 import java.util.function.BiPredicate;
 
@@ -53,11 +44,12 @@ import static java.util.Comparator.nullsFirst;
  * @see Context#getTables(String, String, String, String[])
  */
 @XmlRootElement
+@_ParentOf(VersionColumn.class)
 @Setter
 @Getter
 @NoArgsConstructor
 @ToString(callSuper = true)
-@EqualsAndHashCode(callSuper = true, onlyExplicitlyIncluded = true)
+//@EqualsAndHashCode(callSuper = true, onlyExplicitlyIncluded = true)
 public class Table extends AbstractMetadataType {
 
     private static final long serialVersionUID = 6590036695540141125L;
@@ -120,12 +112,43 @@ public class Table extends AbstractMetadataType {
         return instance;
     }
 
+    // -----------------------------------------------------------------------------------------------------------------
+
+    @Override
+    public boolean equals(final Object obj) {
+        if (this == obj) {
+            return true;
+        }
+        if (obj == null || getClass() != obj.getClass()) {
+            return false;
+        }
+        if (!super.equals(obj)) {
+            return false;
+        }
+        final Table that = (Table) obj;
+        return Objects.equals(tableType, that.tableType) &&
+               Objects.equals(tableCat, that.tableCat) &&
+               Objects.equals(tableSchem, that.tableSchem) &&
+               Objects.equals(tableName, that.tableName);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(
+                super.hashCode(),
+                tableType,
+                tableCat,
+                tableSchem,
+                tableName
+        );
+    }
+
     // -------------------------------------------------------------------------------------------------------- tableCat
 
     // ------------------------------------------------------------------------------------------------------- tableShem
 
     // -----------------------------------------------------------------------------------------------------------------
-    @XmlElement(nillable = true)
+
     @_MissingByVendor("Microsoft SQL Server") // https://github.com/microsoft/mssql-jdbc/issues/406
     @Nullable
     @_NullableBySpecification
@@ -133,7 +156,6 @@ public class Table extends AbstractMetadataType {
     @EqualsAndHashCode.Include
     private String tableCat;
 
-    @XmlElement(nillable = true)
     @_MissingByVendor("Microsoft SQL Server") // https://github.com/microsoft/mssql-jdbc/issues/406
     @Nullable
     @_NullableBySpecification
@@ -145,9 +167,11 @@ public class Table extends AbstractMetadataType {
     @EqualsAndHashCode.Include
     private String tableName;
 
-    // -----------------------------------------------------------------------------------------------------------------
     @_ColumnLabel(COLUMN_LABEL_TABLE_TYPE)
+    @EqualsAndHashCode.Include
     private String tableType;
+
+    // -----------------------------------------------------------------------------------------------------------------
 
     @Nullable
     @_NullableBySpecification
@@ -183,24 +207,4 @@ public class Table extends AbstractMetadataType {
     @_NullableBySpecification
     @_ColumnLabel("REF_GENERATION")
     private String refGeneration;
-
-    // -----------------------------------------------------------------------------------------------------------------
-//    @JsonbTypeAdapter(BestRowIdentifierJsonAdapter.class)
-//    @XmlJavaTypeAdapter(BestRowIdentifierXmlAdapter.class)
-//    @XmlElement(name = "bestRowIdentifierWrapperList")
-//    @EqualsAndHashCode.Exclude
-//    @ToString.Exclude
-//    private final Map<Integer, Map<Boolean, List<BestRowIdentifier>>> bestRowIdentifier = new HashMap<>();
-//
-//    @XmlElementWrapper
-//    @XmlElementRef
-//    @EqualsAndHashCode.Exclude
-//    @ToString.Exclude
-//    private final List<ColumnPrivilege> columnPrivileges = new ArrayList<>();
-//
-//    @XmlElementWrapper
-//    @XmlElementRef
-//    @EqualsAndHashCode.Exclude
-//    @ToString.Exclude
-//    private final List<CrossReference> crossReferenceList = new ArrayList<>();
 }

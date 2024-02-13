@@ -48,6 +48,8 @@ import static java.util.Comparator.nullsFirst;
  * @see Context#getUDTs(String, String, String, int[])
  */
 @XmlRootElement
+@_ParentOf(Attribute.class)
+@_ParentOf(UDT.class)
 @Setter
 @Getter
 @EqualsAndHashCode(callSuper = true, onlyExplicitlyIncluded = true)
@@ -147,6 +149,7 @@ public class UDT extends AbstractMetadataType {
     }
 
     // -----------------------------------------------------------------------------------------------------------------
+
     @Nullable
     @_NullableBySpecification
     @_ColumnLabel(COLUMN_LABEL_TYPE_CAT)

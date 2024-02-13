@@ -37,7 +37,7 @@ import java.util.Comparator;
 @XmlRootElement
 @EqualsAndHashCode(callSuper = true)
 @ToString(callSuper = true)
-public class ImportedKey extends TableKey<ImportedKey> {
+public class ImportedKey extends PortedKey<ImportedKey> {
 
     private static final long serialVersionUID = -1900794151555506751L;
 

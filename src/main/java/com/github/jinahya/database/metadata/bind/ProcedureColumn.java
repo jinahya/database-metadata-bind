@@ -44,6 +44,7 @@ import static java.util.Comparator.nullsFirst;
  * @see Context#getProcedureColumns(String, String, String, String)
  */
 @XmlRootElement
+@_ChildOf(Procedure.class)
 @Setter
 @Getter
 @EqualsAndHashCode(callSuper = true, onlyExplicitlyIncluded = true)
@@ -77,6 +78,7 @@ public class ProcedureColumn extends AbstractMetadataType {
     // -------------------------------------------------------------------------------------------------- procedureSchem
 
     // -----------------------------------------------------------------------------------------------------------------
+
     @Nullable
     @_NullableBySpecification
     @_ColumnLabel("PROCEDURE_CAT")
@@ -88,6 +90,7 @@ public class ProcedureColumn extends AbstractMetadataType {
     private String procedureSchem;
 
     @_ColumnLabel("PROCEDURE_NAME")
+    @EqualsAndHashCode.Include
     private String procedureName;
 
     @_ColumnLabel("COLUMN_NAME")
@@ -132,11 +135,11 @@ public class ProcedureColumn extends AbstractMetadataType {
     @_ColumnLabel("COLUMN_DEF")
     private String columnDef;
 
-    @_Reserved
+    @_ReservedBySpecification
     @_ColumnLabel("SQL_DATA_TYPE")
     private Integer sqlDataType;
 
-    @_Reserved
+    @_ReservedBySpecification
     @_ColumnLabel("SQL_DATETIME_SUB")
     private Integer sqlDatetimeSub;
 

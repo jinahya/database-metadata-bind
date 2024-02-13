@@ -21,7 +21,6 @@ package com.github.jinahya.database.metadata.bind;
  */
 
 import jakarta.annotation.Nullable;
-import jakarta.xml.bind.annotation.XmlElement;
 import jakarta.xml.bind.annotation.XmlRootElement;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
@@ -156,14 +155,13 @@ public class Procedure extends AbstractMetadataType {
     }
 
     // -----------------------------------------------------------------------------------------------------------------
-    @XmlElement(nillable = true)
+
     @Nullable
     @_NullableBySpecification
     @_ColumnLabel("PROCEDURE_CAT")
     @EqualsAndHashCode.Include
     private String procedureCat;
 
-    @XmlElement(nillable = true)
     @Nullable
     @_NullableBySpecification
     @_ColumnLabel("PROCEDURE_SCHEM")
@@ -171,8 +169,10 @@ public class Procedure extends AbstractMetadataType {
     private String procedureSchem;
 
     @_ColumnLabel("PROCEDURE_NAME")
+    @EqualsAndHashCode.Include
     private String procedureName;
 
+    // -----------------------------------------------------------------------------------------------------------------
     @_ColumnLabel("REMARKS")
     private String remarks;
 

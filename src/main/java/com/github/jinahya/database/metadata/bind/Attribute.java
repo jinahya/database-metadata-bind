@@ -42,6 +42,7 @@ import static java.util.Comparator.nullsFirst;
  * @see Nullable
  */
 @XmlRootElement
+@_ChildOf(UDT.class)
 @Setter
 @Getter
 @EqualsAndHashCode(callSuper = true, onlyExplicitlyIncluded = true)
@@ -138,6 +139,7 @@ public class Attribute extends AbstractMetadataType {
     // ------------------------------------------------------------------------------------------------------ tableSchem
 
     // -----------------------------------------------------------------------------------------------------------------
+
     @jakarta.annotation.Nullable
     @_NullableBySpecification
     @_ColumnLabel(COLUMN_LABEL_TYPE_CAT)

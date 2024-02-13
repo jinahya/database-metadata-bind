@@ -47,8 +47,10 @@ class TestContainers_Db2_IT extends TestContainers_$_IT {
     @BeforeAll
     static void start() {
         final DockerImageName name = DockerImageName.parse(FULL_IMAGE_NAME);
-        CONTAINER = new Db2Container(name).acceptLicense()
-                .withImagePullPolicy(PullPolicy.ageBased(Duration.ofDays(180L)));
+        CONTAINER = new Db2Container(name)
+                .withImagePullPolicy(PullPolicy.ageBased(Duration.ofDays(180L)))
+                .acceptLicense()
+        ;
         CONTAINER.start();
     }
 

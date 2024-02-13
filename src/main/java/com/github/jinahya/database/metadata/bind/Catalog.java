@@ -21,15 +21,12 @@ package com.github.jinahya.database.metadata.bind;
  */
 
 import jakarta.xml.bind.annotation.XmlRootElement;
-import lombok.AccessLevel;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
 
-import java.util.ArrayList;
 import java.util.Comparator;
-import java.util.List;
 import java.util.function.Consumer;
 
 import static java.util.Comparator.naturalOrder;
@@ -42,6 +39,7 @@ import static java.util.Comparator.nullsFirst;
  * @see Context#acceptCatalogs(Consumer)
  */
 @XmlRootElement
+@_ParentOf(Schema.class)
 @Setter
 @Getter
 @ToString(callSuper = true)
@@ -81,10 +79,4 @@ public class Catalog extends AbstractMetadataType {
     @_ColumnLabel(COLUMN_LABEL_TABLE_CAT)
     @EqualsAndHashCode.Include
     private String tableCat;
-
-    // -----------------------------------------------------------------------------------------------------------------
-    @Getter(AccessLevel.PACKAGE)
-    @EqualsAndHashCode.Exclude
-    @ToString.Exclude
-    private final List<Schema> schemas = new ArrayList<>();
 }

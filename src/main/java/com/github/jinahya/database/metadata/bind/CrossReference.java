@@ -93,13 +93,13 @@ public class CrossReference extends AbstractMetadataType {
     // ---------------------------------------------------------------------------------------------------- fktableSchem
 
     // ------------------------------------------------------------------------------------------------------ updateRule
-    TableKey.TableKeyUpdateRule getUpdateRuleAsEnum() {
+    PortedKey.TableKeyUpdateRule getUpdateRuleAsEnum() {
         return Optional.ofNullable(getUpdateRule())
-                .map(TableKey.TableKeyUpdateRule::valueOfFieldValue)
+                .map(PortedKey.TableKeyUpdateRule::valueOfFieldValue)
                 .orElse(null);
     }
 
-    void setUpdateRuleAsEnum(final TableKey.TableKeyUpdateRule updateRuleAsEnum) {
+    void setUpdateRuleAsEnum(final PortedKey.TableKeyUpdateRule updateRuleAsEnum) {
         setUpdateRule(
                 Optional.ofNullable(updateRuleAsEnum)
                         .map(_IntFieldEnum::fieldValueAsInt)
@@ -110,6 +110,7 @@ public class CrossReference extends AbstractMetadataType {
     // ------------------------------------------------------------------------------------------------------ deleteRule
 
     // -----------------------------------------------------------------------------------------------------------------
+
     @Nullable
     @_NullableBySpecification
     @_ColumnLabel("PKTABLE_CAT")
@@ -129,6 +130,7 @@ public class CrossReference extends AbstractMetadataType {
     private String pkcolumnName;
 
     // -----------------------------------------------------------------------------------------------------------------
+
     @Nullable
     @_NullableBySpecification
     @_ColumnLabel("FKTABLE_CAT")

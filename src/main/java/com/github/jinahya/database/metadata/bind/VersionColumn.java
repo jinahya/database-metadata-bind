@@ -39,6 +39,7 @@ import java.util.function.BiPredicate;
  * @see Context#getVersionColumns(String, String, String)
  */
 @XmlRootElement
+@_ChildOf(Table.class)
 @Setter
 @Getter
 @EqualsAndHashCode(callSuper = true, onlyExplicitlyIncluded = true)

@@ -92,6 +92,7 @@ public class TablePrivilege extends AbstractMetadataType {
     // ------------------------------------------------------------------------------------------------------ tableSchem
 
     // -----------------------------------------------------------------------------------------------------------------
+
     @Nullable
     @_NullableBySpecification
     @_ColumnLabel(COLUMN_LABEL_TABLE_CAT)
@@ -109,6 +110,7 @@ public class TablePrivilege extends AbstractMetadataType {
     private String tableName;
 
     // -----------------------------------------------------------------------------------------------------------------
+
     @Nullable
     @_NullableBySpecification
     @_ColumnLabel("GRANTOR")

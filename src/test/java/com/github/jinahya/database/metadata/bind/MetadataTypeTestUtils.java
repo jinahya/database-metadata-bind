@@ -25,6 +25,7 @@ import lombok.extern.slf4j.Slf4j;
 import java.beans.BeanInfo;
 import java.beans.IntrospectionException;
 import java.beans.Introspector;
+import java.sql.SQLException;
 import java.util.Objects;
 
 @Slf4j
@@ -74,7 +75,7 @@ final class MetadataTypeTestUtils {
         verifyAccessors(cls, cls.cast(obj));
     }
 
-    static void verify(final MetadataType obj) {
+    static void verify(final MetadataType obj) throws SQLException {
         verifyAccessorsHelper(obj.getClass().asSubclass(MetadataType.class), obj);
         ValidationTestUtils.requireValid(obj);
     }

@@ -20,7 +20,7 @@ package com.github.jinahya.database.metadata.bind;
  * #L%
  */
 
-class ImportedKeyTest extends TableKeyTest<ImportedKey> {
+class ImportedKeyTest extends PortedKeyTest<ImportedKey> {
 
     ImportedKeyTest() {
         super(ImportedKey.class);

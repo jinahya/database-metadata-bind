@@ -117,7 +117,7 @@ abstract class MetadataTypeTest<T extends MetadataType> {
             }
         }
 
-        @DisplayName("@javax.validation.NotNull")
+        @DisplayName("@jakarta.validation.NotNull")
         @Test
         void __NotNull() {
             for (final var field : fieldsAnnotatedWithColumnLabel()) {

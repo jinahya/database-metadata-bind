@@ -104,19 +104,4 @@ abstract class Memory_$_Test {
             }
         });
     }
-
-    @Test
-    void metadata() throws Exception {
-        final var metadata = applyContext(Metadata::newInstance);
-        MetadataTestUtils.verify(metadata);
-        final var name = applyContext(c -> {
-            try {
-                return ContextTestUtils.name(c);
-            } catch (final SQLException sqle) {
-                throw new RuntimeException("failed to get name from " + c, sqle);
-            }
-        });
-        JakartaJsonBindingTestUtils.toJson(name, metadata);
-        JakartaXmlBindingTestUtils.marshal(name, metadata);
-    }
 }

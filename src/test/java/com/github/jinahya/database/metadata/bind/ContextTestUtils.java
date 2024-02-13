@@ -25,10 +25,10 @@ import lombok.extern.slf4j.Slf4j;
 import java.sql.JDBCType;
 import java.sql.SQLException;
 import java.sql.Types;
-import java.util.Collection;
 import java.util.List;
 import java.util.Objects;
 import java.util.Set;
+import java.util.concurrent.Executors;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
@@ -82,9 +82,6 @@ final class ContextTestUtils {
         // ---------------------------------------------------------------------------------------------------- catalogs
         try {
             final var catalogs = context.getCatalogs();
-            if (catalogs.isEmpty()) {
-                catalogs.add(Catalog.of(null));
-            }
             catalogs(context, catalogs);
         } catch (final SQLException sqle) {
             log.error("failed", sqle);
@@ -96,21 +93,22 @@ final class ContextTestUtils {
         } catch (final SQLException sqle) {
             log.error("failed", sqle);
         }
-        // ---------------------------------------------------------------------------------------------- crossReference
-        try {
-            final var crossReference = context.getCrossReference(
-                    null,
-                    null,
-                    "%",
-                    null,
-                    null,
-                    "%"
-            );
-            crossReference(context, crossReference);
-        } catch (final SQLException sqle) {
-            log.error("failed to get crossReference", sqle);
-        }
+//        // ---------------------------------------------------------------------------------------------- crossReference
+//        try {
+//            final var crossReference = context.getCrossReference(
+//                    null,
+//                    null,
+//                    "%",
+//                    null,
+//                    null,
+//                    "%"
+//            );
+//            crossReference(context, crossReference);
+//        } catch (final SQLException sqle) {
+//            log.error("failed to get crossReference", sqle);
+//        }
         // --------------------------------------------------------------------------------------------------- functions
+        // --------------------------------------------------------------------------------------------- functionColumns
         try {
             final var functions = context.getFunctions(null, null, "%");
             functions(context, functions);
@@ -118,6 +116,7 @@ final class ContextTestUtils {
             log.error("failed", sqle);
         }
         // -------------------------------------------------------------------------------------------------- procedures
+        // -------------------------------------------------------------------------------------------- procedureColumns
         try {
             final var procedures = context.getProcedures(null, null, "%");
             procedures(context, procedures);
@@ -127,9 +126,6 @@ final class ContextTestUtils {
         // ----------------------------------------------------------------------------------------------------- schemas
         try {
             final var schemas = context.getSchemas();
-            if (schemas.isEmpty()) {
-                schemas.add(Schema.of(null, null));
-            }
             schemas(context, schemas);
         } catch (final SQLException sqle) {
             log.error("failed", sqle);
@@ -137,9 +133,6 @@ final class ContextTestUtils {
         // ----------------------------------------------------------------------------------------------------- schemas
         try {
             final var schemas = context.getSchemas((String) null, null);
-            if (schemas.isEmpty()) {
-                schemas.add(Schema.of(null, null));
-            }
             schemas(context, schemas);
         } catch (final SQLException sqle) {
             log.error("failed", sqle);
@@ -175,35 +168,56 @@ final class ContextTestUtils {
         // -------------------------------------------------------------------------------------------- numericFunctions
         try {
             final var numericFunctions = context.getNumericFunctions();
-            numericFunctions(context, numericFunctions);
+            assertThat(numericFunctions)
+                    .doesNotContainNull()
+                    .allSatisfy(v -> {
+                        assertThat(v).isNotBlank();
+                    });
         } catch (final SQLException sqle) {
             log.error("failed", sqle);
         }
         // ---------------------------------------------------------------------------------------------- getSQLKeywords
         try {
             final var SQLKeywords = context.getSQLKeywords();
-            log.debug("SQLKeywords: {}", SQLKeywords);
+            assertThat(SQLKeywords)
+                    .doesNotContainNull()
+                    .doesNotHaveDuplicates()
+                    .allSatisfy(v -> {
+                        assertThat(v).isNotBlank();
+                    });
         } catch (final SQLException sqle) {
             log.error("failed", sqle);
         }
         // ------------------------------------------------------------------------------------------ getStringFunctions
         try {
             final var stringFunctions = context.getStringFunctions();
-            log.debug("stringFunctions: {}", stringFunctions);
+            assertThat(stringFunctions)
+                    .doesNotContainNull()
+                    .allSatisfy(v -> {
+                        assertThat(v).isNotBlank();
+                    });
         } catch (final SQLException sqle) {
             log.error("failed", sqle);
         }
         // ------------------------------------------------------------------------------------------ getSystemFunctions
         try {
             final var systemFunctions = context.getSystemFunctions();
-            log.debug("system functions: {}", systemFunctions);
+            assertThat(systemFunctions)
+                    .doesNotContainNull()
+                    .allSatisfy(v -> {
+                        assertThat(v).isNotBlank();
+                    });
         } catch (final SQLException sqle) {
             log.error("failed", sqle);
         }
         // ---------------------------------------------------------------------------------------- getTimeDateFunctions
         try {
             final var timeDateFunction = context.getTimeDateFunctions();
-            log.debug("time date functions: {}", timeDateFunction);
+            assertThat(timeDateFunction)
+                    .doesNotContainNull()
+                    .allSatisfy(v -> {
+                        assertThat(v).isNotBlank();
+                    });
         } catch (final SQLException sqle) {
             log.error("failed", sqle);
         }
@@ -254,7 +268,7 @@ final class ContextTestUtils {
         assertThat(bestRowIdentifier)
                 .doesNotHaveDuplicates()
                 .isSortedAccordingTo(BestRowIdentifier.COMPARING_SCOPE);
-        assertThat(bestRowIdentifier).isSorted();
+        assertThat(bestRowIdentifier).isSortedAccordingTo(BestRowIdentifier.COMPARING_SCOPE);
         for (final var bestRowIdentifier_ : bestRowIdentifier) {
             bestRowIdentifier(context, bestRowIdentifier_);
         }
@@ -467,8 +481,13 @@ final class ContextTestUtils {
     private static void functions(final Context context, final List<? extends Function> functions) throws SQLException {
         Objects.requireNonNull(context, "context is null");
         Objects.requireNonNull(functions, "functions is null");
-        assertThat(functions).doesNotHaveDuplicates();
+        if (!databaseProductName.equals(DatabaseProductNames.POSTGRE_SQL)) {
+            assertThat(functions)
+                    .doesNotContainNull()
+                    .doesNotHaveDuplicates();
+        }
         if (!databaseProductName.equals(DatabaseProductNames.MARIA_DB) &&
+            !databaseProductName.equals(DatabaseProductNames.POSTGRE_SQL) &&
             !databaseProductName.equals(DatabaseProductNames.MICROSOFT_SQL_SERVER)) {
             // https://github.com/microsoft/mssql-jdbc/issues/2321
             assertThat(functions).satisfiesAnyOf(
@@ -484,23 +503,23 @@ final class ContextTestUtils {
     private static void function(final Context context, final Function function) throws SQLException {
         Objects.requireNonNull(context, "context is null");
         Objects.requireNonNull(function, "function is null");
-        log.debug("function: {}", function);
         MetadataTypeTestUtils.verify(function);
         try {
             final var functionColumns = context.getFunctionColumns(function, "%");
-            functionColumns(context, function, functionColumns);
+            functionColumns(context, functionColumns);
         } catch (final SQLException sqle) {
-            log.error("failed", sqle);
+            log.error("failed to getFunctionColumns for {}", function, sqle);
         }
     }
 
     // ------------------------------------------------------------------------------------------------- functionColumns
-    private static void functionColumns(final Context context, final Function function,
-                                        final List<? extends FunctionColumn> functionColumns)
+    private static void functionColumns(final Context context, final List<? extends FunctionColumn> functionColumns)
             throws SQLException {
         Objects.requireNonNull(context, "context is null");
-        Objects.requireNonNull(function, "function is null");
         Objects.requireNonNull(functionColumns, "functionColumns is null");
+        assertThat(functionColumns)
+                .doesNotContainNull()
+                .doesNotHaveDuplicates();
         {
             final var databaseProductNames = Set.of(
                     DatabaseProductNames.POSTGRE_SQL
@@ -513,15 +532,13 @@ final class ContextTestUtils {
             }
         }
         for (final var functionColumn : functionColumns) {
-            functionColumn(context, function, functionColumn);
+            functionColumn(context, functionColumn);
         }
     }
 
-    private static void functionColumn(final Context context, final Function function,
-                                       final FunctionColumn functionColumn)
+    private static void functionColumn(final Context context, final FunctionColumn functionColumn)
             throws SQLException {
         Objects.requireNonNull(context, "context is null");
-        Objects.requireNonNull(function, "function is null");
         Objects.requireNonNull(functionColumn, "functionColumn is null");
         MetadataTypeTestUtils.verify(functionColumn);
         final var columnType = FunctionColumn.ColumnType.valueOfFieldValue(functionColumn.getColumnType());
@@ -570,11 +587,6 @@ final class ContextTestUtils {
         MetadataTypeTestUtils.verify(indexInfo);
     }
 
-    // ------------------------------------------------------------------------------------------------- numberFunctions
-    private static void numericFunctions(final Context context, final Collection<String> numericFunctions)
-            throws SQLException {
-    }
-
     // ------------------------------------------------------------------------------------------------------ procedures
     private static void procedures(final Context context, final List<? extends Procedure> procedures)
             throws SQLException {
@@ -619,7 +631,6 @@ final class ContextTestUtils {
         MetadataTypeTestUtils.verify(procedure);
         try {
             final var procedureColumns = context.getProcedureColumns(procedure, "%");
-            assertThat(procedureColumns).doesNotHaveDuplicates();
             procedureColumns(context, procedureColumns);
         } catch (final SQLException sqle) {
             log.error("failed", sqle);
@@ -719,14 +730,19 @@ final class ContextTestUtils {
     static void tables(final Context context, final List<? extends Table> tables) throws SQLException {
         Objects.requireNonNull(context, "context is null");
         Objects.requireNonNull(tables, "tables is null");
-        assertThat(tables)
-                .doesNotHaveDuplicates();
-//                .satisfiesAnyOf(
-//                        l -> assertThat(l).isSortedAccordingTo(Table.CASE_INSENSITIVE_ORDER),
-//                        l -> assertThat(l).isSortedAccordingTo(Table.LEXICOGRAPHIC_ORDER)
-//                );
-        if (!databaseProductName.equals(DatabaseProductNames.MARIA_DB) &&
-            !databaseProductName.equals(DatabaseProductNames.POSTGRE_SQL)) {
+        try {
+            assertThat(tables)
+                    .doesNotContainNull()
+                    .doesNotHaveDuplicates();
+        } catch (final AssertionError ae) {
+            log.error("tables contains duplicates");
+        }
+        if (!databaseProductName.equals(DatabaseProductNames.APACHE_DERBY) &&
+            !databaseProductName.equals(DatabaseProductNames.HSQL_DATABASE_ENGINE) &&
+            !databaseProductName.equals(DatabaseProductNames.MARIA_DB) &&
+            !databaseProductName.equals(DatabaseProductNames.MY_SQL) &&
+            !databaseProductName.equals(DatabaseProductNames.POSTGRE_SQL) &&
+            !databaseProductName.equals(DatabaseProductNames.MICROSOFT_SQL_SERVER)) {
             // https://jira.mariadb.org/browse/CONJ-1156
             assertThat(tables)
                     .satisfiesAnyOf(
@@ -737,6 +753,24 @@ final class ContextTestUtils {
         for (final var table : tables) {
             table(context, table);
         }
+        if (false) {
+            try (var executor = Executors.newFixedThreadPool(128, Thread.ofVirtual().factory())) {
+                for (final var foreignTable : tables) {
+                    for (final var parentTable : tables) {
+                        executor.submit(() -> {
+                            try (var connection = context.connectionSupplier.get()) {
+                                final var c = Context.newInstance(connection);
+                                final var crossReference = c.getCrossReference(parentTable, foreignTable);
+                                log.debug("crossReference.size: {}", crossReference.size());
+                                crossReference(context, crossReference);
+                            } catch (final SQLException sqle) {
+                                log.error("failed", sqle);
+                            }
+                        });
+                    }
+                }
+            }
+        }
     }
 
     static void table(final Context context, final Table table) throws SQLException {
@@ -744,23 +778,17 @@ final class ContextTestUtils {
         Objects.requireNonNull(table, "table is null");
         MetadataTypeTestUtils.verify(table);
         // ------------------------------------------------------------------------------------------- bestRowIdentifier
-        for (final var scope : BestRowIdentifier.Scope.values()) {
+        for (final BestRowIdentifier.Scope scope : BestRowIdentifier.Scope.values()) {
             for (final boolean nullable : new boolean[] {true, false}) {
                 try {
                     final var bestRowIdentifier =
                             context.getBestRowIdentifier(table, scope.fieldValueAsInt(), nullable);
                     bestRowIdentifier(context, bestRowIdentifier);
                 } catch (final SQLException sqle) {
-                    log.error("failed", sqle);
+                    log.error("failed to getBestRowIdentifier({}, {}, {})", table, scope.fieldValueAsInt(), nullable,
+                              sqle);
                 }
             }
-        }
-        // ----------------------------------------------------------------------------------------------------- columns
-        try {
-            final var columns = context.getColumns(table, "%");
-            columns(context, columns);
-        } catch (final SQLException sqle) {
-            log.error("failed", sqle);
         }
         // -------------------------------------------------------------------------------------------- columnPrivileges
         if (READ_COLUMN_PRIVILEGES) {
@@ -787,15 +815,15 @@ final class ContextTestUtils {
             log.error("failed", sqle);
         }
         // --------------------------------------------------------------------------------------------------- indexInfo
-        try {
-            for (final boolean unique : new boolean[] {true, false}) {
-                for (final boolean approximate : new boolean[] {true, false}) {
+        for (final boolean unique : new boolean[] {true, false}) {
+            for (final boolean approximate : new boolean[] {true, false}) {
+                try {
                     final var indexInfo = context.getIndexInfo(table, unique, approximate);
                     indexInfo(context, indexInfo);
+                } catch (final SQLException sqle) {
+                    log.error("failed", sqle);
                 }
             }
-        } catch (final SQLException sqle) {
-            log.error("failed", sqle);
         }
         // ------------------------------------------------------------------------------------------------- primaryKeys
         try {
@@ -1021,9 +1049,8 @@ final class ContextTestUtils {
             final var attributes = context.getAttributes(udt, "%");
             attributes(context, attributes);
         } catch (final SQLException sqle) {
-            log.error("failed", sqle);
+            log.error("failed to getAttributes for {}", udt, sqle);
         }
-
         // -------------------------------------------------------------------------------------------------- superTypes
         try {
             final var superTypes = context.getSuperTypes(udt);

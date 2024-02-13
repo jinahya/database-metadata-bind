@@ -40,6 +40,7 @@ import java.util.Map.Entry;
 import java.util.Objects;
 import java.util.Set;
 import java.util.function.Consumer;
+import java.util.function.Supplier;
 import java.util.logging.Level;
 import java.util.stream.Collectors;
 
@@ -91,30 +92,37 @@ public class Context {
             final Entry<Field, _ColumnLabel> entry = i.next();
             final Field field = entry.getKey();
             final _ColumnLabel fieldLabel = entry.getValue();
-            if (!resultLabels.remove(fieldLabel.value())) {
-                log.warning(() -> String.format("unmapped field; label: %1$s; field: %2$s", fieldLabel, field));
+            if (field.isAnnotationPresent(_NotUsedBySpecification.class) ||
+                field.isAnnotationPresent(_ReservedBySpecification.class)) {
+                i.remove();
                 continue;
             }
-            if (field.isAnnotationPresent(_NotUsedBySpecification.class) ||
-                field.isAnnotationPresent(_Reserved.class)) {
+            if (field.isAnnotationPresent(_MissingByVendor.class)) {
+                final String value = field.getAnnotation(_MissingByVendor.class).value();
+                if (value.equals(databaseMetaData.getDatabaseProductName())) {
+                    i.remove();
+                    continue;
+                }
+            }
+            if (!resultLabels.remove(fieldLabel.value())) {
+                log.warning(() -> String.format("unmapped; label: %1$s; field: %2$s", fieldLabel, field));
                 i.remove();
                 continue;
             }
             try {
                 Utils.setFieldValue(field, instance, results, fieldLabel.value());
             } catch (final ReflectiveOperationException roe) {
-                log.log(Level.SEVERE, String.format("failed to set %1$s", field), roe);
+                log.log(Level.SEVERE, roe, () -> String.format("failed to set %1$s", field));
             }
             i.remove();
         }
-        for (final String key : resultLabels) {
+        for (final Iterator<String> i = resultLabels.iterator(); i.hasNext(); i.remove()) {
+            final String key = i.next();
             final Object value = results.getObject(key);
             instance.getUnmappedValues().put(key, value);
         }
-        fieldLabels.keySet().removeIf(f -> {
-            return f.isAnnotationPresent(_MissingByVendor.class);
-        });
-        assert fieldLabels.isEmpty() : "remaining fields: " + fieldLabels;
+        assert resultLabels.isEmpty() : "remaining result labels: " + resultLabels;
+        assert fieldLabels.isEmpty() : "remaining field labels: " + fieldLabels;
         return instance;
     }
 
@@ -266,7 +274,6 @@ public class Context {
         try (ResultSet results = databaseMetaData.getBestRowIdentifier(catalog, schema, table, scope, nullable)) {
             assert results != null;
             acceptBound(results, BestRowIdentifier.class, v -> {
-                v.setParent(parent);
                 consumer.accept(v);
             });
         }
@@ -424,6 +431,16 @@ public class Context {
                 table.getTableSchem(),
                 table.getTableName(),
                 columnNamePattern
+        );
+    }
+
+    List<ColumnPrivilege> getColumnPrivileges(final Column column) throws SQLException {
+        Objects.requireNonNull(column, "column is null");
+        return getColumnPrivileges(
+                column.getTableCat(),
+                column.getTableSchem(),
+                column.getTableName(),
+                column.getColumnName()
         );
     }
 
@@ -1185,6 +1202,7 @@ public class Context {
                 assert v.getTableSchem() != null;
                 assert !v.getTableSchem().isEmpty();
                 consumer.accept(v);
+                // ---------------------------------------------------------------------------------------------- tables
             });
         }
     }
@@ -1540,38 +1558,7 @@ public class Context {
         Objects.requireNonNull(consumer, "consumer is null");
         try (ResultSet results = databaseMetaData.getTables(catalog, schemaPattern, tableNamePattern, types)) {
             assert results != null;
-            acceptBound(results, Table.class, v -> {
-                assert v.getTableName() != null;
-                assert !v.getTableName().isEmpty();
-                consumer.accept(v);
-//                // ----------------------------------------------------------------------------------- bestRowIdentifier
-//                for (final BestRowIdentifier.Scope scope : BestRowIdentifier.Scope.values()) {
-//                    for (final boolean nullable : new boolean[] {true, false}) {
-//                        try {
-//                            final List<BestRowIdentifier> bestRowIdentifier = getBestRowIdentifier(
-//                                    v.getTableCat(), v.getTypeSchem(), v.getTableName(), scope.fieldValueAsInt(),
-//                                    nullable);
-//                            v.getBestRowIdentifier()
-//                                    .computeIfAbsent(scope.fieldValueAsInt(), k -> new HashMap<>())
-//                                    .computeIfAbsent(nullable, k -> new ArrayList<>())
-//                                    .addAll(bestRowIdentifier);
-//                        } catch (final SQLException sqle) {
-//                            log.log(Level.WARNING, sqle, () -> String.format(
-//                                    "failed to getBestRowIdentifier(%1$s, %2$s, %3$s, \"%%\", %4$d, %5$b",
-//                                    v.getTableCat(), v.getTableSchem(), v.getTableName(), scope, nullable));
-//                        }
-//                    }
-//                    // -------------------------------------------------------------------------------- columnPrivileges
-//                    try {
-//                        addColumnPrivileges(v.getTableCat(), v.getTypeSchem(), v.getTableName(), "%",
-//                                            v.getColumnPrivileges());
-//                    } catch (final SQLException sqle) {
-//                        log.log(Level.WARNING, sqle, () -> String.format(
-//                                "failed to getColumnPrivileges(%1$s, %2$s, %3$s, \"%%\"", v.getTableCat(),
-//                                v.getTableSchem(), v.getTableName()));
-//                    }
-//                }
-            });
+            acceptBound(results, Table.class, consumer);
         }
     }
 
@@ -1850,4 +1837,7 @@ public class Context {
     public List<String> getTimeDateFunctions() throws SQLException {
         return Arrays.asList(databaseMetaData.getTimeDateFunctions().split(","));
     }
+
+    // -----------------------------------------------------------------------------------------------------------------
+    Supplier<Connection> connectionSupplier;
 }

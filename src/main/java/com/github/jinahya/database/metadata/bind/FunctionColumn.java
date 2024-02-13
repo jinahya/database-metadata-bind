@@ -173,6 +173,7 @@ public class FunctionColumn extends AbstractMetadataType {
     }
 
     // -----------------------------------------------------------------------------------------------------------------
+
     @Nullable
     @_NullableBySpecification
     @_ColumnLabel(COLUMN_LABEL_FUNCTION_CAT)

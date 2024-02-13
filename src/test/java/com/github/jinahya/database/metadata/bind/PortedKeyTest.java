@@ -30,9 +30,9 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 
-abstract class TableKeyTest<T extends TableKey<T>> extends AbstractMetadataTypeTest<T> {
+abstract class PortedKeyTest<T extends PortedKey<T>> extends AbstractMetadataTypeTest<T> {
 
-    TableKeyTest(final Class<T> typeClass) {
+    PortedKeyTest(final Class<T> typeClass) {
         super(typeClass);
     }
 
@@ -63,9 +63,9 @@ abstract class TableKeyTest<T extends TableKey<T>> extends AbstractMetadataTypeT
             verify(spy, times(1)).setUpdateRule(null);
         }
 
-        @EnumSource(TableKey.TableKeyUpdateRule.class)
+        @EnumSource(PortedKey.TableKeyUpdateRule.class)
         @ParameterizedTest
-        void setUpdateRuleAsEnum__(final TableKey.TableKeyUpdateRule updateRuleAsEnum) {
+        void setUpdateRuleAsEnum__(final PortedKey.TableKeyUpdateRule updateRuleAsEnum) {
             final var spy = Mockito.spy(newTypeInstance());
             spy.setUpdateRuleAsEnum(updateRuleAsEnum);
             verify(spy, times(1)).setUpdateRule(updateRuleAsEnum.fieldValueAsInt());
@@ -89,9 +89,9 @@ abstract class TableKeyTest<T extends TableKey<T>> extends AbstractMetadataTypeT
             verify(spy, times(1)).setDeleteRule(null);
         }
 
-        @EnumSource(TableKey.TableKeyDeleteRule.class)
+        @EnumSource(PortedKey.TableKeyDeleteRule.class)
         @ParameterizedTest
-        void setDeleteRuleAsEnum__(final TableKey.TableKeyDeleteRule deleteRuleAsEnum) {
+        void setDeleteRuleAsEnum__(final PortedKey.TableKeyDeleteRule deleteRuleAsEnum) {
             final var spy = newTypeSpy();
             spy.setDeleteRuleAsEnum(deleteRuleAsEnum);
             verify(spy, times(1)).setDeleteRule(deleteRuleAsEnum.fieldValueAsInt());
@@ -115,9 +115,9 @@ abstract class TableKeyTest<T extends TableKey<T>> extends AbstractMetadataTypeT
             verify(spy, times(1)).setDeferrability(null);
         }
 
-        @EnumSource(TableKey.TableKeyDeferrability.class)
+        @EnumSource(PortedKey.TableKeyDeferrability.class)
         @ParameterizedTest
-        void setDeferrabilityAsEnum__(final TableKey.TableKeyDeferrability deferrabilityAsEnum) {
+        void setDeferrabilityAsEnum__(final PortedKey.TableKeyDeferrability deferrabilityAsEnum) {
             final var spy = newTypeSpy();
             spy.setDeferrabilityAsEnum(deferrabilityAsEnum);
             verify(spy, times(1)).setDeferrability(deferrabilityAsEnum.fieldValueAsInt());

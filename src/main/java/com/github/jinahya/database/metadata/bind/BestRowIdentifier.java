@@ -21,10 +21,7 @@ package com.github.jinahya.database.metadata.bind;
  */
 
 import jakarta.annotation.Nullable;
-import jakarta.json.bind.annotation.JsonbTransient;
 import jakarta.xml.bind.annotation.XmlRootElement;
-import jakarta.xml.bind.annotation.XmlTransient;
-import lombok.AccessLevel;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.Setter;
@@ -32,9 +29,7 @@ import lombok.ToString;
 
 import java.sql.DatabaseMetaData;
 import java.util.Comparator;
-import java.util.Objects;
 import java.util.Optional;
-import java.util.function.BiPredicate;
 
 /**
  * A class for binding results of the
@@ -46,13 +41,13 @@ import java.util.function.BiPredicate;
  * @see Scope
  */
 @XmlRootElement
+@_ChildOf(Table.class)
 @Setter
 @Getter
-//@EqualsAndHashCode(onlyExplicitlyIncluded = true)
+@EqualsAndHashCode(callSuper = true, onlyExplicitlyIncluded = true)
 @ToString(callSuper = true)
 public class BestRowIdentifier
-        extends AbstractMetadataType
-        implements Comparable<BestRowIdentifier> {
+        extends AbstractMetadataType {
 
     private static final long serialVersionUID = -1512051574198028399L;
 
@@ -167,38 +162,6 @@ public class BestRowIdentifier
         private final int fieldValue;
     }
 
-    // -----------------------------------------------------------------------------------------------------------------
-    static final BiPredicate<BestRowIdentifier, Table> IS_OF = (i, t) -> {
-        return Objects.equals(i.parent, t);
-    };
-
-    // -----------------------------------------------------------------------------------------------------------------
-
-    @Override
-    public boolean equals(final Object obj) {
-        if (this == obj) return true;
-        if (obj == null || getClass() != obj.getClass()) return false;
-        if (!super.equals(obj)) return false;
-        final BestRowIdentifier that = (BestRowIdentifier) obj;
-        return Objects.equals(parent, that.parent) &&
-               Objects.equals(scope, that.scope) &&
-               Objects.equals(columnName, that.columnName);
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(super.hashCode(), parent, scope, columnName);
-    }
-
-    // -----------------------------------------------------------------------------------------------------------------
-    @Override
-    public int compareTo(final BestRowIdentifier o) {
-        if (o == null) {
-            throw new NullPointerException("o is null");
-        }
-        return COMPARING_SCOPE.compare(this, o);
-    }
-
     // ----------------------------------------------------------------------------------------------------------- scope
     Scope getScopeAsEnum() {
         return Optional.ofNullable(getScope())
@@ -228,13 +191,6 @@ public class BestRowIdentifier
                         .orElse(null)
         );
     }
-
-    // -----------------------------------------------------------------------------------------------------------------
-    @JsonbTransient
-    @XmlTransient
-    @Setter(AccessLevel.PACKAGE)
-    @EqualsAndHashCode.Include
-    private Table parent;
 
     // -----------------------------------------------------------------------------------------------------------------
     @_ColumnLabel(COLUMN_LABEL_SCOPE)

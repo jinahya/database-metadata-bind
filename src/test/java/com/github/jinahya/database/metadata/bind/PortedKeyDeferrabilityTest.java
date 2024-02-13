@@ -24,19 +24,19 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.EnumSource;
 
-import static com.github.jinahya.database.metadata.bind.TableKey.TableKeyDeferrability.valueOfFieldValue;
+import static com.github.jinahya.database.metadata.bind.PortedKey.TableKeyDeferrability.valueOfFieldValue;
 import static org.assertj.core.api.Assertions.assertThat;
 
-class TableKeyDeferrabilityTest extends _IntFieldEnumTest<TableKey.TableKeyDeferrability> {
+class PortedKeyDeferrabilityTest extends _IntFieldEnumTest<PortedKey.TableKeyDeferrability> {
 
-    TableKeyDeferrabilityTest() {
-        super(TableKey.TableKeyDeferrability.class);
+    PortedKeyDeferrabilityTest() {
+        super(PortedKey.TableKeyDeferrability.class);
     }
 
     @DisplayName("valueOfDeferrability(deferrability)")
-    @EnumSource(TableKey.TableKeyDeferrability.class)
+    @EnumSource(PortedKey.TableKeyDeferrability.class)
     @ParameterizedTest
-    void valueOfDeferrability__(final TableKey.TableKeyDeferrability deferrability) {
+    void valueOfDeferrability__(final PortedKey.TableKeyDeferrability deferrability) {
         assertThat(valueOfFieldValue(deferrability.fieldValueAsInt()))
                 .isSameAs(deferrability);
     }
