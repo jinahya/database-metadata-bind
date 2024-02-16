@@ -21,7 +21,6 @@ package com.github.jinahya.database.metadata.bind;
  */
 
 import jakarta.annotation.Nullable;
-import jakarta.xml.bind.annotation.XmlRootElement;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.Setter;
@@ -40,7 +39,7 @@ import java.util.Optional;
  * @see PseudoColumn
  * @see Scope
  */
-@XmlRootElement
+
 @_ChildOf(Table.class)
 @Setter
 @Getter

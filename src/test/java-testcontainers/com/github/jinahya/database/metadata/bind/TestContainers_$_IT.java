@@ -87,9 +87,21 @@ abstract class TestContainers_$_IT {
     }
 
     @Test
-    void info() {
+    void acceptProperties__() {
         applyContextChecked(c -> {
-            ContextTestUtils.info(c);
+            c.acceptProperties((p, r) -> {
+                log.debug("{}: {}", p, r);
+            });
+            return null;
+        });
+    }
+
+    @Test
+    void acceptValues__() {
+        applyContext(c -> {
+            c.acceptValues((m, r) -> {
+                log.debug("{}: {}", m.getName(), r);
+            });
             return null;
         });
     }

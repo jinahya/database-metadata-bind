@@ -20,7 +20,6 @@ package com.github.jinahya.database.metadata.bind;
  * #L%
  */
 
-import jakarta.xml.bind.annotation.XmlRootElement;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.Setter;
@@ -41,7 +40,7 @@ import static java.util.Comparator.nullsFirst;
  * @see Context#getAttributes(String, String, String, String)
  * @see Nullable
  */
-@XmlRootElement
+
 @_ChildOf(UDT.class)
 @Setter
 @Getter
@@ -92,7 +91,7 @@ public class Attribute extends AbstractMetadataType {
          * A value for
          * {@link DatabaseMetaData#attributeNullableUnknown}({@value DatabaseMetaData#attributeNullableUnknown}).
          */
-        PSEUDO(DatabaseMetaData.attributeNullableUnknown) // 2
+        ATTRIBUTE_NULLABLE_UNKNOWN(DatabaseMetaData.attributeNullableUnknown) // 2
         ;
 
         /**

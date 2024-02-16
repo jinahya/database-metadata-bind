@@ -20,7 +20,6 @@ package com.github.jinahya.database.metadata.bind;
  * #L%
  */
 
-import jakarta.xml.bind.annotation.XmlRootElement;
 import lombok.EqualsAndHashCode;
 import lombok.ToString;
 
@@ -35,7 +34,7 @@ import java.util.Comparator;
  * @see Context#getExportedKeys(String, String, String)
  * @see ImportedKey
  */
-@XmlRootElement
+
 @EqualsAndHashCode(callSuper = true)
 @ToString(callSuper = true)
 public class ExportedKey extends PortedKey<ExportedKey> {

@@ -82,14 +82,22 @@ abstract class Memory_$_Test {
     }
 
     @Test
-    void info() throws SQLException {
+    void acceptProperties__() {
+        applyContextChecked(c -> {
+            c.acceptProperties((p, r) -> {
+                log.debug("{}: {}", p, r);
+            });
+            return null;
+        });
+    }
+
+    @Test
+    void acceptValues__() {
         applyContext(c -> {
-            try {
-                ContextTestUtils.info(c);
-                return null;
-            } catch (final SQLException sqle) {
-                throw new RuntimeException(sqle);
-            }
+            c.acceptValues((m, r) -> {
+                log.debug("{}: {}", m.getName(), r);
+            });
+            return null;
         });
     }
 

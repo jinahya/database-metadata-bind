@@ -21,7 +21,6 @@ package com.github.jinahya.database.metadata.bind;
  */
 
 import jakarta.annotation.Nullable;
-import jakarta.xml.bind.annotation.XmlRootElement;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.Setter;
@@ -41,10 +40,12 @@ import static java.util.Comparator.nullsFirst;
  * @author Jin Kwon &lt;jinahya_at_gmail.com&gt;
  * @see Context#getTablePrivileges(String, String, String)
  */
-@XmlRootElement
+@_ChildOf(Schema.class)
+@_ChildOf(Catalog.class)
+
 @Setter
 @Getter
-@EqualsAndHashCode(callSuper = true, onlyExplicitlyIncluded = true)
+@EqualsAndHashCode(callSuper = true)
 @ToString(callSuper = true)
 public class TablePrivilege extends AbstractMetadataType {
 
@@ -96,17 +97,14 @@ public class TablePrivilege extends AbstractMetadataType {
     @Nullable
     @_NullableBySpecification
     @_ColumnLabel(COLUMN_LABEL_TABLE_CAT)
-    @EqualsAndHashCode.Include
     private String tableCat;
 
     @Nullable
     @_NullableBySpecification
     @_ColumnLabel(COLUMN_LABEL_TABLE_SCHEM)
-    @EqualsAndHashCode.Include
     private String tableSchem;
 
     @_ColumnLabel(COLUMN_LABEL_TABLE_NAME)
-    @EqualsAndHashCode.Include
     private String tableName;
 
     // -----------------------------------------------------------------------------------------------------------------
@@ -120,7 +118,6 @@ public class TablePrivilege extends AbstractMetadataType {
     private String grantee;
 
     @_ColumnLabel("PRIVILEGE")
-    @EqualsAndHashCode.Include
     private String privilege;
 
     @Nullable

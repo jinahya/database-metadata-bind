@@ -20,7 +20,6 @@ package com.github.jinahya.database.metadata.bind;
  * #L%
  */
 
-import jakarta.xml.bind.annotation.XmlRootElement;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.Setter;
@@ -43,7 +42,7 @@ import static java.util.Comparator.nullsFirst;
  * @see Nullable
  */
 //@ParentOf(ColumnPrivilege.class)
-@XmlRootElement
+
 @_ChildOf(Table.class)
 @Setter
 @Getter

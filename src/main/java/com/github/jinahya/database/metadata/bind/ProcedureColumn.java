@@ -20,8 +20,6 @@ package com.github.jinahya.database.metadata.bind;
  * #L%
  */
 
-import jakarta.annotation.Nullable;
-import jakarta.xml.bind.annotation.XmlRootElement;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.Setter;
@@ -43,7 +41,7 @@ import static java.util.Comparator.nullsFirst;
  * @author Jin Kwon &lt;jinahya_at_gmail.com&gt;
  * @see Context#getProcedureColumns(String, String, String, String)
  */
-@XmlRootElement
+
 @_ChildOf(Procedure.class)
 @Setter
 @Getter
@@ -73,18 +71,71 @@ public class ProcedureColumn extends AbstractMetadataType {
                Objects.equals(c.procedureName, p.getProcedureName());
     };
 
+    // ----------------------------------------------------------------------------------------------------- COLUMN_TYPE
+    public static final String COLUMN_LABEL_COLUMN_TYPE = "COLUMN_TYPE";
+
+    public enum ColumnType implements _IntFieldEnum<ColumnType> {
+
+        PROCEDURE_COLUMN_UNKNOWN(DatabaseMetaData.procedureColumnUnknown), // 0
+        PROCEDURE_COLUMN_IN(DatabaseMetaData.procedureColumnIn),           // 1
+        PROCEDURE_COLUMN_IN_OUT(DatabaseMetaData.procedureColumnInOut),    // 2
+        PROCEDURE_COLUMN_RESULT(DatabaseMetaData.procedureColumnResult),   // 3
+        PROCEDURE_COLUMN_OUT(DatabaseMetaData.procedureColumnOut),         // 4
+        PROCEDURE_COLUMN_RETURN(DatabaseMetaData.procedureColumnReturn)    // 5
+        ;
+
+        ColumnType(final int fieldValue) {
+            this.fieldValue = fieldValue;
+        }
+
+        @Override
+        public int fieldValueAsInt() {
+            return fieldValue;
+        }
+
+        private final int fieldValue;
+    }
+
+    // -------------------------------------------------------------------------------------------------------- NULLABLE
+    public static final String COLUMN_NAME_NULLABLE = "NULLABLE";
+
+    public enum Nullable implements _IntFieldEnum<Nullable> {
+
+        PROCEDURE_NO_NULLS(DatabaseMetaData.procedureNoNulls),// 0
+
+        PROCEDURE_NULLABLE(DatabaseMetaData.procedureNullable), // 1
+
+        PROCEDURE_NULLABLE_UNKNOWN(DatabaseMetaData.procedureNullableUnknown) // 2
+        ;
+
+        public static Nullable valueOfFieldValue(final int fieldValue) {
+            return _IntFieldEnum.valueOfFieldValue(Nullable.class, fieldValue);
+        }
+
+        Nullable(final int fieldValue) {
+            this.fieldValue = fieldValue;
+        }
+
+        @Override
+        public int fieldValueAsInt() {
+            return fieldValue;
+        }
+
+        private final int fieldValue;
+    }
+
     // ---------------------------------------------------------------------------------------------------- procedureCat
 
     // -------------------------------------------------------------------------------------------------- procedureSchem
 
     // -----------------------------------------------------------------------------------------------------------------
 
-    @Nullable
+    @jakarta.annotation.Nullable
     @_NullableBySpecification
     @_ColumnLabel("PROCEDURE_CAT")
     private String procedureCat;
 
-    @Nullable
+    @jakarta.annotation.Nullable
     @_NullableBySpecification
     @_ColumnLabel("PROCEDURE_SCHEM")
     private String procedureSchem;
@@ -98,7 +149,7 @@ public class ProcedureColumn extends AbstractMetadataType {
     private String columnName;
 
     // -----------------------------------------------------------------------------------------------------------------
-    @_ColumnLabel("COLUMN_TYPE")
+    @_ColumnLabel(COLUMN_LABEL_COLUMN_TYPE)
     private Integer columnType;
 
     @_ColumnLabel("DATA_TYPE")
@@ -107,7 +158,7 @@ public class ProcedureColumn extends AbstractMetadataType {
     @_ColumnLabel("TYPE_NAME")
     private String typeName;
 
-    @Nullable
+    @jakarta.annotation.Nullable
     @_NullableBySpecification
     @_ColumnLabel("PRECISION")
     private Integer precision;
@@ -116,7 +167,7 @@ public class ProcedureColumn extends AbstractMetadataType {
     private Integer length;
 
     // https://issues.apache.org/jira/browse/DERBY-7103
-    @Nullable
+    @jakarta.annotation.Nullable
     @_NullableBySpecification
     @_ColumnLabel("SCALE")
     private Integer scale;
@@ -130,7 +181,7 @@ public class ProcedureColumn extends AbstractMetadataType {
     @_ColumnLabel("REMARKS")
     private String remarks;
 
-    @Nullable
+    @jakarta.annotation.Nullable
     @_NullableBySpecification
     @_ColumnLabel("COLUMN_DEF")
     private String columnDef;
@@ -143,7 +194,7 @@ public class ProcedureColumn extends AbstractMetadataType {
     @_ColumnLabel("SQL_DATETIME_SUB")
     private Integer sqlDatetimeSub;
 
-    @Nullable
+    @jakarta.annotation.Nullable
     @_NullableBySpecification
     @_ColumnLabel("CHAR_OCTET_LENGTH")
     private Integer charOctetLength;

@@ -43,7 +43,7 @@ class Memory_Hsql_Test extends Memory_$_Test {
     static {
         try {
             DRIVER_CLASS = Class.forName(DRIVER_NAME);
-        } catch (ClassNotFoundException cnfe) {
+        } catch (final ClassNotFoundException cnfe) {
             throw new InstantiationError(cnfe.getMessage());
         }
     }

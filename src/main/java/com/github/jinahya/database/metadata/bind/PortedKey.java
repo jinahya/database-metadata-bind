@@ -305,7 +305,7 @@ public abstract class PortedKey<T extends PortedKey<T>> extends AbstractMetadata
          * Constants for
          * {@link DatabaseMetaData#importedKeyNotDeferrable}({@value DatabaseMetaData#importedKeyNotDeferrable}).
          */
-        IMPORTED_KEY_SET_NOT_DEFERRABLE(DatabaseMetaData.importedKeyNotDeferrable); // 7
+        IMPORTED_KEY_NOT_DEFERRABLE(DatabaseMetaData.importedKeyNotDeferrable); // 7
 
         public static TableKeyDeferrability valueOfFieldValue(final int fieldValue) {
             return _IntFieldEnum.valueOfFieldValue(TableKeyDeferrability.class, fieldValue);

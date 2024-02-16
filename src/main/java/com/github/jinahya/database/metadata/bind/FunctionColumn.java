@@ -20,10 +20,8 @@ package com.github.jinahya.database.metadata.bind;
  * #L%
  */
 
-import jakarta.annotation.Nullable;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.PositiveOrZero;
-import jakarta.xml.bind.annotation.XmlRootElement;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.Setter;
@@ -45,7 +43,7 @@ import static java.util.Comparator.nullsFirst;
  * @author Jin Kwon &lt;jinahya_at_gmail.com&gt;
  * @see Context#getFunctionColumns(String, String, String, String)
  */
-@XmlRootElement
+
 @Setter
 @Getter
 @ToString(callSuper = true)
@@ -113,7 +111,7 @@ public class FunctionColumn extends AbstractMetadataType {
          * A value for {@link DatabaseMetaData#functionReturn}({@value DatabaseMetaData#functionReturn}).
          */
 //        FUNCTION_COLUMN_RETURN(4),
-        FUNCTION_COLUMN_RETURN(DatabaseMetaData.functionReturn),
+        FUNCTION_RETURN(DatabaseMetaData.functionReturn),
 
         /**
          * A value for {@link DatabaseMetaData#functionColumnResult}({@value DatabaseMetaData#functionColumnResult}).
@@ -146,6 +144,31 @@ public class FunctionColumn extends AbstractMetadataType {
     // -----------------------------------------------------------------------------------------------------------------
     public static final String COLUMN_LABEL_NULLABLE = "NULLABLE";
 
+    public enum Nullable implements _IntFieldEnum<Nullable> {
+
+        FUNCTION_NO_NULLS(DatabaseMetaData.functionNoNulls),// 0
+
+        FUNCTION_NULLABLE(DatabaseMetaData.functionNullable), // 1
+
+        FUNCTION_NULLABLE_UNKNOWN(DatabaseMetaData.functionNullableUnknown) // 2
+        ;
+
+        public static Nullable valueOfFieldValue(final int fieldValue) {
+            return _IntFieldEnum.valueOfFieldValue(Nullable.class, fieldValue);
+        }
+
+        Nullable(final int fieldValue) {
+            this.fieldValue = fieldValue;
+        }
+
+        @Override
+        public int fieldValueAsInt() {
+            return fieldValue;
+        }
+
+        private final int fieldValue;
+    }
+
     // -----------------------------------------------------------------------------------------------------------------
     public static final String COLUMN_LABEL_IS_NULLABLE = "IS_NULLABLE";
 
@@ -174,13 +197,13 @@ public class FunctionColumn extends AbstractMetadataType {
 
     // -----------------------------------------------------------------------------------------------------------------
 
-    @Nullable
+    @jakarta.annotation.Nullable
     @_NullableBySpecification
     @_ColumnLabel(COLUMN_LABEL_FUNCTION_CAT)
     @EqualsAndHashCode.Include
     private String functionCat;
 
-    @Nullable
+    @jakarta.annotation.Nullable
     @_NullableBySpecification
     @_ColumnLabel(COLUMN_LABEL_FUNCTION_SCHEM)
     @EqualsAndHashCode.Include
@@ -205,7 +228,7 @@ public class FunctionColumn extends AbstractMetadataType {
     @_ColumnLabel("TYPE_NAME")
     private String typeName;
 
-    @Nullable
+    @jakarta.annotation.Nullable
     @_NullableBySpecification
     @_ColumnLabel("PRECISION")
     private Integer precision;
@@ -213,7 +236,7 @@ public class FunctionColumn extends AbstractMetadataType {
     @_ColumnLabel("LENGTH")
     private Integer length;
 
-    @Nullable
+    @jakarta.annotation.Nullable
     @_NullableBySpecification
     @_ColumnLabel("SCALE")
     private Integer scale;
@@ -227,7 +250,7 @@ public class FunctionColumn extends AbstractMetadataType {
     @_ColumnLabel("REMARKS")
     private String remarks;
 
-    @Nullable
+    @jakarta.annotation.Nullable
     @_NullableBySpecification
     @_ColumnLabel("CHAR_OCTET_LENGTH")
     private Integer charOctetLength;
