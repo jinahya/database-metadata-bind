@@ -27,12 +27,12 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
 
+import java.sql.SQLException;
 import java.util.Comparator;
 import java.util.Objects;
 import java.util.function.BiPredicate;
 
 import static java.util.Comparator.naturalOrder;
-import static java.util.Comparator.nullsFirst;
 
 /**
  * A class for binding results of the
@@ -54,17 +54,31 @@ public class Table extends AbstractMetadataType {
     private static final long serialVersionUID = 6590036695540141125L;
 
     // -----------------------------------------------------------------------------------------------------------------
-    static final Comparator<Table> CASE_INSENSITIVE_ORDER =
-            Comparator.comparing(Table::getTableType, String.CASE_INSENSITIVE_ORDER)
-                    .thenComparing(Table::getTableCat, nullsFirst(String.CASE_INSENSITIVE_ORDER))
-                    .thenComparing(Table::getTableSchem, nullsFirst(String.CASE_INSENSITIVE_ORDER))
-                    .thenComparing(Table::getTableName, String.CASE_INSENSITIVE_ORDER);
+//    static final Comparator<Table> CASE_INSENSITIVE_ORDER =
+//            Comparator.comparing(Table::getTableType, (String.CASE_INSENSITIVE_ORDER))
+//                    .thenComparing(Table::getTableCat, ContextUtils.nulls(String.CASE_INSENSITIVE_ORDER))
+//                    .thenComparing(Table::getTableSchem, ContextUtils.nulls(String.CASE_INSENSITIVE_ORDER))
+//                    .thenComparing(Table::getTableName, String.CASE_INSENSITIVE_ORDER);
+//
+//    static final Comparator<Table> LEXICOGRAPHIC_ORDER =
+//            Comparator.comparing(Table::getTableType, ContextUtils.nulls(naturalOrder()))
+//                    .thenComparing(Table::getTableCat, ContextUtils.nulls(naturalOrder()))
+//                    .thenComparing(Table::getTableSchem, ContextUtils.nulls(naturalOrder()))
+//                    .thenComparing(Table::getTableName);
 
-    static final Comparator<Table> LEXICOGRAPHIC_ORDER =
-            Comparator.comparing(Table::getTableType, naturalOrder())
-                    .thenComparing(Table::getTableCat, nullsFirst(naturalOrder()))
-                    .thenComparing(Table::getTableSchem, nullsFirst(naturalOrder()))
-                    .thenComparing(Table::getTableName);
+    static Comparator<Table> comparingCaseInsensitiveOrder(final Context context) throws SQLException {
+        return Comparator.comparing(Table::getTableType, ContextUtils.nulls(context, String.CASE_INSENSITIVE_ORDER))
+                .thenComparing(Table::getTableCat, ContextUtils.nulls(context, String.CASE_INSENSITIVE_ORDER))
+                .thenComparing(Table::getTableSchem, ContextUtils.nulls(context, String.CASE_INSENSITIVE_ORDER))
+                .thenComparing(Table::getTableName, String.CASE_INSENSITIVE_ORDER);
+    }
+
+    static Comparator<Table> comparingLexicographicOrder(final Context context) throws SQLException {
+        return Comparator.comparing(Table::getTableType, ContextUtils.nulls(context, naturalOrder()))
+                .thenComparing(Table::getTableCat, ContextUtils.nulls(context, naturalOrder()))
+                .thenComparing(Table::getTableSchem, ContextUtils.nulls(context, naturalOrder()))
+                .thenComparing(Table::getTableName);
+    }
 
     // -----------------------------------------------------------------------------------------------------------------
 

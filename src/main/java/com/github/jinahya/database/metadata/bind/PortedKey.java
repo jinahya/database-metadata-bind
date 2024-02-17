@@ -324,13 +324,13 @@ public abstract class PortedKey<T extends PortedKey<T>> extends AbstractMetadata
     }
 
     // -----------------------------------------------------------------------------------------------------------------
-    public static final BiPredicate<PortedKey<?>, Table> IS_OF_PKTABLE = (k, t) -> {
+    static final BiPredicate<PortedKey<?>, Table> IS_OF_PKTABLE = (k, t) -> {
         return Objects.equals(k.pktableCat, t.getTableCat()) &&
                Objects.equals(k.pktableSchem, t.getTableSchem()) &&
                Objects.equals(k.pktableName, t.getTableName());
     };
 
-    public static final BiPredicate<PortedKey<?>, Table> IS_OF_FKTABLE = (k, t) -> {
+    static final BiPredicate<PortedKey<?>, Table> IS_OF_FKTABLE = (k, t) -> {
         return Objects.equals(k.fktableCat, t.getTableCat()) &&
                Objects.equals(k.fktableSchem, t.getTableSchem()) &&
                Objects.equals(k.fktableName, t.getTableName());

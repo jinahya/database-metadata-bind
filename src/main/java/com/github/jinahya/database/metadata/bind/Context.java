@@ -336,8 +336,10 @@ public class Context {
      * @throws SQLException if a database error occurs.
      * @see DatabaseMetaData#getAttributes(String, String, String, String)
      */
-    public List<Attribute> getAttributes(final String catalog, final String schemaPattern, final String typeNamePattern,
-                                         final String attributeNamePattern)
+    public @NotNull List<@Valid @NotNull Attribute> getAttributes(final @Nullable String catalog,
+                                                                  final @Nullable String schemaPattern,
+                                                                  final @NotBlank String typeNamePattern,
+                                                                  final @NotBlank String attributeNamePattern)
             throws SQLException {
         return addAttributes(
                 catalog,
@@ -348,7 +350,8 @@ public class Context {
         );
     }
 
-    List<Attribute> getAttributes(final @NotNull UDT udt, final @NotBlank String attributeNamePattern)
+    @NotNull List<@Valid @NotNull Attribute> getAttributes(final @NotNull UDT udt,
+                                                           final @NotBlank String attributeNamePattern)
             throws SQLException {
         Objects.requireNonNull(udt, "udt is null");
         return getAttributes(
@@ -1628,7 +1631,9 @@ public class Context {
         return addSuperTypes(catalog, schemaPattern, typeNamePattern, new ArrayList<>());
     }
 
-    List<SuperType> getSuperTypes(final Schema schema, final String typeNamePattern) throws SQLException {
+    @NotNull List<@Valid @NotNull SuperType> getSuperTypes(final @NotNull Schema schema,
+                                                           final @NotBlank String typeNamePattern)
+            throws SQLException {
         Objects.requireNonNull(schema, "schema is null");
         return getSuperTypes(
                 schema.getTableCatalog(),

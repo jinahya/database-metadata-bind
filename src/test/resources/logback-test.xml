@@ -38,6 +38,7 @@
   <logger name="org.mariadb.jdbc.client.socket.impl.PacketReader" level="INFO"/>
   <logger name="org.mariadb.jdbc.client.socket.impl.PacketWriter" level="INFO"/>
   <logger name="org.mariadb.jdbc.client.impl.StandardClient" level="INFO"/>
+  <logger name="org.sqlite" level="INFO"/>
   <logger name="org.testcontainers" level="INFO"/>
 
 </configuration>

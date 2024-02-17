@@ -106,7 +106,7 @@ public class PrimaryKey extends AbstractMetadataType {
     public static final String COLUMN_LABEL_PK_NAME = "PK_NAME";
 
     // -----------------------------------------------------------------------------------------------------------------
-    public static final BiPredicate<PrimaryKey, Table> IS_OF = (k, t) -> {
+    static final BiPredicate<PrimaryKey, Table> IS_OF = (k, t) -> {
         return Objects.equals(k.tableCat, t.getTableCat()) &&
                Objects.equals(k.tableSchem, t.getTableSchem()) &&
                Objects.equals(k.tableName, t.getTableName());

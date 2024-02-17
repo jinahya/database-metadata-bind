@@ -25,11 +25,9 @@ import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
 
+import java.sql.SQLException;
 import java.util.Comparator;
 import java.util.function.Consumer;
-
-import static java.util.Comparator.naturalOrder;
-import static java.util.Comparator.nullsFirst;
 
 /**
  * A class for binding results of the {@link java.sql.DatabaseMetaData#getCatalogs()} method.
@@ -41,22 +39,21 @@ import static java.util.Comparator.nullsFirst;
 @_ParentOf(Schema.class)
 @Setter
 @Getter
-@ToString(callSuper = true)
 @EqualsAndHashCode(callSuper = true)
+@ToString(callSuper = true)
 public class Catalog extends AbstractMetadataType {
 
     private static final long serialVersionUID = 6239185259128825953L;
 
     // -----------------------------------------------------------------------------------------------------------------
 
-    /**
-     * A comparator compares catalogs with their {@link #getTableCat()} values in a case-insensitive manner.
-     */
-    static final Comparator<Catalog> CASE_INSENSITIVE_ORDER
-            = Comparator.comparing(Catalog::getTableCat, nullsFirst(String.CASE_INSENSITIVE_ORDER));
+    static Comparator<Catalog> comparingInCaseInsensitiveOrder(final Context context) throws SQLException {
+        return Comparator.comparing(Catalog::getTableCat, ContextUtils.nulls(context, String.CASE_INSENSITIVE_ORDER));
+    }
 
-    static final Comparator<Catalog> LEXICOGRAPHIC_ORDER
-            = Comparator.comparing(Catalog::getTableCat, nullsFirst(naturalOrder()));
+    static Comparator<Catalog> comparingInNaturalOrder(final Context context) throws SQLException {
+        return Comparator.comparing(Catalog::getTableCat, ContextUtils.nulls(context, Comparator.naturalOrder()));
+    }
 
     // -----------------------------------------------------------------------------------------------------------------
 
@@ -76,6 +73,5 @@ public class Catalog extends AbstractMetadataType {
 
     // -----------------------------------------------------------------------------------------------------------------
     @_ColumnLabel(COLUMN_LABEL_TABLE_CAT)
-    @EqualsAndHashCode.Include
     private String tableCat;
 }

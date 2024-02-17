@@ -125,11 +125,11 @@ public class Procedure extends AbstractMetadataType {
     public static final String COLUMN_LABEL_SPECIFIC_NAME = "SPECIFIC_NAME";
 
     // -----------------------------------------------------------------------------------------------------------------
-    public static final BiPredicate<Procedure, Catalog> IS_OF_CATALOG = (p, c) -> {
+    static final BiPredicate<Procedure, Catalog> IS_OF_CATALOG = (p, c) -> {
         return Objects.equals(p.procedureCat, c.getTableCat());
     };
 
-    public static final BiPredicate<Procedure, Schema> IS_OF_SCHEMA = (p, s) -> {
+    static final BiPredicate<Procedure, Schema> IS_OF_SCHEMA = (p, s) -> {
         return Objects.equals(p.procedureCat, s.getTableCatalog()) &&
                Objects.equals(p.procedureSchem, s.getTableSchem());
     };

@@ -32,6 +32,7 @@ import java.sql.DriverManager;
 import java.sql.SQLException;
 import java.time.Duration;
 
+// https://java.testcontainers.org/modules/databases/postgres/
 @Testcontainers
 @Slf4j
 class TestContainers_PostgreSQL_IT extends TestContainers_$_IT {

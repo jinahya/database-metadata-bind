@@ -46,7 +46,8 @@ import static java.util.Comparator.nullsFirst;
  * @author Jin Kwon &lt;jinahya_at_gmail.com&gt;
  * @see Context#getUDTs(String, String, String, int[])
  */
-
+@_ChildOf(Catalog.class)
+@_ChildOf(Schema.class)
 @_ParentOf(Attribute.class)
 @_ParentOf(UDT.class)
 @Setter

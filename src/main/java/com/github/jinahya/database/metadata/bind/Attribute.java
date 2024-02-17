@@ -26,12 +26,12 @@ import lombok.Setter;
 import lombok.ToString;
 
 import java.sql.DatabaseMetaData;
+import java.sql.SQLException;
 import java.util.Comparator;
 import java.util.Objects;
 import java.util.function.BiPredicate;
 
 import static java.util.Comparator.naturalOrder;
-import static java.util.Comparator.nullsFirst;
 
 /**
  * A class for binding results of the {@link DatabaseMetaData#getAttributes(String, String, String, String)} method.
@@ -51,17 +51,19 @@ public class Attribute extends AbstractMetadataType {
     private static final long serialVersionUID = 1913681105410440186L;
 
     // -----------------------------------------------------------------------------------------------------------------
-    static final Comparator<Attribute> CASE_INSENSITIVE_ORDER =
-            Comparator.comparing(Attribute::getTypeCat, nullsFirst(String.CASE_INSENSITIVE_ORDER))
-                    .thenComparing(Attribute::getTypeSchem, nullsFirst(String.CASE_INSENSITIVE_ORDER))
-                    .thenComparing(Attribute::getTypeName, nullsFirst(String.CASE_INSENSITIVE_ORDER))
-                    .thenComparing(Attribute::getOrdinalPosition, nullsFirst(naturalOrder()));
+    static Comparator<Attribute> comparingInCaseInsensitiveOrder(final Context context) throws SQLException {
+        return Comparator.comparing(Attribute::getTypeCat, ContextUtils.nulls(context, String.CASE_INSENSITIVE_ORDER))
+                .thenComparing(Attribute::getTypeSchem, ContextUtils.nulls(context, String.CASE_INSENSITIVE_ORDER))
+                .thenComparing(Attribute::getTypeName, ContextUtils.nulls(context, String.CASE_INSENSITIVE_ORDER))
+                .thenComparing(Attribute::getOrdinalPosition, ContextUtils.nulls(context, naturalOrder()));
+    }
 
-    static final Comparator<Attribute> LEXICOGRAPHIC_ORDER =
-            Comparator.comparing(Attribute::getTypeCat, nullsFirst(naturalOrder()))
-                    .thenComparing(Attribute::getTypeSchem, nullsFirst(naturalOrder()))
-                    .thenComparing(Attribute::getTypeName, nullsFirst(naturalOrder()))
-                    .thenComparing(Attribute::getOrdinalPosition, nullsFirst(naturalOrder()));
+    static Comparator<Attribute> comparingInNaturalOrder(final Context context) throws SQLException {
+        return Comparator.comparing(Attribute::getTypeCat, ContextUtils.nulls(context, naturalOrder()))
+                .thenComparing(Attribute::getTypeSchem, ContextUtils.nulls(context, naturalOrder()))
+                .thenComparing(Attribute::getTypeName, ContextUtils.nulls(context, naturalOrder()))
+                .thenComparing(Attribute::getOrdinalPosition, ContextUtils.nulls(context, naturalOrder()));
+    }
 
     // -------------------------------------------------------------------------------------------------------- TYPE_CAT
     public static final String COLUMN_LABEL_TYPE_CAT = "TYPE_CAT";

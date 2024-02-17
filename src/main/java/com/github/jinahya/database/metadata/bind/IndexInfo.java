@@ -121,7 +121,7 @@ public class IndexInfo extends AbstractMetadataType {
     }
 
     // -----------------------------------------------------------------------------------------------------------------
-    public static final BiPredicate<IndexInfo, Table> IS_OF = (i, t) -> {
+    static final BiPredicate<IndexInfo, Table> IS_OF = (i, t) -> {
         return Objects.equals(i.tableCat, t.getTableCat()) &&
                Objects.equals(i.tableSchem, t.getTableSchem()) &&
                Objects.equals(i.tableName, t.getTableName());

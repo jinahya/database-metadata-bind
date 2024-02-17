@@ -27,7 +27,8 @@ All methods, defined in the `DatabaseMetaData`, which each returns a `ResultSet`
 class C {
     void m() {
         try (var connection = connect()) {
-            var context = Context.newInstance(connection);
+            var metadata = connection.getDatabaseMetaData();
+            var context = Context.newInstance(metadata);
             var catalogs = context.getCatalogs();
             var tables = context.getTables(null, null, "%", null);
         }
@@ -51,8 +52,7 @@ A lot of classes/methods defined in this module need to be tested with various k
 ### Run the `ExternalIT` class with `url`, `user`, and `password` parameter.
 
 ```commandline
-$ mvn -Pfailsafe \
-  -Dtest=ExternalIT \
+$ mvn -Pfailsafe -Dtest=ExternalIT \
   -Durl='<your-jdbc-url>' \
   -Duser='<your-own-user>' \
   -Dpassword='<your-own-password>'
@@ -66,6 +66,13 @@ $ mvn -Pfailsafe \
 
 ### MariaDB
 * [getTables should be ordered as expected](https://jira.mariadb.org/browse/CONJ-1156)
+* [DatabaseMetaData#getFunctions's result not property ordered](https://jira.mariadb.org/browse/CONJ-1158)
 
 ### MySQL
 * [DatabaseMetaData#getTables produces duplicates](https://bugs.mysql.com/bug.php?id=113970&thanks=4)
+
+### PostgreSQL
+* [DatabaseMetaData#getFunctionColumns's result has duplicate](https://github.com/pgjdbc/pgjdbc/issues/3127)
+
+### SQL Server
+* [DatabaseMetaData#getProcedures not ordered as specified](https://github.com/microsoft/mssql-jdbc/issues/2321)

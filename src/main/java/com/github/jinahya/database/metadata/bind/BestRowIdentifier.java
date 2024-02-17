@@ -27,6 +27,7 @@ import lombok.Setter;
 import lombok.ToString;
 
 import java.sql.DatabaseMetaData;
+import java.sql.SQLException;
 import java.util.Comparator;
 import java.util.Optional;
 
@@ -52,12 +53,16 @@ public class BestRowIdentifier
 
     // -----------------------------------------------------------------------------------------------------------------
 
-    /**
-     * A comparator compares objects with their value of {@link #getScope()}.
-     */
-    static final Comparator<BestRowIdentifier> COMPARING_SCOPE = Comparator.comparingInt(BestRowIdentifier::getScope);
+    static Comparator<BestRowIdentifier> comparingScope(final Context context) throws SQLException {
+        return Comparator.comparing(BestRowIdentifier::getScope,
+                                    ContextUtils.nulls(context, Comparator.naturalOrder()));
+    }
 
     // ----------------------------------------------------------------------------------------------------------- SCOPE
+
+    /**
+     * The column label of {@value}.
+     */
     public static final String COLUMN_LABEL_SCOPE = "SCOPE";
 
     /**
@@ -107,12 +112,24 @@ public class BestRowIdentifier
     }
 
     // ----------------------------------------------------------------------------------------------------- COLUMN_NAME
+
+    /**
+     * The column label of {@value}.
+     */
     public static final String COLUMN_LABEL_COLUMN_NAME = "COLUMN_NAME";
 
     // ------------------------------------------------------------------------------------------------------- DATA_TYPE
+
+    /**
+     * The column label of {@value}.
+     */
     public static final String COLUMN_LABEL_DATA_TYPE = "DATA_TYPE";
 
     // --------------------------------------------------------------------------------------------------- PSEUDO_COLUMN
+
+    /**
+     * The column label of {@value}.
+     */
     public static final String COLUMN_LABEL_PSEUDO_COLUMN = "PSEUDO_COLUMN";
 
     /**
