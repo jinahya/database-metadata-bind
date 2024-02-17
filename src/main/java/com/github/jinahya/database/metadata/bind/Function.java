@@ -30,6 +30,7 @@ import java.sql.DatabaseMetaData;
 import java.util.Comparator;
 import java.util.Objects;
 import java.util.Optional;
+import java.util.function.BiPredicate;
 
 import static java.util.Comparator.comparing;
 import static java.util.Comparator.naturalOrder;
@@ -47,7 +48,8 @@ import static java.util.Comparator.nullsFirst;
 @Getter
 @ToString(callSuper = true)
 @EqualsAndHashCode(callSuper = true, onlyExplicitlyIncluded = true)
-public class Function extends AbstractMetadataType {
+public class Function
+        extends AbstractMetadataType {
 
     private static final long serialVersionUID = -3318947900237453301L;
 
@@ -90,7 +92,8 @@ public class Function extends AbstractMetadataType {
      *
      * @author Jin Kwon &lt;onacit_at_gmail.com&gt;
      */
-    public enum FunctionType implements _IntFieldEnum<FunctionType> {
+    public enum FunctionType
+            implements _IntFieldEnum<FunctionType> {
 
         /**
          * A value for {@link DatabaseMetaData#functionResultUnknown}({@value DatabaseMetaData#functionResultUnknown}).
@@ -131,14 +134,14 @@ public class Function extends AbstractMetadataType {
     }
 
     // -----------------------------------------------------------------------------------------------------------------
-    boolean isOf(final Catalog catalog) {
-        return Objects.equals(functionCat, catalog.getTableCat());
-    }
+    static final BiPredicate<? super Function, ? super Catalog> IS_OF_CATALOG = (f, c) -> {
+        return Objects.equals(f.functionCat, c.getTableCat());
+    };
 
-    boolean isOf(final Schema schema) {
-        return Objects.equals(functionCat, schema.getTableCatalog()) &&
-               Objects.equals(functionSchem, schema.getTableSchem());
-    }
+    static final BiPredicate<? super Function, ? super Schema> IS_OF_SCHEMA = (f, s) -> {
+        return Objects.equals(f.functionCat, s.getTableCatalog()) &&
+               Objects.equals(f.functionSchem, s.getTableSchem());
+    };
 
     // ---------------------------------------------------------------------------------------------------- functionType
 
