@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
   <modelVersion>4.0.0</modelVersion>
 
   <parent>
@@ -74,7 +74,6 @@
       </dependency>
     </dependencies>
   </dependencyManagement>
-
   <dependencies>
     <dependency>
       <groupId>ch.qos.logback</groupId>
@@ -533,8 +532,7 @@
             <type>pom</type>
             <scope>import</scope>
           </dependency>
-          <dependency>
-            <!-- https://search.maven.org/search?q=g:org.testcontainers -->
+          <dependency><!-- https://search.maven.org/search?q=g:org.testcontainers -->
             <groupId>org.testcontainers</groupId>
             <artifactId>testcontainers-bom</artifactId>
             <version>1.19.5</version>
@@ -549,8 +547,7 @@
           <artifactId>db2</artifactId>
           <scope>test</scope>
         </dependency>
-        <dependency>
-          <!-- https://search.maven.org/search?q=a:mssql-jdbc -->
+        <dependency><!-- https://search.maven.org/search?q=a:mssql-jdbc -->
           <groupId>com.microsoft.sqlserver</groupId>
           <artifactId>mssql-jdbc</artifactId>
           <!--          <version>11.2.3.jre17</version>-->
