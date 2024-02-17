@@ -26,7 +26,8 @@ import org.junit.jupiter.params.provider.EnumSource;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-class PortedKeyDeleteRuleTest extends _IntFieldEnumTest<PortedKey.TableKeyDeleteRule> {
+class PortedKeyDeleteRuleTest
+        extends _IntFieldEnumTest<PortedKey.TableKeyDeleteRule> {
 
     PortedKeyDeleteRuleTest() {
         super(PortedKey.TableKeyDeleteRule.class);

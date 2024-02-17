@@ -20,7 +20,8 @@ package com.github.jinahya.database.metadata.bind;
  * #L%
  */
 
-class TableTest extends AbstractMetadataTypeTest<Table> {
+class TableTest
+        extends AbstractMetadataTypeTest<Table> {
 
     TableTest() {
         super(Table.class);

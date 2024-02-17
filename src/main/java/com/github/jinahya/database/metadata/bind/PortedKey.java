@@ -28,13 +28,11 @@ import lombok.Setter;
 import lombok.ToString;
 
 import java.sql.DatabaseMetaData;
+import java.sql.SQLException;
 import java.util.Comparator;
 import java.util.Objects;
 import java.util.Optional;
 import java.util.function.BiPredicate;
-
-import static java.util.Comparator.naturalOrder;
-import static java.util.Comparator.nullsFirst;
 
 /**
  * An abstract class for binding results of the
@@ -48,37 +46,30 @@ import static java.util.Comparator.nullsFirst;
 @Getter
 @EqualsAndHashCode(callSuper = true, onlyExplicitlyIncluded = true)
 @ToString(callSuper = true)
-public abstract class PortedKey extends AbstractMetadataType {
+abstract class PortedKey
+        extends AbstractMetadataType {
 
     private static final long serialVersionUID = 6713872409315471232L;
 
     // -----------------------------------------------------------------------------------------------------------------
-    static <T extends PortedKey> Comparator<T> comparingPktableCaseInsensitive() {
-        return Comparator.<T, String>comparing(PortedKey::getPktableCat, nullsFirst(String.CASE_INSENSITIVE_ORDER))
-                .thenComparing(PortedKey::getPktableSchem, nullsFirst(String.CASE_INSENSITIVE_ORDER))
-                .thenComparing(PortedKey::getPktableName, String.CASE_INSENSITIVE_ORDER)
-                .thenComparingInt(PortedKey::getKeySeq);
+    static <T extends PortedKey> Comparator<T> comparingPktable_(final Context context,
+                                                                 final Comparator<? super String> comparator)
+            throws SQLException {
+        return Comparator
+                .<T, String>comparing(PortedKey::getPktableCat, ContextUtils.nulls(context, comparator))
+                .thenComparing(PortedKey::getPktableSchem, ContextUtils.nulls(context, comparator))
+                .thenComparing(PortedKey::getPktableName, ContextUtils.nulls(context, comparator))
+                .thenComparing(PortedKey::getKeySeq, ContextUtils.nulls(context, Comparator.naturalOrder()));
     }
 
-    static <T extends PortedKey> Comparator<T> comparingPktableLexicographic() {
-        return Comparator.<T, String>comparing(PortedKey::getPktableCat, nullsFirst(naturalOrder()))
-                .thenComparing(PortedKey::getPktableSchem, nullsFirst(naturalOrder()))
-                .thenComparing(PortedKey::getPktableName)
-                .thenComparingInt(PortedKey::getKeySeq);
-    }
-
-    static <T extends PortedKey> Comparator<T> comparingFktableCaseInsensitive() {
-        return Comparator.<T, String>comparing(PortedKey::getFktableCat, nullsFirst(String.CASE_INSENSITIVE_ORDER))
-                .thenComparing(PortedKey::getFktableSchem, nullsFirst(String.CASE_INSENSITIVE_ORDER))
-                .thenComparing(PortedKey::getFktableName, String.CASE_INSENSITIVE_ORDER)
-                .thenComparingInt(PortedKey::getKeySeq);
-    }
-
-    static <T extends PortedKey> Comparator<T> comparingFktableLexicographic() {
-        return Comparator.<T, String>comparing(PortedKey::getFktableCat, nullsFirst(naturalOrder()))
-                .thenComparing(PortedKey::getFktableSchem, nullsFirst(naturalOrder()))
-                .thenComparing(PortedKey::getFktableName)
-                .thenComparingInt(PortedKey::getKeySeq);
+    static <T extends PortedKey> Comparator<T> comparingFktable_(final Context context,
+                                                                 final Comparator<? super String> comparator)
+            throws SQLException {
+        return Comparator
+                .<T, String>comparing(PortedKey::getFktableCat, ContextUtils.nulls(context, comparator))
+                .thenComparing(PortedKey::getFktableSchem, ContextUtils.nulls(context, comparator))
+                .thenComparing(PortedKey::getFktableName, ContextUtils.nulls(context, comparator))
+                .thenComparing(PortedKey::getKeySeq, ContextUtils.nulls(context, Comparator.naturalOrder()));
     }
 
     // -----------------------------------------------------------------------------------------------------------------
@@ -158,7 +149,8 @@ public abstract class PortedKey extends AbstractMetadataType {
      * @see ExportedKey
      * @see ImportedKey
      */
-    public enum TableKeyUpdateRule implements _IntFieldEnum<TableKeyUpdateRule> {
+    public enum TableKeyUpdateRule
+            implements _IntFieldEnum<TableKeyUpdateRule> {
 
         /**
          * Constants for {@link DatabaseMetaData#importedKeyCascade}({@value DatabaseMetaData#importedKeyCascade}).
@@ -215,7 +207,8 @@ public abstract class PortedKey extends AbstractMetadataType {
      * @see ExportedKey
      * @see ImportedKey
      */
-    public enum TableKeyDeleteRule implements _IntFieldEnum<TableKeyDeleteRule> {
+    public enum TableKeyDeleteRule
+            implements _IntFieldEnum<TableKeyDeleteRule> {
 
         /**
          * Constants for {@link DatabaseMetaData#importedKeyCascade}({@value DatabaseMetaData#importedKeyCascade}).
@@ -285,7 +278,8 @@ public abstract class PortedKey extends AbstractMetadataType {
      * @see ExportedKey
      * @see ImportedKey
      */
-    public enum TableKeyDeferrability implements _IntFieldEnum<TableKeyDeferrability> {
+    public enum TableKeyDeferrability
+            implements _IntFieldEnum<TableKeyDeferrability> {
 
         /**
          * Constants for

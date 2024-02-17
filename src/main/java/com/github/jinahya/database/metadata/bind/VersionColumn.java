@@ -43,7 +43,8 @@ import java.util.function.BiPredicate;
 @Getter
 @EqualsAndHashCode(callSuper = true, onlyExplicitlyIncluded = true)
 @ToString(callSuper = true)
-public class VersionColumn extends AbstractMetadataType {
+public class VersionColumn
+        extends AbstractMetadataType {
 
     private static final long serialVersionUID = 3587959398829593292L;
 
@@ -55,7 +56,8 @@ public class VersionColumn extends AbstractMetadataType {
      *
      * @author Jin Kwon &lt;onacit_at_gmail.com&gt;
      */
-    public enum PseudoColumn implements _IntFieldEnum<PseudoColumn> {
+    public enum PseudoColumn
+            implements _IntFieldEnum<PseudoColumn> {
 
         /**
          * A value for {@link DatabaseMetaData#versionColumnUnknown}({@value DatabaseMetaData#versionColumnUnknown}).

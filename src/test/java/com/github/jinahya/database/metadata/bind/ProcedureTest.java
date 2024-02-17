@@ -29,7 +29,8 @@ import org.mockito.Mockito;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 
-class ProcedureTest extends AbstractMetadataTypeTest<Procedure> {
+class ProcedureTest
+        extends AbstractMetadataTypeTest<Procedure> {
 
     ProcedureTest() {
         super(Procedure.class);

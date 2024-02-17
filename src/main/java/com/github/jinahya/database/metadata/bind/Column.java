@@ -26,13 +26,11 @@ import lombok.Setter;
 import lombok.ToString;
 
 import java.sql.DatabaseMetaData;
+import java.sql.SQLException;
 import java.util.Comparator;
 import java.util.Objects;
 import java.util.Optional;
 import java.util.function.BiPredicate;
-
-import static java.util.Comparator.naturalOrder;
-import static java.util.Comparator.nullsFirst;
 
 /**
  * A class for binding results of the {@link DatabaseMetaData#getColumns(String, String, String, String)} method.
@@ -48,22 +46,19 @@ import static java.util.Comparator.nullsFirst;
 @Getter
 @EqualsAndHashCode(callSuper = true, onlyExplicitlyIncluded = true)
 @ToString(callSuper = true)
-public class Column extends AbstractMetadataType {
+public class Column
+        extends AbstractMetadataType {
 
     private static final long serialVersionUID = -409653682729081530L;
 
     // -----------------------------------------------------------------------------------------------------------------
-    static final Comparator<Column> CASE_INSENSITIVE_ORDER =
-            Comparator.comparing(Column::getTableCat, nullsFirst(String.CASE_INSENSITIVE_ORDER))
-                    .thenComparing(Column::getTableSchem, nullsFirst(String.CASE_INSENSITIVE_ORDER))
-                    .thenComparing(Column::getTableName, nullsFirst(String.CASE_INSENSITIVE_ORDER))
-                    .thenComparingInt(Column::getOrdinalPosition);
-
-    static final Comparator<Column> LEXICOGRAPHIC_ORDER =
-            Comparator.comparing(Column::getTableCat, nullsFirst(naturalOrder()))
-                    .thenComparing(Column::getTableSchem, nullsFirst(naturalOrder()))
-                    .thenComparing(Column::getTableName, nullsFirst(naturalOrder()))
-                    .thenComparingInt(Column::getOrdinalPosition);
+    static Comparator<Column> comparing(final Context context, final Comparator<? super String> comparator)
+            throws SQLException {
+        return Comparator.comparing(Column::getTableCat, ContextUtils.nulls(context, comparator))
+                .thenComparing(Column::getTableSchem, ContextUtils.nulls(context, comparator))
+                .thenComparing(Column::getTableName, ContextUtils.nulls(context, comparator))
+                .thenComparing(Column::getOrdinalPosition, ContextUtils.nulls(context, Comparator.naturalOrder()));
+    }
 
     // -----------------------------------------------------------------------------------------------------------------
 
@@ -105,7 +100,8 @@ public class Column extends AbstractMetadataType {
      *
      * @author Jin Kwon &lt;onacit_at_gmail.com&gt;
      */
-    public enum Nullable implements _IntFieldEnum<Nullable> {
+    public enum Nullable
+            implements _IntFieldEnum<Nullable> {
 
         /**
          * A value for {@link DatabaseMetaData#columnNoNulls}({@value DatabaseMetaData#columnNoNulls}).

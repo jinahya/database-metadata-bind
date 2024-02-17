@@ -28,7 +28,8 @@ import java.util.Map;
  *
  * @author Jin Kwon &lt;onacit_at_gmail.com&gt;
  */
-public interface MetadataType extends Serializable {
+public interface MetadataType
+        extends Serializable {
 
     /**
      * Returns a map of unmapped values.

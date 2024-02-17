@@ -37,7 +37,8 @@ import java.time.Duration;
 @Disabled("doesn't start; no arm")
 //@Testcontainers
 @Slf4j
-class TestContainers_Db2_IT extends TestContainers_$_IT {
+class TestContainers_Db2_IT
+        extends TestContainers_$_IT {
 
     private static final String FULL_IMAGE_NAME = "ibmcom/db2:latest";
 

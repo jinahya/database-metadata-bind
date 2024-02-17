@@ -33,9 +33,9 @@ import java.sql.JDBCType;
 import java.sql.SQLException;
 import java.sql.SQLFeatureNotSupportedException;
 import java.sql.Types;
+import java.util.Comparator;
 import java.util.List;
 import java.util.Objects;
-import java.util.Set;
 import java.util.concurrent.Executors;
 import java.util.function.Consumer;
 
@@ -52,7 +52,6 @@ final class ContextTestUtils {
 
     static void info(final Context context) throws SQLException {
         Objects.requireNonNull(context, "context is null");
-        databaseProductName = context.metadata.getDatabaseProductName();
         context.acceptValues((m, v) -> {
             log.debug("{}: {}", m.getName(), v);
         });
@@ -60,8 +59,6 @@ final class ContextTestUtils {
     }
 
     // -----------------------------------------------------------------------------------------------------------------
-    private static String databaseProductName;
-
     private static InvocationHandler proxy(final InvocationHandler handler) {
         return (p, m, args) -> {
             try {
@@ -78,13 +75,14 @@ final class ContextTestUtils {
         };
     }
 
-    static void acceptValidationProxy(final Context context, final Consumer<? super Context> consumer) {
+    static void proxy(final Context context, final Consumer<? super Context> consumer) {
         try (var factory = Validation.buildDefaultValidatorFactory()) {
             final var validator = factory.getValidator();
             try (var unloaded = new ByteBuddy()
                     .subclass(Context.class)
                     .method(ElementMatchers.any())
-                    .intercept(InvocationHandlerAdapter.of(proxy(new ValidationInvocationHandler(context, validator))))
+                    .intercept(InvocationHandlerAdapter.of(
+                            proxy(new ValidationInvocationHandler(context, validator))))
                     .make()) {
                 final var loaded = unloaded.load(context.getClass().getClassLoader()).getLoaded();
                 final Context instance;
@@ -103,7 +101,7 @@ final class ContextTestUtils {
     }
 
     static void test(final Context context) throws SQLException {
-        acceptValidationProxy(context, p -> {
+        proxy(context, p -> {
             try {
                 test_(p);
             } catch (final SQLException sqle) {
@@ -116,13 +114,8 @@ final class ContextTestUtils {
         return context.metadata.getDatabaseProductName();
     }
 
-    private static void checkDatabaseProductName(final Context context) throws SQLException {
-        databaseProductName = databaseProductName(context);
-    }
-
     private static void test_(final Context context) throws SQLException {
         Objects.requireNonNull(context, "context is null");
-        checkDatabaseProductName(context);
         // ---------------------------------------------------------------------------------------------------- catalogs
         if (true) {
             final var catalogs = context.getCatalogs();
@@ -152,8 +145,7 @@ final class ContextTestUtils {
 //        } catch (final SQLException sqle) {
 //            log.error("failed to get crossReference", sqle);
 //        }
-        // --------------------------------------------------------------------------------------------------- functions
-        // --------------------------------------------------------------------------------------------- functionColumns
+        // ----------------------------------------------------------------------------------- functions/functionColumns
         try {
             final var functions = context.getFunctions(null, null, "%");
             functions(context, functions);
@@ -170,9 +162,6 @@ final class ContextTestUtils {
         // ----------------------------------------------------------------------------------------------------- schemas
         try {
             final var schemas = context.getSchemas();
-            if (schemas.isEmpty()) {
-                schemas.add(Schema.of(null, null));
-            }
             schemas(context, schemas);
         } catch (final SQLFeatureNotSupportedException sqlfnse) {
             // empty
@@ -271,8 +260,8 @@ final class ContextTestUtils {
         }
         if (true) {
             assertThat(attributes).satisfiesAnyOf(
-                    l -> assertThat(l).isSortedAccordingTo(Attribute.comparingInCaseInsensitiveOrder(context)),
-                    l -> assertThat(l).isSortedAccordingTo(Attribute.comparingInNaturalOrder(context))
+                    l -> assertThat(l).isSortedAccordingTo(Attribute.comparing(context, String.CASE_INSENSITIVE_ORDER)),
+                    l -> assertThat(l).isSortedAccordingTo(Attribute.comparing(context, Comparator.naturalOrder()))
             );
         }
         for (final var attribute : attributes) {
@@ -331,8 +320,8 @@ final class ContextTestUtils {
         }
         if (true) {
             assertThat(catalogs).satisfiesAnyOf(
-                    l -> assertThat(l).isSortedAccordingTo(Catalog.comparingInCaseInsensitiveOrder(context)),
-                    l -> assertThat(l).isSortedAccordingTo(Catalog.comparingInNaturalOrder(context))
+                    l -> assertThat(l).isSortedAccordingTo(Catalog.comparing(context, String.CASE_INSENSITIVE_ORDER)),
+                    l -> assertThat(l).isSortedAccordingTo(Catalog.comparing(context, Comparator.naturalOrder()))
             );
         }
         for (final var catalog : catalogs) {
@@ -386,7 +375,19 @@ final class ContextTestUtils {
     private static void clientInfoProperties(final Context context,
                                              final List<? extends ClientInfoProperty> clientInfoProperties)
             throws SQLException {
-        assertThat(clientInfoProperties).doesNotHaveDuplicates();
+        assertThat(clientInfoProperties).isNotNull().doesNotContainNull();
+        if (true) {
+            assertThat(clientInfoProperties).doesNotHaveDuplicates();
+        }
+        if (!databaseProductName(context).equals(DatabaseProductNames.MARIA_DB)) {
+            // https://jira.mariadb.org/browse/CONJ-1159
+            assertThat(clientInfoProperties).satisfiesAnyOf(
+                    l -> assertThat(l).isSortedAccordingTo(
+                            ClientInfoProperty.comparing(context, String.CASE_INSENSITIVE_ORDER)),
+                    l -> assertThat(l).isSortedAccordingTo(
+                            ClientInfoProperty.comparing(context, Comparator.naturalOrder()))
+            );
+        }
         for (final var clientInfoProperty : clientInfoProperties) {
             clientInfoProperty(context, clientInfoProperty);
         }
@@ -399,17 +400,15 @@ final class ContextTestUtils {
 
     // --------------------------------------------------------------------------------------------------------- columns
     private static void columns(final Context context, final List<? extends Column> columns) throws SQLException {
-        assertThat(columns).doesNotHaveDuplicates();
-        {
-            final var databaseProductNames = Set.of(
-                    ""
+        assertThat(columns).isNotNull().doesNotContainNull();
+        if (true) {
+            assertThat(columns).doesNotHaveDuplicates();
+        }
+        if (true) {
+            assertThat(columns).satisfiesAnyOf(
+                    l -> assertThat(l).isSortedAccordingTo(Column.comparing(context, String.CASE_INSENSITIVE_ORDER)),
+                    l -> assertThat(l).isSortedAccordingTo(Column.comparing(context, Comparator.naturalOrder()))
             );
-            if (!databaseProductNames.contains(databaseProductName)) {
-                assertThat(columns).satisfiesAnyOf(
-                        l -> assertThat(l).isSortedAccordingTo(Column.CASE_INSENSITIVE_ORDER),
-                        l -> assertThat(l).isSortedAccordingTo(Column.LEXICOGRAPHIC_ORDER)
-                );
-            }
         }
         for (final var column : columns) {
             column(context, column);
@@ -435,12 +434,18 @@ final class ContextTestUtils {
     // ------------------------------------------------------------------------------------------------ columnPrivileges
     private static void columnPrivileges(final Context context, final List<? extends ColumnPrivilege> columnPrivileges)
             throws SQLException {
-        assertThat(columnPrivileges)
-                .doesNotHaveDuplicates()
-                .satisfiesAnyOf(
-                        l -> assertThat(l).isSortedAccordingTo(ColumnPrivilege.CASE_INSENSITIVE_ORDER),
-                        l -> assertThat(l).isSortedAccordingTo(ColumnPrivilege.LEXICOGRAPHIC_ORDER)
-                );
+        assertThat(columnPrivileges).isNotNull().doesNotContainNull();
+        if (true) {
+            assertThat(columnPrivileges).doesNotHaveDuplicates();
+        }
+        if (true) {
+            assertThat(columnPrivileges).satisfiesAnyOf(
+                    l -> assertThat(l).isSortedAccordingTo(
+                            ColumnPrivilege.comparing(context, String.CASE_INSENSITIVE_ORDER)),
+                    l -> assertThat(l).isSortedAccordingTo(
+                            ColumnPrivilege.comparing(context, Comparator.naturalOrder()))
+            );
+        }
         for (final var columnPrivilege : columnPrivileges) {
             columnPrivilege(context, columnPrivilege);
         }
@@ -454,11 +459,17 @@ final class ContextTestUtils {
     // -------------------------------------------------------------------------------------------------- crossReference
     private static void crossReference(final Context context, final List<CrossReference> crossReference)
             throws SQLException {
-        assertThat(crossReference).doesNotHaveDuplicates()
-                .satisfiesAnyOf(
-                        l -> assertThat(l).isSortedAccordingTo(CrossReference.CASE_INSENSITIVE_ORDER),
-                        l -> assertThat(l).isSortedAccordingTo(CrossReference.LEXICOGRAPHIC_ORDER)
-                );
+        assertThat(crossReference).isNotNull().doesNotContainNull();
+        if (true) {
+            assertThat(crossReference).doesNotHaveDuplicates();
+        }
+        if (true) {
+            assertThat(crossReference).satisfiesAnyOf(
+                    l -> assertThat(l).isSortedAccordingTo(
+                            CrossReference.comparing(context, String.CASE_INSENSITIVE_ORDER)),
+                    l -> assertThat(l).isSortedAccordingTo(CrossReference.comparing(context, Comparator.naturalOrder()))
+            );
+        }
         for (final var v : crossReference) {
             crossReference(context, v);
         }
@@ -471,12 +482,18 @@ final class ContextTestUtils {
     // ---------------------------------------------------------------------------------------------------- exportedKeys
     private static void exportedKeys(final Context context, final List<? extends ExportedKey> exportedKeys)
             throws SQLException {
-        assertThat(exportedKeys)
-                .doesNotHaveDuplicates()
-                .satisfiesAnyOf(
-                        l -> assertThat(l).isSortedAccordingTo(ExportedKey.CASE_INSENSITIVE_ORDER),
-                        l -> assertThat(l).isSortedAccordingTo(ExportedKey.LEXICOGRAPHIC_ORDER)
-                );
+        assertThat(exportedKeys).isNotNull().doesNotContainNull();
+        if (true) {
+            assertThat(exportedKeys).doesNotHaveDuplicates();
+        }
+        if (true) {
+            assertThat(exportedKeys).satisfiesAnyOf(
+                    l -> assertThat(l).isSortedAccordingTo(
+                            ExportedKey.comparingFktable(context, String.CASE_INSENSITIVE_ORDER)),
+                    l -> assertThat(l).isSortedAccordingTo(
+                            ExportedKey.comparingFktable(context, Comparator.naturalOrder()))
+            );
+        }
         for (final var exportedKey : exportedKeys) {
             exportedKey(context, exportedKey);
         }
@@ -488,19 +505,18 @@ final class ContextTestUtils {
 
     // ------------------------------------------------------------------------------------------------------- functions
     static void functions(final Context context, final List<? extends Function> functions) throws SQLException {
-        checkDatabaseProductName(context);
         assertThat(functions).isNotNull().doesNotContainNull();
-        if (!databaseProductName.equals(DatabaseProductNames.POSTGRE_SQL)) {
+        if (!databaseProductName(context).equals(DatabaseProductNames.POSTGRE_SQL)) {
             assertThat(functions).doesNotHaveDuplicates();
         }
-        if (!databaseProductName.equals(DatabaseProductNames.MARIA_DB)
+        if (!databaseProductName(context).equals(DatabaseProductNames.MARIA_DB)
             // https://jira.mariadb.org/browse/CONJ-1158
-            && !databaseProductName.equals(DatabaseProductNames.POSTGRE_SQL)
-            && !databaseProductName.equals(DatabaseProductNames.MICROSOFT_SQL_SERVER)) {
+            && !databaseProductName(context).equals(DatabaseProductNames.POSTGRE_SQL)
+            && !databaseProductName(context).equals(DatabaseProductNames.MICROSOFT_SQL_SERVER)) {
             // https://github.com/microsoft/mssql-jdbc/issues/2321
             assertThat(functions).satisfiesAnyOf(
-                    l -> assertThat(l).isSortedAccordingTo(Function.CASE_INSENSITIVE_ORDER),
-                    l -> assertThat(l).isSortedAccordingTo(Function.LEXICOGRAPHIC_ORDER)
+                    l -> assertThat(l).isSortedAccordingTo(Function.comparingInCaseInsensitiveOrder(context)),
+                    l -> assertThat(l).isSortedAccordingTo(Function.comparingInNaturalOrder(context))
             );
         }
         for (final var function : functions) {
@@ -522,14 +538,14 @@ final class ContextTestUtils {
     private static void functionColumns(final Context context, final List<? extends FunctionColumn> functionColumns)
             throws SQLException {
         assertThat(functionColumns).isNotNull().doesNotContainNull();
-        if (!databaseProductName.equals(DatabaseProductNames.POSTGRE_SQL)) {
+        if (!databaseProductName(context).equals(DatabaseProductNames.POSTGRE_SQL)) {
             // https://github.com/pgjdbc/pgjdbc/issues/3127
             assertThat(functionColumns).doesNotHaveDuplicates();
         }
         if (true) {
             assertThat(functionColumns).satisfiesAnyOf(
-                    l -> assertThat(l).isSortedAccordingTo(FunctionColumn.CASE_INSENSITIVE_ORDER),
-                    l -> assertThat(l).isSortedAccordingTo(FunctionColumn.LEXICOGRAPHIC_ORDER)
+                    l -> assertThat(l).isSortedAccordingTo(FunctionColumn.comparingInCaseInsensitiveOrder(context)),
+                    l -> assertThat(l).isSortedAccordingTo(FunctionColumn.comparingInNaturalOrder(context))
             );
         }
         for (final var functionColumn : functionColumns) {
@@ -546,12 +562,18 @@ final class ContextTestUtils {
     // ---------------------------------------------------------------------------------------------------- importedKeys
     private static void importedKeys(final Context context, final List<? extends ImportedKey> importedKeys)
             throws SQLException {
-        assertThat(importedKeys)
-                .doesNotHaveDuplicates()
-                .satisfiesAnyOf(
-                        l -> assertThat(l).isSortedAccordingTo(ImportedKey.CASE_INSENSITIVE_ORDER),
-                        l -> assertThat(l).isSortedAccordingTo(ImportedKey.LEXICOGRAPHIC_ORDER)
-                );
+        assertThat(importedKeys).isNotNull().doesNotContainNull();
+        if (true) {
+            assertThat(importedKeys).doesNotHaveDuplicates();
+        }
+        if (true) {
+            assertThat(importedKeys).satisfiesAnyOf(
+                    l -> assertThat(l).isSortedAccordingTo(
+                            ImportedKey.comparingPktable(context, String.CASE_INSENSITIVE_ORDER)),
+                    l -> assertThat(l).isSortedAccordingTo(
+                            ImportedKey.comparingPktable_(context, Comparator.naturalOrder()))
+            );
+        }
         for (final var importedKey : importedKeys) {
             importedKey(context, importedKey);
         }
@@ -563,15 +585,18 @@ final class ContextTestUtils {
 
     // ------------------------------------------------------------------------------------------------------- indexInfo
     private static void indexInfo(final Context context, final List<IndexInfo> indexInfo) throws SQLException {
-
-        assertThat(indexInfo)
-                .doesNotHaveDuplicates()
-                .satisfiesAnyOf(
-                        l -> assertThat(l).isSortedAccordingTo(IndexInfo.CASE_INSENSITIVE_ORDER),
-                        l -> assertThat(l).isSortedAccordingTo(IndexInfo.LEXICOGRAPHIC_ORDER)
-                );
-        for (final var indexInfo_ : indexInfo) {
-            indexInfo(context, indexInfo_);
+        assertThat(indexInfo).isNotNull().doesNotContainNull();
+        if (true) {
+            assertThat(indexInfo).doesNotHaveDuplicates();
+        }
+        if (true) {
+            assertThat(indexInfo).satisfiesAnyOf(
+                    l -> assertThat(l).isSortedAccordingTo(IndexInfo.comparing(context, String.CASE_INSENSITIVE_ORDER)),
+                    l -> assertThat(l).isSortedAccordingTo(IndexInfo.comparing(context, Comparator.naturalOrder()))
+            );
+        }
+        for (final var v : indexInfo) {
+            indexInfo(context, v);
         }
     }
 
@@ -586,12 +611,12 @@ final class ContextTestUtils {
         if (true) {
             assertThat(procedures).doesNotHaveDuplicates();
         }
-        if (
-                !databaseProductName.equals(DatabaseProductNames.MARIA_DB) &&
-                !databaseProductName.equals(DatabaseProductNames.MICROSOFT_SQL_SERVER)) {
+        if (true
+            && !databaseProductName(context).equals(DatabaseProductNames.MARIA_DB) &&
+            !databaseProductName(context).equals(DatabaseProductNames.MICROSOFT_SQL_SERVER)) {
             assertThat(procedures).satisfiesAnyOf(
-                    l -> assertThat(l).isSortedAccordingTo(Procedure.CASE_INSENSITIVE_ORDER),
-                    l -> assertThat(l).isSortedAccordingTo(Procedure.LEXICOGRAPHIC_ORDER)
+                    l -> assertThat(l).isSortedAccordingTo(Procedure.comparing(context, String.CASE_INSENSITIVE_ORDER)),
+                    l -> assertThat(l).isSortedAccordingTo(Procedure.comparing(context, Comparator.naturalOrder()))
             );
         }
         for (final var procedure : procedures) {
@@ -616,8 +641,10 @@ final class ContextTestUtils {
         }
         if (true) {
             assertThat(procedureColumns).satisfiesAnyOf(
-                    l -> assertThat(l).isSortedAccordingTo(ProcedureColumn.CASE_INSENSITIVE_ORDER),
-                    l -> assertThat(l).isSortedAccordingTo(ProcedureColumn.LEXICOGRAPHIC_ORDER)
+                    l -> assertThat(l).isSortedAccordingTo(
+                            ProcedureColumn.comparing(context, String.CASE_INSENSITIVE_ORDER)),
+                    l -> assertThat(l).isSortedAccordingTo(
+                            ProcedureColumn.comparing(context, Comparator.naturalOrder()))
             );
         }
         for (final var procedureColumn : procedureColumns) {
@@ -634,9 +661,12 @@ final class ContextTestUtils {
     private static void schemas(final Context context, final List<? extends Schema> schemas) throws SQLException {
         assertThat(schemas).isNotNull().doesNotContainNull();
         if (true) {
+            assertThat(schemas).doesNotHaveDuplicates();
+        }
+        if (true) {
             assertThat(schemas).satisfiesAnyOf(
-                    l -> assertThat(l).isSortedAccordingTo(Schema.CASE_INSENSITIVE_ORDER),
-                    l -> assertThat(l).isSortedAccordingTo(Schema.LEXICOGRAPHIC_ORDER)
+                    l -> assertThat(l).isSortedAccordingTo(Schema.comparing(context, String.CASE_INSENSITIVE_ORDER)),
+                    l -> assertThat(l).isSortedAccordingTo(Schema.comparing(context, Comparator.naturalOrder()))
             );
         }
         for (final var schema : schemas) {
@@ -704,8 +734,8 @@ final class ContextTestUtils {
             !databaseProductName(context).equals(DatabaseProductNames.MICROSOFT_SQL_SERVER)) {
             // https://jira.mariadb.org/browse/CONJ-1156
             assertThat(tables).satisfiesAnyOf(
-                    l -> assertThat(l).isSortedAccordingTo(Table.comparingCaseInsensitiveOrder(context)),
-                    l -> assertThat(l).isSortedAccordingTo(Table.comparingLexicographicOrder(context))
+                    l -> assertThat(l).isSortedAccordingTo(Table.comparing(context, String.CASE_INSENSITIVE_ORDER)),
+                    l -> assertThat(l).isSortedAccordingTo(Table.comparing(context, Comparator.naturalOrder()))
             );
         }
         for (final var table : tables) {
@@ -828,10 +858,13 @@ final class ContextTestUtils {
         if (true) {
             assertThat(primaryKeys).doesNotHaveDuplicates();
         }
-        if (!databaseProductName.equals(DatabaseProductNames.POSTGRE_SQL)) {
+        if (true
+            && !databaseProductName(context).equals(DatabaseProductNames.POSTGRE_SQL)
+        ) {
             assertThat(primaryKeys).satisfiesAnyOf(
-                    l -> assertThat(l).isSortedAccordingTo(PrimaryKey.CASE_INSENSITIVE_ORDER),
-                    l -> assertThat(l).isSortedAccordingTo(PrimaryKey.LEXICOGRAPHIC_ORDER)
+                    l -> assertThat(l).isSortedAccordingTo(
+                            PrimaryKey.comparing(context, String.CASE_INSENSITIVE_ORDER)),
+                    l -> assertThat(l).isSortedAccordingTo(PrimaryKey.comparing(context, Comparator.naturalOrder()))
             );
         }
         for (final var primaryKey : primaryKeys) {
@@ -852,8 +885,9 @@ final class ContextTestUtils {
         }
         if (true) {
             assertThat(pseudoColumns).satisfiesAnyOf(
-                    l -> assertThat(l).isSortedAccordingTo(PseudoColumn.CASE_INSENSITIVE_ORDER),
-                    l -> assertThat(l).isSortedAccordingTo(PseudoColumn.LEXICOGRAPHIC_ORDER)
+                    l -> assertThat(l).isSortedAccordingTo(
+                            PseudoColumn.comparing(context, String.CASE_INSENSITIVE_ORDER)),
+                    l -> assertThat(l).isSortedAccordingTo(PseudoColumn.comparing(context, Comparator.naturalOrder()))
             );
         }
         for (final var pseudoColumn : pseudoColumns) {
@@ -885,12 +919,13 @@ final class ContextTestUtils {
     private static void tablePrivileges(final Context context, final List<? extends TablePrivilege> tablePrivileges)
             throws SQLException {
         assertThat(tablePrivileges).isNotNull().doesNotContainNull();
-        if (!databaseProductName.equals(DatabaseProductNames.MY_SQL)) {
+        if (!databaseProductName(context).equals(DatabaseProductNames.MY_SQL)) {
             assertThat(tablePrivileges).doesNotHaveDuplicates();
         }
         assertThat(tablePrivileges).satisfiesAnyOf(
-                l -> assertThat(l).isSortedAccordingTo(TablePrivilege.CASE_INSENSITIVE_ORDER),
-                l -> assertThat(l).isSortedAccordingTo(TablePrivilege.LEXICOGRAPHIC_ORDER)
+                l -> assertThat(l).isSortedAccordingTo(
+                        TablePrivilege.comparing(context, String.CASE_INSENSITIVE_ORDER)),
+                l -> assertThat(l).isSortedAccordingTo(TablePrivilege.comparing(context, Comparator.naturalOrder()))
         );
         for (final var tablePrivilege : tablePrivileges) {
             tablePrivilege(context, tablePrivilege);
@@ -910,8 +945,8 @@ final class ContextTestUtils {
         }
         if (true) {
             assertThat(tableTypes).satisfiesAnyOf(
-                    l -> assertThat(l).isSortedAccordingTo(TableType.CASE_INSENSITIVE_ORDER),
-                    l -> assertThat(l).isSortedAccordingTo(TableType.LEXICOGRAPHIC_ORDER)
+                    l -> assertThat(l).isSortedAccordingTo(TableType.comparing(context, String.CASE_INSENSITIVE_ORDER)),
+                    l -> assertThat(l).isSortedAccordingTo(TableType.comparing(context, Comparator.naturalOrder()))
             );
         }
         for (final var tableType : tableTypes) {
@@ -932,9 +967,9 @@ final class ContextTestUtils {
         if (true) {
             assertThat(typeInfo).doesNotHaveDuplicates();
         }
-        if (!databaseProductName.equals(DatabaseProductNames.MY_SQL) &&
-            !databaseProductName.equals(DatabaseProductNames.MICROSOFT_SQL_SERVER)) {
-            assertThat(typeInfo).isSortedAccordingTo(TypeInfo.COMPARING_DATA_TYPE);
+        if (!databaseProductName(context).equals(DatabaseProductNames.MY_SQL) &&
+            !databaseProductName(context).equals(DatabaseProductNames.MICROSOFT_SQL_SERVER)) {
+            assertThat(typeInfo).isSortedAccordingTo(TypeInfo.comparing(context));
         }
         for (final var typeInfo_ : typeInfo) {
             typeInfo(context, typeInfo_);
@@ -965,8 +1000,8 @@ final class ContextTestUtils {
         }
         if (true) {
             assertThat(udts).doesNotContainNull().satisfiesAnyOf(
-                    l -> assertThat(l).isSortedAccordingTo(UDT.CASE_INSENSITIVE_ORDER),
-                    l -> assertThat(l).isSortedAccordingTo(UDT.LEXICOGRAPHIC_ORDER)
+                    l -> assertThat(l).isSortedAccordingTo(UDT.comparing(context, String.CASE_INSENSITIVE_ORDER)),
+                    l -> assertThat(l).isSortedAccordingTo(UDT.comparing(context, Comparator.naturalOrder()))
             );
         }
         for (final var udt : udts) {
@@ -1008,9 +1043,9 @@ final class ContextTestUtils {
             assertThat(versionColumns).doesNotHaveDuplicates();
         }
         if (true) {
-            assertThat(versionColumns).satisfiesAnyOf(l -> {
-                // getVersionColumns() are unordered.
-            });
+//            assertThat(versionColumns).satisfiesAnyOf(l -> {
+////                 getVersionColumns() are unordered.
+//            });
         }
         for (final var versionColumn : versionColumns) {
             versionColumn(context, versionColumn);

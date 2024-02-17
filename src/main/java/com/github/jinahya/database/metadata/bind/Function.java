@@ -27,14 +27,11 @@ import lombok.Setter;
 import lombok.ToString;
 
 import java.sql.DatabaseMetaData;
+import java.sql.SQLException;
 import java.util.Comparator;
 import java.util.Objects;
 import java.util.Optional;
 import java.util.function.BiPredicate;
-
-import static java.util.Comparator.comparing;
-import static java.util.Comparator.naturalOrder;
-import static java.util.Comparator.nullsFirst;
 
 /**
  * A class for binding results of the
@@ -54,17 +51,20 @@ public class Function
     private static final long serialVersionUID = -3318947900237453301L;
 
     // -----------------------------------------------------------------------------------------------------------------
-    static final Comparator<Function> CASE_INSENSITIVE_ORDER =
-            comparing(Function::getFunctionCat, nullsFirst(String.CASE_INSENSITIVE_ORDER))
-                    .thenComparing(Function::getFunctionSchem, nullsFirst(String.CASE_INSENSITIVE_ORDER))
-                    .thenComparing(Function::getFunctionName, String.CASE_INSENSITIVE_ORDER)
-                    .thenComparing(Function::getSpecificName, nullsFirst(String.CASE_INSENSITIVE_ORDER));
+    static Comparator<Function> comparingInCaseInsensitiveOrder(final Context context) throws SQLException {
+        return Comparator.comparing(Function::getFunctionCat,
+                                    ContextUtils.nulls(context, String.CASE_INSENSITIVE_ORDER))
+                .thenComparing(Function::getFunctionSchem, ContextUtils.nulls(context, String.CASE_INSENSITIVE_ORDER))
+                .thenComparing(Function::getFunctionName, ContextUtils.nulls(context, String.CASE_INSENSITIVE_ORDER))
+                .thenComparing(Function::getSpecificName, ContextUtils.nulls(context, String.CASE_INSENSITIVE_ORDER));
+    }
 
-    static final Comparator<Function> LEXICOGRAPHIC_ORDER =
-            comparing(Function::getFunctionCat, nullsFirst(naturalOrder()))
-                    .thenComparing(Function::getFunctionSchem, nullsFirst(naturalOrder()))
-                    .thenComparing(Function::getFunctionName)
-                    .thenComparing(Function::getSpecificName, nullsFirst(naturalOrder()));
+    static Comparator<Function> comparingInNaturalOrder(final Context context) throws SQLException {
+        return Comparator.comparing(Function::getFunctionCat, ContextUtils.nulls(context, Comparator.naturalOrder()))
+                .thenComparing(Function::getFunctionSchem, ContextUtils.nulls(context, Comparator.naturalOrder()))
+                .thenComparing(Function::getFunctionName, ContextUtils.nulls(context, Comparator.naturalOrder()))
+                .thenComparing(Function::getSpecificName, ContextUtils.nulls(context, Comparator.naturalOrder()));
+    }
 
     // -----------------------------------------------------------------------------------------------------------------
 

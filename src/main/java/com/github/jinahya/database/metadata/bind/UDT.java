@@ -28,6 +28,7 @@ import lombok.Setter;
 import lombok.ToString;
 
 import java.sql.DatabaseMetaData;
+import java.sql.SQLException;
 import java.sql.Types;
 import java.util.Arrays;
 import java.util.Collections;
@@ -36,9 +37,6 @@ import java.util.HashSet;
 import java.util.Objects;
 import java.util.Set;
 import java.util.function.BiPredicate;
-
-import static java.util.Comparator.naturalOrder;
-import static java.util.Comparator.nullsFirst;
 
 /**
  * A class for binding results of the {@link DatabaseMetaData#getUDTs(String, String, String, int[])} method.
@@ -54,22 +52,36 @@ import static java.util.Comparator.nullsFirst;
 @Getter
 @EqualsAndHashCode(callSuper = true, onlyExplicitlyIncluded = true)
 @ToString(callSuper = true)
-public class UDT extends AbstractMetadataType {
+public class UDT
+        extends AbstractMetadataType {
 
     private static final long serialVersionUID = 8665246093405057553L;
 
     // -----------------------------------------------------------------------------------------------------------------
-    static final Comparator<UDT> CASE_INSENSITIVE_ORDER =
-            Comparator.comparingInt(UDT::getDataType)
-                    .thenComparing(UDT::getTypeCat, nullsFirst(String.CASE_INSENSITIVE_ORDER))
-                    .thenComparing(UDT::getTypeSchem, nullsFirst(String.CASE_INSENSITIVE_ORDER))
-                    .thenComparing(UDT::getTypeName, nullsFirst(String.CASE_INSENSITIVE_ORDER));
+    static Comparator<UDT> comparing(final Context context, final Comparator<? super String> comparator)
+            throws SQLException {
+        return Comparator
+                .comparing(UDT::getDataType, ContextUtils.nulls(context, Comparator.naturalOrder()))
+                .thenComparing(UDT::getTypeCat, ContextUtils.nulls(context, comparator))
+                .thenComparing(UDT::getTypeSchem, ContextUtils.nulls(context, comparator))
+                .thenComparing(UDT::getTypeName, ContextUtils.nulls(context, comparator));
+    }
 
-    static final Comparator<UDT> LEXICOGRAPHIC_ORDER =
-            Comparator.comparingInt(UDT::getDataType)
-                    .thenComparing(UDT::getTypeCat, nullsFirst(naturalOrder()))
-                    .thenComparing(UDT::getTypeSchem, nullsFirst(naturalOrder()))
-                    .thenComparing(UDT::getTypeName, nullsFirst(naturalOrder()));
+    static Comparator<UDT> comparingInCaseInsensitiveOrder(final Context context) throws SQLException {
+        return Comparator
+                .comparing(UDT::getDataType, ContextUtils.nulls(context, Comparator.naturalOrder()))
+                .thenComparing(UDT::getTypeCat, ContextUtils.nulls(context, String.CASE_INSENSITIVE_ORDER))
+                .thenComparing(UDT::getTypeSchem, ContextUtils.nulls(context, String.CASE_INSENSITIVE_ORDER))
+                .thenComparing(UDT::getTypeName, ContextUtils.nulls(context, String.CASE_INSENSITIVE_ORDER));
+    }
+
+    static Comparator<UDT> comparingInNaturalOrder(final Context context) throws SQLException {
+        return Comparator
+                .comparing(UDT::getDataType, ContextUtils.nulls(context, Comparator.naturalOrder()))
+                .thenComparing(UDT::getTypeCat, ContextUtils.nulls(context, Comparator.naturalOrder()))
+                .thenComparing(UDT::getTypeSchem, ContextUtils.nulls(context, Comparator.naturalOrder()))
+                .thenComparing(UDT::getTypeName, ContextUtils.nulls(context, Comparator.naturalOrder()));
+    }
 
     // -----------------------------------------------------------------------------------------------------------------
 

@@ -41,18 +41,16 @@ import java.util.function.Consumer;
 @Getter
 @EqualsAndHashCode(callSuper = true)
 @ToString(callSuper = true)
-public class Catalog extends AbstractMetadataType {
+public class Catalog
+        extends AbstractMetadataType {
 
     private static final long serialVersionUID = 6239185259128825953L;
 
     // -----------------------------------------------------------------------------------------------------------------
 
-    static Comparator<Catalog> comparingInCaseInsensitiveOrder(final Context context) throws SQLException {
-        return Comparator.comparing(Catalog::getTableCat, ContextUtils.nulls(context, String.CASE_INSENSITIVE_ORDER));
-    }
-
-    static Comparator<Catalog> comparingInNaturalOrder(final Context context) throws SQLException {
-        return Comparator.comparing(Catalog::getTableCat, ContextUtils.nulls(context, Comparator.naturalOrder()));
+    static Comparator<Catalog> comparing(final Context context, final Comparator<? super String> comparator)
+            throws SQLException {
+        return Comparator.comparing(Catalog::getTableCat, ContextUtils.nulls(context, comparator));
     }
 
     // -----------------------------------------------------------------------------------------------------------------

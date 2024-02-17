@@ -27,12 +27,10 @@ import lombok.Setter;
 import lombok.ToString;
 
 import java.sql.DatabaseMetaData;
+import java.sql.SQLException;
 import java.util.Comparator;
 import java.util.Objects;
 import java.util.Optional;
-
-import static java.util.Comparator.naturalOrder;
-import static java.util.Comparator.nullsFirst;
 
 /**
  * A class for binding results of the {@link DatabaseMetaData#getColumnPrivileges(String, String, String, String)}
@@ -47,18 +45,17 @@ import static java.util.Comparator.nullsFirst;
 @Getter
 @EqualsAndHashCode(callSuper = true)
 @ToString(callSuper = true)
-public class ColumnPrivilege extends AbstractMetadataType {
+public class ColumnPrivilege
+        extends AbstractMetadataType {
 
     private static final long serialVersionUID = 4384654744147773380L;
 
     // -----------------------------------------------------------------------------------------------------------------
-    static final Comparator<ColumnPrivilege> CASE_INSENSITIVE_ORDER =
-            Comparator.comparing(ColumnPrivilege::getColumnName, nullsFirst(String.CASE_INSENSITIVE_ORDER))
-                    .thenComparing(ColumnPrivilege::getPrivilege, nullsFirst(String.CASE_INSENSITIVE_ORDER));
-
-    static final Comparator<ColumnPrivilege> LEXICOGRAPHIC_ORDER =
-            Comparator.comparing(ColumnPrivilege::getColumnName, nullsFirst(naturalOrder()))
-                    .thenComparing(ColumnPrivilege::getPrivilege, nullsFirst(naturalOrder()));
+    static Comparator<ColumnPrivilege> comparing(final Context context, final Comparator<? super String> comparator)
+            throws SQLException {
+        return Comparator.comparing(ColumnPrivilege::getColumnName, ContextUtils.nulls(context, comparator))
+                .thenComparing(ColumnPrivilege::getPrivilege, ContextUtils.nulls(context, comparator));
+    }
 
     // -----------------------------------------------------------------------------------------------------------------
     public static final String COLUMN_LABEL_TABLE_CAT = "TABLE_CAT";
@@ -79,7 +76,8 @@ public class ColumnPrivilege extends AbstractMetadataType {
 
     public static final String COLUMN_VALUE_IS_GRANTABLE_NO = "NO";
 
-    public enum IsGrantable implements _FieldEnum<IsGrantable, String> {
+    public enum IsGrantable
+            implements _FieldEnum<IsGrantable, String> {
 
         /**
          * A value for {@link #COLUMN_VALUE_IS_GRANTABLE_YES}.

@@ -67,6 +67,7 @@ $ mvn -Pfailsafe -Dtest=ExternalIT \
 ### MariaDB
 * [getTables should be ordered as expected](https://jira.mariadb.org/browse/CONJ-1156)
 * [DatabaseMetaData#getFunctions's result not property ordered](https://jira.mariadb.org/browse/CONJ-1158)
+* [DatabaseMetaData#getClientInfoProperties not ordered correctly](https://jira.mariadb.org/browse/CONJ-1159)
 
 ### MySQL
 * [DatabaseMetaData#getTables produces duplicates](https://bugs.mysql.com/bug.php?id=113970&thanks=4)

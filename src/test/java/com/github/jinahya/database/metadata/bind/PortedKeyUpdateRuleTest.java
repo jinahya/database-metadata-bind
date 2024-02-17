@@ -26,7 +26,8 @@ import org.junit.jupiter.params.provider.EnumSource;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-class PortedKeyUpdateRuleTest extends _IntFieldEnumTest<PortedKey.TableKeyUpdateRule> {
+class PortedKeyUpdateRuleTest
+        extends _IntFieldEnumTest<PortedKey.TableKeyUpdateRule> {
 
     PortedKeyUpdateRuleTest() {
         super(PortedKey.TableKeyUpdateRule.class);

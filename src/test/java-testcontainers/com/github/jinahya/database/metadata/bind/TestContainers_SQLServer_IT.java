@@ -37,7 +37,8 @@ import java.time.Duration;
 // https://github.com/microsoft/mssql-jdbc/issues/2320
 // https://github.com/microsoft/mssql-jdbc/issues/849
 @Slf4j
-class TestContainers_SQLServer_IT extends TestContainers_$_IT {
+class TestContainers_SQLServer_IT
+        extends TestContainers_$_IT {
 
     private static final String FULL_IMAGE_NAME = "mcr.microsoft.com/mssql/server:2022-latest";
 //    private static final String FULL_IMAGE_NAME = "mcr.microsoft.com/azure-sql-edge:latest";

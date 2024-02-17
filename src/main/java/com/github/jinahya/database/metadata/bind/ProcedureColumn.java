@@ -26,12 +26,10 @@ import lombok.Setter;
 import lombok.ToString;
 
 import java.sql.DatabaseMetaData;
+import java.sql.SQLException;
 import java.util.Comparator;
 import java.util.Objects;
 import java.util.function.BiPredicate;
-
-import static java.util.Comparator.naturalOrder;
-import static java.util.Comparator.nullsFirst;
 
 /**
  * A class for binding results of the
@@ -47,22 +45,19 @@ import static java.util.Comparator.nullsFirst;
 @Getter
 @EqualsAndHashCode(callSuper = true, onlyExplicitlyIncluded = true)
 @ToString(callSuper = true)
-public class ProcedureColumn extends AbstractMetadataType {
+public class ProcedureColumn
+        extends AbstractMetadataType {
 
     private static final long serialVersionUID = 3894753719381358829L;
 
     // -----------------------------------------------------------------------------------------------------------------
-    static final Comparator<ProcedureColumn> CASE_INSENSITIVE_ORDER =
-            Comparator.comparing(ProcedureColumn::getProcedureCat, nullsFirst(String.CASE_INSENSITIVE_ORDER))
-                    .thenComparing(ProcedureColumn::getProcedureSchem, nullsFirst(String.CASE_INSENSITIVE_ORDER))
-                    .thenComparing(ProcedureColumn::getProcedureName, nullsFirst(String.CASE_INSENSITIVE_ORDER))
-                    .thenComparing(ProcedureColumn::getSpecificName, nullsFirst(String.CASE_INSENSITIVE_ORDER));
-
-    static final Comparator<ProcedureColumn> LEXICOGRAPHIC_ORDER =
-            Comparator.comparing(ProcedureColumn::getProcedureCat, nullsFirst(naturalOrder()))
-                    .thenComparing(ProcedureColumn::getProcedureSchem, nullsFirst(naturalOrder()))
-                    .thenComparing(ProcedureColumn::getProcedureName, nullsFirst(naturalOrder()))
-                    .thenComparing(ProcedureColumn::getSpecificName, nullsFirst(naturalOrder()));
+    static Comparator<ProcedureColumn> comparing(final Context context, final Comparator<? super String> comparator)
+            throws SQLException {
+        return Comparator.comparing(ProcedureColumn::getProcedureCat, ContextUtils.nulls(context, comparator))
+                .thenComparing(ProcedureColumn::getProcedureSchem, ContextUtils.nulls(context, comparator))
+                .thenComparing(ProcedureColumn::getProcedureName, ContextUtils.nulls(context, comparator))
+                .thenComparing(ProcedureColumn::getSpecificName, ContextUtils.nulls(context, comparator));
+    }
 
     // -----------------------------------------------------------------------------------------------------------------
     static final BiPredicate<ProcedureColumn, Procedure> IS_OF = (c, p) -> {
@@ -74,7 +69,8 @@ public class ProcedureColumn extends AbstractMetadataType {
     // ----------------------------------------------------------------------------------------------------- COLUMN_TYPE
     public static final String COLUMN_LABEL_COLUMN_TYPE = "COLUMN_TYPE";
 
-    public enum ColumnType implements _IntFieldEnum<ColumnType> {
+    public enum ColumnType
+            implements _IntFieldEnum<ColumnType> {
 
         PROCEDURE_COLUMN_UNKNOWN(DatabaseMetaData.procedureColumnUnknown), // 0
         PROCEDURE_COLUMN_IN(DatabaseMetaData.procedureColumnIn),           // 1
@@ -99,7 +95,8 @@ public class ProcedureColumn extends AbstractMetadataType {
     // -------------------------------------------------------------------------------------------------------- NULLABLE
     public static final String COLUMN_NAME_NULLABLE = "NULLABLE";
 
-    public enum Nullable implements _IntFieldEnum<Nullable> {
+    public enum Nullable
+            implements _IntFieldEnum<Nullable> {
 
         PROCEDURE_NO_NULLS(DatabaseMetaData.procedureNoNulls),// 0
 

@@ -32,8 +32,6 @@ import java.util.Comparator;
 import java.util.Objects;
 import java.util.function.BiPredicate;
 
-import static java.util.Comparator.naturalOrder;
-
 /**
  * A class for binding results of the
  * {@link java.sql.DatabaseMetaData#getTables(java.lang.String, java.lang.String, java.lang.String, java.lang.String[])}
@@ -49,23 +47,19 @@ import static java.util.Comparator.naturalOrder;
 @NoArgsConstructor
 @ToString(callSuper = true)
 //@EqualsAndHashCode(callSuper = true, onlyExplicitlyIncluded = true)
-public class Table extends AbstractMetadataType {
+public class Table
+        extends AbstractMetadataType {
 
     private static final long serialVersionUID = 6590036695540141125L;
 
     // -----------------------------------------------------------------------------------------------------------------
-    static Comparator<Table> comparingCaseInsensitiveOrder(final Context context) throws SQLException {
-        return Comparator.comparing(Table::getTableType, ContextUtils.nulls(context, String.CASE_INSENSITIVE_ORDER))
-                .thenComparing(Table::getTableCat, ContextUtils.nulls(context, String.CASE_INSENSITIVE_ORDER))
-                .thenComparing(Table::getTableSchem, ContextUtils.nulls(context, String.CASE_INSENSITIVE_ORDER))
-                .thenComparing(Table::getTableName, String.CASE_INSENSITIVE_ORDER);
-    }
-
-    static Comparator<Table> comparingLexicographicOrder(final Context context) throws SQLException {
-        return Comparator.comparing(Table::getTableType, ContextUtils.nulls(context, naturalOrder()))
-                .thenComparing(Table::getTableCat, ContextUtils.nulls(context, naturalOrder()))
-                .thenComparing(Table::getTableSchem, ContextUtils.nulls(context, naturalOrder()))
-                .thenComparing(Table::getTableName);
+    static Comparator<Table> comparing(final Context context, final Comparator<? super String> comparator)
+            throws SQLException {
+        return Comparator
+                .comparing(Table::getTableType, ContextUtils.nulls(context, comparator))
+                .thenComparing(Table::getTableCat, ContextUtils.nulls(context, comparator))
+                .thenComparing(Table::getTableSchem, ContextUtils.nulls(context, comparator))
+                .thenComparing(Table::getTableName, comparator);
     }
 
     // -----------------------------------------------------------------------------------------------------------------

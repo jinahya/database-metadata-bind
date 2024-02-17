@@ -27,13 +27,11 @@ import lombok.Setter;
 import lombok.ToString;
 
 import java.sql.DatabaseMetaData;
+import java.sql.SQLException;
 import java.util.Comparator;
 import java.util.Objects;
 import java.util.Optional;
 import java.util.function.BiPredicate;
-
-import static java.util.Comparator.naturalOrder;
-import static java.util.Comparator.nullsFirst;
 
 /**
  * A class for binding results of the {@link DatabaseMetaData#getIndexInfo(String, String, String, boolean, boolean)}
@@ -47,21 +45,18 @@ import static java.util.Comparator.nullsFirst;
 @Getter
 @EqualsAndHashCode(callSuper = true, onlyExplicitlyIncluded = true)
 @ToString(callSuper = true)
-public class IndexInfo extends AbstractMetadataType {
+public class IndexInfo
+        extends AbstractMetadataType {
 
     private static final long serialVersionUID = 924040226611181424L;
 
-    static final Comparator<IndexInfo> CASE_INSENSITIVE_ORDER =
-            Comparator.comparing(IndexInfo::getNonUnique, nullsFirst(naturalOrder()))
-                    .thenComparing(IndexInfo::getType, nullsFirst(naturalOrder()))
-                    .thenComparing(IndexInfo::getIndexName, nullsFirst(String.CASE_INSENSITIVE_ORDER))
-                    .thenComparing(IndexInfo::getOrdinalPosition, nullsFirst(naturalOrder()));
-
-    static final Comparator<IndexInfo> LEXICOGRAPHIC_ORDER =
-            Comparator.comparing(IndexInfo::getNonUnique, nullsFirst(naturalOrder()))
-                    .thenComparing(IndexInfo::getType, nullsFirst(naturalOrder()))
-                    .thenComparing(IndexInfo::getIndexName, nullsFirst(naturalOrder()))
-                    .thenComparing(IndexInfo::getOrdinalPosition, nullsFirst(naturalOrder()));
+    static Comparator<IndexInfo> comparing(final Context context, final Comparator<? super String> comparator)
+            throws SQLException {
+        return Comparator.comparing(IndexInfo::getNonUnique, ContextUtils.nulls(context, Comparator.naturalOrder()))
+                .thenComparing(IndexInfo::getType, ContextUtils.nulls(context, Comparator.naturalOrder()))
+                .thenComparing(IndexInfo::getIndexName, ContextUtils.nulls(context, comparator))
+                .thenComparing(IndexInfo::getOrdinalPosition, ContextUtils.nulls(context, Comparator.naturalOrder()));
+    }
 
     // ------------------------------------------------------------------------------------------------------- TABLE_CAT
     public static final String COLUMN_LABEL_TABLE_CAT = "TABLE_CAT";
@@ -80,7 +75,8 @@ public class IndexInfo extends AbstractMetadataType {
      *
      * @author Jin Kwon &lt;onacit_at_gmail.com&gt;
      */
-    public enum Type implements _IntFieldEnum<Type> {
+    public enum Type
+            implements _IntFieldEnum<Type> {
 
         /**
          * The constant for the

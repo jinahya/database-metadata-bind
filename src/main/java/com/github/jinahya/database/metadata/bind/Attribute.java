@@ -31,8 +31,6 @@ import java.util.Comparator;
 import java.util.Objects;
 import java.util.function.BiPredicate;
 
-import static java.util.Comparator.naturalOrder;
-
 /**
  * A class for binding results of the {@link DatabaseMetaData#getAttributes(String, String, String, String)} method.
  *
@@ -46,23 +44,19 @@ import static java.util.Comparator.naturalOrder;
 @Getter
 @EqualsAndHashCode(callSuper = true, onlyExplicitlyIncluded = true)
 @ToString(callSuper = true)
-public class Attribute extends AbstractMetadataType {
+public class Attribute
+        extends AbstractMetadataType {
 
     private static final long serialVersionUID = 1913681105410440186L;
 
     // -----------------------------------------------------------------------------------------------------------------
-    static Comparator<Attribute> comparingInCaseInsensitiveOrder(final Context context) throws SQLException {
-        return Comparator.comparing(Attribute::getTypeCat, ContextUtils.nulls(context, String.CASE_INSENSITIVE_ORDER))
-                .thenComparing(Attribute::getTypeSchem, ContextUtils.nulls(context, String.CASE_INSENSITIVE_ORDER))
-                .thenComparing(Attribute::getTypeName, ContextUtils.nulls(context, String.CASE_INSENSITIVE_ORDER))
-                .thenComparing(Attribute::getOrdinalPosition, ContextUtils.nulls(context, naturalOrder()));
-    }
-
-    static Comparator<Attribute> comparingInNaturalOrder(final Context context) throws SQLException {
-        return Comparator.comparing(Attribute::getTypeCat, ContextUtils.nulls(context, naturalOrder()))
-                .thenComparing(Attribute::getTypeSchem, ContextUtils.nulls(context, naturalOrder()))
-                .thenComparing(Attribute::getTypeName, ContextUtils.nulls(context, naturalOrder()))
-                .thenComparing(Attribute::getOrdinalPosition, ContextUtils.nulls(context, naturalOrder()));
+    static Comparator<Attribute> comparing(final Context context, final Comparator<? super String> comparator)
+            throws SQLException {
+        return Comparator
+                .comparing(Attribute::getTypeCat, ContextUtils.nulls(context, comparator))
+                .thenComparing(Attribute::getTypeSchem, ContextUtils.nulls(context, comparator))
+                .thenComparing(Attribute::getTypeName, ContextUtils.nulls(context, comparator))
+                .thenComparing(Attribute::getOrdinalPosition, ContextUtils.nulls(context, Comparator.naturalOrder()));
     }
 
     // -------------------------------------------------------------------------------------------------------- TYPE_CAT
@@ -77,7 +71,8 @@ public class Attribute extends AbstractMetadataType {
     /**
      * Constants for {@value #COLUMN_LABEL_NULLABLE} column values.
      */
-    public enum Nullable implements _IntFieldEnum<Nullable> {
+    public enum Nullable
+            implements _IntFieldEnum<Nullable> {
 
         /**
          * A value for {@link DatabaseMetaData#attributeNoNulls}({@value DatabaseMetaData#attributeNoNulls}).

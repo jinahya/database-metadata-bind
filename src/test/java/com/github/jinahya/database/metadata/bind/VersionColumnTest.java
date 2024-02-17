@@ -30,7 +30,8 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 
-class VersionColumnTest extends AbstractMetadataTypeTest<VersionColumn> {
+class VersionColumnTest
+        extends AbstractMetadataTypeTest<VersionColumn> {
 
     VersionColumnTest() {
         super(VersionColumn.class);
@@ -38,7 +39,8 @@ class VersionColumnTest extends AbstractMetadataTypeTest<VersionColumn> {
 
     @DisplayName("PseudoColumnEnum")
     @Nested
-    class PseudoColumnTest extends _IntFieldEnumTest<VersionColumn.PseudoColumn> {
+    class PseudoColumnTest
+            extends _IntFieldEnumTest<VersionColumn.PseudoColumn> {
 
         PseudoColumnTest() {
             super(VersionColumn.PseudoColumn.class);

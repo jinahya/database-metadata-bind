@@ -32,7 +32,8 @@ import java.sql.SQLException;
  * @author Jin Kwon &lt;jinahya_at_gmail.com&gt;
  */
 @Slf4j
-class Memory_Sqlite_Test extends Memory_$_Test {
+class Memory_Sqlite_Test
+        extends Memory_$_Test {
 
     private static final String CONNECTION_URL = "jdbc:sqlite::memory:";
 

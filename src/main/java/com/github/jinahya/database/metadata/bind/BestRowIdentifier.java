@@ -70,7 +70,8 @@ public class BestRowIdentifier
      *
      * @author Jin Kwon &lt;onacit_at_gmail.com&gt;
      */
-    public enum Scope implements _IntFieldEnum<Scope> {
+    public enum Scope
+            implements _IntFieldEnum<Scope> {
 
         /**
          * A value for {@link DatabaseMetaData#bestRowTemporary}({@value DatabaseMetaData#bestRowTemporary}).
@@ -137,7 +138,8 @@ public class BestRowIdentifier
      *
      * @author Jin Kwon &lt;onacit_at_gmail.com&gt;
      */
-    public enum PseudoColumn implements _IntFieldEnum<PseudoColumn> {
+    public enum PseudoColumn
+            implements _IntFieldEnum<PseudoColumn> {
 
         /**
          * A value for {@link DatabaseMetaData#bestRowUnknown}({@value DatabaseMetaData#bestRowUnknown}).

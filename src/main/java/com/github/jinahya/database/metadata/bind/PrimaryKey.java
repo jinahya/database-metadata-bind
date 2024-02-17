@@ -28,12 +28,10 @@ import lombok.Setter;
 import lombok.ToString;
 
 import java.sql.DatabaseMetaData;
+import java.sql.SQLException;
 import java.util.Comparator;
 import java.util.Objects;
 import java.util.function.BiPredicate;
-
-import static java.util.Comparator.naturalOrder;
-import static java.util.Comparator.nullsFirst;
 
 /**
  * A class for binding results of the {@link DatabaseMetaData#getPrimaryKeys(String, String, String)} method.
@@ -46,22 +44,20 @@ import static java.util.Comparator.nullsFirst;
 @Getter
 @EqualsAndHashCode(callSuper = true, onlyExplicitlyIncluded = true)
 @ToString(callSuper = true)
-public class PrimaryKey extends AbstractMetadataType {
+public class PrimaryKey
+        extends AbstractMetadataType {
 
     private static final long serialVersionUID = 3159826510060898330L;
 
     // -----------------------------------------------------------------------------------------------------------------
-    static final Comparator<PrimaryKey> CASE_INSENSITIVE_ORDER =
-            Comparator.comparing(PrimaryKey::getTableCat, nullsFirst(String.CASE_INSENSITIVE_ORDER))
-                    .thenComparing(PrimaryKey::getTableSchem, nullsFirst(String.CASE_INSENSITIVE_ORDER))
-                    .thenComparing(PrimaryKey::getTableName, String.CASE_INSENSITIVE_ORDER)
-                    .thenComparing(PrimaryKey::getColumnName, String.CASE_INSENSITIVE_ORDER);
-
-    static final Comparator<PrimaryKey> LEXICOGRAPHIC_ORDER =
-            Comparator.comparing(PrimaryKey::getColumnName, nullsFirst(naturalOrder()))
-                    .thenComparing(PrimaryKey::getColumnName, nullsFirst(naturalOrder()))
-                    .thenComparing(PrimaryKey::getColumnName, naturalOrder())
-                    .thenComparing(PrimaryKey::getColumnName, naturalOrder());
+    static Comparator<PrimaryKey> comparing(final Context context, final Comparator<? super String> comparator)
+            throws SQLException {
+        return Comparator
+                .comparing(PrimaryKey::getTableCat, ContextUtils.nulls(context, comparator))
+                .thenComparing(PrimaryKey::getTableSchem, ContextUtils.nulls(context, comparator))
+                .thenComparing(PrimaryKey::getTableName, ContextUtils.nulls(context, comparator))
+                .thenComparing(PrimaryKey::getColumnName, ContextUtils.nulls(context, comparator));
+    }
 
     // ------------------------------------------------------------------------------------------------------- TABLE_CAT
 

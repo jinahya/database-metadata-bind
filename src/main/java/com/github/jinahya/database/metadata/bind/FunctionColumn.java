@@ -28,13 +28,11 @@ import lombok.Setter;
 import lombok.ToString;
 
 import java.sql.DatabaseMetaData;
+import java.sql.SQLException;
 import java.util.Comparator;
 import java.util.Objects;
 import java.util.Optional;
 import java.util.function.BiPredicate;
-
-import static java.util.Comparator.naturalOrder;
-import static java.util.Comparator.nullsFirst;
 
 /**
  * A class for binding results of the {@link DatabaseMetaData#getFunctionColumns(String, String, String, String)}
@@ -48,22 +46,31 @@ import static java.util.Comparator.nullsFirst;
 @Getter
 @ToString(callSuper = true)
 @EqualsAndHashCode(callSuper = true, onlyExplicitlyIncluded = true)
-public class FunctionColumn extends AbstractMetadataType {
+public class FunctionColumn
+        extends AbstractMetadataType {
 
     private static final long serialVersionUID = -7445156446214062680L;
 
     // -----------------------------------------------------------------------------------------------------------------
-    static final Comparator<FunctionColumn> CASE_INSENSITIVE_ORDER =
-            Comparator.comparing(FunctionColumn::getFunctionCat, nullsFirst(String.CASE_INSENSITIVE_ORDER))
-                    .thenComparing(FunctionColumn::getFunctionSchem, nullsFirst(String.CASE_INSENSITIVE_ORDER))
-                    .thenComparing(FunctionColumn::getFunctionName, String.CASE_INSENSITIVE_ORDER)
-                    .thenComparing(FunctionColumn::getSpecificName, nullsFirst(String.CASE_INSENSITIVE_ORDER));
 
-    static final Comparator<FunctionColumn> LEXICOGRAPHIC_ORDER =
-            Comparator.comparing(FunctionColumn::getFunctionCat, nullsFirst(naturalOrder()))
-                    .thenComparing(FunctionColumn::getFunctionSchem, nullsFirst((naturalOrder())))
-                    .thenComparing(FunctionColumn::getFunctionName, naturalOrder())
-                    .thenComparing(FunctionColumn::getSpecificName, nullsFirst(naturalOrder()));
+    static Comparator<FunctionColumn> comparingInCaseInsensitiveOrder(final Context context) throws SQLException {
+        return Comparator.comparing(FunctionColumn::getFunctionCat,
+                                    ContextUtils.nulls(context, String.CASE_INSENSITIVE_ORDER))
+                .thenComparing(FunctionColumn::getFunctionSchem,
+                               ContextUtils.nulls(context, String.CASE_INSENSITIVE_ORDER))
+                .thenComparing(FunctionColumn::getFunctionName,
+                               ContextUtils.nulls(context, String.CASE_INSENSITIVE_ORDER))
+                .thenComparing(FunctionColumn::getSpecificName,
+                               ContextUtils.nulls(context, String.CASE_INSENSITIVE_ORDER));
+    }
+
+    static Comparator<FunctionColumn> comparingInNaturalOrder(final Context context) throws SQLException {
+        return Comparator.comparing(FunctionColumn::getFunctionCat,
+                                    ContextUtils.nulls(context, Comparator.naturalOrder()))
+                .thenComparing(FunctionColumn::getFunctionSchem, ContextUtils.nulls(context, Comparator.naturalOrder()))
+                .thenComparing(FunctionColumn::getFunctionName, ContextUtils.nulls(context, Comparator.naturalOrder()))
+                .thenComparing(FunctionColumn::getSpecificName, ContextUtils.nulls(context, Comparator.naturalOrder()));
+    }
 
     // -----------------------------------------------------------------------------------------------------------------
     public static final String COLUMN_LABEL_FUNCTION_CAT = "FUNCTION_CAT";
@@ -85,7 +92,8 @@ public class FunctionColumn extends AbstractMetadataType {
      *
      * @author Jin Kwon &lt;onacit_at_gmail.com&gt;
      */
-    public enum ColumnType implements _IntFieldEnum<ColumnType> {
+    public enum ColumnType
+            implements _IntFieldEnum<ColumnType> {
 
         /**
          * A value for {@link DatabaseMetaData#functionColumnUnknown}({@value DatabaseMetaData#functionColumnUnknown}).
@@ -144,7 +152,8 @@ public class FunctionColumn extends AbstractMetadataType {
     // -----------------------------------------------------------------------------------------------------------------
     public static final String COLUMN_LABEL_NULLABLE = "NULLABLE";
 
-    public enum Nullable implements _IntFieldEnum<Nullable> {
+    public enum Nullable
+            implements _IntFieldEnum<Nullable> {
 
         FUNCTION_NO_NULLS(DatabaseMetaData.functionNoNulls),// 0
 

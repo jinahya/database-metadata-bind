@@ -29,7 +29,8 @@ import org.junit.jupiter.params.provider.EnumSource;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 
-class ColumnTest extends AbstractMetadataTypeTest<Column> {
+class ColumnTest
+        extends AbstractMetadataTypeTest<Column> {
 
     ColumnTest() {
         super(Column.class);
@@ -37,7 +38,8 @@ class ColumnTest extends AbstractMetadataTypeTest<Column> {
 
     @DisplayName("NullableEnum")
     @Nested
-    class NullableTest extends _IntFieldEnumTest<Column.Nullable> {
+    class NullableTest
+            extends _IntFieldEnumTest<Column.Nullable> {
 
         NullableTest() {
             super(Column.Nullable.class);

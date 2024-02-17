@@ -20,7 +20,8 @@ package com.github.jinahya.database.metadata.bind;
  * #L%
  */
 
-class ExportedKeyTest extends PortedKeyTest<ExportedKey> {
+class ExportedKeyTest
+        extends PortedKeyTest<ExportedKey> {
 
     ExportedKeyTest() {
         super(ExportedKey.class);

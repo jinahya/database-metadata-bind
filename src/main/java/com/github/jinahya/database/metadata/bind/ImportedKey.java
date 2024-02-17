@@ -24,6 +24,7 @@ import lombok.EqualsAndHashCode;
 import lombok.ToString;
 
 import java.sql.DatabaseMetaData;
+import java.sql.SQLException;
 import java.util.Comparator;
 
 /**
@@ -36,12 +37,14 @@ import java.util.Comparator;
 
 @EqualsAndHashCode(callSuper = true)
 @ToString(callSuper = true)
-public class ImportedKey extends PortedKey {
+public class ImportedKey
+        extends PortedKey {
 
     private static final long serialVersionUID = -1900794151555506751L;
 
     // -----------------------------------------------------------------------------------------------------------------
-    static final Comparator<ImportedKey> CASE_INSENSITIVE_ORDER = comparingPktableCaseInsensitive();
-
-    static final Comparator<ImportedKey> LEXICOGRAPHIC_ORDER = comparingPktableLexicographic();
+    static Comparator<ImportedKey> comparingPktable(final Context context, final Comparator<? super String> comparator)
+            throws SQLException {
+        return PortedKey.comparingPktable_(context, comparator);
+    }
 }

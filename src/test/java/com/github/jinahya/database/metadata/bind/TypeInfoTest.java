@@ -22,14 +22,16 @@ package com.github.jinahya.database.metadata.bind;
 
 import org.junit.jupiter.api.Nested;
 
-class TypeInfoTest extends AbstractMetadataTypeTest<TypeInfo> {
+class TypeInfoTest
+        extends AbstractMetadataTypeTest<TypeInfo> {
 
     TypeInfoTest() {
         super(TypeInfo.class);
     }
 
     @Nested
-    class NullableTest extends _IntFieldEnumTest<TypeInfo.Nullable> {
+    class NullableTest
+            extends _IntFieldEnumTest<TypeInfo.Nullable> {
 
         NullableTest() {
             super(TypeInfo.Nullable.class);
@@ -37,7 +39,8 @@ class TypeInfoTest extends AbstractMetadataTypeTest<TypeInfo> {
     }
 
     @Nested
-    class SearchableTest extends _IntFieldEnumTest<TypeInfo.Searchable> {
+    class SearchableTest
+            extends _IntFieldEnumTest<TypeInfo.Searchable> {
 
         SearchableTest() {
             super(TypeInfo.Searchable.class);

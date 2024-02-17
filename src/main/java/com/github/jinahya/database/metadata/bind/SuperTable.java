@@ -41,7 +41,8 @@ import java.util.function.BiPredicate;
 @Getter
 @EqualsAndHashCode(callSuper = true)
 @ToString(callSuper = true)
-public class SuperTable extends AbstractMetadataType {
+public class SuperTable
+        extends AbstractMetadataType {
 
     private static final long serialVersionUID = 3579710773784268831L;
 

@@ -20,7 +20,8 @@ package com.github.jinahya.database.metadata.bind;
  * #L%
  */
 
-class UDTTest extends AbstractMetadataTypeTest<UDT> {
+class UDTTest
+        extends AbstractMetadataTypeTest<UDT> {
 
     UDTTest() {
         super(UDT.class);

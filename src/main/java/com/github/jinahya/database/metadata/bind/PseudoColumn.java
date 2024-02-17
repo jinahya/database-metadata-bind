@@ -27,12 +27,10 @@ import lombok.Setter;
 import lombok.ToString;
 
 import java.sql.DatabaseMetaData;
+import java.sql.SQLException;
 import java.util.Comparator;
 import java.util.Objects;
 import java.util.function.BiPredicate;
-
-import static java.util.Comparator.naturalOrder;
-import static java.util.Comparator.nullsFirst;
 
 /**
  * A class for binding results of the {@link DatabaseMetaData#getPseudoColumns(String, String, String, String)} method.
@@ -45,22 +43,19 @@ import static java.util.Comparator.nullsFirst;
 @Getter
 @EqualsAndHashCode(callSuper = true, onlyExplicitlyIncluded = true)
 @ToString(callSuper = true)
-public class PseudoColumn extends AbstractMetadataType {
+public class PseudoColumn
+        extends AbstractMetadataType {
 
     private static final long serialVersionUID = -5612575879670895510L;
 
     // -----------------------------------------------------------------------------------------------------------------
-    static final Comparator<PseudoColumn> CASE_INSENSITIVE_ORDER =
-            Comparator.comparing(PseudoColumn::getTableCat, nullsFirst(String.CASE_INSENSITIVE_ORDER))
-                    .thenComparing(PseudoColumn::getTableSchem, nullsFirst(String.CASE_INSENSITIVE_ORDER))
-                    .thenComparing(PseudoColumn::getTableName, nullsFirst(String.CASE_INSENSITIVE_ORDER))
-                    .thenComparing(PseudoColumn::getColumnName, nullsFirst(String.CASE_INSENSITIVE_ORDER));
-
-    static final Comparator<PseudoColumn> LEXICOGRAPHIC_ORDER =
-            Comparator.comparing(PseudoColumn::getTableCat, nullsFirst(naturalOrder()))
-                    .thenComparing(PseudoColumn::getTableSchem, nullsFirst(naturalOrder()))
-                    .thenComparing(PseudoColumn::getTableName, nullsFirst(naturalOrder()))
-                    .thenComparing(PseudoColumn::getColumnName, nullsFirst(naturalOrder()));
+    static Comparator<PseudoColumn> comparing(final Context context, final Comparator<? super String> comparator)
+            throws SQLException {
+        return Comparator.comparing(PseudoColumn::getTableCat, ContextUtils.nulls(context, comparator))
+                .thenComparing(PseudoColumn::getTableSchem, ContextUtils.nulls(context, comparator))
+                .thenComparing(PseudoColumn::getTableName, ContextUtils.nulls(context, comparator))
+                .thenComparing(PseudoColumn::getColumnName, ContextUtils.nulls(context, comparator));
+    }
 
     // -----------------------------------------------------------------------------------------------------------------
     public static final String COLUMN_LABEL_TABLE_CAT = "TABLE_CAT";

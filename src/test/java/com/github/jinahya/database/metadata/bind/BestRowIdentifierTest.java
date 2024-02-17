@@ -37,7 +37,8 @@ import static org.mockito.Mockito.verify;
  * @author Jin Kwon &lt;onacit_at_gmail.com&gt;
  */
 @Slf4j
-class BestRowIdentifierTest extends AbstractMetadataTypeTest<BestRowIdentifier> {
+class BestRowIdentifierTest
+        extends AbstractMetadataTypeTest<BestRowIdentifier> {
 
     BestRowIdentifierTest() {
         super(BestRowIdentifier.class);
@@ -45,7 +46,8 @@ class BestRowIdentifierTest extends AbstractMetadataTypeTest<BestRowIdentifier> 
 
     @DisplayName("PseudoColumnEnum")
     @Nested
-    class PseudoColumnTest extends _IntFieldEnumTest<BestRowIdentifier.PseudoColumn> {
+    class PseudoColumnTest
+            extends _IntFieldEnumTest<BestRowIdentifier.PseudoColumn> {
 
         PseudoColumnTest() {
             super(BestRowIdentifier.PseudoColumn.class);
@@ -54,7 +56,8 @@ class BestRowIdentifierTest extends AbstractMetadataTypeTest<BestRowIdentifier> 
 
     @DisplayName("ScopeEnum")
     @Nested
-    class ScopeTest extends _IntFieldEnumTest<BestRowIdentifier.Scope> {
+    class ScopeTest
+            extends _IntFieldEnumTest<BestRowIdentifier.Scope> {
 
         ScopeTest() {
             super(BestRowIdentifier.Scope.class);

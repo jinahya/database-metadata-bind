@@ -35,7 +35,8 @@ import java.time.Duration;
 // https://java.testcontainers.org/modules/databases/postgres/
 @Testcontainers
 @Slf4j
-class TestContainers_PostgreSQL_IT extends TestContainers_$_IT {
+class TestContainers_PostgreSQL_IT
+        extends TestContainers_$_IT {
 
     @Container
     private static final PostgreSQLContainer<?> CONTAINER;

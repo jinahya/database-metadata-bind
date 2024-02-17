@@ -20,7 +20,8 @@ package com.github.jinahya.database.metadata.bind;
  * #L%
  */
 
-class CrossReferenceTest extends AbstractMetadataTypeTest<CrossReference> {
+class CrossReferenceTest
+        extends AbstractMetadataTypeTest<CrossReference> {
 
     CrossReferenceTest() {
         super(CrossReference.class);

@@ -180,7 +180,7 @@ public class Context {
      */
     private <T extends MetadataType> T bind(final ResultSet results, final Class<T> type, final T instance)
             throws SQLException {
-        final Set<String> resultLabels = Utils.getLabels(results);
+        final Set<String> resultLabels = ContextUtils.getLabels(results);
         final Map<Field, _ColumnLabel> fieldLabels = new HashMap<>(getLabeledFields(type));
         for (final Iterator<Entry<Field, _ColumnLabel>> i = fieldLabels.entrySet().iterator(); i.hasNext(); ) {
             final Entry<Field, _ColumnLabel> entry = i.next();
@@ -204,7 +204,7 @@ public class Context {
                 continue;
             }
             try {
-                Utils.setFieldValue(field, instance, results, fieldLabel.value());
+                ContextUtils.setFieldValue(field, instance, results, fieldLabel.value());
             } catch (final ReflectiveOperationException roe) {
                 log.log(Level.SEVERE, roe, () -> String.format("failed to set %1$s", field));
             }
@@ -907,18 +907,6 @@ public class Context {
 
     // ------------------------------ getFunctionColumns(catalog, schemaPattern, functionNamePattern, columnNamePattern)
 
-    /**
-     * Invokes {@link DatabaseMetaData#getFunctionColumns(String, String, String, String)} method with specified
-     * arguments, and accepts each bound value to specified consumer.
-     *
-     * @param catalog             a value for {@code catalog} parameter.
-     * @param schemaPattern       a value for {@code schemaPattern} parameter.
-     * @param functionNamePattern a value for {@code functionNamePattern} parameter.
-     * @param columnNamePattern   a value for {@code columnNamePattern} parameter.
-     * @param consumer            the consumer to which bound values are accepted.
-     * @throws SQLException if a database error occurs.
-     * @see DatabaseMetaData#getFunctionColumns(String, String, String, String)
-     */
     void acceptFunctionColumns(final String catalog, final String schemaPattern, final String functionNamePattern,
                                final String columnNamePattern, final Consumer<? super FunctionColumn> consumer)
             throws SQLException {
@@ -941,17 +929,18 @@ public class Context {
 
     /**
      * Invokes
-     * {@link DatabaseMetaData#getFunctionColumns(String, String, String, String) getFunctionColumns(catalog,
-     * schemaPattern, functionNamePattern, columnNamePattern)} method with specified arguments, and returns a list of
-     * bound values.
+     * {@link DatabaseMetaData#getFunctionColumns(String, String, String, String) getFunctions((catalog, schemaPattern,
+     * functionNamePattern, columnNamePattern)} method, on the wrapped {@link #metadata} ,with specified arguments, and
+     * returns a list of bound values.
      *
      * @param catalog             a value for the {@code catalog} parameter.
      * @param schemaPattern       a value for the {@code schemaPattern} parameter.
      * @param functionNamePattern a value for the {@code functionNamePattern} parameter.
      * @param columnNamePattern   a value for the {@code columnNamePattern} parameter.
-     * @return a list of bound values.
+     * @return a list of found values.
      * @throws SQLException if a database error occurs.
      * @see DatabaseMetaData#getFunctionColumns(String, String, String, String)
+     * @see #getFunctionColumns(String, String, String, String)
      */
     public @NotNull List<@Valid @NotNull FunctionColumn> getFunctionColumns(final @Nullable String catalog,
                                                                             final @Nullable String schemaPattern,
@@ -1020,8 +1009,8 @@ public class Context {
     }
 
     /**
-     * Invokes {@link DatabaseMetaData#getImportedKeys(String, String, String)} method with given arguments, and returns
-     * a list of bound values.
+     * Invokes {@link DatabaseMetaData#getImportedKeys(String, String, String) getImportedKeys(catalog, schema, table)}
+     * method, on the wrapped {@link #metadata}, with given arguments, and returns a list of bound values.
      *
      * @param catalog a value for {@code catalog} parameter.
      * @param schema  a value for {@code schema} parameter.
@@ -1030,7 +1019,8 @@ public class Context {
      * @throws SQLException if a database error occurs.
      * @see DatabaseMetaData#getImportedKeys(String, String, String)
      */
-    public @NotNull List<@Valid @NotNull ImportedKey> getImportedKeys(final String catalog, final String schema,
+    public @NotNull List<@Valid @NotNull ImportedKey> getImportedKeys(final @Nullable String catalog,
+                                                                      final @Nullable String schema,
                                                                       final @NotBlank String table)
             throws SQLException {
         return addImportedKeys(
@@ -1459,7 +1449,7 @@ public class Context {
      * @return a list of bound values.
      * @throws SQLException if a database error occurs.
      */
-    public List<Schema> getSchemas() throws SQLException {
+    public @NotNull List<@Valid @NotNull Schema> getSchemas() throws SQLException {
         return addSchemas(new ArrayList<>());
     }
 
@@ -1774,7 +1764,7 @@ public class Context {
      * @return a list of bound values.
      * @throws SQLException if a database error occurs.
      */
-    public List<TableType> getTableTypes() throws SQLException {
+    public @NotNull List<@Valid @NotNull TableType> getTableTypes() throws SQLException {
         return addTableTypes(new ArrayList<>());
     }
 
@@ -1817,10 +1807,11 @@ public class Context {
      * @param collection       the collection to which bound values are added.
      * @return given {@code collection}.
      * @throws SQLException if a database error occurs.
-     * @see #acceptTables(String, String, String, String[], Consumer)
      */
-    <T extends Collection<? super Table>> T addTables(final String catalog, final String schemaPattern,
-                                                      final String tableNamePattern, final String[] types,
+    <T extends Collection<? super Table>> T addTables(final @Nullable String catalog,
+                                                      final @Nullable String schemaPattern,
+                                                      final @NotBlank String tableNamePattern,
+                                                      final @Nullable String[] types,
                                                       final T collection)
             throws SQLException {
         Objects.requireNonNull(collection, "collection is null");
@@ -1837,16 +1828,24 @@ public class Context {
     /**
      * Invokes
      * {@link DatabaseMetaData#getTables(java.lang.String, java.lang.String, java.lang.String, java.lang.String[])
-     * getTables(catalog, schemaPattern, tableNamePattern, types)} method with given arguments, and returns a list of
-     * bound values.
+     * getTables(catalog, schemaPattern, tableNamePattern, types)} method, on the wrapped {@link #metadata}, with given
+     * arguments, and returns a list of bound values.
      *
-     * @param catalog          a value for {@code catalog} parameter.
-     * @param schemaPattern    a value for {@code schemaPattern} parameter.
-     * @param tableNamePattern a value for {@code tableNamePattern} parameter.
-     * @param types            a value for {@code types} parameter.
+     * @param catalog          a value for the {@code catalog} parameter.
+     * @param schemaPattern    a value for the {@code schemaPattern} parameter.
+     * @param tableNamePattern a value for the {@code tableNamePattern} parameter.
+     * @param types            a value for the {@code types} parameter.
      * @return a list of bound values.
      * @throws SQLException if a database error occurs.
      * @see DatabaseMetaData#getTables(String, String, String, String[])
+     * @see #getColumns(String, String, String, String)
+     * @see #getExportedKeys(Table)
+     * @see #getImportedKeys(String, String, String)
+     * @see #getIndexInfo(String, String, String, boolean, boolean)
+     * @see #getPrimaryKeys(String, String, String)
+     * @see #getPseudoColumns(String, String, String, String)
+     * @see #getSuperTables(String, String, String)
+     * @see #getVersionColumns(String, String, String)
      */
     public @NotNull List<@Valid @NotNull Table> getTables(final @Nullable String catalog,
                                                           final @Nullable String schemaPattern,
@@ -1896,7 +1895,7 @@ public class Context {
      * @return a list of bound values.
      * @throws SQLException if a database error occurs.
      */
-    public List<TypeInfo> getTypeInfo() throws SQLException {
+    public @NotNull List<@Valid @NotNull TypeInfo> getTypeInfo() throws SQLException {
         return addTypeInfo(new ArrayList<>());
     }
 
@@ -1945,6 +1944,7 @@ public class Context {
      * @return a list of bound values.
      * @throws SQLException if a database error occurs.
      * @see DatabaseMetaData#getUDTs(String, String, String, int[])
+     * @see #getAttributes(String, String, String, String)
      */
     public @NotNull List<@Valid @NotNull UDT> getUDTs(final @Nullable String catalog,
                                                       final @Nullable String schemaPattern,
@@ -2029,7 +2029,8 @@ public class Context {
     private Map<Field, _ColumnLabel> getLabeledFields(final Class<?> clazz) {
         Objects.requireNonNull(clazz, "clazz is null");
         return Collections.unmodifiableMap(
-                classesAndLabeledFields.computeIfAbsent(clazz, c -> Utils.getFieldsAnnotatedWith(c, _ColumnLabel.class))
+                classesAndLabeledFields.computeIfAbsent(clazz,
+                                                        c -> ContextUtils.getFieldsAnnotatedWith(c, _ColumnLabel.class))
         );
     }
 

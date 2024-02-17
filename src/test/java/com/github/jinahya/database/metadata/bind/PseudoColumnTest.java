@@ -20,7 +20,8 @@ package com.github.jinahya.database.metadata.bind;
  * #L%
  */
 
-class PseudoColumnTest extends AbstractMetadataTypeTest<PseudoColumn> {
+class PseudoColumnTest
+        extends AbstractMetadataTypeTest<PseudoColumn> {
 
     PseudoColumnTest() {
         super(PseudoColumn.class);

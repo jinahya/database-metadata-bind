@@ -22,14 +22,16 @@ package com.github.jinahya.database.metadata.bind;
 
 import org.junit.jupiter.api.Nested;
 
-class AttributeTest extends AbstractMetadataTypeTest<Attribute> {
+class AttributeTest
+        extends AbstractMetadataTypeTest<Attribute> {
 
     AttributeTest() {
         super(Attribute.class);
     }
 
     @Nested
-    class NullableTest extends _IntFieldEnumTest<Attribute.Nullable> {
+    class NullableTest
+            extends _IntFieldEnumTest<Attribute.Nullable> {
 
         NullableTest() {
             super(Attribute.Nullable.class);
