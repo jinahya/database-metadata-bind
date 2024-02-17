@@ -20,17 +20,71 @@ package com.github.jinahya.database.metadata.bind;
  * #L%
  */
 
-class FunctionTest extends AbstractMetadataTypeTest<Function> {
+import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Nested;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.EnumSource;
 
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.mockito.BDDMockito.given;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
+
+class FunctionTest
+        extends AbstractMetadataTypeTest<Function> {
+
+    @Nested
+    class FunctionTypeTest
+            extends _IntFieldEnumTest<Function.FunctionType> {
+
+        FunctionTypeTest() {
+            super(Function.FunctionType.class);
+        }
+    }
+
+    // -----------------------------------------------------------------------------------------------------------------
     FunctionTest() {
         super(Function.class);
     }
 
+    // -----------------------------------------------------------------------------------------------------------------
     @Override
     Function newTypeInstance() {
         final Function instance = super.newTypeInstance();
         instance.setFunctionName("");
         instance.setSpecificName("");
         return instance;
+    }
+
+    // -----------------------------------------------------------------------------------------------------------------
+    @DisplayName("functionTypeAsEnum")
+    @Nested
+    class FunctionTypeAsEnumTest {
+
+        @DisplayName("getFunctionTypeAsEnum()FunctionType")
+        @EnumSource(Function.FunctionType.class)
+        @ParameterizedTest
+        void getFunctionTypeAsEnum__(final Function.FunctionType functionType) {
+            // --------------------------------------------------------------------------------------------------- given
+            final var instance = newTypeSpy();
+            given(instance.getFunctionType()).willReturn(functionType.fieldValueAsInt());
+            // ---------------------------------------------------------------------------------------------------- when
+            final var actual = instance.getFunctionTypeAsEnum();
+            // ---------------------------------------------------------------------------------------------------- then
+            assertThat(actual).isSameAs(functionType);
+            verify(instance, times(1)).getFunctionType();
+        }
+
+        @DisplayName("getFunctionTypeAsEnum()FunctionType")
+        @EnumSource(Function.FunctionType.class)
+        @ParameterizedTest
+        void setFunctionTypeAsEnum__(final Function.FunctionType functionType) {
+            // --------------------------------------------------------------------------------------------------- given
+            final var instance = newTypeSpy();
+            // ---------------------------------------------------------------------------------------------------- when
+            instance.setFunctionTypeAsEnum(functionType);
+            // ---------------------------------------------------------------------------------------------------- then
+            verify(instance, times(1)).setFunctionType(functionType.fieldValueAsInt());
+        }
     }
 }
