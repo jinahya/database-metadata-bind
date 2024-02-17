@@ -126,6 +126,9 @@ final class ContextTestUtils {
         // ---------------------------------------------------------------------------------------------------- catalogs
         if (true) {
             final var catalogs = context.getCatalogs();
+            if (catalogs.isEmpty()) {
+                catalogs.add(Catalog.of(null));
+            }
             catalogs(context, catalogs);
         }
         // -------------------------------------------------------------------------------------------- clientProperties
@@ -167,6 +170,9 @@ final class ContextTestUtils {
         // ----------------------------------------------------------------------------------------------------- schemas
         try {
             final var schemas = context.getSchemas();
+            if (schemas.isEmpty()) {
+                schemas.add(Schema.of(null, null));
+            }
             schemas(context, schemas);
         } catch (final SQLFeatureNotSupportedException sqlfnse) {
             // empty
@@ -174,6 +180,9 @@ final class ContextTestUtils {
         // ----------------------------------------------------------------------------------------------------- schemas
         try {
             final var schemas = context.getSchemas((String) null, null);
+            if (schemas.isEmpty()) {
+                schemas.add(Schema.of(null, null));
+            }
             schemas(context, schemas);
         } catch (final SQLFeatureNotSupportedException sqlfnse) {
             // empty
@@ -975,6 +984,9 @@ final class ContextTestUtils {
         // -------------------------------------------------------------------------------------------------- attributes
         try {
             final var attributes = context.getAttributes(udt, "%");
+            for (final var attribute : attributes) {
+                assertThat(attribute).matches(a -> Attribute.IS_OF.test(a, udt));
+            }
             attributes(context, attributes);
         } catch (final SQLFeatureNotSupportedException sqlfnse) {
             // empty

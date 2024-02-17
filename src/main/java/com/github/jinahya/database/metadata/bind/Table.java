@@ -54,18 +54,6 @@ public class Table extends AbstractMetadataType {
     private static final long serialVersionUID = 6590036695540141125L;
 
     // -----------------------------------------------------------------------------------------------------------------
-//    static final Comparator<Table> CASE_INSENSITIVE_ORDER =
-//            Comparator.comparing(Table::getTableType, (String.CASE_INSENSITIVE_ORDER))
-//                    .thenComparing(Table::getTableCat, ContextUtils.nulls(String.CASE_INSENSITIVE_ORDER))
-//                    .thenComparing(Table::getTableSchem, ContextUtils.nulls(String.CASE_INSENSITIVE_ORDER))
-//                    .thenComparing(Table::getTableName, String.CASE_INSENSITIVE_ORDER);
-//
-//    static final Comparator<Table> LEXICOGRAPHIC_ORDER =
-//            Comparator.comparing(Table::getTableType, ContextUtils.nulls(naturalOrder()))
-//                    .thenComparing(Table::getTableCat, ContextUtils.nulls(naturalOrder()))
-//                    .thenComparing(Table::getTableSchem, ContextUtils.nulls(naturalOrder()))
-//                    .thenComparing(Table::getTableName);
-
     static Comparator<Table> comparingCaseInsensitiveOrder(final Context context) throws SQLException {
         return Comparator.comparing(Table::getTableType, ContextUtils.nulls(context, String.CASE_INSENSITIVE_ORDER))
                 .thenComparing(Table::getTableCat, ContextUtils.nulls(context, String.CASE_INSENSITIVE_ORDER))

@@ -48,33 +48,33 @@ import static java.util.Comparator.nullsFirst;
 @Getter
 @EqualsAndHashCode(callSuper = true, onlyExplicitlyIncluded = true)
 @ToString(callSuper = true)
-public abstract class PortedKey<T extends PortedKey<T>> extends AbstractMetadataType {
+public abstract class PortedKey extends AbstractMetadataType {
 
     private static final long serialVersionUID = 6713872409315471232L;
 
     // -----------------------------------------------------------------------------------------------------------------
-    static <T extends PortedKey<T>> Comparator<T> comparingPktableCaseInsensitive() {
+    static <T extends PortedKey> Comparator<T> comparingPktableCaseInsensitive() {
         return Comparator.<T, String>comparing(PortedKey::getPktableCat, nullsFirst(String.CASE_INSENSITIVE_ORDER))
                 .thenComparing(PortedKey::getPktableSchem, nullsFirst(String.CASE_INSENSITIVE_ORDER))
                 .thenComparing(PortedKey::getPktableName, String.CASE_INSENSITIVE_ORDER)
                 .thenComparingInt(PortedKey::getKeySeq);
     }
 
-    static <T extends PortedKey<T>> Comparator<T> comparingPktableLexicographic() {
+    static <T extends PortedKey> Comparator<T> comparingPktableLexicographic() {
         return Comparator.<T, String>comparing(PortedKey::getPktableCat, nullsFirst(naturalOrder()))
                 .thenComparing(PortedKey::getPktableSchem, nullsFirst(naturalOrder()))
                 .thenComparing(PortedKey::getPktableName)
                 .thenComparingInt(PortedKey::getKeySeq);
     }
 
-    static <T extends PortedKey<T>> Comparator<T> comparingFktableCaseInsensitive() {
+    static <T extends PortedKey> Comparator<T> comparingFktableCaseInsensitive() {
         return Comparator.<T, String>comparing(PortedKey::getFktableCat, nullsFirst(String.CASE_INSENSITIVE_ORDER))
                 .thenComparing(PortedKey::getFktableSchem, nullsFirst(String.CASE_INSENSITIVE_ORDER))
                 .thenComparing(PortedKey::getFktableName, String.CASE_INSENSITIVE_ORDER)
                 .thenComparingInt(PortedKey::getKeySeq);
     }
 
-    static <T extends PortedKey<T>> Comparator<T> comparingFktableLexicographic() {
+    static <T extends PortedKey> Comparator<T> comparingFktableLexicographic() {
         return Comparator.<T, String>comparing(PortedKey::getFktableCat, nullsFirst(naturalOrder()))
                 .thenComparing(PortedKey::getFktableSchem, nullsFirst(naturalOrder()))
                 .thenComparing(PortedKey::getFktableName)
@@ -324,13 +324,13 @@ public abstract class PortedKey<T extends PortedKey<T>> extends AbstractMetadata
     }
 
     // -----------------------------------------------------------------------------------------------------------------
-    static final BiPredicate<PortedKey<?>, Table> IS_OF_PKTABLE = (k, t) -> {
+    static final BiPredicate<PortedKey, Table> IS_OF_PKTABLE = (k, t) -> {
         return Objects.equals(k.pktableCat, t.getTableCat()) &&
                Objects.equals(k.pktableSchem, t.getTableSchem()) &&
                Objects.equals(k.pktableName, t.getTableName());
     };
 
-    static final BiPredicate<PortedKey<?>, Table> IS_OF_FKTABLE = (k, t) -> {
+    static final BiPredicate<PortedKey, Table> IS_OF_FKTABLE = (k, t) -> {
         return Objects.equals(k.fktableCat, t.getTableCat()) &&
                Objects.equals(k.fktableSchem, t.getTableSchem()) &&
                Objects.equals(k.fktableName, t.getTableName());

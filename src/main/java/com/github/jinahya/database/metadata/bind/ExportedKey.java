@@ -37,7 +37,7 @@ import java.util.Comparator;
 
 @EqualsAndHashCode(callSuper = true)
 @ToString(callSuper = true)
-public class ExportedKey extends PortedKey<ExportedKey> {
+public class ExportedKey extends PortedKey {
 
     private static final long serialVersionUID = -6561660015694928357L;
 
