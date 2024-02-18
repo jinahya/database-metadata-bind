@@ -61,22 +61,6 @@ public class UDT
                 .thenComparing(UDT::getTypeName, ContextUtils.nulls(context, comparator));
     }
 
-    static Comparator<UDT> comparingInCaseInsensitiveOrder(final Context context) throws SQLException {
-        return Comparator
-                .comparing(UDT::getDataType, ContextUtils.nulls(context, Comparator.naturalOrder()))
-                .thenComparing(UDT::getTypeCat, ContextUtils.nulls(context, String.CASE_INSENSITIVE_ORDER))
-                .thenComparing(UDT::getTypeSchem, ContextUtils.nulls(context, String.CASE_INSENSITIVE_ORDER))
-                .thenComparing(UDT::getTypeName, ContextUtils.nulls(context, String.CASE_INSENSITIVE_ORDER));
-    }
-
-    static Comparator<UDT> comparingInNaturalOrder(final Context context) throws SQLException {
-        return Comparator
-                .comparing(UDT::getDataType, ContextUtils.nulls(context, Comparator.naturalOrder()))
-                .thenComparing(UDT::getTypeCat, ContextUtils.nulls(context, Comparator.naturalOrder()))
-                .thenComparing(UDT::getTypeSchem, ContextUtils.nulls(context, Comparator.naturalOrder()))
-                .thenComparing(UDT::getTypeName, ContextUtils.nulls(context, Comparator.naturalOrder()));
-    }
-
     // -----------------------------------------------------------------------------------------------------------------
 
     /**

@@ -4,7 +4,7 @@ package com.github.jinahya.database.metadata.bind;
  * #%L
  * database-metadata-bind
  * %%
- * Copyright (C) 2011 - 2021 Jinahya, Inc.
+ * Copyright (C) 2011 - 2019 Jinahya, Inc.
  * %%
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -20,22 +20,17 @@ package com.github.jinahya.database.metadata.bind;
  * #L%
  */
 
-import org.junit.jupiter.api.Nested;
+public final class IsNullableConstants {
 
-class PseudoColumnTest
-        extends AbstractMetadataTypeTest<PseudoColumn> {
+    public static final String COLUMN_LABEL_IS_NULLABLE = "IS_NULLABLE";
 
-    PseudoColumnTest() {
-        super(PseudoColumn.class);
-    }
+    public static final String COLUMN_VALUE_IS_NULLABLE_YES = "YES";
 
-    // -----------------------------------------------------------------------------------------------------------------
-    @Nested
-    class IsNullableTest
-            extends HasIsNullableTest<PseudoColumn> {
+    public static final String COLUMN_VALUE_IS_NULLABLE_NO = "NO";
 
-        IsNullableTest() {
-            super(PseudoColumnTest.this::newTypeSpy);
-        }
+    public static final String COLUMN_VALUE_IS_NULLABLE_EMPTY = "";
+
+    private IsNullableConstants() {
+        throw new AssertionError("instantiation is not allowed");
     }
 }

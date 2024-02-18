@@ -134,19 +134,6 @@ public class IndexInfo
     }
 
     // -----------------------------------------------------------------------------------------------------------------
-//    @XmlAttribute
-//    @Setter(AccessLevel.NONE)
-//    @EqualsAndHashCode.Exclude
-//    @ToString.Exclude
-//    transient boolean unique_;
-//
-//    @XmlAttribute
-//    @Setter(AccessLevel.NONE)
-//    @EqualsAndHashCode.Exclude
-//    @ToString.Exclude
-//    transient boolean approximate_;
-
-    // -----------------------------------------------------------------------------------------------------------------
 
     @Nullable
     @_NullableBySpecification

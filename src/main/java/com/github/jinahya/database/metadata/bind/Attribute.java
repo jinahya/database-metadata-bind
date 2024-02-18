@@ -20,6 +20,7 @@ package com.github.jinahya.database.metadata.bind;
  * #L%
  */
 
+import jakarta.validation.constraints.Positive;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.Setter;
@@ -28,6 +29,8 @@ import lombok.ToString;
 import java.sql.DatabaseMetaData;
 import java.sql.SQLException;
 import java.util.Comparator;
+import java.util.Objects;
+import java.util.Optional;
 
 /**
  * A class for binding results of the {@link DatabaseMetaData#getAttributes(String, String, String, String)} method.
@@ -43,13 +46,16 @@ import java.util.Comparator;
 @EqualsAndHashCode(callSuper = true, onlyExplicitlyIncluded = true)
 @ToString(callSuper = true)
 public class Attribute
-        extends AbstractMetadataType {
+        extends AbstractMetadataType
+        implements HasIsNullableEnum {
 
     private static final long serialVersionUID = 1913681105410440186L;
 
     // -----------------------------------------------------------------------------------------------------------------
     static Comparator<Attribute> comparing(final Context context, final Comparator<? super String> comparator)
             throws SQLException {
+        Objects.requireNonNull(context, "context is null");
+        Objects.requireNonNull(comparator, "comparator is null");
         return Comparator
                 .comparing(Attribute::getTypeCat, ContextUtils.nulls(context, comparator))
                 .thenComparing(Attribute::getTypeSchem, ContextUtils.nulls(context, comparator))
@@ -75,7 +81,7 @@ public class Attribute
         /**
          * A value for {@link DatabaseMetaData#attributeNoNulls}({@value DatabaseMetaData#attributeNoNulls}).
          */
-        ATTRIBUTE_NO_NULLS(DatabaseMetaData.attributeNoNulls),// 0
+        ATTRIBUTE_NO_NULLS(DatabaseMetaData.attributeNoNulls), // 0
 
         /**
          * A value for {@link DatabaseMetaData#attributeNullable}({@value DatabaseMetaData#attributeNullable}).
@@ -115,15 +121,25 @@ public class Attribute
     // -----------------------------------------------------------------------------------------------------------------
     public static final String COLUMN_LABEL_IS_NULLABLE = "IS_NULLABLE";
 
-    public static final String COLUMN_VALUE_IS_NULLABLE_YES = "YES";
-
-    public static final String COLUMN_VALUE_IS_NULLABLE_NO = "NO";
-
-    public static final String COLUMN_VALUE_IS_NULLABLE_EMPTY = "";
-
     // -------------------------------------------------------------------------------------------------------- tableCat
 
     // ------------------------------------------------------------------------------------------------------ tableSchem
+
+    // -------------------------------------------------------------------------------------------------------- nullable
+
+    public Nullable getNullableAsEnum() {
+        return Optional.ofNullable(getNullable())
+                .map(Nullable::valueOfFieldValue)
+                .orElse(null);
+    }
+
+    public void setNullableAsEnum(Nullable nullableAsEnum) {
+        setNullable(
+                Optional.ofNullable(nullableAsEnum)
+                        .map(_IntFieldEnum::fieldValueAsInt)
+                        .orElse(null)
+        );
+    }
 
     // -----------------------------------------------------------------------------------------------------------------
 
@@ -189,6 +205,7 @@ public class Attribute
     @_ColumnLabel("CHAR_OCTET_LENGTH")
     private Integer charOctetLength;
 
+    @Positive
     @_ColumnLabel("ORDINAL_POSITION")
     private Integer ordinalPosition;
 

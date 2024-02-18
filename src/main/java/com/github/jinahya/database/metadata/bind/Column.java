@@ -20,6 +20,7 @@ package com.github.jinahya.database.metadata.bind;
  * #L%
  */
 
+import jakarta.validation.constraints.Positive;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.Setter;
@@ -45,7 +46,9 @@ import java.util.Optional;
 @EqualsAndHashCode(callSuper = true, onlyExplicitlyIncluded = true)
 @ToString(callSuper = true)
 public class Column
-        extends AbstractMetadataType {
+        extends AbstractMetadataType
+        implements HasIsNullableEnum,
+                   HasNullableEnum<Column.Nullable> {
 
     private static final long serialVersionUID = -409653682729081530L;
 
@@ -99,7 +102,7 @@ public class Column
      * @author Jin Kwon &lt;onacit_at_gmail.com&gt;
      */
     public enum Nullable
-            implements _IntFieldEnum<Nullable> {
+            implements NullableEnum<Nullable> {
 
         /**
          * A value for {@link DatabaseMetaData#columnNoNulls}({@value DatabaseMetaData#columnNoNulls}).
@@ -151,18 +154,12 @@ public class Column
     // ------------------------------------------------------------------------------------------------------ tableSchem
 
     // -------------------------------------------------------------------------------------------------------- nullable
-    Nullable getNullableAsEnum() {
+
+    @Override
+    public Nullable getNullableAsEnum() {
         return Optional.ofNullable(getNullable())
                 .map(Nullable::valueOfFieldValue)
                 .orElse(null);
-    }
-
-    void setNullableAsEnum(final Nullable nullableAsEnum) {
-        setNullable(
-                Optional.ofNullable(nullableAsEnum)
-                        .map(_IntFieldEnum::fieldValueAsInt)
-                        .orElse(null)
-        );
     }
 
     // -----------------------------------------------------------------------------------------------------------------
@@ -235,6 +232,7 @@ public class Column
     @_ColumnLabel("CHAR_OCTET_LENGTH")
     private Integer charOctetLength;
 
+    @Positive
     @_ColumnLabel("ORDINAL_POSITION")
     private Integer ordinalPosition;
 

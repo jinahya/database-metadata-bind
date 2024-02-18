@@ -20,15 +20,20 @@ package com.github.jinahya.database.metadata.bind;
  * #L%
  */
 
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.EnumSource;
+import org.mockito.BDDMockito;
+
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
 
 class AttributeTest
         extends AbstractMetadataTypeTest<Attribute> {
 
-    AttributeTest() {
-        super(Attribute.class);
-    }
-
+    @DisplayName("Nullable")
     @Nested
     class NullableTest
             extends _IntFieldEnumTest<Attribute.Nullable> {
@@ -38,6 +43,12 @@ class AttributeTest
         }
     }
 
+    // -----------------------------------------------------------------------------------------------------------------
+    AttributeTest() {
+        super(Attribute.class);
+    }
+
+    // -----------------------------------------------------------------------------------------------------------------
     @Override
     Attribute newTypeInstance() {
         final Attribute instance = super.newTypeInstance();
@@ -45,5 +56,46 @@ class AttributeTest
         instance.setTypeName("");
         instance.setOrdinalPosition(1);
         return instance;
+    }
+
+    // -----------------------------------------------------------------------------------------------------------------
+    @DisplayName("NullableAsEnum")
+    @Nested
+    class NullableAsEnumTest {
+
+        @DisplayName("getNullableAsEnum()Nullable")
+        @EnumSource(Attribute.Nullable.class)
+        @ParameterizedTest
+        void getNullableAsEnum__(final Attribute.Nullable expected) {
+            // --------------------------------------------------------------------------------------------------- given
+            final var instance = newTypeSpy();
+            BDDMockito.given(instance.getNullable()).willReturn(expected.fieldValueAsInt());
+            // ---------------------------------------------------------------------------------------------------- when
+            final var actual = instance.getNullableAsEnum();
+            // ---------------------------------------------------------------------------------------------------- then
+            assertThat(actual).isSameAs(expected);
+        }
+
+        @DisplayName("setNullableAsEnum(Nullable)")
+        @EnumSource(Attribute.Nullable.class)
+        @ParameterizedTest
+        void setNullableAsEnum__(final Attribute.Nullable nullableAsEnum) {
+            // --------------------------------------------------------------------------------------------------- given
+            final var instance = newTypeSpy();
+            // ---------------------------------------------------------------------------------------------------- when
+            instance.setNullableAsEnum(nullableAsEnum);
+            // ---------------------------------------------------------------------------------------------------- then
+            verify(instance, times(1)).setNullable(nullableAsEnum.fieldValueAsInt());
+        }
+    }
+
+    @DisplayName("IsNullable")
+    @Nested
+    class IsNullableTest
+            extends HasIsNullableTest<Attribute> {
+
+        IsNullableTest() {
+            super(AttributeTest.this::newTypeSpy);
+        }
     }
 }

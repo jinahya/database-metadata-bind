@@ -30,7 +30,6 @@ import lombok.ToString;
 import java.sql.DatabaseMetaData;
 import java.sql.SQLException;
 import java.util.Comparator;
-import java.util.Objects;
 import java.util.Optional;
 
 /**
@@ -65,19 +64,6 @@ public class CrossReference
      */
     public static final String COLUMN_LABEL_UPDATE_RULE = "UPDATE_RULE";
 
-    // -----------------------------------------------------------------------------------------------------------------
-    boolean isOfPktable(final Table pktable) {
-        return Objects.equals(pktableCat, pktable.getTableCat()) &&
-               Objects.equals(pktableSchem, pktable.getTableSchem()) &&
-               Objects.equals(pktableName, pktable.getTableName());
-    }
-
-    boolean isOfFktable(final Table fktable) {
-        return Objects.equals(fktableCat, fktable.getTableCat()) &&
-               Objects.equals(fktableSchem, fktable.getTableSchem()) &&
-               Objects.equals(fktableName, fktable.getTableName());
-    }
-
     // ------------------------------------------------------------------------------------------------------ pkTableCat
 
     // ---------------------------------------------------------------------------------------------------- pkTableSchem
@@ -102,6 +88,19 @@ public class CrossReference
     }
 
     // ------------------------------------------------------------------------------------------------------ deleteRule
+    PortedKey.TableKeyUpdateRule getDeleteRuleAsEnum() {
+        return Optional.ofNullable(getDeleteRule())
+                .map(PortedKey.TableKeyUpdateRule::valueOfFieldValue)
+                .orElse(null);
+    }
+
+    void setDeleteRuleAsEnum(final PortedKey.TableKeyUpdateRule deleteRuleAsEnum) {
+        setDeleteRule(
+                Optional.ofNullable(deleteRuleAsEnum)
+                        .map(_IntFieldEnum::fieldValueAsInt)
+                        .orElse(null)
+        );
+    }
 
     // -----------------------------------------------------------------------------------------------------------------
 

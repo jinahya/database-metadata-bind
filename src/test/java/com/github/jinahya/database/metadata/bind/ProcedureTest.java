@@ -32,6 +32,15 @@ import static org.mockito.Mockito.verify;
 class ProcedureTest
         extends AbstractMetadataTypeTest<Procedure> {
 
+    @Nested
+    class ProcedureTypeTest
+            extends _IntFieldEnumTest<Procedure.ProcedureType> {
+
+        ProcedureTypeTest() {
+            super(Procedure.ProcedureType.class);
+        }
+    }
+
     ProcedureTest() {
         super(Procedure.class);
     }

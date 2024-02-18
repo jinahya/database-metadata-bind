@@ -42,7 +42,8 @@ import java.util.Comparator;
 @EqualsAndHashCode(callSuper = true, onlyExplicitlyIncluded = true)
 @ToString(callSuper = true)
 public class PseudoColumn
-        extends AbstractMetadataType {
+        extends AbstractMetadataType
+        implements HasIsNullableEnum {
 
     private static final long serialVersionUID = -5612575879670895510L;
 
@@ -76,6 +77,8 @@ public class PseudoColumn
     // -------------------------------------------------------------------------------------------------------- tableCat
 
     // ------------------------------------------------------------------------------------------------------ tableSchem
+
+    // ------------------------------------------------------------------------------------------------------ isNullable
 
     // -----------------------------------------------------------------------------------------------------------------
 

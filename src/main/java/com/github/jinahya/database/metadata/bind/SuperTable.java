@@ -26,10 +26,6 @@ import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
 
-import java.sql.SQLException;
-import java.util.List;
-import java.util.Optional;
-
 /**
  * A entity class for binding results of the
  * {@link java.sql.DatabaseMetaData#getSuperTables(java.lang.String, java.lang.String, java.lang.String)}
@@ -55,23 +51,6 @@ public class SuperTable
     public static final String COLUMN_LABEL_TABLE_NAME = "TABLE_NAME";
 
     public static final String COLUMN_LABEL_SUPERTABLE_NAME = "SUPERTABLE_NAME";
-
-    // -----------------------------------------------------------------------------------------------------------------
-    List<Table> getTables(final Context context, final String[] types) throws SQLException {
-        return context.getTables(tableCat, tableSchem, tableName, types);
-    }
-
-    Optional<Table> getTable(final Context context, final String[] types) throws SQLException {
-        return getTables(context, types).stream().findFirst();
-    }
-
-    List<Table> getSuperTables(final Context context, final String[] types) throws SQLException {
-        return context.getTables(tableCat, tableSchem, supertableName, types);
-    }
-
-    Optional<Table> getSuperTable(final Context context, final String[] types) throws SQLException {
-        return getSuperTables(context, types).stream().findFirst();
-    }
 
     // -------------------------------------------------------------------------------------------------------- tableCat
 

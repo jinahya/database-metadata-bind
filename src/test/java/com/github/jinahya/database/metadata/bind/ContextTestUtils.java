@@ -132,20 +132,20 @@ final class ContextTestUtils {
         } catch (final SQLFeatureNotSupportedException sqlfnse) {
             // empty
         }
-//        // ---------------------------------------------------------------------------------------------- crossReference
-//        try {
-//            final var crossReference = context.getCrossReference(
-//                    null,
-//                    null,
-//                    "%",
-//                    null,
-//                    null,
-//                    "%"
-//            );
-//            crossReference(context, crossReference);
-//        } catch (final SQLException sqle) {
-//            log.error("failed to get crossReference", sqle);
-//        }
+        // ---------------------------------------------------------------------------------------------- crossReference
+        try {
+            final var crossReference = context.getCrossReference(
+                    null,
+                    null,
+                    "%",
+                    null,
+                    null,
+                    "%"
+            );
+            crossReference(context, crossReference);
+        } catch (final SQLFeatureNotSupportedException sqlfnse) {
+            // empty
+        }
         // ----------------------------------------------------------------------------------- functions/functionColumns
         try {
             final var functions = context.getFunctions(null, null, "%");
@@ -366,6 +366,11 @@ final class ContextTestUtils {
         // ------------------------------------------------------------------------------------------------------ tables
         try {
             final var tables = context.getTables(catalog.getTableCat(), null, "%", null);
+            if (!databaseProductName(context).equals(DatabaseProductNames.APACHE_DERBY)) {
+                tables.forEach(t -> {
+                    assertType(t).isOf(catalog);
+                });
+            }
             tables(context, tables);
         } catch (final SQLFeatureNotSupportedException sqlfnse) {
             // empty
@@ -373,6 +378,9 @@ final class ContextTestUtils {
         // --------------------------------------------------------------------------------------------- tablePrivileges
         try {
             final var tablePrivileges = context.getTablePrivileges(catalog.getTableCat(), "%", "%");
+            assertThat(tablePrivileges).allSatisfy(tp -> {
+                assertThat(tp.getTableCat()).isEqualTo(catalog.getTableCat());
+            });
             tablePrivileges(context, tablePrivileges);
         } catch (final SQLFeatureNotSupportedException sqlfnse) {
             // empty
@@ -437,6 +445,13 @@ final class ContextTestUtils {
         {
             final var value = Column.Nullable.valueOfFieldValue(column.getNullable());
         }
+        // -------------------------------------------------------------------------------------------- columnPrivileges
+        try {
+            final var columnPrivileges = context.getColumnPrivileges(column);
+            columnPrivileges(context, columnPrivileges);
+        } catch (final SQLFeatureNotSupportedException sqlfnse) {
+            // empty
+        }
     }
 
     // ------------------------------------------------------------------------------------------------ columnPrivileges
@@ -462,6 +477,7 @@ final class ContextTestUtils {
     private static void columnPrivilege(final Context context, final ColumnPrivilege columnPrivilege)
             throws SQLException {
         MetadataTypeTestUtils.verify(columnPrivilege);
+        final var isGrantableAsEnum = columnPrivilege.getIsGrantableAsEnum();
     }
 
     // -------------------------------------------------------------------------------------------------- crossReference
@@ -705,10 +721,19 @@ final class ContextTestUtils {
         } catch (final SQLFeatureNotSupportedException sqlfnse) {
             // empty
         }
+        // ------------------------------------------------------------------------------------------------------ tables
+        try {
+            final var tables = context.getTables(schema, "%", null);
+            tables(context, tables);
+        } catch (final SQLFeatureNotSupportedException sqlfnse) {
+            // empty
+        }
         // --------------------------------------------------------------------------------------------- tablePrivileges
-        if (true) {
+        try {
             final var tablePrivileges = context.getTablePrivileges(schema, "%");
             tablePrivileges(context, tablePrivileges);
+        } catch (final SQLFeatureNotSupportedException sqlfnse) {
+            // empty
         }
     }
 
@@ -839,13 +864,6 @@ final class ContextTestUtils {
         // ------------------------------------------------------------------------------------------------- superTables
         try {
             final var superTables = context.getSuperTables(table);
-            for (final var superTable : superTables) {
-                assertThat(superTable.getTable(context, new String[] {table.getTableType()})).hasValue(table);
-                assertThat(superTable.getSuperTable(context, null)).hasValueSatisfying(v -> {
-                    assertThat(v.getTableCat()).isEqualTo(superTable.getTableCat());
-                    assertThat(v.getTableSchem()).isEqualTo(superTable.getTableSchem());
-                });
-            }
             superTables(context, superTables);
         } catch (final SQLFeatureNotSupportedException sqlfnse) {
             // empty
@@ -853,6 +871,11 @@ final class ContextTestUtils {
         // --------------------------------------------------------------------------------------------- tablePrivileges
         try {
             final var tablePrivileges = context.getTablePrivileges(table);
+            assertThat(tablePrivileges).allSatisfy(tp -> {
+                assertThat(tp.getTableCat()).isEqualTo(table.getTableCat());
+                assertThat(tp.getTableSchem()).isEqualTo(table.getTableSchem());
+                assertThat(tp.getTableName()).isEqualTo(table.getTableName());
+            });
             tablePrivileges(context, tablePrivileges);
         } catch (final SQLFeatureNotSupportedException sqlfnse) {
             // empty

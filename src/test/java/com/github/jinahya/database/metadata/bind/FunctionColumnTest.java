@@ -83,4 +83,15 @@ class FunctionColumnTest
         instance.setSpecificName("");
         return instance;
     }
+
+    // -----------------------------------------------------------------------------------------------------------------
+
+    @Nested
+    class IsNullableTest
+            extends HasIsNullableTest<FunctionColumn> {
+
+        IsNullableTest() {
+            super(FunctionColumnTest.this::newTypeSpy);
+        }
+    }
 }

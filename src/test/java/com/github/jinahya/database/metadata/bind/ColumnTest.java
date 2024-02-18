@@ -82,4 +82,13 @@ class ColumnTest
                     .setNullable(nullableAsEnum.fieldValueAsInt());
         }
     }
+
+    @Nested
+    class IsNullableTest
+            extends HasIsNullableTest<Column> {
+
+        IsNullableTest() {
+            super(ColumnTest.this::newTypeSpy);
+        }
+    }
 }

@@ -34,6 +34,7 @@ abstract class AbstractMetadataTypeTest<T extends AbstractMetadataType>
         super(typeClass);
     }
 
+    // -----------------------------------------------------------------------------------------------------------------
     @DisplayName("should override equals")
     @Test
     void shouldHaveEqualsOverridden__() throws ReflectiveOperationException {

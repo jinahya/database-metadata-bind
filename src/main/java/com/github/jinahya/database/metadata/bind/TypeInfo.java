@@ -201,6 +201,21 @@ public class TypeInfo
         private final int fieldValue;
     }
 
+    // ------------------------------------------------------------------------------------------------------ nullable
+    Nullable getNullableAsEnum() {
+        return Optional.ofNullable(getNullable())
+                .map(Nullable::valueOfFieldValue)
+                .orElse(null);
+    }
+
+    void setNullableAsEnum(final Nullable nullableAsEnum) {
+        setNullable(
+                Optional.ofNullable(nullableAsEnum)
+                        .map(_IntFieldEnum::fieldValueAsInt)
+                        .orElse(null)
+        );
+    }
+
     // ------------------------------------------------------------------------------------------------------ searchable
     Searchable getSearchableAsEnum() {
         return Optional.ofNullable(getSearchable())

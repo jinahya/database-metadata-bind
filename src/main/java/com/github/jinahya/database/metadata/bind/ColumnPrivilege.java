@@ -29,7 +29,6 @@ import lombok.ToString;
 import java.sql.DatabaseMetaData;
 import java.sql.SQLException;
 import java.util.Comparator;
-import java.util.Objects;
 import java.util.Optional;
 
 /**
@@ -103,14 +102,6 @@ public class ColumnPrivilege
         }
 
         private final String fieldValue;
-    }
-
-    // -----------------------------------------------------------------------------------------------------------------
-    boolean isOf(final Column column) {
-        return Objects.equals(tableCat, column.getTableCat()) &&
-               Objects.equals(tableSchem, column.getTableSchem()) &&
-               Objects.equals(tableName, column.getTableName()) &&
-               Objects.equals(columnName, column.getColumnName());
     }
 
     // -------------------------------------------------------------------------------------------------------- tableCat

@@ -6,6 +6,10 @@ final class _Assertions {
         return new SuperTypeAssert(actual);
     }
 
+    static TableAssert assertType(final Table actual) {
+        return new TableAssert(actual);
+    }
+
     private _Assertions() {
         throw new AssertionError("instantiation is not allowed");
     }

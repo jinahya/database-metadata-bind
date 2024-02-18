@@ -20,6 +20,7 @@ package com.github.jinahya.database.metadata.bind;
  * #L%
  */
 
+import jakarta.validation.constraints.Positive;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.Setter;
@@ -28,6 +29,7 @@ import lombok.ToString;
 import java.sql.DatabaseMetaData;
 import java.sql.SQLException;
 import java.util.Comparator;
+import java.util.Optional;
 
 /**
  * A class for binding results of the
@@ -44,7 +46,8 @@ import java.util.Comparator;
 @EqualsAndHashCode(callSuper = true, onlyExplicitlyIncluded = true)
 @ToString(callSuper = true)
 public class ProcedureColumn
-        extends AbstractMetadataType {
+        extends AbstractMetadataType
+        implements HasIsNullableEnum {
 
     private static final long serialVersionUID = 3894753719381358829L;
 
@@ -70,6 +73,10 @@ public class ProcedureColumn
         PROCEDURE_COLUMN_OUT(DatabaseMetaData.procedureColumnOut),         // 4
         PROCEDURE_COLUMN_RETURN(DatabaseMetaData.procedureColumnReturn)    // 5
         ;
+
+        public static ColumnType valueOfFieldValue(final int fieldValue) {
+            return _IntFieldEnum.valueOfFieldValue(ColumnType.class, fieldValue);
+        }
 
         ColumnType(final int fieldValue) {
             this.fieldValue = fieldValue;
@@ -116,6 +123,36 @@ public class ProcedureColumn
 
     // -------------------------------------------------------------------------------------------------- procedureSchem
 
+    // ------------------------------------------------------------------------------------------------------ columnType
+
+    public ColumnType getColumnTypeAsEnum() {
+        return Optional.ofNullable(getColumnType())
+                .map(ColumnType::valueOfFieldValue)
+                .orElse(null);
+    }
+
+    public void setColumnTypeAsEnum(final ColumnType columnTypeAsEnum) {
+        setColumnType(
+                Optional.ofNullable(columnTypeAsEnum)
+                        .map(_IntFieldEnum::fieldValueAsInt)
+                        .orElse(null)
+        );
+    }
+
+    // -------------------------------------------------------------------------------------------------------- nullable
+    public Nullable getNullableAsEnum() {
+        return Optional.ofNullable(getNullable())
+                .map(Nullable::valueOfFieldValue)
+                .orElse(null);
+    }
+
+    public void setNullableAsEnum(final Nullable nullableAsEnum) {
+        setNullable(
+                Optional.ofNullable(nullableAsEnum)
+                        .map(_IntFieldEnum::fieldValueAsInt)
+                        .orElse(null)
+        );
+    }
     // -----------------------------------------------------------------------------------------------------------------
 
     @jakarta.annotation.Nullable
@@ -187,6 +224,7 @@ public class ProcedureColumn
     @_ColumnLabel("CHAR_OCTET_LENGTH")
     private Integer charOctetLength;
 
+    @Positive
     @_ColumnLabel("ORDINAL_POSITION")
     private Integer ordinalPosition;
 
