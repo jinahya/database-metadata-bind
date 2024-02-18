@@ -29,9 +29,7 @@ import lombok.ToString;
 import java.sql.DatabaseMetaData;
 import java.sql.SQLException;
 import java.util.Comparator;
-import java.util.Objects;
 import java.util.Optional;
-import java.util.function.BiPredicate;
 
 /**
  * A class for binding results of the
@@ -51,19 +49,12 @@ public class Function
     private static final long serialVersionUID = -3318947900237453301L;
 
     // -----------------------------------------------------------------------------------------------------------------
-    static Comparator<Function> comparingInCaseInsensitiveOrder(final Context context) throws SQLException {
-        return Comparator.comparing(Function::getFunctionCat,
-                                    ContextUtils.nulls(context, String.CASE_INSENSITIVE_ORDER))
-                .thenComparing(Function::getFunctionSchem, ContextUtils.nulls(context, String.CASE_INSENSITIVE_ORDER))
-                .thenComparing(Function::getFunctionName, ContextUtils.nulls(context, String.CASE_INSENSITIVE_ORDER))
-                .thenComparing(Function::getSpecificName, ContextUtils.nulls(context, String.CASE_INSENSITIVE_ORDER));
-    }
-
-    static Comparator<Function> comparingInNaturalOrder(final Context context) throws SQLException {
-        return Comparator.comparing(Function::getFunctionCat, ContextUtils.nulls(context, Comparator.naturalOrder()))
-                .thenComparing(Function::getFunctionSchem, ContextUtils.nulls(context, Comparator.naturalOrder()))
-                .thenComparing(Function::getFunctionName, ContextUtils.nulls(context, Comparator.naturalOrder()))
-                .thenComparing(Function::getSpecificName, ContextUtils.nulls(context, Comparator.naturalOrder()));
+    static Comparator<Function> comparing(final Context context, final Comparator<? super String> comparator)
+            throws SQLException {
+        return Comparator.comparing(Function::getFunctionCat, ContextUtils.nulls(context, comparator))
+                .thenComparing(Function::getFunctionSchem, ContextUtils.nulls(context, comparator))
+                .thenComparing(Function::getFunctionName, ContextUtils.nulls(context, comparator))
+                .thenComparing(Function::getSpecificName, ContextUtils.nulls(context, comparator));
     }
 
     // -----------------------------------------------------------------------------------------------------------------
@@ -132,16 +123,6 @@ public class Function
 
         private final int fieldValue;
     }
-
-    // -----------------------------------------------------------------------------------------------------------------
-    static final BiPredicate<? super Function, ? super Catalog> IS_OF_CATALOG = (f, c) -> {
-        return Objects.equals(f.functionCat, c.getTableCat());
-    };
-
-    static final BiPredicate<? super Function, ? super Schema> IS_OF_SCHEMA = (f, s) -> {
-        return Objects.equals(f.functionCat, s.getTableCatalog()) &&
-               Objects.equals(f.functionSchem, s.getTableSchem());
-    };
 
     // ---------------------------------------------------------------------------------------------------- functionType
 

@@ -29,9 +29,7 @@ import lombok.ToString;
 import java.sql.DatabaseMetaData;
 import java.sql.SQLException;
 import java.util.Comparator;
-import java.util.Objects;
 import java.util.Optional;
-import java.util.function.BiPredicate;
 
 /**
  * A class for binding results of the
@@ -119,16 +117,6 @@ public class Procedure
      * A colum label of {@value}.
      */
     public static final String COLUMN_LABEL_SPECIFIC_NAME = "SPECIFIC_NAME";
-
-    // -----------------------------------------------------------------------------------------------------------------
-    static final BiPredicate<Procedure, Catalog> IS_OF_CATALOG = (p, c) -> {
-        return Objects.equals(p.procedureCat, c.getTableCat());
-    };
-
-    static final BiPredicate<Procedure, Schema> IS_OF_SCHEMA = (p, s) -> {
-        return Objects.equals(p.procedureCat, s.getTableCatalog()) &&
-               Objects.equals(p.procedureSchem, s.getTableSchem());
-    };
 
     // ---------------------------------------------------------------------------------------------------- procedureCat
 

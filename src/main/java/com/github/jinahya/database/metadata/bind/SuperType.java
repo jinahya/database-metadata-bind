@@ -27,8 +27,6 @@ import lombok.Setter;
 import lombok.ToString;
 
 import java.sql.DatabaseMetaData;
-import java.util.Objects;
-import java.util.function.BiPredicate;
 
 /**
  * A class for binding results of the
@@ -47,13 +45,6 @@ public class SuperType
         extends AbstractMetadataType {
 
     private static final long serialVersionUID = 4603878785941565029L;
-
-    // -----------------------------------------------------------------------------------------------------------------
-    static final BiPredicate<SuperType, UDT> IS_OF = (c, p) -> {
-        return Objects.equals(c.supertypeCat, p.getTypeCat()) &&
-               Objects.equals(c.supertypeSchem, p.getTypeSchem()) &&
-               Objects.equals(c.supertypeName, p.getTypeName());
-    };
 
     // -----------------------------------------------------------------------------------------------------------------
     @Nullable

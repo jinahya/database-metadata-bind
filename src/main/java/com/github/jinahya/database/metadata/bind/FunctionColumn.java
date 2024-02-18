@@ -30,9 +30,7 @@ import lombok.ToString;
 import java.sql.DatabaseMetaData;
 import java.sql.SQLException;
 import java.util.Comparator;
-import java.util.Objects;
 import java.util.Optional;
-import java.util.function.BiPredicate;
 
 /**
  * A class for binding results of the {@link DatabaseMetaData#getFunctionColumns(String, String, String, String)}
@@ -180,14 +178,6 @@ public class FunctionColumn
 
     // -----------------------------------------------------------------------------------------------------------------
     public static final String COLUMN_LABEL_IS_NULLABLE = "IS_NULLABLE";
-
-    // -----------------------------------------------------------------------------------------------------------------
-    static final BiPredicate<FunctionColumn, Function> IS_OF = (c, f) -> {
-        return Objects.equals(c.functionCat, f.getFunctionCat()) &&
-               Objects.equals(c.functionSchem, f.getFunctionSchem()) &&
-               Objects.equals(c.functionName, f.getFunctionName()) &&
-               Objects.equals(c.specificName, f.getSpecificName());
-    };
 
     // ------------------------------------------------------------------------------------------------------ columnType
     ColumnType getColumnTypeAsEnum() {

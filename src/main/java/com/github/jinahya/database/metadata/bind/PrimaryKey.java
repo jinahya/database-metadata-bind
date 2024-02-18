@@ -30,8 +30,6 @@ import lombok.ToString;
 import java.sql.DatabaseMetaData;
 import java.sql.SQLException;
 import java.util.Comparator;
-import java.util.Objects;
-import java.util.function.BiPredicate;
 
 /**
  * A class for binding results of the {@link DatabaseMetaData#getPrimaryKeys(String, String, String)} method.
@@ -100,13 +98,6 @@ public class PrimaryKey
      * The column label of {@value}.
      */
     public static final String COLUMN_LABEL_PK_NAME = "PK_NAME";
-
-    // -----------------------------------------------------------------------------------------------------------------
-    static final BiPredicate<PrimaryKey, Table> IS_OF = (k, t) -> {
-        return Objects.equals(k.tableCat, t.getTableCat()) &&
-               Objects.equals(k.tableSchem, t.getTableSchem()) &&
-               Objects.equals(k.tableName, t.getTableName());
-    };
 
     // -------------------------------------------------------------------------------------------------------- tableCat
 

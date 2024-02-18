@@ -39,6 +39,7 @@ import java.util.Objects;
 import java.util.concurrent.Executors;
 import java.util.function.Consumer;
 
+import static com.github.jinahya.database.metadata.bind._Assertions.assertType;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 
@@ -362,6 +363,13 @@ final class ContextTestUtils {
         } catch (final SQLFeatureNotSupportedException sqlfnse) {
             // empty
         }
+        // ------------------------------------------------------------------------------------------------------ tables
+        try {
+            final var tables = context.getTables(catalog.getTableCat(), null, "%", null);
+            tables(context, tables);
+        } catch (final SQLFeatureNotSupportedException sqlfnse) {
+            // empty
+        }
         // --------------------------------------------------------------------------------------------- tablePrivileges
         try {
             final var tablePrivileges = context.getTablePrivileges(catalog.getTableCat(), "%", "%");
@@ -515,8 +523,8 @@ final class ContextTestUtils {
             && !databaseProductName(context).equals(DatabaseProductNames.MICROSOFT_SQL_SERVER)) {
             // https://github.com/microsoft/mssql-jdbc/issues/2321
             assertThat(functions).satisfiesAnyOf(
-                    l -> assertThat(l).isSortedAccordingTo(Function.comparingInCaseInsensitiveOrder(context)),
-                    l -> assertThat(l).isSortedAccordingTo(Function.comparingInNaturalOrder(context))
+                    l -> assertThat(l).isSortedAccordingTo(Function.comparing(context, String.CASE_INSENSITIVE_ORDER)),
+                    l -> assertThat(l).isSortedAccordingTo(Function.comparing(context, Comparator.naturalOrder()))
             );
         }
         for (final var function : functions) {
@@ -571,7 +579,7 @@ final class ContextTestUtils {
                     l -> assertThat(l).isSortedAccordingTo(
                             ImportedKey.comparingPktable(context, String.CASE_INSENSITIVE_ORDER)),
                     l -> assertThat(l).isSortedAccordingTo(
-                            ImportedKey.comparingPktable_(context, Comparator.naturalOrder()))
+                            ImportedKey.comparingPktable(context, Comparator.naturalOrder()))
             );
         }
         for (final var importedKey : importedKeys) {
@@ -658,7 +666,7 @@ final class ContextTestUtils {
     }
 
     // --------------------------------------------------------------------------------------------------------- schemas
-    private static void schemas(final Context context, final List<? extends Schema> schemas) throws SQLException {
+    static void schemas(final Context context, final List<? extends Schema> schemas) throws SQLException {
         assertThat(schemas).isNotNull().doesNotContainNull();
         if (true) {
             assertThat(schemas).doesNotHaveDuplicates();
@@ -678,7 +686,7 @@ final class ContextTestUtils {
         MetadataTypeTestUtils.verify(schema);
         // -------------------------------------------------------------------------------------------------- procedures
         try {
-            final var procedures = context.getAllProcedures(schema);
+            final var procedures = context.getProcedures(schema);
             procedures(context, procedures);
         } catch (final SQLFeatureNotSupportedException sqlfnse) {
             // empty
@@ -718,10 +726,10 @@ final class ContextTestUtils {
 
     private static void superType(final Context context, final SuperType superType) throws SQLException {
         MetadataTypeTestUtils.verify(superType);
-        {
-            assertThat(superType.getTypeName()).isNotNull();
-            assertThat(superType.getSupertypeName()).isNotNull();
-        }
+        assertThat(superType).satisfies(v -> {
+            assertThat(v.getTypeName()).isNotNull();
+            assertThat(v.getSupertypeName()).isNotNull();
+        });
     }
 
     // ---------------------------------------------------------------------------------------------------------- tables
@@ -777,14 +785,14 @@ final class ContextTestUtils {
         }
         // ----------------------------------------------------------------------------------------------------- columns
         try {
-            final var columns = context.getAllColumns(table);
+            final var columns = context.getColumns(table);
             columns(context, columns);
         } catch (final SQLFeatureNotSupportedException sqlfnse) {
             // empty
         }
         // -------------------------------------------------------------------------------------------- columnPrivileges
         try {
-            final var columnPrivileges = context.getAllColumnPrivileges(table);
+            final var columnPrivileges = context.getColumnPrivileges(table);
             columnPrivileges(context, columnPrivileges);
         } catch (final SQLFeatureNotSupportedException sqlfnse) {
             // empty
@@ -804,15 +812,15 @@ final class ContextTestUtils {
             // empty
         }
         // --------------------------------------------------------------------------------------------------- indexInfo
-        try {
-            for (final boolean unique : new boolean[] {true, false}) {
-                for (final boolean approximate : new boolean[] {true, false}) {
+        for (final boolean unique : new boolean[] {true, false}) {
+            for (final boolean approximate : new boolean[] {true, false}) {
+                try {
                     final var indexInfo = context.getIndexInfo(table, unique, approximate);
                     indexInfo(context, indexInfo);
+                } catch (final SQLFeatureNotSupportedException sqlfnse) {
+                    // empty
                 }
             }
-        } catch (final SQLFeatureNotSupportedException sqlfnse) {
-            // empty
         }
         // ------------------------------------------------------------------------------------------------- primaryKeys
         try {
@@ -831,6 +839,13 @@ final class ContextTestUtils {
         // ------------------------------------------------------------------------------------------------- superTables
         try {
             final var superTables = context.getSuperTables(table);
+            for (final var superTable : superTables) {
+                assertThat(superTable.getTable(context, new String[] {table.getTableType()})).hasValue(table);
+                assertThat(superTable.getSuperTable(context, null)).hasValueSatisfying(v -> {
+                    assertThat(v.getTableCat()).isEqualTo(superTable.getTableCat());
+                    assertThat(v.getTableSchem()).isEqualTo(superTable.getTableSchem());
+                });
+            }
             superTables(context, superTables);
         } catch (final SQLFeatureNotSupportedException sqlfnse) {
             // empty
@@ -1019,9 +1034,6 @@ final class ContextTestUtils {
         // -------------------------------------------------------------------------------------------------- attributes
         try {
             final var attributes = context.getAttributes(udt, "%");
-            for (final var attribute : attributes) {
-                assertThat(attribute).matches(a -> Attribute.IS_OF.test(a, udt));
-            }
             attributes(context, attributes);
         } catch (final SQLFeatureNotSupportedException sqlfnse) {
             // empty
@@ -1029,6 +1041,9 @@ final class ContextTestUtils {
         // -------------------------------------------------------------------------------------------------- superTypes
         try {
             final var superTypes = context.getSuperTypes(udt);
+            assertThat(superTypes).allSatisfy(st -> {
+                assertType(st).isOf(udt);
+            });
             superTypes(context, superTypes);
         } catch (final SQLFeatureNotSupportedException sqlfnse) {
             // empty

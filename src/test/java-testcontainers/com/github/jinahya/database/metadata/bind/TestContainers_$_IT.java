@@ -144,6 +144,28 @@ abstract class TestContainers_$_IT {
     }
 
     @Test
+    void schemas() {
+        applyContext(c -> {
+            try {
+                ContextTestUtils.info(c);
+            } catch (final SQLException sqle) {
+                throw new RuntimeException(sqle);
+            }
+            try {
+                final var schemas = c.getSchemas((String) null, "%");
+                ContextTestUtils.schemas(c, schemas);
+            } catch (final SQLException sqle) {
+                if (sqle instanceof SQLFeatureNotSupportedException sqlfnse) {
+                    log.error("not supported", sqlfnse);
+                    return null;
+                }
+                throw new RuntimeException(sqle);
+            }
+            return null;
+        });
+    }
+
+    @Test
     void tables() {
         applyContext(c -> {
             try {

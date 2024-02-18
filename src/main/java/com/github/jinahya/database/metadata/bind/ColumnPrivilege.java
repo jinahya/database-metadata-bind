@@ -40,7 +40,7 @@ import java.util.Optional;
  * @see Context#getColumnPrivileges(String, String, String, String)
  */
 
-@_ChildOf(Column.class)
+@_ChildOf(Table.class)
 @Setter
 @Getter
 @EqualsAndHashCode(callSuper = true)

@@ -26,8 +26,9 @@ import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
 
-import java.util.Objects;
-import java.util.function.BiPredicate;
+import java.sql.SQLException;
+import java.util.List;
+import java.util.Optional;
 
 /**
  * A entity class for binding results of the
@@ -56,11 +57,21 @@ public class SuperTable
     public static final String COLUMN_LABEL_SUPERTABLE_NAME = "SUPERTABLE_NAME";
 
     // -----------------------------------------------------------------------------------------------------------------
-    static final BiPredicate<SuperTable, Table> IS_OF = (s, t) -> {
-        return Objects.equals(s.getTableCat(), t.getTableCat()) &&
-               Objects.equals(s.getTableSchem(), t.getTableSchem()) &&
-               Objects.equals(s.getTableName(), t.getTableName());
-    };
+    List<Table> getTables(final Context context, final String[] types) throws SQLException {
+        return context.getTables(tableCat, tableSchem, tableName, types);
+    }
+
+    Optional<Table> getTable(final Context context, final String[] types) throws SQLException {
+        return getTables(context, types).stream().findFirst();
+    }
+
+    List<Table> getSuperTables(final Context context, final String[] types) throws SQLException {
+        return context.getTables(tableCat, tableSchem, supertableName, types);
+    }
+
+    Optional<Table> getSuperTable(final Context context, final String[] types) throws SQLException {
+        return getSuperTables(context, types).stream().findFirst();
+    }
 
     // -------------------------------------------------------------------------------------------------------- tableCat
 
@@ -84,6 +95,7 @@ public class SuperTable
     @EqualsAndHashCode.Include
     private String tableName;
 
+    // -----------------------------------------------------------------------------------------------------------------
     @_ColumnLabel(COLUMN_LABEL_SUPERTABLE_NAME)
     @EqualsAndHashCode.Include
     private String supertableName;

@@ -29,9 +29,7 @@ import lombok.ToString;
 import java.sql.DatabaseMetaData;
 import java.sql.SQLException;
 import java.util.Comparator;
-import java.util.Objects;
 import java.util.Optional;
-import java.util.function.BiPredicate;
 
 /**
  * A class for binding results of the {@link DatabaseMetaData#getIndexInfo(String, String, String, boolean, boolean)}
@@ -115,13 +113,6 @@ public class IndexInfo
 
         private final int fieldValue;
     }
-
-    // -----------------------------------------------------------------------------------------------------------------
-    static final BiPredicate<IndexInfo, Table> IS_OF = (i, t) -> {
-        return Objects.equals(i.tableCat, t.getTableCat()) &&
-               Objects.equals(i.tableSchem, t.getTableSchem()) &&
-               Objects.equals(i.tableName, t.getTableName());
-    };
 
     // -------------------------------------------------------------------------------------------------------- tableCat
 

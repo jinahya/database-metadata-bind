@@ -28,9 +28,7 @@ import lombok.ToString;
 import java.sql.DatabaseMetaData;
 import java.sql.SQLException;
 import java.util.Comparator;
-import java.util.Objects;
 import java.util.Optional;
-import java.util.function.BiPredicate;
 
 /**
  * A class for binding results of the {@link DatabaseMetaData#getColumns(String, String, String, String)} method.
@@ -147,20 +145,6 @@ public class Column
 
     // -----------------------------------------------------------------------------------------------------------------
     public static final String COLUMN_LABEL_IS_GENERATEDCOLUMN = "IS_GENERATEDCOLUMN";
-
-    // -----------------------------------------------------------------------------------------------------------------
-    static final BiPredicate<Column, Table> IS_OF = (c, t) -> {
-        return Objects.equals(c.tableCat, t.getTableCat()) &&
-               Objects.equals(c.tableSchem, t.getTableSchem()) &&
-               Objects.equals(c.tableName, t.getTableName());
-    };
-
-    // -----------------------------------------------------------------------------------------------------------------
-    boolean isOf(final Table table) {
-        return Objects.equals(tableCat, table.getTableCat()) &&
-               Objects.equals(tableSchem, table.getTableSchem()) &&
-               Objects.equals(tableName, table.getTableName());
-    }
 
     // -------------------------------------------------------------------------------------------------------- tableCat
 

@@ -30,7 +30,6 @@ import lombok.ToString;
 import java.sql.SQLException;
 import java.util.Comparator;
 import java.util.Objects;
-import java.util.function.BiPredicate;
 
 /**
  * A class for binding results of the
@@ -41,6 +40,9 @@ import java.util.function.BiPredicate;
  * @see Context#getTables(String, String, String, String[])
  */
 
+@_ParentOf(Column.class)
+@_ParentOf(IndexInfo.class)
+@_ParentOf(PseudoColumn.class)
 @_ParentOf(VersionColumn.class)
 @Setter
 @Getter
@@ -87,16 +89,6 @@ public class Table
      * The column label of {@value}.
      */
     public static final String COLUMN_LABEL_TABLE_TYPE = "TABLE_TYPE";
-
-    // -----------------------------------------------------------------------------------------------------------------
-    static final BiPredicate<Table, Catalog> IS_OF_CATALOG = (t, c) -> {
-        return Objects.equals(t.tableCat, c.getTableCat());
-    };
-
-    static final BiPredicate<Table, Schema> IS_OF_SCHEMA = (t, s) -> {
-        return Objects.equals(t.tableCat, s.getTableCatalog()) &&
-               Objects.equals(t.tableSchem, s.getTableSchem());
-    };
 
     // -----------------------------------------------------------------------------------------------------------------
     static Table of(final String tableCat, final String tableSchem, final String tableName) {

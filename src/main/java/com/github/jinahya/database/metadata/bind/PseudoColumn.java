@@ -29,8 +29,6 @@ import lombok.ToString;
 import java.sql.DatabaseMetaData;
 import java.sql.SQLException;
 import java.util.Comparator;
-import java.util.Objects;
-import java.util.function.BiPredicate;
 
 /**
  * A class for binding results of the {@link DatabaseMetaData#getPseudoColumns(String, String, String, String)} method.
@@ -74,13 +72,6 @@ public class PseudoColumn
     public static final String COLUMN_VALUE_COLUMN_IS_NULLABLE_NO = "NO";
 
     public static final String COLUMN_VALUE_COLUMN_IS_NULLABLE_EMPTY = "";
-
-    // -----------------------------------------------------------------------------------------------------------------
-    static final BiPredicate<PseudoColumn, Table> IS_OF = (c, t) -> {
-        return Objects.equals(c.tableCat, t.getTableCat()) &&
-               Objects.equals(c.tableSchem, t.getTableSchem()) &&
-               Objects.equals(c.tableName, t.getTableName());
-    };
 
     // -------------------------------------------------------------------------------------------------------- tableCat
 

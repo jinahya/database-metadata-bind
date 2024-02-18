@@ -28,8 +28,6 @@ import lombok.ToString;
 
 import java.sql.SQLException;
 import java.util.Comparator;
-import java.util.Objects;
-import java.util.function.BiPredicate;
 
 /**
  * A class for binding results of the {@link java.sql.DatabaseMetaData#getSchemas(java.lang.String, java.lang.String)}
@@ -52,8 +50,8 @@ public class Schema
     // -----------------------------------------------------------------------------------------------------------------
     static Comparator<Schema> comparing(final Context context, final Comparator<? super String> comparator)
             throws SQLException {
-        return Comparator.comparing(Schema::getTableCatalog, ContextUtils.nulls(context, String::compareTo))
-                .thenComparing(Schema::getTableSchem, ContextUtils.nulls(context, String::compareTo));
+        return Comparator.comparing(Schema::getTableCatalog, ContextUtils.nulls(context, comparator))
+                .thenComparing(Schema::getTableSchem, ContextUtils.nulls(context, comparator));
     }
 
     // -----------------------------------------------------------------------------------------------------------------
@@ -71,11 +69,6 @@ public class Schema
      * A column label of {@value}.
      */
     public static final String COLUMN_LABEL_TABLE_SCHEM = "TABLE_SCHEM";
-
-    // -----------------------------------------------------------------------------------------------------------------
-    static final BiPredicate<Schema, Catalog> IS_OF = (s, c) -> {
-        return Objects.equals(s.tableCatalog, c.getTableCat());
-    };
 
     // -----------------------------------------------------------------------------------------------------------------
     static Schema of(final String tableCatalog, final String tableSchem) {

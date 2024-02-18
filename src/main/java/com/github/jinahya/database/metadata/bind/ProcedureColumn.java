@@ -28,8 +28,6 @@ import lombok.ToString;
 import java.sql.DatabaseMetaData;
 import java.sql.SQLException;
 import java.util.Comparator;
-import java.util.Objects;
-import java.util.function.BiPredicate;
 
 /**
  * A class for binding results of the
@@ -58,13 +56,6 @@ public class ProcedureColumn
                 .thenComparing(ProcedureColumn::getProcedureName, ContextUtils.nulls(context, comparator))
                 .thenComparing(ProcedureColumn::getSpecificName, ContextUtils.nulls(context, comparator));
     }
-
-    // -----------------------------------------------------------------------------------------------------------------
-    static final BiPredicate<ProcedureColumn, Procedure> IS_OF = (c, p) -> {
-        return Objects.equals(c.procedureCat, p.getProcedureCat()) &&
-               Objects.equals(c.procedureSchem, p.getProcedureSchem()) &&
-               Objects.equals(c.procedureName, p.getProcedureName());
-    };
 
     // ----------------------------------------------------------------------------------------------------- COLUMN_TYPE
     public static final String COLUMN_LABEL_COLUMN_TYPE = "COLUMN_TYPE";

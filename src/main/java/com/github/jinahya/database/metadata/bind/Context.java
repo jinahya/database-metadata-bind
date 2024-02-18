@@ -560,7 +560,7 @@ public class Context {
         );
     }
 
-    @NotNull List<@Valid @NotNull ColumnPrivilege> getAllColumnPrivileges(final @NotNull Table table)
+    @NotNull List<@Valid @NotNull ColumnPrivilege> getColumnPrivileges(final @NotNull Table table)
             throws SQLException {
         return getColumnPrivileges(
                 table,
@@ -677,7 +677,7 @@ public class Context {
         );
     }
 
-    @NotNull List<@Valid @NotNull Column> getAllColumns(final @NotNull Table table) throws SQLException {
+    @NotNull List<@Valid @NotNull Column> getColumns(final @NotNull Table table) throws SQLException {
         Objects.requireNonNull(table, "table is null");
         return getColumns(
                 table.getTableCat(),
@@ -1312,7 +1312,7 @@ public class Context {
         );
     }
 
-    @NotNull List<@Valid @NotNull Procedure> getAllProcedures(@NotNull final Catalog catalog) throws SQLException {
+    @NotNull List<@Valid @NotNull Procedure> getProcedures(@NotNull final Catalog catalog) throws SQLException {
         Objects.requireNonNull(catalog, "catalog is null");
         return getProcedures(catalog, "%");
     }
@@ -1328,7 +1328,7 @@ public class Context {
         );
     }
 
-    @NotNull List<@Valid @NotNull Procedure> getAllProcedures(final @NotNull Schema schema) throws SQLException {
+    @NotNull List<@Valid @NotNull Procedure> getProcedures(final @NotNull Schema schema) throws SQLException {
         return getProcedures(
                 schema,
                 "%"

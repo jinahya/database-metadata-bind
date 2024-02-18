@@ -47,7 +47,8 @@ public class ClientInfoProperty
 
     // -----------------------------------------------------------------------------------------------------------------
     static Comparator<ClientInfoProperty> comparing(final Context context,
-                                                    final Comparator<? super String> comparator) throws SQLException {
+                                                    final Comparator<? super String> comparator)
+            throws SQLException {
         return Comparator.comparing(ClientInfoProperty::getName, ContextUtils.nulls(context, comparator));
     }
 

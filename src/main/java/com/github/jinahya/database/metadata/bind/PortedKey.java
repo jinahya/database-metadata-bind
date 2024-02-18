@@ -30,9 +30,7 @@ import lombok.ToString;
 import java.sql.DatabaseMetaData;
 import java.sql.SQLException;
 import java.util.Comparator;
-import java.util.Objects;
 import java.util.Optional;
-import java.util.function.BiPredicate;
 
 /**
  * An abstract class for binding results of the
@@ -316,19 +314,6 @@ abstract class PortedKey
 
         private final int fieldValue;
     }
-
-    // -----------------------------------------------------------------------------------------------------------------
-    static final BiPredicate<PortedKey, Table> IS_OF_PKTABLE = (k, t) -> {
-        return Objects.equals(k.pktableCat, t.getTableCat()) &&
-               Objects.equals(k.pktableSchem, t.getTableSchem()) &&
-               Objects.equals(k.pktableName, t.getTableName());
-    };
-
-    static final BiPredicate<PortedKey, Table> IS_OF_FKTABLE = (k, t) -> {
-        return Objects.equals(k.fktableCat, t.getTableCat()) &&
-               Objects.equals(k.fktableSchem, t.getTableSchem()) &&
-               Objects.equals(k.fktableName, t.getTableName());
-    };
 
     // ------------------------------------------------------------------------------------------------------ pktableCat
 

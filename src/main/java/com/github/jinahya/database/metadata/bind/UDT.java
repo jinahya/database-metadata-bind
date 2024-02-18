@@ -30,13 +30,7 @@ import lombok.ToString;
 import java.sql.DatabaseMetaData;
 import java.sql.SQLException;
 import java.sql.Types;
-import java.util.Arrays;
-import java.util.Collections;
 import java.util.Comparator;
-import java.util.HashSet;
-import java.util.Objects;
-import java.util.Set;
-import java.util.function.BiPredicate;
 
 /**
  * A class for binding results of the {@link DatabaseMetaData#getUDTs(String, String, String, int[])} method.
@@ -118,38 +112,11 @@ public class UDT
      */
     public static final String COLUMN_LABEL_DATA_TYPE = "DATA_TYPE";
 
-    public static final int COLUMN_VALUES_DATA_TYPE_JAVA_OBJECT = Types.JAVA_OBJECT;
+    public static final int COLUMN_VALUES_DATA_TYPE_JAVA_OBJECT = Types.JAVA_OBJECT; // 2000
 
-    public static final int COLUMN_VALUES_DATA_TYPE_STRUCT = Types.STRUCT;
+    public static final int COLUMN_VALUES_DATA_TYPE_DISTINCT = Types.DISTINCT; // 2001
 
-    public static final int COLUMN_VALUES_DATA_TYPE_DISTINCT = Types.DISTINCT;
-
-    public static final Set<Integer> COLUMN_VALUES_DATA_TYPE = Collections.unmodifiableSet(new HashSet<>(Arrays.asList(
-            COLUMN_VALUES_DATA_TYPE_JAVA_OBJECT,
-            COLUMN_VALUES_DATA_TYPE_STRUCT,
-            COLUMN_VALUES_DATA_TYPE_DISTINCT
-    )));
-
-    // -----------------------------------------------------------------------------------------------------------------
-    static final BiPredicate<UDT, Catalog> IS_OF_CATALOG = (t, c) -> {
-        return Objects.equals(t.typeCat, c.getTableCat());
-    };
-
-    static final BiPredicate<UDT, Schema> IS_OF_SCHEMA = (t, s) -> {
-        return Objects.equals(t.typeCat, s.getTableCatalog()) &&
-               Objects.equals(t.typeSchem, s.getTableSchem());
-    };
-
-    // --------------------------------------------------------------------------------------------------------- typeCat
-    boolean isOf(final Catalog catalog) {
-        return Objects.equals(typeCat, catalog.getTableCat());
-    }
-
-    // ------------------------------------------------------------------------------------------------------- typeSchem
-    boolean isOf(final Schema schema) {
-        return Objects.equals(typeCat, schema.getTableCatalog()) &&
-               Objects.equals(typeSchem, schema.getTableSchem());
-    }
+    public static final int COLUMN_VALUES_DATA_TYPE_STRUCT = Types.STRUCT; // 2002
 
     // -------------------------------------------------------------------------------------------------------- dataType
     @AssertTrue
@@ -157,7 +124,9 @@ public class UDT
         if (dataType == null) {
             return true;
         }
-        return COLUMN_VALUES_DATA_TYPE.contains(dataType);
+        return dataType == COLUMN_VALUES_DATA_TYPE_JAVA_OBJECT ||
+               dataType == COLUMN_VALUES_DATA_TYPE_DISTINCT ||
+               dataType == COLUMN_VALUES_DATA_TYPE_STRUCT;
     }
 
     // -----------------------------------------------------------------------------------------------------------------
