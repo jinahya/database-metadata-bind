@@ -615,9 +615,14 @@
         </dependency>
         <dependency>
           <groupId>org.testcontainers</groupId>
-          <artifactId>yugabytedb</artifactId>
+          <artifactId>trino</artifactId>
           <scope>test</scope>
         </dependency>
+        <!--        <dependency>-->
+<!--          <groupId>org.testcontainers</groupId>-->
+<!--          <artifactId>yugabytedb</artifactId>-->
+<!--          <scope>test</scope>-->
+<!--        </dependency>-->
       </dependencies>
       <build>
         <plugins>
