@@ -21,6 +21,7 @@ package com.github.jinahya.database.metadata.bind;
  */
 
 import jakarta.validation.constraints.Positive;
+import jakarta.validation.constraints.PositiveOrZero;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.Setter;
@@ -224,7 +225,7 @@ public class ProcedureColumn
     @_ColumnLabel("CHAR_OCTET_LENGTH")
     private Integer charOctetLength;
 
-    @Positive
+    @PositiveOrZero
     @_ColumnLabel("ORDINAL_POSITION")
     private Integer ordinalPosition;
 

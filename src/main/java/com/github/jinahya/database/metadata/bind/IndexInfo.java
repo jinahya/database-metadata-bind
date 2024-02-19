@@ -21,6 +21,7 @@ package com.github.jinahya.database.metadata.bind;
  */
 
 import jakarta.annotation.Nullable;
+import jakarta.validation.constraints.PositiveOrZero;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.Setter;
@@ -170,6 +171,7 @@ public class IndexInfo
     @EqualsAndHashCode.Include
     private Integer type;
 
+    @PositiveOrZero
     @_ColumnLabel("ORDINAL_POSITION")
     @EqualsAndHashCode.Include
     private Integer ordinalPosition;

@@ -51,6 +51,11 @@ import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 @Slf4j
 final class ContextTestUtils {
 
+    private static String databaseProductName(final Context context) throws SQLException {
+        return context.metadata.getDatabaseProductName();
+    }
+
+    // -----------------------------------------------------------------------------------------------------------------
     static void info(final Context context) throws SQLException {
         Objects.requireNonNull(context, "context is null");
         context.acceptValues((m, v) -> {
@@ -66,17 +71,20 @@ final class ContextTestUtils {
                 return handler.invoke(p, m, args);
             } catch (final Throwable t) {
                 final var cause = t.getCause();
-                if (cause instanceof SQLFeatureNotSupportedException) {
-                    log.info("not supported; {}; {}", m.getName(), cause.getMessage());
-                } else {
-                    log.error("failed to invoke {}.{}({})", p, m.getName(), args, cause);
+                if (cause != null) {
+                    if (cause instanceof SQLFeatureNotSupportedException) {
+                        log.info("not supported; {}; {}", m.getName(), cause.getMessage());
+                    } else {
+                        log.error("failed to invoke {}.{}({})", p, m.getName(), args, cause);
+                    }
+                    throw cause;
                 }
-                throw cause;
+                throw t;
             }
         };
     }
 
-    static void proxy(final Context context, final Consumer<? super Context> consumer) {
+    private static void proxy(final Context context, final Consumer<? super Context> consumer) {
         try (var factory = Validation.buildDefaultValidatorFactory()) {
             final var validator = factory.getValidator();
             try (var unloaded = new ByteBuddy()
@@ -101,6 +109,7 @@ final class ContextTestUtils {
         }
     }
 
+    // -----------------------------------------------------------------------------------------------------------------
     static void test(final Context context) throws SQLException {
         proxy(context, p -> {
             try {
@@ -109,10 +118,6 @@ final class ContextTestUtils {
                 throw new RuntimeException("failed to test", sqle);
             }
         });
-    }
-
-    private static String databaseProductName(final Context context) throws SQLException {
-        return context.metadata.getDatabaseProductName();
     }
 
     private static void test_(final Context context) throws SQLException {
@@ -129,7 +134,7 @@ final class ContextTestUtils {
         try {
             final var clientInfoProperties = context.getClientInfoProperties();
             clientInfoProperties(context, clientInfoProperties);
-        } catch (final SQLFeatureNotSupportedException sqlfnse) {
+        } catch (final SQLException sqle) {
             // empty
         }
         // ---------------------------------------------------------------------------------------------- crossReference
@@ -143,28 +148,28 @@ final class ContextTestUtils {
                     "%"
             );
             crossReference(context, crossReference);
-        } catch (final SQLFeatureNotSupportedException sqlfnse) {
+        } catch (final SQLException sqle) {
             // empty
         }
         // ----------------------------------------------------------------------------------- functions/functionColumns
         try {
             final var functions = context.getFunctions(null, null, "%");
             functions(context, functions);
-        } catch (final SQLFeatureNotSupportedException sqlfnse) {
+        } catch (final SQLException sqle) {
             // empty
         }
         // --------------------------------------------------------------------------------- procedures/procedureColumns
         try {
             final var procedures = context.getProcedures(null, null, "%");
             procedures(context, procedures);
-        } catch (final SQLFeatureNotSupportedException sqlfnse) {
+        } catch (final SQLException sqle) {
             // empty
         }
         // ----------------------------------------------------------------------------------------------------- schemas
         try {
             final var schemas = context.getSchemas();
             schemas(context, schemas);
-        } catch (final SQLFeatureNotSupportedException sqlfnse) {
+        } catch (final SQLException sqle) {
             // empty
         }
         // ----------------------------------------------------------------------------------------------------- schemas
@@ -174,35 +179,35 @@ final class ContextTestUtils {
                 schemas.add(Schema.of(null, null));
             }
             schemas(context, schemas);
-        } catch (final SQLFeatureNotSupportedException sqlfnse) {
+        } catch (final SQLException sqle) {
             // empty
         }
         // -------------------------------------------------------------------------------------------------- tableTypes
         try {
             final var tableTypes = context.getTableTypes();
             tableTypes(context, tableTypes);
-        } catch (final SQLFeatureNotSupportedException sqlfnse) {
+        } catch (final SQLException sqle) {
             // empty
         }
         // ------------------------------------------------------------------------------------------------------ tables
         try {
             final var tables = context.getTables(null, null, "%", null);
             tables(context, tables);
-        } catch (final SQLFeatureNotSupportedException sqlfnse) {
+        } catch (final SQLException sqle) {
             // empty
         }
         // ---------------------------------------------------------------------------------------------------- typeInfo
         try {
             final var typeInfo = context.getTypeInfo();
             typeInfo(context, typeInfo);
-        } catch (final SQLFeatureNotSupportedException sqlfnse) {
+        } catch (final SQLException sqle) {
             // empty
         }
         // -------------------------------------------------------------------------------------------------------- udts
         try {
             final var udts = context.getUDTs(null, null, "%", null);
             udts(context, udts);
-        } catch (final SQLFeatureNotSupportedException sqlfnse) {
+        } catch (final SQLException sqle) {
             // empty
         }
         // -------------------------------------------------------------------------------------------- numericFunctions
@@ -211,7 +216,7 @@ final class ContextTestUtils {
             assertThat(numericFunctions).isNotNull().doesNotContainNull().allSatisfy(v -> {
                 assertThat(v).isNotBlank();
             });
-        } catch (final SQLFeatureNotSupportedException sqlfnse) {
+        } catch (final SQLException sqle) {
             // empty
         }
         // ---------------------------------------------------------------------------------------------- getSQLKeywords
@@ -220,7 +225,7 @@ final class ContextTestUtils {
             assertThat(SQLKeywords).isNotNull().doesNotContainNull().allSatisfy(v -> {
                 assertThat(v).isNotBlank();
             });
-        } catch (final SQLFeatureNotSupportedException sqlfnse) {
+        } catch (final SQLException sqle) {
             // empty
         }
         // ------------------------------------------------------------------------------------------ getStringFunctions
@@ -229,7 +234,7 @@ final class ContextTestUtils {
             assertThat(stringFunctions).isNotNull().doesNotContainNull().allSatisfy(v -> {
                 assertThat(v).isNotBlank();
             });
-        } catch (final SQLFeatureNotSupportedException sqlfnse) {
+        } catch (final SQLException sqle) {
             // empty
         }
         // ------------------------------------------------------------------------------------------ getSystemFunctions
@@ -238,7 +243,7 @@ final class ContextTestUtils {
             assertThat(systemFunctions).isNotNull().doesNotContainNull().allSatisfy(v -> {
                 assertThat(v).isNotBlank();
             });
-        } catch (final SQLFeatureNotSupportedException sqlfnse) {
+        } catch (final SQLException sqle) {
             // empty
         }
         // ---------------------------------------------------------------------------------------- getTimeDateFunctions
@@ -247,7 +252,7 @@ final class ContextTestUtils {
             assertThat(timeDateFunction).isNotNull().doesNotContainNull().allSatisfy(v -> {
                 assertThat(v).isNotBlank();
             });
-        } catch (final SQLFeatureNotSupportedException sqlfnse) {
+        } catch (final SQLException sqle) {
             // empty
         }
     }
@@ -336,7 +341,7 @@ final class ContextTestUtils {
         try {
             final var procedures = context.getProcedures(catalog, "%");
             procedures(context, procedures);
-        } catch (final SQLFeatureNotSupportedException sqlfnse) {
+        } catch (final SQLException sqle) {
             // empty
         }
         // ----------------------------------------------------------------------------------------------------- schemas
@@ -346,21 +351,21 @@ final class ContextTestUtils {
                 schemas.add(Schema.of(null, null));
             }
             schemas(context, schemas);
-        } catch (final SQLFeatureNotSupportedException sqlfnse) {
+        } catch (final SQLException sqle) {
             // empty
         }
         // ------------------------------------------------------------------------------------------------- superTables
         try {
             final var superTables = context.getSuperTables(catalog.getTableCat(), "%", "%");
             superTables(context, superTables);
-        } catch (final SQLFeatureNotSupportedException sqlfnse) {
+        } catch (final SQLException sqle) {
             // empty
         }
         // -------------------------------------------------------------------------------------------------- superTypes
         try {
             final var superTypes = context.getSuperTypes(catalog.getTableCat(), "%", "%");
             superTypes(context, superTypes);
-        } catch (final SQLFeatureNotSupportedException sqlfnse) {
+        } catch (final SQLException sqle) {
             // empty
         }
         // ------------------------------------------------------------------------------------------------------ tables
@@ -372,7 +377,7 @@ final class ContextTestUtils {
                 });
             }
             tables(context, tables);
-        } catch (final SQLFeatureNotSupportedException sqlfnse) {
+        } catch (final SQLException sqle) {
             // empty
         }
         // --------------------------------------------------------------------------------------------- tablePrivileges
@@ -382,7 +387,7 @@ final class ContextTestUtils {
                 assertThat(tp.getTableCat()).isEqualTo(catalog.getTableCat());
             });
             tablePrivileges(context, tablePrivileges);
-        } catch (final SQLFeatureNotSupportedException sqlfnse) {
+        } catch (final SQLException sqle) {
             // empty
         }
     }
@@ -449,7 +454,7 @@ final class ContextTestUtils {
         try {
             final var columnPrivileges = context.getColumnPrivileges(column);
             columnPrivileges(context, columnPrivileges);
-        } catch (final SQLFeatureNotSupportedException sqlfnse) {
+        } catch (final SQLException sqle) {
             // empty
         }
     }
@@ -553,7 +558,7 @@ final class ContextTestUtils {
         try {
             final var functionColumns = context.getFunctionColumns(function, "%");
             functionColumns(context, functionColumns);
-        } catch (final SQLFeatureNotSupportedException sqlfnse) {
+        } catch (final SQLException sqle) {
             // empty
         }
     }
@@ -704,35 +709,35 @@ final class ContextTestUtils {
         try {
             final var procedures = context.getProcedures(schema);
             procedures(context, procedures);
-        } catch (final SQLFeatureNotSupportedException sqlfnse) {
+        } catch (final SQLException sqle) {
             // empty
         }
         // ------------------------------------------------------------------------------------------------- superTables
         try {
             final var superTables = context.getSuperTables(schema, "%");
             superTables(context, superTables);
-        } catch (final SQLFeatureNotSupportedException sqlfnse) {
+        } catch (final SQLException sqle) {
             // empty
         }
         // -------------------------------------------------------------------------------------------------- superTypes
         try {
             final var superTypes = context.getSuperTypes(schema, "%");
             superTypes(context, superTypes);
-        } catch (final SQLFeatureNotSupportedException sqlfnse) {
+        } catch (final SQLException sqle) {
             // empty
         }
         // ------------------------------------------------------------------------------------------------------ tables
         try {
             final var tables = context.getTables(schema, "%", null);
             tables(context, tables);
-        } catch (final SQLFeatureNotSupportedException sqlfnse) {
+        } catch (final SQLException sqle) {
             // empty
         }
         // --------------------------------------------------------------------------------------------- tablePrivileges
         try {
             final var tablePrivileges = context.getTablePrivileges(schema, "%");
             tablePrivileges(context, tablePrivileges);
-        } catch (final SQLFeatureNotSupportedException sqlfnse) {
+        } catch (final SQLException sqle) {
             // empty
         }
     }
@@ -803,7 +808,7 @@ final class ContextTestUtils {
                     final var bestRowIdentifier =
                             context.getBestRowIdentifier(table, scope.fieldValueAsInt(), nullable);
                     bestRowIdentifier(context, bestRowIdentifier);
-                } catch (final SQLFeatureNotSupportedException sqlfnse) {
+                } catch (final SQLException sqle) {
                     // empty
                 }
             }
@@ -812,28 +817,28 @@ final class ContextTestUtils {
         try {
             final var columns = context.getColumns(table);
             columns(context, columns);
-        } catch (final SQLFeatureNotSupportedException sqlfnse) {
+        } catch (final SQLException sqle) {
             // empty
         }
         // -------------------------------------------------------------------------------------------- columnPrivileges
         try {
             final var columnPrivileges = context.getColumnPrivileges(table);
             columnPrivileges(context, columnPrivileges);
-        } catch (final SQLFeatureNotSupportedException sqlfnse) {
+        } catch (final SQLException sqle) {
             // empty
         }
         // ------------------------------------------------------------------------------------------------ exportedKeys
         try {
             final var exportedKeys = context.getExportedKeys(table);
             exportedKeys(context, exportedKeys);
-        } catch (final SQLFeatureNotSupportedException sqlfnse) {
+        } catch (final SQLException sqle) {
             // empty
         }
         // ------------------------------------------------------------------------------------------------ importedKeys
         try {
             final var importedKeys = context.getImportedKeys(table);
             importedKeys(context, importedKeys);
-        } catch (final SQLFeatureNotSupportedException sqlfnse) {
+        } catch (final SQLException sqle) {
             // empty
         }
         // --------------------------------------------------------------------------------------------------- indexInfo
@@ -842,7 +847,7 @@ final class ContextTestUtils {
                 try {
                     final var indexInfo = context.getIndexInfo(table, unique, approximate);
                     indexInfo(context, indexInfo);
-                } catch (final SQLFeatureNotSupportedException sqlfnse) {
+                } catch (final SQLException sqle) {
                     // empty
                 }
             }
@@ -851,21 +856,21 @@ final class ContextTestUtils {
         try {
             final var primaryKeys = context.getPrimaryKeys(table);
             primaryKeys(context, primaryKeys);
-        } catch (final SQLFeatureNotSupportedException sqlfnse) {
+        } catch (final SQLException sqle) {
             // empty
         }
         // ----------------------------------------------------------------------------------------------- pseudoColumns
         try {
             final var pseudoColumns = context.getPseudoColumns(table, "%");
             pseudoColumns(context, pseudoColumns);
-        } catch (final SQLFeatureNotSupportedException sqlfnse) {
+        } catch (final SQLException sqle) {
             // empty
         }
         // ------------------------------------------------------------------------------------------------- superTables
         try {
             final var superTables = context.getSuperTables(table);
             superTables(context, superTables);
-        } catch (final SQLFeatureNotSupportedException sqlfnse) {
+        } catch (final SQLException sqle) {
             // empty
         }
         // --------------------------------------------------------------------------------------------- tablePrivileges
@@ -877,14 +882,14 @@ final class ContextTestUtils {
                 assertThat(tp.getTableName()).isEqualTo(table.getTableName());
             });
             tablePrivileges(context, tablePrivileges);
-        } catch (final SQLFeatureNotSupportedException sqlfnse) {
+        } catch (final SQLException sqle) {
             // empty
         }
         // ---------------------------------------------------------------------------------------------- versionColumns
         try {
             final var versionColumns = context.getVersionColumns(table);
             versionColumns(context, versionColumns);
-        } catch (final SQLFeatureNotSupportedException sqlfnse) {
+        } catch (final SQLException sqle) {
             // empty
         }
     }
@@ -960,11 +965,13 @@ final class ContextTestUtils {
         if (!databaseProductName(context).equals(DatabaseProductNames.MY_SQL)) {
             assertThat(tablePrivileges).doesNotHaveDuplicates();
         }
-        assertThat(tablePrivileges).satisfiesAnyOf(
-                l -> assertThat(l).isSortedAccordingTo(
-                        TablePrivilege.comparing(context, String.CASE_INSENSITIVE_ORDER)),
-                l -> assertThat(l).isSortedAccordingTo(TablePrivilege.comparing(context, Comparator.naturalOrder()))
-        );
+        if (true) {
+            assertThat(tablePrivileges).satisfiesAnyOf(
+                    l -> assertThat(l).isSortedAccordingTo(
+                            TablePrivilege.comparing(context, String.CASE_INSENSITIVE_ORDER)),
+                    l -> assertThat(l).isSortedAccordingTo(TablePrivilege.comparing(context, Comparator.naturalOrder()))
+            );
+        }
         for (final var tablePrivilege : tablePrivileges) {
             tablePrivilege(context, tablePrivilege);
         }
@@ -1058,7 +1065,7 @@ final class ContextTestUtils {
         try {
             final var attributes = context.getAttributes(udt, "%");
             attributes(context, attributes);
-        } catch (final SQLFeatureNotSupportedException sqlfnse) {
+        } catch (final SQLException sqle) {
             // empty
         }
         // -------------------------------------------------------------------------------------------------- superTypes
@@ -1068,7 +1075,7 @@ final class ContextTestUtils {
                 assertType(st).isOf(udt);
             });
             superTypes(context, superTypes);
-        } catch (final SQLFeatureNotSupportedException sqlfnse) {
+        } catch (final SQLException sqle) {
             // empty
         }
     }

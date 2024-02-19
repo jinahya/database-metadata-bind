@@ -52,13 +52,17 @@ A lot of classes/methods defined in this module need to be tested with various k
 ### Run the `ExternalIT` class with `url`, `user`, and `password` parameter.
 
 ```commandline
-$ mvn -Pfailsafe -Dtest=ExternalIT \
+$ mvn \
+  -Pfailsafe \
+  -Dit.test=ExternalIT \
   -Durl='<your-jdbc-url>' \
   -Duser='<your-own-user>' \
-  -Dpassword='<your-own-password>'
-  clean failsafe:integration-test
+  -Dpassword='<your-own-password>' \
+  clean test-compile failsafe:integration-test
 ```
+
 ----
+
 ## Links
 
 ### Docker

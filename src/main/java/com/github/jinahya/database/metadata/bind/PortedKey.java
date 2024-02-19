@@ -42,7 +42,7 @@ import java.util.Optional;
  */
 @Setter
 @Getter
-@EqualsAndHashCode(callSuper = true, onlyExplicitlyIncluded = true)
+@EqualsAndHashCode(callSuper = true)
 @ToString(callSuper = true)
 abstract class PortedKey
         extends AbstractMetadataType {
@@ -372,42 +372,34 @@ abstract class PortedKey
     @Nullable
     @_NullableBySpecification
     @_ColumnLabel(COLUMN_NAME_PKTABLE_CAT)
-    @EqualsAndHashCode.Include
     private String pktableCat;
 
     @Nullable
     @_NullableBySpecification
     @_ColumnLabel(COLUMN_NAME_PKTABLE_SCHEM)
-    @EqualsAndHashCode.Include
     private String pktableSchem;
 
     @_ColumnLabel(COLUMN_NAME_PKTABLE_NAME)
-    @EqualsAndHashCode.Include
     private String pktableName;
 
     @_ColumnLabel(COLUMN_NAME_PKCOLUMN_NAME)
-    @EqualsAndHashCode.Include
     private String pkcolumnName;
 
     // -----------------------------------------------------------------------------------------------------------------
     @Nullable
     @_NullableBySpecification
     @_ColumnLabel(COLUMN_NAME_FKTABLE_CAT)
-    @EqualsAndHashCode.Include
     private String fktableCat;
 
     @Nullable
     @_NullableBySpecification
     @_ColumnLabel(COLUMN_NAME_FKTABLE_SCHEM)
-    @EqualsAndHashCode.Include
     private String fktableSchem;
 
     @_ColumnLabel(COLUMN_NAME_FKTABLE_NAME)
-    @EqualsAndHashCode.Include
     private String fktableName;
 
     @_ColumnLabel(COLUMN_NAME_FKCOLUMN_NAME)
-    @EqualsAndHashCode.Include
     private String fkcolumnName;
 
     // -----------------------------------------------------------------------------------------------------------------
