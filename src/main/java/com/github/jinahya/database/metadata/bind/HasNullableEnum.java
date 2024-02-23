@@ -22,7 +22,7 @@ package com.github.jinahya.database.metadata.bind;
 
 import java.util.Optional;
 
-public interface HasNullableEnum<E extends Enum<E> & NullableEnum<E>> {
+interface HasNullableEnum<E extends Enum<E> & NullableEnum<E>> {
 
     /**
      * Returns current value of {@code nullable} property.

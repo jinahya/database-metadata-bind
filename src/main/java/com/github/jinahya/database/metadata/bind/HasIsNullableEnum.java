@@ -22,7 +22,7 @@ package com.github.jinahya.database.metadata.bind;
 
 import java.util.Optional;
 
-public interface HasIsNullableEnum {
+interface HasIsNullableEnum {
 
     /**
      * Returns current value of {@code isNullable} property.

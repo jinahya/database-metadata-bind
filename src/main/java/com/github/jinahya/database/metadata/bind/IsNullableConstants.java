@@ -20,7 +20,7 @@ package com.github.jinahya.database.metadata.bind;
  * #L%
  */
 
-public final class IsNullableConstants {
+final class IsNullableConstants {
 
     public static final String COLUMN_LABEL_IS_NULLABLE = "IS_NULLABLE";
 

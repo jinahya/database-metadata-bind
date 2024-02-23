@@ -27,7 +27,7 @@ import java.util.Objects;
  *
  * @author Jin Kwon &lt;onacit_at_gmail.com&gt;
  */
-public enum IsNullableEnum
+enum IsNullableEnum
         implements _FieldEnum<IsNullableEnum, String> {
 
     /**

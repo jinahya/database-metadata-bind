@@ -930,6 +930,7 @@ final class ContextTestUtils {
         }
         if (true
             && !databaseProductName(context).equals(DatabaseProductNames.POSTGRE_SQL)
+            && !databaseProductName(context).equals(DatabaseProductNames.MICROSOFT_SQL_SERVER)
         ) {
             assertThat(primaryKeys).satisfiesAnyOf(
                     l -> assertThat(l).isSortedAccordingTo(

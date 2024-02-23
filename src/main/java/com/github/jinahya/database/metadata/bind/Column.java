@@ -282,7 +282,6 @@ public class Column
     }
 
     // -----------------------------------------------------------------------------------------------------------------
-
     @jakarta.annotation.Nullable
     @_NullableBySpecification
     @_ColumnLabel(COLUMN_LABEL_TABLE_CAT)

@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
   <modelVersion>4.0.0</modelVersion>
 
   <parent>
@@ -121,11 +122,11 @@
       <artifactId>jakarta.validation-api</artifactId>
       <scope>provided</scope>
     </dependency>
-<!--    <dependency>-->
-<!--      <groupId>jakarta.xml.bind</groupId>-->
-<!--      <artifactId>jakarta.xml.bind-api</artifactId>-->
-<!--      <scope>provided</scope>-->
-<!--    </dependency>-->
+    <!--    <dependency>-->
+    <!--      <groupId>jakarta.xml.bind</groupId>-->
+    <!--      <artifactId>jakarta.xml.bind-api</artifactId>-->
+    <!--      <scope>provided</scope>-->
+    <!--    </dependency>-->
     <dependency>
       <groupId>nl.jqno.equalsverifier</groupId>
       <artifactId>equalsverifier-nodep</artifactId>
@@ -234,13 +235,14 @@
           <configuration>
             <additionalOptions>
               <additionalOption>-Xdoclint:${doclint}</additionalOption>
-              <!-- https://issues.apache.org/jira/browse/MJAVADOC-720 -->
-              <!--              <sourcepath>${project.build.directory}/generated-sources-noduplicate/delombok</sourcepath>-->
             </additionalOptions>
             <links>
               <link>https://javadoc.io/doc/jakarta.platform/jakarta.jakartaee-api/latest</link>
             </links>
             <release>${maven.compiler.testRelease}</release>
+              <!-- https://issues.apache.org/jira/browse/MJAVADOC-720 -->
+            <sourcepath>${project.build.directory}/generated-sources-noduplicate/delombok</sourcepath>
+            <!--            <sourcepath>target/generated-sources-noduplicate/delombok</sourcepath>-->
             <tags>
               <tag>
                 <name>apiNote</name>
@@ -335,7 +337,7 @@
             <id>enforce-dependency-convergence</id>
             <configuration>
               <rules>
-                <dependencyConvergence />
+                <dependencyConvergence/>
               </rules>
             </configuration>
             <goals>
@@ -441,12 +443,10 @@
         <executions>
           <execution>
             <configuration>
-              <skip>true</skip>
               <addOutputDirectory>false</addOutputDirectory>
               <!-- https://stackoverflow.com/a/45382576/330457 -->
               <!-- IntelliJ 에서 중복된 코드라고 나오는 문제가 있어서... -->
               <outputDirectory>${project.build.directory}/generated-sources-noduplicate/delombok</outputDirectory>
-              <!--              <skip>true</skip>-->
               <sourceDirectory>${project.basedir}/src/main/java</sourceDirectory>
             </configuration>
             <phase>generate-sources</phase>
@@ -455,6 +455,14 @@
             </goals>
           </execution>
         </executions>
+        <dependencies>
+          <!-- https://github.com/awhitford/lombok.maven/issues/181 -->
+          <dependency>
+            <groupId>org.projectlombok</groupId>
+            <artifactId>lombok</artifactId>
+            <version>${version.lombok}</version>
+          </dependency>
+        </dependencies>
       </plugin>
     </plugins>
   </build>
@@ -646,10 +654,10 @@
           <scope>test</scope>
         </dependency>
         <!--        <dependency>-->
-<!--          <groupId>org.testcontainers</groupId>-->
-<!--          <artifactId>yugabytedb</artifactId>-->
-<!--          <scope>test</scope>-->
-<!--        </dependency>-->
+        <!--          <groupId>org.testcontainers</groupId>-->
+        <!--          <artifactId>yugabytedb</artifactId>-->
+        <!--          <scope>test</scope>-->
+        <!--        </dependency>-->
       </dependencies>
       <build>
         <plugins>
