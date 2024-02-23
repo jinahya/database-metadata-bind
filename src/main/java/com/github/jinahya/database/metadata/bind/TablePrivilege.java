@@ -38,7 +38,6 @@ import java.util.Comparator;
  */
 @_ChildOf(Schema.class)
 @_ChildOf(Catalog.class)
-
 @Setter
 @Getter
 @EqualsAndHashCode(callSuper = true)

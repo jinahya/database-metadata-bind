@@ -41,6 +41,7 @@ import java.util.function.Consumer;
 
 import static com.github.jinahya.database.metadata.bind._Assertions.assertType;
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatCode;
 import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 
 /**
@@ -71,7 +72,7 @@ final class ContextTestUtils {
                 } else {
                     log.error("failed to invoke {}.{}({})", p, m.getName(), args, cause);
                 }
-                throw cause;
+                throw cause == null ? t : cause;
             }
         };
     }
@@ -568,8 +569,9 @@ final class ContextTestUtils {
         }
         if (true) {
             assertThat(functionColumns).satisfiesAnyOf(
-                    l -> assertThat(l).isSortedAccordingTo(FunctionColumn.comparingInCaseInsensitiveOrder(context)),
-                    l -> assertThat(l).isSortedAccordingTo(FunctionColumn.comparingInNaturalOrder(context))
+                    l -> assertThat(l).isSortedAccordingTo(
+                            FunctionColumn.comparing(context, String.CASE_INSENSITIVE_ORDER)),
+                    l -> assertThat(l).isSortedAccordingTo(FunctionColumn.comparing(context, Comparator.naturalOrder()))
             );
         }
         for (final var functionColumn : functionColumns) {
@@ -679,6 +681,15 @@ final class ContextTestUtils {
     private static void procedureColumn(final Context context, final ProcedureColumn procedureColumn)
             throws SQLException {
         MetadataTypeTestUtils.verify(procedureColumn);
+        assertThatCode(() -> {
+            final var columnType = procedureColumn.getColumnTypeAsEnum();
+        }).doesNotThrowAnyException();
+        assertThatCode(() -> {
+            final var nullable = procedureColumn.getNullableAsEnum();
+        }).doesNotThrowAnyException();
+        assertThatCode(() -> {
+            final var isNullable = procedureColumn.getIsNullable();
+        }).doesNotThrowAnyException();
     }
 
     // --------------------------------------------------------------------------------------------------------- schemas

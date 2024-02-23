@@ -20,6 +20,7 @@ package com.github.jinahya.database.metadata.bind;
  * #L%
  */
 
+import jakarta.validation.constraints.AssertTrue;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.PositiveOrZero;
 import lombok.EqualsAndHashCode;
@@ -52,23 +53,12 @@ public class FunctionColumn
 
     // -----------------------------------------------------------------------------------------------------------------
 
-    static Comparator<FunctionColumn> comparingInCaseInsensitiveOrder(final Context context) throws SQLException {
-        return Comparator.comparing(FunctionColumn::getFunctionCat,
-                                    ContextUtils.nulls(context, String.CASE_INSENSITIVE_ORDER))
-                .thenComparing(FunctionColumn::getFunctionSchem,
-                               ContextUtils.nulls(context, String.CASE_INSENSITIVE_ORDER))
-                .thenComparing(FunctionColumn::getFunctionName,
-                               ContextUtils.nulls(context, String.CASE_INSENSITIVE_ORDER))
-                .thenComparing(FunctionColumn::getSpecificName,
-                               ContextUtils.nulls(context, String.CASE_INSENSITIVE_ORDER));
-    }
-
-    static Comparator<FunctionColumn> comparingInNaturalOrder(final Context context) throws SQLException {
-        return Comparator.comparing(FunctionColumn::getFunctionCat,
-                                    ContextUtils.nulls(context, Comparator.naturalOrder()))
-                .thenComparing(FunctionColumn::getFunctionSchem, ContextUtils.nulls(context, Comparator.naturalOrder()))
-                .thenComparing(FunctionColumn::getFunctionName, ContextUtils.nulls(context, Comparator.naturalOrder()))
-                .thenComparing(FunctionColumn::getSpecificName, ContextUtils.nulls(context, Comparator.naturalOrder()));
+    static Comparator<FunctionColumn> comparing(final Context context, final Comparator<? super String> comparator)
+            throws SQLException {
+        return Comparator.comparing(FunctionColumn::getFunctionCat, ContextUtils.nulls(context, comparator))
+                .thenComparing(FunctionColumn::getFunctionSchem, ContextUtils.nulls(context, comparator))
+                .thenComparing(FunctionColumn::getFunctionName, ContextUtils.nulls(context, comparator))
+                .thenComparing(FunctionColumn::getSpecificName, ContextUtils.nulls(context, comparator));
     }
 
     // -----------------------------------------------------------------------------------------------------------------
@@ -193,6 +183,15 @@ public class FunctionColumn
                         .map(_IntFieldEnum::fieldValueAsInt)
                         .orElse(null)
         );
+    }
+
+    // ------------------------------------------------------------------------------------------------- ordinalPosition
+    @AssertTrue(message = "ordinalPosition should be 0 when columnType is functionReturn(5)")
+    private boolean isOrdinalPositionZeroWhenColumnTypeIsProcedureColumnReturn() {
+        if (ordinalPosition == null || columnType == null || columnType != DatabaseMetaData.functionReturn) {
+            return true;
+        }
+        return ordinalPosition == 0;
     }
 
     // -----------------------------------------------------------------------------------------------------------------

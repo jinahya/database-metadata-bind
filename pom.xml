@@ -78,7 +78,7 @@
     <dependency>
       <groupId>ch.qos.logback</groupId>
       <artifactId>logback-classic</artifactId>
-      <version>1.4.14</version>
+      <version>1.5.0</version>
       <scope>test</scope>
     </dependency>
     <dependency>
@@ -535,7 +535,7 @@
           <dependency><!-- https://search.maven.org/search?q=g:org.testcontainers -->
             <groupId>org.testcontainers</groupId>
             <artifactId>testcontainers-bom</artifactId>
-            <version>1.19.5</version>
+            <version>1.19.6</version>
             <type>pom</type>
             <scope>import</scope>
           </dependency>
@@ -551,7 +551,7 @@
           <groupId>com.microsoft.sqlserver</groupId>
           <artifactId>mssql-jdbc</artifactId>
           <!--          <version>11.2.3.jre17</version>-->
-          <version>12.6.0.jre11</version>
+          <version>12.6.1.jre11</version>
           <scope>test</scope>
         </dependency>
         <dependency>
@@ -568,14 +568,13 @@
         <dependency>
           <groupId>org.mariadb.jdbc</groupId>
           <artifactId>mariadb-java-client</artifactId>
-          <version>3.3.2</version>
+          <version>3.3.3</version>
           <scope>test</scope>
         </dependency>
         <dependency>
           <groupId>org.postgresql</groupId>
           <artifactId>postgresql</artifactId>
-          <!--          <version>42.6.0</version>-->
-          <version>42.7.1</version>
+          <version>42.7.2</version>
           <scope>test</scope>
         </dependency>
         <dependency>

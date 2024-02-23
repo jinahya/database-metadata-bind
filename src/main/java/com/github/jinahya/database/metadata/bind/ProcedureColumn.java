@@ -20,7 +20,8 @@ package com.github.jinahya.database.metadata.bind;
  * #L%
  */
 
-import jakarta.validation.constraints.Positive;
+import jakarta.validation.constraints.AssertTrue;
+import jakarta.validation.constraints.PositiveOrZero;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.Setter;
@@ -63,17 +64,51 @@ public class ProcedureColumn
     // ----------------------------------------------------------------------------------------------------- COLUMN_TYPE
     public static final String COLUMN_LABEL_COLUMN_TYPE = "COLUMN_TYPE";
 
+    /**
+     * Constants for {@value #COLUMN_LABEL_COLUMN_TYPE} column values.
+     */
     public enum ColumnType
             implements _IntFieldEnum<ColumnType> {
 
+        /**
+         * A value for
+         * {@link DatabaseMetaData#procedureColumnUnknown}({@value DatabaseMetaData#procedureColumnUnknown}).
+         */
         PROCEDURE_COLUMN_UNKNOWN(DatabaseMetaData.procedureColumnUnknown), // 0
+
+        /**
+         * A value for {@link DatabaseMetaData#procedureColumnIn}({@value DatabaseMetaData#procedureColumnIn}).
+         */
         PROCEDURE_COLUMN_IN(DatabaseMetaData.procedureColumnIn),           // 1
+
+        /**
+         * A value for {@link DatabaseMetaData#procedureColumnInOut}({@value DatabaseMetaData#procedureColumnInOut}).
+         */
         PROCEDURE_COLUMN_IN_OUT(DatabaseMetaData.procedureColumnInOut),    // 2
+
+        /**
+         * A value for {@link DatabaseMetaData#procedureColumnResult}({@value DatabaseMetaData#procedureColumnResult}).
+         */
         PROCEDURE_COLUMN_RESULT(DatabaseMetaData.procedureColumnResult),   // 3
+
+        /**
+         * A value for {@link DatabaseMetaData#procedureColumnOut}({@value DatabaseMetaData#procedureColumnOut}).
+         */
         PROCEDURE_COLUMN_OUT(DatabaseMetaData.procedureColumnOut),         // 4
+
+        /**
+         * A value for {@link DatabaseMetaData#procedureColumnReturn}({@value DatabaseMetaData#procedureColumnReturn}).
+         */
         PROCEDURE_COLUMN_RETURN(DatabaseMetaData.procedureColumnReturn)    // 5
         ;
 
+        /**
+         * Returns the value whose {@link #fieldValueAsInt() fieldValue} matches specified value.
+         *
+         * @param fieldValue a value of {@link #fieldValueAsInt() fieldValue} to match.
+         * @return the value whose {@link #fieldValueAsInt() fieldValue} matches {@code fieldValue}.
+         * @throws IllegalArgumentException no value matches.
+         */
         public static ColumnType valueOfFieldValue(final int fieldValue) {
             return _IntFieldEnum.valueOfFieldValue(ColumnType.class, fieldValue);
         }
@@ -91,18 +126,44 @@ public class ProcedureColumn
     }
 
     // -------------------------------------------------------------------------------------------------------- NULLABLE
+
+    /**
+     * A column label of {@value}.
+     */
     public static final String COLUMN_NAME_NULLABLE = "NULLABLE";
 
+    /**
+     * Constants for {@value #COLUMN_NAME_NULLABLE} column.
+     *
+     * @author Jin Kwon &lt;onacit_at_gmail.com&gt;
+     */
     public enum Nullable
             implements _IntFieldEnum<Nullable> {
 
-        PROCEDURE_NO_NULLS(DatabaseMetaData.procedureNoNulls),// 0
+        /**
+         * A value for {@link DatabaseMetaData#procedureNoNulls}({@value DatabaseMetaData#procedureNoNulls}).
+         */
+        PROCEDURE_NO_NULLS(DatabaseMetaData.procedureNoNulls),                // 0
 
-        PROCEDURE_NULLABLE(DatabaseMetaData.procedureNullable), // 1
+        /**
+         * A value for {@link DatabaseMetaData#procedureNullable}({@value DatabaseMetaData#procedureNullable}).
+         */
+        PROCEDURE_NULLABLE(DatabaseMetaData.procedureNullable),               // 1
 
+        /**
+         * A value for
+         * {@link DatabaseMetaData#procedureNullableUnknown}({@value DatabaseMetaData#procedureNullableUnknown}).
+         */
         PROCEDURE_NULLABLE_UNKNOWN(DatabaseMetaData.procedureNullableUnknown) // 2
         ;
 
+        /**
+         * Returns the value whose {@link #fieldValueAsInt() fieldValue} matches specified value.
+         *
+         * @param fieldValue the {@link #fieldValueAsInt() fieldValue} value to match.
+         * @return the value whose {@link #fieldValueAsInt() fieldValue} matches {@code fieldValue}.
+         * @throws IllegalArgumentException if no value matches.
+         */
         public static Nullable valueOfFieldValue(final int fieldValue) {
             return _IntFieldEnum.valueOfFieldValue(Nullable.class, fieldValue);
         }
@@ -153,8 +214,33 @@ public class ProcedureColumn
                         .orElse(null)
         );
     }
-    // -----------------------------------------------------------------------------------------------------------------
 
+    // ------------------------------------------------------------------------------------------------- ordinalPosition
+    @AssertTrue(message = "ordinalPosition should be 0 when columnType is procedureColumnReturn(5)")
+    private boolean isOrdinalPositionZeroWhenColumnTypeIsProcedureColumnReturn() {
+        if (ordinalPosition == null || columnType == null || columnType != DatabaseMetaData.procedureColumnReturn) {
+            return true;
+        }
+        return ordinalPosition == 0;
+    }
+
+    // ------------------------------------------------------------------------------------------------------ isNullable
+
+    public IsNullableEnum getIsNullableAsEnum() {
+        return Optional.ofNullable(getIsNullable())
+                .map(IsNullableEnum::valueOfFieldValue)
+                .orElse(null);
+    }
+
+    public void setIsNullableAsEnum(final IsNullableEnum isNullableAsEnum) {
+        setIsNullable(
+                Optional.ofNullable(isNullableAsEnum)
+                        .map(_FieldEnum::fieldValue)
+                        .orElse(null)
+        );
+    }
+
+    // -----------------------------------------------------------------------------------------------------------------
     @jakarta.annotation.Nullable
     @_NullableBySpecification
     @_ColumnLabel("PROCEDURE_CAT")
@@ -224,7 +310,7 @@ public class ProcedureColumn
     @_ColumnLabel("CHAR_OCTET_LENGTH")
     private Integer charOctetLength;
 
-    @Positive
+    @PositiveOrZero
     @_ColumnLabel("ORDINAL_POSITION")
     private Integer ordinalPosition;
 
