@@ -21,6 +21,7 @@ package com.github.jinahya.database.metadata.bind;
  */
 
 import jakarta.annotation.Nullable;
+import jakarta.validation.constraints.Pattern;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.Setter;
@@ -106,6 +107,7 @@ public class TablePrivilege
     private String privilege;
 
     @Nullable
+    @Pattern(regexp = YesNoConstants.REGEXP_YES_NO)
     @_NullableBySpecification
     @_ColumnLabel("IS_GRANTABLE")
     private String isGrantable;

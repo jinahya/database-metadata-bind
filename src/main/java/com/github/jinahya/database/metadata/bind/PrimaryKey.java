@@ -50,8 +50,7 @@ public class PrimaryKey
     // -----------------------------------------------------------------------------------------------------------------
     static Comparator<PrimaryKey> comparing(final Context context, final Comparator<? super String> comparator)
             throws SQLException {
-        return Comparator
-                .comparing(PrimaryKey::getTableCat, ContextUtils.nulls(context, comparator))
+        return Comparator.comparing(PrimaryKey::getTableCat, ContextUtils.nulls(context, comparator))
                 .thenComparing(PrimaryKey::getTableSchem, ContextUtils.nulls(context, comparator))
                 .thenComparing(PrimaryKey::getTableName, ContextUtils.nulls(context, comparator))
                 .thenComparing(PrimaryKey::getColumnName, ContextUtils.nulls(context, comparator));

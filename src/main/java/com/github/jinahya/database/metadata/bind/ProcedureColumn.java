@@ -21,6 +21,7 @@ package com.github.jinahya.database.metadata.bind;
  */
 
 import jakarta.validation.constraints.AssertTrue;
+import jakarta.validation.constraints.Pattern;
 import jakarta.validation.constraints.PositiveOrZero;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
@@ -314,6 +315,7 @@ public class ProcedureColumn
     @_ColumnLabel("ORDINAL_POSITION")
     private Integer ordinalPosition;
 
+    @Pattern(regexp = YesNoEmptyConstants.REGEXP_YES_NO_EMPTY)
     @_ColumnLabel("IS_NULLABLE")
     private String isNullable;
 

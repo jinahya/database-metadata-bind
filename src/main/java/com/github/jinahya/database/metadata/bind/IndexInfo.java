@@ -21,6 +21,7 @@ package com.github.jinahya.database.metadata.bind;
  */
 
 import jakarta.annotation.Nullable;
+import jakarta.validation.constraints.PositiveOrZero;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.Setter;
@@ -48,6 +49,7 @@ public class IndexInfo
 
     private static final long serialVersionUID = 924040226611181424L;
 
+    // -----------------------------------------------------------------------------------------------------------------
     static Comparator<IndexInfo> comparing(final Context context, final Comparator<? super String> comparator)
             throws SQLException {
         return Comparator.comparing(IndexInfo::getNonUnique, ContextUtils.nulls(context, Comparator.naturalOrder()))
@@ -91,12 +93,12 @@ public class IndexInfo
         /**
          * The constant for the {@link DatabaseMetaData#tableIndexHashed}({@value DatabaseMetaData#tableIndexHashed}).
          */
-        TABLE_INDEX_HASHED(DatabaseMetaData.tableIndexHashed), // 2
+        TABLE_INDEX_HASHED(DatabaseMetaData.tableIndexHashed),       // 2
 
         /**
          * The constant for the {@link DatabaseMetaData#tableIndexOther}({@value DatabaseMetaData#tableIndexOther}).
          */
-        TABLE_INDEX_OTHER(DatabaseMetaData.tableIndexOther); // 3
+        TABLE_INDEX_OTHER(DatabaseMetaData.tableIndexOther);         // 3
 
         public static Type valueOfFieldValue(final int fieldValue) {
             return _IntFieldEnum.valueOfFieldValue(Type.class, fieldValue);
@@ -170,6 +172,7 @@ public class IndexInfo
     @EqualsAndHashCode.Include
     private Integer type;
 
+    @PositiveOrZero
     @_ColumnLabel("ORDINAL_POSITION")
     @EqualsAndHashCode.Include
     private Integer ordinalPosition;

@@ -21,6 +21,7 @@ package com.github.jinahya.database.metadata.bind;
  */
 
 import jakarta.annotation.Nullable;
+import jakarta.validation.constraints.Pattern;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.Setter;
@@ -71,25 +72,25 @@ public class ColumnPrivilege
     // -----------------------------------------------------------------------------------------------------------------
     public static final String COLUMN_LABEL_IS_GRANTABLE = "IS_GRANTABLE";
 
-    public static final String COLUMN_VALUE_IS_GRANTABLE_YES = "YES";
+    public static final String COLUMN_VALUE_IS_GRANTABLE_YES = YesNoConstants.YES;
 
-    public static final String COLUMN_VALUE_IS_GRANTABLE_NO = "NO";
+    public static final String COLUMN_VALUE_IS_GRANTABLE_NO = YesNoConstants.NO;
 
     public enum IsGrantable
-            implements _FieldEnum<IsGrantable, String> {
+            implements YesNoEnum<IsGrantable> {
 
         /**
          * A value for {@link #COLUMN_VALUE_IS_GRANTABLE_YES}.
          */
-        YES(COLUMN_VALUE_IS_GRANTABLE_YES),
+        YES(COLUMN_VALUE_IS_GRANTABLE_YES), // "YES"
 
         /**
          * A value for {@link #COLUMN_VALUE_IS_GRANTABLE_NO}.
          */
-        NO(COLUMN_VALUE_IS_GRANTABLE_NO);
+        NO(COLUMN_VALUE_IS_GRANTABLE_NO);   // "NO"
 
         public static IsGrantable valueOfFieldValue(final String fieldValue) {
-            return _FieldEnum.valueOfFieldValue(IsGrantable.class, fieldValue);
+            return YesNoEnum.valueOfFieldValue(IsGrantable.class, fieldValue);
         }
 
         IsGrantable(final String fieldValue) {
@@ -134,21 +135,17 @@ public class ColumnPrivilege
     @Nullable
     @_NullableBySpecification
     @_ColumnLabel(COLUMN_LABEL_TABLE_CAT)
-    @EqualsAndHashCode.Include
     private String tableCat;
 
     @Nullable
     @_NullableBySpecification
     @_ColumnLabel(COLUMN_LABEL_TABLE_SCHEM)
-    @EqualsAndHashCode.Include
     private String tableSchem;
 
     @_ColumnLabel(COLUMN_LABEL_TABLE_NAME)
-    @EqualsAndHashCode.Include
     private String tableName;
 
     @_ColumnLabel(COLUMN_LABEL_COLUMN_NAME)
-    @EqualsAndHashCode.Include
     private String columnName;
 
     // -----------------------------------------------------------------------------------------------------------------
@@ -156,18 +153,16 @@ public class ColumnPrivilege
     @Nullable
     @_NullableBySpecification
     @_ColumnLabel("GRANTOR")
-    @EqualsAndHashCode.Include
     private String grantor;
 
     @_ColumnLabel("GRANTEE")
-    @EqualsAndHashCode.Include
     private String grantee;
 
     @_ColumnLabel("PRIVILEGE")
-    @EqualsAndHashCode.Include
     private String privilege;
 
     @Nullable
+    @Pattern(regexp = YesNoConstants.REGEXP_YES_NO)
     @_NullableBySpecification
     @_ColumnLabel(COLUMN_LABEL_IS_GRANTABLE)
     private String isGrantable;

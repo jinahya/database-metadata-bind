@@ -20,10 +20,11 @@ package com.github.jinahya.database.metadata.bind;
  * #L%
  */
 
-interface NullableEnum<E extends Enum<E> & NullableEnum<E>>
-        extends _IntFieldEnum<E> {
+interface YesNoEnum<E extends Enum<E> & YesNoEnum<E>>
+        extends _FieldEnum<E, String> {
 
-    static <E extends Enum<E> & NullableEnum<E>> E valueOfFieldValue(final Class<E> enumClass, final int fieldValue) {
-        return _IntFieldEnum.valueOfFieldValue(enumClass, fieldValue);
+    static <E extends Enum<E> & YesNoEnum<E>> E valueOfFieldValue(final Class<E> enumClass,
+                                                                  final String fieldValue) {
+        return _FieldEnum.valueOfFieldValue(enumClass, fieldValue);
     }
 }

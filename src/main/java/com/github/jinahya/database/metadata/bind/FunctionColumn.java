@@ -22,6 +22,7 @@ package com.github.jinahya.database.metadata.bind;
 
 import jakarta.validation.constraints.AssertTrue;
 import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.Pattern;
 import jakarta.validation.constraints.PositiveOrZero;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
@@ -87,33 +88,33 @@ public class FunctionColumn
         /**
          * A value for {@link DatabaseMetaData#functionColumnUnknown}({@value DatabaseMetaData#functionColumnUnknown}).
          */
-        FUNCTION_COLUMN_UNKNOWN(DatabaseMetaData.functionColumnUnknown),// 0
+        FUNCTION_COLUMN_UNKNOWN(DatabaseMetaData.functionColumnUnknown), // 0
 
         /**
          * A value for {@link DatabaseMetaData#functionColumnIn}({@value DatabaseMetaData#functionColumnIn}).
          */
-        FUNCTION_COLUMN_IN(DatabaseMetaData.functionColumnIn), // 1
+        FUNCTION_COLUMN_IN(DatabaseMetaData.functionColumnIn),           // 1
 
         /**
          * A value for {@link DatabaseMetaData#functionColumnInOut}({@value DatabaseMetaData#functionColumnInOut}).
          */
-        FUNCTION_COLUMN_IN_OUT(DatabaseMetaData.functionColumnInOut), // 2
+        FUNCTION_COLUMN_IN_OUT(DatabaseMetaData.functionColumnInOut),    // 2
 
         /**
          * A value for {@link DatabaseMetaData#functionColumnOut}({@value DatabaseMetaData#functionColumnOut}).
          */
-        FUNCTION_COLUMN_OUT(DatabaseMetaData.functionColumnOut), // 3
+        FUNCTION_COLUMN_OUT(DatabaseMetaData.functionColumnOut),         // 3
 
         /**
          * A value for {@link DatabaseMetaData#functionReturn}({@value DatabaseMetaData#functionReturn}).
          */
 //        FUNCTION_COLUMN_RETURN(4),
-        FUNCTION_RETURN(DatabaseMetaData.functionReturn),
+        FUNCTION_RETURN(DatabaseMetaData.functionReturn),                // 4
 
         /**
          * A value for {@link DatabaseMetaData#functionColumnResult}({@value DatabaseMetaData#functionColumnResult}).
          */
-        FUNCTION_COLUMN_RESULT(DatabaseMetaData.functionColumnResult); // 5
+        FUNCTION_COLUMN_RESULT(DatabaseMetaData.functionColumnResult);   // 5
 
         /**
          * Finds the value for specified {@link FunctionColumn#COLUMN_LABEL_COLUMN_TYPE} column value.
@@ -144,9 +145,9 @@ public class FunctionColumn
     public enum Nullable
             implements _IntFieldEnum<Nullable> {
 
-        FUNCTION_NO_NULLS(DatabaseMetaData.functionNoNulls),// 0
+        FUNCTION_NO_NULLS(DatabaseMetaData.functionNoNulls),                // 0
 
-        FUNCTION_NULLABLE(DatabaseMetaData.functionNullable), // 1
+        FUNCTION_NULLABLE(DatabaseMetaData.functionNullable),               // 1
 
         FUNCTION_NULLABLE_UNKNOWN(DatabaseMetaData.functionNullableUnknown) // 2
         ;
@@ -258,6 +259,7 @@ public class FunctionColumn
     @_ColumnLabel("ORDINAL_POSITION")
     private Integer ordinalPosition;
 
+    @Pattern(regexp = YesNoEmptyConstants.REGEXP_YES_NO_EMPTY)
     @_ColumnLabel("IS_NULLABLE")
     private String isNullable;
 

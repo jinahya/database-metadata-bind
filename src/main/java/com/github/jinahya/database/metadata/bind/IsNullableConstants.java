@@ -24,12 +24,14 @@ public final class IsNullableConstants {
 
     public static final String COLUMN_LABEL_IS_NULLABLE = "IS_NULLABLE";
 
+    // -----------------------------------------------------------------------------------------------------------------
     public static final String COLUMN_VALUE_IS_NULLABLE_YES = "YES";
 
     public static final String COLUMN_VALUE_IS_NULLABLE_NO = "NO";
 
     public static final String COLUMN_VALUE_IS_NULLABLE_EMPTY = "";
 
+    // -----------------------------------------------------------------------------------------------------------------
     private IsNullableConstants() {
         throw new AssertionError("instantiation is not allowed");
     }

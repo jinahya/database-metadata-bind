@@ -42,7 +42,7 @@ import java.util.Optional;
  */
 @Setter
 @Getter
-@EqualsAndHashCode(callSuper = true, onlyExplicitlyIncluded = true)
+@EqualsAndHashCode(callSuper = true)
 @ToString(callSuper = true)
 abstract class PortedKey
         extends AbstractMetadataType {
@@ -153,22 +153,22 @@ abstract class PortedKey
         /**
          * Constants for {@link DatabaseMetaData#importedKeyCascade}({@value DatabaseMetaData#importedKeyCascade}).
          */
-        IMPORTED_KEY_CASCADE(DatabaseMetaData.importedKeyCascade), // 0
+        IMPORTED_KEY_CASCADE(DatabaseMetaData.importedKeyCascade),        // 0
 
         /**
          * Constants for {@link DatabaseMetaData#importedKeyRestrict}({@value DatabaseMetaData#importedKeyRestrict}).
          */
-        IMPORTED_KEY_RESTRICT(DatabaseMetaData.importedKeyRestrict), // 1
+        IMPORTED_KEY_RESTRICT(DatabaseMetaData.importedKeyRestrict),      // 1
 
         /**
          * Constants for {@link DatabaseMetaData#importedKeySetNull}({@value DatabaseMetaData#importedKeySetNull}).
          */
-        IMPORTED_KEY_SET_NULL(DatabaseMetaData.importedKeySetNull), // 2
+        IMPORTED_KEY_SET_NULL(DatabaseMetaData.importedKeySetNull),       // 2
 
         /**
          * Constants for {@link DatabaseMetaData#importedKeyNoAction}({@value DatabaseMetaData#importedKeyNoAction}).
          */
-        IMPORTED_KEY_NO_ACTION(DatabaseMetaData.importedKeyNoAction), // 3
+        IMPORTED_KEY_NO_ACTION(DatabaseMetaData.importedKeyNoAction),     // 3
 
         /**
          * Constants for
@@ -191,6 +191,7 @@ abstract class PortedKey
 
         private final int fieldValue;
     }
+
     // -----------------------------------------------------------------------------------------------------------------
 
     /**
@@ -211,22 +212,22 @@ abstract class PortedKey
         /**
          * Constants for {@link DatabaseMetaData#importedKeyCascade}({@value DatabaseMetaData#importedKeyCascade}).
          */
-        IMPORTED_KEY_CASCADE(DatabaseMetaData.importedKeyCascade), // 0
+        IMPORTED_KEY_CASCADE(DatabaseMetaData.importedKeyCascade),        // 0
 
         /**
          * Constants for {@link DatabaseMetaData#importedKeyRestrict}({@value DatabaseMetaData#importedKeyRestrict}).
          */
-        IMPORTED_KEY_RESTRICT(DatabaseMetaData.importedKeyRestrict), // 1
+        IMPORTED_KEY_RESTRICT(DatabaseMetaData.importedKeyRestrict),      // 1
 
         /**
          * Constants for {@link DatabaseMetaData#importedKeySetNull}({@value DatabaseMetaData#importedKeySetNull}).
          */
-        IMPORTED_KEY_SET_NULL(DatabaseMetaData.importedKeySetNull), // 2
+        IMPORTED_KEY_SET_NULL(DatabaseMetaData.importedKeySetNull),       // 2
 
         /**
          * Constants for {@link DatabaseMetaData#importedKeyNoAction}({@value DatabaseMetaData#importedKeyNoAction}).
          */
-        IMPORTED_KEY_NO_ACTION(DatabaseMetaData.importedKeyNoAction), // 3
+        IMPORTED_KEY_NO_ACTION(DatabaseMetaData.importedKeyNoAction),     // 3
 
         /**
          * Constants for
@@ -284,7 +285,7 @@ abstract class PortedKey
          * {@link DatabaseMetaData#importedKeyInitiallyDeferred}({@value
          * DatabaseMetaData#importedKeyInitiallyDeferred}).
          */
-        IMPORTED_KEY_INITIALLY_DEFERRED(DatabaseMetaData.importedKeyInitiallyDeferred), // 5
+        IMPORTED_KEY_INITIALLY_DEFERRED(DatabaseMetaData.importedKeyInitiallyDeferred),   // 5
 
         /**
          * Constants for
@@ -297,7 +298,7 @@ abstract class PortedKey
          * Constants for
          * {@link DatabaseMetaData#importedKeyNotDeferrable}({@value DatabaseMetaData#importedKeyNotDeferrable}).
          */
-        IMPORTED_KEY_NOT_DEFERRABLE(DatabaseMetaData.importedKeyNotDeferrable); // 7
+        IMPORTED_KEY_NOT_DEFERRABLE(DatabaseMetaData.importedKeyNotDeferrable);           // 7
 
         public static TableKeyDeferrability valueOfFieldValue(final int fieldValue) {
             return _IntFieldEnum.valueOfFieldValue(TableKeyDeferrability.class, fieldValue);
@@ -372,42 +373,34 @@ abstract class PortedKey
     @Nullable
     @_NullableBySpecification
     @_ColumnLabel(COLUMN_NAME_PKTABLE_CAT)
-    @EqualsAndHashCode.Include
     private String pktableCat;
 
     @Nullable
     @_NullableBySpecification
     @_ColumnLabel(COLUMN_NAME_PKTABLE_SCHEM)
-    @EqualsAndHashCode.Include
     private String pktableSchem;
 
     @_ColumnLabel(COLUMN_NAME_PKTABLE_NAME)
-    @EqualsAndHashCode.Include
     private String pktableName;
 
     @_ColumnLabel(COLUMN_NAME_PKCOLUMN_NAME)
-    @EqualsAndHashCode.Include
     private String pkcolumnName;
 
     // -----------------------------------------------------------------------------------------------------------------
     @Nullable
     @_NullableBySpecification
     @_ColumnLabel(COLUMN_NAME_FKTABLE_CAT)
-    @EqualsAndHashCode.Include
     private String fktableCat;
 
     @Nullable
     @_NullableBySpecification
     @_ColumnLabel(COLUMN_NAME_FKTABLE_SCHEM)
-    @EqualsAndHashCode.Include
     private String fktableSchem;
 
     @_ColumnLabel(COLUMN_NAME_FKTABLE_NAME)
-    @EqualsAndHashCode.Include
     private String fktableName;
 
     @_ColumnLabel(COLUMN_NAME_FKCOLUMN_NAME)
-    @EqualsAndHashCode.Include
     private String fkcolumnName;
 
     // -----------------------------------------------------------------------------------------------------------------

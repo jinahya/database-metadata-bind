@@ -20,6 +20,7 @@ package com.github.jinahya.database.metadata.bind;
  * #L%
  */
 
+import jakarta.validation.constraints.Pattern;
 import jakarta.validation.constraints.Positive;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
@@ -56,8 +57,7 @@ public class Attribute
             throws SQLException {
         Objects.requireNonNull(context, "context is null");
         Objects.requireNonNull(comparator, "comparator is null");
-        return Comparator
-                .comparing(Attribute::getTypeCat, ContextUtils.nulls(context, comparator))
+        return Comparator.comparing(Attribute::getTypeCat, ContextUtils.nulls(context, comparator))
                 .thenComparing(Attribute::getTypeSchem, ContextUtils.nulls(context, comparator))
                 .thenComparing(Attribute::getTypeName, ContextUtils.nulls(context, comparator))
                 .thenComparing(Attribute::getOrdinalPosition, ContextUtils.nulls(context, Comparator.naturalOrder()));
@@ -209,6 +209,7 @@ public class Attribute
     @_ColumnLabel("ORDINAL_POSITION")
     private Integer ordinalPosition;
 
+    @Pattern(regexp = YesNoEmptyConstants.REGEXP_YES_NO_EMPTY)
     @_ColumnLabel(COLUMN_LABEL_IS_NULLABLE)
     private String isNullable;
 

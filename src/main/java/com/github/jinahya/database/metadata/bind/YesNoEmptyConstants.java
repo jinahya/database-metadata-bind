@@ -4,7 +4,7 @@ package com.github.jinahya.database.metadata.bind;
  * #%L
  * database-metadata-bind
  * %%
- * Copyright (C) 2011 - 2024 Jinahya, Inc.
+ * Copyright (C) 2011 - 2019 Jinahya, Inc.
  * %%
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -20,17 +20,21 @@ package com.github.jinahya.database.metadata.bind;
  * #L%
  */
 
-final class _Assertions {
+import java.util.regex.Pattern;
 
-    static SuperTypeAssert assertType(final SuperType actual) {
-        return new SuperTypeAssert(actual);
-    }
+abstract class YesNoEmptyConstants
+        extends YesNoConstants {
 
-    static TableAssert assertType(final Table actual) {
-        return new TableAssert(actual);
-    }
+    // -----------------------------------------------------------------------------------------------------------------
+    static final String EMPTY = "";
 
-    private _Assertions() {
+    // -----------------------------------------------------------------------------------------------------------------
+    static final String REGEXP_YES_NO_EMPTY = "^(?:" + REGEXP_YES_NO_ + ")?$";
+
+    static final Pattern PATTERN_YES_NO_EMPTY = Pattern.compile(REGEXP_YES_NO_EMPTY);
+
+    // -----------------------------------------------------------------------------------------------------------------
+    private YesNoEmptyConstants() {
         throw new AssertionError("instantiation is not allowed");
     }
 }

@@ -2016,6 +2016,16 @@ public class Context {
         );
     }
 
+    /**
+     * Invokes {@link #getVersionColumns(String, String, String)} method with specified table's
+     * {@link Table#getTableCat() tableCat}, {@link Table#getTableSchem() tableSchem}, and
+     * {@link Table#getTableName() tableName}, and returns the result.
+     *
+     * @param table the table.
+     * @return a list of bound values.
+     * @throws SQLException if a database error occurs.
+     * @see #getVersionColumns(String, String, String)
+     */
     @NotNull List<@Valid @NotNull VersionColumn> getVersionColumns(final @NotNull Table table) throws SQLException {
         Objects.requireNonNull(table, "table is null");
         return getVersionColumns(
@@ -2029,8 +2039,10 @@ public class Context {
     private Map<Field, _ColumnLabel> getLabeledFields(final Class<?> clazz) {
         Objects.requireNonNull(clazz, "clazz is null");
         return Collections.unmodifiableMap(
-                classesAndLabeledFields.computeIfAbsent(clazz,
-                                                        c -> ContextUtils.getFieldsAnnotatedWith(c, _ColumnLabel.class))
+                classesAndLabeledFields.computeIfAbsent(
+                        clazz,
+                        c -> ContextUtils.getFieldsAnnotatedWith(c, _ColumnLabel.class)
+                )
         );
     }
 

@@ -20,6 +20,12 @@ package com.github.jinahya.database.metadata.bind;
  * #L%
  */
 
+/**
+ * A class for testing {@link ExportedKey} class.
+ *
+ * @author Jin Kwon &lt;onacit_at_gmail.com&gt;
+ * @see ImportedKeyTest
+ */
 class ExportedKeyTest
         extends PortedKeyTest<ExportedKey> {
 
