@@ -1,5 +1,15 @@
 /**
  * Defines classes for binding results of methods defined in {@link java.sql.DatabaseMetaData}.
+ * <p>
+ * {@snippet :
+ * try (java.sql.Connection connection = connect()) {
+ *     var metadata = connection.getMetaData();
+ *     var context = new Context(metadata);
+ *     var catalogs = context.getCatalogs();
+ *     var schemas = context.getSchemas();
+ *     var tables = context.getTables(null, null, "%", null);
+ * }
+ *}
  *
  * @author Jin Kwon &lt;onacit_at_gmail.com&gt;
  * @see com.github.jinahya.database.metadata.bind.Context
