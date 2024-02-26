@@ -48,7 +48,7 @@ class TestContainers_OracleXE_IT
 
     @BeforeAll
     static void start() {
-        final DockerImageName name = DockerImageName.parse(FULL_IMAGE_NAME);
+        final var name = DockerImageName.parse(FULL_IMAGE_NAME);
         CONTAINER = new OracleContainer(name)
                 .withImagePullPolicy(PullPolicy.ageBased(Duration.ofDays(180L)))
                 .withStartupTimeout(Duration.ofMinutes(8L))
