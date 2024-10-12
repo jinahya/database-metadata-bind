@@ -114,6 +114,19 @@ final class ContextTestUtils {
     }
 
     // -----------------------------------------------------------------------------------------------------------------
+
+    /**
+     * Tests {@link Context#getTableTypes()} on specified context.
+     *
+     * @param context the context.
+     * @throws SQLException if a DB error occurs.
+     */
+    static void getTableTypes_(final Context context) throws SQLException {
+        final var tableTypes = context.getTableTypes();
+        tableTypes(context, tableTypes);
+    }
+
+    // -----------------------------------------------------------------------------------------------------------------
     static void test(final Context context) throws SQLException {
         proxy(context, p -> {
             try {
@@ -1013,7 +1026,7 @@ final class ContextTestUtils {
     }
 
     // ------------------------------------------------------------------------------------------------------ tableTypes
-    private static void tableTypes(final Context context, final List<? extends TableType> tableTypes)
+    static void tableTypes(final Context context, final List<? extends TableType> tableTypes)
             throws SQLException {
         assertThat(tableTypes).isNotNull().doesNotContainNull();
         if (true) {
@@ -1033,7 +1046,7 @@ final class ContextTestUtils {
     private static void tableType(final Context context, final TableType tableType) throws SQLException {
         MetadataTypeTestUtils.verify(tableType);
         {
-            assertThat(tableType.getTableType()).isNotNull();
+            assertThat(tableType.getTableType()).isNotBlank();
         }
     }
 
