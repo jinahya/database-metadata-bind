@@ -195,7 +195,10 @@ abstract class MetadataTypeTest<T extends MetadataType> {
 
     T newTypeInstance() {
         try {
-            final var constructor = typeClass.getConstructor();
+            final var constructor = typeClass.getDeclaredConstructor();
+            if (!constructor.canAccess(null)) {
+                constructor.setAccessible(true);
+            }
             return constructor.newInstance();
         } catch (final ReflectiveOperationException roe) {
             throw new RuntimeException("failed to instantiate " + typeClass, roe);

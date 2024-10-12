@@ -98,6 +98,9 @@ final class ContextTestUtils {
                 final Context instance;
                 try {
                     final var constructor = loaded.getDeclaredConstructor(DatabaseMetaData.class);
+                    if (!constructor.isAccessible()) {
+                        constructor.setAccessible(true);
+                    }
                     if (!constructor.canAccess(null)) {
                         constructor.setAccessible(true);
                     }

@@ -34,7 +34,9 @@ import java.util.Objects;
 import java.util.Optional;
 
 /**
- * A class for binding results of the {@link DatabaseMetaData#getAttributes(String, String, String, String)} method.
+ * A class for binding results of the
+ * {@link DatabaseMetaData#getAttributes(String, String, String, String) getAttributes(catalog, schemaPattern,
+ * typeNamePattern, attributeNamePattern)} method.
  *
  * @author Jin Kwon &lt;jinahya_at_gmail.com&gt;
  * @see Context#getAttributes(String, String, String, String)
@@ -63,11 +65,31 @@ public class Attribute
                 .thenComparing(Attribute::getOrdinalPosition, ContextUtils.nulls(context, Comparator.naturalOrder()));
     }
 
-    // -------------------------------------------------------------------------------------------------------- TYPE_CAT
+    // -----------------------------------------------------------------------------------------------------------------
     public static final String COLUMN_LABEL_TYPE_CAT = "TYPE_CAT";
 
     // ------------------------------------------------------------------------------------------------------ TYPE_SCHEM
     public static final String COLUMN_LABEL_TYPE_SCHEM = "TYPE_SCHEM";
+
+    // ------------------------------------------------------------------------------------------------------- TYPE_NAME
+
+    /**
+     * The column label of {@value}.
+     */
+    public static final String COLUMN_LABEL_TYPE_NAME = "TYPE_NAME";
+
+    // ------------------------------------------------------------------------------------------------------- ATTR_NAME
+
+    /**
+     * The column label of {@value}.
+     */
+    public static final String COLUMN_LABEL_ATTR_NAME = "ATTR_NAME";
+    // ------------------------------------------------------------------------------------------------------- DATA_TYPE
+
+    /**
+     * The column label of {@value}.
+     */
+    public static final String COLUMN_LABEL_DATA_TYPE = "DATA_TYPE";
 
     // -------------------------------------------------------------------------------------------------------- NULLABLE
     public static final String COLUMN_LABEL_NULLABLE = "NULLABLE";
@@ -121,12 +143,73 @@ public class Attribute
     // -----------------------------------------------------------------------------------------------------------------
     public static final String COLUMN_LABEL_IS_NULLABLE = "IS_NULLABLE";
 
+    // ---------------------------------------------------------------------------------------------------- CONSTRUCTORS
+
+    /**
+     * Creates a new instance.
+     */
+    protected Attribute() {
+        super();
+    }
+
     // -------------------------------------------------------------------------------------------------------- tableCat
 
-    // ------------------------------------------------------------------------------------------------------ tableSchem
+    /**
+     * Returns the value of {@value #COLUMN_LABEL_TYPE_CAT} column.
+     *
+     * @return the value of {@value #COLUMN_LABEL_TYPE_CAT} column.
+     */
+    @jakarta.annotation.Nullable
+    public String getTypeCat() {
+        return typeCat;
+    }
+
+    // ------------------------------------------------------------------------------------------------------- typeSchem
+
+    /**
+     * Returns the value of {@value #COLUMN_LABEL_TYPE_SCHEM} column.
+     *
+     * @return the value of {@value #COLUMN_LABEL_TYPE_SCHEM} column.
+     */
+    @jakarta.annotation.Nullable
+    public String getTypeSchem() {
+        return typeSchem;
+    }
+
+    // -------------------------------------------------------------------------------------------------------- typeName
+
+    /**
+     * Returns the value of {@value #COLUMN_LABEL_TYPE_NAME} column.
+     *
+     * @return the value of {@value #COLUMN_LABEL_TYPE_NAME} column.
+     */
+    public String getTypeName() {
+        return typeName;
+    }
+
+    // -------------------------------------------------------------------------------------------------------- attrName
+
+    /**
+     * Returns the value of {@value #COLUMN_LABEL_ATTR_NAME} column.
+     *
+     * @return the value of {@value #COLUMN_LABEL_ATTR_NAME} column.
+     */
+    public String getAttrName() {
+        return attrName;
+    }
+
+    // -------------------------------------------------------------------------------------------------------- dataType
+
+    /**
+     * Returns the value of {@value #COLUMN_LABEL_DATA_TYPE} column.
+     *
+     * @return the value of {@value #COLUMN_LABEL_DATA_TYPE} column.
+     */
+    public Integer getDataType() {
+        return dataType;
+    }
 
     // -------------------------------------------------------------------------------------------------------- nullable
-
     public Nullable getNullableAsEnum() {
         return Optional.ofNullable(getNullable())
                 .map(Nullable::valueOfFieldValue)
@@ -155,16 +238,16 @@ public class Attribute
     @EqualsAndHashCode.Include
     private String typeSchem;
 
-    @_ColumnLabel("TYPE_NAME")
+    @_ColumnLabel(COLUMN_LABEL_TYPE_NAME)
     @EqualsAndHashCode.Include
     private String typeName;
 
-    @_ColumnLabel("ATTR_NAME")
+    @_ColumnLabel(COLUMN_LABEL_ATTR_NAME)
     @EqualsAndHashCode.Include
     private String attrName;
 
     // -----------------------------------------------------------------------------------------------------------------
-    @_ColumnLabel("DATA_TYPE")
+    @_ColumnLabel(COLUMN_LABEL_DATA_TYPE)
     private Integer dataType;
 
     @_ColumnLabel("ATTR_TYPE_NAME")
