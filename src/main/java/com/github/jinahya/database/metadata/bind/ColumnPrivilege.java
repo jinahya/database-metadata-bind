@@ -33,8 +33,9 @@ import java.util.Comparator;
 import java.util.Optional;
 
 /**
- * A class for binding results of the {@link DatabaseMetaData#getColumnPrivileges(String, String, String, String)}
- * method.
+ * A class for binding results of the
+ * {@link DatabaseMetaData#getColumnPrivileges(String, String, String, String) getColumnPrivileges(catalog, schema,
+ * table, columnNamePattern)} method.
  *
  * @author Jin Kwon &lt;jinahya_at_gmail.com&gt;
  * @see Context#getColumnPrivileges(String, String, String, String)
@@ -57,16 +58,28 @@ public class ColumnPrivilege
                 .thenComparing(ColumnPrivilege::getPrivilege, ContextUtils.nulls(context, comparator));
     }
 
-    // -----------------------------------------------------------------------------------------------------------------
+    // ------------------------------------------------------------------------------------------------------- TABLE_CAT
+
+    /**
+     * The column label of {@value}.
+     */
     public static final String COLUMN_LABEL_TABLE_CAT = "TABLE_CAT";
 
-    // -----------------------------------------------------------------------------------------------------------------
+    // ----------------------------------------------------------------------------------------------------- TABLE_SCHEM
+
+    /**
+     * The column label of {@value}.
+     */
     public static final String COLUMN_LABEL_TABLE_SCHEM = "TABLE_SCHEM";
 
-    // -----------------------------------------------------------------------------------------------------------------
+    // ------------------------------------------------------------------------------------------------------- TABLE_NAM
+
+    /**
+     * The column label of {@value}.
+     */
     public static final String COLUMN_LABEL_TABLE_NAME = "TABLE_NAME";
 
-    // -----------------------------------------------------------------------------------------------------------------
+    // ----------------------------------------------------------------------------------------------------- COLUMN_NAME
     public static final String COLUMN_LABEL_COLUMN_NAME = "COLUMN_NAME";
 
     // -----------------------------------------------------------------------------------------------------------------

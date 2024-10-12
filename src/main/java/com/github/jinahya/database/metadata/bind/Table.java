@@ -23,7 +23,6 @@ package com.github.jinahya.database.metadata.bind;
 import jakarta.annotation.Nullable;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
-import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
 
@@ -46,7 +45,6 @@ import java.util.Objects;
 @_ParentOf(VersionColumn.class)
 @Setter
 @Getter
-@NoArgsConstructor
 @ToString(callSuper = true)
 //@EqualsAndHashCode(callSuper = true, onlyExplicitlyIncluded = true)
 public class Table
@@ -64,26 +62,28 @@ public class Table
                 .thenComparing(Table::getTableName, comparator);
     }
 
-    // -----------------------------------------------------------------------------------------------------------------
+    // ------------------------------------------------------------------------------------------------------- TABLE_CAT
 
     /**
      * The column label of {@value}.
      */
     public static final String COLUMN_LABEL_TABLE_CAT = "TABLE_CAT";
 
-    // -----------------------------------------------------------------------------------------------------------------
+    // ----------------------------------------------------------------------------------------------------- TABLE_SCHEM
 
     /**
      * The column label of {@value}.
      */
     public static final String COLUMN_LABEL_TABLE_SCHEM = "TABLE_SCHEM";
 
-    // -----------------------------------------------------------------------------------------------------------------
+    // ------------------------------------------------------------------------------------------------------ TABLE_NAME
 
     /**
      * The column label of {@value}.
      */
     public static final String COLUMN_LABEL_TABLE_NAME = "TABLE_NAME";
+
+    // ------------------------------------------------------------------------------------------------------ TABLE_TYPE
 
     /**
      * The column label of {@value}.
@@ -97,6 +97,16 @@ public class Table
         instance.setTableSchem(tableSchem);
         instance.setTableName(tableName);
         return instance;
+    }
+
+    // ---------------------------------------------------------------------------------------------------- CONSTRUCTORS
+
+    /**
+     * Creates a new instance.
+     */
+    protected Table() {
+        super();
+        this.tableCat = tableCat;
     }
 
     // -----------------------------------------------------------------------------------------------------------------
@@ -132,7 +142,49 @@ public class Table
 
     // -------------------------------------------------------------------------------------------------------- tableCat
 
+    /**
+     * Returns the value of {@value #COLUMN_LABEL_TABLE_CAT} column.
+     *
+     * @return the value of {@value #COLUMN_LABEL_TABLE_CAT} column.
+     */
+    @Nullable
+    public String getTableCat() {
+        return tableCat;
+    }
+
     // ------------------------------------------------------------------------------------------------------- tableShem
+
+    /**
+     * Returns the value of {@value #COLUMN_LABEL_TABLE_SCHEM} column.
+     *
+     * @return the value of {@value #COLUMN_LABEL_TABLE_SCHEM} column.
+     */
+    @Nullable
+    public String getTableSchem() {
+        return tableSchem;
+    }
+
+    // ------------------------------------------------------------------------------------------------------- tableName
+
+    /**
+     * Returns the value of {@value #COLUMN_LABEL_TABLE_NAME} column.
+     *
+     * @return the value of {@value #COLUMN_LABEL_TABLE_NAME} column.
+     */
+    public String getTableName() {
+        return tableName;
+    }
+
+    // ------------------------------------------------------------------------------------------------------- tableType
+
+    /**
+     * Returns the value of {@value #COLUMN_LABEL_TABLE_TYPE} column.
+     *
+     * @return the value of {@value #COLUMN_LABEL_TABLE_TYPE} column.
+     */
+    public String getTableType() {
+        return tableType;
+    }
 
     // -----------------------------------------------------------------------------------------------------------------
 
