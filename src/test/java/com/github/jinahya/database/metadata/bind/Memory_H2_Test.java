@@ -33,7 +33,8 @@ import static java.sql.DriverManager.getConnection;
  * @author Jin Kwon &lt;jinahya_at_gmail.com&gt;
  */
 @Slf4j
-class Memory_H2_Test extends Memory_$_Test {
+class Memory_H2_Test
+        extends Memory_$_Test {
 
     private static final String DRIVER_NAME = "org.h2.Driver";
 

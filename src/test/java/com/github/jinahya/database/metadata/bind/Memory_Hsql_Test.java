@@ -34,7 +34,8 @@ import static java.sql.DriverManager.getConnection;
  * @see <a href="hsqldb.org>HyperSQL</a>
  */
 @Slf4j
-class Memory_Hsql_Test extends Memory_$_Test {
+class Memory_Hsql_Test
+        extends Memory_$_Test {
 
     private static final String DRIVER_NAME = "org.hsqldb.jdbc.JDBCDriver";
 

@@ -26,12 +26,8 @@ import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
 
+import java.sql.SQLException;
 import java.util.Comparator;
-import java.util.Objects;
-import java.util.function.BiPredicate;
-
-import static java.util.Comparator.naturalOrder;
-import static java.util.Comparator.nullsFirst;
 
 /**
  * A class for binding results of the {@link java.sql.DatabaseMetaData#getSchemas(java.lang.String, java.lang.String)}
@@ -46,18 +42,17 @@ import static java.util.Comparator.nullsFirst;
 @Getter
 @EqualsAndHashCode(callSuper = true, onlyExplicitlyIncluded = true)
 @ToString(callSuper = true)
-public class Schema extends AbstractMetadataType {
+public class Schema
+        extends AbstractMetadataType {
 
     private static final long serialVersionUID = 7457236468401244963L;
 
     // -----------------------------------------------------------------------------------------------------------------
-    static final Comparator<Schema> CASE_INSENSITIVE_ORDER =
-            Comparator.comparing(Schema::getTableCatalog, nullsFirst(String.CASE_INSENSITIVE_ORDER))
-                    .thenComparing(Schema::getTableSchem, nullsFirst(String.CASE_INSENSITIVE_ORDER));
-
-    static final Comparator<Schema> LEXICOGRAPHIC_ORDER =
-            Comparator.comparing(Schema::getTableCatalog, nullsFirst(naturalOrder()))
-                    .thenComparing(Schema::getTableSchem, nullsFirst(naturalOrder()));
+    static Comparator<Schema> comparing(final Context context, final Comparator<? super String> comparator)
+            throws SQLException {
+        return Comparator.comparing(Schema::getTableCatalog, ContextUtils.nulls(context, comparator))
+                .thenComparing(Schema::getTableSchem, ContextUtils.nulls(context, comparator));
+    }
 
     // -----------------------------------------------------------------------------------------------------------------
 
@@ -74,11 +69,6 @@ public class Schema extends AbstractMetadataType {
      * A column label of {@value}.
      */
     public static final String COLUMN_LABEL_TABLE_SCHEM = "TABLE_SCHEM";
-
-    // -----------------------------------------------------------------------------------------------------------------
-    static final BiPredicate<Schema, Catalog> IS_OF = (s, c) -> {
-        return Objects.equals(s.tableCatalog, c.getTableCat());
-    };
 
     // -----------------------------------------------------------------------------------------------------------------
     static Schema of(final String tableCatalog, final String tableSchem) {

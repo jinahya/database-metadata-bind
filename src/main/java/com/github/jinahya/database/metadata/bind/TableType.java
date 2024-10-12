@@ -20,11 +20,13 @@ package com.github.jinahya.database.metadata.bind;
  * #L%
  */
 
+import jakarta.validation.constraints.NotBlank;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
 
+import java.sql.SQLException;
 import java.util.Comparator;
 
 /**
@@ -37,23 +39,26 @@ import java.util.Comparator;
 @Getter
 @EqualsAndHashCode(callSuper = true)
 @ToString(callSuper = true)
-public class TableType extends AbstractMetadataType {
+public class TableType
+        extends AbstractMetadataType {
 
     private static final long serialVersionUID = -7630634982776331078L;
 
     // -----------------------------------------------------------------------------------------------------------------
-    static final Comparator<TableType> CASE_INSENSITIVE_ORDER =
-            Comparator.comparing(TableType::getTableType, String.CASE_INSENSITIVE_ORDER);
-
-    static final Comparator<TableType> LEXICOGRAPHIC_ORDER = Comparator.comparing(TableType::getTableType);
+    static Comparator<TableType> comparing(final Context context, final Comparator<? super String> comparator)
+            throws SQLException {
+//        return Comparator.comparing(TableType::getTableType, ContextUtils.nulls(context, comparator));
+        return Comparator.comparing(TableType::getTableType, comparator);
+    }
 
     // -----------------------------------------------------------------------------------------------------------------
     public static final String COLUMN_LABEL_TABLE_TYPE = "TABLE_TYPE";
 
     // -----------------------------------------------------------------------------------------------------------------
+    @NotBlank
+    @_ColumnLabel(COLUMN_LABEL_TABLE_TYPE)
     @SuppressWarnings({
             "java:S1700"
     })
-    @_ColumnLabel(COLUMN_LABEL_TABLE_TYPE)
     private String tableType;
 }

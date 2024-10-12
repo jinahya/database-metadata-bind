@@ -26,11 +26,8 @@ import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
 
-import java.util.Objects;
-import java.util.function.BiPredicate;
-
 /**
- * A entity class for binding results of the
+ * A class for binding results of the
  * {@link java.sql.DatabaseMetaData#getSuperTables(java.lang.String, java.lang.String, java.lang.String)}
  *
  * @author Jin Kwon &lt;jinahya_at_gmail.com&gt;
@@ -41,7 +38,8 @@ import java.util.function.BiPredicate;
 @Getter
 @EqualsAndHashCode(callSuper = true)
 @ToString(callSuper = true)
-public class SuperTable extends AbstractMetadataType {
+public class SuperTable
+        extends AbstractMetadataType {
 
     private static final long serialVersionUID = 3579710773784268831L;
 
@@ -53,13 +51,6 @@ public class SuperTable extends AbstractMetadataType {
     public static final String COLUMN_LABEL_TABLE_NAME = "TABLE_NAME";
 
     public static final String COLUMN_LABEL_SUPERTABLE_NAME = "SUPERTABLE_NAME";
-
-    // -----------------------------------------------------------------------------------------------------------------
-    static final BiPredicate<SuperTable, Table> IS_OF = (s, t) -> {
-        return Objects.equals(s.getTableCat(), t.getTableCat()) &&
-               Objects.equals(s.getTableSchem(), t.getTableSchem()) &&
-               Objects.equals(s.getTableName(), t.getTableName());
-    };
 
     // -------------------------------------------------------------------------------------------------------- tableCat
 
@@ -83,6 +74,7 @@ public class SuperTable extends AbstractMetadataType {
     @EqualsAndHashCode.Include
     private String tableName;
 
+    // -----------------------------------------------------------------------------------------------------------------
     @_ColumnLabel(COLUMN_LABEL_SUPERTABLE_NAME)
     @EqualsAndHashCode.Include
     private String supertableName;

@@ -21,18 +21,15 @@ package com.github.jinahya.database.metadata.bind;
  */
 
 import jakarta.annotation.Nullable;
+import jakarta.validation.constraints.Pattern;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
 
 import java.sql.DatabaseMetaData;
+import java.sql.SQLException;
 import java.util.Comparator;
-import java.util.Objects;
-import java.util.function.BiPredicate;
-
-import static java.util.Comparator.naturalOrder;
-import static java.util.Comparator.nullsFirst;
 
 /**
  * A class for binding results of the {@link DatabaseMetaData#getPseudoColumns(String, String, String, String)} method.
@@ -45,22 +42,20 @@ import static java.util.Comparator.nullsFirst;
 @Getter
 @EqualsAndHashCode(callSuper = true, onlyExplicitlyIncluded = true)
 @ToString(callSuper = true)
-public class PseudoColumn extends AbstractMetadataType {
+public class PseudoColumn
+        extends AbstractMetadataType
+        implements HasIsNullableEnum {
 
     private static final long serialVersionUID = -5612575879670895510L;
 
     // -----------------------------------------------------------------------------------------------------------------
-    static final Comparator<PseudoColumn> CASE_INSENSITIVE_ORDER =
-            Comparator.comparing(PseudoColumn::getTableCat, nullsFirst(String.CASE_INSENSITIVE_ORDER))
-                    .thenComparing(PseudoColumn::getTableSchem, nullsFirst(String.CASE_INSENSITIVE_ORDER))
-                    .thenComparing(PseudoColumn::getTableName, nullsFirst(String.CASE_INSENSITIVE_ORDER))
-                    .thenComparing(PseudoColumn::getColumnName, nullsFirst(String.CASE_INSENSITIVE_ORDER));
-
-    static final Comparator<PseudoColumn> LEXICOGRAPHIC_ORDER =
-            Comparator.comparing(PseudoColumn::getTableCat, nullsFirst(naturalOrder()))
-                    .thenComparing(PseudoColumn::getTableSchem, nullsFirst(naturalOrder()))
-                    .thenComparing(PseudoColumn::getTableName, nullsFirst(naturalOrder()))
-                    .thenComparing(PseudoColumn::getColumnName, nullsFirst(naturalOrder()));
+    static Comparator<PseudoColumn> comparing(final Context context, final Comparator<? super String> comparator)
+            throws SQLException {
+        return Comparator.comparing(PseudoColumn::getTableCat, ContextUtils.nulls(context, comparator))
+                .thenComparing(PseudoColumn::getTableSchem, ContextUtils.nulls(context, comparator))
+                .thenComparing(PseudoColumn::getTableName, ContextUtils.nulls(context, comparator))
+                .thenComparing(PseudoColumn::getColumnName, ContextUtils.nulls(context, comparator));
+    }
 
     // -----------------------------------------------------------------------------------------------------------------
     public static final String COLUMN_LABEL_TABLE_CAT = "TABLE_CAT";
@@ -74,22 +69,17 @@ public class PseudoColumn extends AbstractMetadataType {
     // ----------------------------------------------------------------------------------------------------- IS_NULLABLE
     public static final String COLUMN_LABEL_COLUMN_IS_NULLABLE = "IS_NULLABLE";
 
-    public static final String COLUMN_VALUE_COLUMN_IS_NULLABLE_YES = "YES";
+    public static final String COLUMN_VALUE_COLUMN_IS_NULLABLE_YES = YesNoConstants.YES;
 
-    public static final String COLUMN_VALUE_COLUMN_IS_NULLABLE_NO = "NO";
+    public static final String COLUMN_VALUE_COLUMN_IS_NULLABLE_NO = YesNoConstants.NO;
 
-    public static final String COLUMN_VALUE_COLUMN_IS_NULLABLE_EMPTY = "";
-
-    // -----------------------------------------------------------------------------------------------------------------
-    static final BiPredicate<PseudoColumn, Table> IS_OF = (c, t) -> {
-        return Objects.equals(c.tableCat, t.getTableCat()) &&
-               Objects.equals(c.tableSchem, t.getTableSchem()) &&
-               Objects.equals(c.tableName, t.getTableName());
-    };
+    public static final String COLUMN_VALUE_COLUMN_IS_NULLABLE_EMPTY = YesNoEmptyConstants.EMPTY;
 
     // -------------------------------------------------------------------------------------------------------- tableCat
 
     // ------------------------------------------------------------------------------------------------------ tableSchem
+
+    // ------------------------------------------------------------------------------------------------------ isNullable
 
     // -----------------------------------------------------------------------------------------------------------------
 
@@ -141,6 +131,7 @@ public class PseudoColumn extends AbstractMetadataType {
     @_ColumnLabel("CHAR_OCTET_LENGTH")
     private Integer charOctetLength;
 
+    @Pattern(regexp = YesNoEmptyConstants.REGEXP_YES_NO_EMPTY)
     @_ColumnLabel("IS_NULLABLE")
     private String isNullable;
 }

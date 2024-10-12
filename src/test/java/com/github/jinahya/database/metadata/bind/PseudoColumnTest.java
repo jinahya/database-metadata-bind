@@ -20,9 +20,22 @@ package com.github.jinahya.database.metadata.bind;
  * #L%
  */
 
-class PseudoColumnTest extends AbstractMetadataTypeTest<PseudoColumn> {
+import org.junit.jupiter.api.Nested;
+
+class PseudoColumnTest
+        extends AbstractMetadataTypeTest<PseudoColumn> {
 
     PseudoColumnTest() {
         super(PseudoColumn.class);
+    }
+
+    // -----------------------------------------------------------------------------------------------------------------
+    @Nested
+    class IsNullableTest
+            extends HasIsNullableTest<PseudoColumn> {
+
+        IsNullableTest() {
+            super(PseudoColumnTest.this::newTypeSpy);
+        }
     }
 }

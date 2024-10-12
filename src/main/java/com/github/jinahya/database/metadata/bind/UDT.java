@@ -28,17 +28,9 @@ import lombok.Setter;
 import lombok.ToString;
 
 import java.sql.DatabaseMetaData;
+import java.sql.SQLException;
 import java.sql.Types;
-import java.util.Arrays;
-import java.util.Collections;
 import java.util.Comparator;
-import java.util.HashSet;
-import java.util.Objects;
-import java.util.Set;
-import java.util.function.BiPredicate;
-
-import static java.util.Comparator.naturalOrder;
-import static java.util.Comparator.nullsFirst;
 
 /**
  * A class for binding results of the {@link DatabaseMetaData#getUDTs(String, String, String, int[])} method.
@@ -46,29 +38,28 @@ import static java.util.Comparator.nullsFirst;
  * @author Jin Kwon &lt;jinahya_at_gmail.com&gt;
  * @see Context#getUDTs(String, String, String, int[])
  */
-
+@_ChildOf(Catalog.class)
+@_ChildOf(Schema.class)
 @_ParentOf(Attribute.class)
 @_ParentOf(UDT.class)
 @Setter
 @Getter
 @EqualsAndHashCode(callSuper = true, onlyExplicitlyIncluded = true)
 @ToString(callSuper = true)
-public class UDT extends AbstractMetadataType {
+public class UDT
+        extends AbstractMetadataType {
 
     private static final long serialVersionUID = 8665246093405057553L;
 
     // -----------------------------------------------------------------------------------------------------------------
-    static final Comparator<UDT> CASE_INSENSITIVE_ORDER =
-            Comparator.comparingInt(UDT::getDataType)
-                    .thenComparing(UDT::getTypeCat, nullsFirst(String.CASE_INSENSITIVE_ORDER))
-                    .thenComparing(UDT::getTypeSchem, nullsFirst(String.CASE_INSENSITIVE_ORDER))
-                    .thenComparing(UDT::getTypeName, nullsFirst(String.CASE_INSENSITIVE_ORDER));
-
-    static final Comparator<UDT> LEXICOGRAPHIC_ORDER =
-            Comparator.comparingInt(UDT::getDataType)
-                    .thenComparing(UDT::getTypeCat, nullsFirst(naturalOrder()))
-                    .thenComparing(UDT::getTypeSchem, nullsFirst(naturalOrder()))
-                    .thenComparing(UDT::getTypeName, nullsFirst(naturalOrder()));
+    static Comparator<UDT> comparing(final Context context, final Comparator<? super String> comparator)
+            throws SQLException {
+        return Comparator
+                .comparing(UDT::getDataType, ContextUtils.nulls(context, Comparator.naturalOrder()))
+                .thenComparing(UDT::getTypeCat, ContextUtils.nulls(context, comparator))
+                .thenComparing(UDT::getTypeSchem, ContextUtils.nulls(context, comparator))
+                .thenComparing(UDT::getTypeName, ContextUtils.nulls(context, comparator));
+    }
 
     // -----------------------------------------------------------------------------------------------------------------
 
@@ -105,38 +96,11 @@ public class UDT extends AbstractMetadataType {
      */
     public static final String COLUMN_LABEL_DATA_TYPE = "DATA_TYPE";
 
-    public static final int COLUMN_VALUES_DATA_TYPE_JAVA_OBJECT = Types.JAVA_OBJECT;
+    public static final int COLUMN_VALUES_DATA_TYPE_JAVA_OBJECT = Types.JAVA_OBJECT; // 2000
 
-    public static final int COLUMN_VALUES_DATA_TYPE_STRUCT = Types.STRUCT;
+    public static final int COLUMN_VALUES_DATA_TYPE_DISTINCT = Types.DISTINCT; // 2001
 
-    public static final int COLUMN_VALUES_DATA_TYPE_DISTINCT = Types.DISTINCT;
-
-    public static final Set<Integer> COLUMN_VALUES_DATA_TYPE = Collections.unmodifiableSet(new HashSet<>(Arrays.asList(
-            COLUMN_VALUES_DATA_TYPE_JAVA_OBJECT,
-            COLUMN_VALUES_DATA_TYPE_STRUCT,
-            COLUMN_VALUES_DATA_TYPE_DISTINCT
-    )));
-
-    // -----------------------------------------------------------------------------------------------------------------
-    static final BiPredicate<UDT, Catalog> IS_OF_CATALOG = (t, c) -> {
-        return Objects.equals(t.typeCat, c.getTableCat());
-    };
-
-    static final BiPredicate<UDT, Schema> IS_OF_SCHEMA = (t, s) -> {
-        return Objects.equals(t.typeCat, s.getTableCatalog()) &&
-               Objects.equals(t.typeSchem, s.getTableSchem());
-    };
-
-    // --------------------------------------------------------------------------------------------------------- typeCat
-    boolean isOf(final Catalog catalog) {
-        return Objects.equals(typeCat, catalog.getTableCat());
-    }
-
-    // ------------------------------------------------------------------------------------------------------- typeSchem
-    boolean isOf(final Schema schema) {
-        return Objects.equals(typeCat, schema.getTableCatalog()) &&
-               Objects.equals(typeSchem, schema.getTableSchem());
-    }
+    public static final int COLUMN_VALUES_DATA_TYPE_STRUCT = Types.STRUCT; // 2002
 
     // -------------------------------------------------------------------------------------------------------- dataType
     @AssertTrue
@@ -144,7 +108,9 @@ public class UDT extends AbstractMetadataType {
         if (dataType == null) {
             return true;
         }
-        return COLUMN_VALUES_DATA_TYPE.contains(dataType);
+        return dataType == COLUMN_VALUES_DATA_TYPE_JAVA_OBJECT ||
+               dataType == COLUMN_VALUES_DATA_TYPE_DISTINCT ||
+               dataType == COLUMN_VALUES_DATA_TYPE_STRUCT;
     }
 
     // -----------------------------------------------------------------------------------------------------------------

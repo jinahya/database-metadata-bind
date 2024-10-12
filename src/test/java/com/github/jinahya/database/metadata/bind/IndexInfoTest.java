@@ -28,14 +28,16 @@ import org.junit.jupiter.params.provider.EnumSource;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 
-class IndexInfoTest extends AbstractMetadataTypeTest<IndexInfo> {
+class IndexInfoTest
+        extends AbstractMetadataTypeTest<IndexInfo> {
 
     IndexInfoTest() {
         super(IndexInfo.class);
     }
 
     @Nested
-    class TypeTest extends _IntFieldEnumTest<IndexInfo.Type> {
+    class TypeTest
+            extends _IntFieldEnumTest<IndexInfo.Type> {
 
         TypeTest() {
             super(IndexInfo.Type.class);

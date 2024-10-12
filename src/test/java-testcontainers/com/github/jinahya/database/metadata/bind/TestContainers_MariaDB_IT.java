@@ -34,7 +34,8 @@ import java.time.Duration;
 
 // https://java.testcontainers.org/modules/databases/mariadb/
 @Slf4j
-class TestContainers_MariaDB_IT extends TestContainers_$_IT {
+class TestContainers_MariaDB_IT
+        extends TestContainers_$_IT {
 
     private static final String FULL_IMAGE_NAME = "mariadb:latest";
 

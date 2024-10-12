@@ -27,13 +27,9 @@ import lombok.Setter;
 import lombok.ToString;
 
 import java.sql.DatabaseMetaData;
+import java.sql.SQLException;
 import java.util.Comparator;
-import java.util.Objects;
 import java.util.Optional;
-
-import static java.util.Comparator.comparing;
-import static java.util.Comparator.naturalOrder;
-import static java.util.Comparator.nullsFirst;
 
 /**
  * A class for binding results of the
@@ -47,22 +43,19 @@ import static java.util.Comparator.nullsFirst;
 @Getter
 @ToString(callSuper = true)
 @EqualsAndHashCode(callSuper = true, onlyExplicitlyIncluded = true)
-public class Function extends AbstractMetadataType {
+public class Function
+        extends AbstractMetadataType {
 
     private static final long serialVersionUID = -3318947900237453301L;
 
     // -----------------------------------------------------------------------------------------------------------------
-    static final Comparator<Function> CASE_INSENSITIVE_ORDER =
-            comparing(Function::getFunctionCat, nullsFirst(String.CASE_INSENSITIVE_ORDER))
-                    .thenComparing(Function::getFunctionSchem, nullsFirst(String.CASE_INSENSITIVE_ORDER))
-                    .thenComparing(Function::getFunctionName, String.CASE_INSENSITIVE_ORDER)
-                    .thenComparing(Function::getSpecificName, nullsFirst(String.CASE_INSENSITIVE_ORDER));
-
-    static final Comparator<Function> LEXICOGRAPHIC_ORDER =
-            comparing(Function::getFunctionCat, nullsFirst(naturalOrder()))
-                    .thenComparing(Function::getFunctionSchem, nullsFirst(naturalOrder()))
-                    .thenComparing(Function::getFunctionName)
-                    .thenComparing(Function::getSpecificName, nullsFirst(naturalOrder()));
+    static Comparator<Function> comparing(final Context context, final Comparator<? super String> comparator)
+            throws SQLException {
+        return Comparator.comparing(Function::getFunctionCat, ContextUtils.nulls(context, comparator))
+                .thenComparing(Function::getFunctionSchem, ContextUtils.nulls(context, comparator))
+                .thenComparing(Function::getFunctionName, ContextUtils.nulls(context, comparator))
+                .thenComparing(Function::getSpecificName, ContextUtils.nulls(context, comparator));
+    }
 
     // -----------------------------------------------------------------------------------------------------------------
 
@@ -90,7 +83,8 @@ public class Function extends AbstractMetadataType {
      *
      * @author Jin Kwon &lt;onacit_at_gmail.com&gt;
      */
-    public enum FunctionType implements _IntFieldEnum<FunctionType> {
+    public enum FunctionType
+            implements _IntFieldEnum<FunctionType> {
 
         /**
          * A value for {@link DatabaseMetaData#functionResultUnknown}({@value DatabaseMetaData#functionResultUnknown}).
@@ -128,16 +122,6 @@ public class Function extends AbstractMetadataType {
         }
 
         private final int fieldValue;
-    }
-
-    // -----------------------------------------------------------------------------------------------------------------
-    boolean isOf(final Catalog catalog) {
-        return Objects.equals(functionCat, catalog.getTableCat());
-    }
-
-    boolean isOf(final Schema schema) {
-        return Objects.equals(functionCat, schema.getTableCatalog()) &&
-               Objects.equals(functionSchem, schema.getTableSchem());
     }
 
     // ---------------------------------------------------------------------------------------------------- functionType

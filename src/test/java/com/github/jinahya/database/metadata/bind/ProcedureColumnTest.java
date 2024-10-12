@@ -20,12 +20,42 @@ package com.github.jinahya.database.metadata.bind;
  * #L%
  */
 
-class ProcedureColumnTest extends AbstractMetadataTypeTest<ProcedureColumn> {
+import org.junit.jupiter.api.Nested;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.EnumSource;
+import org.mockito.BDDMockito;
 
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
+
+class ProcedureColumnTest
+        extends AbstractMetadataTypeTest<ProcedureColumn> {
+
+    @Nested
+    class ColumnTypeTest
+            extends _IntFieldEnumTest<ProcedureColumn.ColumnType> {
+
+        ColumnTypeTest() {
+            super(ProcedureColumn.ColumnType.class);
+        }
+    }
+
+    @Nested
+    class NullableTest
+            extends _IntFieldEnumTest<ProcedureColumn.Nullable> {
+
+        NullableTest() {
+            super(ProcedureColumn.Nullable.class);
+        }
+    }
+
+    // -----------------------------------------------------------------------------------------------------------------
     ProcedureColumnTest() {
         super(ProcedureColumn.class);
     }
 
+    // -----------------------------------------------------------------------------------------------------------------
     @Override
     ProcedureColumn newTypeInstance() {
         final ProcedureColumn instance = super.newTypeInstance();
@@ -33,5 +63,69 @@ class ProcedureColumnTest extends AbstractMetadataTypeTest<ProcedureColumn> {
         instance.setColumnName("");
         instance.setSpecificName("");
         return instance;
+    }
+
+    // -----------------------------------------------------------------------------------------------------------------
+    @Nested
+    class ColumnTypeAsEnumTest {
+
+        @EnumSource(ProcedureColumn.ColumnType.class)
+        @ParameterizedTest
+        void getColumnTypeAsEnum__(final ProcedureColumn.ColumnType expected) {
+            // --------------------------------------------------------------------------------------------------- given
+            final var instance = newTypeSpy();
+            BDDMockito.given(instance.getColumnType()).willReturn(expected.fieldValueAsInt());
+            // ---------------------------------------------------------------------------------------------------- when
+            final var actual = instance.getColumnTypeAsEnum();
+            // ---------------------------------------------------------------------------------------------------- then
+            assertThat(actual).isSameAs(expected);
+        }
+
+        @EnumSource(ProcedureColumn.ColumnType.class)
+        @ParameterizedTest
+        void setColumnTypeAsEnum__(final ProcedureColumn.ColumnType columnTypeAsEnum) {
+            // --------------------------------------------------------------------------------------------------- given
+            final var instance = newTypeSpy();
+            // ---------------------------------------------------------------------------------------------------- when
+            instance.setColumnTypeAsEnum(columnTypeAsEnum);
+            // ---------------------------------------------------------------------------------------------------- then
+            verify(instance, times(1)).setColumnType(columnTypeAsEnum.fieldValueAsInt());
+        }
+    }
+
+    @Nested
+    class NullableAsEnumTest {
+
+        @EnumSource(ProcedureColumn.Nullable.class)
+        @ParameterizedTest
+        void getNullableAsEnum__(final ProcedureColumn.Nullable expected) {
+            // --------------------------------------------------------------------------------------------------- given
+            final var instance = newTypeSpy();
+            BDDMockito.given(instance.getNullable()).willReturn(expected.fieldValueAsInt());
+            // ---------------------------------------------------------------------------------------------------- when
+            final var actual = instance.getNullableAsEnum();
+            // ---------------------------------------------------------------------------------------------------- then
+            assertThat(actual).isSameAs(expected);
+        }
+
+        @EnumSource(ProcedureColumn.Nullable.class)
+        @ParameterizedTest
+        void setNullableAsEnum__(final ProcedureColumn.Nullable nullableAsEnum) {
+            // --------------------------------------------------------------------------------------------------- given
+            final var instance = newTypeSpy();
+            // ---------------------------------------------------------------------------------------------------- when
+            instance.setNullableAsEnum(nullableAsEnum);
+            // ---------------------------------------------------------------------------------------------------- then
+            verify(instance, times(1)).setNullable(nullableAsEnum.fieldValueAsInt());
+        }
+    }
+
+    @Nested
+    class IsNullableTest
+            extends HasIsNullableTest<ProcedureColumn> {
+
+        IsNullableTest() {
+            super(ProcedureColumnTest.this::newTypeSpy);
+        }
     }
 }

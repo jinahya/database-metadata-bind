@@ -27,12 +27,9 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
 
+import java.sql.SQLException;
 import java.util.Comparator;
 import java.util.Objects;
-import java.util.function.BiPredicate;
-
-import static java.util.Comparator.naturalOrder;
-import static java.util.Comparator.nullsFirst;
 
 /**
  * A class for binding results of the
@@ -43,28 +40,29 @@ import static java.util.Comparator.nullsFirst;
  * @see Context#getTables(String, String, String, String[])
  */
 
+@_ParentOf(Column.class)
+@_ParentOf(IndexInfo.class)
+@_ParentOf(PseudoColumn.class)
 @_ParentOf(VersionColumn.class)
 @Setter
 @Getter
 @NoArgsConstructor
 @ToString(callSuper = true)
 //@EqualsAndHashCode(callSuper = true, onlyExplicitlyIncluded = true)
-public class Table extends AbstractMetadataType {
+public class Table
+        extends AbstractMetadataType {
 
     private static final long serialVersionUID = 6590036695540141125L;
 
     // -----------------------------------------------------------------------------------------------------------------
-    static final Comparator<Table> CASE_INSENSITIVE_ORDER =
-            Comparator.comparing(Table::getTableType, String.CASE_INSENSITIVE_ORDER)
-                    .thenComparing(Table::getTableCat, nullsFirst(String.CASE_INSENSITIVE_ORDER))
-                    .thenComparing(Table::getTableSchem, nullsFirst(String.CASE_INSENSITIVE_ORDER))
-                    .thenComparing(Table::getTableName, String.CASE_INSENSITIVE_ORDER);
-
-    static final Comparator<Table> LEXICOGRAPHIC_ORDER =
-            Comparator.comparing(Table::getTableType, naturalOrder())
-                    .thenComparing(Table::getTableCat, nullsFirst(naturalOrder()))
-                    .thenComparing(Table::getTableSchem, nullsFirst(naturalOrder()))
-                    .thenComparing(Table::getTableName);
+    static Comparator<Table> comparing(final Context context, final Comparator<? super String> comparator)
+            throws SQLException {
+        return Comparator
+                .comparing(Table::getTableType, ContextUtils.nulls(context, comparator))
+                .thenComparing(Table::getTableCat, ContextUtils.nulls(context, comparator))
+                .thenComparing(Table::getTableSchem, ContextUtils.nulls(context, comparator))
+                .thenComparing(Table::getTableName, comparator);
+    }
 
     // -----------------------------------------------------------------------------------------------------------------
 
@@ -91,16 +89,6 @@ public class Table extends AbstractMetadataType {
      * The column label of {@value}.
      */
     public static final String COLUMN_LABEL_TABLE_TYPE = "TABLE_TYPE";
-
-    // -----------------------------------------------------------------------------------------------------------------
-    static final BiPredicate<Table, Catalog> IS_OF_CATALOG = (t, c) -> {
-        return Objects.equals(t.tableCat, c.getTableCat());
-    };
-
-    static final BiPredicate<Table, Schema> IS_OF_SCHEMA = (t, s) -> {
-        return Objects.equals(t.tableCat, s.getTableCatalog()) &&
-               Objects.equals(t.tableSchem, s.getTableSchem());
-    };
 
     // -----------------------------------------------------------------------------------------------------------------
     static Table of(final String tableCat, final String tableSchem, final String tableName) {
@@ -148,14 +136,14 @@ public class Table extends AbstractMetadataType {
 
     // -----------------------------------------------------------------------------------------------------------------
 
-    @_MissingByVendor("Microsoft SQL Server") // https://github.com/microsoft/mssql-jdbc/issues/406
+    //    @_MissingByVendor("Microsoft SQL Server") // https://github.com/microsoft/mssql-jdbc/issues/406
     @Nullable
     @_NullableBySpecification
     @_ColumnLabel(COLUMN_LABEL_TABLE_CAT)
     @EqualsAndHashCode.Include
     private String tableCat;
 
-    @_MissingByVendor("Microsoft SQL Server") // https://github.com/microsoft/mssql-jdbc/issues/406
+    //    @_MissingByVendor("Microsoft SQL Server") // https://github.com/microsoft/mssql-jdbc/issues/406
     @Nullable
     @_NullableBySpecification
     @_ColumnLabel(COLUMN_LABEL_TABLE_SCHEM)

@@ -28,13 +28,9 @@ import lombok.Setter;
 import lombok.ToString;
 
 import java.sql.DatabaseMetaData;
+import java.sql.SQLException;
 import java.util.Comparator;
-import java.util.Objects;
 import java.util.Optional;
-import java.util.function.BiPredicate;
-
-import static java.util.Comparator.naturalOrder;
-import static java.util.Comparator.nullsFirst;
 
 /**
  * An abstract class for binding results of the
@@ -46,39 +42,32 @@ import static java.util.Comparator.nullsFirst;
  */
 @Setter
 @Getter
-@EqualsAndHashCode(callSuper = true, onlyExplicitlyIncluded = true)
+@EqualsAndHashCode(callSuper = true)
 @ToString(callSuper = true)
-public abstract class PortedKey<T extends PortedKey<T>> extends AbstractMetadataType {
+abstract class PortedKey
+        extends AbstractMetadataType {
 
     private static final long serialVersionUID = 6713872409315471232L;
 
     // -----------------------------------------------------------------------------------------------------------------
-    static <T extends PortedKey<T>> Comparator<T> comparingPktableCaseInsensitive() {
-        return Comparator.<T, String>comparing(PortedKey::getPktableCat, nullsFirst(String.CASE_INSENSITIVE_ORDER))
-                .thenComparing(PortedKey::getPktableSchem, nullsFirst(String.CASE_INSENSITIVE_ORDER))
-                .thenComparing(PortedKey::getPktableName, String.CASE_INSENSITIVE_ORDER)
-                .thenComparingInt(PortedKey::getKeySeq);
+    static <T extends PortedKey> Comparator<T> comparingPktable_(final Context context,
+                                                                 final Comparator<? super String> comparator)
+            throws SQLException {
+        return Comparator
+                .<T, String>comparing(PortedKey::getPktableCat, ContextUtils.nulls(context, comparator))
+                .thenComparing(PortedKey::getPktableSchem, ContextUtils.nulls(context, comparator))
+                .thenComparing(PortedKey::getPktableName, ContextUtils.nulls(context, comparator))
+                .thenComparing(PortedKey::getKeySeq, ContextUtils.nulls(context, Comparator.naturalOrder()));
     }
 
-    static <T extends PortedKey<T>> Comparator<T> comparingPktableLexicographic() {
-        return Comparator.<T, String>comparing(PortedKey::getPktableCat, nullsFirst(naturalOrder()))
-                .thenComparing(PortedKey::getPktableSchem, nullsFirst(naturalOrder()))
-                .thenComparing(PortedKey::getPktableName)
-                .thenComparingInt(PortedKey::getKeySeq);
-    }
-
-    static <T extends PortedKey<T>> Comparator<T> comparingFktableCaseInsensitive() {
-        return Comparator.<T, String>comparing(PortedKey::getFktableCat, nullsFirst(String.CASE_INSENSITIVE_ORDER))
-                .thenComparing(PortedKey::getFktableSchem, nullsFirst(String.CASE_INSENSITIVE_ORDER))
-                .thenComparing(PortedKey::getFktableName, String.CASE_INSENSITIVE_ORDER)
-                .thenComparingInt(PortedKey::getKeySeq);
-    }
-
-    static <T extends PortedKey<T>> Comparator<T> comparingFktableLexicographic() {
-        return Comparator.<T, String>comparing(PortedKey::getFktableCat, nullsFirst(naturalOrder()))
-                .thenComparing(PortedKey::getFktableSchem, nullsFirst(naturalOrder()))
-                .thenComparing(PortedKey::getFktableName)
-                .thenComparingInt(PortedKey::getKeySeq);
+    static <T extends PortedKey> Comparator<T> comparingFktable_(final Context context,
+                                                                 final Comparator<? super String> comparator)
+            throws SQLException {
+        return Comparator
+                .<T, String>comparing(PortedKey::getFktableCat, ContextUtils.nulls(context, comparator))
+                .thenComparing(PortedKey::getFktableSchem, ContextUtils.nulls(context, comparator))
+                .thenComparing(PortedKey::getFktableName, ContextUtils.nulls(context, comparator))
+                .thenComparing(PortedKey::getKeySeq, ContextUtils.nulls(context, Comparator.naturalOrder()));
     }
 
     // -----------------------------------------------------------------------------------------------------------------
@@ -158,27 +147,28 @@ public abstract class PortedKey<T extends PortedKey<T>> extends AbstractMetadata
      * @see ExportedKey
      * @see ImportedKey
      */
-    public enum TableKeyUpdateRule implements _IntFieldEnum<TableKeyUpdateRule> {
+    public enum TableKeyUpdateRule
+            implements _IntFieldEnum<TableKeyUpdateRule> {
 
         /**
          * Constants for {@link DatabaseMetaData#importedKeyCascade}({@value DatabaseMetaData#importedKeyCascade}).
          */
-        IMPORTED_KEY_CASCADE(DatabaseMetaData.importedKeyCascade), // 0
+        IMPORTED_KEY_CASCADE(DatabaseMetaData.importedKeyCascade),        // 0
 
         /**
          * Constants for {@link DatabaseMetaData#importedKeyRestrict}({@value DatabaseMetaData#importedKeyRestrict}).
          */
-        IMPORTED_KEY_RESTRICT(DatabaseMetaData.importedKeyRestrict), // 1
+        IMPORTED_KEY_RESTRICT(DatabaseMetaData.importedKeyRestrict),      // 1
 
         /**
          * Constants for {@link DatabaseMetaData#importedKeySetNull}({@value DatabaseMetaData#importedKeySetNull}).
          */
-        IMPORTED_KEY_SET_NULL(DatabaseMetaData.importedKeySetNull), // 2
+        IMPORTED_KEY_SET_NULL(DatabaseMetaData.importedKeySetNull),       // 2
 
         /**
          * Constants for {@link DatabaseMetaData#importedKeyNoAction}({@value DatabaseMetaData#importedKeyNoAction}).
          */
-        IMPORTED_KEY_NO_ACTION(DatabaseMetaData.importedKeyNoAction), // 3
+        IMPORTED_KEY_NO_ACTION(DatabaseMetaData.importedKeyNoAction),     // 3
 
         /**
          * Constants for
@@ -201,6 +191,7 @@ public abstract class PortedKey<T extends PortedKey<T>> extends AbstractMetadata
 
         private final int fieldValue;
     }
+
     // -----------------------------------------------------------------------------------------------------------------
 
     /**
@@ -215,27 +206,28 @@ public abstract class PortedKey<T extends PortedKey<T>> extends AbstractMetadata
      * @see ExportedKey
      * @see ImportedKey
      */
-    public enum TableKeyDeleteRule implements _IntFieldEnum<TableKeyDeleteRule> {
+    public enum TableKeyDeleteRule
+            implements _IntFieldEnum<TableKeyDeleteRule> {
 
         /**
          * Constants for {@link DatabaseMetaData#importedKeyCascade}({@value DatabaseMetaData#importedKeyCascade}).
          */
-        IMPORTED_KEY_CASCADE(DatabaseMetaData.importedKeyCascade), // 0
+        IMPORTED_KEY_CASCADE(DatabaseMetaData.importedKeyCascade),        // 0
 
         /**
          * Constants for {@link DatabaseMetaData#importedKeyRestrict}({@value DatabaseMetaData#importedKeyRestrict}).
          */
-        IMPORTED_KEY_RESTRICT(DatabaseMetaData.importedKeyRestrict), // 1
+        IMPORTED_KEY_RESTRICT(DatabaseMetaData.importedKeyRestrict),      // 1
 
         /**
          * Constants for {@link DatabaseMetaData#importedKeySetNull}({@value DatabaseMetaData#importedKeySetNull}).
          */
-        IMPORTED_KEY_SET_NULL(DatabaseMetaData.importedKeySetNull), // 2
+        IMPORTED_KEY_SET_NULL(DatabaseMetaData.importedKeySetNull),       // 2
 
         /**
          * Constants for {@link DatabaseMetaData#importedKeyNoAction}({@value DatabaseMetaData#importedKeyNoAction}).
          */
-        IMPORTED_KEY_NO_ACTION(DatabaseMetaData.importedKeyNoAction), // 3
+        IMPORTED_KEY_NO_ACTION(DatabaseMetaData.importedKeyNoAction),     // 3
 
         /**
          * Constants for
@@ -285,14 +277,15 @@ public abstract class PortedKey<T extends PortedKey<T>> extends AbstractMetadata
      * @see ExportedKey
      * @see ImportedKey
      */
-    public enum TableKeyDeferrability implements _IntFieldEnum<TableKeyDeferrability> {
+    public enum TableKeyDeferrability
+            implements _IntFieldEnum<TableKeyDeferrability> {
 
         /**
          * Constants for
          * {@link DatabaseMetaData#importedKeyInitiallyDeferred}({@value
          * DatabaseMetaData#importedKeyInitiallyDeferred}).
          */
-        IMPORTED_KEY_INITIALLY_DEFERRED(DatabaseMetaData.importedKeyInitiallyDeferred), // 5
+        IMPORTED_KEY_INITIALLY_DEFERRED(DatabaseMetaData.importedKeyInitiallyDeferred),   // 5
 
         /**
          * Constants for
@@ -305,7 +298,7 @@ public abstract class PortedKey<T extends PortedKey<T>> extends AbstractMetadata
          * Constants for
          * {@link DatabaseMetaData#importedKeyNotDeferrable}({@value DatabaseMetaData#importedKeyNotDeferrable}).
          */
-        IMPORTED_KEY_NOT_DEFERRABLE(DatabaseMetaData.importedKeyNotDeferrable); // 7
+        IMPORTED_KEY_NOT_DEFERRABLE(DatabaseMetaData.importedKeyNotDeferrable);           // 7
 
         public static TableKeyDeferrability valueOfFieldValue(final int fieldValue) {
             return _IntFieldEnum.valueOfFieldValue(TableKeyDeferrability.class, fieldValue);
@@ -322,19 +315,6 @@ public abstract class PortedKey<T extends PortedKey<T>> extends AbstractMetadata
 
         private final int fieldValue;
     }
-
-    // -----------------------------------------------------------------------------------------------------------------
-    public static final BiPredicate<PortedKey<?>, Table> IS_OF_PKTABLE = (k, t) -> {
-        return Objects.equals(k.pktableCat, t.getTableCat()) &&
-               Objects.equals(k.pktableSchem, t.getTableSchem()) &&
-               Objects.equals(k.pktableName, t.getTableName());
-    };
-
-    public static final BiPredicate<PortedKey<?>, Table> IS_OF_FKTABLE = (k, t) -> {
-        return Objects.equals(k.fktableCat, t.getTableCat()) &&
-               Objects.equals(k.fktableSchem, t.getTableSchem()) &&
-               Objects.equals(k.fktableName, t.getTableName());
-    };
 
     // ------------------------------------------------------------------------------------------------------ pktableCat
 
@@ -393,42 +373,34 @@ public abstract class PortedKey<T extends PortedKey<T>> extends AbstractMetadata
     @Nullable
     @_NullableBySpecification
     @_ColumnLabel(COLUMN_NAME_PKTABLE_CAT)
-    @EqualsAndHashCode.Include
     private String pktableCat;
 
     @Nullable
     @_NullableBySpecification
     @_ColumnLabel(COLUMN_NAME_PKTABLE_SCHEM)
-    @EqualsAndHashCode.Include
     private String pktableSchem;
 
     @_ColumnLabel(COLUMN_NAME_PKTABLE_NAME)
-    @EqualsAndHashCode.Include
     private String pktableName;
 
     @_ColumnLabel(COLUMN_NAME_PKCOLUMN_NAME)
-    @EqualsAndHashCode.Include
     private String pkcolumnName;
 
     // -----------------------------------------------------------------------------------------------------------------
     @Nullable
     @_NullableBySpecification
     @_ColumnLabel(COLUMN_NAME_FKTABLE_CAT)
-    @EqualsAndHashCode.Include
     private String fktableCat;
 
     @Nullable
     @_NullableBySpecification
     @_ColumnLabel(COLUMN_NAME_FKTABLE_SCHEM)
-    @EqualsAndHashCode.Include
     private String fktableSchem;
 
     @_ColumnLabel(COLUMN_NAME_FKTABLE_NAME)
-    @EqualsAndHashCode.Include
     private String fktableName;
 
     @_ColumnLabel(COLUMN_NAME_FKCOLUMN_NAME)
-    @EqualsAndHashCode.Include
     private String fkcolumnName;
 
     // -----------------------------------------------------------------------------------------------------------------

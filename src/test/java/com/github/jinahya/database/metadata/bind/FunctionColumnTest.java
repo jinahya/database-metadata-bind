@@ -30,7 +30,8 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 
-class FunctionColumnTest extends AbstractMetadataTypeTest<FunctionColumn> {
+class FunctionColumnTest
+        extends AbstractMetadataTypeTest<FunctionColumn> {
 
     FunctionColumnTest() {
         super(FunctionColumn.class);
@@ -38,7 +39,8 @@ class FunctionColumnTest extends AbstractMetadataTypeTest<FunctionColumn> {
 
     @DisplayName("ColumnType")
     @Nested
-    class ColumnTypeTest extends _IntFieldEnumTest<FunctionColumn.ColumnType> {
+    class ColumnTypeTest
+            extends _IntFieldEnumTest<FunctionColumn.ColumnType> {
 
         ColumnTypeTest() {
             super(FunctionColumn.ColumnType.class);
@@ -80,5 +82,16 @@ class FunctionColumnTest extends AbstractMetadataTypeTest<FunctionColumn> {
         instance.setColumnName("");
         instance.setSpecificName("");
         return instance;
+    }
+
+    // -----------------------------------------------------------------------------------------------------------------
+
+    @Nested
+    class IsNullableTest
+            extends HasIsNullableTest<FunctionColumn> {
+
+        IsNullableTest() {
+            super(FunctionColumnTest.this::newTypeSpy);
+        }
     }
 }

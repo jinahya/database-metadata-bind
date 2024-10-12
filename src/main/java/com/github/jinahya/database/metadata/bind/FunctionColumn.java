@@ -20,7 +20,9 @@ package com.github.jinahya.database.metadata.bind;
  * #L%
  */
 
+import jakarta.validation.constraints.AssertTrue;
 import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.Pattern;
 import jakarta.validation.constraints.PositiveOrZero;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
@@ -28,13 +30,9 @@ import lombok.Setter;
 import lombok.ToString;
 
 import java.sql.DatabaseMetaData;
+import java.sql.SQLException;
 import java.util.Comparator;
-import java.util.Objects;
 import java.util.Optional;
-import java.util.function.BiPredicate;
-
-import static java.util.Comparator.naturalOrder;
-import static java.util.Comparator.nullsFirst;
 
 /**
  * A class for binding results of the {@link DatabaseMetaData#getFunctionColumns(String, String, String, String)}
@@ -48,22 +46,21 @@ import static java.util.Comparator.nullsFirst;
 @Getter
 @ToString(callSuper = true)
 @EqualsAndHashCode(callSuper = true, onlyExplicitlyIncluded = true)
-public class FunctionColumn extends AbstractMetadataType {
+public class FunctionColumn
+        extends AbstractMetadataType
+        implements HasIsNullableEnum {
 
     private static final long serialVersionUID = -7445156446214062680L;
 
     // -----------------------------------------------------------------------------------------------------------------
-    static final Comparator<FunctionColumn> CASE_INSENSITIVE_ORDER =
-            Comparator.comparing(FunctionColumn::getFunctionCat, nullsFirst(String.CASE_INSENSITIVE_ORDER))
-                    .thenComparing(FunctionColumn::getFunctionSchem, nullsFirst(String.CASE_INSENSITIVE_ORDER))
-                    .thenComparing(FunctionColumn::getFunctionName, String.CASE_INSENSITIVE_ORDER)
-                    .thenComparing(FunctionColumn::getSpecificName, nullsFirst(String.CASE_INSENSITIVE_ORDER));
 
-    static final Comparator<FunctionColumn> LEXICOGRAPHIC_ORDER =
-            Comparator.comparing(FunctionColumn::getFunctionCat, nullsFirst(naturalOrder()))
-                    .thenComparing(FunctionColumn::getFunctionSchem, nullsFirst((naturalOrder())))
-                    .thenComparing(FunctionColumn::getFunctionName, naturalOrder())
-                    .thenComparing(FunctionColumn::getSpecificName, nullsFirst(naturalOrder()));
+    static Comparator<FunctionColumn> comparing(final Context context, final Comparator<? super String> comparator)
+            throws SQLException {
+        return Comparator.comparing(FunctionColumn::getFunctionCat, ContextUtils.nulls(context, comparator))
+                .thenComparing(FunctionColumn::getFunctionSchem, ContextUtils.nulls(context, comparator))
+                .thenComparing(FunctionColumn::getFunctionName, ContextUtils.nulls(context, comparator))
+                .thenComparing(FunctionColumn::getSpecificName, ContextUtils.nulls(context, comparator));
+    }
 
     // -----------------------------------------------------------------------------------------------------------------
     public static final String COLUMN_LABEL_FUNCTION_CAT = "FUNCTION_CAT";
@@ -85,38 +82,39 @@ public class FunctionColumn extends AbstractMetadataType {
      *
      * @author Jin Kwon &lt;onacit_at_gmail.com&gt;
      */
-    public enum ColumnType implements _IntFieldEnum<ColumnType> {
+    public enum ColumnType
+            implements _IntFieldEnum<ColumnType> {
 
         /**
          * A value for {@link DatabaseMetaData#functionColumnUnknown}({@value DatabaseMetaData#functionColumnUnknown}).
          */
-        FUNCTION_COLUMN_UNKNOWN(DatabaseMetaData.functionColumnUnknown),// 0
+        FUNCTION_COLUMN_UNKNOWN(DatabaseMetaData.functionColumnUnknown), // 0
 
         /**
          * A value for {@link DatabaseMetaData#functionColumnIn}({@value DatabaseMetaData#functionColumnIn}).
          */
-        FUNCTION_COLUMN_IN(DatabaseMetaData.functionColumnIn), // 1
+        FUNCTION_COLUMN_IN(DatabaseMetaData.functionColumnIn),           // 1
 
         /**
          * A value for {@link DatabaseMetaData#functionColumnInOut}({@value DatabaseMetaData#functionColumnInOut}).
          */
-        FUNCTION_COLUMN_IN_OUT(DatabaseMetaData.functionColumnInOut), // 2
+        FUNCTION_COLUMN_IN_OUT(DatabaseMetaData.functionColumnInOut),    // 2
 
         /**
          * A value for {@link DatabaseMetaData#functionColumnOut}({@value DatabaseMetaData#functionColumnOut}).
          */
-        FUNCTION_COLUMN_OUT(DatabaseMetaData.functionColumnOut), // 3
+        FUNCTION_COLUMN_OUT(DatabaseMetaData.functionColumnOut),         // 3
 
         /**
          * A value for {@link DatabaseMetaData#functionReturn}({@value DatabaseMetaData#functionReturn}).
          */
 //        FUNCTION_COLUMN_RETURN(4),
-        FUNCTION_RETURN(DatabaseMetaData.functionReturn),
+        FUNCTION_RETURN(DatabaseMetaData.functionReturn),                // 4
 
         /**
          * A value for {@link DatabaseMetaData#functionColumnResult}({@value DatabaseMetaData#functionColumnResult}).
          */
-        FUNCTION_COLUMN_RESULT(DatabaseMetaData.functionColumnResult); // 5
+        FUNCTION_COLUMN_RESULT(DatabaseMetaData.functionColumnResult);   // 5
 
         /**
          * Finds the value for specified {@link FunctionColumn#COLUMN_LABEL_COLUMN_TYPE} column value.
@@ -144,11 +142,12 @@ public class FunctionColumn extends AbstractMetadataType {
     // -----------------------------------------------------------------------------------------------------------------
     public static final String COLUMN_LABEL_NULLABLE = "NULLABLE";
 
-    public enum Nullable implements _IntFieldEnum<Nullable> {
+    public enum Nullable
+            implements _IntFieldEnum<Nullable> {
 
-        FUNCTION_NO_NULLS(DatabaseMetaData.functionNoNulls),// 0
+        FUNCTION_NO_NULLS(DatabaseMetaData.functionNoNulls),                // 0
 
-        FUNCTION_NULLABLE(DatabaseMetaData.functionNullable), // 1
+        FUNCTION_NULLABLE(DatabaseMetaData.functionNullable),               // 1
 
         FUNCTION_NULLABLE_UNKNOWN(DatabaseMetaData.functionNullableUnknown) // 2
         ;
@@ -172,14 +171,6 @@ public class FunctionColumn extends AbstractMetadataType {
     // -----------------------------------------------------------------------------------------------------------------
     public static final String COLUMN_LABEL_IS_NULLABLE = "IS_NULLABLE";
 
-    // -----------------------------------------------------------------------------------------------------------------
-    static final BiPredicate<FunctionColumn, Function> IS_OF = (c, f) -> {
-        return Objects.equals(c.functionCat, f.getFunctionCat()) &&
-               Objects.equals(c.functionSchem, f.getFunctionSchem()) &&
-               Objects.equals(c.functionName, f.getFunctionName()) &&
-               Objects.equals(c.specificName, f.getSpecificName());
-    };
-
     // ------------------------------------------------------------------------------------------------------ columnType
     ColumnType getColumnTypeAsEnum() {
         return Optional.ofNullable(getColumnType())
@@ -193,6 +184,15 @@ public class FunctionColumn extends AbstractMetadataType {
                         .map(_IntFieldEnum::fieldValueAsInt)
                         .orElse(null)
         );
+    }
+
+    // ------------------------------------------------------------------------------------------------- ordinalPosition
+    @AssertTrue(message = "ordinalPosition should be 0 when columnType is functionReturn(5)")
+    private boolean isOrdinalPositionZeroWhenColumnTypeIsProcedureColumnReturn() {
+        if (ordinalPosition == null || columnType == null || columnType != DatabaseMetaData.functionReturn) {
+            return true;
+        }
+        return ordinalPosition == 0;
     }
 
     // -----------------------------------------------------------------------------------------------------------------
@@ -259,6 +259,7 @@ public class FunctionColumn extends AbstractMetadataType {
     @_ColumnLabel("ORDINAL_POSITION")
     private Integer ordinalPosition;
 
+    @Pattern(regexp = YesNoEmptyConstants.REGEXP_YES_NO_EMPTY)
     @_ColumnLabel("IS_NULLABLE")
     private String isNullable;
 

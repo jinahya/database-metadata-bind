@@ -35,7 +35,8 @@ import java.time.Duration;
 // https://java.testcontainers.org/modules/databases/mysql/
 //@Testcontainers
 @Slf4j
-class TestContainers_MySQL_IT extends TestContainers_$_IT {
+class TestContainers_MySQL_IT
+        extends TestContainers_$_IT {
 
     private static final String FULL_IMAGE_NAME = "mysql:latest";
 

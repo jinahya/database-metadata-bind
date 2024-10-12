@@ -20,18 +20,18 @@ package com.github.jinahya.database.metadata.bind;
  * #L%
  */
 
+import jakarta.validation.constraints.Pattern;
+import jakarta.validation.constraints.Positive;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
 
 import java.sql.DatabaseMetaData;
+import java.sql.SQLException;
 import java.util.Comparator;
 import java.util.Objects;
-import java.util.function.BiPredicate;
-
-import static java.util.Comparator.naturalOrder;
-import static java.util.Comparator.nullsFirst;
+import java.util.Optional;
 
 /**
  * A class for binding results of the {@link DatabaseMetaData#getAttributes(String, String, String, String)} method.
@@ -46,22 +46,22 @@ import static java.util.Comparator.nullsFirst;
 @Getter
 @EqualsAndHashCode(callSuper = true, onlyExplicitlyIncluded = true)
 @ToString(callSuper = true)
-public class Attribute extends AbstractMetadataType {
+public class Attribute
+        extends AbstractMetadataType
+        implements HasIsNullableEnum {
 
     private static final long serialVersionUID = 1913681105410440186L;
 
     // -----------------------------------------------------------------------------------------------------------------
-    static final Comparator<Attribute> CASE_INSENSITIVE_ORDER =
-            Comparator.comparing(Attribute::getTypeCat, nullsFirst(String.CASE_INSENSITIVE_ORDER))
-                    .thenComparing(Attribute::getTypeSchem, nullsFirst(String.CASE_INSENSITIVE_ORDER))
-                    .thenComparing(Attribute::getTypeName, nullsFirst(String.CASE_INSENSITIVE_ORDER))
-                    .thenComparing(Attribute::getOrdinalPosition, nullsFirst(naturalOrder()));
-
-    static final Comparator<Attribute> LEXICOGRAPHIC_ORDER =
-            Comparator.comparing(Attribute::getTypeCat, nullsFirst(naturalOrder()))
-                    .thenComparing(Attribute::getTypeSchem, nullsFirst(naturalOrder()))
-                    .thenComparing(Attribute::getTypeName, nullsFirst(naturalOrder()))
-                    .thenComparing(Attribute::getOrdinalPosition, nullsFirst(naturalOrder()));
+    static Comparator<Attribute> comparing(final Context context, final Comparator<? super String> comparator)
+            throws SQLException {
+        Objects.requireNonNull(context, "context is null");
+        Objects.requireNonNull(comparator, "comparator is null");
+        return Comparator.comparing(Attribute::getTypeCat, ContextUtils.nulls(context, comparator))
+                .thenComparing(Attribute::getTypeSchem, ContextUtils.nulls(context, comparator))
+                .thenComparing(Attribute::getTypeName, ContextUtils.nulls(context, comparator))
+                .thenComparing(Attribute::getOrdinalPosition, ContextUtils.nulls(context, Comparator.naturalOrder()));
+    }
 
     // -------------------------------------------------------------------------------------------------------- TYPE_CAT
     public static final String COLUMN_LABEL_TYPE_CAT = "TYPE_CAT";
@@ -75,12 +75,13 @@ public class Attribute extends AbstractMetadataType {
     /**
      * Constants for {@value #COLUMN_LABEL_NULLABLE} column values.
      */
-    public enum Nullable implements _IntFieldEnum<Nullable> {
+    public enum Nullable
+            implements _IntFieldEnum<Nullable> {
 
         /**
          * A value for {@link DatabaseMetaData#attributeNoNulls}({@value DatabaseMetaData#attributeNoNulls}).
          */
-        ATTRIBUTE_NO_NULLS(DatabaseMetaData.attributeNoNulls),// 0
+        ATTRIBUTE_NO_NULLS(DatabaseMetaData.attributeNoNulls), // 0
 
         /**
          * A value for {@link DatabaseMetaData#attributeNullable}({@value DatabaseMetaData#attributeNullable}).
@@ -120,22 +121,25 @@ public class Attribute extends AbstractMetadataType {
     // -----------------------------------------------------------------------------------------------------------------
     public static final String COLUMN_LABEL_IS_NULLABLE = "IS_NULLABLE";
 
-    public static final String COLUMN_VALUE_IS_NULLABLE_YES = "YES";
-
-    public static final String COLUMN_VALUE_IS_NULLABLE_NO = "NO";
-
-    public static final String COLUMN_VALUE_IS_NULLABLE_EMPTY = "";
-
-    // -----------------------------------------------------------------------------------------------------------------
-    static final BiPredicate<Attribute, UDT> IS_OF = (a, t) -> {
-        return Objects.equals(a.typeCat, t.getTypeCat()) &&
-               Objects.equals(a.typeSchem, t.getTypeSchem()) &&
-               Objects.equals(a.typeName, t.getTypeName());
-    };
-
     // -------------------------------------------------------------------------------------------------------- tableCat
 
     // ------------------------------------------------------------------------------------------------------ tableSchem
+
+    // -------------------------------------------------------------------------------------------------------- nullable
+
+    public Nullable getNullableAsEnum() {
+        return Optional.ofNullable(getNullable())
+                .map(Nullable::valueOfFieldValue)
+                .orElse(null);
+    }
+
+    public void setNullableAsEnum(Nullable nullableAsEnum) {
+        setNullable(
+                Optional.ofNullable(nullableAsEnum)
+                        .map(_IntFieldEnum::fieldValueAsInt)
+                        .orElse(null)
+        );
+    }
 
     // -----------------------------------------------------------------------------------------------------------------
 
@@ -201,9 +205,11 @@ public class Attribute extends AbstractMetadataType {
     @_ColumnLabel("CHAR_OCTET_LENGTH")
     private Integer charOctetLength;
 
+    @Positive
     @_ColumnLabel("ORDINAL_POSITION")
     private Integer ordinalPosition;
 
+    @Pattern(regexp = YesNoEmptyConstants.REGEXP_YES_NO_EMPTY)
     @_ColumnLabel(COLUMN_LABEL_IS_NULLABLE)
     private String isNullable;
 

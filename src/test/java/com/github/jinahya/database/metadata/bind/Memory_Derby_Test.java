@@ -37,7 +37,8 @@ import static org.junit.jupiter.api.Assertions.fail;
  * @author Jin Kwon &lt;jinahya_at_gmail.com&gt;
  */
 @Slf4j
-class Memory_Derby_Test extends Memory_$_Test {
+class Memory_Derby_Test
+        extends Memory_$_Test {
 
     private static final String DRIVER_NAME = "org.apache.derby.jdbc.EmbeddedDriver";
 

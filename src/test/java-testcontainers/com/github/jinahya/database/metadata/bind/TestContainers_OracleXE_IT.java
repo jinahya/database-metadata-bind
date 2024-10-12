@@ -39,7 +39,8 @@ import java.time.Duration;
 //@Disabled("does not start; no-arm")
 @Disabled("takes too long!")
 @Slf4j
-class TestContainers_OracleXE_IT extends TestContainers_$_IT {
+class TestContainers_OracleXE_IT
+        extends TestContainers_$_IT {
 
     private static final String FULL_IMAGE_NAME = "gvenzl/oracle-xe:latest-faststart";
 
@@ -47,7 +48,7 @@ class TestContainers_OracleXE_IT extends TestContainers_$_IT {
 
     @BeforeAll
     static void start() {
-        final DockerImageName name = DockerImageName.parse(FULL_IMAGE_NAME);
+        final var name = DockerImageName.parse(FULL_IMAGE_NAME);
         CONTAINER = new OracleContainer(name)
                 .withImagePullPolicy(PullPolicy.ageBased(Duration.ofDays(180L)))
                 .withStartupTimeout(Duration.ofMinutes(8L))

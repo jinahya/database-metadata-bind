@@ -21,18 +21,16 @@ package com.github.jinahya.database.metadata.bind;
  */
 
 import jakarta.annotation.Nullable;
+import jakarta.validation.constraints.Pattern;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
 
 import java.sql.DatabaseMetaData;
+import java.sql.SQLException;
 import java.util.Comparator;
-import java.util.Objects;
 import java.util.Optional;
-
-import static java.util.Comparator.naturalOrder;
-import static java.util.Comparator.nullsFirst;
 
 /**
  * A class for binding results of the {@link DatabaseMetaData#getColumnPrivileges(String, String, String, String)}
@@ -42,23 +40,22 @@ import static java.util.Comparator.nullsFirst;
  * @see Context#getColumnPrivileges(String, String, String, String)
  */
 
-@_ChildOf(Column.class)
+@_ChildOf(Table.class)
 @Setter
 @Getter
 @EqualsAndHashCode(callSuper = true)
 @ToString(callSuper = true)
-public class ColumnPrivilege extends AbstractMetadataType {
+public class ColumnPrivilege
+        extends AbstractMetadataType {
 
     private static final long serialVersionUID = 4384654744147773380L;
 
     // -----------------------------------------------------------------------------------------------------------------
-    static final Comparator<ColumnPrivilege> CASE_INSENSITIVE_ORDER =
-            Comparator.comparing(ColumnPrivilege::getColumnName, nullsFirst(String.CASE_INSENSITIVE_ORDER))
-                    .thenComparing(ColumnPrivilege::getPrivilege, nullsFirst(String.CASE_INSENSITIVE_ORDER));
-
-    static final Comparator<ColumnPrivilege> LEXICOGRAPHIC_ORDER =
-            Comparator.comparing(ColumnPrivilege::getColumnName, nullsFirst(naturalOrder()))
-                    .thenComparing(ColumnPrivilege::getPrivilege, nullsFirst(naturalOrder()));
+    static Comparator<ColumnPrivilege> comparing(final Context context, final Comparator<? super String> comparator)
+            throws SQLException {
+        return Comparator.comparing(ColumnPrivilege::getColumnName, ContextUtils.nulls(context, comparator))
+                .thenComparing(ColumnPrivilege::getPrivilege, ContextUtils.nulls(context, comparator));
+    }
 
     // -----------------------------------------------------------------------------------------------------------------
     public static final String COLUMN_LABEL_TABLE_CAT = "TABLE_CAT";
@@ -75,24 +72,25 @@ public class ColumnPrivilege extends AbstractMetadataType {
     // -----------------------------------------------------------------------------------------------------------------
     public static final String COLUMN_LABEL_IS_GRANTABLE = "IS_GRANTABLE";
 
-    public static final String COLUMN_VALUE_IS_GRANTABLE_YES = "YES";
+    public static final String COLUMN_VALUE_IS_GRANTABLE_YES = YesNoConstants.YES;
 
-    public static final String COLUMN_VALUE_IS_GRANTABLE_NO = "NO";
+    public static final String COLUMN_VALUE_IS_GRANTABLE_NO = YesNoConstants.NO;
 
-    public enum IsGrantable implements _FieldEnum<IsGrantable, String> {
+    public enum IsGrantable
+            implements YesNoEnum<IsGrantable> {
 
         /**
          * A value for {@link #COLUMN_VALUE_IS_GRANTABLE_YES}.
          */
-        YES(COLUMN_VALUE_IS_GRANTABLE_YES),
+        YES(COLUMN_VALUE_IS_GRANTABLE_YES), // "YES"
 
         /**
          * A value for {@link #COLUMN_VALUE_IS_GRANTABLE_NO}.
          */
-        NO(COLUMN_VALUE_IS_GRANTABLE_NO);
+        NO(COLUMN_VALUE_IS_GRANTABLE_NO);   // "NO"
 
         public static IsGrantable valueOfFieldValue(final String fieldValue) {
-            return _FieldEnum.valueOfFieldValue(IsGrantable.class, fieldValue);
+            return YesNoEnum.valueOfFieldValue(IsGrantable.class, fieldValue);
         }
 
         IsGrantable(final String fieldValue) {
@@ -105,14 +103,6 @@ public class ColumnPrivilege extends AbstractMetadataType {
         }
 
         private final String fieldValue;
-    }
-
-    // -----------------------------------------------------------------------------------------------------------------
-    boolean isOf(final Column column) {
-        return Objects.equals(tableCat, column.getTableCat()) &&
-               Objects.equals(tableSchem, column.getTableSchem()) &&
-               Objects.equals(tableName, column.getTableName()) &&
-               Objects.equals(columnName, column.getColumnName());
     }
 
     // -------------------------------------------------------------------------------------------------------- tableCat
@@ -145,21 +135,17 @@ public class ColumnPrivilege extends AbstractMetadataType {
     @Nullable
     @_NullableBySpecification
     @_ColumnLabel(COLUMN_LABEL_TABLE_CAT)
-    @EqualsAndHashCode.Include
     private String tableCat;
 
     @Nullable
     @_NullableBySpecification
     @_ColumnLabel(COLUMN_LABEL_TABLE_SCHEM)
-    @EqualsAndHashCode.Include
     private String tableSchem;
 
     @_ColumnLabel(COLUMN_LABEL_TABLE_NAME)
-    @EqualsAndHashCode.Include
     private String tableName;
 
     @_ColumnLabel(COLUMN_LABEL_COLUMN_NAME)
-    @EqualsAndHashCode.Include
     private String columnName;
 
     // -----------------------------------------------------------------------------------------------------------------
@@ -167,18 +153,16 @@ public class ColumnPrivilege extends AbstractMetadataType {
     @Nullable
     @_NullableBySpecification
     @_ColumnLabel("GRANTOR")
-    @EqualsAndHashCode.Include
     private String grantor;
 
     @_ColumnLabel("GRANTEE")
-    @EqualsAndHashCode.Include
     private String grantee;
 
     @_ColumnLabel("PRIVILEGE")
-    @EqualsAndHashCode.Include
     private String privilege;
 
     @Nullable
+    @Pattern(regexp = YesNoConstants.REGEXP_YES_NO)
     @_NullableBySpecification
     @_ColumnLabel(COLUMN_LABEL_IS_GRANTABLE)
     private String isGrantable;

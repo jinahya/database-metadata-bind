@@ -21,17 +21,14 @@ package com.github.jinahya.database.metadata.bind;
  */
 
 import jakarta.annotation.Nullable;
+import jakarta.validation.constraints.Pattern;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
 
+import java.sql.SQLException;
 import java.util.Comparator;
-import java.util.Objects;
-import java.util.function.BiPredicate;
-
-import static java.util.Comparator.naturalOrder;
-import static java.util.Comparator.nullsFirst;
 
 /**
  * An class for binding results of the
@@ -42,27 +39,23 @@ import static java.util.Comparator.nullsFirst;
  */
 @_ChildOf(Schema.class)
 @_ChildOf(Catalog.class)
-
 @Setter
 @Getter
 @EqualsAndHashCode(callSuper = true)
 @ToString(callSuper = true)
-public class TablePrivilege extends AbstractMetadataType {
+public class TablePrivilege
+        extends AbstractMetadataType {
 
     private static final long serialVersionUID = -2142097373603478881L;
 
     // -----------------------------------------------------------------------------------------------------------------
-    static final Comparator<TablePrivilege> CASE_INSENSITIVE_ORDER =
-            Comparator.comparing(TablePrivilege::getTableCat, nullsFirst(String.CASE_INSENSITIVE_ORDER))
-                    .thenComparing(TablePrivilege::getTableSchem, nullsFirst(String.CASE_INSENSITIVE_ORDER))
-                    .thenComparing(TablePrivilege::getTableName, String.CASE_INSENSITIVE_ORDER)
-                    .thenComparing(TablePrivilege::getPrivilege, String.CASE_INSENSITIVE_ORDER);
-
-    static final Comparator<TablePrivilege> LEXICOGRAPHIC_ORDER =
-            Comparator.comparing(TablePrivilege::getTableCat, nullsFirst(naturalOrder()))
-                    .thenComparing(TablePrivilege::getTableSchem, nullsFirst(naturalOrder()))
-                    .thenComparing(TablePrivilege::getTableName)
-                    .thenComparing(TablePrivilege::getPrivilege);
+    static Comparator<TablePrivilege> comparing(final Context context, final Comparator<? super String> comparator)
+            throws SQLException {
+        return Comparator.comparing(TablePrivilege::getTableCat, ContextUtils.nulls(context, comparator))
+                .thenComparing(TablePrivilege::getTableSchem, ContextUtils.nulls(context, comparator))
+                .thenComparing(TablePrivilege::getTableName, ContextUtils.nulls(context, comparator))
+                .thenComparing(TablePrivilege::getPrivilege, ContextUtils.nulls(context, comparator));
+    }
 
     // -----------------------------------------------------------------------------------------------------------------
 
@@ -80,13 +73,6 @@ public class TablePrivilege extends AbstractMetadataType {
      * The column label of {@value}.
      */
     public static final String COLUMN_LABEL_TABLE_NAME = "TABLE_NAME";
-
-    // -----------------------------------------------------------------------------------------------------------------
-    static final BiPredicate<TablePrivilege, Table> IS_OF = (p, t) -> {
-        return Objects.equals(p.tableCat, t.getTableCat()) &&
-               Objects.equals(p.tableSchem, t.getTableSchem()) &&
-               Objects.equals(p.tableName, t.getTableName());
-    };
 
     // -------------------------------------------------------------------------------------------------------- tableCat
 
@@ -121,6 +107,7 @@ public class TablePrivilege extends AbstractMetadataType {
     private String privilege;
 
     @Nullable
+    @Pattern(regexp = YesNoConstants.REGEXP_YES_NO)
     @_NullableBySpecification
     @_ColumnLabel("IS_GRANTABLE")
     private String isGrantable;

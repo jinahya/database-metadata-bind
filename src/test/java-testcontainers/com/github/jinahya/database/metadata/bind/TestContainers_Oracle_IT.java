@@ -38,7 +38,8 @@ import java.time.Duration;
 //@Disabled("does not start; no-arm")
 @Disabled("takes too long!")
 @Slf4j
-class TestContainers_Oracle_IT extends TestContainers_$_IT {
+class TestContainers_Oracle_IT
+        extends TestContainers_$_IT {
 
     private static final String FULL_IMAGE_NAME = "gvenzl/oracle-free:slim-faststart";
 

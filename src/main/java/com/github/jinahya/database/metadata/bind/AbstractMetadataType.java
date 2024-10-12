@@ -31,7 +31,8 @@ import java.util.Map;
 import java.util.Objects;
 
 @ToString(callSuper = true)
-abstract class AbstractMetadataType implements MetadataType {
+abstract class AbstractMetadataType
+        implements MetadataType {
 
     private static final long serialVersionUID = -3285362930174073345L;
 
@@ -39,8 +40,12 @@ abstract class AbstractMetadataType implements MetadataType {
 
     @Override
     public boolean equals(final Object obj) {
-        if (this == obj) return true;
-        if (obj == null || getClass() != obj.getClass()) return false;
+        if (this == obj) {
+            return true;
+        }
+        if (obj == null || getClass() != obj.getClass()) {
+            return false;
+        }
         return true;
     }
 

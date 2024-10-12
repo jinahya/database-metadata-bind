@@ -21,15 +21,20 @@ package com.github.jinahya.database.metadata.bind;
  */
 
 import org.junit.jupiter.api.Nested;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.EnumSource;
+import org.mockito.Mockito;
 
-class TypeInfoTest extends AbstractMetadataTypeTest<TypeInfo> {
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.mockito.BDDMockito.given;
+import static org.mockito.Mockito.times;
 
-    TypeInfoTest() {
-        super(TypeInfo.class);
-    }
+class TypeInfoTest
+        extends AbstractMetadataTypeTest<TypeInfo> {
 
     @Nested
-    class NullableTest extends _IntFieldEnumTest<TypeInfo.Nullable> {
+    class NullableTest
+            extends _IntFieldEnumTest<TypeInfo.Nullable> {
 
         NullableTest() {
             super(TypeInfo.Nullable.class);
@@ -37,10 +42,69 @@ class TypeInfoTest extends AbstractMetadataTypeTest<TypeInfo> {
     }
 
     @Nested
-    class SearchableTest extends _IntFieldEnumTest<TypeInfo.Searchable> {
+    class SearchableTest
+            extends _IntFieldEnumTest<TypeInfo.Searchable> {
 
         SearchableTest() {
             super(TypeInfo.Searchable.class);
+        }
+    }
+
+    TypeInfoTest() {
+        super(TypeInfo.class);
+    }
+
+    @Nested
+    class NullableAsEnumTest {
+
+        @EnumSource(TypeInfo.Nullable.class)
+        @ParameterizedTest
+        void getNullableAsEnum__(final TypeInfo.Nullable expected) {
+            // --------------------------------------------------------------------------------------------------- given
+            final var instance = newTypeSpy();
+            given(instance.getNullable()).willReturn(expected.fieldValueAsInt());
+            // ---------------------------------------------------------------------------------------------------- when
+            final var actual = instance.getNullableAsEnum();
+            // ---------------------------------------------------------------------------------------------------- then
+            assertThat(actual).isSameAs(expected);
+        }
+
+        @EnumSource(TypeInfo.Nullable.class)
+        @ParameterizedTest
+        void setNullableAsEnum__(final TypeInfo.Nullable nullableAsEnum) {
+            // --------------------------------------------------------------------------------------------------- given
+            final var instance = newTypeSpy();
+            // ---------------------------------------------------------------------------------------------------- when
+            instance.setNullableAsEnum(nullableAsEnum);
+            // ---------------------------------------------------------------------------------------------------- then
+            Mockito.verify(instance, times(1)).setNullable(nullableAsEnum.fieldValueAsInt());
+        }
+    }
+
+    @Nested
+    class SearchableAsEnumTest {
+
+        @EnumSource(TypeInfo.Searchable.class)
+        @ParameterizedTest
+        void getSearchableAsEnum__(final TypeInfo.Searchable expected) {
+            // --------------------------------------------------------------------------------------------------- given
+            final var instance = newTypeSpy();
+            given(instance.getSearchable()).willReturn(expected.fieldValueAsInt());
+            // ---------------------------------------------------------------------------------------------------- when
+            final var actual = instance.getSearchableAsEnum();
+            // ---------------------------------------------------------------------------------------------------- then
+            assertThat(actual).isSameAs(expected);
+        }
+
+        @EnumSource(TypeInfo.Searchable.class)
+        @ParameterizedTest
+        void setSearchableAsEnum__(final TypeInfo.Searchable searchableAsEnum) {
+            // --------------------------------------------------------------------------------------------------- given
+            final var instance = newTypeSpy();
+            // ---------------------------------------------------------------------------------------------------- when
+            instance.setSearchableAsEnum(searchableAsEnum);
+            // ---------------------------------------------------------------------------------------------------- then
+            Mockito.verify(instance, times(1)).setSearchable(searchableAsEnum.fieldValueAsInt());
         }
     }
 }

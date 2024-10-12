@@ -26,6 +26,7 @@ import lombok.Setter;
 import lombok.ToString;
 
 import java.sql.DatabaseMetaData;
+import java.sql.SQLException;
 import java.util.Comparator;
 import java.util.Optional;
 
@@ -40,12 +41,15 @@ import java.util.Optional;
 @Getter
 @EqualsAndHashCode(callSuper = true)
 @ToString(callSuper = true)
-public class TypeInfo extends AbstractMetadataType {
+public class TypeInfo
+        extends AbstractMetadataType {
 
     private static final long serialVersionUID = -3964147654019495313L;
 
     // -----------------------------------------------------------------------------------------------------------------
-    static final Comparator<TypeInfo> COMPARING_DATA_TYPE = Comparator.comparingInt(TypeInfo::getDataType);
+    static Comparator<TypeInfo> comparing(final Context context) throws SQLException {
+        return Comparator.comparing(TypeInfo::getDataType, ContextUtils.nulls(context, Comparator.naturalOrder()));
+    }
 
     // -----------------------------------------------------------------------------------------------------------------
 
@@ -91,7 +95,8 @@ public class TypeInfo extends AbstractMetadataType {
     /**
      * Constants for the {@value #COLUMN_LABEL_NULLABLE} column value.
      */
-    public enum Nullable implements _IntFieldEnum<Nullable> {
+    public enum Nullable
+            implements _IntFieldEnum<Nullable> {
 
         /**
          * A value for {@link DatabaseMetaData#typeNoNulls}({@value DatabaseMetaData#typeNoNulls}).
@@ -150,7 +155,8 @@ public class TypeInfo extends AbstractMetadataType {
     /**
      * Constants for the {@value #COLUMN_LABEL_SEARCHABLE} column value.
      */
-    public enum Searchable implements _IntFieldEnum<Searchable> {
+    public enum Searchable
+            implements _IntFieldEnum<Searchable> {
 
         /**
          * A value for {@link DatabaseMetaData#typePredNone}({@value DatabaseMetaData#typePredNone}).
@@ -193,6 +199,21 @@ public class TypeInfo extends AbstractMetadataType {
         }
 
         private final int fieldValue;
+    }
+
+    // ------------------------------------------------------------------------------------------------------ nullable
+    Nullable getNullableAsEnum() {
+        return Optional.ofNullable(getNullable())
+                .map(Nullable::valueOfFieldValue)
+                .orElse(null);
+    }
+
+    void setNullableAsEnum(final Nullable nullableAsEnum) {
+        setNullable(
+                Optional.ofNullable(nullableAsEnum)
+                        .map(_IntFieldEnum::fieldValueAsInt)
+                        .orElse(null)
+        );
     }
 
     // ------------------------------------------------------------------------------------------------------ searchable

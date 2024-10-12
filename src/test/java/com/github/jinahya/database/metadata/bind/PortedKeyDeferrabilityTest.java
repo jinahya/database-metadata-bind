@@ -27,7 +27,8 @@ import org.junit.jupiter.params.provider.EnumSource;
 import static com.github.jinahya.database.metadata.bind.PortedKey.TableKeyDeferrability.valueOfFieldValue;
 import static org.assertj.core.api.Assertions.assertThat;
 
-class PortedKeyDeferrabilityTest extends _IntFieldEnumTest<PortedKey.TableKeyDeferrability> {
+class PortedKeyDeferrabilityTest
+        extends _IntFieldEnumTest<PortedKey.TableKeyDeferrability> {
 
     PortedKeyDeferrabilityTest() {
         super(PortedKey.TableKeyDeferrability.class);

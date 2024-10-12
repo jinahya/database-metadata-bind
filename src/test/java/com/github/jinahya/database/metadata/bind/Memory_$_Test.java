@@ -20,13 +20,13 @@ package com.github.jinahya.database.metadata.bind;
  * #L%
  */
 
-import io.vavr.CheckedFunction1;
-import io.vavr.Function1;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.Test;
 
+import java.beans.IntrospectionException;
 import java.sql.Connection;
 import java.sql.SQLException;
+import java.sql.SQLFeatureNotSupportedException;
 import java.util.Objects;
 
 /**
@@ -45,6 +45,7 @@ abstract class Memory_$_Test {
      */
     abstract Connection connect() throws SQLException;
 
+    // ------------------------------------------------------------------------------------------------------ connection
     <R> R applyConnection(final java.util.function.Function<? super Connection, ? extends R> function) {
         Objects.requireNonNull(function, "function is null");
         try (var connection = connect()) {
@@ -54,6 +55,7 @@ abstract class Memory_$_Test {
         }
     }
 
+    // --------------------------------------------------------------------------------------------------------- context
     <R> R applyContext(final java.util.function.Function<? super Context, ? extends R> function) {
         Objects.requireNonNull(function, "function is null");
         return applyConnection(c -> {
@@ -65,28 +67,17 @@ abstract class Memory_$_Test {
         });
     }
 
-    <R> R applyContextUnchecked(final Function1<? super Context, ? extends R> function) {
-        Objects.requireNonNull(function, "function is null");
-        return applyContext(c -> {
-            try {
-                return function.apply(c);
-            } catch (final Throwable t) {
-                throw new RuntimeException(t);
-            }
-        });
-    }
-
-    <R> R applyContextChecked(final CheckedFunction1<? super Context, ? extends R> function) {
-        Objects.requireNonNull(function, "function is null");
-        return applyContextUnchecked(function.unchecked());
-    }
-
+    // -----------------------------------------------------------------------------------------------------------------
     @Test
     void acceptProperties__() {
-        applyContextChecked(c -> {
-            c.acceptProperties((p, r) -> {
-                log.debug("{}: {}", p, r);
-            });
+        applyContext(c -> {
+            try {
+                c.acceptProperties((p, r) -> {
+                    log.debug("{}: {}", p, r);
+                });
+            } catch (final IntrospectionException ie) {
+                throw new RuntimeException(ie);
+            }
             return null;
         });
     }
@@ -108,6 +99,10 @@ abstract class Memory_$_Test {
                 ContextTestUtils.test(c);
                 return null;
             } catch (final SQLException sqle) {
+                if (sqle instanceof SQLFeatureNotSupportedException sqlfnse) {
+                    log.warn("not supported", sqlfnse);
+                    return null;
+                }
                 throw new RuntimeException(sqle);
             }
         });

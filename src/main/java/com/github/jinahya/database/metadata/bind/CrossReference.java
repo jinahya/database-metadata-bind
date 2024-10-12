@@ -28,12 +28,9 @@ import lombok.Setter;
 import lombok.ToString;
 
 import java.sql.DatabaseMetaData;
+import java.sql.SQLException;
 import java.util.Comparator;
-import java.util.Objects;
 import java.util.Optional;
-
-import static java.util.Comparator.naturalOrder;
-import static java.util.Comparator.nullsFirst;
 
 /**
  * A class for binding results of the
@@ -46,22 +43,19 @@ import static java.util.Comparator.nullsFirst;
 @Getter
 @ToString(callSuper = true)
 @EqualsAndHashCode(callSuper = true, onlyExplicitlyIncluded = true)
-public class CrossReference extends AbstractMetadataType {
+public class CrossReference
+        extends AbstractMetadataType {
 
     private static final long serialVersionUID = -5343386346721125961L;
 
     // -----------------------------------------------------------------------------------------------------------------
-    static final Comparator<CrossReference> CASE_INSENSITIVE_ORDER =
-            Comparator.comparing(CrossReference::getFktableCat, nullsFirst(String.CASE_INSENSITIVE_ORDER))
-                    .thenComparing(CrossReference::getFktableSchem, nullsFirst(String.CASE_INSENSITIVE_ORDER))
-                    .thenComparing(CrossReference::getFktableName, nullsFirst(String.CASE_INSENSITIVE_ORDER))
-                    .thenComparingInt(CrossReference::getKeySeq);
-
-    static final Comparator<CrossReference> LEXICOGRAPHIC_ORDER =
-            Comparator.comparing(CrossReference::getFktableCat, nullsFirst(naturalOrder()))
-                    .thenComparing(CrossReference::getFktableSchem, nullsFirst(naturalOrder()))
-                    .thenComparing(CrossReference::getFktableName, nullsFirst(naturalOrder()))
-                    .thenComparingInt(CrossReference::getKeySeq);
+    static Comparator<CrossReference> comparing(final Context context, final Comparator<? super String> comparator)
+            throws SQLException {
+        return Comparator.comparing(CrossReference::getFktableCat, ContextUtils.nulls(context, comparator))
+                .thenComparing(CrossReference::getFktableSchem, ContextUtils.nulls(context, comparator))
+                .thenComparing(CrossReference::getFktableName, ContextUtils.nulls(context, comparator))
+                .thenComparing(CrossReference::getKeySeq, ContextUtils.nulls(context, Comparator.naturalOrder()));
+    }
 
     // ----------------------------------------------------------------------------------------------------- UPDATE_RULE
 
@@ -69,19 +63,6 @@ public class CrossReference extends AbstractMetadataType {
      * A column label of {@value}.
      */
     public static final String COLUMN_LABEL_UPDATE_RULE = "UPDATE_RULE";
-
-    // -----------------------------------------------------------------------------------------------------------------
-    boolean isOfPktable(final Table pktable) {
-        return Objects.equals(pktableCat, pktable.getTableCat()) &&
-               Objects.equals(pktableSchem, pktable.getTableSchem()) &&
-               Objects.equals(pktableName, pktable.getTableName());
-    }
-
-    boolean isOfFktable(final Table fktable) {
-        return Objects.equals(fktableCat, fktable.getTableCat()) &&
-               Objects.equals(fktableSchem, fktable.getTableSchem()) &&
-               Objects.equals(fktableName, fktable.getTableName());
-    }
 
     // ------------------------------------------------------------------------------------------------------ pkTableCat
 
@@ -107,6 +88,19 @@ public class CrossReference extends AbstractMetadataType {
     }
 
     // ------------------------------------------------------------------------------------------------------ deleteRule
+    PortedKey.TableKeyUpdateRule getDeleteRuleAsEnum() {
+        return Optional.ofNullable(getDeleteRule())
+                .map(PortedKey.TableKeyUpdateRule::valueOfFieldValue)
+                .orElse(null);
+    }
+
+    void setDeleteRuleAsEnum(final PortedKey.TableKeyUpdateRule deleteRuleAsEnum) {
+        setDeleteRule(
+                Optional.ofNullable(deleteRuleAsEnum)
+                        .map(_IntFieldEnum::fieldValueAsInt)
+                        .orElse(null)
+        );
+    }
 
     // -----------------------------------------------------------------------------------------------------------------
 

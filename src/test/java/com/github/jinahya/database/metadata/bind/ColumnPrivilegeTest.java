@@ -20,9 +20,55 @@ package com.github.jinahya.database.metadata.bind;
  * #L%
  */
 
-class ColumnPrivilegeTest extends AbstractMetadataTypeTest<ColumnPrivilege> {
+import org.junit.jupiter.api.Nested;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.EnumSource;
+
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.mockito.BDDMockito.given;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
+
+class ColumnPrivilegeTest
+        extends AbstractMetadataTypeTest<ColumnPrivilege> {
+
+    @Nested
+    class IsGrantableTest
+            extends _FieldEnumTest<ColumnPrivilege.IsGrantable, String> {
+
+        IsGrantableTest() {
+            super(ColumnPrivilege.IsGrantable.class);
+        }
+    }
 
     ColumnPrivilegeTest() {
         super(ColumnPrivilege.class);
+    }
+
+    @Nested
+    class IsGrantableAsEnumTest {
+
+        @EnumSource(ColumnPrivilege.IsGrantable.class)
+        @ParameterizedTest
+        void getIsGrantableAsEnum__(final ColumnPrivilege.IsGrantable expected) {
+            // --------------------------------------------------------------------------------------------------- given
+            final var instance = newTypeSpy();
+            given(instance.getIsGrantable()).willReturn(expected.fieldValue());
+            // ---------------------------------------------------------------------------------------------------- when
+            final var actual = instance.getIsGrantableAsEnum();
+            // ---------------------------------------------------------------------------------------------------- then
+            assertThat(actual).isSameAs(expected);
+        }
+
+        @EnumSource(ColumnPrivilege.IsGrantable.class)
+        @ParameterizedTest
+        void setIsGrantableAsEnum__(final ColumnPrivilege.IsGrantable isGrantableAsEnum) {
+            // --------------------------------------------------------------------------------------------------- given
+            final var instance = newTypeSpy();
+            // ---------------------------------------------------------------------------------------------------- when
+            instance.setIsGrantableAsEnum(isGrantableAsEnum);
+            // ---------------------------------------------------------------------------------------------------- then
+            verify(instance, times(1)).setIsGrantable(isGrantableAsEnum.fieldValue());
+        }
     }
 }

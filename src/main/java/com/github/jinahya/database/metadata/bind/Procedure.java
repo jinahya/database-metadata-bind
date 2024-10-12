@@ -27,13 +27,9 @@ import lombok.Setter;
 import lombok.ToString;
 
 import java.sql.DatabaseMetaData;
+import java.sql.SQLException;
 import java.util.Comparator;
-import java.util.Objects;
 import java.util.Optional;
-import java.util.function.BiPredicate;
-
-import static java.util.Comparator.naturalOrder;
-import static java.util.Comparator.nullsFirst;
 
 /**
  * A class for binding results of the
@@ -49,22 +45,19 @@ import static java.util.Comparator.nullsFirst;
 @Getter
 @EqualsAndHashCode(callSuper = true, onlyExplicitlyIncluded = true)
 @ToString(callSuper = true)
-public class Procedure extends AbstractMetadataType {
+public class Procedure
+        extends AbstractMetadataType {
 
     private static final long serialVersionUID = -6262056388403934829L;
 
     // -----------------------------------------------------------------------------------------------------------------
-    static final Comparator<Procedure> CASE_INSENSITIVE_ORDER =
-            Comparator.comparing(Procedure::getProcedureCat, nullsFirst(String.CASE_INSENSITIVE_ORDER))
-                    .thenComparing(Procedure::getProcedureSchem, nullsFirst(String.CASE_INSENSITIVE_ORDER))
-                    .thenComparing(Procedure::getProcedureName, nullsFirst(String.CASE_INSENSITIVE_ORDER))
-                    .thenComparing(Procedure::getSpecificName, nullsFirst(String.CASE_INSENSITIVE_ORDER));
-
-    static final Comparator<Procedure> LEXICOGRAPHIC_ORDER =
-            Comparator.comparing(Procedure::getProcedureCat, nullsFirst(naturalOrder()))
-                    .thenComparing(Procedure::getProcedureSchem, nullsFirst(naturalOrder()))
-                    .thenComparing(Procedure::getProcedureName, nullsFirst(naturalOrder()))
-                    .thenComparing(Procedure::getSpecificName, nullsFirst(naturalOrder()));
+    static Comparator<Procedure> comparing(final Context context, final Comparator<? super String> comparator)
+            throws SQLException {
+        return Comparator.comparing(Procedure::getProcedureCat, ContextUtils.nulls(context, comparator))
+                .thenComparing(Procedure::getProcedureSchem, ContextUtils.nulls(context, comparator))
+                .thenComparing(Procedure::getProcedureName, ContextUtils.nulls(context, comparator))
+                .thenComparing(Procedure::getSpecificName, ContextUtils.nulls(context, comparator));
+    }
 
     // -------------------------------------------------------------------------------------------------- PROCEDURE_TYPE
 
@@ -76,7 +69,8 @@ public class Procedure extends AbstractMetadataType {
     /**
      * Constants for the value of {@value #COLUMN_LABEL_PROCEDURE_TYPE} column.
      */
-    public enum ProcedureType implements _IntFieldEnum<ProcedureType> {
+    public enum ProcedureType
+            implements _IntFieldEnum<ProcedureType> {
 
         /**
          * A value for
@@ -123,16 +117,6 @@ public class Procedure extends AbstractMetadataType {
      * A colum label of {@value}.
      */
     public static final String COLUMN_LABEL_SPECIFIC_NAME = "SPECIFIC_NAME";
-
-    // -----------------------------------------------------------------------------------------------------------------
-    public static final BiPredicate<Procedure, Catalog> IS_OF_CATALOG = (p, c) -> {
-        return Objects.equals(p.procedureCat, c.getTableCat());
-    };
-
-    public static final BiPredicate<Procedure, Schema> IS_OF_SCHEMA = (p, s) -> {
-        return Objects.equals(p.procedureCat, s.getTableCatalog()) &&
-               Objects.equals(p.procedureSchem, s.getTableSchem());
-    };
 
     // ---------------------------------------------------------------------------------------------------- procedureCat
 

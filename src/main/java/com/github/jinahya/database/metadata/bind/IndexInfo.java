@@ -21,19 +21,16 @@ package com.github.jinahya.database.metadata.bind;
  */
 
 import jakarta.annotation.Nullable;
+import jakarta.validation.constraints.PositiveOrZero;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
 
 import java.sql.DatabaseMetaData;
+import java.sql.SQLException;
 import java.util.Comparator;
-import java.util.Objects;
 import java.util.Optional;
-import java.util.function.BiPredicate;
-
-import static java.util.Comparator.naturalOrder;
-import static java.util.Comparator.nullsFirst;
 
 /**
  * A class for binding results of the {@link DatabaseMetaData#getIndexInfo(String, String, String, boolean, boolean)}
@@ -47,21 +44,19 @@ import static java.util.Comparator.nullsFirst;
 @Getter
 @EqualsAndHashCode(callSuper = true, onlyExplicitlyIncluded = true)
 @ToString(callSuper = true)
-public class IndexInfo extends AbstractMetadataType {
+public class IndexInfo
+        extends AbstractMetadataType {
 
     private static final long serialVersionUID = 924040226611181424L;
 
-    static final Comparator<IndexInfo> CASE_INSENSITIVE_ORDER =
-            Comparator.comparing(IndexInfo::getNonUnique, nullsFirst(naturalOrder()))
-                    .thenComparing(IndexInfo::getType, nullsFirst(naturalOrder()))
-                    .thenComparing(IndexInfo::getIndexName, nullsFirst(String.CASE_INSENSITIVE_ORDER))
-                    .thenComparing(IndexInfo::getOrdinalPosition, nullsFirst(naturalOrder()));
-
-    static final Comparator<IndexInfo> LEXICOGRAPHIC_ORDER =
-            Comparator.comparing(IndexInfo::getNonUnique, nullsFirst(naturalOrder()))
-                    .thenComparing(IndexInfo::getType, nullsFirst(naturalOrder()))
-                    .thenComparing(IndexInfo::getIndexName, nullsFirst(naturalOrder()))
-                    .thenComparing(IndexInfo::getOrdinalPosition, nullsFirst(naturalOrder()));
+    // -----------------------------------------------------------------------------------------------------------------
+    static Comparator<IndexInfo> comparing(final Context context, final Comparator<? super String> comparator)
+            throws SQLException {
+        return Comparator.comparing(IndexInfo::getNonUnique, ContextUtils.nulls(context, Comparator.naturalOrder()))
+                .thenComparing(IndexInfo::getType, ContextUtils.nulls(context, Comparator.naturalOrder()))
+                .thenComparing(IndexInfo::getIndexName, ContextUtils.nulls(context, comparator))
+                .thenComparing(IndexInfo::getOrdinalPosition, ContextUtils.nulls(context, Comparator.naturalOrder()));
+    }
 
     // ------------------------------------------------------------------------------------------------------- TABLE_CAT
     public static final String COLUMN_LABEL_TABLE_CAT = "TABLE_CAT";
@@ -80,7 +75,8 @@ public class IndexInfo extends AbstractMetadataType {
      *
      * @author Jin Kwon &lt;onacit_at_gmail.com&gt;
      */
-    public enum Type implements _IntFieldEnum<Type> {
+    public enum Type
+            implements _IntFieldEnum<Type> {
 
         /**
          * The constant for the
@@ -97,12 +93,12 @@ public class IndexInfo extends AbstractMetadataType {
         /**
          * The constant for the {@link DatabaseMetaData#tableIndexHashed}({@value DatabaseMetaData#tableIndexHashed}).
          */
-        TABLE_INDEX_HASHED(DatabaseMetaData.tableIndexHashed), // 2
+        TABLE_INDEX_HASHED(DatabaseMetaData.tableIndexHashed),       // 2
 
         /**
          * The constant for the {@link DatabaseMetaData#tableIndexOther}({@value DatabaseMetaData#tableIndexOther}).
          */
-        TABLE_INDEX_OTHER(DatabaseMetaData.tableIndexOther); // 3
+        TABLE_INDEX_OTHER(DatabaseMetaData.tableIndexOther);         // 3
 
         public static Type valueOfFieldValue(final int fieldValue) {
             return _IntFieldEnum.valueOfFieldValue(Type.class, fieldValue);
@@ -119,13 +115,6 @@ public class IndexInfo extends AbstractMetadataType {
 
         private final int fieldValue;
     }
-
-    // -----------------------------------------------------------------------------------------------------------------
-    public static final BiPredicate<IndexInfo, Table> IS_OF = (i, t) -> {
-        return Objects.equals(i.tableCat, t.getTableCat()) &&
-               Objects.equals(i.tableSchem, t.getTableSchem()) &&
-               Objects.equals(i.tableName, t.getTableName());
-    };
 
     // -------------------------------------------------------------------------------------------------------- tableCat
 
@@ -145,19 +134,6 @@ public class IndexInfo extends AbstractMetadataType {
                         .orElse(null)
         );
     }
-
-    // -----------------------------------------------------------------------------------------------------------------
-//    @XmlAttribute
-//    @Setter(AccessLevel.NONE)
-//    @EqualsAndHashCode.Exclude
-//    @ToString.Exclude
-//    transient boolean unique_;
-//
-//    @XmlAttribute
-//    @Setter(AccessLevel.NONE)
-//    @EqualsAndHashCode.Exclude
-//    @ToString.Exclude
-//    transient boolean approximate_;
 
     // -----------------------------------------------------------------------------------------------------------------
 
@@ -196,6 +172,7 @@ public class IndexInfo extends AbstractMetadataType {
     @EqualsAndHashCode.Include
     private Integer type;
 
+    @PositiveOrZero
     @_ColumnLabel("ORDINAL_POSITION")
     @EqualsAndHashCode.Include
     private Integer ordinalPosition;

@@ -30,7 +30,8 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 
-abstract class PortedKeyTest<T extends PortedKey<T>> extends AbstractMetadataTypeTest<T> {
+abstract class PortedKeyTest<T extends PortedKey>
+        extends AbstractMetadataTypeTest<T> {
 
     PortedKeyTest(final Class<T> typeClass) {
         super(typeClass);

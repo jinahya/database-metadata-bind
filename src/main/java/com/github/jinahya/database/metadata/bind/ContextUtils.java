@@ -27,6 +27,7 @@ import java.lang.reflect.Field;
 import java.sql.ResultSet;
 import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
@@ -35,7 +36,7 @@ import java.util.Set;
 import java.util.logging.Level;
 
 @Log
-final class Utils {
+final class ContextUtils {
 
     @SuppressWarnings({
             "java:S3011" // setAccessible
@@ -149,7 +150,15 @@ final class Utils {
                 () -> String.format("failed to set; label: %1$s, value: %2$s, field: %3$s", label, value, field));
     }
 
-    private Utils() {
+    static <T> Comparator<T> nulls(final Context context, final Comparator<? super T> comparator) throws SQLException {
+        if (context.metadata.nullsAreSortedAtStart() || context.metadata.nullsAreSortedLow()) {
+            return Comparator.nullsFirst(comparator);
+        } else {
+            return Comparator.nullsLast(comparator);
+        }
+    }
+
+    private ContextUtils() {
         throw new AssertionError("instantiation is not allowed");
     }
 }

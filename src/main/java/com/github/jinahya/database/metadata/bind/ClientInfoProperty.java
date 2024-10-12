@@ -26,9 +26,8 @@ import lombok.Setter;
 import lombok.ToString;
 
 import java.sql.DatabaseMetaData;
+import java.sql.SQLException;
 import java.util.Comparator;
-
-import static java.util.Comparator.naturalOrder;
 
 /**
  * A class for binding results of the {@link DatabaseMetaData#getClientInfoProperties()} method.
@@ -41,16 +40,17 @@ import static java.util.Comparator.naturalOrder;
 @Getter
 @EqualsAndHashCode(callSuper = true, onlyExplicitlyIncluded = true)
 @ToString(callSuper = true)
-public class ClientInfoProperty extends AbstractMetadataType {
+public class ClientInfoProperty
+        extends AbstractMetadataType {
 
     private static final long serialVersionUID = -2913230435651853254L;
 
     // -----------------------------------------------------------------------------------------------------------------
-    static final Comparator<ClientInfoProperty> CASE_INSENSITIVE_ORDER =
-            Comparator.comparing(ClientInfoProperty::getName, String.CASE_INSENSITIVE_ORDER);
-
-    static final Comparator<ClientInfoProperty> LEXICOGRAPHIC_ORDER =
-            Comparator.comparing(ClientInfoProperty::getName, naturalOrder());
+    static Comparator<ClientInfoProperty> comparing(final Context context,
+                                                    final Comparator<? super String> comparator)
+            throws SQLException {
+        return Comparator.comparing(ClientInfoProperty::getName, ContextUtils.nulls(context, comparator));
+    }
 
     // ------------------------------------------------------------------------------------------------------------ NAME
 
