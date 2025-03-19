@@ -79,7 +79,6 @@ public class TablePrivilege
     // ------------------------------------------------------------------------------------------------------ tableSchem
 
     // -----------------------------------------------------------------------------------------------------------------
-
     @Nullable
     @_NullableBySpecification
     @_ColumnLabel(COLUMN_LABEL_TABLE_CAT)
@@ -94,7 +93,6 @@ public class TablePrivilege
     private String tableName;
 
     // -----------------------------------------------------------------------------------------------------------------
-
     @Nullable
     @_NullableBySpecification
     @_ColumnLabel("GRANTOR")
