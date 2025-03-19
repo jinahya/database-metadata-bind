@@ -123,7 +123,6 @@ public class CrossReference
     private String pkcolumnName;
 
     // -----------------------------------------------------------------------------------------------------------------
-
     @Nullable
     @_NullableBySpecification
     @_ColumnLabel("FKTABLE_CAT")

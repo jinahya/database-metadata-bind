@@ -20,8 +20,8 @@ package com.github.jinahya.database.metadata.bind;
  * #L%
  */
 
-import annotation.Nullable;
-import validation.constraints.Pattern;
+import jakarta.annotation.Nullable;
+import jakarta.validation.constraints.Pattern;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.Setter;
@@ -31,7 +31,7 @@ import java.sql.SQLException;
 import java.util.Comparator;
 
 /**
- * An class for binding results of the
+ * A class for binding results of the
  * {@link java.sql.DatabaseMetaData#getTablePrivileges(java.lang.String, java.lang.String, java.lang.String)} method.
  *
  * @author Jin Kwon &lt;jinahya_at_gmail.com&gt;
