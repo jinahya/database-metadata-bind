@@ -508,6 +508,14 @@ public class Column
 
     // ------------------------------------------------------------------------------------------------- isAutoincrement
 
+    public String getIsAutoincrement() {
+        return isAutoincrement;
+    }
+
+    public void setIsAutoincrement(final String isAutoincrement) {
+        this.isAutoincrement = isAutoincrement;
+    }
+
     /**
      * Returns current value of {@code isAutoincrement} field as one of predefined constants.
      *
@@ -535,6 +543,14 @@ public class Column
     }
 
     // ----------------------------------------------------------------------------------------------- isGeneratedcolumn
+    public String getIsGeneratedcolumn() {
+        return isGeneratedcolumn;
+    }
+
+    public void setIsGeneratedcolumn(final String isGeneratedcolumn) {
+        this.isGeneratedcolumn = isGeneratedcolumn;
+    }
+
     public IsGeneratedcolumn getIsGeneratedcolumnAsEnum() {
         return Optional.ofNullable(getIsGeneratedcolumn())
                 .map(IsGeneratedcolumn::valueOfFieldValue)
