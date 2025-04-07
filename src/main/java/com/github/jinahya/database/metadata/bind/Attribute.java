@@ -39,10 +39,6 @@ import java.util.Optional;
  */
 
 @_ChildOf(UDT.class)
-//@Setter
-//@Getter
-//@EqualsAndHashCode(callSuper = true, onlyExplicitlyIncluded = true)
-//@ToString(callSuper = true)
 public class Attribute
         extends AbstractMetadataType
         implements HasIsNullableEnum {
@@ -60,7 +56,7 @@ public class Attribute
                 .thenComparing(Attribute::getOrdinalPosition, ContextUtils.nulls(context, Comparator.naturalOrder()));
     }
 
-    // -----------------------------------------------------------------------------------------------------------------
+    // -------------------------------------------------------------------------------------------------------- TYPE_CAT
     public static final String COLUMN_LABEL_TYPE_CAT = "TYPE_CAT";
 
     // ------------------------------------------------------------------------------------------------------ TYPE_SCHEM
@@ -155,18 +151,74 @@ public class Attribute
         super();
     }
 
+    // ------------------------------------------------------------------------------------------------ java.lang.Object
+
+    @Override
+    public String toString() {
+        return super.toString() + '{' +
+               "typeCat=" + typeCat +
+               ",typeSchem=" + typeSchem +
+               ",typeName=" + typeName +
+               ",attrName=" + attrName +
+               ",dataType=" + dataType +
+               ",attrTypeName=" + attrTypeName +
+               ",attrSize=" + attrSize +
+               ",decimalDigits=" + decimalDigits +
+               ",numPrecRadix=" + numPrecRadix +
+               ",nullable=" + nullable +
+               ",remarks=" + remarks +
+               ",attrDef=" + attrDef +
+               ",sqlDataType=" + sqlDataType +
+               ",sqlDatetimeSub=" + sqlDatetimeSub +
+               ",charOctetLength=" + charOctetLength +
+               ",ordinalPosition=" + ordinalPosition +
+               ",isNullable=" + isNullable +
+               ",scopeCatalog=" + scopeCatalog +
+               ",scopeSchema=" + scopeSchema +
+               ",scopeTable=" + scopeTable +
+               ",sourceDataType=" + sourceDataType +
+               '}';
+    }
+
+    @Override
+    public boolean equals(final Object obj) {
+        if (obj == null || getClass() != obj.getClass()) {
+            return false;
+        }
+        if (!super.equals(obj)) {
+            return false;
+        }
+        final Attribute that = (Attribute) obj;
+        return Objects.equals(typeCat, that.typeCat) &&
+               Objects.equals(typeSchem, that.typeSchem) &&
+               Objects.equals(typeName, that.typeName) &&
+               Objects.equals(attrName, that.attrName);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(super.hashCode(), typeCat, typeSchem, typeName, attrName);
+    }
+
     // -------------------------------------------------------------------------------------------------------- tableCat
 
     /**
-     * Returns the value of {@value #COLUMN_LABEL_TYPE_CAT} column.
+     * Returns current value of {@value #COLUMN_LABEL_TYPE_CAT} column property.
      *
-     * @return the value of {@value #COLUMN_LABEL_TYPE_CAT} column.
+     * @return current value of the {@value #COLUMN_LABEL_TYPE_CAT} column property.
+     * @see #setTypeCat(String)
      */
     public String getTypeCat() {
         return typeCat;
     }
 
-    public void setTypeCat(String typeCat) {
+    /**
+     * Replaces current value of {@value #COLUMN_LABEL_TYPE_CAT} column property with specified value.
+     *
+     * @param typeCat new value for the {@value #COLUMN_LABEL_TYPE_CAT} column property.
+     * @see #getTypeCat()
+     */
+    public void setTypeCat(final String typeCat) {
         this.typeCat = typeCat;
     }
 

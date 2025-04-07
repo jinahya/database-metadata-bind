@@ -21,6 +21,7 @@ package com.github.jinahya.database.metadata.bind;
  */
 
 import lombok.extern.slf4j.Slf4j;
+import nl.jqno.equalsverifier.api.SingleTypeEqualsVerifierApi;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
@@ -123,5 +124,16 @@ class BestRowIdentifierTest
             spy.setScopeAsEnum(scopeAsEnum);
             verify(spy, times(1)).setScope(scopeAsEnum.fieldValueAsInt());
         }
+    }
+
+    // -----------------------------------------------------------------------------------------------------------------
+
+    @Override
+    SingleTypeEqualsVerifierApi<BestRowIdentifier> equalsVerifier() {
+        return super.equalsVerifier()
+//                .withPrefabValues(
+//                        Table.class, new Table().tableCat("a"), new Table().tableCat("b")
+//                )
+                ;
     }
 }

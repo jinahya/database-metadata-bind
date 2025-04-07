@@ -20,13 +20,9 @@ package com.github.jinahya.database.metadata.bind;
  * #L%
  */
 
-import lombok.EqualsAndHashCode;
-import lombok.Getter;
-import lombok.Setter;
-import lombok.ToString;
-
 import java.sql.SQLException;
 import java.util.Comparator;
+import java.util.Objects;
 import java.util.function.Consumer;
 
 /**
@@ -37,10 +33,7 @@ import java.util.function.Consumer;
  */
 
 @_ParentOf(Schema.class)
-@Setter
-@Getter
-@EqualsAndHashCode(callSuper = true)
-@ToString(callSuper = true)
+@_ParentOf(Table.class)
 public class Catalog
         extends AbstractMetadataType {
 
@@ -60,14 +53,56 @@ public class Catalog
      */
     public static final String COLUMN_LABEL_TABLE_CAT = "TABLE_CAT";
 
-    // -----------------------------------------------------------------------------------------------------------------
+    // ------------------------------------------------------------------------------------------ STATIC_FACTORY_METHODS
     static Catalog of(final String tableCat) {
         final Catalog instance = new Catalog();
         instance.setTableCat(tableCat);
         return instance;
     }
 
+    // ---------------------------------------------------------------------------------------------------- CONSTRUCTORS
+
+    /**
+     * Creates a new instance.
+     */
+    public Catalog() {
+        super();
+    }
+
+    // ------------------------------------------------------------------------------------------------ java.lang.Object
+
+    @Override
+    public String toString() {
+        return super.toString() + '{' +
+               "tableCat=" + tableCat +
+               '}';
+    }
+
+    @Override
+    public boolean equals(final Object obj) {
+        if (obj == null || getClass() != obj.getClass()) {
+            return false;
+        }
+        if (!super.equals(obj)) {
+            return false;
+        }
+        final Catalog that = (Catalog) obj;
+        return Objects.equals(tableCat, that.tableCat);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(super.hashCode(), tableCat);
+    }
+
     // -------------------------------------------------------------------------------------------------------- tableCat
+    public String getTableCat() {
+        return tableCat;
+    }
+
+    public void setTableCat(final String tableCat) {
+        this.tableCat = tableCat;
+    }
 
     // -----------------------------------------------------------------------------------------------------------------
     @_ColumnLabel(COLUMN_LABEL_TABLE_CAT)

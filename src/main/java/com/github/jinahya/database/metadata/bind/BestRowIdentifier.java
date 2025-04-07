@@ -21,13 +21,11 @@ package com.github.jinahya.database.metadata.bind;
  */
 
 import lombok.EqualsAndHashCode;
-import lombok.Getter;
-import lombok.Setter;
-import lombok.ToString;
 
 import java.sql.DatabaseMetaData;
 import java.sql.SQLException;
 import java.util.Comparator;
+import java.util.Objects;
 import java.util.Optional;
 
 /**
@@ -41,10 +39,6 @@ import java.util.Optional;
  */
 
 @_ChildOf(Table.class)
-@Setter
-@Getter
-@EqualsAndHashCode(callSuper = true, onlyExplicitlyIncluded = true)
-@ToString(callSuper = true)
 public class BestRowIdentifier
         extends AbstractMetadataType {
 
@@ -179,7 +173,57 @@ public class BestRowIdentifier
         private final int fieldValue;
     }
 
+    // ---------------------------------------------------------------------------------------------------- CONSTRUCTORS
+
+    /**
+     * Creates a new instance.
+     */
+    public BestRowIdentifier() {
+        super();
+    }
+
+    // ------------------------------------------------------------------------------------------------ java.lang.Object
+
+    @Override
+    public String toString() {
+        return super.toString() + '{' +
+               "scope=" + scope +
+               ",columnName=" + columnName +
+               ",dataType=" + dataType +
+               ",typeName=" + typeName +
+               ",columnSize=" + columnSize +
+               ",bufferLength=" + bufferLength +
+               ",decimalDigits=" + decimalDigits +
+               ",pseudoColumn=" + pseudoColumn +
+               '}';
+    }
+
+    @Override
+    public boolean equals(final Object obj) {
+        if (obj == null || getClass() != obj.getClass()) {
+            return false;
+        }
+        if (!super.equals(obj)) {
+            return false;
+        }
+        final BestRowIdentifier that = (BestRowIdentifier) obj;
+        return Objects.equals(scope, that.scope) && Objects.equals(columnName, that.columnName);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(super.hashCode(), scope, columnName);
+    }
+
     // ----------------------------------------------------------------------------------------------------------- scope
+    public Integer getScope() {
+        return scope;
+    }
+
+    public void setScope(final Integer scope) {
+        this.scope = scope;
+    }
+
     Scope getScopeAsEnum() {
         return Optional.ofNullable(getScope())
                 .map(Scope::valueOfFieldValue)
@@ -194,7 +238,69 @@ public class BestRowIdentifier
         );
     }
 
+    // ------------------------------------------------------------------------------------------------------ columnName
+    public String getColumnName() {
+        return columnName;
+    }
+
+    public void setColumnName(final String columnName) {
+        this.columnName = columnName;
+    }
+
+    // -------------------------------------------------------------------------------------------------------- dataType
+    public Integer getDataType() {
+        return dataType;
+    }
+
+    public void setDataType(final Integer dataType) {
+        this.dataType = dataType;
+    }
+
+    // -------------------------------------------------------------------------------------------------------- typeName
+    public String getTypeName() {
+        return typeName;
+    }
+
+    public void setTypeName(final String typeName) {
+        this.typeName = typeName;
+    }
+
+    // ------------------------------------------------------------------------------------------------------ columnSize
+    public Integer getColumnSize() {
+        return columnSize;
+    }
+
+    public void setColumnSize(final Integer columnSize) {
+        this.columnSize = columnSize;
+    }
+
+    // ---------------------------------------------------------------------------------------------------- bufferLength
+    public Integer getBufferLength() {
+        return bufferLength;
+    }
+
+    public void setBufferLength(final Integer bufferLength) {
+        this.bufferLength = bufferLength;
+    }
+
+    // ------------------------------------------------------------------------------------------------------- decimalDigits
+    public Integer getDecimalDigits() {
+        return decimalDigits;
+    }
+
+    public void setDecimalDigits(final Integer decimalDigits) {
+        this.decimalDigits = decimalDigits;
+    }
+
     // ---------------------------------------------------------------------------------------------------- pseudoColumn
+    public Integer getPseudoColumn() {
+        return pseudoColumn;
+    }
+
+    public void setPseudoColumn(final Integer pseudoColumn) {
+        this.pseudoColumn = pseudoColumn;
+    }
+
     PseudoColumn getPseudoColumnAsEnum() {
         return Optional.ofNullable(getPseudoColumn())
                 .map(PseudoColumn::valueOfFieldValue)

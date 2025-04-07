@@ -38,9 +38,9 @@
   </ciManagement>
 
   <properties>
-    <maven.compiler.source>1.8</maven.compiler.source>
+    <maven.compiler.source>8</maven.compiler.source>
     <maven.compiler.target>${maven.compiler.source}</maven.compiler.target>
-    <maven.compiler.release>8</maven.compiler.release>
+    <maven.compiler.release>${maven.compiler.target}</maven.compiler.release>
     <maven.compiler.testSource>21</maven.compiler.testSource>
     <maven.compiler.testTarget>${maven.compiler.testSource}</maven.compiler.testTarget>
     <maven.compiler.testRelease>${maven.compiler.testTarget}</maven.compiler.testRelease>
@@ -49,9 +49,9 @@
     <sonar.host.url>https://sonarcloud.io</sonar.host.url>
     <version.animal-sniffer>1.24</version.animal-sniffer>
     <version.com.oracle.ojdbc>23.3.0.23.09</version.com.oracle.ojdbc>
-    <version.lombok>1.18.36</version.lombok>
+    <version.lombok>1.18.38</version.lombok>
     <version.maven-failsafe>${version.maven-surefire}</version.maven-failsafe>
-    <version.maven-surefire>3.5.2</version.maven-surefire>
+    <version.maven-surefire>3.5.3</version.maven-surefire>
     <version.mysql-connector-j>8.3.0</version.mysql-connector-j>
     <version.ojdbc6>11.2.0.4</version.ojdbc6>
     <version.ojdbc8>21.8.0.0</version.ojdbc8>
@@ -61,7 +61,7 @@
     <version.org.apache.derby>10.17.1.0</version.org.apache.derby>
     <version.org.hibernate.validator>8.0.1.Final</version.org.hibernate.validator>
     <version.org.junit.jupiter>5.12.1</version.org.junit.jupiter>
-    <version.org.mockito>5.16.1</version.org.mockito>
+    <version.org.mockito>5.17.0</version.org.mockito>
   </properties>
 
   <dependencyManagement>
@@ -70,7 +70,7 @@
         <groupId>jakarta.platform</groupId>
         <artifactId>jakarta.jakartaee-bom</artifactId>
         <!-- https://central.sonatype.com/artifact/jakarta.platform/jakarta.jakartaee-bom/versions -->
-<!--        <version>11.0.0-M4</version>-->
+        <!--        <version>11.0.0-M4</version>-->
         <version>11.0.0-RC1</version>
         <type>pom</type>
         <scope>import</scope>
@@ -93,13 +93,13 @@
     <dependency>
       <groupId>com.google.guava</groupId>
       <artifactId>guava</artifactId>
-      <version>33.4.0-jre</version>
+      <version>33.4.6-jre</version>
       <scope>test</scope>
     </dependency>
     <dependency>
       <groupId>com.ibm.db2</groupId>
       <artifactId>jcc</artifactId>
-<!--      <version>11.5.9.0</version>-->
+      <!--      <version>11.5.9.0</version>-->
       <version>12.1.0.0</version>
       <scope>test</scope>
     </dependency>
@@ -133,7 +133,7 @@
     <dependency>
       <groupId>nl.jqno.equalsverifier</groupId>
       <artifactId>equalsverifier-nodep</artifactId>
-      <version>3.19.2</version>
+      <version>3.19.3</version>
       <scope>test</scope>
     </dependency>
     <dependency>
@@ -243,7 +243,7 @@
               <link>https://javadoc.io/doc/jakarta.platform/jakarta.jakartaee-api/latest</link>
             </links>
             <release>${maven.compiler.testRelease}</release>
-              <!-- https://issues.apache.org/jira/browse/MJAVADOC-720 -->
+            <!-- https://issues.apache.org/jira/browse/MJAVADOC-720 -->
             <sourcepath>${project.build.directory}/generated-sources-noduplicate/delombok</sourcepath>
             <!--            <sourcepath>target/generated-sources-noduplicate/delombok</sourcepath>-->
             <tags>
@@ -273,7 +273,7 @@
         <plugin>
           <groupId>org.apache.maven.plugins</groupId>
           <artifactId>maven-project-info-reports-plugin</artifactId>
-          <version>3.7.0</version>
+          <version>3.9.0</version>
         </plugin>
         <plugin>
           <groupId>org.apache.maven.plugins</groupId>
@@ -293,13 +293,13 @@
         <plugin>
           <groupId>org.codehaus.mojo</groupId>
           <artifactId>sonar-maven-plugin</artifactId>
-<!--          <version>3.10.0.2594</version>-->
+          <!--          <version>3.10.0.2594</version>-->
           <version>4.0.0.4121</version>
         </plugin>
         <plugin>
           <groupId>org.jacoco</groupId>
           <artifactId>jacoco-maven-plugin</artifactId>
-          <version>0.8.12</version>
+          <version>0.8.13</version>
         </plugin>
       </plugins>
     </pluginManagement>

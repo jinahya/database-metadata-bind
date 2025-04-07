@@ -151,6 +151,15 @@ public class Table
         return tableCat;
     }
 
+    public void setTableCat(String tableCat) {
+        this.tableCat = tableCat;
+    }
+
+    public Table tableCat(final String tableCat) {
+        setTableCat(tableCat);
+        return this;
+    }
+
     // ------------------------------------------------------------------------------------------------------- tableShem
 
     /**
