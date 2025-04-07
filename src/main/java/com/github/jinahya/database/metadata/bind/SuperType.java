@@ -20,7 +20,6 @@ package com.github.jinahya.database.metadata.bind;
  * #L%
  */
 
-import jakarta.annotation.Nullable;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.Setter;
@@ -47,12 +46,10 @@ public class SuperType
     private static final long serialVersionUID = 4603878785941565029L;
 
     // -----------------------------------------------------------------------------------------------------------------
-    @Nullable
     @_NullableBySpecification
     @_ColumnLabel("TYPE_CAT")
     private String typeCat;
 
-    @Nullable
     @_NullableBySpecification
     @_ColumnLabel("TYPE_SCHEM")
     private String typeSchem;
@@ -61,12 +58,10 @@ public class SuperType
     private String typeName;
 
     // -----------------------------------------------------------------------------------------------------------------
-    @Nullable
     @_NullableBySpecification
     @_ColumnLabel("SUPERTYPE_CAT")
     private String supertypeCat;
 
-    @Nullable
     @_NullableBySpecification
     @_ColumnLabel("SUPERTYPE_SCHEM")
     private String supertypeSchem;

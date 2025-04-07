@@ -20,8 +20,6 @@ package com.github.jinahya.database.metadata.bind;
  * #L%
  */
 
-import jakarta.annotation.Nullable;
-import jakarta.validation.constraints.Pattern;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.Setter;
@@ -82,14 +80,11 @@ public class PseudoColumn
     // ------------------------------------------------------------------------------------------------------ isNullable
 
     // -----------------------------------------------------------------------------------------------------------------
-
-    @Nullable
     @_NullableBySpecification
     @_ColumnLabel(COLUMN_LABEL_TABLE_CAT)
     @EqualsAndHashCode.Include
     private String tableCat;
 
-    @Nullable
     @_NullableBySpecification
     @_ColumnLabel(COLUMN_LABEL_TABLE_SCHEM)
     @EqualsAndHashCode.Include
@@ -107,12 +102,10 @@ public class PseudoColumn
     @_ColumnLabel("DATA_TYPE")
     private Integer dataType;
 
-    @Nullable
     @_NullableBySpecification
     @_ColumnLabel("COLUMN_SIZE")
     private Integer columnSize;
 
-    @Nullable
     @_NullableBySpecification
     @_ColumnLabel("DECIMAL_DIGITS")
     private Integer decimalDigits;
@@ -123,7 +116,6 @@ public class PseudoColumn
     @_ColumnLabel("COLUMN_USAGE")
     private String columnUsage;
 
-    @Nullable
     @_NullableBySpecification
     @_ColumnLabel("REMARKS")
     private String remarks;
@@ -131,7 +123,6 @@ public class PseudoColumn
     @_ColumnLabel("CHAR_OCTET_LENGTH")
     private Integer charOctetLength;
 
-    @Pattern(regexp = YesNoEmptyConstants.REGEXP_YES_NO_EMPTY)
     @_ColumnLabel("IS_NULLABLE")
     private String isNullable;
 }

@@ -20,7 +20,6 @@ package com.github.jinahya.database.metadata.bind;
  * #L%
  */
 
-import jakarta.annotation.Nullable;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.Setter;
@@ -131,7 +130,6 @@ public class VersionColumn
     @_ColumnLabel("TYPE_NAME")
     private String typeName;
 
-    @Nullable
     @_NullableBySpecification
     @_ColumnLabel("COLUMN_SIZE")
     private Integer columnSize;
@@ -139,7 +137,6 @@ public class VersionColumn
     @_ColumnLabel("BUFFER_LENGTH")
     private Integer bufferLength;
 
-    @Nullable
     @_NullableBySpecification
     @_ColumnLabel("DECIMAL_DIGITS")
     private Integer decimalDigits;

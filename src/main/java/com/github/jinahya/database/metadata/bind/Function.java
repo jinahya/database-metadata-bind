@@ -20,7 +20,6 @@ package com.github.jinahya.database.metadata.bind;
  * #L%
  */
 
-import jakarta.annotation.Nullable;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.Setter;
@@ -141,14 +140,11 @@ public class Function
     }
 
     // -----------------------------------------------------------------------------------------------------------------
-
-    @Nullable
     @_NullableBySpecification
     @_ColumnLabel(COLUMN_LABEL_FUNCTION_CAT)
     @EqualsAndHashCode.Include
     private String functionCat;
 
-    @Nullable
     @_NullableBySpecification
     @_ColumnLabel(COLUMN_LABEL_FUNCTION_SCHEM)
     @EqualsAndHashCode.Include

@@ -20,9 +20,6 @@ package com.github.jinahya.database.metadata.bind;
  * #L%
  */
 
-import jakarta.validation.constraints.AssertTrue;
-import jakarta.validation.constraints.Pattern;
-import jakarta.validation.constraints.PositiveOrZero;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.Setter;
@@ -217,7 +214,6 @@ public class ProcedureColumn
     }
 
     // ------------------------------------------------------------------------------------------------- ordinalPosition
-    @AssertTrue(message = "ordinalPosition should be 0 when columnType is procedureColumnReturn(5)")
     private boolean isOrdinalPositionZeroWhenColumnTypeIsProcedureColumnReturn() {
         if (ordinalPosition == null || columnType == null || columnType != DatabaseMetaData.procedureColumnReturn) {
             return true;
@@ -242,12 +238,10 @@ public class ProcedureColumn
     }
 
     // -----------------------------------------------------------------------------------------------------------------
-    @jakarta.annotation.Nullable
     @_NullableBySpecification
     @_ColumnLabel("PROCEDURE_CAT")
     private String procedureCat;
 
-    @jakarta.annotation.Nullable
     @_NullableBySpecification
     @_ColumnLabel("PROCEDURE_SCHEM")
     private String procedureSchem;
@@ -270,7 +264,6 @@ public class ProcedureColumn
     @_ColumnLabel("TYPE_NAME")
     private String typeName;
 
-    @jakarta.annotation.Nullable
     @_NullableBySpecification
     @_ColumnLabel("PRECISION")
     private Integer precision;
@@ -279,7 +272,6 @@ public class ProcedureColumn
     private Integer length;
 
     // https://issues.apache.org/jira/browse/DERBY-7103
-    @jakarta.annotation.Nullable
     @_NullableBySpecification
     @_ColumnLabel("SCALE")
     private Integer scale;
@@ -293,7 +285,6 @@ public class ProcedureColumn
     @_ColumnLabel("REMARKS")
     private String remarks;
 
-    @jakarta.annotation.Nullable
     @_NullableBySpecification
     @_ColumnLabel("COLUMN_DEF")
     private String columnDef;
@@ -306,16 +297,13 @@ public class ProcedureColumn
     @_ColumnLabel("SQL_DATETIME_SUB")
     private Integer sqlDatetimeSub;
 
-    @jakarta.annotation.Nullable
     @_NullableBySpecification
     @_ColumnLabel("CHAR_OCTET_LENGTH")
     private Integer charOctetLength;
 
-    @PositiveOrZero
     @_ColumnLabel("ORDINAL_POSITION")
     private Integer ordinalPosition;
 
-    @Pattern(regexp = YesNoEmptyConstants.REGEXP_YES_NO_EMPTY)
     @_ColumnLabel("IS_NULLABLE")
     private String isNullable;
 

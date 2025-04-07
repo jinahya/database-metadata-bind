@@ -20,8 +20,6 @@ package com.github.jinahya.database.metadata.bind;
  * #L%
  */
 
-import jakarta.annotation.Nullable;
-import jakarta.validation.constraints.Pattern;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.Setter;
@@ -128,14 +126,13 @@ public class ColumnPrivilege
 
     // ----------------------------------------------------------------------------------------------------- isGrantable
 
-    @Nullable
     IsGrantable getIsGrantableAsEnum() {
         return Optional.ofNullable(getIsGrantable())
                 .map(IsGrantable::valueOfFieldValue)
                 .orElse(null);
     }
 
-    void setIsGrantableAsEnum(@Nullable final IsGrantable isGrantableAsEnum) {
+    void setIsGrantableAsEnum(final IsGrantable isGrantableAsEnum) {
         setIsGrantable(
                 Optional.ofNullable(isGrantableAsEnum)
                         .map(_FieldEnum::fieldValue)
@@ -144,13 +141,10 @@ public class ColumnPrivilege
     }
 
     // -----------------------------------------------------------------------------------------------------------------
-
-    @Nullable
     @_NullableBySpecification
     @_ColumnLabel(COLUMN_LABEL_TABLE_CAT)
     private String tableCat;
 
-    @Nullable
     @_NullableBySpecification
     @_ColumnLabel(COLUMN_LABEL_TABLE_SCHEM)
     private String tableSchem;
@@ -162,8 +156,6 @@ public class ColumnPrivilege
     private String columnName;
 
     // -----------------------------------------------------------------------------------------------------------------
-
-    @Nullable
     @_NullableBySpecification
     @_ColumnLabel("GRANTOR")
     private String grantor;
@@ -174,8 +166,6 @@ public class ColumnPrivilege
     @_ColumnLabel("PRIVILEGE")
     private String privilege;
 
-    @Nullable
-    @Pattern(regexp = YesNoConstants.REGEXP_YES_NO)
     @_NullableBySpecification
     @_ColumnLabel(COLUMN_LABEL_IS_GRANTABLE)
     private String isGrantable;

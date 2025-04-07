@@ -20,8 +20,6 @@ package com.github.jinahya.database.metadata.bind;
  * #L%
  */
 
-import jakarta.annotation.Nullable;
-import jakarta.validation.constraints.NotNull;
 import lombok.extern.slf4j.Slf4j;
 import nl.jqno.equalsverifier.EqualsVerifier;
 import nl.jqno.equalsverifier.Warning;
@@ -114,49 +112,6 @@ abstract class MetadataTypeTest<T extends MetadataType> {
                 assertThat(field.getType())
                         .as("type of %s.%s", typeClass.getSimpleName(), field.getName())
                         .isNotPrimitive();
-            }
-        }
-
-        @DisplayName("@jakarta.validation.NotNull")
-        @Test
-        void __NotNull() {
-            for (final var field : fieldsAnnotatedWithColumnLabel()) {
-                if (!field.isAnnotationPresent(_NonNullBySpecification.class)) {
-                    continue;
-                }
-                if (field.isAnnotationPresent(_NullableByVendor.class)) {
-                    continue;
-                }
-                assertThat(field.isAnnotationPresent(NotNull.class))
-                        .as("%s.%s expected to be annotated with %s", typeClass.getSimpleName(), field.getName(),
-                            NotNull.class)
-                        .isTrue();
-            }
-        }
-
-        @DisplayName("@_NullableBySpecification -> @jakarta.annotation.Nullable")
-        @Test
-        void _ShouldBeAnnotatedWithNullable_AnnotatedWithNullableBySpecification() {
-            for (final var field : fieldsAnnotatedWithColumnLabel()) {
-                if (!field.isAnnotationPresent(_NullableBySpecification.class)) {
-                    continue;
-                }
-                assertThat(field.getAnnotation(Nullable.class))
-                        .as("@%1$s on %2$s.%3$s", Nullable.class, typeClass.getSimpleName(), field.getName())
-                        .isNotNull();
-            }
-        }
-
-        @DisplayName("@_NullableByVendor -> !@jakarta.annotation.Nullable")
-        @Test
-        void _ShouldBeNotAnnotatedWithNullable_AnnotatedWithNullableByVendor() {
-            for (final var field : fieldsAnnotatedWithColumnLabel()) {
-                if (!field.isAnnotationPresent(_NullableByVendor.class)) {
-                    continue;
-                }
-                assertThat(field.getAnnotation(Nullable.class))
-                        .as("@%1$s on %2$s.%3$s", Nullable.class, typeClass.getSimpleName(), field)
-                        .isNull();
             }
         }
 

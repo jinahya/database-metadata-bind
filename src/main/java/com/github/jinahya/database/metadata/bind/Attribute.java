@@ -20,8 +20,6 @@ package com.github.jinahya.database.metadata.bind;
  * #L%
  */
 
-import jakarta.validation.constraints.Pattern;
-import jakarta.validation.constraints.Positive;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.Setter;
@@ -159,7 +157,6 @@ public class Attribute
      *
      * @return the value of {@value #COLUMN_LABEL_TYPE_CAT} column.
      */
-    @jakarta.annotation.Nullable
     public String getTypeCat() {
         return typeCat;
     }
@@ -171,7 +168,6 @@ public class Attribute
      *
      * @return the value of {@value #COLUMN_LABEL_TYPE_SCHEM} column.
      */
-    @jakarta.annotation.Nullable
     public String getTypeSchem() {
         return typeSchem;
     }
@@ -225,14 +221,11 @@ public class Attribute
     }
 
     // -----------------------------------------------------------------------------------------------------------------
-
-    @jakarta.annotation.Nullable
     @_NullableBySpecification
     @_ColumnLabel(COLUMN_LABEL_TYPE_CAT)
     @EqualsAndHashCode.Include
     private String typeCat;
 
-    @jakarta.annotation.Nullable
     @_NullableBySpecification
     @_ColumnLabel(COLUMN_LABEL_TYPE_SCHEM)
     @EqualsAndHashCode.Include
@@ -256,7 +249,6 @@ public class Attribute
     @_ColumnLabel("ATTR_SIZE")
     private Integer attrSize;
 
-    @jakarta.annotation.Nullable
     @_NullableBySpecification
     @_ColumnLabel("DECIMAL_DIGITS")
     private Integer decimalDigits;
@@ -267,12 +259,10 @@ public class Attribute
     @_ColumnLabel(COLUMN_LABEL_NULLABLE)
     private Integer nullable;
 
-    @jakarta.annotation.Nullable
     @_NullableBySpecification
     @_ColumnLabel("REMARKS")
     private String remarks;
 
-    @jakarta.annotation.Nullable
     @_NullableBySpecification
     @_ColumnLabel("ATTR_DEF")
     private String attrDef;
@@ -288,30 +278,24 @@ public class Attribute
     @_ColumnLabel("CHAR_OCTET_LENGTH")
     private Integer charOctetLength;
 
-    @Positive
     @_ColumnLabel("ORDINAL_POSITION")
     private Integer ordinalPosition;
 
-    @Pattern(regexp = YesNoEmptyConstants.REGEXP_YES_NO_EMPTY)
     @_ColumnLabel(COLUMN_LABEL_IS_NULLABLE)
     private String isNullable;
 
-    @jakarta.annotation.Nullable
     @_NullableBySpecification
     @_ColumnLabel("SCOPE_CATALOG")
     private String scopeCatalog;
 
-    @jakarta.annotation.Nullable
     @_NullableBySpecification
     @_ColumnLabel("SCOPE_SCHEMA")
     private String scopeSchema;
 
-    @jakarta.annotation.Nullable
     @_NullableBySpecification
     @_ColumnLabel("SCOPE_TABLE")
     private String scopeTable;
 
-    @jakarta.annotation.Nullable
     @_NullableBySpecification
     @_ColumnLabel("SOURCE_DATA_TYPE")
     private Integer sourceDataType;

@@ -240,22 +240,18 @@ public class TypeInfo
     @_ColumnLabel(COLUMN_LABEL_DATA_TYPE)
     private Integer dataType;
 
-    @jakarta.annotation.Nullable
     @_NullableBySpecification
     @_ColumnLabel(COLUMN_LABEL_PRECISION)
     private Integer precision;
 
-    @jakarta.annotation.Nullable
     @_NullableBySpecification
     @_ColumnLabel(COLUMN_LABEL_LITERAL_PREFIX)
     private String literalPrefix;
 
-    @jakarta.annotation.Nullable
     @_NullableBySpecification
     @_ColumnLabel(COLUMN_LABEL_LITERAL_SUFFIX)
     private String literalSuffix;
 
-    @jakarta.annotation.Nullable
     @_NullableBySpecification
     @_ColumnLabel(COLUMN_LABEL_CREATE_PARAMS)
     private String createParams;
@@ -279,7 +275,6 @@ public class TypeInfo
     @_ColumnLabel("AUTO_INCREMENT")
     private Boolean autoIncrement;
 
-    @jakarta.annotation.Nullable
     @_NullableBySpecification
     @_ColumnLabel("LOCAL_TYPE_NAME")
     private String localTypeName;

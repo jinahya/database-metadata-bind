@@ -20,10 +20,6 @@ package com.github.jinahya.database.metadata.bind;
  * #L%
  */
 
-import jakarta.annotation.Nullable;
-import jakarta.validation.Valid;
-import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.NotNull;
 import lombok.extern.java.Log;
 
 import java.beans.BeanInfo;
@@ -336,10 +332,10 @@ public class Context {
      * @throws SQLException if a database error occurs.
      * @see DatabaseMetaData#getAttributes(String, String, String, String)
      */
-    public @NotNull List<@Valid @NotNull Attribute> getAttributes(final @Nullable String catalog,
-                                                                  final @Nullable String schemaPattern,
-                                                                  final @NotBlank String typeNamePattern,
-                                                                  final @NotBlank String attributeNamePattern)
+    public List<Attribute> getAttributes(final String catalog,
+                                         final String schemaPattern,
+                                         final String typeNamePattern,
+                                         final String attributeNamePattern)
             throws SQLException {
         return addAttributes(
                 catalog,
@@ -350,8 +346,8 @@ public class Context {
         );
     }
 
-    @NotNull List<@Valid @NotNull Attribute> getAttributes(final @NotNull UDT udt,
-                                                           final @NotBlank String attributeNamePattern)
+    List<Attribute> getAttributes(final UDT udt,
+                                  final String attributeNamePattern)
             throws SQLException {
         Objects.requireNonNull(udt, "udt is null");
         return getAttributes(
@@ -398,11 +394,11 @@ public class Context {
      * @throws SQLException if a database error occurs.
      * @see DatabaseMetaData#getBestRowIdentifier(String, String, String, int, boolean)
      */
-    public @NotNull List<@Valid @NotNull BestRowIdentifier> getBestRowIdentifier(final @Nullable String catalog,
-                                                                                 final @Nullable String schema,
-                                                                                 final @NotBlank String table,
-                                                                                 final int scope,
-                                                                                 final boolean nullable)
+    public List<BestRowIdentifier> getBestRowIdentifier(final String catalog,
+                                                        final String schema,
+                                                        final String table,
+                                                        final int scope,
+                                                        final boolean nullable)
             throws SQLException {
         return addBestRowIdentifier(
                 catalog,
@@ -447,7 +443,7 @@ public class Context {
      * @return a list of bound values.
      * @throws SQLException if a database error occurs.
      */
-    public @NotNull List<@Valid @NotNull Catalog> getCatalogs() throws SQLException {
+    public List<Catalog> getCatalogs() throws SQLException {
         return addCatalogs(new ArrayList<>());
     }
 
@@ -483,7 +479,7 @@ public class Context {
      * @throws SQLException if a database error occurs.
      * @see DatabaseMetaData#getClientInfoProperties()
      */
-    public @NotNull List<@Valid @NotNull ClientInfoProperty> getClientInfoProperties() throws SQLException {
+    public List<ClientInfoProperty> getClientInfoProperties() throws SQLException {
         return addClientInfoProperties(new ArrayList<>());
     }
 
@@ -532,10 +528,10 @@ public class Context {
      * @see DatabaseMetaData#getColumnPrivileges(String, String, String, String)
      * @see #getTables(String, String, String, String[])
      */
-    public @NotNull List<@Valid @NotNull ColumnPrivilege> getColumnPrivileges(final @Nullable String catalog,
-                                                                              final @Nullable String schema,
-                                                                              final @NotBlank String table,
-                                                                              final @NotBlank String columnNamePattern)
+    public List<ColumnPrivilege> getColumnPrivileges(final String catalog,
+                                                     final String schema,
+                                                     final String table,
+                                                     final String columnNamePattern)
             throws SQLException {
         Objects.requireNonNull(table, "table is null");
         Objects.requireNonNull(columnNamePattern, "columnNamePattern is null");
@@ -548,8 +544,8 @@ public class Context {
         );
     }
 
-    @NotNull List<@Valid @NotNull ColumnPrivilege> getColumnPrivileges(final @NotNull Table table,
-                                                                       final @NotBlank String columnNamePattern)
+    List<ColumnPrivilege> getColumnPrivileges(final Table table,
+                                              final String columnNamePattern)
             throws SQLException {
         Objects.requireNonNull(table, "table is null");
         return getColumnPrivileges(
@@ -560,7 +556,7 @@ public class Context {
         );
     }
 
-    @NotNull List<@Valid @NotNull ColumnPrivilege> getColumnPrivileges(final @NotNull Table table)
+    List<ColumnPrivilege> getColumnPrivileges(final Table table)
             throws SQLException {
         return getColumnPrivileges(
                 table,
@@ -568,7 +564,7 @@ public class Context {
         );
     }
 
-    @NotNull List<@Valid @NotNull ColumnPrivilege> getColumnPrivileges(final @NotNull Column column)
+    List<ColumnPrivilege> getColumnPrivileges(final Column column)
             throws SQLException {
         Objects.requireNonNull(column, "column is null");
         return getColumnPrivileges(
@@ -642,10 +638,10 @@ public class Context {
      * @return a list of bound values.
      * @throws SQLException if a database error occurs.
      */
-    public @NotNull List<@Valid @NotNull Column> getColumns(final @Nullable String catalog,
-                                                            final @Nullable String schemaPattern,
-                                                            final @NotBlank String tableNamePattern,
-                                                            final @NotBlank String columnNamePattern)
+    public List<Column> getColumns(final String catalog,
+                                   final String schemaPattern,
+                                   final String tableNamePattern,
+                                   final String columnNamePattern)
             throws SQLException {
         return addColumns(
                 catalog,
@@ -677,7 +673,7 @@ public class Context {
         );
     }
 
-    @NotNull List<@Valid @NotNull Column> getColumns(final @NotNull Table table) throws SQLException {
+    List<Column> getColumns(final Table table) throws SQLException {
         Objects.requireNonNull(table, "table is null");
         return getColumns(
                 table.getTableCat(),
@@ -747,11 +743,11 @@ public class Context {
      * @return a list of bound values.
      * @throws SQLException if a database error occurs.
      */
-    public @NotNull List<@Valid @NotNull CrossReference> getCrossReference(
-            final @Nullable String parentCatalog, final @Nullable String parentSchema,
-            final @NotBlank String parentTable,
-            final @Nullable String foreignCatalog, final @Nullable String foreignSchema,
-            final @NotBlank String foreignTable)
+    public List<CrossReference> getCrossReference(
+            final String parentCatalog, final String parentSchema,
+            final String parentTable,
+            final String foreignCatalog, final String foreignSchema,
+            final String foreignTable)
             throws SQLException {
         return addCrossReference(
                 parentCatalog,
@@ -764,8 +760,8 @@ public class Context {
         );
     }
 
-    @NotNull List<@Valid @NotNull CrossReference> getCrossReference(final @NotNull Table parentTable,
-                                                                    final @NotNull Table foreighTable)
+    List<CrossReference> getCrossReference(final Table parentTable,
+                                           final Table foreighTable)
             throws SQLException {
         Objects.requireNonNull(parentTable, "parentTable is null");
         Objects.requireNonNull(foreighTable, "foreignTable is null");
@@ -821,9 +817,9 @@ public class Context {
      * @return a list of bound values.
      * @throws SQLException if a database error occurs.
      */
-    public @NotNull List<@Valid @NotNull ExportedKey> getExportedKeys(final @Nullable String catalog,
-                                                                      final @Nullable String schema,
-                                                                      final @NotBlank String table)
+    public List<ExportedKey> getExportedKeys(final String catalog,
+                                             final String schema,
+                                             final String table)
             throws SQLException {
         return addExportedKeys(
                 catalog,
@@ -841,7 +837,8 @@ public class Context {
      * @throws SQLException if a database error occurs.
      * @see #getExportedKeys(String, String, String)
      */
-    @NotNull List<@Valid @NotNull ExportedKey> getExportedKeys(final @NotNull Table table) throws SQLException {
+
+    List<ExportedKey> getExportedKeys(final Table table) throws SQLException {
         Objects.requireNonNull(table, "table is null");
         return getExportedKeys(
                 table.getTableCat(),
@@ -893,9 +890,9 @@ public class Context {
      * @throws SQLException if a database error occurs.
      * @see DatabaseMetaData#getFunctions(String, String, String)
      */
-    public @NotNull List<@Valid @NotNull Function> getFunctions(final @Nullable String catalog,
-                                                                final @Nullable String schemaPattern,
-                                                                final @NotBlank String functionNamePattern)
+    public List<Function> getFunctions(final String catalog,
+                                       final String schemaPattern,
+                                       final String functionNamePattern)
             throws SQLException {
         return addFunctions(
                 catalog,
@@ -942,10 +939,10 @@ public class Context {
      * @see DatabaseMetaData#getFunctionColumns(String, String, String, String)
      * @see #getFunctionColumns(String, String, String, String)
      */
-    public @NotNull List<@Valid @NotNull FunctionColumn> getFunctionColumns(final @Nullable String catalog,
-                                                                            final @Nullable String schemaPattern,
-                                                                            final @NotBlank String functionNamePattern,
-                                                                            final @NotBlank String columnNamePattern)
+    public List<FunctionColumn> getFunctionColumns(final String catalog,
+                                                   final String schemaPattern,
+                                                   final String functionNamePattern,
+                                                   final String columnNamePattern)
             throws SQLException {
         return addFunctionColumns(
                 catalog,
@@ -966,7 +963,7 @@ public class Context {
      * @throws SQLException if a database error occurs.
      * @see #getFunctionColumns(String, String, String, String)
      */
-    List<FunctionColumn> getFunctionColumns(final @NotNull Function function, final @NotBlank String columnNamePattern)
+    List<FunctionColumn> getFunctionColumns(final Function function, final String columnNamePattern)
             throws SQLException {
         Objects.requireNonNull(function, "function is null");
         return getFunctionColumns(
@@ -1019,9 +1016,9 @@ public class Context {
      * @throws SQLException if a database error occurs.
      * @see DatabaseMetaData#getImportedKeys(String, String, String)
      */
-    public @NotNull List<@Valid @NotNull ImportedKey> getImportedKeys(final @Nullable String catalog,
-                                                                      final @Nullable String schema,
-                                                                      final @NotBlank String table)
+    public List<ImportedKey> getImportedKeys(final String catalog,
+                                             final String schema,
+                                             final String table)
             throws SQLException {
         return addImportedKeys(
                 catalog,
@@ -1087,10 +1084,10 @@ public class Context {
      * @throws SQLException if a database error occurs.
      * @see DatabaseMetaData#getIndexInfo(String, String, String, boolean, boolean)
      */
-    public @NotNull List<@Valid @NotNull IndexInfo> getIndexInfo(final @Nullable String catalog,
-                                                                 final @Nullable String schema,
-                                                                 final @NotBlank String table,
-                                                                 final boolean unique, final boolean approximate)
+    public List<IndexInfo> getIndexInfo(final String catalog,
+                                        final String schema,
+                                        final String table,
+                                        final boolean unique, final boolean approximate)
             throws SQLException {
         return addIndexInfo(
                 catalog,
@@ -1155,9 +1152,9 @@ public class Context {
      * @return a list of bound values.
      * @throws SQLException if a database error occurs.
      */
-    public @NotNull List<@Valid @NotNull PrimaryKey> getPrimaryKeys(final @Nullable String catalog,
-                                                                    final @Nullable String schema,
-                                                                    final @NotBlank String table)
+    public List<PrimaryKey> getPrimaryKeys(final String catalog,
+                                           final String schema,
+                                           final String table)
             throws SQLException {
         return addPrimaryKeys(
                 catalog,
@@ -1167,7 +1164,7 @@ public class Context {
         );
     }
 
-    List<PrimaryKey> getPrimaryKeys(final @NotNull Table table) throws SQLException {
+    List<PrimaryKey> getPrimaryKeys(final Table table) throws SQLException {
         Objects.requireNonNull(table, "table is null");
         return getPrimaryKeys(
                 table.getTableCat(),
@@ -1221,9 +1218,9 @@ public class Context {
      * @return a list of bound values.
      * @throws SQLException if a database error occurs.
      */
-    public @NotNull List<@Valid @NotNull ProcedureColumn> getProcedureColumns(
-            final @Nullable String catalog, final @Nullable String schemaPattern,
-            final @NotBlank String procedureNamePattern, final @NotBlank String columnNamePattern)
+    public List<ProcedureColumn> getProcedureColumns(
+            final String catalog, final String schemaPattern,
+            final String procedureNamePattern, final String columnNamePattern)
             throws SQLException {
         return addProcedureColumns(
                 catalog,
@@ -1289,9 +1286,9 @@ public class Context {
      * @throws SQLException if a database error occurs.
      * @see DatabaseMetaData#getProcedures(String, String, String)
      */
-    public @NotNull List<@Valid @NotNull Procedure> getProcedures(final @Nullable String catalog,
-                                                                  final @Nullable String schemaPattern,
-                                                                  final @NotBlank String procedureNamePattern)
+    public List<Procedure> getProcedures(final String catalog,
+                                         final String schemaPattern,
+                                         final String procedureNamePattern)
             throws SQLException {
         return addProcedures(
                 catalog,
@@ -1301,8 +1298,8 @@ public class Context {
         );
     }
 
-    @NotNull List<@Valid @NotNull Procedure> getProcedures(final @NotNull Catalog catalog,
-                                                           final @NotBlank String procedureNamePattern)
+    List<Procedure> getProcedures(final Catalog catalog,
+                                  final String procedureNamePattern)
             throws SQLException {
         Objects.requireNonNull(catalog, "catalog is null");
         return getProcedures(
@@ -1312,13 +1309,13 @@ public class Context {
         );
     }
 
-    @NotNull List<@Valid @NotNull Procedure> getProcedures(@NotNull final Catalog catalog) throws SQLException {
+    List<Procedure> getProcedures(final Catalog catalog) throws SQLException {
         Objects.requireNonNull(catalog, "catalog is null");
         return getProcedures(catalog, "%");
     }
 
-    @NotNull List<@Valid @NotNull Procedure> getProcedures(final @NotNull Schema schema,
-                                                           final @NotBlank String procedureNamePattern)
+    List<Procedure> getProcedures(final Schema schema,
+                                  final String procedureNamePattern)
             throws SQLException {
         Objects.requireNonNull(schema, "schema is null");
         return getProcedures(
@@ -1328,7 +1325,7 @@ public class Context {
         );
     }
 
-    @NotNull List<@Valid @NotNull Procedure> getProcedures(final @NotNull Schema schema) throws SQLException {
+    List<Procedure> getProcedures(final Schema schema) throws SQLException {
         return getProcedures(
                 schema,
                 "%"
@@ -1390,10 +1387,10 @@ public class Context {
      * @throws SQLException if a database error occurs.
      * @see DatabaseMetaData#getPseudoColumns(String, String, String, String)
      */
-    public @NotNull List<@Valid @NotNull PseudoColumn> getPseudoColumns(final @Nullable String catalog,
-                                                                        final @Nullable String schemaPattern,
-                                                                        final @NotBlank String tableNamePattern,
-                                                                        final @NotBlank String columnNamePattern)
+    public List<PseudoColumn> getPseudoColumns(final String catalog,
+                                               final String schemaPattern,
+                                               final String tableNamePattern,
+                                               final String columnNamePattern)
             throws SQLException {
         return addPseudoColumns(
                 catalog,
@@ -1449,7 +1446,7 @@ public class Context {
      * @return a list of bound values.
      * @throws SQLException if a database error occurs.
      */
-    public @NotNull List<@Valid @NotNull Schema> getSchemas() throws SQLException {
+    public List<Schema> getSchemas() throws SQLException {
         return addSchemas(new ArrayList<>());
     }
 
@@ -1491,8 +1488,8 @@ public class Context {
      * @return a list of bound values.
      * @throws SQLException if a database error occurs.
      */
-    public @NotNull List<@Valid @NotNull Schema> getSchemas(final @Nullable String catalog,
-                                                            final @Nullable String schemaPattern)
+    public List<Schema> getSchemas(final String catalog,
+                                   final String schemaPattern)
             throws SQLException {
         return addSchemas(catalog, schemaPattern, new ArrayList<>());
     }
@@ -1547,9 +1544,9 @@ public class Context {
      * @return a list of bound values.
      * @throws SQLException if a database error occurs.
      */
-    public @NotNull List<@Valid @NotNull SuperTable> getSuperTables(final @Nullable String catalog,
-                                                                    final String schemaPattern,
-                                                                    final @NotBlank String tableNamePattern)
+    public List<SuperTable> getSuperTables(final String catalog,
+                                           final String schemaPattern,
+                                           final String tableNamePattern)
             throws SQLException {
         return addSuperTables(catalog, schemaPattern, tableNamePattern, new ArrayList<>());
     }
@@ -1614,15 +1611,15 @@ public class Context {
      * @throws SQLException if a database error occurs.
      * @see DatabaseMetaData#getSuperTypes(String, String, String)
      */
-    public @NotNull List<@Valid @NotNull SuperType> getSuperTypes(final @Nullable String catalog,
-                                                                  final String schemaPattern,
-                                                                  final @NotBlank String typeNamePattern)
+    public List<SuperType> getSuperTypes(final String catalog,
+                                         final String schemaPattern,
+                                         final String typeNamePattern)
             throws SQLException {
         return addSuperTypes(catalog, schemaPattern, typeNamePattern, new ArrayList<>());
     }
 
-    @NotNull List<@Valid @NotNull SuperType> getSuperTypes(final @NotNull Schema schema,
-                                                           final @NotBlank String typeNamePattern)
+    List<SuperType> getSuperTypes(final Schema schema,
+                                  final String typeNamePattern)
             throws SQLException {
         Objects.requireNonNull(schema, "schema is null");
         return getSuperTypes(
@@ -1692,9 +1689,9 @@ public class Context {
      * @throws SQLException if a database error occurs.
      * @see DatabaseMetaData#getTablePrivileges(String, String, String)
      */
-    public @NotNull List<@Valid @NotNull TablePrivilege> getTablePrivileges(final @Nullable String catalog,
-                                                                            final @Nullable String schemaPattern,
-                                                                            final @NotBlank String tableNamePattern)
+    public List<TablePrivilege> getTablePrivileges(final String catalog,
+                                                   final String schemaPattern,
+                                                   final String tableNamePattern)
             throws SQLException {
         return addTablePrivileges(
                 catalog,
@@ -1764,7 +1761,7 @@ public class Context {
      * @return a list of bound values.
      * @throws SQLException if a database error occurs.
      */
-    public @NotNull List<@Valid @NotNull TableType> getTableTypes() throws SQLException {
+    public List<TableType> getTableTypes() throws SQLException {
         return addTableTypes(new ArrayList<>());
     }
 
@@ -1808,10 +1805,10 @@ public class Context {
      * @return given {@code collection}.
      * @throws SQLException if a database error occurs.
      */
-    <T extends Collection<? super Table>> T addTables(final @Nullable String catalog,
-                                                      final @Nullable String schemaPattern,
-                                                      final @NotBlank String tableNamePattern,
-                                                      final @Nullable String[] types,
+    <T extends Collection<? super Table>> T addTables(final String catalog,
+                                                      final String schemaPattern,
+                                                      final String tableNamePattern,
+                                                      final String[] types,
                                                       final T collection)
             throws SQLException {
         Objects.requireNonNull(collection, "collection is null");
@@ -1847,10 +1844,10 @@ public class Context {
      * @see #getSuperTables(String, String, String)
      * @see #getVersionColumns(String, String, String)
      */
-    public @NotNull List<@Valid @NotNull Table> getTables(final @Nullable String catalog,
-                                                          final @Nullable String schemaPattern,
-                                                          final @NotBlank String tableNamePattern,
-                                                          final @Nullable String[] types)
+    public List<Table> getTables(final String catalog,
+                                 final String schemaPattern,
+                                 final String tableNamePattern,
+                                 final String[] types)
             throws SQLException {
         return addTables(catalog, schemaPattern, tableNamePattern, types, new ArrayList<>());
     }
@@ -1895,7 +1892,7 @@ public class Context {
      * @return a list of bound values.
      * @throws SQLException if a database error occurs.
      */
-    public @NotNull List<@Valid @NotNull TypeInfo> getTypeInfo() throws SQLException {
+    public List<TypeInfo> getTypeInfo() throws SQLException {
         return addTypeInfo(new ArrayList<>());
     }
 
@@ -1946,10 +1943,10 @@ public class Context {
      * @see DatabaseMetaData#getUDTs(String, String, String, int[])
      * @see #getAttributes(String, String, String, String)
      */
-    public @NotNull List<@Valid @NotNull UDT> getUDTs(final @Nullable String catalog,
-                                                      final @Nullable String schemaPattern,
-                                                      final @NotBlank String typeNamePattern,
-                                                      final @Nullable int[] types)
+    public List<UDT> getUDTs(final String catalog,
+                             final String schemaPattern,
+                             final String typeNamePattern,
+                             final int[] types)
             throws SQLException {
         return addUDTs(
                 catalog,
@@ -2004,9 +2001,9 @@ public class Context {
      * @throws SQLException if a database access error occurs.
      * @see DatabaseMetaData#getVersionColumns(String, String, String)
      */
-    public @NotNull List<@Valid @NotNull VersionColumn> getVersionColumns(final @Nullable String catalog,
-                                                                          final @Nullable String schema,
-                                                                          final @NotBlank String table)
+    public List<VersionColumn> getVersionColumns(final String catalog,
+                                                 final String schema,
+                                                 final String table)
             throws SQLException {
         return addVersionColumns(
                 catalog,
@@ -2026,7 +2023,8 @@ public class Context {
      * @throws SQLException if a database error occurs.
      * @see #getVersionColumns(String, String, String)
      */
-    @NotNull List<@Valid @NotNull VersionColumn> getVersionColumns(final @NotNull Table table) throws SQLException {
+
+    List<VersionColumn> getVersionColumns(final Table table) throws SQLException {
         Objects.requireNonNull(table, "table is null");
         return getVersionColumns(
                 table.getTableCat(),
@@ -2065,7 +2063,7 @@ public class Context {
      * @return a list of numeric functions.
      * @throws SQLException if a database error occurs.
      */
-    public @NotNull List<@NotBlank String> getNumericFunctions() throws SQLException {
+    public List<String> getNumericFunctions() throws SQLException {
         return Arrays.stream(metadata.getNumericFunctions().split(","))
                 .filter(v -> !v.isEmpty())
                 .collect(Collectors.toList());
@@ -2078,7 +2076,7 @@ public class Context {
      * @return a list of SQL keywords.
      * @throws SQLException if a database error occurs.
      */
-    public @NotNull List<@NotBlank String> getSQLKeywords() throws SQLException {
+    public List<String> getSQLKeywords() throws SQLException {
         return Arrays.stream(metadata.getSQLKeywords().split(","))
                 .filter(v -> !v.isEmpty())
                 .collect(Collectors.toList());
@@ -2091,7 +2089,7 @@ public class Context {
      * @return a list of string functions.
      * @throws SQLException if a database error occurs.
      */
-    public @NotNull List<@NotBlank String> getStringFunctions() throws SQLException {
+    public List<String> getStringFunctions() throws SQLException {
         return Arrays.stream(metadata.getStringFunctions().split(","))
                 .filter(v -> !v.isEmpty())
                 .collect(Collectors.toList());
@@ -2105,7 +2103,7 @@ public class Context {
      * @throws SQLException if a database error occurs.
      * @see DatabaseMetaData#getSystemFunctions()
      */
-    public @NotNull List<@NotBlank String> getSystemFunctions() throws SQLException {
+    public List<String> getSystemFunctions() throws SQLException {
         return Arrays.stream(metadata.getSystemFunctions().split(","))
                 .filter(v -> !v.isEmpty())
                 .collect(Collectors.toList());
@@ -2119,7 +2117,7 @@ public class Context {
      * @throws SQLException if a database error occurs.
      * @see DatabaseMetaData#getTimeDateFunctions()
      */
-    public @NotNull List<@NotBlank String> getTimeDateFunctions() throws SQLException {
+    public List<String> getTimeDateFunctions() throws SQLException {
         return Arrays.stream(metadata.getTimeDateFunctions().split(","))
                 .filter(v -> !v.isEmpty())
                 .collect(Collectors.toList());

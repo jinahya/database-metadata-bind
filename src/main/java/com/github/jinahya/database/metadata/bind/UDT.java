@@ -20,8 +20,6 @@ package com.github.jinahya.database.metadata.bind;
  * #L%
  */
 
-import jakarta.annotation.Nullable;
-import jakarta.validation.constraints.AssertTrue;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.Setter;
@@ -103,7 +101,6 @@ public class UDT
     public static final int COLUMN_VALUES_DATA_TYPE_STRUCT = Types.STRUCT; // 2002
 
     // -------------------------------------------------------------------------------------------------------- dataType
-    @AssertTrue
     private boolean isDataTypeValid() {
         if (dataType == null) {
             return true;
@@ -115,13 +112,11 @@ public class UDT
 
     // -----------------------------------------------------------------------------------------------------------------
 
-    @Nullable
     @_NullableBySpecification
     @_ColumnLabel(COLUMN_LABEL_TYPE_CAT)
     @EqualsAndHashCode.Include
     private String typeCat;
 
-    @Nullable
     @_NullableBySpecification
     @_ColumnLabel(COLUMN_LABEL_TYPE_SCHEM)
     @EqualsAndHashCode.Include
@@ -141,7 +136,6 @@ public class UDT
     @_ColumnLabel("REMARKS")
     private String remarks;
 
-    @Nullable
     @_NullableBySpecification
     @_ColumnLabel("BASE_TYPE")
     private Integer baseType;

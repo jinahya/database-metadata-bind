@@ -20,8 +20,6 @@ package com.github.jinahya.database.metadata.bind;
  * #L%
  */
 
-import jakarta.validation.constraints.Pattern;
-import jakarta.validation.constraints.Positive;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.Setter;
@@ -282,13 +280,11 @@ public class Column
     }
 
     // -----------------------------------------------------------------------------------------------------------------
-    @jakarta.annotation.Nullable
     @_NullableBySpecification
     @_ColumnLabel(COLUMN_LABEL_TABLE_CAT)
     @EqualsAndHashCode.Include
     private String tableCat;
 
-    @jakarta.annotation.Nullable
     @_NullableBySpecification
     @_ColumnLabel(COLUMN_LABEL_TABLE_SCHEM)
     @EqualsAndHashCode.Include
@@ -309,7 +305,6 @@ public class Column
     @_ColumnLabel("TYPE_NAME")
     private String typeName;
 
-    @jakarta.annotation.Nullable
     @_NullableBySpecification
     @_ColumnLabel("COLUMN_SIZE")
     private Integer columnSize;
@@ -318,7 +313,6 @@ public class Column
     @_ColumnLabel("BUFFER_LENGTH")
     private Integer bufferLength;
 
-    @jakarta.annotation.Nullable
     @_NullableBySpecification
     @_ColumnLabel("DECIMAL_DIGITS")
     private Integer decimalDigits;
@@ -329,12 +323,10 @@ public class Column
     @_ColumnLabel(COLUMN_LABEL_NULLABLE)
     private Integer nullable;
 
-    @jakarta.annotation.Nullable
     @_NullableBySpecification
     @_ColumnLabel("REMARKS")
     private String remarks;
 
-    @jakarta.annotation.Nullable
     @_NullableBySpecification
     @_ColumnLabel("COLUMN_DEF")
     private String columnDef;
@@ -350,39 +342,31 @@ public class Column
     @_ColumnLabel("CHAR_OCTET_LENGTH")
     private Integer charOctetLength;
 
-    @Positive
     @_ColumnLabel("ORDINAL_POSITION")
     private Integer ordinalPosition;
 
-    @Pattern(regexp = YesNoEmptyConstants.REGEXP_YES_NO_EMPTY)
     @_ColumnLabel("IS_NULLABLE")
     private String isNullable;
 
-    @jakarta.annotation.Nullable
     @_NullableBySpecification
     @_ColumnLabel("SCOPE_CATALOG")
     private String scopeCatalog;
 
-    @jakarta.annotation.Nullable
     @_NullableBySpecification
     @_ColumnLabel("SCOPE_SCHEMA")
     private String scopeSchema;
 
-    @jakarta.annotation.Nullable
     @_NullableBySpecification
     @_ColumnLabel("SCOPE_TABLE")
     private String scopeTable;
 
-    @jakarta.annotation.Nullable
     @_NullableBySpecification
     @_ColumnLabel("SOURCE_DATA_TYPE")
     private Integer sourceDataType;
 
-    @Pattern(regexp = YesNoEmptyConstants.REGEXP_YES_NO_EMPTY)
     @_ColumnLabel(COLUMN_LABEL_IS_AUTOINCREMENT)
     private String isAutoincrement;
 
-    @Pattern(regexp = YesNoEmptyConstants.REGEXP_YES_NO_EMPTY)
     @_ColumnLabel(COLUMN_LABEL_IS_GENERATEDCOLUMN)
     private String isGeneratedcolumn;
 }

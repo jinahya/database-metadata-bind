@@ -20,8 +20,6 @@ package com.github.jinahya.database.metadata.bind;
  * #L%
  */
 
-import jakarta.annotation.Nullable;
-import jakarta.validation.constraints.Positive;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.Setter;
@@ -104,13 +102,10 @@ public class PrimaryKey
     // ------------------------------------------------------------------------------------------------------ tableSchem
 
     // -----------------------------------------------------------------------------------------------------------------
-
-    @Nullable
     @_NullableBySpecification
     @_ColumnLabel(COLUMN_LABEL_TABLE_CAT)
     private String tableCat;
 
-    @Nullable
     @_NullableBySpecification
     @_ColumnLabel(COLUMN_LABEL_TABLE_SCHEM)
     private String tableSchem;
@@ -124,11 +119,9 @@ public class PrimaryKey
     private String columnName;
 
     // -----------------------------------------------------------------------------------------------------------------
-    @Positive
     @_ColumnLabel(COLUMN_LABEL_KEY_SEQ)
     private Integer keySeq;
 
-    @Nullable
     @_NullableBySpecification
     @_ColumnLabel(COLUMN_LABEL_PK_NAME)
     @EqualsAndHashCode.Include

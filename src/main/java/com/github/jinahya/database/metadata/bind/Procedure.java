@@ -20,7 +20,6 @@ package com.github.jinahya.database.metadata.bind;
  * #L%
  */
 
-import jakarta.annotation.Nullable;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.Setter;
@@ -138,14 +137,11 @@ public class Procedure
     }
 
     // -----------------------------------------------------------------------------------------------------------------
-
-    @Nullable
     @_NullableBySpecification
     @_ColumnLabel("PROCEDURE_CAT")
     @EqualsAndHashCode.Include
     private String procedureCat;
 
-    @Nullable
     @_NullableBySpecification
     @_ColumnLabel("PROCEDURE_SCHEM")
     @EqualsAndHashCode.Include

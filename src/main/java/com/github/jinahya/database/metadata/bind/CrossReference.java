@@ -20,8 +20,6 @@ package com.github.jinahya.database.metadata.bind;
  * #L%
  */
 
-import jakarta.annotation.Nullable;
-import jakarta.validation.constraints.Positive;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.Setter;
@@ -103,13 +101,10 @@ public class CrossReference
     }
 
     // -----------------------------------------------------------------------------------------------------------------
-
-    @Nullable
     @_NullableBySpecification
     @_ColumnLabel("PKTABLE_CAT")
     private String pktableCat;
 
-    @Nullable
     @_NullableBySpecification
     @_ColumnLabel("PKTABLE_SCHEM")
     private String pktableSchem;
@@ -123,12 +118,10 @@ public class CrossReference
     private String pkcolumnName;
 
     // -----------------------------------------------------------------------------------------------------------------
-    @Nullable
     @_NullableBySpecification
     @_ColumnLabel("FKTABLE_CAT")
     private String fktableCat;
 
-    @Nullable
     @_NullableBySpecification
     @_ColumnLabel("FKTABLE_SCHEM")
     private String fktableSchem;
@@ -142,7 +135,6 @@ public class CrossReference
     private String fkcolumnName;
 
     // -----------------------------------------------------------------------------------------------------------------
-    @Positive
     @_ColumnLabel("KEY_SEQ")
     private Integer keySeq;
 
@@ -152,12 +144,10 @@ public class CrossReference
     @_ColumnLabel("DELETE_RULE")
     private Integer deleteRule;
 
-    @Nullable
     @_NullableBySpecification
     @_ColumnLabel("FK_NAME")
     private String fkName;
 
-    @Nullable
     @_NullableBySpecification
     @_ColumnLabel("PK_NAME")
     private String pkName;

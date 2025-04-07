@@ -20,10 +20,6 @@ package com.github.jinahya.database.metadata.bind;
  * #L%
  */
 
-import jakarta.validation.constraints.AssertTrue;
-import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.Pattern;
-import jakarta.validation.constraints.PositiveOrZero;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.Setter;
@@ -187,7 +183,6 @@ public class FunctionColumn
     }
 
     // ------------------------------------------------------------------------------------------------- ordinalPosition
-    @AssertTrue(message = "ordinalPosition should be 0 when columnType is functionReturn(5)")
     private boolean isOrdinalPositionZeroWhenColumnTypeIsProcedureColumnReturn() {
         if (ordinalPosition == null || columnType == null || columnType != DatabaseMetaData.functionReturn) {
             return true;
@@ -196,20 +191,16 @@ public class FunctionColumn
     }
 
     // -----------------------------------------------------------------------------------------------------------------
-
-    @jakarta.annotation.Nullable
     @_NullableBySpecification
     @_ColumnLabel(COLUMN_LABEL_FUNCTION_CAT)
     @EqualsAndHashCode.Include
     private String functionCat;
 
-    @jakarta.annotation.Nullable
     @_NullableBySpecification
     @_ColumnLabel(COLUMN_LABEL_FUNCTION_SCHEM)
     @EqualsAndHashCode.Include
     private String functionSchem;
 
-    @NotBlank
     @_ColumnLabel(COLUMN_LABEL_FUNCTION_NAME)
     @EqualsAndHashCode.Include
     private String functionName;
@@ -228,7 +219,6 @@ public class FunctionColumn
     @_ColumnLabel("TYPE_NAME")
     private String typeName;
 
-    @jakarta.annotation.Nullable
     @_NullableBySpecification
     @_ColumnLabel("PRECISION")
     private Integer precision;
@@ -236,7 +226,6 @@ public class FunctionColumn
     @_ColumnLabel("LENGTH")
     private Integer length;
 
-    @jakarta.annotation.Nullable
     @_NullableBySpecification
     @_ColumnLabel("SCALE")
     private Integer scale;
@@ -250,16 +239,13 @@ public class FunctionColumn
     @_ColumnLabel("REMARKS")
     private String remarks;
 
-    @jakarta.annotation.Nullable
     @_NullableBySpecification
     @_ColumnLabel("CHAR_OCTET_LENGTH")
     private Integer charOctetLength;
 
-    @PositiveOrZero
     @_ColumnLabel("ORDINAL_POSITION")
     private Integer ordinalPosition;
 
-    @Pattern(regexp = YesNoEmptyConstants.REGEXP_YES_NO_EMPTY)
     @_ColumnLabel("IS_NULLABLE")
     private String isNullable;
 

@@ -20,8 +20,6 @@ package com.github.jinahya.database.metadata.bind;
  * #L%
  */
 
-import jakarta.annotation.Nullable;
-import jakarta.validation.constraints.Positive;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.Setter;
@@ -370,12 +368,10 @@ abstract class PortedKey
     }
 
     // -----------------------------------------------------------------------------------------------------------------
-    @Nullable
     @_NullableBySpecification
     @_ColumnLabel(COLUMN_NAME_PKTABLE_CAT)
     private String pktableCat;
 
-    @Nullable
     @_NullableBySpecification
     @_ColumnLabel(COLUMN_NAME_PKTABLE_SCHEM)
     private String pktableSchem;
@@ -387,12 +383,10 @@ abstract class PortedKey
     private String pkcolumnName;
 
     // -----------------------------------------------------------------------------------------------------------------
-    @Nullable
     @_NullableBySpecification
     @_ColumnLabel(COLUMN_NAME_FKTABLE_CAT)
     private String fktableCat;
 
-    @Nullable
     @_NullableBySpecification
     @_ColumnLabel(COLUMN_NAME_FKTABLE_SCHEM)
     private String fktableSchem;
@@ -404,7 +398,6 @@ abstract class PortedKey
     private String fkcolumnName;
 
     // -----------------------------------------------------------------------------------------------------------------
-    @Positive
     @_ColumnLabel(COLUMN_NAME_KEY_SEQ)
     private Integer keySeq;
 
@@ -414,12 +407,10 @@ abstract class PortedKey
     @_ColumnLabel(COLUMN_NAME_DELETE_RULE)
     private Integer deleteRule;
 
-    @Nullable
     @_NullableBySpecification
     @_ColumnLabel(COLUMN_NAME_FK_NAME)
     private String fkName;
 
-    @Nullable
     @_NullableBySpecification
     @_ColumnLabel(COLUMN_NAME_PK_NAME)
     private String pkName;

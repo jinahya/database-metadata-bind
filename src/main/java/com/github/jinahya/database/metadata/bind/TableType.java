@@ -20,7 +20,6 @@ package com.github.jinahya.database.metadata.bind;
  * #L%
  */
 
-import jakarta.validation.constraints.NotBlank;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.Setter;
@@ -59,7 +58,6 @@ public class TableType
     public static final String COLUMN_LABEL_TABLE_TYPE = "TABLE_TYPE";
 
     // -----------------------------------------------------------------------------------------------------------------
-    @NotBlank
     @_ColumnLabel(COLUMN_LABEL_TABLE_TYPE)
     @SuppressWarnings({
             "java:S1700"

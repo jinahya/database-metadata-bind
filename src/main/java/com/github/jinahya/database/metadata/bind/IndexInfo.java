@@ -20,8 +20,6 @@ package com.github.jinahya.database.metadata.bind;
  * #L%
  */
 
-import jakarta.annotation.Nullable;
-import jakarta.validation.constraints.PositiveOrZero;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.Setter;
@@ -136,14 +134,11 @@ public class IndexInfo
     }
 
     // -----------------------------------------------------------------------------------------------------------------
-
-    @Nullable
     @_NullableBySpecification
     @_ColumnLabel(COLUMN_LABEL_TABLE_CAT)
     @EqualsAndHashCode.Include
     private String tableCat;
 
-    @Nullable
     @_NullableBySpecification
     @_ColumnLabel(COLUMN_LABEL_TABLE_SCHEM)
     @EqualsAndHashCode.Include
@@ -157,12 +152,10 @@ public class IndexInfo
     @EqualsAndHashCode.Include
     private Boolean nonUnique;
 
-    @Nullable
     @_NullableBySpecification
     @_ColumnLabel("INDEX_QUALIFIER")
     private String indexQualifier;
 
-    @Nullable
     @_NullableBySpecification
     @_ColumnLabel("INDEX_NAME")
     @EqualsAndHashCode.Include
@@ -172,17 +165,14 @@ public class IndexInfo
     @EqualsAndHashCode.Include
     private Integer type;
 
-    @PositiveOrZero
     @_ColumnLabel("ORDINAL_POSITION")
     @EqualsAndHashCode.Include
     private Integer ordinalPosition;
 
-    @Nullable
     @_NullableBySpecification
     @_ColumnLabel("COLUMN_NAME")
     private String columnName;
 
-    @Nullable
     @_NullableBySpecification
     @_ColumnLabel("ASC_OR_DESC")
     private String ascOrDesc;
@@ -194,7 +184,6 @@ public class IndexInfo
     @_ColumnLabel("PAGES")
     private Long pages;
 
-    @Nullable
     @_NullableBySpecification
     @_ColumnLabel("FILTER_CONDITION")
     private String filterCondition;
