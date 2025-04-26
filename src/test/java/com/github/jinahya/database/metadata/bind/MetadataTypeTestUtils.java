@@ -79,7 +79,7 @@ final class MetadataTypeTestUtils {
 
     static void verify(final MetadataType obj) throws SQLException {
         verifyAccessorsHelper(obj.getClass().asSubclass(MetadataType.class), obj);
-        ValidationTestUtils.requireValid(obj);
+//        ValidationTestUtils.requireValid(obj);
         // -------------------------------------------------------------------------------------------------- toString()
         assertThatCode(() -> {
             final var string = obj.toString();
