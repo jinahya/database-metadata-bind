@@ -22,6 +22,9 @@ package com.github.jinahya.database.metadata.bind;
 
 import java.util.Objects;
 
+@SuppressWarnings({
+        "java:S114" // Interface names should comply with a naming convention
+})
 interface _FieldEnum<E extends Enum<E> & _FieldEnum<E, T>, T> {
 
     static <E extends Enum<E> & _FieldEnum<E, T>, T> E valueOfFieldValue(final Class<E> enumClass, final T fieldValue) {
@@ -33,5 +36,6 @@ interface _FieldEnum<E extends Enum<E> & _FieldEnum<E, T>, T> {
         throw new IllegalArgumentException("no enum constant for " + fieldValue);
     }
 
+    // -----------------------------------------------------------------------------------------------------------------
     T fieldValue();
 }

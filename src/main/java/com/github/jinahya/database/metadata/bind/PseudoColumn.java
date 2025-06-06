@@ -49,10 +49,10 @@ public class PseudoColumn
     // -----------------------------------------------------------------------------------------------------------------
     static Comparator<PseudoColumn> comparing(final Context context, final Comparator<? super String> comparator)
             throws SQLException {
-        return Comparator.comparing(PseudoColumn::getTableCat, ContextUtils.nulls(context, comparator))
-                .thenComparing(PseudoColumn::getTableSchem, ContextUtils.nulls(context, comparator))
-                .thenComparing(PseudoColumn::getTableName, ContextUtils.nulls(context, comparator))
-                .thenComparing(PseudoColumn::getColumnName, ContextUtils.nulls(context, comparator));
+        return Comparator.comparing(PseudoColumn::getTableCat, ContextUtils.nullPrecedence(context, comparator))
+                .thenComparing(PseudoColumn::getTableSchem, ContextUtils.nullPrecedence(context, comparator))
+                .thenComparing(PseudoColumn::getTableName, ContextUtils.nullPrecedence(context, comparator))
+                .thenComparing(PseudoColumn::getColumnName, ContextUtils.nullPrecedence(context, comparator));
     }
 
     // -----------------------------------------------------------------------------------------------------------------

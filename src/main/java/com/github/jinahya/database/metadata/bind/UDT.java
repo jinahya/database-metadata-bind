@@ -29,6 +29,7 @@ import java.sql.DatabaseMetaData;
 import java.sql.SQLException;
 import java.sql.Types;
 import java.util.Comparator;
+import java.util.Objects;
 
 /**
  * A class for binding results of the {@link DatabaseMetaData#getUDTs(String, String, String, int[])} method.
@@ -53,34 +54,34 @@ public class UDT
     static Comparator<UDT> comparing(final Context context, final Comparator<? super String> comparator)
             throws SQLException {
         return Comparator
-                .comparing(UDT::getDataType, ContextUtils.nulls(context, Comparator.naturalOrder()))
-                .thenComparing(UDT::getTypeCat, ContextUtils.nulls(context, comparator))
-                .thenComparing(UDT::getTypeSchem, ContextUtils.nulls(context, comparator))
-                .thenComparing(UDT::getTypeName, ContextUtils.nulls(context, comparator));
+                .comparing(UDT::getDataType, ContextUtils.nullPrecedence(context, Comparator.naturalOrder()))
+                .thenComparing(UDT::getTypeCat, ContextUtils.nullPrecedence(context, comparator))
+                .thenComparing(UDT::getTypeSchem, ContextUtils.nullPrecedence(context, comparator))
+                .thenComparing(UDT::getTypeName, ContextUtils.nullPrecedence(context, comparator));
     }
 
-    // -----------------------------------------------------------------------------------------------------------------
+    // -------------------------------------------------------------------------------------------------------- TYPE_CAT
 
     /**
      * A column label of {@value}.
      */
     public static final String COLUMN_LABEL_TYPE_CAT = "TYPE_CAT";
 
-    // -----------------------------------------------------------------------------------------------------------------
+    // ------------------------------------------------------------------------------------------------------ TYPE_SCHEM
 
     /**
      * A column label of {@value}.
      */
     public static final String COLUMN_LABEL_TYPE_SCHEM = "TYPE_SCHEM";
 
-    // -----------------------------------------------------------------------------------------------------------------
+    // ------------------------------------------------------------------------------------------------------- TYPE_NAME
 
     /**
      * A column label of {@value}.
      */
     public static final String COLUMN_LABEL_TYPE_NAME = "TYPE_NAME";
 
-    // -----------------------------------------------------------------------------------------------------------------
+    // ------------------------------------------------------------------------------------------------------ CLASS_NAME
 
     /**
      * A column label of {@value}.
@@ -100,18 +101,63 @@ public class UDT
 
     public static final int COLUMN_VALUES_DATA_TYPE_STRUCT = Types.STRUCT; // 2002
 
-    // -------------------------------------------------------------------------------------------------------- dataType
-    private boolean isDataTypeValid() {
-        if (dataType == null) {
-            return true;
+    // ------------------------------------------------------------------------------------------ STATIC_FACTORY_METHODS
+
+    // ---------------------------------------------------------------------------------------------------- CONSTRUCTORS
+
+    // ------------------------------------------------------------------------------------------------ java.lang.Object
+
+    @Override
+    public boolean equals(final Object obj) {
+        if (obj == null || getClass() != obj.getClass()) {
+            return false;
         }
-        return dataType == COLUMN_VALUES_DATA_TYPE_JAVA_OBJECT ||
-               dataType == COLUMN_VALUES_DATA_TYPE_DISTINCT ||
-               dataType == COLUMN_VALUES_DATA_TYPE_STRUCT;
+        if (!super.equals(obj)) {
+            return false;
+        }
+        final var that = (UDT) obj;
+        return Objects.equals(typeCat, that.typeCat) &&
+               Objects.equals(typeSchem, that.typeSchem) &&
+               Objects.equals(typeName, that.typeName);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(super.hashCode(), typeCat, typeSchem, typeName);
     }
 
     // -----------------------------------------------------------------------------------------------------------------
+    public String getTypeCat() {
+        return typeCat;
+    }
 
+    public String getTypeSchem() {
+        return typeSchem;
+    }
+
+    public String getTypeName() {
+        return typeName;
+    }
+
+    public String getClassName() {
+        return className;
+    }
+
+    // -------------------------------------------------------------------------------------------------------- dataType
+    public Integer getDataType() {
+        return dataType;
+    }
+
+    public String getRemarks() {
+        return remarks;
+    }
+
+    // --------------------------------------------------------------------------------------------------------- bseType
+    public Integer getBaseType() {
+        return baseType;
+    }
+
+    // -----------------------------------------------------------------------------------------------------------------
     @_NullableBySpecification
     @_ColumnLabel(COLUMN_LABEL_TYPE_CAT)
     @EqualsAndHashCode.Include

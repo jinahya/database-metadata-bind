@@ -50,10 +50,10 @@ public class Attribute
             throws SQLException {
         Objects.requireNonNull(context, "context is null");
         Objects.requireNonNull(comparator, "comparator is null");
-        return Comparator.comparing(Attribute::getTypeCat, ContextUtils.nulls(context, comparator))
-                .thenComparing(Attribute::getTypeSchem, ContextUtils.nulls(context, comparator))
-                .thenComparing(Attribute::getTypeName, ContextUtils.nulls(context, comparator))
-                .thenComparing(Attribute::getOrdinalPosition, ContextUtils.nulls(context, Comparator.naturalOrder()));
+        return Comparator.comparing(Attribute::getTypeCat, ContextUtils.nullPrecedence(context, comparator))
+                .thenComparing(Attribute::getTypeSchem, ContextUtils.nullPrecedence(context, comparator))
+                .thenComparing(Attribute::getTypeName, ContextUtils.nullPrecedence(context, comparator))
+                .thenComparing(Attribute::getOrdinalPosition, ContextUtils.nullPrecedence(context, Comparator.naturalOrder()));
     }
 
     // -------------------------------------------------------------------------------------------------------- TYPE_CAT

@@ -20,14 +20,8 @@ package com.github.jinahya.database.metadata.bind;
  * #L%
  */
 
-import lombok.AccessLevel;
-import lombok.EqualsAndHashCode;
-import lombok.Getter;
-import lombok.Setter;
 import lombok.ToString;
 
-import java.util.HashMap;
-import java.util.Map;
 import java.util.Objects;
 
 @ToString(callSuper = true)
@@ -53,19 +47,4 @@ abstract class AbstractMetadataType
     public int hashCode() {
         return Objects.hash(getClass());
     }
-
-    // -------------------------------------------------------------------------------------------------- unmappedValues
-    @Override
-    public Map<String, Object> getUnmappedValues() {
-        if (unmappedValues == null) {
-            unmappedValues = new HashMap<>();
-        }
-        return unmappedValues;
-    }
-
-    // -----------------------------------------------------------------------------------------------------------------
-    @Setter(AccessLevel.NONE)
-    @Getter(AccessLevel.NONE)
-    @EqualsAndHashCode.Exclude
-    private transient Map<String, Object> unmappedValues;
 }

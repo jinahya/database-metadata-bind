@@ -23,6 +23,7 @@ package com.github.jinahya.database.metadata.bind;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
+import org.testcontainers.junit.jupiter.Testcontainers;
 
 import java.beans.IntrospectionException;
 import java.io.IOException;
@@ -34,6 +35,7 @@ import java.util.Objects;
 import static org.junit.jupiter.api.Assumptions.assumeTrue;
 
 // https://java.testcontainers.org/modules/databases/jdbc/
+@Testcontainers
 @Slf4j
 abstract class TestContainers_$_IT {
 

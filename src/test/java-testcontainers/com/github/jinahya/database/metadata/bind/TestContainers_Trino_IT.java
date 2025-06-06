@@ -21,11 +21,10 @@ package com.github.jinahya.database.metadata.bind;
  */
 
 import lombok.extern.slf4j.Slf4j;
-import org.junit.jupiter.api.AfterAll;
-import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Disabled;
 import org.testcontainers.containers.TrinoContainer;
 import org.testcontainers.images.PullPolicy;
+import org.testcontainers.junit.jupiter.Container;
 import org.testcontainers.utility.DockerImageName;
 
 import java.sql.Connection;
@@ -41,24 +40,9 @@ class TestContainers_Trino_IT
 
     private static final String FULL_IMAGE_NAME = "trinodb/trino:439-arm64";
 
-    private static TrinoContainer CONTAINER;
-
-    @BeforeAll
-    static void start() {
-        final DockerImageName name = DockerImageName.parse(FULL_IMAGE_NAME);
-        CONTAINER = new TrinoContainer(name)
-                .withImagePullPolicy(PullPolicy.ageBased(Duration.ofDays(180L)))
-//                .withStartupCheckStrategy(
-//                        new OneShotStartupCheckStrategy().withTimeout(Duration.ofSeconds(600))
-//                )
-        ;
-        CONTAINER.start();
-    }
-
-    @AfterAll
-    static void stop() {
-        CONTAINER.stop();
-    }
+    @Container
+    private static final TrinoContainer CONTAINER = new TrinoContainer(DockerImageName.parse(FULL_IMAGE_NAME))
+            .withImagePullPolicy(PullPolicy.ageBased(Duration.ofDays(180L)));
 
     @Override
     Connection connect() throws SQLException {

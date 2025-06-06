@@ -50,10 +50,10 @@ public class IndexInfo
     // -----------------------------------------------------------------------------------------------------------------
     static Comparator<IndexInfo> comparing(final Context context, final Comparator<? super String> comparator)
             throws SQLException {
-        return Comparator.comparing(IndexInfo::getNonUnique, ContextUtils.nulls(context, Comparator.naturalOrder()))
-                .thenComparing(IndexInfo::getType, ContextUtils.nulls(context, Comparator.naturalOrder()))
-                .thenComparing(IndexInfo::getIndexName, ContextUtils.nulls(context, comparator))
-                .thenComparing(IndexInfo::getOrdinalPosition, ContextUtils.nulls(context, Comparator.naturalOrder()));
+        return Comparator.comparing(IndexInfo::getNonUnique, ContextUtils.nullPrecedence(context, Comparator.naturalOrder()))
+                .thenComparing(IndexInfo::getType, ContextUtils.nullPrecedence(context, Comparator.naturalOrder()))
+                .thenComparing(IndexInfo::getIndexName, ContextUtils.nullPrecedence(context, comparator))
+                .thenComparing(IndexInfo::getOrdinalPosition, ContextUtils.nullPrecedence(context, Comparator.naturalOrder()));
     }
 
     // ------------------------------------------------------------------------------------------------------- TABLE_CAT

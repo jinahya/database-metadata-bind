@@ -43,7 +43,7 @@ public class Catalog
 
     static Comparator<Catalog> comparing(final Context context, final Comparator<? super String> comparator)
             throws SQLException {
-        return Comparator.comparing(Catalog::getTableCat, ContextUtils.nulls(context, comparator));
+        return Comparator.comparing(Catalog::getTableCat, ContextUtils.nullPrecedence(context, comparator));
     }
 
     // -----------------------------------------------------------------------------------------------------------------

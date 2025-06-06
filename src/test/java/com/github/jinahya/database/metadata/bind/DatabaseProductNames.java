@@ -37,6 +37,8 @@ final class DatabaseProductNames {
 
     static final String MY_SQL = "MySQL";
 
+    static final String ORACLE = "Oracle";
+
     static final String POSTGRE_SQL = "PostgreSQL";
 
     static final String SQ_LITE = "SQLite";

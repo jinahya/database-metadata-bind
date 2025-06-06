@@ -42,8 +42,8 @@ public class Schema
     // -----------------------------------------------------------------------------------------------------------------
     static Comparator<Schema> comparing(final Context context, final Comparator<? super String> comparator)
             throws SQLException {
-        return Comparator.comparing(Schema::getTableCatalog, ContextUtils.nulls(context, comparator))
-                .thenComparing(Schema::getTableSchem, ContextUtils.nulls(context, comparator));
+        return Comparator.comparing(Schema::getTableCatalog, ContextUtils.nullPrecedence(context, comparator))
+                .thenComparing(Schema::getTableSchem, ContextUtils.nullPrecedence(context, comparator));
     }
 
     // -----------------------------------------------------------------------------------------------------------------

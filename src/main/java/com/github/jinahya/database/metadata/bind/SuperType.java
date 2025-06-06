@@ -21,11 +21,9 @@ package com.github.jinahya.database.metadata.bind;
  */
 
 import lombok.EqualsAndHashCode;
-import lombok.Getter;
-import lombok.Setter;
-import lombok.ToString;
 
 import java.sql.DatabaseMetaData;
+import java.util.Objects;
 
 /**
  * A class for binding results of the
@@ -36,14 +34,86 @@ import java.sql.DatabaseMetaData;
  */
 
 @_ChildOf(UDT.class)
-@Setter
-@Getter
 @EqualsAndHashCode(callSuper = true)
-@ToString(callSuper = true)
 public class SuperType
         extends AbstractMetadataType {
 
     private static final long serialVersionUID = 4603878785941565029L;
+
+    // ---------------------------------------------------------------------------------------------------- CONSTRUCTORS
+
+    /**
+     * Creates a new instance.
+     */
+    SuperType() {
+        super();
+    }
+
+    // ------------------------------------------------------------------------------------------------ java.lang.Object
+    @Override
+    public String toString() {
+        return super.toString() + '{' +
+               "typeCat=" + typeCat +
+               ",typeSchem=" + typeSchem +
+               ",typeName=" + typeName +
+               ",supertypeCat=" + supertypeCat +
+               ",supertypeSchem=" + supertypeSchem +
+               ",supertypeName=" + supertypeName +
+               '}';
+    }
+
+    @Override
+    public boolean equals(final Object obj) {
+        if (obj == null || getClass() != obj.getClass()) {
+            return false;
+        }
+        if (!super.equals(obj)) {
+            return false;
+        }
+        final var that = (SuperType) obj;
+        return Objects.equals(typeCat, that.typeCat) &&
+               Objects.equals(typeSchem, that.typeSchem) &&
+               Objects.equals(typeName, that.typeName) &&
+               Objects.equals(supertypeCat, that.supertypeCat) &&
+               Objects.equals(supertypeSchem, that.supertypeSchem) &&
+               Objects.equals(supertypeName, that.supertypeName);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(super.hashCode(), typeCat, typeSchem, typeName, supertypeCat, supertypeSchem,
+                            supertypeName);
+    }
+
+    // --------------------------------------------------------------------------------------------------------- typeCat
+    public String getTypeCat() {
+        return typeCat;
+    }
+
+    // ------------------------------------------------------------------------------------------------------- typeSchem
+    public String getTypeSchem() {
+        return typeSchem;
+    }
+
+    // -----------------------------------------------------------------------------------------------------------------
+    public String getTypeName() {
+        return typeName;
+    }
+
+    // -----------------------------------------------------------------------------------------------------------------
+    public String getSupertypeCat() {
+        return supertypeCat;
+    }
+
+    // -----------------------------------------------------------------------------------------------------------------
+    public String getSupertypeSchem() {
+        return supertypeSchem;
+    }
+
+    // -----------------------------------------------------------------------------------------------------------------
+    public String getSupertypeName() {
+        return supertypeName;
+    }
 
     // -----------------------------------------------------------------------------------------------------------------
     @_NullableBySpecification

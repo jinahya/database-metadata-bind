@@ -31,10 +31,10 @@ import java.util.Map;
 public interface MetadataType
         extends Serializable {
 
-    /**
-     * Returns a map of unmapped values.
-     *
-     * @return a map of unmapped values.
-     */
-    Map<String, Object> getUnmappedValues();
+//    /**
+//     * Returns a map of unmapped values.
+//     *
+//     * @return a map of unmapped values.
+//     */
+//    Map<String, Object> getUnmappedValues();
 }

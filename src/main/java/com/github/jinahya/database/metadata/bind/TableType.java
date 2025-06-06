@@ -25,8 +25,8 @@ import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
 
-import java.sql.SQLException;
 import java.util.Comparator;
+import java.util.Objects;
 
 /**
  * A class for binding results of the {@link java.sql.DatabaseMetaData#getTableTypes()}.
@@ -44,9 +44,7 @@ public class TableType
     private static final long serialVersionUID = -7630634982776331078L;
 
     // -----------------------------------------------------------------------------------------------------------------
-    static Comparator<TableType> comparing(final Context context, final Comparator<? super String> comparator)
-            throws SQLException {
-//        return Comparator.comparing(TableType::getTableType, ContextUtils.nulls(context, comparator));
+    static Comparator<TableType> comparing(final Context context, final Comparator<? super String> comparator) {
         return Comparator.comparing(TableType::getTableType, comparator);
     }
 
@@ -56,6 +54,48 @@ public class TableType
      * The column label of {@value}.
      */
     public static final String COLUMN_LABEL_TABLE_TYPE = "TABLE_TYPE";
+
+    // ------------------------------------------------------------------------------------------ STATIC_FACTORY_METHODS
+
+    // ---------------------------------------------------------------------------------------------------- CONSTRUCTORS
+
+    /**
+     * Creates a new instance.
+     */
+    protected TableType() {
+        super();
+    }
+
+    // ------------------------------------------------------------------------------------------------ java.lang.Object
+
+    @Override
+    public String toString() {
+        return super.toString() + '{' +
+               "tableType=" + tableType +
+               '}';
+    }
+
+    @Override
+    public boolean equals(final Object obj) {
+        if (obj == null || getClass() != obj.getClass()) {
+            return false;
+        }
+        if (!super.equals(obj)) {
+            return false;
+        }
+        final var that = (TableType) obj;
+        return Objects.equals(tableType, that.tableType);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(super.hashCode(), tableType);
+    }
+
+    // ------------------------------------------------------------------------------------------------------- tableType
+    public String getTableType() {
+        return tableType;
+    }
 
     // -----------------------------------------------------------------------------------------------------------------
     @_ColumnLabel(COLUMN_LABEL_TABLE_TYPE)

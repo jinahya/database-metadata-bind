@@ -48,10 +48,10 @@ public class Column
     // -----------------------------------------------------------------------------------------------------------------
     static Comparator<Column> comparing(final Context context, final Comparator<? super String> comparator)
             throws SQLException {
-        return Comparator.comparing(Column::getTableCat, ContextUtils.nulls(context, comparator))
-                .thenComparing(Column::getTableSchem, ContextUtils.nulls(context, comparator))
-                .thenComparing(Column::getTableName, ContextUtils.nulls(context, comparator))
-                .thenComparing(Column::getOrdinalPosition, ContextUtils.nulls(context, Comparator.naturalOrder()));
+        return Comparator.comparing(Column::getTableCat, ContextUtils.nullPrecedence(context, comparator))
+                .thenComparing(Column::getTableSchem, ContextUtils.nullPrecedence(context, comparator))
+                .thenComparing(Column::getTableName, ContextUtils.nullPrecedence(context, comparator))
+                .thenComparing(Column::getOrdinalPosition, ContextUtils.nullPrecedence(context, Comparator.naturalOrder()));
     }
 
     // -----------------------------------------------------------------------------------------------------------------

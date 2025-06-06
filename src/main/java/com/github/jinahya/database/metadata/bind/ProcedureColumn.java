@@ -53,10 +53,10 @@ public class ProcedureColumn
     // -----------------------------------------------------------------------------------------------------------------
     static Comparator<ProcedureColumn> comparing(final Context context, final Comparator<? super String> comparator)
             throws SQLException {
-        return Comparator.comparing(ProcedureColumn::getProcedureCat, ContextUtils.nulls(context, comparator))
-                .thenComparing(ProcedureColumn::getProcedureSchem, ContextUtils.nulls(context, comparator))
-                .thenComparing(ProcedureColumn::getProcedureName, ContextUtils.nulls(context, comparator))
-                .thenComparing(ProcedureColumn::getSpecificName, ContextUtils.nulls(context, comparator));
+        return Comparator.comparing(ProcedureColumn::getProcedureCat, ContextUtils.nullPrecedence(context, comparator))
+                .thenComparing(ProcedureColumn::getProcedureSchem, ContextUtils.nullPrecedence(context, comparator))
+                .thenComparing(ProcedureColumn::getProcedureName, ContextUtils.nullPrecedence(context, comparator))
+                .thenComparing(ProcedureColumn::getSpecificName, ContextUtils.nullPrecedence(context, comparator));
     }
 
     // ----------------------------------------------------------------------------------------------------- COLUMN_TYPE
@@ -307,7 +307,7 @@ public class ProcedureColumn
     @_ColumnLabel("IS_NULLABLE")
     private String isNullable;
 
-    @_MissingByVendor("Microsoft SQL Server") // https://github.com/microsoft/mssql-jdbc/issues/2320
+    // https://github.com/microsoft/mssql-jdbc/issues/2320
     @_ColumnLabel("SPECIFIC_NAME")
     @EqualsAndHashCode.Include
     private String specificName;

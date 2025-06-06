@@ -52,10 +52,10 @@ public class FunctionColumn
 
     static Comparator<FunctionColumn> comparing(final Context context, final Comparator<? super String> comparator)
             throws SQLException {
-        return Comparator.comparing(FunctionColumn::getFunctionCat, ContextUtils.nulls(context, comparator))
-                .thenComparing(FunctionColumn::getFunctionSchem, ContextUtils.nulls(context, comparator))
-                .thenComparing(FunctionColumn::getFunctionName, ContextUtils.nulls(context, comparator))
-                .thenComparing(FunctionColumn::getSpecificName, ContextUtils.nulls(context, comparator));
+        return Comparator.comparing(FunctionColumn::getFunctionCat, ContextUtils.nullPrecedence(context, comparator))
+                .thenComparing(FunctionColumn::getFunctionSchem, ContextUtils.nullPrecedence(context, comparator))
+                .thenComparing(FunctionColumn::getFunctionName, ContextUtils.nullPrecedence(context, comparator))
+                .thenComparing(FunctionColumn::getSpecificName, ContextUtils.nullPrecedence(context, comparator));
     }
 
     // -----------------------------------------------------------------------------------------------------------------
@@ -249,7 +249,7 @@ public class FunctionColumn
     @_ColumnLabel("IS_NULLABLE")
     private String isNullable;
 
-    @_MissingByVendor("Microsoft SQL Server") // https://github.com/microsoft/mssql-jdbc/issues/849
+    // https://github.com/microsoft/mssql-jdbc/issues/849
     @_ColumnLabel("SPECIFIC_NAME")
     @EqualsAndHashCode.Include
     private String specificName;

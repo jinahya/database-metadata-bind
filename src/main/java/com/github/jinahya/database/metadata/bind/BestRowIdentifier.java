@@ -48,7 +48,7 @@ public class BestRowIdentifier
 
     static Comparator<BestRowIdentifier> comparingScope(final Context context) throws SQLException {
         return Comparator.comparing(BestRowIdentifier::getScope,
-                                    ContextUtils.nulls(context, Comparator.naturalOrder()));
+                                    ContextUtils.nullPrecedence(context, Comparator.naturalOrder()));
     }
 
     // ----------------------------------------------------------------------------------------------------------- SCOPE

@@ -28,7 +28,7 @@ import lombok.ToString;
 import java.sql.DatabaseMetaData;
 import java.sql.SQLException;
 import java.util.Comparator;
-import java.util.Optional;
+import java.util.Objects;
 
 /**
  * A class for binding results of the {@link java.sql.DatabaseMetaData#getTypeInfo()} method.
@@ -47,8 +47,11 @@ public class TypeInfo
     private static final long serialVersionUID = -3964147654019495313L;
 
     // -----------------------------------------------------------------------------------------------------------------
-    static Comparator<TypeInfo> comparing(final Context context) throws SQLException {
-        return Comparator.comparing(TypeInfo::getDataType, ContextUtils.nulls(context, Comparator.naturalOrder()));
+    static Comparator<TypeInfo> comparator(final Context context) throws SQLException {
+        return Comparator.comparing(
+                TypeInfo::getDataType,
+                ContextUtils.nullPrecedence(context, Comparator.naturalOrder())
+        );
     }
 
     // -----------------------------------------------------------------------------------------------------------------
@@ -58,25 +61,35 @@ public class TypeInfo
      */
     public static final String COLUMN_LABEL_TYPE_NAME = "TYPE_NAME";
 
+    // -----------------------------------------------------------------------------------------------------------------
+
     /**
      * A column label of {@value}.
      */
     public static final String COLUMN_LABEL_DATA_TYPE = "DATA_TYPE";
+
+    // -----------------------------------------------------------------------------------------------------------------
 
     /**
      * A column label of {@value}.
      */
     public static final String COLUMN_LABEL_PRECISION = "PRECISION";
 
+    // -----------------------------------------------------------------------------------------------------------------
+
     /**
      * A column label of {@value}.
      */
     public static final String COLUMN_LABEL_LITERAL_PREFIX = "LITERAL_PREFIX";
 
+    // -----------------------------------------------------------------------------------------------------------------
+
     /**
      * A column label of {@value}.
      */
     public static final String COLUMN_LABEL_LITERAL_SUFFIX = "LITERAL_SUFFIX";
+
+    // -----------------------------------------------------------------------------------------------------------------
 
     /**
      * A column label of {@value}.
@@ -87,54 +100,14 @@ public class TypeInfo
 
     /**
      * A column label of {@value}.
-     *
-     * @see Nullable
      */
     public static final String COLUMN_LABEL_NULLABLE = "NULLABLE";
 
-    /**
-     * Constants for the {@value #COLUMN_LABEL_NULLABLE} column value.
-     */
-    public enum Nullable
-            implements _IntFieldEnum<Nullable> {
+    public static final int COLUMN_VALUE_NULLABLE_TYPE_NO_NULLS = DatabaseMetaData.typeNoNulls; // 0
 
-        /**
-         * A value for {@link DatabaseMetaData#typeNoNulls}({@value DatabaseMetaData#typeNoNulls}).
-         */
-        TYPE_NO_NULLS(DatabaseMetaData.typeNoNulls),// 0
+    public static final int COLUMN_VALUE_NULLABLE_TYPE_NULLABLE = DatabaseMetaData.typeNullable; // 1
 
-        /**
-         * A value for {@link DatabaseMetaData#typeNullable}({@value DatabaseMetaData#typeNullable}).
-         */
-        TYPE_NULLABLE(DatabaseMetaData.typeNullable), // 1
-
-        /**
-         * A value for {@link DatabaseMetaData#typeNullableUnknown}({@value DatabaseMetaData#typeNullableUnknown}).
-         */
-        TYPE_NULLABLE_UNKNOWN(DatabaseMetaData.typeNullableUnknown); // 2
-
-        /**
-         * Finds the value for specified {@link TypeInfo#COLUMN_LABEL_SEARCHABLE} column value.
-         *
-         * @param fieldValue the {@link TypeInfo#COLUMN_LABEL_SEARCHABLE} column value to match.
-         * @return the value matched.
-         * @throws IllegalStateException when no value matched.
-         */
-        public static Nullable valueOfFieldValue(final int fieldValue) {
-            return _IntFieldEnum.valueOfFieldValue(Nullable.class, fieldValue);
-        }
-
-        Nullable(final int fieldValue) {
-            this.fieldValue = fieldValue;
-        }
-
-        @Override
-        public int fieldValueAsInt() {
-            return fieldValue;
-        }
-
-        private final int fieldValue;
-    }
+    public static final int COLUMN_VALUE_NULLABLE_TYPE_NULLABLE_UNKNOWN = DatabaseMetaData.typeNullableUnknown; // 2
 
     // -----------------------------------------------------------------------------------------------------------------
 
@@ -147,89 +120,157 @@ public class TypeInfo
 
     /**
      * A column label of {@value}.
-     *
-     * @see Searchable
      */
     public static final String COLUMN_LABEL_SEARCHABLE = "SEARCHABLE";
 
+    public static final int COLUMN_VALUE_SEARCHABLE_TYPE_PREC_NONE = DatabaseMetaData.typePredNone; // 0
+
+    public static final int COLUMN_VALUE_SEARCHABLE_TYPE_PREC_CHAR = DatabaseMetaData.typePredChar; // 1
+
+    public static final int COLUMN_VALUE_SEARCHABLE_TYPE_PREC_BASIC = DatabaseMetaData.typePredBasic; // 2
+
+    public static final int COLUMN_VALUE_SEARCHABLE_TYPE_SEARCHABLE = DatabaseMetaData.typeSearchable; // 3
+
+    // ------------------------------------------------------------------------------------------ STATIC_FACTORY_METHODS
+
+    // ---------------------------------------------------------------------------------------------------- CONSTRUCTORS
+
     /**
-     * Constants for the {@value #COLUMN_LABEL_SEARCHABLE} column value.
+     * Creates a new instance.
      */
-    public enum Searchable
-            implements _IntFieldEnum<Searchable> {
-
-        /**
-         * A value for {@link DatabaseMetaData#typePredNone}({@value DatabaseMetaData#typePredNone}).
-         */
-        TYPE_PRED_NONE(DatabaseMetaData.typePredNone),// 0
-
-        /**
-         * A value for {@link DatabaseMetaData#typePredChar}({@value DatabaseMetaData#typePredChar}).
-         */
-        TYPE_PRED_CHAR(DatabaseMetaData.typePredChar), // 1
-
-        /**
-         * A value for {@link DatabaseMetaData#typePredBasic}({@value DatabaseMetaData#typePredBasic}).
-         */
-        TYPE_PRED_BASIC(DatabaseMetaData.typePredBasic), // 2
-
-        /**
-         * A value for {@link DatabaseMetaData#typeSearchable}({@value DatabaseMetaData#typeSearchable}).
-         */
-        TYPE_SEARCHABLE(DatabaseMetaData.typeSearchable); // 3
-
-        /**
-         * Finds the value for specified {@link TypeInfo#COLUMN_LABEL_SEARCHABLE} column value.
-         *
-         * @param fieldValue the {@link TypeInfo#COLUMN_LABEL_SEARCHABLE} column value to match.
-         * @return the value matched.
-         * @throws IllegalStateException when no value matched.
-         */
-        public static Searchable valueOfFieldValue(final int fieldValue) {
-            return _IntFieldEnum.valueOfFieldValue(Searchable.class, fieldValue);
-        }
-
-        Searchable(final int fieldValue) {
-            this.fieldValue = fieldValue;
-        }
-
-        @Override
-        public int fieldValueAsInt() {
-            return fieldValue;
-        }
-
-        private final int fieldValue;
+    protected TypeInfo() {
+        super();
     }
 
-    // ------------------------------------------------------------------------------------------------------ nullable
-    Nullable getNullableAsEnum() {
-        return Optional.ofNullable(getNullable())
-                .map(Nullable::valueOfFieldValue)
-                .orElse(null);
+    // ------------------------------------------------------------------------------------------------ java.lang.Object
+
+    @Override
+    public String toString() {
+        return super.toString() + '{' +
+               "typeName=" + typeName +
+               ",dataType=" + dataType +
+               ",precision=" + precision +
+               ",literalPrefix=" + literalPrefix +
+               ",literalSuffix=" + literalSuffix +
+               ",createParams=" + createParams +
+               ",nullable=" + nullable +
+               ",caseSensitive=" + caseSensitive +
+               ",searchable=" + searchable +
+               ",unsignedAttribute=" + unsignedAttribute +
+               ",fixedPrecScale=" + fixedPrecScale +
+               ",autoIncrement=" + autoIncrement +
+               ",localTypeName=" + localTypeName +
+               ",minimumScale=" + minimumScale +
+               ",maximumScale=" + maximumScale +
+               ",sqlDataType=" + sqlDataType +
+               ",sqlDatetimeSub=" + sqlDatetimeSub +
+               ",numPrecRadix=" + numPrecRadix +
+               '}';
     }
 
-    void setNullableAsEnum(final Nullable nullableAsEnum) {
-        setNullable(
-                Optional.ofNullable(nullableAsEnum)
-                        .map(_IntFieldEnum::fieldValueAsInt)
-                        .orElse(null)
-        );
+    @Override
+    public boolean equals(final Object obj) {
+        if (obj == null || getClass() != obj.getClass()) {
+            return false;
+        }
+        if (!super.equals(obj)) {
+            return false;
+        }
+        final var that = (TypeInfo) obj;
+        return Objects.equals(typeName, that.typeName) &&
+               Objects.equals(dataType, that.dataType);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(super.hashCode(), typeName, dataType);
+    }
+
+    // -----------------------------------------------------------------------------------------------------------------
+
+    public String getTypeName() {
+        return typeName;
+    }
+
+    public Integer getDataType() {
+        return dataType;
+    }
+
+    public Integer getPrecision() {
+        return precision;
+    }
+
+    public String getLiteralPrefix() {
+        return literalPrefix;
+    }
+
+    // --------------------------------------------------------------------------------------------------- literalSuffix
+    public String getLiteralSuffix() {
+        return literalSuffix;
+    }
+
+    // ---------------------------------------------------------------------------------------------------- createParams
+    public String getCreateParams() {
+        return createParams;
+    }
+
+    // -------------------------------------------------------------------------------------------------------- nullable
+    public Integer getNullable() {
+        return nullable;
+    }
+
+    // --------------------------------------------------------------------------------------------------- caseSensitive
+    public Boolean getCaseSensitive() {
+        return caseSensitive;
     }
 
     // ------------------------------------------------------------------------------------------------------ searchable
-    Searchable getSearchableAsEnum() {
-        return Optional.ofNullable(getSearchable())
-                .map(Searchable::valueOfFieldValue)
-                .orElse(null);
+    public Integer getSearchable() {
+        return searchable;
     }
 
-    void setSearchableAsEnum(final Searchable searchableAsEnum) {
-        setSearchable(
-                Optional.ofNullable(searchableAsEnum)
-                        .map(_IntFieldEnum::fieldValueAsInt)
-                        .orElse(null)
-        );
+    // ----------------------------------------------------------------------------------------------- unsignedAttribute
+    public Boolean getUnsignedAttribute() {
+        return unsignedAttribute;
     }
+
+    public Boolean getFixedPrecScale() {
+        return fixedPrecScale;
+    }
+
+    public Boolean getAutoIncrement() {
+        return autoIncrement;
+    }
+
+    public String getLocalTypeName() {
+        return localTypeName;
+    }
+
+    public Integer getMinimumScale() {
+        return minimumScale;
+    }
+
+    public Integer getMaximumScale() {
+        return maximumScale;
+    }
+
+    public Integer getSqlDataType() {
+        return sqlDataType;
+    }
+
+    // -------------------------------------------------------------------------------------------------- sqlDateTimeSub
+    public Integer getSqlDatetimeSub() {
+        return sqlDatetimeSub;
+    }
+
+    // ---------------------------------------------------------------------------------------------------- numPrecRadix
+    public Integer getNumPrecRadix() {
+        return numPrecRadix;
+    }
+
+    // -------------------------------------------------------------------------------------------------------- nullable
+
+    // ------------------------------------------------------------------------------------------------------ searchable
 
     // -----------------------------------------------------------------------------------------------------------------
     @_ColumnLabel(COLUMN_LABEL_TYPE_NAME)

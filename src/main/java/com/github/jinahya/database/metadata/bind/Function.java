@@ -50,10 +50,10 @@ public class Function
     // -----------------------------------------------------------------------------------------------------------------
     static Comparator<Function> comparing(final Context context, final Comparator<? super String> comparator)
             throws SQLException {
-        return Comparator.comparing(Function::getFunctionCat, ContextUtils.nulls(context, comparator))
-                .thenComparing(Function::getFunctionSchem, ContextUtils.nulls(context, comparator))
-                .thenComparing(Function::getFunctionName, ContextUtils.nulls(context, comparator))
-                .thenComparing(Function::getSpecificName, ContextUtils.nulls(context, comparator));
+        return Comparator.comparing(Function::getFunctionCat, ContextUtils.nullPrecedence(context, comparator))
+                .thenComparing(Function::getFunctionSchem, ContextUtils.nullPrecedence(context, comparator))
+                .thenComparing(Function::getFunctionName, ContextUtils.nullPrecedence(context, comparator))
+                .thenComparing(Function::getSpecificName, ContextUtils.nullPrecedence(context, comparator));
     }
 
     // -----------------------------------------------------------------------------------------------------------------
@@ -123,6 +123,12 @@ public class Function
         private final int fieldValue;
     }
 
+    // ------------------------------------------------------------------------------------------ STATIC_FACTORY_METHODS
+
+    // ---------------------------------------------------------------------------------------------------- CONSTRUCTORS
+
+    // ------------------------------------------------------------------------------------------------ java.lang.Object
+
     // ---------------------------------------------------------------------------------------------------- functionType
 
     public FunctionType getFunctionTypeAsEnum() {
@@ -161,7 +167,7 @@ public class Function
     @_ColumnLabel("FUNCTION_TYPE")
     private Integer functionType;
 
-    @_MissingByVendor("Microsoft SQL Server") // https://github.com/microsoft/mssql-jdbc/issues/849
+    // https://github.com/microsoft/mssql-jdbc/issues/849
     @_ColumnLabel("SPECIFIC_NAME")
     @EqualsAndHashCode.Include
     private String specificName;

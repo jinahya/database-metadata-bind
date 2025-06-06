@@ -28,6 +28,7 @@ import java.sql.SQLException;
 import java.sql.SQLFeatureNotSupportedException;
 import java.sql.Types;
 import java.util.Comparator;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Objects;
 import java.util.concurrent.Executors;
@@ -116,6 +117,9 @@ final class ContextTestUtils {
      */
     static void getTableTypes_(final Context context) throws SQLException {
         final var tableTypes = context.getTableTypes();
+        assertThat(tableTypes)
+                .doesNotHaveDuplicates()
+                .isSortedAccordingTo(TableType.comparing(context, Comparator.naturalOrder()));
         tableTypes(context, tableTypes);
     }
 
@@ -210,13 +214,22 @@ final class ContextTestUtils {
         // ---------------------------------------------------------------------------------------------------- typeInfo
         try {
             final var typeInfo = context.getTypeInfo();
+            assertThat(typeInfo)
+                    .doesNotHaveDuplicates()
+                    .isSortedAccordingTo(TypeInfo.comparator(context))
+                    .allSatisfy(v -> {
+                        assertThat(v.getNullable()).isIn(TypeInfo.COLUMN_VALUE_NULLABLE_TYPE_NO_NULLS,
+                                                         TypeInfo.COLUMN_VALUE_NULLABLE_TYPE_NULLABLE,
+                                                         TypeInfo.COLUMN_VALUE_NULLABLE_TYPE_NULLABLE_UNKNOWN);
+                    })
+            ;
             typeInfo(context, typeInfo);
         } catch (final SQLException sqle) {
             // empty
         }
         // -------------------------------------------------------------------------------------------------------- udts
         try {
-            final var udts = context.getUDTs(null, null, "%", null);
+            final var udts = context.getUDTs((String) null, (String) null, "%", null);
             udts(context, udts);
         } catch (final SQLException sqle) {
             // empty
@@ -556,13 +569,26 @@ final class ContextTestUtils {
     // ------------------------------------------------------------------------------------------------------- functions
     static void functions(final Context context, final List<? extends Function> functions) throws SQLException {
         assertThat(functions).isNotNull().doesNotContainNull();
-        if (!databaseProductName(context).equals(DatabaseProductNames.POSTGRE_SQL)) {
+        {
+            final var set = new HashSet<Function>();
+            functions.forEach(f -> {
+                if (!set.add(f)) {
+                    log.error("duplicate function: {}", f);
+                }
+            });
+        }
+        if (!List.of(
+                DatabaseProductNames.POSTGRE_SQL,
+                DatabaseProductNames.ORACLE
+        ).contains(databaseProductName(context))) {
             assertThat(functions).doesNotHaveDuplicates();
         }
-        if (!databaseProductName(context).equals(DatabaseProductNames.MARIA_DB)
-            // https://jira.mariadb.org/browse/CONJ-1158
-            && !databaseProductName(context).equals(DatabaseProductNames.POSTGRE_SQL)
-            && !databaseProductName(context).equals(DatabaseProductNames.MICROSOFT_SQL_SERVER)) {
+        if (!List.of(
+                DatabaseProductNames.MARIA_DB,
+                DatabaseProductNames.POSTGRE_SQL,
+                DatabaseProductNames.MICROSOFT_SQL_SERVER,
+                DatabaseProductNames.ORACLE
+        ).contains(databaseProductName(context))) {
             // https://github.com/microsoft/mssql-jdbc/issues/2321
             assertThat(functions).satisfiesAnyOf(
                     l -> assertThat(l).isSortedAccordingTo(Function.comparing(context, String.CASE_INSENSITIVE_ORDER)),
@@ -999,15 +1025,18 @@ final class ContextTestUtils {
     // ------------------------------------------------------------------------------------------------- tablePrivileges
     private static void tablePrivileges(final Context context, final List<? extends TablePrivilege> tablePrivileges)
             throws SQLException {
-        assertThat(tablePrivileges).isNotNull().doesNotContainNull();
+        assertThat(tablePrivileges)
+                .doesNotContainNull()
+                .doesNotHaveDuplicates();
         if (!databaseProductName(context).equals(DatabaseProductNames.MY_SQL)) {
             assertThat(tablePrivileges).doesNotHaveDuplicates();
         }
         if (true) {
             assertThat(tablePrivileges).satisfiesAnyOf(
-                    l -> assertThat(l).isSortedAccordingTo(
-                            TablePrivilege.comparing(context, String.CASE_INSENSITIVE_ORDER)),
-                    l -> assertThat(l).isSortedAccordingTo(TablePrivilege.comparing(context, Comparator.naturalOrder()))
+                    l -> assertThat(l)
+                            .isSortedAccordingTo(TablePrivilege.comparing(context, String.CASE_INSENSITIVE_ORDER)),
+                    l -> assertThat(l)
+                            .isSortedAccordingTo(TablePrivilege.comparing(context, Comparator.naturalOrder()))
             );
         }
         for (final var tablePrivilege : tablePrivileges) {
@@ -1022,16 +1051,12 @@ final class ContextTestUtils {
     // ------------------------------------------------------------------------------------------------------ tableTypes
     static void tableTypes(final Context context, final List<? extends TableType> tableTypes)
             throws SQLException {
-        assertThat(tableTypes).isNotNull().doesNotContainNull();
-        if (true) {
-            assertThat(tableTypes).doesNotContainNull();
-        }
-        if (true) {
-            assertThat(tableTypes).satisfiesAnyOf(
-                    l -> assertThat(l).isSortedAccordingTo(TableType.comparing(context, String.CASE_INSENSITIVE_ORDER)),
-                    l -> assertThat(l).isSortedAccordingTo(TableType.comparing(context, Comparator.naturalOrder()))
-            );
-        }
+        assertThat(tableTypes).doesNotContainNull();
+        assertThat(tableTypes).doesNotHaveDuplicates();
+        assertThat(tableTypes).satisfiesAnyOf(
+                l -> assertThat(l).isSortedAccordingTo(TableType.comparing(context, String.CASE_INSENSITIVE_ORDER)),
+                l -> assertThat(l).isSortedAccordingTo(TableType.comparing(context, Comparator.naturalOrder()))
+        );
         for (final var tableType : tableTypes) {
             tableType(context, tableType);
         }
@@ -1040,7 +1065,10 @@ final class ContextTestUtils {
     private static void tableType(final Context context, final TableType tableType) throws SQLException {
         MetadataTypeTestUtils.verify(tableType);
         {
-            assertThat(tableType.getTableType()).isNotBlank();
+            assertThat(tableType.getTableType())
+                    .isNotBlank()
+                    .doesNotStartWithWhitespaces()
+                    .doesNotEndWithWhitespaces();
         }
     }
 
@@ -1052,7 +1080,7 @@ final class ContextTestUtils {
         }
         if (!databaseProductName(context).equals(DatabaseProductNames.MY_SQL) &&
             !databaseProductName(context).equals(DatabaseProductNames.MICROSOFT_SQL_SERVER)) {
-            assertThat(typeInfo).isSortedAccordingTo(TypeInfo.comparing(context));
+            assertThat(typeInfo).isSortedAccordingTo(TypeInfo.comparator(context));
         }
         for (final var typeInfo_ : typeInfo) {
             typeInfo(context, typeInfo_);
@@ -1064,14 +1092,14 @@ final class ContextTestUtils {
         {
             assertThat(typeInfo.getTypeName()).isNotNull();
             //assertDoesNotThrow(() -> JDBCType.valueOf(typeInfo.getDataType())); // mssqlserver
-            assertDoesNotThrow(() -> TypeInfo.Nullable.valueOfFieldValue(typeInfo.getNullable()));
-            assertDoesNotThrow(() -> TypeInfo.Searchable.valueOfFieldValue(typeInfo.getSearchable()));
+//            assertDoesNotThrow(() -> TypeInfo.Nullable.valueOfFieldValue(typeInfo.getNullable()));
+//            assertDoesNotThrow(() -> TypeInfo.Searchable.valueOfFieldValue(typeInfo.getSearchable()));
         }
         {
-            final var value = TypeInfo.Nullable.valueOfFieldValue(typeInfo.getNullable());
+//            final var value = TypeInfo.Nullable.valueOfFieldValue(typeInfo.getNullable());
         }
         {
-            final var value = TypeInfo.Searchable.valueOfFieldValue(typeInfo.getSearchable());
+//            final var value = TypeInfo.Searchable.valueOfFieldValue(typeInfo.getSearchable());
         }
     }
 

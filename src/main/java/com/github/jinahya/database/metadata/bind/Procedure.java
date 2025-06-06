@@ -52,10 +52,10 @@ public class Procedure
     // -----------------------------------------------------------------------------------------------------------------
     static Comparator<Procedure> comparing(final Context context, final Comparator<? super String> comparator)
             throws SQLException {
-        return Comparator.comparing(Procedure::getProcedureCat, ContextUtils.nulls(context, comparator))
-                .thenComparing(Procedure::getProcedureSchem, ContextUtils.nulls(context, comparator))
-                .thenComparing(Procedure::getProcedureName, ContextUtils.nulls(context, comparator))
-                .thenComparing(Procedure::getSpecificName, ContextUtils.nulls(context, comparator));
+        return Comparator.comparing(Procedure::getProcedureCat, ContextUtils.nullPrecedence(context, comparator))
+                .thenComparing(Procedure::getProcedureSchem, ContextUtils.nullPrecedence(context, comparator))
+                .thenComparing(Procedure::getProcedureName, ContextUtils.nullPrecedence(context, comparator))
+                .thenComparing(Procedure::getSpecificName, ContextUtils.nullPrecedence(context, comparator));
     }
 
     // -------------------------------------------------------------------------------------------------- PROCEDURE_TYPE
@@ -117,11 +117,57 @@ public class Procedure
      */
     public static final String COLUMN_LABEL_SPECIFIC_NAME = "SPECIFIC_NAME";
 
+    // ------------------------------------------------------------------------------------------ STATIC_FACTORY_METHODS
+
+    // ---------------------------------------------------------------------------------------------------- CONSTRUCTORS
+
+    // ------------------------------------------------------------------------------------------------ java.lang.Object
+
     // ---------------------------------------------------------------------------------------------------- procedureCat
+    public String getProcedureCat() {
+        return procedureCat;
+    }
+
+    void setProcedureCat(final String procedureCat) {
+        this.procedureCat = procedureCat;
+    }
 
     // -------------------------------------------------------------------------------------------------- procedureSchem
+    public String getProcedureSchem() {
+        return procedureSchem;
+    }
+
+    void setProcedureSchem(final String procedureSchem) {
+        this.procedureSchem = procedureSchem;
+    }
+
+    // --------------------------------------------------------------------------------------------------- procedureName
+    public String getProcedureName() {
+        return procedureName;
+    }
+
+    void setProcedureName(final String procedureName) {
+        this.procedureName = procedureName;
+    }
+
+    // ---------------------------------------------------------------------------------------------------------- remark
+    public String getRemarks() {
+        return remarks;
+    }
+
+    void setRemarks(final String remarks) {
+        this.remarks = remarks;
+    }
 
     // --------------------------------------------------------------------------------------------------- procedureType
+    public Integer getProcedureType() {
+        return procedureType;
+    }
+
+    void setProcedureType(final Integer procedureType) {
+        this.procedureType = procedureType;
+    }
+
     ProcedureType getProcedureTypeAsEnum() {
         return Optional.ofNullable(getProcedureType())
                 .map(ProcedureType::valueOfFieldValue)
@@ -134,6 +180,15 @@ public class Procedure
                         .map(_IntFieldEnum::fieldValueAsInt)
                         .orElse(null)
         );
+    }
+
+    // ---------------------------------------------------------------------------------------------------- specificName
+    public String getSpecificName() {
+        return specificName;
+    }
+
+    void setSpecificName(final String specificName) {
+        this.specificName = specificName;
     }
 
     // -----------------------------------------------------------------------------------------------------------------
@@ -158,7 +213,7 @@ public class Procedure
     @_ColumnLabel("PROCEDURE_TYPE")
     private Integer procedureType;
 
-    @_MissingByVendor("Microsoft SQL Server") // https://github.com/microsoft/mssql-jdbc/issues/2320
+    // https://github.com/microsoft/mssql-jdbc/issues/2320
     @_ColumnLabel(COLUMN_LABEL_SPECIFIC_NAME)
     @EqualsAndHashCode.Include
     private String specificName;

@@ -55,9 +55,9 @@ public class Table
     static Comparator<Table> comparing(final Context context, final Comparator<? super String> comparator)
             throws SQLException {
         return Comparator
-                .comparing(Table::getTableType, ContextUtils.nulls(context, comparator))
-                .thenComparing(Table::getTableCat, ContextUtils.nulls(context, comparator))
-                .thenComparing(Table::getTableSchem, ContextUtils.nulls(context, comparator))
+                .comparing(Table::getTableType, ContextUtils.nullPrecedence(context, comparator))
+                .thenComparing(Table::getTableCat, ContextUtils.nullPrecedence(context, comparator))
+                .thenComparing(Table::getTableSchem, ContextUtils.nullPrecedence(context, comparator))
                 .thenComparing(Table::getTableName, comparator);
     }
 
@@ -105,7 +105,6 @@ public class Table
      */
     protected Table() {
         super();
-        this.tableCat = tableCat;
     }
 
     // -----------------------------------------------------------------------------------------------------------------
@@ -151,11 +150,11 @@ public class Table
         return tableCat;
     }
 
-    public void setTableCat(String tableCat) {
+    void setTableCat(final String tableCat) {
         this.tableCat = tableCat;
     }
 
-    public Table tableCat(final String tableCat) {
+    Table tableCat(final String tableCat) {
         setTableCat(tableCat);
         return this;
     }
@@ -195,15 +194,10 @@ public class Table
     }
 
     // -----------------------------------------------------------------------------------------------------------------
-
-    //    @_MissingByVendor("Microsoft SQL Server") // https://github.com/microsoft/mssql-jdbc/issues/406
-
     @_NullableBySpecification
     @_ColumnLabel(COLUMN_LABEL_TABLE_CAT)
     @EqualsAndHashCode.Include
     private String tableCat;
-
-    //    @_MissingByVendor("Microsoft SQL Server") // https://github.com/microsoft/mssql-jdbc/issues/406
 
     @_NullableBySpecification
     @_ColumnLabel(COLUMN_LABEL_TABLE_SCHEM)
@@ -219,36 +213,25 @@ public class Table
     private String tableType;
 
     // -----------------------------------------------------------------------------------------------------------------
-
     @_NullableBySpecification
     @_ColumnLabel("REMARKS")
     private String remarks;
-
-    @_MissingByVendor("Microsoft SQL Server") // https://github.com/microsoft/mssql-jdbc/issues/406
 
     @_NullableBySpecification
     @_ColumnLabel("TYPE_CAT")
     private String typeCat;
 
-    @_MissingByVendor("Microsoft SQL Server") // https://github.com/microsoft/mssql-jdbc/issues/406
-
     @_NullableBySpecification
     @_ColumnLabel("TYPE_SCHEM")
     private String typeSchem;
-
-    @_MissingByVendor("Microsoft SQL Server") // https://github.com/microsoft/mssql-jdbc/issues/406
 
     @_NullableBySpecification
     @_ColumnLabel("TYPE_NAME")
     private String typeName;
 
-    @_MissingByVendor("Microsoft SQL Server") // https://github.com/microsoft/mssql-jdbc/issues/406
-
     @_NullableBySpecification
     @_ColumnLabel("SELF_REFERENCING_COL_NAME")
     private String selfReferencingColName;
-
-    @_MissingByVendor("Microsoft SQL Server") // https://github.com/microsoft/mssql-jdbc/issues/406
 
     @_NullableBySpecification
     @_ColumnLabel("REF_GENERATION")

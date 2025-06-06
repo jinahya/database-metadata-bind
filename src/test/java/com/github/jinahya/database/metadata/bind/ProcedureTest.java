@@ -26,6 +26,9 @@ import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.EnumSource;
 import org.mockito.Mockito;
 
+import java.util.Comparator;
+
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 
@@ -76,5 +79,48 @@ class ProcedureTest
             // THEN
             verify(spy, times(1)).setProcedureType(procedureTypeAsEnum.fieldValueAsInt());
         }
+    }
+
+    @Test
+    void __() {
+        final var p1 = new Procedure();
+        p1.setProcedureCat(null);
+        p1.setProcedureSchem("DVSYS");
+        p1.setProcedureName("GET_TRUST_LEVEL_FOR_IDENTITY");
+        p1.setSpecificName(null);
+
+        final var p2 = new Procedure();
+        p2.setProcedureCat("DBMS_MACOLS_SESSION");
+        p2.setProcedureSchem("DVSYS");
+        p2.setProcedureName("IS_MAC_LABEL_SET");
+        p2.setSpecificName(null);
+
+        assertThat(
+                Comparator.comparing(
+                        Procedure::getProcedureCat,
+                        Comparator.nullsFirst(Comparator.naturalOrder())
+                ).compare(p1, p2)
+        ).isNotPositive();
+
+        assertThat(
+                Comparator.comparing(
+                        Procedure::getProcedureSchem,
+                        Comparator.nullsFirst(Comparator.naturalOrder())
+                ).compare(p1, p2)
+        ).isNotPositive();
+
+        assertThat(
+                Comparator.comparing(
+                        Procedure::getProcedureName,
+                        Comparator.nullsFirst(Comparator.naturalOrder())
+                ).compare(p1, p2)
+        ).isNotPositive();
+
+        assertThat(
+                Comparator.comparing(
+                        Procedure::getSpecificName,
+                        Comparator.nullsFirst(Comparator.naturalOrder())
+                ).compare(p1, p2)
+        ).isNotPositive();
     }
 }
