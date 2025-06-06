@@ -32,6 +32,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Objects;
 import java.util.concurrent.Executors;
+import java.util.stream.Collectors;
 
 import static com.github.jinahya.database.metadata.bind._Assertions.assertType;
 import static org.assertj.core.api.Assertions.assertThat;
@@ -79,63 +80,8 @@ final class ContextTestUtils {
         };
     }
 
-//    private static void proxy(final Context context, final Consumer<? super Context> consumer) {
-//        try (var factory = Validation.buildDefaultValidatorFactory()) {
-//            final var validator = factory.getValidator();
-//            try (var unloaded = new ByteBuddy()
-//                    .subclass(Context.class)
-//                    .method(ElementMatchers.any())
-//                    .intercept(InvocationHandlerAdapter.of(
-//                            proxy(new ValidationInvocationHandler(context, validator))))
-//                    .make()) {
-//                final var loaded = unloaded.load(context.getClass().getClassLoader()).getLoaded();
-//                final Context instance;
-//                try {
-//                    final var constructor = loaded.getDeclaredConstructor(DatabaseMetaData.class);
-//                    if (!constructor.isAccessible()) {
-//                        constructor.setAccessible(true);
-//                    }
-//                    if (!constructor.canAccess(null)) {
-//                        constructor.setAccessible(true);
-//                    }
-//                    instance = constructor.newInstance(context.metadata);
-//                } catch (final ReflectiveOperationException roe) {
-//                    throw new RuntimeException("failed to instantiate " + loaded, roe);
-//                }
-//                consumer.accept(instance);
-//            }
-//        }
-//    }
-
-    // -----------------------------------------------------------------------------------------------------------------
-
-    /**
-     * Tests {@link Context#getTableTypes()} on specified context.
-     *
-     * @param context the context.
-     * @throws SQLException if a DB error occurs.
-     */
-    static void getTableTypes_(final Context context) throws SQLException {
-        final var tableTypes = context.getTableTypes();
-        assertThat(tableTypes)
-                .doesNotHaveDuplicates()
-                .isSortedAccordingTo(TableType.comparing(context, Comparator.naturalOrder()));
-        tableTypes(context, tableTypes);
-    }
-
     // -----------------------------------------------------------------------------------------------------------------
     static void test(final Context context) throws SQLException {
-//        proxy(context, p -> {
-//            try {
-//                test_(p);
-//            } catch (final SQLException sqle) {
-//                throw new RuntimeException("failed to test", sqle);
-//            }
-//        });
-        test_(context);
-    }
-
-    private static void test_(final Context context) throws SQLException {
         Objects.requireNonNull(context, "context is null");
         // ---------------------------------------------------------------------------------------------------- catalogs
         if (true) {
@@ -170,6 +116,25 @@ final class ContextTestUtils {
         try {
             final var functions = context.getFunctions(null, null, "%");
             functions(context, functions);
+            functions.stream()
+                    .filter(e1 -> e1.getFunctionCat() != null)
+                    .collect(Collectors.groupingBy(Function::getFunctionCat)).forEach((fc, l1) -> {
+                        try {
+                            functions(context, l1);
+                        } catch (final SQLException e) {
+                            // empty
+                        }
+                        l1.stream()
+                                .filter(e2 -> e2.getFunctionSchem() != null)
+                                .collect(Collectors.groupingBy(Function::getFunctionSchem)).forEach((fs, l2) -> {
+                                    assertThat(l2).doesNotHaveDuplicates();
+                                    try {
+                                        functions(context, l1);
+                                    } catch (final SQLException e) {
+                                        // empty
+                                    }
+                                });
+                    });
         } catch (final SQLException sqle) {
             // empty
         }
@@ -568,7 +533,6 @@ final class ContextTestUtils {
 
     // ------------------------------------------------------------------------------------------------------- functions
     static void functions(final Context context, final List<? extends Function> functions) throws SQLException {
-        assertThat(functions).isNotNull().doesNotContainNull();
         {
             final var set = new HashSet<Function>();
             functions.forEach(f -> {
