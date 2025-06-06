@@ -35,7 +35,11 @@ import java.time.Duration;
 // https://java.testcontainers.org/modules/databases/trino/
 @Disabled
 @Slf4j
+<<<<<<<< HEAD:src/test/java-testcontainers/com/github/jinahya/database/metadata/bind/TestContainers_Trino_IT.java
 class TestContainers_Trino_IT
+========
+class TestContainers_Oracle_IT
+>>>>>>>> d0568958b2703d50449b00c691e46e642fd4a5f3:src/test/java-testcontainers/com/github/jinahya/database/metadata/bind/TestContainers_Oracle_IT.java
         extends TestContainers_$_IT {
 
     private static final String FULL_IMAGE_NAME = "trinodb/trino:439-arm64";
