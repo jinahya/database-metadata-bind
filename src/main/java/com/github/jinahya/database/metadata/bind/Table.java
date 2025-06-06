@@ -89,14 +89,7 @@ public class Table
      */
     public static final String COLUMN_LABEL_TABLE_TYPE = "TABLE_TYPE";
 
-    // -----------------------------------------------------------------------------------------------------------------
-    static Table of(final String tableCat, final String tableSchem, final String tableName) {
-        final Table instance = new Table();
-        instance.setTableCat(tableCat);
-        instance.setTableSchem(tableSchem);
-        instance.setTableName(tableName);
-        return instance;
-    }
+    // ------------------------------------------------------------------------------------------ STATIC_FACTORY_METHODS
 
     // ---------------------------------------------------------------------------------------------------- CONSTRUCTORS
 

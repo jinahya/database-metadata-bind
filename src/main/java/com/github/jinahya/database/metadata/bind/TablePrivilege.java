@@ -98,26 +98,6 @@ public class TablePrivilege
                '}';
     }
 
-//    @Override
-//    public boolean equals(final Object obj) {
-//        if (obj == null || getClass() != obj.getClass()) {
-//            return false;
-//        }
-//        if (!super.equals(obj)) {
-//            return false;
-//        }
-//        final var that = (TablePrivilege) obj;
-//        return Objects.equals(tableCat, that.tableCat) &&
-//               Objects.equals(tableSchem, that.tableSchem) &&
-//               Objects.equals(tableName, that.tableName) &&
-//               Objects.equals(privilege, that.privilege);
-//    }
-//
-//    @Override
-//    public int hashCode() {
-//        return Objects.hash(super.hashCode(), tableCat, tableSchem, tableName, privilege);
-//    }
-
     @Override
     public boolean equals(final Object obj) {
         if (obj == null || getClass() != obj.getClass()) {
