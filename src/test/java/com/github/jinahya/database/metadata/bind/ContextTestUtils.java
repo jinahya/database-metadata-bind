@@ -20,15 +20,9 @@ package com.github.jinahya.database.metadata.bind;
  * #L%
  */
 
-import jakarta.validation.Validation;
 import lombok.extern.slf4j.Slf4j;
-import net.bytebuddy.ByteBuddy;
-import net.bytebuddy.implementation.InvocationHandlerAdapter;
-import net.bytebuddy.matcher.ElementMatchers;
-import org.hibernate.validator.testutil.ValidationInvocationHandler;
 
 import java.lang.reflect.InvocationHandler;
-import java.sql.DatabaseMetaData;
 import java.sql.JDBCType;
 import java.sql.SQLException;
 import java.sql.SQLFeatureNotSupportedException;
@@ -37,7 +31,6 @@ import java.util.Comparator;
 import java.util.List;
 import java.util.Objects;
 import java.util.concurrent.Executors;
-import java.util.function.Consumer;
 
 import static com.github.jinahya.database.metadata.bind._Assertions.assertType;
 import static org.assertj.core.api.Assertions.assertThat;
@@ -85,33 +78,33 @@ final class ContextTestUtils {
         };
     }
 
-    private static void proxy(final Context context, final Consumer<? super Context> consumer) {
-        try (var factory = Validation.buildDefaultValidatorFactory()) {
-            final var validator = factory.getValidator();
-            try (var unloaded = new ByteBuddy()
-                    .subclass(Context.class)
-                    .method(ElementMatchers.any())
-                    .intercept(InvocationHandlerAdapter.of(
-                            proxy(new ValidationInvocationHandler(context, validator))))
-                    .make()) {
-                final var loaded = unloaded.load(context.getClass().getClassLoader()).getLoaded();
-                final Context instance;
-                try {
-                    final var constructor = loaded.getDeclaredConstructor(DatabaseMetaData.class);
-                    if (!constructor.isAccessible()) {
-                        constructor.setAccessible(true);
-                    }
-                    if (!constructor.canAccess(null)) {
-                        constructor.setAccessible(true);
-                    }
-                    instance = constructor.newInstance(context.metadata);
-                } catch (final ReflectiveOperationException roe) {
-                    throw new RuntimeException("failed to instantiate " + loaded, roe);
-                }
-                consumer.accept(instance);
-            }
-        }
-    }
+//    private static void proxy(final Context context, final Consumer<? super Context> consumer) {
+//        try (var factory = Validation.buildDefaultValidatorFactory()) {
+//            final var validator = factory.getValidator();
+//            try (var unloaded = new ByteBuddy()
+//                    .subclass(Context.class)
+//                    .method(ElementMatchers.any())
+//                    .intercept(InvocationHandlerAdapter.of(
+//                            proxy(new ValidationInvocationHandler(context, validator))))
+//                    .make()) {
+//                final var loaded = unloaded.load(context.getClass().getClassLoader()).getLoaded();
+//                final Context instance;
+//                try {
+//                    final var constructor = loaded.getDeclaredConstructor(DatabaseMetaData.class);
+//                    if (!constructor.isAccessible()) {
+//                        constructor.setAccessible(true);
+//                    }
+//                    if (!constructor.canAccess(null)) {
+//                        constructor.setAccessible(true);
+//                    }
+//                    instance = constructor.newInstance(context.metadata);
+//                } catch (final ReflectiveOperationException roe) {
+//                    throw new RuntimeException("failed to instantiate " + loaded, roe);
+//                }
+//                consumer.accept(instance);
+//            }
+//        }
+//    }
 
     // -----------------------------------------------------------------------------------------------------------------
 
@@ -128,13 +121,14 @@ final class ContextTestUtils {
 
     // -----------------------------------------------------------------------------------------------------------------
     static void test(final Context context) throws SQLException {
-        proxy(context, p -> {
-            try {
-                test_(p);
-            } catch (final SQLException sqle) {
-                throw new RuntimeException("failed to test", sqle);
-            }
-        });
+//        proxy(context, p -> {
+//            try {
+//                test_(p);
+//            } catch (final SQLException sqle) {
+//                throw new RuntimeException("failed to test", sqle);
+//            }
+//        });
+        test_(context);
     }
 
     private static void test_(final Context context) throws SQLException {
