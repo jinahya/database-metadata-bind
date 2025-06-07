@@ -28,7 +28,9 @@ import lombok.ToString;
 import java.sql.DatabaseMetaData;
 import java.sql.SQLException;
 import java.sql.Types;
+import java.util.ArrayList;
 import java.util.Comparator;
+import java.util.List;
 import java.util.Objects;
 
 /**
@@ -185,4 +187,30 @@ public class UDT
     @_NullableBySpecification
     @_ColumnLabel("BASE_TYPE")
     private Integer baseType;
+
+    // -----------------------------------------------------------------------------------------------------------------
+    List<Attribute> getAttributes(final Context context, final String attributeNamePattern) throws SQLException {
+        Objects.requireNonNull(context, "context is null");
+        return context.getAttributes(this, attributeNamePattern);
+    }
+
+    List<SuperType> getSuperTypes(final Context context) throws SQLException {
+        Objects.requireNonNull(context, "context is null");
+        return context.getSuperTypes(this);
+    }
+
+    List<UDT> getSuperUDTs(final Context context, final int[] types) throws SQLException {
+        Objects.requireNonNull(context, "context is null");
+        final var collection = new ArrayList<UDT>();
+        for (final var superType : getSuperTypes(context)) {
+            context.addUDTs(
+                    superType.getTypeCat(),
+                    superType.getTypeSchem(),
+                    superType.getTypeName(),
+                    types,
+                    collection
+            );
+        }
+        return collection;
+    }
 }

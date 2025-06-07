@@ -176,7 +176,7 @@ abstract class TestContainers_$_IT {
                 throw new RuntimeException(sqle);
             }
             try {
-                final var tables = c.getTables(null, null, "%", null);
+                final var tables = c.getTables((String) null, null, "%", null);
                 ContextTestUtils.tables(c, tables);
             } catch (final SQLException sqle) {
                 if (sqle instanceof SQLFeatureNotSupportedException sqlfnse) {

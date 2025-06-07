@@ -25,6 +25,8 @@ import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
 
+import java.util.Optional;
+
 /**
  * A class for binding results of the
  * {@link java.sql.DatabaseMetaData#getSuperTables(java.lang.String, java.lang.String, java.lang.String)}
@@ -51,9 +53,47 @@ public class SuperTable
 
     public static final String COLUMN_LABEL_SUPERTABLE_NAME = "SUPERTABLE_NAME";
 
-    // -------------------------------------------------------------------------------------------------------- tableCat
+    // ------------------------------------------------------------------------------------------ STATIC FACTORY_METHODS
 
-    // ------------------------------------------------------------------------------------------------------ tableSchem
+    // ---------------------------------------------------------------------------------------------------- CONSTRUCTORS
+
+    // ------------------------------------------------------------------------------------------------ java.lang.Object
+
+    // -----------------------------------------------------------------------------------------------------------------
+    public String getTableCat() {
+        return tableCat;
+    }
+
+    protected void setTableCat(final String tableCat) {
+        this.tableCat = tableCat;
+    }
+
+    // -----------------------------------------------------------------------------------------------------------------
+    public String getTableSchem() {
+        return tableSchem;
+    }
+
+    protected void setTableSchem(final String tableSchem) {
+        this.tableSchem = tableSchem;
+    }
+
+    // -----------------------------------------------------------------------------------------------------------------
+    public String getTableName() {
+        return tableName;
+    }
+
+    protected void setTableName(final String tableName) {
+        this.tableName = tableName;
+    }
+
+    // -----------------------------------------------------------------------------------------------------------------
+    public String getSupertableName() {
+        return supertableName;
+    }
+
+    protected void setSupertableName(final String supertableName) {
+        this.supertableName = supertableName;
+    }
 
     // -----------------------------------------------------------------------------------------------------------------
     @_NullableBySpecification
@@ -74,4 +114,85 @@ public class SuperTable
     @_ColumnLabel(COLUMN_LABEL_SUPERTABLE_NAME)
     @EqualsAndHashCode.Include
     private String supertableName;
+
+    // -----------------------------------------------------------------------------------------------------------------
+    @EqualsAndHashCode.Exclude
+    @ToString.Exclude
+    private transient Catalog tableCatalog_;
+
+    @EqualsAndHashCode.Exclude
+    @ToString.Exclude
+    private transient Schema tableSchema_;
+
+    @EqualsAndHashCode.Exclude
+    @ToString.Exclude
+    private transient Catalog supertableCatalog_;
+
+    @EqualsAndHashCode.Exclude
+    @ToString.Exclude
+    private transient Schema supertableSchema_;
+
+    Catalog getTableCatalog_() {
+        if (tableCatalog_ == null) {
+            tableCatalog_ = Catalog.of(tableCat);
+        }
+        return tableCatalog_;
+    }
+
+    void setTableCatalog_(final Catalog tableCatalog_) {
+        this.tableCatalog_ = tableCatalog_;
+        setTableCat(
+                Optional.ofNullable(this.tableCatalog_)
+                        .map(Catalog::getTableCat)
+                        .orElse(null)
+        );
+    }
+
+    Schema getTableSchema_() {
+        if (tableSchema_ == null) {
+            tableSchema_ = Schema.of(getTableCatalog_(), tableSchem);
+        }
+        return tableSchema_;
+    }
+
+    void setTableSchema_(final Schema tableSchema_) {
+        this.tableSchema_ = tableSchema_;
+        setTableCatalog_(
+                Optional.ofNullable(this.tableSchema_)
+                        .map(Schema::getTableCatalog_)
+                        .orElse(null)
+        );
+    }
+
+    Catalog getSupertableCatalog_() {
+        if (supertableCatalog_ == null) {
+            supertableCatalog_ = Catalog.of(tableCat);
+        }
+        return supertableCatalog_;
+    }
+
+    void setSupertableCatalog_(final Catalog supertableCatalog_) {
+        this.supertableCatalog_ = supertableCatalog_;
+        setTableCat(
+                Optional.ofNullable(this.supertableCatalog_)
+                        .map(Catalog::getTableCat)
+                        .orElse(null)
+        );
+    }
+
+    Schema getSupertableSchema_() {
+        if (supertableSchema_ == null) {
+            supertableSchema_ = Schema.of(getSupertableCatalog_(), tableSchem);
+        }
+        return supertableSchema_;
+    }
+
+    void setSupertableSchema_(final Schema supertableSchema_) {
+        this.supertableSchema_ = supertableSchema_;
+        setSupertableCatalog_(
+                Optional.ofNullable(this.supertableSchema_)
+                        .map(Schema::getTableCatalog_)
+                        .orElse(null)
+        );
+    }
 }

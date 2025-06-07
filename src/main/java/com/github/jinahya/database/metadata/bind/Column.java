@@ -51,7 +51,8 @@ public class Column
         return Comparator.comparing(Column::getTableCat, ContextUtils.nullPrecedence(context, comparator))
                 .thenComparing(Column::getTableSchem, ContextUtils.nullPrecedence(context, comparator))
                 .thenComparing(Column::getTableName, ContextUtils.nullPrecedence(context, comparator))
-                .thenComparing(Column::getOrdinalPosition, ContextUtils.nullPrecedence(context, Comparator.naturalOrder()));
+                .thenComparing(Column::getOrdinalPosition,
+                               ContextUtils.nullPrecedence(context, Comparator.naturalOrder()));
     }
 
     // -----------------------------------------------------------------------------------------------------------------
@@ -275,28 +276,6 @@ public class Column
     @Override
     public int hashCode() {
         return Objects.hash(super.hashCode(), tableCat, tableSchem, tableName, columnName);
-    }
-
-    // -----------------------------------------------------------------------------------------------------------------
-    public Catalog toCatalog() {
-        final Catalog instance = new Catalog();
-        instance.setTableCat(getTableCat());
-        return instance;
-    }
-
-    public Schema toSchema() {
-        final Schema instance = new Schema();
-        instance.setTableCatalog(getTableCat());
-        instance.setTableSchem(getTableSchem());
-        return instance;
-    }
-
-    public Table toTable() {
-        final Table instance = new Table();
-        instance.setTableCat(getTableCat());
-        instance.setTableSchem(getTableSchem());
-        instance.setTableName(getTableName());
-        return instance;
     }
 
     // -------------------------------------------------------------------------------------------------------- tableCat

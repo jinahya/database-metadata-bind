@@ -21,13 +21,12 @@ package com.github.jinahya.database.metadata.bind;
  */
 
 import lombok.EqualsAndHashCode;
-import lombok.Getter;
-import lombok.Setter;
 import lombok.ToString;
 
 import java.sql.SQLException;
 import java.util.Comparator;
 import java.util.Objects;
+import java.util.Optional;
 
 /**
  * A class for binding results of the
@@ -38,14 +37,12 @@ import java.util.Objects;
  * @see Context#getTables(String, String, String, String[])
  */
 
+@_ChildOf(Catalog.class)
+@_ChildOf(Schema.class)
 @_ParentOf(Column.class)
 @_ParentOf(IndexInfo.class)
 @_ParentOf(PseudoColumn.class)
 @_ParentOf(VersionColumn.class)
-@Setter
-@Getter
-@ToString(callSuper = true)
-//@EqualsAndHashCode(callSuper = true, onlyExplicitlyIncluded = true)
 public class Table
         extends AbstractMetadataType {
 
@@ -88,6 +85,30 @@ public class Table
      * The column label of {@value}.
      */
     public static final String COLUMN_LABEL_TABLE_TYPE = "TABLE_TYPE";
+
+    // --------------------------------------------------------------------------------------------------------- REMARKS
+    public static final String COLUMN_LABEL_REMARKS = "REMARKS";
+
+    // -------------------------------------------------------------------------------------------------------- TYPE_CAT
+    public static final String COLUMN_LABEL_TYPE_CAT = "TYPE_CAT";
+
+    // ------------------------------------------------------------------------------------------------------ TYPE_SCHEM
+    public static final String COLUMN_LABEL_TYPE_SCHEM = "TYPE_SCHEM";
+
+    // ------------------------------------------------------------------------------------------------------- TYPE_NAME
+    public static final String COLUMN_LABEL_TYPE_NAME = "TYPE_NAME";
+
+    // --------------------------------------------------------------------------------------- SELF_REFERENCING_COL_NAME
+    public static final String COLUMN_LABEL_SELF_REFERENCING_COL_NAME = "SELF_REFERENCING_COL_NAME";
+
+    // -------------------------------------------------------------------------------------------------- REF_GENERATION
+    public static final String COLUMN_LABEL_REF_GENERATION = "REF_GENERATION";
+
+    public static final String COLUMN_VALUE_REF_GENERATION_SYSTEM = "SYSTEM";
+
+    public static final String COLUMN_VALUE_REF_GENERATION_USER = "USER";
+
+    public static final String COLUMN_VALUE_REF_GENERATION_DERIVED = "DERIVED";
 
     // ------------------------------------------------------------------------------------------ STATIC_FACTORY_METHODS
 
@@ -143,13 +164,8 @@ public class Table
         return tableCat;
     }
 
-    void setTableCat(final String tableCat) {
+    protected void setTableCat(final String tableCat) {
         this.tableCat = tableCat;
-    }
-
-    Table tableCat(final String tableCat) {
-        setTableCat(tableCat);
-        return this;
     }
 
     // ------------------------------------------------------------------------------------------------------- tableShem
@@ -164,6 +180,10 @@ public class Table
         return tableSchem;
     }
 
+    protected void setTableSchem(final String tableSchem) {
+        this.tableSchem = tableSchem;
+    }
+
     // ------------------------------------------------------------------------------------------------------- tableName
 
     /**
@@ -175,6 +195,10 @@ public class Table
         return tableName;
     }
 
+    protected void setTableName(final String tableName) {
+        this.tableName = tableName;
+    }
+
     // ------------------------------------------------------------------------------------------------------- tableType
 
     /**
@@ -184,6 +208,64 @@ public class Table
      */
     public String getTableType() {
         return tableType;
+    }
+
+    protected void setTableType(final String tableType) {
+        this.tableType = tableType;
+    }
+
+    // --------------------------------------------------------------------------------------------------------- remarks
+    public String getRemarks() {
+        return remarks;
+    }
+
+    protected void setRemarks(final String remarks) {
+        this.remarks = remarks;
+    }
+
+    // --------------------------------------------------------------------------------------------------------- typeCat
+    public String getTypeCat() {
+        return typeCat;
+    }
+
+    protected void setTypeCat(final String typeCat) {
+        this.typeCat = typeCat;
+    }
+
+    // ------------------------------------------------------------------------------------------------------- typeSchem
+    public String getTypeSchem() {
+        return typeSchem;
+    }
+
+    protected void setTypeSchem(final String typeSchem) {
+        this.typeSchem = typeSchem;
+    }
+
+    // -------------------------------------------------------------------------------------------------------- typeName
+    public String getTypeName() {
+        return typeName;
+    }
+
+    protected void setTypeName(String typeName) {
+        this.typeName = typeName;
+    }
+
+    // --------------------------------------------------------------------------------------- selfReferencingColumnName
+    public String getSelfReferencingColName() {
+        return selfReferencingColName;
+    }
+
+    protected void setSelfReferencingColName(final String selfReferencingColName) {
+        this.selfReferencingColName = selfReferencingColName;
+    }
+
+    // --------------------------------------------------------------------------------------------------- refGeneration
+    public String getRefGeneration() {
+        return refGeneration;
+    }
+
+    protected void setRefGeneration(final String refGeneration) {
+        this.refGeneration = refGeneration;
     }
 
     // -----------------------------------------------------------------------------------------------------------------
@@ -201,32 +283,116 @@ public class Table
     @EqualsAndHashCode.Include
     private String tableName;
 
+    // -----------------------------------------------------------------------------------------------------------------
     @_ColumnLabel(COLUMN_LABEL_TABLE_TYPE)
     @EqualsAndHashCode.Include
     private String tableType;
 
     // -----------------------------------------------------------------------------------------------------------------
     @_NullableBySpecification
-    @_ColumnLabel("REMARKS")
+    @_ColumnLabel(COLUMN_LABEL_REMARKS)
     private String remarks;
 
+    // -----------------------------------------------------------------------------------------------------------------
     @_NullableBySpecification
-    @_ColumnLabel("TYPE_CAT")
+    @_ColumnLabel(COLUMN_LABEL_TYPE_CAT)
     private String typeCat;
 
     @_NullableBySpecification
-    @_ColumnLabel("TYPE_SCHEM")
+    @_ColumnLabel(COLUMN_LABEL_TYPE_SCHEM)
     private String typeSchem;
 
     @_NullableBySpecification
-    @_ColumnLabel("TYPE_NAME")
+    @_ColumnLabel(COLUMN_LABEL_TYPE_NAME)
     private String typeName;
 
+    // -----------------------------------------------------------------------------------------------------------------
     @_NullableBySpecification
-    @_ColumnLabel("SELF_REFERENCING_COL_NAME")
+    @_ColumnLabel(COLUMN_LABEL_SELF_REFERENCING_COL_NAME)
     private String selfReferencingColName;
 
     @_NullableBySpecification
-    @_ColumnLabel("REF_GENERATION")
+    @_ColumnLabel(COLUMN_LABEL_REF_GENERATION)
     private String refGeneration;
+
+    // -----------------------------------------------------------------------------------------------------------------
+    @EqualsAndHashCode.Exclude
+    @ToString.Exclude
+    private Catalog tableCatalog_;
+
+    @EqualsAndHashCode.Exclude
+    @ToString.Exclude
+    private Schema tableSchema_;
+
+    @EqualsAndHashCode.Exclude
+    @ToString.Exclude
+    private Catalog typeCatalog_;
+
+    @EqualsAndHashCode.Exclude
+    @ToString.Exclude
+    private Schema typeSchema_;
+
+    Catalog getTableCatalog_() {
+        if (tableCatalog_ == null) {
+            tableCatalog_ = Catalog.of(tableCat);
+        }
+        return tableCatalog_;
+    }
+
+    void setTableCatalog_(final Catalog tableCatalog_) {
+        this.tableCatalog_ = tableCatalog_;
+        setTableCat(
+                Optional.ofNullable(this.tableCatalog_)
+                        .map(Catalog::getTableCat)
+                        .orElse(null)
+        );
+    }
+
+    Schema getTableSchema_() {
+        if (tableSchema_ == null) {
+            tableSchema_ = Schema.of(getTableCatalog_(), tableSchem);
+        }
+        return tableSchema_;
+    }
+
+    void setTableSchema_(final Schema tableSchema_) {
+        this.tableSchema_ = tableSchema_;
+        setTableCatalog_(
+                Optional.ofNullable(this.tableSchema_)
+                        .map(Schema::getTableCatalog_)
+                        .orElse(null)
+        );
+    }
+
+    Catalog getTypeCatalog_() {
+        if (typeCatalog_ == null) {
+            typeCatalog_ = Catalog.of(typeCat);
+        }
+        return typeCatalog_;
+    }
+
+    void setTypeCatalog_(final Catalog typeCatalog_) {
+        this.typeCatalog_ = typeCatalog_;
+        setTypeCat(
+                Optional.ofNullable(this.typeCatalog_)
+                        .map(Catalog::getTableCat)
+                        .orElse(null)
+        );
+    }
+
+    Schema getTypeSchema_() {
+        if (typeSchema_ == null) {
+            typeSchema_ = Schema.of(getTypeCatalog_(), typeSchem);
+        }
+        return typeSchema_;
+    }
+
+    void setTypeSchema_(final Schema typeSchema_) {
+        this.typeSchema_ = typeSchema_;
+        setTypeCatalog_(
+                Optional.ofNullable(this.typeSchema_)
+                        .map(Schema::getTableCatalog_)
+                        .orElse(null)
+        );
+    }
 }

@@ -42,7 +42,7 @@ import java.util.Optional;
 //@XmlType(name = "xxx")
 @Setter
 @Getter
-@EqualsAndHashCode(callSuper = true, onlyExplicitlyIncluded = true)
+@EqualsAndHashCode(callSuper = true)
 @ToString(callSuper = true)
 public class Procedure
         extends AbstractMetadataType {

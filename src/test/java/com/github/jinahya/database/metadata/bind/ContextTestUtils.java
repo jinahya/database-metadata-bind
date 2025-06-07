@@ -156,7 +156,7 @@ final class ContextTestUtils {
         try {
             final var schemas = context.getSchemas((String) null, null);
             if (schemas.isEmpty()) {
-                schemas.add(Schema.of(null, null));
+                schemas.add(Schema.of((String) null, null));
             }
             schemas(context, schemas);
         } catch (final SQLException sqle) {
@@ -171,7 +171,7 @@ final class ContextTestUtils {
         }
         // ------------------------------------------------------------------------------------------------------ tables
         try {
-            final var tables = context.getTables(null, null, "%", null);
+            final var tables = context.getTables((String) null, null, "%", null);
             tables(context, tables);
         } catch (final SQLException sqle) {
             // empty
@@ -337,7 +337,7 @@ final class ContextTestUtils {
         try {
             final var schemas = context.getSchemas(catalog, "%");
             if (schemas.isEmpty()) {
-                schemas.add(Schema.of(null, null));
+                schemas.add(Schema.of((String) null, null));
             }
             schemas(context, schemas);
         } catch (final SQLException sqle) {
@@ -703,12 +703,6 @@ final class ContextTestUtils {
             throws SQLException {
         MetadataTypeTestUtils.verify(procedureColumn);
         assertThatCode(() -> {
-            final var columnType = procedureColumn.getColumnTypeAsEnum();
-        }).doesNotThrowAnyException();
-        assertThatCode(() -> {
-            final var nullable = procedureColumn.getNullableAsEnum();
-        }).doesNotThrowAnyException();
-        assertThatCode(() -> {
             final var isNullable = procedureColumn.getIsNullable();
         }).doesNotThrowAnyException();
     }
@@ -828,6 +822,29 @@ final class ContextTestUtils {
 
     private static void table(final Context context, final Table table) throws SQLException {
         MetadataTypeTestUtils.verify(table);
+        // -------------------------------------------------------------------------------------------------------------
+        {
+            assertThat(table.getTableCatalog_())
+                    .isNotNull()
+                    .isEqualTo(Catalog.of(table.getTableCat()));
+            assertThat(table.getTableSchema_())
+                    .isNotNull()
+                    .isEqualTo(Schema.of(table.getTableCat(), table.getTableSchem()));
+            assertThat(table.getTypeCatalog_())
+                    .isNotNull()
+                    .isEqualTo(Catalog.of(table.getTypeCat()));
+            assertThat(table.getTypeSchema_())
+                    .isNotNull()
+                    .isEqualTo(Schema.of(table.getTypeCat(), table.getTypeSchem()));
+        }
+        assertThat(table.getRefGeneration()).satisfiesAnyOf(
+                rg -> assertThat(rg).isNull(),
+                rg -> assertThat(rg).isIn(
+                        Table.COLUMN_VALUE_REF_GENERATION_DERIVED,
+                        Table.COLUMN_VALUE_REF_GENERATION_SYSTEM,
+                        Table.COLUMN_VALUE_REF_GENERATION_USER
+                )
+        );
         // ------------------------------------------------------------------------------------------- bestRowIdentifier
         for (final BestRowIdentifier.Scope scope : BestRowIdentifier.Scope.values()) {
             for (final boolean nullable : new boolean[] {true, false}) {
@@ -1091,6 +1108,18 @@ final class ContextTestUtils {
             assertThat(udt.getDataType()).isIn(Types.JAVA_OBJECT, Types.STRUCT, Types.DISTINCT);
             assertDoesNotThrow(() -> JDBCType.valueOf(udt.getDataType()));
         }
+        // ------------------------------------------------------------------------------------------------- .attributes
+        udt.getAttributes(context, "%").forEach(a -> {
+            log.debug("attribute: {}", a);
+        });
+        // ------------------------------------------------------------------------------------------------- .superTypes
+        udt.getSuperTypes(context).forEach(st -> {
+            log.debug("superType: {}", st);
+        });
+        // -------------------------------------------------------------------------------------------------- .superUDTs
+        udt.getSuperUDTs(context, null).forEach(sudt -> {
+            log.debug("superUDT: {}", sudt);
+        });
         // -------------------------------------------------------------------------------------------------- attributes
         try {
             final var attributes = context.getAttributes(udt, "%");
