@@ -70,7 +70,7 @@
         <groupId>jakarta.platform</groupId>
         <artifactId>jakarta.jakartaee-bom</artifactId>
         <!-- https://central.sonatype.com/artifact/jakarta.platform/jakarta.jakartaee-bom/versions -->
-<!--        <version>11.0.0-M4</version>-->
+        <!--        <version>11.0.0-M4</version>-->
         <version>11.0.0-RC1</version>
         <type>pom</type>
         <scope>import</scope>
@@ -99,7 +99,7 @@
     <dependency>
       <groupId>com.ibm.db2</groupId>
       <artifactId>jcc</artifactId>
-<!--      <version>11.5.9.0</version>-->
+      <!--      <version>11.5.9.0</version>-->
       <version>12.1.0.0</version>
       <scope>test</scope>
     </dependency>
@@ -118,7 +118,7 @@
     <dependency>
       <groupId>jakarta.annotation</groupId>
       <artifactId>jakarta.annotation-api</artifactId>
-      <scope>test</scope>
+      <scope>provided</scope>
     </dependency>
     <dependency>
       <groupId>jakarta.validation</groupId>
@@ -243,7 +243,7 @@
               <link>https://javadoc.io/doc/jakarta.platform/jakarta.jakartaee-api/latest</link>
             </links>
             <release>${maven.compiler.testRelease}</release>
-              <!-- https://issues.apache.org/jira/browse/MJAVADOC-720 -->
+            <!-- https://issues.apache.org/jira/browse/MJAVADOC-720 -->
             <sourcepath>${project.build.directory}/generated-sources-noduplicate/delombok</sourcepath>
             <!--            <sourcepath>target/generated-sources-noduplicate/delombok</sourcepath>-->
             <tags>
@@ -293,7 +293,7 @@
         <plugin>
           <groupId>org.codehaus.mojo</groupId>
           <artifactId>sonar-maven-plugin</artifactId>
-<!--          <version>3.10.0.2594</version>-->
+          <!--          <version>3.10.0.2594</version>-->
           <version>4.0.0.4121</version>
         </plugin>
         <plugin>

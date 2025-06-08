@@ -20,6 +20,8 @@ package com.github.jinahya.database.metadata.bind;
  * #L%
  */
 
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.Setter;
@@ -27,6 +29,7 @@ import lombok.ToString;
 
 import java.sql.SQLException;
 import java.util.Comparator;
+import java.util.Optional;
 
 /**
  * A class for binding results of the {@link java.sql.DatabaseMetaData#getSchemas(java.lang.String, java.lang.String)}
@@ -47,10 +50,15 @@ public class Schema
     private static final long serialVersionUID = 7457236468401244963L;
 
     // -----------------------------------------------------------------------------------------------------------------
+    static Comparator<Schema> comparing(final Comparator<? super String> comparator) {
+        return Comparator
+                .comparing(Schema::getTableCatalog, comparator)
+                .thenComparing(Schema::getTableSchem, comparator);
+    }
+
     static Comparator<Schema> comparing(final Context context, final Comparator<? super String> comparator)
             throws SQLException {
-        return Comparator.comparing(Schema::getTableCatalog, ContextUtils.nulls(context, comparator))
-                .thenComparing(Schema::getTableSchem, ContextUtils.nulls(context, comparator));
+        return comparing(ContextUtils.nulls(context, comparator));
     }
 
     // -----------------------------------------------------------------------------------------------------------------
@@ -69,7 +77,7 @@ public class Schema
      */
     public static final String COLUMN_LABEL_TABLE_SCHEM = "TABLE_SCHEM";
 
-    // -----------------------------------------------------------------------------------------------------------------
+    // ------------------------------------------------------------------------------------------ STATIC_FACTORY_METHODS
     static Schema of(final String tableCatalog, final String tableSchem) {
         final Schema instance = new Schema();
         instance.setTableCatalog(tableCatalog);
@@ -77,17 +85,67 @@ public class Schema
         return instance;
     }
 
-    // ---------------------------------------------------------------------------------------------------- tableCatalog
+    // ---------------------------------------------------------------------------------------------------- CONSTRUCTORS
+
+    /**
+     * Creates a new instance.
+     */
+    protected Schema() {
+        super();
+    }
+
+    // ------------------------------------------------------------------------------------------------ java.lang.Object
 
     // ------------------------------------------------------------------------------------------------------ tableSchem
 
+    @Nonnull
+    public String getTableSchem() {
+        return tableSchem;
+    }
+
+    protected void setTableSchem(@Nonnull final String tableSchem) {
+        this.tableSchem = tableSchem;
+    }
+
+    // ---------------------------------------------------------------------------------------------------- tableCatalog
+
+    @Nullable
+    public String getTableCatalog() {
+        return tableCatalog;
+    }
+
+    protected void setTableCatalog(@Nullable final String tableCatalog) {
+        this.tableCatalog = tableCatalog;
+    }
+
     // -----------------------------------------------------------------------------------------------------------------
+    @Nonnull
+    @_ColumnLabel(COLUMN_LABEL_TABLE_SCHEM)
+    @EqualsAndHashCode.Include
+    private String tableSchem;
+
+    @Nullable
     @_NullableBySpecification
     @_ColumnLabel(COLUMN_LABEL_TABLE_CATALOG)
     @EqualsAndHashCode.Include
     private String tableCatalog;
 
-    @_ColumnLabel(COLUMN_LABEL_TABLE_SCHEM)
-    @EqualsAndHashCode.Include
-    private String tableSchem;
+    // -----------------------------------------------------------------------------------------------------------------
+    @EqualsAndHashCode.Exclude
+    @ToString.Exclude
+    private Catalog tableCatalog_;
+
+    Catalog getTableCatalog_() {
+        if (tableCatalog_ == null) {
+            tableCatalog_ = Catalog.of(tableCatalog);
+        }
+        return tableCatalog_;
+    }
+
+    void setTableCatalog_(final Catalog tableCatalog_) {
+        this.tableCatalog_ = tableCatalog_;
+        setTableCatalog(
+                Optional.ofNullable(this.tableCatalog_).map(Catalog::getTableCat).orElse(null)
+        );
+    }
 }
