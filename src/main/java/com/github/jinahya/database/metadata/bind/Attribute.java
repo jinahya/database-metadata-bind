@@ -21,9 +21,6 @@ package com.github.jinahya.database.metadata.bind;
  */
 
 import lombok.EqualsAndHashCode;
-import lombok.Getter;
-import lombok.Setter;
-import lombok.ToString;
 
 import java.sql.DatabaseMetaData;
 import java.sql.SQLException;
@@ -42,10 +39,6 @@ import java.util.Optional;
  */
 
 @_ChildOf(UDT.class)
-@Setter
-@Getter
-@EqualsAndHashCode(callSuper = true, onlyExplicitlyIncluded = true)
-@ToString(callSuper = true)
 public class Attribute
         extends AbstractMetadataType
         implements HasIsNullableEnum {
@@ -57,13 +50,13 @@ public class Attribute
             throws SQLException {
         Objects.requireNonNull(context, "context is null");
         Objects.requireNonNull(comparator, "comparator is null");
-        return Comparator.comparing(Attribute::getTypeCat, ContextUtils.nulls(context, comparator))
-                .thenComparing(Attribute::getTypeSchem, ContextUtils.nulls(context, comparator))
-                .thenComparing(Attribute::getTypeName, ContextUtils.nulls(context, comparator))
-                .thenComparing(Attribute::getOrdinalPosition, ContextUtils.nulls(context, Comparator.naturalOrder()));
+        return Comparator.comparing(Attribute::getTypeCat, ContextUtils.nullPrecedence(context, comparator))
+                .thenComparing(Attribute::getTypeSchem, ContextUtils.nullPrecedence(context, comparator))
+                .thenComparing(Attribute::getTypeName, ContextUtils.nullPrecedence(context, comparator))
+                .thenComparing(Attribute::getOrdinalPosition, ContextUtils.nullPrecedence(context, Comparator.naturalOrder()));
     }
 
-    // -----------------------------------------------------------------------------------------------------------------
+    // -------------------------------------------------------------------------------------------------------- TYPE_CAT
     public static final String COLUMN_LABEL_TYPE_CAT = "TYPE_CAT";
 
     // ------------------------------------------------------------------------------------------------------ TYPE_SCHEM
@@ -90,6 +83,10 @@ public class Attribute
     public static final String COLUMN_LABEL_DATA_TYPE = "DATA_TYPE";
 
     // -------------------------------------------------------------------------------------------------------- NULLABLE
+
+    /**
+     * The column label of {@value}
+     */
     public static final String COLUMN_LABEL_NULLABLE = "NULLABLE";
 
     /**
@@ -139,6 +136,10 @@ public class Attribute
     }
 
     // -----------------------------------------------------------------------------------------------------------------
+
+    /**
+     * The column label of {@value}.
+     */
     public static final String COLUMN_LABEL_IS_NULLABLE = "IS_NULLABLE";
 
     // ---------------------------------------------------------------------------------------------------- CONSTRUCTORS
@@ -150,15 +151,75 @@ public class Attribute
         super();
     }
 
+    // ------------------------------------------------------------------------------------------------ java.lang.Object
+
+    @Override
+    public String toString() {
+        return super.toString() + '{' +
+               "typeCat=" + typeCat +
+               ",typeSchem=" + typeSchem +
+               ",typeName=" + typeName +
+               ",attrName=" + attrName +
+               ",dataType=" + dataType +
+               ",attrTypeName=" + attrTypeName +
+               ",attrSize=" + attrSize +
+               ",decimalDigits=" + decimalDigits +
+               ",numPrecRadix=" + numPrecRadix +
+               ",nullable=" + nullable +
+               ",remarks=" + remarks +
+               ",attrDef=" + attrDef +
+               ",sqlDataType=" + sqlDataType +
+               ",sqlDatetimeSub=" + sqlDatetimeSub +
+               ",charOctetLength=" + charOctetLength +
+               ",ordinalPosition=" + ordinalPosition +
+               ",isNullable=" + isNullable +
+               ",scopeCatalog=" + scopeCatalog +
+               ",scopeSchema=" + scopeSchema +
+               ",scopeTable=" + scopeTable +
+               ",sourceDataType=" + sourceDataType +
+               '}';
+    }
+
+    @Override
+    public boolean equals(final Object obj) {
+        if (obj == null || getClass() != obj.getClass()) {
+            return false;
+        }
+        if (!super.equals(obj)) {
+            return false;
+        }
+        final Attribute that = (Attribute) obj;
+        return Objects.equals(typeCat, that.typeCat) &&
+               Objects.equals(typeSchem, that.typeSchem) &&
+               Objects.equals(typeName, that.typeName) &&
+               Objects.equals(attrName, that.attrName);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(super.hashCode(), typeCat, typeSchem, typeName, attrName);
+    }
+
     // -------------------------------------------------------------------------------------------------------- tableCat
 
     /**
-     * Returns the value of {@value #COLUMN_LABEL_TYPE_CAT} column.
+     * Returns current value of {@value #COLUMN_LABEL_TYPE_CAT} column property.
      *
-     * @return the value of {@value #COLUMN_LABEL_TYPE_CAT} column.
+     * @return current value of the {@value #COLUMN_LABEL_TYPE_CAT} column property.
+     * @see #setTypeCat(String)
      */
     public String getTypeCat() {
         return typeCat;
+    }
+
+    /**
+     * Replaces current value of {@value #COLUMN_LABEL_TYPE_CAT} column property with specified value.
+     *
+     * @param typeCat new value for the {@value #COLUMN_LABEL_TYPE_CAT} column property.
+     * @see #getTypeCat()
+     */
+    public void setTypeCat(final String typeCat) {
+        this.typeCat = typeCat;
     }
 
     // ------------------------------------------------------------------------------------------------------- typeSchem
@@ -172,6 +233,10 @@ public class Attribute
         return typeSchem;
     }
 
+    public void setTypeSchem(String typeSchem) {
+        this.typeSchem = typeSchem;
+    }
+
     // -------------------------------------------------------------------------------------------------------- typeName
 
     /**
@@ -181,6 +246,10 @@ public class Attribute
      */
     public String getTypeName() {
         return typeName;
+    }
+
+    public void setTypeName(String typeName) {
+        this.typeName = typeName;
     }
 
     // -------------------------------------------------------------------------------------------------------- attrName
@@ -194,6 +263,10 @@ public class Attribute
         return attrName;
     }
 
+    public void setAttrName(String attrName) {
+        this.attrName = attrName;
+    }
+
     // -------------------------------------------------------------------------------------------------------- dataType
 
     /**
@@ -205,7 +278,55 @@ public class Attribute
         return dataType;
     }
 
+    public void setDataType(Integer dataType) {
+        this.dataType = dataType;
+    }
+
+    // ---------------------------------------------------------------------------------------------------- attrTypeName
+    public String getAttrTypeName() {
+        return attrTypeName;
+    }
+
+    public void setAttrTypeName(String attrTypeName) {
+        this.attrTypeName = attrTypeName;
+    }
+
+    // -------------------------------------------------------------------------------------------------------- attrSize
+    public Integer getAttrSize() {
+        return attrSize;
+    }
+
+    public void setAttrSize(Integer attrSize) {
+        this.attrSize = attrSize;
+    }
+
+    // --------------------------------------------------------------------------------------------------- decimalDigits
+    public Integer getDecimalDigits() {
+        return decimalDigits;
+    }
+
+    public void setDecimalDigits(Integer decimalDigits) {
+        this.decimalDigits = decimalDigits;
+    }
+
+    // ---------------------------------------------------------------------------------------------------- numPrecRadix
+    public Integer getNumPrecRadix() {
+        return numPrecRadix;
+    }
+
+    public void setNumPrecRadix(Integer numPrecRadix) {
+        this.numPrecRadix = numPrecRadix;
+    }
+
     // -------------------------------------------------------------------------------------------------------- nullable
+    public Integer getNullable() {
+        return nullable;
+    }
+
+    public void setNullable(Integer nullable) {
+        this.nullable = nullable;
+    }
+
     public Nullable getNullableAsEnum() {
         return Optional.ofNullable(getNullable())
                 .map(Nullable::valueOfFieldValue)
@@ -218,6 +339,109 @@ public class Attribute
                         .map(_IntFieldEnum::fieldValueAsInt)
                         .orElse(null)
         );
+    }
+
+    // --------------------------------------------------------------------------------------------------------- remarks
+    public String getRemarks() {
+        return remarks;
+    }
+
+    public void setRemarks(String remarks) {
+        this.remarks = remarks;
+    }
+
+    // --------------------------------------------------------------------------------------------------------- attrDef
+    public String getAttrDef() {
+        return attrDef;
+    }
+
+    public void setAttrDef(String attrDef) {
+        this.attrDef = attrDef;
+    }
+
+    // ----------------------------------------------------------------------------------------------------- sqlDataType
+    public Integer getSqlDataType() {
+        return sqlDataType;
+    }
+
+    public void setSqlDataType(Integer sqlDataType) {
+        this.sqlDataType = sqlDataType;
+    }
+
+    // -------------------------------------------------------------------------------------------------- sqlDatetimeSub
+    public Integer getSqlDatetimeSub() {
+        return sqlDatetimeSub;
+    }
+
+    public void setSqlDatetimeSub(Integer sqlDatetimeSub) {
+        this.sqlDatetimeSub = sqlDatetimeSub;
+    }
+
+    // ------------------------------------------------------------------------------------------------- charOctetLength
+
+    public Integer getCharOctetLength() {
+        return charOctetLength;
+    }
+
+    public void setCharOctetLength(Integer charOctetLength) {
+        this.charOctetLength = charOctetLength;
+    }
+
+    // ------------------------------------------------------------------------------------------------- ordinalPosition
+
+    public Integer getOrdinalPosition() {
+        return ordinalPosition;
+    }
+
+    public void setOrdinalPosition(Integer ordinalPosition) {
+        this.ordinalPosition = ordinalPosition;
+    }
+
+    // ------------------------------------------------------------------------------------------------------ isNullable
+    @Override
+    public String getIsNullable() {
+        return isNullable;
+    }
+
+    @Override
+    public void setIsNullable(final String isNullable) {
+        this.isNullable = isNullable;
+    }
+
+    // ----------------------------------------------------------------------------------------------------- scopCatalog
+    public String getScopeCatalog() {
+        return scopeCatalog;
+    }
+
+    public void setScopeCatalog(final String scopeCatalog) {
+        this.scopeCatalog = scopeCatalog;
+    }
+
+    // ----------------------------------------------------------------------------------------------------- scopeSchema
+    public String getScopeSchema() {
+        return scopeSchema;
+    }
+
+    public void setScopeSchema(final String scopeSchema) {
+        this.scopeSchema = scopeSchema;
+    }
+
+    // ------------------------------------------------------------------------------------------------------ scopeTable
+    public String getScopeTable() {
+        return scopeTable;
+    }
+
+    public void setScopeTable(final String scopeTable) {
+        this.scopeTable = scopeTable;
+    }
+
+    // -------------------------------------------------------------------------------------------------- sourceDataType
+    public Integer getSourceDataType() {
+        return sourceDataType;
+    }
+
+    public void setSourceDataType(final Integer sourceDataType) {
+        this.sourceDataType = sourceDataType;
     }
 
     // -----------------------------------------------------------------------------------------------------------------
@@ -233,11 +457,11 @@ public class Attribute
 
     @_ColumnLabel(COLUMN_LABEL_TYPE_NAME)
     @EqualsAndHashCode.Include
-    private String typeName;
+    String typeName;
 
     @_ColumnLabel(COLUMN_LABEL_ATTR_NAME)
     @EqualsAndHashCode.Include
-    private String attrName;
+    String attrName;
 
     // -----------------------------------------------------------------------------------------------------------------
     @_ColumnLabel(COLUMN_LABEL_DATA_TYPE)
@@ -279,7 +503,7 @@ public class Attribute
     private Integer charOctetLength;
 
     @_ColumnLabel("ORDINAL_POSITION")
-    private Integer ordinalPosition;
+    Integer ordinalPosition;
 
     @_ColumnLabel(COLUMN_LABEL_IS_NULLABLE)
     private String isNullable;

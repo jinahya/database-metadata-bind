@@ -39,19 +39,16 @@ class TestContainers_PostgreSQL_IT
         extends TestContainers_$_IT {
 
     @Container
-    private static final PostgreSQLContainer<?> CONTAINER;
+    private static final PostgreSQLContainer<?> CONTAINER =
+            new PostgreSQLContainer<>(DockerImageName.parse("postgres:latest"))
+                    .withImagePullPolicy(PullPolicy.ageBased(Duration.ofDays(180L)));
 
-    static {
-        final DockerImageName NAME = DockerImageName.parse("postgres:latest");
-        CONTAINER = new PostgreSQLContainer<>(NAME)
-                .withImagePullPolicy(PullPolicy.ageBased(Duration.ofDays(180L)));
-    }
-
+    // -----------------------------------------------------------------------------------------------------------------
     @Override
     Connection connect() throws SQLException {
-        final var url = CONTAINER.getJdbcUrl();
-        final var user = CONTAINER.getUsername();
+        final var jdbcUrl = CONTAINER.getJdbcUrl();
+        final var username = CONTAINER.getUsername();
         final var password = CONTAINER.getPassword();
-        return DriverManager.getConnection(url, user, password);
+        return DriverManager.getConnection(jdbcUrl, username, password);
     }
 }

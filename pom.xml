@@ -1,12 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
   <modelVersion>4.0.0</modelVersion>
 
   <parent>
-    <groupId>com.github.jinahya</groupId>
+    <groupId>io.github.jinahya</groupId>
     <artifactId>jinahya-parent</artifactId>
-    <version>0.9.4</version>
+    <version>0.9.9</version>
   </parent>
 
   <artifactId>database-metadata-bind</artifactId>
@@ -38,20 +37,20 @@
   </ciManagement>
 
   <properties>
-    <maven.compiler.source>1.8</maven.compiler.source>
+    <maven.compiler.source>11</maven.compiler.source>
     <maven.compiler.target>${maven.compiler.source}</maven.compiler.target>
-    <maven.compiler.release>8</maven.compiler.release>
+    <maven.compiler.release>${maven.compiler.target}</maven.compiler.release>
     <maven.compiler.testSource>21</maven.compiler.testSource>
     <maven.compiler.testTarget>${maven.compiler.testSource}</maven.compiler.testTarget>
     <maven.compiler.testRelease>${maven.compiler.testTarget}</maven.compiler.testRelease>
     <doclint>none</doclint>
     <sonar.organization>jinahya-github</sonar.organization>
     <sonar.host.url>https://sonarcloud.io</sonar.host.url>
-    <version.animal-sniffer>1.24</version.animal-sniffer>
+    <!--    <version.animal-sniffer>1.24</version.animal-sniffer>-->
     <version.com.oracle.ojdbc>23.3.0.23.09</version.com.oracle.ojdbc>
-    <version.lombok>1.18.36</version.lombok>
+    <version.lombok>1.18.38</version.lombok>
     <version.maven-failsafe>${version.maven-surefire}</version.maven-failsafe>
-    <version.maven-surefire>3.5.2</version.maven-surefire>
+    <version.maven-surefire>3.5.3</version.maven-surefire>
     <version.mysql-connector-j>8.3.0</version.mysql-connector-j>
     <version.ojdbc6>11.2.0.4</version.ojdbc6>
     <version.ojdbc8>21.8.0.0</version.ojdbc8>
@@ -60,8 +59,8 @@
     <!--    <version.org.apache.derby>10.16.1.1</version.org.apache.derby>-->
     <version.org.apache.derby>10.17.1.0</version.org.apache.derby>
     <version.org.hibernate.validator>8.0.1.Final</version.org.hibernate.validator>
-    <version.org.junit.jupiter>5.12.1</version.org.junit.jupiter>
-    <version.org.mockito>5.16.1</version.org.mockito>
+    <version.org.junit.jupiter>5.13.0</version.org.junit.jupiter>
+    <version.org.mockito>5.18.0</version.org.mockito>
   </properties>
 
   <dependencyManagement>
@@ -70,8 +69,7 @@
         <groupId>jakarta.platform</groupId>
         <artifactId>jakarta.jakartaee-bom</artifactId>
         <!-- https://central.sonatype.com/artifact/jakarta.platform/jakarta.jakartaee-bom/versions -->
-        <!--        <version>11.0.0-M4</version>-->
-        <version>11.0.0-RC1</version>
+        <version>11.0.0</version>
         <type>pom</type>
         <scope>import</scope>
       </dependency>
@@ -93,14 +91,7 @@
     <dependency>
       <groupId>com.google.guava</groupId>
       <artifactId>guava</artifactId>
-      <version>33.4.0-jre</version>
-      <scope>test</scope>
-    </dependency>
-    <dependency>
-      <groupId>com.ibm.db2</groupId>
-      <artifactId>jcc</artifactId>
-      <!--      <version>11.5.9.0</version>-->
-      <version>12.1.0.0</version>
+      <version>33.4.8-jre</version>
       <scope>test</scope>
     </dependency>
     <dependency>
@@ -121,25 +112,15 @@
       <scope>provided</scope>
     </dependency>
     <dependency>
-      <groupId>jakarta.validation</groupId>
-      <artifactId>jakarta.validation-api</artifactId>
-      <scope>test</scope>
-    </dependency>
-    <!--    <dependency>-->
-    <!--      <groupId>jakarta.xml.bind</groupId>-->
-    <!--      <artifactId>jakarta.xml.bind-api</artifactId>-->
-    <!--      <scope>provided</scope>-->
-    <!--    </dependency>-->
-    <dependency>
       <groupId>nl.jqno.equalsverifier</groupId>
       <artifactId>equalsverifier-nodep</artifactId>
-      <version>3.19.2</version>
+      <version>4.0</version>
       <scope>test</scope>
     </dependency>
     <dependency>
       <groupId>org.apache.commons</groupId>
       <artifactId>commons-text</artifactId>
-      <version>1.13.0</version>
+      <version>1.13.1</version>
       <scope>test</scope>
     </dependency>
     <dependency>
@@ -163,31 +144,8 @@
     <dependency>
       <groupId>org.assertj</groupId>
       <artifactId>assertj-core</artifactId>
-      <version>3.26.3</version>
-      <scope>test</scope>
-    </dependency>
-    <dependency>
-      <groupId>org.codehaus.mojo</groupId>
-      <artifactId>animal-sniffer-annotations</artifactId>
-      <version>${version.animal-sniffer}</version>
-      <scope>provided</scope>
-    </dependency>
-    <dependency>
-      <groupId>org.glassfish.expressly</groupId>
-      <artifactId>expressly</artifactId>
-      <version>5.0.0</version>
-      <scope>test</scope>
-    </dependency>
-    <dependency>
-      <groupId>org.hibernate.validator</groupId>
-      <artifactId>hibernate-validator</artifactId>
-      <version>${version.org.hibernate.validator}</version>
-      <scope>test</scope>
-    </dependency>
-    <dependency>
-      <groupId>org.hibernate.validator</groupId>
-      <artifactId>hibernate-validator-test-utils</artifactId>
-      <version>${version.org.hibernate.validator}</version>
+      <!-- https://central.sonatype.com/artifact/org.assertj/assertj-core/versions -->
+      <version>3.27.3</version>
       <scope>test</scope>
     </dependency>
     <dependency>
@@ -202,12 +160,6 @@
       <version>${version.org.junit.jupiter}</version>
       <scope>test</scope>
     </dependency>
-    <!--    <dependency>-->
-    <!--      <groupId>org.mockito</groupId>-->
-    <!--      <artifactId>mockito-inline</artifactId>-->
-    <!--      <version>${version.org.mockito}</version>-->
-    <!--      <scope>test</scope>-->
-    <!--    </dependency>-->
     <dependency>
       <groupId>org.mockito</groupId>
       <artifactId>mockito-junit-jupiter</artifactId>
@@ -240,7 +192,7 @@
               <additionalOption>-Xdoclint:${doclint}</additionalOption>
             </additionalOptions>
             <links>
-              <link>https://javadoc.io/doc/jakarta.platform/jakarta.jakartaee-api/latest</link>
+              <link>https://javadoc.io/doc/jakarta.annotation/jakarta.annotation-api/latest</link>
             </links>
             <release>${maven.compiler.testRelease}</release>
             <!-- https://issues.apache.org/jira/browse/MJAVADOC-720 -->
@@ -273,7 +225,7 @@
         <plugin>
           <groupId>org.apache.maven.plugins</groupId>
           <artifactId>maven-project-info-reports-plugin</artifactId>
-          <version>3.7.0</version>
+          <version>3.9.0</version>
         </plugin>
         <plugin>
           <groupId>org.apache.maven.plugins</groupId>
@@ -283,7 +235,7 @@
         <plugin>
           <groupId>org.codehaus.mojo</groupId>
           <artifactId>build-helper-maven-plugin</artifactId>
-          <version>3.6.0</version>
+          <version>3.6.1</version>
         </plugin>
         <plugin>
           <groupId>org.codehaus.mojo</groupId>
@@ -299,7 +251,7 @@
         <plugin>
           <groupId>org.jacoco</groupId>
           <artifactId>jacoco-maven-plugin</artifactId>
-          <version>0.8.12</version>
+          <version>0.8.13</version>
         </plugin>
       </plugins>
     </pluginManagement>
@@ -393,27 +345,28 @@
           <trimStackTrace>false</trimStackTrace>
         </configuration>
       </plugin>
-      <plugin>
-        <groupId>org.codehaus.mojo</groupId>
-        <artifactId>animal-sniffer-maven-plugin</artifactId>
-        <version>${version.animal-sniffer}</version>
-        <executions>
-          <execution>
-            <id>check-against-java18</id>
-            <phase>test</phase>
-            <goals>
-              <goal>check</goal>
-            </goals>
-            <configuration>
-              <signature>
-                <groupId>org.codehaus.mojo.signature</groupId>
-                <artifactId>java18</artifactId>
-                <version>1.0</version>
-              </signature>
-            </configuration>
-          </execution>
-        </executions>
-      </plugin>
+      <!--      <plugin>-->
+      <!--        <groupId>org.codehaus.mojo</groupId>-->
+      <!--        <artifactId>animal-sniffer-maven-plugin</artifactId>-->
+      <!--        <version>${version.animal-sniffer}</version>-->
+      <!--        <executions>-->
+      <!--          <execution>-->
+      <!--            <id>check-against-java18</id>-->
+      <!--            <phase>test</phase>-->
+      <!--            <goals>-->
+      <!--              <goal>check</goal>-->
+      <!--            </goals>-->
+      <!--            <configuration>-->
+      <!--              <skip>true</skip>-->
+      <!--              <signature>-->
+      <!--                <groupId>org.codehaus.mojo.signature</groupId>-->
+      <!--                <artifactId>java18</artifactId>-->
+      <!--                <version>1.0</version>-->
+      <!--              </signature>-->
+      <!--            </configuration>-->
+      <!--          </execution>-->
+      <!--        </executions>-->
+      <!--      </plugin>-->
       <plugin>
         <groupId>org.codehaus.mojo</groupId>
         <artifactId>license-maven-plugin</artifactId>
@@ -568,20 +521,27 @@
             <groupId>com.oracle.database.jdbc</groupId>
             <artifactId>ojdbc-bom</artifactId>
             <!--            <version>23.2.0.0</version>-->
-            <version>23.3.0.23.09</version>
+            <!--            <version>23.3.0.23.09</version>-->
+            <version>23.8.0.25.04</version>
             <type>pom</type>
             <scope>import</scope>
           </dependency>
           <dependency><!-- https://search.maven.org/search?q=g:org.testcontainers -->
             <groupId>org.testcontainers</groupId>
             <artifactId>testcontainers-bom</artifactId>
-            <version>1.19.6</version>
+            <!--            <version>1.19.6</version>-->
+            <version>1.21.1</version>
             <type>pom</type>
             <scope>import</scope>
           </dependency>
         </dependencies>
       </dependencyManagement>
       <dependencies>
+        <!--        <dependency>-->
+        <!--          <groupId>org.testcontainers</groupId>-->
+        <!--          <artifactId>junit-jupiter</artifactId>-->
+        <!--          <scope>test</scope>-->
+        <!--        </dependency>-->
         <dependency>
           <groupId>org.testcontainers</groupId>
           <artifactId>db2</artifactId>
@@ -614,7 +574,7 @@
         <dependency>
           <groupId>org.postgresql</groupId>
           <artifactId>postgresql</artifactId>
-          <version>42.7.2</version>
+          <version>42.7.6</version>
           <scope>test</scope>
         </dependency>
         <dependency>
@@ -635,6 +595,11 @@
         <dependency>
           <groupId>org.testcontainers</groupId>
           <artifactId>mysql</artifactId>
+          <scope>test</scope>
+        </dependency>
+        <dependency>
+          <groupId>org.testcontainers</groupId>
+          <artifactId>oracle-free</artifactId>
           <scope>test</scope>
         </dependency>
         <dependency>

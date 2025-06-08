@@ -21,10 +21,10 @@ package com.github.jinahya.database.metadata.bind;
  */
 
 import lombok.extern.slf4j.Slf4j;
-import org.junit.jupiter.api.AfterAll;
-import org.junit.jupiter.api.BeforeAll;
+import org.testcontainers.containers.JdbcDatabaseContainer;
 import org.testcontainers.containers.MariaDBContainer;
 import org.testcontainers.images.PullPolicy;
+import org.testcontainers.junit.jupiter.Container;
 import org.testcontainers.utility.DockerImageName;
 
 import java.sql.Connection;
@@ -39,27 +39,17 @@ class TestContainers_MariaDB_IT
 
     private static final String FULL_IMAGE_NAME = "mariadb:latest";
 
-    private static MariaDBContainer<?> CONTAINER;
+    @Container
+    private static final JdbcDatabaseContainer<?> CONTAINER =
+            new MariaDBContainer<>(DockerImageName.parse(FULL_IMAGE_NAME))
+                    .withImagePullPolicy(PullPolicy.ageBased(Duration.ofDays(180L)));
 
-    @BeforeAll
-    static void start() {
-        final DockerImageName name = DockerImageName.parse(FULL_IMAGE_NAME);
-        CONTAINER = new MariaDBContainer<>(name)
-                .withImagePullPolicy(PullPolicy.ageBased(Duration.ofDays(180L)));
-        CONTAINER.start();
-    }
-
-    @AfterAll
-    static void stop() {
-        CONTAINER.stop();
-    }
-
+    // -----------------------------------------------------------------------------------------------------------------
     @Override
     Connection connect() throws SQLException {
-        final var url = CONTAINER.getJdbcUrl();
-        final var user = CONTAINER.getUsername();
+        final var jdbcUrl = CONTAINER.getJdbcUrl();
+        final var username = CONTAINER.getUsername();
         final var password = CONTAINER.getPassword();
-//        return DriverManager.getConnection(url, user, password);
-        return DriverManager.getConnection(url, "root", "test");
+        return DriverManager.getConnection(jdbcUrl, username, password);
     }
 }

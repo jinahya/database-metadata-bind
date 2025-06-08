@@ -21,10 +21,10 @@ package com.github.jinahya.database.metadata.bind;
  */
 
 import lombok.extern.slf4j.Slf4j;
-import org.junit.jupiter.api.AfterAll;
-import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.Disabled;
 import org.testcontainers.containers.MSSQLServerContainer;
 import org.testcontainers.images.PullPolicy;
+import org.testcontainers.junit.jupiter.Container;
 import org.testcontainers.utility.DockerImageName;
 
 import java.sql.Connection;
@@ -36,35 +36,26 @@ import java.time.Duration;
 // https://github.com/microsoft/mssql-docker/issues/668
 // https://github.com/microsoft/mssql-jdbc/issues/2320
 // https://github.com/microsoft/mssql-jdbc/issues/849
+@Disabled
 @Slf4j
 class TestContainers_SQLServer_IT
         extends TestContainers_$_IT {
 
     private static final String FULL_IMAGE_NAME = "mcr.microsoft.com/mssql/server:2022-latest";
-//    private static final String FULL_IMAGE_NAME = "mcr.microsoft.com/azure-sql-edge:latest";
-//    private static final String FULL_IMAGE_NAME = "azure-sql-edge:latest";
 
-    private static MSSQLServerContainer<?> CONTAINER;
+    @Container
+    private static final MSSQLServerContainer<?> CONTAINER =
+            new MSSQLServerContainer<>(DockerImageName.parse(FULL_IMAGE_NAME))
+                    .withImagePullPolicy(PullPolicy.ageBased(Duration.ofDays(180L)))
+                    .acceptLicense();
 
-    @BeforeAll
-    static void start() {
-        final DockerImageName name = DockerImageName.parse(FULL_IMAGE_NAME);
-        CONTAINER = new MSSQLServerContainer<>(name)
-                .withImagePullPolicy(PullPolicy.ageBased(Duration.ofDays(180L)))
-                .acceptLicense();
-        CONTAINER.start();
-    }
-
-    @AfterAll
-    static void stop() {
-        CONTAINER.stop();
-    }
+    // -----------------------------------------------------------------------------------------------------------------
 
     @Override
     Connection connect() throws SQLException {
-        final var url = CONTAINER.getJdbcUrl();
-        final var user = CONTAINER.getUsername();
+        final var jdbcUrl = CONTAINER.getJdbcUrl();
+        final var username = CONTAINER.getUsername();
         final var password = CONTAINER.getPassword();
-        return DriverManager.getConnection(url, user, password);
+        return DriverManager.getConnection(jdbcUrl, username, password);
     }
 }

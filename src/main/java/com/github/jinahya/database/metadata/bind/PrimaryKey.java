@@ -20,10 +20,8 @@ package com.github.jinahya.database.metadata.bind;
  * #L%
  */
 
+import jakarta.annotation.Nullable;
 import lombok.EqualsAndHashCode;
-import lombok.Getter;
-import lombok.Setter;
-import lombok.ToString;
 
 import java.sql.DatabaseMetaData;
 import java.sql.SQLException;
@@ -35,11 +33,7 @@ import java.util.Comparator;
  * @author Jin Kwon &lt;jinahya_at_gmail.com&gt;
  * @see Context#getPrimaryKeys(String, String, String)
  */
-
-@Setter
-@Getter
-@EqualsAndHashCode(callSuper = true, onlyExplicitlyIncluded = true)
-@ToString(callSuper = true)
+@EqualsAndHashCode(callSuper = true)
 public class PrimaryKey
         extends AbstractMetadataType {
 
@@ -52,7 +46,7 @@ public class PrimaryKey
 //                .thenComparing(PrimaryKey::getTableSchem, ContextUtils.nulls(context, comparator))
 //                .thenComparing(PrimaryKey::getTableName, ContextUtils.nulls(context, comparator))
 //                .thenComparing(PrimaryKey::getColumnName, ContextUtils.nulls(context, comparator));
-        return Comparator.comparing(PrimaryKey::getColumnName, ContextUtils.nulls(context, comparator));
+        return Comparator.comparing(PrimaryKey::getColumnName, ContextUtils.nullPrecedence(context, comparator));
     }
 
     // ------------------------------------------------------------------------------------------------------- TABLE_CAT
@@ -97,33 +91,110 @@ public class PrimaryKey
      */
     public static final String COLUMN_LABEL_PK_NAME = "PK_NAME";
 
+    // ------------------------------------------------------------------------------------------ STATIC_FACTORY_METHODS
+
+    // ---------------------------------------------------------------------------------------------------- CONSTRUCTORS
+
+    /**
+     * Creates a new instance.
+     */
+    protected PrimaryKey() {
+        super();
+    }
+
+    // ------------------------------------------------------------------------------------------------ java.lang.Object
+    @Override
+    public String toString() {
+        return super.toString() + '{' +
+               "tableCat=" + tableCat +
+               ",tableSchem=" + tableSchem +
+               ",tableName=" + tableName +
+               ",columnName=" + columnName +
+               ",keySeq=" + keySeq +
+               ",pkName=" + pkName +
+               '}';
+    }
+
     // -------------------------------------------------------------------------------------------------------- tableCat
+    @Nullable
+    public String getTableCat() {
+        return tableCat;
+    }
+
+    protected void setTableCat(@Nullable final String tableCat) {
+        this.tableCat = tableCat;
+    }
 
     // ------------------------------------------------------------------------------------------------------ tableSchem
+    @Nullable
+    public String getTableSchem() {
+        return tableSchem;
+    }
+
+    protected void setTableSchem(@Nullable String tableSchem) {
+        this.tableSchem = tableSchem;
+    }
+
+    // ------------------------------------------------------------------------------------------------------- tableName
+    public String getTableName() {
+        return tableName;
+    }
+
+    protected void setTableName(final String tableName) {
+        this.tableName = tableName;
+    }
+
+    // ------------------------------------------------------------------------------------------------------ columnName
+    public String getColumnName() {
+        return columnName;
+    }
+
+    protected void setColumnName(final String columnName) {
+        this.columnName = columnName;
+    }
+
+    // ---------------------------------------------------------------------------------------------------------- keySeq
+    public Integer getKeySeq() {
+        return keySeq;
+    }
+
+    protected void setKeySeq(final Integer keySeq) {
+        this.keySeq = keySeq;
+    }
+
+    // ---------------------------------------------------------------------------------------------------------- pkName
+    @Nullable
+    public String getPkName() {
+        return pkName;
+    }
+
+    protected void setPkName(@Nullable final String pkName) {
+        this.pkName = pkName;
+    }
 
     // -----------------------------------------------------------------------------------------------------------------
+    @Nullable
     @_NullableBySpecification
     @_ColumnLabel(COLUMN_LABEL_TABLE_CAT)
     private String tableCat;
 
+    @Nullable
     @_NullableBySpecification
     @_ColumnLabel(COLUMN_LABEL_TABLE_SCHEM)
     private String tableSchem;
 
     @_ColumnLabel(COLUMN_LABEL_TABLE_NAME)
-    @EqualsAndHashCode.Include
     private String tableName;
 
     @_ColumnLabel(COLUMN_LABEL_COLUMN_NAME)
-    @EqualsAndHashCode.Include
     private String columnName;
 
     // -----------------------------------------------------------------------------------------------------------------
     @_ColumnLabel(COLUMN_LABEL_KEY_SEQ)
     private Integer keySeq;
 
+    @Nullable
     @_NullableBySpecification
     @_ColumnLabel(COLUMN_LABEL_PK_NAME)
-    @EqualsAndHashCode.Include
     private String pkName;
 }

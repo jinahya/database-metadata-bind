@@ -52,9 +52,9 @@ class AttributeTest
     @Override
     Attribute newTypeInstance() {
         final Attribute instance = super.newTypeInstance();
-        instance.setAttrName("");
-        instance.setTypeName("");
-        instance.setOrdinalPosition(1);
+        instance.attrName = "";
+        instance.typeName = "";
+        instance.ordinalPosition = 1;
         return instance;
     }
 

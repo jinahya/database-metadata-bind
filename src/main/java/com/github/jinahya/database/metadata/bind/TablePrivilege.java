@@ -27,6 +27,7 @@ import lombok.ToString;
 
 import java.sql.SQLException;
 import java.util.Comparator;
+import java.util.Objects;
 
 /**
  * A class for binding results of the
@@ -49,10 +50,10 @@ public class TablePrivilege
     // -----------------------------------------------------------------------------------------------------------------
     static Comparator<TablePrivilege> comparing(final Context context, final Comparator<? super String> comparator)
             throws SQLException {
-        return Comparator.comparing(TablePrivilege::getTableCat, ContextUtils.nulls(context, comparator))
-                .thenComparing(TablePrivilege::getTableSchem, ContextUtils.nulls(context, comparator))
-                .thenComparing(TablePrivilege::getTableName, ContextUtils.nulls(context, comparator))
-                .thenComparing(TablePrivilege::getPrivilege, ContextUtils.nulls(context, comparator));
+        return Comparator.comparing(TablePrivilege::getTableCat, ContextUtils.nullPrecedence(context, comparator))
+                .thenComparing(TablePrivilege::getTableSchem, ContextUtils.nullPrecedence(context, comparator))
+                .thenComparing(TablePrivilege::getTableName, ContextUtils.nullPrecedence(context, comparator))
+                .thenComparing(TablePrivilege::getPrivilege, ContextUtils.nullPrecedence(context, comparator));
     }
 
     // -----------------------------------------------------------------------------------------------------------------
@@ -72,9 +73,97 @@ public class TablePrivilege
      */
     public static final String COLUMN_LABEL_TABLE_NAME = "TABLE_NAME";
 
+    // ------------------------------------------------------------------------------------------ STATIC_FACTORY_METHODS
+
+    // ---------------------------------------------------------------------------------------------------- CONSTRUCTORS
+
+    /**
+     * Creates a new instance.
+     */
+    protected TablePrivilege() {
+        super();
+    }
+
+    // ------------------------------------------------------------------------------------------------ java.lang.Object
+    @Override
+    public String toString() {
+        return super.toString() + '{' +
+               "tableCat=" + tableCat +
+               ",tableSchem=" + tableSchem +
+               ",tableName=" + tableName +
+               ",grantor=" + grantor +
+               ",grantee=" + grantee +
+               ",privilege=" + privilege +
+               ",isGrantable=" + isGrantable +
+               '}';
+    }
+
+    @Override
+    public boolean equals(final Object obj) {
+        if (obj == null || getClass() != obj.getClass()) {
+            return false;
+        }
+        if (!super.equals(obj)) {
+            return false;
+        }
+        final var that = (TablePrivilege) obj;
+        return Objects.equals(tableCat, that.tableCat) &&
+               Objects.equals(tableSchem, that.tableSchem) &&
+               Objects.equals(tableName, that.tableName) &&
+               Objects.equals(grantor, that.grantor) &&
+               Objects.equals(grantee, that.grantee) &&
+               Objects.equals(privilege, that.privilege) &&
+               Objects.equals(isGrantable, that.isGrantable);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(
+                super.hashCode(),
+                tableCat,
+                tableSchem,
+                tableName,
+                grantor,
+                grantee,
+                privilege,
+                isGrantable
+        );
+    }
+
     // -------------------------------------------------------------------------------------------------------- tableCat
+    public String getTableCat() {
+        return tableCat;
+    }
 
     // ------------------------------------------------------------------------------------------------------ tableSchem
+    public String getTableSchem() {
+        return tableSchem;
+    }
+
+    // ------------------------------------------------------------------------------------------------------- tableName
+    public String getTableName() {
+        return tableName;
+    }
+
+    // --------------------------------------------------------------------------------------------------------- grantor
+    public String getGrantor() {
+        return grantor;
+    }
+
+    // --------------------------------------------------------------------------------------------------------- grantee
+    public String getGrantee() {
+        return grantee;
+    }
+
+    // ------------------------------------------------------------------------------------------------------ privilege
+    public String getPrivilege() {
+        return privilege;
+    }
+
+    // ----------------------------------------------------------------------------------------------------- isGrantable
+    public String getIsGrantable() {
+        return isGrantable;
+    }
 
     // -----------------------------------------------------------------------------------------------------------------
     @_NullableBySpecification

@@ -21,30 +21,29 @@ package com.github.jinahya.database.metadata.bind;
  */
 
 import lombok.extern.slf4j.Slf4j;
-import org.junit.jupiter.api.Disabled;
-import org.testcontainers.containers.Db2Container;
-import org.testcontainers.images.PullPolicy;
+import org.testcontainers.containers.JdbcDatabaseContainer;
 import org.testcontainers.junit.jupiter.Container;
-import org.testcontainers.utility.DockerImageName;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
-import java.time.Duration;
 
-// https://java.testcontainers.org/modules/databases/db2/
-@Disabled("doesn't start; no arm")
-//@Testcontainers
+//https://java.testcontainers.org/modules/databases/oraclefree/
+//@Disabled("takes too long!")
 @Slf4j
-class TestContainers_Db2_IT
+class TestContainers_OracleFree_IT
         extends TestContainers_$_IT {
 
-    private static final String FULL_IMAGE_NAME = "ibmcom/db2:latest";
+    private static final String IMAGE_NAME = "container-registry.oracle.com/database/free:latest-lite";
 
     @Container
-    private static final Db2Container CONTAINER = new Db2Container(DockerImageName.parse(FULL_IMAGE_NAME))
-            .withImagePullPolicy(PullPolicy.ageBased(Duration.ofDays(180L)))
-            .acceptLicense();
+//    private static final OracleContainer CONTAINER = new OracleContainer("gvenzl/oracle-free:slim-faststart")
+//    private static final OracleContainer CONTAINER = new OracleContainer(IMAGE_NAME)
+    private static final JdbcDatabaseContainer<?> CONTAINER =
+            new org.testcontainers.oracle.OracleContainer("gvenzl/oracle-free:slim-faststart")
+                    .withDatabaseName("testDB")
+                    .withUsername("testUser")
+                    .withPassword("testPassword");
 
     // -----------------------------------------------------------------------------------------------------------------
     @Override

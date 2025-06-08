@@ -21,11 +21,9 @@ package com.github.jinahya.database.metadata.bind;
  */
 
 import lombok.EqualsAndHashCode;
-import lombok.Getter;
-import lombok.Setter;
-import lombok.ToString;
 
 import java.sql.DatabaseMetaData;
+import java.util.Objects;
 import java.util.Optional;
 
 /**
@@ -34,16 +32,17 @@ import java.util.Optional;
  * @author Jin Kwon &lt;jinahya_at_gmail.com&gt;
  * @see Context#getVersionColumns(String, String, String)
  */
-
 @_ChildOf(Table.class)
-@Setter
-@Getter
-@EqualsAndHashCode(callSuper = true, onlyExplicitlyIncluded = true)
-@ToString(callSuper = true)
 public class VersionColumn
         extends AbstractMetadataType {
 
     private static final long serialVersionUID = 3587959398829593292L;
+
+    // ----------------------------------------------------------------------------------------------------------- SCOPE
+    public static final String COLUMN_LABEL_SCOPE = "SCOPE";
+
+    // ----------------------------------------------------------------------------------------------------- COLUMN_NAME
+    public static final String COLUMN_LABEL_COLUMN_NAME = "COLUMN_NAME";
 
     // -----------------------------------------------------------------------------------------------------------------
     public static final String COLUMN_LABEL_PSEUDO_COLUMN = "PSEUDO_COLUMN";
@@ -96,24 +95,117 @@ public class VersionColumn
         private final int fieldValue;
     }
 
+    // ------------------------------------------------------------------------------------------ STATIC_FACTORY_METHODS
+
+    // ---------------------------------------------------------------------------------------------------- CONSTRUCTORS
+
+    /**
+     * Creates a new instance.
+     */
+    VersionColumn() {
+        super();
+    }
+
+    // ------------------------------------------------------------------------------------------------ java.lang.Object
+
+    @Override
+    public String toString() {
+        return super.toString() + '{' +
+               "scope=" + scope +
+               ",columnName=" + columnName +
+               ",dataType=" + dataType +
+               ",typeName=" + typeName +
+               ",columnSize=" + columnSize +
+               ",bufferLength=" + bufferLength +
+               ",decimalDigits=" + decimalDigits +
+               ",pseudoColumn=" + pseudoColumn +
+               '}';
+    }
+
+    @Override
+    public boolean equals(final Object obj) {
+        if (obj == null || getClass() != obj.getClass()) {
+            return false;
+        }
+        if (!super.equals(obj)) {
+            return false;
+        }
+        final var that = (VersionColumn) obj;
+        return Objects.equals(scope, that.scope) &&
+               Objects.equals(columnName, that.columnName) &&
+               Objects.equals(dataType, that.dataType) &&
+               Objects.equals(typeName, that.typeName) &&
+               Objects.equals(columnSize, that.columnSize) &&
+               Objects.equals(bufferLength, that.bufferLength) &&
+               Objects.equals(decimalDigits, that.decimalDigits) &&
+               Objects.equals(pseudoColumn, that.pseudoColumn);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(super.hashCode(), scope, columnName, dataType, typeName, columnSize, bufferLength,
+                            decimalDigits, pseudoColumn);
+    }
+
     // -----------------------------------------------------------------------------------------------------------------
+
+    /**
+     * Returns the value of {@value COLUMN_LABEL_SCOPE} column.
+     *
+     * @return the value of {@value COLUMN_LABEL_SCOPE} column.
+     */
+    public Integer getScope() {
+        return scope;
+    }
+
+    // -----------------------------------------------------------------------------------------------------------------
+    public String getColumnName() {
+        return columnName;
+    }
+
+    // -----------------------------------------------------------------------------------------------------------------
+    public Integer getDataType() {
+        return dataType;
+    }
+
+    // -----------------------------------------------------------------------------------------------------------------
+    public String getTypeName() {
+        return typeName;
+    }
+
+    // -----------------------------------------------------------------------------------------------------------------
+    public Integer getColumnSize() {
+        return columnSize;
+    }
+
+    // -----------------------------------------------------------------------------------------------------------------
+    public Integer getBufferLength() {
+        return bufferLength;
+    }
+
+    // -----------------------------------------------------------------------------------------------------------------
+    public Integer getDecimalDigits() {
+        return decimalDigits;
+    }
+
+    // ---------------------------------------------------------------------------------------------------- pseudoColumn
+    public Integer getPseudoColumn() {
+        return pseudoColumn;
+    }
+
     PseudoColumn getPseudoColumnAsEnum() {
         return Optional.ofNullable(getPseudoColumn())
                 .map(PseudoColumn::valueOfFieldValue)
                 .orElse(null);
     }
 
-    void setPseudoColumnAsEnum(final PseudoColumn pseudoColumnAsEnum) {
-        setPseudoColumn(
-                Optional.ofNullable(pseudoColumnAsEnum)
-                        .map(PseudoColumn::fieldValueAsInt)
-                        .orElse(null)
-        );
-    }
-
-    // -----------------------------------------------------------------------------------------------------------------
-    @EqualsAndHashCode.Include
-    private Table parent;
+//    void setPseudoColumnAsEnum(final PseudoColumn pseudoColumnAsEnum) {
+//        setPseudoColumn(
+//                Optional.ofNullable(pseudoColumnAsEnum)
+//                        .map(PseudoColumn::fieldValueAsInt)
+//                        .orElse(null)
+//        );
+//    }
 
     // -----------------------------------------------------------------------------------------------------------------
     @_NotUsedBySpecification

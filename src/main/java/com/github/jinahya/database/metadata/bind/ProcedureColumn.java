@@ -20,15 +20,14 @@ package com.github.jinahya.database.metadata.bind;
  * #L%
  */
 
+import jakarta.annotation.Nullable;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.Setter;
-import lombok.ToString;
 
 import java.sql.DatabaseMetaData;
 import java.sql.SQLException;
 import java.util.Comparator;
-import java.util.Optional;
 
 /**
  * A class for binding results of the
@@ -42,86 +41,42 @@ import java.util.Optional;
 @_ChildOf(Procedure.class)
 @Setter
 @Getter
-@EqualsAndHashCode(callSuper = true, onlyExplicitlyIncluded = true)
-@ToString(callSuper = true)
+@EqualsAndHashCode(callSuper = true)
 public class ProcedureColumn
-        extends AbstractMetadataType
-        implements HasIsNullableEnum {
+        extends AbstractMetadataType {
 
     private static final long serialVersionUID = 3894753719381358829L;
 
     // -----------------------------------------------------------------------------------------------------------------
+    static Comparator<ProcedureColumn> comparing(final Comparator<? super String> comparator) {
+        return Comparator
+                .comparing(ProcedureColumn::getProcedureCat, comparator)
+                .thenComparing(ProcedureColumn::getProcedureSchem, comparator)
+                .thenComparing(ProcedureColumn::getProcedureName, comparator)
+                .thenComparing(ProcedureColumn::getSpecificName, comparator);
+    }
+
     static Comparator<ProcedureColumn> comparing(final Context context, final Comparator<? super String> comparator)
             throws SQLException {
-        return Comparator.comparing(ProcedureColumn::getProcedureCat, ContextUtils.nulls(context, comparator))
-                .thenComparing(ProcedureColumn::getProcedureSchem, ContextUtils.nulls(context, comparator))
-                .thenComparing(ProcedureColumn::getProcedureName, ContextUtils.nulls(context, comparator))
-                .thenComparing(ProcedureColumn::getSpecificName, ContextUtils.nulls(context, comparator));
+        return comparing(ContextUtils.nullPrecedence(context, comparator));
     }
 
     // ----------------------------------------------------------------------------------------------------- COLUMN_TYPE
     public static final String COLUMN_LABEL_COLUMN_TYPE = "COLUMN_TYPE";
 
     /**
-     * Constants for {@value #COLUMN_LABEL_COLUMN_TYPE} column values.
+     * A value for {@value #COLUMN_LABEL_COLUMN_TYPE} label. The value is
+     * {@link DatabaseMetaData#procedureColumnUnknown}({@value DatabaseMetaData#procedureColumnUnknown}).
      */
-    public enum ColumnType
-            implements _IntFieldEnum<ColumnType> {
+    public static final int COLUMN_VALUE_COLUMN_TYPE_PROCEDURE_COLUMN_UNKNOWN = DatabaseMetaData.procedureColumnUnknown;
 
-        /**
-         * A value for
-         * {@link DatabaseMetaData#procedureColumnUnknown}({@value DatabaseMetaData#procedureColumnUnknown}).
-         */
-        PROCEDURE_COLUMN_UNKNOWN(DatabaseMetaData.procedureColumnUnknown), // 0
+    public static final int COLUMN_VALUE_COLUMN_TYPE_PROCEDURE_COLUMN_IN = DatabaseMetaData.procedureColumnIn;
 
-        /**
-         * A value for {@link DatabaseMetaData#procedureColumnIn}({@value DatabaseMetaData#procedureColumnIn}).
-         */
-        PROCEDURE_COLUMN_IN(DatabaseMetaData.procedureColumnIn),           // 1
+    public static final int COLUMN_VALUE_COLUMN_TYPE_PROCEDURE_COLUMN_OUT = DatabaseMetaData.procedureColumnOut; // 4
 
-        /**
-         * A value for {@link DatabaseMetaData#procedureColumnInOut}({@value DatabaseMetaData#procedureColumnInOut}).
-         */
-        PROCEDURE_COLUMN_IN_OUT(DatabaseMetaData.procedureColumnInOut),    // 2
+    public static final int COLUMN_VALUE_COLUMN_TYPE_PROCEDURE_COLUMN_RETURN = DatabaseMetaData.procedureColumnReturn;
 
-        /**
-         * A value for {@link DatabaseMetaData#procedureColumnResult}({@value DatabaseMetaData#procedureColumnResult}).
-         */
-        PROCEDURE_COLUMN_RESULT(DatabaseMetaData.procedureColumnResult),   // 3
-
-        /**
-         * A value for {@link DatabaseMetaData#procedureColumnOut}({@value DatabaseMetaData#procedureColumnOut}).
-         */
-        PROCEDURE_COLUMN_OUT(DatabaseMetaData.procedureColumnOut),         // 4
-
-        /**
-         * A value for {@link DatabaseMetaData#procedureColumnReturn}({@value DatabaseMetaData#procedureColumnReturn}).
-         */
-        PROCEDURE_COLUMN_RETURN(DatabaseMetaData.procedureColumnReturn)    // 5
-        ;
-
-        /**
-         * Returns the value whose {@link #fieldValueAsInt() fieldValue} matches specified value.
-         *
-         * @param fieldValue a value of {@link #fieldValueAsInt() fieldValue} to match.
-         * @return the value whose {@link #fieldValueAsInt() fieldValue} matches {@code fieldValue}.
-         * @throws IllegalArgumentException no value matches.
-         */
-        public static ColumnType valueOfFieldValue(final int fieldValue) {
-            return _IntFieldEnum.valueOfFieldValue(ColumnType.class, fieldValue);
-        }
-
-        ColumnType(final int fieldValue) {
-            this.fieldValue = fieldValue;
-        }
-
-        @Override
-        public int fieldValueAsInt() {
-            return fieldValue;
-        }
-
-        private final int fieldValue;
-    }
+    public static final int COLUMN_VALUE_COLUMN_TYPE_PROCEDURE_COLUMN_RESULT = DatabaseMetaData.procedureColumnResult;
 
     // -------------------------------------------------------------------------------------------------------- NULLABLE
 
@@ -130,118 +85,219 @@ public class ProcedureColumn
      */
     public static final String COLUMN_NAME_NULLABLE = "NULLABLE";
 
+    // ------------------------------------------------------------------------------------------ STATIC_FACTORY_METHODS
+
+    // ---------------------------------------------------------------------------------------------------- CONSTRUCTORS
+
     /**
-     * Constants for {@value #COLUMN_NAME_NULLABLE} column.
-     *
-     * @author Jin Kwon &lt;onacit_at_gmail.com&gt;
+     * Creates a new instance.
      */
-    public enum Nullable
-            implements _IntFieldEnum<Nullable> {
+    protected ProcedureColumn() {
+        super();
+    }
 
-        /**
-         * A value for {@link DatabaseMetaData#procedureNoNulls}({@value DatabaseMetaData#procedureNoNulls}).
-         */
-        PROCEDURE_NO_NULLS(DatabaseMetaData.procedureNoNulls),                // 0
+    // ------------------------------------------------------------------------------------------------ java.lang.Object
 
-        /**
-         * A value for {@link DatabaseMetaData#procedureNullable}({@value DatabaseMetaData#procedureNullable}).
-         */
-        PROCEDURE_NULLABLE(DatabaseMetaData.procedureNullable),               // 1
-
-        /**
-         * A value for
-         * {@link DatabaseMetaData#procedureNullableUnknown}({@value DatabaseMetaData#procedureNullableUnknown}).
-         */
-        PROCEDURE_NULLABLE_UNKNOWN(DatabaseMetaData.procedureNullableUnknown) // 2
-        ;
-
-        /**
-         * Returns the value whose {@link #fieldValueAsInt() fieldValue} matches specified value.
-         *
-         * @param fieldValue the {@link #fieldValueAsInt() fieldValue} value to match.
-         * @return the value whose {@link #fieldValueAsInt() fieldValue} matches {@code fieldValue}.
-         * @throws IllegalArgumentException if no value matches.
-         */
-        public static Nullable valueOfFieldValue(final int fieldValue) {
-            return _IntFieldEnum.valueOfFieldValue(Nullable.class, fieldValue);
-        }
-
-        Nullable(final int fieldValue) {
-            this.fieldValue = fieldValue;
-        }
-
-        @Override
-        public int fieldValueAsInt() {
-            return fieldValue;
-        }
-
-        private final int fieldValue;
+    @Override
+    public String toString() {
+        return super.toString() + '{' +
+               "procedureCat=" + procedureCat +
+               ",procedureSchem=" + procedureSchem +
+               ",procedureName=" + procedureName +
+               ",columnName=" + columnName +
+               ",columnType=" + columnType +
+               ",dataType=" + dataType +
+               ",typeName=" + typeName +
+               ",precision=" + precision +
+               ",length=" + length +
+               ",scale=" + scale +
+               ",radix=" + radix +
+               ",nullable=" + nullable +
+               ",remarks=" + remarks +
+               ",columnDef=" + columnDef +
+               ",sqlDataType=" + sqlDataType +
+               ",sqlDatetimeSub=" + sqlDatetimeSub +
+               ",charOctetLength=" + charOctetLength +
+               ",ordinalPosition=" + ordinalPosition +
+               ",isNullable=" + isNullable +
+               ",specificName=" + specificName +
+               '}';
     }
 
     // ---------------------------------------------------------------------------------------------------- procedureCat
 
-    // -------------------------------------------------------------------------------------------------- procedureSchem
-
-    // ------------------------------------------------------------------------------------------------------ columnType
-
-    public ColumnType getColumnTypeAsEnum() {
-        return Optional.ofNullable(getColumnType())
-                .map(ColumnType::valueOfFieldValue)
-                .orElse(null);
+    @Nullable
+    public String getProcedureCat() {
+        return procedureCat;
     }
 
-    public void setColumnTypeAsEnum(final ColumnType columnTypeAsEnum) {
-        setColumnType(
-                Optional.ofNullable(columnTypeAsEnum)
-                        .map(_IntFieldEnum::fieldValueAsInt)
-                        .orElse(null)
-        );
+    protected void setProcedureCat(@Nullable final String procedureCat) {
+        this.procedureCat = procedureCat;
     }
 
-    // -------------------------------------------------------------------------------------------------------- nullable
-    public Nullable getNullableAsEnum() {
-        return Optional.ofNullable(getNullable())
-                .map(Nullable::valueOfFieldValue)
-                .orElse(null);
+    @Nullable
+    public String getProcedureSchem() {
+        return procedureSchem;
     }
 
-    public void setNullableAsEnum(final Nullable nullableAsEnum) {
-        setNullable(
-                Optional.ofNullable(nullableAsEnum)
-                        .map(_IntFieldEnum::fieldValueAsInt)
-                        .orElse(null)
-        );
+    protected void setProcedureSchem(@Nullable final String procedureSchem) {
+        this.procedureSchem = procedureSchem;
     }
 
-    // ------------------------------------------------------------------------------------------------- ordinalPosition
-    private boolean isOrdinalPositionZeroWhenColumnTypeIsProcedureColumnReturn() {
-        if (ordinalPosition == null || columnType == null || columnType != DatabaseMetaData.procedureColumnReturn) {
-            return true;
-        }
-        return ordinalPosition == 0;
+    public String getProcedureName() {
+        return procedureName;
     }
 
-    // ------------------------------------------------------------------------------------------------------ isNullable
-
-    public IsNullableEnum getIsNullableAsEnum() {
-        return Optional.ofNullable(getIsNullable())
-                .map(IsNullableEnum::valueOfFieldValue)
-                .orElse(null);
+    protected void setProcedureName(final String procedureName) {
+        this.procedureName = procedureName;
     }
 
-    public void setIsNullableAsEnum(final IsNullableEnum isNullableAsEnum) {
-        setIsNullable(
-                Optional.ofNullable(isNullableAsEnum)
-                        .map(_FieldEnum::fieldValue)
-                        .orElse(null)
-        );
+    public String getColumnName() {
+        return columnName;
+    }
+
+    protected void setColumnName(final String columnName) {
+        this.columnName = columnName;
+    }
+
+    public Integer getColumnType() {
+        return columnType;
+    }
+
+    protected void setColumnType(final Integer columnType) {
+        this.columnType = columnType;
+    }
+
+    public Integer getDataType() {
+        return dataType;
+    }
+
+    protected void setDataType(final Integer dataType) {
+        this.dataType = dataType;
+    }
+
+    public String getTypeName() {
+        return typeName;
+    }
+
+    protected void setTypeName(final String typeName) {
+        this.typeName = typeName;
+    }
+
+    @Nullable
+    public Integer getPrecision() {
+        return precision;
+    }
+
+    protected void setPrecision(@Nullable final Integer precision) {
+        this.precision = precision;
+    }
+
+    public Integer getLength() {
+        return length;
+    }
+
+    protected void setLength(final Integer length) {
+        this.length = length;
+    }
+
+    @Nullable
+    public Integer getScale() {
+        return scale;
+    }
+
+    protected void setScale(@Nullable final Integer scale) {
+        this.scale = scale;
+    }
+
+    public Integer getRadix() {
+        return radix;
+    }
+
+    protected void setRadix(final Integer radix) {
+        this.radix = radix;
+    }
+
+    public Integer getNullable() {
+        return nullable;
+    }
+
+    protected void setNullable(final Integer nullable) {
+        this.nullable = nullable;
+    }
+
+    public String getRemarks() {
+        return remarks;
+    }
+
+    protected void setRemarks(final String remarks) {
+        this.remarks = remarks;
+    }
+
+    @Nullable
+    public String getColumnDef() {
+        return columnDef;
+    }
+
+    protected void setColumnDef(@Nullable final String columnDef) {
+        this.columnDef = columnDef;
+    }
+
+    public Integer getSqlDataType() {
+        return sqlDataType;
+    }
+
+    protected void setSqlDataType(final Integer sqlDataType) {
+        this.sqlDataType = sqlDataType;
+    }
+
+    public Integer getSqlDatetimeSub() {
+        return sqlDatetimeSub;
+    }
+
+    protected void setSqlDatetimeSub(final Integer sqlDatetimeSub) {
+        this.sqlDatetimeSub = sqlDatetimeSub;
+    }
+
+    public Integer getCharOctetLength() {
+        return charOctetLength;
+    }
+
+    protected void setCharOctetLength(final Integer charOctetLength) {
+        this.charOctetLength = charOctetLength;
+    }
+
+    public Integer getOrdinalPosition() {
+        return ordinalPosition;
+    }
+
+    protected void setOrdinalPosition(final Integer ordinalPosition) {
+        this.ordinalPosition = ordinalPosition;
+    }
+
+    public String getIsNullable() {
+        return isNullable;
+    }
+
+    protected void setIsNullable(final String isNullable) {
+        this.isNullable = isNullable;
+    }
+
+    public String getSpecificName() {
+        return specificName;
+    }
+
+    protected void setSpecificName(final String specificName) {
+        this.specificName = specificName;
     }
 
     // -----------------------------------------------------------------------------------------------------------------
+    @Nullable
     @_NullableBySpecification
     @_ColumnLabel("PROCEDURE_CAT")
     private String procedureCat;
 
+    @Nullable
     @_NullableBySpecification
     @_ColumnLabel("PROCEDURE_SCHEM")
     private String procedureSchem;
@@ -264,6 +320,7 @@ public class ProcedureColumn
     @_ColumnLabel("TYPE_NAME")
     private String typeName;
 
+    @Nullable
     @_NullableBySpecification
     @_ColumnLabel("PRECISION")
     private Integer precision;
@@ -271,7 +328,7 @@ public class ProcedureColumn
     @_ColumnLabel("LENGTH")
     private Integer length;
 
-    // https://issues.apache.org/jira/browse/DERBY-7103
+    @Nullable
     @_NullableBySpecification
     @_ColumnLabel("SCALE")
     private Integer scale;
@@ -285,6 +342,7 @@ public class ProcedureColumn
     @_ColumnLabel("REMARKS")
     private String remarks;
 
+    @Nullable
     @_NullableBySpecification
     @_ColumnLabel("COLUMN_DEF")
     private String columnDef;
@@ -307,7 +365,7 @@ public class ProcedureColumn
     @_ColumnLabel("IS_NULLABLE")
     private String isNullable;
 
-    @_MissingByVendor("Microsoft SQL Server") // https://github.com/microsoft/mssql-jdbc/issues/2320
+    // https://github.com/microsoft/mssql-jdbc/issues/2320
     @_ColumnLabel("SPECIFIC_NAME")
     @EqualsAndHashCode.Include
     private String specificName;

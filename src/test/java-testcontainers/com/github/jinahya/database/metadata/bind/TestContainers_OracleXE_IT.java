@@ -21,11 +21,10 @@ package com.github.jinahya.database.metadata.bind;
  */
 
 import lombok.extern.slf4j.Slf4j;
-import org.junit.jupiter.api.AfterAll;
-import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Disabled;
 import org.testcontainers.containers.OracleContainer;
 import org.testcontainers.images.PullPolicy;
+import org.testcontainers.junit.jupiter.Container;
 import org.testcontainers.utility.DockerImageName;
 
 import java.sql.Connection;
@@ -33,42 +32,29 @@ import java.sql.DriverManager;
 import java.sql.SQLException;
 import java.time.Duration;
 
-// https://hub.docker.com/r/gvenzl/oracle-xe
-// https://blog.jdriven.com/2022/07/running-oracle-xe-with-testcontainers-on-apple-silicon/
-// https://java.testcontainers.org/modules/databases/oraclefree/
+// https://java.testcontainers.org/modules/databases/oraclexe/
 //@Disabled("does not start; no-arm")
 @Disabled("takes too long!")
 @Slf4j
 class TestContainers_OracleXE_IT
         extends TestContainers_$_IT {
 
-    private static final String FULL_IMAGE_NAME = "gvenzl/oracle-xe:latest-faststart";
+    private static final String IMAGE_NAME = "gvenzl/oracle-xe:latest-faststart";
 
-    private static OracleContainer CONTAINER;
-
-    @BeforeAll
-    static void start() {
-        final var name = DockerImageName.parse(FULL_IMAGE_NAME);
-        CONTAINER = new OracleContainer(name)
-                .withImagePullPolicy(PullPolicy.ageBased(Duration.ofDays(180L)))
-                .withStartupTimeout(Duration.ofMinutes(8L))
-                .withDatabaseName("testDB")
-                .withUsername("testUser")
-                .withPassword("testPassword");
-        CONTAINER.start();
-    }
-
-    @AfterAll
-    static void stop() {
-        CONTAINER.stop();
-    }
+    @Container
+    private static final OracleContainer CONTAINER = new OracleContainer(DockerImageName.parse(IMAGE_NAME))
+            .withImagePullPolicy(PullPolicy.ageBased(Duration.ofDays(180L)))
+//            .withStartupTimeout(Duration.ofMinutes(8L))
+            .withDatabaseName("testDB")
+            .withUsername("testUser")
+            .withPassword("testPassword");
 
     // -----------------------------------------------------------------------------------------------------------------
     @Override
     Connection connect() throws SQLException {
-        final var url = CONTAINER.getJdbcUrl();
-        final var user = CONTAINER.getUsername();
+        final var jdbcUrl = CONTAINER.getJdbcUrl();
+        final var username = CONTAINER.getUsername();
         final var password = CONTAINER.getPassword();
-        return DriverManager.getConnection(url, user, password);
+        return DriverManager.getConnection(jdbcUrl, username, password);
     }
 }

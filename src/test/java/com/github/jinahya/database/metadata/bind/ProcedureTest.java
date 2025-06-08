@@ -20,26 +20,14 @@ package com.github.jinahya.database.metadata.bind;
  * #L%
  */
 
-import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.params.ParameterizedTest;
-import org.junit.jupiter.params.provider.EnumSource;
-import org.mockito.Mockito;
 
-import static org.mockito.Mockito.times;
-import static org.mockito.Mockito.verify;
+import java.util.Comparator;
+
+import static org.assertj.core.api.Assertions.assertThat;
 
 class ProcedureTest
         extends AbstractMetadataTypeTest<Procedure> {
-
-    @Nested
-    class ProcedureTypeTest
-            extends _IntFieldEnumTest<Procedure.ProcedureType> {
-
-        ProcedureTypeTest() {
-            super(Procedure.ProcedureType.class);
-        }
-    }
 
     ProcedureTest() {
         super(Procedure.class);
@@ -53,28 +41,46 @@ class ProcedureTest
         return instance;
     }
 
-    @Nested
-    class ProcedureTypeAsEnumTest {
+    @Test
+    void __() {
+        final var p1 = new Procedure();
+        p1.setProcedureCat(null);
+        p1.setProcedureSchem("DVSYS");
+        p1.setProcedureName("GET_TRUST_LEVEL_FOR_IDENTITY");
+        p1.setSpecificName(null);
 
-        @Test
-        void getProcedureTypeAsEnum__() {
-            // GIVEN
-            final var spy = Mockito.spy(newTypeInstance());
-            // WHEN
-            final var procedureTypeAsEnum = spy.getProcedureTypeAsEnum();
-            // THEN
-            verify(spy, times(1)).getProcedureType();
-        }
+        final var p2 = new Procedure();
+        p2.setProcedureCat("DBMS_MACOLS_SESSION");
+        p2.setProcedureSchem("DVSYS");
+        p2.setProcedureName("IS_MAC_LABEL_SET");
+        p2.setSpecificName(null);
 
-        @EnumSource(Procedure.ProcedureType.class)
-        @ParameterizedTest
-        void setProcedureTypeAsEnum__(final Procedure.ProcedureType procedureTypeAsEnum) {
-            // GIVEN
-            final var spy = Mockito.spy(newTypeInstance());
-            // WHEN
-            spy.setProcedureTypeAsEnum(procedureTypeAsEnum);
-            // THEN
-            verify(spy, times(1)).setProcedureType(procedureTypeAsEnum.fieldValueAsInt());
-        }
+        assertThat(
+                Comparator.comparing(
+                        Procedure::getProcedureCat,
+                        Comparator.nullsFirst(Comparator.naturalOrder())
+                ).compare(p1, p2)
+        ).isNotPositive();
+
+        assertThat(
+                Comparator.comparing(
+                        Procedure::getProcedureSchem,
+                        Comparator.nullsFirst(Comparator.naturalOrder())
+                ).compare(p1, p2)
+        ).isNotPositive();
+
+        assertThat(
+                Comparator.comparing(
+                        Procedure::getProcedureName,
+                        Comparator.nullsFirst(Comparator.naturalOrder())
+                ).compare(p1, p2)
+        ).isNotPositive();
+
+        assertThat(
+                Comparator.comparing(
+                        Procedure::getSpecificName,
+                        Comparator.nullsFirst(Comparator.naturalOrder())
+                ).compare(p1, p2)
+        ).isNotPositive();
     }
 }

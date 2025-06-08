@@ -49,10 +49,10 @@ public class CrossReference
     // -----------------------------------------------------------------------------------------------------------------
     static Comparator<CrossReference> comparing(final Context context, final Comparator<? super String> comparator)
             throws SQLException {
-        return Comparator.comparing(CrossReference::getFktableCat, ContextUtils.nulls(context, comparator))
-                .thenComparing(CrossReference::getFktableSchem, ContextUtils.nulls(context, comparator))
-                .thenComparing(CrossReference::getFktableName, ContextUtils.nulls(context, comparator))
-                .thenComparing(CrossReference::getKeySeq, ContextUtils.nulls(context, Comparator.naturalOrder()));
+        return Comparator.comparing(CrossReference::getFktableCat, ContextUtils.nullPrecedence(context, comparator))
+                .thenComparing(CrossReference::getFktableSchem, ContextUtils.nullPrecedence(context, comparator))
+                .thenComparing(CrossReference::getFktableName, ContextUtils.nullPrecedence(context, comparator))
+                .thenComparing(CrossReference::getKeySeq, ContextUtils.nullPrecedence(context, Comparator.naturalOrder()));
     }
 
     // ----------------------------------------------------------------------------------------------------- UPDATE_RULE

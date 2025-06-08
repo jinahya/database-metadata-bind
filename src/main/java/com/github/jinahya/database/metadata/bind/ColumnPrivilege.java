@@ -52,8 +52,8 @@ public class ColumnPrivilege
     // -----------------------------------------------------------------------------------------------------------------
     static Comparator<ColumnPrivilege> comparing(final Context context, final Comparator<? super String> comparator)
             throws SQLException {
-        return Comparator.comparing(ColumnPrivilege::getColumnName, ContextUtils.nulls(context, comparator))
-                .thenComparing(ColumnPrivilege::getPrivilege, ContextUtils.nulls(context, comparator));
+        return Comparator.comparing(ColumnPrivilege::getColumnName, ContextUtils.nullPrecedence(context, comparator))
+                .thenComparing(ColumnPrivilege::getPrivilege, ContextUtils.nullPrecedence(context, comparator));
     }
 
     // ------------------------------------------------------------------------------------------------------- TABLE_CAT

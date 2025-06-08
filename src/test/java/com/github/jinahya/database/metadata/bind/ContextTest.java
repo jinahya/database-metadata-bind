@@ -22,12 +22,12 @@ package com.github.jinahya.database.metadata.bind;
 
 import com.google.common.reflect.ClassPath;
 import lombok.extern.slf4j.Slf4j;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
 import java.io.IOException;
 import java.lang.reflect.Field;
-import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
 import java.sql.DatabaseMetaData;
 import java.sql.ResultSet;
@@ -47,7 +47,7 @@ class ContextTest {
     @DisplayName("...(...)ResultSet")
     @Test
     void assertAllMethodsBound() throws ReflectiveOperationException {
-        for (final Method method : DatabaseMetaData.class.getMethods()) {
+        for (final var method : DatabaseMetaData.class.getMethods()) {
             final int modifiers = method.getModifiers();
             if (Modifier.isStatic(modifiers)) {
                 continue;
@@ -64,7 +64,7 @@ class ContextTest {
             log.debug("method: {}", method);
             final var name = method.getName();
             {
-                final Method found = Context.class.getMethod(name, method.getParameterTypes());
+                final var found = Context.class.getMethod(name, method.getParameterTypes());
                 assertThat(found.getModifiers()).satisfies(m -> {
                     assertThat(Modifier.isStatic(m)).isFalse();
                     assertThat(Modifier.isPublic(m)).isTrue();
@@ -74,8 +74,10 @@ class ContextTest {
         }
     }
 
+    @Disabled("field enums shall be removed")
     @Test
-    void __() throws IOException, IllegalAccessException {
+    void _ShouldBeDefinedAsEnum_AllStaticFieldsDefinedInDatabaseMetaDataClass()
+            throws IOException, IllegalAccessException {
         final var fieldValues = new HashMap<Field, Object>();
         for (final var field : DatabaseMetaData.class.getFields()) {
             final int modifiers = field.getModifiers();
@@ -103,7 +105,7 @@ class ContextTest {
                 .filter(Class::isEnum)
                 .filter(c -> !c.getName().equals("module-info"))
                 .forEach(c -> {
-//                    log.debug("enum class: {}", c);
+                    log.debug("enum class: {}", c);
                     for (final var constant : c.getEnumConstants()) {
 //                        log.debug("constant: {}", constant);
                         final var name = ((Enum<?>) constant).name().replaceAll("_", "");
@@ -127,7 +129,7 @@ class ContextTest {
                     }
                 });
         fieldValues.forEach((f, v) -> {
-            log.debug("field: {}, value: {}", f.getName(), v);
+            log.warn("field: {}, value: {}", f.getName(), v);
         });
         assertThat(fieldValues).isEmpty();
     }

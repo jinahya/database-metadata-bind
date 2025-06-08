@@ -52,20 +52,20 @@ abstract class PortedKey
                                                                  final Comparator<? super String> comparator)
             throws SQLException {
         return Comparator
-                .<T, String>comparing(PortedKey::getPktableCat, ContextUtils.nulls(context, comparator))
-                .thenComparing(PortedKey::getPktableSchem, ContextUtils.nulls(context, comparator))
-                .thenComparing(PortedKey::getPktableName, ContextUtils.nulls(context, comparator))
-                .thenComparing(PortedKey::getKeySeq, ContextUtils.nulls(context, Comparator.naturalOrder()));
+                .<T, String>comparing(PortedKey::getPktableCat, ContextUtils.nullPrecedence(context, comparator))
+                .thenComparing(PortedKey::getPktableSchem, ContextUtils.nullPrecedence(context, comparator))
+                .thenComparing(PortedKey::getPktableName, ContextUtils.nullPrecedence(context, comparator))
+                .thenComparing(PortedKey::getKeySeq, ContextUtils.nullPrecedence(context, Comparator.naturalOrder()));
     }
 
     static <T extends PortedKey> Comparator<T> comparingFktable_(final Context context,
                                                                  final Comparator<? super String> comparator)
             throws SQLException {
         return Comparator
-                .<T, String>comparing(PortedKey::getFktableCat, ContextUtils.nulls(context, comparator))
-                .thenComparing(PortedKey::getFktableSchem, ContextUtils.nulls(context, comparator))
-                .thenComparing(PortedKey::getFktableName, ContextUtils.nulls(context, comparator))
-                .thenComparing(PortedKey::getKeySeq, ContextUtils.nulls(context, Comparator.naturalOrder()));
+                .<T, String>comparing(PortedKey::getFktableCat, ContextUtils.nullPrecedence(context, comparator))
+                .thenComparing(PortedKey::getFktableSchem, ContextUtils.nullPrecedence(context, comparator))
+                .thenComparing(PortedKey::getFktableName, ContextUtils.nullPrecedence(context, comparator))
+                .thenComparing(PortedKey::getKeySeq, ContextUtils.nullPrecedence(context, Comparator.naturalOrder()));
     }
 
     // -----------------------------------------------------------------------------------------------------------------

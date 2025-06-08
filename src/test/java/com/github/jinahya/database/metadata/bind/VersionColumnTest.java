@@ -65,24 +65,5 @@ class VersionColumnTest
             // THEN
             verify(instance, times(1)).getPseudoColumn();
         }
-
-        @Test
-        void setPseudoColumnAsEnum__Null() {
-            final var instance = newTypeSpy();
-            // WHEN
-            instance.setPseudoColumnAsEnum(null);
-            // THEN
-            verify(instance, times(1)).setPseudoColumn(null);
-        }
-
-        @EnumSource(VersionColumn.PseudoColumn.class)
-        @ParameterizedTest
-        void setPseudoColumnAsEnum__(final VersionColumn.PseudoColumn pseudoColumn) {
-            final var instance = newTypeSpy();
-            // WHEN
-            instance.setPseudoColumnAsEnum(pseudoColumn);
-            // THEN
-            verify(instance, times(1)).setPseudoColumn(pseudoColumn.fieldValueAsInt());
-        }
     }
 }
