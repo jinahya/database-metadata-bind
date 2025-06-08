@@ -20,19 +20,30 @@ package com.github.jinahya.database.metadata.bind;
  * #L%
  */
 
-final class ValidationTestUtils {
+import jakarta.validation.Validation;
+import jakarta.validation.ValidatorFactory;
 
-//    static void requireValid(final Object obj) {
-//        Objects.requireNonNull(obj, "obj is null");
-//        try (final var factory = Validation.buildDefaultValidatorFactory()) {
-//            final var violations = factory.getValidator().validate(obj);
-//            assertThat(violations)
-//                    .as("violations of %s: %s", obj, violations)
-//                    .isEmpty();
-//        }
-//    }
+import java.util.Objects;
 
-    private ValidationTestUtils() {
+import static org.assertj.core.api.Assertions.assertThat;
+
+final class __Validation_Test_Utils {
+
+    private static final ValidatorFactory VALIDATOR_FACTORY = Validation.buildDefaultValidatorFactory();
+
+    static {
+        Runtime.getRuntime().addShutdownHook(new Thread(VALIDATOR_FACTORY::close));
+    }
+
+    static void requireValid(final Object object) {
+        Objects.requireNonNull(object, "object is null");
+        final var violations = VALIDATOR_FACTORY.getValidator().validate(object);
+        assertThat(violations)
+                .as("violations of %s: %s", object, violations)
+                .isEmpty();
+    }
+
+    private __Validation_Test_Utils() {
         throw new AssertionError("instantiation is not allowed");
     }
 }

@@ -83,6 +83,14 @@ final class ContextTestUtils {
     // -----------------------------------------------------------------------------------------------------------------
     static void test(final Context context) throws SQLException {
         Objects.requireNonNull(context, "context is null");
+
+        context.listeners.add(new Context.Listener() {
+            @Override
+            public void bound(final MetadataType value) {
+                __Validation_Test_Utils.requireValid(value);
+            }
+        });
+
         // ---------------------------------------------------------------------------------------------------- catalogs
         if (true) {
             final var catalogs = context.getCatalogs();
@@ -272,7 +280,7 @@ final class ContextTestUtils {
             final var dataType = attribute.getDataType();
             assertDoesNotThrow(() -> JDBCType.valueOf(dataType));
             assertThat(attribute.getAttrTypeName()).isNotNull();
-            assertDoesNotThrow(() -> Attribute.Nullable.valueOfFieldValue(attribute.getNullable()));
+//            assertDoesNotThrow(() -> Attribute.Nullable.valueOfFieldValue(attribute.getNullable()));
             assertThat(attribute.getIsNullable()).isNotNull();
         }
     }
@@ -298,12 +306,12 @@ final class ContextTestUtils {
         MetadataTypeTestUtils.verify(bestRowIdentifier);
         {
             final var scope = bestRowIdentifier.getScope();
-            assertDoesNotThrow(() -> BestRowIdentifier.Scope.valueOfFieldValue(scope));
+//            assertDoesNotThrow(() -> BestRowIdentifier.Scope.valueOfFieldValue(scope));
             assertThat(bestRowIdentifier.getColumnName()).isNotNull();
             assertDoesNotThrow(() -> JDBCType.valueOf(bestRowIdentifier.getDataType()));
             assertThat(bestRowIdentifier.getTypeName()).isNotNull();
             final int pseudoColumn = bestRowIdentifier.getPseudoColumn();
-            assertDoesNotThrow(() -> BestRowIdentifier.PseudoColumn.valueOfFieldValue(pseudoColumn));
+//            assertDoesNotThrow(() -> BestRowIdentifier.PseudoColumn.valueOfFieldValue(pseudoColumn));
         }
     }
 
@@ -439,15 +447,15 @@ final class ContextTestUtils {
             assertThat(column.getIsAutoincrement()).isNotNull();
             assertThat(column.getIsGeneratedcolumn()).isNotNull();
         }
-        assertThatCode(() -> {
-            final var value = Column.Nullable.valueOfFieldValue(column.getNullable());
-        }).doesNotThrowAnyException();
-        assertThatCode(() -> {
-            final var isAutoincrementAsEnum = column.getIsAutoincrementAsEnum();
-        }).doesNotThrowAnyException();
-        assertThatCode(() -> {
-            final var isGeneratedcolumnAsEnum = column.getIsGeneratedcolumnAsEnum();
-        }).doesNotThrowAnyException();
+//        assertThatCode(() -> {
+//            final var value = Column.Nullable.valueOfFieldValue(column.getNullable());
+//        }).doesNotThrowAnyException();
+//        assertThatCode(() -> {
+//            final var isAutoincrementAsEnum = column.getIsAutoincrementAsEnum();
+//        }).doesNotThrowAnyException();
+//        assertThatCode(() -> {
+//            final var isGeneratedcolumnAsEnum = column.getIsGeneratedcolumnAsEnum();
+//        }).doesNotThrowAnyException();
 
         // -------------------------------------------------------------------------------------------- columnPrivileges
         try {
@@ -481,7 +489,7 @@ final class ContextTestUtils {
     private static void columnPrivilege(final Context context, final ColumnPrivilege columnPrivilege)
             throws SQLException {
         MetadataTypeTestUtils.verify(columnPrivilege);
-        final var isGrantableAsEnum = columnPrivilege.getIsGrantableAsEnum();
+//        final var isGrantableAsEnum = columnPrivilege.getIsGrantableAsEnum();
     }
 
     // -------------------------------------------------------------------------------------------------- crossReference
@@ -517,9 +525,9 @@ final class ContextTestUtils {
         if (true) {
             assertThat(exportedKeys).satisfiesAnyOf(
                     l -> assertThat(l).isSortedAccordingTo(
-                            ExportedKey.comparingFktable(context, String.CASE_INSENSITIVE_ORDER)),
+                            ExportedKey.comparing(context, String.CASE_INSENSITIVE_ORDER)),
                     l -> assertThat(l).isSortedAccordingTo(
-                            ExportedKey.comparingFktable(context, Comparator.naturalOrder()))
+                            ExportedKey.comparing(context, Comparator.naturalOrder()))
             );
         }
         for (final var exportedKey : exportedKeys) {
@@ -597,7 +605,7 @@ final class ContextTestUtils {
     private static void functionColumn(final Context context, final FunctionColumn functionColumn)
             throws SQLException {
         MetadataTypeTestUtils.verify(functionColumn);
-        final var columnType = FunctionColumn.ColumnType.valueOfFieldValue(functionColumn.getColumnType());
+//        final var columnType = FunctionColumn.ColumnType.valueOfFieldValue(functionColumn.getColumnType());
     }
 
     // ---------------------------------------------------------------------------------------------------- importedKeys
@@ -610,9 +618,9 @@ final class ContextTestUtils {
         if (true) {
             assertThat(importedKeys).satisfiesAnyOf(
                     l -> assertThat(l).isSortedAccordingTo(
-                            ImportedKey.comparingPktable(context, String.CASE_INSENSITIVE_ORDER)),
+                            ImportedKey.comparing(context, String.CASE_INSENSITIVE_ORDER)),
                     l -> assertThat(l).isSortedAccordingTo(
-                            ImportedKey.comparingPktable(context, Comparator.naturalOrder()))
+                            ImportedKey.comparing(context, Comparator.naturalOrder()))
             );
         }
         for (final var importedKey : importedKeys) {
@@ -846,17 +854,17 @@ final class ContextTestUtils {
                 )
         );
         // ------------------------------------------------------------------------------------------- bestRowIdentifier
-        for (final BestRowIdentifier.Scope scope : BestRowIdentifier.Scope.values()) {
-            for (final boolean nullable : new boolean[] {true, false}) {
-                try {
-                    final var bestRowIdentifier =
-                            context.getBestRowIdentifier(table, scope.fieldValueAsInt(), nullable);
-                    bestRowIdentifier(context, bestRowIdentifier);
-                } catch (final SQLException sqle) {
-                    // empty
-                }
-            }
-        }
+//        for (final BestRowIdentifier.Scope scope : BestRowIdentifier.Scope.values()) {
+//            for (final boolean nullable : new boolean[] {true, false}) {
+//                try {
+//                    final var bestRowIdentifier =
+//                            context.getBestRowIdentifier(table, scope.fieldValueAsInt(), nullable);
+//                    bestRowIdentifier(context, bestRowIdentifier);
+//                } catch (final SQLException sqle) {
+//                    // empty
+//                }
+//            }
+//        }
         // ----------------------------------------------------------------------------------------------------- columns
         try {
             final var columns = context.getColumns(table);

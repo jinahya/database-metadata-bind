@@ -209,6 +209,7 @@ public class Context {
         }
         assert resultLabels.isEmpty() : "remaining result labels: " + resultLabels;
         assert fieldLabels.isEmpty() : "remaining field labels: " + fieldLabels;
+        listeners.forEach(l -> l.bound(instance));
         return instance;
     }
 
@@ -2066,4 +2067,12 @@ public class Context {
 
     // -----------------------------------------------------------------------------------------------------------------
     Supplier<Connection> connectionSupplier;
+
+    // -----------------------------------------------------------------------------------------------------------------
+    interface Listener {
+
+        void bound(MetadataType value);
+    }
+
+    final List<Listener> listeners = new ArrayList<>();
 }

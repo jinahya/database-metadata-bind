@@ -44,8 +44,12 @@ public class ExportedKey
     private static final long serialVersionUID = -6561660015694928357L;
 
     // -----------------------------------------------------------------------------------------------------------------
-    static Comparator<ExportedKey> comparingFktable(final Context context, final Comparator<? super String> comparator)
+    static Comparator<ExportedKey> comparing(final Comparator<? super String> comparator) {
+        return PortedKey.comparingFktable(comparator);
+    }
+
+    static Comparator<ExportedKey> comparing(final Context context, final Comparator<? super String> comparator)
             throws SQLException {
-        return PortedKey.comparingFktable_(context, comparator);
+        return comparing(ContextUtils.nullPrecedence(context, comparator));
     }
 }

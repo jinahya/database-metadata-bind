@@ -43,8 +43,12 @@ public class ImportedKey
     private static final long serialVersionUID = -1900794151555506751L;
 
     // -----------------------------------------------------------------------------------------------------------------
-    static Comparator<ImportedKey> comparingPktable(final Context context, final Comparator<? super String> comparator)
+    static Comparator<ImportedKey> comparing(final Comparator<? super String> comparator) {
+        return PortedKey.comparingPktable(comparator);
+    }
+
+    static Comparator<ImportedKey> comparing(final Context context, final Comparator<? super String> comparator)
             throws SQLException {
-        return PortedKey.comparingPktable_(context, comparator);
+        return comparing(ContextUtils.nullPrecedence(context, comparator));
     }
 }

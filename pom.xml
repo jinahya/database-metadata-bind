@@ -112,6 +112,11 @@
       <scope>provided</scope>
     </dependency>
     <dependency>
+      <groupId>jakarta.validation</groupId>
+      <artifactId>jakarta.validation-api</artifactId>
+      <scope>provided</scope>
+    </dependency>
+    <dependency>
       <groupId>nl.jqno.equalsverifier</groupId>
       <artifactId>equalsverifier-nodep</artifactId>
       <version>4.0</version>
@@ -146,6 +151,20 @@
       <artifactId>assertj-core</artifactId>
       <!-- https://central.sonatype.com/artifact/org.assertj/assertj-core/versions -->
       <version>3.27.3</version>
+      <scope>test</scope>
+    </dependency>
+    <dependency>
+      <groupId>org.glassfish.expressly</groupId>
+      <artifactId>expressly</artifactId>
+      <!-- https://central.sonatype.com/artifact/org.glassfish.expressly/expressly/versions -->
+      <version>6.0.0-M1</version>
+      <scope>test</scope>
+    </dependency>
+    <dependency>
+      <groupId>org.hibernate.validator</groupId>
+      <artifactId>hibernate-validator</artifactId>
+      <!-- https://central.sonatype.com/artifact/org.hibernate.validator/hibernate-validator/versions -->
+      <version>9.0.0.Final</version>
       <scope>test</scope>
     </dependency>
     <dependency>

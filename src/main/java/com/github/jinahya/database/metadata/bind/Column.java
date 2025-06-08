@@ -20,28 +20,29 @@ package com.github.jinahya.database.metadata.bind;
  * #L%
  */
 
+import jakarta.annotation.Nullable;
+import jakarta.validation.constraints.AssertTrue;
+import jakarta.validation.constraints.Pattern;
+import jakarta.validation.constraints.Positive;
 import lombok.EqualsAndHashCode;
 
 import java.sql.DatabaseMetaData;
 import java.sql.SQLException;
+import java.sql.Types;
 import java.util.Comparator;
 import java.util.Objects;
-import java.util.Optional;
 
 /**
  * A class for binding results of the {@link DatabaseMetaData#getColumns(String, String, String, String)} method.
  *
  * @author Jin Kwon &lt;jinahya_at_gmail.com&gt;
  * @see Context#getColumns(String, String, String, String)
- * @see Nullable
  */
 //@ParentOf(ColumnPrivilege.class)
 
 @_ChildOf(Table.class)
 public class Column
-        extends AbstractMetadataType
-        implements HasIsNullableEnum,
-                   HasNullableEnum<Column.Nullable> {
+        extends AbstractMetadataType {
 
     private static final long serialVersionUID = -409653682729081530L;
 
@@ -96,125 +97,20 @@ public class Column
 
     public static final int COLUMN_VALUE_NULLABLE_COLUMN_NULLABLE_UNKNOWN = DatabaseMetaData.columnNullableUnknown; // 2
 
-    /**
-     * Constants for {@value #COLUMN_LABEL_NULLABLE} column values.
-     *
-     * @author Jin Kwon &lt;onacit_at_gmail.com&gt;
-     */
-    public enum Nullable
-            implements NullableEnum<Nullable> {
-
-        /**
-         * A value for {@link DatabaseMetaData#columnNoNulls}({@value DatabaseMetaData#columnNoNulls}).
-         */
-        COLUMN_NO_NULLS(DatabaseMetaData.columnNoNulls),                // 0
-
-        /**
-         * A value for {@link DatabaseMetaData#columnNullable}({@value DatabaseMetaData#columnNullable}).
-         */
-        COLUMN_NULLABLE(DatabaseMetaData.columnNullable),               // 1
-
-        /**
-         * A value for {@link DatabaseMetaData#columnNullableUnknown}({@value DatabaseMetaData#columnNullableUnknown}).
-         */
-        COLUMN_NULLABLE_UNKNOWN(DatabaseMetaData.columnNullableUnknown) // 2
-        ;
-
-        /**
-         * Finds the value for specified {@link Column#COLUMN_LABEL_NULLABLE} column value.
-         *
-         * @param fieldValue the value of {@link Column#COLUMN_LABEL_NULLABLE} column to match.
-         * @return the value matched.
-         * @throws IllegalStateException when no value matched.
-         */
-        public static Nullable valueOfFieldValue(final int fieldValue) {
-            return _IntFieldEnum.valueOfFieldValue(Nullable.class, fieldValue);
-        }
-
-        Nullable(final int fieldValue) {
-            this.fieldValue = fieldValue;
-        }
-
-        @Override
-        public int fieldValueAsInt() {
-            return fieldValue;
-        }
-
-        private final int fieldValue;
-    }
-
     // -----------------------------------------------------------------------------------------------------------------
     public static final String COLUMN_LABEL_IS_AUTOINCREMENT = "IS_AUTOINCREMENT";
-
-    public enum IsAutoincrement
-            implements YesNoEmptyEnum<IsAutoincrement> {
-
-        /**
-         * Constants for {@value YesNoEmptyConstants#EMPTY}.
-         */
-        EMPTY(YesNoEmptyConstants.EMPTY),
-
-        /**
-         * Constants for {@value YesNoEmptyConstants#NO}.
-         */
-        NO(YesNoEmptyConstants.NO),
-
-        /**
-         * Constants for {@value YesNoEmptyConstants#YES}.
-         */
-        YES(YesNoEmptyConstants.YES);
-
-        public static IsAutoincrement valueOfFieldValue(final String fieldValue) {
-            return YesNoEmptyEnum.valueOfFieldValue(IsAutoincrement.class, fieldValue);
-        }
-
-        IsAutoincrement(final String fieldValue) {
-            this.fieldValue = Objects.requireNonNull(fieldValue, "fieldValue is null");
-        }
-
-        @Override
-        public String fieldValue() {
-            return fieldValue;
-        }
-
-        private final String fieldValue;
-    }
 
     // -----------------------------------------------------------------------------------------------------------------
     public static final String COLUMN_LABEL_IS_GENERATEDCOLUMN = "IS_GENERATEDCOLUMN";
 
-    public enum IsGeneratedcolumn
-            implements YesNoEmptyEnum<IsGeneratedcolumn> {
-
-        /**
-         * Constants for {@value YesNoEmptyConstants#EMPTY}.
-         */
-        EMPTY(YesNoEmptyConstants.EMPTY),
-
-        /**
-         * Constants for {@value YesNoEmptyConstants#NO}.
-         */
-        NO(YesNoEmptyConstants.NO),
-
-        /**
-         * Constants for {@value YesNoEmptyConstants#YES}.
-         */
-        YES(YesNoEmptyConstants.YES);
-
-        public static IsGeneratedcolumn valueOfFieldValue(final String fieldValue) {
-            return YesNoEmptyEnum.valueOfFieldValue(IsGeneratedcolumn.class, fieldValue);
-        }
-
-        IsGeneratedcolumn(final String fieldValue) {
-            this.fieldValue = Objects.requireNonNull(fieldValue, "fieldValue is null");
-        }
-
-        @Override
-        public String fieldValue() {
-            return fieldValue;
-        }
-
-        private final String fieldValue;
+    // ------------------------------------------------------------------------------------------ STATIC_FACTORY_METHODS
+    static Column of(final String tableCat, final String tableSchem, final String tableName, final String columnName) {
+        final var instance = new Column();
+        instance.setTableCat(tableCat);
+        instance.setTableSchem(tableSchem);
+        instance.setTableName(tableName);
+        instance.setColumnName(columnName);
+        return instance;
     }
 
     // ---------------------------------------------------------------------------------------------------- CONSTRUCTORS
@@ -276,6 +172,41 @@ public class Column
     @Override
     public int hashCode() {
         return Objects.hash(super.hashCode(), tableCat, tableSchem, tableName, columnName);
+    }
+
+    // ------------------------------------------------------------------------------------------------- Bean-Validation
+    @AssertTrue
+    private boolean isScopeCatalogValid() {
+        if (scopeCatalog != null) {
+            return true;
+        }
+        return dataType == null || !Objects.equals(dataType, Types.REF);
+    }
+
+    @AssertTrue
+    private boolean isScopeSchemaValid() {
+        if (scopeSchema != null) {
+            return true;
+        }
+        return dataType == null || !Objects.equals(dataType, Types.REF);
+    }
+
+    @AssertTrue
+    private boolean isScopeTableValid() {
+        if (scopeTable != null) {
+            return true;
+        }
+        return dataType == null || !Objects.equals(dataType, Types.REF);
+    }
+
+    @AssertTrue
+    private boolean isSourceDataTypeValid() {
+        if (sourceDataType != null) {
+            return true;
+        }
+        return dataType == null ||
+               (!Objects.equals(dataType, Types.DISTINCT) ||
+                Objects.equals(dataType, Types.REF));
     }
 
     // -------------------------------------------------------------------------------------------------------- tableCat
@@ -375,13 +306,6 @@ public class Column
 
     public void setNullable(final Integer nullable) {
         this.nullable = nullable;
-    }
-
-    @Override
-    public Nullable getNullableAsEnum() {
-        return Optional.ofNullable(getNullable())
-                .map(Nullable::valueOfFieldValue)
-                .orElse(null);
     }
 
     // --------------------------------------------------------------------------------------------------------- remarks
@@ -495,32 +419,6 @@ public class Column
         this.isAutoincrement = isAutoincrement;
     }
 
-    /**
-     * Returns current value of {@code isAutoincrement} field as one of predefined constants.
-     *
-     * @return current value of the {@code isAutoincrement} field as one of predefined constants.
-     */
-    public IsAutoincrement getIsAutoincrementAsEnum() {
-        return Optional.ofNullable(getIsAutoincrement())
-                .map(IsAutoincrement::valueOfFieldValue)
-                .orElse(null);
-    }
-
-    /**
-     * Replaces current value of {@code isAutoincrement} field with specified constant's field value.
-     *
-     * @param isAutoincrementAsEnum the constant whose {@link _FieldEnum#fieldValue() fieldValue} is set to the
-     *                              {@code isAutoincrement} field.
-     */
-
-    public void setIsAutoincrementAsEnum(final IsAutoincrement isAutoincrementAsEnum) {
-        setIsAutoincrement(
-                Optional.ofNullable(isAutoincrementAsEnum)
-                        .map(_FieldEnum::fieldValue)
-                        .orElse(null)
-        );
-    }
-
     // ----------------------------------------------------------------------------------------------- isGeneratedcolumn
     public String getIsGeneratedcolumn() {
         return isGeneratedcolumn;
@@ -530,26 +428,14 @@ public class Column
         this.isGeneratedcolumn = isGeneratedcolumn;
     }
 
-    public IsGeneratedcolumn getIsGeneratedcolumnAsEnum() {
-        return Optional.ofNullable(getIsGeneratedcolumn())
-                .map(IsGeneratedcolumn::valueOfFieldValue)
-                .orElse(null);
-    }
-
-    public void setIsGeneratedcolumnAsEnum(final IsGeneratedcolumn isGeneratedcolumnAsEnum) {
-        setIsGeneratedcolumn(
-                Optional.ofNullable(isGeneratedcolumnAsEnum)
-                        .map(_FieldEnum::fieldValue)
-                        .orElse(null)
-        );
-    }
-
     // -----------------------------------------------------------------------------------------------------------------
+    @Nullable
     @_NullableBySpecification
     @_ColumnLabel(COLUMN_LABEL_TABLE_CAT)
     @EqualsAndHashCode.Include
     private String tableCat;
 
+    @Nullable
     @_NullableBySpecification
     @_ColumnLabel(COLUMN_LABEL_TABLE_SCHEM)
     @EqualsAndHashCode.Include
@@ -570,14 +456,17 @@ public class Column
     @_ColumnLabel("TYPE_NAME")
     private String typeName;
 
+    @Nullable
     @_NullableBySpecification
     @_ColumnLabel("COLUMN_SIZE")
     private Integer columnSize;
 
+    @Nullable
     @_NotUsedBySpecification
     @_ColumnLabel("BUFFER_LENGTH")
     private Integer bufferLength;
 
+    @Nullable
     @_NullableBySpecification
     @_ColumnLabel("DECIMAL_DIGITS")
     private Integer decimalDigits;
@@ -588,18 +477,22 @@ public class Column
     @_ColumnLabel(COLUMN_LABEL_NULLABLE)
     private Integer nullable;
 
+    @Nullable
     @_NullableBySpecification
     @_ColumnLabel("REMARKS")
     private String remarks;
 
+    @Nullable
     @_NullableBySpecification
     @_ColumnLabel("COLUMN_DEF")
     private String columnDef;
 
+    @Nullable
     @_NotUsedBySpecification
     @_ColumnLabel("SQL_DATA_TYPE")
     private Integer sqlDataType;
 
+    @Nullable
     @_NotUsedBySpecification
     @_ColumnLabel("SQL_DATETIME_SUB")
     private Integer sqlDatetimeSub;
@@ -607,31 +500,40 @@ public class Column
     @_ColumnLabel("CHAR_OCTET_LENGTH")
     private Integer charOctetLength;
 
+    @Positive
     @_ColumnLabel("ORDINAL_POSITION")
     private Integer ordinalPosition;
 
     @_ColumnLabel("IS_NULLABLE")
     private String isNullable;
 
+    // -----------------------------------------------------------------------------------------------------------------
+    @Nullable
     @_NullableBySpecification
     @_ColumnLabel("SCOPE_CATALOG")
     private String scopeCatalog;
 
+    @Nullable
     @_NullableBySpecification
     @_ColumnLabel("SCOPE_SCHEMA")
     private String scopeSchema;
 
+    @Nullable
     @_NullableBySpecification
     @_ColumnLabel("SCOPE_TABLE")
     private String scopeTable;
 
+    // -----------------------------------------------------------------------------------------------------------------
+    @Nullable
     @_NullableBySpecification
     @_ColumnLabel("SOURCE_DATA_TYPE")
     private Integer sourceDataType;
 
+    @Pattern(regexp = MetadataTypeConstants.PATTERN_REGEXP_YES_NO_OR_EMPTY)
     @_ColumnLabel(COLUMN_LABEL_IS_AUTOINCREMENT)
     private String isAutoincrement;
 
+    @Pattern(regexp = MetadataTypeConstants.PATTERN_REGEXP_YES_NO_OR_EMPTY)
     @_ColumnLabel(COLUMN_LABEL_IS_GENERATEDCOLUMN)
     private String isGeneratedcolumn;
 }

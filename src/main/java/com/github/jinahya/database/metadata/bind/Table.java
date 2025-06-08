@@ -20,6 +20,7 @@ package com.github.jinahya.database.metadata.bind;
  * #L%
  */
 
+import jakarta.validation.constraints.NotBlank;
 import lombok.EqualsAndHashCode;
 import lombok.ToString;
 
@@ -124,11 +125,30 @@ public class Table
     /**
      * Creates a new instance.
      */
-    protected Table() {
+    public Table() {
         super();
     }
 
-    // -----------------------------------------------------------------------------------------------------------------
+    // ------------------------------------------------------------------------------------------------ java.lang.Object
+    @Override
+    public String toString() {
+        return super.toString() + '{' +
+               "tableCat=" + tableCat +
+               ",tableSchem=" + tableSchem +
+               ",tableName=" + tableName +
+               ",tableType=" + tableType +
+               ",remarks=" + remarks +
+               ",typeCat=" + typeCat +
+               ",typeSchem=" + typeSchem +
+               ",typeName=" + typeName +
+               ",selfReferencingColName=" + selfReferencingColName +
+               ",refGeneration=" + refGeneration +
+               ",tableCatalog_=" + tableCatalog_ +
+               ",tableSchema_=" + tableSchema_ +
+               ",typeCatalog_=" + typeCatalog_ +
+               ",typeSchema_=" + typeSchema_ +
+               '}';
+    }
 
     @Override
     public boolean equals(final Object obj) {
@@ -171,7 +191,7 @@ public class Table
         return tableCat;
     }
 
-    protected void setTableCat(final String tableCat) {
+    public void setTableCat(final String tableCat) {
         this.tableCat = tableCat;
     }
 
@@ -187,7 +207,7 @@ public class Table
         return tableSchem;
     }
 
-    protected void setTableSchem(final String tableSchem) {
+    public void setTableSchem(final String tableSchem) {
         this.tableSchem = tableSchem;
     }
 
@@ -202,7 +222,7 @@ public class Table
         return tableName;
     }
 
-    protected void setTableName(final String tableName) {
+    public void setTableName(final String tableName) {
         this.tableName = tableName;
     }
 
@@ -217,7 +237,7 @@ public class Table
         return tableType;
     }
 
-    protected void setTableType(final String tableType) {
+    public void setTableType(final String tableType) {
         this.tableType = tableType;
     }
 
@@ -226,7 +246,7 @@ public class Table
         return remarks;
     }
 
-    protected void setRemarks(final String remarks) {
+    public void setRemarks(final String remarks) {
         this.remarks = remarks;
     }
 
@@ -235,7 +255,7 @@ public class Table
         return typeCat;
     }
 
-    protected void setTypeCat(final String typeCat) {
+    public void setTypeCat(final String typeCat) {
         this.typeCat = typeCat;
     }
 
@@ -244,7 +264,7 @@ public class Table
         return typeSchem;
     }
 
-    protected void setTypeSchem(final String typeSchem) {
+    public void setTypeSchem(final String typeSchem) {
         this.typeSchem = typeSchem;
     }
 
@@ -253,7 +273,7 @@ public class Table
         return typeName;
     }
 
-    protected void setTypeName(String typeName) {
+    public void setTypeName(String typeName) {
         this.typeName = typeName;
     }
 
@@ -262,7 +282,7 @@ public class Table
         return selfReferencingColName;
     }
 
-    protected void setSelfReferencingColName(final String selfReferencingColName) {
+    public void setSelfReferencingColName(final String selfReferencingColName) {
         this.selfReferencingColName = selfReferencingColName;
     }
 
@@ -271,7 +291,7 @@ public class Table
         return refGeneration;
     }
 
-    protected void setRefGeneration(final String refGeneration) {
+    public void setRefGeneration(final String refGeneration) {
         this.refGeneration = refGeneration;
     }
 
@@ -286,6 +306,7 @@ public class Table
     @EqualsAndHashCode.Include
     private String tableSchem;
 
+    @NotBlank
     @_ColumnLabel(COLUMN_LABEL_TABLE_NAME)
     @EqualsAndHashCode.Include
     private String tableName;

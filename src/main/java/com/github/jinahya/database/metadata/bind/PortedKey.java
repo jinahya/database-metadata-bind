@@ -24,8 +24,8 @@ import jakarta.annotation.Nullable;
 import lombok.EqualsAndHashCode;
 
 import java.sql.DatabaseMetaData;
-import java.sql.SQLException;
 import java.util.Comparator;
+import java.util.Objects;
 import java.util.Optional;
 
 /**
@@ -43,40 +43,24 @@ abstract class PortedKey
     private static final long serialVersionUID = 6713872409315471232L;
 
     // -----------------------------------------------------------------------------------------------------------------
-    static <T extends PortedKey> Comparator<T> comparingPktable_(final Comparator<? super String> comparator) {
+    static <T extends PortedKey> Comparator<T> comparingPktable(final Comparator<? super String> comparator) {
+        Objects.requireNonNull(comparator, "comparator is null");
         return Comparator
                 .<T, String>comparing(PortedKey::getPktableCat, comparator)
                 .thenComparing(PortedKey::getPktableSchem, comparator)
                 .thenComparing(PortedKey::getPktableName, comparator)
+                .thenComparing(PortedKey::getPkName, comparator)
                 .thenComparing(PortedKey::getKeySeq, Comparator.naturalOrder());
     }
 
-    static <T extends PortedKey> Comparator<T> comparingPktable_(final Context context,
-                                                                 final Comparator<? super String> comparator)
-            throws SQLException {
-        return Comparator
-                .<T, String>comparing(PortedKey::getPktableCat, ContextUtils.nullPrecedence(context, comparator))
-                .thenComparing(PortedKey::getPktableSchem, ContextUtils.nullPrecedence(context, comparator))
-                .thenComparing(PortedKey::getPktableName, ContextUtils.nullPrecedence(context, comparator))
-                .thenComparing(PortedKey::getKeySeq, ContextUtils.nullPrecedence(context, Comparator.naturalOrder()));
-    }
-
-    static <T extends PortedKey> Comparator<T> comparingFktable_(final Comparator<? super String> comparator) {
+    static <T extends PortedKey> Comparator<T> comparingFktable(final Comparator<? super String> comparator) {
+        Objects.requireNonNull(comparator, "comparator is null");
         return Comparator
                 .<T, String>comparing(PortedKey::getFktableCat, comparator)
                 .thenComparing(PortedKey::getFktableSchem, comparator)
                 .thenComparing(PortedKey::getFktableName, comparator)
+                .thenComparing(PortedKey::getFkName, comparator)
                 .thenComparing(PortedKey::getKeySeq, Comparator.naturalOrder());
-    }
-
-    static <T extends PortedKey> Comparator<T> comparingFktable_(final Context context,
-                                                                 final Comparator<? super String> comparator)
-            throws SQLException {
-        return Comparator
-                .<T, String>comparing(PortedKey::getFktableCat, ContextUtils.nullPrecedence(context, comparator))
-                .thenComparing(PortedKey::getFktableSchem, ContextUtils.nullPrecedence(context, comparator))
-                .thenComparing(PortedKey::getFktableName, ContextUtils.nullPrecedence(context, comparator))
-                .thenComparing(PortedKey::getKeySeq, ContextUtils.nullPrecedence(context, Comparator.naturalOrder()));
     }
 
     // -----------------------------------------------------------------------------------------------------------------
@@ -292,6 +276,13 @@ abstract class PortedKey
     }
 
     // ---------------------------------------------------------------------------------------------------------- keySeq
+    public Integer getKeySeq() {
+        return keySeq;
+    }
+
+    protected void setKeySeq(final Integer keySeq) {
+        this.keySeq = keySeq;
+    }
 
     // ------------------------------------------------------------------------------------------------------ updateRule
 
@@ -299,7 +290,24 @@ abstract class PortedKey
 
     // ---------------------------------------------------------------------------------------------------------- fkName
 
+    @Nullable
+    public String getFkName() {
+        return fkName;
+    }
+
+    public void setFkName(@Nullable final String fkName) {
+        this.fkName = fkName;
+    }
+
     // ---------------------------------------------------------------------------------------------------------- pkName
+    @Nullable
+    public String getPkName() {
+        return pkName;
+    }
+
+    public void setPkName(@Nullable final String pkName) {
+        this.pkName = pkName;
+    }
 
     // --------------------------------------------------------------------------------------------------- deferrability
 
@@ -364,58 +372,68 @@ abstract class PortedKey
     private Integer deferrability;
 
     // -----------------------------------------------------------------------------------------------------------------
-    private transient Table pkTable_;
+    private transient Column pkColumn_;
 
-    private transient Table fkTable_;
+    private transient Column fkColumn_;
 
-    Table getPkTable_() {
-        if (pkTable_ == null) {
-            pkTable_ = Table.of(pktableCat, pktableSchem, pktableName);
+    Column getPkColumn_() {
+        if (pkColumn_ == null) {
+            pkColumn_ = Column.of(pktableCat, pktableSchem, pktableName, pkcolumnName);
         }
-        return pkTable_;
+        return pkColumn_;
     }
 
-    void setPkTable_(final Table pkTable_) {
-        this.pkTable_ = pkTable_;
+    void setPkColumn_(final Column pkColumn_) {
+        this.pkColumn_ = pkColumn_;
         setPktableCat(
-                Optional.ofNullable(this.pkTable_)
-                        .map(Table::getTableCat)
+                Optional.ofNullable(this.pkColumn_)
+                        .map(Column::getTableCat)
                         .orElse(null)
         );
         setPktableSchem(
-                Optional.ofNullable(pkTable_)
-                        .map(Table::getTableSchem)
+                Optional.ofNullable(pkColumn_)
+                        .map(Column::getTableSchem)
                         .orElse(null)
         );
         setPktableName(
-                Optional.ofNullable(pkTable_)
-                        .map(Table::getTableName)
+                Optional.ofNullable(pkColumn_)
+                        .map(Column::getTableName)
+                        .orElse(null)
+        );
+        setPkcolumnName(
+                Optional.ofNullable(pkColumn_)
+                        .map(Column::getColumnName)
                         .orElse(null)
         );
     }
 
-    Table getFkTable_() {
-        if (fkTable_ == null) {
-            fkTable_ = Table.of(fktableCat, fktableSchem, fktableName);
+    Column getFkColumn_() {
+        if (fkColumn_ == null) {
+            fkColumn_ = Column.of(fktableCat, fktableSchem, fktableName, fkcolumnName);
         }
-        return fkTable_;
+        return fkColumn_;
     }
 
-    void setFkTable_(final Table fkTable_) {
-        this.fkTable_ = fkTable_;
+    void setFkColumn_(final Column fkColumn_) {
+        this.fkColumn_ = fkColumn_;
         setFktableCat(
-                Optional.ofNullable(this.fkTable_)
-                        .map(Table::getTableCat)
+                Optional.ofNullable(this.fkColumn_)
+                        .map(Column::getTableCat)
                         .orElse(null)
         );
         setFktableSchem(
-                Optional.ofNullable(fkTable_)
-                        .map(Table::getTableSchem)
+                Optional.ofNullable(fkColumn_)
+                        .map(Column::getTableSchem)
                         .orElse(null)
         );
         setFktableName(
-                Optional.ofNullable(fkTable_)
-                        .map(Table::getTableName)
+                Optional.ofNullable(fkColumn_)
+                        .map(Column::getTableName)
+                        .orElse(null)
+        );
+        setFkcolumnName(
+                Optional.ofNullable(fkColumn_)
+                        .map(Column::getColumnName)
                         .orElse(null)
         );
     }

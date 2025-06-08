@@ -20,6 +20,8 @@ buildNumber.properties
 
 .DS_Store
 
+tmp
+
 
 *.iml
 .idea

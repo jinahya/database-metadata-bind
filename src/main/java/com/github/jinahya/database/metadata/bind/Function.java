@@ -20,15 +20,14 @@ package com.github.jinahya.database.metadata.bind;
  * #L%
  */
 
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 import lombok.EqualsAndHashCode;
-import lombok.Getter;
-import lombok.Setter;
-import lombok.ToString;
 
 import java.sql.DatabaseMetaData;
 import java.sql.SQLException;
 import java.util.Comparator;
-import java.util.Optional;
+import java.util.Objects;
 
 /**
  * A class for binding results of the
@@ -37,138 +36,155 @@ import java.util.Optional;
  * @author Jin Kwon &lt;jinahya_at_gmail.com&gt;
  * @see Context#getFunctions(String, String, String)
  */
-
-@Setter
-@Getter
-@ToString(callSuper = true)
-@EqualsAndHashCode(callSuper = true, onlyExplicitlyIncluded = true)
+@_ChildOf(Catalog.class)
+@EqualsAndHashCode(callSuper = true)
 public class Function
         extends AbstractMetadataType {
 
     private static final long serialVersionUID = -3318947900237453301L;
 
     // -----------------------------------------------------------------------------------------------------------------
-    static Comparator<Function> comparing(final Context context, final Comparator<? super String> comparator)
-            throws SQLException {
-        return Comparator.comparing(Function::getFunctionCat, ContextUtils.nullPrecedence(context, comparator))
-                .thenComparing(Function::getFunctionSchem, ContextUtils.nullPrecedence(context, comparator))
-                .thenComparing(Function::getFunctionName, ContextUtils.nullPrecedence(context, comparator))
-                .thenComparing(Function::getSpecificName, ContextUtils.nullPrecedence(context, comparator));
+    static @Nonnull Comparator<Function> comparing(@Nonnull final Comparator<? super String> comparator) {
+        Objects.requireNonNull(comparator, "comparator is null");
+        return Comparator
+                .comparing(Function::getFunctionCat, comparator)
+                .thenComparing(Function::getFunctionSchem, comparator)
+                .thenComparing(Function::getFunctionName, comparator)
+                .thenComparing(Function::getSpecificName, comparator);
     }
 
-    // -----------------------------------------------------------------------------------------------------------------
+    static @Nonnull Comparator<Function> comparing(@Nonnull final Context context,
+                                                   @Nonnull final Comparator<? super String> comparator)
+            throws SQLException {
+        Objects.requireNonNull(context, "context is null");
+        Objects.requireNonNull(comparator, "comparator is null");
+        return comparing(ContextUtils.nullPrecedence(context, comparator));
+    }
+
+    // ---------------------------------------------------------------------------------------------------- FUNCTION_CAT
 
     /**
      * A column label of {@value}.
      */
     public static final String COLUMN_LABEL_FUNCTION_CAT = "FUNCTION_CAT";
 
-    // -----------------------------------------------------------------------------------------------------------------
+    // -------------------------------------------------------------------------------------------------- FUNCTION_SCHEM
 
     /**
      * A column label of {@value}.
      */
     public static final String COLUMN_LABEL_FUNCTION_SCHEM = "FUNCTION_SCHEM";
 
-    // -----------------------------------------------------------------------------------------------------------------
+    // --------------------------------------------------------------------------------------------------- FUNCTION_NAME
+    public static final String COLUMN_LABEL_FUNCTION_NAME = "FUNCTION_NAME";
+
+    // --------------------------------------------------------------------------------------------------------- REMARKS
+    public static final String COLUMN_LABEL_REMARKS = "REMARKS";
+
+    // --------------------------------------------------------------------------------------------------- FUNCTION_TYPE
 
     /**
      * A column label of {@value}.
      */
     public static final String COLUMN_LABEL_FUNCTION_TYPE = "FUNCTION_TYPE";
 
-    /**
-     * Constants for {@value #COLUMN_LABEL_FUNCTION_TYPE} column values.
-     *
-     * @author Jin Kwon &lt;onacit_at_gmail.com&gt;
-     */
-    public enum FunctionType
-            implements _IntFieldEnum<FunctionType> {
-
-        /**
-         * A value for {@link DatabaseMetaData#functionResultUnknown}({@value DatabaseMetaData#functionResultUnknown}).
-         */
-        FUNCTION_RESULT_UNKNOWN(DatabaseMetaData.functionResultUnknown),// 0
-
-        /**
-         * A value for {@link DatabaseMetaData#functionNoTable}({@value DatabaseMetaData#functionNoTable}).
-         */
-        FUNCTION_NO_TABLE(DatabaseMetaData.functionNoTable), // 1
-
-        /**
-         * A value for {@link DatabaseMetaData#functionReturnsTable}({@value DatabaseMetaData#functionReturnsTable}).
-         */
-        FUNCTION_RETURNS_TABLE(DatabaseMetaData.functionReturnsTable); // 2
-
-        /**
-         * Finds the value for specified {@link Function#COLUMN_LABEL_FUNCTION_TYPE} column value.
-         *
-         * @param fieldValue the {@link Function#COLUMN_LABEL_FUNCTION_TYPE} column value to match.
-         * @return the value matched.
-         * @throws IllegalStateException when no value matched.
-         */
-        public static FunctionType valueOfFieldValue(final int fieldValue) {
-            return _IntFieldEnum.valueOfFieldValue(FunctionType.class, fieldValue);
-        }
-
-        FunctionType(final int fieldValue) {
-            this.fieldValue = fieldValue;
-        }
-
-        @Override
-        public int fieldValueAsInt() {
-            return fieldValue;
-        }
-
-        private final int fieldValue;
-    }
+    // --------------------------------------------------------------------------------------------------- SPECIFIC_NAME
+    public static final String COLUMN_LABEL_SPECIFIC_NAME = "SPECIFIC_NAME";
 
     // ------------------------------------------------------------------------------------------ STATIC_FACTORY_METHODS
 
     // ---------------------------------------------------------------------------------------------------- CONSTRUCTORS
 
     // ------------------------------------------------------------------------------------------------ java.lang.Object
-
-    // ---------------------------------------------------------------------------------------------------- functionType
-
-    public FunctionType getFunctionTypeAsEnum() {
-        return Optional.ofNullable(getFunctionType())
-                .map(FunctionType::valueOfFieldValue)
-                .orElse(null);
+    @Override
+    public String toString() {
+        return super.toString() + '{' +
+               "functionCat=" + functionCat +
+               ",functionSchem=" + functionSchem +
+               ",functionName=" + functionName +
+               ",remarks=" + remarks +
+               ",functionType=" + functionType +
+               ",specificName=" + specificName +
+               '}';
     }
 
-    public void setFunctionTypeAsEnum(final FunctionType functionTypeAsEnum) {
-        setFunctionType(
-                Optional.ofNullable(functionTypeAsEnum)
-                        .map(_IntFieldEnum::fieldValueAsInt)
-                        .orElse(null)
-        );
+    // ----------------------------------------------------------------------------------------------------- functionCat
+    @Nullable
+    public String getFunctionCat() {
+        return functionCat;
+    }
+
+    public void setFunctionCat(@Nullable final String functionCat) {
+        this.functionCat = functionCat;
+    }
+
+    // --------------------------------------------------------------------------------------------------- functionSchem
+    @Nullable
+    public String getFunctionSchem() {
+        return functionSchem;
+    }
+
+    public void setFunctionSchem(@Nullable final String functionSchem) {
+        this.functionSchem = functionSchem;
+    }
+
+    // ---------------------------------------------------------------------------------------------------- functionName
+    public String getFunctionName() {
+        return functionName;
+    }
+
+    public void setFunctionName(final String functionName) {
+        this.functionName = functionName;
+    }
+
+    // --------------------------------------------------------------------------------------------------------- remarks
+    public String getRemarks() {
+        return remarks;
+    }
+
+    public void setRemarks(final String remarks) {
+        this.remarks = remarks;
+    }
+
+    // ---------------------------------------------------------------------------------------------------- functionType
+    public Integer getFunctionType() {
+        return functionType;
+    }
+
+    public void setFunctionType(final Integer functionType) {
+        this.functionType = functionType;
+    }
+
+    // ---------------------------------------------------------------------------------------------------- specificName
+    public String getSpecificName() {
+        return specificName;
+    }
+
+    public void setSpecificName(final String specificName) {
+        this.specificName = specificName;
     }
 
     // -----------------------------------------------------------------------------------------------------------------
+    @Nullable
     @_NullableBySpecification
     @_ColumnLabel(COLUMN_LABEL_FUNCTION_CAT)
-    @EqualsAndHashCode.Include
     private String functionCat;
 
+    @Nullable
     @_NullableBySpecification
     @_ColumnLabel(COLUMN_LABEL_FUNCTION_SCHEM)
-    @EqualsAndHashCode.Include
     private String functionSchem;
 
-    @_ColumnLabel("FUNCTION_NAME")
-    @EqualsAndHashCode.Include
+    @_ColumnLabel(COLUMN_LABEL_FUNCTION_NAME)
     private String functionName;
 
     // -----------------------------------------------------------------------------------------------------------------
-    @_ColumnLabel("REMARKS")
+    @_ColumnLabel(COLUMN_LABEL_REMARKS)
     private String remarks;
 
-    @_ColumnLabel("FUNCTION_TYPE")
+    @_ColumnLabel(COLUMN_LABEL_FUNCTION_TYPE)
     private Integer functionType;
 
-    // https://github.com/microsoft/mssql-jdbc/issues/849
-    @_ColumnLabel("SPECIFIC_NAME")
-    @EqualsAndHashCode.Include
+    @_ColumnLabel(COLUMN_LABEL_SPECIFIC_NAME)
     private String specificName;
 }

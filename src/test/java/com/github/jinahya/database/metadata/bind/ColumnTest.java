@@ -20,30 +20,11 @@ package com.github.jinahya.database.metadata.bind;
  * #L%
  */
 
-import org.junit.jupiter.api.DisplayName;
-import org.junit.jupiter.api.Nested;
-import org.junit.jupiter.api.Test;
-import org.junit.jupiter.params.ParameterizedTest;
-import org.junit.jupiter.params.provider.EnumSource;
-
-import static org.mockito.Mockito.times;
-import static org.mockito.Mockito.verify;
-
 class ColumnTest
         extends AbstractMetadataTypeTest<Column> {
 
     ColumnTest() {
         super(Column.class);
-    }
-
-    @DisplayName("NullableEnum")
-    @Nested
-    class NullableTest
-            extends _IntFieldEnumTest<Column.Nullable> {
-
-        NullableTest() {
-            super(Column.Nullable.class);
-        }
     }
 
     @Override
@@ -53,42 +34,5 @@ class ColumnTest
         instance.setColumnName("");
         instance.setOrdinalPosition(1);
         return instance;
-    }
-
-    @DisplayName("nullableAsEnum")
-    @Nested
-    class NullableAsEnumTest {
-
-        @Test
-        void getNullableAsEnum__() {
-            final var spy = newTypeSpy();
-            final var nullableAsEnum = spy.getNullableAsEnum();
-            verify(spy, times(1)).getNullable();
-        }
-
-        @Test
-        void setNullableAsEnum_Null_Null() {
-            final var spy = newTypeSpy();
-            spy.setNullableAsEnum(null);
-            verify(spy, times(1)).setNullable(null);
-        }
-
-        @EnumSource(Column.Nullable.class)
-        @ParameterizedTest
-        void setNullableAsEnum__(final Column.Nullable nullableAsEnum) {
-            final var spy = newTypeSpy();
-            spy.setNullableAsEnum(nullableAsEnum);
-            verify(spy, times(1))
-                    .setNullable(nullableAsEnum.fieldValueAsInt());
-        }
-    }
-
-    @Nested
-    class IsNullableTest
-            extends HasIsNullableTest<Column> {
-
-        IsNullableTest() {
-            super(ColumnTest.this::newTypeSpy);
-        }
     }
 }

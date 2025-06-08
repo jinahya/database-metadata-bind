@@ -20,62 +20,10 @@ package com.github.jinahya.database.metadata.bind;
  * #L%
  */
 
-import org.junit.jupiter.api.Nested;
-import org.junit.jupiter.api.Test;
-import org.junit.jupiter.params.ParameterizedTest;
-import org.junit.jupiter.params.provider.EnumSource;
-
-import static org.mockito.Mockito.times;
-import static org.mockito.Mockito.verify;
-
 class IndexInfoTest
         extends AbstractMetadataTypeTest<IndexInfo> {
 
     IndexInfoTest() {
         super(IndexInfo.class);
-    }
-
-    @Nested
-    class TypeTest
-            extends _IntFieldEnumTest<IndexInfo.Type> {
-
-        TypeTest() {
-            super(IndexInfo.Type.class);
-        }
-    }
-
-    @Nested
-    class TypeAsEnumTest {
-
-        @Test
-        void getTypeAsEnum__() {
-            // GIVEN
-            final var instance = newTypeSpy();
-            // WHEN
-            final var typeAsEnum = instance.getTypeAsEnum();
-            // THEN
-            verify(instance, times(1)).getType();
-        }
-
-        @Test
-        void setTypeAsEnum__Null() {
-            // GIVEN
-            final var instance = newTypeSpy();
-            // WHEN
-            instance.setTypeAsEnum(null);
-            // THEN
-            verify(instance, times(1)).setType(null);
-        }
-
-        @EnumSource(IndexInfo.Type.class)
-        @ParameterizedTest
-        void setTypeAsEnum__Nonnull(final IndexInfo.Type typeAsEnum) {
-            // GIVEN
-            final var instance = newTypeSpy();
-            // WHEN
-            instance.setTypeAsEnum(typeAsEnum);
-            // THEN
-            verify(instance, times(1)).setType(typeAsEnum.fieldValueAsInt());
-        }
     }
 }

@@ -20,10 +20,22 @@ package com.github.jinahya.database.metadata.bind;
  * #L%
  */
 
-class ColumnPrivilegeTest
-        extends AbstractMetadataTypeTest<ColumnPrivilege> {
+/**
+ * The parent interface for binding database metadata types.
+ *
+ * @author Jin Kwon &lt;onacit_at_gmail.com&gt;
+ */
+final class MetadataTypeConstants {
 
-    ColumnPrivilegeTest() {
-        super(ColumnPrivilege.class);
+    static final String YES = "YES";
+
+    static final String NO = "NO";
+
+    static final String PATTERN_REGEXP_YES_OR_NO = YES + "|" + NO;
+
+    static final String PATTERN_REGEXP_YES_NO_OR_EMPTY = "^$|" + PATTERN_REGEXP_YES_OR_NO;
+
+    private MetadataTypeConstants() {
+        throw new AssertionError("instantiation is not allowed");
     }
 }
