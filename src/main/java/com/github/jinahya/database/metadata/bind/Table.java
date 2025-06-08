@@ -111,6 +111,13 @@ public class Table
     public static final String COLUMN_VALUE_REF_GENERATION_DERIVED = "DERIVED";
 
     // ------------------------------------------------------------------------------------------ STATIC_FACTORY_METHODS
+    static Table of(final String tableCat, final String tableSchem, final String tableName) {
+        final var table = new Table();
+        table.setTableCat(tableCat);
+        table.setTableSchem(tableSchem);
+        table.setTableName(tableName);
+        return table;
+    }
 
     // ---------------------------------------------------------------------------------------------------- CONSTRUCTORS
 

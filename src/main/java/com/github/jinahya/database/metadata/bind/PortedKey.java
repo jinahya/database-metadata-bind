@@ -20,10 +20,8 @@ package com.github.jinahya.database.metadata.bind;
  * #L%
  */
 
+import jakarta.annotation.Nullable;
 import lombok.EqualsAndHashCode;
-import lombok.Getter;
-import lombok.Setter;
-import lombok.ToString;
 
 import java.sql.DatabaseMetaData;
 import java.sql.SQLException;
@@ -38,16 +36,21 @@ import java.util.Optional;
  * @see ExportedKey
  * @see ImportedKey
  */
-@Setter
-@Getter
 @EqualsAndHashCode(callSuper = true)
-@ToString(callSuper = true)
 abstract class PortedKey
         extends AbstractMetadataType {
 
     private static final long serialVersionUID = 6713872409315471232L;
 
     // -----------------------------------------------------------------------------------------------------------------
+    static <T extends PortedKey> Comparator<T> comparingPktable_(final Comparator<? super String> comparator) {
+        return Comparator
+                .<T, String>comparing(PortedKey::getPktableCat, comparator)
+                .thenComparing(PortedKey::getPktableSchem, comparator)
+                .thenComparing(PortedKey::getPktableName, comparator)
+                .thenComparing(PortedKey::getKeySeq, Comparator.naturalOrder());
+    }
+
     static <T extends PortedKey> Comparator<T> comparingPktable_(final Context context,
                                                                  final Comparator<? super String> comparator)
             throws SQLException {
@@ -56,6 +59,14 @@ abstract class PortedKey
                 .thenComparing(PortedKey::getPktableSchem, ContextUtils.nullPrecedence(context, comparator))
                 .thenComparing(PortedKey::getPktableName, ContextUtils.nullPrecedence(context, comparator))
                 .thenComparing(PortedKey::getKeySeq, ContextUtils.nullPrecedence(context, Comparator.naturalOrder()));
+    }
+
+    static <T extends PortedKey> Comparator<T> comparingFktable_(final Comparator<? super String> comparator) {
+        return Comparator
+                .<T, String>comparing(PortedKey::getFktableCat, comparator)
+                .thenComparing(PortedKey::getFktableSchem, comparator)
+                .thenComparing(PortedKey::getFktableName, comparator)
+                .thenComparing(PortedKey::getKeySeq, Comparator.naturalOrder());
     }
 
     static <T extends PortedKey> Comparator<T> comparingFktable_(final Context context,
@@ -138,116 +149,12 @@ abstract class PortedKey
      */
     public static final String COLUMN_NAME_UPDATE_RULE = "UPDATE_RULE";
 
-    /**
-     * Constants for values of {@value PortedKey#COLUMN_NAME_UPDATE_RULE} column.
-     *
-     * @author Jin Kwon &lt;onacit_at_gmail.com&gt;
-     * @see ExportedKey
-     * @see ImportedKey
-     */
-    public enum TableKeyUpdateRule
-            implements _IntFieldEnum<TableKeyUpdateRule> {
-
-        /**
-         * Constants for {@link DatabaseMetaData#importedKeyCascade}({@value DatabaseMetaData#importedKeyCascade}).
-         */
-        IMPORTED_KEY_CASCADE(DatabaseMetaData.importedKeyCascade),        // 0
-
-        /**
-         * Constants for {@link DatabaseMetaData#importedKeyRestrict}({@value DatabaseMetaData#importedKeyRestrict}).
-         */
-        IMPORTED_KEY_RESTRICT(DatabaseMetaData.importedKeyRestrict),      // 1
-
-        /**
-         * Constants for {@link DatabaseMetaData#importedKeySetNull}({@value DatabaseMetaData#importedKeySetNull}).
-         */
-        IMPORTED_KEY_SET_NULL(DatabaseMetaData.importedKeySetNull),       // 2
-
-        /**
-         * Constants for {@link DatabaseMetaData#importedKeyNoAction}({@value DatabaseMetaData#importedKeyNoAction}).
-         */
-        IMPORTED_KEY_NO_ACTION(DatabaseMetaData.importedKeyNoAction),     // 3
-
-        /**
-         * Constants for
-         * {@link DatabaseMetaData#importedKeySetDefault}({@value DatabaseMetaData#importedKeySetDefault}).
-         */
-        IMPORTED_KEY_SET_DEFAULT(DatabaseMetaData.importedKeySetDefault); // 4
-
-        public static TableKeyUpdateRule valueOfFieldValue(final int fieldValue) {
-            return _IntFieldEnum.valueOfFieldValue(TableKeyUpdateRule.class, fieldValue);
-        }
-
-        TableKeyUpdateRule(final int fieldValue) {
-            this.fieldValue = fieldValue;
-        }
-
-        @Override
-        public int fieldValueAsInt() {
-            return fieldValue;
-        }
-
-        private final int fieldValue;
-    }
-
     // -----------------------------------------------------------------------------------------------------------------
 
     /**
      * The column label of {@value}.
      */
     public static final String COLUMN_NAME_DELETE_RULE = "DELETE_RULE";
-
-    /**
-     * Constants for values of {@value PortedKey#COLUMN_NAME_DELETE_RULE} column.
-     *
-     * @author Jin Kwon &lt;onacit_at_gmail.com&gt;
-     * @see ExportedKey
-     * @see ImportedKey
-     */
-    public enum TableKeyDeleteRule
-            implements _IntFieldEnum<TableKeyDeleteRule> {
-
-        /**
-         * Constants for {@link DatabaseMetaData#importedKeyCascade}({@value DatabaseMetaData#importedKeyCascade}).
-         */
-        IMPORTED_KEY_CASCADE(DatabaseMetaData.importedKeyCascade),        // 0
-
-        /**
-         * Constants for {@link DatabaseMetaData#importedKeyRestrict}({@value DatabaseMetaData#importedKeyRestrict}).
-         */
-        IMPORTED_KEY_RESTRICT(DatabaseMetaData.importedKeyRestrict),      // 1
-
-        /**
-         * Constants for {@link DatabaseMetaData#importedKeySetNull}({@value DatabaseMetaData#importedKeySetNull}).
-         */
-        IMPORTED_KEY_SET_NULL(DatabaseMetaData.importedKeySetNull),       // 2
-
-        /**
-         * Constants for {@link DatabaseMetaData#importedKeyNoAction}({@value DatabaseMetaData#importedKeyNoAction}).
-         */
-        IMPORTED_KEY_NO_ACTION(DatabaseMetaData.importedKeyNoAction),     // 3
-
-        /**
-         * Constants for
-         * {@link DatabaseMetaData#importedKeySetDefault}({@value DatabaseMetaData#importedKeySetDefault}).
-         */
-        IMPORTED_KEY_SET_DEFAULT(DatabaseMetaData.importedKeySetDefault); // 4
-
-        public static TableKeyDeleteRule valueOfFieldValue(final int fieldValue) {
-            return _IntFieldEnum.valueOfFieldValue(TableKeyDeleteRule.class, fieldValue);
-        }
-
-        TableKeyDeleteRule(final int fieldValue) {
-            this.fieldValue = fieldValue;
-        }
-
-        @Override
-        public int fieldValueAsInt() {
-            return fieldValue;
-        }
-
-        private final int fieldValue;
-    }
 
     // -----------------------------------------------------------------------------------------------------------------
 
@@ -268,110 +175,141 @@ abstract class PortedKey
      */
     public static final String COLUMN_NAME_DEFERRABILITY = "DEFERRABILITY";
 
-    /**
-     * Constants for values of {@value PortedKey#COLUMN_NAME_DEFERRABILITY} column.
-     *
-     * @author Jin Kwon &lt;onacit_at_gmail.com&gt;
-     * @see ExportedKey
-     * @see ImportedKey
-     */
-    public enum TableKeyDeferrability
-            implements _IntFieldEnum<TableKeyDeferrability> {
+    public static final int COLUMN_VALUE_DEFERRABILITY_IMPORTED_KEY_INITIALLY_DEFERRED =
+            DatabaseMetaData.importedKeyInitiallyDeferred;
 
-        /**
-         * Constants for
-         * {@link DatabaseMetaData#importedKeyInitiallyDeferred}({@value
-         * DatabaseMetaData#importedKeyInitiallyDeferred}).
-         */
-        IMPORTED_KEY_INITIALLY_DEFERRED(DatabaseMetaData.importedKeyInitiallyDeferred),   // 5
+    public static final int COLUMN_VALUE_DEFERRABILITY_IMPORTED_KEY_INITIALLY_IMMEDIATE =
+            DatabaseMetaData.importedKeyInitiallyImmediate;
 
-        /**
-         * Constants for
-         * {@link DatabaseMetaData#importedKeyInitiallyImmediate}({@value
-         * DatabaseMetaData#importedKeyInitiallyImmediate}).
-         */
-        IMPORTED_KEY_INITIALLY_IMMEDIATE(DatabaseMetaData.importedKeyInitiallyImmediate), // 6
+    public static final int COLUMN_VALUE_DEFERRABILITY_IMPORTED_KEY_NOT_DEFERRABLE =
+            DatabaseMetaData.importedKeyNotDeferrable;
 
-        /**
-         * Constants for
-         * {@link DatabaseMetaData#importedKeyNotDeferrable}({@value DatabaseMetaData#importedKeyNotDeferrable}).
-         */
-        IMPORTED_KEY_NOT_DEFERRABLE(DatabaseMetaData.importedKeyNotDeferrable);           // 7
+    // ------------------------------------------------------------------------------------------ STATIC_FACTORY_METHODS
 
-        public static TableKeyDeferrability valueOfFieldValue(final int fieldValue) {
-            return _IntFieldEnum.valueOfFieldValue(TableKeyDeferrability.class, fieldValue);
-        }
+    // ---------------------------------------------------------------------------------------------------- CONSTRUCTORS
+    PortedKey() {
+        super();
+    }
 
-        TableKeyDeferrability(final int fieldValue) {
-            this.fieldValue = fieldValue;
-        }
+    // ------------------------------------------------------------------------------------------------ java.lang.Object
 
-        @Override
-        public int fieldValueAsInt() {
-            return fieldValue;
-        }
-
-        private final int fieldValue;
+    @Override
+    public String toString() {
+        return super.toString() + '{' +
+               "pktableCat=" + pktableCat +
+               ",pktableSchem=" + pktableSchem +
+               ",pktableName=" + pktableName +
+               ",pkcolumnName=" + pkcolumnName +
+               ",fktableCat=" + fktableCat +
+               ",fktableSchem=" + fktableSchem +
+               ",fktableName=" + fktableName +
+               ",fkcolumnName=" + fkcolumnName +
+               ",keySeq=" + keySeq +
+               ",updateRule=" + updateRule +
+               ",deleteRule=" + deleteRule +
+               ",fkName=" + fkName +
+               ",pkName=" + pkName +
+               ",deferrability=" + deferrability +
+               '}';
     }
 
     // ------------------------------------------------------------------------------------------------------ pktableCat
 
+    @Nullable
+    public String getPktableCat() {
+        return pktableCat;
+    }
+
+    protected void setPktableCat(@Nullable final String pktableCat) {
+        this.pktableCat = pktableCat;
+    }
+
     // ---------------------------------------------------------------------------------------------------- pktableSchem
+    @Nullable
+    public String getPktableSchem() {
+        return pktableSchem;
+    }
+
+    protected void setPktableSchem(@Nullable final String pktableSchem) {
+        this.pktableSchem = pktableSchem;
+    }
+
+    // ----------------------------------------------------------------------------------------------------- pktableName
+    public String getPktableName() {
+        return pktableName;
+    }
+
+    protected void setPktableName(final String pktableName) {
+        this.pktableName = pktableName;
+    }
+
+    // ---------------------------------------------------------------------------------------------------- pkcolumnName
+    public String getPkcolumnName() {
+        return pkcolumnName;
+    }
+
+    protected void setPkcolumnName(final String pkcolumnName) {
+        this.pkcolumnName = pkcolumnName;
+    }
 
     // ------------------------------------------------------------------------------------------------------ fktableCat
 
+    @Nullable
+    public String getFktableCat() {
+        return fktableCat;
+    }
+
+    protected void setFktableCat(@Nullable final String fktableCat) {
+        this.fktableCat = fktableCat;
+    }
+
     // ---------------------------------------------------------------------------------------------------- fktableSchem
+    @Nullable
+    public String getFktableSchem() {
+        return fktableSchem;
+    }
+
+    protected void setFktableSchem(@Nullable final String fktableSchem) {
+        this.fktableSchem = fktableSchem;
+    }
+
+    // ----------------------------------------------------------------------------------------------------- fktableName
+    public String getFktableName() {
+        return fktableName;
+    }
+
+    protected void setFktableName(final String fktableName) {
+        this.fktableName = fktableName;
+    }
+
+    // ---------------------------------------------------------------------------------------------------- fkcolumnName
+    public String getFkcolumnName() {
+        return fkcolumnName;
+    }
+
+    protected void setFkcolumnName(final String fkcolumnName) {
+        this.fkcolumnName = fkcolumnName;
+    }
+
+    // ---------------------------------------------------------------------------------------------------------- keySeq
 
     // ------------------------------------------------------------------------------------------------------ updateRule
-    TableKeyUpdateRule getUpdateRuleAsEnum() {
-        return Optional.ofNullable(getUpdateRule())
-                .map(TableKeyUpdateRule::valueOfFieldValue)
-                .orElse(null);
-    }
-
-    void setUpdateRuleAsEnum(final TableKeyUpdateRule updateRuleAsEnum) {
-        setUpdateRule(
-                Optional.ofNullable(updateRuleAsEnum)
-                        .map(_IntFieldEnum::fieldValueAsInt)
-                        .orElse(null)
-        );
-    }
 
     // ------------------------------------------------------------------------------------------------------ deleteRule
-    TableKeyDeleteRule getDeleteRuleAsEnum() {
-        return Optional.ofNullable(getDeleteRule())
-                .map(TableKeyDeleteRule::valueOfFieldValue)
-                .orElse(null);
-    }
 
-    void setDeleteRuleAsEnum(final TableKeyDeleteRule deleteRuleAsEnum) {
-        setDeleteRule(
-                Optional.ofNullable(deleteRuleAsEnum)
-                        .map(_IntFieldEnum::fieldValueAsInt)
-                        .orElse(null)
-        );
-    }
+    // ---------------------------------------------------------------------------------------------------------- fkName
+
+    // ---------------------------------------------------------------------------------------------------------- pkName
 
     // --------------------------------------------------------------------------------------------------- deferrability
-    TableKeyDeferrability getDeferrabilityAsEnum() {
-        return Optional.ofNullable(getDeferrability())
-                .map(v -> TableKeyDeferrability.valueOfFieldValue(getDeferrability()))
-                .orElse(null);
-    }
-
-    void setDeferrabilityAsEnum(final TableKeyDeferrability deferrabilityAsEnum) {
-        setDeferrability(
-                Optional.ofNullable(deferrabilityAsEnum)
-                        .map(TableKeyDeferrability::fieldValueAsInt)
-                        .orElse(null)
-        );
-    }
 
     // -----------------------------------------------------------------------------------------------------------------
+    @Nullable
     @_NullableBySpecification
     @_ColumnLabel(COLUMN_NAME_PKTABLE_CAT)
     private String pktableCat;
 
+    @Nullable
     @_NullableBySpecification
     @_ColumnLabel(COLUMN_NAME_PKTABLE_SCHEM)
     private String pktableSchem;
@@ -383,10 +321,12 @@ abstract class PortedKey
     private String pkcolumnName;
 
     // -----------------------------------------------------------------------------------------------------------------
+    @Nullable
     @_NullableBySpecification
     @_ColumnLabel(COLUMN_NAME_FKTABLE_CAT)
     private String fktableCat;
 
+    @Nullable
     @_NullableBySpecification
     @_ColumnLabel(COLUMN_NAME_FKTABLE_SCHEM)
     private String fktableSchem;
@@ -401,20 +341,82 @@ abstract class PortedKey
     @_ColumnLabel(COLUMN_NAME_KEY_SEQ)
     private Integer keySeq;
 
+    // -----------------------------------------------------------------------------------------------------------------
     @_ColumnLabel(COLUMN_NAME_UPDATE_RULE)
     private Integer updateRule;
 
     @_ColumnLabel(COLUMN_NAME_DELETE_RULE)
     private Integer deleteRule;
 
+    // -----------------------------------------------------------------------------------------------------------------
+    @Nullable
     @_NullableBySpecification
     @_ColumnLabel(COLUMN_NAME_FK_NAME)
     private String fkName;
 
+    @Nullable
     @_NullableBySpecification
     @_ColumnLabel(COLUMN_NAME_PK_NAME)
     private String pkName;
 
+    // -----------------------------------------------------------------------------------------------------------------
     @_ColumnLabel(COLUMN_NAME_DEFERRABILITY)
     private Integer deferrability;
+
+    // -----------------------------------------------------------------------------------------------------------------
+    private transient Table pkTable_;
+
+    private transient Table fkTable_;
+
+    Table getPkTable_() {
+        if (pkTable_ == null) {
+            pkTable_ = Table.of(pktableCat, pktableSchem, pktableName);
+        }
+        return pkTable_;
+    }
+
+    void setPkTable_(final Table pkTable_) {
+        this.pkTable_ = pkTable_;
+        setPktableCat(
+                Optional.ofNullable(this.pkTable_)
+                        .map(Table::getTableCat)
+                        .orElse(null)
+        );
+        setPktableSchem(
+                Optional.ofNullable(pkTable_)
+                        .map(Table::getTableSchem)
+                        .orElse(null)
+        );
+        setPktableName(
+                Optional.ofNullable(pkTable_)
+                        .map(Table::getTableName)
+                        .orElse(null)
+        );
+    }
+
+    Table getFkTable_() {
+        if (fkTable_ == null) {
+            fkTable_ = Table.of(fktableCat, fktableSchem, fktableName);
+        }
+        return fkTable_;
+    }
+
+    void setFkTable_(final Table fkTable_) {
+        this.fkTable_ = fkTable_;
+        setFktableCat(
+                Optional.ofNullable(this.fkTable_)
+                        .map(Table::getTableCat)
+                        .orElse(null)
+        );
+        setFktableSchem(
+                Optional.ofNullable(fkTable_)
+                        .map(Table::getTableSchem)
+                        .orElse(null)
+        );
+        setFktableName(
+                Optional.ofNullable(fkTable_)
+                        .map(Table::getTableName)
+                        .orElse(null)
+        );
+    }
 }

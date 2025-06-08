@@ -40,13 +40,13 @@ public class PrimaryKey
     private static final long serialVersionUID = 3159826510060898330L;
 
     // -----------------------------------------------------------------------------------------------------------------
+    static Comparator<PrimaryKey> comparing(final Comparator<? super String> comparator) {
+        return Comparator.comparing(PrimaryKey::getColumnName, comparator);
+    }
+
     static Comparator<PrimaryKey> comparing(final Context context, final Comparator<? super String> comparator)
             throws SQLException {
-//        return Comparator.comparing(PrimaryKey::getTableCat, ContextUtils.nulls(context, comparator))
-//                .thenComparing(PrimaryKey::getTableSchem, ContextUtils.nulls(context, comparator))
-//                .thenComparing(PrimaryKey::getTableName, ContextUtils.nulls(context, comparator))
-//                .thenComparing(PrimaryKey::getColumnName, ContextUtils.nulls(context, comparator));
-        return Comparator.comparing(PrimaryKey::getColumnName, ContextUtils.nullPrecedence(context, comparator));
+        return comparing(ContextUtils.nullPrecedence(context, comparator));
     }
 
     // ------------------------------------------------------------------------------------------------------- TABLE_CAT
@@ -58,7 +58,7 @@ public class PrimaryKey
 
     // ----------------------------------------------------------------------------------------------------- TABLE_SCHEM
 
-    /**
+    /**x
      * The column label of {@value}.
      */
     public static final String COLUMN_LABEL_TABLE_SCHEM = "TABLE_SCHEM";
@@ -131,7 +131,7 @@ public class PrimaryKey
         return tableSchem;
     }
 
-    protected void setTableSchem(@Nullable String tableSchem) {
+    protected void setTableSchem(@Nullable final String tableSchem) {
         this.tableSchem = tableSchem;
     }
 
@@ -186,10 +186,10 @@ public class PrimaryKey
     @_ColumnLabel(COLUMN_LABEL_TABLE_NAME)
     private String tableName;
 
+    // -----------------------------------------------------------------------------------------------------------------
     @_ColumnLabel(COLUMN_LABEL_COLUMN_NAME)
     private String columnName;
 
-    // -----------------------------------------------------------------------------------------------------------------
     @_ColumnLabel(COLUMN_LABEL_KEY_SEQ)
     private Integer keySeq;
 

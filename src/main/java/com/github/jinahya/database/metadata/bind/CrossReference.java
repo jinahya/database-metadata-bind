@@ -28,7 +28,6 @@ import lombok.ToString;
 import java.sql.DatabaseMetaData;
 import java.sql.SQLException;
 import java.util.Comparator;
-import java.util.Optional;
 
 /**
  * A class for binding results of the
@@ -52,7 +51,8 @@ public class CrossReference
         return Comparator.comparing(CrossReference::getFktableCat, ContextUtils.nullPrecedence(context, comparator))
                 .thenComparing(CrossReference::getFktableSchem, ContextUtils.nullPrecedence(context, comparator))
                 .thenComparing(CrossReference::getFktableName, ContextUtils.nullPrecedence(context, comparator))
-                .thenComparing(CrossReference::getKeySeq, ContextUtils.nullPrecedence(context, Comparator.naturalOrder()));
+                .thenComparing(CrossReference::getKeySeq,
+                               ContextUtils.nullPrecedence(context, Comparator.naturalOrder()));
     }
 
     // ----------------------------------------------------------------------------------------------------- UPDATE_RULE
@@ -71,34 +71,8 @@ public class CrossReference
     // ---------------------------------------------------------------------------------------------------- fktableSchem
 
     // ------------------------------------------------------------------------------------------------------ updateRule
-    PortedKey.TableKeyUpdateRule getUpdateRuleAsEnum() {
-        return Optional.ofNullable(getUpdateRule())
-                .map(PortedKey.TableKeyUpdateRule::valueOfFieldValue)
-                .orElse(null);
-    }
-
-    void setUpdateRuleAsEnum(final PortedKey.TableKeyUpdateRule updateRuleAsEnum) {
-        setUpdateRule(
-                Optional.ofNullable(updateRuleAsEnum)
-                        .map(_IntFieldEnum::fieldValueAsInt)
-                        .orElse(null)
-        );
-    }
 
     // ------------------------------------------------------------------------------------------------------ deleteRule
-    PortedKey.TableKeyUpdateRule getDeleteRuleAsEnum() {
-        return Optional.ofNullable(getDeleteRule())
-                .map(PortedKey.TableKeyUpdateRule::valueOfFieldValue)
-                .orElse(null);
-    }
-
-    void setDeleteRuleAsEnum(final PortedKey.TableKeyUpdateRule deleteRuleAsEnum) {
-        setDeleteRule(
-                Optional.ofNullable(deleteRuleAsEnum)
-                        .map(_IntFieldEnum::fieldValueAsInt)
-                        .orElse(null)
-        );
-    }
 
     // -----------------------------------------------------------------------------------------------------------------
     @_NullableBySpecification
