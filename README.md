@@ -10,11 +10,11 @@ in [DatabaseMetaData](http://docs.oracle.com/javase/8/docs/api/java/sql/Database
 
 ## Coordinates
 
-See [Maven Central](https://search.maven.org/artifact/com.github.jinahya/database-metadata-bind) for available versions.
+See [Maven Central](https://central.sonatype.com/artifact/io.github.jinahya/database-metadata-bind/overview) for available versions.
 
 ```xml
 <dependency>
-  <groupId>com.github.jinahya</groupId>
+  <groupId>io.github.jinahya</groupId>
   <artifactId>database-metadata-bind</artifactId>
 </dependency>
 ```
