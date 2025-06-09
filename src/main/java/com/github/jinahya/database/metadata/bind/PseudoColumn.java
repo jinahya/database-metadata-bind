@@ -88,11 +88,11 @@ public class PseudoColumn
     // ----------------------------------------------------------------------------------------------------- IS_NULLABLE
     public static final String COLUMN_LABEL_COLUMN_IS_NULLABLE = "IS_NULLABLE";
 
-    public static final String COLUMN_VALUE_COLUMN_IS_NULLABLE_YES = YesNoConstants.YES;
+    public static final String COLUMN_VALUE_COLUMN_IS_NULLABLE_YES = MetadataTypeConstants.YES;
 
-    public static final String COLUMN_VALUE_COLUMN_IS_NULLABLE_NO = YesNoConstants.NO;
+    public static final String COLUMN_VALUE_COLUMN_IS_NULLABLE_NO = MetadataTypeConstants.NO;
 
-    public static final String COLUMN_VALUE_COLUMN_IS_NULLABLE_EMPTY = YesNoEmptyConstants.EMPTY;
+    public static final String COLUMN_VALUE_COLUMN_IS_NULLABLE_EMPTY = MetadataTypeConstants.EMPTY;
 
     // ------------------------------------------------------------------------------------------ STATIC_FACTORY_METHODS
 

@@ -24,7 +24,6 @@ import jakarta.annotation.Nullable;
 import lombok.EqualsAndHashCode;
 
 import java.sql.DatabaseMetaData;
-import java.util.Optional;
 
 /**
  * A class for binding results of the {@link DatabaseMetaData#getVersionColumns(String, String, String)} method.
@@ -47,54 +46,6 @@ public class VersionColumn
 
     // -----------------------------------------------------------------------------------------------------------------
     public static final String COLUMN_LABEL_PSEUDO_COLUMN = "PSEUDO_COLUMN";
-
-    /**
-     * Constants for {@value #COLUMN_LABEL_PSEUDO_COLUMN} column values.
-     *
-     * @author Jin Kwon &lt;onacit_at_gmail.com&gt;
-     */
-    public enum PseudoColumn
-            implements _IntFieldEnum<PseudoColumn> {
-
-        /**
-         * A value for {@link DatabaseMetaData#versionColumnUnknown}({@value DatabaseMetaData#versionColumnUnknown}).
-         */
-        VERSION_COLUMN_UNKNOWN(DatabaseMetaData.versionColumnUnknown),// 0
-
-        /**
-         * A value for
-         * {@link DatabaseMetaData#versionColumnNotPseudo}({@value DatabaseMetaData#versionColumnNotPseudo}).
-         */
-        VERSION_COLUMN_NOT_PSEUDO(DatabaseMetaData.versionColumnNotPseudo), // 1
-
-        /**
-         * A value for {@link DatabaseMetaData#versionColumnPseudo}({@value DatabaseMetaData#versionColumnPseudo}).
-         */
-        VERSION_COLUMN_PSEUDO(DatabaseMetaData.versionColumnPseudo) // 2
-        ;
-
-        /**
-         * Finds the value for specified {@link VersionColumn#COLUMN_LABEL_PSEUDO_COLUMN} column value.
-         *
-         * @param fieldValue the value of {@link VersionColumn#COLUMN_LABEL_PSEUDO_COLUMN} column to match.
-         * @return the value matched.
-         * @throws IllegalStateException when no value matched.
-         */
-        public static PseudoColumn valueOfFieldValue(final int fieldValue) {
-            return _IntFieldEnum.valueOfFieldValue(PseudoColumn.class, fieldValue);
-        }
-
-        PseudoColumn(final int fieldValue) {
-            this.fieldValue = fieldValue;
-        }
-
-        @Override
-        public int fieldValueAsInt() {
-            return fieldValue;
-        }
-
-        private final int fieldValue;
-    }
 
     // ------------------------------------------------------------------------------------------ STATIC_FACTORY_METHODS
 
@@ -169,19 +120,9 @@ public class VersionColumn
         return pseudoColumn;
     }
 
-    PseudoColumn getPseudoColumnAsEnum() {
-        return Optional.ofNullable(getPseudoColumn())
-                .map(PseudoColumn::valueOfFieldValue)
-                .orElse(null);
+    public void setPseudoColumn(Integer pseudoColumn) {
+        this.pseudoColumn = pseudoColumn;
     }
-
-//    void setPseudoColumnAsEnum(final PseudoColumn pseudoColumnAsEnum) {
-//        setPseudoColumn(
-//                Optional.ofNullable(pseudoColumnAsEnum)
-//                        .map(PseudoColumn::fieldValueAsInt)
-//                        .orElse(null)
-//        );
-//    }
 
     // -----------------------------------------------------------------------------------------------------------------
     @_NotUsedBySpecification

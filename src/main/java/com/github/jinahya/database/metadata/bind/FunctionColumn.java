@@ -43,8 +43,7 @@ import java.util.Comparator;
 @Getter
 @EqualsAndHashCode(callSuper = true)
 public class FunctionColumn
-        extends AbstractMetadataType
-        implements HasIsNullableEnum {
+        extends AbstractMetadataType {
 
     private static final long serialVersionUID = -7445156446214062680L;
 

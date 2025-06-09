@@ -20,8 +20,6 @@ package com.github.jinahya.database.metadata.bind;
  * #L%
  */
 
-import org.junit.jupiter.api.Nested;
-
 class FunctionColumnTest
         extends AbstractMetadataType_Test<FunctionColumn> {
 
@@ -36,16 +34,5 @@ class FunctionColumnTest
         instance.setColumnName("");
         instance.setSpecificName("");
         return instance;
-    }
-
-    // -----------------------------------------------------------------------------------------------------------------
-
-    @Nested
-    class IsNullableTest
-            extends HasIsNullableTest<FunctionColumn> {
-
-        IsNullableTest() {
-            super(FunctionColumnTest.this::newTypeSpy);
-        }
     }
 }

@@ -31,6 +31,8 @@ final class MetadataTypeConstants {
 
     static final String NO = "NO";
 
+    static final String EMPTY = "";
+
     static final String PATTERN_REGEXP_YES_OR_NO = YES + "|" + NO;
 
     static final String PATTERN_REGEXP_YES_NO_OR_EMPTY = "^$|" + PATTERN_REGEXP_YES_OR_NO;

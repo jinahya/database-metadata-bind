@@ -1171,7 +1171,7 @@ final class Context_Test_Utils {
     private static void versionColumn(final Context context, final VersionColumn versionColumn) throws SQLException {
         MetadataType_Test_Utils.verify(versionColumn);
         assertDoesNotThrow(() -> JDBCType.valueOf(versionColumn.getDataType()));
-        assertDoesNotThrow(() -> VersionColumn.PseudoColumn.valueOfFieldValue(versionColumn.getPseudoColumn()));
+//        assertDoesNotThrow(() -> VersionColumn.PseudoColumn.valueOfFieldValue(versionColumn.getPseudoColumn()));
     }
 
     // -----------------------------------------------------------------------------------------------------------------
