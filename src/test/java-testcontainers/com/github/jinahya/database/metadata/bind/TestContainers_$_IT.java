@@ -110,7 +110,7 @@ abstract class TestContainers_$_IT {
                 }
             };
             try {
-                ContextTestUtils.test(c);
+                Context_Test_Utils.test(c);
             } catch (final SQLException sqle) {
                 if (sqle instanceof SQLFeatureNotSupportedException sqlfnse) {
                     log.warn("not supported", sqlfnse);
@@ -127,13 +127,13 @@ abstract class TestContainers_$_IT {
     void functions() {
         applyContext(c -> {
             try {
-                ContextTestUtils.info(c);
+                Context_Test_Utils.info(c);
             } catch (final SQLException sqle) {
                 throw new RuntimeException(sqle);
             }
             try {
                 final var functions = c.getFunctions(null, null, "%");
-                ContextTestUtils.functions(c, functions);
+                Context_Test_Utils.functions(c, functions);
             } catch (final SQLException sqle) {
                 if (sqle instanceof SQLFeatureNotSupportedException sqlfnse) {
                     log.error("not supported", sqlfnse);
@@ -149,13 +149,13 @@ abstract class TestContainers_$_IT {
     void schemas() {
         applyContext(c -> {
             try {
-                ContextTestUtils.info(c);
+                Context_Test_Utils.info(c);
             } catch (final SQLException sqle) {
                 throw new RuntimeException(sqle);
             }
             try {
                 final var schemas = c.getSchemas((String) null, "%");
-                ContextTestUtils.schemas(c, schemas);
+                Context_Test_Utils.schemas(c, schemas);
             } catch (final SQLException sqle) {
                 if (sqle instanceof SQLFeatureNotSupportedException sqlfnse) {
                     log.error("not supported", sqlfnse);
@@ -171,13 +171,13 @@ abstract class TestContainers_$_IT {
     void tables() {
         applyContext(c -> {
             try {
-                ContextTestUtils.info(c);
+                Context_Test_Utils.info(c);
             } catch (final SQLException sqle) {
                 throw new RuntimeException(sqle);
             }
             try {
                 final var tables = c.getTables((String) null, null, "%", null);
-                ContextTestUtils.tables(c, tables);
+                Context_Test_Utils.tables(c, tables);
             } catch (final SQLException sqle) {
                 if (sqle instanceof SQLFeatureNotSupportedException sqlfnse) {
                     log.error("not supported", sqlfnse);

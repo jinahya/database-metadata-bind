@@ -51,6 +51,12 @@ abstract class MetadataType_Test<T extends MetadataType> {
         this.typeClass = Objects.requireNonNull(typeClass, "typeClass is null");
     }
 
+    @Test
+    void _Valid_NewInstance() {
+        final var instance = newTypeInstance();
+        __Validation_Test_Utils.requireValid(instance);
+    }
+
     // -----------------------------------------------------------------------------------------------------------------
     @DisplayName("toString()!blank")
     @Test

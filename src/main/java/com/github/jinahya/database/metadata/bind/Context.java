@@ -86,10 +86,8 @@ public class Context {
         return true;
     };
 
-    // -----------------------------------------------------------------------------------------------------------------
-
     /**
-     * Creates a new instance from specified connection.
+     * Creates a new instance from the specified connection.
      *
      * @param connection the connection.
      * @return a new instance.
@@ -101,6 +99,8 @@ public class Context {
         Objects.requireNonNull(connection, "connection is null");
         return new Context(connection.getMetaData());
     }
+
+    // ---------------------------------------------------------------------------------------------------- CONSTRUCTORS
 
     /**
      * Creates a new instance with specified instance of {@link DatabaseMetaData}.
@@ -206,6 +206,9 @@ public class Context {
             log.warning(
                     () -> String.format("unknown result; type: %s, label: %s, value: %s", type.getSimpleName(), label,
                                         value));
+            if (instance instanceof AbstractMetadataType) {
+                ((AbstractMetadataType) instance).putUnmappedColumn(label, value);
+            }
         }
         assert resultLabels.isEmpty() : "remaining result labels: " + resultLabels;
         assert fieldLabels.isEmpty() : "remaining field labels: " + fieldLabels;
@@ -484,7 +487,12 @@ public class Context {
     List<ColumnPrivilege> getColumnPrivileges(final Table table, final String columnNamePattern)
             throws SQLException {
         Objects.requireNonNull(table, "table is null");
-        return getColumnPrivileges(table.getTableCat(), table.getTableSchem(), table.getTableName(), columnNamePattern);
+        return getColumnPrivileges(
+                table.getTableCat(),
+                table.getTableSchem(),
+                table.getTableName(),
+                columnNamePattern
+        );
     }
 
     List<ColumnPrivilege> getColumnPrivileges(final Table table) throws SQLException {
@@ -493,8 +501,12 @@ public class Context {
 
     List<ColumnPrivilege> getColumnPrivileges(final Column column) throws SQLException {
         Objects.requireNonNull(column, "column is null");
-        return getColumnPrivileges(column.getTableCat(), column.getTableSchem(), column.getTableName(),
-                                   column.getColumnName());
+        return getColumnPrivileges(
+                column.getTableCat(),
+                column.getTableSchem(),
+                column.getTableName(),
+                column.getColumnName()
+        );
     }
 
     // ----------------------------------------- getColumns(catalog, schemaPattern, tableNamePattern, columnNamePattern)
@@ -1711,7 +1723,7 @@ public class Context {
      * @throws SQLException if a database error occurs.
      */
     public List<Table> getTables(@Nullable final String catalog, @Nullable final String schemaPattern,
-                                 @Nonnull final String tableNamePattern, @Nullable final String... types)
+                                 @Nonnull final String tableNamePattern, @Nullable final String[] types)
             throws SQLException {
         return collectTables(
                 catalog,
@@ -1735,7 +1747,7 @@ public class Context {
      * @see #getTables(String, String, String, String[])
      */
     List<Table> getTables(@Nonnull final Catalog catalog, @Nullable final String schemaPattern,
-                          @Nonnull final String tableNamePattern, @Nullable final String... types)
+                          @Nonnull final String tableNamePattern, @Nullable final String[] types)
             throws SQLException {
         Objects.requireNonNull(catalog, "catalog is null");
         return getTables(
@@ -1748,7 +1760,7 @@ public class Context {
 
     @Nonnull
     List<Table> getTables(@Nonnull final Schema schema, @Nonnull final String tableNamePattern,
-                          @Nullable final String... types)
+                          @Nullable final String[] types)
             throws SQLException {
         Objects.requireNonNull(schema, "schema is null");
         return getTables(

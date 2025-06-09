@@ -177,10 +177,7 @@ public class IndexInfo
      */
     @AssertTrue
     private boolean isIndexQualifierValid() {
-        if (indexQualifier != null) {
-            return true;
-        }
-        return type == null || Objects.equals(type, COLUMN_VALUE_TYPE_TABLE_INDEX_STATISTIC);
+        return !Objects.equals(type, COLUMN_VALUE_TYPE_TABLE_INDEX_STATISTIC) || indexQualifier == null;
     }
 
     /**
@@ -246,10 +243,7 @@ public class IndexInfo
      */
     @AssertTrue
     private boolean isAscOrDescValid() {
-        if (ascOrDesc != null) {
-            return true;
-        }
-        return type == null || Objects.equals(type, COLUMN_VALUE_TYPE_TABLE_INDEX_STATISTIC);
+        return !Objects.equals(type, COLUMN_VALUE_TYPE_TABLE_INDEX_STATISTIC) || ascOrDesc == null;
     }
 
     // -------------------------------------------------------------------------------------------------------- tableCat

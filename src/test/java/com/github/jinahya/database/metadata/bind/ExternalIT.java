@@ -57,7 +57,7 @@ class ExternalIT {
             context.acceptValues((m, v) -> {
                 log.debug("{}: {}", m.getName(), v);
             });
-            ContextTestUtils.test(context);
+            Context_Test_Utils.test(context);
         }
     }
 }

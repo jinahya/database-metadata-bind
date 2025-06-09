@@ -20,17 +20,28 @@ package com.github.jinahya.database.metadata.bind;
  * #L%
  */
 
-import lombok.ToString;
-
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Objects;
 
-@ToString(callSuper = true)
 abstract class AbstractMetadataType
         implements MetadataType {
 
     private static final long serialVersionUID = -3285362930174073345L;
 
+    // ------------------------------------------------------------------------------------------ STATIC_FACTORY_METHODS
+
+    // ---------------------------------------------------------------------------------------------------- CONSTRUCTORS
+
+    // ------------------------------------------------------------------------------------------------ java.lang.Object
+
     // -----------------------------------------------------------------------------------------------------------------
+    @Override
+    public String toString() {
+        return super.toString() + '{' +
+               "unmappedColumns=" + unmappedColumns +
+               '}';
+    }
 
     @Override
     public boolean equals(final Object obj) {
@@ -46,5 +57,12 @@ abstract class AbstractMetadataType
     @Override
     public int hashCode() {
         return Objects.hash(getClass());
+    }
+
+    // -----------------------------------------------------------------------------------------------------------------
+    private final transient Map<String, Object> unmappedColumns = new HashMap<>();
+
+    Object putUnmappedColumn(final String columnName, final Object value) {
+        return unmappedColumns.put(columnName, value);
     }
 }

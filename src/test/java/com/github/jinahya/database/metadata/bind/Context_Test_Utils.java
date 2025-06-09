@@ -45,7 +45,7 @@ import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
  * @author Jin Kwon &lt;onacit at gmail.com&gt;
  */
 @Slf4j
-final class ContextTestUtils {
+final class Context_Test_Utils {
 
     private static String databaseProductName(final Context context) throws SQLException {
         return context.metadata.getDatabaseProductName();
@@ -179,7 +179,7 @@ final class ContextTestUtils {
         }
         // ------------------------------------------------------------------------------------------------------ tables
         try {
-            final var tables = context.getTables((String) null, null, "%", null);
+            final var tables = context.getTables((String) null, null, "%", (String[]) null);
             tables(context, tables);
         } catch (final SQLException sqle) {
             // empty
@@ -367,7 +367,7 @@ final class ContextTestUtils {
         }
         // ------------------------------------------------------------------------------------------------------ tables
         try {
-            final var tables = context.getTables(catalog.getTableCat(), null, "%", null);
+            final var tables = context.getTables(catalog.getTableCat(), null, "%", (String[]) null);
             if (!databaseProductName(context).equals(DatabaseProductNames.APACHE_DERBY) &&
                 !databaseProductName(context).equals(DatabaseProductNames.POSTGRE_SQL)) {
                 tables.forEach(t -> {
@@ -761,7 +761,7 @@ final class ContextTestUtils {
         }
         // ------------------------------------------------------------------------------------------------------ tables
         try {
-            final var tables = context.getTables(schema, "%", null);
+            final var tables = context.getTables(schema, "%", (String[]) null);
             tables(context, tables);
         } catch (final SQLException sqle) {
             // empty
@@ -1175,7 +1175,7 @@ final class ContextTestUtils {
     }
 
     // -----------------------------------------------------------------------------------------------------------------
-    private ContextTestUtils() {
+    private Context_Test_Utils() {
         throw new AssertionError("instantiation is not allowed");
     }
 }

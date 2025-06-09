@@ -21,7 +21,6 @@ package com.github.jinahya.database.metadata.bind;
  */
 
 import jakarta.annotation.Nullable;
-import jakarta.validation.constraints.NotBlank;
 import lombok.EqualsAndHashCode;
 import lombok.ToString;
 
@@ -279,7 +278,6 @@ public class Table
     @_ColumnLabel(COLUMN_LABEL_TABLE_SCHEM)
     private String tableSchem;
 
-    @NotBlank
     @_ColumnLabel(COLUMN_LABEL_TABLE_NAME)
     private String tableName;
 
