@@ -303,11 +303,10 @@ public class ProcedureColumn
     private String procedureSchem;
 
     @_ColumnLabel("PROCEDURE_NAME")
-    @EqualsAndHashCode.Include
     private String procedureName;
 
     @_ColumnLabel("COLUMN_NAME")
-    @EqualsAndHashCode.Include
+
     private String columnName;
 
     // -----------------------------------------------------------------------------------------------------------------
@@ -355,6 +354,7 @@ public class ProcedureColumn
     @_ColumnLabel("SQL_DATETIME_SUB")
     private Integer sqlDatetimeSub;
 
+    @Nullable
     @_NullableBySpecification
     @_ColumnLabel("CHAR_OCTET_LENGTH")
     private Integer charOctetLength;
@@ -367,6 +367,6 @@ public class ProcedureColumn
 
     // https://github.com/microsoft/mssql-jdbc/issues/2320
     @_ColumnLabel("SPECIFIC_NAME")
-    @EqualsAndHashCode.Include
+
     private String specificName;
 }

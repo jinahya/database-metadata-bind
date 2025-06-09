@@ -20,10 +20,10 @@ package com.github.jinahya.database.metadata.bind;
  * #L%
  */
 
+import jakarta.annotation.Nullable;
 import lombok.EqualsAndHashCode;
 
 import java.sql.DatabaseMetaData;
-import java.util.Objects;
 import java.util.Optional;
 
 /**
@@ -33,6 +33,7 @@ import java.util.Optional;
  * @see Context#getVersionColumns(String, String, String)
  */
 @_ChildOf(Table.class)
+@EqualsAndHashCode(callSuper = true)
 public class VersionColumn
         extends AbstractMetadataType {
 
@@ -122,31 +123,6 @@ public class VersionColumn
                '}';
     }
 
-    @Override
-    public boolean equals(final Object obj) {
-        if (obj == null || getClass() != obj.getClass()) {
-            return false;
-        }
-        if (!super.equals(obj)) {
-            return false;
-        }
-        final var that = (VersionColumn) obj;
-        return Objects.equals(scope, that.scope) &&
-               Objects.equals(columnName, that.columnName) &&
-               Objects.equals(dataType, that.dataType) &&
-               Objects.equals(typeName, that.typeName) &&
-               Objects.equals(columnSize, that.columnSize) &&
-               Objects.equals(bufferLength, that.bufferLength) &&
-               Objects.equals(decimalDigits, that.decimalDigits) &&
-               Objects.equals(pseudoColumn, that.pseudoColumn);
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(super.hashCode(), scope, columnName, dataType, typeName, columnSize, bufferLength,
-                            decimalDigits, pseudoColumn);
-    }
-
     // -----------------------------------------------------------------------------------------------------------------
 
     /**
@@ -213,7 +189,7 @@ public class VersionColumn
     private Integer scope;
 
     @_ColumnLabel("COLUMN_NAME")
-    @EqualsAndHashCode.Include
+
     private String columnName;
 
     @_ColumnLabel("DATA_TYPE")
@@ -222,6 +198,7 @@ public class VersionColumn
     @_ColumnLabel("TYPE_NAME")
     private String typeName;
 
+    @Nullable
     @_NullableBySpecification
     @_ColumnLabel("COLUMN_SIZE")
     private Integer columnSize;
@@ -229,6 +206,7 @@ public class VersionColumn
     @_ColumnLabel("BUFFER_LENGTH")
     private Integer bufferLength;
 
+    @Nullable
     @_NullableBySpecification
     @_ColumnLabel("DECIMAL_DIGITS")
     private Integer decimalDigits;

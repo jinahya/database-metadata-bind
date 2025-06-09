@@ -30,7 +30,7 @@ import nl.jqno.equalsverifier.api.SingleTypeEqualsVerifierApi;
  */
 @Slf4j
 class BestRowIdentifierTest
-        extends AbstractMetadataTypeTest<BestRowIdentifier> {
+        extends AbstractMetadataType_Test<BestRowIdentifier> {
 
     BestRowIdentifierTest() {
         super(BestRowIdentifier.class);

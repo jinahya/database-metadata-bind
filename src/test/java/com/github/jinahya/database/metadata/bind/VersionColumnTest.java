@@ -31,7 +31,7 @@ import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 
 class VersionColumnTest
-        extends AbstractMetadataTypeTest<VersionColumn> {
+        extends AbstractMetadataType_Test<VersionColumn> {
 
     VersionColumnTest() {
         super(VersionColumn.class);

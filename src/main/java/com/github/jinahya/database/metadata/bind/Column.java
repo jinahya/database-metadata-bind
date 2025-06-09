@@ -30,6 +30,7 @@ import java.sql.DatabaseMetaData;
 import java.sql.SQLException;
 import java.sql.Types;
 import java.util.Comparator;
+import java.util.List;
 import java.util.Objects;
 
 /**
@@ -38,22 +39,25 @@ import java.util.Objects;
  * @author Jin Kwon &lt;jinahya_at_gmail.com&gt;
  * @see Context#getColumns(String, String, String, String)
  */
-//@ParentOf(ColumnPrivilege.class)
-
 @_ChildOf(Table.class)
+@EqualsAndHashCode(callSuper = true)
 public class Column
         extends AbstractMetadataType {
 
     private static final long serialVersionUID = -409653682729081530L;
 
     // -----------------------------------------------------------------------------------------------------------------
-    static Comparator<Column> comparing(final Context context, final Comparator<? super String> comparator)
+    static Comparator<Column> comparingAsSpecified(final Comparator<? super String> comparator) {
+        return Comparator
+                .comparing(Column::getTableCat, comparator)
+                .thenComparing(Column::getTableSchem, comparator)
+                .thenComparing(Column::getTableName, comparator)
+                .thenComparing(Column::getOrdinalPosition, Comparator.naturalOrder());
+    }
+
+    static Comparator<Column> comparingAsSpecified(final Context context, final Comparator<? super String> comparator)
             throws SQLException {
-        return Comparator.comparing(Column::getTableCat, ContextUtils.nullPrecedence(context, comparator))
-                .thenComparing(Column::getTableSchem, ContextUtils.nullPrecedence(context, comparator))
-                .thenComparing(Column::getTableName, ContextUtils.nullPrecedence(context, comparator))
-                .thenComparing(Column::getOrdinalPosition,
-                               ContextUtils.nullPrecedence(context, Comparator.naturalOrder()));
+        return comparingAsSpecified(ContextUtils.nullPrecedence(context, comparator));
     }
 
     // -----------------------------------------------------------------------------------------------------------------
@@ -91,11 +95,17 @@ public class Column
      */
     public static final String COLUMN_LABEL_NULLABLE = "NULLABLE";
 
-    public static final int COLUMN_VALUE_NULLABLE_COLUMN_NO_NULLS = DatabaseMetaData.columnNoNulls;                 // 0
+    public static final int COLUMN_VALUE_NULLABLE_COLUMN_NO_NULLS = DatabaseMetaData.columnNoNulls;
 
-    public static final int COLUMN_VALUE_NULLABLE_COLUMN_NULLABLE = DatabaseMetaData.columnNullable;                // 1
+    public static final int COLUMN_VALUE_NULLABLE_COLUMN_NULLABLE = DatabaseMetaData.columnNullable;
 
-    public static final int COLUMN_VALUE_NULLABLE_COLUMN_NULLABLE_UNKNOWN = DatabaseMetaData.columnNullableUnknown; // 2
+    public static final int COLUMN_VALUE_NULLABLE_COLUMN_NULLABLE_UNKNOWN = DatabaseMetaData.columnNullableUnknown;
+
+    static final List<Integer> COLUMN_VALUES_NULLABLE = List.of(
+            COLUMN_VALUE_NULLABLE_COLUMN_NO_NULLS,        // 0
+            COLUMN_VALUE_NULLABLE_COLUMN_NULLABLE,        // 1
+            COLUMN_VALUE_NULLABLE_COLUMN_NULLABLE_UNKNOWN // 2
+    );
 
     // -----------------------------------------------------------------------------------------------------------------
     public static final String COLUMN_LABEL_IS_AUTOINCREMENT = "IS_AUTOINCREMENT";
@@ -154,28 +164,16 @@ public class Column
                '}';
     }
 
-    @Override
-    public boolean equals(final Object obj) {
-        if (obj == null || getClass() != obj.getClass()) {
-            return false;
-        }
-        if (!super.equals(obj)) {
-            return false;
-        }
-        final Column that = (Column) obj;
-        return Objects.equals(tableCat, that.tableCat) &&
-               Objects.equals(tableSchem, that.tableSchem) &&
-               Objects.equals(tableName, that.tableName) &&
-               Objects.equals(columnName, that.columnName);
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(super.hashCode(), tableCat, tableSchem, tableName, columnName);
-    }
-
     // ------------------------------------------------------------------------------------------------- Bean-Validation
-    @AssertTrue
+    @AssertTrue(message = "nullable must be 1, 2, or 3")
+    private boolean isNullableValid() {
+        if (nullable == null) {
+            return true;
+        }
+        return COLUMN_VALUES_NULLABLE.contains(nullable);
+    }
+
+    @AssertTrue(message = "scopeCatalog must be null when dataType is not REF")
     private boolean isScopeCatalogValid() {
         if (scopeCatalog != null) {
             return true;
@@ -183,7 +181,7 @@ public class Column
         return dataType == null || !Objects.equals(dataType, Types.REF);
     }
 
-    @AssertTrue
+    @AssertTrue(message = "scopeSchema must be null when dataType is not REF")
     private boolean isScopeSchemaValid() {
         if (scopeSchema != null) {
             return true;
@@ -191,7 +189,7 @@ public class Column
         return dataType == null || !Objects.equals(dataType, Types.REF);
     }
 
-    @AssertTrue
+    @AssertTrue(message = "scopeTable must be null when dataType is not REF")
     private boolean isScopeTableValid() {
         if (scopeTable != null) {
             return true;
@@ -199,7 +197,7 @@ public class Column
         return dataType == null || !Objects.equals(dataType, Types.REF);
     }
 
-    @AssertTrue
+    @AssertTrue(message = "sourceDataType must be null if DATA_TYPE is not DISTINCT or user-generated REF")
     private boolean isSourceDataTypeValid() {
         if (sourceDataType != null) {
             return true;
@@ -210,20 +208,22 @@ public class Column
     }
 
     // -------------------------------------------------------------------------------------------------------- tableCat
+    @Nullable
     public String getTableCat() {
         return tableCat;
     }
 
-    public void setTableCat(final String tableCat) {
+    public void setTableCat(@Nullable final String tableCat) {
         this.tableCat = tableCat;
     }
 
     // ------------------------------------------------------------------------------------------------------ tableSchem
+    @Nullable
     public String getTableSchem() {
         return tableSchem;
     }
 
-    public void setTableSchem(final String tableSchem) {
+    public void setTableSchem(@Nullable final String tableSchem) {
         this.tableSchem = tableSchem;
     }
 
@@ -264,11 +264,12 @@ public class Column
     }
 
     // ------------------------------------------------------------------------------------------------------ columnSize
+    @Nullable
     public Integer getColumnSize() {
         return columnSize;
     }
 
-    public void setColumnSize(final Integer columnSize) {
+    public void setColumnSize(@Nullable final Integer columnSize) {
         this.columnSize = columnSize;
     }
 
@@ -282,11 +283,12 @@ public class Column
     }
 
     // --------------------------------------------------------------------------------------------------- decimalDigits
+    @Nullable
     public Integer getDecimalDigits() {
         return decimalDigits;
     }
 
-    public void setDecimalDigits(final Integer decimalDigits) {
+    public void setDecimalDigits(@Nullable final Integer decimalDigits) {
         this.decimalDigits = decimalDigits;
     }
 
@@ -309,21 +311,22 @@ public class Column
     }
 
     // --------------------------------------------------------------------------------------------------------- remarks
-
+    @Nullable
     public String getRemarks() {
         return remarks;
     }
 
-    public void setRemarks(final String remarks) {
+    public void setRemarks(@Nullable final String remarks) {
         this.remarks = remarks;
     }
 
     // ------------------------------------------------------------------------------------------------------- columnDef
+    @Nullable
     public String getColumnDef() {
         return columnDef;
     }
 
-    public void setColumnDef(final String columnDef) {
+    public void setColumnDef(@Nullable final String columnDef) {
         this.columnDef = columnDef;
     }
 
@@ -373,44 +376,46 @@ public class Column
     }
 
     // ---------------------------------------------------------------------------------------------------- scopeCatalog
+    @Nullable
     public String getScopeCatalog() {
         return scopeCatalog;
     }
 
-    public void setScopeCatalog(final String scopeCatalog) {
+    public void setScopeCatalog(@Nullable final String scopeCatalog) {
         this.scopeCatalog = scopeCatalog;
     }
 
     // ----------------------------------------------------------------------------------------------------- scopeSchema
+    @Nullable
     public String getScopeSchema() {
         return scopeSchema;
     }
 
-    public void setScopeSchema(final String scopeSchema) {
+    public void setScopeSchema(@Nullable final String scopeSchema) {
         this.scopeSchema = scopeSchema;
     }
 
     // ------------------------------------------------------------------------------------------------------ scopeTable
+    @Nullable
     public String getScopeTable() {
         return scopeTable;
     }
 
-    public void setScopeTable(final String scopeTable) {
+    public void setScopeTable(@Nullable final String scopeTable) {
         this.scopeTable = scopeTable;
     }
 
     // -------------------------------------------------------------------------------------------------- sourceDataType
-
+    @Nullable
     public Integer getSourceDataType() {
         return sourceDataType;
     }
 
-    public void setSourceDataType(final Integer sourceDataType) {
+    public void setSourceDataType(@Nullable final Integer sourceDataType) {
         this.sourceDataType = sourceDataType;
     }
 
     // ------------------------------------------------------------------------------------------------- isAutoincrement
-
     public String getIsAutoincrement() {
         return isAutoincrement;
     }
@@ -432,21 +437,20 @@ public class Column
     @Nullable
     @_NullableBySpecification
     @_ColumnLabel(COLUMN_LABEL_TABLE_CAT)
-    @EqualsAndHashCode.Include
     private String tableCat;
 
     @Nullable
     @_NullableBySpecification
     @_ColumnLabel(COLUMN_LABEL_TABLE_SCHEM)
-    @EqualsAndHashCode.Include
+
     private String tableSchem;
 
     @_ColumnLabel(COLUMN_LABEL_TABLE_NAME)
-    @EqualsAndHashCode.Include
+
     private String tableName;
 
     @_ColumnLabel(COLUMN_LABEL_COLUMN_NAME)
-    @EqualsAndHashCode.Include
+
     private String columnName;
 
     // -----------------------------------------------------------------------------------------------------------------
@@ -461,7 +465,6 @@ public class Column
     @_ColumnLabel("COLUMN_SIZE")
     private Integer columnSize;
 
-    @Nullable
     @_NotUsedBySpecification
     @_ColumnLabel("BUFFER_LENGTH")
     private Integer bufferLength;
@@ -487,12 +490,10 @@ public class Column
     @_ColumnLabel("COLUMN_DEF")
     private String columnDef;
 
-    @Nullable
     @_NotUsedBySpecification
     @_ColumnLabel("SQL_DATA_TYPE")
     private Integer sqlDataType;
 
-    @Nullable
     @_NotUsedBySpecification
     @_ColumnLabel("SQL_DATETIME_SUB")
     private Integer sqlDatetimeSub;

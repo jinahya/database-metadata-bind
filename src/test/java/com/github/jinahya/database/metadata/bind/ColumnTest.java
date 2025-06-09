@@ -21,7 +21,7 @@ package com.github.jinahya.database.metadata.bind;
  */
 
 class ColumnTest
-        extends AbstractMetadataTypeTest<Column> {
+        extends AbstractMetadataType_Test<Column> {
 
     ColumnTest() {
         super(Column.class);

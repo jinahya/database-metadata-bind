@@ -21,7 +21,6 @@ package com.github.jinahya.database.metadata.bind;
  */
 
 import java.io.Serializable;
-import java.util.Map;
 
 /**
  * The parent interface for binding database metadata types.

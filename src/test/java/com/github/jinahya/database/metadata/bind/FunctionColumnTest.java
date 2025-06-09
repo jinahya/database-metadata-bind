@@ -23,7 +23,7 @@ package com.github.jinahya.database.metadata.bind;
 import org.junit.jupiter.api.Nested;
 
 class FunctionColumnTest
-        extends AbstractMetadataTypeTest<FunctionColumn> {
+        extends AbstractMetadataType_Test<FunctionColumn> {
 
     FunctionColumnTest() {
         super(FunctionColumn.class);

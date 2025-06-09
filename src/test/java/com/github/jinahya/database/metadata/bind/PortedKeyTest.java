@@ -26,7 +26,7 @@ package com.github.jinahya.database.metadata.bind;
  * @author Jin Kwon &lt;onacit_at_gmail.com&gt;
  */
 abstract class PortedKeyTest<T extends PortedKey>
-        extends AbstractMetadataTypeTest<T> {
+        extends AbstractMetadataType_Test<T> {
 
     PortedKeyTest(final Class<T> typeClass) {
         super(typeClass);

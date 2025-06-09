@@ -58,8 +58,8 @@ public class PrimaryKey
 
     // ----------------------------------------------------------------------------------------------------- TABLE_SCHEM
 
-    /**x
-     * The column label of {@value}.
+    /**
+     * x The column label of {@value}.
      */
     public static final String COLUMN_LABEL_TABLE_SCHEM = "TABLE_SCHEM";
 

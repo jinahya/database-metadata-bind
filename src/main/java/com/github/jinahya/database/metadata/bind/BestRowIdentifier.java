@@ -34,7 +34,6 @@ import java.util.Comparator;
  * @author Jin Kwon &lt;jinahya_at_gmail.com&gt;
  * @see Context#getBestRowIdentifier(String, String, String, int, boolean)
  * @see PseudoColumn
- * @see Scope
  */
 @_ChildOf(Table.class)
 @EqualsAndHashCode(callSuper = true)
@@ -44,7 +43,6 @@ public class BestRowIdentifier
     private static final long serialVersionUID = -1512051574198028399L;
 
     // -----------------------------------------------------------------------------------------------------------------
-
     static Comparator<BestRowIdentifier> comparingScope(final Context context) throws SQLException {
         return Comparator.comparing(BestRowIdentifier::getScope,
                                     ContextUtils.nullPrecedence(context, Comparator.naturalOrder()));
@@ -140,11 +138,12 @@ public class BestRowIdentifier
     }
 
     // ------------------------------------------------------------------------------------------------------ columnSize
+    @Nullable
     public Integer getColumnSize() {
         return columnSize;
     }
 
-    public void setColumnSize(final Integer columnSize) {
+    public void setColumnSize(@Nullable final Integer columnSize) {
         this.columnSize = columnSize;
     }
 
@@ -157,12 +156,13 @@ public class BestRowIdentifier
         this.bufferLength = bufferLength;
     }
 
-    // ------------------------------------------------------------------------------------------------------- decimalDigits
+    // --------------------------------------------------------------------------------------------------- decimalDigits
+    @Nullable
     public Integer getDecimalDigits() {
         return decimalDigits;
     }
 
-    public void setDecimalDigits(final Integer decimalDigits) {
+    public void setDecimalDigits(@Nullable final Integer decimalDigits) {
         this.decimalDigits = decimalDigits;
     }
 

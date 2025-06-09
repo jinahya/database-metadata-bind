@@ -20,10 +20,10 @@ package com.github.jinahya.database.metadata.bind;
  * #L%
  */
 
+import jakarta.annotation.Nullable;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.Setter;
-import lombok.ToString;
 
 import java.sql.DatabaseMetaData;
 import java.sql.SQLException;
@@ -45,8 +45,7 @@ import java.util.Objects;
 @_ParentOf(UDT.class)
 @Setter
 @Getter
-@EqualsAndHashCode(callSuper = true, onlyExplicitlyIncluded = true)
-@ToString(callSuper = true)
+@EqualsAndHashCode(callSuper = true)
 public class UDT
         extends AbstractMetadataType {
 
@@ -110,22 +109,16 @@ public class UDT
     // ------------------------------------------------------------------------------------------------ java.lang.Object
 
     @Override
-    public boolean equals(final Object obj) {
-        if (obj == null || getClass() != obj.getClass()) {
-            return false;
-        }
-        if (!super.equals(obj)) {
-            return false;
-        }
-        final var that = (UDT) obj;
-        return Objects.equals(typeCat, that.typeCat) &&
-               Objects.equals(typeSchem, that.typeSchem) &&
-               Objects.equals(typeName, that.typeName);
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(super.hashCode(), typeCat, typeSchem, typeName);
+    public String toString() {
+        return super.toString() + '{' +
+               "typeCat=" + typeCat +
+               ",typeSchem=" + typeSchem +
+               ",typeName=" + typeName +
+               ",className=" + className +
+               ",dataType=" + dataType +
+               ",remarks=" + remarks +
+               ",baseType=" + baseType +
+               '}';
     }
 
     // -----------------------------------------------------------------------------------------------------------------
@@ -160,18 +153,20 @@ public class UDT
     }
 
     // -----------------------------------------------------------------------------------------------------------------
+    @Nullable
     @_NullableBySpecification
     @_ColumnLabel(COLUMN_LABEL_TYPE_CAT)
-    @EqualsAndHashCode.Include
+
     private String typeCat;
 
+    @Nullable
     @_NullableBySpecification
     @_ColumnLabel(COLUMN_LABEL_TYPE_SCHEM)
-    @EqualsAndHashCode.Include
+
     private String typeSchem;
 
     @_ColumnLabel(COLUMN_LABEL_TYPE_NAME)
-    @EqualsAndHashCode.Include
+
     private String typeName;
 
     // -----------------------------------------------------------------------------------------------------------------
@@ -184,6 +179,7 @@ public class UDT
     @_ColumnLabel("REMARKS")
     private String remarks;
 
+    @Nullable
     @_NullableBySpecification
     @_ColumnLabel("BASE_TYPE")
     private Integer baseType;

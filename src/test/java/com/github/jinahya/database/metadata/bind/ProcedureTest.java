@@ -27,7 +27,7 @@ import java.util.Comparator;
 import static org.assertj.core.api.Assertions.assertThat;
 
 class ProcedureTest
-        extends AbstractMetadataTypeTest<Procedure> {
+        extends AbstractMetadataType_Test<Procedure> {
 
     ProcedureTest() {
         super(Procedure.class);

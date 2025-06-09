@@ -21,7 +21,7 @@ package com.github.jinahya.database.metadata.bind;
  */
 
 class ClientInfoPropertyTest
-        extends AbstractMetadataTypeTest<ClientInfoProperty> {
+        extends AbstractMetadataType_Test<ClientInfoProperty> {
 
     ClientInfoPropertyTest() {
         super(ClientInfoProperty.class);

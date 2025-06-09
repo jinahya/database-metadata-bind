@@ -21,7 +21,7 @@ package com.github.jinahya.database.metadata.bind;
  */
 
 class ProcedureColumnTest
-        extends AbstractMetadataTypeTest<ProcedureColumn> {
+        extends AbstractMetadataType_Test<ProcedureColumn> {
 
     // -----------------------------------------------------------------------------------------------------------------
     ProcedureColumnTest() {

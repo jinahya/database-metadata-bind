@@ -273,7 +273,7 @@ final class ContextTestUtils {
     }
 
     private static void attribute(final Context context, final Attribute attribute) throws SQLException {
-        MetadataTypeTestUtils.verify(attribute);
+        MetadataType_Test_Utils.verify(attribute);
         {
             assertThat(attribute.getTypeName()).isNotNull();
             assertThat(attribute.getAttrName()).isNotNull();
@@ -303,7 +303,7 @@ final class ContextTestUtils {
 
     private static void bestRowIdentifier(final Context context, final BestRowIdentifier bestRowIdentifier)
             throws SQLException {
-        MetadataTypeTestUtils.verify(bestRowIdentifier);
+        MetadataType_Test_Utils.verify(bestRowIdentifier);
         {
             final var scope = bestRowIdentifier.getScope();
 //            assertDoesNotThrow(() -> BestRowIdentifier.Scope.valueOfFieldValue(scope));
@@ -333,7 +333,7 @@ final class ContextTestUtils {
     }
 
     private static void catalog(final Context context, final Catalog catalog) throws SQLException {
-        MetadataTypeTestUtils.verify(catalog);
+        MetadataType_Test_Utils.verify(catalog);
         // -------------------------------------------------------------------------------------------------- procedures
         try {
             final var procedures = context.getProcedures(catalog, "%");
@@ -416,7 +416,7 @@ final class ContextTestUtils {
 
     private static void clientInfoProperty(final Context context, final ClientInfoProperty clientInfoProperty)
             throws SQLException {
-        MetadataTypeTestUtils.verify(clientInfoProperty);
+        MetadataType_Test_Utils.verify(clientInfoProperty);
     }
 
     // --------------------------------------------------------------------------------------------------------- columns
@@ -427,8 +427,8 @@ final class ContextTestUtils {
         }
         if (true) {
             assertThat(columns).satisfiesAnyOf(
-                    l -> assertThat(l).isSortedAccordingTo(Column.comparing(context, String.CASE_INSENSITIVE_ORDER)),
-                    l -> assertThat(l).isSortedAccordingTo(Column.comparing(context, Comparator.naturalOrder()))
+                    l -> assertThat(l).isSortedAccordingTo(Column.comparingAsSpecified(context, String.CASE_INSENSITIVE_ORDER)),
+                    l -> assertThat(l).isSortedAccordingTo(Column.comparingAsSpecified(context, Comparator.naturalOrder()))
             );
         }
         for (final var column : columns) {
@@ -437,7 +437,7 @@ final class ContextTestUtils {
     }
 
     private static void column(final Context context, final Column column) throws SQLException {
-        MetadataTypeTestUtils.verify(column);
+        MetadataType_Test_Utils.verify(column);
         {
             assertThat(column.getTableName()).isNotNull();
             assertThat(column.getColumnName()).isNotNull();
@@ -488,7 +488,7 @@ final class ContextTestUtils {
 
     private static void columnPrivilege(final Context context, final ColumnPrivilege columnPrivilege)
             throws SQLException {
-        MetadataTypeTestUtils.verify(columnPrivilege);
+        MetadataType_Test_Utils.verify(columnPrivilege);
 //        final var isGrantableAsEnum = columnPrivilege.getIsGrantableAsEnum();
     }
 
@@ -502,8 +502,8 @@ final class ContextTestUtils {
         if (true) {
             assertThat(crossReference).satisfiesAnyOf(
                     l -> assertThat(l).isSortedAccordingTo(
-                            CrossReference.comparing(context, String.CASE_INSENSITIVE_ORDER)),
-                    l -> assertThat(l).isSortedAccordingTo(CrossReference.comparing(context, Comparator.naturalOrder()))
+                            CrossReference.comparingSpecifiedOrder(context, String.CASE_INSENSITIVE_ORDER)),
+                    l -> assertThat(l).isSortedAccordingTo(CrossReference.comparingSpecifiedOrder(context, Comparator.naturalOrder()))
             );
         }
         for (final var v : crossReference) {
@@ -512,7 +512,7 @@ final class ContextTestUtils {
     }
 
     private static void crossReference(final Context context, final CrossReference crossReference) throws SQLException {
-        MetadataTypeTestUtils.verify(crossReference);
+        MetadataType_Test_Utils.verify(crossReference);
     }
 
     // ---------------------------------------------------------------------------------------------------- exportedKeys
@@ -525,9 +525,9 @@ final class ContextTestUtils {
         if (true) {
             assertThat(exportedKeys).satisfiesAnyOf(
                     l -> assertThat(l).isSortedAccordingTo(
-                            ExportedKey.comparing(context, String.CASE_INSENSITIVE_ORDER)),
+                            ExportedKey.specifiedOrder(context, String.CASE_INSENSITIVE_ORDER)),
                     l -> assertThat(l).isSortedAccordingTo(
-                            ExportedKey.comparing(context, Comparator.naturalOrder()))
+                            ExportedKey.specifiedOrder(context, Comparator.naturalOrder()))
             );
         }
         for (final var exportedKey : exportedKeys) {
@@ -536,7 +536,7 @@ final class ContextTestUtils {
     }
 
     private static void exportedKey(final Context context, final ExportedKey exportedKey) throws SQLException {
-        MetadataTypeTestUtils.verify(exportedKey);
+        MetadataType_Test_Utils.verify(exportedKey);
     }
 
     // ------------------------------------------------------------------------------------------------------- functions
@@ -563,8 +563,8 @@ final class ContextTestUtils {
         ).contains(databaseProductName(context))) {
             // https://github.com/microsoft/mssql-jdbc/issues/2321
             assertThat(functions).satisfiesAnyOf(
-                    l -> assertThat(l).isSortedAccordingTo(Function.comparing(context, String.CASE_INSENSITIVE_ORDER)),
-                    l -> assertThat(l).isSortedAccordingTo(Function.comparing(context, Comparator.naturalOrder()))
+                    l -> assertThat(l).isSortedAccordingTo(Function.specifiedOrder(context, String.CASE_INSENSITIVE_ORDER)),
+                    l -> assertThat(l).isSortedAccordingTo(Function.specifiedOrder(context, Comparator.naturalOrder()))
             );
         }
         for (final var function : functions) {
@@ -573,7 +573,7 @@ final class ContextTestUtils {
     }
 
     private static void function(final Context context, final Function function) throws SQLException {
-        MetadataTypeTestUtils.verify(function);
+        MetadataType_Test_Utils.verify(function);
         try {
             final var functionColumns = context.getFunctionColumns(function, "%");
             functionColumns(context, functionColumns);
@@ -604,7 +604,7 @@ final class ContextTestUtils {
 
     private static void functionColumn(final Context context, final FunctionColumn functionColumn)
             throws SQLException {
-        MetadataTypeTestUtils.verify(functionColumn);
+        MetadataType_Test_Utils.verify(functionColumn);
 //        final var columnType = FunctionColumn.ColumnType.valueOfFieldValue(functionColumn.getColumnType());
     }
 
@@ -629,7 +629,7 @@ final class ContextTestUtils {
     }
 
     private static void importedKey(final Context context, final ImportedKey importedKey) throws SQLException {
-        MetadataTypeTestUtils.verify(importedKey);
+        MetadataType_Test_Utils.verify(importedKey);
         assertThatCode(() -> {
             final var string = importedKey.toString();
         }).doesNotThrowAnyException();
@@ -656,7 +656,7 @@ final class ContextTestUtils {
     }
 
     private static void indexInfo(final Context context, final IndexInfo indexInfo) throws SQLException {
-        MetadataTypeTestUtils.verify(indexInfo);
+        MetadataType_Test_Utils.verify(indexInfo);
     }
 
     // ------------------------------------------------------------------------------------------------------ procedures
@@ -680,7 +680,7 @@ final class ContextTestUtils {
     }
 
     private static void procedure(final Context context, final Procedure procedure) throws SQLException {
-        MetadataTypeTestUtils.verify(procedure);
+        MetadataType_Test_Utils.verify(procedure);
         if (true) {
             final var procedureColumns = context.getProcedureColumns(procedure, "%");
             procedureColumns(context, procedureColumns);
@@ -709,7 +709,7 @@ final class ContextTestUtils {
 
     private static void procedureColumn(final Context context, final ProcedureColumn procedureColumn)
             throws SQLException {
-        MetadataTypeTestUtils.verify(procedureColumn);
+        MetadataType_Test_Utils.verify(procedureColumn);
         assertThatCode(() -> {
             final var isNullable = procedureColumn.getIsNullable();
         }).doesNotThrowAnyException();
@@ -733,7 +733,7 @@ final class ContextTestUtils {
     }
 
     private static void schema(final Context context, final Schema schema) throws SQLException {
-        MetadataTypeTestUtils.verify(schema);
+        MetadataType_Test_Utils.verify(schema);
         // -------------------------------------------------------------------------------------------------- procedures
         try {
             final var procedures = context.getProcedures(schema);
@@ -784,7 +784,7 @@ final class ContextTestUtils {
     }
 
     private static void superType(final Context context, final SuperType superType) throws SQLException {
-        MetadataTypeTestUtils.verify(superType);
+        MetadataType_Test_Utils.verify(superType);
         assertThat(superType).satisfies(v -> {
             assertThat(v.getTypeName()).isNotNull();
             assertThat(v.getSupertypeName()).isNotNull();
@@ -829,7 +829,7 @@ final class ContextTestUtils {
     }
 
     private static void table(final Context context, final Table table) throws SQLException {
-        MetadataTypeTestUtils.verify(table);
+        MetadataType_Test_Utils.verify(table);
         // -------------------------------------------------------------------------------------------------------------
         {
             assertThat(table.getTableCatalog_())
@@ -969,7 +969,7 @@ final class ContextTestUtils {
     }
 
     private static void primaryKey(final Context context, final PrimaryKey primaryKey) throws SQLException {
-        MetadataTypeTestUtils.verify(primaryKey);
+        MetadataType_Test_Utils.verify(primaryKey);
     }
 
     // --------------------------------------------------------------------------------------------------- pseudoColumns
@@ -992,7 +992,7 @@ final class ContextTestUtils {
     }
 
     private static void pseudoColumn(final Context context, final PseudoColumn pseudoColumn) throws SQLException {
-        MetadataTypeTestUtils.verify(pseudoColumn);
+        MetadataType_Test_Utils.verify(pseudoColumn);
     }
 
     // ----------------------------------------------------------------------------------------------------- superTables
@@ -1008,7 +1008,7 @@ final class ContextTestUtils {
     }
 
     private static void superTable(final Context context, final SuperTable superTable) throws SQLException {
-        MetadataTypeTestUtils.verify(superTable);
+        MetadataType_Test_Utils.verify(superTable);
     }
 
     // ------------------------------------------------------------------------------------------------- tablePrivileges
@@ -1034,7 +1034,7 @@ final class ContextTestUtils {
     }
 
     private static void tablePrivilege(final Context context, final TablePrivilege tablePrivilege) throws SQLException {
-        MetadataTypeTestUtils.verify(tablePrivilege);
+        MetadataType_Test_Utils.verify(tablePrivilege);
     }
 
     // ------------------------------------------------------------------------------------------------------ tableTypes
@@ -1052,7 +1052,7 @@ final class ContextTestUtils {
     }
 
     private static void tableType(final Context context, final TableType tableType) throws SQLException {
-        MetadataTypeTestUtils.verify(tableType);
+        MetadataType_Test_Utils.verify(tableType);
         {
             assertThat(tableType.getTableType())
                     .isNotBlank()
@@ -1077,7 +1077,7 @@ final class ContextTestUtils {
     }
 
     private static void typeInfo(final Context context, final TypeInfo typeInfo) throws SQLException {
-        MetadataTypeTestUtils.verify(typeInfo);
+        MetadataType_Test_Utils.verify(typeInfo);
         {
             assertThat(typeInfo.getTypeName()).isNotNull();
             //assertDoesNotThrow(() -> JDBCType.valueOf(typeInfo.getDataType())); // mssqlserver
@@ -1110,7 +1110,7 @@ final class ContextTestUtils {
     }
 
     private static void udt(final Context context, final UDT udt) throws SQLException {
-        MetadataTypeTestUtils.verify(udt);
+        MetadataType_Test_Utils.verify(udt);
         {
             assertThat(udt.getTypeName()).isNotNull();
             assertThat(udt.getDataType()).isIn(Types.JAVA_OBJECT, Types.STRUCT, Types.DISTINCT);
@@ -1165,7 +1165,7 @@ final class ContextTestUtils {
     }
 
     private static void versionColumn(final Context context, final VersionColumn versionColumn) throws SQLException {
-        MetadataTypeTestUtils.verify(versionColumn);
+        MetadataType_Test_Utils.verify(versionColumn);
         assertDoesNotThrow(() -> JDBCType.valueOf(versionColumn.getDataType()));
         assertDoesNotThrow(() -> VersionColumn.PseudoColumn.valueOfFieldValue(versionColumn.getPseudoColumn()));
     }

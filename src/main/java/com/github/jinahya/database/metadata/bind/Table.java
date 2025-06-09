@@ -20,13 +20,13 @@ package com.github.jinahya.database.metadata.bind;
  * #L%
  */
 
+import jakarta.annotation.Nullable;
 import jakarta.validation.constraints.NotBlank;
 import lombok.EqualsAndHashCode;
 import lombok.ToString;
 
 import java.sql.SQLException;
 import java.util.Comparator;
-import java.util.Objects;
 import java.util.Optional;
 
 /**
@@ -44,6 +44,8 @@ import java.util.Optional;
 @_ParentOf(IndexInfo.class)
 @_ParentOf(PseudoColumn.class)
 @_ParentOf(VersionColumn.class)
+@ToString(callSuper = true)
+@EqualsAndHashCode(callSuper = true)
 public class Table
         extends AbstractMetadataType {
 
@@ -148,35 +150,6 @@ public class Table
                ",typeCatalog_=" + typeCatalog_ +
                ",typeSchema_=" + typeSchema_ +
                '}';
-    }
-
-    @Override
-    public boolean equals(final Object obj) {
-        if (this == obj) {
-            return true;
-        }
-        if (obj == null || getClass() != obj.getClass()) {
-            return false;
-        }
-        if (!super.equals(obj)) {
-            return false;
-        }
-        final Table that = (Table) obj;
-        return Objects.equals(tableType, that.tableType) &&
-               Objects.equals(tableCat, that.tableCat) &&
-               Objects.equals(tableSchem, that.tableSchem) &&
-               Objects.equals(tableName, that.tableName);
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(
-                super.hashCode(),
-                tableType,
-                tableCat,
-                tableSchem,
-                tableName
-        );
     }
 
     // -------------------------------------------------------------------------------------------------------- tableCat
@@ -296,49 +269,53 @@ public class Table
     }
 
     // -----------------------------------------------------------------------------------------------------------------
+    @Nullable
     @_NullableBySpecification
     @_ColumnLabel(COLUMN_LABEL_TABLE_CAT)
-    @EqualsAndHashCode.Include
     private String tableCat;
 
+    @Nullable
     @_NullableBySpecification
     @_ColumnLabel(COLUMN_LABEL_TABLE_SCHEM)
-    @EqualsAndHashCode.Include
     private String tableSchem;
 
     @NotBlank
     @_ColumnLabel(COLUMN_LABEL_TABLE_NAME)
-    @EqualsAndHashCode.Include
     private String tableName;
 
     // -----------------------------------------------------------------------------------------------------------------
     @_ColumnLabel(COLUMN_LABEL_TABLE_TYPE)
-    @EqualsAndHashCode.Include
     private String tableType;
 
     // -----------------------------------------------------------------------------------------------------------------
+    @Nullable
     @_NullableBySpecification
     @_ColumnLabel(COLUMN_LABEL_REMARKS)
     private String remarks;
 
     // -----------------------------------------------------------------------------------------------------------------
+    @Nullable
     @_NullableBySpecification
     @_ColumnLabel(COLUMN_LABEL_TYPE_CAT)
     private String typeCat;
 
+    @Nullable
     @_NullableBySpecification
     @_ColumnLabel(COLUMN_LABEL_TYPE_SCHEM)
     private String typeSchem;
 
+    @Nullable
     @_NullableBySpecification
     @_ColumnLabel(COLUMN_LABEL_TYPE_NAME)
     private String typeName;
 
     // -----------------------------------------------------------------------------------------------------------------
+    @Nullable
     @_NullableBySpecification
     @_ColumnLabel(COLUMN_LABEL_SELF_REFERENCING_COL_NAME)
     private String selfReferencingColName;
 
+    @Nullable
     @_NullableBySpecification
     @_ColumnLabel(COLUMN_LABEL_REF_GENERATION)
     private String refGeneration;

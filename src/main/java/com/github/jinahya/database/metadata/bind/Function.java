@@ -27,6 +27,7 @@ import lombok.EqualsAndHashCode;
 import java.sql.DatabaseMetaData;
 import java.sql.SQLException;
 import java.util.Comparator;
+import java.util.List;
 import java.util.Objects;
 
 /**
@@ -44,7 +45,7 @@ public class Function
     private static final long serialVersionUID = -3318947900237453301L;
 
     // -----------------------------------------------------------------------------------------------------------------
-    static @Nonnull Comparator<Function> comparing(@Nonnull final Comparator<? super String> comparator) {
+    static @Nonnull Comparator<Function> specifiedOrder(@Nonnull final Comparator<? super String> comparator) {
         Objects.requireNonNull(comparator, "comparator is null");
         return Comparator
                 .comparing(Function::getFunctionCat, comparator)
@@ -53,12 +54,12 @@ public class Function
                 .thenComparing(Function::getSpecificName, comparator);
     }
 
-    static @Nonnull Comparator<Function> comparing(@Nonnull final Context context,
-                                                   @Nonnull final Comparator<? super String> comparator)
+    static @Nonnull Comparator<Function> specifiedOrder(@Nonnull final Context context,
+                                                        @Nonnull final Comparator<? super String> comparator)
             throws SQLException {
         Objects.requireNonNull(context, "context is null");
         Objects.requireNonNull(comparator, "comparator is null");
-        return comparing(ContextUtils.nullPrecedence(context, comparator));
+        return specifiedOrder(ContextUtils.nullPrecedence(context, comparator));
     }
 
     // ---------------------------------------------------------------------------------------------------- FUNCTION_CAT
@@ -87,6 +88,42 @@ public class Function
      * A column label of {@value}.
      */
     public static final String COLUMN_LABEL_FUNCTION_TYPE = "FUNCTION_TYPE";
+
+    /**
+     * A value for {@link #COLUMN_LABEL_FUNCTION_TYPE} column. The value is
+     * {@link DatabaseMetaData#functionResultUnknown}({@value DatabaseMetaData#functionResultUnknown}).
+     * <blockquote>
+     * Cannot determine if a return value or table will be returned
+     * </blockquote>
+     */
+    public static final int COLUMN_VALUE_FUNCTION_TYPE_FUNCTION_RESULT_UNKNOWN = // 0
+            DatabaseMetaData.functionResultUnknown;
+
+    /**
+     * A value for {@link #COLUMN_LABEL_FUNCTION_TYPE} column. The value is
+     * {@link DatabaseMetaData#functionNoTable}({@value DatabaseMetaData#functionNoTable}).
+     * <blockquote>
+     * Does not return a table
+     * </blockquote>
+     */
+    public static final int COLUMN_VALUE_FUNCTION_TYPE_FUNCTION_NO_TABLE =       // 1
+            DatabaseMetaData.functionNoTable;
+
+    /**
+     * A value for {@link #COLUMN_LABEL_FUNCTION_TYPE} column. The value is
+     * {@link DatabaseMetaData#functionReturnsTable}({@value DatabaseMetaData#functionReturnsTable}).
+     * <blockquote>
+     * Returns a table
+     * </blockquote>
+     */
+    public static final int COLUMN_VALUE_FUNCTION_TYPE_FUNCTION_RETURNS_TABLE =  // 2
+            DatabaseMetaData.functionReturnsTable;
+
+    static final List<Integer> FUNCTION_TYPE_VALUES = List.of(
+            COLUMN_VALUE_FUNCTION_TYPE_FUNCTION_RESULT_UNKNOWN,
+            COLUMN_VALUE_FUNCTION_TYPE_FUNCTION_NO_TABLE,
+            COLUMN_VALUE_FUNCTION_TYPE_FUNCTION_RETURNS_TABLE
+    );
 
     // --------------------------------------------------------------------------------------------------- SPECIFIC_NAME
     public static final String COLUMN_LABEL_SPECIFIC_NAME = "SPECIFIC_NAME";

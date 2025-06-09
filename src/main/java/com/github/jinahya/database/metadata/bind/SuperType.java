@@ -20,11 +20,11 @@ package com.github.jinahya.database.metadata.bind;
  * #L%
  */
 
+import jakarta.annotation.Nullable;
 import lombok.EqualsAndHashCode;
 import lombok.ToString;
 
 import java.sql.DatabaseMetaData;
-import java.util.Objects;
 import java.util.Optional;
 
 /**
@@ -62,29 +62,6 @@ public class SuperType
                ",supertypeSchem=" + supertypeSchem +
                ",supertypeName=" + supertypeName +
                '}';
-    }
-
-    @Override
-    public boolean equals(final Object obj) {
-        if (obj == null || getClass() != obj.getClass()) {
-            return false;
-        }
-        if (!super.equals(obj)) {
-            return false;
-        }
-        final var that = (SuperType) obj;
-        return Objects.equals(typeCat, that.typeCat) &&
-               Objects.equals(typeSchem, that.typeSchem) &&
-               Objects.equals(typeName, that.typeName) &&
-               Objects.equals(supertypeCat, that.supertypeCat) &&
-               Objects.equals(supertypeSchem, that.supertypeSchem) &&
-               Objects.equals(supertypeName, that.supertypeName);
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(super.hashCode(), typeCat, typeSchem, typeName, supertypeCat, supertypeSchem,
-                            supertypeName);
     }
 
     // --------------------------------------------------------------------------------------------------------- typeCat
@@ -142,10 +119,12 @@ public class SuperType
     }
 
     // -----------------------------------------------------------------------------------------------------------------
+    @Nullable
     @_NullableBySpecification
     @_ColumnLabel("TYPE_CAT")
     private String typeCat;
 
+    @Nullable
     @_NullableBySpecification
     @_ColumnLabel("TYPE_SCHEM")
     private String typeSchem;
@@ -154,10 +133,12 @@ public class SuperType
     private String typeName;
 
     // -----------------------------------------------------------------------------------------------------------------
+    @Nullable
     @_NullableBySpecification
     @_ColumnLabel("SUPERTYPE_CAT")
     private String supertypeCat;
 
+    @Nullable
     @_NullableBySpecification
     @_ColumnLabel("SUPERTYPE_SCHEM")
     private String supertypeSchem;

@@ -41,7 +41,7 @@ import java.util.Optional;
 @_ChildOf(Table.class)
 @Setter
 @Getter
-@EqualsAndHashCode(callSuper = true, onlyExplicitlyIncluded = true)
+@EqualsAndHashCode(callSuper = true)
 @ToString(callSuper = true)
 public class PseudoColumn
         extends AbstractMetadataType {
@@ -237,23 +237,23 @@ public class PseudoColumn
     @Nullable
     @_NullableBySpecification
     @_ColumnLabel(COLUMN_LABEL_TABLE_CAT)
-    @EqualsAndHashCode.Include
+
     private String tableCat;
 
     @Nullable
     @_NullableBySpecification
     @_ColumnLabel(COLUMN_LABEL_TABLE_SCHEM)
-    @EqualsAndHashCode.Include
+
     private String tableSchem;
 
     @Nonnull
     @_ColumnLabel(COLUMN_LABEL_TABLE_NAME)
-    @EqualsAndHashCode.Include
+
     private String tableName;
 
     @Nonnull
     @_ColumnLabel(COLUMN_LABEL_COLUMN_NAME)
-    @EqualsAndHashCode.Include
+
     private String columnName;
 
     // -----------------------------------------------------------------------------------------------------------------

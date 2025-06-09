@@ -21,7 +21,7 @@ package com.github.jinahya.database.metadata.bind;
  */
 
 class FunctionTest
-        extends AbstractMetadataTypeTest<Function> {
+        extends AbstractMetadataType_Test<Function> {
 
     // -----------------------------------------------------------------------------------------------------------------
     FunctionTest() {
