@@ -40,10 +40,13 @@ public class Catalog
     private static final long serialVersionUID = 6239185259128825953L;
 
     // -----------------------------------------------------------------------------------------------------------------
+    static Comparator<Catalog> comparing(final Comparator<? super String> comparator) {
+        return Comparator.comparing(Catalog::getTableCat, comparator);
+    }
 
     static Comparator<Catalog> comparing(final Context context, final Comparator<? super String> comparator)
             throws SQLException {
-        return Comparator.comparing(Catalog::getTableCat, ContextUtils.nullPrecedence(context, comparator));
+        return comparing(ContextUtils.nullPrecedence(context, comparator));
     }
 
     // -----------------------------------------------------------------------------------------------------------------

@@ -20,12 +20,12 @@ package com.github.jinahya.database.metadata.bind;
  * #L%
  */
 
+import jakarta.annotation.Nullable;
 import lombok.EqualsAndHashCode;
 import lombok.ToString;
 
 import java.sql.SQLException;
 import java.util.Comparator;
-import java.util.Objects;
 import java.util.Optional;
 
 /**
@@ -43,6 +43,8 @@ import java.util.Optional;
 @_ParentOf(IndexInfo.class)
 @_ParentOf(PseudoColumn.class)
 @_ParentOf(VersionColumn.class)
+@ToString(callSuper = true)
+@EqualsAndHashCode(callSuper = true)
 public class Table
         extends AbstractMetadataType {
 
@@ -111,45 +113,42 @@ public class Table
     public static final String COLUMN_VALUE_REF_GENERATION_DERIVED = "DERIVED";
 
     // ------------------------------------------------------------------------------------------ STATIC_FACTORY_METHODS
+    static Table of(final String tableCat, final String tableSchem, final String tableName) {
+        final var table = new Table();
+        table.setTableCat(tableCat);
+        table.setTableSchem(tableSchem);
+        table.setTableName(tableName);
+        return table;
+    }
 
     // ---------------------------------------------------------------------------------------------------- CONSTRUCTORS
 
     /**
      * Creates a new instance.
      */
-    protected Table() {
+    public Table() {
         super();
     }
 
-    // -----------------------------------------------------------------------------------------------------------------
-
+    // ------------------------------------------------------------------------------------------------ java.lang.Object
     @Override
-    public boolean equals(final Object obj) {
-        if (this == obj) {
-            return true;
-        }
-        if (obj == null || getClass() != obj.getClass()) {
-            return false;
-        }
-        if (!super.equals(obj)) {
-            return false;
-        }
-        final Table that = (Table) obj;
-        return Objects.equals(tableType, that.tableType) &&
-               Objects.equals(tableCat, that.tableCat) &&
-               Objects.equals(tableSchem, that.tableSchem) &&
-               Objects.equals(tableName, that.tableName);
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(
-                super.hashCode(),
-                tableType,
-                tableCat,
-                tableSchem,
-                tableName
-        );
+    public String toString() {
+        return super.toString() + '{' +
+               "tableCat=" + tableCat +
+               ",tableSchem=" + tableSchem +
+               ",tableName=" + tableName +
+               ",tableType=" + tableType +
+               ",remarks=" + remarks +
+               ",typeCat=" + typeCat +
+               ",typeSchem=" + typeSchem +
+               ",typeName=" + typeName +
+               ",selfReferencingColName=" + selfReferencingColName +
+               ",refGeneration=" + refGeneration +
+               ",tableCatalog_=" + tableCatalog_ +
+               ",tableSchema_=" + tableSchema_ +
+               ",typeCatalog_=" + typeCatalog_ +
+               ",typeSchema_=" + typeSchema_ +
+               '}';
     }
 
     // -------------------------------------------------------------------------------------------------------- tableCat
@@ -164,7 +163,7 @@ public class Table
         return tableCat;
     }
 
-    protected void setTableCat(final String tableCat) {
+    public void setTableCat(final String tableCat) {
         this.tableCat = tableCat;
     }
 
@@ -180,7 +179,7 @@ public class Table
         return tableSchem;
     }
 
-    protected void setTableSchem(final String tableSchem) {
+    public void setTableSchem(final String tableSchem) {
         this.tableSchem = tableSchem;
     }
 
@@ -195,7 +194,7 @@ public class Table
         return tableName;
     }
 
-    protected void setTableName(final String tableName) {
+    public void setTableName(final String tableName) {
         this.tableName = tableName;
     }
 
@@ -210,7 +209,7 @@ public class Table
         return tableType;
     }
 
-    protected void setTableType(final String tableType) {
+    public void setTableType(final String tableType) {
         this.tableType = tableType;
     }
 
@@ -219,7 +218,7 @@ public class Table
         return remarks;
     }
 
-    protected void setRemarks(final String remarks) {
+    public void setRemarks(final String remarks) {
         this.remarks = remarks;
     }
 
@@ -228,7 +227,7 @@ public class Table
         return typeCat;
     }
 
-    protected void setTypeCat(final String typeCat) {
+    public void setTypeCat(final String typeCat) {
         this.typeCat = typeCat;
     }
 
@@ -237,7 +236,7 @@ public class Table
         return typeSchem;
     }
 
-    protected void setTypeSchem(final String typeSchem) {
+    public void setTypeSchem(final String typeSchem) {
         this.typeSchem = typeSchem;
     }
 
@@ -246,7 +245,7 @@ public class Table
         return typeName;
     }
 
-    protected void setTypeName(String typeName) {
+    public void setTypeName(String typeName) {
         this.typeName = typeName;
     }
 
@@ -255,7 +254,7 @@ public class Table
         return selfReferencingColName;
     }
 
-    protected void setSelfReferencingColName(final String selfReferencingColName) {
+    public void setSelfReferencingColName(final String selfReferencingColName) {
         this.selfReferencingColName = selfReferencingColName;
     }
 
@@ -264,53 +263,57 @@ public class Table
         return refGeneration;
     }
 
-    protected void setRefGeneration(final String refGeneration) {
+    public void setRefGeneration(final String refGeneration) {
         this.refGeneration = refGeneration;
     }
 
     // -----------------------------------------------------------------------------------------------------------------
+    @Nullable
     @_NullableBySpecification
     @_ColumnLabel(COLUMN_LABEL_TABLE_CAT)
-    @EqualsAndHashCode.Include
     private String tableCat;
 
+    @Nullable
     @_NullableBySpecification
     @_ColumnLabel(COLUMN_LABEL_TABLE_SCHEM)
-    @EqualsAndHashCode.Include
     private String tableSchem;
 
     @_ColumnLabel(COLUMN_LABEL_TABLE_NAME)
-    @EqualsAndHashCode.Include
     private String tableName;
 
     // -----------------------------------------------------------------------------------------------------------------
     @_ColumnLabel(COLUMN_LABEL_TABLE_TYPE)
-    @EqualsAndHashCode.Include
     private String tableType;
 
     // -----------------------------------------------------------------------------------------------------------------
+    @Nullable
     @_NullableBySpecification
     @_ColumnLabel(COLUMN_LABEL_REMARKS)
     private String remarks;
 
     // -----------------------------------------------------------------------------------------------------------------
+    @Nullable
     @_NullableBySpecification
     @_ColumnLabel(COLUMN_LABEL_TYPE_CAT)
     private String typeCat;
 
+    @Nullable
     @_NullableBySpecification
     @_ColumnLabel(COLUMN_LABEL_TYPE_SCHEM)
     private String typeSchem;
 
+    @Nullable
     @_NullableBySpecification
     @_ColumnLabel(COLUMN_LABEL_TYPE_NAME)
     private String typeName;
 
     // -----------------------------------------------------------------------------------------------------------------
+    @Nullable
     @_NullableBySpecification
     @_ColumnLabel(COLUMN_LABEL_SELF_REFERENCING_COL_NAME)
     private String selfReferencingColName;
 
+    @Nullable
     @_NullableBySpecification
     @_ColumnLabel(COLUMN_LABEL_REF_GENERATION)
     private String refGeneration;

@@ -20,24 +20,30 @@ package com.github.jinahya.database.metadata.bind;
  * #L%
  */
 
-import org.junit.jupiter.api.DisplayName;
-import org.junit.jupiter.params.ParameterizedTest;
-import org.junit.jupiter.params.provider.EnumSource;
+import jakarta.validation.Validation;
+import jakarta.validation.ValidatorFactory;
+
+import java.util.Objects;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-class PortedKeyDeleteRuleTest
-        extends _IntFieldEnumTest<PortedKey.TableKeyDeleteRule> {
+final class __Validation_Test_Utils {
 
-    PortedKeyDeleteRuleTest() {
-        super(PortedKey.TableKeyDeleteRule.class);
+    private static final ValidatorFactory VALIDATOR_FACTORY = Validation.buildDefaultValidatorFactory();
+
+    static {
+        Runtime.getRuntime().addShutdownHook(new Thread(VALIDATOR_FACTORY::close));
     }
 
-    @DisplayName("valueOfDeleteRule")
-    @EnumSource(PortedKey.TableKeyDeleteRule.class)
-    @ParameterizedTest
-    void valueOfDeleteRule__(final PortedKey.TableKeyDeleteRule deleteRule) {
-        assertThat(PortedKey.TableKeyDeleteRule.valueOfFieldValue(deleteRule.fieldValueAsInt()))
-                .isSameAs(deleteRule);
+    static void requireValid(final Object object) {
+        Objects.requireNonNull(object, "object is null");
+        final var violations = VALIDATOR_FACTORY.getValidator().validate(object);
+        assertThat(violations)
+                .as("violations of %s: %s", object, violations)
+                .isEmpty();
+    }
+
+    private __Validation_Test_Utils() {
+        throw new AssertionError("instantiation is not allowed");
     }
 }

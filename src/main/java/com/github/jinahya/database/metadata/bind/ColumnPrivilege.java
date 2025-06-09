@@ -20,40 +20,42 @@ package com.github.jinahya.database.metadata.bind;
  * #L%
  */
 
+import jakarta.annotation.Nullable;
+import jakarta.validation.constraints.Pattern;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.Setter;
-import lombok.ToString;
 
 import java.sql.DatabaseMetaData;
 import java.sql.SQLException;
 import java.util.Comparator;
-import java.util.Optional;
 
 /**
- * A class for binding results of the
- * {@link DatabaseMetaData#getColumnPrivileges(String, String, String, String) getColumnPrivileges(catalog, schema,
- * table, columnNamePattern)} method.
+ * A class for binding results of the {@link DatabaseMetaData#getColumnPrivileges(String, String, String, String)}
+ * method.
  *
  * @author Jin Kwon &lt;jinahya_at_gmail.com&gt;
  * @see Context#getColumnPrivileges(String, String, String, String)
  */
-
 @_ChildOf(Table.class)
 @Setter
 @Getter
 @EqualsAndHashCode(callSuper = true)
-@ToString(callSuper = true)
 public class ColumnPrivilege
         extends AbstractMetadataType {
 
     private static final long serialVersionUID = 4384654744147773380L;
 
     // -----------------------------------------------------------------------------------------------------------------
+    static Comparator<ColumnPrivilege> comparing(final Comparator<? super String> comparator) {
+        return Comparator
+                .comparing(ColumnPrivilege::getColumnName, comparator)
+                .thenComparing(ColumnPrivilege::getPrivilege, comparator);
+    }
+
     static Comparator<ColumnPrivilege> comparing(final Context context, final Comparator<? super String> comparator)
             throws SQLException {
-        return Comparator.comparing(ColumnPrivilege::getColumnName, ContextUtils.nullPrecedence(context, comparator))
-                .thenComparing(ColumnPrivilege::getPrivilege, ContextUtils.nullPrecedence(context, comparator));
+        return comparing(ContextUtils.nullPrecedence(context, comparator));
     }
 
     // ------------------------------------------------------------------------------------------------------- TABLE_CAT
@@ -83,37 +85,35 @@ public class ColumnPrivilege
     // -----------------------------------------------------------------------------------------------------------------
     public static final String COLUMN_LABEL_IS_GRANTABLE = "IS_GRANTABLE";
 
-    public static final String COLUMN_VALUE_IS_GRANTABLE_YES = YesNoConstants.YES;
+    public static final String COLUMN_VALUE_IS_GRANTABLE_YES = MetadataTypeConstants.YES;
 
-    public static final String COLUMN_VALUE_IS_GRANTABLE_NO = YesNoConstants.NO;
+    public static final String COLUMN_VALUE_IS_GRANTABLE_NO = MetadataTypeConstants.NO;
 
-    public enum IsGrantable
-            implements YesNoEnum<IsGrantable> {
+    // ------------------------------------------------------------------------------------------ STATIC_FACTORY_METHODS
 
-        /**
-         * A value for {@link #COLUMN_VALUE_IS_GRANTABLE_YES}.
-         */
-        YES(COLUMN_VALUE_IS_GRANTABLE_YES), // "YES"
+    // ---------------------------------------------------------------------------------------------------- CONSTRUCTORS
 
-        /**
-         * A value for {@link #COLUMN_VALUE_IS_GRANTABLE_NO}.
-         */
-        NO(COLUMN_VALUE_IS_GRANTABLE_NO);   // "NO"
+    /**
+     * Creates a new instance.
+     */
+    public ColumnPrivilege() {
+        super();
+    }
 
-        public static IsGrantable valueOfFieldValue(final String fieldValue) {
-            return YesNoEnum.valueOfFieldValue(IsGrantable.class, fieldValue);
-        }
+    // ------------------------------------------------------------------------------------------------ java.lang.Object
 
-        IsGrantable(final String fieldValue) {
-            this.fieldValue = fieldValue;
-        }
-
-        @Override
-        public String fieldValue() {
-            return fieldValue;
-        }
-
-        private final String fieldValue;
+    @Override
+    public String toString() {
+        return super.toString() + '{' +
+               "tableCat=" + tableCat +
+               ",tableSchem=" + tableSchem +
+               ",tableName=" + tableName +
+               ",columnName=" + columnName +
+               ",grantor=" + grantor +
+               ",grantee=" + grantee +
+               ",privilege=" + privilege +
+               ",isGrantable=" + isGrantable +
+               '}';
     }
 
     // -------------------------------------------------------------------------------------------------------- tableCat
@@ -126,25 +126,13 @@ public class ColumnPrivilege
 
     // ----------------------------------------------------------------------------------------------------- isGrantable
 
-    IsGrantable getIsGrantableAsEnum() {
-        return Optional.ofNullable(getIsGrantable())
-                .map(IsGrantable::valueOfFieldValue)
-                .orElse(null);
-    }
-
-    void setIsGrantableAsEnum(final IsGrantable isGrantableAsEnum) {
-        setIsGrantable(
-                Optional.ofNullable(isGrantableAsEnum)
-                        .map(_FieldEnum::fieldValue)
-                        .orElse(null)
-        );
-    }
-
     // -----------------------------------------------------------------------------------------------------------------
+    @Nullable
     @_NullableBySpecification
     @_ColumnLabel(COLUMN_LABEL_TABLE_CAT)
     private String tableCat;
 
+    @Nullable
     @_NullableBySpecification
     @_ColumnLabel(COLUMN_LABEL_TABLE_SCHEM)
     private String tableSchem;
@@ -156,6 +144,7 @@ public class ColumnPrivilege
     private String columnName;
 
     // -----------------------------------------------------------------------------------------------------------------
+    @Nullable
     @_NullableBySpecification
     @_ColumnLabel("GRANTOR")
     private String grantor;
@@ -166,6 +155,8 @@ public class ColumnPrivilege
     @_ColumnLabel("PRIVILEGE")
     private String privilege;
 
+    @Nullable
+    @Pattern(regexp = MetadataTypeConstants.PATTERN_REGEXP_YES_OR_NO)
     @_NullableBySpecification
     @_ColumnLabel(COLUMN_LABEL_IS_GRANTABLE)
     private String isGrantable;

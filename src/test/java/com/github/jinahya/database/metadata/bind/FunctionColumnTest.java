@@ -20,59 +20,11 @@ package com.github.jinahya.database.metadata.bind;
  * #L%
  */
 
-import org.junit.jupiter.api.DisplayName;
-import org.junit.jupiter.api.Nested;
-import org.junit.jupiter.api.Test;
-import org.junit.jupiter.params.ParameterizedTest;
-import org.junit.jupiter.params.provider.EnumSource;
-
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.mockito.Mockito.times;
-import static org.mockito.Mockito.verify;
-
 class FunctionColumnTest
-        extends AbstractMetadataTypeTest<FunctionColumn> {
+        extends AbstractMetadataType_Test<FunctionColumn> {
 
     FunctionColumnTest() {
         super(FunctionColumn.class);
-    }
-
-    @DisplayName("ColumnType")
-    @Nested
-    class ColumnTypeTest
-            extends _IntFieldEnumTest<FunctionColumn.ColumnType> {
-
-        ColumnTypeTest() {
-            super(FunctionColumn.ColumnType.class);
-        }
-    }
-
-    @DisplayName("ColumnTypeAsEnum")
-    @Nested
-    class ColumnTypeEnumAsEnumTest {
-
-        @Test
-        void getColumnTypeAsEnum__() {
-            final var spy = newTypeSpy();
-            final var columnTypeAsEnum = spy.getColumnTypeAsEnum();
-            assertThat(columnTypeAsEnum).isNull();
-            verify(spy, times(1)).getColumnType();
-        }
-
-        @Test
-        void setColumnTypeAsEnum_Null_Null() {
-            final var spy = newTypeSpy();
-            spy.setColumnTypeAsEnum(null);
-            verify(spy, times(1)).setColumnType(null);
-        }
-
-        @EnumSource(FunctionColumn.ColumnType.class)
-        @ParameterizedTest
-        void setColumnTypeAsEnum__(final FunctionColumn.ColumnType columnTypeAsEnum) {
-            final var spy = newTypeSpy();
-            spy.setColumnTypeAsEnum(columnTypeAsEnum);
-            verify(spy, times(1)).setColumnType(columnTypeAsEnum.fieldValueAsInt());
-        }
     }
 
     @Override
@@ -82,16 +34,5 @@ class FunctionColumnTest
         instance.setColumnName("");
         instance.setSpecificName("");
         return instance;
-    }
-
-    // -----------------------------------------------------------------------------------------------------------------
-
-    @Nested
-    class IsNullableTest
-            extends HasIsNullableTest<FunctionColumn> {
-
-        IsNullableTest() {
-            super(FunctionColumnTest.this::newTypeSpy);
-        }
     }
 }

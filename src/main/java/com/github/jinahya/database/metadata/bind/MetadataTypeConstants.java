@@ -4,7 +4,7 @@ package com.github.jinahya.database.metadata.bind;
  * #%L
  * database-metadata-bind
  * %%
- * Copyright (C) 2011 - 2024 Jinahya, Inc.
+ * Copyright (C) 2011 - 2021 Jinahya, Inc.
  * %%
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -20,10 +20,24 @@ package com.github.jinahya.database.metadata.bind;
  * #L%
  */
 
-interface NullableEnum<E extends Enum<E> & NullableEnum<E>>
-        extends _IntFieldEnum<E> {
+/**
+ * The parent interface for binding database metadata types.
+ *
+ * @author Jin Kwon &lt;onacit_at_gmail.com&gt;
+ */
+final class MetadataTypeConstants {
 
-    static <E extends Enum<E> & NullableEnum<E>> E valueOfFieldValue(final Class<E> enumClass, final int fieldValue) {
-        return _IntFieldEnum.valueOfFieldValue(enumClass, fieldValue);
+    static final String YES = "YES";
+
+    static final String NO = "NO";
+
+    static final String EMPTY = "";
+
+    static final String PATTERN_REGEXP_YES_OR_NO = YES + "|" + NO;
+
+    static final String PATTERN_REGEXP_YES_NO_OR_EMPTY = "^$|" + PATTERN_REGEXP_YES_OR_NO;
+
+    private MetadataTypeConstants() {
+        throw new AssertionError("instantiation is not allowed");
     }
 }

@@ -21,7 +21,7 @@ package com.github.jinahya.database.metadata.bind;
  */
 
 class PrimaryKeyTest
-        extends AbstractMetadataTypeTest<PrimaryKey> {
+        extends AbstractMetadataType_Test<PrimaryKey> {
 
     PrimaryKeyTest() {
         super(PrimaryKey.class);

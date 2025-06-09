@@ -31,7 +31,7 @@ import java.util.Objects;
 import static org.assertj.core.api.Assertions.assertThatCode;
 
 @Slf4j
-final class MetadataTypeTestUtils {
+final class MetadataType_Test_Utils {
 
     static <T extends MetadataType> void verifyAccessors(final Class<T> cls, final MetadataType obj) {
         Objects.requireNonNull(cls, "cls is null");
@@ -90,7 +90,7 @@ final class MetadataTypeTestUtils {
         }).doesNotThrowAnyException();
     }
 
-    private MetadataTypeTestUtils() {
+    private MetadataType_Test_Utils() {
         throw new AssertionError("instantiation is not allowed");
     }
 }

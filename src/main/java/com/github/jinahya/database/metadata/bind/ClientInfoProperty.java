@@ -38,7 +38,7 @@ import java.util.Comparator;
 
 @Setter
 @Getter
-@EqualsAndHashCode(callSuper = true, onlyExplicitlyIncluded = true)
+@EqualsAndHashCode(callSuper = true)
 @ToString(callSuper = true)
 public class ClientInfoProperty
         extends AbstractMetadataType {
@@ -82,7 +82,7 @@ public class ClientInfoProperty
 
     // -----------------------------------------------------------------------------------------------------------------
     @_ColumnLabel(COLUMN_LABEL_NAME)
-    @EqualsAndHashCode.Include
+
     private String name;
 
     // -----------------------------------------------------------------------------------------------------------------

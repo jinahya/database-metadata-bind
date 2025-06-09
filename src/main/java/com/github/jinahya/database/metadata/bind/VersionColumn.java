@@ -20,11 +20,10 @@ package com.github.jinahya.database.metadata.bind;
  * #L%
  */
 
+import jakarta.annotation.Nullable;
 import lombok.EqualsAndHashCode;
 
 import java.sql.DatabaseMetaData;
-import java.util.Objects;
-import java.util.Optional;
 
 /**
  * A class for binding results of the {@link DatabaseMetaData#getVersionColumns(String, String, String)} method.
@@ -33,6 +32,7 @@ import java.util.Optional;
  * @see Context#getVersionColumns(String, String, String)
  */
 @_ChildOf(Table.class)
+@EqualsAndHashCode(callSuper = true)
 public class VersionColumn
         extends AbstractMetadataType {
 
@@ -46,54 +46,6 @@ public class VersionColumn
 
     // -----------------------------------------------------------------------------------------------------------------
     public static final String COLUMN_LABEL_PSEUDO_COLUMN = "PSEUDO_COLUMN";
-
-    /**
-     * Constants for {@value #COLUMN_LABEL_PSEUDO_COLUMN} column values.
-     *
-     * @author Jin Kwon &lt;onacit_at_gmail.com&gt;
-     */
-    public enum PseudoColumn
-            implements _IntFieldEnum<PseudoColumn> {
-
-        /**
-         * A value for {@link DatabaseMetaData#versionColumnUnknown}({@value DatabaseMetaData#versionColumnUnknown}).
-         */
-        VERSION_COLUMN_UNKNOWN(DatabaseMetaData.versionColumnUnknown),// 0
-
-        /**
-         * A value for
-         * {@link DatabaseMetaData#versionColumnNotPseudo}({@value DatabaseMetaData#versionColumnNotPseudo}).
-         */
-        VERSION_COLUMN_NOT_PSEUDO(DatabaseMetaData.versionColumnNotPseudo), // 1
-
-        /**
-         * A value for {@link DatabaseMetaData#versionColumnPseudo}({@value DatabaseMetaData#versionColumnPseudo}).
-         */
-        VERSION_COLUMN_PSEUDO(DatabaseMetaData.versionColumnPseudo) // 2
-        ;
-
-        /**
-         * Finds the value for specified {@link VersionColumn#COLUMN_LABEL_PSEUDO_COLUMN} column value.
-         *
-         * @param fieldValue the value of {@link VersionColumn#COLUMN_LABEL_PSEUDO_COLUMN} column to match.
-         * @return the value matched.
-         * @throws IllegalStateException when no value matched.
-         */
-        public static PseudoColumn valueOfFieldValue(final int fieldValue) {
-            return _IntFieldEnum.valueOfFieldValue(PseudoColumn.class, fieldValue);
-        }
-
-        PseudoColumn(final int fieldValue) {
-            this.fieldValue = fieldValue;
-        }
-
-        @Override
-        public int fieldValueAsInt() {
-            return fieldValue;
-        }
-
-        private final int fieldValue;
-    }
 
     // ------------------------------------------------------------------------------------------ STATIC_FACTORY_METHODS
 
@@ -120,31 +72,6 @@ public class VersionColumn
                ",decimalDigits=" + decimalDigits +
                ",pseudoColumn=" + pseudoColumn +
                '}';
-    }
-
-    @Override
-    public boolean equals(final Object obj) {
-        if (obj == null || getClass() != obj.getClass()) {
-            return false;
-        }
-        if (!super.equals(obj)) {
-            return false;
-        }
-        final var that = (VersionColumn) obj;
-        return Objects.equals(scope, that.scope) &&
-               Objects.equals(columnName, that.columnName) &&
-               Objects.equals(dataType, that.dataType) &&
-               Objects.equals(typeName, that.typeName) &&
-               Objects.equals(columnSize, that.columnSize) &&
-               Objects.equals(bufferLength, that.bufferLength) &&
-               Objects.equals(decimalDigits, that.decimalDigits) &&
-               Objects.equals(pseudoColumn, that.pseudoColumn);
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(super.hashCode(), scope, columnName, dataType, typeName, columnSize, bufferLength,
-                            decimalDigits, pseudoColumn);
     }
 
     // -----------------------------------------------------------------------------------------------------------------
@@ -193,19 +120,9 @@ public class VersionColumn
         return pseudoColumn;
     }
 
-    PseudoColumn getPseudoColumnAsEnum() {
-        return Optional.ofNullable(getPseudoColumn())
-                .map(PseudoColumn::valueOfFieldValue)
-                .orElse(null);
+    public void setPseudoColumn(Integer pseudoColumn) {
+        this.pseudoColumn = pseudoColumn;
     }
-
-//    void setPseudoColumnAsEnum(final PseudoColumn pseudoColumnAsEnum) {
-//        setPseudoColumn(
-//                Optional.ofNullable(pseudoColumnAsEnum)
-//                        .map(PseudoColumn::fieldValueAsInt)
-//                        .orElse(null)
-//        );
-//    }
 
     // -----------------------------------------------------------------------------------------------------------------
     @_NotUsedBySpecification
@@ -213,7 +130,7 @@ public class VersionColumn
     private Integer scope;
 
     @_ColumnLabel("COLUMN_NAME")
-    @EqualsAndHashCode.Include
+
     private String columnName;
 
     @_ColumnLabel("DATA_TYPE")
@@ -222,6 +139,7 @@ public class VersionColumn
     @_ColumnLabel("TYPE_NAME")
     private String typeName;
 
+    @Nullable
     @_NullableBySpecification
     @_ColumnLabel("COLUMN_SIZE")
     private Integer columnSize;
@@ -229,6 +147,7 @@ public class VersionColumn
     @_ColumnLabel("BUFFER_LENGTH")
     private Integer bufferLength;
 
+    @Nullable
     @_NullableBySpecification
     @_ColumnLabel("DECIMAL_DIGITS")
     private Integer decimalDigits;

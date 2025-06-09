@@ -20,13 +20,14 @@ package com.github.jinahya.database.metadata.bind;
  * #L%
  */
 
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 import lombok.EqualsAndHashCode;
 
 import java.sql.DatabaseMetaData;
 import java.sql.SQLException;
 import java.util.Comparator;
 import java.util.Objects;
-import java.util.Optional;
 
 /**
  * A class for binding results of the
@@ -37,23 +38,31 @@ import java.util.Optional;
  * @see Context#getAttributes(String, String, String, String)
  * @see Nullable
  */
-
 @_ChildOf(UDT.class)
+@EqualsAndHashCode(callSuper = true)
 public class Attribute
-        extends AbstractMetadataType
-        implements HasIsNullableEnum {
+        extends AbstractMetadataType {
 
     private static final long serialVersionUID = 1913681105410440186L;
 
     // -----------------------------------------------------------------------------------------------------------------
-    static Comparator<Attribute> comparing(final Context context, final Comparator<? super String> comparator)
+    @Nonnull
+    static Comparator<Attribute> comparing(@Nonnull final Comparator<? super String> comparator) {
+        Objects.requireNonNull(comparator, "comparator is null");
+        return Comparator
+                .comparing(Attribute::getTypeCat, comparator)
+                .thenComparing(Attribute::getTypeSchem, comparator)
+                .thenComparing(Attribute::getTypeName, comparator)
+                .thenComparing(Attribute::getOrdinalPosition, Comparator.naturalOrder());
+    }
+
+    @Nonnull
+    static Comparator<Attribute> comparing(@Nonnull final Context context,
+                                           @Nonnull final Comparator<? super String> comparator)
             throws SQLException {
         Objects.requireNonNull(context, "context is null");
         Objects.requireNonNull(comparator, "comparator is null");
-        return Comparator.comparing(Attribute::getTypeCat, ContextUtils.nullPrecedence(context, comparator))
-                .thenComparing(Attribute::getTypeSchem, ContextUtils.nullPrecedence(context, comparator))
-                .thenComparing(Attribute::getTypeName, ContextUtils.nullPrecedence(context, comparator))
-                .thenComparing(Attribute::getOrdinalPosition, ContextUtils.nullPrecedence(context, Comparator.naturalOrder()));
+        return comparing(ContextUtils.nullPrecedence(context, comparator));
     }
 
     // -------------------------------------------------------------------------------------------------------- TYPE_CAT
@@ -89,52 +98,6 @@ public class Attribute
      */
     public static final String COLUMN_LABEL_NULLABLE = "NULLABLE";
 
-    /**
-     * Constants for {@value #COLUMN_LABEL_NULLABLE} column values.
-     */
-    public enum Nullable
-            implements _IntFieldEnum<Nullable> {
-
-        /**
-         * A value for {@link DatabaseMetaData#attributeNoNulls}({@value DatabaseMetaData#attributeNoNulls}).
-         */
-        ATTRIBUTE_NO_NULLS(DatabaseMetaData.attributeNoNulls), // 0
-
-        /**
-         * A value for {@link DatabaseMetaData#attributeNullable}({@value DatabaseMetaData#attributeNullable}).
-         */
-        ATTRIBUTE_NULLABLE(DatabaseMetaData.attributeNullable), // 1
-
-        /**
-         * A value for
-         * {@link DatabaseMetaData#attributeNullableUnknown}({@value DatabaseMetaData#attributeNullableUnknown}).
-         */
-        ATTRIBUTE_NULLABLE_UNKNOWN(DatabaseMetaData.attributeNullableUnknown) // 2
-        ;
-
-        /**
-         * Finds the value for specified {@link Attribute#COLUMN_LABEL_NULLABLE} attribute value.
-         *
-         * @param fieldValue the value of {@link Attribute#COLUMN_LABEL_NULLABLE} attribute to match.
-         * @return the value matched.
-         * @throws IllegalStateException when no value matched.
-         */
-        public static Nullable valueOfFieldValue(final int fieldValue) {
-            return _IntFieldEnum.valueOfFieldValue(Nullable.class, fieldValue);
-        }
-
-        Nullable(final int fieldValue) {
-            this.fieldValue = fieldValue;
-        }
-
-        @Override
-        public int fieldValueAsInt() {
-            return fieldValue;
-        }
-
-        private final int fieldValue;
-    }
-
     // -----------------------------------------------------------------------------------------------------------------
 
     /**
@@ -147,7 +110,7 @@ public class Attribute
     /**
      * Creates a new instance.
      */
-    protected Attribute() {
+    public Attribute() {
         super();
     }
 
@@ -178,26 +141,6 @@ public class Attribute
                ",scopeTable=" + scopeTable +
                ",sourceDataType=" + sourceDataType +
                '}';
-    }
-
-    @Override
-    public boolean equals(final Object obj) {
-        if (obj == null || getClass() != obj.getClass()) {
-            return false;
-        }
-        if (!super.equals(obj)) {
-            return false;
-        }
-        final Attribute that = (Attribute) obj;
-        return Objects.equals(typeCat, that.typeCat) &&
-               Objects.equals(typeSchem, that.typeSchem) &&
-               Objects.equals(typeName, that.typeName) &&
-               Objects.equals(attrName, that.attrName);
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(super.hashCode(), typeCat, typeSchem, typeName, attrName);
     }
 
     // -------------------------------------------------------------------------------------------------------- tableCat
@@ -327,20 +270,6 @@ public class Attribute
         this.nullable = nullable;
     }
 
-    public Nullable getNullableAsEnum() {
-        return Optional.ofNullable(getNullable())
-                .map(Nullable::valueOfFieldValue)
-                .orElse(null);
-    }
-
-    public void setNullableAsEnum(Nullable nullableAsEnum) {
-        setNullable(
-                Optional.ofNullable(nullableAsEnum)
-                        .map(_IntFieldEnum::fieldValueAsInt)
-                        .orElse(null)
-        );
-    }
-
     // --------------------------------------------------------------------------------------------------------- remarks
     public String getRemarks() {
         return remarks;
@@ -398,12 +327,10 @@ public class Attribute
     }
 
     // ------------------------------------------------------------------------------------------------------ isNullable
-    @Override
     public String getIsNullable() {
         return isNullable;
     }
 
-    @Override
     public void setIsNullable(final String isNullable) {
         this.isNullable = isNullable;
     }
@@ -445,22 +372,20 @@ public class Attribute
     }
 
     // -----------------------------------------------------------------------------------------------------------------
+    @Nullable
     @_NullableBySpecification
     @_ColumnLabel(COLUMN_LABEL_TYPE_CAT)
-    @EqualsAndHashCode.Include
     private String typeCat;
 
+    @Nullable
     @_NullableBySpecification
     @_ColumnLabel(COLUMN_LABEL_TYPE_SCHEM)
-    @EqualsAndHashCode.Include
     private String typeSchem;
 
     @_ColumnLabel(COLUMN_LABEL_TYPE_NAME)
-    @EqualsAndHashCode.Include
     String typeName;
 
     @_ColumnLabel(COLUMN_LABEL_ATTR_NAME)
-    @EqualsAndHashCode.Include
     String attrName;
 
     // -----------------------------------------------------------------------------------------------------------------
@@ -473,6 +398,7 @@ public class Attribute
     @_ColumnLabel("ATTR_SIZE")
     private Integer attrSize;
 
+    @Nullable
     @_NullableBySpecification
     @_ColumnLabel("DECIMAL_DIGITS")
     private Integer decimalDigits;
@@ -483,10 +409,12 @@ public class Attribute
     @_ColumnLabel(COLUMN_LABEL_NULLABLE)
     private Integer nullable;
 
+    @Nullable
     @_NullableBySpecification
     @_ColumnLabel("REMARKS")
     private String remarks;
 
+    @Nullable
     @_NullableBySpecification
     @_ColumnLabel("ATTR_DEF")
     private String attrDef;
@@ -508,18 +436,22 @@ public class Attribute
     @_ColumnLabel(COLUMN_LABEL_IS_NULLABLE)
     private String isNullable;
 
+    @Nullable
     @_NullableBySpecification
     @_ColumnLabel("SCOPE_CATALOG")
     private String scopeCatalog;
 
+    @Nullable
     @_NullableBySpecification
     @_ColumnLabel("SCOPE_SCHEMA")
     private String scopeSchema;
 
+    @Nullable
     @_NullableBySpecification
     @_ColumnLabel("SCOPE_TABLE")
     private String scopeTable;
 
+    @Nullable
     @_NullableBySpecification
     @_ColumnLabel("SOURCE_DATA_TYPE")
     private Integer sourceDataType;

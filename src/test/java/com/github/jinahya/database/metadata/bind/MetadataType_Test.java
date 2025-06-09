@@ -20,6 +20,7 @@ package com.github.jinahya.database.metadata.bind;
  * #L%
  */
 
+import jakarta.annotation.Nullable;
 import lombok.extern.slf4j.Slf4j;
 import nl.jqno.equalsverifier.EqualsVerifier;
 import nl.jqno.equalsverifier.Warning;
@@ -32,6 +33,7 @@ import org.mockito.Mockito;
 
 import java.beans.IntrospectionException;
 import java.beans.Introspector;
+import java.lang.annotation.Annotation;
 import java.lang.reflect.Field;
 import java.lang.reflect.Modifier;
 import java.util.List;
@@ -42,13 +44,20 @@ import static java.util.Arrays.stream;
 import static org.assertj.core.api.Assertions.assertThat;
 
 @Slf4j
-abstract class MetadataTypeTest<T extends MetadataType> {
+abstract class MetadataType_Test<T extends MetadataType> {
 
-    MetadataTypeTest(final Class<T> typeClass) {
+    MetadataType_Test(final Class<T> typeClass) {
         super();
         this.typeClass = Objects.requireNonNull(typeClass, "typeClass is null");
     }
 
+    @Test
+    void _Valid_NewInstance() {
+        final var instance = newTypeInstance();
+        __Validation_Test_Utils.requireValid(instance);
+    }
+
+    // -----------------------------------------------------------------------------------------------------------------
     @DisplayName("toString()!blank")
     @Test
     void toString_NotBlank_() {
@@ -75,8 +84,25 @@ abstract class MetadataTypeTest<T extends MetadataType> {
     }
 
     // -----------------------------------------------------------------------------------------------------------------
+    @Test
+    void lombokEqualsAndHashCode_ForNow() {
+//        final var annotation = typeClass.getAnnotation(EqualsAndHashCode.class);
+//        assertThat(annotation).isNotNull();
+    }
+
+    // -----------------------------------------------------------------------------------------------------------------
     @Nested
     class FieldTest {
+
+        @DisplayName("@_NullableBySpecification -> @Nullable")
+        @Test
+        void _Nullable_NullableBySpecification() {
+            for (final var field : fieldsAnnotatedWith(_NullableBySpecification.class)) {
+                assertThat(field.isAnnotationPresent(Nullable.class))
+                        .as("should be annotated with @jakarta.annotation.Nullable; field: %s", field)
+                        .isTrue();
+            }
+        }
 
         @DisplayName("@ColumnLabel -> has accessors")
         @Test
@@ -177,6 +203,19 @@ abstract class MetadataTypeTest<T extends MetadataType> {
 
     T newTypeSpy() {
         return Mockito.spy(newTypeInstance());
+    }
+
+    List<Field> fieldsAnnotatedWith(final Class<? extends Annotation> annotationClass) {
+        return Stream.of(typeClass.getDeclaredFields()).filter(f -> {
+            final var modifier = f.getModifiers();
+            if (Modifier.isStatic(modifier)) {
+                return false;
+            }
+            if (!f.isAnnotationPresent(annotationClass)) {
+                return false;
+            }
+            return true;
+        }).toList();
     }
 
     List<Field> fieldsAnnotatedWithColumnLabel() {

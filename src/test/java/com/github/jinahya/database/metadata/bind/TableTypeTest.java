@@ -21,7 +21,7 @@ package com.github.jinahya.database.metadata.bind;
  */
 
 class TableTypeTest
-        extends AbstractMetadataTypeTest<TableType> {
+        extends AbstractMetadataType_Test<TableType> {
 
     TableTypeTest() {
         super(TableType.class);

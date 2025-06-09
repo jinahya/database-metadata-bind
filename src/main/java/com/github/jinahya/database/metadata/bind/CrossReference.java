@@ -20,6 +20,8 @@ package com.github.jinahya.database.metadata.bind;
  * #L%
  */
 
+import jakarta.annotation.Nullable;
+import jakarta.validation.constraints.Positive;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.Setter;
@@ -28,7 +30,7 @@ import lombok.ToString;
 import java.sql.DatabaseMetaData;
 import java.sql.SQLException;
 import java.util.Comparator;
-import java.util.Optional;
+import java.util.List;
 
 /**
  * A class for binding results of the
@@ -40,20 +42,53 @@ import java.util.Optional;
 @Setter
 @Getter
 @ToString(callSuper = true)
-@EqualsAndHashCode(callSuper = true, onlyExplicitlyIncluded = true)
+@EqualsAndHashCode(callSuper = true)
 public class CrossReference
         extends AbstractMetadataType {
 
     private static final long serialVersionUID = -5343386346721125961L;
 
     // -----------------------------------------------------------------------------------------------------------------
-    static Comparator<CrossReference> comparing(final Context context, final Comparator<? super String> comparator)
-            throws SQLException {
-        return Comparator.comparing(CrossReference::getFktableCat, ContextUtils.nullPrecedence(context, comparator))
-                .thenComparing(CrossReference::getFktableSchem, ContextUtils.nullPrecedence(context, comparator))
-                .thenComparing(CrossReference::getFktableName, ContextUtils.nullPrecedence(context, comparator))
-                .thenComparing(CrossReference::getKeySeq, ContextUtils.nullPrecedence(context, Comparator.naturalOrder()));
+    static Comparator<CrossReference> comparingSpecifiedOrder(final Comparator<? super String> comparator) {
+        return Comparator
+                .comparing(CrossReference::getFktableCat, comparator)
+                .thenComparing(CrossReference::getFktableSchem, comparator)
+                .thenComparing(CrossReference::getFktableName, comparator)
+                .thenComparing(CrossReference::getKeySeq, Comparator.naturalOrder());
     }
+
+    static Comparator<CrossReference> comparingSpecifiedOrder(final Context context,
+                                                              final Comparator<? super String> comparator)
+            throws SQLException {
+        return comparingSpecifiedOrder(ContextUtils.nullPrecedence(context, comparator));
+    }
+
+    // ----------------------------------------------------------------------------------------------------- PKTABLE_CAT
+    public static final String COLUMN_LABEL_PKTABLE_CAT = "PKTABLE_CAT";
+
+    // --------------------------------------------------------------------------------------------------- PKTABLE_SCHEM
+    public static final String COLUMN_LABEL_PKTABLE_SCHEM = "PKTABLE_SCHEM";
+
+    // ---------------------------------------------------------------------------------------------------- PKTABLE_NAME
+    public static final String COLUMN_LABEL_PKTABLE_NAME = "PKTABLE_NAME";
+
+    // --------------------------------------------------------------------------------------------------- PKCOLUMN_NAME
+    public static final String COLUMN_LABEL_PKCOLUMN_NAME = "PKCOLUMN_NAME";
+
+    // ----------------------------------------------------------------------------------------------------- FKTABLE_CAT
+    public static final String COLUMN_LABEL_FKTABLE_CAT = "FKTABLE_CAT";
+
+    // --------------------------------------------------------------------------------------------------- FKTABLE_SCHEM
+    public static final String COLUMN_LABEL_FKTABLE_SCHEM = "FKTABLE_SCHEM";
+
+    // ---------------------------------------------------------------------------------------------------- FKTABLE_NAME
+    public static final String COLUMN_LABEL_FKTABLE_NAME = "FKTABLE_NAME";
+
+    // --------------------------------------------------------------------------------------------------- FKCOLUMN_NAME
+    public static final String COLUMN_LABEL_FKCOLUMN_NAME = "FKCOLUMN_NAME";
+
+    // --------------------------------------------------------------------------------------------------------- KEY_SEQ
+    public static final String COLUMN_LABEL_KEY_SEQ = "KEY_SEQ";
 
     // ----------------------------------------------------------------------------------------------------- UPDATE_RULE
 
@@ -62,96 +97,161 @@ public class CrossReference
      */
     public static final String COLUMN_LABEL_UPDATE_RULE = "UPDATE_RULE";
 
+    public static final int COLUMN_VALUE_UPDATE_RULE_IMPORTED_KEY_NO_ACTION = DatabaseMetaData.importedKeyNoAction;
+
+    public static final int COLUMN_VALUE_UPDATE_RULE_IMPORTED_KEY_CASCADE = DatabaseMetaData.importedKeyCascade;
+
+    public static final int COLUMN_VALUE_UPDATE_RULE_IMPORTED_KEY_SET_NULL = DatabaseMetaData.importedKeySetNull;
+
+    public static final int COLUMN_VALUE_UPDATE_RULE_IMPORTED_KEY_SET_DEFAULT = DatabaseMetaData.importedKeySetDefault;
+
+    public static final int COLUMN_VALUE_UPDATE_RULE_IMPORTED_KEY_RESTRICT = DatabaseMetaData.importedKeyRestrict;
+
+    static final List<Integer> COLUMN_VALUES_UPDATE_RULES = List.of(
+            COLUMN_VALUE_UPDATE_RULE_IMPORTED_KEY_CASCADE,    // 0
+            COLUMN_VALUE_UPDATE_RULE_IMPORTED_KEY_RESTRICT,   // 1
+            COLUMN_VALUE_UPDATE_RULE_IMPORTED_KEY_SET_NULL,   // 2
+            COLUMN_VALUE_UPDATE_RULE_IMPORTED_KEY_NO_ACTION,  // 3
+            COLUMN_VALUE_UPDATE_RULE_IMPORTED_KEY_SET_DEFAULT // 4
+    );
+
+    // ----------------------------------------------------------------------------------------------------- DELETE_RULE
+    public static final String COLUMN_LABEL_DELETE_RULE = "DELETE_RULE";
+
+    public static final int COLUMN_VALUE_DELETE_RULE_IMPORTED_KEY_NO_ACTION = DatabaseMetaData.importedKeyNoAction;
+
+    public static final int COLUMN_VALUE_DELETE_RULE_IMPORTED_KEY_CASCADE = DatabaseMetaData.importedKeyCascade;
+
+    public static final int COLUMN_VALUE_DELETE_RULE_IMPORTED_KEY_SET_NULL = DatabaseMetaData.importedKeySetNull;
+
+    public static final int COLUMN_VALUE_DELETE_RULE_IMPORTED_KEY_SET_DEFAULT = DatabaseMetaData.importedKeySetDefault;
+
+    public static final int COLUMN_VALUE_DELETE_RULE_IMPORTED_KEY_RESTRICT = DatabaseMetaData.importedKeyRestrict;
+
+    static final List<Integer> COLUMN_VALUES_DELETE_RULES = List.of(
+            COLUMN_VALUE_DELETE_RULE_IMPORTED_KEY_CASCADE,    // 0
+            COLUMN_VALUE_DELETE_RULE_IMPORTED_KEY_RESTRICT,   // 1
+            COLUMN_VALUE_DELETE_RULE_IMPORTED_KEY_SET_NULL,   // 2
+            COLUMN_VALUE_DELETE_RULE_IMPORTED_KEY_NO_ACTION,  // 3
+            COLUMN_VALUE_DELETE_RULE_IMPORTED_KEY_SET_DEFAULT // 4
+    );
+
+    // --------------------------------------------------------------------------------------------------------- FK_NAME
+    public static final String COLUMN_LABEL_FK_NAME = "FK_NAME";
+
+    // --------------------------------------------------------------------------------------------------------- PK_NAME
+    public static final String COLUMN_LABEL_PK_NAME = "PK_NAME";
+
+    // --------------------------------------------------------------------------------------------------- DEFERRABILITY
+    public static final String COLUMN_LABEL_DEFERRABILITY = "DEFERRABILITY";
+
+    public static final int COLUMN_VALUE_DEFERRABILITY_IMPORTED_KEY_CASCADE =
+            DatabaseMetaData.importedKeyInitiallyDeferred;
+
+    public static final int COLUMN_VALUE_DEFERRABILITY_IMPORTED_KEY_RESTRICT =
+            DatabaseMetaData.importedKeyInitiallyImmediate;
+
+    public static final int COLUMN_VALUE_DEFERRABILITY_IMPORTED_KEY_SET_NULL =
+            DatabaseMetaData.importedKeyNotDeferrable;
+
+    static final List<Integer> COLUMN_VALUES_DEFERRABILITY = List.of(
+            COLUMN_VALUE_DEFERRABILITY_IMPORTED_KEY_CASCADE,  // 5
+            COLUMN_VALUE_DEFERRABILITY_IMPORTED_KEY_RESTRICT, // 6
+            COLUMN_VALUE_DEFERRABILITY_IMPORTED_KEY_SET_NULL  // 7
+    );
+
+    // ------------------------------------------------------------------------------------------ STATIC_FACTORY_METHODS
+
+    // ---------------------------------------------------------------------------------------------------- CONSTRUCTORS
+
+    // ------------------------------------------------------------------------------------------------ java.lang.Object
+
     // ------------------------------------------------------------------------------------------------------ pkTableCat
 
     // ---------------------------------------------------------------------------------------------------- pkTableSchem
+
+    // ----------------------------------------------------------------------------------------------------- pkTableName
+
+    // ---------------------------------------------------------------------------------------------------- pkColumnName
 
     // ------------------------------------------------------------------------------------------------------ fktableCat
 
     // ---------------------------------------------------------------------------------------------------- fktableSchem
 
-    // ------------------------------------------------------------------------------------------------------ updateRule
-    PortedKey.TableKeyUpdateRule getUpdateRuleAsEnum() {
-        return Optional.ofNullable(getUpdateRule())
-                .map(PortedKey.TableKeyUpdateRule::valueOfFieldValue)
-                .orElse(null);
-    }
+    // ----------------------------------------------------------------------------------------------------- fkTableName
 
-    void setUpdateRuleAsEnum(final PortedKey.TableKeyUpdateRule updateRuleAsEnum) {
-        setUpdateRule(
-                Optional.ofNullable(updateRuleAsEnum)
-                        .map(_IntFieldEnum::fieldValueAsInt)
-                        .orElse(null)
-        );
-    }
+    // ---------------------------------------------------------------------------------------------------- fkColumnName
+
+    // ---------------------------------------------------------------------------------------------------------- keySeq
+
+    // ------------------------------------------------------------------------------------------------------ updateRule
 
     // ------------------------------------------------------------------------------------------------------ deleteRule
-    PortedKey.TableKeyUpdateRule getDeleteRuleAsEnum() {
-        return Optional.ofNullable(getDeleteRule())
-                .map(PortedKey.TableKeyUpdateRule::valueOfFieldValue)
-                .orElse(null);
-    }
 
-    void setDeleteRuleAsEnum(final PortedKey.TableKeyUpdateRule deleteRuleAsEnum) {
-        setDeleteRule(
-                Optional.ofNullable(deleteRuleAsEnum)
-                        .map(_IntFieldEnum::fieldValueAsInt)
-                        .orElse(null)
-        );
-    }
+    // ---------------------------------------------------------------------------------------------------------- fkName
+
+    // ---------------------------------------------------------------------------------------------------------- pkName
+
+    // --------------------------------------------------------------------------------------------------- deferrability
 
     // -----------------------------------------------------------------------------------------------------------------
+    @Nullable
     @_NullableBySpecification
-    @_ColumnLabel("PKTABLE_CAT")
+    @_ColumnLabel(COLUMN_LABEL_PKTABLE_CAT)
     private String pktableCat;
 
+    @Nullable
     @_NullableBySpecification
-    @_ColumnLabel("PKTABLE_SCHEM")
+    @_ColumnLabel(COLUMN_LABEL_PKTABLE_SCHEM)
     private String pktableSchem;
 
-    @_ColumnLabel("PKTABLE_NAME")
-    @EqualsAndHashCode.Include
+    @_ColumnLabel(COLUMN_LABEL_PKTABLE_NAME)
     private String pktableName;
 
-    @_ColumnLabel("PKCOLUMN_NAME")
-    @EqualsAndHashCode.Include
+    @_ColumnLabel(COLUMN_LABEL_PKCOLUMN_NAME)
     private String pkcolumnName;
 
     // -----------------------------------------------------------------------------------------------------------------
+    @Nullable
     @_NullableBySpecification
-    @_ColumnLabel("FKTABLE_CAT")
+    @_ColumnLabel(COLUMN_LABEL_FKTABLE_CAT)
     private String fktableCat;
 
+    @Nullable
     @_NullableBySpecification
-    @_ColumnLabel("FKTABLE_SCHEM")
+    @_ColumnLabel(COLUMN_LABEL_FKTABLE_SCHEM)
     private String fktableSchem;
 
-    @_ColumnLabel("FKTABLE_NAME")
-    @EqualsAndHashCode.Include
+    @_ColumnLabel(COLUMN_LABEL_FKTABLE_NAME)
     private String fktableName;
 
-    @_ColumnLabel("FKCOLUMN_NAME")
-    @EqualsAndHashCode.Include
+    @_ColumnLabel(COLUMN_LABEL_FKCOLUMN_NAME)
     private String fkcolumnName;
 
     // -----------------------------------------------------------------------------------------------------------------
-    @_ColumnLabel("KEY_SEQ")
+    @Positive
+    @_ColumnLabel(COLUMN_LABEL_KEY_SEQ)
     private Integer keySeq;
 
+    // -----------------------------------------------------------------------------------------------------------------
     @_ColumnLabel(COLUMN_LABEL_UPDATE_RULE)
     private Integer updateRule;
 
-    @_ColumnLabel("DELETE_RULE")
+    @_ColumnLabel(COLUMN_LABEL_DELETE_RULE)
     private Integer deleteRule;
 
+    // -----------------------------------------------------------------------------------------------------------------
+    @Nullable
     @_NullableBySpecification
-    @_ColumnLabel("FK_NAME")
+    @_ColumnLabel(COLUMN_LABEL_FK_NAME)
     private String fkName;
 
+    @Nullable
     @_NullableBySpecification
-    @_ColumnLabel("PK_NAME")
+    @_ColumnLabel(COLUMN_LABEL_PK_NAME)
     private String pkName;
 
-    @_ColumnLabel("DEFERRABILITY")
+    // -----------------------------------------------------------------------------------------------------------------
+    @_ColumnLabel(COLUMN_LABEL_DEFERRABILITY)
     private Integer deferrability;
 }

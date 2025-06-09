@@ -20,29 +20,14 @@ package com.github.jinahya.database.metadata.bind;
  * #L%
  */
 
-import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.params.ParameterizedTest;
-import org.junit.jupiter.params.provider.EnumSource;
-import org.mockito.Mockito;
 
 import java.util.Comparator;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.mockito.Mockito.times;
-import static org.mockito.Mockito.verify;
 
 class ProcedureTest
-        extends AbstractMetadataTypeTest<Procedure> {
-
-    @Nested
-    class ProcedureTypeTest
-            extends _IntFieldEnumTest<Procedure.ProcedureType> {
-
-        ProcedureTypeTest() {
-            super(Procedure.ProcedureType.class);
-        }
-    }
+        extends AbstractMetadataType_Test<Procedure> {
 
     ProcedureTest() {
         super(Procedure.class);
@@ -54,31 +39,6 @@ class ProcedureTest
         instance.setProcedureName("");
         instance.setSpecificName("");
         return instance;
-    }
-
-    @Nested
-    class ProcedureTypeAsEnumTest {
-
-        @Test
-        void getProcedureTypeAsEnum__() {
-            // GIVEN
-            final var spy = Mockito.spy(newTypeInstance());
-            // WHEN
-            final var procedureTypeAsEnum = spy.getProcedureTypeAsEnum();
-            // THEN
-            verify(spy, times(1)).getProcedureType();
-        }
-
-        @EnumSource(Procedure.ProcedureType.class)
-        @ParameterizedTest
-        void setProcedureTypeAsEnum__(final Procedure.ProcedureType procedureTypeAsEnum) {
-            // GIVEN
-            final var spy = Mockito.spy(newTypeInstance());
-            // WHEN
-            spy.setProcedureTypeAsEnum(procedureTypeAsEnum);
-            // THEN
-            verify(spy, times(1)).setProcedureType(procedureTypeAsEnum.fieldValueAsInt());
-        }
     }
 
     @Test

@@ -20,14 +20,13 @@ package com.github.jinahya.database.metadata.bind;
  * #L%
  */
 
+import jakarta.annotation.Nullable;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.Setter;
-import lombok.ToString;
 
 import java.sql.SQLException;
 import java.util.Comparator;
-import java.util.Objects;
 
 /**
  * A class for binding results of the
@@ -41,7 +40,6 @@ import java.util.Objects;
 @Setter
 @Getter
 @EqualsAndHashCode(callSuper = true)
-@ToString(callSuper = true)
 public class TablePrivilege
         extends AbstractMetadataType {
 
@@ -98,38 +96,6 @@ public class TablePrivilege
                '}';
     }
 
-    @Override
-    public boolean equals(final Object obj) {
-        if (obj == null || getClass() != obj.getClass()) {
-            return false;
-        }
-        if (!super.equals(obj)) {
-            return false;
-        }
-        final var that = (TablePrivilege) obj;
-        return Objects.equals(tableCat, that.tableCat) &&
-               Objects.equals(tableSchem, that.tableSchem) &&
-               Objects.equals(tableName, that.tableName) &&
-               Objects.equals(grantor, that.grantor) &&
-               Objects.equals(grantee, that.grantee) &&
-               Objects.equals(privilege, that.privilege) &&
-               Objects.equals(isGrantable, that.isGrantable);
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(
-                super.hashCode(),
-                tableCat,
-                tableSchem,
-                tableName,
-                grantor,
-                grantee,
-                privilege,
-                isGrantable
-        );
-    }
-
     // -------------------------------------------------------------------------------------------------------- tableCat
     public String getTableCat() {
         return tableCat;
@@ -166,10 +132,12 @@ public class TablePrivilege
     }
 
     // -----------------------------------------------------------------------------------------------------------------
+    @Nullable
     @_NullableBySpecification
     @_ColumnLabel(COLUMN_LABEL_TABLE_CAT)
     private String tableCat;
 
+    @Nullable
     @_NullableBySpecification
     @_ColumnLabel(COLUMN_LABEL_TABLE_SCHEM)
     private String tableSchem;
@@ -178,6 +146,7 @@ public class TablePrivilege
     private String tableName;
 
     // -----------------------------------------------------------------------------------------------------------------
+    @Nullable
     @_NullableBySpecification
     @_ColumnLabel("GRANTOR")
     private String grantor;
@@ -188,6 +157,7 @@ public class TablePrivilege
     @_ColumnLabel("PRIVILEGE")
     private String privilege;
 
+    @Nullable
     @_NullableBySpecification
     @_ColumnLabel("IS_GRANTABLE")
     private String isGrantable;

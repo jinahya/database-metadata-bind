@@ -20,15 +20,12 @@ package com.github.jinahya.database.metadata.bind;
  * #L%
  */
 
+import jakarta.annotation.Nullable;
 import lombok.EqualsAndHashCode;
-import lombok.Getter;
-import lombok.Setter;
-import lombok.ToString;
 
 import java.sql.DatabaseMetaData;
 import java.sql.SQLException;
 import java.util.Comparator;
-import java.util.Optional;
 
 /**
  * A class for binding results of the
@@ -38,77 +35,35 @@ import java.util.Optional;
  * @see Context#getFunctionColumns(String, String, String, String)
  * @see ProcedureColumn
  */
-
-//@XmlType(name = "xxx")
-@Setter
-@Getter
 @EqualsAndHashCode(callSuper = true)
-@ToString(callSuper = true)
 public class Procedure
         extends AbstractMetadataType {
 
     private static final long serialVersionUID = -6262056388403934829L;
 
     // -----------------------------------------------------------------------------------------------------------------
+    static Comparator<Procedure> comparing(final Comparator<? super String> comparator) {
+        return Comparator.comparing(Procedure::getProcedureCat, comparator)
+                .thenComparing(Procedure::getProcedureSchem, comparator)
+                .thenComparing(Procedure::getProcedureName, comparator)
+                .thenComparing(Procedure::getSpecificName, comparator);
+    }
+
     static Comparator<Procedure> comparing(final Context context, final Comparator<? super String> comparator)
             throws SQLException {
-        return Comparator.comparing(Procedure::getProcedureCat, ContextUtils.nullPrecedence(context, comparator))
-                .thenComparing(Procedure::getProcedureSchem, ContextUtils.nullPrecedence(context, comparator))
-                .thenComparing(Procedure::getProcedureName, ContextUtils.nullPrecedence(context, comparator))
-                .thenComparing(Procedure::getSpecificName, ContextUtils.nullPrecedence(context, comparator));
+        return comparing(ContextUtils.nullPrecedence(context, comparator));
     }
 
     // -------------------------------------------------------------------------------------------------- PROCEDURE_TYPE
-
-    /**
-     * A colum label of {@value}.
-     */
     public static final String COLUMN_LABEL_PROCEDURE_TYPE = "PROCEDURE_TYPE";
 
-    /**
-     * Constants for the value of {@value #COLUMN_LABEL_PROCEDURE_TYPE} column.
-     */
-    public enum ProcedureType
-            implements _IntFieldEnum<ProcedureType> {
+    public static final int COLUMN_VALUE_PROCEDURE_TYPE_PROCEDURE_RESULT_UNKNOWN =
+            DatabaseMetaData.procedureResultUnknown;
 
-        /**
-         * A value for
-         * {@link DatabaseMetaData#procedureResultUnknown}({@value DatabaseMetaData#procedureResultUnknown}).
-         */
-        PROCEDURE_RESULT_UNKNOWN(DatabaseMetaData.procedureResultUnknown), // 0
+    public static final int COLUMN_VALUE_PROCEDURE_TYPE_PROCEDURE_NO_RESULT = DatabaseMetaData.procedureNoResult;
 
-        /**
-         * A value for {@link DatabaseMetaData#procedureNoResult}({@value DatabaseMetaData#procedureNoResult}).
-         */
-        PROCEDURE_NO_RESULT(DatabaseMetaData.procedureNoResult), // 1
-
-        /**
-         * A value for
-         * {@link DatabaseMetaData#procedureReturnsResult}({@value DatabaseMetaData#procedureReturnsResult}).
-         */
-        PROCEDURE_RETURNS_RESULT(DatabaseMetaData.procedureReturnsResult); // 2
-
-        /**
-         * Returns the value whose {@link #fieldValueAsInt() procedureType} matches to specified value.
-         *
-         * @param fieldValue the value of {@link #fieldValueAsInt() procedureType} to match.
-         * @return a matched value.
-         */
-        public static ProcedureType valueOfFieldValue(final int fieldValue) {
-            return _IntFieldEnum.valueOfFieldValue(ProcedureType.class, fieldValue);
-        }
-
-        ProcedureType(final int fieldValue) {
-            this.fieldValue = fieldValue;
-        }
-
-        @Override
-        public int fieldValueAsInt() {
-            return fieldValue;
-        }
-
-        private final int fieldValue;
-    }
+    public static final int COLUMN_VALUE_PROCEDURE_TYPE_PROCEDURE_RETURNS_RESULT =
+            DatabaseMetaData.procedureReturnsResult;
 
     // --------------------------------------------------------------------------------------------------- SPECIFIC_NAME
 
@@ -121,23 +76,44 @@ public class Procedure
 
     // ---------------------------------------------------------------------------------------------------- CONSTRUCTORS
 
+    /**
+     * Creates a new instance.
+     */
+    protected Procedure() {
+        super();
+    }
+
     // ------------------------------------------------------------------------------------------------ java.lang.Object
 
+    @Override
+    public String toString() {
+        return super.toString() + '{' +
+               "procedureCat=" + procedureCat +
+               ",procedureSchem=" + procedureSchem +
+               ",procedureName=" + procedureName +
+               ",remarks=" + remarks +
+               ",procedureType=" + procedureType +
+               ",specificName=" + specificName +
+               '}';
+    }
+
     // ---------------------------------------------------------------------------------------------------- procedureCat
+    @Nullable
     public String getProcedureCat() {
         return procedureCat;
     }
 
-    void setProcedureCat(final String procedureCat) {
+    protected void setProcedureCat(@Nullable final String procedureCat) {
         this.procedureCat = procedureCat;
     }
 
     // -------------------------------------------------------------------------------------------------- procedureSchem
+    @Nullable
     public String getProcedureSchem() {
         return procedureSchem;
     }
 
-    void setProcedureSchem(final String procedureSchem) {
+    protected void setProcedureSchem(@Nullable final String procedureSchem) {
         this.procedureSchem = procedureSchem;
     }
 
@@ -146,7 +122,7 @@ public class Procedure
         return procedureName;
     }
 
-    void setProcedureName(final String procedureName) {
+    protected void setProcedureName(final String procedureName) {
         this.procedureName = procedureName;
     }
 
@@ -155,7 +131,7 @@ public class Procedure
         return remarks;
     }
 
-    void setRemarks(final String remarks) {
+    protected void setRemarks(final String remarks) {
         this.remarks = remarks;
     }
 
@@ -164,22 +140,8 @@ public class Procedure
         return procedureType;
     }
 
-    void setProcedureType(final Integer procedureType) {
+    protected void setProcedureType(final Integer procedureType) {
         this.procedureType = procedureType;
-    }
-
-    ProcedureType getProcedureTypeAsEnum() {
-        return Optional.ofNullable(getProcedureType())
-                .map(ProcedureType::valueOfFieldValue)
-                .orElse(null);
-    }
-
-    void setProcedureTypeAsEnum(final ProcedureType procedureTypeAsEnum) {
-        setProcedureType(
-                Optional.ofNullable(procedureTypeAsEnum)
-                        .map(_IntFieldEnum::fieldValueAsInt)
-                        .orElse(null)
-        );
     }
 
     // ---------------------------------------------------------------------------------------------------- specificName
@@ -187,23 +149,22 @@ public class Procedure
         return specificName;
     }
 
-    void setSpecificName(final String specificName) {
+    protected void setSpecificName(final String specificName) {
         this.specificName = specificName;
     }
 
     // -----------------------------------------------------------------------------------------------------------------
+    @Nullable
     @_NullableBySpecification
     @_ColumnLabel("PROCEDURE_CAT")
-    @EqualsAndHashCode.Include
     private String procedureCat;
 
+    @Nullable
     @_NullableBySpecification
     @_ColumnLabel("PROCEDURE_SCHEM")
-    @EqualsAndHashCode.Include
     private String procedureSchem;
 
     @_ColumnLabel("PROCEDURE_NAME")
-    @EqualsAndHashCode.Include
     private String procedureName;
 
     // -----------------------------------------------------------------------------------------------------------------
@@ -215,6 +176,5 @@ public class Procedure
 
     // https://github.com/microsoft/mssql-jdbc/issues/2320
     @_ColumnLabel(COLUMN_LABEL_SPECIFIC_NAME)
-    @EqualsAndHashCode.Include
     private String specificName;
 }

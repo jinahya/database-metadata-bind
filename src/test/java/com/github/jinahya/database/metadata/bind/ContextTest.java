@@ -117,16 +117,6 @@ class ContextTest {
                             }
                         }
                     }
-                    if (c.isInstance(_IntFieldEnum.class)) {
-                        for (final var constant : c.getEnumConstants()) {
-                            log.debug("constant: {}", constant);
-                        }
-                    }
-                    if (c.isInstance(_FieldEnum.class)) {
-                        for (final var constant : c.getEnumConstants()) {
-                            log.debug("constant: {}", constant);
-                        }
-                    }
                 });
         fieldValues.forEach((f, v) -> {
             log.warn("field: {}, value: {}", f.getName(), v);
