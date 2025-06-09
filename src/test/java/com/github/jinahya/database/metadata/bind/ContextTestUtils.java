@@ -427,8 +427,10 @@ final class ContextTestUtils {
         }
         if (true) {
             assertThat(columns).satisfiesAnyOf(
-                    l -> assertThat(l).isSortedAccordingTo(Column.comparingAsSpecified(context, String.CASE_INSENSITIVE_ORDER)),
-                    l -> assertThat(l).isSortedAccordingTo(Column.comparingAsSpecified(context, Comparator.naturalOrder()))
+                    l -> assertThat(l).isSortedAccordingTo(
+                            Column.comparingAsSpecified(context, String.CASE_INSENSITIVE_ORDER)),
+                    l -> assertThat(l).isSortedAccordingTo(
+                            Column.comparingAsSpecified(context, Comparator.naturalOrder()))
             );
         }
         for (final var column : columns) {
@@ -503,7 +505,8 @@ final class ContextTestUtils {
             assertThat(crossReference).satisfiesAnyOf(
                     l -> assertThat(l).isSortedAccordingTo(
                             CrossReference.comparingSpecifiedOrder(context, String.CASE_INSENSITIVE_ORDER)),
-                    l -> assertThat(l).isSortedAccordingTo(CrossReference.comparingSpecifiedOrder(context, Comparator.naturalOrder()))
+                    l -> assertThat(l).isSortedAccordingTo(
+                            CrossReference.comparingSpecifiedOrder(context, Comparator.naturalOrder()))
             );
         }
         for (final var v : crossReference) {
@@ -563,7 +566,8 @@ final class ContextTestUtils {
         ).contains(databaseProductName(context))) {
             // https://github.com/microsoft/mssql-jdbc/issues/2321
             assertThat(functions).satisfiesAnyOf(
-                    l -> assertThat(l).isSortedAccordingTo(Function.specifiedOrder(context, String.CASE_INSENSITIVE_ORDER)),
+                    l -> assertThat(l).isSortedAccordingTo(
+                            Function.specifiedOrder(context, String.CASE_INSENSITIVE_ORDER)),
                     l -> assertThat(l).isSortedAccordingTo(Function.specifiedOrder(context, Comparator.naturalOrder()))
             );
         }
