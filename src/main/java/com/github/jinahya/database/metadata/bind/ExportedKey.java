@@ -21,7 +21,6 @@ package com.github.jinahya.database.metadata.bind;
  */
 
 import lombok.EqualsAndHashCode;
-import lombok.ToString;
 
 import java.sql.DatabaseMetaData;
 import java.sql.SQLException;
@@ -35,21 +34,38 @@ import java.util.Comparator;
  * @see Context#getExportedKeys(String, String, String)
  * @see ImportedKey
  */
-
 @EqualsAndHashCode(callSuper = true)
-@ToString(callSuper = true)
 public class ExportedKey
         extends PortedKey {
 
     private static final long serialVersionUID = -6561660015694928357L;
 
     // -----------------------------------------------------------------------------------------------------------------
-    static Comparator<ExportedKey> specifiedOrder(final Comparator<? super String> comparator) {
+    static Comparator<ExportedKey> comparingInSpecifiedOrder(final Comparator<? super String> comparator) {
         return PortedKey.comparingFktable(comparator);
     }
 
-    static Comparator<ExportedKey> specifiedOrder(final Context context, final Comparator<? super String> comparator)
+    static Comparator<ExportedKey> comparingInSpecifiedOrder(final Context context,
+                                                             final Comparator<? super String> comparator)
             throws SQLException {
-        return specifiedOrder(ContextUtils.nullPrecedence(context, comparator));
+        return comparingInSpecifiedOrder(ContextUtils.nullPrecedence(context, comparator));
+    }
+
+    // ------------------------------------------------------------------------------------------ STATIC_FACTORY_METHODS
+
+    // ---------------------------------------------------------------------------------------------------- CONSTRUCTORS
+
+    /**
+     * Creates a new instance.
+     */
+    public ExportedKey() {
+        super();
+    }
+
+    // ------------------------------------------------------------------------------------------------ java.lang.Object
+    @Override
+    public String toString() {
+        return super.toString() + '{' +
+               '}';
     }
 }

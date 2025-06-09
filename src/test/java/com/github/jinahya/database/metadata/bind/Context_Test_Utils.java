@@ -528,9 +528,9 @@ final class Context_Test_Utils {
         if (true) {
             assertThat(exportedKeys).satisfiesAnyOf(
                     l -> assertThat(l).isSortedAccordingTo(
-                            ExportedKey.specifiedOrder(context, String.CASE_INSENSITIVE_ORDER)),
+                            ExportedKey.comparingInSpecifiedOrder(context, String.CASE_INSENSITIVE_ORDER)),
                     l -> assertThat(l).isSortedAccordingTo(
-                            ExportedKey.specifiedOrder(context, Comparator.naturalOrder()))
+                            ExportedKey.comparingInSpecifiedOrder(context, Comparator.naturalOrder()))
             );
         }
         for (final var exportedKey : exportedKeys) {

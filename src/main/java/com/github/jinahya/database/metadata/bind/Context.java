@@ -693,7 +693,12 @@ public class Context {
     addExportedKeys(final String catalog, final String schema, final String table, final C collection)
             throws SQLException {
         Objects.requireNonNull(collection, "collection is null");
-        acceptExportedKeys(catalog, schema, table, collection::add);
+        acceptExportedKeys(
+                catalog,
+                schema,
+                table,
+                collection::add
+        );
         return collection;
     }
 
@@ -710,7 +715,9 @@ public class Context {
     public List<ExportedKey> getExportedKeys(final String catalog, final String schema, final String table)
             throws SQLException {
         return addExportedKeys(
-                catalog, schema, table,
+                catalog,
+                schema,
+                table,
                 new ArrayList<>()
         );
     }
@@ -887,7 +894,9 @@ public class Context {
             throws SQLException {
         Objects.requireNonNull(collection, "collection is null");
         acceptImportedKeys(
-                catalog, schema, table,
+                catalog,
+                schema,
+                table,
                 collection::add
         );
         return collection;
@@ -907,7 +916,9 @@ public class Context {
     public List<ImportedKey> getImportedKeys(final String catalog, final String schema, final String table)
             throws SQLException {
         return addImportedKeys(
-                catalog, schema, table,
+                catalog,
+                schema,
+                table,
                 new ArrayList<>()
         );
     }
@@ -923,7 +934,9 @@ public class Context {
     List<ImportedKey> getImportedKeys(final Table table) throws SQLException {
         Objects.requireNonNull(table, "table is null");
         return getImportedKeys(
-                table.getTableCat(), table.getTableSchem(), table.getTableName()
+                table.getTableCat(),
+                table.getTableSchem(),
+                table.getTableName()
         );
     }
 
@@ -1666,9 +1679,9 @@ public class Context {
      * @throws SQLException if a database error occurs.
      * @see DatabaseMetaData#getTables(String, String, String, String[])
      */
-    void acceptEachTable(@Nullable final String catalog, @Nullable final String schemaPattern,
-                         @Nonnull final String tableNamePattern, @Nullable final String[] types,
-                         @Nonnull final Consumer<? super Table> consumer)
+    void acceptTables(@Nullable final String catalog, @Nullable final String schemaPattern,
+                      @Nonnull final String tableNamePattern, @Nullable final String[] types,
+                      @Nonnull final Consumer<? super Table> consumer)
             throws SQLException {
         Objects.requireNonNull(consumer, "consumer is null");
         try (var results = metadata.getTables(catalog, schemaPattern, tableNamePattern, types)) {
@@ -1696,11 +1709,11 @@ public class Context {
      * @throws SQLException if a database error occurs.
      */
     <C extends Collection<? super Table>>
-    C collectTables(@Nullable final String catalog, @Nullable final String schemaPattern,
-                    @Nonnull final String tableNamePattern, @Nullable final String[] types, @Nonnull final C collection)
+    C addTables(@Nullable final String catalog, @Nullable final String schemaPattern,
+                @Nonnull final String tableNamePattern, @Nullable final String[] types, @Nonnull final C collection)
             throws SQLException {
         Objects.requireNonNull(collection, "collection is null");
-        acceptEachTable(
+        acceptTables(
                 catalog,
                 schemaPattern,
                 tableNamePattern,
@@ -1725,7 +1738,7 @@ public class Context {
     public List<Table> getTables(@Nullable final String catalog, @Nullable final String schemaPattern,
                                  @Nonnull final String tableNamePattern, @Nullable final String[] types)
             throws SQLException {
-        return collectTables(
+        return addTables(
                 catalog,
                 schemaPattern,
                 tableNamePattern,
@@ -2080,7 +2093,6 @@ public class Context {
     // -----------------------------------------------------------------------------------------------------------------
     Supplier<Connection> connectionSupplier;
 
-    // -----------------------------------------------------------------------------------------------------------------
     interface Listener {
 
         void bound(MetadataType value);
