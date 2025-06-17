@@ -47,7 +47,7 @@ public class Attribute
 
     // -----------------------------------------------------------------------------------------------------------------
     @Nonnull
-    static Comparator<Attribute> comparing(@Nonnull final Comparator<? super String> comparator) {
+    static Comparator<Attribute> comparingInSpecifiedOrder(@Nonnull final Comparator<? super String> comparator) {
         Objects.requireNonNull(comparator, "comparator is null");
         return Comparator
                 .comparing(Attribute::getTypeCat, comparator)
@@ -57,12 +57,14 @@ public class Attribute
     }
 
     @Nonnull
-    static Comparator<Attribute> comparing(@Nonnull final Context context,
-                                           @Nonnull final Comparator<? super String> comparator)
+    static Comparator<Attribute> comparingInSpecifiedOrder(@Nonnull final Context context,
+                                                           @Nonnull final Comparator<? super String> comparator)
             throws SQLException {
         Objects.requireNonNull(context, "context is null");
         Objects.requireNonNull(comparator, "comparator is null");
-        return comparing(ContextUtils.nullPrecedence(context, comparator));
+        return comparingInSpecifiedOrder(
+                ContextUtils.nullPrecedence(context, comparator)
+        );
     }
 
     // -------------------------------------------------------------------------------------------------------- TYPE_CAT
@@ -172,11 +174,12 @@ public class Attribute
      *
      * @return the value of {@value #COLUMN_LABEL_TYPE_SCHEM} column.
      */
+    @Nullable
     public String getTypeSchem() {
         return typeSchem;
     }
 
-    public void setTypeSchem(String typeSchem) {
+    public void setTypeSchem(@Nullable final String typeSchem) {
         this.typeSchem = typeSchem;
     }
 
@@ -191,7 +194,7 @@ public class Attribute
         return typeName;
     }
 
-    public void setTypeName(String typeName) {
+    public void setTypeName(final String typeName) {
         this.typeName = typeName;
     }
 
@@ -363,11 +366,12 @@ public class Attribute
     }
 
     // -------------------------------------------------------------------------------------------------- sourceDataType
+    @Nullable
     public Integer getSourceDataType() {
         return sourceDataType;
     }
 
-    public void setSourceDataType(final Integer sourceDataType) {
+    public void setSourceDataType(@Nullable final Integer sourceDataType) {
         this.sourceDataType = sourceDataType;
     }
 

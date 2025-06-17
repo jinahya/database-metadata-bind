@@ -263,8 +263,8 @@ final class Context_Test_Utils {
         }
         if (true) {
             assertThat(attributes).satisfiesAnyOf(
-                    l -> assertThat(l).isSortedAccordingTo(Attribute.comparing(context, String.CASE_INSENSITIVE_ORDER)),
-                    l -> assertThat(l).isSortedAccordingTo(Attribute.comparing(context, Comparator.naturalOrder()))
+                    l -> assertThat(l).isSortedAccordingTo(Attribute.comparingInSpecifiedOrder(context, String.CASE_INSENSITIVE_ORDER)),
+                    l -> assertThat(l).isSortedAccordingTo(Attribute.comparingInSpecifiedOrder(context, Comparator.naturalOrder()))
             );
         }
         for (final var attribute : attributes) {
