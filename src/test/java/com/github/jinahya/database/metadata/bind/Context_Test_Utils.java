@@ -189,7 +189,7 @@ final class Context_Test_Utils {
             final var typeInfo = context.getTypeInfo();
             assertThat(typeInfo)
                     .doesNotHaveDuplicates()
-                    .isSortedAccordingTo(TypeInfo.comparator(context))
+                    .isSortedAccordingTo(TypeInfo.comparingInSpecifiedOrder(context))
                     .allSatisfy(v -> {
                         assertThat(v.getNullable()).isIn(TypeInfo.COLUMN_VALUE_NULLABLE_TYPE_NO_NULLS,
                                                          TypeInfo.COLUMN_VALUE_NULLABLE_TYPE_NULLABLE,
@@ -404,9 +404,9 @@ final class Context_Test_Utils {
             // https://jira.mariadb.org/browse/CONJ-1159
             assertThat(clientInfoProperties).satisfiesAnyOf(
                     l -> assertThat(l).isSortedAccordingTo(
-                            ClientInfoProperty.comparing(context, String.CASE_INSENSITIVE_ORDER)),
+                            ClientInfoProperty.comparingInSpecifiedOrder(context, String.CASE_INSENSITIVE_ORDER)),
                     l -> assertThat(l).isSortedAccordingTo(
-                            ClientInfoProperty.comparing(context, Comparator.naturalOrder()))
+                            ClientInfoProperty.comparingInSpecifiedOrder(context, Comparator.naturalOrder()))
             );
         }
         for (final var clientInfoProperty : clientInfoProperties) {
@@ -478,9 +478,9 @@ final class Context_Test_Utils {
         if (true) {
             assertThat(columnPrivileges).satisfiesAnyOf(
                     l -> assertThat(l).isSortedAccordingTo(
-                            ColumnPrivilege.comparing(context, String.CASE_INSENSITIVE_ORDER)),
+                            ColumnPrivilege.comparingComparingInSpecifiedOrder(context, String.CASE_INSENSITIVE_ORDER)),
                     l -> assertThat(l).isSortedAccordingTo(
-                            ColumnPrivilege.comparing(context, Comparator.naturalOrder()))
+                            ColumnPrivilege.comparingComparingInSpecifiedOrder(context, Comparator.naturalOrder()))
             );
         }
         for (final var columnPrivilege : columnPrivileges) {
@@ -504,9 +504,9 @@ final class Context_Test_Utils {
         if (true) {
             assertThat(crossReference).satisfiesAnyOf(
                     l -> assertThat(l).isSortedAccordingTo(
-                            CrossReference.comparingSpecifiedOrder(context, String.CASE_INSENSITIVE_ORDER)),
+                            CrossReference.comparingInSpecifiedOrder(context, String.CASE_INSENSITIVE_ORDER)),
                     l -> assertThat(l).isSortedAccordingTo(
-                            CrossReference.comparingSpecifiedOrder(context, Comparator.naturalOrder()))
+                            CrossReference.comparingInSpecifiedOrder(context, Comparator.naturalOrder()))
             );
         }
         for (final var v : crossReference) {
@@ -650,8 +650,8 @@ final class Context_Test_Utils {
         }
         if (true) {
             assertThat(indexInfo).satisfiesAnyOf(
-                    l -> assertThat(l).isSortedAccordingTo(IndexInfo.comparing(context, String.CASE_INSENSITIVE_ORDER)),
-                    l -> assertThat(l).isSortedAccordingTo(IndexInfo.comparing(context, Comparator.naturalOrder()))
+                    l -> assertThat(l).isSortedAccordingTo(IndexInfo.comparingInSpecifiedOrder(context, String.CASE_INSENSITIVE_ORDER)),
+                    l -> assertThat(l).isSortedAccordingTo(IndexInfo.comparingInSpecifiedOrder(context, Comparator.naturalOrder()))
             );
         }
         for (final var v : indexInfo) {
@@ -727,8 +727,8 @@ final class Context_Test_Utils {
         }
         if (true) {
             assertThat(schemas).satisfiesAnyOf(
-                    l -> assertThat(l).isSortedAccordingTo(Schema.comparing(context, String.CASE_INSENSITIVE_ORDER)),
-                    l -> assertThat(l).isSortedAccordingTo(Schema.comparing(context, Comparator.naturalOrder()))
+                    l -> assertThat(l).isSortedAccordingTo(Schema.comparingInSpecifiedOrder(context, String.CASE_INSENSITIVE_ORDER)),
+                    l -> assertThat(l).isSortedAccordingTo(Schema.comparingInSpecifiedOrder(context, Comparator.naturalOrder()))
             );
         }
         for (final var schema : schemas) {
@@ -1027,9 +1027,9 @@ final class Context_Test_Utils {
         if (true) {
             assertThat(tablePrivileges).satisfiesAnyOf(
                     l -> assertThat(l)
-                            .isSortedAccordingTo(TablePrivilege.comparing(context, String.CASE_INSENSITIVE_ORDER)),
+                            .isSortedAccordingTo(TablePrivilege.comparingInSpecifiedOrder(context, String.CASE_INSENSITIVE_ORDER)),
                     l -> assertThat(l)
-                            .isSortedAccordingTo(TablePrivilege.comparing(context, Comparator.naturalOrder()))
+                            .isSortedAccordingTo(TablePrivilege.comparingInSpecifiedOrder(context, Comparator.naturalOrder()))
             );
         }
         for (final var tablePrivilege : tablePrivileges) {
@@ -1073,7 +1073,7 @@ final class Context_Test_Utils {
         }
         if (!databaseProductName(context).equals(DatabaseProductNames.MY_SQL) &&
             !databaseProductName(context).equals(DatabaseProductNames.MICROSOFT_SQL_SERVER)) {
-            assertThat(typeInfo).isSortedAccordingTo(TypeInfo.comparator(context));
+            assertThat(typeInfo).isSortedAccordingTo(TypeInfo.comparingInSpecifiedOrder(context));
         }
         for (final var typeInfo_ : typeInfo) {
             typeInfo(context, typeInfo_);

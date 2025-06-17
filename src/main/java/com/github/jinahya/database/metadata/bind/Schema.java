@@ -45,15 +45,18 @@ public class Schema
     private static final long serialVersionUID = 7457236468401244963L;
 
     // -----------------------------------------------------------------------------------------------------------------
-    static Comparator<Schema> comparing(final Comparator<? super String> comparator) {
+    static Comparator<Schema> comparingInSpecifiedOrder(final Comparator<? super String> comparator) {
         return Comparator
                 .comparing(Schema::getTableCatalog, comparator)
                 .thenComparing(Schema::getTableSchem, comparator);
     }
 
-    static Comparator<Schema> comparing(final Context context, final Comparator<? super String> comparator)
+    static Comparator<Schema> comparingInSpecifiedOrder(final Context context,
+                                                        final Comparator<? super String> comparator)
             throws SQLException {
-        return comparing(ContextUtils.nullPrecedence(context, comparator));
+        return comparingInSpecifiedOrder(
+                ContextUtils.nullPrecedence(context, comparator)
+        );
     }
 
     // -----------------------------------------------------------------------------------------------------------------

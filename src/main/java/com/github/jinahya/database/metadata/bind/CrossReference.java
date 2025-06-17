@@ -49,7 +49,7 @@ public class CrossReference
     private static final long serialVersionUID = -5343386346721125961L;
 
     // -----------------------------------------------------------------------------------------------------------------
-    static Comparator<CrossReference> comparingSpecifiedOrder(final Comparator<? super String> comparator) {
+    static Comparator<CrossReference> comparingInSpecifiedOrder(final Comparator<? super String> comparator) {
         return Comparator
                 .comparing(CrossReference::getFktableCat, comparator)
                 .thenComparing(CrossReference::getFktableSchem, comparator)
@@ -57,10 +57,12 @@ public class CrossReference
                 .thenComparing(CrossReference::getKeySeq, Comparator.naturalOrder());
     }
 
-    static Comparator<CrossReference> comparingSpecifiedOrder(final Context context,
-                                                              final Comparator<? super String> comparator)
+    static Comparator<CrossReference> comparingInSpecifiedOrder(final Context context,
+                                                                final Comparator<? super String> comparator)
             throws SQLException {
-        return comparingSpecifiedOrder(ContextUtils.nullPrecedence(context, comparator));
+        return comparingInSpecifiedOrder(
+                ContextUtils.nullPrecedence(context, comparator)
+        );
     }
 
     // ----------------------------------------------------------------------------------------------------- PKTABLE_CAT

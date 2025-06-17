@@ -47,7 +47,7 @@ public class IndexInfo
     private static final long serialVersionUID = 924040226611181424L;
 
     // -----------------------------------------------------------------------------------------------------------------
-    static Comparator<IndexInfo> comparing(final Comparator<? super String> comparator) {
+    static Comparator<IndexInfo> comparingInSpecifiedOrder(final Comparator<? super String> comparator) {
         return Comparator
                 .comparing(IndexInfo::getNonUnique, Comparator.naturalOrder())
                 .thenComparing(IndexInfo::getType, Comparator.naturalOrder())
@@ -55,9 +55,12 @@ public class IndexInfo
                 .thenComparing(IndexInfo::getOrdinalPosition, Comparator.naturalOrder());
     }
 
-    static Comparator<IndexInfo> comparing(final Context context, final Comparator<? super String> comparator)
+    static Comparator<IndexInfo> comparingInSpecifiedOrder(final Context context,
+                                                           final Comparator<? super String> comparator)
             throws SQLException {
-        return comparing(ContextUtils.nullPrecedence(context, comparator));
+        return comparingInSpecifiedOrder(
+                ContextUtils.nullPrecedence(context, comparator)
+        );
     }
 
     // ------------------------------------------------------------------------------------------------------- TABLE_CAT

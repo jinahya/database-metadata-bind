@@ -47,15 +47,18 @@ public class ColumnPrivilege
     private static final long serialVersionUID = 4384654744147773380L;
 
     // -----------------------------------------------------------------------------------------------------------------
-    static Comparator<ColumnPrivilege> comparing(final Comparator<? super String> comparator) {
+    static Comparator<ColumnPrivilege> comparingInSpecifiedOrder(final Comparator<? super String> comparator) {
         return Comparator
                 .comparing(ColumnPrivilege::getColumnName, comparator)
                 .thenComparing(ColumnPrivilege::getPrivilege, comparator);
     }
 
-    static Comparator<ColumnPrivilege> comparing(final Context context, final Comparator<? super String> comparator)
+    static Comparator<ColumnPrivilege> comparingComparingInSpecifiedOrder(final Context context,
+                                                                          final Comparator<? super String> comparator)
             throws SQLException {
-        return comparing(ContextUtils.nullPrecedence(context, comparator));
+        return comparingInSpecifiedOrder(
+                ContextUtils.nullPrecedence(context, comparator)
+        );
     }
 
     // ------------------------------------------------------------------------------------------------------- TABLE_CAT

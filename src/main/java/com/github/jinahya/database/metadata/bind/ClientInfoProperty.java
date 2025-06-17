@@ -46,10 +46,16 @@ public class ClientInfoProperty
     private static final long serialVersionUID = -2913230435651853254L;
 
     // -----------------------------------------------------------------------------------------------------------------
-    static Comparator<ClientInfoProperty> comparing(final Context context,
-                                                    final Comparator<? super String> comparator)
+    static Comparator<ClientInfoProperty> comparingInSpecifiedOrder(final Comparator<? super String> comparator) {
+        return Comparator.comparing(ClientInfoProperty::getName, comparator);
+    }
+
+    static Comparator<ClientInfoProperty> comparingInSpecifiedOrder(final Context context,
+                                                                    final Comparator<? super String> comparator)
             throws SQLException {
-        return Comparator.comparing(ClientInfoProperty::getName, ContextUtils.nullPrecedence(context, comparator));
+        return comparingInSpecifiedOrder(
+                ContextUtils.nullPrecedence(context, comparator)
+        );
     }
 
     // ------------------------------------------------------------------------------------------------------------ NAME
