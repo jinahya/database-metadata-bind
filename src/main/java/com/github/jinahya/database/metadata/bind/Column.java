@@ -29,6 +29,7 @@ import lombok.EqualsAndHashCode;
 import java.sql.DatabaseMetaData;
 import java.sql.SQLException;
 import java.sql.Types;
+import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Objects;
@@ -40,6 +41,7 @@ import java.util.Objects;
  * @see Context#getColumns(String, String, String, String)
  */
 @_ChildOf(Table.class)
+@_ParentOf(ColumnPrivilege.class)
 @EqualsAndHashCode(callSuper = true)
 public class Column
         extends AbstractMetadataType {
@@ -47,7 +49,7 @@ public class Column
     private static final long serialVersionUID = -409653682729081530L;
 
     // -----------------------------------------------------------------------------------------------------------------
-    static Comparator<Column> comparingAsSpecified(final Comparator<? super String> comparator) {
+    static Comparator<Column> comparingInSpecifiedOrder(final Comparator<? super String> comparator) {
         return Comparator
                 .comparing(Column::getTableCat, comparator)
                 .thenComparing(Column::getTableSchem, comparator)
@@ -55,9 +57,10 @@ public class Column
                 .thenComparing(Column::getOrdinalPosition, Comparator.naturalOrder());
     }
 
-    static Comparator<Column> comparingAsSpecified(final Context context, final Comparator<? super String> comparator)
+    static Comparator<Column> comparingInSpecifiedOrder(final Context context,
+                                                        final Comparator<? super String> comparator)
             throws SQLException {
-        return comparingAsSpecified(ContextUtils.nullPrecedence(context, comparator));
+        return comparingInSpecifiedOrder(ContextUtils.nullPrecedence(context, comparator));
     }
 
     // -----------------------------------------------------------------------------------------------------------------
@@ -537,4 +540,18 @@ public class Column
     @Pattern(regexp = MetadataTypeConstants.PATTERN_REGEXP_YES_NO_OR_EMPTY)
     @_ColumnLabel(COLUMN_LABEL_IS_GENERATEDCOLUMN)
     private String isGeneratedcolumn;
+
+    // -----------------------------------------------------------------------------------------------------------------
+    List<ColumnPrivilege> getColumnPrivileges() {
+        if (columnPrivileges == null) {
+            columnPrivileges = new ArrayList<>();
+        }
+        return columnPrivileges;
+    }
+
+    void setColumnPrivileges(final List<ColumnPrivilege> columnPrivileges) {
+        this.columnPrivileges = columnPrivileges;
+    }
+
+    private List<ColumnPrivilege> columnPrivileges;
 }

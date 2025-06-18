@@ -463,7 +463,10 @@ public class Context {
                           final C collection)
             throws SQLException {
         Objects.requireNonNull(collection, "collection is null");
-        acceptColumnPrivileges(catalog, schema, table, columnNamePattern, collection::add);
+        acceptColumnPrivileges(catalog, schema, table, columnNamePattern, v -> {
+            final var changed = collection.add(v);
+            assert changed : "duplicate column privilege: " + v;
+        });
         return collection;
     }
 

@@ -21,11 +21,15 @@ package com.github.jinahya.database.metadata.bind;
  */
 
 import jakarta.annotation.Nullable;
+import jakarta.validation.Valid;
+import jakarta.validation.constraints.NotNull;
 import lombok.EqualsAndHashCode;
 import lombok.ToString;
 
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.Comparator;
+import java.util.List;
 import java.util.Optional;
 
 /**
@@ -398,4 +402,89 @@ public class Table
                         .orElse(null)
         );
     }
+
+    // -----------------------------------------------------------------------------------------------------------------
+
+    List<PrimaryKey> getPrimaryKeys() {
+        if (primaryKeys == null) {
+            primaryKeys = new ArrayList<>();
+        }
+        return primaryKeys;
+    }
+
+    void setPrimaryKeys(final List<PrimaryKey> primaryKeys) {
+        this.primaryKeys = primaryKeys;
+    }
+
+    private List<@Valid @NotNull PrimaryKey> primaryKeys;
+
+    // -----------------------------------------------------------------------------------------------------------------
+    List<ImportedKey> getImportedKeys() {
+        if (importedKeys == null) {
+            importedKeys = new ArrayList<>();
+        }
+        return importedKeys;
+    }
+
+    void setImportedKeys(final List<ImportedKey> importedKeys) {
+        this.importedKeys = importedKeys;
+    }
+
+    private List<@Valid @NotNull ImportedKey> importedKeys;
+
+    // -----------------------------------------------------------------------------------------------------------------
+    List<ExportedKey> getExportedKeys() {
+        if (exportedKeys == null) {
+            exportedKeys = new ArrayList<>();
+        }
+        return exportedKeys;
+    }
+
+    void setExportedKeys(final List<ExportedKey> exportedKeys) {
+        this.exportedKeys = exportedKeys;
+    }
+
+    private List<@Valid @NotNull ExportedKey> exportedKeys;
+
+    // -----------------------------------------------------------------------------------------------------------------
+    List<IndexInfo> getIndexInfo() {
+        if (indexInfo == null) {
+            indexInfo = new ArrayList<>();
+        }
+        return indexInfo;
+    }
+
+    void setIndexInfo(final List<IndexInfo> indexInfo) {
+        this.indexInfo = indexInfo;
+    }
+
+    private List<@Valid @NotNull IndexInfo> indexInfo;
+
+    // -----------------------------------------------------------------------------------------------------------------
+    List<Column> getColumns() {
+        if (columns == null) {
+            columns = new ArrayList<>();
+        }
+        return columns;
+    }
+
+    void setColumns(final List<Column> columns) {
+        this.columns = columns;
+    }
+
+    private List<@Valid @NotNull Column> columns;
+
+    // -----------------------------------------------------------------------------------------------------------------
+    List<PseudoColumn> getPseudoColumns() {
+        if (pseudoColumns == null) {
+            pseudoColumns = new ArrayList<>();
+        }
+        return pseudoColumns;
+    }
+
+    void setPseudoColumns(final List<PseudoColumn> pseudoColumns) {
+        this.pseudoColumns = pseudoColumns;
+    }
+
+    private List<@Valid @NotNull PseudoColumn> pseudoColumns;
 }

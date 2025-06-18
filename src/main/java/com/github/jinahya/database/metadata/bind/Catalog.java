@@ -21,7 +21,9 @@ package com.github.jinahya.database.metadata.bind;
  */
 
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.Comparator;
+import java.util.List;
 import java.util.Objects;
 import java.util.function.Consumer;
 
@@ -40,13 +42,16 @@ public class Catalog
     private static final long serialVersionUID = 6239185259128825953L;
 
     // -----------------------------------------------------------------------------------------------------------------
-    static Comparator<Catalog> comparing(final Comparator<? super String> comparator) {
+    static Comparator<Catalog> comparingInSpecifiedOrder(final Comparator<? super String> comparator) {
         return Comparator.comparing(Catalog::getTableCat, comparator);
     }
 
-    static Comparator<Catalog> comparing(final Context context, final Comparator<? super String> comparator)
+    static Comparator<Catalog> comparingInSpecifiedOrder(final Context context,
+                                                         final Comparator<? super String> comparator)
             throws SQLException {
-        return comparing(ContextUtils.nullPrecedence(context, comparator));
+        return comparingInSpecifiedOrder(
+                ContextUtils.nullPrecedence(context, comparator)
+        );
     }
 
     // -----------------------------------------------------------------------------------------------------------------
@@ -110,4 +115,18 @@ public class Catalog
     // -----------------------------------------------------------------------------------------------------------------
     @_ColumnLabel(COLUMN_LABEL_TABLE_CAT)
     private String tableCat;
+
+    // -----------------------------------------------------------------------------------------------------------------
+    List<Schema> getSchemas() {
+        if (schemas == null) {
+            schemas = new ArrayList<>();
+        }
+        return schemas;
+    }
+
+    void setSchemas(final List<Schema> schemas) {
+        this.schemas = schemas;
+    }
+
+    private List<Schema> schemas;
 }

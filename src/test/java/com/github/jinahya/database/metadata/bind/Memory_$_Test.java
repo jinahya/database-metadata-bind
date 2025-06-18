@@ -98,6 +98,14 @@ abstract class Memory_$_Test {
         });
     }
 
+    @Test
+    void metadata() {
+        final var metadata = applyContext(c -> {
+            return Metadata.newInstance(c);
+        });
+        __Validation_Test_Utils.requireValid(metadata);
+    }
+
     // -----------------------------------------------------------------------------------------------------------------
     @Test
     void test() throws SQLException {

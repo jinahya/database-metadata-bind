@@ -26,7 +26,9 @@ import lombok.EqualsAndHashCode;
 import lombok.ToString;
 
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.Comparator;
+import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
 
@@ -190,4 +192,19 @@ public class Schema
                         .orElse(null)
         );
     }
+
+    // -----------------------------------------------------------------------------------------------------------------
+
+    public List<Table> getTables() {
+        if (tables == null) {
+            tables = new ArrayList<>();
+        }
+        return tables;
+    }
+
+    public void setTables(final List<Table> tables) {
+        this.tables = tables;
+    }
+
+    private List<Table> tables;
 }

@@ -43,9 +43,21 @@ public class BestRowIdentifier
     private static final long serialVersionUID = -1512051574198028399L;
 
     // -----------------------------------------------------------------------------------------------------------------
-    static Comparator<BestRowIdentifier> comparingScope(final Context context) throws SQLException {
-        return Comparator.comparing(BestRowIdentifier::getScope,
-                                    ContextUtils.nullPrecedence(context, Comparator.naturalOrder()));
+    private static Comparator<BestRowIdentifier> comparingInSpecifiedOrder(
+            final Comparator<? super Integer> comparator) {
+        return Comparator
+                .comparing(BestRowIdentifier::getScope, comparator);
+    }
+
+    static Comparator<BestRowIdentifier> comparingInSpecifiedOrder() {
+        return comparingInSpecifiedOrder(Comparator.naturalOrder());
+    }
+
+    static Comparator<BestRowIdentifier> comparingInSpecifiedOrder(final Context context)
+            throws SQLException {
+        return comparingInSpecifiedOrder(
+                ContextUtils.nullPrecedence(context, Comparator.naturalOrder())
+        );
     }
 
     // ----------------------------------------------------------------------------------------------------------- SCOPE

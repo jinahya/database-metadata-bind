@@ -36,7 +36,6 @@ import java.util.Objects;
  *
  * @author Jin Kwon &lt;jinahya_at_gmail.com&gt;
  * @see Context#getAttributes(String, String, String, String)
- * @see Nullable
  */
 @_ChildOf(UDT.class)
 @EqualsAndHashCode(callSuper = true)
@@ -148,22 +147,23 @@ public class Attribute
     // -------------------------------------------------------------------------------------------------------- tableCat
 
     /**
-     * Returns current value of {@value #COLUMN_LABEL_TYPE_CAT} column property.
+     * Returns current value of {@value #COLUMN_LABEL_TYPE_CAT} property.
      *
-     * @return current value of the {@value #COLUMN_LABEL_TYPE_CAT} column property.
+     * @return current value of the {@value #COLUMN_LABEL_TYPE_CAT} property.
      * @see #setTypeCat(String)
      */
+    @Nullable
     public String getTypeCat() {
         return typeCat;
     }
 
     /**
-     * Replaces current value of {@value #COLUMN_LABEL_TYPE_CAT} column property with specified value.
+     * Replaces current value of {@value #COLUMN_LABEL_TYPE_CAT} property with specified value.
      *
-     * @param typeCat new value for the {@value #COLUMN_LABEL_TYPE_CAT} column property.
+     * @param typeCat new value for the {@value #COLUMN_LABEL_TYPE_CAT} property.
      * @see #getTypeCat()
      */
-    public void setTypeCat(final String typeCat) {
+    public void setTypeCat(@Nullable final String typeCat) {
         this.typeCat = typeCat;
     }
 
@@ -348,11 +348,12 @@ public class Attribute
     }
 
     // ----------------------------------------------------------------------------------------------------- scopeSchema
+    @Nullable
     public String getScopeSchema() {
         return scopeSchema;
     }
 
-    public void setScopeSchema(final String scopeSchema) {
+    public void setScopeSchema(@Nullable final String scopeSchema) {
         this.scopeSchema = scopeSchema;
     }
 

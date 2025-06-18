@@ -189,7 +189,7 @@ final class Context_Test_Utils {
             final var typeInfo = context.getTypeInfo();
             assertThat(typeInfo)
                     .doesNotHaveDuplicates()
-                    .isSortedAccordingTo(TypeInfo.comparingInSpecifiedOrder(context))
+                    .isSortedAccordingTo(TypeInfo.comparingInSpecifiedOrder(context, Comparator.naturalOrder()))
                     .allSatisfy(v -> {
                         assertThat(v.getNullable()).isIn(TypeInfo.COLUMN_VALUE_NULLABLE_TYPE_NO_NULLS,
                                                          TypeInfo.COLUMN_VALUE_NULLABLE_TYPE_NULLABLE,
@@ -294,7 +294,7 @@ final class Context_Test_Utils {
             assertThat(bestRowIdentifier).doesNotHaveDuplicates();
         }
         if (true) {
-            assertThat(bestRowIdentifier).isSortedAccordingTo(BestRowIdentifier.comparingScope(context));
+            assertThat(bestRowIdentifier).isSortedAccordingTo(BestRowIdentifier.comparingInSpecifiedOrder(context));
         }
         for (final var bestRowIdentifier_ : bestRowIdentifier) {
             bestRowIdentifier(context, bestRowIdentifier_);
@@ -323,8 +323,8 @@ final class Context_Test_Utils {
         }
         if (true) {
             assertThat(catalogs).satisfiesAnyOf(
-                    l -> assertThat(l).isSortedAccordingTo(Catalog.comparing(context, String.CASE_INSENSITIVE_ORDER)),
-                    l -> assertThat(l).isSortedAccordingTo(Catalog.comparing(context, Comparator.naturalOrder()))
+                    l -> assertThat(l).isSortedAccordingTo(Catalog.comparingInSpecifiedOrder(context, String.CASE_INSENSITIVE_ORDER)),
+                    l -> assertThat(l).isSortedAccordingTo(Catalog.comparingInSpecifiedOrder(context, Comparator.naturalOrder()))
             );
         }
         for (final var catalog : catalogs) {
@@ -428,9 +428,9 @@ final class Context_Test_Utils {
         if (true) {
             assertThat(columns).satisfiesAnyOf(
                     l -> assertThat(l).isSortedAccordingTo(
-                            Column.comparingAsSpecified(context, String.CASE_INSENSITIVE_ORDER)),
+                            Column.comparingInSpecifiedOrder(context, String.CASE_INSENSITIVE_ORDER)),
                     l -> assertThat(l).isSortedAccordingTo(
-                            Column.comparingAsSpecified(context, Comparator.naturalOrder()))
+                            Column.comparingInSpecifiedOrder(context, Comparator.naturalOrder()))
             );
         }
         for (final var column : columns) {
@@ -1073,7 +1073,7 @@ final class Context_Test_Utils {
         }
         if (!databaseProductName(context).equals(DatabaseProductNames.MY_SQL) &&
             !databaseProductName(context).equals(DatabaseProductNames.MICROSOFT_SQL_SERVER)) {
-            assertThat(typeInfo).isSortedAccordingTo(TypeInfo.comparingInSpecifiedOrder(context));
+            assertThat(typeInfo).isSortedAccordingTo(TypeInfo.comparingInSpecifiedOrder(context, Comparator.naturalOrder()));
         }
         for (final var typeInfo_ : typeInfo) {
             typeInfo(context, typeInfo_);
