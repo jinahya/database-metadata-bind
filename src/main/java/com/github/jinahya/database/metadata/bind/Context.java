@@ -358,7 +358,17 @@ public class Context {
     C addBestRowIdentifier(final String catalog, final String schema, final String table, final int scope,
                            final boolean nullable, final C collection)
             throws SQLException {
-        acceptBestRowIdentifier(catalog, schema, table, scope, nullable, collection::add);
+        acceptBestRowIdentifier(
+                catalog,
+                schema,
+                table,
+                scope,
+                nullable,
+                v -> {
+                    final var changed = collection.add(v);
+                    assert changed : "duplicate best row identifier: " + v;
+                }
+        );
         return collection;
     }
 
@@ -399,7 +409,10 @@ public class Context {
     <C extends Collection<? super Catalog>>
     C addCatalogs(final C collection) throws SQLException {
         Objects.requireNonNull(collection, "collection is null");
-        acceptCatalogs(collection::add);
+        acceptCatalogs(v -> {
+            final var changed = collection.add(v);
+            assert changed : "duplicate catalog: " + v;
+        });
         return collection;
     }
 
@@ -434,7 +447,12 @@ public class Context {
     <C extends Collection<ClientInfoProperty>>
     C addClientInfoProperties(final C collection) throws SQLException {
         Objects.requireNonNull(collection, "collection is null");
-        acceptClientInfoProperties(collection::add);
+        acceptClientInfoProperties(
+                v -> {
+                    final var changed = collection.add(v);
+                    assert changed : "duplicate client info property: " + v;
+                }
+        );
         return collection;
     }
 
@@ -466,10 +484,16 @@ public class Context {
                           final C collection)
             throws SQLException {
         Objects.requireNonNull(collection, "collection is null");
-        acceptColumnPrivileges(catalog, schema, table, columnNamePattern, v -> {
-            final var changed = collection.add(v);
-            assert changed : "duplicate column privilege: " + v;
-        });
+        acceptColumnPrivileges(
+                catalog,
+                schema,
+                table,
+                columnNamePattern,
+                v -> {
+                    final var changed = collection.add(v);
+                    assert changed : "duplicate column privilege: " + v;
+                }
+        );
         return collection;
     }
 
@@ -643,8 +667,18 @@ public class Context {
                       final C collection)
             throws SQLException {
         Objects.requireNonNull(collection, "collection is null");
-        acceptCrossReference(parentCatalog, parentSchema, parentTable, foreignCatalog, foreignSchema, foreignTable,
-                             collection::add);
+        acceptCrossReference(
+                parentCatalog,
+                parentSchema,
+                parentTable,
+                foreignCatalog,
+                foreignSchema,
+                foreignTable,
+                v -> {
+                    final var changed = collection.add(v);
+                    assert changed : "duplicate cross reference: " + v;
+                }
+        );
         return collection;
     }
 
@@ -712,7 +746,10 @@ public class Context {
                 catalog,
                 schema,
                 table,
-                collection::add
+                v -> {
+                    final var changed = collection.add(v);
+                    assert changed : "duplicate exported key: " + v;
+                }
         );
         return collection;
     }
@@ -783,7 +820,15 @@ public class Context {
                    final C collection)
             throws SQLException {
         Objects.requireNonNull(collection, "collection is null");
-        acceptFunctions(catalog, schemaPattern, functionNamePattern, collection::add);
+        acceptFunctions(
+                catalog,
+                schemaPattern,
+                functionNamePattern,
+                v -> {
+                    final var changed = collection.add(v);
+                    assert changed : "duplicate function: " + v;
+                }
+        );
         return collection;
     }
 
@@ -825,8 +870,14 @@ public class Context {
             throws SQLException {
         Objects.requireNonNull(collection, "collection is null");
         acceptFunctionColumns(
-                catalog, schemaPattern, functionNamePattern, columnNamePattern,
-                collection::add
+                catalog,
+                schemaPattern,
+                functionNamePattern,
+                columnNamePattern,
+                v -> {
+                    final var changed = collection.add(v);
+                    assert changed : "duplicate function column: " + v;
+                }
         );
         return collection;
     }
@@ -912,7 +963,10 @@ public class Context {
                 catalog,
                 schema,
                 table,
-                collection::add
+                v -> {
+                    final var changed = collection.add(v);
+                    assert changed : "duplicate imported key: " + v;
+                }
         );
         return collection;
     }
@@ -976,8 +1030,15 @@ public class Context {
             throws SQLException {
         Objects.requireNonNull(collection, "collection is null");
         acceptIndexInfo(
-                catalog, schema, table, unique, approximate,
-                collection::add
+                catalog,
+                schema,
+                table,
+                unique,
+                approximate,
+                v -> {
+                    final var changed = collection.add(v);
+                    assert changed : "duplicate index info: " + v;
+                }
         );
         return collection;
     }
@@ -1042,8 +1103,13 @@ public class Context {
             throws SQLException {
         Objects.requireNonNull(collection, "collection is null");
         acceptPrimaryKeys(
-                catalog, schema, table,
-                collection::add
+                catalog,
+                schema,
+                table,
+                v -> {
+                    final var changed = collection.add(v);
+                    assert changed : "duplicate primary key: " + v;
+                }
         );
         return collection;
     }
@@ -1104,8 +1170,14 @@ public class Context {
             throws SQLException {
         Objects.requireNonNull(collection, "collection is null");
         acceptProcedureColumns(
-                catalog, schemaPattern, procedureNamePattern, columnNamePattern,
-                collection::add
+                catalog,
+                schemaPattern,
+                procedureNamePattern,
+                columnNamePattern,
+                v -> {
+                    final var changed = collection.add(v);
+                    assert changed : "duplicate procedure column: " + v;
+                }
         );
         return collection;
     }
@@ -1176,8 +1248,13 @@ public class Context {
             throws SQLException {
         Objects.requireNonNull(collection, "collection is null");
         acceptProcedures(
-                catalog, schemaPattern, procedureNamePattern,
-                collection::add
+                catalog,
+                schemaPattern,
+                procedureNamePattern,
+                v -> {
+                    final var changed = collection.add(v);
+                    assert changed : "duplicate procedure: " + v;
+                }
         );
         return collection;
     }
@@ -1267,8 +1344,14 @@ public class Context {
             throws SQLException {
         Objects.requireNonNull(collection, "collection is null");
         acceptPseudoColumns(
-                catalog, schemaPattern, tableNamePattern, columnNamePattern,
-                collection::add
+                catalog,
+                schemaPattern,
+                tableNamePattern,
+                columnNamePattern,
+                v -> {
+                    final var changed = collection.add(v);
+                    assert changed : "duplicate pseudo column: " + v;
+                }
         );
         return collection;
     }
@@ -1328,7 +1411,12 @@ public class Context {
      */
     <T extends Collection<? super Schema>> T addSchemas(final T collection) throws SQLException {
         Objects.requireNonNull(collection, "collection is null");
-        acceptSchemas(collection::add);
+        acceptSchemas(
+                v -> {
+                    final var changed = collection.add(v);
+                    assert changed : "duplicate schema: " + v;
+                }
+        );
         return collection;
     }
 
@@ -1370,8 +1458,12 @@ public class Context {
             throws SQLException {
         Objects.requireNonNull(collection, "collection is null");
         acceptSchemas(
-                catalog, schemaPattern,
-                collection::add
+                catalog,
+                schemaPattern,
+                v -> {
+                    final var changed = collection.add(v);
+                    assert changed : "duplicate schema: " + v;
+                }
         );
         return collection;
     }
@@ -1434,8 +1526,13 @@ public class Context {
             throws SQLException {
         Objects.requireNonNull(collection, "collection is null");
         acceptSuperTables(
-                catalog, schemaPattern, tableNamePattern,
-                collection::add
+                catalog,
+                schemaPattern,
+                tableNamePattern,
+                v -> {
+                    final var changed = collection.add(v);
+                    assert changed : "duplicate super table: " + v;
+                }
         );
         return collection;
     }
@@ -1508,7 +1605,10 @@ public class Context {
                 catalog,
                 schemaPattern,
                 typeNamePattern,
-                collection::add
+                v -> {
+                    final var changed = collection.add(v);
+                    assert changed : "duplicate super type: " + v;
+                }
         );
         return collection;
     }
@@ -1584,7 +1684,10 @@ public class Context {
                 catalog,
                 schemaPattern,
                 tableNamePattern,
-                collection::add
+                v -> {
+                    final var changed = collection.add(v);
+                    assert changed : "duplicate table privilege: " + v;
+                }
         );
         return collection;
     }
@@ -1662,7 +1765,10 @@ public class Context {
     <C extends Collection<? super TableType>> C addTableTypes(final C collection) throws SQLException {
         Objects.requireNonNull(collection, "collection is null");
         acceptTableTypes(
-                collection::add
+                v -> {
+                    final var changed = collection.add(v);
+                    assert changed : "duplicate table type: " + v;
+                }
         );
         return collection;
     }
@@ -1733,7 +1839,10 @@ public class Context {
                 schemaPattern,
                 tableNamePattern,
                 types,
-                collection::add
+                v -> {
+                    final var changed = collection.add(v);
+                    assert changed : "duplicate table: " + v;
+                }
         );
         return collection;
     }
@@ -1823,7 +1932,10 @@ public class Context {
     <C extends Collection<? super TypeInfo>> C addTypeInfo(final C collection) throws SQLException {
         Objects.requireNonNull(collection, "collection is null");
         acceptTypeInfo(
-                collection::add
+                v -> {
+                    final var changed = collection.add(v);
+                    assert changed : "duplicate type info: " + v;
+                }
         );
         return collection;
     }
@@ -1962,7 +2074,10 @@ public class Context {
                 catalog,
                 schema,
                 table,
-                collection::add
+                v -> {
+                    assert !collection.contains(v);
+                    collection.add(v);
+                }
         );
         return collection;
     }
