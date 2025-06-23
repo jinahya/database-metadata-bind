@@ -49,16 +49,19 @@ public class FunctionColumn
 
     // -----------------------------------------------------------------------------------------------------------------
 
-    static Comparator<FunctionColumn> comparing(final Comparator<? super String> comparator) {
+    static Comparator<FunctionColumn> comparingInSpecifiedOrder(final Comparator<? super String> comparator) {
         return Comparator.comparing(FunctionColumn::getFunctionCat, comparator)
                 .thenComparing(FunctionColumn::getFunctionSchem, comparator)
                 .thenComparing(FunctionColumn::getFunctionName, comparator)
                 .thenComparing(FunctionColumn::getSpecificName, comparator);
     }
 
-    static Comparator<FunctionColumn> comparing(final Context context, final Comparator<? super String> comparator)
+    static Comparator<FunctionColumn> comparingInSpecifiedOrder(final Context context,
+                                                                final Comparator<? super String> comparator)
             throws SQLException {
-        return comparing(ContextUtils.nullPrecedence(context, comparator));
+        return comparingInSpecifiedOrder(
+                ContextUtils.nullPrecedence(context, comparator)
+        );
     }
 
     // -----------------------------------------------------------------------------------------------------------------

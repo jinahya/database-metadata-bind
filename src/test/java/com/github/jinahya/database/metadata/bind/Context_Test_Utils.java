@@ -597,8 +597,8 @@ final class Context_Test_Utils {
         if (true) {
             assertThat(functionColumns).satisfiesAnyOf(
                     l -> assertThat(l).isSortedAccordingTo(
-                            FunctionColumn.comparing(context, String.CASE_INSENSITIVE_ORDER)),
-                    l -> assertThat(l).isSortedAccordingTo(FunctionColumn.comparing(context, Comparator.naturalOrder()))
+                            FunctionColumn.comparingInSpecifiedOrder(context, String.CASE_INSENSITIVE_ORDER)),
+                    l -> assertThat(l).isSortedAccordingTo(FunctionColumn.comparingInSpecifiedOrder(context, Comparator.naturalOrder()))
             );
         }
         for (final var functionColumn : functionColumns) {
@@ -622,9 +622,9 @@ final class Context_Test_Utils {
         if (true) {
             assertThat(importedKeys).satisfiesAnyOf(
                     l -> assertThat(l).isSortedAccordingTo(
-                            ImportedKey.comparing(context, String.CASE_INSENSITIVE_ORDER)),
+                            ImportedKey.comparingInSpecifiedOrder(context, String.CASE_INSENSITIVE_ORDER)),
                     l -> assertThat(l).isSortedAccordingTo(
-                            ImportedKey.comparing(context, Comparator.naturalOrder()))
+                            ImportedKey.comparingInSpecifiedOrder(context, Comparator.naturalOrder()))
             );
         }
         for (final var importedKey : importedKeys) {
@@ -805,8 +805,8 @@ final class Context_Test_Utils {
             !databaseProductName(context).equals(DatabaseProductNames.MICROSOFT_SQL_SERVER)) {
             // https://jira.mariadb.org/browse/CONJ-1156
             assertThat(tables).satisfiesAnyOf(
-                    l -> assertThat(l).isSortedAccordingTo(Table.comparing(context, String.CASE_INSENSITIVE_ORDER)),
-                    l -> assertThat(l).isSortedAccordingTo(Table.comparing(context, Comparator.naturalOrder()))
+                    l -> assertThat(l).isSortedAccordingTo(Table.comparingInSpecifiedOrder(context, String.CASE_INSENSITIVE_ORDER)),
+                    l -> assertThat(l).isSortedAccordingTo(Table.comparingInSpecifiedOrder(context, Comparator.naturalOrder()))
             );
         }
         for (final var table : tables) {

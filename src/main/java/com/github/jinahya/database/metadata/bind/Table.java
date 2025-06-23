@@ -55,13 +55,20 @@ public class Table
     private static final long serialVersionUID = 6590036695540141125L;
 
     // -----------------------------------------------------------------------------------------------------------------
-    static Comparator<Table> comparing(final Context context, final Comparator<? super String> comparator)
-            throws SQLException {
+    static Comparator<Table> comparingInSpecifiedOrder(final Comparator<? super String> comparator) {
         return Comparator
-                .comparing(Table::getTableType, ContextUtils.nullPrecedence(context, comparator))
-                .thenComparing(Table::getTableCat, ContextUtils.nullPrecedence(context, comparator))
-                .thenComparing(Table::getTableSchem, ContextUtils.nullPrecedence(context, comparator))
+                .comparing(Table::getTableType, comparator)
+                .thenComparing(Table::getTableCat, comparator)
+                .thenComparing(Table::getTableSchem, comparator)
                 .thenComparing(Table::getTableName, comparator);
+    }
+
+    static Comparator<Table> comparingInSpecifiedOrder(final Context context,
+                                                       final Comparator<? super String> comparator)
+            throws SQLException {
+        return comparingInSpecifiedOrder(
+                ContextUtils.nullPrecedence(context, comparator)
+        );
     }
 
     // ------------------------------------------------------------------------------------------------------- TABLE_CAT

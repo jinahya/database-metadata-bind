@@ -20,18 +20,13 @@ package com.github.jinahya.database.metadata.bind;
  * #L%
  */
 
-import com.google.common.reflect.ClassPath;
 import lombok.extern.slf4j.Slf4j;
-import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
-import java.io.IOException;
-import java.lang.reflect.Field;
 import java.lang.reflect.Modifier;
 import java.sql.DatabaseMetaData;
 import java.sql.ResultSet;
-import java.util.HashMap;
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -55,7 +50,7 @@ class ContextTest {
             if (method.getDeclaringClass() != DatabaseMetaData.class) {
                 continue;
             }
-            if (method.getParameterCount() == 0) {
+            if (false && method.getParameterCount() == 0) {
                 continue;
             }
             if (!ResultSet.class.isAssignableFrom(method.getReturnType())) {
@@ -72,55 +67,5 @@ class ContextTest {
                 assertThat(found.getReturnType()).isEqualTo(List.class);
             }
         }
-    }
-
-    @Disabled("field enums shall be removed")
-    @Test
-    void _ShouldBeDefinedAsEnum_AllStaticFieldsDefinedInDatabaseMetaDataClass()
-            throws IOException, IllegalAccessException {
-        final var fieldValues = new HashMap<Field, Object>();
-        for (final var field : DatabaseMetaData.class.getFields()) {
-            final int modifiers = field.getModifiers();
-            if (!Modifier.isStatic(modifiers)) {
-                continue;
-            }
-            if (!Modifier.isFinal(modifiers)) {
-                continue;
-            }
-            if (field.getName().startsWith("sqlState")) {
-                continue;
-            }
-            fieldValues.put(field, field.get(null));
-        }
-//        log.debug("fieldValues: {}", fieldValues);
-        ClassPath.from(getClass().getClassLoader()).getAllClasses()
-                .stream()
-                .filter(ci -> {
-                    return !"module-info".equals(ci.getName());
-                })
-                .filter(ci -> {
-                    return ci.getName().startsWith(getClass().getPackageName());
-                })
-                .map(ClassPath.ClassInfo::load)
-                .filter(Class::isEnum)
-                .filter(c -> !c.getName().equals("module-info"))
-                .forEach(c -> {
-                    log.debug("enum class: {}", c);
-                    for (final var constant : c.getEnumConstants()) {
-//                        log.debug("constant: {}", constant);
-                        final var name = ((Enum<?>) constant).name().replaceAll("_", "");
-                        for (final var i = fieldValues.keySet().iterator(); i.hasNext(); ) {
-                            final var key = i.next().getName();
-                            if (key.equalsIgnoreCase(name)) {
-//                                log.debug("key: {}", key);
-                                i.remove();
-                            }
-                        }
-                    }
-                });
-        fieldValues.forEach((f, v) -> {
-            log.warn("field: {}, value: {}", f.getName(), v);
-        });
-        assertThat(fieldValues).isEmpty();
     }
 }
