@@ -553,7 +553,16 @@ public class Context {
                  final String columnNamePattern, final C collection)
             throws SQLException {
         Objects.requireNonNull(collection, "collection is null");
-        acceptColumns(catalog, schemaPattern, tableNamePattern, columnNamePattern, collection::add);
+        acceptColumns(
+                catalog,
+                schemaPattern,
+                tableNamePattern,
+                columnNamePattern,
+                v -> {
+                    final var changed = collection.add(v);
+                    assert changed : "duplicate column: " + v;
+                }
+        );
         return collection;
     }
 

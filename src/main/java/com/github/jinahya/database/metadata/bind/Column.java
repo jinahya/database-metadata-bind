@@ -33,6 +33,7 @@ import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Objects;
+import java.util.Optional;
 
 /**
  * A class for binding results of the {@link DatabaseMetaData#getColumns(String, String, String, String)} method.
@@ -60,7 +61,9 @@ public class Column
     static Comparator<Column> comparingInSpecifiedOrder(final Context context,
                                                         final Comparator<? super String> comparator)
             throws SQLException {
-        return comparingInSpecifiedOrder(ContextUtils.nullPrecedence(context, comparator));
+        return comparingInSpecifiedOrder(
+                ContextUtils.nullPrecedence(context, comparator)
+        );
     }
 
     // -----------------------------------------------------------------------------------------------------------------
@@ -165,6 +168,48 @@ public class Column
                ",isAutoincrement=" + isAutoincrement +
                ",isGeneratedcolumn=" + isGeneratedcolumn +
                '}';
+    }
+
+    private String getTableCatEffective() {
+        return Optional.ofNullable(getTableCat())
+                .map(String::strip)
+                .filter(v -> !v.isBlank())
+                .map(String::toUpperCase)
+                .orElse(null);
+    }
+
+    private String getTableSchemEffective() {
+        return Optional.ofNullable(getTableSchem())
+                .map(String::strip)
+                .filter(v -> !v.isBlank())
+                .map(String::toUpperCase)
+                .orElse(null);
+    }
+
+    @Override
+    public boolean equals(final Object obj) {
+        if (obj == null || getClass() != obj.getClass()) {
+            return false;
+        }
+        if (!super.equals(obj)) {
+            return false;
+        }
+        final var that = (Column) obj;
+        return Objects.equals(getTableCatEffective(), that.getTableCatEffective()) &&
+               Objects.equals(getTableSchemEffective(), that.getTableSchemEffective()) &&
+               Objects.equals(tableName, that.tableName) &&
+               Objects.equals(columnName, that.columnName);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(
+                super.hashCode(),
+                getTableCatEffective(),
+                getTableSchemEffective(),
+                tableName,
+                columnName
+        );
     }
 
     // ------------------------------------------------------------------------------------------------- Bean-Validation
@@ -445,15 +490,12 @@ public class Column
     @Nullable
     @_NullableBySpecification
     @_ColumnLabel(COLUMN_LABEL_TABLE_SCHEM)
-
     private String tableSchem;
 
     @_ColumnLabel(COLUMN_LABEL_TABLE_NAME)
-
     private String tableName;
 
     @_ColumnLabel(COLUMN_LABEL_COLUMN_NAME)
-
     private String columnName;
 
     // -----------------------------------------------------------------------------------------------------------------

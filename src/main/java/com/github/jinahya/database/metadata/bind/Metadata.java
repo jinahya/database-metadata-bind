@@ -21,7 +21,7 @@ class Metadata
     private static final Logger logger = Logger.getLogger(MethodHandles.lookup().lookupClass().getName());
 
     // ------------------------------------------------------------------------------------------ STATIC_FACTORY_METHODS
-    public static Metadata newInstance(final Context context) {
+    static Metadata newInstance(final Context context) {
         final Metadata instance = new Metadata();
         try {
             context.addCatalogs(instance.getCatalogs());
@@ -141,7 +141,7 @@ class Metadata
         this.columns = columns;
     }
 
-    // -----------------------------------------------------------------------------------------------------------------
+    // ------------------------------------------------------------------------------------------------ columnPrivileges
 
     @Nonnull
     public List<ColumnPrivilege> getColumnPrivileges() {

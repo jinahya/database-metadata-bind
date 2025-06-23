@@ -35,7 +35,6 @@ import java.util.Comparator;
  * @author Jin Kwon &lt;jinahya_at_gmail.com&gt;
  * @see Context#getTablePrivileges(String, String, String)
  */
-@_ChildOf(Schema.class)
 @_ChildOf(Catalog.class)
 @Setter
 @Getter

@@ -44,6 +44,7 @@ import java.util.Optional;
 @_ChildOf(Catalog.class)
 @_ChildOf(Schema.class)
 @_ParentOf(Column.class)
+@_ParentOf(ColumnPrivilege.class)
 @_ParentOf(IndexInfo.class)
 @_ParentOf(PseudoColumn.class)
 @_ParentOf(VersionColumn.class)
@@ -480,6 +481,20 @@ public class Table
     }
 
     private List<@Valid @NotNull Column> columns;
+
+    // ------------------------------------------------------------------------------------------------ columnPrivileges
+    List<ColumnPrivilege> getColumnPrivileges() {
+        if (columnPrivileges == null) {
+            columnPrivileges = new ArrayList<>();
+        }
+        return columnPrivileges;
+    }
+
+    void setColumnPrivileges(final List<ColumnPrivilege> columnPrivileges) {
+        this.columnPrivileges = columnPrivileges;
+    }
+
+    private List<@Valid @NotNull ColumnPrivilege> columnPrivileges;
 
     // -----------------------------------------------------------------------------------------------------------------
     List<PseudoColumn> getPseudoColumns() {
