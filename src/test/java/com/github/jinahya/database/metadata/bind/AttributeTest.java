@@ -34,7 +34,7 @@ class AttributeTest
         final Attribute instance = super.newTypeInstance();
         instance.attrName = "";
         instance.typeName = "";
-        instance.ordinalPosition = 1;
+        instance.setOrdinalPosition(1);
         return instance;
     }
 }

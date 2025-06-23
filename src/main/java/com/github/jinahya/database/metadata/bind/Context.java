@@ -310,7 +310,10 @@ public class Context {
                 schemaPattern,
                 typeNamePattern,
                 attributeNamePattern,
-                collection::add
+                v -> {
+                    final var changed = collection.add(v);
+                    assert changed : "duplicate attribute: " + v;
+                }
         );
         return collection;
     }

@@ -22,12 +22,14 @@ package com.github.jinahya.database.metadata.bind;
 
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
+import jakarta.validation.constraints.Positive;
 import lombok.EqualsAndHashCode;
 
 import java.sql.DatabaseMetaData;
 import java.sql.SQLException;
 import java.util.Comparator;
 import java.util.Objects;
+import java.util.Optional;
 
 /**
  * A class for binding results of the
@@ -142,6 +144,48 @@ public class Attribute
                ",scopeTable=" + scopeTable +
                ",sourceDataType=" + sourceDataType +
                '}';
+    }
+
+    private String getTypeCatEffective() {
+        return Optional.ofNullable(getTypeCat())
+                .map(String::strip)
+                .filter(v -> !v.isBlank())
+                .map(String::toUpperCase)
+                .orElse(null);
+    }
+
+    private String getTypeSchemEffective() {
+        return Optional.ofNullable(getTypeSchem())
+                .map(String::strip)
+                .filter(v -> !v.isBlank())
+                .map(String::toUpperCase)
+                .orElse(null);
+    }
+
+    @Override
+    public boolean equals(final Object obj) {
+        if (obj == null || getClass() != obj.getClass()) {
+            return false;
+        }
+        if (!super.equals(obj)) {
+            return false;
+        }
+        final var that = (Attribute) obj;
+        return Objects.equals(getTypeCatEffective(), that.getTypeCatEffective())
+               && Objects.equals(getTypeSchemEffective(), that.getTypeSchemEffective())
+               && Objects.equals(typeName, that.typeName)
+               && Objects.equals(attrName, that.attrName);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(
+                super.hashCode(),
+                getTypeCatEffective(),
+                getTypeSchemEffective(),
+                typeName,
+                attrName
+        );
     }
 
     // -------------------------------------------------------------------------------------------------------- tableCat
@@ -435,8 +479,9 @@ public class Attribute
     @_ColumnLabel("CHAR_OCTET_LENGTH")
     private Integer charOctetLength;
 
+    @Positive
     @_ColumnLabel("ORDINAL_POSITION")
-    Integer ordinalPosition;
+    private Integer ordinalPosition;
 
     @_ColumnLabel(COLUMN_LABEL_IS_NULLABLE)
     private String isNullable;

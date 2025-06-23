@@ -29,7 +29,9 @@ import lombok.ToString;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Comparator;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 /**
@@ -44,6 +46,7 @@ import java.util.Optional;
 @_ChildOf(Catalog.class)
 @_ChildOf(Schema.class)
 @_ParentOf(Column.class)
+@_ParentOf(BestRowIdentifier.class)
 @_ParentOf(ColumnPrivilege.class)
 @_ParentOf(IndexInfo.class)
 @_ParentOf(PseudoColumn.class)
@@ -161,6 +164,20 @@ public class Table
                ",typeCatalog_=" + typeCatalog_ +
                ",typeSchema_=" + typeSchema_ +
                '}';
+    }
+
+    public String getTableCatEffective() {
+        return Optional.ofNullable(getTableCat())
+                .map(String::strip)
+                .map(String::toUpperCase)
+                .orElse("");
+    }
+
+    public String getTableSchemEffective() {
+        return Optional.ofNullable(getTableSchem())
+                .map(String::strip)
+                .map(String::toUpperCase)
+                .orElse("");
     }
 
     // -------------------------------------------------------------------------------------------------------- tableCat
@@ -411,8 +428,38 @@ public class Table
         );
     }
 
-    // -----------------------------------------------------------------------------------------------------------------
+    // ---------------------------------------------------------------------------------------------- bestRowIdentifiers
+    Map<Integer, Map<Boolean, List<@Valid @NotNull BestRowIdentifier>>> getBestRowIdentifiers() {
+        if (bestRowIdentifiers == null) {
+            bestRowIdentifiers = new HashMap<>();
+        }
+        return bestRowIdentifiers;
+    }
 
+    List<@Valid @NotNull BestRowIdentifier> getBestRowIdentifiers(final Context context, final String catalog,
+                                                                  final String schema, final String table,
+                                                                  final int scope, final boolean nullable)
+            throws SQLException {
+        context.acceptBestRowIdentifier(
+                catalog,
+                schema,
+                table,
+                scope,
+                nullable,
+                v -> {
+                    getBestRowIdentifiers()
+                            .computeIfAbsent(scope, k -> new HashMap<>())
+                            .computeIfAbsent(nullable, k -> new ArrayList<>())
+                            .add(v);
+                }
+        );
+        return getBestRowIdentifiers().get(scope).get(nullable);
+    }
+
+    private Map<@NotNull Integer, @NotNull Map<@NotNull Boolean, List<@Valid @NotNull BestRowIdentifier>>>
+            bestRowIdentifiers;
+
+    // ----------------------------------------------------------------------------------------------------- primaryKeys
     List<PrimaryKey> getPrimaryKeys() {
         if (primaryKeys == null) {
             primaryKeys = new ArrayList<>();
