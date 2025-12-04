@@ -23,8 +23,6 @@ package com.github.jinahya.database.metadata.bind;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
 import lombok.EqualsAndHashCode;
-import lombok.Getter;
-import lombok.Setter;
 import lombok.ToString;
 
 import java.sql.DatabaseMetaData;
@@ -39,8 +37,6 @@ import java.util.Optional;
  */
 
 @_ChildOf(Table.class)
-@Setter
-@Getter
 @EqualsAndHashCode(callSuper = true)
 @ToString(callSuper = true)
 public class PseudoColumn
