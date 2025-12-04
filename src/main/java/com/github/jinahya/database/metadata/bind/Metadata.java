@@ -24,23 +24,23 @@ class Metadata
     static Metadata newInstance(final Context context) {
         final Metadata instance = new Metadata();
         try {
-            context.addCatalogs(instance.getCatalogs());
+            context.getCatalogsAndAddAll(instance.getCatalogs());
         } catch (final Exception e) {
             logger.log(Level.SEVERE, "failed to collect catalogs", e);
         }
         try {
-            context.addSchemas(instance.getSchemas());
+            context.getSchemasAndAddAll(instance.getSchemas());
         } catch (final Exception e) {
             logger.log(Level.SEVERE, "failed to collect catalogs", e);
         }
         try {
-            context.addTables(null, null, "%", null, instance.getTables());
+            context.getTablesAndAddAll(null, null, "%", null, instance.getTables());
         } catch (final Exception e) {
             logger.log(Level.SEVERE, "failed to collect tables", e);
         }
         for (final var table : instance.getTables()) {
             try {
-                context.addPrimaryKeys(
+                context.getPrimaryKeysAndAddAll(
                         Optional.ofNullable(table.getTableCat()).orElse(""),
                         Optional.ofNullable(table.getTableSchem()).orElse(""),
                         table.getTableName(),
@@ -52,7 +52,7 @@ class Metadata
         }
         for (final var table : instance.getTables()) {
             try {
-                context.addColumnPrivileges(
+                context.getColumnPrivilegesAndAddAll(
                         Optional.ofNullable(table.getTableCat()).orElse(""),
                         Optional.ofNullable(table.getTableSchem()).orElse(""),
                         table.getTableName(),
@@ -64,7 +64,7 @@ class Metadata
             }
         }
         try {
-            context.addColumns(null, null, "%", "%", instance.getColumns());
+            context.getColumnsAndAddAll(null, null, "%", "%", instance.getColumns());
         } catch (final Exception e) {
             logger.log(Level.SEVERE, "failed to collect columns", e);
         }

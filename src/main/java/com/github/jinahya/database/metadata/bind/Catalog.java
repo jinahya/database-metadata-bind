@@ -31,7 +31,7 @@ import java.util.function.Consumer;
  * A class for binding results of the {@link java.sql.DatabaseMetaData#getCatalogs()} method.
  *
  * @author Jin Kwon &lt;jinahya_at_gmail.com&gt;
- * @see Context#acceptCatalogs(Consumer)
+ * @see Context#getCatalogsAndAcceptEach(Consumer)
  */
 
 @_ParentOf(Schema.class)

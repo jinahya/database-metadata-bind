@@ -199,7 +199,7 @@ public class UDT
         Objects.requireNonNull(context, "context is null");
         final var collection = new ArrayList<UDT>();
         for (final var superType : getSuperTypes(context)) {
-            context.addUDTs(
+            context.getUDTsAndAddAll(
                     superType.getTypeCat(),
                     superType.getTypeSchem(),
                     superType.getTypeName(),

@@ -138,6 +138,24 @@ abstract class Memory_$_Test {
     }
 
     @Test
+    void catalogs() throws SQLException, IOException {
+        try (var connection = connect()) {
+            final var metaData = connection.getMetaData();
+            final var context = new Context(metaData);
+            final List<Catalog> catalogs;
+            try {
+                catalogs = context.getCatalogs();
+            } catch (final SQLFeatureNotSupportedException sqlfnse) {
+                sqlfnse.printStackTrace();
+                return;
+            }
+            json(metaData, "catalogs", catalogs);
+            for (var catalog : catalogs) {
+            }
+        }
+    }
+
+    @Test
     void columns() throws SQLException, IOException {
         try (var connection = connect()) {
             final var metaData = connection.getMetaData();
@@ -171,6 +189,24 @@ abstract class Memory_$_Test {
                 json(metaData, "functionColumns", functionColumns);
             } catch (final SQLFeatureNotSupportedException sqlfnse) {
                 log.warn("not supported", sqlfnse);
+            }
+        }
+    }
+
+    @Test
+    void schemas() throws SQLException, IOException {
+        try (var connection = connect()) {
+            final var metaData = connection.getMetaData();
+            final var context = new Context(metaData);
+            final List<Schema> schemas;
+            try {
+                schemas = context.getSchemas((String) null, null);
+            } catch (final SQLFeatureNotSupportedException sqlfnse) {
+                sqlfnse.printStackTrace();
+                return;
+            }
+            json(metaData, "schemas", schemas);
+            for (var schema : schemas) {
             }
         }
     }

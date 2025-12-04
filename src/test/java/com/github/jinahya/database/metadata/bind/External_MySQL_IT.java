@@ -67,7 +67,7 @@ class External_MySQL_IT {
             try (final var stream = new FileOutputStream("columns.json")) {
                 try (var generator = factory.createGenerator(stream)) {
                     generator.writeStartArray();
-                    context.acceptColumns(null, null, "%", "%", c -> {
+                    context.getColumnsAndAcceptEach(null, null, "%", "%", c -> {
                         log.debug("column: {}", c);
                         try {
                             generator.writeObject(c);
@@ -109,7 +109,7 @@ class External_MySQL_IT {
                         "_imported_keys.json")) {
                     try (var generator = factory.createGenerator(stream)) {
                         generator.writeStartArray();
-                        context.acceptImportedKeys(
+                        context.getImportedKeysAndAcceptEach(
                                 table.getTableCat(),
                                 table.getTableSchem(),
                                 table.getTableName(),
@@ -156,7 +156,7 @@ class External_MySQL_IT {
                         "_exported_keys.json")) {
                     try (var generator = factory.createGenerator(stream)) {
                         generator.writeStartArray();
-                        context.acceptExportedKeys(
+                        context.getExportedKeysAndAcceptEach(
                                 table.getTableCat(),
                                 table.getTableSchem(),
                                 table.getTableName(),
@@ -209,7 +209,7 @@ class External_MySQL_IT {
                     generator.writeStartArray();
                     for (final var t1 : tableList) {
                         for (final var t2 : tableList) {
-                            context.acceptCrossReference(
+                            context.getCrossReferenceAndAcceptEach(
                                     t1.getTableCat(), t1.getTableCat(), t1.getTableName(),
                                     t2.getTableCat(), t2.getTableSchem(), t2.getTableName(), cr -> {
 //                                        log.debug("crossReference: {}", cr);

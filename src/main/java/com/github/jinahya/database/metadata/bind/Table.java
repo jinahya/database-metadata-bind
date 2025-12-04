@@ -440,7 +440,7 @@ public class Table
                                                                   final String schema, final String table,
                                                                   final int scope, final boolean nullable)
             throws SQLException {
-        context.acceptBestRowIdentifier(
+        context.getBestRowIdentifierAndAcceptEach(
                 catalog,
                 schema,
                 table,
