@@ -169,32 +169,142 @@ public class CrossReference
     // ------------------------------------------------------------------------------------------------ java.lang.Object
 
     // ------------------------------------------------------------------------------------------------------ pkTableCat
+    @Nullable
+    public String getPktableCat() {
+        return pktableCat;
+    }
+
+    void setPktableCat(@Nullable final String pktableCat) {
+        this.pktableCat = pktableCat;
+    }
 
     // ---------------------------------------------------------------------------------------------------- pkTableSchem
+    @Nullable
+    public String getPktableSchem() {
+        return pktableSchem;
+    }
+
+    void setPktableSchem(@Nullable final String pktableSchem) {
+        this.pktableSchem = pktableSchem;
+    }
 
     // ----------------------------------------------------------------------------------------------------- pkTableName
+    public String getPktableName() {
+        return pktableName;
+    }
+
+    void setPktableName(final String pktableName) {
+        this.pktableName = pktableName;
+    }
 
     // ---------------------------------------------------------------------------------------------------- pkColumnName
+    public String getPkcolumnName() {
+        return pkcolumnName;
+    }
+
+    void setPkcolumnName(final String pkcolumnName) {
+        this.pkcolumnName = pkcolumnName;
+    }
 
     // ------------------------------------------------------------------------------------------------------ fktableCat
+    @Nullable
+    public String getFktableCat() {
+        return fktableCat;
+    }
+
+    void setFktableCat(@Nullable final String fktableCat) {
+        this.fktableCat = fktableCat;
+    }
 
     // ---------------------------------------------------------------------------------------------------- fktableSchem
+    @Nullable
+    public String getFktableSchem() {
+        return fktableSchem;
+    }
+
+    void setFktableSchem(@Nullable final String fktableSchem) {
+        this.fktableSchem = fktableSchem;
+    }
 
     // ----------------------------------------------------------------------------------------------------- fkTableName
+    public String getFktableName() {
+        return fktableName;
+    }
+
+    void setFktableName(final String fktableName) {
+        this.fktableName = fktableName;
+    }
 
     // ---------------------------------------------------------------------------------------------------- fkColumnName
+    public String getFkcolumnName() {
+        return fkcolumnName;
+    }
+
+    void setFkcolumnName(final String fkcolumnName) {
+        this.fkcolumnName = fkcolumnName;
+    }
 
     // ---------------------------------------------------------------------------------------------------------- keySeq
+    public Integer getKeySeq() {
+        return keySeq;
+    }
+
+    public void setKeySeq(final Integer keySeq) {
+        this.keySeq = keySeq;
+    }
 
     // ------------------------------------------------------------------------------------------------------ updateRule
+    public Integer getUpdateRule() {
+        return updateRule;
+    }
+
+    void setUpdateRule(final Integer updateRule) {
+        this.updateRule = updateRule;
+    }
 
     // ------------------------------------------------------------------------------------------------------ deleteRule
+    public Integer getDeleteRule() {
+        return deleteRule;
+    }
+
+    void setDeleteRule(final Integer deleteRule) {
+        this.deleteRule = deleteRule;
+    }
 
     // ---------------------------------------------------------------------------------------------------------- fkName
+    @Nullable
+    public String getFkName() {
+        return fkName;
+    }
+
+    public void setFkName(@Nullable final String fkName) {
+        this.fkName = fkName;
+    }
 
     // ---------------------------------------------------------------------------------------------------------- pkName
+    @Nullable
+    public String getPkName() {
+        return pkName;
+    }
+
+    public void setPkName(@Nullable final String pkName) {
+        this.pkName = pkName;
+    }
 
     // --------------------------------------------------------------------------------------------------- deferrability
+
+    /**
+     * Returns the value of {@value #COLUMN_LABEL_DEFERRABILITY} column.
+     *
+     * @return the value of the {@value #COLUMN_LABEL_DEFERRABILITY} column.
+     */
+    public Integer getDeferrability() {
+        return deferrability;
+    }
+
+    void setDeferrability(Integer deferrability) {
+        this.deferrability = deferrability;
+    }
 
     // -----------------------------------------------------------------------------------------------------------------
     @Nullable

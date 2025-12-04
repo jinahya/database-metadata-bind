@@ -29,6 +29,7 @@ import org.junit.jupiter.api.condition.EnabledIfSystemProperty;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.sql.DriverManager;
+import java.util.stream.Collectors;
 
 /**
  * A test class for binding a remote database.
@@ -64,16 +65,164 @@ class External_MySQL_IT {
             final var mapper = new ObjectMapper();
             final var factory = mapper.getFactory();
             try (final var stream = new FileOutputStream("columns.json")) {
-                final var generator = factory.createGenerator(stream);
-                generator.writeStartArray();
-                context.acceptColumns(null, null, "%", "%", c -> {
-                    try {
-                        generator.writeObject(c);
-                    } catch (final IOException ioe) {
-                        throw new RuntimeException(ioe);
+                try (var generator = factory.createGenerator(stream)) {
+                    generator.writeStartArray();
+                    context.acceptColumns(null, null, "%", "%", c -> {
+                        log.debug("column: {}", c);
+                        try {
+                            generator.writeObject(c);
+                        } catch (final IOException ioe) {
+                            throw new RuntimeException(ioe);
+                        }
+                    });
+                    generator.writeEndArray();
+                    generator.flush();
+                }
+                stream.flush();
+            }
+        }
+    }
+
+    @Disabled
+    @EnabledIfSystemProperty(named = PROPERTY_NAME_URL, matches = ".+")
+    @EnabledIfSystemProperty(named = PROPERTY_NAME_USER, matches = ".+")
+    @EnabledIfSystemProperty(named = PROPERTY_NAME_PASSWORD, matches = ".+")
+    @Test
+    void importedKeys() throws Exception {
+        final var clazz = Class.forName("com.mysql.cj.jdbc.Driver");
+        log.debug("loaded: {}", clazz);
+        final String url = System.getProperty("url");
+        final String user = System.getProperty("user");
+        final String password = System.getProperty("password");
+        log.info("connecting to {}", url);
+        try (var connection = DriverManager.getConnection(url, user, password)) {
+            log.info("connected: {}", connection);
+            final var context = Context.newInstance(connection);
+            final var tables = context.getTables((String) null, null, "%", null);
+            log.debug("tables.size: {}", tables.size());
+            final var mapper = new ObjectMapper();
+            final var factory = mapper.getFactory();
+            for (final var table : tables) {
+                try (final var stream = new FileOutputStream(
+                        String.valueOf(table.getTableCat()) + '_' + String.valueOf(table.getTableSchem()) + '_' +
+                        table.getTableName() +
+                        "_imported_keys.json")) {
+                    try (var generator = factory.createGenerator(stream)) {
+                        generator.writeStartArray();
+                        context.acceptImportedKeys(
+                                table.getTableCat(),
+                                table.getTableSchem(),
+                                table.getTableName(),
+                                ik -> {
+                                    log.debug("importedKey: {}", ik);
+                                    try {
+                                        generator.writeObject(ik);
+                                    } catch (final IOException ioe) {
+                                        throw new RuntimeException(ioe);
+                                    }
+                                });
+                        generator.writeEndArray();
+                        generator.flush();
                     }
-                });
-                generator.writeEndArray();
+                    stream.flush();
+                }
+            }
+        }
+    }
+
+    @Disabled
+    @EnabledIfSystemProperty(named = PROPERTY_NAME_URL, matches = ".+")
+    @EnabledIfSystemProperty(named = PROPERTY_NAME_USER, matches = ".+")
+    @EnabledIfSystemProperty(named = PROPERTY_NAME_PASSWORD, matches = ".+")
+    @Test
+    void exportedKeys() throws Exception {
+        final var clazz = Class.forName("com.mysql.cj.jdbc.Driver");
+        log.debug("loaded: {}", clazz);
+        final String url = System.getProperty("url");
+        final String user = System.getProperty("user");
+        final String password = System.getProperty("password");
+        log.info("connecting to {}", url);
+        try (var connection = DriverManager.getConnection(url, user, password)) {
+            log.info("connected: {}", connection);
+            final var context = Context.newInstance(connection);
+            final var tables = context.getTables((String) null, null, "%", null);
+            log.debug("tables.size: {}", tables.size());
+            final var mapper = new ObjectMapper();
+            final var factory = mapper.getFactory();
+            for (final var table : tables) {
+                try (final var stream = new FileOutputStream(
+                        String.valueOf(table.getTableCat()) + '_' + String.valueOf(table.getTableSchem()) + '_' +
+                        table.getTableName() +
+                        "_exported_keys.json")) {
+                    try (var generator = factory.createGenerator(stream)) {
+                        generator.writeStartArray();
+                        context.acceptExportedKeys(
+                                table.getTableCat(),
+                                table.getTableSchem(),
+                                table.getTableName(),
+                                ek -> {
+                                    log.debug("exportedKey: {}", ek);
+                                    try {
+                                        generator.writeObject(ek);
+                                    } catch (final IOException ioe) {
+                                        throw new RuntimeException(ioe);
+                                    }
+                                });
+                        generator.writeEndArray();
+                        generator.flush();
+                    }
+                    stream.flush();
+                }
+            }
+        }
+    }
+
+    @Disabled
+    @EnabledIfSystemProperty(named = PROPERTY_NAME_URL, matches = ".+")
+    @EnabledIfSystemProperty(named = PROPERTY_NAME_USER, matches = ".+")
+    @EnabledIfSystemProperty(named = PROPERTY_NAME_PASSWORD, matches = ".+")
+    @Test
+    void crossReferences() throws Exception {
+        final var clazz = Class.forName("com.mysql.cj.jdbc.Driver");
+        log.debug("loaded: {}", clazz);
+        final String url = System.getProperty("url");
+        final String user = System.getProperty("user");
+        final String password = System.getProperty("password");
+        log.info("connecting to {}", url);
+        try (var connection = DriverManager.getConnection(url, user, password)) {
+            log.info("connected: {}", connection);
+            final var context = Context.newInstance(connection);
+            final var schemaIdsAndTableLists =
+                    context.getTables((String) null, null, "%", null).stream()
+                            .collect(Collectors.groupingBy(t -> SchemaId.of(t.getTableSchem(), t.getTableCat())));
+            final var mapper = new ObjectMapper();
+            final var factory = mapper.getFactory();
+            for (final var entry : schemaIdsAndTableLists.entrySet()) {
+                final var schemaId = entry.getKey();
+                log.info("schemaId: {}", schemaId);
+                final var tableList = entry.getValue();
+                log.info("tableList.size: {}", tableList.size());
+                try (final var stream = new FileOutputStream(
+                        String.valueOf(schemaId.getTableCatalog()) + '_' + String.valueOf(schemaId.getTableSchem()) +
+                        "_cross_references.json")) {
+                    final var generator = factory.createGenerator(stream);
+                    generator.writeStartArray();
+                    for (final var t1 : tableList) {
+                        for (final var t2 : tableList) {
+                            context.acceptCrossReference(
+                                    t1.getTableCat(), t1.getTableCat(), t1.getTableName(),
+                                    t2.getTableCat(), t2.getTableSchem(), t2.getTableName(), cr -> {
+//                                        log.debug("crossReference: {}", cr);
+                                        try {
+                                            generator.writeObject(cr);
+                                        } catch (final IOException ioe) {
+                                            throw new RuntimeException(ioe);
+                                        }
+                                    });
+                        }
+                    }
+                    generator.writeEndArray();
+                }
             }
         }
     }
