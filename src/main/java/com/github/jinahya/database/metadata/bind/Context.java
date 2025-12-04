@@ -28,6 +28,7 @@ import java.beans.BeanInfo;
 import java.beans.IntrospectionException;
 import java.beans.Introspector;
 import java.beans.PropertyDescriptor;
+import java.lang.invoke.MethodHandles;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
@@ -58,6 +59,8 @@ import java.util.stream.Collectors;
  */
 @Log
 public class Context {
+
+    private static final System.Logger logger = System.getLogger(MethodHandles.lookup().lookupClass().getName());
 
     private static final Predicate<Method> READER_PREDICATE = m -> {
         if (m.getDeclaringClass() != DatabaseMetaData.class) {
