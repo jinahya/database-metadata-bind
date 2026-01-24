@@ -36,21 +36,21 @@ import java.util.stream.Collectors;
  *
  * @author Jin Kwon &lt;onacit at gmail.com&gt;
  */
+@Disabled
+@EnabledIfSystemProperty(named = External_MySQL_IT.PROPERTY_NAME_URL, matches = ".+")
+@EnabledIfSystemProperty(named = External_MySQL_IT.PROPERTY_NAME_USER, matches = ".+")
+@EnabledIfSystemProperty(named = External_MySQL_IT.PROPERTY_NAME_PASSWORD, matches = ".+")
 @Slf4j
 class External_MySQL_IT {
 
-    private static final String PROPERTY_NAME_URL = "url";
+    static final String PROPERTY_NAME_URL = "url";
 
-    private static final String PROPERTY_NAME_USER = "user";
+    static final String PROPERTY_NAME_USER = "user";
 
-    private static final String PROPERTY_NAME_PASSWORD = "password";
+    static final String PROPERTY_NAME_PASSWORD = "password";
 
     private static final String PROPERTY_NAME_CATALOG = "catalog";
 
-    @Disabled
-    @EnabledIfSystemProperty(named = PROPERTY_NAME_URL, matches = ".+")
-    @EnabledIfSystemProperty(named = PROPERTY_NAME_USER, matches = ".+")
-    @EnabledIfSystemProperty(named = PROPERTY_NAME_PASSWORD, matches = ".+")
     @Test
     void columns() throws Exception {
         final var clazz = Class.forName("com.mysql.cj.jdbc.Driver");
@@ -83,10 +83,9 @@ class External_MySQL_IT {
         }
     }
 
-    @Disabled
-    @EnabledIfSystemProperty(named = PROPERTY_NAME_URL, matches = ".+")
-    @EnabledIfSystemProperty(named = PROPERTY_NAME_USER, matches = ".+")
-    @EnabledIfSystemProperty(named = PROPERTY_NAME_PASSWORD, matches = ".+")
+    //    @EnabledIfSystemProperty(named = PROPERTY_NAME_URL, matches = ".+")
+//    @EnabledIfSystemProperty(named = PROPERTY_NAME_USER, matches = ".+")
+//    @EnabledIfSystemProperty(named = PROPERTY_NAME_PASSWORD, matches = ".+")
     @Test
     void importedKeys() throws Exception {
         final var clazz = Class.forName("com.mysql.cj.jdbc.Driver");
@@ -130,10 +129,9 @@ class External_MySQL_IT {
         }
     }
 
-    @Disabled
-    @EnabledIfSystemProperty(named = PROPERTY_NAME_URL, matches = ".+")
-    @EnabledIfSystemProperty(named = PROPERTY_NAME_USER, matches = ".+")
-    @EnabledIfSystemProperty(named = PROPERTY_NAME_PASSWORD, matches = ".+")
+    //    @EnabledIfSystemProperty(named = PROPERTY_NAME_URL, matches = ".+")
+//    @EnabledIfSystemProperty(named = PROPERTY_NAME_USER, matches = ".+")
+//    @EnabledIfSystemProperty(named = PROPERTY_NAME_PASSWORD, matches = ".+")
     @Test
     void exportedKeys() throws Exception {
         final var clazz = Class.forName("com.mysql.cj.jdbc.Driver");
@@ -177,10 +175,10 @@ class External_MySQL_IT {
         }
     }
 
-    @Disabled
-    @EnabledIfSystemProperty(named = PROPERTY_NAME_URL, matches = ".+")
-    @EnabledIfSystemProperty(named = PROPERTY_NAME_USER, matches = ".+")
-    @EnabledIfSystemProperty(named = PROPERTY_NAME_PASSWORD, matches = ".+")
+    @org.junit.jupiter.api.Disabled
+//    @EnabledIfSystemProperty(named = PROPERTY_NAME_URL, matches = ".+")
+//    @EnabledIfSystemProperty(named = PROPERTY_NAME_USER, matches = ".+")
+//    @EnabledIfSystemProperty(named = PROPERTY_NAME_PASSWORD, matches = ".+")
     @Test
     void crossReferences() throws Exception {
         final var clazz = Class.forName("com.mysql.cj.jdbc.Driver");

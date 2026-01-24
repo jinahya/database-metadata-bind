@@ -23,8 +23,6 @@ package com.github.jinahya.database.metadata.bind;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
 import lombok.EqualsAndHashCode;
-import lombok.Getter;
-import lombok.Setter;
 import lombok.ToString;
 
 import java.sql.DatabaseMetaData;
@@ -39,8 +37,6 @@ import java.util.Optional;
  */
 
 @_ChildOf(Table.class)
-@Setter
-@Getter
 @EqualsAndHashCode(callSuper = true)
 @ToString(callSuper = true)
 public class PseudoColumn
@@ -128,8 +124,7 @@ public class PseudoColumn
                '}';
     }
 
-    // -----------------------------------------------------------------------------------------------------------------
-
+    // -------------------------------------------------------------------------------------------------------- tableCat
     @Nullable
     public String getTableCat() {
         return tableCat;
@@ -139,6 +134,7 @@ public class PseudoColumn
         this.tableCat = tableCat;
     }
 
+    // ------------------------------------------------------------------------------------------------------ tableSchem
     @Nullable
     public String getTableSchem() {
         return tableSchem;
@@ -148,6 +144,7 @@ public class PseudoColumn
         this.tableSchem = tableSchem;
     }
 
+    // ------------------------------------------------------------------------------------------------------- tableName
     @Nonnull
     public String getTableName() {
         return tableName;
@@ -157,79 +154,88 @@ public class PseudoColumn
         this.tableName = tableName;
     }
 
+    // ------------------------------------------------------------------------------------------------------ columnName
     @Nonnull
     public String getColumnName() {
         return columnName;
     }
 
-    protected void setColumnName(@Nonnull String columnName) {
+    protected void setColumnName(@Nonnull final String columnName) {
         this.columnName = columnName;
     }
 
+    // -------------------------------------------------------------------------------------------------------- dataType
     public Integer getDataType() {
         return dataType;
     }
 
-    protected void setDataType(Integer dataType) {
+    protected void setDataType(final Integer dataType) {
         this.dataType = dataType;
     }
 
+    // ------------------------------------------------------------------------------------------------------ columnSize
     @Nullable
     public Integer getColumnSize() {
         return columnSize;
     }
 
-    protected void setColumnSize(@Nullable Integer columnSize) {
+    protected void setColumnSize(@Nullable final Integer columnSize) {
         this.columnSize = columnSize;
     }
 
+    // --------------------------------------------------------------------------------------------------- decimalDigits
     @Nullable
     public Integer getDecimalDigits() {
         return decimalDigits;
     }
 
-    protected void setDecimalDigits(@Nullable Integer decimalDigits) {
+    protected void setDecimalDigits(@Nullable final Integer decimalDigits) {
         this.decimalDigits = decimalDigits;
     }
 
+    // ---------------------------------------------------------------------------------------------------- numPrecRadix
     public Integer getNumPrecRadix() {
         return numPrecRadix;
     }
 
-    protected void setNumPrecRadix(Integer numPrecRadix) {
+    protected void setNumPrecRadix(final Integer numPrecRadix) {
         this.numPrecRadix = numPrecRadix;
     }
 
+    // ----------------------------------------------------------------------------------------------------- columnUsage
     public String getColumnUsage() {
         return columnUsage;
     }
 
-    protected void setColumnUsage(String columnUsage) {
+    protected void setColumnUsage(final String columnUsage) {
         this.columnUsage = columnUsage;
     }
 
+    // --------------------------------------------------------------------------------------------------------- remarks
     @Nullable
     public String getRemarks() {
         return remarks;
     }
 
-    protected void setRemarks(@Nullable String remarks) {
+    protected void setRemarks(@Nullable final String remarks) {
         this.remarks = remarks;
     }
 
+    // -------------------------------------------------------------------------------------------- characterOctetLength
     public Integer getCharOctetLength() {
         return charOctetLength;
     }
 
-    protected void setCharOctetLength(Integer charOctetLength) {
+    protected void setCharOctetLength(final Integer charOctetLength) {
         this.charOctetLength = charOctetLength;
     }
 
+    // ------------------------------------------------------------------------------------------------------ isNullable
     public String getIsNullable() {
         return isNullable;
     }
 
-    protected void setIsNullable(String isNullable) {
+    protected void setIsNullable(final String isNullable) {
         this.isNullable = isNullable;
     }
 
@@ -248,12 +254,10 @@ public class PseudoColumn
 
     @Nonnull
     @_ColumnLabel(COLUMN_LABEL_TABLE_NAME)
-
     private String tableName;
 
     @Nonnull
     @_ColumnLabel(COLUMN_LABEL_COLUMN_NAME)
-
     private String columnName;
 
     // -----------------------------------------------------------------------------------------------------------------
