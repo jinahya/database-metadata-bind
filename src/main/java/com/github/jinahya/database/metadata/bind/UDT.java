@@ -20,12 +20,11 @@ package com.github.jinahya.database.metadata.bind;
  * #L%
  */
 
-import lombok.EqualsAndHashCode;
-
 import java.sql.DatabaseMetaData;
 import java.sql.SQLException;
 import java.sql.Types;
 import java.util.Comparator;
+import java.util.Objects;
 
 /**
  * A class for binding results of the {@link DatabaseMetaData#getUDTs(String, String, String, int[])} method.
@@ -37,9 +36,30 @@ import java.util.Comparator;
 @_ChildOf(Schema.class)
 @_ParentOf(Attribute.class)
 @_ParentOf(UDT.class)
-@EqualsAndHashCode(callSuper = true)
 public class UDT
         extends AbstractMetadataType {
+
+    @Override
+    public boolean equals(final Object obj) {
+        if (this == obj) {
+            return true;
+        }
+        if (obj == null || getClass() != obj.getClass()) {
+            return false;
+        }
+        if (!super.equals(obj)) {
+            return false;
+        }
+        final var that = (UDT) obj;
+        return Objects.equals(typeCat, that.typeCat) &&
+               Objects.equals(typeSchem, that.typeSchem) &&
+               Objects.equals(typeName, that.typeName);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(super.hashCode(), typeCat, typeSchem, typeName);
+    }
 
     private static final long serialVersionUID = 8665246093405057553L;
 

@@ -20,11 +20,10 @@ package com.github.jinahya.database.metadata.bind;
  * #L%
  */
 
-import lombok.EqualsAndHashCode;
-
 import java.sql.DatabaseMetaData;
 import java.sql.SQLException;
 import java.util.Comparator;
+import java.util.Objects;
 
 /**
  * A class for binding results of the {@link DatabaseMetaData#getClientInfoProperties()} method.
@@ -33,7 +32,6 @@ import java.util.Comparator;
  * @see Context#getClientInfoProperties()
  */
 
-@EqualsAndHashCode(callSuper = true)
 public class ClientInfoProperty
         extends AbstractMetadataType {
 
@@ -101,6 +99,26 @@ public class ClientInfoProperty
                ",defaultValue=" + defaultValue +
                ",description=" + description +
                '}';
+    }
+
+    @Override
+    public boolean equals(final Object obj) {
+        if (this == obj) {
+            return true;
+        }
+        if (obj == null || getClass() != obj.getClass()) {
+            return false;
+        }
+        if (!super.equals(obj)) {
+            return false;
+        }
+        final var that = (ClientInfoProperty) obj;
+        return Objects.equals(name, that.name);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(super.hashCode(), name);
     }
 
     // ------------------------------------------------------------------------------------------------------------ name

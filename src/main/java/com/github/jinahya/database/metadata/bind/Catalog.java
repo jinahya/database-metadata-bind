@@ -37,6 +37,26 @@ import java.util.function.Consumer;
 public class Catalog
         extends AbstractMetadataType {
 
+    @Override
+    public boolean equals(final Object obj) {
+        if (this == obj) {
+            return true;
+        }
+        if (obj == null || getClass() != obj.getClass()) {
+            return false;
+        }
+        if (!super.equals(obj)) {
+            return false;
+        }
+        final var that = (Catalog) obj;
+        return Objects.equals(tableCat, that.tableCat);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(super.hashCode(), tableCat);
+    }
+
     private static final long serialVersionUID = 6239185259128825953L;
 
     // -----------------------------------------------------------------------------------------------------------------
@@ -75,30 +95,11 @@ public class Catalog
         super();
     }
 
-    // ------------------------------------------------------------------------------------------------ java.lang.Object
-
     @Override
     public String toString() {
         return super.toString() + '{' +
                "tableCat=" + tableCat +
                '}';
-    }
-
-    @Override
-    public boolean equals(final Object obj) {
-        if (obj == null || getClass() != obj.getClass()) {
-            return false;
-        }
-        if (!super.equals(obj)) {
-            return false;
-        }
-        final Catalog that = (Catalog) obj;
-        return Objects.equals(tableCat, that.tableCat);
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(super.hashCode(), tableCat);
     }
 
     // -------------------------------------------------------------------------------------------------------- tableCat

@@ -39,7 +39,6 @@ import java.util.Optional;
  * @see Context#getAttributes(String, String, String, String)
  */
 @_ChildOf(UDT.class)
-@EqualsAndHashCode(callSuper = true)
 public class Attribute
         extends AbstractMetadataType {
 
@@ -286,19 +285,25 @@ public class Attribute
 
     @Override
     public boolean equals(final Object obj) {
-        if (!(obj instanceof Attribute)) {
+        if (this == obj) {
+            return true;
+        }
+        if (obj == null || getClass() != obj.getClass()) {
             return false;
         }
-        final Attribute attribute = (Attribute) obj;
-        return Objects.equals(typeCat, attribute.typeCat) &&
-               Objects.equals(typeSchem, attribute.typeSchem) &&
-               Objects.equals(typeName, attribute.typeName) &&
-               Objects.equals(attrName, attribute.attrName);
+        if (!super.equals(obj)) {
+            return false;
+        }
+        final var that = (Attribute) obj;
+        return Objects.equals(typeCat, that.typeCat) &&
+               Objects.equals(typeSchem, that.typeSchem) &&
+               Objects.equals(typeName, that.typeName) &&
+               Objects.equals(attrName, that.attrName);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(typeCat, typeSchem, typeName, attrName);
+        return Objects.hash(super.hashCode(), typeCat, typeSchem, typeName, attrName);
     }
 
     // -------------------------------------------------------------------------------------------------------- tableCat

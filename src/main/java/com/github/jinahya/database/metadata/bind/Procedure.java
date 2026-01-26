@@ -20,11 +20,10 @@ package com.github.jinahya.database.metadata.bind;
  * #L%
  */
 
-import lombok.EqualsAndHashCode;
-
 import java.sql.DatabaseMetaData;
 import java.sql.SQLException;
 import java.util.Comparator;
+import java.util.Objects;
 
 /**
  * A class for binding results of the
@@ -34,9 +33,31 @@ import java.util.Comparator;
  * @see Context#getFunctionColumns(String, String, String, String)
  * @see ProcedureColumn
  */
-@EqualsAndHashCode(callSuper = true)
 public class Procedure
         extends AbstractMetadataType {
+
+    @Override
+    public boolean equals(final Object obj) {
+        if (this == obj) {
+            return true;
+        }
+        if (obj == null || getClass() != obj.getClass()) {
+            return false;
+        }
+        if (!super.equals(obj)) {
+            return false;
+        }
+        final var that = (Procedure) obj;
+        return Objects.equals(procedureCat, that.procedureCat) &&
+               Objects.equals(procedureSchem, that.procedureSchem) &&
+               Objects.equals(procedureName, that.procedureName) &&
+               Objects.equals(specificName, that.specificName);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(super.hashCode(), procedureCat, procedureSchem, procedureName, specificName);
+    }
 
     private static final long serialVersionUID = -6262056388403934829L;
 

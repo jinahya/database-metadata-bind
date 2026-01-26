@@ -32,6 +32,26 @@ import java.util.Objects;
 public class TableType
         extends AbstractMetadataType {
 
+    @Override
+    public boolean equals(final Object obj) {
+        if (this == obj) {
+            return true;
+        }
+        if (obj == null || getClass() != obj.getClass()) {
+            return false;
+        }
+        if (!super.equals(obj)) {
+            return false;
+        }
+        final var that = (TableType) obj;
+        return Objects.equals(tableType, that.tableType);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(super.hashCode(), tableType);
+    }
+
     private static final long serialVersionUID = -7630634982776331078L;
 
     // -----------------------------------------------------------------------------------------------------------------
@@ -64,23 +84,6 @@ public class TableType
         return super.toString() + '{' +
                "tableType=" + tableType +
                '}';
-    }
-
-    @Override
-    public boolean equals(final Object obj) {
-        if (obj == null || getClass() != obj.getClass()) {
-            return false;
-        }
-        if (!super.equals(obj)) {
-            return false;
-        }
-        final var that = (TableType) obj;
-        return Objects.equals(tableType, that.tableType);
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(super.hashCode(), tableType);
     }
 
     // ------------------------------------------------------------------------------------------------------- tableType

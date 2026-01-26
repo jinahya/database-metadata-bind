@@ -20,11 +20,10 @@ package com.github.jinahya.database.metadata.bind;
  * #L%
  */
 
-import lombok.EqualsAndHashCode;
-
 import java.sql.DatabaseMetaData;
 import java.sql.SQLException;
 import java.util.Comparator;
+import java.util.Objects;
 
 /**
  * A class for binding results of the {@link java.sql.DatabaseMetaData#getTypeInfo()} method.
@@ -33,9 +32,29 @@ import java.util.Comparator;
  * @see Context#getTypeInfo()
  */
 
-@EqualsAndHashCode(callSuper = true)
 public class TypeInfo
         extends AbstractMetadataType {
+
+    @Override
+    public boolean equals(final Object obj) {
+        if (this == obj) {
+            return true;
+        }
+        if (obj == null || getClass() != obj.getClass()) {
+            return false;
+        }
+        if (!super.equals(obj)) {
+            return false;
+        }
+        final var that = (TypeInfo) obj;
+        return Objects.equals(typeName, that.typeName) &&
+               Objects.equals(dataType, that.dataType);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(super.hashCode(), typeName, dataType);
+    }
 
     private static final long serialVersionUID = -3964147654019495313L;
 

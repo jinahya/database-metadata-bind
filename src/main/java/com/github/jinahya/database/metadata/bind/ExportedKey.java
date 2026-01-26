@@ -20,11 +20,10 @@ package com.github.jinahya.database.metadata.bind;
  * #L%
  */
 
-import lombok.EqualsAndHashCode;
-
 import java.sql.DatabaseMetaData;
 import java.sql.SQLException;
 import java.util.Comparator;
+import java.util.Objects;
 
 /**
  * An abstract class for binding results of the {@link DatabaseMetaData#getExportedKeys(String, String, String)}
@@ -34,7 +33,6 @@ import java.util.Comparator;
  * @see Context#getExportedKeys(String, String, String)
  * @see ImportedKey
  */
-@EqualsAndHashCode(callSuper = true)
 public class ExportedKey
         extends PortedKey {
 
@@ -74,12 +72,47 @@ public class ExportedKey
                ",fktableSchem=" + getFktableSchem() +
                ",fktableName=" + getFktableName() +
                ",fkcolumnName=" + getFkcolumnName() +
-               ",keySeq=" + getKeySeq() +
+               ",keySeq=" + keySeq +
                ",updateRule=" + getUpdateRule() +
                ",deleteRule=" + getDeleteRule() +
                ",fkName=" + getFkName() +
                ",pkName=" + getPkName() +
                ",deferrability=" + getDeferrability() +
                '}';
+    }
+
+    @Override
+    public boolean equals(final Object obj) {
+        if (this == obj) {
+            return true;
+        }
+        if (!(obj instanceof ExportedKey)) {
+            return false;
+        }
+        final var that = (ExportedKey) obj;
+        return Objects.equals(fktableCat, that.fktableCat) &&
+               Objects.equals(fktableSchem, that.fktableSchem) &&
+               Objects.equals(fktableName, that.fktableName) &&
+               Objects.equals(fkcolumnName, that.fkcolumnName) &&
+               Objects.equals(pktableCat, that.pktableCat) &&
+               Objects.equals(pktableSchem, that.pktableSchem) &&
+               Objects.equals(pktableName, that.pktableName) &&
+               Objects.equals(pkcolumnName, that.pkcolumnName) &&
+               Objects.equals(keySeq, that.keySeq);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(
+                fktableCat,
+                fktableSchem,
+                fktableName,
+                fkcolumnName,
+                pktableCat,
+                pktableSchem,
+                pktableName,
+                pkcolumnName,
+                keySeq
+        );
     }
 }

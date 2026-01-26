@@ -43,21 +43,21 @@ abstract class AbstractMetadataType
                '}';
     }
 
-//    @Override
-//    public boolean equals(final Object obj) {
-//        if (this == obj) {
-//            return true;
-//        }
-//        if (obj == null || getClass() != obj.getClass()) {
-//            return false;
-//        }
-//        return true;
-//    }
-//
-//    @Override
-//    public int hashCode() {
-//        return Objects.hash(getClass());
-//    }
+    @Override
+    public boolean equals(final Object obj) {
+        if (this == obj) {
+            return true;
+        }
+        if (obj == null || getClass() != obj.getClass()) {
+            return false;
+        }
+        return true;
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(getClass());
+    }
 
     // -----------------------------------------------------------------------------------------------------------------
     private final transient Map<String, Object> unmappedColumns = new HashMap<>();

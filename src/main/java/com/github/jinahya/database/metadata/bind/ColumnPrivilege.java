@@ -26,6 +26,7 @@ import lombok.EqualsAndHashCode;
 import java.sql.DatabaseMetaData;
 import java.sql.SQLException;
 import java.util.Comparator;
+import java.util.Objects;
 
 /**
  * A class for binding results of the {@link DatabaseMetaData#getColumnPrivileges(String, String, String, String)}
@@ -35,7 +36,6 @@ import java.util.Comparator;
  * @see Context#getColumnPrivileges(String, String, String, String)
  */
 @_ChildOf(Table.class)
-@EqualsAndHashCode(callSuper = true)
 public class ColumnPrivilege
         extends AbstractMetadataType {
 
@@ -122,6 +122,31 @@ public class ColumnPrivilege
     // ------------------------------------------------------------------------------------------------ java.lang.Object
 
     @Override
+    public boolean equals(final Object obj) {
+        if (this == obj) {
+            return true;
+        }
+        if (obj == null || getClass() != obj.getClass()) {
+            return false;
+        }
+        if (!super.equals(obj)) {
+            return false;
+        }
+        final var that = (ColumnPrivilege) obj;
+        return Objects.equals(tableCat, that.tableCat) &&
+               Objects.equals(tableSchem, that.tableSchem) &&
+               Objects.equals(tableName, that.tableName) &&
+               Objects.equals(columnName, that.columnName) &&
+               Objects.equals(grantee, that.grantee) &&
+               Objects.equals(privilege, that.privilege);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(super.hashCode(), tableCat, tableSchem, tableName, columnName, grantee, privilege);
+    }
+
+    @Override
     public String toString() {
         return super.toString() + '{' +
                "tableCat=" + tableCat +
@@ -134,8 +159,6 @@ public class ColumnPrivilege
                ",isGrantable=" + isGrantable +
                '}';
     }
-
-    // -------------------------------------------------------------------------------------------------------- tableCat
 
     /**
      * Returns the value of {@value #COLUMN_LABEL_TABLE_CAT} column.

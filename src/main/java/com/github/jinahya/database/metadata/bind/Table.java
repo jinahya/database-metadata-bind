@@ -24,6 +24,7 @@ import lombok.EqualsAndHashCode;
 
 import java.sql.SQLException;
 import java.util.Comparator;
+import java.util.Objects;
 import java.util.Optional;
 
 /**
@@ -43,7 +44,6 @@ import java.util.Optional;
 @_ParentOf(IndexInfo.class)
 @_ParentOf(PseudoColumn.class)
 @_ParentOf(VersionColumn.class)
-@EqualsAndHashCode(callSuper = true)
 public class Table
         extends AbstractMetadataType {
 
@@ -167,6 +167,27 @@ public class Table
                 .orElse("");
     }
 
+    @Override
+    public boolean equals(final Object obj) {
+        if (this == obj) {
+            return true;
+        }
+        if (obj == null || getClass() != obj.getClass()) {
+            return false;
+        }
+        if (!super.equals(obj)) {
+            return false;
+        }
+        final var that = (Table) obj;
+        return Objects.equals(getTableCatEffective(), that.getTableCatEffective()) &&
+               Objects.equals(getTableSchemEffective(), that.getTableSchemEffective()) &&
+               Objects.equals(tableName, that.tableName);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(super.hashCode(), getTableCatEffective(), getTableSchemEffective(), tableName);
+    }
     // -------------------------------------------------------------------------------------------------------- tableCat
 
     /**

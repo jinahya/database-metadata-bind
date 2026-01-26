@@ -37,6 +37,27 @@ import java.util.Optional;
 public class Schema
         extends AbstractMetadataType {
 
+    @Override
+    public boolean equals(final Object obj) {
+        if (this == obj) {
+            return true;
+        }
+        if (obj == null || getClass() != obj.getClass()) {
+            return false;
+        }
+        if (!super.equals(obj)) {
+            return false;
+        }
+        final var that = (Schema) obj;
+        return Objects.equals(tableCatalog, that.tableCatalog) &&
+               Objects.equals(tableSchem, that.tableSchem);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(super.hashCode(), tableCatalog, tableSchem);
+    }
+
     private static final long serialVersionUID = 7457236468401244963L;
 
     // -----------------------------------------------------------------------------------------------------------------
@@ -105,24 +126,6 @@ public class Schema
                "tableSchem=" + tableSchem +
                ",tableCatalog=" + tableCatalog +
                '}';
-    }
-
-    @Override
-    public boolean equals(final Object obj) {
-        if (obj == null || getClass() != obj.getClass()) {
-            return false;
-        }
-        if (!super.equals(obj)) {
-            return false;
-        }
-        final var that = (Schema) obj;
-        return Objects.equals(tableSchem, that.tableSchem) &&
-               Objects.equals(tableCatalog, that.tableCatalog);
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(super.hashCode(), tableSchem, tableCatalog);
     }
 
     // ------------------------------------------------------------------------------------------------------ tableSchem

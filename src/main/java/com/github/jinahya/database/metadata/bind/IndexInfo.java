@@ -37,10 +37,32 @@ import java.util.Optional;
  * @author Jin Kwon &lt;jinahya_at_gmail.com&gt;
  * @see Context#getIndexInfo(String, String, String, boolean, boolean)
  */
-@_ChildOf(Table.class)
-@EqualsAndHashCode(callSuper = true)
 public class IndexInfo
         extends AbstractMetadataType {
+
+    @Override
+    public boolean equals(final Object obj) {
+        if (this == obj) {
+            return true;
+        }
+        if (obj == null || getClass() != obj.getClass()) {
+            return false;
+        }
+        if (!super.equals(obj)) {
+            return false;
+        }
+        final var that = (IndexInfo) obj;
+        return Objects.equals(tableCat, that.tableCat) &&
+               Objects.equals(tableSchem, that.tableSchem) &&
+               Objects.equals(tableName, that.tableName) &&
+               Objects.equals(indexName, that.indexName) &&
+               Objects.equals(ordinalPosition, that.ordinalPosition);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(super.hashCode(), tableCat, tableSchem, tableName, indexName, ordinalPosition);
+    }
 
     private static final long serialVersionUID = 924040226611181424L;
 

@@ -20,11 +20,10 @@ package com.github.jinahya.database.metadata.bind;
  * #L%
  */
 
-import lombok.EqualsAndHashCode;
-
 import java.sql.DatabaseMetaData;
 import java.sql.SQLException;
 import java.util.Comparator;
+import java.util.Objects;
 
 /**
  * A class for binding results of the {@link DatabaseMetaData#getPseudoColumns(String, String, String, String)} method.
@@ -33,9 +32,31 @@ import java.util.Comparator;
  */
 
 @_ChildOf(Table.class)
-@EqualsAndHashCode(callSuper = true)
 public class PseudoColumn
         extends AbstractMetadataType {
+
+    @Override
+    public boolean equals(final Object obj) {
+        if (this == obj) {
+            return true;
+        }
+        if (obj == null || getClass() != obj.getClass()) {
+            return false;
+        }
+        if (!super.equals(obj)) {
+            return false;
+        }
+        final var that = (PseudoColumn) obj;
+        return Objects.equals(tableCat, that.tableCat) &&
+               Objects.equals(tableSchem, that.tableSchem) &&
+               Objects.equals(tableName, that.tableName) &&
+               Objects.equals(columnName, that.columnName);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(super.hashCode(), tableCat, tableSchem, tableName, columnName);
+    }
 
     private static final long serialVersionUID = -5612575879670895510L;
 

@@ -20,8 +20,6 @@ package com.github.jinahya.database.metadata.bind;
  * #L%
  */
 
-import lombok.extern.java.Log;
-
 import java.beans.BeanInfo;
 import java.beans.IntrospectionException;
 import java.beans.Introspector;
@@ -47,7 +45,6 @@ import java.util.function.BiConsumer;
 import java.util.function.Consumer;
 import java.util.function.Predicate;
 import java.util.function.Supplier;
-import java.util.logging.Level;
 import java.util.stream.Collectors;
 
 /**
@@ -55,7 +52,6 @@ import java.util.stream.Collectors;
  *
  * @author Jin Kwon &lt;jinahya_at_gmail.com&gt;
  */
-@Log
 public class Context {
 
     private static final System.Logger logger = System.getLogger(MethodHandles.lookup().lookupClass().getName());
@@ -137,7 +133,11 @@ public class Context {
                 final Object result = reader.invoke(metadata);
                 consumer.accept(descriptor.getName(), result);
             } catch (final ReflectiveOperationException roe) {
-                log.log(Level.SEVERE, roe, () -> String.format("failed to invoke %1$s", reader));
+                logger.log(
+                        System.Logger.Level.ERROR,
+                        () -> String.format("failed to invoke %s with %s", reader, metadata),
+                        roe
+                );
             }
         }
     }
@@ -158,7 +158,11 @@ public class Context {
                 final Object result = method.invoke(metadata);
                 consumer.accept(method, result);
             } catch (final ReflectiveOperationException roe) {
-                log.log(Level.SEVERE, roe, () -> String.format("failed to invoke %1$s", method));
+                logger.log(
+                        System.Logger.Level.ERROR,
+                        () -> String.format("failed to invoke %s with %s", method, metadata),
+                        roe
+                );
             }
         }
     }
@@ -190,23 +194,30 @@ public class Context {
                 continue;
             }
             if (!resultLabels.remove(fieldLabel.value())) {
-                log.warning(() -> String.format("unmapped field; label: %s; field: %s", fieldLabel, field));
+                logger.log(
+                        System.Logger.Level.WARNING,
+                        () -> String.format("unmapped field; label: %s; field: %s", fieldLabel, field)
+                );
                 i.remove();
                 continue;
             }
             try {
                 ContextUtils.setFieldValue(field, instance, results, fieldLabel.value());
             } catch (final ReflectiveOperationException roe) {
-                log.log(Level.SEVERE, roe, () -> String.format("failed to set %1$s", field));
+                logger.log(System.Logger.Level.ERROR, () -> String.format("failed to set %1$s", field), roe);
             }
             i.remove();
         }
         for (final var i = resultLabels.iterator(); i.hasNext(); i.remove()) {
             final String label = i.next();
             final Object value = results.getObject(label);
-            log.warning(
-                    () -> String.format("unknown result; type: %s, label: %s, value: %s", type.getSimpleName(), label,
-                                        value));
+            logger.log(System.Logger.Level.WARNING,
+                       () -> String.format(
+                               "unknown result; type: %s, label: %s, value: %s", type.getSimpleName(),
+                               label,
+                               value
+                       )
+            );
             if (instance instanceof AbstractMetadataType) {
                 ((AbstractMetadataType) instance).putUnmappedColumn(label, value);
             }

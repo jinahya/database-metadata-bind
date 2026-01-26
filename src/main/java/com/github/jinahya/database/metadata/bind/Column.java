@@ -41,7 +41,6 @@ import java.util.Optional;
  */
 @_ChildOf(Table.class)
 @_ParentOf(ColumnPrivilege.class)
-@EqualsAndHashCode(callSuper = true)
 public class Column
         extends AbstractMetadataType {
 
@@ -305,6 +304,9 @@ public class Column
 
     @Override
     public boolean equals(final Object obj) {
+        if (this == obj) {
+            return true;
+        }
         if (obj == null || getClass() != obj.getClass()) {
             return false;
         }

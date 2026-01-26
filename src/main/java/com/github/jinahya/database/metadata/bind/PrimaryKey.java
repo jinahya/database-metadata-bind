@@ -20,11 +20,10 @@ package com.github.jinahya.database.metadata.bind;
  * #L%
  */
 
-import lombok.EqualsAndHashCode;
-
 import java.sql.DatabaseMetaData;
 import java.sql.SQLException;
 import java.util.Comparator;
+import java.util.Objects;
 
 /**
  * A class for binding results of the {@link DatabaseMetaData#getPrimaryKeys(String, String, String)} method.
@@ -32,9 +31,31 @@ import java.util.Comparator;
  * @author Jin Kwon &lt;jinahya_at_gmail.com&gt;
  * @see Context#getPrimaryKeys(String, String, String)
  */
-@EqualsAndHashCode(callSuper = true)
 public class PrimaryKey
         extends AbstractMetadataType {
+
+    @Override
+    public boolean equals(final Object obj) {
+        if (this == obj) {
+            return true;
+        }
+        if (obj == null || getClass() != obj.getClass()) {
+            return false;
+        }
+        if (!super.equals(obj)) {
+            return false;
+        }
+        final var that = (PrimaryKey) obj;
+        return Objects.equals(tableCat, that.tableCat) &&
+               Objects.equals(tableSchem, that.tableSchem) &&
+               Objects.equals(tableName, that.tableName) &&
+               Objects.equals(columnName, that.columnName);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(super.hashCode(), tableCat, tableSchem, tableName, columnName);
+    }
 
     private static final long serialVersionUID = 3159826510060898330L;
 

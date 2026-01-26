@@ -20,10 +20,24 @@ package com.github.jinahya.database.metadata.bind;
  * #L%
  */
 
+import nl.jqno.equalsverifier.api.SingleTypeEqualsVerifierApi;
+import org.junit.jupiter.api.Test;
+
 class VersionColumnTest
         extends AbstractMetadataType_Test<VersionColumn> {
 
     VersionColumnTest() {
         super(VersionColumn.class);
+    }
+
+    @Override
+    void equals__() {
+        super.equals__();
+    }
+
+    @Override
+    SingleTypeEqualsVerifierApi<VersionColumn> equalsVerifier() {
+        return super.equalsVerifier()
+                .withOnlyTheseFields("columnName");
     }
 }

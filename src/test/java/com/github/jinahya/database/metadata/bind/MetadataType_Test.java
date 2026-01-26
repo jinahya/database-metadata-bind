@@ -28,6 +28,7 @@ import org.apache.commons.text.CaseUtils;
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
+import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 
@@ -70,7 +71,6 @@ abstract class MetadataType_Test<T extends MetadataType> {
     }
 
     // -----------------------------------------------------------------------------------------------------------------
-    @Disabled // TODO: enable
     @DisplayName("equals/hashCode")
     @Test
     void equals__() {
@@ -81,7 +81,7 @@ abstract class MetadataType_Test<T extends MetadataType> {
         return EqualsVerifier
                 .simple()
                 .forClass(typeClass)
-//                .suppress(Warning.ALL_FIELDS_SHOULD_BE_USED)
+                .withIgnoredFields("unmappedColumns")
         ;
     }
 

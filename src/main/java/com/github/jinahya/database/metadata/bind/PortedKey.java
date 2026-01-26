@@ -34,7 +34,6 @@ import java.util.Objects;
  * @see ExportedKey
  * @see ImportedKey
  */
-@EqualsAndHashCode(callSuper = true)
 abstract class PortedKey
         extends AbstractMetadataType {
 
@@ -478,36 +477,36 @@ abstract class PortedKey
     // -----------------------------------------------------------------------------------------------------------------
     @_NullableBySpecification
     @_ColumnLabel(COLUMN_NAME_PKTABLE_CAT)
-    private String pktableCat;
+    String pktableCat;
 
     @_NullableBySpecification
     @_ColumnLabel(COLUMN_NAME_PKTABLE_SCHEM)
-    private String pktableSchem;
+    String pktableSchem;
 
     @_ColumnLabel(COLUMN_NAME_PKTABLE_NAME)
-    private String pktableName;
+    String pktableName;
 
     @_ColumnLabel(COLUMN_NAME_PKCOLUMN_NAME)
-    private String pkcolumnName;
+    String pkcolumnName;
 
     // -----------------------------------------------------------------------------------------------------------------
     @_NullableBySpecification
     @_ColumnLabel(COLUMN_NAME_FKTABLE_CAT)
-    private String fktableCat;
+    String fktableCat;
 
     @_NullableBySpecification
     @_ColumnLabel(COLUMN_NAME_FKTABLE_SCHEM)
-    private String fktableSchem;
+    String fktableSchem;
 
     @_ColumnLabel(COLUMN_NAME_FKTABLE_NAME)
-    private String fktableName;
+    String fktableName;
 
     @_ColumnLabel(COLUMN_NAME_FKCOLUMN_NAME)
-    private String fkcolumnName;
+    String fkcolumnName;
 
     // -----------------------------------------------------------------------------------------------------------------
     @_ColumnLabel(COLUMN_NAME_KEY_SEQ)
-    private Integer keySeq;
+    Integer keySeq;
 
     // -----------------------------------------------------------------------------------------------------------------
     @_ColumnLabel(COLUMN_NAME_UPDATE_RULE)

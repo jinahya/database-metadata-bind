@@ -25,6 +25,7 @@ import lombok.EqualsAndHashCode;
 import java.sql.DatabaseMetaData;
 import java.sql.SQLException;
 import java.util.Comparator;
+import java.util.Objects;
 
 /**
  * A class for binding results of the {@link DatabaseMetaData#getImportedKeys(String, String, String)} method.
@@ -34,7 +35,6 @@ import java.util.Comparator;
  * @see ExportedKey
  */
 
-@EqualsAndHashCode(callSuper = true)
 public class ImportedKey
         extends PortedKey {
 
@@ -50,6 +50,51 @@ public class ImportedKey
             throws SQLException {
         return comparingInSpecifiedOrder(
                 ContextUtils.nullPrecedence(context, comparator)
+        );
+    }
+
+    // -----------------------------------------------------------------------------------------------------------------
+
+    /**
+     * Creates a new instance.
+     */
+    ImportedKey() {
+        super();
+    }
+
+    // -----------------------------------------------------------------------------------------------------------------
+    @Override
+    public boolean equals(final Object obj) {
+        if (this == obj) {
+            return true;
+        }
+        if (!(obj instanceof ImportedKey)) {
+            return false;
+        }
+        final var that = (ImportedKey) obj;
+        return Objects.equals(pktableCat, that.pktableCat) &&
+               Objects.equals(pktableSchem, that.pktableSchem) &&
+               Objects.equals(pktableName, that.pktableName) &&
+               Objects.equals(pkcolumnName, that.pkcolumnName) &&
+               Objects.equals(fktableCat, that.fktableCat) &&
+               Objects.equals(fktableSchem, that.fktableSchem) &&
+               Objects.equals(fktableName, that.fktableName) &&
+               Objects.equals(fkcolumnName, that.fkcolumnName) &&
+               Objects.equals(keySeq, that.keySeq);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(
+                pktableCat,
+                pktableSchem,
+                pktableName,
+                pkcolumnName,
+                fktableCat,
+                fktableSchem,
+                fktableName,
+                fkcolumnName,
+                keySeq
         );
     }
 }

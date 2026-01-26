@@ -20,7 +20,7 @@ package com.github.jinahya.database.metadata.bind;
  * #L%
  */
 
-import lombok.EqualsAndHashCode;
+import java.util.Objects;
 
 /**
  * A class for binding results of the
@@ -30,9 +30,31 @@ import lombok.EqualsAndHashCode;
  * @see Context#getSuperTables(String, String, String)
  */
 
-@EqualsAndHashCode(callSuper = true)
 public class SuperTable
         extends AbstractMetadataType {
+
+    @Override
+    public boolean equals(final Object obj) {
+        if (this == obj) {
+            return true;
+        }
+        if (obj == null || getClass() != obj.getClass()) {
+            return false;
+        }
+        if (!super.equals(obj)) {
+            return false;
+        }
+        final var that = (SuperTable) obj;
+        return Objects.equals(tableCat, that.tableCat) &&
+               Objects.equals(tableSchem, that.tableSchem) &&
+               Objects.equals(tableName, that.tableName) &&
+               Objects.equals(supertableName, that.supertableName);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(super.hashCode(), tableCat, tableSchem, tableName, supertableName);
+    }
 
     private static final long serialVersionUID = 3579710773784268831L;
 
@@ -167,15 +189,11 @@ public class SuperTable
     private String supertableName;
 
     // -----------------------------------------------------------------------------------------------------------------
-    @EqualsAndHashCode.Exclude
     private transient Catalog tableCatalog_;
 
-    @EqualsAndHashCode.Exclude
     private transient Schema tableSchema_;
 
-    @EqualsAndHashCode.Exclude
     private transient Catalog supertableCatalog_;
 
-    @EqualsAndHashCode.Exclude
     private transient Schema supertableSchema_;
 }

@@ -20,8 +20,6 @@ package com.github.jinahya.database.metadata.bind;
  * #L%
  */
 
-import lombok.EqualsAndHashCode;
-
 import java.sql.DatabaseMetaData;
 import java.sql.SQLException;
 import java.util.Comparator;
@@ -36,9 +34,31 @@ import java.util.Objects;
  * @see Context#getFunctions(String, String, String)
  */
 @_ChildOf(Catalog.class)
-@EqualsAndHashCode(callSuper = true)
 public class Function
         extends AbstractMetadataType {
+
+    @Override
+    public boolean equals(final Object obj) {
+        if (this == obj) {
+            return true;
+        }
+        if (obj == null || getClass() != obj.getClass()) {
+            return false;
+        }
+        if (!super.equals(obj)) {
+            return false;
+        }
+        final var that = (Function) obj;
+        return Objects.equals(functionCat, that.functionCat) &&
+               Objects.equals(functionSchem, that.functionSchem) &&
+               Objects.equals(functionName, that.functionName) &&
+               Objects.equals(specificName, that.specificName);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(super.hashCode(), functionCat, functionSchem, functionName, specificName);
+    }
 
     private static final long serialVersionUID = -3318947900237453301L;
 

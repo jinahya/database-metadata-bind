@@ -36,7 +36,6 @@ import java.util.Objects;
  * @see PseudoColumn
  */
 @_ChildOf(Table.class)
-@EqualsAndHashCode(callSuper = true)
 public class BestRowIdentifier
         extends AbstractMetadataType {
 
@@ -142,18 +141,23 @@ public class BestRowIdentifier
     }
 
     @Override
-    public boolean equals(Object o) {
-        if (!(o instanceof BestRowIdentifier)) {
+    public boolean equals(final Object obj) {
+        if (this == obj) {
+            return true;
+        }
+        if (obj == null || getClass() != obj.getClass()) {
             return false;
         }
-        BestRowIdentifier that = (BestRowIdentifier) o;
-        return Objects.equals(table_, that.table_) && Objects.equals(scope, that.scope) &&
-               Objects.equals(columnName, that.columnName);
+        if (!super.equals(obj)) {
+            return false;
+        }
+        final var that = (BestRowIdentifier) obj;
+        return Objects.equals(columnName, that.columnName);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(table_, scope, columnName);
+        return Objects.hash(super.hashCode(), columnName);
     }
 // ----------------------------------------------------------------------------------------------------------- scope
 
@@ -314,9 +318,6 @@ public class BestRowIdentifier
     public void setPseudoColumn(final Integer pseudoColumn) {
         this.pseudoColumn = pseudoColumn;
     }
-
-    // -----------------------------------------------------------------------------------------------------------------
-    Table table_;
 
     // -----------------------------------------------------------------------------------------------------------------
     @_ColumnLabel(COLUMN_LABEL_SCOPE)

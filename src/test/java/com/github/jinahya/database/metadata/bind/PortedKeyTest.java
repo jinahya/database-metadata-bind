@@ -20,6 +20,9 @@ package com.github.jinahya.database.metadata.bind;
  * #L%
  */
 
+import nl.jqno.equalsverifier.api.SingleTypeEqualsVerifierApi;
+import org.junit.jupiter.api.Test;
+
 /**
  * A class for testing {@link ExportedKey} class.
  *
@@ -30,5 +33,20 @@ abstract class PortedKeyTest<T extends PortedKey>
 
     PortedKeyTest(final Class<T> typeClass) {
         super(typeClass);
+    }
+
+    @Override
+    void equals__() {
+        super.equals__();
+    }
+
+    @Override
+    SingleTypeEqualsVerifierApi<T> equalsVerifier() {
+        return super.equalsVerifier()
+                .withOnlyTheseFields(
+                        "pktableCat", "pktableSchem", "pktableName", "pkcolumnName",
+                        "fktableCat", "fktableSchem", "fktableName", "fkcolumnName",
+                        "keySeq"
+                );
     }
 }

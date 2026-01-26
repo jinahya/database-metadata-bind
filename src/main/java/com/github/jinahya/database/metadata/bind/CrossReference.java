@@ -27,6 +27,7 @@ import java.sql.DatabaseMetaData;
 import java.sql.SQLException;
 import java.util.Comparator;
 import java.util.List;
+import java.util.Objects;
 
 /**
  * A class for binding results of the
@@ -35,7 +36,6 @@ import java.util.List;
  * @author Jin Kwon &lt;jinahya_at_gmail.com&gt;
  */
 
-@EqualsAndHashCode(callSuper = true)
 public class CrossReference
         extends AbstractMetadataType {
 
@@ -167,6 +167,45 @@ public class CrossReference
     }
 
     // ------------------------------------------------------------------------------------------------ java.lang.Object
+
+    @Override
+    public boolean equals(final Object obj) {
+        if (this == obj) {
+            return true;
+        }
+        if (obj == null || getClass() != obj.getClass()) {
+            return false;
+        }
+        if (!super.equals(obj)) {
+            return false;
+        }
+        final var that = (CrossReference) obj;
+        return Objects.equals(fktableCat, that.fktableCat) &&
+               Objects.equals(fktableSchem, that.fktableSchem) &&
+               Objects.equals(fktableName, that.fktableName) &&
+               Objects.equals(fkcolumnName, that.fkcolumnName) &&
+               Objects.equals(pktableCat, that.pktableCat) &&
+               Objects.equals(pktableSchem, that.pktableSchem) &&
+               Objects.equals(pktableName, that.pktableName) &&
+               Objects.equals(pkcolumnName, that.pkcolumnName) &&
+               Objects.equals(keySeq, that.keySeq);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(
+                super.hashCode(),
+                fktableCat,
+                fktableSchem,
+                fktableName,
+                fkcolumnName,
+                pktableCat,
+                pktableSchem,
+                pktableName,
+                pkcolumnName,
+                keySeq
+        );
+    }
 
     @Override
     public String toString() {

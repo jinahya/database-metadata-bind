@@ -20,10 +20,24 @@ package com.github.jinahya.database.metadata.bind;
  * #L%
  */
 
+import nl.jqno.equalsverifier.api.SingleTypeEqualsVerifierApi;
+import org.junit.jupiter.api.Test;
+
 class TypeInfoTest
         extends AbstractMetadataType_Test<TypeInfo> {
 
     TypeInfoTest() {
         super(TypeInfo.class);
+    }
+
+    @Override
+    void equals__() {
+        super.equals__();
+    }
+
+    @Override
+    SingleTypeEqualsVerifierApi<TypeInfo> equalsVerifier() {
+        return super.equalsVerifier()
+                .withOnlyTheseFields("typeName", "dataType");
     }
 }

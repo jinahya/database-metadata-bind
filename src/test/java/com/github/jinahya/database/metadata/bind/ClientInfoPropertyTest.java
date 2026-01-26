@@ -20,10 +20,24 @@ package com.github.jinahya.database.metadata.bind;
  * #L%
  */
 
+import nl.jqno.equalsverifier.api.SingleTypeEqualsVerifierApi;
+import org.junit.jupiter.api.Test;
+
 class ClientInfoPropertyTest
         extends AbstractMetadataType_Test<ClientInfoProperty> {
 
     ClientInfoPropertyTest() {
         super(ClientInfoProperty.class);
+    }
+
+    @Override
+    void equals__() {
+        super.equals__();
+    }
+
+    @Override
+    SingleTypeEqualsVerifierApi<ClientInfoProperty> equalsVerifier() {
+        return super.equalsVerifier()
+                .withOnlyTheseFields("name");
     }
 }

@@ -20,11 +20,25 @@ package com.github.jinahya.database.metadata.bind;
  * #L%
  */
 
+import nl.jqno.equalsverifier.api.SingleTypeEqualsVerifierApi;
+import org.junit.jupiter.api.Test;
+
 class FunctionColumnTest
         extends AbstractMetadataType_Test<FunctionColumn> {
 
     FunctionColumnTest() {
         super(FunctionColumn.class);
+    }
+
+    @Override
+    void equals__() {
+        super.equals__();
+    }
+
+    @Override
+    SingleTypeEqualsVerifierApi<FunctionColumn> equalsVerifier() {
+        return super.equalsVerifier()
+                .withOnlyTheseFields("functionCat", "functionSchem", "functionName", "columnName", "ordinalPosition");
     }
 
     @Override

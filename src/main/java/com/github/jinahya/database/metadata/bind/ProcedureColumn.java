@@ -20,8 +20,6 @@ package com.github.jinahya.database.metadata.bind;
  * #L%
  */
 
-import lombok.EqualsAndHashCode;
-
 import java.sql.DatabaseMetaData;
 import java.sql.SQLException;
 import java.util.Comparator;
@@ -37,9 +35,32 @@ import java.util.Objects;
  */
 
 @_ChildOf(Procedure.class)
-@EqualsAndHashCode(callSuper = true)
 public class ProcedureColumn
         extends AbstractMetadataType {
+
+    @Override
+    public boolean equals(final Object obj) {
+        if (this == obj) {
+            return true;
+        }
+        if (obj == null || getClass() != obj.getClass()) {
+            return false;
+        }
+        if (!super.equals(obj)) {
+            return false;
+        }
+        final var that = (ProcedureColumn) obj;
+        return Objects.equals(procedureCat, that.procedureCat) &&
+               Objects.equals(procedureSchem, that.procedureSchem) &&
+               Objects.equals(procedureName, that.procedureName) &&
+               Objects.equals(columnName, that.columnName) &&
+               Objects.equals(ordinalPosition, that.ordinalPosition);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(super.hashCode(), procedureCat, procedureSchem, procedureName, columnName, ordinalPosition);
+    }
 
     private static final long serialVersionUID = 3894753719381358829L;
 
@@ -248,25 +269,6 @@ public class ProcedureColumn
                '}';
     }
 
-    @Override
-    public boolean equals(final Object obj) {
-        if (!(obj instanceof ProcedureColumn)) {
-            return false;
-        }
-        if (!super.equals(obj)) {
-            return false;
-        }
-        final ProcedureColumn that = (ProcedureColumn) obj;
-        return Objects.equals(procedureCat, that.procedureCat) &&
-               Objects.equals(procedureSchem, that.procedureSchem) &&
-               Objects.equals(procedureName, that.procedureName) &&
-               Objects.equals(columnName, that.columnName);
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(super.hashCode(), procedureCat, procedureSchem, procedureName, columnName);
-    }
     // ---------------------------------------------------------------------------------------------------- procedureCat
 
     /**

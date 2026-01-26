@@ -22,11 +22,11 @@ package com.github.jinahya.database.metadata.bind;
 
 import jakarta.validation.constraints.Pattern;
 import jakarta.validation.constraints.PositiveOrZero;
-import lombok.EqualsAndHashCode;
 
 import java.sql.DatabaseMetaData;
 import java.sql.SQLException;
 import java.util.Comparator;
+import java.util.Objects;
 
 /**
  * A class for binding results of the {@link DatabaseMetaData#getFunctionColumns(String, String, String, String)}
@@ -36,9 +36,32 @@ import java.util.Comparator;
  * @see Context#getFunctionColumns(String, String, String, String)
  */
 @_ChildOf(Function.class)
-@EqualsAndHashCode(callSuper = true)
 public class FunctionColumn
         extends AbstractMetadataType {
+
+    @Override
+    public boolean equals(final Object obj) {
+        if (this == obj) {
+            return true;
+        }
+        if (obj == null || getClass() != obj.getClass()) {
+            return false;
+        }
+        if (!super.equals(obj)) {
+            return false;
+        }
+        final var that = (FunctionColumn) obj;
+        return Objects.equals(functionCat, that.functionCat) &&
+               Objects.equals(functionSchem, that.functionSchem) &&
+               Objects.equals(functionName, that.functionName) &&
+               Objects.equals(columnName, that.columnName) &&
+               Objects.equals(ordinalPosition, that.ordinalPosition);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(super.hashCode(), functionCat, functionSchem, functionName, columnName, ordinalPosition);
+    }
 
     private static final long serialVersionUID = -7445156446214062680L;
 

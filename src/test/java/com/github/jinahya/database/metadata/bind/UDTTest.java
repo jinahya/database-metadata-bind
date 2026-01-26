@@ -20,10 +20,24 @@ package com.github.jinahya.database.metadata.bind;
  * #L%
  */
 
+import nl.jqno.equalsverifier.api.SingleTypeEqualsVerifierApi;
+import org.junit.jupiter.api.Test;
+
 class UDTTest
         extends AbstractMetadataType_Test<UDT> {
 
     UDTTest() {
         super(UDT.class);
+    }
+
+    @Override
+    void equals__() {
+        super.equals__();
+    }
+
+    @Override
+    SingleTypeEqualsVerifierApi<UDT> equalsVerifier() {
+        return super.equalsVerifier()
+                .withOnlyTheseFields("typeCat", "typeSchem", "typeName");
     }
 }
