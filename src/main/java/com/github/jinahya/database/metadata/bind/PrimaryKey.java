@@ -20,7 +20,6 @@ package com.github.jinahya.database.metadata.bind;
  * #L%
  */
 
-import org.jspecify.annotations.Nullable;
 
 import java.sql.DatabaseMetaData;
 import java.sql.SQLException;
@@ -74,42 +73,42 @@ public class PrimaryKey
     // ------------------------------------------------------------------------------------------------------- TABLE_CAT
 
     /**
-     * The column label of {@value}.
+     * A column label of {@value}.
      */
     public static final String COLUMN_LABEL_TABLE_CAT = "TABLE_CAT";
 
     // ----------------------------------------------------------------------------------------------------- TABLE_SCHEM
 
     /**
-     * x The column label of {@value}.
+     * A column label of {@value}.
      */
     public static final String COLUMN_LABEL_TABLE_SCHEM = "TABLE_SCHEM";
 
     // ------------------------------------------------------------------------------------------------------ TABLE_NAME
 
     /**
-     * The column label of {@value}.
+     * A column label of {@value}.
      */
     public static final String COLUMN_LABEL_TABLE_NAME = "TABLE_NAME";
 
     // ----------------------------------------------------------------------------------------------------- COLUMN_NAME
 
     /**
-     * The column label of {@value}.
+     * A column label of {@value}.
      */
     public static final String COLUMN_LABEL_COLUMN_NAME = "COLUMN_NAME";
 
     // --------------------------------------------------------------------------------------------------------- KEY_SEQ
 
     /**
-     * The column label of {@value}.
+     * A column label of {@value}.
      */
     public static final String COLUMN_LABEL_KEY_SEQ = "KEY_SEQ";
 
     // --------------------------------------------------------------------------------------------------------- PK_NAME
 
     /**
-     * The column label of {@value}.
+     * A column label of {@value}.
      */
     public static final String COLUMN_LABEL_PK_NAME = "PK_NAME";
 
@@ -258,12 +257,12 @@ public class PrimaryKey
     }
 
     // -----------------------------------------------------------------------------------------------------------------
-    @Nullable
+   @org.jspecify.annotations.Nullable
     @_NullableBySpecification
     @_ColumnLabel(COLUMN_LABEL_TABLE_CAT)
     private String tableCat;
 
-    @Nullable
+   @org.jspecify.annotations.Nullable
     @_NullableBySpecification
     @_ColumnLabel(COLUMN_LABEL_TABLE_SCHEM)
     private String tableSchem;
@@ -278,7 +277,7 @@ public class PrimaryKey
     @_ColumnLabel(COLUMN_LABEL_KEY_SEQ)
     private Integer keySeq;
 
-    @Nullable
+   @org.jspecify.annotations.Nullable
     @_NullableBySpecification
     @_ColumnLabel(COLUMN_LABEL_PK_NAME)
     private String pkName;

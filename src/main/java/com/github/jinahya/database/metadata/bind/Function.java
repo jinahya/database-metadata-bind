@@ -20,7 +20,6 @@ package com.github.jinahya.database.metadata.bind;
  * #L%
  */
 
-import org.jspecify.annotations.Nullable;
 
 import java.sql.DatabaseMetaData;
 import java.sql.SQLException;
@@ -97,9 +96,15 @@ public class Function
     public static final String COLUMN_LABEL_FUNCTION_SCHEM = "FUNCTION_SCHEM";
 
     // --------------------------------------------------------------------------------------------------- FUNCTION_NAME
+    /**
+     * A column label of {@value}.
+     */
     public static final String COLUMN_LABEL_FUNCTION_NAME = "FUNCTION_NAME";
 
     // --------------------------------------------------------------------------------------------------------- REMARKS
+    /**
+     * A column label of {@value}.
+     */
     public static final String COLUMN_LABEL_REMARKS = "REMARKS";
 
     // --------------------------------------------------------------------------------------------------- FUNCTION_TYPE
@@ -287,12 +292,12 @@ public class Function
 
     // -----------------------------------------------------------------------------------------------------------------
 
-    @Nullable
+   @org.jspecify.annotations.Nullable
     @_NullableBySpecification
     @_ColumnLabel(COLUMN_LABEL_FUNCTION_CAT)
     private String functionCat;
 
-    @Nullable
+   @org.jspecify.annotations.Nullable
     @_NullableBySpecification
     @_ColumnLabel(COLUMN_LABEL_FUNCTION_SCHEM)
     private String functionSchem;

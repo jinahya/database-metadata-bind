@@ -20,7 +20,6 @@ package com.github.jinahya.database.metadata.bind;
  * #L%
  */
 
-import org.jspecify.annotations.Nullable;
 
 import java.sql.DatabaseMetaData;
 import java.sql.SQLException;
@@ -603,22 +602,22 @@ public class TypeInfo
     @_ColumnLabel(COLUMN_LABEL_DATA_TYPE)
     private Integer dataType;
 
-    @Nullable
+   @org.jspecify.annotations.Nullable
     @_NullableBySpecification
     @_ColumnLabel(COLUMN_LABEL_PRECISION)
     private Integer precision;
 
-    @Nullable
+   @org.jspecify.annotations.Nullable
     @_NullableBySpecification
     @_ColumnLabel(COLUMN_LABEL_LITERAL_PREFIX)
     private String literalPrefix;
 
-    @Nullable
+   @org.jspecify.annotations.Nullable
     @_NullableBySpecification
     @_ColumnLabel(COLUMN_LABEL_LITERAL_SUFFIX)
     private String literalSuffix;
 
-    @Nullable
+   @org.jspecify.annotations.Nullable
     @_NullableBySpecification
     @_ColumnLabel(COLUMN_LABEL_CREATE_PARAMS)
     private String createParams;
@@ -632,7 +631,7 @@ public class TypeInfo
     @_ColumnLabel(COLUMN_LABEL_SEARCHABLE)
     private Integer searchable;
 
-    @Nullable
+   @org.jspecify.annotations.Nullable
     @_NotUsedBySpecification
     @_ColumnLabel(COLUMN_LABEL_UNSIGNED_ATTRIBUTE)
     private Boolean unsignedAttribute;
@@ -643,7 +642,7 @@ public class TypeInfo
     @_ColumnLabel(COLUMN_LABEL_AUTO_INCREMENT)
     private Boolean autoIncrement;
 
-    @Nullable
+   @org.jspecify.annotations.Nullable
     @_NullableBySpecification
     @_ColumnLabel(COLUMN_LABEL_LOCAL_TYPE_NAME)
     private String localTypeName;
@@ -654,12 +653,12 @@ public class TypeInfo
     @_ColumnLabel(COLUMN_LABEL_MAXIMUM_SCALE)
     private Integer maximumScale;
 
-    @Nullable
+   @org.jspecify.annotations.Nullable
     @_NotUsedBySpecification
     @_ColumnLabel(COLUMN_LABEL_SQL_DATA_TYPE)
     private Integer sqlDataType;
 
-    @Nullable
+   @org.jspecify.annotations.Nullable
     @_NotUsedBySpecification
     @_ColumnLabel(COLUMN_LABEL_SQL_DATETIME_SUB)
     private Integer sqlDatetimeSub;

@@ -21,7 +21,6 @@ package com.github.jinahya.database.metadata.bind;
  */
 
 import jakarta.validation.constraints.Positive;
-import org.jspecify.annotations.Nullable;
 
 import java.sql.DatabaseMetaData;
 import java.sql.SQLException;
@@ -58,31 +57,57 @@ public class CrossReference
         );
     }
 
-    // ----------------------------------------------------------------------------------------------------- PKTABLE_CAT
+    /**
+     * A column label of {@value}.
+     */
     public static final String COLUMN_LABEL_PKTABLE_CAT = "PKTABLE_CAT";
 
     // --------------------------------------------------------------------------------------------------- PKTABLE_SCHEM
+    /**
+     * A column label of {@value}.
+     */
     public static final String COLUMN_LABEL_PKTABLE_SCHEM = "PKTABLE_SCHEM";
 
     // ---------------------------------------------------------------------------------------------------- PKTABLE_NAME
+    /**
+     * A column label of {@value}.
+     */
     public static final String COLUMN_LABEL_PKTABLE_NAME = "PKTABLE_NAME";
 
     // --------------------------------------------------------------------------------------------------- PKCOLUMN_NAME
+    /**
+     * A column label of {@value}.
+     */
     public static final String COLUMN_LABEL_PKCOLUMN_NAME = "PKCOLUMN_NAME";
 
     // ----------------------------------------------------------------------------------------------------- FKTABLE_CAT
+    /**
+     * A column label of {@value}.
+     */
     public static final String COLUMN_LABEL_FKTABLE_CAT = "FKTABLE_CAT";
 
     // --------------------------------------------------------------------------------------------------- FKTABLE_SCHEM
+    /**
+     * A column label of {@value}.
+     */
     public static final String COLUMN_LABEL_FKTABLE_SCHEM = "FKTABLE_SCHEM";
 
     // ---------------------------------------------------------------------------------------------------- FKTABLE_NAME
+    /**
+     * A column label of {@value}.
+     */
     public static final String COLUMN_LABEL_FKTABLE_NAME = "FKTABLE_NAME";
 
     // --------------------------------------------------------------------------------------------------- FKCOLUMN_NAME
+    /**
+     * A column label of {@value}.
+     */
     public static final String COLUMN_LABEL_FKCOLUMN_NAME = "FKCOLUMN_NAME";
 
     // --------------------------------------------------------------------------------------------------------- KEY_SEQ
+    /**
+     * A column label of {@value}.
+     */
     public static final String COLUMN_LABEL_KEY_SEQ = "KEY_SEQ";
 
     // ----------------------------------------------------------------------------------------------------- UPDATE_RULE
@@ -111,6 +136,9 @@ public class CrossReference
     );
 
     // ----------------------------------------------------------------------------------------------------- DELETE_RULE
+    /**
+     * A column label of {@value}.
+     */
     public static final String COLUMN_LABEL_DELETE_RULE = "DELETE_RULE";
 
     public static final int COLUMN_VALUE_DELETE_RULE_IMPORTED_KEY_NO_ACTION = DatabaseMetaData.importedKeyNoAction;
@@ -132,12 +160,21 @@ public class CrossReference
     );
 
     // --------------------------------------------------------------------------------------------------------- FK_NAME
+    /**
+     * A column label of {@value}.
+     */
     public static final String COLUMN_LABEL_FK_NAME = "FK_NAME";
 
     // --------------------------------------------------------------------------------------------------------- PK_NAME
+    /**
+     * A column label of {@value}.
+     */
     public static final String COLUMN_LABEL_PK_NAME = "PK_NAME";
 
     // --------------------------------------------------------------------------------------------------- DEFERRABILITY
+    /**
+     * A column label of {@value}.
+     */
     public static final String COLUMN_LABEL_DEFERRABILITY = "DEFERRABILITY";
 
     public static final int COLUMN_VALUE_DEFERRABILITY_IMPORTED_KEY_CASCADE =
@@ -509,10 +546,12 @@ public class CrossReference
 
     // -----------------------------------------------------------------------------------------------------------------
 
+    @org.jspecify.annotations.Nullable
     @_NullableBySpecification
     @_ColumnLabel(COLUMN_LABEL_PKTABLE_CAT)
     private String pktableCat;
 
+    @org.jspecify.annotations.Nullable
     @_NullableBySpecification
     @_ColumnLabel(COLUMN_LABEL_PKTABLE_SCHEM)
     private String pktableSchem;
@@ -525,10 +564,12 @@ public class CrossReference
 
     // -----------------------------------------------------------------------------------------------------------------
 
+    @org.jspecify.annotations.Nullable
     @_NullableBySpecification
     @_ColumnLabel(COLUMN_LABEL_FKTABLE_CAT)
     private String fktableCat;
 
+    @org.jspecify.annotations.Nullable
     @_NullableBySpecification
     @_ColumnLabel(COLUMN_LABEL_FKTABLE_SCHEM)
     private String fktableSchem;
@@ -552,16 +593,18 @@ public class CrossReference
     private Integer deleteRule;
 
     // -----------------------------------------------------------------------------------------------------------------
-
+    @org.jspecify.annotations.Nullable
     @_NullableBySpecification
     @_ColumnLabel(COLUMN_LABEL_FK_NAME)
     private String fkName;
 
+    @org.jspecify.annotations.Nullable
     @_NullableBySpecification
     @_ColumnLabel(COLUMN_LABEL_PK_NAME)
     private String pkName;
 
     // -----------------------------------------------------------------------------------------------------------------
     @_ColumnLabel(COLUMN_LABEL_DEFERRABILITY)
+    //noinspection NotNullFieldNotInitialized
     private Integer deferrability;
 }

@@ -20,7 +20,6 @@ package com.github.jinahya.database.metadata.bind;
  * #L%
  */
 
-import org.jspecify.annotations.Nullable;
 
 import java.sql.DatabaseMetaData;
 import java.util.Objects;
@@ -58,46 +57,55 @@ public class VersionColumn
     private static final long serialVersionUID = 3587959398829593292L;
 
     // ----------------------------------------------------------------------------------------------------------- SCOPE
+    /**
+     * A column label of {@value}.
+     */
     public static final String COLUMN_LABEL_SCOPE = "SCOPE";
 
     // ----------------------------------------------------------------------------------------------------- COLUMN_NAME
+    /**
+     * A column label of {@value}.
+     */
     public static final String COLUMN_LABEL_COLUMN_NAME = "COLUMN_NAME";
 
     // -----------------------------------------------------------------------------------------------------------------
+    /**
+     * A column label of {@value}.
+     */
     public static final String COLUMN_LABEL_PSEUDO_COLUMN = "PSEUDO_COLUMN";
 
     // -----------------------------------------------------------------------------------------------------------------
 
     /**
-     * The column label of {@value}.
+     * A column label of {@value}.
      */
     public static final String COLUMN_LABEL_DATA_TYPE = "DATA_TYPE";
 
     // -----------------------------------------------------------------------------------------------------------------
 
     /**
-     * The column label of {@value}.
+     * A column label of {@value}.
      */
     public static final String COLUMN_LABEL_TYPE_NAME = "TYPE_NAME";
 
     // -----------------------------------------------------------------------------------------------------------------
 
     /**
-     * The column label of {@value}.
+     * A column label of {@value}.
      */
     public static final String COLUMN_LABEL_COLUMN_SIZE = "COLUMN_SIZE";
 
     // -----------------------------------------------------------------------------------------------------------------
 
     /**
-     * The column label of {@value}.
+     * A column label of {@value}.
      */
     public static final String COLUMN_LABEL_BUFFER_LENGTH = "BUFFER_LENGTH";
 
     // -----------------------------------------------------------------------------------------------------------------
 
     /**
-     * The column label of {@value}.
+     * A column label of {@value}.
      */
     public static final String COLUMN_LABEL_DECIMAL_DIGITS = "DECIMAL_DIGITS";
 
@@ -289,7 +297,7 @@ public class VersionColumn
     }
 
     // -----------------------------------------------------------------------------------------------------------------
-    @Nullable
+   @org.jspecify.annotations.Nullable
     @_NotUsedBySpecification
     @_ColumnLabel(COLUMN_LABEL_SCOPE)
     private Integer scope;
@@ -303,7 +311,7 @@ public class VersionColumn
     @_ColumnLabel(COLUMN_LABEL_TYPE_NAME)
     private String typeName;
 
-    @Nullable
+   @org.jspecify.annotations.Nullable
     @_NullableBySpecification
     @_ColumnLabel(COLUMN_LABEL_COLUMN_SIZE)
     private Integer columnSize;
@@ -311,7 +319,7 @@ public class VersionColumn
     @_ColumnLabel(COLUMN_LABEL_BUFFER_LENGTH)
     private Integer bufferLength;
 
-    @Nullable
+   @org.jspecify.annotations.Nullable
     @_NullableBySpecification
     @_ColumnLabel(COLUMN_LABEL_DECIMAL_DIGITS)
     private Integer decimalDigits;

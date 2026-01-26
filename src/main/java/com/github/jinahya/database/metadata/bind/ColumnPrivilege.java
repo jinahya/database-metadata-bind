@@ -21,7 +21,6 @@ package com.github.jinahya.database.metadata.bind;
  */
 
 import jakarta.validation.constraints.Pattern;
-import org.jspecify.annotations.Nullable;
 
 import java.sql.DatabaseMetaData;
 import java.sql.SQLException;
@@ -59,49 +58,55 @@ public class ColumnPrivilege
     // ------------------------------------------------------------------------------------------------------- TABLE_CAT
 
     /**
-     * The column label of {@value}.
+     * A column label of {@value}.
      */
     public static final String COLUMN_LABEL_TABLE_CAT = "TABLE_CAT";
 
     // ----------------------------------------------------------------------------------------------------- TABLE_SCHEM
 
     /**
-     * The column label of {@value}.
+     * A column label of {@value}.
      */
     public static final String COLUMN_LABEL_TABLE_SCHEM = "TABLE_SCHEM";
 
     // ------------------------------------------------------------------------------------------------------- TABLE_NAM
 
     /**
-     * The column label of {@value}.
+     * A column label of {@value}.
      */
     public static final String COLUMN_LABEL_TABLE_NAME = "TABLE_NAME";
 
     // ----------------------------------------------------------------------------------------------------- COLUMN_NAME
+    /**
+     * A column label of {@value}.
+     */
     public static final String COLUMN_LABEL_COLUMN_NAME = "COLUMN_NAME";
 
     // --------------------------------------------------------------------------------------------------------- GRANTOR
 
     /**
-     * The column label of {@value}.
+     * A column label of {@value}.
      */
     public static final String COLUMN_LABEL_GRANTOR = "GRANTOR";
 
     // --------------------------------------------------------------------------------------------------------- GRANTEE
 
     /**
-     * The column label of {@value}.
+     * A column label of {@value}.
      */
     public static final String COLUMN_LABEL_GRANTEE = "GRANTEE";
 
     // ------------------------------------------------------------------------------------------------------- PRIVILEGE
 
     /**
-     * The column label of {@value}.
+     * A column label of {@value}.
      */
     public static final String COLUMN_LABEL_PRIVILEGE = "PRIVILEGE";
 
     // -----------------------------------------------------------------------------------------------------------------
+    /**
+     * A column label of {@value}.
+     */
     public static final String COLUMN_LABEL_IS_GRANTABLE = "IS_GRANTABLE";
 
     public static final String COLUMN_VALUE_IS_GRANTABLE_YES = MetadataTypeConstants.YES;
@@ -320,10 +325,12 @@ public class ColumnPrivilege
 
     // -----------------------------------------------------------------------------------------------------------------
 
+    @org.jspecify.annotations.Nullable
     @_NullableBySpecification
     @_ColumnLabel(COLUMN_LABEL_TABLE_CAT)
     private String tableCat;
 
+    @org.jspecify.annotations.Nullable
     @_NullableBySpecification
     @_ColumnLabel(COLUMN_LABEL_TABLE_SCHEM)
     private String tableSchem;
@@ -336,6 +343,7 @@ public class ColumnPrivilege
 
     // -----------------------------------------------------------------------------------------------------------------
 
+    @org.jspecify.annotations.Nullable
     @_NullableBySpecification
     @_ColumnLabel(COLUMN_LABEL_GRANTOR)
     private String grantor;
@@ -347,6 +355,7 @@ public class ColumnPrivilege
     private String privilege;
 
     @Pattern(regexp = MetadataTypeConstants.PATTERN_REGEXP_YES_OR_NO)
+    @org.jspecify.annotations.Nullable
     @_NullableBySpecification
     @_ColumnLabel(COLUMN_LABEL_IS_GRANTABLE)
     private String isGrantable;

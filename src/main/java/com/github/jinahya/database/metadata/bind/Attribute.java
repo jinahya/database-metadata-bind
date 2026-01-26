@@ -21,7 +21,6 @@ package com.github.jinahya.database.metadata.bind;
  */
 
 import jakarta.validation.constraints.Positive;
-import org.jspecify.annotations.Nullable;
 
 import java.sql.DatabaseMetaData;
 import java.sql.SQLException;
@@ -46,6 +45,17 @@ public class Attribute
 
     // -----------------------------------------------------------------------------------------------------------------
 
+    /**
+     * Returns a comparator for comparing instances in the order specified by the JDBC specification.
+     * <p>
+     * They are ordered by {@link #COLUMN_LABEL_TYPE_CAT TYPE_CAT}, {@link #COLUMN_LABEL_TYPE_SCHEM TYPE_SCHEM},
+     * {@link #COLUMN_LABEL_TYPE_NAME TYPE_NAME} and {@link #COLUMN_LABEL_ORDINAL_POSITION ORDINAL_POSITION}.
+     * </p>
+     *
+     * @param comparator a comparator for comparing string values; must be not {@code null}.
+     * @return a comparator for comparing instances in the specified order.
+     * @see #comparingInSpecifiedOrder(Context, Comparator)
+     */
     static Comparator<Attribute> comparingInSpecifiedOrder(final Comparator<? super String> comparator) {
         Objects.requireNonNull(comparator, "comparator is null");
         return Comparator
@@ -55,6 +65,19 @@ public class Attribute
                 .thenComparing(Attribute::getOrdinalPosition, Comparator.naturalOrder());
     }
 
+    /**
+     * Returns a comparator for comparing instances in the order specified by the JDBC specification.
+     * <p>
+     * This method uses {@link ContextUtils#nullPrecedence(Context, Comparator)} to handle the null precedence of the
+     * specified {@code context}.
+     * </p>
+     *
+     * @param context    the context; must be not {@code null}.
+     * @param comparator a comparator for comparing string values; must be not {@code null}.
+     * @return a comparator for comparing instances in the specified order.
+     * @throws SQLException if a database error occurs.
+     * @see #comparingInSpecifiedOrder(Comparator)
+     */
     static Comparator<Attribute> comparingInSpecifiedOrder(final Context context,
                                                            final Comparator<? super String> comparator)
             throws SQLException {
@@ -65,141 +88,167 @@ public class Attribute
         );
     }
 
+    /**
+     * Returns a comparator for comparing instances in the order specified by the JDBC specification.
+     * <p>
+     * This method uses {@link Comparator#naturalOrder()} for comparing string values.
+     * </p>
+     *
+     * @param context the context; must be not {@code null}.
+     * @return a comparator for comparing instances in the specified order.
+     * @throws SQLException if a database error occurs.
+     * @see #comparingInSpecifiedOrder(Context, Comparator)
+     */
+    static Comparator<Attribute> comparingInSpecifiedOrder(final Context context) throws SQLException {
+        Objects.requireNonNull(context, "context is null");
+        return comparingInSpecifiedOrder(
+                context,
+                Comparator.naturalOrder()
+        );
+    }
+
     // -------------------------------------------------------------------------------------------------------- TYPE_CAT
+
+    /**
+     * A column label of {@value}.
+     */
     public static final String COLUMN_LABEL_TYPE_CAT = "TYPE_CAT";
 
     // ------------------------------------------------------------------------------------------------------ TYPE_SCHEM
+    /**
+     * A column label of {@value}.
+     */
     public static final String COLUMN_LABEL_TYPE_SCHEM = "TYPE_SCHEM";
 
     // ------------------------------------------------------------------------------------------------------- TYPE_NAME
 
     /**
-     * The column label of {@value}.
+     * A column label of {@value}.
      */
     public static final String COLUMN_LABEL_TYPE_NAME = "TYPE_NAME";
 
     // ------------------------------------------------------------------------------------------------------- ATTR_NAME
 
     /**
-     * The column label of {@value}.
+     * A column label of {@value}.
      */
     public static final String COLUMN_LABEL_ATTR_NAME = "ATTR_NAME";
     // ------------------------------------------------------------------------------------------------------- DATA_TYPE
 
     /**
-     * The column label of {@value}.
+     * A column label of {@value}.
      */
     public static final String COLUMN_LABEL_DATA_TYPE = "DATA_TYPE";
 
     // -------------------------------------------------------------------------------------------------------- NULLABLE
 
     /**
-     * The column label of {@value}
+     * A column label of {@value}.
      */
     public static final String COLUMN_LABEL_NULLABLE = "NULLABLE";
 
     // -----------------------------------------------------------------------------------------------------------------
 
     /**
-     * The column label of {@value}.
+     * A column label of {@value}.
      */
     public static final String COLUMN_LABEL_IS_NULLABLE = "IS_NULLABLE";
 
     // -----------------------------------------------------------------------------------------------------------------
 
     /**
-     * The column label of {@value}.
+     * A column label of {@value}.
      */
     public static final String COLUMN_LABEL_ATTR_TYPE_NAME = "ATTR_TYPE_NAME";
 
     // -----------------------------------------------------------------------------------------------------------------
 
     /**
-     * The column label of {@value}.
+     * A column label of {@value}.
      */
     public static final String COLUMN_LABEL_ATTR_SIZE = "ATTR_SIZE";
 
     // -----------------------------------------------------------------------------------------------------------------
 
     /**
-     * The column label of {@value}.
+     * A column label of {@value}.
      */
     public static final String COLUMN_LABEL_DECIMAL_DIGITS = "DECIMAL_DIGITS";
 
     // -----------------------------------------------------------------------------------------------------------------
 
     /**
-     * The column label of {@value}.
+     * A column label of {@value}.
      */
     public static final String COLUMN_LABEL_NUM_PREC_RADIX = "NUM_PREC_RADIX";
 
     // -----------------------------------------------------------------------------------------------------------------
 
     /**
-     * The column label of {@value}.
+     * A column label of {@value}.
      */
     public static final String COLUMN_LABEL_REMARKS = "REMARKS";
 
     // -----------------------------------------------------------------------------------------------------------------
 
     /**
-     * The column label of {@value}.
+     * A column label of {@value}.
      */
     public static final String COLUMN_LABEL_ATTR_DEF = "ATTR_DEF";
 
     // -----------------------------------------------------------------------------------------------------------------
 
     /**
-     * The column label of {@value}.
+     * A column label of {@value}.
      */
     public static final String COLUMN_LABEL_SQL_DATA_TYPE = "SQL_DATA_TYPE";
 
     // -----------------------------------------------------------------------------------------------------------------
 
     /**
-     * The column label of {@value}.
+     * A column label of {@value}.
      */
     public static final String COLUMN_LABEL_SQL_DATETIME_SUB = "SQL_DATETIME_SUB";
 
     // -----------------------------------------------------------------------------------------------------------------
 
     /**
-     * The column label of {@value}.
+     * A column label of {@value}.
      */
     public static final String COLUMN_LABEL_CHAR_OCTET_LENGTH = "CHAR_OCTET_LENGTH";
 
     // -----------------------------------------------------------------------------------------------------------------
 
     /**
-     * The column label of {@value}.
+     * A column label of {@value}.
      */
     public static final String COLUMN_LABEL_ORDINAL_POSITION = "ORDINAL_POSITION";
 
     // -----------------------------------------------------------------------------------------------------------------
 
     /**
-     * The column label of {@value}.
+     * A column label of {@value}.
      */
     public static final String COLUMN_LABEL_SCOPE_CATALOG = "SCOPE_CATALOG";
 
     // -----------------------------------------------------------------------------------------------------------------
 
     /**
-     * The column label of {@value}.
+     * A column label of {@value}.
      */
     public static final String COLUMN_LABEL_SCOPE_SCHEMA = "SCOPE_SCHEMA";
 
     // -----------------------------------------------------------------------------------------------------------------
 
     /**
-     * The column label of {@value}.
+     * A column label of {@value}.
      */
     public static final String COLUMN_LABEL_SCOPE_TABLE = "SCOPE_TABLE";
 
     // -----------------------------------------------------------------------------------------------------------------
 
     /**
-     * The column label of {@value}.
+     * A column label of {@value}.
      */
     public static final String COLUMN_LABEL_SOURCE_DATA_TYPE = "SOURCE_DATA_TYPE";
 
@@ -732,12 +781,12 @@ public class Attribute
 
     // -----------------------------------------------------------------------------------------------------------------
 
-    @Nullable
+    @org.jspecify.annotations.Nullable
     @_NullableBySpecification
     @_ColumnLabel(COLUMN_LABEL_TYPE_CAT)
     private String typeCat;
 
-    @Nullable
+    @org.jspecify.annotations.Nullable
     @_NullableBySpecification
     @_ColumnLabel(COLUMN_LABEL_TYPE_SCHEM)
     private String typeSchem;
@@ -758,7 +807,7 @@ public class Attribute
     @_ColumnLabel(COLUMN_LABEL_ATTR_SIZE)
     private Integer attrSize;
 
-    @Nullable
+    @org.jspecify.annotations.Nullable
     @_NullableBySpecification
     @_ColumnLabel(COLUMN_LABEL_DECIMAL_DIGITS)
     private Integer decimalDigits;
@@ -769,22 +818,22 @@ public class Attribute
     @_ColumnLabel(COLUMN_LABEL_NULLABLE)
     private Integer nullable;
 
-    @Nullable
+    @org.jspecify.annotations.Nullable
     @_NullableBySpecification
     @_ColumnLabel(COLUMN_LABEL_REMARKS)
     private String remarks;
 
-    @Nullable
+    @org.jspecify.annotations.Nullable
     @_NullableBySpecification
     @_ColumnLabel(COLUMN_LABEL_ATTR_DEF)
     private String attrDef;
 
-    @Nullable
+    @org.jspecify.annotations.Nullable
     @_NotUsedBySpecification
     @_ColumnLabel(COLUMN_LABEL_SQL_DATA_TYPE)
     private Integer sqlDataType;
 
-    @Nullable
+    @org.jspecify.annotations.Nullable
     @_NotUsedBySpecification
     @_ColumnLabel(COLUMN_LABEL_SQL_DATETIME_SUB)
     private Integer sqlDatetimeSub;
@@ -799,22 +848,22 @@ public class Attribute
     @_ColumnLabel(COLUMN_LABEL_IS_NULLABLE)
     private String isNullable;
 
-    @Nullable
+    @org.jspecify.annotations.Nullable
     @_NullableBySpecification
     @_ColumnLabel(COLUMN_LABEL_SCOPE_CATALOG)
     private String scopeCatalog;
 
-    @Nullable
+    @org.jspecify.annotations.Nullable
     @_NullableBySpecification
     @_ColumnLabel(COLUMN_LABEL_SCOPE_SCHEMA)
     private String scopeSchema;
 
-    @Nullable
+    @org.jspecify.annotations.Nullable
     @_NullableBySpecification
     @_ColumnLabel(COLUMN_LABEL_SCOPE_TABLE)
     private String scopeTable;
 
-    @Nullable
+    @org.jspecify.annotations.Nullable
     @_NullableBySpecification
     @_ColumnLabel(COLUMN_LABEL_SOURCE_DATA_TYPE)
     private Integer sourceDataType;

@@ -62,7 +62,7 @@ public class TableType
     // -----------------------------------------------------------------------------------------------------------------
 
     /**
-     * The column label of {@value}.
+     * A column label of {@value}.
      */
     public static final String COLUMN_LABEL_TABLE_TYPE = "TABLE_TYPE";
 

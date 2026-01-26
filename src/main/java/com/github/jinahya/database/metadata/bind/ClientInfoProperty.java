@@ -53,28 +53,28 @@ public class ClientInfoProperty
     // ------------------------------------------------------------------------------------------------------------ NAME
 
     /**
-     * The column label of {@value}.
+     * A column label of {@value}.
      */
     public static final String COLUMN_LABEL_NAME = "NAME";
 
     // --------------------------------------------------------------------------------------------------------- MAX_LEN
 
     /**
-     * The column label of {@value}.
+     * A column label of {@value}.
      */
     public static final String COLUMN_LABEL_MAX_LEN = "MAX_LEN";
 
     // --------------------------------------------------------------------------------------------------- DEFAULT_VALUE
 
     /**
-     * The column label of {@value}.
+     * A column label of {@value}.
      */
     public static final String COLUMN_LABEL_DEFAULT_VALUE = "DEFAULT_VALUE";
 
     // ----------------------------------------------------------------------------------------------------- DESCRIPTION
 
     /**
-     * The column label of {@value}.
+     * A column label of {@value}.
      */
     public static final String COLUMN_LABEL_DESCRIPTION = "DESCRIPTION";
 
