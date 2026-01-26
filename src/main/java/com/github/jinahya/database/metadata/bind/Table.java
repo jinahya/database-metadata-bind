@@ -20,7 +20,7 @@ package com.github.jinahya.database.metadata.bind;
  * #L%
  */
 
-import lombok.EqualsAndHashCode;
+import org.jspecify.annotations.Nullable;
 
 import java.sql.SQLException;
 import java.util.Comparator;
@@ -392,10 +392,12 @@ public class Table
 
     // -----------------------------------------------------------------------------------------------------------------
 
+    @Nullable
     @_NullableBySpecification
     @_ColumnLabel(COLUMN_LABEL_TABLE_CAT)
     private String tableCat;
 
+    @Nullable
     @_NullableBySpecification
     @_ColumnLabel(COLUMN_LABEL_TABLE_SCHEM)
     private String tableSchem;
@@ -409,30 +411,36 @@ public class Table
 
     // -----------------------------------------------------------------------------------------------------------------
 
+    @Nullable
     @_NullableBySpecification
     @_ColumnLabel(COLUMN_LABEL_REMARKS)
     private String remarks;
 
     // -----------------------------------------------------------------------------------------------------------------
 
+    @Nullable
     @_NullableBySpecification
     @_ColumnLabel(COLUMN_LABEL_TYPE_CAT)
     private String typeCat;
 
+    @Nullable
     @_NullableBySpecification
     @_ColumnLabel(COLUMN_LABEL_TYPE_SCHEM)
     private String typeSchem;
 
+    @Nullable
     @_NullableBySpecification
     @_ColumnLabel(COLUMN_LABEL_TYPE_NAME)
     private String typeName;
 
     // -----------------------------------------------------------------------------------------------------------------
 
+    @Nullable
     @_NullableBySpecification
     @_ColumnLabel(COLUMN_LABEL_SELF_REFERENCING_COL_NAME)
     private String selfReferencingColName;
 
+    @Nullable
     @_NullableBySpecification
     @_ColumnLabel(COLUMN_LABEL_REF_GENERATION)
     private String refGeneration;

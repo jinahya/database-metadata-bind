@@ -20,6 +20,8 @@ package com.github.jinahya.database.metadata.bind;
  * #L%
  */
 
+import org.jspecify.annotations.Nullable;
+
 import java.util.Objects;
 
 /**

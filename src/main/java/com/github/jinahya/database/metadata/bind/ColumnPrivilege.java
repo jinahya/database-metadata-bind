@@ -21,7 +21,7 @@ package com.github.jinahya.database.metadata.bind;
  */
 
 import jakarta.validation.constraints.Pattern;
-import lombok.EqualsAndHashCode;
+import org.jspecify.annotations.Nullable;
 
 import java.sql.DatabaseMetaData;
 import java.sql.SQLException;

@@ -20,9 +20,10 @@ package com.github.jinahya.database.metadata.bind;
  * #L%
  */
 
-import java.util.Objects;
+import org.jspecify.annotations.Nullable;
 
 import java.sql.DatabaseMetaData;
+import java.util.Objects;
 
 /**
  * A class for binding results of the
@@ -247,10 +248,12 @@ public class SuperType
 
     // -----------------------------------------------------------------------------------------------------------------
 
+    @Nullable
     @_NullableBySpecification
     @_ColumnLabel(COLUMN_LABEL_TYPE_CAT)
     private String typeCat;
 
+    @Nullable
     @_NullableBySpecification
     @_ColumnLabel(COLUMN_LABEL_TYPE_SCHEM)
     private String typeSchem;
@@ -260,10 +263,12 @@ public class SuperType
 
     // -----------------------------------------------------------------------------------------------------------------
 
+    @Nullable
     @_NullableBySpecification
     @_ColumnLabel(COLUMN_LABEL_SUPERTYPE_CAT)
     private String supertypeCat;
 
+    @Nullable
     @_NullableBySpecification
     @_ColumnLabel(COLUMN_LABEL_SUPERTYPE_SCHEM)
     private String supertypeSchem;

@@ -21,7 +21,7 @@ package com.github.jinahya.database.metadata.bind;
  */
 
 import jakarta.validation.constraints.Positive;
-import lombok.EqualsAndHashCode;
+import org.jspecify.annotations.Nullable;
 
 import java.sql.DatabaseMetaData;
 import java.sql.SQLException;
@@ -732,10 +732,12 @@ public class Attribute
 
     // -----------------------------------------------------------------------------------------------------------------
 
+    @Nullable
     @_NullableBySpecification
     @_ColumnLabel(COLUMN_LABEL_TYPE_CAT)
     private String typeCat;
 
+    @Nullable
     @_NullableBySpecification
     @_ColumnLabel(COLUMN_LABEL_TYPE_SCHEM)
     private String typeSchem;
@@ -756,6 +758,7 @@ public class Attribute
     @_ColumnLabel(COLUMN_LABEL_ATTR_SIZE)
     private Integer attrSize;
 
+    @Nullable
     @_NullableBySpecification
     @_ColumnLabel(COLUMN_LABEL_DECIMAL_DIGITS)
     private Integer decimalDigits;
@@ -766,18 +769,22 @@ public class Attribute
     @_ColumnLabel(COLUMN_LABEL_NULLABLE)
     private Integer nullable;
 
+    @Nullable
     @_NullableBySpecification
     @_ColumnLabel(COLUMN_LABEL_REMARKS)
     private String remarks;
 
+    @Nullable
     @_NullableBySpecification
     @_ColumnLabel(COLUMN_LABEL_ATTR_DEF)
     private String attrDef;
 
+    @Nullable
     @_NotUsedBySpecification
     @_ColumnLabel(COLUMN_LABEL_SQL_DATA_TYPE)
     private Integer sqlDataType;
 
+    @Nullable
     @_NotUsedBySpecification
     @_ColumnLabel(COLUMN_LABEL_SQL_DATETIME_SUB)
     private Integer sqlDatetimeSub;
@@ -792,18 +799,22 @@ public class Attribute
     @_ColumnLabel(COLUMN_LABEL_IS_NULLABLE)
     private String isNullable;
 
+    @Nullable
     @_NullableBySpecification
     @_ColumnLabel(COLUMN_LABEL_SCOPE_CATALOG)
     private String scopeCatalog;
 
+    @Nullable
     @_NullableBySpecification
     @_ColumnLabel(COLUMN_LABEL_SCOPE_SCHEMA)
     private String scopeSchema;
 
+    @Nullable
     @_NullableBySpecification
     @_ColumnLabel(COLUMN_LABEL_SCOPE_TABLE)
     private String scopeTable;
 
+    @Nullable
     @_NullableBySpecification
     @_ColumnLabel(COLUMN_LABEL_SOURCE_DATA_TYPE)
     private Integer sourceDataType;

@@ -20,9 +20,8 @@ package com.github.jinahya.database.metadata.bind;
  * #L%
  */
 
-import lombok.extern.java.Log;
-
 import java.lang.annotation.Annotation;
+import java.lang.invoke.MethodHandles;
 import java.lang.reflect.Field;
 import java.sql.ResultSet;
 import java.sql.ResultSetMetaData;
@@ -33,10 +32,10 @@ import java.util.HashSet;
 import java.util.Map;
 import java.util.Objects;
 import java.util.Set;
-import java.util.logging.Level;
 
-@Log
 final class ContextUtils {
+
+    private static final System.Logger logger = System.getLogger(MethodHandles.lookup().lookupClass().getName());
 
     @SuppressWarnings({
             "java:S3011" // setAccessible
@@ -146,8 +145,10 @@ final class ContextUtils {
                 }
             }
         }
-        log.log(Level.SEVERE,
-                () -> String.format("failed to set; label: %1$s, value: %2$s, field: %3$s", label, value, field));
+        logger.log(
+                System.Logger.Level.ERROR,
+                () -> String.format("failed to set; label: %s, value: %s, field: %s", label, value, field)
+        );
     }
 
     static <T> Comparator<T> nullPrecedence(final Context context,

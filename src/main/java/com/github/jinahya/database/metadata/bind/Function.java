@@ -20,6 +20,8 @@ package com.github.jinahya.database.metadata.bind;
  * #L%
  */
 
+import org.jspecify.annotations.Nullable;
+
 import java.sql.DatabaseMetaData;
 import java.sql.SQLException;
 import java.util.Comparator;
@@ -285,10 +287,12 @@ public class Function
 
     // -----------------------------------------------------------------------------------------------------------------
 
+    @Nullable
     @_NullableBySpecification
     @_ColumnLabel(COLUMN_LABEL_FUNCTION_CAT)
     private String functionCat;
 
+    @Nullable
     @_NullableBySpecification
     @_ColumnLabel(COLUMN_LABEL_FUNCTION_SCHEM)
     private String functionSchem;

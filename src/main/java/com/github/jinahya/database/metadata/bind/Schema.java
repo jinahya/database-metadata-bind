@@ -20,6 +20,8 @@ package com.github.jinahya.database.metadata.bind;
  * #L%
  */
 
+import org.jspecify.annotations.Nullable;
+
 import java.sql.SQLException;
 import java.util.Comparator;
 import java.util.Objects;
@@ -173,6 +175,7 @@ public class Schema
     @_ColumnLabel(COLUMN_LABEL_TABLE_SCHEM)
     private String tableSchem;
 
+    @Nullable
     @_NullableBySpecification
     @_ColumnLabel(COLUMN_LABEL_TABLE_CATALOG)
     private String tableCatalog;

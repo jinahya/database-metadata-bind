@@ -21,7 +21,7 @@ package com.github.jinahya.database.metadata.bind;
  */
 
 import jakarta.validation.constraints.AssertTrue;
-import lombok.EqualsAndHashCode;
+import org.jspecify.annotations.Nullable;
 
 import java.sql.DatabaseMetaData;
 import java.sql.SQLException;
@@ -583,10 +583,12 @@ public class IndexInfo
 
     // -----------------------------------------------------------------------------------------------------------------
 
+    @Nullable
     @_NullableBySpecification
     @_ColumnLabel(COLUMN_LABEL_TABLE_CAT)
     private String tableCat;
 
+    @Nullable
     @_NullableBySpecification
     @_ColumnLabel(COLUMN_LABEL_TABLE_SCHEM)
     private String tableSchem;
@@ -597,10 +599,12 @@ public class IndexInfo
     @_ColumnLabel(COLUMN_LABEL_NON_UNIQUE)
     private Boolean nonUnique;
 
+    @Nullable
     @_NullableBySpecification
     @_ColumnLabel(COLUMN_LABEL_INDEX_QUALIFIER)
     private String indexQualifier;
 
+    @Nullable
     @_NullableBySpecification
     @_ColumnLabel(COLUMN_LABEL_INDEX_NAME)
     private String indexName;
@@ -611,10 +615,12 @@ public class IndexInfo
     @_ColumnLabel(COLUMN_LABEL_ORDINAL_POSITION)
     private Integer ordinalPosition;
 
+    @Nullable
     @_NullableBySpecification
     @_ColumnLabel(COLUMN_LABEL_COLUMN_NAME)
     private String columnName;
 
+    @Nullable
     @_NullableBySpecification
     @_ColumnLabel(COLUMN_LABEL_ASC_OR_DESC)
     private String ascOrDesc;
@@ -625,6 +631,7 @@ public class IndexInfo
     @_ColumnLabel(COLUMN_LABEL_PAGES)
     private Long pages;
 
+    @Nullable
     @_NullableBySpecification
     @_ColumnLabel(COLUMN_LABEL_FILTER_CONDITION)
     private String filterCondition;

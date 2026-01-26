@@ -39,7 +39,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 @Slf4j
 class ContextTest {
 
-    @DisplayName("...(...)ResultSet")
+    @DisplayName("all ...(...)ResultSet method bound")
     @Test
     void assertAllMethodsBound() throws ReflectiveOperationException {
         for (final var method : DatabaseMetaData.class.getMethods()) {
@@ -48,9 +48,6 @@ class ContextTest {
                 continue;
             }
             if (method.getDeclaringClass() != DatabaseMetaData.class) {
-                continue;
-            }
-            if (false && method.getParameterCount() == 0) {
                 continue;
             }
             if (!ResultSet.class.isAssignableFrom(method.getReturnType())) {

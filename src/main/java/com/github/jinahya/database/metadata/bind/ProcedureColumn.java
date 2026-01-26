@@ -20,6 +20,8 @@ package com.github.jinahya.database.metadata.bind;
  * #L%
  */
 
+import org.jspecify.annotations.Nullable;
+
 import java.sql.DatabaseMetaData;
 import java.sql.SQLException;
 import java.util.Comparator;
@@ -670,10 +672,12 @@ public class ProcedureColumn
     }
 
     // -----------------------------------------------------------------------------------------------------------------
+    @Nullable
     @_NullableBySpecification
     @_ColumnLabel(COLUMN_LABEL_PROCEDURE_CAT)
     private String procedureCat;
 
+    @Nullable
     @_NullableBySpecification
     @_ColumnLabel(COLUMN_LABEL_PROCEDURE_SCHEM)
     private String procedureSchem;
@@ -694,6 +698,7 @@ public class ProcedureColumn
     @_ColumnLabel(COLUMN_LABEL_TYPE_NAME)
     private String typeName;
 
+    @Nullable
     @_NullableBySpecification
     @_ColumnLabel(COLUMN_LABEL_PRECISION)
     private Integer precision;
@@ -701,6 +706,7 @@ public class ProcedureColumn
     @_ColumnLabel(COLUMN_LABEL_LENGTH)
     private Integer length;
 
+    @Nullable
     @_NullableBySpecification
     @_ColumnLabel(COLUMN_LABEL_SCALE)
     private Integer scale;
@@ -714,18 +720,22 @@ public class ProcedureColumn
     @_ColumnLabel(COLUMN_LABEL_REMARKS)
     private String remarks;
 
+    @Nullable
     @_NullableBySpecification
     @_ColumnLabel(COLUMN_LABEL_COLUMN_DEF)
     private String columnDef;
 
+    @Nullable
     @_ReservedBySpecification
     @_ColumnLabel(COLUMN_LABEL_SQL_DATA_TYPE)
     private Integer sqlDataType;
 
+    @Nullable
     @_ReservedBySpecification
     @_ColumnLabel(COLUMN_LABEL_SQL_DATETIME_SUB)
     private Integer sqlDatetimeSub;
 
+    @Nullable
     @_NullableBySpecification
     @_ColumnLabel(COLUMN_LABEL_CHAR_OCTET_LENGTH)
     private Integer charOctetLength;

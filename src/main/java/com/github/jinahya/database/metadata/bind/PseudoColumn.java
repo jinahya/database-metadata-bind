@@ -20,6 +20,8 @@ package com.github.jinahya.database.metadata.bind;
  * #L%
  */
 
+import org.jspecify.annotations.Nullable;
+
 import java.sql.DatabaseMetaData;
 import java.sql.SQLException;
 import java.util.Comparator;
@@ -381,11 +383,13 @@ public class PseudoColumn
     }
 
     // -----------------------------------------------------------------------------------------------------------------
+    @Nullable
     @_NullableBySpecification
     @_ColumnLabel(COLUMN_LABEL_TABLE_CAT)
 
     private String tableCat;
 
+    @Nullable
     @_NullableBySpecification
     @_ColumnLabel(COLUMN_LABEL_TABLE_SCHEM)
 
@@ -401,10 +405,12 @@ public class PseudoColumn
     @_ColumnLabel(COLUMN_LABEL_DATA_TYPE)
     private Integer dataType;
 
+    @Nullable
     @_NullableBySpecification
     @_ColumnLabel(COLUMN_LABEL_COLUMN_SIZE)
     private Integer columnSize;
 
+    @Nullable
     @_NullableBySpecification
     @_ColumnLabel(COLUMN_LABEL_DECIMAL_DIGITS)
     private Integer decimalDigits;
@@ -415,6 +421,7 @@ public class PseudoColumn
     @_ColumnLabel(COLUMN_LABEL_USAGE)
     private String columnUsage;
 
+    @Nullable
     @_NullableBySpecification
     @_ColumnLabel(COLUMN_LABEL_REMARKS)
     private String remarks;

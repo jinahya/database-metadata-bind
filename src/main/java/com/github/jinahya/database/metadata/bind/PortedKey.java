@@ -20,7 +20,7 @@ package com.github.jinahya.database.metadata.bind;
  * #L%
  */
 
-import lombok.EqualsAndHashCode;
+import org.jspecify.annotations.Nullable;
 
 import java.sql.DatabaseMetaData;
 import java.util.Comparator;
@@ -475,10 +475,12 @@ abstract class PortedKey
     }
 
     // -----------------------------------------------------------------------------------------------------------------
+    @Nullable
     @_NullableBySpecification
     @_ColumnLabel(COLUMN_NAME_PKTABLE_CAT)
     String pktableCat;
 
+    @Nullable
     @_NullableBySpecification
     @_ColumnLabel(COLUMN_NAME_PKTABLE_SCHEM)
     String pktableSchem;
@@ -490,10 +492,12 @@ abstract class PortedKey
     String pkcolumnName;
 
     // -----------------------------------------------------------------------------------------------------------------
+    @Nullable
     @_NullableBySpecification
     @_ColumnLabel(COLUMN_NAME_FKTABLE_CAT)
     String fktableCat;
 
+    @Nullable
     @_NullableBySpecification
     @_ColumnLabel(COLUMN_NAME_FKTABLE_SCHEM)
     String fktableSchem;
@@ -516,10 +520,12 @@ abstract class PortedKey
     private Integer deleteRule;
 
     // -----------------------------------------------------------------------------------------------------------------
+    @Nullable
     @_NullableBySpecification
     @_ColumnLabel(COLUMN_NAME_FK_NAME)
     private String fkName;
 
+    @Nullable
     @_NullableBySpecification
     @_ColumnLabel(COLUMN_NAME_PK_NAME)
     private String pkName;

@@ -23,7 +23,7 @@ package com.github.jinahya.database.metadata.bind;
 import jakarta.validation.constraints.AssertTrue;
 import jakarta.validation.constraints.Pattern;
 import jakarta.validation.constraints.Positive;
-import lombok.EqualsAndHashCode;
+import org.jspecify.annotations.Nullable;
 
 import java.sql.DatabaseMetaData;
 import java.sql.SQLException;
@@ -856,10 +856,12 @@ public class Column
 
     // -----------------------------------------------------------------------------------------------------------------
 
+    @Nullable
     @_NullableBySpecification
     @_ColumnLabel(COLUMN_LABEL_TABLE_CAT)
     private String tableCat;
 
+    @Nullable
     @_NullableBySpecification
     @_ColumnLabel(COLUMN_LABEL_TABLE_SCHEM)
     private String tableSchem;
@@ -877,14 +879,17 @@ public class Column
     @_ColumnLabel(COLUMN_LABEL_TYPE_NAME)
     private String typeName;
 
+    @Nullable
     @_NullableBySpecification
     @_ColumnLabel(COLUMN_LABEL_COLUMN_SIZE)
     private Integer columnSize;
 
+    @Nullable
     @_NotUsedBySpecification
     @_ColumnLabel(COLUMN_LABEL_BUFFER_LENGTH)
     private Integer bufferLength;
 
+    @Nullable
     @_NullableBySpecification
     @_ColumnLabel(COLUMN_LABEL_DECIMAL_DIGITS)
     private Integer decimalDigits;
@@ -895,22 +900,28 @@ public class Column
     @_ColumnLabel(COLUMN_LABEL_NULLABLE)
     private Integer nullable;
 
+    @Nullable
     @_NullableBySpecification
     @_ColumnLabel(COLUMN_LABEL_REMARKS)
     private String remarks;
 
+    @Nullable
     @_NullableBySpecification
     @_ColumnLabel(COLUMN_LABEL_COLUMN_DEF)
     private String columnDef;
 
+    @Nullable
     @_NotUsedBySpecification
     @_ColumnLabel(COLUMN_LABEL_SQL_DATA_TYPE)
     private Integer sqlDataType;
 
+    @Nullable
     @_NotUsedBySpecification
     @_ColumnLabel(COLUMN_LABEL_SQL_DATETIME_SUB)
     private Integer sqlDatetimeSub;
 
+    @Nullable
+    @_NullableBySpecification
     @_ColumnLabel(COLUMN_LABEL_CHAR_OCTET_LENGTH)
     private Integer charOctetLength;
 
@@ -923,20 +934,24 @@ public class Column
 
     // -----------------------------------------------------------------------------------------------------------------
 
+    @Nullable
     @_NullableBySpecification
     @_ColumnLabel(COLUMN_LABEL_SCOPE_CATALOG)
     private String scopeCatalog;
 
+    @Nullable
     @_NullableBySpecification
     @_ColumnLabel(COLUMN_LABEL_SCOPE_SCHEMA)
     private String scopeSchema;
 
+    @Nullable
     @_NullableBySpecification
     @_ColumnLabel(COLUMN_LABEL_SCOPE_TABLE)
     private String scopeTable;
 
     // -----------------------------------------------------------------------------------------------------------------
 
+    @Nullable
     @_NullableBySpecification
     @_ColumnLabel(COLUMN_LABEL_SOURCE_DATA_TYPE)
     private Integer sourceDataType;

@@ -20,7 +20,7 @@ package com.github.jinahya.database.metadata.bind;
  * #L%
  */
 
-import lombok.EqualsAndHashCode;
+import org.jspecify.annotations.Nullable;
 
 import java.sql.DatabaseMetaData;
 import java.sql.SQLException;
@@ -333,14 +333,17 @@ public class BestRowIdentifier
     @_ColumnLabel(COLUMN_LABEL_TYPE_NAME)
     private String typeName;
 
+    @Nullable
     @_NullableBySpecification
     @_ColumnLabel(COLUMN_LABEL_COLUMN_SIZE)
     private Integer columnSize;
 
+    @Nullable
     @_NotUsedBySpecification
     @_ColumnLabel(COLUMN_LABEL_BUFFER_LENGTH)
     private Integer bufferLength;
 
+    @Nullable
     @_NullableBySpecification
     @_ColumnLabel(COLUMN_LABEL_DECIMAL_DIGITS)
     private Integer decimalDigits;

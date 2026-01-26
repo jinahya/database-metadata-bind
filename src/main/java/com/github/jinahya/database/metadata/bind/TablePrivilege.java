@@ -20,6 +20,8 @@ package com.github.jinahya.database.metadata.bind;
  * #L%
  */
 
+import org.jspecify.annotations.Nullable;
+
 import java.sql.SQLException;
 import java.util.Comparator;
 import java.util.Objects;
@@ -281,10 +283,12 @@ public class TablePrivilege
 
     // -----------------------------------------------------------------------------------------------------------------
 
+    @Nullable
     @_NullableBySpecification
     @_ColumnLabel(COLUMN_LABEL_TABLE_CAT)
     private String tableCat;
 
+    @Nullable
     @_NullableBySpecification
     @_ColumnLabel(COLUMN_LABEL_TABLE_SCHEM)
     private String tableSchem;
@@ -294,6 +298,7 @@ public class TablePrivilege
 
     // -----------------------------------------------------------------------------------------------------------------
 
+    @Nullable
     @_NullableBySpecification
     @_ColumnLabel(COLUMN_LABEL_GRANTOR)
     private String grantor;
@@ -304,6 +309,7 @@ public class TablePrivilege
     @_ColumnLabel(COLUMN_LABEL_PRIVILEGE)
     private String privilege;
 
+    @Nullable
     @_NullableBySpecification
     @_ColumnLabel(COLUMN_LABEL_IS_GRANTABLE)
     private String isGrantable;

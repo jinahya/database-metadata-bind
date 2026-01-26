@@ -20,6 +20,8 @@ package com.github.jinahya.database.metadata.bind;
  * #L%
  */
 
+import org.jspecify.annotations.Nullable;
+
 import java.sql.DatabaseMetaData;
 import java.sql.SQLException;
 import java.sql.Types;
@@ -289,11 +291,13 @@ public class UDT
 
     // -----------------------------------------------------------------------------------------------------------------
 
+    @Nullable
     @_NullableBySpecification
     @_ColumnLabel(COLUMN_LABEL_TYPE_CAT)
 
     private String typeCat;
 
+    @Nullable
     @_NullableBySpecification
     @_ColumnLabel(COLUMN_LABEL_TYPE_SCHEM)
 
@@ -313,6 +317,7 @@ public class UDT
     @_ColumnLabel(COLUMN_LABEL_REMARKS)
     private String remarks;
 
+    @Nullable
     @_NullableBySpecification
     @_ColumnLabel(COLUMN_LABEL_BASE_TYPE)
     private Integer baseType;
