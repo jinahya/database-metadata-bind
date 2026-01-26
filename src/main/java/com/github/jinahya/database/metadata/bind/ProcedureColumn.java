@@ -20,7 +20,6 @@ package com.github.jinahya.database.metadata.bind;
  * #L%
  */
 
-import jakarta.annotation.Nullable;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.Setter;
@@ -126,21 +125,21 @@ public class ProcedureColumn
 
     // ---------------------------------------------------------------------------------------------------- procedureCat
 
-    @Nullable
+    
     public String getProcedureCat() {
         return procedureCat;
     }
 
-    protected void setProcedureCat(@Nullable final String procedureCat) {
+    protected void setProcedureCat(final String procedureCat) {
         this.procedureCat = procedureCat;
     }
 
-    @Nullable
+    
     public String getProcedureSchem() {
         return procedureSchem;
     }
 
-    protected void setProcedureSchem(@Nullable final String procedureSchem) {
+    protected void setProcedureSchem(final String procedureSchem) {
         this.procedureSchem = procedureSchem;
     }
 
@@ -184,12 +183,12 @@ public class ProcedureColumn
         this.typeName = typeName;
     }
 
-    @Nullable
+    
     public Integer getPrecision() {
         return precision;
     }
 
-    protected void setPrecision(@Nullable final Integer precision) {
+    protected void setPrecision(final Integer precision) {
         this.precision = precision;
     }
 
@@ -201,12 +200,12 @@ public class ProcedureColumn
         this.length = length;
     }
 
-    @Nullable
+    
     public Integer getScale() {
         return scale;
     }
 
-    protected void setScale(@Nullable final Integer scale) {
+    protected void setScale(final Integer scale) {
         this.scale = scale;
     }
 
@@ -234,12 +233,12 @@ public class ProcedureColumn
         this.remarks = remarks;
     }
 
-    @Nullable
+    
     public String getColumnDef() {
         return columnDef;
     }
 
-    protected void setColumnDef(@Nullable final String columnDef) {
+    protected void setColumnDef(final String columnDef) {
         this.columnDef = columnDef;
     }
 
@@ -292,12 +291,12 @@ public class ProcedureColumn
     }
 
     // -----------------------------------------------------------------------------------------------------------------
-    @Nullable
+    
     @_NullableBySpecification
     @_ColumnLabel("PROCEDURE_CAT")
     private String procedureCat;
 
-    @Nullable
+    
     @_NullableBySpecification
     @_ColumnLabel("PROCEDURE_SCHEM")
     private String procedureSchem;
@@ -319,7 +318,7 @@ public class ProcedureColumn
     @_ColumnLabel("TYPE_NAME")
     private String typeName;
 
-    @Nullable
+    
     @_NullableBySpecification
     @_ColumnLabel("PRECISION")
     private Integer precision;
@@ -327,7 +326,7 @@ public class ProcedureColumn
     @_ColumnLabel("LENGTH")
     private Integer length;
 
-    @Nullable
+    
     @_NullableBySpecification
     @_ColumnLabel("SCALE")
     private Integer scale;
@@ -341,7 +340,7 @@ public class ProcedureColumn
     @_ColumnLabel("REMARKS")
     private String remarks;
 
-    @Nullable
+    
     @_NullableBySpecification
     @_ColumnLabel("COLUMN_DEF")
     private String columnDef;
@@ -354,7 +353,7 @@ public class ProcedureColumn
     @_ColumnLabel("SQL_DATETIME_SUB")
     private Integer sqlDatetimeSub;
 
-    @Nullable
+    
     @_NullableBySpecification
     @_ColumnLabel("CHAR_OCTET_LENGTH")
     private Integer charOctetLength;

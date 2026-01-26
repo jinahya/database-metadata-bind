@@ -1,8 +1,5 @@
 package com.github.jinahya.database.metadata.bind;
 
-import jakarta.annotation.Nonnull;
-import jakarta.validation.Valid;
-import jakarta.validation.constraints.NotNull;
 
 import java.io.Serializable;
 import java.lang.invoke.MethodHandles;
@@ -77,7 +74,6 @@ class Metadata
     }
 
     // -----------------------------------------------------------------------------------------------------------------
-    @Nonnull
     public List<Catalog> getCatalogs() {
         if (catalogs == null) {
             catalogs = new ArrayList<>();
@@ -90,7 +86,6 @@ class Metadata
     }
 
     // -----------------------------------------------------------------------------------------------------------------
-    @Nonnull
     public List<Schema> getSchemas() {
         if (schemas == null) {
             schemas = new ArrayList<>();
@@ -103,7 +98,6 @@ class Metadata
     }
 
     // ---------------------------------------------------------------------------------------------------------- tables
-    @Nonnull
     public List<Table> getTables() {
         if (tables == null) {
             tables = new ArrayList<>();
@@ -116,7 +110,6 @@ class Metadata
     }
 
     // ----------------------------------------------------------------------------------------------------- primaryKeys
-    @Nonnull
     public List<PrimaryKey> getPrimaryKeys() {
         if (primaryKeys == null) {
             primaryKeys = new ArrayList<>();
@@ -129,7 +122,6 @@ class Metadata
     }
 
     // --------------------------------------------------------------------------------------------------------- columns
-    @Nonnull
     public List<Column> getColumns() {
         if (columns == null) {
             columns = new ArrayList<>();
@@ -143,7 +135,6 @@ class Metadata
 
     // ------------------------------------------------------------------------------------------------ columnPrivileges
 
-    @Nonnull
     public List<ColumnPrivilege> getColumnPrivileges() {
         if (columnPrivileges == null) {
             columnPrivileges = new ArrayList<>();
@@ -156,15 +147,15 @@ class Metadata
     }
 
     // -----------------------------------------------------------------------------------------------------------------
-    private List<@Valid @NotNull Catalog> catalogs;
+    private List<Catalog> catalogs;
 
-    private List<@Valid @NotNull Schema> schemas;
+    private List<Schema> schemas;
 
-    private List<@Valid @NotNull Table> tables;
+    private List<Table> tables;
 
-    private List<@Valid @NotNull PrimaryKey> primaryKeys;
+    private List<PrimaryKey> primaryKeys;
 
-    private List<@Valid @NotNull Column> columns;
+    private List<Column> columns;
 
-    private List<@Valid @NotNull ColumnPrivilege> columnPrivileges;
+    private List<ColumnPrivilege> columnPrivileges;
 }

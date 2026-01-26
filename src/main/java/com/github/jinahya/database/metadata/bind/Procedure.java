@@ -20,7 +20,6 @@ package com.github.jinahya.database.metadata.bind;
  * #L%
  */
 
-import jakarta.annotation.Nullable;
 import lombok.EqualsAndHashCode;
 
 import java.sql.DatabaseMetaData;
@@ -98,22 +97,22 @@ public class Procedure
     }
 
     // ---------------------------------------------------------------------------------------------------- procedureCat
-    @Nullable
+    
     public String getProcedureCat() {
         return procedureCat;
     }
 
-    protected void setProcedureCat(@Nullable final String procedureCat) {
+    protected void setProcedureCat(final String procedureCat) {
         this.procedureCat = procedureCat;
     }
 
     // -------------------------------------------------------------------------------------------------- procedureSchem
-    @Nullable
+    
     public String getProcedureSchem() {
         return procedureSchem;
     }
 
-    protected void setProcedureSchem(@Nullable final String procedureSchem) {
+    protected void setProcedureSchem(final String procedureSchem) {
         this.procedureSchem = procedureSchem;
     }
 
@@ -154,12 +153,12 @@ public class Procedure
     }
 
     // -----------------------------------------------------------------------------------------------------------------
-    @Nullable
+    
     @_NullableBySpecification
     @_ColumnLabel("PROCEDURE_CAT")
     private String procedureCat;
 
-    @Nullable
+    
     @_NullableBySpecification
     @_ColumnLabel("PROCEDURE_SCHEM")
     private String procedureSchem;

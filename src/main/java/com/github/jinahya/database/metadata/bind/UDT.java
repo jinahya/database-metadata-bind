@@ -20,7 +20,6 @@ package com.github.jinahya.database.metadata.bind;
  * #L%
  */
 
-import jakarta.annotation.Nullable;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.Setter;
@@ -28,10 +27,7 @@ import lombok.Setter;
 import java.sql.DatabaseMetaData;
 import java.sql.SQLException;
 import java.sql.Types;
-import java.util.ArrayList;
 import java.util.Comparator;
-import java.util.List;
-import java.util.Objects;
 
 /**
  * A class for binding results of the {@link DatabaseMetaData#getUDTs(String, String, String, int[])} method.
@@ -102,6 +98,20 @@ public class UDT
 
     public static final int COLUMN_VALUES_DATA_TYPE_STRUCT = Types.STRUCT; // 2002
 
+    // --------------------------------------------------------------------------------------------------------- REMARKS
+
+    /**
+     * A column label of {@value}.
+     */
+    public static final String COLUMN_LABEL_REMARKS = "REMARKS";
+
+    // ------------------------------------------------------------------------------------------------------- BASE_TYPE
+
+    /**
+     * A column label of {@value}.
+     */
+    public static final String COLUMN_LABEL_BASE_TYPE = "BASE_TYPE";
+
     // ------------------------------------------------------------------------------------------ STATIC_FACTORY_METHODS
 
     // ---------------------------------------------------------------------------------------------------- CONSTRUCTORS
@@ -121,7 +131,7 @@ public class UDT
                '}';
     }
 
-    // -----------------------------------------------------------------------------------------------------------------
+    // --------------------------------------------------------------------------------------------------------- typeCat
     public String getTypeCat() {
         return typeCat;
     }
@@ -130,6 +140,7 @@ public class UDT
         return typeSchem;
     }
 
+    // -------------------------------------------------------------------------------------------------------- typeName
     public String getTypeName() {
         return typeName;
     }
@@ -153,13 +164,12 @@ public class UDT
     }
 
     // -----------------------------------------------------------------------------------------------------------------
-    @Nullable
+
     @_NullableBySpecification
     @_ColumnLabel(COLUMN_LABEL_TYPE_CAT)
 
     private String typeCat;
 
-    @Nullable
     @_NullableBySpecification
     @_ColumnLabel(COLUMN_LABEL_TYPE_SCHEM)
 
@@ -176,37 +186,10 @@ public class UDT
     @_ColumnLabel(COLUMN_LABEL_DATA_TYPE)
     private Integer dataType;
 
-    @_ColumnLabel("REMARKS")
+    @_ColumnLabel(COLUMN_LABEL_REMARKS)
     private String remarks;
 
-    @Nullable
     @_NullableBySpecification
-    @_ColumnLabel("BASE_TYPE")
+    @_ColumnLabel(COLUMN_LABEL_BASE_TYPE)
     private Integer baseType;
-
-    // -----------------------------------------------------------------------------------------------------------------
-    List<Attribute> getAttributes(final Context context, final String attributeNamePattern) throws SQLException {
-        Objects.requireNonNull(context, "context is null");
-        return context.getAttributes(this, attributeNamePattern);
-    }
-
-    List<SuperType> getSuperTypes(final Context context) throws SQLException {
-        Objects.requireNonNull(context, "context is null");
-        return context.getSuperTypes(this);
-    }
-
-    List<UDT> getSuperUDTs(final Context context, final int[] types) throws SQLException {
-        Objects.requireNonNull(context, "context is null");
-        final var collection = new ArrayList<UDT>();
-        for (final var superType : getSuperTypes(context)) {
-            context.getUDTsAndAddAll(
-                    superType.getTypeCat(),
-                    superType.getTypeSchem(),
-                    superType.getTypeName(),
-                    types,
-                    collection
-            );
-        }
-        return collection;
-    }
 }

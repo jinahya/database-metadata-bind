@@ -20,7 +20,6 @@ package com.github.jinahya.database.metadata.bind;
  * #L%
  */
 
-import jakarta.annotation.Nullable;
 import jakarta.validation.constraints.AssertTrue;
 import jakarta.validation.constraints.Pattern;
 import jakarta.validation.constraints.Positive;
@@ -29,7 +28,6 @@ import lombok.EqualsAndHashCode;
 import java.sql.DatabaseMetaData;
 import java.sql.SQLException;
 import java.sql.Types;
-import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Objects;
@@ -256,22 +254,22 @@ public class Column
     }
 
     // -------------------------------------------------------------------------------------------------------- tableCat
-    @Nullable
+
     public String getTableCat() {
         return tableCat;
     }
 
-    public void setTableCat(@Nullable final String tableCat) {
+    public void setTableCat(final String tableCat) {
         this.tableCat = tableCat;
     }
 
     // ------------------------------------------------------------------------------------------------------ tableSchem
-    @Nullable
+
     public String getTableSchem() {
         return tableSchem;
     }
 
-    public void setTableSchem(@Nullable final String tableSchem) {
+    public void setTableSchem(final String tableSchem) {
         this.tableSchem = tableSchem;
     }
 
@@ -312,12 +310,12 @@ public class Column
     }
 
     // ------------------------------------------------------------------------------------------------------ columnSize
-    @Nullable
+
     public Integer getColumnSize() {
         return columnSize;
     }
 
-    public void setColumnSize(@Nullable final Integer columnSize) {
+    public void setColumnSize(final Integer columnSize) {
         this.columnSize = columnSize;
     }
 
@@ -331,12 +329,12 @@ public class Column
     }
 
     // --------------------------------------------------------------------------------------------------- decimalDigits
-    @Nullable
+
     public Integer getDecimalDigits() {
         return decimalDigits;
     }
 
-    public void setDecimalDigits(@Nullable final Integer decimalDigits) {
+    public void setDecimalDigits(final Integer decimalDigits) {
         this.decimalDigits = decimalDigits;
     }
 
@@ -359,22 +357,22 @@ public class Column
     }
 
     // --------------------------------------------------------------------------------------------------------- remarks
-    @Nullable
+
     public String getRemarks() {
         return remarks;
     }
 
-    public void setRemarks(@Nullable final String remarks) {
+    public void setRemarks(final String remarks) {
         this.remarks = remarks;
     }
 
     // ------------------------------------------------------------------------------------------------------- columnDef
-    @Nullable
+
     public String getColumnDef() {
         return columnDef;
     }
 
-    public void setColumnDef(@Nullable final String columnDef) {
+    public void setColumnDef(final String columnDef) {
         this.columnDef = columnDef;
     }
 
@@ -424,42 +422,42 @@ public class Column
     }
 
     // ---------------------------------------------------------------------------------------------------- scopeCatalog
-    @Nullable
+
     public String getScopeCatalog() {
         return scopeCatalog;
     }
 
-    public void setScopeCatalog(@Nullable final String scopeCatalog) {
+    public void setScopeCatalog(final String scopeCatalog) {
         this.scopeCatalog = scopeCatalog;
     }
 
     // ----------------------------------------------------------------------------------------------------- scopeSchema
-    @Nullable
+
     public String getScopeSchema() {
         return scopeSchema;
     }
 
-    public void setScopeSchema(@Nullable final String scopeSchema) {
+    public void setScopeSchema(final String scopeSchema) {
         this.scopeSchema = scopeSchema;
     }
 
     // ------------------------------------------------------------------------------------------------------ scopeTable
-    @Nullable
+
     public String getScopeTable() {
         return scopeTable;
     }
 
-    public void setScopeTable(@Nullable final String scopeTable) {
+    public void setScopeTable(final String scopeTable) {
         this.scopeTable = scopeTable;
     }
 
     // -------------------------------------------------------------------------------------------------- sourceDataType
-    @Nullable
+
     public Integer getSourceDataType() {
         return sourceDataType;
     }
 
-    public void setSourceDataType(@Nullable final Integer sourceDataType) {
+    public void setSourceDataType(final Integer sourceDataType) {
         this.sourceDataType = sourceDataType;
     }
 
@@ -482,12 +480,11 @@ public class Column
     }
 
     // -----------------------------------------------------------------------------------------------------------------
-    @Nullable
+
     @_NullableBySpecification
     @_ColumnLabel(COLUMN_LABEL_TABLE_CAT)
     private String tableCat;
 
-    @Nullable
     @_NullableBySpecification
     @_ColumnLabel(COLUMN_LABEL_TABLE_SCHEM)
     private String tableSchem;
@@ -505,7 +502,6 @@ public class Column
     @_ColumnLabel("TYPE_NAME")
     private String typeName;
 
-    @Nullable
     @_NullableBySpecification
     @_ColumnLabel("COLUMN_SIZE")
     private Integer columnSize;
@@ -514,7 +510,6 @@ public class Column
     @_ColumnLabel("BUFFER_LENGTH")
     private Integer bufferLength;
 
-    @Nullable
     @_NullableBySpecification
     @_ColumnLabel("DECIMAL_DIGITS")
     private Integer decimalDigits;
@@ -525,12 +520,10 @@ public class Column
     @_ColumnLabel(COLUMN_LABEL_NULLABLE)
     private Integer nullable;
 
-    @Nullable
     @_NullableBySpecification
     @_ColumnLabel("REMARKS")
     private String remarks;
 
-    @Nullable
     @_NullableBySpecification
     @_ColumnLabel("COLUMN_DEF")
     private String columnDef;
@@ -554,23 +547,21 @@ public class Column
     private String isNullable;
 
     // -----------------------------------------------------------------------------------------------------------------
-    @Nullable
+
     @_NullableBySpecification
     @_ColumnLabel("SCOPE_CATALOG")
     private String scopeCatalog;
 
-    @Nullable
     @_NullableBySpecification
     @_ColumnLabel("SCOPE_SCHEMA")
     private String scopeSchema;
 
-    @Nullable
     @_NullableBySpecification
     @_ColumnLabel("SCOPE_TABLE")
     private String scopeTable;
 
     // -----------------------------------------------------------------------------------------------------------------
-    @Nullable
+
     @_NullableBySpecification
     @_ColumnLabel("SOURCE_DATA_TYPE")
     private Integer sourceDataType;
@@ -582,18 +573,4 @@ public class Column
     @Pattern(regexp = MetadataTypeConstants.PATTERN_REGEXP_YES_NO_OR_EMPTY)
     @_ColumnLabel(COLUMN_LABEL_IS_GENERATEDCOLUMN)
     private String isGeneratedcolumn;
-
-    // -----------------------------------------------------------------------------------------------------------------
-    List<ColumnPrivilege> getColumnPrivileges() {
-        if (columnPrivileges == null) {
-            columnPrivileges = new ArrayList<>();
-        }
-        return columnPrivileges;
-    }
-
-    void setColumnPrivileges(final List<ColumnPrivilege> columnPrivileges) {
-        this.columnPrivileges = columnPrivileges;
-    }
-
-    private List<ColumnPrivilege> columnPrivileges;
 }

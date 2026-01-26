@@ -32,8 +32,8 @@ class AttributeTest
     @Override
     Attribute newTypeInstance() {
         final Attribute instance = super.newTypeInstance();
-        instance.attrName = "";
-        instance.typeName = "";
+        instance.setAttrName("");
+        instance.setTypeName("");
         instance.setOrdinalPosition(1);
         return instance;
     }

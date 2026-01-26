@@ -20,7 +20,6 @@ package com.github.jinahya.database.metadata.bind;
  * #L%
  */
 
-import jakarta.annotation.Nullable;
 import lombok.EqualsAndHashCode;
 
 import java.sql.DatabaseMetaData;
@@ -74,7 +73,7 @@ public class VersionColumn
                '}';
     }
 
-    // -----------------------------------------------------------------------------------------------------------------
+    // ----------------------------------------------------------------------------------------------------------- scope
 
     /**
      * Returns the value of {@value COLUMN_LABEL_SCOPE} column.
@@ -85,34 +84,62 @@ public class VersionColumn
         return scope;
     }
 
-    // -----------------------------------------------------------------------------------------------------------------
+    void setScope(final Integer scope) {
+        this.scope = scope;
+    }
+
+    // ------------------------------------------------------------------------------------------------------ columnName
     public String getColumnName() {
         return columnName;
     }
 
-    // -----------------------------------------------------------------------------------------------------------------
+    void setColumnName(final String columnName) {
+        this.columnName = columnName;
+    }
+
+    // -------------------------------------------------------------------------------------------------------- dataType
     public Integer getDataType() {
         return dataType;
     }
 
-    // -----------------------------------------------------------------------------------------------------------------
+    void setDataType(final Integer dataType) {
+        this.dataType = dataType;
+    }
+
+    // -------------------------------------------------------------------------------------------------------- typeName
     public String getTypeName() {
         return typeName;
     }
 
-    // -----------------------------------------------------------------------------------------------------------------
+    void setTypeName(final String typeName) {
+        this.typeName = typeName;
+    }
+
+    // ------------------------------------------------------------------------------------------------------ columnSize
     public Integer getColumnSize() {
         return columnSize;
     }
 
-    // -----------------------------------------------------------------------------------------------------------------
+    void setColumnSize(final Integer columnSize) {
+        this.columnSize = columnSize;
+    }
+
+    // ---------------------------------------------------------------------------------------------------- bufferLength
     public Integer getBufferLength() {
         return bufferLength;
     }
 
-    // -----------------------------------------------------------------------------------------------------------------
+    void setBufferLength(final Integer bufferLength) {
+        this.bufferLength = bufferLength;
+    }
+
+    // --------------------------------------------------------------------------------------------------- decimalDigits
     public Integer getDecimalDigits() {
         return decimalDigits;
+    }
+
+    void setDecimalDigits(final Integer decimalDigits) {
+        this.decimalDigits = decimalDigits;
     }
 
     // ---------------------------------------------------------------------------------------------------- pseudoColumn
@@ -120,7 +147,7 @@ public class VersionColumn
         return pseudoColumn;
     }
 
-    public void setPseudoColumn(Integer pseudoColumn) {
+    public void setPseudoColumn(final Integer pseudoColumn) {
         this.pseudoColumn = pseudoColumn;
     }
 
@@ -139,7 +166,7 @@ public class VersionColumn
     @_ColumnLabel("TYPE_NAME")
     private String typeName;
 
-    @Nullable
+    
     @_NullableBySpecification
     @_ColumnLabel("COLUMN_SIZE")
     private Integer columnSize;
@@ -147,7 +174,7 @@ public class VersionColumn
     @_ColumnLabel("BUFFER_LENGTH")
     private Integer bufferLength;
 
-    @Nullable
+    
     @_NullableBySpecification
     @_ColumnLabel("DECIMAL_DIGITS")
     private Integer decimalDigits;

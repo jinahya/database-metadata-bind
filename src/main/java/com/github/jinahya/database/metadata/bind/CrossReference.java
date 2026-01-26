@@ -20,7 +20,6 @@ package com.github.jinahya.database.metadata.bind;
  * #L%
  */
 
-import jakarta.annotation.Nullable;
 import jakarta.validation.constraints.Positive;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
@@ -169,22 +168,22 @@ public class CrossReference
     // ------------------------------------------------------------------------------------------------ java.lang.Object
 
     // ------------------------------------------------------------------------------------------------------ pkTableCat
-    @Nullable
+    
     public String getPktableCat() {
         return pktableCat;
     }
 
-    void setPktableCat(@Nullable final String pktableCat) {
+    void setPktableCat(final String pktableCat) {
         this.pktableCat = pktableCat;
     }
 
     // ---------------------------------------------------------------------------------------------------- pkTableSchem
-    @Nullable
+    
     public String getPktableSchem() {
         return pktableSchem;
     }
 
-    void setPktableSchem(@Nullable final String pktableSchem) {
+    void setPktableSchem(final String pktableSchem) {
         this.pktableSchem = pktableSchem;
     }
 
@@ -207,22 +206,22 @@ public class CrossReference
     }
 
     // ------------------------------------------------------------------------------------------------------ fktableCat
-    @Nullable
+    
     public String getFktableCat() {
         return fktableCat;
     }
 
-    void setFktableCat(@Nullable final String fktableCat) {
+    void setFktableCat(final String fktableCat) {
         this.fktableCat = fktableCat;
     }
 
     // ---------------------------------------------------------------------------------------------------- fktableSchem
-    @Nullable
+    
     public String getFktableSchem() {
         return fktableSchem;
     }
 
-    void setFktableSchem(@Nullable final String fktableSchem) {
+    void setFktableSchem(final String fktableSchem) {
         this.fktableSchem = fktableSchem;
     }
 
@@ -272,22 +271,22 @@ public class CrossReference
     }
 
     // ---------------------------------------------------------------------------------------------------------- fkName
-    @Nullable
+    
     public String getFkName() {
         return fkName;
     }
 
-    public void setFkName(@Nullable final String fkName) {
+    public void setFkName(final String fkName) {
         this.fkName = fkName;
     }
 
     // ---------------------------------------------------------------------------------------------------------- pkName
-    @Nullable
+    
     public String getPkName() {
         return pkName;
     }
 
-    public void setPkName(@Nullable final String pkName) {
+    public void setPkName(final String pkName) {
         this.pkName = pkName;
     }
 
@@ -307,12 +306,12 @@ public class CrossReference
     }
 
     // -----------------------------------------------------------------------------------------------------------------
-    @Nullable
+    
     @_NullableBySpecification
     @_ColumnLabel(COLUMN_LABEL_PKTABLE_CAT)
     private String pktableCat;
 
-    @Nullable
+    
     @_NullableBySpecification
     @_ColumnLabel(COLUMN_LABEL_PKTABLE_SCHEM)
     private String pktableSchem;
@@ -324,12 +323,12 @@ public class CrossReference
     private String pkcolumnName;
 
     // -----------------------------------------------------------------------------------------------------------------
-    @Nullable
+    
     @_NullableBySpecification
     @_ColumnLabel(COLUMN_LABEL_FKTABLE_CAT)
     private String fktableCat;
 
-    @Nullable
+    
     @_NullableBySpecification
     @_ColumnLabel(COLUMN_LABEL_FKTABLE_SCHEM)
     private String fktableSchem;
@@ -353,12 +352,12 @@ public class CrossReference
     private Integer deleteRule;
 
     // -----------------------------------------------------------------------------------------------------------------
-    @Nullable
+    
     @_NullableBySpecification
     @_ColumnLabel(COLUMN_LABEL_FK_NAME)
     private String fkName;
 
-    @Nullable
+    
     @_NullableBySpecification
     @_ColumnLabel(COLUMN_LABEL_PK_NAME)
     private String pkName;

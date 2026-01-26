@@ -20,12 +20,9 @@ package com.github.jinahya.database.metadata.bind;
  * #L%
  */
 
-import jakarta.annotation.Nullable;
 import lombok.EqualsAndHashCode;
-import lombok.ToString;
 
 import java.sql.DatabaseMetaData;
-import java.util.Optional;
 
 /**
  * A class for binding results of the
@@ -41,6 +38,48 @@ public class SuperType
         extends AbstractMetadataType {
 
     private static final long serialVersionUID = 4603878785941565029L;
+
+    // -------------------------------------------------------------------------------------------------------- TYPE_CAT
+
+    /**
+     * A column label of {@value}.
+     */
+    public static final String COLUMN_LABEL_TYPE_CAT = "TYPE_CAT";
+
+    // ------------------------------------------------------------------------------------------------------ TYPE_SCHEM
+
+    /**
+     * A column label of {@value}.
+     */
+    public static final String COLUMN_LABEL_TYPE_SCHEM = "TYPE_SCHEM";
+
+    // ------------------------------------------------------------------------------------------------------- TYPE_NAME
+
+    /**
+     * A column label of {@value}.
+     */
+    public static final String COLUMN_LABEL_TYPE_NAME = "TYPE_NAME";
+
+    // ---------------------------------------------------------------------------------------------------- SUPERTYPE_CAT
+
+    /**
+     * A column label of {@value}.
+     */
+    public static final String COLUMN_LABEL_SUPERTYPE_CAT = "SUPERTYPE_CAT";
+
+    // -------------------------------------------------------------------------------------------------- SUPERTYPE_SCHEM
+
+    /**
+     * A column label of {@value}.
+     */
+    public static final String COLUMN_LABEL_SUPERTYPE_SCHEM = "SUPERTYPE_SCHEM";
+
+    // --------------------------------------------------------------------------------------------------- SUPERTYPE_NAME
+
+    /**
+     * A column label of {@value}.
+     */
+    public static final String COLUMN_LABEL_SUPERTYPE_NAME = "SUPERTYPE_NAME";
 
     // ---------------------------------------------------------------------------------------------------- CONSTRUCTORS
 
@@ -119,111 +158,28 @@ public class SuperType
     }
 
     // -----------------------------------------------------------------------------------------------------------------
-    @Nullable
+
     @_NullableBySpecification
-    @_ColumnLabel("TYPE_CAT")
+    @_ColumnLabel(COLUMN_LABEL_TYPE_CAT)
     private String typeCat;
 
-    @Nullable
     @_NullableBySpecification
-    @_ColumnLabel("TYPE_SCHEM")
+    @_ColumnLabel(COLUMN_LABEL_TYPE_SCHEM)
     private String typeSchem;
 
-    @_ColumnLabel("TYPE_NAME")
+    @_ColumnLabel(COLUMN_LABEL_TYPE_NAME)
     private String typeName;
 
     // -----------------------------------------------------------------------------------------------------------------
-    @Nullable
+
     @_NullableBySpecification
-    @_ColumnLabel("SUPERTYPE_CAT")
+    @_ColumnLabel(COLUMN_LABEL_SUPERTYPE_CAT)
     private String supertypeCat;
 
-    @Nullable
     @_NullableBySpecification
-    @_ColumnLabel("SUPERTYPE_SCHEM")
+    @_ColumnLabel(COLUMN_LABEL_SUPERTYPE_SCHEM)
     private String supertypeSchem;
 
-    @_ColumnLabel("SUPERTYPE_NAME")
+    @_ColumnLabel(COLUMN_LABEL_SUPERTYPE_NAME)
     private String supertypeName;
-
-    // -----------------------------------------------------------------------------------------------------------------
-    @EqualsAndHashCode.Exclude
-    @ToString.Exclude
-    private transient Catalog typeCatalog_;
-
-    @EqualsAndHashCode.Exclude
-    @ToString.Exclude
-    private transient Schema typeSchema_;
-
-    @EqualsAndHashCode.Exclude
-    @ToString.Exclude
-    private transient Catalog supertypeCatalog_;
-
-    @EqualsAndHashCode.Exclude
-    @ToString.Exclude
-    private transient Schema supertypeSchema_;
-
-    Catalog getTypeCatalog_() {
-        if (typeCatalog_ == null) {
-            typeCatalog_ = Catalog.of(typeCat);
-        }
-        return typeCatalog_;
-    }
-
-    void setTypeCatalog_(final Catalog typeCatalog_) {
-        this.typeCatalog_ = typeCatalog_;
-        setTypeCat(
-                Optional.ofNullable(this.typeCatalog_)
-                        .map(Catalog::getTableCat)
-                        .orElse(null)
-        );
-    }
-
-    Schema getTypeSchema_() {
-        if (typeSchema_ == null) {
-            typeSchema_ = Schema.of(getTypeCatalog_(), typeSchem);
-        }
-        return typeSchema_;
-    }
-
-    void setTypeSchema_(final Schema typeSchema_) {
-        this.typeSchema_ = typeSchema_;
-        setTypeSchem(
-                Optional.ofNullable(this.typeSchema_)
-                        .map(Schema::getTableSchem)
-                        .orElse(null)
-        );
-    }
-
-    Catalog getSupertypeCatalog_() {
-        if (supertypeCatalog_ == null) {
-            supertypeCatalog_ = Catalog.of(supertypeCat);
-        }
-        return supertypeCatalog_;
-    }
-
-    void setSupertypeCatalog_(final Catalog supertypeCatalog_) {
-        this.supertypeCatalog_ = supertypeCatalog_;
-        setSupertypeCat(
-                Optional.ofNullable(this.supertypeCatalog_)
-                        .map(Catalog::getTableCat)
-                        .orElse(null)
-        );
-    }
-
-    Schema getSupertypeSchema_() {
-        if (supertypeSchema_ == null) {
-            supertypeSchema_ = Schema.of(getSupertypeCatalog_(), supertypeSchem);
-        }
-        return supertypeSchema_;
-    }
-
-    void setSupertypeSchema_(final Schema supertypeSchema_) {
-        this.supertypeSchema_ = supertypeSchema_;
-        setSupertypeSchem(
-                Optional.ofNullable(this.supertypeSchema_)
-                        .map(Schema::getTableSchem)
-                        .orElse(null)
-        );
-    }
 }

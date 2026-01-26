@@ -20,7 +20,6 @@ package com.github.jinahya.database.metadata.bind;
  * #L%
  */
 
-import jakarta.annotation.Nonnull;
 import lombok.extern.java.Log;
 
 import java.lang.annotation.Annotation;
@@ -151,9 +150,8 @@ final class ContextUtils {
                 () -> String.format("failed to set; label: %1$s, value: %2$s, field: %3$s", label, value, field));
     }
 
-    @Nonnull
-    static <T> Comparator<T> nullPrecedence(@Nonnull final Context context,
-                                            @Nonnull final Comparator<? super T> comparator)
+    static <T> Comparator<T> nullPrecedence(final Context context,
+                                            final Comparator<? super T> comparator)
             throws SQLException {
         Objects.requireNonNull(context, "context is null");
         Objects.requireNonNull(comparator, "comparator is null");

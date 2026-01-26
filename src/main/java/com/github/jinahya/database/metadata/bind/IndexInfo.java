@@ -20,10 +20,8 @@ package com.github.jinahya.database.metadata.bind;
  * #L%
  */
 
-import jakarta.annotation.Nullable;
 import jakarta.validation.constraints.AssertTrue;
 import lombok.EqualsAndHashCode;
-import lombok.ToString;
 
 import java.sql.DatabaseMetaData;
 import java.sql.SQLException;
@@ -250,23 +248,22 @@ public class IndexInfo
     }
 
     // -------------------------------------------------------------------------------------------------------- tableCat
-    @Nullable
+
     public String getTableCat() {
         return tableCat;
     }
 
-    public void setTableCat(@Nullable final String tableCat) {
+    public void setTableCat(final String tableCat) {
         this.tableCat = tableCat;
     }
 
     // ------------------------------------------------------------------------------------------------------ tableSchem
 
-    @Nullable
     public String getTableSchem() {
         return tableSchem;
     }
 
-    public void setTableSchem(@Nullable final String tableSchem) {
+    public void setTableSchem(final String tableSchem) {
         this.tableSchem = tableSchem;
     }
 
@@ -292,23 +289,21 @@ public class IndexInfo
 
     // -------------------------------------------------------------------------------------------------- indexQualifier
 
-    @Nullable
     public String getIndexQualifier() {
         return indexQualifier;
     }
 
-    public void setIndexQualifier(@Nullable final String indexQualifier) {
+    public void setIndexQualifier(final String indexQualifier) {
         this.indexQualifier = indexQualifier;
     }
 
     // ------------------------------------------------------------------------------------------------------- indexName
 
-    @Nullable
     public String getIndexName() {
         return indexName;
     }
 
-    public void setIndexName(@Nullable final String indexName) {
+    public void setIndexName(final String indexName) {
         this.indexName = indexName;
     }
 
@@ -332,22 +327,22 @@ public class IndexInfo
     }
 
     // ------------------------------------------------------------------------------------------------------ columnName
-    @Nullable
+
     public String getColumnName() {
         return columnName;
     }
 
-    public void setColumnName(@Nullable final String columnName) {
+    public void setColumnName(final String columnName) {
         this.columnName = columnName;
     }
 
     // ------------------------------------------------------------------------------------------------------- ascOrDesc
-    @Nullable
+
     public String getAscOrDesc() {
         return ascOrDesc;
     }
 
-    public void setAscOrDesc(@Nullable final String ascOrDesc) {
+    public void setAscOrDesc(final String ascOrDesc) {
         this.ascOrDesc = ascOrDesc;
     }
 
@@ -384,7 +379,6 @@ public class IndexInfo
         this.cardinality = cardinality;
     }
 
-    @Nullable
     Long getNumberOfRowsInTheTable() {
         if (Objects.equals(getType(), COLUMN_VALUE_TYPE_TABLE_INDEX_STATISTIC)) {
             return getCardinality();
@@ -392,7 +386,6 @@ public class IndexInfo
         return null;
     }
 
-    @Nullable
     Long getNumberOfUniqueValuesInTheIndex() {
         if (!Objects.equals(getType(), COLUMN_VALUE_TYPE_TABLE_INDEX_STATISTIC)) {
             return getCardinality();
@@ -409,7 +402,6 @@ public class IndexInfo
         this.pages = pages;
     }
 
-    @Nullable
     Long getNumberOfPagesUsedForTheTable() {
         if (!Objects.equals(type, COLUMN_VALUE_TYPE_TABLE_INDEX_STATISTIC)) {
             return getPages();
@@ -417,7 +409,6 @@ public class IndexInfo
         return null;
     }
 
-    @Nullable
     Long getNumberOfPagesUsedForTheCurrentIndex() {
         if (Objects.equals(type, COLUMN_VALUE_TYPE_TABLE_INDEX_STATISTIC)) {
             return null;
@@ -426,22 +417,21 @@ public class IndexInfo
     }
 
     // ------------------------------------------------------------------------------------------------- filterCondition
-    @Nullable
+
     public String getFilterCondition() {
         return filterCondition;
     }
 
-    public void setFilterCondition(@Nullable final String filterCondition) {
+    public void setFilterCondition(final String filterCondition) {
         this.filterCondition = filterCondition;
     }
 
     // -----------------------------------------------------------------------------------------------------------------
-    @Nullable
+
     @_NullableBySpecification
     @_ColumnLabel(COLUMN_LABEL_TABLE_CAT)
     private String tableCat;
 
-    @Nullable
     @_NullableBySpecification
     @_ColumnLabel(COLUMN_LABEL_TABLE_SCHEM)
     private String tableSchem;
@@ -452,12 +442,10 @@ public class IndexInfo
     @_ColumnLabel(COLUMN_LABEL_NON_UNIQUE)
     private Boolean nonUnique;
 
-    @Nullable
     @_NullableBySpecification
     @_ColumnLabel(COLUMN_LABEL_INDEX_QUALIFIER)
     private String indexQualifier;
 
-    @Nullable
     @_NullableBySpecification
     @_ColumnLabel(COLUMN_LABEL_INDEX_NAME)
     private String indexName;
@@ -468,12 +456,10 @@ public class IndexInfo
     @_ColumnLabel(COLUMN_LABEL_ORDINAL_POSITION)
     private Integer ordinalPosition;
 
-    @Nullable
     @_NullableBySpecification
     @_ColumnLabel(COLUMN_LABEL_COLUMN_NAME)
     private String columnName;
 
-    @Nullable
     @_NullableBySpecification
     @_ColumnLabel(COLUMN_LABEL_ASC_OR_DESC)
     private String ascOrDesc;
@@ -484,21 +470,7 @@ public class IndexInfo
     @_ColumnLabel(COLUMN_LABEL_PAGES)
     private Long pages;
 
-    @Nullable
     @_NullableBySpecification
     @_ColumnLabel(COLUMN_LABEL_FILTER_CONDITION)
     private String filterCondition;
-
-    // -----------------------------------------------------------------------------------------------------------------
-    @EqualsAndHashCode.Exclude
-    @ToString.Exclude
-    private transient Table table;
-
-    Table getTable() {
-        return table;
-    }
-
-    void setTable(final Table table) {
-        this.table = table;
-    }
 }

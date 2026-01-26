@@ -20,8 +20,6 @@ package com.github.jinahya.database.metadata.bind;
  * #L%
  */
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
 import lombok.EqualsAndHashCode;
 
 import java.sql.DatabaseMetaData;
@@ -45,7 +43,7 @@ public class Function
     private static final long serialVersionUID = -3318947900237453301L;
 
     // -----------------------------------------------------------------------------------------------------------------
-    static @Nonnull Comparator<Function> specifiedOrder(@Nonnull final Comparator<? super String> comparator) {
+    static Comparator<Function> specifiedOrder(final Comparator<? super String> comparator) {
         Objects.requireNonNull(comparator, "comparator is null");
         return Comparator
                 .comparing(Function::getFunctionCat, comparator)
@@ -54,8 +52,8 @@ public class Function
                 .thenComparing(Function::getSpecificName, comparator);
     }
 
-    static @Nonnull Comparator<Function> specifiedOrder(@Nonnull final Context context,
-                                                        @Nonnull final Comparator<? super String> comparator)
+    static Comparator<Function> specifiedOrder(final Context context,
+                                                        final Comparator<? super String> comparator)
             throws SQLException {
         Objects.requireNonNull(context, "context is null");
         Objects.requireNonNull(comparator, "comparator is null");
@@ -146,22 +144,22 @@ public class Function
     }
 
     // ----------------------------------------------------------------------------------------------------- functionCat
-    @Nullable
+    
     public String getFunctionCat() {
         return functionCat;
     }
 
-    public void setFunctionCat(@Nullable final String functionCat) {
+    public void setFunctionCat(final String functionCat) {
         this.functionCat = functionCat;
     }
 
     // --------------------------------------------------------------------------------------------------- functionSchem
-    @Nullable
+    
     public String getFunctionSchem() {
         return functionSchem;
     }
 
-    public void setFunctionSchem(@Nullable final String functionSchem) {
+    public void setFunctionSchem(final String functionSchem) {
         this.functionSchem = functionSchem;
     }
 
@@ -202,12 +200,12 @@ public class Function
     }
 
     // -----------------------------------------------------------------------------------------------------------------
-    @Nullable
+    
     @_NullableBySpecification
     @_ColumnLabel(COLUMN_LABEL_FUNCTION_CAT)
     private String functionCat;
 
-    @Nullable
+    
     @_NullableBySpecification
     @_ColumnLabel(COLUMN_LABEL_FUNCTION_SCHEM)
     private String functionSchem;

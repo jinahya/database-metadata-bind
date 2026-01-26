@@ -20,7 +20,6 @@ package com.github.jinahya.database.metadata.bind;
  * #L%
  */
 
-import jakarta.annotation.Nullable;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.Setter;
@@ -138,12 +137,12 @@ public class TablePrivilege
     }
 
     // -----------------------------------------------------------------------------------------------------------------
-    @Nullable
+    
     @_NullableBySpecification
     @_ColumnLabel(COLUMN_LABEL_TABLE_CAT)
     private String tableCat;
 
-    @Nullable
+    
     @_NullableBySpecification
     @_ColumnLabel(COLUMN_LABEL_TABLE_SCHEM)
     private String tableSchem;
@@ -152,7 +151,7 @@ public class TablePrivilege
     private String tableName;
 
     // -----------------------------------------------------------------------------------------------------------------
-    @Nullable
+    
     @_NullableBySpecification
     @_ColumnLabel("GRANTOR")
     private String grantor;
@@ -163,7 +162,7 @@ public class TablePrivilege
     @_ColumnLabel("PRIVILEGE")
     private String privilege;
 
-    @Nullable
+    
     @_NullableBySpecification
     @_ColumnLabel("IS_GRANTABLE")
     private String isGrantable;

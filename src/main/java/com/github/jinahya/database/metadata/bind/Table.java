@@ -20,18 +20,11 @@ package com.github.jinahya.database.metadata.bind;
  * #L%
  */
 
-import jakarta.annotation.Nullable;
-import jakarta.validation.Valid;
-import jakarta.validation.constraints.NotNull;
 import lombok.EqualsAndHashCode;
 import lombok.ToString;
 
 import java.sql.SQLException;
-import java.util.ArrayList;
 import java.util.Comparator;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
 import java.util.Optional;
 
 /**
@@ -159,10 +152,6 @@ public class Table
                ",typeName=" + typeName +
                ",selfReferencingColName=" + selfReferencingColName +
                ",refGeneration=" + refGeneration +
-               ",tableCatalog_=" + tableCatalog_ +
-               ",tableSchema_=" + tableSchema_ +
-               ",typeCatalog_=" + typeCatalog_ +
-               ",typeSchema_=" + typeSchema_ +
                '}';
     }
 
@@ -297,12 +286,11 @@ public class Table
     }
 
     // -----------------------------------------------------------------------------------------------------------------
-    @Nullable
+
     @_NullableBySpecification
     @_ColumnLabel(COLUMN_LABEL_TABLE_CAT)
     private String tableCat;
 
-    @Nullable
     @_NullableBySpecification
     @_ColumnLabel(COLUMN_LABEL_TABLE_SCHEM)
     private String tableSchem;
@@ -315,245 +303,32 @@ public class Table
     private String tableType;
 
     // -----------------------------------------------------------------------------------------------------------------
-    @Nullable
+
     @_NullableBySpecification
     @_ColumnLabel(COLUMN_LABEL_REMARKS)
     private String remarks;
 
     // -----------------------------------------------------------------------------------------------------------------
-    @Nullable
+
     @_NullableBySpecification
     @_ColumnLabel(COLUMN_LABEL_TYPE_CAT)
     private String typeCat;
 
-    @Nullable
     @_NullableBySpecification
     @_ColumnLabel(COLUMN_LABEL_TYPE_SCHEM)
     private String typeSchem;
 
-    @Nullable
     @_NullableBySpecification
     @_ColumnLabel(COLUMN_LABEL_TYPE_NAME)
     private String typeName;
 
     // -----------------------------------------------------------------------------------------------------------------
-    @Nullable
+
     @_NullableBySpecification
     @_ColumnLabel(COLUMN_LABEL_SELF_REFERENCING_COL_NAME)
     private String selfReferencingColName;
 
-    @Nullable
     @_NullableBySpecification
     @_ColumnLabel(COLUMN_LABEL_REF_GENERATION)
     private String refGeneration;
-
-    // -----------------------------------------------------------------------------------------------------------------
-    @EqualsAndHashCode.Exclude
-    @ToString.Exclude
-    private Catalog tableCatalog_;
-
-    @EqualsAndHashCode.Exclude
-    @ToString.Exclude
-    private Schema tableSchema_;
-
-    @EqualsAndHashCode.Exclude
-    @ToString.Exclude
-    private Catalog typeCatalog_;
-
-    @EqualsAndHashCode.Exclude
-    @ToString.Exclude
-    private Schema typeSchema_;
-
-    Catalog getTableCatalog_() {
-        if (tableCatalog_ == null) {
-            tableCatalog_ = Catalog.of(tableCat);
-        }
-        return tableCatalog_;
-    }
-
-    void setTableCatalog_(final Catalog tableCatalog_) {
-        this.tableCatalog_ = tableCatalog_;
-        setTableCat(
-                Optional.ofNullable(this.tableCatalog_)
-                        .map(Catalog::getTableCat)
-                        .orElse(null)
-        );
-    }
-
-    Schema getTableSchema_() {
-        if (tableSchema_ == null) {
-            tableSchema_ = Schema.of(getTableCatalog_(), tableSchem);
-        }
-        return tableSchema_;
-    }
-
-    void setTableSchema_(final Schema tableSchema_) {
-        this.tableSchema_ = tableSchema_;
-        setTableCatalog_(
-                Optional.ofNullable(this.tableSchema_)
-                        .map(Schema::getTableCatalog_)
-                        .orElse(null)
-        );
-    }
-
-    Catalog getTypeCatalog_() {
-        if (typeCatalog_ == null) {
-            typeCatalog_ = Catalog.of(typeCat);
-        }
-        return typeCatalog_;
-    }
-
-    void setTypeCatalog_(final Catalog typeCatalog_) {
-        this.typeCatalog_ = typeCatalog_;
-        setTypeCat(
-                Optional.ofNullable(this.typeCatalog_)
-                        .map(Catalog::getTableCat)
-                        .orElse(null)
-        );
-    }
-
-    Schema getTypeSchema_() {
-        if (typeSchema_ == null) {
-            typeSchema_ = Schema.of(getTypeCatalog_(), typeSchem);
-        }
-        return typeSchema_;
-    }
-
-    void setTypeSchema_(final Schema typeSchema_) {
-        this.typeSchema_ = typeSchema_;
-        setTypeCatalog_(
-                Optional.ofNullable(this.typeSchema_)
-                        .map(Schema::getTableCatalog_)
-                        .orElse(null)
-        );
-    }
-
-    // ---------------------------------------------------------------------------------------------- bestRowIdentifiers
-    Map<Integer, Map<Boolean, List<@Valid @NotNull BestRowIdentifier>>> getBestRowIdentifiers() {
-        if (bestRowIdentifiers == null) {
-            bestRowIdentifiers = new HashMap<>();
-        }
-        return bestRowIdentifiers;
-    }
-
-    List<@Valid @NotNull BestRowIdentifier> getBestRowIdentifiers(final Context context, final String catalog,
-                                                                  final String schema, final String table,
-                                                                  final int scope, final boolean nullable)
-            throws SQLException {
-        context.getBestRowIdentifierAndAcceptEach(
-                catalog,
-                schema,
-                table,
-                scope,
-                nullable,
-                v -> {
-                    getBestRowIdentifiers()
-                            .computeIfAbsent(scope, k -> new HashMap<>())
-                            .computeIfAbsent(nullable, k -> new ArrayList<>())
-                            .add(v);
-                }
-        );
-        return getBestRowIdentifiers().get(scope).get(nullable);
-    }
-
-    private Map<@NotNull Integer, @NotNull Map<@NotNull Boolean, List<@Valid @NotNull BestRowIdentifier>>>
-            bestRowIdentifiers;
-
-    // ----------------------------------------------------------------------------------------------------- primaryKeys
-    List<PrimaryKey> getPrimaryKeys() {
-        if (primaryKeys == null) {
-            primaryKeys = new ArrayList<>();
-        }
-        return primaryKeys;
-    }
-
-    void setPrimaryKeys(final List<PrimaryKey> primaryKeys) {
-        this.primaryKeys = primaryKeys;
-    }
-
-    private List<@Valid @NotNull PrimaryKey> primaryKeys;
-
-    // -----------------------------------------------------------------------------------------------------------------
-    List<ImportedKey> getImportedKeys() {
-        if (importedKeys == null) {
-            importedKeys = new ArrayList<>();
-        }
-        return importedKeys;
-    }
-
-    void setImportedKeys(final List<ImportedKey> importedKeys) {
-        this.importedKeys = importedKeys;
-    }
-
-    private List<@Valid @NotNull ImportedKey> importedKeys;
-
-    // -----------------------------------------------------------------------------------------------------------------
-    List<ExportedKey> getExportedKeys() {
-        if (exportedKeys == null) {
-            exportedKeys = new ArrayList<>();
-        }
-        return exportedKeys;
-    }
-
-    void setExportedKeys(final List<ExportedKey> exportedKeys) {
-        this.exportedKeys = exportedKeys;
-    }
-
-    private List<@Valid @NotNull ExportedKey> exportedKeys;
-
-    // -----------------------------------------------------------------------------------------------------------------
-    List<IndexInfo> getIndexInfo() {
-        if (indexInfo == null) {
-            indexInfo = new ArrayList<>();
-        }
-        return indexInfo;
-    }
-
-    void setIndexInfo(final List<IndexInfo> indexInfo) {
-        this.indexInfo = indexInfo;
-    }
-
-    private List<@Valid @NotNull IndexInfo> indexInfo;
-
-    // -----------------------------------------------------------------------------------------------------------------
-    List<Column> getColumns() {
-        if (columns == null) {
-            columns = new ArrayList<>();
-        }
-        return columns;
-    }
-
-    void setColumns(final List<Column> columns) {
-        this.columns = columns;
-    }
-
-    private List<@Valid @NotNull Column> columns;
-
-    // ------------------------------------------------------------------------------------------------ columnPrivileges
-    List<ColumnPrivilege> getColumnPrivileges() {
-        if (columnPrivileges == null) {
-            columnPrivileges = new ArrayList<>();
-        }
-        return columnPrivileges;
-    }
-
-    void setColumnPrivileges(final List<ColumnPrivilege> columnPrivileges) {
-        this.columnPrivileges = columnPrivileges;
-    }
-
-    private List<@Valid @NotNull ColumnPrivilege> columnPrivileges;
-
-    // -----------------------------------------------------------------------------------------------------------------
-    List<PseudoColumn> getPseudoColumns() {
-        if (pseudoColumns == null) {
-            pseudoColumns = new ArrayList<>();
-        }
-        return pseudoColumns;
-    }
-
-    void setPseudoColumns(final List<PseudoColumn> pseudoColumns) {
-        this.pseudoColumns = pseudoColumns;
-    }
-
-    private List<@Valid @NotNull PseudoColumn> pseudoColumns;
 }

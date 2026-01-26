@@ -20,15 +20,12 @@ package com.github.jinahya.database.metadata.bind;
  * #L%
  */
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
 import lombok.EqualsAndHashCode;
 import lombok.ToString;
 
 import java.sql.DatabaseMetaData;
 import java.sql.SQLException;
 import java.util.Comparator;
-import java.util.Optional;
 
 /**
  * A class for binding results of the {@link DatabaseMetaData#getPseudoColumns(String, String, String, String)} method.
@@ -125,42 +122,38 @@ public class PseudoColumn
     }
 
     // -------------------------------------------------------------------------------------------------------- tableCat
-    @Nullable
     public String getTableCat() {
         return tableCat;
     }
 
-    protected void setTableCat(@Nullable final String tableCat) {
+    protected void setTableCat(final String tableCat) {
         this.tableCat = tableCat;
     }
 
     // ------------------------------------------------------------------------------------------------------ tableSchem
-    @Nullable
     public String getTableSchem() {
         return tableSchem;
     }
 
-    protected void setTableSchem(@Nullable final String tableSchem) {
+    protected void setTableSchem(final String tableSchem) {
         this.tableSchem = tableSchem;
     }
 
     // ------------------------------------------------------------------------------------------------------- tableName
-    @Nonnull
     public String getTableName() {
         return tableName;
     }
 
-    protected void setTableName(@Nonnull final String tableName) {
+    protected void setTableName(final String tableName) {
         this.tableName = tableName;
     }
 
     // ------------------------------------------------------------------------------------------------------ columnName
-    @Nonnull
     public String getColumnName() {
         return columnName;
     }
 
-    protected void setColumnName(@Nonnull final String columnName) {
+    protected void setColumnName(final String columnName) {
         this.columnName = columnName;
     }
 
@@ -174,22 +167,20 @@ public class PseudoColumn
     }
 
     // ------------------------------------------------------------------------------------------------------ columnSize
-    @Nullable
     public Integer getColumnSize() {
         return columnSize;
     }
 
-    protected void setColumnSize(@Nullable final Integer columnSize) {
+    protected void setColumnSize(final Integer columnSize) {
         this.columnSize = columnSize;
     }
 
     // --------------------------------------------------------------------------------------------------- decimalDigits
-    @Nullable
     public Integer getDecimalDigits() {
         return decimalDigits;
     }
 
-    protected void setDecimalDigits(@Nullable final Integer decimalDigits) {
+    protected void setDecimalDigits(final Integer decimalDigits) {
         this.decimalDigits = decimalDigits;
     }
 
@@ -212,12 +203,11 @@ public class PseudoColumn
     }
 
     // --------------------------------------------------------------------------------------------------------- remarks
-    @Nullable
     public String getRemarks() {
         return remarks;
     }
 
-    protected void setRemarks(@Nullable final String remarks) {
+    protected void setRemarks(final String remarks) {
         this.remarks = remarks;
     }
 
@@ -240,23 +230,19 @@ public class PseudoColumn
     }
 
     // -----------------------------------------------------------------------------------------------------------------
-    @Nullable
     @_NullableBySpecification
     @_ColumnLabel(COLUMN_LABEL_TABLE_CAT)
 
     private String tableCat;
 
-    @Nullable
     @_NullableBySpecification
     @_ColumnLabel(COLUMN_LABEL_TABLE_SCHEM)
 
     private String tableSchem;
 
-    @Nonnull
     @_ColumnLabel(COLUMN_LABEL_TABLE_NAME)
     private String tableName;
 
-    @Nonnull
     @_ColumnLabel(COLUMN_LABEL_COLUMN_NAME)
     private String columnName;
 
@@ -264,12 +250,10 @@ public class PseudoColumn
     @_ColumnLabel(COLUMN_LABEL_DATA_TYPE)
     private Integer dataType;
 
-    @Nullable
     @_NullableBySpecification
     @_ColumnLabel(COLUMN_LABEL_COLUMN_SIZE)
     private Integer columnSize;
 
-    @Nullable
     @_NullableBySpecification
     @_ColumnLabel(COLUMN_LABEL_DECIMAL_DIGITS)
     private Integer decimalDigits;
@@ -280,7 +264,6 @@ public class PseudoColumn
     @_ColumnLabel(COLUMN_LABEL_USAGE)
     private String columnUsage;
 
-    @Nullable
     @_NullableBySpecification
     @_ColumnLabel(COLUMN_LABEL_REMARKS)
     private String remarks;
@@ -290,95 +273,4 @@ public class PseudoColumn
 
     @_ColumnLabel(COLUMN_LABEL_COLUMN_IS_NULLABLE)
     private String isNullable;
-
-    // -----------------------------------------------------------------------------------------------------------------
-    @EqualsAndHashCode.Exclude
-    @ToString.Exclude
-    @SuppressWarnings({
-            "java:S116" // Field names should comply with a naming convention
-    })
-    private Catalog tableCatalog_;
-
-    @EqualsAndHashCode.Exclude
-    @ToString.Exclude
-    @SuppressWarnings({
-            "java:S116" // Field names should comply with a naming convention
-    })
-    private Schema tableSchema_;
-
-    @EqualsAndHashCode.Exclude
-    @ToString.Exclude
-    @SuppressWarnings({
-            "java:S116" // Field names should comply with a naming convention
-    })
-    private Table table_;
-
-    @SuppressWarnings({
-            "java:S100", // Method names should comply with a naming convention
-            "java:S117"  // Local variable and method parameter names should comply with a naming convention
-    })
-    Catalog getTableCatalog_() {
-        if (tableCatalog_ == null) {
-            tableCatalog_ = Catalog.of(tableCat);
-        }
-        return tableCatalog_;
-    }
-
-    @SuppressWarnings({
-            "java:S100", // Method names should comply with a naming convention
-            "java:S117"  // Local variable and method parameter names should comply with a naming convention
-    })
-    void setTableCatalog_(final Catalog tableCatalog_) {
-        this.tableCatalog_ = tableCatalog_;
-        setTableCat(
-                Optional.ofNullable(this.tableCatalog_)
-                        .map(Catalog::getTableCat)
-                        .orElse(null)
-        );
-    }
-
-    @SuppressWarnings({
-            "java:S100", // Method names should comply with a naming convention
-            "java:S117"  // Local variable and method parameter names should comply with a naming convention
-    })
-    Schema getTableSchema_() {
-        if (tableSchema_ == null) {
-            tableSchema_ = Schema.of(getTableCatalog_(), tableSchem);
-        }
-        return tableSchema_;
-    }
-
-    @SuppressWarnings({
-            "java:S100", // Method names should comply with a naming convention
-            "java:S117"  // Local variable and method parameter names should comply with a naming convention
-    })
-    void setTableSchema_(final Schema tableSchema_) {
-        this.tableSchema_ = tableSchema_;
-        setTableCatalog_(
-                Optional.ofNullable(this.tableSchema_)
-                        .map(Schema::getTableCatalog_)
-                        .orElse(null)
-        );
-    }
-
-    @SuppressWarnings({
-            "java:S100", // Method names should comply with a naming convention
-            "java:S117"  // Local variable and method parameter names should comply with a naming convention
-    })
-    Table getTable_() {
-        return table_;
-    }
-
-    @SuppressWarnings({
-            "java:S100", // Method names should comply with a naming convention
-            "java:S117"  // Local variable and method parameter names should comply with a naming convention
-    })
-    void setTable_(final Table parent_) {
-        this.table_ = parent_;
-        setTableSchema_(
-                Optional.ofNullable(this.table_)
-                        .map(Table::getTableSchema_)
-                        .orElse(null)
-        );
-    }
 }

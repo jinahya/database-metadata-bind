@@ -20,8 +20,6 @@ package com.github.jinahya.database.metadata.bind;
  * #L%
  */
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
 import jakarta.validation.constraints.Positive;
 import lombok.EqualsAndHashCode;
 
@@ -47,8 +45,8 @@ public class Attribute
     private static final long serialVersionUID = 1913681105410440186L;
 
     // -----------------------------------------------------------------------------------------------------------------
-    @Nonnull
-    static Comparator<Attribute> comparingInSpecifiedOrder(@Nonnull final Comparator<? super String> comparator) {
+    
+    static Comparator<Attribute> comparingInSpecifiedOrder(final Comparator<? super String> comparator) {
         Objects.requireNonNull(comparator, "comparator is null");
         return Comparator
                 .comparing(Attribute::getTypeCat, comparator)
@@ -57,9 +55,9 @@ public class Attribute
                 .thenComparing(Attribute::getOrdinalPosition, Comparator.naturalOrder());
     }
 
-    @Nonnull
-    static Comparator<Attribute> comparingInSpecifiedOrder(@Nonnull final Context context,
-                                                           @Nonnull final Comparator<? super String> comparator)
+    
+    static Comparator<Attribute> comparingInSpecifiedOrder(final Context context,
+                                                           final Comparator<? super String> comparator)
             throws SQLException {
         Objects.requireNonNull(context, "context is null");
         Objects.requireNonNull(comparator, "comparator is null");
@@ -196,7 +194,7 @@ public class Attribute
      * @return current value of the {@value #COLUMN_LABEL_TYPE_CAT} property.
      * @see #setTypeCat(String)
      */
-    @Nullable
+    
     public String getTypeCat() {
         return typeCat;
     }
@@ -207,7 +205,7 @@ public class Attribute
      * @param typeCat new value for the {@value #COLUMN_LABEL_TYPE_CAT} property.
      * @see #getTypeCat()
      */
-    public void setTypeCat(@Nullable final String typeCat) {
+    public void setTypeCat(final String typeCat) {
         this.typeCat = typeCat;
     }
 
@@ -218,12 +216,12 @@ public class Attribute
      *
      * @return the value of {@value #COLUMN_LABEL_TYPE_SCHEM} column.
      */
-    @Nullable
+    
     public String getTypeSchem() {
         return typeSchem;
     }
 
-    public void setTypeSchem(@Nullable final String typeSchem) {
+    public void setTypeSchem(final String typeSchem) {
         this.typeSchem = typeSchem;
     }
 
@@ -392,12 +390,12 @@ public class Attribute
     }
 
     // ----------------------------------------------------------------------------------------------------- scopeSchema
-    @Nullable
+    
     public String getScopeSchema() {
         return scopeSchema;
     }
 
-    public void setScopeSchema(@Nullable final String scopeSchema) {
+    public void setScopeSchema(final String scopeSchema) {
         this.scopeSchema = scopeSchema;
     }
 
@@ -411,31 +409,31 @@ public class Attribute
     }
 
     // -------------------------------------------------------------------------------------------------- sourceDataType
-    @Nullable
+    
     public Integer getSourceDataType() {
         return sourceDataType;
     }
 
-    public void setSourceDataType(@Nullable final Integer sourceDataType) {
+    public void setSourceDataType(final Integer sourceDataType) {
         this.sourceDataType = sourceDataType;
     }
 
     // -----------------------------------------------------------------------------------------------------------------
-    @Nullable
+    
     @_NullableBySpecification
     @_ColumnLabel(COLUMN_LABEL_TYPE_CAT)
     private String typeCat;
 
-    @Nullable
+    
     @_NullableBySpecification
     @_ColumnLabel(COLUMN_LABEL_TYPE_SCHEM)
     private String typeSchem;
 
     @_ColumnLabel(COLUMN_LABEL_TYPE_NAME)
-    String typeName;
+    private String typeName;
 
     @_ColumnLabel(COLUMN_LABEL_ATTR_NAME)
-    String attrName;
+    private String attrName;
 
     // -----------------------------------------------------------------------------------------------------------------
     @_ColumnLabel(COLUMN_LABEL_DATA_TYPE)
@@ -447,7 +445,7 @@ public class Attribute
     @_ColumnLabel("ATTR_SIZE")
     private Integer attrSize;
 
-    @Nullable
+    
     @_NullableBySpecification
     @_ColumnLabel("DECIMAL_DIGITS")
     private Integer decimalDigits;
@@ -458,12 +456,12 @@ public class Attribute
     @_ColumnLabel(COLUMN_LABEL_NULLABLE)
     private Integer nullable;
 
-    @Nullable
+    
     @_NullableBySpecification
     @_ColumnLabel("REMARKS")
     private String remarks;
 
-    @Nullable
+    
     @_NullableBySpecification
     @_ColumnLabel("ATTR_DEF")
     private String attrDef;
@@ -486,22 +484,22 @@ public class Attribute
     @_ColumnLabel(COLUMN_LABEL_IS_NULLABLE)
     private String isNullable;
 
-    @Nullable
+    
     @_NullableBySpecification
     @_ColumnLabel("SCOPE_CATALOG")
     private String scopeCatalog;
 
-    @Nullable
+    
     @_NullableBySpecification
     @_ColumnLabel("SCOPE_SCHEMA")
     private String scopeSchema;
 
-    @Nullable
+    
     @_NullableBySpecification
     @_ColumnLabel("SCOPE_TABLE")
     private String scopeTable;
 
-    @Nullable
+    
     @_NullableBySpecification
     @_ColumnLabel("SOURCE_DATA_TYPE")
     private Integer sourceDataType;

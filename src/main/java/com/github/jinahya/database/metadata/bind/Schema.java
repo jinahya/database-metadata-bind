@@ -20,15 +20,8 @@ package com.github.jinahya.database.metadata.bind;
  * #L%
  */
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
-import lombok.EqualsAndHashCode;
-import lombok.ToString;
-
 import java.sql.SQLException;
-import java.util.ArrayList;
 import java.util.Comparator;
-import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
 
@@ -133,78 +126,31 @@ public class Schema
     }
 
     // ------------------------------------------------------------------------------------------------------ tableSchem
-    @Nonnull
+
     public String getTableSchem() {
         return tableSchem;
     }
 
-    public void setTableSchem(@Nonnull final String tableSchem) {
+    public void setTableSchem(final String tableSchem) {
         this.tableSchem = tableSchem;
     }
 
     // ---------------------------------------------------------------------------------------------------- tableCatalog
-    @Nullable
+
     public String getTableCatalog() {
         return tableCatalog;
     }
 
-    protected void setTableCatalog(@Nullable final String tableCatalog) {
+    protected void setTableCatalog(final String tableCatalog) {
         this.tableCatalog = tableCatalog;
     }
 
     // -----------------------------------------------------------------------------------------------------------------
-    @Nonnull
+
     @_ColumnLabel(COLUMN_LABEL_TABLE_SCHEM)
     private String tableSchem;
 
-    @Nullable
     @_NullableBySpecification
     @_ColumnLabel(COLUMN_LABEL_TABLE_CATALOG)
     private String tableCatalog;
-
-    // -----------------------------------------------------------------------------------------------------------------
-    @EqualsAndHashCode.Exclude
-    @ToString.Exclude
-    @SuppressWarnings({
-            "java:S116" // Field names should comply with a naming convention
-    })
-    private transient Catalog tableCatalog_;
-
-    @SuppressWarnings({
-            "java:S100" // Method names should comply with a naming convention
-    })
-    Catalog getTableCatalog_() {
-        if (tableCatalog_ == null) {
-            tableCatalog_ = Catalog.of(tableCatalog);
-        }
-        return tableCatalog_;
-    }
-
-    @SuppressWarnings({
-            "java:S100", // Method names should comply with a naming convention
-            "java:S117"  // Local variable and method parameter names should comply with a naming convention
-    })
-    void setTableCatalog_(final Catalog tableCatalog_) {
-        this.tableCatalog_ = tableCatalog_;
-        setTableCatalog(
-                Optional.ofNullable(this.tableCatalog_)
-                        .map(Catalog::getTableCat)
-                        .orElse(null)
-        );
-    }
-
-    // -----------------------------------------------------------------------------------------------------------------
-
-    public List<Table> getTables() {
-        if (tables == null) {
-            tables = new ArrayList<>();
-        }
-        return tables;
-    }
-
-    public void setTables(final List<Table> tables) {
-        this.tables = tables;
-    }
-
-    private List<Table> tables;
 }

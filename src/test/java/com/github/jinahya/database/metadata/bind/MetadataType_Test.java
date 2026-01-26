@@ -20,7 +20,6 @@ package com.github.jinahya.database.metadata.bind;
  * #L%
  */
 
-import jakarta.annotation.Nullable;
 import lombok.extern.slf4j.Slf4j;
 import nl.jqno.equalsverifier.EqualsVerifier;
 import nl.jqno.equalsverifier.Warning;
@@ -98,9 +97,9 @@ abstract class MetadataType_Test<T extends MetadataType> {
         @Test
         void _Nullable_NullableBySpecification() {
             for (final var field : fieldsAnnotatedWith(_NullableBySpecification.class)) {
-                assertThat(field.isAnnotationPresent(Nullable.class))
-                        .as("should be annotated with @jakarta.annotation.Nullable; field: %s", field)
-                        .isTrue();
+//                assertThat(field.isAnnotationPresent(Nullable.class))
+//                        .as("should be annotated with @jakarta.annotation.Nullable; field: %s", field)
+//                        .isTrue();
             }
         }
 

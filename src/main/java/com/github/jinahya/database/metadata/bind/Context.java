@@ -20,8 +20,6 @@ package com.github.jinahya.database.metadata.bind;
  * #L%
  */
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
 import lombok.extern.java.Log;
 
 import java.beans.BeanInfo;
@@ -1816,9 +1814,9 @@ public class Context {
      * @throws SQLException if a database error occurs.
      * @see DatabaseMetaData#getTables(String, String, String, String[])
      */
-    void getTablesAndAcceptEach(@Nullable final String catalog, @Nullable final String schemaPattern,
-                                @Nonnull final String tableNamePattern, @Nullable final String[] types,
-                                @Nonnull final Consumer<? super Table> consumer)
+    void getTablesAndAcceptEach(final String catalog, final String schemaPattern,
+                                final String tableNamePattern, final String[] types,
+                                final Consumer<? super Table> consumer)
             throws SQLException {
         Objects.requireNonNull(consumer, "consumer is null");
         try (var results = metadata.getTables(catalog, schemaPattern, tableNamePattern, types)) {
@@ -1846,9 +1844,9 @@ public class Context {
      * @throws SQLException if a database error occurs.
      */
     <C extends Collection<? super Table>>
-    C getTablesAndAddAll(@Nullable final String catalog, @Nullable final String schemaPattern,
-                         @Nonnull final String tableNamePattern, @Nullable final String[] types,
-                         @Nonnull final C collection)
+    C getTablesAndAddAll(final String catalog, final String schemaPattern,
+                         final String tableNamePattern, final String[] types,
+                         final C collection)
             throws SQLException {
         Objects.requireNonNull(collection, "collection is null");
         getTablesAndAcceptEach(
@@ -1876,8 +1874,8 @@ public class Context {
      * @return a list of bound values.
      * @throws SQLException if a database error occurs.
      */
-    public List<Table> getTables(@Nullable final String catalog, @Nullable final String schemaPattern,
-                                 @Nonnull final String tableNamePattern, @Nullable final String[] types)
+    public List<Table> getTables(final String catalog, final String schemaPattern,
+                                 final String tableNamePattern, final String[] types)
             throws SQLException {
         return getTablesAndAddAll(
                 catalog,
@@ -1900,8 +1898,8 @@ public class Context {
      * @see Catalog#getTableCat()
      * @see #getTables(String, String, String, String[])
      */
-    List<Table> getTables(@Nonnull final Catalog catalog, @Nullable final String schemaPattern,
-                          @Nonnull final String tableNamePattern, @Nullable final String[] types)
+    List<Table> getTables(final Catalog catalog, final String schemaPattern,
+                          final String tableNamePattern, final String[] types)
             throws SQLException {
         Objects.requireNonNull(catalog, "catalog is null");
         return getTables(
@@ -1912,9 +1910,9 @@ public class Context {
         );
     }
 
-    @Nonnull
-    List<Table> getTables(@Nonnull final Schema schema, @Nonnull final String tableNamePattern,
-                          @Nullable final String[] types)
+    
+    List<Table> getTables(final Schema schema, final String tableNamePattern,
+                          final String[] types)
             throws SQLException {
         Objects.requireNonNull(schema, "schema is null");
         return getTables(

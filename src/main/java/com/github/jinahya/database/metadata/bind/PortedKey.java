@@ -20,13 +20,11 @@ package com.github.jinahya.database.metadata.bind;
  * #L%
  */
 
-import jakarta.annotation.Nullable;
 import lombok.EqualsAndHashCode;
 
 import java.sql.DatabaseMetaData;
 import java.util.Comparator;
 import java.util.Objects;
-import java.util.Optional;
 
 /**
  * An abstract class for binding results of the
@@ -199,22 +197,20 @@ abstract class PortedKey
 
     // ------------------------------------------------------------------------------------------------------ pktableCat
 
-    @Nullable
     public String getPktableCat() {
         return pktableCat;
     }
 
-    protected void setPktableCat(@Nullable final String pktableCat) {
+    protected void setPktableCat(final String pktableCat) {
         this.pktableCat = pktableCat;
     }
 
     // ---------------------------------------------------------------------------------------------------- pktableSchem
-    @Nullable
     public String getPktableSchem() {
         return pktableSchem;
     }
 
-    protected void setPktableSchem(@Nullable final String pktableSchem) {
+    protected void setPktableSchem(final String pktableSchem) {
         this.pktableSchem = pktableSchem;
     }
 
@@ -238,22 +234,20 @@ abstract class PortedKey
 
     // ------------------------------------------------------------------------------------------------------ fktableCat
 
-    @Nullable
     public String getFktableCat() {
         return fktableCat;
     }
 
-    protected void setFktableCat(@Nullable final String fktableCat) {
+    protected void setFktableCat(final String fktableCat) {
         this.fktableCat = fktableCat;
     }
 
     // ---------------------------------------------------------------------------------------------------- fktableSchem
-    @Nullable
     public String getFktableSchem() {
         return fktableSchem;
     }
 
-    protected void setFktableSchem(@Nullable final String fktableSchem) {
+    protected void setFktableSchem(final String fktableSchem) {
         this.fktableSchem = fktableSchem;
     }
 
@@ -285,39 +279,56 @@ abstract class PortedKey
     }
 
     // ------------------------------------------------------------------------------------------------------ updateRule
+    public Integer getUpdateRule() {
+        return updateRule;
+    }
+
+    protected void setUpdateRule(final Integer updateRule) {
+        this.updateRule = updateRule;
+    }
 
     // ------------------------------------------------------------------------------------------------------ deleteRule
+    public Integer getDeleteRule() {
+        return deleteRule;
+    }
+
+    protected void setDeleteRule(final Integer deleteRule) {
+        this.deleteRule = deleteRule;
+    }
 
     // ---------------------------------------------------------------------------------------------------------- fkName
 
-    @Nullable
     public String getFkName() {
         return fkName;
     }
 
-    public void setFkName(@Nullable final String fkName) {
+    public void setFkName(final String fkName) {
         this.fkName = fkName;
     }
 
     // ---------------------------------------------------------------------------------------------------------- pkName
-    @Nullable
     public String getPkName() {
         return pkName;
     }
 
-    public void setPkName(@Nullable final String pkName) {
+    public void setPkName(final String pkName) {
         this.pkName = pkName;
     }
 
     // --------------------------------------------------------------------------------------------------- deferrability
+    public Integer getDeferrability() {
+        return deferrability;
+    }
+
+    protected void setDeferrability(final Integer deferrability) {
+        this.deferrability = deferrability;
+    }
 
     // -----------------------------------------------------------------------------------------------------------------
-    @Nullable
     @_NullableBySpecification
     @_ColumnLabel(COLUMN_NAME_PKTABLE_CAT)
     private String pktableCat;
 
-    @Nullable
     @_NullableBySpecification
     @_ColumnLabel(COLUMN_NAME_PKTABLE_SCHEM)
     private String pktableSchem;
@@ -329,12 +340,10 @@ abstract class PortedKey
     private String pkcolumnName;
 
     // -----------------------------------------------------------------------------------------------------------------
-    @Nullable
     @_NullableBySpecification
     @_ColumnLabel(COLUMN_NAME_FKTABLE_CAT)
     private String fktableCat;
 
-    @Nullable
     @_NullableBySpecification
     @_ColumnLabel(COLUMN_NAME_FKTABLE_SCHEM)
     private String fktableSchem;
@@ -357,12 +366,10 @@ abstract class PortedKey
     private Integer deleteRule;
 
     // -----------------------------------------------------------------------------------------------------------------
-    @Nullable
     @_NullableBySpecification
     @_ColumnLabel(COLUMN_NAME_FK_NAME)
     private String fkName;
 
-    @Nullable
     @_NullableBySpecification
     @_ColumnLabel(COLUMN_NAME_PK_NAME)
     private String pkName;
@@ -370,71 +377,4 @@ abstract class PortedKey
     // -----------------------------------------------------------------------------------------------------------------
     @_ColumnLabel(COLUMN_NAME_DEFERRABILITY)
     private Integer deferrability;
-
-    // -----------------------------------------------------------------------------------------------------------------
-    private transient Column pkColumn_;
-
-    private transient Column fkColumn_;
-
-    Column getPkColumn_() {
-        if (pkColumn_ == null) {
-            pkColumn_ = Column.of(pktableCat, pktableSchem, pktableName, pkcolumnName);
-        }
-        return pkColumn_;
-    }
-
-    void setPkColumn_(final Column pkColumn_) {
-        this.pkColumn_ = pkColumn_;
-        setPktableCat(
-                Optional.ofNullable(this.pkColumn_)
-                        .map(Column::getTableCat)
-                        .orElse(null)
-        );
-        setPktableSchem(
-                Optional.ofNullable(pkColumn_)
-                        .map(Column::getTableSchem)
-                        .orElse(null)
-        );
-        setPktableName(
-                Optional.ofNullable(pkColumn_)
-                        .map(Column::getTableName)
-                        .orElse(null)
-        );
-        setPkcolumnName(
-                Optional.ofNullable(pkColumn_)
-                        .map(Column::getColumnName)
-                        .orElse(null)
-        );
-    }
-
-    Column getFkColumn_() {
-        if (fkColumn_ == null) {
-            fkColumn_ = Column.of(fktableCat, fktableSchem, fktableName, fkcolumnName);
-        }
-        return fkColumn_;
-    }
-
-    void setFkColumn_(final Column fkColumn_) {
-        this.fkColumn_ = fkColumn_;
-        setFktableCat(
-                Optional.ofNullable(this.fkColumn_)
-                        .map(Column::getTableCat)
-                        .orElse(null)
-        );
-        setFktableSchem(
-                Optional.ofNullable(fkColumn_)
-                        .map(Column::getTableSchem)
-                        .orElse(null)
-        );
-        setFktableName(
-                Optional.ofNullable(fkColumn_)
-                        .map(Column::getTableName)
-                        .orElse(null)
-        );
-        setFkcolumnName(
-                Optional.ofNullable(fkColumn_)
-                        .map(Column::getColumnName)
-                        .orElse(null)
-        );
-    }
 }

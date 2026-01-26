@@ -20,7 +20,6 @@ package com.github.jinahya.database.metadata.bind;
  * #L%
  */
 
-import jakarta.annotation.Nullable;
 import lombok.EqualsAndHashCode;
 
 import java.sql.DatabaseMetaData;
@@ -116,22 +115,22 @@ public class PrimaryKey
     }
 
     // -------------------------------------------------------------------------------------------------------- tableCat
-    @Nullable
+
     public String getTableCat() {
         return tableCat;
     }
 
-    protected void setTableCat(@Nullable final String tableCat) {
+    protected void setTableCat(final String tableCat) {
         this.tableCat = tableCat;
     }
 
     // ------------------------------------------------------------------------------------------------------ tableSchem
-    @Nullable
+
     public String getTableSchem() {
         return tableSchem;
     }
 
-    protected void setTableSchem(@Nullable final String tableSchem) {
+    protected void setTableSchem(final String tableSchem) {
         this.tableSchem = tableSchem;
     }
 
@@ -163,22 +162,21 @@ public class PrimaryKey
     }
 
     // ---------------------------------------------------------------------------------------------------------- pkName
-    @Nullable
+
     public String getPkName() {
         return pkName;
     }
 
-    protected void setPkName(@Nullable final String pkName) {
+    protected void setPkName(final String pkName) {
         this.pkName = pkName;
     }
 
     // -----------------------------------------------------------------------------------------------------------------
-    @Nullable
+
     @_NullableBySpecification
     @_ColumnLabel(COLUMN_LABEL_TABLE_CAT)
     private String tableCat;
 
-    @Nullable
     @_NullableBySpecification
     @_ColumnLabel(COLUMN_LABEL_TABLE_SCHEM)
     private String tableSchem;
@@ -193,7 +191,6 @@ public class PrimaryKey
     @_ColumnLabel(COLUMN_LABEL_KEY_SEQ)
     private Integer keySeq;
 
-    @Nullable
     @_NullableBySpecification
     @_ColumnLabel(COLUMN_LABEL_PK_NAME)
     private String pkName;

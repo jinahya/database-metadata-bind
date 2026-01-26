@@ -20,7 +20,6 @@ package com.github.jinahya.database.metadata.bind;
  * #L%
  */
 
-import jakarta.annotation.Nullable;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.Setter;
@@ -266,22 +265,22 @@ public class TypeInfo
     @_ColumnLabel(COLUMN_LABEL_DATA_TYPE)
     private Integer dataType;
 
-    @Nullable
+    
     @_NullableBySpecification
     @_ColumnLabel(COLUMN_LABEL_PRECISION)
     private Integer precision;
 
-    @Nullable
+    
     @_NullableBySpecification
     @_ColumnLabel(COLUMN_LABEL_LITERAL_PREFIX)
     private String literalPrefix;
 
-    @Nullable
+    
     @_NullableBySpecification
     @_ColumnLabel(COLUMN_LABEL_LITERAL_SUFFIX)
     private String literalSuffix;
 
-    @Nullable
+    
     @_NullableBySpecification
     @_ColumnLabel(COLUMN_LABEL_CREATE_PARAMS)
     private String createParams;
@@ -295,7 +294,7 @@ public class TypeInfo
     @_ColumnLabel(COLUMN_LABEL_SEARCHABLE)
     private Integer searchable;
 
-    @Nullable
+    
     @_NotUsedBySpecification
     @_ColumnLabel("UNSIGNED_ATTRIBUTE")
     private Boolean unsignedAttribute;
@@ -306,7 +305,7 @@ public class TypeInfo
     @_ColumnLabel("AUTO_INCREMENT")
     private Boolean autoIncrement;
 
-    @Nullable
+    
     @_NullableBySpecification
     @_ColumnLabel("LOCAL_TYPE_NAME")
     private String localTypeName;

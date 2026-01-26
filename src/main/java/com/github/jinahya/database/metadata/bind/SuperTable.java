@@ -20,13 +20,10 @@ package com.github.jinahya.database.metadata.bind;
  * #L%
  */
 
-import jakarta.annotation.Nullable;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
-
-import java.util.Optional;
 
 /**
  * A class for binding results of the
@@ -97,12 +94,11 @@ public class SuperTable
     }
 
     // -----------------------------------------------------------------------------------------------------------------
-    @Nullable
+
     @_NullableBySpecification
     @_ColumnLabel(COLUMN_LABEL_TABLE_CAT)
     private String tableCat;
 
-    @Nullable
     @_NullableBySpecification
     @_ColumnLabel(COLUMN_LABEL_TABLE_SCHEM)
     private String tableSchem;
@@ -131,68 +127,4 @@ public class SuperTable
     @EqualsAndHashCode.Exclude
     @ToString.Exclude
     private transient Schema supertableSchema_;
-
-    Catalog getTableCatalog_() {
-        if (tableCatalog_ == null) {
-            tableCatalog_ = Catalog.of(tableCat);
-        }
-        return tableCatalog_;
-    }
-
-    void setTableCatalog_(final Catalog tableCatalog_) {
-        this.tableCatalog_ = tableCatalog_;
-        setTableCat(
-                Optional.ofNullable(this.tableCatalog_)
-                        .map(Catalog::getTableCat)
-                        .orElse(null)
-        );
-    }
-
-    Schema getTableSchema_() {
-        if (tableSchema_ == null) {
-            tableSchema_ = Schema.of(getTableCatalog_(), tableSchem);
-        }
-        return tableSchema_;
-    }
-
-    void setTableSchema_(final Schema tableSchema_) {
-        this.tableSchema_ = tableSchema_;
-        setTableCatalog_(
-                Optional.ofNullable(this.tableSchema_)
-                        .map(Schema::getTableCatalog_)
-                        .orElse(null)
-        );
-    }
-
-    Catalog getSupertableCatalog_() {
-        if (supertableCatalog_ == null) {
-            supertableCatalog_ = Catalog.of(tableCat);
-        }
-        return supertableCatalog_;
-    }
-
-    void setSupertableCatalog_(final Catalog supertableCatalog_) {
-        this.supertableCatalog_ = supertableCatalog_;
-        setTableCat(
-                Optional.ofNullable(this.supertableCatalog_)
-                        .map(Catalog::getTableCat)
-                        .orElse(null)
-        );
-    }
-
-    Schema getSupertableSchema_() {
-        if (supertableSchema_ == null) {
-            supertableSchema_ = Schema.of(getSupertableCatalog_(), tableSchem);
-        }
-        return supertableSchema_;
-    }
-
-    void setSupertableSchema_(final Schema supertableSchema_) {
-        this.supertableSchema_ = supertableSchema_;
-        setSupertableCatalog_(
-                Optional.ofNullable(this.supertableSchema_)
-                        .map(Schema::getTableCatalog_)
-                        .orElse(null)
-        );
-    }
 }

@@ -263,8 +263,10 @@ final class Context_Test_Utils {
         }
         if (true) {
             assertThat(attributes).satisfiesAnyOf(
-                    l -> assertThat(l).isSortedAccordingTo(Attribute.comparingInSpecifiedOrder(context, String.CASE_INSENSITIVE_ORDER)),
-                    l -> assertThat(l).isSortedAccordingTo(Attribute.comparingInSpecifiedOrder(context, Comparator.naturalOrder()))
+                    l -> assertThat(l).isSortedAccordingTo(
+                            Attribute.comparingInSpecifiedOrder(context, String.CASE_INSENSITIVE_ORDER)),
+                    l -> assertThat(l).isSortedAccordingTo(
+                            Attribute.comparingInSpecifiedOrder(context, Comparator.naturalOrder()))
             );
         }
         for (final var attribute : attributes) {
@@ -323,8 +325,10 @@ final class Context_Test_Utils {
         }
         if (true) {
             assertThat(catalogs).satisfiesAnyOf(
-                    l -> assertThat(l).isSortedAccordingTo(Catalog.comparingInSpecifiedOrder(context, String.CASE_INSENSITIVE_ORDER)),
-                    l -> assertThat(l).isSortedAccordingTo(Catalog.comparingInSpecifiedOrder(context, Comparator.naturalOrder()))
+                    l -> assertThat(l).isSortedAccordingTo(
+                            Catalog.comparingInSpecifiedOrder(context, String.CASE_INSENSITIVE_ORDER)),
+                    l -> assertThat(l).isSortedAccordingTo(
+                            Catalog.comparingInSpecifiedOrder(context, Comparator.naturalOrder()))
             );
         }
         for (final var catalog : catalogs) {
@@ -598,7 +602,8 @@ final class Context_Test_Utils {
             assertThat(functionColumns).satisfiesAnyOf(
                     l -> assertThat(l).isSortedAccordingTo(
                             FunctionColumn.comparingInSpecifiedOrder(context, String.CASE_INSENSITIVE_ORDER)),
-                    l -> assertThat(l).isSortedAccordingTo(FunctionColumn.comparingInSpecifiedOrder(context, Comparator.naturalOrder()))
+                    l -> assertThat(l).isSortedAccordingTo(
+                            FunctionColumn.comparingInSpecifiedOrder(context, Comparator.naturalOrder()))
             );
         }
         for (final var functionColumn : functionColumns) {
@@ -650,8 +655,10 @@ final class Context_Test_Utils {
         }
         if (true) {
             assertThat(indexInfo).satisfiesAnyOf(
-                    l -> assertThat(l).isSortedAccordingTo(IndexInfo.comparingInSpecifiedOrder(context, String.CASE_INSENSITIVE_ORDER)),
-                    l -> assertThat(l).isSortedAccordingTo(IndexInfo.comparingInSpecifiedOrder(context, Comparator.naturalOrder()))
+                    l -> assertThat(l).isSortedAccordingTo(
+                            IndexInfo.comparingInSpecifiedOrder(context, String.CASE_INSENSITIVE_ORDER)),
+                    l -> assertThat(l).isSortedAccordingTo(
+                            IndexInfo.comparingInSpecifiedOrder(context, Comparator.naturalOrder()))
             );
         }
         for (final var v : indexInfo) {
@@ -727,8 +734,10 @@ final class Context_Test_Utils {
         }
         if (true) {
             assertThat(schemas).satisfiesAnyOf(
-                    l -> assertThat(l).isSortedAccordingTo(Schema.comparingInSpecifiedOrder(context, String.CASE_INSENSITIVE_ORDER)),
-                    l -> assertThat(l).isSortedAccordingTo(Schema.comparingInSpecifiedOrder(context, Comparator.naturalOrder()))
+                    l -> assertThat(l).isSortedAccordingTo(
+                            Schema.comparingInSpecifiedOrder(context, String.CASE_INSENSITIVE_ORDER)),
+                    l -> assertThat(l).isSortedAccordingTo(
+                            Schema.comparingInSpecifiedOrder(context, Comparator.naturalOrder()))
             );
         }
         for (final var schema : schemas) {
@@ -805,8 +814,10 @@ final class Context_Test_Utils {
             !databaseProductName(context).equals(DatabaseProductNames.MICROSOFT_SQL_SERVER)) {
             // https://jira.mariadb.org/browse/CONJ-1156
             assertThat(tables).satisfiesAnyOf(
-                    l -> assertThat(l).isSortedAccordingTo(Table.comparingInSpecifiedOrder(context, String.CASE_INSENSITIVE_ORDER)),
-                    l -> assertThat(l).isSortedAccordingTo(Table.comparingInSpecifiedOrder(context, Comparator.naturalOrder()))
+                    l -> assertThat(l).isSortedAccordingTo(
+                            Table.comparingInSpecifiedOrder(context, String.CASE_INSENSITIVE_ORDER)),
+                    l -> assertThat(l).isSortedAccordingTo(
+                            Table.comparingInSpecifiedOrder(context, Comparator.naturalOrder()))
             );
         }
         for (final var table : tables) {
@@ -835,20 +846,6 @@ final class Context_Test_Utils {
     private static void table(final Context context, final Table table) throws SQLException {
         MetadataType_Test_Utils.verify(table);
         // -------------------------------------------------------------------------------------------------------------
-        {
-            assertThat(table.getTableCatalog_())
-                    .isNotNull()
-                    .isEqualTo(Catalog.of(table.getTableCat()));
-            assertThat(table.getTableSchema_())
-                    .isNotNull()
-                    .isEqualTo(Schema.of(table.getTableCat(), table.getTableSchem()));
-            assertThat(table.getTypeCatalog_())
-                    .isNotNull()
-                    .isEqualTo(Catalog.of(table.getTypeCat()));
-            assertThat(table.getTypeSchema_())
-                    .isNotNull()
-                    .isEqualTo(Schema.of(table.getTypeCat(), table.getTypeSchem()));
-        }
         assertThat(table.getRefGeneration()).satisfiesAnyOf(
                 rg -> assertThat(rg).isNull(),
                 rg -> assertThat(rg).isIn(
@@ -1027,9 +1024,11 @@ final class Context_Test_Utils {
         if (true) {
             assertThat(tablePrivileges).satisfiesAnyOf(
                     l -> assertThat(l)
-                            .isSortedAccordingTo(TablePrivilege.comparingInSpecifiedOrder(context, String.CASE_INSENSITIVE_ORDER)),
+                            .isSortedAccordingTo(
+                                    TablePrivilege.comparingInSpecifiedOrder(context, String.CASE_INSENSITIVE_ORDER)),
                     l -> assertThat(l)
-                            .isSortedAccordingTo(TablePrivilege.comparingInSpecifiedOrder(context, Comparator.naturalOrder()))
+                            .isSortedAccordingTo(
+                                    TablePrivilege.comparingInSpecifiedOrder(context, Comparator.naturalOrder()))
             );
         }
         for (final var tablePrivilege : tablePrivileges) {
@@ -1073,7 +1072,8 @@ final class Context_Test_Utils {
         }
         if (!databaseProductName(context).equals(DatabaseProductNames.MY_SQL) &&
             !databaseProductName(context).equals(DatabaseProductNames.MICROSOFT_SQL_SERVER)) {
-            assertThat(typeInfo).isSortedAccordingTo(TypeInfo.comparingInSpecifiedOrder(context, Comparator.naturalOrder()));
+            assertThat(typeInfo).isSortedAccordingTo(
+                    TypeInfo.comparingInSpecifiedOrder(context, Comparator.naturalOrder()));
         }
         for (final var typeInfo_ : typeInfo) {
             typeInfo(context, typeInfo_);
@@ -1121,17 +1121,17 @@ final class Context_Test_Utils {
             assertDoesNotThrow(() -> JDBCType.valueOf(udt.getDataType()));
         }
         // ------------------------------------------------------------------------------------------------- .attributes
-        udt.getAttributes(context, "%").forEach(a -> {
-            log.debug("attribute: {}", a);
-        });
+//        udt.getAttributes(context, "%").forEach(a -> {
+//            log.debug("attribute: {}", a);
+//        });
         // ------------------------------------------------------------------------------------------------- .superTypes
-        udt.getSuperTypes(context).forEach(st -> {
-            log.debug("superType: {}", st);
-        });
+//        udt.getSuperTypes(context).forEach(st -> {
+//            log.debug("superType: {}", st);
+//        });
         // -------------------------------------------------------------------------------------------------- .superUDTs
-        udt.getSuperUDTs(context, null).forEach(sudt -> {
-            log.debug("superUDT: {}", sudt);
-        });
+//        udt.getSuperUDTs(context, null).forEach(sudt -> {
+//            log.debug("superUDT: {}", sudt);
+//        });
         // -------------------------------------------------------------------------------------------------- attributes
         try {
             final var attributes = context.getAttributes(udt, "%");

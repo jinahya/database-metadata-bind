@@ -20,7 +20,6 @@ package com.github.jinahya.database.metadata.bind;
  * #L%
  */
 
-import jakarta.annotation.Nullable;
 import jakarta.validation.constraints.Pattern;
 import jakarta.validation.constraints.PositiveOrZero;
 import lombok.EqualsAndHashCode;
@@ -122,22 +121,22 @@ public class FunctionColumn
     }
 
     // ----------------------------------------------------------------------------------------------------- functionCat
-    @Nullable
+    
     public String getFunctionCat() {
         return functionCat;
     }
 
-    public void setFunctionCat(@Nullable final String functionCat) {
+    public void setFunctionCat(final String functionCat) {
         this.functionCat = functionCat;
     }
 
     // --------------------------------------------------------------------------------------------------- functionSchem
-    @Nullable
+    
     public String getFunctionSchem() {
         return functionSchem;
     }
 
-    public void setFunctionSchem(@Nullable final String functionSchem) {
+    public void setFunctionSchem(final String functionSchem) {
         this.functionSchem = functionSchem;
     }
 
@@ -187,12 +186,12 @@ public class FunctionColumn
     }
 
     // ------------------------------------------------------------------------------------------------------- precision
-    @Nullable
+    
     public Integer getPrecision() {
         return precision;
     }
 
-    public void setPrecision(@Nullable final Integer precision) {
+    public void setPrecision(final Integer precision) {
         this.precision = precision;
     }
 
@@ -206,12 +205,12 @@ public class FunctionColumn
     }
 
     // ----------------------------------------------------------------------------------------------------------- scale
-    @Nullable
+    
     public Integer getScale() {
         return scale;
     }
 
-    public void setScale(@Nullable final Integer scale) {
+    public void setScale(final Integer scale) {
         this.scale = scale;
     }
 
@@ -243,12 +242,12 @@ public class FunctionColumn
     }
 
     // ------------------------------------------------------------------------------------------------- charOctetLength
-    @Nullable
+    
     public Integer getCharOctetLength() {
         return charOctetLength;
     }
 
-    public void setCharOctetLength(@Nullable final Integer charOctetLength) {
+    public void setCharOctetLength(final Integer charOctetLength) {
         this.charOctetLength = charOctetLength;
     }
 
@@ -280,12 +279,12 @@ public class FunctionColumn
     }
 
     // -----------------------------------------------------------------------------------------------------------------
-    @Nullable
+    
     @_NullableBySpecification
     @_ColumnLabel(COLUMN_LABEL_FUNCTION_CAT)
     private String functionCat;
 
-    @Nullable
+    
     @_NullableBySpecification
     @_ColumnLabel(COLUMN_LABEL_FUNCTION_SCHEM)
     private String functionSchem;
@@ -306,7 +305,7 @@ public class FunctionColumn
     @_ColumnLabel("TYPE_NAME")
     private String typeName;
 
-    @Nullable
+    
     @_NullableBySpecification
     @_ColumnLabel("PRECISION")
     private Integer precision;
@@ -314,7 +313,7 @@ public class FunctionColumn
     @_ColumnLabel("LENGTH")
     private Integer length;
 
-    @Nullable
+    
     @_NullableBySpecification
     @_ColumnLabel("SCALE")
     private Integer scale;
@@ -328,7 +327,7 @@ public class FunctionColumn
     @_ColumnLabel("REMARKS")
     private String remarks;
 
-    @Nullable
+    
     @_NullableBySpecification
     @_ColumnLabel("CHAR_OCTET_LENGTH")
     private Integer charOctetLength;

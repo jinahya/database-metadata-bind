@@ -21,9 +21,7 @@ package com.github.jinahya.database.metadata.bind;
  */
 
 import java.sql.SQLException;
-import java.util.ArrayList;
 import java.util.Comparator;
-import java.util.List;
 import java.util.Objects;
 import java.util.function.Consumer;
 
@@ -115,18 +113,4 @@ public class Catalog
     // -----------------------------------------------------------------------------------------------------------------
     @_ColumnLabel(COLUMN_LABEL_TABLE_CAT)
     private String tableCat;
-
-    // -----------------------------------------------------------------------------------------------------------------
-    List<Schema> getSchemas() {
-        if (schemas == null) {
-            schemas = new ArrayList<>();
-        }
-        return schemas;
-    }
-
-    void setSchemas(final List<Schema> schemas) {
-        this.schemas = schemas;
-    }
-
-    private List<Schema> schemas;
 }

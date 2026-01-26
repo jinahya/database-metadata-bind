@@ -20,7 +20,6 @@ package com.github.jinahya.database.metadata.bind;
  * #L%
  */
 
-import jakarta.annotation.Nullable;
 import lombok.EqualsAndHashCode;
 
 import java.sql.DatabaseMetaData;
@@ -150,12 +149,12 @@ public class BestRowIdentifier
     }
 
     // ------------------------------------------------------------------------------------------------------ columnSize
-    @Nullable
+    
     public Integer getColumnSize() {
         return columnSize;
     }
 
-    public void setColumnSize(@Nullable final Integer columnSize) {
+    public void setColumnSize(final Integer columnSize) {
         this.columnSize = columnSize;
     }
 
@@ -169,12 +168,12 @@ public class BestRowIdentifier
     }
 
     // --------------------------------------------------------------------------------------------------- decimalDigits
-    @Nullable
+    
     public Integer getDecimalDigits() {
         return decimalDigits;
     }
 
-    public void setDecimalDigits(@Nullable final Integer decimalDigits) {
+    public void setDecimalDigits(final Integer decimalDigits) {
         this.decimalDigits = decimalDigits;
     }
 
@@ -201,7 +200,7 @@ public class BestRowIdentifier
     @_ColumnLabel("TYPE_NAME")
     private String typeName;
 
-    @Nullable
+    
     @_NullableBySpecification
     @_ColumnLabel("COLUMN_SIZE")
     private Integer columnSize;
@@ -210,7 +209,7 @@ public class BestRowIdentifier
     @_ColumnLabel("BUFFER_LENGTH")
     private Integer bufferLength;
 
-    @Nullable
+    
     @_NullableBySpecification
     @_ColumnLabel("DECIMAL_DIGITS")
     private Integer decimalDigits;

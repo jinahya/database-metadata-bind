@@ -20,7 +20,6 @@ package com.github.jinahya.database.metadata.bind;
  * #L%
  */
 
-import jakarta.annotation.Nullable;
 import jakarta.validation.constraints.Pattern;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
@@ -130,12 +129,12 @@ public class ColumnPrivilege
     // ----------------------------------------------------------------------------------------------------- isGrantable
 
     // -----------------------------------------------------------------------------------------------------------------
-    @Nullable
+    
     @_NullableBySpecification
     @_ColumnLabel(COLUMN_LABEL_TABLE_CAT)
     private String tableCat;
 
-    @Nullable
+    
     @_NullableBySpecification
     @_ColumnLabel(COLUMN_LABEL_TABLE_SCHEM)
     private String tableSchem;
@@ -147,7 +146,7 @@ public class ColumnPrivilege
     private String columnName;
 
     // -----------------------------------------------------------------------------------------------------------------
-    @Nullable
+    
     @_NullableBySpecification
     @_ColumnLabel("GRANTOR")
     private String grantor;
@@ -158,7 +157,7 @@ public class ColumnPrivilege
     @_ColumnLabel("PRIVILEGE")
     private String privilege;
 
-    @Nullable
+    
     @Pattern(regexp = MetadataTypeConstants.PATTERN_REGEXP_YES_OR_NO)
     @_NullableBySpecification
     @_ColumnLabel(COLUMN_LABEL_IS_GRANTABLE)
