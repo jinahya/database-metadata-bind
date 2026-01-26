@@ -249,99 +249,200 @@ public class IndexInfo
 
     // -------------------------------------------------------------------------------------------------------- tableCat
 
+    /**
+     * Returns the value of {@value #COLUMN_LABEL_TABLE_CAT} column.
+     *
+     * @return the value of {@value #COLUMN_LABEL_TABLE_CAT} column.
+     */
     public String getTableCat() {
         return tableCat;
     }
 
+    /**
+     * Sets the value of {@value #COLUMN_LABEL_TABLE_CAT} column.
+     *
+     * @param tableCat the value of {@value #COLUMN_LABEL_TABLE_CAT} column.
+     */
     public void setTableCat(final String tableCat) {
         this.tableCat = tableCat;
     }
 
     // ------------------------------------------------------------------------------------------------------ tableSchem
 
+    /**
+     * Returns the value of {@value #COLUMN_LABEL_TABLE_SCHEM} column.
+     *
+     * @return the value of {@value #COLUMN_LABEL_TABLE_SCHEM} column.
+     */
     public String getTableSchem() {
         return tableSchem;
     }
 
+    /**
+     * Sets the value of {@value #COLUMN_LABEL_TABLE_SCHEM} column.
+     *
+     * @param tableSchem the value of {@value #COLUMN_LABEL_TABLE_SCHEM} column.
+     */
     public void setTableSchem(final String tableSchem) {
         this.tableSchem = tableSchem;
     }
 
     // ------------------------------------------------------------------------------------------------------- tableName
 
+    /**
+     * Returns the value of {@value #COLUMN_LABEL_TABLE_NAME} column.
+     *
+     * @return the value of {@value #COLUMN_LABEL_TABLE_NAME} column.
+     */
     public String getTableName() {
         return tableName;
     }
 
+    /**
+     * Sets the value of {@value #COLUMN_LABEL_TABLE_NAME} column.
+     *
+     * @param tableName the value of {@value #COLUMN_LABEL_TABLE_NAME} column.
+     */
     public void setTableName(final String tableName) {
         this.tableName = tableName;
     }
 
     // ------------------------------------------------------------------------------------------------------- nonUnique
 
+    /**
+     * Returns the value of {@value #COLUMN_LABEL_NON_UNIQUE} column.
+     *
+     * @return the value of {@value #COLUMN_LABEL_NON_UNIQUE} column.
+     */
     public Boolean getNonUnique() {
         return nonUnique;
     }
 
+    /**
+     * Sets the value of {@value #COLUMN_LABEL_NON_UNIQUE} column.
+     *
+     * @param nonUnique the value of {@value #COLUMN_LABEL_NON_UNIQUE} column.
+     */
     public void setNonUnique(final Boolean nonUnique) {
         this.nonUnique = nonUnique;
     }
 
     // -------------------------------------------------------------------------------------------------- indexQualifier
 
+    /**
+     * Returns the value of {@value #COLUMN_LABEL_INDEX_QUALIFIER} column.
+     *
+     * @return the value of {@value #COLUMN_LABEL_INDEX_QUALIFIER} column.
+     */
     public String getIndexQualifier() {
         return indexQualifier;
     }
 
+    /**
+     * Sets the value of {@value #COLUMN_LABEL_INDEX_QUALIFIER} column.
+     *
+     * @param indexQualifier the value of {@value #COLUMN_LABEL_INDEX_QUALIFIER} column.
+     */
     public void setIndexQualifier(final String indexQualifier) {
         this.indexQualifier = indexQualifier;
     }
 
     // ------------------------------------------------------------------------------------------------------- indexName
 
+    /**
+     * Returns the value of {@value #COLUMN_LABEL_INDEX_NAME} column.
+     *
+     * @return the value of {@value #COLUMN_LABEL_INDEX_NAME} column.
+     */
     public String getIndexName() {
         return indexName;
     }
 
+    /**
+     * Sets the value of {@value #COLUMN_LABEL_INDEX_NAME} column.
+     *
+     * @param indexName the value of {@value #COLUMN_LABEL_INDEX_NAME} column.
+     */
     public void setIndexName(final String indexName) {
         this.indexName = indexName;
     }
 
     // ------------------------------------------------------------------------------------------------------------ type
+
+    /**
+     * Returns the value of {@value #COLUMN_LABEL_TYPE} column.
+     *
+     * @return the value of {@value #COLUMN_LABEL_TYPE} column.
+     */
     public Integer getType() {
         return type;
     }
 
+    /**
+     * Sets the value of {@value #COLUMN_LABEL_TYPE} column.
+     *
+     * @param type the value of {@value #COLUMN_LABEL_TYPE} column.
+     */
     public void setType(final Integer type) {
         this.type = type;
     }
 
     // ------------------------------------------------------------------------------------------------- ordinalPosition
 
+    /**
+     * Returns the value of {@value #COLUMN_LABEL_ORDINAL_POSITION} column.
+     *
+     * @return the value of {@value #COLUMN_LABEL_ORDINAL_POSITION} column.
+     */
     public Integer getOrdinalPosition() {
         return ordinalPosition;
     }
 
+    /**
+     * Sets the value of {@value #COLUMN_LABEL_ORDINAL_POSITION} column.
+     *
+     * @param ordinalPosition the value of {@value #COLUMN_LABEL_ORDINAL_POSITION} column.
+     */
     public void setOrdinalPosition(final Integer ordinalPosition) {
         this.ordinalPosition = ordinalPosition;
     }
 
     // ------------------------------------------------------------------------------------------------------ columnName
 
+    /**
+     * Returns the value of {@value #COLUMN_LABEL_COLUMN_NAME} column.
+     *
+     * @return the value of {@value #COLUMN_LABEL_COLUMN_NAME} column.
+     */
     public String getColumnName() {
         return columnName;
     }
 
+    /**
+     * Sets the value of {@value #COLUMN_LABEL_COLUMN_NAME} column.
+     *
+     * @param columnName the value of {@value #COLUMN_LABEL_COLUMN_NAME} column.
+     */
     public void setColumnName(final String columnName) {
         this.columnName = columnName;
     }
 
     // ------------------------------------------------------------------------------------------------------- ascOrDesc
 
+    /**
+     * Returns the value of {@value #COLUMN_LABEL_ASC_OR_DESC} column.
+     *
+     * @return the value of {@value #COLUMN_LABEL_ASC_OR_DESC} column.
+     */
     public String getAscOrDesc() {
         return ascOrDesc;
     }
 
+    /**
+     * Sets the value of {@value #COLUMN_LABEL_ASC_OR_DESC} column.
+     *
+     * @param ascOrDesc the value of {@value #COLUMN_LABEL_ASC_OR_DESC} column.
+     */
     public void setAscOrDesc(final String ascOrDesc) {
         this.ascOrDesc = ascOrDesc;
     }
@@ -371,10 +472,21 @@ public class IndexInfo
     }
 
     // ----------------------------------------------------------------------------------------------------- cardinality
+
+    /**
+     * Returns the value of {@value #COLUMN_LABEL_CARDINALITY} column.
+     *
+     * @return the value of {@value #COLUMN_LABEL_CARDINALITY} column.
+     */
     public Long getCardinality() {
         return cardinality;
     }
 
+    /**
+     * Sets the value of {@value #COLUMN_LABEL_CARDINALITY} column.
+     *
+     * @param cardinality the value of {@value #COLUMN_LABEL_CARDINALITY} column.
+     */
     public void setCardinality(final Long cardinality) {
         this.cardinality = cardinality;
     }
@@ -394,10 +506,21 @@ public class IndexInfo
     }
 
     // ----------------------------------------------------------------------------------------------------------- pages
+
+    /**
+     * Returns the value of {@value #COLUMN_LABEL_PAGES} column.
+     *
+     * @return the value of {@value #COLUMN_LABEL_PAGES} column.
+     */
     public Long getPages() {
         return pages;
     }
 
+    /**
+     * Sets the value of {@value #COLUMN_LABEL_PAGES} column.
+     *
+     * @param pages the value of {@value #COLUMN_LABEL_PAGES} column.
+     */
     public void setPages(final Long pages) {
         this.pages = pages;
     }
@@ -418,10 +541,20 @@ public class IndexInfo
 
     // ------------------------------------------------------------------------------------------------- filterCondition
 
+    /**
+     * Returns the value of {@value #COLUMN_LABEL_FILTER_CONDITION} column.
+     *
+     * @return the value of {@value #COLUMN_LABEL_FILTER_CONDITION} column.
+     */
     public String getFilterCondition() {
         return filterCondition;
     }
 
+    /**
+     * Sets the value of {@value #COLUMN_LABEL_FILTER_CONDITION} column.
+     *
+     * @param filterCondition the value of {@value #COLUMN_LABEL_FILTER_CONDITION} column.
+     */
     public void setFilterCondition(final String filterCondition) {
         this.filterCondition = filterCondition;
     }

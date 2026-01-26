@@ -134,6 +134,53 @@ public class TypeInfo
 
     public static final int COLUMN_VALUE_SEARCHABLE_TYPE_SEARCHABLE = DatabaseMetaData.typeSearchable; // 3
 
+    // -----------------------------------------------------------------------------------------------------------------
+
+    /**
+     * A column label of {@value}.
+     */
+    public static final String COLUMN_LABEL_UNSIGNED_ATTRIBUTE = "UNSIGNED_ATTRIBUTE";
+
+    /**
+     * A column label of {@value}.
+     */
+    public static final String COLUMN_LABEL_FIXED_PREC_SCALE = "FIXED_PREC_SCALE";
+
+    /**
+     * A column label of {@value}.
+     */
+    public static final String COLUMN_LABEL_AUTO_INCREMENT = "AUTO_INCREMENT";
+
+    /**
+     * A column label of {@value}.
+     */
+    public static final String COLUMN_LABEL_LOCAL_TYPE_NAME = "LOCAL_TYPE_NAME";
+
+    /**
+     * A column label of {@value}.
+     */
+    public static final String COLUMN_LABEL_MINIMUM_SCALE = "MINIMUM_SCALE";
+
+    /**
+     * A column label of {@value}.
+     */
+    public static final String COLUMN_LABEL_MAXIMUM_SCALE = "MAXIMUM_SCALE";
+
+    /**
+     * A column label of {@value}.
+     */
+    public static final String COLUMN_LABEL_SQL_DATA_TYPE = "SQL_DATA_TYPE";
+
+    /**
+     * A column label of {@value}.
+     */
+    public static final String COLUMN_LABEL_SQL_DATETIME_SUB = "SQL_DATETIME_SUB";
+
+    /**
+     * A column label of {@value}.
+     */
+    public static final String COLUMN_LABEL_NUM_PREC_RADIX = "NUM_PREC_RADIX";
+
     // ------------------------------------------------------------------------------------------ STATIC_FACTORY_METHODS
 
     // ---------------------------------------------------------------------------------------------------- CONSTRUCTORS
@@ -171,84 +218,200 @@ public class TypeInfo
                '}';
     }
 
-    // -----------------------------------------------------------------------------------------------------------------
+    // -------------------------------------------------------------------------------------------------------- typeName
 
+    /**
+     * Returns the value of {@value #COLUMN_LABEL_TYPE_NAME} column.
+     *
+     * @return the value of {@value #COLUMN_LABEL_TYPE_NAME} column.
+     */
     public String getTypeName() {
         return typeName;
     }
 
+    // -------------------------------------------------------------------------------------------------------- dataType
+
+    /**
+     * Returns the value of {@value #COLUMN_LABEL_DATA_TYPE} column.
+     *
+     * @return the value of {@value #COLUMN_LABEL_DATA_TYPE} column.
+     */
     public Integer getDataType() {
         return dataType;
     }
 
+    // ------------------------------------------------------------------------------------------------------- precision
+
+    /**
+     * Returns the value of {@value #COLUMN_LABEL_PRECISION} column.
+     *
+     * @return the value of {@value #COLUMN_LABEL_PRECISION} column.
+     */
     public Integer getPrecision() {
         return precision;
     }
 
+    // --------------------------------------------------------------------------------------------------- literalPrefix
+
+    /**
+     * Returns the value of {@value #COLUMN_LABEL_LITERAL_PREFIX} column.
+     *
+     * @return the value of {@value #COLUMN_LABEL_LITERAL_PREFIX} column.
+     */
     public String getLiteralPrefix() {
         return literalPrefix;
     }
 
     // --------------------------------------------------------------------------------------------------- literalSuffix
+
+    /**
+     * Returns the value of {@value #COLUMN_LABEL_LITERAL_SUFFIX} column.
+     *
+     * @return the value of {@value #COLUMN_LABEL_LITERAL_SUFFIX} column.
+     */
     public String getLiteralSuffix() {
         return literalSuffix;
     }
 
     // ---------------------------------------------------------------------------------------------------- createParams
+
+    /**
+     * Returns the value of {@value #COLUMN_LABEL_CREATE_PARAMS} column.
+     *
+     * @return the value of {@value #COLUMN_LABEL_CREATE_PARAMS} column.
+     */
     public String getCreateParams() {
         return createParams;
     }
 
     // -------------------------------------------------------------------------------------------------------- nullable
+
+    /**
+     * Returns the value of {@value #COLUMN_LABEL_NULLABLE} column.
+     *
+     * @return the value of {@value #COLUMN_LABEL_NULLABLE} column.
+     */
     public Integer getNullable() {
         return nullable;
     }
 
     // --------------------------------------------------------------------------------------------------- caseSensitive
+
+    /**
+     * Returns the value of {@value #COLUMN_LABEL_CASE_SENSITIVE} column.
+     *
+     * @return the value of {@value #COLUMN_LABEL_CASE_SENSITIVE} column.
+     */
     public Boolean getCaseSensitive() {
         return caseSensitive;
     }
 
     // ------------------------------------------------------------------------------------------------------ searchable
+
+    /**
+     * Returns the value of {@value #COLUMN_LABEL_SEARCHABLE} column.
+     *
+     * @return the value of {@value #COLUMN_LABEL_SEARCHABLE} column.
+     */
     public Integer getSearchable() {
         return searchable;
     }
 
     // ----------------------------------------------------------------------------------------------- unsignedAttribute
+
+    /**
+     * Returns the value of {@value #COLUMN_LABEL_UNSIGNED_ATTRIBUTE} column.
+     *
+     * @return the value of {@value #COLUMN_LABEL_UNSIGNED_ATTRIBUTE} column.
+     */
     public Boolean getUnsignedAttribute() {
         return unsignedAttribute;
     }
 
+    // -------------------------------------------------------------------------------------------------- fixedPrecScale
+
+    /**
+     * Returns the value of {@value #COLUMN_LABEL_FIXED_PREC_SCALE} column.
+     *
+     * @return the value of {@value #COLUMN_LABEL_FIXED_PREC_SCALE} column.
+     */
     public Boolean getFixedPrecScale() {
         return fixedPrecScale;
     }
 
+    // --------------------------------------------------------------------------------------------------- autoIncrement
+
+    /**
+     * Returns the value of {@value #COLUMN_LABEL_AUTO_INCREMENT} column.
+     *
+     * @return the value of {@value #COLUMN_LABEL_AUTO_INCREMENT} column.
+     */
     public Boolean getAutoIncrement() {
         return autoIncrement;
     }
 
+    // --------------------------------------------------------------------------------------------------- localTypeName
+
+    /**
+     * Returns the value of {@value #COLUMN_LABEL_LOCAL_TYPE_NAME} column.
+     *
+     * @return the value of {@value #COLUMN_LABEL_LOCAL_TYPE_NAME} column.
+     */
     public String getLocalTypeName() {
         return localTypeName;
     }
 
+    // ---------------------------------------------------------------------------------------------------- minimumScale
+
+    /**
+     * Returns the value of {@value #COLUMN_LABEL_MINIMUM_SCALE} column.
+     *
+     * @return the value of {@value #COLUMN_LABEL_MINIMUM_SCALE} column.
+     */
     public Integer getMinimumScale() {
         return minimumScale;
     }
 
+    // ---------------------------------------------------------------------------------------------------- maximumScale
+
+    /**
+     * Returns the value of {@value #COLUMN_LABEL_MAXIMUM_SCALE} column.
+     *
+     * @return the value of {@value #COLUMN_LABEL_MAXIMUM_SCALE} column.
+     */
     public Integer getMaximumScale() {
         return maximumScale;
     }
 
+    // ----------------------------------------------------------------------------------------------------- sqlDataType
+
+    /**
+     * Returns the value of {@value #COLUMN_LABEL_SQL_DATA_TYPE} column.
+     *
+     * @return the value of {@value #COLUMN_LABEL_SQL_DATA_TYPE} column.
+     */
     public Integer getSqlDataType() {
         return sqlDataType;
     }
 
-    // -------------------------------------------------------------------------------------------------- sqlDateTimeSub
+    // -------------------------------------------------------------------------------------------------- sqlDatetimeSub
+
+    /**
+     * Returns the value of {@value #COLUMN_LABEL_SQL_DATETIME_SUB} column.
+     *
+     * @return the value of {@value #COLUMN_LABEL_SQL_DATETIME_SUB} column.
+     */
     public Integer getSqlDatetimeSub() {
         return sqlDatetimeSub;
     }
 
     // ---------------------------------------------------------------------------------------------------- numPrecRadix
+
+    /**
+     * Returns the value of {@value #COLUMN_LABEL_NUM_PREC_RADIX} column.
+     *
+     * @return the value of {@value #COLUMN_LABEL_NUM_PREC_RADIX} column.
+     */
     public Integer getNumPrecRadix() {
         return numPrecRadix;
     }
@@ -296,34 +459,33 @@ public class TypeInfo
 
     
     @_NotUsedBySpecification
-    @_ColumnLabel("UNSIGNED_ATTRIBUTE")
+    @_ColumnLabel(COLUMN_LABEL_UNSIGNED_ATTRIBUTE)
     private Boolean unsignedAttribute;
 
-    @_ColumnLabel("FIXED_PREC_SCALE")
+    @_ColumnLabel(COLUMN_LABEL_FIXED_PREC_SCALE)
     private Boolean fixedPrecScale;
 
-    @_ColumnLabel("AUTO_INCREMENT")
+    @_ColumnLabel(COLUMN_LABEL_AUTO_INCREMENT)
     private Boolean autoIncrement;
 
-    
     @_NullableBySpecification
-    @_ColumnLabel("LOCAL_TYPE_NAME")
+    @_ColumnLabel(COLUMN_LABEL_LOCAL_TYPE_NAME)
     private String localTypeName;
 
-    @_ColumnLabel("MINIMUM_SCALE")
+    @_ColumnLabel(COLUMN_LABEL_MINIMUM_SCALE)
     private Integer minimumScale;
 
-    @_ColumnLabel("MAXIMUM_SCALE")
+    @_ColumnLabel(COLUMN_LABEL_MAXIMUM_SCALE)
     private Integer maximumScale;
 
     @_NotUsedBySpecification
-    @_ColumnLabel("SQL_DATA_TYPE")
+    @_ColumnLabel(COLUMN_LABEL_SQL_DATA_TYPE)
     private Integer sqlDataType;
 
     @_NotUsedBySpecification
-    @_ColumnLabel("SQL_DATETIME_SUB")
+    @_ColumnLabel(COLUMN_LABEL_SQL_DATETIME_SUB)
     private Integer sqlDatetimeSub;
 
-    @_ColumnLabel("NUM_PREC_RADIX")
+    @_ColumnLabel(COLUMN_LABEL_NUM_PREC_RADIX)
     private Integer numPrecRadix;
 }

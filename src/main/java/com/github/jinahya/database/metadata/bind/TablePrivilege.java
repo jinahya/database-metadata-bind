@@ -76,6 +76,26 @@ public class TablePrivilege
      */
     public static final String COLUMN_LABEL_TABLE_NAME = "TABLE_NAME";
 
+    /**
+     * The column label of {@value}.
+     */
+    public static final String COLUMN_LABEL_GRANTOR = "GRANTOR";
+
+    /**
+     * The column label of {@value}.
+     */
+    public static final String COLUMN_LABEL_GRANTEE = "GRANTEE";
+
+    /**
+     * The column label of {@value}.
+     */
+    public static final String COLUMN_LABEL_PRIVILEGE = "PRIVILEGE";
+
+    /**
+     * The column label of {@value}.
+     */
+    public static final String COLUMN_LABEL_IS_GRANTABLE = "IS_GRANTABLE";
+
     // ------------------------------------------------------------------------------------------ STATIC_FACTORY_METHODS
 
     // ---------------------------------------------------------------------------------------------------- CONSTRUCTORS
@@ -102,36 +122,78 @@ public class TablePrivilege
     }
 
     // -------------------------------------------------------------------------------------------------------- tableCat
+
+    /**
+     * Returns the value of {@value #COLUMN_LABEL_TABLE_CAT} column.
+     *
+     * @return the value of {@value #COLUMN_LABEL_TABLE_CAT} column.
+     */
     public String getTableCat() {
         return tableCat;
     }
 
     // ------------------------------------------------------------------------------------------------------ tableSchem
+
+    /**
+     * Returns the value of {@value #COLUMN_LABEL_TABLE_SCHEM} column.
+     *
+     * @return the value of {@value #COLUMN_LABEL_TABLE_SCHEM} column.
+     */
     public String getTableSchem() {
         return tableSchem;
     }
 
     // ------------------------------------------------------------------------------------------------------- tableName
+
+    /**
+     * Returns the value of {@value #COLUMN_LABEL_TABLE_NAME} column.
+     *
+     * @return the value of {@value #COLUMN_LABEL_TABLE_NAME} column.
+     */
     public String getTableName() {
         return tableName;
     }
 
     // --------------------------------------------------------------------------------------------------------- grantor
+
+    /**
+     * Returns the value of {@value #COLUMN_LABEL_GRANTOR} column.
+     *
+     * @return the value of {@value #COLUMN_LABEL_GRANTOR} column.
+     */
     public String getGrantor() {
         return grantor;
     }
 
     // --------------------------------------------------------------------------------------------------------- grantee
+
+    /**
+     * Returns the value of {@value #COLUMN_LABEL_GRANTEE} column.
+     *
+     * @return the value of {@value #COLUMN_LABEL_GRANTEE} column.
+     */
     public String getGrantee() {
         return grantee;
     }
 
-    // ------------------------------------------------------------------------------------------------------ privilege
+    // ------------------------------------------------------------------------------------------------------- privilege
+
+    /**
+     * Returns the value of {@value #COLUMN_LABEL_PRIVILEGE} column.
+     *
+     * @return the value of {@value #COLUMN_LABEL_PRIVILEGE} column.
+     */
     public String getPrivilege() {
         return privilege;
     }
 
     // ----------------------------------------------------------------------------------------------------- isGrantable
+
+    /**
+     * Returns the value of {@value #COLUMN_LABEL_IS_GRANTABLE} column.
+     *
+     * @return the value of {@value #COLUMN_LABEL_IS_GRANTABLE} column.
+     */
     public String getIsGrantable() {
         return isGrantable;
     }
@@ -153,17 +215,16 @@ public class TablePrivilege
     // -----------------------------------------------------------------------------------------------------------------
     
     @_NullableBySpecification
-    @_ColumnLabel("GRANTOR")
+    @_ColumnLabel(COLUMN_LABEL_GRANTOR)
     private String grantor;
 
-    @_ColumnLabel("GRANTEE")
+    @_ColumnLabel(COLUMN_LABEL_GRANTEE)
     private String grantee;
 
-    @_ColumnLabel("PRIVILEGE")
+    @_ColumnLabel(COLUMN_LABEL_PRIVILEGE)
     private String privilege;
 
-    
     @_NullableBySpecification
-    @_ColumnLabel("IS_GRANTABLE")
+    @_ColumnLabel(COLUMN_LABEL_IS_GRANTABLE)
     private String isGrantable;
 }

@@ -132,33 +132,78 @@ public class UDT
     }
 
     // --------------------------------------------------------------------------------------------------------- typeCat
+
+    /**
+     * Returns the value of {@value #COLUMN_LABEL_TYPE_CAT} column.
+     *
+     * @return the value of {@value #COLUMN_LABEL_TYPE_CAT} column.
+     */
     public String getTypeCat() {
         return typeCat;
     }
 
+    // ------------------------------------------------------------------------------------------------------- typeSchem
+
+    /**
+     * Returns the value of {@value #COLUMN_LABEL_TYPE_SCHEM} column.
+     *
+     * @return the value of {@value #COLUMN_LABEL_TYPE_SCHEM} column.
+     */
     public String getTypeSchem() {
         return typeSchem;
     }
 
     // -------------------------------------------------------------------------------------------------------- typeName
+
+    /**
+     * Returns the value of {@value #COLUMN_LABEL_TYPE_NAME} column.
+     *
+     * @return the value of {@value #COLUMN_LABEL_TYPE_NAME} column.
+     */
     public String getTypeName() {
         return typeName;
     }
 
+    // ------------------------------------------------------------------------------------------------------- className
+
+    /**
+     * Returns the value of {@value #COLUMN_LABEL_CLASS_NAME} column.
+     *
+     * @return the value of {@value #COLUMN_LABEL_CLASS_NAME} column.
+     */
     public String getClassName() {
         return className;
     }
 
     // -------------------------------------------------------------------------------------------------------- dataType
+
+    /**
+     * Returns the value of {@value #COLUMN_LABEL_DATA_TYPE} column.
+     *
+     * @return the value of {@value #COLUMN_LABEL_DATA_TYPE} column.
+     */
     public Integer getDataType() {
         return dataType;
     }
 
+    // --------------------------------------------------------------------------------------------------------- remarks
+
+    /**
+     * Returns the value of {@value #COLUMN_LABEL_REMARKS} column.
+     *
+     * @return the value of {@value #COLUMN_LABEL_REMARKS} column.
+     */
     public String getRemarks() {
         return remarks;
     }
 
-    // --------------------------------------------------------------------------------------------------------- bseType
+    // -------------------------------------------------------------------------------------------------------- baseType
+
+    /**
+     * Returns the value of {@value #COLUMN_LABEL_BASE_TYPE} column.
+     *
+     * @return the value of {@value #COLUMN_LABEL_BASE_TYPE} column.
+     */
     public Integer getBaseType() {
         return baseType;
     }

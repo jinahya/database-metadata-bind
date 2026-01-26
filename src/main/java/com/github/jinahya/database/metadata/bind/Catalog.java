@@ -102,10 +102,21 @@ public class Catalog
     }
 
     // -------------------------------------------------------------------------------------------------------- tableCat
+
+    /**
+     * Returns the value of {@value #COLUMN_LABEL_TABLE_CAT} column.
+     *
+     * @return the value of {@value #COLUMN_LABEL_TABLE_CAT} column.
+     */
     public String getTableCat() {
         return tableCat;
     }
 
+    /**
+     * Sets the value of {@value #COLUMN_LABEL_TABLE_CAT} column.
+     *
+     * @param tableCat the value of {@value #COLUMN_LABEL_TABLE_CAT} column.
+     */
     public void setTableCat(final String tableCat) {
         this.tableCat = tableCat;
     }

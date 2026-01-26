@@ -144,57 +144,121 @@ public class Function
     }
 
     // ----------------------------------------------------------------------------------------------------- functionCat
-    
+
+    /**
+     * Returns the value of {@value #COLUMN_LABEL_FUNCTION_CAT} column.
+     *
+     * @return the value of {@value #COLUMN_LABEL_FUNCTION_CAT} column.
+     */
     public String getFunctionCat() {
         return functionCat;
     }
 
+    /**
+     * Sets the value of {@value #COLUMN_LABEL_FUNCTION_CAT} column.
+     *
+     * @param functionCat the value of {@value #COLUMN_LABEL_FUNCTION_CAT} column.
+     */
     public void setFunctionCat(final String functionCat) {
         this.functionCat = functionCat;
     }
 
     // --------------------------------------------------------------------------------------------------- functionSchem
-    
+
+    /**
+     * Returns the value of {@value #COLUMN_LABEL_FUNCTION_SCHEM} column.
+     *
+     * @return the value of {@value #COLUMN_LABEL_FUNCTION_SCHEM} column.
+     */
     public String getFunctionSchem() {
         return functionSchem;
     }
 
+    /**
+     * Sets the value of {@value #COLUMN_LABEL_FUNCTION_SCHEM} column.
+     *
+     * @param functionSchem the value of {@value #COLUMN_LABEL_FUNCTION_SCHEM} column.
+     */
     public void setFunctionSchem(final String functionSchem) {
         this.functionSchem = functionSchem;
     }
 
     // ---------------------------------------------------------------------------------------------------- functionName
+
+    /**
+     * Returns the value of {@value #COLUMN_LABEL_FUNCTION_NAME} column.
+     *
+     * @return the value of {@value #COLUMN_LABEL_FUNCTION_NAME} column.
+     */
     public String getFunctionName() {
         return functionName;
     }
 
+    /**
+     * Sets the value of {@value #COLUMN_LABEL_FUNCTION_NAME} column.
+     *
+     * @param functionName the value of {@value #COLUMN_LABEL_FUNCTION_NAME} column.
+     */
     public void setFunctionName(final String functionName) {
         this.functionName = functionName;
     }
 
     // --------------------------------------------------------------------------------------------------------- remarks
+
+    /**
+     * Returns the value of {@value #COLUMN_LABEL_REMARKS} column.
+     *
+     * @return the value of {@value #COLUMN_LABEL_REMARKS} column.
+     */
     public String getRemarks() {
         return remarks;
     }
 
+    /**
+     * Sets the value of {@value #COLUMN_LABEL_REMARKS} column.
+     *
+     * @param remarks the value of {@value #COLUMN_LABEL_REMARKS} column.
+     */
     public void setRemarks(final String remarks) {
         this.remarks = remarks;
     }
 
     // ---------------------------------------------------------------------------------------------------- functionType
+
+    /**
+     * Returns the value of {@value #COLUMN_LABEL_FUNCTION_TYPE} column.
+     *
+     * @return the value of {@value #COLUMN_LABEL_FUNCTION_TYPE} column.
+     */
     public Integer getFunctionType() {
         return functionType;
     }
 
+    /**
+     * Sets the value of {@value #COLUMN_LABEL_FUNCTION_TYPE} column.
+     *
+     * @param functionType the value of {@value #COLUMN_LABEL_FUNCTION_TYPE} column.
+     */
     public void setFunctionType(final Integer functionType) {
         this.functionType = functionType;
     }
 
     // ---------------------------------------------------------------------------------------------------- specificName
+
+    /**
+     * Returns the value of {@value #COLUMN_LABEL_SPECIFIC_NAME} column.
+     *
+     * @return the value of {@value #COLUMN_LABEL_SPECIFIC_NAME} column.
+     */
     public String getSpecificName() {
         return specificName;
     }
 
+    /**
+     * Sets the value of {@value #COLUMN_LABEL_SPECIFIC_NAME} column.
+     *
+     * @param specificName the value of {@value #COLUMN_LABEL_SPECIFIC_NAME} column.
+     */
     public void setSpecificName(final String specificName) {
         this.specificName = specificName;
     }

@@ -116,57 +116,120 @@ public class PrimaryKey
 
     // -------------------------------------------------------------------------------------------------------- tableCat
 
+    /**
+     * Returns the value of {@value #COLUMN_LABEL_TABLE_CAT} column.
+     *
+     * @return the value of {@value #COLUMN_LABEL_TABLE_CAT} column.
+     */
     public String getTableCat() {
         return tableCat;
     }
 
+    /**
+     * Sets the value of {@value #COLUMN_LABEL_TABLE_CAT} column.
+     *
+     * @param tableCat the value of {@value #COLUMN_LABEL_TABLE_CAT} column.
+     */
     protected void setTableCat(final String tableCat) {
         this.tableCat = tableCat;
     }
 
     // ------------------------------------------------------------------------------------------------------ tableSchem
 
+    /**
+     * Returns the value of {@value #COLUMN_LABEL_TABLE_SCHEM} column.
+     *
+     * @return the value of {@value #COLUMN_LABEL_TABLE_SCHEM} column.
+     */
     public String getTableSchem() {
         return tableSchem;
     }
 
+    /**
+     * Sets the value of {@value #COLUMN_LABEL_TABLE_SCHEM} column.
+     *
+     * @param tableSchem the value of {@value #COLUMN_LABEL_TABLE_SCHEM} column.
+     */
     protected void setTableSchem(final String tableSchem) {
         this.tableSchem = tableSchem;
     }
 
     // ------------------------------------------------------------------------------------------------------- tableName
+
+    /**
+     * Returns the value of {@value #COLUMN_LABEL_TABLE_NAME} column.
+     *
+     * @return the value of {@value #COLUMN_LABEL_TABLE_NAME} column.
+     */
     public String getTableName() {
         return tableName;
     }
 
+    /**
+     * Sets the value of {@value #COLUMN_LABEL_TABLE_NAME} column.
+     *
+     * @param tableName the value of {@value #COLUMN_LABEL_TABLE_NAME} column.
+     */
     protected void setTableName(final String tableName) {
         this.tableName = tableName;
     }
 
     // ------------------------------------------------------------------------------------------------------ columnName
+
+    /**
+     * Returns the value of {@value #COLUMN_LABEL_COLUMN_NAME} column.
+     *
+     * @return the value of {@value #COLUMN_LABEL_COLUMN_NAME} column.
+     */
     public String getColumnName() {
         return columnName;
     }
 
+    /**
+     * Sets the value of {@value #COLUMN_LABEL_COLUMN_NAME} column.
+     *
+     * @param columnName the value of {@value #COLUMN_LABEL_COLUMN_NAME} column.
+     */
     protected void setColumnName(final String columnName) {
         this.columnName = columnName;
     }
 
     // ---------------------------------------------------------------------------------------------------------- keySeq
+
+    /**
+     * Returns the value of {@value #COLUMN_LABEL_KEY_SEQ} column.
+     *
+     * @return the value of {@value #COLUMN_LABEL_KEY_SEQ} column.
+     */
     public Integer getKeySeq() {
         return keySeq;
     }
 
+    /**
+     * Sets the value of {@value #COLUMN_LABEL_KEY_SEQ} column.
+     *
+     * @param keySeq the value of {@value #COLUMN_LABEL_KEY_SEQ} column.
+     */
     protected void setKeySeq(final Integer keySeq) {
         this.keySeq = keySeq;
     }
 
     // ---------------------------------------------------------------------------------------------------------- pkName
 
+    /**
+     * Returns the value of {@value #COLUMN_LABEL_PK_NAME} column.
+     *
+     * @return the value of {@value #COLUMN_LABEL_PK_NAME} column.
+     */
     public String getPkName() {
         return pkName;
     }
 
+    /**
+     * Sets the value of {@value #COLUMN_LABEL_PK_NAME} column.
+     *
+     * @param pkName the value of {@value #COLUMN_LABEL_PK_NAME} column.
+     */
     protected void setPkName(final String pkName) {
         this.pkName = pkName;
     }

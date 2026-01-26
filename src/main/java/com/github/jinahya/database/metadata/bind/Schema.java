@@ -127,20 +127,40 @@ public class Schema
 
     // ------------------------------------------------------------------------------------------------------ tableSchem
 
+    /**
+     * Returns the value of {@value #COLUMN_LABEL_TABLE_SCHEM} column.
+     *
+     * @return the value of {@value #COLUMN_LABEL_TABLE_SCHEM} column.
+     */
     public String getTableSchem() {
         return tableSchem;
     }
 
+    /**
+     * Sets the value of {@value #COLUMN_LABEL_TABLE_SCHEM} column.
+     *
+     * @param tableSchem the value of {@value #COLUMN_LABEL_TABLE_SCHEM} column.
+     */
     public void setTableSchem(final String tableSchem) {
         this.tableSchem = tableSchem;
     }
 
     // ---------------------------------------------------------------------------------------------------- tableCatalog
 
+    /**
+     * Returns the value of {@value #COLUMN_LABEL_TABLE_CATALOG} column.
+     *
+     * @return the value of {@value #COLUMN_LABEL_TABLE_CATALOG} column.
+     */
     public String getTableCatalog() {
         return tableCatalog;
     }
 
+    /**
+     * Sets the value of {@value #COLUMN_LABEL_TABLE_CATALOG} column.
+     *
+     * @param tableCatalog the value of {@value #COLUMN_LABEL_TABLE_CATALOG} column.
+     */
     protected void setTableCatalog(final String tableCatalog) {
         this.tableCatalog = tableCatalog;
     }

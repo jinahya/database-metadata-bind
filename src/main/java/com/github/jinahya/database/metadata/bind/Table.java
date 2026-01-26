@@ -181,6 +181,11 @@ public class Table
         return tableCat;
     }
 
+    /**
+     * Sets the value of {@value #COLUMN_LABEL_TABLE_CAT} column.
+     *
+     * @param tableCat the value of {@value #COLUMN_LABEL_TABLE_CAT} column.
+     */
     public void setTableCat(final String tableCat) {
         this.tableCat = tableCat;
     }
@@ -197,6 +202,11 @@ public class Table
         return tableSchem;
     }
 
+    /**
+     * Sets the value of {@value #COLUMN_LABEL_TABLE_SCHEM} column.
+     *
+     * @param tableSchem the value of {@value #COLUMN_LABEL_TABLE_SCHEM} column.
+     */
     public void setTableSchem(final String tableSchem) {
         this.tableSchem = tableSchem;
     }
@@ -212,6 +222,11 @@ public class Table
         return tableName;
     }
 
+    /**
+     * Sets the value of {@value #COLUMN_LABEL_TABLE_NAME} column.
+     *
+     * @param tableName the value of {@value #COLUMN_LABEL_TABLE_NAME} column.
+     */
     public void setTableName(final String tableName) {
         this.tableName = tableName;
     }
@@ -227,60 +242,131 @@ public class Table
         return tableType;
     }
 
+    /**
+     * Sets the value of {@value #COLUMN_LABEL_TABLE_TYPE} column.
+     *
+     * @param tableType the value of {@value #COLUMN_LABEL_TABLE_TYPE} column.
+     */
     public void setTableType(final String tableType) {
         this.tableType = tableType;
     }
 
     // --------------------------------------------------------------------------------------------------------- remarks
+
+    /**
+     * Returns the value of {@value #COLUMN_LABEL_REMARKS} column.
+     *
+     * @return the value of {@value #COLUMN_LABEL_REMARKS} column.
+     */
     public String getRemarks() {
         return remarks;
     }
 
+    /**
+     * Sets the value of {@value #COLUMN_LABEL_REMARKS} column.
+     *
+     * @param remarks the value of {@value #COLUMN_LABEL_REMARKS} column.
+     */
     public void setRemarks(final String remarks) {
         this.remarks = remarks;
     }
 
     // --------------------------------------------------------------------------------------------------------- typeCat
+
+    /**
+     * Returns the value of {@value #COLUMN_LABEL_TYPE_CAT} column.
+     *
+     * @return the value of {@value #COLUMN_LABEL_TYPE_CAT} column.
+     */
     public String getTypeCat() {
         return typeCat;
     }
 
+    /**
+     * Sets the value of {@value #COLUMN_LABEL_TYPE_CAT} column.
+     *
+     * @param typeCat the value of {@value #COLUMN_LABEL_TYPE_CAT} column.
+     */
     public void setTypeCat(final String typeCat) {
         this.typeCat = typeCat;
     }
 
     // ------------------------------------------------------------------------------------------------------- typeSchem
+
+    /**
+     * Returns the value of {@value #COLUMN_LABEL_TYPE_SCHEM} column.
+     *
+     * @return the value of {@value #COLUMN_LABEL_TYPE_SCHEM} column.
+     */
     public String getTypeSchem() {
         return typeSchem;
     }
 
+    /**
+     * Sets the value of {@value #COLUMN_LABEL_TYPE_SCHEM} column.
+     *
+     * @param typeSchem the value of {@value #COLUMN_LABEL_TYPE_SCHEM} column.
+     */
     public void setTypeSchem(final String typeSchem) {
         this.typeSchem = typeSchem;
     }
 
     // -------------------------------------------------------------------------------------------------------- typeName
+
+    /**
+     * Returns the value of {@value #COLUMN_LABEL_TYPE_NAME} column.
+     *
+     * @return the value of {@value #COLUMN_LABEL_TYPE_NAME} column.
+     */
     public String getTypeName() {
         return typeName;
     }
 
+    /**
+     * Sets the value of {@value #COLUMN_LABEL_TYPE_NAME} column.
+     *
+     * @param typeName the value of {@value #COLUMN_LABEL_TYPE_NAME} column.
+     */
     public void setTypeName(String typeName) {
         this.typeName = typeName;
     }
 
     // --------------------------------------------------------------------------------------- selfReferencingColumnName
+
+    /**
+     * Returns the value of {@value #COLUMN_LABEL_SELF_REFERENCING_COL_NAME} column.
+     *
+     * @return the value of {@value #COLUMN_LABEL_SELF_REFERENCING_COL_NAME} column.
+     */
     public String getSelfReferencingColName() {
         return selfReferencingColName;
     }
 
+    /**
+     * Sets the value of {@value #COLUMN_LABEL_SELF_REFERENCING_COL_NAME} column.
+     *
+     * @param selfReferencingColName the value of {@value #COLUMN_LABEL_SELF_REFERENCING_COL_NAME} column.
+     */
     public void setSelfReferencingColName(final String selfReferencingColName) {
         this.selfReferencingColName = selfReferencingColName;
     }
 
     // --------------------------------------------------------------------------------------------------- refGeneration
+
+    /**
+     * Returns the value of {@value #COLUMN_LABEL_REF_GENERATION} column.
+     *
+     * @return the value of {@value #COLUMN_LABEL_REF_GENERATION} column.
+     */
     public String getRefGeneration() {
         return refGeneration;
     }
 
+    /**
+     * Sets the value of {@value #COLUMN_LABEL_REF_GENERATION} column.
+     *
+     * @param refGeneration the value of {@value #COLUMN_LABEL_REF_GENERATION} column.
+     */
     public void setRefGeneration(final String refGeneration) {
         this.refGeneration = refGeneration;
     }

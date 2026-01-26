@@ -167,125 +167,262 @@ public class CrossReference
 
     // ------------------------------------------------------------------------------------------------ java.lang.Object
 
-    // ------------------------------------------------------------------------------------------------------ pkTableCat
-    
+    // ----------------------------------------------------------------------------------------------------- pktableCat
+
+    /**
+     * Returns the value of {@value #COLUMN_LABEL_PKTABLE_CAT} column.
+     *
+     * @return the value of {@value #COLUMN_LABEL_PKTABLE_CAT} column.
+     */
     public String getPktableCat() {
         return pktableCat;
     }
 
+    /**
+     * Sets the value of {@value #COLUMN_LABEL_PKTABLE_CAT} column.
+     *
+     * @param pktableCat the value of {@value #COLUMN_LABEL_PKTABLE_CAT} column.
+     */
     void setPktableCat(final String pktableCat) {
         this.pktableCat = pktableCat;
     }
 
-    // ---------------------------------------------------------------------------------------------------- pkTableSchem
-    
+    // --------------------------------------------------------------------------------------------------- pktableSchem
+
+    /**
+     * Returns the value of {@value #COLUMN_LABEL_PKTABLE_SCHEM} column.
+     *
+     * @return the value of {@value #COLUMN_LABEL_PKTABLE_SCHEM} column.
+     */
     public String getPktableSchem() {
         return pktableSchem;
     }
 
+    /**
+     * Sets the value of {@value #COLUMN_LABEL_PKTABLE_SCHEM} column.
+     *
+     * @param pktableSchem the value of {@value #COLUMN_LABEL_PKTABLE_SCHEM} column.
+     */
     void setPktableSchem(final String pktableSchem) {
         this.pktableSchem = pktableSchem;
     }
 
-    // ----------------------------------------------------------------------------------------------------- pkTableName
+    // ---------------------------------------------------------------------------------------------------- pktableName
+
+    /**
+     * Returns the value of {@value #COLUMN_LABEL_PKTABLE_NAME} column.
+     *
+     * @return the value of {@value #COLUMN_LABEL_PKTABLE_NAME} column.
+     */
     public String getPktableName() {
         return pktableName;
     }
 
+    /**
+     * Sets the value of {@value #COLUMN_LABEL_PKTABLE_NAME} column.
+     *
+     * @param pktableName the value of {@value #COLUMN_LABEL_PKTABLE_NAME} column.
+     */
     void setPktableName(final String pktableName) {
         this.pktableName = pktableName;
     }
 
-    // ---------------------------------------------------------------------------------------------------- pkColumnName
+    // --------------------------------------------------------------------------------------------------- pkcolumnName
+
+    /**
+     * Returns the value of {@value #COLUMN_LABEL_PKCOLUMN_NAME} column.
+     *
+     * @return the value of {@value #COLUMN_LABEL_PKCOLUMN_NAME} column.
+     */
     public String getPkcolumnName() {
         return pkcolumnName;
     }
 
+    /**
+     * Sets the value of {@value #COLUMN_LABEL_PKCOLUMN_NAME} column.
+     *
+     * @param pkcolumnName the value of {@value #COLUMN_LABEL_PKCOLUMN_NAME} column.
+     */
     void setPkcolumnName(final String pkcolumnName) {
         this.pkcolumnName = pkcolumnName;
     }
 
-    // ------------------------------------------------------------------------------------------------------ fktableCat
-    
+    // ----------------------------------------------------------------------------------------------------- fktableCat
+
+    /**
+     * Returns the value of {@value #COLUMN_LABEL_FKTABLE_CAT} column.
+     *
+     * @return the value of {@value #COLUMN_LABEL_FKTABLE_CAT} column.
+     */
     public String getFktableCat() {
         return fktableCat;
     }
 
+    /**
+     * Sets the value of {@value #COLUMN_LABEL_FKTABLE_CAT} column.
+     *
+     * @param fktableCat the value of {@value #COLUMN_LABEL_FKTABLE_CAT} column.
+     */
     void setFktableCat(final String fktableCat) {
         this.fktableCat = fktableCat;
     }
 
-    // ---------------------------------------------------------------------------------------------------- fktableSchem
-    
+    // --------------------------------------------------------------------------------------------------- fktableSchem
+
+    /**
+     * Returns the value of {@value #COLUMN_LABEL_FKTABLE_SCHEM} column.
+     *
+     * @return the value of {@value #COLUMN_LABEL_FKTABLE_SCHEM} column.
+     */
     public String getFktableSchem() {
         return fktableSchem;
     }
 
+    /**
+     * Sets the value of {@value #COLUMN_LABEL_FKTABLE_SCHEM} column.
+     *
+     * @param fktableSchem the value of {@value #COLUMN_LABEL_FKTABLE_SCHEM} column.
+     */
     void setFktableSchem(final String fktableSchem) {
         this.fktableSchem = fktableSchem;
     }
 
-    // ----------------------------------------------------------------------------------------------------- fkTableName
+    // ---------------------------------------------------------------------------------------------------- fktableName
+
+    /**
+     * Returns the value of {@value #COLUMN_LABEL_FKTABLE_NAME} column.
+     *
+     * @return the value of {@value #COLUMN_LABEL_FKTABLE_NAME} column.
+     */
     public String getFktableName() {
         return fktableName;
     }
 
+    /**
+     * Sets the value of {@value #COLUMN_LABEL_FKTABLE_NAME} column.
+     *
+     * @param fktableName the value of {@value #COLUMN_LABEL_FKTABLE_NAME} column.
+     */
     void setFktableName(final String fktableName) {
         this.fktableName = fktableName;
     }
 
-    // ---------------------------------------------------------------------------------------------------- fkColumnName
+    // --------------------------------------------------------------------------------------------------- fkcolumnName
+
+    /**
+     * Returns the value of {@value #COLUMN_LABEL_FKCOLUMN_NAME} column.
+     *
+     * @return the value of {@value #COLUMN_LABEL_FKCOLUMN_NAME} column.
+     */
     public String getFkcolumnName() {
         return fkcolumnName;
     }
 
+    /**
+     * Sets the value of {@value #COLUMN_LABEL_FKCOLUMN_NAME} column.
+     *
+     * @param fkcolumnName the value of {@value #COLUMN_LABEL_FKCOLUMN_NAME} column.
+     */
     void setFkcolumnName(final String fkcolumnName) {
         this.fkcolumnName = fkcolumnName;
     }
 
     // ---------------------------------------------------------------------------------------------------------- keySeq
+
+    /**
+     * Returns the value of {@value #COLUMN_LABEL_KEY_SEQ} column.
+     *
+     * @return the value of {@value #COLUMN_LABEL_KEY_SEQ} column.
+     */
     public Integer getKeySeq() {
         return keySeq;
     }
 
+    /**
+     * Sets the value of {@value #COLUMN_LABEL_KEY_SEQ} column.
+     *
+     * @param keySeq the value of {@value #COLUMN_LABEL_KEY_SEQ} column.
+     */
     public void setKeySeq(final Integer keySeq) {
         this.keySeq = keySeq;
     }
 
     // ------------------------------------------------------------------------------------------------------ updateRule
+
+    /**
+     * Returns the value of {@value #COLUMN_LABEL_UPDATE_RULE} column.
+     *
+     * @return the value of {@value #COLUMN_LABEL_UPDATE_RULE} column.
+     */
     public Integer getUpdateRule() {
         return updateRule;
     }
 
+    /**
+     * Sets the value of {@value #COLUMN_LABEL_UPDATE_RULE} column.
+     *
+     * @param updateRule the value of {@value #COLUMN_LABEL_UPDATE_RULE} column.
+     */
     void setUpdateRule(final Integer updateRule) {
         this.updateRule = updateRule;
     }
 
     // ------------------------------------------------------------------------------------------------------ deleteRule
+
+    /**
+     * Returns the value of {@value #COLUMN_LABEL_DELETE_RULE} column.
+     *
+     * @return the value of {@value #COLUMN_LABEL_DELETE_RULE} column.
+     */
     public Integer getDeleteRule() {
         return deleteRule;
     }
 
+    /**
+     * Sets the value of {@value #COLUMN_LABEL_DELETE_RULE} column.
+     *
+     * @param deleteRule the value of {@value #COLUMN_LABEL_DELETE_RULE} column.
+     */
     void setDeleteRule(final Integer deleteRule) {
         this.deleteRule = deleteRule;
     }
 
     // ---------------------------------------------------------------------------------------------------------- fkName
-    
+
+    /**
+     * Returns the value of {@value #COLUMN_LABEL_FK_NAME} column.
+     *
+     * @return the value of {@value #COLUMN_LABEL_FK_NAME} column.
+     */
     public String getFkName() {
         return fkName;
     }
 
+    /**
+     * Sets the value of {@value #COLUMN_LABEL_FK_NAME} column.
+     *
+     * @param fkName the value of {@value #COLUMN_LABEL_FK_NAME} column.
+     */
     public void setFkName(final String fkName) {
         this.fkName = fkName;
     }
 
     // ---------------------------------------------------------------------------------------------------------- pkName
-    
+
+    /**
+     * Returns the value of {@value #COLUMN_LABEL_PK_NAME} column.
+     *
+     * @return the value of {@value #COLUMN_LABEL_PK_NAME} column.
+     */
     public String getPkName() {
         return pkName;
     }
 
+    /**
+     * Sets the value of {@value #COLUMN_LABEL_PK_NAME} column.
+     *
+     * @param pkName the value of {@value #COLUMN_LABEL_PK_NAME} column.
+     */
     public void setPkName(final String pkName) {
         this.pkName = pkName;
     }
@@ -295,12 +432,17 @@ public class CrossReference
     /**
      * Returns the value of {@value #COLUMN_LABEL_DEFERRABILITY} column.
      *
-     * @return the value of the {@value #COLUMN_LABEL_DEFERRABILITY} column.
+     * @return the value of {@value #COLUMN_LABEL_DEFERRABILITY} column.
      */
     public Integer getDeferrability() {
         return deferrability;
     }
 
+    /**
+     * Sets the value of {@value #COLUMN_LABEL_DEFERRABILITY} column.
+     *
+     * @param deferrability the value of {@value #COLUMN_LABEL_DEFERRABILITY} column.
+     */
     void setDeferrability(Integer deferrability) {
         this.deferrability = deferrability;
     }

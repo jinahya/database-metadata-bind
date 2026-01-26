@@ -221,6 +221,11 @@ public class Attribute
         return typeSchem;
     }
 
+    /**
+     * Sets the value of {@value #COLUMN_LABEL_TYPE_SCHEM} column.
+     *
+     * @param typeSchem the value of {@value #COLUMN_LABEL_TYPE_SCHEM} column.
+     */
     public void setTypeSchem(final String typeSchem) {
         this.typeSchem = typeSchem;
     }
@@ -236,6 +241,11 @@ public class Attribute
         return typeName;
     }
 
+    /**
+     * Sets the value of {@value #COLUMN_LABEL_TYPE_NAME} column.
+     *
+     * @param typeName the value of {@value #COLUMN_LABEL_TYPE_NAME} column.
+     */
     public void setTypeName(final String typeName) {
         this.typeName = typeName;
     }
@@ -251,6 +261,11 @@ public class Attribute
         return attrName;
     }
 
+    /**
+     * Sets the value of {@value #COLUMN_LABEL_ATTR_NAME} column.
+     *
+     * @param attrName the value of {@value #COLUMN_LABEL_ATTR_NAME} column.
+     */
     public void setAttrName(String attrName) {
         this.attrName = attrName;
     }
@@ -266,154 +281,331 @@ public class Attribute
         return dataType;
     }
 
+    /**
+     * Sets the value of {@value #COLUMN_LABEL_DATA_TYPE} column.
+     *
+     * @param dataType the value of {@value #COLUMN_LABEL_DATA_TYPE} column.
+     */
     public void setDataType(Integer dataType) {
         this.dataType = dataType;
     }
 
     // ---------------------------------------------------------------------------------------------------- attrTypeName
+
+    /**
+     * Returns the value of {@code ATTR_TYPE_NAME} column.
+     *
+     * @return the value of {@code ATTR_TYPE_NAME} column.
+     */
     public String getAttrTypeName() {
         return attrTypeName;
     }
 
+    /**
+     * Sets the value of {@code ATTR_TYPE_NAME} column.
+     *
+     * @param attrTypeName the value of {@code ATTR_TYPE_NAME} column.
+     */
     public void setAttrTypeName(String attrTypeName) {
         this.attrTypeName = attrTypeName;
     }
 
     // -------------------------------------------------------------------------------------------------------- attrSize
+
+    /**
+     * Returns the value of {@code ATTR_SIZE} column.
+     *
+     * @return the value of {@code ATTR_SIZE} column.
+     */
     public Integer getAttrSize() {
         return attrSize;
     }
 
+    /**
+     * Sets the value of {@code ATTR_SIZE} column.
+     *
+     * @param attrSize the value of {@code ATTR_SIZE} column.
+     */
     public void setAttrSize(Integer attrSize) {
         this.attrSize = attrSize;
     }
 
     // --------------------------------------------------------------------------------------------------- decimalDigits
+
+    /**
+     * Returns the value of {@code DECIMAL_DIGITS} column.
+     *
+     * @return the value of {@code DECIMAL_DIGITS} column.
+     */
     public Integer getDecimalDigits() {
         return decimalDigits;
     }
 
+    /**
+     * Sets the value of {@code DECIMAL_DIGITS} column.
+     *
+     * @param decimalDigits the value of {@code DECIMAL_DIGITS} column.
+     */
     public void setDecimalDigits(Integer decimalDigits) {
         this.decimalDigits = decimalDigits;
     }
 
     // ---------------------------------------------------------------------------------------------------- numPrecRadix
+
+    /**
+     * Returns the value of {@code NUM_PREC_RADIX} column.
+     *
+     * @return the value of {@code NUM_PREC_RADIX} column.
+     */
     public Integer getNumPrecRadix() {
         return numPrecRadix;
     }
 
+    /**
+     * Sets the value of {@code NUM_PREC_RADIX} column.
+     *
+     * @param numPrecRadix the value of {@code NUM_PREC_RADIX} column.
+     */
     public void setNumPrecRadix(Integer numPrecRadix) {
         this.numPrecRadix = numPrecRadix;
     }
 
     // -------------------------------------------------------------------------------------------------------- nullable
+
+    /**
+     * Returns the value of {@value #COLUMN_LABEL_NULLABLE} column.
+     *
+     * @return the value of {@value #COLUMN_LABEL_NULLABLE} column.
+     */
     public Integer getNullable() {
         return nullable;
     }
 
+    /**
+     * Sets the value of {@value #COLUMN_LABEL_NULLABLE} column.
+     *
+     * @param nullable the value of {@value #COLUMN_LABEL_NULLABLE} column.
+     */
     public void setNullable(Integer nullable) {
         this.nullable = nullable;
     }
 
     // --------------------------------------------------------------------------------------------------------- remarks
+
+    /**
+     * Returns the value of {@code REMARKS} column.
+     *
+     * @return the value of {@code REMARKS} column.
+     */
     public String getRemarks() {
         return remarks;
     }
 
+    /**
+     * Sets the value of {@code REMARKS} column.
+     *
+     * @param remarks the value of {@code REMARKS} column.
+     */
     public void setRemarks(String remarks) {
         this.remarks = remarks;
     }
 
     // --------------------------------------------------------------------------------------------------------- attrDef
+
+    /**
+     * Returns the value of {@code ATTR_DEF} column.
+     *
+     * @return the value of {@code ATTR_DEF} column.
+     */
     public String getAttrDef() {
         return attrDef;
     }
 
+    /**
+     * Sets the value of {@code ATTR_DEF} column.
+     *
+     * @param attrDef the value of {@code ATTR_DEF} column.
+     */
     public void setAttrDef(String attrDef) {
         this.attrDef = attrDef;
     }
 
     // ----------------------------------------------------------------------------------------------------- sqlDataType
+
+    /**
+     * Returns the value of {@code SQL_DATA_TYPE} column.
+     *
+     * @return the value of {@code SQL_DATA_TYPE} column.
+     */
     public Integer getSqlDataType() {
         return sqlDataType;
     }
 
+    /**
+     * Sets the value of {@code SQL_DATA_TYPE} column.
+     *
+     * @param sqlDataType the value of {@code SQL_DATA_TYPE} column.
+     */
     public void setSqlDataType(Integer sqlDataType) {
         this.sqlDataType = sqlDataType;
     }
 
     // -------------------------------------------------------------------------------------------------- sqlDatetimeSub
+
+    /**
+     * Returns the value of {@code SQL_DATETIME_SUB} column.
+     *
+     * @return the value of {@code SQL_DATETIME_SUB} column.
+     */
     public Integer getSqlDatetimeSub() {
         return sqlDatetimeSub;
     }
 
+    /**
+     * Sets the value of {@code SQL_DATETIME_SUB} column.
+     *
+     * @param sqlDatetimeSub the value of {@code SQL_DATETIME_SUB} column.
+     */
     public void setSqlDatetimeSub(Integer sqlDatetimeSub) {
         this.sqlDatetimeSub = sqlDatetimeSub;
     }
 
     // ------------------------------------------------------------------------------------------------- charOctetLength
 
+    /**
+     * Returns the value of {@code CHAR_OCTET_LENGTH} column.
+     *
+     * @return the value of {@code CHAR_OCTET_LENGTH} column.
+     */
     public Integer getCharOctetLength() {
         return charOctetLength;
     }
 
+    /**
+     * Sets the value of {@code CHAR_OCTET_LENGTH} column.
+     *
+     * @param charOctetLength the value of {@code CHAR_OCTET_LENGTH} column.
+     */
     public void setCharOctetLength(Integer charOctetLength) {
         this.charOctetLength = charOctetLength;
     }
 
     // ------------------------------------------------------------------------------------------------- ordinalPosition
 
+    /**
+     * Returns the value of {@code ORDINAL_POSITION} column.
+     *
+     * @return the value of {@code ORDINAL_POSITION} column.
+     */
     public Integer getOrdinalPosition() {
         return ordinalPosition;
     }
 
+    /**
+     * Sets the value of {@code ORDINAL_POSITION} column.
+     *
+     * @param ordinalPosition the value of {@code ORDINAL_POSITION} column.
+     */
     public void setOrdinalPosition(Integer ordinalPosition) {
         this.ordinalPosition = ordinalPosition;
     }
 
     // ------------------------------------------------------------------------------------------------------ isNullable
+
+    /**
+     * Returns the value of {@value #COLUMN_LABEL_IS_NULLABLE} column.
+     *
+     * @return the value of {@value #COLUMN_LABEL_IS_NULLABLE} column.
+     */
     public String getIsNullable() {
         return isNullable;
     }
 
+    /**
+     * Sets the value of {@value #COLUMN_LABEL_IS_NULLABLE} column.
+     *
+     * @param isNullable the value of {@value #COLUMN_LABEL_IS_NULLABLE} column.
+     */
     public void setIsNullable(final String isNullable) {
         this.isNullable = isNullable;
     }
 
-    // ----------------------------------------------------------------------------------------------------- scopCatalog
+    // ---------------------------------------------------------------------------------------------------- scopeCatalog
+
+    /**
+     * Returns the value of {@code SCOPE_CATALOG} column.
+     *
+     * @return the value of {@code SCOPE_CATALOG} column.
+     */
     public String getScopeCatalog() {
         return scopeCatalog;
     }
 
+    /**
+     * Sets the value of {@code SCOPE_CATALOG} column.
+     *
+     * @param scopeCatalog the value of {@code SCOPE_CATALOG} column.
+     */
     public void setScopeCatalog(final String scopeCatalog) {
         this.scopeCatalog = scopeCatalog;
     }
 
     // ----------------------------------------------------------------------------------------------------- scopeSchema
-    
+
+    /**
+     * Returns the value of {@code SCOPE_SCHEMA} column.
+     *
+     * @return the value of {@code SCOPE_SCHEMA} column.
+     */
     public String getScopeSchema() {
         return scopeSchema;
     }
 
+    /**
+     * Sets the value of {@code SCOPE_SCHEMA} column.
+     *
+     * @param scopeSchema the value of {@code SCOPE_SCHEMA} column.
+     */
     public void setScopeSchema(final String scopeSchema) {
         this.scopeSchema = scopeSchema;
     }
 
     // ------------------------------------------------------------------------------------------------------ scopeTable
+
+    /**
+     * Returns the value of {@code SCOPE_TABLE} column.
+     *
+     * @return the value of {@code SCOPE_TABLE} column.
+     */
     public String getScopeTable() {
         return scopeTable;
     }
 
+    /**
+     * Sets the value of {@code SCOPE_TABLE} column.
+     *
+     * @param scopeTable the value of {@code SCOPE_TABLE} column.
+     */
     public void setScopeTable(final String scopeTable) {
         this.scopeTable = scopeTable;
     }
 
     // -------------------------------------------------------------------------------------------------- sourceDataType
-    
+
+    /**
+     * Returns the value of {@code SOURCE_DATA_TYPE} column.
+     *
+     * @return the value of {@code SOURCE_DATA_TYPE} column.
+     */
     public Integer getSourceDataType() {
         return sourceDataType;
     }
 
+    /**
+     * Sets the value of {@code SOURCE_DATA_TYPE} column.
+     *
+     * @param sourceDataType the value of {@code SOURCE_DATA_TYPE} column.
+     */
     public void setSourceDataType(final Integer sourceDataType) {
         this.sourceDataType = sourceDataType;
     }

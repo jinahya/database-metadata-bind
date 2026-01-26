@@ -84,6 +84,27 @@ public class ColumnPrivilege
     // ----------------------------------------------------------------------------------------------------- COLUMN_NAME
     public static final String COLUMN_LABEL_COLUMN_NAME = "COLUMN_NAME";
 
+    // --------------------------------------------------------------------------------------------------------- GRANTOR
+
+    /**
+     * The column label of {@value}.
+     */
+    public static final String COLUMN_LABEL_GRANTOR = "GRANTOR";
+
+    // --------------------------------------------------------------------------------------------------------- GRANTEE
+
+    /**
+     * The column label of {@value}.
+     */
+    public static final String COLUMN_LABEL_GRANTEE = "GRANTEE";
+
+    // ------------------------------------------------------------------------------------------------------- PRIVILEGE
+
+    /**
+     * The column label of {@value}.
+     */
+    public static final String COLUMN_LABEL_PRIVILEGE = "PRIVILEGE";
+
     // -----------------------------------------------------------------------------------------------------------------
     public static final String COLUMN_LABEL_IS_GRANTABLE = "IS_GRANTABLE";
 
@@ -148,13 +169,13 @@ public class ColumnPrivilege
     // -----------------------------------------------------------------------------------------------------------------
     
     @_NullableBySpecification
-    @_ColumnLabel("GRANTOR")
+    @_ColumnLabel(COLUMN_LABEL_GRANTOR)
     private String grantor;
 
-    @_ColumnLabel("GRANTEE")
+    @_ColumnLabel(COLUMN_LABEL_GRANTEE)
     private String grantee;
 
-    @_ColumnLabel("PRIVILEGE")
+    @_ColumnLabel(COLUMN_LABEL_PRIVILEGE)
     private String privilege;
 
     

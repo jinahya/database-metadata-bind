@@ -57,38 +57,82 @@ public class SuperTable
 
     // ------------------------------------------------------------------------------------------------ java.lang.Object
 
-    // -----------------------------------------------------------------------------------------------------------------
+    // -------------------------------------------------------------------------------------------------------- tableCat
+
+    /**
+     * Returns the value of {@value #COLUMN_LABEL_TABLE_CAT} column.
+     *
+     * @return the value of {@value #COLUMN_LABEL_TABLE_CAT} column.
+     */
     public String getTableCat() {
         return tableCat;
     }
 
+    /**
+     * Sets the value of {@value #COLUMN_LABEL_TABLE_CAT} column.
+     *
+     * @param tableCat the value of {@value #COLUMN_LABEL_TABLE_CAT} column.
+     */
     protected void setTableCat(final String tableCat) {
         this.tableCat = tableCat;
     }
 
-    // -----------------------------------------------------------------------------------------------------------------
+    // ------------------------------------------------------------------------------------------------------ tableSchem
+
+    /**
+     * Returns the value of {@value #COLUMN_LABEL_TABLE_SCHEM} column.
+     *
+     * @return the value of {@value #COLUMN_LABEL_TABLE_SCHEM} column.
+     */
     public String getTableSchem() {
         return tableSchem;
     }
 
+    /**
+     * Sets the value of {@value #COLUMN_LABEL_TABLE_SCHEM} column.
+     *
+     * @param tableSchem the value of {@value #COLUMN_LABEL_TABLE_SCHEM} column.
+     */
     protected void setTableSchem(final String tableSchem) {
         this.tableSchem = tableSchem;
     }
 
-    // -----------------------------------------------------------------------------------------------------------------
+    // ------------------------------------------------------------------------------------------------------- tableName
+
+    /**
+     * Returns the value of {@value #COLUMN_LABEL_TABLE_NAME} column.
+     *
+     * @return the value of {@value #COLUMN_LABEL_TABLE_NAME} column.
+     */
     public String getTableName() {
         return tableName;
     }
 
+    /**
+     * Sets the value of {@value #COLUMN_LABEL_TABLE_NAME} column.
+     *
+     * @param tableName the value of {@value #COLUMN_LABEL_TABLE_NAME} column.
+     */
     protected void setTableName(final String tableName) {
         this.tableName = tableName;
     }
 
-    // -----------------------------------------------------------------------------------------------------------------
+    // -------------------------------------------------------------------------------------------------- supertableName
+
+    /**
+     * Returns the value of {@value #COLUMN_LABEL_SUPERTABLE_NAME} column.
+     *
+     * @return the value of {@value #COLUMN_LABEL_SUPERTABLE_NAME} column.
+     */
     public String getSupertableName() {
         return supertableName;
     }
 
+    /**
+     * Sets the value of {@value #COLUMN_LABEL_SUPERTABLE_NAME} column.
+     *
+     * @param supertableName the value of {@value #COLUMN_LABEL_SUPERTABLE_NAME} column.
+     */
     protected void setSupertableName(final String supertableName) {
         this.supertableName = supertableName;
     }

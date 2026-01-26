@@ -122,109 +122,241 @@ public class PseudoColumn
     }
 
     // -------------------------------------------------------------------------------------------------------- tableCat
+
+    /**
+     * Returns the value of {@value #COLUMN_LABEL_TABLE_CAT} column.
+     *
+     * @return the value of {@value #COLUMN_LABEL_TABLE_CAT} column.
+     */
     public String getTableCat() {
         return tableCat;
     }
 
+    /**
+     * Sets the value of {@value #COLUMN_LABEL_TABLE_CAT} column.
+     *
+     * @param tableCat the value of {@value #COLUMN_LABEL_TABLE_CAT} column.
+     */
     protected void setTableCat(final String tableCat) {
         this.tableCat = tableCat;
     }
 
     // ------------------------------------------------------------------------------------------------------ tableSchem
+
+    /**
+     * Returns the value of {@value #COLUMN_LABEL_TABLE_SCHEM} column.
+     *
+     * @return the value of {@value #COLUMN_LABEL_TABLE_SCHEM} column.
+     */
     public String getTableSchem() {
         return tableSchem;
     }
 
+    /**
+     * Sets the value of {@value #COLUMN_LABEL_TABLE_SCHEM} column.
+     *
+     * @param tableSchem the value of {@value #COLUMN_LABEL_TABLE_SCHEM} column.
+     */
     protected void setTableSchem(final String tableSchem) {
         this.tableSchem = tableSchem;
     }
 
     // ------------------------------------------------------------------------------------------------------- tableName
+
+    /**
+     * Returns the value of {@value #COLUMN_LABEL_TABLE_NAME} column.
+     *
+     * @return the value of {@value #COLUMN_LABEL_TABLE_NAME} column.
+     */
     public String getTableName() {
         return tableName;
     }
 
+    /**
+     * Sets the value of {@value #COLUMN_LABEL_TABLE_NAME} column.
+     *
+     * @param tableName the value of {@value #COLUMN_LABEL_TABLE_NAME} column.
+     */
     protected void setTableName(final String tableName) {
         this.tableName = tableName;
     }
 
     // ------------------------------------------------------------------------------------------------------ columnName
+
+    /**
+     * Returns the value of {@value #COLUMN_LABEL_COLUMN_NAME} column.
+     *
+     * @return the value of {@value #COLUMN_LABEL_COLUMN_NAME} column.
+     */
     public String getColumnName() {
         return columnName;
     }
 
+    /**
+     * Sets the value of {@value #COLUMN_LABEL_COLUMN_NAME} column.
+     *
+     * @param columnName the value of {@value #COLUMN_LABEL_COLUMN_NAME} column.
+     */
     protected void setColumnName(final String columnName) {
         this.columnName = columnName;
     }
 
     // -------------------------------------------------------------------------------------------------------- dataType
+
+    /**
+     * Returns the value of {@value #COLUMN_LABEL_DATA_TYPE} column.
+     *
+     * @return the value of {@value #COLUMN_LABEL_DATA_TYPE} column.
+     */
     public Integer getDataType() {
         return dataType;
     }
 
+    /**
+     * Sets the value of {@value #COLUMN_LABEL_DATA_TYPE} column.
+     *
+     * @param dataType the value of {@value #COLUMN_LABEL_DATA_TYPE} column.
+     */
     protected void setDataType(final Integer dataType) {
         this.dataType = dataType;
     }
 
     // ------------------------------------------------------------------------------------------------------ columnSize
+
+    /**
+     * Returns the value of {@value #COLUMN_LABEL_COLUMN_SIZE} column.
+     *
+     * @return the value of {@value #COLUMN_LABEL_COLUMN_SIZE} column.
+     */
     public Integer getColumnSize() {
         return columnSize;
     }
 
+    /**
+     * Sets the value of {@value #COLUMN_LABEL_COLUMN_SIZE} column.
+     *
+     * @param columnSize the value of {@value #COLUMN_LABEL_COLUMN_SIZE} column.
+     */
     protected void setColumnSize(final Integer columnSize) {
         this.columnSize = columnSize;
     }
 
     // --------------------------------------------------------------------------------------------------- decimalDigits
+
+    /**
+     * Returns the value of {@value #COLUMN_LABEL_DECIMAL_DIGITS} column.
+     *
+     * @return the value of {@value #COLUMN_LABEL_DECIMAL_DIGITS} column.
+     */
     public Integer getDecimalDigits() {
         return decimalDigits;
     }
 
+    /**
+     * Sets the value of {@value #COLUMN_LABEL_DECIMAL_DIGITS} column.
+     *
+     * @param decimalDigits the value of {@value #COLUMN_LABEL_DECIMAL_DIGITS} column.
+     */
     protected void setDecimalDigits(final Integer decimalDigits) {
         this.decimalDigits = decimalDigits;
     }
 
     // ---------------------------------------------------------------------------------------------------- numPrecRadix
+
+    /**
+     * Returns the value of {@value #COLUMN_LABEL_NUM_PREC_RADIX} column.
+     *
+     * @return the value of {@value #COLUMN_LABEL_NUM_PREC_RADIX} column.
+     */
     public Integer getNumPrecRadix() {
         return numPrecRadix;
     }
 
+    /**
+     * Sets the value of {@value #COLUMN_LABEL_NUM_PREC_RADIX} column.
+     *
+     * @param numPrecRadix the value of {@value #COLUMN_LABEL_NUM_PREC_RADIX} column.
+     */
     protected void setNumPrecRadix(final Integer numPrecRadix) {
         this.numPrecRadix = numPrecRadix;
     }
 
     // ----------------------------------------------------------------------------------------------------- columnUsage
+
+    /**
+     * Returns the value of {@value #COLUMN_LABEL_USAGE} column.
+     *
+     * @return the value of {@value #COLUMN_LABEL_USAGE} column.
+     */
     public String getColumnUsage() {
         return columnUsage;
     }
 
+    /**
+     * Sets the value of {@value #COLUMN_LABEL_USAGE} column.
+     *
+     * @param columnUsage the value of {@value #COLUMN_LABEL_USAGE} column.
+     */
     protected void setColumnUsage(final String columnUsage) {
         this.columnUsage = columnUsage;
     }
 
     // --------------------------------------------------------------------------------------------------------- remarks
+
+    /**
+     * Returns the value of {@value #COLUMN_LABEL_REMARKS} column.
+     *
+     * @return the value of {@value #COLUMN_LABEL_REMARKS} column.
+     */
     public String getRemarks() {
         return remarks;
     }
 
+    /**
+     * Sets the value of {@value #COLUMN_LABEL_REMARKS} column.
+     *
+     * @param remarks the value of {@value #COLUMN_LABEL_REMARKS} column.
+     */
     protected void setRemarks(final String remarks) {
         this.remarks = remarks;
     }
 
     // -------------------------------------------------------------------------------------------- characterOctetLength
+
+    /**
+     * Returns the value of {@value #COLUMN_LABEL_CHARACTER_OCTET_LENGTH} column.
+     *
+     * @return the value of {@value #COLUMN_LABEL_CHARACTER_OCTET_LENGTH} column.
+     */
     public Integer getCharOctetLength() {
         return charOctetLength;
     }
 
+    /**
+     * Sets the value of {@value #COLUMN_LABEL_CHARACTER_OCTET_LENGTH} column.
+     *
+     * @param charOctetLength the value of {@value #COLUMN_LABEL_CHARACTER_OCTET_LENGTH} column.
+     */
     protected void setCharOctetLength(final Integer charOctetLength) {
         this.charOctetLength = charOctetLength;
     }
 
     // ------------------------------------------------------------------------------------------------------ isNullable
+
+    /**
+     * Returns the value of {@value #COLUMN_LABEL_COLUMN_IS_NULLABLE} column.
+     *
+     * @return the value of {@value #COLUMN_LABEL_COLUMN_IS_NULLABLE} column.
+     */
     public String getIsNullable() {
         return isNullable;
     }
 
+    /**
+     * Sets the value of {@value #COLUMN_LABEL_COLUMN_IS_NULLABLE} column.
+     *
+     * @param isNullable the value of {@value #COLUMN_LABEL_COLUMN_IS_NULLABLE} column.
+     */
     protected void setIsNullable(final String isNullable) {
         this.isNullable = isNullable;
     }

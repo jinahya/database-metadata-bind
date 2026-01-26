@@ -104,55 +104,121 @@ public class SuperType
     }
 
     // --------------------------------------------------------------------------------------------------------- typeCat
+
+    /**
+     * Returns the value of {@value #COLUMN_LABEL_TYPE_CAT} column.
+     *
+     * @return the value of {@value #COLUMN_LABEL_TYPE_CAT} column.
+     */
     public String getTypeCat() {
         return typeCat;
     }
 
+    /**
+     * Sets the value of {@value #COLUMN_LABEL_TYPE_CAT} column.
+     *
+     * @param typeCat the value of {@value #COLUMN_LABEL_TYPE_CAT} column.
+     */
     protected void setTypeCat(final String typeCat) {
         this.typeCat = typeCat;
     }
 
     // ------------------------------------------------------------------------------------------------------- typeSchem
+
+    /**
+     * Returns the value of {@value #COLUMN_LABEL_TYPE_SCHEM} column.
+     *
+     * @return the value of {@value #COLUMN_LABEL_TYPE_SCHEM} column.
+     */
     public String getTypeSchem() {
         return typeSchem;
     }
 
+    /**
+     * Sets the value of {@value #COLUMN_LABEL_TYPE_SCHEM} column.
+     *
+     * @param typeSchem the value of {@value #COLUMN_LABEL_TYPE_SCHEM} column.
+     */
     protected void setTypeSchem(final String typeSchem) {
         this.typeSchem = typeSchem;
     }
 
-    // -----------------------------------------------------------------------------------------------------------------
+    // -------------------------------------------------------------------------------------------------------- typeName
+
+    /**
+     * Returns the value of {@value #COLUMN_LABEL_TYPE_NAME} column.
+     *
+     * @return the value of {@value #COLUMN_LABEL_TYPE_NAME} column.
+     */
     public String getTypeName() {
         return typeName;
     }
 
+    /**
+     * Sets the value of {@value #COLUMN_LABEL_TYPE_NAME} column.
+     *
+     * @param typeName the value of {@value #COLUMN_LABEL_TYPE_NAME} column.
+     */
     protected void setTypeName(final String typeName) {
         this.typeName = typeName;
     }
 
-    // -----------------------------------------------------------------------------------------------------------------
+    // ----------------------------------------------------------------------------------------------------- supertypeCat
+
+    /**
+     * Returns the value of {@value #COLUMN_LABEL_SUPERTYPE_CAT} column.
+     *
+     * @return the value of {@value #COLUMN_LABEL_SUPERTYPE_CAT} column.
+     */
     public String getSupertypeCat() {
         return supertypeCat;
     }
 
+    /**
+     * Sets the value of {@value #COLUMN_LABEL_SUPERTYPE_CAT} column.
+     *
+     * @param supertypeCat the value of {@value #COLUMN_LABEL_SUPERTYPE_CAT} column.
+     */
     protected void setSupertypeCat(final String supertypeCat) {
         this.supertypeCat = supertypeCat;
     }
 
-    // -----------------------------------------------------------------------------------------------------------------
+    // --------------------------------------------------------------------------------------------------- supertypeSchem
+
+    /**
+     * Returns the value of {@value #COLUMN_LABEL_SUPERTYPE_SCHEM} column.
+     *
+     * @return the value of {@value #COLUMN_LABEL_SUPERTYPE_SCHEM} column.
+     */
     public String getSupertypeSchem() {
         return supertypeSchem;
     }
 
+    /**
+     * Sets the value of {@value #COLUMN_LABEL_SUPERTYPE_SCHEM} column.
+     *
+     * @param supertypeSchem the value of {@value #COLUMN_LABEL_SUPERTYPE_SCHEM} column.
+     */
     protected void setSupertypeSchem(final String supertypeSchem) {
         this.supertypeSchem = supertypeSchem;
     }
 
-    // -----------------------------------------------------------------------------------------------------------------
+    // ---------------------------------------------------------------------------------------------------- supertypeName
+
+    /**
+     * Returns the value of {@value #COLUMN_LABEL_SUPERTYPE_NAME} column.
+     *
+     * @return the value of {@value #COLUMN_LABEL_SUPERTYPE_NAME} column.
+     */
     public String getSupertypeName() {
         return supertypeName;
     }
 
+    /**
+     * Sets the value of {@value #COLUMN_LABEL_SUPERTYPE_NAME} column.
+     *
+     * @param supertypeName the value of {@value #COLUMN_LABEL_SUPERTYPE_NAME} column.
+     */
     protected void setSupertypeName(final String supertypeName) {
         this.supertypeName = supertypeName;
     }

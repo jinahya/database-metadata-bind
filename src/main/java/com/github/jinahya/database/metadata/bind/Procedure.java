@@ -97,57 +97,121 @@ public class Procedure
     }
 
     // ---------------------------------------------------------------------------------------------------- procedureCat
-    
+
+    /**
+     * Returns the value of {@code PROCEDURE_CAT} column.
+     *
+     * @return the value of {@code PROCEDURE_CAT} column.
+     */
     public String getProcedureCat() {
         return procedureCat;
     }
 
+    /**
+     * Sets the value of {@code PROCEDURE_CAT} column.
+     *
+     * @param procedureCat the value of {@code PROCEDURE_CAT} column.
+     */
     protected void setProcedureCat(final String procedureCat) {
         this.procedureCat = procedureCat;
     }
 
     // -------------------------------------------------------------------------------------------------- procedureSchem
-    
+
+    /**
+     * Returns the value of {@code PROCEDURE_SCHEM} column.
+     *
+     * @return the value of {@code PROCEDURE_SCHEM} column.
+     */
     public String getProcedureSchem() {
         return procedureSchem;
     }
 
+    /**
+     * Sets the value of {@code PROCEDURE_SCHEM} column.
+     *
+     * @param procedureSchem the value of {@code PROCEDURE_SCHEM} column.
+     */
     protected void setProcedureSchem(final String procedureSchem) {
         this.procedureSchem = procedureSchem;
     }
 
     // --------------------------------------------------------------------------------------------------- procedureName
+
+    /**
+     * Returns the value of {@code PROCEDURE_NAME} column.
+     *
+     * @return the value of {@code PROCEDURE_NAME} column.
+     */
     public String getProcedureName() {
         return procedureName;
     }
 
+    /**
+     * Sets the value of {@code PROCEDURE_NAME} column.
+     *
+     * @param procedureName the value of {@code PROCEDURE_NAME} column.
+     */
     protected void setProcedureName(final String procedureName) {
         this.procedureName = procedureName;
     }
 
     // ---------------------------------------------------------------------------------------------------------- remark
+
+    /**
+     * Returns the value of {@code REMARKS} column.
+     *
+     * @return the value of {@code REMARKS} column.
+     */
     public String getRemarks() {
         return remarks;
     }
 
+    /**
+     * Sets the value of {@code REMARKS} column.
+     *
+     * @param remarks the value of {@code REMARKS} column.
+     */
     protected void setRemarks(final String remarks) {
         this.remarks = remarks;
     }
 
     // --------------------------------------------------------------------------------------------------- procedureType
+
+    /**
+     * Returns the value of {@value #COLUMN_LABEL_PROCEDURE_TYPE} column.
+     *
+     * @return the value of {@value #COLUMN_LABEL_PROCEDURE_TYPE} column.
+     */
     public Integer getProcedureType() {
         return procedureType;
     }
 
+    /**
+     * Sets the value of {@value #COLUMN_LABEL_PROCEDURE_TYPE} column.
+     *
+     * @param procedureType the value of {@value #COLUMN_LABEL_PROCEDURE_TYPE} column.
+     */
     protected void setProcedureType(final Integer procedureType) {
         this.procedureType = procedureType;
     }
 
     // ---------------------------------------------------------------------------------------------------- specificName
+
+    /**
+     * Returns the value of {@value #COLUMN_LABEL_SPECIFIC_NAME} column.
+     *
+     * @return the value of {@value #COLUMN_LABEL_SPECIFIC_NAME} column.
+     */
     public String getSpecificName() {
         return specificName;
     }
 
+    /**
+     * Sets the value of {@value #COLUMN_LABEL_SPECIFIC_NAME} column.
+     *
+     * @param specificName the value of {@value #COLUMN_LABEL_SPECIFIC_NAME} column.
+     */
     protected void setSpecificName(final String specificName) {
         this.specificName = specificName;
     }

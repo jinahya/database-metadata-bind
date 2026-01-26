@@ -84,10 +84,21 @@ public class TableType
     }
 
     // ------------------------------------------------------------------------------------------------------- tableType
+
+    /**
+     * Returns the value of {@value #COLUMN_LABEL_TABLE_TYPE} column.
+     *
+     * @return the value of {@value #COLUMN_LABEL_TABLE_TYPE} column.
+     */
     public String getTableType() {
         return tableType;
     }
 
+    /**
+     * Sets the value of {@value #COLUMN_LABEL_TABLE_TYPE} column.
+     *
+     * @param tableType the value of {@value #COLUMN_LABEL_TABLE_TYPE} column.
+     */
     public void setTableType(final String tableType) {
         this.tableType = tableType;
     }

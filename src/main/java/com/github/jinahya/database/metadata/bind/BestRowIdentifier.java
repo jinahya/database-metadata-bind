@@ -113,75 +113,161 @@ public class BestRowIdentifier
     }
 
     // ----------------------------------------------------------------------------------------------------------- scope
+
+    /**
+     * Returns the value of {@value #COLUMN_LABEL_SCOPE} column.
+     *
+     * @return the value of {@value #COLUMN_LABEL_SCOPE} column.
+     */
     public Integer getScope() {
         return scope;
     }
 
+    /**
+     * Sets the value of {@value #COLUMN_LABEL_SCOPE} column.
+     *
+     * @param scope the value of {@value #COLUMN_LABEL_SCOPE} column.
+     */
     public void setScope(final Integer scope) {
         this.scope = scope;
     }
 
     // ------------------------------------------------------------------------------------------------------ columnName
+
+    /**
+     * Returns the value of {@value #COLUMN_LABEL_COLUMN_NAME} column.
+     *
+     * @return the value of {@value #COLUMN_LABEL_COLUMN_NAME} column.
+     */
     public String getColumnName() {
         return columnName;
     }
 
+    /**
+     * Sets the value of {@value #COLUMN_LABEL_COLUMN_NAME} column.
+     *
+     * @param columnName the value of {@value #COLUMN_LABEL_COLUMN_NAME} column.
+     */
     public void setColumnName(final String columnName) {
         this.columnName = columnName;
     }
 
     // -------------------------------------------------------------------------------------------------------- dataType
+
+    /**
+     * Returns the value of {@value #COLUMN_LABEL_DATA_TYPE} column.
+     *
+     * @return the value of {@value #COLUMN_LABEL_DATA_TYPE} column.
+     */
     public Integer getDataType() {
         return dataType;
     }
 
+    /**
+     * Sets the value of {@value #COLUMN_LABEL_DATA_TYPE} column.
+     *
+     * @param dataType the value of {@value #COLUMN_LABEL_DATA_TYPE} column.
+     */
     public void setDataType(final Integer dataType) {
         this.dataType = dataType;
     }
 
     // -------------------------------------------------------------------------------------------------------- typeName
+
+    /**
+     * Returns the value of {@code TYPE_NAME} column.
+     *
+     * @return the value of {@code TYPE_NAME} column.
+     */
     public String getTypeName() {
         return typeName;
     }
 
+    /**
+     * Sets the value of {@code TYPE_NAME} column.
+     *
+     * @param typeName the value of {@code TYPE_NAME} column.
+     */
     public void setTypeName(final String typeName) {
         this.typeName = typeName;
     }
 
     // ------------------------------------------------------------------------------------------------------ columnSize
-    
+
+    /**
+     * Returns the value of {@code COLUMN_SIZE} column.
+     *
+     * @return the value of {@code COLUMN_SIZE} column.
+     */
     public Integer getColumnSize() {
         return columnSize;
     }
 
+    /**
+     * Sets the value of {@code COLUMN_SIZE} column.
+     *
+     * @param columnSize the value of {@code COLUMN_SIZE} column.
+     */
     public void setColumnSize(final Integer columnSize) {
         this.columnSize = columnSize;
     }
 
     // ---------------------------------------------------------------------------------------------------- bufferLength
+
+    /**
+     * Returns the value of {@code BUFFER_LENGTH} column.
+     *
+     * @return the value of {@code BUFFER_LENGTH} column.
+     */
     public Integer getBufferLength() {
         return bufferLength;
     }
 
+    /**
+     * Sets the value of {@code BUFFER_LENGTH} column.
+     *
+     * @param bufferLength the value of {@code BUFFER_LENGTH} column.
+     */
     public void setBufferLength(final Integer bufferLength) {
         this.bufferLength = bufferLength;
     }
 
     // --------------------------------------------------------------------------------------------------- decimalDigits
-    
+
+    /**
+     * Returns the value of {@code DECIMAL_DIGITS} column.
+     *
+     * @return the value of {@code DECIMAL_DIGITS} column.
+     */
     public Integer getDecimalDigits() {
         return decimalDigits;
     }
 
+    /**
+     * Sets the value of {@code DECIMAL_DIGITS} column.
+     *
+     * @param decimalDigits the value of {@code DECIMAL_DIGITS} column.
+     */
     public void setDecimalDigits(final Integer decimalDigits) {
         this.decimalDigits = decimalDigits;
     }
 
     // ---------------------------------------------------------------------------------------------------- pseudoColumn
+
+    /**
+     * Returns the value of {@value #COLUMN_LABEL_PSEUDO_COLUMN} column.
+     *
+     * @return the value of {@value #COLUMN_LABEL_PSEUDO_COLUMN} column.
+     */
     public Integer getPseudoColumn() {
         return pseudoColumn;
     }
 
+    /**
+     * Sets the value of {@value #COLUMN_LABEL_PSEUDO_COLUMN} column.
+     *
+     * @param pseudoColumn the value of {@value #COLUMN_LABEL_PSEUDO_COLUMN} column.
+     */
     public void setPseudoColumn(final Integer pseudoColumn) {
         this.pseudoColumn = pseudoColumn;
     }
