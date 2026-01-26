@@ -145,6 +145,7 @@ final class ContextUtils {
                 }
             }
         }
+        // should we add java.long.Number case?
         logger.log(
                 System.Logger.Level.ERROR,
                 () -> String.format("failed to set; label: %s, value: %s, field: %s", label, value, field)

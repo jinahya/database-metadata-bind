@@ -947,7 +947,6 @@ public class Column
     private String scopeTable;
 
     // -----------------------------------------------------------------------------------------------------------------
-
     @org.jspecify.annotations.Nullable
     @_NullableBySpecification
     @_ColumnLabel(COLUMN_LABEL_SOURCE_DATA_TYPE)
