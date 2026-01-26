@@ -235,7 +235,6 @@ public class PrimaryKey
     }
 
     // -----------------------------------------------------------------------------------------------------------------
-
     @_NullableBySpecification
     @_ColumnLabel(COLUMN_LABEL_TABLE_CAT)
     private String tableCat;

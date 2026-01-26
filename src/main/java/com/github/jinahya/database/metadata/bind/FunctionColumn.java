@@ -23,8 +23,6 @@ package com.github.jinahya.database.metadata.bind;
 import jakarta.validation.constraints.Pattern;
 import jakarta.validation.constraints.PositiveOrZero;
 import lombok.EqualsAndHashCode;
-import lombok.Getter;
-import lombok.Setter;
 
 import java.sql.DatabaseMetaData;
 import java.sql.SQLException;
@@ -38,8 +36,6 @@ import java.util.Comparator;
  * @see Context#getFunctionColumns(String, String, String, String)
  */
 @_ChildOf(Function.class)
-@Setter
-@Getter
 @EqualsAndHashCode(callSuper = true)
 public class FunctionColumn
         extends AbstractMetadataType {
@@ -83,6 +79,76 @@ public class FunctionColumn
 
     // -----------------------------------------------------------------------------------------------------------------
     public static final String COLUMN_LABEL_IS_NULLABLE = "IS_NULLABLE";
+
+    // -----------------------------------------------------------------------------------------------------------------
+
+    /**
+     * The column label of {@value}.
+     */
+    public static final String COLUMN_LABEL_DATA_TYPE = "DATA_TYPE";
+
+    // -----------------------------------------------------------------------------------------------------------------
+
+    /**
+     * The column label of {@value}.
+     */
+    public static final String COLUMN_LABEL_TYPE_NAME = "TYPE_NAME";
+
+    // -----------------------------------------------------------------------------------------------------------------
+
+    /**
+     * The column label of {@value}.
+     */
+    public static final String COLUMN_LABEL_PRECISION = "PRECISION";
+
+    // -----------------------------------------------------------------------------------------------------------------
+
+    /**
+     * The column label of {@value}.
+     */
+    public static final String COLUMN_LABEL_LENGTH = "LENGTH";
+
+    // -----------------------------------------------------------------------------------------------------------------
+
+    /**
+     * The column label of {@value}.
+     */
+    public static final String COLUMN_LABEL_SCALE = "SCALE";
+
+    // -----------------------------------------------------------------------------------------------------------------
+
+    /**
+     * The column label of {@value}.
+     */
+    public static final String COLUMN_LABEL_RADIX = "RADIX";
+
+    // -----------------------------------------------------------------------------------------------------------------
+
+    /**
+     * The column label of {@value}.
+     */
+    public static final String COLUMN_LABEL_REMARKS = "REMARKS";
+
+    // -----------------------------------------------------------------------------------------------------------------
+
+    /**
+     * The column label of {@value}.
+     */
+    public static final String COLUMN_LABEL_CHAR_OCTET_LENGTH = "CHAR_OCTET_LENGTH";
+
+    // -----------------------------------------------------------------------------------------------------------------
+
+    /**
+     * The column label of {@value}.
+     */
+    public static final String COLUMN_LABEL_ORDINAL_POSITION = "ORDINAL_POSITION";
+
+    // -----------------------------------------------------------------------------------------------------------------
+
+    /**
+     * The column label of {@value}.
+     */
+    public static final String COLUMN_LABEL_SPECIFIC_NAME = "SPECIFIC_NAME";
 
     // ------------------------------------------------------------------------------------------ STATIC_FACTORY_METHODS
 
@@ -478,51 +544,51 @@ public class FunctionColumn
     private String columnName;
 
     // -----------------------------------------------------------------------------------------------------------------
-    @_ColumnLabel("COLUMN_TYPE")
+    @_ColumnLabel(COLUMN_LABEL_COLUMN_TYPE)
     private Integer columnType;
 
-    @_ColumnLabel("DATA_TYPE")
+    @_ColumnLabel(COLUMN_LABEL_DATA_TYPE)
     private Integer dataType;
 
-    @_ColumnLabel("TYPE_NAME")
+    @_ColumnLabel(COLUMN_LABEL_TYPE_NAME)
     private String typeName;
 
     
     @_NullableBySpecification
-    @_ColumnLabel("PRECISION")
+    @_ColumnLabel(COLUMN_LABEL_PRECISION)
     private Integer precision;
 
-    @_ColumnLabel("LENGTH")
+    @_ColumnLabel(COLUMN_LABEL_LENGTH)
     private Integer length;
 
     
     @_NullableBySpecification
-    @_ColumnLabel("SCALE")
+    @_ColumnLabel(COLUMN_LABEL_SCALE)
     private Integer scale;
 
-    @_ColumnLabel("RADIX")
+    @_ColumnLabel(COLUMN_LABEL_RADIX)
     private Integer radix;
 
-    @_ColumnLabel("NULLABLE")
+    @_ColumnLabel(COLUMN_LABEL_NULLABLE)
     private Integer nullable;
 
-    @_ColumnLabel("REMARKS")
+    @_ColumnLabel(COLUMN_LABEL_REMARKS)
     private String remarks;
 
     
     @_NullableBySpecification
-    @_ColumnLabel("CHAR_OCTET_LENGTH")
+    @_ColumnLabel(COLUMN_LABEL_CHAR_OCTET_LENGTH)
     private Integer charOctetLength;
 
     @PositiveOrZero
-    @_ColumnLabel("ORDINAL_POSITION")
+    @_ColumnLabel(COLUMN_LABEL_ORDINAL_POSITION)
     private Integer ordinalPosition;
 
     @Pattern(regexp = MetadataTypeConstants.PATTERN_REGEXP_YES_NO_OR_EMPTY)
-    @_ColumnLabel("IS_NULLABLE")
+    @_ColumnLabel(COLUMN_LABEL_IS_NULLABLE)
     private String isNullable;
 
     // https://github.com/microsoft/mssql-jdbc/issues/849
-    @_ColumnLabel("SPECIFIC_NAME")
+    @_ColumnLabel(COLUMN_LABEL_SPECIFIC_NAME)
     private String specificName;
 }

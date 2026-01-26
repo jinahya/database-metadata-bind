@@ -21,8 +21,6 @@ package com.github.jinahya.database.metadata.bind;
  */
 
 import lombok.EqualsAndHashCode;
-import lombok.Getter;
-import lombok.Setter;
 
 import java.sql.SQLException;
 import java.util.Comparator;
@@ -35,8 +33,6 @@ import java.util.Comparator;
  * @see Context#getTablePrivileges(String, String, String)
  */
 @_ChildOf(Catalog.class)
-@Setter
-@Getter
 @EqualsAndHashCode(callSuper = true)
 public class TablePrivilege
         extends AbstractMetadataType {
@@ -132,6 +128,15 @@ public class TablePrivilege
         return tableCat;
     }
 
+    /**
+     * Sets the value of {@value #COLUMN_LABEL_TABLE_CAT} column.
+     *
+     * @param tableCat the value of {@value #COLUMN_LABEL_TABLE_CAT} column.
+     */
+    protected void setTableCat(final String tableCat) {
+        this.tableCat = tableCat;
+    }
+
     // ------------------------------------------------------------------------------------------------------ tableSchem
 
     /**
@@ -141,6 +146,15 @@ public class TablePrivilege
      */
     public String getTableSchem() {
         return tableSchem;
+    }
+
+    /**
+     * Sets the value of {@value #COLUMN_LABEL_TABLE_SCHEM} column.
+     *
+     * @param tableSchem the value of {@value #COLUMN_LABEL_TABLE_SCHEM} column.
+     */
+    protected void setTableSchem(final String tableSchem) {
+        this.tableSchem = tableSchem;
     }
 
     // ------------------------------------------------------------------------------------------------------- tableName
@@ -154,6 +168,15 @@ public class TablePrivilege
         return tableName;
     }
 
+    /**
+     * Sets the value of {@value #COLUMN_LABEL_TABLE_NAME} column.
+     *
+     * @param tableName the value of {@value #COLUMN_LABEL_TABLE_NAME} column.
+     */
+    protected void setTableName(final String tableName) {
+        this.tableName = tableName;
+    }
+
     // --------------------------------------------------------------------------------------------------------- grantor
 
     /**
@@ -163,6 +186,15 @@ public class TablePrivilege
      */
     public String getGrantor() {
         return grantor;
+    }
+
+    /**
+     * Sets the value of {@value #COLUMN_LABEL_GRANTOR} column.
+     *
+     * @param grantor the value of {@value #COLUMN_LABEL_GRANTOR} column.
+     */
+    protected void setGrantor(final String grantor) {
+        this.grantor = grantor;
     }
 
     // --------------------------------------------------------------------------------------------------------- grantee
@@ -176,6 +208,15 @@ public class TablePrivilege
         return grantee;
     }
 
+    /**
+     * Sets the value of {@value #COLUMN_LABEL_GRANTEE} column.
+     *
+     * @param grantee the value of {@value #COLUMN_LABEL_GRANTEE} column.
+     */
+    protected void setGrantee(final String grantee) {
+        this.grantee = grantee;
+    }
+
     // ------------------------------------------------------------------------------------------------------- privilege
 
     /**
@@ -187,6 +228,15 @@ public class TablePrivilege
         return privilege;
     }
 
+    /**
+     * Sets the value of {@value #COLUMN_LABEL_PRIVILEGE} column.
+     *
+     * @param privilege the value of {@value #COLUMN_LABEL_PRIVILEGE} column.
+     */
+    protected void setPrivilege(final String privilege) {
+        this.privilege = privilege;
+    }
+
     // ----------------------------------------------------------------------------------------------------- isGrantable
 
     /**
@@ -196,6 +246,15 @@ public class TablePrivilege
      */
     public String getIsGrantable() {
         return isGrantable;
+    }
+
+    /**
+     * Sets the value of {@value #COLUMN_LABEL_IS_GRANTABLE} column.
+     *
+     * @param isGrantable the value of {@value #COLUMN_LABEL_IS_GRANTABLE} column.
+     */
+    protected void setIsGrantable(final String isGrantable) {
+        this.isGrantable = isGrantable;
     }
 
     // -----------------------------------------------------------------------------------------------------------------

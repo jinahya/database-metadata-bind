@@ -117,6 +117,125 @@ public class Column
     // -----------------------------------------------------------------------------------------------------------------
     public static final String COLUMN_LABEL_IS_GENERATEDCOLUMN = "IS_GENERATEDCOLUMN";
 
+    // -----------------------------------------------------------------------------------------------------------------
+
+    /**
+     * The column label of {@value}.
+     */
+    public static final String COLUMN_LABEL_DATA_TYPE = "DATA_TYPE";
+
+    // -----------------------------------------------------------------------------------------------------------------
+
+    /**
+     * The column label of {@value}.
+     */
+    public static final String COLUMN_LABEL_TYPE_NAME = "TYPE_NAME";
+
+    // -----------------------------------------------------------------------------------------------------------------
+
+    /**
+     * The column label of {@value}.
+     */
+    public static final String COLUMN_LABEL_COLUMN_SIZE = "COLUMN_SIZE";
+
+    // -----------------------------------------------------------------------------------------------------------------
+
+    /**
+     * The column label of {@value}.
+     */
+    public static final String COLUMN_LABEL_BUFFER_LENGTH = "BUFFER_LENGTH";
+
+    // -----------------------------------------------------------------------------------------------------------------
+
+    /**
+     * The column label of {@value}.
+     */
+    public static final String COLUMN_LABEL_DECIMAL_DIGITS = "DECIMAL_DIGITS";
+
+    // -----------------------------------------------------------------------------------------------------------------
+
+    /**
+     * The column label of {@value}.
+     */
+    public static final String COLUMN_LABEL_NUM_PREC_RADIX = "NUM_PREC_RADIX";
+
+    // -----------------------------------------------------------------------------------------------------------------
+
+    /**
+     * The column label of {@value}.
+     */
+    public static final String COLUMN_LABEL_REMARKS = "REMARKS";
+
+    // -----------------------------------------------------------------------------------------------------------------
+
+    /**
+     * The column label of {@value}.
+     */
+    public static final String COLUMN_LABEL_COLUMN_DEF = "COLUMN_DEF";
+
+    // -----------------------------------------------------------------------------------------------------------------
+
+    /**
+     * The column label of {@value}.
+     */
+    public static final String COLUMN_LABEL_SQL_DATA_TYPE = "SQL_DATA_TYPE";
+
+    // -----------------------------------------------------------------------------------------------------------------
+
+    /**
+     * The column label of {@value}.
+     */
+    public static final String COLUMN_LABEL_SQL_DATETIME_SUB = "SQL_DATETIME_SUB";
+
+    // -----------------------------------------------------------------------------------------------------------------
+
+    /**
+     * The column label of {@value}.
+     */
+    public static final String COLUMN_LABEL_CHAR_OCTET_LENGTH = "CHAR_OCTET_LENGTH";
+
+    // -----------------------------------------------------------------------------------------------------------------
+
+    /**
+     * The column label of {@value}.
+     */
+    public static final String COLUMN_LABEL_ORDINAL_POSITION = "ORDINAL_POSITION";
+
+    // -----------------------------------------------------------------------------------------------------------------
+
+    /**
+     * The column label of {@value}.
+     */
+    public static final String COLUMN_LABEL_IS_NULLABLE = "IS_NULLABLE";
+
+    // -----------------------------------------------------------------------------------------------------------------
+
+    /**
+     * The column label of {@value}.
+     */
+    public static final String COLUMN_LABEL_SCOPE_CATALOG = "SCOPE_CATALOG";
+
+    // -----------------------------------------------------------------------------------------------------------------
+
+    /**
+     * The column label of {@value}.
+     */
+    public static final String COLUMN_LABEL_SCOPE_SCHEMA = "SCOPE_SCHEMA";
+
+    // -----------------------------------------------------------------------------------------------------------------
+
+    /**
+     * The column label of {@value}.
+     */
+    public static final String COLUMN_LABEL_SCOPE_TABLE = "SCOPE_TABLE";
+
+    // -----------------------------------------------------------------------------------------------------------------
+
+    /**
+     * The column label of {@value}.
+     */
+    public static final String COLUMN_LABEL_SOURCE_DATA_TYPE = "SOURCE_DATA_TYPE";
+
     // ------------------------------------------------------------------------------------------ STATIC_FACTORY_METHODS
     static Column of(final String tableCat, final String tableSchem, final String tableName, final String columnName) {
         final var instance = new Column();
@@ -750,74 +869,74 @@ public class Column
     private String columnName;
 
     // -----------------------------------------------------------------------------------------------------------------
-    @_ColumnLabel("DATA_TYPE")
+    @_ColumnLabel(COLUMN_LABEL_DATA_TYPE)
     private Integer dataType;
 
-    @_ColumnLabel("TYPE_NAME")
+    @_ColumnLabel(COLUMN_LABEL_TYPE_NAME)
     private String typeName;
 
     @_NullableBySpecification
-    @_ColumnLabel("COLUMN_SIZE")
+    @_ColumnLabel(COLUMN_LABEL_COLUMN_SIZE)
     private Integer columnSize;
 
     @_NotUsedBySpecification
-    @_ColumnLabel("BUFFER_LENGTH")
+    @_ColumnLabel(COLUMN_LABEL_BUFFER_LENGTH)
     private Integer bufferLength;
 
     @_NullableBySpecification
-    @_ColumnLabel("DECIMAL_DIGITS")
+    @_ColumnLabel(COLUMN_LABEL_DECIMAL_DIGITS)
     private Integer decimalDigits;
 
-    @_ColumnLabel("NUM_PREC_RADIX")
+    @_ColumnLabel(COLUMN_LABEL_NUM_PREC_RADIX)
     private Integer numPrecRadix;
 
     @_ColumnLabel(COLUMN_LABEL_NULLABLE)
     private Integer nullable;
 
     @_NullableBySpecification
-    @_ColumnLabel("REMARKS")
+    @_ColumnLabel(COLUMN_LABEL_REMARKS)
     private String remarks;
 
     @_NullableBySpecification
-    @_ColumnLabel("COLUMN_DEF")
+    @_ColumnLabel(COLUMN_LABEL_COLUMN_DEF)
     private String columnDef;
 
     @_NotUsedBySpecification
-    @_ColumnLabel("SQL_DATA_TYPE")
+    @_ColumnLabel(COLUMN_LABEL_SQL_DATA_TYPE)
     private Integer sqlDataType;
 
     @_NotUsedBySpecification
-    @_ColumnLabel("SQL_DATETIME_SUB")
+    @_ColumnLabel(COLUMN_LABEL_SQL_DATETIME_SUB)
     private Integer sqlDatetimeSub;
 
-    @_ColumnLabel("CHAR_OCTET_LENGTH")
+    @_ColumnLabel(COLUMN_LABEL_CHAR_OCTET_LENGTH)
     private Integer charOctetLength;
 
     @Positive
-    @_ColumnLabel("ORDINAL_POSITION")
+    @_ColumnLabel(COLUMN_LABEL_ORDINAL_POSITION)
     private Integer ordinalPosition;
 
-    @_ColumnLabel("IS_NULLABLE")
+    @_ColumnLabel(COLUMN_LABEL_IS_NULLABLE)
     private String isNullable;
 
     // -----------------------------------------------------------------------------------------------------------------
 
     @_NullableBySpecification
-    @_ColumnLabel("SCOPE_CATALOG")
+    @_ColumnLabel(COLUMN_LABEL_SCOPE_CATALOG)
     private String scopeCatalog;
 
     @_NullableBySpecification
-    @_ColumnLabel("SCOPE_SCHEMA")
+    @_ColumnLabel(COLUMN_LABEL_SCOPE_SCHEMA)
     private String scopeSchema;
 
     @_NullableBySpecification
-    @_ColumnLabel("SCOPE_TABLE")
+    @_ColumnLabel(COLUMN_LABEL_SCOPE_TABLE)
     private String scopeTable;
 
     // -----------------------------------------------------------------------------------------------------------------
 
     @_NullableBySpecification
-    @_ColumnLabel("SOURCE_DATA_TYPE")
+    @_ColumnLabel(COLUMN_LABEL_SOURCE_DATA_TYPE)
     private Integer sourceDataType;
 
     @Pattern(regexp = MetadataTypeConstants.PATTERN_REGEXP_YES_NO_OR_EMPTY)

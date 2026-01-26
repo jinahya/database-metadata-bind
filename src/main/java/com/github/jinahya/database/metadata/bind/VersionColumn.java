@@ -46,6 +46,41 @@ public class VersionColumn
     // -----------------------------------------------------------------------------------------------------------------
     public static final String COLUMN_LABEL_PSEUDO_COLUMN = "PSEUDO_COLUMN";
 
+    // -----------------------------------------------------------------------------------------------------------------
+
+    /**
+     * The column label of {@value}.
+     */
+    public static final String COLUMN_LABEL_DATA_TYPE = "DATA_TYPE";
+
+    // -----------------------------------------------------------------------------------------------------------------
+
+    /**
+     * The column label of {@value}.
+     */
+    public static final String COLUMN_LABEL_TYPE_NAME = "TYPE_NAME";
+
+    // -----------------------------------------------------------------------------------------------------------------
+
+    /**
+     * The column label of {@value}.
+     */
+    public static final String COLUMN_LABEL_COLUMN_SIZE = "COLUMN_SIZE";
+
+    // -----------------------------------------------------------------------------------------------------------------
+
+    /**
+     * The column label of {@value}.
+     */
+    public static final String COLUMN_LABEL_BUFFER_LENGTH = "BUFFER_LENGTH";
+
+    // -----------------------------------------------------------------------------------------------------------------
+
+    /**
+     * The column label of {@value}.
+     */
+    public static final String COLUMN_LABEL_DECIMAL_DIGITS = "DECIMAL_DIGITS";
+
     // ------------------------------------------------------------------------------------------ STATIC_FACTORY_METHODS
 
     // ---------------------------------------------------------------------------------------------------- CONSTRUCTORS
@@ -235,30 +270,29 @@ public class VersionColumn
 
     // -----------------------------------------------------------------------------------------------------------------
     @_NotUsedBySpecification
-    @_ColumnLabel("SCOPE")
+    @_ColumnLabel(COLUMN_LABEL_SCOPE)
     private Integer scope;
 
-    @_ColumnLabel("COLUMN_NAME")
-
+    @_ColumnLabel(COLUMN_LABEL_COLUMN_NAME)
     private String columnName;
 
-    @_ColumnLabel("DATA_TYPE")
+    @_ColumnLabel(COLUMN_LABEL_DATA_TYPE)
     private Integer dataType;
 
-    @_ColumnLabel("TYPE_NAME")
+    @_ColumnLabel(COLUMN_LABEL_TYPE_NAME)
     private String typeName;
 
     
     @_NullableBySpecification
-    @_ColumnLabel("COLUMN_SIZE")
+    @_ColumnLabel(COLUMN_LABEL_COLUMN_SIZE)
     private Integer columnSize;
 
-    @_ColumnLabel("BUFFER_LENGTH")
+    @_ColumnLabel(COLUMN_LABEL_BUFFER_LENGTH)
     private Integer bufferLength;
 
     
     @_NullableBySpecification
-    @_ColumnLabel("DECIMAL_DIGITS")
+    @_ColumnLabel(COLUMN_LABEL_DECIMAL_DIGITS)
     private Integer decimalDigits;
 
     @_ColumnLabel(COLUMN_LABEL_PSEUDO_COLUMN)

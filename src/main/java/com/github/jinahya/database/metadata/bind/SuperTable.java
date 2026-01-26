@@ -21,9 +21,6 @@ package com.github.jinahya.database.metadata.bind;
  */
 
 import lombok.EqualsAndHashCode;
-import lombok.Getter;
-import lombok.Setter;
-import lombok.ToString;
 
 /**
  * A class for binding results of the
@@ -33,10 +30,7 @@ import lombok.ToString;
  * @see Context#getSuperTables(String, String, String)
  */
 
-@Setter
-@Getter
 @EqualsAndHashCode(callSuper = true)
-@ToString(callSuper = true)
 public class SuperTable
         extends AbstractMetadataType {
 
@@ -55,7 +49,24 @@ public class SuperTable
 
     // ---------------------------------------------------------------------------------------------------- CONSTRUCTORS
 
+    /**
+     * Creates a new instance.
+     */
+    public SuperTable() {
+        super();
+    }
+
     // ------------------------------------------------------------------------------------------------ java.lang.Object
+
+    @Override
+    public String toString() {
+        return super.toString() + '{' +
+               "tableCat=" + tableCat +
+               ",tableSchem=" + tableSchem +
+               ",tableName=" + tableName +
+               ",supertableName=" + supertableName +
+               '}';
+    }
 
     // -------------------------------------------------------------------------------------------------------- tableCat
 
@@ -157,18 +168,14 @@ public class SuperTable
 
     // -----------------------------------------------------------------------------------------------------------------
     @EqualsAndHashCode.Exclude
-    @ToString.Exclude
     private transient Catalog tableCatalog_;
 
     @EqualsAndHashCode.Exclude
-    @ToString.Exclude
     private transient Schema tableSchema_;
 
     @EqualsAndHashCode.Exclude
-    @ToString.Exclude
     private transient Catalog supertableCatalog_;
 
     @EqualsAndHashCode.Exclude
-    @ToString.Exclude
     private transient Schema supertableSchema_;
 }

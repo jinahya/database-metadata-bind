@@ -21,8 +21,6 @@ package com.github.jinahya.database.metadata.bind;
  */
 
 import lombok.EqualsAndHashCode;
-import lombok.Getter;
-import lombok.Setter;
 
 import java.sql.DatabaseMetaData;
 import java.sql.SQLException;
@@ -39,8 +37,6 @@ import java.util.Comparator;
 @_ChildOf(Schema.class)
 @_ParentOf(Attribute.class)
 @_ParentOf(UDT.class)
-@Setter
-@Getter
 @EqualsAndHashCode(callSuper = true)
 public class UDT
         extends AbstractMetadataType {
@@ -142,6 +138,15 @@ public class UDT
         return typeCat;
     }
 
+    /**
+     * Sets the value of {@value #COLUMN_LABEL_TYPE_CAT} column.
+     *
+     * @param typeCat the value of {@value #COLUMN_LABEL_TYPE_CAT} column.
+     */
+    protected void setTypeCat(final String typeCat) {
+        this.typeCat = typeCat;
+    }
+
     // ------------------------------------------------------------------------------------------------------- typeSchem
 
     /**
@@ -151,6 +156,15 @@ public class UDT
      */
     public String getTypeSchem() {
         return typeSchem;
+    }
+
+    /**
+     * Sets the value of {@value #COLUMN_LABEL_TYPE_SCHEM} column.
+     *
+     * @param typeSchem the value of {@value #COLUMN_LABEL_TYPE_SCHEM} column.
+     */
+    protected void setTypeSchem(final String typeSchem) {
+        this.typeSchem = typeSchem;
     }
 
     // -------------------------------------------------------------------------------------------------------- typeName
@@ -164,6 +178,15 @@ public class UDT
         return typeName;
     }
 
+    /**
+     * Sets the value of {@value #COLUMN_LABEL_TYPE_NAME} column.
+     *
+     * @param typeName the value of {@value #COLUMN_LABEL_TYPE_NAME} column.
+     */
+    protected void setTypeName(final String typeName) {
+        this.typeName = typeName;
+    }
+
     // ------------------------------------------------------------------------------------------------------- className
 
     /**
@@ -173,6 +196,15 @@ public class UDT
      */
     public String getClassName() {
         return className;
+    }
+
+    /**
+     * Sets the value of {@value #COLUMN_LABEL_CLASS_NAME} column.
+     *
+     * @param className the value of {@value #COLUMN_LABEL_CLASS_NAME} column.
+     */
+    protected void setClassName(final String className) {
+        this.className = className;
     }
 
     // -------------------------------------------------------------------------------------------------------- dataType
@@ -186,6 +218,15 @@ public class UDT
         return dataType;
     }
 
+    /**
+     * Sets the value of {@value #COLUMN_LABEL_DATA_TYPE} column.
+     *
+     * @param dataType the value of {@value #COLUMN_LABEL_DATA_TYPE} column.
+     */
+    protected void setDataType(final Integer dataType) {
+        this.dataType = dataType;
+    }
+
     // --------------------------------------------------------------------------------------------------------- remarks
 
     /**
@@ -197,6 +238,15 @@ public class UDT
         return remarks;
     }
 
+    /**
+     * Sets the value of {@value #COLUMN_LABEL_REMARKS} column.
+     *
+     * @param remarks the value of {@value #COLUMN_LABEL_REMARKS} column.
+     */
+    protected void setRemarks(final String remarks) {
+        this.remarks = remarks;
+    }
+
     // -------------------------------------------------------------------------------------------------------- baseType
 
     /**
@@ -206,6 +256,15 @@ public class UDT
      */
     public Integer getBaseType() {
         return baseType;
+    }
+
+    /**
+     * Sets the value of {@value #COLUMN_LABEL_BASE_TYPE} column.
+     *
+     * @param baseType the value of {@value #COLUMN_LABEL_BASE_TYPE} column.
+     */
+    protected void setBaseType(final Integer baseType) {
+        this.baseType = baseType;
     }
 
     // -----------------------------------------------------------------------------------------------------------------

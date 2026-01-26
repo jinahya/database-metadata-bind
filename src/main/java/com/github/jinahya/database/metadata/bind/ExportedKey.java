@@ -66,6 +66,20 @@ public class ExportedKey
     @Override
     public String toString() {
         return super.toString() + '{' +
+               "pktableCat=" + getPktableCat() +
+               ",pktableSchem=" + getPktableSchem() +
+               ",pktableName=" + getPktableName() +
+               ",pkcolumnName=" + getPkcolumnName() +
+               ",fktableCat=" + getFktableCat() +
+               ",fktableSchem=" + getFktableSchem() +
+               ",fktableName=" + getFktableName() +
+               ",fkcolumnName=" + getFkcolumnName() +
+               ",keySeq=" + getKeySeq() +
+               ",updateRule=" + getUpdateRule() +
+               ",deleteRule=" + getDeleteRule() +
+               ",fkName=" + getFkName() +
+               ",pkName=" + getPkName() +
+               ",deferrability=" + getDeferrability() +
                '}';
     }
 }

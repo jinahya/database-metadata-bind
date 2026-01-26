@@ -21,8 +21,6 @@ package com.github.jinahya.database.metadata.bind;
  */
 
 import lombok.EqualsAndHashCode;
-import lombok.Getter;
-import lombok.Setter;
 
 import java.sql.DatabaseMetaData;
 import java.sql.SQLException;
@@ -38,8 +36,6 @@ import java.util.Comparator;
  */
 
 @_ChildOf(Procedure.class)
-@Setter
-@Getter
 @EqualsAndHashCode(callSuper = true)
 public class ProcedureColumn
         extends AbstractMetadataType {
@@ -63,6 +59,139 @@ public class ProcedureColumn
     // ----------------------------------------------------------------------------------------------------- COLUMN_TYPE
     public static final String COLUMN_LABEL_COLUMN_TYPE = "COLUMN_TYPE";
 
+    // -----------------------------------------------------------------------------------------------------------------
+
+    /**
+     * The column label of {@value}.
+     */
+    public static final String COLUMN_LABEL_PROCEDURE_CAT = "PROCEDURE_CAT";
+
+    // -----------------------------------------------------------------------------------------------------------------
+
+    /**
+     * The column label of {@value}.
+     */
+    public static final String COLUMN_LABEL_PROCEDURE_SCHEM = "PROCEDURE_SCHEM";
+
+    // -----------------------------------------------------------------------------------------------------------------
+
+    /**
+     * The column label of {@value}.
+     */
+    public static final String COLUMN_LABEL_PROCEDURE_NAME = "PROCEDURE_NAME";
+
+    // -----------------------------------------------------------------------------------------------------------------
+
+    /**
+     * The column label of {@value}.
+     */
+    public static final String COLUMN_LABEL_COLUMN_NAME = "COLUMN_NAME";
+
+    // -----------------------------------------------------------------------------------------------------------------
+
+    /**
+     * The column label of {@value}.
+     */
+    public static final String COLUMN_LABEL_DATA_TYPE = "DATA_TYPE";
+
+    // -----------------------------------------------------------------------------------------------------------------
+
+    /**
+     * The column label of {@value}.
+     */
+    public static final String COLUMN_LABEL_TYPE_NAME = "TYPE_NAME";
+
+    // -----------------------------------------------------------------------------------------------------------------
+
+    /**
+     * The column label of {@value}.
+     */
+    public static final String COLUMN_LABEL_PRECISION = "PRECISION";
+
+    // -----------------------------------------------------------------------------------------------------------------
+
+    /**
+     * The column label of {@value}.
+     */
+    public static final String COLUMN_LABEL_LENGTH = "LENGTH";
+
+    // -----------------------------------------------------------------------------------------------------------------
+
+    /**
+     * The column label of {@value}.
+     */
+    public static final String COLUMN_LABEL_SCALE = "SCALE";
+
+    // -----------------------------------------------------------------------------------------------------------------
+
+    /**
+     * The column label of {@value}.
+     */
+    public static final String COLUMN_LABEL_RADIX = "RADIX";
+
+    // -----------------------------------------------------------------------------------------------------------------
+
+    /**
+     * The column label of {@value}.
+     */
+    public static final String COLUMN_LABEL_NULLABLE = "NULLABLE";
+
+    // -----------------------------------------------------------------------------------------------------------------
+
+    /**
+     * The column label of {@value}.
+     */
+    public static final String COLUMN_LABEL_REMARKS = "REMARKS";
+
+    // -----------------------------------------------------------------------------------------------------------------
+
+    /**
+     * The column label of {@value}.
+     */
+    public static final String COLUMN_LABEL_COLUMN_DEF = "COLUMN_DEF";
+
+    // -----------------------------------------------------------------------------------------------------------------
+
+    /**
+     * The column label of {@value}.
+     */
+    public static final String COLUMN_LABEL_SQL_DATA_TYPE = "SQL_DATA_TYPE";
+
+    // -----------------------------------------------------------------------------------------------------------------
+
+    /**
+     * The column label of {@value}.
+     */
+    public static final String COLUMN_LABEL_SQL_DATETIME_SUB = "SQL_DATETIME_SUB";
+
+    // -----------------------------------------------------------------------------------------------------------------
+
+    /**
+     * The column label of {@value}.
+     */
+    public static final String COLUMN_LABEL_CHAR_OCTET_LENGTH = "CHAR_OCTET_LENGTH";
+
+    // -----------------------------------------------------------------------------------------------------------------
+
+    /**
+     * The column label of {@value}.
+     */
+    public static final String COLUMN_LABEL_ORDINAL_POSITION = "ORDINAL_POSITION";
+
+    // -----------------------------------------------------------------------------------------------------------------
+
+    /**
+     * The column label of {@value}.
+     */
+    public static final String COLUMN_LABEL_IS_NULLABLE = "IS_NULLABLE";
+
+    // -----------------------------------------------------------------------------------------------------------------
+
+    /**
+     * The column label of {@value}.
+     */
+    public static final String COLUMN_LABEL_SPECIFIC_NAME = "SPECIFIC_NAME";
+
     /**
      * A value for {@value #COLUMN_LABEL_COLUMN_TYPE} label. The value is
      * {@link DatabaseMetaData#procedureColumnUnknown}({@value DatabaseMetaData#procedureColumnUnknown}).
@@ -78,11 +207,6 @@ public class ProcedureColumn
     public static final int COLUMN_VALUE_COLUMN_TYPE_PROCEDURE_COLUMN_RESULT = DatabaseMetaData.procedureColumnResult;
 
     // -------------------------------------------------------------------------------------------------------- NULLABLE
-
-    /**
-     * A column label of {@value}.
-     */
-    public static final String COLUMN_NAME_NULLABLE = "NULLABLE";
 
     // ------------------------------------------------------------------------------------------ STATIC_FACTORY_METHODS
 
@@ -346,18 +470,18 @@ public class ProcedureColumn
     // -------------------------------------------------------------------------------------------------------- nullable
 
     /**
-     * Returns the value of {@value #COLUMN_NAME_NULLABLE} column.
+     * Returns the value of {@value #COLUMN_LABEL_NULLABLE} column.
      *
-     * @return the value of {@value #COLUMN_NAME_NULLABLE} column.
+     * @return the value of {@value #COLUMN_LABEL_NULLABLE} column.
      */
     public Integer getNullable() {
         return nullable;
     }
 
     /**
-     * Sets the value of {@value #COLUMN_NAME_NULLABLE} column.
+     * Sets the value of {@value #COLUMN_LABEL_NULLABLE} column.
      *
-     * @param nullable the value of {@value #COLUMN_NAME_NULLABLE} column.
+     * @param nullable the value of {@value #COLUMN_LABEL_NULLABLE} column.
      */
     protected void setNullable(final Integer nullable) {
         this.nullable = nullable;
@@ -526,79 +650,77 @@ public class ProcedureColumn
     // -----------------------------------------------------------------------------------------------------------------
     
     @_NullableBySpecification
-    @_ColumnLabel("PROCEDURE_CAT")
+    @_ColumnLabel(COLUMN_LABEL_PROCEDURE_CAT)
     private String procedureCat;
 
     
     @_NullableBySpecification
-    @_ColumnLabel("PROCEDURE_SCHEM")
+    @_ColumnLabel(COLUMN_LABEL_PROCEDURE_SCHEM)
     private String procedureSchem;
 
-    @_ColumnLabel("PROCEDURE_NAME")
+    @_ColumnLabel(COLUMN_LABEL_PROCEDURE_NAME)
     private String procedureName;
 
-    @_ColumnLabel("COLUMN_NAME")
-
+    @_ColumnLabel(COLUMN_LABEL_COLUMN_NAME)
     private String columnName;
 
     // -----------------------------------------------------------------------------------------------------------------
     @_ColumnLabel(COLUMN_LABEL_COLUMN_TYPE)
     private Integer columnType;
 
-    @_ColumnLabel("DATA_TYPE")
+    @_ColumnLabel(COLUMN_LABEL_DATA_TYPE)
     private Integer dataType;
 
-    @_ColumnLabel("TYPE_NAME")
+    @_ColumnLabel(COLUMN_LABEL_TYPE_NAME)
     private String typeName;
 
     
     @_NullableBySpecification
-    @_ColumnLabel("PRECISION")
+    @_ColumnLabel(COLUMN_LABEL_PRECISION)
     private Integer precision;
 
-    @_ColumnLabel("LENGTH")
+    @_ColumnLabel(COLUMN_LABEL_LENGTH)
     private Integer length;
 
     
     @_NullableBySpecification
-    @_ColumnLabel("SCALE")
+    @_ColumnLabel(COLUMN_LABEL_SCALE)
     private Integer scale;
 
-    @_ColumnLabel("RADIX")
+    @_ColumnLabel(COLUMN_LABEL_RADIX)
     private Integer radix;
 
-    @_ColumnLabel("NULLABLE")
+    @_ColumnLabel(COLUMN_LABEL_NULLABLE)
     private Integer nullable;
 
-    @_ColumnLabel("REMARKS")
+    @_ColumnLabel(COLUMN_LABEL_REMARKS)
     private String remarks;
 
     
     @_NullableBySpecification
-    @_ColumnLabel("COLUMN_DEF")
+    @_ColumnLabel(COLUMN_LABEL_COLUMN_DEF)
     private String columnDef;
 
     @_ReservedBySpecification
-    @_ColumnLabel("SQL_DATA_TYPE")
+    @_ColumnLabel(COLUMN_LABEL_SQL_DATA_TYPE)
     private Integer sqlDataType;
 
     @_ReservedBySpecification
-    @_ColumnLabel("SQL_DATETIME_SUB")
+    @_ColumnLabel(COLUMN_LABEL_SQL_DATETIME_SUB)
     private Integer sqlDatetimeSub;
 
     
     @_NullableBySpecification
-    @_ColumnLabel("CHAR_OCTET_LENGTH")
+    @_ColumnLabel(COLUMN_LABEL_CHAR_OCTET_LENGTH)
     private Integer charOctetLength;
 
-    @_ColumnLabel("ORDINAL_POSITION")
+    @_ColumnLabel(COLUMN_LABEL_ORDINAL_POSITION)
     private Integer ordinalPosition;
 
-    @_ColumnLabel("IS_NULLABLE")
+    @_ColumnLabel(COLUMN_LABEL_IS_NULLABLE)
     private String isNullable;
 
     // https://github.com/microsoft/mssql-jdbc/issues/2320
-    @_ColumnLabel("SPECIFIC_NAME")
-
+    @_ColumnLabel(COLUMN_LABEL_SPECIFIC_NAME)
     private String specificName;
 }

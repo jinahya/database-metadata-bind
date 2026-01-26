@@ -22,9 +22,6 @@ package com.github.jinahya.database.metadata.bind;
 
 import jakarta.validation.constraints.Positive;
 import lombok.EqualsAndHashCode;
-import lombok.Getter;
-import lombok.Setter;
-import lombok.ToString;
 
 import java.sql.DatabaseMetaData;
 import java.sql.SQLException;
@@ -38,9 +35,6 @@ import java.util.List;
  * @author Jin Kwon &lt;jinahya_at_gmail.com&gt;
  */
 
-@Setter
-@Getter
-@ToString(callSuper = true)
 @EqualsAndHashCode(callSuper = true)
 public class CrossReference
         extends AbstractMetadataType {
@@ -165,7 +159,34 @@ public class CrossReference
 
     // ---------------------------------------------------------------------------------------------------- CONSTRUCTORS
 
+    /**
+     * Creates a new instance.
+     */
+    public CrossReference() {
+        super();
+    }
+
     // ------------------------------------------------------------------------------------------------ java.lang.Object
+
+    @Override
+    public String toString() {
+        return super.toString() + '{' +
+               "pktableCat=" + pktableCat +
+               ",pktableSchem=" + pktableSchem +
+               ",pktableName=" + pktableName +
+               ",pkcolumnName=" + pkcolumnName +
+               ",fktableCat=" + fktableCat +
+               ",fktableSchem=" + fktableSchem +
+               ",fktableName=" + fktableName +
+               ",fkcolumnName=" + fkcolumnName +
+               ",keySeq=" + keySeq +
+               ",updateRule=" + updateRule +
+               ",deleteRule=" + deleteRule +
+               ",fkName=" + fkName +
+               ",pkName=" + pkName +
+               ",deferrability=" + deferrability +
+               '}';
+    }
 
     // ----------------------------------------------------------------------------------------------------- pktableCat
 
@@ -183,7 +204,7 @@ public class CrossReference
      *
      * @param pktableCat the value of {@value #COLUMN_LABEL_PKTABLE_CAT} column.
      */
-    void setPktableCat(final String pktableCat) {
+    protected void setPktableCat(final String pktableCat) {
         this.pktableCat = pktableCat;
     }
 
@@ -203,7 +224,7 @@ public class CrossReference
      *
      * @param pktableSchem the value of {@value #COLUMN_LABEL_PKTABLE_SCHEM} column.
      */
-    void setPktableSchem(final String pktableSchem) {
+    protected void setPktableSchem(final String pktableSchem) {
         this.pktableSchem = pktableSchem;
     }
 
@@ -223,7 +244,7 @@ public class CrossReference
      *
      * @param pktableName the value of {@value #COLUMN_LABEL_PKTABLE_NAME} column.
      */
-    void setPktableName(final String pktableName) {
+    protected void setPktableName(final String pktableName) {
         this.pktableName = pktableName;
     }
 
@@ -243,7 +264,7 @@ public class CrossReference
      *
      * @param pkcolumnName the value of {@value #COLUMN_LABEL_PKCOLUMN_NAME} column.
      */
-    void setPkcolumnName(final String pkcolumnName) {
+    protected void setPkcolumnName(final String pkcolumnName) {
         this.pkcolumnName = pkcolumnName;
     }
 
@@ -263,7 +284,7 @@ public class CrossReference
      *
      * @param fktableCat the value of {@value #COLUMN_LABEL_FKTABLE_CAT} column.
      */
-    void setFktableCat(final String fktableCat) {
+    protected void setFktableCat(final String fktableCat) {
         this.fktableCat = fktableCat;
     }
 
@@ -283,7 +304,7 @@ public class CrossReference
      *
      * @param fktableSchem the value of {@value #COLUMN_LABEL_FKTABLE_SCHEM} column.
      */
-    void setFktableSchem(final String fktableSchem) {
+    protected void setFktableSchem(final String fktableSchem) {
         this.fktableSchem = fktableSchem;
     }
 
@@ -303,7 +324,7 @@ public class CrossReference
      *
      * @param fktableName the value of {@value #COLUMN_LABEL_FKTABLE_NAME} column.
      */
-    void setFktableName(final String fktableName) {
+    protected void setFktableName(final String fktableName) {
         this.fktableName = fktableName;
     }
 
@@ -323,7 +344,7 @@ public class CrossReference
      *
      * @param fkcolumnName the value of {@value #COLUMN_LABEL_FKCOLUMN_NAME} column.
      */
-    void setFkcolumnName(final String fkcolumnName) {
+    protected void setFkcolumnName(final String fkcolumnName) {
         this.fkcolumnName = fkcolumnName;
     }
 
@@ -343,7 +364,7 @@ public class CrossReference
      *
      * @param keySeq the value of {@value #COLUMN_LABEL_KEY_SEQ} column.
      */
-    public void setKeySeq(final Integer keySeq) {
+    protected void setKeySeq(final Integer keySeq) {
         this.keySeq = keySeq;
     }
 
@@ -363,7 +384,7 @@ public class CrossReference
      *
      * @param updateRule the value of {@value #COLUMN_LABEL_UPDATE_RULE} column.
      */
-    void setUpdateRule(final Integer updateRule) {
+    protected void setUpdateRule(final Integer updateRule) {
         this.updateRule = updateRule;
     }
 
@@ -383,7 +404,7 @@ public class CrossReference
      *
      * @param deleteRule the value of {@value #COLUMN_LABEL_DELETE_RULE} column.
      */
-    void setDeleteRule(final Integer deleteRule) {
+    protected void setDeleteRule(final Integer deleteRule) {
         this.deleteRule = deleteRule;
     }
 
@@ -403,7 +424,7 @@ public class CrossReference
      *
      * @param fkName the value of {@value #COLUMN_LABEL_FK_NAME} column.
      */
-    public void setFkName(final String fkName) {
+    protected void setFkName(final String fkName) {
         this.fkName = fkName;
     }
 
@@ -423,7 +444,7 @@ public class CrossReference
      *
      * @param pkName the value of {@value #COLUMN_LABEL_PK_NAME} column.
      */
-    public void setPkName(final String pkName) {
+    protected void setPkName(final String pkName) {
         this.pkName = pkName;
     }
 
@@ -443,7 +464,7 @@ public class CrossReference
      *
      * @param deferrability the value of {@value #COLUMN_LABEL_DEFERRABILITY} column.
      */
-    void setDeferrability(Integer deferrability) {
+    protected void setDeferrability(final Integer deferrability) {
         this.deferrability = deferrability;
     }
 

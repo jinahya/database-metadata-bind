@@ -130,7 +130,12 @@ Note: Some classes use "effective" methods (normalize: uppercase, strip whitespa
 
 ## toString()
 
-Include all significant fields:
+**MANDATORY**: Include ONLY fields annotated with `@_ColumnLabel`. Exclude:
+- Transient fields (e.g., `unmappedColumns` in `AbstractMetadataType`)
+- Helper fields without `@_ColumnLabel`
+- Fields from parent classes that are not `@_ColumnLabel` annotated
+
+Include ALL `@_ColumnLabel` fields in the same order as field definitions:
 ```java
 @Override
 public String toString() {
@@ -142,6 +147,8 @@ public String toString() {
            '}';
 }
 ```
+
+For classes extending other binding classes (e.g., `ExportedKey extends PortedKey`), include all `@_ColumnLabel` fields from both the class and its parent(s).
 
 ## Comment Style
 

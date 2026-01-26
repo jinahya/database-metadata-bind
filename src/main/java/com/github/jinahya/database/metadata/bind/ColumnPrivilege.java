@@ -22,8 +22,6 @@ package com.github.jinahya.database.metadata.bind;
 
 import jakarta.validation.constraints.Pattern;
 import lombok.EqualsAndHashCode;
-import lombok.Getter;
-import lombok.Setter;
 
 import java.sql.DatabaseMetaData;
 import java.sql.SQLException;
@@ -37,8 +35,6 @@ import java.util.Comparator;
  * @see Context#getColumnPrivileges(String, String, String, String)
  */
 @_ChildOf(Table.class)
-@Setter
-@Getter
 @EqualsAndHashCode(callSuper = true)
 public class ColumnPrivilege
         extends AbstractMetadataType {
@@ -141,13 +137,163 @@ public class ColumnPrivilege
 
     // -------------------------------------------------------------------------------------------------------- tableCat
 
+    /**
+     * Returns the value of {@value #COLUMN_LABEL_TABLE_CAT} column.
+     *
+     * @return the value of {@value #COLUMN_LABEL_TABLE_CAT} column.
+     */
+    public String getTableCat() {
+        return tableCat;
+    }
+
+    /**
+     * Sets the value of {@value #COLUMN_LABEL_TABLE_CAT} column.
+     *
+     * @param tableCat the value of {@value #COLUMN_LABEL_TABLE_CAT} column.
+     */
+    protected void setTableCat(final String tableCat) {
+        this.tableCat = tableCat;
+    }
+
     // ------------------------------------------------------------------------------------------------------ tableSchem
+
+    /**
+     * Returns the value of {@value #COLUMN_LABEL_TABLE_SCHEM} column.
+     *
+     * @return the value of {@value #COLUMN_LABEL_TABLE_SCHEM} column.
+     */
+    public String getTableSchem() {
+        return tableSchem;
+    }
+
+    /**
+     * Sets the value of {@value #COLUMN_LABEL_TABLE_SCHEM} column.
+     *
+     * @param tableSchem the value of {@value #COLUMN_LABEL_TABLE_SCHEM} column.
+     */
+    protected void setTableSchem(final String tableSchem) {
+        this.tableSchem = tableSchem;
+    }
 
     // ------------------------------------------------------------------------------------------------------- tableName
 
+    /**
+     * Returns the value of {@value #COLUMN_LABEL_TABLE_NAME} column.
+     *
+     * @return the value of {@value #COLUMN_LABEL_TABLE_NAME} column.
+     */
+    public String getTableName() {
+        return tableName;
+    }
+
+    /**
+     * Sets the value of {@value #COLUMN_LABEL_TABLE_NAME} column.
+     *
+     * @param tableName the value of {@value #COLUMN_LABEL_TABLE_NAME} column.
+     */
+    protected void setTableName(final String tableName) {
+        this.tableName = tableName;
+    }
+
     // ------------------------------------------------------------------------------------------------------ columnName
 
+    /**
+     * Returns the value of {@value #COLUMN_LABEL_COLUMN_NAME} column.
+     *
+     * @return the value of {@value #COLUMN_LABEL_COLUMN_NAME} column.
+     */
+    public String getColumnName() {
+        return columnName;
+    }
+
+    /**
+     * Sets the value of {@value #COLUMN_LABEL_COLUMN_NAME} column.
+     *
+     * @param columnName the value of {@value #COLUMN_LABEL_COLUMN_NAME} column.
+     */
+    protected void setColumnName(final String columnName) {
+        this.columnName = columnName;
+    }
+
+    // --------------------------------------------------------------------------------------------------------- grantor
+
+    /**
+     * Returns the value of {@value #COLUMN_LABEL_GRANTOR} column.
+     *
+     * @return the value of {@value #COLUMN_LABEL_GRANTOR} column.
+     */
+    public String getGrantor() {
+        return grantor;
+    }
+
+    /**
+     * Sets the value of {@value #COLUMN_LABEL_GRANTOR} column.
+     *
+     * @param grantor the value of {@value #COLUMN_LABEL_GRANTOR} column.
+     */
+    protected void setGrantor(final String grantor) {
+        this.grantor = grantor;
+    }
+
+    // --------------------------------------------------------------------------------------------------------- grantee
+
+    /**
+     * Returns the value of {@value #COLUMN_LABEL_GRANTEE} column.
+     *
+     * @return the value of {@value #COLUMN_LABEL_GRANTEE} column.
+     */
+    public String getGrantee() {
+        return grantee;
+    }
+
+    /**
+     * Sets the value of {@value #COLUMN_LABEL_GRANTEE} column.
+     *
+     * @param grantee the value of {@value #COLUMN_LABEL_GRANTEE} column.
+     */
+    protected void setGrantee(final String grantee) {
+        this.grantee = grantee;
+    }
+
+    // ------------------------------------------------------------------------------------------------------- privilege
+
+    /**
+     * Returns the value of {@value #COLUMN_LABEL_PRIVILEGE} column.
+     *
+     * @return the value of {@value #COLUMN_LABEL_PRIVILEGE} column.
+     */
+    public String getPrivilege() {
+        return privilege;
+    }
+
+    /**
+     * Sets the value of {@value #COLUMN_LABEL_PRIVILEGE} column.
+     *
+     * @param privilege the value of {@value #COLUMN_LABEL_PRIVILEGE} column.
+     */
+    protected void setPrivilege(final String privilege) {
+        this.privilege = privilege;
+    }
+
     // ----------------------------------------------------------------------------------------------------- isGrantable
+
+    /**
+     * Returns the value of {@value #COLUMN_LABEL_IS_GRANTABLE} column.
+     *
+     * @return the value of {@value #COLUMN_LABEL_IS_GRANTABLE} column.
+     */
+    public String getIsGrantable() {
+        return isGrantable;
+    }
+
+    /**
+     * Sets the value of {@value #COLUMN_LABEL_IS_GRANTABLE} column.
+     *
+     * @param isGrantable the value of {@value #COLUMN_LABEL_IS_GRANTABLE} column.
+     */
+    protected void setIsGrantable(final String isGrantable) {
+        this.isGrantable = isGrantable;
+    }
 
     // -----------------------------------------------------------------------------------------------------------------
     

@@ -21,7 +21,6 @@ package com.github.jinahya.database.metadata.bind;
  */
 
 import lombok.EqualsAndHashCode;
-import lombok.ToString;
 
 import java.sql.DatabaseMetaData;
 import java.sql.SQLException;
@@ -36,7 +35,6 @@ import java.util.Comparator;
  */
 
 @EqualsAndHashCode(callSuper = true)
-@ToString(callSuper = true)
 public class ImportedKey
         extends PortedKey {
 

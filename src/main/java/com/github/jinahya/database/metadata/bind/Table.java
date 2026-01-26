@@ -21,7 +21,6 @@ package com.github.jinahya.database.metadata.bind;
  */
 
 import lombok.EqualsAndHashCode;
-import lombok.ToString;
 
 import java.sql.SQLException;
 import java.util.Comparator;
@@ -44,7 +43,6 @@ import java.util.Optional;
 @_ParentOf(IndexInfo.class)
 @_ParentOf(PseudoColumn.class)
 @_ParentOf(VersionColumn.class)
-@ToString(callSuper = true)
 @EqualsAndHashCode(callSuper = true)
 public class Table
         extends AbstractMetadataType {

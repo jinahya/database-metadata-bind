@@ -21,8 +21,6 @@ package com.github.jinahya.database.metadata.bind;
  */
 
 import lombok.EqualsAndHashCode;
-import lombok.Getter;
-import lombok.Setter;
 
 import java.sql.DatabaseMetaData;
 import java.sql.SQLException;
@@ -35,8 +33,6 @@ import java.util.Comparator;
  * @see Context#getTypeInfo()
  */
 
-@Setter
-@Getter
 @EqualsAndHashCode(callSuper = true)
 public class TypeInfo
         extends AbstractMetadataType {
@@ -229,6 +225,15 @@ public class TypeInfo
         return typeName;
     }
 
+    /**
+     * Sets the value of {@value #COLUMN_LABEL_TYPE_NAME} column.
+     *
+     * @param typeName the value of {@value #COLUMN_LABEL_TYPE_NAME} column.
+     */
+    protected void setTypeName(final String typeName) {
+        this.typeName = typeName;
+    }
+
     // -------------------------------------------------------------------------------------------------------- dataType
 
     /**
@@ -238,6 +243,15 @@ public class TypeInfo
      */
     public Integer getDataType() {
         return dataType;
+    }
+
+    /**
+     * Sets the value of {@value #COLUMN_LABEL_DATA_TYPE} column.
+     *
+     * @param dataType the value of {@value #COLUMN_LABEL_DATA_TYPE} column.
+     */
+    protected void setDataType(final Integer dataType) {
+        this.dataType = dataType;
     }
 
     // ------------------------------------------------------------------------------------------------------- precision
@@ -251,6 +265,15 @@ public class TypeInfo
         return precision;
     }
 
+    /**
+     * Sets the value of {@value #COLUMN_LABEL_PRECISION} column.
+     *
+     * @param precision the value of {@value #COLUMN_LABEL_PRECISION} column.
+     */
+    protected void setPrecision(final Integer precision) {
+        this.precision = precision;
+    }
+
     // --------------------------------------------------------------------------------------------------- literalPrefix
 
     /**
@@ -260,6 +283,15 @@ public class TypeInfo
      */
     public String getLiteralPrefix() {
         return literalPrefix;
+    }
+
+    /**
+     * Sets the value of {@value #COLUMN_LABEL_LITERAL_PREFIX} column.
+     *
+     * @param literalPrefix the value of {@value #COLUMN_LABEL_LITERAL_PREFIX} column.
+     */
+    protected void setLiteralPrefix(final String literalPrefix) {
+        this.literalPrefix = literalPrefix;
     }
 
     // --------------------------------------------------------------------------------------------------- literalSuffix
@@ -273,6 +305,15 @@ public class TypeInfo
         return literalSuffix;
     }
 
+    /**
+     * Sets the value of {@value #COLUMN_LABEL_LITERAL_SUFFIX} column.
+     *
+     * @param literalSuffix the value of {@value #COLUMN_LABEL_LITERAL_SUFFIX} column.
+     */
+    protected void setLiteralSuffix(final String literalSuffix) {
+        this.literalSuffix = literalSuffix;
+    }
+
     // ---------------------------------------------------------------------------------------------------- createParams
 
     /**
@@ -282,6 +323,15 @@ public class TypeInfo
      */
     public String getCreateParams() {
         return createParams;
+    }
+
+    /**
+     * Sets the value of {@value #COLUMN_LABEL_CREATE_PARAMS} column.
+     *
+     * @param createParams the value of {@value #COLUMN_LABEL_CREATE_PARAMS} column.
+     */
+    protected void setCreateParams(final String createParams) {
+        this.createParams = createParams;
     }
 
     // -------------------------------------------------------------------------------------------------------- nullable
@@ -295,6 +345,15 @@ public class TypeInfo
         return nullable;
     }
 
+    /**
+     * Sets the value of {@value #COLUMN_LABEL_NULLABLE} column.
+     *
+     * @param nullable the value of {@value #COLUMN_LABEL_NULLABLE} column.
+     */
+    protected void setNullable(final Integer nullable) {
+        this.nullable = nullable;
+    }
+
     // --------------------------------------------------------------------------------------------------- caseSensitive
 
     /**
@@ -304,6 +363,15 @@ public class TypeInfo
      */
     public Boolean getCaseSensitive() {
         return caseSensitive;
+    }
+
+    /**
+     * Sets the value of {@value #COLUMN_LABEL_CASE_SENSITIVE} column.
+     *
+     * @param caseSensitive the value of {@value #COLUMN_LABEL_CASE_SENSITIVE} column.
+     */
+    protected void setCaseSensitive(final Boolean caseSensitive) {
+        this.caseSensitive = caseSensitive;
     }
 
     // ------------------------------------------------------------------------------------------------------ searchable
@@ -317,6 +385,15 @@ public class TypeInfo
         return searchable;
     }
 
+    /**
+     * Sets the value of {@value #COLUMN_LABEL_SEARCHABLE} column.
+     *
+     * @param searchable the value of {@value #COLUMN_LABEL_SEARCHABLE} column.
+     */
+    protected void setSearchable(final Integer searchable) {
+        this.searchable = searchable;
+    }
+
     // ----------------------------------------------------------------------------------------------- unsignedAttribute
 
     /**
@@ -326,6 +403,15 @@ public class TypeInfo
      */
     public Boolean getUnsignedAttribute() {
         return unsignedAttribute;
+    }
+
+    /**
+     * Sets the value of {@value #COLUMN_LABEL_UNSIGNED_ATTRIBUTE} column.
+     *
+     * @param unsignedAttribute the value of {@value #COLUMN_LABEL_UNSIGNED_ATTRIBUTE} column.
+     */
+    protected void setUnsignedAttribute(final Boolean unsignedAttribute) {
+        this.unsignedAttribute = unsignedAttribute;
     }
 
     // -------------------------------------------------------------------------------------------------- fixedPrecScale
@@ -339,6 +425,15 @@ public class TypeInfo
         return fixedPrecScale;
     }
 
+    /**
+     * Sets the value of {@value #COLUMN_LABEL_FIXED_PREC_SCALE} column.
+     *
+     * @param fixedPrecScale the value of {@value #COLUMN_LABEL_FIXED_PREC_SCALE} column.
+     */
+    protected void setFixedPrecScale(final Boolean fixedPrecScale) {
+        this.fixedPrecScale = fixedPrecScale;
+    }
+
     // --------------------------------------------------------------------------------------------------- autoIncrement
 
     /**
@@ -348,6 +443,15 @@ public class TypeInfo
      */
     public Boolean getAutoIncrement() {
         return autoIncrement;
+    }
+
+    /**
+     * Sets the value of {@value #COLUMN_LABEL_AUTO_INCREMENT} column.
+     *
+     * @param autoIncrement the value of {@value #COLUMN_LABEL_AUTO_INCREMENT} column.
+     */
+    protected void setAutoIncrement(final Boolean autoIncrement) {
+        this.autoIncrement = autoIncrement;
     }
 
     // --------------------------------------------------------------------------------------------------- localTypeName
@@ -361,6 +465,15 @@ public class TypeInfo
         return localTypeName;
     }
 
+    /**
+     * Sets the value of {@value #COLUMN_LABEL_LOCAL_TYPE_NAME} column.
+     *
+     * @param localTypeName the value of {@value #COLUMN_LABEL_LOCAL_TYPE_NAME} column.
+     */
+    protected void setLocalTypeName(final String localTypeName) {
+        this.localTypeName = localTypeName;
+    }
+
     // ---------------------------------------------------------------------------------------------------- minimumScale
 
     /**
@@ -370,6 +483,15 @@ public class TypeInfo
      */
     public Integer getMinimumScale() {
         return minimumScale;
+    }
+
+    /**
+     * Sets the value of {@value #COLUMN_LABEL_MINIMUM_SCALE} column.
+     *
+     * @param minimumScale the value of {@value #COLUMN_LABEL_MINIMUM_SCALE} column.
+     */
+    protected void setMinimumScale(final Integer minimumScale) {
+        this.minimumScale = minimumScale;
     }
 
     // ---------------------------------------------------------------------------------------------------- maximumScale
@@ -383,6 +505,15 @@ public class TypeInfo
         return maximumScale;
     }
 
+    /**
+     * Sets the value of {@value #COLUMN_LABEL_MAXIMUM_SCALE} column.
+     *
+     * @param maximumScale the value of {@value #COLUMN_LABEL_MAXIMUM_SCALE} column.
+     */
+    protected void setMaximumScale(final Integer maximumScale) {
+        this.maximumScale = maximumScale;
+    }
+
     // ----------------------------------------------------------------------------------------------------- sqlDataType
 
     /**
@@ -392,6 +523,15 @@ public class TypeInfo
      */
     public Integer getSqlDataType() {
         return sqlDataType;
+    }
+
+    /**
+     * Sets the value of {@value #COLUMN_LABEL_SQL_DATA_TYPE} column.
+     *
+     * @param sqlDataType the value of {@value #COLUMN_LABEL_SQL_DATA_TYPE} column.
+     */
+    protected void setSqlDataType(final Integer sqlDataType) {
+        this.sqlDataType = sqlDataType;
     }
 
     // -------------------------------------------------------------------------------------------------- sqlDatetimeSub
@@ -405,6 +545,15 @@ public class TypeInfo
         return sqlDatetimeSub;
     }
 
+    /**
+     * Sets the value of {@value #COLUMN_LABEL_SQL_DATETIME_SUB} column.
+     *
+     * @param sqlDatetimeSub the value of {@value #COLUMN_LABEL_SQL_DATETIME_SUB} column.
+     */
+    protected void setSqlDatetimeSub(final Integer sqlDatetimeSub) {
+        this.sqlDatetimeSub = sqlDatetimeSub;
+    }
+
     // ---------------------------------------------------------------------------------------------------- numPrecRadix
 
     /**
@@ -416,9 +565,14 @@ public class TypeInfo
         return numPrecRadix;
     }
 
-    // -------------------------------------------------------------------------------------------------------- nullable
-
-    // ------------------------------------------------------------------------------------------------------ searchable
+    /**
+     * Sets the value of {@value #COLUMN_LABEL_NUM_PREC_RADIX} column.
+     *
+     * @param numPrecRadix the value of {@value #COLUMN_LABEL_NUM_PREC_RADIX} column.
+     */
+    protected void setNumPrecRadix(final Integer numPrecRadix) {
+        this.numPrecRadix = numPrecRadix;
+    }
 
     // -----------------------------------------------------------------------------------------------------------------
     @_ColumnLabel(COLUMN_LABEL_TYPE_NAME)

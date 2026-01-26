@@ -21,9 +21,6 @@ package com.github.jinahya.database.metadata.bind;
  */
 
 import lombok.EqualsAndHashCode;
-import lombok.Getter;
-import lombok.Setter;
-import lombok.ToString;
 
 import java.sql.DatabaseMetaData;
 import java.sql.SQLException;
@@ -36,10 +33,7 @@ import java.util.Comparator;
  * @see Context#getClientInfoProperties()
  */
 
-@Setter
-@Getter
 @EqualsAndHashCode(callSuper = true)
-@ToString(callSuper = true)
 public class ClientInfoProperty
         extends AbstractMetadataType {
 
@@ -86,9 +80,111 @@ public class ClientInfoProperty
      */
     public static final String COLUMN_LABEL_DESCRIPTION = "DESCRIPTION";
 
+    // ------------------------------------------------------------------------------------------ STATIC_FACTORY_METHODS
+
+    // ---------------------------------------------------------------------------------------------------- CONSTRUCTORS
+
+    /**
+     * Creates a new instance.
+     */
+    public ClientInfoProperty() {
+        super();
+    }
+
+    // ------------------------------------------------------------------------------------------------ java.lang.Object
+
+    @Override
+    public String toString() {
+        return super.toString() + '{' +
+               "name=" + name +
+               ",maxLen=" + maxLen +
+               ",defaultValue=" + defaultValue +
+               ",description=" + description +
+               '}';
+    }
+
+    // ------------------------------------------------------------------------------------------------------------ name
+
+    /**
+     * Returns the value of {@value #COLUMN_LABEL_NAME} column.
+     *
+     * @return the value of {@value #COLUMN_LABEL_NAME} column.
+     */
+    public String getName() {
+        return name;
+    }
+
+    /**
+     * Sets the value of {@value #COLUMN_LABEL_NAME} column.
+     *
+     * @param name the value of {@value #COLUMN_LABEL_NAME} column.
+     */
+    protected void setName(final String name) {
+        this.name = name;
+    }
+
+    // --------------------------------------------------------------------------------------------------------- maxLen
+
+    /**
+     * Returns the value of {@value #COLUMN_LABEL_MAX_LEN} column.
+     *
+     * @return the value of {@value #COLUMN_LABEL_MAX_LEN} column.
+     */
+    public Integer getMaxLen() {
+        return maxLen;
+    }
+
+    /**
+     * Sets the value of {@value #COLUMN_LABEL_MAX_LEN} column.
+     *
+     * @param maxLen the value of {@value #COLUMN_LABEL_MAX_LEN} column.
+     */
+    protected void setMaxLen(final Integer maxLen) {
+        this.maxLen = maxLen;
+    }
+
+    // --------------------------------------------------------------------------------------------------- defaultValue
+
+    /**
+     * Returns the value of {@value #COLUMN_LABEL_DEFAULT_VALUE} column.
+     *
+     * @return the value of {@value #COLUMN_LABEL_DEFAULT_VALUE} column.
+     */
+    public String getDefaultValue() {
+        return defaultValue;
+    }
+
+    /**
+     * Sets the value of {@value #COLUMN_LABEL_DEFAULT_VALUE} column.
+     *
+     * @param defaultValue the value of {@value #COLUMN_LABEL_DEFAULT_VALUE} column.
+     */
+    protected void setDefaultValue(final String defaultValue) {
+        this.defaultValue = defaultValue;
+    }
+
+    // ----------------------------------------------------------------------------------------------------- description
+
+    /**
+     * Returns the value of {@value #COLUMN_LABEL_DESCRIPTION} column.
+     *
+     * @return the value of {@value #COLUMN_LABEL_DESCRIPTION} column.
+     */
+    public String getDescription() {
+        return description;
+    }
+
+    /**
+     * Sets the value of {@value #COLUMN_LABEL_DESCRIPTION} column.
+     *
+     * @param description the value of {@value #COLUMN_LABEL_DESCRIPTION} column.
+     */
+    protected void setDescription(final String description) {
+        this.description = description;
+    }
+
     // -----------------------------------------------------------------------------------------------------------------
     @_ColumnLabel(COLUMN_LABEL_NAME)
-
     private String name;
 
     // -----------------------------------------------------------------------------------------------------------------

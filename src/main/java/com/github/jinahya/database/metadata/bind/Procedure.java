@@ -71,6 +71,34 @@ public class Procedure
      */
     public static final String COLUMN_LABEL_SPECIFIC_NAME = "SPECIFIC_NAME";
 
+    // -----------------------------------------------------------------------------------------------------------------
+
+    /**
+     * The column label of {@value}.
+     */
+    public static final String COLUMN_LABEL_PROCEDURE_CAT = "PROCEDURE_CAT";
+
+    // -----------------------------------------------------------------------------------------------------------------
+
+    /**
+     * The column label of {@value}.
+     */
+    public static final String COLUMN_LABEL_PROCEDURE_SCHEM = "PROCEDURE_SCHEM";
+
+    // -----------------------------------------------------------------------------------------------------------------
+
+    /**
+     * The column label of {@value}.
+     */
+    public static final String COLUMN_LABEL_PROCEDURE_NAME = "PROCEDURE_NAME";
+
+    // -----------------------------------------------------------------------------------------------------------------
+
+    /**
+     * The column label of {@value}.
+     */
+    public static final String COLUMN_LABEL_REMARKS = "REMARKS";
+
     // ------------------------------------------------------------------------------------------ STATIC_FACTORY_METHODS
 
     // ---------------------------------------------------------------------------------------------------- CONSTRUCTORS
@@ -219,22 +247,22 @@ public class Procedure
     // -----------------------------------------------------------------------------------------------------------------
     
     @_NullableBySpecification
-    @_ColumnLabel("PROCEDURE_CAT")
+    @_ColumnLabel(COLUMN_LABEL_PROCEDURE_CAT)
     private String procedureCat;
 
     
     @_NullableBySpecification
-    @_ColumnLabel("PROCEDURE_SCHEM")
+    @_ColumnLabel(COLUMN_LABEL_PROCEDURE_SCHEM)
     private String procedureSchem;
 
-    @_ColumnLabel("PROCEDURE_NAME")
+    @_ColumnLabel(COLUMN_LABEL_PROCEDURE_NAME)
     private String procedureName;
 
     // -----------------------------------------------------------------------------------------------------------------
-    @_ColumnLabel("REMARKS")
+    @_ColumnLabel(COLUMN_LABEL_REMARKS)
     private String remarks;
 
-    @_ColumnLabel("PROCEDURE_TYPE")
+    @_ColumnLabel(COLUMN_LABEL_PROCEDURE_TYPE)
     private Integer procedureType;
 
     // https://github.com/microsoft/mssql-jdbc/issues/2320
