@@ -20,8 +20,6 @@ package com.github.jinahya.database.metadata.bind;
  * #L%
  */
 
-import jakarta.validation.constraints.Pattern;
-
 import java.sql.DatabaseMetaData;
 import java.sql.SQLException;
 import java.util.Comparator;
@@ -77,6 +75,7 @@ public class ColumnPrivilege
     public static final String COLUMN_LABEL_TABLE_NAME = "TABLE_NAME";
 
     // ----------------------------------------------------------------------------------------------------- COLUMN_NAME
+
     /**
      * A column label of {@value}.
      */
@@ -104,6 +103,7 @@ public class ColumnPrivilege
     public static final String COLUMN_LABEL_PRIVILEGE = "PRIVILEGE";
 
     // -----------------------------------------------------------------------------------------------------------------
+
     /**
      * A column label of {@value}.
      */
@@ -120,7 +120,7 @@ public class ColumnPrivilege
     /**
      * Creates a new instance.
      */
-    public ColumnPrivilege() {
+     ColumnPrivilege() {
         super();
     }
 
@@ -179,7 +179,7 @@ public class ColumnPrivilege
      *
      * @param tableCat the value of {@value #COLUMN_LABEL_TABLE_CAT} column.
      */
-    protected void setTableCat(final String tableCat) {
+    void setTableCat(final String tableCat) {
         this.tableCat = tableCat;
     }
 
@@ -199,7 +199,7 @@ public class ColumnPrivilege
      *
      * @param tableSchem the value of {@value #COLUMN_LABEL_TABLE_SCHEM} column.
      */
-    protected void setTableSchem(final String tableSchem) {
+    void setTableSchem(final String tableSchem) {
         this.tableSchem = tableSchem;
     }
 
@@ -219,7 +219,7 @@ public class ColumnPrivilege
      *
      * @param tableName the value of {@value #COLUMN_LABEL_TABLE_NAME} column.
      */
-    protected void setTableName(final String tableName) {
+    void setTableName(final String tableName) {
         this.tableName = tableName;
     }
 
@@ -239,7 +239,7 @@ public class ColumnPrivilege
      *
      * @param columnName the value of {@value #COLUMN_LABEL_COLUMN_NAME} column.
      */
-    protected void setColumnName(final String columnName) {
+    void setColumnName(final String columnName) {
         this.columnName = columnName;
     }
 
@@ -259,7 +259,7 @@ public class ColumnPrivilege
      *
      * @param grantor the value of {@value #COLUMN_LABEL_GRANTOR} column.
      */
-    protected void setGrantor(final String grantor) {
+    void setGrantor(final String grantor) {
         this.grantor = grantor;
     }
 
@@ -279,7 +279,7 @@ public class ColumnPrivilege
      *
      * @param grantee the value of {@value #COLUMN_LABEL_GRANTEE} column.
      */
-    protected void setGrantee(final String grantee) {
+    void setGrantee(final String grantee) {
         this.grantee = grantee;
     }
 
@@ -299,7 +299,7 @@ public class ColumnPrivilege
      *
      * @param privilege the value of {@value #COLUMN_LABEL_PRIVILEGE} column.
      */
-    protected void setPrivilege(final String privilege) {
+    void setPrivilege(final String privilege) {
         this.privilege = privilege;
     }
 
@@ -319,7 +319,7 @@ public class ColumnPrivilege
      *
      * @param isGrantable the value of {@value #COLUMN_LABEL_IS_GRANTABLE} column.
      */
-    protected void setIsGrantable(final String isGrantable) {
+    void setIsGrantable(final String isGrantable) {
         this.isGrantable = isGrantable;
     }
 
@@ -354,7 +354,6 @@ public class ColumnPrivilege
     @_ColumnLabel(COLUMN_LABEL_PRIVILEGE)
     private String privilege;
 
-    @Pattern(regexp = MetadataTypeConstants.PATTERN_REGEXP_YES_OR_NO)
     @org.jspecify.annotations.Nullable
     @_NullableBySpecification
     @_ColumnLabel(COLUMN_LABEL_IS_GRANTABLE)

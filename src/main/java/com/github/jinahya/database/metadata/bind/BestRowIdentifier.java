@@ -20,7 +20,6 @@ package com.github.jinahya.database.metadata.bind;
  * #L%
  */
 
-
 import java.sql.DatabaseMetaData;
 import java.sql.SQLException;
 import java.util.Comparator;
@@ -119,7 +118,7 @@ public class BestRowIdentifier
     /**
      * Creates a new instance.
      */
-    public BestRowIdentifier() {
+     BestRowIdentifier() {
         super();
     }
 
@@ -174,7 +173,7 @@ public class BestRowIdentifier
      *
      * @param scope the value of {@value #COLUMN_LABEL_SCOPE} column.
      */
-    public void setScope(final Integer scope) {
+    void setScope(final Integer scope) {
         this.scope = scope;
     }
 
@@ -194,7 +193,7 @@ public class BestRowIdentifier
      *
      * @param columnName the value of {@value #COLUMN_LABEL_COLUMN_NAME} column.
      */
-    public void setColumnName(final String columnName) {
+    void setColumnName(final String columnName) {
         this.columnName = columnName;
     }
 
@@ -214,7 +213,7 @@ public class BestRowIdentifier
      *
      * @param dataType the value of {@value #COLUMN_LABEL_DATA_TYPE} column.
      */
-    public void setDataType(final Integer dataType) {
+    void setDataType(final Integer dataType) {
         this.dataType = dataType;
     }
 
@@ -234,7 +233,7 @@ public class BestRowIdentifier
      *
      * @param typeName the value of {@code TYPE_NAME} column.
      */
-    public void setTypeName(final String typeName) {
+    void setTypeName(final String typeName) {
         this.typeName = typeName;
     }
 
@@ -254,7 +253,7 @@ public class BestRowIdentifier
      *
      * @param columnSize the value of {@code COLUMN_SIZE} column.
      */
-    public void setColumnSize(final Integer columnSize) {
+    void setColumnSize(final Integer columnSize) {
         this.columnSize = columnSize;
     }
 
@@ -274,7 +273,7 @@ public class BestRowIdentifier
      *
      * @param bufferLength the value of {@code BUFFER_LENGTH} column.
      */
-    public void setBufferLength(final Integer bufferLength) {
+    void setBufferLength(final Integer bufferLength) {
         this.bufferLength = bufferLength;
     }
 
@@ -294,7 +293,7 @@ public class BestRowIdentifier
      *
      * @param decimalDigits the value of {@code DECIMAL_DIGITS} column.
      */
-    public void setDecimalDigits(final Integer decimalDigits) {
+    void setDecimalDigits(final Integer decimalDigits) {
         this.decimalDigits = decimalDigits;
     }
 
@@ -314,7 +313,7 @@ public class BestRowIdentifier
      *
      * @param pseudoColumn the value of {@value #COLUMN_LABEL_PSEUDO_COLUMN} column.
      */
-    public void setPseudoColumn(final Integer pseudoColumn) {
+    void setPseudoColumn(final Integer pseudoColumn) {
         this.pseudoColumn = pseudoColumn;
     }
 
@@ -332,17 +331,17 @@ public class BestRowIdentifier
     @_ColumnLabel(COLUMN_LABEL_TYPE_NAME)
     private String typeName;
 
-   @org.jspecify.annotations.Nullable
+    @org.jspecify.annotations.Nullable
     @_NullableBySpecification
     @_ColumnLabel(COLUMN_LABEL_COLUMN_SIZE)
     private Integer columnSize;
 
-   @org.jspecify.annotations.Nullable
+    @org.jspecify.annotations.Nullable
     @_NotUsedBySpecification
     @_ColumnLabel(COLUMN_LABEL_BUFFER_LENGTH)
     private Integer bufferLength;
 
-   @org.jspecify.annotations.Nullable
+    @org.jspecify.annotations.Nullable
     @_NullableBySpecification
     @_ColumnLabel(COLUMN_LABEL_DECIMAL_DIGITS)
     private Integer decimalDigits;

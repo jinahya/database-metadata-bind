@@ -20,7 +20,6 @@ package com.github.jinahya.database.metadata.bind;
  * #L%
  */
 
-
 import java.sql.DatabaseMetaData;
 import java.sql.SQLException;
 import java.util.Comparator;
@@ -119,7 +118,7 @@ public class PrimaryKey
     /**
      * Creates a new instance.
      */
-    protected PrimaryKey() {
+     PrimaryKey() {
         super();
     }
 
@@ -152,7 +151,7 @@ public class PrimaryKey
      *
      * @param tableCat the value of {@value #COLUMN_LABEL_TABLE_CAT} column.
      */
-    protected void setTableCat(final String tableCat) {
+    void setTableCat(final String tableCat) {
         this.tableCat = tableCat;
     }
 
@@ -172,7 +171,7 @@ public class PrimaryKey
      *
      * @param tableSchem the value of {@value #COLUMN_LABEL_TABLE_SCHEM} column.
      */
-    protected void setTableSchem(final String tableSchem) {
+    void setTableSchem(final String tableSchem) {
         this.tableSchem = tableSchem;
     }
 
@@ -192,7 +191,7 @@ public class PrimaryKey
      *
      * @param tableName the value of {@value #COLUMN_LABEL_TABLE_NAME} column.
      */
-    protected void setTableName(final String tableName) {
+    void setTableName(final String tableName) {
         this.tableName = tableName;
     }
 
@@ -212,7 +211,7 @@ public class PrimaryKey
      *
      * @param columnName the value of {@value #COLUMN_LABEL_COLUMN_NAME} column.
      */
-    protected void setColumnName(final String columnName) {
+    void setColumnName(final String columnName) {
         this.columnName = columnName;
     }
 
@@ -232,7 +231,7 @@ public class PrimaryKey
      *
      * @param keySeq the value of {@value #COLUMN_LABEL_KEY_SEQ} column.
      */
-    protected void setKeySeq(final Integer keySeq) {
+    void setKeySeq(final Integer keySeq) {
         this.keySeq = keySeq;
     }
 
@@ -252,17 +251,17 @@ public class PrimaryKey
      *
      * @param pkName the value of {@value #COLUMN_LABEL_PK_NAME} column.
      */
-    protected void setPkName(final String pkName) {
+    void setPkName(final String pkName) {
         this.pkName = pkName;
     }
 
     // -----------------------------------------------------------------------------------------------------------------
-   @org.jspecify.annotations.Nullable
+    @org.jspecify.annotations.Nullable
     @_NullableBySpecification
     @_ColumnLabel(COLUMN_LABEL_TABLE_CAT)
     private String tableCat;
 
-   @org.jspecify.annotations.Nullable
+    @org.jspecify.annotations.Nullable
     @_NullableBySpecification
     @_ColumnLabel(COLUMN_LABEL_TABLE_SCHEM)
     private String tableSchem;
@@ -277,7 +276,7 @@ public class PrimaryKey
     @_ColumnLabel(COLUMN_LABEL_KEY_SEQ)
     private Integer keySeq;
 
-   @org.jspecify.annotations.Nullable
+    @org.jspecify.annotations.Nullable
     @_NullableBySpecification
     @_ColumnLabel(COLUMN_LABEL_PK_NAME)
     private String pkName;

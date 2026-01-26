@@ -20,7 +20,6 @@ package com.github.jinahya.database.metadata.bind;
  * #L%
  */
 
-
 import java.util.Objects;
 
 /**
@@ -60,6 +59,7 @@ public class SuperTable
     private static final long serialVersionUID = 3579710773784268831L;
 
     // -----------------------------------------------------------------------------------------------------------------
+
     /**
      * A column label of {@value}.
      */
@@ -87,7 +87,7 @@ public class SuperTable
     /**
      * Creates a new instance.
      */
-    public SuperTable() {
+     SuperTable() {
         super();
     }
 
@@ -119,7 +119,7 @@ public class SuperTable
      *
      * @param tableCat the value of {@value #COLUMN_LABEL_TABLE_CAT} column.
      */
-    protected void setTableCat(final String tableCat) {
+    void setTableCat(final String tableCat) {
         this.tableCat = tableCat;
     }
 
@@ -139,7 +139,7 @@ public class SuperTable
      *
      * @param tableSchem the value of {@value #COLUMN_LABEL_TABLE_SCHEM} column.
      */
-    protected void setTableSchem(final String tableSchem) {
+    void setTableSchem(final String tableSchem) {
         this.tableSchem = tableSchem;
     }
 
@@ -159,7 +159,7 @@ public class SuperTable
      *
      * @param tableName the value of {@value #COLUMN_LABEL_TABLE_NAME} column.
      */
-    protected void setTableName(final String tableName) {
+    void setTableName(final String tableName) {
         this.tableName = tableName;
     }
 
@@ -179,7 +179,7 @@ public class SuperTable
      *
      * @param supertableName the value of {@value #COLUMN_LABEL_SUPERTABLE_NAME} column.
      */
-    protected void setSupertableName(final String supertableName) {
+    void setSupertableName(final String supertableName) {
         this.supertableName = supertableName;
     }
 

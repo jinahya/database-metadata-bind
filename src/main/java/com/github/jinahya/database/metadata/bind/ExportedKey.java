@@ -56,7 +56,7 @@ public class ExportedKey
     /**
      * Creates a new instance.
      */
-    public ExportedKey() {
+     ExportedKey() {
         super();
     }
 

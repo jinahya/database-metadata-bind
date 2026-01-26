@@ -20,7 +20,6 @@ package com.github.jinahya.database.metadata.bind;
  * #L%
  */
 
-
 import java.sql.DatabaseMetaData;
 import java.util.Objects;
 
@@ -57,18 +56,21 @@ public class VersionColumn
     private static final long serialVersionUID = 3587959398829593292L;
 
     // ----------------------------------------------------------------------------------------------------------- SCOPE
+
     /**
      * A column label of {@value}.
      */
     public static final String COLUMN_LABEL_SCOPE = "SCOPE";
 
     // ----------------------------------------------------------------------------------------------------- COLUMN_NAME
+
     /**
      * A column label of {@value}.
      */
     public static final String COLUMN_LABEL_COLUMN_NAME = "COLUMN_NAME";
 
     // -----------------------------------------------------------------------------------------------------------------
+
     /**
      * A column label of {@value}.
      */
@@ -292,12 +294,12 @@ public class VersionColumn
      *
      * @param pseudoColumn the value of {@value #COLUMN_LABEL_PSEUDO_COLUMN} column.
      */
-    public void setPseudoColumn(final Integer pseudoColumn) {
+    void setPseudoColumn(final Integer pseudoColumn) {
         this.pseudoColumn = pseudoColumn;
     }
 
     // -----------------------------------------------------------------------------------------------------------------
-   @org.jspecify.annotations.Nullable
+    @org.jspecify.annotations.Nullable
     @_NotUsedBySpecification
     @_ColumnLabel(COLUMN_LABEL_SCOPE)
     private Integer scope;
@@ -311,7 +313,7 @@ public class VersionColumn
     @_ColumnLabel(COLUMN_LABEL_TYPE_NAME)
     private String typeName;
 
-   @org.jspecify.annotations.Nullable
+    @org.jspecify.annotations.Nullable
     @_NullableBySpecification
     @_ColumnLabel(COLUMN_LABEL_COLUMN_SIZE)
     private Integer columnSize;
@@ -319,7 +321,7 @@ public class VersionColumn
     @_ColumnLabel(COLUMN_LABEL_BUFFER_LENGTH)
     private Integer bufferLength;
 
-   @org.jspecify.annotations.Nullable
+    @org.jspecify.annotations.Nullable
     @_NullableBySpecification
     @_ColumnLabel(COLUMN_LABEL_DECIMAL_DIGITS)
     private Integer decimalDigits;

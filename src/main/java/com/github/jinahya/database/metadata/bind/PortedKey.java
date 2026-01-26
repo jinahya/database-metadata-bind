@@ -20,7 +20,6 @@ package com.github.jinahya.database.metadata.bind;
  * #L%
  */
 
-
 import java.sql.DatabaseMetaData;
 import java.util.Comparator;
 import java.util.Objects;
@@ -209,7 +208,7 @@ abstract class PortedKey
      *
      * @param pktableCat the value of {@value #COLUMN_NAME_PKTABLE_CAT} column.
      */
-    protected void setPktableCat(final String pktableCat) {
+    void setPktableCat(final String pktableCat) {
         this.pktableCat = pktableCat;
     }
 
@@ -229,7 +228,7 @@ abstract class PortedKey
      *
      * @param pktableSchem the value of {@value #COLUMN_NAME_PKTABLE_SCHEM} column.
      */
-    protected void setPktableSchem(final String pktableSchem) {
+    void setPktableSchem(final String pktableSchem) {
         this.pktableSchem = pktableSchem;
     }
 
@@ -249,7 +248,7 @@ abstract class PortedKey
      *
      * @param pktableName the value of {@value #COLUMN_NAME_PKTABLE_NAME} column.
      */
-    protected void setPktableName(final String pktableName) {
+    void setPktableName(final String pktableName) {
         this.pktableName = pktableName;
     }
 
@@ -269,7 +268,7 @@ abstract class PortedKey
      *
      * @param pkcolumnName the value of {@value #COLUMN_NAME_PKCOLUMN_NAME} column.
      */
-    protected void setPkcolumnName(final String pkcolumnName) {
+    void setPkcolumnName(final String pkcolumnName) {
         this.pkcolumnName = pkcolumnName;
     }
 
@@ -289,7 +288,7 @@ abstract class PortedKey
      *
      * @param fktableCat the value of {@value #COLUMN_NAME_FKTABLE_CAT} column.
      */
-    protected void setFktableCat(final String fktableCat) {
+    void setFktableCat(final String fktableCat) {
         this.fktableCat = fktableCat;
     }
 
@@ -309,7 +308,7 @@ abstract class PortedKey
      *
      * @param fktableSchem the value of {@value #COLUMN_NAME_FKTABLE_SCHEM} column.
      */
-    protected void setFktableSchem(final String fktableSchem) {
+    void setFktableSchem(final String fktableSchem) {
         this.fktableSchem = fktableSchem;
     }
 
@@ -329,7 +328,7 @@ abstract class PortedKey
      *
      * @param fktableName the value of {@value #COLUMN_NAME_FKTABLE_NAME} column.
      */
-    protected void setFktableName(final String fktableName) {
+    void setFktableName(final String fktableName) {
         this.fktableName = fktableName;
     }
 
@@ -349,7 +348,7 @@ abstract class PortedKey
      *
      * @param fkcolumnName the value of {@value #COLUMN_NAME_FKCOLUMN_NAME} column.
      */
-    protected void setFkcolumnName(final String fkcolumnName) {
+    void setFkcolumnName(final String fkcolumnName) {
         this.fkcolumnName = fkcolumnName;
     }
 
@@ -369,7 +368,7 @@ abstract class PortedKey
      *
      * @param keySeq the value of {@value #COLUMN_NAME_KEY_SEQ} column.
      */
-    protected void setKeySeq(final Integer keySeq) {
+    void setKeySeq(final Integer keySeq) {
         this.keySeq = keySeq;
     }
 
@@ -389,7 +388,7 @@ abstract class PortedKey
      *
      * @param updateRule the value of {@value #COLUMN_NAME_UPDATE_RULE} column.
      */
-    protected void setUpdateRule(final Integer updateRule) {
+    void setUpdateRule(final Integer updateRule) {
         this.updateRule = updateRule;
     }
 
@@ -409,7 +408,7 @@ abstract class PortedKey
      *
      * @param deleteRule the value of {@value #COLUMN_NAME_DELETE_RULE} column.
      */
-    protected void setDeleteRule(final Integer deleteRule) {
+    void setDeleteRule(final Integer deleteRule) {
         this.deleteRule = deleteRule;
     }
 
@@ -429,7 +428,7 @@ abstract class PortedKey
      *
      * @param fkName the value of {@value #COLUMN_NAME_FK_NAME} column.
      */
-    public void setFkName(final String fkName) {
+    void setFkName(final String fkName) {
         this.fkName = fkName;
     }
 
@@ -449,7 +448,7 @@ abstract class PortedKey
      *
      * @param pkName the value of {@value #COLUMN_NAME_PK_NAME} column.
      */
-    public void setPkName(final String pkName) {
+    void setPkName(final String pkName) {
         this.pkName = pkName;
     }
 
@@ -469,17 +468,17 @@ abstract class PortedKey
      *
      * @param deferrability the value of {@value #COLUMN_NAME_DEFERRABILITY} column.
      */
-    protected void setDeferrability(final Integer deferrability) {
+    void setDeferrability(final Integer deferrability) {
         this.deferrability = deferrability;
     }
 
     // -----------------------------------------------------------------------------------------------------------------
-   @org.jspecify.annotations.Nullable
+    @org.jspecify.annotations.Nullable
     @_NullableBySpecification
     @_ColumnLabel(COLUMN_NAME_PKTABLE_CAT)
     String pktableCat;
 
-   @org.jspecify.annotations.Nullable
+    @org.jspecify.annotations.Nullable
     @_NullableBySpecification
     @_ColumnLabel(COLUMN_NAME_PKTABLE_SCHEM)
     String pktableSchem;
@@ -491,12 +490,12 @@ abstract class PortedKey
     String pkcolumnName;
 
     // -----------------------------------------------------------------------------------------------------------------
-   @org.jspecify.annotations.Nullable
+    @org.jspecify.annotations.Nullable
     @_NullableBySpecification
     @_ColumnLabel(COLUMN_NAME_FKTABLE_CAT)
     String fktableCat;
 
-   @org.jspecify.annotations.Nullable
+    @org.jspecify.annotations.Nullable
     @_NullableBySpecification
     @_ColumnLabel(COLUMN_NAME_FKTABLE_SCHEM)
     String fktableSchem;
@@ -519,12 +518,12 @@ abstract class PortedKey
     private Integer deleteRule;
 
     // -----------------------------------------------------------------------------------------------------------------
-   @org.jspecify.annotations.Nullable
+    @org.jspecify.annotations.Nullable
     @_NullableBySpecification
     @_ColumnLabel(COLUMN_NAME_FK_NAME)
     private String fkName;
 
-   @org.jspecify.annotations.Nullable
+    @org.jspecify.annotations.Nullable
     @_NullableBySpecification
     @_ColumnLabel(COLUMN_NAME_PK_NAME)
     private String pkName;

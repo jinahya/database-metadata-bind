@@ -73,7 +73,7 @@ public class TableType
     /**
      * Creates a new instance.
      */
-    public TableType() {
+     TableType() {
         super();
     }
 
@@ -102,7 +102,7 @@ public class TableType
      *
      * @param tableType the value of {@value #COLUMN_LABEL_TABLE_TYPE} column.
      */
-    public void setTableType(final String tableType) {
+    void setTableType(final String tableType) {
         this.tableType = tableType;
     }
 

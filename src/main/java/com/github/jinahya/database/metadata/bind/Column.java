@@ -20,10 +20,6 @@ package com.github.jinahya.database.metadata.bind;
  * #L%
  */
 
-import jakarta.validation.constraints.AssertTrue;
-import jakarta.validation.constraints.Pattern;
-import jakarta.validation.constraints.Positive;
-
 import java.sql.DatabaseMetaData;
 import java.sql.SQLException;
 import java.sql.Types;
@@ -110,12 +106,14 @@ public class Column
     );
 
     // -----------------------------------------------------------------------------------------------------------------
+
     /**
      * A column label of {@value}.
      */
     public static final String COLUMN_LABEL_IS_AUTOINCREMENT = "IS_AUTOINCREMENT";
 
     // -----------------------------------------------------------------------------------------------------------------
+
     /**
      * A column label of {@value}.
      */
@@ -255,7 +253,7 @@ public class Column
     /**
      * Creates a new instance.
      */
-    public Column() {
+     Column() {
         super();
     }
 
@@ -337,7 +335,6 @@ public class Column
     }
 
     // ------------------------------------------------------------------------------------------------- Bean-Validation
-    @AssertTrue(message = "nullable must be 1, 2, or 3")
     private boolean isNullableValid() {
         if (nullable == null) {
             return true;
@@ -345,7 +342,6 @@ public class Column
         return COLUMN_VALUES_NULLABLE.contains(nullable);
     }
 
-    @AssertTrue(message = "scopeCatalog must be null when dataType is not REF")
     private boolean isScopeCatalogValid() {
         if (scopeCatalog != null) {
             return true;
@@ -353,7 +349,6 @@ public class Column
         return dataType == null || !Objects.equals(dataType, Types.REF);
     }
 
-    @AssertTrue(message = "scopeSchema must be null when dataType is not REF")
     private boolean isScopeSchemaValid() {
         if (scopeSchema != null) {
             return true;
@@ -361,7 +356,6 @@ public class Column
         return dataType == null || !Objects.equals(dataType, Types.REF);
     }
 
-    @AssertTrue(message = "scopeTable must be null when dataType is not REF")
     private boolean isScopeTableValid() {
         if (scopeTable != null) {
             return true;
@@ -369,7 +363,6 @@ public class Column
         return dataType == null || !Objects.equals(dataType, Types.REF);
     }
 
-    @AssertTrue(message = "sourceDataType must be null if DATA_TYPE is not DISTINCT or user-generated REF")
     private boolean isSourceDataTypeValid() {
         if (sourceDataType != null) {
             return true;
@@ -395,7 +388,7 @@ public class Column
      *
      * @param tableCat the value of {@value #COLUMN_LABEL_TABLE_CAT} column.
      */
-    public void setTableCat(final String tableCat) {
+    void setTableCat(final String tableCat) {
         this.tableCat = tableCat;
     }
 
@@ -415,7 +408,7 @@ public class Column
      *
      * @param tableSchem the value of {@value #COLUMN_LABEL_TABLE_SCHEM} column.
      */
-    public void setTableSchem(final String tableSchem) {
+    void setTableSchem(final String tableSchem) {
         this.tableSchem = tableSchem;
     }
 
@@ -435,7 +428,7 @@ public class Column
      *
      * @param tableName the value of {@value #COLUMN_LABEL_TABLE_NAME} column.
      */
-    public void setTableName(final String tableName) {
+    void setTableName(final String tableName) {
         this.tableName = tableName;
     }
 
@@ -455,7 +448,7 @@ public class Column
      *
      * @param columnName the value of {@value #COLUMN_LABEL_COLUMN_NAME} column.
      */
-    public void setColumnName(final String columnName) {
+    void setColumnName(final String columnName) {
         this.columnName = columnName;
     }
 
@@ -475,7 +468,7 @@ public class Column
      *
      * @param dataType the value of {@code DATA_TYPE} column.
      */
-    public void setDataType(final Integer dataType) {
+    void setDataType(final Integer dataType) {
         this.dataType = dataType;
     }
 
@@ -495,7 +488,7 @@ public class Column
      *
      * @param typeName the value of {@code TYPE_NAME} column.
      */
-    public void setTypeName(final String typeName) {
+    void setTypeName(final String typeName) {
         this.typeName = typeName;
     }
 
@@ -515,7 +508,7 @@ public class Column
      *
      * @param columnSize the value of {@code COLUMN_SIZE} column.
      */
-    public void setColumnSize(final Integer columnSize) {
+    void setColumnSize(final Integer columnSize) {
         this.columnSize = columnSize;
     }
 
@@ -535,7 +528,7 @@ public class Column
      *
      * @param bufferLength the value of {@code BUFFER_LENGTH} column.
      */
-    public void setBufferLength(final Integer bufferLength) {
+    void setBufferLength(final Integer bufferLength) {
         this.bufferLength = bufferLength;
     }
 
@@ -555,7 +548,7 @@ public class Column
      *
      * @param decimalDigits the value of {@code DECIMAL_DIGITS} column.
      */
-    public void setDecimalDigits(final Integer decimalDigits) {
+    void setDecimalDigits(final Integer decimalDigits) {
         this.decimalDigits = decimalDigits;
     }
 
@@ -575,7 +568,7 @@ public class Column
      *
      * @param numPrecRadix the value of {@code NUM_PREC_RADIX} column.
      */
-    public void setNumPrecRadix(final Integer numPrecRadix) {
+    void setNumPrecRadix(final Integer numPrecRadix) {
         this.numPrecRadix = numPrecRadix;
     }
 
@@ -595,7 +588,7 @@ public class Column
      *
      * @param nullable the value of {@value #COLUMN_LABEL_NULLABLE} column.
      */
-    public void setNullable(final Integer nullable) {
+    void setNullable(final Integer nullable) {
         this.nullable = nullable;
     }
 
@@ -615,7 +608,7 @@ public class Column
      *
      * @param remarks the value of {@code REMARKS} column.
      */
-    public void setRemarks(final String remarks) {
+    void setRemarks(final String remarks) {
         this.remarks = remarks;
     }
 
@@ -635,7 +628,7 @@ public class Column
      *
      * @param columnDef the value of {@code COLUMN_DEF} column.
      */
-    public void setColumnDef(final String columnDef) {
+    void setColumnDef(final String columnDef) {
         this.columnDef = columnDef;
     }
 
@@ -655,7 +648,7 @@ public class Column
      *
      * @param sqlDataType the value of {@code SQL_DATA_TYPE} column.
      */
-    public void setSqlDataType(final Integer sqlDataType) {
+    void setSqlDataType(final Integer sqlDataType) {
         this.sqlDataType = sqlDataType;
     }
 
@@ -675,7 +668,7 @@ public class Column
      *
      * @param sqlDatetimeSub the value of {@code SQL_DATETIME_SUB} column.
      */
-    public void setSqlDatetimeSub(final Integer sqlDatetimeSub) {
+    void setSqlDatetimeSub(final Integer sqlDatetimeSub) {
         this.sqlDatetimeSub = sqlDatetimeSub;
     }
 
@@ -695,7 +688,7 @@ public class Column
      *
      * @param charOctetLength the value of {@code CHAR_OCTET_LENGTH} column.
      */
-    public void setCharOctetLength(final Integer charOctetLength) {
+    void setCharOctetLength(final Integer charOctetLength) {
         this.charOctetLength = charOctetLength;
     }
 
@@ -715,7 +708,7 @@ public class Column
      *
      * @param ordinalPosition the value of {@code ORDINAL_POSITION} column.
      */
-    public void setOrdinalPosition(final Integer ordinalPosition) {
+    void setOrdinalPosition(final Integer ordinalPosition) {
         this.ordinalPosition = ordinalPosition;
     }
 
@@ -735,7 +728,7 @@ public class Column
      *
      * @param isNullable the value of {@code IS_NULLABLE} column.
      */
-    public void setIsNullable(final String isNullable) {
+    void setIsNullable(final String isNullable) {
         this.isNullable = isNullable;
     }
 
@@ -755,7 +748,7 @@ public class Column
      *
      * @param scopeCatalog the value of {@code SCOPE_CATALOG} column.
      */
-    public void setScopeCatalog(final String scopeCatalog) {
+    void setScopeCatalog(final String scopeCatalog) {
         this.scopeCatalog = scopeCatalog;
     }
 
@@ -775,7 +768,7 @@ public class Column
      *
      * @param scopeSchema the value of {@code SCOPE_SCHEMA} column.
      */
-    public void setScopeSchema(final String scopeSchema) {
+    void setScopeSchema(final String scopeSchema) {
         this.scopeSchema = scopeSchema;
     }
 
@@ -795,7 +788,7 @@ public class Column
      *
      * @param scopeTable the value of {@code SCOPE_TABLE} column.
      */
-    public void setScopeTable(final String scopeTable) {
+    void setScopeTable(final String scopeTable) {
         this.scopeTable = scopeTable;
     }
 
@@ -815,7 +808,7 @@ public class Column
      *
      * @param sourceDataType the value of {@code SOURCE_DATA_TYPE} column.
      */
-    public void setSourceDataType(final Integer sourceDataType) {
+    void setSourceDataType(final Integer sourceDataType) {
         this.sourceDataType = sourceDataType;
     }
 
@@ -835,7 +828,7 @@ public class Column
      *
      * @param isAutoincrement the value of {@value #COLUMN_LABEL_IS_AUTOINCREMENT} column.
      */
-    public void setIsAutoincrement(final String isAutoincrement) {
+    void setIsAutoincrement(final String isAutoincrement) {
         this.isAutoincrement = isAutoincrement;
     }
 
@@ -855,18 +848,18 @@ public class Column
      *
      * @param isGeneratedcolumn the value of {@value #COLUMN_LABEL_IS_GENERATEDCOLUMN} column.
      */
-    public void setIsGeneratedcolumn(final String isGeneratedcolumn) {
+    void setIsGeneratedcolumn(final String isGeneratedcolumn) {
         this.isGeneratedcolumn = isGeneratedcolumn;
     }
 
     // -----------------------------------------------------------------------------------------------------------------
 
-   @org.jspecify.annotations.Nullable
+    @org.jspecify.annotations.Nullable
     @_NullableBySpecification
     @_ColumnLabel(COLUMN_LABEL_TABLE_CAT)
     private String tableCat;
 
-   @org.jspecify.annotations.Nullable
+    @org.jspecify.annotations.Nullable
     @_NullableBySpecification
     @_ColumnLabel(COLUMN_LABEL_TABLE_SCHEM)
     private String tableSchem;
@@ -884,17 +877,17 @@ public class Column
     @_ColumnLabel(COLUMN_LABEL_TYPE_NAME)
     private String typeName;
 
-   @org.jspecify.annotations.Nullable
+    @org.jspecify.annotations.Nullable
     @_NullableBySpecification
     @_ColumnLabel(COLUMN_LABEL_COLUMN_SIZE)
     private Integer columnSize;
 
-   @org.jspecify.annotations.Nullable
+    @org.jspecify.annotations.Nullable
     @_NotUsedBySpecification
     @_ColumnLabel(COLUMN_LABEL_BUFFER_LENGTH)
     private Integer bufferLength;
 
-   @org.jspecify.annotations.Nullable
+    @org.jspecify.annotations.Nullable
     @_NullableBySpecification
     @_ColumnLabel(COLUMN_LABEL_DECIMAL_DIGITS)
     private Integer decimalDigits;
@@ -905,32 +898,31 @@ public class Column
     @_ColumnLabel(COLUMN_LABEL_NULLABLE)
     private Integer nullable;
 
-   @org.jspecify.annotations.Nullable
+    @org.jspecify.annotations.Nullable
     @_NullableBySpecification
     @_ColumnLabel(COLUMN_LABEL_REMARKS)
     private String remarks;
 
-   @org.jspecify.annotations.Nullable
+    @org.jspecify.annotations.Nullable
     @_NullableBySpecification
     @_ColumnLabel(COLUMN_LABEL_COLUMN_DEF)
     private String columnDef;
 
-   @org.jspecify.annotations.Nullable
+    @org.jspecify.annotations.Nullable
     @_NotUsedBySpecification
     @_ColumnLabel(COLUMN_LABEL_SQL_DATA_TYPE)
     private Integer sqlDataType;
 
-   @org.jspecify.annotations.Nullable
+    @org.jspecify.annotations.Nullable
     @_NotUsedBySpecification
     @_ColumnLabel(COLUMN_LABEL_SQL_DATETIME_SUB)
     private Integer sqlDatetimeSub;
 
-   @org.jspecify.annotations.Nullable
+    @org.jspecify.annotations.Nullable
     @_NullableBySpecification
     @_ColumnLabel(COLUMN_LABEL_CHAR_OCTET_LENGTH)
     private Integer charOctetLength;
 
-    @Positive
     @_ColumnLabel(COLUMN_LABEL_ORDINAL_POSITION)
     private Integer ordinalPosition;
 
@@ -939,33 +931,31 @@ public class Column
 
     // -----------------------------------------------------------------------------------------------------------------
 
-   @org.jspecify.annotations.Nullable
+    @org.jspecify.annotations.Nullable
     @_NullableBySpecification
     @_ColumnLabel(COLUMN_LABEL_SCOPE_CATALOG)
     private String scopeCatalog;
 
-   @org.jspecify.annotations.Nullable
+    @org.jspecify.annotations.Nullable
     @_NullableBySpecification
     @_ColumnLabel(COLUMN_LABEL_SCOPE_SCHEMA)
     private String scopeSchema;
 
-   @org.jspecify.annotations.Nullable
+    @org.jspecify.annotations.Nullable
     @_NullableBySpecification
     @_ColumnLabel(COLUMN_LABEL_SCOPE_TABLE)
     private String scopeTable;
 
     // -----------------------------------------------------------------------------------------------------------------
 
-   @org.jspecify.annotations.Nullable
+    @org.jspecify.annotations.Nullable
     @_NullableBySpecification
     @_ColumnLabel(COLUMN_LABEL_SOURCE_DATA_TYPE)
     private Integer sourceDataType;
 
-    @Pattern(regexp = MetadataTypeConstants.PATTERN_REGEXP_YES_NO_OR_EMPTY)
     @_ColumnLabel(COLUMN_LABEL_IS_AUTOINCREMENT)
     private String isAutoincrement;
 
-    @Pattern(regexp = MetadataTypeConstants.PATTERN_REGEXP_YES_NO_OR_EMPTY)
     @_ColumnLabel(COLUMN_LABEL_IS_GENERATEDCOLUMN)
     private String isGeneratedcolumn;
 }

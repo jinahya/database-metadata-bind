@@ -160,11 +160,11 @@
     <!--      <artifactId>jakarta.annotation-api</artifactId>-->
     <!--      <scope>provided</scope>-->
     <!--    </dependency>-->
-    <dependency>
-      <groupId>jakarta.validation</groupId>
-      <artifactId>jakarta.validation-api</artifactId>
-      <scope>provided</scope>
-    </dependency>
+<!--    <dependency>-->
+<!--      <groupId>jakarta.validation</groupId>-->
+<!--      <artifactId>jakarta.validation-api</artifactId>-->
+<!--      <scope>provided</scope>-->
+<!--    </dependency>-->
     <dependency>
       <groupId>nl.jqno.equalsverifier</groupId>
       <artifactId>equalsverifier-nodep</artifactId>

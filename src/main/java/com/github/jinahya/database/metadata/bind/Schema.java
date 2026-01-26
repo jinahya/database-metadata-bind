@@ -20,7 +20,6 @@ package com.github.jinahya.database.metadata.bind;
  * #L%
  */
 
-
 import java.sql.SQLException;
 import java.util.Comparator;
 import java.util.Objects;
@@ -115,7 +114,7 @@ public class Schema
     @SuppressWarnings({
             "java:S2637" // "@NonNull" values should not be set to null
     })
-    protected Schema() {
+     Schema() {
         super();
     }
 
@@ -145,7 +144,7 @@ public class Schema
      *
      * @param tableSchem the value of {@value #COLUMN_LABEL_TABLE_SCHEM} column.
      */
-    public void setTableSchem(final String tableSchem) {
+    void setTableSchem(final String tableSchem) {
         this.tableSchem = tableSchem;
     }
 
@@ -165,7 +164,7 @@ public class Schema
      *
      * @param tableCatalog the value of {@value #COLUMN_LABEL_TABLE_CATALOG} column.
      */
-    protected void setTableCatalog(final String tableCatalog) {
+    void setTableCatalog(final String tableCatalog) {
         this.tableCatalog = tableCatalog;
     }
 
@@ -174,7 +173,7 @@ public class Schema
     @_ColumnLabel(COLUMN_LABEL_TABLE_SCHEM)
     private String tableSchem;
 
-   @org.jspecify.annotations.Nullable
+    @org.jspecify.annotations.Nullable
     @_NullableBySpecification
     @_ColumnLabel(COLUMN_LABEL_TABLE_CATALOG)
     private String tableCatalog;

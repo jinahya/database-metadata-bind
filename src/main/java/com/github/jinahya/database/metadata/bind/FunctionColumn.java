@@ -20,9 +20,6 @@ package com.github.jinahya.database.metadata.bind;
  * #L%
  */
 
-import jakarta.validation.constraints.Pattern;
-import jakarta.validation.constraints.PositiveOrZero;
-
 import java.sql.DatabaseMetaData;
 import java.sql.SQLException;
 import java.util.Comparator;
@@ -83,42 +80,49 @@ public class FunctionColumn
     }
 
     // -----------------------------------------------------------------------------------------------------------------
+
     /**
      * A column label of {@value}.
      */
     public static final String COLUMN_LABEL_FUNCTION_CAT = "FUNCTION_CAT";
 
     // -----------------------------------------------------------------------------------------------------------------
+
     /**
      * A column label of {@value}.
      */
     public static final String COLUMN_LABEL_FUNCTION_SCHEM = "FUNCTION_SCHEM";
 
     // -----------------------------------------------------------------------------------------------------------------
+
     /**
      * A column label of {@value}.
      */
     public static final String COLUMN_LABEL_FUNCTION_NAME = "FUNCTION_NAME";
 
     // -----------------------------------------------------------------------------------------------------------------
+
     /**
      * A column label of {@value}.
      */
     public static final String COLUMN_LABEL_COLUMN_NAME = "COLUMN_NAME";
 
     // -----------------------------------------------------------------------------------------------------------------
+
     /**
      * A column label of {@value}.
      */
     public static final String COLUMN_LABEL_COLUMN_TYPE = "COLUMN_TYPE";
 
     // -----------------------------------------------------------------------------------------------------------------
+
     /**
      * A column label of {@value}.
      */
     public static final String COLUMN_LABEL_NULLABLE = "NULLABLE";
 
     // -----------------------------------------------------------------------------------------------------------------
+
     /**
      * A column label of {@value}.
      */
@@ -201,7 +205,7 @@ public class FunctionColumn
     /**
      * Creates a new instance.
      */
-    public FunctionColumn() {
+     FunctionColumn() {
         super();
     }
 
@@ -246,7 +250,7 @@ public class FunctionColumn
      *
      * @param functionCat the value of {@value #COLUMN_LABEL_FUNCTION_CAT} column.
      */
-    public void setFunctionCat(final String functionCat) {
+    void setFunctionCat(final String functionCat) {
         this.functionCat = functionCat;
     }
 
@@ -266,7 +270,7 @@ public class FunctionColumn
      *
      * @param functionSchem the value of {@value #COLUMN_LABEL_FUNCTION_SCHEM} column.
      */
-    public void setFunctionSchem(final String functionSchem) {
+    void setFunctionSchem(final String functionSchem) {
         this.functionSchem = functionSchem;
     }
 
@@ -286,7 +290,7 @@ public class FunctionColumn
      *
      * @param functionName the value of {@value #COLUMN_LABEL_FUNCTION_NAME} column.
      */
-    public void setFunctionName(final String functionName) {
+    void setFunctionName(final String functionName) {
         this.functionName = functionName;
     }
 
@@ -306,7 +310,7 @@ public class FunctionColumn
      *
      * @param columnName the value of {@value #COLUMN_LABEL_COLUMN_NAME} column.
      */
-    public void setColumnName(final String columnName) {
+    void setColumnName(final String columnName) {
         this.columnName = columnName;
     }
 
@@ -326,7 +330,7 @@ public class FunctionColumn
      *
      * @param columnType the value of {@value #COLUMN_LABEL_COLUMN_TYPE} column.
      */
-    public void setColumnType(final Integer columnType) {
+    void setColumnType(final Integer columnType) {
         this.columnType = columnType;
     }
 
@@ -346,7 +350,7 @@ public class FunctionColumn
      *
      * @param dataType the value of {@code DATA_TYPE} column.
      */
-    public void setDataType(final Integer dataType) {
+    void setDataType(final Integer dataType) {
         this.dataType = dataType;
     }
 
@@ -366,7 +370,7 @@ public class FunctionColumn
      *
      * @param typeName the value of {@code TYPE_NAME} column.
      */
-    public void setTypeName(final String typeName) {
+    void setTypeName(final String typeName) {
         this.typeName = typeName;
     }
 
@@ -386,7 +390,7 @@ public class FunctionColumn
      *
      * @param precision the value of {@code PRECISION} column.
      */
-    public void setPrecision(final Integer precision) {
+    void setPrecision(final Integer precision) {
         this.precision = precision;
     }
 
@@ -406,7 +410,7 @@ public class FunctionColumn
      *
      * @param length the value of {@code LENGTH} column.
      */
-    public void setLength(final Integer length) {
+    void setLength(final Integer length) {
         this.length = length;
     }
 
@@ -426,7 +430,7 @@ public class FunctionColumn
      *
      * @param scale the value of {@code SCALE} column.
      */
-    public void setScale(final Integer scale) {
+    void setScale(final Integer scale) {
         this.scale = scale;
     }
 
@@ -446,7 +450,7 @@ public class FunctionColumn
      *
      * @param radix the value of {@code RADIX} column.
      */
-    public void setRadix(final Integer radix) {
+    void setRadix(final Integer radix) {
         this.radix = radix;
     }
 
@@ -466,7 +470,7 @@ public class FunctionColumn
      *
      * @param nullable the value of {@value #COLUMN_LABEL_NULLABLE} column.
      */
-    public void setNullable(final Integer nullable) {
+    void setNullable(final Integer nullable) {
         this.nullable = nullable;
     }
 
@@ -486,7 +490,7 @@ public class FunctionColumn
      *
      * @param remarks the value of {@code REMARKS} column.
      */
-    public void setRemarks(final String remarks) {
+    void setRemarks(final String remarks) {
         this.remarks = remarks;
     }
 
@@ -506,7 +510,7 @@ public class FunctionColumn
      *
      * @param charOctetLength the value of {@code CHAR_OCTET_LENGTH} column.
      */
-    public void setCharOctetLength(final Integer charOctetLength) {
+    void setCharOctetLength(final Integer charOctetLength) {
         this.charOctetLength = charOctetLength;
     }
 
@@ -526,7 +530,7 @@ public class FunctionColumn
      *
      * @param ordinalPosition the value of {@code ORDINAL_POSITION} column.
      */
-    public void setOrdinalPosition(final Integer ordinalPosition) {
+    void setOrdinalPosition(final Integer ordinalPosition) {
         this.ordinalPosition = ordinalPosition;
     }
 
@@ -546,7 +550,7 @@ public class FunctionColumn
      *
      * @param isNullable the value of {@value #COLUMN_LABEL_IS_NULLABLE} column.
      */
-    public void setIsNullable(final String isNullable) {
+    void setIsNullable(final String isNullable) {
         this.isNullable = isNullable;
     }
 
@@ -566,7 +570,7 @@ public class FunctionColumn
      *
      * @param specificName the value of {@code SPECIFIC_NAME} column.
      */
-    public void setSpecificName(final String specificName) {
+    void setSpecificName(final String specificName) {
         this.specificName = specificName;
     }
 
@@ -625,11 +629,9 @@ public class FunctionColumn
     @_ColumnLabel(COLUMN_LABEL_CHAR_OCTET_LENGTH)
     private Integer charOctetLength;
 
-    @PositiveOrZero
     @_ColumnLabel(COLUMN_LABEL_ORDINAL_POSITION)
     private Integer ordinalPosition;
 
-    @Pattern(regexp = MetadataTypeConstants.PATTERN_REGEXP_YES_NO_OR_EMPTY)
     @_ColumnLabel(COLUMN_LABEL_IS_NULLABLE)
     private String isNullable;
 

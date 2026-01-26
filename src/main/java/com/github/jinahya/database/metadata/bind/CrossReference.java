@@ -20,8 +20,6 @@ package com.github.jinahya.database.metadata.bind;
  * #L%
  */
 
-import jakarta.validation.constraints.Positive;
-
 import java.sql.DatabaseMetaData;
 import java.sql.SQLException;
 import java.util.Comparator;
@@ -63,48 +61,56 @@ public class CrossReference
     public static final String COLUMN_LABEL_PKTABLE_CAT = "PKTABLE_CAT";
 
     // --------------------------------------------------------------------------------------------------- PKTABLE_SCHEM
+
     /**
      * A column label of {@value}.
      */
     public static final String COLUMN_LABEL_PKTABLE_SCHEM = "PKTABLE_SCHEM";
 
     // ---------------------------------------------------------------------------------------------------- PKTABLE_NAME
+
     /**
      * A column label of {@value}.
      */
     public static final String COLUMN_LABEL_PKTABLE_NAME = "PKTABLE_NAME";
 
     // --------------------------------------------------------------------------------------------------- PKCOLUMN_NAME
+
     /**
      * A column label of {@value}.
      */
     public static final String COLUMN_LABEL_PKCOLUMN_NAME = "PKCOLUMN_NAME";
 
     // ----------------------------------------------------------------------------------------------------- FKTABLE_CAT
+
     /**
      * A column label of {@value}.
      */
     public static final String COLUMN_LABEL_FKTABLE_CAT = "FKTABLE_CAT";
 
     // --------------------------------------------------------------------------------------------------- FKTABLE_SCHEM
+
     /**
      * A column label of {@value}.
      */
     public static final String COLUMN_LABEL_FKTABLE_SCHEM = "FKTABLE_SCHEM";
 
     // ---------------------------------------------------------------------------------------------------- FKTABLE_NAME
+
     /**
      * A column label of {@value}.
      */
     public static final String COLUMN_LABEL_FKTABLE_NAME = "FKTABLE_NAME";
 
     // --------------------------------------------------------------------------------------------------- FKCOLUMN_NAME
+
     /**
      * A column label of {@value}.
      */
     public static final String COLUMN_LABEL_FKCOLUMN_NAME = "FKCOLUMN_NAME";
 
     // --------------------------------------------------------------------------------------------------------- KEY_SEQ
+
     /**
      * A column label of {@value}.
      */
@@ -136,6 +142,7 @@ public class CrossReference
     );
 
     // ----------------------------------------------------------------------------------------------------- DELETE_RULE
+
     /**
      * A column label of {@value}.
      */
@@ -160,18 +167,21 @@ public class CrossReference
     );
 
     // --------------------------------------------------------------------------------------------------------- FK_NAME
+
     /**
      * A column label of {@value}.
      */
     public static final String COLUMN_LABEL_FK_NAME = "FK_NAME";
 
     // --------------------------------------------------------------------------------------------------------- PK_NAME
+
     /**
      * A column label of {@value}.
      */
     public static final String COLUMN_LABEL_PK_NAME = "PK_NAME";
 
     // --------------------------------------------------------------------------------------------------- DEFERRABILITY
+
     /**
      * A column label of {@value}.
      */
@@ -199,7 +209,7 @@ public class CrossReference
     /**
      * Creates a new instance.
      */
-    public CrossReference() {
+     CrossReference() {
         super();
     }
 
@@ -280,7 +290,7 @@ public class CrossReference
      *
      * @param pktableCat the value of {@value #COLUMN_LABEL_PKTABLE_CAT} column.
      */
-    protected void setPktableCat(final String pktableCat) {
+    void setPktableCat(final String pktableCat) {
         this.pktableCat = pktableCat;
     }
 
@@ -300,7 +310,7 @@ public class CrossReference
      *
      * @param pktableSchem the value of {@value #COLUMN_LABEL_PKTABLE_SCHEM} column.
      */
-    protected void setPktableSchem(final String pktableSchem) {
+    void setPktableSchem(final String pktableSchem) {
         this.pktableSchem = pktableSchem;
     }
 
@@ -320,7 +330,7 @@ public class CrossReference
      *
      * @param pktableName the value of {@value #COLUMN_LABEL_PKTABLE_NAME} column.
      */
-    protected void setPktableName(final String pktableName) {
+    void setPktableName(final String pktableName) {
         this.pktableName = pktableName;
     }
 
@@ -340,7 +350,7 @@ public class CrossReference
      *
      * @param pkcolumnName the value of {@value #COLUMN_LABEL_PKCOLUMN_NAME} column.
      */
-    protected void setPkcolumnName(final String pkcolumnName) {
+    void setPkcolumnName(final String pkcolumnName) {
         this.pkcolumnName = pkcolumnName;
     }
 
@@ -360,7 +370,7 @@ public class CrossReference
      *
      * @param fktableCat the value of {@value #COLUMN_LABEL_FKTABLE_CAT} column.
      */
-    protected void setFktableCat(final String fktableCat) {
+    void setFktableCat(final String fktableCat) {
         this.fktableCat = fktableCat;
     }
 
@@ -380,7 +390,7 @@ public class CrossReference
      *
      * @param fktableSchem the value of {@value #COLUMN_LABEL_FKTABLE_SCHEM} column.
      */
-    protected void setFktableSchem(final String fktableSchem) {
+    void setFktableSchem(final String fktableSchem) {
         this.fktableSchem = fktableSchem;
     }
 
@@ -400,7 +410,7 @@ public class CrossReference
      *
      * @param fktableName the value of {@value #COLUMN_LABEL_FKTABLE_NAME} column.
      */
-    protected void setFktableName(final String fktableName) {
+    void setFktableName(final String fktableName) {
         this.fktableName = fktableName;
     }
 
@@ -420,7 +430,7 @@ public class CrossReference
      *
      * @param fkcolumnName the value of {@value #COLUMN_LABEL_FKCOLUMN_NAME} column.
      */
-    protected void setFkcolumnName(final String fkcolumnName) {
+    void setFkcolumnName(final String fkcolumnName) {
         this.fkcolumnName = fkcolumnName;
     }
 
@@ -440,7 +450,7 @@ public class CrossReference
      *
      * @param keySeq the value of {@value #COLUMN_LABEL_KEY_SEQ} column.
      */
-    protected void setKeySeq(final Integer keySeq) {
+    void setKeySeq(final Integer keySeq) {
         this.keySeq = keySeq;
     }
 
@@ -460,7 +470,7 @@ public class CrossReference
      *
      * @param updateRule the value of {@value #COLUMN_LABEL_UPDATE_RULE} column.
      */
-    protected void setUpdateRule(final Integer updateRule) {
+    void setUpdateRule(final Integer updateRule) {
         this.updateRule = updateRule;
     }
 
@@ -480,7 +490,7 @@ public class CrossReference
      *
      * @param deleteRule the value of {@value #COLUMN_LABEL_DELETE_RULE} column.
      */
-    protected void setDeleteRule(final Integer deleteRule) {
+    void setDeleteRule(final Integer deleteRule) {
         this.deleteRule = deleteRule;
     }
 
@@ -500,7 +510,7 @@ public class CrossReference
      *
      * @param fkName the value of {@value #COLUMN_LABEL_FK_NAME} column.
      */
-    protected void setFkName(final String fkName) {
+    void setFkName(final String fkName) {
         this.fkName = fkName;
     }
 
@@ -520,7 +530,7 @@ public class CrossReference
      *
      * @param pkName the value of {@value #COLUMN_LABEL_PK_NAME} column.
      */
-    protected void setPkName(final String pkName) {
+    void setPkName(final String pkName) {
         this.pkName = pkName;
     }
 
@@ -540,7 +550,7 @@ public class CrossReference
      *
      * @param deferrability the value of {@value #COLUMN_LABEL_DEFERRABILITY} column.
      */
-    protected void setDeferrability(final Integer deferrability) {
+    void setDeferrability(final Integer deferrability) {
         this.deferrability = deferrability;
     }
 
@@ -581,7 +591,6 @@ public class CrossReference
     private String fkcolumnName;
 
     // -----------------------------------------------------------------------------------------------------------------
-    @Positive
     @_ColumnLabel(COLUMN_LABEL_KEY_SEQ)
     private Integer keySeq;
 

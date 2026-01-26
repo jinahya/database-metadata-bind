@@ -20,7 +20,6 @@ package com.github.jinahya.database.metadata.bind;
  * #L%
  */
 
-
 import java.sql.DatabaseMetaData;
 import java.sql.SQLException;
 import java.sql.Types;
@@ -133,6 +132,13 @@ public class UDT
 
     // ---------------------------------------------------------------------------------------------------- CONSTRUCTORS
 
+    /**
+     * Creates a new instance.
+     */
+    UDT() {
+        super();
+    }
+
     // ------------------------------------------------------------------------------------------------ java.lang.Object
 
     @Override
@@ -164,7 +170,7 @@ public class UDT
      *
      * @param typeCat the value of {@value #COLUMN_LABEL_TYPE_CAT} column.
      */
-    protected void setTypeCat(final String typeCat) {
+    void setTypeCat(final String typeCat) {
         this.typeCat = typeCat;
     }
 
@@ -184,7 +190,7 @@ public class UDT
      *
      * @param typeSchem the value of {@value #COLUMN_LABEL_TYPE_SCHEM} column.
      */
-    protected void setTypeSchem(final String typeSchem) {
+    void setTypeSchem(final String typeSchem) {
         this.typeSchem = typeSchem;
     }
 
@@ -204,7 +210,7 @@ public class UDT
      *
      * @param typeName the value of {@value #COLUMN_LABEL_TYPE_NAME} column.
      */
-    protected void setTypeName(final String typeName) {
+    void setTypeName(final String typeName) {
         this.typeName = typeName;
     }
 
@@ -224,7 +230,7 @@ public class UDT
      *
      * @param className the value of {@value #COLUMN_LABEL_CLASS_NAME} column.
      */
-    protected void setClassName(final String className) {
+    void setClassName(final String className) {
         this.className = className;
     }
 
@@ -244,7 +250,7 @@ public class UDT
      *
      * @param dataType the value of {@value #COLUMN_LABEL_DATA_TYPE} column.
      */
-    protected void setDataType(final Integer dataType) {
+    void setDataType(final Integer dataType) {
         this.dataType = dataType;
     }
 
@@ -264,7 +270,7 @@ public class UDT
      *
      * @param remarks the value of {@value #COLUMN_LABEL_REMARKS} column.
      */
-    protected void setRemarks(final String remarks) {
+    void setRemarks(final String remarks) {
         this.remarks = remarks;
     }
 
@@ -284,19 +290,19 @@ public class UDT
      *
      * @param baseType the value of {@value #COLUMN_LABEL_BASE_TYPE} column.
      */
-    protected void setBaseType(final Integer baseType) {
+    void setBaseType(final Integer baseType) {
         this.baseType = baseType;
     }
 
     // -----------------------------------------------------------------------------------------------------------------
 
-   @org.jspecify.annotations.Nullable
+    @org.jspecify.annotations.Nullable
     @_NullableBySpecification
     @_ColumnLabel(COLUMN_LABEL_TYPE_CAT)
 
     private String typeCat;
 
-   @org.jspecify.annotations.Nullable
+    @org.jspecify.annotations.Nullable
     @_NullableBySpecification
     @_ColumnLabel(COLUMN_LABEL_TYPE_SCHEM)
 
@@ -316,7 +322,7 @@ public class UDT
     @_ColumnLabel(COLUMN_LABEL_REMARKS)
     private String remarks;
 
-   @org.jspecify.annotations.Nullable
+    @org.jspecify.annotations.Nullable
     @_NullableBySpecification
     @_ColumnLabel(COLUMN_LABEL_BASE_TYPE)
     private Integer baseType;

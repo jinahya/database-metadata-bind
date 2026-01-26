@@ -20,7 +20,6 @@ package com.github.jinahya.database.metadata.bind;
  * #L%
  */
 
-
 import java.sql.DatabaseMetaData;
 import java.sql.SQLException;
 import java.util.Comparator;
@@ -76,6 +75,7 @@ public class Procedure
     }
 
     // -------------------------------------------------------------------------------------------------- PROCEDURE_TYPE
+
     /**
      * A column label of {@value}.
      */
@@ -131,7 +131,7 @@ public class Procedure
     /**
      * Creates a new instance.
      */
-    protected Procedure() {
+     Procedure() {
         super();
     }
 
@@ -165,7 +165,7 @@ public class Procedure
      *
      * @param procedureCat the value of {@code PROCEDURE_CAT} column.
      */
-    protected void setProcedureCat(final String procedureCat) {
+    void setProcedureCat(final String procedureCat) {
         this.procedureCat = procedureCat;
     }
 
@@ -185,7 +185,7 @@ public class Procedure
      *
      * @param procedureSchem the value of {@code PROCEDURE_SCHEM} column.
      */
-    protected void setProcedureSchem(final String procedureSchem) {
+    void setProcedureSchem(final String procedureSchem) {
         this.procedureSchem = procedureSchem;
     }
 
@@ -205,7 +205,7 @@ public class Procedure
      *
      * @param procedureName the value of {@code PROCEDURE_NAME} column.
      */
-    protected void setProcedureName(final String procedureName) {
+    void setProcedureName(final String procedureName) {
         this.procedureName = procedureName;
     }
 
@@ -225,7 +225,7 @@ public class Procedure
      *
      * @param remarks the value of {@code REMARKS} column.
      */
-    protected void setRemarks(final String remarks) {
+    void setRemarks(final String remarks) {
         this.remarks = remarks;
     }
 
@@ -245,7 +245,7 @@ public class Procedure
      *
      * @param procedureType the value of {@value #COLUMN_LABEL_PROCEDURE_TYPE} column.
      */
-    protected void setProcedureType(final Integer procedureType) {
+    void setProcedureType(final Integer procedureType) {
         this.procedureType = procedureType;
     }
 
@@ -265,18 +265,18 @@ public class Procedure
      *
      * @param specificName the value of {@value #COLUMN_LABEL_SPECIFIC_NAME} column.
      */
-    protected void setSpecificName(final String specificName) {
+    void setSpecificName(final String specificName) {
         this.specificName = specificName;
     }
 
     // -----------------------------------------------------------------------------------------------------------------
 
-   @org.jspecify.annotations.Nullable
+    @org.jspecify.annotations.Nullable
     @_NullableBySpecification
     @_ColumnLabel(COLUMN_LABEL_PROCEDURE_CAT)
     private String procedureCat;
 
-   @org.jspecify.annotations.Nullable
+    @org.jspecify.annotations.Nullable
     @_NullableBySpecification
     @_ColumnLabel(COLUMN_LABEL_PROCEDURE_SCHEM)
     private String procedureSchem;

@@ -21,7 +21,6 @@ package com.github.jinahya.database.metadata.bind;
  */
 
 import nl.jqno.equalsverifier.api.SingleTypeEqualsVerifierApi;
-import org.junit.jupiter.api.Test;
 
 class ProcedureColumnTest
         extends AbstractMetadataType_Test<ProcedureColumn> {
@@ -40,7 +39,8 @@ class ProcedureColumnTest
     @Override
     SingleTypeEqualsVerifierApi<ProcedureColumn> equalsVerifier() {
         return super.equalsVerifier()
-                .withOnlyTheseFields("procedureCat", "procedureSchem", "procedureName", "columnName", "ordinalPosition");
+                .withOnlyTheseFields("procedureCat", "procedureSchem", "procedureName", "columnName",
+                                     "ordinalPosition");
     }
 
     // -----------------------------------------------------------------------------------------------------------------

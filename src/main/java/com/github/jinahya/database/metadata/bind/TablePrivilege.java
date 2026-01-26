@@ -121,7 +121,7 @@ public class TablePrivilege
     /**
      * Creates a new instance.
      */
-    protected TablePrivilege() {
+     TablePrivilege() {
         super();
     }
 
@@ -155,7 +155,7 @@ public class TablePrivilege
      *
      * @param tableCat the value of {@value #COLUMN_LABEL_TABLE_CAT} column.
      */
-    protected void setTableCat(final String tableCat) {
+    void setTableCat(final String tableCat) {
         this.tableCat = tableCat;
     }
 
@@ -175,7 +175,7 @@ public class TablePrivilege
      *
      * @param tableSchem the value of {@value #COLUMN_LABEL_TABLE_SCHEM} column.
      */
-    protected void setTableSchem(final String tableSchem) {
+    void setTableSchem(final String tableSchem) {
         this.tableSchem = tableSchem;
     }
 
@@ -195,7 +195,7 @@ public class TablePrivilege
      *
      * @param tableName the value of {@value #COLUMN_LABEL_TABLE_NAME} column.
      */
-    protected void setTableName(final String tableName) {
+    void setTableName(final String tableName) {
         this.tableName = tableName;
     }
 
@@ -215,7 +215,7 @@ public class TablePrivilege
      *
      * @param grantor the value of {@value #COLUMN_LABEL_GRANTOR} column.
      */
-    protected void setGrantor(final String grantor) {
+    void setGrantor(final String grantor) {
         this.grantor = grantor;
     }
 
@@ -235,7 +235,7 @@ public class TablePrivilege
      *
      * @param grantee the value of {@value #COLUMN_LABEL_GRANTEE} column.
      */
-    protected void setGrantee(final String grantee) {
+    void setGrantee(final String grantee) {
         this.grantee = grantee;
     }
 
@@ -255,7 +255,7 @@ public class TablePrivilege
      *
      * @param privilege the value of {@value #COLUMN_LABEL_PRIVILEGE} column.
      */
-    protected void setPrivilege(final String privilege) {
+    void setPrivilege(final String privilege) {
         this.privilege = privilege;
     }
 
@@ -275,7 +275,7 @@ public class TablePrivilege
      *
      * @param isGrantable the value of {@value #COLUMN_LABEL_IS_GRANTABLE} column.
      */
-    protected void setIsGrantable(final String isGrantable) {
+    void setIsGrantable(final String isGrantable) {
         this.isGrantable = isGrantable;
     }
 

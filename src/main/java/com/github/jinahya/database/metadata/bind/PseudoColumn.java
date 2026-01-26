@@ -20,7 +20,6 @@ package com.github.jinahya.database.metadata.bind;
  * #L%
  */
 
-
 import java.sql.DatabaseMetaData;
 import java.sql.SQLException;
 import java.util.Comparator;
@@ -76,6 +75,7 @@ public class PseudoColumn
     }
 
     // -----------------------------------------------------------------------------------------------------------------
+
     /**
      * A column label of {@value}.
      */
@@ -132,6 +132,7 @@ public class PseudoColumn
     public static final String COLUMN_LABEL_CHARACTER_OCTET_LENGTH = "CHAR_OCTET_LENGTH";
 
     // ----------------------------------------------------------------------------------------------------- IS_NULLABLE
+
     /**
      * A column label of {@value}.
      */
@@ -153,7 +154,7 @@ public class PseudoColumn
     @SuppressWarnings({
             "java:S2637" // "@NonNull" values should not be set to null
     })
-    protected PseudoColumn() {
+     PseudoColumn() {
         super();
     }
 
@@ -193,7 +194,7 @@ public class PseudoColumn
      *
      * @param tableCat the value of {@value #COLUMN_LABEL_TABLE_CAT} column.
      */
-    protected void setTableCat(final String tableCat) {
+    void setTableCat(final String tableCat) {
         this.tableCat = tableCat;
     }
 
@@ -213,7 +214,7 @@ public class PseudoColumn
      *
      * @param tableSchem the value of {@value #COLUMN_LABEL_TABLE_SCHEM} column.
      */
-    protected void setTableSchem(final String tableSchem) {
+    void setTableSchem(final String tableSchem) {
         this.tableSchem = tableSchem;
     }
 
@@ -233,7 +234,7 @@ public class PseudoColumn
      *
      * @param tableName the value of {@value #COLUMN_LABEL_TABLE_NAME} column.
      */
-    protected void setTableName(final String tableName) {
+    void setTableName(final String tableName) {
         this.tableName = tableName;
     }
 
@@ -253,7 +254,7 @@ public class PseudoColumn
      *
      * @param columnName the value of {@value #COLUMN_LABEL_COLUMN_NAME} column.
      */
-    protected void setColumnName(final String columnName) {
+    void setColumnName(final String columnName) {
         this.columnName = columnName;
     }
 
@@ -273,7 +274,7 @@ public class PseudoColumn
      *
      * @param dataType the value of {@value #COLUMN_LABEL_DATA_TYPE} column.
      */
-    protected void setDataType(final Integer dataType) {
+    void setDataType(final Integer dataType) {
         this.dataType = dataType;
     }
 
@@ -293,7 +294,7 @@ public class PseudoColumn
      *
      * @param columnSize the value of {@value #COLUMN_LABEL_COLUMN_SIZE} column.
      */
-    protected void setColumnSize(final Integer columnSize) {
+    void setColumnSize(final Integer columnSize) {
         this.columnSize = columnSize;
     }
 
@@ -313,7 +314,7 @@ public class PseudoColumn
      *
      * @param decimalDigits the value of {@value #COLUMN_LABEL_DECIMAL_DIGITS} column.
      */
-    protected void setDecimalDigits(final Integer decimalDigits) {
+    void setDecimalDigits(final Integer decimalDigits) {
         this.decimalDigits = decimalDigits;
     }
 
@@ -333,7 +334,7 @@ public class PseudoColumn
      *
      * @param numPrecRadix the value of {@value #COLUMN_LABEL_NUM_PREC_RADIX} column.
      */
-    protected void setNumPrecRadix(final Integer numPrecRadix) {
+    void setNumPrecRadix(final Integer numPrecRadix) {
         this.numPrecRadix = numPrecRadix;
     }
 
@@ -353,7 +354,7 @@ public class PseudoColumn
      *
      * @param columnUsage the value of {@value #COLUMN_LABEL_USAGE} column.
      */
-    protected void setColumnUsage(final String columnUsage) {
+    void setColumnUsage(final String columnUsage) {
         this.columnUsage = columnUsage;
     }
 
@@ -373,7 +374,7 @@ public class PseudoColumn
      *
      * @param remarks the value of {@value #COLUMN_LABEL_REMARKS} column.
      */
-    protected void setRemarks(final String remarks) {
+    void setRemarks(final String remarks) {
         this.remarks = remarks;
     }
 
@@ -393,7 +394,7 @@ public class PseudoColumn
      *
      * @param charOctetLength the value of {@value #COLUMN_LABEL_CHARACTER_OCTET_LENGTH} column.
      */
-    protected void setCharOctetLength(final Integer charOctetLength) {
+    void setCharOctetLength(final Integer charOctetLength) {
         this.charOctetLength = charOctetLength;
     }
 
@@ -413,18 +414,18 @@ public class PseudoColumn
      *
      * @param isNullable the value of {@value #COLUMN_LABEL_COLUMN_IS_NULLABLE} column.
      */
-    protected void setIsNullable(final String isNullable) {
+    void setIsNullable(final String isNullable) {
         this.isNullable = isNullable;
     }
 
     // -----------------------------------------------------------------------------------------------------------------
-   @org.jspecify.annotations.Nullable
+    @org.jspecify.annotations.Nullable
     @_NullableBySpecification
     @_ColumnLabel(COLUMN_LABEL_TABLE_CAT)
 
     private String tableCat;
 
-   @org.jspecify.annotations.Nullable
+    @org.jspecify.annotations.Nullable
     @_NullableBySpecification
     @_ColumnLabel(COLUMN_LABEL_TABLE_SCHEM)
 
@@ -440,12 +441,12 @@ public class PseudoColumn
     @_ColumnLabel(COLUMN_LABEL_DATA_TYPE)
     private Integer dataType;
 
-   @org.jspecify.annotations.Nullable
+    @org.jspecify.annotations.Nullable
     @_NullableBySpecification
     @_ColumnLabel(COLUMN_LABEL_COLUMN_SIZE)
     private Integer columnSize;
 
-   @org.jspecify.annotations.Nullable
+    @org.jspecify.annotations.Nullable
     @_NullableBySpecification
     @_ColumnLabel(COLUMN_LABEL_DECIMAL_DIGITS)
     private Integer decimalDigits;
@@ -456,7 +457,7 @@ public class PseudoColumn
     @_ColumnLabel(COLUMN_LABEL_USAGE)
     private String columnUsage;
 
-   @org.jspecify.annotations.Nullable
+    @org.jspecify.annotations.Nullable
     @_NullableBySpecification
     @_ColumnLabel(COLUMN_LABEL_REMARKS)
     private String remarks;

@@ -85,7 +85,7 @@ public class ClientInfoProperty
     /**
      * Creates a new instance.
      */
-    public ClientInfoProperty() {
+     ClientInfoProperty() {
         super();
     }
 
@@ -137,7 +137,7 @@ public class ClientInfoProperty
      *
      * @param name the value of {@value #COLUMN_LABEL_NAME} column.
      */
-    protected void setName(final String name) {
+    void setName(final String name) {
         this.name = name;
     }
 
@@ -157,7 +157,7 @@ public class ClientInfoProperty
      *
      * @param maxLen the value of {@value #COLUMN_LABEL_MAX_LEN} column.
      */
-    protected void setMaxLen(final Integer maxLen) {
+    void setMaxLen(final Integer maxLen) {
         this.maxLen = maxLen;
     }
 
@@ -177,7 +177,7 @@ public class ClientInfoProperty
      *
      * @param defaultValue the value of {@value #COLUMN_LABEL_DEFAULT_VALUE} column.
      */
-    protected void setDefaultValue(final String defaultValue) {
+    void setDefaultValue(final String defaultValue) {
         this.defaultValue = defaultValue;
     }
 
@@ -197,7 +197,7 @@ public class ClientInfoProperty
      *
      * @param description the value of {@value #COLUMN_LABEL_DESCRIPTION} column.
      */
-    protected void setDescription(final String description) {
+    void setDescription(final String description) {
         this.description = description;
     }
 

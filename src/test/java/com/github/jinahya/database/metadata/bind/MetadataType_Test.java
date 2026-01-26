@@ -22,13 +22,10 @@ package com.github.jinahya.database.metadata.bind;
 
 import lombok.extern.slf4j.Slf4j;
 import nl.jqno.equalsverifier.EqualsVerifier;
-import nl.jqno.equalsverifier.Warning;
 import nl.jqno.equalsverifier.api.SingleTypeEqualsVerifierApi;
 import org.apache.commons.text.CaseUtils;
-import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
-import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 
@@ -82,7 +79,7 @@ abstract class MetadataType_Test<T extends MetadataType> {
                 .simple()
                 .forClass(typeClass)
                 .withIgnoredFields("unmappedColumns")
-        ;
+                ;
     }
 
     // -----------------------------------------------------------------------------------------------------------------

@@ -20,7 +20,6 @@ package com.github.jinahya.database.metadata.bind;
  * #L%
  */
 
-
 import java.sql.SQLException;
 import java.util.Comparator;
 import java.util.Objects;
@@ -94,36 +93,42 @@ public class Table
     public static final String COLUMN_LABEL_TABLE_TYPE = "TABLE_TYPE";
 
     // --------------------------------------------------------------------------------------------------------- REMARKS
+
     /**
      * A column label of {@value}.
      */
     public static final String COLUMN_LABEL_REMARKS = "REMARKS";
 
     // -------------------------------------------------------------------------------------------------------- TYPE_CAT
+
     /**
      * A column label of {@value}.
      */
     public static final String COLUMN_LABEL_TYPE_CAT = "TYPE_CAT";
 
     // ------------------------------------------------------------------------------------------------------ TYPE_SCHEM
+
     /**
      * A column label of {@value}.
      */
     public static final String COLUMN_LABEL_TYPE_SCHEM = "TYPE_SCHEM";
 
     // ------------------------------------------------------------------------------------------------------- TYPE_NAME
+
     /**
      * A column label of {@value}.
      */
     public static final String COLUMN_LABEL_TYPE_NAME = "TYPE_NAME";
 
     // --------------------------------------------------------------------------------------- SELF_REFERENCING_COL_NAME
+
     /**
      * A column label of {@value}.
      */
     public static final String COLUMN_LABEL_SELF_REFERENCING_COL_NAME = "SELF_REFERENCING_COL_NAME";
 
     // -------------------------------------------------------------------------------------------------- REF_GENERATION
+
     /**
      * A column label of {@value}.
      */
@@ -149,7 +154,7 @@ public class Table
     /**
      * Creates a new instance.
      */
-    public Table() {
+     Table() {
         super();
     }
 
@@ -222,7 +227,7 @@ public class Table
      *
      * @param tableCat the value of {@value #COLUMN_LABEL_TABLE_CAT} column.
      */
-    public void setTableCat(final String tableCat) {
+    void setTableCat(final String tableCat) {
         this.tableCat = tableCat;
     }
 
@@ -243,7 +248,7 @@ public class Table
      *
      * @param tableSchem the value of {@value #COLUMN_LABEL_TABLE_SCHEM} column.
      */
-    public void setTableSchem(final String tableSchem) {
+    void setTableSchem(final String tableSchem) {
         this.tableSchem = tableSchem;
     }
 
@@ -263,7 +268,7 @@ public class Table
      *
      * @param tableName the value of {@value #COLUMN_LABEL_TABLE_NAME} column.
      */
-    public void setTableName(final String tableName) {
+    void setTableName(final String tableName) {
         this.tableName = tableName;
     }
 
@@ -283,7 +288,7 @@ public class Table
      *
      * @param tableType the value of {@value #COLUMN_LABEL_TABLE_TYPE} column.
      */
-    public void setTableType(final String tableType) {
+    void setTableType(final String tableType) {
         this.tableType = tableType;
     }
 
@@ -303,7 +308,7 @@ public class Table
      *
      * @param remarks the value of {@value #COLUMN_LABEL_REMARKS} column.
      */
-    public void setRemarks(final String remarks) {
+    void setRemarks(final String remarks) {
         this.remarks = remarks;
     }
 
@@ -323,7 +328,7 @@ public class Table
      *
      * @param typeCat the value of {@value #COLUMN_LABEL_TYPE_CAT} column.
      */
-    public void setTypeCat(final String typeCat) {
+    void setTypeCat(final String typeCat) {
         this.typeCat = typeCat;
     }
 
@@ -343,7 +348,7 @@ public class Table
      *
      * @param typeSchem the value of {@value #COLUMN_LABEL_TYPE_SCHEM} column.
      */
-    public void setTypeSchem(final String typeSchem) {
+    void setTypeSchem(final String typeSchem) {
         this.typeSchem = typeSchem;
     }
 
@@ -363,7 +368,7 @@ public class Table
      *
      * @param typeName the value of {@value #COLUMN_LABEL_TYPE_NAME} column.
      */
-    public void setTypeName(String typeName) {
+    void setTypeName(String typeName) {
         this.typeName = typeName;
     }
 
@@ -383,7 +388,7 @@ public class Table
      *
      * @param selfReferencingColName the value of {@value #COLUMN_LABEL_SELF_REFERENCING_COL_NAME} column.
      */
-    public void setSelfReferencingColName(final String selfReferencingColName) {
+    void setSelfReferencingColName(final String selfReferencingColName) {
         this.selfReferencingColName = selfReferencingColName;
     }
 
@@ -403,18 +408,18 @@ public class Table
      *
      * @param refGeneration the value of {@value #COLUMN_LABEL_REF_GENERATION} column.
      */
-    public void setRefGeneration(final String refGeneration) {
+    void setRefGeneration(final String refGeneration) {
         this.refGeneration = refGeneration;
     }
 
     // -----------------------------------------------------------------------------------------------------------------
 
-   @org.jspecify.annotations.Nullable
+    @org.jspecify.annotations.Nullable
     @_NullableBySpecification
     @_ColumnLabel(COLUMN_LABEL_TABLE_CAT)
     private String tableCat;
 
-   @org.jspecify.annotations.Nullable
+    @org.jspecify.annotations.Nullable
     @_NullableBySpecification
     @_ColumnLabel(COLUMN_LABEL_TABLE_SCHEM)
     private String tableSchem;
@@ -428,36 +433,36 @@ public class Table
 
     // -----------------------------------------------------------------------------------------------------------------
 
-   @org.jspecify.annotations.Nullable
+    @org.jspecify.annotations.Nullable
     @_NullableBySpecification
     @_ColumnLabel(COLUMN_LABEL_REMARKS)
     private String remarks;
 
     // -----------------------------------------------------------------------------------------------------------------
 
-   @org.jspecify.annotations.Nullable
+    @org.jspecify.annotations.Nullable
     @_NullableBySpecification
     @_ColumnLabel(COLUMN_LABEL_TYPE_CAT)
     private String typeCat;
 
-   @org.jspecify.annotations.Nullable
+    @org.jspecify.annotations.Nullable
     @_NullableBySpecification
     @_ColumnLabel(COLUMN_LABEL_TYPE_SCHEM)
     private String typeSchem;
 
-   @org.jspecify.annotations.Nullable
+    @org.jspecify.annotations.Nullable
     @_NullableBySpecification
     @_ColumnLabel(COLUMN_LABEL_TYPE_NAME)
     private String typeName;
 
     // -----------------------------------------------------------------------------------------------------------------
 
-   @org.jspecify.annotations.Nullable
+    @org.jspecify.annotations.Nullable
     @_NullableBySpecification
     @_ColumnLabel(COLUMN_LABEL_SELF_REFERENCING_COL_NAME)
     private String selfReferencingColName;
 
-   @org.jspecify.annotations.Nullable
+    @org.jspecify.annotations.Nullable
     @_NullableBySpecification
     @_ColumnLabel(COLUMN_LABEL_REF_GENERATION)
     private String refGeneration;

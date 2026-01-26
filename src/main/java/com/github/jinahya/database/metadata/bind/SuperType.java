@@ -20,7 +20,6 @@ package com.github.jinahya.database.metadata.bind;
  * #L%
  */
 
-
 import java.sql.DatabaseMetaData;
 import java.util.Objects;
 
@@ -141,7 +140,7 @@ public class SuperType
      *
      * @param typeCat the value of {@value #COLUMN_LABEL_TYPE_CAT} column.
      */
-    protected void setTypeCat(final String typeCat) {
+    void setTypeCat(final String typeCat) {
         this.typeCat = typeCat;
     }
 
@@ -161,7 +160,7 @@ public class SuperType
      *
      * @param typeSchem the value of {@value #COLUMN_LABEL_TYPE_SCHEM} column.
      */
-    protected void setTypeSchem(final String typeSchem) {
+    void setTypeSchem(final String typeSchem) {
         this.typeSchem = typeSchem;
     }
 
@@ -181,7 +180,7 @@ public class SuperType
      *
      * @param typeName the value of {@value #COLUMN_LABEL_TYPE_NAME} column.
      */
-    protected void setTypeName(final String typeName) {
+    void setTypeName(final String typeName) {
         this.typeName = typeName;
     }
 
@@ -201,7 +200,7 @@ public class SuperType
      *
      * @param supertypeCat the value of {@value #COLUMN_LABEL_SUPERTYPE_CAT} column.
      */
-    protected void setSupertypeCat(final String supertypeCat) {
+    void setSupertypeCat(final String supertypeCat) {
         this.supertypeCat = supertypeCat;
     }
 
@@ -221,7 +220,7 @@ public class SuperType
      *
      * @param supertypeSchem the value of {@value #COLUMN_LABEL_SUPERTYPE_SCHEM} column.
      */
-    protected void setSupertypeSchem(final String supertypeSchem) {
+    void setSupertypeSchem(final String supertypeSchem) {
         this.supertypeSchem = supertypeSchem;
     }
 
@@ -241,18 +240,18 @@ public class SuperType
      *
      * @param supertypeName the value of {@value #COLUMN_LABEL_SUPERTYPE_NAME} column.
      */
-    protected void setSupertypeName(final String supertypeName) {
+    void setSupertypeName(final String supertypeName) {
         this.supertypeName = supertypeName;
     }
 
     // -----------------------------------------------------------------------------------------------------------------
 
-   @org.jspecify.annotations.Nullable
+    @org.jspecify.annotations.Nullable
     @_NullableBySpecification
     @_ColumnLabel(COLUMN_LABEL_TYPE_CAT)
     private String typeCat;
 
-   @org.jspecify.annotations.Nullable
+    @org.jspecify.annotations.Nullable
     @_NullableBySpecification
     @_ColumnLabel(COLUMN_LABEL_TYPE_SCHEM)
     private String typeSchem;
@@ -262,12 +261,12 @@ public class SuperType
 
     // -----------------------------------------------------------------------------------------------------------------
 
-   @org.jspecify.annotations.Nullable
+    @org.jspecify.annotations.Nullable
     @_NullableBySpecification
     @_ColumnLabel(COLUMN_LABEL_SUPERTYPE_CAT)
     private String supertypeCat;
 
-   @org.jspecify.annotations.Nullable
+    @org.jspecify.annotations.Nullable
     @_NullableBySpecification
     @_ColumnLabel(COLUMN_LABEL_SUPERTYPE_SCHEM)
     private String supertypeSchem;

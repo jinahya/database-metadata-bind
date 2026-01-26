@@ -20,8 +20,6 @@ package com.github.jinahya.database.metadata.bind;
  * #L%
  */
 
-import jakarta.validation.constraints.AssertTrue;
-
 import java.sql.DatabaseMetaData;
 import java.sql.SQLException;
 import java.util.Comparator;
@@ -83,42 +81,49 @@ public class IndexInfo
     }
 
     // ------------------------------------------------------------------------------------------------------- TABLE_CAT
+
     /**
      * A column label of {@value}.
      */
     public static final String COLUMN_LABEL_TABLE_CAT = "TABLE_CAT";
 
     // ----------------------------------------------------------------------------------------------------- TABLE_SCHEM
+
     /**
      * A column label of {@value}.
      */
     public static final String COLUMN_LABEL_TABLE_SCHEM = "TABLE_SCHEM";
 
     // ------------------------------------------------------------------------------------------------------ TABLE_NAME
+
     /**
      * A column label of {@value}.
      */
     public static final String COLUMN_LABEL_TABLE_NAME = "TABLE_NAME";
 
     // ------------------------------------------------------------------------------------------------------ NON_UNIQUE
+
     /**
      * A column label of {@value}.
      */
     public static final String COLUMN_LABEL_NON_UNIQUE = "NON_UNIQUE";
 
     // ------------------------------------------------------------------------------------------------- INDEX_QUALIFIER
+
     /**
      * A column label of {@value}.
      */
     public static final String COLUMN_LABEL_INDEX_QUALIFIER = "INDEX_QUALIFIER";
 
     // ------------------------------------------------------------------------------------------------------ INDEX_NAME
+
     /**
      * A column label of {@value}.
      */
     public static final String COLUMN_LABEL_INDEX_NAME = "INDEX_NAME";
 
     // ------------------------------------------------------------------------------------------------------------ TYPE
+
     /**
      * A column label of {@value}.
      */
@@ -140,18 +145,21 @@ public class IndexInfo
     );
 
     // ------------------------------------------------------------------------------------------------ ORDINAL_POSITION
+
     /**
      * A column label of {@value}.
      */
     public static final String COLUMN_LABEL_ORDINAL_POSITION = "ORDINAL_POSITION";
 
     // ----------------------------------------------------------------------------------------------------- COLUMN_NAME
+
     /**
      * A column label of {@value}.
      */
     public static final String COLUMN_LABEL_COLUMN_NAME = "COLUMN_NAME";
 
     // ----------------------------------------------------------------------------------------------------- ASC_OR_DESC
+
     /**
      * A column label of {@value}.
      */
@@ -162,18 +170,21 @@ public class IndexInfo
     public static final String COLUMN_VALUE_ASC_OR_DESC_D = "D";
 
     // ----------------------------------------------------------------------------------------------------- CARDINALITY
+
     /**
      * A column label of {@value}.
      */
     public static final String COLUMN_LABEL_CARDINALITY = "CARDINALITY";
 
     // ----------------------------------------------------------------------------------------------------------- PAGES
+
     /**
      * A column label of {@value}.
      */
     public static final String COLUMN_LABEL_PAGES = "PAGES";
 
     // ------------------------------------------------------------------------------------------------ FILTER_CONDITION
+
     /**
      * A column label of {@value}.
      */
@@ -186,7 +197,7 @@ public class IndexInfo
     /**
      * Creates a new instance.
      */
-    public IndexInfo() {
+     IndexInfo() {
         super();
     }
 
@@ -220,7 +231,6 @@ public class IndexInfo
      *
      * @return .
      */
-    @AssertTrue
     private boolean isNonUniqueValid() {
         if (nonUnique == null || nonUnique) {
             return true;
@@ -236,7 +246,6 @@ public class IndexInfo
      *
      * @return .
      */
-    @AssertTrue
     private boolean isIndexQualifierValid() {
         return !Objects.equals(type, COLUMN_VALUE_TYPE_TABLE_INDEX_STATISTIC) || indexQualifier == null;
     }
@@ -249,7 +258,6 @@ public class IndexInfo
      *
      * @return .
      */
-    @AssertTrue
     private boolean isIndexNameValid() {
         if (indexName != null) {
             return true;
@@ -257,7 +265,6 @@ public class IndexInfo
         return type == null || Objects.equals(type, COLUMN_VALUE_TYPE_TABLE_INDEX_STATISTIC);
     }
 
-    @AssertTrue
     private boolean isTypeValid() {
         return type == null || TYPE_VALUES.contains(type);
     }
@@ -270,7 +277,6 @@ public class IndexInfo
      *
      * @return .
      */
-    @AssertTrue
     private boolean isOrdinalPosition() {
         if (ordinalPosition == null || ordinalPosition != 0) {
             return true;
@@ -286,7 +292,6 @@ public class IndexInfo
      *
      * @return .
      */
-    @AssertTrue
     private boolean isColumnNameValid() {
         if (columnName != null) {
             return true;
@@ -302,7 +307,6 @@ public class IndexInfo
      *
      * @return .
      */
-    @AssertTrue
     private boolean isAscOrDescValid() {
         return !Objects.equals(type, COLUMN_VALUE_TYPE_TABLE_INDEX_STATISTIC) || ascOrDesc == null;
     }
@@ -323,7 +327,7 @@ public class IndexInfo
      *
      * @param tableCat the value of {@value #COLUMN_LABEL_TABLE_CAT} column.
      */
-    public void setTableCat(final String tableCat) {
+    void setTableCat(final String tableCat) {
         this.tableCat = tableCat;
     }
 
@@ -343,7 +347,7 @@ public class IndexInfo
      *
      * @param tableSchem the value of {@value #COLUMN_LABEL_TABLE_SCHEM} column.
      */
-    public void setTableSchem(final String tableSchem) {
+    void setTableSchem(final String tableSchem) {
         this.tableSchem = tableSchem;
     }
 
@@ -363,7 +367,7 @@ public class IndexInfo
      *
      * @param tableName the value of {@value #COLUMN_LABEL_TABLE_NAME} column.
      */
-    public void setTableName(final String tableName) {
+    void setTableName(final String tableName) {
         this.tableName = tableName;
     }
 
@@ -383,7 +387,7 @@ public class IndexInfo
      *
      * @param nonUnique the value of {@value #COLUMN_LABEL_NON_UNIQUE} column.
      */
-    public void setNonUnique(final Boolean nonUnique) {
+    void setNonUnique(final Boolean nonUnique) {
         this.nonUnique = nonUnique;
     }
 
@@ -403,7 +407,7 @@ public class IndexInfo
      *
      * @param indexQualifier the value of {@value #COLUMN_LABEL_INDEX_QUALIFIER} column.
      */
-    public void setIndexQualifier(final String indexQualifier) {
+    void setIndexQualifier(final String indexQualifier) {
         this.indexQualifier = indexQualifier;
     }
 
@@ -423,7 +427,7 @@ public class IndexInfo
      *
      * @param indexName the value of {@value #COLUMN_LABEL_INDEX_NAME} column.
      */
-    public void setIndexName(final String indexName) {
+    void setIndexName(final String indexName) {
         this.indexName = indexName;
     }
 
@@ -443,7 +447,7 @@ public class IndexInfo
      *
      * @param type the value of {@value #COLUMN_LABEL_TYPE} column.
      */
-    public void setType(final Integer type) {
+    void setType(final Integer type) {
         this.type = type;
     }
 
@@ -463,7 +467,7 @@ public class IndexInfo
      *
      * @param ordinalPosition the value of {@value #COLUMN_LABEL_ORDINAL_POSITION} column.
      */
-    public void setOrdinalPosition(final Integer ordinalPosition) {
+    void setOrdinalPosition(final Integer ordinalPosition) {
         this.ordinalPosition = ordinalPosition;
     }
 
@@ -483,7 +487,7 @@ public class IndexInfo
      *
      * @param columnName the value of {@value #COLUMN_LABEL_COLUMN_NAME} column.
      */
-    public void setColumnName(final String columnName) {
+    void setColumnName(final String columnName) {
         this.columnName = columnName;
     }
 
@@ -503,7 +507,7 @@ public class IndexInfo
      *
      * @param ascOrDesc the value of {@value #COLUMN_LABEL_ASC_OR_DESC} column.
      */
-    public void setAscOrDesc(final String ascOrDesc) {
+    void setAscOrDesc(final String ascOrDesc) {
         this.ascOrDesc = ascOrDesc;
     }
 
@@ -547,7 +551,7 @@ public class IndexInfo
      *
      * @param cardinality the value of {@value #COLUMN_LABEL_CARDINALITY} column.
      */
-    public void setCardinality(final Long cardinality) {
+    void setCardinality(final Long cardinality) {
         this.cardinality = cardinality;
     }
 
@@ -581,7 +585,7 @@ public class IndexInfo
      *
      * @param pages the value of {@value #COLUMN_LABEL_PAGES} column.
      */
-    public void setPages(final Long pages) {
+    void setPages(final Long pages) {
         this.pages = pages;
     }
 
@@ -615,18 +619,18 @@ public class IndexInfo
      *
      * @param filterCondition the value of {@value #COLUMN_LABEL_FILTER_CONDITION} column.
      */
-    public void setFilterCondition(final String filterCondition) {
+    void setFilterCondition(final String filterCondition) {
         this.filterCondition = filterCondition;
     }
 
     // -----------------------------------------------------------------------------------------------------------------
 
-   @org.jspecify.annotations.Nullable
+    @org.jspecify.annotations.Nullable
     @_NullableBySpecification
     @_ColumnLabel(COLUMN_LABEL_TABLE_CAT)
     private String tableCat;
 
-   @org.jspecify.annotations.Nullable
+    @org.jspecify.annotations.Nullable
     @_NullableBySpecification
     @_ColumnLabel(COLUMN_LABEL_TABLE_SCHEM)
     private String tableSchem;
@@ -637,12 +641,12 @@ public class IndexInfo
     @_ColumnLabel(COLUMN_LABEL_NON_UNIQUE)
     private Boolean nonUnique;
 
-   @org.jspecify.annotations.Nullable
+    @org.jspecify.annotations.Nullable
     @_NullableBySpecification
     @_ColumnLabel(COLUMN_LABEL_INDEX_QUALIFIER)
     private String indexQualifier;
 
-   @org.jspecify.annotations.Nullable
+    @org.jspecify.annotations.Nullable
     @_NullableBySpecification
     @_ColumnLabel(COLUMN_LABEL_INDEX_NAME)
     private String indexName;
@@ -653,12 +657,12 @@ public class IndexInfo
     @_ColumnLabel(COLUMN_LABEL_ORDINAL_POSITION)
     private Integer ordinalPosition;
 
-   @org.jspecify.annotations.Nullable
+    @org.jspecify.annotations.Nullable
     @_NullableBySpecification
     @_ColumnLabel(COLUMN_LABEL_COLUMN_NAME)
     private String columnName;
 
-   @org.jspecify.annotations.Nullable
+    @org.jspecify.annotations.Nullable
     @_NullableBySpecification
     @_ColumnLabel(COLUMN_LABEL_ASC_OR_DESC)
     private String ascOrDesc;
@@ -669,7 +673,7 @@ public class IndexInfo
     @_ColumnLabel(COLUMN_LABEL_PAGES)
     private Long pages;
 
-   @org.jspecify.annotations.Nullable
+    @org.jspecify.annotations.Nullable
     @_NullableBySpecification
     @_ColumnLabel(COLUMN_LABEL_FILTER_CONDITION)
     private String filterCondition;

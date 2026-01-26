@@ -20,7 +20,6 @@ package com.github.jinahya.database.metadata.bind;
  * #L%
  */
 
-
 import java.sql.DatabaseMetaData;
 import java.sql.SQLException;
 import java.util.Comparator;
@@ -80,6 +79,7 @@ public class ProcedureColumn
     }
 
     // ----------------------------------------------------------------------------------------------------- COLUMN_TYPE
+
     /**
      * A column label of {@value}.
      */
@@ -241,7 +241,7 @@ public class ProcedureColumn
     /**
      * Creates a new instance.
      */
-    protected ProcedureColumn() {
+     ProcedureColumn() {
         super();
     }
 
@@ -289,7 +289,7 @@ public class ProcedureColumn
      *
      * @param procedureCat the value of {@code PROCEDURE_CAT} column.
      */
-    protected void setProcedureCat(final String procedureCat) {
+    void setProcedureCat(final String procedureCat) {
         this.procedureCat = procedureCat;
     }
 
@@ -309,7 +309,7 @@ public class ProcedureColumn
      *
      * @param procedureSchem the value of {@code PROCEDURE_SCHEM} column.
      */
-    protected void setProcedureSchem(final String procedureSchem) {
+    void setProcedureSchem(final String procedureSchem) {
         this.procedureSchem = procedureSchem;
     }
 
@@ -329,7 +329,7 @@ public class ProcedureColumn
      *
      * @param procedureName the value of {@code PROCEDURE_NAME} column.
      */
-    protected void setProcedureName(final String procedureName) {
+    void setProcedureName(final String procedureName) {
         this.procedureName = procedureName;
     }
 
@@ -349,7 +349,7 @@ public class ProcedureColumn
      *
      * @param columnName the value of {@code COLUMN_NAME} column.
      */
-    protected void setColumnName(final String columnName) {
+    void setColumnName(final String columnName) {
         this.columnName = columnName;
     }
 
@@ -369,7 +369,7 @@ public class ProcedureColumn
      *
      * @param columnType the value of {@value #COLUMN_LABEL_COLUMN_TYPE} column.
      */
-    protected void setColumnType(final Integer columnType) {
+    void setColumnType(final Integer columnType) {
         this.columnType = columnType;
     }
 
@@ -389,7 +389,7 @@ public class ProcedureColumn
      *
      * @param dataType the value of {@code DATA_TYPE} column.
      */
-    protected void setDataType(final Integer dataType) {
+    void setDataType(final Integer dataType) {
         this.dataType = dataType;
     }
 
@@ -409,7 +409,7 @@ public class ProcedureColumn
      *
      * @param typeName the value of {@code TYPE_NAME} column.
      */
-    protected void setTypeName(final String typeName) {
+    void setTypeName(final String typeName) {
         this.typeName = typeName;
     }
 
@@ -429,7 +429,7 @@ public class ProcedureColumn
      *
      * @param precision the value of {@code PRECISION} column.
      */
-    protected void setPrecision(final Integer precision) {
+    void setPrecision(final Integer precision) {
         this.precision = precision;
     }
 
@@ -449,7 +449,7 @@ public class ProcedureColumn
      *
      * @param length the value of {@code LENGTH} column.
      */
-    protected void setLength(final Integer length) {
+    void setLength(final Integer length) {
         this.length = length;
     }
 
@@ -469,7 +469,7 @@ public class ProcedureColumn
      *
      * @param scale the value of {@code SCALE} column.
      */
-    protected void setScale(final Integer scale) {
+    void setScale(final Integer scale) {
         this.scale = scale;
     }
 
@@ -489,7 +489,7 @@ public class ProcedureColumn
      *
      * @param radix the value of {@code RADIX} column.
      */
-    protected void setRadix(final Integer radix) {
+    void setRadix(final Integer radix) {
         this.radix = radix;
     }
 
@@ -509,7 +509,7 @@ public class ProcedureColumn
      *
      * @param nullable the value of {@value #COLUMN_LABEL_NULLABLE} column.
      */
-    protected void setNullable(final Integer nullable) {
+    void setNullable(final Integer nullable) {
         this.nullable = nullable;
     }
 
@@ -529,7 +529,7 @@ public class ProcedureColumn
      *
      * @param remarks the value of {@code REMARKS} column.
      */
-    protected void setRemarks(final String remarks) {
+    void setRemarks(final String remarks) {
         this.remarks = remarks;
     }
 
@@ -549,7 +549,7 @@ public class ProcedureColumn
      *
      * @param columnDef the value of {@code COLUMN_DEF} column.
      */
-    protected void setColumnDef(final String columnDef) {
+    void setColumnDef(final String columnDef) {
         this.columnDef = columnDef;
     }
 
@@ -569,7 +569,7 @@ public class ProcedureColumn
      *
      * @param sqlDataType the value of {@code SQL_DATA_TYPE} column.
      */
-    protected void setSqlDataType(final Integer sqlDataType) {
+    void setSqlDataType(final Integer sqlDataType) {
         this.sqlDataType = sqlDataType;
     }
 
@@ -589,7 +589,7 @@ public class ProcedureColumn
      *
      * @param sqlDatetimeSub the value of {@code SQL_DATETIME_SUB} column.
      */
-    protected void setSqlDatetimeSub(final Integer sqlDatetimeSub) {
+    void setSqlDatetimeSub(final Integer sqlDatetimeSub) {
         this.sqlDatetimeSub = sqlDatetimeSub;
     }
 
@@ -609,7 +609,7 @@ public class ProcedureColumn
      *
      * @param charOctetLength the value of {@code CHAR_OCTET_LENGTH} column.
      */
-    protected void setCharOctetLength(final Integer charOctetLength) {
+    void setCharOctetLength(final Integer charOctetLength) {
         this.charOctetLength = charOctetLength;
     }
 
@@ -629,7 +629,7 @@ public class ProcedureColumn
      *
      * @param ordinalPosition the value of {@code ORDINAL_POSITION} column.
      */
-    protected void setOrdinalPosition(final Integer ordinalPosition) {
+    void setOrdinalPosition(final Integer ordinalPosition) {
         this.ordinalPosition = ordinalPosition;
     }
 
@@ -649,7 +649,7 @@ public class ProcedureColumn
      *
      * @param isNullable the value of {@code IS_NULLABLE} column.
      */
-    protected void setIsNullable(final String isNullable) {
+    void setIsNullable(final String isNullable) {
         this.isNullable = isNullable;
     }
 
@@ -669,17 +669,17 @@ public class ProcedureColumn
      *
      * @param specificName the value of {@code SPECIFIC_NAME} column.
      */
-    protected void setSpecificName(final String specificName) {
+    void setSpecificName(final String specificName) {
         this.specificName = specificName;
     }
 
     // -----------------------------------------------------------------------------------------------------------------
-   @org.jspecify.annotations.Nullable
+    @org.jspecify.annotations.Nullable
     @_NullableBySpecification
     @_ColumnLabel(COLUMN_LABEL_PROCEDURE_CAT)
     private String procedureCat;
 
-   @org.jspecify.annotations.Nullable
+    @org.jspecify.annotations.Nullable
     @_NullableBySpecification
     @_ColumnLabel(COLUMN_LABEL_PROCEDURE_SCHEM)
     private String procedureSchem;
@@ -700,7 +700,7 @@ public class ProcedureColumn
     @_ColumnLabel(COLUMN_LABEL_TYPE_NAME)
     private String typeName;
 
-   @org.jspecify.annotations.Nullable
+    @org.jspecify.annotations.Nullable
     @_NullableBySpecification
     @_ColumnLabel(COLUMN_LABEL_PRECISION)
     private Integer precision;
@@ -708,7 +708,7 @@ public class ProcedureColumn
     @_ColumnLabel(COLUMN_LABEL_LENGTH)
     private Integer length;
 
-   @org.jspecify.annotations.Nullable
+    @org.jspecify.annotations.Nullable
     @_NullableBySpecification
     @_ColumnLabel(COLUMN_LABEL_SCALE)
     private Integer scale;
@@ -719,25 +719,27 @@ public class ProcedureColumn
     @_ColumnLabel(COLUMN_LABEL_NULLABLE)
     private Integer nullable;
 
+    @org.jspecify.annotations.Nullable
+    @_NullableBySpecification
     @_ColumnLabel(COLUMN_LABEL_REMARKS)
     private String remarks;
 
-   @org.jspecify.annotations.Nullable
+    @org.jspecify.annotations.Nullable
     @_NullableBySpecification
     @_ColumnLabel(COLUMN_LABEL_COLUMN_DEF)
     private String columnDef;
 
-   @org.jspecify.annotations.Nullable
+    @org.jspecify.annotations.Nullable
     @_ReservedBySpecification
     @_ColumnLabel(COLUMN_LABEL_SQL_DATA_TYPE)
     private Integer sqlDataType;
 
-   @org.jspecify.annotations.Nullable
+    @org.jspecify.annotations.Nullable
     @_ReservedBySpecification
     @_ColumnLabel(COLUMN_LABEL_SQL_DATETIME_SUB)
     private Integer sqlDatetimeSub;
 
-   @org.jspecify.annotations.Nullable
+    @org.jspecify.annotations.Nullable
     @_NullableBySpecification
     @_ColumnLabel(COLUMN_LABEL_CHAR_OCTET_LENGTH)
     private Integer charOctetLength;

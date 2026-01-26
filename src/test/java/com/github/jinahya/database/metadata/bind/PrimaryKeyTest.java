@@ -21,7 +21,6 @@ package com.github.jinahya.database.metadata.bind;
  */
 
 import nl.jqno.equalsverifier.api.SingleTypeEqualsVerifierApi;
-import org.junit.jupiter.api.Test;
 
 class PrimaryKeyTest
         extends AbstractMetadataType_Test<PrimaryKey> {

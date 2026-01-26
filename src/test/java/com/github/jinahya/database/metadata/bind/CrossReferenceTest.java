@@ -24,7 +24,7 @@ import nl.jqno.equalsverifier.api.SingleTypeEqualsVerifierApi;
 
 class CrossReferenceTest
         extends AbstractMetadataType_Test<CrossReference> {
-    
+
     CrossReferenceTest() {
         super(CrossReference.class);
     }

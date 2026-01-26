@@ -20,8 +20,6 @@ package com.github.jinahya.database.metadata.bind;
  * #L%
  */
 
-import jakarta.validation.constraints.Positive;
-
 import java.sql.DatabaseMetaData;
 import java.sql.SQLException;
 import java.util.Comparator;
@@ -115,6 +113,7 @@ public class Attribute
     public static final String COLUMN_LABEL_TYPE_CAT = "TYPE_CAT";
 
     // ------------------------------------------------------------------------------------------------------ TYPE_SCHEM
+
     /**
      * A column label of {@value}.
      */
@@ -257,7 +256,7 @@ public class Attribute
     /**
      * Creates a new instance.
      */
-    public Attribute() {
+     Attribute() {
         super();
     }
 
@@ -374,7 +373,7 @@ public class Attribute
      * @param typeCat new value for the {@value #COLUMN_LABEL_TYPE_CAT} property.
      * @see #getTypeCat()
      */
-    public void setTypeCat(final String typeCat) {
+    void setTypeCat(final String typeCat) {
         this.typeCat = typeCat;
     }
 
@@ -395,7 +394,7 @@ public class Attribute
      *
      * @param typeSchem the value of {@value #COLUMN_LABEL_TYPE_SCHEM} column.
      */
-    public void setTypeSchem(final String typeSchem) {
+    void setTypeSchem(final String typeSchem) {
         this.typeSchem = typeSchem;
     }
 
@@ -415,7 +414,7 @@ public class Attribute
      *
      * @param typeName the value of {@value #COLUMN_LABEL_TYPE_NAME} column.
      */
-    public void setTypeName(final String typeName) {
+    void setTypeName(final String typeName) {
         this.typeName = typeName;
     }
 
@@ -435,7 +434,7 @@ public class Attribute
      *
      * @param attrName the value of {@value #COLUMN_LABEL_ATTR_NAME} column.
      */
-    public void setAttrName(String attrName) {
+    void setAttrName(String attrName) {
         this.attrName = attrName;
     }
 
@@ -455,7 +454,7 @@ public class Attribute
      *
      * @param dataType the value of {@value #COLUMN_LABEL_DATA_TYPE} column.
      */
-    public void setDataType(Integer dataType) {
+    void setDataType(Integer dataType) {
         this.dataType = dataType;
     }
 
@@ -475,7 +474,7 @@ public class Attribute
      *
      * @param attrTypeName the value of {@code ATTR_TYPE_NAME} column.
      */
-    public void setAttrTypeName(String attrTypeName) {
+    void setAttrTypeName(String attrTypeName) {
         this.attrTypeName = attrTypeName;
     }
 
@@ -495,7 +494,7 @@ public class Attribute
      *
      * @param attrSize the value of {@code ATTR_SIZE} column.
      */
-    public void setAttrSize(Integer attrSize) {
+    void setAttrSize(Integer attrSize) {
         this.attrSize = attrSize;
     }
 
@@ -515,7 +514,7 @@ public class Attribute
      *
      * @param decimalDigits the value of {@code DECIMAL_DIGITS} column.
      */
-    public void setDecimalDigits(Integer decimalDigits) {
+    void setDecimalDigits(Integer decimalDigits) {
         this.decimalDigits = decimalDigits;
     }
 
@@ -535,7 +534,7 @@ public class Attribute
      *
      * @param numPrecRadix the value of {@code NUM_PREC_RADIX} column.
      */
-    public void setNumPrecRadix(Integer numPrecRadix) {
+    void setNumPrecRadix(Integer numPrecRadix) {
         this.numPrecRadix = numPrecRadix;
     }
 
@@ -555,7 +554,7 @@ public class Attribute
      *
      * @param nullable the value of {@value #COLUMN_LABEL_NULLABLE} column.
      */
-    public void setNullable(Integer nullable) {
+    void setNullable(Integer nullable) {
         this.nullable = nullable;
     }
 
@@ -575,7 +574,7 @@ public class Attribute
      *
      * @param remarks the value of {@code REMARKS} column.
      */
-    public void setRemarks(String remarks) {
+    void setRemarks(String remarks) {
         this.remarks = remarks;
     }
 
@@ -595,7 +594,7 @@ public class Attribute
      *
      * @param attrDef the value of {@code ATTR_DEF} column.
      */
-    public void setAttrDef(String attrDef) {
+    void setAttrDef(String attrDef) {
         this.attrDef = attrDef;
     }
 
@@ -615,7 +614,7 @@ public class Attribute
      *
      * @param sqlDataType the value of {@code SQL_DATA_TYPE} column.
      */
-    public void setSqlDataType(Integer sqlDataType) {
+    void setSqlDataType(Integer sqlDataType) {
         this.sqlDataType = sqlDataType;
     }
 
@@ -635,7 +634,7 @@ public class Attribute
      *
      * @param sqlDatetimeSub the value of {@code SQL_DATETIME_SUB} column.
      */
-    public void setSqlDatetimeSub(Integer sqlDatetimeSub) {
+    void setSqlDatetimeSub(Integer sqlDatetimeSub) {
         this.sqlDatetimeSub = sqlDatetimeSub;
     }
 
@@ -655,7 +654,7 @@ public class Attribute
      *
      * @param charOctetLength the value of {@code CHAR_OCTET_LENGTH} column.
      */
-    public void setCharOctetLength(Integer charOctetLength) {
+    void setCharOctetLength(Integer charOctetLength) {
         this.charOctetLength = charOctetLength;
     }
 
@@ -675,7 +674,7 @@ public class Attribute
      *
      * @param ordinalPosition the value of {@code ORDINAL_POSITION} column.
      */
-    public void setOrdinalPosition(Integer ordinalPosition) {
+    void setOrdinalPosition(Integer ordinalPosition) {
         this.ordinalPosition = ordinalPosition;
     }
 
@@ -695,7 +694,7 @@ public class Attribute
      *
      * @param isNullable the value of {@value #COLUMN_LABEL_IS_NULLABLE} column.
      */
-    public void setIsNullable(final String isNullable) {
+    void setIsNullable(final String isNullable) {
         this.isNullable = isNullable;
     }
 
@@ -715,7 +714,7 @@ public class Attribute
      *
      * @param scopeCatalog the value of {@code SCOPE_CATALOG} column.
      */
-    public void setScopeCatalog(final String scopeCatalog) {
+    void setScopeCatalog(final String scopeCatalog) {
         this.scopeCatalog = scopeCatalog;
     }
 
@@ -735,7 +734,7 @@ public class Attribute
      *
      * @param scopeSchema the value of {@code SCOPE_SCHEMA} column.
      */
-    public void setScopeSchema(final String scopeSchema) {
+    void setScopeSchema(final String scopeSchema) {
         this.scopeSchema = scopeSchema;
     }
 
@@ -755,7 +754,7 @@ public class Attribute
      *
      * @param scopeTable the value of {@code SCOPE_TABLE} column.
      */
-    public void setScopeTable(final String scopeTable) {
+    void setScopeTable(final String scopeTable) {
         this.scopeTable = scopeTable;
     }
 
@@ -775,12 +774,11 @@ public class Attribute
      *
      * @param sourceDataType the value of {@code SOURCE_DATA_TYPE} column.
      */
-    public void setSourceDataType(final Integer sourceDataType) {
+    void setSourceDataType(final Integer sourceDataType) {
         this.sourceDataType = sourceDataType;
     }
 
     // -----------------------------------------------------------------------------------------------------------------
-
     @org.jspecify.annotations.Nullable
     @_NullableBySpecification
     @_ColumnLabel(COLUMN_LABEL_TYPE_CAT)
@@ -841,7 +839,6 @@ public class Attribute
     @_ColumnLabel(COLUMN_LABEL_CHAR_OCTET_LENGTH)
     private Integer charOctetLength;
 
-    @Positive
     @_ColumnLabel(COLUMN_LABEL_ORDINAL_POSITION)
     private Integer ordinalPosition;
 

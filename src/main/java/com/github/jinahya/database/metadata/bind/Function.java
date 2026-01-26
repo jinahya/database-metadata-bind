@@ -20,7 +20,6 @@ package com.github.jinahya.database.metadata.bind;
  * #L%
  */
 
-
 import java.sql.DatabaseMetaData;
 import java.sql.SQLException;
 import java.util.Comparator;
@@ -96,12 +95,14 @@ public class Function
     public static final String COLUMN_LABEL_FUNCTION_SCHEM = "FUNCTION_SCHEM";
 
     // --------------------------------------------------------------------------------------------------- FUNCTION_NAME
+
     /**
      * A column label of {@value}.
      */
     public static final String COLUMN_LABEL_FUNCTION_NAME = "FUNCTION_NAME";
 
     // --------------------------------------------------------------------------------------------------------- REMARKS
+
     /**
      * A column label of {@value}.
      */
@@ -157,6 +158,13 @@ public class Function
 
     // ---------------------------------------------------------------------------------------------------- CONSTRUCTORS
 
+    /**
+     * Creates a new instance.
+     */
+    Function() {
+        super();
+    }
+
     // ------------------------------------------------------------------------------------------------ java.lang.Object
     @Override
     public String toString() {
@@ -186,7 +194,7 @@ public class Function
      *
      * @param functionCat the value of {@value #COLUMN_LABEL_FUNCTION_CAT} column.
      */
-    public void setFunctionCat(final String functionCat) {
+    void setFunctionCat(final String functionCat) {
         this.functionCat = functionCat;
     }
 
@@ -206,7 +214,7 @@ public class Function
      *
      * @param functionSchem the value of {@value #COLUMN_LABEL_FUNCTION_SCHEM} column.
      */
-    public void setFunctionSchem(final String functionSchem) {
+    void setFunctionSchem(final String functionSchem) {
         this.functionSchem = functionSchem;
     }
 
@@ -226,7 +234,7 @@ public class Function
      *
      * @param functionName the value of {@value #COLUMN_LABEL_FUNCTION_NAME} column.
      */
-    public void setFunctionName(final String functionName) {
+    void setFunctionName(final String functionName) {
         this.functionName = functionName;
     }
 
@@ -246,7 +254,7 @@ public class Function
      *
      * @param remarks the value of {@value #COLUMN_LABEL_REMARKS} column.
      */
-    public void setRemarks(final String remarks) {
+    void setRemarks(final String remarks) {
         this.remarks = remarks;
     }
 
@@ -266,7 +274,7 @@ public class Function
      *
      * @param functionType the value of {@value #COLUMN_LABEL_FUNCTION_TYPE} column.
      */
-    public void setFunctionType(final Integer functionType) {
+    void setFunctionType(final Integer functionType) {
         this.functionType = functionType;
     }
 
@@ -286,18 +294,18 @@ public class Function
      *
      * @param specificName the value of {@value #COLUMN_LABEL_SPECIFIC_NAME} column.
      */
-    public void setSpecificName(final String specificName) {
+    void setSpecificName(final String specificName) {
         this.specificName = specificName;
     }
 
     // -----------------------------------------------------------------------------------------------------------------
 
-   @org.jspecify.annotations.Nullable
+    @org.jspecify.annotations.Nullable
     @_NullableBySpecification
     @_ColumnLabel(COLUMN_LABEL_FUNCTION_CAT)
     private String functionCat;
 
-   @org.jspecify.annotations.Nullable
+    @org.jspecify.annotations.Nullable
     @_NullableBySpecification
     @_ColumnLabel(COLUMN_LABEL_FUNCTION_SCHEM)
     private String functionSchem;

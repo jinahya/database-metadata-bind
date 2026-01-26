@@ -91,7 +91,7 @@ public class Catalog
     /**
      * Creates a new instance.
      */
-    public Catalog() {
+     Catalog() {
         super();
     }
 
@@ -118,7 +118,7 @@ public class Catalog
      *
      * @param tableCat the value of {@value #COLUMN_LABEL_TABLE_CAT} column.
      */
-    public void setTableCat(final String tableCat) {
+    void setTableCat(final String tableCat) {
         this.tableCat = tableCat;
     }
 
