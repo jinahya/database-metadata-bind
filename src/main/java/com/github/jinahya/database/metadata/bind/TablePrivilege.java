@@ -258,12 +258,11 @@ public class TablePrivilege
     }
 
     // -----------------------------------------------------------------------------------------------------------------
-    
+
     @_NullableBySpecification
     @_ColumnLabel(COLUMN_LABEL_TABLE_CAT)
     private String tableCat;
 
-    
     @_NullableBySpecification
     @_ColumnLabel(COLUMN_LABEL_TABLE_SCHEM)
     private String tableSchem;
@@ -272,7 +271,7 @@ public class TablePrivilege
     private String tableName;
 
     // -----------------------------------------------------------------------------------------------------------------
-    
+
     @_NullableBySpecification
     @_ColumnLabel(COLUMN_LABEL_GRANTOR)
     private String grantor;

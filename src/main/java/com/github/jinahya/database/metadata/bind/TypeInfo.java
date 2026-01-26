@@ -582,22 +582,18 @@ public class TypeInfo
     @_ColumnLabel(COLUMN_LABEL_DATA_TYPE)
     private Integer dataType;
 
-    
     @_NullableBySpecification
     @_ColumnLabel(COLUMN_LABEL_PRECISION)
     private Integer precision;
 
-    
     @_NullableBySpecification
     @_ColumnLabel(COLUMN_LABEL_LITERAL_PREFIX)
     private String literalPrefix;
 
-    
     @_NullableBySpecification
     @_ColumnLabel(COLUMN_LABEL_LITERAL_SUFFIX)
     private String literalSuffix;
 
-    
     @_NullableBySpecification
     @_ColumnLabel(COLUMN_LABEL_CREATE_PARAMS)
     private String createParams;
@@ -611,7 +607,6 @@ public class TypeInfo
     @_ColumnLabel(COLUMN_LABEL_SEARCHABLE)
     private Integer searchable;
 
-    
     @_NotUsedBySpecification
     @_ColumnLabel(COLUMN_LABEL_UNSIGNED_ATTRIBUTE)
     private Boolean unsignedAttribute;

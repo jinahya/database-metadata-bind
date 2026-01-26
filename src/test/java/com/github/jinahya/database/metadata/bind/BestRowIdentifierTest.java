@@ -39,8 +39,14 @@ class BestRowIdentifierTest
     // -----------------------------------------------------------------------------------------------------------------
 
     @Override
+    void equals__() {
+        super.equals__();
+    }
+
+    @Override
     SingleTypeEqualsVerifierApi<BestRowIdentifier> equalsVerifier() {
         return super.equalsVerifier()
+                .withOnlyTheseFields("table_", "scope", "columnName")
 //                .withPrefabValues(
 //                        Table.class, new Table().tableCat("a"), new Table().tableCat("b")
 //                )

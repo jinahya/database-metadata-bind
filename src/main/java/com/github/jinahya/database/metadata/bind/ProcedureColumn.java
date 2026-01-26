@@ -25,6 +25,7 @@ import lombok.EqualsAndHashCode;
 import java.sql.DatabaseMetaData;
 import java.sql.SQLException;
 import java.util.Comparator;
+import java.util.Objects;
 
 /**
  * A class for binding results of the
@@ -247,6 +248,25 @@ public class ProcedureColumn
                '}';
     }
 
+    @Override
+    public boolean equals(final Object obj) {
+        if (!(obj instanceof ProcedureColumn)) {
+            return false;
+        }
+        if (!super.equals(obj)) {
+            return false;
+        }
+        final ProcedureColumn that = (ProcedureColumn) obj;
+        return Objects.equals(procedureCat, that.procedureCat) &&
+               Objects.equals(procedureSchem, that.procedureSchem) &&
+               Objects.equals(procedureName, that.procedureName) &&
+               Objects.equals(columnName, that.columnName);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(super.hashCode(), procedureCat, procedureSchem, procedureName, columnName);
+    }
     // ---------------------------------------------------------------------------------------------------- procedureCat
 
     /**
@@ -648,12 +668,10 @@ public class ProcedureColumn
     }
 
     // -----------------------------------------------------------------------------------------------------------------
-    
     @_NullableBySpecification
     @_ColumnLabel(COLUMN_LABEL_PROCEDURE_CAT)
     private String procedureCat;
 
-    
     @_NullableBySpecification
     @_ColumnLabel(COLUMN_LABEL_PROCEDURE_SCHEM)
     private String procedureSchem;
@@ -674,7 +692,6 @@ public class ProcedureColumn
     @_ColumnLabel(COLUMN_LABEL_TYPE_NAME)
     private String typeName;
 
-    
     @_NullableBySpecification
     @_ColumnLabel(COLUMN_LABEL_PRECISION)
     private Integer precision;
@@ -682,7 +699,6 @@ public class ProcedureColumn
     @_ColumnLabel(COLUMN_LABEL_LENGTH)
     private Integer length;
 
-    
     @_NullableBySpecification
     @_ColumnLabel(COLUMN_LABEL_SCALE)
     private Integer scale;
@@ -696,7 +712,6 @@ public class ProcedureColumn
     @_ColumnLabel(COLUMN_LABEL_REMARKS)
     private String remarks;
 
-    
     @_NullableBySpecification
     @_ColumnLabel(COLUMN_LABEL_COLUMN_DEF)
     private String columnDef;
@@ -709,7 +724,6 @@ public class ProcedureColumn
     @_ColumnLabel(COLUMN_LABEL_SQL_DATETIME_SUB)
     private Integer sqlDatetimeSub;
 
-    
     @_NullableBySpecification
     @_ColumnLabel(COLUMN_LABEL_CHAR_OCTET_LENGTH)
     private Integer charOctetLength;

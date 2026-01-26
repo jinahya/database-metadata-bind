@@ -130,6 +130,8 @@ Note: Some classes use "effective" methods (normalize: uppercase, strip whitespa
 
 ## toString()
 
+### For those inherits `MetadataType`
+
 **MANDATORY**: Include ONLY fields annotated with `@_ColumnLabel`. Exclude:
 - Transient fields (e.g., `unmappedColumns` in `AbstractMetadataType`)
 - Helper fields without `@_ColumnLabel`

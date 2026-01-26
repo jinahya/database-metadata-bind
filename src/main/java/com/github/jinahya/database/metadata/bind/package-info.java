@@ -14,7 +14,8 @@
  * @author Jin Kwon &lt;onacit_at_gmail.com&gt;
  * @see com.github.jinahya.database.metadata.bind.Context
  * @see com.github.jinahya.database.metadata.bind.MetadataType
- * @see <a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.sql/java/sql/DatabaseMetaData.html">java.sql.DatabaseMetaData</a>
+ * @see <a
+ * href="https://docs.oracle.com/en/java/javase/25/docs/api/java.sql/java/sql/DatabaseMetaData.html">java.sql.DatabaseMetaData</a>
  */
 package com.github.jinahya.database.metadata.bind;
 

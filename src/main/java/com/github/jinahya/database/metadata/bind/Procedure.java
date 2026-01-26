@@ -245,12 +245,11 @@ public class Procedure
     }
 
     // -----------------------------------------------------------------------------------------------------------------
-    
+
     @_NullableBySpecification
     @_ColumnLabel(COLUMN_LABEL_PROCEDURE_CAT)
     private String procedureCat;
 
-    
     @_NullableBySpecification
     @_ColumnLabel(COLUMN_LABEL_PROCEDURE_SCHEM)
     private String procedureSchem;

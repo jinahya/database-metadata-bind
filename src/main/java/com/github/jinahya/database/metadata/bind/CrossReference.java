@@ -469,12 +469,11 @@ public class CrossReference
     }
 
     // -----------------------------------------------------------------------------------------------------------------
-    
+
     @_NullableBySpecification
     @_ColumnLabel(COLUMN_LABEL_PKTABLE_CAT)
     private String pktableCat;
 
-    
     @_NullableBySpecification
     @_ColumnLabel(COLUMN_LABEL_PKTABLE_SCHEM)
     private String pktableSchem;
@@ -486,12 +485,11 @@ public class CrossReference
     private String pkcolumnName;
 
     // -----------------------------------------------------------------------------------------------------------------
-    
+
     @_NullableBySpecification
     @_ColumnLabel(COLUMN_LABEL_FKTABLE_CAT)
     private String fktableCat;
 
-    
     @_NullableBySpecification
     @_ColumnLabel(COLUMN_LABEL_FKTABLE_SCHEM)
     private String fktableSchem;
@@ -515,12 +513,11 @@ public class CrossReference
     private Integer deleteRule;
 
     // -----------------------------------------------------------------------------------------------------------------
-    
+
     @_NullableBySpecification
     @_ColumnLabel(COLUMN_LABEL_FK_NAME)
     private String fkName;
 
-    
     @_NullableBySpecification
     @_ColumnLabel(COLUMN_LABEL_PK_NAME)
     private String pkName;

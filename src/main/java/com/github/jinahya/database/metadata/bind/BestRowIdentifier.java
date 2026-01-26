@@ -25,6 +25,7 @@ import lombok.EqualsAndHashCode;
 import java.sql.DatabaseMetaData;
 import java.sql.SQLException;
 import java.util.Comparator;
+import java.util.Objects;
 
 /**
  * A class for binding results of the
@@ -140,7 +141,21 @@ public class BestRowIdentifier
                '}';
     }
 
-    // ----------------------------------------------------------------------------------------------------------- scope
+    @Override
+    public boolean equals(Object o) {
+        if (!(o instanceof BestRowIdentifier)) {
+            return false;
+        }
+        BestRowIdentifier that = (BestRowIdentifier) o;
+        return Objects.equals(table_, that.table_) && Objects.equals(scope, that.scope) &&
+               Objects.equals(columnName, that.columnName);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(table_, scope, columnName);
+    }
+// ----------------------------------------------------------------------------------------------------------- scope
 
     /**
      * Returns the value of {@value #COLUMN_LABEL_SCOPE} column.
@@ -299,6 +314,9 @@ public class BestRowIdentifier
     public void setPseudoColumn(final Integer pseudoColumn) {
         this.pseudoColumn = pseudoColumn;
     }
+
+    // -----------------------------------------------------------------------------------------------------------------
+    Table table_;
 
     // -----------------------------------------------------------------------------------------------------------------
     @_ColumnLabel(COLUMN_LABEL_SCOPE)

@@ -527,12 +527,11 @@ public class FunctionColumn
     }
 
     // -----------------------------------------------------------------------------------------------------------------
-    
+
     @_NullableBySpecification
     @_ColumnLabel(COLUMN_LABEL_FUNCTION_CAT)
     private String functionCat;
 
-    
     @_NullableBySpecification
     @_ColumnLabel(COLUMN_LABEL_FUNCTION_SCHEM)
     private String functionSchem;
@@ -553,7 +552,6 @@ public class FunctionColumn
     @_ColumnLabel(COLUMN_LABEL_TYPE_NAME)
     private String typeName;
 
-    
     @_NullableBySpecification
     @_ColumnLabel(COLUMN_LABEL_PRECISION)
     private Integer precision;
@@ -561,7 +559,6 @@ public class FunctionColumn
     @_ColumnLabel(COLUMN_LABEL_LENGTH)
     private Integer length;
 
-    
     @_NullableBySpecification
     @_ColumnLabel(COLUMN_LABEL_SCALE)
     private Integer scale;
@@ -575,7 +572,6 @@ public class FunctionColumn
     @_ColumnLabel(COLUMN_LABEL_REMARKS)
     private String remarks;
 
-    
     @_NullableBySpecification
     @_ColumnLabel(COLUMN_LABEL_CHAR_OCTET_LENGTH)
     private Integer charOctetLength;

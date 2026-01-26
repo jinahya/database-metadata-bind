@@ -1,6 +1,5 @@
 package com.github.jinahya.database.metadata.bind;
 
-
 import java.io.Serializable;
 import java.lang.invoke.MethodHandles;
 import java.util.ArrayList;

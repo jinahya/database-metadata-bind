@@ -296,12 +296,11 @@ public class ColumnPrivilege
     }
 
     // -----------------------------------------------------------------------------------------------------------------
-    
+
     @_NullableBySpecification
     @_ColumnLabel(COLUMN_LABEL_TABLE_CAT)
     private String tableCat;
 
-    
     @_NullableBySpecification
     @_ColumnLabel(COLUMN_LABEL_TABLE_SCHEM)
     private String tableSchem;
@@ -313,7 +312,7 @@ public class ColumnPrivilege
     private String columnName;
 
     // -----------------------------------------------------------------------------------------------------------------
-    
+
     @_NullableBySpecification
     @_ColumnLabel(COLUMN_LABEL_GRANTOR)
     private String grantor;
@@ -324,7 +323,6 @@ public class ColumnPrivilege
     @_ColumnLabel(COLUMN_LABEL_PRIVILEGE)
     private String privilege;
 
-    
     @Pattern(regexp = MetadataTypeConstants.PATTERN_REGEXP_YES_OR_NO)
     @_NullableBySpecification
     @_ColumnLabel(COLUMN_LABEL_IS_GRANTABLE)

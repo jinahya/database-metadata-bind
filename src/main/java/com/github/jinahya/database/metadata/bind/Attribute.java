@@ -46,7 +46,7 @@ public class Attribute
     private static final long serialVersionUID = 1913681105410440186L;
 
     // -----------------------------------------------------------------------------------------------------------------
-    
+
     static Comparator<Attribute> comparingInSpecifiedOrder(final Comparator<? super String> comparator) {
         Objects.requireNonNull(comparator, "comparator is null");
         return Comparator
@@ -56,7 +56,6 @@ public class Attribute
                 .thenComparing(Attribute::getOrdinalPosition, Comparator.naturalOrder());
     }
 
-    
     static Comparator<Attribute> comparingInSpecifiedOrder(final Context context,
                                                            final Comparator<? super String> comparator)
             throws SQLException {
@@ -259,30 +258,47 @@ public class Attribute
                 .orElse(null);
     }
 
+//    @Override
+//    public boolean equals(final Object obj) {
+//        if (obj == null || getClass() != obj.getClass()) {
+//            return false;
+//        }
+//        if (!super.equals(obj)) {
+//            return false;
+//        }
+//        final var that = (Attribute) obj;
+//        return Objects.equals(getTypeCatEffective(), that.getTypeCatEffective())
+//               && Objects.equals(getTypeSchemEffective(), that.getTypeSchemEffective())
+//               && Objects.equals(typeName, that.typeName)
+//               && Objects.equals(attrName, that.attrName);
+//    }
+//
+//    @Override
+//    public int hashCode() {
+//        return Objects.hash(
+//                super.hashCode(),
+//                getTypeCatEffective(),
+//                getTypeSchemEffective(),
+//                typeName,
+//                attrName
+//        );
+//    }
+
     @Override
     public boolean equals(final Object obj) {
-        if (obj == null || getClass() != obj.getClass()) {
+        if (!(obj instanceof Attribute)) {
             return false;
         }
-        if (!super.equals(obj)) {
-            return false;
-        }
-        final var that = (Attribute) obj;
-        return Objects.equals(getTypeCatEffective(), that.getTypeCatEffective())
-               && Objects.equals(getTypeSchemEffective(), that.getTypeSchemEffective())
-               && Objects.equals(typeName, that.typeName)
-               && Objects.equals(attrName, that.attrName);
+        final Attribute attribute = (Attribute) obj;
+        return Objects.equals(typeCat, attribute.typeCat) &&
+               Objects.equals(typeSchem, attribute.typeSchem) &&
+               Objects.equals(typeName, attribute.typeName) &&
+               Objects.equals(attrName, attribute.attrName);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(
-                super.hashCode(),
-                getTypeCatEffective(),
-                getTypeSchemEffective(),
-                typeName,
-                attrName
-        );
+        return Objects.hash(typeCat, typeSchem, typeName, attrName);
     }
 
     // -------------------------------------------------------------------------------------------------------- tableCat
@@ -293,7 +309,7 @@ public class Attribute
      * @return current value of the {@value #COLUMN_LABEL_TYPE_CAT} property.
      * @see #setTypeCat(String)
      */
-    
+
     public String getTypeCat() {
         return typeCat;
     }
@@ -315,7 +331,7 @@ public class Attribute
      *
      * @return the value of {@value #COLUMN_LABEL_TYPE_SCHEM} column.
      */
-    
+
     public String getTypeSchem() {
         return typeSchem;
     }
@@ -710,12 +726,11 @@ public class Attribute
     }
 
     // -----------------------------------------------------------------------------------------------------------------
-    
+
     @_NullableBySpecification
     @_ColumnLabel(COLUMN_LABEL_TYPE_CAT)
     private String typeCat;
 
-    
     @_NullableBySpecification
     @_ColumnLabel(COLUMN_LABEL_TYPE_SCHEM)
     private String typeSchem;
@@ -736,7 +751,6 @@ public class Attribute
     @_ColumnLabel(COLUMN_LABEL_ATTR_SIZE)
     private Integer attrSize;
 
-    
     @_NullableBySpecification
     @_ColumnLabel(COLUMN_LABEL_DECIMAL_DIGITS)
     private Integer decimalDigits;
@@ -747,12 +761,10 @@ public class Attribute
     @_ColumnLabel(COLUMN_LABEL_NULLABLE)
     private Integer nullable;
 
-    
     @_NullableBySpecification
     @_ColumnLabel(COLUMN_LABEL_REMARKS)
     private String remarks;
 
-    
     @_NullableBySpecification
     @_ColumnLabel(COLUMN_LABEL_ATTR_DEF)
     private String attrDef;
@@ -775,22 +787,18 @@ public class Attribute
     @_ColumnLabel(COLUMN_LABEL_IS_NULLABLE)
     private String isNullable;
 
-    
     @_NullableBySpecification
     @_ColumnLabel(COLUMN_LABEL_SCOPE_CATALOG)
     private String scopeCatalog;
 
-    
     @_NullableBySpecification
     @_ColumnLabel(COLUMN_LABEL_SCOPE_SCHEMA)
     private String scopeSchema;
 
-    
     @_NullableBySpecification
     @_ColumnLabel(COLUMN_LABEL_SCOPE_TABLE)
     private String scopeTable;
 
-    
     @_NullableBySpecification
     @_ColumnLabel(COLUMN_LABEL_SOURCE_DATA_TYPE)
     private Integer sourceDataType;

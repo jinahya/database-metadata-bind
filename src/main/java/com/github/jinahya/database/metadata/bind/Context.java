@@ -1910,7 +1910,6 @@ public class Context {
         );
     }
 
-    
     List<Table> getTables(final Schema schema, final String tableNamePattern,
                           final String[] types)
             throws SQLException {
